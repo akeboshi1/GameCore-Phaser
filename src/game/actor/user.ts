@@ -199,7 +199,7 @@ export class User extends Player {
         // this.mRoomService.game.physicalPeer.stopMove();
         this.changeState(PlayerState.IDLE);
         this.mMoving = false;
-
+        // Logger.getInstance().log("stopMovedirection", this.dir);
         if (this.mRoomService && this.mRoomService.game.moveStyle === op_def.MoveStyle.DIRECTION_MOVE_STYLE) {
             const pkt: PBpacket = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_STOP_SPRITE);
             const ct: op_virtual_world.IOP_CLIENT_REQ_VIRTUAL_WORLD_STOP_SPRITE = pkt.content;
@@ -435,8 +435,8 @@ export class User extends Player {
         } else {
             Object.assign(this.mModel, val);
         }
-        // this.mModel.off("Animation_Change", this.animationChange, this);
-        // this.mModel.on("Animation_Change", this.animationChange, this);
+        (<any>this.mModel).off("Animation_Change", this.animationChange, this);
+        (<any>this.mModel).on("Animation_Change", this.animationChange, this);
         if ((val as PlayerModel).package) {
             // this.mPackage = (val as PlayerModel).package;
             // this.mBag = new Bag(this.mElementManager.roomService.world);

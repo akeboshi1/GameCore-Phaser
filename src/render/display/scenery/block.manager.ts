@@ -3,7 +3,6 @@ import { Render } from "src/render/render";
 import { Logger, Url } from "utils";
 import { Fit, IScenery } from "structure";
 import { DynamicImage } from "../../ui";
-import { SkyBoxScene } from "../../scenes/sky.box.scene";
 
 export interface IBlockManager {
   startPlay(scene: Phaser.Scene);
@@ -43,7 +42,7 @@ export class BlockManager implements IBlockManager {
       return;
     }
     this.mSceneName = "SkyBoxScene" + `_${scenery.id}`;
-    const scene = this.render.game.scene.add(this.mSceneName, SkyBoxScene, false);
+    // const scene = this.render.game.scene.add(this.mSceneName, SkyBoxScene, false);
     playScene.scene.launch(this.mSceneName, this);
     this.updateDepth();
   }

@@ -351,20 +351,22 @@ export class Element extends BlockObject implements IElement {
         if (!this.mModel) {
             return;
         }
-        if (this.mModel.direction === val) {
-            return;
-        }
         if (this.mDisplayInfo) {
             this.mDisplayInfo.avatarDir = val;
         }
+        if (this.mModel.direction === val) {
+            return;
+        }
         if (this.model && !this.model.currentAnimationName) {
             this.model.currentAnimationName = PlayerState.IDLE;
+            this.changeState(this.model.currentAnimationName);
         }
+        // Logger.getInstance().debug("user direction ====>", val);
         if (this.model) {
             this.model.setDirection(val);
             // this.mDisplay.play(this.model.currentAnimation);
         }
-        this.play(this.model.currentAnimationName);
+        // this.play(this.model.currentAnimationName);
     }
 
     public getDirection(): number {
@@ -737,7 +739,6 @@ export class Element extends BlockObject implements IElement {
         const pos = this.moveControll.position;
         this.mModel.setPosition(pos.x, pos.y);
         this.mRoomService.game.renderPeer.setPosition(this.id, pos.x, pos.y);
-        this.checkDirection();
         const path = this.mMoveData.path;
         const speed = this.mModel.speed * delta;
         if (Tool.twoPointDistance(pos, path[0]) <= speed) {
@@ -750,6 +751,8 @@ export class Element extends BlockObject implements IElement {
                     this.setDirection(path[0].stopDir);
                 }
             }
+        } else {
+            this.checkDirection();
         }
     }
 

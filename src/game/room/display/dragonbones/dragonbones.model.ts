@@ -52,16 +52,15 @@ export class DragonbonesModel implements IDragonbonesModel {
         let flip = false;
         switch (dir) {
             case Direction.south_east:
-                flip = true;
-                dir = Direction.west_south;
-                break;
             case Direction.east_north:
                 flip = true;
-                dir = Direction.north_west;
+                break;
+            case Direction.west_south:
+            case Direction.north_west:
                 break;
         }
         let addName: string = "";
-        if ((dir >= Direction.north && dir < Direction.west) || dir > Direction.east && dir <= Direction.east_north) addName = "_back";
+        if (dir === Direction.north_west || dir === Direction.east_north) addName = "_back";
         return { name: `${baseName}${addName}`, flip };
     }
 }

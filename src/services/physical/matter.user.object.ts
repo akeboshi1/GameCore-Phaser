@@ -3,6 +3,7 @@ import { delayTime, PhysicalPeer } from "../physical.worker";
 import { IMoveTarget, MatterPlayerObject, MovePos } from "./matter.player.object";
 import { op_def } from "pixelpai_proto";
 import { IPoint } from "game-capsule";
+
 export class MatterUserObject extends MatterPlayerObject {
     private mTargetPoint: IMoveTarget;
     private mSyncDirty: boolean = false;
@@ -86,18 +87,16 @@ export class MatterUserObject extends MatterPlayerObject {
         this.startMove();
     }
 
-    public startMove() {
-        this.checkDirection();
+    public async startMove() {
         const path = this.mTargetPoint.path;
         if (path.length < 1) {
             return;
         }
-
+        this.setStatic(false);
+        this.checkDirection();
         // this.peer.mainPeer.changePlayerState(this.id, PlayerState.WALK);
         this.peer.mainPeer.selfStartMove();
         this.mMoving = true;
-        this.setStatic(false);
-
         const pos = this.getPosition();
         const angle = Math.atan2((path[0].y - pos.y), (path[0].x - pos.x));
         const speed = this.mModel.speed * delayTime;
@@ -146,15 +145,14 @@ export class MatterUserObject extends MatterPlayerObject {
         const _pos = this.body.position;
         const pos = new LogicPos(Math.round(_pos.x / this.peer.scaleRatio), Math.round(_pos.y / this.peer.scaleRatio));
         this.mModel.pos = pos;
-
         // 通知render主角移动
         this.peer.render.setPosition(this.id, pos.x, pos.y);
         // 通知mainworker同步主角位置
         this.peer.mainPeer.setPosition(this.id, true, pos.x, pos.y);
         const dist = this.mModel.speed * delta;
         this.peer.mainPeer.setSyncDirty(true);
+        this.checkDirection();
         const distboo = Tool.twoPointDistance(pos, path[0]) <= dist;
-        // if (Math.abs(pos.x - path[0].x) <= speed && Math.abs(pos.y - path[0].y) <= speed) {
         if (distboo) {
             if (path.length > 1) {
                 path.shift();
@@ -182,6 +180,9 @@ export class MatterUserObject extends MatterPlayerObject {
         const pos = this.body.position;
         const angle = Math.atan2((pos.y - prePos.y), (pos.x - prePos.x));
         const dir = this.onCheckDirection(angle * (180 / Math.PI));
+        // Logger.getInstance().log("matterDirection ====>", dir);
+        this.mModel.setDirection(dir);
+        this.peer.render.updateDirection(this.id, dir);
         this.peer.mainPeer.setDirection(this.id, dir);
     }
 

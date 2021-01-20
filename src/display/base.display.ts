@@ -1,4 +1,4 @@
-import { Handler, LogicPos, ValueResolver } from "utils";
+import { Handler, Logger, LogicPos, ValueResolver } from "utils";
 import { DisplayField, IDragonbonesModel, IFramesModel, RunningAnimation } from "structure";
 
 export interface IBaseDisplay {
@@ -84,7 +84,7 @@ export abstract class BaseDisplay extends Phaser.GameObjects.Container implement
 
     public set direction(dir: number) {
         this.mDirection = dir;
-        if (this.mDisplayInfo && dir !== this.mDisplayInfo.avatarDir) {
+        if (this.mDisplayInfo) {
             this.mDisplayInfo.avatarDir = dir;
             this.play(this.mAnimation);
         }
@@ -115,9 +115,10 @@ export abstract class BaseDisplay extends Phaser.GameObjects.Container implement
     }
 
     public setDirection(dir: number) {
-        if (dir === this.mDisplayInfo.avatarDir) return;
-        this.mDisplayInfo.avatarDir = dir;
+        if (dir === this.direction) return;
+        // this.mDisplayInfo.avatarDir = dir;
         this.direction = dir;
+        // Logger.getInstance().log("render display ===>", this.direction);
         this.play(this.mAnimation);
     }
 

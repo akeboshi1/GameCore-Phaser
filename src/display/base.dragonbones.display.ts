@@ -148,6 +148,7 @@ export class BaseDragonbonesDisplay extends BaseDisplay {
 
     public play(val: RunningAnimation) {
         this.mAnimation = val;
+        Logger.getInstance().debug("dragonbones play ====>", val);
         if (this.mArmatureDisplay) {
             if (this.mArmatureDisplay.hasDBEventListener(dragonBones.EventObject.LOOP_COMPLETE)) {
                 this.mArmatureDisplay.removeDBEventListener(dragonBones.EventObject.LOOP_COMPLETE, this.onArmatureLoopComplete, this);
@@ -1009,7 +1010,7 @@ export class BaseDragonbonesDisplay extends BaseDisplay {
             const nextLoad: string[] = data;
             const partUrl: string = this.getLoadPartUrl(nextLoad[1]);
             const partName: string = this.getLoadPartName(nextLoad[1]);
-            configList.push({key: partName, url: partUrl});
+            configList.push({ key: partName, url: partUrl });
         });
         this.scene.load.image(configList);
         this.scene.load.start();
