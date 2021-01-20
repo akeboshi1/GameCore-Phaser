@@ -11,3 +11,5 @@ export * from "./bubble/bubble";
 export * from "./bubble/bubble.container";
 export * from "./dragonbones/uidragonbones.display";
 export * from "./display.object";
+export * from "./debugs/grids";
+export * from "./debugs/astar";

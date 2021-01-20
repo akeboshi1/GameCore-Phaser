@@ -7,7 +7,7 @@ import {LoadQueue, LoadType} from "../../loadqueue";
 import {ReferenceArea} from "../../editor";
 import {ElementTopDisplay} from "../element.top.display";
 import {DisplayMovement} from "../display.movement";
-import {projectionAngle} from "gamecoreRender";
+import {PlayScene, projectionAngle} from "gamecoreRender";
 
 export class DragonbonesDisplay extends BaseDragonbonesDisplay implements IDisplayObject {
     protected mID: number = undefined;

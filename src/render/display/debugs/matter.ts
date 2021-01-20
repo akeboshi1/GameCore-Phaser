@@ -20,6 +20,7 @@ export class MatterBodies {
 
     renderWireframes(bodies) {
         const graphics = this.mGraphics;
+        if (!graphics) return;
         graphics.clear();
         if (!bodies) return;
         graphics.lineStyle(1, 0xFF0000);

@@ -379,7 +379,7 @@ export class ElementManager extends PacketHandler implements IElementManager {
         this.mElements.forEach((ele, key) => {
             if (ele.state === false) {
                 // todo 遍历优化
-                Logger.getInstance().error("left not ready display: ", this.mElements.get(key));
+                Logger.getInstance().debug("left not ready display: ", this.mElements.get(key));
                 return;
             }
         });

@@ -1,4 +1,4 @@
-import { Logger } from "utils";
+import {IPosition45Obj, Logger, LogicPos, Position45} from "utils";
 import { PlayCamera } from "../cameras/play.camera";
 import { BasicLayer } from "../managers/layer.manager";
 import { MainUIScene } from "./main.ui.scene";
@@ -21,6 +21,7 @@ export class PlayScene extends RoomScene {
     public readonly LAYER_SCENEUI = "sceneUILayer";
     protected motionManager: MotionManager;
     protected mLoadState: PlaySceneLoadState;
+
     constructor(config?: string | Phaser.Types.Scenes.SettingsConfig) {
         super(config || { key: SceneName.PLAY_SCENE });
         this.loadState = PlaySceneLoadState.CREATING_SCENE;
@@ -83,6 +84,7 @@ export class PlayScene extends RoomScene {
         Logger.getInstance().log("sort-display: ", sort.addFixedDisplayObject);
 
         this.initListener();
+
         super.create();
     }
 
