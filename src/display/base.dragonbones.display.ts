@@ -157,7 +157,7 @@ export class BaseDragonbonesDisplay extends BaseDisplay {
                 this.mArmatureDisplay.addDBEventListener(dragonBones.EventObject.LOOP_COMPLETE, this.onArmatureLoopComplete, this);
             }
             this.mArmatureDisplay.animation.play(val.name, val.times);
-            this.mArmatureDisplay.scaleX *= val.flip ? -1 : 1;
+            this.mArmatureDisplay.scaleX = val.flip ? -1 : 1;
 
             if (this.mArmatureDisplay && this.mArmatureDisplay.armature) {
                 const bound = this.mArmatureDisplay.armature.getBone("board");
