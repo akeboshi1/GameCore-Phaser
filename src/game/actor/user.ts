@@ -7,6 +7,7 @@ import { PlayerModel } from "../room/player/player.model";
 import { IPos, Logger } from "utils";
 import { UserDataManager } from "./data/user.dataManager";
 import { AvatarSuitType, EventType, IDragonbonesModel, IFramesModel, PlayerState, ISprite } from "structure";
+// import * as _ from "lodash";
 
 export class User extends Player {
     private mUserData: UserDataManager;
@@ -446,7 +447,15 @@ export class User extends Player {
         if (this.mModel.pos) {
             const obj = { id: val.id, pos: val.pos, alpha: val.alpha, titleMask: val.titleMask | 0x00010000 };
             this.game.renderPeer.setModel(obj);
-            this.game.physicalPeer.setModel(val);
+            const obj1 = {
+                id: val.id,
+                point3f: val.pos,
+                currentAnimationName: val.currentAnimationName,
+                direction: val.direction,
+                mountSprites: val.mountSprites,
+                speed: val.speed,
+            };
+            this.game.physicalPeer.setModel(obj1);
             this.setPosition(this.mModel.pos);
         }
         // todo change display alpha
