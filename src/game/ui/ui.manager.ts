@@ -72,10 +72,7 @@ export class UIManager extends PacketHandler {
         this.game.emitter.off(EventType.SCENE_SHOW_UI, this.onOpenUIMediator, this);
     }
 
-    public showMainUI(hideNames?: string[], force?: boolean) {
-        if (!force && this.isshowMainui) {
-            return;
-        }
+    public showMainUI(hideNames?: string[]) {
         if (this.mAtiveUIData) {
             this.updateUIState(this.mAtiveUIData);
         }

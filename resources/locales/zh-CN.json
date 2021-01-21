@@ -385,5 +385,22 @@
     "moneytips": "你没有足够的{{name}}漫游!",
     "paytips": "是否要花费{{name}}购买{{count}}张时空漫游{{tag}}票",
     "drawfreetips": "本次抽奖免费"
+  },
+  "explore": {
+    "title": "探索日志",
+    "basetips": "基础得分",
+    "combotips": "连击得分",
+    "timetips": "时间得分",
+    "accuracytips": "准确得分",
+    "hinttips": "提示得分",
+    "foreword": "序",
+    "open": "开始",
+    "unlock": "解锁条件:",
+    "chaptertitle": "第{{name}}章节",
+    "taskneedtips": "任务需求",
+    "finishchaptertips": "结束上一章",
+    "unlocktips": "达到{{name}}级解锁",
+    "nextleveltips": "下一场关卡",
+    "eventuallytips": "最终关卡"
   }
 }

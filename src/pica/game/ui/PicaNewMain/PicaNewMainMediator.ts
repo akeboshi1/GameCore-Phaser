@@ -4,7 +4,7 @@ import { EventType, ModuleName } from "structure";
 import { PicaNewMain } from "./PicaNewMain";
 
 export class PicaNewMainMediator extends BasicMediator {
-
+    protected mModel: PicaNewMain;
     constructor(protected game: Game) {
         super(ModuleName.PICANEWMAIN_NAME, game);
         this.mModel = new PicaNewMain(this.game);
@@ -73,7 +73,7 @@ export class PicaNewMainMediator extends BasicMediator {
     private onQuery_PRAISE_ROOM(praise: boolean) {
         if (!this.roomInfo || this.roomInfo.roomType !== "room" && this.roomInfo.roomType !== "store") return;
         const roomid = this.roomInfo.roomId;
-        (<PicaNewMain>this.mModel).query_PRAISE_ROOM(roomid, praise);
+        this.mModel.query_PRAISE_ROOM(roomid, praise);
     }
     private onShowPanelHandler(panel: string, data?: any) {
         if (!this.mModel || !this.game) {
@@ -82,11 +82,12 @@ export class PicaNewMainMediator extends BasicMediator {
         const uiManager = this.game.uiManager;
         uiManager.showMed(panel);
         if (panel === ModuleName.CHARACTERINFO_NAME) {
-            (<PicaNewMain>this.mModel).fetchPlayerInfo();
+            this.mModel.fetchPlayerInfo();
         } else if (panel === ModuleName.PICAOPENPARTY_NAME) {
 
         }
     }
+
     get playerInfo() {
         const info = this.game.user.userData.playerProperty;
         return info;

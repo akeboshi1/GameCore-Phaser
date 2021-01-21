@@ -9,8 +9,10 @@ export class PicaNewActivityPanel extends Phaser.GameObjects.Container {
     private indentButton: Button;
     private rechargeButton: Button;
     private emailButton: Button;
+    private roamButton: Button;
     private arrowButton: Button;
     private listBtns: Button[];
+    private listBtns2: Button[];
     private listPosY: number[] = [];
     private sendHandler: Handler;
     private isFold: boolean = false;
@@ -42,13 +44,20 @@ export class PicaNewActivityPanel extends Phaser.GameObjects.Container {
         this.emailButton = emailButton;
         this.emailButton.on(ClickEvent.Tap, this.onEmailHandler, this);
 
+        this.roamButton = new Button(this.scene, UIAtlasName.iconcommon, "home_roam", "home_roam");
+        this.roamButton.y = activityButton.y;
+        this.roamButton.x = activityButton.x - this.roamButton.width * 0.5 - activityButton.width * 0.5 - 15 * this.dpr;
+        this.roamButton.on(ClickEvent.Tap, this.onRoamHandler, this);
+
         this.arrowButton = new Button(this.scene, UIAtlasName.uicommon, "home_more_2", "home_more_2");
         this.arrowButton.y = emailButton.y + emailButton.height * 0.5 + 10 * this.dpr + this.arrowButton.height * 0.5;
         this.arrowButton.on(ClickEvent.Tap, this.onArrowHandler, this);
 
         this.listBtns = [activityButton, indentButton, rechargeButton, emailButton];
+        this.listBtns2 = [this.roamButton];
         this.listPosY = [activityButton.y, indentButton.y, rechargeButton.y, emailButton.y];
         this.add(this.listBtns);
+        this.add(this.listBtns2);
         this.add(this.arrowButton);
     }
     public addListen() {
@@ -78,6 +87,9 @@ export class PicaNewActivityPanel extends Phaser.GameObjects.Container {
     private onEmailHandler() {
         if (this.sendHandler) this.sendHandler.runWith(["email"]);
     }
+    private onRoamHandler() {
+        if (this.sendHandler) this.sendHandler.runWith(["roam"]);
+    }
     private onArrowHandler() {
         this.isFold = !this.isFold;
         if (this.isFold) {
@@ -95,7 +107,7 @@ export class PicaNewActivityPanel extends Phaser.GameObjects.Container {
             ease: "Linear",
             duration: 150,
             onUpdate: (cope: any, param: any) => {
-                this.updateButtons(param.value);
+                this.updateAllButtons(param.value);
             },
             onComplete: () => {
                 tween.stop();
@@ -115,7 +127,7 @@ export class PicaNewActivityPanel extends Phaser.GameObjects.Container {
             ease: "Linear",
             duration: 150,
             onUpdate: (cope: any, param: any) => {
-                this.updateButtons(param.value);
+                this.updateAllButtons(param.value);
             },
             onComplete: () => {
                 tween.stop();
@@ -126,11 +138,21 @@ export class PicaNewActivityPanel extends Phaser.GameObjects.Container {
         });
     }
 
-    private updateButtons(tempY: number) {
+    private updateAllButtons(tempY: number) {
+        this.updateButtons(tempY, this.listBtns);
+        this.updateButtons(tempY, this.listBtns2);
+        const lastButton = this.listBtns[this.listBtns.length - 1];
+        this.arrowButton.y = lastButton.y + lastButton.height * 0.5 + 10 * this.dpr + this.arrowButton.height * 0.5;
+        if (lastButton.y === this.listPosY[0]) {
+            this.listBtns2[0].visible = false;
+        } else this.listBtns2[0].visible = true;
+    }
+
+    private updateButtons(tempY: number, buttons: Button[]) {
         const lowY = this.listPosY[0];
         const dis = this.listPosY[this.listPosY.length - 1] - tempY;
-        for (let i = 1; i < this.listBtns.length; i++) {
-            const button = this.listBtns[i];
+        for (let i = 1; i < buttons.length; i++) {
+            const button = buttons[i];
             let posy = this.listPosY[i] - dis;
             button.y = posy;
             const maxY = this.listPosY[i];
@@ -142,7 +164,5 @@ export class PicaNewActivityPanel extends Phaser.GameObjects.Container {
             button.alpha = alpha;
             button.y = posy;
         }
-        const lastButton = this.listBtns[this.listBtns.length - 1];
-        this.arrowButton.y = lastButton.y + lastButton.height * 0.5 + 10 * this.dpr + this.arrowButton.height * 0.5;
     }
 }

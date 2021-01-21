@@ -85,6 +85,9 @@ export class ItemButton extends ButtonEventDispatcher {
     public set select(value) {
         this.selectbg.visible = value;
     }
+    public set BGVisible(value) {
+        this.bg.visible = value;
+    }
     protected onTabClickHandler() {
         PicaItemTipsPanel.Inst.showTips(this, this.itemData);
     }
