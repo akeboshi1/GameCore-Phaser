@@ -1,18 +1,18 @@
 import "tooqinggamephaser";
 import "dragonBones";
-import {Game} from "tooqinggamephaser";
-import {RPCPeer, Export, webworker_rpc} from "webworker-rpc";
-import {Url, initLocales, Logger, Size, LogicPos, i18n, IPos, IPosition45Obj} from "utils";
-import {ServerAddress} from "../../lib/net/address";
-import {PBpacket} from "net-socket-packet";
-import {op_client} from "pixelpai_proto";
-import {Account} from "./account/account";
-import {SceneManager} from "./scenes/scene.manager";
-import {LoginScene} from "./scenes/login.scene";
-import {LocalStorageManager} from "./managers/local.storage.manager";
-import {BasicScene} from "./scenes/basic.scene";
-import {PlayScene} from "./scenes/play.scene";
-import {CamerasManager} from "./cameras/cameras.manager";
+import { Game } from "tooqinggamephaser";
+import { RPCPeer, Export, webworker_rpc } from "webworker-rpc";
+import { Url, initLocales, Logger, Size, LogicPos, i18n, IPos, IPosition45Obj } from "utils";
+import { ServerAddress } from "../../lib/net/address";
+import { PBpacket } from "net-socket-packet";
+import { op_client } from "pixelpai_proto";
+import { Account } from "./account/account";
+import { SceneManager } from "./scenes/scene.manager";
+import { LoginScene } from "./scenes/login.scene";
+import { LocalStorageManager } from "./managers/local.storage.manager";
+import { BasicScene } from "./scenes/basic.scene";
+import { PlayScene } from "./scenes/play.scene";
+import { CamerasManager } from "./cameras/cameras.manager";
 import * as path from "path";
 import {
     IFramesModel,
@@ -33,14 +33,14 @@ import {
     PHYSICAL_WORKER,
     PHYSICAL_WORKER_URL
 } from "structure";
-import {DisplayManager} from "./managers/display.manager";
-import {InputManager} from "./input/input.manager";
+import { DisplayManager } from "./managers/display.manager";
+import { InputManager } from "./input/input.manager";
 import * as protos from "pixelpai_proto";
-import {PicaRenderUiManager} from "picaRender";
-import {GamePauseScene, MainUIScene} from "./scenes";
-import {EditorCanvasManager} from "./managers/editor.canvas.manager";
+import { PicaRenderUiManager } from "picaRender";
+import { GamePauseScene, MainUIScene } from "./scenes";
+import { EditorCanvasManager } from "./managers/editor.canvas.manager";
 import version from "../../version";
-import {AstarDebugger, GridsDebugger} from "./display";
+import { AstarDebugger, GridsDebugger } from "./display";
 // import Stats from "../../Stat";
 
 for (const key in protos) {
@@ -422,7 +422,28 @@ export class Render extends RPCPeer implements GameMain {
     }
 
     destroy(): Promise<void> {
-        return new Promise((reslove, reject) => {
+        return new Promise((resolve, reject) => {
+            if (this.mGame) {
+                this.destroyManager();
+                this.mGame.events.off(Phaser.Core.Events.FOCUS, this.onFocus, this);
+                this.mGame.events.off(Phaser.Core.Events.BLUR, this.onBlur, this);
+                this.mGame.scale.off("enterfullscreen", this.onFullScreenChange, this);
+                this.mGame.scale.off("leavefullscreen", this.onFullScreenChange, this);
+                this.mGame.scale.off("orientationchange", this.onOrientationChange, this);
+                this.mGame.plugins.removeGlobalPlugin("rexButton");
+                this.mGame.plugins.removeGlobalPlugin("rexNinePatchPlugin");
+                this.mGame.plugins.removeGlobalPlugin("rexInputText");
+                this.mGame.plugins.removeGlobalPlugin("rexBBCodeTextPlugin");
+                this.mGame.plugins.removeGlobalPlugin("rexMoveTo");
+                this.mGame.plugins.removeScenePlugin("DragonBones");
+                this.mGame.events.once(Phaser.Core.Events.DESTROY, () => {
+                    this.mGame = undefined;
+                    resolve();
+                });
+                this.mGame.destroy(true);
+            } else {
+                resolve();
+            }
         });
     }
 
@@ -632,7 +653,7 @@ export class Render extends RPCPeer implements GameMain {
 
     @Export()
     public showCreateRole(params?: any) {
-        if (this.mSceneManager) this.mSceneManager.startScene(SceneName.CREATE_ROLE_SCENE, {render: this, params});
+        if (this.mSceneManager) this.mSceneManager.startScene(SceneName.CREATE_ROLE_SCENE, { render: this, params });
     }
 
     @Export()
@@ -642,7 +663,7 @@ export class Render extends RPCPeer implements GameMain {
 
     @Export()
     public showPlay(params?: any) {
-        if (this.mSceneManager) this.mSceneManager.startScene(SceneName.PLAY_SCENE, {render: this, params});
+        if (this.mSceneManager) this.mSceneManager.startScene(SceneName.PLAY_SCENE, { render: this, params });
     }
 
     @Export()
@@ -725,7 +746,7 @@ export class Render extends RPCPeer implements GameMain {
     @Export([webworker_rpc.ParamType.num])
     public displayReady(id: number, animation: any) {
         const display = this.mDisplayManager.getDisplay(id);
-        if (!display) return;
+        if (!display || !animation) return;
         display.play(animation);
         display.showNickname();
     }
@@ -795,7 +816,7 @@ export class Render extends RPCPeer implements GameMain {
                 this.mAccount = new Account();
             }
             this.exportProperty(this.mAccount, this, ModuleName.ACCOUNT_NAME).onceReady(() => {
-                this.mAccount.enterGame(gameID, worldID, sceneID, {locX, locY, locZ});
+                this.mAccount.enterGame(gameID, worldID, sceneID, { locX, locY, locZ });
                 resolve(true);
             });
         });
@@ -825,7 +846,7 @@ export class Render extends RPCPeer implements GameMain {
             if (playScene) {
                 const camera = playScene.cameras.main;
                 const rect = camera.worldView;
-                const {x, y} = rect;
+                const { x, y } = rect;
                 const obj = {
                     x,
                     y,
@@ -934,7 +955,7 @@ export class Render extends RPCPeer implements GameMain {
         // this.newGame().then(() => {
         //     // todo sceneManager loginScene.name
         // });
-        this.account.enterGame(gameId, worldId, sceneId, {x: px, y: py, z: pz});
+        this.account.enterGame(gameId, worldId, sceneId, { x: px, y: py, z: pz });
     }
 
     @Export([webworker_rpc.ParamType.num, webworker_rpc.ParamType.num, webworker_rpc.ParamType.num, webworker_rpc.ParamType.num])
@@ -1444,7 +1465,7 @@ export class Render extends RPCPeer implements GameMain {
             if (!this.mGame.scene.getScene(GamePauseScene.name)) {
                 this.mGame.scene.add(GamePauseScene.name, GamePauseScene);
             }
-            this.mGame.scene.start(GamePauseScene.name, {render: this});
+            this.mGame.scene.start(GamePauseScene.name, { render: this });
         }
     }
 
