@@ -23,10 +23,12 @@ export class PicaBasePanel extends BasePanel {
         }
         if (datas) {
             for (const data of datas) {
-                if (data.uiType === UILoadType.atlas) {
-                    this.addAtlas(data.atlasName, data.atlasUrl, data.jsonUrl);
-                } else if (data.uiType === UILoadType.texture) {
-                    this.addImage(data.atlasName, data.atlasUrl);
+                if (!this.scene.textures.exists(data.atlasName)) {
+                    if (data.uiType === UILoadType.atlas) {
+                        this.addAtlas(data.atlasName, data.atlasUrl, data.jsonUrl);
+                    } else if (data.uiType === UILoadType.texture) {
+                        this.addImage(data.atlasName, data.atlasUrl);
+                    }
                 }
             }
         }
