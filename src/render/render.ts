@@ -440,10 +440,12 @@ export class Render extends RPCPeer implements GameMain {
                 this.mGame.plugins.removeScenePlugin("DragonBones");
                 this.mGame.events.once(Phaser.Core.Events.DESTROY, () => {
                     this.mGame = undefined;
+                    super.destroy();
                     resolve();
                 });
                 this.mGame.destroy(true);
             } else {
+                super.destroy();
                 resolve();
             }
         });
