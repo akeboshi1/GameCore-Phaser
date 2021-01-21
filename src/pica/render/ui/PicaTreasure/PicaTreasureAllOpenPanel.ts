@@ -7,8 +7,8 @@ import { ItemButton } from "../Components";
 export class PicaTreasureAllOpenPanel extends Phaser.GameObjects.Container {
     private confirmBtn: Button;
     private titleimage: Phaser.GameObjects.Image;
-    private pageCount: Phaser.GameObjects.Text;
-    private pagedown: Phaser.GameObjects.Text;
+    // private pageCount: Phaser.GameObjects.Text;
+    // private pagedown: Phaser.GameObjects.Text;
     private content: Phaser.GameObjects.Container;
     private maskGraphic: Phaser.GameObjects.Graphics;
     private lightSprite: Phaser.GameObjects.Sprite;
@@ -50,14 +50,14 @@ export class PicaTreasureAllOpenPanel extends Phaser.GameObjects.Container {
     }
     init() {
         const posY = -this.height * 0.5;
-        const titlebgline = this.scene.make.image({ x: 0, y: posY + 5 * this.dpr, key:  UIAtlasName.treasure, frame: "treasure_title_bg" }, false);
-        this.titleimage = this.scene.make.image({ x: 0, y: titlebgline.y, key:  UIAtlasName.treasure, frame: i18n.t("treasure.titleimg") }, false);
+        const titlebgline = this.scene.make.image({ x: 0, y: posY + 5 * this.dpr, key: UIAtlasName.treasure, frame: "treasure_title_bg" }, false);
+        this.titleimage = this.scene.make.image({ x: 0, y: titlebgline.y, key: UIAtlasName.treasure, frame: i18n.t("treasure.titleimg") }, false);
         this.titleimage.alpha = 0;
-        this.pageCount = this.scene.make.text({
-            x: 0, y: this.titleimage.y + 40 * this.dpr, text: "1/6",
-            style: { color: "#FFE400", fontFamily: Font.DEFULT_FONT, fontSize: 16 * this.dpr }
-        }).setOrigin(0.5).setFontStyle("bold");
-        this.pageCount.visible = false;
+        // this.pageCount = this.scene.make.text({
+        //     x: 0, y: this.titleimage.y + 40 * this.dpr, text: "1/6",
+        //     style: { color: "#FFE400", fontFamily: Font.DEFULT_FONT, fontSize: 16 * this.dpr }
+        // }).setOrigin(0.5).setFontStyle("bold");
+        // this.pageCount.visible = false;
         this.add([titlebgline, this.titleimage]);
 
         this.lightSprite = this.createSprite(UIAtlasName.circleeffect, this.lightAniKey, "", [1, 16]);
@@ -77,13 +77,13 @@ export class PicaTreasureAllOpenPanel extends Phaser.GameObjects.Container {
         this.maskGraphic.setPosition(worldpos.tx, worldpos.ty);
         this.content.setMask(this.maskGraphic.createGeometryMask());
 
-        this.pagedown = this.scene.make.text({
-            x: 0, y: -posY - 45 * this.dpr, text: i18n.t("treasure.pagedown"),
-            style: { color: "#96F7FF", fontFamily: Font.DEFULT_FONT, fontSize: 12 * this.dpr }
-        }).setOrigin(0.5);
+        // this.pagedown = this.scene.make.text({
+        //     x: 0, y: -posY - 45 * this.dpr, text: i18n.t("treasure.pagedown"),
+        //     style: { color: "#96F7FF", fontFamily: Font.DEFULT_FONT, fontSize: 12 * this.dpr }
+        // }).setOrigin(0.5);
         // this.add(this.pagedown);
-        this.pagedown.visible = false;
-        this.confirmBtn = new Button(this.scene,  UIAtlasName.treasure, "butt", "butt", i18n.t("common.confirm"));
+        // this.pagedown.visible = false;
+        this.confirmBtn = new Button(this.scene, UIAtlasName.treasure, "butt", "butt", i18n.t("common.confirm"));
         this.confirmBtn.y = -posY - 8 * this.dpr;
         this.confirmBtn.setTextStyle(UIHelper.brownishStyle(this.dpr, 20));
         this.confirmBtn.setFontStyle("bold");
@@ -202,13 +202,13 @@ export class PicaTreasureAllOpenPanel extends Phaser.GameObjects.Container {
 
     private playPageCount() {
         if (this.isDispose) return;
-        const len = this.treasureData.length;
-        if (len < 6) return;
-        this.pageCount.visible = true;
-        this.pagedown.visible = true;
-        const total = Math.ceil(len / 6);
-        const index = Math.ceil(this.indexed / 6);
-        this.pageCount.text = index + " /" + total;
+        // const len = this.treasureData.length;
+        // if (len < 6) return;
+        // this.pageCount.visible = true;
+        // this.pagedown.visible = true;
+        // const total = Math.ceil(len / 6);
+        // const index = Math.ceil(this.indexed / 6);
+        // this.pageCount.text = index + " /" + total;
     }
     private getNextDatas() {
         const datas: any[] = this.treasureData;

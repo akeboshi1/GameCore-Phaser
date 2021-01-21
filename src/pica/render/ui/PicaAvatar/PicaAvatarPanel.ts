@@ -36,6 +36,7 @@ export class PicaAvatarPanel extends PicaBasePanel {
     this.key = ModuleName.PICAAVATAR_NAME;
     this.mSceneType = sceneType;
     this.atlasNames = [UIAtlasName.uicommon];
+    this.textures = [{ atlasName: "avater_bg_adorn", folder: "texture" }, { atlasName: "avater_bg_stripe", folder: "texture" }];
   }
 
   resize(w: number, h: number) {
@@ -242,8 +243,7 @@ export class PicaAvatarPanel extends PicaBasePanel {
     background.displayWidth = width;
     background.x = width * 0.5;
     this.mBg = this.scene.make.image({
-      key: UIAtlasName.uicommon,
-      frame: "avater_bg_stripe"
+      key: "avater_bg_stripe"
     }, false);
     this.mBg.texture.setFilter(Phaser.Textures.FilterMode.LINEAR);
     this.mShelfContainer = this.scene.make.container(undefined, false);
@@ -262,11 +262,11 @@ export class PicaAvatarPanel extends PicaBasePanel {
     nameBg.x = width * 0.5;
     nameBg.y = this.mCloseBtn.y;
     this.nameText = this.scene.make.text({ x: nameBg.x, y: nameBg.y, text: "", style: UIHelper.whiteStyle(this.dpr, 14) }).setOrigin(0.5);
-    const leftbg = this.scene.make.image({ key: UIAtlasName.uicommon, frame: "avater_bg_adorn" });
+    const leftbg = this.scene.make.image({ key: "avater_bg_adorn" });
     leftbg.x = leftbg.width * 0.5;
     leftbg.y = leftbg.height * 0.5;
     leftbg.scaleX = -1;
-    const rightbg = this.scene.make.image({ key: UIAtlasName.uicommon, frame: "avater_bg_adorn" });
+    const rightbg = this.scene.make.image({ key: "avater_bg_adorn" });
     rightbg.x = width - leftbg.width * 0.5;
     rightbg.y = leftbg.height * 0.5;
     const btnwidth = 90 * this.dpr;
@@ -282,7 +282,7 @@ export class PicaAvatarPanel extends PicaBasePanel {
     this.mDetailDisplay.setComplHandler(new Handler(this, () => {
       this.mDetailDisplay.visible = true;
     }));
-    this.mDetailDisplay.setTexture(UIAtlasName.uicommon, "bag_nothing",1);
+    this.mDetailDisplay.setTexture(UIAtlasName.uicommon, "bag_nothing", 1);
     this.mDetailDisplay.setNearest();
     this.mDetailDisplay.on("pointerup", this.onAvatarClickHandler, this);
     //  this.mDetailDisplay.loadSprite("loading_ui", Url.getUIRes(this.dpr, "loading_ui"), Url.getUIRes(this.dpr, "loading_ui"));

@@ -5,15 +5,17 @@ import { ModuleName } from "structure";
 import { UIAtlasName } from "picaRes";
 import { Font, Handler, i18n, UIHelper } from "utils";
 import { PicaBasePanel } from "../pica.base.panel";
+import { PicaExploreLogSettlePanel } from "./PicaExploreLogSettlePanel";
 
 export class PicaExploreLogPanel extends PicaBasePanel {
     private goOutBtn: Button;
     private expProgress: ExploreTimeProgress;
     private textCon: Phaser.GameObjects.Container;
+    private settlePanel: PicaExploreLogSettlePanel;
     private timer: any;
     constructor(uiManager: UiManager) {
         super(uiManager);
-        this.atlasNames = [UIAtlasName.explorelog];
+        this.atlasNames = [UIAtlasName.explorelog, UIAtlasName.uicommon1];
         this.key = ModuleName.PICAEXPLORELOG_NAME;
     }
     resize(width: number, height: number) {
@@ -23,9 +25,9 @@ export class PicaExploreLogPanel extends PicaBasePanel {
         this.setSize(w, h);
         this.goOutBtn.x = w - this.goOutBtn.width * 0.5 - 10 * this.dpr;
         this.goOutBtn.y = this.goOutBtn.height * 0.5 + 10 * this.dpr;
-        this.expProgress.x = w - this.expProgress.width * 0.5 - 20 * this.dpr;
+        this.expProgress.x = w - this.expProgress.width * 0.5 - 40 * this.dpr;
         this.expProgress.y = h - 240 * this.dpr;
-        this.textCon.y = this.expProgress.y + 50 * this.dpr;
+        this.textCon.y = this.expProgress.y + 55 * this.dpr;
         this.textCon.x = w * 0.5;
         this.expProgress.refreshMask();
     }
@@ -51,14 +53,11 @@ export class PicaExploreLogPanel extends PicaBasePanel {
         this.add([this.goOutBtn, this.expProgress, this.textCon]);
         this.resize(w, h);
         super.init();
+        this.setTimeProgress(30000);
     }
 
     setExploreDatas(texts: string[]) {
-        const list = this.textCon.list;
-        for (const obj of list) {
-            obj.destroy(true);
-        }
-        list.length = 0;
+        this.textCon.removeAll(true);
         const bwidth = 107 * this.dpr, bheight = 25 * this.dpr;
         let posX = -this.width * 0.5 + bwidth * 0.5 + 7 * this.dpr;
         for (const text of texts) {
@@ -68,12 +67,18 @@ export class PicaExploreLogPanel extends PicaBasePanel {
             button.setTextStyle(UIHelper.colorStyle("#FFEE5D", 11 * this.dpr));
             button.x = posX;
             posX += bwidth + 12 * this.dpr;
+            if (text === "") button.alpha = 0;
             this.textCon.add(button);
         }
-        this.setTimeProgress(30000);
+    }
+
+    setExploreSettleDatas(content: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_EXPLORE_SUMMARY) {
+        this.openSettlePanel();
+        this.settlePanel.setSettleData(content);
     }
 
     setTimeProgress(time) {
+        this.expProgress.setProgress(0);
         this.clearTimer();
         let temp = 0;
         this.timer = setInterval(() => {
@@ -84,16 +89,60 @@ export class PicaExploreLogPanel extends PicaBasePanel {
         }, 20);
     }
 
+    openSettlePanel() {
+        const wid = this.width;
+        const hei = this.height;
+        if (!this.settlePanel) {
+            this.settlePanel = new PicaExploreLogSettlePanel(this.scene, wid, hei, this.dpr, this.scale);
+            this.settlePanel.setHandler(new Handler(this, this.onSettleHandler));
+            this.settlePanel.y = -20 * this.dpr;
+        }
+        this.add(this.settlePanel);
+        this.settlePanel.x = wid * 0.5;
+        this.settlePanel.y = hei * 0.5;
+        this.settlePanel.resize(wid, hei);
+    }
+
+    hideSettlePanel() {
+
+    }
+
+    setTipsLayout(extpand: boolean) {
+        const offset = extpand ? this.scaleHeight - 360 * this.dpr : this.scaleHeight - 240 * this.dpr;
+        this.expProgress.y = offset;
+        this.textCon.y = this.expProgress.y + 55 * this.dpr;
+        this.expProgress.refreshMask();
+    }
+
     destroy() {
         super.destroy();
         this.clearTimer();
     }
 
     private onProClickHandler() {
-
+        this.render.renderEmitter(ModuleName.PICAEXPLORELOG_NAME + "_queryexplorehint");
+        this.setTimeProgress(30000);
     }
     private onGoOutHandler() {
-        this.render.renderEmitter(ModuleName.PICAEQUIPUPGRADE_NAME + "_hide");
+        this.render.renderEmitter(ModuleName.PICAEXPLORELOG_NAME + "_querygohome");
+    }
+
+    private onSettleHandler() {
+        // const data = new op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_EXPLORE_SUMMARY();
+        // data.latestProgress = 300;
+        // data.previousProgress = 200;
+        // data.pointBase = 200;
+        // data.pointCombo = 300;
+        // data.pointHint = 200;
+        // data.pointTime = 300;
+        // data.rewards = [];
+        // for (let i = 0; i < 8; i++) {
+        //     const tdata = new op_client.CountablePackageItem();
+        //     tdata.display = {};
+        //     data.rewards.push(tdata);
+        // }
+        // this.setExploreSettleDatas(data);
+        this.onGoOutHandler();
     }
 
     private clearTimer() {

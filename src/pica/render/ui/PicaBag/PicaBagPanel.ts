@@ -43,6 +43,7 @@ export class PicaBagPanel extends PicaBasePanel {
   constructor(uiManager: UiManager) {
     super(uiManager);
     this.atlasNames = [UIAtlasName.uicommon];
+    this.textures = [{ atlasName: "bag_bg", folder: "texture" }];
     this.key = ModuleName.PICABAG_NAME;
   }
 
@@ -227,8 +228,7 @@ export class PicaBagPanel extends PicaBasePanel {
     const height = this.scaleHeight;
     this.mBackground = new CommonBackground(this.scene, 0, 0, width, height);
     this.mIconBg = this.scene.make.image({
-      key: UIAtlasName.uicommon,
-      frame: "bag_bg"
+      key: "bag_bg"
     }, false);
     this.mIconBg.texture.setFilter(Phaser.Textures.FilterMode.LINEAR);
     this.mCategoryCon = this.scene.make.container(undefined, false);

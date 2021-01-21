@@ -35,6 +35,7 @@ export class PicaCreateRolePanel extends PicaBasePanel {
     container.add(this);
     this.scene.scale.on("resize", this.onResize, this);
     this.atlasNames = [UIAtlasName.uicommon];
+    this.textures = [{ atlasName: "Create_bg_texture", folder: "texture" }, { atlasName: "Create_role_bg", folder: "texture" }];
     this.mMediator = this.render.mainPeer[ModuleName.PICACREATEROLE_NAME];
     this.key = ModuleName.PICACREATEROLE_NAME;
   }
@@ -83,9 +84,9 @@ export class PicaCreateRolePanel extends PicaBasePanel {
     this.content = this.scene.make.container(undefined, false);
     this.add(this.content);
     this.commonBackground = new CommonBackground(this.scene, 0, 0, width, height);
-    this.mBottomBg = this.scene.make.image({ key: UIAtlasName.uicommon, frame: "Create_bg_texture" });
+    this.mBottomBg = this.scene.make.image({ key: "Create_bg_texture" });
     this.mBottomBg.y = height * 0.5 - this.mBottomBg.height * 0.5;
-    const mTopBg = this.scene.make.image({ key: UIAtlasName.uicommon, frame: "Create_role_bg" });
+    const mTopBg = this.scene.make.image({ key: "Create_role_bg" });
     mTopBg.y = -150 * this.dpr;
     this.dragonbones = new UIDragonbonesDisplay(this.scene, this.render);
     this.dragonbones.scale = this.dpr * 2.2;

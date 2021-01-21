@@ -4,6 +4,7 @@ import { BaseDataManager } from "./base.dataManager";
 import { BaseHandler } from "./base.handler";
 import { BasePacketHandler } from "./base.packet.handler";
 import { CacheDataManager } from "./cache.dataManager";
+import { CommonDataManager } from "./common.data.manager";
 import { ElementDataManager } from "./element.dataManager";
 import { SceneDataManager } from "./scene.data.manager";
 export class DataManager {
@@ -22,8 +23,10 @@ export class DataManager {
     public initPackMap() {
         const baseMgr = new BaseDataManager(this.mGame, this.mEvent);
         const sceneMgr = new SceneDataManager(this.mGame, this.mEvent);
+        const commonMgr = new CommonDataManager(this.mGame, this.mEvent);
         this.mPackMap.set(DataMgrType.BaseMgr, baseMgr);
         this.mPackMap.set(DataMgrType.SceneMgr, sceneMgr);
+        this.mPackMap.set(DataMgrType.CommonMgr, commonMgr);
     }
 
     public initDataMap() {
@@ -108,5 +111,6 @@ export enum DataMgrType {
     BaseMgr,
     CacheMgr,
     EleMgr,
-    SceneMgr
+    SceneMgr,
+    CommonMgr
 }
