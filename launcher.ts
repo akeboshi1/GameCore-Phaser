@@ -238,7 +238,10 @@ export class Launcher {
 
     public destroy(): Promise<void> {
         if (this.intervalId) clearInterval(this.intervalId);
-        if (this.world) return this.world.destroy();
+        if (this.world) {
+            this.world.destroy();
+            this.world = null;
+        }
         return null;
     }
 }
