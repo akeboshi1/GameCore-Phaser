@@ -10,7 +10,7 @@ export class PicaExploreListBottomPanel extends Phaser.GameObjects.Container {
     private rightButton: Button;
     private zoom: number;
     private dpr: number;
-    private chapterItems: ChapterItemProgress[]=[];
+    private chapterItems: ChapterItemProgress[] = [];
     private chapterProDatas: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_EXPLORE_CHAPTER_PROGRESS;
     private curChapterID: number = 0;
     private send: Handler;
@@ -77,13 +77,15 @@ export class PicaExploreListBottomPanel extends Phaser.GameObjects.Container {
     protected createChapterItems() {
         const space = 16 * this.dpr;
         let posx = -91 * this.dpr;
+        let beforItem: ChapterItemProgress;
         for (let i = 0; i < 5; i++) {
             const zoom = i === 2 ? true : false;
             const item = new ChapterItemProgress(this.scene, this.dpr, this.zoom, zoom);
             item.setHandler(new Handler(this, this.onChapterProHandler));
+            if (i !== 0) posx += item.width * 0.5 + space + (beforItem ? beforItem.width * 0.5 : item.width * 0.5);
             item.x = posx;
-            posx += item.width * 0.5 + space;
             this.chapterItems.push(item);
+            beforItem = item;
         }
         this.add(this.chapterItems);
     }
@@ -217,6 +219,8 @@ class ChapterItemProgress extends ButtonEventDispatcher {
         this.add([this.bg, this.lightbg, this.topbg, this.levelTex, this.finishImg, this.lockImg]);
         this.setSize(this.bg.width, this.bg.height);
         this.on(ClickEvent.Tap, this.onClickHandler, this);
+        this.finishImg.visible = false;
+        this.lockImg.visible = false;
     }
 
     private onClickHandler() {

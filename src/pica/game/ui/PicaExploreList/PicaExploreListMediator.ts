@@ -50,9 +50,16 @@ export class PicaExploreListMediator extends BasicMediator {
     private setChapters() {
         const mgr = this.game.getDataMgr<CacheDataManager>(DataMgrType.CacheMgr);
         if (mgr) {
-            const chapters = mgr.chapters;
-            if (this.mView) this.mView.setExploreChapters(chapters, this.playerInfo.playerInfo.nextChapterId);
-
+            const chapters = []; // mgr.chapters;
+            for (let i = 0; i < 20; i++) {
+                const data = {
+                    chapterId: i + 1,
+                    progress: i < 5 ? Math.floor(Math.random() * 500) : -1
+                };
+                chapters.push(data);
+            }
+            // if (this.mView) this.mView.setExploreChapters(chapters, this.playerInfo.playerInfo.nextChapterId);
+            if (this.mView) this.mView.setExploreChapters({chapters}, 5);
         }
     }
 }
