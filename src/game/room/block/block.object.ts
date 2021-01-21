@@ -145,6 +145,7 @@ export abstract class BlockObject extends MatterObject implements IBlockObject {
     protected removeDisplay(): Promise<any> {
         Logger.getInstance().log("removeDisplay ====>", this);
         this.mCreatedDisplay = false;
+        this.removeBody();
         return this.mRoomService.game.peer.render.removeBlockObject(this.id);
     }
 
