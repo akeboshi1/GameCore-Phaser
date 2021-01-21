@@ -28,6 +28,7 @@ interface ISize {
 export const fps: number = 45;
 export const interval = fps > 0 ? 1000 / fps : 1000 / 30;
 export class Game extends PacketHandler implements IConnectListener, ClockReadyListener {
+    public isDestroy: boolean = false;
     protected mainPeer: MainPeer;
     protected connect: ConnectionService;
     protected mUser: User;
@@ -762,7 +763,7 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
     }
 
     private update(current: number, delta: number = 0) {
-
+        if (this.isDestroy) return;
         this._run(current, delta);
 
         const now: number = new Date().getTime();

@@ -422,6 +422,8 @@ export class Render extends RPCPeer implements GameMain {
     }
 
     destroy(): Promise<void> {
+        this.mainPeer.destroy();
+        this.physicalPeer.destroy();
         return new Promise((resolve, reject) => {
             if (this.mGame) {
                 this.destroyManager();
