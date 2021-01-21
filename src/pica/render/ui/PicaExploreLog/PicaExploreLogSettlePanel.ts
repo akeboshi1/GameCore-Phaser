@@ -5,7 +5,6 @@ import { Font, Handler, i18n, ResUtils, UIHelper } from "utils";
 import { UIAtlasName } from "picaRes";
 import { ItemButton } from "../Components";
 import { ButtonEventDispatcher, ProgressMaskBar } from "gamecoreRender";
-import { EvalSourceMapDevToolPlugin } from "webpack";
 export class PicaExploreLogSettlePanel extends ButtonEventDispatcher {
     protected dpr: number;
     protected zoom: number;

@@ -15,7 +15,6 @@ export class PicaNewMainMediator extends BasicMediator {
         this.game.emitter.on(EventType.QUERY_PRAISE, this.onQuery_PRAISE_ROOM, this);
         this.game.emitter.on(ModuleName.PICANEWMAIN_NAME + "_openhousepanel", this.onOpenHouseHandler, this);
         this.game.emitter.on(ModuleName.PICANEWMAIN_NAME + "_showpanel", this.onShowPanelHandler, this);
-        this.game.emitter.on(ModuleName.PICANEWMAIN_NAME + "_explorechapter", this.onExploreChapterHandler, this);
         this.game.emitter.on(EventType.UPDATE_ROOM_INFO, this.onUpdateRoomHandler, this);
         this.game.emitter.on(EventType.UPDATE_PLAYER_INFO, this.onUpdatePlayerHandler, this);
     }
@@ -25,7 +24,6 @@ export class PicaNewMainMediator extends BasicMediator {
         this.game.emitter.off(EventType.QUERY_PRAISE, this.onQuery_PRAISE_ROOM, this);
         this.game.emitter.off(ModuleName.PICANEWMAIN_NAME + "_openhousepanel", this.onOpenHouseHandler, this);
         this.game.emitter.off(ModuleName.PICANEWMAIN_NAME + "_showpanel", this.onShowPanelHandler, this);
-        this.game.emitter.off(ModuleName.PICANEWMAIN_NAME + "_explorechapter", this.onExploreChapterHandler, this);
         this.game.emitter.off(EventType.UPDATE_ROOM_INFO, this.onUpdateRoomHandler, this);
         this.game.emitter.off(EventType.UPDATE_PLAYER_INFO, this.onUpdatePlayerHandler, this);
     }
@@ -89,9 +87,7 @@ export class PicaNewMainMediator extends BasicMediator {
 
         }
     }
-    private onExploreChapterHandler() {
-        this.mModel.queryExploreChapter(this.playerInfo.playerInfo.nextChapterId);
-    }
+
     get playerInfo() {
         const info = this.game.user.userData.playerProperty;
         return info;

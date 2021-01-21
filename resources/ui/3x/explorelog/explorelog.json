@@ -4,11 +4,32 @@
 			"image": "explorelog",
 			"format": "RGBA8888",
 			"size": {
-				"w": 1807,
-				"h": 1034
+				"w": 1756,
+				"h": 2025
 			},
 			"scale": 1,
 			"frames": [
+				{
+					"filename": "explore_chapter_total_open",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 947,
+						"h": 719
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 947,
+						"h": 719
+					},
+					"frame": {
+						"x": 1,
+						"y": 1,
+						"w": 947,
+						"h": 719
+					}
+				},
 				{
 					"filename": "Settlement_reward_bg",
 					"rotated": false,
@@ -25,30 +46,30 @@
 					},
 					"frame": {
 						"x": 1,
-						"y": 1,
+						"y": 722,
 						"w": 1006,
 						"h": 645
 					}
 				},
 				{
-					"filename": "Settlement_title",
+					"filename": "explore_chapter_checkpoint",
 					"rotated": false,
-					"trimmed": true,
+					"trimmed": false,
 					"sourceSize": {
-						"w": 810,
-						"h": 445
+						"w": 947,
+						"h": 436
 					},
 					"spriteSourceSize": {
-						"x": 9,
+						"x": 0,
 						"y": 0,
-						"w": 793,
-						"h": 445
+						"w": 947,
+						"h": 436
 					},
 					"frame": {
-						"x": 1009,
-						"y": 1,
-						"w": 793,
-						"h": 445
+						"x": 1,
+						"y": 1369,
+						"w": 947,
+						"h": 436
 					}
 				},
 				{
@@ -66,52 +87,10 @@
 						"h": 584
 					},
 					"frame": {
-						"x": 1009,
-						"y": 448,
+						"x": 950,
+						"y": 1,
 						"w": 702,
 						"h": 584
-					}
-				},
-				{
-					"filename": "checkpoint_prompt_icon_gray",
-					"rotated": false,
-					"trimmed": true,
-					"sourceSize": {
-						"w": 128,
-						"h": 128
-					},
-					"spriteSourceSize": {
-						"x": 13,
-						"y": 11,
-						"w": 93,
-						"h": 104
-					},
-					"frame": {
-						"x": 1713,
-						"y": 448,
-						"w": 93,
-						"h": 104
-					}
-				},
-				{
-					"filename": "checkpoint_prompt_icon_light",
-					"rotated": false,
-					"trimmed": true,
-					"sourceSize": {
-						"w": 128,
-						"h": 128
-					},
-					"spriteSourceSize": {
-						"x": 13,
-						"y": 11,
-						"w": 93,
-						"h": 104
-					},
-					"frame": {
-						"x": 1713,
-						"y": 554,
-						"w": 93,
-						"h": 104
 					}
 				},
 				{
@@ -130,93 +109,51 @@
 					},
 					"frame": {
 						"x": 1,
-						"y": 648,
+						"y": 1807,
 						"w": 732,
 						"h": 205
 					}
 				},
 				{
-					"filename": "checkpoint_Countdown_bg",
+					"filename": "explore_chapter_total",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
-						"w": 252,
-						"h": 75
+						"w": 485,
+						"h": 444
 					},
 					"spriteSourceSize": {
 						"x": 0,
 						"y": 0,
-						"w": 252,
-						"h": 75
+						"w": 485,
+						"h": 444
 					},
 					"frame": {
-						"x": 735,
-						"y": 648,
-						"w": 252,
-						"h": 75
+						"x": 1009,
+						"y": 587,
+						"w": 485,
+						"h": 444
 					}
 				},
 				{
-					"filename": "checkpoint_prompt_bottom",
-					"rotated": false,
-					"trimmed": false,
-					"sourceSize": {
-						"w": 128,
-						"h": 128
-					},
-					"spriteSourceSize": {
-						"x": 0,
-						"y": 0,
-						"w": 128,
-						"h": 128
-					},
-					"frame": {
-						"x": 1,
-						"y": 855,
-						"w": 128,
-						"h": 128
-					}
-				},
-				{
-					"filename": "checkpoint_prompt_schedule",
+					"filename": "explore_title",
 					"rotated": false,
 					"trimmed": true,
 					"sourceSize": {
-						"w": 128,
-						"h": 128
-					},
-					"spriteSourceSize": {
-						"x": 3,
-						"y": 3,
-						"w": 122,
-						"h": 122
-					},
-					"frame": {
-						"x": 131,
-						"y": 855,
-						"w": 122,
-						"h": 122
-					}
-				},
-				{
-					"filename": "checkpoint_abort",
-					"rotated": false,
-					"trimmed": false,
-					"sourceSize": {
-						"w": 121,
-						"h": 121
+						"w": 670,
+						"h": 139
 					},
 					"spriteSourceSize": {
 						"x": 0,
 						"y": 0,
-						"w": 121,
-						"h": 121
+						"w": 670,
+						"h": 138
 					},
 					"frame": {
-						"x": 255,
-						"y": 855,
-						"w": 121,
-						"h": 121
+						"x": 1009,
+						"y": 1033,
+						"w": 670,
+						"h": 138
 					}
 				},
 				{
@@ -234,8 +171,8 @@
 						"h": 90
 					},
 					"frame": {
-						"x": 378,
-						"y": 855,
+						"x": 1009,
+						"y": 1173,
 						"w": 592,
 						"h": 90
 					}
@@ -255,10 +192,220 @@
 						"h": 86
 					},
 					"frame": {
-						"x": 378,
-						"y": 947,
+						"x": 1009,
+						"y": 1265,
 						"w": 588,
 						"h": 86
+					}
+				},
+				{
+					"filename": "Settlement_title",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 810,
+						"h": 445
+					},
+					"spriteSourceSize": {
+						"x": 9,
+						"y": 0,
+						"w": 793,
+						"h": 445
+					},
+					"frame": {
+						"x": 950,
+						"y": 1369,
+						"w": 793,
+						"h": 445
+					}
+				},
+				{
+					"filename": "explore_bg",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 10,
+						"h": 1375
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 10,
+						"h": 1375
+					},
+					"frame": {
+						"x": 1745,
+						"y": 1,
+						"w": 10,
+						"h": 1375
+					}
+				},
+				{
+					"filename": "explore_nav_bg",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 10,
+						"h": 169
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 10,
+						"h": 169
+					},
+					"frame": {
+						"x": 1745,
+						"y": 1378,
+						"w": 10,
+						"h": 169
+					}
+				},
+				{
+					"filename": "explore_chapter_scene_bg",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 357,
+						"h": 210
+					},
+					"spriteSourceSize": {
+						"x": 1,
+						"y": 1,
+						"w": 355,
+						"h": 208
+					},
+					"frame": {
+						"x": 735,
+						"y": 1816,
+						"w": 355,
+						"h": 208
+					}
+				},
+				{
+					"filename": "checkpoint_Countdown_bg",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 252,
+						"h": 75
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 252,
+						"h": 75
+					},
+					"frame": {
+						"x": 1092,
+						"y": 1816,
+						"w": 252,
+						"h": 75
+					}
+				},
+				{
+					"filename": "checkpoint_prompt_bottom",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 128,
+						"h": 128
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 128,
+						"h": 128
+					},
+					"frame": {
+						"x": 1496,
+						"y": 587,
+						"w": 128,
+						"h": 128
+					}
+				},
+				{
+					"filename": "checkpoint_prompt_schedule",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 128,
+						"h": 128
+					},
+					"spriteSourceSize": {
+						"x": 3,
+						"y": 3,
+						"w": 122,
+						"h": 122
+					},
+					"frame": {
+						"x": 1092,
+						"y": 1893,
+						"w": 122,
+						"h": 122
+					}
+				},
+				{
+					"filename": "checkpoint_abort",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 121,
+						"h": 121
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 121,
+						"h": 121
+					},
+					"frame": {
+						"x": 1496,
+						"y": 717,
+						"w": 121,
+						"h": 121
+					}
+				},
+				{
+					"filename": "explore_sequence_select_bottom",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 108,
+						"h": 108
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 108,
+						"h": 108
+					},
+					"frame": {
+						"x": 1216,
+						"y": 1893,
+						"w": 108,
+						"h": 108
+					}
+				},
+				{
+					"filename": "explore_sequence_select_schedule",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 108,
+						"h": 108
+					},
+					"spriteSourceSize": {
+						"x": 1,
+						"y": 1,
+						"w": 106,
+						"h": 106
+					},
+					"frame": {
+						"x": 1496,
+						"y": 840,
+						"w": 106,
+						"h": 106
 					}
 				},
 				{
@@ -276,10 +423,52 @@
 						"h": 102
 					},
 					"frame": {
-						"x": 735,
-						"y": 725,
+						"x": 1599,
+						"y": 1265,
 						"w": 102,
 						"h": 102
+					}
+				},
+				{
+					"filename": "explore_chapter_explore_chapter_right",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 155,
+						"h": 34
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 155,
+						"h": 34
+					},
+					"frame": {
+						"x": 1346,
+						"y": 1816,
+						"w": 155,
+						"h": 34
+					}
+				},
+				{
+					"filename": "explore_chapter_explore_chapter_left",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 154,
+						"h": 34
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 154,
+						"h": 34
+					},
+					"frame": {
+						"x": 1346,
+						"y": 1852,
+						"w": 154,
+						"h": 34
 					}
 				},
 				{
@@ -297,10 +486,346 @@
 						"h": 76
 					},
 					"frame": {
-						"x": 839,
-						"y": 725,
+						"x": 1496,
+						"y": 948,
 						"w": 102,
 						"h": 76
+					}
+				},
+				{
+					"filename": "explore_sequence_select_top",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 108,
+						"h": 108
+					},
+					"spriteSourceSize": {
+						"x": 10,
+						"y": 10,
+						"w": 88,
+						"h": 88
+					},
+					"frame": {
+						"x": 1654,
+						"y": 1,
+						"w": 88,
+						"h": 88
+					}
+				},
+				{
+					"filename": "explore_sequence_uncheck_bottom",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 80,
+						"h": 80
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 80,
+						"h": 80
+					},
+					"frame": {
+						"x": 1654,
+						"y": 91,
+						"w": 80,
+						"h": 80
+					}
+				},
+				{
+					"filename": "explore_sequence_uncheck_schedule",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 82,
+						"h": 82
+					},
+					"spriteSourceSize": {
+						"x": 2,
+						"y": 2,
+						"w": 78,
+						"h": 78
+					},
+					"frame": {
+						"x": 1654,
+						"y": 173,
+						"w": 78,
+						"h": 78
+					}
+				},
+				{
+					"filename": "explore_switch_left",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 71,
+						"h": 70
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 71,
+						"h": 70
+					},
+					"frame": {
+						"x": 1603,
+						"y": 1173,
+						"w": 71,
+						"h": 70
+					}
+				},
+				{
+					"filename": "explore_sequence_uncheck_big",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 106,
+						"h": 45
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 106,
+						"h": 45
+					},
+					"frame": {
+						"x": 1503,
+						"y": 1816,
+						"w": 106,
+						"h": 45
+					}
+				},
+				{
+					"filename": "explore_switch_right",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 70,
+						"h": 70
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 70,
+						"h": 70
+					},
+					"frame": {
+						"x": 1654,
+						"y": 253,
+						"w": 70,
+						"h": 70
+					}
+				},
+				{
+					"filename": "checkpoint_prompt_icon_gray",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 128,
+						"h": 128
+					},
+					"spriteSourceSize": {
+						"x": 13,
+						"y": 11,
+						"w": 93,
+						"h": 104
+					},
+					"frame": {
+						"x": 1611,
+						"y": 1816,
+						"w": 93,
+						"h": 104
+					}
+				},
+				{
+					"filename": "explore_sequence_uncheck_top",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 82,
+						"h": 82
+					},
+					"spriteSourceSize": {
+						"x": 8,
+						"y": 8,
+						"w": 66,
+						"h": 66
+					},
+					"frame": {
+						"x": 1654,
+						"y": 325,
+						"w": 66,
+						"h": 66
+					}
+				},
+				{
+					"filename": "checkpoint_prompt_icon_light",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 128,
+						"h": 128
+					},
+					"spriteSourceSize": {
+						"x": 13,
+						"y": 11,
+						"w": 93,
+						"h": 104
+					},
+					"frame": {
+						"x": 1626,
+						"y": 587,
+						"w": 93,
+						"h": 104
+					}
+				},
+				{
+					"filename": "explore_chapter_scene_lock",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 63,
+						"h": 71
+					},
+					"spriteSourceSize": {
+						"x": 1,
+						"y": 1,
+						"w": 61,
+						"h": 69
+					},
+					"frame": {
+						"x": 1654,
+						"y": 393,
+						"w": 61,
+						"h": 69
+					}
+				},
+				{
+					"filename": "explore_sequence_uncheck_small",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 85,
+						"h": 37
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 85,
+						"h": 37
+					},
+					"frame": {
+						"x": 1502,
+						"y": 1863,
+						"w": 85,
+						"h": 37
+					}
+				},
+				{
+					"filename": "explore_star_full",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 41,
+						"h": 39
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 41,
+						"h": 39
+					},
+					"frame": {
+						"x": 950,
+						"y": 587,
+						"w": 41,
+						"h": 39
+					}
+				},
+				{
+					"filename": "explore_star_empty",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 39,
+						"h": 37
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 39,
+						"h": 37
+					},
+					"frame": {
+						"x": 1654,
+						"y": 464,
+						"w": 39,
+						"h": 37
+					}
+				},
+				{
+					"filename": "explore_switch_lock",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 82,
+						"h": 82
+					},
+					"spriteSourceSize": {
+						"x": 24,
+						"y": 18,
+						"w": 34,
+						"h": 41
+					},
+					"frame": {
+						"x": 1706,
+						"y": 1816,
+						"w": 34,
+						"h": 41
+					}
+				},
+				{
+					"filename": "explore_page down",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 14,
+						"h": 14
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 14,
+						"h": 14
+					},
+					"frame": {
+						"x": 1009,
+						"y": 1353,
+						"w": 14,
+						"h": 14
+					}
+				},
+				{
+					"filename": "explore_page up",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 14,
+						"h": 14
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 14,
+						"h": 14
+					},
+					"frame": {
+						"x": 993,
+						"y": 587,
+						"w": 14,
+						"h": 14
 					}
 				}
 			]
@@ -309,6 +834,6 @@
 	"meta": {
 		"app": "https://www.codeandweb.com/texturepacker",
 		"version": "3.0",
-		"smartupdate": "$TexturePacker:SmartUpdate:89dd548025d85dc5264dbd346fa4403c:46ea7f5b02b81f73fb1a1986046239aa:6993824701fd330548707f25a25546b8$"
+		"smartupdate": "$TexturePacker:SmartUpdate:f62b72beea621aacef4b3538d83e7394:8dccf74b583e7837c88838b42395b52b:6993824701fd330548707f25a25546b8$"
 	}
 }

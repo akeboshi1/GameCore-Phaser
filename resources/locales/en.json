@@ -384,10 +384,16 @@
     "drawfreetips": "This draw is free of charge"
   },
   "explore": {
+    "title": "Explore Log",
     "basetips": "Base Score",
     "combotips": "Combo Score",
     "timetips": "Time Score",
     "accuracytips": "Accuracy Score",
-    "hinttips": "Hint Score"
+    "hinttips": "Hint Score",
+    "foreword": "Foreword",
+    "open": "Start",
+    "unlock": "Unlock the conditions:",
+    "chaptertitle": "The {{name}} chapter",
+    "taskneedtips": "Requirement"
   }
 }
