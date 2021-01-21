@@ -1,9 +1,8 @@
 import {BaseFramesDisplay} from "display";
 import {Render} from "../../render";
-import {DisplayField, ElementStateType, RunningAnimation, TitleMask} from "structure";
+import {DisplayField, ElementStateType, RunningAnimation, TitleMask, ReferenceArea } from "structure";
 import {IDisplayObject} from "../display.object";
 import {IPos, Logger} from "utils";
-import {ReferenceArea} from "../../editor";
 import {ElementTopDisplay} from "../element.top.display";
 import {DisplayMovement} from "../display.movement";
 import {IProjection} from "src/utils/projection";
@@ -29,7 +28,7 @@ export class FramesDisplay extends BaseFramesDisplay implements IDisplayObject {
     private mName: string = undefined;
 
     constructor(scene: Phaser.Scene, private render: Render, id?: number, type?: number) {
-        super(scene);
+        super(scene, id);
         this.mID = id;
         this.mNodeType = type;
 
@@ -76,13 +75,14 @@ export class FramesDisplay extends BaseFramesDisplay implements IDisplayObject {
         this.updateTopDisplay();
     }
 
-    public showRefernceArea(area: number[][], origin: IPos) {
+    public async showRefernceArea(area: number[][], origin: IPos) {
         if (!area || area.length <= 0 || !origin) return;
         if (!this.mReferenceArea) {
-            this.mReferenceArea = new ReferenceArea(this.scene, this.render);
+            this.mReferenceArea = new ReferenceArea(this.scene);
             this.addChildMap("reference", this.mReferenceArea);
         }
-        this.mReferenceArea.draw(area, origin);
+        const roomSize = this.render.mainPeer.getCurrentRoomSize();
+        this.mReferenceArea.draw(area, origin, roomSize.tileWidth, roomSize.tileHeight);
         this.addAt(this.mReferenceArea, 0);
     }
 

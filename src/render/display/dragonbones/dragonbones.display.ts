@@ -1,10 +1,9 @@
 import {BaseDragonbonesDisplay} from "display";
 import {Render} from "../../render";
 import {IPos, Logger, ValueResolver, IProjection} from "utils";
-import {DisplayField, ElementStateType, IDragonbonesModel, RunningAnimation, TitleMask} from "structure";
+import {DisplayField, ElementStateType, IDragonbonesModel, ReferenceArea, RunningAnimation, TitleMask} from "structure";
 import {IDisplayObject} from "../display.object";
 import {LoadQueue, LoadType} from "../../loadqueue";
-import {ReferenceArea} from "../../editor";
 import {ElementTopDisplay} from "../element.top.display";
 import {DisplayMovement} from "../display.movement";
 import {projectionAngle} from "gamecoreRender";
@@ -88,12 +87,13 @@ export class DragonbonesDisplay extends BaseDragonbonesDisplay implements IDispl
         this.updateTopDisplay();
     }
 
-    public showRefernceArea(area: number[][], origin: IPos) {
+    public async showRefernceArea(area: number[][], origin: IPos) {
         if (!area || area.length <= 0 || !origin) return;
         if (!this.mReferenceArea) {
-            this.mReferenceArea = new ReferenceArea(this.scene, this.render);
+            this.mReferenceArea = new ReferenceArea(this.scene);
         }
-        this.mReferenceArea.draw(area, origin);
+        const roomSize = await this.render.mainPeer.getCurrentRoomSize();
+        this.mReferenceArea.draw(area, origin, roomSize.tileWidth, roomSize.tileHeight);
         this.addAt(this.mReferenceArea, 0);
     }
 

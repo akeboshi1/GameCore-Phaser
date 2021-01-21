@@ -14,6 +14,7 @@ const appVer = require("./version");
 const config = {
     entry: {
         tooqing: path.join(__dirname, "./launcher.ts"),
+        editor: path.join(__dirname, "./src/editor/editor.launcher.ts"),
         mainWorker: path.join(__dirname, "./src/game/main.peer.ts"),
         heartWorker: path.join(__dirname, "./src/services/heartBeat.worker.ts"),
         physicalWorker: path.join(__dirname, "./src/services/physical.worker.ts")
@@ -49,11 +50,12 @@ const config = {
             picaRender: path.join(__dirname, "./src/pica/render"),
             picaRes: path.join(__dirname, "./src/pica/res"),
             editorCanvas: path.join(__dirname, "./src/editor"),
-            display: path.join(__dirname, "./src/display"),
+            display: path.join(__dirname, "./src/base/display"),
+            base: path.join(__dirname, "./src/base")
         },
     },
     optimization: {
-        minimize: true,
+        minimize: false,
         minimizer: [
             new TerserPlugin({
                 sourceMap: true,

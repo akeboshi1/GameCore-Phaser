@@ -2,21 +2,16 @@ import { Font, Url } from "utils";
 import { PlayScene } from "../scenes/play.scene";
 import { BubbleContainer } from "./bubble/bubble.container";
 import { ElementStateType, StateConfig } from "structure";
+import { FollowEnum, FollowObject, TopDisplay } from "base";
 
 /**
  * 人物头顶显示对象
  */
-export class ElementTopDisplay {
-    private mFollows: Map<FollowEnum, FollowObject>;
-    private mOwner: any;
-    private mDpr: number;
+export class ElementTopDisplay extends TopDisplay {
     private mBubble: BubbleContainer;
     private isDispose: boolean = false;
-    constructor(private scene: Phaser.Scene, owner: any, dpr: number) {
-        // super(scene, 0, 0);
-        this.mFollows = new Map();
-        this.mOwner = owner;
-        this.mDpr = dpr;
+    constructor(scene: Phaser.Scene, owner: any, dpr: number) {
+        super(scene, owner, dpr);
     }
 
     public showNickname(name: string) {
@@ -177,23 +172,23 @@ export class ElementTopDisplay {
         }
     }
 
-    private addToSceneUI(obj: any) {
+    protected addToSceneUI(obj: any) {
         if (!this.mOwner || !obj) {
             return;
         }
         (<PlayScene>this.scene).layerManager.addToLayer("sceneUILayer", obj);
     }
-    private removeFollowObject(key: FollowEnum) {
-        if (!this.mFollows) return;
-        if (this.mFollows.has(key)) {
-            const follow = this.mFollows.get(key);
-            if (follow) {
-                follow.destroy();
-                this.mFollows.delete(key);
-            }
-        }
+    // private removeFollowObject(key: FollowEnum) {
+    //     if (!this.mFollows) return;
+    //     if (this.mFollows.has(key)) {
+    //         const follow = this.mFollows.get(key);
+    //         if (follow) {
+    //             follow.destroy();
+    //             this.mFollows.delete(key);
+    //         }
+    //     }
 
-    }
+    // }
     private loadAtals(pngurl: string, jsonurl: string, context: any, callback: any) {
         if (this.scene.textures.exists(pngurl)) {
             if (!this.isDispose && callback) callback.call(context);
@@ -208,53 +203,4 @@ export class ElementTopDisplay {
     private showStateHandler(json) {
         this.showUIState(json);
     }
-}
-
-class FollowObject {
-    private mObject: any;
-    private mTarget: any;
-    private mDpr: number;
-    private mOffset: Phaser.Geom.Point;
-    constructor(object: any, target: any, dpr: number = 1) {
-        this.mDpr = dpr;
-        this.mOffset = new Phaser.Geom.Point();
-        this.mObject = object;
-        this.mTarget = target;
-    }
-
-    setOffset(x: number, y: number) {
-        this.mOffset.setTo(x, y);
-        this.update();
-    }
-
-    update() {
-        if (!this.mTarget || !this.mObject) {
-            return;
-        }
-        const pos = this.mTarget.getPosition();
-        this.mObject.x = Math.round((pos.x + this.mOffset.x) * this.mDpr);
-        this.mObject.y = Math.round((pos.y + this.mOffset.y) * this.mDpr);
-    }
-
-    remove() {
-        if (!this.mObject) {
-            return;
-        }
-        const display = <any>this.mObject;
-        if (display.parentContainer) display.parentContainer.remove(display);
-    }
-
-    destroy() {
-        if (this.mObject) (<any>this.mObject).destroy();
-        this.mObject = undefined;
-    }
-
-    get object() {
-        return this.mObject;
-    }
-}
-export enum FollowEnum {
-    Nickname = 1000,
-    Image = 1001,
-    Sprite = 1002
 }

@@ -1,14 +1,14 @@
 import { Render } from "gamecoreRender";
-import { Pos, Logger, IPosition45Obj, Position45, LogicPoint, IPos } from "utils";
+import { Pos, Logger, IPosition45Obj, Position45, IPos } from "utils";
 
 export class ReferenceArea extends Phaser.GameObjects.Graphics {
     private mSize: IPosition45Obj;
     private mOrigin: IPos;
-    constructor(scene: Phaser.Scene, private render: Render) {
+    constructor(scene: Phaser.Scene) {
         super(scene);
     }
 
-    async draw(area: number[][], origin: IPos) {
+    async draw(area: number[][], origin: IPos, tileWidth: number, tileHeight: number) {
         this.clear();
         if (area.length === 0 || area[0].length === 0) {
             return;
@@ -19,9 +19,6 @@ export class ReferenceArea extends Phaser.GameObjects.Graphics {
         let p4: Pos;
         const rows = area.length;
         const cols = area[0].length;
-        const roomSize = await this.render.mainPeer.getCurrentRoomSize();
-        const tileWidth = roomSize.tileWidth / 2;
-        const tileHeight = roomSize.tileHeight / 2;
         this.mOrigin = origin;
         this.mSize = {
             rows,

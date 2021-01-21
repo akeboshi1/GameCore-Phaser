@@ -15,7 +15,13 @@ export class BaseFramesDisplay extends BaseDisplay {
     protected mCurAnimation: any;
     protected mMountList: Phaser.GameObjects.Container[];
     protected isSetInteractive: boolean = false;
+    protected mID: number = 0;
     protected isInteracitve: boolean = false;
+
+    constructor(scene: Phaser.Scene, id?: number) {
+        super(scene);
+        this.mID = id;
+    }
 
     public load(displayInfo: IFramesModel, field?: DisplayField) {
         field = !field ? DisplayField.STAGE : field;
@@ -73,7 +79,7 @@ export class BaseFramesDisplay extends BaseDisplay {
         let container: Phaser.GameObjects.Container = <Phaser.GameObjects.Container> this.mSprites.get(DisplayField.STAGE);
         if (!container) {
             container = this.scene.make.container(undefined, false);
-            container.setData("id", this.displayInfo ? this.displayInfo.id : undefined);
+            container.setData("id", this.mID);
             this.addAt(container, DisplayField.STAGE);
             this.mSprites.set(DisplayField.STAGE, container);
         }
@@ -94,7 +100,7 @@ export class BaseFramesDisplay extends BaseDisplay {
             } else {
                 display = this.scene.make.image({key: data.gene, frame: frameName[0]});
             }
-            display.setData("id", this.displayInfo ? this.displayInfo.id : undefined);
+            display.setData("id", this.mID);
             this.mDisplays.push(display);
             display.scaleX = animation.flip ? -1 : 1;
             let x = offsetLoc.x;

@@ -3,6 +3,7 @@ import "dragonBones";
 import { EditorCanvas, IEditorCanvasConfig } from "./canvas/editor.canvas";
 import { ElementEditorCanvas } from "./canvas/element/element.editor.canvas";
 import { AvatarEditorCanvas } from "./canvas/avatar/avatar.editor.canvas";
+import { SceneEditorCanvas } from "./canvas/scene/scene.editor.canvas";
 
 /*
 编辑器画布生成器 用于生成编辑器专用的画布 和游戏用的launcher分开
@@ -15,7 +16,8 @@ canvas.destroy();
 */
 export enum EditorCanvasType {
     Element,
-    Avatar
+    Avatar,
+    Scene
 }
 
 export class EditorLauncher {
@@ -31,6 +33,8 @@ export class EditorLauncher {
                 return new ElementEditorCanvas(config);
             case EditorCanvasType.Avatar:
                 return new AvatarEditorCanvas(config);
+            case EditorCanvasType.Scene:
+                return new SceneEditorCanvas(config);
         }
     }
 }

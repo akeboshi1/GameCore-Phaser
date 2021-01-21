@@ -44,7 +44,10 @@
         "./src/editor/index"
       ],
       "display": [
-        "./src/display/index"
+        "./src/base/display/index"
+      ],
+      "base": [
+        "./src/base/index"
       ]
     },
   },

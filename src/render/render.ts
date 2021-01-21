@@ -1315,8 +1315,8 @@ export class Render extends RPCPeer implements GameMain {
     }
 
     private resumeScene() {
-        Logger.getInstance().log(`#BlackSceneFromBackground; world.resumeScene(); isEditor:${this.mConfig.isEditor}; isPause:${this.isPause}; mGame:${this.mGame}`);
-        if (this.mConfig.isEditor || !this.isPause) {
+        Logger.getInstance().log(`#BlackSceneFromBackground; world.resumeScene(); isEditor: isPause:${this.isPause}; mGame:${this.mGame}`);
+        if (!this.isPause) {
             return;
         }
         this.isPause = false;
@@ -1341,8 +1341,8 @@ export class Render extends RPCPeer implements GameMain {
     }
 
     private pauseScene() {
-        Logger.getInstance().log(`#BlackSceneFromBackground; world.pauseScene(); isEditor:${this.mConfig.isEditor}; isPause:${this.isPause}; mGame:${this.mGame}`);
-        if (this.mConfig.isEditor || this.isPause) {
+        Logger.getInstance().log(`#BlackSceneFromBackground; world.pauseScene(); isPause:${this.isPause}; mGame:${this.mGame}`);
+        if (this.isPause) {
             return;
         }
         this.isPause = true;

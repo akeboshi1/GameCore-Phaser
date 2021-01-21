@@ -1,9 +1,9 @@
 
 import { BasicScene } from "./basic.scene";
 import { Font } from "utils";
-import { BasicLayer } from "../managers/layer.manager";
 import { Size } from "src/utils/size";
 import { SceneName } from "structure";
+import { BaseLayer } from "base";
 
 export class MainUIScene extends BasicScene {
   public static readonly LAYER_UI = "uiLayer";
@@ -53,9 +53,9 @@ export class MainUIScene extends BasicScene {
     // this.scale.on("resize", this.checkSize, this);
 
     // set layers
-    this.layerManager.addLayer(this, BasicLayer, MainUIScene.LAYER_UI, 1);
-    this.layerManager.addLayer(this, BasicLayer, MainUIScene.LAYER_DIALOG, 2);
-    this.layerManager.addLayer(this, BasicLayer, MainUIScene.LAYER_TOOLTIPS, 3);
+    this.layerManager.addLayer(this, BaseLayer, MainUIScene.LAYER_UI, 1);
+    this.layerManager.addLayer(this, BaseLayer, MainUIScene.LAYER_DIALOG, 2);
+    this.layerManager.addLayer(this, BaseLayer, MainUIScene.LAYER_TOOLTIPS, 3);
     super.create();
   }
 

@@ -15,13 +15,13 @@ export interface ILauncherConfig {
     width: number;
     height: number;
     osd?: string;
+    runtime: string;
     readonly screenWidth: number;
     readonly screenHeight: number;
     readonly baseWidth: number;
     readonly baseHeight: number;
     readonly game_created?: Function;
     readonly connection?: any;
-    readonly isEditor?: boolean;
     readonly closeGame: Function;
     readonly connectFail?: Function;
     readonly parent?: string;
