@@ -23,6 +23,7 @@ export class PicaExploreListDetailPanel extends Phaser.GameObjects.Container {
     private needItems: PicaChapterLevelClue[];
     private labels: Phaser.GameObjects.Image[];
     private indexed: number = 0;
+    private send: Handler;
     constructor(scene: Phaser.Scene, width: number, height: number, dpr: number, zoom: number) {
         super(scene, 0, 0);
         this.dpr = dpr;
@@ -44,15 +45,27 @@ export class PicaExploreListDetailPanel extends Phaser.GameObjects.Container {
         this.lineGraphic.fillRect(-12 * this.dpr, -this.dpr, 24 * this.dpr, 2 * this.dpr);
     }
 
+    public setHandler(send: Handler) {
+        this.send = send;
+    }
+
     public setCaptoreResultData(data: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_QUERY_CHAPTER_RESULT) {
         const numTex = i18n.language !== "zh-CN" ? data.chapter.chapterId + "" : ChineseUnit.numberToChinese(data.chapter.chapterId);
         this.titleTex.text = i18n.t("explore.chaptertitle", { name: numTex });
         this.captoreTex.text = "皮卡熊的任务";
         this.captoreDes.text = "帮助皮大熊在本章节中找到某某某几件道具，和某某某几件道具，以完成什么什么家具和什么什么家具家具的修复。";
         this.taskTex.text = i18n.t("explore.taskneedtips");
+        const items = [];
+        for (const level of data.levels) {
+            for (const item of level.clueItems) {
+                items.push(item);
+            }
+        }
+        this.setNeedItems(items);
+        this.setNeedBottomImgs(items.length);
     }
 
-    setNeedItems(datas: op_client.ICountablePackageItem[]) {
+    protected setNeedItems(datas: op_client.ICountablePackageItem[]) {
         for (const item of this.needItems) {
             item.visible = false;
         }
@@ -72,7 +85,7 @@ export class PicaExploreListDetailPanel extends Phaser.GameObjects.Container {
         this.setItemLayout(datas.length);
     }
 
-    setNeedBottomImgs(count: number) {
+    protected setNeedBottomImgs(count: number) {
         for (const label of this.labels) {
             label.visible = false;
         }
@@ -98,6 +111,7 @@ export class PicaExploreListDetailPanel extends Phaser.GameObjects.Container {
         this.content.setSize(this.bg.width, this.bg.height);
         this.add(this.content);
         this.backButton = new Button(this.scene, UIAtlasName.uicommon, "close");
+        this.backButton.on(ClickEvent.Tap, this.onHideHandler, this);
         this.backButton.x = this.content.width * 0.5 - this.backButton.width * 0.5;
         this.backButton.y = -this.content.height * 0.5 + this.backButton.height * 0.5;
         const leftMidx = -70 * this.dpr, rightMidx = 70 * this.dpr;
@@ -159,6 +173,10 @@ export class PicaExploreListDetailPanel extends Phaser.GameObjects.Container {
             item.x = -remaWdith * 0.5 + cellwidth * 0.5 + (cellwidth + spaceW) * j;
             item.y = height * 0.5 - cellHeight * 0.5;
         }
+    }
+
+    private onHideHandler() {
+        if (this.send) this.send.runWith("hide");
     }
 
 }

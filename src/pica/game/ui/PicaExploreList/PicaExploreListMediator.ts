@@ -3,7 +3,7 @@ import { BasicMediator, CacheDataManager, DataMgrType, Game } from "gamecore";
 import { EventType, ModuleName } from "structure";
 import { PicaExploreList } from "./PicaExploreList";
 
-export class PicaExploreLogMediator extends BasicMediator {
+export class PicaExploreListMediator extends BasicMediator {
     protected mModel: PicaExploreList;
     constructor(game: Game) {
         super(ModuleName.PICAEXPLORELIST_NAME, game);
@@ -39,6 +39,7 @@ export class PicaExploreLogMediator extends BasicMediator {
 
     private onQUERY_CHAPTER_RESULT(content: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_QUERY_CHAPTER_RESULT) {
         this.mShowData = content;
+        content["lock"] = this.playerInfo.level.value < content.chapter.requiredPlayerLevel;
         if (this.mView) this.mView.setExploreChapterResult(content, this.playerInfo.playerInfo.nextLevelId);
     }
 

@@ -10,7 +10,7 @@ export class PicaExploreListBottomPanel extends Phaser.GameObjects.Container {
     private rightButton: Button;
     private zoom: number;
     private dpr: number;
-    private chapterItems: ChapterItemProgress[];
+    private chapterItems: ChapterItemProgress[]=[];
     private chapterProDatas: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_EXPLORE_CHAPTER_PROGRESS;
     private curChapterID: number = 0;
     private send: Handler;

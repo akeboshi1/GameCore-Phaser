@@ -397,6 +397,10 @@
     "open": "开始",
     "unlock": "解锁条件:",
     "chaptertitle": "第{{name}}章节",
-    "taskneedtips": "任务需求"
+    "taskneedtips": "任务需求",
+    "finishchaptertips": "结束上一章",
+    "unlocktips": "达到{{name}}级解锁",
+    "nextleveltips": "下一场关卡",
+    "eventuallytips": "最终关卡"
   }
 }

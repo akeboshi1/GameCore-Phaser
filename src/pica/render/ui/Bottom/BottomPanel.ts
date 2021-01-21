@@ -141,8 +141,8 @@ export class BottomPanel extends PicaBasePanel {
             this.render.renderEmitter(ModuleName.PICANEWMAIN_NAME + "_showpanel", ModuleName.PICAAVATAR_NAME);
         } else if (tag === "shop") {
             this.render.renderEmitter(ModuleName.PICANEWMAIN_NAME + "_showpanel", ModuleName.PICAMARKET_NAME);
-        } else if (tag === "vip") {
-            this.render.renderEmitter(ModuleName.PICANEWMAIN_NAME + "_explorechapter");
+        } else if (tag === "explore") {
+            this.render.renderEmitter(ModuleName.PICANEWMAIN_NAME + "_showpanel", ModuleName.PICAEXPLORELIST_NAME);
         }
     }
 
@@ -155,7 +155,7 @@ export class BottomPanel extends PicaBasePanel {
             this.mOutput.collapse();
             this.resizeColtroll.collapse();
         }
-        this.render.renderEmitter(EventType.CHAT_PANEL_EXTPAND,expand);
+        this.render.renderEmitter(EventType.CHAT_PANEL_EXTPAND, expand);
         this.updateOutputLayout();
     }
 

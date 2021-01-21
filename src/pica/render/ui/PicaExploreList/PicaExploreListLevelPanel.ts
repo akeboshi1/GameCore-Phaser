@@ -13,7 +13,9 @@ export class PicaExploreListLevelPanel extends Phaser.GameObjects.Container {
     private titlebg: Phaser.GameObjects.Image;
     private titleTex: Phaser.GameObjects.Text;
     private forewordItem: ForewordChapterItem;
-    private levelItems: ChapterLevelItem[];
+    private lockItem: ChapterLevelLockItem;
+    private finalItem: ChapterLevelEventuallyItem;
+    private levelItems: ChapterLevelItem[] = [];
     private chapterResult: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_QUERY_CHAPTER_RESULT;
     private send: Handler;
     constructor(scene: Phaser.Scene, width: number, height: number, dpr: number, zoom: number) {
@@ -47,9 +49,16 @@ export class PicaExploreListLevelPanel extends Phaser.GameObjects.Container {
 
     setCaptoreResult(result: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_QUERY_CHAPTER_RESULT, nextLevelID: number) {
         this.chapterResult = result;
-        this.setForwardDatas(result.chapter);
-        this.setLevelDatas(result.levels, nextLevelID);
+        const lock = result["lock"];
+        this.captorScroll.clearItems(false);
+        this.setForwardDatas(result.chapter, lock);
+        if (!lock) this.setLevelDatas(result.levels, nextLevelID);
         this.captorScroll.Sort();
+        if (lock) {
+            this.captorScroll.setEnable(false);
+        } else {
+            this.captorScroll.setEnable(true);
+        }
     }
 
     setLevelDatas(levels: op_client.IPKT_EXPLORE_LEVEL_DATA[], nextLevelID: number) {
@@ -57,15 +66,24 @@ export class PicaExploreListLevelPanel extends Phaser.GameObjects.Container {
             item.visible = false;
         }
         for (let i = 0; i < levels.length; i++) {
-            let item: ChapterLevelItem;
+            let item: ChapterLevelItem | ChapterLevelEventuallyItem;
             if (i < this.levelItems.length) {
-                item = this.levelItems[i];
+                if (i === levels.length - 1) {
+                    item = this.finalItem;
+                } else {
+                    item = this.levelItems[i];
+                }
             } else {
-                item = new ChapterLevelItem(this.scene, this.dpr);
+                if (i === levels.length - 1) {
+                    item = new ChapterLevelEventuallyItem(this.scene, this.dpr);
+                    this.finalItem = item;
+                } else {
+                    item = new ChapterLevelItem(this.scene, this.dpr);
+                    this.levelItems.push(item);
+                }
                 item.setHandler(new Handler(this, this.onChapterLevelHandler));
-                this.captorScroll.addItem(item);
-                this.levelItems.push(item);
             }
+            this.captorScroll.addItem(item);
             item.visible = true;
             const data = levels[i];
             const lock = data.levelId >= nextLevelID ? true : false;
@@ -73,7 +91,7 @@ export class PicaExploreListLevelPanel extends Phaser.GameObjects.Container {
         }
     }
 
-    setForwardDatas(data: op_client.IPKT_EXPLORE_CHAPTER_DATA) {
+    setForwardDatas(data: op_client.IPKT_EXPLORE_CHAPTER_DATA, lock: boolean) {
         if (!this.forewordItem) {
             this.forewordItem = new ForewordChapterItem(this.scene, this.dpr);
             this.forewordItem.on(ClickEvent.Tap, this.onForewordClickHandler, this);
@@ -82,7 +100,11 @@ export class PicaExploreListLevelPanel extends Phaser.GameObjects.Container {
         this.forewordItem.setCaptoreData(data);
         const numTex = i18n.language !== "zh-CN" ? data.chapterId + "" : ChineseUnit.numberToChinese(data.chapterId);
         this.titleTex.text = i18n.t("explore.chaptertitle", { name: numTex });
-
+        if (lock) {
+            this.lockItem = new ChapterLevelLockItem(this.scene, this.dpr);
+            this.lockItem.setHandler(new Handler(this, this.onChapterLockHandler));
+            this.captorScroll.addItem(this.lockItem);
+        }
     }
 
     protected init() {
@@ -128,6 +150,14 @@ export class PicaExploreListLevelPanel extends Phaser.GameObjects.Container {
     private onChapterLevelHandler(data: op_client.IPKT_EXPLORE_LEVEL_DATA) {
         if (this.send) this.send.runWith(["level", this.chapterResult.chapter.chapterId, data.levelId]);
     }
+
+    private onChapterLockHandler(tag: string, data: any) {
+        if (tag === "lockgo") {
+
+        } else if (tag === "lockfinish") {
+
+        }
+    }
 }
 
 class ForewordChapterItem extends ButtonEventDispatcher {
@@ -156,7 +186,34 @@ class ForewordChapterItem extends ButtonEventDispatcher {
     }
 }
 
-class ChapterLevelItem extends Phaser.GameObjects.Container {
+class ChapterLevelBaseItem extends Phaser.GameObjects.Container {
+    protected dpr: number;
+    protected unlock: boolean = false;
+    protected send: Handler;
+    protected chapterData: any;
+    constructor(scene: Phaser.Scene, dpr: number) {
+        super(scene);
+        this.dpr = dpr;
+        this.init();
+    }
+    refreshMask() {
+
+    }
+    public setLevelData(data: any, lock: boolean) {
+        this.chapterData = data;
+        this.unlock = lock;
+    }
+
+    public setHandler(send: Handler) {
+        this.send = send;
+    }
+
+    protected init() {
+
+    }
+}
+
+class ChapterLevelItem extends ChapterLevelBaseItem {
     protected dpr: number;
     private bg: Phaser.GameObjects.Image;
     private imgMask: Phaser.GameObjects.Image;
@@ -171,21 +228,15 @@ class ChapterLevelItem extends Phaser.GameObjects.Container {
     private energyImg: ImageValue;
     private lockimg: Phaser.GameObjects.Image;
     private clueItms: PicaChapterLevelClue[];
-    private unlock: boolean = false;
-    private send: Handler;
-    private chapterData: op_client.IPKT_EXPLORE_LEVEL_DATA;
     constructor(scene: Phaser.Scene, dpr: number) {
-        super(scene);
-        this.dpr = dpr;
-        this.init();
+        super(scene, dpr);
     }
     refreshMask() {
         this.starProgress.refreshMask();
 
     }
     public setLevelData(data: op_client.IPKT_EXPLORE_LEVEL_DATA, lock: boolean) {
-        this.chapterData = data;
-        this.unlock = lock;
+        super.setLevelData(data, lock);
         this.levelTex.text = data.levelId + "";
         this.starProgress.setProgress(data.progress, 500);
         const url = Url.getOsdRes(data.imagePath);
@@ -250,12 +301,12 @@ class ChapterLevelItem extends Phaser.GameObjects.Container {
         this.bg = this.scene.make.image({ key: UIAtlasName.explorelog, frame: "explore_chapter_checkpoint" });
         // this.imgMask = this.scene.make.image({ key: UIAtlasName.explorelog, frame: "explore_chapter_checkpoint" });
         this.setSize(this.bg.width, this.bg.height);
-        const leftMidX = this.width * 0.5 + 94 * this.dpr;
+        const leftMidX = -this.width * 0.5 + 94 * this.dpr;
         const rightMidx = this.width * 0.5 - 94 * this.dpr;
         const topy = -this.height * 0.5 + 23 * this.dpr;
         this.leftLine = this.scene.make.image({ key: UIAtlasName.explorelog, frame: "explore_chapter_explore_chapter_left" });
-        this.leftLine.x = topy;
-        this.leftLine.y = -this.height * 0.5 + this.leftLine.height * 0.5 + 16 * this.dpr;
+        this.leftLine.x = leftMidX - this.leftLine.width;
+        this.leftLine.y = topy;
         this.rightLine = this.scene.make.image({ key: UIAtlasName.explorelog, frame: "explore_chapter_explore_chapter_right" });
         this.rightLine.x = leftMidX + this.rightLine.width;
         this.rightLine.y = this.leftLine.y;
@@ -298,4 +349,143 @@ class ChapterLevelItem extends Phaser.GameObjects.Container {
         if (!this.unlock) return;
         if (this.send) this.send.runWith([this.chapterData]);
     }
+}
+
+class ChapterLevelLockItem extends ChapterLevelBaseItem {
+    private bg: Phaser.GameObjects.Image;
+    private nameTex: Phaser.GameObjects.Text;
+    private leftLine: Phaser.GameObjects.Image;
+    private rightLine: Phaser.GameObjects.Image;
+    private goButton: ThreeSliceButton;
+    private finishButton: ThreeSliceButton;
+    private leftTex: Phaser.GameObjects.Text;
+    private rightTex: Phaser.GameObjects.Text;
+    private leftbg: Phaser.GameObjects.Image;
+    private rightbg: Phaser.GameObjects.Image;
+    constructor(scene: Phaser.Scene, dpr: number) {
+        super(scene, dpr);
+    }
+
+    public setLevelData(data: op_client.IPKT_EXPLORE_CHAPTER_DATA, lock: boolean) {
+        super.setLevelData(data, lock);
+        this.rightTex.text = i18n.t("explore.unlocktips", { name: data.requiredPlayerLevel });
+    }
+
+    protected init() {
+        this.bg = this.scene.make.image({ key: UIAtlasName.explorelog, frame: "explore_chapter_checkpoint" });
+        this.setSize(this.bg.width, this.bg.height);
+        const leftMidX = - 94 * this.dpr;
+        const rightMidx = 94 * this.dpr;
+        const topy = -this.height * 0.5 + 23 * this.dpr;
+        this.leftLine = this.scene.make.image({ key: UIAtlasName.explorelog, frame: "explore_chapter_explore_chapter_left" });
+        this.leftLine.x = leftMidX - this.leftLine.width;
+        this.leftLine.y = topy;
+        this.rightLine = this.scene.make.image({ key: UIAtlasName.explorelog, frame: "explore_chapter_explore_chapter_right" });
+        this.rightLine.x = rightMidx + this.rightLine.width;
+        this.rightLine.y = this.leftLine.y;
+
+        this.nameTex = this.scene.make.text({ text: i18n.t("explore.nextleveltips"), style: UIHelper.colorStyle("#8743B9", this.dpr * 14) });
+        this.nameTex.setFontStyle("bold");
+        this.nameTex.x = rightMidx;
+        this.nameTex.y = topy;
+
+        this.leftbg = this.scene.make.image({ key: UIAtlasName.explorelog, frame: "explore_chapter_scene_bg" });
+        this.leftbg.x = leftMidX;
+        this.leftbg.y = topy + this.leftbg.height * 0.5 + 20 * this.dpr;
+
+        this.leftTex = this.scene.make.text({ text: i18n.t("explore.finishchaptertips"), style: UIHelper.colorStyle("#8743B9", this.dpr * 14) });
+        this.leftTex.x = this.leftbg.x;
+        this.leftTex.y = this.leftbg.y;
+
+        this.rightbg = this.scene.make.image({ key: UIAtlasName.explorelog, frame: "explore_chapter_scene_bg" });
+        this.rightbg.x = rightMidx;
+        this.rightbg.y = topy + this.leftbg.height * 0.5 + 20 * this.dpr;
+
+        this.rightTex = this.scene.make.text({ text: "", style: UIHelper.colorStyle("#8743B9", this.dpr * 14) });
+        this.rightTex.x = this.rightbg.x;
+        this.rightTex.y = this.rightbg.y;
+
+        const frames = ["butt_yellow_left_s", "butt_yellow_middle_s", "butt_yellow_right_s"];
+        this.goButton = new ThreeSliceButton(this.scene, 88 * this.dpr, 30 * this.dpr, UIAtlasName.uicommon, frames, frames, i18n.t("explore.open"));
+        this.goButton.setTextStyle(UIHelper.brownishStyle(this.dpr, 13));
+        this.goButton.setFontStyle("bold");
+        this.goButton.setTextOffset(-15 * this.dpr, 0);
+        this.goButton.on(ClickEvent.Tap, this.onGoClickHandler, this);
+        this.goButton.x = -this.goButton.width * 0.5 - 30 * this.dpr;
+        this.goButton.y = this.height * 0.5 + 10 * this.dpr;
+
+        this.finishButton = new ThreeSliceButton(this.scene, 88 * this.dpr, 30 * this.dpr, UIAtlasName.uicommon, frames, frames, i18n.t("explore.open"));
+        this.finishButton.setTextStyle(UIHelper.brownishStyle(this.dpr, 13));
+        this.finishButton.setFontStyle("bold");
+        this.finishButton.setTextOffset(-15 * this.dpr, 0);
+        this.finishButton.on(ClickEvent.Tap, this.onFinishClickHandler, this);
+        this.finishButton.x = this.finishButton.width * 0.5 + 30 * this.dpr;
+        this.finishButton.y = this.height * 0.5 + 10 * this.dpr;
+
+        this.add([this.bg, this.leftLine, this.rightLine, this.nameTex, this.leftbg, this.leftTex, this.rightbg, this.rightTex, this.goButton, this.finishButton]);
+    }
+
+    private onGoClickHandler() {
+        if (this.send) this.send.runWith(["lockgo", this.chapterData]);
+    }
+
+    private onFinishClickHandler() {
+        if (this.send) this.send.runWith(["lockfinish", this.chapterData]);
+    }
+}
+
+class ChapterLevelEventuallyItem extends ChapterLevelBaseItem {
+    private bg: Phaser.GameObjects.Image;
+    private iconbg1: Phaser.GameObjects.Image;
+    private iconbg2: Phaser.GameObjects.Image;
+    private iconbg3: Phaser.GameObjects.Image;
+    private icon: DynamicImage;
+    private nameTex: Phaser.GameObjects.Text;
+    private leftLine: Phaser.GameObjects.Image;
+    private rightLine: Phaser.GameObjects.Image;
+    private openButton: ThreeSliceButton;
+    constructor(scene: Phaser.Scene, dpr: number) {
+        super(scene, dpr);
+    }
+
+    public setLevelData(data: op_client.IPKT_EXPLORE_LEVEL_DATA, lock: boolean) {
+        super.setLevelData(data, lock);
+        const url = Url.getOsdRes(data.imagePath);
+        this.icon.load(url);
+    }
+
+    protected init() {
+        this.bg = this.scene.make.image({ key: UIAtlasName.explorelog, frame: "explore_chapter_end_checkpoint" });
+        this.setSize(this.bg.width, this.bg.height);
+        const topy = -this.height * 0.5 + 23 * this.dpr;
+        this.nameTex = this.scene.make.text({ text: i18n.t("explore.eventuallytips"), style: UIHelper.colorStyle("#8743B9", this.dpr * 14) });
+        this.nameTex.setFontStyle("bold");
+        this.nameTex.y = topy;
+        this.leftLine = this.scene.make.image({ key: UIAtlasName.explorelog, frame: "explore_chapter_end_left" });
+        this.leftLine.y = this.nameTex.y;
+        this.leftLine.x = this.nameTex.width * 0.5 - this.leftLine.width * 0.5 - 10 * this.dpr;
+        this.rightLine = this.scene.make.image({ key: UIAtlasName.explorelog, frame: "explore_chapter_end_right" });
+        this.rightLine.y = this.leftLine.y;
+        this.rightLine.x = this.nameTex.width * 0.5 + this.rightLine.width * 0.5 + 10 * this.dpr;
+        this.iconbg1 = this.scene.make.image({ key: UIAtlasName.explorelog, frame: "explore_chapter_end_close" });
+        this.iconbg2 = this.scene.make.image({ key: UIAtlasName.explorelog, frame: "explore_chapter_end_undraw" });
+        this.iconbg3 = this.scene.make.image({ key: UIAtlasName.explorelog, frame: "explore_chapter_end_curtain" });
+        this.icon = new DynamicImage(this.scene, 0, 0);
+
+        const frames = ["butt_yellow_left_s", "butt_yellow_middle_s", "butt_yellow_right_s"];
+        this.openButton = new ThreeSliceButton(this.scene, 88 * this.dpr, 30 * this.dpr, UIAtlasName.uicommon, frames, frames, i18n.t("explore.open"));
+        this.openButton.setTextStyle(UIHelper.brownishStyle(this.dpr, 13));
+        this.openButton.setFontStyle("bold");
+        this.openButton.setTextOffset(-15 * this.dpr, 0);
+        this.openButton.on(ClickEvent.Tap, this.onGoClickHandler, this);
+        this.openButton.x = 0;
+        this.openButton.y = this.height * 0.5 + 10 * this.dpr;
+
+        this.add([this.bg, this.iconbg1, this.icon, this.iconbg2, this.iconbg3, this.leftLine, this.rightLine, this.nameTex, this.openButton]);
+    }
+
+    private onGoClickHandler() {
+        if (this.send) this.send.runWith(["eventuallygo", this.chapterData]);
+    }
+
 }

@@ -1,6 +1,6 @@
-import { ItemButton } from "picaRender";
 import { UIAtlasName } from "picaRes";
 import { op_client } from "pixelpai_proto";
+import { ItemButton } from "../Components";
 export class PicaChapterLevelClue extends ItemButton {
     private gou: Phaser.GameObjects.Image;
     constructor(scene: Phaser.Scene, dpr: number, width: number, height: number) {
