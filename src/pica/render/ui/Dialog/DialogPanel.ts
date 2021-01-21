@@ -115,7 +115,7 @@ export class DialogPanel extends BasePanel {
         this.add(this.content);
         this.resize(0, 0);
         super.init();
-        (<MainUIScene>this.mScene).layerManager.addToLayer(MainUIScene.LAYER_UI, this);
+        (<MainUIScene>this.mScene).layerManager.addToLayer(MainUIScene.LAYER_DIALOG, this);
     }
 
     public setLayoutItems(arr: any) {
