@@ -89,14 +89,10 @@ export class MatterObject implements IMatterObject {
     public _sensor: boolean = false;
     public body: Body;
     protected mModel: MatterSprite;
-    // protected mDisplayInfo: IFramesModel | IDragonbonesModel;
     protected mMoveData: MoveData = {};
     protected mCurState: string = PlayerState.IDLE;
     protected mMoving: boolean = false;
-    // protected mAnimationName: string = "";
-    // protected mCurAnimationName: RunningAnimation;
     protected mOffsetY: number = undefined;
-    // protected mQueueAnimations: AnimationQueue[];
     protected mMounts: IMatterObject[];
     protected mDirty: boolean = false;
     protected mRootMount: IMatterObject;
@@ -474,7 +470,7 @@ export class MatterObject implements IMatterObject {
     }
 
     public removeBody() {
-        if (!this.body) {
+        if (!this.body || !this.matterWorld) {
             return;
         }
         this.matterWorld.remove(this.body, true);
@@ -516,7 +512,7 @@ export class MatterObject implements IMatterObject {
     }
 
     public async drawBody() {
-        if (!this.mModel) return;
+        if (!this.mModel || !this.matterWorld) return;
         const collision = this.mModel.getCollisionArea();
         let body;
         if (!collision) {
