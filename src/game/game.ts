@@ -420,9 +420,11 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
             this.login();
             return;
         }
+        this.peer.state = GameState.requestToken;
         // this.peer.render[ModuleName.].then((account) => {
         this.httpService.refreshToekn(account.refreshToken, account.accessToken)
             .then((response: any) => {
+                this.peer.state = GameState.getToken;
                 if (response.code === 200) {
                     this.peer.render.refreshAccount(response);
                     // this.mAccount.refreshToken(response);
@@ -431,6 +433,7 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
                     this.login();
                 }
             }).catch((error) => {
+                this.peer.state = GameState.getToken;
                 Logger.getInstance().error("refreshToken:", error);
                 this.login();
             });
@@ -676,7 +679,7 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
                 Logger.getInstance().debug("created game suc");
             })
             .catch((err: any) => {
-                Logger.getInstance().log(err);
+                Logger.getInstance().error(err);
             });
     }
 
@@ -689,12 +692,16 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
             return this.decodeConfigs(req);
         }, (reason) => {
             if (index > 3) {
-                // app reload
-                Logger.getInstance().log("load res error");
+                if (this.mConfig.hasReload) {
+                    // app reload
+                } else {
+                    this.renderPeer.reload();
+                }
+                Logger.getInstance().error("load res error");
                 return;
             }
             index++;
-            Logger.getInstance().log("reload res", index);
+            Logger.getInstance().error("reload res", index);
             return this.loadGameConfig(remotePath);
         });
     }
@@ -739,11 +746,11 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
                     // });
                     resolve(gameConfig);
                 } catch (error) {
-                    Logger.getInstance().log("catch error", error);
+                    Logger.getInstance().error("catch error", error);
                     reject(error);
                 }
             } else {
-                Logger.getInstance().log("reject error");
+                Logger.getInstance().error("reject error");
                 reject("error");
             }
         });

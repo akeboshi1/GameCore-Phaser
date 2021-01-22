@@ -109,6 +109,7 @@ export class Render extends RPCPeer implements GameMain {
         this.mConfig.hasConnectFail = this.mConnectFailFunc ? true : false;
         this.mConfig.hasCloseGame = this.mConfig.closeGame ? true : false;
         this.mConfig.hasGameCreated = this.mConfig.game_created ? true : false;
+        this.mConfig.hasReload = this.mConfig.reload ? true : false;
         // rpc不传送方法
         delete this.mConfig.connectFail;
         delete this.mConfig.game_created;
@@ -705,6 +706,11 @@ export class Render extends RPCPeer implements GameMain {
     @Export([webworker_rpc.ParamType.str])
     public hidePanel(panelName: string) {
         if (this.mUiManager) this.mUiManager.hidePanel(panelName);
+    }
+
+    @Export()
+    public reload() {
+        window.location.reload();
     }
 
     @Export()

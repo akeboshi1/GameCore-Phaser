@@ -1,7 +1,6 @@
 import { RPCPeer, Export, webworker_rpc } from "webworker-rpc";
 import { op_gateway, op_virtual_world, op_client } from "pixelpai_proto";
 import { PBpacket, Buffer } from "net-socket-packet";
-// import HeartBeatWorker from "worker-loader?filename=js/[name].js!../services/heartBeat.worker";
 import * as protos from "pixelpai_proto";
 import { ServerAddress } from "../../lib/net/address";
 import { Game } from "./game";
@@ -16,6 +15,7 @@ for (const key in protos) {
 
 export class MainPeer extends RPCPeer {
     private gameState;
+    private stateTime: number = 0;
     @Export()
     private game: Game;
     private mConfig: ILauncherConfig;
@@ -29,6 +29,7 @@ export class MainPeer extends RPCPeer {
         super(MAIN_WORKER);
         Logger.getInstance().log("constructor mainPeer");
         this.game = new PicaGame(this);
+        this.stateTime = new Date().getTime();
     }
 
     get render() {
@@ -44,8 +45,10 @@ export class MainPeer extends RPCPeer {
     }
 
     set state(val) {
-        Logger.getInstance().log("gameState: ====>", val);
+        const now: number = new Date().getTime();
+        Logger.getInstance().log("gameState: ====>", val, "delayTime:=====>", now - this.stateTime);
         this.gameState = val;
+        this.stateTime = now;
     }
     // ============= connection调用主进程
     public onConnected() {

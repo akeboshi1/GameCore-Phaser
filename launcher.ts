@@ -103,8 +103,10 @@ export class Launcher {
         hasConnectFail: false,
         hasCloseGame: false,
         hasGameCreated: false,
+        hasReload: false,
         closeGame: null,
         connectFail: null,
+        reload: null,
         platform: "pc",
     };
 
