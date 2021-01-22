@@ -1,7 +1,7 @@
 import { AnimationsNode, Capsule, ElementNode, SceneNode, TerrainNode } from "game-capsule";
 import { BaseCamerasManager, BaseDisplay, BaseFramesDisplay, BaseLayer, GroundLayer, IBaseDisplay, SurfaceLayer } from "base";
 import { AnimationModel, IFramesModel } from "structure";
-import { IPosition45Obj, load, Logger, LogicPos, Position45, Url } from "utils";
+import { IPos, IPosition45Obj, load, Logger, LogicPos, Position45, Url } from "utils";
 import { EditorCanvas, IEditorCanvasConfig } from "../editor.canvas";
 import { LayerManager } from "base";
 import { EditorFramesDisplay } from "./editor.frames.display";
@@ -74,16 +74,15 @@ export class SceneEditorCanvas extends EditorCanvas {
     }
 
     public drawElement(element: ElementNode) {
-        const display = this.factory.createFramesDisplay(element);
-        const loc = element.location;
-        display.setPosition(loc.x, loc.y);
-        display.name = element.name;
-        display.setInteractive();
-        this.mElements.set(element.id, display);
-        (<SceneEditor>this.mScene).layerManager.addToLayer("surfaceLayer", display);
+        this.mSelecedElement.unselectedElements();
+        this.mStamp.setDisplay(element);
+        this.mBrush = BrushEnum.Fill;
     }
 
     public selectElement(id: number) {
+        if (this.mBrush !== BrushEnum.Select) {
+            return;
+        }
         if (!this.mSelecedElement) {
             return;
         }
@@ -114,11 +113,9 @@ export class SceneEditorCanvas extends EditorCanvas {
     }
 
     public drawTile(terrain: TerrainNode) {
-        const display = this.factory.createFramesDisplay(terrain);
-        const loc = terrain.location;
-        const pos = Position45.transformTo90(loc, this.mRoomSize);
-        display.setPosition(pos.x, pos.y);
-        (<SceneEditor>this.mScene).layerManager.addToLayer("groundLayer", display);
+        this.mSelecedElement.unselectedElements();
+        this.mStamp.setDisplay(terrain);
+        this.mBrush = BrushEnum.Fill;
     }
 
     public removeTile() {
@@ -166,13 +163,15 @@ export class SceneEditorCanvas extends EditorCanvas {
 
         const elements = this.mSceneNode.getElements();
         for (const ele of elements) {
-            this.drawElement(ele);
+            this.addElement(ele);
         }
 
         const terrains = this.mSceneNode.getTerrains();
         for (const terrain of terrains) {
-            this.drawTile(terrain);
+            this.addTerrain(terrain);
         }
+
+        this.initSkybox();
     }
 
     private addListener() {
@@ -249,7 +248,27 @@ export class SceneEditorCanvas extends EditorCanvas {
         }
     }
 
+    private addElement(element: ElementNode) {
+        const display = this.factory.createFramesDisplay(element);
+        const loc = element.location;
+        display.setPosition(loc.x, loc.y);
+        display.name = element.name;
+        display.setInteractive();
+        this.mElements.set(element.id, display);
+        (<SceneEditor>this.mScene).layerManager.addToLayer("surfaceLayer", display);
+    }
+
+    private addTerrain(terrain: TerrainNode) {
+        const display = this.factory.createFramesDisplay(terrain);
+        const loc = terrain.location;
+        const pos = Position45.transformTo90(loc, this.mRoomSize);
+        display.setPosition(pos.x, pos.y);
+        (<SceneEditor>this.mScene).layerManager.addToLayer("groundLayer", display);
+    }
+
     private initSkybox() {
+        const scenery = this.mSceneNode.getScenerys();
+        Logger.getInstance().log("scenery: ", scenery);
     }
 
     get alignGrid() {
@@ -307,7 +326,8 @@ class SceneEditor extends Phaser.Scene {
         this.sceneEditor.create(this);
     }
 
-    update() {
+    update(time?: number, delta?: number) {
+        this.layerManager.update(time, delta);
     }
 
     drawGrid(roomSize: IPosition45Obj, line: number = 1) {
@@ -376,12 +396,13 @@ class MouseFollow {
             this.mDisplay = null;
         }
         const scene = this.sceneEditor.scene;
-        this.isTerrain = false;
+        this.isTerrain = content.nodeType === 4 ? true : false;
         this.isMoss = content.isMoss;
         // this.key = content.key;
         // this.mSprite = new Sprite(content.sprite, content.nodeType);
         this.mDisplay = new MouseDisplayContainer(scene, this.sceneEditor);
-        // this.mDisplay.setDisplay(this.mSprite, this.isTerrain ? this.mSize : 1);
+        // const displayInfo = this.sceneEditor.factory.createFramesModel(content.animations);
+        this.mDisplay.setDisplay(content, this.isTerrain ? this.mSize : 1);
         // this.mLayerManager.addToSceneToUI(this.mDisplay);
         (<SceneEditor>scene).layerManager.addToLayer("sceneUILayer", this.mDisplay);
     }
@@ -417,22 +438,22 @@ class MouseFollow {
 }
 
 class MouseDisplayContainer extends Phaser.GameObjects.Container {
-    protected mOffset: Phaser.Geom.Point;
+    protected mOffset: IPos;
     protected mNodeType;
     protected mDisplays: BaseFramesDisplay[];
     protected mScaleRatio: number = 1;
     constructor(scene: Phaser.Scene, protected sceneEditor: SceneEditorCanvas) {
         super(scene);
+        this.mOffset = { x: 0, y: 0 };
     }
 
-    public setDisplay(sprite, size: number) {
+    public setDisplay(element: ElementNode | TerrainNode, size: number) {
         this.clear();
         this.mDisplays = [];
-        if (!sprite) {
+        if (!element) {
             return;
         }
-        const frame = <IFramesModel>sprite.displayInfo;
-        this.mNodeType = sprite.nodeType;
+        this.mNodeType = element.nodeType;
         let frameDisplay: EditorFramesDisplay;
         const { tileWidth, tileHeight } = this.sceneEditor.roomSize;
         const roomSize = {
@@ -446,13 +467,15 @@ class MouseDisplayContainer extends Phaser.GameObjects.Container {
 
         this.mOffset.x = 0;
         this.mOffset.y = -((roomSize.sceneHeight / this.mScaleRatio - (size % 2 === 0 ? 0 : tileHeight)) / 2);
+        const animationName = element.animations.defaultAnimationName;
 
         for (let i = 0; i < size; i++) {
             for (let j = 0; j < size; j++) {
-                frameDisplay = new EditorFramesDisplay(this.scene, 0, this.sceneEditor);
+                // frameDisplay = new EditorFramesDisplay(this.scene, 0, this.sceneEditor);
+                frameDisplay = this.sceneEditor.factory.createFramesDisplay(element);
                 frameDisplay.setAlpha(0.8);
-                frameDisplay.once("initialized", this.onInitializedHandler, this);
-                frameDisplay.load(frame);
+                frameDisplay.play({ name: animationName, flip: false });
+                frameDisplay.selected();
                 const pos = Position45.transformTo90(new LogicPos(i, j), roomSize);
                 frameDisplay.x = pos.x;
                 frameDisplay.y = pos.y;

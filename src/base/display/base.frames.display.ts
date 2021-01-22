@@ -48,7 +48,6 @@ export class BaseFramesDisplay extends BaseDisplay {
                 Logger.getInstance().log("update frame loadError", "动画资源报错：", this.displayInfo);
                 this.created();
             } else {
-                Logger.getInstance().log("frameinfo.gene =====>", this.framesInfo.gene);
                 this.scene.load.atlas(this.framesInfo.gene, Url.getOsdRes(display.texturePath), Url.getOsdRes(display.dataPath));
                 const onAdd = (key: string) => {
                     if (key !== this.framesInfo.gene) return;
