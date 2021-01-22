@@ -330,6 +330,12 @@ export class MainPeer extends RPCPeer {
         if (elementManager) elementManager.onDisplayReady(id);
     }
 
+    @Export([webworker_rpc.ParamType.num])
+    public elementDisplaySyncReady(id: number) {
+        const elementManager = this.game.roomManager.currentRoom.elementManager;
+        if (elementManager) elementManager.elementDisplaySyncReady(id);
+    }
+
     @Export()
     public now(): number {
         return this.game.roomManager.currentRoom.now();
@@ -636,7 +642,9 @@ export class MainPeer extends RPCPeer {
     /**
      * 慎用，super.destroy()会使worker.terminator,致使整个游戏进程关闭
      */
+    @Export()
     public destroy() {
+        if (this.game) this.game.isDestroy = true;
         super.destroy();
         this.remote[HEARTBEAT_WORKER].HeartBeatPeer.destroy();
     }

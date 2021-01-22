@@ -64,8 +64,12 @@ export class ConnListener implements IConnectListener {
 // 网络连接器
 // 使用webworker启动socket，无webworker时直接启动socket
 export class Connection implements ConnectionService {
+    // 数据缓存队列
+    protected mCache: any[] = [];
+    /**
+     * 客户端向服务端表明的socket session的唯一标识
+     */
     protected mUuid: number = 0;
-
     protected mPacketHandlers: PacketHandler[] = [];
     private mCachedServerAddress: ServerAddress | undefined;
     private mSocket: GameSocket;
@@ -75,6 +79,9 @@ export class Connection implements ConnectionService {
     private mPeer: MainPeer;
     constructor(peer: MainPeer) {
         this.mPeer = peer;
+    }
+
+    update() {
     }
 
     get pause(): boolean {
@@ -151,8 +158,6 @@ export class Connection implements ConnectionService {
     }
 
     onData(data: ArrayBuffer) {
-        // const protobuf_packet: PBpacket = new PBpacket();
-        // protobuf_packet.Deserialization(new Buffer(data));
         const protobuf_packet = PBpacket.Create(data);
         this.mUuid = protobuf_packet.header.uuid;
         Logger.getInstance().info(`MainWorker[接收] <<< ${protobuf_packet.toString()} `);

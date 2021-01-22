@@ -14,15 +14,18 @@ export interface ILauncherConfig {
     keyboardHeight: number;
     width: number;
     height: number;
+    hasConnectFail?: boolean;
+    hasCloseGame?: boolean;
+    hasGameCreated?: boolean;
     osd?: string;
     runtime: string;
+    connectFail?: Function;
+    closeGame: Function;
+    game_created?: Function;
     readonly screenWidth: number;
     readonly screenHeight: number;
     readonly baseWidth: number;
     readonly baseHeight: number;
-    readonly game_created?: Function;
     readonly connection?: any;
-    readonly closeGame: Function;
-    readonly connectFail?: Function;
     readonly parent?: string;
 }

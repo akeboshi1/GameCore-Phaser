@@ -1,7 +1,7 @@
 import { Render } from "gamecoreRender";
 import { NodeType } from "../managers";
 import { MainUIScene } from "../scenes";
-import { Logger, LogicPos } from "utils";
+import { Logger, LogicPos, Tool } from "utils";
 export class MotionManager {
     public enable: boolean;
     private scaleRatio: number;
@@ -11,6 +11,7 @@ export class MotionManager {
     private holdTime: any;
     private holdDelay: number = 200;
     private curtime: number;
+    // private curDirection: number = 0;
     constructor(private render: Render) {
         this.scaleRatio = render.scaleRatio;
     }
@@ -133,15 +134,14 @@ export class MotionManager {
         this.clearGameObject();
     }
 
-    private onPointerDownHandler(pointer: Phaser.Input.Pointer) {
+    private async onPointerDownHandler(pointer: Phaser.Input.Pointer) {
         this.scene.input.on("pointermove", this.onPointerMoveHandler, this);
         this.holdTime = setTimeout(() => {
             this.dirty = true;
         }, this.holdDelay);
     }
 
-    private onPointerMoveHandler(pointer: Phaser.Input.Pointer) {
-        // this.start(pointer.worldX, pointer.worldY);
+    private async onPointerMoveHandler(pointer: Phaser.Input.Pointer) {
         this.dirty = true;
     }
 

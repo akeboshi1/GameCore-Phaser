@@ -163,8 +163,8 @@ export class Sprite extends EventDispatcher implements ISprite {
         const dirable = this.dirable(this.currentAnimationName);
         const index = dirable.indexOf(this.direction);
         if (index > -1) {
-            // this.direction = dirable[(index + 1) % dirable.length];
             this.setDirection(dirable[(index + 1) % dirable.length]);
+           //  Logger.getInstance().debug("turn sprite ===>", dirable[(index + 1) % dirable.length]);
         } else {
             Logger.getInstance().error(`${Sprite.name}: error dir ${this.direction}`);
         }

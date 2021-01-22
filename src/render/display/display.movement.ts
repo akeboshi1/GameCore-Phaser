@@ -65,7 +65,7 @@ export class DisplayMovement {
         });
     }
 
-    private onCheckDirection(dir: number) {
+    public onCheckDirection(dir: number) {
         if (typeof dir !== "number") {
             return this.display.direction;
         }

@@ -1,12 +1,13 @@
 import { PBpacket } from "net-socket-packet";
 import { op_client, op_virtual_world, op_def, op_gameconfig, op_pkt_def } from "pixelpai_proto";
-import { EventType, ModuleName } from "structure";
+import { EventType, ModuleName, RoomType } from "structure";
 import { EventDispatcher } from "utils";
 import { Game } from "../game";
 import { BasePacketHandler } from "./base.packet.handler";
 import { DataMgrType } from "./dataManager";
 export class SceneDataManager extends BasePacketHandler {
     private mCurRoom: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_EDIT_MODE_ROOM_INFO;
+    private isShowMainui: boolean = false;
     constructor(game: Game, event?: EventDispatcher) {
         super(game, event);
         this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_PKT_PARTY_SEND_GIFT, this.on_SEND_GIFT_DATA);
@@ -15,6 +16,7 @@ export class SceneDataManager extends BasePacketHandler {
         this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_SHOW_REWARD_TIPS, this.onReAwardTipsHandler);
         this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_SHOW_BLING_PANEL, this.onShowBlingPanel);
         this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_SHOW_HIGH_QUALITY_REWARD_TIPS, this.onHIGH_QUALITY_REWARD_TIPS);
+        this.mEvent.on(EventType.SCENE_CHANGE, this.onSceneChangeHandler, this);
         this.addPackListener();
     }
     clear() {
@@ -56,8 +58,7 @@ export class SceneDataManager extends BasePacketHandler {
         else Object.assign(this.mCurRoom, room);
         this.mEvent.emit(EventType.UPDATE_ROOM_INFO, this.mCurRoom);
         this.mEvent.emit(EventType.UPDATE_PARTY_STATE, this.mCurRoom.openingParty);
-        this.mEvent.emit(EventType.SCENE_SHOW_MAIN_UI);
-        // this.mEvent.emit(EventType.SCENE_SHOW_UI, ModuleName.PICAEXPLORELOG_NAME);
+        this.showMainUI();
     }
 
     private onShowBlingPanel(packet: PBpacket) {
@@ -77,5 +78,20 @@ export class SceneDataManager extends BasePacketHandler {
 
     get curRoom() {
         return this.mCurRoom;
+    }
+    private showMainUI() {
+        if (!this.isShowMainui) {
+            const hideArr = [];
+            if (this.mCurRoom.roomType === RoomType.EPISODE) {
+                hideArr.push(ModuleName.PICANEWMAIN_NAME);
+            }
+            this.mEvent.emit(EventType.SCENE_SHOW_MAIN_UI, hideArr);
+            if (this.mCurRoom.roomType === RoomType.EPISODE)
+                this.mEvent.emit(EventType.SCENE_SHOW_UI, ModuleName.PICAEXPLORELOG_NAME);
+            this.isShowMainui = true;
+        }
+    }
+    private onSceneChangeHandler() {
+        this.isShowMainui = false;
     }
 }

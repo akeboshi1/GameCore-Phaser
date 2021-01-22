@@ -1,5 +1,5 @@
 import { LoadState, ModuleName } from "structure";
-import { Logger } from "utils";
+import { Logger, StringUtils } from "utils";
 import { LoadingTips } from "../loadqueue";
 import { Render } from "../render";
 import { BasicScene } from "./basic.scene";
@@ -62,6 +62,19 @@ export class SceneManager {
     public getSceneByName(sceneName: string): Phaser.Scene {
         if (!this.render || !this.render.game) return undefined;
         return this.render.game.scene.getScene(sceneName);
+    }
+
+    public showProgress(progress: number) {
+        const sceneManager = this.render.game.scene;
+        if (!sceneManager) {
+            return;
+        }
+        const scene = sceneManager.getScene("LoadingScene") as LoadingScene;
+        if (scene && scene.scene.isActive) {
+            progress *= 100;
+            const text = StringUtils.format("正在加载资源 {0}", [progress.toFixed(0) + "%"]);
+            (<LoadingScene>scene).updateProgress(text);
+        }
     }
 
     public startScene(name: string, data?: any) {

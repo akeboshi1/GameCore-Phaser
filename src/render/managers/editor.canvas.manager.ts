@@ -6,7 +6,7 @@ import { Render } from "../render";
 export class EditorCanvasManager {
     public readonly AVATAR_CANVAS_TEST_DATA = [{ id: "5facff1a67d3b140e835e1d0", parts: ["head_hair"] }];
 
-    private readonly AVATAR_CANVAS_RESOURCE_PATH = "https://osd-alpha.tooqing.com/avatar/part";
+    private readonly AVATAR_CANVAS_RESOURCE_PATH = "https://osd-alpha.tooqing.com";
     private readonly AVATAR_CANVAS_PARENT = "avatarCanvas";
     private readonly SCENEKEY_SNAPSHOT: string = "AvatarEditorSnapshotScene";
 
@@ -31,6 +31,7 @@ export class EditorCanvasManager {
                             dragonbone.generateHeadIcon().then((src) => {
                                 resolve(src);
 
+                                dragonbone.destroy();
                                 this.render.game.scene.stop(this.SCENEKEY_SNAPSHOT);
                                 this.render.game.scene.remove(this.SCENEKEY_SNAPSHOT);
                             });

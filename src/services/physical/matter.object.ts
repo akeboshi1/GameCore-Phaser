@@ -156,6 +156,9 @@ export class MatterObject implements IMatterObject {
         if (!sprite) {
             return;
         }
+        if (!this.body) {
+            this.addBody();
+        }
         // this.peer.world.removeFromMap(sprite);
         if (this.mModel.pos) {
             this.setPosition(this.mModel.pos);
@@ -575,7 +578,7 @@ export class MatterObject implements IMatterObject {
         this.setExistingBody(body, true);
     }
 
-    private calcBodyPath(collisionArea: number[][], miniSize: IPosition45Obj) {
+    protected calcBodyPath(collisionArea: number[][], miniSize: IPosition45Obj) {
         const allpoints = this.prepareVertices(collisionArea).reduce((acc, p) => acc.concat(this.transformBodyPath2(p[1], p[0], miniSize)), []);
         // console.log(allpoints);
         const convexHull = require("monotone-convex-hull-2d");

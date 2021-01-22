@@ -1,4 +1,59 @@
 export class ChineseUnit {
+
+    /*
+    数字转中文
+    @number {Integer} 形如123的数字
+    @return {String} 返回转换成的形如 一百二十三 的字符串
+*/
+    static numberToChinese(number, uint: boolean = false) {
+
+        const units = "个十百千万@#%亿^&~";
+        const chars = "零一二三四五六七八九";
+        const arr: string[] = (number + "").split(""), s = [];
+        const len = arr.length - 1;
+        if (arr.length > 12) {
+            throw new Error("too big");
+        } else {
+            for (let i = 0; i <= len; i++) {
+                const num = Number(arr[i]);
+                if (len === 1 || len === 5 || len === 9) { // 两位数 处理特殊的 1*
+                    if (i === 0) {
+                        if (arr[i] !== "1") s.push(chars.charAt(num));
+                    } else {
+                        s.push(chars.charAt(num));
+                    }
+                } else {
+                    s.push(chars.charAt(num));
+                }
+                if (uint) {
+                    if (i !== len) {
+                        s.push(units.charAt(len - i));
+                    }
+                }
+            }
+        }
+        if (!uint) return s;
+        return s.join("").replace(/零([十百千万亿@#%^&~])/g, (m, d, b) => {// 优先处理 零百 零千 等
+            b = units.indexOf(d);
+            if (b !== -1) {
+                if (d === "亿") return d;
+                if (d === "万") return d;
+                if (arr[len - b] === "0") return "零";
+            }
+            return "";
+        }).replace(/零+/g, "零").replace(/零([万亿])/g, (m, b) => {// 零百 零千处理后 可能出现 零零相连的 再处理结尾为零的
+            return b;
+        }).replace(/亿[万千百]/g, "亿").replace(/[零]$/, "").replace(/[@#%^&~]/g, (m) => {
+            return { "@": "十", "#": "百", "%": "千", "^": "十", "&": "百", "~": "千" }[m];
+        }).replace(/([亿万])([一-九])/g, (m, d, b, c) => {
+            c = units.indexOf(d);
+            if (c !== -1) {
+                if (arr[len - c] === "0") return d + "零" + b;
+            }
+            return m;
+        });
+    }
+
     static getChineseUnit(number, decimalDigit) {
         const me = this;
         decimalDigit = decimalDigit == null ? 2 : decimalDigit;

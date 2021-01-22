@@ -1,0 +1,149 @@
+import { op_client } from "pixelpai_proto";
+import { CommonBackground, UiManager } from "gamecoreRender";
+import { ClickEvent, NineSliceButton } from "apowophaserui";
+import { ModuleName } from "structure";
+import { UIAtlasName } from "picaRes";
+import { Font, Handler, i18n, UIHelper, Url } from "utils";
+import { PicaBasePanel } from "../pica.base.panel";
+import { PicaExploreListDetailPanel } from "./PicaExploreListDetailPanel";
+import { BackTextButton, EnergyProgressBar } from "../Components";
+import { PicaExploreListBottomPanel } from "./PicaExploreListBottomPanel";
+import { PicaExploreListLevelPanel } from "./PicaExploreListLevelPanel";
+
+export class PicaExploreListPanel extends PicaBasePanel {
+    private bg: CommonBackground;
+    private topbg: Phaser.GameObjects.Image;
+    private midbg: Phaser.GameObjects.Image;
+    private mBackBtn: BackTextButton;
+    private energyProgress: EnergyProgressBar;
+
+    private levelPanel: PicaExploreListLevelPanel;
+    private bottomPanel: PicaExploreListBottomPanel;
+    private detialPanel: PicaExploreListDetailPanel;
+    constructor(uiManager: UiManager) {
+        super(uiManager);
+        this.atlasNames = [UIAtlasName.explorelog, UIAtlasName.uicommon1, UIAtlasName.uicommon];
+        this.textures = [{ atlasName: "explore_bg_stripe_top", folder: UIAtlasName.explorelog }, { atlasName: "explore_bg_stripe_middle", folder: UIAtlasName.explorelog }];
+        this.key = ModuleName.PICAEXPLORELIST_NAME;
+    }
+    resize(width: number, height: number) {
+        const w: number = this.scaleWidth;
+        const h: number = this.scaleHeight;
+        super.resize(w, h);
+        this.setSize(w, h);
+        this.bg.x = w * 0.5;
+        this.bg.y = h * 0.5;
+        this.topbg.y = this.topbg.height * 0.5;
+        this.topbg.x = w * 0.5;
+        this.midbg.y = this.topbg.y + this.midbg.height * 0.5;
+        this.midbg.x = this.topbg.x;
+        this.mBackBtn.x = this.mBackBtn.width * 0.5 + 20 * this.dpr;
+        this.mBackBtn.y = this.mBackBtn.height * 0.5 + 23 * this.dpr;
+        this.energyProgress.x = w - this.energyProgress.width * 0.5 - 17 * this.dpr;
+        const topHeight = 63 * this.dpr;
+        const bottomHeight = 56 * this.dpr;
+        const conHeight = h - topHeight - bottomHeight;
+        this.levelPanel.resize(w, conHeight);
+        this.levelPanel.x = w * 0.5;
+        this.levelPanel.y = -h * 0.5 + topHeight + conHeight * 0.5;
+        this.bottomPanel.x = w * 0.5;
+        this.bottomPanel.y = h - this.bottomPanel.height * 0.5;
+    }
+
+    public addListen() {
+        if (!this.mInitialized) return;
+        this.mBackBtn.on(ClickEvent.Tap, this.onBackHandler, this);
+    }
+
+    public removeListen() {
+        if (!this.mInitialized) return;
+        this.mBackBtn.off(ClickEvent.Tap, this.onBackHandler, this);
+    }
+
+    init() {
+        const w = this.scaleWidth;
+        const h = this.scaleHeight;
+        const topHeight = 63 * this.dpr;
+        const bottomHeight = 56 * this.dpr;
+        this.setSize(w, h);
+        this.bg = new CommonBackground(this.scene, 0, 0, w, h, UIAtlasName.explorelog, "explore_bg", 0xf6f0dc);
+        this.topbg = this.scene.make.image({ key: "explore_bg_stripe_top" });
+        this.midbg = this.scene.make.image({ key: "explore_bg_stripe_middle" });
+        this.mBackBtn = new BackTextButton(this.scene, this.dpr);
+        this.mBackBtn.setText(i18n.t("explore.title"));
+        this.energyProgress = new EnergyProgressBar(this.scene, this.dpr);
+        const conHeight = h - topHeight - bottomHeight;
+        this.levelPanel = new PicaExploreListLevelPanel(this.scene, this.width, conHeight, this.dpr, this.scale);
+        this.levelPanel.setHandler(new Handler(this, this.onLevelPanelHandler));
+        this.bottomPanel = new PicaExploreListBottomPanel(this.scene, this.width, 56 * this.dpr, this.dpr, this.scale);
+        this.bottomPanel.setHandler(new Handler(this, this.onBottomPanelHandler));
+        this.add([this.bg, this.topbg, this.midbg, this.mBackBtn, this.energyProgress, this.levelPanel, this.bottomPanel]);
+        this.resize(w, h);
+        super.init();
+    }
+
+    onShow() {
+        if (this.mShowData)
+            this.setExploreChapters(this.mShowData[0], this.mShowData[1]);
+        if (this.tempDatas)
+            this.setEnergyData(this.tempDatas.value, this.tempDatas.max);
+    }
+    setExploreChapterResult(content: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_QUERY_CHAPTER_RESULT, nextLevelID: number) {
+        this.levelPanel.setCaptoreResult(content, nextLevelID);
+    }
+    setExploreChapters(data: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_EXPLORE_CHAPTER_PROGRESS, nextChapterID: number) {
+        this.mShowData = [data, nextChapterID];
+        if (!this.mInitialized) return;
+        this.bottomPanel.setChapterDatas(data, nextChapterID);
+    }
+
+    setEnergyData(value: number, max: number) {
+        this.tempDatas = { value, max };
+        if (!this.mInitialized) return;
+        this.energyProgress.setEnergyData(value, max);
+    }
+
+    openDetialPanel() {
+        const wid = this.width;
+        const hei = this.height;
+        if (!this.detialPanel) {
+            this.detialPanel = new PicaExploreListDetailPanel(this.scene, wid, hei, this.dpr, this.scale);
+            this.detialPanel.setHandler(new Handler(this, this.onDetialHandler));
+            this.detialPanel.y = -20 * this.dpr;
+        }
+        this.add(this.detialPanel);
+        this.detialPanel.visible = true;
+        this.detialPanel.x = wid * 0.5;
+        this.detialPanel.y = hei * 0.5;
+        this.detialPanel.resize(wid, hei);
+    }
+
+    hideDetailPanel() {
+        this.remove(this.detialPanel);
+        this.detialPanel.visible = false;
+    }
+    destroy() {
+        super.destroy();
+    }
+
+    private onBackHandler() {
+        this.render.renderEmitter(ModuleName.PICAEXPLORELOG_NAME + "_hide");
+    }
+
+    private onDetialHandler(tag: string, data: any) {
+        if (tag === "hide") {
+            this.hideDetailPanel();
+        }
+    }
+
+    private onLevelPanelHandler(tag: string, data: any) {
+        if (tag === "foreword") {
+            this.openDetialPanel();
+            this.detialPanel.setCaptoreResultData(data);
+        }
+    }
+    private onBottomPanelHandler(tag: string, data: any) {
+
+    }
+
+}

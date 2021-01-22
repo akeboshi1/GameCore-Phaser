@@ -2,7 +2,7 @@ import "tooqinggamephaser";
 import "dragonBones";
 import { Game } from "tooqinggamephaser";
 import { RPCPeer, Export, webworker_rpc } from "webworker-rpc";
-import { Url, initLocales, Logger, Size, LogicPos, i18n, IPos } from "utils";
+import { Url, initLocales, Logger, Size, LogicPos, i18n, IPos, IPosition45Obj } from "utils";
 import { ServerAddress } from "../../lib/net/address";
 import { PBpacket } from "net-socket-packet";
 import { op_client } from "pixelpai_proto";
@@ -14,7 +14,25 @@ import { BasicScene } from "./scenes/basic.scene";
 import { PlayScene } from "./scenes/play.scene";
 import { CamerasManager } from "./cameras/cameras.manager";
 import * as path from "path";
-import { IFramesModel, IDragonbonesModel, ILauncherConfig, IScenery, EventType, GameMain, MAIN_WORKER, MAIN_WORKER_URL, RENDER_PEER, MessageType, ModuleName, SceneName, HEARTBEAT_WORKER, HEARTBEAT_WORKER_URL, ElementStateType, PHYSICAL_WORKER, PHYSICAL_WORKER_URL } from "structure";
+import {
+    IFramesModel,
+    IDragonbonesModel,
+    ILauncherConfig,
+    IScenery,
+    EventType,
+    GameMain,
+    MAIN_WORKER,
+    MAIN_WORKER_URL,
+    RENDER_PEER,
+    MessageType,
+    ModuleName,
+    SceneName,
+    HEARTBEAT_WORKER,
+    HEARTBEAT_WORKER_URL,
+    ElementStateType,
+    PHYSICAL_WORKER,
+    PHYSICAL_WORKER_URL
+} from "structure";
 import { DisplayManager } from "./managers/display.manager";
 import { InputManager } from "./input/input.manager";
 import * as protos from "pixelpai_proto";
@@ -22,11 +40,13 @@ import { PicaRenderUiManager } from "picaRender";
 import { GamePauseScene, MainUIScene } from "./scenes";
 import { EditorCanvasManager } from "./managers/editor.canvas.manager";
 import version from "../../version";
+import { AstarDebugger, GridsDebugger } from "./display";
 // import Stats from "../../Stat";
 
 for (const key in protos) {
     PBpacket.addProtocol(protos[key]);
 }
+
 enum MoveStyle {
     DIRECTION_MOVE_STYLE = 1,
     FOLLOW_MOUSE_MOVE_STYLE = 2,
@@ -34,9 +54,14 @@ enum MoveStyle {
 }
 
 export const projectionAngle = [Math.cos(45 * Math.PI / 180), Math.sin(45 * Math.PI / 180)];
+
 export class Render extends RPCPeer implements GameMain {
     public isConnect: boolean = false;
     public emitter: Phaser.Events.EventEmitter;
+    @Export()
+    public gridsDebugger: GridsDebugger;
+    @Export()
+    public astarDebugger: AstarDebugger;
 
     protected readonly DEFAULT_WIDTH = 360;
     protected readonly DEFAULT_HEIGHT = 640;
@@ -72,11 +97,23 @@ export class Render extends RPCPeer implements GameMain {
     private mHeartPeer: any;
     private mPhysicalPeer: any;
     private isPause: boolean = false;
+    private mConnectFailFunc: Function;
     constructor(config: ILauncherConfig, callBack?: Function) {
         super(RENDER_PEER);
         this.emitter = new Phaser.Events.EventEmitter();
         this.mConfig = config;
         this.mCallBack = callBack;
+        this.gridsDebugger = GridsDebugger.getInstance();
+        this.astarDebugger = AstarDebugger.getInstance();
+        this.mConnectFailFunc = this.mConfig.connectFail;
+        this.mConfig.hasConnectFail = this.mConnectFailFunc ? true : false;
+        this.mConfig.hasCloseGame = this.mConfig.closeGame ? true : false;
+        this.mConfig.hasGameCreated = this.mConfig.game_created ? true : false;
+        // rpc不传送方法
+        delete this.mConfig.connectFail;
+        delete this.mConfig.game_created;
+        delete this.mConfig.closeGame;
+        // Logger.getInstance().debug("connectfail===>", this.mConnectFailFunc, this.mConfig);
         this.initConfig();
         this.linkTo(MAIN_WORKER, MAIN_WORKER_URL).onceReady(() => {
             this.mMainPeer = this.remote[MAIN_WORKER].MainPeer;
@@ -120,6 +157,7 @@ export class Render extends RPCPeer implements GameMain {
     get physicalPeer(): any {
         return this.mPhysicalPeer;
     }
+
     setKeyBoardHeight(height: number) {
         throw new Error("Method not implemented.");
     }
@@ -356,6 +394,7 @@ export class Render extends RPCPeer implements GameMain {
     setGameConfig(config): void {
 
     }
+
     updatePalette(palette): void {
         this.mainPeer.updatePalette(palette);
     }
@@ -363,6 +402,7 @@ export class Render extends RPCPeer implements GameMain {
     updateMoss(moss): void {
         this.mainPeer.updateMoss(moss);
     }
+
     restart(config?: ILauncherConfig, callBack?: Function) {
 
     }
@@ -382,7 +422,32 @@ export class Render extends RPCPeer implements GameMain {
     }
 
     destroy(): Promise<void> {
-        return new Promise((reslove, reject) => {
+        this.mainPeer.destroy();
+        this.physicalPeer.destroy();
+        return new Promise((resolve, reject) => {
+            if (this.mGame) {
+                this.destroyManager();
+                this.mGame.events.off(Phaser.Core.Events.FOCUS, this.onFocus, this);
+                this.mGame.events.off(Phaser.Core.Events.BLUR, this.onBlur, this);
+                this.mGame.scale.off("enterfullscreen", this.onFullScreenChange, this);
+                this.mGame.scale.off("leavefullscreen", this.onFullScreenChange, this);
+                this.mGame.scale.off("orientationchange", this.onOrientationChange, this);
+                this.mGame.plugins.removeGlobalPlugin("rexButton");
+                this.mGame.plugins.removeGlobalPlugin("rexNinePatchPlugin");
+                this.mGame.plugins.removeGlobalPlugin("rexInputText");
+                this.mGame.plugins.removeGlobalPlugin("rexBBCodeTextPlugin");
+                this.mGame.plugins.removeGlobalPlugin("rexMoveTo");
+                this.mGame.plugins.removeScenePlugin("DragonBones");
+                this.mGame.events.once(Phaser.Core.Events.DESTROY, () => {
+                    this.mGame = undefined;
+                    super.destroy();
+                    resolve();
+                });
+                this.mGame.destroy(true);
+            } else {
+                super.destroy();
+                resolve();
+            }
         });
     }
 
@@ -411,7 +476,9 @@ export class Render extends RPCPeer implements GameMain {
             this.gameConfig = {
                 type: Phaser.AUTO,
                 parent: this.mConfig.parent,
-                scene: null,
+                loader: {
+                    timeout: 300,
+                },
                 disableContextMenu: true,
                 transparent: false,
                 backgroundColor: 0x0,
@@ -683,7 +750,7 @@ export class Render extends RPCPeer implements GameMain {
     @Export([webworker_rpc.ParamType.num])
     public displayReady(id: number, animation: any) {
         const display = this.mDisplayManager.getDisplay(id);
-        if (!display) return;
+        if (!display || !animation) return;
         display.play(animation);
         display.showNickname();
     }
@@ -716,6 +783,7 @@ export class Render extends RPCPeer implements GameMain {
     @Export()
     public connectFail() {
         this.isConnect = false;
+        if (this.mConnectFailFunc) this.mConnectFailFunc();
         // this.mWorld.connectFail();
     }
 
@@ -783,7 +851,15 @@ export class Render extends RPCPeer implements GameMain {
                 const camera = playScene.cameras.main;
                 const rect = camera.worldView;
                 const { x, y } = rect;
-                const obj = { x, y, width: camera.width, height: camera.height, zoom: camera.zoom, scrollX: camera.scrollX, scrollY: camera.scrollY };
+                const obj = {
+                    x,
+                    y,
+                    width: camera.width,
+                    height: camera.height,
+                    zoom: camera.zoom,
+                    scrollX: camera.scrollX,
+                    scrollY: camera.scrollY
+                };
                 resolve(obj);
             }
         });
@@ -810,6 +886,13 @@ export class Render extends RPCPeer implements GameMain {
         };
         data.dpr = this.uiRatio;
         this.mSceneManager.startScene(SceneName.LOADING_SCENE, data);
+    }
+
+    @Export([webworker_rpc.ParamType.num])
+    public updateProgress(progress: number) {
+        if (progress > 1) progress = 1;
+        progress.toFixed(2);
+        if (this.mSceneManager) this.mSceneManager.showProgress(progress);
     }
 
     @Export()
@@ -850,18 +933,22 @@ export class Render extends RPCPeer implements GameMain {
     public roomResume(roomID: number) {
 
     }
+
     @Export()
     public removeScene(sceneName: string) {
         if (this.sceneManager) this.sceneManager.remove(sceneName);
     }
+
     @Export()
     public showCreatePanelError(content: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_CREATE_ROLE_ERROR_MESSAGE) {
 
     }
+
     @Export([webworker_rpc.ParamType.str])
     public createSetNickName(name: string) {
 
     }
+
     @Export()
     public renderReconnect() {
 
@@ -910,6 +997,7 @@ export class Render extends RPCPeer implements GameMain {
     public fadeOut(id: number, type: number) {
 
     }
+
     @Export([webworker_rpc.ParamType.num, webworker_rpc.ParamType.num, webworker_rpc.ParamType.num])
     public fadeAlpha(id: number, type: number, alpha: number) {
 
@@ -1026,6 +1114,24 @@ export class Render extends RPCPeer implements GameMain {
     }
 
     @Export()
+    public drawGrids(posObj: IPosition45Obj | undefined) {
+        if (!this.displayManager) return;
+        this.displayManager.showGridsDebug(posObj);
+    }
+
+    @Export()
+    public drawAstar_init(map: number[][], posObj: IPosition45Obj) {
+        if (!this.displayManager) return;
+        this.displayManager.showAstarDebug_init(map, posObj);
+    }
+
+    @Export()
+    public drawAstar_update(x: number, y: number, val: boolean) {
+        if (!this.displayManager) return;
+        this.displayManager.showAstarDebug_update(x, y, val);
+    }
+
+    @Export()
     public roomReady() {
         if (!this.mSceneManager || !this.mCameraManager) return;
         const scene = this.mSceneManager.getMainScene();
@@ -1071,6 +1177,7 @@ export class Render extends RPCPeer implements GameMain {
     @Export([webworker_rpc.ParamType.num])
     public createFramesDisplay(id: number, displayInfo: IFramesModel) {
         if (this.mDisplayManager) this.mDisplayManager.addFramesDisplay(id, displayInfo);
+        else Logger.getInstance().log("no displayManager ====>");
     }
 
     @Export([webworker_rpc.ParamType.num])
@@ -1081,6 +1188,14 @@ export class Render extends RPCPeer implements GameMain {
     @Export()
     public setModel(sprite: any) {
         if (this.mDisplayManager) this.mDisplayManager.setModel(sprite);
+    }
+
+    @Export([webworker_rpc.ParamType.num, webworker_rpc.ParamType.num])
+    public updateDirection(id: number, dir: number) {
+        if (this.mDisplayManager) {
+            const display = this.mDisplayManager.getDisplay(id);
+            display.setDirection(dir);
+        }
     }
 
     @Export()

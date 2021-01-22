@@ -1,18 +1,20 @@
 import { UIAtlasName } from "picaRes";
+import { ButtonEventDispatcher } from "./button.event.dispatch";
 
-export class CommonBackground extends Phaser.GameObjects.Container {
+export class CommonBackground extends ButtonEventDispatcher {
     private background: Phaser.GameObjects.Image;
     private graphic: Phaser.GameObjects.Graphics;
     private bgFrame: string;
     private key: string;
     private bottomColor: number;
     constructor(scene: Phaser.Scene, x: number, y: number, width: number, height: number, key?: string, bgframe?: string, color?: number) {
-        super(scene, x, y);
+        super(scene, x, y, false);
         this.setSize(width, height);
         this.key = key || UIAtlasName.uicommon;
         this.bgFrame = bgframe || "online_bg";
         this.bottomColor = color === undefined ? 0x01CDFF : color;
         this.init();
+        this.enable = true;
     }
 
     public resize(width: number, height: number) {

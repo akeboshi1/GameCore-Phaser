@@ -49,6 +49,10 @@ export class ProgressMaskBar extends BaseUI {
         const ty = world.ty - this.height * this.zoom * 0.5;
         this.maskGraphics.setPosition(tx, ty);
     }
+    destroy() {
+        super.destroy();
+        this.maskGraphics.destroy();
+    }
     get text() {
         return this.mText;
     }

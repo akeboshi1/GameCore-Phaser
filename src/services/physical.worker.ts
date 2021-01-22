@@ -19,6 +19,7 @@ export class PhysicalPeer extends RPCPeer {
     protected mEmitter: EventDispatcher;
     private matterWorld: MatterWorld;
     private matterObjectMap: Map<number, IMatterObject>;
+    private isDestroy: boolean = false;
     constructor() {
         super(PHYSICAL_WORKER);
         this.matterObjectMap = new Map();
@@ -52,6 +53,7 @@ export class PhysicalPeer extends RPCPeer {
         let now: number = 0;
         let tmpTime: number = new Date().getTime();
         for (; ;) {
+            if (this.isDestroy) return;
             await this.run();
             now = new Date().getTime();
             let delay = now - tmpTime;
@@ -104,11 +106,6 @@ export class PhysicalPeer extends RPCPeer {
 
     @Export()
     public createMatterWorld() {
-        // if (this.matterWorld) {
-        //     this.matterWorld.debugDisable();
-        //     this.matterWorld.clear();
-        //     this.matterWorld = undefined;
-        // }
         if (!this.matterWorld) this.matterWorld = new MatterWorld(this);
         this.exportProperty(this.matterWorld, this).onceReady(() => {
         });
@@ -126,44 +123,6 @@ export class PhysicalPeer extends RPCPeer {
             this.matterWorld = undefined;
         }
     }
-
-    // @Export([webworker_rpc.ParamType.num, webworker_rpc.ParamType.num, webworker_rpc.ParamType.boolean])
-    // public setElementWalkable(x: number, y: number, boo: boolean) {
-    //     this.matterWorld.setElementWalkable(x, y, boo);
-    // }
-
-    // @Export()
-    // public createMap(map: any) {
-    //     if (this.matterWorld) this.matterWorld.createMap(map);
-    // }
-
-    // @Export([webworker_rpc.ParamType.num])
-    // public addToMap(id: number) {
-    //     const obj = this.matterObjectMap.get(id);
-    //     if (!obj) {
-    //         return;
-    //     }
-    //     this.matterWorld.addToMap(obj.model);
-    // }
-
-    // @Export([webworker_rpc.ParamType.num])
-    // public removeFromMap(id: number) {
-    //     const obj = this.matterObjectMap.get(id);
-    //     if (!obj) {
-    //         return;
-    //     }
-    //     this.matterWorld.removeFromMap(obj.model);
-    // }
-
-    // @Export([webworker_rpc.ParamType.num])
-    // public setMatterWorld(id: number) {
-    //     let obj = this.matterObjectMap.get(id);
-    //     if (!obj) {
-    //         obj = new MatterObject(this, id);
-    //         this.matterObjectMap.set(id, obj);
-    //     }
-    //     obj.setMatterWorld(this.matterWorld);
-    // }
 
     @Export()
     public startMove() {
@@ -204,11 +163,6 @@ export class PhysicalPeer extends RPCPeer {
     public getPath(startPos: IPos, targetPosList: IPos[], toReverse: boolean) {
         return this.matterWorld.getPath(startPos, targetPosList, toReverse);
     }
-
-    // @Export()
-    // public tryMove() {
-    //     this.world.tryMove();
-    // }
 
     @Export([webworker_rpc.ParamType.num, webworker_rpc.ParamType.num])
     public isWalkableAt(x: number, y: number): any {
@@ -473,6 +427,12 @@ export class PhysicalPeer extends RPCPeer {
         if (!obj) return;
         const body = Bodies.fromVertices(x, y, paths, param);
         obj.setExistingBody(body, addToWorld);
+    }
+
+    @Export()
+    public destroy() {
+        this.isDestroy = true;
+        super.destroy();
     }
 }
 const context: PhysicalPeer = new PhysicalPeer();

@@ -1,9 +1,9 @@
-import { Render } from "src/render/render";
+import { Render } from "../../render";
 import { Logger, Url } from "utils";
 import { Fit, IScenery } from "structure";
 import { DynamicImage } from "../../ui";
 import { SkyBoxScene } from "../../scenes/sky.box.scene";
-import { ICameraService } from "src/base";
+import { ICameraService } from "base";
 
 export interface IBlockManager {
   startPlay(scene: Phaser.Scene);

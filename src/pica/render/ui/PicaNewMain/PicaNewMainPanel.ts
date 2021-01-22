@@ -159,6 +159,8 @@ export class PicaNewMainPanel extends PicaBasePanel {
             this.render.renderEmitter(ModuleName.PICANEWMAIN_NAME + "_showpanel", ModuleName.PICAFURNITURECOMPOSE_NAME);
         } else if (tag === "email") {
             this.render.renderEmitter(ModuleName.PICANEWMAIN_NAME + "_showpanel", ModuleName.PICAROAM_NAME);
+        } else if (tag === "roam") {
+            this.render.renderEmitter(ModuleName.PICANEWMAIN_NAME + "_showpanel", ModuleName.PICAROAM_NAME);
         }
     }
 
@@ -171,8 +173,8 @@ export class PicaNewMainPanel extends PicaBasePanel {
             this.render.renderEmitter(ModuleName.PICANEWMAIN_NAME + "_showpanel", ModuleName.PICAAVATAR_NAME);
         } else if (tag === "shop") {
             this.render.renderEmitter(ModuleName.PICANEWMAIN_NAME + "_showpanel", ModuleName.PICAMARKET_NAME);
-        } else if (tag === "vip") {
-            this.render.renderEmitter(ModuleName.PICANEWMAIN_NAME + "_showpanel", ModuleName.PICARECHARGE_NAME);
+        } else if (tag === "explore") {
+            this.render.renderEmitter(ModuleName.PICANEWMAIN_NAME + "_showpanel", ModuleName.PICAEXPLORELIST_NAME);
         }
     }
 }

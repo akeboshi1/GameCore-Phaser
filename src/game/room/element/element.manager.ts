@@ -1,18 +1,17 @@
-import {PacketHandler, PBpacket} from "net-socket-packet";
-import {op_client, op_def, op_virtual_world} from "pixelpai_proto";
-import {ConnectionService} from "../../../../lib/net/connection.service";
-import {Logger, LogicPos} from "utils";
-import {EventType, IDragonbonesModel, IFramesModel, ISprite} from "structure";
-import {IElementStorage} from "../elementstorage/element.storage";
-import {IRoomService, Room} from "../room/room";
-import {Element, IElement, InputEnable} from "./element";
-import {ElementStateManager} from "./element.state.manager";
-import {ElementDataManager} from "../../data.manager/element.dataManager";
-import {DataMgrType} from "../../data.manager";
-import {ElementActionManager} from "../elementaction/element.action.manager";
-import {Sprite} from "../display/sprite/sprite";
+import { PacketHandler, PBpacket } from "net-socket-packet";
+import { op_client, op_def, op_virtual_world } from "pixelpai_proto";
+import { ConnectionService } from "../../../../lib/net/connection.service";
+import { Logger, LogicPos } from "utils";
+import { EventType, IDragonbonesModel, IFramesModel, ISprite } from "structure";
+import { IElementStorage } from "../elementstorage/element.storage";
+import { IRoomService, Room } from "../room/room";
+import { Element, IElement, InputEnable } from "./element";
+import { ElementStateManager } from "./element.state.manager";
+import { ElementDataManager } from "../../data.manager/element.dataManager";
+import { DataMgrType } from "../../data.manager";
+import { ElementActionManager } from "../elementaction/element.action.manager";
+import { Sprite } from "../display/sprite/sprite";
 import NodeType = op_def.NodeType;
-
 export interface IElementManager {
     hasAddComplete: boolean;
     readonly connection: ConnectionService | undefined;
@@ -29,10 +28,6 @@ export interface IElementManager {
 
     removeFromMap(sprite: ISprite);
 
-    onDisplayCreated(id: number);
-
-    onDisplayRemoved(id: number);
-
     destroy();
 }
 
@@ -44,12 +39,22 @@ export interface Task {
 export class ElementManager extends PacketHandler implements IElementManager {
     public hasAddComplete: boolean = false;
     protected mElements: Map<number, Element> = new Map();
+    /**
+     * 添加element缓存list
+     */
+    protected mCacheAddList: any[] = [];
+    /**
+     * 更新element缓存list
+     */
+    protected mCacheSyncList: any[] = [];
     protected mMap: number[][];
+    private mDealAddList: any[] = [];
+    private mDealSyncMap: Map<number, boolean> = new Map();
     private mGameConfig: IElementStorage;
     private mStateMgr: ElementStateManager;
     private mActionMgr: ElementActionManager;
-    private mElementsDisplayReady: Map<number, boolean> = new Map();
-
+    private mLoadLen: number = 0;
+    private mCurIndex: number = 0;
     constructor(protected mRoom: IRoomService) {
         super();
         if (this.connection) {
@@ -155,7 +160,7 @@ export class ElementManager extends PacketHandler implements IElementManager {
                             this.mMap[row][col] = walkable[i][j];
                         }
                         // this.roomService.game.physicalPeer.setElementWalkable(row, col, this.mMap[row][col] === 1);
-                        (<Room> this.roomService).setElementWalkable(row, col, this.mMap[row][col] === 1);
+                        (<Room>this.roomService).setElementWalkable(row, col, this.mMap[row][col] === 1);
                     }
                 }
             }
@@ -189,7 +194,7 @@ export class ElementManager extends PacketHandler implements IElementManager {
                     col = pos.x + j - origin.x;
                     if (row >= 0 && row < this.mMap.length && col >= 0 && col < this.mMap[row].length) {
                         this.mMap[row][col] = 0;
-                        (<Room> this.roomService).setElementWalkable(row, col, this.mMap[row][col] === 0);
+                        (<Room>this.roomService).setElementWalkable(row, col, this.mMap[row][col] === 0);
                         // this.roomService.game.physicalPeer.setElementWalkable(row, col, this.mMap[row][col] === 0);
                     }
                 }
@@ -222,56 +227,166 @@ export class ElementManager extends PacketHandler implements IElementManager {
     }
 
     public destroy() {
+        this.hasAddComplete = false;
         this.mRoom.game.emitter.off(EventType.SCENE_INTERACTION_ELEMENT, this.checkElementAction, this);
         if (this.eleDataMgr) this.eleDataMgr.off(EventType.SCENE_ELEMENT_FIND, this.onQueryElementHandler, this);
         if (this.connection) {
             Logger.getInstance().log("elementmanager ---- removepacklistener");
             this.connection.removePacketListener(this);
         }
-        if (!this.mElements) return;
-        this.mElements.forEach((element) => this.remove(element.id));
-        this.mElements.clear();
-        this.mElementsDisplayReady.clear();
-        this.mStateMgr.destroy();
-        this.mActionMgr.destroy();
+        if (this.mElements) {
+            this.mElements.forEach((element) => this.remove(element.id));
+            this.mElements.clear();
+            this.mStateMgr.destroy();
+            this.mActionMgr.destroy();
+        }
+        if (this.mDealAddList) this.mDealAddList.length = 0;
+        if (this.mDealSyncMap) this.mDealSyncMap.clear();
+        if (this.mCacheAddList) {
+            this.mCacheAddList.length = 0;
+            this.mCacheAddList = [];
+        }
+
+        if (this.mCacheSyncList) {
+            this.mCacheSyncList.length = 0;
+            this.mCacheSyncList = [];
+        }
+        this.mCurIndex = 0;
+        this.mLoadLen = 0;
     }
 
     public update(time: number, delta: number) {
+        if (!this.hasAddComplete) return;
         this.mElements.forEach((ele) => ele.update(time, delta));
     }
 
-    public onDisplayCreated(id: number) {
-        if (!this.mElements.has(id)) return;
+    /**
+     * render 反馈给worker，某些element加载成功/失败
+     * @param id
+     */
+    public elementLoadCallBack(id: number) {
+        let loadAll: boolean = true;
+        for (let i: number = 0, len = this.mDealAddList.length; i < len; i++) {
+            const ele = this.mDealAddList[i];
+            if (ele.id === id) {
+                ele.state = true;
+            }
+            if (!ele.state) {
+                loadAll = false;
+                return;
+            }
+        }
 
-        this.mElementsDisplayReady.set(id, false);
+        if (!loadAll) return;
+        // 如果所有sprite都已经有反馈，则重新获取缓存队列进行处理
+        this.mDealAddList.length = 0;
+        this.mDealAddList = [];
+        this.dealAddList();
     }
 
-    public onDisplayRemoved(id: number) {
-        if (!this.mElements.has(id)) return;
+    public dealAddList(spliceBoo: boolean = false) {
+        const len = 3;
+        let point: op_def.IPBPoint3f;
+        let sprite: ISprite = null;
+        const ids = [];
+        const eles = [];
+        const tmpLen = !spliceBoo ? (this.mCacheAddList.length > len ? len : this.mCacheAddList.length) : this.mDealAddList.length;
+        const tmpList = !spliceBoo ? this.mCacheAddList.splice(0, tmpLen) : this.mDealAddList;
+        for (let i: number = 0; i < tmpLen; i++) {
+            const obj = tmpList[i];
+            if (!obj) continue;
+            point = obj.point3f;
+            if (point) {
+                sprite = new Sprite(obj, 3);
+                if (!sprite.displayInfo) {
+                    if (!this.checkDisplay(sprite)) {
+                        ids.push(sprite.id);
+                    } else {
+                        obj.state = true;
+                        this.mDealAddList.push(obj);
+                    }
+                }
+                const ele = this._add(sprite);
+                eles.push(ele);
+            }
+        }
+        this.fetchDisplay(ids);
+        this.mStateMgr.add(eles);
+        this.checkElementDataAction(eles);
+    }
 
-        if (this.mElementsDisplayReady.has(id)) {
-            this.mElementsDisplayReady.delete(id);
+    /**
+     * render 反馈给worker，某些element更新成功
+     * @param id
+     */
+    public elementDisplaySyncReady(id: number) {
+        this.mDealSyncMap.set(id, true);
+        let syncAll: boolean = true;
+        this.mDealSyncMap.forEach((val, key) => {
+            if (!val) {
+                syncAll = false;
+                return;
+            }
+        });
+        if (!syncAll) return;
+        // 如果所有sprite都已经有反馈，则把缓存列表处理
+        this.mDealSyncMap.clear();
+        this.dealSyncList();
+    }
+
+    public dealSyncList() {
+        const len = 3;
+        if (this.mCacheSyncList && this.mCacheSyncList.length > 0) {
+            let element: Element = null;
+            const tmpLen = this.mCacheSyncList.length > len ? len : this.mCacheSyncList.length;
+            const tmpList = this.mCacheSyncList.splice(0, tmpLen);
+            const ele = [];
+            for (let i: number = 0; i < tmpLen; i++) {
+                const sprite = tmpList[i];
+                if (!sprite) continue;
+                element = this.get(sprite.id);
+                if (element) {
+                    this.mDealSyncMap.set(sprite.id, false);
+                    const command = (<any>sprite).command;
+                    if (command === op_def.OpCommand.OP_COMMAND_UPDATE) { //  全部
+                        element.model = new Sprite(sprite, 3);
+                    } else if (command === op_def.OpCommand.OP_COMMAND_PATCH) { //  增量
+                        element.updateModel(sprite);
+                    }
+                    // 更新elementstorage中显示对象的数据信息
+                    const displayInfo = element.model.displayInfo;
+                    if (displayInfo) {
+                        this.mRoom.game.elementStorage.add(<any>displayInfo);
+                    }
+                    ele.push(element);
+                }
+            }
+            this.dealAddList(true);
+            this.mStateMgr.syncElement(ele);
+            this.checkElementDataAction(ele);
         }
     }
 
     public onDisplayReady(id: number) {
-        if (!this.mElementsDisplayReady.has(id)) return;
-
-        this.mElementsDisplayReady.set(id, true);
-        if (!this.hasAddComplete) return;
-
-        Logger.getInstance().log("onDisplayReady ", id);
-        let allReady = true;
-        this.mElementsDisplayReady.forEach((val, key) => {
-            if (val === false) {
-                allReady = false;
-                Logger.getInstance().log("left not ready display: ", this.mElements.get(key));
+        const element = this.mElements.get(id);
+        if (!element) return;
+        element.state = true;
+        // 回馈给load缓存队列逻辑
+        this.elementLoadCallBack(id);
+        // 没有完成全部元素添加或者当物件添加队列缓存存在，则不做创建状态检测
+        if (!this.hasAddComplete || (this.mCacheAddList && this.mCacheAddList.length > 0)) return;
+        Logger.getInstance().debug("onDisplayReady ", id);
+        this.mElements.forEach((ele, key) => {
+            if (ele.state === false) {
+                // todo 遍历优化
+                Logger.getInstance().debug("left not ready display: ", this.mElements.get(key));
+                return;
             }
         });
-
-        if (allReady) {
-            this.mRoom.onManagerReady(this.constructor.name);
+        if (this.mLoadLen > 0) {
+            this.mRoom.game.renderPeer.updateProgress(this.mCurIndex++ / this.mLoadLen);
         }
+        this.mRoom.onManagerReady(this.constructor.name);
     }
 
     protected addMap(sprite: ISprite) {
@@ -284,7 +399,7 @@ export class ElementManager extends PacketHandler implements IElementManager {
         if (this.mRoom) {
             return this.mRoom.game.connection;
         }
-        Logger.getInstance().log("roomManager is undefined");
+        Logger.getInstance().error("roomManager is undefined");
         return;
     }
 
@@ -308,10 +423,6 @@ export class ElementManager extends PacketHandler implements IElementManager {
     }
 
     protected onAdd(packet: PBpacket) {
-        // if (!this.mRoom.layerManager) {
-        //     Logger.getInstance().error("layer manager does not exist");
-        //     return;
-        // }
         if (!this.mGameConfig) {
             Logger.getInstance().error("gameConfig does not exist");
             return;
@@ -323,26 +434,9 @@ export class ElementManager extends PacketHandler implements IElementManager {
         if (type !== NodeType.ElementNodeType) {
             return;
         }
-        let point: op_def.IPBPoint3f;
-        let sprite: ISprite = null;
-        const ids = [];
-        const eles = [];
         for (const obj of objs) {
-            point = obj.point3f;
-            if (point) {
-                sprite = new Sprite(obj, content.nodeType);
-                if (!sprite.displayInfo) {
-                    if (!this.checkDisplay(sprite)) {
-                        ids.push(sprite.id);
-                    }
-                }
-                const ele = this._add(sprite);
-                eles.push(ele);
-            }
+            this.mCacheAddList.push(obj);
         }
-        this.fetchDisplay(ids);
-        this.mStateMgr.add(eles);
-        this.checkElementDataAction(eles);
     }
 
     protected _add(sprite: ISprite, addMap?: boolean): Element {
@@ -362,8 +456,17 @@ export class ElementManager extends PacketHandler implements IElementManager {
 
     protected addComplete(packet: PBpacket) {
         this.hasAddComplete = true;
-
-        if (this.mElements.size === 0) {
+        this.mCurIndex = 0;
+        this.mLoadLen = 0;
+        // 接收到addcomplete，则开始处理缓存列表内的数据
+        if (this.mCacheAddList && this.mCacheAddList.length > 0) {
+            this.mLoadLen = this.mCacheAddList.length;
+            this.mRoom.game.renderPeer.updateProgress(this.mCurIndex / this.mLoadLen);
+            this.dealAddList();
+        } else {
+            this.dealSyncList();
+        }
+        if (this.mElements.size === 0 && (!this.mCacheAddList || this.mCacheAddList.length === 0)) {
             this.mRoom.onManagerReady(this.constructor.name);
         }
     }
@@ -377,7 +480,9 @@ export class ElementManager extends PacketHandler implements IElementManager {
                 this.mRoom.game.physicalPeer.updateAnimations(sprite);
                 return displayInfo;
             }
+            Logger.getInstance().error("checkdisplay error====>", sprite);
         }
+        return;
     }
 
     protected fetchDisplay(ids: number[]) {
@@ -433,23 +538,13 @@ export class ElementManager extends PacketHandler implements IElementManager {
         if (content.nodeType !== NodeType.ElementNodeType) {
             return;
         }
-        let element: Element = null;
-        const sprites = content.sprites;
         const command = content.command;
-        const ele = [];
+        const sprites = content.sprites;
         for (const sprite of sprites) {
-            element = this.get(sprite.id);
-            if (element) {
-                if (command === op_def.OpCommand.OP_COMMAND_UPDATE) {
-                    element.model = new Sprite(sprite, content.nodeType);
-                } else if (command === op_def.OpCommand.OP_COMMAND_PATCH) {
-                    element.updateModel(sprite);
-                }
-                ele.push(element);
-            }
+            (<any>sprite).command = command;
+            this.mCacheSyncList.push(sprite);
         }
-        this.mStateMgr.syncElement(ele);
-        this.checkElementDataAction(ele);
+        this.dealSyncList();
     }
 
     protected onMove(packet: PBpacket) {
@@ -465,12 +560,12 @@ export class ElementManager extends PacketHandler implements IElementManager {
                 moveData = moveDataList[i];
                 elementID = moveData.moveObjectId;
                 element = this.get(elementID);
-                // Console.log(player.x + "," + player.y + ":" + moveData.destinationPoint3f.x + "," + moveData.destinationPoint3f.y + ":" + moveData.timeSpan);
+                // Logger.getInstance().log(player.x + "," + player.y + ":" + moveData.destinationPoint3f.x + "," + moveData.destinationPoint3f.y + ":" + moveData.timeSpan);
                 if (!element) {
                     continue;
                 }
-                const {x, y} = moveData.destinationPoint3f;
-                element.move([{x, y}]);
+                const { x, y } = moveData.destinationPoint3f;
+                element.move([{ x, y }]);
                 // element.move(moveData);
             }
         }

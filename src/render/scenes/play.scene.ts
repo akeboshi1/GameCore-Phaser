@@ -1,4 +1,4 @@
-import { Logger } from "utils";
+import {IPosition45Obj, Logger, LogicPos, Position45} from "utils";
 import { PlayCamera } from "../cameras/play.camera";
 import { BaseLayer, GroundLayer, SurfaceLayer } from "base";
 import { MainUIScene } from "./main.ui.scene";
@@ -18,6 +18,7 @@ export class PlayScene extends RoomScene {
     public readonly LAYER_SCENEUI = "sceneUILayer";
     protected motionManager: MotionManager;
     protected mLoadState: PlaySceneLoadState;
+
     constructor(config?: string | Phaser.Types.Scenes.SettingsConfig) {
         super(config || { key: SceneName.PLAY_SCENE });
         this.loadState = PlaySceneLoadState.CREATING_SCENE;
@@ -80,6 +81,7 @@ export class PlayScene extends RoomScene {
         // Logger.getInstance().log("sort-display: ", sort.addFixedDisplayObject);
 
         this.initListener();
+
         super.create();
     }
 
@@ -103,7 +105,8 @@ export class PlayScene extends RoomScene {
     }
     set loadState(val: PlaySceneLoadState) {
         if (val === this.mLoadState) return;
-
+        // tslint:disable-next-line:no-console
+        console.log("PlayScene change loadState: ", val);
         Logger.getInstance().log("PlayScene change loadState: ", val);
         this.mLoadState = val;
 

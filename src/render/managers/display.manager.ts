@@ -1,20 +1,22 @@
-import {IPos, Logger, LogicPos} from "utils";
-import {SceneManager} from "../scenes/scene.manager";
-import {FramesDisplay} from "../display/frames/frames.display";
-import {PlayScene} from "../scenes/play.scene";
-import {DragonbonesDisplay} from "../display/dragonbones/dragonbones.display";
-import {DisplayField, ElementStateType, IScenery} from "structure";
-import {BlockManager} from "../display/scenery/block.manager";
-import {Render} from "../render";
-import {IFramesModel} from "structure";
-import {IDragonbonesModel} from "structure";
-import {RunningAnimation} from "structure";
-import {op_def} from "pixelpai_proto";
-import {MatterBodies} from "../display/debugs/matter";
-import {ServerPosition} from "../display/debugs/server.pointer";
-import {BasicScene} from "../scenes";
-import {FallEffect} from "picaRender";
-import {IDisplayObject} from "../display";
+import {IPos, IPosition45Obj, Logger, LogicPos} from "utils";
+import { SceneManager } from "../scenes/scene.manager";
+import { FramesDisplay } from "../display/frames/frames.display";
+import { PlayScene } from "../scenes/play.scene";
+import { DragonbonesDisplay } from "../display/dragonbones/dragonbones.display";
+import { DisplayField, ElementStateType, IScenery } from "structure";
+import { BlockManager } from "../display/scenery/block.manager";
+import { Render } from "../render";
+import { IFramesModel } from "structure";
+import { IDragonbonesModel } from "structure";
+import { RunningAnimation } from "structure";
+import { op_def } from "pixelpai_proto";
+import { MatterBodies } from "../display/debugs/matter";
+import { ServerPosition } from "../display/debugs/server.pointer";
+import { BasicScene } from "../scenes";
+import { FallEffect } from "picaRender";
+import { IDisplayObject } from "../display";
+import {Astar} from "../display/debugs/astar";
+import {Grids} from "../display/debugs/grids";
 
 export enum NodeType {
     UnknownNodeType = 0,
@@ -64,6 +66,8 @@ export class DisplayManager {
     private mUser: IDisplayObject;
     private matterBodies: MatterBodies;
     private serverPosition: ServerPosition;
+    private mAstarDebug: Astar;
+    private mGridsDebug: Grids;
     private preLoadList: any[];
     private loading: boolean = false;
 
@@ -103,6 +107,7 @@ export class DisplayManager {
         const display: IDisplayObject = this.displays.get(id);
         if (display) {
             display.load(data);
+            this.render.mainPeer.elementDisplaySyncReady(id);
         }
     }
 
@@ -124,7 +129,7 @@ export class DisplayManager {
             display = this.displays.get(id) as DragonbonesDisplay;
         }
         display.load(data);
-        (<PlayScene> scene).layerManager.addToLayer("surfaceLayer", display);
+        (<PlayScene>scene).layerManager.addToLayer("surfaceLayer", display);
     }
 
     public addUserDragonbonesDisplay(data: IDragonbonesModel, isUser: boolean = false) {
@@ -146,7 +151,7 @@ export class DisplayManager {
         // 主角龙骨无视其余资源优先加载
         display.load(data);
         display.startLoad();
-        (<PlayScene> scene).layerManager.addToLayer("surfaceLayer", display);
+        (<PlayScene>scene).layerManager.addToLayer("surfaceLayer", display);
         if (isUser) this.mUser = display;
         return display;
     }
@@ -168,12 +173,13 @@ export class DisplayManager {
             display = this.displays.get(id) as FramesDisplay;
         }
         display.load(data);
-        (<PlayScene> scene).layerManager.addToLayer("groundLayer", display);
+        (<PlayScene>scene).layerManager.addToLayer("groundLayer", display);
         return display;
     }
 
     public addFramesDisplay(id: number, data: IFramesModel, field?: DisplayField) {
         if (!data) {
+            Logger.getInstance().log("addFramesDisplay ====>", id);
             return;
         }
         const scene = this.sceneManager.getMainScene();
@@ -183,18 +189,20 @@ export class DisplayManager {
         }
         let display: FramesDisplay;
         if (!this.displays.has(id)) {
+            if (id === 57255261)
+                Logger.getInstance().debug("no load obj render", data);
             display = new FramesDisplay(scene, this.render, id, NodeType.ElementNodeType);
             this.displays.set(id, display);
         } else {
             display = this.displays.get(id) as FramesDisplay;
         }
         display.load(data, field);
-        (<PlayScene> scene).layerManager.addToLayer("surfaceLayer", display);
+        (<PlayScene>scene).layerManager.addToLayer("surfaceLayer", display);
         return display;
     }
 
     public addToSurfaceLayer(display: FramesDisplay | DragonbonesDisplay) {
-        const scene: PlayScene = <PlayScene> this.sceneManager.getMainScene();
+        const scene: PlayScene = <PlayScene>this.sceneManager.getMainScene();
         if (!scene) {
             Logger.getInstance().fatal(`scene does not exist`);
             return;
@@ -395,6 +403,44 @@ export class DisplayManager {
         }
     }
 
+    public showGridsDebug(size: IPosition45Obj) {
+        if (!this.mGridsDebug) {
+            this.mGridsDebug = new Grids(this.render);
+        }
+        this.mGridsDebug.setData(size);
+    }
+
+    public hideGridsDebug() {
+        if (this.mGridsDebug) {
+            this.mGridsDebug.destroy();
+            this.mGridsDebug = null;
+        }
+    }
+
+    public showAstarDebug_init(map: number[][], posObj: IPosition45Obj) {
+        if (!this.mAstarDebug) {
+            this.mAstarDebug = new Astar(this.render);
+        }
+
+        this.mAstarDebug.initData(map, posObj);
+    }
+
+    public showAstarDebug_update(x: number, y: number, val: boolean) {
+        if (!this.mAstarDebug) {
+            Logger.getInstance().error("AstarDebug not init");
+            return;
+        }
+
+        this.mAstarDebug.updateData(x, y, val);
+    }
+
+    public hideAstarDebug() {
+        if (this.mAstarDebug) {
+            this.mAstarDebug.destroy();
+            this.mAstarDebug = null;
+        }
+    }
+
     public drawServerPosition(x: number, y: number) {
         if (!this.serverPosition) {
             this.serverPosition = new ServerPosition(this.render);
@@ -429,6 +475,14 @@ export class DisplayManager {
             this.serverPosition.destroy();
             this.serverPosition = null;
         }
+        if (this.mAstarDebug) {
+            this.mAstarDebug.destroy();
+            this.mAstarDebug = null;
+        }
+        if (this.mGridsDebug) {
+            this.mGridsDebug.destroy();
+            this.mGridsDebug = null;
+        }
     }
 
     private loadProgress() {
@@ -437,10 +491,12 @@ export class DisplayManager {
             this.loading = false;
             return;
         }
-        display.startLoad(() => {
-            this.loadProgress();
-        }).catch(() => {
-            this.loadProgress();
-        });
+        display.startLoad()
+            .then(() => {
+                this.loadProgress();
+            })
+            .catch(() => {
+                this.loadProgress();
+            });
     }
 }

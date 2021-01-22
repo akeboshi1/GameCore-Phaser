@@ -29,7 +29,7 @@ export class EmptyTerrain extends BlockObject {
         const height = roomSize.tileHeight * dpr;
         const width = roomSize.tileWidth * dpr;
         const paths = [{ x: 0, y: -height / 2 }, { x: width / 2, y: 0 }, { x: 0, y: height / 2 }, { x: -width / 2, y: 0 }];
-        this.mRoomService.game.peer.physicalPeer.createBodyFromVertices(this.guid, this._tempVec2.x, this._tempVec2.y + height * 0.5,
+        this.mRoomService.game.peer.physicalPeer.createBodyFromVertices(this.guid, this._tempVec2.x * dpr, this._tempVec2.y * dpr + height * 0.5,
             [paths], true, { isStatic: true, inertia: Infinity, inverseInertia: Infinity });
     }
 

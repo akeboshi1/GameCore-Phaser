@@ -100,6 +100,9 @@ export class Launcher {
         baseWidth: this.maxWidth,
         baseHeight: this.maxHeight,
         ui_scale: undefined,
+        hasConnectFail: false,
+        hasCloseGame: false,
+        hasGameCreated: false,
         closeGame: null,
         connectFail: null,
         platform: "pc",
@@ -209,7 +212,10 @@ export class Launcher {
 
     public destroy(): Promise<void> {
         if (this.intervalId) clearInterval(this.intervalId);
-        if (this.world) return this.world.destroy();
+        if (this.world) {
+            this.world.destroy();
+            this.world = null;
+        }
         return null;
     }
 

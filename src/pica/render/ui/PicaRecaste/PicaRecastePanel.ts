@@ -31,6 +31,7 @@ export class PicaRecastePanel extends PicaBasePanel {
   constructor(uiManager: UiManager) {
     super(uiManager);
     this.atlasNames = [UIAtlasName.uicommon];
+    this.textures = [{ atlasName: "Recast_aims_icon_bg", folder: "texture" }, { atlasName: "Recast_bg_texture", folder: "texture" }];
     this.key = ModuleName.PICARECASTE_NAME;
   }
 
@@ -169,8 +170,7 @@ export class PicaRecastePanel extends PicaBasePanel {
     const height = this.scaleHeight;
     this.mBackground = new CommonBackground(this.scene, 0, 0, width, height);
     this.mTopBg = this.scene.make.image({
-      key: UIAtlasName.uicommon,
-      frame: "Recast_bg_texture"
+      key: "Recast_bg_texture"
     }, false);
     this.displayPanel = new RecasteDisplayPanel(this.scene, width, 248 * this.dpr, this.render, this.dpr, this.scale);
     this.mTopBg.texture.setFilter(Phaser.Textures.FilterMode.LINEAR);
@@ -389,7 +389,7 @@ class RecasteDisplayPanel extends Phaser.GameObjects.Container {
   }
 
   protected init() {
-    const rightbg = this.scene.make.image({ key: UIAtlasName.uicommon, frame: "Recast_aims_icon_bg" });
+    const rightbg = this.scene.make.image({ key: "Recast_aims_icon_bg" });
     rightbg.x = this.width * 0.5 - rightbg.width * 0.5 - 15 * this.dpr;
 
     this.recasteItem = new ItemButton(this.scene, UIAtlasName.uicommon, "Recast_default_icon_bg", this.dpr, this.zoom, false);

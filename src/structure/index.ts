@@ -1,3 +1,5 @@
+import { Export } from "webworker-rpc";
+
 export { RunningAnimation, AnimationQueue } from "./animation";
 export { PI_EXTENSION_REGEX, HTTP_REGEX } from "./constants";
 export * from "./display";
@@ -26,3 +28,4 @@ export * from "./animation.model";
 export * from "./isprite";
 export * from "./animator";
 export * from "./size.chart";
+export * from "./room.type";

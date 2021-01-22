@@ -4,9 +4,10 @@ import { EventDispatcher } from "utils";
 import { Game } from "../game";
 import { BaseHandler } from "./base.handler";
 export class CacheDataManager extends BaseHandler {
-
+    public chapters: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_EXPLORE_CHAPTER_PROGRESS;
     private mBagCategory: Map<number, any> = new Map();
     private furiRecasteMap: Map<string, any> = new Map();
+    private mChaptersMap: Map<number, any> = new Map();
     constructor(game: Game, event?: EventDispatcher) {
         super(game, event);
     }
@@ -63,5 +64,22 @@ export class CacheDataManager extends BaseHandler {
             }
         }
         return tempArr;
+    }
+
+    setChapters(datas: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_EXPLORE_CHAPTER_PROGRESS) {
+        this.chapters = datas;
+        const chapters = datas.chapters;
+        if (chapters) {
+            for (const data of chapters) {
+                this.mChaptersMap.set(data.chapterId, data);
+            }
+        }
+    }
+
+    getChapter(chapterId: number) {
+        if (this.mChaptersMap.has(chapterId)) {
+            return this.mChaptersMap.get(chapterId);
+        }
+        return undefined;
     }
 }

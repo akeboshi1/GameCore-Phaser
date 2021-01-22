@@ -10,6 +10,7 @@ export interface ConnectionService {
     startConnect(addr: ServerAddress, keepalive?: boolean);
     closeConnect(): void;
     setClock(clock: Clock): void;
+    update();
     addPacketListener(listener: PacketHandler): void;
     removePacketListener(listener: PacketHandler): void;
     clearPacketListeners(): void;

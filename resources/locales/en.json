@@ -382,5 +382,22 @@
     "moneytips": "You don't have enough {{name}} roaming!",
     "paytips": "Do you want to spend {{name}} to buy {{count}} for {{tag}} tickets?",
     "drawfreetips": "This draw is free of charge"
+  },
+  "explore": {
+    "title": "Explore Log",
+    "basetips": "Base Score",
+    "combotips": "Combo Score",
+    "timetips": "Time Score",
+    "accuracytips": "Accuracy Score",
+    "hinttips": "Hint Score",
+    "foreword": "Foreword",
+    "open": "Start",
+    "unlock": "Unlock the conditions:",
+    "chaptertitle": "The {{name}} chapter",
+    "taskneedtips": "Requirement",
+    "finishchaptertips": "To conclude the previous chapter",
+    "unlocktips": "Reaches {{Name}} level to unlock",
+    "nextleveltips": "Next Level",
+    "eventuallytips": "Eventually"
   }
 }

@@ -28,6 +28,7 @@ interface ISize {
 export const fps: number = 45;
 export const interval = fps > 0 ? 1000 / fps : 1000 / 30;
 export class Game extends PacketHandler implements IConnectListener, ClockReadyListener {
+    public isDestroy: boolean = false;
     protected mainPeer: MainPeer;
     protected connect: ConnectionService;
     protected mUser: User;
@@ -104,7 +105,7 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
     public onDisConnected() {
         Logger.getInstance().log("app connectFail=====");
         if (this.hasClear || this.connect.pause) return;
-        if (this.mConfig.connectFail) {
+        if (this.mConfig.hasConnectFail) {
             return this.mainPeer.render.connectFail();
         } else {
             if (this.mReconnect > 2) {
@@ -122,7 +123,7 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
     public onRefreshConnect() {
         if (this.hasClear || this.isPause) return;
         Logger.getInstance().log("game onrefreshconnect");
-        if (this.mConfig.connectFail) {
+        if (this.mConfig.hasConnectFail) {
             Logger.getInstance().log("app connectfail");
             this.onError();
         } else {
@@ -140,9 +141,9 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
             return;
         }
         if (!this.connect.connect) {
-            if (this.mConfig.connectFail) {
+            if (this.mConfig.hasConnectFail) {
                 Logger.getInstance().log("app connectFail");
-                return this.mConfig.connectFail();
+                return this.mainPeer.render.connectFail();
             } else {
                 Logger.getInstance().log("reconnect");
                 this.reconnect();
@@ -153,7 +154,7 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
     public async reconnect() {
         if (this.hasClear || this.isPause) return;
         Logger.getInstance().log("game reconnect");
-        if (this.mConfig.connectFail) return this.mConfig.connectFail();
+        if (this.mConfig.hasConnectFail) return this.mainPeer.render.connectFail();
         let gameID: string = this.mConfig.game_id;
         let worldID: string = this.mConfig.virtual_world_id;
         const account = await this.mainPeer.render.getAccount();
@@ -348,8 +349,8 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
         this.connect.onFocus();
         if (this.connection) {
             if (!this.connection.connect) {
-                if (this.mConfig.connectFail) {
-                    return this.mConfig.connectFail();
+                if (this.mConfig.hasConnectFail) {
+                    return this.mainPeer.render.connectFail();
                 } else {
                     return this.onDisConnected();
                 }
@@ -757,11 +758,12 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
         // Logger.getInstance.log(`_run at ${current} + delta: ${delta}`);
 
         // TODO do something here.
+        if (this.connect) this.connect.update();
         if (this.mRoomManager) this.mRoomManager.update(current, delta);
     }
 
     private update(current: number, delta: number = 0) {
-
+        if (this.isDestroy) return;
         this._run(current, delta);
 
         const now: number = new Date().getTime();
