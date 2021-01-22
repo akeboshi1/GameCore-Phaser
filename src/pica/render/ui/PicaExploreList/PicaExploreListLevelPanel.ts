@@ -2,7 +2,7 @@ import { ButtonEventDispatcher, DynamicImage, ImageValue, ProgressMaskBar, Three
 import { UIAtlasName } from "picaRes";
 import { Handler, i18n, UIHelper, Url } from "utils";
 import { op_client } from "pixelpai_proto";
-import { ClickEvent, GameScroller } from "apowophaserui";
+import { ClickEvent, GameScroller, NineSliceButton } from "apowophaserui";
 import { ChineseUnit } from "structure";
 import { ItemButton } from "../Components";
 import { PicaChapterLevelClue } from "./PicaChapterLevelClue";
@@ -15,6 +15,7 @@ export class PicaExploreListLevelPanel extends Phaser.GameObjects.Container {
     private forewordItem: ForewordChapterItem;
     private lockItem: ChapterLevelLockItem;
     private finalItem: ChapterLevelEventuallyItem;
+    private topbg: Phaser.GameObjects.Image;
     private levelItems: ChapterLevelItem[] = [];
     private chapterResult: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_QUERY_CHAPTER_RESULT;
     private send: Handler;
@@ -28,13 +29,15 @@ export class PicaExploreListLevelPanel extends Phaser.GameObjects.Container {
 
     resize(w: number, h: number) {
         this.setSize(w, h);
-        this.titlebg.x = w * 0.5;
+        this.topbg.x = 0;
+        this.topbg.y = -this.height * 0.5 + this.topbg.height * 0.5;
+        this.titlebg.x = 0;
         this.titlebg.y = -this.height * 0.5 + this.titlebg.height * 0.5;
         this.titleTex.x = this.titlebg.x;
         this.titleTex.y = this.titlebg.y;
         const scrollheight = h - this.titlebg.height - 15 * this.dpr;
         this.captorScroll.resetSize(w, scrollheight);
-        this.captorScroll.x = w * 0.5;
+        this.captorScroll.x = 0;
         this.captorScroll.y = this.height * 0.5 - scrollheight * 0.5;
         this.refreshMask();
     }
@@ -49,7 +52,10 @@ export class PicaExploreListLevelPanel extends Phaser.GameObjects.Container {
 
     setCaptoreResult(result: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_QUERY_CHAPTER_RESULT, nextLevelID: number) {
         this.chapterResult = result;
+        const chapter = result.chapter;
         const lock = result["lock"];
+        const numTex = i18n.language !== "zh-CN" ? chapter.chapterId + "" : ChineseUnit.numberToChinese(chapter.chapterId = 25);
+        this.titleTex.text = i18n.t("explore.chaptertitle", { name: numTex });
         this.captorScroll.clearItems(false);
         this.setForwardDatas(result.chapter, lock);
         if (!lock) this.setLevelDatas(result.levels, nextLevelID);
@@ -98,8 +104,6 @@ export class PicaExploreListLevelPanel extends Phaser.GameObjects.Container {
             this.captorScroll.addItem(this.forewordItem);
         }
         this.forewordItem.setCaptoreData(data);
-        const numTex = i18n.language !== "zh-CN" ? data.chapterId + "" : ChineseUnit.numberToChinese(data.chapterId);
-        this.titleTex.text = i18n.t("explore.chaptertitle", { name: numTex });
         if (lock) {
             this.lockItem = new ChapterLevelLockItem(this.scene, this.dpr);
             this.lockItem.setHandler(new Handler(this, this.onChapterLockHandler));
@@ -108,8 +112,9 @@ export class PicaExploreListLevelPanel extends Phaser.GameObjects.Container {
     }
 
     protected init() {
+        this.topbg = this.scene.make.image({ key: UIAtlasName.explorelog, frame: "explore_mask" });
         this.titlebg = this.scene.make.image({ key: UIAtlasName.explorelog, frame: "explore_title" });
-        this.titleTex = this.scene.make.text({ style: UIHelper.whiteStyle(this.dpr, 18) });
+        this.titleTex = this.scene.make.text({ style: UIHelper.whiteStyle(this.dpr, 18) }).setOrigin(0.5);
         this.titleTex.setFontStyle("bold");
         this.captorScroll = new GameScroller(this.scene, {
             x: 0,
@@ -119,7 +124,7 @@ export class PicaExploreListLevelPanel extends Phaser.GameObjects.Container {
             zoom: this.zoom,
             dpr: this.dpr,
             align: 2,
-            orientation: 1,
+            orientation: 0,
             space: 20 * this.dpr,
             valuechangeCallback: (value) => {
                 this.onScrollValueChange(value);
@@ -128,16 +133,23 @@ export class PicaExploreListLevelPanel extends Phaser.GameObjects.Container {
                 this.onScrollClickHandler(gameobject);
             }
         });
-        this.add([this.titlebg, this.titleTex, this.captorScroll]);
+        this.add([this.topbg, this.titlebg, this.titleTex, this.captorScroll]);
         this.resize(this.width, this.height);
+        this.topbg.visible = false;
     }
     private onScrollClickHandler(obj) {
-
+        if (obj instanceof ForewordChapterItem) {
+            this.onForewordClickHandler();
+        }
     }
     private onScrollValueChange(value: number) {
         if (value < 1) {
             if (this.send) this.send.runWith(["move", false]);
-        } else if (this.send) this.send.runWith(["move", true]);
+            this.topbg.visible = false;
+        } else if (this.send) {
+            this.send.runWith(["move", true]);
+            this.topbg.visible = true;
+        }
         for (const item of this.levelItems) {
             item.refreshMask();
         }
@@ -148,7 +160,7 @@ export class PicaExploreListLevelPanel extends Phaser.GameObjects.Container {
     }
 
     private onChapterLevelHandler(data: op_client.IPKT_EXPLORE_LEVEL_DATA) {
-        if (this.send) this.send.runWith(["level", this.chapterResult.chapter.chapterId, data.levelId]);
+        if (this.send) this.send.runWith(["roomid", data.roomId]);
     }
 
     private onChapterLockHandler(tag: string, data: any) {
@@ -178,9 +190,10 @@ class ForewordChapterItem extends ButtonEventDispatcher {
     protected init() {
         const bg = this.scene.make.image({ key: UIAtlasName.explorelog, frame: "explore_chapter_total" });
         this.setSize(bg.width, bg.height);
-        const title = this.scene.make.text({ text: i18n.t("explore.foreword"), style: UIHelper.whiteStyle(this.dpr, 11) });
+        const title = this.scene.make.text({ text: i18n.t("explore.foreword"), style: UIHelper.whiteStyle(this.dpr, 11) }).setOrigin(0.5);
         title.setFontStyle("bold");
-        title.y = -this.height * 0.5 + 20 * this.dpr;
+        title.x = -2 * this.dpr;
+        title.y = -this.height * 0.5 + 22 * this.dpr;
         this.icon = new DynamicImage(this.scene, 0, 0);
         this.add([bg, title, this.icon]);
     }
@@ -216,6 +229,7 @@ class ChapterLevelBaseItem extends Phaser.GameObjects.Container {
 class ChapterLevelItem extends ChapterLevelBaseItem {
     protected dpr: number;
     private bg: Phaser.GameObjects.Image;
+    private iconbg: Phaser.GameObjects.Image;
     private imgMask: Phaser.GameObjects.Image;
     private levelTex: Phaser.GameObjects.Text;
     private nameTex: Phaser.GameObjects.Text;
@@ -223,11 +237,11 @@ class ChapterLevelItem extends ChapterLevelBaseItem {
     private rightLine: Phaser.GameObjects.Image;
     private starProgress: ProgressMaskBar;
     private icon: DynamicImage;
-    private openButton: ThreeSliceButton;
+    private openButton: NineSliceButton;
     private unlockTex: Phaser.GameObjects.Text;
     private energyImg: ImageValue;
     private lockimg: Phaser.GameObjects.Image;
-    private clueItms: PicaChapterLevelClue[];
+    private clueItms: PicaChapterLevelClue[] = [];
     constructor(scene: Phaser.Scene, dpr: number) {
         super(scene, dpr);
     }
@@ -238,20 +252,24 @@ class ChapterLevelItem extends ChapterLevelBaseItem {
     public setLevelData(data: op_client.IPKT_EXPLORE_LEVEL_DATA, lock: boolean) {
         super.setLevelData(data, lock);
         this.levelTex.text = data.levelId + "";
+        this.leftLine.x = this.levelTex.x - this.leftLine.width * 0.5 - this.levelTex.width * 0.5 - 2 * this.dpr;
+        this.rightLine.x = this.levelTex.x + this.rightLine.width * 0.5 + this.levelTex.width * 0.5 + 2 * this.dpr;
         this.starProgress.setProgress(data.progress, 500);
         const url = Url.getOsdRes(data.imagePath);
         this.icon.load(url);
         this.nameTex.text = data.name;
-        this.energyImg.setText("-15");
-        this.setClueData(data.clueItems);
+        this.energyImg.setText("-" + data.energyCost);
         this.lockimg.visible = lock;
         this.icon.visible = !lock;
+        this.setClueData(data.clueItems);
         if (lock) {
-            const frames = ["butt_gray_left_s", "butt_gray_middle_s", "butt_gray_right_s"];
-            this.openButton.setFrame(frames);
+            this.openButton.setFrameNormal("butt_gray");
+            this.openButton.setTextStyle(UIHelper.whiteStyle(this.dpr, 13));
+            this.energyImg.setTextStyle(UIHelper.blackStyle(this.dpr, 13));
         } else {
-            const frames = ["butt_yellow_left_s", "butt_yellow_middle_s", "butt_yellow_right_s"];
-            this.openButton.setFrame(frames);
+            this.openButton.setFrameNormal("yellow_btn_normal");
+            this.openButton.setTextStyle(UIHelper.brownishStyle(this.dpr, 13));
+            this.energyImg.setTextStyle(UIHelper.brownishStyle(this.dpr, 13));
         }
     }
 
@@ -301,48 +319,55 @@ class ChapterLevelItem extends ChapterLevelBaseItem {
         this.bg = this.scene.make.image({ key: UIAtlasName.explorelog, frame: "explore_chapter_checkpoint" });
         // this.imgMask = this.scene.make.image({ key: UIAtlasName.explorelog, frame: "explore_chapter_checkpoint" });
         this.setSize(this.bg.width, this.bg.height);
-        const leftMidX = -this.width * 0.5 + 94 * this.dpr;
-        const rightMidx = this.width * 0.5 - 94 * this.dpr;
-        const topy = -this.height * 0.5 + 23 * this.dpr;
+        const leftMidX = -this.width * 0.5 + 85 * this.dpr;
+        const rightMidx = this.width * 0.5 - 85 * this.dpr;
+        const topy = -this.height * 0.5 + 18 * this.dpr;
+        this.levelTex = this.scene.make.text({ text: "", style: UIHelper.colorStyle("#5885FD", this.dpr * 17) }).setOrigin(0.5);
+        this.levelTex.setFontStyle("bold");
+        this.levelTex.y = topy;
+        this.levelTex.x = leftMidX;
+
         this.leftLine = this.scene.make.image({ key: UIAtlasName.explorelog, frame: "explore_chapter_explore_chapter_left" });
         this.leftLine.x = leftMidX - this.leftLine.width;
-        this.leftLine.y = topy;
+        this.leftLine.y = topy + 2 * this.dpr;
         this.rightLine = this.scene.make.image({ key: UIAtlasName.explorelog, frame: "explore_chapter_explore_chapter_right" });
         this.rightLine.x = leftMidX + this.rightLine.width;
         this.rightLine.y = this.leftLine.y;
-        this.levelTex = this.scene.make.text({ text: "", style: UIHelper.colorStyle("#5885FD", this.dpr * 17) });
-        this.levelTex.setFontStyle("bold");
-        this.levelTex.y = this.leftLine.y;
-        this.levelTex.x = leftMidX;
-        this.nameTex = this.scene.make.text({ text: "", style: UIHelper.colorStyle("#8743B9", this.dpr * 14) });
+
+        this.nameTex = this.scene.make.text({ text: "", style: UIHelper.colorStyle("#8743B9", this.dpr * 14) }).setOrigin(0.5);
         this.nameTex.setFontStyle("bold");
         this.nameTex.x = rightMidx;
-        this.nameTex.y = topy;
-        this.starProgress = new ProgressMaskBar(this.scene, UIAtlasName.explorelog, "Settlement_star_default", "Settlement_star_Light");
+        this.nameTex.y = topy + 4 * this.dpr;
+        this.starProgress = new ProgressMaskBar(this.scene, UIAtlasName.explorelog, "explore_star_empty", "explore_star_full");
         this.starProgress.x = leftMidX;
         this.starProgress.y = topy + this.leftLine.height * 0.5 + this.starProgress.height * 0.5 + 5 * this.dpr;
-        const iconbg = this.scene.make.image({ key: UIAtlasName.explorelog, frame: "explore_chapter_scene_bg" });
-        iconbg.x = leftMidX;
-        iconbg.y = this.starProgress.y + this.starProgress.height * 0.5 + iconbg.height * 0.5 + 5 * this.dpr;
-        this.icon = new DynamicImage(this.scene, iconbg.x, iconbg.y);
+        this.iconbg = this.scene.make.image({ key: UIAtlasName.explorelog, frame: "explore_chapter_scene_bg" });
+        this.iconbg.x = leftMidX;
+        this.iconbg.y = this.starProgress.y + this.starProgress.height * 0.5 + this.iconbg.height * 0.5 + 5 * this.dpr;
+        this.icon = new DynamicImage(this.scene, this.iconbg.x, this.iconbg.y);
         this.lockimg = this.scene.make.image({ key: UIAtlasName.explorelog, frame: "explore_chapter_scene_lock" });
+        this.lockimg.x = this.iconbg.x;
+        this.lockimg.y = this.iconbg.y;
         this.unlockTex = this.scene.make.text({ style: UIHelper.blackStyle(this.dpr, 11) }).setOrigin(0);
         this.unlockTex.setWordWrapWidth(106 * this.dpr);
         this.unlockTex.x = rightMidx - 53 * this.dpr;
         this.unlockTex.y = topy + 15 * this.dpr;
         const frames = ["butt_yellow_left_s", "butt_yellow_middle_s", "butt_yellow_right_s"];
-        this.openButton = new ThreeSliceButton(this.scene, 88 * this.dpr, 30 * this.dpr, UIAtlasName.uicommon, frames, frames, i18n.t("explore.open"));
-        this.openButton.setTextStyle(UIHelper.whiteStyle(this.dpr, 13));
+        // this.openButton = new ThreeSliceButton(this.scene, 88 * this.dpr, 30 * this.dpr, UIAtlasName.uicommon, frames, frames, i18n.t("explore.open"));
+        this.openButton = new NineSliceButton(this.scene, 0, 0, 88 * this.dpr, 30 * this.dpr, UIAtlasName.uicommon, "yellow_btn_normal", i18n.t("explore.open"), this.dpr, 1, UIHelper.button(this.dpr));
+        this.openButton.setTextStyle(UIHelper.brownishStyle(this.dpr, 13));
         this.openButton.setFontStyle("bold");
         this.openButton.setTextOffset(-15 * this.dpr, 0);
+        this.openButton.x = rightMidx;
+        this.openButton.y = this.height * 0.5 - this.openButton.height * 0.5 - 30 * this.dpr;
         this.openButton.on(ClickEvent.Tap, this.onClickHandler, this);
-        this.energyImg = new ImageValue(this.scene, 43 * this.dpr, 15 * this.dpr, UIAtlasName.uicommon, "explore_physical_icon", this.dpr, UIHelper.blackStyle(this.dpr, 14));
-        this.energyImg.x = 2 * this.dpr;
+        this.energyImg = new ImageValue(this.scene, 43 * this.dpr, 15 * this.dpr, UIAtlasName.uicommon, "explore_physical_icon", this.dpr, UIHelper.brownishStyle(this.dpr, 14));
+        this.energyImg.x = 14 * this.dpr;
         this.energyImg.setOffset(-4 * this.dpr, 0);
         this.energyImg.setLayout(1);
         this.energyImg.setText("");
         this.openButton.add(this.energyImg);
-        this.add([this.bg, this.leftLine, this.rightLine, this.levelTex, this.nameTex, this.starProgress, iconbg, this.icon, this.lockimg, this.unlockTex, this.openButton]);
+        this.add([this.bg, this.leftLine, this.rightLine, this.levelTex, this.nameTex, this.starProgress, this.iconbg, this.icon, this.lockimg, this.unlockTex, this.openButton]);
     }
 
     private onClickHandler() {

@@ -33,9 +33,9 @@ export class PicaExploreListBottomPanel extends Phaser.GameObjects.Container {
         }
     }
 
-    setChapterDatas(data: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_EXPLORE_CHAPTER_PROGRESS, nextChapterID: number) {
+    setChapterDatas(data: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_EXPLORE_CHAPTER_PROGRESS) {
         this.chapterProDatas = data;
-        this.curChapterID = nextChapterID;
+        this.curChapterID = data.nextChapterId;
         this.setChapterProData();
 
     }
@@ -48,17 +48,18 @@ export class PicaExploreListBottomPanel extends Phaser.GameObjects.Container {
         if (!this.chapterProDatas) return;
         const chapters = this.chapterProDatas.chapters;
         let chapterid = this.curChapterID - 2;
-        for (let i = 0; i < 4; i++) {
-            chapterid += i;
+        for (let i = 0; i < 5; i++) {
             const item = this.chapterItems[i];
-            if (chapterid < 1) {
-                item.setChapterData(chapters[chapterid - 1]);
-                if (chapterid >= chapters.length) {
+            if (chapterid >= 1) {
+                if (chapterid <= chapters.length)
+                    item.setChapterData(chapters[chapterid - 1]);
+                else {
                     item.setChapterData(undefined);
                 }
             } else {
                 item.setChapterData(undefined);
             }
+            chapterid += 1;
         }
     }
 
@@ -146,17 +147,20 @@ class ChapterItemProgress extends ButtonEventDispatcher {
             this.setProgress(0);
             this.finishImg.visible = false;
             this.unlock = false;
+            this.levelTex.visible = false;
         } else {
             if (this.chapterProData.progress === -1) {
                 this.unlock = false;
                 this.lockImg.visible = true;
                 this.finishImg.visible = false;
+                this.levelTex.visible = false;
                 this.setProgress(0);
             } else {
                 this.unlock = true;
                 if (data.progress === 100) this.finishImg.visible = true;
                 else this.finishImg.visible = false;
                 this.lockImg.visible = false;
+                this.levelTex.visible = true;
                 this.setProgress(data.progress / 100);
             }
             this.levelTex.text = data.chapterId + "";
@@ -210,7 +214,8 @@ class ChapterItemProgress extends ButtonEventDispatcher {
         this.bg = this.scene.make.image({ key: UIAtlasName.explorelog, frame: "explore_sequence_uncheck_bottom" });
         this.lightbg = this.scene.make.image({ key: UIAtlasName.explorelog, frame: "explore_sequence_uncheck_schedule" });
         this.topbg = this.scene.make.image({ key: UIAtlasName.explorelog, frame: "explore_sequence_uncheck_top" });
-        this.levelTex = this.scene.make.text({ style: UIHelper.whiteStyle(this.dpr, 16) });
+        this.levelTex = this.scene.make.text({ style: UIHelper.whiteStyle(this.dpr, 16) }).setOrigin(0.5);
+        this.levelTex.setFontStyle("bold");
         this.finishImg = this.scene.make.image({ key: UIAtlasName.explorelog, frame: "explore_sequence_uncheck_small" });
         this.lockImg = this.scene.make.image({ key: UIAtlasName.explorelog, frame: "explore_switch_lock" });
         this.finishImg.y = this.height * 0.5;
