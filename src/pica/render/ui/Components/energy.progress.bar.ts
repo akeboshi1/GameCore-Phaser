@@ -1,6 +1,6 @@
 import { ImageValue, ProgressMaskBar } from "gamecoreRender";
 import { UIAtlasName } from "picaRes";
-import { Font } from "utils";
+import { Font, UIHelper } from "utils";
 
 export class EnergyProgressBar extends Phaser.GameObjects.Container {
     private powerTex: ImageValue;
@@ -20,14 +20,14 @@ export class EnergyProgressBar extends Phaser.GameObjects.Container {
     protected init() {
         const width = 83 * this.dpr, height = 18 * this.dpr;
         this.setSize(width, height);
-        this.powerPro = new ProgressMaskBar(this.scene, UIAtlasName.uicommon, "explore_physical_bottom", "explore_physical_top", undefined, {
-            width, height, left: 8 * this.dpr, right: 8 * this.dpr, top: 0, bottom: 0
-        });
+        const config = {
+            width, height, left: 9 * this.dpr, right: 9 * this.dpr, top: 0, bottom: 0
+        };
+        this.powerPro = new ProgressMaskBar(this.scene, UIAtlasName.uicommon, "explore_physical_bottom", "explore_physical_top", undefined, config, config);
         this.powerPro.x = 0;
-        this.powerTex = new ImageValue(this.scene, 43 * this.dpr, 15 * this.dpr, UIAtlasName.uicommon, "explore_physical_icon", this.dpr, {
-            color: "#ffffff", fontSize: 8 * this.dpr, fontFamily: Font.NUMBER
-        });
+        this.powerTex = new ImageValue(this.scene, 43 * this.dpr, 15 * this.dpr, UIAtlasName.uicommon, "explore_physical_icon", this.dpr, UIHelper.colorNumberStyle("#ffffff", 11 * this.dpr));
         this.powerTex.x = -width * 0.5 + 13 * this.dpr;
+        this.powerTex.y = -1 * this.dpr;
         this.powerTex.setFontStyle("bold");
         this.powerTex.setStroke("#000000", 2 * this.dpr);
         this.powerTex.setOffset(-4 * this.dpr, 0);

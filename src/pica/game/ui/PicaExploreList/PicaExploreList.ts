@@ -41,7 +41,13 @@ export class PicaExploreList extends BasicModel {
         content.chapterId = chapterId;
         this.connection.send(packet);
     }
-
+     query_ENTER_ROOM(roomId: string, password: string) {
+        const packet = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_EDIT_MODE_ENTER_ROOM);
+        const content: op_virtual_world.IOP_CLIENT_REQ_VIRTUAL_WORLD_EDIT_MODE_ENTER_ROOM = packet.content;
+        content.roomId = roomId;
+        content.password = password;
+        this.connection.send(packet);
+    }
     private onQUERY_CHAPTER_RESULT(packge: PBpacket) {
         const content: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_QUERY_CHAPTER_RESULT = packge.content;
         this.event.emit(ModuleName.PICAEXPLORELIST_NAME + "_retchapterresult", content);

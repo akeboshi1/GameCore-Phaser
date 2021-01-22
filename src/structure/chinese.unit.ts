@@ -32,7 +32,7 @@ export class ChineseUnit {
                 }
             }
         }
-        if (!uint) return s;
+        if (!uint) return s.join("");
         return s.join("").replace(/零([十百千万亿@#%^&~])/g, (m, d, b) => {// 优先处理 零百 零千 等
             b = units.indexOf(d);
             if (b !== -1) {

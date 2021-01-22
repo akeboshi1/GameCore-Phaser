@@ -20,8 +20,9 @@ export class PicaExploreListDetailPanel extends Phaser.GameObjects.Container {
     private taskTex: Phaser.GameObjects.Text;
     private captoreDes: Phaser.GameObjects.Text;
     private needCon: Phaser.GameObjects.Container;
-    private needItems: PicaChapterLevelClue[];
-    private labels: Phaser.GameObjects.Image[];
+    private needItems: PicaChapterLevelClue[] = [];
+    private labels: Phaser.GameObjects.Image[] = [];
+    private needDatas: op_client.ICountablePackageItem[] = [];
     private indexed: number = 0;
     private send: Handler;
     constructor(scene: Phaser.Scene, width: number, height: number, dpr: number, zoom: number) {
@@ -36,10 +37,10 @@ export class PicaExploreListDetailPanel extends Phaser.GameObjects.Container {
     public resize(w: number, h: number) {
         this.setSize(w, h);
         this.blackGraphic.clear();
-        this.blackGraphic.fillStyle(0x000000, 0.66);
+        this.blackGraphic.fillStyle(0x000000, 0.73);
         this.blackGraphic.fillRect(0, 0, w, h);
-        this.blackGraphic.x = w * 0.5;
-        this.blackGraphic.y = h * 0.5;
+        this.blackGraphic.x = -w * 0.5;
+        this.blackGraphic.y = -h * 0.5;
         this.lineGraphic.clear();
         this.lineGraphic.fillStyle(0x0B0B0B, 1);
         this.lineGraphic.fillRect(-12 * this.dpr, -this.dpr, 24 * this.dpr, 2 * this.dpr);
@@ -55,12 +56,12 @@ export class PicaExploreListDetailPanel extends Phaser.GameObjects.Container {
         this.captoreTex.text = "皮卡熊的任务";
         this.captoreDes.text = "帮助皮大熊在本章节中找到某某某几件道具，和某某某几件道具，以完成什么什么家具和什么什么家具家具的修复。";
         this.taskTex.text = i18n.t("explore.taskneedtips");
-        const items = [];
         for (const level of data.levels) {
             for (const item of level.clueItems) {
-                items.push(item);
+                this.needDatas.push(item);
             }
         }
+        const items = this.getNextDatas();
         this.setNeedItems(items);
         this.setNeedBottomImgs(items.length);
     }
@@ -103,6 +104,16 @@ export class PicaExploreListDetailPanel extends Phaser.GameObjects.Container {
         this.setLabelLayout(count);
     }
 
+    protected getNextDatas() {
+        const datas = [];
+        const len = this.indexed + 6 < this.needDatas.length ? this.indexed + 6 : this.needDatas.length;
+        for (let i = this.indexed; i < len; i++) {
+            datas.push(this.needDatas[i]);
+        }
+
+        return datas;
+    }
+
     protected init() {
         this.blackGraphic = this.scene.make.graphics(undefined, false);
         this.add(this.blackGraphic);
@@ -116,11 +127,11 @@ export class PicaExploreListDetailPanel extends Phaser.GameObjects.Container {
         this.backButton.y = -this.content.height * 0.5 + this.backButton.height * 0.5;
         const leftMidx = -70 * this.dpr, rightMidx = 70 * this.dpr;
         const topy = -this.content.height * 0.5 + 20 * this.dpr;
-        this.titleTex = this.scene.make.text({ style: UIHelper.colorStyle("#8743B9", 14 * this.dpr) });
+        this.titleTex = this.scene.make.text({ style: UIHelper.colorStyle("#8743B9", 14 * this.dpr) }).setOrigin(0.5);
         this.titleTex.setFontStyle("bold");
         this.titleTex.x = leftMidx;
         this.titleTex.y = topy;
-        this.captoreTex = this.scene.make.text({ style: UIHelper.blackStyle(this.dpr, 14) });
+        this.captoreTex = this.scene.make.text({ style: UIHelper.blackStyle(this.dpr, 14) }).setOrigin(0.5);
         this.captoreTex.setFontStyle("bold");
         this.captoreTex.y = this.titleTex.y + 20 * this.dpr;
         this.captoreTex.x = leftMidx;
@@ -128,9 +139,11 @@ export class PicaExploreListDetailPanel extends Phaser.GameObjects.Container {
         this.lineGraphic.x = leftMidx;
         this.lineGraphic.y = this.captoreTex.y + 15 * this.dpr;
         this.captoreDes = this.scene.make.text({ style: UIHelper.blackStyle(this.dpr, 11) }).setOrigin(0);
-        this.captoreDes.setWordWrapWidth(117 * this.dpr);
+        this.captoreDes.setWordWrapWidth(117 * this.dpr, true);
         this.captoreDes.x = leftMidx - 58 * this.dpr;
         this.captoreDes.y = this.lineGraphic.y + 20 * this.dpr;
+        this.taskTex = this.scene.make.text({ style: UIHelper.blackStyle(this.dpr, 14) }).setOrigin(0.5);
+        this.taskTex.setFontStyle("bold");
         this.taskTex.x = rightMidx;
         this.taskTex.y = this.captoreTex.y;
         this.needCon = this.scene.make.container(undefined, false);
