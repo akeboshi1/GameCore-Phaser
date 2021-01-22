@@ -13,6 +13,7 @@ export class PicaExploreListBottomPanel extends Phaser.GameObjects.Container {
     private chapterItems: ChapterItemProgress[] = [];
     private chapterProDatas: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_EXPLORE_CHAPTER_PROGRESS;
     private curChapterID: number = 0;
+    private unlockChapterID: number = 0;
     private send: Handler;
     constructor(scene: Phaser.Scene, width: number, height: number, dpr: number, zoom: number) {
         super(scene, dpr, zoom);
@@ -52,9 +53,11 @@ export class PicaExploreListBottomPanel extends Phaser.GameObjects.Container {
         for (let i = 0; i < 5; i++) {
             const item = this.chapterItems[i];
             if (chapterid >= 1) {
-                if (chapterid <= chapters.length)
-                    item.setChapterData(chapters[chapterid - 1]);
-                else {
+                if (chapterid <= chapters.length) {
+                    const data = chapters[chapterid - 1];
+                    item.setChapterData(data);
+                    if (data.progress !== -1) this.unlockChapterID = data.chapterId;
+                } else {
                     item.setChapterData(undefined);
                 }
             } else {
@@ -93,21 +96,25 @@ export class PicaExploreListBottomPanel extends Phaser.GameObjects.Container {
     }
 
     private onLeftClickHandler() {
+        if (this.curChapterID === 1) return;
         this.curChapterID--;
         if (this.curChapterID < 1) this.curChapterID = 1;
         this.setChapterProData();
     }
 
     private onRightClickHandler() {
+        if (this.curChapterID === this.unlockChapterID) return;
         this.curChapterID++;
         if (!this.chapterProDatas) this.curChapterID = 1;
-        if (this.curChapterID > this.chapterProDatas.chapters.length) {
-            this.curChapterID = this.chapterProDatas.chapters.length;
+        if (this.curChapterID > this.unlockChapterID) {
+            this.curChapterID = this.unlockChapterID;
         }
         this.setChapterProData();
     }
 
     private onChapterProHandler(chapterID: number) {
+        this.curChapterID = chapterID;
+        this.setChapterProData();
         if (this.send) this.send.runWith(["chapterdata", chapterID]);
     }
 

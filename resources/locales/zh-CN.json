@@ -401,6 +401,7 @@
     "finishchaptertips": "结束上一章",
     "unlocktips": "达到{{name}}级解锁",
     "nextleveltips": "下一场关卡",
-    "eventuallytips": "最终关卡"
+    "eventuallytips": "最终关卡",
+    "finish":"完成"
   }
 }
