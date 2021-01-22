@@ -420,11 +420,11 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
             this.login();
             return;
         }
-        this.peer.state = GameState.requestToken;
+        this.peer.state = GameState.RequestToken;
         // this.peer.render[ModuleName.].then((account) => {
         this.httpService.refreshToekn(account.refreshToken, account.accessToken)
             .then((response: any) => {
-                this.peer.state = GameState.getToken;
+                this.peer.state = GameState.GetToken;
                 if (response.code === 200) {
                     this.peer.render.refreshAccount(response);
                     // this.mAccount.refreshToken(response);
@@ -433,7 +433,7 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
                     this.login();
                 }
             }).catch((error) => {
-                this.peer.state = GameState.getToken;
+                this.peer.state = GameState.GetToken;
                 Logger.getInstance().error("refreshToken:", error);
                 this.login();
             });
@@ -673,6 +673,7 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
         Logger.getInstance().log("onInitVirtualWorldPlayerInit====loadGameConfig");
         this.loadGameConfig(mainGameConfigUrl)
             .then((gameConfig: Lite) => {
+                this.peer.state = GameState.CompleteDecodeConfig;
                 this.mElementStorage.setGameConfig(gameConfig);
                 this.mainPeer.render.createGameCallBack(content.keyEvents);
                 this.gameCreated();
@@ -687,6 +688,7 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
         const configPath = ResUtils.getGameConfig(remotePath);
         let index = 0;
         return load(configPath, "arraybuffer").then((req: any) => {
+            this.peer.state = GameState.LoadGameConfig;
             this.mLoadingManager.start(LoadState.PARSECONFIG);
             Logger.getInstance().log("start decodeConfig");
             return this.decodeConfigs(req);
