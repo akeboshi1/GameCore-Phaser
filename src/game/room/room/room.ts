@@ -17,7 +17,7 @@ import { IElement } from "../element/element";
 import { IViewBlockManager } from "../viewblock/iviewblock.manager";
 import { TerrainManager } from "../terrain/terrain.manager";
 import { SkyBoxManager } from "../sky.box/sky.box.manager";
-import { IScenery, LoadState, SceneName } from "structure";
+import { GameState, IScenery, LoadState, SceneName } from "structure";
 import { EffectManager } from "../effect/effect.manager";
 export interface SpriteAddCompletedListener {
     onFullPacketReceived(sprite_t: op_def.NodeType): void;
@@ -170,7 +170,7 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
             "sceneName": "PlayScene",
             "state": LoadState.CREATESCENE
         });
-
+        this.mGame.peer.state = GameState.SceneCreate;
         this.mIsLoading = true;
     }
 

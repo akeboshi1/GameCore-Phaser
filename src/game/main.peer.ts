@@ -6,7 +6,7 @@ import * as protos from "pixelpai_proto";
 import { ServerAddress } from "../../lib/net/address";
 import { Game } from "./game";
 import { IPos, Logger, LogicPoint, Pos } from "utils";
-import { ILauncherConfig, HEARTBEAT_WORKER, HEARTBEAT_WORKER_URL, MAIN_WORKER, RENDER_PEER, ModuleName, EventType, PHYSICAL_WORKER, PHYSICAL_WORKER_URL } from "structure";
+import { ILauncherConfig, HEARTBEAT_WORKER, HEARTBEAT_WORKER_URL, MAIN_WORKER, RENDER_PEER, ModuleName, EventType, PHYSICAL_WORKER, PHYSICAL_WORKER_URL, GameState } from "structure";
 import { PicaGame } from "picaWorker";
 import { DataMgrType } from "./data.manager/dataManager";
 import { SceneDataManager } from "./data.manager";
@@ -15,6 +15,7 @@ for (const key in protos) {
 }
 
 export class MainPeer extends RPCPeer {
+    private gameState;
     @Export()
     private game: Game;
     private mConfig: ILauncherConfig;
@@ -40,6 +41,11 @@ export class MainPeer extends RPCPeer {
 
     get heartBeatPeer() {
         return this.remote[HEARTBEAT_WORKER].HeartBeatPeer;
+    }
+
+    set state(val) {
+        Logger.getInstance().log("gameState: ====>", val);
+        this.gameState = val;
     }
     // ============= connection调用主进程
     public onConnected() {
@@ -89,6 +95,7 @@ export class MainPeer extends RPCPeer {
     @Export()
     public createGame(config: ILauncherConfig) {
         this.mConfig = config;
+        this.state = GameState.LinkWorker;
         // ============
         Logger.getInstance().log("createGame");
         // const url: string = "/js/game" + "_v1.0.398";
@@ -145,6 +152,7 @@ export class MainPeer extends RPCPeer {
     public startConnect(host: string, port: number, secure?: boolean) {
         const addr: ServerAddress = { host, port, secure };
         this.game.connection.startConnect(addr);
+        this.state = GameState.StartConnect;
     }
 
     @Export([webworker_rpc.ParamType.boolean])
