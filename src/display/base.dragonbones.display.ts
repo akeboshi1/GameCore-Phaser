@@ -164,6 +164,9 @@ export class BaseDragonbonesDisplay extends BaseDisplay {
                 if (bound) {
                     this.mBoardPoint = new Phaser.Geom.Point(bound.global.x, bound.global.y);
                     return;
+                } else {
+                    Logger.getInstance().error("no board dragonbones!!!");
+                    this.mBoardPoint = new Phaser.Geom.Point(35, 40);
                 }
             }
             this.mBoardPoint = new Phaser.Geom.Point();
