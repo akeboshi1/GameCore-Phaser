@@ -41,7 +41,7 @@ export class PicaExploreList extends BasicModel {
         content.chapterId = chapterId;
         this.connection.send(packet);
     }
-     query_ENTER_ROOM(roomId: string, password: string) {
+     query_ENTER_ROOM(roomId: string, password?: string) {
         const packet = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_EDIT_MODE_ENTER_ROOM);
         const content: op_virtual_world.IOP_CLIENT_REQ_VIRTUAL_WORLD_EDIT_MODE_ENTER_ROOM = packet.content;
         content.roomId = roomId;

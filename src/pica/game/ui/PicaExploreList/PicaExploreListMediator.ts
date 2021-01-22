@@ -50,7 +50,7 @@ export class PicaExploreListMediator extends BasicMediator {
     }
 
     private onEnterRoomHandler(roomID: string) {
-        this.mModel.query_ENTER_ROOM(roomID, undefined);
+        this.mModel.query_ENTER_ROOM(roomID);
     }
 
     private setChapters() {

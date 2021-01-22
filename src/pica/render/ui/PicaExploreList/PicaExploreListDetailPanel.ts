@@ -148,6 +148,8 @@ export class PicaExploreListDetailPanel extends Phaser.GameObjects.Container {
         this.taskTex.y = this.captoreTex.y;
         this.needCon = this.scene.make.container(undefined, false);
         this.needCon.setSize(100 * this.dpr, 157 * this.dpr);
+        this.needCon.setInteractive();
+        this.needCon.on("pointermove", this.onMoveHandler, this);
         this.needCon.x = rightMidx;
         this.content.add([this.bg, this.backButton, this.titleTex, this.captoreTex, this.lineGraphic, this.captoreDes, this.taskTex, this.needCon]);
         this.resize(this.width, this.height);
@@ -188,8 +190,12 @@ export class PicaExploreListDetailPanel extends Phaser.GameObjects.Container {
         }
     }
 
+    private onMoveHandler(obj) {
+        // tslint:disable-next-line:no-console
+        console.log(obj);
+    }
+
     private onHideHandler() {
         if (this.send) this.send.runWith("hide");
     }
-
 }
