@@ -12,11 +12,11 @@ export class PicaChapterLevelClue extends ItemButton {
         this.gou.y = this.height * 0.5 - this.gou.height * 0.5;
         this.add([this.gou]);
         this.enable = true;
-        this.BGVisible = true;
+        this.BGVisible = false;
     }
 
     setItemData(data: op_client.ICountablePackageItem) {
         super.setItemData(data);
-        //  this.gou.visible = data.count === 0 ? false : true;
+        this.gou.visible = data.count === 0 ? false : true;
     }
 }

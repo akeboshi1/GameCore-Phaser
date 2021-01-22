@@ -20,7 +20,6 @@ export class PicaExploreListPanel extends PicaBasePanel {
     private levelPanel: PicaExploreListLevelPanel;
     private bottomPanel: PicaExploreListBottomPanel;
     private detialPanel: PicaExploreListDetailPanel;
-    private chapterProData: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_EXPLORE_CHAPTER_PROGRESS;
     constructor(uiManager: UiManager) {
         super(uiManager);
         this.atlasNames = [UIAtlasName.explorelog, UIAtlasName.uicommon1, UIAtlasName.uicommon];
@@ -93,7 +92,7 @@ export class PicaExploreListPanel extends PicaBasePanel {
             this.setEnergyData(this.tempDatas.value, this.tempDatas.max);
     }
     setExploreChapterResult(content: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_QUERY_CHAPTER_RESULT) {
-        const nextLevelID = this.chapterProData.nextLevelId;
+        const nextLevelID = this.mShowData.nextLevelId;
         this.levelPanel.setCaptoreResult(content, nextLevelID);
     }
     setExploreChapters(data: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_EXPLORE_CHAPTER_PROGRESS) {

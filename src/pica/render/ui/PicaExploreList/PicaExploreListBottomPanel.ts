@@ -37,6 +37,7 @@ export class PicaExploreListBottomPanel extends Phaser.GameObjects.Container {
         this.chapterProDatas = data;
         this.curChapterID = data.nextChapterId;
         this.setChapterProData();
+        this.onChapterProHandler(this.curChapterID);
 
     }
 
