@@ -464,7 +464,7 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
         content.sceneId = sceneId;
         content.loc = loc;
         this.connect.send(pkt);
-        this.peer.gameState = GameState.EnterWorld;
+        this.peer.state = GameState.EnterWorld;
     }
 
     public leaveRoom(room: IRoomService) {
@@ -632,7 +632,7 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
     }
 
     private async onInitVirtualWorldPlayerInit(packet: PBpacket) {
-        this.peer.gameState = GameState.PlayerInit;
+        this.peer.state = GameState.PlayerInit;
         Logger.getInstance().log("onInitVirtualWorldPlayerInit");
         // if (this.mClock) this.mClock.sync(); // Manual sync remote time.
         // TODO 进游戏前预加载资源
@@ -705,7 +705,7 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
             this.mLoadingManager.start(LoadState.WAITENTERROOM);
             const pkt = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_GATEWAY_GAME_CREATED);
             this.connection.send(pkt);
-            this.peer.gameState = GameState.GameCreate;
+            this.peer.state = GameState.GameCreate;
         } else {
             // Log
             Logger.getInstance().log("no connection gameCreat");

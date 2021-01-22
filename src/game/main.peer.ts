@@ -15,7 +15,7 @@ for (const key in protos) {
 }
 
 export class MainPeer extends RPCPeer {
-    public gameState;
+    private gameState;
     @Export()
     private game: Game;
     private mConfig: ILauncherConfig;
@@ -41,6 +41,11 @@ export class MainPeer extends RPCPeer {
 
     get heartBeatPeer() {
         return this.remote[HEARTBEAT_WORKER].HeartBeatPeer;
+    }
+
+    set state(val) {
+        Logger.getInstance().log("gameState: ====>", val);
+        this.gameState = val;
     }
     // ============= connection调用主进程
     public onConnected() {
@@ -90,7 +95,7 @@ export class MainPeer extends RPCPeer {
     @Export()
     public createGame(config: ILauncherConfig) {
         this.mConfig = config;
-        this.gameState = GameState.LinkWorker;
+        this.state = GameState.LinkWorker;
         // ============
         Logger.getInstance().log("createGame");
         // const url: string = "/js/game" + "_v1.0.398";
@@ -147,7 +152,7 @@ export class MainPeer extends RPCPeer {
     public startConnect(host: string, port: number, secure?: boolean) {
         const addr: ServerAddress = { host, port, secure };
         this.game.connection.startConnect(addr);
-        this.gameState = GameState.StartConnect;
+        this.state = GameState.StartConnect;
     }
 
     @Export([webworker_rpc.ParamType.boolean])

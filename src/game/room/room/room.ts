@@ -170,7 +170,7 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
             "sceneName": "PlayScene",
             "state": LoadState.CREATESCENE
         });
-        this.mGame.peer.gameState = GameState.SceneCreate;
+        this.mGame.peer.state = GameState.SceneCreate;
         this.mIsLoading = true;
     }
 

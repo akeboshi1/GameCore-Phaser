@@ -122,7 +122,7 @@ export class RoomManager extends PacketHandler implements IRoomManager {
         this.mRooms.push(room);
         room.addActor(scene.actor);
         room.enter(scene.scene);
-        this.game.peer.gameState = GameState.RoomCreate;
+        this.game.peer.state = GameState.RoomCreate;
         this.mCurRoom = room;
     }
 
@@ -176,7 +176,7 @@ export class RoomManager extends PacketHandler implements IRoomManager {
                 this.onEnterDecorate(content);
                 break;
         }
-        this.game.peer.gameState = GameState.EnterScene;
+        this.game.peer.state = GameState.EnterScene;
         this.game.emitter.emit(EventType.SCENE_CHANGE);
     }
 
