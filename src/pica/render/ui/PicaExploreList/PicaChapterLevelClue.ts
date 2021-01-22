@@ -11,7 +11,6 @@ export class PicaChapterLevelClue extends ItemButton {
         this.gou.x = this.width * 0.5 - this.gou.width * 0.5;
         this.gou.y = this.height * 0.5 - this.gou.height * 0.5;
         this.add([this.gou]);
-        this.enable = true;
         this.BGVisible = false;
     }
 

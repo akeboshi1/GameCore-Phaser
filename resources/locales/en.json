@@ -398,6 +398,7 @@
     "finishchaptertips": "To conclude the previous chapter",
     "unlocktips": "Reaches {{Name}} level to unlock",
     "nextleveltips": "Next Level",
-    "eventuallytips": "Eventually"
+    "eventuallytips": "Eventually",
+    "finish":"Finish"
   }
 }
