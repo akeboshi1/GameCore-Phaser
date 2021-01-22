@@ -14,6 +14,7 @@ export class PicaExploreListMediator extends BasicMediator {
         super.show(param);
         this.game.emitter.on(ModuleName.PICAEXPLORELIST_NAME + "_hide", this.onHidePanel, this);
         this.game.emitter.on(ModuleName.PICAEXPLORELIST_NAME + "_queyexplorechapter", this.onChapterResultHandler, this);
+        this.game.emitter.on(ModuleName.PICAEXPLORELIST_NAME + "_queyenterroom", this.onEnterRoomHandler, this);
         this.game.emitter.on(ModuleName.PICAEXPLORELIST_NAME + "_retchapterresult", this.onQUERY_CHAPTER_RESULT, this);
     }
 
@@ -21,6 +22,7 @@ export class PicaExploreListMediator extends BasicMediator {
         super.hide();
         this.game.emitter.off(ModuleName.PICAEXPLORELIST_NAME + "_hide", this.onHidePanel, this);
         this.game.emitter.off(ModuleName.PICAEXPLORELIST_NAME + "_queyexplorechapter", this.onChapterResultHandler, this);
+        this.game.emitter.off(ModuleName.PICAEXPLORELIST_NAME + "_queyenterroom", this.onEnterRoomHandler, this);
         this.game.emitter.off(ModuleName.PICAEXPLORELIST_NAME + "_retchapterresult", this.onQUERY_CHAPTER_RESULT, this);
     }
 
@@ -40,26 +42,25 @@ export class PicaExploreListMediator extends BasicMediator {
     private onQUERY_CHAPTER_RESULT(content: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_QUERY_CHAPTER_RESULT) {
         this.mShowData = content;
         content["lock"] = this.playerInfo.level.value < content.chapter.requiredPlayerLevel;
-        if (this.mView) this.mView.setExploreChapterResult(content, this.playerInfo.playerInfo.nextLevelId);
+        if (this.mView) this.mView.setExploreChapterResult(content);
     }
 
     private onChapterResultHandler(chapterId: number) {
         this.mModel.queryExploreChapter(chapterId);
     }
 
+    private onEnterRoomHandler(roomID: string) {
+        this.mModel.query_ENTER_ROOM(roomID, undefined);
+    }
+
     private setChapters() {
         const mgr = this.game.getDataMgr<CacheDataManager>(DataMgrType.CacheMgr);
         if (mgr) {
-            const chapters = []; // mgr.chapters;
-            for (let i = 0; i < 20; i++) {
-                const data = {
-                    chapterId: i + 1,
-                    progress: i < 5 ? Math.floor(Math.random() * 500) : -1
-                };
-                chapters.push(data);
+            const chapters = mgr.chapters;
+            if (this.mView && chapters) {
+                this.mView.setExploreChapters(chapters);
+                this.mView.setEnergyData(this.playerInfo.energy.value, this.playerInfo.energy.max);
             }
-            // if (this.mView) this.mView.setExploreChapters(chapters, this.playerInfo.playerInfo.nextChapterId);
-            if (this.mView) this.mView.setExploreChapters({chapters}, 5);
         }
     }
 }
