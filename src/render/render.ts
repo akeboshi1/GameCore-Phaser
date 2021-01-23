@@ -118,11 +118,11 @@ export class Render extends RPCPeer implements GameMain {
         this.initConfig();
         this.linkTo(MAIN_WORKER, MAIN_WORKER_URL).onceReady(() => {
             this.mMainPeer = this.remote[MAIN_WORKER].MainPeer;
+            this.createGame();
             this.linkTo(PHYSICAL_WORKER, PHYSICAL_WORKER_URL).onceReady(() => {
                 this.mPhysicalPeer = this.remote[PHYSICAL_WORKER].PhysicalPeer;
                 this.mPhysicalPeer.setScaleRatio(Math.ceil(this.mConfig.devicePixelRatio || 1));
                 this.mPhysicalPeer.start();
-                this.createGame();
                 Logger.getInstance().log("Physcialworker onReady");
             });
             Logger.getInstance().log("worker onReady");
@@ -464,9 +464,9 @@ export class Render extends RPCPeer implements GameMain {
         this.remote[MAIN_WORKER].MainPeer.initGameConfig(JSON.stringify(config));
     }
 
-    public startConnect(gateway: ServerAddress) {
-        this.remote[MAIN_WORKER].MainPeer.startConnect(gateway.host, gateway.port, gateway.secure);
-    }
+    // public startConnect(gateway: ServerAddress) {
+    //     this.remote[MAIN_WORKER].MainPeer.startConnect(gateway.host, gateway.port, gateway.secure);
+    // }
 
     public newGame(): Promise<any> {
         return new Promise<any>((resolve, reject) => {

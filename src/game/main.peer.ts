@@ -103,11 +103,11 @@ export class MainPeer extends RPCPeer {
         Logger.getInstance().log("createGame");
         // const url: string = "/js/game" + "_v1.0.398";
         Logger.getInstance().log("render link onReady");
+        this.game.createGame(this.mConfig);
         this.linkTo(PHYSICAL_WORKER, PHYSICAL_WORKER_URL).onceReady(() => {
             this.mPhysicalPeer = this.remote[PHYSICAL_WORKER].PhysicalPeer;
             Logger.getInstance().log("Physcialworker onReady");
             this.linkTo(HEARTBEAT_WORKER, HEARTBEAT_WORKER_URL).onceReady(() => {
-                this.game.createGame(this.mConfig);
                 Logger.getInstance().log("heartBeatworker onReady in mainworker");
             });
         });
@@ -151,7 +151,7 @@ export class MainPeer extends RPCPeer {
         this.game.loginEnterWorld();
     }
 
-    @Export([webworker_rpc.ParamType.str, webworker_rpc.ParamType.num, webworker_rpc.ParamType.boolean])
+    // @Export([webworker_rpc.ParamType.str, webworker_rpc.ParamType.num, webworker_rpc.ParamType.boolean])
     public startConnect(host: string, port: number, secure?: boolean) {
         const addr: ServerAddress = { host, port, secure };
         this.game.connection.startConnect(addr);

@@ -80,6 +80,7 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
     public async createGame(config?: ILauncherConfig) {
         this.mConfig = config;
         await this.initWorld();
+        this.peer.state = GameState.InitWorld;
         this.initGame();
         this.hasClear = false;
         const gateway: ServerAddress = this.mConfig.server_addr;
@@ -490,6 +491,19 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
         this.mUIManager.hideMed(name);
     }
 
+    public gameCreated() {
+        if (this.connection) {
+            Logger.getInstance().log("connection gameCreat");
+            this.mLoadingManager.start(LoadState.WAITENTERROOM);
+            const pkt = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_GATEWAY_GAME_CREATED);
+            this.connection.send(pkt);
+            this.peer.state = GameState.GameCreate;
+        } else {
+            // Log
+            Logger.getInstance().log("no connection gameCreat");
+        }
+    }
+
     protected async initWorld() {
         this.mUser = new User(this);
         this.addHandlerFun(op_client.OPCODE._OP_GATEWAY_RES_CLIENT_VIRTUAL_WORLD_INIT, this.onInitVirtualWorldPlayerInit);
@@ -507,7 +521,9 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
         if (typeof worldId !== "string") {
             Logger.getInstance().error("worldId is not string");
         }
+        this.peer.state = GameState.CreateManager;
         await this.mainPeer.render.createAccount(this.mConfig.game_id + "", this.mConfig.virtual_world_id + "");
+        this.peer.state = GameState.CreateAccount;
     }
 
     protected createManager() {
@@ -628,6 +644,7 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
                     this.mDataManager = null;
                 }
                 if (this.user) this.user.removePackListener();
+                this.peer.destroy();
                 this.hasClear = true;
                 resolve();
             });
@@ -652,6 +669,7 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
         if (!configUrls || configUrls.length <= 0) {
             Logger.getInstance().error(`configUrls error: , ${configUrls}, gameId: ${account.gameID}`);
             this.mainPeer.render.createGameCallBack(content.keyEvents);
+            // if (!this.mainPeer.physicalPeer) return;
             this.gameCreated();
             return;
         }
@@ -660,6 +678,7 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
         if (game_id === undefined) {
             Logger.getInstance().log("!game_ID");
             this.mainPeer.render.createGameCallBack(content.keyEvents);
+            // if (!this.mainPeer.physicalPeer) return;
             this.gameCreated();
             return;
         }
@@ -676,6 +695,7 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
                 this.peer.state = GameState.CompleteDecodeConfig;
                 this.mElementStorage.setGameConfig(gameConfig);
                 this.mainPeer.render.createGameCallBack(content.keyEvents);
+                // if (!this.mainPeer.physicalPeer) return;
                 this.gameCreated();
                 Logger.getInstance().debug("created game suc");
             })
@@ -706,19 +726,6 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
             Logger.getInstance().error("reload res", index);
             return this.loadGameConfig(remotePath);
         });
-    }
-
-    private gameCreated() {
-        if (this.connection) {
-            Logger.getInstance().log("connection gameCreat");
-            this.mLoadingManager.start(LoadState.WAITENTERROOM);
-            const pkt = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_GATEWAY_GAME_CREATED);
-            this.connection.send(pkt);
-            this.peer.state = GameState.GameCreate;
-        } else {
-            // Log
-            Logger.getInstance().log("no connection gameCreat");
-        }
     }
 
     private onSelectCharacter() {
