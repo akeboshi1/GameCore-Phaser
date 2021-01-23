@@ -6,8 +6,6 @@ import {IDisplayObject} from "../display.object";
 import {LoadQueue, LoadType} from "../../loadqueue";
 import {ElementTopDisplay} from "../element.top.display";
 import {DisplayMovement} from "../display.movement";
-import {PlayScene, projectionAngle} from "gamecoreRender";
-
 export class DragonbonesDisplay extends BaseDragonbonesDisplay implements IDisplayObject {
     protected mID: number = undefined;
     protected mTitleMask: number;
@@ -179,7 +177,6 @@ export class DragonbonesDisplay extends BaseDragonbonesDisplay implements IDispl
 
     public setPosition(x?: number, y?: number, z?: number, w?: number): this {
         super.setPosition(x, y, z, w);
-        this.updateSort();
         this.updateTopDisplay();
         return this;
     }
@@ -270,12 +267,6 @@ export class DragonbonesDisplay extends BaseDragonbonesDisplay implements IDispl
 
     protected checkShowNickname(): boolean {
         return (this.mTitleMask & TitleMask.TQ_NickName) > 0;
-    }
-
-    protected updateSort() {
-        const _projectionAngle = projectionAngle;
-        this.mSortX = (this.x - this.projectionSize.offset.x) / (2 * _projectionAngle[0]) + ((this.y - 7.5) - this.projectionSize.offset.y) / _projectionAngle[1] + this.z;
-        this.mSortY = -((this.x - this.projectionSize.offset.x) / 2 * _projectionAngle[0]) + ((this.y - 7.5) - this.projectionSize.offset.y) / (2 * _projectionAngle[1]);
     }
 
     protected showPlaceholder() {

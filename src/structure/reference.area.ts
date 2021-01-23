@@ -8,7 +8,7 @@ export class ReferenceArea extends Phaser.GameObjects.Graphics {
         super(scene);
     }
 
-    async draw(area: number[][], origin: IPos, tileWidth: number, tileHeight: number) {
+    draw(area: number[][], origin: IPos, tileWidth: number, tileHeight: number) {
         this.clear();
         if (area.length === 0 || area[0].length === 0) {
             return;

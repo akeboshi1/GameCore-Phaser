@@ -53,8 +53,6 @@ enum MoveStyle {
     PATH_MOVE_STYLE = 3
 }
 
-export const projectionAngle = [Math.cos(45 * Math.PI / 180), Math.sin(45 * Math.PI / 180)];
-
 export class Render extends RPCPeer implements GameMain {
     public isConnect: boolean = false;
     public emitter: Phaser.Events.EventEmitter;

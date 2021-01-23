@@ -1,4 +1,6 @@
+import { Sprite } from "base";
 import { AnimationsNode, ElementNode, SpawnPointNode, TerrainNode } from "game-capsule";
+import { FramesModel } from "gamecore";
 import { AnimationModel, IFramesModel } from "structure";
 import { EditorFramesDisplay } from "./editor.frames.display";
 import { SceneEditorCanvas } from "./scene.editor.canvas";
@@ -7,11 +9,20 @@ export class EditorFactory {
     constructor(private sceneEditor: SceneEditorCanvas) {
     }
 
+    public createFramesDisplayBYSprite(sprite: Sprite) {
+        const frameModel: IFramesModel = <FramesModel>sprite.displayInfo;
+
+        const display = new EditorFramesDisplay(this.sceneEditor.scene, sprite.id, sprite.nodeType, this.sceneEditor);
+        display.load(frameModel);
+        display.play({ name: sprite.currentAnimationName, flip: false });
+        return display;
+    }
+
     public createFramesDisplay(element: ElementNode | TerrainNode) {
         const animations = element.animations;
         const frameModel: IFramesModel = this.createFramesModel(animations);
 
-        const display = new EditorFramesDisplay(this.sceneEditor.scene, element.id, this.sceneEditor);
+        const display = new EditorFramesDisplay(this.sceneEditor.scene, element.id, 3, this.sceneEditor);
         display.load(frameModel);
         display.play({ name: animations.defaultAnimationName, flip: false });
         return display;

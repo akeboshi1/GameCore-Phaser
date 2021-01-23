@@ -1,18 +1,15 @@
 import { BaseFramesDisplay } from "base";
 import { ReferenceArea, RunningAnimation } from "structure";
-import { IProjection, LogicPoint, LogicPos, Position45 } from "utils";
+import { LogicPoint, Position45 } from "utils";
 import { SceneEditorCanvas } from "./scene.editor.canvas";
 import { EditorTopDisplay } from "./top.display";
 
 export class EditorFramesDisplay extends BaseFramesDisplay {
     protected mReferenceArea: ReferenceArea;
     protected mTopDisplay: EditorTopDisplay;
-    protected mSortX: number = 0;
-    protected mSortY: number = 0;
-    private mProjectionSize: IProjection;
 
-    constructor(scene: Phaser.Scene, id: number, private sceneEditor: SceneEditorCanvas) {
-        super(scene, id);
+    constructor(scene: Phaser.Scene, id: number, nodeType: number, private sceneEditor: SceneEditorCanvas) {
+        super(scene, id, nodeType);
     }
 
     selected() {
@@ -56,7 +53,6 @@ export class EditorFramesDisplay extends BaseFramesDisplay {
 
     setPosition(x?: number, y?: number, z?: number, w?: number) {
         super.setPosition(x, y, z, w);
-        this.updateSort();
         if (this.mTopDisplay) {
             this.mTopDisplay.update();
         }
@@ -83,30 +79,6 @@ export class EditorFramesDisplay extends BaseFramesDisplay {
         const offset = Position45.transformTo90(new LogicPoint(origin.x, origin.y), miniSize);
         this.mProjectionSize = { offset, width, height };
         this.updateSort();
-    }
-
-    protected updateSort() {
-        if (!this.mProjectionSize) {
-            return;
-        }
-        const _projectionAngle = [Math.cos(45 * Math.PI / 180), Math.sin(45 * Math.PI / 180)];
-        this.mSortX = (this.x - this.mProjectionSize.offset.x) / (2 * _projectionAngle[0]) + (this.y - this.mProjectionSize.offset.y) / _projectionAngle[1] + this.z;
-        this.mSortY = -((this.x - this.mProjectionSize.offset.x) / 2 * _projectionAngle[0]) + (this.y - this.mProjectionSize.offset.y) / (2 * _projectionAngle[1]);
-    }
-
-    get sortX() {
-        return this.mSortX;
-    }
-
-    get sortY() {
-        return this.mSortY;
-    }
-
-    public get projectionSize(): IProjection {
-        if (!this.mProjectionSize) {
-            this.mProjectionSize = {offset: {x: 0, y: 0}, width: 0, height: 0};
-        }
-        return this.mProjectionSize;
     }
 
     private get topDisplay() {
