@@ -27,8 +27,6 @@ import {
     MessageType,
     ModuleName,
     SceneName,
-    HEARTBEAT_WORKER,
-    HEARTBEAT_WORKER_URL,
     ElementStateType,
     PHYSICAL_WORKER,
     PHYSICAL_WORKER_URL
@@ -118,6 +116,7 @@ export class Render extends RPCPeer implements GameMain {
         this.initConfig();
         this.linkTo(MAIN_WORKER, MAIN_WORKER_URL).onceReady(() => {
             this.mMainPeer = this.remote[MAIN_WORKER].MainPeer;
+            this.mMainPeer.updateFps();
             this.createGame();
             Logger.getInstance().log("worker onReady");
         });
@@ -127,11 +126,11 @@ export class Render extends RPCPeer implements GameMain {
             this.mPhysicalPeer.start();
             Logger.getInstance().log("Physcialworker onReady");
         });
-        this.linkTo(HEARTBEAT_WORKER, HEARTBEAT_WORKER_URL).onceReady(() => {
-            this.mHeartPeer = this.remote[HEARTBEAT_WORKER].HeartBeatPeer;
-            this.mHeartPeer.updateFps();
-            Logger.getInstance().log("heartBeatworker onReady in Render");
-        });
+        // this.linkTo(HEARTBEAT_WORKER, HEARTBEAT_WORKER_URL).onceReady(() => {
+        //     this.mHeartPeer = this.remote[HEARTBEAT_WORKER].HeartBeatPeer;
+        //     this.mMainPeer.updateFps();
+        //     Logger.getInstance().log("heartBeatworker onReady in Render");
+        // });
         // const len = 3;
         // const statList = [];
         // for (let i = 0; i < len; i++) {

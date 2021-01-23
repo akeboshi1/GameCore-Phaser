@@ -4,8 +4,8 @@ import { PBpacket, Buffer } from "net-socket-packet";
 import * as protos from "pixelpai_proto";
 import { ServerAddress } from "../../lib/net/address";
 import { Game } from "./game";
-import { IPos, Logger, LogicPoint, Pos } from "utils";
-import { ILauncherConfig, HEARTBEAT_WORKER, HEARTBEAT_WORKER_URL, MAIN_WORKER, RENDER_PEER, ModuleName, EventType, PHYSICAL_WORKER, PHYSICAL_WORKER_URL, GameState } from "structure";
+import { IPos, Logger, LogicPoint } from "utils";
+import { ILauncherConfig, MAIN_WORKER, RENDER_PEER, ModuleName, EventType, PHYSICAL_WORKER, PHYSICAL_WORKER_URL, GameState } from "structure";
 import { PicaGame } from "picaWorker";
 import { DataMgrType } from "./data.manager/dataManager";
 import { SceneDataManager } from "./data.manager";
@@ -24,6 +24,11 @@ export class MainPeer extends RPCPeer {
      */
     private isReady: boolean = false;
     private mPhysicalPeer: any;
+    private delayTime: number = 20000;
+    private reConnectCount: number = 0;
+    private startDelay: any;
+    private isStartUpdateFps: boolean = false;
+    private startUpdateFps: any;
     // private isReconnect: boolean = false;
     constructor() {
         super(MAIN_WORKER);
@@ -40,9 +45,9 @@ export class MainPeer extends RPCPeer {
         return this.remote[PHYSICAL_WORKER].PhysicalPeer;
     }
 
-    get heartBeatPeer() {
-        return this.remote[HEARTBEAT_WORKER].HeartBeatPeer;
-    }
+    // get heartBeatPeer() {
+    //     return this.remote[HEARTBEAT_WORKER].HeartBeatPeer;
+    // }
 
     set state(val) {
         const now: number = new Date().getTime();
@@ -84,14 +89,56 @@ export class MainPeer extends RPCPeer {
     }
 
     // ============= 主进程调用心跳
+    @Export()
+    public updateFps() {
+        if (this.isStartUpdateFps) return;
+        this.isStartUpdateFps = true;
+        this.startUpdateFps = setInterval(() => {
+            this.remote[RENDER_PEER].Render.updateFPS();
+        }, 100);
+    }
+
+    @Export()
+    public endFps() {
+        if (this.startUpdateFps) {
+            clearInterval(this.startUpdateFps);
+            this.startUpdateFps = null;
+        }
+        // Logger.getInstance().log("heartBeatWorker endBeat");
+        this.remote[RENDER_PEER].Render.endFPS();
+    }
+
     public startBeat() {
-        this.remote[HEARTBEAT_WORKER].HeartBeatPeer.startBeat();
+        Logger.getInstance().log("startBeat======");
+        if (this.startDelay) return;
+        this.startDelay = setInterval(() => {
+            Logger.getInstance().log("heartbeat++++interval");
+            if (this.reConnectCount >= 8) {
+                this.remote[MAIN_WORKER].MainPeer.reconnect();
+                return;
+            }
+            this.reConnectCount++;
+            const pkt: PBpacket = new PBpacket(op_gateway.OPCODE._OP_CLIENT_REQ_GATEWAY_PING);
+            this.game.socket.send(pkt.Serialization());
+        }, this.delayTime);
     }
+
     public endBeat() {
-        this.remote[HEARTBEAT_WORKER].HeartBeatPeer.endBeat();
+        this.reConnectCount = 0;
+        if (this.startDelay) {
+            clearInterval(this.startDelay);
+            this.startDelay = null;
+        }
+        Logger.getInstance().log("heartBeatWorker endBeat");
+        // this.remote[MAIN_WORKER].MainPeer.endHeartBeat();
     }
+
+    @Export()
     public clearBeat() {
-        this.remote[HEARTBEAT_WORKER].HeartBeatPeer.clearBeat();
+        Logger.getInstance().log("clearBeat======");
+        this.reConnectCount = 0;
+        // Logger.getInstance().log("heartBeatWorker clearBeat");
+        // this.remote[MAIN_WORKER].MainPeer.clearHeartBeat();
     }
 
     // ============== render调用主进程
@@ -107,9 +154,9 @@ export class MainPeer extends RPCPeer {
         this.linkTo(PHYSICAL_WORKER, PHYSICAL_WORKER_URL).onceReady(() => {
             this.mPhysicalPeer = this.remote[PHYSICAL_WORKER].PhysicalPeer;
             Logger.getInstance().log("Physcialworker onReady");
-            this.linkTo(HEARTBEAT_WORKER, HEARTBEAT_WORKER_URL).onceReady(() => {
-                Logger.getInstance().log("heartBeatworker onReady in mainworker");
-            });
+            // this.linkTo(HEARTBEAT_WORKER, HEARTBEAT_WORKER_URL).onceReady(() => {
+            //     Logger.getInstance().log("heartBeatworker onReady in mainworker");
+            // });
         });
     }
 
@@ -385,22 +432,22 @@ export class MainPeer extends RPCPeer {
     }
 
     // ============= 心跳调用主进程
-    @Export()
-    public startHeartBeat() {
-        // ==========同步心跳
-        const pkt: PBpacket = new PBpacket(op_gateway.OPCODE._OP_CLIENT_REQ_GATEWAY_PING);
-        this.game.socket.send(pkt.Serialization());
-    }
+    // @Export()
+    // public startHeartBeat() {
+    //     // ==========同步心跳
+    //     const pkt: PBpacket = new PBpacket(op_gateway.OPCODE._OP_CLIENT_REQ_GATEWAY_PING);
+    //     this.game.socket.send(pkt.Serialization());
+    // }
 
-    @Export()
-    public endHeartBeat() {
+    // @Export()
+    // public endHeartBeat() {
 
-    }
+    // }
 
-    @Export()
-    public clearHeartBeat() {
+    // @Export()
+    // public clearHeartBeat() {
 
-    }
+    // }
 
     @Export()
     public creareRole() {
@@ -645,7 +692,7 @@ export class MainPeer extends RPCPeer {
 
     // ==== todo
     public terminate() {
-        this.remote[HEARTBEAT_WORKER].HeartBeatPeer.terminate();
+        // this.remote[HEARTBEAT_WORKER].HeartBeatPeer.terminate();
         self.close();
         // super.terminate();
     }
@@ -657,7 +704,7 @@ export class MainPeer extends RPCPeer {
     public destroy() {
         if (this.game) this.game.isDestroy = true;
         super.destroy();
-        this.remote[HEARTBEAT_WORKER].HeartBeatPeer.destroy();
+        // this.remote[HEARTBEAT_WORKER].HeartBeatPeer.destroy();
     }
 
     // ==== config
