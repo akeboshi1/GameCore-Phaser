@@ -1,8 +1,11 @@
 TODO List
 ===
-> 2020-10
+> 2021 进度计划
+- [x] Webpack 动态加载代码块。
+- [x] Webpack 动态加载代码块。
+- [x] Webpack 动态加载代码块。
 ## rpc模块拆分
-- [ ]render 部分拆分  周围
+- [x]render 部分拆分  周围
   - [x] Phaser场景管理-sceneManager
   - [x] Phaser镜头管理-cameraManager
   - [x] 多帧显示对象管理-frameDisplayManager
@@ -14,7 +17,7 @@ TODO List
     - [x] 登陆ui-loginPanel
     - [ ] 创角ui-CreateRolePanel
   - [x] 显示对象层级管理-layerManager
-  - [ ] Phaser声音管理-soundManager
+  - [x] Phaser声音管理-soundManager
   - [ ] Phaser交互管理-inputManager
   - [ ] 特效显示对象管理-effectManager
   - [ ] 特效显示对象管理-falleffectManager
@@ -22,7 +25,7 @@ TODO List
   - [ ] 气泡显示对象管理-bubbleManager
   - [x] 加载管理-loadingManager
   - [ ] 动画管理-animationManager
-- [ ]game 部分拆分 张腾 管晓敏
+- [x]game 部分拆分 张腾 管晓敏
   - [x] 游戏登陆数据管理-account
   - [x] 游戏时间管理（游戏服务器同步）-clock
   - [x] 游戏时间管理（游戏后台同步）-httpclock
@@ -46,21 +49,21 @@ TODO List
           - [ ] 龙骨显示对象数据-dragonBonesModle
             - [ ] 显示对象动画数据 - animation
           - [ ] 显示对象proto数据-isprite
-    - [ ] 地块管理-terrainManager 张腾
-      - [ ] 地块对象 - terrain
-    - [ ] 墙块管理-wallManager 张腾
-      - [ ] 墙块对象 - wall
+    - [x] 地块管理-terrainManager 张腾
+      - [x] 地块对象 - terrain
+    - [x] 墙块管理-wallManager 张腾
+      - [x] 墙块对象 - wall
     - [x] 群体事件管理-groupManager 管晓敏
       - [x] 跟随族群 - followGroup
     - [x] 群体事件管理-frameManager 管晓敏
-    - [ ] 特效管理-effectManager 管晓敏
-      - [ ] 特效对象 - effect
-    - [ ] 天空盒区块管理-blockManager 张腾
-      - [ ] 区块对象 - block
-    - [ ] 地块区块管理-viewblockManager 张腾
-      - [ ] 区块对象 - viewblock
-    - [ ] 天空盒管理-skyBoxManager 张腾
-      - [ ] 天空盒逻辑对象 - logicbackgroundDisplay
+    - [x] 特效管理-effectManager 管晓敏
+      - [x] 特效对象 - effect
+    - [x] 天空盒区块管理-blockManager 张腾
+      - [x] 区块对象 - block
+    - [x] 地块区块管理-viewblockManager 张腾
+      - [x] 区块对象 - viewblock
+    - [x] 天空盒管理-skyBoxManager 张腾
+      - [x] 天空盒逻辑对象 - logicbackgroundDisplay
 > older
 ## 调研
 - [x] Webworker + Webpack ：[github repository](https://github.com/askdaddy/ts-webworker-webpack) `@seven`

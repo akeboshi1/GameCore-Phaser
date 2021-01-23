@@ -1,6 +1,6 @@
 {
   "name": "@PixelPai/game-core",
-  "version": "1.0.487",
+  "version": "1.0.488",
   "main": "release/js/tooqing.js",
   "scripts": {
     "dev": "webpack-dev-server --mode development",

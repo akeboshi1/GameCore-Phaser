@@ -27,8 +27,6 @@ import {
     MessageType,
     ModuleName,
     SceneName,
-    HEARTBEAT_WORKER,
-    HEARTBEAT_WORKER_URL,
     ElementStateType,
     PHYSICAL_WORKER,
     PHYSICAL_WORKER_URL
@@ -118,20 +116,21 @@ export class Render extends RPCPeer implements GameMain {
         this.initConfig();
         this.linkTo(MAIN_WORKER, MAIN_WORKER_URL).onceReady(() => {
             this.mMainPeer = this.remote[MAIN_WORKER].MainPeer;
-            this.linkTo(PHYSICAL_WORKER, PHYSICAL_WORKER_URL).onceReady(() => {
-                this.mPhysicalPeer = this.remote[PHYSICAL_WORKER].PhysicalPeer;
-                this.mPhysicalPeer.setScaleRatio(Math.ceil(this.mConfig.devicePixelRatio || 1));
-                this.mPhysicalPeer.start();
-                this.createGame();
-                Logger.getInstance().log("Physcialworker onReady");
-            });
+            this.mMainPeer.updateFps();
+            this.createGame();
             Logger.getInstance().log("worker onReady");
         });
-        this.linkTo(HEARTBEAT_WORKER, HEARTBEAT_WORKER_URL).onceReady(() => {
-            this.mHeartPeer = this.remote[HEARTBEAT_WORKER].HeartBeatPeer;
-            this.mHeartPeer.updateFps();
-            Logger.getInstance().log("heartBeatworker onReady in Render");
+        this.linkTo(PHYSICAL_WORKER, PHYSICAL_WORKER_URL).onceReady(() => {
+            this.mPhysicalPeer = this.remote[PHYSICAL_WORKER].PhysicalPeer;
+            this.mPhysicalPeer.setScaleRatio(Math.ceil(this.mConfig.devicePixelRatio || 1));
+            this.mPhysicalPeer.start();
+            Logger.getInstance().log("Physcialworker onReady");
         });
+        // this.linkTo(HEARTBEAT_WORKER, HEARTBEAT_WORKER_URL).onceReady(() => {
+        //     this.mHeartPeer = this.remote[HEARTBEAT_WORKER].HeartBeatPeer;
+        //     this.mMainPeer.updateFps();
+        //     Logger.getInstance().log("heartBeatworker onReady in Render");
+        // });
         // const len = 3;
         // const statList = [];
         // for (let i = 0; i < len; i++) {
@@ -464,9 +463,9 @@ export class Render extends RPCPeer implements GameMain {
         this.remote[MAIN_WORKER].MainPeer.initGameConfig(JSON.stringify(config));
     }
 
-    public startConnect(gateway: ServerAddress) {
-        this.remote[MAIN_WORKER].MainPeer.startConnect(gateway.host, gateway.port, gateway.secure);
-    }
+    // public startConnect(gateway: ServerAddress) {
+    //     this.remote[MAIN_WORKER].MainPeer.startConnect(gateway.host, gateway.port, gateway.secure);
+    // }
 
     public newGame(): Promise<any> {
         return new Promise<any>((resolve, reject) => {
@@ -825,7 +824,10 @@ export class Render extends RPCPeer implements GameMain {
             if (!this.mAccount) {
                 this.mAccount = new Account();
             }
+            const now = new Date().getTime();
+            Logger.getInstance().log("createAccount ====>", now);
             this.exportProperty(this.mAccount, this, ModuleName.ACCOUNT_NAME).onceReady(() => {
+                Logger.getInstance().log("createAccountExport ====>", new Date().getTime() - now);
                 this.mAccount.enterGame(gameID, worldID, sceneID, { locX, locY, locZ });
                 resolve(true);
             });

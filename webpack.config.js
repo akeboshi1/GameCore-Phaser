@@ -15,7 +15,6 @@ const config = {
     entry: {
         tooqing: path.join(__dirname, "./launcher.ts"),
         mainWorker: path.join(__dirname, "./src/game/main.peer.ts"),
-        heartWorker: path.join(__dirname, "./src/services/heartBeat.worker.ts"),
         physicalWorker: path.join(__dirname, "./src/services/physical.worker.ts")
     },
     output: {
