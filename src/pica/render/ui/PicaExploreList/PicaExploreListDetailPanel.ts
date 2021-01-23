@@ -1,10 +1,10 @@
 
 import { op_client } from "pixelpai_proto";
 import { ClickEvent, Button, GameGridTable } from "apowophaserui";
-import { Font, Handler, i18n, ResUtils, UIHelper } from "utils";
+import { Font, Handler, i18n, ResUtils, Tool, UIHelper } from "utils";
 import { UIAtlasName } from "picaRes";
 import { ItemButton } from "../Components";
-import { ButtonEventDispatcher, ProgressMaskBar } from "gamecoreRender";
+import { AlignmentType, AxisType, ButtonEventDispatcher, ConstraintType, GridLayoutGroup, GridLayoutGroupConfig, ProgressMaskBar } from "gamecoreRender";
 import { ChineseUnit } from "structure";
 import { PicaChapterLevelClue } from "./PicaChapterLevelClue";
 export class PicaExploreListDetailPanel extends Phaser.GameObjects.Container {
@@ -23,7 +23,8 @@ export class PicaExploreListDetailPanel extends Phaser.GameObjects.Container {
     private needItems: PicaChapterLevelClue[] = [];
     private labels: Phaser.GameObjects.Image[] = [];
     private needDatas: op_client.ICountablePackageItem[] = [];
-    private indexed: number = 0;
+    private indexed: number = -1;
+    private labelsCount: number = 0;
     private send: Handler;
     constructor(scene: Phaser.Scene, width: number, height: number, dpr: number, zoom: number) {
         super(scene, 0, 0);
@@ -64,14 +65,26 @@ export class PicaExploreListDetailPanel extends Phaser.GameObjects.Container {
             }
         }
         this.setNeedItems(this.needDatas);
-        //  this.setNeedBottomImgs(this.needDatas.length);
+        const count = Math.ceil(this.needDatas.length / 6);
+        this.setNeedBottomImgs(count);
+        this.setLabelsSelect(0);
     }
 
     protected setNeedItems(datas: op_client.ICountablePackageItem[]) {
-        this.mPropGrid.setItems(datas);
+        const gridDatas = [];
+        for (let i = 0; i < datas.length; i += 6) {
+            const temps = [];
+            for (let j = i; j < i + 6; j++) {
+                if (j < datas.length)
+                    temps.push(datas[j]);
+            }
+            gridDatas.push(temps);
+        }
+        this.mPropGrid.setItems(gridDatas);
     }
 
     protected setNeedBottomImgs(count: number) {
+        this.labelsCount = count;
         for (const label of this.labels) {
             label.visible = false;
         }
@@ -121,7 +134,7 @@ export class PicaExploreListDetailPanel extends Phaser.GameObjects.Container {
         this.taskTex.x = rightMidx;
         this.taskTex.y = this.captoreTex.y;
         this.mPropGrid = this.createGrid();
-        this.mPropGrid.x = rightMidx;
+        this.mPropGrid.x = rightMidx + 5 * this.dpr;
         this.mPropGrid.y = 15 * this.dpr;
         this.content.add([this.bg, this.backButton, this.titleTex, this.captoreTex, this.lineGraphic, this.captoreDes, this.taskTex, this.mPropGrid]);
         this.resize(this.width, this.height);
@@ -129,7 +142,8 @@ export class PicaExploreListDetailPanel extends Phaser.GameObjects.Container {
 
     private setLabelLayout(count: number) {
         const cellwidth = 6 * this.dpr, space = 8 * this.dpr, posy = this.content.height * 0.5 - 30 * this.dpr;
-        let posx = -(cellwidth * count + space * (count - 1)) / 0.5 + cellwidth * 0.5;
+        const rightMidx = 110 * this.dpr;
+        let posx = rightMidx - ((cellwidth * count + space * (count - 1)) / 0.5) + cellwidth * 0.5;
         for (let i = 0; i < count; i++) {
             const label = this.labels[i];
             label.x = posx;
@@ -143,47 +157,114 @@ export class PicaExploreListDetailPanel extends Phaser.GameObjects.Container {
     }
 
     private createGrid() {
-        const capW = 55 * this.dpr;
-        const capH = 55 * this.dpr;
+        const capW = 110 * this.dpr;
+        const capH = 157 * this.dpr;
         const tableConfig = {
             x: 0,
             y: 0,
             table: {
-                width: 120 * this.dpr,
+                width: 110 * this.dpr,
                 height: 157 * this.dpr,
-                columns: 3,
+                columns: 1,
                 cellWidth: capW,
                 cellHeight: capH,
                 reuseCellContainer: true,
-                zoom: this.zoom
+                zoom: this.zoom,
+                mask: true
             },
             scrollMode: 1,
             clamplChildOY: false,
             createCellContainerCallback: (cell, cellContainer) => {
                 const item = cell.item;
                 if (cellContainer === null) {
-                    cellContainer = new PicaChapterLevelClue(this.scene, this.dpr, 43 * this.dpr, 43 * this.dpr);
+                    cellContainer = this.createGridLayout();
                 }
-                cellContainer.setData({ item });
-                cellContainer.setItemData(item);
+                cellContainer.setItems(item);
                 return cellContainer;
             },
             onScrollValueChange: (value) => {
-
+                if (value < 0) value = 0;
+                else if (value > 1) value = 1;
+                const indexed = Math.floor((value * this.labelsCount));
+                this.setLabelsSelect(indexed);
             }
         };
         const mPropGrid = new GameGridTable(this.scene, tableConfig);
         mPropGrid.layout();
         mPropGrid.on("cellTap", (cell) => {
             if (cell) {
-                this.onSelectItemHandler(cell);
+                this.onSelectItemHandler(cell, this.scene.input.activePointer);
             }
         });
         return mPropGrid;
     }
 
-    private onSelectItemHandler(obj) {
-        obj.showTips();
+    private setLabelsSelect(indexed: number) {
+        if (this.indexed === indexed) return;
+        if (indexed >= this.labelsCount) indexed = this.labelsCount - 1;
+        for (let i = 0; i < this.labelsCount; i++) {
+            if (indexed === i) {
+                this.labels[i].setFrame("explore_page_up");
+            } else {
+                this.labels[i].setFrame("explore_page_down");
+            }
+        }
+        this.indexed = indexed;
     }
 
+    private createGridLayout() {
+        const gridlayout = new ChapterGridLayout(this.scene, 120 * this.dpr, 157 * this.dpr, this.dpr, {
+            cellSize: new Phaser.Math.Vector2(45 * this.dpr, 45 * this.dpr),
+            space: new Phaser.Math.Vector2(15 * this.dpr, 5 * this.dpr),
+            startAxis: AxisType.Vertical,
+            constraint: ConstraintType.FixedColumnCount,
+            constraintCount: 2,
+            alignmentType: AlignmentType.UpperCenter
+        });
+        return gridlayout;
+    }
+
+    private onSelectItemHandler(obj, pointer) {
+        // obj.showTips();
+        obj.checkPointer(pointer);
+    }
+
+}
+
+class ChapterGridLayout extends GridLayoutGroup {
+    private items: PicaChapterLevelClue[] = [];
+    private dpr: number;
+    constructor(scene: Phaser.Scene, width: number, height: number, dpr: number, config: GridLayoutGroupConfig) {
+        super(scene, 0, 0, config);
+        this.dpr = dpr;
+        this.setSize(width, height);
+    }
+    public setItems(datas: op_client.ICountablePackageItem[]) {
+        for (const item of this.items) {
+            item.visible = false;
+        }
+        for (let i = 0; i < datas.length; i++) {
+            let item: PicaChapterLevelClue;
+            if (i < this.items.length) {
+                item = this.items[i];
+            } else {
+                item = new PicaChapterLevelClue(this.scene, this.dpr, 43 * this.dpr, 43 * this.dpr);
+                this.add(item);
+                this.items.push(item);
+            }
+            item.visible = true;
+            item.setItemData(datas[i]);
+        }
+        this.Layout();
+    }
+
+    public checkPointer(pointer) {
+        for (const item of this.items) {
+            if (item.visible) {
+                if (Tool.checkPointerContains(item, pointer)) {
+                    item.showTips();
+                }
+            }
+        }
+    }
 }

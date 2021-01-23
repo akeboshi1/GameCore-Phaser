@@ -163,19 +163,21 @@ export class GridLayoutGroup extends Phaser.GameObjects.Container {
         }
         const maxWidth = startOffset.x + (this._cellSize.x + this._spacing.x) * (positionX + 1);
         const maxHeight = startOffset.y + (this._cellSize.y + this._spacing.y) * (positionY + 1);
-        if (this.startAxis === AxisType.Horizontal) {
-            this.height = maxHeight;
-            this.setAllChildPositionOffset(0);
-        } else {
-            this.width = maxWidth;
-            this.setAllChildPositionOffset(1);
-        }
+        // if (this.startAxis === AxisType.Horizontal) {
+        //     this.height = maxHeight;
+        //     this.setAllChildPositionOffset(0);
+        // } else {
+        //     this.width = maxWidth;
+        //     this.setAllChildPositionOffset(1);
+        // }
         if (this.width < maxWidth) {
             this.width = maxWidth;
         }
         if (this.height < maxHeight) {
             this.height = maxHeight;
         }
+        this.setAllChildPositionOffset(0);
+        this.setAllChildPositionOffset(1);
     }
 
     private setChildAlongAxis(child: any, axis: number, pos: number, size: number) {

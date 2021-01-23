@@ -73,7 +73,7 @@ export class Tool {
     }
 
     public static calcAngle(p1, p2): number {
-        const angle = Math.atan2((p2.y-p1.y), (p2.x-p1.x));
+        const angle = Math.atan2((p2.y - p1.y), (p2.x - p1.x));
         return angle * (180 / Math.PI);
     }
 
@@ -164,8 +164,9 @@ export class Tool {
         const bottom = gameObject.height / 2;
         if (pointer) {
             const worldMatrix: Phaser.GameObjects.Components.TransformMatrix = gameObject.getWorldTransformMatrix();
-            const x: number = pointer.x - worldMatrix.tx - gameObject.x;
-            const y: number = pointer.y - worldMatrix.ty - gameObject.y;
+            const zoom = worldMatrix.scaleX;
+            const x: number = (pointer.x - worldMatrix.tx) / zoom;
+            const y: number = (pointer.y - worldMatrix.ty) / zoom;
             if (left <= x && right >= x && top <= y && bottom >= y) {
                 return true;
             }
