@@ -142,8 +142,8 @@ export class PicaExploreListDetailPanel extends Phaser.GameObjects.Container {
 
     private setLabelLayout(count: number) {
         const cellwidth = 6 * this.dpr, space = 8 * this.dpr, posy = this.content.height * 0.5 - 30 * this.dpr;
-        const rightMidx = 110 * this.dpr;
-        let posx = rightMidx - ((cellwidth * count + space * (count - 1)) / 0.5) + cellwidth * 0.5;
+        const rightMidx = 80 * this.dpr;
+        let posx = rightMidx - ((cellwidth * count + space * (count - 1)) * 0.5) + cellwidth * 0.5;
         for (let i = 0; i < count; i++) {
             const label = this.labels[i];
             label.x = posx;
