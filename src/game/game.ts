@@ -15,7 +15,7 @@ import { LoadingManager } from "./loading/loading.manager";
 import { ILauncherConfig, LoadState } from "structure";
 import { ServerAddress } from "../../lib/net/address";
 import { IRoomService } from "./room/room/room";
-import { ElementStorage } from "./room/elementstorage/element.storage";
+import { ElementStorage } from "../base/elementstorage/element.storage";
 import { RoomManager } from "./room/room.manager";
 import { User } from "./actor/user";
 import { DataManager, DataMgrType } from "./data.manager/dataManager";

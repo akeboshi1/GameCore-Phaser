@@ -4,7 +4,7 @@ import { Terrain } from "./terrain";
 import { IElementManager } from "../element/element.manager";
 import { IElement } from "../element/element";
 import NodeType = op_def.NodeType;
-import { IElementStorage } from "../elementstorage/element.storage";
+import { IElementStorage } from "base";
 import { IRoomService, Room, SpriteAddCompletedListener } from "../room/room";
 import { ISprite } from "structure";
 import { ConnectionService } from "lib/net/connection.service";

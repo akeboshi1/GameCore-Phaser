@@ -106,7 +106,7 @@ export class Launcher {
         closeGame: null,
         connectFail: null,
         platform: "pc",
-        runtime: "editor"
+        runtime: "game"
     };
 
     constructor(config?: ILauncherConfig) {
@@ -169,7 +169,7 @@ export class Launcher {
 
     public setGameConfig(config) {
         if (!this.world) return;
-        // this.world.setGameConfig(config);
+        this.world.setGameConfig(config);
     }
 
     public updatePalette(palette) {

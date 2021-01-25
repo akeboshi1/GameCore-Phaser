@@ -11,11 +11,11 @@ import {
 } from "game-capsule";
 import { op_def } from "pixelpai_proto";
 import { MossCollectionNode } from "game-capsule";
-import { AnimationModel } from "../../../structure/animation.model";
+import { AnimationModel } from "../../structure/animation.model";
 import { Logger, Url } from "utils";
 import { IDragonbonesModel, IFramesModel, IScenery } from "structure";
-import { FramesModel } from "../display/frame/frames.model";
-import { DragonbonesModel } from "../display/dragonbones/dragonbones.model";
+import { FramesModel } from "../../game/room/display/frame/frames.model";
+import { DragonbonesModel } from "../../game/room/display/dragonbones/dragonbones.model";
 export interface IAsset {
     type: string;
     key: string;

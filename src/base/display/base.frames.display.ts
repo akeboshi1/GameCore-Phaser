@@ -451,4 +451,8 @@ export class BaseFramesDisplay extends BaseDisplay {
     get nodeType(): number {
         return this.mNodeType;
     }
+
+    get id(): number {
+        return this.mID;
+    }
 }

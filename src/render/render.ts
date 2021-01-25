@@ -41,6 +41,7 @@ import { GamePauseScene, MainUIScene } from "./scenes";
 import { EditorCanvasManager } from "./managers/editor.canvas.manager";
 import version from "../../version";
 import { AstarDebugger, GridsDebugger } from "./display";
+import { IRender } from "base";
 // import Stats from "../../Stat";
 
 for (const key in protos) {
@@ -53,7 +54,7 @@ enum MoveStyle {
     PATH_MOVE_STYLE = 3
 }
 
-export class Render extends RPCPeer implements GameMain {
+export class Render extends RPCPeer implements GameMain, IRender {
     public isConnect: boolean = false;
     public emitter: Phaser.Events.EventEmitter;
     @Export()
@@ -581,6 +582,10 @@ export class Render extends RPCPeer implements GameMain {
         return this.mainPeer.getCurrentRoomSize();
     }
 
+    public getCurrentRoomMiniSize(): any {
+        return this.mainPeer.getCurrentRoomMiniSize();
+    }
+
     public syncCameraScroll() {
         if (this.mMainPeer) this.mMainPeer.syncCameraScroll();
     }
@@ -595,6 +600,10 @@ export class Render extends RPCPeer implements GameMain {
 
     public showMediator(name: string, isShow: boolean) {
         if (this.mMainPeer) this.mMainPeer.showMediator(name, isShow);
+    }
+
+    public getMainScene() {
+        return this.mSceneManager.getMainScene();
     }
 
     @Export()

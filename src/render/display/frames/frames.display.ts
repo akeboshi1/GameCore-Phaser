@@ -51,14 +51,6 @@ export class FramesDisplay extends BaseFramesDisplay implements IDisplayObject {
         super.destroy();
     }
 
-    public get id() {
-        return this.mID;
-    }
-
-    public get nodeType() {
-        return this.mNodeType;
-    }
-
     public set titleMask(val: number) {
         this.mTitleMask = val;
     }

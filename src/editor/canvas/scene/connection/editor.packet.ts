@@ -211,7 +211,10 @@ export class EditorPacket extends PacketHandler {
     private handleSyncElements() {
     }
 
-    private onFetchSpriteHandler() {
+    private onFetchSpriteHandler(packet: PBpacket) {
+        const content: op_client.IOP_EDITOR_REQ_CLIENT_FETCH_SPRITE = packet.content;
+        const { ids, nodeType } = content;
+        this.sceneEditor.fetchSprite(ids, nodeType);
     }
 
     private onAddSceneryHandler() {
@@ -223,6 +226,8 @@ export class EditorPacket extends PacketHandler {
     private onDeleteSceneryHandler() {
     }
 
-    private onFetchSceneryHandler() {
+    private onFetchSceneryHandler(packet: PBpacket) {
+        const content: op_client.IOP_EDITOR_REQ_CLIENT_FETCH_SCENERY = packet.content;
+        this.sceneEditor.fetchScenery(content.id);
     }
 }

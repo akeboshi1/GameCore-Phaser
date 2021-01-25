@@ -1,12 +1,15 @@
-import { BaseFramesDisplay } from "base";
-import { ReferenceArea, RunningAnimation } from "structure";
-import { LogicPoint, Position45 } from "utils";
+import { BaseFramesDisplay, Sprite } from "base";
+import { DisplayField, ReferenceArea, RunningAnimation } from "structure";
+import { Helpers, LogicPoint, Position45 } from "utils";
 import { SceneEditorCanvas } from "./scene.editor.canvas";
 import { EditorTopDisplay } from "./top.display";
 
 export class EditorFramesDisplay extends BaseFramesDisplay {
+
+    public sprite: Sprite;
     protected mReferenceArea: ReferenceArea;
     protected mTopDisplay: EditorTopDisplay;
+    protected mIsMoss: boolean = false;
 
     constructor(scene: Phaser.Scene, id: number, nodeType: number, private sceneEditor: SceneEditorCanvas) {
         super(scene, id, nodeType);
@@ -29,8 +32,8 @@ export class EditorFramesDisplay extends BaseFramesDisplay {
         if (!this.mCurAnimation) {
             return;
         }
-        const area = this.mCurAnimation.collisionArea;
-        const origin = this.mCurAnimation.originPoint;
+        const area = this.getCollisionArea();
+        const origin = this.getOriginPoint();
         const { tileWidth, tileHeight } = this.sceneEditor.miniRoomSize;
         this.mReferenceArea.draw(area, origin, tileWidth, tileHeight);
         this.addAt(this.mReferenceArea, 0);
@@ -59,9 +62,27 @@ export class EditorFramesDisplay extends BaseFramesDisplay {
         return this;
     }
 
+    /**
+     * TODO sprite仅用于和编辑器通信，后期会删除
+     * @deprecated
+     */
+    toSprite() {
+        if (!this.sprite) {
+            return;
+        }
+        const pos = this.sprite.pos;
+        pos.x = this.x;
+        pos.y = this.y;
+        pos.z = this.z;
+        return this.sprite.toSprite();
+    }
+
     public play(val: RunningAnimation) {
         super.play(val);
         this.fetchProjection();
+        if (this.mReferenceArea) {
+            this.showRefernceArea();
+        }
     }
 
     protected fetchProjection() {
@@ -69,8 +90,8 @@ export class EditorFramesDisplay extends BaseFramesDisplay {
             return;
         }
         const miniSize = this.sceneEditor.miniRoomSize;
-        const collision = this.mCurAnimation.collisionArea;
-        const origin = this.mCurAnimation.originPoint;
+        const collision = this.getCollisionArea();
+        const origin = this.getOriginPoint();
         if (!collision) return;
         const rows = collision.length;
         const cols = collision[0].length;
@@ -81,10 +102,40 @@ export class EditorFramesDisplay extends BaseFramesDisplay {
         this.updateSort();
     }
 
+    protected getCollisionArea() {
+        if (!this.mCurAnimation) {
+            return;
+        }
+        let collision = this.mCurAnimation.collisionArea;
+        if (this.mAnimation.flip) {
+            collision = Helpers.flipArray(collision);
+        }
+        return collision;
+    }
+
+    protected getOriginPoint() {
+        if (!this.mCurAnimation) {
+            return;
+        }
+        const originPoint = this.mCurAnimation.originPoint;
+        if (this.mAnimation.flip) {
+            return new LogicPoint(originPoint.y, originPoint.x);
+        }
+        return originPoint;
+    }
+
     private get topDisplay() {
         if (!this.mTopDisplay) {
             this.mTopDisplay = new EditorTopDisplay(this.scene, this, 1);
         }
         return this.mTopDisplay;
+    }
+
+    set isMoss(val: boolean) {
+        this.mIsMoss = val;
+    }
+
+    get isMoss() {
+        return this.mIsMoss;
     }
 }

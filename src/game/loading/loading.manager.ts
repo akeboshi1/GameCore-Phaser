@@ -1,5 +1,5 @@
+import { IAsset } from "base";
 import { Game } from "../game";
-import { IAsset } from "../room";
 export class LoadingManager {
     private readonly mGame: Game;
     private mResources: IAsset[];

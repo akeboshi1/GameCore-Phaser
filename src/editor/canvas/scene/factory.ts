@@ -14,7 +14,10 @@ export class EditorFactory {
 
         const display = new EditorFramesDisplay(this.sceneEditor.scene, sprite.id, sprite.nodeType, this.sceneEditor);
         display.load(frameModel);
-        display.play({ name: sprite.currentAnimationName, flip: false });
+        display.isMoss = sprite.isMoss;
+        display.name = sprite.nickname;
+        display.sprite = sprite;
+        display.play(sprite.currentAnimation);
         return display;
     }
 

@@ -1,10 +1,9 @@
-import { AnimationsNode, Capsule, ElementNode, SceneNode, TerrainNode } from "game-capsule";
+import { Capsule, ElementNode, MossNode, PaletteNode, SceneNode, TerrainNode } from "game-capsule";
 import { op_def, op_client } from "pixelpai_proto";
-import { BaseCamerasManager, BaseDisplay, BaseFramesDisplay, BaseLayer, GroundLayer, Sprite, SurfaceLayer } from "base";
-import { AnimationModel, IFramesModel, ISprite } from "structure";
+import { BaseFramesDisplay, BaseLayer, ElementStorage, GroundLayer, Sprite, SurfaceLayer, LayerManager, IRender } from "base";
+import { IFramesModel, ISprite } from "structure";
 import { IPos, IPosition45Obj, load, Logger, LogicPos, Position45, Url } from "utils";
 import { EditorCanvas, IEditorCanvasConfig } from "../editor.canvas";
-import { LayerManager } from "base";
 import { EditorFramesDisplay } from "./editor.frames.display";
 import { EditorFactory } from "./factory";
 import { transitionGrid } from "./check.bound";
@@ -14,7 +13,8 @@ import { EditorTerrainManager } from "./manager/terrain.manager";
 import { EditorMossManager } from "./manager/moss.manager";
 import { EditorElementManager } from "./manager/element.manager";
 import { EditorCamerasManager } from "./manager/cameras.manager";
-export class SceneEditorCanvas extends EditorCanvas {
+import { EditorSkyboxManager } from "./manager/skybox.manager";
+export class SceneEditorCanvas extends EditorCanvas implements IRender {
     public displayObjectPool: DisplayObjectPool;
     private mSelecedElement: SelectedElementManager;
     private mCameraManager: EditorCamerasManager;
@@ -32,6 +32,9 @@ export class SceneEditorCanvas extends EditorCanvas {
     private mTerrainManager: EditorTerrainManager;
     private mMossManager: EditorMossManager;
     private mElementManager: EditorElementManager;
+    private mSkyboxManager: EditorSkyboxManager;
+
+    private mElementStorage: ElementStorage;
 
     private mScene: Phaser.Scene;
     constructor(config: IEditorCanvasConfig) {
@@ -48,6 +51,8 @@ export class SceneEditorCanvas extends EditorCanvas {
         this.mTerrainManager = new EditorTerrainManager(this);
         this.mMossManager = new EditorMossManager(this);
         this.mElementManager = new EditorElementManager(this);
+        this.mSkyboxManager = new EditorSkyboxManager(this);
+        this.mElementStorage = new ElementStorage();
         this.mGame.scene.add(SceneEditor.name, SceneEditor, true, this);
     }
 
@@ -130,11 +135,13 @@ export class SceneEditorCanvas extends EditorCanvas {
         if (!this.mSelecedElement) {
             return;
         }
-        const ele = this.mElements.get(id);
+        const ele = this.displayObjectPool.get(id.toString());
         if (!ele) {
             return;
         }
+        this.mSkyboxManager.unselected();
         this.mSelecedElement.selectElements([ele]);
+        this.mEditorPacket.sendFetch(this.mSelecedElement.getSelectedIDs(), op_def.NodeType.ElementNodeType, ele.isMoss);
     }
 
     public unselectElement() {
@@ -237,6 +244,53 @@ export class SceneEditorCanvas extends EditorCanvas {
         this.init();
     }
 
+    fetchSprite(ids: number[], nodeType: op_def.NodeType) {
+        // const map = {
+        //     [op_def.NodeType.SpawnPointType]: "elements",
+        //     [op_def.NodeType.ElementNodeType]: "elements",
+        //     [op_def.NodeType.MossCollectionType]: "mosses",
+        // };
+
+        // for (const id of ids) {
+        //     const poolName = map[nodeType];
+        //     const pool = this.displayObjectPool.getPool(poolName);
+        //     const displayObj = pool.get(id.toString());
+        //     if (displayObj) {
+        this.selectElement(ids[0]);
+                // this.selectedElement(displayObj.getDisplay());
+        //     }
+        // }
+    }
+
+    fetchScenery(id: number) {
+        this.mSelecedElement.unselectedElements();
+        this.mSkyboxManager.fetch(id);
+    }
+
+    setGameConfig(config: Capsule) {
+        this.mElementStorage.setGameConfig(config);
+    }
+
+    updatePalette(palette: PaletteNode) {
+        this.mElementStorage.updatePalette(palette);
+    }
+
+    updateMoss(moss: MossNode) {
+        this.mElementStorage.updateMoss(moss);
+    }
+
+    getCurrentRoomSize() {
+        return this.mRoomSize;
+    }
+
+    getCurrentRoomMiniSize() {
+        return this.mMiniRoomSize;
+    }
+
+    getMainScene() {
+        return this.mScene;
+    }
+
     private init() {
         this.mCameraManager = new EditorCamerasManager(this);
         const camera = this.mScene.cameras.main;
@@ -300,7 +354,17 @@ export class SceneEditorCanvas extends EditorCanvas {
                 this.createElement();
                 break;
             case BrushEnum.Select:
-                // TODO
+                if (pointer.downX !== pointer.upX && pointer.downY !== pointer.upY) {
+                    const selectedElements = this.mSelecedElement.getSelecedElement();
+                    for (const ele of selectedElements) {
+                        if (ele.isMoss) {
+                            this.mMossManager.updateMosses([ele]);
+                        } else {
+                            const sprite = ele.toSprite();
+                            this.mElementManager.updateElements([sprite]);
+                        }
+                    }
+                }
                 break;
             case BrushEnum.Eraser:
                 this.eraserTerrains();
@@ -312,6 +376,19 @@ export class SceneEditorCanvas extends EditorCanvas {
     }
 
     private onPointerDownHandler(pointer: Phaser.Input.Pointer) {
+        const key = this.mStamp.key;
+        if (key) {
+            const nodeType = this.mStamp.nodeType;
+            if (nodeType === op_def.NodeType.TerrainNodeType) {
+                if (!this.mElementStorage.getTerrainPalette(key)) {
+                    this.mEditorPacket.reqEditorSyncPaletteOrMoss(key, nodeType);
+                }
+            } else if (nodeType === op_def.NodeType.ElementNodeType) {
+                if (!this.mElementStorage.getMossPalette(key)) {
+                    this.mEditorPacket.reqEditorSyncPaletteOrMoss(key, nodeType);
+                }
+            }
+        }
     }
 
     private onPointerMoveHandler(pointer: Phaser.Input.Pointer) {
@@ -322,12 +399,28 @@ export class SceneEditorCanvas extends EditorCanvas {
                 }
                 break;
             case BrushEnum.Select:
-                if (pointer.isDown && this.mSelecedElement) this.mSelecedElement.dragElement(pointer.worldX, pointer.worldY);
+                if (pointer.isDown) {
+                    if (this.mSelecedElement) {
+                        this.mSelecedElement.dragElement(pointer.worldX, pointer.worldY);
+                    }
+                    this.mSkyboxManager.move(pointer);
+                }
+                // if (pointer.isDown && this.mSelecedElement) this.mSelecedElement.dragElement(pointer.worldX, pointer.worldY);
                 break;
             case BrushEnum.Fill:
-            case BrushEnum.Eraser:
+                this.mStamp.pointerMove(pointer.worldX, pointer.worldY);
+                break;
             case BrushEnum.BRUSH:
                 this.mStamp.pointerMove(pointer.worldX, pointer.worldY);
+                if (pointer.isDown) {
+                    this.createElement();
+                }
+                break;
+            case BrushEnum.Eraser:
+                this.mStamp.pointerMove(pointer.worldX, pointer.worldY);
+                if (pointer.isDown) {
+                    this.eraserTerrains();
+                }
                 break;
         }
     }
@@ -407,8 +500,24 @@ export class SceneEditorCanvas extends EditorCanvas {
         return this.mFactory;
     }
 
+    get elementStorage() {
+        return this.mElementStorage;
+    }
+
     get connection() {
         return this.mConnection;
+    }
+
+    get camerasManager() {
+        return this.mCameraManager;
+    }
+
+    get game() {
+        return this.mGame;
+    }
+
+    get scaleRatio() {
+        return Math.round(window.devicePixelRatio);
     }
 }
 
@@ -496,7 +605,7 @@ class MouseFollow {
     private mDisplay: MouseDisplayContainer;
     private isTerrain: boolean = false;
     private mNodeType: any;
-    private key: string;
+    private mKey: number;
     private mSprite: Sprite;
     private mIsMoss: boolean;
     private mScaleRatio = 1;
@@ -531,7 +640,7 @@ class MouseFollow {
         const scene = this.sceneEditor.scene;
         this.mNodeType = content.nodeType;
         this.mIsMoss = content.isMoss;
-        this.key = content.key;
+        this.mKey = content.key;
         this.isTerrain = this.mNodeType === op_def.NodeType.TerrainNodeType;
         this.mSprite = new Sprite(content.sprite, content.nodeType);
         this.mDisplay = new MouseDisplayContainer(this.sceneEditor);
@@ -672,6 +781,10 @@ class MouseFollow {
     get nodeType() {
         return this.mNodeType;
     }
+
+    get key() {
+        return this.mKey;
+    }
 }
 
 class MouseDisplayContainer extends Phaser.GameObjects.Container {
@@ -784,9 +897,6 @@ class MouseDisplayContainer extends Phaser.GameObjects.Container {
         this.mDisplays = undefined;
     }
 
-    private onInitializedHandler() {
-    }
-
     get displays() {
         return this.mDisplays;
     }
@@ -803,7 +913,7 @@ class EraserArea extends MouseDisplayContainer {
             this.area.clear();
         }
         const { tileWidth, tileHeight } = this.sceneEditor.roomSize;
-        const roomSize = {
+        this.mTileSize = {
             tileWidth,
             tileHeight,
             rows: size,
@@ -813,19 +923,20 @@ class EraserArea extends MouseDisplayContainer {
         };
 
         this.mOffset.x = 0;
-        this.mOffset.y = -((roomSize.sceneHeight - (size % 2 === 0 ? 0 : tileHeight)) / 2);
+        this.mOffset.y = -((this.mTileSize.sceneHeight - (size % 2 === 0 ? 0 : tileHeight)) / 2);
         let p1: LogicPos;
         let p2: LogicPos;
         let p3: LogicPos;
         let p4: LogicPos;
+        this.mNodeType = op_def.NodeType.TerrainNodeType;
         this.area = this.scene.make.graphics(undefined, false);
         for (let y = 0; y < size; y++) {
             for (let x = 0; x < size; x++) {
                 this.area.lineStyle(2, 0);
-                p1 = Position45.transformTo90(new LogicPos(x, y), roomSize);
-                p2 = Position45.transformTo90(new LogicPos(x + 1, y), roomSize);
-                p3 = Position45.transformTo90(new LogicPos(x + 1, y + 1), roomSize);
-                p4 = Position45.transformTo90(new LogicPos(x, y + 1), roomSize);
+                p1 = Position45.transformTo90(new LogicPos(x, y), this.mTileSize);
+                p2 = Position45.transformTo90(new LogicPos(x + 1, y), this.mTileSize);
+                p3 = Position45.transformTo90(new LogicPos(x + 1, y + 1), this.mTileSize);
+                p4 = Position45.transformTo90(new LogicPos(x, y + 1), this.mTileSize);
                 this.area.beginPath();
                 this.area.fillStyle(0, 0.5);
                 this.area.strokePoints([p1.toPoint(), p2.toPoint(), p3.toPoint(), p4.toPoint()], true, true);
@@ -878,5 +989,13 @@ class SelectedElementManager {
             const pos = transitionGrid(x, y, this.sceneEditor.alignGrid, roomSize);
             ele.setPosition(pos.x, pos.y);
         }
+    }
+
+    getSelectedIDs() {
+        return this.mSelecedElement.map((ele) => ele.id);
+    }
+
+    getSelecedElement() {
+        return this.mSelecedElement || [];
     }
 }

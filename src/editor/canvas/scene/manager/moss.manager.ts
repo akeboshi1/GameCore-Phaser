@@ -54,7 +54,7 @@ export class EditorMossManager extends PacketHandler {
     public updateMosses(elements) {
         const updateLocs = [];
         for (const element of elements) {
-            const sprite = element.display.element.model.toSprite();
+            const sprite = element.toSprite();
 
             const originLoc = this.editorMosses.get(sprite.id);
             const loc: op_def.IMossMetaData = {
@@ -159,10 +159,10 @@ export class EditorMossManager extends PacketHandler {
             this.taskQueue.delete(key);
 
             if (action === "ADD") {
-                // const moss = this.mRoom.world.elementStorage.getMossPalette(loc.key);
-                const moss = null;
+                const moss = this.sceneEditor.elementStorage.getMossPalette(loc.key);
                 if (!moss) continue;
 
+                // @ts-ignore
                 const sprite = moss.createSprite({
                     ...loc,
                     nodeType: op_def.NodeType.ElementNodeType,

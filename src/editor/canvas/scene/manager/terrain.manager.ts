@@ -151,14 +151,14 @@ export class EditorTerrainManager extends PacketHandler {
             this.taskQueue.delete(key);
 
             if (action === "ADD") {
-                // const palette = this.mRoom.world.elementStorage.getTerrainPalette(loc.key);
-                const palette = null;
+                const palette = this.sceneEditor.elementStorage.getTerrainPalette(loc.key);
                 if (!palette) continue;
 
                 const sprite = palette.createSprite({
                     nodeType: op_def.NodeType.TerrainNodeType,
                     x: loc.x,
                     y: loc.y,
+                    z: 0
                 });
                 this.mEditorTerrains.set(locId, loc.key);
                 this.sceneEditor.displayObjectPool.push("terrains", locId, sprite, this);
@@ -166,14 +166,14 @@ export class EditorTerrainManager extends PacketHandler {
                 this.mEditorTerrains.delete(locId);
                 this.sceneEditor.displayObjectPool.remove("terrains", locId);
             } else if (action === "UPDATE") {
-                // const palette = this.mRoom.world.elementStorage.getTerrainPalette(loc.key);
-                const palette = null;
+                const palette = this.sceneEditor.elementStorage.getTerrainPalette(loc.key);
                 if (!palette) continue;
 
                 const sprite = palette.createSprite({
                     nodeType: op_def.NodeType.TerrainNodeType,
                     x: loc.x,
                     y: loc.y,
+                    z: 0
                 });
                 this.mEditorTerrains.set(locId, loc.key);
                 this.sceneEditor.displayObjectPool.update("terrains", locId, sprite);

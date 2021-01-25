@@ -11,7 +11,6 @@ export * from "./elementaction/pkt.element.action";
 export * from "./elementaction/tag.element.action";
 export * from "./elementaction/furit.element.action";
 export * from "./elementaction/player.element.action";
-export * from "./elementstorage/element.storage";
 export * from "./player/player";
 export * from "./player/player.manager";
 export * from "./player/player.model";

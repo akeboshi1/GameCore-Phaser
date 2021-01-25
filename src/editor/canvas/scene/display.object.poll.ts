@@ -27,7 +27,7 @@ export class DisplayObjectPool {
         // const obj: BaseFramesDisplay = new this.POOLOBJECTCONFIG[poolName](sprite, manager);
         let layer = "surfaceLayer";
         const obj = this.sceneEditor.factory.createFramesDisplayBYSprite(sprite);
-        if (obj.nodeType === op_def.NodeType.ElementNodeType || obj.nodeType === op_def.NodeType.SpawnPointType) {
+        if (obj.nodeType === op_def.NodeType.ElementNodeType || obj.nodeType === op_def.NodeType.MossType || obj.nodeType === op_def.NodeType.SpawnPointType) {
             obj.setInteractive();
             obj.setPosition(sprite.pos.x, sprite.pos.y);
         } else if (obj.nodeType === op_def.NodeType.TerrainNodeType) {
@@ -61,6 +61,17 @@ export class DisplayObjectPool {
             if (obj.nodeType === op_def.NodeType.TerrainNodeType) {
                 const pos = Position45.transformTo90(new LogicPos(newSprite.pos.x, newSprite.pos.y), this.sceneEditor.roomSize);
                 obj.setPosition(pos.x, pos.y);
+            }
+            obj.play(newSprite.currentAnimation);
+        }
+    }
+
+    get(id: string) {
+        const arys = [this.elements, this.mosses];
+        for (const map of arys) {
+            const ele = map.get(id);
+            if (ele) {
+                return ele;
             }
         }
     }
