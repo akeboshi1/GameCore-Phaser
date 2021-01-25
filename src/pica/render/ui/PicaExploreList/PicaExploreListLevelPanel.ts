@@ -111,9 +111,9 @@ export class PicaExploreListLevelPanel extends Phaser.GameObjects.Container {
         if (!this.forewordItem) {
             this.forewordItem = new ForewordChapterItem(this.scene, this.dpr);
             this.forewordItem.on(ClickEvent.Tap, this.onForewordClickHandler, this);
-            this.captorScroll.addItem(this.forewordItem);
         }
         this.forewordItem.setCaptoreData(data);
+        this.captorScroll.addItem(this.forewordItem);
         if (lock) {
             this.lockItem = new ChapterLevelLockItem(this.scene, this.dpr);
             this.lockItem.setHandler(new Handler(this, this.onChapterLockHandler));
