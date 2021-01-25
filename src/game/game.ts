@@ -644,7 +644,7 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
                     this.mDataManager = null;
                 }
                 if (this.user) this.user.removePackListener();
-                this.peer.destroy();
+                // this.peer.destroy();
                 this.hasClear = true;
                 resolve();
             });
