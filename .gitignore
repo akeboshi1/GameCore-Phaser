@@ -248,3 +248,4 @@ yargs.d.ts
 .gitignore
 webpack.config.js
 *.DS_Store
+!release/

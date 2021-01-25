@@ -1,0 +1,38 @@
+<!doctype html><html lang="en"><head><meta charset="UTF-8" name="viewport" content="width=device-width,height=device-height,initial-scale=1"/><title>Tooqing-phaser3</title><style>body {
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+        }
+
+        body div.container {
+            text-align: center;
+        }
+
+        body div.container div#game {
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
+        }</style><script src="js/tooqing.js"></script></head><body><div id="game"></div><script>window.addEventListener('load', (event) => {
+            const launcher = TooqingCore.Launcher;
+            const option = {
+                width: window.innerWidth,
+                height: window.innerHeight,
+                api_root: "https://api-dev.tooqing.com/",
+                osd: "https://osd-alpha.tooqing.com/",
+                server_addr: {
+                    host: "gdev.tooqing.com",
+                    port: 11100,
+                    secure: true
+                },
+                parent: "game",
+                game_id: "5e719a0a68196e416ecf7aad",
+                virtual_world_id: "0",
+            }
+            const app = launcher.start(option);
+            app.registerReload(window.reload);
+            
+            window.addEventListener("resize", (e) => {
+                app.onResize(window.innerWidth, window.innerHeight);
+
+            });
+        });</script></body></html>

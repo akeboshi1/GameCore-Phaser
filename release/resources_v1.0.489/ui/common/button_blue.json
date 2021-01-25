@@ -1,0 +1,28 @@
+{"frames": [
+	{
+		"filename": "button_blue_normal",
+		"frame": {"x":0, "y":0, "w":15, "h":15},
+		"spriteSourceSize": {"x":0,"y":0,"w":45,"h":15},
+		"sourceSize": {"w":45,"h":15}
+	},
+	{
+		"filename": "button_blue_over",
+		"frame": {"x":15, "y":0, "w":15, "h":15},
+		"spriteSourceSize": {"x":0,"y":0,"w":45,"h":15},
+		"sourceSize": {"w":45,"h":15}
+	},
+	{
+		"filename": "button_blue_down",
+		"frame": {"x":30, "y":0, "w":15, "h":15},
+		"spriteSourceSize": {"x":0,"y":0,"w":45,"h":15},
+		"sourceSize": {"w":45,"h":15}
+	}
+
+],
+"meta": {
+	"image": "button_blue_green.png",
+	"size": {"w": 45, "h": 15},
+	"scale": "1"
+}
+}
+
