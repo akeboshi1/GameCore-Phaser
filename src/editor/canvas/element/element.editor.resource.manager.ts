@@ -59,7 +59,7 @@ export default class ElementEditorResourceManager {
             path.join(this.mLocalHomePath, val.texturePath),// this.mLocalHomePath WEB_HOME_PATH
             path.join(this.mLocalHomePath, val.dataPath)// this.mLocalHomePath WEB_HOME_PATH
         ).on("loaderror", this.imageLoadError, this);
-        Logger.getInstance().log("loadResources ", path.join(this.mLocalHomePath, val.texturePath));
+        Logger.getInstance().debug("loadResources ", path.join(this.mLocalHomePath, val.texturePath));
         this.mScene.load.start();
     }
 
@@ -125,7 +125,7 @@ export default class ElementEditorResourceManager {
                     }
                 });
 
-                Logger.getInstance().log("generate sprite sheet: ", url, atlas.toString());
+                Logger.getInstance().debug("generate sprite sheet: ", url, atlas.toString());
                 resolve({ url, json: atlas.toString() });
 
                 // remove listener
@@ -160,7 +160,7 @@ export default class ElementEditorResourceManager {
                     imgs.push({ key: frameName, name: imgName, url });
                     canvas.destroy();
                 }
-                Logger.getInstance().log("deserialize sprite sheet: ", imgs);
+                Logger.getInstance().debug("deserialize sprite sheet: ", imgs);
                 resolve(imgs);
             }
         });
@@ -207,7 +207,7 @@ export default class ElementEditorResourceManager {
             listener.onResourcesLoaded();
         });
 
-        // Logger.getInstance().log("imageLoaded");
+        // Logger.getInstance().debug("imageLoaded");
         this.mEmitter.emit(ElementEditorEmitType.Resource_Loaded, true, "DisplayNode load success");
     }
     private imageLoadError() {

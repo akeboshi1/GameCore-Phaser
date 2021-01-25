@@ -32,7 +32,7 @@ export class MainPeer extends RPCPeer {
     // private isReconnect: boolean = false;
     constructor() {
         super(MAIN_WORKER);
-        Logger.getInstance().log("constructor mainPeer");
+        Logger.getInstance().debug("constructor mainPeer");
         this.game = new PicaGame(this);
         this.stateTime = new Date().getTime();
     }
@@ -104,15 +104,15 @@ export class MainPeer extends RPCPeer {
             clearInterval(this.startUpdateFps);
             this.startUpdateFps = null;
         }
-        // Logger.getInstance().log("heartBeatWorker endBeat");
+        // Logger.getInstance().debug("heartBeatWorker endBeat");
         this.remote[RENDER_PEER].Render.endFPS();
     }
 
     public startBeat() {
-        Logger.getInstance().log("startBeat======");
+        Logger.getInstance().debug("startBeat======");
         if (this.startDelay) return;
         this.startDelay = setInterval(() => {
-            Logger.getInstance().log("heartbeat++++interval");
+            Logger.getInstance().debug("heartbeat++++interval");
             if (this.reConnectCount >= 8) {
                 this.remote[MAIN_WORKER].MainPeer.reconnect();
                 return;
@@ -129,15 +129,15 @@ export class MainPeer extends RPCPeer {
             clearInterval(this.startDelay);
             this.startDelay = null;
         }
-        Logger.getInstance().log("heartBeatWorker endBeat");
+        Logger.getInstance().debug("heartBeatWorker endBeat");
         // this.remote[MAIN_WORKER].MainPeer.endHeartBeat();
     }
 
     @Export()
     public clearBeat() {
-        Logger.getInstance().log("clearBeat======");
+        Logger.getInstance().debug("clearBeat======");
         this.reConnectCount = 0;
-        // Logger.getInstance().log("heartBeatWorker clearBeat");
+        // Logger.getInstance().debug("heartBeatWorker clearBeat");
         // this.remote[MAIN_WORKER].MainPeer.clearHeartBeat();
     }
 
@@ -147,15 +147,15 @@ export class MainPeer extends RPCPeer {
         this.mConfig = config;
         this.state = GameState.LinkWorker;
         // ============
-        Logger.getInstance().log("createGame");
+        Logger.getInstance().debug("createGame");
         // const url: string = "/js/game" + "_v1.0.398";
-        Logger.getInstance().log("render link onReady");
+        Logger.getInstance().debug("render link onReady");
         this.game.createGame(this.mConfig);
         this.linkTo(PHYSICAL_WORKER, PHYSICAL_WORKER_URL).onceReady(() => {
             this.mPhysicalPeer = this.remote[PHYSICAL_WORKER].PhysicalPeer;
-            Logger.getInstance().log("Physcialworker onReady");
+            Logger.getInstance().debug("Physcialworker onReady");
             // this.linkTo(HEARTBEAT_WORKER, HEARTBEAT_WORKER_URL).onceReady(() => {
-            //     Logger.getInstance().log("heartBeatworker onReady in mainworker");
+            //     Logger.getInstance().debug("heartBeatworker onReady in mainworker");
             // });
         });
     }
@@ -194,7 +194,7 @@ export class MainPeer extends RPCPeer {
 
     @Export()
     public loginEnterWorld() {
-        Logger.getInstance().log("game======loginEnterWorld");
+        Logger.getInstance().debug("game======loginEnterWorld");
         this.game.loginEnterWorld();
     }
 
@@ -268,7 +268,7 @@ export class MainPeer extends RPCPeer {
 
     @Export()
     public startRoomPlay() {
-        Logger.getInstance().log("peer startroom");
+        Logger.getInstance().debug("peer startroom");
         this.game.roomManager.currentRoom.startPlay();
     }
 
@@ -330,7 +330,7 @@ export class MainPeer extends RPCPeer {
     @Export()
     public syncCameraScroll() {
         if (this.game.roomManager && this.game.roomManager.currentRoom && this.game.roomManager.currentRoom.cameraService) {
-            Logger.getInstance().log("mainpeer====synccamerascroll");
+            Logger.getInstance().debug("mainpeer====synccamerascroll");
             this.game.roomManager.currentRoom.cameraService.syncCameraScroll();
         }
     }

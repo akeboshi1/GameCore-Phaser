@@ -235,7 +235,7 @@ export class ElementManager extends PacketHandler implements IElementManager {
         this.mRoom.game.emitter.off(EventType.SCENE_INTERACTION_ELEMENT, this.checkElementAction, this);
         if (this.eleDataMgr) this.eleDataMgr.off(EventType.SCENE_ELEMENT_FIND, this.onQueryElementHandler, this);
         if (this.connection) {
-            Logger.getInstance().log("elementmanager ---- removepacklistener");
+            Logger.getInstance().debug("elementmanager ---- removepacklistener");
             this.connection.removePacketListener(this);
         }
         if (this.mElements) {
@@ -579,7 +579,7 @@ export class ElementManager extends PacketHandler implements IElementManager {
                 moveData = moveDataList[i];
                 elementID = moveData.moveObjectId;
                 element = this.get(elementID);
-                // Logger.getInstance().log(player.x + "," + player.y + ":" + moveData.destinationPoint3f.x + "," + moveData.destinationPoint3f.y + ":" + moveData.timeSpan);
+                // Logger.getInstance().debug(player.x + "," + player.y + ":" + moveData.destinationPoint3f.x + "," + moveData.destinationPoint3f.y + ":" + moveData.timeSpan);
                 if (!element) {
                     continue;
                 }

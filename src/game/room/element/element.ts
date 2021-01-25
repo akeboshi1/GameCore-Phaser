@@ -514,7 +514,7 @@ export class Element extends BlockObject implements IElement {
     }
 
     // public completeMove() {
-    //     Logger.getInstance().log("complete_walk");
+    //     Logger.getInstance().debug("complete_walk");
     // }
 
     public stopMove() {
@@ -590,7 +590,7 @@ export class Element extends BlockObject implements IElement {
 
     public showNickname() {
         if (!this.mModel) return;
-        Logger.getInstance().log("showNickName======" + this.mModel.nickname);
+        Logger.getInstance().debug("showNickName======" + this.mModel.nickname);
         this.mRoomService.game.renderPeer.showNickname(this.id, this.mModel.nickname);
     }
 
