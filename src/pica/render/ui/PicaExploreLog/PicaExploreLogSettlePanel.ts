@@ -267,9 +267,9 @@ export class PicaExploreLogSettlePanel extends ButtonEventDispatcher {
         const width = 196 * this.dpr;
         const cellWidth = 29 * this.dpr;
         const space = 12 * this.dpr;
-        this.starText.text = Math.floor(to / max * 1000) / 10 + "%";
-        let riado = Math.floor(to / 100);
-        riado = to / 100 === riado ? riado - 1 > 0 ? riado - 1 : riado : riado;
+        this.starText.text = Math.floor(to % 100) + "%";
+        const riado = Math.floor(to / 100);
+        //     riado = to / 100 === riado ? riado - 1 > 0 ? riado - 1 : riado : riado;
         this.starText.x = -width * 0.5 + riado * (cellWidth + space) + cellWidth * 0.5;
     }
 

@@ -1,22 +1,39 @@
 export enum GameState {
     // ===============登陆游戏时状态:
-    // =====第1步 launcher调用render.createGame 创建游戏
-    LinkWorker,
-    // =====第2步 尝试链接
-    StartConnect,
-    // =====第3步 登陆游戏
-    EnterWorld, // 发送 _OP_CLIENT_REQ_VIRTUAL_WORLD_PLAYER_INIT
-    // =====第4步 服务器下发 _OP_GATEWAY_RES_CLIENT_VIRTUAL_WORLD_INIT 包含角色,游戏信息,客户端进行下载/反序列化 游戏数据
-    PlayerInit,
-    // =====第5步 游戏创建成功
-    GameCreate, // 发送 _OP_CLIENT_REQ_GATEWAY_GAME_CREATED
-    // =====第6步 服务端下发 _OP_VIRTUAL_WORLD_RES_CLIENT_ENTER_SCENE 进入场景,客户端进行下载/反序列化 场景数据
-    EnterScene,
-    // =====第7步 创建房间
-    RoomCreate,
-    // =====第8步 场景创建成功
-    SceneCreate,
+    // =====第0步 launcher调用render.createGame 创建游戏
+    LinkWorker = "LinkWorker",
+    // =====第1步 初始化game中user，监听，manager
+    CreateManager = "CreateManager",
+    // =====第2步 创建远程render account
+    CreateAccount = "CreateAccount",
+    // =====第1步 初始化game中user，监听，manager
+    InitWorld = "InitWorld",
+    // =====第3步 尝试链接
+    StartConnect = "StartConnect",
+    // =====第4步 请求平台token
+    RequestToken = "RequestToken",
+    // =====第5步 获得平台token
+    GetToken = "GetToken",
+    // =====第6步 登陆游戏
+    EnterWorld = "EnterWorld", // 发送 _OP_CLIENT_REQ_VIRTUAL_WORLD_PLAYER_INIT
+    // =====第7步 服务器下发 _OP_GATEWAY_RES_CLIENT_VIRTUAL_WORLD_INIT 包含角色,游戏信息
+    PlayerInit = "PlayerInit",
+    // =====第8步 成功加载游戏pi
+    LoadGameConfig = "LoadGameConfig",
+    // =====第9步 成功解析pi
+    CompleteDecodeConfig = "CompleteDecodeConfig",
+    // =====第10步 游戏创建成功
+    GameCreate = "GameCreate", // 发送 _OP_CLIENT_REQ_GATEWAY_GAME_CREATED
+    // =====第11步 服务端下发 _OP_VIRTUAL_WORLD_RES_CLIENT_ENTER_SCENE 进入场景,客户端进行下载/反序列化 场景数据
+    EnterScene = "EnterScene",
+    // =====第12步 场景创建成功
+    SceneCreate = "SceneCreate",
+    // =====第13步 创建房间
+    RoomCreate = "RoomCreate",
+
     // ===============进入游戏后状态：
+    // =====第0步 收到房间信息，展示不同ui
+    RoomInfo = "RoomInfo",
 }
 
 export enum ConnectState {
@@ -51,6 +68,6 @@ export enum PlayerState {
 }
 
 export enum PhysicalPeerState {
-   CREATEWORLD,
-   DESTROYWORLD,
+    CREATEWORLD,
+    DESTROYWORLD,
 }

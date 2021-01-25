@@ -48,6 +48,10 @@ export class ElementManager extends PacketHandler implements IElementManager {
      */
     protected mCacheSyncList: any[] = [];
     protected mMap: number[][];
+    /**
+     * 移除缓存list
+     */
+    protected mCacheRemoveList: any[] = [];
     private mDealAddList: any[] = [];
     private mDealSyncMap: Map<number, boolean> = new Map();
     private mGameConfig: IElementStorage;
@@ -231,7 +235,7 @@ export class ElementManager extends PacketHandler implements IElementManager {
         this.mRoom.game.emitter.off(EventType.SCENE_INTERACTION_ELEMENT, this.checkElementAction, this);
         if (this.eleDataMgr) this.eleDataMgr.off(EventType.SCENE_ELEMENT_FIND, this.onQueryElementHandler, this);
         if (this.connection) {
-            Logger.getInstance().log("elementmanager ---- removepacklistener");
+            Logger.getInstance().debug("elementmanager ---- removepacklistener");
             this.connection.removePacketListener(this);
         }
         if (this.mElements) {
@@ -258,6 +262,7 @@ export class ElementManager extends PacketHandler implements IElementManager {
     public update(time: number, delta: number) {
         if (!this.hasAddComplete) return;
         this.mElements.forEach((ele) => ele.update(time, delta));
+        if (this.mCacheRemoveList.length > 0) this.dealRemoveList(this.mCacheRemoveList);
     }
 
     /**
@@ -359,6 +364,8 @@ export class ElementManager extends PacketHandler implements IElementManager {
                         this.mRoom.game.elementStorage.add(<any>displayInfo);
                     }
                     ele.push(element);
+                } else {
+                    this.mDealAddList.push(sprite);
                 }
             }
             this.dealAddList(true);
@@ -526,11 +533,23 @@ export class ElementManager extends PacketHandler implements IElementManager {
         if (type !== NodeType.ElementNodeType) {
             return;
         }
-        for (const id of ids) {
+        this.dealRemoveList(ids);
+    }
+
+    protected dealRemoveList(list: number[]) {
+        const tmpList = [];
+        for (const id of list) {
+            const ele = this.get(id);
+            if (!ele) continue;
+            if (!ele.state) {
+                tmpList.push(ele);
+                continue;
+            }
             this.remove(id);
             this.mStateMgr.remove(id);
             this.eleDataMgr.offAction(id, EventType.SCENE_ELEMENT_DATA_UPDATE, undefined, undefined);
         }
+        this.mCacheRemoveList = tmpList;
     }
 
     protected onSync(packet: PBpacket) {
@@ -560,7 +579,7 @@ export class ElementManager extends PacketHandler implements IElementManager {
                 moveData = moveDataList[i];
                 elementID = moveData.moveObjectId;
                 element = this.get(elementID);
-                // Logger.getInstance().log(player.x + "," + player.y + ":" + moveData.destinationPoint3f.x + "," + moveData.destinationPoint3f.y + ":" + moveData.timeSpan);
+                // Logger.getInstance().debug(player.x + "," + player.y + ":" + moveData.destinationPoint3f.x + "," + moveData.destinationPoint3f.y + ":" + moveData.timeSpan);
                 if (!element) {
                     continue;
                 }

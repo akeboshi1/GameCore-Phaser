@@ -27,8 +27,6 @@ import {
     MessageType,
     ModuleName,
     SceneName,
-    HEARTBEAT_WORKER,
-    HEARTBEAT_WORKER_URL,
     ElementStateType,
     PHYSICAL_WORKER,
     PHYSICAL_WORKER_URL
@@ -108,6 +106,7 @@ export class Render extends RPCPeer implements GameMain, IRender {
         this.mConfig.hasConnectFail = this.mConnectFailFunc ? true : false;
         this.mConfig.hasCloseGame = this.mConfig.closeGame ? true : false;
         this.mConfig.hasGameCreated = this.mConfig.game_created ? true : false;
+        this.mConfig.hasReload = this.mConfig.reload ? true : false;
         // rpc不传送方法
         delete this.mConfig.connectFail;
         delete this.mConfig.game_created;
@@ -116,20 +115,21 @@ export class Render extends RPCPeer implements GameMain, IRender {
         this.initConfig();
         this.linkTo(MAIN_WORKER, MAIN_WORKER_URL).onceReady(() => {
             this.mMainPeer = this.remote[MAIN_WORKER].MainPeer;
-            this.linkTo(PHYSICAL_WORKER, PHYSICAL_WORKER_URL).onceReady(() => {
-                this.mPhysicalPeer = this.remote[PHYSICAL_WORKER].PhysicalPeer;
-                this.mPhysicalPeer.setScaleRatio(Math.ceil(this.mConfig.devicePixelRatio || 1));
-                this.mPhysicalPeer.start();
-                this.createGame();
-                Logger.getInstance().log("Physcialworker onReady");
-            });
-            Logger.getInstance().log("worker onReady");
+            this.mMainPeer.updateFps();
+            this.createGame();
+            Logger.getInstance().debug("worker onReady");
         });
-        this.linkTo(HEARTBEAT_WORKER, HEARTBEAT_WORKER_URL).onceReady(() => {
-            this.mHeartPeer = this.remote[HEARTBEAT_WORKER].HeartBeatPeer;
-            this.mHeartPeer.updateFps();
-            Logger.getInstance().log("heartBeatworker onReady in Render");
+        this.linkTo(PHYSICAL_WORKER, PHYSICAL_WORKER_URL).onceReady(() => {
+            this.mPhysicalPeer = this.remote[PHYSICAL_WORKER].PhysicalPeer;
+            this.mPhysicalPeer.setScaleRatio(Math.ceil(this.mConfig.devicePixelRatio || 1));
+            this.mPhysicalPeer.start();
+            Logger.getInstance().debug("Physcialworker onReady");
         });
+        // this.linkTo(HEARTBEAT_WORKER, HEARTBEAT_WORKER_URL).onceReady(() => {
+        //     this.mHeartPeer = this.remote[HEARTBEAT_WORKER].HeartBeatPeer;
+        //     this.mMainPeer.updateFps();
+        //     Logger.getInstance().debug("heartBeatworker onReady in Render");
+        // });
         // const len = 3;
         // const statList = [];
         // for (let i = 0; i < len; i++) {
@@ -312,7 +312,7 @@ export class Render extends RPCPeer implements GameMain, IRender {
                 panel.hideKeyboard();
             }
         }
-        // Logger.getInstance().log("input: ", input);
+        // Logger.getInstance().debug("input: ", input);
         if (this.mConfig) {
             this.mConfig.width = width;
             this.mConfig.height = height;
@@ -462,16 +462,16 @@ export class Render extends RPCPeer implements GameMain, IRender {
         this.remote[MAIN_WORKER].MainPeer.initGameConfig(JSON.stringify(config));
     }
 
-    public startConnect(gateway: ServerAddress) {
-        this.remote[MAIN_WORKER].MainPeer.startConnect(gateway.host, gateway.port, gateway.secure);
-    }
+    // public startConnect(gateway: ServerAddress) {
+    //     this.remote[MAIN_WORKER].MainPeer.startConnect(gateway.host, gateway.port, gateway.secure);
+    // }
 
     public newGame(): Promise<any> {
         return new Promise<any>((resolve, reject) => {
             if (this.mGame) {
                 resolve(true);
             }
-            // Logger.getInstance().log("dragonbones: ", dragonBones);
+            // Logger.getInstance().debug("dragonbones: ", dragonBones);
             this.gameConfig = {
                 type: Phaser.AUTO,
                 parent: this.mConfig.parent,
@@ -715,6 +715,11 @@ export class Render extends RPCPeer implements GameMain, IRender {
     }
 
     @Export()
+    public reload() {
+        window.location.reload();
+    }
+
+    @Export()
     public showJoystick() {
         if (this.mInputManager) this.mInputManager.showJoystick();
     }
@@ -826,7 +831,10 @@ export class Render extends RPCPeer implements GameMain, IRender {
             if (!this.mAccount) {
                 this.mAccount = new Account();
             }
+            const now = new Date().getTime();
+            Logger.getInstance().debug("createAccount ====>", now);
             this.exportProperty(this.mAccount, this, ModuleName.ACCOUNT_NAME).onceReady(() => {
+                Logger.getInstance().debug("createAccountExport ====>", new Date().getTime() - now);
                 this.mAccount.enterGame(gameID, worldID, sceneID, { locX, locY, locZ });
                 resolve(true);
             });
@@ -1159,7 +1167,7 @@ export class Render extends RPCPeer implements GameMain, IRender {
 
     @Export([webworker_rpc.ParamType.num, webworker_rpc.ParamType.num])
     public setCameraScroller(actorX: number, actorY: number) {
-        // Logger.getInstance().log("syncCameraScroll");
+        // Logger.getInstance().debug("syncCameraScroll");
         if (!this.mSceneManager || !this.mCameraManager) return;
         const scene = this.mSceneManager.getMainScene();
         if (!scene) {
@@ -1184,7 +1192,7 @@ export class Render extends RPCPeer implements GameMain, IRender {
     @Export([webworker_rpc.ParamType.num])
     public createFramesDisplay(id: number, displayInfo: IFramesModel) {
         if (this.mDisplayManager) this.mDisplayManager.addFramesDisplay(id, displayInfo);
-        else Logger.getInstance().log("no displayManager ====>");
+        else Logger.getInstance().debug("no displayManager ====>");
     }
 
     @Export([webworker_rpc.ParamType.num])
@@ -1262,7 +1270,7 @@ export class Render extends RPCPeer implements GameMain, IRender {
 
     @Export([webworker_rpc.ParamType.num])
     public startFollow(id: number) {
-        // Logger.getInstance().log("target ===== startFollow");
+        // Logger.getInstance().debug("target ===== startFollow");
         const display = this.mDisplayManager.getDisplay(id);
         if (display) this.mCameraManager.startFollow(display);
     }
@@ -1437,7 +1445,7 @@ export class Render extends RPCPeer implements GameMain, IRender {
     }
 
     private resumeScene() {
-        Logger.getInstance().log(`#BlackSceneFromBackground; world.resumeScene(); isEditor: isPause:${this.isPause}; mGame:${this.mGame}`);
+        Logger.getInstance().debug(`#BlackSceneFromBackground; world.resumeScene(); isPause:${this.isPause}; mGame:${this.mGame}`);
         if (!this.isPause) {
             return;
         }
@@ -1463,7 +1471,7 @@ export class Render extends RPCPeer implements GameMain, IRender {
     }
 
     private pauseScene() {
-        Logger.getInstance().log(`#BlackSceneFromBackground; world.pauseScene(); isPause:${this.isPause}; mGame:${this.mGame}`);
+        Logger.getInstance().debug(`#BlackSceneFromBackground; world.pauseScene(); isPause:${this.isPause}; mGame:${this.mGame}`);
         if (this.isPause) {
             return;
         }

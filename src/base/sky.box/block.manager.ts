@@ -43,6 +43,7 @@ export class BlockManager implements IBlockManager {
       return;
     }
     this.mSceneName = "SkyBoxScene" + `_${scenery.id}`;
+    // 注册skyboxscene，必须存在，否则获取不到skyboxscene
     const scene = this.render.game.scene.add(this.mSceneName, SkyBoxScene, false);
     playScene.scene.launch(this.mSceneName, this);
     this.updateDepth();

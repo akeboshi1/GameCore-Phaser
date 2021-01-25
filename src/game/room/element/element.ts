@@ -198,12 +198,12 @@ export class Element extends BlockObject implements IElement {
     }
 
     public async setModel(model: ISprite) {
-        this.mModel = model;
         if (!model) {
             return;
         }
+        this.mElementManager.removeFromMap(this.mModel);
+        this.mModel = model;
         this.mQueueAnimations = undefined;
-        this.mElementManager.addToMap(model);
         if (this.mModel.pos) {
             this.setPosition(this.mModel.pos);
         }
@@ -219,6 +219,7 @@ export class Element extends BlockObject implements IElement {
                 if (model.mountSprites && model.mountSprites.length > 0) {
                     this.updateMounth(model.mountSprites);
                 }
+                this.mElementManager.addToMap(model);
                 return this.setRenderable(true);
             });
         // physic action
@@ -234,6 +235,7 @@ export class Element extends BlockObject implements IElement {
         if (this.mModel.id !== model.id) {
             return;
         }
+        this.mElementManager.removeFromMap(this.mModel);
         // 更新物理进程的物件/人物element
         this.mRoomService.game.physicalPeer.updateModel(model);
         if (model.hasOwnProperty("attrs")) {
@@ -512,7 +514,7 @@ export class Element extends BlockObject implements IElement {
     }
 
     // public completeMove() {
-    //     Logger.getInstance().log("complete_walk");
+    //     Logger.getInstance().debug("complete_walk");
     // }
 
     public stopMove() {
@@ -588,7 +590,7 @@ export class Element extends BlockObject implements IElement {
 
     public showNickname() {
         if (!this.mModel) return;
-        Logger.getInstance().log("showNickName======" + this.mModel.nickname);
+        Logger.getInstance().debug("showNickName======" + this.mModel.nickname);
         this.mRoomService.game.renderPeer.showNickname(this.id, this.mModel.nickname);
     }
 

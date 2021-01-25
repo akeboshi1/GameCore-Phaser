@@ -35,7 +35,7 @@ export class User extends Player {
     }
 
     enterScene(room: IRoomService, actor: op_client.IActor) {
-        Logger.getInstance().log("enterScene");
+        Logger.getInstance().debug("enterScene");
         if (!room || !actor) {
             return;
         }
@@ -52,7 +52,7 @@ export class User extends Player {
         this.model = new PlayerModel(actor);
         this.mRoomService.playerManager.setMe(this);
         // todo render setScroll
-        Logger.getInstance().log("setCameraScroller");
+        Logger.getInstance().debug("setCameraScroller");
         this.game.renderPeer.setCameraScroller(actor.x, actor.y);
     }
 
@@ -200,7 +200,7 @@ export class User extends Player {
         // this.mRoomService.game.physicalPeer.stopMove();
         this.changeState(PlayerState.IDLE);
         this.mMoving = false;
-        // Logger.getInstance().log("stopMovedirection", this.dir);
+        // Logger.getInstance().debug("stopMovedirection", this.dir);
         if (this.mRoomService && this.mRoomService.game.moveStyle === op_def.MoveStyle.DIRECTION_MOVE_STYLE) {
             const pkt: PBpacket = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_STOP_SPRITE);
             const ct: op_virtual_world.IOP_CLIENT_REQ_VIRTUAL_WORLD_STOP_SPRITE = pkt.content;
@@ -291,7 +291,7 @@ export class User extends Player {
         content.position = position;
         this.game.connection.send(packet);
 
-        Logger.getInstance().log("send stop move==========>>>", pos);
+        Logger.getInstance().debug("send stop move==========>>>", pos);
 
         this.activeSprite(targetId);
     }
@@ -459,7 +459,7 @@ export class User extends Player {
             this.setPosition(this.mModel.pos);
         }
         // todo change display alpha
-        Logger.getInstance().log("showNickname===use", this.mModel.direction);
+        Logger.getInstance().debug("showNickname===use", this.mModel.direction);
         // this.mDisplay.changeAlpha(this.mModel.alpha);
         if (this.mModel.nickname) this.showNickname();
         this.setDirection(this.mModel.direction);

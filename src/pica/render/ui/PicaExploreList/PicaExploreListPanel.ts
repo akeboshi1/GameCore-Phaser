@@ -20,11 +20,11 @@ export class PicaExploreListPanel extends PicaBasePanel {
     private levelPanel: PicaExploreListLevelPanel;
     private bottomPanel: PicaExploreListBottomPanel;
     private detialPanel: PicaExploreListDetailPanel;
-    private chapterProData: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_EXPLORE_CHAPTER_PROGRESS;
     constructor(uiManager: UiManager) {
         super(uiManager);
         this.atlasNames = [UIAtlasName.explorelog, UIAtlasName.uicommon1, UIAtlasName.uicommon];
-        this.textures = [{ atlasName: "explore_bg_stripe_top", folder: UIAtlasName.explorelog }, { atlasName: "explore_bg_stripe_middle", folder: UIAtlasName.explorelog }];
+        this.textures = [{ atlasName: "explore_bg_stripe_top", folder: UIAtlasName.explorelog }, { atlasName: "explore_bg_stripe_middle", folder: UIAtlasName.explorelog },
+        { atlasName: "explore_mask", folder: UIAtlasName.explorelog }];
         this.key = ModuleName.PICAEXPLORELIST_NAME;
     }
     resize(width: number, height: number) {
@@ -47,6 +47,7 @@ export class PicaExploreListPanel extends PicaBasePanel {
         const conHeight = h - topHeight - bottomHeight;
         this.levelPanel.x = w * 0.5;
         this.levelPanel.y = topHeight + conHeight * 0.5;
+        this.levelPanel.setTopAndBottomHeight(topHeight, bottomHeight);
         this.levelPanel.resize(w, conHeight);
         this.bottomPanel.x = w * 0.5;
         this.bottomPanel.y = h - this.bottomPanel.height * 0.5;
@@ -81,7 +82,7 @@ export class PicaExploreListPanel extends PicaBasePanel {
         this.levelPanel.setHandler(new Handler(this, this.onLevelPanelHandler));
         this.bottomPanel = new PicaExploreListBottomPanel(this.scene, this.width, 57 * this.dpr, this.dpr, this.scale);
         this.bottomPanel.setHandler(new Handler(this, this.onBottomPanelHandler));
-        this.add([this.bg, this.topbg, this.midbg, this.mBackBtn, this.energyProgress, this.levelPanel, this.bottomPanel]);
+        this.add([this.bg, this.topbg, this.midbg, this.levelPanel, this.mBackBtn, this.energyProgress, this.bottomPanel]);
         this.resize(w, h);
         super.init();
     }
@@ -93,7 +94,7 @@ export class PicaExploreListPanel extends PicaBasePanel {
             this.setEnergyData(this.tempDatas.value, this.tempDatas.max);
     }
     setExploreChapterResult(content: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_QUERY_CHAPTER_RESULT) {
-        const nextLevelID = this.chapterProData.nextLevelId;
+        const nextLevelID = this.mShowData.nextLevelId;
         this.levelPanel.setCaptoreResult(content, nextLevelID);
     }
     setExploreChapters(data: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_EXPLORE_CHAPTER_PROGRESS) {

@@ -69,7 +69,7 @@ export class SocketConnection {
 
     // Frees all resources for garbage collection.
     destroy(): void {
-        Logger.getInstance().log("socket close");
+        Logger.getInstance().debug("socket close");
         if (this.mTransport) {
             this.mTransport.destroy();
         }

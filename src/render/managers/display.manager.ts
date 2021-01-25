@@ -179,7 +179,7 @@ export class DisplayManager {
 
     public addFramesDisplay(id: number, data: IFramesModel, field?: DisplayField) {
         if (!data) {
-            Logger.getInstance().log("addFramesDisplay ====>", id);
+            Logger.getInstance().debug("addFramesDisplay ====>", id);
             return;
         }
         const scene = this.sceneManager.getMainScene();
@@ -375,7 +375,7 @@ export class DisplayManager {
     public showNickname(id: number, name: string) {
         const display = this.getDisplay(id);
         if (!display) {
-            return Logger.getInstance().log(`can't show nickname ${name}`);
+            return Logger.getInstance().debug(`can't show nickname ${name}`);
         }
         display.showNickname(name);
         // if (display) display.showNickname(name);

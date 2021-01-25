@@ -1,5 +1,3 @@
-// import { BlockManager } from "./block.manager";
-import { PacketHandler } from "net-socket-packet";
 import { State } from "../state/state.group";
 import { IRoomService } from "../room/room";
 import { IScenery } from "structure";
@@ -13,13 +11,12 @@ export interface ISkyBoxConfig {
   gridH?: number;
 }
 
-export class SkyBoxManager extends PacketHandler {
+export class SkyBoxManager {
   protected mRoom: IRoomService;
   protected mScenetys: Map<number, IScenery>;
   protected mStateMap: Map<string, State>;
   protected mGame: Game;
   constructor(room: IRoomService) {
-    super();
     this.mRoom = room;
     this.mGame = room.game;
     this.mScenetys = new Map();
@@ -69,12 +66,6 @@ export class SkyBoxManager extends PacketHandler {
   }
 
   destroy() {
-    if (this.mRoom) {
-      const connection = this.mRoom.game.connection;
-      if (connection) {
-        connection.removePacketListener(this);
-      }
-    }
     // this.mScenetys.forEach((scenery: BlockManager) => scenery.destroy());
     this.mScenetys.forEach((scenery: IScenery) => this.mGame.renderPeer.removeSkybox(scenery.id));
     this.mScenetys.clear();

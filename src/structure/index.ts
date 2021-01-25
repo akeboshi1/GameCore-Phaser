@@ -10,7 +10,7 @@ export { ILauncherConfig } from "./lanucher.config";
 export { MessageType } from "./message.type";
 export { SceneName } from "./scene.name";
 export { IScenery, Fit } from "./scenery";
-export { RENDER_PEER, MAIN_WORKER, HEARTBEAT_WORKER, HEARTBEAT_WORKER_URL, MAIN_WORKER_URL, PHYSICAL_WORKER, PHYSICAL_WORKER_URL } from "./worker.name";
+export { RENDER_PEER, MAIN_WORKER, MAIN_WORKER_URL, PHYSICAL_WORKER, PHYSICAL_WORKER_URL } from "./worker.name";
 export { EventType } from "./event.type";
 export { ModuleName } from "./module.name";
 export { FriendRelation, FriendRelationEnum, FriendData, FriendChannel, MenuData } from "./friend.relation";

@@ -7,7 +7,7 @@ import { ConnectionService } from "../../../lib/net/connection.service";
 import { Lite } from "game-capsule";
 import { Logger } from "utils";
 import { DecorateRoom } from "./room/decorate.room";
-import { EventType } from "structure";
+import { EventType, GameState } from "structure";
 export interface IRoomManager {
     readonly game: Game | undefined;
 
@@ -122,6 +122,7 @@ export class RoomManager extends PacketHandler implements IRoomManager {
         this.mRooms.push(room);
         room.addActor(scene.actor);
         room.enter(scene.scene);
+        this.game.peer.state = GameState.RoomCreate;
         this.mCurRoom = room;
     }
 
@@ -175,6 +176,7 @@ export class RoomManager extends PacketHandler implements IRoomManager {
                 this.onEnterDecorate(content);
                 break;
         }
+        this.game.peer.state = GameState.EnterScene;
         this.game.emitter.emit(EventType.SCENE_CHANGE);
     }
 
