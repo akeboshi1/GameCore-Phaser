@@ -108,7 +108,7 @@ export class MatterUserObject extends MatterPlayerObject {
     }
 
     public stopMove() {
-        Logger.getInstance().log("stopMatterMove");
+        Logger.getInstance().debug("stopMatterMove");
         this.peer.mainPeer.stopMove(this.id);
         this.mMoving = false;
         if (this.mMoveData && this.mMoveData.posPath) {
@@ -184,7 +184,7 @@ export class MatterUserObject extends MatterPlayerObject {
         const pos = this.body.position;
         const angle = Math.atan2((pos.y - prePos.y), (pos.x - prePos.x));
         const dir = this.onCheckDirection(angle * (180 / Math.PI));
-        // Logger.getInstance().log("matterDirection ====>", dir);
+        // Logger.getInstance().debug("matterDirection ====>", dir);
         this.mModel.setDirection(dir);
         this.peer.render.updateDirection(this.id, dir);
         this.peer.mainPeer.setDirection(this.id, dir);

@@ -247,7 +247,7 @@ export class TerrainManager extends PacketHandler implements IElementManager {
                 this.addEmpty(terrain.model.pos);
             }
         }
-        // Logger.getInstance().log("remove terrain length: ", ids.length);
+        // Logger.getInstance().debug("remove terrain length: ", ids.length);
     }
 
     protected onSyncSprite(packet: PBpacket) {
@@ -359,7 +359,7 @@ export class TerrainManager extends PacketHandler implements IElementManager {
     protected removeEmpty(pos: IPos) {
         const pos45 = this.roomService.transformTo45(pos);
         if (pos45.x >= this.mEmptyMap.length || pos45.y >= this.mEmptyMap[0].length) {
-            Logger.getInstance().log(`position ${pos.x} ${pos.y} exceed the map boundary`);
+            Logger.getInstance().debug(`position ${pos.x} ${pos.y} exceed the map boundary`);
             return;
         }
         if (!this.mEmptyMap[pos45.x] || !this.mEmptyMap[pos45.x][pos45.y]) return;

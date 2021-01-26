@@ -70,7 +70,7 @@ export class PicaOrderPanel extends BasePanel {
         this.addAtlas(this.key, "order/order.png", "order/order.json");
         this.addAtlas(UIAtlasKey.commonKey, UIAtlasName.commonUrl + ".png", UIAtlasName.commonUrl + ".json");
         this.addAtlas(UIAtlasKey.common2Key, UIAtlasName.common2Url + ".png", UIAtlasName.common2Url + ".json");
-        Logger.getInstance().log("=====>> dpr", this.dpr);
+        Logger.getInstance().debug("=====>> dpr", this.dpr);
         super.preload();
     }
 

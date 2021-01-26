@@ -89,10 +89,10 @@ export abstract class BlockObject extends MatterObject implements IBlockObject {
             this.mBlockable = val;
             if (this.mRoomService) {
                 if (val) {
-                    // Logger.getInstance().log("block addBlockObject");
+                    // Logger.getInstance().debug("block addBlockObject");
                     this.mRoomService.addBlockObject(this);
                 } else {
-                    // Logger.getInstance().log("block removeBlockObject");
+                    // Logger.getInstance().debug("block removeBlockObject");
                     this.mRoomService.removeBlockObject(this);
                 }
             }
@@ -143,7 +143,7 @@ export abstract class BlockObject extends MatterObject implements IBlockObject {
     }
 
     protected removeDisplay(): Promise<any> {
-        Logger.getInstance().log("removeDisplay ====>", this);
+        Logger.getInstance().debug("removeDisplay ====>", this);
         this.mCreatedDisplay = false;
         this.removeBody();
         return this.mRoomService.game.peer.render.removeBlockObject(this.id);

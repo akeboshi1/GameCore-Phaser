@@ -18,7 +18,7 @@ export class PicaSingleManager {
         const map = this.singleMap;
         map.forEach((value, key) => {
             value.destroy();
-            Logger.getInstance().log(value);
+            Logger.getInstance().debug(value);
         });
         map.clear();
     }

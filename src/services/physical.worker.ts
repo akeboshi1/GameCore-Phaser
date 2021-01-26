@@ -5,7 +5,7 @@ import { IMatterObject, MatterObject } from "./physical/matter.object";
 import { MatterWorld } from "./physical/matter.world";
 import decomp from "poly-decomp";
 import { MatterUserObject } from "./physical/matter.user.object";
-import { EventDispatcher, IPos, LogicPos } from "utils";
+import { EventDispatcher, IPos, Logger, LogicPos } from "utils";
 // The World act as the global Phaser.World instance;
 // @ts-ignore
 global.decomp = decomp;
@@ -327,6 +327,7 @@ export class PhysicalPeer extends RPCPeer {
         }
         obj._sensor = sensor;
         obj.addBody(this.scaleRatio);
+        Logger.getInstance().debug("Body add ====>:", id);
     }
 
     @Export([webworker_rpc.ParamType.num])
@@ -337,6 +338,7 @@ export class PhysicalPeer extends RPCPeer {
             this.matterObjectMap.set(id, obj);
         }
         obj.removeBody();
+        Logger.getInstance().debug("Body remove ====>:", id);
     }
 
     @Export([webworker_rpc.ParamType.num])
