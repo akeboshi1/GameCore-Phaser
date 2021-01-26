@@ -18,7 +18,7 @@ import { IViewBlockManager } from "../viewblock/iviewblock.manager";
 import { DecorateTerrainManager } from "../terrain/decorate.terrain.manager";
 import { DecorateElementManager } from "../element/decorate.element.manager";
 import { SpawnPoint } from "../display/spawn.point";
-import { Sprite } from "../display/sprite/sprite";
+import { Sprite } from "baseModel";
 
 export interface DecorateRoomService extends IRoomService {
     readonly miniSize: IPosition45Obj;

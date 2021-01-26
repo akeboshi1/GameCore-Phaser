@@ -1,6 +1,5 @@
 import { Capsule, ElementNode, MossNode, PaletteNode, SceneNode, TerrainNode } from "game-capsule";
 import { op_def, op_client } from "pixelpai_proto";
-import { BaseFramesDisplay, BaseLayer, ElementStorage, GroundLayer, Sprite, SurfaceLayer, LayerManager, IRender } from "base";
 import { IFramesModel, ISprite } from "structure";
 import { IPos, IPosition45Obj, load, Logger, LogicPos, Position45, Url } from "utils";
 import { EditorCanvas, IEditorCanvasConfig } from "../editor.canvas";
@@ -8,12 +7,14 @@ import { EditorFramesDisplay } from "./editor.frames.display";
 import { EditorFactory } from "./factory";
 import { transitionGrid } from "./check.bound";
 import { EditorPacket } from "./connection/editor.packet";
-import { DisplayObjectPool } from "./display.object.poll";
+import { DisplayObjectPool } from "./display.object.pool";
 import { EditorTerrainManager } from "./manager/terrain.manager";
 import { EditorMossManager } from "./manager/moss.manager";
 import { EditorElementManager } from "./manager/element.manager";
 import { EditorCamerasManager } from "./manager/cameras.manager";
 import { EditorSkyboxManager } from "./manager/skybox.manager";
+import { BaseFramesDisplay, BaseLayer, GroundLayer, IRender, LayerManager, SurfaceLayer } from "baseRender";
+import { ElementStorage, Sprite } from "baseModel";
 export class SceneEditorCanvas extends EditorCanvas implements IRender {
     public displayObjectPool: DisplayObjectPool;
     private mSelecedElement: SelectedElementManager;
@@ -289,6 +290,16 @@ export class SceneEditorCanvas extends EditorCanvas implements IRender {
 
     getMainScene() {
         return this.mScene;
+    }
+
+    destroy() {
+        this.mTerrainManager.destroy();
+        this.displayObjectPool.destroy();
+        this.mEditorPacket.destroy();
+        this.mElementManager.destroy();
+        this.mElementStorage.destroy();
+        this.mMossManager.destroy();
+        super.destroy();
     }
 
     private init() {
@@ -672,6 +683,7 @@ class MouseFollow {
         }
         const scene = this.sceneEditor.scene;
         this.mDisplay = new EraserArea(this.sceneEditor);
+        this.mNodeType = op_def.NodeType.TerrainNodeType;
         this.mDisplay.setDisplay(null, this.mSize);
         this.isTerrain = true;
         (<SceneEditor>scene).layerManager.addToLayer("sceneUILayer", this.mDisplay);

@@ -1,6 +1,6 @@
-import {BaseFramesDisplay} from "display";
+import {BaseFramesDisplay, ReferenceArea} from "baseRender";
 import {Render} from "../../render";
-import {DisplayField, ElementStateType, RunningAnimation, TitleMask, ReferenceArea } from "structure";
+import {DisplayField, ElementStateType, RunningAnimation, TitleMask } from "structure";
 import {IDisplayObject} from "../display.object";
 import {IPos, Logger} from "utils";
 import {ElementTopDisplay} from "../element.top.display";

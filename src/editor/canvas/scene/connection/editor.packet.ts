@@ -31,6 +31,10 @@ export class EditorPacket extends PacketHandler {
         this.addHandlerFun(op_client.OPCODE._OP_EDITOR_REQ_CLIENT_FETCH_SCENERY, this.onFetchSceneryHandler);
     }
 
+    destroy() {
+        if (this.connection) this.connection.removePacketListener(this);
+    }
+
     // onConnected(connection?: SocketConnection): void {
     //     throw new Error("Method not implemented.");
     // }

@@ -3,14 +3,13 @@ import { op_client, op_def, op_virtual_world } from "pixelpai_proto";
 import { ConnectionService } from "../../../../lib/net/connection.service";
 import { Logger, LogicPos } from "utils";
 import { EventType, IDragonbonesModel, IFramesModel, ISprite } from "structure";
-import { IElementStorage } from "base";
 import { IRoomService, Room } from "../room/room";
 import { Element, IElement, InputEnable } from "./element";
 import { ElementStateManager } from "./element.state.manager";
 import { ElementDataManager } from "../../data.manager/element.dataManager";
 import { DataMgrType } from "../../data.manager";
 import { ElementActionManager } from "../elementaction/element.action.manager";
-import { Sprite } from "../display/sprite/sprite";
+import { Sprite, IElementStorage } from "baseModel";
 import NodeType = op_def.NodeType;
 export interface IElementManager {
     hasAddComplete: boolean;

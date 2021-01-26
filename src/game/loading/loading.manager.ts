@@ -1,4 +1,4 @@
-import { IAsset } from "base";
+import { IAsset } from "baseModel";
 import { Game } from "../game";
 export class LoadingManager {
     private readonly mGame: Game;

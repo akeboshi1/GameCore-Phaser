@@ -18,6 +18,13 @@ export class EditorTerrainManager extends PacketHandler {
         }
     }
 
+    destroy() {
+        const connection = this.sceneEditor.connection;
+        if (connection) {
+            connection.removePacketListener(this);
+        }
+    }
+
     addTerrains(terrainCoorData) {
         const { locs, key } = terrainCoorData;
         const drawLocs = locs.filter((loc) => this.exist(loc, key));

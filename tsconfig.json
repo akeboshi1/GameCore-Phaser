@@ -44,12 +44,15 @@
         "./src/editor/index"
       ],
       "display": [
-        "./src/base/display/index"
+        "src/base/render/display/index"
       ],
-      "base": [
-        "./src/base/index"
+      "baseModel": [
+        "./src/base/model/index"
+      ],
+      "baseRender": [
+        "./src/base/render/index"
       ]
-    },
+    }
   },
   "exclude": [
     "node_modules",

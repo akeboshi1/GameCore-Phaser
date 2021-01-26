@@ -1,4 +1,4 @@
-import { Sprite } from "base";
+import { Sprite } from "baseModel";
 import { PacketHandler, PBpacket } from "net-socket-packet";
 import { op_client, op_editor, op_def } from "pixelpai_proto";
 import { ISprite } from "structure";
@@ -19,6 +19,13 @@ export class EditorElementManager extends PacketHandler {
 
     update() {
         this.batchActionSprites();
+    }
+
+    destroy() {
+        const connection = this.sceneEditor.connection;
+        if (connection) {
+            connection.removePacketListener(this);
+        }
     }
 
     addElements(sprites: ISprite[]) {

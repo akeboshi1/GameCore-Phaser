@@ -53,7 +53,7 @@
     "simple-sha1": "^3.0.1",
     "sort-display-object": "git+ssh://git@code.apowo.com:PixelPai/sort-display-object.git",
     "tooqinggamephaser": "^0.2.8",
-    "tooqingmatter-js": "^0.0.8",
+    "tooqingmatter-js": "0.1.1",
     "webworker-rpc": "git://github.com/ApowoGames/webworker-rpc",
     "worker-loader": "^3.0.2"
   }

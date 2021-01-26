@@ -1,6 +1,5 @@
-import { Sprite } from "base";
-import { AnimationsNode, ElementNode, SpawnPointNode, TerrainNode } from "game-capsule";
-import { FramesModel } from "gamecore";
+import { FramesModel, Sprite } from "baseModel";
+import { AnimationsNode, ElementNode, TerrainNode } from "game-capsule";
 import { AnimationModel, IFramesModel } from "structure";
 import { EditorFramesDisplay } from "./editor.frames.display";
 import { SceneEditorCanvas } from "./scene.editor.canvas";
@@ -13,11 +12,9 @@ export class EditorFactory {
         const frameModel: IFramesModel = <FramesModel>sprite.displayInfo;
 
         const display = new EditorFramesDisplay(this.sceneEditor.scene, sprite.id, sprite.nodeType, this.sceneEditor);
-        display.load(frameModel);
         display.isMoss = sprite.isMoss;
-        display.name = sprite.nickname;
         display.sprite = sprite;
-        display.play(sprite.currentAnimation);
+        display.updateSprite(sprite);
         return display;
     }
 

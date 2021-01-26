@@ -2,7 +2,7 @@ import { PacketHandler, PBpacket } from "net-socket-packet";
 import { SceneEditorCanvas } from "../scene.editor.canvas";
 import { op_client, op_editor, op_def } from "pixelpai_proto";
 import { IScenery } from "structure";
-import { BlockManager, Scenery } from "base";
+import { BlockManager, Scenery } from "baseRender";
 import { Logger } from "utils";
 
 export class EditorSkyboxManager extends PacketHandler {
@@ -17,6 +17,13 @@ export class EditorSkyboxManager extends PacketHandler {
             this.addHandlerFun(op_client.OPCODE._OP_EDITOR_REQ_CLIENT_ADD_SCENERY, this.onAddSceneryHandler);
             this.addHandlerFun(op_client.OPCODE._OP_EDITOR_REQ_CLIENT_UPDATE_SCENERY, this.onUpdateSceneryHandler);
             this.addHandlerFun(op_client.OPCODE._OP_EDITOR_REQ_CLIENT_DELETE_SCENERY, this.onDeleteSceneryHandler);
+        }
+    }
+
+    destroy() {
+        const connection = this.sceneEditor.connection;
+        if (connection) {
+            connection.removePacketListener(this);
         }
     }
 

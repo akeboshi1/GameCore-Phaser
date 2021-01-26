@@ -1,4 +1,4 @@
-import { ICameraService } from "../cameras/cameras.manager";
+import { ICameraService } from "./cameras/cameras.manager";
 
 export interface IRender {
     readonly camerasManager: ICameraService;
@@ -9,3 +9,8 @@ export interface IRender {
     getCurrentRoomSize(): any;
     getCurrentRoomMiniSize(): any;
 }
+
+export * from "./cameras";
+export * from "./display";
+export * from "./layer";
+export * from "./sky.box";

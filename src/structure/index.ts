@@ -18,7 +18,6 @@ export { ChineseUnit } from "./chinese.unit";
 export { TimerCountDown } from "./TimerCountDown";
 export { AvatarSuitType, SuitAlternativeType, AvatarSuit, BaseAvatar } from "./avatar.suit.type";
 export { StateConfig, ElementStateType } from "./element.state.data";
-export { ReferenceArea } from "./reference.area";
 export * from "./message.type";
 export * from "./load.state";
 export * from "./game.state";

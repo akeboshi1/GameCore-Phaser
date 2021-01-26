@@ -1,4 +1,4 @@
-import { BaseCamerasManager } from "base";
+import { BaseCamerasManager } from "baseRender";
 import { PBpacket } from "net-socket-packet";
 import { op_editor } from "pixelpai_proto";
 import { SceneEditorCanvas } from "../scene.editor.canvas";

@@ -3,7 +3,7 @@ import { BasicScene } from "./basic.scene";
 import { Font } from "utils";
 import { Size } from "src/utils/size";
 import { SceneName } from "structure";
-import { BaseLayer } from "base";
+import { BaseLayer } from "baseRender";
 
 export class MainUIScene extends BasicScene {
   public static readonly LAYER_UI = "uiLayer";

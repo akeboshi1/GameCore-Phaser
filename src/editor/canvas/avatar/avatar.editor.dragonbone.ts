@@ -1,7 +1,7 @@
-import {Handler, load, Logger, ResUtils, Url} from "utils";
+import {Logger} from "utils";
 import version from "../../../../version";
-import {BaseDragonbonesDisplay} from "display";
-import {IAvatar, IDragonbonesModel, SlotSkin} from "structure";
+import {BaseDragonbonesDisplay} from "baseRender";
+import {IAvatar, IDragonbonesModel} from "structure";
 
 export class AvatarEditorDragonbone extends Phaser.GameObjects.Container {
 

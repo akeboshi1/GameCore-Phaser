@@ -39,7 +39,7 @@ import { GamePauseScene, MainUIScene } from "./scenes";
 import { EditorCanvasManager } from "./managers/editor.canvas.manager";
 import version from "../../version";
 import { AstarDebugger, GridsDebugger } from "./display";
-import { IRender } from "base";
+import { IRender } from "baseRender";
 // import Stats from "../../Stat";
 
 for (const key in protos) {

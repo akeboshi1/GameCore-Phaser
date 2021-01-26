@@ -1,6 +1,6 @@
-import {IPosition45Obj, Logger, LogicPos, Position45} from "utils";
+import { Logger } from "utils";
 import { PlayCamera } from "../cameras/play.camera";
-import { BaseLayer, GroundLayer, SurfaceLayer } from "base";
+import { BaseLayer, GroundLayer, SurfaceLayer } from "baseRender";
 import { MainUIScene } from "./main.ui.scene";
 import { RoomScene } from "./room.scene";
 import { Size } from "src/utils/size";

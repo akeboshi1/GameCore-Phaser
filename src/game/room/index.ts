@@ -26,7 +26,4 @@ export * from "./viewblock/iviewblock.manager";
 export * from "./viewblock/view.block";
 export * from "./viewblock/viewblock.manager";
 export * from "./room.manager";
-export * from "./display/sprite/sprite";
-export * from "./display/dragonbones/dragonbones.model";
-export * from "./display/frame/frames.model";
 export * from "./display/spawn.point";

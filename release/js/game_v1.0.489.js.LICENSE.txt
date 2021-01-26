@@ -1,0 +1,1097 @@
+/*! exports provided: Account */
+
+/*! exports provided: ActivityPanel */
+
+/*! exports provided: AnimationModel */
+
+/*! exports provided: AnimationUrlData */
+
+/*! exports provided: Astar, AstarDebugger */
+
+/*! exports provided: BackTextButton */
+
+/*! exports provided: BaseAnimation */
+
+/*! exports provided: BasicScene, CreateRoleScene, GamePauseScene, LoadingScene, LoginAccountScene, LoginScene, MainUIScene, PlayScene, RoomScene, SceneManager, SelectRoleScene, SkyBoxScene */
+
+/*! exports provided: BottomPanel */
+
+/*! exports provided: Bubble */
+
+/*! exports provided: BubbleAnimation */
+
+/*! exports provided: BubbleContainer */
+
+/*! exports provided: CamerasManager */
+
+/*! exports provided: CamerasManager, EditorCamerasManager, PlayCamera */
+
+/*! exports provided: CharacterAttributePanel */
+
+/*! exports provided: CharacterEditorPanel */
+
+/*! exports provided: CharacterInfoPanel */
+
+/*! exports provided: ChatPanel */
+
+/*! exports provided: CreateRolePanel */
+
+/*! exports provided: CreateRoleScene */
+
+/*! exports provided: CutInMenuPanel */
+
+/*! exports provided: CutInPanel */
+
+/*! exports provided: DecorateManager */
+
+/*! exports provided: DecorateScene */
+
+/*! exports provided: DetailDisplay */
+
+/*! exports provided: DialogPanel */
+
+/*! exports provided: DisplayMovement */
+
+/*! exports provided: DragonbonesAnimation */
+
+/*! exports provided: DragonbonesDisplay */
+
+/*! exports provided: EditorCamerasManager */
+
+/*! exports provided: EditorCanvasManager */
+
+/*! exports provided: ElementDetail */
+
+/*! exports provided: ElementTopDisplay */
+
+/*! exports provided: EnergyProgressBar */
+
+/*! exports provided: FallEffect */
+
+/*! exports provided: FallEffect, FallEffectContainer */
+
+/*! exports provided: FallEffectContainer */
+
+/*! exports provided: FrameAnimation */
+
+/*! exports provided: FramesDisplay */
+
+/*! exports provided: GMToolsPanel */
+
+/*! exports provided: GamePauseScene */
+
+/*! exports provided: GraphicsProgressBar */
+
+/*! exports provided: Grids, GridsDebugger */
+
+/*! exports provided: InputManager */
+
+/*! exports provided: InputManager, JoystickManager, MouseEvent, MouseManager */
+
+/*! exports provided: InteractionBubbleCell */
+
+/*! exports provided: InteractionBubbleContainer */
+
+/*! exports provided: InteractiveBubblePanel */
+
+/*! exports provided: Item */
+
+/*! exports provided: ItemButton */
+
+/*! exports provided: ItemButton, DetailDisplay, BackTextButton, EnergyProgressBar */
+
+/*! exports provided: ItemButton, DetailDisplay, BackTextButton, EnergyProgressBar, ActivityPanel, CharacterAttributePanel, CharacterEditorPanel, CharacterInfoPanel, GraphicsProgressBar, PicaHandheldPanel, PicaChatInputPanel, PicaGiftPanel, PicaChatPanel, PicaMainUIPanel, PicaRenderUiManager, CutInPanel, DialogPanel, LoginPanel, VerifiedPanel, CreateRolePanel, InteractionBubbleCell, InteractionBubbleContainer, InteractiveBubblePanel, PicaNavigatePanel, PicaBagPanel, ElementDetail, PicaMarketPanel, NumberCounter, MarketItem, PicaFriendPanel, PicaPropFunPanel, PicaNoticePanel, PicaPartyListPanel, PicaManorContentPanel, PicaManorListPanel, PicaManorScrollPanel, PicaOpenPartyCreatePanel, PicaOpenPartyPanel, TaskPanel, PicaManorBasePanel, PicaManorChildPanel, PicManorInfoPanel, PicaManorShopPanel, PicaManorTipsPanel, PicaBusinessContentPanel, PicaBusinessHistoryPanel, PicaBusinessMyStreetPanel, PicaBusinessRankRewardPanel, PicaBusinessRankingDetailPanel, PicaBusinessRankingPanel, PicaBusinessStoreCreatePanel, PicaBusinessStreetListPanel, PicaBusinessStreetPanel, SecondaryMenuPanel, PicaBusinessChoosePlanPanel, PicaBusinessMarketingPlanPanel, PicaBusinessPlanPanel, PicaRechargePanel, PicaDecorateControlPanel, PicRoomUpgradePanel, PicaEquipUpgradeItem, PicaEquipUpgradePanel, PicaRoomListPanel, RoomDelegate, RoomZoon, PicaWorkPanel, PicaMineCarPanel, PicaHousePanel, PicaHouseInfoPanel, PicaMineSettlePanel, PicaRewardTipPanel, PicaComposePanel, PicaItemPopCardPanel, PicaMessageBoxPanel, PicaElementStoragePanel, CutInMenuPanel, PicaTreasureOpenPanel, PicaTreasurePanel, PicaTreasurePreviewPanel, PicaTreasureAllOpenPanel, PicaGiftEffectPanel, PicaGiftLateralItem, PicaGiftLaterctPanel, PicaGiftPlayerPanel, PicaFurniFunPanel, PicaNewRolePanel, PicaNewActivityPanel, PicaNewChatPanel, PicaNewHeadPanel, PicaNewLeftPanel, PicaNewNavigatePanel, PicaNewMainPanel, PicaAvatarPanel, PicaOnlinePanel, PicaEffectMgrPanel, PicaFurniUnlockEffectPanel, PicaTaskItem, PicaTaskMainPanel, PicaTaskPanel, PicaTaskSidePanel, PicaElevatorPanel, PicaCreateRolePanel, PicaItemTipsPanel, PicaSingleManager, PicaFurnitureComposePanel, PicaRecastePanel, PicaRoamListPanel, PicaRoamPanel, PicaRoamDrawPanel, PicaRoamPreviewPanel, PicaExploreLogPanel, PicaExploreLogSettlePanel, PicaChapterLevelClue, PicaExploreListBottomPanel, PicaExploreListDetailPanel, PicaExploreListLevelPanel, PicaExploreListPanel */
+
+/*! exports provided: ItemButton, DetailDisplay, BackTextButton, EnergyProgressBar, ActivityPanel, CharacterAttributePanel, CharacterEditorPanel, CharacterInfoPanel, GraphicsProgressBar, PicaHandheldPanel, PicaChatInputPanel, PicaGiftPanel, PicaChatPanel, PicaMainUIPanel, PicaRenderUiManager, CutInPanel, DialogPanel, LoginPanel, VerifiedPanel, CreateRolePanel, InteractionBubbleCell, InteractionBubbleContainer, InteractiveBubblePanel, PicaNavigatePanel, PicaBagPanel, ElementDetail, PicaMarketPanel, NumberCounter, MarketItem, PicaFriendPanel, PicaPropFunPanel, PicaNoticePanel, PicaPartyListPanel, PicaManorContentPanel, PicaManorListPanel, PicaManorScrollPanel, PicaOpenPartyCreatePanel, PicaOpenPartyPanel, TaskPanel, PicaManorBasePanel, PicaManorChildPanel, PicManorInfoPanel, PicaManorShopPanel, PicaManorTipsPanel, PicaBusinessContentPanel, PicaBusinessHistoryPanel, PicaBusinessMyStreetPanel, PicaBusinessRankRewardPanel, PicaBusinessRankingDetailPanel, PicaBusinessRankingPanel, PicaBusinessStoreCreatePanel, PicaBusinessStreetListPanel, PicaBusinessStreetPanel, SecondaryMenuPanel, PicaBusinessChoosePlanPanel, PicaBusinessMarketingPlanPanel, PicaBusinessPlanPanel, PicaRechargePanel, PicaDecorateControlPanel, PicRoomUpgradePanel, PicaEquipUpgradeItem, PicaEquipUpgradePanel, PicaRoomListPanel, RoomDelegate, RoomZoon, PicaWorkPanel, PicaMineCarPanel, PicaHousePanel, PicaHouseInfoPanel, PicaMineSettlePanel, PicaRewardTipPanel, PicaComposePanel, PicaItemPopCardPanel, PicaMessageBoxPanel, PicaElementStoragePanel, CutInMenuPanel, PicaTreasureOpenPanel, PicaTreasurePanel, PicaTreasurePreviewPanel, PicaTreasureAllOpenPanel, PicaGiftEffectPanel, PicaGiftLateralItem, PicaGiftLaterctPanel, PicaGiftPlayerPanel, PicaFurniFunPanel, PicaNewRolePanel, PicaNewActivityPanel, PicaNewChatPanel, PicaNewHeadPanel, PicaNewLeftPanel, PicaNewNavigatePanel, PicaNewMainPanel, PicaAvatarPanel, PicaOnlinePanel, PicaEffectMgrPanel, PicaFurniUnlockEffectPanel, PicaTaskItem, PicaTaskMainPanel, PicaTaskPanel, PicaTaskSidePanel, PicaElevatorPanel, PicaCreateRolePanel, PicaItemTipsPanel, PicaSingleManager, PicaFurnitureComposePanel, PicaRecastePanel, PicaRoamListPanel, PicaRoamPanel, PicaRoamDrawPanel, PicaRoamPreviewPanel, PicaExploreLogPanel, PicaExploreLogSettlePanel, PicaChapterLevelClue, PicaExploreListBottomPanel, PicaExploreListDetailPanel, PicaExploreListLevelPanel, PicaExploreListPanel, FallEffect, FallEffectContainer */
+
+/*! exports provided: JoystickManager */
+
+/*! exports provided: LoadQueue, LoadType, LoadingTips */
+
+/*! exports provided: LoadType, LoadQueue */
+
+/*! exports provided: LoadingScene */
+
+/*! exports provided: LoadingTips */
+
+/*! exports provided: LocalStorageManager */
+
+/*! exports provided: LoginAccountScene */
+
+/*! exports provided: LoginPanel */
+
+/*! exports provided: LoginScene */
+
+/*! exports provided: MarketItem */
+
+/*! exports provided: MatterBodies */
+
+/*! exports provided: MotionManager */
+
+/*! exports provided: MouseEvent, MouseManager */
+
+/*! exports provided: NodeType, DisplayManager */
+
+/*! exports provided: NodeType, DisplayManager, LayerManager, LocalStorageManager */
+
+/*! exports provided: NumberCounter */
+
+/*! exports provided: PicManorInfoPanel */
+
+/*! exports provided: PicRoomUpgradePanel */
+
+/*! exports provided: PicaAvatarPanel */
+
+/*! exports provided: PicaBagPanel */
+
+/*! exports provided: PicaBasePanel */
+
+/*! exports provided: PicaBusinessChoosePlanPanel */
+
+/*! exports provided: PicaBusinessContentPanel */
+
+/*! exports provided: PicaBusinessHistoryPanel */
+
+/*! exports provided: PicaBusinessMarketingPlanPanel */
+
+/*! exports provided: PicaBusinessMyStreetPanel */
+
+/*! exports provided: PicaBusinessPlanPanel */
+
+/*! exports provided: PicaBusinessRankRewardPanel */
+
+/*! exports provided: PicaBusinessRankingDetailPanel */
+
+/*! exports provided: PicaBusinessRankingPanel */
+
+/*! exports provided: PicaBusinessStoreCreatePanel */
+
+/*! exports provided: PicaBusinessStreetListPanel */
+
+/*! exports provided: PicaBusinessStreetPanel */
+
+/*! exports provided: PicaChapterLevelClue */
+
+/*! exports provided: PicaChatInputPanel */
+
+/*! exports provided: PicaChatPanel */
+
+/*! exports provided: PicaComposePanel */
+
+/*! exports provided: PicaCreateRolePanel */
+
+/*! exports provided: PicaDecorateControlPanel */
+
+/*! exports provided: PicaDecoratePanel */
+
+/*! exports provided: PicaEffectMgrPanel */
+
+/*! exports provided: PicaElementStoragePanel */
+
+/*! exports provided: PicaElevatorPanel */
+
+/*! exports provided: PicaEquipUpgradeItem */
+
+/*! exports provided: PicaEquipUpgradePanel */
+
+/*! exports provided: PicaExploreListBottomPanel */
+
+/*! exports provided: PicaExploreListDetailPanel */
+
+/*! exports provided: PicaExploreListLevelPanel */
+
+/*! exports provided: PicaExploreListPanel */
+
+/*! exports provided: PicaExploreLogPanel */
+
+/*! exports provided: PicaExploreLogSettlePanel */
+
+/*! exports provided: PicaFriendPanel */
+
+/*! exports provided: PicaFurniFunPanel */
+
+/*! exports provided: PicaFurniUnlockEffectPanel */
+
+/*! exports provided: PicaFurnitureComposePanel */
+
+/*! exports provided: PicaGiftEffectPanel */
+
+/*! exports provided: PicaGiftLateralItem */
+
+/*! exports provided: PicaGiftLaterctPanel */
+
+/*! exports provided: PicaGiftPanel */
+
+/*! exports provided: PicaGiftPlayerPanel */
+
+/*! exports provided: PicaHandheldPanel */
+
+/*! exports provided: PicaHouseInfoPanel */
+
+/*! exports provided: PicaHousePanel */
+
+/*! exports provided: PicaItemPopCardPanel */
+
+/*! exports provided: PicaItemTipsPanel */
+
+/*! exports provided: PicaMainUIPanel */
+
+/*! exports provided: PicaManorBasePanel */
+
+/*! exports provided: PicaManorChildPanel */
+
+/*! exports provided: PicaManorContentPanel */
+
+/*! exports provided: PicaManorListPanel */
+
+/*! exports provided: PicaManorScrollPanel */
+
+/*! exports provided: PicaManorShopPanel */
+
+/*! exports provided: PicaManorTipsPanel */
+
+/*! exports provided: PicaMarketPanel */
+
+/*! exports provided: PicaMessageBoxPanel */
+
+/*! exports provided: PicaMineCarPanel */
+
+/*! exports provided: PicaMineSettlePanel */
+
+/*! exports provided: PicaMyRoomNavigationPanel */
+
+/*! exports provided: PicaNavigatePanel */
+
+/*! exports provided: PicaNewActivityPanel */
+
+/*! exports provided: PicaNewChatPanel */
+
+/*! exports provided: PicaNewHeadPanel */
+
+/*! exports provided: PicaNewLeftPanel */
+
+/*! exports provided: PicaNewMainPanel */
+
+/*! exports provided: PicaNewNavigatePanel */
+
+/*! exports provided: PicaNewOldMainPanel */
+
+/*! exports provided: PicaNewRolePanel */
+
+/*! exports provided: PicaNoticePanel */
+
+/*! exports provided: PicaOnlineBottomPanel */
+
+/*! exports provided: PicaOnlinePanel */
+
+/*! exports provided: PicaOpenPartyCreatePanel */
+
+/*! exports provided: PicaOpenPartyPanel */
+
+/*! exports provided: PicaOrderPanel */
+
+/*! exports provided: PicaPartyListPanel */
+
+/*! exports provided: PicaPartyNavigationPanel */
+
+/*! exports provided: PicaPropFunPanel */
+
+/*! exports provided: PicaRecastePanel */
+
+/*! exports provided: PicaRechargePanel */
+
+/*! exports provided: PicaRenderUiManager */
+
+/*! exports provided: PicaRewardTipPanel */
+
+/*! exports provided: PicaRoamDrawPanel */
+
+/*! exports provided: PicaRoamListPanel */
+
+/*! exports provided: PicaRoamPanel */
+
+/*! exports provided: PicaRoamPreviewPanel */
+
+/*! exports provided: PicaRoomListPanel, RoomDelegate, RoomZoon */
+
+/*! exports provided: PicaSingleManager */
+
+/*! exports provided: PicaTaskItem */
+
+/*! exports provided: PicaTaskMainPanel */
+
+/*! exports provided: PicaTaskPanel */
+
+/*! exports provided: PicaTaskSidePanel */
+
+/*! exports provided: PicaTreasureAllOpenPanel */
+
+/*! exports provided: PicaTreasureOpenPanel */
+
+/*! exports provided: PicaTreasurePanel */
+
+/*! exports provided: PicaTreasurePreviewPanel */
+
+/*! exports provided: PicaWorkPanel */
+
+/*! exports provided: PlayScene */
+
+/*! exports provided: Render */
+
+/*! exports provided: RoomScene */
+
+/*! exports provided: SceneManager */
+
+/*! exports provided: SecondaryMenuPanel */
+
+/*! exports provided: SelectRoleScene */
+
+/*! exports provided: ServerPosition */
+
+/*! exports provided: TaskPanel */
+
+/*! exports provided: UIDragonbonesDisplay */
+
+/*! exports provided: VerifiedPanel */
+
+/*! no static exports found */
+
+/*!*****************************!*\
+  !*** ./src/render/index.ts ***!
+  \*****************************/
+
+/*!******************************!*\
+  !*** ./src/render/render.ts ***!
+  \******************************/
+
+/*!**********************************!*\
+  !*** ./src/pica/render/index.ts ***!
+  \**********************************/
+
+/*!***********************************!*\
+  !*** ./src/render/input/index.ts ***!
+  \***********************************/
+
+/*!************************************!*\
+  !*** ./src/render/scenes/index.ts ***!
+  \************************************/
+
+/*!*************************************!*\
+  !*** ./src/pica/render/ui/index.ts ***!
+  \*************************************/
+
+/*!*************************************!*\
+  !*** ./src/render/account/index.ts ***!
+  \*************************************/
+
+/*!*************************************!*\
+  !*** ./src/render/cameras/index.ts ***!
+  \*************************************/
+
+/*!*************************************!*\
+  !*** ./src/render/display/index.ts ***!
+  \*************************************/
+
+/*!**************************************!*\
+  !*** ./src/render/managers/index.ts ***!
+  \**************************************/
+
+/*!***************************************!*\
+  !*** ./src/render/account/account.ts ***!
+  \***************************************/
+
+/*!***************************************!*\
+  !*** ./src/render/loadqueue/index.ts ***!
+  \***************************************/
+
+/*!*****************************************!*\
+  !*** ./src/render/scenes/play.scene.ts ***!
+  \*****************************************/
+
+/*!*****************************************!*\
+  !*** ./src/render/scenes/room.scene.ts ***!
+  \*****************************************/
+
+/*!******************************************!*\
+  !*** ./src/pica/render/ui sync ^\.\/.*$ ***!
+  \******************************************/
+
+/*!******************************************!*\
+  !*** ./src/render/scenes/login.scene.ts ***!
+  \******************************************/
+
+/*!*******************************************!*\
+  !*** ./src/render/input/input.manager.ts ***!
+  \*******************************************/
+
+/*!*******************************************!*\
+  !*** ./src/render/input/mouse.manager.ts ***!
+  \*******************************************/
+
+/*!********************************************!*\
+  !*** ./src/render/display/debugs/astar.ts ***!
+  \********************************************/
+
+/*!********************************************!*\
+  !*** ./src/render/display/debugs/grids.ts ***!
+  \********************************************/
+
+/*!********************************************!*\
+  !*** ./src/render/input/motion.manager.ts ***!
+  \********************************************/
+
+/*!********************************************!*\
+  !*** ./src/render/loadqueue/load.queue.ts ***!
+  \********************************************/
+
+/*!********************************************!*\
+  !*** ./src/render/scenes/loading.scene.ts ***!
+  \********************************************/
+
+/*!********************************************!*\
+  !*** ./src/render/scenes/scene.manager.ts ***!
+  \********************************************/
+
+/*!*********************************************!*\
+  !*** ./src/render/display/bubble/bubble.ts ***!
+  \*********************************************/
+
+/*!*********************************************!*\
+  !*** ./src/render/display/debugs/matter.ts ***!
+  \*********************************************/
+
+/*!*********************************************!*\
+  !*** ./src/render/scenes/decorate.scene.ts ***!
+  \*********************************************/
+
+/*!**********************************************!*\
+  !*** ./src/pica/render/fall.effect/index.ts ***!
+  \**********************************************/
+
+/*!**********************************************!*\
+  !*** ./src/pica/render/ui/Chat/ChatPanel.ts ***!
+  \**********************************************/
+
+/*!**********************************************!*\
+  !*** ./src/pica/render/ui/Task/TaskPanel.ts ***!
+  \**********************************************/
+
+/*!**********************************************!*\
+  !*** ./src/render/display/display.object.ts ***!
+  \**********************************************/
+
+/*!**********************************************!*\
+  !*** ./src/render/input/decorate.manager.ts ***!
+  \**********************************************/
+
+/*!**********************************************!*\
+  !*** ./src/render/input/joystick.manager.ts ***!
+  \**********************************************/
+
+/*!**********************************************!*\
+  !*** ./src/render/loadqueue/loading.tips.ts ***!
+  \**********************************************/
+
+/*!***********************************************!*\
+  !*** ./src/pica/render/ui/PicaMarket/item.ts ***!
+  \***********************************************/
+
+/*!***********************************************!*\
+  !*** ./src/pica/render/ui/pica.base.panel.ts ***!
+  \***********************************************/
+
+/*!***********************************************!*\
+  !*** ./src/render/cameras/cameras.manager.ts ***!
+  \***********************************************/
+
+/*!***********************************************!*\
+  !*** ./src/render/scenes/game.pause.scene.ts ***!
+  \***********************************************/
+
+/*!************************************************!*\
+  !*** ./src/pica/render/ui/Components/index.ts ***!
+  \************************************************/
+
+/*!************************************************!*\
+  !*** ./src/pica/render/ui/CutIn/CutInPanel.ts ***!
+  \************************************************/
+
+/*!************************************************!*\
+  !*** ./src/pica/render/ui/Login/LoginPanel.ts ***!
+  \************************************************/
+
+/*!************************************************!*\
+  !*** ./src/render/display/display.movement.ts ***!
+  \************************************************/
+
+/*!************************************************!*\
+  !*** ./src/render/managers/display.manager.ts ***!
+  \************************************************/
+
+/*!************************************************!*\
+  !*** ./src/render/scenes/create.role.scene.ts ***!
+  \************************************************/
+
+/*!************************************************!*\
+  !*** ./src/render/scenes/select.role.scene.ts ***!
+  \************************************************/
+
+/*!**************************************************!*\
+  !*** ./src/pica/render/ui/Bottom/BottomPanel.ts ***!
+  \**************************************************/
+
+/*!**************************************************!*\
+  !*** ./src/pica/render/ui/Dialog/DialogPanel.ts ***!
+  \**************************************************/
+
+/*!**************************************************!*\
+  !*** ./src/pica/render/ui/Login/VerifiePanel.ts ***!
+  \**************************************************/
+
+/*!**************************************************!*\
+  !*** ./src/render/scenes/login.account.scene.ts ***!
+  \**************************************************/
+
+/*!***************************************************!*\
+  !*** ./src/render/display/element.top.display.ts ***!
+  \***************************************************/
+
+/*!****************************************************!*\
+  !*** ./src/pica/render/fall.effect/fall.effect.ts ***!
+  \****************************************************/
+
+/*!****************************************************!*\
+  !*** ./src/pica/render/ui/GMTools/GMToolsPanel.ts ***!
+  \****************************************************/
+
+/*!****************************************************!*\
+  !*** ./src/pica/render/ui/PicaBag/PicaBagPanel.ts ***!
+  \****************************************************/
+
+/*!****************************************************!*\
+  !*** ./src/pica/render/ui/pica.Renderuimanager.ts ***!
+  \****************************************************/
+
+/*!*****************************************************!*\
+  !*** ./src/pica/render/ui/PicaTask/PicaTaskItem.ts ***!
+  \*****************************************************/
+
+/*!*****************************************************!*\
+  !*** ./src/render/display/debugs/server.pointer.ts ***!
+  \*****************************************************/
+
+/*!*****************************************************!*\
+  !*** ./src/render/display/frames/frames.display.ts ***!
+  \*****************************************************/
+
+/*!******************************************************!*\
+  !*** ./node_modules/copy-text-to-clipboard/index.js ***!
+  \******************************************************/
+
+/*!******************************************************!*\
+  !*** ./src/pica/render/ui/Activity/ActivityPanel.ts ***!
+  \******************************************************/
+
+/*!******************************************************!*\
+  !*** ./src/pica/render/ui/Components/Item.button.ts ***!
+  \******************************************************/
+
+/*!******************************************************!*\
+  !*** ./src/pica/render/ui/PicaChat/PicaChatPanel.ts ***!
+  \******************************************************/
+
+/*!******************************************************!*\
+  !*** ./src/pica/render/ui/PicaChat/PicaGiftPanel.ts ***!
+  \******************************************************/
+
+/*!******************************************************!*\
+  !*** ./src/pica/render/ui/PicaRoam/PicaRoamPanel.ts ***!
+  \******************************************************/
+
+/*!******************************************************!*\
+  !*** ./src/pica/render/ui/PicaTask/PicaTaskPanel.ts ***!
+  \******************************************************/
+
+/*!******************************************************!*\
+  !*** ./src/pica/render/ui/PicaWork/PicaWorkPanel.ts ***!
+  \******************************************************/
+
+/*!******************************************************!*\
+  !*** ./src/render/cameras/editor.cameras.manager.ts ***!
+  \******************************************************/
+
+/*!******************************************************!*\
+  !*** ./src/render/managers/editor.canvas.manager.ts ***!
+  \******************************************************/
+
+/*!******************************************************!*\
+  !*** ./src/render/managers/local.storage.manager.ts ***!
+  \******************************************************/
+
+/*!*******************************************************!*\
+  !*** ./src/pica/render/ui/PicaElementStorage/Item.ts ***!
+  \*******************************************************/
+
+/*!*******************************************************!*\
+  !*** ./src/render/display/bubble/bubble.container.ts ***!
+  \*******************************************************/
+
+/*!********************************************************!*\
+  !*** ./src/pica/render/ui/CutInMenu/CutInMenuPanel.ts ***!
+  \********************************************************/
+
+/*!********************************************************!*\
+  !*** ./src/pica/render/ui/PicaHouse/PicaHousePanel.ts ***!
+  \********************************************************/
+
+/*!********************************************************!*\
+  !*** ./src/pica/render/ui/PicaMarket/ElementDetail.ts ***!
+  \********************************************************/
+
+/*!********************************************************!*\
+  !*** ./src/pica/render/ui/PicaMarket/NumberCounter.ts ***!
+  \********************************************************/
+
+/*!********************************************************!*\
+  !*** ./src/pica/render/ui/PicaOrder/PicaOrderPanel.ts ***!
+  \********************************************************/
+
+/*!********************************************************!*\
+  !*** ./src/render/display/animation/base.animation.ts ***!
+  \********************************************************/
+
+/*!********************************************************!*\
+  !*** ./src/render/display/animation/ianimationbase.ts ***!
+  \********************************************************/
+
+/*!*********************************************************!*\
+  !*** ./src/pica/render/ui/Components/detail.display.ts ***!
+  \*********************************************************/
+
+/*!*********************************************************!*\
+  !*** ./src/pica/render/ui/PicaWork/PicaWorkOldPanel.ts ***!
+  \*********************************************************/
+
+/*!*********************************************************!*\
+  !*** ./src/render/display/animation/animation.model.ts ***!
+  \*********************************************************/
+
+/*!*********************************************************!*\
+  !*** ./src/render/display/animation/frame.animation.ts ***!
+  \*********************************************************/
+
+/*!**********************************************************!*\
+  !*** ./src/pica/render/ui/CreateRole/CreateRolePanel.ts ***!
+  \**********************************************************/
+
+/*!**********************************************************!*\
+  !*** ./src/pica/render/ui/PicaAvatar/PicaAvatarPanel.ts ***!
+  \**********************************************************/
+
+/*!**********************************************************!*\
+  !*** ./src/pica/render/ui/PicaFriend/PicaFriendPanel.ts ***!
+  \**********************************************************/
+
+/*!**********************************************************!*\
+  !*** ./src/pica/render/ui/PicaMainUI/PicaMainUIPanel.ts ***!
+  \**********************************************************/
+
+/*!**********************************************************!*\
+  !*** ./src/pica/render/ui/PicaMarket/PicaMarketPanel.ts ***!
+  \**********************************************************/
+
+/*!**********************************************************!*\
+  !*** ./src/pica/render/ui/PicaNotice/PicaNoticePanel.ts ***!
+  \**********************************************************/
+
+/*!**********************************************************!*\
+  !*** ./src/pica/render/ui/PicaOnline/PicaOnlinePanel.ts ***!
+  \**********************************************************/
+
+/*!**********************************************************!*\
+  !*** ./src/pica/render/ui/PicaRoam/PicaRoamDrawPanel.ts ***!
+  \**********************************************************/
+
+/*!**********************************************************!*\
+  !*** ./src/pica/render/ui/PicaRoam/PicaRoamListPanel.ts ***!
+  \**********************************************************/
+
+/*!**********************************************************!*\
+  !*** ./src/pica/render/ui/PicaTask/PicaTaskMainPanel.ts ***!
+  \**********************************************************/
+
+/*!**********************************************************!*\
+  !*** ./src/pica/render/ui/PicaTask/PicaTaskSidePanel.ts ***!
+  \**********************************************************/
+
+/*!**********************************************************!*\
+  !*** ./src/render/display/animation/bubble.animation.ts ***!
+  \**********************************************************/
+
+/*!***********************************************************!*\
+  !*** ./src/pica/render/ui/Components/back.text.button.ts ***!
+  \***********************************************************/
+
+/*!***********************************************************!*\
+  !*** ./src/pica/render/ui/PicaChat/PicaChatInputPanel.ts ***!
+  \***********************************************************/
+
+/*!************************************************************!*\
+  !*** ./src/pica/render/ui/Bubble/InteractionBubbleCell.ts ***!
+  \************************************************************/
+
+/*!************************************************************!*\
+  !*** ./src/pica/render/ui/PicaCompose/PicaComposePanel.ts ***!
+  \************************************************************/
+
+/*!************************************************************!*\
+  !*** ./src/pica/render/ui/PicaHouse/PicaHouseInfoPanel.ts ***!
+  \************************************************************/
+
+/*!************************************************************!*\
+  !*** ./src/pica/render/ui/PicaMineCar/PicaMineCarPanel.ts ***!
+  \************************************************************/
+
+/*!************************************************************!*\
+  !*** ./src/pica/render/ui/PicaNewMain/PicaNewChatPanel.ts ***!
+  \************************************************************/
+
+/*!************************************************************!*\
+  !*** ./src/pica/render/ui/PicaNewMain/PicaNewHeadPanel.ts ***!
+  \************************************************************/
+
+/*!************************************************************!*\
+  !*** ./src/pica/render/ui/PicaNewMain/PicaNewLeftPanel.ts ***!
+  \************************************************************/
+
+/*!************************************************************!*\
+  !*** ./src/pica/render/ui/PicaNewMain/PicaNewMainPanel.ts ***!
+  \************************************************************/
+
+/*!************************************************************!*\
+  !*** ./src/pica/render/ui/PicaNewRole/PicaNewRolePanel.ts ***!
+  \************************************************************/
+
+/*!************************************************************!*\
+  !*** ./src/pica/render/ui/PicaPropFun/PicaPropFunPanel.ts ***!
+  \************************************************************/
+
+/*!************************************************************!*\
+  !*** ./src/pica/render/ui/PicaRecaste/PicaRecastePanel.ts ***!
+  \************************************************************/
+
+/*!*************************************************************!*\
+  !*** ./src/pica/render/ui/Bubble/InteractiveBubblePanel.ts ***!
+  \*************************************************************/
+
+/*!*************************************************************!*\
+  !*** ./src/pica/render/ui/PicaRoam/PicaRoamPreviewPanel.ts ***!
+  \*************************************************************/
+
+/*!*************************************************************!*\
+  !*** ./src/pica/render/ui/SinglePanel/PicaItemTipsPanel.ts ***!
+  \*************************************************************/
+
+/*!*************************************************************!*\
+  !*** ./src/pica/render/ui/SinglePanel/PicaSingleManager.ts ***!
+  \*************************************************************/
+
+/*!**************************************************************!*\
+  !*** ./src/pica/render/fall.effect/fall.effect.container.ts ***!
+  \**************************************************************/
+
+/*!**************************************************************!*\
+  !*** ./src/pica/render/ui/Components/energy.progress.bar.ts ***!
+  \**************************************************************/
+
+/*!**************************************************************!*\
+  !*** ./src/pica/render/ui/PicManorInfo/PicManorInfoPanel.ts ***!
+  \**************************************************************/
+
+/*!**************************************************************!*\
+  !*** ./src/pica/render/ui/PicaDecorate/PicaDecoratePanel.ts ***!
+  \**************************************************************/
+
+/*!**************************************************************!*\
+  !*** ./src/pica/render/ui/PicaElevator/PicaElevatorPanel.ts ***!
+  \**************************************************************/
+
+/*!**************************************************************!*\
+  !*** ./src/pica/render/ui/PicaFurniFun/PicaFurniFunPanel.ts ***!
+  \**************************************************************/
+
+/*!**************************************************************!*\
+  !*** ./src/pica/render/ui/PicaHandheld/PicaHandheldPanel.ts ***!
+  \**************************************************************/
+
+/*!**************************************************************!*\
+  !*** ./src/pica/render/ui/PicaNavigate/PicaNavigatePanel.ts ***!
+  \**************************************************************/
+
+/*!**************************************************************!*\
+  !*** ./src/pica/render/ui/PicaRecharge/PicaRechargePanel.ts ***!
+  \**************************************************************/
+
+/*!**************************************************************!*\
+  !*** ./src/pica/render/ui/PicaRoomList/PicaRoomListPanel.ts ***!
+  \**************************************************************/
+
+/*!**************************************************************!*\
+  !*** ./src/pica/render/ui/PicaTreasure/PicaTreasurePanel.ts ***!
+  \**************************************************************/
+
+/*!***************************************************************!*\
+  !*** ./src/pica/render/ui/PicManorInfo/PicaManorBasePanel.ts ***!
+  \***************************************************************/
+
+/*!***************************************************************!*\
+  !*** ./src/pica/render/ui/PicManorInfo/PicaManorShopPanel.ts ***!
+  \***************************************************************/
+
+/*!***************************************************************!*\
+  !*** ./src/pica/render/ui/PicManorInfo/PicaManorTipsPanel.ts ***!
+  \***************************************************************/
+
+/*!***************************************************************!*\
+  !*** ./src/pica/render/ui/PicaNewMain/PicaNewOldMainPanel.ts ***!
+  \***************************************************************/
+
+/*!***************************************************************!*\
+  !*** ./src/render/display/animation/dragonbones.animation.ts ***!
+  \***************************************************************/
+
+/*!***************************************************************!*\
+  !*** ./src/render/display/dragonbones/dragonbones.display.ts ***!
+  \***************************************************************/
+
+/*!****************************************************************!*\
+  !*** ./src/pica/render/ui/CharacterInfo/CharacterInfoPanel.ts ***!
+  \****************************************************************/
+
+/*!****************************************************************!*\
+  !*** ./src/pica/render/ui/PicManorInfo/PicaManorChildPanel.ts ***!
+  \****************************************************************/
+
+/*!****************************************************************!*\
+  !*** ./src/pica/render/ui/PicaEffectMgr/PicaEffectMgrPanel.ts ***!
+  \****************************************************************/
+
+/*!****************************************************************!*\
+  !*** ./src/pica/render/ui/PicaManorList/PicaManorListPanel.ts ***!
+  \****************************************************************/
+
+/*!****************************************************************!*\
+  !*** ./src/pica/render/ui/PicaNewMain/PicaNewActivityPanel.ts ***!
+  \****************************************************************/
+
+/*!****************************************************************!*\
+  !*** ./src/pica/render/ui/PicaNewMain/PicaNewNavigatePanel.ts ***!
+  \****************************************************************/
+
+/*!****************************************************************!*\
+  !*** ./src/pica/render/ui/PicaOnline/PicaOnlineBottomPanel.ts ***!
+  \****************************************************************/
+
+/*!****************************************************************!*\
+  !*** ./src/pica/render/ui/PicaOpenParty/PicaOpenPartyPanel.ts ***!
+  \****************************************************************/
+
+/*!****************************************************************!*\
+  !*** ./src/pica/render/ui/PicaPartyList/PicaPartyListPanel.ts ***!
+  \****************************************************************/
+
+/*!****************************************************************!*\
+  !*** ./src/pica/render/ui/PicaRewardTip/PicaRewardTipPanel.ts ***!
+  \****************************************************************/
+
+/*!*****************************************************************!*\
+  !*** ./src/pica/render/ui/Bubble/InteractionBubbleContainer.ts ***!
+  \*****************************************************************/
+
+/*!*****************************************************************!*\
+  !*** ./src/pica/render/ui/CharacterInfo/GraphicsProgressBar.ts ***!
+  \*****************************************************************/
+
+/*!*****************************************************************!*\
+  !*** ./src/render/display/dragonbones/uidragonbones.display.ts ***!
+  \*****************************************************************/
+
+/*!******************************************************************!*\
+  !*** ./src/pica/render/ui/CharacterInfo/CharacterEditorPanel.ts ***!
+  \******************************************************************/
+
+/*!******************************************************************!*\
+  !*** ./src/pica/render/ui/PicRoomUpgrade/PicRoomUpgradePanel.ts ***!
+  \******************************************************************/
+
+/*!******************************************************************!*\
+  !*** ./src/pica/render/ui/PicaCreateRole/PicaCreateRolePanel.ts ***!
+  \******************************************************************/
+
+/*!******************************************************************!*\
+  !*** ./src/pica/render/ui/PicaExploreLog/PicaExploreLogPanel.ts ***!
+  \******************************************************************/
+
+/*!******************************************************************!*\
+  !*** ./src/pica/render/ui/PicaGiftEffect/PicaGiftEffectPanel.ts ***!
+  \******************************************************************/
+
+/*!******************************************************************!*\
+  !*** ./src/pica/render/ui/PicaGiftEffect/PicaGiftLateralItem.ts ***!
+  \******************************************************************/
+
+/*!******************************************************************!*\
+  !*** ./src/pica/render/ui/PicaGiftEffect/PicaGiftPlayerPanel.ts ***!
+  \******************************************************************/
+
+/*!******************************************************************!*\
+  !*** ./src/pica/render/ui/PicaManorList/PicaManorScrollPanel.ts ***!
+  \******************************************************************/
+
+/*!******************************************************************!*\
+  !*** ./src/pica/render/ui/PicaMessageBox/PicaMessageBoxPanel.ts ***!
+  \******************************************************************/
+
+/*!******************************************************************!*\
+  !*** ./src/pica/render/ui/PicaMineSettle/PicaMineSettlePanel.ts ***!
+  \******************************************************************/
+
+/*!******************************************************************!*\
+  !*** ./src/pica/render/ui/PicaTreasure/PicaTreasureOpenPanel.ts ***!
+  \******************************************************************/
+
+/*!*******************************************************************!*\
+  !*** ./src/pica/render/ui/PicaGiftEffect/PicaGiftLaterctPanel.ts ***!
+  \*******************************************************************/
+
+/*!*******************************************************************!*\
+  !*** ./src/pica/render/ui/PicaManorList/PicaManorContentPanel.ts ***!
+  \*******************************************************************/
+
+/*!********************************************************************!*\
+  !*** ./src/pica/render/ui/PicaExploreList/PicaChapterLevelClue.ts ***!
+  \********************************************************************/
+
+/*!********************************************************************!*\
+  !*** ./src/pica/render/ui/PicaExploreList/PicaExploreListPanel.ts ***!
+  \********************************************************************/
+
+/*!********************************************************************!*\
+  !*** ./src/pica/render/ui/PicaItemPopCard/PicaItemPopCardPanel.ts ***!
+  \********************************************************************/
+
+/*!*********************************************************************!*\
+  !*** ./src/pica/render/ui/CharacterInfo/CharacterAttributePanel.ts ***!
+  \*********************************************************************/
+
+/*!*********************************************************************!*\
+  !*** ./src/pica/render/ui/PicaBusinessStreet/SecondaryMenuPanel.ts ***!
+  \*********************************************************************/
+
+/*!*********************************************************************!*\
+  !*** ./src/pica/render/ui/PicaEquipUpgrade/PicaEquipUpgradeItem.ts ***!
+  \*********************************************************************/
+
+/*!*********************************************************************!*\
+  !*** ./src/pica/render/ui/PicaTreasure/PicaTreasureAllOpenPanel.ts ***!
+  \*********************************************************************/
+
+/*!*********************************************************************!*\
+  !*** ./src/pica/render/ui/PicaTreasure/PicaTreasurePreviewPanel.ts ***!
+  \*********************************************************************/
+
+/*!**********************************************************************!*\
+  !*** ./src/pica/render/ui/PicaEquipUpgrade/PicaEquipUpgradePanel.ts ***!
+  \**********************************************************************/
+
+/*!**********************************************************************!*\
+  !*** ./src/pica/render/ui/PicaOpenParty/PicaOpenPartyCreatePanel.ts ***!
+  \**********************************************************************/
+
+/*!**********************************************************************!*\
+  !*** ./src/pica/render/ui/PicaPartyList/PicaPartyNavigationPanel.ts ***!
+  \**********************************************************************/
+
+/*!***********************************************************************!*\
+  !*** ./src/pica/render/ui/PicaPartyList/PicaMyRoomNavigationPanel.ts ***!
+  \***********************************************************************/
+
+/*!************************************************************************!*\
+  !*** ./src/pica/render/ui/PicaEffectMgr/PicaFurniUnlockEffectPanel.ts ***!
+  \************************************************************************/
+
+/*!************************************************************************!*\
+  !*** ./src/pica/render/ui/PicaExploreLog/PicaExploreLogSettlePanel.ts ***!
+  \************************************************************************/
+
+/*!*************************************************************************!*\
+  !*** ./src/pica/render/ui/PicaExploreList/PicaExploreListLevelPanel.ts ***!
+  \*************************************************************************/
+
+/*!**************************************************************************!*\
+  !*** ./src/pica/render/ui/PicaBusinessStreet/PicaBusinessStreetPanel.ts ***!
+  \**************************************************************************/
+
+/*!**************************************************************************!*\
+  !*** ./src/pica/render/ui/PicaElementStorage/PicaElementStoragePanel.ts ***!
+  \**************************************************************************/
+
+/*!**************************************************************************!*\
+  !*** ./src/pica/render/ui/PicaExploreList/PicaExploreListBottomPanel.ts ***!
+  \**************************************************************************/
+
+/*!**************************************************************************!*\
+  !*** ./src/pica/render/ui/PicaExploreList/PicaExploreListDetailPanel.ts ***!
+  \**************************************************************************/
+
+/*!***************************************************************************!*\
+  !*** ./src/pica/render/ui/PicaBusinessStreet/PicaBusinessContentPanel.ts ***!
+  \***************************************************************************/
+
+/*!***************************************************************************!*\
+  !*** ./src/pica/render/ui/PicaBusinessStreet/PicaBusinessHistoryPanel.ts ***!
+  \***************************************************************************/
+
+/*!***************************************************************************!*\
+  !*** ./src/pica/render/ui/PicaBusinessStreet/PicaBusinessRankingPanel.ts ***!
+  \***************************************************************************/
+
+/*!****************************************************************************!*\
+  !*** ./src/pica/render/ui/PicaBusinessStreet/PicaBusinessMyStreetPanel.ts ***!
+  \****************************************************************************/
+
+/*!****************************************************************************!*\
+  !*** ./src/pica/render/ui/PicaDecorateControl/PicaDecorateControlPanel.ts ***!
+  \****************************************************************************/
+
+/*!******************************************************************************!*\
+  !*** ./src/pica/render/ui/PicaBusinessStreet/PicaBusinessRankRewardPanel.ts ***!
+  \******************************************************************************/
+
+/*!******************************************************************************!*\
+  !*** ./src/pica/render/ui/PicaBusinessStreet/PicaBusinessStreetListPanel.ts ***!
+  \******************************************************************************/
+
+/*!******************************************************************************!*\
+  !*** ./src/pica/render/ui/PicaFurnitureCompose/PicaFurnitureComposePanel.ts ***!
+  \******************************************************************************/
+
+/*!*******************************************************************************!*\
+  !*** ./src/pica/render/ui/PicaBusinessMarketingPlan/PicaBusinessPlanPanel.ts ***!
+  \*******************************************************************************/
+
+/*!*******************************************************************************!*\
+  !*** ./src/pica/render/ui/PicaBusinessStreet/PicaBusinessStoreCreatePanel.ts ***!
+  \*******************************************************************************/
+
+/*!*********************************************************************************!*\
+  !*** ./src/pica/render/ui/PicaBusinessStreet/PicaBusinessRankingDetailPanel.ts ***!
+  \*********************************************************************************/
+
+/*!*************************************************************************************!*\
+  !*** ./src/pica/render/ui/PicaBusinessMarketingPlan/PicaBusinessChoosePlanPanel.ts ***!
+  \*************************************************************************************/
+
+/*!****************************************************************************************!*\
+  !*** ./src/pica/render/ui/PicaBusinessMarketingPlan/PicaBusinessMarketingPlanPanel.ts ***!
+  \****************************************************************************************/

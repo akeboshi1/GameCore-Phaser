@@ -2,7 +2,7 @@ import { Font, Url } from "utils";
 import { PlayScene } from "../scenes/play.scene";
 import { BubbleContainer } from "./bubble/bubble.container";
 import { ElementStateType, StateConfig } from "structure";
-import { FollowEnum, FollowObject, TopDisplay } from "base";
+import { FollowEnum, FollowObject, TopDisplay } from "baseRender";
 
 /**
  * 人物头顶显示对象

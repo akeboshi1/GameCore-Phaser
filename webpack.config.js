@@ -50,7 +50,8 @@ const config = {
             picaRes: path.join(__dirname, "./src/pica/res"),
             editorCanvas: path.join(__dirname, "./src/editor"),
             display: path.join(__dirname, "./src/base/display"),
-            base: path.join(__dirname, "./src/base")
+            baseRender: path.join(__dirname, "./src/base/render"),
+            baseModel: path.join(__dirname, "./src/base/model")
         },
     },
     optimization: {

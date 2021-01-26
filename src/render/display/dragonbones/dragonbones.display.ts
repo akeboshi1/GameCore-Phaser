@@ -1,7 +1,7 @@
-import {BaseDragonbonesDisplay} from "display";
+import {BaseDragonbonesDisplay, ReferenceArea} from "baseRender";
 import {Render} from "../../render";
-import {IPos, Logger, ValueResolver, IProjection} from "utils";
-import {DisplayField, ElementStateType, IDragonbonesModel, ReferenceArea, RunningAnimation, TitleMask} from "structure";
+import {IPos, Logger, IProjection} from "utils";
+import {DisplayField, ElementStateType, IDragonbonesModel, RunningAnimation, TitleMask} from "structure";
 import {IDisplayObject} from "../display.object";
 import {LoadQueue, LoadType} from "../../loadqueue";
 import {ElementTopDisplay} from "../element.top.display";

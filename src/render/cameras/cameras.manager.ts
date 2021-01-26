@@ -1,6 +1,6 @@
+import { BaseCamerasManager } from "baseRender";
 import { Logger } from "utils";
 import { Render } from "../render";
-import { BaseCamerasManager } from "../../base";
 export class CamerasManager extends BaseCamerasManager {
     readonly MINI_VIEW_SIZE = 50;
     readonly VIEW_PORT_SIZE = 50;
@@ -34,6 +34,10 @@ export class CamerasManager extends BaseCamerasManager {
         this.mMain = camera;
         this.addCamera(camera);
         this.setViewPortSize();
+    }
+
+    public get camera() {
+        return this.mMain;
     }
 
     public resize(width: number, height: number) {

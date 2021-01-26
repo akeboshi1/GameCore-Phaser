@@ -21,6 +21,13 @@ export class EditorMossManager extends PacketHandler {
         this.batchActionSprites();
     }
 
+    destroy() {
+        const connection = this.sceneEditor.connection;
+        if (connection) {
+            connection.removePacketListener(this);
+        }
+    }
+
     public addMosses(coorData) {
         const placeLocs = [];
         const { locs, key } = coorData;

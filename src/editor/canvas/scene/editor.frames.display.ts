@@ -1,5 +1,6 @@
-import { BaseFramesDisplay, Sprite } from "base";
-import { DisplayField, ReferenceArea, RunningAnimation } from "structure";
+import { Sprite } from "baseModel";
+import { BaseFramesDisplay, ReferenceArea } from "baseRender";
+import { IFramesModel, RunningAnimation } from "structure";
 import { Helpers, LogicPoint, Position45 } from "utils";
 import { SceneEditorCanvas } from "./scene.editor.canvas";
 import { EditorTopDisplay } from "./top.display";
@@ -60,6 +61,19 @@ export class EditorFramesDisplay extends BaseFramesDisplay {
             this.mTopDisplay.update();
         }
         return this;
+    }
+
+    updateSprite(sprite: Sprite) {
+        const displayInfo = sprite.displayInfo;
+        if (displayInfo) {
+            this.load(<IFramesModel>displayInfo);
+        }
+        const pos = sprite.pos;
+        if (pos) {
+            this.setPosition(pos.x, pos.y, pos.z);
+        }
+        this.name = sprite.nickname;
+        this.play(sprite.currentAnimation);
     }
 
     /**

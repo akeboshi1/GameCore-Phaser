@@ -2,8 +2,8 @@ import { AnimationModel, AnimationQueue, Animator, AvatarSuit, AvatarSuitType, I
 import { Direction, EventDispatcher, IPos, Logger, LogicPoint, LogicPos } from "utils";
 import { op_def, op_gameconfig, op_client, op_gameconfig_01 } from "pixelpai_proto";
 import { Helpers } from "game-capsule";
-import { DragonbonesModel, FramesModel } from "gamecore";
-
+import { DragonbonesModel } from "./dragonbones.model";
+import { FramesModel } from "./frames.model";
 enum TitleMask {
     TQ_NickName = 0x00010000,
     TQ_Badge = 0x00020000,
