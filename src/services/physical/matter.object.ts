@@ -153,8 +153,7 @@ export class MatterObject implements IMatterObject {
             return;
         }
         if (!this.body) {
-            return;
-            // this.addBody();
+            this.addBody();
         }
         // this.peer.world.removeFromMap(sprite);
         if (this.mModel.pos) {
