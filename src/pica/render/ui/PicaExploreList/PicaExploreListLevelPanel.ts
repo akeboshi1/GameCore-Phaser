@@ -91,8 +91,12 @@ export class PicaExploreListLevelPanel extends Phaser.GameObjects.Container {
                 }
             } else {
                 if (i === levels.length - 1) {
-                    item = new ChapterLevelEventuallyItem(this.scene, this.dpr);
-                    this.finalItem = item;
+                    if (!this.finalItem) {
+                        item = new ChapterLevelEventuallyItem(this.scene, this.dpr);
+                        this.finalItem = item;
+                    } else {
+                        item = this.finalItem;
+                    }
                 } else {
                     item = new ChapterLevelItem(this.scene, this.dpr);
                     this.levelItems.push(item);
@@ -152,9 +156,15 @@ export class PicaExploreListLevelPanel extends Phaser.GameObjects.Container {
     }
 
     private setIndexedLayout(indexed: number) {
-        const worldy = this.levelItems[indexed - 1].getWorldTransformMatrix().ty;
-        const thisy = this.getWorldTransformMatrix().ty;
-        const bottomdis = (worldy - thisy) / this.zoom - this.height * 0.5;
+        let item;
+        if (indexed < this.chapterResult.levels.length) {
+            item = this.levelItems[indexed - 1];
+        } else {
+            item = this.finalItem;
+        }
+        const worldy = item.getWorldTransformMatrix().ty;
+        const thisy = this.captorScroll.getWorldTransformMatrix().ty;
+        const bottomdis = (worldy - thisy) / this.zoom - (this.captorScroll.height * 0.5 - item.height * 0.5);
         if (bottomdis > 0) {
             this.captorScroll.setValue(this.posValue - bottomdis);
         }
@@ -206,7 +216,7 @@ class ForewordChapterItem extends ButtonEventDispatcher {
 
     public setCaptoreData(data: op_client.IPKT_EXPLORE_CHAPTER_DATA) {
         this.captoreData = data;
-        const url = Url.getOsdRes(data.imagePath+`_${this.dpr}x.png`);
+        const url = Url.getOsdRes(data.imagePath + `_${this.dpr}x.png`);
         this.icon.load(url);
     }
 
@@ -277,8 +287,9 @@ class ChapterLevelItem extends ChapterLevelBaseItem {
         this.levelTex.text = data.levelId + "";
         this.leftLine.x = this.levelTex.x - this.leftLine.width * 0.5 - this.levelTex.width * 0.5 - 2 * this.dpr;
         this.rightLine.x = this.levelTex.x + this.rightLine.width * 0.5 + this.levelTex.width * 0.5 + 2 * this.dpr;
-        this.starProgress.setProgress(data.progress, 500);
-        const url = Url.getOsdRes(data.imagePath+`_${this.dpr}x.png`);
+        const tempto = this.getProgressValue(data.progress);
+        this.starProgress.setProgress(tempto, 500);
+        const url = Url.getOsdRes(data.imagePath + `_${this.dpr}x.png`);
         this.icon.load(url);
         this.nameTex.text = data.name;
         data.energyCost = 8;
@@ -397,7 +408,15 @@ class ChapterLevelItem extends ChapterLevelBaseItem {
         this.openButton.add(this.energyImg);
         this.add([this.bg, this.leftLine, this.rightLine, this.levelTex, this.nameTex, this.starProgress, this.iconbg, this.icon, this.lockimg, this.unlockTex, this.openButton]);
     }
-
+    private getProgressValue(value: number) {
+        const score = 75.75;
+        const riado = Math.floor(value / 100);
+        const temprem = Math.floor(value % 100);
+        let intvalue = riado * score + 30.3 * (riado);
+        intvalue = intvalue < 0 ? 0 : intvalue;
+        const tempto = intvalue + temprem / 100 * score;
+        return tempto;
+    }
     private onClickHandler() {
         if (!this.unlock) return;
         if (this.send) this.send.runWith([this.chapterData]);
@@ -502,7 +521,7 @@ class ChapterLevelEventuallyItem extends ChapterLevelBaseItem {
 
     public setLevelData(data: op_client.IPKT_EXPLORE_LEVEL_DATA, lock: boolean) {
         super.setLevelData(data, lock);
-        const url = Url.getOsdRes(data.imagePath+`_${this.dpr}x.png`);
+        const url = Url.getOsdRes(data.imagePath + `_${this.dpr}x.png`);
         this.icon.load(url);
         if (lock) {
             this.iconbg2.visible = false;
@@ -550,7 +569,7 @@ class ChapterLevelEventuallyItem extends ChapterLevelBaseItem {
     }
 
     private onGoClickHandler() {
-        if (this.send) this.send.runWith(["eventuallygo", this.chapterData]);
+        if (this.send) this.send.runWith(this.chapterData);
     }
 
 }

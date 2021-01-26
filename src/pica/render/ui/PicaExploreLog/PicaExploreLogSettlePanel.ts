@@ -62,9 +62,10 @@ export class PicaExploreLogSettlePanel extends ButtonEventDispatcher {
         this.starPro = new ProgressMaskBar(this.scene, UIAtlasName.explorelog, "Settlement_star_default", "Settlement_star_Light");
         this.starPro.y = this.titleimage.y + this.titleimage.height * 0.5 + this.starPro.height * 0.5 + 5 * this.dpr;
         this.starText = this.scene.make.text({
-            x: 0, y: this.titleimage.y + 40 * this.dpr, text: "1/6", style: UIHelper.whiteStyle(this.dpr, 11)
+            x: 0, y: this.titleimage.y + 40 * this.dpr, text: "", style: UIHelper.whiteStyle(this.dpr, 11)
         }).setOrigin(0.5);
         this.starText.y = this.starPro.y + this.starPro.height * 0.5 + 10 * this.dpr;
+        this.starText.visible = false;
         this.scorebg = this.scene.make.image({ key: UIAtlasName.explorelog, frame: "Settlement_score_bg" });
         this.scorebg.y = this.starText.y + 15 * this.dpr + this.scorebg.height * 0.5;
         this.scoreTex = this.scene.make.text({
@@ -75,7 +76,7 @@ export class PicaExploreLogSettlePanel extends ButtonEventDispatcher {
         this.lightImg.visible = false;
         this.scoreTipsCon = this.scene.make.container(undefined, false);
         this.scoreTipsCon.setSize(244 * this.dpr, 160 * this.dpr);
-        this.scoreTipsCon.y = 40 * this.dpr;
+        this.scoreTipsCon.y = 45 * this.dpr;
         this.maskGraphic = this.scene.make.graphics(undefined, false);
         this.maskWidth = 336 * this.dpr;
         this.maskHeight = 215 * this.dpr;
@@ -105,7 +106,8 @@ export class PicaExploreLogSettlePanel extends ButtonEventDispatcher {
         this.curLayoutGroup.y = this.height * 0.5;
         this.curLayoutGroup.visible = false;
         this.setLayoutMask(this.maskWidth, this.maskHeight);
-        this.starPro.setProgress(content.previousProgress, 500);
+        const previous = this.getProgressValue(content.previousProgress);
+        this.starPro.setProgress(previous, 500);
     }
 
     private initParam() {
@@ -249,9 +251,13 @@ export class PicaExploreLogSettlePanel extends ButtonEventDispatcher {
     private playStarAnimation(from: number, to: number, max: number) {
         const allTime = 5000;
         const duration = allTime * ((to - from) / max);
+        const riado = Math.floor(to / 100);
+        const temprem = Math.floor(to % 100);
+        const tempto = this.getProgressValue(to);
+        const tempfrom = this.getProgressValue(from);
         const tween = this.scene.tweens.addCounter({
-            from,
-            to,
+            from: tempfrom,
+            to: tempto,
             ease: "Linear",
             duration,
             onUpdate: (cope: any, param: any) => {
@@ -267,10 +273,19 @@ export class PicaExploreLogSettlePanel extends ButtonEventDispatcher {
         const width = 196 * this.dpr;
         const cellWidth = 29 * this.dpr;
         const space = 12 * this.dpr;
-        this.starText.text = Math.floor(to % 100) + "%";
-        const riado = Math.floor(to / 100);
-        //     riado = to / 100 === riado ? riado - 1 > 0 ? riado - 1 : riado : riado;
+        this.starText.text = temprem + "%";
         this.starText.x = -width * 0.5 + riado * (cellWidth + space) + cellWidth * 0.5;
+        this.starText.visible = true;
+    }
+
+    private getProgressValue(value: number) {
+        const score = 75.75;
+        const riado = Math.floor(value / 100);
+        const temprem = Math.floor(value % 100);
+        let intvalue = riado * score + 30.3 * (riado);
+        intvalue = intvalue < 0 ? 0 : intvalue;
+        const tempto = intvalue + temprem / 100 * score;
+        return tempto;
     }
 
     private playLayoutAnimation() {
