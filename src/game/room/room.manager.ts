@@ -37,14 +37,14 @@ export class RoomManager extends PacketHandler implements IRoomManager {
 
     public addPackListener() {
         if (this.connection) {
-            Logger.getInstance().log("roommanager addPackListener");
+            Logger.getInstance().debug("roommanager addPackListener");
             this.connection.addPacketListener(this);
         }
     }
 
     public removePackListener() {
         if (this.connection) {
-            Logger.getInstance().log("roommanager removePackListener");
+            Logger.getInstance().debug("roommanager removePackListener");
             this.connection.removePacketListener(this);
         }
     }
@@ -107,7 +107,7 @@ export class RoomManager extends PacketHandler implements IRoomManager {
     }
 
     private onEnterRoom(scene: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_ENTER_SCENE) {
-        Logger.getInstance().log("enter===room");
+        Logger.getInstance().debug("enter===room");
         const id = scene.scene.id;
         let boo: boolean = false;
         // tslint:disable-next-line:no-shadowed-variable
@@ -152,7 +152,7 @@ export class RoomManager extends PacketHandler implements IRoomManager {
         room.destroy();
         // await
         // this.mGame.leaveRoom(room);
-        // Logger.getInstance().log("===========leaveRoom");
+        // Logger.getInstance().debug("===========leaveRoom");
         // return new Promise((resolve, reject) => {
         //     const loading: LoadingScene = <LoadingScene>this.mWorld.game.scene.getScene(LoadingScene.name);
         //     if (loading) {

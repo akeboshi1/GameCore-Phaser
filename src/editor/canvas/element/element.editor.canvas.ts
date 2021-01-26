@@ -35,7 +35,7 @@ export class ElementEditorCanvas extends EditorCanvas {
 
     constructor(config: IEditorCanvasConfig) {
         super(config);
-        Logger.getInstance().log("ElementEditorCanvas.constructor()");
+        Logger.getInstance().debug("ElementEditorCanvas.constructor()");
 
         this.mGame.scene.add(this.SCENEKEY, ElementEditorScene);
 
@@ -46,7 +46,7 @@ export class ElementEditorCanvas extends EditorCanvas {
     }
 
     public destroy() {
-        Logger.getInstance().log("ElementEditorCanvas.destroy()");
+        Logger.getInstance().debug("ElementEditorCanvas.destroy()");
         if (this.mData) {
             this.mData = null;
         }

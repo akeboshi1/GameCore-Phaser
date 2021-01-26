@@ -21,7 +21,7 @@ export class PlayerManager extends PacketHandler implements IElementManager {
         super();
         if (this.connection) {
             this.connection.addPacketListener(this);
-            Logger.getInstance().log("playermanager ---- addpacklistener");
+            Logger.getInstance().debug("playermanager ---- addpacklistener");
             this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_ADD_SPRITE, this.onAdd);
             this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_ADD_SPRITE_END, this.addComplete);
             this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_DELETE_SPRITE, this.onRemove);
@@ -68,7 +68,7 @@ export class PlayerManager extends PacketHandler implements IElementManager {
     public destroy() {
         this.removeLisenter();
         if (this.connection) {
-            Logger.getInstance().log("playermanager ---- removepacklistener");
+            Logger.getInstance().debug("playermanager ---- removepacklistener");
             this.connection.removePacketListener(this);
         }
         if (this.mActor) {
@@ -454,7 +454,7 @@ export class PlayerManager extends PacketHandler implements IElementManager {
     private onSyncActorHandler(packet: PBpacket) {
         const content: op_client.IOP_VIRTUAL_WORLD_REQ_CLIENT_SYNC_ACTOR = packet.content;
         this.mActor.updateModel(content.actor);
-        // Logger.getInstance().log("====>>", content);
+        // Logger.getInstance().debug("====>>", content);
     }
 
     get roomService(): IRoomService {

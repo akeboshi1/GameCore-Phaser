@@ -71,11 +71,11 @@ export class CamerasManager extends PacketHandler implements ICameraService {
     }
 
     public resize(width: number, height: number) {
-        Logger.getInstance().log("resize");
+        Logger.getInstance().debug("resize");
         this.resetCameraSize(width, height);
-        Logger.getInstance().log("camera ===== resize");
+        Logger.getInstance().debug("camera ===== resize");
         if (this.mTarget) {
-            Logger.getInstance().log("target ===== resize");
+            Logger.getInstance().debug("target ===== resize");
             this.startFollow(this.mTarget);
         }
     }
@@ -178,14 +178,14 @@ export class CamerasManager extends PacketHandler implements ICameraService {
     }
 
     public destroy() {
-        Logger.getInstance().log("camerasmanager destroy");
+        Logger.getInstance().debug("camerasmanager destroy");
         this.mMain = undefined;
         this.mTarget = undefined;
         this.mCameras = [];
     }
 
     private resetCameraSize(width: number, height: number) {
-        Logger.getInstance().log("resetCamerSize");
+        Logger.getInstance().debug("resetCamerSize");
         this.render.mainPeer.resetGameraSize(width, height);
     }
 

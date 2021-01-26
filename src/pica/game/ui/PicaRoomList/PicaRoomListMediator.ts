@@ -64,7 +64,7 @@ export class PicaRoomListMediator extends BasicMediator {
   }
 
   private onEnterRoomResuleHandler(content: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_EDIT_MODE_ENTER_ROOM) {
-    Logger.getInstance().log("enter room result:", content);
+    Logger.getInstance().debug("enter room result:", content);
   }
 
   private onGetRoomListHandler() {

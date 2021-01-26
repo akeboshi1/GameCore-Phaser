@@ -34,14 +34,14 @@ export class BaseFramesDisplay extends BaseDisplay {
         } else {
             const display = this.framesInfo.display;
             if (!display) {
-                Logger.getInstance().log("update frame loadError", "display is undefined");
+                Logger.getInstance().debug("update frame loadError", "display is undefined");
                 this.created();
             }
             if (display.texturePath === "" || display.dataPath === "") {
-                Logger.getInstance().log("update frame loadError", "动画资源报错：", this.displayInfo);
+                Logger.getInstance().debug("update frame loadError", "动画资源报错：", this.displayInfo);
                 this.created();
             } else {
-                Logger.getInstance().log("frameinfo.gene =====>", this.framesInfo.gene);
+                Logger.getInstance().debug("frameinfo.gene =====>", this.framesInfo.gene);
                 this.scene.load.atlas(this.framesInfo.gene, Url.getOsdRes(display.texturePath), Url.getOsdRes(display.dataPath));
                 const onAdd = (key: string) => {
                     if (key !== this.framesInfo.gene) return;
@@ -52,7 +52,7 @@ export class BaseFramesDisplay extends BaseDisplay {
                     }
                 };
                 const onLoadError = (imageFile: ImageFile) => {
-                    Logger.getInstance().log("update frame loadError");
+                    Logger.getInstance().debug("update frame loadError");
                     // Logger.error(`Loading Error: key = ${imageFile} >> ${imageFile.url}`);
                     this.created();
                 };

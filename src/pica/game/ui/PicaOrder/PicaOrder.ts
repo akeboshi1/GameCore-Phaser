@@ -77,6 +77,6 @@ export class PicaOrder extends BasicModel {
 
     private on_CLIENT_TEST(packet: PBpacket) {
         const content: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_TEST = packet.content;
-        Logger.getInstance().log("++++++++++++++++++++    ", content);
+        Logger.getInstance().debug("++++++++++++++++++++    ", content);
     }
 }

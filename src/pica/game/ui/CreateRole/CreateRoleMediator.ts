@@ -119,7 +119,7 @@ class CreateRole extends PacketHandler {
   }
 
   private onGenerateNameHandler(packet: PBpacket) {
-    Logger.getInstance().log("Generate Name: ", packet.content.name);
+    Logger.getInstance().debug("Generate Name: ", packet.content.name);
     this.game.emitter.emit("GenerateName", packet.content.name);
   }
 }

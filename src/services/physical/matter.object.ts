@@ -153,7 +153,8 @@ export class MatterObject implements IMatterObject {
             return;
         }
         if (!this.body) {
-            this.addBody();
+            return;
+            // this.addBody();
         }
         // this.peer.world.removeFromMap(sprite);
         if (this.mModel.pos) {
@@ -556,7 +557,7 @@ export class MatterObject implements IMatterObject {
         };
         paths.map((path) => path.map(scaleDpr));
         if (paths.length < 1 || paths[0].length < 3) {
-            Logger.getInstance().log("can't draw paths: ", this.curSprite.nickname, this.mModel.id);
+            Logger.getInstance().debug("can't draw paths: ", this.curSprite.nickname, this.mModel.id);
             return;
         }
         // const paths = [{ x: 0, y: -height / 2 }, { x: width / 2, y: 0 }, { x: 0, y: height / 2 }, { x: -width / 2, y: 0 }];

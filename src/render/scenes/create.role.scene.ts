@@ -18,7 +18,7 @@ export class CreateRoleScene extends BasicScene {
     if (this.render) {
       const uimanager: UiManager = this.render.uiManager;
       uimanager.setScene(this);
-      Logger.getInstance().log("createrole===scene");
+      Logger.getInstance().debug("createrole===scene");
       // uimanager.showPanel(ModuleName.CREATEROLE_NAME, this.params);
       // this.render.hideLoading();
     }
