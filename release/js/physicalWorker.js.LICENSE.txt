@@ -74,8 +74,6 @@
 
 /*! exports provided: RENDER_PEER, PICARENDER_PEER, MAIN_WORKER, PHYSICAL_WORKER, MAIN_WORKER_URL, PHYSICAL_WORKER_URL */
 
-/*! exports provided: ReferenceArea */
-
 /*! exports provided: RoomType */
 
 /*! exports provided: SceneName */
@@ -370,10 +368,6 @@
 
 /*!*****************************************!*\
   !*** ./src/structure/TimerCountDown.ts ***!
-  \*****************************************/
-
-/*!*****************************************!*\
-  !*** ./src/structure/reference.area.ts ***!
   \*****************************************/
 
 /*!******************************************!*\

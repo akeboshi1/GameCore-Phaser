@@ -15,6 +15,11 @@ import { EditorCamerasManager } from "./manager/cameras.manager";
 import { EditorSkyboxManager } from "./manager/skybox.manager";
 import { BaseFramesDisplay, BaseLayer, GroundLayer, IRender, LayerManager, SurfaceLayer } from "baseRender";
 import { ElementStorage, Sprite } from "baseModel";
+import * as protos from "pixelpai_proto";
+import { PBpacket } from "net-socket-packet";
+for (const key in protos) {
+    PBpacket.addProtocol(protos[key]);
+}
 export class SceneEditorCanvas extends EditorCanvas implements IRender {
     public displayObjectPool: DisplayObjectPool;
     private mSelecedElement: SelectedElementManager;

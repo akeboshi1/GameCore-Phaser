@@ -1,7 +1,5 @@
 /*! exports provided: AStar */
 
-/*! exports provided: ActivityMediator */
-
 /*! exports provided: AlertView, Buttons */
 
 /*! exports provided: Algorithm */
@@ -24,25 +22,19 @@
 
 /*! exports provided: BaseCamerasManager */
 
-/*! exports provided: BaseDataManager */
+/*! exports provided: BaseCamerasManager, BaseDisplay, TopDisplay, FollowEnum, FollowObject, ReferenceArea, AvatarSlotType, AvatarPartType, BaseDragonbonesDisplay, BaseFramesDisplay, BaseLayer, GroundLayer, SurfaceLayer, LayerManager, Scenery, BlockManager */
 
 /*! exports provided: BaseDisplay */
 
-/*! exports provided: BaseDisplay, TopDisplay, FollowEnum, FollowObject, AvatarSlotType, AvatarPartType, BaseDragonbonesDisplay, BaseFramesDisplay */
+/*! exports provided: BaseDisplay, TopDisplay, FollowEnum, FollowObject, ReferenceArea, AvatarSlotType, AvatarPartType, BaseDragonbonesDisplay, BaseFramesDisplay */
 
 /*! exports provided: BaseFramesDisplay */
-
-/*! exports provided: BaseHandler */
 
 /*! exports provided: BaseLayer */
 
 /*! exports provided: BaseLayer, GroundLayer, SurfaceLayer, LayerManager */
 
-/*! exports provided: BasePacketHandler */
-
 /*! exports provided: BasePanel */
-
-/*! exports provided: BasicModel */
 
 /*! exports provided: BasicRankPanel */
 
@@ -52,33 +44,13 @@
 
 /*! exports provided: BlockManager */
 
-/*! exports provided: BlockObject */
-
-/*! exports provided: BottomMediator */
-
 /*! exports provided: ButtonEventDispatcher */
 
 /*! exports provided: ButtonState, ThreeSliceButton */
 
-/*! exports provided: CacheDataManager */
-
-/*! exports provided: CamerasManager */
-
-/*! exports provided: CharacterInfo */
-
-/*! exports provided: CharacterInfo, CharacterInfoMediator, PicaChat, PicaChatMediator, PicaMainUI, PicaMainUIMediator, PicaFriend, PicaFriendMediator, PicaFriendRelation, PicaHandheld, PicaHandheldMediator, PicaWorkerUiManager, ActivityMediator, CutInMediator, Dialog, DialogMediator, UserMenuMediator, LoginMediator, PicaGame, InteractiveBubble, InteractiveBubbleMediator, PicaNavigate, PicaNavigateMediator, PicaBag, PicaBagMediator, PicaMarket, PicaMarketMediator, PicaPropFunConfig, PicaPropFunMediator, PicaNoticeMediator, PicaPartyList, PicaPartyListMediator, CreateRoleMediator, Task, TaskMediator, PicaManorList, PicaManorListMediator, PicManorInfo, PicManorInfoMediator, PicaBusinessStreet, PicaBusinessStreetMediator, PicaBusinessMarketingPlan, PicaBusinessMarketingPlanMediator, PicaRecharge, PicaRechargeMediator, PicRoomUpgrade, PicRoomUpgradeMediator, PicaDecorateControlMediator, PicaEquipUpgrade, PicaEquipUpgradeMediator, PicaRoomList, PicaRoomListMediator, PicaWork, PicaWorkMediator, PicaMineCar, PicaMineCarMediator, PicaHouse, PicaHouseMediator, PicaMineSettle, PicaMineSettleMediator, PicaRewardTip, PicaRewardTipMediator, PicaCompose, PicaComposeMediator, PicaItemPopCardMediator, PicaMessageBoxMediator, PicaElementStorage, PicaElementStorageMediator, CutInMenu, CutInMenuMediator, PicaTreasure, PicaTreasureMediator, PicaGiftEffect, PicaGiftEffectMediator, PicaFurniFun, PicaFurniFunMediator, PicaNewRole, PicaNewRoleMediator, PicaAvatar, PicaAvatarMediator, PicaOnline, PicaOnlineMediator, PicaEffectMgr, PicaEffectMgrMediator, PicaElevator, PicaElevatorMediator, PicaFurnitureCompose, PicaFurnitureComposeMediator, PicaRecaste, PicaRecasteMediator, PicaRoam, PicaRoamMediator, PicaExploreLog, PicaExploreLogMediator, PicaExploreList, PicaExploreListMediator */
-
-/*! exports provided: CharacterInfoMediator */
-
-/*! exports provided: ChatMediator */
-
 /*! exports provided: CheckboxGroup */
 
 /*! exports provided: ChineseUnit */
-
-/*! exports provided: Clock */
-
-/*! exports provided: Clock, HttpClock, HttpService */
 
 /*! exports provided: CoinType, Url, ResUtils, BlackButton, BlueButton, WhiteButton, CloseButton, Background, Border, TransparentButton, Coin, UIHelper */
 
@@ -86,33 +58,7 @@
 
 /*! exports provided: CommonBackground */
 
-/*! exports provided: CommonDataManager */
-
 /*! exports provided: CopyProtoType */
-
-/*! exports provided: CreateRoleMediator */
-
-/*! exports provided: CutInMediator */
-
-/*! exports provided: CutInMenu */
-
-/*! exports provided: CutInMenuMediator */
-
-/*! exports provided: DataManager, DataMgrType */
-
-/*! exports provided: DataManager, DataMgrType, BaseDataManager, BaseHandler, BasePacketHandler, CacheDataManager, ElementDataManager, SceneDataManager */
-
-/*! exports provided: DecorateElementManager */
-
-/*! exports provided: DecorateRoom */
-
-/*! exports provided: DecorateTerrainManager */
-
-/*! exports provided: Dialog */
-
-/*! exports provided: Dialog, DialogMediator */
-
-/*! exports provided: DialogMediator */
 
 /*! exports provided: Direction */
 
@@ -154,27 +100,11 @@
 
 /*! exports provided: EditorTopDisplay */
 
-/*! exports provided: Effect */
-
-/*! exports provided: EffectManager */
-
-/*! exports provided: ElementActionManager */
-
-/*! exports provided: ElementBaseAction */
-
-/*! exports provided: ElementDataManager */
-
 /*! exports provided: ElementEditorBrushType, ElementEditorEmitType, ElementEditorCanvas */
-
-/*! exports provided: ElementManager */
-
-/*! exports provided: ElementStateManager */
 
 /*! exports provided: ElementStateType */
 
 /*! exports provided: ElementStorage */
-
-/*! exports provided: EmptyTerrain */
 
 /*! exports provided: EventDispatcher */
 
@@ -188,12 +118,6 @@
 
 /*! exports provided: FriendRelationEnum, FriendChannel */
 
-/*! exports provided: FuritElementAction */
-
-/*! exports provided: GMToolsMediator */
-
-/*! exports provided: GameSocket, ConnListener, Connection */
-
 /*! exports provided: GameState, ConnectState, SceneState, PlayerState, PhysicalPeerState */
 
 /*! exports provided: GridLayoutGroup, AlignmentType, CornerType, AxisType, ConstraintType */
@@ -204,25 +128,15 @@
 
 /*! exports provided: Helpers */
 
-/*! exports provided: HttpClock */
-
-/*! exports provided: HttpService */
-
 /*! exports provided: IconBtn */
 
 /*! exports provided: IconSelectBtn */
 
 /*! exports provided: ImageValue, ImageBBCodeValue, DynamicImageValue */
 
-/*! exports provided: InputEnable, Element */
-
 /*! exports provided: InputPanel */
 
 /*! exports provided: InputView */
-
-/*! exports provided: InteractiveBubble */
-
-/*! exports provided: InteractiveBubbleMediator */
 
 /*! exports provided: Intersects */
 
@@ -231,8 +145,6 @@
 /*! exports provided: ItemSlot */
 
 /*! exports provided: ItemsConsumeFunPanel */
-
-/*! exports provided: JoystickManager */
 
 /*! exports provided: LOCAL_HOME_PATH, default */
 
@@ -244,8 +156,6 @@
 
 /*! exports provided: LoadState, PlaySceneLoadState */
 
-/*! exports provided: LoadingManager */
-
 /*! exports provided: Logger, log, error */
 
 /*! exports provided: LogicPoint */
@@ -256,15 +166,9 @@
 
 /*! exports provided: LogicRectangle45 */
 
-/*! exports provided: LoginMediator */
-
-/*! exports provided: MainPeer */
-
 /*! exports provided: MainUIScene */
 
 /*! exports provided: MaterialItem */
-
-/*! exports provided: MatterObject */
 
 /*! exports provided: MessageType */
 
@@ -278,205 +182,7 @@
 
 /*! exports provided: PI_EXTENSION_REGEX, HTTP_REGEX */
 
-/*! exports provided: PKTElementAction */
-
-/*! exports provided: PicManorInfo */
-
-/*! exports provided: PicManorInfoMediator */
-
-/*! exports provided: PicRoomUpgrade */
-
-/*! exports provided: PicRoomUpgradeMediator */
-
-/*! exports provided: PicaAvatar */
-
-/*! exports provided: PicaAvatarMediator */
-
-/*! exports provided: PicaBag */
-
-/*! exports provided: PicaBagMediator */
-
-/*! exports provided: PicaBusinessMarketingPlan */
-
-/*! exports provided: PicaBusinessMarketingPlanMediator */
-
-/*! exports provided: PicaBusinessStreet */
-
-/*! exports provided: PicaBusinessStreetMediator */
-
-/*! exports provided: PicaChat */
-
-/*! exports provided: PicaChatMediator */
-
-/*! exports provided: PicaCompose */
-
-/*! exports provided: PicaComposeMediator */
-
-/*! exports provided: PicaCreateRole */
-
-/*! exports provided: PicaCreateRoleMediator */
-
-/*! exports provided: PicaDecorateControlMediator */
-
-/*! exports provided: PicaDecorateMediator */
-
-/*! exports provided: PicaEffectMgr */
-
-/*! exports provided: PicaEffectMgrMediator */
-
-/*! exports provided: PicaElementStorage */
-
-/*! exports provided: PicaElementStorageMediator */
-
-/*! exports provided: PicaElevator */
-
-/*! exports provided: PicaElevatorMediator */
-
-/*! exports provided: PicaEquipUpgrade */
-
-/*! exports provided: PicaEquipUpgradeMediator */
-
-/*! exports provided: PicaExploreList */
-
-/*! exports provided: PicaExploreListMediator */
-
-/*! exports provided: PicaExploreLog */
-
-/*! exports provided: PicaExploreLogMediator */
-
-/*! exports provided: PicaFriend */
-
-/*! exports provided: PicaFriendMediator */
-
-/*! exports provided: PicaFriendRelation */
-
-/*! exports provided: PicaFurniFun */
-
-/*! exports provided: PicaFurniFunMediator */
-
-/*! exports provided: PicaFurnitureCompose */
-
-/*! exports provided: PicaFurnitureComposeMediator */
-
-/*! exports provided: PicaGame */
-
-/*! exports provided: PicaGiftEffect */
-
-/*! exports provided: PicaGiftEffectMediator */
-
-/*! exports provided: PicaHandheld */
-
-/*! exports provided: PicaHandheldMediator */
-
-/*! exports provided: PicaHouse */
-
-/*! exports provided: PicaHouseMediator */
-
-/*! exports provided: PicaItemPopCardMediator */
-
-/*! exports provided: PicaMainUI */
-
-/*! exports provided: PicaMainUIMediator */
-
-/*! exports provided: PicaManorList */
-
-/*! exports provided: PicaManorListMediator */
-
-/*! exports provided: PicaMarket */
-
-/*! exports provided: PicaMarketMediator */
-
-/*! exports provided: PicaMessageBoxMediator */
-
-/*! exports provided: PicaMineCar */
-
-/*! exports provided: PicaMineCarMediator */
-
-/*! exports provided: PicaMineSettle */
-
-/*! exports provided: PicaMineSettleMediator */
-
-/*! exports provided: PicaNavigate */
-
-/*! exports provided: PicaNavigateMediator */
-
-/*! exports provided: PicaNewMain */
-
-/*! exports provided: PicaNewMainMediator */
-
-/*! exports provided: PicaNewRole */
-
-/*! exports provided: PicaNewRoleMediator */
-
-/*! exports provided: PicaNoticeMediator */
-
-/*! exports provided: PicaOnline */
-
-/*! exports provided: PicaOnlineMediator */
-
-/*! exports provided: PicaOpenParty */
-
-/*! exports provided: PicaOpenPartyMediator */
-
-/*! exports provided: PicaOrder */
-
-/*! exports provided: PicaOrderMediator */
-
-/*! exports provided: PicaPartyList */
-
-/*! exports provided: PicaPartyListMediator */
-
-/*! exports provided: PicaPropFunConfig */
-
-/*! exports provided: PicaPropFunMediator */
-
-/*! exports provided: PicaRecaste */
-
-/*! exports provided: PicaRecasteMediator */
-
-/*! exports provided: PicaRecharge */
-
-/*! exports provided: PicaRechargeMediator */
-
-/*! exports provided: PicaRewardTip */
-
-/*! exports provided: PicaRewardTipMediator */
-
-/*! exports provided: PicaRoam */
-
-/*! exports provided: PicaRoamMediator */
-
-/*! exports provided: PicaRoomList */
-
-/*! exports provided: PicaRoomListMediator */
-
-/*! exports provided: PicaTask */
-
-/*! exports provided: PicaTaskMediator */
-
-/*! exports provided: PicaTreasure */
-
-/*! exports provided: PicaTreasureMediator */
-
-/*! exports provided: PicaWork */
-
-/*! exports provided: PicaWorkMediator */
-
-/*! exports provided: PicaWorkerUiManager */
-
 /*! exports provided: PlayCamera */
-
-/*! exports provided: Player */
-
-/*! exports provided: PlayerBag */
-
-/*! exports provided: PlayerElementAction */
-
-/*! exports provided: PlayerManager */
-
-/*! exports provided: PlayerModel */
-
-/*! exports provided: PlayerProperty */
 
 /*! exports provided: Pos */
 
@@ -492,21 +198,11 @@
 
 /*! exports provided: RENDER_PEER, PICARENDER_PEER, MAIN_WORKER, PHYSICAL_WORKER, MAIN_WORKER_URL, PHYSICAL_WORKER_URL */
 
-/*! exports provided: RankMediator */
-
 /*! exports provided: RankPanel */
-
-/*! exports provided: ReadyState, WSWrapper */
 
 /*! exports provided: ReferenceArea */
 
-/*! exports provided: Room */
-
-/*! exports provided: RoomManager */
-
 /*! exports provided: RoomType */
-
-/*! exports provided: SceneDataManager */
 
 /*! exports provided: SceneEditorCanvas */
 
@@ -518,39 +214,19 @@
 
 /*! exports provided: Size */
 
-/*! exports provided: SkyBoxManager */
-
 /*! exports provided: SkyBoxScene */
-
-/*! exports provided: SocketConnectionError, SocketConnection */
 
 /*! exports provided: SoundButton */
 
-/*! exports provided: SpawnPoint */
-
 /*! exports provided: Sprite */
 
-/*! exports provided: StateGroup, State */
-
-/*! exports provided: StateListener */
-
-/*! exports provided: StateParse */
+/*! exports provided: Sprite, FramesModel, DragonbonesModel, ElementStorage */
 
 /*! exports provided: StoragePanel */
 
 /*! exports provided: StringUtils */
 
 /*! exports provided: SurfaceLayer */
-
-/*! exports provided: TAGElementAction */
-
-/*! exports provided: Task */
-
-/*! exports provided: TaskMediator */
-
-/*! exports provided: Terrain */
-
-/*! exports provided: TerrainManager */
 
 /*! exports provided: TextButton */
 
@@ -580,39 +256,15 @@
 
 /*! exports provided: UILoadType, AtlasUrlData, AtlasManager */
 
-/*! exports provided: UIManager */
-
-/*! exports provided: UIManager, UIMediatorType, UILayoutType, UIType, BasicMediator, BasicModel, RankMediator */
-
-/*! exports provided: UIMediatorType, UILayoutType */
-
-/*! exports provided: UIType, BasicMediator */
-
-/*! exports provided: UIType, BasicMediator, BasicModel */
-
 /*! exports provided: UiManager */
-
-/*! exports provided: User */
-
-/*! exports provided: User, PlayerBag, PlayerProperty, UserDataManager */
-
-/*! exports provided: UserDataManager */
-
-/*! exports provided: UserMenuMediator */
 
 /*! exports provided: ValueContainer */
 
 /*! exports provided: ValueResolver */
 
-/*! exports provided: Viewblock */
-
-/*! exports provided: ViewblockManager */
-
 /*! exports provided: WEB_HOME_PATH, SPRITE_SHEET_KEY, IMAGE_BLANK_KEY, default */
 
 /*! exports provided: default */
-
-/*! exports provided: fps, interval, Game */
 
 /*! exports provided: initLocales, i18n */
 
@@ -635,28 +287,12 @@
   \*********************/
 
 /*!**************************!*\
-  !*** ./src/game/game.ts ***!
-  \**************************/
-
-/*!**************************!*\
   !*** ./src/utils/log.ts ***!
   \**************************/
 
 /*!**************************!*\
   !*** ./src/utils/pos.ts ***!
   \**************************/
-
-/*!***************************!*\
-  !*** ./lib/net/socket.ts ***!
-  \***************************/
-
-/*!***************************!*\
-  !*** ./src/base/index.ts ***!
-  \***************************/
-
-/*!***************************!*\
-  !*** ./src/game/index.ts ***!
-  \***************************/
 
 /*!***************************!*\
   !*** ./src/utils/font.ts ***!
@@ -695,10 +331,6 @@
   \*****************************/
 
 /*!******************************!*\
-  !*** ./src/game/ui/index.ts ***!
-  \******************************/
-
-/*!******************************!*\
   !*** ./src/utils/Handler.ts ***!
   \******************************/
 
@@ -715,32 +347,8 @@
   \******************************/
 
 /*!*******************************!*\
-  !*** ./src/game/main.peer.ts ***!
-  \*******************************/
-
-/*!*******************************!*\
-  !*** ./src/game/net/index.ts ***!
-  \*******************************/
-
-/*!*******************************!*\
   !*** ./src/pica/res/index.ts ***!
   \*******************************/
-
-/*!********************************!*\
-  !*** ./src/game/actor/user.ts ***!
-  \********************************/
-
-/*!********************************!*\
-  !*** ./src/game/loop/index.ts ***!
-  \********************************/
-
-/*!********************************!*\
-  !*** ./src/game/room/index.ts ***!
-  \********************************/
-
-/*!********************************!*\
-  !*** ./src/pica/game/index.ts ***!
-  \********************************/
 
 /*!********************************!*\
   !*** ./src/render/ui/index.ts ***!
@@ -767,15 +375,7 @@
   \********************************/
 
 /*!*********************************!*\
-  !*** ./src/base/layer/index.ts ***!
-  \*********************************/
-
-/*!*********************************!*\
   !*** ./src/base/model/index.ts ***!
-  \*********************************/
-
-/*!*********************************!*\
-  !*** ./src/game/actor/index.ts ***!
   \*********************************/
 
 /*!*********************************!*\
@@ -793,10 +393,6 @@
 /*!*********************************!*\
   !*** ./src/utils/time.utils.ts ***!
   \*********************************/
-
-/*!**********************************!*\
-  !*** ./src/base/layer/ground.ts ***!
-  \**********************************/
 
 /*!**********************************!*\
   !*** ./src/base/model/sprite.ts ***!
@@ -835,31 +431,7 @@
   \***********************************/
 
 /*!***********************************!*\
-  !*** ./src/base/display/index.ts ***!
-  \***********************************/
-
-/*!***********************************!*\
-  !*** ./src/base/layer/surface.ts ***!
-  \***********************************/
-
-/*!***********************************!*\
-  !*** ./src/base/sky.box/index.ts ***!
-  \***********************************/
-
-/*!***********************************!*\
   !*** ./src/editor/utils/atlas.ts ***!
-  \***********************************/
-
-/*!***********************************!*\
-  !*** ./src/game/loading/index.ts ***!
-  \***********************************/
-
-/*!***********************************!*\
-  !*** ./src/game/ui sync ^\.\/.*$ ***!
-  \***********************************/
-
-/*!***********************************!*\
-  !*** ./src/game/ui/ui.manager.ts ***!
   \***********************************/
 
 /*!***********************************!*\
@@ -875,22 +447,6 @@
   \************************************/
 
 /*!************************************!*\
-  !*** ./src/game/net/connection.ts ***!
-  \************************************/
-
-/*!************************************!*\
-  !*** ./src/game/room/room/room.ts ***!
-  \************************************/
-
-/*!************************************!*\
-  !*** ./src/game/ui/basic/index.ts ***!
-  \************************************/
-
-/*!************************************!*\
-  !*** ./src/pica/game/pica.game.ts ***!
-  \************************************/
-
-/*!************************************!*\
   !*** ./src/render/ui/bag/index.ts ***!
   \************************************/
 
@@ -901,10 +457,6 @@
 /*!************************************!*\
   !*** ./src/structure/room.type.ts ***!
   \************************************/
-
-/*!*************************************!*\
-  !*** ./src/base/sky.box/scenery.ts ***!
-  \*************************************/
 
 /*!*************************************!*\
   !*** ./src/render/ui sync ^\.\/.*$ ***!
@@ -937,18 +489,6 @@
 /*!*************************************!*\
   !*** ./src/utils/copy.prototype.ts ***!
   \*************************************/
-
-/*!**************************************!*\
-  !*** ./src/base/layer/base.layer.ts ***!
-  \**************************************/
-
-/*!**************************************!*\
-  !*** ./src/game/loop/clock/clock.ts ***!
-  \**************************************/
-
-/*!**************************************!*\
-  !*** ./src/game/room/state/parse.ts ***!
-  \**************************************/
 
 /*!**************************************!*\
   !*** ./src/render/ui/bag/basebag.ts ***!
@@ -991,10 +531,6 @@
   \***************************************/
 
 /*!***************************************!*\
-  !*** ./node_modules/events/events.js ***!
-  \***************************************/
-
-/*!***************************************!*\
   !*** ./node_modules/heap/lib/heap.js ***!
   \***************************************/
 
@@ -1012,14 +548,6 @@
 
 /*!***************************************!*\
   !*** ./src/editor/editor.launcher.ts ***!
-  \***************************************/
-
-/*!***************************************!*\
-  !*** ./src/game/room/room.manager.ts ***!
-  \***************************************/
-
-/*!***************************************!*\
-  !*** ./src/pica/game/ui/Task/Task.ts ***!
   \***************************************/
 
 /*!***************************************!*\
@@ -1047,10 +575,6 @@
   \****************************************/
 
 /*!****************************************!*\
-  !*** ./lib/net/transport/websocket.ts ***!
-  \****************************************/
-
-/*!****************************************!*\
   !*** ./node_modules/crypto-js/core.js ***!
   \****************************************/
 
@@ -1071,19 +595,11 @@
   \****************************************/
 
 /*!****************************************!*\
-  !*** ./src/game/data.manager/index.ts ***!
+  !*** ./src/base/model/frames.model.ts ***!
   \****************************************/
 
 /*!****************************************!*\
-  !*** ./src/game/room/effect/effect.ts ***!
-  \****************************************/
-
-/*!****************************************!*\
-  !*** ./src/game/room/player/player.ts ***!
-  \****************************************/
-
-/*!****************************************!*\
-  !*** ./src/pica/game/ui sync ^\.\/.*$ ***!
+  !*** ./src/base/render/layer/index.ts ***!
   \****************************************/
 
 /*!****************************************!*\
@@ -1107,27 +623,7 @@
   \*****************************************/
 
 /*!*****************************************!*\
-  !*** ./src/base/display/top.display.ts ***!
-  \*****************************************/
-
-/*!*****************************************!*\
-  !*** ./src/base/layer/layer.manager.ts ***!
-  \*****************************************/
-
-/*!*****************************************!*\
-  !*** ./src/game/input.manager/index.ts ***!
-  \*****************************************/
-
-/*!*****************************************!*\
-  !*** ./src/game/ui/ui.mediator.type.ts ***!
-  \*****************************************/
-
-/*!*****************************************!*\
-  !*** ./src/pica/game/ui/CutIn/index.ts ***!
-  \*****************************************/
-
-/*!*****************************************!*\
-  !*** ./src/pica/game/ui/Login/index.ts ***!
+  !*** ./src/base/render/layer/ground.ts ***!
   \*****************************************/
 
 /*!*****************************************!*\
@@ -1136,10 +632,6 @@
 
 /*!*****************************************!*\
   !*** ./src/structure/TimerCountDown.ts ***!
-  \*****************************************/
-
-/*!*****************************************!*\
-  !*** ./src/structure/reference.area.ts ***!
   \*****************************************/
 
 /*!******************************************!*\
@@ -1175,35 +667,19 @@
   \******************************************/
 
 /*!******************************************!*\
-  !*** ./src/base/display/base.display.ts ***!
+  !*** ./src/base/render/cameras/index.ts ***!
   \******************************************/
 
 /*!******************************************!*\
-  !*** ./src/base/elementstorage/index.ts ***!
+  !*** ./src/base/render/display/index.ts ***!
   \******************************************/
 
 /*!******************************************!*\
-  !*** ./src/game/room/element/element.ts ***!
+  !*** ./src/base/render/layer/surface.ts ***!
   \******************************************/
 
 /*!******************************************!*\
-  !*** ./src/game/room/sky.box/scenery.ts ***!
-  \******************************************/
-
-/*!******************************************!*\
-  !*** ./src/game/room/terrain/terrain.ts ***!
-  \******************************************/
-
-/*!******************************************!*\
-  !*** ./src/game/ui/basic/basic.model.ts ***!
-  \******************************************/
-
-/*!******************************************!*\
-  !*** ./src/game/ui/rank/rankMediator.ts ***!
-  \******************************************/
-
-/*!******************************************!*\
-  !*** ./src/pica/game/ui/Dialog/index.ts ***!
+  !*** ./src/base/render/sky.box/index.ts ***!
   \******************************************/
 
 /*!******************************************!*\
@@ -1220,18 +696,6 @@
 
 /*!*******************************************!*\
   !*** ./node_modules/pathfinding/index.js ***!
-  \*******************************************/
-
-/*!*******************************************!*\
-  !*** ./src/base/sky.box/block.manager.ts ***!
-  \*******************************************/
-
-/*!*******************************************!*\
-  !*** ./src/game/actor/data/player.bag.ts ***!
-  \*******************************************/
-
-/*!*******************************************!*\
-  !*** ./src/pica/game/ui/Dialog/Dialog.ts ***!
   \*******************************************/
 
 /*!*******************************************!*\
@@ -1275,19 +739,15 @@
   \********************************************/
 
 /*!********************************************!*\
+  !*** ./src/base/render/sky.box/scenery.ts ***!
+  \********************************************/
+
+/*!********************************************!*\
   !*** ./src/editor/canvas/editor.canvas.ts ***!
   \********************************************/
 
 /*!********************************************!*\
   !*** ./src/editor/canvas/scene/factory.ts ***!
-  \********************************************/
-
-/*!********************************************!*\
-  !*** ./src/game/room/state/state.group.ts ***!
-  \********************************************/
-
-/*!********************************************!*\
-  !*** ./src/pica/game/ui/UserMenu/index.ts ***!
   \********************************************/
 
 /*!********************************************!*\
@@ -1315,27 +775,11 @@
   \*********************************************/
 
 /*!*********************************************!*\
-  !*** ./src/base/cameras/cameras.manager.ts ***!
+  !*** ./src/base/model/dragonbones.model.ts ***!
   \*********************************************/
 
 /*!*********************************************!*\
-  !*** ./src/game/loading/loading.manager.ts ***!
-  \*********************************************/
-
-/*!*********************************************!*\
-  !*** ./src/game/room/block/block.object.ts ***!
-  \*********************************************/
-
-/*!*********************************************!*\
-  !*** ./src/game/room/room/decorate.room.ts ***!
-  \*********************************************/
-
-/*!*********************************************!*\
-  !*** ./src/game/ui/basic/basic.mediator.ts ***!
-  \*********************************************/
-
-/*!*********************************************!*\
-  !*** ./src/pica/game/ui/PicaBag/PicaBag.ts ***!
+  !*** ./src/base/render/layer/base.layer.ts ***!
   \*********************************************/
 
 /*!*********************************************!*\
@@ -1356,22 +800,6 @@
 
 /*!**********************************************!*\
   !*** ./src/editor/utils/position45.utils.ts ***!
-  \**********************************************/
-
-/*!**********************************************!*\
-  !*** ./src/game/data.manager/dataManager.ts ***!
-  \**********************************************/
-
-/*!**********************************************!*\
-  !*** ./src/game/room/block/iblock.object.ts ***!
-  \**********************************************/
-
-/*!**********************************************!*\
-  !*** ./src/game/room/display/spawn.point.ts ***!
-  \**********************************************/
-
-/*!**********************************************!*\
-  !*** ./src/game/room/player/player.model.ts ***!
   \**********************************************/
 
 /*!**********************************************!*\
@@ -1408,46 +836,6 @@
 
 /*!***********************************************!*\
   !*** ./node_modules/protobufjs/src/writer.js ***!
-  \***********************************************/
-
-/*!***********************************************!*\
-  !*** ./src/game/data.manager/base.handler.ts ***!
-  \***********************************************/
-
-/*!***********************************************!*\
-  !*** ./src/game/loop/httpClock/http.clock.ts ***!
-  \***********************************************/
-
-/*!***********************************************!*\
-  !*** ./src/game/room/state/state.listener.ts ***!
-  \***********************************************/
-
-/*!***********************************************!*\
-  !*** ./src/game/room/viewblock/view.block.ts ***!
-  \***********************************************/
-
-/*!***********************************************!*\
-  !*** ./src/pica/game/ui/Chat/ChatMediator.ts ***!
-  \***********************************************/
-
-/*!***********************************************!*\
-  !*** ./src/pica/game/ui/PicaChat/PicaChat.ts ***!
-  \***********************************************/
-
-/*!***********************************************!*\
-  !*** ./src/pica/game/ui/PicaRoam/PicaRoam.ts ***!
-  \***********************************************/
-
-/*!***********************************************!*\
-  !*** ./src/pica/game/ui/PicaTask/PicaTask.ts ***!
-  \***********************************************/
-
-/*!***********************************************!*\
-  !*** ./src/pica/game/ui/PicaWork/PicaWork.ts ***!
-  \***********************************************/
-
-/*!***********************************************!*\
-  !*** ./src/pica/game/ui/Task/TaskMediator.ts ***!
   \***********************************************/
 
 /*!***********************************************!*\
@@ -1495,35 +883,23 @@
   \************************************************/
 
 /*!************************************************!*\
+  !*** ./src/base/model/elementstorage/index.ts ***!
+  \************************************************/
+
+/*!************************************************!*\
+  !*** ./src/base/render/display/top.display.ts ***!
+  \************************************************/
+
+/*!************************************************!*\
+  !*** ./src/base/render/layer/layer.manager.ts ***!
+  \************************************************/
+
+/*!************************************************!*\
   !*** ./src/editor/canvas/scene/check.bound.ts ***!
   \************************************************/
 
 /*!************************************************!*\
   !*** ./src/editor/canvas/scene/top.display.ts ***!
-  \************************************************/
-
-/*!************************************************!*\
-  !*** ./src/game/actor/data/player.property.ts ***!
-  \************************************************/
-
-/*!************************************************!*\
-  !*** ./src/game/room/display/sprite/sprite.ts ***!
-  \************************************************/
-
-/*!************************************************!*\
-  !*** ./src/game/room/effect/effect.manager.ts ***!
-  \************************************************/
-
-/*!************************************************!*\
-  !*** ./src/game/room/player/player.manager.ts ***!
-  \************************************************/
-
-/*!************************************************!*\
-  !*** ./src/game/room/terrain/empty.terrain.ts ***!
-  \************************************************/
-
-/*!************************************************!*\
-  !*** ./src/game/ui/bag/bagView/bagMediator.ts ***!
   \************************************************/
 
 /*!************************************************!*\
@@ -1563,43 +939,7 @@
   \*************************************************/
 
 /*!*************************************************!*\
-  !*** ./src/base/display/base.frames.display.ts ***!
-  \*************************************************/
-
-/*!*************************************************!*\
-  !*** ./src/game/actor/data/user.dataManager.ts ***!
-  \*************************************************/
-
-/*!*************************************************!*\
-  !*** ./src/game/loop/httpClock/http.service.ts ***!
-  \*************************************************/
-
-/*!*************************************************!*\
-  !*** ./src/game/room/camera/cameras.manager.ts ***!
-  \*************************************************/
-
-/*!*************************************************!*\
-  !*** ./src/game/room/physical/matter.object.ts ***!
-  \*************************************************/
-
-/*!*************************************************!*\
-  !*** ./src/pica/game/ui/CutIn/CutInMediator.ts ***!
-  \*************************************************/
-
-/*!*************************************************!*\
-  !*** ./src/pica/game/ui/CutInMenu/CutInMenu.ts ***!
-  \*************************************************/
-
-/*!*************************************************!*\
-  !*** ./src/pica/game/ui/Login/LoginMediator.ts ***!
-  \*************************************************/
-
-/*!*************************************************!*\
-  !*** ./src/pica/game/ui/PicaHouse/PicaHouse.ts ***!
-  \*************************************************/
-
-/*!*************************************************!*\
-  !*** ./src/pica/game/ui/PicaOrder/PicaOrder.ts ***!
+  !*** ./src/base/render/display/base.display.ts ***!
   \*************************************************/
 
 /*!*************************************************!*\
@@ -1631,19 +971,7 @@
   \**************************************************/
 
 /*!**************************************************!*\
-  !*** ./src/game/room/element/element.manager.ts ***!
-  \**************************************************/
-
-/*!**************************************************!*\
-  !*** ./src/game/room/sky.box/sky.box.manager.ts ***!
-  \**************************************************/
-
-/*!**************************************************!*\
-  !*** ./src/game/room/terrain/terrain.manager.ts ***!
-  \**************************************************/
-
-/*!**************************************************!*\
-  !*** ./src/pica/game/ui/pica.workeruimanager.ts ***!
+  !*** ./src/base/render/sky.box/block.manager.ts ***!
   \**************************************************/
 
 /*!**************************************************!*\
@@ -1687,35 +1015,7 @@
   \***************************************************/
 
 /*!***************************************************!*\
-  !*** ./src/game/data.manager/base.dataManager.ts ***!
-  \***************************************************/
-
-/*!***************************************************!*\
-  !*** ./src/pica/game/ui/Bottom/BottomMediator.ts ***!
-  \***************************************************/
-
-/*!***************************************************!*\
-  !*** ./src/pica/game/ui/Dialog/DialogMediator.ts ***!
-  \***************************************************/
-
-/*!***************************************************!*\
-  !*** ./src/pica/game/ui/PicaAvatar/PicaAvatar.ts ***!
-  \***************************************************/
-
-/*!***************************************************!*\
-  !*** ./src/pica/game/ui/PicaFriend/PicaFriend.ts ***!
-  \***************************************************/
-
-/*!***************************************************!*\
-  !*** ./src/pica/game/ui/PicaMainUI/PicaMainUI.ts ***!
-  \***************************************************/
-
-/*!***************************************************!*\
-  !*** ./src/pica/game/ui/PicaMarket/PicaMarket.ts ***!
-  \***************************************************/
-
-/*!***************************************************!*\
-  !*** ./src/pica/game/ui/PicaOnline/PicaOnline.ts ***!
+  !*** ./src/base/render/display/reference.area.ts ***!
   \***************************************************/
 
 /*!***************************************************!*\
@@ -1755,19 +1055,7 @@
   \****************************************************/
 
 /*!****************************************************!*\
-  !*** ./src/base/elementstorage/element.storage.ts ***!
-  \****************************************************/
-
-/*!****************************************************!*\
-  !*** ./src/game/data.manager/cache.dataManager.ts ***!
-  \****************************************************/
-
-/*!****************************************************!*\
-  !*** ./src/game/input.manager/joystick.manager.ts ***!
-  \****************************************************/
-
-/*!****************************************************!*\
-  !*** ./src/game/ui/bag/storage/storageMediator.ts ***!
+  !*** ./src/base/render/cameras/cameras.manager.ts ***!
   \****************************************************/
 
 /*!****************************************************!*\
@@ -1792,46 +1080,6 @@
 
 /*!*****************************************************!*\
   !*** ./node_modules/protobufjs/src/util/minimal.js ***!
-  \*****************************************************/
-
-/*!*****************************************************!*\
-  !*** ./node_modules/webworker-rpc/release/index.js ***!
-  \*****************************************************/
-
-/*!*****************************************************!*\
-  !*** ./src/game/data.manager/scene.data.manager.ts ***!
-  \*****************************************************/
-
-/*!*****************************************************!*\
-  !*** ./src/game/room/display/frame/frames.model.ts ***!
-  \*****************************************************/
-
-/*!*****************************************************!*\
-  !*** ./src/pica/game/ui/GMTools/GMToolsMediator.ts ***!
-  \*****************************************************/
-
-/*!*****************************************************!*\
-  !*** ./src/pica/game/ui/PicaBag/PicaBagMediator.ts ***!
-  \*****************************************************/
-
-/*!*****************************************************!*\
-  !*** ./src/pica/game/ui/PicaCompose/PicaCompose.ts ***!
-  \*****************************************************/
-
-/*!*****************************************************!*\
-  !*** ./src/pica/game/ui/PicaMineCar/PicaMineCar.ts ***!
-  \*****************************************************/
-
-/*!*****************************************************!*\
-  !*** ./src/pica/game/ui/PicaNewMain/PicaNewMain.ts ***!
-  \*****************************************************/
-
-/*!*****************************************************!*\
-  !*** ./src/pica/game/ui/PicaNewRole/PicaNewRole.ts ***!
-  \*****************************************************/
-
-/*!*****************************************************!*\
-  !*** ./src/pica/game/ui/PicaRecaste/PicaRecaste.ts ***!
   \*****************************************************/
 
 /*!*****************************************************!*\
@@ -1867,30 +1115,6 @@
   \******************************************************/
 
 /*!******************************************************!*\
-  !*** ./src/base/display/base.dragonbones.display.ts ***!
-  \******************************************************/
-
-/*!******************************************************!*\
-  !*** ./src/game/data.manager/base.packet.handler.ts ***!
-  \******************************************************/
-
-/*!******************************************************!*\
-  !*** ./src/game/data.manager/common.data.manager.ts ***!
-  \******************************************************/
-
-/*!******************************************************!*\
-  !*** ./src/game/data.manager/element.dataManager.ts ***!
-  \******************************************************/
-
-/*!******************************************************!*\
-  !*** ./src/game/room/viewblock/viewblock.manager.ts ***!
-  \******************************************************/
-
-/*!******************************************************!*\
-  !*** ./src/pica/game/ui/Bubble/InteractiveBubble.ts ***!
-  \******************************************************/
-
-/*!******************************************************!*\
   !*** ./src/render/ui/components/ninepatch.button.ts ***!
   \******************************************************/
 
@@ -1916,66 +1140,6 @@
 
 /*!*******************************************************!*\
   !*** ./node_modules/tooqinggamephaser/dist/phaser.js ***!
-  \*******************************************************/
-
-/*!*******************************************************!*\
-  !*** ./src/game/room/viewblock/iviewblock.manager.ts ***!
-  \*******************************************************/
-
-/*!*******************************************************!*\
-  !*** ./src/pica/game/ui/Activity/ActivityMediator.ts ***!
-  \*******************************************************/
-
-/*!*******************************************************!*\
-  !*** ./src/pica/game/ui/PicManorInfo/PicManorInfo.ts ***!
-  \*******************************************************/
-
-/*!*******************************************************!*\
-  !*** ./src/pica/game/ui/PicaChat/PicaChatMediator.ts ***!
-  \*******************************************************/
-
-/*!*******************************************************!*\
-  !*** ./src/pica/game/ui/PicaElevator/PicaElevator.ts ***!
-  \*******************************************************/
-
-/*!*******************************************************!*\
-  !*** ./src/pica/game/ui/PicaFurniFun/PicaFurniFun.ts ***!
-  \*******************************************************/
-
-/*!*******************************************************!*\
-  !*** ./src/pica/game/ui/PicaHandheld/PicaHandheld.ts ***!
-  \*******************************************************/
-
-/*!*******************************************************!*\
-  !*** ./src/pica/game/ui/PicaNavigate/PicaNavigate.ts ***!
-  \*******************************************************/
-
-/*!*******************************************************!*\
-  !*** ./src/pica/game/ui/PicaRecharge/PicaRecharge.ts ***!
-  \*******************************************************/
-
-/*!*******************************************************!*\
-  !*** ./src/pica/game/ui/PicaRoam/PicaRoamMediator.ts ***!
-  \*******************************************************/
-
-/*!*******************************************************!*\
-  !*** ./src/pica/game/ui/PicaRoomList/PicaRoomList.ts ***!
-  \*******************************************************/
-
-/*!*******************************************************!*\
-  !*** ./src/pica/game/ui/PicaTask/PicaTaskMediator.ts ***!
-  \*******************************************************/
-
-/*!*******************************************************!*\
-  !*** ./src/pica/game/ui/PicaTreasure/PicaTreasure.ts ***!
-  \*******************************************************/
-
-/*!*******************************************************!*\
-  !*** ./src/pica/game/ui/PicaWork/PicaWorkMediator.ts ***!
-  \*******************************************************/
-
-/*!*******************************************************!*\
-  !*** ./src/pica/game/ui/UserMenu/UserMenuMediator.ts ***!
   \*******************************************************/
 
 /*!*******************************************************!*\
@@ -2007,15 +1171,15 @@
   \********************************************************/
 
 /*!********************************************************!*\
+  !*** ./src/base/render/display/base.frames.display.ts ***!
+  \********************************************************/
+
+/*!********************************************************!*\
   !*** ./src/editor/canvas/scene/display.object.pool.ts ***!
   \********************************************************/
 
 /*!********************************************************!*\
   !*** ./src/editor/canvas/scene/scene.editor.canvas.ts ***!
-  \********************************************************/
-
-/*!********************************************************!*\
-  !*** ./src/game/room/element/element.state.manager.ts ***!
   \********************************************************/
 
 /*!********************************************************!*\
@@ -2031,47 +1195,15 @@
   \*********************************************************/
 
 /*!*********************************************************!*\
-  !*** ./src/pica/game/ui/CharacterInfo/CharacterInfo.ts ***!
-  \*********************************************************/
-
-/*!*********************************************************!*\
-  !*** ./src/pica/game/ui/CutInMenu/CutInMenuMediator.ts ***!
-  \*********************************************************/
-
-/*!*********************************************************!*\
-  !*** ./src/pica/game/ui/PicaEffectMgr/PicaEffectMgr.ts ***!
-  \*********************************************************/
-
-/*!*********************************************************!*\
-  !*** ./src/pica/game/ui/PicaHouse/PicaHouseMediator.ts ***!
-  \*********************************************************/
-
-/*!*********************************************************!*\
-  !*** ./src/pica/game/ui/PicaManorList/PicaManorList.ts ***!
-  \*********************************************************/
-
-/*!*********************************************************!*\
-  !*** ./src/pica/game/ui/PicaOpenParty/PicaOpenParty.ts ***!
-  \*********************************************************/
-
-/*!*********************************************************!*\
-  !*** ./src/pica/game/ui/PicaOrder/PicaOrderMediator.ts ***!
-  \*********************************************************/
-
-/*!*********************************************************!*\
-  !*** ./src/pica/game/ui/PicaPartyList/PicaPartyList.ts ***!
-  \*********************************************************/
-
-/*!*********************************************************!*\
-  !*** ./src/pica/game/ui/PicaRewardTip/PicaRewardTip.ts ***!
-  \*********************************************************/
-
-/*!*********************************************************!*\
   !*** ./src/render/ui/components/toggle.color.button.ts ***!
   \*********************************************************/
 
 /*!**********************************************************!*\
   !*** ./node_modules/apowophaserui/dist/apowophaserui.js ***!
+  \**********************************************************/
+
+/*!**********************************************************!*\
+  !*** ./src/base/model/elementstorage/element.storage.ts ***!
   \**********************************************************/
 
 /*!**********************************************************!*\
@@ -2099,78 +1231,6 @@
   \***********************************************************/
 
 /*!***********************************************************!*\
-  !*** ./src/game/room/element/decorate.element.manager.ts ***!
-  \***********************************************************/
-
-/*!***********************************************************!*\
-  !*** ./src/game/room/elementaction/pkt.element.action.ts ***!
-  \***********************************************************/
-
-/*!***********************************************************!*\
-  !*** ./src/game/room/elementaction/tag.element.action.ts ***!
-  \***********************************************************/
-
-/*!***********************************************************!*\
-  !*** ./src/game/room/terrain/decorate.terrain.manager.ts ***!
-  \***********************************************************/
-
-/*!***********************************************************!*\
-  !*** ./src/pica/game/ui/CreateRole/CreateRoleMediator.ts ***!
-  \***********************************************************/
-
-/*!***********************************************************!*\
-  !*** ./src/pica/game/ui/PicRoomUpgrade/PicRoomUpgrade.ts ***!
-  \***********************************************************/
-
-/*!***********************************************************!*\
-  !*** ./src/pica/game/ui/PicaAvatar/PicaAvatarMediator.ts ***!
-  \***********************************************************/
-
-/*!***********************************************************!*\
-  !*** ./src/pica/game/ui/PicaCreateRole/PicaCreateRole.ts ***!
-  \***********************************************************/
-
-/*!***********************************************************!*\
-  !*** ./src/pica/game/ui/PicaExploreLog/PicaExploreLog.ts ***!
-  \***********************************************************/
-
-/*!***********************************************************!*\
-  !*** ./src/pica/game/ui/PicaFriend/PicaFriendMediator.ts ***!
-  \***********************************************************/
-
-/*!***********************************************************!*\
-  !*** ./src/pica/game/ui/PicaFriend/PicaFriendRelation.ts ***!
-  \***********************************************************/
-
-/*!***********************************************************!*\
-  !*** ./src/pica/game/ui/PicaGiftEffect/PicaGiftEffect.ts ***!
-  \***********************************************************/
-
-/*!***********************************************************!*\
-  !*** ./src/pica/game/ui/PicaMainUI/PicaMainUIMediator.ts ***!
-  \***********************************************************/
-
-/*!***********************************************************!*\
-  !*** ./src/pica/game/ui/PicaMarket/PicaMarketMediator.ts ***!
-  \***********************************************************/
-
-/*!***********************************************************!*\
-  !*** ./src/pica/game/ui/PicaMineSettle/PicaMineSettle.ts ***!
-  \***********************************************************/
-
-/*!***********************************************************!*\
-  !*** ./src/pica/game/ui/PicaNotice/PicaNoticeMediator.ts ***!
-  \***********************************************************/
-
-/*!***********************************************************!*\
-  !*** ./src/pica/game/ui/PicaOnline/PicaOnlineMediator.ts ***!
-  \***********************************************************/
-
-/*!***********************************************************!*\
-  !*** ./src/pica/game/ui/PicaPropFun/PicaPropFunConfig.ts ***!
-  \***********************************************************/
-
-/*!***********************************************************!*\
   !*** ./src/render/ui/components/button.event.dispatch.ts ***!
   \***********************************************************/
 
@@ -2188,10 +1248,6 @@
 
 /*!************************************************************!*\
   !*** ./src/editor/canvas/scene/manager/terrain.manager.ts ***!
-  \************************************************************/
-
-/*!************************************************************!*\
-  !*** ./src/game/room/elementaction/element.base.action.ts ***!
   \************************************************************/
 
 /*!************************************************************!*\
@@ -2215,39 +1271,11 @@
   \*************************************************************/
 
 /*!*************************************************************!*\
+  !*** ./src/base/render/display/base.dragonbones.display.ts ***!
+  \*************************************************************/
+
+/*!*************************************************************!*\
   !*** ./src/editor/canvas/scene/connection/editor.packet.ts ***!
-  \*************************************************************/
-
-/*!*************************************************************!*\
-  !*** ./src/game/room/elementaction/furit.element.action.ts ***!
-  \*************************************************************/
-
-/*!*************************************************************!*\
-  !*** ./src/pica/game/ui/PicaCompose/PicaComposeMediator.ts ***!
-  \*************************************************************/
-
-/*!*************************************************************!*\
-  !*** ./src/pica/game/ui/PicaExploreList/PicaExploreList.ts ***!
-  \*************************************************************/
-
-/*!*************************************************************!*\
-  !*** ./src/pica/game/ui/PicaMineCar/PicaMineCarMediator.ts ***!
-  \*************************************************************/
-
-/*!*************************************************************!*\
-  !*** ./src/pica/game/ui/PicaNewMain/PicaNewMainMediator.ts ***!
-  \*************************************************************/
-
-/*!*************************************************************!*\
-  !*** ./src/pica/game/ui/PicaNewRole/PicaNewRoleMediator.ts ***!
-  \*************************************************************/
-
-/*!*************************************************************!*\
-  !*** ./src/pica/game/ui/PicaPropFun/PicaPropFunMediator.ts ***!
-  \*************************************************************/
-
-/*!*************************************************************!*\
-  !*** ./src/pica/game/ui/PicaRecaste/PicaRecasteMediator.ts ***!
   \*************************************************************/
 
 /*!*************************************************************!*\
@@ -2272,14 +1300,6 @@
 
 /*!**************************************************************!*\
   !*** ./src/editor/canvas/avatar/avatar.editor.dragonbone.ts ***!
-  \**************************************************************/
-
-/*!**************************************************************!*\
-  !*** ./src/game/room/elementaction/player.element.action.ts ***!
-  \**************************************************************/
-
-/*!**************************************************************!*\
-  !*** ./src/pica/game/ui/Bubble/InteractiveBubbleMediator.ts ***!
   \**************************************************************/
 
 /*!***************************************************************!*\
@@ -2314,50 +1334,6 @@
   !*** ./node_modules/typescript-collections/dist/lib/index.js ***!
   \***************************************************************/
 
-/*!***************************************************************!*\
-  !*** ./src/game/room/elementaction/element.action.manager.ts ***!
-  \***************************************************************/
-
-/*!***************************************************************!*\
-  !*** ./src/pica/game/ui/PicManorInfo/PicManorInfoMediator.ts ***!
-  \***************************************************************/
-
-/*!***************************************************************!*\
-  !*** ./src/pica/game/ui/PicaDecorate/PicaDecorateMediator.ts ***!
-  \***************************************************************/
-
-/*!***************************************************************!*\
-  !*** ./src/pica/game/ui/PicaElevator/PicaElevatorMediator.ts ***!
-  \***************************************************************/
-
-/*!***************************************************************!*\
-  !*** ./src/pica/game/ui/PicaEquipUpgrade/PicaEquipUpgrade.ts ***!
-  \***************************************************************/
-
-/*!***************************************************************!*\
-  !*** ./src/pica/game/ui/PicaFurniFun/PicaFurniFunMediator.ts ***!
-  \***************************************************************/
-
-/*!***************************************************************!*\
-  !*** ./src/pica/game/ui/PicaHandheld/PicaHandheldMediator.ts ***!
-  \***************************************************************/
-
-/*!***************************************************************!*\
-  !*** ./src/pica/game/ui/PicaNavigate/PicaNavigateMediator.ts ***!
-  \***************************************************************/
-
-/*!***************************************************************!*\
-  !*** ./src/pica/game/ui/PicaRecharge/PicaRechargeMediator.ts ***!
-  \***************************************************************/
-
-/*!***************************************************************!*\
-  !*** ./src/pica/game/ui/PicaRoomList/PicaRoomListMediator.ts ***!
-  \***************************************************************/
-
-/*!***************************************************************!*\
-  !*** ./src/pica/game/ui/PicaTreasure/PicaTreasureMediator.ts ***!
-  \***************************************************************/
-
 /*!****************************************************************!*\
   !*** ./node_modules/@babel/runtime/helpers/esm/createClass.js ***!
   \****************************************************************/
@@ -2382,10 +1358,6 @@
   !*** ./src/editor/canvas/element/element.editor.animations.ts ***!
   \****************************************************************/
 
-/*!****************************************************************!*\
-  !*** ./src/game/room/display/dragonbones/dragonbones.model.ts ***!
-  \****************************************************************/
-
 /*!*****************************************************************!*\
   !*** ./node_modules/@babel/runtime/helpers/esm/objectSpread.js ***!
   \*****************************************************************/
@@ -2396,30 +1368,6 @@
 
 /*!*****************************************************************!*\
   !*** ./node_modules/pathfinding/src/finders/JumpPointFinder.js ***!
-  \*****************************************************************/
-
-/*!*****************************************************************!*\
-  !*** ./src/pica/game/ui/CharacterInfo/CharacterInfoMediator.ts ***!
-  \*****************************************************************/
-
-/*!*****************************************************************!*\
-  !*** ./src/pica/game/ui/PicaEffectMgr/PicaEffectMgrMediator.ts ***!
-  \*****************************************************************/
-
-/*!*****************************************************************!*\
-  !*** ./src/pica/game/ui/PicaManorList/PicaManorListMediator.ts ***!
-  \*****************************************************************/
-
-/*!*****************************************************************!*\
-  !*** ./src/pica/game/ui/PicaOpenParty/PicaOpenPartyMediator.ts ***!
-  \*****************************************************************/
-
-/*!*****************************************************************!*\
-  !*** ./src/pica/game/ui/PicaPartyList/PicaPartyListMediator.ts ***!
-  \*****************************************************************/
-
-/*!*****************************************************************!*\
-  !*** ./src/pica/game/ui/PicaRewardTip/PicaRewardTipMediator.ts ***!
   \*****************************************************************/
 
 /*!******************************************************************!*\
@@ -2486,38 +1434,6 @@
   !*** ./node_modules/pathfinding/src/finders/BiBestFirstFinder.js ***!
   \*******************************************************************/
 
-/*!*******************************************************************!*\
-  !*** ./src/pica/game/ui/PicRoomUpgrade/PicRoomUpgradeMediator.ts ***!
-  \*******************************************************************/
-
-/*!*******************************************************************!*\
-  !*** ./src/pica/game/ui/PicaBusinessStreet/PicaBusinessStreet.ts ***!
-  \*******************************************************************/
-
-/*!*******************************************************************!*\
-  !*** ./src/pica/game/ui/PicaCreateRole/PicaCreateRoleMediator.ts ***!
-  \*******************************************************************/
-
-/*!*******************************************************************!*\
-  !*** ./src/pica/game/ui/PicaElementStorage/PicaElementStorage.ts ***!
-  \*******************************************************************/
-
-/*!*******************************************************************!*\
-  !*** ./src/pica/game/ui/PicaExploreLog/PicaExploreLogMediator.ts ***!
-  \*******************************************************************/
-
-/*!*******************************************************************!*\
-  !*** ./src/pica/game/ui/PicaGiftEffect/PicaGiftEffectMediator.ts ***!
-  \*******************************************************************/
-
-/*!*******************************************************************!*\
-  !*** ./src/pica/game/ui/PicaMessageBox/PicaMessageBoxMediator.ts ***!
-  \*******************************************************************/
-
-/*!*******************************************************************!*\
-  !*** ./src/pica/game/ui/PicaMineSettle/PicaMineSettleMediator.ts ***!
-  \*******************************************************************/
-
 /*!********************************************************************!*\
   !*** ./node_modules/game-capsule/dist/lib/configobjects/access.js ***!
   \********************************************************************/
@@ -2574,14 +1490,6 @@
   !*** ./node_modules/pathfinding/src/finders/JumpPointFinderBase.js ***!
   \*********************************************************************/
 
-/*!*********************************************************************!*\
-  !*** ./src/pica/game/ui/PicaExploreList/PicaExploreListMediator.ts ***!
-  \*********************************************************************/
-
-/*!*********************************************************************!*\
-  !*** ./src/pica/game/ui/PicaItemPopCard/PicaItemPopCardMediator.ts ***!
-  \*********************************************************************/
-
 /*!**********************************************************************!*\
   !*** ./node_modules/game-capsule/dist/lib/configobjects/location.js ***!
   \**********************************************************************/
@@ -2612,14 +1520,6 @@
 
 /*!***********************************************************************!*\
   !*** ./node_modules/typescript-collections/dist/lib/PriorityQueue.js ***!
-  \***********************************************************************/
-
-/*!***********************************************************************!*\
-  !*** ./src/pica/game/ui/PicaEquipUpgrade/PicaEquipUpgradeMediator.ts ***!
-  \***********************************************************************/
-
-/*!***********************************************************************!*\
-  !*** ./src/pica/game/ui/PicaFurnitureCompose/PicaFurnitureCompose.ts ***!
   \***********************************************************************/
 
 /*!************************************************************************!*\
@@ -2662,41 +1562,17 @@
   !*** ./node_modules/typescript-collections/dist/lib/FactoryDictionary.js ***!
   \***************************************************************************/
 
-/*!***************************************************************************!*\
-  !*** ./src/pica/game/ui/PicaBusinessStreet/PicaBusinessStreetMediator.ts ***!
-  \***************************************************************************/
-
-/*!***************************************************************************!*\
-  !*** ./src/pica/game/ui/PicaElementStorage/PicaElementStorageMediator.ts ***!
-  \***************************************************************************/
-
-/*!*****************************************************************************!*\
-  !*** ./src/pica/game/ui/PicaDecorateControl/PicaDecorateControlMediator.ts ***!
-  \*****************************************************************************/
-
 /*!******************************************************************************!*\
   !*** ./node_modules/@babel/runtime/helpers/esm/possibleConstructorReturn.js ***!
   \******************************************************************************/
-
-/*!*******************************************************************************!*\
-  !*** ./src/pica/game/ui/PicaFurnitureCompose/PicaFurnitureComposeMediator.ts ***!
-  \*******************************************************************************/
 
 /*!********************************************************************************!*\
   !*** ./node_modules/pathfinding/src/finders/JPFMoveDiagonallyIfNoObstacles.js ***!
   \********************************************************************************/
 
-/*!*********************************************************************************!*\
-  !*** ./src/pica/game/ui/PicaBusinessMarketingPlan/PicaBusinessMarketingPlan.ts ***!
-  \*********************************************************************************/
-
 /*!**************************************************************************************!*\
   !*** ./node_modules/pathfinding/src/finders/JPFMoveDiagonallyIfAtMostOneObstacle.js ***!
   \**************************************************************************************/
-
-/*!*****************************************************************************************!*\
-  !*** ./src/pica/game/ui/PicaBusinessMarketingPlan/PicaBusinessMarketingPlanMediator.ts ***!
-  \*****************************************************************************************/
 
 /*!**************************************************************************************************!*\
   !*** ./node_modules/i18next-browser-languagedetector/dist/esm/i18nextBrowserLanguageDetector.js ***!

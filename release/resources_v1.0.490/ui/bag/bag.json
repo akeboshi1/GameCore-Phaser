@@ -1,0 +1,355 @@
+{
+    "meta": {
+        "app": "Adobe Flash CS6",
+        "version": "12.0.0.481",
+        "image": "bag.png",
+        "format": "RGBA8888",
+        "size": {
+            "w": 124,
+            "h": 146
+        },
+        "scale": "1"
+    },
+    "frames": {
+        "bag_Slot": {
+            "frame": {
+                "x": 58,
+                "y": 0,
+                "w": 56,
+                "h": 56
+            },
+            "rotated": false,
+            "trimmed": false,
+            "spriteSourceSize": {
+                "x": 0,
+                "y": 0,
+                "w": 56,
+                "h": 56
+            },
+            "sourceSize": {
+                "w": 56,
+                "h": 61
+            }
+        },
+        "bag_SubScript0": {
+            "frame": {
+                "x": 0,
+                "y": 128,
+                "w": 16,
+                "h": 16
+            },
+            "rotated": false,
+            "trimmed": false,
+            "spriteSourceSize": {
+                "x": 0,
+                "y": 0,
+                "w": 16,
+                "h": 16
+            },
+            "sourceSize": {
+                "w": 17,
+                "h": 17
+            }
+        },
+        "bag_SubScript1": {
+            "frame": {
+                "x": 54,
+                "y": 121,
+                "w": 16,
+                "h": 16
+            },
+            "rotated": false,
+            "trimmed": false,
+            "spriteSourceSize": {
+                "x": 0,
+                "y": 0,
+                "w": 16,
+                "h": 16
+            },
+            "sourceSize": {
+                "w": 17,
+                "h": 17
+            }
+        },
+        "bag_SubScript2": {
+            "frame": {
+                "x": 36,
+                "y": 121,
+                "w": 16,
+                "h": 16
+            },
+            "rotated": false,
+            "trimmed": false,
+            "spriteSourceSize": {
+                "x": 0,
+                "y": 0,
+                "w": 16,
+                "h": 16
+            },
+            "sourceSize": {
+                "w": 17,
+                "h": 17
+            }
+        },
+        "bag_SubScript3": {
+            "frame": {
+                "x": 106,
+                "y": 113,
+                "w": 16,
+                "h": 16
+            },
+            "rotated": false,
+            "trimmed": false,
+            "spriteSourceSize": {
+                "x": 0,
+                "y": 0,
+                "w": 16,
+                "h": 16
+            },
+            "sourceSize": {
+                "w": 17,
+                "h": 17
+            }
+        },
+        "bag_SubScript4": {
+            "frame": {
+                "x": 88,
+                "y": 113,
+                "w": 16,
+                "h": 16
+            },
+            "rotated": false,
+            "trimmed": false,
+            "spriteSourceSize": {
+                "x": 0,
+                "y": 0,
+                "w": 16,
+                "h": 16
+            },
+            "sourceSize": {
+                "w": 17,
+                "h": 17
+            }
+        },
+        "bag_SubScript5": {
+            "frame": {
+                "x": 18,
+                "y": 110,
+                "w": 16,
+                "h": 16
+            },
+            "rotated": false,
+            "trimmed": false,
+            "spriteSourceSize": {
+                "x": 0,
+                "y": 0,
+                "w": 16,
+                "h": 16
+            },
+            "sourceSize": {
+                "w": 17,
+                "h": 17
+            }
+        },
+        "bag_SubScript6": {
+            "frame": {
+                "x": 0,
+                "y": 110,
+                "w": 16,
+                "h": 16
+            },
+            "rotated": false,
+            "trimmed": false,
+            "spriteSourceSize": {
+                "x": 0,
+                "y": 0,
+                "w": 16,
+                "h": 16
+            },
+            "sourceSize": {
+                "w": 17,
+                "h": 17
+            }
+        },
+        "bag_SubScript7": {
+            "frame": {
+                "x": 70,
+                "y": 103,
+                "w": 16,
+                "h": 16
+            },
+            "rotated": false,
+            "trimmed": false,
+            "spriteSourceSize": {
+                "x": 0,
+                "y": 0,
+                "w": 16,
+                "h": 16
+            },
+            "sourceSize": {
+                "w": 17,
+                "h": 17
+            }
+        },
+        "bag_SubScript8": {
+            "frame": {
+                "x": 52,
+                "y": 103,
+                "w": 16,
+                "h": 16
+            },
+            "rotated": false,
+            "trimmed": false,
+            "spriteSourceSize": {
+                "x": 0,
+                "y": 0,
+                "w": 16,
+                "h": 16
+            },
+            "sourceSize": {
+                "w": 17,
+                "h": 17
+            }
+        },
+        "bag_SubScript9": {
+            "frame": {
+                "x": 94,
+                "y": 95,
+                "w": 16,
+                "h": 16
+            },
+            "rotated": false,
+            "trimmed": false,
+            "spriteSourceSize": {
+                "x": 0,
+                "y": 0,
+                "w": 16,
+                "h": 16
+            },
+            "sourceSize": {
+                "w": 17,
+                "h": 17
+            }
+        },
+        "bag_SubScripta": {
+            "frame": {
+                "x": 94,
+                "y": 58,
+                "w": 17,
+                "h": 17
+            },
+            "rotated": false,
+            "trimmed": false,
+            "spriteSourceSize": {
+                "x": 0,
+                "y": 0,
+                "w": 17,
+                "h": 17
+            },
+            "sourceSize": {
+                "w": 17,
+                "h": 17
+            }
+        },
+        "bag_SubScriptb": {
+            "frame": {
+                "x": 18,
+                "y": 128,
+                "w": 16,
+                "h": 16
+            },
+            "rotated": false,
+            "trimmed": false,
+            "spriteSourceSize": {
+                "x": 0,
+                "y": 0,
+                "w": 16,
+                "h": 16
+            },
+            "sourceSize": {
+                "w": 17,
+                "h": 17
+            }
+        },
+        "bag_SubScriptc": {
+            "frame": {
+                "x": 94,
+                "y": 77,
+                "w": 16,
+                "h": 16
+            },
+            "rotated": false,
+            "trimmed": false,
+            "spriteSourceSize": {
+                "x": 0,
+                "y": 0,
+                "w": 16,
+                "h": 16
+            },
+            "sourceSize": {
+                "w": 17,
+                "h": 17
+            }
+        },
+        "bag_Btn": {
+            "frame": {
+                "x": 52,
+                "y": 58,
+                "w": 40,
+                "h": 43
+            },
+            "rotated": false,
+            "trimmed": false,
+            "spriteSourceSize": {
+                "x": 4,
+                "y": 1,
+                "w": 40,
+                "h": 43
+            },
+            "sourceSize": {
+                "w": 48,
+                "h": 48
+            }
+        },
+        "bag_BtnBg": {
+            "frame": {
+                "x": 0,
+                "y": 58,
+                "w": 50,
+                "h": 50
+            },
+            "rotated": false,
+            "trimmed": false,
+            "spriteSourceSize": {
+                "x": 3,
+                "y": 3,
+                "w": 50,
+                "h": 50
+            },
+            "sourceSize": {
+                "w": 56,
+                "h": 56
+            }
+        },
+        "bag_BtnSelect": {
+            "frame": {
+                "x": 0,
+                "y": 0,
+                "w": 56,
+                "h": 56
+            },
+            "rotated": false,
+            "trimmed": false,
+            "spriteSourceSize": {
+                "x": 0,
+                "y": 0,
+                "w": 56,
+                "h": 56
+            },
+            "sourceSize": {
+                "w": 56,
+                "h": 56
+            }
+        }
+    }
+}
