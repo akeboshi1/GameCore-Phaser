@@ -55,8 +55,8 @@ export class PicaExploreListDetailPanel extends Phaser.GameObjects.Container {
     public setCaptoreResultData(data: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_QUERY_CHAPTER_RESULT) {
         const numTex = i18n.language !== "zh-CN" ? data.chapter.chapterId + "" : ChineseUnit.numberToChinese(data.chapter.chapterId);
         this.titleTex.text = i18n.t("explore.chaptertitle", { name: numTex });
-        this.captoreTex.text = "皮卡熊的任务";
-        this.captoreDes.text = "帮助皮大熊在本章节中找到某某某几件道具，和某某某几件道具，以完成什么什么家具和什么什么家具家具的修复。";
+        this.captoreTex.text = data.chapter.name;
+        this.captoreDes.text = data.chapter.des;
         this.taskTex.text = i18n.t("explore.taskneedtips");
         this.needDatas.length = 0;
         for (const level of data.levels) {

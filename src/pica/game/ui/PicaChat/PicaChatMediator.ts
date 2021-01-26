@@ -7,7 +7,7 @@ import { ChatCommandInterface, i18n, Logger } from "utils";
 export class PicaChatMediator extends BasicMediator {
     constructor(game: Game) {
         super(ModuleName.PICACHAT_NAME, game);
-        Logger.getInstance().log("picachatmed=====create");
+        Logger.getInstance().debug("picachatmed=====create");
         // this.game.dataManager.on(EventType.UPDATE_PARTY_STATE, this.onGiftStateHandler, this);
         if (!this.mModel) {
             this.mModel = new PicaChat(this.game);

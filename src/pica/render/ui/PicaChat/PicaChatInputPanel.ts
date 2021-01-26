@@ -272,7 +272,7 @@ export class PicaChatInputPanel extends Phaser.Events.EventEmitter {
         }
         this.mOutputText.text = text;
         this.gamescroll.Sort();
-        Logger.getInstance().log(datas);
+        Logger.getInstance().debug(datas);
         // this.mInput.setFocus();
     }
     public appendChat(val: string) {
@@ -287,7 +287,7 @@ export class PicaChatInputPanel extends Phaser.Events.EventEmitter {
     }
 
     private onKeyboardHandler(e) {
-        Logger.getInstance().log(e.keyboardHeight);
+        Logger.getInstance().debug(e.keyboardHeight);
         if (this.keyboardHeight > 0 && e.keyboardHeight === this.keyboardHeight)
             return;
         window.removeEventListener(

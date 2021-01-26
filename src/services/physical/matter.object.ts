@@ -153,7 +153,8 @@ export class MatterObject implements IMatterObject {
             return;
         }
         if (!this.body) {
-            this.addBody();
+            return;
+            // this.addBody();
         }
         // this.peer.world.removeFromMap(sprite);
         if (this.mModel.pos) {
@@ -267,7 +268,7 @@ export class MatterObject implements IMatterObject {
         }
         // this.changeState(PlayerState.WALK);
         this.mMoving = true;
-        this.setStatic(false);
+        // this.setStatic(false);
         const pos = this.getPosition();
         // pos.y += this.offsetY;
         const angle = Math.atan2(path[0].y * this._scale - pos.y, path[0].x * this._scale - pos.x);
@@ -288,7 +289,7 @@ export class MatterObject implements IMatterObject {
         this.changeState(PlayerState.IDLE);
         if (!this.body) return;
         this.setVelocity(0, 0);
-        this.setStatic(true);
+        // this.setStatic(true);
     }
 
     // public changeState(val?: string, times?: number) {
@@ -345,7 +346,7 @@ export class MatterObject implements IMatterObject {
         x *= this._scale;
         y *= this._scale;
         // tslint:disable-next-line:no-console
-        console.log("body.setVelocity ====>", x, y);
+        // console.log("#move body.setVelocity ====>", x, y);
         Body.setVelocity(this.body, Vector.create(x, y));
         Body.setInertia(this.body, Infinity);
     }

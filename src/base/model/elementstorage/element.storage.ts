@@ -72,7 +72,7 @@ export class ElementStorage implements IElementStorage {
     // }
 
     public setGameConfig(config: Lite) {
-        Logger.getInstance().log("TCL: ElementStorage -> config", config);
+        Logger.getInstance().debug("TCL: ElementStorage -> config", config);
         if (!config) {
             return;
         }

@@ -125,7 +125,7 @@ export class LoadingScene extends BasicScene {
         // this.displayVisible(true);
         this.scene.wake();
       }).catch((error) => {
-        Logger.getInstance().log(error);
+        Logger.getInstance().debug(error);
       });
       // this.scale.on("resize", this.checkSize, this);
       this.scene.bringToTop(SceneName.LOADING_SCENE);
@@ -136,7 +136,7 @@ export class LoadingScene extends BasicScene {
     }
     // 更新load状态
     this.tipsText = data.text;
-    Logger.getInstance().log("loadState:----", data.text);
+    Logger.getInstance().debug("loadState:----", data.text);
     if (data.text && this.progressText) {
       if (this.progressText.active) this.progressText.setText(data.text);
     }

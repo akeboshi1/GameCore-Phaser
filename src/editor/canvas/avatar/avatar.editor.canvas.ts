@@ -18,7 +18,7 @@ export class AvatarEditorCanvas extends EditorCanvas {
 
     constructor(config: IEditorCanvasConfig) {
         super(config);
-        Logger.getInstance().log("AvatarEditorCanvas.constructor()");
+        Logger.getInstance().debug("AvatarEditorCanvas.constructor()");
 
         this.mGame.scene.add(this.SCENEKEY, AvatarEditorScene);
 
@@ -28,7 +28,7 @@ export class AvatarEditorCanvas extends EditorCanvas {
     }
 
     public destroy() {
-        Logger.getInstance().log("AvatarEditorCanvas.destroy()");
+        Logger.getInstance().debug("AvatarEditorCanvas.destroy()");
         if (this.mData) {
             this.mData = null;
         }
@@ -164,7 +164,7 @@ export class AvatarEditorScene extends Phaser.Scene {
     private onSceneDestroy: () => any;
 
     public preload() {
-        Logger.getInstance().log("AvatarEditorScene preload");
+        Logger.getInstance().debug("AvatarEditorScene preload");
 
         this.game.plugins.installScenePlugin("DragonBones", dragonBones.phaser.plugin.DragonBonesScenePlugin, "dragonbone", this, true);
     }

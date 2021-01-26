@@ -56,7 +56,7 @@ export default class ElementEditorAnimations extends Phaser.GameObjects.Containe
             return;
         }
 
-        Logger.getInstance().log("setAnimationData: ", data);
+        Logger.getInstance().debug("setAnimationData: ", data);
 
         this.createDisplays();
         this.createMountDisplay();
@@ -436,7 +436,7 @@ export default class ElementEditorAnimations extends Phaser.GameObjects.Containe
             this.mDisplays.forEach((val, key) => {
                 if (val === sprite) {
                     this.mEmitter.emit(ElementEditorEmitType.Active_Animation_Layer, key);
-                    Logger.getInstance().log(ElementEditorEmitType.Active_Animation_Layer, key);
+                    Logger.getInstance().debug(ElementEditorEmitType.Active_Animation_Layer, key);
                     return;
                 }
             });
@@ -446,7 +446,7 @@ export default class ElementEditorAnimations extends Phaser.GameObjects.Containe
                 const element = this.mMountArmatures[i];
                 if (element === arm) {
                     this.mEmitter.emit(ElementEditorEmitType.Active_Mount_Layer, i);
-                    Logger.getInstance().log(ElementEditorEmitType.Active_Mount_Layer, i);
+                    Logger.getInstance().debug(ElementEditorEmitType.Active_Mount_Layer, i);
                     return;
                 }
             }
@@ -709,7 +709,7 @@ export default class ElementEditorAnimations extends Phaser.GameObjects.Containe
         this.mSelectedGameObjects = [].concat(gos);
         // 显示选中状态
 
-        Logger.getInstance().log("select game objects: ", this.mSelectedGameObjects);
+        Logger.getInstance().debug("select game objects: ", this.mSelectedGameObjects);
     }
 
     // // 转换数组idx为深度/层序列

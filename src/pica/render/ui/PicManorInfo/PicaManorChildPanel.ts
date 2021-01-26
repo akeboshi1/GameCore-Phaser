@@ -72,7 +72,7 @@ export class PicaManorChildPanel extends PicaManorBasePanel {
             }
         }).setInteractive()
             .on("areadown", (key) => {
-                Logger.getInstance().log(key);
+                Logger.getInstance().debug(key);
             })
             .on("areaup", (key) => {
                 // tslint:disable-next-line:no-console

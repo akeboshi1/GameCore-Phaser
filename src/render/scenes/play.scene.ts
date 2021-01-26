@@ -30,7 +30,7 @@ export class PlayScene extends RoomScene {
 
     public create() {
         this.loadState = PlaySceneLoadState.CREATING_ROOM;
-        Logger.getInstance().log("create playscene");
+        Logger.getInstance().debug("create playscene");
         const oldCamera = this.cameras.main;
         const { width, height } = this.sys.scale;
         this.cameras.addExisting(
@@ -78,8 +78,6 @@ export class PlayScene extends RoomScene {
         this.render.startRoomPlay();
         this.render.changeScene(this);
 
-        // Logger.getInstance().log("sort-display: ", sort.addFixedDisplayObject);
-
         this.initListener();
 
         super.create();
@@ -107,7 +105,7 @@ export class PlayScene extends RoomScene {
         if (val === this.mLoadState) return;
         // tslint:disable-next-line:no-console
         console.log("PlayScene change loadState: ", val);
-        Logger.getInstance().log("PlayScene change loadState: ", val);
+        Logger.getInstance().debug("PlayScene change loadState: ", val);
         this.mLoadState = val;
 
         if (val === PlaySceneLoadState.LOAD_COMPOLETE) {
@@ -166,7 +164,7 @@ export class PlayScene extends RoomScene {
     }
 
     // protected onLoadCompleteHandler() {
-    //     Logger.getInstance().log("playload complete");
+    //     Logger.getInstance().debug("playload complete");
     //     this.load.off(Phaser.Loader.Events.COMPLETE, this.onLoadCompleteHandler, this);
     //     this.render.hideLoading();
     // }

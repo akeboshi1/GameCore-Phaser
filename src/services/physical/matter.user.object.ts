@@ -43,6 +43,8 @@ export class MatterUserObject extends MatterPlayerObject {
         this._sensor = false;
         this._offsetOrigin.y = 0;
         this.setBody();
+
+        this.setStatic(false);
     }
 
     public async moveMotion(x: number, y: number, targetId?: number) {
@@ -92,19 +94,21 @@ export class MatterUserObject extends MatterPlayerObject {
         if (path.length < 1) {
             return;
         }
-        this.setStatic(false);
+        // this.setStatic(false);
         this.checkDirection();
         // this.peer.mainPeer.changePlayerState(this.id, PlayerState.WALK);
         this.peer.mainPeer.selfStartMove();
         this.mMoving = true;
         const pos = this.getPosition();
+        // const vec = path[0] - pos;
+        // vec.normalize * speed;
         const angle = Math.atan2((path[0].y - pos.y), (path[0].x - pos.x));
         const speed = this.mModel.speed * delayTime;
         this.setVelocity(Math.cos(angle) * speed, Math.sin(angle) * speed);
     }
 
     public stopMove() {
-        Logger.getInstance().log("stopMatterMove");
+        Logger.getInstance().debug("stopMatterMove");
         this.peer.mainPeer.stopMove(this.id);
         this.mMoving = false;
         if (this.mMoveData && this.mMoveData.posPath) {
@@ -118,7 +122,7 @@ export class MatterUserObject extends MatterPlayerObject {
         // this.peer.mainPeer.changePlayerState(this.id, PlayerState.IDLE);
         if (!this.body) return;
         this.setVelocity(0, 0);
-        this.setStatic(true);
+        // this.setStatic(true);
     }
 
     public tryStopMove(pos?: IPos) {
@@ -180,7 +184,7 @@ export class MatterUserObject extends MatterPlayerObject {
         const pos = this.body.position;
         const angle = Math.atan2((pos.y - prePos.y), (pos.x - prePos.x));
         const dir = this.onCheckDirection(angle * (180 / Math.PI));
-        // Logger.getInstance().log("matterDirection ====>", dir);
+        // Logger.getInstance().debug("matterDirection ====>", dir);
         this.mModel.setDirection(dir);
         this.peer.render.updateDirection(this.id, dir);
         this.peer.mainPeer.setDirection(this.id, dir);

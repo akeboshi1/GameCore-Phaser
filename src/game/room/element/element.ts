@@ -226,7 +226,7 @@ export class Element extends BlockObject implements IElement {
         this.mRoomService.game.peer.physicalPeer.setModel(model)
             .then(() => {
                 if (this.mRenderable) {
-                    this.mRoomService.game.physicalPeer.addBody(this.id);
+                    if (model.nodeType !== op_def.NodeType.CharacterNodeType) this.mRoomService.game.physicalPeer.addBody(this.id);
                 }
             });
     }
@@ -791,7 +791,7 @@ export class Element extends BlockObject implements IElement {
         });
         const currentAnimation = this.mModel.currentAnimation;
         this.setInputEnable(this.mInputEnable);
-        this.mRoomService.game.physicalPeer.addBody(this.id);
+        if (this.mModel.nodeType !== op_def.NodeType.CharacterNodeType) this.mRoomService.game.physicalPeer.addBody(this.id);
         this.roomService.game.emitter.emit("ElementCreated", this.id);
         return Promise.resolve();
     }

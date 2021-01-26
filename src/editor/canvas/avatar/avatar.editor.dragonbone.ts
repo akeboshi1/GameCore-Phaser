@@ -170,7 +170,7 @@ export class AvatarEditorDragonbone extends Phaser.GameObjects.Container {
     public setDir(dir: number) {
         const re = this.mCurAnimationName.split("_");
         this.mCurAnimationName = dir === 3 ? re[0] : re[0] + "_back";
-        // Logger.getInstance().log("ZW-- new animation name: ", this.mCurAnimationName);
+        // Logger.getInstance().debug("ZW-- new animation name: ", this.mCurAnimationName);
         this.mCurDir = dir;
 
         this.reloadDisplay();
@@ -302,7 +302,7 @@ export class AvatarEditorDragonbone extends Phaser.GameObjects.Container {
 
     // 将一组AvatatSet整合到一起形成一个完整的Avatar，并保存到self._parts里
     private addSets(newSets: any[]) {
-        // Logger.getInstance().log("ZW-- addSets: ", newSets);
+        // Logger.getInstance().debug("ZW-- addSets: ", newSets);
         // 复制值
         const temp: any[] = [];
         for (const newSet of newSets) {
@@ -331,7 +331,7 @@ export class AvatarEditorDragonbone extends Phaser.GameObjects.Container {
 
         this.mSets = this.mSets.concat(newSets);
 
-        // Logger.getInstance().log("ZW-- this.mSets: ", this.mSets);
+        // Logger.getInstance().debug("ZW-- this.mSets: ", this.mSets);
 
         this.applySets();
     }
@@ -448,7 +448,7 @@ export class AvatarEditorDragonbone extends Phaser.GameObjects.Container {
         for (const set of this.mSets) {
             for (const part of set.parts) {
                 if (AvatarEditorDragonbone.BOTTOM_BODY_PARTS.indexOf(part) >= 0) {
-                    // Logger.getInstance().log("ZW-- snapshotArmature: body");
+                    // Logger.getInstance().debug("ZW-- snapshotArmature: body");
                     return {
                         armature: this.mDisplay_default,
                         x: this.mDisplay_default.x,
@@ -459,7 +459,7 @@ export class AvatarEditorDragonbone extends Phaser.GameObjects.Container {
             }
         }
 
-        // Logger.getInstance().log("ZW-- snapshotArmature: head");
+        // Logger.getInstance().debug("ZW-- snapshotArmature: head");
         return {
             armature: this.mDisplay_head,
             x: this.mDisplay_default.x,
@@ -476,7 +476,7 @@ export class AvatarEditorDragonbone extends Phaser.GameObjects.Container {
                 .then(() => {
                     const gameWidth = this.scene.scale.width;
                     const gameHeight = this.scene.scale.height;
-                    Logger.getInstance().log(`ZW-- start snapshot, gameSize: ${gameWidth}*${gameHeight}, setSize: ${area.width}*${area.height}`);
+                    Logger.getInstance().debug(`ZW-- start snapshot, gameSize: ${gameWidth}*${gameHeight}, setSize: ${area.width}*${area.height}`);
                     const rt = this.scene.make.renderTexture({x: 0, y: 0, width: gameWidth, height: gameHeight}, false);
                     modelData.armature.scaleY *= -1;
                     rt.draw(modelData.armature, modelData.x, modelData.y);
@@ -487,7 +487,7 @@ export class AvatarEditorDragonbone extends Phaser.GameObjects.Container {
                         this.reloadDisplay()
                             .then(() => {
                                 resolve(img.src);
-                                Logger.getInstance().log("ZW-- snapshot result: ", img.src);
+                                Logger.getInstance().debug("ZW-- snapshot result: ", img.src);
                             });
                     });
                 })

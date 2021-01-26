@@ -215,7 +215,7 @@ export class BlockManager implements IBlockManager {
       this.tween.stop();
       this.tween.removeAllListeners();
     }
-    Logger.getInstance().log("scenery: ", props, duration);
+    Logger.getInstance().debug("scenery: ", props, duration);
     this.tween = this.scene.tweens.add({
       targets,
       props,

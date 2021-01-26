@@ -1,6 +1,6 @@
-import { Logger, ResUtils, Url, ValueResolver } from "utils";
-import { IAvatar, IDragonbonesModel, RunningAnimation, SlotSkin } from "structure";
-import { BaseDisplay } from "./base.display";
+import {Logger, ResUtils, Url, ValueResolver} from "utils";
+import {IAvatar, IDragonbonesModel, RunningAnimation, SlotSkin} from "structure";
+import {BaseDisplay} from "./base.display";
 
 export enum AvatarSlotType {
     BodyCostDres = "body_cost_dres_$",
@@ -134,7 +134,7 @@ export class BaseDragonbonesDisplay extends BaseDisplay {
 
     // 改变装扮接口
     public load(display: IDragonbonesModel): Promise<any> {
-        this.displayInfo = <IDragonbonesModel>display;
+        this.displayInfo = <IDragonbonesModel> display;
         if (!this.displayInfo) return Promise.reject("displayInfo error");
         this.mLoadDisplayPromise = new ValueResolver<any>();
         return this.mLoadDisplayPromise.promise(() => {
@@ -158,18 +158,6 @@ export class BaseDragonbonesDisplay extends BaseDisplay {
             }
             this.mArmatureDisplay.animation.play(val.name, val.times);
             this.mArmatureDisplay.scaleX = val.flip ? -1 : 1;
-
-            if (this.mArmatureDisplay && this.mArmatureDisplay.armature) {
-                const bound = this.mArmatureDisplay.armature.getBone("board");
-                if (bound) {
-                    this.mBoardPoint = new Phaser.Geom.Point(bound.global.x, bound.global.y);
-                    return;
-                } else {
-                    Logger.getInstance().error("no board dragonbones!!!");
-                    this.mBoardPoint = new Phaser.Geom.Point(35, 40);
-                }
-            }
-            this.mBoardPoint = new Phaser.Geom.Point();
         }
         super.play(val);
     }
@@ -294,6 +282,13 @@ export class BaseDragonbonesDisplay extends BaseDisplay {
             // for (const slot of this.mArmatureDisplay.armature.getSlots()) {
             //     Logger.getInstance().log(this.mBonesName + "'s slot: ", slot.name);
             // }
+            const bound = this.mArmatureDisplay.armature.getBone("board");
+            if (bound) {
+                this.mBoardPoint = new Phaser.Geom.Point(bound.global.x, bound.global.y);
+            } else {
+                Logger.getInstance().error("no board dragonbones!!!");
+                this.mBoardPoint = new Phaser.Geom.Point(35, 40);
+            }
         }
         this.mArmatureDisplay.removeDBEventListener(dragonBones.EventObject.SOUND_EVENT, this.onSoundEventHandler, this);
         this.mArmatureDisplay.addDBEventListener(dragonBones.EventObject.SOUND_EVENT, this.onSoundEventHandler, this);
@@ -354,7 +349,7 @@ export class BaseDragonbonesDisplay extends BaseDisplay {
             dbbinUrl,
             null,
             null,
-            { responseType: "arraybuffer" }
+            {responseType: "arraybuffer"}
         );
         this.scene.load.once(Phaser.Loader.Events.COMPLETE, this.createArmatureDisplay, this);
         this.scene.load.start();
@@ -1013,7 +1008,7 @@ export class BaseDragonbonesDisplay extends BaseDisplay {
             const nextLoad: string[] = data;
             const partUrl: string = this.getLoadPartUrl(nextLoad[1]);
             const partName: string = this.getLoadPartName(nextLoad[1]);
-            configList.push({ key: partName, url: partUrl });
+            configList.push({key: partName, url: partUrl});
         });
         this.scene.load.image(configList);
         this.scene.load.start();
@@ -1049,7 +1044,7 @@ export class BaseDragonbonesDisplay extends BaseDisplay {
             version = (skin.version === undefined || skin.version === "" ? "" : `_${skin.version}`);
             sn = skin.sn;
         }
-        return { sn, version };
+        return {sn, version};
     }
 
     private clearFadeTween() {

@@ -69,11 +69,11 @@ export class DisplayMovement {
         if (typeof dir !== "number") {
             return this.display.direction;
         }
-        Logger.getInstance().log("dir:====", dir);
+        Logger.getInstance().debug("dir:====", dir);
         if (dir !== this.display.displayInfo.avatarDir) {
             // this.display.displayInfo.avatarDir = dir; // 和direction set方法中重复
             this.display.direction = dir;
-            Logger.getInstance().log("renderSetDirection:=====", dir);
+            Logger.getInstance().debug("renderSetDirection:=====", dir);
             this.render.setDirection(this.display.id, dir);
         }
     }
