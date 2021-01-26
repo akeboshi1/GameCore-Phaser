@@ -341,6 +341,17 @@ export class PhysicalPeer extends RPCPeer {
         Logger.getInstance().debug("Body remove ====>:", id);
     }
 
+    @Export([webworker_rpc.ParamType.num, webworker_rpc.ParamType.str])
+    public changeAnimation(id: number, animationName: string, times?: number) {
+        const obj = this.matterObjectMap.get(id);
+        if (!obj) {
+            return;
+        }
+        obj.model.setAnimationName(animationName, times);
+        obj.removeBody();
+        obj.addBody(this.scaleRatio);
+    }
+
     @Export([webworker_rpc.ParamType.num])
     public setVertices(id: number, vertexSets: any) {
         let obj = this.matterObjectMap.get(id);

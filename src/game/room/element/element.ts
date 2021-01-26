@@ -289,19 +289,19 @@ export class Element extends BlockObject implements IElement {
             Logger.getInstance().error(`${Element.name}: sprite is empty`);
             return;
         }
-        // if (this.mModel.currentAnimationName !== animationName) {
         this.mModel.setAnimationName(animationName);
-        // }
-        // 部分动画可能会重新播放
-        // if (!this.mDisplay) {
-        //     return Logger.getInstance().warn("display can't initlized");
-        // }
 
         if (times !== undefined) {
             times = times > 0 ? times - 1 : -1;
         }
-        if (this.mElementManager) this.mElementManager.roomService.game.renderPeer.playAnimation(this.id, this.mModel.currentAnimation, undefined, times);
-        // this.mDisplay.play(this.model.currentAnimation, undefined, times);
+        if (this.mElementManager) {
+            if (times === undefined) {
+                this.mElementManager.roomService.game.physicalPeer.changeAnimation(this.id, this.mModel.currentAnimationName);
+            } else {
+                this.mElementManager.roomService.game.physicalPeer.changeAnimation(this.id, this.mModel.currentAnimationName, times);
+            }
+            this.mElementManager.roomService.game.renderPeer.playAnimation(this.id, this.mModel.currentAnimation, undefined, times);
+        }
     }
 
     public setQueue(animations: op_client.IChangeAnimation[]) {
@@ -314,20 +314,6 @@ export class Element extends BlockObject implements IElement {
                 name: animation.animationName,
                 playTimes: animation.times,
             };
-            // if (animation.times > 0) {
-            //     aq.complete = () => {
-            //         const anis = this.model.animationQueue;
-            //         anis.shift();
-            //         let aniName: string = PlayerState.IDLE;
-            //         let playTiems;
-            //         if (anis.length > 0) {
-            //             aniName = anis[0].name;
-            //             playTiems = anis[0].playTimes;
-            //         }
-            //         this.play(aniName, playTiems);
-            //         // const aniName = anis.length > 0 ? anis[0].name : PlayerState.IDLE;
-            //     };
-            // }
             queue.push(aq);
         }
         this.mModel.setAnimationQueue(queue);

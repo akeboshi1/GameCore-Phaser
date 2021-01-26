@@ -109,10 +109,10 @@ export class MainPeer extends RPCPeer {
     }
 
     public startBeat() {
-        Logger.getInstance().debug("startBeat======");
+        Logger.getInstance().log("heartBeat start");
         if (this.startDelay) return;
         this.startDelay = setInterval(() => {
-            Logger.getInstance().debug("heartbeat++++interval");
+            Logger.getInstance().log("heartBeat request");
             if (this.reConnectCount >= 8) {
                 this.remote[MAIN_WORKER].MainPeer.reconnect();
                 return;
@@ -129,13 +129,13 @@ export class MainPeer extends RPCPeer {
             clearInterval(this.startDelay);
             this.startDelay = null;
         }
-        Logger.getInstance().debug("heartBeatWorker endBeat");
+        Logger.getInstance().log("heartBeat end");
         // this.remote[MAIN_WORKER].MainPeer.endHeartBeat();
     }
 
     @Export()
     public clearBeat() {
-        Logger.getInstance().debug("clearBeat======");
+        Logger.getInstance().log("heartBeat get");
         this.reConnectCount = 0;
         // Logger.getInstance().debug("heartBeatWorker clearBeat");
         // this.remote[MAIN_WORKER].MainPeer.clearHeartBeat();

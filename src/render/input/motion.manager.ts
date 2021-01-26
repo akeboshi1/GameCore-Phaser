@@ -57,7 +57,7 @@ export class MotionManager {
                 return;
             }
         }
-        if (!pointer) return;
+        if (!pointer || !this.render.displayManager.user || !this.render.displayManager) return;
         const { x, y } = this.render.displayManager.user;
         const tmpX = pointer.worldX / this.scaleRatio - x;
         const tmpY = pointer.worldY / this.scaleRatio - y;
