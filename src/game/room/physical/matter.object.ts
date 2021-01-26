@@ -16,11 +16,6 @@ export class MatterObject {
         this.mRoomService.game.peer.physicalPeer.setOffset(this.guid, val);
     }
 
-    public async setStatic(value: boolean) {
-        await this.mRoomService.game.peer.physicalPeer.setStatic(this.guid, value);
-        return this;
-    }
-
     public async applyForce(force) {
         await this.mRoomService.game.peer.physicalPeer.applyForce(this.guid, force);
         return this;

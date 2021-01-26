@@ -206,7 +206,7 @@ class ForewordChapterItem extends ButtonEventDispatcher {
 
     public setCaptoreData(data: op_client.IPKT_EXPLORE_CHAPTER_DATA) {
         this.captoreData = data;
-        const url = Url.getOsdRes(data.imagePath);
+        const url = Url.getOsdRes(data.imagePath+`_${this.dpr}x.png`);
         this.icon.load(url);
     }
 
@@ -278,7 +278,7 @@ class ChapterLevelItem extends ChapterLevelBaseItem {
         this.leftLine.x = this.levelTex.x - this.leftLine.width * 0.5 - this.levelTex.width * 0.5 - 2 * this.dpr;
         this.rightLine.x = this.levelTex.x + this.rightLine.width * 0.5 + this.levelTex.width * 0.5 + 2 * this.dpr;
         this.starProgress.setProgress(data.progress, 500);
-        const url = Url.getOsdRes(data.imagePath);
+        const url = Url.getOsdRes(data.imagePath+`_${this.dpr}x.png`);
         this.icon.load(url);
         this.nameTex.text = data.name;
         data.energyCost = 8;
@@ -502,7 +502,7 @@ class ChapterLevelEventuallyItem extends ChapterLevelBaseItem {
 
     public setLevelData(data: op_client.IPKT_EXPLORE_LEVEL_DATA, lock: boolean) {
         super.setLevelData(data, lock);
-        const url = Url.getOsdRes(data.imagePath);
+        const url = Url.getOsdRes(data.imagePath+`_${this.dpr}x.png`);
         this.icon.load(url);
         if (lock) {
             this.iconbg2.visible = false;
