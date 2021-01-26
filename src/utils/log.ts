@@ -19,7 +19,22 @@ export class Logger implements ChatCommandInterface {
     // return console.error(message, ...optionalParams);
     throw message;
   }
+
+  /**
+   * 正常输出
+   * @param message 
+   * @param optionalParams 
+   */
   log(message?: any, ...optionalParams: any[]) {
+      console.log(message, ...optionalParams);
+  }
+
+  /**
+   * 调试输出
+   * @param message 
+   * @param optionalParams 
+   */
+  debug(message?: any, ...optionalParams: any[]) {
     if (this.isDebug)
       console.log(message, ...optionalParams);
   }
@@ -34,11 +49,6 @@ export class Logger implements ChatCommandInterface {
     if (this.isDebug)
       console.warn(message, ...optionalParams);
     this.mWarnList.push(message);
-  }
-
-  debug(message?: any, ...optionalParams: any[]) {
-    if (this.isDebug)
-      console.log(message, ...optionalParams);
   }
 
   info(message?: any, ...optionalParams: any[]) {

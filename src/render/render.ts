@@ -118,18 +118,18 @@ export class Render extends RPCPeer implements GameMain {
             this.mMainPeer = this.remote[MAIN_WORKER].MainPeer;
             this.mMainPeer.updateFps();
             this.createGame();
-            Logger.getInstance().log("worker onReady");
+            Logger.getInstance().debug("worker onReady");
         });
         this.linkTo(PHYSICAL_WORKER, PHYSICAL_WORKER_URL).onceReady(() => {
             this.mPhysicalPeer = this.remote[PHYSICAL_WORKER].PhysicalPeer;
             this.mPhysicalPeer.setScaleRatio(Math.ceil(this.mConfig.devicePixelRatio || 1));
             this.mPhysicalPeer.start();
-            Logger.getInstance().log("Physcialworker onReady");
+            Logger.getInstance().debug("Physcialworker onReady");
         });
         // this.linkTo(HEARTBEAT_WORKER, HEARTBEAT_WORKER_URL).onceReady(() => {
         //     this.mHeartPeer = this.remote[HEARTBEAT_WORKER].HeartBeatPeer;
         //     this.mMainPeer.updateFps();
-        //     Logger.getInstance().log("heartBeatworker onReady in Render");
+        //     Logger.getInstance().debug("heartBeatworker onReady in Render");
         // });
         // const len = 3;
         // const statList = [];
@@ -313,7 +313,7 @@ export class Render extends RPCPeer implements GameMain {
                 panel.hideKeyboard();
             }
         }
-        // Logger.getInstance().log("input: ", input);
+        // Logger.getInstance().debug("input: ", input);
         if (this.mConfig) {
             this.mConfig.width = width;
             this.mConfig.height = height;
@@ -472,7 +472,7 @@ export class Render extends RPCPeer implements GameMain {
             if (this.mGame) {
                 resolve(true);
             }
-            // Logger.getInstance().log("dragonbones: ", dragonBones);
+            // Logger.getInstance().debug("dragonbones: ", dragonBones);
             this.gameConfig = {
                 type: Phaser.AUTO,
                 parent: this.mConfig.parent,
@@ -825,9 +825,9 @@ export class Render extends RPCPeer implements GameMain {
                 this.mAccount = new Account();
             }
             const now = new Date().getTime();
-            Logger.getInstance().log("createAccount ====>", now);
+            Logger.getInstance().debug("createAccount ====>", now);
             this.exportProperty(this.mAccount, this, ModuleName.ACCOUNT_NAME).onceReady(() => {
-                Logger.getInstance().log("createAccountExport ====>", new Date().getTime() - now);
+                Logger.getInstance().debug("createAccountExport ====>", new Date().getTime() - now);
                 this.mAccount.enterGame(gameID, worldID, sceneID, { locX, locY, locZ });
                 resolve(true);
             });
@@ -1160,7 +1160,7 @@ export class Render extends RPCPeer implements GameMain {
 
     @Export([webworker_rpc.ParamType.num, webworker_rpc.ParamType.num])
     public setCameraScroller(actorX: number, actorY: number) {
-        // Logger.getInstance().log("syncCameraScroll");
+        // Logger.getInstance().debug("syncCameraScroll");
         if (!this.mSceneManager || !this.mCameraManager) return;
         const scene = this.mSceneManager.getMainScene();
         if (!scene) {
@@ -1185,7 +1185,7 @@ export class Render extends RPCPeer implements GameMain {
     @Export([webworker_rpc.ParamType.num])
     public createFramesDisplay(id: number, displayInfo: IFramesModel) {
         if (this.mDisplayManager) this.mDisplayManager.addFramesDisplay(id, displayInfo);
-        else Logger.getInstance().log("no displayManager ====>");
+        else Logger.getInstance().debug("no displayManager ====>");
     }
 
     @Export([webworker_rpc.ParamType.num])
@@ -1263,7 +1263,7 @@ export class Render extends RPCPeer implements GameMain {
 
     @Export([webworker_rpc.ParamType.num])
     public startFollow(id: number) {
-        // Logger.getInstance().log("target ===== startFollow");
+        // Logger.getInstance().debug("target ===== startFollow");
         const display = this.mDisplayManager.getDisplay(id);
         if (display) this.mCameraManager.startFollow(display);
     }
@@ -1438,7 +1438,7 @@ export class Render extends RPCPeer implements GameMain {
     }
 
     private resumeScene() {
-        Logger.getInstance().log(`#BlackSceneFromBackground; world.resumeScene(); isEditor:${this.mConfig.isEditor}; isPause:${this.isPause}; mGame:${this.mGame}`);
+        Logger.getInstance().debug(`#BlackSceneFromBackground; world.resumeScene(); isEditor:${this.mConfig.isEditor}; isPause:${this.isPause}; mGame:${this.mGame}`);
         if (this.mConfig.isEditor || !this.isPause) {
             return;
         }
@@ -1464,7 +1464,7 @@ export class Render extends RPCPeer implements GameMain {
     }
 
     private pauseScene() {
-        Logger.getInstance().log(`#BlackSceneFromBackground; world.pauseScene(); isEditor:${this.mConfig.isEditor}; isPause:${this.isPause}; mGame:${this.mGame}`);
+        Logger.getInstance().debug(`#BlackSceneFromBackground; world.pauseScene(); isEditor:${this.mConfig.isEditor}; isPause:${this.isPause}; mGame:${this.mGame}`);
         if (this.mConfig.isEditor || this.isPause) {
             return;
         }

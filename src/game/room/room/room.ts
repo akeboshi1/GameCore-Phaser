@@ -146,7 +146,7 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
         if (!data) {
             return;
         }
-        // Logger.getInstance().log("room====enter");
+        // Logger.getInstance().debug("room====enter");
         this.mID = data.id;
         this.mSize = {
             cols: data.cols,
@@ -221,14 +221,14 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
     }
 
     public removeBlockObject(object: IBlockObject) {
-        // Logger.getInstance().log("rooms remove");
+        // Logger.getInstance().debug("rooms remove");
         if (this.blocks) {
             this.blocks.remove(object);
         }
     }
 
     public updateBlockObject(object: IBlockObject) {
-        // Logger.getInstance().log("rooms update");
+        // Logger.getInstance().debug("rooms update");
         if (this.blocks) {
             this.blocks.check(object);
         }
@@ -326,9 +326,9 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
 
         //     this.layerManager.destroy();
         // }
-        Logger.getInstance().log("room startplay =====");
+        Logger.getInstance().debug("room startplay =====");
         this.game.renderPeer.showPlay();
-        // Logger.getInstance().log("roomstartPlay");
+        // Logger.getInstance().debug("roomstartPlay");
         this.mCameraService = new CamerasManager(this.mGame, this);
         // this.mScene = this.world.game.scene.getScene(PlayScene.name);
         this.mTerrainManager = new TerrainManager(this, this);
@@ -471,7 +471,7 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
         // if (this.mWallManager) this.mWallManager.destroy();
         if (this.mActorData) this.mActorData = null;
         if (this.mStateMap) this.mStateMap = null;
-        Logger.getInstance().log("room clear");
+        Logger.getInstance().debug("room clear");
         this.game.renderPeer.clearRoom();
         this.game.uiManager.recover();
     }
@@ -570,7 +570,7 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
         position.y = playerPosition.y;
 
         if (pos[step] === undefined) {
-            // Logger.getInstance().log("move error", pos, step);
+            // Logger.getInstance().debug("move error", pos, step);
         }
         const nextPosition = op_def.PBPoint3f.create();
         nextPosition.x = pos[step].x;
@@ -593,7 +593,7 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
     public onManagerReady(key: string) {
         if (!this.mManagersReadyStates.has(key)) return;
 
-        Logger.getInstance().log("room.onManagerReady ", key);
+        Logger.getInstance().debug("room.onManagerReady ", key);
 
         this.mManagersReadyStates.set(key, true);
         let allReady = true;
@@ -639,7 +639,7 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
             case "setCameraBounds":
                 const bounds = state.packet;
                 if (!bounds || !bounds.width || !bounds.height) {
-                    // Logger.getInstance().log("setCameraBounds error", bounds);
+                    // Logger.getInstance().debug("setCameraBounds error", bounds);
                     return;
                 }
                 let { x, y, width, height } = bounds;
@@ -749,7 +749,7 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
 
     // private addFillEffect(pos: IPoint, status: op_def.PathReachableStatus) {
     //     // if (!this.scene) {
-    //     //     Logger.getInstance().log("Room scene  does not exist");
+    //     //     Logger.getInstance().debug("Room scene  does not exist");
     //     //     return;
     //     // }
     //     // const fall = new FallEffect(this.scene, this.mScaleRatio);
