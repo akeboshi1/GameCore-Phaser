@@ -206,6 +206,10 @@ export class BaseDragonbonesDisplay extends BaseDisplay {
             this.mFadeTween = null;
         }
 
+        if (this.mReplaceTexTimeOutID) {
+            clearTimeout(this.mReplaceTexTimeOutID);
+            this.mReplaceTexTimeOutID = null;
+        }
         // if (this.scene) {
         //     if (this.scene.textures.exists(this.mReplaceTextureKey)) {
         //         this.scene.textures.remove(this.mReplaceTextureKey);
@@ -1024,7 +1028,7 @@ export class BaseDragonbonesDisplay extends BaseDisplay {
             this.mReplaceTexTimeOutID = null;
         }
         this.mReplaceTexTimeOutID = setTimeout(() => {
-            if (this.mPreReplaceTextureKey !== null && this.mPreReplaceTextureKey.length > 0 &&
+            if (this.mPreReplaceTextureKey !== null && this.mPreReplaceTextureKey.length > 0 && this.scene &&
                 this.scene.textures.exists(this.mPreReplaceTextureKey)) {
                 this.scene.textures.remove(this.mPreReplaceTextureKey);
                 this.scene.textures.removeKey(this.mPreReplaceTextureKey);
