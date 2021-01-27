@@ -710,6 +710,7 @@ export class Render extends RPCPeer implements GameMain {
 
     @Export()
     public reload() {
+        Logger.getInstance().log("game relaod =====>");
         window.location.reload();
     }
 
@@ -968,6 +969,7 @@ export class Render extends RPCPeer implements GameMain {
         // this.newGame().then(() => {
         //     // todo sceneManager loginScene.name
         // });
+        Logger.getInstance().debug("gotoanothergame ====>");
         this.account.enterGame(gameId, worldId, sceneId, { x: px, y: py, z: pz });
     }
 

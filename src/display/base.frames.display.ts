@@ -292,8 +292,7 @@ export class BaseFramesDisplay extends BaseDisplay {
             this.scene.textures.off(Phaser.Textures.Events.ADD, cb, this);
             this.onLoadCompleted(field);
         } else {
-            // tslint:disable-next-line:no-console
-            console.log("no addtexture", this, data, field);
+            Logger.getInstance().debug("no addtexture", this, data, field);
         }
     }
 
