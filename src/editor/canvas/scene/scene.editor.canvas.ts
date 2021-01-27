@@ -116,6 +116,9 @@ export class SceneEditorCanvas extends EditorCanvas implements IRender {
         if (this.mBrush === BrushEnum.Eraser) {
             this.mStamp.showEraserArea();
         }
+        if (this.mBrush !== BrushEnum.BRUSH) {
+            this.mStamp.unselected();
+        }
     }
 
     public changeStamp() {
@@ -297,6 +300,10 @@ export class SceneEditorCanvas extends EditorCanvas implements IRender {
         return this.mScene;
     }
 
+    checkCollision(pos: IPos, sprite) {
+        return this.mElementManager.checkCollision(pos, sprite);
+    }
+
     destroy() {
         this.mTerrainManager.destroy();
         this.displayObjectPool.destroy();
@@ -321,6 +328,8 @@ export class SceneEditorCanvas extends EditorCanvas implements IRender {
         this.mCameraManager.centerCamera();
         this.addListener();
         this.showGrid();
+
+        this.mElementManager.init();
 
         // const elements = this.mSceneNode.getElements();
         // for (const ele of elements) {
@@ -535,6 +544,10 @@ export class SceneEditorCanvas extends EditorCanvas implements IRender {
     get scaleRatio() {
         return Math.round(window.devicePixelRatio);
     }
+
+    get elementManager() {
+        return this.mElementManager;
+    }
 }
 
 class SceneEditor extends Phaser.Scene {
@@ -744,6 +757,17 @@ class MouseFollow {
         return result;
     }
 
+    unselected() {
+        if (this.mDisplay) {
+            this.mDisplay.destroy();
+            this.mDisplay = null;
+        }
+        this.mNodeType = op_def.NodeType.UnknownNodeType;
+        this.mIsMoss = false;
+        this.mKey = 0;
+        this.isTerrain = false;
+    }
+
     private updatePos(worldX: number, worldY: number) {
         if (!this.mDisplay) {
             return;
@@ -752,6 +776,12 @@ class MouseFollow {
         const pos = transitionGrid(worldX, worldY, this.sceneEditor.alignGrid, roomSize);
         if (!pos) {
             return;
+        }
+        if (this.mNodeType === op_def.NodeType.ElementNodeType) {
+            const result = this.sceneEditor.checkCollision(pos, this.mSprite);
+            if (!result) {
+                return;
+            }
         }
         this.mDisplay.updatePosition(pos.x, pos.y);
     }
@@ -882,7 +912,7 @@ class MouseDisplayContainer extends Phaser.GameObjects.Container {
 
         for (let i = 0; i < size; i++) {
             for (let j = 0; j < size; j++) {
-                frameDisplay = new EditorFramesDisplay(this.scene, 0, this.mNodeType, this.sceneEditor);
+                frameDisplay = new EditorFramesDisplay(this.sceneEditor, sprite);
                 frameDisplay.setAlpha(0.8);
                 // frameDisplay.once("initialized", this.onInitializedHandler, this);
                 frameDisplay.load(frame);
@@ -1003,6 +1033,12 @@ class SelectedElementManager {
 
         const roomSize = this.sceneEditor.miniRoomSize;
         for (const ele of this.mSelecedElement) {
+            if (ele.nodeType === op_def.NodeType.ElementNodeType) {
+                const result = this.sceneEditor.checkCollision(new LogicPos(x, y), ele.sprite);
+                if (!result) {
+                    return;
+                }
+            }
             const pos = transitionGrid(x, y, this.sceneEditor.alignGrid, roomSize);
             ele.setPosition(pos.x, pos.y);
         }

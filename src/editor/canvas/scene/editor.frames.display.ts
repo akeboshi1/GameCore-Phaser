@@ -4,6 +4,7 @@ import { IFramesModel, RunningAnimation } from "structure";
 import { Helpers, LogicPoint, Position45 } from "utils";
 import { SceneEditorCanvas } from "./scene.editor.canvas";
 import { EditorTopDisplay } from "./top.display";
+import { op_def } from "pixelpai_proto";
 
 export class EditorFramesDisplay extends BaseFramesDisplay {
 
@@ -12,32 +13,19 @@ export class EditorFramesDisplay extends BaseFramesDisplay {
     protected mTopDisplay: EditorTopDisplay;
     protected mIsMoss: boolean = false;
 
-    constructor(scene: Phaser.Scene, id: number, nodeType: number, private sceneEditor: SceneEditorCanvas) {
-        super(scene, id, nodeType);
+    constructor(protected sceneEditor: SceneEditorCanvas, sprite: Sprite) {
+        super(sceneEditor.scene, sprite.id, sprite.nodeType);
     }
 
     selected() {
-        this.showRefernceArea();
         this.showNickname();
     }
 
     unselected() {
-        this.hideRefernceArea();
         this.hideNickname();
     }
 
     showRefernceArea() {
-        if (!this.mReferenceArea) {
-            this.mReferenceArea = new ReferenceArea(this.scene);
-        }
-        if (!this.mCurAnimation) {
-            return;
-        }
-        const area = this.getCollisionArea();
-        const origin = this.getOriginPoint();
-        const { tileWidth, tileHeight } = this.sceneEditor.miniRoomSize;
-        this.mReferenceArea.draw(area, origin, tileWidth, tileHeight);
-        this.addAt(this.mReferenceArea, 0);
     }
 
     hideRefernceArea() {
@@ -64,6 +52,7 @@ export class EditorFramesDisplay extends BaseFramesDisplay {
     }
 
     updateSprite(sprite: Sprite) {
+        this.sprite = sprite;
         const displayInfo = sprite.displayInfo;
         if (displayInfo) {
             this.load(<IFramesModel>displayInfo);
@@ -74,6 +63,10 @@ export class EditorFramesDisplay extends BaseFramesDisplay {
         }
         this.name = sprite.nickname;
         this.play(sprite.currentAnimation);
+    }
+
+    setSprite(sprite: Sprite) {
+        this.sprite = sprite;
     }
 
     /**
@@ -138,11 +131,15 @@ export class EditorFramesDisplay extends BaseFramesDisplay {
         return originPoint;
     }
 
-    private get topDisplay() {
+    protected get topDisplay() {
         if (!this.mTopDisplay) {
             this.mTopDisplay = new EditorTopDisplay(this.scene, this, 1);
         }
         return this.mTopDisplay;
+    }
+
+    protected get elementManager() {
+        return this.sceneEditor.elementManager;
     }
 
     set isMoss(val: boolean) {

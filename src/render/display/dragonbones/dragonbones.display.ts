@@ -17,7 +17,6 @@ export class DragonbonesDisplay extends BaseDragonbonesDisplay implements IDispl
     protected mSortY: number = 0;
 
     private mLoadQueue: LoadQueue;
-    private mProjectionSize: IProjection;
     private mName: string = undefined;
     private mPlaceholder: Phaser.GameObjects.Image;
 

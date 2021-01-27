@@ -3,8 +3,8 @@
 //     readonly scene: Phaser.Scene;
 //     setScene(scene: Phaser.Scene): void;
 
+import { BaseLayer } from "baseRender";
 import {Logger} from "utils";
-import { BaseLayer } from "./base.layer";
 
 //     addToUILayer(obj: Phaser.GameObjects.GameObject, index?: number);
 //     addToDialogLayer(obj: Phaser.GameObjects.GameObject);
@@ -90,15 +90,14 @@ export class LayerManager {
         //     this.mGroundLayer.sort("depth");
         //     this.mDepthGround = false;
         // }
-        if (this.mDepthSurface) {
-            this.mDepthSurface = false;
-            const surfaceLayer = this.getLayer("surfaceLayer");
-            // TODO any 改成ISort接口
-            surfaceLayer.sort("depth", (displayA: any, displayB: any) => {
-                // 游戏中所有元素的sortz为1，只在同一高度上，所以下面公式中加入sortz暂时不影响排序，后期sortz会有变化
-                return displayA.y + displayA.z > displayB.y + displayB.z;
-            });
-        }
+        // if (this.mDepthSurface) {
+        //     this.mDepthSurface = false;
+        //     const surfaceLayer = this.getLayer("surfaceLayer");
+        //     surfaceLayer.sort("depth", (displayA: IDisplayObject, displayB: IDisplayObject) => {
+        //         // 游戏中所有元素的sortz为1，只在同一高度上，所以下面公式中加入sortz暂时不影响排序，后期sortz会有变化
+        //         return displayA.y + displayA.z > displayB.y + displayB.z;
+        //     });
+        // }
     }
 
     // public setScene(scene: Phaser.Scene) {

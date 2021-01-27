@@ -1,4 +1,4 @@
-import { IProjection, Logger, projectionAngle, Url } from "utils";
+import { Logger, Url } from "utils";
 import { BaseDisplay } from "./base.display";
 import { DisplayField, IFramesModel, RunningAnimation } from "structure";
 import ImageFile = Phaser.Loader.FileTypes.ImageFile;
@@ -16,9 +16,6 @@ export class BaseFramesDisplay extends BaseDisplay {
     protected mMountList: Phaser.GameObjects.Container[];
     protected mIsSetInteractive: boolean = false;
     protected mIsInteracitve: boolean = false;
-    protected mSortX: number = 0;
-    protected mSortY: number = 0;
-    protected mProjectionSize: IProjection;
     protected mID: number = 0;
     protected mNodeType: number;
     private mField;
@@ -238,12 +235,6 @@ export class BaseFramesDisplay extends BaseDisplay {
         }
     }
 
-    public setPosition(x?: number, y?: number, z?: number, w?: number) {
-        super.setPosition(x, y, z, w);
-        this.updateSort();
-        return this;
-    }
-
     public destroy() {
 
         this.clear();
@@ -288,13 +279,6 @@ export class BaseFramesDisplay extends BaseDisplay {
 
     protected completeFrameAnimationQueue() {
 
-    }
-
-    protected updateSort() {
-        const _projectionAngle = projectionAngle;
-        const projectionSize = this.projectionSize;
-        this.mSortX = (this.x - projectionSize.offset.x) / (2 * _projectionAngle[0]) + (this.y - projectionSize.offset.y) / _projectionAngle[1] + this.z;
-        this.mSortY = -((this.x - projectionSize.offset.x) / 2 * _projectionAngle[0]) + (this.y - projectionSize.offset.y) / (2 * _projectionAngle[1]);
     }
 
     protected clear() {
@@ -431,21 +415,6 @@ export class BaseFramesDisplay extends BaseDisplay {
 
     get topPoint() {
         return new Phaser.Geom.Point(0, -this.spriteHeight);
-    }
-
-    get projectionSize(): IProjection {
-        if (!this.mProjectionSize) {
-            this.mProjectionSize = {offset: {x: 0, y: 0}, width: 0, height: 0};
-        }
-        return this.mProjectionSize;
-    }
-
-    get sortX() {
-        return this.mSortX;
-    }
-
-    get sortY() {
-        return this.mSortY;
     }
 
     get nodeType(): number {

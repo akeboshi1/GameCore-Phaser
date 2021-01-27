@@ -2,10 +2,12 @@ import { Sprite } from "baseModel";
 import { PacketHandler, PBpacket } from "net-socket-packet";
 import { op_client, op_editor, op_def } from "pixelpai_proto";
 import { ISprite } from "structure";
+import { IPos, Logger, Position45 } from "utils";
 import { SceneEditorCanvas } from "../scene.editor.canvas";
 
 export class EditorElementManager extends PacketHandler {
     private taskQueue: Map<number, any> = new Map();
+    private mMap: number[][] = [];
     constructor(protected sceneEditor: SceneEditorCanvas) {
         super();
         const connection = this.sceneEditor.connection;
@@ -14,6 +16,14 @@ export class EditorElementManager extends PacketHandler {
             this.addHandlerFun(op_client.OPCODE._OP_EDITOR_REQ_CLIENT_CREATE_SPRITE, this.handleCreateElements);
             this.addHandlerFun(op_client.OPCODE._OP_EDITOR_REQ_CLIENT_DELETE_SPRITE, this.handleDeleteElements);
             this.addHandlerFun(op_client.OPCODE._OP_EDITOR_REQ_CLIENT_SYNC_SPRITE, this.handleSyncElements);
+        }
+    }
+
+    init() {
+        const size = this.sceneEditor.miniRoomSize;
+        this.mMap = new Array(size.rows);
+        for (let i = 0; i < this.mMap.length; i++) {
+            this.mMap[i] = new Array(size.cols).fill(0);
         }
     }
 
@@ -88,10 +98,40 @@ export class EditorElementManager extends PacketHandler {
         this.sceneEditor.connection.send(pkt);
     }
 
-    addToMap() {
+    addToMap(sprite: ISprite) {
+        if (!sprite) return;
+        this.setMap(sprite, true);
     }
 
-    removeFromMap() {
+    removeFromMap(sprite: ISprite) {
+        if (!sprite) return;
+        this.setMap(sprite, false);
+    }
+
+    checkCollision(pos: IPos, sprite: ISprite): boolean {
+        const collision = sprite.getCollisionArea();
+        const origin = sprite.getOriginPoint();
+        if (!collision) {
+            return false;
+        }
+        const miniSize = this.sceneEditor.miniRoomSize;
+        const pos45 = Position45.transformTo45(pos, miniSize);
+        const rows = collision.length;
+        const cols = collision[0].length;
+        let row = 0, col = 0;
+
+        for (let i = 0; i < rows; i++) {
+            row = pos45.y + i - origin.y;
+            for (let j = 0; j < cols; j++) {
+                if (collision[i][j] === 1) {
+                    col = pos45.x + j - origin.x;
+                    if (row >= 0 && row < this.mMap.length && col >= 0 && col < this.mMap[row].length) {
+                            if (this.mMap[row][col] === 1) return false;
+                    }
+                }
+            }
+        }
+        return true;
     }
 
     protected handleCreateElements(packet: PBpacket) {
@@ -157,6 +197,30 @@ export class EditorElementManager extends PacketHandler {
         }
     }
 
+    protected setMap(sprite: ISprite, isAdd: boolean) {
+        const collision = sprite.getCollisionArea();
+        const origin = sprite.getOriginPoint();
+        if (!collision) {
+            return;
+        }
+        const miniSize = this.sceneEditor.miniRoomSize;
+        const pos = Position45.transformTo45(sprite.pos, miniSize);
+        const rows = collision.length;
+        const cols = collision[0].length;
+        let row = 0, col = 0;
+        for (let i = 0; i < rows; i++) {
+            row = pos.y + i - origin.y;
+            for (let j = 0; j < cols; j++) {
+                if (collision[i][j] === 1) {
+                    col = pos.x + j - origin.x;
+                    if (row >= 0 && row < this.mMap.length && col >= 0 && col < this.mMap[row].length) {
+                            this.mMap[row][col] = isAdd ? collision[i][j] : 0;
+                    }
+                }
+            }
+        }
+    }
+
     // protected _add(sprite: ISprite): Element {
     //     let ele = this.mElements.get(sprite.id);
     //     if (!ele) ele = new Element(sprite, this);
@@ -193,6 +257,10 @@ export class EditorElementManager extends PacketHandler {
     //         element.setDirection(sprite.direction);
     //     }
     // }
+
+    private checkCollsition() {
+
+    }
 
     private batchActionSprites() {
         if (!Array.from(this.taskQueue.keys()).length) {

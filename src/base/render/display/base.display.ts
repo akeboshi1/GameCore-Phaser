@@ -1,12 +1,10 @@
-import { Handler, LogicPos, ValueResolver } from "utils";
+import { Handler, IProjection, LogicPos, projectionAngle, ValueResolver } from "utils";
 import { DisplayField, IDragonbonesModel, IFramesModel, RunningAnimation } from "structure";
+import { ISortObject } from "./sort.object";
 
 export interface IBaseDisplay {
     displayInfo: IDragonbonesModel | IFramesModel | undefined;
     direction: number;
-    sortX: number;
-    sortY: number;
-    sortZ: number;
     x: number;
     y: number;
     z: number;
@@ -43,7 +41,7 @@ export interface IBaseDisplay {
     disableInteractive();
 }
 
-export abstract class BaseDisplay extends Phaser.GameObjects.Container implements IBaseDisplay {
+export abstract class BaseDisplay extends Phaser.GameObjects.Container implements IBaseDisplay, ISortObject {
     public createdHandler: Handler;
     protected mAlpha: number = 1;
     protected mDirection: number = 3;
@@ -55,6 +53,9 @@ export abstract class BaseDisplay extends Phaser.GameObjects.Container implement
     protected mSprites: Map<DisplayField, Phaser.GameObjects.Sprite | Phaser.GameObjects.Image | Phaser.GameObjects.Container> = new Map<DisplayField,
         Phaser.GameObjects.Sprite | Phaser.GameObjects.Image>();
     protected mLoadDisplayPromise: ValueResolver<any> = null;
+    protected mProjectionSize: IProjection;
+    protected mSortX: number = 0;
+    protected mSortY: number = 0;
 
     public destroy(fromScene?: boolean) {
         this.mSprites.forEach((sprite) => sprite.destroy());
@@ -122,6 +123,12 @@ export abstract class BaseDisplay extends Phaser.GameObjects.Container implement
         this.play(this.mAnimation);
     }
 
+    public setPosition(x?: number, y?: number, z?: number, w?: number) {
+        super.setPosition(x, y, z, w);
+        this.updateSort();
+        return this;
+    }
+
     public getPosition(): LogicPos {
         const pos = new LogicPos(this.x, this.y);
         if (this.mRootMount) {
@@ -145,12 +152,26 @@ export abstract class BaseDisplay extends Phaser.GameObjects.Container implement
         return this.mSprites.get(key);
     }
 
-    get sortX(): number {
-        return this.x;
+    protected updateSort() {
+        const _projectionAngle = projectionAngle;
+        const projectionSize = this.projectionSize;
+        this.mSortX = (this.x - projectionSize.offset.x) / (2 * _projectionAngle[0]) + (this.y - projectionSize.offset.y) / _projectionAngle[1] + this.z;
+        this.mSortY = -((this.x - projectionSize.offset.x) / 2 * _projectionAngle[0]) + (this.y - projectionSize.offset.y) / (2 * _projectionAngle[1]);
     }
 
-    get sortY(): number {
-        return this.y;
+    get projectionSize(): IProjection {
+        if (!this.mProjectionSize) {
+            this.mProjectionSize = {offset: {x: 0, y: 0}, width: 0, height: 0};
+        }
+        return this.mProjectionSize;
+    }
+
+    get sortX() {
+        return this.mSortX;
+    }
+
+    get sortY() {
+        return this.mSortY;
     }
 
     get sortZ(): number {
