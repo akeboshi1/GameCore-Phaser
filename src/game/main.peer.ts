@@ -9,6 +9,8 @@ import { ILauncherConfig, MAIN_WORKER, RENDER_PEER, ModuleName, EventType, PHYSI
 import { PicaGame } from "picaWorker";
 import { DataMgrType } from "./data.manager/dataManager";
 import { SceneDataManager } from "./data.manager";
+import version from "../../version";
+
 for (const key in protos) {
     PBpacket.addProtocol(protos[key]);
 }
@@ -32,7 +34,7 @@ export class MainPeer extends RPCPeer {
     // private isReconnect: boolean = false;
     constructor() {
         super(MAIN_WORKER);
-        Logger.getInstance().debug("constructor mainPeer");
+        Logger.getInstance().log("Game version ====>:", `v${version}`);
         this.game = new PicaGame(this);
         this.stateTime = new Date().getTime();
     }
