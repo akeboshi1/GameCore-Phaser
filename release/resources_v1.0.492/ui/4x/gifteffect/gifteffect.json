@@ -1,0 +1,104 @@
+{
+	"textures": [
+		{
+			"image": "effect",
+			"format": "RGBA8888",
+			"size": {
+				"w": 994,
+				"h": 684
+			},
+			"scale": 1,
+			"frames": [
+				{
+					"filename": "gift_barrage",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 992,
+						"h": 412
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 992,
+						"h": 412
+					},
+					"frame": {
+						"x": 1,
+						"y": 1,
+						"w": 992,
+						"h": 412
+					}
+				},
+				{
+					"filename": "gift_bg",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 817,
+						"h": 139
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 817,
+						"h": 139
+					},
+					"frame": {
+						"x": 1,
+						"y": 415,
+						"w": 817,
+						"h": 139
+					}
+				},
+				{
+					"filename": "gift_bubble",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 173,
+						"h": 202
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 173,
+						"h": 202
+					},
+					"frame": {
+						"x": 820,
+						"y": 415,
+						"w": 173,
+						"h": 202
+					}
+				},
+				{
+					"filename": "gift_head",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 127,
+						"h": 127
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 127,
+						"h": 127
+					},
+					"frame": {
+						"x": 1,
+						"y": 556,
+						"w": 127,
+						"h": 127
+					}
+				}
+			]
+		}
+	],
+	"meta": {
+		"app": "https://www.codeandweb.com/texturepacker",
+		"version": "3.0",
+		"smartupdate": "$TexturePacker:SmartUpdate:d43513c9407449750f509207ba8fb1de:6f7a0fb8a92a0400f28710be2523508f:b60d9131f70683876e2c96e2120f0b99$"
+	}
+}
