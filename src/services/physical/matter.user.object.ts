@@ -67,11 +67,7 @@ export class MatterUserObject extends MatterPlayerObject {
         }
         // this.peer.mainPeer.removePartMount(this.id, targets[0], path);
 
-        Logger.getInstance().debug("#move Model.pos:", this.mModel.pos);
-        Logger.getInstance().debug("#move body.position:",
-            new LogicPos(this.body.position.x / this.peer.scaleRatio, this.body.position.y / this.peer.scaleRatio));
         const pos = this.mModel.pos;
-        // const pos = new LogicPos(this.body.position.x / this.peer.scaleRatio, this.body.position.y / this.peer.scaleRatio);
         for (const target of targets) {
             if (target.x === pos.x && target.y === pos.y) {
                 this.mTargetPoint = { targetId };
@@ -170,6 +166,9 @@ export class MatterUserObject extends MatterPlayerObject {
                 this.tryStopMove(path[0]);
                 return;
             }
+        } else {
+            // 只要路径结果存在，每一帧都更新vec
+            this.startMove();
         }
         if (delta === undefined) delta = 0;
         this.mSyncTime += delta;

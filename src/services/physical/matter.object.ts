@@ -139,6 +139,8 @@ export class MatterObject implements IMatterObject {
                     this.peer.mainPeer.setDirection(this.id, path[0].stopDir);
                 }
             }
+        } else {
+            this.startMove();
         }
     }
 
