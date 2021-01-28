@@ -43,7 +43,6 @@ export class User extends Player {
         this.mRoomService = room;
         this.mElementManager = room.playerManager;
         this.game.peer.physicalPeer.createMatterUserObject(this.id);
-        // this.setMatterWorld(room.matterWorld);
         if (this.game.avatarType === op_def.AvatarStyle.SuitType) {
             if (!AvatarSuitType.hasAvatarSuit(actor["attrs"])) {
                 if (!actor.avatar) actor.avatar = <any>(AvatarSuitType.createBaseAvatar());
@@ -57,102 +56,14 @@ export class User extends Player {
     }
 
     update() {
-        //     if (this.mMoving) {
-        //         const pos = this.getPosition();
-        //         pos.y += this.offsetY;
-        //         if (Math.abs(pos.x - this.mTargetPoint.x) <= this.mSpeed && Math.abs(pos.y - this.mTargetPoint.y) <= this.mSpeed) {
-        //             this.stopMove();
-        //             return;
-        //         }
-        //         // const angle = Tool.calcAngle(pos, this.mTargetPoint) * (Math.PI / 180);
-        //         const angle = Math.atan2((this.mTargetPoint.y - pos.y), (this.mTargetPoint.x - pos.x));
-        //         const dir = Tool.calculateDirectionByRadin(angle);
-        //         this.setDirection(dir);
-
-        //         pos.x += Math.cos(angle) * this.mSpeed;
-        //         pos.y += Math.sin(angle) * this.mSpeed;
-        //         this.model.setPosition(pos.x, pos.y);
-        //         if (this.mRootMount) {
-        //             return;
-        //         }
-        //         this.game.renderPeer.setPosition(this.id, pos.x, pos.y);
-        //     }
     }
 
     public unmount(targetPos?: IPos): Promise<this> {
         const mountID = this.mRootMount.id;
-        // super.unmount();
         this.mRootMount = null;
         this.unmountSprite(mountID, targetPos);
         return Promise.resolve(this);
-        //     if (this.mRootMount) {
-        //         let landingPos: IPos;
-        //         const pos = await this.mRoomService.game.physicalPeer.getInteractivePosition(this.mRootMount.id);
-        //         // this.mRootMount.getInteractivePositionList();
-        //         if (pos.length === 0) {
-        //             return;
-        //         }
-        //         const mountID = this.mRootMount.id;
-        //         this.mRootMount = null;
-        //         if (targetPos != null) {
-        //             const path = await this.roomService.findPath(targetPos, pos, true);
-        //             if (path.length > 0) {
-        //                 landingPos = path[0];
-        //             } else {
-        //                 landingPos = pos[0];
-        //             }
-        //         } else {
-        //             landingPos = pos[0];
-        //         }
-        //         this.setPosition(landingPos);
-        //         this.unmountSprite(mountID, landingPos);
-        //         this.enableBlock();
-        //         // this.mDirty = true;
-        //     }
-        //     return this;
     }
-
-    // public moveMotion(x: number, y: number, targetId?: number) {
-    //     if (this.mRootMount) {
-    //         this.mRootMount.removeMount(this);
-    //     }
-    //     this.mTargetPoint = { path: [new LogicPos(x, y)], targetId };
-    //     this.mSyncDirty = true;
-    //     this.game.peer.physicalPeer.setSensor(this.id, false);
-    //     // this.matterWorld.setSensor(this.body, false);
-    //     this.startMove();
-    // }
-
-    // public findPath(x: number, y: number, targets: IPos[], targetId?: number, toReverse: boolean = false) {
-    //     if (!targets) {
-    //         return;
-    //     }
-    //     if (this.mRootMount) {
-    //         this.mRootMount.removeMount(this, targets[0]);
-    //     }
-    //     const pos = this.mModel.pos;
-    //     for (const target of targets) {
-    //         if (target.x === pos.x && target.y === pos.y) {
-    //             this.mTargetPoint = { targetId };
-    //             this.tryStopMove();
-    //             return;
-    //         }
-    //     }
-    //     const path = this.roomService.findPath(this.getPosition(), targets, toReverse);
-    //     if (!path) {
-    //         return;
-    //     }
-    //     if (path.length < 1) {
-    //         this.addFillEffect({ x, y }, op_def.PathReachableStatus.PATH_UNREACHABLE_AREA);
-    //         return;
-    //     }
-    //     // path.map((pos: IPos) => pos.y += this.offsetY);
-    //     this.game.peer.physicalPeer.setSensor(this.id, true);
-    //     // this.matterWorld.setSensor(this.body, true);
-    //     this.mTargetPoint = { path, targetId };
-    //     this.addFillEffect({ x, y }, op_def.PathReachableStatus.PATH_REACHABLE_AREA);
-    //     this.startMove();
-    // }
 
     public syncPosition(targetPoint: any) {
         const target = op_def.PBPoint3f.create();
@@ -172,35 +83,14 @@ export class User extends Player {
         this.game.connection.send(packet);
     }
 
-    // public startMove() {
-    //     const path = this.mTargetPoint.path;
-    //     if (path.length < 1) {
-    //         return;
-    //     }
-    //     this.changeState(PlayerState.WALK);
-    //     this.mMoving = true;
-    //     this.setStatic(false);
-
-    //     const pos = this.getPosition();
-    //     // pos.y += this.offsetY;
-    //     const angle = Math.atan2((path[0].y - pos.y), (path[0].x - pos.x));
-    //     // TODO
-    //     const speed = this.mModel.speed * delayTime;
-    //     this.setVelocity(Math.cos(angle) * speed, Math.sin(angle) * speed);
-    // }
-
     public startMove() {
         this.changeState(PlayerState.WALK);
         this.mMoving = true;
-        // this.mRoomService.game.physicalPeer.startMove();
     }
 
     public stopMove() {
-        //  super.stopMove();
-        // this.mRoomService.game.physicalPeer.stopMove();
         this.changeState(PlayerState.IDLE);
         this.mMoving = false;
-        // Logger.getInstance().debug("stopMovedirection", this.dir);
         if (this.mRoomService && this.mRoomService.game.moveStyle === op_def.MoveStyle.DIRECTION_MOVE_STYLE) {
             const pkt: PBpacket = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_STOP_SPRITE);
             const ct: op_virtual_world.IOP_CLIENT_REQ_VIRTUAL_WORLD_STOP_SPRITE = pkt.content;
@@ -230,38 +120,6 @@ export class User extends Player {
         super.setQueue(animations);
     }
 
-    // public movePath(movePath: op_client.IOP_VIRTUAL_WORLD_REQ_CLIENT_MOVE_SPRITE_BY_PATH) {
-    //     if (this.mRoomService.game.moveStyle === op_def.MoveStyle.DIRECTION_MOVE_STYLE) {
-    //         if (this.mCurState !== PlayerState.WALK) {
-    //             return;
-    //         }
-    //     }
-    //     // movePath.path = [{ x: 885.000000, y: 637.50000}, { x: 915.000000, y: 637.50000}, { x: 945.000000, y: 637.50000}, { x: 975.000000, y: 637.50000}, { x: 1005.00000, y: 637.50000}, { x: 1035.00000, y: 637.50000}, { x: 1065.00000, y: 637.50000}, { x: 1080.00000, y: 645.00000}, { x: 1095.00000, y: 652.50000}, { x: 1110.00000, y: 660.00000}, { x: 1125.00000, y: 667.50000}, { x: 1140.00000, y: 675.00000}, { x: 1155.00000, y: 682.50000}, { x: 1170.00000, y: 690.00000}];
-    //     // movePath.path = [{x: 1140.00000, y: 495.000000}, {x: 1125.00000, y: 502.500000}, {x: 1110.00000, y: 510.000000}, {x: 1095.00000, y: 517.500000}, {x: 1080.00000, y: 525.000000}, {x: 1065.00000, y: 532.500000}, {x: 1050.00000, y: 540.000000}, {x: 1035.00000, y: 547.500000}];
-    //     // movePath.timestemp = 3965;
-    //     let lastPos = new LogicPos(this.mModel.pos.x, this.mModel.pos.y - this.offsetY);
-    //     const path = movePath.path;
-    //     let point = null;
-    //     let now = this.mElementManager.roomService.now();
-    //     let duration = 0;
-    //     let angle = 0;
-    //     const pathAry = path.map((value) => {
-    //         point = value.point3f;
-    //         if (!(point.y === lastPos.y && point.x === lastPos.x)) {
-    //             angle = Math.atan2(point.y - lastPos.y, point.x - lastPos.x) * (180 / Math.PI);
-    //         }
-    //         const direction = this.onCheckDirection(angle);
-    //         now += duration;
-    //         duration = value.timestemp - now;
-    //         return {
-    //             x: value.point3f.x, y: value.point3f.y, duration, timestemp: value.timestemp, direction
-    //         };
-    //         lastPos = new LogicPos(point.x, point.y);
-    //     });
-    //     // this.drawPath(movePath.path);
-    //     super.movePath(movePath);
-    // }
-
     // override super's method.
     public setRenderable(isRenderable: boolean): Promise<any> {
         // do nothing!
@@ -290,9 +148,7 @@ export class User extends Player {
         const content: op_virtual_world.IOP_CLIENT_REQ_VIRTUAL_WORLD_STOP_SELF = packet.content;
         content.position = position;
         this.game.connection.send(packet);
-
         Logger.getInstance().debug("send stop move==========>>>", pos);
-
         this.activeSprite(targetId);
     }
 
@@ -329,97 +185,16 @@ export class User extends Player {
         this.game.connection.send(packet);
     }
 
-    // protected onMoveComplete() {
-    //     this.preMoveComplete();
-    //     if (this.mCurState !== PlayerState.WALK) {
-    //         this.mMoveData.tweenAnim.stop();
-    //         return;
-    //     }
-    //     if (this.mRoomService.game.moveStyle !== op_def.MoveStyle.DIRECTION_MOVE_STYLE) {
-    //         this.changeState(PlayerState.IDLE);
-    //         this.stopMove();
-    //     }
-    //     // this._doMove();
-    // }
-
-    // protected async _doMove(time?: number, delta?: number) {
-    //     if (!this.mMoving || !this.mTargetPoint) return;
-    //     const path = this.mTargetPoint.path;
-    //     const _pos = await this.roomService.game.peer.physicalPeer.position(this.id);
-    //     const pos = new LogicPos(Math.round(_pos.x / this.roomService.game.scaleRatio), Math.round(_pos.y / this.mElementManager.roomService.game.scaleRatio));
-    //     this.mModel.setPosition(pos.x, pos.y);
-    //     this.mRoomService.game.peer.render.setPosition(this.id, pos.x, pos.y);
-    //     const speed = this.mModel.speed * delta;
-    //     this.checkDirection();
-    //     this.roomService.cameraService.syncDirty = true;
-
-    //     // if (Math.abs(pos.x - path[0].x) <= speed && Math.abs(pos.y - path[0].y) <= speed) {
-    //     if (Tool.twoPointDistance(pos, path[0]) <= speed) {
-    //         if (path.length > 1) {
-    //             path.shift();
-    //             this.startMove();
-    //         } else {
-    //             this.tryStopMove(path[0]);
-    //             return;
-    //         }
-    //     }
-    //     if (delta === undefined) delta = 0;
-    //     this.mSyncTime += delta;
-    //     if (this.mSyncTime > 50) {
-    //         this.mSyncTime = 0;
-    //         this.mSyncDirty = true;
-    //     }
-    //     if (this.mSyncDirty) {
-    //         this.mSyncDirty = false;
-    //         this.syncPosition();
-    //     }
-    // }
-
-    // protected onMoving() {
-    //     if (this.mCurState !== PlayerState.WALK) {
-    //         this.mMoveData.tweenLineAnim.stop();
-    //         return;
-    //     }
-    //     super.onMoving();
-    // }
-
     protected addToBlock(): Promise<any> {
         return this.addDisplay();
     }
 
     protected addBody() {
         this.game.peer.physicalPeer.addBody(this.id, false);
-        // this._sensor = false;
-        // this._offsetOrigin.y = 0;
-        // this.setBody();
     }
 
     protected syncCameraPosition() {
         this.roomService.cameraService.syncCameraScroll();
-    }
-
-    // private addFillEffect(pos: IPoint, status: op_def.PathReachableStatus) {
-    //     this.game.addFillEffect(pos, status);
-    // }
-
-    private drawPath(pos: op_client.IMovePoint[]) {
-        // if (!pos && pos.length > 0) {
-        //     return;
-        // }
-        // if (!this.mMovePath) {
-        //     this.mMovePath = this.mElementManager.scene.make.graphics(undefined, false);
-        // }
-        // this.mMovePath.clear();
-        // this.mMovePath.lineStyle(2, 0xFFFF00);
-        // this.mMovePath.moveTo(pos[0].point3f.x, pos[0].point3f.y);
-        // let point3f = null;
-        // for (const point of pos) {
-        //     point3f = point.point3f;
-        //     if (point3f) this.mMovePath.lineTo(point3f.x, point3f.y);
-        // }
-        // this.mMovePath.strokePath();
-        // this.mRoom.addToSurface(<any> this.mMovePath);
-
     }
 
     private animationChange(data: any) {
@@ -439,9 +214,6 @@ export class User extends Player {
         (<any>this.mModel).off("Animation_Change", this.animationChange, this);
         (<any>this.mModel).on("Animation_Change", this.animationChange, this);
         if ((val as PlayerModel).package) {
-            // this.mPackage = (val as PlayerModel).package;
-            // this.mBag = new Bag(this.mElementManager.roomService.world);
-            // this.mBag.register();
         }
         this.load(this.mModel.displayInfo, this.isUser);
         if (this.mModel.pos) {
@@ -460,7 +232,6 @@ export class User extends Player {
         }
         // todo change display alpha
         Logger.getInstance().debug("showNickname===use", this.mModel.direction);
-        // this.mDisplay.changeAlpha(this.mModel.alpha);
         if (this.mModel.nickname) this.showNickname();
         this.setDirection(this.mModel.direction);
     }
@@ -474,7 +245,6 @@ export class User extends Player {
     }
 
     set package(value: op_gameconfig.IPackage) {
-        // this.mPackage = value;
     }
 
     get userData() {

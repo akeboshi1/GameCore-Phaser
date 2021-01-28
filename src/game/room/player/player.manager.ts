@@ -272,7 +272,6 @@ export class PlayerManager extends PacketHandler implements IElementManager {
         for (const sprite of sprites) {
             this.checkSuitAvatarSprite(sprite);
             this._add(new Sprite(sprite, content.nodeType));
-            // MineCarSimulateData.addSimulate(this.roomService, sprite);
         }
     }
 

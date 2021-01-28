@@ -70,7 +70,4 @@ export class UIDragonbonesDisplay extends DragonbonesDisplay {
     }
     protected closePlaceholder() {
     }
-    protected clearArmatureSlot() {
-    }
-
 }
