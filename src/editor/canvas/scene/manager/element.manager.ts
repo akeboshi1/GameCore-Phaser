@@ -2,7 +2,7 @@ import { Sprite } from "baseModel";
 import { PacketHandler, PBpacket } from "net-socket-packet";
 import { op_client, op_editor, op_def } from "pixelpai_proto";
 import { ISprite } from "structure";
-import { IPos, Logger, Position45 } from "utils";
+import { IPos, Position45 } from "utils";
 import { SceneEditorCanvas } from "../scene.editor.canvas";
 
 export class EditorElementManager extends PacketHandler {
@@ -126,7 +126,7 @@ export class EditorElementManager extends PacketHandler {
                 if (collision[i][j] === 1) {
                     col = pos45.x + j - origin.x;
                     if (row >= 0 && row < this.mMap.length && col >= 0 && col < this.mMap[row].length) {
-                            if (this.mMap[row][col] === 1) return false;
+                        if (this.mMap[row][col] === 1) return false;
                     }
                 }
             }
@@ -168,6 +168,7 @@ export class EditorElementManager extends PacketHandler {
         if (nodeType !== op_def.NodeType.ElementNodeType && nodeType !== op_def.NodeType.SpawnPointType) {
             return;
         }
+        this.sceneEditor.unselectElement();
         // for (const id of ids) {
         //     this.tryRemove(id);
         // }
@@ -179,7 +180,6 @@ export class EditorElementManager extends PacketHandler {
             });
         }
 
-        this.sceneEditor.unselectElement();
     }
 
     protected handleSyncElements(packet: PBpacket) {
@@ -214,7 +214,7 @@ export class EditorElementManager extends PacketHandler {
                 if (collision[i][j] === 1) {
                     col = pos.x + j - origin.x;
                     if (row >= 0 && row < this.mMap.length && col >= 0 && col < this.mMap[row].length) {
-                            this.mMap[row][col] = isAdd ? collision[i][j] : 0;
+                        this.mMap[row][col] = isAdd ? collision[i][j] : 0;
                     }
                 }
             }
@@ -257,10 +257,6 @@ export class EditorElementManager extends PacketHandler {
     //         element.setDirection(sprite.direction);
     //     }
     // }
-
-    private checkCollsition() {
-
-    }
 
     private batchActionSprites() {
         if (!Array.from(this.taskQueue.keys()).length) {

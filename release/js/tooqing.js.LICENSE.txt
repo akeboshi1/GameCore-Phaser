@@ -1,2239 +1,1581 @@
-/*!
- * The buffer module from node.js, for the browser.
- *
- * @author   Feross Aboukhadijeh <http://feross.org>
- * @license  MIT
- */
+/*! exports provided: AStar */
 
-/*! ../../../../pool.js */
+/*! exports provided: AlertView, Buttons */
 
-/*! ../../../../utils/object/Clone.js */
+/*! exports provided: Algorithm */
 
-/*! ../../../../utils/object/NOOP */
+/*! exports provided: AnimationModel */
 
-/*! ../../../../utils/object/NOOP.js */
+/*! exports provided: Animator */
 
-/*! ../../../containerlite/MaskChildren.js */
+/*! exports provided: AvatarEditorCanvas, AvatarEditorScene, AvatarEditorEmitType */
 
-/*! ../../../fsm.js */
+/*! exports provided: AvatarEditorDragonbone */
 
-/*! ../../../plugins/input/button/Button.js */
+/*! exports provided: AvatarSlotType, AvatarPartType, BaseDragonbonesDisplay */
 
-/*! ../../../plugins/scroller.js */
+/*! exports provided: AvatarSuitType, SuitAlternativeType, BaseAvatar */
 
-/*! ../../../pool.js */
+/*! exports provided: BackgroundScaleButton */
 
-/*! ../../../utils/actions/RotateObjectAround.js */
+/*! exports provided: BagPanel */
 
-/*! ../../../utils/eventemitter/EventEmitterMethods.js */
+/*! exports provided: BaseCamerasManager */
 
-/*! ../../../utils/geom/polygon/Earcut.js */
+/*! exports provided: BaseCamerasManager, BaseDisplay, TopDisplay, FollowEnum, FollowObject, ReferenceArea, AvatarSlotType, AvatarPartType, BaseDragonbonesDisplay, BaseFramesDisplay, BaseLayer, GroundLayer, SurfaceLayer, LayerManager, Scenery, BlockManager */
 
-/*! ../../../utils/math/DegToRad.js */
+/*! exports provided: BaseDisplay */
 
-/*! ../../../utils/math/angle/angletodirections/AngleToDirections.js */
+/*! exports provided: BaseDisplay, TopDisplay, FollowEnum, FollowObject, ReferenceArea, AvatarSlotType, AvatarPartType, BaseDragonbonesDisplay, BaseFramesDisplay */
 
-/*! ../../../utils/math/angle/angletodirections/Const.js */
+/*! exports provided: BaseFramesDisplay */
 
-/*! ../../../utils/object/Clear.js */
+/*! exports provided: BaseLayer */
 
-/*! ../../../utils/object/IsArray.js */
+/*! exports provided: BaseLayer, GroundLayer, SurfaceLayer, LayerManager */
 
-/*! ../../../utils/object/NOOP.js */
+/*! exports provided: BasePanel */
 
-/*! ../../../utils/renderTexture/MakeChildImageGameObject.js */
+/*! exports provided: BasicRankPanel */
 
-/*! ../../../utils/system/GetSceneObject.js */
+/*! exports provided: BasicScene */
 
-/*! ../../../utils/ticktask/TickTask.js */
+/*! exports provided: Bin, MaxRectsBin, MaxRectsPacker, OversizedElementBin, PACKING_LOGIC, Rectangle */
 
-/*! ../../bounds/CenterOn.js */
+/*! exports provided: BlockManager */
 
-/*! ../../bounds/GetBottom.js */
+/*! exports provided: ButtonEventDispatcher */
 
-/*! ../../bounds/GetCenterX.js */
+/*! exports provided: ButtonState, ThreeSliceButton */
 
-/*! ../../bounds/GetCenterY.js */
+/*! exports provided: CheckboxGroup */
 
-/*! ../../bounds/GetLeft.js */
+/*! exports provided: ChineseUnit */
 
-/*! ../../bounds/GetRight.js */
+/*! exports provided: CoinType, Url, ResUtils, BlackButton, BlueButton, WhiteButton, CloseButton, Background, Border, TransparentButton, Coin, UIHelper */
 
-/*! ../../bounds/GetTop.js */
+/*! exports provided: Color */
 
-/*! ../../bounds/SetBottom.js */
+/*! exports provided: CommonBackground */
 
-/*! ../../bounds/SetCenterX.js */
+/*! exports provided: CopyProtoType */
 
-/*! ../../bounds/SetCenterY.js */
+/*! exports provided: Direction */
 
-/*! ../../bounds/SetLeft.js */
+/*! exports provided: DisplayField, TitleMask */
 
-/*! ../../bounds/SetRight.js */
+/*! exports provided: DisplayObjectPool */
 
-/*! ../../bounds/SetTop.js */
+/*! exports provided: DragDropIcon */
 
-/*! ../../dragspeed.js */
+/*! exports provided: DragonbonesModel */
 
-/*! ../../fsm.js */
+/*! exports provided: DynamicImage */
 
-/*! ../../gameobjects/inputtext/InputText.js */
+/*! exports provided: DynamicNinepatch */
 
-/*! ../../plugins/bbcodetext */
+/*! exports provided: DynamicSprite */
 
-/*! ../../plugins/behaviors/anchor/Anchor.js */
+/*! exports provided: EditorCamerasManager */
 
-/*! ../../plugins/behaviors/textedit/TextEdit */
+/*! exports provided: EditorCanvas */
 
-/*! ../../plugins/fade-in.js */
+/*! exports provided: EditorCanvasType, EditorLauncher */
 
-/*! ../../plugins/fade-out-destroy.js */
+/*! exports provided: EditorElementDisplay */
 
-/*! ../../plugins/flip.js */
+/*! exports provided: EditorElementManager */
 
-/*! ../../plugins/gameobjects/canvas/Canvas.js */
+/*! exports provided: EditorFactory */
 
-/*! ../../plugins/gameobjects/containerlite/ContainerLite.js */
+/*! exports provided: EditorFramesDisplay */
 
-/*! ../../plugins/gameobjects/containerlite/MaskChildren.js */
+/*! exports provided: EditorLauncher, EditorCanvasType, ElementEditorCanvas, ElementEditorEmitType, ElementEditorBrushType, AvatarEditorCanvas, AvatarEditorEmitType, AvatarEditorScene */
 
-/*! ../../plugins/gameobjects/gridtable/GridTable.js */
+/*! exports provided: EditorMossManager */
 
-/*! ../../plugins/gameobjects/ninepatch/NinePatch.js */
+/*! exports provided: EditorPacket */
 
-/*! ../../plugins/gameobjects/shape/roundrectangle/RoundRectangle.js */
+/*! exports provided: EditorSkyboxManager */
 
-/*! ../../plugins/gameobjects/text/bbcodetext/BBCodeText.js */
+/*! exports provided: EditorTerrainManager */
 
-/*! ../../plugins/gameobjects/text/tagtext/TagText.js */
+/*! exports provided: EditorTopDisplay */
 
-/*! ../../plugins/input/button/Button.js */
+/*! exports provided: ElementEditorBrushType, ElementEditorEmitType, ElementEditorCanvas */
 
-/*! ../../plugins/input/gestures/press/Press.js */
+/*! exports provided: ElementStateType */
 
-/*! ../../plugins/input/gestures/rotate/Rotate.js */
+/*! exports provided: ElementStorage */
 
-/*! ../../plugins/input/gestures/swipe/Swipe.js */
+/*! exports provided: EventDispatcher */
 
-/*! ../../plugins/input/gestures/tap/Tap.js */
+/*! exports provided: EventType */
 
-/*! ../../plugins/input/scroller/Scroller.js */
+/*! exports provided: Fit */
 
-/*! ../../plugins/popup.js */
+/*! exports provided: Font */
 
-/*! ../../plugins/scale-down-destroy.js */
+/*! exports provided: FramesModel */
 
-/*! ../../plugins/utils/actions/GlobZone.js */
+/*! exports provided: FriendRelationEnum, FriendChannel */
 
-/*! ../../plugins/utils/align/align/in/QuickSet.js */
+/*! exports provided: GameState, ConnectState, SceneState, PlayerState, PhysicalPeerState */
 
-/*! ../../plugins/utils/defaultbounds/GetDefaultBounds.js */
+/*! exports provided: GridLayoutGroup, AlignmentType, CornerType, AxisType, ConstraintType */
 
-/*! ../../plugins/utils/input/IsPointerInBounds.js */
+/*! exports provided: GroundLayer */
 
-/*! ../../plugins/utils/mask/DefaultMask.js */
+/*! exports provided: Handler */
 
-/*! ../../plugins/utils/mask/MaskToGameObject.js */
+/*! exports provided: Helpers */
 
-/*! ../../plugins/utils/object/IsArray.js */
+/*! exports provided: IconBtn */
 
-/*! ../../plugins/utils/object/NOOP.js */
+/*! exports provided: IconSelectBtn */
 
-/*! ../../plugins/utils/promise/WaitEvent.js */
+/*! exports provided: ImageValue, ImageBBCodeValue, DynamicImageValue */
 
-/*! ../../plugins/utils/size/GetDisplaySize.js */
+/*! exports provided: InputPanel */
 
-/*! ../../plugins/utils/size/ResizeGameObject.js */
+/*! exports provided: InputView */
 
-/*! ../../plugins/utils/text/IsTextGameObject.js */
+/*! exports provided: Intersects */
 
-/*! ../../pool.js */
+/*! exports provided: ItemInfoTips */
 
-/*! ../../press/Press.js */
+/*! exports provided: ItemSlot */
 
-/*! ../../size/GetDisplaySize.js */
+/*! exports provided: ItemsConsumeFunPanel */
 
-/*! ../../sizer/Sizer.js */
+/*! exports provided: LOCAL_HOME_PATH, default */
 
-/*! ../../slider/Slider.js */
+/*! exports provided: LabelInput */
 
-/*! ../../swipe/Swipe.js */
+/*! exports provided: Launcher, EditorLauncher, EditorCanvasType, ElementEditorCanvas, ElementEditorEmitType, ElementEditorBrushType, AvatarEditorCanvas, AvatarEditorEmitType, AvatarEditorScene */
 
-/*! ../../tap/Tap.js */
+/*! exports provided: LayerManager */
 
-/*! ../../utils/FillPathWebGL */
+/*! exports provided: LoadState, PlaySceneLoadState */
 
-/*! ../../utils/FillStyleCanvas */
+/*! exports provided: Logger, log, error */
 
-/*! ../../utils/LineStyleCanvas */
+/*! exports provided: LogicPoint */
 
-/*! ../../utils/StrokePathWebGL */
+/*! exports provided: LogicPos */
 
-/*! ../../utils/data/DataMethods.js */
+/*! exports provided: LogicRectangle */
 
-/*! ../../utils/eventemitter/EventEmitterMethods.js */
+/*! exports provided: LogicRectangle45 */
 
-/*! ../../utils/input/StopPropagationTouchEvents */
+/*! exports provided: MainUIScene */
 
-/*! ../../utils/mask/DefaultMask.js */
+/*! exports provided: MaterialItem */
 
-/*! ../../utils/mask/MaskToGameObject.js */
+/*! exports provided: MessageType */
 
-/*! ../../utils/movement/SlowDown.js */
+/*! exports provided: ModuleName */
 
-/*! ../../utils/object/GetValue.js */
+/*! exports provided: MoreButtonPanel */
 
-/*! ../../utils/object/IsArray.js */
+/*! exports provided: NinePatch */
 
-/*! ../../utils/object/IsFunction.js */
+/*! exports provided: NinePatchButton */
 
-/*! ../../utils/size/ResizeGameObject.js */
+/*! exports provided: PI_EXTENSION_REGEX, HTTP_REGEX */
 
-/*! ../../utils/system/GetSceneObject.js */
+/*! exports provided: PlayCamera */
 
-/*! ../../utils/tween/TweenBase.js */
+/*! exports provided: Pos */
 
-/*! ../GetScrollMode.js */
+/*! exports provided: Position45 */
 
-/*! ../baseUI/BaseUI */
+/*! exports provided: ProgressMaskBar */
 
-/*! ../basesizer/BaseSizer.js */
+/*! exports provided: ProgressThreeBar */
 
-/*! ../button/Button */
+/*! exports provided: ProgressThreeMaskBar */
 
-/*! ../buttons/Buttons.js */
+/*! exports provided: PropItem */
 
-/*! ../const.js */
+/*! exports provided: RENDER_PEER, PICARENDER_PEER, MAIN_WORKER, PHYSICAL_WORKER, MAIN_WORKER_URL, PHYSICAL_WORKER_URL */
 
-/*! ../container/Container.js */
+/*! exports provided: RankPanel */
 
-/*! ../containerlite/ContainerLite.js */
+/*! exports provided: ReferenceArea */
 
-/*! ../eventemitter/EventEmitterMethods.js */
+/*! exports provided: RoomType */
 
-/*! ../hitareamanager/HitAreaManager.js */
+/*! exports provided: SceneEditorCanvas */
 
-/*! ../interface/baseUI/Patches.config */
+/*! exports provided: SceneName */
 
-/*! ../interface/baseUI/UIType */
+/*! exports provided: Scenery */
 
-/*! ../interface/event/ClickEvent */
+/*! exports provided: Scenery, BlockManager */
 
-/*! ../ninepatch/NineSlicePatch */
+/*! exports provided: Size */
 
-/*! ../object/Clear.js */
+/*! exports provided: SkyBoxScene */
 
-/*! ../object/Clone.js */
+/*! exports provided: SoundButton */
 
-/*! ../object/GetValue.js */
+/*! exports provided: Sprite */
 
-/*! ../object/NOOP.js */
+/*! exports provided: Sprite, FramesModel, DragonbonesModel, ElementStorage */
 
-/*! ../onepointertracer/OnePointerTracer.js */
+/*! exports provided: StoragePanel */
 
-/*! ../panel/Panel */
+/*! exports provided: StringUtils */
 
-/*! ../penmanger/PenManager.js */
+/*! exports provided: SurfaceLayer */
 
-/*! ../plugins/behaviors/textedit/Edit.js */
+/*! exports provided: TextButton */
 
-/*! ../plugins/gameobjects/inputtext/InputText */
+/*! exports provided: TextToolTips */
 
-/*! ../plugins/utils/input/IsPointerInBounds.js */
+/*! exports provided: ThreeSlicePath */
 
-/*! ../scrollableblock/ScrollableBlock.js */
+/*! exports provided: TimeUtils */
 
-/*! ../sizer/Sizer.js */
+/*! exports provided: TimerCountDown */
 
-/*! ../system/GetSceneObject.js */
+/*! exports provided: ToggleButton */
 
-/*! ../system/IsGameObject.js */
-
-/*! ../system/IsSceneObject.js */
-
-/*! ../textbase/Text */
-
-/*! ../textbase/Text.js */
-
-/*! ../textbase/textstyle/TextStyle */
-
-/*! ../textbase/textstyle/TextStyle.js */
-
-/*! ../textblock/TextBlock.js */
-
-/*! ../tool/Tool */
-
-/*! ../twopointerstracer/TwoPointersTracer.js */
-
-/*! ../ui/baseUI/BaseImage */
-
-/*! ../ui/baseUI/BaseMediator */
-
-/*! ../ui/checkbox/CheckBox */
-
-/*! ../ui/interface/baseUI/Patches.config */
-
-/*! ../ui/interface/baseUI/UIType.js */
-
-/*! ../ui/interface/event/ClickEvent */
-
-/*! ../ui/interface/sound/ISoundConfig */
-
-/*! ../ui/interface/sound/SoundField */
-
-/*! ../ui/slider/GameSlider */
-
-/*! ../ui/textarea/AppendText.js */
-
-/*! ../ui/textarea/SetText.js */
-
-/*! ../ui/tool/Tool */
-
-/*! ../utils/AddChildMask.js */
-
-/*! ../utils/AlignConst.js */
-
-/*! ../utils/ArcTo.js */
-
-/*! ../utils/GetBoundsConfig.js */
-
-/*! ../utils/GetParentSizer.js */
-
-/*! ../utils/GetScrollMode.js */
-
-/*! ../utils/GetSizerConfig.js */
-
-/*! ../utils/GetTopmostSizer.js */
-
-/*! ../utils/Hide.js */
-
-/*! ../utils/IsEdge.js */
-
-/*! ../utils/LineTo.js */
-
-/*! ../utils/OrientationConst.js */
-
-/*! ../utils/ScrollModeConst.js */
-
-/*! ../utils/Space.js */
-
-/*! ../utils/scrollable/Scrollable.js */
-
-/*! ./Active.js */
-
-/*! ./AddChild.js */
-
-/*! ./AddChildrenMap.js */
-
-/*! ./Alpha.js */
-
-/*! ./AppendText */
-
-/*! ./BBCodeText.js */
-
-/*! ./BottomCenter.js */
-
-/*! ./BottomLeft.js */
-
-/*! ./BottomRight.js */
-
-/*! ./Button */
-
-/*! ./ButtonMethods.js */
-
-/*! ./ButtonSetInteractive.js */
-
-/*! ./CanvasMethods.js */
-
-/*! ./CanvasRenderer.js */
-
-/*! ./Cell.js */
-
-/*! ./Center.js */
-
-/*! ./ChildState.js */
-
-/*! ./Children.js */
-
-/*! ./Clear.js */
-
-/*! ./ClickCell.js */
-
-/*! ./Collapse.js */
-
-/*! ./CollapseSubMenu.js */
-
-/*! ./CreateBackground.js */
-
-/*! ./CreateButtons.js */
-
-/*! ./CreateInputText.js */
-
-/*! ./CreateScrollableSizer.js */
-
-/*! ./Depth.js */
-
-/*! ./DrawBounds.js */
-
-/*! ./DrawMethods.js */
-
-/*! ./EachCell.js */
-
-/*! ./EmitCellEvent.js */
-
-/*! ./ExpandSubMenu.js */
-
-/*! ./FadeMethods.js */
-
-/*! ./GetAllChildrenSizers.js */
-
-/*! ./GetChildrenHeight.js */
-
-/*! ./GetChildrenProportion.js */
-
-/*! ./GetChildrenSizers.js */
-
-/*! ./GetChildrenWidth.js */
-
-/*! ./GetEaseConfig.js */
-
-/*! ./GetElement.js */
-
-/*! ./GetEndPoint.js */
-
-/*! ./GetExpandedChildHeight.js */
-
-/*! ./GetExpandedChildWidth.js */
-
-/*! ./GetFaceUpdatingCallback.js */
-
-/*! ./GetLines.js */
-
-/*! ./GetParentSizer.js */
-
-/*! ./GetSizerConfig.js */
-
-/*! ./GetStartPoint.js */
-
-/*! ./GetStretchMode.js */
-
-/*! ./GetThumbAlignPoint.js */
-
-/*! ./GetTopmostSizer.js */
-
-/*! ./GetViewport.js */
-
-/*! ./GridTable.js */
-
-/*! ./HideCell.js */
-
-/*! ./HideCells.js */
-
-/*! ./ImageManager.js */
-
-/*! ./InitData.js */
-
-/*! ./InjectProperties.js */
-
-/*! ./InsertNewCells.js */
-
-/*! ./IsCellVisible.js */
-
-/*! ./IsInTouching.js */
-
-/*! ./IsSceneObject.js */
-
-/*! ./Layout.js */
-
-/*! ./LayoutBackgrounds.js */
-
-/*! ./LeftCenter.js */
-
-/*! ./LineTo.js */
-
-/*! ./LinesCountToTextHeight.js */
-
-/*! ./Mask.js */
-
-/*! ./MaskCells.js */
-
-/*! ./MeasureText.js */
-
-/*! ./MenuSetInteractive.js */
-
-/*! ./Methods.js */
-
-/*! ./Movement.js */
-
-/*! ./OnDragThumb.js */
-
-/*! ./OnTouchTrack.js */
-
-/*! ./OverCell.js */
-
-/*! ./Parser.js */
-
-/*! ./Pen.js */
-
-/*! ./PercentToPosition.js */
-
-/*! ./PointerToCell.js */
-
-/*! ./Position.js */
-
-/*! ./PositionToPercent.js */
-
-/*! ./PostLayout.js */
-
-/*! ./PreLayout.js */
-
-/*! ./PressCell.js */
-
-/*! ./PushIntoBounds.js */
-
-/*! ./RemoveCells.js */
-
-/*! ./RemoveChild.js */
-
-/*! ./ResetChildPosition.js */
-
-/*! ./ResetTextObjectPosition.js */
-
-/*! ./ResizeController.js */
-
-/*! ./ResizeText.js */
-
-/*! ./RightCenter.js */
-
-/*! ./Scale.js */
-
-/*! ./ScaleMethods.js */
-
-/*! ./ScrollFactor.js */
-
-/*! ./ScrollModeConst.js */
-
-/*! ./SetAnchor.js */
-
-/*! ./SetCellsCount.js */
-
-/*! ./SetCenterX.js */
-
-/*! ./SetCenterY.js */
-
-/*! ./SetCheckboxesType.js */
-
-/*! ./SetChild.js */
-
-/*! ./SetColumnCount.js */
-
-/*! ./SetDraggable.js */
-
-/*! ./SetGridSize.js */
-
-/*! ./SetInteractive.js */
-
-/*! ./SetItems.js */
-
-/*! ./SetRadioType.js */
-
-/*! ./SetStretchMode.js */
-
-/*! ./SetTableOX.js */
-
-/*! ./SetTableOY.js */
-
-/*! ./SetText */
-
-/*! ./SetText.js */
-
-/*! ./SetTextObject.js */
-
-/*! ./SetTexture.js */
-
-/*! ./ShowCell.js */
-
-/*! ./ShowCells.js */
-
-/*! ./Slider.js */
-
-/*! ./SpinObject.js */
-
-/*! ./State.js */
-
-/*! ./SwipeCell.js */
-
-/*! ./TabButton */
-
-/*! ./Table.js */
-
-/*! ./TableOnCellVisible.js */
-
-/*! ./TapCell.js */
-
-/*! ./TextEdit.js */
-
-/*! ./TextHeightToLinesCount.js */
-
-/*! ./TextureMethods.js */
-
-/*! ./TopCenter.js */
-
-/*! ./TopLeft.js */
-
-/*! ./TopRight.js */
-
-/*! ./Transform.js */
-
-/*! ./UpdateController.js */
-
-/*! ./UpdateIndicator.js */
-
-/*! ./UpdateTextObject.js */
-
-/*! ./UpdateTexture.js */
-
-/*! ./UpdateThumb.js */
-
-/*! ./VelocityMethods.js */
-
-/*! ./Visible.js */
-
-/*! ./WebGLRenderer.js */
-
-/*! ./WrapText.js */
-
-/*! ./_layoutInit.js */
-
-/*! ./baseUI/BaseUI.js */
-
-/*! ./bbcodetext/BBCodeText.js */
-
-/*! ./behaviors/fade/Fade.js */
-
-/*! ./behaviors/flip/Flip.js */
-
-/*! ./behaviors/scale/Scale.js */
-
-/*! ./button/Button.js */
-
-/*! ./button/NineSliceButton.js */
-
-/*! ./buttons/Buttons.js */
-
-/*! ./canvas/Canvas.js */
-
-/*! ./canvastext/CanvasText.js */
-
-/*! ./combobox/Combobox.js */
-
-/*! ./const.js */
-
-/*! ./container/Container.js */
-
-/*! ./fade.js */
-
-/*! ./flip/Flip.js */
-
-/*! ./gameobjects/text/bbcodetext/BBCodeText.js */
-
-/*! ./gameobjects/text/bbcodetext/Creator.js */
-
-/*! ./gameobjects/text/bbcodetext/Factory.js */
-
-/*! ./geom/RoundRectangle.js */
-
-/*! ./gridsizer/GridSizer.js */
-
-/*! ./gridtable/GameGridTable.js */
-
-/*! ./gridtable/GridTable.js */
-
-/*! ./imagemanager/GetGlobImageManager.js */
-
-/*! ./input/TableSetInteractive.js */
-
-/*! ./input/dragspeed/DragSpeed.js */
-
-/*! ./input/scroller/Scroller.js */
-
-/*! ./interface/ninepatch/NinePatchSkin.js */
-
-/*! ./label/Label.js */
-
-/*! ./logic/fsm/FSM.js */
-
-/*! ./menu/Menu.js */
-
-/*! ./messageBox/MessageBox.js */
-
-/*! ./methods/Methods.js */
-
-/*! ./ninepatch/NinePatch.js */
-
-/*! ./ninepatch/NineSlicePatch */
-
-/*! ./panel/Panel.js */
-
-/*! ./parser */
-
-/*! ./press/Press.js */
-
-/*! ./progressbar/ProgressBar.js */
-
-/*! ./render/Render.js */
-
-/*! ./rotate/Rotate.js */
-
-/*! ./roundrectangle/RoundRectangle.js */
-
-/*! ./scale.js */
-
-/*! ./scrollableblock/ScrollableBlock.js */
-
-/*! ./scrollablepanel/ScrollablePanel.js */
-
-/*! ./scroller/GameScroller.js */
-
-/*! ./scroller/Scroller.js */
-
-/*! ./sizer/Sizer.js */
-
-/*! ./slider/Slider.js */
-
-/*! ./tab/NinePatchTabButton.js */
-
-/*! ./tab/TabButton.js */
-
-/*! ./tagtext/TagText.js */
-
-/*! ./tap/Tap.js */
-
-/*! ./textBox/TextBox */
-
-/*! ./textarea/TextArea.js */
-
-/*! ./textblock/TextBlock.js */
-
-/*! ./textstyle/TextStyle.js */
-
-/*! ./texture/TextureMethods.js */
-
-/*! ./types/SetType.js */
-
-/*! ./updatetable/HideCell.js */
-
-/*! ./updatetable/UpdateTable.js */
-
-/*! ./utils/DefaultGetFrameNameCallback.js */
-
-/*! ./utils/GetParentSizer.js */
-
-/*! ./utils/GetTopmostSizer.js */
-
-/*! ./utils/Hide.js */
-
-/*! ./utils/Resize */
-
-/*! ./utils/RouteEvents */
-
-/*! ./utils/SetProperties */
-
-/*! ./utils/WaitEvent.js */
-
-/*! ./utils/struct/Stack.js */
-
-/*! exports provided: Button, ButtonState, NinePatchConfig, ButtonConfig */
-
-/*! exports provided: ButtonSetInteractive, FireEvent */
-
-/*! exports provided: EachVisibleCell, IterateVisibleCell, EachCell, IterateCell */
-
-/*! exports provided: GetDisplayWidth, GetDisplayHeight */
-
-/*! exports provided: ISoundGroup, ISoundConfig */
-
-/*! exports provided: Patches_config, IPatchesConfig */
-
-/*! exports provided: PointerToCellIndex, PointerToCellContainer */
-
-/*! exports provided: ProgressBarEvent, ProgressBar */
-
-/*! exports provided: SelectCallItem, ComboBox */
-
-/*! exports provided: Show, Hide, IsShown */
+/*! exports provided: ToggleColorButton */
 
 /*! exports provided: Tool */
 
-/*! exports provided: WaitEvent, WaitComplete */
+/*! exports provided: ToolTip */
+
+/*! exports provided: TopDisplay, FollowObject, FollowEnum */
+
+/*! exports provided: TweenCompent */
+
+/*! exports provided: UIAtlasName, UIAtlasKey */
+
+/*! exports provided: UIAtlasName, UIAtlasKey, AtlasManager, AtlasUrlData, UILoadType */
+
+/*! exports provided: UILoadType, AtlasUrlData, AtlasManager */
+
+/*! exports provided: UiManager */
+
+/*! exports provided: ValueContainer */
+
+/*! exports provided: ValueResolver */
+
+/*! exports provided: WEB_HOME_PATH, SPRITE_SHEET_KEY, IMAGE_BLANK_KEY, default */
 
 /*! exports provided: default */
 
-/*! ieee754. BSD-3-Clause License. Feross Aboukhadijeh <https://feross.org/opensource> */
+/*! exports provided: initLocales, i18n */
+
+/*! exports provided: load */
+
+/*! exports provided: normalizePatchesConfig */
+
+/*! exports provided: projectionAngle */
+
+/*! exports provided: transitionGrid */
 
 /*! no static exports found */
 
+/*!********************!*\
+  !*** ./version.js ***!
+  \********************/
+
+/*!*********************!*\
+  !*** ./launcher.ts ***!
+  \*********************/
+
+/*!**************************!*\
+  !*** ./src/utils/log.ts ***!
+  \**************************/
+
+/*!**************************!*\
+  !*** ./src/utils/pos.ts ***!
+  \**************************/
+
 /*!***************************!*\
-  !*** ./lib/ui/tap/Tap.js ***!
+  !*** ./src/utils/font.ts ***!
+  \***************************/
+
+/*!***************************!*\
+  !*** ./src/utils/http.ts ***!
+  \***************************/
+
+/*!***************************!*\
+  !*** ./src/utils/i18n.ts ***!
+  \***************************/
+
+/*!***************************!*\
+  !*** ./src/utils/size.ts ***!
+  \***************************/
+
+/*!***************************!*\
+  !*** ./src/utils/tool.ts ***!
   \***************************/
 
 /*!****************************!*\
-  !*** ./lib/plugins/fsm.js ***!
+  !*** ./src/utils/Color.ts ***!
+  \****************************/
+
+/*!****************************!*\
+  !*** ./src/utils/astar.ts ***!
+  \****************************/
+
+/*!****************************!*\
+  !*** ./src/utils/index.ts ***!
   \****************************/
 
 /*!*****************************!*\
-  !*** ./lib/plugins/fade.js ***!
-  \*****************************/
-
-/*!*****************************!*\
-  !*** ./lib/plugins/flip.js ***!
-  \*****************************/
-
-/*!*****************************!*\
-  !*** ./lib/plugins/pool.js ***!
-  \*****************************/
-
-/*!*****************************!*\
-  !*** ./lib/ui/flip/Flip.js ***!
-  \*****************************/
-
-/*!*****************************!*\
-  !*** ./lib/ui/menu/Menu.js ***!
-  \*****************************/
-
-/*!*****************************!*\
-  !*** ./lib/ui/tool/Tool.js ***!
+  !*** ./src/editor/index.ts ***!
   \*****************************/
 
 /*!******************************!*\
-  !*** ./lib/plugins/popup.js ***!
+  !*** ./src/utils/Handler.ts ***!
   \******************************/
 
 /*!******************************!*\
-  !*** ./lib/plugins/scale.js ***!
+  !*** ./src/utils/helpers.ts ***!
   \******************************/
 
 /*!******************************!*\
-  !*** ./lib/ui/utils/Hide.js ***!
+  !*** ./src/utils/promise.ts ***!
+  \******************************/
+
+/*!******************************!*\
+  !*** ./src/utils/resUtil.ts ***!
   \******************************/
 
 /*!*******************************!*\
-  !*** ./lib/ui/label/Label.js ***!
-  \*******************************/
-
-/*!*******************************!*\
-  !*** ./lib/ui/panel/Panel.js ***!
-  \*******************************/
-
-/*!*******************************!*\
-  !*** ./lib/ui/press/Press.js ***!
-  \*******************************/
-
-/*!*******************************!*\
-  !*** ./lib/ui/sizer/Sizer.js ***!
-  \*******************************/
-
-/*!*******************************!*\
-  !*** ./lib/ui/swipe/Swipe.js ***!
-  \*******************************/
-
-/*!*******************************!*\
-  !*** ./lib/ui/utils/Space.js ***!
+  !*** ./src/pica/res/index.ts ***!
   \*******************************/
 
 /*!********************************!*\
-  !*** ./lib/plugins/fade-in.js ***!
+  !*** ./src/render/ui/index.ts ***!
   \********************************/
 
 /*!********************************!*\
-  !*** ./lib/ui/menu/Methods.js ***!
+  !*** ./src/structure/frame.ts ***!
   \********************************/
 
 /*!********************************!*\
-  !*** ./lib/ui/sizer/Layout.js ***!
+  !*** ./src/structure/index.ts ***!
+  \********************************/
+
+/*!********************************!*\
+  !*** ./src/utils/algorithm.ts ***!
+  \********************************/
+
+/*!********************************!*\
+  !*** ./src/utils/direction.ts ***!
+  \********************************/
+
+/*!********************************!*\
+  !*** ./src/utils/logic.pos.ts ***!
   \********************************/
 
 /*!*********************************!*\
-  !*** ./lib/plugins/scroller.js ***!
+  !*** ./src/base/model/index.ts ***!
   \*********************************/
 
 /*!*********************************!*\
-  !*** ./lib/ui/baseUI/BaseUI.js ***!
+  !*** ./src/utils/intersects.ts ***!
   \*********************************/
 
 /*!*********************************!*\
-  !*** ./lib/ui/button/Button.js ***!
+  !*** ./src/utils/position45.ts ***!
   \*********************************/
 
 /*!*********************************!*\
-  !*** ./lib/ui/canvas/Canvas.js ***!
+  !*** ./src/utils/projection.ts ***!
   \*********************************/
 
 /*!*********************************!*\
-  !*** ./lib/ui/menu/Collapse.js ***!
-  \*********************************/
-
-/*!*********************************!*\
-  !*** ./lib/ui/rotate/Rotate.js ***!
-  \*********************************/
-
-/*!*********************************!*\
-  !*** ./lib/ui/sizer/Methods.js ***!
-  \*********************************/
-
-/*!*********************************!*\
-  !*** ./lib/ui/slider/Slider.js ***!
-  \*********************************/
-
-/*!*********************************!*\
-  !*** ./lib/ui/tab/TabButton.js ***!
-  \*********************************/
-
-/*!*********************************!*\
-  !*** ./lib/ui/ui-components.ts ***!
+  !*** ./src/utils/time.utils.ts ***!
   \*********************************/
 
 /*!**********************************!*\
-  !*** ./lib/plugins/dragspeed.js ***!
+  !*** ./src/base/model/sprite.ts ***!
+  \**********************************/
+
+/*!**********************************!*\
+  !*** ./src/base/render/index.ts ***!
+  \**********************************/
+
+/*!**********************************!*\
+  !*** ./src/structure/display.ts ***!
+  \**********************************/
+
+/*!**********************************!*\
+  !*** ./src/structure/isprite.ts ***!
+  \**********************************/
+
+/*!**********************************!*\
+  !*** ./src/structure/scenery.ts ***!
+  \**********************************/
+
+/*!**********************************!*\
+  !*** ./src/utils/logic.point.ts ***!
+  \**********************************/
+
+/*!**********************************!*\
+  !*** ./src/utils/stringUtils.ts ***!
   \**********************************/
 
 /*!***********************************!*\
-  !*** ./lib/plugins/bbcodetext.js ***!
+  !*** (webpack)/buildin/global.js ***!
   \***********************************/
 
 /*!***********************************!*\
-  !*** ./lib/ui/buttons/Buttons.js ***!
+  !*** (webpack)/buildin/module.js ***!
   \***********************************/
 
 /*!***********************************!*\
-  !*** ./lib/ui/tagtext/TagText.js ***!
+  !*** ./src/editor/utils/atlas.ts ***!
   \***********************************/
 
 /*!***********************************!*\
-  !*** ./lib/ui/textBox/TextBox.js ***!
+  !*** ./src/structure/animator.ts ***!
   \***********************************/
 
 /*!***********************************!*\
-  !*** ./lib/ui/utils/WaitEvent.js ***!
+  !*** ./src/utils/chat.command.ts ***!
   \***********************************/
 
 /*!************************************!*\
-  !*** ./lib/ui/baseUI/BaseImage.js ***!
+  !*** ./node_modules/heap/index.js ***!
   \************************************/
 
 /*!************************************!*\
-  !*** ./lib/ui/basesizer/Layout.js ***!
+  !*** ./src/render/ui/bag/index.ts ***!
   \************************************/
 
 /*!************************************!*\
-  !*** ./lib/ui/gridsizer/Layout.js ***!
+  !*** ./src/structure/constants.ts ***!
   \************************************/
 
 /*!************************************!*\
-  !*** ./lib/ui/textarea/SetText.js ***!
-  \************************************/
-
-/*!************************************!*\
-  !*** ./lib/ui/textblock/Layout.js ***!
-  \************************************/
-
-/*!************************************!*\
-  !*** ./lib/ui/utils/AlignConst.js ***!
+  !*** ./src/structure/room.type.ts ***!
   \************************************/
 
 /*!*************************************!*\
-  !*** ./lib/ui/basesizer/Methods.js ***!
+  !*** ./src/render/ui sync ^\.\/.*$ ***!
   \*************************************/
 
 /*!*************************************!*\
-  !*** ./lib/ui/checkbox/CheckBox.js ***!
+  !*** ./src/render/ui/ui.manager.ts ***!
   \*************************************/
 
 /*!*************************************!*\
-  !*** ./lib/ui/combobox/Combobox.js ***!
+  !*** ./src/structure/event.type.ts ***!
   \*************************************/
 
 /*!*************************************!*\
-  !*** ./lib/ui/gridsizer/Methods.js ***!
+  !*** ./src/structure/game.state.ts ***!
   \*************************************/
 
 /*!*************************************!*\
-  !*** ./lib/ui/scroller/Scroller.js ***!
+  !*** ./src/structure/load.state.ts ***!
   \*************************************/
 
 /*!*************************************!*\
-  !*** ./lib/ui/sizer/_layoutInit.js ***!
+  !*** ./src/structure/scene.name.ts ***!
   \*************************************/
 
 /*!*************************************!*\
-  !*** ./lib/ui/slider/GameSlider.js ***!
+  !*** ./src/structure/size.chart.ts ***!
   \*************************************/
 
 /*!*************************************!*\
-  !*** ./lib/ui/textarea/TextArea.js ***!
-  \*************************************/
-
-/*!*************************************!*\
-  !*** ./lib/ui/textblock/Methods.js ***!
-  \*************************************/
-
-/*!*************************************!*\
-  !*** ./lib/ui/textblock/SetText.js ***!
+  !*** ./src/utils/copy.prototype.ts ***!
   \*************************************/
 
 /*!**************************************!*\
-  !*** ./lib/plugins/logic/fsm/FSM.js ***!
+  !*** ./src/render/ui/bag/basebag.ts ***!
   \**************************************/
 
 /*!**************************************!*\
-  !*** ./lib/ui/gridtable/SetItems.js ***!
+  !*** ./src/structure/dragonbones.ts ***!
   \**************************************/
 
 /*!**************************************!*\
-  !*** ./lib/ui/menu/CreateButtons.js ***!
+  !*** ./src/structure/module.name.ts ***!
   \**************************************/
 
 /*!**************************************!*\
-  !*** ./lib/ui/menu/ExpandSubMenu.js ***!
+  !*** ./src/structure/worker.name.ts ***!
   \**************************************/
 
 /*!**************************************!*\
-  !*** ./lib/ui/menu/GetEaseConfig.js ***!
+  !*** ./src/utils/EventDispatcher.ts ***!
   \**************************************/
 
 /*!**************************************!*\
-  !*** ./lib/ui/slider/GetEndPoint.js ***!
-  \**************************************/
-
-/*!**************************************!*\
-  !*** ./lib/ui/slider/OnDragThumb.js ***!
-  \**************************************/
-
-/*!**************************************!*\
-  !*** ./lib/ui/slider/UpdateThumb.js ***!
-  \**************************************/
-
-/*!**************************************!*\
-  !*** ./lib/ui/textblock/GetLines.js ***!
-  \**************************************/
-
-/*!**************************************!*\
-  !*** ./lib/ui/utils/AddChildMask.js ***!
+  !*** ./src/utils/logic.rectangle.ts ***!
   \**************************************/
 
 /*!***************************************!*\
-  !*** ./lib/ui/baseUI/BaseMediator.js ***!
+  !*** ./node_modules/chance/chance.js ***!
   \***************************************/
 
 /*!***************************************!*\
-  !*** ./lib/ui/basesizer/BaseSizer.js ***!
+  !*** ./node_modules/crypto-js/aes.js ***!
   \***************************************/
 
 /*!***************************************!*\
-  !*** ./lib/ui/basesizer/PreLayout.js ***!
+  !*** ./node_modules/crypto-js/md5.js ***!
   \***************************************/
 
 /*!***************************************!*\
-  !*** ./lib/ui/basesizer/SetAnchor.js ***!
+  !*** ./node_modules/crypto-js/rc4.js ***!
   \***************************************/
 
 /*!***************************************!*\
-  !*** ./lib/ui/container/Container.js ***!
+  !*** ./node_modules/heap/lib/heap.js ***!
   \***************************************/
 
 /*!***************************************!*\
-  !*** ./lib/ui/gridsizer/GridSizer.js ***!
+  !*** ./node_modules/ieee754/index.js ***!
   \***************************************/
 
 /*!***************************************!*\
-  !*** ./lib/ui/gridtable/GridTable.js ***!
+  !*** ./node_modules/isarray/index.js ***!
   \***************************************/
 
 /*!***************************************!*\
-  !*** ./lib/ui/ninepatch/NinePatch.js ***!
+  !*** ./node_modules/lodash/lodash.js ***!
   \***************************************/
 
 /*!***************************************!*\
-  !*** ./lib/ui/slider/OnTouchTrack.js ***!
+  !*** ./src/editor/editor.launcher.ts ***!
   \***************************************/
 
 /*!***************************************!*\
-  !*** ./lib/ui/textarea/AppendText.js ***!
+  !*** ./src/pica/res/atlas.manager.ts ***!
   \***************************************/
 
 /*!***************************************!*\
-  !*** ./lib/ui/textblock/TextBlock.js ***!
+  !*** ./src/pica/res/ui.atlas.name.ts ***!
   \***************************************/
 
 /*!***************************************!*\
-  !*** ./lib/ui/utils/GetScrollMode.js ***!
+  !*** ./src/render/ui/bag/baseitem.ts ***!
+  \***************************************/
+
+/*!***************************************!*\
+  !*** ./src/structure/chinese.unit.ts ***!
+  \***************************************/
+
+/*!***************************************!*\
+  !*** ./src/structure/message.type.ts ***!
   \***************************************/
 
 /*!****************************************!*\
-  !*** ./lib/ui/basesizer/DrawBounds.js ***!
+  !*** ./lib/dragonBones/dragonBones.js ***!
   \****************************************/
 
 /*!****************************************!*\
-  !*** ./lib/ui/basesizer/GetElement.js ***!
+  !*** ./node_modules/crypto-js/core.js ***!
   \****************************************/
 
 /*!****************************************!*\
-  !*** ./lib/ui/basesizer/PostLayout.js ***!
+  !*** ./node_modules/crypto-js/hmac.js ***!
   \****************************************/
 
 /*!****************************************!*\
-  !*** ./lib/ui/menu/CollapseSubMenu.js ***!
+  !*** ./node_modules/crypto-js/sha1.js ***!
   \****************************************/
 
 /*!****************************************!*\
-  !*** ./lib/ui/slider/GetStartPoint.js ***!
+  !*** ./node_modules/crypto-js/sha3.js ***!
   \****************************************/
 
 /*!****************************************!*\
-  !*** ./lib/ui/textblock/ResizeText.js ***!
+  !*** ./node_modules/toposort/index.js ***!
   \****************************************/
 
 /*!****************************************!*\
-  !*** ./lib/ui/utils/GetParentSizer.js ***!
+  !*** ./src/base/model/frames.model.ts ***!
   \****************************************/
 
 /*!****************************************!*\
-  !*** ./lib/ui/utils/GetSizerConfig.js ***!
+  !*** ./src/base/render/layer/index.ts ***!
+  \****************************************/
+
+/*!****************************************!*\
+  !*** ./src/utils/logic.rectangle45.ts ***!
   \****************************************/
 
 /*!*****************************************!*\
-  !*** ./lib/plugins/fade-out-destroy.js ***!
+  !*** ./node_modules/base64-js/index.js ***!
   \*****************************************/
 
 /*!*****************************************!*\
-  !*** ./lib/ui/basesizer/FadeMethods.js ***!
+  !*** ./node_modules/crypto-js/index.js ***!
   \*****************************************/
 
 /*!*****************************************!*\
-  !*** ./lib/ui/basesizer/_layoutInit.js ***!
+  !*** ./node_modules/process/browser.js ***!
   \*****************************************/
 
 /*!*****************************************!*\
-  !*** ./lib/ui/bbcodetext/BBCodeText.js ***!
+  !*** ./node_modules/treeify/treeify.js ***!
   \*****************************************/
 
 /*!*****************************************!*\
-  !*** ./lib/ui/buttons/ButtonMethods.js ***!
+  !*** ./src/base/render/layer/ground.ts ***!
   \*****************************************/
 
 /*!*****************************************!*\
-  !*** ./lib/ui/buttons/types/SetType.js ***!
+  !*** ./src/render/ui/rank/rankPanel.ts ***!
   \*****************************************/
 
 /*!*****************************************!*\
-  !*** ./lib/ui/gridsizer/_layoutInit.js ***!
-  \*****************************************/
-
-/*!*****************************************!*\
-  !*** ./lib/ui/menu/CreateBackground.js ***!
-  \*****************************************/
-
-/*!*****************************************!*\
-  !*** ./lib/ui/messageBox/MessageBox.js ***!
-  \*****************************************/
-
-/*!*****************************************!*\
-  !*** ./lib/ui/scroller/GameScroller.js ***!
-  \*****************************************/
-
-/*!*****************************************!*\
-  !*** ./lib/ui/utils/GetBoundsConfig.js ***!
-  \*****************************************/
-
-/*!*****************************************!*\
-  !*** ./lib/ui/utils/GetTopmostSizer.js ***!
-  \*****************************************/
-
-/*!*****************************************!*\
-  !*** ./lib/ui/utils/ScrollModeConst.js ***!
+  !*** ./src/structure/TimerCountDown.ts ***!
   \*****************************************/
 
 /*!******************************************!*\
-  !*** ./lib/plugins/utils/object/NOOP.js ***!
+  !*** ./node_modules/crypto-js/evpkdf.js ***!
   \******************************************/
 
 /*!******************************************!*\
-  !*** ./lib/ui/basesizer/IsInTouching.js ***!
+  !*** ./node_modules/crypto-js/pbkdf2.js ***!
   \******************************************/
 
 /*!******************************************!*\
-  !*** ./lib/ui/basesizer/ScaleMethods.js ***!
+  !*** ./node_modules/crypto-js/rabbit.js ***!
   \******************************************/
 
 /*!******************************************!*\
-  !*** ./lib/ui/basesizer/SetDraggable.js ***!
+  !*** ./node_modules/crypto-js/sha224.js ***!
   \******************************************/
 
 /*!******************************************!*\
-  !*** ./lib/ui/button/NineSliceButton.js ***!
+  !*** ./node_modules/crypto-js/sha256.js ***!
   \******************************************/
 
 /*!******************************************!*\
-  !*** ./lib/ui/buttons/types/InitData.js ***!
+  !*** ./node_modules/crypto-js/sha384.js ***!
   \******************************************/
 
 /*!******************************************!*\
-  !*** ./lib/ui/scrollableblock/Layout.js ***!
+  !*** ./node_modules/crypto-js/sha512.js ***!
   \******************************************/
 
 /*!******************************************!*\
-  !*** ./lib/ui/sizer/GetChildrenWidth.js ***!
+  !*** ./node_modules/rusha/dist/rusha.js ***!
   \******************************************/
 
 /*!******************************************!*\
-  !*** ./lib/ui/slider/UpdateIndicator.js ***!
+  !*** ./src/base/render/cameras/index.ts ***!
   \******************************************/
 
 /*!******************************************!*\
-  !*** ./lib/ui/tab/NinePatchTabButton.js ***!
+  !*** ./src/base/render/display/index.ts ***!
   \******************************************/
 
 /*!******************************************!*\
-  !*** ./lib/ui/utils/OrientationConst.js ***!
+  !*** ./src/base/render/layer/surface.ts ***!
+  \******************************************/
+
+/*!******************************************!*\
+  !*** ./src/base/render/sky.box/index.ts ***!
+  \******************************************/
+
+/*!******************************************!*\
+  !*** ./src/render/scenes/basic.scene.ts ***!
+  \******************************************/
+
+/*!******************************************!*\
+  !*** ./src/structure/animation.model.ts ***!
+  \******************************************/
+
+/*!******************************************!*\
+  !*** ./src/structure/friend.relation.ts ***!
   \******************************************/
 
 /*!*******************************************!*\
-  !*** ./lib/plugins/scale-down-destroy.js ***!
+  !*** ./node_modules/pathfinding/index.js ***!
   \*******************************************/
 
 /*!*******************************************!*\
-  !*** ./lib/plugins/utils/object/Clear.js ***!
+  !*** ./src/render/cameras/play.camera.ts ***!
   \*******************************************/
 
 /*!*******************************************!*\
-  !*** ./lib/plugins/utils/object/Clone.js ***!
+  !*** ./src/render/ui/components/index.ts ***!
   \*******************************************/
 
 /*!*******************************************!*\
-  !*** ./lib/plugins/utils/struct/Stack.js ***!
-  \*******************************************/
-
-/*!*******************************************!*\
-  !*** ./lib/ui/gridtable/GameGridTable.js ***!
-  \*******************************************/
-
-/*!*******************************************!*\
-  !*** ./lib/ui/gridtable/input/TapCell.js ***!
-  \*******************************************/
-
-/*!*******************************************!*\
-  !*** ./lib/ui/interface/baseUI/UIType.js ***!
-  \*******************************************/
-
-/*!*******************************************!*\
-  !*** ./lib/ui/menu/MenuSetInteractive.js ***!
-  \*******************************************/
-
-/*!*******************************************!*\
-  !*** ./lib/ui/progressbar/ProgressBar.js ***!
-  \*******************************************/
-
-/*!*******************************************!*\
-  !*** ./lib/ui/scrollableblock/Methods.js ***!
-  \*******************************************/
-
-/*!*******************************************!*\
-  !*** ./lib/ui/sizer/GetChildrenHeight.js ***!
-  \*******************************************/
-
-/*!*******************************************!*\
-  !*** ./lib/ui/sizer/GetChildrenSizers.js ***!
-  \*******************************************/
-
-/*!*******************************************!*\
-  !*** ./lib/ui/textblock/SetTextObject.js ***!
+  !*** ./src/structure/avatar.suit.type.ts ***!
   \*******************************************/
 
 /*!********************************************!*\
-  !*** ./lib/plugins/behaviors/fade/Fade.js ***!
+  !*** ./node_modules/crypto-js/mode-cfb.js ***!
   \********************************************/
 
 /*!********************************************!*\
-  !*** ./lib/plugins/behaviors/flip/Flip.js ***!
+  !*** ./node_modules/crypto-js/mode-ctr.js ***!
   \********************************************/
 
 /*!********************************************!*\
-  !*** ./lib/plugins/input/button/Button.js ***!
+  !*** ./node_modules/crypto-js/mode-ecb.js ***!
   \********************************************/
 
 /*!********************************************!*\
-  !*** ./lib/plugins/utils/math/DegToRad.js ***!
+  !*** ./node_modules/crypto-js/mode-ofb.js ***!
   \********************************************/
 
 /*!********************************************!*\
-  !*** ./lib/ui/basesizer/AddChildrenMap.js ***!
+  !*** ./node_modules/crypto-js/x64-core.js ***!
   \********************************************/
 
 /*!********************************************!*\
-  !*** ./lib/ui/basesizer/GetParentSizer.js ***!
+  !*** ./node_modules/protobufjs/minimal.js ***!
   \********************************************/
 
 /*!********************************************!*\
-  !*** ./lib/ui/basesizer/PushIntoBounds.js ***!
+  !*** ./node_modules/protobufjs/src/rpc.js ***!
   \********************************************/
 
 /*!********************************************!*\
-  !*** ./lib/ui/gridtable/input/OverCell.js ***!
+  !*** ./src/base/render/sky.box/scenery.ts ***!
   \********************************************/
 
 /*!********************************************!*\
-  !*** ./lib/ui/ninepatch/NineSlicePatch.js ***!
+  !*** ./src/editor/canvas/editor.canvas.ts ***!
   \********************************************/
 
 /*!********************************************!*\
-  !*** ./lib/ui/scrollableblock/SetChild.js ***!
+  !*** ./src/editor/canvas/scene/factory.ts ***!
   \********************************************/
 
 /*!********************************************!*\
-  !*** ./lib/ui/slider/PercentToPosition.js ***!
+  !*** ./src/render/scenes/main.ui.scene.ts ***!
   \********************************************/
 
 /*!********************************************!*\
-  !*** ./lib/ui/slider/PositionToPercent.js ***!
+  !*** ./src/render/scenes/sky.box.scene.ts ***!
   \********************************************/
 
 /*!*********************************************!*\
-  !*** ./lib/plugins/input/scroller/State.js ***!
+  !*** ./node_modules/crypto-js/enc-utf16.js ***!
   \*********************************************/
 
 /*!*********************************************!*\
-  !*** ./lib/plugins/utils/object/IsArray.js ***!
+  !*** ./node_modules/crypto-js/ripemd160.js ***!
   \*********************************************/
 
 /*!*********************************************!*\
-  !*** ./lib/ui/basesizer/GetTopmostSizer.js ***!
+  !*** ./node_modules/crypto-js/tripledes.js ***!
   \*********************************************/
 
 /*!*********************************************!*\
-  !*** ./lib/ui/gridtable/input/ClickCell.js ***!
+  !*** ./node_modules/simple-sha1/browser.js ***!
   \*********************************************/
 
 /*!*********************************************!*\
-  !*** ./lib/ui/gridtable/input/PressCell.js ***!
+  !*** ./src/base/model/dragonbones.model.ts ***!
   \*********************************************/
 
 /*!*********************************************!*\
-  !*** ./lib/ui/gridtable/input/SwipeCell.js ***!
+  !*** ./src/base/render/layer/base.layer.ts ***!
   \*********************************************/
 
 /*!*********************************************!*\
-  !*** ./lib/ui/slider/GetThumbAlignPoint.js ***!
-  \*********************************************/
-
-/*!*********************************************!*\
-  !*** ./lib/ui/textarea/InjectProperties.js ***!
+  !*** ./src/structure/element.state.data.ts ***!
   \*********************************************/
 
 /*!**********************************************!*\
-  !*** ./lib/plugins/behaviors/scale/Scale.js ***!
+  !*** ./node_modules/crypto-js/enc-base64.js ***!
   \**********************************************/
 
 /*!**********************************************!*\
-  !*** ./lib/plugins/utils/object/GetValue.js ***!
+  !*** ./node_modules/crypto-js/format-hex.js ***!
   \**********************************************/
 
 /*!**********************************************!*\
-  !*** ./lib/plugins/utils/tween/TweenBase.js ***!
+  !*** ./node_modules/protobufjs/src/roots.js ***!
   \**********************************************/
 
 /*!**********************************************!*\
-  !*** ./lib/ui/basesizer/GetChildrenWidth.js ***!
+  !*** ./src/editor/utils/position45.utils.ts ***!
   \**********************************************/
 
 /*!**********************************************!*\
-  !*** ./lib/ui/buttons/types/SetRadioType.js ***!
+  !*** ./src/render/ui/bag/IListItemRender.ts ***!
   \**********************************************/
 
 /*!**********************************************!*\
-  !*** ./lib/ui/gridsizer/GetChildrenWidth.js ***!
+  !*** ./src/render/ui/components/icon.btn.ts ***!
   \**********************************************/
 
 /*!**********************************************!*\
-  !*** ./lib/ui/gridtable/InjectProperties.js ***!
-  \**********************************************/
-
-/*!**********************************************!*\
-  !*** ./lib/ui/interface/event/ClickEvent.js ***!
-  \**********************************************/
-
-/*!**********************************************!*\
-  !*** ./lib/ui/interface/sound/SoundField.js ***!
-  \**********************************************/
-
-/*!**********************************************!*\
-  !*** ./lib/ui/textblock/UpdateTextObject.js ***!
+  !*** ./src/render/ui/rank/basicRankPanel.ts ***!
   \**********************************************/
 
 /*!***********************************************!*\
-  !*** ./lib/plugins/input/gestures/tap/Tap.js ***!
+  !*** ./node_modules/crypto-js/cipher-core.js ***!
   \***********************************************/
 
 /*!***********************************************!*\
-  !*** ./lib/plugins/utils/actions/GlobZone.js ***!
+  !*** ./node_modules/os-browserify/browser.js ***!
   \***********************************************/
 
 /*!***********************************************!*\
-  !*** ./lib/plugins/utils/data/DataMethods.js ***!
+  !*** ./node_modules/path-browserify/index.js ***!
   \***********************************************/
 
 /*!***********************************************!*\
-  !*** ./lib/plugins/utils/mask/DefaultMask.js ***!
+  !*** ./node_modules/protobufjs/src/reader.js ***!
   \***********************************************/
 
 /*!***********************************************!*\
-  !*** ./lib/ui/basesizer/GetChildrenHeight.js ***!
+  !*** ./node_modules/protobufjs/src/writer.js ***!
   \***********************************************/
 
 /*!***********************************************!*\
-  !*** ./lib/ui/basesizer/GetChildrenSizers.js ***!
+  !*** ./src/render/ui/bag/bagView/bagPanel.ts ***!
   \***********************************************/
 
 /*!***********************************************!*\
-  !*** ./lib/ui/basesizer/LayoutBackgrounds.js ***!
+  !*** ./src/render/ui/components/idragable.ts ***!
   \***********************************************/
 
 /*!***********************************************!*\
-  !*** ./lib/ui/gridsizer/GetChildrenHeight.js ***!
+  !*** ./src/render/ui/components/idropable.ts ***!
   \***********************************************/
 
 /*!***********************************************!*\
-  !*** ./lib/ui/gridsizer/GetChildrenSizers.js ***!
+  !*** ./src/render/ui/components/item.slot.ts ***!
   \***********************************************/
 
 /*!***********************************************!*\
-  !*** ./lib/ui/sizer/GetChildrenProportion.js ***!
-  \***********************************************/
-
-/*!***********************************************!*\
-  !*** ./lib/ui/sizer/GetExpandedChildWidth.js ***!
-  \***********************************************/
-
-/*!***********************************************!*\
-  !*** ./lib/ui/utils/scrollable/Scrollable.js ***!
+  !*** ./src/render/ui/components/prop.item.ts ***!
   \***********************************************/
 
 /*!************************************************!*\
-  !*** ./lib/plugins/behaviors/anchor/Anchor.js ***!
+  !*** ./lib/dragonBones/dragonBones.js-exposed ***!
   \************************************************/
 
 /*!************************************************!*\
-  !*** ./lib/plugins/behaviors/textedit/Edit.js ***!
+  !*** ./node_modules/@protobufjs/pool/index.js ***!
   \************************************************/
 
 /*!************************************************!*\
-  !*** ./lib/plugins/input/scroller/Scroller.js ***!
+  !*** ./node_modules/@protobufjs/utf8/index.js ***!
   \************************************************/
 
 /*!************************************************!*\
-  !*** ./lib/plugins/utils/align/align/const.js ***!
+  !*** ./node_modules/crypto-js/pad-ansix923.js ***!
   \************************************************/
 
 /*!************************************************!*\
-  !*** ./lib/plugins/utils/movement/Movement.js ***!
+  !*** ./node_modules/crypto-js/pad-iso10126.js ***!
   \************************************************/
 
 /*!************************************************!*\
-  !*** ./lib/plugins/utils/movement/SlowDown.js ***!
+  !*** ./node_modules/crypto-js/pad-iso97971.js ***!
   \************************************************/
 
 /*!************************************************!*\
-  !*** ./lib/plugins/utils/object/IsFunction.js ***!
+  !*** ./src/base/model/elementstorage/index.ts ***!
   \************************************************/
 
 /*!************************************************!*\
-  !*** ./lib/plugins/utils/promise/WaitEvent.js ***!
+  !*** ./src/base/render/display/top.display.ts ***!
   \************************************************/
 
 /*!************************************************!*\
-  !*** ./lib/plugins/utils/ticktask/TickTask.js ***!
+  !*** ./src/base/render/layer/layer.manager.ts ***!
   \************************************************/
 
 /*!************************************************!*\
-  !*** ./lib/ui/buttons/ButtonSetInteractive.js ***!
+  !*** ./src/editor/canvas/scene/check.bound.ts ***!
   \************************************************/
 
 /*!************************************************!*\
-  !*** ./lib/ui/gridtable/TableOnCellVisible.js ***!
+  !*** ./src/editor/canvas/scene/top.display.ts ***!
   \************************************************/
 
 /*!************************************************!*\
-  !*** ./lib/ui/interface/sound/ISoundConfig.js ***!
+  !*** ./src/render/ui/components/TextButton.ts ***!
   \************************************************/
 
 /*!************************************************!*\
-  !*** ./lib/ui/sizer/GetExpandedChildHeight.js ***!
+  !*** ./src/render/ui/components/alert.view.ts ***!
+  \************************************************/
+
+/*!************************************************!*\
+  !*** ./src/render/ui/components/base.panel.ts ***!
+  \************************************************/
+
+/*!************************************************!*\
+  !*** ./src/render/ui/components/input.view.ts ***!
+  \************************************************/
+
+/*!************************************************!*\
+  !*** ./src/render/ui/components/nine.patch.ts ***!
   \************************************************/
 
 /*!*************************************************!*\
-  !*** ./lib/ui/gridtable/input/EmitCellEvent.js ***!
+  !*** ./node_modules/@protobufjs/float/index.js ***!
   \*************************************************/
 
 /*!*************************************************!*\
-  !*** ./lib/ui/roundrectangle/RoundRectangle.js ***!
+  !*** ./node_modules/crypto-js/pad-nopadding.js ***!
+  \*************************************************/
+
+/*!*************************************************!*\
+  !*** ./node_modules/crypto-js/rabbit-legacy.js ***!
+  \*************************************************/
+
+/*!*************************************************!*\
+  !*** ./node_modules/game-capsule/dist/index.js ***!
+  \*************************************************/
+
+/*!*************************************************!*\
+  !*** ./src/base/render/display/base.display.ts ***!
+  \*************************************************/
+
+/*!*************************************************!*\
+  !*** ./src/render/ui/components/image.value.ts ***!
+  \*************************************************/
+
+/*!*************************************************!*\
+  !*** ./src/render/ui/components/input.panel.ts ***!
+  \*************************************************/
+
+/*!*************************************************!*\
+  !*** ./src/render/ui/components/label.input.ts ***!
+  \*************************************************/
+
+/*!*************************************************!*\
+  !*** ./src/render/ui/components/soundButton.ts ***!
   \*************************************************/
 
 /*!**************************************************!*\
-  !*** ./lib/plugins/gameobjects/canvas/Canvas.js ***!
+  !*** ./node_modules/@protobufjs/base64/index.js ***!
   \**************************************************/
 
 /*!**************************************************!*\
-  !*** ./lib/plugins/input/dragspeed/DragSpeed.js ***!
+  !*** ./node_modules/i18next/dist/esm/i18next.js ***!
   \**************************************************/
 
 /*!**************************************************!*\
-  !*** ./lib/plugins/utils/align/bounds/GetTop.js ***!
+  !*** ./node_modules/pixelpai_proto/protocols.js ***!
   \**************************************************/
 
 /*!**************************************************!*\
-  !*** ./lib/plugins/utils/align/bounds/SetTop.js ***!
+  !*** ./src/base/render/sky.box/block.manager.ts ***!
   \**************************************************/
 
 /*!**************************************************!*\
-  !*** ./lib/plugins/utils/geom/polygon/Earcut.js ***!
+  !*** ./src/render/ui/components/dragDropIcon.ts ***!
   \**************************************************/
 
 /*!**************************************************!*\
-  !*** ./lib/plugins/utils/size/GetDisplaySize.js ***!
+  !*** ./src/render/ui/components/three.button.ts ***!
   \**************************************************/
 
 /*!**************************************************!*\
-  !*** ./lib/plugins/utils/system/IsGameObject.js ***!
-  \**************************************************/
-
-/*!**************************************************!*\
-  !*** ./lib/ui/basesizer/GetAllChildrenSizers.js ***!
+  !*** ./src/render/ui/components/tips/toolTip.ts ***!
   \**************************************************/
 
 /*!***************************************************!*\
-  !*** ./lib/plugins/gameobjects/gridtable/Cell.js ***!
+  !*** ./node_modules/@protobufjs/inquire/index.js ***!
   \***************************************************/
 
 /*!***************************************************!*\
-  !*** ./lib/plugins/input/gestures/press/Press.js ***!
+  !*** ./node_modules/crypto-js/lib-typedarrays.js ***!
   \***************************************************/
 
 /*!***************************************************!*\
-  !*** ./lib/plugins/input/gestures/swipe/Swipe.js ***!
+  !*** ./node_modules/crypto-js/pad-zeropadding.js ***!
   \***************************************************/
 
 /*!***************************************************!*\
-  !*** ./lib/plugins/utils/align/bounds/GetLeft.js ***!
+  !*** ./node_modules/pathfinding/src/core/Grid.js ***!
   \***************************************************/
 
 /*!***************************************************!*\
-  !*** ./lib/plugins/utils/align/bounds/SetLeft.js ***!
+  !*** ./node_modules/pathfinding/src/core/Node.js ***!
   \***************************************************/
 
 /*!***************************************************!*\
-  !*** ./lib/plugins/utils/system/IsSceneObject.js ***!
+  !*** ./node_modules/pathfinding/src/core/Util.js ***!
   \***************************************************/
 
 /*!***************************************************!*\
-  !*** ./lib/ui/buttons/types/SetCheckboxesType.js ***!
+  !*** ./node_modules/sort-display-object/index.js ***!
   \***************************************************/
 
 /*!***************************************************!*\
-  !*** ./lib/ui/gridsizer/GetExpandedChildWidth.js ***!
+  !*** ./src/base/render/display/reference.area.ts ***!
   \***************************************************/
 
 /*!***************************************************!*\
-  !*** ./lib/ui/interface/baseUI/Patches.config.js ***!
+  !*** ./src/render/ui/bag/storage/storagePanel.ts ***!
   \***************************************************/
 
 /*!***************************************************!*\
-  !*** ./lib/ui/scrollableblock/ScrollableBlock.js ***!
+  !*** ./src/render/ui/components/dynamic.image.ts ***!
   \***************************************************/
 
 /*!***************************************************!*\
-  !*** ./lib/ui/scrollablepanel/ScrollablePanel.js ***!
+  !*** ./src/render/ui/components/material.item.ts ***!
+  \***************************************************/
+
+/*!***************************************************!*\
+  !*** ./src/render/ui/components/tips/itoolTip.ts ***!
+  \***************************************************/
+
+/*!***************************************************!*\
+  !*** ./src/render/ui/components/toggle.button.ts ***!
+  \***************************************************/
+
+/*!***************************************************!*\
+  !*** ./src/render/ui/components/tween.compent.ts ***!
   \***************************************************/
 
 /*!****************************************************!*\
-  !*** ./lib/plugins/behaviors/textedit/TextEdit.js ***!
+  !*** ./node_modules/crypto-js/mode-ctr-gladman.js ***!
   \****************************************************/
 
 /*!****************************************************!*\
-  !*** ./lib/plugins/gameobjects/gridtable/Table.js ***!
+  !*** ./node_modules/game-capsule/dist/lib/lite.js ***!
   \****************************************************/
 
 /*!****************************************************!*\
-  !*** ./lib/plugins/utils/align/align/in/Center.js ***!
+  !*** ./node_modules/protobufjs/src/rpc/service.js ***!
   \****************************************************/
 
 /*!****************************************************!*\
-  !*** ./lib/plugins/utils/align/bounds/CenterOn.js ***!
+  !*** ./src/base/render/cameras/cameras.manager.ts ***!
   \****************************************************/
 
 /*!****************************************************!*\
-  !*** ./lib/plugins/utils/align/bounds/GetRight.js ***!
+  !*** ./src/render/ui/components/checkbox.group.ts ***!
   \****************************************************/
 
 /*!****************************************************!*\
-  !*** ./lib/plugins/utils/align/bounds/SetRight.js ***!
+  !*** ./src/render/ui/components/dynamic.sprite.ts ***!
   \****************************************************/
 
 /*!****************************************************!*\
-  !*** ./lib/plugins/utils/mask/MaskToGameObject.js ***!
-  \****************************************************/
-
-/*!****************************************************!*\
-  !*** ./lib/plugins/utils/size/ResizeGameObject.js ***!
-  \****************************************************/
-
-/*!****************************************************!*\
-  !*** ./lib/plugins/utils/system/GetSceneObject.js ***!
-  \****************************************************/
-
-/*!****************************************************!*\
-  !*** ./lib/plugins/utils/text/IsTextGameObject.js ***!
-  \****************************************************/
-
-/*!****************************************************!*\
-  !*** ./lib/ui/gridsizer/GetExpandedChildHeight.js ***!
-  \****************************************************/
-
-/*!****************************************************!*\
-  !*** ./lib/ui/scrollableblock/GetChildrenWidth.js ***!
-  \****************************************************/
-
-/*!****************************************************!*\
-  !*** ./lib/ui/textblock/LinesCountToTextHeight.js ***!
-  \****************************************************/
-
-/*!****************************************************!*\
-  !*** ./lib/ui/textblock/TextHeightToLinesCount.js ***!
+  !*** ./src/render/ui/components/patches.config.ts ***!
   \****************************************************/
 
 /*!*****************************************************!*\
-  !*** ./lib/plugins/behaviors/anchor/GetViewport.js ***!
+  !*** ./node_modules/@protobufjs/aspromise/index.js ***!
   \*****************************************************/
 
 /*!*****************************************************!*\
-  !*** ./lib/plugins/input/gestures/rotate/Rotate.js ***!
+  !*** ./node_modules/pathfinding/src/PathFinding.js ***!
   \*****************************************************/
 
 /*!*****************************************************!*\
-  !*** ./lib/plugins/utils/align/align/in/TopLeft.js ***!
+  !*** ./node_modules/protobufjs/src/util/minimal.js ***!
   \*****************************************************/
 
 /*!*****************************************************!*\
-  !*** ./lib/plugins/utils/align/bounds/GetBottom.js ***!
+  !*** ./src/render/ui/components/MoreButtonPanel.ts ***!
   \*****************************************************/
 
 /*!*****************************************************!*\
-  !*** ./lib/plugins/utils/align/bounds/SetBottom.js ***!
+  !*** ./src/render/ui/components/icon.select.btn.ts ***!
   \*****************************************************/
 
 /*!*****************************************************!*\
-  !*** ./lib/ui/interface/ninepatch/NinePatchSkin.js ***!
-  \*****************************************************/
-
-/*!*****************************************************!*\
-  !*** ./lib/ui/scrollableblock/GetChildrenHeight.js ***!
-  \*****************************************************/
-
-/*!*****************************************************!*\
-  !*** ./lib/ui/textblock/ResetTextObjectPosition.js ***!
-  \*****************************************************/
-
-/*!*****************************************************!*\
-  !*** ./lib/ui/utils/scrollable/ResizeController.js ***!
-  \*****************************************************/
-
-/*!*****************************************************!*\
-  !*** ./lib/ui/utils/scrollable/UpdateController.js ***!
+  !*** ./src/render/ui/components/value.container.ts ***!
   \*****************************************************/
 
 /*!******************************************************!*\
-  !*** ./lib/plugins/gameobjects/shape/utils/ArcTo.js ***!
+  !*** ./node_modules/net-socket-packet/dist/index.js ***!
   \******************************************************/
 
 /*!******************************************************!*\
-  !*** ./lib/plugins/utils/align/align/in/QuickSet.js ***!
+  !*** ./node_modules/protobufjs/src/index-minimal.js ***!
   \******************************************************/
 
 /*!******************************************************!*\
-  !*** ./lib/plugins/utils/align/align/in/TopRight.js ***!
+  !*** ./node_modules/protobufjs/src/reader_buffer.js ***!
   \******************************************************/
 
 /*!******************************************************!*\
-  !*** ./lib/plugins/utils/align/bounds/GetCenterX.js ***!
+  !*** ./node_modules/protobufjs/src/util/longbits.js ***!
   \******************************************************/
 
 /*!******************************************************!*\
-  !*** ./lib/plugins/utils/align/bounds/GetCenterY.js ***!
+  !*** ./node_modules/protobufjs/src/writer_buffer.js ***!
   \******************************************************/
 
 /*!******************************************************!*\
-  !*** ./lib/plugins/utils/align/bounds/SetCenterX.js ***!
+  !*** ./src/render/ui/components/ninepatch.button.ts ***!
   \******************************************************/
 
 /*!******************************************************!*\
-  !*** ./lib/plugins/utils/align/bounds/SetCenterY.js ***!
+  !*** ./src/render/ui/components/three.slice.path.ts ***!
   \******************************************************/
 
 /*!******************************************************!*\
-  !*** ./lib/plugins/utils/input/IsPointerInBounds.js ***!
-  \******************************************************/
-
-/*!******************************************************!*\
-  !*** ./lib/ui/scrollableblock/ResetChildPosition.js ***!
+  !*** ./src/render/ui/components/tips/TextToolTip.ts ***!
   \******************************************************/
 
 /*!*******************************************************!*\
-  !*** ./lib/plugins/gameobjects/containerlite/Mask.js ***!
+  !*** ./node_modules/game-capsule/dist/lib/capsule.js ***!
   \*******************************************************/
 
 /*!*******************************************************!*\
-  !*** ./lib/plugins/gameobjects/shape/utils/LineTo.js ***!
+  !*** ./node_modules/game-capsule/dist/lib/helpers.js ***!
   \*******************************************************/
 
 /*!*******************************************************!*\
-  !*** ./lib/plugins/gameobjects/text/textbase/Text.js ***!
+  !*** ./node_modules/simple-sha1/rusha-worker-sha1.js ***!
   \*******************************************************/
 
 /*!*******************************************************!*\
-  !*** ./lib/plugins/utils/align/align/in/TopCenter.js ***!
+  !*** ./node_modules/tooqinggamephaser/dist/phaser.js ***!
   \*******************************************************/
 
 /*!*******************************************************!*\
-  !*** ./lib/ui/gridtable/input/TableSetInteractive.js ***!
+  !*** ./src/render/ui/components/common.background.ts ***!
+  \*******************************************************/
+
+/*!*******************************************************!*\
+  !*** ./src/render/ui/components/dynamic.ninepatch.ts ***!
+  \*******************************************************/
+
+/*!*******************************************************!*\
+  !*** ./src/render/ui/components/grid.layout.group.ts ***!
+  \*******************************************************/
+
+/*!*******************************************************!*\
+  !*** ./src/render/ui/components/progress.mask.bar.ts ***!
+  \*******************************************************/
+
+/*!*******************************************************!*\
+  !*** ./src/render/ui/components/tips/ItemInfoTips.ts ***!
   \*******************************************************/
 
 /*!********************************************************!*\
-  !*** ./lib/plugins/gameobjects/containerlite/Alpha.js ***!
+  !*** ./node_modules/@protobufjs/eventemitter/index.js ***!
   \********************************************************/
 
 /*!********************************************************!*\
-  !*** ./lib/plugins/gameobjects/containerlite/Depth.js ***!
+  !*** ./node_modules/pathfinding/src/core/Heuristic.js ***!
   \********************************************************/
 
 /*!********************************************************!*\
-  !*** ./lib/plugins/gameobjects/containerlite/Scale.js ***!
+  !*** ./src/base/render/display/base.frames.display.ts ***!
   \********************************************************/
 
 /*!********************************************************!*\
-  !*** ./lib/plugins/gameobjects/gridtable/GridTable.js ***!
+  !*** ./src/editor/canvas/scene/display.object.pool.ts ***!
   \********************************************************/
 
 /*!********************************************************!*\
-  !*** ./lib/plugins/gameobjects/inputtext/InputText.js ***!
+  !*** ./src/editor/canvas/scene/scene.editor.canvas.ts ***!
   \********************************************************/
 
 /*!********************************************************!*\
-  !*** ./lib/plugins/gameobjects/ninepatch/NinePatch.js ***!
-  \********************************************************/
-
-/*!********************************************************!*\
-  !*** ./lib/plugins/gameobjects/text/tagtext/Parser.js ***!
-  \********************************************************/
-
-/*!********************************************************!*\
-  !*** ./lib/plugins/gameobjects/text/textbase/const.js ***!
-  \********************************************************/
-
-/*!********************************************************!*\
-  !*** ./lib/plugins/utils/align/align/in/BottomLeft.js ***!
-  \********************************************************/
-
-/*!********************************************************!*\
-  !*** ./lib/plugins/utils/align/align/in/LeftCenter.js ***!
+  !*** ./src/render/ui/components/progress.three.bar.ts ***!
   \********************************************************/
 
 /*!*********************************************************!*\
-  !*** ./lib/plugins/gameobjects/canvas/CanvasMethods.js ***!
+  !*** ./node_modules/game-capsule/dist/lib/constants.js ***!
   \*********************************************************/
 
 /*!*********************************************************!*\
-  !*** ./lib/plugins/gameobjects/canvas/render/Render.js ***!
+  !*** ./src/editor/canvas/scene/manager/moss.manager.ts ***!
   \*********************************************************/
 
 /*!*********************************************************!*\
-  !*** ./lib/plugins/gameobjects/containerlite/Active.js ***!
-  \*********************************************************/
-
-/*!*********************************************************!*\
-  !*** ./lib/plugins/gameobjects/text/tagtext/TagText.js ***!
-  \*********************************************************/
-
-/*!*********************************************************!*\
-  !*** ./lib/plugins/input/gestures/rotate/SpinObject.js ***!
-  \*********************************************************/
-
-/*!*********************************************************!*\
-  !*** ./lib/plugins/utils/actions/RotateObjectAround.js ***!
-  \*********************************************************/
-
-/*!*********************************************************!*\
-  !*** ./lib/plugins/utils/align/align/in/BottomRight.js ***!
-  \*********************************************************/
-
-/*!*********************************************************!*\
-  !*** ./lib/plugins/utils/align/align/in/RightCenter.js ***!
+  !*** ./src/render/ui/components/toggle.color.button.ts ***!
   \*********************************************************/
 
 /*!**********************************************************!*\
-  !*** ./lib/plugins/gameobjects/canvas/TextureMethods.js ***!
+  !*** ./node_modules/apowophaserui/dist/apowophaserui.js ***!
   \**********************************************************/
 
 /*!**********************************************************!*\
-  !*** ./lib/plugins/gameobjects/containerlite/Visible.js ***!
+  !*** ./src/base/model/elementstorage/element.storage.ts ***!
   \**********************************************************/
 
 /*!**********************************************************!*\
-  !*** ./lib/plugins/utils/align/align/in/BottomCenter.js ***!
+  !*** ./src/editor/canvas/avatar/avatar.editor.canvas.ts ***!
   \**********************************************************/
 
 /*!**********************************************************!*\
-  !*** ./lib/ui/utils/scrollable/CreateScrollableSizer.js ***!
+  !*** ./src/editor/canvas/scene/editor.frames.display.ts ***!
   \**********************************************************/
 
 /*!***********************************************************!*\
-  !*** ./lib/plugins/behaviors/textedit/CreateInputText.js ***!
+  !*** ./node_modules/@babel/runtime/helpers/esm/typeof.js ***!
   \***********************************************************/
 
 /*!***********************************************************!*\
-  !*** ./lib/plugins/gameobjects/containerlite/AddChild.js ***!
+  !*** ./node_modules/net-socket-packet/dist/src/Packet.js ***!
   \***********************************************************/
 
 /*!***********************************************************!*\
-  !*** ./lib/plugins/gameobjects/containerlite/Children.js ***!
+  !*** ./src/editor/canvas/element/element.editor.grids.ts ***!
   \***********************************************************/
 
 /*!***********************************************************!*\
-  !*** ./lib/plugins/gameobjects/containerlite/Position.js ***!
+  !*** ./src/editor/canvas/scene/editor.element.display.ts ***!
   \***********************************************************/
 
 /*!***********************************************************!*\
-  !*** ./lib/plugins/gameobjects/inputtext/utils/Resize.js ***!
+  !*** ./src/editor/canvas/scene/manager/skybox.manager.ts ***!
   \***********************************************************/
 
 /*!***********************************************************!*\
-  !*** ./lib/plugins/gameobjects/ninepatch/utils/IsEdge.js ***!
-  \***********************************************************/
-
-/*!***********************************************************!*\
-  !*** ./lib/plugins/gameobjects/text/bbcodetext/parser.js ***!
+  !*** ./src/render/ui/components/button.event.dispatch.ts ***!
   \***********************************************************/
 
 /*!************************************************************!*\
-  !*** ./lib/plugins/gameobjects/containerlite/Transform.js ***!
+  !*** ./src/editor/canvas/element/element.editor.canvas.ts ***!
   \************************************************************/
 
 /*!************************************************************!*\
-  !*** ./lib/plugins/gameobjects/text/bbcodetext/Creator.js ***!
+  !*** ./src/editor/canvas/scene/manager/cameras.manager.ts ***!
   \************************************************************/
 
 /*!************************************************************!*\
-  !*** ./lib/plugins/gameobjects/text/bbcodetext/Factory.js ***!
+  !*** ./src/editor/canvas/scene/manager/element.manager.ts ***!
+  \************************************************************/
+
+/*!************************************************************!*\
+  !*** ./src/editor/canvas/scene/manager/terrain.manager.ts ***!
+  \************************************************************/
+
+/*!************************************************************!*\
+  !*** ./src/render/ui/components/items.consume.funpanel.ts ***!
   \************************************************************/
 
 /*!*************************************************************!*\
-  !*** ./lib/plugins/gameobjects/containerlite/ChildState.js ***!
+  !*** ./node_modules/@babel/runtime/helpers/esm/inherits.js ***!
   \*************************************************************/
 
 /*!*************************************************************!*\
-  !*** ./lib/plugins/input/gestures/swipe/VelocityMethods.js ***!
+  !*** ./node_modules/pathfinding/src/finders/AStarFinder.js ***!
   \*************************************************************/
 
 /*!*************************************************************!*\
-  !*** ./lib/plugins/utils/defaultbounds/GetDefaultBounds.js ***!
+  !*** ./node_modules/typescript-collections/dist/lib/Bag.js ***!
+  \*************************************************************/
+
+/*!*************************************************************!*\
+  !*** ./node_modules/typescript-collections/dist/lib/Set.js ***!
+  \*************************************************************/
+
+/*!*************************************************************!*\
+  !*** ./src/base/render/display/base.dragonbones.display.ts ***!
+  \*************************************************************/
+
+/*!*************************************************************!*\
+  !*** ./src/editor/canvas/scene/connection/editor.packet.ts ***!
+  \*************************************************************/
+
+/*!*************************************************************!*\
+  !*** ./src/render/ui/components/background.scale.button.ts ***!
+  \*************************************************************/
+
+/*!*************************************************************!*\
+  !*** ./src/render/ui/components/progress.three.mask.bar.ts ***!
   \*************************************************************/
 
 /*!**************************************************************!*\
-  !*** ./lib/plugins/gameobjects/containerlite/RemoveChild.js ***!
+  !*** ./node_modules/game-capsule/dist/lib/children_index.js ***!
   \**************************************************************/
 
 /*!**************************************************************!*\
-  !*** ./lib/plugins/gameobjects/gridtable/methods/Methods.js ***!
+  !*** ./node_modules/typescript-collections/dist/lib/Heap.js ***!
   \**************************************************************/
 
 /*!**************************************************************!*\
-  !*** ./lib/plugins/gameobjects/shape/utils/FillPathWebGL.js ***!
+  !*** ./node_modules/typescript-collections/dist/lib/util.js ***!
+  \**************************************************************/
+
+/*!**************************************************************!*\
+  !*** ./src/editor/canvas/avatar/avatar.editor.dragonbone.ts ***!
   \**************************************************************/
 
 /*!***************************************************************!*\
-  !*** ./lib/plugins/behaviors/flip/GetFaceUpdatingCallback.js ***!
+  !*** ./node_modules/maxrects-packer/dist/maxrects-packer.mjs ***!
   \***************************************************************/
 
 /*!***************************************************************!*\
-  !*** ./lib/plugins/gameobjects/containerlite/MaskChildren.js ***!
+  !*** ./node_modules/pathfinding/src/core/DiagonalMovement.js ***!
   \***************************************************************/
 
 /*!***************************************************************!*\
-  !*** ./lib/plugins/gameobjects/containerlite/ScrollFactor.js ***!
+  !*** ./node_modules/pathfinding/src/finders/BiAStarFinder.js ***!
   \***************************************************************/
 
 /*!***************************************************************!*\
-  !*** ./lib/plugins/gameobjects/gridtable/methods/EachCell.js ***!
+  !*** ./node_modules/pathfinding/src/finders/IDAStarFinder.js ***!
   \***************************************************************/
 
 /*!***************************************************************!*\
-  !*** ./lib/plugins/gameobjects/text/bbcodetext/BBCodeText.js ***!
+  !*** ./node_modules/tooqinggamephaser/dist/phaser.js-exposed ***!
   \***************************************************************/
 
 /*!***************************************************************!*\
-  !*** ./lib/plugins/utils/eventemitter/EventEmitterMethods.js ***!
+  !*** ./node_modules/typescript-collections/dist/lib/Queue.js ***!
   \***************************************************************/
 
 /*!***************************************************************!*\
-  !*** ./lib/plugins/utils/input/StopPropagationTouchEvents.js ***!
+  !*** ./node_modules/typescript-collections/dist/lib/Stack.js ***!
+  \***************************************************************/
+
+/*!***************************************************************!*\
+  !*** ./node_modules/typescript-collections/dist/lib/index.js ***!
   \***************************************************************/
 
 /*!****************************************************************!*\
-  !*** ./lib/plugins/gameobjects/canvas/render/WebGLRenderer.js ***!
+  !*** ./node_modules/@babel/runtime/helpers/esm/createClass.js ***!
   \****************************************************************/
 
 /*!****************************************************************!*\
-  !*** ./lib/plugins/gameobjects/containerlite/ContainerLite.js ***!
+  !*** ./node_modules/game-capsule/dist/lib/configobjects/ui.js ***!
   \****************************************************************/
 
 /*!****************************************************************!*\
-  !*** ./lib/plugins/gameobjects/inputtext/utils/RouteEvents.js ***!
+  !*** ./node_modules/pathfinding/src/finders/DijkstraFinder.js ***!
   \****************************************************************/
 
 /*!****************************************************************!*\
-  !*** ./lib/plugins/gameobjects/shape/utils/FillStyleCanvas.js ***!
+  !*** ./node_modules/typescript-collections/dist/lib/BSTree.js ***!
   \****************************************************************/
 
 /*!****************************************************************!*\
-  !*** ./lib/plugins/gameobjects/shape/utils/LineStyleCanvas.js ***!
+  !*** ./node_modules/typescript-collections/dist/lib/arrays.js ***!
   \****************************************************************/
 
 /*!****************************************************************!*\
-  !*** ./lib/plugins/gameobjects/shape/utils/StrokePathWebGL.js ***!
-  \****************************************************************/
-
-/*!****************************************************************!*\
-  !*** ./lib/plugins/gameobjects/text/textbase/penmanger/Pen.js ***!
-  \****************************************************************/
-
-/*!****************************************************************!*\
-  !*** ./lib/plugins/gameobjects/text/textbase/render/Render.js ***!
+  !*** ./src/editor/canvas/element/element.editor.animations.ts ***!
   \****************************************************************/
 
 /*!*****************************************************************!*\
-  !*** ./lib/plugins/gameobjects/canvas/render/CanvasRenderer.js ***!
+  !*** ./node_modules/@babel/runtime/helpers/esm/objectSpread.js ***!
   \*****************************************************************/
 
 /*!*****************************************************************!*\
-  !*** ./lib/plugins/gameobjects/gridtable/methods/SetTableOX.js ***!
+  !*** ./node_modules/pathfinding/src/finders/BestFirstFinder.js ***!
   \*****************************************************************/
 
 /*!*****************************************************************!*\
-  !*** ./lib/plugins/gameobjects/gridtable/methods/SetTableOY.js ***!
-  \*****************************************************************/
-
-/*!*****************************************************************!*\
-  !*** ./lib/plugins/gameobjects/ninepatch/texture/SetTexture.js ***!
-  \*****************************************************************/
-
-/*!*****************************************************************!*\
-  !*** ./lib/plugins/utils/math/angle/angletodirections/Const.js ***!
+  !*** ./node_modules/pathfinding/src/finders/JumpPointFinder.js ***!
   \*****************************************************************/
 
 /*!******************************************************************!*\
-  !*** ./lib/plugins/gameobjects/gridtable/methods/RemoveCells.js ***!
+  !*** ./node_modules/game-capsule/dist/lib/configobjects/fork.js ***!
   \******************************************************************/
 
 /*!******************************************************************!*\
-  !*** ./lib/plugins/gameobjects/gridtable/methods/SetGridSize.js ***!
+  !*** ./node_modules/game-capsule/dist/lib/configobjects/func.js ***!
   \******************************************************************/
 
 /*!******************************************************************!*\
-  !*** ./lib/plugins/gameobjects/inputtext/utils/SetProperties.js ***!
+  !*** ./node_modules/game-capsule/dist/lib/configobjects/game.js ***!
   \******************************************************************/
 
+/*!******************************************************************!*\
+  !*** ./node_modules/game-capsule/dist/lib/configobjects/shop.js ***!
+  \******************************************************************/
+
+/*!******************************************************************!*\
+  !*** ./node_modules/net-socket-packet/dist/src/PacketHandler.js ***!
+  \******************************************************************/
+
+/*!******************************************************************!*\
+  !*** ./node_modules/pathfinding/src/finders/BiDijkstraFinder.js ***!
+  \******************************************************************/
+
+/*!******************************************************************!*\
+  !*** ./node_modules/typescript-collections/dist/lib/BSTreeKV.js ***!
+  \******************************************************************/
+
+/*!*******************************************************************!*\
+  !*** ./node_modules/@babel/runtime/helpers/esm/classCallCheck.js ***!
+  \*******************************************************************/
+
+/*!*******************************************************************!*\
+  !*** ./node_modules/@babel/runtime/helpers/esm/defineProperty.js ***!
+  \*******************************************************************/
+
+/*!*******************************************************************!*\
+  !*** ./node_modules/@babel/runtime/helpers/esm/getPrototypeOf.js ***!
+  \*******************************************************************/
+
+/*!*******************************************************************!*\
+  !*** ./node_modules/@babel/runtime/helpers/esm/setPrototypeOf.js ***!
+  \*******************************************************************/
+
+/*!*******************************************************************!*\
+  !*** ./node_modules/game-capsule/dist/lib/configobjects/event.js ***!
+  \*******************************************************************/
+
+/*!*******************************************************************!*\
+  !*** ./node_modules/game-capsule/dist/lib/configobjects/index.js ***!
+  \*******************************************************************/
+
+/*!*******************************************************************!*\
+  !*** ./node_modules/game-capsule/dist/lib/configobjects/scene.js ***!
+  \*******************************************************************/
+
+/*!*******************************************************************!*\
+  !*** ./node_modules/game-capsule/dist/lib/configobjects/timer.js ***!
+  \*******************************************************************/
+
+/*!*******************************************************************!*\
+  !*** ./node_modules/pathfinding/src/finders/BiBestFirstFinder.js ***!
+  \*******************************************************************/
+
 /*!********************************************************************!*\
-  !*** ./lib/plugins/gameobjects/gridtable/methods/IsCellVisible.js ***!
+  !*** ./node_modules/game-capsule/dist/lib/configobjects/access.js ***!
   \********************************************************************/
 
 /*!********************************************************************!*\
-  !*** ./lib/plugins/gameobjects/gridtable/methods/PointerToCell.js ***!
+  !*** ./node_modules/game-capsule/dist/lib/configobjects/avatar.js ***!
   \********************************************************************/
 
 /*!********************************************************************!*\
-  !*** ./lib/plugins/gameobjects/gridtable/methods/SetCellsCount.js ***!
+  !*** ./node_modules/pathfinding/src/finders/BreadthFirstFinder.js ***!
   \********************************************************************/
 
 /*!********************************************************************!*\
-  !*** ./lib/plugins/gameobjects/ninepatch/texture/UpdateTexture.js ***!
+  !*** ./node_modules/typescript-collections/dist/lib/Dictionary.js ***!
+  \********************************************************************/
+
+/*!********************************************************************!*\
+  !*** ./node_modules/typescript-collections/dist/lib/LinkedList.js ***!
   \********************************************************************/
 
 /*!*********************************************************************!*\
-  !*** ./lib/plugins/gameobjects/gridtable/methods/InsertNewCells.js ***!
+  !*** ./node_modules/game-capsule/dist/lib/config_object_factory.js ***!
   \*********************************************************************/
 
 /*!*********************************************************************!*\
-  !*** ./lib/plugins/gameobjects/gridtable/methods/SetColumnCount.js ***!
+  !*** ./node_modules/game-capsule/dist/lib/configobjects/display.js ***!
   \*********************************************************************/
 
 /*!*********************************************************************!*\
-  !*** ./lib/plugins/gameobjects/ninepatch/texture/GetStretchMode.js ***!
+  !*** ./node_modules/game-capsule/dist/lib/configobjects/element.js ***!
   \*********************************************************************/
 
 /*!*********************************************************************!*\
-  !*** ./lib/plugins/gameobjects/ninepatch/texture/SetStretchMode.js ***!
+  !*** ./node_modules/game-capsule/dist/lib/configobjects/movable.js ***!
   \*********************************************************************/
 
 /*!*********************************************************************!*\
-  !*** ./lib/plugins/gameobjects/ninepatch/texture/TextureMethods.js ***!
+  !*** ./node_modules/game-capsule/dist/lib/configobjects/package.js ***!
   \*********************************************************************/
 
 /*!*********************************************************************!*\
-  !*** ./lib/plugins/utils/renderTexture/MakeChildImageGameObject.js ***!
+  !*** ./node_modules/game-capsule/dist/lib/configobjects/scenery.js ***!
+  \*********************************************************************/
+
+/*!*********************************************************************!*\
+  !*** ./node_modules/game-capsule/dist/lib/configobjects/terrain.js ***!
+  \*********************************************************************/
+
+/*!*********************************************************************!*\
+  !*** ./node_modules/node-libs-browser/node_modules/buffer/index.js ***!
+  \*********************************************************************/
+
+/*!*********************************************************************!*\
+  !*** ./node_modules/pathfinding/src/finders/JumpPointFinderBase.js ***!
   \*********************************************************************/
 
 /*!**********************************************************************!*\
-  !*** ./lib/plugins/gameobjects/text/textbase/canvastext/WrapText.js ***!
+  !*** ./node_modules/game-capsule/dist/lib/configobjects/location.js ***!
   \**********************************************************************/
 
 /*!**********************************************************************!*\
-  !*** ./lib/plugins/gameobjects/text/textbase/textstyle/TextStyle.js ***!
+  !*** ./node_modules/game-capsule/dist/lib/configobjects/metadata.js ***!
+  \**********************************************************************/
+
+/*!**********************************************************************!*\
+  !*** ./node_modules/pathfinding/src/finders/BiBreadthFirstFinder.js ***!
+  \**********************************************************************/
+
+/*!**********************************************************************!*\
+  !*** ./src/editor/canvas/element/element.editor.resource.manager.ts ***!
   \**********************************************************************/
 
 /*!***********************************************************************!*\
-  !*** ./lib/plugins/gameobjects/shape/roundrectangle/render/Render.js ***!
+  !*** ./node_modules/game-capsule/dist/lib/configobjects/attribute.js ***!
   \***********************************************************************/
 
 /*!***********************************************************************!*\
-  !*** ./lib/plugins/gameobjects/text/textbase/penmanger/PenManager.js ***!
+  !*** ./node_modules/game-capsule/dist/lib/configobjects/character.js ***!
   \***********************************************************************/
 
 /*!***********************************************************************!*\
-  !*** ./lib/plugins/gameobjects/text/textbase/render/WebGLRenderer.js ***!
+  !*** ./node_modules/typescript-collections/dist/lib/MultiRootTree.js ***!
+  \***********************************************************************/
+
+/*!***********************************************************************!*\
+  !*** ./node_modules/typescript-collections/dist/lib/PriorityQueue.js ***!
   \***********************************************************************/
 
 /*!************************************************************************!*\
-  !*** ./lib/plugins/gameobjects/shape/roundrectangle/RoundRectangle.js ***!
+  !*** ./node_modules/game-capsule/dist/lib/configobjects/animations.js ***!
   \************************************************************************/
 
 /*!************************************************************************!*\
-  !*** ./lib/plugins/gameobjects/text/textbase/canvastext/CanvasText.js ***!
+  !*** ./node_modules/game-capsule/dist/lib/configobjects/spawnpoint.js ***!
   \************************************************************************/
 
 /*!************************************************************************!*\
-  !*** ./lib/plugins/gameobjects/text/textbase/render/CanvasRenderer.js ***!
+  !*** ./node_modules/i18next-xhr-backend/dist/esm/i18nextXHRBackend.js ***!
   \************************************************************************/
 
 /*!************************************************************************!*\
-  !*** ./lib/plugins/gameobjects/text/textbase/textstyle/MeasureText.js ***!
+  !*** ./node_modules/pathfinding/src/finders/JPFNeverMoveDiagonally.js ***!
   \************************************************************************/
 
 /*!*************************************************************************!*\
-  !*** ./lib/plugins/gameobjects/text/textbase/canvastext/DrawMethods.js ***!
+  !*** ./node_modules/pathfinding/src/finders/JPFAlwaysMoveDiagonally.js ***!
   \*************************************************************************/
 
 /*!*************************************************************************!*\
-  !*** ./lib/plugins/input/gestures/onepointertracer/OnePointerTracer.js ***!
+  !*** ./node_modules/typescript-collections/dist/lib/MultiDictionary.js ***!
   \*************************************************************************/
 
+/*!**************************************************************************!*\
+  !*** ./node_modules/@babel/runtime/helpers/esm/assertThisInitialized.js ***!
+  \**************************************************************************/
+
+/*!**************************************************************************!*\
+  !*** ./node_modules/typescript-collections/dist/lib/LinkedDictionary.js ***!
+  \**************************************************************************/
+
 /*!***************************************************************************!*\
-  !*** ./lib/plugins/gameobjects/gridtable/methods/updatetable/HideCell.js ***!
+  !*** ./node_modules/game-capsule/dist/lib/configobjects/config_object.js ***!
   \***************************************************************************/
 
 /*!***************************************************************************!*\
-  !*** ./lib/plugins/gameobjects/gridtable/methods/updatetable/ShowCell.js ***!
+  !*** ./node_modules/typescript-collections/dist/lib/FactoryDictionary.js ***!
   \***************************************************************************/
-
-/*!***************************************************************************!*\
-  !*** ./lib/plugins/input/gestures/twopointerstracer/TwoPointersTracer.js ***!
-  \***************************************************************************/
-
-/*!****************************************************************************!*\
-  !*** ./lib/plugins/gameobjects/gridtable/methods/updatetable/HideCells.js ***!
-  \****************************************************************************/
-
-/*!****************************************************************************!*\
-  !*** ./lib/plugins/gameobjects/gridtable/methods/updatetable/MaskCells.js ***!
-  \****************************************************************************/
-
-/*!****************************************************************************!*\
-  !*** ./lib/plugins/gameobjects/gridtable/methods/updatetable/ShowCells.js ***!
-  \****************************************************************************/
-
-/*!****************************************************************************!*\
-  !*** ./lib/plugins/gameobjects/text/textbase/canvastext/SetInteractive.js ***!
-  \****************************************************************************/
-
-/*!****************************************************************************!*\
-  !*** ./lib/plugins/gameobjects/text/textbase/imagemanager/ImageManager.js ***!
-  \****************************************************************************/
-
-/*!*****************************************************************************!*\
-  !*** ./lib/plugins/gameobjects/shape/roundrectangle/geom/RoundRectangle.js ***!
-  \*****************************************************************************/
-
-/*!*****************************************************************************!*\
-  !*** ./lib/plugins/utils/math/angle/angletodirections/AngleToDirections.js ***!
-  \*****************************************************************************/
 
 /*!******************************************************************************!*\
-  !*** ./lib/plugins/gameobjects/gridtable/methods/updatetable/UpdateTable.js ***!
+  !*** ./node_modules/@babel/runtime/helpers/esm/possibleConstructorReturn.js ***!
   \******************************************************************************/
 
-/*!******************************************************************************!*\
-  !*** ./lib/plugins/gameobjects/shape/roundrectangle/render/WebGLRenderer.js ***!
-  \******************************************************************************/
-
-/*!*******************************************************************************!*\
-  !*** ./lib/plugins/gameobjects/shape/roundrectangle/render/CanvasRenderer.js ***!
-  \*******************************************************************************/
-
 /*!********************************************************************************!*\
-  !*** ./lib/plugins/gameobjects/ninepatch/utils/DefaultGetFrameNameCallback.js ***!
+  !*** ./node_modules/pathfinding/src/finders/JPFMoveDiagonallyIfNoObstacles.js ***!
   \********************************************************************************/
 
-/*!********************************************************************************!*\
-  !*** ./lib/plugins/gameobjects/text/textbase/hitareamanager/HitAreaManager.js ***!
-  \********************************************************************************/
+/*!**************************************************************************************!*\
+  !*** ./node_modules/pathfinding/src/finders/JPFMoveDiagonallyIfAtMostOneObstacle.js ***!
+  \**************************************************************************************/
 
-/*!***********************************************************************************!*\
-  !*** ./lib/plugins/gameobjects/text/textbase/imagemanager/GetGlobImageManager.js ***!
-  \***********************************************************************************/
-
-/**
- * @author       Florian Vazelle
- * @author       Geoffrey Glaive
- * @copyright    2020 Photon Storm Ltd.
- * @license      {@link https://opensource.org/licenses/MIT|MIT License}
- */
-
-/**
- * @author       Jason Nicholls <nicholls.jason@gmail.com>
- * @copyright    2018 Photon Storm Ltd.
- * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
- */
-
-/**
- * @author       Niklas von Hertzen (https://github.com/niklasvh/base64-arraybuffer)
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
- * @license      {@link https://opensource.org/licenses/MIT|MIT License}
- */
-
-/**
- * @author       Richard Davey <rich@photonstorm.com>
- * @author       @samme
- * @copyright    2020 Photon Storm Ltd.
- * @license      {@link https://opensource.org/licenses/MIT|MIT License}
- */
-
-/**
- * @author       Richard Davey <rich@photonstorm.com>
- * @author       Felipe Alfonso <@bitnenfer>
- * @copyright    2020 Photon Storm Ltd.
- * @license      {@link https://opensource.org/licenses/MIT|MIT License}
- */
-
-/**
- * @author       Richard Davey <rich@photonstorm.com>
- * @author       Florian Mertens
- * @copyright    2020 Photon Storm Ltd.
- * @license      {@link https://opensource.org/licenses/MIT|MIT License}
- */
-
-/**
- * @author       Richard Davey <rich@photonstorm.com>
- * @author       Igor Ognichenko <ognichenko.igor@gmail.com>
- * @copyright    2020 Photon Storm Ltd.
- * @license      {@link https://opensource.org/licenses/MIT|MIT License}
- */
-
-/**
- * @author       Richard Davey <rich@photonstorm.com>
- * @author       Pavle Goloskokovic <pgoloskokovic@gmail.com> (http://prunegames.com)
- * @copyright    2020 Photon Storm Ltd.
- * @license      {@link https://opensource.org/licenses/MIT|MIT License}
- */
-
-/**
- * @author       Richard Davey <rich@photonstorm.com>
- * @author       samme <samme.npm@gmail.com>
- * @copyright    2020 Photon Storm Ltd.
- * @license      {@link https://opensource.org/licenses/MIT|MIT License}
- */
-
-/**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2018 Photon Storm Ltd.
- * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
- */
-
-/**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
- * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
- */
-
-/**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2019 Photon Storm Ltd.
- * @license      {@link https://opensource.org/licenses/MIT|MIT License}
- */
-
-/**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
- * @license      {@link https://opensource.org/licenses/MIT|MIT License}
- */
-
-/**
- * @author       Seth Berrier <berriers@uwstout.edu>
- * @copyright    2020 Photon Storm Ltd.
- * @license      {@link https://opensource.org/licenses/MIT|MIT License}
- */
-
-/**
- * @author       Vladimir Agafonkin
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
- * @license      {@link https://opensource.org/licenses/MIT|MIT License}
- */
-
-/**
- * @author       samme
- * @copyright    2020 Photon Storm Ltd.
- * @license      {@link https://opensource.org/licenses/MIT|MIT License}
- */
-
-/**
- * @license
- * Lodash <https://lodash.com/>
- * Copyright OpenJS Foundation and other contributors <https://openjsf.org/>
- * Released under MIT license <https://lodash.com/license>
- * Based on Underscore.js 1.8.3 <http://underscorejs.org/LICENSE>
- * Copyright Jeremy Ashkenas, DocumentCloud and Investigative Reporters & Editors
- */
-
-/**
-* @author       Richard Davey <rich@photonstorm.com>
-* @copyright    2020 Photon Storm Ltd.
-* @license      {@link https://github.com/photonstorm/phaser3-plugin-template/blob/master/LICENSE|MIT License}
-*/
-
-/** @preserve
-	 * Counter block mode compatible with  Dr Brian Gladman fileenc.c
-	 * derived from CryptoJS.mode.CTR
-	 * Jan Hruby jhruby.web@gmail.com
-	 */
-
-/** @preserve
-	(c) 2012 by Cédric Mesnil. All rights reserved.
-
-	Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
-
-	    - Redistributions of source code must retain the above copyright notice, this list of conditions and the following disclaimer.
-	    - Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution.
-
-	THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-	*/
-
-//! stable.js 0.1.6, https://github.com/Two-Screen/stable
-
-//! © 2017 Angry Bytes and contributors. MIT licensed.
+/*!**************************************************************************************************!*\
+  !*** ./node_modules/i18next-browser-languagedetector/dist/esm/i18nextBrowserLanguageDetector.js ***!
+  \**************************************************************************************************/

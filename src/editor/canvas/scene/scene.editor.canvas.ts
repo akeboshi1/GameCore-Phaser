@@ -110,14 +110,14 @@ export class SceneEditorCanvas extends EditorCanvas implements IRender {
 
     public changeBrushType(mode: string) {
         this.mBrush = <BrushEnum>mode;
+        if (this.mBrush !== BrushEnum.BRUSH) {
+            this.mStamp.unselected();
+        }
         if (this.mBrush !== BrushEnum.Select) {
             this.mSelecedElement.unselectedElements();
         }
         if (this.mBrush === BrushEnum.Eraser) {
             this.mStamp.showEraserArea();
-        }
-        if (this.mBrush !== BrushEnum.BRUSH) {
-            this.mStamp.unselected();
         }
     }
 
@@ -311,6 +311,7 @@ export class SceneEditorCanvas extends EditorCanvas implements IRender {
         this.mElementManager.destroy();
         this.mElementStorage.destroy();
         this.mMossManager.destroy();
+        this.mSkyboxManager.destroy();
         super.destroy();
     }
 
@@ -437,7 +438,7 @@ export class SceneEditorCanvas extends EditorCanvas implements IRender {
                 break;
             case BrushEnum.BRUSH:
                 this.mStamp.pointerMove(pointer.worldX, pointer.worldY);
-                if (pointer.isDown) {
+                if (pointer.isDown && this.mStamp.nodeType === op_def.NodeType.TerrainNodeType) {
                     this.createElement();
                 }
                 break;
@@ -1020,6 +1021,7 @@ class SelectedElementManager {
         for (const ele of this.mSelecedElement) {
             ele.unselected();
         }
+        this.mSelecedElement.length = 0;
         this.selecting = false;
     }
 

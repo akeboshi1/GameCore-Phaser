@@ -25,6 +25,8 @@ export class EditorSkyboxManager extends PacketHandler {
         if (connection) {
             connection.removePacketListener(this);
         }
+        this.blocks.forEach((block) => block.destroy());
+        this.blocks.clear();
     }
 
     add(scenery: IScenery) {
