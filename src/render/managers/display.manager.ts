@@ -434,6 +434,15 @@ export class DisplayManager {
         this.mAstarDebug.updateData(x, y, val);
     }
 
+    public showAstarDebug_findPath(start: IPos, tar: IPos, path: IPos[]) {
+        if (!this.mAstarDebug) {
+            Logger.getInstance().error("AstarDebug not init");
+            return;
+        }
+
+        this.mAstarDebug.showPath(start, tar, path);
+    }
+
     public hideAstarDebug() {
         if (this.mAstarDebug) {
             this.mAstarDebug.destroy();

@@ -1,5 +1,5 @@
 
-import { PacketHandler, PBpacket, Buffer } from "net-socket-packet";
+import { PacketHandler, PBpacket } from "net-socket-packet";
 import * as protos from "pixelpai_proto";
 import { MainPeer } from "../main.peer";
 import { Logger } from "utils";
@@ -37,17 +37,17 @@ export class ConnListener implements IConnectListener {
     }
     onConnected(): void {
         this.mainPeer.onConnected();
-        Logger.getInstance().info(`MainWorker[已连接]`);
+        Logger.getInstance().log(`MainWorker[已连接]`);
     }
 
     onDisConnected(): void {
         this.mainPeer.onDisConnected();
-        Logger.getInstance().info(`MainWorker[已断开]`);
+        Logger.getInstance().log(`MainWorker[已断开]`);
     }
 
     onRefreshConnect() {
         this.mainPeer.reconnect();
-        Logger.getInstance().info(`MainWorker[正在刷新链接]`);
+        Logger.getInstance().log(`MainWorker[正在刷新链接]`);
     }
 
     // reason: SocketConnectionError | undefined
@@ -134,7 +134,7 @@ export class Connection implements ConnectionService {
         packet.header.timestamp = this.mClock ? this.mClock.unixTime : 0;
         packet.header.uuid = this.mUuid || 0;
         this.mSocket.send(packet.Serialization());
-        Logger.getInstance().info(`MainWorker[发送] >>> ${packet.toString()}`);
+        Logger.getInstance().log(`MainWorker[发送] >>> ${packet.toString()}`);
     }
 
     removePacketListener(listener: PacketHandler) {
@@ -160,7 +160,7 @@ export class Connection implements ConnectionService {
     onData(data: ArrayBuffer) {
         const protobuf_packet = PBpacket.Create(data);
         this.mUuid = protobuf_packet.header.uuid;
-        Logger.getInstance().info(`MainWorker[接收] <<< ${protobuf_packet.toString()} `);
+        Logger.getInstance().log(`MainWorker[接收] <<< ${protobuf_packet.toString()} `);
         const handlers = this.mPacketHandlers;
         handlers.forEach((handler: PacketHandler) => {
             handler.onPacketArrived(protobuf_packet);

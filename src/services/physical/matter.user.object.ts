@@ -66,6 +66,7 @@ export class MatterUserObject extends MatterPlayerObject {
             await this.mRootMount.removeMount(this, targets[0]);
         }
         // this.peer.mainPeer.removePartMount(this.id, targets[0], path);
+
         const pos = this.mModel.pos;
         for (const target of targets) {
             if (target.x === pos.x && target.y === pos.y) {
@@ -165,6 +166,9 @@ export class MatterUserObject extends MatterPlayerObject {
                 this.tryStopMove(path[0]);
                 return;
             }
+        } else {
+            // 只要路径结果存在，每一帧都更新vec
+            this.startMove();
         }
         if (delta === undefined) delta = 0;
         this.mSyncTime += delta;
