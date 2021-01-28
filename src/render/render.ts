@@ -1143,6 +1143,12 @@ export class Render extends RPCPeer implements GameMain {
     }
 
     @Export()
+    public drawAstar_findPath(start: IPos, tar: IPos, points: IPos[]) {
+        if (!this.displayManager) return;
+        this.displayManager.showAstarDebug_findPath(start, tar, points);
+    }
+
+    @Export()
     public roomReady() {
         if (!this.mSceneManager || !this.mCameraManager) return;
         const scene = this.mSceneManager.getMainScene();
