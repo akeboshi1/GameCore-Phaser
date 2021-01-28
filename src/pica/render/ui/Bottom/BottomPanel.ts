@@ -134,15 +134,15 @@ export class BottomPanel extends PicaBasePanel {
 
     private onNavigateHandler(tag: string, data: any) {
         if (tag === "bag") {
-            this.render.renderEmitter(ModuleName.PICANEWMAIN_NAME + "_showpanel", ModuleName.PICABAG_NAME);
+            this.render.renderEmitter(ModuleName.BOTTOM + "_showpanel", ModuleName.PICABAG_NAME);
         } else if (tag === "friend") {
-            this.render.renderEmitter(ModuleName.PICANEWMAIN_NAME + "_showpanel", ModuleName.PICAFRIEND_NAME);
+            this.render.renderEmitter(ModuleName.BOTTOM + "_showpanel", ModuleName.PICAFRIEND_NAME);
         } else if (tag === "avatar") {
-            this.render.renderEmitter(ModuleName.PICANEWMAIN_NAME + "_showpanel", ModuleName.PICAAVATAR_NAME);
+            this.render.renderEmitter(ModuleName.BOTTOM + "_showpanel", ModuleName.PICAAVATAR_NAME);
         } else if (tag === "shop") {
-            this.render.renderEmitter(ModuleName.PICANEWMAIN_NAME + "_showpanel", ModuleName.PICAMARKET_NAME);
+            this.render.renderEmitter(ModuleName.BOTTOM + "_showpanel", ModuleName.PICAMARKET_NAME);
         } else if (tag === "explore") {
-            this.render.renderEmitter(ModuleName.PICANEWMAIN_NAME + "_showpanel", ModuleName.PICAEXPLORELIST_NAME);
+            this.render.renderEmitter(ModuleName.BOTTOM + "_showpanel", ModuleName.PICAEXPLORELIST_NAME);
         }
     }
 

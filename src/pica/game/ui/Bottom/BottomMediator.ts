@@ -15,11 +15,13 @@ export class BottomMediator extends BasicMediator {
 
     public show() {
         this.game.emitter.on("chat", this.onChatHandler, this);
+        this.game.emitter.on(ModuleName.BOTTOM + "_showpanel", this.onShowPanelHandler, this);
         super.show();
     }
 
     public hide() {
         this.game.emitter.off("chat", this.onChatHandler, this);
+        this.game.emitter.off(ModuleName.BOTTOM + "_showpanel", this.onShowPanelHandler, this);
         super.hide();
     }
 
@@ -117,7 +119,13 @@ export class BottomMediator extends BasicMediator {
             resolve(str);
         });
     }
-
+    private onShowPanelHandler(panel: string, data?: any) {
+        if (!this.mModel || !this.game) {
+            return;
+        }
+        const uiManager = this.game.uiManager;
+        uiManager.showMed(panel);
+    }
     private get model(): PicaChat {
         return (<PicaChat>this.mModel);
     }

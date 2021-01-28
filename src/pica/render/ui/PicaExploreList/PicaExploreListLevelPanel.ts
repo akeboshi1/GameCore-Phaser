@@ -14,7 +14,7 @@ export class PicaExploreListLevelPanel extends Phaser.GameObjects.Container {
     private titleTex: Phaser.GameObjects.Text;
     private forewordItem: ForewordChapterItem;
     private lockItem: ChapterLevelLockItem;
-    private finalItem: ChapterLevelEventuallyItem;
+    private finalItem: ChapterLevelItem | ChapterLevelEventuallyItem;
     private topbg: Phaser.GameObjects.Image;
     private levelItems: ChapterLevelItem[] = [];
     private chapterResult: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_QUERY_CHAPTER_RESULT;
@@ -73,7 +73,7 @@ export class PicaExploreListLevelPanel extends Phaser.GameObjects.Container {
             this.captorScroll.setEnable(false);
         } else {
             this.captorScroll.setEnable(true);
-            this.setIndexedLayout(nextLevelID);
+            this.setIndexedLayout(nextLevelID - result.levels[0].levelId);
         }
     }
 
@@ -92,7 +92,11 @@ export class PicaExploreListLevelPanel extends Phaser.GameObjects.Container {
             } else {
                 if (i === levels.length - 1) {
                     if (!this.finalItem) {
-                        item = new ChapterLevelEventuallyItem(this.scene, this.dpr);
+                        if (levels[i].levelType === 2) {
+                            item = new ChapterLevelEventuallyItem(this.scene, this.dpr);
+                        } else {
+                            item = new ChapterLevelItem(this.scene, this.dpr);
+                        }
                         this.finalItem = item;
                     } else {
                         item = this.finalItem;
@@ -157,8 +161,8 @@ export class PicaExploreListLevelPanel extends Phaser.GameObjects.Container {
 
     private setIndexedLayout(indexed: number) {
         let item;
-        if (indexed < this.chapterResult.levels.length) {
-            item = this.levelItems[indexed - 1];
+        if (indexed < this.chapterResult.levels.length - 1) {
+            item = this.levelItems[indexed];
         } else {
             item = this.finalItem;
         }
@@ -298,7 +302,7 @@ class ChapterLevelItem extends ChapterLevelBaseItem {
         this.icon.visible = !lock;
         if (lock) {
             this.unlockTex.visible = true;
-            this.unlockTex.text = i18n.t("explore.unlock") + "\n" + "找到上一个关卡中的关键两个道具";
+            this.unlockTex.text = i18n.t("explore.unlock");// + "\n" + "找到上一个关卡中的关键两个道具";
             this.openButton.setFrameNormal("butt_gray");
             this.openButton.setTextStyle(UIHelper.whiteStyle(this.dpr, 13));
             this.energyImg.setTextStyle(UIHelper.blackStyle(this.dpr, 13));

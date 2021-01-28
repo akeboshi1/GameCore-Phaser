@@ -36,7 +36,6 @@ export class PicaExploreListBottomPanel extends Phaser.GameObjects.Container {
 
     setChapterDatas(data: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_EXPLORE_CHAPTER_PROGRESS) {
         this.chapterProDatas = data;
-        this.setChapterProData();
         this.onChapterProHandler(data.nextChapterId);
 
     }
@@ -95,20 +94,22 @@ export class PicaExploreListBottomPanel extends Phaser.GameObjects.Container {
     }
 
     private onLeftClickHandler() {
-        if (this.curChapterID === 1) return;
-        this.curChapterID--;
-        if (this.curChapterID < 1) this.curChapterID = 1;
-        this.setChapterProData();
+        let tempid = this.curChapterID;
+        if (tempid === 1) return;
+        tempid--;
+        if (tempid < 1) tempid = 1;
+        this.onChapterProHandler(tempid);
     }
 
     private onRightClickHandler() {
-        if (this.curChapterID === this.unlockChapterID) return;
-        this.curChapterID++;
-        if (!this.chapterProDatas) this.curChapterID = 1;
-        if (this.curChapterID > this.unlockChapterID) {
-            this.curChapterID = this.unlockChapterID;
+        let tempid = this.curChapterID;
+        if (tempid === this.unlockChapterID) return;
+        tempid++;
+        if (!this.chapterProDatas) tempid = 1;
+        if (tempid > this.unlockChapterID) {
+            tempid = this.unlockChapterID;
         }
-        this.setChapterProData();
+        this.onChapterProHandler(tempid);
     }
 
     private onChapterProHandler(chapterID: number) {

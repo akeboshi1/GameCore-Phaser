@@ -1,5 +1,5 @@
 import { op_client } from "pixelpai_proto";
-import { ButtonEventDispatcher, UiManager } from "gamecoreRender";
+import { ButtonEventDispatcher, ProgressMaskBar, UiManager } from "gamecoreRender";
 import { Button, ClickEvent, NineSliceButton } from "apowophaserui";
 import { ModuleName } from "structure";
 import { UIAtlasName } from "picaRes";
@@ -9,8 +9,10 @@ import { PicaExploreLogSettlePanel } from "./PicaExploreLogSettlePanel";
 
 export class PicaExploreLogPanel extends PicaBasePanel {
     private goOutBtn: Button;
+    private continueProgress: ProgressMaskBar;
+    private continueText: Phaser.GameObjects.Text;
     private expProgress: ExploreTimeProgress;
-    private textCon: Phaser.GameObjects.Container;
+    private textCon: ExploreTipsTextsCon;
     private settlePanel: PicaExploreLogSettlePanel;
     private timer: any;
     constructor(uiManager: UiManager) {
@@ -25,11 +27,16 @@ export class PicaExploreLogPanel extends PicaBasePanel {
         this.setSize(w, h);
         this.goOutBtn.x = w - this.goOutBtn.width * 0.5 - 10 * this.dpr;
         this.goOutBtn.y = this.goOutBtn.height * 0.5 + 10 * this.dpr;
+        this.continueProgress.x = w * 0.5;
+        this.continueProgress.y = -this.continueProgress.height * 0.5;
+        this.continueText.x = this.continueProgress.x;
+        this.continueText.y = this.continueProgress.y + this.continueProgress.height * 0.5 + 20 * this.dpr;
         this.expProgress.x = w - this.expProgress.width * 0.5 - 40 * this.dpr;
         this.expProgress.y = h - 240 * this.dpr;
         this.textCon.y = this.expProgress.y + 55 * this.dpr;
         this.textCon.x = w * 0.5;
         this.expProgress.refreshMask();
+        this.textCon.refreshMask();
     }
 
     public addListen() {
@@ -49,29 +56,44 @@ export class PicaExploreLogPanel extends PicaBasePanel {
         this.goOutBtn = new Button(this.scene, UIAtlasName.explorelog, "checkpoint_abort");
         this.expProgress = new ExploreTimeProgress(this.scene, this.dpr, this.scale);
         this.expProgress.setHandler(new Handler(this, this.onProClickHandler));
-        this.textCon = this.scene.make.container(undefined, false);
-        this.add([this.goOutBtn, this.expProgress, this.textCon]);
+        this.continueProgress = new ProgressMaskBar(this.scene, this.key, "checkpoint_progress bar_bottom", "checkpoint_progress bar_top");
+        this.continueProgress.visible = false;
+        this.continueText = this.scene.make.text({ style: UIHelper.whiteStyle(this.dpr, 37) });
+        this.continueText.setFontStyle("bold italic");
+        this.continueText.setStroke("#653404", this.dpr * 2);
+        this.textCon = new ExploreTipsTextsCon(this.scene, w, 138 * this.dpr, this.dpr, this.scale);
+        this.add([this.goOutBtn, this.expProgress, this.continueProgress, this.continueText, this.textCon]);
         this.resize(w, h);
         super.init();
         this.setTimeProgress(30000);
     }
 
     setExploreDatas(texts: string[]) {
-        this.textCon.removeAll(true);
-        const bwidth = 107 * this.dpr, bheight = 25 * this.dpr;
-        let posX = -this.width * 0.5 + bwidth * 0.5 + 7 * this.dpr;
-        for (const text of texts) {
-            const button = new NineSliceButton(this.scene, 0, 0, bwidth, bheight, UIAtlasName.explorelog, "checkpoint_aims_bg", text, this.dpr, this.scale, {
-                left: 10 * this.dpr, right: 10 * this.dpr, top: 0 * this.dpr, bottom: 0 * this.dpr
-            });
-            button.setTextStyle(UIHelper.colorStyle("#FFEE5D", 11 * this.dpr));
-            button.x = posX;
-            posX += bwidth + 12 * this.dpr;
-            if (text === "") button.alpha = 0;
-            this.textCon.add(button);
-        }
+        this.textCon.setTextTips(texts);
     }
 
+    setExploreCountDown(content: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_EXPLORE_SHOW_COUNTDOWN) {
+        if (!this.continueProgress.visible) {
+            const to = this.continueProgress.height * 0.5 + 20 * this.dpr;
+            UIHelper.playtPosYTween(this.scene, this.continueProgress, 0, to, 300, "Bounce.easeOut", new Handler(this, () => {
+                if (!this.scene) return;
+                this.playRotateTween(0, 100, content.seconds);
+                this.continueText.scale = 0;
+                UIHelper.playScaleTween(this.scene, this.continueText, 0, 1, 200, "Bounce.easeOut", new Handler(this, () => {
+                    if (!this.scene) return;
+                    UIHelper.playAlphaTween(this.scene, this.continueText, 1, 0, 500, "Linear", undefined, 200);
+                }));
+            }));
+        } else {
+            this.playRotateTween(0, 100, content.seconds);
+            this.continueText.alpha = 0;
+            UIHelper.playAlphaTween(this.scene, this.continueText, 0, 500, 1, "Linear", new Handler(this, () => {
+                if (!this.scene) return;
+                UIHelper.playAlphaTween(this.scene, this.continueText, 1, 0, 500, "Linear", undefined, 200);
+            }));
+        }
+
+    }
     setExploreSettleDatas(content: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_EXPLORE_SUMMARY) {
         this.openSettlePanel();
         this.settlePanel.setSettleData(content);
@@ -104,7 +126,7 @@ export class PicaExploreLogPanel extends PicaBasePanel {
     }
 
     hideSettlePanel() {
-
+        this.settlePanel.visible = false;
     }
 
     setTipsLayout(extpand: boolean) {
@@ -112,6 +134,7 @@ export class PicaExploreLogPanel extends PicaBasePanel {
         this.expProgress.y = offset;
         this.textCon.y = this.expProgress.y + 55 * this.dpr;
         this.expProgress.refreshMask();
+        this.textCon.refreshMask();
     }
 
     destroy() {
@@ -124,25 +147,14 @@ export class PicaExploreLogPanel extends PicaBasePanel {
         this.setTimeProgress(30000);
     }
     private onGoOutHandler() {
-        this.render.renderEmitter(ModuleName.PICAEXPLORELOG_NAME + "_querygohome");
+        UIHelper.createMessageBox(this.render, this, this.key, i18n.t("explore.exit"), i18n.t("explore.exittips"), () => {
+            this.render.renderEmitter(ModuleName.PICAEXPLORELOG_NAME + "_querygohome");
+        });
     }
 
     private onSettleHandler() {
-        // const data = new op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_EXPLORE_SUMMARY();
-        // data.latestProgress = 300;
-        // data.previousProgress = 200;
-        // data.pointBase = 200;
-        // data.pointCombo = 300;
-        // data.pointHint = 200;
-        // data.pointTime = 300;
-        // data.rewards = [];
-        // for (let i = 0; i < 8; i++) {
-        //     const tdata = new op_client.CountablePackageItem();
-        //     tdata.display = {};
-        //     data.rewards.push(tdata);
-        // }
-        // this.setExploreSettleDatas(data);
-        this.onGoOutHandler();
+        this.render.renderEmitter(ModuleName.PICAEXPLORELOG_NAME + "_querygohome");
+        this.hideSettlePanel();
     }
 
     private clearTimer() {
@@ -150,6 +162,32 @@ export class PicaExploreLogPanel extends PicaBasePanel {
             clearInterval(this.timer);
             this.timer = undefined;
         }
+    }
+    private playRotateTween(from: number, to: number, duration: number) {
+        if (!this.scene) return;
+        const tween = this.scene.tweens.addCounter({
+            from,
+            to,
+            ease: "Linear",
+            duration,
+            onUpdate: (cope: any, param: any) => {
+                if (!this.scene) {
+                    tween.stop();
+                    tween.remove();
+                }
+                this.continueProgress.setProgress(to - param.value, to);
+                if (param.value === to) {
+                    UIHelper.playAlphaTween(this.scene, this.continueProgress, 0, 1, 500, "Linear", new Handler(this, () => {
+                        if (!this.scene) return;
+                        this.continueProgress.visible = false;
+                        this.continueProgress.y = -this.continueProgress.height * 0.5;
+                    }));
+                }
+            },
+            onComplete: () => {
+                tween.stop();
+            },
+        });
     }
 }
 class ExploreTimeProgress extends ButtonEventDispatcher {
@@ -212,5 +250,126 @@ class ExploreTimeProgress extends ButtonEventDispatcher {
 
     private onClickHandler() {
         if (this.send && this.proValue >= 1) this.send.run();
+    }
+}
+
+class ExploreTipsTextsCon extends Phaser.GameObjects.Container {
+    private dpr: number;
+    private zoom: number;
+    private maskGrap: Phaser.GameObjects.Graphics;
+    private tipsItems: NineSliceButton[] = [];
+    private tweens: Phaser.Tweens.Tween[] = [];
+    private texts: string[] = [];
+    constructor(scene: Phaser.Scene, width: number, height: number, dpr: number, zoom: number) {
+        super(scene);
+        this.dpr = dpr;
+        this.zoom = zoom;
+        this.setSize(width, height);
+        this.maskGrap = this.scene.make.graphics(undefined, false);
+        this.maskGrap.clear();
+        this.maskGrap.fillStyle(0, 1);
+        this.maskGrap.fillRect(-width * 0.5 * zoom, -height * 0.5 * zoom, width * zoom, height * zoom);
+        this.mask = this.maskGrap.createGeometryMask();
+    }
+    refreshMask() {
+        const world = this.getWorldTransformMatrix();
+        this.maskGrap.setPosition(world.tx, world.ty);
+    }
+
+    setTextTips(texts: string[]) {
+        const bwidth = 107 * this.dpr, bheight = 25 * this.dpr;
+        let posX = -this.width * 0.5 + bwidth * 0.5 + 7 * this.dpr;
+        const first = this.tipsItems.length === 0 ? true : false;
+        for (let i = 0; i < texts.length; i++) {
+            const text = texts[i];
+            const before = this.texts[i];
+            if (before !== text && text !== "") {
+                const button = new NineSliceButton(this.scene, 0, 0, bwidth, bheight, UIAtlasName.explorelog, "checkpoint_aims_bg", text, this.dpr, this.scale, {
+                    left: 10 * this.dpr, right: 10 * this.dpr, top: 0 * this.dpr, bottom: 0 * this.dpr
+                });
+                button.setTextStyle(UIHelper.colorStyle("#FFEE5D", 11 * this.dpr));
+                button.x = posX;
+                const replaceItem = this.tipsItems[i];
+                if (!first) this.replaceAnimation(button, replaceItem);
+                this.add(button);
+                this.tipsItems[i] = button;
+            } else {
+                if (text === "") {
+                    const replaceItem = this.tipsItems[i];
+                    if (!first) this.replaceAnimation(undefined, replaceItem);
+                }
+            }
+            posX += bwidth + 12 * this.dpr;
+            this.texts[i] = text;
+        }
+        if (first) this.firstAnimation();
+    }
+
+    private firstAnimation() {
+        let delay = 0;
+        for (const item of this.tipsItems) {
+            item.y = this.height * 0.5;
+            this.playtPosYTween(item, this.height * 0.5, 0, 600, undefined, delay);
+            delay += 50;
+        }
+    }
+
+    private replaceAnimation(source: NineSliceButton, target?: NineSliceButton) {
+        if (target) {
+            target.y = 0;
+            this.playtPosYTween(target, 0, -this.height * 0.5, 600 * this.dpr, new Handler(this, () => {
+                target.destroy();
+            }));
+            this.playAlphaTween(target, 1, 0, 500);
+        }
+        if (source) {
+            source.y = this.height * 0.5;
+            this.playtPosYTween(source, this.height * 0.5, 0, 600);
+        }
+    }
+    private playtPosYTween(obj: any, from: number, to: number, duration: number = 500, compl?: Handler, delay?: number) {
+        if (!this.scene) return;
+        const tweenY = this.scene.tweens.add({
+            targets: obj,
+            y: {
+                from,
+                to
+            },
+            ease: "Bounce.easeOut",
+            duration,
+            delay,
+            onComplete: () => {
+                tweenY.stop();
+                tweenY.remove();
+                this.removeTween(tweenY);
+                if (compl) compl.run();
+            },
+        });
+        this.tweens.push(tweenY);
+    }
+
+    private playAlphaTween(obj: any, from: number, to: number, duration: number = 500, compl?: Handler, delay?: number) {
+        if (!this.scene) return;
+        const tweenAlpha = this.scene.tweens.add({
+            targets: obj,
+            alpha: {
+                from,
+                to
+            },
+            ease: "Linear",
+            duration,
+            delay,
+            onComplete: () => {
+                tweenAlpha.stop();
+                tweenAlpha.remove();
+                this.removeTween(tweenAlpha);
+                if (compl) compl.runWith(to);
+            },
+        });
+        this.tweens.push(tweenAlpha);
+    }
+    private removeTween(tween: Phaser.Tweens.Tween) {
+        const index = this.tweens.indexOf(tween);
+        if (index !== -1) this.tweens.splice(index, 1);
     }
 }

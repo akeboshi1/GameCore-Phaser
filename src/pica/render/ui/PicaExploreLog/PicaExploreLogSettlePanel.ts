@@ -76,7 +76,7 @@ export class PicaExploreLogSettlePanel extends ButtonEventDispatcher {
         this.lightImg.visible = false;
         this.scoreTipsCon = this.scene.make.container(undefined, false);
         this.scoreTipsCon.setSize(244 * this.dpr, 160 * this.dpr);
-        this.scoreTipsCon.y = 45 * this.dpr;
+        this.scoreTipsCon.y = this.scorebg.y + this.scoreTipsCon.height * 0.5;
         this.maskGraphic = this.scene.make.graphics(undefined, false);
         this.maskWidth = 336 * this.dpr;
         this.maskHeight = 215 * this.dpr;
