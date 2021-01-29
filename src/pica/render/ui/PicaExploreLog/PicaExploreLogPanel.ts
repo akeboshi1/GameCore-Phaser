@@ -14,6 +14,7 @@ export class PicaExploreLogPanel extends PicaBasePanel {
     private expProgress: ExploreTimeProgress;
     private textCon: ExploreTipsTextsCon;
     private settlePanel: PicaExploreLogSettlePanel;
+    private rotateTween: Phaser.Tweens.Tween;
     private timer: any;
     constructor(uiManager: UiManager) {
         super(uiManager);
@@ -29,8 +30,8 @@ export class PicaExploreLogPanel extends PicaBasePanel {
         this.goOutBtn.y = this.goOutBtn.height * 0.5 + 10 * this.dpr;
         this.continueProgress.x = w * 0.5;
         this.continueProgress.y = -this.continueProgress.height * 0.5;
-        this.continueText.x = this.continueProgress.x;
-        this.continueText.y = this.continueProgress.y + this.continueProgress.height * 0.5 + 20 * this.dpr;
+        this.continueText.x = this.continueProgress.x + this.continueProgress.width * 0.5 + 5 * this.dpr;
+        this.continueText.y = this.continueProgress.y;
         this.expProgress.x = w - this.expProgress.width * 0.5 - 40 * this.dpr;
         this.expProgress.y = h - 240 * this.dpr;
         this.textCon.y = this.expProgress.y + 55 * this.dpr;
@@ -56,11 +57,10 @@ export class PicaExploreLogPanel extends PicaBasePanel {
         this.goOutBtn = new Button(this.scene, UIAtlasName.explorelog, "checkpoint_abort");
         this.expProgress = new ExploreTimeProgress(this.scene, this.dpr, this.scale);
         this.expProgress.setHandler(new Handler(this, this.onProClickHandler));
-        this.continueProgress = new ProgressMaskBar(this.scene, this.key, "checkpoint_progress bar_bottom", "checkpoint_progress bar_top");
+        this.continueProgress = new ProgressMaskBar(this.scene, UIAtlasName.explorelog, "checkpoint_progress bar_bottom", "checkpoint_progress bar_top");
         this.continueProgress.visible = false;
-        this.continueText = this.scene.make.text({ style: UIHelper.whiteStyle(this.dpr, 37) });
+        this.continueText = this.scene.make.text({ style: UIHelper.yellowStyle(this.dpr, 24) }).setOrigin(0, 0.5);
         this.continueText.setFontStyle("bold italic");
-        this.continueText.setStroke("#653404", this.dpr * 2);
         this.textCon = new ExploreTipsTextsCon(this.scene, w, 138 * this.dpr, this.dpr, this.scale);
         this.add([this.goOutBtn, this.expProgress, this.continueProgress, this.continueText, this.textCon]);
         this.resize(w, h);
@@ -74,23 +74,26 @@ export class PicaExploreLogPanel extends PicaBasePanel {
 
     setExploreCountDown(content: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_EXPLORE_SHOW_COUNTDOWN) {
         if (!this.continueProgress.visible) {
+            this.continueProgress.visible = true;
             const to = this.continueProgress.height * 0.5 + 20 * this.dpr;
-            UIHelper.playtPosYTween(this.scene, this.continueProgress, 0, to, 300, "Bounce.easeOut", new Handler(this, () => {
+            this.continueProgress.setProgress(100, 100);
+            this.continueText.text = `x${content.combo}`;
+            this.continueText.scale = 0.01;
+            UIHelper.playtPosYTween(this.scene, this.continueProgress, 0, to, 300, "Bounce.easeOut", undefined, new Handler(this, () => {
                 if (!this.scene) return;
-                this.playRotateTween(0, 100, content.seconds);
-                this.continueText.scale = 0;
-                UIHelper.playScaleTween(this.scene, this.continueText, 0, 1, 200, "Bounce.easeOut", new Handler(this, () => {
-                    if (!this.scene) return;
-                    UIHelper.playAlphaTween(this.scene, this.continueText, 1, 0, 500, "Linear", undefined, 200);
-                }));
+                this.playRotateTween(0, 100, content.seconds * 1000);
+                this.continueText.alpha = 1;
+                UIHelper.playScaleTween(this.scene, this.continueText, 0.1, 1, 200, "Back.easeInOut", undefined);
+            }), new Handler(this, () => {
+                if (!this.scene) return;
+                this.continueProgress.refreshMask();
+                this.continueText.y = this.continueProgress.y;
             }));
         } else {
-            this.playRotateTween(0, 100, content.seconds);
-            this.continueText.alpha = 0;
-            UIHelper.playAlphaTween(this.scene, this.continueText, 0, 500, 1, "Linear", new Handler(this, () => {
-                if (!this.scene) return;
-                UIHelper.playAlphaTween(this.scene, this.continueText, 1, 0, 500, "Linear", undefined, 200);
-            }));
+            this.playRotateTween(0, 100, content.seconds * 1000);
+            this.continueText.scale = 0.1;
+            this.continueText.alpha = 1;
+            UIHelper.playScaleTween(this.scene, this.continueText, 0.1, 1, 200, "Linear", undefined);
         }
 
     }
@@ -165,27 +168,37 @@ export class PicaExploreLogPanel extends PicaBasePanel {
     }
     private playRotateTween(from: number, to: number, duration: number) {
         if (!this.scene) return;
-        const tween = this.scene.tweens.addCounter({
+        if (this.rotateTween) {
+            this.rotateTween.stop();
+            this.rotateTween.remove();
+            this.rotateTween = undefined;
+        }
+        this.rotateTween = this.scene.tweens.addCounter({
             from,
             to,
             ease: "Linear",
             duration,
             onUpdate: (cope: any, param: any) => {
                 if (!this.scene) {
-                    tween.stop();
-                    tween.remove();
+                    this.rotateTween.stop();
+                    this.rotateTween.remove();
                 }
                 this.continueProgress.setProgress(to - param.value, to);
                 if (param.value === to) {
-                    UIHelper.playAlphaTween(this.scene, this.continueProgress, 0, 1, 500, "Linear", new Handler(this, () => {
+                    UIHelper.playAlphaTween(this.scene, this.continueProgress, 1, 0, 500, "Linear", undefined, new Handler(this, () => {
                         if (!this.scene) return;
                         this.continueProgress.visible = false;
                         this.continueProgress.y = -this.continueProgress.height * 0.5;
+                        this.continueProgress.alpha = 1;
+                    }), new Handler(this, (value: number) => {
+                        this.continueText.alpha = value;
                     }));
                 }
             },
             onComplete: () => {
-                tween.stop();
+                this.rotateTween.stop();
+                this.rotateTween.remove();
+                this.rotateTween = undefined;
             },
         });
     }

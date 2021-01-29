@@ -1,0 +1,272 @@
+{
+	"textures": [
+		{
+			"image": "roam_effect_1.png",
+			"format": "RGBA8888",
+			"size": {
+				"w": 3379,
+				"h": 1284
+			},
+			"scale": 1,
+			"frames": [
+				{
+					"filename": "roam_hit_bg_1.png",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 720,
+						"h": 640
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 720,
+						"h": 640
+					},
+					"frame": {
+						"x": 1,
+						"y": 1,
+						"w": 720,
+						"h": 640
+					}
+				},
+				{
+					"filename": "roam_hit_bg_2.png",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 720,
+						"h": 640
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 720,
+						"h": 640
+					},
+					"frame": {
+						"x": 723,
+						"y": 1,
+						"w": 720,
+						"h": 640
+					}
+				},
+				{
+					"filename": "roam_hit_bg_3.png",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 720,
+						"h": 640
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 720,
+						"h": 640
+					},
+					"frame": {
+						"x": 1445,
+						"y": 1,
+						"w": 720,
+						"h": 640
+					}
+				},
+				{
+					"filename": "roam_hit_bg_4.png",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 720,
+						"h": 640
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 720,
+						"h": 640
+					},
+					"frame": {
+						"x": 2167,
+						"y": 1,
+						"w": 720,
+						"h": 640
+					}
+				},
+				{
+					"filename": "roam_hit_light.png",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 457,
+						"h": 440
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 457,
+						"h": 440
+					},
+					"frame": {
+						"x": 2889,
+						"y": 1,
+						"w": 457,
+						"h": 440
+					}
+				},
+				{
+					"filename": "roam_clock_right.png",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 204,
+						"h": 222
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 204,
+						"h": 222
+					},
+					"frame": {
+						"x": 2889,
+						"y": 443,
+						"w": 204,
+						"h": 222
+					}
+				},
+				{
+					"filename": "roam_clock_left.png",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 185,
+						"h": 154
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 185,
+						"h": 154
+					},
+					"frame": {
+						"x": 3095,
+						"y": 443,
+						"w": 185,
+						"h": 154
+					}
+				},
+				{
+					"filename": "roam_hit_bg_5.png",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 720,
+						"h": 640
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 720,
+						"h": 640
+					},
+					"frame": {
+						"x": 1,
+						"y": 643,
+						"w": 720,
+						"h": 640
+					}
+				},
+				{
+					"filename": "roam_hit_bg_6.png",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 720,
+						"h": 640
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 720,
+						"h": 640
+					},
+					"frame": {
+						"x": 723,
+						"y": 643,
+						"w": 720,
+						"h": 640
+					}
+				},
+				{
+					"filename": "roam_clock_effect_1.png",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 656,
+						"h": 598
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 656,
+						"h": 598
+					},
+					"frame": {
+						"x": 1445,
+						"y": 643,
+						"w": 656,
+						"h": 598
+					}
+				},
+				{
+					"filename": "roam_clock_effect_2.png",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 655,
+						"h": 598
+					},
+					"spriteSourceSize": {
+						"x": 9,
+						"y": 4,
+						"w": 639,
+						"h": 585
+					},
+					"frame": {
+						"x": 2103,
+						"y": 643,
+						"w": 639,
+						"h": 585
+					}
+				},
+				{
+					"filename": "roam_clock_effect_3.png",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 655,
+						"h": 598
+					},
+					"spriteSourceSize": {
+						"x": 4,
+						"y": 0,
+						"w": 634,
+						"h": 589
+					},
+					"frame": {
+						"x": 2744,
+						"y": 667,
+						"w": 634,
+						"h": 589
+					}
+				}
+			]
+		}
+	],
+	"meta": {
+		"app": "https://www.codeandweb.com/texturepacker",
+		"version": "3.0",
+		"smartupdate": "$TexturePacker:SmartUpdate:23ad5fa3354016b521c82a03543178d2:f6a6caff09fe596db93da91d0fe75a39:6f65c6cc1ebf1c5923f435eb05dee75e$"
+	}
+}

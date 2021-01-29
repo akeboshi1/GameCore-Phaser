@@ -71,6 +71,6 @@ export class PicaExploreLogMediator extends BasicMediator {
         uiManager.showMed(panel);
     }
     private onSHOW_COUNTDOWN(content: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_EXPLORE_SHOW_COUNTDOWN) {
-        if (this.mView) this.mView.setExploreDatas(content);
+        if (this.mView) this.mView.setExploreCountDown(content);
     }
 }

@@ -39,3 +39,4 @@ export * from "./progress.three.bar";
 export * from "./toggle.color.button";
 export * from "./toggle.button";
 export * from "./MoreButtonPanel";
+export * from "./texture.sprite";
