@@ -347,7 +347,7 @@ export class UIHelper {
         return {
             fontSize: size * dpr,
             fontFamily: Font.DEFULT_FONT,
-            color: "#FFD248"
+            color: "#ffd136"
         };
     }
     public static redStyle(dpr, size: number = 12) {
@@ -468,7 +468,10 @@ export class UIHelper {
         render.mainPeer.showMediator(ModuleName.PICAMESSAGEBOX_NAME, true, content);
     }
 
-    public static playtPosYTween(scene: any, obj: any, from: number, to: number, duration: number = 500, ease: string = "Bounce.easeOut", compl?: Handler, delay?: number) {
+    public static playtPosYTween(scene: any, obj: any, from: number, to: number, duration: number = 500, ease: string = "Bounce.easeOut", delay?: number, compl?: Handler, update?: Handler) {
+        const onUpdate = update ? (cope: any, param: any) => {
+            if (update) update.runWith(param.value);
+        } : undefined;
         const tweenY = scene.tweens.add({
             targets: obj,
             y: {
@@ -483,9 +486,14 @@ export class UIHelper {
                 tweenY.remove();
                 if (compl) compl.run();
             },
+            onUpdate
         });
+        return tweenY;
     }
-    public static playtPosXTween(scene: any, obj: any, from: number, to: number, duration: number = 500, ease: string = "Bounce.easeOut", compl?: Handler, delay?: number) {
+    public static playtPosXTween(scene: any, obj: any, from: number, to: number, duration: number = 500, ease: string = "Bounce.easeOut", delay?: number, compl?: Handler, update?: Handler) {
+        const onUpdate = update ? (cope: any, param: any) => {
+            if (update) update.runWith(param.value);
+        } : undefined;
         const tweenY = scene.tweens.add({
             targets: obj,
             x: {
@@ -500,10 +508,15 @@ export class UIHelper {
                 tweenY.remove();
                 if (compl) compl.run();
             },
+            onUpdate
         });
+        return tweenY;
     }
 
-    public static playAlphaTween(scene: any, obj: any, from: number, to: number, duration: number = 500, ease = "Linear", compl?: Handler, delay?: number) {
+    public static playAlphaTween(scene: any, obj: any, from: number, to: number, duration: number = 500, ease = "Linear", delay?: number, compl?: Handler, update?: Handler) {
+        const onUpdate = update ? (cope: any, param: any) => {
+            if (update) update.runWith(param.value);
+        } : undefined;
         const tweenAlpha = scene.tweens.add({
             targets: obj,
             alpha: {
@@ -518,13 +531,21 @@ export class UIHelper {
                 tweenAlpha.remove();
                 if (compl) compl.runWith(to);
             },
+            onUpdate
         });
         return tweenAlpha;
     }
-    public static playScaleTween(scene: any, obj: any, from: number, to: number, duration: number = 500, ease = "Linear", compl?: Handler, delay?: number) {
+    public static playScaleTween(scene: any, obj: any, from: number, to: number, duration: number = 500, ease = "Linear", delay?: number, compl?: Handler, update?: Handler) {
+        const onUpdate = update ? (cope: any, param: any) => {
+            if (update) update.runWith(param.value);
+        } : undefined;
         const tweenScale = scene.tweens.add({
             targets: obj,
-            scale: {
+            scaleX: {
+                from,
+                to
+            },
+            scaleY: {
                 from,
                 to
             },
@@ -536,6 +557,7 @@ export class UIHelper {
                 tweenScale.remove();
                 if (compl) compl.runWith(to);
             },
+            onUpdate
         });
         return tweenScale;
     }
