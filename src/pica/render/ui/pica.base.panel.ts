@@ -1,6 +1,5 @@
 import { UiManager, Render, BasePanel, BasicScene } from "gamecoreRender";
-import { AtlasData, UILoadType } from "picaRes";
-import { FolderType } from "src/pica/res/atlas.manager";
+import { AtlasData, FolderType, UILoadType } from "picaRes";
 import { Url } from "utils";
 import { PicaRenderUiManager } from "./pica.Renderuimanager";
 export class PicaBasePanel extends BasePanel {
@@ -54,6 +53,9 @@ export class PicaBasePanel extends BasePanel {
 
     protected setResourcesData(type: string, key: string, texture: string, data: string, foldType: FolderType) {
         if (this.scene.textures.exists(key)) return;
+        if (!this.mResources) {
+            this.mResources = new Map();
+        }
         this.mResources.set(key, {
             dpr: this.dpr,
             type,
@@ -66,8 +68,9 @@ export class PicaBasePanel extends BasePanel {
     protected addResources(key: string, resource: any) {
         if (resource.type) {
             if (this.scene.load[resource.type]) {
-                const textureUrl = resource.foldType === FolderType.DPR ? Url.getRes(resource.texture) : Url.getRes(resource.texture);
-                const jsonUrl = resource.foldType === FolderType.DPR ? Url.getUIRes(resource.dpr, resource.data) : Url.getUIRes(resource.dpr, resource.data);
+                resource.foldType = resource.foldType || FolderType.DPR;
+                const textureUrl = resource.foldType === FolderType.DPR ? Url.getUIRes(resource.dpr, resource.texture) : Url.getRes(resource.texture);
+                const jsonUrl = resource.foldType === FolderType.DPR ? Url.getUIRes(resource.dpr, resource.data) : Url.getRes(resource.data);
                 this.scene.load[resource.type](key, textureUrl, jsonUrl);
             }
         }

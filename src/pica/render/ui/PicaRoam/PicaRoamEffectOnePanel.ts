@@ -1,7 +1,9 @@
 export class PicaRoamEffectOnePanel extends Phaser.GameObjects.Container {
+    private video: Phaser.GameObjects.Video;
     constructor(scene: Phaser.Scene) {
         super(scene);
     }
+
 }
 
 class RaomEffectBackground extends Phaser.GameObjects.Container {
@@ -17,5 +19,13 @@ class RoamEffectBallPanel extends Phaser.GameObjects.Container {
     [387, 4245, 1], [1495, 4383, 1], [74, 4600, 1], [801, 4674, 1]];
     constructor(scene: Phaser.Scene) {
         super(scene);
+        this.setSize(1980, 4740);
+        this.createBalls();
+    }
+
+    protected createBalls() {
+        for (const pos of this.pos) {
+            // const ball = this.scene
+        }
     }
 }
