@@ -38,7 +38,7 @@ import { PicaRenderUiManager } from "picaRender";
 import { GamePauseScene, MainUIScene } from "./scenes";
 import { EditorCanvasManager } from "./managers/editor.canvas.manager";
 import version from "../../version";
-import { AstarDebugger, GridsDebugger } from "./display";
+import {AstarDebugger, EditorModeDebugger, GridsDebugger, SortDebugger} from "./display";
 // import Stats from "../../Stat";
 
 for (const key in protos) {
@@ -60,6 +60,10 @@ export class Render extends RPCPeer implements GameMain {
     public gridsDebugger: GridsDebugger;
     @Export()
     public astarDebugger: AstarDebugger;
+    @Export()
+    public sortDebugger: SortDebugger;
+    @Export()
+    public editorModeDebugger: EditorModeDebugger;
 
     protected readonly DEFAULT_WIDTH = 360;
     protected readonly DEFAULT_HEIGHT = 640;
@@ -103,6 +107,8 @@ export class Render extends RPCPeer implements GameMain {
         this.mCallBack = callBack;
         this.gridsDebugger = GridsDebugger.getInstance();
         this.astarDebugger = AstarDebugger.getInstance();
+        this.sortDebugger = new SortDebugger(this);
+        this.editorModeDebugger = new EditorModeDebugger(this);
         this.mConnectFailFunc = this.mConfig.connectFail;
         this.mConfig.hasConnectFail = this.mConnectFailFunc ? true : false;
         this.mConfig.hasCloseGame = this.mConfig.closeGame ? true : false;

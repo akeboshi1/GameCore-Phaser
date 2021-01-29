@@ -396,6 +396,18 @@ export class ElementManager extends PacketHandler implements IElementManager {
         this.mRoom.onManagerReady(this.constructor.name);
     }
 
+    public showReferenceArea() {
+        this.mElements.forEach((ele) => {
+            ele.showRefernceArea();
+        });
+    }
+
+    public hideReferenceArea() {
+        this.mElements.forEach((ele) => {
+            ele.hideRefernceArea();
+        });
+    }
+
     protected addMap(sprite: ISprite) {
     }
 
@@ -442,6 +454,10 @@ export class ElementManager extends PacketHandler implements IElementManager {
             return;
         }
         for (const obj of objs) {
+            // test
+            if (obj.id !== 533095811 && obj.id !== 1677446769) {
+                continue;
+            }
             this.mCacheAddList.push(obj);
         }
     }

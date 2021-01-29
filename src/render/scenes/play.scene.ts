@@ -6,7 +6,7 @@ import { RoomScene } from "./room.scene";
 import { Size } from "src/utils/size";
 import { PlaySceneLoadState, SceneName } from "structure";
 import { MotionManager } from "../input/motion.manager";
-import { IDisplayObject } from "../display";
+import {IDisplayObject, SortDebugger} from "../display";
 import sort from "sort-display-object";
 import { BaseDragonbonesDisplay, BaseFramesDisplay } from "display";
 
@@ -229,6 +229,7 @@ class SurfaceLayer extends BasicLayer {
             } else {
                 sort.addFixedDisplayObject(dis.id, dis.sortX, dis.sortY, projection.width, projection.height, false, dis.nickname, dis);
             }
+            SortDebugger.getInstance().addDisplayObject(dis.id, dis.sortX, dis.sortY, projection.width, projection.height);
         }
         try {
             this.list = sort.sort();

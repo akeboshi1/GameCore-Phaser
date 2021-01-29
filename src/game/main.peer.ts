@@ -408,6 +408,18 @@ export class MainPeer extends RPCPeer {
     }
 
     @Export()
+    public elementsShowReferenceArea() {
+        const elementManager = this.game.roomManager.currentRoom.elementManager;
+        if (elementManager) elementManager.showReferenceArea();
+    }
+
+    @Export()
+    public elementsHideReferenceArea() {
+        const elementManager = this.game.roomManager.currentRoom.elementManager;
+        if (elementManager) elementManager.hideReferenceArea();
+    }
+
+    @Export()
     public onTapHandler(obj: any) {
         // if (this.game.roomManager.currentRoom) this.game.roomManager.currentRoom.move(obj.id, obj.x, obj.y, obj.nodeType);
     }

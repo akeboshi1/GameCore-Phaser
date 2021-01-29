@@ -111,7 +111,7 @@ export class FramesDisplay extends BaseFramesDisplay implements IDisplayObject {
             this.mTopDisplay = new ElementTopDisplay(this.scene, this, this.render.scaleRatio);
         }
         if (!this.checkShowNickname()) return;
-        this.mTopDisplay.showNickname(name);
+        this.mTopDisplay.showNickname(name + "_" + this.mID);
     }
 
     public showTopDisplay(data?: ElementStateType) {
@@ -156,6 +156,9 @@ export class FramesDisplay extends BaseFramesDisplay implements IDisplayObject {
             const stageContainer = <Phaser.GameObjects.Container> this.mSprites.get(DisplayField.STAGE);
             if (stageContainer) stageContainer.addAt(this.mMountContainer, this.mCurAnimation.mountLayer.index);
         }
+
+        // test
+        this.alpha = 0.8;
     }
 
     public doMove(moveData: any) {
@@ -294,7 +297,9 @@ export class FramesDisplay extends BaseFramesDisplay implements IDisplayObject {
     }
 
     protected checkShowNickname(): boolean {
-        return (this.mTitleMask & TitleMask.TQ_NickName) > 0;
+        // test
+        return true;
+        // return (this.mTitleMask & TitleMask.TQ_NickName) > 0;
     }
 
     protected updateSort() {
