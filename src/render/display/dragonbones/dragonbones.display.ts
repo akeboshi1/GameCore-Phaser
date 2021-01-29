@@ -276,9 +276,10 @@ export class DragonbonesDisplay extends BaseDragonbonesDisplay implements IDispl
     }
 
     protected updateSort() {
-        const _projectionAngle = projectionAngle;
-        this.mSortX = (this.x - this.projectionSize.offset.x) / (2 * _projectionAngle[0]) + ((this.y - 7.5) - this.projectionSize.offset.y) / _projectionAngle[1] + this.z;
-        this.mSortY = -((this.x - this.projectionSize.offset.x) / 2 * _projectionAngle[0]) + ((this.y - 7.5) - this.projectionSize.offset.y) / (2 * _projectionAngle[1]);
+        const x = this.x - this.projectionSize.offset.x;
+        const y = this.y - this.projectionSize.offset.y;
+        this.mSortX = (x + 2 * y) / 30; // 转化为斜45度的格子
+        this.mSortY = (2 * y - x) / 30;
     }
 
     protected showPlaceholder() {

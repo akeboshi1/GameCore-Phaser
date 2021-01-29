@@ -126,8 +126,8 @@ export abstract class BlockObject extends MatterObject implements IBlockObject {
         if (!collision) return;
         const rows = collision.length;
         const cols = collision[0].length;
-        const width = cols * miniSize.tileWidth / Math.sqrt(2);
-        const height = rows * miniSize.tileHeight / Math.sqrt(2);
+        const width = cols;
+        const height = rows;
         const offset = this.mRoomService.transformToMini90(new LogicPos(origin.x, origin.y));
         return { offset, width, height };
     }
