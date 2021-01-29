@@ -7,6 +7,7 @@ import { PlayerModel } from "../room/player/player.model";
 import { IPos, Logger } from "utils";
 import { UserDataManager } from "./data/user.dataManager";
 import { AvatarSuitType, EventType, IDragonbonesModel, IFramesModel, PlayerState, ISprite } from "structure";
+import { LayerEnum } from "game-capsule";
 // import * as _ from "lodash";
 
 export class User extends Player {
@@ -213,7 +214,8 @@ export class User extends Player {
         }
         (<any>this.mModel).off("Animation_Change", this.animationChange, this);
         (<any>this.mModel).on("Animation_Change", this.animationChange, this);
-        if ((val as PlayerModel).package) {
+        if (!this.mModel.layer) {
+            this.mModel.layer = LayerEnum.Surface;
         }
         this.load(this.mModel.displayInfo, this.isUser);
         if (this.mModel.pos) {
