@@ -5,6 +5,7 @@ import { Helpers, LogicPoint, Position45 } from "utils";
 import { SceneEditorCanvas } from "./scene.editor.canvas";
 import { EditorTopDisplay } from "./top.display";
 import { op_def } from "pixelpai_proto";
+import { LayerEnum } from "game-capsule";
 
 export class EditorFramesDisplay extends BaseFramesDisplay {
 
@@ -52,7 +53,7 @@ export class EditorFramesDisplay extends BaseFramesDisplay {
     }
 
     updateSprite(sprite: Sprite) {
-        this.sprite = sprite;
+        this.setSprite(sprite);
         const displayInfo = sprite.displayInfo;
         if (displayInfo) {
             this.load(<IFramesModel>displayInfo);
@@ -67,6 +68,7 @@ export class EditorFramesDisplay extends BaseFramesDisplay {
 
     setSprite(sprite: Sprite) {
         this.sprite = sprite;
+        this.defaultLayer();
     }
 
     /**
@@ -140,6 +142,20 @@ export class EditorFramesDisplay extends BaseFramesDisplay {
 
     protected get elementManager() {
         return this.sceneEditor.elementManager;
+    }
+
+    /**
+     * 兼容没有Layer的情况
+     * @deprecated
+     */
+    protected defaultLayer() {
+        if (!this.sprite.layer) {
+            if (this.nodeType === op_def.NodeType.TerrainNodeType) {
+                this.sprite.layer = LayerEnum.Terrain;
+            } else {
+                this.sprite.layer = LayerEnum.Surface;
+            }
+        }
     }
 
     set isMoss(val: boolean) {

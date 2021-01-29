@@ -26,17 +26,17 @@ export class DisplayObjectPool {
         const pool = this[poolName];
 
         // const obj: BaseFramesDisplay = new this.POOLOBJECTCONFIG[poolName](sprite, manager);
-        let layer = "surfaceLayer";
+        // let layer = "surfaceLayer";
         const obj = this.sceneEditor.factory.createFramesDisplayBYSprite(sprite);
         if (obj.nodeType === op_def.NodeType.ElementNodeType || obj.nodeType === op_def.NodeType.MossType || obj.nodeType === op_def.NodeType.SpawnPointType) {
             obj.setInteractive();
             obj.setPosition(sprite.pos.x, sprite.pos.y);
         } else if (obj.nodeType === op_def.NodeType.TerrainNodeType) {
-            layer = "groundLayer";
+            // layer = "groundLayer";
             const pos = Position45.transformTo90(new LogicPos(sprite.pos.x, sprite.pos.y), this.sceneEditor.roomSize);
             obj.setPosition(pos.x, pos.y);
         }
-        (<any>this.sceneEditor.scene).layerManager.addToLayer(layer, obj);
+        (<any>this.sceneEditor.scene).layerManager.addToLayer(sprite.layer.toString(), obj);
         pool.set(id, obj);
     }
 

@@ -121,8 +121,9 @@ export class FramesModel implements IFramesModel {
         id?: number;
         dir?: number;
         isMoss?: boolean;
+        layer?: number;
     }): Sprite {
-        const { nodeType, x, y, z, id, dir, isMoss } = properties;
+        const { nodeType, x, y, z, id, dir, isMoss, layer } = properties;
         const spr = op_client.Sprite.create();
 
         if (id) {
@@ -130,6 +131,7 @@ export class FramesModel implements IFramesModel {
         } else {
             spr.id = Helpers.genId();
         }
+        spr.layer = layer;
         spr.display = this.display;
         spr.currentAnimationName = this.animationName;
         const point3f = op_def.PBPoint3f.create();

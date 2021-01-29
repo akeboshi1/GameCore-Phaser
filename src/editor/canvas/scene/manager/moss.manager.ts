@@ -170,10 +170,11 @@ export class EditorMossManager extends PacketHandler {
                 if (!moss) continue;
 
                 // @ts-ignore
-                const sprite = moss.createSprite({
+                const sprite = moss.frameModel.createSprite({
                     ...loc,
                     nodeType: op_def.NodeType.ElementNodeType,
                     isMoss: true,
+                    layer: moss.layer
                 });
                 this.editorMosses.set(loc.id, loc);
                 this.sceneEditor.displayObjectPool.push("mosses", loc.id.toString(), sprite, this);

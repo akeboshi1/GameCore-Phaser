@@ -1,0 +1,398 @@
+{
+	"textures": [
+		{
+			"image": "recharge",
+			"format": "RGBA8888",
+			"size": {
+				"w": 1943,
+				"h": 1891
+			},
+			"scale": 1,
+			"frames": [
+				{
+					"filename": "recharge_bg",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 1015,
+						"h": 1536
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 1015,
+						"h": 1536
+					},
+					"frame": {
+						"x": 1,
+						"y": 1,
+						"w": 1015,
+						"h": 1536
+					}
+				},
+				{
+					"filename": "recharge_head",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 1091,
+						"h": 164
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 1091,
+						"h": 164
+					},
+					"frame": {
+						"x": 1,
+						"y": 1539,
+						"w": 1091,
+						"h": 164
+					}
+				},
+				{
+					"filename": "recharge_division",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 1087,
+						"h": 33
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 1087,
+						"h": 33
+					},
+					"frame": {
+						"x": 1,
+						"y": 1705,
+						"w": 1087,
+						"h": 33
+					}
+				},
+				{
+					"filename": "recharge_text",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 475,
+						"h": 167
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 475,
+						"h": 167
+					},
+					"frame": {
+						"x": 1090,
+						"y": 1705,
+						"w": 475,
+						"h": 167
+					}
+				},
+				{
+					"filename": "recharge_nav_bg",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 1080,
+						"h": 150
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 1080,
+						"h": 150
+					},
+					"frame": {
+						"x": 1,
+						"y": 1740,
+						"w": 1080,
+						"h": 150
+					}
+				},
+				{
+					"filename": "recharge_diamond_bg",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 446,
+						"h": 325
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 446,
+						"h": 325
+					},
+					"frame": {
+						"x": 1018,
+						"y": 1,
+						"w": 446,
+						"h": 325
+					}
+				},
+				{
+					"filename": "recharge_banner",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 924,
+						"h": 286
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 924,
+						"h": 286
+					},
+					"frame": {
+						"x": 1018,
+						"y": 328,
+						"w": 924,
+						"h": 286
+					}
+				},
+				{
+					"filename": "recharge_tab_check",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 304,
+						"h": 123
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 304,
+						"h": 123
+					},
+					"frame": {
+						"x": 1466,
+						"y": 1,
+						"w": 304,
+						"h": 123
+					}
+				},
+				{
+					"filename": "recharge_tab_uncheck",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 304,
+						"h": 123
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 304,
+						"h": 123
+					},
+					"frame": {
+						"x": 1466,
+						"y": 126,
+						"w": 304,
+						"h": 123
+					}
+				},
+				{
+					"filename": "recharge_diamond_1.99",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 144,
+						"h": 143
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 144,
+						"h": 143
+					},
+					"frame": {
+						"x": 1772,
+						"y": 1,
+						"w": 144,
+						"h": 143
+					}
+				},
+				{
+					"filename": "recharge_diamond_gift",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 84,
+						"h": 88
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 84,
+						"h": 88
+					},
+					"frame": {
+						"x": 1772,
+						"y": 146,
+						"w": 84,
+						"h": 88
+					}
+				},
+				{
+					"filename": "recharge_diamond_add",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 32,
+						"h": 34
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 32,
+						"h": 34
+					},
+					"frame": {
+						"x": 1772,
+						"y": 236,
+						"w": 32,
+						"h": 34
+					}
+				},
+				{
+					"filename": "recharge_diamond_29.99",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 231,
+						"h": 231
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 1,
+						"w": 230,
+						"h": 229
+					},
+					"frame": {
+						"x": 1018,
+						"y": 616,
+						"w": 230,
+						"h": 229
+					}
+				},
+				{
+					"filename": "recharge_diamond_49.99",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 200,
+						"h": 172
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 200,
+						"h": 172
+					},
+					"frame": {
+						"x": 1094,
+						"y": 847,
+						"w": 200,
+						"h": 172
+					}
+				},
+				{
+					"filename": "recharge_diamond_99.99",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 237,
+						"h": 168
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 237,
+						"h": 168
+					},
+					"frame": {
+						"x": 1250,
+						"y": 616,
+						"w": 237,
+						"h": 168
+					}
+				},
+				{
+					"filename": "recharge_first_purchase",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 213,
+						"h": 85
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 213,
+						"h": 85
+					},
+					"frame": {
+						"x": 1094,
+						"y": 1021,
+						"w": 213,
+						"h": 85
+					}
+				},
+				{
+					"filename": "recharge_diamond_9.99",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 193,
+						"h": 140
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 193,
+						"h": 140
+					},
+					"frame": {
+						"x": 1296,
+						"y": 786,
+						"w": 193,
+						"h": 140
+					}
+				},
+				{
+					"filename": "recharge_diamond_2.99",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 189,
+						"h": 160
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 17,
+						"w": 189,
+						"h": 143
+					},
+					"frame": {
+						"x": 1489,
+						"y": 616,
+						"w": 189,
+						"h": 143
+					}
+				}
+			]
+		}
+	],
+	"meta": {
+		"app": "https://www.codeandweb.com/texturepacker",
+		"version": "3.0",
+		"smartupdate": "$TexturePacker:SmartUpdate:9b5df2d11e181410dfa2c81498807e01:6d33a861d815c61e5c9bdf457980779d:5b7a4fa50c95fab6c3e99da606502b3f$"
+	}
+}

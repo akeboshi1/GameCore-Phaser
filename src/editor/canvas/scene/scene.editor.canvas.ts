@@ -1,4 +1,4 @@
-import { Capsule, ElementNode, MossNode, PaletteNode, SceneNode, TerrainNode } from "game-capsule";
+import { Capsule, ElementNode, LayerEnum, MossNode, PaletteNode, SceneNode, TerrainNode } from "game-capsule";
 import { op_def, op_client } from "pixelpai_proto";
 import { IFramesModel, ISprite } from "structure";
 import { IPos, IPosition45Obj, load, Logger, LogicPos, Position45, Url } from "utils";
@@ -485,7 +485,7 @@ export class SceneEditorCanvas extends EditorCanvas implements IRender {
         display.name = element.name;
         display.setInteractive();
         this.mElements.set(element.id, display);
-        (<SceneEditor>this.mScene).layerManager.addToLayer("surfaceLayer", display);
+        (<SceneEditor>this.mScene).layerManager.addToLayer(element.layer.toString(), display);
     }
 
     private addTerrain(terrain: TerrainNode) {
@@ -493,7 +493,7 @@ export class SceneEditorCanvas extends EditorCanvas implements IRender {
         const loc = terrain.location;
         const pos = Position45.transformTo90(loc, this.mRoomSize);
         display.setPosition(pos.x, pos.y);
-        (<SceneEditor>this.mScene).layerManager.addToLayer("groundLayer", display);
+        (<SceneEditor>this.mScene).layerManager.addToLayer(terrain.layer.toString(), display);
     }
 
     private eraserTerrains() {
@@ -552,12 +552,13 @@ export class SceneEditorCanvas extends EditorCanvas implements IRender {
 }
 
 class SceneEditor extends Phaser.Scene {
+    public static LAYER_GROUND = LayerEnum.Terrain;
+    public static LAYER_MIDDLE = "middleLayer";
+    public static LAYER_FLOOR = LayerEnum.Floor;
+    public static LAYER_SURFACE = LayerEnum.Surface;
+    public static LAYER_ATMOSPHERE = "atmosphere";
+    public static SCENE_UI = "sceneUILayer";
     public layerManager: LayerManager;
-    public readonly LAYER_GROUND = "groundLayer";
-    public readonly LAYER_MIDDLE = "middleLayer";
-    public readonly LAYER_SURFACE = "surfaceLayer";
-    public readonly LAYER_ATMOSPHERE = "atmosphere";
-    public readonly SCENE_UI = "sceneUILayer";
 
     private gridLayer: GridLayer;
     private sceneEditor: SceneEditorCanvas;
@@ -575,12 +576,13 @@ class SceneEditor extends Phaser.Scene {
     create() {
         this.layerManager = new LayerManager();
 
-        this.layerManager.addLayer(this, GroundLayer, this.LAYER_GROUND, 1);
+        this.layerManager.addLayer(this, GroundLayer, SceneEditor.LAYER_GROUND.toString(), 1);
         this.gridLayer = new GridLayer(this);
         this.sys.displayList.add(this.gridLayer);
-        this.layerManager.addLayer(this, BaseLayer, this.LAYER_MIDDLE, 3);
-        this.layerManager.addLayer(this, SurfaceLayer, this.LAYER_SURFACE, 4);
-        this.layerManager.addLayer(this, BaseLayer, this.SCENE_UI, 5);
+        this.layerManager.addLayer(this, BaseLayer, SceneEditor.LAYER_MIDDLE, 3);
+        this.layerManager.addLayer(this, GroundLayer, SceneEditor.LAYER_FLOOR.toString(), 4);
+        this.layerManager.addLayer(this, SurfaceLayer, SceneEditor.LAYER_SURFACE.toString(), 4);
+        this.layerManager.addLayer(this, BaseLayer, SceneEditor.SCENE_UI, 5);
 
         this.sceneEditor.create(this);
     }
@@ -676,7 +678,7 @@ class MouseFollow {
         this.mDisplay = new MouseDisplayContainer(this.sceneEditor);
         const size = this.mNodeType === op_def.NodeType.TerrainNodeType ? this.mSize : 1;
         this.mDisplay.setDisplay(this.mSprite, size);
-        (<SceneEditor>scene).layerManager.addToLayer("sceneUILayer", this.mDisplay);
+        (<SceneEditor>scene).layerManager.addToLayer(SceneEditor.SCENE_UI, this.mDisplay);
     }
 
     // setDisplay(content: ElementNode | TerrainNode) {
@@ -705,7 +707,7 @@ class MouseFollow {
         this.mNodeType = op_def.NodeType.TerrainNodeType;
         this.mDisplay.setDisplay(null, this.mSize);
         this.isTerrain = true;
-        (<SceneEditor>scene).layerManager.addToLayer("sceneUILayer", this.mDisplay);
+        (<SceneEditor>scene).layerManager.addToLayer(SceneEditor.SCENE_UI, this.mDisplay);
         // this.mLayerManager.addToSceneToUI(this.mDisplay);
     }
 

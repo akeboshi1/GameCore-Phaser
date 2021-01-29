@@ -44,6 +44,7 @@ export class EditorElementDisplay extends EditorFramesDisplay {
         const elementManager = this.elementManager;
         elementManager.removeFromMap(sprite);
         this.sprite = sprite;
+        this.defaultLayer();
         elementManager.addToMap(sprite);
     }
 

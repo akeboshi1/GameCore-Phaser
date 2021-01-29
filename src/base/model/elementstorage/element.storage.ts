@@ -32,7 +32,7 @@ export interface IElementStorage {
     getTerrainCollection();
     getTerrainPalette(key: number): IFramesModel;
     getTerrainPaletteByBindId(id: number): IFramesModel;
-    getMossPalette(key: number): IFramesModel;
+    getMossPalette(key: number): { layer: number, frameModel: FramesModel };
     getAssets(): IAsset[];
     getScenerys(): IScenery[];
     // on(event: string | symbol, fn: Function, context?: any);
@@ -51,7 +51,7 @@ export class ElementStorage implements IElementStorage {
     private mElementRef = new Map<number, IDisplayRef>();
     private terrainPalette = new Map<number, FramesModel>();
     private terrainPaletteWithBindId = new Map<number, FramesModel>();
-    private mossPalette = new Map<number, FramesModel>();
+    private mossPalette = new Map<number, {layer: number, frameModel: FramesModel}>();
     private _terrainCollection: TerrainCollectionNode;
     private _mossCollection: MossCollectionNode;
     private _scenerys: IScenery[];
@@ -151,7 +151,7 @@ export class ElementStorage implements IElementStorage {
                         ),
                     },
                 });
-                this.mossPalette.set(peerKey, frameModel);
+                this.mossPalette.set(peerKey, { layer: elementMoss.layer, frameModel});
             }
         }
     }
