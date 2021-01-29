@@ -50,6 +50,7 @@ export class Sprite extends EventDispatcher implements ISprite {
     public interactive: op_def.IPBPoint2f[];
     public animator?: Animator;
     public updateSuits: boolean = false;
+    public layer: number;
 
     constructor(obj: op_client.ISprite, nodeType?: op_def.NodeType) {
         super();
@@ -83,6 +84,9 @@ export class Sprite extends EventDispatcher implements ISprite {
         this.alpha = obj.opacity === undefined ? 1 : obj.opacity / 100;
         this.displayBadgeCards = obj.displayBadgeCards;
         this.nodeType = nodeType;
+        if (obj.layer) {
+            this.layer = obj.layer;
+        }
 
         if (obj.version) {
             this.version = obj.version;
