@@ -5,6 +5,13 @@ import { UIAtlasName } from "./ui.atlas.name";
 export interface AtlasData {
     atlasName: string;
     folder: string;
+    foldType?: FolderType;
+}
+
+export enum FolderType {
+    DPR = 1,
+    NORMAL = 2,
+    OSD = 3
 }
 
 export enum UILoadType {
@@ -18,6 +25,7 @@ export class AtlasUrlData {
     public atlasUrl: string;
     public jsonUrl: string;
     public uiType: UILoadType = UILoadType.none;
+    public foldType: FolderType = FolderType.DPR;
     public constructor(atlasName: string, url: string, jsonUrl: string, uiType = UILoadType.none) {
         this.atlasName = atlasName;
         this.atlasUrl = url;
@@ -36,9 +44,10 @@ export class AtlasManager {
         this.add(UIAtlasName.effectcommon, UILoadType.atlas);
     }
 
-    public add(atlasName: string, loadType = UILoadType.none, folder?: string) {
+    public add(atlasName: string, loadType = UILoadType.none, folder?: string, foldType?: FolderType) {
         let data: AtlasUrlData;
         folder = folder || atlasName;
+        foldType = foldType || FolderType.DPR;
         if (loadType === UILoadType.atlas) {
             const url = `${folder}/${atlasName}`;
             data = new AtlasUrlData(atlasName, `${url}.png`, `${url}.json`, UILoadType.atlas);
@@ -49,6 +58,7 @@ export class AtlasManager {
             const url = `${folder}/${atlasName}`;
             data = new AtlasUrlData(atlasName, `${url}.png`, undefined, UILoadType.texture);
         }
+        data.foldType = foldType;
         this.atlasMap.set(atlasName, data);
         return data;
     }
