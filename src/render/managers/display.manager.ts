@@ -427,7 +427,7 @@ export class DisplayManager {
 
     public showAstarDebug_update(x: number, y: number, val: boolean) {
         if (!this.mAstarDebug) {
-            Logger.getInstance().error("AstarDebug not init");
+            // Logger.getInstance().error("AstarDebug not init");
             return;
         }
 
@@ -436,7 +436,7 @@ export class DisplayManager {
 
     public showAstarDebug_findPath(start: IPos, tar: IPos, path: IPos[]) {
         if (!this.mAstarDebug) {
-            Logger.getInstance().error("AstarDebug not init");
+            // Logger.getInstance().error("AstarDebug not init");
             return;
         }
 
