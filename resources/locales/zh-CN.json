@@ -395,13 +395,15 @@
     "hinttips": "提示得分",
     "foreword": "序",
     "open": "开始",
-    "unlock": "解锁条件:",
+    "unlock": "解锁条件:\n找到上一个关卡中的关键两个道具",
     "chaptertitle": "第{{name}}章节",
     "taskneedtips": "任务需求",
     "finishchaptertips": "结束上一章",
     "unlocktips": "达到{{name}}级解锁",
     "nextleveltips": "下一场关卡",
     "eventuallytips": "最终关卡",
-    "finish":"完成"
+    "finish": "完成",
+    "exit": "退出",
+    "exittips": "是否退出探索关卡"
   }
 }

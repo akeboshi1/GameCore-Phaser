@@ -934,6 +934,27 @@
 					}
 				},
 				{
+					"filename": "checkpoint_progress bar_top",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 271,
+						"h": 32
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 271,
+						"h": 32
+					},
+					"frame": {
+						"x": 471,
+						"y": 1054,
+						"w": 271,
+						"h": 32
+					}
+				},
+				{
 					"filename": "Settlement_star_default",
 					"rotated": false,
 					"trimmed": true,
@@ -974,6 +995,27 @@
 						"w": 394,
 						"h": 59
 					}
+				},
+				{
+					"filename": "checkpoint_progress bar_bottom",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 279,
+						"h": 38
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 279,
+						"h": 38
+					},
+					"frame": {
+						"x": 1383,
+						"y": 1096,
+						"w": 279,
+						"h": 38
+					}
 				}
 			]
 		}
@@ -981,6 +1023,6 @@
 	"meta": {
 		"app": "https://www.codeandweb.com/texturepacker",
 		"version": "3.0",
-		"smartupdate": "$TexturePacker:SmartUpdate:929a8d01e55c277e59d64d88f18dfc32:c5121d657974a684b3502508bc48812f:6993824701fd330548707f25a25546b8$"
+		"smartupdate": "$TexturePacker:SmartUpdate:ec5f2f300aeeb9346f419d5251c21014:5ef838c18890b87286716bcba48d0ce5:6993824701fd330548707f25a25546b8$"
 	}
 }

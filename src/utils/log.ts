@@ -4,11 +4,11 @@ import { ChatCommandInterface } from "./chat.command";
 export class Logger implements ChatCommandInterface {
   public isDebug: boolean = false;
   private static _instance: Logger;
-  private mErrorList: string[];
-  private mWarnList: string[];
+  // private mErrorList: string[];
+  // private mWarnList: string[];
   constructor() {
-    this.mErrorList = [];
-    this.mWarnList = [];
+    // this.mErrorList = [];
+    // this.mWarnList = [];
   }
 
   public static getInstance(): Logger {
@@ -42,13 +42,13 @@ export class Logger implements ChatCommandInterface {
   error(message?: any, ...optionalParams: any[]) {
     // if (this.isDebug)
     console.error(message, ...optionalParams);
-    this.mErrorList.push(message);
+    // this.mErrorList.push(message);
   }
 
   warn(message?: any, ...optionalParams: any[]) {
     if (this.isDebug)
       console.warn(message, ...optionalParams);
-    this.mWarnList.push(message);
+    // this.mWarnList.push(message);
   }
 
   info(message?: any, ...optionalParams: any[]) {
@@ -56,13 +56,13 @@ export class Logger implements ChatCommandInterface {
       console.info(message, ...optionalParams);
   }
 
-  getErrorList(): string[] {
-    return this.mErrorList;
-  }
+  // getErrorList(): string[] {
+  //   return this.mErrorList;
+  // }
 
-  getWarnList(): string[] {
-    return this.mWarnList;
-  }
+  // getWarnList(): string[] {
+  //   return this.mWarnList;
+  // }
 
   v() {
     this.isDebug = true;

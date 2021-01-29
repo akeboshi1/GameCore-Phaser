@@ -523,6 +523,8 @@ export class ElementManager extends PacketHandler implements IElementManager {
         }
         const ele: Element = this.get(id);
         ele.setPosition(new LogicPos(content.position.x, content.position.y, content.position.z));
+
+        this.mRoom.game.renderPeer.setPosition(id, content.position.x, content.position.y, content.position.z);
     }
 
     protected onRemove(packet: PBpacket) {

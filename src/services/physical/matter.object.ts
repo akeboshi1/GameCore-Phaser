@@ -139,6 +139,8 @@ export class MatterObject implements IMatterObject {
                     this.peer.mainPeer.setDirection(this.id, path[0].stopDir);
                 }
             }
+        } else {
+            this.startMove();
         }
     }
 
@@ -344,8 +346,7 @@ export class MatterObject implements IMatterObject {
         }
         x *= this._scale;
         y *= this._scale;
-        // tslint:disable-next-line:no-console
-        // console.log("#move body.setVelocity ====>", x, y);
+        // Logger.getInstance().debug("#move body.setVelocity ====>", x, y);
         Body.setVelocity(this.body, Vector.create(x, y));
         Body.setInertia(this.body, Infinity);
     }

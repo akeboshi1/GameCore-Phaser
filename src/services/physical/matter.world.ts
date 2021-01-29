@@ -78,7 +78,9 @@ export class MatterWorld implements ChatCommandInterface, ISizeChart {
     }
 
     public getPath(startPos: IPos, targets: IPos[], toReverse: boolean = false): IPos[] {
-        return this.mAstar.find(startPos, targets, toReverse);
+        const result = this.mAstar.find(startPos, targets, toReverse);
+        this.peer.render.drawAstar_findPath(startPos, targets[0], result);
+        return result;
     }
 
     // public tryMove() {

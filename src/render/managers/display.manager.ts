@@ -111,7 +111,7 @@ export class DisplayManager {
         }
     }
 
-    public addDragonbonesDisplay(id: number, data: IDragonbonesModel) {
+    public addDragonbonesDisplay(id: number, data: IDragonbonesModel, layer: number) {
         if (!data) {
             return;
         }
@@ -129,10 +129,10 @@ export class DisplayManager {
             display = this.displays.get(id) as DragonbonesDisplay;
         }
         display.load(data);
-        (<PlayScene>scene).layerManager.addToLayer("surfaceLayer", display);
+        (<PlayScene>scene).layerManager.addToLayer(layer.toString(), display);
     }
 
-    public addUserDragonbonesDisplay(data: IDragonbonesModel, isUser: boolean = false) {
+    public addUserDragonbonesDisplay(data: IDragonbonesModel, isUser: boolean = false, layer: number) {
         if (!data) {
             return;
         }
@@ -151,12 +151,12 @@ export class DisplayManager {
         // 主角龙骨无视其余资源优先加载
         display.load(data);
         display.startLoad();
-        (<PlayScene>scene).layerManager.addToLayer("surfaceLayer", display);
+        (<PlayScene>scene).layerManager.addToLayer(layer.toString(), display);
         if (isUser) this.mUser = display;
         return display;
     }
 
-    public addTerrainDisplay(id: number, data: IFramesModel) {
+    public addTerrainDisplay(id: number, data: IFramesModel, layer: number) {
         if (!data) {
             return;
         }
@@ -173,11 +173,11 @@ export class DisplayManager {
             display = this.displays.get(id) as FramesDisplay;
         }
         display.load(data);
-        (<PlayScene>scene).layerManager.addToLayer("groundLayer", display);
+        (<PlayScene>scene).layerManager.addToLayer(layer.toString(), display);
         return display;
     }
 
-    public addFramesDisplay(id: number, data: IFramesModel, field?: DisplayField) {
+    public addFramesDisplay(id: number, data: IFramesModel, layer: number, field?: DisplayField) {
         if (!data) {
             Logger.getInstance().debug("addFramesDisplay ====>", id);
             return;
@@ -197,7 +197,7 @@ export class DisplayManager {
             display = this.displays.get(id) as FramesDisplay;
         }
         display.load(data, field);
-        (<PlayScene>scene).layerManager.addToLayer("surfaceLayer", display);
+        (<PlayScene>scene).layerManager.addToLayer(layer.toString(), display);
         return display;
     }
 
@@ -207,7 +207,7 @@ export class DisplayManager {
             Logger.getInstance().fatal(`scene does not exist`);
             return;
         }
-        scene.layerManager.addToLayer(scene.LAYER_SURFACE, display);
+        scene.layerManager.addToLayer(PlayScene.LAYER_SURFACE, display);
     }
 
     public removeDisplay(displayID: number): void {
@@ -427,11 +427,20 @@ export class DisplayManager {
 
     public showAstarDebug_update(x: number, y: number, val: boolean) {
         if (!this.mAstarDebug) {
-            Logger.getInstance().error("AstarDebug not init");
+            // Logger.getInstance().error("AstarDebug not init");
             return;
         }
 
         this.mAstarDebug.updateData(x, y, val);
+    }
+
+    public showAstarDebug_findPath(start: IPos, tar: IPos, path: IPos[]) {
+        if (!this.mAstarDebug) {
+            // Logger.getInstance().error("AstarDebug not init");
+            return;
+        }
+
+        this.mAstarDebug.showPath(start, tar, path);
     }
 
     public hideAstarDebug() {

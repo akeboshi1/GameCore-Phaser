@@ -194,7 +194,7 @@ export class PicaTaskMainPanel extends Phaser.GameObjects.Container {
         // const data = gameobj.itemData;
         // this.itemTips.setItemData(data);
         // this.itemTips.setTipsPosition(gameobj, this, 10 * this.dpr);
-        PicaItemTipsPanel.Inst.showTips(gameobj,gameobj.itemData);
+        PicaItemTipsPanel.Inst.showTips(gameobj, gameobj.itemData);
     }
 }
 
@@ -213,6 +213,7 @@ class MainTaskItem extends Phaser.GameObjects.Container {
     private isFinish: boolean = false;
     private questType: op_pkt_def.PKT_Quest_Type;
     private send: Handler;
+    private intervalTimer: any;
     constructor(scene: Phaser.Scene, width: number, height: number, dpr: number, zoom: number) {
         super(scene);
         this.dpr = dpr;
@@ -246,13 +247,16 @@ class MainTaskItem extends Phaser.GameObjects.Container {
         });
 
         this.mainData = content;
-
     }
 
     public setHandler(send: Handler) {
         this.send = send;
     }
 
+    destroy() {
+        super.destroy();
+        if (this.intervalTimer) clearInterval(this.intervalTimer);
+    }
     protected init() {
         this.bg = new NineSlicePatch(this.scene, 0, 0, this.width, this.height, UIAtlasName.uicommon, "task_chapter_bg", {
             left: 8 * this.dpr, top: 8 * this.dpr, right: 8 * this.dpr, bottom: 8 * this.dpr
@@ -356,29 +360,21 @@ class MainTaskItem extends Phaser.GameObjects.Container {
             onComplete: () => {
                 tween.stop();
                 if (to === max) {
-                    this.playRotateTween(1, 100, 1500);
+                    this.playRotateTween();
                 }
             },
         });
     }
-    private playRotateTween(from: number, to: number, duration: number) {
+    private playRotateTween() {
         if (!this.scene) return;
-        const tween = this.scene.tweens.addCounter({
-            from,
-            to,
-            ease: "Linear",
-            duration,
-            onUpdate: (cope: any, param: any) => {
-                if (!this.scene) {
-                    tween.stop();
-                    tween.remove();
-                }
-                this.rewardRotateImg.rotation += 0.1;
-            },
-            onComplete: () => {
-                tween.stop();
-            },
-        });
+        if (this.intervalTimer) clearInterval(this.intervalTimer);
+        this.intervalTimer = setInterval(() => {
+            if (!this.scene) {
+                if (this.intervalTimer) clearInterval(this.intervalTimer);
+                return;
+            }
+            this.rewardRotateImg.rotation += 0.1;
+        }, 30);
     }
 
 }

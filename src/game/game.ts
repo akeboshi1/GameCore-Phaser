@@ -717,13 +717,13 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
                 if (this.mConfig.hasReload) {
                     // app reload
                 } else {
+                    Logger.getInstance().log(reason);
                     this.renderPeer.reload();
                 }
-                Logger.getInstance().error("load res error");
                 return;
             }
             index++;
-            Logger.getInstance().error("reload res", index);
+            Logger.getInstance().error("reload res ====>", reason, "reload count ====>", index);
             return this.loadGameConfig(remotePath);
         });
     }

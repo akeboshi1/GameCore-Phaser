@@ -1,4 +1,4 @@
-import { HTTP_REGEX } from "structure";
+import { HTTP_REGEX, ModuleName } from "structure";
 import { Font } from "./font";
 import { Handler } from "./Handler";
 import { i18n } from "./i18n";
@@ -459,6 +459,85 @@ export class UIHelper {
             ]
         };
         return content;
+    }
+
+    public static createMessageBox(render: any, panel: any, moduleName: string, title: string, context: string, callback: Function, data?: any) {
+        const funName = "messageboxcallback";
+        const content = UIHelper.createMessageBoxConfig(context, title, moduleName, funName, data);
+        panel[funName] = callback;
+        render.mainPeer.showMediator(ModuleName.PICAMESSAGEBOX_NAME, true, content);
+    }
+
+    public static playtPosYTween(scene: any, obj: any, from: number, to: number, duration: number = 500, ease: string = "Bounce.easeOut", compl?: Handler, delay?: number) {
+        const tweenY = scene.tweens.add({
+            targets: obj,
+            y: {
+                from,
+                to
+            },
+            ease,
+            duration,
+            delay,
+            onComplete: () => {
+                tweenY.stop();
+                tweenY.remove();
+                if (compl) compl.run();
+            },
+        });
+    }
+    public static playtPosXTween(scene: any, obj: any, from: number, to: number, duration: number = 500, ease: string = "Bounce.easeOut", compl?: Handler, delay?: number) {
+        const tweenY = scene.tweens.add({
+            targets: obj,
+            x: {
+                from,
+                to
+            },
+            ease,
+            duration,
+            delay,
+            onComplete: () => {
+                tweenY.stop();
+                tweenY.remove();
+                if (compl) compl.run();
+            },
+        });
+    }
+
+    public static playAlphaTween(scene: any, obj: any, from: number, to: number, duration: number = 500, ease = "Linear", compl?: Handler, delay?: number) {
+        const tweenAlpha = scene.tweens.add({
+            targets: obj,
+            alpha: {
+                from,
+                to
+            },
+            ease,
+            duration,
+            delay,
+            onComplete: () => {
+                tweenAlpha.stop();
+                tweenAlpha.remove();
+                if (compl) compl.runWith(to);
+            },
+        });
+        return tweenAlpha;
+    }
+    public static playScaleTween(scene: any, obj: any, from: number, to: number, duration: number = 500, ease = "Linear", compl?: Handler, delay?: number) {
+        const tweenScale = scene.tweens.add({
+            targets: obj,
+            scale: {
+                from,
+                to
+            },
+            ease,
+            duration,
+            delay,
+            onComplete: () => {
+                tweenScale.stop();
+                tweenScale.remove();
+                if (compl) compl.runWith(to);
+            },
+        });
+        return tweenScale;
     }
     private static mText: Phaser.GameObjects.Text;
 }

@@ -113,6 +113,7 @@ export class Render extends RPCPeer implements GameMain, IRender {
         delete this.mConfig.closeGame;
         // Logger.getInstance().debug("connectfail===>", this.mConnectFailFunc, this.mConfig);
         this.initConfig();
+        Logger.getInstance().log("Render version ====>:", `v${version}`);
         this.linkTo(MAIN_WORKER, MAIN_WORKER_URL).onceReady(() => {
             this.mMainPeer = this.remote[MAIN_WORKER].MainPeer;
             this.mMainPeer.updateFps();
@@ -716,6 +717,7 @@ export class Render extends RPCPeer implements GameMain, IRender {
 
     @Export()
     public reload() {
+        Logger.getInstance().log("game relaod =====>");
         window.location.reload();
     }
 
@@ -974,6 +976,7 @@ export class Render extends RPCPeer implements GameMain, IRender {
         // this.newGame().then(() => {
         //     // todo sceneManager loginScene.name
         // });
+        Logger.getInstance().debug("gotoanothergame ====>");
         this.account.enterGame(gameId, worldId, sceneId, { x: px, y: py, z: pz });
     }
 
@@ -1147,6 +1150,12 @@ export class Render extends RPCPeer implements GameMain, IRender {
     }
 
     @Export()
+    public drawAstar_findPath(start: IPos, tar: IPos, points: IPos[]) {
+        if (!this.displayManager) return;
+        this.displayManager.showAstarDebug_findPath(start, tar, points);
+    }
+
+    @Export()
     public roomReady() {
         if (!this.mSceneManager || !this.mCameraManager) return;
         const scene = this.mSceneManager.getMainScene();
@@ -1180,24 +1189,24 @@ export class Render extends RPCPeer implements GameMain, IRender {
     }
 
     @Export([webworker_rpc.ParamType.num])
-    public createDragonBones(id: number, displayInfo: IFramesModel | IDragonbonesModel) {
-        if (this.mDisplayManager) this.mDisplayManager.addDragonbonesDisplay(id, displayInfo);
+    public createDragonBones(id: number, displayInfo: IFramesModel | IDragonbonesModel, layer: number) {
+        if (this.mDisplayManager) this.mDisplayManager.addDragonbonesDisplay(id, displayInfo, layer);
     }
 
     @Export()
-    public createUserDragonBones(displayInfo: IFramesModel | IDragonbonesModel) {
-        if (this.mDisplayManager) this.mDisplayManager.addUserDragonbonesDisplay(displayInfo, true);
+    public createUserDragonBones(displayInfo: IFramesModel | IDragonbonesModel, layer: number) {
+        if (this.mDisplayManager) this.mDisplayManager.addUserDragonbonesDisplay(displayInfo, true, layer);
     }
 
     @Export([webworker_rpc.ParamType.num])
-    public createFramesDisplay(id: number, displayInfo: IFramesModel) {
-        if (this.mDisplayManager) this.mDisplayManager.addFramesDisplay(id, displayInfo);
+    public createFramesDisplay(id: number, displayInfo: IFramesModel, layer: number) {
+        if (this.mDisplayManager) this.mDisplayManager.addFramesDisplay(id, displayInfo, layer);
         else Logger.getInstance().debug("no displayManager ====>");
     }
 
     @Export([webworker_rpc.ParamType.num])
-    public createTerrainDisplay(id: number, displayInfo: IFramesModel) {
-        if (this.mDisplayManager) this.mDisplayManager.addTerrainDisplay(id, displayInfo);
+    public createTerrainDisplay(id: number, displayInfo: IFramesModel, layer: number) {
+        if (this.mDisplayManager) this.mDisplayManager.addTerrainDisplay(id, displayInfo, layer);
     }
 
     @Export()

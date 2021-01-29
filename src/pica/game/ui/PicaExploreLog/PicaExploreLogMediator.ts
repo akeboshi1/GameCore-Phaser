@@ -18,6 +18,7 @@ export class PicaExploreLogMediator extends BasicMediator {
         this.game.emitter.on(ModuleName.PICAEXPLORELOG_NAME + "_retexplorelist", this.onEXPLORE_REQUIRE_LIST, this);
         this.game.emitter.on(ModuleName.PICAEXPLORELOG_NAME + "_retchapterlist", this.onQUERY_CHAPTER_RESULT, this);
         this.game.emitter.on(ModuleName.PICAEXPLORELOG_NAME + "_retexploresettle", this.onEXPLORE_SUMMARY, this);
+        this.game.emitter.on(ModuleName.PICAEXPLORELOG_NAME + "_retexplorecountdown", this.onSHOW_COUNTDOWN, this);
         this.game.emitter.on(EventType.CHAT_PANEL_EXTPAND, this.onTipsLayoutHandler, this);
     }
 
@@ -29,6 +30,7 @@ export class PicaExploreLogMediator extends BasicMediator {
         this.game.emitter.off(ModuleName.PICAEXPLORELOG_NAME + "_retexplorelist", this.onEXPLORE_REQUIRE_LIST, this);
         this.game.emitter.off(ModuleName.PICAEXPLORELOG_NAME + "_retchapterlist", this.onQUERY_CHAPTER_RESULT, this);
         this.game.emitter.off(ModuleName.PICAEXPLORELOG_NAME + "_retexploresettle", this.onEXPLORE_SUMMARY, this);
+        this.game.emitter.off(ModuleName.PICAEXPLORELOG_NAME + "_retexplorecountdown", this.onSHOW_COUNTDOWN, this);
         this.game.emitter.off(EventType.CHAT_PANEL_EXTPAND, this.onTipsLayoutHandler, this);
     }
 
@@ -55,9 +57,20 @@ export class PicaExploreLogMediator extends BasicMediator {
         if (this.mView) this.mView.setExploreSettleDatas(content);
     }
     private onGoHomeHandler() {
-        this.mModel.queryGOHome();
+        //  this.mModel.queryGOHome();
+        this.onShowPanelHandler(ModuleName.PICAEXPLORELIST_NAME);
     }
     private onTipsLayoutHandler(extpand: boolean) {
-        if(this.mView)this.mView.setTipsLayout(extpand);
+        if (this.mView) this.mView.setTipsLayout(extpand);
+    }
+    private onShowPanelHandler(panel: string, data?: any) {
+        if (!this.mModel || !this.game) {
+            return;
+        }
+        const uiManager = this.game.uiManager;
+        uiManager.showMed(panel);
+    }
+    private onSHOW_COUNTDOWN(content: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_EXPLORE_SHOW_COUNTDOWN) {
+        if (this.mView) this.mView.setExploreDatas(content);
     }
 }

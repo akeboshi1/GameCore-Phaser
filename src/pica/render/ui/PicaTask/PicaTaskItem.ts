@@ -58,8 +58,8 @@ export class PicaTaskItem extends Phaser.GameObjects.Container {
 
     public setTaskData(data: op_client.IPKT_Quest) {
         this.questData = data;
-        this.taskName.text = data.name;
-        this.setTextLimit(this.taskName, data.name);
+        this.taskName.text = data.name + this.getProgressStr(data);
+        this.setTextLimit(this.taskName, this.taskName.text);
         this.setTextLimit(this.taskDes, data.detail);
         const url = Url.getOsdRes(data.display.texturePath);
         this.headIcon.load(url, this, () => {
@@ -69,12 +69,10 @@ export class PicaTaskItem extends Phaser.GameObjects.Container {
             this.taskButton.setFrameNormal(UIHelper.threeGreenSmall);
             this.taskButton.setText(i18n.t("task.go"));
             this.taskButton.setTextStyle(UIHelper.colorStyle("#022B55", 12 * this.dpr));
-
         } else if (data.stage === op_pkt_def.PKT_Quest_Stage.PKT_QUEST_STAGE_FINISHED || this.questData.stage === op_pkt_def.PKT_Quest_Stage.PKT_QUEST_STAGE_END) {
             this.taskButton.setFrameNormal(UIHelper.threeYellowSmall);
             this.taskButton.setText(i18n.t("task.receive"));
             this.taskButton.setTextStyle(UIHelper.brownishStyle(this.dpr));
-
         }
     }
 
@@ -98,12 +96,23 @@ export class PicaTaskItem extends Phaser.GameObjects.Container {
                     this.send.runWith(["extend", { extend: false, item: this }]);
             }
         }
-
     }
 
     get extend() {
         return this.mIsExtend;
     }
+
+    private getProgressStr(data: op_client.IPKT_Quest) {
+        if (data.targets) {
+            for (const target of data.targets) {
+                if (target.neededCount) {
+                    return " (" + target.count + "/" + target.neededCount + ")";
+                }
+            }
+        }
+        return "";
+    }
+
     private onTaskButtonHandler() {
         if (this.questData.stage === op_pkt_def.PKT_Quest_Stage.PKT_QUEST_STAGE_PROCESSING) {
             if (this.send) this.send.runWith(["go", this.questData]);
@@ -263,7 +272,7 @@ class TaskItemExtend extends Phaser.GameObjects.Container {
 
     private getTaskTargetText(questData: op_client.IPKT_Quest) {
         const targets = questData.targets;
-        const text: string = questData.detail;
+        const text: string = questData.detail + this.getProgressStr(questData);
         // if (targets.length === 0) {
         //     text = questData.detail;
         // } else {
@@ -273,6 +282,17 @@ class TaskItemExtend extends Phaser.GameObjects.Container {
         //     }
         // }
         return text;
+    }
+
+    private getProgressStr(data: op_client.IPKT_Quest) {
+        if (data.targets) {
+            for (const target of data.targets) {
+                if (target.neededCount) {
+                    return " (" + target.count + "/" + target.neededCount + ")";
+                }
+            }
+        }
+        return "";
     }
 
     private onTaskCellHandler(pointer, gameobject) {

@@ -125,7 +125,6 @@ export class PicaExploreListPanel extends PicaBasePanel {
     }
 
     hideDetailPanel() {
-        this.remove(this.detialPanel);
         this.detialPanel.visible = false;
     }
     destroy() {
