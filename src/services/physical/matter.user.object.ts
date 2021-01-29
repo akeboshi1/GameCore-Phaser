@@ -3,6 +3,7 @@ import { delayTime, PhysicalPeer } from "../physical.worker";
 import { IMoveTarget, MatterPlayerObject, MovePos } from "./matter.player.object";
 import { op_def } from "pixelpai_proto";
 import { IPoint } from "game-capsule";
+import { Vector, Body } from "tooqingmatter-js";
 
 export class MatterUserObject extends MatterPlayerObject {
     private mTargetPoint: IMoveTarget;
@@ -90,16 +91,16 @@ export class MatterUserObject extends MatterPlayerObject {
         this.startMove();
     }
 
-    public async startMove() {
+    public startMove() {
         const path = this.mTargetPoint.path;
         if (path.length < 1) {
             return;
         }
+        this.mMoving = true;
         // this.setStatic(false);
         this.checkDirection();
         // this.peer.mainPeer.changePlayerState(this.id, PlayerState.WALK);
         this.peer.mainPeer.selfStartMove();
-        this.mMoving = true;
         const pos = this.getPosition();
         // const vec = path[0] - pos;
         // vec.normalize * speed;
@@ -109,9 +110,9 @@ export class MatterUserObject extends MatterPlayerObject {
     }
 
     public stopMove() {
+        this.mMoving = false;
         Logger.getInstance().debug("stopMatterMove");
         this.peer.mainPeer.stopMove(this.id);
-        this.mMoving = false;
         if (this.mMoveData && this.mMoveData.posPath) {
             delete this.mMoveData.posPath;
             if (this.mMoveData.arrivalTime) this.mMoveData.arrivalTime = 0;
@@ -130,6 +131,10 @@ export class MatterUserObject extends MatterPlayerObject {
         this.stopMove();
         if (this.mTargetPoint) {
             this.peer.mainPeer.tryStopMove(this.id, pos, this.mTargetPoint.targetId);
+            this._tempVec.x = pos.x;
+            this._tempVec.y = pos.y;
+            Body.setPosition(this.body, Vector.create(this._tempVec.x * this._scale + this._offset.x, this._tempVec.y * this._scale + this._offset.y));
+            this.mTargetPoint = null;
         }
     }
 
@@ -145,7 +150,7 @@ export class MatterUserObject extends MatterPlayerObject {
     }
 
     public _doMove(time?: number, delta?: number) {
-        if (!this.mMoving || !this.mTargetPoint) return;
+        if (!this.mMoving || !this.mTargetPoint || !this.body) return;
         const path = this.mTargetPoint.path;
         const _pos = this.body.position;
         const pos = new LogicPos(Math.round(_pos.x / this.peer.scaleRatio), Math.round(_pos.y / this.peer.scaleRatio));
