@@ -1,7 +1,7 @@
 import { op_client, op_gameconfig, op_gameconfig_01, op_def } from "pixelpai_proto";
 import { AnimationModel, AnimationQueue, AvatarSuit, ISprite, RunningAnimation, IAvatar, IDragonbonesModel, IFramesModel } from "structure";
 import { LogicPos } from "utils";
-import { FramesModel } from "./frame/frames.model";
+import { FramesModel } from "baseModel";
 
 export class SpawnPoint implements ISprite {
     id: number;

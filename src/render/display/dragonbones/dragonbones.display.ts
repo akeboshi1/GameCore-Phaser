@@ -1,14 +1,11 @@
-import { BaseDragonbonesDisplay } from "display";
-import { Render } from "../../render";
-import { IPos, Logger, IProjection } from "utils";
-import { DisplayField, ElementStateType, IDragonbonesModel, RunningAnimation, TitleMask } from "structure";
-import { IDisplayObject } from "../display.object";
-import { LoadQueue, LoadType } from "../../loadqueue";
-import { ReferenceArea } from "../../editor";
-import { ElementTopDisplay } from "../element.top.display";
-import { DisplayMovement } from "../display.movement";
-import { PlayScene, projectionAngle } from "gamecoreRender";
-
+import {BaseDragonbonesDisplay, ReferenceArea} from "baseRender";
+import {Render} from "../../render";
+import {IPos, Logger, IProjection} from "utils";
+import {DisplayField, ElementStateType, IDragonbonesModel, RunningAnimation, TitleMask} from "structure";
+import {IDisplayObject} from "../display.object";
+import {LoadQueue, LoadType} from "../../loadqueue";
+import {ElementTopDisplay} from "../element.top.display";
+import {DisplayMovement} from "../display.movement";
 export class DragonbonesDisplay extends BaseDragonbonesDisplay implements IDisplayObject {
     protected mID: number = undefined;
     protected mTitleMask: number;
@@ -20,7 +17,6 @@ export class DragonbonesDisplay extends BaseDragonbonesDisplay implements IDispl
     protected mSortY: number = 0;
 
     private mLoadQueue: LoadQueue;
-    private mProjectionSize: IProjection;
     private mName: string = undefined;
     private mPlaceholder: Phaser.GameObjects.Image;
 
@@ -100,12 +96,13 @@ export class DragonbonesDisplay extends BaseDragonbonesDisplay implements IDispl
         this.updateTopDisplay();
     }
 
-    public showRefernceArea(area: number[][], origin: IPos) {
+    public async showRefernceArea(area: number[][], origin: IPos) {
         if (!area || area.length <= 0 || !origin) return;
         if (!this.mReferenceArea) {
-            this.mReferenceArea = new ReferenceArea(this.scene, this.render);
+            this.mReferenceArea = new ReferenceArea(this.scene);
         }
-        this.mReferenceArea.draw(area, origin);
+        const roomSize = await this.render.mainPeer.getCurrentRoomSize();
+        this.mReferenceArea.draw(area, origin, roomSize.tileWidth, roomSize.tileHeight);
         this.addAt(this.mReferenceArea, 0);
     }
 
@@ -179,7 +176,6 @@ export class DragonbonesDisplay extends BaseDragonbonesDisplay implements IDispl
 
     public setPosition(x?: number, y?: number, z?: number, w?: number): this {
         super.setPosition(x, y, z, w);
-        this.updateSort();
         this.updateTopDisplay();
         return this;
     }
@@ -273,13 +269,6 @@ export class DragonbonesDisplay extends BaseDragonbonesDisplay implements IDispl
 
     protected checkShowNickname(): boolean {
         return (this.mTitleMask & TitleMask.TQ_NickName) > 0;
-    }
-
-    protected updateSort() {
-        const x = this.x - this.projectionSize.offset.x;
-        const y = this.y - this.projectionSize.offset.y;
-        this.mSortX = (x + 2 * y) / 30; // 转化为斜45度的格子
-        this.mSortY = (2 * y - x) / 30;
     }
 
     protected showPlaceholder() {

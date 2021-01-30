@@ -1,0 +1,95 @@
+{
+	"frames": {
+		"juqing_bg.png": {
+			"frame": {
+				"x": 0,
+				"y": 0,
+				"w": 1071,
+				"h": 221
+			},
+			"rotated": false,
+			"trimmed": false,
+			"spriteSourceSize": {
+				"x": 0,
+				"y": 0,
+				"w": 1071,
+				"h": 221
+			},
+			"sourceSize": {
+				"w": 1071,
+				"h": 221
+			}
+		},
+		"juqing_name.png": {
+			"frame": {
+				"x": 0,
+				"y": 221,
+				"w": 198,
+				"h": 41
+			},
+			"rotated": false,
+			"trimmed": false,
+			"spriteSourceSize": {
+				"x": 0,
+				"y": 0,
+				"w": 198,
+				"h": 41
+			},
+			"sourceSize": {
+				"w": 198,
+				"h": 41
+			}
+		},
+		"radio_arrow.png": {
+			"frame": {
+				"x": 198,
+				"y": 221,
+				"w": 10,
+				"h": 14
+			},
+			"rotated": false,
+			"trimmed": false,
+			"spriteSourceSize": {
+				"x": 0,
+				"y": 0,
+				"w": 10,
+				"h": 14
+			},
+			"sourceSize": {
+				"w": 10,
+				"h": 14
+			}
+		},
+		"radio_bg.png": {
+			"frame": {
+				"x": 208,
+				"y": 221,
+				"w": 328,
+				"h": 142
+			},
+			"rotated": false,
+			"trimmed": false,
+			"spriteSourceSize": {
+				"x": 0,
+				"y": 0,
+				"w": 328,
+				"h": 142
+			},
+			"sourceSize": {
+				"w": 328,
+				"h": 142
+			}
+		}
+	},
+	"meta": {
+		"app": "http://www.codeandweb.com/texturepacker",
+		"version": "1.0",
+		"image": "spritesheet.png",
+		"format": "RGBA8888",
+		"size": {
+			"w": 1071,
+			"h": 363
+		},
+		"scale": "1"
+	}
+}

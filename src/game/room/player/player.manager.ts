@@ -12,7 +12,7 @@ import { LogicPos, Logger } from "utils";
 import { ConnectionService } from "../../../../lib/net/connection.service";
 import { IElement } from "../element/element";
 import { PlayerElementAction } from "../elementaction/player.element.action";
-import { Sprite } from "../display/sprite/sprite";
+import { Sprite } from "baseModel";
 export class PlayerManager extends PacketHandler implements IElementManager {
     public hasAddComplete: boolean = false;
     private mActor: User;

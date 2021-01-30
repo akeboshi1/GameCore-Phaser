@@ -4,7 +4,6 @@ import { Terrain } from "./terrain";
 import { IElementManager } from "../element/element.manager";
 import { IElement } from "../element/element";
 import NodeType = op_def.NodeType;
-import { IElementStorage } from "../elementstorage/element.storage";
 import { IRoomService, Room, SpriteAddCompletedListener } from "../room/room";
 import { ISprite } from "structure";
 import { ConnectionService } from "lib/net/connection.service";
@@ -12,7 +11,7 @@ import { IFramesModel } from "structure";
 import { IDragonbonesModel } from "structure";
 import { EmptyTerrain } from "./empty.terrain";
 import { IPos, Logger, LogicPos } from "utils";
-import { Sprite } from "../display/sprite/sprite";
+import { IElementStorage, Sprite } from "baseModel";
 export class TerrainManager extends PacketHandler implements IElementManager {
     public hasAddComplete: boolean = false;
     protected mTerrains: Map<number, Terrain> = new Map<number, Terrain>();

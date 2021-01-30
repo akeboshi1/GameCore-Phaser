@@ -39,6 +39,7 @@ import { GamePauseScene, MainUIScene } from "./scenes";
 import { EditorCanvasManager } from "./managers/editor.canvas.manager";
 import version from "../../version";
 import { AstarDebugger, GridsDebugger } from "./display";
+import { IRender } from "baseRender";
 // import Stats from "../../Stat";
 
 for (const key in protos) {
@@ -51,9 +52,7 @@ enum MoveStyle {
     PATH_MOVE_STYLE = 3
 }
 
-export const projectionAngle = [Math.cos(45 * Math.PI / 180), Math.sin(45 * Math.PI / 180)];
-
-export class Render extends RPCPeer implements GameMain {
+export class Render extends RPCPeer implements GameMain, IRender {
     public isConnect: boolean = false;
     public emitter: Phaser.Events.EventEmitter;
     @Export()
@@ -584,6 +583,10 @@ export class Render extends RPCPeer implements GameMain {
         return this.mainPeer.getCurrentRoomSize();
     }
 
+    public getCurrentRoomMiniSize(): any {
+        return this.mainPeer.getCurrentRoomMiniSize();
+    }
+
     public syncCameraScroll() {
         if (this.mMainPeer) this.mMainPeer.syncCameraScroll();
     }
@@ -598,6 +601,10 @@ export class Render extends RPCPeer implements GameMain {
 
     public showMediator(name: string, isShow: boolean) {
         if (this.mMainPeer) this.mMainPeer.showMediator(name, isShow);
+    }
+
+    public getMainScene() {
+        return this.mSceneManager.getMainScene();
     }
 
     @Export()
@@ -1447,8 +1454,8 @@ export class Render extends RPCPeer implements GameMain {
     }
 
     private resumeScene() {
-        Logger.getInstance().debug(`#BlackSceneFromBackground; world.resumeScene(); isEditor:${this.mConfig.isEditor}; isPause:${this.isPause}; mGame:${this.mGame}`);
-        if (this.mConfig.isEditor || !this.isPause) {
+        Logger.getInstance().debug(`#BlackSceneFromBackground; world.resumeScene(); isPause:${this.isPause}; mGame:${this.mGame}`);
+        if (!this.isPause) {
             return;
         }
         this.isPause = false;
@@ -1473,8 +1480,8 @@ export class Render extends RPCPeer implements GameMain {
     }
 
     private pauseScene() {
-        Logger.getInstance().debug(`#BlackSceneFromBackground; world.pauseScene(); isEditor:${this.mConfig.isEditor}; isPause:${this.isPause}; mGame:${this.mGame}`);
-        if (this.mConfig.isEditor || this.isPause) {
+        Logger.getInstance().debug(`#BlackSceneFromBackground; world.pauseScene(); isPause:${this.isPause}; mGame:${this.mGame}`);
+        if (this.isPause) {
             return;
         }
         this.isPause = true;
