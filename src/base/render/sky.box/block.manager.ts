@@ -1,9 +1,8 @@
-import { ICameraService } from "../../cameras/cameras.manager";
-import { Render } from "../../render";
 import { Logger, Url } from "utils";
 import { Fit, IScenery } from "structure";
-import { DynamicImage } from "../../ui";
-import { SkyBoxScene } from "../../scenes/sky.box.scene";
+import { DynamicImage } from "../../../render/ui";
+import { SkyBoxScene } from "../../../render/scenes/sky.box.scene";
+import { ICameraService, IRender } from "baseRender";
 
 export interface IBlockManager {
   startPlay(scene: Phaser.Scene);
@@ -27,7 +26,7 @@ export class BlockManager implements IBlockManager {
   private mStateMap: Map<string, any>;
   private _bound: Phaser.Geom.Rectangle;
   private tween: Phaser.Tweens.Tween;
-  constructor(scenery: IScenery, private render: Render) {
+  constructor(scenery: IScenery, private render: IRender) {
     this.mGrids = [];
     this.mScenery = scenery;
     this.mUris = scenery.uris;
@@ -37,7 +36,7 @@ export class BlockManager implements IBlockManager {
     this.mScaleRatio = this.render.scaleRatio;
     this.setSize(scenery.width, scenery.height);
 
-    const playScene = render.sceneManager.getMainScene();
+    const playScene = render.getMainScene();
     if (!playScene) {
       Logger.getInstance().fatal(`${BlockManager.name} scene does not exist`);
       return;
@@ -162,7 +161,7 @@ export class BlockManager implements IBlockManager {
     if (!this.render) {
       return;
     }
-    const playScene = this.render.sceneManager.getMainScene();
+    const playScene = this.render.getMainScene();
     if (!this.mScenery || !playScene) {
       Logger.getInstance().fatal(`scene does not exist`);
       return;
@@ -287,7 +286,7 @@ export class BlockManager implements IBlockManager {
     let y = 0;
     if (this.mScenery) {
       if (this.mScenery.fit === Fit.Center) {
-        const size = await this.render.mainPeer.getCurrentRoomSize();
+        const size = await this.render.getCurrentRoomSize();
         const { width, height } = this.mScenery;
         x = -width >> 1;
         y = size.sceneHeight - height >> 1;

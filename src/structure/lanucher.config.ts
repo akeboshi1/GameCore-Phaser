@@ -19,6 +19,7 @@ export interface ILauncherConfig {
     hasGameCreated?: boolean;
     hasReload?: boolean;
     osd?: string;
+    runtime: string;
     connectFail?: Function;
     closeGame: Function;
     game_created?: Function;
@@ -28,6 +29,5 @@ export interface ILauncherConfig {
     readonly baseWidth: number;
     readonly baseHeight: number;
     readonly connection?: any;
-    readonly isEditor?: boolean;
     readonly parent?: string;
 }

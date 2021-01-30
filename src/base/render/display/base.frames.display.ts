@@ -16,7 +16,16 @@ export class BaseFramesDisplay extends BaseDisplay {
     protected mMountList: Phaser.GameObjects.Container[];
     protected mIsSetInteractive: boolean = false;
     protected mIsInteracitve: boolean = false;
+    protected mID: number = 0;
+    protected mNodeType: number;
     private mField;
+
+    constructor(scene: Phaser.Scene, id?: number, nodeType?: number) {
+        super(scene);
+        this.mNodeType = nodeType;
+        this.mID = id;
+    }
+
     public load(displayInfo: IFramesModel, field?: DisplayField): Promise<any> {
         field = !field ? DisplayField.STAGE : field;
         this.mField = field;
@@ -41,7 +50,6 @@ export class BaseFramesDisplay extends BaseDisplay {
                 Logger.getInstance().debug("update frame loadError", "动画资源报错：", this.displayInfo);
                 this.created();
             } else {
-                Logger.getInstance().debug("frameinfo.gene =====>", this.framesInfo.gene);
                 this.scene.load.atlas(this.framesInfo.gene, Url.getOsdRes(display.texturePath), Url.getOsdRes(display.dataPath));
                 const onAdd = (key: string) => {
                     if (key !== this.framesInfo.gene) return;
@@ -83,7 +91,7 @@ export class BaseFramesDisplay extends BaseDisplay {
         let container: Phaser.GameObjects.Container = <Phaser.GameObjects.Container>this.mSprites.get(DisplayField.STAGE);
         if (!container) {
             container = this.scene.make.container(undefined, false);
-            container.setData("id", this.displayInfo ? this.displayInfo.id : undefined);
+            container.setData("id", this.mID);
             this.addAt(container, DisplayField.STAGE);
             this.mSprites.set(DisplayField.STAGE, container);
         }
@@ -104,7 +112,7 @@ export class BaseFramesDisplay extends BaseDisplay {
             } else {
                 display = this.scene.make.image({ key: data.gene, frame: frameName[0] });
             }
-            display.setData("id", this.displayInfo ? this.displayInfo.id : undefined);
+            display.setData("id", this.mID);
             this.mDisplays.push(display);
             display.scaleX = animation.flip ? -1 : 1;
             let x = offsetLoc.x;
@@ -406,5 +414,13 @@ export class BaseFramesDisplay extends BaseDisplay {
 
     get topPoint() {
         return new Phaser.Geom.Point(0, -this.spriteHeight);
+    }
+
+    get nodeType(): number {
+        return this.mNodeType;
+    }
+
+    get id(): number {
+        return this.mID;
     }
 }

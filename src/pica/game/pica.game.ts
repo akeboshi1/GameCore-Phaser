@@ -1,4 +1,5 @@
-import { DataManager, ElementStorage, Game, HttpService, LoadingManager, MainPeer, RoomManager } from "gamecore";
+import { ElementStorage } from "baseModel";
+import { DataManager, Game, HttpService, LoadingManager, MainPeer, RoomManager } from "gamecore";
 import { PicaWorkerUiManager } from "./ui/pica.workeruimanager";
 
 export class PicaGame extends Game {

@@ -1,7 +1,6 @@
 export * from "./account";
 export * from "./cameras";
 export * from "./display";
-export * from "./editor";
 export * from "./input";
 export * from "./managers";
 export * from "./render";

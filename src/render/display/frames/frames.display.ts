@@ -1,13 +1,10 @@
-import {BaseFramesDisplay} from "display";
+import {BaseFramesDisplay, ReferenceArea} from "baseRender";
 import {Render} from "../../render";
-import {DisplayField, ElementStateType, RunningAnimation, TitleMask} from "structure";
+import {DisplayField, ElementStateType, RunningAnimation, TitleMask } from "structure";
 import {IDisplayObject} from "../display.object";
 import {IPos, Logger} from "utils";
-import {ReferenceArea} from "../../editor";
 import {ElementTopDisplay} from "../element.top.display";
 import {DisplayMovement} from "../display.movement";
-import {IProjection} from "src/utils/projection";
-import {projectionAngle} from "gamecoreRender";
 import {DragonbonesDisplay} from "../dragonbones/dragonbones.display";
 
 /**
@@ -16,22 +13,17 @@ import {DragonbonesDisplay} from "../dragonbones/dragonbones.display";
 export class FramesDisplay extends BaseFramesDisplay implements IDisplayObject {
     protected mID: number = undefined;
     protected mTitleMask: number;
-    protected mNodeType: number = undefined;
     protected mReferenceArea: ReferenceArea;
     protected mChildMap: Map<string, any>;
     protected mTopDisplay: ElementTopDisplay;
     protected mMovement: DisplayMovement;
     protected mMountContainer: Phaser.GameObjects.Container;
-    protected mSortX: number = 0;
-    protected mSortY: number = 0;
 
-    private mProjectionSize: IProjection;
     private mName: string = undefined;
 
     constructor(scene: Phaser.Scene, private render: Render, id?: number, type?: number) {
-        super(scene);
+        super(scene, id, type);
         this.mID = id;
-        this.mNodeType = type;
 
         this.mMovement = new DisplayMovement(scene, this, render);
     }
@@ -59,14 +51,6 @@ export class FramesDisplay extends BaseFramesDisplay implements IDisplayObject {
         super.destroy();
     }
 
-    public get id() {
-        return this.mID;
-    }
-
-    public get nodeType() {
-        return this.mNodeType;
-    }
-
     public set titleMask(val: number) {
         this.mTitleMask = val;
     }
@@ -81,13 +65,14 @@ export class FramesDisplay extends BaseFramesDisplay implements IDisplayObject {
         this.updateTopDisplay();
     }
 
-    public showRefernceArea(area: number[][], origin: IPos) {
+    public async showRefernceArea(area: number[][], origin: IPos) {
         if (!area || area.length <= 0 || !origin) return;
         if (!this.mReferenceArea) {
-            this.mReferenceArea = new ReferenceArea(this.scene, this.render);
+            this.mReferenceArea = new ReferenceArea(this.scene);
             this.addChildMap("reference", this.mReferenceArea);
         }
-        this.mReferenceArea.draw(area, origin);
+        const roomSize = this.render.mainPeer.getCurrentRoomSize();
+        this.mReferenceArea.draw(area, origin, roomSize.tileWidth, roomSize.tileHeight);
         this.addAt(this.mReferenceArea, 0);
     }
 
@@ -142,13 +127,6 @@ export class FramesDisplay extends BaseFramesDisplay implements IDisplayObject {
         this.render.mainPeer.elementDisplayReady(this.id);
     }
 
-    public get projectionSize(): IProjection {
-        if (!this.mProjectionSize) {
-            this.mProjectionSize = {offset: {x: 0, y: 0}, width: 0, height: 0};
-        }
-        return this.mProjectionSize;
-    }
-
     public play(val: RunningAnimation) {
         super.play(val);
         this.fetchProjection();
@@ -164,7 +142,6 @@ export class FramesDisplay extends BaseFramesDisplay implements IDisplayObject {
 
     public setPosition(x?: number, y?: number, z?: number, w?: number): this {
         super.setPosition(x, y, z, w);
-        this.updateSort();
         this.updateTopDisplay();
         return this;
     }
@@ -297,13 +274,6 @@ export class FramesDisplay extends BaseFramesDisplay implements IDisplayObject {
         return (this.mTitleMask & TitleMask.TQ_NickName) > 0;
     }
 
-    protected updateSort() {
-        const x = this.x - this.projectionSize.offset.x;
-        const y = this.y - this.projectionSize.offset.y;
-        this.mSortX = (x + 2 * y) / 30; // 转化为斜45度的格子
-        this.mSortY = (2 * y - x) / 30;
-    }
-
     protected clear() {
         super.clear();
 
@@ -329,14 +299,6 @@ export class FramesDisplay extends BaseFramesDisplay implements IDisplayObject {
 
     private getMaskValue(mask: number, idx: number): boolean {
         return ((mask >> idx) % 2) === 1;
-    }
-
-    get sortX() {
-        return this.mSortX;
-    }
-
-    get sortY() {
-        return this.mSortY;
     }
 
     get nickname() {

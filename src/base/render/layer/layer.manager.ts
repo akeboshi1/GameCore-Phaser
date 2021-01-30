@@ -3,8 +3,8 @@
 //     readonly scene: Phaser.Scene;
 //     setScene(scene: Phaser.Scene): void;
 
+import { BaseLayer } from "baseRender";
 import {Logger} from "utils";
-import {IDisplayObject} from "../display";
 
 //     addToUILayer(obj: Phaser.GameObjects.GameObject, index?: number);
 //     addToDialogLayer(obj: Phaser.GameObjects.GameObject);
@@ -17,17 +17,6 @@ import {IDisplayObject} from "../display";
 //     destroy();
 // }
 
-export class BasicLayer extends Phaser.GameObjects.Container {
-    constructor(scene: Phaser.Scene, public name: string, depth: number) {
-        super(scene);
-        this.setDepth(depth);
-    }
-
-    public sortLayer() {
-
-    }
-}
-
 export class LayerManager {
     private mDepthSurface: boolean;
     // private mScene: Phaser.Scene;
@@ -37,7 +26,7 @@ export class LayerManager {
     // private mDialogLayer: Phaser.GameObjects.Container;
     // private mToolTipsLyaer: Phaser.GameObjects.Container;
 
-    private layers: Map<string, BasicLayer>;
+    private layers: Map<string, BaseLayer>;
     private delta: number = 0;
 
     public constructor() {
@@ -50,7 +39,7 @@ export class LayerManager {
         });
     }
 
-    public addLayer(scene: Phaser.Scene, layerClass: typeof BasicLayer, name: string, depth: number): BasicLayer {
+    public addLayer(scene: Phaser.Scene, layerClass: typeof BaseLayer, name: string, depth: number): BaseLayer {
         if (this.layers.get(name)) {
             Logger.getInstance().warn("repeated layer name: ", name);
             return;
@@ -81,7 +70,7 @@ export class LayerManager {
         this.layers = null;
     }
 
-    public getLayer(name: string): BasicLayer {
+    public getLayer(name: string): BaseLayer {
         if (!this.layers.get(name)) {
             return null;
         }
@@ -101,14 +90,14 @@ export class LayerManager {
         //     this.mGroundLayer.sort("depth");
         //     this.mDepthGround = false;
         // }
-        if (this.mDepthSurface) {
-            this.mDepthSurface = false;
-            const surfaceLayer = this.getLayer("surfaceLayer");
-            surfaceLayer.sort("depth", (displayA: IDisplayObject, displayB: IDisplayObject) => {
-                // 游戏中所有元素的sortz为1，只在同一高度上，所以下面公式中加入sortz暂时不影响排序，后期sortz会有变化
-                return displayA.y + displayA.z > displayB.y + displayB.z;
-            });
-        }
+        // if (this.mDepthSurface) {
+        //     this.mDepthSurface = false;
+        //     const surfaceLayer = this.getLayer("surfaceLayer");
+        //     surfaceLayer.sort("depth", (displayA: IDisplayObject, displayB: IDisplayObject) => {
+        //         // 游戏中所有元素的sortz为1，只在同一高度上，所以下面公式中加入sortz暂时不影响排序，后期sortz会有变化
+        //         return displayA.y + displayA.z > displayB.y + displayB.z;
+        //     });
+        // }
     }
 
     // public setScene(scene: Phaser.Scene) {

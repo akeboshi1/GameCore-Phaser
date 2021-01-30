@@ -2,6 +2,8 @@ export interface IEditorCanvasConfig {
     width: number;
     height: number;
     node: {};
+    connection: any;
+    game_created: () => void;
     LOCAL_HOME_PATH?: string;
     parent?: string;
 }

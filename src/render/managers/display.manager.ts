@@ -4,7 +4,7 @@ import { FramesDisplay } from "../display/frames/frames.display";
 import { PlayScene } from "../scenes/play.scene";
 import { DragonbonesDisplay } from "../display/dragonbones/dragonbones.display";
 import { DisplayField, ElementStateType, IScenery } from "structure";
-import { BlockManager } from "../display/scenery/block.manager";
+import { BlockManager } from "../../base/render/sky.box/block.manager";
 import { Render } from "../render";
 import { IFramesModel } from "structure";
 import { IDragonbonesModel } from "structure";

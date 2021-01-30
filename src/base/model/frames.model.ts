@@ -2,8 +2,8 @@ import { AnimationModel, IAnimationData, IDisplay, IFramesModel, RunningAnimatio
 import { Direction, Logger, LogicPoint } from "utils";
 import { op_gameconfig, op_gameconfig_01, op_def, op_client } from "pixelpai_proto";
 import { Helpers } from "game-capsule";
-import { Sprite } from "../sprite/sprite";
 import * as sha1 from "simple-sha1";
+import { Sprite } from "./sprite";
 
 export class FramesModel implements IFramesModel {
     avatarDir?: number;
@@ -117,12 +117,13 @@ export class FramesModel implements IFramesModel {
         nodeType: op_def.NodeType;
         x: number;
         y: number;
-        z: number;
+        z?: number;
         id?: number;
         dir?: number;
         isMoss?: boolean;
+        layer?: number;
     }): Sprite {
-        const { nodeType, x, y, z, id, dir, isMoss } = properties;
+        const { nodeType, x, y, z, id, dir, isMoss, layer } = properties;
         const spr = op_client.Sprite.create();
 
         if (id) {
@@ -130,6 +131,7 @@ export class FramesModel implements IFramesModel {
         } else {
             spr.id = Helpers.genId();
         }
+        spr.layer = layer;
         spr.display = this.display;
         spr.currentAnimationName = this.animationName;
         const point3f = op_def.PBPoint3f.create();

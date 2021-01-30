@@ -1,14 +1,11 @@
-import {IPosition45Obj, Logger, LogicPos, Position45} from "utils";
+import { Logger } from "utils";
 import { PlayCamera } from "../cameras/play.camera";
-import { BasicLayer } from "../managers/layer.manager";
+import { BaseLayer, GroundLayer, SurfaceLayer } from "baseRender";
 import { MainUIScene } from "./main.ui.scene";
 import { RoomScene } from "./room.scene";
 import { Size } from "src/utils/size";
 import { PlaySceneLoadState, SceneName } from "structure";
 import { MotionManager } from "../input/motion.manager";
-import { IDisplayObject } from "../display";
-import sort from "sort-display-object";
-import { BaseDragonbonesDisplay, BaseFramesDisplay } from "display";
 import { LayerEnum } from "game-capsule";
 
 // 游戏正式运行用 Phaser.Scene
@@ -69,22 +66,20 @@ export class PlayScene extends RoomScene {
 
         // set layers
         // ==========背景层
-        this.layerManager.addLayer(this, BasicLayer, PlayScene.LAYER_GROUNDCLICK, 1);
-        this.layerManager.addLayer(this, BasicLayer, PlayScene.LAYER_GROUND2, 2);
+        this.layerManager.addLayer(this, BaseLayer, PlayScene.LAYER_GROUNDCLICK, 1);
+        this.layerManager.addLayer(this, BaseLayer, PlayScene.LAYER_GROUND2, 2);
 
         // ==========舞台层
         this.layerManager.addLayer(this, GroundLayer, PlayScene.LAYER_GROUND, 3).setScale(this.render.scaleRatio);
-        this.layerManager.addLayer(this, BasicLayer, PlayScene.LAYER_MIDDLE, 4).setScale(this.render.scaleRatio);
+        this.layerManager.addLayer(this, BaseLayer, PlayScene.LAYER_MIDDLE, 4).setScale(this.render.scaleRatio);
         this.layerManager.addLayer(this, GroundLayer, PlayScene.LAYER_FLOOR, 4).setScale(this.render.scaleRatio);
         this.layerManager.addLayer(this, SurfaceLayer, PlayScene.LAYER_SURFACE, 5).setScale(this.render.scaleRatio);
-        this.layerManager.addLayer(this, BasicLayer, PlayScene.LAYER_ATMOSPHERE, 6);
-        this.layerManager.addLayer(this, BasicLayer, PlayScene.LAYER_SCENEUI, 7);
+        this.layerManager.addLayer(this, BaseLayer, PlayScene.LAYER_ATMOSPHERE, 6);
+        this.layerManager.addLayer(this, BaseLayer, PlayScene.LAYER_SCENEUI, 7);
 
         // ======= mainworker startPlay
         this.render.startRoomPlay();
         this.render.changeScene(this);
-
-        Logger.getInstance().debug("sort-display: ", sort.addFixedDisplayObject);
 
         this.initListener();
 
@@ -184,59 +179,5 @@ export class PlayScene extends RoomScene {
     protected checkSize(size: Size) {
         const width: number = size.width;
         const height: number = size.height;
-    }
-}
-
-class GroundLayer extends BasicLayer {
-    private mSortDirty: boolean = false;
-
-    public add(child: Phaser.GameObjects.GameObject) {
-        super.add(child);
-        this.mSortDirty = true;
-        return this;
-    }
-    public sortLayer() {
-        if (!this.mSortDirty) {
-            return;
-        }
-        this.mSortDirty = false;
-        this.sort("depth", (displayA: any, displayB: any) => {
-            // 游戏中所有元素的sortz为1，只在同一高度上，所以下面公式中加入sortz暂时不影响排序，后期sortz会有变化
-            return displayA.y + displayA.z > displayB.y + displayB.z;
-        });
-    }
-}
-
-class SurfaceLayer extends BasicLayer {
-    public add(child: BaseFramesDisplay | BaseDragonbonesDisplay) {
-        super.add(child);
-        return this;
-    }
-
-    public sortLayer() {
-        // this.sortUtil.depthSort(this.list);
-        // TODO: import ElementDisplay
-        // this.sort("depth", (displayA: any, displayB: any) => {
-        //     // 游戏中所有元素的sortz为1，只在同一高度上，所以下面公式中加入sortz暂时不影响排序，后期sortz会有变化
-        //     return displayA.y + displayA.z > displayB.y + displayB.z;
-        // });
-        sort.reset();
-        sort.setTolerance(0.8);
-        const displays = this.list;
-        for (const display of displays) {
-            const dis = <any> display;
-            const projection = dis.projectionSize;
-
-            if (dis.nodeType === 5) {
-                sort.addDynamicDisplayObject(dis.id, dis.sortX, dis.sortY, projection.width, projection.height, true, dis.nickname, dis);
-            } else {
-                sort.addFixedDisplayObject(dis.id, dis.sortX, dis.sortY, projection.width, projection.height, false, dis.nickname, dis);
-            }
-        }
-        try {
-            this.list = sort.sort();
-        } catch {
-            Logger.getInstance().error("Cyclic dependency");
-        }
     }
 }
