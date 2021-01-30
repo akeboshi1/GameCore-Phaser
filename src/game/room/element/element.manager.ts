@@ -23,6 +23,8 @@ export interface IElementManager {
 
     getElements(): IElement[];
 
+    resetWalkable(sprite: ISprite);
+
     addToMap(sprite: ISprite);
 
     removeFromMap(sprite: ISprite);
@@ -172,6 +174,10 @@ export class ElementManager extends PacketHandler implements IElementManager {
 
     public removeFromMap(sprite: ISprite) {
         if (!sprite) return;
+        this.resetWalkable(sprite);
+    }
+
+    public resetWalkable(sprite: any) {
         const collision = sprite.getCollisionArea();
         if (!collision) return;
         let walkable = sprite.getWalkableArea();

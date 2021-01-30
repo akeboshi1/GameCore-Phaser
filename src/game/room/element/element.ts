@@ -293,8 +293,10 @@ export class Element extends BlockObject implements IElement {
             Logger.getInstance().error(`${Element.name}: sprite is empty`);
             return;
         }
+        const preWalkable = this.mModel.getWalkableArea();
         this.mModel.setAnimationName(animationName);
-
+        const nextWalkable = this.mModel.getWalkableArea();
+        if (preWalkable !== nextWalkable) this.eleMgr.resetWalkable(this.mModel);
         if (times !== undefined) {
             times = times > 0 ? times - 1 : -1;
         }

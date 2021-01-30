@@ -126,6 +126,8 @@ export class PlayerManager extends PacketHandler implements IElementManager {
 
     public removeFromMap(sprite: ISprite) { }
 
+    public resetWalkable(sprite: ISprite) { }
+
     public getElements(): IElement[] {
         return Array.from(this.mPlayerMap.values());
     }
