@@ -493,6 +493,7 @@ export class ElementManager extends PacketHandler implements IElementManager {
     }
 
     protected fetchDisplay(ids: number[]) {
+        if (ids.length < 1) return;
         const packet = new PBpacket(op_virtual_world.OPCODE._OP_REQ_VIRTUAL_WORLD_QUERY_SPRITE_RESOURCE);
         const content: op_virtual_world.IOP_REQ_VIRTUAL_WORLD_QUERY_SPRITE_RESOURCE = packet.content;
         content.ids = ids;
