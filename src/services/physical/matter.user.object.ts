@@ -132,9 +132,12 @@ export class MatterUserObject extends MatterPlayerObject {
         this.stopMove();
         if (this.mTargetPoint) {
             this.peer.mainPeer.tryStopMove(this.id, pos, this.mTargetPoint.targetId);
-            this._tempVec.x = pos.x;
-            this._tempVec.y = pos.y;
-            Body.setPosition(this.body, Vector.create(this._tempVec.x * this._scale + this._offset.x, this._tempVec.y * this._scale + this._offset.y));
+            if (pos) {
+                this.mModel.setPosition(pos.x, pos.y);
+                this._tempVec.x = pos.x;
+                this._tempVec.y = pos.y;
+                Body.setPosition(this.body, Vector.create(this._tempVec.x * this._scale + this._offset.x, this._tempVec.y * this._scale + this._offset.y));
+            }
             this.mTargetPoint = null;
         }
     }

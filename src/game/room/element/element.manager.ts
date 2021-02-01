@@ -504,7 +504,7 @@ export class ElementManager extends PacketHandler implements IElementManager {
                 this.mRoom.game.physicalPeer.updateAnimations(sprite);
                 return displayInfo;
             }
-            Logger.getInstance().error("checkdisplay error====>", sprite);
+            // Logger.getInstance().error("checkdisplay error====>", sprite);
         }
         return;
     }
