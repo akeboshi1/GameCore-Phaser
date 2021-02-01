@@ -1,11 +1,11 @@
-import {BaseDragonbonesDisplay, ReferenceArea} from "baseRender";
-import {Render} from "../../render";
-import {IPos, Logger, IProjection} from "utils";
-import {DisplayField, ElementStateType, IDragonbonesModel, RunningAnimation, TitleMask} from "structure";
-import {IDisplayObject} from "../display.object";
-import {LoadQueue, LoadType} from "../../loadqueue";
-import {ElementTopDisplay} from "../element.top.display";
-import {DisplayMovement} from "../display.movement";
+import { BaseDragonbonesDisplay, ReferenceArea } from "baseRender";
+import { Render } from "../../render";
+import { IPos, Logger, IProjection } from "utils";
+import { DisplayField, ElementStateType, IDragonbonesModel, RunningAnimation, TitleMask } from "structure";
+import { IDisplayObject } from "../display.object";
+import { LoadQueue, LoadType } from "../../loadqueue";
+import { ElementTopDisplay } from "../element.top.display";
+import { DisplayMovement } from "../display.movement";
 export class DragonbonesDisplay extends BaseDragonbonesDisplay implements IDisplayObject {
     protected mID: number = undefined;
     protected mTitleMask: number;
@@ -15,10 +15,10 @@ export class DragonbonesDisplay extends BaseDragonbonesDisplay implements IDispl
     protected mMovement: DisplayMovement;
     protected mSortX: number = 0;
     protected mSortY: number = 0;
+    protected mPlaceholder: Phaser.GameObjects.Image;
 
     private mLoadQueue: LoadQueue;
     private mName: string = undefined;
-    private mPlaceholder: Phaser.GameObjects.Image;
 
     constructor(scene: Phaser.Scene, private render: Render, id?: number, private uuid?: number, type?: number) {
         super(scene);
@@ -217,9 +217,9 @@ export class DragonbonesDisplay extends BaseDragonbonesDisplay implements IDispl
 
     protected createArmatureDisplay(loader?: any, totalComplete?: number, totalFailed?: number) {
         if (!this.scene) return;
-        if (!this.mArmatureDisplay) {
-            this.showPlaceholder();
-        }
+        // if (!this.mArmatureDisplay) {
+        //     this.showPlaceholder();
+        // }
         super.createArmatureDisplay(loader, totalComplete, totalFailed);
     }
 
