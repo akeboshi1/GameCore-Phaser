@@ -89,6 +89,7 @@ export class MatterUserObject extends MatterPlayerObject {
         this.mTargetPoint = { path, targetId };
         this.addFillEffect({ x: firstPos.x, y: firstPos.y }, op_def.PathReachableStatus.PATH_REACHABLE_AREA);
         this.startMove();
+        this.checkDirection();
     }
 
     public startMove() {
@@ -98,7 +99,6 @@ export class MatterUserObject extends MatterPlayerObject {
         }
         this.mMoving = true;
         // this.setStatic(false);
-        this.checkDirection();
         // this.peer.mainPeer.changePlayerState(this.id, PlayerState.WALK);
         this.peer.mainPeer.selfStartMove();
         const pos = this.getPosition();
@@ -161,12 +161,12 @@ export class MatterUserObject extends MatterPlayerObject {
         this.peer.mainPeer.setPosition(this.id, true, pos.x, pos.y);
         const dist = this.mModel.speed * delta;
         this.peer.mainPeer.setSyncDirty(true);
-        this.checkDirection();
         const distboo = Tool.twoPointDistance(pos, path[0]) <= dist;
         if (distboo) {
             if (path.length > 1) {
                 path.shift();
                 this.startMove();
+                this.checkDirection();
             } else {
                 this.tryStopMove(path[0]);
                 return;
