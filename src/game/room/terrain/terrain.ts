@@ -6,6 +6,7 @@ import { op_client } from "pixelpai_proto";
 import { IPos, Logger } from "utils";
 import { IRoomService } from "../room/room";
 import { IFramesModel } from "structure";
+import { LayerEnum } from "game-capsule";
 export class Terrain extends BlockObject implements IElement {
     protected mId: number;
     protected mDisplayInfo: IFramesModel;
@@ -39,6 +40,9 @@ export class Terrain extends BlockObject implements IElement {
         this.mModel = val;
         if (!val) {
             return;
+        }
+        if (!this.mModel.layer) {
+            this.mModel.layer = LayerEnum.Terrain;
         }
         await this.mElementManager.roomService.game.peer.render.setModel(val);
         await this.mRoomService.game.peer.physicalPeer.setModel(val);
@@ -160,7 +164,7 @@ export class Terrain extends BlockObject implements IElement {
             // Logger.getInstance().error("displayinfo does not exist, Create display failed");
             return;
         }
-        await this.mRoomService.game.peer.render.createTerrainDisplay(this.id, this.mDisplayInfo);
+        await this.mRoomService.game.peer.render.createTerrainDisplay(this.id, this.mDisplayInfo, this.mModel.layer);
         const currentAnimation = this.mModel.currentAnimation;
         if (currentAnimation) {
             await this.mElementManager.roomService.game.renderPeer.playAnimation(this.id, this.mModel.currentAnimation);

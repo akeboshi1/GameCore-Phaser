@@ -1,3 +1,4 @@
+import { LayerEnum } from "game-capsule";
 import { op_client, op_def } from "pixelpai_proto";
 import {
     AnimationQueue,
@@ -200,6 +201,9 @@ export class Element extends BlockObject implements IElement {
     public async setModel(model: ISprite) {
         if (!model) {
             return;
+        }
+        if (!model.layer) {
+            model.layer = LayerEnum.Surface;
         }
         this.mElementManager.removeFromMap(this.mModel);
         this.mModel = model;
@@ -759,13 +763,13 @@ export class Element extends BlockObject implements IElement {
         let createPromise: Promise<any> = null;
         if (this.mDisplayInfo.discriminator === "DragonbonesModel") {
             if (this.isUser) {
-                createPromise = this.mElementManager.roomService.game.peer.render.createUserDragonBones(this.mDisplayInfo as IDragonbonesModel);
+                createPromise = this.mElementManager.roomService.game.peer.render.createUserDragonBones(this.mDisplayInfo as IDragonbonesModel, this.mModel.layer);
             } else {
-                createPromise = this.mElementManager.roomService.game.peer.render.createDragonBones(this.id, this.mDisplayInfo as IDragonbonesModel);
+                createPromise = this.mElementManager.roomService.game.peer.render.createDragonBones(this.id, this.mDisplayInfo as IDragonbonesModel, this.mModel.layer);
             }
         } else {
             // (this.mDisplayInfo as IFramesModel).gene = this.mDisplayInfo.mGene;
-            createPromise = this.mElementManager.roomService.game.peer.render.createFramesDisplay(this.id, this.mDisplayInfo as IFramesModel);
+            createPromise = this.mElementManager.roomService.game.peer.render.createFramesDisplay(this.id, this.mDisplayInfo as IFramesModel, this.mModel.layer);
         }
 
         this.mElementManager.roomService.game.renderPeer.editorModeDebugger.getIsDebug()

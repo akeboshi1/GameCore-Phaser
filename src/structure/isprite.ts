@@ -37,6 +37,7 @@ export interface ISprite {
     speed: number;
     animator?: Animator;
     updateSuits?: boolean;
+    layer?: number;
     newID();
     updateAvatar(avatar: IAvatar);
     setTempAvatar(avatar: IAvatar);

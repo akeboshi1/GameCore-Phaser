@@ -1,5 +1,6 @@
 import { UiManager, Render, BasePanel, BasicScene } from "gamecoreRender";
-import { AtlasData, UILoadType } from "picaRes";
+import { AtlasData, FolderType, UILoadType } from "picaRes";
+import { Url } from "utils";
 import { PicaRenderUiManager } from "./pica.Renderuimanager";
 export class PicaBasePanel extends BasePanel {
     protected atlasNames: Array<string | AtlasData>;
@@ -8,7 +9,6 @@ export class PicaBasePanel extends BasePanel {
     constructor(private uiManager: UiManager) {
         super(uiManager.scene, uiManager.render);
     }
-
     protected initResource() {
         let datas;
         if (this.atlasNames) {
@@ -25,9 +25,9 @@ export class PicaBasePanel extends BasePanel {
             for (const data of datas) {
                 if (!this.scene.textures.exists(data.atlasName)) {
                     if (data.uiType === UILoadType.atlas) {
-                        this.addAtlas(data.atlasName, data.atlasUrl, data.jsonUrl);
+                        this.setResourcesData("atlas", data.atlasName, data.atlasUrl, data.jsonUrl, data.foldType);
                     } else if (data.uiType === UILoadType.texture) {
-                        this.addImage(data.atlasName, data.atlasUrl);
+                        this.setResourcesData("image", data.atlasName, data.atlasUrl, undefined, data.foldType);
                     }
                 }
             }
@@ -51,4 +51,28 @@ export class PicaBasePanel extends BasePanel {
         }
     }
 
+    protected setResourcesData(type: string, key: string, texture: string, data: string, foldType: FolderType) {
+        if (this.scene.textures.exists(key)) return;
+        if (!this.mResources) {
+            this.mResources = new Map();
+        }
+        this.mResources.set(key, {
+            dpr: this.dpr,
+            type,
+            texture,
+            data,
+            foldType
+        });
+    }
+
+    protected addResources(key: string, resource: any) {
+        if (resource.type) {
+            if (this.scene.load[resource.type]) {
+                resource.foldType = resource.foldType || FolderType.DPR;
+                const textureUrl = resource.foldType === FolderType.DPR ? Url.getUIRes(resource.dpr, resource.texture) : Url.getRes(resource.texture);
+                const jsonUrl = resource.foldType === FolderType.DPR ? Url.getUIRes(resource.dpr, resource.data) : Url.getRes(resource.data);
+                this.scene.load[resource.type](key, textureUrl, jsonUrl);
+            }
+        }
+    }
 }
