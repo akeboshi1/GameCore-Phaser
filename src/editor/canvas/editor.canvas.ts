@@ -47,9 +47,9 @@ export class EditorCanvas {
         this.mEmitter = new Phaser.Events.EventEmitter();
     }
 
-    public resize(bounds: any) {// IRectangle
+    public resize(width: number, height: number) {
         if (this.mGame) {
-            this.mGame.scale.setGameSize(bounds.width, bounds.height);
+            this.mGame.scale.setGameSize(width, height);
         }
     }
 
