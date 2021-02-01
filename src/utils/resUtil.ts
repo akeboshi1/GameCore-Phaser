@@ -22,6 +22,9 @@ export class Url {
     static getUIRes(dpr: number, value: string): string {
         return Url.RESUI_PATH + `${dpr}x/${value}`;
     }
+    static getNormalUIRes(value: string) {
+        return Url.RESUI_PATH + value;
+    }
 
     static getOsdRes(value: string): string {
         if (Url.OSD_PATH) {

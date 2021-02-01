@@ -143,6 +143,8 @@ export class BottomPanel extends PicaBasePanel {
             this.render.renderEmitter(ModuleName.BOTTOM + "_showpanel", ModuleName.PICAMARKET_NAME);
         } else if (tag === "explore") {
             this.render.renderEmitter(ModuleName.BOTTOM + "_showpanel", ModuleName.PICAEXPLORELIST_NAME);
+        } else if (tag === "home") {
+            this.render.renderEmitter(ModuleName.BOTTOM + "_gohome");
         }
     }
 

@@ -6,6 +6,7 @@ export class PicaRoamMediator extends BasicMediator {
     protected mModel: PicaRoam;
     protected curMoneyData: any;
     protected poolsData: op_client.IDRAW_POOL_STATUS[];
+    private drawResult: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_DRAW_RESULT;
     constructor(game: Game) {
         super(ModuleName.PICAROAM_NAME, game);
         this.mModel = new PicaRoam(game);
@@ -17,11 +18,13 @@ export class PicaRoamMediator extends BasicMediator {
         this.game.emitter.on(this.key + "_queryroamlist", this.query_ROAM_LIST, this);
         this.game.emitter.on(this.key + "_queryroamdraw", this.query_ROAM_DRAW, this);
         this.game.emitter.on(this.key + "_queryprogressrewards", this.query_PROGRESS_REWARD, this);
+        this.game.emitter.on(this.key + "_queryrareeffect", this.query_RARE_Effect, this);
         this.game.emitter.on(this.key + "_retquestlist", this.onRetRoamListResult, this);
         this.game.emitter.on(this.key + "_retquestdraw", this.onRetRoamDrawResult, this);
         this.game.emitter.on(this.key + "_updatetoken", this.updateTokenData, this);
         this.game.emitter.on(this.key + "_updatepools", this.updatePoolsData, this);
         this.game.emitter.on(this.key + "_retprogresslist", this.onRetDrawProgress, this);
+        this.game.emitter.on(this.key + "_hideeffectone", this.onTreasureHideHandler, this);
         this.game.emitter.on(this.key + "_hide", this.hide, this);
     }
 
@@ -29,11 +32,13 @@ export class PicaRoamMediator extends BasicMediator {
         this.game.emitter.off(this.key + "_queryroamlist", this.query_ROAM_LIST, this);
         this.game.emitter.off(this.key + "_queryroamdraw", this.query_ROAM_DRAW, this);
         this.game.emitter.off(this.key + "_queryprogressrewards", this.query_PROGRESS_REWARD, this);
+        this.game.emitter.off(this.key + "_queryrareeffect", this.query_RARE_Effect, this);
         this.game.emitter.off(this.key + "_retquestlist", this.onRetRoamListResult, this);
         this.game.emitter.off(this.key + "_retquestdraw", this.onRetRoamDrawResult, this);
         this.game.emitter.off(this.key + "_updatetoken", this.updateTokenData, this);
         this.game.emitter.off(this.key + "_updatepools", this.updatePoolsData, this);
         this.game.emitter.off(this.key + "_retprogresslist", this.onRetDrawProgress, this);
+        this.game.emitter.off(this.key + "_hideeffectone", this.onTreasureHideHandler, this);
         this.game.emitter.off(this.key + "_hide", this.hide, this);
         super.hide();
     }
@@ -74,6 +79,10 @@ export class PicaRoamMediator extends BasicMediator {
         this.mModel.query_PROGRESS_REWARD("draw_SETTING0160001_CP0000002", index - 1);
     }
 
+    private query_RARE_Effect() {
+        this.onRetDrawHandler(this.drawResult.rewards);
+    }
+
     private onRetRoamListResult(pools: op_client.IDRAW_POOL_STATUS[]) {
         if (this.poolsData === undefined) {
             this.poolsData = pools;
@@ -98,14 +107,18 @@ export class PicaRoamMediator extends BasicMediator {
     }
 
     private onRetRoamDrawResult(content: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_DRAW_RESULT) {
+        this.drawResult = content;
         for (const data of this.poolsData) {
             if (data.id === content.poolUpdate.id) {
                 Object.assign(data, content.poolUpdate);
             }
         }
         this.updateServiceTime(this.poolsData);
-        if (this.mView) this.mView.setRoamDataList(this.poolsData);
-        this.onRetDrawHandler(content.rewards);
+        if (this.mView) {
+            this.mView.setRoamDataList(this.poolsData);
+            this.mView.openRoamEffectOnePanel(content.rewards);
+        }
+        // this.onRetDrawHandler(content.rewards);
     }
 
     private updatePoolsData() {
@@ -125,7 +138,7 @@ export class PicaRoamMediator extends BasicMediator {
     private onRetDrawHandler(reward: op_client.ICountablePackageItem[]) {
         const uimgr = this.game.uiManager;
         const tag = reward.length === 1 ? "open" : "roamdraw";
-        uimgr.showMed(ModuleName.PICATREASURE_NAME, { data: reward, type: tag });
+        uimgr.showMed(ModuleName.PICATREASURE_NAME, { data: reward, type: tag, event: this.key + "_hideeffectone" });
     }
 
     private onRetDrawProgress(content: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_QUERY_PLAYER_PROGRESS) {
@@ -144,6 +157,9 @@ export class PicaRoamMediator extends BasicMediator {
             this.onRetDrawHandler(tempData);
         }
 
+    }
+    private onTreasureHideHandler() {
+        if (this.mView) this.mView.hideRoamEffectOnePanel();
     }
     private updateServiceTime(pools: op_client.IDRAW_POOL_STATUS[]) {
 

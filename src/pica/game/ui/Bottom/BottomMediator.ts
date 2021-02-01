@@ -16,12 +16,14 @@ export class BottomMediator extends BasicMediator {
     public show() {
         this.game.emitter.on("chat", this.onChatHandler, this);
         this.game.emitter.on(ModuleName.BOTTOM + "_showpanel", this.onShowPanelHandler, this);
+        this.game.emitter.on(ModuleName.BOTTOM + "_gohome", this.onGoHomeHandler, this);
         super.show();
     }
 
     public hide() {
         this.game.emitter.off("chat", this.onChatHandler, this);
         this.game.emitter.off(ModuleName.BOTTOM + "_showpanel", this.onShowPanelHandler, this);
+        this.game.emitter.off(ModuleName.BOTTOM + "_gohome", this.onGoHomeHandler, this);
         super.hide();
     }
 
@@ -126,6 +128,10 @@ export class BottomMediator extends BasicMediator {
         const uiManager = this.game.uiManager;
         uiManager.showMed(panel);
     }
+    private onGoHomeHandler() {
+        this.model.queryGoHome();
+    }
+
     private get model(): PicaChat {
         return (<PicaChat>this.mModel);
     }

@@ -4,6 +4,7 @@ import { PicaTreasure } from "./PicaTreasure";
 
 export class PicaTreasureMediator extends BasicMediator {
 
+    private complEvent: string;
     constructor(game: Game) {
         super(ModuleName.PICATREASURE_NAME, game);
         this.mModel = new PicaTreasure(game);
@@ -12,6 +13,7 @@ export class PicaTreasureMediator extends BasicMediator {
     show(param?: any) {
         super.show(param);
         this.game.emitter.on(this.key + "_close", this.onHidePanel, this);
+        this.complEvent = param.event;
     }
     hide() {
         super.hide();
@@ -25,5 +27,7 @@ export class PicaTreasureMediator extends BasicMediator {
 
     private onHidePanel() {
         this.hide();
+        if (this.complEvent) this.game.emitter.emit(this.complEvent);
+        this.complEvent = undefined;
     }
 }

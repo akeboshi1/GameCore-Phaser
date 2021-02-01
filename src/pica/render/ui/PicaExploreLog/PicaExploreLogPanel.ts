@@ -73,11 +73,11 @@ export class PicaExploreLogPanel extends PicaBasePanel {
     }
 
     setExploreCountDown(content: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_EXPLORE_SHOW_COUNTDOWN) {
+        this.continueProgress.setProgress(100, 100);
+        this.continueText.text = `x${content.combo}`;
         if (!this.continueProgress.visible) {
             this.continueProgress.visible = true;
             const to = this.continueProgress.height * 0.5 + 20 * this.dpr;
-            this.continueProgress.setProgress(100, 100);
-            this.continueText.text = `x${content.combo}`;
             this.continueText.scale = 0.01;
             UIHelper.playtPosYTween(this.scene, this.continueProgress, 0, to, 300, "Bounce.easeOut", undefined, new Handler(this, () => {
                 if (!this.scene) return;
@@ -100,6 +100,7 @@ export class PicaExploreLogPanel extends PicaBasePanel {
     setExploreSettleDatas(content: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_EXPLORE_SUMMARY) {
         this.openSettlePanel();
         this.settlePanel.setSettleData(content);
+        this.clearRotateTween();
     }
 
     setTimeProgress(time) {
@@ -156,7 +157,7 @@ export class PicaExploreLogPanel extends PicaBasePanel {
     }
 
     private onSettleHandler() {
-        this.render.renderEmitter(ModuleName.PICAEXPLORELOG_NAME + "_querygohome");
+        this.render.renderEmitter(ModuleName.PICAEXPLORELOG_NAME + "_showexplorelist");
         this.hideSettlePanel();
     }
 
@@ -168,11 +169,7 @@ export class PicaExploreLogPanel extends PicaBasePanel {
     }
     private playRotateTween(from: number, to: number, duration: number) {
         if (!this.scene) return;
-        if (this.rotateTween) {
-            this.rotateTween.stop();
-            this.rotateTween.remove();
-            this.rotateTween = undefined;
-        }
+        this.clearRotateTween();
         this.rotateTween = this.scene.tweens.addCounter({
             from,
             to,
@@ -196,11 +193,16 @@ export class PicaExploreLogPanel extends PicaBasePanel {
                 }
             },
             onComplete: () => {
-                this.rotateTween.stop();
-                this.rotateTween.remove();
-                this.rotateTween = undefined;
+                this.clearRotateTween();
             },
         });
+    }
+    private clearRotateTween() {
+        if (this.rotateTween) {
+            this.rotateTween.stop();
+            this.rotateTween.remove();
+            this.rotateTween = undefined;
+        }
     }
 }
 class ExploreTimeProgress extends ButtonEventDispatcher {

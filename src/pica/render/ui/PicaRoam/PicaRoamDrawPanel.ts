@@ -148,6 +148,7 @@ export class PicaRoamDrawPanel extends Phaser.GameObjects.Container {
 
     private onRoamDrawHandler(tag: string, roamData: op_client.IDRAW_POOL_STATUS) {
         if (tag === "one") {
+            roamData["one"] = true;
             if (!roamData["free"] && this.token < roamData.drawTime && this.money < roamData.unitPrice * roamData.drawTime) {
                 const moneyName = this.tokenid === "IV0000002" ? i18n.t("coin.diamond") : i18n.t("coin.coin");
                 const text = i18n.t("roam.moneytips", { name: moneyName });
@@ -155,6 +156,7 @@ export class PicaRoamDrawPanel extends Phaser.GameObjects.Container {
                 return;
             }
         } else if (tag === "ten") {
+            roamData["one"] = false;
             if (!roamData["free"] && this.token < roamData.drawTime) {
                 const moneyName = this.tokenid === "IV0000002" ? i18n.t("coin.diamond") : i18n.t("coin.coin");
                 const moneytag = this.tokenid === "IV0000002" ? i18n.t("coin.gold") : i18n.t("coin.silver");

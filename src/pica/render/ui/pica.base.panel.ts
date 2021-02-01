@@ -23,11 +23,13 @@ export class PicaBasePanel extends BasePanel {
         }
         if (datas) {
             for (const data of datas) {
-                if (!this.scene.textures.exists(data.atlasName)) {
+                if (!this.cacheExists(UILoadType[data.uiType], data.atlasName)) {
                     if (data.uiType === UILoadType.atlas) {
                         this.setResourcesData("atlas", data.atlasName, data.atlasUrl, data.jsonUrl, data.foldType);
                     } else if (data.uiType === UILoadType.texture) {
                         this.setResourcesData("image", data.atlasName, data.atlasUrl, undefined, data.foldType);
+                    } else if (data.uiType === UILoadType.video) {
+                        this.setResourcesData("video", data.atlasName, data.atlasUrl, undefined, data.foldType);
                     }
                 }
             }
@@ -52,7 +54,7 @@ export class PicaBasePanel extends BasePanel {
     }
 
     protected setResourcesData(type: string, key: string, texture: string, data: string, foldType: FolderType) {
-        if (this.scene.textures.exists(key)) return;
+        if (this.cacheExists(type, key)) return;
         if (!this.mResources) {
             this.mResources = new Map();
         }
@@ -69,10 +71,23 @@ export class PicaBasePanel extends BasePanel {
         if (resource.type) {
             if (this.scene.load[resource.type]) {
                 resource.foldType = resource.foldType || FolderType.DPR;
-                const textureUrl = resource.foldType === FolderType.DPR ? Url.getUIRes(resource.dpr, resource.texture) : Url.getRes(resource.texture);
-                const jsonUrl = resource.foldType === FolderType.DPR ? Url.getUIRes(resource.dpr, resource.data) : Url.getRes(resource.data);
-                this.scene.load[resource.type](key, textureUrl, jsonUrl);
+                const textureUrl = resource.foldType === FolderType.DPR ? Url.getUIRes(resource.dpr, resource.texture) : Url.getNormalUIRes(resource.texture);
+                const jsonUrl = resource.foldType === FolderType.DPR ? Url.getUIRes(resource.dpr, resource.data) : Url.getNormalUIRes(resource.data);
+                if (resource.type !== "video") {
+                    this.scene.load[resource.type](key, textureUrl, jsonUrl);
+                } else {
+                    this.scene.load.video(key, textureUrl, undefined, undefined, true);
+                }
             }
         }
+    }
+
+    protected cacheExists(type: string, key: string) {
+        if (type === "image" || type === "atlas" || type === "texture") {
+            return this.scene.textures.exists(key);
+        } else if (type === "json" || type === "video") {
+            return this.scene.cache[type].exists(key);
+        }
+        return false;
     }
 }

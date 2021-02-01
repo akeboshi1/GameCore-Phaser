@@ -15,6 +15,7 @@ export class PicaExploreLogMediator extends BasicMediator {
         this.game.emitter.on(ModuleName.PICAEXPLORELOG_NAME + "_hide", this.onHidePanel, this);
         this.game.emitter.on(ModuleName.PICAEXPLORELOG_NAME + "_querygohome", this.onGoHomeHandler, this);
         this.game.emitter.on(ModuleName.PICAEXPLORELOG_NAME + "_queryexplorehint", this.onQueryExploreHint, this);
+        this.game.emitter.on(ModuleName.PICAEXPLORELOG_NAME + "_showexplorelist", this.onShowExploreList, this);
         this.game.emitter.on(ModuleName.PICAEXPLORELOG_NAME + "_retexplorelist", this.onEXPLORE_REQUIRE_LIST, this);
         this.game.emitter.on(ModuleName.PICAEXPLORELOG_NAME + "_retchapterlist", this.onQUERY_CHAPTER_RESULT, this);
         this.game.emitter.on(ModuleName.PICAEXPLORELOG_NAME + "_retexploresettle", this.onEXPLORE_SUMMARY, this);
@@ -27,6 +28,7 @@ export class PicaExploreLogMediator extends BasicMediator {
         this.game.emitter.off(ModuleName.PICAEXPLORELOG_NAME + "_hide", this.onHidePanel, this);
         this.game.emitter.off(ModuleName.PICAEXPLORELOG_NAME + "_querygohome", this.onGoHomeHandler, this);
         this.game.emitter.off(ModuleName.PICAEXPLORELOG_NAME + "_queryexplorehint", this.onQueryExploreHint, this);
+        this.game.emitter.off(ModuleName.PICAEXPLORELOG_NAME + "_showexplorelist", this.onShowExploreList, this);
         this.game.emitter.off(ModuleName.PICAEXPLORELOG_NAME + "_retexplorelist", this.onEXPLORE_REQUIRE_LIST, this);
         this.game.emitter.off(ModuleName.PICAEXPLORELOG_NAME + "_retchapterlist", this.onQUERY_CHAPTER_RESULT, this);
         this.game.emitter.off(ModuleName.PICAEXPLORELOG_NAME + "_retexploresettle", this.onEXPLORE_SUMMARY, this);
@@ -57,11 +59,13 @@ export class PicaExploreLogMediator extends BasicMediator {
         if (this.mView) this.mView.setExploreSettleDatas(content);
     }
     private onGoHomeHandler() {
-        //  this.mModel.queryGOHome();
-        this.onShowPanelHandler(ModuleName.PICAEXPLORELIST_NAME);
+        this.mModel.queryGOHome();
     }
     private onTipsLayoutHandler(extpand: boolean) {
         if (this.mView) this.mView.setTipsLayout(extpand);
+    }
+    private onShowExploreList() {
+        this.onShowPanelHandler(ModuleName.PICAEXPLORELIST_NAME);
     }
     private onShowPanelHandler(panel: string, data?: any) {
         if (!this.mModel || !this.game) {

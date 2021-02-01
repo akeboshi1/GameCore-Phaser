@@ -1,31 +1,75 @@
+import { Handler, UIHelper } from "utils";
+import { op_client, op_pkt_def } from "pixelpai_proto";
 export class PicaRoamEffectOnePanel extends Phaser.GameObjects.Container {
     private video: Phaser.GameObjects.Video;
-    constructor(scene: Phaser.Scene) {
+    private send: Handler;
+    private blackGraphic: Phaser.GameObjects.Graphics;
+    private isOne: boolean = true;
+    private loopTimes: number = 0;
+    private rewardDatas: op_client.ICountablePackageItem[];
+    constructor(scene: Phaser.Scene, width: number, height: number, dpr: number) {
         super(scene);
+        this.setSize(width, height);
+        this.init();
+        this.setInteractive();
     }
 
-}
+    init() {
 
-class RaomEffectBackground extends Phaser.GameObjects.Container {
-    constructor(scene: Phaser.Scene) {
-        super(scene);
+        this.blackGraphic = this.scene.make.graphics(undefined, false);
+        this.blackGraphic.clear();
+        this.blackGraphic.fillStyle(0, 1);
+        this.blackGraphic.fillRect(-this.width * 0.5, -this.height * 0.5, this.width * 2, this.height * 2);
+        this.blackGraphic.visible = false;
+        this.blackGraphic.alpha = 0;
+        this.video = this.scene.make.video({ key: "roamone" });
+        this.video.on("complete", this.onCompleteHandler, this);
+        this.add([this.video, this.blackGraphic]);
     }
-}
-class RoamEffectBallPanel extends Phaser.GameObjects.Container {
-    private pos = [[194, 71, 1], [1175, 78, -1], [1893, 174, 1], [484, 356, -1], [1590, 500, -1], [974, 625, -1],
-    [70, 898, -1], [1762, 1001, -1], [372, 1366, -1], [1388, 1327, -1], [830, 1566, -1], [1765, 1723, -1],
-    [1312, 1798, -1], [513, 2047, -1], [68, 2430, -1], [594, 2432, 1], [1384, 2316, -1], [1464, 2702, 1],
-    [664, 2949, 1], [215, 3019, 1], [1151, 3176, 1], [590, 3419, 1], [1603, 3379, 1], [217, 3751, 1], [1009, 4126, 1],
-    [387, 4245, 1], [1495, 4383, 1], [74, 4600, 1], [801, 4674, 1]];
-    constructor(scene: Phaser.Scene) {
-        super(scene);
-        this.setSize(1980, 4740);
-        this.createBalls();
+    setHandler(send: Handler) {
+        this.send = send;
     }
 
-    protected createBalls() {
-        for (const pos of this.pos) {
-            // const ball = this.scene
+    setRewardDatas(datas: op_client.ICountablePackageItem[], one: boolean) {
+        this.rewardDatas = datas;
+        this.isOne = one;
+        if (one) {
+            if (this.video.getVideoKey() !== "roamone")
+                this.video.changeSource("roamone", true);
+            else this.video.play();
+        } else {
+            if (this.video.getVideoKey() !== "roamtenrepead")
+                this.video.changeSource("roamtenrepead", true, false);
+            else this.video.play();
+            this.loopTimes = 3;
         }
+        this.setVideoSize();
+        this.video.visible = true;
+        this.blackGraphic.visible = false;
+    }
+    public play() {
+        if (this.video) this.video.play(false,);
+    }
+    private onCompleteHandler() {
+        if (!this.isOne && this.loopTimes > -1) {
+            this.loopTimes--;
+            if (this.loopTimes === -1) {
+                this.video.changeSource("roamreward", true, false);
+            } else
+                this.video.play();
+            return;
+        }
+        if (this.send) this.send.runWith("compl");
+        this.blackGraphic.alpha = 0;
+        this.blackGraphic.visible = true;
+        UIHelper.playAlphaTween(this.scene, this.blackGraphic, 0, 1);
+
+    }
+
+    private setVideoSize() {
+        this.video.scale = 1;
+        const scaleX = this.width / this.video.displayWidth;
+        const scaleY = this.height / this.video.displayHeight;
+        this.video.scale = scaleX > scaleY ? scaleX : scaleY;
     }
 }

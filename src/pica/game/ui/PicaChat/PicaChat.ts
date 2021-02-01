@@ -71,7 +71,10 @@ export class PicaChat extends BasicModel {
     content.marketName = "gift_shop";
     this.connection.send(packet);
   }
-
+  queryGoHome() {
+    const packet = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_PKT_GO_HOME);
+    this.connection.send(packet);
+}
   private handleCharacterChat(packet: PBpacket) {
     this.game.emitter.emit("chat", packet.content);
   }

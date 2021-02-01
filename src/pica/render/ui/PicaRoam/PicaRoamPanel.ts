@@ -1,5 +1,5 @@
 import { UiManager } from "gamecoreRender";
-import { UIAtlasName } from "picaRes";
+import { FolderType, UIAtlasName, UILoadType } from "picaRes";
 import { ModuleName } from "structure";
 import { Font, Handler, i18n, UIHelper, Url } from "utils";
 import { PicaBasePanel } from "../pica.base.panel";
@@ -7,18 +7,24 @@ import { PicaRoamListPanel } from "./PicaRoamListPanel";
 import { op_client, op_pkt_def } from "pixelpai_proto";
 import { PicaRoamDrawPanel } from "./PicaRoamDrawPanel";
 import { PicaRoamPreviewPanel } from "./PicaRoamPreviewPanel";
+import { PicaRoamEffectOnePanel } from "./PicaRoamEffectOnePanel";
 export class PicaRoamPanel extends PicaBasePanel {
     private mBackground: Phaser.GameObjects.Graphics;
     private content: Phaser.GameObjects.Container;
     private roamListPanel: PicaRoamListPanel;
     private roamDrawPanel: PicaRoamDrawPanel;
     private roamPreviewPanel: PicaRoamPreviewPanel;
+    private roamEffectOnePanel: PicaRoamEffectOnePanel;
     private tokenId: string;
+    private isOneDraw: boolean = true;
     constructor(uiManager: UiManager) {
         super(uiManager);
         this.key = ModuleName.PICAROAM_NAME;
-        this.atlasNames = [UIAtlasName.uicommon, UIAtlasName.uicommon1, UIAtlasName.roam];
-        this.textures = [{ atlasName: "roam_stripe", folder: "roam" }, { atlasName: "roam_topic", folder: "roam" }];
+        this.atlasNames = [UIAtlasName.uicommon, UIAtlasName.uicommon1, UIAtlasName.roam, { atlasName: "roam_effect_1", folder: "roam_effect", foldType: FolderType.NORMAL }];
+        this.textures = [{ atlasName: "roam_stripe", folder: "roam" }, { atlasName: "roam_topic", folder: "roam" },
+        { atlasName: "roamone", folder: "roam_effect", foldType: FolderType.NORMAL, uiType: UILoadType.video },
+        { atlasName: "roamtenrepead", folder: "roam_effect", foldType: FolderType.NORMAL, uiType: UILoadType.video },
+        { atlasName: "roamreward", folder: "roam_effect", foldType: FolderType.NORMAL, uiType: UILoadType.video }];
     }
     resize(width?: number, height?: number) {
         const w: number = this.scaleWidth;
@@ -80,8 +86,17 @@ export class PicaRoamPanel extends PicaBasePanel {
         }
     }
 
+    openRoamEffectOnePanel(datas: op_client.ICountablePackageItem[]) {
+        this.showRoamEffectOnePanel();
+        this.roamEffectOnePanel.setRewardDatas(datas, this.isOneDraw);
+    }
+    hideRoamEffectOnePanel() {
+        //  this.content.remove(this.roamEffectOnePanel);
+        this.roamEffectOnePanel.visible = false;
+    }
     public payDrawHandler(id: string) {
         this.render.renderEmitter(this.key + "_queryroamdraw", id);
+        this.isOneDraw = false;
     }
 
     public setRoamTokenData(money: number, token: number, tokenId: string) {
@@ -102,7 +117,7 @@ export class PicaRoamPanel extends PicaBasePanel {
         this.render.renderEmitter(this.key + "_updatepools");
     }
     private hideRoamListPanel() {
-        this.content.remove(this.roamListPanel);
+        // this.content.remove(this.roamListPanel);
         this.roamListPanel.visible = false;
     }
 
@@ -126,7 +141,7 @@ export class PicaRoamPanel extends PicaBasePanel {
     }
 
     private hideRoamDrawPanel() {
-        this.content.remove(this.roamDrawPanel);
+        // this.content.remove(this.roamDrawPanel);
         this.roamDrawPanel.visible = false;
     }
 
@@ -141,8 +156,17 @@ export class PicaRoamPanel extends PicaBasePanel {
     }
 
     private hideRoamPreviewPanel() {
-        this.content.remove(this.roamPreviewPanel);
+        //  this.content.remove(this.roamPreviewPanel);
         this.roamPreviewPanel.visible = false;
+    }
+
+    private showRoamEffectOnePanel() {
+        if (!this.roamEffectOnePanel) {
+            this.roamEffectOnePanel = new PicaRoamEffectOnePanel(this.scene, this.scaleWidth, this.scaleHeight, this.dpr);
+            this.roamEffectOnePanel.setHandler(new Handler(this, this.onRoamEffectOneHandler));
+        }
+        this.content.add(this.roamEffectOnePanel);
+        this.roamEffectOnePanel.visible = true;
     }
 
     private onRoamListHandler(tag: string, data?: any) {
@@ -159,6 +183,7 @@ export class PicaRoamPanel extends PicaBasePanel {
             this.showRoamListPanel();
         } else if (tag === "draw") {
             this.render.renderEmitter(this.key + "_queryroamdraw", data.id);
+            this.isOneDraw = data.one;
         } else if (tag === "notice") {
             const tempdata = {
                 text: [{ text: data, node: undefined }]
@@ -179,6 +204,10 @@ export class PicaRoamPanel extends PicaBasePanel {
         if (tag === "close") {
             this.hideRoamPreviewPanel();
         }
+    }
+
+    private onRoamEffectOneHandler(tag: string) {
+        this.render.renderEmitter(this.key + "_queryrareeffect");
     }
 
     private onCloseHandler() {
