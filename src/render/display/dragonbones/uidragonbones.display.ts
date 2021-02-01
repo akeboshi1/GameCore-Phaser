@@ -66,18 +66,4 @@ export class UIDragonbonesDisplay extends DragonbonesDisplay {
             this.play(runAni);
         }
     }
-    protected showPlaceholder() {
-        if (this.mPlaceholder) {
-            this.mPlaceholder.destroy();
-        }
-        this.mPlaceholder = this.scene.make.image({ key: "avatar_placeholder", x: -22, y: -68 }).setOrigin(0);
-        this.add(this.mPlaceholder);
-    }
-
-    protected closePlaceholder() {
-        if (this.mPlaceholder) {
-            this.mPlaceholder.destroy();
-        }
-        this.mPlaceholder = undefined;
-    }
 }

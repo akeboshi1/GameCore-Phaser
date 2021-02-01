@@ -83,6 +83,7 @@ export class BaseDragonbonesDisplay extends BaseDisplay {
      * 是否合图 & 单图替换
      */
     protected isRenderTexture: boolean = false;
+    protected mPlaceholder: Phaser.GameObjects.Image;
     private replaceArr = [];
     private mHasLoadMap: Map<string, any> = new Map();
     private mLoadMap: Map<string, any> = new Map();
@@ -357,9 +358,18 @@ export class BaseDragonbonesDisplay extends BaseDisplay {
     }
 
     protected showPlaceholder() {
+        if (this.mPlaceholder) {
+            this.mPlaceholder.destroy();
+        }
+        this.mPlaceholder = this.scene.make.image({ key: "avatar_placeholder", x: -22, y: -68 }).setOrigin(0);
+        this.add(this.mPlaceholder);
     }
 
     protected closePlaceholder() {
+        if (this.mPlaceholder) {
+            this.mPlaceholder.destroy();
+        }
+        this.mPlaceholder = undefined;
     }
 
     protected loadDragonBones(pngUrl: string, jsonUrl: string, dbbinUrl: string) {

@@ -15,7 +15,6 @@ export class DragonbonesDisplay extends BaseDragonbonesDisplay implements IDispl
     protected mMovement: DisplayMovement;
     protected mSortX: number = 0;
     protected mSortY: number = 0;
-    protected mPlaceholder: Phaser.GameObjects.Image;
 
     private mLoadQueue: LoadQueue;
     private mName: string = undefined;
@@ -217,9 +216,6 @@ export class DragonbonesDisplay extends BaseDragonbonesDisplay implements IDispl
 
     protected createArmatureDisplay(loader?: any, totalComplete?: number, totalFailed?: number) {
         if (!this.scene) return;
-        // if (!this.mArmatureDisplay) {
-        //     this.showPlaceholder();
-        // }
         super.createArmatureDisplay(loader, totalComplete, totalFailed);
     }
 
@@ -269,21 +265,6 @@ export class DragonbonesDisplay extends BaseDragonbonesDisplay implements IDispl
 
     protected checkShowNickname(): boolean {
         return (this.mTitleMask & TitleMask.TQ_NickName) > 0;
-    }
-
-    protected showPlaceholder() {
-        if (this.mPlaceholder) {
-            this.mPlaceholder.destroy();
-        }
-        this.mPlaceholder = this.scene.make.image({ key: "avatar_placeholder", x: -22, y: -68 }).setOrigin(0);
-        this.add(this.mPlaceholder);
-    }
-
-    protected closePlaceholder() {
-        if (this.mPlaceholder) {
-            this.mPlaceholder.destroy();
-        }
-        this.mPlaceholder = undefined;
     }
 
     get nickname() {
