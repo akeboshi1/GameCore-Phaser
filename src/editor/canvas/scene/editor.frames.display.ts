@@ -1,7 +1,7 @@
 import { Sprite } from "baseModel";
 import { BaseFramesDisplay, ReferenceArea } from "baseRender";
 import { IFramesModel, RunningAnimation } from "structure";
-import { Helpers, LogicPoint, Position45 } from "utils";
+import { Helpers, Logger, LogicPoint, Position45 } from "utils";
 import { SceneEditorCanvas } from "./scene.editor.canvas";
 import { EditorTopDisplay } from "./top.display";
 import { op_def } from "pixelpai_proto";
@@ -13,6 +13,7 @@ export class EditorFramesDisplay extends BaseFramesDisplay {
     protected mReferenceArea: ReferenceArea;
     protected mTopDisplay: EditorTopDisplay;
     protected mIsMoss: boolean = false;
+    protected mOverlapped: boolean = false;
 
     constructor(protected sceneEditor: SceneEditorCanvas, sprite: Sprite) {
         super(sceneEditor.scene, sprite.id, sprite.nodeType);
@@ -98,14 +99,15 @@ export class EditorFramesDisplay extends BaseFramesDisplay {
         if (!this.mCurAnimation) {
             return;
         }
+
         const miniSize = this.sceneEditor.miniRoomSize;
         const collision = this.getCollisionArea();
         const origin = this.getOriginPoint();
         if (!collision) return;
         const rows = collision.length;
         const cols = collision[0].length;
-        const width = cols * miniSize.tileWidth / Math.sqrt(2);
-        const height = rows * miniSize.tileHeight / Math.sqrt(2);
+        const width = cols;
+        const height = rows;
         const offset = Position45.transformTo90(new LogicPoint(origin.x, origin.y), miniSize);
         this.mProjectionSize = { offset, width, height };
         this.updateSort();
@@ -164,5 +166,18 @@ export class EditorFramesDisplay extends BaseFramesDisplay {
 
     get isMoss() {
         return this.mIsMoss;
+    }
+
+    set overlapped(val: boolean) {
+        if (this.mOverlapped === val) {
+            return;
+        }
+        this.mOverlapped = val;
+        if (val) {
+            this.showRefernceArea();
+        } else {
+            this.hideRefernceArea();
+        }
+        Logger.getInstance().log("overlapped: ", val);
     }
 }

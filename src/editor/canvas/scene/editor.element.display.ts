@@ -1,6 +1,5 @@
 import { EditorFramesDisplay } from "./editor.frames.display";
 import { SceneEditorCanvas } from "./scene.editor.canvas";
-import { op_def } from "pixelpai_proto";
 import { ReferenceArea } from "baseRender";
 import { Sprite } from "baseModel";
 
@@ -11,19 +10,14 @@ export class EditorElementDisplay extends EditorFramesDisplay {
 
     selected() {
         super.selected();
-        if (this.mNodeType === op_def.NodeType.ElementNodeType) {
-            this.elementManager.removeFromMap(this.sprite);
-        }
+        this.removeFromMap();
         this.showRefernceArea();
     }
 
     unselected() {
         super.unselected();
         this.hideRefernceArea();
-        // TODO 添加Element Display区分类型
-        if (this.mNodeType === op_def.NodeType.ElementNodeType) {
-            this.elementManager.addToMap(this.sprite);
-        }
+        this.addToMap();
     }
 
     showRefernceArea() {
@@ -41,23 +35,24 @@ export class EditorElementDisplay extends EditorFramesDisplay {
     }
 
     setSprite(sprite: Sprite) {
-        const elementManager = this.elementManager;
-        elementManager.removeFromMap(sprite);
+        this.removeFromMap();
         this.sprite = sprite;
         this.defaultLayer();
-        elementManager.addToMap(sprite);
-    }
-
-    updateSprite(sprite: Sprite) {
-        const elementManager = this.elementManager;
-        elementManager.removeFromMap(this.sprite);
-        super.updateSprite(sprite);
-        elementManager.addToMap(this.sprite);
+        this.addToMap();
     }
 
     destroy() {
-        const elementManager = this.elementManager;
-        elementManager.removeFromMap(this.sprite);
+        this.removeFromMap();
         super.destroy();
+    }
+
+    protected addToMap() {
+        const elementManager = this.elementManager;
+        this.overlapped = elementManager.addToMap(this.sprite);
+    }
+
+    protected removeFromMap() {
+        const elementManager = this.elementManager;
+        this.overlapped = elementManager.removeFromMap(this.sprite);
     }
 }

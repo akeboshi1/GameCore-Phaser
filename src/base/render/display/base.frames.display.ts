@@ -291,7 +291,7 @@ export class BaseFramesDisplay extends BaseDisplay {
 
     }
 
-    private onAddTextureHandler(key: string, field?: DisplayField, cb?: (key: string) => void) {
+    protected onAddTextureHandler(key: string, field?: DisplayField, cb?: (key: string) => void) {
         if (field === undefined) {
             field = DisplayField.STAGE;
         }
@@ -304,12 +304,12 @@ export class BaseFramesDisplay extends BaseDisplay {
         }
     }
 
-    private mAllLoadCompleted() {
+    protected mAllLoadCompleted() {
         this.scene.load.off(Phaser.Loader.Events.COMPLETE, this.mAllLoadCompleted, this);
         this.onLoadCompleted(this.mField);
     }
 
-    private onLoadCompleted(field: DisplayField) {
+    protected onLoadCompleted(field: DisplayField) {
         const data = this.mDisplayDatas.get(field);
         if (!data) {
             return;
@@ -324,7 +324,7 @@ export class BaseFramesDisplay extends BaseDisplay {
         this.created();
     }
 
-    private makeAnimation(gen: string, key: string, frameName: string[], frameVisible: boolean[], frameRate: number, loop: boolean, frameDuration?: number[]) {
+    protected makeAnimation(gen: string, key: string, frameName: string[], frameVisible: boolean[], frameRate: number, loop: boolean, frameDuration?: number[]) {
         if (frameVisible && frameName.length !== frameVisible.length) {
             Logger.getInstance().error("wrong data: frameName.length: " + frameName.length + "; frameVisible.length: " + frameVisible.length);
             return;
@@ -356,7 +356,7 @@ export class BaseFramesDisplay extends BaseDisplay {
         this.scene.anims.create(config);
     }
 
-    private initBaseLoc(field: DisplayField, playAnimation: RunningAnimation) {
+    protected initBaseLoc(field: DisplayField, playAnimation: RunningAnimation) {
         const data: IFramesModel = this.mDisplayDatas.get(field);
         // const sprite: Phaser.GameObjects.Sprite | Phaser.GameObjects.Image = this.mSprites.get(field);
         if (this.mDisplays.length < 1 || !data || !data.animations) return;
@@ -372,7 +372,7 @@ export class BaseFramesDisplay extends BaseDisplay {
         // }
     }
 
-    private onAnimationRepeatHander() {
+    protected onAnimationRepeatHander() {
         const queue = this.mAnimation.playingQueue;
         if (queue.playedTimes === undefined) {
             queue.playedTimes = 1;
@@ -388,7 +388,7 @@ export class BaseFramesDisplay extends BaseDisplay {
         }
     }
 
-    private get framesInfo(): IFramesModel {
+    protected get framesInfo(): IFramesModel {
         return <IFramesModel>this.mDisplayInfo;
     }
 
