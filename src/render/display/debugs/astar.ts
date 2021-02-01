@@ -12,6 +12,9 @@ export class Astar {
     private readonly CIRCLE_COLOR_TARGET_POSITION = 0xFFFF00;
     private readonly LINE_COLOR_PATH = 0xFFFF00;
 
+    // 是否显示所有可行经点。如果打开会非常消耗性能
+    private mShowAllPoints: boolean = false;
+
     private mPoints: Map<LogicPos, Phaser.GameObjects.Graphics> =
         new Map<LogicPos, Phaser.GameObjects.Graphics>();
     private mStartPos: Phaser.GameObjects.Graphics = null;
@@ -60,6 +63,7 @@ export class Astar {
     }
 
     public drawPoints() {
+        if (!this.mShowAllPoints) return;
         if (!this.mAstarSize) return;
         const scene = this.render.sceneManager.getMainScene();
         if (!scene || !(scene instanceof PlayScene)) {

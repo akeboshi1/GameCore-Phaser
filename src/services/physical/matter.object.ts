@@ -348,7 +348,8 @@ export class MatterObject implements IMatterObject {
         y *= this._scale;
         // Logger.getInstance().debug("#move body.setVelocity ====>", x, y);
         Body.setVelocity(this.body, Vector.create(x, y));
-       //  Body.setInertia(this.body, Infinity);
+        // 设置碰撞体是否选择
+        Body.setInertia(this.body, Infinity);
     }
 
     public setPosition(p: IPos, update: boolean = false) {

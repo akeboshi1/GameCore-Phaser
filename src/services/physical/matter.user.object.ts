@@ -57,6 +57,7 @@ export class MatterUserObject extends MatterPlayerObject {
         this.mSyncDirty = true;
         this.matterWorld.setSensor(this.body, false);
         this.startMove();
+        this.checkDirection();
     }
 
     public async findPath(targets: IPos[], targetId?: number, toReverse: boolean = false) {
@@ -89,6 +90,7 @@ export class MatterUserObject extends MatterPlayerObject {
         this.mTargetPoint = { path, targetId };
         this.addFillEffect({ x: firstPos.x, y: firstPos.y }, op_def.PathReachableStatus.PATH_REACHABLE_AREA);
         this.startMove();
+        this.checkDirection();
     }
 
     public startMove() {
@@ -98,7 +100,6 @@ export class MatterUserObject extends MatterPlayerObject {
         }
         this.mMoving = true;
         // this.setStatic(false);
-        this.checkDirection();
         // this.peer.mainPeer.changePlayerState(this.id, PlayerState.WALK);
         this.peer.mainPeer.selfStartMove();
         const pos = this.getPosition();
@@ -131,9 +132,12 @@ export class MatterUserObject extends MatterPlayerObject {
         this.stopMove();
         if (this.mTargetPoint) {
             this.peer.mainPeer.tryStopMove(this.id, pos, this.mTargetPoint.targetId);
-            this._tempVec.x = pos.x;
-            this._tempVec.y = pos.y;
-            Body.setPosition(this.body, Vector.create(this._tempVec.x * this._scale + this._offset.x, this._tempVec.y * this._scale + this._offset.y));
+            if (pos) {
+                this.mModel.setPosition(pos.x, pos.y);
+                this._tempVec.x = pos.x;
+                this._tempVec.y = pos.y;
+                Body.setPosition(this.body, Vector.create(this._tempVec.x * this._scale + this._offset.x, this._tempVec.y * this._scale + this._offset.y));
+            }
             this.mTargetPoint = null;
         }
     }
@@ -161,12 +165,12 @@ export class MatterUserObject extends MatterPlayerObject {
         this.peer.mainPeer.setPosition(this.id, true, pos.x, pos.y);
         const dist = this.mModel.speed * delta;
         this.peer.mainPeer.setSyncDirty(true);
-        this.checkDirection();
         const distboo = Tool.twoPointDistance(pos, path[0]) <= dist;
         if (distboo) {
             if (path.length > 1) {
                 path.shift();
                 this.startMove();
+                this.checkDirection();
             } else {
                 this.tryStopMove(path[0]);
                 return;

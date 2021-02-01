@@ -1,5 +1,5 @@
 import { AvatarSuit, RunningAnimation } from "structure";
-import { Handler } from "utils";
+import { Handler, Logger } from "utils";
 import { DragonbonesDisplay } from "./dragonbones.display";
 
 export class UIDragonbonesDisplay extends DragonbonesDisplay {
@@ -65,9 +65,5 @@ export class UIDragonbonesDisplay extends DragonbonesDisplay {
             };
             this.play(runAni);
         }
-    }
-    protected showPlaceholder() {
-    }
-    protected closePlaceholder() {
     }
 }

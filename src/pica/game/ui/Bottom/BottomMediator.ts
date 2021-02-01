@@ -56,7 +56,9 @@ export class BottomMediator extends BasicMediator {
             "box": this.game.peer.physicalPeer.matterWorld,
             "log": Logger.getInstance(),
             "grids": this.game.renderPeer.gridsDebugger,
-            "astar": this.game.renderPeer.astarDebugger
+            "astar": this.game.renderPeer.astarDebugger,
+            "sort": this.game.renderPeer.sortDebugger,
+            "editor": this.game.renderPeer.editorModeDebugger
         };
         const context: ChatCommandInterface = contextMap[contextStr];
         if (context === undefined || context === null) {

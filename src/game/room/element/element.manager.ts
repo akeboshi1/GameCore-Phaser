@@ -401,6 +401,18 @@ export class ElementManager extends PacketHandler implements IElementManager {
         this.mRoom.onManagerReady(this.constructor.name);
     }
 
+    public showReferenceArea() {
+        this.mElements.forEach((ele) => {
+            ele.showRefernceArea();
+        });
+    }
+
+    public hideReferenceArea() {
+        this.mElements.forEach((ele) => {
+            ele.hideRefernceArea();
+        });
+    }
+
     protected addMap(sprite: ISprite) {
     }
 
@@ -492,7 +504,7 @@ export class ElementManager extends PacketHandler implements IElementManager {
                 this.mRoom.game.physicalPeer.updateAnimations(sprite);
                 return displayInfo;
             }
-            Logger.getInstance().error("checkdisplay error====>", sprite);
+            // Logger.getInstance().error("checkdisplay error====>", sprite);
         }
         return;
     }

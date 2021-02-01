@@ -773,6 +773,12 @@ export class Element extends BlockObject implements IElement {
             // (this.mDisplayInfo as IFramesModel).gene = this.mDisplayInfo.mGene;
             createPromise = this.mElementManager.roomService.game.peer.render.createFramesDisplay(this.id, this.mDisplayInfo as IFramesModel, this.mModel.layer);
         }
+
+        this.mElementManager.roomService.game.renderPeer.editorModeDebugger.getIsDebug()
+            .then((isDebug) => {
+                if (isDebug) this.showRefernceArea();
+            });
+
         createPromise.then(() => {
             const pos = this.mModel.pos;
             this.mElementManager.roomService.game.peer.render.setPosition(this.id, pos.x, pos.y);

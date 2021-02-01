@@ -26,7 +26,7 @@ export class Logger implements ChatCommandInterface {
    * @param optionalParams 
    */
   log(message?: any, ...optionalParams: any[]) {
-      console.log(message, ...optionalParams);
+    console.log(message, ...optionalParams);
   }
 
   /**
@@ -42,6 +42,12 @@ export class Logger implements ChatCommandInterface {
   error(message?: any, ...optionalParams: any[]) {
     // if (this.isDebug)
     console.error(message, ...optionalParams);
+    // this.mErrorList.push(message);
+  }
+
+  debugError(message?: any, ...optionalParams: any[]) {
+    if (this.isDebug)
+      console.error(message, ...optionalParams);
     // this.mErrorList.push(message);
   }
 
