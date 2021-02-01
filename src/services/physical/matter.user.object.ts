@@ -57,6 +57,7 @@ export class MatterUserObject extends MatterPlayerObject {
         this.mSyncDirty = true;
         this.matterWorld.setSensor(this.body, false);
         this.startMove();
+        this.checkDirection();
     }
 
     public async findPath(targets: IPos[], targetId?: number, toReverse: boolean = false) {
