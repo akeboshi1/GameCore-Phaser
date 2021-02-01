@@ -91,7 +91,6 @@ export class SortDebugger implements ChatCommandInterface {
         let pos4 = new LogicPos(rect.x, rect.y + rect.h);
         pos4 = Position45.transformTo90(pos4, posObj);
 
-
         const graphics = scene.make.graphics(undefined, false);
         graphics.lineStyle(1, color);
         graphics.fillStyle(color, 1);
