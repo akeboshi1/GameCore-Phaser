@@ -1,5 +1,5 @@
 import { AvatarSuit, RunningAnimation } from "structure";
-import { Handler } from "utils";
+import { Handler, Logger } from "utils";
 import { DragonbonesDisplay } from "./dragonbones.display";
 
 export class UIDragonbonesDisplay extends DragonbonesDisplay {
@@ -67,7 +67,17 @@ export class UIDragonbonesDisplay extends DragonbonesDisplay {
         }
     }
     protected showPlaceholder() {
+        if (this.mPlaceholder) {
+            this.mPlaceholder.destroy();
+        }
+        this.mPlaceholder = this.scene.make.image({ key: "avatar_placeholder", x: -22, y: -68 }).setOrigin(0);
+        this.add(this.mPlaceholder);
     }
+
     protected closePlaceholder() {
+        if (this.mPlaceholder) {
+            this.mPlaceholder.destroy();
+        }
+        this.mPlaceholder = undefined;
     }
 }
