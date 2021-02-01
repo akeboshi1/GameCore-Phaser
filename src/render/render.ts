@@ -1,45 +1,43 @@
 import "tooqinggamephaser";
 import "dragonBones";
-import { Game } from "tooqinggamephaser";
-import { RPCPeer, Export, webworker_rpc } from "webworker-rpc";
-import { Url, initLocales, Logger, Size, LogicPos, i18n, IPos, IPosition45Obj } from "utils";
-import { ServerAddress } from "../../lib/net/address";
-import { PBpacket } from "net-socket-packet";
-import { op_client } from "pixelpai_proto";
-import { Account } from "./account/account";
-import { SceneManager } from "./scenes/scene.manager";
-import { LoginScene } from "./scenes/login.scene";
-import { LocalStorageManager } from "./managers/local.storage.manager";
-import { BasicScene } from "./scenes/basic.scene";
-import { PlayScene } from "./scenes/play.scene";
-import { CamerasManager } from "./cameras/cameras.manager";
+import {Game} from "tooqinggamephaser";
+import {Export, RPCPeer, webworker_rpc} from "webworker-rpc";
+import {i18n, initLocales, IPos, IPosition45Obj, Logger, Size, Url} from "utils";
+import {PBpacket} from "net-socket-packet";
+import * as protos from "pixelpai_proto";
+import {op_client} from "pixelpai_proto";
+import {Account} from "./account/account";
+import {SceneManager} from "./scenes/scene.manager";
+import {LoginScene} from "./scenes/login.scene";
+import {LocalStorageManager} from "./managers/local.storage.manager";
+import {BasicScene} from "./scenes/basic.scene";
+import {PlayScene} from "./scenes/play.scene";
+import {CamerasManager} from "./cameras/cameras.manager";
 import * as path from "path";
 import {
-    IFramesModel,
+    ElementStateType,
+    GameMain,
     IDragonbonesModel,
+    IFramesModel,
     ILauncherConfig,
     IScenery,
-    EventType,
-    GameMain,
     MAIN_WORKER,
     MAIN_WORKER_URL,
-    RENDER_PEER,
     MessageType,
     ModuleName,
-    SceneName,
-    ElementStateType,
     PHYSICAL_WORKER,
-    PHYSICAL_WORKER_URL
+    PHYSICAL_WORKER_URL,
+    RENDER_PEER,
+    SceneName
 } from "structure";
-import { DisplayManager } from "./managers/display.manager";
-import { InputManager } from "./input/input.manager";
-import * as protos from "pixelpai_proto";
-import { PicaRenderUiManager } from "picaRender";
-import { GamePauseScene, MainUIScene } from "./scenes";
-import { EditorCanvasManager } from "./managers/editor.canvas.manager";
+import {DisplayManager} from "./managers/display.manager";
+import {InputManager} from "./input/input.manager";
+import {PicaRenderUiManager} from "picaRender";
+import {GamePauseScene, MainUIScene} from "./scenes";
+import {EditorCanvasManager} from "./managers/editor.canvas.manager";
 import version from "../../version";
-import { AstarDebugger, GridsDebugger } from "./display";
-import { IRender } from "baseRender";
+import {IRender} from "baseRender";
+import {AstarDebugger, EditorModeDebugger, GridsDebugger, SortDebugger} from "./display";
 // import Stats from "../../Stat";
 
 for (const key in protos) {
@@ -59,6 +57,10 @@ export class Render extends RPCPeer implements GameMain, IRender {
     public gridsDebugger: GridsDebugger;
     @Export()
     public astarDebugger: AstarDebugger;
+    @Export()
+    public sortDebugger: SortDebugger;
+    @Export()
+    public editorModeDebugger: EditorModeDebugger;
 
     protected readonly DEFAULT_WIDTH = 360;
     protected readonly DEFAULT_HEIGHT = 640;
@@ -95,6 +97,7 @@ export class Render extends RPCPeer implements GameMain, IRender {
     private mPhysicalPeer: any;
     private isPause: boolean = false;
     private mConnectFailFunc: Function;
+
     constructor(config: ILauncherConfig, callBack?: Function) {
         super(RENDER_PEER);
         this.emitter = new Phaser.Events.EventEmitter();
@@ -102,6 +105,8 @@ export class Render extends RPCPeer implements GameMain, IRender {
         this.mCallBack = callBack;
         this.gridsDebugger = GridsDebugger.getInstance();
         this.astarDebugger = AstarDebugger.getInstance();
+        this.sortDebugger = new SortDebugger(this);
+        this.editorModeDebugger = new EditorModeDebugger(this);
         this.mConnectFailFunc = this.mConfig.connectFail;
         this.mConfig.hasConnectFail = this.mConnectFailFunc ? true : false;
         this.mConfig.hasCloseGame = this.mConfig.closeGame ? true : false;
@@ -665,7 +670,7 @@ export class Render extends RPCPeer implements GameMain, IRender {
 
     @Export()
     public showCreateRole(params?: any) {
-        if (this.mSceneManager) this.mSceneManager.startScene(SceneName.CREATE_ROLE_SCENE, { render: this, params });
+        if (this.mSceneManager) this.mSceneManager.startScene(SceneName.CREATE_ROLE_SCENE, {render: this, params});
     }
 
     @Export()
@@ -675,7 +680,7 @@ export class Render extends RPCPeer implements GameMain, IRender {
 
     @Export()
     public showPlay(params?: any) {
-        if (this.mSceneManager) this.mSceneManager.startScene(SceneName.PLAY_SCENE, { render: this, params });
+        if (this.mSceneManager) this.mSceneManager.startScene(SceneName.PLAY_SCENE, {render: this, params});
     }
 
     @Export()
@@ -837,7 +842,7 @@ export class Render extends RPCPeer implements GameMain, IRender {
             Logger.getInstance().debug("createAccount ====>", now);
             this.exportProperty(this.mAccount, this, ModuleName.ACCOUNT_NAME).onceReady(() => {
                 Logger.getInstance().debug("createAccountExport ====>", new Date().getTime() - now);
-                this.mAccount.enterGame(gameID, worldID, sceneID, { locX, locY, locZ });
+                this.mAccount.enterGame(gameID, worldID, sceneID, {locX, locY, locZ});
                 resolve(true);
             });
         });
@@ -867,7 +872,7 @@ export class Render extends RPCPeer implements GameMain, IRender {
             if (playScene) {
                 const camera = playScene.cameras.main;
                 const rect = camera.worldView;
-                const { x, y } = rect;
+                const {x, y} = rect;
                 const obj = {
                     x,
                     y,
@@ -977,7 +982,7 @@ export class Render extends RPCPeer implements GameMain, IRender {
         //     // todo sceneManager loginScene.name
         // });
         Logger.getInstance().debug("gotoanothergame ====>");
-        this.account.enterGame(gameId, worldId, sceneId, { x: px, y: py, z: pz });
+        this.account.enterGame(gameId, worldId, sceneId, {x: px, y: py, z: pz});
     }
 
     @Export([webworker_rpc.ParamType.num, webworker_rpc.ParamType.num, webworker_rpc.ParamType.num, webworker_rpc.ParamType.num])
@@ -1493,7 +1498,7 @@ export class Render extends RPCPeer implements GameMain, IRender {
             if (!this.mGame.scene.getScene(GamePauseScene.name)) {
                 this.mGame.scene.add(GamePauseScene.name, GamePauseScene);
             }
-            this.mGame.scene.start(GamePauseScene.name, { render: this });
+            this.mGame.scene.start(GamePauseScene.name, {render: this});
         }
     }
 
