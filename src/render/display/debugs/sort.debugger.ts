@@ -12,7 +12,7 @@ export class SortDebugger implements ChatCommandInterface {
 
     private static _instance: SortDebugger;
 
-    public isDebug: boolean = true;
+    public isDebug: boolean = false;
 
     private readonly RECT_COLOR: number = 0x00ff00;
 
@@ -46,6 +46,7 @@ export class SortDebugger implements ChatCommandInterface {
         this.mGraphics.clear();
     }
 
+    // 调用sort库时调用
     public addDisplayObject(id: number, x: number, y: number, w: number, h: number) {
         const rect = new Rect(x, y, w, h);
         this.mData.set(id, rect);
@@ -82,14 +83,14 @@ export class SortDebugger implements ChatCommandInterface {
     private drawObj(scene: PlayScene, color: number, rect: Rect, posObj: IPosition45Obj): Phaser.GameObjects.Graphics {
         Logger.getInstance().debug("#sort drawRect: ", rect);
 
-        let pos1 = new LogicPos(rect.x, rect.y);
-        pos1 = Position45.transformTo90(pos1, posObj);
-        let pos2 = new LogicPos(rect.x + rect.w, rect.y);
-        pos2 = Position45.transformTo90(pos2, posObj);
-        let pos3 = new LogicPos(rect.x + rect.w, rect.y + rect.h);
-        pos3 = Position45.transformTo90(pos3, posObj);
-        let pos4 = new LogicPos(rect.x, rect.y + rect.h);
-        pos4 = Position45.transformTo90(pos4, posObj);
+        const pos1 = new LogicPos(rect.x, rect.y);
+        // pos1 = Position45.transformTo90(pos1, posObj);
+        const pos2 = new LogicPos(rect.x + rect.w, rect.y);
+        // pos2 = Position45.transformTo90(pos2, posObj);
+        const pos3 = new LogicPos(rect.x + rect.w, rect.y + rect.h);
+        // pos3 = Position45.transformTo90(pos3, posObj);
+        const pos4 = new LogicPos(rect.x, rect.y + rect.h);
+        // pos4 = Position45.transformTo90(pos4, posObj);
 
         const graphics = scene.make.graphics(undefined, false);
         graphics.lineStyle(1, color);
