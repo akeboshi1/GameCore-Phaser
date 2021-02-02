@@ -3,6 +3,7 @@ import ElementEditorGrids from "./element.editor.grids";
 import ElementEditorAnimations from "./element.editor.animations";
 import ElementEditorResourceManager from "./element.editor.resource.manager";
 import { Logger } from "utils";
+import ElementFramesDisplay from "./element.frames.display";
 
 export enum ElementEditorBrushType {
     Drag,
@@ -31,7 +32,7 @@ export class ElementEditorCanvas extends EditorCanvas {
 
     private mResManager: ElementEditorResourceManager;
     private mGrids: ElementEditorGrids;
-    private mAnimations: ElementEditorAnimations;
+    private mAnimations: ElementFramesDisplay | ElementEditorAnimations;
 
     constructor(config: IEditorCanvasConfig) {
         super(config);
@@ -79,6 +80,7 @@ export class ElementEditorCanvas extends EditorCanvas {
 
         const scene = this.getScene();
         this.mGrids = new ElementEditorGrids(scene, this.mData.animations.getDefaultAnimationData());
+        // this.mAnimations = new ElementFramesDisplay(scene, this.mData.animations.getDefaultAnimationData(), this.mGrids, this.mEmitter);
         this.mAnimations = new ElementEditorAnimations(scene, this.mData.animations.getDefaultAnimationData(), this.mGrids, this.mEmitter);
         this.mResManager.init(scene);
 

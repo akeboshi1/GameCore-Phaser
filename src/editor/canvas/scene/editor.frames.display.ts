@@ -178,6 +178,5 @@ export class EditorFramesDisplay extends BaseFramesDisplay {
         } else {
             this.hideRefernceArea();
         }
-        Logger.getInstance().log("overlapped: ", val);
     }
 }

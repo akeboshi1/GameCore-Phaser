@@ -45,6 +45,7 @@ export class BaseFramesDisplay extends BaseDisplay {
             if (!display) {
                 Logger.getInstance().debug("update frame loadError", "display is undefined");
                 this.created();
+                return;
             }
             if (display.texturePath === "" || display.dataPath === "") {
                 Logger.getInstance().debug("update frame loadError", "动画资源报错：", this.displayInfo);
