@@ -41,7 +41,7 @@ export class PicaRoamEffectOnePanel extends Phaser.GameObjects.Container {
             if (this.video.getVideoKey() !== "roamtenrepead")
                 this.video.changeSource("roamtenrepead", true, false);
             else this.video.play();
-            this.loopTimes = 3;
+            this.loopTimes = 1;
         }
         this.setVideoSize();
         this.video.visible = true;
@@ -51,9 +51,9 @@ export class PicaRoamEffectOnePanel extends Phaser.GameObjects.Container {
         if (this.video) this.video.play(false,);
     }
     private onCompleteHandler() {
-        if (!this.isOne && this.loopTimes > -1) {
+        if (!this.isOne && this.loopTimes > 0) {
             this.loopTimes--;
-            if (this.loopTimes === -1) {
+            if (this.loopTimes === 0) {
                 this.video.changeSource("roamreward", true, false);
             } else
                 this.video.play();
