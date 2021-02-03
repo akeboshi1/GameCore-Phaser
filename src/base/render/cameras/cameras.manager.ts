@@ -1,4 +1,4 @@
-import { Logger } from "utils";
+import { IPos, Logger } from "utils";
 
 export interface ICameraService {
     camera: Phaser.Cameras.Scene2D.Camera | undefined;
@@ -33,6 +33,16 @@ export class BaseCamerasManager implements ICameraService {
 
     constructor() {
         this.mCameras = [];
+    }
+
+    /**
+     * 检测是否在游戏主摄像头内部
+     * @param pos
+     */
+    checkContains(pos: IPos): boolean {
+        const rectange = this.mMain.worldView;
+        if (rectange) return false;
+        return rectange.contains(pos.x, pos.y);
     }
 
     startRoomPlay(scene: Phaser.Scene) {
