@@ -304,7 +304,7 @@ class InputContainer extends Phaser.GameObjects.Container {
         this.emoji.x = 12.67 * dpr + this.emoji.width * 0.5;
         const w = this.scene.cameras.main.width;
         this.inputText = new LabelInput(this.scene, {
-            width: w,
+            width: w - 46 * this.dpr,
             height: 16 * this.dpr,
             placeholder: text,
             fontSize: 11 * this.dpr + "px",
