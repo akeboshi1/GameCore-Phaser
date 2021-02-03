@@ -1,5 +1,5 @@
 import { UIAtlasName } from "picaRes";
-import { op_client } from "pixelpai_proto";
+import { ICountablePackageItem } from "picaStructure";
 import { ItemButton } from "../Components";
 export class PicaChapterLevelClue extends ItemButton {
     private gou: Phaser.GameObjects.Image;
@@ -14,7 +14,7 @@ export class PicaChapterLevelClue extends ItemButton {
         this.BGVisible = false;
     }
 
-    setItemData(data: op_client.ICountablePackageItem) {
+    setItemData(data: ICountablePackageItem) {
         super.setItemData(data);
         this.gou.visible = data.count === 0 ? false : true;
     }

@@ -7,6 +7,7 @@ import { ItemButton } from "../Components";
 import { AlignmentType, AxisType, ButtonEventDispatcher, ConstraintType, GridLayoutGroup, GridLayoutGroupConfig, ProgressMaskBar } from "gamecoreRender";
 import { ChineseUnit } from "structure";
 import { PicaChapterLevelClue } from "./PicaChapterLevelClue";
+import { ICountablePackageItem } from "picaStructure";
 export class PicaExploreListDetailPanel extends Phaser.GameObjects.Container {
     protected dpr: number;
     protected zoom: number;
@@ -239,7 +240,7 @@ class ChapterGridLayout extends GridLayoutGroup {
         this.dpr = dpr;
         this.setSize(width, height);
     }
-    public setItems(datas: op_client.ICountablePackageItem[]) {
+    public setItems(datas: ICountablePackageItem[]) {
         for (const item of this.items) {
             item.visible = false;
         }

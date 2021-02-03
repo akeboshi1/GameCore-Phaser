@@ -1112,7 +1112,10 @@ export class Render extends RPCPeer implements GameMain, IRender {
     public getLocalStorage(key: string) {
         return this.localStorageManager ? this.localStorageManager.getItem(key) : "";
     }
-
+    @Export()
+    public removeLocalStorage(key: string) {
+        if (this.localStorageManager) this.localStorageManager.removeItem(key);
+    }
     @Export()
     public createPanel(name: string, key: string): Promise<any> {
         return new Promise<any>((resolve, reject) => {

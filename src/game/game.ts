@@ -5,7 +5,7 @@ import { op_def, op_client, op_virtual_world, op_gateway } from "pixelpai_proto"
 import { Lite } from "game-capsule";
 import { ConnectionService } from "../../lib/net/connection.service";
 import { IConnectListener } from "../../lib/net/socket";
-import { Logger, ResUtils, Tool, load, EventDispatcher } from "utils";
+import { Logger, ResUtils, Tool, load, EventDispatcher, Handler } from "utils";
 import IOP_CLIENT_REQ_VIRTUAL_WORLD_PLAYER_INIT = op_gateway.IOP_CLIENT_REQ_VIRTUAL_WORLD_PLAYER_INIT;
 import { Connection, GameSocket } from "./net/connection";
 import { Clock, ClockReadyListener } from "./loop/clock/clock";
@@ -19,6 +19,7 @@ import { ElementStorage } from "../base/model/elementstorage/element.storage";
 import { RoomManager } from "./room/room.manager";
 import { User } from "./actor/user";
 import { DataManager, DataMgrType } from "./data.manager/dataManager";
+import { BaseConfigManager } from "./data.manager";
 
 interface ISize {
     width: number;
@@ -47,6 +48,8 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
     protected mUIManager: UIManager;
     // protected mSoundManager: SoundManager;
     protected mLoadingManager: LoadingManager;
+    protected mConfigManager: BaseConfigManager;
+
     protected gameConfigUrls: Map<string, string> = new Map();
     protected gameConfigUrl: string;
     protected isPause: boolean = false;
@@ -188,7 +191,17 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
     public loadSceneConfig(sceneID: string): Promise<any> {
         const remotePath = this.getConfigUrl(sceneID);
         this.mLoadingManager.start(LoadState.DOWNLOADSCENECONFIG);
-        return this.loadGameConfig(remotePath);
+        const result = this.preloadGameConfig();
+        if (result === undefined) {
+            return this.loadGameConfig(remotePath);
+        } else {
+            return result.then((req: any) => {
+                return this.loadGameConfig(remotePath);
+
+            }, (reason) => {
+                return this.loadGameConfig(remotePath);
+            });
+        }
     }
 
     public clearGameComplete() {
@@ -316,7 +329,9 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
     get dataManager(): DataManager {
         return this.mDataManager;
     }
-
+    get configManager() {
+        return this.mConfigManager;
+    }
     get emitter(): EventDispatcher {
         return this.mDataManager.emitter;
     }
@@ -535,6 +550,7 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
         // this.mSoundManager = new SoundManager(this);
         if (!this.mLoadingManager) this.mLoadingManager = new LoadingManager(this);
         if (!this.mDataManager) this.mDataManager = new DataManager(this);
+        if (!this.mConfigManager) this.mConfigManager = new BaseConfigManager(this);
         // this.mPlayerDataManager = new PlayerDataManager(this);
 
         this.mUIManager.addPackListener();
@@ -542,6 +558,10 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
         this.user.addPackListener();
         // this.mSoundManager.addPackListener();
         // this.mPlayerDataManager.addPackListener();
+    }
+
+    protected preloadGameConfig(): Promise<any> {
+        return undefined;
     }
 
     private initGame() {

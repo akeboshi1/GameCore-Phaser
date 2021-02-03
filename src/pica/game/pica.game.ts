@@ -1,10 +1,16 @@
 import { ElementStorage } from "baseModel";
-import { DataManager, Game, HttpService, LoadingManager, MainPeer, RoomManager } from "gamecore";
+import { BaseConfigData, DataManager, Game, HttpService, LoadingManager, MainPeer, RoomManager } from "gamecore";
+import { BaseDataConfigManager, BaseDataType } from "./data";
 import { PicaWorkerUiManager } from "./ui/pica.workeruimanager";
 
 export class PicaGame extends Game {
     constructor(peer: MainPeer) {
         super(peer);
+    }
+
+    public getBaseConfig<T extends BaseConfigData>(type: BaseDataType) {
+        const data = <T>(this.mConfigManager.getConfig(type));
+        return data;
     }
 
     protected createManager() {
@@ -17,9 +23,14 @@ export class PicaGame extends Game {
         this.mHttpService = new HttpService(this);
         // this.mSoundManager = new SoundManager(this);
         this.mLoadingManager = new LoadingManager(this);
+        this.mConfigManager = new BaseDataConfigManager(this);
         // this.mPlayerDataManager = new PlayerDataManager(this);
         this.mUIManager.addPackListener();
         this.mRoomManager.addPackListener();
         this.user.addPackListener();
     }
+    protected preloadGameConfig(): Promise<any> {
+        return this.mConfigManager.startLoad(this.gameConfigUrl);
+    }
+
 }

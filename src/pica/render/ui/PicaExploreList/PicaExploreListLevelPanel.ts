@@ -6,6 +6,7 @@ import { ClickEvent, GameScroller, NineSliceButton } from "apowophaserui";
 import { ChineseUnit } from "structure";
 import { ItemButton } from "../Components";
 import { PicaChapterLevelClue } from "./PicaChapterLevelClue";
+import { ICountablePackageItem, IExploreLevelData } from "picaStructure";
 export class PicaExploreListLevelPanel extends Phaser.GameObjects.Container {
     private dpr: number;
     private zoom: number;
@@ -66,7 +67,7 @@ export class PicaExploreListLevelPanel extends Phaser.GameObjects.Container {
         this.titleTex.text = i18n.t("explore.chaptertitle", { name: numTex });
         this.captorScroll.clearItems(false);
         this.setForwardDatas(result.chapter, lock);
-        if (!lock) this.setLevelDatas(result.levels, nextLevelID);
+        if (!lock) this.setLevelDatas(<any>result.levels, nextLevelID);
         this.posValue = 0;
         this.captorScroll.Sort();
         if (lock) {
@@ -77,7 +78,7 @@ export class PicaExploreListLevelPanel extends Phaser.GameObjects.Container {
         }
     }
 
-    setLevelDatas(levels: op_client.IPKT_EXPLORE_LEVEL_DATA[], nextLevelID: number) {
+    setLevelDatas(levels: IExploreLevelData[], nextLevelID: number) {
         for (const item of this.levelItems) {
             item.visible = false;
         }
@@ -92,7 +93,7 @@ export class PicaExploreListLevelPanel extends Phaser.GameObjects.Container {
             } else {
                 if (i === levels.length - 1) {
                     if (!this.finalItem) {
-                        if (levels[i].levelType === 2) {
+                        if (levels[i].type === 2) {
                             item = new ChapterLevelEventuallyItem(this.scene, this.dpr);
                         } else {
                             item = new ChapterLevelItem(this.scene, this.dpr);
@@ -110,7 +111,7 @@ export class PicaExploreListLevelPanel extends Phaser.GameObjects.Container {
             this.captorScroll.addItem(item);
             item.visible = true;
             const data = levels[i];
-            const lock = data.levelId > nextLevelID ? true : false;
+            const lock = data.id > nextLevelID ? true : false;
             item.setLevelData(data, lock);
         }
     }
@@ -286,9 +287,9 @@ class ChapterLevelItem extends ChapterLevelBaseItem {
         this.starProgress.refreshMask();
 
     }
-    public setLevelData(data: op_client.IPKT_EXPLORE_LEVEL_DATA, lock: boolean) {
+    public setLevelData(data: IExploreLevelData, lock: boolean) {
         super.setLevelData(data, lock);
-        this.levelTex.text = data.levelId + "";
+        this.levelTex.text = data.id + "";
         this.leftLine.x = this.levelTex.x - this.leftLine.width * 0.5 - this.levelTex.width * 0.5 - 2 * this.dpr;
         this.rightLine.x = this.levelTex.x + this.rightLine.width * 0.5 + this.levelTex.width * 0.5 + 2 * this.dpr;
         const tempto = this.getProgressValue(data.progress);
@@ -296,8 +297,7 @@ class ChapterLevelItem extends ChapterLevelBaseItem {
         const url = Url.getOsdRes(data.imagePath + `_${this.dpr}x.png`);
         this.icon.load(url);
         this.nameTex.text = data.name;
-        data.energyCost = 8;
-        this.energyImg.setText("-" + data.energyCost);
+        this.energyImg.setText("-" + data.costEnergy);
         this.lockimg.visible = lock;
         this.icon.visible = !lock;
         if (lock) {
@@ -311,11 +311,11 @@ class ChapterLevelItem extends ChapterLevelBaseItem {
             this.openButton.setFrameNormal("yellow_btn_normal");
             this.openButton.setTextStyle(UIHelper.brownishStyle(this.dpr, 13));
             this.energyImg.setTextStyle(UIHelper.brownishStyle(this.dpr, 13));
-            this.setClueData(data.clueItems);
+            this.setClueData(<any>data.clueItems);
         }
     }
 
-    public setClueData(datas: op_client.ICountablePackageItem[]) {
+    public setClueData(datas: ICountablePackageItem[]) {
         for (const item of this.clueItms) {
             item.visible = false;
         }
@@ -523,7 +523,7 @@ class ChapterLevelEventuallyItem extends ChapterLevelBaseItem {
         super(scene, dpr);
     }
 
-    public setLevelData(data: op_client.IPKT_EXPLORE_LEVEL_DATA, lock: boolean) {
+    public setLevelData(data: IExploreLevelData, lock: boolean) {
         super.setLevelData(data, lock);
         const url = Url.getOsdRes(data.imagePath + `_${this.dpr}x.png`);
         this.icon.load(url);

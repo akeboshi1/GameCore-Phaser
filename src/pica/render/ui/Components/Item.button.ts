@@ -4,8 +4,9 @@ import { BBCodeText, ClickEvent } from "apowophaserui";
 import { UIAtlasName } from "picaRes";
 import { UIHelper, Url } from "utils";
 import { PicaItemTipsPanel } from "picaRender";
+import { ICountablePackageItem } from "picaStructure";
 export class ItemButton extends ButtonEventDispatcher {
-    public itemData: op_client.ICountablePackageItem;
+    public itemData: ICountablePackageItem;
     protected dpr: number;
     protected zoom: number;
     private bg: Phaser.GameObjects.Image;
@@ -45,7 +46,7 @@ export class ItemButton extends ButtonEventDispatcher {
         this.rarityFrame = rarity;
     }
 
-    public setItemData(itemData: op_client.ICountablePackageItem, alldisplay: boolean = false) {
+    public setItemData(itemData: ICountablePackageItem | any, alldisplay: boolean = false) {
         this.itemData = itemData;
         this.select = false;
         this.itemIcon.visible = false;
@@ -60,7 +61,7 @@ export class ItemButton extends ButtonEventDispatcher {
         } else {
             this.bg.setTexture(this.key, this.bgFrame);
         }
-        const url = Url.getOsdRes(itemData.display.texturePath);
+        const url = Url.getOsdRes(itemData.texturePath);
         this.itemIcon.load(url, this, () => {
             this.itemIcon.visible = true;
         });

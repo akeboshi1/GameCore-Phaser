@@ -5,3 +5,5 @@ export * from "./base.packet.handler";
 export * from "./cache.dataManager";
 export * from "./element.dataManager";
 export * from "./scene.data.manager";
+export * from "./base.config.data";
+export * from "./base.config.manager";

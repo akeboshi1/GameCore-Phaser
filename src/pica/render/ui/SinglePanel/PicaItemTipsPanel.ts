@@ -4,6 +4,7 @@ import { PicaBasePanel } from "../pica.base.panel";
 import { PicaSingleManager } from "./PicaSingleManager";
 import { op_client, op_pkt_def } from "pixelpai_proto";
 import { ModuleName } from "structure";
+import { ICountablePackageItem } from "picaStructure";
 export class PicaItemTipsPanel extends PicaBasePanel {
     public static get Inst() {
         if (!this.mInstance) {
@@ -19,7 +20,7 @@ export class PicaItemTipsPanel extends PicaBasePanel {
         this.key = ModuleName.PICAITEMTIPSPANEL_NAME;
         this.uiLayer = MainUIScene.LAYER_TOOLTIPS;
     }
-    public showTips(gameobj: any, data: op_client.ICountablePackageItem) {
+    public showTips(gameobj: any, data: ICountablePackageItem) {
         if (!this.mInitialized) this.show({ gameobj, data });
         else this.displayTips(gameobj, data);
     }
@@ -43,7 +44,7 @@ export class PicaItemTipsPanel extends PicaBasePanel {
         super.init();
     }
 
-    protected displayTips(gameobj: Phaser.GameObjects.Container, data: op_client.ICountablePackageItem) {
+    protected displayTips(gameobj: Phaser.GameObjects.Container, data: ICountablePackageItem) {
         this.itemTips.setVisible(true);
         this.itemTips.setItemData(data);
         this.setTipsPosition(gameobj, -gameobj.height * 0.5 - 5 * this.dpr);
