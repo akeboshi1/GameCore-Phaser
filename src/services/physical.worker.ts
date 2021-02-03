@@ -327,7 +327,7 @@ export class PhysicalPeer extends RPCPeer {
         }
         obj._sensor = sensor;
         obj.addBody(this.scaleRatio);
-        Logger.getInstance().debug("Body add ====>:", id);
+        // Logger.getInstance().debug("Body add ====>:", id);
     }
 
     @Export([webworker_rpc.ParamType.num])
@@ -338,7 +338,7 @@ export class PhysicalPeer extends RPCPeer {
             this.matterObjectMap.set(id, obj);
         }
         obj.removeBody();
-        Logger.getInstance().debug("Body remove ====>:", id);
+        // Logger.getInstance().debug("Body remove ====>:", id);
     }
 
     @Export([webworker_rpc.ParamType.num, webworker_rpc.ParamType.str])

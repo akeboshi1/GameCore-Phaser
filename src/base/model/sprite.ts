@@ -383,6 +383,7 @@ export class Sprite extends EventDispatcher implements ISprite {
         if (this.currentCollisionArea) {
             this.setArea();
         }
+        // Logger.getInstance().debug("#dir ", direction, this.direction);
         this.emit("Animation_Change", { id: this.id, direction: this.direction, animation: this.currentAnimation, playTimes: times });
         return this.currentAnimation;
     }
