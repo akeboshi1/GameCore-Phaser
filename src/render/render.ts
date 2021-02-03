@@ -1,10 +1,10 @@
 import "tooqinggamephaser";
 import "dragonBones";
 import { Game } from "tooqinggamephaser";
-import { RPCPeer, Export, webworker_rpc } from "webworker-rpc";
-import { Url, initLocales, Logger, Size, LogicPos, i18n, IPos, IPosition45Obj } from "utils";
-import { ServerAddress } from "../../lib/net/address";
+import { Export, RPCPeer, webworker_rpc } from "webworker-rpc";
+import { i18n, initLocales, IPos, IPosition45Obj, Logger, Size, Url } from "utils";
 import { PBpacket } from "net-socket-packet";
+import * as protos from "pixelpai_proto";
 import { op_client } from "pixelpai_proto";
 import { Account } from "./account/account";
 import { SceneManager } from "./scenes/scene.manager";
@@ -15,31 +15,29 @@ import { PlayScene } from "./scenes/play.scene";
 import { CamerasManager } from "./cameras/cameras.manager";
 import * as path from "path";
 import {
-    IFramesModel,
+    ElementStateType,
+    GameMain,
     IDragonbonesModel,
+    IFramesModel,
     ILauncherConfig,
     IScenery,
-    EventType,
-    GameMain,
     MAIN_WORKER,
     MAIN_WORKER_URL,
-    RENDER_PEER,
     MessageType,
     ModuleName,
-    SceneName,
-    ElementStateType,
     PHYSICAL_WORKER,
-    PHYSICAL_WORKER_URL
+    PHYSICAL_WORKER_URL,
+    RENDER_PEER,
+    SceneName
 } from "structure";
 import { DisplayManager } from "./managers/display.manager";
 import { InputManager } from "./input/input.manager";
-import * as protos from "pixelpai_proto";
 import { PicaRenderUiManager } from "picaRender";
 import { GamePauseScene, MainUIScene } from "./scenes";
 import { EditorCanvasManager } from "./managers/editor.canvas.manager";
 import version from "../../version";
-import { AstarDebugger, GridsDebugger } from "./display";
 import { IRender } from "baseRender";
+import { AstarDebugger, EditorModeDebugger, GridsDebugger, SortDebugger } from "./display";
 // import Stats from "../../Stat";
 
 for (const key in protos) {
@@ -59,6 +57,10 @@ export class Render extends RPCPeer implements GameMain, IRender {
     public gridsDebugger: GridsDebugger;
     @Export()
     public astarDebugger: AstarDebugger;
+    @Export()
+    public sortDebugger: SortDebugger;
+    @Export()
+    public editorModeDebugger: EditorModeDebugger;
 
     protected readonly DEFAULT_WIDTH = 360;
     protected readonly DEFAULT_HEIGHT = 640;
@@ -95,6 +97,8 @@ export class Render extends RPCPeer implements GameMain, IRender {
     private mPhysicalPeer: any;
     private isPause: boolean = false;
     private mConnectFailFunc: Function;
+    private mGameCreatedFunc: Function;
+
     constructor(config: ILauncherConfig, callBack?: Function) {
         super(RENDER_PEER);
         this.emitter = new Phaser.Events.EventEmitter();
@@ -102,7 +106,10 @@ export class Render extends RPCPeer implements GameMain, IRender {
         this.mCallBack = callBack;
         this.gridsDebugger = GridsDebugger.getInstance();
         this.astarDebugger = AstarDebugger.getInstance();
+        this.sortDebugger = new SortDebugger(this);
+        this.editorModeDebugger = new EditorModeDebugger(this);
         this.mConnectFailFunc = this.mConfig.connectFail;
+        this.mGameCreatedFunc = this.mConfig.game_created;
         this.mConfig.hasConnectFail = this.mConnectFailFunc ? true : false;
         this.mConfig.hasCloseGame = this.mConfig.closeGame ? true : false;
         this.mConfig.hasGameCreated = this.mConfig.game_created ? true : false;
@@ -304,13 +311,19 @@ export class Render extends RPCPeer implements GameMain, IRender {
             const inputs = this.game.domContainer.getElementsByTagName("input");
             if (inputs && inputs.length > 0) {
                 // tslint:disable-next-line:prefer-for-of
-                for (let i = 0; i < inputs.length; i++) {
-                    if (window.document.activeElement === inputs[i]) {
-                        panel.showKeyboard(width * this.mConfig.devicePixelRatio, height * this.mConfig.devicePixelRatio);
-                        return;
-                    }
+                // for (let i = 0; i < inputs.length; i++) {
+                //     if (window.document.activeElement === inputs[i]) {
+                //         panel.showKeyboard(width * this.mConfig.devicePixelRatio, height * this.mConfig.devicePixelRatio);
+                //         return;
+                //     }
+                // }
+                // panel.hideKeyboard();
+                if (panel.getInputFocusing()) {
+                    panel.showKeyboard(width * this.mConfig.devicePixelRatio, height * this.mConfig.devicePixelRatio);
+                    return;
                 }
                 panel.hideKeyboard();
+                return;
             }
         }
         // Logger.getInstance().debug("input: ", input);
@@ -1043,7 +1056,7 @@ export class Render extends RPCPeer implements GameMain, IRender {
                 this.resize(this.mConfig.height, this.mConfig.width);
             }
         }
-
+        if (this.mGameCreatedFunc) this.mGameCreatedFunc.call(this);
         this.gameCreated(keyEvents);
     }
 

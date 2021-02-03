@@ -138,6 +138,10 @@ export class TerrainManager extends PacketHandler implements IElementManager {
 
     public removeFromMap(sprite: ISprite) {
         if (!sprite) return;
+        this.resetWalkable(sprite);
+    }
+
+    public resetWalkable(sprite: ISprite) {
         const collision = sprite.getCollisionArea();
         const walkable = sprite.getWalkableArea();
         const origin = sprite.getOriginPoint();

@@ -6,6 +6,7 @@ export interface AtlasData {
     atlasName: string;
     folder: string;
     foldType?: FolderType;
+    uiType?: UILoadType;
 }
 
 export enum FolderType {
@@ -19,6 +20,8 @@ export enum UILoadType {
     atlas = 2,
     font = 3,
     texture = 4,
+    video = 5,
+    json = 6
 }
 export class AtlasUrlData {
     public atlasName: string;
@@ -53,10 +56,13 @@ export class AtlasManager {
             data = new AtlasUrlData(atlasName, `${url}.png`, `${url}.json`, UILoadType.atlas);
         } else if (loadType === UILoadType.font) {
             const url = `${folder}/${atlasName}`;
-            data = new AtlasUrlData(atlasName, `${url}.png`, `${url}.json`, UILoadType.font);
+            data = new AtlasUrlData(atlasName, `${url}.ttf`, undefined, UILoadType.font);
         } else if (loadType === UILoadType.texture) {
             const url = `${folder}/${atlasName}`;
             data = new AtlasUrlData(atlasName, `${url}.png`, undefined, UILoadType.texture);
+        } else if (loadType === UILoadType.video) {
+            const url = `${folder}/${atlasName}`;
+            data = new AtlasUrlData(atlasName, `${url}.mp4`, undefined, UILoadType.video);
         }
         data.foldType = foldType;
         this.atlasMap.set(atlasName, data);
@@ -65,10 +71,12 @@ export class AtlasManager {
     public getUrlDatas(atlas: Array<string | AtlasData>, loadType: UILoadType = UILoadType.atlas) {
         const tempUrls: AtlasUrlData[] = [];
         for (const obj of atlas) {
-            let name, folder;
+            let name, folder, foldType;
             if (typeof obj === "object") {
                 name = obj.atlasName;
                 folder = obj.folder;
+                loadType = obj.uiType || loadType;
+                foldType = obj.foldType;
             } else {
                 name = obj;
             }
@@ -76,7 +84,7 @@ export class AtlasManager {
                 const urlData = this.atlasMap.get(name);
                 tempUrls.push(urlData);
             } else {
-                const data = this.add(name, loadType, folder);
+                const data = this.add(name, loadType, folder, foldType);
                 tempUrls.push(data);
             }
         }

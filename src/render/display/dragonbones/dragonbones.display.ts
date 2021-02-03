@@ -1,11 +1,11 @@
-import {BaseDragonbonesDisplay, ReferenceArea} from "baseRender";
-import {Render} from "../../render";
-import {IPos, Logger, IProjection} from "utils";
-import {DisplayField, ElementStateType, IDragonbonesModel, RunningAnimation, TitleMask} from "structure";
-import {IDisplayObject} from "../display.object";
-import {LoadQueue, LoadType} from "../../loadqueue";
-import {ElementTopDisplay} from "../element.top.display";
-import {DisplayMovement} from "../display.movement";
+import { BaseDragonbonesDisplay, ReferenceArea } from "baseRender";
+import { Render } from "../../render";
+import { IPos, Logger, IProjection } from "utils";
+import { DisplayField, ElementStateType, IDragonbonesModel, PlayerState, RunningAnimation, TitleMask } from "structure";
+import { IDisplayObject } from "../display.object";
+import { LoadQueue, LoadType } from "../../loadqueue";
+import { ElementTopDisplay } from "../element.top.display";
+import { DisplayMovement } from "../display.movement";
 export class DragonbonesDisplay extends BaseDragonbonesDisplay implements IDisplayObject {
     protected mID: number = undefined;
     protected mTitleMask: number;
@@ -18,7 +18,6 @@ export class DragonbonesDisplay extends BaseDragonbonesDisplay implements IDispl
 
     private mLoadQueue: LoadQueue;
     private mName: string = undefined;
-    private mPlaceholder: Phaser.GameObjects.Image;
 
     constructor(scene: Phaser.Scene, private render: Render, id?: number, private uuid?: number, type?: number) {
         super(scene);
@@ -217,10 +216,8 @@ export class DragonbonesDisplay extends BaseDragonbonesDisplay implements IDispl
 
     protected createArmatureDisplay(loader?: any, totalComplete?: number, totalFailed?: number) {
         if (!this.scene) return;
-        if (!this.mArmatureDisplay) {
-            this.showPlaceholder();
-        }
         super.createArmatureDisplay(loader, totalComplete, totalFailed);
+        this.play({ name: "idle", flip: false });
     }
 
     protected refreshAvatar() {
@@ -269,21 +266,6 @@ export class DragonbonesDisplay extends BaseDragonbonesDisplay implements IDispl
 
     protected checkShowNickname(): boolean {
         return (this.mTitleMask & TitleMask.TQ_NickName) > 0;
-    }
-
-    protected showPlaceholder() {
-        if (this.mPlaceholder) {
-            this.mPlaceholder.destroy();
-        }
-        this.mPlaceholder = this.scene.make.image({ key: "avatar_placeholder", x: -22, y: -68 }).setOrigin(0);
-        this.add(this.mPlaceholder);
-    }
-
-    protected closePlaceholder() {
-        if (this.mPlaceholder) {
-            this.mPlaceholder.destroy();
-        }
-        this.mPlaceholder = undefined;
     }
 
     get nickname() {

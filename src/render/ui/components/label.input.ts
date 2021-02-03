@@ -92,6 +92,8 @@ export class LabelInput extends Phaser.GameObjects.Container {
         this.mInputText.on("textchange", this.onTextChangeHandler, this);
         this.mInputText.on("blur", this.onTextBlurHandler, this);
         this.mInputText.on("focus", this.onTextFocusHandler, this);
+        this.mInputText.x = this.mLabel.x;
+        this.mInputText.y = this.mLabel.y;
         this.mInputText.node.addEventListener("keypress", (e) => {
             const keycode = e.keyCode || e.which;
             if (keycode === 13) {

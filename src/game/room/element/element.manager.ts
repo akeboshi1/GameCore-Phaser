@@ -23,6 +23,8 @@ export interface IElementManager {
 
     getElements(): IElement[];
 
+    resetWalkable(sprite: ISprite);
+
     addToMap(sprite: ISprite);
 
     removeFromMap(sprite: ISprite);
@@ -172,6 +174,10 @@ export class ElementManager extends PacketHandler implements IElementManager {
 
     public removeFromMap(sprite: ISprite) {
         if (!sprite) return;
+        this.resetWalkable(sprite);
+    }
+
+    public resetWalkable(sprite: any) {
         const collision = sprite.getCollisionArea();
         if (!collision) return;
         let walkable = sprite.getWalkableArea();
@@ -395,6 +401,18 @@ export class ElementManager extends PacketHandler implements IElementManager {
         this.mRoom.onManagerReady(this.constructor.name);
     }
 
+    public showReferenceArea() {
+        this.mElements.forEach((ele) => {
+            ele.showRefernceArea();
+        });
+    }
+
+    public hideReferenceArea() {
+        this.mElements.forEach((ele) => {
+            ele.hideRefernceArea();
+        });
+    }
+
     protected addMap(sprite: ISprite) {
     }
 
@@ -486,12 +504,13 @@ export class ElementManager extends PacketHandler implements IElementManager {
                 this.mRoom.game.physicalPeer.updateAnimations(sprite);
                 return displayInfo;
             }
-            Logger.getInstance().error("checkdisplay error====>", sprite);
+            // Logger.getInstance().error("checkdisplay error====>", sprite);
         }
         return;
     }
 
     protected fetchDisplay(ids: number[]) {
+        if (ids.length < 1) return;
         const packet = new PBpacket(op_virtual_world.OPCODE._OP_REQ_VIRTUAL_WORLD_QUERY_SPRITE_RESOURCE);
         const content: op_virtual_world.IOP_REQ_VIRTUAL_WORLD_QUERY_SPRITE_RESOURCE = packet.content;
         content.ids = ids;

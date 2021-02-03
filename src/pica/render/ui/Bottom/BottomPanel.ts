@@ -91,6 +91,10 @@ export class BottomPanel extends PicaBasePanel {
         // this.mOutput.updateLayout();
     }
 
+    getInputFocusing() {
+        return this.mInput.getFocusing();
+    }
+
     protected init() {
         this.mOutput = new OutputContainer(this.scene, this.dpr, this.scale);
         this.mInput = new InputContainer(this.scene, this.key, this.dpr);
@@ -143,6 +147,8 @@ export class BottomPanel extends PicaBasePanel {
             this.render.renderEmitter(ModuleName.BOTTOM + "_showpanel", ModuleName.PICAMARKET_NAME);
         } else if (tag === "explore") {
             this.render.renderEmitter(ModuleName.BOTTOM + "_showpanel", ModuleName.PICAEXPLORELIST_NAME);
+        } else if (tag === "home") {
+            this.render.renderEmitter(ModuleName.BOTTOM + "_gohome");
         }
     }
 
@@ -286,6 +292,7 @@ class InputContainer extends Phaser.GameObjects.Container {
     private background: Phaser.GameObjects.Graphics;
     private inputText: LabelInput;
     private emoji: Phaser.GameObjects.Image;
+    private mFocusing: boolean = false;
     constructor(scene: Phaser.Scene, key: string, private dpr: number) {
         super(scene);
         this.background = scene.make.graphics(undefined, false);
@@ -297,7 +304,7 @@ class InputContainer extends Phaser.GameObjects.Container {
         this.emoji.x = 12.67 * dpr + this.emoji.width * 0.5;
         const w = this.scene.cameras.main.width;
         this.inputText = new LabelInput(this.scene, {
-            width: w,
+            width: w - 46 * this.dpr,
             height: 16 * this.dpr,
             placeholder: text,
             fontSize: 11 * this.dpr + "px",
@@ -334,6 +341,10 @@ class InputContainer extends Phaser.GameObjects.Container {
         this.inputText.setBlur();
     }
 
+    public getFocusing() {
+        return this.mFocusing;
+    }
+
     private onEnterHandler(text: string) {
         this.emit("enter", text);
         // this.inputText.setBlur();
@@ -348,12 +359,14 @@ class InputContainer extends Phaser.GameObjects.Container {
 
     private onInputFocusHandler() {
         this.scene.input.on("pointerdown", this.onPointerSceneHandler, this);
+        this.mFocusing = true;
         // this.emit("focus");
     }
 
     private onPointerSceneHandler(pointer: Phaser.Input.Pointer, currentlyOver: Phaser.GameObjects.GameObject[]) {
         this.emit("pointerScene", currentlyOver);
         this.inputText.setBlur();
+        this.mFocusing = false;
     }
 }
 

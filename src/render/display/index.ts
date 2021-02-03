@@ -12,3 +12,5 @@ export * from "./dragonbones/uidragonbones.display";
 export * from "./display.object";
 export * from "./debugs/grids";
 export * from "./debugs/astar";
+export * from "./debugs/sort.debugger";
+export * from "./debugs/editor.mode.debugger";

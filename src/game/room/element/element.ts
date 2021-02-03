@@ -293,8 +293,10 @@ export class Element extends BlockObject implements IElement {
             Logger.getInstance().error(`${Element.name}: sprite is empty`);
             return;
         }
+        const preWalkable = this.mModel.getWalkableArea();
         this.mModel.setAnimationName(animationName);
-
+        const nextWalkable = this.mModel.getWalkableArea();
+        if (preWalkable !== nextWalkable) this.eleMgr.resetWalkable(this.mModel);
         if (times !== undefined) {
             times = times > 0 ? times - 1 : -1;
         }
@@ -771,6 +773,12 @@ export class Element extends BlockObject implements IElement {
             // (this.mDisplayInfo as IFramesModel).gene = this.mDisplayInfo.mGene;
             createPromise = this.mElementManager.roomService.game.peer.render.createFramesDisplay(this.id, this.mDisplayInfo as IFramesModel, this.mModel.layer);
         }
+
+        this.mElementManager.roomService.game.renderPeer.editorModeDebugger.getIsDebug()
+            .then((isDebug) => {
+                if (isDebug) this.showRefernceArea();
+            });
+
         createPromise.then(() => {
             const pos = this.mModel.pos;
             this.mElementManager.roomService.game.peer.render.setPosition(this.id, pos.x, pos.y);

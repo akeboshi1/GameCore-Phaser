@@ -348,6 +348,7 @@ export class MatterObject implements IMatterObject {
         y *= this._scale;
         // Logger.getInstance().debug("#move body.setVelocity ====>", x, y);
         Body.setVelocity(this.body, Vector.create(x, y));
+        // 设置碰撞体是否选择
         Body.setInertia(this.body, Infinity);
     }
 
@@ -366,9 +367,9 @@ export class MatterObject implements IMatterObject {
             return;
         }
         // tslint:disable-next-line:no-console
-        // console.log("matter.object position ======>", this._tempVec.x * this._scale + this._offset.x, this._tempVec.y * this._scale + this._offset.y);
+        // console.log("tryStopMove matter.object position ======>", this._tempVec.x * this._scale + this._offset.x, this._tempVec.y * this._scale + this._offset.y);
         // todo
-        // Body.setPosition(this.body, Vector.create(this._tempVec.x * this._scale + this._offset.x, this._tempVec.y * this._scale + this._offset.y));
+        Body.setPosition(this.body, Vector.create(this._tempVec.x * this._scale + this._offset.x, this._tempVec.y * this._scale + this._offset.y));
     }
 
     public getPosition(): IPos {
