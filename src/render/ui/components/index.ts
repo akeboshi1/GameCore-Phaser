@@ -40,3 +40,4 @@ export * from "./toggle.color.button";
 export * from "./toggle.button";
 export * from "./MoreButtonPanel";
 export * from "./texture.sprite";
+export * from "./input.field";

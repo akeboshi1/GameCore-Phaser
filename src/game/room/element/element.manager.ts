@@ -1,17 +1,17 @@
-
-import { PacketHandler, PBpacket } from "net-socket-packet";
-import { op_client, op_def, op_virtual_world } from "pixelpai_proto";
-import { ConnectionService } from "../../../../lib/net/connection.service";
-import { Logger, LogicPos } from "utils";
-import { EventType, IDragonbonesModel, IFramesModel, ISprite } from "structure";
-import { IRoomService, Room } from "../room/room";
-import { Element, IElement, InputEnable } from "./element";
-import { ElementStateManager } from "./element.state.manager";
-import { ElementDataManager } from "../../data.manager/element.dataManager";
-import { DataMgrType } from "../../data.manager";
-import { ElementActionManager } from "../elementaction/element.action.manager";
-import { Sprite, IElementStorage } from "baseModel";
+import {PacketHandler, PBpacket} from "net-socket-packet";
+import {op_client, op_def, op_virtual_world} from "pixelpai_proto";
+import {ConnectionService} from "../../../../lib/net/connection.service";
+import {Logger, LogicPos} from "utils";
+import {EventType, IDragonbonesModel, IFramesModel, ISprite} from "structure";
+import {IRoomService, Room} from "../room/room";
+import {Element, IElement, InputEnable} from "./element";
+import {ElementStateManager} from "./element.state.manager";
+import {ElementDataManager} from "../../data.manager/element.dataManager";
+import {DataMgrType} from "../../data.manager";
+import {ElementActionManager} from "../elementaction/element.action.manager";
+import {Sprite, IElementStorage} from "baseModel";
 import NodeType = op_def.NodeType;
+
 export interface IElementManager {
     hasAddComplete: boolean;
     readonly connection: ConnectionService | undefined;
@@ -61,6 +61,7 @@ export class ElementManager extends PacketHandler implements IElementManager {
     private mActionMgr: ElementActionManager;
     private mLoadLen: number = 0;
     private mCurIndex: number = 0;
+
     constructor(protected mRoom: IRoomService) {
         super();
         if (this.connection) {
@@ -166,7 +167,7 @@ export class ElementManager extends PacketHandler implements IElementManager {
                             this.mMap[row][col] = walkable[i][j];
                         }
                         // this.roomService.game.physicalPeer.setElementWalkable(row, col, this.mMap[row][col] === 1);
-                        (<Room>this.roomService).setElementWalkable(row, col, this.mMap[row][col] === 1);
+                        (<Room> this.roomService).setElementWalkable(row, col, this.mMap[row][col] === 1);
                     }
                 }
             }
@@ -204,7 +205,7 @@ export class ElementManager extends PacketHandler implements IElementManager {
                     col = pos.x + j - origin.x;
                     if (row >= 0 && row < this.mMap.length && col >= 0 && col < this.mMap[row].length) {
                         this.mMap[row][col] = 0;
-                        (<Room>this.roomService).setElementWalkable(row, col, this.mMap[row][col] === 0);
+                        (<Room> this.roomService).setElementWalkable(row, col, this.mMap[row][col] === 0);
                         // this.roomService.game.physicalPeer.setElementWalkable(row, col, this.mMap[row][col] === 0);
                     }
                 }
@@ -284,7 +285,6 @@ export class ElementManager extends PacketHandler implements IElementManager {
             }
             if (!ele.state) {
                 loadAll = false;
-                return;
             }
         }
 
@@ -309,14 +309,14 @@ export class ElementManager extends PacketHandler implements IElementManager {
             point = obj.point3f;
             if (point) {
                 sprite = new Sprite(obj, 3);
-                if (!sprite.displayInfo) {
-                    if (!this.checkDisplay(sprite)) {
-                        ids.push(sprite.id);
-                    } else {
-                        obj.state = true;
-                        this.mDealAddList.push(obj);
-                    }
+                // if (!sprite.displayInfo) {
+                if (!this.checkDisplay(sprite)) {
+                    ids.push(sprite.id);
+                } else {
+                    obj.state = true;
+                    this.mDealAddList.push(obj);
                 }
+                // }
                 const ele = this._add(sprite);
                 eles.push(ele);
             }
@@ -358,7 +358,7 @@ export class ElementManager extends PacketHandler implements IElementManager {
                 element = this.get(sprite.id);
                 if (element) {
                     this.mDealSyncMap.set(sprite.id, false);
-                    const command = (<any>sprite).command;
+                    const command = (<any> sprite).command;
                     if (command === op_def.OpCommand.OP_COMMAND_UPDATE) { //  全部
                         element.model = new Sprite(sprite, 3);
                     } else if (command === op_def.OpCommand.OP_COMMAND_PATCH) { //  增量
@@ -367,7 +367,7 @@ export class ElementManager extends PacketHandler implements IElementManager {
                     // 更新elementstorage中显示对象的数据信息
                     const displayInfo = element.model.displayInfo;
                     if (displayInfo) {
-                        this.mRoom.game.elementStorage.add(<any>displayInfo);
+                        this.mRoom.game.elementStorage.add(<any> displayInfo);
                     }
                     ele.push(element);
                 } else {
@@ -388,18 +388,28 @@ export class ElementManager extends PacketHandler implements IElementManager {
         this.elementLoadCallBack(id);
         // 没有完成全部元素添加或者当物件添加队列缓存存在，则不做创建状态检测
         if (!this.hasAddComplete || (this.mCacheAddList && this.mCacheAddList.length > 0)) return;
-        Logger.getInstance().debug("onDisplayReady ", id);
+        // Logger.getInstance().debug("#loading onDisplayReady ", id);
+        const notReadyElements = [];
         this.mElements.forEach((ele, key) => {
             if (ele.state === false) {
                 // todo 遍历优化
-                Logger.getInstance().debug("left not ready display: ", this.mElements.get(key));
-                return;
+                notReadyElements.push(ele);
             }
         });
+
+        if (notReadyElements.length < 10) {
+            Logger.getInstance().debug("#loading left not ready display: ", notReadyElements);
+        } else {
+            Logger.getInstance().debug("#loading left not ready display: ", notReadyElements.length);
+        }
+
         if (this.mLoadLen > 0) {
             this.mRoom.game.renderPeer.updateProgress(this.mCurIndex++ / this.mLoadLen);
         }
-        this.mRoom.onManagerReady(this.constructor.name);
+        if (notReadyElements.length < 1) {
+            Logger.getInstance().debug("#loading onManagerReady ", this.constructor.name);
+            this.mRoom.onManagerReady(this.constructor.name);
+        }
     }
 
     public showReferenceArea() {
@@ -581,7 +591,7 @@ export class ElementManager extends PacketHandler implements IElementManager {
         const command = content.command;
         const sprites = content.sprites;
         for (const sprite of sprites) {
-            (<any>sprite).command = command;
+            (<any> sprite).command = command;
             this.mCacheSyncList.push(sprite);
         }
         this.dealSyncList();
@@ -604,8 +614,8 @@ export class ElementManager extends PacketHandler implements IElementManager {
                 if (!element) {
                     continue;
                 }
-                const { x, y } = moveData.destinationPoint3f;
-                element.move([{ x, y }]);
+                const {x, y} = moveData.destinationPoint3f;
+                element.move([{x, y}]);
                 // element.move(moveData);
             }
         }

@@ -1,7 +1,7 @@
 import { BaseDragonbonesDisplay, ReferenceArea } from "baseRender";
 import { Render } from "../../render";
 import { IPos, Logger, IProjection } from "utils";
-import { DisplayField, ElementStateType, IDragonbonesModel, RunningAnimation, TitleMask } from "structure";
+import { DisplayField, ElementStateType, IDragonbonesModel, PlayerState, RunningAnimation, TitleMask } from "structure";
 import { IDisplayObject } from "../display.object";
 import { LoadQueue, LoadType } from "../../loadqueue";
 import { ElementTopDisplay } from "../element.top.display";
@@ -217,6 +217,7 @@ export class DragonbonesDisplay extends BaseDragonbonesDisplay implements IDispl
     protected createArmatureDisplay(loader?: any, totalComplete?: number, totalFailed?: number) {
         if (!this.scene) return;
         super.createArmatureDisplay(loader, totalComplete, totalFailed);
+        this.play({ name: "idle", flip: false });
     }
 
     protected refreshAvatar() {

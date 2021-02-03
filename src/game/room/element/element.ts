@@ -12,7 +12,7 @@ import {
 import { IPos, IProjection, Logger, LogicPoint, LogicPos, Tool } from "utils";
 import { BlockObject } from "../block/block.object";
 import { IRoomService } from "../room/room";
-import { IElementManager } from "./element.manager";
+import {ElementManager, IElementManager} from "./element.manager";
 
 export interface IElement {
     readonly id: number;
@@ -582,7 +582,7 @@ export class Element extends BlockObject implements IElement {
 
     public showNickname() {
         if (!this.mModel) return;
-        Logger.getInstance().debug("showNickName======" + this.mModel.nickname);
+        // Logger.getInstance().debug("showNickName======" + this.mModel.nickname);
         this.mRoomService.game.renderPeer.showNickname(this.id, this.mModel.nickname);
     }
 
@@ -759,6 +759,7 @@ export class Element extends BlockObject implements IElement {
 
         if (!this.mDisplayInfo || !this.mElementManager) {
             Logger.getInstance().debug("no displayInfo", this);
+            // (<ElementManager>this.mElementManager).onDisplayReady(this.id);
             return;
         }
         Logger.getInstance().debug("createDisplay displayInfo", this);

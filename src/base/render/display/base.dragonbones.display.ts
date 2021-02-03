@@ -995,6 +995,7 @@ export class BaseDragonbonesDisplay extends BaseDisplay {
             const partName: string = ResUtils.getPartName(key);
             const frameName: string = "test resources/" + key;
             if (this.mErrorLoadMap.get(partName)) return;
+            // 单图替换
             if (!this.isRenderTexture) {
                 if (!this.scene.textures.exists(partName) && !dragonBonesTexture.frames[frameName]) {
                     // ==============新资源需从外部加载，之后要重新打图集
