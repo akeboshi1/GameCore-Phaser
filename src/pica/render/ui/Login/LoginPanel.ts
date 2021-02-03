@@ -101,7 +101,7 @@ export class LoginPanel extends BasePanel {
         this.mPhoneInput = new InputField(this.scene, 0, 0, 256 * this.dpr, 40 * this.dpr, {
             type: "tel",
             maxLength: 11,
-            placeholder: "请输入手机号",
+            placeholder: "请输入手机号码",
             color: "#717171",
             fontSize: 16 * this.dpr + "px"
         });
