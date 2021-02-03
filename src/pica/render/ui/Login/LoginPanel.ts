@@ -1,13 +1,14 @@
-import { InputText, CheckBox, NineSliceButton, ClickEvent, BBCodeText, NineSlicePatch } from "apowophaserui";
+import { CheckBox, NineSliceButton, ClickEvent, BBCodeText, NineSlicePatch } from "apowophaserui";
 import { UIAtlasKey, UIAtlasName } from "picaRes";
 import { BasePanel, UiManager } from "gamecoreRender";
 import { MAIN_WORKER, ModuleName } from "structure";
 import { Font, Helpers } from "utils";
+import { InputField } from "gamecoreRender";
 
 export class LoginPanel extends BasePanel {
     private readonly areaCode = "86";
-    private mPhoneInput: InputText;
-    private mPhoneCodeInput: InputText;
+    private mPhoneInput: InputField;
+    private mPhoneCodeInput: InputField;
     private fetchTime: any;
     private acceptBtn: CheckBox;
     private loginBtn: NineSliceButton;
@@ -97,13 +98,14 @@ export class LoginPanel extends BasePanel {
         bg.x = width * 0.5;
         bg.y = height - bg.height * 0.5;
 
-        this.mPhoneInput = new InputText(this.scene, 0, 0, 256 * this.dpr, 40 * this.dpr, {
+        this.mPhoneInput = new InputField(this.scene, 0, 0, 256 * this.dpr, 40 * this.dpr, {
             type: "tel",
             maxLength: 11,
             placeholder: "请输入手机号",
             color: "#717171",
             fontSize: 16 * this.dpr + "px"
         });
+        this.mPhoneInput.on("enter", this.onEnterPhoneHandler, this);
 
         const phoneContaier = this.createInput(this.mPhoneInput, width * 0.5, 97 * this.dpr + logo.y + logo.height);
         const accountData: string = localStorage.getItem("accountphone");
@@ -114,7 +116,7 @@ export class LoginPanel extends BasePanel {
             }
         }
 
-        this.mPhoneCodeInput = new InputText(this.scene, 0, 0, 156 * this.dpr, 40 * this.dpr, {
+        this.mPhoneCodeInput = new InputField(this.scene, 0, 0, 156 * this.dpr, 40 * this.dpr, {
             type: "tel",
             maxLength: 4,
             placeholder: "验证码",
@@ -122,6 +124,7 @@ export class LoginPanel extends BasePanel {
             text: "",
             fontSize: 16 * this.dpr + "px"
         }).setOrigin(0, 0.5);
+        this.mPhoneCodeInput.on("enter", this.onEnterCodeHandler, this);
         const codeContainer = this.createInput(this.mPhoneCodeInput, width * 0.5, 172 * this.dpr + logo.y + logo.height, 256 * this.dpr);
         // this.mPhoneCodeInput.resize(100 * this.dpr, this.mPhoneCodeInput.height);
         this.mPhoneCodeInput.x = -codeContainer.width / 2 + 8 * this.dpr;
@@ -211,7 +214,7 @@ export class LoginPanel extends BasePanel {
         super.init();
     }
 
-    private createInput(input: InputText, x: number, y: number, width?: number) {
+    private createInput(input: InputField, x: number, y: number, width?: number) {
         const container = this.scene.make.container({ x, y }, false);
         const frame = this.scene.textures.getFrame(this.key, "input_bg");
         // const height = frame ? frame.height || 50 * this.dpr;
@@ -287,5 +290,14 @@ export class LoginPanel extends BasePanel {
         if (this.tryLogin) {
             this.loginBtn.enable = this.acceptBtn.selected;
         }
+    }
+
+    private onEnterPhoneHandler() {
+        this.mPhoneCodeInput.setFocus();
+    }
+
+    private onEnterCodeHandler() {
+        this.mPhoneCodeInput.setBlur();
+        this.tryLogin();
     }
 }
