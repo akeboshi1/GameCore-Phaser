@@ -383,9 +383,6 @@ export class ElementManager extends PacketHandler implements IElementManager {
     public onDisplayReady(id: number) {
         const element = this.mElements.get(id);
         if (!element) return;
-        if (element.nickname === "碎纸") {
-            Logger.getInstance().debug("#load " + "碎纸");
-        }
         element.state = true;
         // 回馈给load缓存队列逻辑
         this.elementLoadCallBack(id);
@@ -409,10 +406,10 @@ export class ElementManager extends PacketHandler implements IElementManager {
         if (this.mLoadLen > 0) {
             this.mRoom.game.renderPeer.updateProgress(this.mCurIndex++ / this.mLoadLen);
         }
-        // if (notReadyElements.length < 1) {
-        Logger.getInstance().debug("#loading onManagerReady ", this.constructor.name);
-        this.mRoom.onManagerReady(this.constructor.name);
-        // }
+        if (notReadyElements.length < 1) {
+            Logger.getInstance().debug("#loading onManagerReady ", this.constructor.name);
+            this.mRoom.onManagerReady(this.constructor.name);
+        }
     }
 
     public showReferenceArea() {
