@@ -17,7 +17,7 @@ export interface IExploreLevelData {
     id: number;
     sn: string;
     name: string;
-    imagePath: string;
+    texturePath: string;
     type: number;
     chapterId: number;
     costEnergy: number;

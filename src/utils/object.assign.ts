@@ -6,15 +6,16 @@ export class ObjectAssign {
      * @param target 替换对象
      * @param tag 通过target或者source中的 tag 来获取要排除替换的属性数组
      */
-    public static excludeTagAssign(source: object, target: object, tag: string) {
+    public static excludeTagAssign(source: object, target: object, tag: string = "exclude") {
         const excludes = source[tag] || target[tag];
         for (const key in target) {
             if (target.hasOwnProperty(key)) {
                 const value = target[key];
                 if (typeof value === "object") {
-                    if (source.hasOwnProperty(key)) {
-                        this.excludeTagAssign(source[key], value, tag);
+                    if (!source.hasOwnProperty(key)) {
+                        source[key] = {};
                     }
+                    this.excludeTagAssign(source[key], value, tag);
                 } else {
                     if (excludes) {
                         if (excludes.indexOf(key) === -1) {
@@ -28,7 +29,7 @@ export class ObjectAssign {
         }
     }
     /**
-     * source 中 要排除替换的key 数组
+     * source 中 要排除替换的key 数组 属性为对象递归替换
      * @param source 被替换对象
      * @param target 替换对象
      * @param excludes 排除的key数组
@@ -36,12 +37,20 @@ export class ObjectAssign {
     public static excludeAssign(source: object, target: object, excludes?: string[]) {
         for (const key in target) {
             if (target.hasOwnProperty(key)) {
-                if (excludes) {
-                    if (excludes.indexOf(key) === -1) {
+                const value = target[key];
+                if (typeof value === "object") {
+                    if (!source.hasOwnProperty(key)) {
+                        source[key] = {};
+                    }
+                    this.excludeAssign(source[key], value);
+                } else {
+                    if (excludes) {
+                        if (excludes.indexOf(key) === -1) {
+                            source[key] = target[key];
+                        }
+                    } else {
                         source[key] = target[key];
                     }
-                } else {
-                    source[key] = target[key];
                 }
             }
         }
@@ -56,11 +65,10 @@ export class ObjectAssign {
             if (target.hasOwnProperty(key)) {
                 const value = target[key];
                 if (typeof value === "object") {
-                    if (source.hasOwnProperty(key)) {
-                        this.excludeAllAssign(source[key], value);
-                    } else {
-                        source[key] = value;
+                    if (!source.hasOwnProperty(key)) {
+                        source[key] = {};
                     }
+                    this.excludeAllAssign(source[key], value);
                 } else {
                     if (!source.hasOwnProperty(key)) {
                         source[key] = value;

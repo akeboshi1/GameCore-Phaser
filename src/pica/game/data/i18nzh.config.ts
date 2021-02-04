@@ -7,7 +7,7 @@ export class I18nZHDataConfig extends BaseConfigData {
         else {
             // tslint:disable-next-line:no-console
             console.error(`语言表未配置ID为:${id}的数据`);
-            return "";
+            return id;
         }
     }
 }

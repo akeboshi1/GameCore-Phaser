@@ -2,6 +2,7 @@ import { PicaAvatar } from "./PicaAvatar";
 import { op_client, op_def, op_gameconfig, op_pkt_def } from "pixelpai_proto";
 import { BasicMediator, Game } from "gamecore";
 import { EventType, ModuleName, RENDER_PEER } from "structure";
+import { BaseDataConfigManager } from "picaWorker";
 
 export class PicaAvatarMediator extends BasicMediator {
     private mScneType: op_def.SceneTypeEnum;
@@ -125,6 +126,8 @@ export class PicaAvatarMediator extends BasicMediator {
     private onQueryPackage(data: { packType: op_pkt_def.PKT_PackageType, key: string, isupdate: boolean }) {
         if (this.playerData) {
             const items = this.playerData.getItemsByCategory(data.packType, data.key);
+            const configMgr = <BaseDataConfigManager>this.game.configManager;
+            configMgr.getBatchItemDatas(items);
             if (data.packType === op_pkt_def.PKT_PackageType.AvatarPackage && items) {
                 let tempitem: op_client.ICountablePackageItem;
                 for (let i = items.length - 1; i >= 0; i--) {

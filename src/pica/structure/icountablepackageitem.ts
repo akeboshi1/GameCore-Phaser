@@ -1,10 +1,11 @@
+import { IAnimationData } from "./ielement";
 export interface ICountablePackageItem {
     id: string;
 
     count: number;
 
     name: string;
-
+    shortName: string;
     texturePath: string;
 
     category: string;
@@ -40,4 +41,11 @@ export interface ICountablePackageItem {
     type: string;
 
     code: string;
+}
+
+export interface IExtendCountablePackageItem extends ICountablePackageItem {
+    indexId: number;
+    animationDisplay: { dataPath?: string; texturePath?: string };
+    display: { dataPath?: string; texturePath?: string };
+    animations?: IAnimationData[];
 }

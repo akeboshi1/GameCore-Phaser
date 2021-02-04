@@ -2,6 +2,7 @@ import { PicaMineCar } from "./PicaMineCar";
 import { op_pkt_def, op_def } from "pixelpai_proto";
 import { BasicMediator, Game } from "gamecore";
 import { EventType, ModuleName, RENDER_PEER } from "structure";
+import { BaseDataConfigManager } from "picaWorker";
 
 export class PicaMineCarMediator extends BasicMediator {
   constructor(game: Game) {
@@ -90,6 +91,8 @@ export class PicaMineCarMediator extends BasicMediator {
     if (this.playerData) {
       const bag = this.playerData.mineBag;
       const items = this.playerData.getItemsByCategory(data.type, data.key);
+      const configMgr = <BaseDataConfigManager>this.game.configManager;
+      configMgr.getBatchItemDatas(items);
       this.mView.setProp(items, bag.limit);
     }
   }

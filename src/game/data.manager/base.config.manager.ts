@@ -13,7 +13,7 @@ export class BaseConfigManager {
         return <T>(this.dataMap.get(key));
     }
     public startLoad(basePath: string): Promise<any> {
-       return this.getBasePath().then((value: string) => {
+        return this.getBasePath().then((value: string) => {
             return this.executeLoad(value);
         });
     }
@@ -43,8 +43,13 @@ export class BaseConfigManager {
                         data.forEach((value: XMLHttpRequest, key: string) => {
                             const obj = this.dataMap.get(key);
                             const json = value.response;
+                            try {
+                                this.setLocalStorage(key, value.responseURL, json);
+                            } catch (error) {
+                                // tslint:disable-next-line:no-console
+                                console.log("Local Storage is full, Please empty data");
+                            }
                             obj.parseJson(json);
-                            this.setLocalStorage(key, value.responseURL, json);
                         });
                         resolve(true);
                     }, (reponse) => {

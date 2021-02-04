@@ -6,6 +6,7 @@ import { AvatarSuitType, ModuleName } from "structure";
 import { Font, Handler, i18n, UIHelper, Url } from "utils";
 import { op_client, op_def } from "pixelpai_proto";
 import { PicaBasePanel } from "../pica.base.panel";
+import { ICountablePackageItem, IExtendCountablePackageItem } from "picaStructure";
 export class PicaBagPanel extends PicaBasePanel {
   private mCloseBtn: Button;
   private topCheckBox: CheckboxGroup;
@@ -113,7 +114,7 @@ export class PicaBagPanel extends PicaBasePanel {
     this.updateCategeoriesLoc(false);
   }
 
-  public setProp(props: any[], isupdate: boolean = false) {// op_client.ICountablePackageItem
+  public setProp(props: IExtendCountablePackageItem[], isupdate: boolean = false) {// op_client.ICountablePackageItem
     props = !props ? [] : props;
     let subProps = [];
     const subcategoryType = this.mSelectedCategeories.key;
@@ -435,7 +436,7 @@ export class PicaBagPanel extends PicaBasePanel {
     return btn;
   }
 
-  private setSelectedItem(data: op_client.ICountablePackageItem, cell: Item) {// op_client.ICountablePackageItem
+  private setSelectedItem(data: IExtendCountablePackageItem, cell: Item) {// op_client.ICountablePackageItem
     if (this.mSelectedItem) {
       this.mSelectedItem.isSelect = false;
     }
@@ -451,7 +452,7 @@ export class PicaBagPanel extends PicaBasePanel {
     this.mDetailDisplay.displayLoading("loading_ui", Url.getUIRes(this.dpr, "loading_ui"), Url.getUIRes(this.dpr, "loading_ui"));
     const content = new op_client.OP_VIRTUAL_WORLD_RES_CLIENT_MARKET_QUERY_PACKAGE_ITEM_RESOURCE();
     content.display = this.categoryType === 1 ? data.animationDisplay : data.display;
-    content.animations = data.animations;
+    content.animations = <any>data.animations;
     this.setSelectedResource(content);
   }
 
@@ -777,12 +778,13 @@ class DetailBubble extends Phaser.GameObjects.Container {
       color: "#333333",
       fontSize: 12 * this.dpr,
       fontFamily: Font.DEFULT_FONT,
-      lineSpacing: 6 * dpr,
+      lineSpacing: 5 * dpr,
       padding: {
         top: 2 * dpr
       }
     }).setOrigin(0);
-    this.tipsText.setWrapMode("string");
+    this.tipsText.setWrapMode("char");
+    this.tipsText.setWrapWidth(200 * dpr);
     this.mExpires = new BBCodeText(scene, 7 * dpr, 85 * dpr, "", {
       fontSize: 12 * this.dpr,
       fontFamily: Font.DEFULT_FONT,
@@ -798,17 +800,17 @@ class DetailBubble extends Phaser.GameObjects.Container {
       this.mExpires.text = "";
       this.resize();
     } else {
-      this.tipsText.setWrapWidth(undefined);
+      // this.tipsText.setWrapWidth(undefined);
       const name = `[color=#32347b][b][size=${14 * this.dpr}]${prop.shortName || prop.name}[/size][/b][/color]`;
       // let price = "";
       let source = "";
       let describle = "";
       let attri = "";
       let need = "";
-      let tips = name + "\n";
-      let maxWidth: number = 100 * this.dpr;
+      let tips = name;
+      let mixWidth: number = 100 * this.dpr;
       this.tipsText.text = tips;
-      maxWidth = maxWidth < this.tipsText.width ? this.tipsText.width : maxWidth;
+      mixWidth = mixWidth < this.tipsText.width ? this.tipsText.width : mixWidth;
       // if (prop.recyclable) {
       //   // if (prop.sellingPrice) {
       //   //   price = `${i18n.t("furni_bag.sale_price")}: [img=${Coin.getIcon(prop.sellingPrice.coinType)}] ${prop.sellingPrice.price}`;
@@ -827,13 +829,13 @@ class DetailBubble extends Phaser.GameObjects.Container {
         source = `${prop.source}`;
         tips += `[color=#ffffff][size=${12 * this.dpr}]${source}[/size][/color]`;
         this.tipsText.text = source;
-        maxWidth = maxWidth < this.tipsText.width ? this.tipsText.width : maxWidth;
+        mixWidth = mixWidth < this.tipsText.width ? this.tipsText.width : mixWidth;
       }
       if (prop.des && prop.des !== "") {
         describle = prop.des;
         tips += "\n" + describle;
         this.tipsText.text = describle;
-        maxWidth = maxWidth < this.tipsText.width ? this.tipsText.width : maxWidth;
+        mixWidth = mixWidth < this.tipsText.width ? this.tipsText.width : mixWidth;
       }
       let isline = false;
       if (prop.affectValues) {
@@ -876,9 +878,10 @@ class DetailBubble extends Phaser.GameObjects.Container {
           tips += `\n${i18n.t("furni_bag.needproper")}:${need}`;
         }
       }
-      this.tipsText.setWrapWidth(maxWidth);
+      // const wrapwidth = mixWidth > maxWidth ? maxWidth : mixWidth;
+      // this.tipsText.setWrapWidth(wrapwidth);
       this.tipsText.text = tips;
-      this.width = maxWidth + 14 * this.dpr;
+      this.width = this.tipsText.width + 14 * this.dpr;
       if (prop.expiredTime > 0) {
         if (!isline) {
           isline = true;

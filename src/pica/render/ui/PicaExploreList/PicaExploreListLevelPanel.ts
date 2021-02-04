@@ -294,7 +294,7 @@ class ChapterLevelItem extends ChapterLevelBaseItem {
         this.rightLine.x = this.levelTex.x + this.rightLine.width * 0.5 + this.levelTex.width * 0.5 + 2 * this.dpr;
         const tempto = this.getProgressValue(data.progress);
         this.starProgress.setProgress(tempto, 500);
-        const url = Url.getOsdRes(data.imagePath + `_${this.dpr}x.png`);
+        const url = Url.getOsdRes(data.texturePath + `_${this.dpr}x.png`);
         this.icon.load(url);
         this.nameTex.text = data.name;
         this.energyImg.setText("-" + data.costEnergy);
@@ -525,7 +525,7 @@ class ChapterLevelEventuallyItem extends ChapterLevelBaseItem {
 
     public setLevelData(data: IExploreLevelData, lock: boolean) {
         super.setLevelData(data, lock);
-        const url = Url.getOsdRes(data.imagePath + `_${this.dpr}x.png`);
+        const url = Url.getOsdRes(data.texturePath + `_${this.dpr}x.png`);
         this.icon.load(url);
         if (lock) {
             this.iconbg2.visible = false;
