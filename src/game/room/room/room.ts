@@ -284,6 +284,7 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
         // if (this.layerManager) this.layerManager.update(time, delta);
         if (this.mElementManager) this.mElementManager.update(time, delta);
         if (this.mPlayerManager) this.mPlayerManager.update(time, delta);
+        if (this.terrainManager) this.terrainManager.update(time, delta);
         // if (this.mHandlerManager) this.handlerManager.update(time, delta);
         if (this.mGame.httpClock) this.mGame.httpClock.update(time, delta);
         if (this.mCameraService) this.mCameraService.update(time, delta);
