@@ -1,4 +1,5 @@
 import { Sprite } from "baseModel";
+import { LayerEnum } from "game-capsule";
 import { PacketHandler, PBpacket } from "net-socket-packet";
 import { op_client, op_editor, op_def } from "pixelpai_proto";
 import { ISprite } from "structure";
@@ -100,15 +101,18 @@ export class EditorElementManager extends PacketHandler {
 
     addToMap(sprite: ISprite) {
         if (!sprite) return;
-        this.setMap(sprite, true);
+        return this.setMap(sprite, true);
     }
 
     removeFromMap(sprite: ISprite) {
         if (!sprite) return;
-        this.setMap(sprite, false);
+        return this.setMap(sprite, false);
     }
 
     checkCollision(pos: IPos, sprite: ISprite): boolean {
+        if (sprite.layer === LayerEnum.Floor) {
+            return true;
+        }
         const collision = sprite.getCollisionArea();
         const origin = sprite.getOriginPoint();
         if (!collision) {
@@ -198,6 +202,9 @@ export class EditorElementManager extends PacketHandler {
     }
 
     protected setMap(sprite: ISprite, isAdd: boolean) {
+        if (sprite.layer === LayerEnum.Floor) {
+            return;
+        }
         const collision = sprite.getCollisionArea();
         const origin = sprite.getOriginPoint();
         if (!collision) {
@@ -208,17 +215,22 @@ export class EditorElementManager extends PacketHandler {
         const rows = collision.length;
         const cols = collision[0].length;
         let row = 0, col = 0;
+        let overlap = false;
         for (let i = 0; i < rows; i++) {
             row = pos.y + i - origin.y;
             for (let j = 0; j < cols; j++) {
                 if (collision[i][j] === 1) {
                     col = pos.x + j - origin.x;
                     if (row >= 0 && row < this.mMap.length && col >= 0 && col < this.mMap[row].length) {
+                        if (isAdd && this.mMap[row][col] === 1) {
+                            overlap = true;
+                        }
                         this.mMap[row][col] = isAdd ? collision[i][j] : 0;
                     }
                 }
             }
         }
+        return overlap;
     }
 
     // protected _add(sprite: ISprite): Element {

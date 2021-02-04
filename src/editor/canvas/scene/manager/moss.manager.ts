@@ -184,14 +184,14 @@ export class EditorMossManager extends PacketHandler {
                     this.sceneEditor.displayObjectPool.remove("mosses", loc.id.toString());
                 }
             } else if (action === "UPDATE") {
-                // const moss = this.mRoom.world.elementStorage.getMossPalette(loc.key);
-                const moss = null;
+                const moss = this.sceneEditor.elementStorage.getMossPalette(loc.key);
                 if (!moss) continue;
-                const sprite = moss.createSprite({
+                const sprite = moss.frameModel.createSprite({
                     ...loc,
                     nodeType: op_def.NodeType.ElementNodeType,
                     isMoss: true,
-                });
+                    layer: moss.layer
+                } as any);
                 this.editorMosses.set(loc.id, loc);
                 this.sceneEditor.displayObjectPool.update("mosses", loc.id.toString(), sprite);
             }

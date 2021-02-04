@@ -22,6 +22,7 @@ export class TerrainManager extends PacketHandler implements IElementManager {
     // ---- by 7
     protected mMap: number[][];
     private mEmptyMap: EmptyTerrain[][];
+    private mDirty: boolean = false;
 
     constructor(protected mRoom: IRoomService, listener?: SpriteAddCompletedListener) {
         super();
@@ -57,6 +58,24 @@ export class TerrainManager extends PacketHandler implements IElementManager {
             for (let j = 0; j < roomSize.rows; j++) {
                 this.addEmpty(this.roomService.transformTo90(new LogicPos(i, j)));
             }
+        }
+    }
+
+    public update(time: number, delta: number) {
+        if (this.mDirty) {
+            const len = this.mEmptyMap.length;
+            for (let i: number = 0; i < len; i++) {
+                const tmpList = this.mEmptyMap[i];
+                const tmpLen: number = tmpList.length;
+                for (let j: number = 0; j < tmpLen; j++) {
+                    const terrain = tmpList[j];
+                    if (terrain && terrain.dirty) {
+                        this.mEmptyMap[i][j] = undefined;
+                        terrain.destroy();
+                    }
+                }
+            }
+            this.mDirty = false;
         }
     }
 
@@ -354,7 +373,8 @@ export class TerrainManager extends PacketHandler implements IElementManager {
     }
 
     protected addEmpty(pos: IPos) {
-        const block = new EmptyTerrain(this.roomService, pos);
+        const tmpPos = this.roomService.transformTo45(pos);
+        const block = new EmptyTerrain(this.roomService, pos, tmpPos.x, tmpPos.y);
         const pos45 = this.roomService.transformTo45(pos);
         this.mEmptyMap[pos45.x][pos45.y] = block;
     }
@@ -368,8 +388,8 @@ export class TerrainManager extends PacketHandler implements IElementManager {
         if (!this.mEmptyMap[pos45.x] || !this.mEmptyMap[pos45.x][pos45.y]) return;
         const block = this.mEmptyMap[pos45.x][pos45.y];
         if (block) {
-            this.mEmptyMap[pos45.x][pos45.y] = undefined;
-            block.destroy();
+            block.dirty = true;
+            this.mDirty = true;
         }
     }
 

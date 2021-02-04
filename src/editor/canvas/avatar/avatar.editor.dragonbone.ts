@@ -1,4 +1,4 @@
-import {Logger} from "utils";
+import {Logger, ResUtils} from "utils";
 import version from "../../../../version";
 import {BaseDragonbonesDisplay} from "baseRender";
 import {IAvatar, IDragonbonesModel} from "structure";
@@ -155,14 +155,14 @@ export class AvatarEditorDragonbone extends Phaser.GameObjects.Container {
 
     // 每次调用强制重新加载资源（因为可能出现不同图片，但是key相同的情况）
     public loadLocalResources(img: any, part: string, dir: string) {
-        const uri = this.relativeUri(part, img.key, dir);
+        const key = this.partTextureSaveKey(part, img.key, dir);
 
-        if (this.scene.textures.exists(uri)) {
-            this.scene.textures.remove(uri);
-            this.scene.textures.removeKey(uri);
+        if (this.scene.textures.exists(key)) {
+            this.scene.textures.remove(key);
+            this.scene.textures.removeKey(key);
         }
 
-        this.scene.textures.addBase64(uri, img.url);
+        this.scene.textures.addBase64(key, img.url);
         this.scene.textures.on("onload", this.onResourcesLoaded, this);
 
     }
@@ -378,7 +378,7 @@ export class AvatarEditorDragonbone extends Phaser.GameObjects.Container {
             const dirs = ["1", "3"];
             for (const dir of dirs) {
                 for (const part of set.parts) {
-                    const imgKey = this.relativeUri(part, set.id, dir, set.version);
+                    const imgKey = this.partTextureSaveKey(part, set.id, dir, set.version);
                     if (this.scene.textures.exists(imgKey)) {
                         this.scene.textures.remove(imgKey);
                         this.scene.textures.removeKey(imgKey);
@@ -413,15 +413,15 @@ export class AvatarEditorDragonbone extends Phaser.GameObjects.Container {
         });
     }
 
-    // 从部件ID转换为资源相对路径 同时也是TextureManager中的key
-    // tslint:disable-next-line:no-shadowed-variable
-    private relativeUri(part: string, id: string, dir: string, version?: string) {
-        let result = `/avatar/part/${part}_${id}_${dir}`;
-        if (version !== undefined && version.length > 0) {
-            result = `${result}_${version}`;
+    // 从部件ID转换为TextureManager中的key
+    // TODO: 需要和BaseDragonbonesDisplay中保持一致
+    private partTextureSaveKey(part: string, id: string, dir: string, ver?: string) {
+        let result = `${part}_${id}_${dir}`;
+        if (ver !== undefined && ver.length > 0) {
+            result = `${result}_${ver}`;
         }
 
-        result = `${result}.png`;
+        result = ResUtils.getPartName(result);
         return result;
     }
 

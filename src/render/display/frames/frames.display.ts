@@ -17,7 +17,6 @@ export class FramesDisplay extends BaseFramesDisplay implements IDisplayObject {
     protected mChildMap: Map<string, any>;
     protected mTopDisplay: ElementTopDisplay;
     protected mMovement: DisplayMovement;
-    protected mMountContainer: Phaser.GameObjects.Container;
 
     private mName: string = undefined;
 
@@ -130,10 +129,6 @@ export class FramesDisplay extends BaseFramesDisplay implements IDisplayObject {
     public play(val: RunningAnimation) {
         super.play(val);
         this.fetchProjection();
-        if (this.mMountContainer && this.mCurAnimation.mountLayer) {
-            const stageContainer = <Phaser.GameObjects.Container> this.mSprites.get(DisplayField.STAGE);
-            if (stageContainer) stageContainer.addAt(this.mMountContainer, this.mCurAnimation.mountLayer.index);
-        }
     }
 
     public doMove(moveData: any) {
@@ -169,63 +164,64 @@ export class FramesDisplay extends BaseFramesDisplay implements IDisplayObject {
         }
     }
 
-    public mount(display: FramesDisplay | DragonbonesDisplay, targetIndex?: number) {
-        if (!display) return;
-        if (this.mDisplays.length <= 0) {
-            return;
-        }
-        if (!this.mCurAnimation) {
-            return;
-        }
-        if (!this.mCurAnimation.mountLayer) {
-            Logger.getInstance().error(`mountLyaer does not exist ${this.mAnimation}`);
-            return;
-        }
-        const {index, mountPoint} = this.mCurAnimation.mountLayer;
-        if (targetIndex === undefined) targetIndex = 0;
-        if (targetIndex >= mountPoint.length) {
-            Logger.getInstance().error("mount index does not exist");
-            return;
-        }
-        let {x} = mountPoint[targetIndex];
-        if (this.mAnimation.flip) {
-            x = 0 - x;
-        }
-        display.x = x;
-        display.y = mountPoint[targetIndex].y;
+    // public mount(display: FramesDisplay | DragonbonesDisplay, targetIndex?: number) {
+    //     if (!display) return;
+    //     if (this.mDisplays.size <= 0) {
+    //         return;
+    //     }
+    //     if (!this.mCurAnimation) {
+    //         return;
+    //     }
+    //     if (!this.mCurAnimation.mountLayer) {
+    //         Logger.getInstance().error(`mountLyaer does not exist ${this.mAnimation}`);
+    //         return;
+    //     }
+    //     const {index, mountPoint} = this.mCurAnimation.mountLayer;
+    //     if (targetIndex === undefined) targetIndex = 0;
+    //     if (targetIndex >= mountPoint.length) {
+    //         Logger.getInstance().error("mount index does not exist");
+    //         return;
+    //     }
+    //     let {x} = mountPoint[targetIndex];
+    //     if (this.mAnimation.flip) {
+    //         x = 0 - x;
+    //     }
+    //     display.x = x;
+    //     display.y = mountPoint[targetIndex].y;
 
-        if (!this.mMountContainer) {
-            this.mMountContainer = this.scene.make.container(undefined, false);
-        }
-        if (!this.mMountContainer.parentContainer) {
-            const container = <Phaser.GameObjects.Container> this.mSprites.get(DisplayField.STAGE);
-            if (container) container.addAt(this.mMountContainer, index);
-        }
-        this.mMountContainer.addAt(display, targetIndex);
-        display.setRootMount(this);
-        this.mMountList[targetIndex] = display;
-        if (this.mMainSprite) {
-            // 侦听前先移除，避免重复添加
-            this.mMainSprite.off("animationupdate", this.onAnimationUpdateHandler, this);
-            this.mMainSprite.on("animationupdate", this.onAnimationUpdateHandler, this);
-        }
-    }
+    //     if (!this.mMountContainer) {
+    //         this.mMountContainer = this.scene.make.container(undefined, false);
+    //     }
+    //     if (!this.mMountContainer.parentContainer) {
+    //         const container = <Phaser.GameObjects.Container> this.mSprites.get(DisplayField.STAGE);
+    //         if (container) container.addAt(this.mMountContainer, index);
+    //     }
+    //     this.mMountContainer.addAt(display, targetIndex);
+    //     display.setRootMount(this);
+    //     this.mMountList[targetIndex] = display;
+    //     if (this.mMainSprite) {
+    //         // 侦听前先移除，避免重复添加
+    //         this.mMainSprite.off("animationupdate", this.onAnimationUpdateHandler, this);
+    //         this.mMainSprite.on("animationupdate", this.onAnimationUpdateHandler, this);
+    //     }
+    // }
 
     public unmount(display: FramesDisplay | DragonbonesDisplay) {
         if (!this.mMountContainer) {
             return;
         }
+        super.unmount(display);
         this.render.displayManager.addToSurfaceLayer(display);
-        display.setRootMount(undefined);
-        const index = this.mMountList.indexOf(display);
-        display.visible = true;
-        if (index > -1) {
-            this.mMountList.splice(index, 1);
-        }
-        const list = this.mMountContainer.list;
-        if (list.length <= 0 && this.mDisplays.length > 0) {
-            this.mDisplays[0].off("animationupdate", this.onAnimationUpdateHandler, this);
-        }
+    //     display.setRootMount(undefined);
+    //     const index = this.mMountList.indexOf(display);
+    //     display.visible = true;
+    //     if (index > -1) {
+    //         this.mMountList.splice(index, 1);
+    //     }
+    //     const list = this.mMountContainer.list;
+    //     if (list.length <= 0 && this.mDisplays.size > 0) {
+    //         this.mDisplays[0].off("animationupdate", this.onAnimationUpdateHandler, this);
+    //     }
     }
 
     public scaleTween() {
@@ -274,8 +270,8 @@ export class FramesDisplay extends BaseFramesDisplay implements IDisplayObject {
         return (this.mTitleMask & TitleMask.TQ_NickName) > 0;
     }
 
-    protected clear() {
-        super.clear();
+    protected clearDisplay() {
+        super.clearDisplay();
 
         if (this.mMountContainer && this.mMountContainer.parentContainer) {
             this.mMountContainer.parentContainer.remove(this.mMountContainer);

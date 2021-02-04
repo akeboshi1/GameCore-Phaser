@@ -2,7 +2,7 @@ import "tooqinggamephaser";
 import "dragonBones";
 import { Game } from "tooqinggamephaser";
 import { Export, RPCPeer, webworker_rpc } from "webworker-rpc";
-import { i18n, initLocales, IPos, IPosition45Obj, Logger, Size, Url } from "utils";
+import { i18n, initLocales, IPos, IPosition45Obj, Logger, Pos, Size, Url } from "utils";
 import { PBpacket } from "net-socket-packet";
 import * as protos from "pixelpai_proto";
 import { op_client } from "pixelpai_proto";
@@ -373,11 +373,13 @@ export class Render extends RPCPeer implements GameMain, IRender {
     }
 
     enableClick() {
-
+        const playScene: Phaser.Scene = this.sceneManager.getMainScene();
+        if (playScene) playScene.input.enabled = true;
     }
 
     disableClick() {
-
+        const playScene: Phaser.Scene = this.sceneManager.getMainScene();
+        if (playScene) playScene.input.enabled = false;
     }
 
     keyboardDidShow(keyboardHeight: number) {
@@ -643,6 +645,14 @@ export class Render extends RPCPeer implements GameMain, IRender {
     @Export()
     public hideLogin() {
         if (this.sceneManager) this.sceneManager.stopScene(SceneName.LOGIN_SCENE);
+    }
+
+    @Export([webworker_rpc.ParamType.num, webworker_rpc.ParamType.num])
+    public checkContains(id: number, x: number, y: number): Promise<boolean> {
+        return new Promise<boolean>((resolve, reject) => {
+            const boo = this.mCameraManager.checkContains(new Pos(x, y));
+            resolve(boo);
+        });
     }
 
     @Export()
