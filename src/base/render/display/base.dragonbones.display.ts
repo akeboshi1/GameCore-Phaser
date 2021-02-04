@@ -266,11 +266,11 @@ export class BaseDragonbonesDisplay extends BaseDisplay {
     }
 
     // TODO: 游戏中截图会出现404，待解决
-    protected getLoadPartUrl(val: string): string {
+    protected getPartLoadUrl(val: string): string {
         return ResUtils.getPartUrl(val);
     }
 
-    protected getLoadPartName(val: string): string {
+    protected getPartLoadKey(val: string): string {
         return ResUtils.getPartName(val);
     }
 
@@ -296,7 +296,6 @@ export class BaseDragonbonesDisplay extends BaseDisplay {
             if (bound) {
                 this.mBoardPoint = new Phaser.Geom.Point(bound.global.x, bound.global.y);
             } else {
-                Logger.getInstance().error("no board dragonbones!!!");
                 this.mBoardPoint = new Phaser.Geom.Point(35, 40);
             }
         } else {
@@ -395,7 +394,7 @@ export class BaseDragonbonesDisplay extends BaseDisplay {
             if (!slot) continue;
             const skin = this.formattingSkin(rep.skin);
             const key = rep.part.replace("#", skin.sn.toString()).replace("$", rep.dir.toString()) + skin.version;
-            const partName: string = ResUtils.getPartName(key);
+            const partName: string = this.getPartLoadKey(key);
             const frameName: string = "test resources/" + key;
             if (this.UNPACKSLOTS.indexOf(rep.slot) < 0) {
                 slot.display.visible = this.scene.textures.exists(partName) || dragonBonesTexture.frames[frameName];
@@ -434,7 +433,7 @@ export class BaseDragonbonesDisplay extends BaseDisplay {
                         for (const obj of this.replaceArr) {
                             const skin = this.formattingSkin(obj.skin);
                             const tmpKey = obj.part.replace("#", skin.sn.toString()).replace("$", obj.dir.toString()) + skin.version;
-                            const partName: string = ResUtils.getPartName(tmpKey);
+                            const partName: string = this.getPartLoadKey(tmpKey);
                             const frameName: string = "test resources/" + tmpKey;
                             const part: string = obj.slot.replace("$", obj.dir.toString());
                             if (part === slotKey) {
@@ -992,7 +991,7 @@ export class BaseDragonbonesDisplay extends BaseDisplay {
         const key = soltPart.replace("#", tempskin.sn).replace("$", soltDir.toString()) + tempskin.version;
         const dragonBonesTexture = this.scene.game.textures.get(this.resourceName);
         if (this.scene.cache.custom.dragonbone.get(this.resourceName)) {
-            const partName: string = ResUtils.getPartName(key);
+            const partName: string = this.getPartLoadKey(key);
             const frameName: string = "test resources/" + key;
             if (this.mErrorLoadMap.get(partName)) return;
             // 单图替换
@@ -1042,7 +1041,7 @@ export class BaseDragonbonesDisplay extends BaseDisplay {
                     // ==========load[0]slot名  load[1]part名
                     const slot: dragonBones.Slot = this.mArmatureDisplay.armature.getSlot(load[0]);
                     // slot.display.visible = true;
-                    const name: string = ResUtils.getPartName(load[1]);
+                    const name: string = this.getPartLoadKey(load[1]);
                     if (this.scene.textures.exists(name) && !this.mErrorLoadMap.get(name)) {
                         const baseX = slot.display ? slot.display.x : 0;
                         const baseY = slot.display ? slot.display.y : 0;
@@ -1073,8 +1072,8 @@ export class BaseDragonbonesDisplay extends BaseDisplay {
 
         this.mLoadMap.forEach((data) => {
             const nextLoad: string[] = data;
-            const partUrl: string = this.getLoadPartUrl(nextLoad[1]);
-            const partName: string = this.getLoadPartName(nextLoad[1]);
+            const partUrl: string = this.getPartLoadUrl(nextLoad[1]);
+            const partName: string = this.getPartLoadKey(nextLoad[1]);
             configList.push({ key: partName, url: partUrl });
         });
         this.scene.load.image(configList);
