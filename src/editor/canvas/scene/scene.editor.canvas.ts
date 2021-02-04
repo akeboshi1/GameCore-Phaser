@@ -79,6 +79,18 @@ export class SceneEditorCanvas extends EditorCanvas implements IRender {
         // this.init();
     }
 
+    public enableClick() {
+        if (this.mScene) {
+            this.mScene.input.enabled = true;
+        }
+    }
+
+    public disableClick() {
+        if (this.mScene) {
+            this.mScene.input.enabled = false;
+        }
+    }
+
     public load(url: string) {
         load(this.mConfig.LOCAL_HOME_PATH + url, "arraybuffer").then((req: any) => {
             try {
