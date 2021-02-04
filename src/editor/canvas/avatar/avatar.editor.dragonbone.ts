@@ -414,10 +414,11 @@ export class AvatarEditorDragonbone extends Phaser.GameObjects.Container {
     }
 
     // 从部件ID转换为TextureManager中的key
-    private partTextureSaveKey(part: string, id: string, dir: string, version?: string) {
+    // TODO: 需要和BaseDragonbonesDisplay中保持一致
+    private partTextureSaveKey(part: string, id: string, dir: string, ver?: string) {
         let result = `${part}_${id}_${dir}`;
-        if (version !== undefined && version.length > 0) {
-            result = `${result}_${version}`;
+        if (ver !== undefined && ver.length > 0) {
+            result = `${result}_${ver}`;
         }
 
         result = ResUtils.getPartName(result);
