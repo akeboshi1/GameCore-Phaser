@@ -375,11 +375,15 @@ export class Render extends RPCPeer implements GameMain, IRender {
     enableClick() {
         const playScene: Phaser.Scene = this.sceneManager.getMainScene();
         if (playScene) playScene.input.enabled = true;
+        const uiScene = this.game.scene.getScene("MainUIScene") as BasicScene;
+        if (uiScene) uiScene.input.enabled = true;
     }
 
     disableClick() {
         const playScene: Phaser.Scene = this.sceneManager.getMainScene();
         if (playScene) playScene.input.enabled = false;
+        const uiScene = this.game.scene.getScene("MainUIScene") as BasicScene;
+        if (uiScene) uiScene.input.enabled = false;
     }
 
     keyboardDidShow(keyboardHeight: number) {
