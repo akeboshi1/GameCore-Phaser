@@ -67,6 +67,7 @@ export abstract class BlockObject extends MatterObject implements IBlockObject {
     public setInputEnable(val: InputEnable) {
         // if (this.mInputEnable !== val) {
         this.mInputEnable = val;
+        if (!this.mRoomService) return;
         switch (val) {
             case InputEnable.Interactive:
                 if (this.mModel && this.mModel.hasInteractive) {

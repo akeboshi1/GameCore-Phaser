@@ -82,8 +82,8 @@ export class ElementEditorCanvas extends EditorCanvas {
 
         const scene = this.getScene();
         this.mGrids = new ElementEditorGrids(scene, this.mData.animations.getDefaultAnimationData());
-        // this.mAnimations = new ElementFramesDisplay(scene, this.mData.animations.getDefaultAnimationData(), this.mGrids, this.mEmitter);
-        this.mAnimations = new ElementEditorAnimations(scene, this.mData.animations.getDefaultAnimationData(), this.mGrids, this.mEmitter);
+        this.mAnimations = new ElementFramesDisplay(scene, this.mData.animations.getDefaultAnimationData(), this.mGrids, this.mEmitter);
+        // this.mAnimations = new ElementEditorAnimations(scene, this.mData.animations.getDefaultAnimationData(), this.mGrids, this.mEmitter);
         this.mResManager.init(scene);
 
         this.mResManager.addResourcesChangeListener(this.mAnimations);
