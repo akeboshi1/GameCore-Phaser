@@ -48,6 +48,7 @@ const config = {
             picaWorker: path.join(__dirname, "./src/pica/game"),
             picaRender: path.join(__dirname, "./src/pica/render"),
             picaRes: path.join(__dirname, "./src/pica/res"),
+            picaStructure: path.join(__dirname, "./src/pica/structure"),
             editorCanvas: path.join(__dirname, "./src/editor"),
             display: path.join(__dirname, "./src/base/display"),
             baseRender: path.join(__dirname, "./src/base/render"),

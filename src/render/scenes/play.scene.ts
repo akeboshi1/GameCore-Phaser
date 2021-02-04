@@ -26,6 +26,10 @@ export class PlayScene extends RoomScene {
         this.loadState = PlaySceneLoadState.CREATING_SCENE;
     }
 
+    public preload() {
+       super.preload();
+    }
+
     get motionMgr(): MotionManager {
         return this.motionManager;
     }

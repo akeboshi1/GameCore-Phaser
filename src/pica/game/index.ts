@@ -1,3 +1,4 @@
+export * from "./data/index";
 export { CharacterInfo } from "./ui/CharacterInfo/CharacterInfo";
 export { CharacterInfoMediator } from "./ui/CharacterInfo/CharacterInfoMediator";
 export { PicaChat } from "./ui/PicaChat/PicaChat";

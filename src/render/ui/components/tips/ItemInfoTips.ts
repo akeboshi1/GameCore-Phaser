@@ -112,7 +112,7 @@ export class ItemInfoTips extends Phaser.GameObjects.Container {
                 mode: "string"
             }
         }).setOrigin(0);
-
+        tipsText.setLineSpacing(2 * this.dpr);
         this.tipsText = tipsText;
         this.add([tipsbg, tipsText]);
     }

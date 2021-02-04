@@ -214,6 +214,7 @@ class MainTaskItem extends Phaser.GameObjects.Container {
     private questType: op_pkt_def.PKT_Quest_Type;
     private send: Handler;
     private intervalTimer: any;
+    private previousProgress: number;
     constructor(scene: Phaser.Scene, width: number, height: number, dpr: number, zoom: number) {
         super(scene);
         this.dpr = dpr;
@@ -227,26 +228,28 @@ class MainTaskItem extends Phaser.GameObjects.Container {
     public setMainTaskData(content: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_QUERY_QUEST_GROUP, questType: op_pkt_def.PKT_Quest_Type) {
         this.titleTex.text = content.name;
         this.taskDes.text = content.des;
-        const max = content.quests.length;
+        const max = 100;
+        const fvalue = this.getFinishProgress(content);
         if (this.questType !== questType) {
-            const fvalue = this.getFinishProgress(content);
             this.progress.setProgress(fvalue, max);
-            this.progressTex.text = Math.floor((fvalue * 1000 / max)) / 10 + "%";
-            this.isFinish = fvalue === max;
         } else {
-            const from = this.getFinishProgress(this.mainData);
-            const to = this.getFinishProgress(content);
+            const from = this.previousProgress;
             const allTime = 2000;
-            const duration = allTime * to / max;
-            this.playProgressTween(from, to, max, duration);
-            this.isFinish = to === max;
+            const duration = allTime * fvalue / max;
+            this.playProgressTween(from, fvalue, max, duration);
         }
+
+        this.progressTex.text = fvalue + "%";
+        this.isFinish = fvalue === max;
+        this.previousProgress = fvalue;
+
+        this.mainData = content;
+
         const url = Url.getOsdRes(content.reward.display.texturePath);
         this.rewardsImg.load(url, this, () => {
 
         });
 
-        this.mainData = content;
     }
 
     public setHandler(send: Handler) {
@@ -330,14 +333,7 @@ class MainTaskItem extends Phaser.GameObjects.Container {
         }
     }
     private getFinishProgress(content: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_QUERY_QUEST_GROUP) {
-        const quests = content.quests;
-        let endNum = 0;
-        for (const quest of quests) {
-            if (quest.stage === op_pkt_def.PKT_Quest_Stage.PKT_QUEST_STAGE_END) {
-                endNum++;
-            }
-        }
-        return endNum;
+        return content.progress;
     }
 
     private playProgressTween(from: number, to: number, max: number, duration: number) {
