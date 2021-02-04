@@ -1,15 +1,23 @@
 import { IPos } from "utils";
 import { IRoomService } from "../room/room";
 export class MatterObject {
-    protected guid: number;
+    protected mGuid: number;
     protected hasBody: boolean = false;
     protected _tempVec2: any;
     protected _sensor: boolean = false;
     protected _offsetOrigin: any;
-    constructor(id: number,protected mRoomService: IRoomService) {
+    constructor(id: number, protected mRoomService: IRoomService) {
         this.guid = id;
         this._tempVec2 = { x: 0, y: 0 };
         this._offsetOrigin = { x: 0.5, y: 0.5 };
+    }
+
+    set guid(val: number) {
+        this.mGuid = val;
+    }
+
+    get guid(): number {
+        return this.mGuid;
     }
 
     set _offset(val: any) {

@@ -5,7 +5,7 @@ import { IMatterObject, MatterObject } from "./physical/matter.object";
 import { MatterWorld } from "./physical/matter.world";
 import decomp from "poly-decomp";
 import { MatterUserObject } from "./physical/matter.user.object";
-import { EventDispatcher, IPos, Logger, LogicPos } from "utils";
+import { EventDispatcher, IPos } from "utils";
 // The World act as the global Phaser.World instance;
 // @ts-ignore
 global.decomp = decomp;
@@ -425,9 +425,13 @@ export class PhysicalPeer extends RPCPeer {
     }
 
     @Export([webworker_rpc.ParamType.num, webworker_rpc.ParamType.num, webworker_rpc.ParamType.num])
-    public createBodyFromVertices(id: number, x: number, y: number, paths: any, addToWorld?: boolean, param?: any) {
-        const obj: IMatterObject = this.matterObjectMap.get(id);
-        if (!obj) return;
+    public createBodyFromVertices(id: number, x: number, y: number, paths: any, addToWorld?: boolean, sensor?: boolean, param?: any) {
+        let obj: IMatterObject = this.matterObjectMap.get(id);
+        if (!obj) {
+            obj = new MatterObject(this, id);
+            this.matterObjectMap.set(id, obj);
+            obj._sensor = sensor || false;
+        }
         const body = Bodies.fromVertices(x, y, paths, param);
         obj.setExistingBody(body, addToWorld);
     }
