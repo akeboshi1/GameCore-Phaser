@@ -2,8 +2,9 @@ import { EditorCanvas, IEditorCanvasConfig } from "../editor.canvas";
 import ElementEditorGrids from "./element.editor.grids";
 import ElementEditorAnimations from "./element.editor.animations";
 import ElementEditorResourceManager from "./element.editor.resource.manager";
-import { Logger } from "utils";
+import { Logger, Url } from "utils";
 import ElementFramesDisplay from "./element.frames.display";
+import version from "../../../../version";
 
 export enum ElementEditorBrushType {
     Drag,
@@ -37,6 +38,7 @@ export class ElementEditorCanvas extends EditorCanvas {
     constructor(config: IEditorCanvasConfig) {
         super(config);
         Logger.getInstance().debug("ElementEditorCanvas.constructor()");
+        Url.RES_PATH = `./resources_v${version}/`;
 
         this.mGame.scene.add(this.SCENEKEY, ElementEditorScene);
 
