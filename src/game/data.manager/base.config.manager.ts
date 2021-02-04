@@ -129,7 +129,7 @@ export class BaseConfigManager {
     protected getBasePath() {
         return new Promise((resolve, reject) => {
             const url = "https://cdn.tooqing.com/game/resource/alpha/5e719a0a68196e416ecf7aad/.config.json";
-            const cdnurl = "http://cdn.tooqing.com/game/resource/alpha/5e719a0a68196e416ecf7aad/";
+            const cdnurl = "https://cdn.tooqing.com/game/resource/alpha/5e719a0a68196e416ecf7aad/";
             load(url, "json").then((value: XMLHttpRequest) => {
                 const json = value.response;
                 const version = json.version;

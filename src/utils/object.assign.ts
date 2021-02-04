@@ -1,3 +1,5 @@
+import { Logger } from "./log";
+
 export class ObjectAssign {
 
     /**
@@ -7,6 +9,10 @@ export class ObjectAssign {
      * @param tag 通过target或者source中的 tag 来获取要排除替换的属性数组
      */
     public static excludeTagAssign(source: object, target: object, tag: string = "exclude") {
+        if (!source || !target) {
+            Logger.getInstance().error(`source:${source},target:${target}`);
+            return;
+        }
         const excludes = source[tag] || target[tag];
         for (const key in target) {
             if (target.hasOwnProperty(key)) {
