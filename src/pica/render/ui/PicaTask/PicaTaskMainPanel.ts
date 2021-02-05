@@ -5,6 +5,7 @@ import { Font, Handler, Url } from "utils";
 import { op_client, op_pkt_def } from "pixelpai_proto";
 import { PicaTaskItem } from "./PicaTaskItem";
 import { PicaItemTipsPanel } from "../SinglePanel/PicaItemTipsPanel";
+import { ICountablePackageItem } from "picaStructure";
 
 export class PicaTaskMainPanel extends Phaser.GameObjects.Container {
     private gameScroller: GameScroller;
@@ -245,7 +246,7 @@ class MainTaskItem extends Phaser.GameObjects.Container {
 
         this.mainData = content;
 
-        const url = Url.getOsdRes(content.reward.display.texturePath);
+        const url = Url.getOsdRes((<any>content.reward).texturePath);
         this.rewardsImg.load(url, this, () => {
 
         });

@@ -3,6 +3,7 @@ import { PicaOrder } from "./PicaOrder";
 import { BasicMediator } from "gamecore";
 import { ModuleName } from "structure";
 import { PicaGame } from "../../pica.game";
+import { BaseDataConfigManager } from "../../data";
 export class PicaOrderMediator extends BasicMediator {
 
     private mListData: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_ORDER_LIST = null;
@@ -78,8 +79,11 @@ export class PicaOrderMediator extends BasicMediator {
     }
     private on_ORDER_LIST(content: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_ORDER_LIST) {
         const list = content.orders;
+        const configMgr = <BaseDataConfigManager>this.game.configManager;
         for (const order of list) {
             const materials = order.targets;
+            configMgr.getBatchItemDatas(materials);
+            configMgr.getBatchItemDatas(order.rewards);
             if (materials) {
                 for (const material of materials) {
                     const count = this.playerData.getItemsCount(op_pkt_def.PKT_PackageType.PropPackage, material.id, material.subcategory);

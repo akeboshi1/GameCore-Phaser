@@ -5,6 +5,7 @@ import { DetailDisplay } from "../Components/detail.display";
 import { ModuleName } from "structure";
 import { UIAtlasKey, UIAtlasName } from "picaRes";
 import { Font, Handler, i18n, Url } from "utils";
+import { ICountablePackageItem } from "picaStructure";
 export class PicaComposePanel extends BasePanel {
     private content: Phaser.GameObjects.Container;
     private mDetailDisplay: DetailDisplay;
@@ -227,7 +228,7 @@ export class PicaComposePanel extends BasePanel {
     public setComposeDetialData(data: op_client.IPKT_CRAFT_SKILL) {
         this.mDetailBubble.setDetailData(data.productName, data.productDes);
         this.setDetailDisplay(data);
-        this.setMaterialItems(data.materials);
+        this.setMaterialItems(<any>data.materials);
     }
 
     private setDetailDisplay(data: op_client.IPKT_CRAFT_SKILL) {
@@ -258,7 +259,7 @@ export class PicaComposePanel extends BasePanel {
         item.select = true;
         this.setComposeDetialData(data);
     }
-    private setMaterialItems(datas: op_client.ICountablePackageItem[]) {
+    private setMaterialItems(datas: ICountablePackageItem[]) {
         const len = datas.length;
         const items = [];
         (<any>this.materialGameScroll).clearItems();
@@ -481,7 +482,7 @@ class ComposeItem extends Phaser.GameObjects.Container {
     }
 }
 class ComposeMaterialItem extends Phaser.GameObjects.Container {
-    public itemData: op_client.ICountablePackageItem;
+    public itemData: ICountablePackageItem;
     private readonly dpr: number;
     private readonly key: string;
     private itemIcon: DynamicImage;
@@ -499,10 +500,10 @@ class ComposeMaterialItem extends Phaser.GameObjects.Container {
         this.setSize(bg.width, bg.height);
         this.itemCount.y = this.height * 0.5;
     }
-    public setItemData(data: op_client.ICountablePackageItem) {
+    public setItemData(data: ICountablePackageItem) {
         this.itemData = data;
         this.itemCount.text = this.getCountText(data.count, data.neededCount);
-        const url = Url.getOsdRes(data.display.texturePath);
+        const url = Url.getOsdRes(data.texturePath);
         this.itemIcon.load(url, this, () => {
             this.itemIcon.scale = this.dpr;
             this.itemIcon.setPosition(0, 0);

@@ -1,16 +1,19 @@
 import { BaseConfigData, BaseConfigManager, Game } from "gamecore";
 import { ICountablePackageItem, IElement, IExploreChapterData, IExploreLevelData, IExtendCountablePackageItem } from "picaStructure";
+import { IShopBase } from "src/pica/structure/imarketcommodity";
 import { loadArr, Logger, ObjectAssign } from "utils";
 import { ElementDataConfig } from "./element.data.config";
 import { ExploreDataConfig } from "./explore.data.config";
 import { I18nZHDataConfig } from "./i18nzh.config";
 import { ItemBaseDataConfig } from "./item.base.data.config";
+import { ShopConfig } from "./shop.config";
 
 export enum BaseDataType {
     i18n_zh = "i18n_zh",
     explore = "explore",
     item = "item",
-    element = "element"
+    element = "element",
+    shop = "shop"
 }
 export class BaseDataConfigManager extends BaseConfigManager {
     protected baseDirname: string;
@@ -29,8 +32,10 @@ export class BaseDataConfigManager extends BaseConfigManager {
             item["exclude"] = data.excludes;
             if (item.elementId && item.elementId !== "") {
                 const element = this.getElementData(item.elementId);
-                item["animations"] = element["AnimationData"];
-                item["animationDisplay"] = { dataPath: element.data_path, texturePath: element.texture_path };
+                if (element) {
+                    item["animations"] = element["AnimationData"];
+                    item["animationDisplay"] = { dataPath: element.data_path, texturePath: element.texture_path };
+                }
             }
             item["find"] = true;
         }
@@ -48,7 +53,11 @@ export class BaseDataConfigManager extends BaseConfigManager {
         }
         return items;
     }
-
+    public synItemBase(item: any) {
+        if (!item) return undefined;
+        const tempitem = this.getItemBase(item.id);
+        ObjectAssign.excludeTagAssign(item, tempitem, "exclude");
+    }
     public getChapterData(id: number): IExploreChapterData {
         const data: ExploreDataConfig = this.getConfig(BaseDataType.explore);
         const chapter = data.getChapter(id);
@@ -83,6 +92,29 @@ export class BaseDataConfigManager extends BaseConfigManager {
         return element;
     }
 
+    public getShopBase(id: string): IShopBase {
+        const data: ShopConfig = this.getConfig(BaseDataType.shop);
+        const temp = data.get(id);
+        if (temp && !temp["find"]) {
+            const item = this.getItemBase(temp.itemId);
+            temp.name = item.name;
+            temp.icon = item.texturePath;
+            temp.source = item.source;
+            temp["find"] = true;
+        }
+        return temp;
+    }
+
+    public getBatchShopBase(ids: string[]) {
+        const temps = [];
+        if (ids) {
+            for (const id of ids) {
+                temps.push(this.getShopBase(id));
+            }
+        }
+        return temps;
+    }
+
     public getI18n(id: string, tips?: any) {
         const data: I18nZHDataConfig = this.getConfig(BaseDataType.i18n_zh);
         return data.text(id, tips);
@@ -104,6 +136,7 @@ export class BaseDataConfigManager extends BaseConfigManager {
         this.dataMap.set(BaseDataType.explore, new ExploreDataConfig());
         this.dataMap.set(BaseDataType.item, new ItemBaseDataConfig());
         this.dataMap.set(BaseDataType.element, new ElementDataConfig());
+        this.dataMap.set(BaseDataType.shop, new ShopConfig());
     }
     protected configUrl(reName: string) {
         const url = this.baseDirname + `client_resource/${reName}.json`;

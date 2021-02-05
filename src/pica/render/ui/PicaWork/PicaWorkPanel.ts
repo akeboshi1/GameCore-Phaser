@@ -167,7 +167,7 @@ export class PicaWorkPanel extends BasePanel {
                 this.imageValues.push(item);
                 item.setHandler(new Handler(this, this.onItemInfoTips));
             }
-            const tempurl = Url.getOsdRes(tempdata.display.texturePath);
+            const tempurl = Url.getOsdRes((<any>tempdata).texturePath);
             item.setUrlValue(tempurl, tempdata.neededCount);
             item.setTextStyle({ color: (tempdata.count >= tempdata.neededCount ? "#000000" : "#E71313") });
             item.setImageData(tempdata);

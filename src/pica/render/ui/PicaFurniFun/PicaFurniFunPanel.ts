@@ -6,6 +6,7 @@ import { DetailDisplay } from "picaRender";
 import { ModuleName } from "structure";
 import { UIAtlasKey, UIAtlasName } from "picaRes";
 import { Font, Handler, i18n, Url } from "utils";
+import { ICountablePackageItem } from "picaStructure";
 export class PicaFurniFunPanel extends BasePanel {
     private confirmBtn: NineSliceButton;
     private blackGraphic: Phaser.GameObjects.Graphics;
@@ -21,7 +22,7 @@ export class PicaFurniFunPanel extends BasePanel {
     private selectMaterial: MaterialItem;
     private itemName: Phaser.GameObjects.Text;
     private itemtips: ItemInfoTips;
-    private materials: op_client.ICountablePackageItem[];
+    private materials: ICountablePackageItem[];
     constructor(uiManager: UiManager) {
         super(uiManager.scene, uiManager.render);
         this.key = ModuleName.PICAFURNIFUN_NAME;
@@ -245,7 +246,7 @@ export class PicaFurniFunPanel extends BasePanel {
         }
     }
 
-    setMaterialsData(materials: op_client.ICountablePackageItem[]) {
+    setMaterialsData(materials: ICountablePackageItem[]) {
         this.materials = materials;
         if (!this.mInitialized || !materials) return;
         this.setMaterialItems(this.materials);
@@ -263,7 +264,7 @@ export class PicaFurniFunPanel extends BasePanel {
         return anis;
     }
 
-    private setMaterialItems(datas: op_client.ICountablePackageItem[]) {
+    private setMaterialItems(datas: ICountablePackageItem[]) {
         const len = datas.length;
         (<any>this.materialGameScroll).clearItems();
         for (let i = 0; i < len; i++) {
@@ -330,7 +331,7 @@ export class PicaFurniFunPanel extends BasePanel {
 }
 
 class MaterialItem extends Phaser.GameObjects.Container {
-    public itemData: op_client.ICountablePackageItem;
+    public itemData: ICountablePackageItem;
     private readonly dpr: number;
     private readonly key: string;
     private zoom: number;
@@ -352,10 +353,10 @@ class MaterialItem extends Phaser.GameObjects.Container {
         this.setSize(this.bg.width, this.bg.height);
         this.itemCount.y = this.height * 0.5 + 8 * dpr;
     }
-    public setItemData(data: op_client.ICountablePackageItem) {
+    public setItemData(data: ICountablePackageItem) {
         this.itemData = data;
         this.itemCount.text = this.getCountText(data);
-        const url = Url.getOsdRes(data.display.texturePath);
+        const url = Url.getOsdRes(data.texturePath);
         this.itemIcon.load(url, this, () => {
         });
     }
@@ -367,7 +368,7 @@ class MaterialItem extends Phaser.GameObjects.Container {
     public get select() {
         return this.mselect;
     }
-    private getCountText(data: op_client.ICountablePackageItem) {
+    private getCountText(data: ICountablePackageItem) {
         const color = (data.count >= data.neededCount ? "#000000" : "#ff0000");
         let text = `[color=${color}]${data.count}[/color]/` + data.neededCount;
         if (data.hasOwnProperty("recommended")) {

@@ -2,6 +2,7 @@ import { BasicMediator, Game } from "gamecore";
 import { EventType, ModuleName } from "structure";
 import { PicaRoam } from "./PicaRoam";
 import { op_client, op_virtual_world, op_pkt_def } from "pixelpai_proto";
+import { BaseDataConfigManager } from "picaWorker";
 export class PicaRoamMediator extends BasicMediator {
     protected mModel: PicaRoam;
     protected curMoneyData: any;
@@ -138,6 +139,8 @@ export class PicaRoamMediator extends BasicMediator {
     private onRetDrawHandler(reward: op_client.ICountablePackageItem[]) {
         const uimgr = this.game.uiManager;
         const tag = reward.length === 1 ? "open" : "roamdraw";
+        const configMgr = <BaseDataConfigManager>this.game.configManager;
+        configMgr.getBatchItemDatas(reward);
         uimgr.showMed(ModuleName.PICATREASURE_NAME, { data: reward, type: tag, event: this.key + "_hideeffectone" });
     }
 

@@ -15,10 +15,11 @@ export class ElementDataConfig extends BaseConfigData {
 
     serializeJson(obj: object) {
         try {
-            const stri = obj["serializeString"];
-            if (stri !== "") {
-                const objJson = JSON.parse(stri);
-                Object.assign(obj, objJson);
+            let temp = obj["serializeString"];
+            if (temp) {
+                if (typeof temp === "string")
+                    temp = JSON.parse(temp);
+                Object.assign(obj, temp);
             }
         } catch (error) {
             Logger.getInstance().error(error);

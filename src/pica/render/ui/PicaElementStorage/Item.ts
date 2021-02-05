@@ -29,7 +29,7 @@ export class Item extends Phaser.GameObjects.Container {
     }
 
     if (prop) {
-      this.mImage.load(Url.getOsdRes(prop.display.texturePath), this, () => {
+      this.mImage.load(Url.getOsdRes(prop.texturePath), this, () => {
         // this.mImage.on("dragstart", this.onPointerUpHandler, this);
         this.mImage.setInteractive();
         this.scene.input.setDraggable(this.mImage);
