@@ -3,6 +3,7 @@ import { AlertView, BasePanel, DynamicImage, ImageValue, ItemInfoTips, Render, U
 import { ModuleName } from "structure";
 import { UIAtlasKey, UIAtlasName } from "picaRes";
 import { Font, Handler, i18n, Logger, Url } from "utils";
+import { ICountablePackageItem } from "picaStructure";
 export class PicaOrderPanel extends BasePanel {
     private mBackground: Phaser.GameObjects.Graphics;
     private bg: NineSlicePatch;
@@ -430,7 +431,7 @@ class OrderItem extends Phaser.GameObjects.Container {
                 this.imageValues.push(item);
             }
             item.setOffset(0, this.dpr);
-            item.setFrameValue(`${reward.count}`, this.key, this.getIconName(reward.display.texturePath) + "_s");
+            item.setFrameValue(`${reward.count}`, this.key, this.getIconName(reward.texturePath) + "_s");
             item.setTextStyle({ color: questType === 5 ? "#ffffff" : "#2154BD" });// op_pkt_def.PKT_Quest_Type.ORDER_QUEST_ROYAL_MISSION
             item.x = offsetpos + item.width * 0.5;
             offsetpos += item.width + 20 * this.dpr;
@@ -622,9 +623,9 @@ class MaterialItem extends Phaser.GameObjects.Container {
         this.add([this.bg, this.icon, this.value]);
         this.setInteractive();
     }
-    public setMaterialData(data: any) {// op_client.ICountablePackageItem
+    public setMaterialData(data: ICountablePackageItem) {// op_client.ICountablePackageItem
         this.itemData = data;
-        const url = Url.getOsdRes(data.display.texturePath);
+        const url = Url.getOsdRes(data.texturePath);
         this.icon.load(url, this, () => {
             this.icon.scale = 1;
             this.icon.scaleX = 15 * this.dpr / this.icon.displayWidth;
@@ -671,15 +672,15 @@ class OrderRewardItem extends Phaser.GameObjects.Container {
         this.add([this.bg, this.icon]);
     }
 
-    public setItemData(data: any) {// op_client.ICountablePackageItem
+    public setItemData(data: ICountablePackageItem) {// op_client.ICountablePackageItem
         this.imageValue = new ImageValue(this.scene, 30 * this.dpr, 13 * this.dpr, this.key, undefined, this.dpr);
-        this.imageValue.setFrameValue(`${data.count}`, this.key, this.getIconName(data.display.texturePath) + "_s");
+        this.imageValue.setFrameValue(`${data.count}`, this.key, this.getIconName(data.texturePath) + "_s");
         this.imageValue.x = -4 * this.dpr;
         this.imageValue.y = this.height - this.imageValue.height * 0.5 + 2 * this.dpr;
         this.imageValue.setOffset(0, this.dpr);
         this.imageValue.setTextStyle({ color: "#2154BD" });
         this.add([this.imageValue]);
-        this.icon.setFrame(this.getIconName(data.display.texturePath));
+        this.icon.setFrame(this.getIconName(data.texturePath));
     }
 
     private getIconName(url: string) {
@@ -803,7 +804,7 @@ class OrderProgressItem extends Phaser.GameObjects.Container {
         this.index = index;
         this.text.text = data.targetValue + "";
         if (data.rewards) {
-            const url = Url.getOsdRes(data.rewards[0].display.texturePath);
+            const url = Url.getOsdRes(data.rewards[0].texturePath);
             this.icon.load(url, this, () => {
                 this.icon.scale = 1;
                 this.icon.scaleY = 29 * this.dpr / this.icon.displayHeight;

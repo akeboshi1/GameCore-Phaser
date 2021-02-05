@@ -2,6 +2,8 @@ import { op_client, op_def, op_gameconfig, op_pkt_def } from "pixelpai_proto";
 import { BasicMediator, CacheDataManager, DataMgrType, Game } from "gamecore";
 import { ConnectState, EventType, ModuleName } from "structure";
 import { PicaRecaste } from "./PicaRecaste";
+import { BaseDataConfigManager } from "picaWorker";
+import { ObjectAssign } from "utils";
 
 export class PicaRecasteMediator extends BasicMediator {
     protected mModel: PicaRecaste;
@@ -83,12 +85,17 @@ export class PicaRecasteMediator extends BasicMediator {
 
     private onRetRescateHandler(reward: op_client.ICountablePackageItem) {
         if (this.mView) {
+            const configMgr = <BaseDataConfigManager>this.game.configManager;
+            const temp = configMgr.getItemBase(reward.id);
+            ObjectAssign.excludeTagAssign(reward, temp);
             this.mView.setRecasteResult(reward);
             const uimgr = this.game.uiManager;
             uimgr.showMed(ModuleName.PICATREASURE_NAME, { data: [reward], type: "open" });
         }
     }
     private onRetRescateListHandler(list: op_client.ICountablePackageItem[]) {
+        const configMgr = <BaseDataConfigManager>this.game.configManager;
+        configMgr.getBatchItemDatas(list);
         this.cacheMgr.setRecasteList(list);
         if (this.mView) this.mView.queryRecasteList();
     }

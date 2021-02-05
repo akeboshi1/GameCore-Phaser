@@ -263,9 +263,9 @@ class MarketingPlanItem extends Phaser.GameObjects.Container {
             this.progress.setText(this.getDataFormat(remainTime * 1000));
             this.planName.text = data.marketPlan.name;
             this.planAtt.text = data.marketPlan.buffDes;
-            let icon = data.marketPlan.icon !== "" ? data.marketPlan.icon : data.marketPlan.requirements[0].display.texturePath;
+            let icon = data.marketPlan.icon !== "" ? data.marketPlan.icon : data.marketPlan.requirements[0].texturePath;
             if ((icon === "" || !icon) && data.marketPlan.requirements && data.marketPlan.requirements.length > 0) {
-                icon = data.marketPlan.requirements[0].display.texturePath;
+                icon = data.marketPlan.requirements[0].texturePath;
             }
             const url = Url.getOsdRes(icon);
             this.planIcon.load(url, this, () => {

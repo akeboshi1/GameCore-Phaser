@@ -100,7 +100,7 @@ export class PicaHousePanel extends BasePanel {
         this.itemsPanel.setHandler(new Handler(this, () => {
             this.render.renderEmitter(ModuleName.PICAHOUSE_NAME + "_queryrefurbish", this.mRoomInfoData.roomId);
         }));
-        this.itemsPanel.setItemDatas(content.requirements);
+        this.itemsPanel.setItemDatas(<any>content.requirements);
     }
     protected preload() {
         this.addAtlas(this.key, "room_information/room_information.png", "room_information/room_information.json");
