@@ -15,7 +15,7 @@ export class DragonbonesEditorDisplay extends BaseDragonbonesDisplay {
     }
 
     public setDraggable(val: boolean) {
-        if (this.mArmatureDisplay) this.scene.input.setDraggable(this.mArmatureDisplay, val);
+        if (this.input) this.scene.input.setDraggable(this, val);
     }
 
     public stop() {
