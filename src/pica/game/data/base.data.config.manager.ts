@@ -34,7 +34,8 @@ export class BaseDataConfigManager extends BaseConfigManager {
                 const element = this.getElementData(item.elementId);
                 if (element) {
                     item["animations"] = element["AnimationData"];
-                    item["animationDisplay"] = { dataPath: element.data_path, texturePath: element.texture_path };
+                    if (element.data_path || element.texture_path)
+                        item["animationDisplay"] = { dataPath: element.data_path, texturePath: element.texture_path };
                 }
             }
             item["find"] = true;

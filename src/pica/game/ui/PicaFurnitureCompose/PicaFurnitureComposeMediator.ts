@@ -116,6 +116,8 @@ export class PicaFurnitureComposeMediator extends BasicMediator {
     private queryFuriPackageByStar(obj: { type: number, update: boolean }) {
         const furibag = this.bag.furniBag;
         const list = furibag.list;
+        const configMgr = <BaseDataConfigManager>this.game.configManager;
+        configMgr.getBatchItemDatas(list);
         const tempArr = [];
         for (const data of list) {
             if (data.grade === obj.type && data.rarity === 1) {
