@@ -109,7 +109,12 @@ export class PicaRecasteMediator extends BasicMediator {
         if (tempArr) {
             this.mView.setProp(tempArr);
         } else {
-            this.mModel.queryRecasteList();
+            // this.mModel.queryRecasteList();
+            const configMgr = <BaseDataConfigManager>this.game.configManager;
+            const list = configMgr.getRecastItemBases();
+            this.cacheMgr.setRecasteList(list);
+            const temp = this.cacheMgr.getRecasteList(data.type, data.star);
+            this.mView.setProp(temp);
         }
     }
     private setCategories(categoryType: number) {

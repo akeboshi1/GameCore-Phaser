@@ -1,5 +1,5 @@
 import { Game } from "gamecore";
-import { load, loadArr, Logger } from "utils";
+import { load, loadArr, Logger, Url } from "utils";
 import { BaseConfigData } from "./base.config.data";
 export class BaseConfigManager {
     protected baseDirname: string;
@@ -94,7 +94,10 @@ export class BaseConfigManager {
         // this.baseDirname = path.slice(0, index + 1);
         this.baseDirname = path;
     }
-    protected configUrl(reName: string) {
+    protected configUrl(reName: string, tempurl?: string) {
+        if (tempurl) {
+            return tempurl;
+        }
         const url = this.baseDirname + `${reName}.json`;
         return url;
     }
@@ -102,7 +105,7 @@ export class BaseConfigManager {
     protected checkLocalStorage(): Promise<any> {
         const promises = [];
         this.dataMap.forEach(async (value, key: string) => {
-            const temppath = this.configUrl(key);
+            const temppath = this.configUrl(key, value.url);
             const obj = this.getLocalStorage(key, temppath);
             promises.push(obj);
         });

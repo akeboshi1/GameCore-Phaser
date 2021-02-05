@@ -372,7 +372,7 @@ export class PicaBagPanel extends PicaBasePanel {
     const topCapH = 35 * this.dpr;
     const topPosY = 23 * this.dpr;
     this.topCheckBox = new CheckboxGroup();
-    let topCategorys = [3, 1];// op_pkt_def.PKT_PackageType.PropPackage, op_pkt_def.PKT_PackageType.FurniturePackage, op_pkt_def.PKT_PackageType.AvatarPackage
+    let topCategorys = [3, 1]; // op_pkt_def.PKT_PackageType.PropPackage, op_pkt_def.PKT_PackageType.FurniturePackage, op_pkt_def.PKT_PackageType.AvatarPackage
     let topBtnTexts = [i18n.t("furni_bag.Props"), i18n.t("furni_bag.furni")];
     if (sceneType === 2) {// op_def.SceneTypeEnum.EDIT_SCENE_TYPE
       topCategorys = [5];// op_pkt_def.PKT_PackageType.PropPackage, op_pkt_def.PKT_PackageType.FurniturePackage, op_pkt_def.PKT_PackageType.AvatarPackage

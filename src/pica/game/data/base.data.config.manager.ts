@@ -1,19 +1,22 @@
 import { BaseConfigData, BaseConfigManager, Game } from "gamecore";
 import { ICountablePackageItem, IElement, IExploreChapterData, IExploreLevelData, IExtendCountablePackageItem } from "picaStructure";
 import { IShopBase } from "src/pica/structure/imarketcommodity";
-import { loadArr, Logger, ObjectAssign } from "utils";
+import { loadArr, Logger, ObjectAssign, Url } from "utils";
 import { ElementDataConfig } from "./element.data.config";
 import { ExploreDataConfig } from "./explore.data.config";
 import { I18nZHDataConfig } from "./i18nzh.config";
 import { ItemBaseDataConfig } from "./item.base.data.config";
+import { ItemCategoryConfig } from "./item.category.config";
 import { ShopConfig } from "./shop.config";
+import version from "../../../../version";
 
 export enum BaseDataType {
     i18n_zh = "i18n_zh",
     explore = "explore",
     item = "item",
     element = "element",
-    shop = "shop"
+    shop = "material_shop",
+    itemcategory = "itemcategory"
 }
 export class BaseDataConfigManager extends BaseConfigManager {
     protected baseDirname: string;
@@ -58,6 +61,20 @@ export class BaseDataConfigManager extends BaseConfigManager {
         if (!item) return undefined;
         const tempitem = this.getItemBase(item.id);
         ObjectAssign.excludeTagAssign(item, tempitem, "exclude");
+    }
+
+    public getRecastItemBases() {
+        const temp = [];
+        const data: ItemBaseDataConfig = this.getConfig(BaseDataType.item);
+        for (const key in data) {
+            if (data.hasOwnProperty(key)) {
+                const element = data[key];
+                if (element.className === "FurnitureItem" && element.rarity === 1) {
+                    temp.push(element);
+                }
+            }
+        }
+        return temp;
     }
     public getChapterData(id: number): IExploreChapterData {
         const data: ExploreDataConfig = this.getConfig(BaseDataType.explore);
@@ -138,8 +155,13 @@ export class BaseDataConfigManager extends BaseConfigManager {
         this.dataMap.set(BaseDataType.item, new ItemBaseDataConfig());
         this.dataMap.set(BaseDataType.element, new ElementDataConfig());
         this.dataMap.set(BaseDataType.shop, new ShopConfig());
+        this.dataMap.set(BaseDataType.itemcategory, new ItemCategoryConfig());
     }
-    protected configUrl(reName: string) {
+
+    protected configUrl(reName: string, tempurl?: string) {
+        if (tempurl) {
+            return this.mGame.getGameConfig().locationhref + `resources_v${version}/${tempurl}`;
+        }
         const url = this.baseDirname + `client_resource/${reName}.json`;
         return url;
     }
