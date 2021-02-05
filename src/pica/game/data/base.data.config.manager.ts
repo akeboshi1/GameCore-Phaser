@@ -23,9 +23,9 @@ export class BaseDataConfigManager extends BaseConfigManager {
         const data: ItemBaseDataConfig = this.getConfig(BaseDataType.item);
         const item = data.get(id);
         if (item && !item["find"]) {
-            item.name = this.getI18n(item.name);
-            item.source = this.getI18n(item.source);
-            item.des = this.getI18n(item.des);
+            item.name = this.getI18n(item.name, { id: item.id, name: "name" });
+            item.source = this.getI18n(item.source, { id: item.id, source: "source" });
+            item.des = this.getI18n(item.des, { id: item.id, des: "des" });
             item["exclude"] = data.excludes;
             if (item.elementId && item.elementId !== "") {
                 const element = this.getElementData(item.elementId);
@@ -38,6 +38,7 @@ export class BaseDataConfigManager extends BaseConfigManager {
     }
 
     public getBatchItemDatas(items: any[]) {
+        if (!items) return [];
         for (const item of items) {
             if (!item["find"]) {
                 const tempitem = this.getItemBase(item.id);
@@ -82,18 +83,20 @@ export class BaseDataConfigManager extends BaseConfigManager {
         return element;
     }
 
-    public getI18n(id: string) {
+    public getI18n(id: string, tips?: any) {
         const data: I18nZHDataConfig = this.getConfig(BaseDataType.i18n_zh);
-        return data.text(id);
+        return data.text(id, tips);
     }
 
     public getBatchI18n(ids: string[]) {
         const texts = [];
-        for (const key of ids) {
-            const text = this.getI18n(key);
-            texts.push(text);
+        if (ids) {
+            for (const key of ids) {
+                const text = this.getI18n(key);
+                texts.push(text);
+            }
         }
-        return;
+        return texts;
     }
 
     protected add() {
