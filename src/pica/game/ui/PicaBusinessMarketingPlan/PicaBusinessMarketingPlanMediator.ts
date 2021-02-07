@@ -74,13 +74,13 @@ export class PicaBusinessMarketingPlanMediator extends BasicMediator {
         this.mView.setEquipedPlan(content);
     }
     private onMARKET_PLAN_MODELS_BY_TYPE(content: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_MARKET_PLAN_MODELS_BY_TYPE) {
-        this.mView.setPlanModels(content);
         if (content.marketPlan) {
             for (const plan of content.marketPlan) {
                 const requirements = plan.requirements;
                 this.updateMaterials(requirements);
             }
         }
+        this.mView.setPlanModels(content);
     }
     private updateMaterials(materials: op_client.ICountablePackageItem[]) {
         if (this.playerData) {

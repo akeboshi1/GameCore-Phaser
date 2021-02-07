@@ -14,6 +14,7 @@ export interface ILauncherConfig {
     keyboardHeight: number;
     width: number;
     height: number;
+    locationhref?: string;
     hasConnectFail?: boolean;
     hasCloseGame?: boolean;
     hasGameCreated?: boolean;

@@ -7,7 +7,7 @@ export interface IExploreDataConfig {
 export interface IExploreChapterData {
     id: number;
     name: string;
-    imagePath: string;
+    texturePath: string;
     totalStar: string;
     award: string[];
     requiredPlayerLevel: number;
@@ -17,7 +17,7 @@ export interface IExploreLevelData {
     id: number;
     sn: string;
     name: string;
-    imagePath: string;
+    texturePath: string;
     type: number;
     chapterId: number;
     costEnergy: number;

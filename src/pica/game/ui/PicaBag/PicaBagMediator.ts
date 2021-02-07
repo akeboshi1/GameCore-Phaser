@@ -2,6 +2,8 @@ import { PicaBag } from "./PicaBag";
 import { op_client, op_def, op_gameconfig, op_pkt_def } from "pixelpai_proto";
 import { BasicMediator, CacheDataManager, DataMgrType, Game } from "gamecore";
 import { EventType, ModuleName, RENDER_PEER } from "structure";
+import { BaseDataConfigManager } from "../../data";
+import { ObjectAssign } from "utils";
 
 export class PicaBagMediator extends BasicMediator {
     private mScneType: op_def.SceneTypeEnum;
@@ -111,7 +113,12 @@ export class PicaBagMediator extends BasicMediator {
         if (!this.mView) {
             return;
         }
-        this.mView.setCategories(content.subcategory);
+        const configMgr = <BaseDataConfigManager>this.game.configManager;
+        const subcategory = content.subcategory;
+        for (const sub of subcategory) {
+            sub.value = configMgr.getI18n(sub.key);
+        }
+        this.mView.setCategories(subcategory);
         this.cacheMgr.setBagCategory(content);
     }
 
@@ -123,12 +130,23 @@ export class PicaBagMediator extends BasicMediator {
 
     private onGetCategoriesHandler(categoryType: number) {
         if (this.model) {
-            const data = this.cacheMgr.getBagCategory(categoryType);
-            if (!data) {
-                this.model.getCategories(categoryType);
-            } else {
-                this.mView.setCategories(data.subcategory);
-            }
+            // const data = this.cacheMgr.getBagCategory(categoryType);
+            // if (!data) {
+            //     this.model.getCategories(categoryType);
+            // } else {
+            //     const configMgr = <BaseDataConfigManager>this.game.configManager;
+            //     const subcategory = data.subcategory;
+            //     for (const sub of subcategory) {
+            //         sub.value = configMgr.getI18n(sub.key);
+            //     }
+            //     this.mView.setCategories(subcategory);
+            // }
+            const configMgr = <BaseDataConfigManager>this.game.configManager;
+            const subcategory = configMgr.getItemSubCategory(categoryType);
+            // for (const sub of subcategory) {
+            //     sub.value = configMgr.getI18n(sub.key);
+            // }
+            this.mView.setCategories(subcategory);
         }
     }
 
@@ -139,6 +157,8 @@ export class PicaBagMediator extends BasicMediator {
     private onQueryPackage(data: { packType: op_pkt_def.PKT_PackageType, key: string, isupdate: boolean }) {
         if (this.bagData) {
             const items = this.bagData.getItemsByCategory(data.packType, "alltype");
+            const configMgr = <BaseDataConfigManager>this.game.configManager;
+            configMgr.getBatchItemDatas(items);
             this.mView.setProp(items, data.isupdate);
         }
     }

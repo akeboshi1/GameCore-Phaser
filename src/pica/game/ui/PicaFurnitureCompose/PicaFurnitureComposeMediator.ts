@@ -2,6 +2,8 @@ import { PicaFurnitureCompose } from "./PicaFurnitureCompose";
 import { op_client, op_def, op_gameconfig, op_pkt_def } from "pixelpai_proto";
 import { BasicMediator, Game } from "gamecore";
 import { ConnectState, EventType, ModuleName } from "structure";
+import { BaseDataConfigManager } from "picaWorker";
+import { ObjectAssign } from "utils";
 
 export class PicaFurnitureComposeMediator extends BasicMediator {
     protected mModel: PicaFurnitureCompose;
@@ -98,6 +100,9 @@ export class PicaFurnitureComposeMediator extends BasicMediator {
 
     private onRetComposeHandler(reward: op_client.ICountablePackageItem) {
         if (this.mView) {
+            const configMgr = <BaseDataConfigManager>this.game.configManager;
+            const temp = configMgr.getItemBase(reward.id);
+            ObjectAssign.excludeTagAssign(reward, temp);
             this.mView.setComposeResult(reward);
             const uimgr = this.game.uiManager;
             uimgr.showMed(ModuleName.PICATREASURE_NAME, { data: [reward], type: "open" });
@@ -111,6 +116,8 @@ export class PicaFurnitureComposeMediator extends BasicMediator {
     private queryFuriPackageByStar(obj: { type: number, update: boolean }) {
         const furibag = this.bag.furniBag;
         const list = furibag.list;
+        const configMgr = <BaseDataConfigManager>this.game.configManager;
+        configMgr.getBatchItemDatas(list);
         const tempArr = [];
         for (const data of list) {
             if (data.grade === obj.type && data.rarity === 1) {

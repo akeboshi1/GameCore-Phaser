@@ -3,8 +3,9 @@ import { op_client } from "pixelpai_proto";
 import { BBCodeText } from "apowophaserui";
 import { SoundButton } from "./soundButton";
 import { Font, Handler, Url } from "utils";
+import { ICountablePackageItem } from "picaStructure";
 export class PropItem extends SoundButton {
-    public itemData: op_client.ICountablePackageItem;
+    public itemData: ICountablePackageItem;
     protected dpr: number;
     protected key: string;
     protected itemIcon: DynamicImage;
@@ -31,12 +32,12 @@ export class PropItem extends SoundButton {
     public setHandler(handler: Handler) {
         this.send = handler;
     }
-    public setItemData(data: op_client.ICountablePackageItem) {
+    public setItemData(data: ICountablePackageItem) {
         this.itemData = data;
         this.itemCount.text = data.count + "";
-        const url = Url.getOsdRes(data.display.texturePath);
+        const url = Url.getOsdRes(data.texturePath);
         const zoom = this.getWorldTransformMatrix().scaleX;
-        this.itemIcon.scale = this.dpr/zoom;
+        this.itemIcon.scale = this.dpr / zoom;
         this.itemIcon.load(url, this, () => {
             this.itemIcon.setPosition(0, 0);
         });

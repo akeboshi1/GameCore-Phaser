@@ -6,7 +6,7 @@ import { ClickEvent, GameScroller, NineSliceButton } from "apowophaserui";
 import { ChineseUnit } from "structure";
 import { ItemButton } from "../Components";
 import { PicaChapterLevelClue } from "./PicaChapterLevelClue";
-import { ICountablePackageItem, IExploreLevelData } from "picaStructure";
+import { ICountablePackageItem, IExploreChapterData, IExploreLevelData } from "picaStructure";
 export class PicaExploreListLevelPanel extends Phaser.GameObjects.Container {
     private dpr: number;
     private zoom: number;
@@ -66,7 +66,7 @@ export class PicaExploreListLevelPanel extends Phaser.GameObjects.Container {
         const numTex = i18n.language !== "zh-CN" ? chapter.chapterId + "" : ChineseUnit.numberToChinese(chapter.chapterId, true);
         this.titleTex.text = i18n.t("explore.chaptertitle", { name: numTex });
         this.captorScroll.clearItems(false);
-        this.setForwardDatas(result.chapter, lock);
+        this.setForwardDatas(<any>result.chapter, lock);
         if (!lock) this.setLevelDatas(<any>result.levels, nextLevelID);
         this.posValue = 0;
         this.captorScroll.Sort();
@@ -116,7 +116,7 @@ export class PicaExploreListLevelPanel extends Phaser.GameObjects.Container {
         }
     }
 
-    setForwardDatas(data: op_client.IPKT_EXPLORE_CHAPTER_DATA, lock: boolean) {
+    setForwardDatas(data: IExploreChapterData, lock: boolean) {
         if (!this.forewordItem) {
             this.forewordItem = new ForewordChapterItem(this.scene, this.dpr);
             this.forewordItem.on(ClickEvent.Tap, this.onForewordClickHandler, this);
@@ -211,7 +211,7 @@ export class PicaExploreListLevelPanel extends Phaser.GameObjects.Container {
 }
 
 class ForewordChapterItem extends ButtonEventDispatcher {
-    public captoreData: op_client.IPKT_EXPLORE_CHAPTER_DATA;
+    public captoreData: IExploreChapterData;
     private icon: DynamicImage;
     constructor(scene: Phaser.Scene, dpr: number) {
         super(scene, 0, 0, false);
@@ -219,9 +219,9 @@ class ForewordChapterItem extends ButtonEventDispatcher {
         this.init();
     }
 
-    public setCaptoreData(data: op_client.IPKT_EXPLORE_CHAPTER_DATA) {
+    public setCaptoreData(data: IExploreChapterData) {
         this.captoreData = data;
-        const url = Url.getOsdRes(data.imagePath + `_${this.dpr}x.png`);
+        const url = Url.getOsdRes(data.texturePath + `_${this.dpr}x.png`);
         this.icon.load(url);
     }
 
@@ -294,7 +294,7 @@ class ChapterLevelItem extends ChapterLevelBaseItem {
         this.rightLine.x = this.levelTex.x + this.rightLine.width * 0.5 + this.levelTex.width * 0.5 + 2 * this.dpr;
         const tempto = this.getProgressValue(data.progress);
         this.starProgress.setProgress(tempto, 500);
-        const url = Url.getOsdRes(data.imagePath + `_${this.dpr}x.png`);
+        const url = Url.getOsdRes(data.texturePath + `_${this.dpr}x.png`);
         this.icon.load(url);
         this.nameTex.text = data.name;
         this.energyImg.setText("-" + data.costEnergy);
@@ -442,7 +442,7 @@ class ChapterLevelLockItem extends ChapterLevelBaseItem {
         super(scene, dpr);
     }
 
-    public setLevelData(data: op_client.IPKT_EXPLORE_CHAPTER_DATA, lock: boolean) {
+    public setLevelData(data: IExploreChapterData, lock: boolean) {
         super.setLevelData(data, lock);
         this.rightTex.text = i18n.t("explore.unlocktips", { name: data.requiredPlayerLevel });
     }
@@ -525,7 +525,7 @@ class ChapterLevelEventuallyItem extends ChapterLevelBaseItem {
 
     public setLevelData(data: IExploreLevelData, lock: boolean) {
         super.setLevelData(data, lock);
-        const url = Url.getOsdRes(data.imagePath + `_${this.dpr}x.png`);
+        const url = Url.getOsdRes(data.texturePath + `_${this.dpr}x.png`);
         this.icon.load(url);
         if (lock) {
             this.iconbg2.visible = false;

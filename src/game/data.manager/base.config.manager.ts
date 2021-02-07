@@ -1,5 +1,5 @@
 import { Game } from "gamecore";
-import { load, loadArr, Logger } from "utils";
+import { load, loadArr, Logger, Url } from "utils";
 import { BaseConfigData } from "./base.config.data";
 export class BaseConfigManager {
     protected baseDirname: string;
@@ -13,7 +13,7 @@ export class BaseConfigManager {
         return <T>(this.dataMap.get(key));
     }
     public startLoad(basePath: string): Promise<any> {
-       return this.getBasePath().then((value: string) => {
+        return this.getBasePath().then((value: string) => {
             return this.executeLoad(value);
         });
     }
@@ -43,8 +43,13 @@ export class BaseConfigManager {
                         data.forEach((value: XMLHttpRequest, key: string) => {
                             const obj = this.dataMap.get(key);
                             const json = value.response;
+                            try {
+                                this.setLocalStorage(key, value.responseURL, json);
+                            } catch (error) {
+                                // tslint:disable-next-line:no-console
+                                console.log("Local Storage is full, Please empty data");
+                            }
                             obj.parseJson(json);
-                            this.setLocalStorage(key, value.responseURL, json);
                         });
                         resolve(true);
                     }, (reponse) => {
@@ -89,7 +94,10 @@ export class BaseConfigManager {
         // this.baseDirname = path.slice(0, index + 1);
         this.baseDirname = path;
     }
-    protected configUrl(reName: string) {
+    protected configUrl(reName: string, tempurl?: string) {
+        if (tempurl) {
+            return tempurl;
+        }
         const url = this.baseDirname + `${reName}.json`;
         return url;
     }
@@ -97,7 +105,7 @@ export class BaseConfigManager {
     protected checkLocalStorage(): Promise<any> {
         const promises = [];
         this.dataMap.forEach(async (value, key: string) => {
-            const temppath = this.configUrl(key);
+            const temppath = this.configUrl(key, value.url);
             const obj = this.getLocalStorage(key, temppath);
             promises.push(obj);
         });
@@ -124,7 +132,7 @@ export class BaseConfigManager {
     protected getBasePath() {
         return new Promise((resolve, reject) => {
             const url = "https://cdn.tooqing.com/game/resource/alpha/5e719a0a68196e416ecf7aad/.config.json";
-            const cdnurl = "http://cdn.tooqing.com/game/resource/alpha/5e719a0a68196e416ecf7aad/";
+            const cdnurl = "https://cdn.tooqing.com/game/resource/alpha/5e719a0a68196e416ecf7aad/";
             load(url, "json").then((value: XMLHttpRequest) => {
                 const json = value.response;
                 const version = json.version;

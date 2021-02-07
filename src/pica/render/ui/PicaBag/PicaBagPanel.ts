@@ -6,6 +6,7 @@ import { AvatarSuitType, ModuleName } from "structure";
 import { Font, Handler, i18n, UIHelper, Url } from "utils";
 import { op_client, op_def } from "pixelpai_proto";
 import { PicaBasePanel } from "../pica.base.panel";
+import { ICountablePackageItem, IExtendCountablePackageItem } from "picaStructure";
 export class PicaBagPanel extends PicaBasePanel {
   private mCloseBtn: Button;
   private topCheckBox: CheckboxGroup;
@@ -113,7 +114,7 @@ export class PicaBagPanel extends PicaBasePanel {
     this.updateCategeoriesLoc(false);
   }
 
-  public setProp(props: any[], isupdate: boolean = false) {// op_client.ICountablePackageItem
+  public setProp(props: IExtendCountablePackageItem[], isupdate: boolean = false) {// op_client.ICountablePackageItem
     props = !props ? [] : props;
     let subProps = [];
     const subcategoryType = this.mSelectedCategeories.key;
@@ -371,7 +372,7 @@ export class PicaBagPanel extends PicaBasePanel {
     const topCapH = 35 * this.dpr;
     const topPosY = 23 * this.dpr;
     this.topCheckBox = new CheckboxGroup();
-    let topCategorys = [3, 1];// op_pkt_def.PKT_PackageType.PropPackage, op_pkt_def.PKT_PackageType.FurniturePackage, op_pkt_def.PKT_PackageType.AvatarPackage
+    let topCategorys = [3, 1]; // op_pkt_def.PKT_PackageType.PropPackage, op_pkt_def.PKT_PackageType.FurniturePackage, op_pkt_def.PKT_PackageType.AvatarPackage
     let topBtnTexts = [i18n.t("furni_bag.Props"), i18n.t("furni_bag.furni")];
     if (sceneType === 2) {// op_def.SceneTypeEnum.EDIT_SCENE_TYPE
       topCategorys = [5];// op_pkt_def.PKT_PackageType.PropPackage, op_pkt_def.PKT_PackageType.FurniturePackage, op_pkt_def.PKT_PackageType.AvatarPackage
@@ -435,7 +436,7 @@ export class PicaBagPanel extends PicaBasePanel {
     return btn;
   }
 
-  private setSelectedItem(data: op_client.ICountablePackageItem, cell: Item) {// op_client.ICountablePackageItem
+  private setSelectedItem(data: IExtendCountablePackageItem, cell: Item) {// op_client.ICountablePackageItem
     if (this.mSelectedItem) {
       this.mSelectedItem.isSelect = false;
     }
@@ -451,7 +452,7 @@ export class PicaBagPanel extends PicaBasePanel {
     this.mDetailDisplay.displayLoading("loading_ui", Url.getUIRes(this.dpr, "loading_ui"), Url.getUIRes(this.dpr, "loading_ui"));
     const content = new op_client.OP_VIRTUAL_WORLD_RES_CLIENT_MARKET_QUERY_PACKAGE_ITEM_RESOURCE();
     content.display = this.categoryType === 1 ? data.animationDisplay : data.display;
-    content.animations = data.animations;
+    content.animations = <any>data.animations;
     this.setSelectedResource(content);
   }
 
@@ -523,7 +524,7 @@ export class PicaBagPanel extends PicaBasePanel {
     }
   }
 
-  private setItemAttribute(item: op_client.CountablePackageItem, property: any) {
+  private setItemAttribute(item: ICountablePackageItem, property: any) {
     for (const img of this.mAttributes) {
       img.visible = false;
     }
@@ -632,7 +633,7 @@ export class PicaBagPanel extends PicaBasePanel {
     this.categoryType = categoryType;
     this.render.renderEmitter(this.key + "_getCategories", categoryType);
   }
-  private getPropResource(data: op_client.ICountablePackageItem) {
+  private getPropResource(data: IExtendCountablePackageItem) {
     const resource: any = {};
     if (data.suitType) {
       resource.avatar = AvatarSuitType.createAvatarBySn(data.suitType, data.sn, data.slot, data.tag, data.version);
@@ -777,12 +778,13 @@ class DetailBubble extends Phaser.GameObjects.Container {
       color: "#333333",
       fontSize: 12 * this.dpr,
       fontFamily: Font.DEFULT_FONT,
-      lineSpacing: 6 * dpr,
+      lineSpacing: 5 * dpr,
       padding: {
         top: 2 * dpr
       }
     }).setOrigin(0);
-    this.tipsText.setWrapMode("string");
+    this.tipsText.setWrapMode("char");
+    this.tipsText.setWrapWidth(200 * dpr);
     this.mExpires = new BBCodeText(scene, 7 * dpr, 85 * dpr, "", {
       fontSize: 12 * this.dpr,
       fontFamily: Font.DEFULT_FONT,
@@ -798,17 +800,16 @@ class DetailBubble extends Phaser.GameObjects.Container {
       this.mExpires.text = "";
       this.resize();
     } else {
-      this.tipsText.setWrapWidth(undefined);
       const name = `[color=#32347b][b][size=${14 * this.dpr}]${prop.shortName || prop.name}[/size][/b][/color]`;
       // let price = "";
       let source = "";
       let describle = "";
       let attri = "";
       let need = "";
-      let tips = name + "\n";
-      let maxWidth: number = 100 * this.dpr;
+      let tips = name;
+      let mixWidth: number = 100 * this.dpr;
       this.tipsText.text = tips;
-      maxWidth = maxWidth < this.tipsText.width ? this.tipsText.width : maxWidth;
+      mixWidth = mixWidth < this.tipsText.width ? this.tipsText.width : mixWidth;
       // if (prop.recyclable) {
       //   // if (prop.sellingPrice) {
       //   //   price = `${i18n.t("furni_bag.sale_price")}: [img=${Coin.getIcon(prop.sellingPrice.coinType)}] ${prop.sellingPrice.price}`;
@@ -827,13 +828,13 @@ class DetailBubble extends Phaser.GameObjects.Container {
         source = `${prop.source}`;
         tips += `[color=#ffffff][size=${12 * this.dpr}]${source}[/size][/color]`;
         this.tipsText.text = source;
-        maxWidth = maxWidth < this.tipsText.width ? this.tipsText.width : maxWidth;
+        mixWidth = mixWidth < this.tipsText.width ? this.tipsText.width : mixWidth;
       }
       if (prop.des && prop.des !== "") {
         describle = prop.des;
         tips += "\n" + describle;
         this.tipsText.text = describle;
-        maxWidth = maxWidth < this.tipsText.width ? this.tipsText.width : maxWidth;
+        mixWidth = mixWidth < this.tipsText.width ? this.tipsText.width : mixWidth;
       }
       let isline = false;
       if (prop.affectValues) {
@@ -876,9 +877,10 @@ class DetailBubble extends Phaser.GameObjects.Container {
           tips += `\n${i18n.t("furni_bag.needproper")}:${need}`;
         }
       }
-      this.tipsText.setWrapWidth(maxWidth);
+      // const wrapwidth = mixWidth > maxWidth ? maxWidth : mixWidth;
+      // this.tipsText.setWrapWidth(wrapwidth);
       this.tipsText.text = tips;
-      this.width = maxWidth + 14 * this.dpr;
+      this.width = this.tipsText.width + 14 * this.dpr;
       if (prop.expiredTime > 0) {
         if (!isline) {
           isline = true;
@@ -1021,7 +1023,7 @@ class Item extends Phaser.GameObjects.Container {
     }
     if (!prop.tag || JSON.parse(prop.tag).type !== "remove") {
       this.mPropImage.scale = this.dpr / this.zoom;
-      this.mPropImage.load(Url.getOsdRes(prop.display.texturePath), this, this.onPropLoadCompleteHandler);
+      this.mPropImage.load(Url.getOsdRes(prop.texturePath), this, this.onPropLoadCompleteHandler);
     } else {
       this.mPropImage.setTexture(UIAtlasName.uicommon, "backpack_close");
       this.mPropImage.scale = 1;

@@ -2,6 +2,7 @@ import { op_client } from "pixelpai_proto";
 import { PicaWork } from "./PicaWork";
 import { BasicMediator, Game, PlayerProperty, UIType } from "gamecore";
 import { EventType, ModuleName } from "structure";
+import { BaseDataConfigManager } from "picaWorker";
 export class PicaWorkMediator extends BasicMediator {
     protected mModel: PicaWork;
     private mPlayerInfo: PlayerProperty;
@@ -62,8 +63,11 @@ export class PicaWorkMediator extends BasicMediator {
     }
     private checkCanDoJob(content: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_JOB_LIST) {
         const jobs: op_client.IPKT_Quest[] = [];
+        const configMgr = <BaseDataConfigManager>this.game.configManager;
         for (const job of content.jobs) {
             const targets = job.targets;
+            configMgr.getBatchItemDatas(job.targets);
+            configMgr.getBatchItemDatas(job.rewards);
             let issatisfy: boolean = true;
             for (const target of targets) {
                 const property = this.playerInfo.getProperty(target.id);

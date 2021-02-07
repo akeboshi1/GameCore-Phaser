@@ -548,13 +548,13 @@ export class ElementManager extends PacketHandler implements IElementManager {
         const content: op_client.IOP_VIRTUAL_WORLD_REQ_CLIENT_SET_SPRITE_POSITION = packet.content;
         const type: number = content.nodeType;
         const id: number = content.id;
-        if (type !== NodeType.ElementNodeType) {
+        if (type !== NodeType.ElementNodeType && type !== NodeType.CharacterNodeType) {
             return;
         }
         const ele: Element = this.get(id);
-        ele.setPosition(new LogicPos(content.position.x, content.position.y, content.position.z));
+        if (ele) ele.setPosition(new LogicPos(content.position.x, content.position.y, content.position.z));
 
-        this.mRoom.game.renderPeer.setPosition(id, content.position.x, content.position.y, content.position.z);
+        this.mRoom.game.physicalPeer.setPosition(id, content.position.x, content.position.y, content.position.z);
     }
 
     protected onRemove(packet: PBpacket) {

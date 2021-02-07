@@ -1,6 +1,7 @@
 import { NineSliceButton, GameGridTable, ClickEvent } from "apowophaserui";
 import { BasePanel, DynamicImage, NinePatch, UiManager } from "gamecoreRender";
 import { UIAtlasKey, UIAtlasName } from "picaRes";
+import { ICountablePackageItem } from "picaStructure";
 import { ModuleName, RENDER_PEER } from "structure";
 import { Font, i18n, Url } from "utils";
 export class PicaMineSettlePanel extends BasePanel {
@@ -201,11 +202,11 @@ class MineSettleItem extends Phaser.GameObjects.Container {
         this.add(this.icon);
         this.add(this.itemCount);
     }
-    public setItemData(data: any) {// op_client.ICountablePackageItem
+    public setItemData(data: ICountablePackageItem) {// op_client.ICountablePackageItem
         this.itemData = data;
         this.itemCount.setFontSize(this.dpr * 14);
         this.itemCount.text = data.count + "";
-        const url = Url.getOsdRes(data.display.texturePath);
+        const url = Url.getOsdRes(data.texturePath);
         this.icon.load(url, this, () => {
             ///  this.icon.setDisplaySize(33 * this.dpr, 33 * this.dpr);
             this.icon.setScale(33 * this.dpr / this.icon.width);

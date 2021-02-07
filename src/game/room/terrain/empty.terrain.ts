@@ -5,7 +5,7 @@ import { IRoomService } from "../room/room";
 export class EmptyTerrain extends BlockObject {
     public dirty: boolean = false;
     constructor(room: IRoomService, public pos: IPos, i, j) {
-        super(Number(i + "" + j), room);
+        super(Number(i * 10 + "" + j * 10), room);
         this.setPosition(pos);
         this.addDisplay();
     }

@@ -38,11 +38,17 @@ export class ValueResolver<T> {
 
   public resolve = (value?: T) => {
     if (!this.resolver) {
-      const error = new Error("No Resolver");
+      // const error = new Error("No Resolver");
+      // if (this.rejecter) {
+      //   return this.rejecter(error);
+      // } else {
+      //   throw error;
+      // }
+      const error = "No Resolver";
       if (this.rejecter) {
         return this.rejecter(error);
       } else {
-        throw error;
+        return;
       }
     }
     this.resolver(value);

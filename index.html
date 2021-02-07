@@ -83,10 +83,11 @@
                 parent: "game",
                 game_id: "5e719a0a68196e416ecf7aad",
                 virtual_world_id: "0",
+                locationhref: window.location.href
             }
             const app = launcher.start(option);
             app.registerReload(window.reload);
-            
+
             window.addEventListener("resize", (e) => {
                 app.onResize(window.innerWidth, window.innerHeight);
 

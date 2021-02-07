@@ -218,6 +218,7 @@ export class AvatarEditorDragonbone extends Phaser.GameObjects.Container {
 
             this.snapshot({x: 0, y: 0, width, height}, modelData)
                 .then((result) => {
+                    Logger.getInstance().log("shop icon: ", result);
                     resolve(result);
                 })
                 .catch((reason) => {
@@ -532,6 +533,7 @@ class EditorDragonbonesDisplay extends BaseDragonbonesDisplay {
         super(scene);
 
         this.resourceName = resName;
+        this.isRenderTexture = true;
     }
 
     protected generateReplaceTextureKey(): string {
@@ -542,7 +544,7 @@ class EditorDragonbonesDisplay extends BaseDragonbonesDisplay {
         return `./resources_v${version}/`;
     }
 
-    protected getLoadPartUrl(val: string): string {
+    protected getPartLoadUrl(val: string): string {
         return `${this.mWebHomePath}/avatar/part/${val}.png`;
     }
 }
