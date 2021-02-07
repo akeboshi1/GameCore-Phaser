@@ -3,7 +3,7 @@
 //     readonly scene: Phaser.Scene;
 //     setScene(scene: Phaser.Scene): void;
 
-import { BaseLayer } from "baseRender";
+import { BaseLayer } from "./base.layer";
 import {Logger} from "utils";
 
 //     addToUILayer(obj: Phaser.GameObjects.GameObject, index?: number);
