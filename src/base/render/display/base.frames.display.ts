@@ -1,6 +1,6 @@
-import {Logger, Url} from "utils";
-import {BaseDisplay} from "./base.display";
-import {DisplayField, IFramesModel, RunningAnimation} from "structure";
+import { Direction, Logger, Url } from "utils";
+import { BaseDisplay } from "./base.display";
+import { DisplayField, IFramesModel, RunningAnimation } from "structure";
 import ImageFile = Phaser.Loader.FileTypes.ImageFile;
 import { BaseDragonbonesDisplay } from "./base.dragonbones.display";
 
@@ -69,7 +69,7 @@ export class BaseFramesDisplay extends BaseDisplay {
                     this.created();
                 };
                 // this.scene.load.on(Phaser.Loader.Events.COMPLETE, this.mAllLoadCompleted, this);
-                this.scene.load.once(Phaser.Loader.Events.FILE_LOAD_ERROR, onLoadError, this);
+                this.scene.load.on(Phaser.Loader.Events.FILE_LOAD_ERROR, onLoadError, this);
                 this.scene.textures.on(Phaser.Textures.Events.ADD, onAdd, this);
                 this.scene.load.start();
             }
@@ -92,7 +92,7 @@ export class BaseFramesDisplay extends BaseDisplay {
         if (!this.mCurAnimation) return;
         this.clearDisplay();
         const layer = this.mCurAnimation.layer;
-        let container: Phaser.GameObjects.Container = <Phaser.GameObjects.Container> this.mSprites.get(DisplayField.STAGE);
+        let container: Phaser.GameObjects.Container = <Phaser.GameObjects.Container>this.mSprites.get(DisplayField.STAGE);
         if (!container) {
             container = this.scene.make.container(undefined, false);
             container.setData("id", this.mID);
@@ -101,20 +101,20 @@ export class BaseFramesDisplay extends BaseDisplay {
         }
         for (let i = 0; i < layer.length; i++) {
             let display: Phaser.GameObjects.Sprite | Phaser.GameObjects.Image;
-            const {frameName, offsetLoc} = layer[i];
+            const { frameName, offsetLoc } = layer[i];
             if (frameName.length > 1) {
                 const key = `${data.gene}_${animation.name}_${i}`;
                 this.makeAnimation(data.gene, key, layer[i].frameName, layer[i].frameVisible,
                     this.mCurAnimation.frameRate, this.mCurAnimation.loop, this.mCurAnimation.frameDuration);
                 display = this.scene.make.sprite(undefined, false);
-                const anis = (<Phaser.GameObjects.Sprite> display).anims;
+                const anis = (<Phaser.GameObjects.Sprite>display).anims;
                 anis.play(key);
                 if (typeof times === "number") anis.setRepeat(times);
                 if (!this.mMainSprite) {
-                    this.mMainSprite = <Phaser.GameObjects.Sprite> display;
+                    this.mMainSprite = <Phaser.GameObjects.Sprite>display;
                 }
             } else {
-                display = this.scene.make.image({key: data.gene, frame: frameName[0]});
+                display = this.scene.make.image({ key: data.gene, frame: frameName[0] });
             }
             display.setData("id", this.mID);
             // this.mDisplays.push(display);
@@ -147,7 +147,7 @@ export class BaseFramesDisplay extends BaseDisplay {
         }
 
         if (this.mMountContainer && this.mCurAnimation.mountLayer) {
-            const stageContainer = <Phaser.GameObjects.Container> this.mSprites.get(DisplayField.STAGE);
+            const stageContainer = <Phaser.GameObjects.Container>this.mSprites.get(DisplayField.STAGE);
             if (stageContainer) stageContainer.addAt(this.mMountContainer, this.mCurAnimation.mountLayer.index);
         }
     }
@@ -171,7 +171,7 @@ export class BaseFramesDisplay extends BaseDisplay {
         const effects = [];
         for (let i = 0; i < layer.length; i++) {
             let display: Phaser.GameObjects.Sprite | Phaser.GameObjects.Image;
-            const {frameName, offsetLoc} = layer[i];
+            const { frameName, offsetLoc } = layer[i];
             if (frameName.length > 1) {
                 const key = `${data.gene}_${aniName}_${i}`;
                 this.makeAnimation(data.gene, key, layer[i].frameName, layer[i].frameVisible, ani.frameRate, ani.loop, ani.frameDuration);
@@ -223,7 +223,7 @@ export class BaseFramesDisplay extends BaseDisplay {
         // super.setInteractive(shape, callback, dropZone);
         this.mIsInteracitve = true;
         this.mDisplays.forEach((display) => {
-            display.setInteractive({pixelPerfect: true});
+            display.setInteractive({ pixelPerfect: true });
         });
         return this;
     }
@@ -257,13 +257,13 @@ export class BaseFramesDisplay extends BaseDisplay {
             Logger.getInstance().error(`mountLyaer does not exist ${this.mAnimation}`);
             return;
         }
-        const {index, mountPoint} = this.mCurAnimation.mountLayer;
+        const { index, mountPoint } = this.mCurAnimation.mountLayer;
         if (targetIndex === undefined) targetIndex = 0;
         if (targetIndex >= mountPoint.length) {
             Logger.getInstance().error("mount index does not exist");
             return;
         }
-        let {x} = mountPoint[targetIndex];
+        let { x } = mountPoint[targetIndex];
         if (this.mAnimation.flip) {
             x = 0 - x;
         }
@@ -274,7 +274,7 @@ export class BaseFramesDisplay extends BaseDisplay {
             this.mMountContainer = this.scene.make.container(undefined, false);
         }
         if (!this.mMountContainer.parentContainer) {
-            const container = <Phaser.GameObjects.Container> this.mSprites.get(DisplayField.STAGE);
+            const container = <Phaser.GameObjects.Container>this.mSprites.get(DisplayField.STAGE);
             if (container) container.addAt(this.mMountContainer, index);
         }
         this.mMountContainer.addAt(display, targetIndex);
@@ -387,7 +387,21 @@ export class BaseFramesDisplay extends BaseDisplay {
         }
         if (this.scene.textures.exists(data.gene)) {
             if (field === DisplayField.STAGE) {
-                if (this.mAnimation) this.play(this.mAnimation);
+                if (this.mAnimation) {
+                    this.play(this.mAnimation);
+                } else {
+                    let flip = false;
+                    switch (data.avatarDir) {
+                        case Direction.south_east:
+                        case Direction.east_north:
+                            flip = true;
+                            break;
+                        case Direction.west_south:
+                        case Direction.north_west:
+                            break;
+                    }
+                    this.play({ name: data.animationName, flip });
+                }
             } else {
                 this.playEffect();
             }
@@ -412,9 +426,9 @@ export class BaseFramesDisplay extends BaseDisplay {
             const frame = frameName[i];
             const visible = frameVisible ? frameVisible[i] : true;
             if (frameDuration) {
-                frames.push({key: gen, frame, duration: frameDuration[i] * 1000, visible});
+                frames.push({ key: gen, frame, duration: frameDuration[i] * 1000, visible });
             } else {
-                frames.push({key: gen, frame, visible});
+                frames.push({ key: gen, frame, visible });
             }
         }
         const repeat = loop ? -1 : 1;
@@ -433,7 +447,7 @@ export class BaseFramesDisplay extends BaseDisplay {
         if (this.mDisplays.size < 1 || !data || !data.animations) return;
         // const animations = data.getAnimations(aniName);
         // if (!animations) return;
-        const {name, flip} = playAnimation;
+        const { name, flip } = playAnimation;
         // TODO
         // this.mCollisionArea = data.getCollisionArea(name, flip);
         // this.mOriginPoint = data.getOriginPoint(name, flip);
