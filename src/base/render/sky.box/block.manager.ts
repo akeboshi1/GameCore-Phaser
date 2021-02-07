@@ -1,9 +1,8 @@
 import { Logger, Url } from "utils";
 import { Fit, IScenery } from "structure";
-import { DynamicImage } from "../../../render/ui";
-import { SkyBoxScene } from "../../../render/scenes/sky.box.scene";
-import { ICameraService, IRender } from "baseRender";
-
+import { DynamicImage } from "../../../render/ui/components/dynamic.image";
+import { ICameraService } from "../cameras/cameras.manager";
+import { IRender } from "../render";
 export interface IBlockManager {
   startPlay(scene: Phaser.Scene);
   check(time?: number, delta?: number);
@@ -43,8 +42,9 @@ export class BlockManager implements IBlockManager {
     }
     this.mSceneName = "SkyBoxScene" + `_${scenery.id}`;
     // 注册skyboxscene，必须存在，否则获取不到skyboxscene
-    const scene = this.render.game.scene.add(this.mSceneName, SkyBoxScene, false);
-    playScene.scene.launch(this.mSceneName, this);
+    // const scene = this.render.game.scene.add(this.mSceneName, SkyBoxScene, false);
+    // playScene.scene.launch(this.mSceneName, this);
+    (<any>this.render).sceneManager.launchScene(this.render.getMainScene(), this.mSceneName, "SkyBoxScene", this);
     this.updateDepth();
   }
 

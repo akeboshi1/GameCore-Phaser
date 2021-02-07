@@ -12,6 +12,13 @@ export class ItemBaseDataConfig extends BaseConfigData {
             return undefined;
         }
     }
+
+    public getCoinType(id: string) {
+        if (id === "IV0000001")
+            return 3;
+        else if (id === "IV0000002")
+            return 4;
+    }
     // parseJson(json) {
     //     super.parseJson(json);
     //     this.consoleCategoryJson();
