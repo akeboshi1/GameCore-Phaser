@@ -1,5 +1,6 @@
 import { BasicMediator, Game } from "gamecore";
 import { ModuleName } from "structure";
+import { BaseDataConfigManager } from "../../data";
 import { PicaRewardTip } from "./PicaRewardTip";
 
 export class PicaRewardTipMediator extends BasicMediator {
@@ -34,6 +35,7 @@ export class PicaRewardTipMediator extends BasicMediator {
             this.mCacheData.push(content);
             return;
         }
+        const config = <BaseDataConfigManager>this.game.configManager;
         this.mView.appendAward(content);
     }
 }

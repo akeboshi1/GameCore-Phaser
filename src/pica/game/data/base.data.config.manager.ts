@@ -94,7 +94,7 @@ export class BaseDataConfigManager extends BaseConfigManager {
             if (data.hasOwnProperty(key)) {
                 const element = data[key];
                 if (element.className === "FurnitureItem" && element.rarity === 1) {
-                    temp.push(element);
+                    temp.push(this.getItemBase(element.id));
                 }
             }
         }
