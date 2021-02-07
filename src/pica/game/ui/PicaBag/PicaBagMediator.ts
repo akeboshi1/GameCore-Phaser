@@ -130,17 +130,23 @@ export class PicaBagMediator extends BasicMediator {
 
     private onGetCategoriesHandler(categoryType: number) {
         if (this.model) {
-            const data = this.cacheMgr.getBagCategory(categoryType);
-            if (!data) {
-                this.model.getCategories(categoryType);
-            } else {
-                const configMgr = <BaseDataConfigManager>this.game.configManager;
-                const subcategory = data.subcategory;
-                for (const sub of subcategory) {
-                    sub.value = configMgr.getI18n(sub.key);
-                }
-                this.mView.setCategories(subcategory);
-            }
+            // const data = this.cacheMgr.getBagCategory(categoryType);
+            // if (!data) {
+            //     this.model.getCategories(categoryType);
+            // } else {
+            //     const configMgr = <BaseDataConfigManager>this.game.configManager;
+            //     const subcategory = data.subcategory;
+            //     for (const sub of subcategory) {
+            //         sub.value = configMgr.getI18n(sub.key);
+            //     }
+            //     this.mView.setCategories(subcategory);
+            // }
+            const configMgr = <BaseDataConfigManager>this.game.configManager;
+            const subcategory = configMgr.getItemSubCategory(categoryType);
+            // for (const sub of subcategory) {
+            //     sub.value = configMgr.getI18n(sub.key);
+            // }
+            this.mView.setCategories(subcategory);
         }
     }
 

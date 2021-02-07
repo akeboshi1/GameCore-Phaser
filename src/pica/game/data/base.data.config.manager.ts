@@ -149,6 +149,23 @@ export class BaseDataConfigManager extends BaseConfigManager {
         return texts;
     }
 
+    public getItemSubCategory(type: number) {
+        const data: ItemCategoryConfig = this.getConfig(BaseDataType.itemcategory);
+        const key = data.getClassName(type);
+        const extend = key + "extend";
+        if (data.hasOwnProperty(extend)) return data[extend];
+        else {
+            const categorys: Array<{ key: string, value: string }> = [];
+            const arr = data[key];
+            for (const temp of arr) {
+                const value = this.getI18n(temp);
+                categorys.push({ key: temp, value });
+            }
+            this["extend"] = categorys;
+            return categorys;
+        }
+    }
+
     protected add() {
         this.dataMap.set(BaseDataType.i18n_zh, new I18nZHDataConfig());
         this.dataMap.set(BaseDataType.explore, new ExploreDataConfig());

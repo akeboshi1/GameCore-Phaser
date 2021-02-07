@@ -2,18 +2,22 @@ import { BaseConfigData } from "gamecore";
 
 export class ItemCategoryConfig extends BaseConfigData {
     url = "config/itemcategory.json";
-    getClassNames() {
-        return this["classname"];
+    getSubCategory(type: number) {
+        const key = this.getClassName(type);
+        return this[key];
     }
 
-    getCategorys() {
-        return this["category"];
-    }
-    getClassNameEnum() {
-        return this["enumclass"];
-    }
-
-    getCategoryEnum() {
-        return this["enumcategory"];
+    getClassName(type: number) {
+        if (type === 1) {
+            return "FurnitureItem";
+        } else if (type === 2) {
+            return "AvatarItem";
+        } else if (type === 3) {
+            return "PropItem";
+        } else if (type === 4) {
+            return "HandheldItem";
+        } else if (type === 5) {
+            return "ValueItem";
+        }
     }
 }
