@@ -1,6 +1,6 @@
 import { BaseConfigData, BaseConfigManager, Game } from "gamecore";
 import { ICountablePackageItem, IElement, IExploreChapterData, IExploreLevelData, IExtendCountablePackageItem } from "picaStructure";
-import { IShopBase } from "src/pica/structure/imarketcommodity";
+import { IMarketCommodity, IShopBase } from "src/pica/structure/imarketcommodity";
 import { loadArr, Logger, ObjectAssign, Url } from "utils";
 import { ElementDataConfig } from "./element.data.config";
 import { ExploreDataConfig } from "./explore.data.config";
@@ -163,6 +163,51 @@ export class BaseDataConfigManager extends BaseConfigManager {
             }
             this["extend"] = categorys;
             return categorys;
+        }
+    }
+
+    public getShopSubCategory() {
+        const data: ShopConfig = this.getConfig(BaseDataType.shop);
+        const extend = "subextend";
+        if (data.hasOwnProperty(extend)) {
+            return data[extend];
+        } else {
+            const categorys: Array<{ key: string, value: string }> = [];
+            const subs = data["subcategory"];
+            for (const sub of subs) {
+                const value = this.getI18n(sub);
+                categorys.push({ key: sub, value });
+            }
+            data["subcategory"] = categorys;
+            return categorys;
+        }
+    }
+
+    public getShopItems(sub: string) {
+        const data: ShopConfig = this.getConfig(BaseDataType.shop);
+        const itemconfig: ItemBaseDataConfig = this.getConfig(BaseDataType.item);
+        const arr = data.subMap.get(sub);
+        const extend = "subarrextend";
+        if (arr["subarrextend"]) {
+            return arr;
+        } else {
+            for (const shopitem of arr) {
+                const tempItem: IMarketCommodity = <any>shopitem;
+                if (!shopitem["find"]) {
+                    const item = this.getItemBase(shopitem.itemId);
+                    tempItem.name = this.getI18n(shopitem.name);
+                    tempItem.source = this.getI18n(shopitem.source);
+                    tempItem["des"] = this.getI18n(item.des);
+                    // const valueItem = this.getItemBase(shopitem.currencyId);
+                    tempItem["price"] = [{
+                        price: shopitem.price,
+                        coinType: itemconfig.getCoinType(shopitem.currencyId),
+                        displayPrecision: 0
+                    }];
+                    shopitem["find"] = true;
+                }
+            }
+            arr[extend] = true;
         }
     }
 
