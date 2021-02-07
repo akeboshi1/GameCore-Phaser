@@ -152,15 +152,15 @@ export class SceneManager {
         this.mCurSceneName = name;
     }
 
-    public launchScene(startScene: BasicScene, LaunchName: string, data?: any) {
+    public launchScene(startScene: BasicScene, LaunchName: string, sceneName: string, data?: any) {
         const sceneManager = this.render.game.scene;
         if (!data) data = { render: this.render };
         if (!sceneManager) {
             return; // Promise.reject("start faild. SceneManager does not exist");
         }
-        if (!this.sceneClass.hasOwnProperty(LaunchName)) {
-            return;// Promise.reject("className error: " + name);
-        }
+        // if (!this.sceneClass.hasOwnProperty(LaunchName)) {
+        //     return;// Promise.reject("className error: " + name);
+        // }
         data.render = this.render;
         const scene = sceneManager.getScene(LaunchName) as BasicScene;
         this.render.emitter.once("sceneCreated", () => {
@@ -168,7 +168,7 @@ export class SceneManager {
         }, this);
         if (scene) {
         } else {
-            sceneManager.add(LaunchName, this.sceneClass[LaunchName]);
+            sceneManager.add(LaunchName, this.sceneClass[sceneName]);
         }
         startScene.scene.launch(LaunchName, data);
     }
