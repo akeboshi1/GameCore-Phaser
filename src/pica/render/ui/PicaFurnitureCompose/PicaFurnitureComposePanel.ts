@@ -6,6 +6,7 @@ import { ModuleName } from "structure";
 import { Font, Handler, i18n, UIHelper, Url } from "utils";
 import { op_client, op_def } from "pixelpai_proto";
 import { PicaBasePanel } from "../pica.base.panel";
+import { ICountablePackageItem } from "picaStructure";
 export class PicaFurnitureComposePanel extends PicaBasePanel {
   private mCloseBtn: ButtonEventDispatcher;
   private mBackground: CommonBackground;
@@ -627,7 +628,7 @@ class FuriComposeAnimation extends Phaser.GameObjects.Container {
   }
 }
 class FuriComposeItem extends ButtonEventDispatcher {
-  public itemData: op_client.CountablePackageItem;
+  public itemData: ICountablePackageItem;
   private bg: Phaser.GameObjects.Image;
   private lightbg: Phaser.GameObjects.Image;
   private icon: DynamicImage;
@@ -640,14 +641,14 @@ class FuriComposeItem extends ButtonEventDispatcher {
     this.setSize(this.bg.width, this.bg.height);
     this.enable = true;
   }
-  public setItemData(data: op_client.CountablePackageItem) {
+  public setItemData(data: ICountablePackageItem) {
     this.itemData = data;
     this.lightbg.alpha = 0;
     this.icon.alpha = 0;
     if (!data) {
       this.icon.visible = false;
     } else {
-      const url = Url.getOsdRes(data.display.texturePath);
+      const url = Url.getOsdRes(data.texturePath);
       this.icon.load(url);
       this.icon.visible = true;
       this.playAlphaAni([this.icon, this.lightbg]);

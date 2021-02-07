@@ -1,6 +1,7 @@
 import { BasicMediator, Game } from "gamecore";
 import { op_client, op_pkt_def } from "pixelpai_proto";
 import { ModuleName } from "structure";
+import { BaseDataConfigManager } from "../../data";
 import { PicaTask } from "./PicaTask";
 export class PicaTaskMediator extends BasicMediator {
     protected mModel: PicaTask;
@@ -70,6 +71,14 @@ export class PicaTaskMediator extends BasicMediator {
         if (this.mView) this.mView.setTaskDetail(quest);
     }
     private onRetQuestGroup(content: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_QUERY_QUEST_GROUP) {
+        const configMgr = <BaseDataConfigManager>this.game.configManager;
+        configMgr.synItemBase(content.reward);
+        if (content.quests) {
+            for (const quest of content.quests) {
+                configMgr.getBatchItemDatas(quest.targets);
+                configMgr.getBatchItemDatas(quest.rewards);
+            }
+        }
         if (this.mView) this.mView.setTaskDatas(content);
         else this.taskGroup = content;
     }

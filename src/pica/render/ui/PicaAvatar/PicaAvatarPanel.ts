@@ -630,7 +630,8 @@ class DetailBubble extends Phaser.GameObjects.Container {
         top: 2 * dpr
       }
     }).setOrigin(0);
-    this.tipsText.setWrapMode("string");
+    this.tipsText.setWrapMode("char");
+    this.tipsText.setWrapWidth(200 * dpr);
     this.mExpires = new BBCodeText(scene, 7 * dpr, 85 * dpr, "", {
       fontSize: 12 * this.dpr,
       fontFamily: Font.DEFULT_FONT,
@@ -653,7 +654,7 @@ class DetailBubble extends Phaser.GameObjects.Container {
       let describle = "";
       let attri = "";
       let need = "";
-      let tips = name + "\n";
+      let tips = name;
       let maxWidth: number = 100 * this.dpr;
       this.tipsText.text = tips;
       maxWidth = maxWidth < this.tipsText.width ? this.tipsText.width : maxWidth;
@@ -720,9 +721,9 @@ class DetailBubble extends Phaser.GameObjects.Container {
           tips += `\n${i18n.t("furni_bag.needproper")}:${need}`;
         }
       }
-      this.tipsText.setWrapWidth(maxWidth);
+      // this.tipsText.setWrapWidth(maxWidth);
       this.tipsText.text = tips;
-      this.width = maxWidth + 14 * this.dpr;
+      this.width = this.tipsText.width + 14 * this.dpr;
       if (prop.expiredTime > 0) {
         if (!isline) {
           isline = true;
@@ -860,7 +861,7 @@ class Item extends Phaser.GameObjects.Container {
     }
     if (!prop.tag || JSON.parse(prop.tag).type !== "remove") {
       this.mPropImage.scale = this.dpr / this.zoom;
-      this.mPropImage.load(Url.getOsdRes(prop.display.texturePath), this, this.onPropLoadCompleteHandler);
+      this.mPropImage.load(Url.getOsdRes(prop.texturePath), this, this.onPropLoadCompleteHandler);
     } else {
       this.mPropImage.setTexture(UIAtlasName.uicommon, "backpack_close");
       this.mPropImage.scale = 1;

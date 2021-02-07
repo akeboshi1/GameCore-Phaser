@@ -126,9 +126,9 @@ export class PicaAvatarMediator extends BasicMediator {
     private onQueryPackage(data: { packType: op_pkt_def.PKT_PackageType, key: string, isupdate: boolean }) {
         if (this.playerData) {
             const items = this.playerData.getItemsByCategory(data.packType, data.key);
-            const configMgr = <BaseDataConfigManager>this.game.configManager;
-            configMgr.getBatchItemDatas(items);
             if (data.packType === op_pkt_def.PKT_PackageType.AvatarPackage && items) {
+                const configMgr = <BaseDataConfigManager>this.game.configManager;
+                configMgr.getBatchItemDatas(items);
                 let tempitem: op_client.ICountablePackageItem;
                 for (let i = items.length - 1; i >= 0; i--) {
                     const tag = items[i].tag;

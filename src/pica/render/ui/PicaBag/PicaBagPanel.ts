@@ -372,7 +372,7 @@ export class PicaBagPanel extends PicaBasePanel {
     const topCapH = 35 * this.dpr;
     const topPosY = 23 * this.dpr;
     this.topCheckBox = new CheckboxGroup();
-    let topCategorys = [3, 1];// op_pkt_def.PKT_PackageType.PropPackage, op_pkt_def.PKT_PackageType.FurniturePackage, op_pkt_def.PKT_PackageType.AvatarPackage
+    let topCategorys = [3, 1]; // op_pkt_def.PKT_PackageType.PropPackage, op_pkt_def.PKT_PackageType.FurniturePackage, op_pkt_def.PKT_PackageType.AvatarPackage
     let topBtnTexts = [i18n.t("furni_bag.Props"), i18n.t("furni_bag.furni")];
     if (sceneType === 2) {// op_def.SceneTypeEnum.EDIT_SCENE_TYPE
       topCategorys = [5];// op_pkt_def.PKT_PackageType.PropPackage, op_pkt_def.PKT_PackageType.FurniturePackage, op_pkt_def.PKT_PackageType.AvatarPackage
@@ -524,7 +524,7 @@ export class PicaBagPanel extends PicaBasePanel {
     }
   }
 
-  private setItemAttribute(item: op_client.CountablePackageItem, property: any) {
+  private setItemAttribute(item: ICountablePackageItem, property: any) {
     for (const img of this.mAttributes) {
       img.visible = false;
     }
@@ -633,7 +633,7 @@ export class PicaBagPanel extends PicaBasePanel {
     this.categoryType = categoryType;
     this.render.renderEmitter(this.key + "_getCategories", categoryType);
   }
-  private getPropResource(data: op_client.ICountablePackageItem) {
+  private getPropResource(data: IExtendCountablePackageItem) {
     const resource: any = {};
     if (data.suitType) {
       resource.avatar = AvatarSuitType.createAvatarBySn(data.suitType, data.sn, data.slot, data.tag, data.version);
@@ -800,7 +800,6 @@ class DetailBubble extends Phaser.GameObjects.Container {
       this.mExpires.text = "";
       this.resize();
     } else {
-      // this.tipsText.setWrapWidth(undefined);
       const name = `[color=#32347b][b][size=${14 * this.dpr}]${prop.shortName || prop.name}[/size][/b][/color]`;
       // let price = "";
       let source = "";
@@ -1024,7 +1023,7 @@ class Item extends Phaser.GameObjects.Container {
     }
     if (!prop.tag || JSON.parse(prop.tag).type !== "remove") {
       this.mPropImage.scale = this.dpr / this.zoom;
-      this.mPropImage.load(Url.getOsdRes(prop.display.texturePath), this, this.onPropLoadCompleteHandler);
+      this.mPropImage.load(Url.getOsdRes(prop.texturePath), this, this.onPropLoadCompleteHandler);
     } else {
       this.mPropImage.setTexture(UIAtlasName.uicommon, "backpack_close");
       this.mPropImage.scale = 1;

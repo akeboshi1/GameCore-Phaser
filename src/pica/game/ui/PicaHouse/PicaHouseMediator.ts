@@ -1,4 +1,5 @@
 import { BasicMediator, Game } from "gamecore";
+import { BaseDataConfigManager } from "picaWorker";
 import { op_client } from "pixelpai_proto";
 import { ModuleName } from "structure";
 import { PicaHouse } from "./PicaHouse";
@@ -65,6 +66,8 @@ export class PicaHouseMediator extends BasicMediator {
     }
 
     private on_REFURBISH_REQUIREMENTS(content: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_QUERY_ROOM_REFURBISH_REQUIREMENTS) {
+        const configMgr = <BaseDataConfigManager>this.game.configManager;
+        configMgr.getBatchItemDatas(content.requirements);
         this.mView.on_REFURBISH_REQUIREMENTS(content);
     }
 

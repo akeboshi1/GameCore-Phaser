@@ -1,4 +1,5 @@
 import { BasicMediator, Game } from "gamecore";
+import { BaseDataConfigManager } from "picaWorker";
 import { op_client, op_pkt_def } from "pixelpai_proto";
 import { EventType, ModuleName } from "structure";
 import { PicaCompose } from "./PicaCompose";
@@ -62,6 +63,8 @@ export class PicaComposeMediator extends BasicMediator {
         this.mModel.onReqUseFormula(id);
     }
     private onRetFormulaDetial(content: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_CRAFT_QUERY_FORMULA) {
+        const configMgr = <BaseDataConfigManager>this.game.configManager;
+        configMgr.getBatchItemDatas(content.materials);
         this.mView.setComposeDetialData(content);
     }
 

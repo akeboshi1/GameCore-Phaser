@@ -1,6 +1,7 @@
 import { BBCodeText, ClickEvent, NineSlicePatch } from "apowophaserui";
 import { ButtonEventDispatcher, DynamicImage, ThreeSliceButton } from "gamecoreRender";
 import { UIAtlasName } from "picaRes";
+import { ICountablePackageItem } from "picaStructure";
 import { op_client, op_pkt_def } from "pixelpai_proto";
 import { Handler, i18n, UIHelper, Url } from "utils";
 import { ItemButton } from "../Components";
@@ -203,20 +204,20 @@ class TaskItemExtend extends Phaser.GameObjects.Container {
         let taskPosy = 0;
         const cellHeight = 67 * this.dpr;
         this.taskTex.text = this.getTaskTargetText(questData);
-        this.createTaskCells(this.needArr, questData.targets, true);
+        this.createTaskCells(this.needArr, <any>questData.targets, true);
         taskPosy = this.taskTex.y + this.taskTex.height + 8 * this.dpr;
         if (questData.targets.length > 0) {
             if (this.hasTargetWithDisplay(questData)) {
                 taskPosy += cellHeight * 0.5;
                 this.sortItem(this.needArr, taskPosy);
-                taskPosy += cellHeight * 0.5 +15 * this.dpr;
+                taskPosy += cellHeight * 0.5 + 15 * this.dpr;
             }
         }
         this.rewardLabel.y = taskPosy;
         taskPosy += this.rewardLabel.height + 5 * this.dpr;
         this.line.y = taskPosy;
         taskPosy += 5 * this.dpr;
-        this.createTaskCells(this.rewardArr, questData.rewards, false);
+        this.createTaskCells(this.rewardArr, <any>questData.rewards, false);
         taskPosy += cellHeight * 0.5;
         this.sortItem(this.rewardArr, taskPosy);
         this.height = taskPosy + cellHeight * 0.5 + 10 * this.dpr;
@@ -240,7 +241,7 @@ class TaskItemExtend extends Phaser.GameObjects.Container {
         this.send = send;
     }
 
-    private createTaskCells(arr: ItemButton[], dataArr: op_client.ICountablePackageItem[], isTask: boolean = true) {
+    private createTaskCells(arr: ItemButton[], dataArr: ICountablePackageItem[], isTask: boolean = true) {
         for (const item of arr) {
             item.visible = false;
         }
@@ -249,7 +250,7 @@ class TaskItemExtend extends Phaser.GameObjects.Container {
             if (i < arr.length) {
                 item = arr[i];
             } else {
-                if (dataArr[i].display && dataArr[i].display.texturePath) {
+                if (dataArr[i].texturePath) {
                     item = new ItemButton(this.scene, UIAtlasName.uicommon, "bag_icon_common_bg", this.dpr, this.zoom, true);
                     item.on(ClickEvent.Tap, this.onTaskCellHandler, this);
                     arr.push(item);
@@ -266,7 +267,7 @@ class TaskItemExtend extends Phaser.GameObjects.Container {
 
     private hasTargetWithDisplay(questData: op_client.IPKT_Quest) {
         for (const target of questData.targets) {
-            if (target.display && target.display.texturePath) return true;
+            if ((<any>target).texturePath) return true;
         }
     }
 
@@ -300,7 +301,7 @@ class TaskItemExtend extends Phaser.GameObjects.Container {
     }
 }
 class TaskCell extends ButtonEventDispatcher {
-    public itemData: op_client.ICountablePackageItem;
+    public itemData: ICountablePackageItem;
     protected dpr: number;
     protected zoom: number;
     private bg: Phaser.GameObjects.Image;
@@ -322,11 +323,11 @@ class TaskCell extends ButtonEventDispatcher {
         this.enable = true;
     }
 
-    public setCellData(itemData: op_client.ICountablePackageItem, isTask: boolean = true) {
+    public setCellData(itemData: ICountablePackageItem, isTask: boolean = true) {
         this.itemData = itemData;
         const frame = isTask ? "task_icon_bg" : "task_reward_bg";
         this.bg.setTexture(UIAtlasName.uicommon, frame);
-        const url = Url.getOsdRes(itemData.display.texturePath);
+        const url = Url.getOsdRes(itemData.texturePath);
         this.itemIcon.load(url, this, () => {
         });
         if (!isTask) {

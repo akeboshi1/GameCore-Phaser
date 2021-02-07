@@ -1,16 +1,22 @@
 import { BaseConfigData, BaseConfigManager, Game } from "gamecore";
 import { ICountablePackageItem, IElement, IExploreChapterData, IExploreLevelData, IExtendCountablePackageItem } from "picaStructure";
-import { loadArr, Logger, ObjectAssign } from "utils";
+import { IShopBase } from "src/pica/structure/imarketcommodity";
+import { loadArr, Logger, ObjectAssign, Url } from "utils";
 import { ElementDataConfig } from "./element.data.config";
 import { ExploreDataConfig } from "./explore.data.config";
 import { I18nZHDataConfig } from "./i18nzh.config";
 import { ItemBaseDataConfig } from "./item.base.data.config";
+import { ItemCategoryConfig } from "./item.category.config";
+import { ShopConfig } from "./shop.config";
+import version from "../../../../version";
 
 export enum BaseDataType {
     i18n_zh = "i18n_zh",
     explore = "explore",
     item = "item",
-    element = "element"
+    element = "element",
+    shop = "material_shop",
+    itemcategory = "itemcategory"
 }
 export class BaseDataConfigManager extends BaseConfigManager {
     protected baseDirname: string;
@@ -23,14 +29,17 @@ export class BaseDataConfigManager extends BaseConfigManager {
         const data: ItemBaseDataConfig = this.getConfig(BaseDataType.item);
         const item = data.get(id);
         if (item && !item["find"]) {
-            item.name = this.getI18n(item.name);
-            item.source = this.getI18n(item.source);
-            item.des = this.getI18n(item.des);
+            item.name = this.getI18n(item.name, { id: item.id, name: "name" });
+            item.source = this.getI18n(item.source, { id: item.id, source: "source" });
+            item.des = this.getI18n(item.des, { id: item.id, des: "des" });
             item["exclude"] = data.excludes;
             if (item.elementId && item.elementId !== "") {
                 const element = this.getElementData(item.elementId);
-                item["animations"] = element["AnimationData"];
-                item["animationDisplay"] = { dataPath: element.data_path, texturePath: element.texture_path };
+                if (element) {
+                    item["animations"] = element["AnimationData"];
+                    if (element.data_path || element.texture_path)
+                        item["animationDisplay"] = { dataPath: element.data_path, texturePath: element.texture_path };
+                }
             }
             item["find"] = true;
         }
@@ -38,6 +47,7 @@ export class BaseDataConfigManager extends BaseConfigManager {
     }
 
     public getBatchItemDatas(items: any[]) {
+        if (!items) return [];
         for (const item of items) {
             if (!item["find"]) {
                 const tempitem = this.getItemBase(item.id);
@@ -47,7 +57,25 @@ export class BaseDataConfigManager extends BaseConfigManager {
         }
         return items;
     }
+    public synItemBase(item: any) {
+        if (!item) return undefined;
+        const tempitem = this.getItemBase(item.id);
+        ObjectAssign.excludeTagAssign(item, tempitem, "exclude");
+    }
 
+    public getRecastItemBases() {
+        const temp = [];
+        const data: ItemBaseDataConfig = this.getConfig(BaseDataType.item);
+        for (const key in data) {
+            if (data.hasOwnProperty(key)) {
+                const element = data[key];
+                if (element.className === "FurnitureItem" && element.rarity === 1) {
+                    temp.push(element);
+                }
+            }
+        }
+        return temp;
+    }
     public getChapterData(id: number): IExploreChapterData {
         const data: ExploreDataConfig = this.getConfig(BaseDataType.explore);
         const chapter = data.getChapter(id);
@@ -82,18 +110,60 @@ export class BaseDataConfigManager extends BaseConfigManager {
         return element;
     }
 
-    public getI18n(id: string) {
+    public getShopBase(id: string): IShopBase {
+        const data: ShopConfig = this.getConfig(BaseDataType.shop);
+        const temp = data.get(id);
+        if (temp && !temp["find"]) {
+            const item = this.getItemBase(temp.itemId);
+            temp.name = item.name;
+            temp.icon = item.texturePath;
+            temp.source = item.source;
+            temp["find"] = true;
+        }
+        return temp;
+    }
+
+    public getBatchShopBase(ids: string[]) {
+        const temps = [];
+        if (ids) {
+            for (const id of ids) {
+                temps.push(this.getShopBase(id));
+            }
+        }
+        return temps;
+    }
+
+    public getI18n(id: string, tips?: any) {
         const data: I18nZHDataConfig = this.getConfig(BaseDataType.i18n_zh);
-        return data.text(id);
+        return data.text(id, tips);
     }
 
     public getBatchI18n(ids: string[]) {
         const texts = [];
-        for (const key of ids) {
-            const text = this.getI18n(key);
-            texts.push(text);
+        if (ids) {
+            for (const key of ids) {
+                const text = this.getI18n(key);
+                texts.push(text);
+            }
         }
-        return;
+        return texts;
+    }
+
+    public getItemSubCategory(type: number) {
+        const data: ItemCategoryConfig = this.getConfig(BaseDataType.itemcategory);
+        const key = data.getClassName(type);
+        const extend = key + "extend";
+        if (data.hasOwnProperty(extend)) return data[extend];
+        else {
+            const categorys: Array<{ key: string, value: string }> = [];
+            const arr = data[key];
+            for (const temp of arr) {
+                const value = this.getI18n(temp);
+                categorys.push({ key: temp, value });
+            }
+            this["extend"] = categorys;
+            return categorys;
+        }
     }
 
     protected add() {
@@ -101,8 +171,14 @@ export class BaseDataConfigManager extends BaseConfigManager {
         this.dataMap.set(BaseDataType.explore, new ExploreDataConfig());
         this.dataMap.set(BaseDataType.item, new ItemBaseDataConfig());
         this.dataMap.set(BaseDataType.element, new ElementDataConfig());
+        this.dataMap.set(BaseDataType.shop, new ShopConfig());
+        this.dataMap.set(BaseDataType.itemcategory, new ItemCategoryConfig());
     }
-    protected configUrl(reName: string) {
+
+    protected configUrl(reName: string, tempurl?: string) {
+        if (tempurl) {
+            return this.mGame.getGameConfig().locationhref + `resources_v${version}/${tempurl}`;
+        }
         const url = this.baseDirname + `client_resource/${reName}.json`;
         return url;
     }

@@ -2,6 +2,7 @@ import { op_client, op_pkt_def } from "pixelpai_proto";
 import { PicaFurniFun } from "./PicaFurniFun";
 import { EventType, ISprite, ModuleName } from "structure";
 import { BaseDataManager, BasicMediator, DataMgrType, Game } from "gamecore";
+import { BaseDataConfigManager } from "../../data";
 
 export class PicaFurniFunMediator extends BasicMediator {
     private picFurni: PicaFurniFun;
@@ -69,6 +70,8 @@ export class PicaFurniFunMediator extends BasicMediator {
         if (map.has(sn)) {
             const value: op_client.ICountablePackageItem[] = map.get(sn);
             this.updateMaterials(value);
+            const configMgr = <BaseDataConfigManager>this.game.configManager;
+            configMgr.getBatchItemDatas(value);
             if (this.mView) this.mView.setMaterialsData(value);
         }
     }
@@ -91,6 +94,8 @@ export class PicaFurniFunMediator extends BasicMediator {
 
         if (this.playerData) {
             if (content.materials) {
+                const configMgr = <BaseDataConfigManager>this.game.configManager;
+                configMgr.getBatchItemDatas(content.materials);
                 for (const data of content.materials) {
                     const count = this.playerData.getItemsCount(op_pkt_def.PKT_PackageType.PropPackage, data.id, data.subcategory);
                     data.recommended = count; // hack
@@ -98,7 +103,7 @@ export class PicaFurniFunMediator extends BasicMediator {
             }
         }
 
-        this.game.emitter.emit(EventType.SCENE_SHOW_UI, ModuleName.PICAFURNIFUN_NAME, {tag: "teambuild", element: ele.model, materials: content.materials});
+        this.game.emitter.emit(EventType.SCENE_SHOW_UI, ModuleName.PICAFURNIFUN_NAME, { tag: "teambuild", element: ele.model, materials: content.materials });
     }
     private query_TEAM_BUILD(ids: number[]) {
         this.picFurni.queryTeamBuild(ids);

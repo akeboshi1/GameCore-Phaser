@@ -10,16 +10,18 @@ export class ObjectAssign {
      */
     public static excludeTagAssign(source: object, target: object, tag: string = "exclude") {
         if (!source || !target) {
-            Logger.getInstance().error(`source:${source},target:${target}`);
+            Logger.getInstance().error("source", source, "target", target);
             return;
         }
         const excludes = source[tag] || target[tag];
         for (const key in target) {
-            if (target.hasOwnProperty(key)) {
+            if (key !== tag && target.hasOwnProperty(key)) {
                 const value = target[key];
                 if (typeof value === "object") {
                     if (!source.hasOwnProperty(key)) {
-                        source[key] = {};
+                        if (Array.isArray(value))
+                            source[key] = [];
+                        else source[key] = {};
                     }
                     this.excludeTagAssign(source[key], value, tag);
                 } else {
@@ -46,7 +48,9 @@ export class ObjectAssign {
                 const value = target[key];
                 if (typeof value === "object") {
                     if (!source.hasOwnProperty(key)) {
-                        source[key] = {};
+                        if (Array.isArray(value))
+                            source[key] = [];
+                        else source[key] = {};
                     }
                     this.excludeAssign(source[key], value);
                 } else {
@@ -72,7 +76,9 @@ export class ObjectAssign {
                 const value = target[key];
                 if (typeof value === "object") {
                     if (!source.hasOwnProperty(key)) {
-                        source[key] = {};
+                        if (Array.isArray(value))
+                            source[key] = [];
+                        else source[key] = {};
                     }
                     this.excludeAllAssign(source[key], value);
                 } else {

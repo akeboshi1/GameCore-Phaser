@@ -4,6 +4,7 @@ import { BasePanel, UiManager } from "gamecoreRender";
 import { ModuleName, RENDER_PEER } from "structure";
 import { Coin, Font, i18n } from "utils";
 import { UIAtlasKey, UIAtlasName } from "picaRes";
+import { ICountablePackageItem } from "picaStructure";
 export class PicaPropFunPanel extends BasePanel {
     public itemCount: number = 1;
     private itemName: Phaser.GameObjects.Text;
@@ -13,7 +14,7 @@ export class PicaPropFunPanel extends BasePanel {
     private priceBg: Phaser.GameObjects.Image;
     private mCoinIcon: Phaser.GameObjects.Image;
     private itemCountText: Phaser.GameObjects.Text;
-    private itemData: any;// op_client.ICountablePackageItem
+    private itemData: ICountablePackageItem;
     private confirmHandler: Function;
     private confirmHandlerAddData: any;
     private cancelHandler: Function;
@@ -255,7 +256,7 @@ export class PicaPropFunPanel extends BasePanel {
                 this.mDetailDisplay.loadAvatar(content, 2, new Phaser.Geom.Point(0, 35 * 2));
             }
         } else {
-            this.mDetailDisplay.loadUrl(this.itemData.display.texturePath);
+            this.mDetailDisplay.loadUrl(this.itemData.texturePath);
         }
     }
     private updateData() {

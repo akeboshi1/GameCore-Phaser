@@ -178,7 +178,7 @@ class RewardItem extends Phaser.GameObjects.Container {
     }
 
     public setRewardData(data: any) {// op_client.ICountablePackageItem
-        const url = Url.getOsdRes(data.display.texturePath);
+        const url = Url.getOsdRes(data.texturePath);
         this.itemIcon.load(url, this, () => {
             this.itemIcon.displayWidth = 43 * this.dpr;
             this.itemIcon.scaleY = this.itemIcon.scaleX;

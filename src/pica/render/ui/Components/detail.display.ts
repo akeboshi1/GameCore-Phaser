@@ -43,7 +43,7 @@ export class DetailDisplay extends Phaser.GameObjects.Container {
     }
     if (display.texturePath !== "" && display.dataPath !== "") {
       const animation = content.animations;
-      if (animation.length > 0) {
+      if (animation && animation.length > 0) {
         this.loadElement(content);
       } else {
         this.loadUrl(Url.getOsdRes(display.texturePath), Url.getOsdRes(display.dataPath));
