@@ -7,6 +7,7 @@ import { PlayerBag } from "./player.bag";
 import { PlayerProperty } from "./player.property";
 import { SceneDataManager } from "../../data.manager/scene.data.manager";
 import { DataMgrType } from "../../data.manager/dataManager";
+import { BaseDataConfigManager } from "picaWorker";
 export class UserDataManager extends PacketHandler {
     private readonly mPlayerBag: PlayerBag;
     private readonly mProperty: PlayerProperty;
@@ -99,6 +100,7 @@ export class UserDataManager extends PacketHandler {
     }
     public onSYNC_PACKAHE(packet: PBpacket) {
         const content: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_PKT_SYNC_PACKAGE = packet.content;
+        this.syncItemBases(content.items);
         const bag = this.playerBag.syncPackage(content);
         if (bag.syncFinish) {
             this.game.peer.workerEmitter(EventType.PACKAGE_SYNC_FINISH, content.packageName);
@@ -107,6 +109,7 @@ export class UserDataManager extends PacketHandler {
     }
     public onUPDATE_PACKAGE(packet: PBpacket) {
         const content: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_PKT_UPDATE_PACKAGE = packet.content;
+        this.syncItemBases(content.items);
         this.playerBag.updatePackage(content);
         this.game.emitter.emit(EventType.PACKAGE_UPDATE, content.packageName);
         this.game.peer.workerEmitter(EventType.PACKAGE_UPDATE, content.packageName);
@@ -116,5 +119,12 @@ export class UserDataManager extends PacketHandler {
         this.playerProperty.syncData(content);
         this.game.emitter.emit(EventType.UPDATE_PLAYER_INFO, this.playerProperty);
         this.game.peer.workerEmitter(EventType.UPDATE_PLAYER_INFO, this.playerProperty);
+    }
+
+    private syncItemBases(items: op_client.ICountablePackageItem[]) {
+        const config = <BaseDataConfigManager>this.game.configManager;
+        for (const item of items) {
+            config.synItemBase(item);
+        }
     }
 }

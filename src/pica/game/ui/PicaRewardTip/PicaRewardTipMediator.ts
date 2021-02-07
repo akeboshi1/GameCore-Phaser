@@ -1,6 +1,7 @@
 import { BasicMediator, Game } from "gamecore";
 import { ModuleName } from "structure";
 import { PicaRewardTip } from "./PicaRewardTip";
+import { BaseDataConfigManager } from "picaWorker";
 
 export class PicaRewardTipMediator extends BasicMediator {
     private mCacheData: any[] = [];
@@ -30,6 +31,13 @@ export class PicaRewardTipMediator extends BasicMediator {
     }
 
     private onShowAwardHandler(content: any) {
+        if (content.itemId) {
+            const configMgr = <BaseDataConfigManager>this.game.configManager;
+            const config = configMgr.getItemBase(content.itemId);
+            if (config) {
+                content.display = config["display"];
+            }
+        }
         if (!this.mPanelInit) {
             this.mCacheData.push(content);
             return;

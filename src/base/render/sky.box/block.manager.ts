@@ -1,8 +1,8 @@
 import { Logger, Url } from "utils";
 import { Fit, IScenery } from "structure";
 import { DynamicImage } from "../../../render/ui/components/dynamic.image";
-import { ICameraService, IRender } from "baseRender";
-
+import { ICameraService } from "../cameras/cameras.manager";
+import { IRender } from "../render";
 export interface IBlockManager {
   startPlay(scene: Phaser.Scene);
   check(time?: number, delta?: number);
