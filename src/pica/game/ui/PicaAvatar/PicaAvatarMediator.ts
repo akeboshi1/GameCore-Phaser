@@ -119,7 +119,13 @@ export class PicaAvatarMediator extends BasicMediator {
 
     private onGetCategoriesHandler(categoryType: number) {
         if (this.model) {
-            this.model.getCategories(categoryType);
+           // this.model.getCategories(categoryType);
+           const configMgr = <BaseDataConfigManager>this.game.configManager;
+           const subcategory = configMgr.getItemSubCategory(categoryType);
+           // for (const sub of subcategory) {
+           //     sub.value = configMgr.getI18n(sub.key);
+           // }
+           this.mView.setCategories(subcategory);
         }
     }
 
