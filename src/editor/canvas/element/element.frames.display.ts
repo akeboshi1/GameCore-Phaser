@@ -53,15 +53,6 @@ export default class ElementFramesDisplay extends BaseFramesDisplay implements R
         }
 
         Logger.getInstance().debug("setAnimationData: ", data);
-        const anis = new Map();
-        anis.set(data.name, new AnimationModel(data.createProtocolObject()));
-        this.load({
-            discriminator: "FramesModel",
-            id: 0,
-            gene: SPRITE_SHEET_KEY,
-            animations: anis,
-            animationName: data.name
-        });
         // this.play({ name: data.name, flip: false });
         const originPos = this.mGrids.getAnchor90Point();
         this.x = originPos.x;
@@ -183,6 +174,9 @@ export default class ElementFramesDisplay extends BaseFramesDisplay implements R
         // if (this.mMountArmatureParent) {
         //     this.mMountArmatureParent.setDepth(this.mAnimationData.mountLayer.index);
         // }
+        if (this.mMountContainer) {
+            this.mMountContainer.setDepth(this.mAnimationData.mountLayer.index);
+        }
 
         this.updateChildrenIdxByDepth();
     }
@@ -492,6 +486,16 @@ export default class ElementFramesDisplay extends BaseFramesDisplay implements R
             Logger.getInstance().error("no scene created");
             return;
         }
+        this.mDisplayDatas.clear();
+        const anis = new Map();
+        anis.set(this.mAnimationData.name, new AnimationModel(this.mAnimationData.createProtocolObject()));
+        this.load({
+            discriminator: "FramesModel",
+            id: 0,
+            gene: SPRITE_SHEET_KEY,
+            animations: anis,
+            animationName: this.mAnimationData.name
+        });
         // this.mCurAnimation = this.mAnimationData.createProtocolObject();
         if (this.scene.textures.exists(SPRITE_SHEET_KEY)) {
             let index = 0;

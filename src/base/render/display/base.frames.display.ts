@@ -127,7 +127,8 @@ export class BaseFramesDisplay extends BaseDisplay {
 
         if (this.mMountContainer && this.mCurAnimation.mountLayer) {
             const stageContainer = <Phaser.GameObjects.Container> this.mSprites.get(DisplayField.STAGE);
-            if (stageContainer) stageContainer.addAt(this.mMountContainer, this.mCurAnimation.mountLayer.index);
+            stageContainer.moveTo(this.mMountContainer, this.mCurAnimation.mountLayer.index);
+            // if (stageContainer) stageContainer.addAt(this.mMountContainer, this.mCurAnimation.mountLayer.index);
         }
         this.mPreAnimation = animation;
     }
