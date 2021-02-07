@@ -49,10 +49,19 @@ export class BaseDataConfigManager extends BaseConfigManager {
             item["exclude"] = data.excludes;
             if (item.elementId && item.elementId !== "") {
                 const element = this.getElementData(item.elementId);
+                const texture_path = element.texture_path;
                 if (element) {
                     item["animations"] = element["AnimationData"];
-                    if (element.data_path || element.texture_path)
-                        item["animationDisplay"] = { dataPath: element.data_path, texturePath: element.texture_path };
+                    if (element.data_path || texture_path)
+                        item["animationDisplay"] = { dataPath: element.data_path, texturePath: texture_path };
+                }
+                const index = texture_path.lastIndexOf(".");
+                if (index === -1) {
+                    item.texturePath = element.texture_path + "_s";
+                } else {
+                    const extensions = texture_path.slice(index, texture_path.length);
+                    const path = texture_path.slice(0, index);
+                    item.texturePath = path + "_s" + extensions;
                 }
             }
             item["find"] = true;
@@ -196,13 +205,12 @@ export class BaseDataConfigManager extends BaseConfigManager {
             return categorys;
         }
     }
-
     public getShopItems(sub: string) {
         const data: ShopConfig = this.getConfig(BaseDataType.shop);
         const itemconfig: ItemBaseDataConfig = this.getConfig(BaseDataType.item);
         const arr = data.subMap.get(sub);
         const extend = "subarrextend";
-        if (arr["subarrextend"]) {
+        if (arr[extend]) {
             return arr;
         } else {
             for (const shopitem of arr) {
@@ -219,6 +227,7 @@ export class BaseDataConfigManager extends BaseConfigManager {
                         displayPrecision: 0
                     }];
                     shopitem["find"] = true;
+                    ObjectAssign.excludeTagAssign(shopitem, item);
                 }
             }
             arr[extend] = true;
