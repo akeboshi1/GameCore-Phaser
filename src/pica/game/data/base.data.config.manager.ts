@@ -62,6 +62,7 @@ export class BaseDataConfigManager extends BaseConfigManager {
                             const path = texture_path.slice(0, index);
                             item.texturePath = path + "_s" + extensions;
                         }
+                        item["display"] = { texturePath: item.texturePath };
                     }
                 }
             }
