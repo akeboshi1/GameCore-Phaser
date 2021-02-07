@@ -725,6 +725,9 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
     }
 
     private loadGameConfig(remotePath): Promise<Lite> {
+        if (this.configManager.initialize) {
+            this.user.userData.querySYNC_ALL_PACKAGE();
+        }
         const configPath = ResUtils.getGameConfig(remotePath);
         let index = 0;
         return load(configPath, "arraybuffer").then((req: any) => {
@@ -756,7 +759,7 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
         // content.localeCode = i18n.language;
         content.localeCode = "zh-CN";
         this.mainPeer.send(i18Packet.Serialization());
-        this.user.userData.querySYNC_ALL_PACKAGE();
+        //  this.user.userData.querySYNC_ALL_PACKAGE();
     }
 
     private decodeConfigs(req): Promise<Lite> {

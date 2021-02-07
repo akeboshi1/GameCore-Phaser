@@ -5,6 +5,7 @@ export class BaseConfigManager {
     protected baseDirname: string;
     protected dataMap: Map<string, BaseConfigData> = new Map();
     protected mGame: Game;
+    protected mInitialization: boolean = false;
     constructor(game: Game) {
         this.mGame = game;
     }
@@ -23,6 +24,7 @@ export class BaseConfigManager {
             this.dirname(basePath);
             this.add();
             if (this.dataMap.size === 0) {
+                this.mInitialization = true;
                 resolve(true);
                 return;
             }
@@ -51,12 +53,15 @@ export class BaseConfigManager {
                             }
                             obj.parseJson(json);
                         });
+                        this.mInitialization = true;
                         resolve(true);
                     }, (reponse) => {
                         Logger.getInstance().error("未成功加载配置:" + reponse);
+                        this.mInitialization = true;
                         resolve(true);
                     });
                 } else {
+                    this.mInitialization = true;
                     resolve(true);
                 }
             });
@@ -142,5 +147,8 @@ export class BaseConfigManager {
                 Logger.getInstance().error("版本配置加载失败URL: ", url);
             });
         });
+    }
+    get initialize() {
+        return this.mInitialization;
     }
 }
