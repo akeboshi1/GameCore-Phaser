@@ -16,7 +16,7 @@ export enum BaseDataType {
     item = "item",
     element = "element",
     shop = "material_shop",
-    itemcategory = "itemcategory"
+    // itemcategory = "itemcategory"
 }
 
 export class BaseDataConfigManager extends BaseConfigManager {
@@ -28,15 +28,14 @@ export class BaseDataConfigManager extends BaseConfigManager {
 
     public getLocalConfigMap() {
         return {
-            itemcategory: ItemCategoryConfig["data"]
+            itemcategory: { template: new ItemCategoryConfig(), data: ItemCategoryConfig["data"] }
         };
     }
 
     public getLocalConfig(key) {
-        const data = this.getLocalConfigMap()[key];
-        const config = this.dataMap.get(key);
-        config.parseJson(data);
-        return config;
+        const configMap = this.getLocalConfigMap()[key];
+        configMap.template.parseJson(configMap.data);
+        return configMap.template;
     }
 
     public getItemBase(id: string): ICountablePackageItem | IExtendCountablePackageItem {
@@ -240,7 +239,6 @@ export class BaseDataConfigManager extends BaseConfigManager {
         this.dataMap.set(BaseDataType.item, new ItemBaseDataConfig());
         this.dataMap.set(BaseDataType.element, new ElementDataConfig());
         this.dataMap.set(BaseDataType.shop, new ShopConfig());
-        this.dataMap.set(BaseDataType.itemcategory, new ItemCategoryConfig());
     }
 
     protected configUrl(reName: string, tempurl?: string) {
