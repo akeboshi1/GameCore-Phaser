@@ -27,7 +27,7 @@ export class PlayScene extends RoomScene {
     }
 
     public preload() {
-       super.preload();
+        super.preload();
     }
 
     get motionMgr(): MotionManager {
@@ -53,6 +53,8 @@ export class PlayScene extends RoomScene {
             this.scene.launch(MainUIScene.name, {
                 "render": this.render,
             });
+            const sceneManager = this.render.sceneManager;
+            sceneManager.bringToTop(SceneName.LOADING_SCENE);
         } else {
             this.render.initUI();
             // this.mRoom.initUI();

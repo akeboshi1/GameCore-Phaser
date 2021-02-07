@@ -75,6 +75,18 @@ export class SceneManager {
             const text = StringUtils.format("正在加载资源 {0}", [progress.toFixed(0) + "%"]);
             (<LoadingScene>scene).updateProgress(text);
         }
+        sceneManager.bringToTop("LoadingScene");
+    }
+
+    public bringToTop(sceneName: string) {
+        const sceneManager = this.render.game.scene;
+        if (!sceneManager) {
+            return;
+        }
+        const scene = sceneManager.getScene(sceneName);
+        if (scene && scene.scene.isActive) {
+            sceneManager.bringToTop(sceneName);
+        }
     }
 
     public startScene(name: string, data?: any) {
