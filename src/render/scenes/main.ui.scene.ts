@@ -1,9 +1,7 @@
-
-import { BasicScene } from "./basic.scene";
-import { Font } from "utils";
-import { Size } from "src/utils/size";
-import { SceneName } from "structure";
-import { BaseLayer } from "baseRender";
+import {BasicScene} from "./basic.scene";
+import {Font, Size} from "utils";
+import {SceneName} from "structure";
+import {BaseLayer} from "baseRender";
 
 export class MainUIScene extends BasicScene {
   public static readonly LAYER_UI = "uiLayer";
@@ -36,7 +34,7 @@ export class MainUIScene extends BasicScene {
     this.fps.setFontFamily(Font.DEFULT_FONT);
     this.fps.setFontSize(20 * window.devicePixelRatio);
     this.fps.setDepth(1000);
-    this.sizeTF = this.add.text(10, 50, "", { style: { color: "#64DD17" }, wordWrap: { width: 800, useAdvancedWrap: true } });
+    this.sizeTF = this.add.text(10, 50, "", { style: { color: "#64dd17" }, wordWrap: { width: 800, useAdvancedWrap: true } });
     this.sizeTF.setFontSize(20 * window.devicePixelRatio);
     this.sizeTF.setFontFamily(Font.DEFULT_FONT);
     this.sizeTF.setStroke("#0", 3);

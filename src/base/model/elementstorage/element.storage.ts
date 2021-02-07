@@ -11,9 +11,8 @@ import {
 } from "game-capsule";
 import { op_def } from "pixelpai_proto";
 import { MossCollectionNode } from "game-capsule";
-import { AnimationModel } from "../../../structure/animation.model";
 import { Logger, Url } from "utils";
-import { IDragonbonesModel, IFramesModel, IScenery } from "structure";
+import { AnimationModel, IDragonbonesModel, IFramesModel, IScenery} from "structure";
 import { FramesModel } from "../frames.model";
 import { DragonbonesModel } from "../dragonbones.model";
 export interface IAsset {
