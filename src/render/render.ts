@@ -32,7 +32,7 @@ import {
 } from "structure";
 import {DisplayManager} from "./managers/display.manager";
 import {InputManager} from "./input/input.manager";
-import {PicaRenderUiManager} from "picaRender";
+import {PicaRenderUiManager} from "picaRender";// TODO: 分离pica模块时，删除该引用
 import {GamePauseScene} from "./scenes/game.pause.scene";
 import {MainUIScene} from "./scenes/main.ui.scene";
 import {EditorCanvasManager} from "./managers/editor.canvas.manager";
@@ -501,7 +501,7 @@ export class Render extends RPCPeer implements GameMain, IRender {
                 type: Phaser.AUTO,
                 parent: this.mConfig.parent,
                 loader: {
-                    timeout: 300,
+                    timeout: 10000,
                 },
                 disableContextMenu: true,
                 transparent: false,
