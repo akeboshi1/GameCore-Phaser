@@ -249,6 +249,7 @@ export class BaseDataConfigManager extends BaseConfigManager {
                         displayPrecision: 0
                     }];
                     shopitem["find"] = true;
+                    shopitem["exclude"] = data.excludes;
                     if (shopitem.icon === "" || shopitem.icon === undefined)
                         shopitem.icon = item.texturePath;
                     ObjectAssign.excludeTagAssign(shopitem, item);

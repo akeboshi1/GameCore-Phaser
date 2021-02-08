@@ -37,7 +37,7 @@ export class PicaBagPanel extends PicaBasePanel {
   private mEnableEdit: boolean = false;
   private categoryType: any;
   private mSelectedItemData;
-  private mSelectedItem: Item;
+  private mSelectedItem: ItemButton;
   private mAttributes: DynamicImageValue[] = [];
   private sceneData: any;
   private moneyData: any;
@@ -436,9 +436,9 @@ export class PicaBagPanel extends PicaBasePanel {
     return btn;
   }
 
-  private setSelectedItem(data: IExtendCountablePackageItem, cell: Item) {// op_client.ICountablePackageItem
+  private setSelectedItem(data: IExtendCountablePackageItem, cell: ItemButton) {// op_client.ICountablePackageItem
     if (this.mSelectedItem) {
-      this.mSelectedItem.isSelect = false;
+      this.mSelectedItem.select = false;
     }
     this.nameText.text = data.name || data.shortName;
     if (data.grade > 0) {
@@ -448,7 +448,7 @@ export class PicaBagPanel extends PicaBasePanel {
     } else this.starImage.visible = false;
     this.mSelectedItemData = data;
     this.mSelectedItem = cell;
-    cell.isSelect = true;
+    cell.select = true;
     this.mDetailDisplay.displayLoading("loading_ui", Url.getUIRes(this.dpr, "loading_ui"), Url.getUIRes(this.dpr, "loading_ui"));
     const content = new op_client.OP_VIRTUAL_WORLD_RES_CLIENT_MARKET_QUERY_PACKAGE_ITEM_RESOURCE();
     content.display = this.categoryType === 1 ? data.animationDisplay : data.display;
@@ -489,7 +489,7 @@ export class PicaBagPanel extends PicaBasePanel {
     }
   }
 
-  private onSelectItemHandler(cell: Item) {
+  private onSelectItemHandler(cell: ItemButton) {
     const item: any = cell.getData("item");// op_client.ICountablePackageItem
     if (item && this.mSelectedItemData === item || this.mSelectedItemData && !item) return;
     this.mDetailBubble.visible = true;
