@@ -3,15 +3,15 @@ export interface IShopBase {
 
     itemId: string;
 
-    name: string;
+    name?: string;
 
-    icon: string;
+    icon?: string;
 
-    category: string;
+    category?: string;
 
-    subcategory: string;
+    subcategory?: string;
 
-    source: string;
+    source?: string;
 
     currencyId: string;
 
@@ -23,9 +23,8 @@ export interface IShopBase {
 export interface IMarketCommodity {
 
     id: string;
-
     name?: string;
-
+    itemId: string;
     des?: string;
 
     icon?: string;

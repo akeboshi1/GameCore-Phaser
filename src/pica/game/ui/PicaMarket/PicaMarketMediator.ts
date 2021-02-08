@@ -2,6 +2,8 @@ import { PicaMarket } from "./PicaMarket";
 import { op_client, op_def } from "pixelpai_proto";
 import { BasicMediator, Game } from "gamecore";
 import { EventType, MessageType, ModuleName, RENDER_PEER } from "structure";
+import { BaseDataConfigManager } from "../../data";
+import { Logger } from "utils";
 
 export class PicaMarketMediator extends BasicMediator {
   constructor(game: Game) {
@@ -47,6 +49,13 @@ export class PicaMarketMediator extends BasicMediator {
     super.hide();
   }
 
+  panelInit() {
+    super.panelInit();
+    if (this.mShowData && this.mView) {
+      this.mView.setCategories(this.mShowData);
+    }
+  }
+
   destroy() {
     if (this.model) this.model.destroy();
     this.mModel = null;
@@ -68,10 +77,19 @@ export class PicaMarketMediator extends BasicMediator {
 
   private onGetCategoriesHandler() {
     this.model.getMarkCategories();
+    const config = <BaseDataConfigManager>this.game.configManager;
+    const shopName = this.model.market_name;
+    config.checkDynamicShop(shopName).then(() => {
+      const map = config.getShopSubCategory(shopName);
+      this.setCategories(map);
+    }, () => {
+      Logger.getInstance().error("配置文件" + shopName + "未能成功加载");
+    });
   }
 
   private onQueryPropHandler(data: { page: number, category: string, subCategory: string }) {
-    this.model.queryMarket(data.page, data.category, data.subCategory);
+    // this.model.queryMarket(data.page, data.category, data.subCategory);
+    this.setMarketProp(data.category, data.subCategory);
   }
 
   private onBuyItemHandler(prop: op_def.IOrderCommodities) {
@@ -103,6 +121,25 @@ export class PicaMarketMediator extends BasicMediator {
       return;
     }
     this.mView.setCommodityResource(content);
+  }
+
+  private setCategories(map: Map<any, any>) {
+    const arrValue = [];
+    const obj = { marketName: this.model.market_name, marketCategory: arrValue };
+    map.forEach((value, key) => {
+      arrValue.push({ category: key, subcategory: value });
+    });
+    if (this.mView)
+      this.mView.setCategories(obj);
+    this.mShowData = obj;
+  }
+
+  private setMarketProp(category: string, subCategory: string) {
+    const config = <BaseDataConfigManager>this.game.configManager;
+    const att = config.getShopItems(category, subCategory, this.model.market_name);
+    const obj = { category, subCategory, commodities: att, marketName: this.model.market_name };
+    if (this.mView)
+      this.mView.setProp(obj);
   }
 
   private onCloseHandler() {

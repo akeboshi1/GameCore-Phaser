@@ -42,6 +42,9 @@ export class ElementDataConfig extends BaseConfigData {
         if (!element.Animations) return;
         const aniData = [];
         for (const ani of element.Animations) {
+            ani.layers.forEach((value) => {
+                value.frameName = value["frameNames"];
+            });
             aniData.push(this.createAnimationData(ani));
         }
         element["AnimationData"] = aniData;
@@ -61,7 +64,8 @@ export class ElementDataConfig extends BaseConfigData {
             interactiveArea: animation.interactiveArea,
             frameDuration: animation.frameDurations,
             layer: animation.layers,
-            mountLayer: animation.mountLayer
+            mountLayer: animation.mountLayer,
+            node: { name: animation.animation_name, id: 0 }
         };
         return obj;
     }

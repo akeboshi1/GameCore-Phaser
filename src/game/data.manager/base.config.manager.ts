@@ -5,6 +5,7 @@ export class BaseConfigManager {
     protected baseDirname: string;
     protected dataMap: Map<string, BaseConfigData> = new Map();
     protected mGame: Game;
+    protected mInitialization: boolean = false;
     constructor(game: Game) {
         this.mGame = game;
     }
@@ -14,24 +15,31 @@ export class BaseConfigManager {
     }
     public startLoad(basePath: string): Promise<any> {
         return this.getBasePath().then((value: string) => {
-            return this.executeLoad(value);
+            this.dataMap.clear();
+            this.dirname(value);
+            this.add();
+            return this.executeLoad(this.dataMap);
         });
     }
-    public executeLoad(basePath: string): Promise<any> {
-        this.dataMap.clear();
+
+    public dynamicLoad(dataMap: Map<string, BaseConfigData>): Promise<any> {
+        dataMap.forEach((value, key) => {
+            this.dataMap.set(key, value);
+        });
+        return this.executeLoad(dataMap);
+    }
+    public executeLoad(dataMap: Map<string, BaseConfigData>): Promise<any> {
         return new Promise((resolve, reject) => {
-            this.dirname(basePath);
-            this.add();
-            if (this.dataMap.size === 0) {
+            if (dataMap.size === 0) {
+                this.mInitialization = true;
                 resolve(true);
                 return;
             }
-
-            this.checkLocalStorage().then((values) => {
+            this.checkLocalStorage(dataMap).then((values) => {
                 const loadUrls = [];
                 for (const value of values) {
                     if (value.obj) {
-                        const dataconfig = this.dataMap.get(value.key);
+                        const dataconfig = dataMap.get(value.key);
                         dataconfig.parseJson(value.obj);
                     } else {
                         const temp = { resName: value.key, path: value.url, type: "json" };
@@ -41,7 +49,8 @@ export class BaseConfigManager {
                 if (loadUrls.length > 0) {
                     loadArr(loadUrls).then((data) => {
                         data.forEach((value: XMLHttpRequest, key: string) => {
-                            const obj = this.dataMap.get(key);
+                            const obj = dataMap.get(key);
+                            obj.resName = key;
                             const json = value.response;
                             try {
                                 this.setLocalStorage(key, value.responseURL, json);
@@ -51,12 +60,15 @@ export class BaseConfigManager {
                             }
                             obj.parseJson(json);
                         });
+                        this.mInitialization = true;
                         resolve(true);
                     }, (reponse) => {
                         Logger.getInstance().error("未成功加载配置:" + reponse);
+                        this.mInitialization = true;
                         resolve(true);
                     });
                 } else {
+                    this.mInitialization = true;
                     resolve(true);
                 }
             });
@@ -102,9 +114,9 @@ export class BaseConfigManager {
         return url;
     }
 
-    protected checkLocalStorage(): Promise<any> {
+    protected checkLocalStorage(dataMap: Map<string, BaseConfigData>): Promise<any> {
         const promises = [];
-        this.dataMap.forEach(async (value, key: string) => {
+        dataMap.forEach(async (value, key: string) => {
             const temppath = this.configUrl(key, value.url);
             const obj = this.getLocalStorage(key, temppath);
             promises.push(obj);
@@ -142,5 +154,8 @@ export class BaseConfigManager {
                 Logger.getInstance().error("版本配置加载失败URL: ", url);
             });
         });
+    }
+    get initialize() {
+        return this.mInitialization;
     }
 }

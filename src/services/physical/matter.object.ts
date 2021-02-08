@@ -152,9 +152,9 @@ export class MatterObject implements IMatterObject {
         if (!sprite) {
             return;
         }
-        if (!this.body) {
-            this.addBody();
-        }
+        // if (!this.body) {
+        //     this.addBody();
+        // }
         // this.peer.world.removeFromMap(sprite);
         if (this.mModel.pos) {
             this.setPosition(this.mModel.pos);

@@ -69,9 +69,9 @@ export class PicaFurniFunMediator extends BasicMediator {
         const sn = data.sn;
         if (map.has(sn)) {
             const value: op_client.ICountablePackageItem[] = map.get(sn);
+            // const configMgr = <BaseDataConfigManager>this.game.configManager;
+            // configMgr.getBatchItemDatas(value);
             this.updateMaterials(value);
-            const configMgr = <BaseDataConfigManager>this.game.configManager;
-            configMgr.getBatchItemDatas(value);
             if (this.mView) this.mView.setMaterialsData(value);
         }
     }
@@ -94,8 +94,8 @@ export class PicaFurniFunMediator extends BasicMediator {
 
         if (this.playerData) {
             if (content.materials) {
-                const configMgr = <BaseDataConfigManager>this.game.configManager;
-                configMgr.getBatchItemDatas(content.materials);
+                // const configMgr = <BaseDataConfigManager>this.game.configManager;
+                // configMgr.getBatchItemDatas(content.materials);
                 for (const data of content.materials) {
                     const count = this.playerData.getItemsCount(op_pkt_def.PKT_PackageType.PropPackage, data.id, data.subcategory);
                     data.recommended = count; // hack

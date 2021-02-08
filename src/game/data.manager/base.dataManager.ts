@@ -1,4 +1,5 @@
 import { PacketHandler, PBpacket } from "net-socket-packet";
+import { BaseDataConfigManager } from "picaWorker";
 import { op_client, op_virtual_world, op_def, op_gameconfig, op_pkt_def } from "pixelpai_proto";
 import { EventType } from "structure";
 import { EventDispatcher } from "utils";
@@ -31,6 +32,14 @@ export class BaseDataManager extends BasePacketHandler {
                 items.set(sn, this.mSNRequirements.get(sn));
             } else needSNs.push(sn);
         }
+        if (needSNs.length > 0) {
+            const map = this.syncElementSNUnlockMaterials(needSNs);
+            map.forEach((value, key) => {
+                items.set(key, value);
+            });
+            needSNs.length = 0;
+        }
+
         if (needSNs.length > 0) {
             const packet = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_PKT_REQUIRE_FURNITURE_UNFROZEN_REQUIREMENTS);
             const content: op_virtual_world.IOP_CLIENT_REQ_VIRTUAL_WORLD_PKT_REQUIRE_FURNITURE_UNFROZEN_REQUIREMENTS = packet.content;
@@ -68,6 +77,7 @@ export class BaseDataManager extends BasePacketHandler {
             for (const item of content.furnitureRequirements) {
                 this.mSNRequirements.set(item.sn, item.requirements);
                 items.set(item.sn, item.requirements);
+                this.syncItemBases(item.requirements);
             }
         }
         this.mEvent.emit(EventType.SEND_FURNITURE_REQUIREMENTS, items);
@@ -88,5 +98,24 @@ export class BaseDataManager extends BasePacketHandler {
         }
         this.mEvent.emit(EventType.ELEMENT_ITEM_CONFIG, { status, data });
     }
+    private syncItemBases(items: op_client.ICountablePackageItem[]) {
+        const config = <BaseDataConfigManager>this.game.configManager;
+        for (const item of items) {
+            const count = item.count;
+            config.synItemBase(item);
+            item.neededCount = count;
+        }
+    }
 
+    private syncElementSNUnlockMaterials(sn: string[]) {
+        const config = <BaseDataConfigManager>this.game.configManager;
+        const map = config.getElementSNUnlockMaterials(sn);
+        map.forEach((value, key) => {
+            this.mSNRequirements.set(key, value);
+            this.syncItemBases(value);
+
+        });
+        this.mEvent.emit(EventType.SEND_FURNITURE_REQUIREMENTS, map);
+        return map;
+    }
 }

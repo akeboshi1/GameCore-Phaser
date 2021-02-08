@@ -1,15 +1,15 @@
-import {PacketHandler, PBpacket} from "net-socket-packet";
-import {op_client, op_def, op_virtual_world} from "pixelpai_proto";
-import {ConnectionService} from "../../../../lib/net/connection.service";
-import {Logger, LogicPos} from "utils";
-import {EventType, IDragonbonesModel, IFramesModel, ISprite} from "structure";
-import {IRoomService, Room} from "../room/room";
-import {Element, IElement, InputEnable} from "./element";
-import {ElementStateManager} from "./element.state.manager";
-import {ElementDataManager} from "../../data.manager/element.dataManager";
-import {DataMgrType} from "../../data.manager";
-import {ElementActionManager} from "../elementaction/element.action.manager";
-import {Sprite, IElementStorage} from "baseModel";
+import { PacketHandler, PBpacket } from "net-socket-packet";
+import { op_client, op_def, op_virtual_world } from "pixelpai_proto";
+import { ConnectionService } from "../../../../lib/net/connection.service";
+import { Logger, LogicPos } from "utils";
+import { EventType, IDragonbonesModel, IFramesModel, ISprite } from "structure";
+import { IRoomService, Room } from "../room/room";
+import { Element, IElement, InputEnable } from "./element";
+import { ElementStateManager } from "./element.state.manager";
+import { ElementDataManager } from "../../data.manager/element.dataManager";
+import { DataMgrType } from "../../data.manager";
+import { ElementActionManager } from "../elementaction/element.action.manager";
+import { Sprite, IElementStorage } from "baseModel";
 import NodeType = op_def.NodeType;
 
 export interface IElementManager {
@@ -167,7 +167,7 @@ export class ElementManager extends PacketHandler implements IElementManager {
                             this.mMap[row][col] = walkable[i][j];
                         }
                         // this.roomService.game.physicalPeer.setElementWalkable(row, col, this.mMap[row][col] === 1);
-                        (<Room> this.roomService).setElementWalkable(row, col, this.mMap[row][col] === 1);
+                        (<Room>this.roomService).setElementWalkable(row, col, this.mMap[row][col] === 1);
                     }
                 }
             }
@@ -205,7 +205,7 @@ export class ElementManager extends PacketHandler implements IElementManager {
                     col = pos.x + j - origin.x;
                     if (row >= 0 && row < this.mMap.length && col >= 0 && col < this.mMap[row].length) {
                         this.mMap[row][col] = 0;
-                        (<Room> this.roomService).setElementWalkable(row, col, this.mMap[row][col] === 0);
+                        (<Room>this.roomService).setElementWalkable(row, col, this.mMap[row][col] === 0);
                         // this.roomService.game.physicalPeer.setElementWalkable(row, col, this.mMap[row][col] === 0);
                     }
                 }
@@ -358,7 +358,7 @@ export class ElementManager extends PacketHandler implements IElementManager {
                 element = this.get(sprite.id);
                 if (element) {
                     this.mDealSyncMap.set(sprite.id, false);
-                    const command = (<any> sprite).command;
+                    const command = (<any>sprite).command;
                     if (command === op_def.OpCommand.OP_COMMAND_UPDATE) { //  全部
                         element.model = new Sprite(sprite, 3);
                     } else if (command === op_def.OpCommand.OP_COMMAND_PATCH) { //  增量
@@ -367,12 +367,13 @@ export class ElementManager extends PacketHandler implements IElementManager {
                     // 更新elementstorage中显示对象的数据信息
                     const displayInfo = element.model.displayInfo;
                     if (displayInfo) {
-                        this.mRoom.game.elementStorage.add(<any> displayInfo);
+                        this.mRoom.game.elementStorage.add(<any>displayInfo);
                     }
-                    ele.push(element);
                 } else {
                     this.mDealAddList.push(sprite);
+                    element = this._add(new Sprite(sprite, 3));
                 }
+                ele.push(element);
             }
             this.dealAddList(true);
             this.mStateMgr.syncElement(ele);
@@ -474,7 +475,7 @@ export class ElementManager extends PacketHandler implements IElementManager {
         }
     }
 
-    protected _add(sprite: ISprite, addMap?: boolean): Element {
+    protected _add(sprite: ISprite, addMap: boolean = false): Element {
         if (addMap === undefined) addMap = true;
         let ele = this.mElements.get(sprite.id);
         if (ele) {
@@ -591,7 +592,7 @@ export class ElementManager extends PacketHandler implements IElementManager {
         const command = content.command;
         const sprites = content.sprites;
         for (const sprite of sprites) {
-            (<any> sprite).command = command;
+            (<any>sprite).command = command;
             this.mCacheSyncList.push(sprite);
         }
         this.dealSyncList();
@@ -614,8 +615,8 @@ export class ElementManager extends PacketHandler implements IElementManager {
                 if (!element) {
                     continue;
                 }
-                const {x, y} = moveData.destinationPoint3f;
-                element.move([{x, y}]);
+                const { x, y } = moveData.destinationPoint3f;
+                element.move([{ x, y }]);
                 // element.move(moveData);
             }
         }

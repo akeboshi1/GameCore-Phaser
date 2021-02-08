@@ -1,6 +1,6 @@
 import { BaseConfigData, BaseConfigManager, Game } from "gamecore";
 import { ICountablePackageItem, IElement, IExploreChapterData, IExploreLevelData, IExtendCountablePackageItem } from "picaStructure";
-import { IShopBase } from "src/pica/structure/imarketcommodity";
+import { IMarketCommodity, IShopBase } from "src/pica/structure/imarketcommodity";
 import { loadArr, Logger, ObjectAssign, Url } from "utils";
 import { ElementDataConfig } from "./element.data.config";
 import { ExploreDataConfig } from "./explore.data.config";
@@ -15,14 +15,27 @@ export enum BaseDataType {
     explore = "explore",
     item = "item",
     element = "element",
-    shop = "material_shop",
-    itemcategory = "itemcategory"
+    shop = "shop",
+    // itemcategory = "itemcategory"
 }
+
 export class BaseDataConfigManager extends BaseConfigManager {
     protected baseDirname: string;
     protected dataMap: Map<string, BaseConfigData> = new Map();
     constructor(game: Game) {
         super(game);
+    }
+
+    public getLocalConfigMap() {
+        return {
+            itemcategory: { template: new ItemCategoryConfig(), data: ItemCategoryConfig["data"] }
+        };
+    }
+
+    public getLocalConfig(key) {
+        const configMap = this.getLocalConfigMap()[key];
+        configMap.template.parseJson(configMap.data);
+        return configMap.template;
     }
 
     public getItemBase(id: string): ICountablePackageItem | IExtendCountablePackageItem {
@@ -33,12 +46,24 @@ export class BaseDataConfigManager extends BaseConfigManager {
             item.source = this.getI18n(item.source, { id: item.id, source: "source" });
             item.des = this.getI18n(item.des, { id: item.id, des: "des" });
             item["exclude"] = data.excludes;
+            if (item.texturePath) item["display"] = { texturePath: item.texturePath };
             if (item.elementId && item.elementId !== "") {
                 const element = this.getElementData(item.elementId);
                 if (element) {
+                    const texture_path = element.texture_path;
                     item["animations"] = element["AnimationData"];
-                    if (element.data_path || element.texture_path)
-                        item["animationDisplay"] = { dataPath: element.data_path, texturePath: element.texture_path };
+                    if (texture_path) {
+                        item["animationDisplay"] = { dataPath: element.data_path, texturePath: texture_path };
+                        const index = texture_path.lastIndexOf(".");
+                        if (index === -1) {
+                            item.texturePath = element.texture_path + "_s";
+                        } else {
+                            const extensions = texture_path.slice(index, texture_path.length);
+                            const path = texture_path.slice(0, index);
+                            item.texturePath = path + "_s" + extensions;
+                        }
+                        item["display"] = { texturePath: item.texturePath };
+                    }
                 }
             }
             item["find"] = true;
@@ -70,7 +95,7 @@ export class BaseDataConfigManager extends BaseConfigManager {
             if (data.hasOwnProperty(key)) {
                 const element = data[key];
                 if (element.className === "FurnitureItem" && element.rarity === 1) {
-                    temp.push(element);
+                    temp.push(this.getItemBase(element.id));
                 }
             }
         }
@@ -110,6 +135,22 @@ export class BaseDataConfigManager extends BaseConfigManager {
         return element;
     }
 
+    public getElementSNUnlockMaterials(sns: string[]) {
+        const data: ElementDataConfig = this.getConfig(BaseDataType.element);
+        const map: Map<string, any> = new Map();
+        for (const key in data) {
+            if (data.hasOwnProperty(key)) {
+                const temp = data[key];
+                if (sns.indexOf(temp.sn) !== -1) {
+                    const unlockstri = JSON.stringify(temp.unLockMaterials);
+                    map.set(temp.sn, JSON.parse(unlockstri));
+                }
+            }
+            if (map.size === sns.length) break;
+        }
+        return map;
+    }
+
     public getShopBase(id: string): IShopBase {
         const data: ShopConfig = this.getConfig(BaseDataType.shop);
         const temp = data.get(id);
@@ -119,6 +160,7 @@ export class BaseDataConfigManager extends BaseConfigManager {
             temp.icon = item.texturePath;
             temp.source = item.source;
             temp["find"] = true;
+            ObjectAssign.excludeTagAssign(temp, item);
         }
         return temp;
     }
@@ -150,7 +192,7 @@ export class BaseDataConfigManager extends BaseConfigManager {
     }
 
     public getItemSubCategory(type: number) {
-        const data: ItemCategoryConfig = this.getConfig(BaseDataType.itemcategory);
+        const data: ItemCategoryConfig = this.getLocalConfig("itemcategory") as ItemCategoryConfig;
         const key = data.getClassName(type);
         const extend = key + "extend";
         if (data.hasOwnProperty(extend)) return data[extend];
@@ -166,13 +208,80 @@ export class BaseDataConfigManager extends BaseConfigManager {
         }
     }
 
+    public checkDynamicShop(shopName): Promise<any> {
+        return new Promise((resolve, reject) => {
+            if (!this.dataMap.has(shopName)) {
+                this.dynamicLoad(new Map([shopName, new ShopConfig()])).then(() => {
+                    resolve(true);
+                }, (reponse) => {
+                    Logger.getInstance().error("未成功加载配置:" + reponse);
+                    reject(false);
+                });
+            } else {
+                resolve(true);
+            }
+        });
+    }
+
+    public getShopSubCategory(shopName: string = BaseDataType.shop) {
+        const data: ShopConfig = this.getConfig(shopName);
+        if (!data.categoryMap["find"]) {
+            const extendMap: Map<{ key: string, value: string }, Array<{ key: string, value: string }>> = new Map();
+            data.categoryMap.forEach((value, key) => {
+                const subCategorys: Array<{ key: string, value: string }> = [];
+                for (const temp of value) {
+                    const tvalue = this.getI18n(temp);
+                    subCategorys.push({ key: temp, value: tvalue });
+                }
+                const category = { key, value: this.getI18n(key) };
+                extendMap.set(category, subCategorys);
+            });
+            data.categoryMap["find"] = true;
+            data.categoryMap["extendMap"] = extendMap;
+            return extendMap;
+        }
+        return data.categoryMap["extendMap"];
+    }
+    public getShopItems(category: string, sub: string, shopName: string = BaseDataType.shop) {
+        const data: ShopConfig = this.getConfig(shopName);
+        const itemconfig: ItemBaseDataConfig = this.getConfig(BaseDataType.item);
+        const map = data.propMap.get(category);
+        const extend = "extendfind";
+        const tempArr = map.get(sub);
+        if (tempArr[extend]) {
+            return tempArr;
+        } else {
+            for (const shopitem of tempArr) {
+                const tempItem: IMarketCommodity = <any>shopitem;
+                if (!shopitem["find"]) {
+                    const item = this.getItemBase(shopitem.itemId);
+                    tempItem.name = this.getI18n(shopitem.name);
+                    tempItem.source = this.getI18n(shopitem.source);
+                    tempItem["des"] = item.des;
+                    // const valueItem = this.getItemBase(shopitem.currencyId);
+                    tempItem["price"] = [{
+                        price: shopitem.price,
+                        coinType: itemconfig.getCoinType(shopitem.currencyId),
+                        displayPrecision: 0
+                    }];
+                    shopitem["find"] = true;
+                    shopitem["exclude"] = data.excludes;
+                    if (shopitem.icon === "" || shopitem.icon === undefined)
+                        shopitem.icon = item.texturePath;
+                    ObjectAssign.excludeTagAssign(shopitem, item);
+                }
+            }
+            tempArr[extend] = true;
+            return tempArr;
+        }
+    }
+
     protected add() {
         this.dataMap.set(BaseDataType.i18n_zh, new I18nZHDataConfig());
         this.dataMap.set(BaseDataType.explore, new ExploreDataConfig());
         this.dataMap.set(BaseDataType.item, new ItemBaseDataConfig());
         this.dataMap.set(BaseDataType.element, new ElementDataConfig());
         this.dataMap.set(BaseDataType.shop, new ShopConfig());
-        this.dataMap.set(BaseDataType.itemcategory, new ItemCategoryConfig());
     }
 
     protected configUrl(reName: string, tempurl?: string) {

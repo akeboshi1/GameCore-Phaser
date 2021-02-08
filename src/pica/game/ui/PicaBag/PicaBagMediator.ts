@@ -147,6 +147,7 @@ export class PicaBagMediator extends BasicMediator {
             //     sub.value = configMgr.getI18n(sub.key);
             // }
             this.mView.setCategories(subcategory);
+            this.cacheMgr.setBagCategory({ category: categoryType, subcategory });
         }
     }
 
