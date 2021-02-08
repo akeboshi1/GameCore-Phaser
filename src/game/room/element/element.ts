@@ -12,7 +12,7 @@ import {
 import { IPos, IProjection, Logger, LogicPoint, LogicPos, Tool } from "utils";
 import { BlockObject } from "../block/block.object";
 import { IRoomService } from "../room/room";
-import {ElementManager, IElementManager} from "./element.manager";
+import { ElementManager, IElementManager } from "./element.manager";
 
 export interface IElement {
     readonly id: number;
@@ -240,28 +240,25 @@ export class Element extends BlockObject implements IElement {
             return;
         }
         this.mElementManager.removeFromMap(this.mModel);
-        // 更新物理进程的物件/人物element
-        this.mRoomService.game.physicalPeer.updateModel(model);
         if (model.hasOwnProperty("attrs")) {
-            this.model.updateAttr(model.attrs);
+            this.mModel.updateAttr(model.attrs);
         }
         if (avatarType === op_def.AvatarStyle.SuitType) {
             if (this.mModel.updateSuits) {
                 this.mModel.updateAvatarSuits(this.mModel.suits);
                 if (!this.mModel.avatar) this.mModel.avatar = AvatarSuitType.createBaseAvatar();
                 this.mModel.updateAvatar(this.mModel.avatar);
-                this.load(this.mModel.displayInfo);
+                // this.load(this.mModel.displayInfo);
             }
         } else if (avatarType === op_def.AvatarStyle.OriginAvatar) {
             if (model.hasOwnProperty("avatar")) {
                 this.mModel.updateAvatar(model.avatar);
-                this.load(this.mModel.displayInfo);
+                // this.load(this.mModel.displayInfo);
             }
         }
 
         if (model.display && model.animations) {
             this.mModel.updateDisplay(model.display, model.animations);
-            this.load(this.mModel.displayInfo);
         }
         if (model.hasOwnProperty("currentAnimationName")) {
             this.play(model.currentAnimationName);
@@ -276,6 +273,9 @@ export class Element extends BlockObject implements IElement {
             this.mergeMounth(mounts);
             this.updateMounth(mounts);
         }
+        this.load(this.mModel.displayInfo);
+        // 更新物理进程的物件/人物element
+        this.mRoomService.game.physicalPeer.updateModel(model);
         this.mElementManager.addToMap(this.mModel);
         // if (model.hasOwnProperty("point3f")) {
         //     const pos = model.point3f;
@@ -801,10 +801,11 @@ export class Element extends BlockObject implements IElement {
         //     return;
         // }
         // if (!this.mDisplay) {
-        //     this.createDisplay();
+        //  this.createDisplay();
         // }
         this.mRoomService.game.emitter.once("dragonBones_initialized", this.onDisplayReady, this);
-        return this.mRoomService.game.renderPeer.updateModel(this.id, this.mDisplayInfo);
+        // return this.mRoomService.game.renderPeer.setModel(this.mModel);
+        return this.mRoomService.game.renderPeer.updateModel(this.id, this.mDisplayInfo || this.mModel.displayInfo);
         // this.mDisplay.on("updateAnimation", this.onUpdateAnimationHandler, this);
         // this.mDisplay.load(this.mDisplayInfo);
     }

@@ -1,4 +1,5 @@
 import { PBpacket } from "net-socket-packet";
+import { BaseDataConfigManager } from "picaWorker";
 import { op_client, op_virtual_world, op_def, op_gameconfig, op_pkt_def } from "pixelpai_proto";
 import { EventType, ModuleName, RoomType } from "structure";
 import { EventDispatcher } from "utils";
@@ -68,6 +69,7 @@ export class SceneDataManager extends BasePacketHandler {
 
     private onHIGH_QUALITY_REWARD_TIPS(packet: PBpacket) {
         const content: op_client.OP_VIRTUAL_WORLD_REQ_CLIENT_SHOW_HIGH_QUALITY_REWARD_TIPS = packet.content;
+        this.syncItemBases( content.list);
         this.mEvent.emit(EventType.SCENE_SHOW_UI, ModuleName.PICATREASURE_NAME, { data: content.list, type: "open" });
     }
 
@@ -93,5 +95,11 @@ export class SceneDataManager extends BasePacketHandler {
     }
     private onSceneChangeHandler() {
         this.isShowMainui = false;
+    }
+    private syncItemBases(items: op_client.ICountablePackageItem[]) {
+        const config = <BaseDataConfigManager>this.game.configManager;
+        for (const item of items) {
+            config.synItemBase(item);
+        }
     }
 }

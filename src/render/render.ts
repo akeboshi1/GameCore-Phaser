@@ -501,7 +501,7 @@ export class Render extends RPCPeer implements GameMain, IRender {
                 type: Phaser.AUTO,
                 parent: this.mConfig.parent,
                 loader: {
-                    timeout: 300,
+                    timeout: 10000,
                 },
                 disableContextMenu: true,
                 transparent: false,

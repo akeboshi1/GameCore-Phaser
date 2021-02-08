@@ -40,7 +40,7 @@ export interface IAnimation {
 }
 
 export interface ILayer {
-    frameNames: string[];
+    frameName: string[];
     frameVisible: boolean[];
     offsetLoc: { x: number, y: number };
     name: string;
@@ -66,4 +66,5 @@ export interface IAnimationData {
     frameDuration?: number[];
     layer?: ILayer[];
     mountLayer?: IMountLayer[];
+    aniName?: string;
 }

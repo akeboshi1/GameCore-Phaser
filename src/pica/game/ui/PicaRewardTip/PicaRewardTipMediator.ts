@@ -18,6 +18,9 @@ export class PicaRewardTipMediator extends BasicMediator {
     panelInit() {
         super.panelInit();
         if (!this.mShowData) return;
+        if (this.mShowData.itemId) {
+            this.onUpdateItemBase(this.mShowData);
+        }
         this.mView.appendAward(this.mShowData);
         for (const oneData of this.mCacheData) {
             this.mView.appendAward(oneData);
@@ -32,16 +35,19 @@ export class PicaRewardTipMediator extends BasicMediator {
 
     private onShowAwardHandler(content: any) {
         if (content.itemId) {
-            const configMgr = <BaseDataConfigManager>this.game.configManager;
-            const config = configMgr.getItemBase(content.itemId);
-            if (config) {
-                content.display = config["display"];
-            }
+            this.onUpdateItemBase(content);
         }
         if (!this.mPanelInit) {
             this.mCacheData.push(content);
             return;
         }
         this.mView.appendAward(content);
+    }
+    private onUpdateItemBase(content: any) {
+        const configMgr = <BaseDataConfigManager>this.game.configManager;
+        const tempitem = configMgr.getItemBase(content.itemId);
+        if (tempitem) {
+            content.display = tempitem["display"];
+        }
     }
 }

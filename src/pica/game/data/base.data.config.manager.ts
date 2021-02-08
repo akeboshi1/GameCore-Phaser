@@ -62,6 +62,7 @@ export class BaseDataConfigManager extends BaseConfigManager {
                             const path = texture_path.slice(0, index);
                             item.texturePath = path + "_s" + extensions;
                         }
+                        item["display"] = { texturePath: item.texturePath };
                     }
                 }
             }
@@ -94,7 +95,7 @@ export class BaseDataConfigManager extends BaseConfigManager {
             if (data.hasOwnProperty(key)) {
                 const element = data[key];
                 if (element.className === "FurnitureItem" && element.rarity === 1) {
-                    temp.push(element);
+                    temp.push(this.getItemBase(element.id));
                 }
             }
         }
