@@ -2,6 +2,7 @@ import { op_client } from "pixelpai_proto";
 import { PicaOpenParty } from "./PicaOpenParty";
 import { BasicMediator, Game } from "gamecore";
 import { ModuleName } from "structure";
+import { BaseDataConfigManager } from "../../data";
 export class PicaOpenPartyMediator extends BasicMediator {
     private picOpen: PicaOpenParty;
     constructor(game: Game) {
@@ -52,6 +53,13 @@ export class PicaOpenPartyMediator extends BasicMediator {
         this.mShowData = content;
         if (!this.mPanelInit) {
             return;
+        }
+        const config = <BaseDataConfigManager>this.game.configManager;
+        if (content.topic) content.topic.name = config.getI18n(content.topic.name);
+        if (content.topics) {
+            for (const topic of content.topics) {
+                topic.name = config.getI18n(topic.name);
+            }
         }
         this.mView.setPartyData(content, this.game.user.userData.isSelfRoom);
     }

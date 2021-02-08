@@ -135,6 +135,22 @@ export class BaseDataConfigManager extends BaseConfigManager {
         return element;
     }
 
+    public getElementSNUnlockMaterials(sns: string[]) {
+        const data: ElementDataConfig = this.getConfig(BaseDataType.element);
+        const map: Map<string, any> = new Map();
+        for (const key in data) {
+            if (data.hasOwnProperty(key)) {
+                const temp = data[key];
+                if (sns.indexOf(temp.sn) !== -1) {
+                    const unlockstri = JSON.stringify(temp.unLockMaterials);
+                    map.set(temp.sn, JSON.parse(unlockstri));
+                }
+            }
+            if (map.size === sns.length) break;
+        }
+        return map;
+    }
+
     public getShopBase(id: string): IShopBase {
         const data: ShopConfig = this.getConfig(BaseDataType.shop);
         const temp = data.get(id);

@@ -65,7 +65,7 @@ export class ElementDataConfig extends BaseConfigData {
             frameDuration: animation.frameDurations,
             layer: animation.layers,
             mountLayer: animation.mountLayer,
-            node: { name: "idle", id: 0 }
+            node: { name: animation.animation_name, id: 0 }
         };
         return obj;
     }
