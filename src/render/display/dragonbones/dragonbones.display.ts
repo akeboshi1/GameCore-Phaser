@@ -95,6 +95,12 @@ export class DragonbonesDisplay extends BaseDragonbonesDisplay implements IDispl
         this.updateTopDisplay();
     }
 
+    public checkCollision(sprite: any): boolean {
+        const currentCollisionArea = sprite.currentCollisionArea;
+        if (currentCollisionArea && currentCollisionArea.length > 0) return true;
+        return false;
+    }
+
     public async showRefernceArea(area: number[][], origin: IPos) {
         if (!area || area.length <= 0 || !origin) return;
         if (!this.mReferenceArea) {

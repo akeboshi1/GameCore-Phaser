@@ -340,6 +340,7 @@ export class DisplayManager {
         if (!sprite.pos) sprite.pos = new LogicPos(0, 0, 0);
         display.titleMask = sprite.titleMask;
         display.setPosition(sprite.pos.x, sprite.pos.y, sprite.pos.z);
+        display.checkCollision(sprite);
         display.changeAlpha(sprite.alpha);
     }
 
