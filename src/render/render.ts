@@ -32,7 +32,7 @@ import {
 } from "structure";
 import {DisplayManager} from "./managers/display.manager";
 import {InputManager} from "./input/input.manager";
-import {PicaRenderUiManager} from "picaRender";
+import {PicaRenderUiManager} from "picaRender";// TODO: 分离pica模块时，删除该引用
 import {GamePauseScene} from "./scenes/game.pause.scene";
 import {MainUIScene} from "./scenes/main.ui.scene";
 import {EditorCanvasManager} from "./managers/editor.canvas.manager";
