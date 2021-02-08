@@ -426,7 +426,11 @@ export class PicaMarketPanel extends BasePanel {
     this.mSelectItem.setProp(prop);
     this.mSelectItem.setData("propdata", prop);
     if (!prop.suitType || prop.suitType === "") {
-      this.render.renderEmitter(this.key + "_queryPropResource", prop);
+     // this.render.renderEmitter(this.key + "_queryPropResource", prop);
+     const content = new op_client.OP_VIRTUAL_WORLD_RES_CLIENT_MARKET_QUERY_PACKAGE_ITEM_RESOURCE();
+     content.display = prop.animationDisplay ? prop.animationDisplay : prop.display;
+     content.animations = <any>prop.animations;
+     this.setCommodityResource(content);
     } else {
       const content = this.getCommodityResource(prop);
       this.setCommodityResource(content);

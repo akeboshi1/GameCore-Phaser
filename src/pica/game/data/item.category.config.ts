@@ -52,14 +52,14 @@ export class ItemCategoryConfig extends BaseConfigData {
           "PKT_MARKET_TAG_40002"
         ],
         "PropItem": [
+          "PKT_MARKET_TAG_20013",
+          "PKT_MARKET_TAG_20009",
+          "PKT_MARKET_TAG_20006",
           "PKT_MARKET_TAG_20001",
           "PKT_MARKET_TAG_20002",
           "PKT_MARKET_TAG_20003",
           "PKT_MARKET_TAG_20010",
           "PKT_MARKET_TAG_20005",
-          "PKT_MARKET_TAG_20009",
-          "PKT_MARKET_TAG_20006",
-          "PKT_MARKET_TAG_20013"
         ],
         "HandheldItem": [
           "PKT_MARKET_TAG_20007"

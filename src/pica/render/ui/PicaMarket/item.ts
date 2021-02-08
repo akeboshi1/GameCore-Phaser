@@ -81,7 +81,7 @@ export class MarketItem extends Phaser.GameObjects.Container {
   setProp(content: any) {// op_client.IMarketCommodity
     this.mProp = content;
     if (content.icon) {
-      const url = Url.getOsdRes(content.icon);
+      const url = Url.getOsdRes(content.icon || content.texturePath);
       this.mPropImage.load(url, this, this.onPropLoadComplete);
     } else {
       Logger.getInstance().error(`${content.name} : ${content.id} icon value is empty`);
