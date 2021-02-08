@@ -507,7 +507,7 @@ export class PicaBagPanel extends PicaBasePanel {
       });
     if (item) {
       if (this.categoryType === 3) {
-        if (item.subcategory !== "pkt_market_tag_20013") {
+        if (item.subcategory !== "PKT_MARKET_TAG_20013") {
           this.useBtn.visible = false;
         } else this.useBtn.visible = true;
       } else {

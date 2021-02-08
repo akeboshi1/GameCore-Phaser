@@ -15,7 +15,7 @@ export enum BaseDataType {
     explore = "explore",
     item = "item",
     element = "element",
-    shop = "material_shop",
+    shop = "shop",
     // itemcategory = "itemcategory"
 }
 
@@ -144,6 +144,7 @@ export class BaseDataConfigManager extends BaseConfigManager {
             temp.icon = item.texturePath;
             temp.source = item.source;
             temp["find"] = true;
+            ObjectAssign.excludeTagAssign(temp, item);
         }
         return temp;
     }
@@ -191,37 +192,56 @@ export class BaseDataConfigManager extends BaseConfigManager {
         }
     }
 
-    public getShopSubCategory() {
-        const data: ShopConfig = this.getConfig(BaseDataType.shop);
-        const extend = "subextend";
-        if (data.hasOwnProperty(extend)) {
-            return data[extend];
-        } else {
-            const categorys: Array<{ key: string, value: string }> = [];
-            const subs = data["subcategory"];
-            for (const sub of subs) {
-                const value = this.getI18n(sub);
-                categorys.push({ key: sub, value });
+    public checkDynamicShop(shopName): Promise<any> {
+        return new Promise((resolve, reject) => {
+            if (!this.dataMap.has(shopName)) {
+                this.dynamicLoad(new Map([shopName, new ShopConfig()])).then(() => {
+                    resolve(true);
+                }, (reponse) => {
+                    Logger.getInstance().error("未成功加载配置:" + reponse);
+                    reject(false);
+                });
+            } else {
+                resolve(true);
             }
-            data["subcategory"] = categorys;
-            return categorys;
-        }
+        });
     }
-    public getShopItems(sub: string) {
-        const data: ShopConfig = this.getConfig(BaseDataType.shop);
+
+    public getShopSubCategory(shopName: string = BaseDataType.shop) {
+        const data: ShopConfig = this.getConfig(shopName);
+        if (!data.categoryMap["find"]) {
+            const extendMap: Map<{ key: string, value: string }, Array<{ key: string, value: string }>> = new Map();
+            data.categoryMap.forEach((value, key) => {
+                const subCategorys: Array<{ key: string, value: string }> = [];
+                for (const temp of value) {
+                    const tvalue = this.getI18n(temp);
+                    subCategorys.push({ key: temp, value: tvalue });
+                }
+                const category = { key, value: this.getI18n(key) };
+                extendMap.set(category, subCategorys);
+            });
+            data.categoryMap["find"] = true;
+            data.categoryMap["extendMap"] = extendMap;
+            return extendMap;
+        }
+        return data.categoryMap["extendMap"];
+    }
+    public getShopItems(category: string, sub: string, shopName: string = BaseDataType.shop) {
+        const data: ShopConfig = this.getConfig(shopName);
         const itemconfig: ItemBaseDataConfig = this.getConfig(BaseDataType.item);
-        const arr = data.subMap.get(sub);
-        const extend = "subarrextend";
-        if (arr[extend]) {
-            return arr;
+        const map = data.propMap.get(category);
+        const extend = "extendfind";
+        const tempArr = map.get(sub);
+        if (tempArr[extend]) {
+            return tempArr;
         } else {
-            for (const shopitem of arr) {
+            for (const shopitem of tempArr) {
                 const tempItem: IMarketCommodity = <any>shopitem;
                 if (!shopitem["find"]) {
                     const item = this.getItemBase(shopitem.itemId);
                     tempItem.name = this.getI18n(shopitem.name);
                     tempItem.source = this.getI18n(shopitem.source);
-                    tempItem["des"] = this.getI18n(item.des);
+                    tempItem["des"] = item.des;
                     // const valueItem = this.getItemBase(shopitem.currencyId);
                     tempItem["price"] = [{
                         price: shopitem.price,
@@ -229,10 +249,13 @@ export class BaseDataConfigManager extends BaseConfigManager {
                         displayPrecision: 0
                     }];
                     shopitem["find"] = true;
+                    if (shopitem.icon === "" || shopitem.icon === undefined)
+                        shopitem.icon = item.texturePath;
                     ObjectAssign.excludeTagAssign(shopitem, item);
                 }
             }
-            arr[extend] = true;
+            tempArr[extend] = true;
+            return tempArr;
         }
     }
 
