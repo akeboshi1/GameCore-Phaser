@@ -55,6 +55,7 @@ export class ElementManager extends PacketHandler implements IElementManager {
      */
     protected mCacheRemoveList: any[] = [];
     private mDealAddList: any[] = [];
+    private mRequestSyncIdList: number[] = [];
     private mDealSyncMap: Map<number, boolean> = new Map();
     private mGameConfig: IElementStorage;
     private mStateMgr: ElementStateManager;
@@ -252,6 +253,7 @@ export class ElementManager extends PacketHandler implements IElementManager {
             this.mActionMgr.destroy();
         }
         if (this.mDealAddList) this.mDealAddList.length = 0;
+        if (this.mRequestSyncIdList) this.mRequestSyncIdList.length = 0;
         if (this.mDealSyncMap) this.mDealSyncMap.clear();
         if (this.mCacheAddList) {
             this.mCacheAddList.length = 0;
@@ -410,6 +412,11 @@ export class ElementManager extends PacketHandler implements IElementManager {
         if (notReadyElements.length < 1) {
             Logger.getInstance().debug("#loading onManagerReady ", this.constructor.name);
             this.mRoom.onManagerReady(this.constructor.name);
+            if (this.mRequestSyncIdList && this.mRequestSyncIdList.length > 0) {
+                this.fetchDisplay(this.mRequestSyncIdList);
+                this.mRequestSyncIdList.length = 0;
+                this.mRequestSyncIdList = [];
+            }
         }
     }
 
@@ -471,7 +478,11 @@ export class ElementManager extends PacketHandler implements IElementManager {
             return;
         }
         for (const obj of objs) {
-            this.mCacheAddList.push(obj);
+            if (this.checkDisplay(new Sprite(obj, 3))) {
+                this.mCacheAddList.push(obj);
+            } else {
+                this.mRequestSyncIdList.push(obj.id);
+            }
         }
     }
 
@@ -504,6 +515,11 @@ export class ElementManager extends PacketHandler implements IElementManager {
         }
         if (this.mElements.size === 0 && (!this.mCacheAddList || this.mCacheAddList.length === 0)) {
             this.mRoom.onManagerReady(this.constructor.name);
+            if (this.mRequestSyncIdList && this.mRequestSyncIdList.length > 0) {
+                this.fetchDisplay(this.mRequestSyncIdList);
+                this.mRequestSyncIdList.length = 0;
+                this.mRequestSyncIdList = [];
+            }
         }
     }
 
