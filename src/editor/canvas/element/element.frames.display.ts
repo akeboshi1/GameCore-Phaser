@@ -345,7 +345,7 @@ export default class ElementFramesDisplay extends BaseFramesDisplay implements R
             const count = data.mountPoint.length - this.mMountList.length;
             for (let i = 0; i < count; i++) {
                 const arm = new DragonbonesEditorDisplay(this.scene);
-                this.mount(arm);
+                this.mount(arm, i);
                 // this.mMountList.push(arm);
             }
         }
