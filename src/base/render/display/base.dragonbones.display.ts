@@ -226,10 +226,6 @@ export class BaseDragonbonesDisplay extends BaseDisplay {
             this.mArmatureDisplay.dispose(true);
             this.mArmatureDisplay = null;
         }
-        if (this.mClickCon) {
-            this.mClickCon.destroy(true);
-            this.mClickCon = null;
-        }
 
         if (this.mFadeTween) {
             this.clearFadeTween();
@@ -254,14 +250,11 @@ export class BaseDragonbonesDisplay extends BaseDisplay {
         this.mInteractive = active;
         if (active) {
             const rect: Phaser.Geom.Rectangle = new Phaser.Geom.Rectangle(0, 0, 50, 70);
-            if (!this.mClickCon) {
-                this.mClickCon = this.scene.make.container(undefined, false);
-                this.mClickCon.setInteractive(rect, Phaser.Geom.Rectangle.Contains);
-                this.mClickCon.x = -rect.width >> 1;
-                this.mClickCon.y = -rect.height;
-            }
+            rect.x = -rect.width >> 1;
+            rect.y = -rect.height;
+            this.setInteractive(rect, Phaser.Geom.Rectangle.Contains);
         } else {
-            if (this.mClickCon) this.mClickCon.destroy();
+            this.disableInteractive();
         }
     }
 
@@ -338,19 +331,9 @@ export class BaseDragonbonesDisplay extends BaseDisplay {
         // this.play("idle");
         // this.mArmatureDisplay.x = this.baseLoc.x;
         // this.mArmatureDisplay.y = this.baseLoc.y;
-        const rect: Phaser.Geom.Rectangle = new Phaser.Geom.Rectangle(0, 0, 50, 70);
-        if (this.mInteractive) {
-            if (!this.mClickCon) {
-                this.mClickCon = this.scene.make.container(undefined, false);
-                this.mClickCon.setInteractive(rect, Phaser.Geom.Rectangle.Contains);
-                this.mClickCon.x = -rect.width >> 1;
-                this.mClickCon.y = -rect.height;
-            }
-            this.mClickCon.setData("id", this.displayInfo.id);
-            this.add(this.mClickCon);
-        }
+        this.setClickInteractive(this.mInteractive);
         this.setData("id", this.displayInfo.id);
-        this.created();
+        this.displayCreated();
     }
 
     protected onArmatureLoopComplete(event: dragonBones.EventObject) {

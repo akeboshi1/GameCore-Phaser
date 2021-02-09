@@ -4,13 +4,14 @@ import { PBpacket } from "net-socket-packet";
 import { IElementManager } from "../element/element.manager";
 import { ISprite, PlayerState } from "structure";
 import { IPos } from "../../../utils/logic.pos";
-import { Element, IElement, MovePath } from "../element/element";
+import { Element, IElement, InputEnable, MovePath } from "../element/element";
 import { Logger } from "utils";
 export class Player extends Element implements IElement {
     protected nodeType: number = op_def.NodeType.CharacterNodeType;
     protected mOffsetY: number = undefined;
     constructor(sprite: ISprite, protected mElementManager: IElementManager) {
         super(sprite, mElementManager);
+        this.setInputEnable(InputEnable.Enable);
     }
 
     async setModel(val: ISprite): Promise<any> {

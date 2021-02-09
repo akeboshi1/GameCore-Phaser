@@ -790,7 +790,7 @@ export class Element extends BlockObject implements IElement {
             Logger.getInstance().error("promise error ====>", error);
         });
         const currentAnimation = this.mModel.currentAnimation;
-        this.setInputEnable(this.mInputEnable);
+        if (this.mInputEnable) this.setInputEnable(this.mInputEnable);
         if (this.mModel.nodeType !== op_def.NodeType.CharacterNodeType) this.mRoomService.game.physicalPeer.addBody(this.id);
         this.roomService.game.emitter.emit("ElementCreated", this.id);
         return Promise.resolve();

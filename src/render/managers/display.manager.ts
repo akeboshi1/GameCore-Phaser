@@ -1,4 +1,4 @@
-import {IPos, IPosition45Obj, Logger, LogicPos} from "utils";
+import {Handler, IPos, IPosition45Obj, Logger, LogicPos} from "utils";
 import { SceneManager } from "../scenes/scene.manager";
 import { FramesDisplay } from "../display/frames/frames.display";
 import { PlayScene } from "../scenes/play.scene";
@@ -306,13 +306,18 @@ export class DisplayManager {
 
     public addEffect(targetID: number, effectID: number, display: IFramesModel) {
         const target = this.getDisplay(targetID);
-        const effect = this.addFramesDisplay(effectID, display, DisplayField.Effect);
+        const effect = this.addFramesDisplay(effectID, display, parseInt(PlayScene.LAYER_SURFACE, 10), DisplayField.Effect);
         if (!target || !effect) {
             return;
         }
-        effect.once("initialized", () => {
+        if (effect.created) {
             target.addEffect(effect);
-        });
+        } else {
+            effect.createdHandler = new Handler(this, () => {
+                target.addEffect(effect);
+                effect.createdHandler = undefined;
+            });
+        }
     }
 
     public removeEffect(displayID: number) {
@@ -323,6 +328,7 @@ export class DisplayManager {
         }
         display.removeEffect();
         display.destroy();
+        this.displays.delete(displayID);
     }
 
     public showEffect(displayID: number) {

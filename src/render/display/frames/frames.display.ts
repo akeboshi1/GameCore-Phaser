@@ -127,8 +127,8 @@ export class FramesDisplay extends BaseFramesDisplay implements IDisplayObject {
         this.mTopDisplay.clearBubble();
     }
 
-    public created() {
-        super.created();
+    public displayCreated() {
+        super.displayCreated();
         this.render.mainPeer.elementDisplayReady(this.id);
     }
 

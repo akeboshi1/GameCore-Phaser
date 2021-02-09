@@ -1,12 +1,13 @@
 {
   "name": "@PixelPai/game-core",
-  "version": "1.0.510",
+  "version": "1.0.512",
   "main": "release/js/editor.js",
   "scripts": {
     "dev": "webpack-dev-server --mode development",
     "up": "yarn upgrade game-capsule && yarn upgrade webworker-rpc && yarn upgrade tooqinggamephaser && yarn upgrade tooqingmatter-js",
     "build": "yarn up && yarn ver && node --max-old-space-size=4096 node_modules/webpack/bin/webpack.js --mode=production --output-path=./release --progress",
     "build:dev": "webpack --mode=development --output-path=./release --progress",
+    "build:editor:dev": "webpack --config webpack.editor.config.js --mode=development --output-path=./release --progress",
     "ver": "genversion version.js",
     "patch": "yarn version --patch && yarn ver"
   },
