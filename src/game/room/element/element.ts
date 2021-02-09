@@ -211,6 +211,7 @@ export class Element extends BlockObject implements IElement {
         if (this.mModel.pos) {
             this.setPosition(this.mModel.pos);
         }
+        const area = model.getCollisionArea();
         // render action
         this.load(this.mModel.displayInfo)
             .then(() => this.mElementManager.roomService.game.peer.render.setModel(model))
