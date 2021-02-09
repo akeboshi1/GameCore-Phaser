@@ -84,6 +84,7 @@ export class BaseFramesDisplay extends BaseDisplay {
         if (!animation) return;
         field = !field ? DisplayField.STAGE : field;
         const data = this.mDisplayDatas.get(field);
+        if (!this.scene) return;
         if (this.scene.textures.exists(data.gene) === false) {
             return;
         }
