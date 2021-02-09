@@ -357,25 +357,27 @@ export class ElementManager extends PacketHandler implements IElementManager {
             for (let i: number = 0; i < tmpLen; i++) {
                 const sprite = tmpList[i];
                 if (!sprite) continue;
+                // 更新elementstorage中显示对象的数据信息
+                const data = new Sprite(sprite, 3);
+                this.mRoom.game.elementStorage.add(<any>data);
                 element = this.get(sprite.id);
                 if (element) {
                     this.mDealSyncMap.set(sprite.id, false);
                     const command = (<any>sprite).command;
                     if (command === op_def.OpCommand.OP_COMMAND_UPDATE) { //  全部
-                        element.model = new Sprite(sprite, 3);
+                        element.model = data;
                     } else if (command === op_def.OpCommand.OP_COMMAND_PATCH) { //  增量
                         element.updateModel(sprite);
                     }
-                    // 更新elementstorage中显示对象的数据信息
-                    const displayInfo = element.model.displayInfo;
-                    if (displayInfo) {
-                        this.mRoom.game.elementStorage.add(<any>displayInfo);
-                    }
+                    // const displayInfo = element.model.displayInfo;
+                    // if (displayInfo) {
+                    //     this.mRoom.game.elementStorage.add(<any>displayInfo);
+                    // }
+                    ele.push(element);
                 } else {
                     this.mDealAddList.push(sprite);
-                    element = this._add(new Sprite(sprite, 3));
+                    // element = this._add(new Sprite(sprite, 3));
                 }
-                ele.push(element);
             }
             this.dealAddList(true);
             this.mStateMgr.syncElement(ele);
@@ -534,7 +536,7 @@ export class ElementManager extends PacketHandler implements IElementManager {
             }
             // Logger.getInstance().error("checkdisplay error====>", sprite);
         }
-        return;
+        return sprite.displayInfo;
     }
 
     protected fetchDisplay(ids: number[]) {
