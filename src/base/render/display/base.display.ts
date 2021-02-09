@@ -11,7 +11,7 @@ export interface IBaseDisplay {
 
     load(data: IDragonbonesModel | IFramesModel, field?: DisplayField): Promise<any>;
 
-    created();
+    displayCreated();
 
     play(animation: RunningAnimation);
 
@@ -76,11 +76,15 @@ export abstract class BaseDisplay extends Phaser.GameObjects.Container implement
         });
     }
 
-    public created() {
+    public displayCreated() {
         this.mCreated = true;
         if (this.createdHandler) {
             this.createdHandler.runWith(this.displayInfo);
         }
+    }
+
+    public get created() {
+        return this.mCreated;
     }
 
     public set direction(dir: number) {

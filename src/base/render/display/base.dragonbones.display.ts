@@ -325,7 +325,7 @@ export class BaseDragonbonesDisplay extends BaseDisplay {
             this.add(this.mClickCon);
         }
         this.setData("id", this.displayInfo.id);
-        this.created();
+        this.displayCreated();
     }
 
     protected onArmatureLoopComplete(event: dragonBones.EventObject) {
