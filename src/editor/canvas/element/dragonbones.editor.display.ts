@@ -8,8 +8,8 @@ export class DragonbonesEditorDisplay extends BaseDragonbonesDisplay {
         this.load(new DragonbonesModel({ id: 0, avatar: { } }));
     }
 
-    public created() {
-        super.created();
+    public displayCreated() {
+        super.displayCreated();
         this.clearArmatureUnusedSlots();
         this.setDraggable(this.mInteractive);
     }

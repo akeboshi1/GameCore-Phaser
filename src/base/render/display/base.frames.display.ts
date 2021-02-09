@@ -48,12 +48,12 @@ export class BaseFramesDisplay extends BaseDisplay {
             const display = this.framesInfo.display;
             if (!display) {
                 Logger.getInstance().debug("update frame loadError", "display is undefined");
-                this.created();
+                this.displayCreated();
                 return;
             }
             if (display.texturePath === "" || display.dataPath === "") {
                 Logger.getInstance().debug("update frame loadError", "动画资源报错：", this.displayInfo);
-                this.created();
+                this.displayCreated();
             } else {
                 this.scene.load.atlas(this.framesInfo.gene, Url.getOsdRes(display.texturePath), Url.getOsdRes(display.dataPath));
                 const onAdd = (key: string) => {
@@ -67,7 +67,7 @@ export class BaseFramesDisplay extends BaseDisplay {
                 const onLoadError = (imageFile: ImageFile) => {
                     Logger.getInstance().debug("update frame loadError");
                     // Logger.error(`Loading Error: key = ${imageFile} >> ${imageFile.url}`);
-                    this.created();
+                    this.displayCreated();
                 };
                 // this.scene.load.on(Phaser.Loader.Events.COMPLETE, this.mAllLoadCompleted, this);
                 this.scene.load.on(Phaser.Loader.Events.FILE_LOAD_ERROR, onLoadError, this);
@@ -85,6 +85,7 @@ export class BaseFramesDisplay extends BaseDisplay {
         const times = animation.times;
         field = !field ? DisplayField.STAGE : field;
         const data = this.mDisplayDatas.get(field);
+        if (!this.scene) return;
         if (this.scene.textures.exists(data.gene) === false) {
             return;
         }
@@ -406,7 +407,7 @@ export class BaseFramesDisplay extends BaseDisplay {
                 this.playEffect();
             }
         }
-        this.created();
+        this.displayCreated();
     }
 
     protected makeAnimation(gen: string, key: string, frameName: string[], frameVisible: boolean[], frameRate: number, loop: boolean, frameDuration?: number[]) {

@@ -157,8 +157,8 @@ export class DragonbonesDisplay extends BaseDragonbonesDisplay implements IDispl
         this.mTopDisplay.clearBubble();
     }
 
-    public created() {
-        super.created();
+    public displayCreated() {
+        super.displayCreated();
         this.render.mainPeer.elementDisplayReady(this.id);
         this.render.renderEmitter("dragonBones_initialized");
     }
@@ -245,7 +245,7 @@ export class DragonbonesDisplay extends BaseDragonbonesDisplay implements IDispl
     protected fileError(key: string) {
         if (key !== this.resourceName) return;
         // TODO: 根据请求错误类型，retry或catch
-        this.created();
+        this.displayCreated();
     }
 
     protected onArmatureLoopComplete(event: dragonBones.EventObject) {
