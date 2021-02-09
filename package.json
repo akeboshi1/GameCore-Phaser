@@ -1,7 +1,7 @@
 {
   "name": "@PixelPai/game-core",
   "version": "1.0.508",
-  "main": "release/js/tooqing.js",
+  "main": "release/js/editor.js",
   "scripts": {
     "dev": "webpack-dev-server --mode development",
     "up": "yarn upgrade game-capsule && yarn upgrade webworker-rpc && yarn upgrade tooqinggamephaser && yarn upgrade tooqingmatter-js",

@@ -14,7 +14,7 @@ const appVer = require("./version");
 const config = {
     entry: {
         tooqing: path.join(__dirname, "./launcher.ts"),
-        editor: path.join(__dirname, "./src/editor/editor.launcher.ts"),
+        editor: path.join(__dirname, "./src/editor/index.ts"),
         mainWorker: path.join(__dirname, "./src/game/main.peer.ts"),
         physicalWorker: path.join(__dirname, "./src/services/physical.worker.ts")
     },
@@ -25,7 +25,7 @@ const config = {
         chunkFilename: `js/[name]_v${appVer}.js`,
         libraryTarget: "umd",
         globalObject: "this",
-        library: "TooqingCore",
+        library: "[name]",
     },
     module: {
         rules: [
