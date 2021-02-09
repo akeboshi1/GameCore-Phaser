@@ -177,6 +177,13 @@ export class MainPeer extends RPCPeer {
         this.game.elementStorage.updatePalette(palette);
     }
 
+    @Export([webworker_rpc.ParamType.num])
+    public removeElement(id: number) {
+        if (this.game.roomManager && this.game.roomManager.currentRoom && this.game.roomManager.currentRoom.elementManager) {
+            this.game.roomManager.currentRoom.elementManager.remove(id);
+        }
+    }
+
     @Export()
     public refreshToken() {
         this.game.refreshToken();
@@ -616,10 +623,10 @@ export class MainPeer extends RPCPeer {
         }
     }
 
-    @Export([webworker_rpc.ParamType.num])
-    public tryStopMove(id: number, pos?: any, targetID?: number,) {
+    @Export([webworker_rpc.ParamType.num, webworker_rpc.ParamType.boolean])
+    public tryStopMove(id: number, interactiveBoo: boolean, targetID?: number, pos?: any) {
         if (this.game.user) {
-            this.game.user.tryStopMove(targetID, pos);
+            this.game.user.tryStopMove(targetID, interactiveBoo, pos);
         }
     }
 
