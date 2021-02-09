@@ -4,6 +4,7 @@
 /node_modules/*
 /builds/*
 /dist/*
+/release/*
 /yarn-error.log
 .idea/**/workspace.xml
 .idea/**/tasks.xml
@@ -248,4 +249,3 @@ yargs.d.ts
 .gitignore
 webpack.config.js
 *.DS_Store
-!/release
