@@ -17,6 +17,8 @@ import { BaseFramesDisplay, BaseLayer, GroundLayer, IRender, LayerManager, Surfa
 import { ElementStorage, Sprite } from "baseModel";
 import * as protos from "pixelpai_proto";
 import { PBpacket } from "net-socket-packet";
+import { BaseSceneManager } from "src/base/render/scene/scene.manager";
+import { EditorSceneManger } from "./manager/scene.manager";
 for (const key in protos) {
     PBpacket.addProtocol(protos[key]);
 }
@@ -39,6 +41,7 @@ export class SceneEditorCanvas extends EditorCanvas implements IRender {
     private mMossManager: EditorMossManager;
     private mElementManager: EditorElementManager;
     private mSkyboxManager: EditorSkyboxManager;
+    private mSceneManager: EditorSceneManger;
 
     private mElementStorage: ElementStorage;
 
@@ -58,6 +61,7 @@ export class SceneEditorCanvas extends EditorCanvas implements IRender {
         this.mMossManager = new EditorMossManager(this);
         this.mElementManager = new EditorElementManager(this);
         this.mSkyboxManager = new EditorSkyboxManager(this);
+        this.mSceneManager = new EditorSceneManger(this);
         this.mElementStorage = new ElementStorage();
         this.mGame.scene.add(SceneEditor.name, SceneEditor, true, this);
     }
@@ -561,9 +565,17 @@ export class SceneEditorCanvas extends EditorCanvas implements IRender {
     get elementManager() {
         return this.mElementManager;
     }
+
+    get emitter() {
+        return this.mEmitter;
+    }
+
+    get sceneManager() {
+        return this.mSceneManager;
+    }
 }
 
-class SceneEditor extends Phaser.Scene {
+export class SceneEditor extends Phaser.Scene {
     public static LAYER_GROUND = LayerEnum.Terrain;
     public static LAYER_MIDDLE = "middleLayer";
     public static LAYER_FLOOR = LayerEnum.Floor;
@@ -587,6 +599,7 @@ class SceneEditor extends Phaser.Scene {
 
     create() {
         this.layerManager = new LayerManager();
+        this.sceneEditor.sceneManager.setMainScene(this);
 
         this.layerManager.addLayer(this, GroundLayer, SceneEditor.LAYER_GROUND.toString(), 1);
         this.gridLayer = new GridLayer(this);

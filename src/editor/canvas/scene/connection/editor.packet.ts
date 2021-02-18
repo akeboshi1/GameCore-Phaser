@@ -7,7 +7,7 @@ import { SceneEditorCanvas } from "../scene.editor.canvas";
 export class EditorPacket extends PacketHandler {
     constructor(private sceneEditor: SceneEditorCanvas, private connection: any) {
         super();
-        this.connection.addPacketListener(this);
+        // this.connection.addPacketListener(this);
         this.addHandlerFun(op_client.OPCODE._OP_EDITOR_REQ_CLIENT_CHANGE_TO_EDITOR_MODE, this.onEnterEditor);
         this.addHandlerFun(op_client.OPCODE._OP_EDITOR_REQ_CLIENT_MOUSE_SELECTED_SPRITE, this.onMouseFollowHandler);
         this.addHandlerFun(op_client.OPCODE._OP_EDITOR_REQ_CLIENT_SET_EDITOR_MODE, this.onSetEditorModeHandler);
@@ -184,7 +184,6 @@ export class EditorPacket extends PacketHandler {
         const content: op_client.IOP_EDITOR_REQ_CLIENT_ADD_SPRITES_WITH_LOCS = packet.content;
         const locs = content.locs;
         const nodeType = content.nodeType;
-        Logger.getInstance().log("handleAddTerrains =========>", locs);
         if (nodeType !== op_def.NodeType.TerrainNodeType) {
             return;
         }
@@ -193,8 +192,6 @@ export class EditorPacket extends PacketHandler {
     private handleAddMosses(packet: PBpacket) {
         const content: op_client.IOP_EDITOR_REQ_CLIENT_ADD_MOSSES = packet.content;
         const locs = content.locs;
-        Logger.getInstance().log("handleAddMosses =========>", locs);
-
     }
 
     private handleDeleteMosses() {

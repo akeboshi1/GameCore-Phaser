@@ -2,7 +2,7 @@ import { LoadState, ModuleName } from "structure";
 import { Logger, StringUtils } from "utils";
 import { LoadingTips } from "../loadqueue";
 import { Render } from "../render";
-import { BasicScene } from "./basic.scene";
+import { BasicScene, SkyBoxScene, BaseSceneManager } from "baseRender";
 import { CreateRoleScene } from "./create.role.scene";
 import { DecorateScene } from "./decorate.scene";
 import { GamePauseScene } from "./game.pause.scene";
@@ -13,28 +13,14 @@ import { MainUIScene } from "./main.ui.scene";
 import { PlayScene } from "./play.scene";
 import { RoomScene } from "./room.scene";
 import { SelectRoleScene } from "./select.role.scene";
-import { SkyBoxScene } from "./sky.box.scene";
 
-export class SceneManager {
-    private readonly sceneClass = {
-        "BasicScene": BasicScene,
-        "CreateRoleScene": CreateRoleScene,
-        "GamePauseScene": GamePauseScene,
-        "LoadingScene": LoadingScene,
-        "LoginAccountScene": LoginAccountScene,
-        "LoginScene": LoginScene,
-        "MainUIScene": MainUIScene,
-        "PlayScene": PlayScene,
-        "RoomScene": RoomScene,
-        "SelectRoleScene": SelectRoleScene,
-        "SkyBoxScene": SkyBoxScene,
-        "DecorateScene": DecorateScene
-    };
+export class SceneManager extends BaseSceneManager {
 
     private mCurSceneName: string;
-    private mMainScene: Phaser.Scene;
-    constructor(private render: Render) {
-        this.render.exportProperty(this, this.render, ModuleName.SCENEMANAGER_NAME)
+    constructor(render: Render) {
+        super(render);
+
+        (<Render>this.render).exportProperty(this, this.render, ModuleName.SCENEMANAGER_NAME)
             .onceReady(() => {
             });
     }
@@ -249,14 +235,6 @@ export class SceneManager {
         this.mMainScene = undefined;
     }
 
-    public setMainScene(scene: Phaser.Scene) {
-        this.mMainScene = scene;
-    }
-
-    public getMainScene() {
-        return this.mMainScene;
-    }
-
     public updateInput(val: SceneInputEnum) {
         const scenes = this.render.game.scene.getScenes();
         scenes.map((scene: Phaser.Scene) => scene.input.enabled = (val !== SceneInputEnum.Disable));
@@ -268,6 +246,23 @@ export class SceneManager {
         //         scenes.map((scene: Phaser.Scene) => scene.input.enabled = true);
         //         break;
         // }
+    }
+
+    protected initScene() {
+        this.sceneClass = {
+            "BasicScene": BasicScene,
+            "CreateRoleScene": CreateRoleScene,
+            "GamePauseScene": GamePauseScene,
+            "LoadingScene": LoadingScene,
+            "LoginAccountScene": LoginAccountScene,
+            "LoginScene": LoginScene,
+            "MainUIScene": MainUIScene,
+            "PlayScene": PlayScene,
+            "RoomScene": RoomScene,
+            "SelectRoleScene": SelectRoleScene,
+            "SkyBoxScene": SkyBoxScene,
+            "DecorateScene": DecorateScene
+        };
     }
 
     private sceneCallback(scene: Phaser.Scene) {

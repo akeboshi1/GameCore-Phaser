@@ -1,4 +1,4 @@
-import { PlayCamera } from "../cameras/play.camera";
+import { PlayCamera } from "../../../render/cameras/play.camera";
 import { BasicScene } from "./basic.scene";
 
 export class SkyBoxScene extends BasicScene {

@@ -1,5 +1,5 @@
 import { Font, Logger, Url } from "utils";
-import { BasicScene } from ".";
+import { BasicScene } from "baseRender";
 import version from "../../../version";
 import { SceneName } from "../../structure";
 

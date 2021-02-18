@@ -1,5 +1,5 @@
 import { Url, Size } from "utils";
-import { BasicScene } from "./basic.scene";
+import { BasicScene } from "baseRender";
 
 export class GamePauseScene extends BasicScene {
     private mRender: any;

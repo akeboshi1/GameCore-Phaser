@@ -1,10 +1,9 @@
-import { BasicScene, Render } from "gamecoreRender";
 import { Pos } from "utils";
 import { FallEffect } from "./fall.effect";
-
+import { BasicScene, IRender } from "baseRender";
 export class FallEffectContainer {
     private mFalls: FallEffect[];
-    constructor(private render: Render) {
+    constructor(private render: IRender) {
         this.mFalls = [];
     }
 

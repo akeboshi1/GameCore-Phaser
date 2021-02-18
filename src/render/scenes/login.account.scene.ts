@@ -1,4 +1,4 @@
-import { BasicScene } from "./basic.scene";
+import { BasicScene } from "baseRender";
 import { Url, Size, Logger } from "utils";
 
 export class LoginAccountScene extends BasicScene {
