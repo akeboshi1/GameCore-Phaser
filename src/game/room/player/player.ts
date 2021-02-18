@@ -5,7 +5,7 @@ import { IElementManager } from "../element/element.manager";
 import { ISprite, PlayerState } from "structure";
 import { IPos } from "../../../utils/logic.pos";
 import { Element, IElement, InputEnable, MovePath } from "../element/element";
-import { Logger } from "utils";
+import {DirectionChecker, Logger} from "utils";
 export class Player extends Element implements IElement {
     protected nodeType: number = op_def.NodeType.CharacterNodeType;
     protected mOffsetY: number = undefined;
@@ -15,79 +15,10 @@ export class Player extends Element implements IElement {
     }
 
     async setModel(val: ISprite): Promise<any> {
+        (<any>val).off("Animation_Change", this.animationChanged, this);
+        (<any>val).on("Animation_Change", this.animationChanged, this);
         return super.setModel(val);
     }
-
-    // public move(moveData: op_client.IMoveData) {
-    //     if (this.getDirection() !== moveData.direction) {
-    //         if (this.roomService.game.moveStyle === op_def.MoveStyle.DIRECTION_MOVE_STYLE) {
-    //             if (this.mId !== this.roomService.playerManager.actor.id) {
-    //                 this.setDirection(moveData.direction);
-    //             }
-    //         } else {
-    //             this.setDirection(moveData.direction);
-    //         }
-    //     }
-    //     moveData.destinationPoint3f.y += this.offsetY;
-    //     super.move(moveData);
-    // }
-
-    // public movePath(movePath: op_client.IOP_VIRTUAL_WORLD_REQ_CLIENT_MOVE_SPRITE_BY_PATH) {
-    //     const tmpPath = movePath.path;
-    //     if (!tmpPath) {
-    //         return;
-    //     }
-    //     let lastPos = new LogicPos(this.mModel.pos.x, this.mModel.pos.y - this.offsetY);
-    //     const paths = [];
-    //     this.mMoveData.arrivalTime = movePath.timestemp;
-    //     let angle = null;
-    //     let point = null;
-    //     let now = this.mElementManager.roomService.now();
-    //     let duration = 0;
-    //     let index = 0;
-    //     for (const path of tmpPath) {
-    //         point = path.point3f;
-    //         if (!(point.y === lastPos.y && point.x === lastPos.x)) {
-    //             angle = index === 0 ? Math.atan2(lastPos.y - point.y, lastPos.x - point.x) * (180 / Math.PI)
-    //                 : Math.atan2(point.y - lastPos.y, point.x - lastPos.x) * (180 / Math.PI);
-    //         }
-    //         const dir = this.onCheckDirection(angle);
-    //         now += duration;
-    //         duration = path.timestemp - now;
-    //         paths.push({
-    //             x: point.x,
-    //             y: point.y + this.offsetY,
-    //             direction: dir,
-    //             duration,
-    //             onStartParams: angle,
-    //             onCompleteParams: { duration, index },
-    //             // onStart: (tween, target, params) => {
-    //             //     this.onCheckDirection(params);
-    //             // },
-    //             // onComplete: (tween, targets, params) => {
-    //             //     this.onMovePathPointComplete(params);
-    //             // }
-    //         });
-    //         lastPos = new LogicPos(point.x, point.y);
-    //         index++;
-    //     }
-    //     this.mMoveData.posPath = paths;
-    //     this.mMoveData.onCompleteParams = point;
-    //     // this.mMoveData.onComplete = this.mMovePathPointFinished;
-    //     this._doMove();
-    // }
-
-    // public setDirection(dir: number) {
-    //     if (dir !== this.mDisplayInfo.avatarDir) {
-    //         this.mDisplayInfo.avatarDir = dir;
-    //         const id = this.mModel.id;
-    //         if (!this.mModel.currentAnimationName) {
-    //             this.mModel.currentAnimationName = PlayerState.IDLE;
-    //         }
-    //         this.mModel.setDirection(dir);
-    //         this.mElementManager.roomService.game.renderPeer.playAnimation(id, this.mModel.currentAnimation);
-    //     }
-    // }
 
     public changeState(val?: string, times?: number) {
         Logger.getInstance().debug("change state: ", val);
@@ -136,32 +67,12 @@ export class Player extends Element implements IElement {
     }
 
     protected async checkDirection() {
-    //     const prePos = await this.roomService.game.peer.physicalPeer.positionPrev(this.guid);
-    //     // (<any>this.body).positionPrev;
-    //     const pos = await this.roomService.game.peer.physicalPeer.position(this.guid);
-    //     // this.body.position;
         const pos = this.moveControll.position;
         const prePos = this.moveControll.prePosition;
-        const angle = Math.atan2((pos.y - prePos.y), (pos.x - prePos.x));
-        const dir = this.onCheckDirection(angle * (180 / Math.PI));
+        // Logger.getInstance().debug("#dir startMove checkDir", this.id, pos, prePos);
+        const dir = DirectionChecker.check(prePos, pos);
         this.setDirection(dir);
     }
-
-    // protected onCheckDirection(params: any): number {
-    //     if (typeof params !== "number") {
-    //         return;
-    //     }
-    //     // 重叠
-    //     if (params > 90) {
-    //         this.setDirection(3);
-    //     } else if (params >= 0) {
-    //         this.setDirection(5);
-    //     } else if (params >= -90) {
-    //         this.setDirection(7);
-    //     } else {
-    //         this.setDirection(1);
-    //     }
-    // }
 
     // protected onMoveStart() {
     //     this.changeState(PlayerState.WALK);
@@ -242,5 +153,10 @@ export class Player extends Element implements IElement {
     private mCheckStateHandle(val: string): boolean {
         // if (this.mCurState === val) return false;
         return true;
+    }
+
+    private animationChanged(data: any) {
+        // { id: this.id, direction: this.direction }
+        this.mElementManager.roomService.game.renderPeer.displayAnimationChange(data);
     }
 }

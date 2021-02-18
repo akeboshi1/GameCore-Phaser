@@ -3,7 +3,7 @@ export { Font } from "./font";
 export * from "./resUtil";
 export { Handler } from "./Handler";
 export { Logger } from "./log";
-export { Direction } from "./direction";
+export { Direction, DirectionChecker } from "./direction";
 export { ILogicPoint, LogicPoint } from "./logic.point";
 export { IPos, LogicPos } from "./logic.pos";
 export * from "./resUtil";

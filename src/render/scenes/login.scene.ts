@@ -1,6 +1,6 @@
 import { SceneName } from "structure";
 import { UiManager } from "../ui";
-import { BasicScene } from "./basic.scene";
+import { BasicScene } from "baseRender";
 
 // 编辑器用 Phaser.Scene
 export class LoginScene extends BasicScene {

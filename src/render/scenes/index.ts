@@ -1,4 +1,3 @@
-export * from "./basic.scene";
 export * from "./create.role.scene";
 export * from "./game.pause.scene";
 export * from "./loading.scene";
@@ -9,4 +8,3 @@ export * from "./play.scene";
 export * from "./room.scene";
 export * from "./scene.manager";
 export * from "./select.role.scene";
-export * from "./sky.box.scene";

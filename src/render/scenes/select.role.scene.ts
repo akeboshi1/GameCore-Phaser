@@ -1,4 +1,4 @@
-import { BasicScene } from "./basic.scene";
+import { BasicScene } from "baseRender";
 
 export class SelectRoleScene extends BasicScene {
   private mWorld: any | undefined;

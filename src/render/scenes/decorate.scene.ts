@@ -1,6 +1,5 @@
 import { PlayScene } from "./play.scene";
-import { ModuleName, SceneName } from "structure";
-import { Logger } from "utils";
+import { SceneName } from "structure";
 import { DecorateManager } from "../input/decorate.manager";
 
 export class DecorateScene extends PlayScene {
