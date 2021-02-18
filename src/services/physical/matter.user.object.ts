@@ -1,4 +1,4 @@
-import { IPos, Logger, LogicPos, Tool } from "utils";
+import {DirectionChecker, IPos, Logger, LogicPos, Tool} from "utils";
 import { delayTime, PhysicalPeer } from "../physical.worker";
 import { IMoveTarget, MatterPlayerObject, MovePos } from "./matter.player.object";
 import { op_def } from "pixelpai_proto";
@@ -207,11 +207,9 @@ export class MatterUserObject extends MatterPlayerObject {
         if (!this.body) return;
         const prePos = (<any>this.body).positionPrev;
         const pos = this.body.position;
-        const angle = Math.atan2((pos.y - prePos.y), (pos.x - prePos.x));
-        const dir = this.onCheckDirection(angle * (180 / Math.PI));
+        const dir = DirectionChecker.check(prePos, pos);
         // Logger.getInstance().debug("matterDirection ====>", dir);
         this.mModel.setDirection(dir);
-        this.peer.render.updateDirection(this.id, dir);
         this.peer.mainPeer.setDirection(this.id, dir);
     }
 
