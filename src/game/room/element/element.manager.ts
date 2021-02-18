@@ -294,7 +294,11 @@ export class ElementManager extends PacketHandler implements IElementManager {
         // 如果所有sprite都已经有反馈，则重新获取缓存队列进行处理
         this.mDealAddList.length = 0;
         this.mDealAddList = [];
-        this.dealAddList();
+        if (this.mCacheSyncList.length < 1) {
+            this.dealAddList();
+        } else {
+            this.dealSyncList();
+        }
     }
 
     public dealAddList(spliceBoo: boolean = false) {
@@ -304,7 +308,7 @@ export class ElementManager extends PacketHandler implements IElementManager {
         const ids = [];
         const eles = [];
         const tmpLen = !spliceBoo ? (this.mCacheAddList.length > len ? len : this.mCacheAddList.length) : this.mDealAddList.length;
-        const tmpList = !spliceBoo ? this.mCacheAddList.splice(0, tmpLen) : this.mDealAddList;
+        const tmpList = !spliceBoo ? this.mCacheAddList.splice(0, tmpLen) : (this.mDealAddList.length > 0 ? this.mDealAddList : this.mRequestSyncIdList.splice(0, tmpLen));
         for (let i: number = 0; i < tmpLen; i++) {
             const obj = tmpList[i];
             if (!obj) continue;
@@ -316,7 +320,9 @@ export class ElementManager extends PacketHandler implements IElementManager {
                     ids.push(sprite.id);
                 } else {
                     obj.state = true;
-                    this.mDealAddList.push(obj);
+                    if (this.mDealAddList.indexOf(obj) === -1) {
+                        this.mDealAddList.push(obj);
+                    }
                 }
                 // }
                 const ele = this._add(sprite);
@@ -357,6 +363,9 @@ export class ElementManager extends PacketHandler implements IElementManager {
             for (let i: number = 0; i < tmpLen; i++) {
                 const sprite = tmpList[i];
                 if (!sprite) continue;
+                if (this.mRequestSyncIdList.length > 0 && this.mRequestSyncIdList.indexOf(sprite.id) === -1) {
+                    continue;
+                }
                 // 更新elementstorage中显示对象的数据信息
                 const data = new Sprite(sprite, 3);
                 this.mRoom.game.elementStorage.add(<any>data);
@@ -515,7 +524,7 @@ export class ElementManager extends PacketHandler implements IElementManager {
         } else {
             this.dealSyncList();
         }
-        if (this.mElements.size === 0 && (!this.mCacheAddList || this.mCacheAddList.length === 0)) {
+        if (!this.mCacheAddList || this.mCacheAddList.length === 0) {
             this.mRoom.onManagerReady(this.constructor.name);
             if (this.mRequestSyncIdList && this.mRequestSyncIdList.length > 0) {
                 this.fetchDisplay(this.mRequestSyncIdList);
