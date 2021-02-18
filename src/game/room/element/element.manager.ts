@@ -128,9 +128,9 @@ export class ElementManager extends PacketHandler implements IElementManager {
         return Array.from(this.mElements.values());
     }
 
-    public add(sprites: ISprite[], addMap?: boolean) {
+    public add(sprites: ISprite[]) {
         for (const sprite of sprites) {
-            this._add(sprite, addMap);
+            this._add(sprite);
         }
     }
 
@@ -294,6 +294,7 @@ export class ElementManager extends PacketHandler implements IElementManager {
         // 如果所有sprite都已经有反馈，则重新获取缓存队列进行处理
         this.mDealAddList.length = 0;
         this.mDealAddList = [];
+        if (this.mCacheAddList.length < 1) return;
         this.dealAddList();
     }
 
@@ -312,18 +313,19 @@ export class ElementManager extends PacketHandler implements IElementManager {
             if (point) {
                 sprite = new Sprite(obj, 3);
                 // if (!sprite.displayInfo) {
-                if (!this.checkDisplay(sprite)) {
-                    ids.push(sprite.id);
-                } else {
-                    obj.state = true;
-                    this.mDealAddList.push(obj);
-                }
+                // if (!this.checkDisplay(sprite)) {
+                //     ids.push(sprite.id);
+                // } else {
+                obj.state = true;
+                this.mDealAddList.push(obj);
+                // }
                 // }
                 const ele = this._add(sprite);
                 eles.push(ele);
             }
         }
-        this.fetchDisplay(ids);
+        // this.fetchDisplay(ids);
+        if (eles.length < 1) return;
         this.mStateMgr.add(eles);
         this.checkElementDataAction(eles);
     }
@@ -354,6 +356,7 @@ export class ElementManager extends PacketHandler implements IElementManager {
             const tmpLen = this.mCacheSyncList.length > len ? len : this.mCacheSyncList.length;
             const tmpList = this.mCacheSyncList.splice(0, tmpLen);
             const ele = [];
+            const addList = [];
             for (let i: number = 0; i < tmpLen; i++) {
                 const sprite = tmpList[i];
                 if (!sprite) continue;
@@ -369,19 +372,43 @@ export class ElementManager extends PacketHandler implements IElementManager {
                     } else if (command === op_def.OpCommand.OP_COMMAND_PATCH) { //  增量
                         element.updateModel(sprite);
                     }
-                    // const displayInfo = element.model.displayInfo;
-                    // if (displayInfo) {
-                    //     this.mRoom.game.elementStorage.add(<any>displayInfo);
-                    // }
                     ele.push(element);
                 } else {
-                    this.mDealAddList.push(sprite);
-                    // element = this._add(new Sprite(sprite, 3));
+                    addList.push(sprite);
                 }
             }
-            this.dealAddList(true);
-            this.mStateMgr.syncElement(ele);
-            this.checkElementDataAction(ele);
+            if (ele.length > 0) {
+                this.mStateMgr.syncElement(ele);
+                this.checkElementDataAction(ele);
+            }
+            // 处理未添加过的物件
+            const addLen = addList.length;
+            if (addLen > 0) {
+                let point: op_def.IPBPoint3f;
+                let tmpSprite: ISprite = null;
+                const ids = [];
+                const eles = [];
+                for (let j: number = 0; j < addLen; j++) {
+                    const obj = addList[j];
+                    if (!obj) continue;
+                    point = obj.point3f;
+                    if (point) {
+                        tmpSprite = new Sprite(obj, 3);
+                        if (!this.checkDisplay(tmpSprite)) {
+                            ids.push(tmpSprite.id);
+                        } else {
+                            obj.state = true;
+                        }
+                        const tmpEle = this._add(tmpSprite);
+                        eles.push(tmpEle);
+                    }
+                }
+                this.fetchDisplay(ids);
+                if (eles.length < 1) return;
+                this.mStateMgr.add(eles);
+                this.checkElementDataAction(eles);
+
+            }
         }
     }
 
@@ -480,6 +507,9 @@ export class ElementManager extends PacketHandler implements IElementManager {
             return;
         }
         for (const obj of objs) {
+            if (this.mCacheAddList.indexOf(obj) !== -1 || this.mRequestSyncIdList.indexOf(obj.id) !== -1) {
+                continue;
+            }
             if (this.checkDisplay(new Sprite(obj, 3))) {
                 this.mCacheAddList.push(obj);
             } else {
@@ -488,21 +518,27 @@ export class ElementManager extends PacketHandler implements IElementManager {
         }
     }
 
-    protected _add(sprite: ISprite, addMap: boolean = false): Element {
-        if (addMap === undefined) addMap = true;
-        let ele = this.mElements.get(sprite.id);
+    protected _add(sprite: ISprite): Element {
+        // let addMap = false;
+        let ele = this.get(sprite.id);
         if (ele) {
             ele.model = sprite;
+            // addMap = true;
         } else {
             ele = new Element(sprite, this);
             ele.setInputEnable(InputEnable.Interactive);
+            // addMap = false;
         }
         // if (!ele) ele = new Element(sprite, this);
-        if (addMap) this.addMap(sprite);
-        this.mElements.set(ele.id || 0, ele);
+        this.addMap(sprite);
+        this.mElements.set(ele.id, ele);
         return ele;
     }
 
+    /**
+     * 收到添加物件信息完成协议
+     * @param packet
+     */
     protected addComplete(packet: PBpacket) {
         this.hasAddComplete = true;
         this.mCurIndex = 0;
@@ -513,9 +549,10 @@ export class ElementManager extends PacketHandler implements IElementManager {
             this.mRoom.game.renderPeer.updateProgress(this.mCurIndex / this.mLoadLen);
             this.dealAddList();
         } else {
+            // 如果没有直接添加物件的缓存，直接处理onsync的物件列表
             this.dealSyncList();
         }
-        if (this.mElements.size === 0 && (!this.mCacheAddList || this.mCacheAddList.length === 0)) {
+        if (!this.mCacheAddList || this.mCacheAddList.length === 0) {
             this.mRoom.onManagerReady(this.constructor.name);
             if (this.mRequestSyncIdList && this.mRequestSyncIdList.length > 0) {
                 this.fetchDisplay(this.mRequestSyncIdList);
