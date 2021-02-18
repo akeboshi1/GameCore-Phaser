@@ -224,26 +224,6 @@ export class MatterObject implements IMatterObject {
     public checkDirection() {
     }
 
-    public onCheckDirection(params: any): number {
-        if (typeof params !== "number") {
-            return;
-        }
-        // 重叠
-        if (params > 90) {
-            // this.setDirection(3);
-            return 3;
-        } else if (params >= 0) {
-            // this.setDirection(5);
-            return 5;
-        } else if (params >= -90) {
-            // this.setDirection(7);
-            return 7;
-        } else {
-            // this.setDirection(1);
-            return 1;
-        }
-    }
-
     public updateAnimations(displayInfo: any) {
         if (!this.mModel || this.mModel.id !== displayInfo.id) {
             return;

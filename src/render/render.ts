@@ -1248,13 +1248,13 @@ export class Render extends RPCPeer implements GameMain, IRender {
         if (this.mDisplayManager) this.mDisplayManager.setModel(sprite);
     }
 
-    @Export([webworker_rpc.ParamType.num, webworker_rpc.ParamType.num])
-    public updateDirection(id: number, dir: number) {
-        if (this.mDisplayManager) {
-            const display = this.mDisplayManager.getDisplay(id);
-            display.setDirection(dir);
-        }
-    }
+    // @Export([webworker_rpc.ParamType.num, webworker_rpc.ParamType.num])
+    // public updateDirection(id: number, dir: number) {
+    //     if (this.mDisplayManager) {
+    //         const display = this.mDisplayManager.getDisplay(id);
+    //         display.setDirection(dir);
+    //     }
+    // }
 
     @Export()
     public addSkybox(scenery: IScenery) {

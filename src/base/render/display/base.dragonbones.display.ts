@@ -178,7 +178,7 @@ export class BaseDragonbonesDisplay extends BaseDisplay {
 
     public play(val: RunningAnimation) {
         this.mAnimation = val;
-        Logger.getInstance().debug("dragonbones play ====>", val);
+        // Logger.getInstance().debug("#dir dragonbones play ====>", val);
         if (this.mArmatureDisplay) {
             if (this.mArmatureDisplay.hasDBEventListener(dragonBones.EventObject.LOOP_COMPLETE)) {
                 this.mArmatureDisplay.removeDBEventListener(dragonBones.EventObject.LOOP_COMPLETE, this.onArmatureLoopComplete, this);
