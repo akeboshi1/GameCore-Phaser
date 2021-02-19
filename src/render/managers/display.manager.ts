@@ -320,13 +320,14 @@ export class DisplayManager {
         }
     }
 
-    public removeEffect(displayID: number) {
+    public removeEffect(targetID: number, displayID: number) {
         const display = this.displays.get(displayID);
         if (!display) {
             Logger.getInstance().error("BaseDisplay not found: ", displayID);
             return;
         }
-        display.removeEffect();
+        const target = this.displays.get(targetID);
+        if (target) target.removeEffect(display);
         display.destroy();
         this.displays.delete(displayID);
     }

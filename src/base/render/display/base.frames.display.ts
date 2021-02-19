@@ -222,7 +222,7 @@ export class BaseFramesDisplay extends BaseDisplay {
     public removeDisplay(field: DisplayField) {
         const display = this.mSprites.get(field);
         if (display) {
-            this.mDisplayDatas.delete(field);
+            this.mSprites.delete(field);
             display.destroy();
         }
     }

@@ -33,7 +33,7 @@ export class Effect {
         if (this.mDisplayInfo) {
             this.mDisplayInfo.destroy();
         }
-        this.game.renderPeer.removeEffect(this.mID);
+        this.game.renderPeer.removeEffect(this.mOwnerID, this.mID);
     }
 
     get id(): number {
