@@ -93,7 +93,7 @@ export class PicaFurniFunMediator extends BasicMediator {
         const ele = eleMgr.get(content.ids[0]);
         if (!ele) return null;
 
-        var list : ICountablePackageItem[] = [];
+        const list: ICountablePackageItem[] = [];
         if (this.playerData) {
             if (content.materials) {
                 // const configMgr = <BaseDataConfigManager>this.game.configManager;
