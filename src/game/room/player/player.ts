@@ -5,7 +5,8 @@ import { IElementManager } from "../element/element.manager";
 import { ISprite, PlayerState } from "structure";
 import { IPos } from "../../../utils/logic.pos";
 import { Element, IElement, InputEnable, MovePath } from "../element/element";
-import {DirectionChecker, Logger} from "utils";
+import { DirectionChecker, Logger } from "utils";
+import { LayerEnum } from "game-capsule";
 export class Player extends Element implements IElement {
     protected nodeType: number = op_def.NodeType.CharacterNodeType;
     protected mOffsetY: number = undefined;
@@ -14,10 +15,53 @@ export class Player extends Element implements IElement {
         this.setInputEnable(InputEnable.Enable);
     }
 
-    async setModel(val: ISprite): Promise<any> {
-        (<any>val).off("Animation_Change", this.animationChanged, this);
-        (<any>val).on("Animation_Change", this.animationChanged, this);
-        return super.setModel(val);
+    async setModel(model: ISprite): Promise<any> {
+        (<any>model).off("Animation_Change", this.animationChanged, this);
+        (<any>model).on("Animation_Change", this.animationChanged, this);
+        if (!model) {
+            return;
+        }
+        if (!model.layer) {
+            model.layer = LayerEnum.Surface;
+        }
+        this.mElementManager.removeFromMap(this.mModel);
+        this.mModel = model;
+        this.mQueueAnimations = undefined;
+        if (this.mModel.pos) {
+            this.setPosition(this.mModel.pos);
+        }
+        const area = model.getCollisionArea();
+        const obj = { id: model.id, pos: model.pos, alpha: model.alpha, titleMask: model.titleMask | 0x00010000 };
+        // render action
+        this.load(this.mModel.displayInfo)
+            .then(() => this.mElementManager.roomService.game.peer.render.setModel(obj))
+            .then(() => {
+                this.showNickname();
+                this.setDirection(this.mModel.direction);
+                if (this.mInputEnable === InputEnable.Interactive) {
+                    this.setInputEnable(this.mInputEnable);
+                }
+                if (model.mountSprites && model.mountSprites.length > 0) {
+                    this.updateMounth(model.mountSprites);
+                }
+                this.mElementManager.addToMap(model);
+                return this.setRenderable(true);
+            });
+        const obj1 = {
+            id: model.id,
+            point3f: model.pos,
+            currentAnimationName: model.currentAnimationName,
+            direction: model.direction,
+            mountSprites: model.mountSprites,
+            speed: model.speed,
+        };
+        // physic action
+        this.mRoomService.game.peer.physicalPeer.setModel(obj1)
+            .then(() => {
+                if (this.mRenderable) {
+                    if (model.nodeType !== op_def.NodeType.CharacterNodeType) this.mRoomService.game.physicalPeer.addBody(this.id);
+                }
+            });
     }
 
     public changeState(val?: string, times?: number) {
