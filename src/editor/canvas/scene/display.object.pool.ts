@@ -59,6 +59,7 @@ export class DisplayObjectPool {
         if (obj) {
             // obj.isUsed = true;
             // obj.setModel(newSprite);
+            obj.clear();
             obj.updateSprite(newSprite);
             if (obj.nodeType === op_def.NodeType.TerrainNodeType) {
                 const pos = Position45.transformTo90(new LogicPos(newSprite.pos.x, newSprite.pos.y), this.sceneEditor.roomSize);

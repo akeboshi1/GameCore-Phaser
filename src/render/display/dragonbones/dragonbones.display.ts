@@ -199,7 +199,7 @@ export class DragonbonesDisplay extends BaseDragonbonesDisplay implements IDispl
         }
     }
 
-    public removeEffect() {
+    public removeEffect(display: IDisplayObject) {
     }
 
     public mount(ele: Phaser.GameObjects.Container, targetIndex?: number) {

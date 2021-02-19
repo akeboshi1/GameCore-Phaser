@@ -1430,8 +1430,8 @@ export class Render extends RPCPeer implements GameMain, IRender {
     }
 
     @Export()
-    public removeEffect(effectID: number) {
-        this.mDisplayManager.removeEffect(effectID);
+    public removeEffect(target: number, effectID: number) {
+        this.mDisplayManager.removeEffect(target, effectID);
     }
 
     // private connectReconnect() {

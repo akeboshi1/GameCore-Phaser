@@ -33,5 +33,5 @@ export interface IDisplayObject extends IBaseDisplay {
 
     addEffect(display: IDisplayObject);
 
-    removeEffect();
+    removeEffect(display: IDisplayObject);
 }

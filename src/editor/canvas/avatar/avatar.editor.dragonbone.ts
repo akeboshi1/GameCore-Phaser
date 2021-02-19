@@ -543,15 +543,20 @@ export class AvatarEditorDragonbone extends Phaser.GameObjects.Container {
 
 class EditorDragonbonesDisplay extends BaseDragonbonesDisplay {
 
+    private static GenerateCount = 0;
+
+    private uuid = 0;
+
     constructor(scene: Phaser.Scene, resName: string, private mWebHomePath: string) {
         super(scene);
 
         this.resourceName = resName;
         this.isRenderTexture = true;
+        this.uuid = EditorDragonbonesDisplay.GenerateCount ++;
     }
 
     protected generateReplaceTextureKey(): string {
-        return super.generateReplaceTextureKey() + "_editor_" + this.resourceName;
+        return super.generateReplaceTextureKey() + "_editor_" + this.resourceName + "_" + this.uuid;
     }
 
     protected get localResourceRoot(): string {

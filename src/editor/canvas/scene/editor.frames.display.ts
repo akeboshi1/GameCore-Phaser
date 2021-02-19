@@ -87,6 +87,16 @@ export class EditorFramesDisplay extends BaseFramesDisplay {
         return this.sprite.toSprite();
     }
 
+    clear() {
+        this.mAnimation = null;
+        this.mCurAnimation = null;
+        this.mPreAnimation = null;
+        this.clearDisplay();
+        this.mDisplayDatas.clear();
+        this.mSprites.forEach((display) => display.destroy());
+        this.mSprites.clear();
+    }
+
     public play(val: RunningAnimation) {
         super.play(val);
         this.fetchProjection();

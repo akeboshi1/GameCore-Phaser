@@ -161,12 +161,17 @@ export class FramesDisplay extends BaseFramesDisplay implements IDisplayObject {
         }
     }
 
-    public removeEffect() {
-        const data = this.mDisplayDatas.get(DisplayField.Effect);
-        if (data) {
-            this.mDisplayDatas.delete(DisplayField.Effect);
-            this.removeDisplay(DisplayField.BACKEND);
-            this.removeDisplay(DisplayField.FRONTEND);
+    public removeEffect(display: IDisplayObject) {
+        if (!display) {
+            return Logger.getInstance().error("Failed to remove effect, display does not exist");
+        }
+        const backend = display.getSprite(DisplayField.BACKEND);
+        if (backend) {
+            this.remove(backend, true);
+        }
+        const frontend = display.getSprite(DisplayField.FRONTEND);
+        if (frontend) {
+            this.remove(frontend, true);
         }
     }
 
