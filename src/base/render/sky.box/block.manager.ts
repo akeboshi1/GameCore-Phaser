@@ -44,7 +44,11 @@ export class BlockManager implements IBlockManager {
     // 注册skyboxscene，必须存在，否则获取不到skyboxscene
     // const scene = this.render.game.scene.add(this.mSceneName, SkyBoxScene, false);
     // playScene.scene.launch(this.mSceneName, this);
-    (<any>this.render).sceneManager.launchScene(this.render.getMainScene(), this.mSceneName, "SkyBoxScene", this);
+    const sceneManager = this.render.sceneManager;
+    if (!sceneManager) {
+      Logger.getInstance().fatal("scene manager does not exist");
+    }
+    sceneManager.launchScene(sceneManager.getMainScene(), this.mSceneName, "SkyBoxScene", this);
     this.updateDepth();
   }
 

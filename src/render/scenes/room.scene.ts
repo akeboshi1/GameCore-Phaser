@@ -1,4 +1,4 @@
-import { BasicScene } from "./basic.scene";
+import { BasicScene } from "baseRender";
 
 export class RoomScene extends BasicScene {
     protected mRoomID: any;

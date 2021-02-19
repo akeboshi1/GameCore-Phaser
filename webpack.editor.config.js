@@ -2,8 +2,6 @@ const path = require("path");
 const webpack = require("webpack");
 const pathToPhaser = path.join(__dirname, "/node_modules/tooqinggamephaser");
 const phaser = path.join(pathToPhaser, "dist/phaser.js");
-const pathToRPC = path.join(__dirname, "/node_modules/webworker-rpc");
-const webworkerrpc = path.join(pathToRPC, "release/rpcpeer.js")
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const CopyWebpackPlugin = require("copy-webpack-plugin");
 const { CleanWebpackPlugin } = require("clean-webpack-plugin");
@@ -13,44 +11,36 @@ const appVer = require("./version");
 
 const config = {
     entry: {
-        tooqing: path.join(__dirname, "./launcher.ts"),
-        editor: path.join(__dirname, "./src/editor/index.ts"),
-        mainWorker: path.join(__dirname, "./src/game/main.peer.ts"),
-        physicalWorker: path.join(__dirname, "./src/services/physical.worker.ts")
+        tooqing: path.join(__dirname, "./src/editor/index.ts"),
     },
     output: {
         // This is required so workers are known where to be loaded from
         path: path.resolve(__dirname, "dist"),
         filename: "js/[name].js",
-        chunkFilename: `js/[name]_v${appVer}.js`,
+        chunkFilename: `js/[name].js`,
         libraryTarget: "umd",
         globalObject: "this",
-        library: "[name]",
+        library: "TooqingEditor",
     },
     module: {
         rules: [
             { test: /\.ts$/, loader: "ts-loader", options: { allowTsInNodeModules: false }, exclude: "/node_modules/" },
             { test: /phaser\.js$/, loader: "expose-loader?Phaser" },
             { test: /dragonBones\.js$/, loader: "expose-loader?dragonBones" },
-            { test: /webworkerrpc\.js$/, loader: "expose-loader?webworker-rpc" },
         ],
     },
     resolve: {
         extensions: [".ts", ".js"],
         alias: {
             phaser: phaser,
-            webworkerrpc: webworkerrpc,
             dragonBones: path.join(__dirname, "./lib/dragonBones/dragonBones.js"),
-            gamecore: path.join(__dirname, "./src/game"),
             gamecoreRender: path.join(__dirname, "./src/render"),
             structure: path.join(__dirname, "./src/structure"),
             utils: path.join(__dirname, "./src/utils"),
-            picaWorker: path.join(__dirname, "./src/pica/game"),
             picaRender: path.join(__dirname, "./src/pica/render"),
             picaRes: path.join(__dirname, "./src/pica/res"),
             picaStructure: path.join(__dirname, "./src/pica/structure"),
             editorCanvas: path.join(__dirname, "./src/editor"),
-            display: path.join(__dirname, "./src/base/display"),
             baseRender: path.join(__dirname, "./src/base/render"),
             baseModel: path.join(__dirname, "./src/base/model")
         },

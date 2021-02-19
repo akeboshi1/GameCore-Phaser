@@ -10,7 +10,6 @@ import {Account} from "./account/account";
 import {SceneManager} from "./scenes/scene.manager";
 import {LoginScene} from "./scenes/login.scene";
 import {LocalStorageManager} from "./managers/local.storage.manager";
-import {BasicScene} from "./scenes/basic.scene";
 import {PlayScene} from "./scenes/play.scene";
 import {CamerasManager} from "./cameras/cameras.manager";
 import * as path from "path";
@@ -37,7 +36,7 @@ import {GamePauseScene} from "./scenes/game.pause.scene";
 import {MainUIScene} from "./scenes/main.ui.scene";
 import {EditorCanvasManager} from "./managers/editor.canvas.manager";
 import version from "../../version";
-import {IRender} from "baseRender";
+import {IRender, BasicScene} from "baseRender";
 import {AstarDebugger} from "./display/debugs/astar";
 import {EditorModeDebugger} from "./display/debugs/editor.mode.debugger";
 import {GridsDebugger} from "./display/debugs/grids";
@@ -1249,13 +1248,13 @@ export class Render extends RPCPeer implements GameMain, IRender {
         if (this.mDisplayManager) this.mDisplayManager.setModel(sprite);
     }
 
-    @Export([webworker_rpc.ParamType.num, webworker_rpc.ParamType.num])
-    public updateDirection(id: number, dir: number) {
-        if (this.mDisplayManager) {
-            const display = this.mDisplayManager.getDisplay(id);
-            display.setDirection(dir);
-        }
-    }
+    // @Export([webworker_rpc.ParamType.num, webworker_rpc.ParamType.num])
+    // public updateDirection(id: number, dir: number) {
+    //     if (this.mDisplayManager) {
+    //         const display = this.mDisplayManager.getDisplay(id);
+    //         display.setDirection(dir);
+    //     }
+    // }
 
     @Export()
     public addSkybox(scenery: IScenery) {

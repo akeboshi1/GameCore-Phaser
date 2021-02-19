@@ -73,7 +73,6 @@ export class Launcher {
         reload: null,
         game_created: null,
         platform: "pc",
-        runtime: "game"
     };
 
     constructor(config?: ILauncherConfig) {
@@ -87,10 +86,34 @@ export class Launcher {
             Object.assign(this.mConfig, config);
         }
 
-        const context = this.mConfig.runtime;
-        if (this[context]) {
-            this[context](config);
-        }
+        this.intervalId = setInterval(() => {
+            // const xhr = new XMLHttpRequest(); // TODO
+            // xhr.open("GET", "./package.json", true);
+            // xhr.addEventListener("load", () => {
+            // const manifest = JSON.parse(xhr.response);
+            const newVersion = version;
+            if (version !== newVersion) {
+                const result = confirm("检测到新版本，是否刷新更新到最新版？");
+                if (result && this.mReload) {
+                    this.mReload();
+                }
+            }
+            // });
+            // xhr.send(null);
+        }, 4 * 60 * 60 * 1000 /* ms */);
+
+        import(/* webpackChunkName: "game" */ "./src/render/render").then((game) => {
+            if (!game) {
+                // tslint:disable-next-line:no-console
+                console.log("no game error");
+                return;
+            }
+            this.world = new game.Render(this.config, this.mCompleteFunc);
+            this.disableClick();
+        }).catch((error) => {
+            // tslint:disable-next-line:no-console
+            console.log("import game error", error);
+        });
     }
 
     public pauseGame() {
@@ -185,48 +208,4 @@ export class Launcher {
         }
         return null;
     }
-
-    private game(config: ILauncherConfig) {
-        this.intervalId = setInterval(() => {
-            // const xhr = new XMLHttpRequest(); // TODO
-            // xhr.open("GET", "./package.json", true);
-            // xhr.addEventListener("load", () => {
-            // const manifest = JSON.parse(xhr.response);
-            const newVersion = version;
-            if (version !== newVersion) {
-                const result = confirm("检测到新版本，是否刷新更新到最新版？");
-                if (result && this.mReload) {
-                    this.mReload();
-                }
-            }
-            // });
-            // xhr.send(null);
-        }, 4 * 60 * 60 * 1000 /* ms */);
-
-        import(/* webpackChunkName: "game" */ "./src/render/render").then((game) => {
-            if (!game) {
-                // tslint:disable-next-line:no-console
-                console.log("no game error");
-                return;
-            }
-            this.world = new game.Render(this.config, this.mCompleteFunc);
-            this.disableClick();
-        }).catch((error) => {
-            // tslint:disable-next-line:no-console
-            console.log("import game error", error);
-        });
-    }
-
-    private editor() {
-        import(/* webpackChunkName: "game" */ "./src/editor/editor.launcher").then((editor) => {
-            if (!editor) {
-                // tslint:disable-next-line:no-console
-                console.log("");
-                return;
-            }
-            this.world = editor.EditorLauncher.CreateCanvas(editor.EditorCanvasType.Scene, <any>this.mConfig);
-        });
-    }
 }
-
-export * from "./src/editor";

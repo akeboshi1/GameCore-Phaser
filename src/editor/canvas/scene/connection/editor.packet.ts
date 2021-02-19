@@ -184,7 +184,6 @@ export class EditorPacket extends PacketHandler {
         const content: op_client.IOP_EDITOR_REQ_CLIENT_ADD_SPRITES_WITH_LOCS = packet.content;
         const locs = content.locs;
         const nodeType = content.nodeType;
-        Logger.getInstance().log("handleAddTerrains =========>", locs);
         if (nodeType !== op_def.NodeType.TerrainNodeType) {
             return;
         }
@@ -193,8 +192,6 @@ export class EditorPacket extends PacketHandler {
     private handleAddMosses(packet: PBpacket) {
         const content: op_client.IOP_EDITOR_REQ_CLIENT_ADD_MOSSES = packet.content;
         const locs = content.locs;
-        Logger.getInstance().log("handleAddMosses =========>", locs);
-
     }
 
     private handleDeleteMosses() {
@@ -206,7 +203,7 @@ export class EditorPacket extends PacketHandler {
     private handleCreateElements(packet: PBpacket) {
         const content: op_client.IOP_EDITOR_REQ_CLIENT_CREATE_SPRITE = packet.content;
         const { sprites, nodeType } = content;
-        Logger.getInstance().log("handleCreateElements ====>", sprites);
+        // Logger.getInstance().log("handleCreateElements ====>", sprites);
     }
 
     private handleDeleteElements() {

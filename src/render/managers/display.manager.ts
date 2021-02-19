@@ -1,4 +1,4 @@
-import {IPos, IPosition45Obj, Logger, LogicPos} from "utils";
+import {Handler, IPos, IPosition45Obj, Logger, LogicPos} from "utils";
 import { SceneManager } from "../scenes/scene.manager";
 import { FramesDisplay } from "../display/frames/frames.display";
 import { PlayScene } from "../scenes/play.scene";
@@ -12,7 +12,7 @@ import { RunningAnimation } from "structure";
 import { op_def } from "pixelpai_proto";
 import { MatterBodies } from "../display/debugs/matter";
 import { ServerPosition } from "../display/debugs/server.pointer";
-import { BasicScene } from "../scenes";
+import { BasicScene } from "baseRender";
 import { FallEffect } from "picaRender";
 import { IDisplayObject } from "../display";
 import {Astar} from "../display/debugs/astar";
@@ -306,13 +306,18 @@ export class DisplayManager {
 
     public addEffect(targetID: number, effectID: number, display: IFramesModel) {
         const target = this.getDisplay(targetID);
-        const effect = this.addFramesDisplay(effectID, display, DisplayField.Effect);
+        const effect = this.addFramesDisplay(effectID, display, parseInt(PlayScene.LAYER_SURFACE, 10), DisplayField.Effect);
         if (!target || !effect) {
             return;
         }
-        effect.once("initialized", () => {
+        if (effect.created) {
             target.addEffect(effect);
-        });
+        } else {
+            effect.createdHandler = new Handler(this, () => {
+                target.addEffect(effect);
+                effect.createdHandler = undefined;
+            });
+        }
     }
 
     public removeEffect(displayID: number) {
@@ -323,6 +328,7 @@ export class DisplayManager {
         }
         display.removeEffect();
         display.destroy();
+        this.displays.delete(displayID);
     }
 
     public showEffect(displayID: number) {
@@ -340,6 +346,7 @@ export class DisplayManager {
         if (!sprite.pos) sprite.pos = new LogicPos(0, 0, 0);
         display.titleMask = sprite.titleMask;
         display.setPosition(sprite.pos.x, sprite.pos.y, sprite.pos.z);
+        display.checkCollision(sprite);
         display.changeAlpha(sprite.alpha);
     }
 

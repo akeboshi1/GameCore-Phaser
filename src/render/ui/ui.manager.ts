@@ -1,7 +1,7 @@
 import { Logger, ValueResolver } from "utils";
 import { Render } from "../render";
 import { BasePanel } from "./components/base.panel";
-import { BasicScene } from "../scenes/basic.scene";
+import { BasicScene } from "baseRender";
 import { SceneName } from "structure";
 import { AlertView, Buttons } from "./components";
 export class UiManager {

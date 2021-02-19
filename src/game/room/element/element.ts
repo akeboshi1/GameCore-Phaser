@@ -9,7 +9,7 @@ import {
     ISprite,
     PlayerState
 } from "structure";
-import { IPos, IProjection, Logger, LogicPoint, LogicPos, Tool } from "utils";
+import {DirectionChecker, IPos, IProjection, Logger, LogicPoint, LogicPos, Tool} from "utils";
 import { BlockObject } from "../block/block.object";
 import { IRoomService } from "../room/room";
 import { ElementManager, IElementManager } from "./element.manager";
@@ -211,6 +211,7 @@ export class Element extends BlockObject implements IElement {
         if (this.mModel.pos) {
             this.setPosition(this.mModel.pos);
         }
+        const area = model.getCollisionArea();
         // render action
         this.load(this.mModel.displayInfo)
             .then(() => this.mElementManager.roomService.game.peer.render.setModel(model))
@@ -351,6 +352,7 @@ export class Element extends BlockObject implements IElement {
         if (this.mModel.direction === val) {
             return;
         }
+        // Logger.getInstance().debug("#dir element setDirection:=====", this.id, val);
         if (this.model && !this.model.currentAnimationName) {
             this.model.currentAnimationName = PlayerState.IDLE;
             this.changeState(this.model.currentAnimationName);
@@ -358,7 +360,6 @@ export class Element extends BlockObject implements IElement {
         // Logger.getInstance().debug("user direction ====>", val);
         if (this.model) {
             this.model.setDirection(val);
-            // this.mDisplay.play(this.model.currentAnimation);
         }
         // this.play(this.model.currentAnimationName);
     }
@@ -494,15 +495,17 @@ export class Element extends BlockObject implements IElement {
         if (!path || path.length < 1) {
             return;
         }
-        this.changeState(PlayerState.WALK);
         this.mMoving = true;
 
-        const pos = this.getPosition();
-        // pos.y += this.offsetY;
+        // const pos = this.getPosition();
+        const pos = this.moveControll.position;
         const angle = Math.atan2(path[0].y - pos.y, path[0].x - pos.x);
         const speed = this.mModel.speed * this.delayTime;
         this.moveControll.setVelocity(Math.cos(angle) * speed, Math.sin(angle) * speed);
-        // this.setVelocity(Math.cos(angle) * speed, Math.sin(angle) * speed);
+        // Logger.getInstance().debug("#dir startMove checkDir", this.id, path[0], pos);
+        const dir = DirectionChecker.check(pos, path[0]);
+        this.setDirection(dir);
+        this.changeState(PlayerState.WALK);
     }
 
     // public completeMove() {
@@ -742,7 +745,7 @@ export class Element extends BlockObject implements IElement {
             } else {
                 if (path[0].stopDir) {
                     this.stopMove();
-                    this.setDirection(path[0].stopDir);
+                    // this.setDirection(path[0].stopDir);
                 }
             }
         } else {
@@ -789,7 +792,7 @@ export class Element extends BlockObject implements IElement {
             Logger.getInstance().error("promise error ====>", error);
         });
         const currentAnimation = this.mModel.currentAnimation;
-        this.setInputEnable(this.mInputEnable);
+        if (this.mInputEnable) this.setInputEnable(this.mInputEnable);
         if (this.mModel.nodeType !== op_def.NodeType.CharacterNodeType) this.mRoomService.game.physicalPeer.addBody(this.id);
         this.roomService.game.emitter.emit("ElementCreated", this.id);
         return Promise.resolve();
@@ -866,26 +869,6 @@ export class Element extends BlockObject implements IElement {
     }
 
     protected checkDirection() {
-    }
-
-    protected onCheckDirection(params: any): number {
-        if (typeof params !== "number") {
-            return;
-        }
-        // 重叠
-        if (params > 90) {
-            // this.setDirection(3);
-            return 3;
-        } else if (params >= 0) {
-            // this.setDirection(5);
-            return 5;
-        } else if (params >= -90) {
-            // this.setDirection(7);
-            return 7;
-        } else {
-            // this.setDirection(1);
-            return 1;
-        }
     }
 
     protected calculateDirectionByAngle(angle: any) {

@@ -60,8 +60,10 @@ export class AvatarEditorCanvas extends EditorCanvas {
         }
     }
 
-    public loadLocalResources(img: any, part: string, dir: string, layer?: string) {// IImage
-        if (this.mDragonbone) this.mDragonbone.loadLocalResources(img, part, dir);
+    public loadLocalResources(img: any, part: string, dir: string, layer?: string): Promise<string> {
+        if (this.mDragonbone) return this.mDragonbone.loadLocalResources(img, part, dir);
+
+        return Promise.reject("not init yet");
     }
 
     public toggleFacing(dir: number) {
