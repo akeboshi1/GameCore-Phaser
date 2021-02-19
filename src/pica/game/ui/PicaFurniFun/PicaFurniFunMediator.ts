@@ -3,6 +3,7 @@ import { PicaFurniFun } from "./PicaFurniFun";
 import { EventType, ISprite, ModuleName } from "structure";
 import { BaseDataManager, BasicMediator, DataMgrType, Game } from "gamecore";
 import { BaseDataConfigManager } from "../../data";
+import { ICountablePackageItem } from "picaStructure";
 
 export class PicaFurniFunMediator extends BasicMediator {
     private picFurni: PicaFurniFun;
@@ -92,18 +93,23 @@ export class PicaFurniFunMediator extends BasicMediator {
         const ele = eleMgr.get(content.ids[0]);
         if (!ele) return null;
 
+        var list : ICountablePackageItem[] = [];
         if (this.playerData) {
             if (content.materials) {
                 // const configMgr = <BaseDataConfigManager>this.game.configManager;
                 // configMgr.getBatchItemDatas(content.materials);
                 for (const data of content.materials) {
+                    const configMgr = <BaseDataConfigManager>this.game.configManager;
+                    const temp = configMgr.getItemBase(data.id);
+                    temp.neededCount = data.neededCount;
                     const count = this.playerData.getItemsCount(op_pkt_def.PKT_PackageType.PropPackage, data.id, data.subcategory);
-                    data.recommended = count; // hack
+                    temp.recommended = "" + count; // hack
+                    list.push(temp as ICountablePackageItem);
                 }
             }
         }
 
-        this.game.emitter.emit(EventType.SCENE_SHOW_UI, ModuleName.PICAFURNIFUN_NAME, { tag: "teambuild", element: ele.model, materials: content.materials });
+        this.game.emitter.emit(EventType.SCENE_SHOW_UI, ModuleName.PICAFURNIFUN_NAME, { tag: "teambuild", element: ele.model, materials: list });
     }
     private query_TEAM_BUILD(ids: number[]) {
         this.picFurni.queryTeamBuild(ids);
