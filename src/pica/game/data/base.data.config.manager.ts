@@ -191,6 +191,7 @@ export class BaseDataConfigManager extends BaseConfigManager {
         const item = {id: "IV0000001", countRange: temp["coinRange"]};
         temp.rewards = [ this.synItemBase(item) ];
 
+        temp.requirements = [];
         if (temp["attrRequirements"]) {
             const targets = this.convertMapToItem([temp["attrRequirements"]]);
             this.getBatchItemDatas(targets);
