@@ -13,7 +13,7 @@ export class PicaHouseMediator extends BasicMediator {
 
     show(param?: any) {
         super.show(param);
-        this.game.emitter.on(ModuleName.PICAHOUSE_NAME + "_hide", this.onHideHandler, this);
+        this.game.emitter.on(ModuleName.PICAHOUSE_NAME + "_hide", this.hide, this);
         this.game.emitter.on(ModuleName.PICAHOUSE_NAME + "_scenedecorate", this.onSendEnterDecorate, this);
         this.game.emitter.on(ModuleName.PICAHOUSE_NAME + "_queryrequirements", this.query_REFURBISH_REQUIREMENTS, this);
         this.game.emitter.on(ModuleName.PICAHOUSE_NAME + "_queryrefurbish", this.query_ROOM_REFURBISH, this);
@@ -23,14 +23,14 @@ export class PicaHouseMediator extends BasicMediator {
     }
 
     hide() {
-        super.hide();
-        this.game.emitter.on(ModuleName.PICAHOUSE_NAME + "_hide", this.onHideHandler, this);
-        this.game.emitter.on(ModuleName.PICAHOUSE_NAME + "_scenedecorate", this.onSendEnterDecorate, this);
-        this.game.emitter.on(ModuleName.PICAHOUSE_NAME + "_queryrequirements", this.query_REFURBISH_REQUIREMENTS, this);
-        this.game.emitter.on(ModuleName.PICAHOUSE_NAME + "_queryrefurbish", this.query_ROOM_REFURBISH, this);
+        this.game.emitter.off(ModuleName.PICAHOUSE_NAME + "_hide", this.hide, this);
+        this.game.emitter.off(ModuleName.PICAHOUSE_NAME + "_scenedecorate", this.onSendEnterDecorate, this);
+        this.game.emitter.off(ModuleName.PICAHOUSE_NAME + "_queryrequirements", this.query_REFURBISH_REQUIREMENTS, this);
+        this.game.emitter.off(ModuleName.PICAHOUSE_NAME + "_queryrefurbish", this.query_ROOM_REFURBISH, this);
 
-        this.game.emitter.on("roominfo", this.onRoomInfoHandler, this);
-        this.game.emitter.on("refurbish", this.on_REFURBISH_REQUIREMENTS, this);
+        this.game.emitter.off("roominfo", this.onRoomInfoHandler, this);
+        this.game.emitter.off("refurbish", this.on_REFURBISH_REQUIREMENTS, this);
+        super.hide();
     }
 
     destroy() {
@@ -69,10 +69,6 @@ export class PicaHouseMediator extends BasicMediator {
         const configMgr = <BaseDataConfigManager>this.game.configManager;
         configMgr.getBatchItemDatas(content.requirements);
         this.mView.on_REFURBISH_REQUIREMENTS(content);
-    }
-
-    private onHideHandler() {
-        this.destroy();
     }
 
     private onSendEnterDecorate() {
