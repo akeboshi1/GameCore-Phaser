@@ -37,6 +37,10 @@ export class PicaTaskMainPanel extends Phaser.GameObjects.Container {
         if (this.mainItem) this.mainItem.refreshMask();
     }
     setTaskDatas(content: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_QUERY_QUEST_GROUP, questType: op_pkt_def.PKT_Quest_Type) {
+        if (!content.id) {
+            // console.log("没有新任务了");
+            return;
+        }
         if (this.curTaskItem) this.curTaskItem.setExtend(false);
         if (!this.mainItem) {
             this.mainItem = new MainTaskItem(this.scene, 272 * this.dpr, 126 * this.dpr, this.dpr, this.zoom);
