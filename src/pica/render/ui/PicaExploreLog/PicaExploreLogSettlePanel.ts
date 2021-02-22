@@ -19,6 +19,7 @@ export class PicaExploreLogSettlePanel extends ButtonEventDispatcher {
     private scoreTipsCon: Phaser.GameObjects.Container;
     private curLayoutGroup: RewardLayoutGroup;
     private maskGraphic: Phaser.GameObjects.Graphics;
+    private unkownImg: Phaser.GameObjects.Image;
     private settleData: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_EXPLORE_SUMMARY;
     private scoreDatas: Array<{ tip: string, score: number }>;
     private closeHandler: Handler;
@@ -66,6 +67,9 @@ export class PicaExploreLogSettlePanel extends ButtonEventDispatcher {
         }).setOrigin(0.5);
         this.starText.y = this.starPro.y + this.starPro.height * 0.5 + 10 * this.dpr;
         this.starText.visible = false;
+        this.unkownImg = this.scene.make.image({ key: UIAtlasName.explorelog, frame: "Settlement_unkown_clue" });
+        this.unkownImg.y = this.starText.y;
+        this.unkownImg.visible = false;
         this.scorebg = this.scene.make.image({ key: UIAtlasName.explorelog, frame: "Settlement_score_bg" });
         this.scorebg.y = this.starText.y + 15 * this.dpr + this.scorebg.height * 0.5;
         this.scoreTex = this.scene.make.text({
@@ -80,7 +84,7 @@ export class PicaExploreLogSettlePanel extends ButtonEventDispatcher {
         this.maskGraphic = this.scene.make.graphics(undefined, false);
         this.maskWidth = 336 * this.dpr;
         this.maskHeight = 215 * this.dpr;
-        this.content.add([this.titleimage, this.starPro, this.starText, this.scorebg, this.scoreTex, this.lightImg, this.scoreTipsCon]);
+        this.content.add([this.titleimage, this.starPro, this.starText, this.unkownImg, this.scorebg, this.scoreTex, this.lightImg, this.scoreTipsCon]);
     }
     setHandler(close: Handler) {
         this.closeHandler = close;
@@ -251,8 +255,6 @@ export class PicaExploreLogSettlePanel extends ButtonEventDispatcher {
     private playStarAnimation(from: number, to: number, max: number) {
         const allTime = 5000;
         const duration = allTime * ((to - from) / max);
-        const riado = Math.floor(to / 100);
-        const temprem = Math.floor(to % 100);
         const tempto = this.getProgressValue(to);
         const tempfrom = this.getProgressValue(from);
         const tween = this.scene.tweens.addCounter({
@@ -270,11 +272,7 @@ export class PicaExploreLogSettlePanel extends ButtonEventDispatcher {
             },
         });
         this.tweens.push(tween);
-        const width = 196 * this.dpr;
-        const cellWidth = 29 * this.dpr;
-        const space = 12 * this.dpr;
-        this.starText.text = temprem + "%";
-        this.starText.x = -width * 0.5 + riado * (cellWidth + space) + cellWidth * 0.5;
+        this.setStarProgressInfo();
         this.starText.visible = true;
     }
 
@@ -286,6 +284,35 @@ export class PicaExploreLogSettlePanel extends ButtonEventDispatcher {
         intvalue = intvalue < 0 ? 0 : intvalue;
         const tempto = intvalue + temprem / 100 * score;
         return tempto;
+    }
+
+    private setStarProgressInfo() {
+        const to = this.settleData.latestProgress;
+        let riado = Math.floor(to / 100);
+        let temprem = Math.floor(to % 100);
+        if (to !== 0) {
+            if (temprem === 0) {
+                temprem = 100;
+                riado -= 1;
+            }
+        }
+        const width = 196 * this.dpr;
+        const cellWidth = 29 * this.dpr;
+        const space = 12 * this.dpr;
+        this.starText.text = temprem + "%";
+        this.starText.x = -width * 0.5 + riado * (cellWidth + space) + cellWidth * 0.5;
+        const clues = this.settleData.clue;
+        this.unkownImg.visible = false;
+        if (clues) {
+            for (const clue of clues) {
+                if (clue.star > to) {
+                    this.unkownImg.visible = true;
+                    const xx = -width * 0.5 + clue.star * (cellWidth + space) + cellWidth * 0.5;
+                    this.unkownImg.x = xx;
+                }
+            }
+        }
+
     }
 
     private playLayoutAnimation() {

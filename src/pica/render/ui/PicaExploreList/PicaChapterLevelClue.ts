@@ -17,5 +17,11 @@ export class PicaChapterLevelClue extends ItemButton {
     setItemData(data: ICountablePackageItem) {
         super.setItemData(data);
         this.gou.visible = data.count === 0 ? false : true;
+        this.itemIcon.scale = this.dpr / this.zoom;
+    }
+    setTexture(key: string, frame: string) {
+        this.itemIcon.setTexture(key, frame);
+        this.itemIcon.scale = 1;
+        this.gou.visible = false;
     }
 }
