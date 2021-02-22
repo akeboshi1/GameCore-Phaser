@@ -55,6 +55,7 @@ export class ElementManager extends PacketHandler implements IElementManager {
      */
     protected mCacheRemoveList: any[] = [];
     private mDealAddList: any[] = [];
+    private mRequestSyncIdList: number[] = [];
     private mDealSyncMap: Map<number, boolean> = new Map();
     private mGameConfig: IElementStorage;
     private mStateMgr: ElementStateManager;
@@ -252,6 +253,7 @@ export class ElementManager extends PacketHandler implements IElementManager {
             this.mActionMgr.destroy();
         }
         if (this.mDealAddList) this.mDealAddList.length = 0;
+        if (this.mRequestSyncIdList) this.mRequestSyncIdList.length = 0;
         if (this.mDealSyncMap) this.mDealSyncMap.clear();
         if (this.mCacheAddList) {
             this.mCacheAddList.length = 0;
@@ -292,7 +294,11 @@ export class ElementManager extends PacketHandler implements IElementManager {
         // 如果所有sprite都已经有反馈，则重新获取缓存队列进行处理
         this.mDealAddList.length = 0;
         this.mDealAddList = [];
-        this.dealAddList();
+        if (this.mCacheSyncList.length < 1) {
+            this.dealAddList();
+        } else {
+            this.dealSyncList();
+        }
     }
 
     public dealAddList(spliceBoo: boolean = false) {
@@ -302,7 +308,7 @@ export class ElementManager extends PacketHandler implements IElementManager {
         const ids = [];
         const eles = [];
         const tmpLen = !spliceBoo ? (this.mCacheAddList.length > len ? len : this.mCacheAddList.length) : this.mDealAddList.length;
-        const tmpList = !spliceBoo ? this.mCacheAddList.splice(0, tmpLen) : this.mDealAddList;
+        const tmpList = !spliceBoo ? this.mCacheAddList.splice(0, tmpLen) : (this.mDealAddList.length > 0 ? this.mDealAddList : this.mRequestSyncIdList.splice(0, tmpLen));
         for (let i: number = 0; i < tmpLen; i++) {
             const obj = tmpList[i];
             if (!obj) continue;
@@ -314,7 +320,9 @@ export class ElementManager extends PacketHandler implements IElementManager {
                     ids.push(sprite.id);
                 } else {
                     obj.state = true;
-                    this.mDealAddList.push(obj);
+                    if (this.mDealAddList.indexOf(obj) === -1) {
+                        this.mDealAddList.push(obj);
+                    }
                 }
                 // }
                 const ele = this._add(sprite);
@@ -355,25 +363,30 @@ export class ElementManager extends PacketHandler implements IElementManager {
             for (let i: number = 0; i < tmpLen; i++) {
                 const sprite = tmpList[i];
                 if (!sprite) continue;
+                if (this.mRequestSyncIdList.length > 0 && this.mRequestSyncIdList.indexOf(sprite.id) === -1) {
+                    continue;
+                }
+                // 更新elementstorage中显示对象的数据信息
+                const data = new Sprite(sprite, 3);
+                this.mRoom.game.elementStorage.add(<any>data);
                 element = this.get(sprite.id);
                 if (element) {
                     this.mDealSyncMap.set(sprite.id, false);
                     const command = (<any>sprite).command;
                     if (command === op_def.OpCommand.OP_COMMAND_UPDATE) { //  全部
-                        element.model = new Sprite(sprite, 3);
+                        element.model = data;
                     } else if (command === op_def.OpCommand.OP_COMMAND_PATCH) { //  增量
                         element.updateModel(sprite);
                     }
-                    // 更新elementstorage中显示对象的数据信息
-                    const displayInfo = element.model.displayInfo;
-                    if (displayInfo) {
-                        this.mRoom.game.elementStorage.add(<any>displayInfo);
-                    }
+                    // const displayInfo = element.model.displayInfo;
+                    // if (displayInfo) {
+                    //     this.mRoom.game.elementStorage.add(<any>displayInfo);
+                    // }
+                    ele.push(element);
                 } else {
                     this.mDealAddList.push(sprite);
-                    element = this._add(new Sprite(sprite, 3));
+                    // element = this._add(new Sprite(sprite, 3));
                 }
-                ele.push(element);
             }
             this.dealAddList(true);
             this.mStateMgr.syncElement(ele);
@@ -410,6 +423,11 @@ export class ElementManager extends PacketHandler implements IElementManager {
         if (notReadyElements.length < 1) {
             Logger.getInstance().debug("#loading onManagerReady ", this.constructor.name);
             this.mRoom.onManagerReady(this.constructor.name);
+            if (this.mRequestSyncIdList && this.mRequestSyncIdList.length > 0) {
+                this.fetchDisplay(this.mRequestSyncIdList);
+                this.mRequestSyncIdList.length = 0;
+                this.mRequestSyncIdList = [];
+            }
         }
     }
 
@@ -426,9 +444,11 @@ export class ElementManager extends PacketHandler implements IElementManager {
     }
 
     protected addMap(sprite: ISprite) {
+        this.addToMap(sprite);
     }
 
     protected removeMap(sprite: ISprite) {
+        this.removeFromMap(sprite);
     }
 
     get connection(): ConnectionService {
@@ -471,7 +491,11 @@ export class ElementManager extends PacketHandler implements IElementManager {
             return;
         }
         for (const obj of objs) {
-            this.mCacheAddList.push(obj);
+            if (this.checkDisplay(new Sprite(obj, 3))) {
+                this.mCacheAddList.push(obj);
+            } else {
+                this.mRequestSyncIdList.push(obj.id);
+            }
         }
     }
 
@@ -502,8 +526,13 @@ export class ElementManager extends PacketHandler implements IElementManager {
         } else {
             this.dealSyncList();
         }
-        if (this.mElements.size === 0 && (!this.mCacheAddList || this.mCacheAddList.length === 0)) {
+        if (!this.mCacheAddList || this.mCacheAddList.length === 0) {
             this.mRoom.onManagerReady(this.constructor.name);
+            if (this.mRequestSyncIdList && this.mRequestSyncIdList.length > 0) {
+                this.fetchDisplay(this.mRequestSyncIdList);
+                this.mRequestSyncIdList.length = 0;
+                this.mRequestSyncIdList = [];
+            }
         }
     }
 
@@ -518,7 +547,7 @@ export class ElementManager extends PacketHandler implements IElementManager {
             }
             // Logger.getInstance().error("checkdisplay error====>", sprite);
         }
-        return;
+        return sprite.displayInfo;
     }
 
     protected fetchDisplay(ids: number[]) {

@@ -1,11 +1,11 @@
-import {BaseFramesDisplay, ReferenceArea} from "baseRender";
-import {Render} from "../../render";
-import {DisplayField, ElementStateType, RunningAnimation, TitleMask } from "structure";
-import {IDisplayObject} from "../display.object";
-import {IPos, Logger} from "utils";
-import {ElementTopDisplay} from "../element.top.display";
-import {DisplayMovement} from "../display.movement";
-import {DragonbonesDisplay} from "../dragonbones/dragonbones.display";
+import { BaseFramesDisplay, ReferenceArea } from "baseRender";
+import { Render } from "../../render";
+import { DisplayField, ElementStateType, RunningAnimation, TitleMask } from "structure";
+import { IDisplayObject } from "../display.object";
+import { IPos, Logger } from "utils";
+import { ElementTopDisplay } from "../element.top.display";
+import { DisplayMovement } from "../display.movement";
+import { DragonbonesDisplay } from "../dragonbones/dragonbones.display";
 
 /**
  * 序列帧显示对象
@@ -62,6 +62,12 @@ export class FramesDisplay extends BaseFramesDisplay implements IDisplayObject {
         super.setRootMount(gameObject);
 
         this.updateTopDisplay();
+    }
+
+    public checkCollision(sprite: any): boolean {
+        const currentCollisionArea = sprite.currentCollisionArea;
+        if (currentCollisionArea && currentCollisionArea.length > 0) return true;
+        return false;
     }
 
     public async showRefernceArea(area: number[][], origin: IPos) {
@@ -121,8 +127,8 @@ export class FramesDisplay extends BaseFramesDisplay implements IDisplayObject {
         this.mTopDisplay.clearBubble();
     }
 
-    public created() {
-        super.created();
+    public displayCreated() {
+        super.displayCreated();
         this.render.mainPeer.elementDisplayReady(this.id);
     }
 
@@ -155,12 +161,17 @@ export class FramesDisplay extends BaseFramesDisplay implements IDisplayObject {
         }
     }
 
-    public removeEffect() {
-        const data = this.mDisplayDatas.get(DisplayField.Effect);
-        if (data) {
-            this.mDisplayDatas.delete(DisplayField.Effect);
-            this.removeDisplay(DisplayField.BACKEND);
-            this.removeDisplay(DisplayField.FRONTEND);
+    public removeEffect(display: IDisplayObject) {
+        if (!display) {
+            return Logger.getInstance().error("Failed to remove effect, display does not exist");
+        }
+        const backend = display.getSprite(DisplayField.BACKEND);
+        if (backend) {
+            this.remove(backend, true);
+        }
+        const frontend = display.getSprite(DisplayField.FRONTEND);
+        if (frontend) {
+            this.remove(frontend, true);
         }
     }
 
@@ -212,16 +223,16 @@ export class FramesDisplay extends BaseFramesDisplay implements IDisplayObject {
         }
         super.unmount(display);
         this.render.displayManager.addToSurfaceLayer(display);
-    //     display.setRootMount(undefined);
-    //     const index = this.mMountList.indexOf(display);
-    //     display.visible = true;
-    //     if (index > -1) {
-    //         this.mMountList.splice(index, 1);
-    //     }
-    //     const list = this.mMountContainer.list;
-    //     if (list.length <= 0 && this.mDisplays.size > 0) {
-    //         this.mDisplays[0].off("animationupdate", this.onAnimationUpdateHandler, this);
-    //     }
+        //     display.setRootMount(undefined);
+        //     const index = this.mMountList.indexOf(display);
+        //     display.visible = true;
+        //     if (index > -1) {
+        //         this.mMountList.splice(index, 1);
+        //     }
+        //     const list = this.mMountContainer.list;
+        //     if (list.length <= 0 && this.mDisplays.size > 0) {
+        //         this.mDisplays[0].off("animationupdate", this.onAnimationUpdateHandler, this);
+        //     }
     }
 
     public scaleTween() {

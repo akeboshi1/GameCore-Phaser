@@ -2,6 +2,7 @@ import {Logger, ResUtils} from "utils";
 import version from "../../../../version";
 import {BaseDragonbonesDisplay} from "baseRender";
 import {IAvatar, IDragonbonesModel} from "structure";
+import * as stream from "stream";
 
 export class AvatarEditorDragonbone extends Phaser.GameObjects.Container {
 
@@ -154,17 +155,35 @@ export class AvatarEditorDragonbone extends Phaser.GameObjects.Container {
     }
 
     // 每次调用强制重新加载资源（因为可能出现不同图片，但是key相同的情况）
-    public loadLocalResources(img: any, part: string, dir: string) {
-        const key = this.partTextureSaveKey(part, img.key, dir);
+    public loadLocalResources(img: any, part: string, dir: string): Promise<string> {
+        return new Promise<string>((resolve, reject) => {
+            const key = this.partTextureSaveKey(part, img.key, dir);
 
-        if (this.scene.textures.exists(key)) {
-            this.scene.textures.remove(key);
-            this.scene.textures.removeKey(key);
-        }
+            if (this.scene.textures.exists(key)) {
+                this.scene.textures.remove(key);
+                this.scene.textures.removeKey(key);
+            }
 
-        this.scene.textures.addBase64(key, img.url);
-        this.scene.textures.on("onload", this.onResourcesLoaded, this);
+            const onLoad = (k) => {
+                if (key !== k) return;
 
+                this.scene.textures.off("onload", onLoad, this, false);
+                this.scene.textures.off(Phaser.Loader.Events.FILE_LOAD_ERROR, onLoadError, this);
+                this.reloadDisplay();
+
+                resolve(k);
+            };
+            const onLoadError = (k) => {
+                if (key !== k) return;
+
+                this.scene.textures.off("onload", onLoad, this, false);
+                this.scene.textures.off(Phaser.Loader.Events.FILE_LOAD_ERROR, onLoadError, this);
+                reject(k);
+            };
+            this.scene.textures.on("onload", onLoad, this);
+            this.scene.textures.on(Phaser.Loader.Events.FILE_LOAD_ERROR, onLoadError, this);
+            this.scene.textures.addBase64(key, img.url);
+        });
     }
 
     public setDir(dir: number) {
@@ -257,11 +276,6 @@ export class AvatarEditorDragonbone extends Phaser.GameObjects.Container {
                     reject(reason);
                 });
         });
-    }
-
-    public onResourcesLoaded() {
-        this.scene.textures.off("onload", this.onResourcesLoaded, this, false);
-        this.reloadDisplay();
     }
 
     public get curSets() {
@@ -529,22 +543,27 @@ export class AvatarEditorDragonbone extends Phaser.GameObjects.Container {
 
 class EditorDragonbonesDisplay extends BaseDragonbonesDisplay {
 
+    private static GenerateCount = 0;
+
+    private uuid = 0;
+
     constructor(scene: Phaser.Scene, resName: string, private mWebHomePath: string) {
         super(scene);
 
         this.resourceName = resName;
         this.isRenderTexture = true;
+        this.uuid = EditorDragonbonesDisplay.GenerateCount ++;
     }
 
     protected generateReplaceTextureKey(): string {
-        return super.generateReplaceTextureKey() + "_editor_" + this.resourceName;
+        return super.generateReplaceTextureKey() + "_editor_" + this.resourceName + "_" + this.uuid;
     }
 
     protected get localResourceRoot(): string {
         return `./resources_v${version}/`;
     }
 
-    protected getPartLoadUrl(val: string): string {
+    protected partNameToLoadUrl(val: string): string {
         return `${this.mWebHomePath}/avatar/part/${val}.png`;
     }
 }

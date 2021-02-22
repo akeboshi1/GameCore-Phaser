@@ -1,7 +1,6 @@
-import {BasicScene} from "./basic.scene";
+import {BasicScene, BaseLayer} from "baseRender";
 import {Font, Size} from "utils";
 import {SceneName} from "structure";
-import {BaseLayer} from "baseRender";
 
 export class MainUIScene extends BasicScene {
   public static readonly LAYER_UI = "uiLayer";

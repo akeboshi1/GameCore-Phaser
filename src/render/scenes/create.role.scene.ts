@@ -1,4 +1,4 @@
-import { BasicScene } from "./basic.scene";
+import { BasicScene } from "baseRender";
 import { UiManager } from "../ui/ui.manager";
 import { SceneName } from "structure";
 import { Logger } from "utils";

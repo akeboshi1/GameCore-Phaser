@@ -5,6 +5,8 @@ import { BasePanel, ButtonEventDispatcher, DynamicImage, ImageValue, ItemInfoTip
 import { ModuleName } from "structure";
 import { UIAtlasKey, UIAtlasName } from "picaRes";
 import { Font, Handler, i18n, UIHelper, Url } from "utils";
+import { IJob } from "src/pica/structure/ijob";
+import { ICountablePackageItem } from "picaStructure";
 export class PicaWorkPanel extends BasePanel {
     private bg: Phaser.GameObjects.Image;
     private titleName: Phaser.GameObjects.Text;
@@ -17,7 +19,7 @@ export class PicaWorkPanel extends BasePanel {
     private itemtips: ItemInfoTips;
     private starSprite: Phaser.GameObjects.Sprite;
     private moneySprite: Phaser.GameObjects.Sprite;
-    private jobData: op_client.IPKT_Quest;
+    private jobData: IJob;
     private imageValues: PointerImageValue[] = [];
     private curProgress = 0;
     private isWorking: boolean = false;
@@ -127,7 +129,7 @@ export class PicaWorkPanel extends BasePanel {
         this.render.renderEmitter(this.key + "_questlist");
     }
 
-    public setWorkData(jobData: op_client.IPKT_Quest) {
+    public setWorkData(jobData: IJob) {
         this.setJobData(jobData);
         this.workbutton.setProgressDatas(0, 100);
     }
@@ -137,24 +139,25 @@ export class PicaWorkPanel extends BasePanel {
         else this.workbutton.setInteractive();
     }
 
-    public setJobData(data: op_client.IPKT_Quest) {
+    public setJobData(data: IJob) {
         this.jobData = data;
-        const url = Url.getOsdRes(data.display.texturePath);
-        this.headIcon.load(url, this, () => {
-            this.headIcon.scale = this.dpr;
-        });
+        // const url = Url.getOsdRes(data.display.texturePath);
+        // this.headIcon.load(url, this, () => {
+        //     this.headIcon.scale = this.dpr;
+        // });
         this.headIcon.visible = true;
         this.titleName.text = data.name;
         let rewardTex = "0";
         if (data.rewards) {
             const countRange = data.rewards[0].countRange;
-            rewardTex = `${countRange.start}~${countRange.stop}`;
+            rewardTex = `${countRange[0]}~${countRange[1]}`;
         }
         this.salaryvalue.setText(rewardTex);
-        const matrr = data.targets;
         for (const item of this.imageValues) {
             item.visible = false;
         }
+
+        const matrr = data.requirements;
         let posx = this.salaryvalue.x + this.salaryvalue.width * 0.5 + 20 * this.dpr;
         for (let i = 0; i < matrr.length; i++) {
             let item: PointerImageValue;
@@ -168,8 +171,8 @@ export class PicaWorkPanel extends BasePanel {
                 item.setHandler(new Handler(this, this.onItemInfoTips));
             }
             const tempurl = Url.getOsdRes((<any>tempdata).texturePath);
-            item.setUrlValue(tempurl, tempdata.neededCount);
-            item.setTextStyle({ color: (tempdata.count >= tempdata.neededCount ? "#000000" : "#E71313") });
+            item.setUrlValue(tempurl, tempdata.count);
+            item.setTextStyle({ color: (tempdata.count >= tempdata.count ? "#000000" : "#E71313") });
             item.setImageData(tempdata);
             item.visible = true;
             item.x = posx + item.width * 0.5;
@@ -204,7 +207,7 @@ export class PicaWorkPanel extends BasePanel {
                 this.isWorking = false;
                 this.curProgress = 0;
                 this.workbutton.setProgressDatas(this.curProgress, 100);
-                this.render.renderEmitter(this.key + "_questwork");
+                this.render.renderEmitter(this.key + "_questwork", this.jobData.id);
                 this.interTimeerID = undefined;
                 this.moneySprite.play(this.moneyAniKey);
             }
@@ -226,7 +229,8 @@ export class PicaWorkPanel extends BasePanel {
         this.itemtips.setTipsPosition(item, this);
         this.itemtips.setText(this.getDesText(data));
     }
-    private getDesText(data: op_client.ICountablePackageItem) {
+
+    private getDesText(data: ICountablePackageItem) {
         if (!data) data = <any>{ "sellingPrice": true, tradable: false };
         const text: string = i18n.t("work.attri", { "name": `${data.name}`, "value": data.neededCount });
         return text;
@@ -234,7 +238,7 @@ export class PicaWorkPanel extends BasePanel {
 }
 
 class PointerImageValue extends ImageValue {
-    public imageData: op_client.ICountablePackageItem;
+    public imageData: ICountablePackageItem;
     protected icon: DynamicImage;
     private tipsHandler: Handler;
     public constructor(scene: Phaser.Scene, width: number, height: number, key: string, dpr: number) {
@@ -242,7 +246,7 @@ class PointerImageValue extends ImageValue {
         this.addListen();
     }
 
-    public setImageData(data: op_client.ICountablePackageItem) {
+    public setImageData(data: ICountablePackageItem) {
         this.imageData = data;
     }
     public setUrlValue(url, value) {

@@ -80,7 +80,7 @@ export class PicaMainUIMediator extends BasicMediator {
     private onOpenRoomHandler() {
         if (!this.roomInfo || this.roomInfo.roomType !== "room" && this.roomInfo.roomType !== "store") return;
         const uimanager = this.game.uiManager;
-        uimanager.showMed("PicHouse");
+        uimanager.showMed(ModuleName.PICAHOUSE_NAME);
     }
 
     private onQuery_PRAISE_ROOM(praise: boolean) {

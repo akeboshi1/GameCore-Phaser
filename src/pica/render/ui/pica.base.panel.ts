@@ -1,4 +1,4 @@
-import { UiManager, Render, BasePanel, BasicScene } from "gamecoreRender";
+import { UiManager, Render, BasePanel } from "gamecoreRender";
 import { AtlasData, FolderType, UILoadType } from "picaRes";
 import { Url } from "utils";
 import { PicaRenderUiManager } from "./pica.Renderuimanager";

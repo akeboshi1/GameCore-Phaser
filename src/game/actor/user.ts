@@ -135,7 +135,7 @@ export class User extends Player {
         this.destroy();
     }
 
-    public tryStopMove(targetId: number, stopPos?: IPos) {
+    public tryStopMove(targetId: number, interactiveBoo: boolean, stopPos?: IPos) {
         this.stopMove();
         if (stopPos) {
             this.setPosition(stopPos);
@@ -150,7 +150,7 @@ export class User extends Player {
         content.position = position;
         this.game.connection.send(packet);
         Logger.getInstance().debug("send stop move==========>>>", pos);
-        this.activeSprite(targetId);
+        if (interactiveBoo) this.activeSprite(targetId);
     }
 
     public updateModel(model: op_client.IActor) {

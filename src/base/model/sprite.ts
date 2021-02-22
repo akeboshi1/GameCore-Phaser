@@ -285,7 +285,7 @@ export class Sprite extends EventDispatcher implements ISprite {
         if (!this.displayInfo) {
             return;
         }
-        Logger.getInstance().debug("setDirection:=====", val);
+        // Logger.getInstance().debug("#dir sprite setDirection:=====", this.id, val);
         this.setAnimationData(this.currentAnimationName, this.direction);
     }
 

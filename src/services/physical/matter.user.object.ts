@@ -1,4 +1,4 @@
-import { IPos, Logger, LogicPos, Tool } from "utils";
+import {DirectionChecker, IPos, Logger, LogicPos, Tool} from "utils";
 import { delayTime, PhysicalPeer } from "../physical.worker";
 import { IMoveTarget, MatterPlayerObject, MovePos } from "./matter.player.object";
 import { op_def } from "pixelpai_proto";
@@ -9,6 +9,7 @@ export class MatterUserObject extends MatterPlayerObject {
     private mTargetPoint: IMoveTarget;
     private mSyncDirty: boolean = false;
     private mSyncTime: number = 0;
+    private mTargetID: number;
     constructor(public peer: PhysicalPeer, public id: number) {
         super(peer, id);
     }
@@ -131,14 +132,25 @@ export class MatterUserObject extends MatterPlayerObject {
     public tryStopMove(pos?: IPos) {
         this.stopMove();
         if (this.mTargetPoint) {
-            this.peer.mainPeer.tryStopMove(this.id, pos, this.mTargetPoint.targetId);
+            let interactiveBoo = false;
             if (pos) {
+                interactiveBoo = true;
+                // 检查是否在碰撞区域内
+                if (this.mTargetID !== undefined) {
+                    const matterObj = this.peer.getMatterObj(this.mTargetID);
+                    if (matterObj) {
+                        const list = matterObj.getInteractivePositionList();
+                        if (list.indexOf(pos) === -1) interactiveBoo = false;
+                    }
+                }
                 this.mModel.setPosition(pos.x, pos.y);
                 this._tempVec.x = pos.x;
                 this._tempVec.y = pos.y;
                 Body.setPosition(this.body, Vector.create(this._tempVec.x * this._scale + this._offset.x, this._tempVec.y * this._scale + this._offset.y));
             }
+            this.peer.mainPeer.tryStopMove(this.id, interactiveBoo, this.mTargetPoint.targetId, pos);
             this.mTargetPoint = null;
+            this.mTargetID = undefined;
         }
     }
 
@@ -195,11 +207,9 @@ export class MatterUserObject extends MatterPlayerObject {
         if (!this.body) return;
         const prePos = (<any>this.body).positionPrev;
         const pos = this.body.position;
-        const angle = Math.atan2((pos.y - prePos.y), (pos.x - prePos.x));
-        const dir = this.onCheckDirection(angle * (180 / Math.PI));
+        const dir = DirectionChecker.check(prePos, pos);
         // Logger.getInstance().debug("matterDirection ====>", dir);
         this.mModel.setDirection(dir);
-        this.peer.render.updateDirection(this.id, dir);
         this.peer.mainPeer.setDirection(this.id, dir);
     }
 

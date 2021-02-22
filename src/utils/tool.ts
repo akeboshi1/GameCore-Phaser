@@ -1,4 +1,4 @@
-import { Pos } from "./pos";
+import {Pos} from "./pos";
 
 export class Tool {
     /**
@@ -12,6 +12,7 @@ export class Tool {
         const py = pos.y - camera.scrollY;
         return new Pos(px, py);
     }
+
     /*
     * 两点之间距离公式
     */
@@ -199,6 +200,13 @@ export class Tool {
         rectangle.top = worldMatrix.ty - worldHeight * gameObject.originY;
         rectangle.bottom = worldMatrix.ty + worldHeight * (1 - gameObject.originY);
         return rectangle;
+    }
+
+    // check is string a number. 0001;2.22 return true
+    public static isNumeric(str): boolean {
+        if (typeof str !== "string") return false; // we only process strings!
+        return !isNaN(str as any) && // use type coercion to parse the _entirety_ of the string (`parseFloat` alone does not do this)...
+            !isNaN(parseFloat(str)); // ...and ensure strings of whitespace fail
     }
 
     private static chunk(str, n) {
