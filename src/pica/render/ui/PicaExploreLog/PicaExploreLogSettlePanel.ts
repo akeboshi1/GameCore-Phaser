@@ -67,7 +67,7 @@ export class PicaExploreLogSettlePanel extends ButtonEventDispatcher {
         }).setOrigin(0.5);
         this.starText.y = this.starPro.y + this.starPro.height * 0.5 + 10 * this.dpr;
         this.starText.visible = false;
-        this.unkownImg = this.scene.make.image({ key: UIAtlasName.explorelog, frame: "Settlement_unkown_clue" });
+        this.unkownImg = this.scene.make.image({ key: UIAtlasName.explorelog, frame: "Settlement_unkown_clue" }).setOrigin(0.3, 0.8);
         this.unkownImg.y = this.starText.y;
         this.unkownImg.visible = false;
         this.scorebg = this.scene.make.image({ key: UIAtlasName.explorelog, frame: "Settlement_score_bg" });
@@ -305,9 +305,9 @@ export class PicaExploreLogSettlePanel extends ButtonEventDispatcher {
         this.unkownImg.visible = false;
         if (clues) {
             for (const clue of clues) {
-                if (clue.star > to) {
+                if (clue.star > riado) {
                     this.unkownImg.visible = true;
-                    const xx = -width * 0.5 + clue.star * (cellWidth + space) + cellWidth * 0.5;
+                    const xx = -width * 0.5 + (clue.star - 1) * (cellWidth + space) + cellWidth * 0.5;
                     this.unkownImg.x = xx;
                 }
             }
@@ -317,7 +317,7 @@ export class PicaExploreLogSettlePanel extends ButtonEventDispatcher {
 
     private playLayoutAnimation() {
         const group = this.curLayoutGroup;
-        const to = this.maskHeight * 0.5 + 30 * this.dpr;
+        const to = this.maskHeight * 0.5 + 50 * this.dpr;
         const from = to + this.maskHeight + 20 * this.dpr;
         group.y = from;
         this.curLayoutGroup.visible = true;

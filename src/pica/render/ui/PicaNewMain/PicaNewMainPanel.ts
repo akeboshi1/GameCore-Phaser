@@ -77,6 +77,11 @@ export class PicaNewMainPanel extends PicaBasePanel {
         this.headPanel.setSceneData(sceneName, isPraise, people, roomType, isself);
     }
 
+    setSelfRoomInfo(isself: boolean = false) {
+        if (!this.mInitialized) return;
+        this.headPanel.setSelfRoomInfo(isself);
+    }
+
     updateUIState(active?: any) {
 
     }

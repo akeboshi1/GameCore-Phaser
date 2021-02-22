@@ -130,6 +130,7 @@ export class PicaExploreLogPanel extends PicaBasePanel {
         this.settlePanel.x = wid * 0.5;
         this.settlePanel.y = hei * 0.5;
         this.settlePanel.resize(wid, hei);
+        this.settlePanel.visible = true;
     }
 
     hideSettlePanel() {
@@ -203,6 +204,7 @@ export class PicaExploreLogPanel extends PicaBasePanel {
 
     private continueFadeOutAnimation() {
         if (!this.scene) return;
+        if (!this.continueProgress.visible) return;
         UIHelper.playAlphaTween(this.scene, this.continueProgress, 1, 0, 500, "Linear", undefined, new Handler(this, () => {
             if (!this.scene) return;
             this.continueProgress.visible = false;

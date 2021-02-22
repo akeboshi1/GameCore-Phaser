@@ -189,6 +189,15 @@ export class PicaNewHeadPanel extends Phaser.GameObjects.Container {
         }
     }
 
+    public setSelfRoomInfo(isself: boolean = false) {
+        this.isself = isself;
+        if (isself) {
+            this.praiseImg.setFrame("home_set");
+        } else {
+            this.praiseImg.setFrame(this.praise ? "home_praise_1" : "home_praise");
+        }
+    }
+
     public setHandler(send: Handler) {
         this.sendHandler = send;
     }

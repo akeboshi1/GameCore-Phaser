@@ -2,6 +2,8 @@ import { op_client } from "pixelpai_proto";
 import { BasicMediator, Game } from "gamecore";
 import { EventType, ModuleName } from "structure";
 import { PicaExploreLog } from "./PicaExploreLog";
+import { BaseDataConfigManager } from "picaWorker";
+import { ObjectAssign } from "utils";
 
 export class PicaExploreLogMediator extends BasicMediator {
     protected mModel: PicaExploreLog;
@@ -56,6 +58,9 @@ export class PicaExploreLogMediator extends BasicMediator {
 
     }
     private onEXPLORE_SUMMARY(content: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_EXPLORE_SUMMARY) {
+        const configManager = <BaseDataConfigManager>this.game.configManager;
+        const rewards = content.rewards;
+        if (rewards) configManager.getBatchItemDatas(rewards);
         if (this.mView) this.mView.setExploreSettleDatas(content);
     }
     private onGoHomeHandler() {

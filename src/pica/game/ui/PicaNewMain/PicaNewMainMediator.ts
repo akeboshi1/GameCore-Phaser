@@ -99,7 +99,7 @@ export class PicaNewMainMediator extends BasicMediator {
     }
 
     get isSelfRoom() {
-        if (!this.playerInfo || !this.roomInfo) return false;
+        if (!this.playerInfo || !this.playerInfo.rooms || !this.roomInfo) return false;
         const rooms = this.playerInfo.rooms;
         const curRoomid = this.roomInfo.roomId;
         for (const room of rooms) {

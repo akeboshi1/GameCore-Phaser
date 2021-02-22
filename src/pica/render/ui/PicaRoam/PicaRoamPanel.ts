@@ -24,7 +24,8 @@ export class PicaRoamPanel extends PicaBasePanel {
         this.textures = [{ atlasName: "roam_stripe", folder: "roam" }, { atlasName: "roam_topic", folder: "roam" },
         { atlasName: "roamone", folder: "roam_effect", foldType: FolderType.NORMAL, uiType: UILoadType.video },
         { atlasName: "roamtenrepead", folder: "roam_effect", foldType: FolderType.NORMAL, uiType: UILoadType.video },
-        { atlasName: "roamreward", folder: "roam_effect", foldType: FolderType.NORMAL, uiType: UILoadType.video }];
+        { atlasName: "roamreward", folder: "roam_effect", foldType: FolderType.NORMAL, uiType: UILoadType.video },
+        { atlasName: "roambefore", folder: "roam_effect", foldType: FolderType.NORMAL, uiType: UILoadType.video }];
     }
     resize(width?: number, height?: number) {
         const w: number = this.scaleWidth;
