@@ -103,7 +103,7 @@ export class DecorateRoom extends PacketHandler implements DecorateRoomService {
 
         this.game.showLoading({
             "dpr": this.mScaleRatio,
-            "sceneName": "DecorateScene",
+            "sceneName": SceneName.DECORATE_SCENE,
             "state": LoadState.CREATESCENE
         });
     }
