@@ -1,7 +1,7 @@
 import { PacketHandler, PBpacket } from "net-socket-packet";
 import { op_client, op_pkt_def } from "pixelpai_proto";
 import { EventType, ModuleName } from "structure";
-import { ResUtils, Size } from "utils";
+import {i18n, ResUtils, Size} from "utils";
 import { Game } from "../game";
 import { BasicMediator, UIType } from "./basic/basic.mediator";
 import { UILayoutType, UIMediatorType } from "./ui.mediator.type";
@@ -232,7 +232,7 @@ export class UIManager extends PacketHandler {
     }
 
     protected onForceOfflineHandler(packet: PBpacket) {
-        this.game.peer.render.onForceOfflineHandler();
+        this.game.peer.render.showAlert(i18n.t("common.offline"), true);
     }
 
     protected updateUIState(data: op_client.OP_VIRTUAL_WORLD_REQ_CLIENT_PKT_REFRESH_ACTIVE_UI) {

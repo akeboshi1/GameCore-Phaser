@@ -97,7 +97,6 @@ export class Render extends RPCPeer implements GameMain, IRender {
     private mUIScale: number;
 
     private mMainPeer: any;
-    private mHeartPeer: any;
     private mPhysicalPeer: any;
     private isPause: boolean = false;
     private mConnectFailFunc: Function;
@@ -918,9 +917,10 @@ export class Render extends RPCPeer implements GameMain, IRender {
         // this.mWorld.onClockReady();
     }
 
-    @Export([webworker_rpc.ParamType.str, webworker_rpc.ParamType.str])
-    public showAlert(text: string, title: string) {
+    @Export()
+    public showAlert(text: string, ok: boolean) {
         // 告诉render显示警告框
+        this.uiManager.showAlertView(text, ok);
     }
 
     @Export()
@@ -950,11 +950,6 @@ export class Render extends RPCPeer implements GameMain, IRender {
             return;
         }
         this.mSceneManager.sleepScene(SceneName.LOADING_SCENE);
-    }
-
-    @Export()
-    public onForceOfflineHandler() {
-        this.uiManager.showAlertView(i18n.t("common.offline"), true);
     }
 
     // @Export([webworker_rpc.ParamType.str, webworker_rpc.ParamType.str, webworker_rpc.ParamType.str, webworker_rpc.ParamType.str])
@@ -1372,6 +1367,14 @@ export class Render extends RPCPeer implements GameMain, IRender {
     @Export([webworker_rpc.ParamType.num])
     public showTopDisplay(id: number, state?: ElementStateType) {
         if (this.mDisplayManager) this.mDisplayManager.showTopDisplay(id, state);
+    }
+
+    @Export()
+    public SetDisplayVisible(id:number, visible: boolean){
+        if (!this.mDisplayManager) return;
+        const display = this.displayManager.getDisplay(id);
+        if (!display) return;
+        display.setVisible(visible);
     }
 
     @Export()

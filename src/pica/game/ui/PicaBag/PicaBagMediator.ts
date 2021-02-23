@@ -77,7 +77,7 @@ export class PicaBagMediator extends BasicMediator {
     protected panelInit() {
         super.panelInit();
         if (this.mPanelInit) {
-            this.mView.setSceneData(this.mScneType, this.game.roomManager.currentRoom.enableEdit);
+            this.mView.setSceneData(this.mScneType, this.game.roomManager.currentRoom.enableDecorate);
             this.mView.setMoneyData(this.userData.money, this.userData.diamond);
         }
     }
@@ -173,11 +173,14 @@ export class PicaBagMediator extends BasicMediator {
     }
 
     private onAddFurniHandler(id: string) {
-        const enable = this.game.roomManager.currentRoom.enableEdit;
+        const enable = this.game.roomManager.currentRoom.enableDecorate;
         if (enable) {
-            this.model.enterEditAndSelectedSprite(id);
+            // enter decorate locally
+            // this.model.enterEditAndSelectedSprite(id);
+            this.game.roomManager.switchCurrentRoomToDecorate();
         } else {
-            this.model.addFurniToScene(id);
+            // edit locally
+            // this.model.addFurniToScene(id);
         }
         this.hide();
     }

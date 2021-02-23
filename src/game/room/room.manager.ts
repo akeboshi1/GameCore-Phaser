@@ -1,13 +1,14 @@
-import { op_client, op_def } from "pixelpai_proto";
-import { IRoomService, Room } from "./room/room";
-import { PacketHandler, PBpacket } from "net-socket-packet";
-import { Game } from "../game";
-import { ConnectionService } from "../../../lib/net/connection.service";
+import {op_client, op_def, op_virtual_world} from "pixelpai_proto";
+import {IRoomService, Room} from "./room/room";
+import {PacketHandler, PBpacket} from "net-socket-packet";
+import {Game} from "../game";
+import {ConnectionService} from "../../../lib/net/connection.service";
 // import { Logger } from "utils";
-import { Lite } from "game-capsule";
-import { Logger } from "utils";
-import { DecorateRoom } from "./room/decorate.room";
-import { EventType, GameState } from "structure";
+import {Lite} from "game-capsule";
+import {Logger} from "utils";
+import {DecorateRoom} from "./room/decorate.room";
+import {EventType, GameState} from "structure";
+
 export interface IRoomManager {
     readonly game: Game | undefined;
 
@@ -16,6 +17,7 @@ export interface IRoomManager {
     readonly connection: ConnectionService | undefined;
 
     addPackListener();
+
     removePackListener();
 }
 
@@ -23,11 +25,13 @@ export class RoomManager extends PacketHandler implements IRoomManager {
     protected mGame: Game;
     private mRooms: IRoomService[] = [];
     private mCurRoom: IRoomService;
+
     constructor(game: Game) {
         super();
         this.mGame = game;
         this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_ENTER_SCENE, this.onEnterSceneHandler);
         this.addHandlerFun(op_client.OPCODE._OP_EDITOR_REQ_CLIENT_CHANGE_TO_EDITOR_MODE, this.onEnterEditor);
+        this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_START_EDIT_MODEL, this.onStartDecorate);
         // this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_EDIT_MODE_READY, this.onEnterDecorate);
     }
 
@@ -81,6 +85,20 @@ export class RoomManager extends PacketHandler implements IRoomManager {
         }
         this.mRooms.length = 0;
         this.mCurRoom = null;
+    }
+
+    public async switchCurrentRoomToDecorate() {
+        if (!this.currentRoom) {
+            Logger.getInstance().error("current room is null");
+            return;
+        }
+        if (this.currentRoom instanceof DecorateRoom) {
+            Logger.getInstance().error("current room is decorate already");
+            return;
+        }
+
+        // waite for <onStartDecorate>
+        this.connection.send(new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_START_EDIT_MODEL));
     }
 
     private hasRoom(id: number): boolean {
@@ -178,6 +196,45 @@ export class RoomManager extends PacketHandler implements IRoomManager {
         }
         this.game.peer.state = GameState.EnterScene;
         this.game.emitter.emit(EventType.SCENE_CHANGE);
+    }
+
+    private async onStartDecorate(packet: PBpacket) {
+        const content: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_START_EDIT_MODEL = packet.content;
+        if (!content.status) {
+            this.game.renderPeer.showAlert(content.msg, true);
+            // Logger.getInstance().warn("enter decorate error: ", content.msg);
+            return;
+        }
+
+        if (!this.currentRoom) {
+            Logger.getInstance().error("current room is null");
+            return;
+        }
+        if (this.currentRoom instanceof DecorateRoom) {
+            Logger.getInstance().error("current room is decorate room");
+            return;
+        }
+
+        // 换room。但是与效果不符，待定
+        // const camViewPort = await this.currentRoom.cameraService.getViewPort();
+        // this.onEnterDecorate({
+        //     scene: {
+        //         id: this.currentRoom.id,
+        //         cols: this.currentRoom.roomSize.cols,
+        //         rows: this.currentRoom.roomSize.rows,
+        //         tileWidth: this.currentRoom.roomSize.tileWidth,
+        //         tileHeight: this.currentRoom.roomSize.tileHeight
+        //     },
+        //     actor: {id: 0, x: camViewPort.x, y: camViewPort.y, uuid: 0}
+        // });
+
+        // 不换room
+        if (this.currentRoom.isDecorating) {
+            Logger.getInstance().error("current room is decorating");
+            return;
+        }
+
+        this.currentRoom.startDecorating();
     }
 
     get game(): Game {

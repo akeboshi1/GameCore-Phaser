@@ -69,6 +69,10 @@ export class DecorateRoom extends PacketHandler implements DecorateRoomService {
     onManagerReady(key: string) {
 
     }
+    startDecorating() {
+    }
+    stopDecorating() {
+    }
 
     enter(room: op_client.IScene): void {
         // this.mID = room.id;
@@ -740,8 +744,12 @@ export class DecorateRoom extends PacketHandler implements DecorateRoomService {
         return this.mSelectorElement.element;
     }
 
-    get enableEdit(): boolean {
+    get enableDecorate(): boolean {
         return false;
+    }
+
+    get isDecorating(): boolean {
+        return true;
     }
 
     get sceneType(): op_def.SceneTypeEnum {

@@ -17,8 +17,9 @@ import { IElement } from "../element/element";
 import { IViewBlockManager } from "../viewblock/iviewblock.manager";
 import { TerrainManager } from "../terrain/terrain.manager";
 import { SkyBoxManager } from "../sky.box/sky.box.manager";
-import { GameState, IScenery, LoadState, SceneName } from "structure";
+import {GameState, IScenery, LoadState, ModuleName, SceneName} from "structure";
 import { EffectManager } from "../effect/effect.manager";
+import {DecorateManager} from "../decorate/decorate.manager";
 export interface SpriteAddCompletedListener {
     onFullPacketReceived(sprite_t: op_def.NodeType): void;
 }
@@ -35,11 +36,12 @@ export interface IRoomService {
     readonly roomSize: IPosition45Obj;
     readonly miniSize: IPosition45Obj;
     readonly game: Game;
-    readonly enableEdit: boolean;
+    readonly enableDecorate: boolean;
     readonly sceneType: op_def.SceneTypeEnum;
     // readonly matterWorld: MatterWorld;
 
     readonly isLoading: boolean;
+    readonly isDecorating: boolean;
 
     now(): number;
 
@@ -83,6 +85,10 @@ export interface IRoomService {
 
     onManagerReady(key: string);
 
+    startDecorating();
+
+    stopDecorating();
+
     destroy();
 }
 
@@ -105,16 +111,20 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
     protected mMiniSize: IPosition45Obj;
     protected mCameraService: ICameraService;
     protected mBlocks: IViewBlockManager;
-    protected mEnableEdit: boolean = false;
+    protected mEnableDecorate: boolean = false;
+    protected mIsDecorating: boolean = false;
     protected mScaleRatio: number;
     protected mStateMap: Map<string, State>;
     // protected mMatterWorld: MatterWorld;
     // protected mAstar: AStar;
     protected mIsLoading: boolean = false;
     protected mManagersReadyStates: Map<string, boolean> = new Map();
+    protected mDecorateManager: DecorateManager;
     private moveStyle: op_def.MoveStyle;
     private mActorData: IActor;
     private mUpdateHandlers: Handler[] = [];
+    private mAllSpritesReceived: boolean = false;
+    private mSprites: op_client.ISprite[] = [];
     constructor(protected manager: IRoomManager) {
         super();
         this.mGame = this.manager.game;
@@ -127,6 +137,7 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
             this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_MOVE_SPRITE_BY_PATH, this.onMovePathHandler);
             this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_SET_CAMERA_FOLLOW, this.onCameraFollowHandler);
             this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_SYNC_STATE, this.onSyncStateHandler);
+            this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_CURRENT_SCENE_ALL_SPRITE, this.onAllSpriteReceived);
         }
     }
 
@@ -470,6 +481,7 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
         if (this.mEffectManager) this.mEffectManager.destroy();
         if (this.mSkyboxManager) this.mSkyboxManager.destroy();
         // if (this.mWallManager) this.mWallManager.destroy();
+        if (this.mDecorateManager) this.mDecorateManager.destroy();
         if (this.mActorData) this.mActorData = null;
         if (this.mStateMap) this.mStateMap = null;
         Logger.getInstance().debug("room clear");
@@ -608,6 +620,51 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
             this.game.renderPeer.roomReady();
         }
     }
+
+    public startDecorating() {
+        if (this.mIsDecorating) return;
+        this.mIsDecorating = true;
+
+        this.cameraService.stopFollow();
+
+        // hide players (with animations)
+        this.playerManager.hideAll();
+
+        // switch ui
+        this.game.uiManager.hideMed(ModuleName.PICAMAINUI_NAME);
+        this.game.uiManager.showMed(ModuleName.PICADECORATE_NAME);
+
+        // new decorate manager
+        this.mDecorateManager = new DecorateManager(this);
+        if (this.mAllSpritesReceived) {
+            this.mDecorateManager.init(this.mSprites);
+        }
+    }
+
+    public stopDecorating() {
+        if (!this.mIsDecorating) return;
+        this.mIsDecorating = false;
+
+        // camera follow
+        this.cameraService.startFollow(this.playerManager.actor.id);
+
+        // set user pos
+        const entrePos = new LogicPos(this.mActorData.x, this.mActorData.y);
+        this.playerManager.actor.setPosition(entrePos);
+        this.game.renderPeer.setPosition(this.playerManager.actor.id, entrePos.x, entrePos.y);
+
+        // show players
+        this.playerManager.showAll();
+
+        // switch ui
+        this.game.uiManager.hideMed(ModuleName.PICADECORATE_NAME);
+        this.game.uiManager.showMed(ModuleName.PICAMAINUI_NAME);
+
+        // destroy decorate manager
+        this.mDecorateManager.destroy();
+        this.mDecorateManager = null;
+    }
+
     //
 
     protected initSkyBox() {
@@ -707,8 +764,12 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
         return this.mGame;
     }
 
-    get enableEdit() {
-        return this.mEnableEdit;
+    get enableDecorate() {
+        return this.mEnableDecorate;
+    }
+
+    get isDecorating(): boolean {
+        return this.mIsDecorating;
     }
 
     get connection(): ConnectionService | undefined {
@@ -722,7 +783,7 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
     }
 
     private onEnableEditModeHandler(packet: PBpacket) {
-        this.mEnableEdit = true;
+        this.mEnableDecorate = true;
     }
 
     private onShowMapTitle(packet: PBpacket) {
@@ -796,6 +857,26 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
                     this.elementManager.setState(states);
                     break;
             }
+        }
+    }
+
+    private onAllSpriteReceived(packet: PBpacket) {
+        const content: op_client.IOP_VIRTUAL_WORLD_REQ_CLIENT_CURRENT_SCENE_ALL_SPRITE = packet.content;
+        const sprites: op_client.ISprite[] | undefined = content.sprites;
+        if (!sprites) {
+            Logger.getInstance().error("<OP_VIRTUAL_WORLD_REQ_CLIENT_CURRENT_SCENE_ALL_SPRITE> content.sprites is undefined");
+            return;
+        }
+        const type = content.nodeType;
+        if (type !== NodeType.ElementNodeType) {
+            Logger.getInstance().error("<OP_VIRTUAL_WORLD_REQ_CLIENT_CURRENT_SCENE_ALL_SPRITE> content.nodeType is not element");
+            return;
+        }
+
+        this.mAllSpritesReceived = true;
+        this.mSprites = sprites;
+        if (this.mDecorateManager) {
+            this.mDecorateManager.init(sprites);
         }
     }
 }

@@ -211,6 +211,17 @@ export class PlayerManager extends PacketHandler implements IElementManager {
     public onDisplayRemoved(id: number) {
     }
 
+    public hideAll(){
+        this.mPlayerMap.forEach((val, key) => {
+            this.mRoom.game.renderPeer.SetDisplayVisible(val.id, false);
+        })
+    }
+    public showAll() {
+        this.mPlayerMap.forEach((val, key) => {
+            this.mRoom.game.renderPeer.SetDisplayVisible(val.id, true);
+        })
+    }
+
     private onSync(packet: PBpacket) {
         const content: op_client.IOP_VIRTUAL_WORLD_REQ_CLIENT_SYNC_SPRITE = packet.content;
         if (content.nodeType !== op_def.NodeType.CharacterNodeType) {

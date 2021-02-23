@@ -7,7 +7,7 @@ export class MotionManager {
     private scaleRatio: number;
     private scene: Phaser.Scene;
     private gameObject: Phaser.GameObjects.GameObject;
-    private dirty: boolean = false;
+    private isHolding: boolean = false;
     private holdTime: any;
     private holdDelay: number = 200;
     private curtime: number;
@@ -42,7 +42,7 @@ export class MotionManager {
     }
 
     update(time: number, delta: number) {
-        if (this.dirty === false) return;
+        if (this.isHolding === false) return;
         this.curtime += delta;
         if (this.curtime < 200) {
             return;
@@ -51,13 +51,13 @@ export class MotionManager {
         const pointer = this.scene.input.activePointer;
         if (pointer.camera) {
             if (pointer.camera.scene && pointer.camera.scene.sys.settings.key === MainUIScene.name) {
-                this.dirty = false;
+                this.isHolding = false;
                 this.scene.input.off("pointermove", this.onPointerMoveHandler, this);
                 this.clearGameObject();
                 return;
             }
         }
-        if (!pointer || !this.render.displayManager.user || !this.render.displayManager) return;
+        if (!pointer || !this.render.displayManager || !this.render.displayManager.user || !this.render.displayManager.user.visible) return;
         const { x, y } = this.render.displayManager.user;
         const tmpX = pointer.worldX / this.scaleRatio - x;
         const tmpY = pointer.worldY / this.scaleRatio - y;
@@ -79,6 +79,7 @@ export class MotionManager {
     }
 
     private start(worldX: number, worldY: number, id?: number) {
+        if (!this.render.displayManager || !this.render.displayManager.user || !this.render.displayManager.user.visible) return;
         // const user = this.render.user;
         // if (!user) {
         //     return;
@@ -89,6 +90,7 @@ export class MotionManager {
     }
 
     private movePath(x: number, y: number, z: number, targets: {}, id?: number) {
+        if (!this.render.displayManager || !this.render.displayManager.user || !this.render.displayManager.user.visible) return;
         // const user = this.render.user;
         // if (!user) {
         //     return;'
@@ -99,12 +101,13 @@ export class MotionManager {
     }
 
     private stop() {
+        if (!this.render.displayManager || !this.render.displayManager.user || !this.render.displayManager.user.visible) return;
         this.render.physicalPeer.stopMove();
         // this.render.user.stopMove();
     }
 
     private async onPointerUpHandler(pointer: Phaser.Input.Pointer) {
-        this.dirty = false;
+        this.isHolding = false;
         this.scene.input.off("pointermove", this.onPointerMoveHandler, this);
         if (Math.abs(pointer.downX - pointer.upX) >= 5 * this.render.scaleRatio && Math.abs(pointer.downY - pointer.upY) >= 5 * this.render.scaleRatio || pointer.upTime - pointer.downTime > this.holdDelay) {
             this.stop();
@@ -119,6 +122,11 @@ export class MotionManager {
                         this.clearGameObject();
                         return;
                     }
+                    // if (ele.nodeType === NodeType.ElementNodeType) {
+                    //     // check enter decorate
+                    //     this.render.mainPeer.onFurnitureHolded(id);
+                    //     return;
+                    // }
                     // const position = ele.getPosition();
                     let targets = await this.render.physicalPeer.getInteractivePosition(id);
                     if (!targets || targets.length === 0) {
@@ -137,16 +145,16 @@ export class MotionManager {
     private async onPointerDownHandler(pointer: Phaser.Input.Pointer) {
         this.scene.input.on("pointermove", this.onPointerMoveHandler, this);
         this.holdTime = setTimeout(() => {
-            this.dirty = true;
+            this.isHolding = true;
         }, this.holdDelay);
     }
 
     private async onPointerMoveHandler(pointer: Phaser.Input.Pointer) {
-        this.dirty = true;
+        this.isHolding = true;
     }
 
     private onPointeroutHandler() {
-        this.dirty = false;
+        this.isHolding = false;
         this.scene.input.off("pointermove", this.onPointerMoveHandler, this);
         this.stop();
         clearTimeout(this.holdTime);

@@ -355,6 +355,13 @@ export class MainPeer extends RPCPeer {
     }
 
     @Export()
+    public onFurnitureHolded(id: number) {
+        if (this.game.roomManager.currentRoom.enableDecorate) {
+            this.game.roomManager.switchCurrentRoomToDecorate();
+        }
+    }
+
+    @Export()
     public exitUser() {
         this.game.exitUser();
     }
@@ -434,7 +441,7 @@ export class MainPeer extends RPCPeer {
     @Export()
     public isCurrentRoomEditEnable(): boolean {
         if (this.game.roomManager && this.game.roomManager.currentRoom) {
-            return this.game.roomManager.currentRoom.enableEdit;
+            return this.game.roomManager.currentRoom.enableDecorate;
         }
         return false;
     }
