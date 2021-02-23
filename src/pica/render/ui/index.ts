@@ -111,3 +111,4 @@ export * from "./PicaExploreList/PicaExploreListBottomPanel";
 export * from "./PicaExploreList/PicaExploreListDetailPanel";
 export * from "./PicaExploreList/PicaExploreListLevelPanel";
 export * from "./PicaExploreList/PicaExploreListPanel";
+export * from "./Bottom/BottomPanel";

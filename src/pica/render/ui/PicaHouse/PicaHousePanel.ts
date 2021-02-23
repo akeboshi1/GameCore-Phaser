@@ -54,6 +54,7 @@ export class PicaHousePanel extends BasePanel {
     hide() {
         this.mShow = false;
         this.removeListen();
+        super.hide();
     }
 
     public addListen() {
@@ -161,7 +162,7 @@ export class PicaHousePanel extends BasePanel {
             bottom: 0 * this.dpr
         });
         this.closeShopBtn.setTextStyle({
-            color: "#C12914",
+            color: "#c12914",
             fontSize: 12 * this.dpr,
             fontFamily: Font.DEFULT_FONT
         });

@@ -15,14 +15,18 @@ export class FrameAnimation extends BaseAnimation {
         if (resName)
             this.animUrlData.setData(this.resName, this.resUrl);
         else this.animUrlData.setDisplayData(resUrl, data);
-        this.scene.load.atlas(this.resName, this.animUrlData.pngUrl, this.animUrlData.jsonUrl,
-            this.animUrlData.textureXhrSettings, this.animUrlData.atlasXhrSettings);
-        this.scene.load.once(
-            Phaser.Loader.Events.COMPLETE,
-            this.onLoadComplete,
-            this,
-        );
-        this.scene.load.start();
+        if (this.scene.textures.exists(this.resName)) {
+            this.onLoadComplete();
+        } else {
+            this.scene.load.atlas(this.resName, this.animUrlData.pngUrl, this.animUrlData.jsonUrl,
+                this.animUrlData.textureXhrSettings, this.animUrlData.atlasXhrSettings);
+            this.scene.load.once(
+                Phaser.Loader.Events.COMPLETE,
+                this.onLoadComplete,
+                this,
+            );
+            this.scene.load.start();
+        }
     }
 
     public play(aniName?: string) {

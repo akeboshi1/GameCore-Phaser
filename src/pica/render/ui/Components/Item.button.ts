@@ -1,6 +1,5 @@
 import { ButtonEventDispatcher, DynamicImage } from "../../../../render/ui/components";
-import { op_client, op_pkt_def } from "pixelpai_proto";
-import { BBCodeText, ClickEvent } from "apowophaserui";
+import { ClickEvent } from "apowophaserui";
 import { UIAtlasName } from "picaRes";
 import { UIHelper, Url } from "utils";
 import { PicaItemTipsPanel } from "picaRender";
@@ -9,15 +8,15 @@ export class ItemButton extends ButtonEventDispatcher {
     public itemData: ICountablePackageItem;
     protected dpr: number;
     protected zoom: number;
-    private bg: Phaser.GameObjects.Image;
-    private selectbg: Phaser.GameObjects.Image;
-    private itemIcon: DynamicImage;
-    private countTex: Phaser.GameObjects.Text;
-    private starImg: Phaser.GameObjects.Image;
-    private bgFrame: string = "bag_icon_common_bg";
-    private selectFrame: string = "bag_icon_select_bg";
-    private rarityFrame: string = "bag_icon_rare_bg";
-    private key: string;
+    protected itemIcon: DynamicImage;
+    protected bg: Phaser.GameObjects.Image;
+    protected selectbg: Phaser.GameObjects.Image;
+    protected countTex: Phaser.GameObjects.Text;
+    protected starImg: Phaser.GameObjects.Image;
+    protected bgFrame: string = "bag_icon_common_bg";
+    protected selectFrame: string = "bag_icon_select_bg";
+    protected rarityFrame: string = "bag_icon_rare_bg";
+    protected key: string;
     constructor(scene: Phaser.Scene, key: string, bg: string, dpr: number, zoom: number, enable: boolean) {
         super(scene, 0, 0);
         this.dpr = dpr;
@@ -35,6 +34,7 @@ export class ItemButton extends ButtonEventDispatcher {
         this.starImg = this.scene.make.image({ key: UIAtlasName.uicommon, frame: "bag_star_small_1" }).setOrigin(0);
         this.starImg.x = -this.width * 0.5 + 6 * dpr;
         this.starImg.y = -this.height * 0.5 + 6 * dpr;
+        this.starImg.visible = false;
         this.add([this.selectbg, this.bg, this.itemIcon, this.starImg, this.countTex]);
         this.selectbg.visible = false;
         this.enable = enable;

@@ -32,6 +32,7 @@ export interface ICountablePackageItem {
     tag: string;
     affectValues: ICompareValue[];
     sellingPrice: IPrice;
+    countRange: number[];
 }
 
 export interface IExtendCountablePackageItem extends ICountablePackageItem {

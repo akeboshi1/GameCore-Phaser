@@ -67,7 +67,7 @@ export class PicaNewMainMediator extends BasicMediator {
     private onOpenHouseHandler() {
         if (!this.roomInfo || this.roomInfo.roomType !== "room" && this.roomInfo.roomType !== "store") return;
         const uimanager = this.game.uiManager;
-        uimanager.showMed("PicHouse");
+        uimanager.showMed(ModuleName.PICAHOUSE_NAME);
     }
 
     private onQuery_PRAISE_ROOM(praise: boolean) {
@@ -99,7 +99,7 @@ export class PicaNewMainMediator extends BasicMediator {
     }
 
     get isSelfRoom() {
-        if (!this.playerInfo || !this.roomInfo) return false;
+        if (!this.playerInfo || !this.playerInfo.rooms || !this.roomInfo) return false;
         const rooms = this.playerInfo.rooms;
         const curRoomid = this.roomInfo.roomId;
         for (const room of rooms) {

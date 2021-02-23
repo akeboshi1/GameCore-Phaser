@@ -135,7 +135,8 @@
     "side": "[side]",
     "daily": "[daily]",
     "receive": "Receive",
-    "go": "Go"
+    "go": "Go",
+    "notasktip": "There are no new missions for now"
   },
   "furni_unlock": {
     "unlock": "REPAIR",

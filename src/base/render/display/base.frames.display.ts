@@ -382,6 +382,7 @@ export class BaseFramesDisplay extends BaseDisplay {
     }
 
     protected onLoadCompleted(field: DisplayField) {
+        this.clearDisplay();
         const data = this.mDisplayDatas.get(field);
         if (!data) {
             return;

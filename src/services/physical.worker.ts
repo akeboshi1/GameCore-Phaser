@@ -171,7 +171,7 @@ export class PhysicalPeer extends RPCPeer {
 
     @Export([webworker_rpc.ParamType.num, webworker_rpc.ParamType.num, webworker_rpc.ParamType.boolean])
     public setWalkableAt(x: number, y: number, val: boolean) {
-        this.matterWorld.setWalkableAt(x, y, val);
+        if (this.matterWorld) this.matterWorld.setWalkableAt(x, y, val);
     }
 
     @Export()

@@ -444,9 +444,11 @@ export class ElementManager extends PacketHandler implements IElementManager {
     }
 
     protected addMap(sprite: ISprite) {
+        this.addToMap(sprite);
     }
 
     protected removeMap(sprite: ISprite) {
+        this.removeFromMap(sprite);
     }
 
     get connection(): ConnectionService {

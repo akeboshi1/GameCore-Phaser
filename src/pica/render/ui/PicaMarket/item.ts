@@ -1,4 +1,5 @@
 import { DynamicImage } from "gamecoreRender";
+import { UIAtlasName } from "picaRes";
 import { ModuleName } from "structure";
 import { Coin, Font, Logger, Url } from "utils";
 
@@ -10,6 +11,7 @@ export class MarketItem extends Phaser.GameObjects.Container {
   private mCoinIcon: Phaser.GameObjects.Image;
   private mPriceText: Phaser.GameObjects.Text;
   private mTagIcon: Phaser.GameObjects.Image;
+  private starImg: Phaser.GameObjects.Image;
   private mProp: any;// op_client.IMarketCommodity
   private zoom: number = 1;
   private readonly dpr: number;
@@ -48,7 +50,10 @@ export class MarketItem extends Phaser.GameObjects.Container {
       y: 40 * this.dpr,
       key: ModuleName.PICAMARKET_NAME,
     }, false).setOrigin(0);
-
+    this.starImg = this.scene.make.image({ key: UIAtlasName.uicommon, frame: "bag_star_small_1" }).setOrigin(1, 0);
+    this.starImg.x = this.mBorder.x + this.mBorder.displayWidth - 2 * dpr  ;
+    this.starImg.y = this.mBorder.y + 2 * dpr;
+    this.starImg.visible = false;
     const priceBg = this.scene.make.image({
       x: 62 * this.dpr,
       y: 39 * this.dpr,
@@ -73,7 +78,7 @@ export class MarketItem extends Phaser.GameObjects.Container {
       y: -34 * this.dpr
     }, false).setOrigin(0);
 
-    this.add([this.mBackground, this.mBorder, this.mPropImage, this.mNickName, priceBg, this.mCoinIcon, this.mPriceText]);
+    this.add([this.mBackground, this.mBorder, this.mPropImage, this.starImg, this.mNickName, priceBg, this.mCoinIcon, this.mPriceText]);
     this.setSize(this.mBackground.displayWidth, this.mBackground.displayHeight);
 
   }
@@ -106,6 +111,11 @@ export class MarketItem extends Phaser.GameObjects.Container {
     this.mPriceText.setText(content.price[0].price.toString());
     const coinIcon = Coin.getIcon(content.price[0].coinType);
     this.mCoinIcon.setFrame(coinIcon);
+    if (content.grade > 0) {
+      this.starImg.visible = true;
+      const starFrame = "bag_star_small_" + content.grade;
+      this.starImg.setFrame(starFrame);
+    } else this.starImg.visible = false;
   }
 
   private onPropLoadComplete() {

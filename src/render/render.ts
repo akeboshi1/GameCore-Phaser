@@ -1,17 +1,17 @@
 import "tooqinggamephaser";
 import "dragonBones";
-import {Game} from "tooqinggamephaser";
-import {Export, RPCPeer, webworker_rpc} from "webworker-rpc";
-import {i18n, initLocales, IPos, IPosition45Obj, Logger, Pos, Size, Url} from "utils";
-import {PBpacket} from "net-socket-packet";
+import { Game } from "tooqinggamephaser";
+import { Export, RPCPeer, webworker_rpc } from "webworker-rpc";
+import { i18n, initLocales, IPos, IPosition45Obj, Logger, Pos, Size, Url } from "utils";
+import { PBpacket } from "net-socket-packet";
 import * as protos from "pixelpai_proto";
-import {op_client} from "pixelpai_proto";
-import {Account} from "./account/account";
-import {SceneManager} from "./scenes/scene.manager";
-import {LoginScene} from "./scenes/login.scene";
-import {LocalStorageManager} from "./managers/local.storage.manager";
-import {PlayScene} from "./scenes/play.scene";
-import {CamerasManager} from "./cameras/cameras.manager";
+import { op_client } from "pixelpai_proto";
+import { Account } from "./account/account";
+import { SceneManager } from "./scenes/scene.manager";
+import { LoginScene } from "./scenes/login.scene";
+import { LocalStorageManager } from "./managers/local.storage.manager";
+import { PlayScene } from "./scenes/play.scene";
+import { CamerasManager } from "./cameras/cameras.manager";
 import * as path from "path";
 import {
     ElementStateType,
@@ -29,19 +29,21 @@ import {
     RENDER_PEER,
     SceneName
 } from "structure";
-import {DisplayManager} from "./managers/display.manager";
-import {InputManager} from "./input/input.manager";
-import {PicaRenderUiManager} from "picaRender";// TODO: 分离pica模块时，删除该引用
-import {GamePauseScene} from "./scenes/game.pause.scene";
-import {MainUIScene} from "./scenes/main.ui.scene";
-import {EditorCanvasManager} from "./managers/editor.canvas.manager";
+import { DisplayManager } from "./managers/display.manager";
+import { InputManager } from "./input/input.manager";
+// import { PicaGuideManager, PicaRenderUiManager } from "picaRender";// TODO: 分离pica模块时，删除该引用
+import { GamePauseScene } from "./scenes/game.pause.scene";
+import { MainUIScene } from "./scenes/main.ui.scene";
+import { EditorCanvasManager } from "./managers/editor.canvas.manager";
 import version from "../../version";
-import {IRender, BasicScene} from "baseRender";
-import {AstarDebugger} from "./display/debugs/astar";
-import {EditorModeDebugger} from "./display/debugs/editor.mode.debugger";
-import {GridsDebugger} from "./display/debugs/grids";
-import {SortDebugger} from "./display/debugs/sort.debugger";
-import {UiManager} from "./ui/ui.manager";
+import { IRender, BasicScene } from "baseRender";
+import { AstarDebugger } from "./display/debugs/astar";
+import { EditorModeDebugger } from "./display/debugs/editor.mode.debugger";
+import { GridsDebugger } from "./display/debugs/grids";
+import { SortDebugger } from "./display/debugs/sort.debugger";
+import { UiManager } from "./ui";
+import { GuideManager } from "./guide";
+
 // import Stats from "../../Stat";
 
 for (const key in protos) {
@@ -68,12 +70,13 @@ export class Render extends RPCPeer implements GameMain, IRender {
 
     protected readonly DEFAULT_WIDTH = 360;
     protected readonly DEFAULT_HEIGHT = 640;
+    // protected mGuideManager: GuideManager;
     protected mSceneManager: SceneManager;
     protected mCameraManager: CamerasManager;
     protected mInputManager: InputManager;
     // protected mInputManager: InputManager;
     protected mConfig: ILauncherConfig;
-    protected mUiManager: PicaRenderUiManager;
+    protected mUiManager: UiManager;
     protected mDisplayManager: DisplayManager;
     protected mLocalStorageManager: LocalStorageManager;
     protected mEditorCanvasManager: EditorCanvasManager;
@@ -193,13 +196,17 @@ export class Render extends RPCPeer implements GameMain, IRender {
         return this.mAccount;
     }
 
-    get uiManager(): PicaRenderUiManager {
+    get uiManager(): UiManager {
         return this.mUiManager;
     }
 
     get sceneManager(): SceneManager {
         return this.mSceneManager;
     }
+
+    // get guideManager(): GuideManager {
+    //     return this.mGuideManager;
+    // }
 
     get camerasManager(): CamerasManager {
         return this.mCameraManager;
@@ -234,10 +241,11 @@ export class Render extends RPCPeer implements GameMain, IRender {
     }
 
     createManager() {
-        if (!this.mUiManager) this.mUiManager = new PicaRenderUiManager(this);
+        if (!this.mUiManager) this.mUiManager = new UiManager(this);
         if (!this.mCameraManager) this.mCameraManager = new CamerasManager(this);
         if (!this.mLocalStorageManager) this.mLocalStorageManager = new LocalStorageManager();
         if (!this.mSceneManager) this.mSceneManager = new SceneManager(this);
+        // if (!this.mGuideManager) this.mGuideManager = new GuideManager(this);
         if (!this.mInputManager) this.mInputManager = new InputManager(this);
         if (!this.mDisplayManager) this.mDisplayManager = new DisplayManager(this);
         if (!this.mEditorCanvasManager) this.mEditorCanvasManager = new EditorCanvasManager(this);
@@ -261,6 +269,10 @@ export class Render extends RPCPeer implements GameMain, IRender {
             this.mSceneManager.destroy();
             this.mSceneManager = undefined;
         }
+        // if (this.mGuideManager) {
+        //     this.mGuideManager.destroy();
+        //     this.mGuideManager = undefined;
+        // }
         if (this.mInputManager) {
             this.mInputManager.destroy();
             this.mInputManager = undefined;
@@ -384,6 +396,7 @@ export class Render extends RPCPeer implements GameMain, IRender {
     }
 
     disableClick() {
+        if (!this.sceneManager) return;
         const playScene: Phaser.Scene = this.sceneManager.getMainScene();
         if (playScene) playScene.input.enabled = false;
         const uiScene = this.game.scene.getScene("MainUIScene") as BasicScene;
@@ -1092,7 +1105,6 @@ export class Render extends RPCPeer implements GameMain, IRender {
     public clearGame(boo: boolean): Promise<void> {
         return new Promise((resolve, reject) => {
             if (this.mGame) {
-                this.destroyManager();
                 this.mGame.events.off(Phaser.Core.Events.FOCUS, this.onFocus, this);
                 this.mGame.events.off(Phaser.Core.Events.BLUR, this.onBlur, this);
                 this.mGame.scale.off("enterfullscreen", this.onFullScreenChange, this);
@@ -1104,6 +1116,7 @@ export class Render extends RPCPeer implements GameMain, IRender {
                 this.mGame.plugins.removeGlobalPlugin("rexBBCodeTextPlugin");
                 this.mGame.plugins.removeGlobalPlugin("rexMoveTo");
                 this.mGame.plugins.removeScenePlugin("DragonBones");
+                this.destroyManager();
                 this.mGame.events.once(Phaser.Core.Events.DESTROY, () => {
                     this.mGame = undefined;
                     if (boo) {
@@ -1503,6 +1516,10 @@ export class Render extends RPCPeer implements GameMain, IRender {
                 (pauseScene as GamePauseScene).sleep();
                 this.mGame.scene.stop(GamePauseScene.name);
             }
+            const playScene = this.mGame.scene.getScene(PlayScene.name);
+            if (playScene) playScene.scene.resume();
+            const uiScene = this.mGame.scene.getScene(MainUIScene.name);
+            if (uiScene) uiScene.scene.resume();
             // if (!this.mConnection.isConnect) {
             //     if (this.mConfig.connectFail) {
             //         return this.mConfig.connectFail();
@@ -1528,6 +1545,10 @@ export class Render extends RPCPeer implements GameMain, IRender {
                 this.mGame.scene.add(GamePauseScene.name, GamePauseScene);
             }
             this.mGame.scene.start(GamePauseScene.name, { render: this });
+            const playScene = this.mGame.scene.getScene(PlayScene.name);
+            if (playScene) playScene.scene.pause();
+            const uiScene = this.mGame.scene.getScene(MainUIScene.name);
+            if (uiScene) uiScene.scene.pause();
         }
     }
 

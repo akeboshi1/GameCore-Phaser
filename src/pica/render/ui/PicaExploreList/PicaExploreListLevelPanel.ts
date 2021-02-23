@@ -311,16 +311,18 @@ class ChapterLevelItem extends ChapterLevelBaseItem {
             this.openButton.setFrameNormal("yellow_btn_normal");
             this.openButton.setTextStyle(UIHelper.brownishStyle(this.dpr, 13));
             this.energyImg.setTextStyle(UIHelper.brownishStyle(this.dpr, 13));
-            this.setClueData(<any>data.clueItems);
+            const star = Math.ceil(data.progress / 100);
+            this.setClueData(<any>data.clueItems, star);
         }
     }
 
-    public setClueData(datas: ICountablePackageItem[]) {
+    public setClueData(datas: ICountablePackageItem[], star: number) {
         for (const item of this.clueItms) {
             item.visible = false;
         }
         if (!datas) return;
         for (let i = 0; i < datas.length; i++) {
+            const data = datas[i];
             let item: PicaChapterLevelClue;
             if (i < this.clueItms.length) {
                 item = this.clueItms[i];
@@ -331,7 +333,13 @@ class ChapterLevelItem extends ChapterLevelBaseItem {
                 this.add(item);
             }
             item.visible = true;
-            item.setItemData(datas[i]);
+            if (data["star"] > star) {
+                item.setTexture(UIAtlasName.explorelog, "explore_unknown_clue");
+                item.enable = false;
+            } else {
+                item.setItemData(data);
+                item.enable = true;
+            }
         }
         this.setLayoutItems(datas.length);
     }

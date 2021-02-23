@@ -272,6 +272,7 @@ export class DetailDisplay extends Phaser.GameObjects.Container {
     if (this.mFrameAni) {
       if (!this.isLoading) {
         this.remove(this.mFrameAni);
+        this.mFrameAni.destroy();
       }
     }
     this.mDisplay = undefined;

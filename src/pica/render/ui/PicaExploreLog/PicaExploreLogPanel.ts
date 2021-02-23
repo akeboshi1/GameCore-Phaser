@@ -90,12 +90,15 @@ export class PicaExploreLogPanel extends PicaBasePanel {
                 this.continueText.y = this.continueProgress.y;
             }));
         } else {
-            this.playRotateTween(0, 100, content.seconds * 1000);
-            this.continueText.scale = 0.1;
-            this.continueText.alpha = 1;
-            UIHelper.playScaleTween(this.scene, this.continueText, 0.1, 1, 200, "Linear", undefined);
+            if (content.combo === 0) {
+                this.continueFadeOutAnimation();
+            } else {
+                this.playRotateTween(0, 100, content.seconds * 1000);
+                this.continueText.scale = 0.1;
+                this.continueText.alpha = 1;
+                UIHelper.playScaleTween(this.scene, this.continueText, 0.1, 1, 200, "Linear", undefined);
+            }
         }
-
     }
     setExploreSettleDatas(content: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_EXPLORE_SUMMARY) {
         this.openSettlePanel();
@@ -127,6 +130,7 @@ export class PicaExploreLogPanel extends PicaBasePanel {
         this.settlePanel.x = wid * 0.5;
         this.settlePanel.y = hei * 0.5;
         this.settlePanel.resize(wid, hei);
+        this.settlePanel.visible = true;
     }
 
     hideSettlePanel() {
@@ -182,14 +186,7 @@ export class PicaExploreLogPanel extends PicaBasePanel {
                 }
                 this.continueProgress.setProgress(to - param.value, to);
                 if (param.value === to) {
-                    UIHelper.playAlphaTween(this.scene, this.continueProgress, 1, 0, 500, "Linear", undefined, new Handler(this, () => {
-                        if (!this.scene) return;
-                        this.continueProgress.visible = false;
-                        this.continueProgress.y = -this.continueProgress.height * 0.5;
-                        this.continueProgress.alpha = 1;
-                    }), new Handler(this, (value: number) => {
-                        this.continueText.alpha = value;
-                    }));
+                    this.continueFadeOutAnimation();
                 }
             },
             onComplete: () => {
@@ -203,6 +200,19 @@ export class PicaExploreLogPanel extends PicaBasePanel {
             this.rotateTween.remove();
             this.rotateTween = undefined;
         }
+    }
+
+    private continueFadeOutAnimation() {
+        if (!this.scene) return;
+        if (!this.continueProgress.visible) return;
+        UIHelper.playAlphaTween(this.scene, this.continueProgress, 1, 0, 500, "Linear", undefined, new Handler(this, () => {
+            if (!this.scene) return;
+            this.continueProgress.visible = false;
+            this.continueProgress.y = -this.continueProgress.height * 0.5;
+            this.continueProgress.alpha = 1;
+        }), new Handler(this, (value: number) => {
+            this.continueText.alpha = value;
+        }));
     }
 }
 class ExploreTimeProgress extends ButtonEventDispatcher {

@@ -1,7 +1,7 @@
 import { BasicMediator, Game } from "gamecore";
 import { BaseDataConfigManager } from "picaWorker";
 import { op_client, op_pkt_def } from "pixelpai_proto";
-import { EventType, ModuleName } from "structure";
+import { AvatarSuitType, EventType, ModuleName } from "structure";
 import { PicaCompose } from "./PicaCompose";
 export class PicaComposeMediator extends BasicMediator {
     protected mModel: PicaCompose;
@@ -85,9 +85,24 @@ export class PicaComposeMediator extends BasicMediator {
 
     private isQualified(item: op_client.IPKT_CRAFT_SKILL) {
         if (this.playerBag) {
+            const configMgr = <BaseDataConfigManager>this.game.configManager;
+            if (item.product) {
+                configMgr.getBatchItemDatas([item.product]);
+                const product = item.product;
+                item.productDes = product.des;
+                item.productName = product.name;
+                item.productSource = product.source;
+                item.productAnimations = product.animations;
+                item.productDisplay = product.animationDisplay;
+                if (item.product.suitType) {
+                    const dataAvatar: any = AvatarSuitType.createHasBaseAvatarBySn(product.suitType, product.sn, product.slot, product.tag, product.version);
+                    item.productAvatar = dataAvatar;
+                }
+            }
             let qualified = true;
             const materials = item.materials;
             if (materials) {
+                configMgr.getBatchItemDatas(materials);
                 for (const data of materials) {
                     const count = this.playerBag.getItemsCount(op_pkt_def.PKT_PackageType.PropPackage, data.id, data.subcategory);
                     data.count = count;

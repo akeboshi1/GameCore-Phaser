@@ -22,8 +22,7 @@ export class PicaRoamEffectOnePanel extends Phaser.GameObjects.Container {
         this.blackGraphic.fillRect(-this.width * 0.5, -this.height * 0.5, this.width * 2, this.height * 2);
         this.blackGraphic.visible = false;
         this.blackGraphic.alpha = 0;
-        this.video = this.scene.make.video({ key: "roamone" });
-        this.video.on("complete", this.onCompleteHandler, this);
+        this.video = this.scene.make.video({ key: "roambefore" });
         this.add([this.video, this.blackGraphic]);
     }
     setHandler(send: Handler) {
@@ -33,7 +32,26 @@ export class PicaRoamEffectOnePanel extends Phaser.GameObjects.Container {
     setRewardDatas(datas: op_client.ICountablePackageItem[], one: boolean) {
         this.rewardDatas = datas;
         this.isOne = one;
-        if (one) {
+        this.playBeforeVideo();
+        this.setVideoSize();
+        this.video.visible = true;
+        this.blackGraphic.visible = false;
+    }
+    public play() {
+        if (this.video) this.video.play(false);
+    }
+
+    private playBeforeVideo() {
+        this.video.removeAllListeners();
+        this.video.changeSource("roambefore", true);
+        this.video.on("complete", () => {
+            this.playRewardVideo();
+        }, this);
+    }
+
+    private playRewardVideo() {
+        this.video.removeAllListeners();
+        if (this.isOne) {
             if (this.video.getVideoKey() !== "roamone")
                 this.video.changeSource("roamone", true);
             else this.video.play();
@@ -43,12 +61,10 @@ export class PicaRoamEffectOnePanel extends Phaser.GameObjects.Container {
             else this.video.play();
             this.loopTimes = 1;
         }
-        this.setVideoSize();
-        this.video.visible = true;
-        this.blackGraphic.visible = false;
-    }
-    public play() {
-        if (this.video) this.video.play(false,);
+        setTimeout(() => {
+            this.video.on("complete", this.onCompleteHandler, this);
+        }, 20);
+
     }
     private onCompleteHandler() {
         if (!this.isOne && this.loopTimes > 0) {
