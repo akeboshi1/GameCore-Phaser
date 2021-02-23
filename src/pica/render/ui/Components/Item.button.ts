@@ -1,6 +1,5 @@
 import { ButtonEventDispatcher, DynamicImage } from "../../../../render/ui/components";
-import { op_client, op_pkt_def } from "pixelpai_proto";
-import { BBCodeText, ClickEvent } from "apowophaserui";
+import { ClickEvent } from "apowophaserui";
 import { UIAtlasName } from "picaRes";
 import { UIHelper, Url } from "utils";
 import { PicaItemTipsPanel } from "picaRender";

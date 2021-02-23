@@ -7,3 +7,4 @@ export * from "./render";
 export * from "./scenes";
 export * from "./ui";
 export * from "./loadqueue";
+export * from "./guide";

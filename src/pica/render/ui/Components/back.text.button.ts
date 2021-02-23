@@ -1,6 +1,6 @@
 import { ButtonEventDispatcher } from "gamecoreRender";
 import { UIAtlasName } from "picaRes";
-import { i18n, UIHelper } from "utils";
+import { UIHelper } from "utils";
 
 export class BackTextButton extends ButtonEventDispatcher {
     private titleTex: Phaser.GameObjects.Text;

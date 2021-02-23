@@ -1,5 +1,4 @@
 import { DynamicImage } from "./dynamic.image";
-import { op_client } from "pixelpai_proto";
 import { BBCodeText } from "apowophaserui";
 import { SoundButton } from "./soundButton";
 import { Font, Handler, Url } from "utils";
