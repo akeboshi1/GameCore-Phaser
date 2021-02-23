@@ -1,5 +1,5 @@
 
-import { BaseUI, NineSlicePatch } from "apowophaserui";
+import { BaseUI } from "apowophaserui";
 import { ThreeSlicePath } from ".";
 export class ProgressThreeBar extends BaseUI {
     public value: number = 0;

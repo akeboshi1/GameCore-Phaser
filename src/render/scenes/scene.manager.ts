@@ -4,7 +4,6 @@ import { LoadingTips } from "../loadqueue";
 import { Render } from "../render";
 import { BasicScene, SkyBoxScene, BaseSceneManager } from "baseRender";
 import { CreateRoleScene } from "./create.role.scene";
-import { DecorateScene } from "./decorate.scene";
 import { GamePauseScene } from "./game.pause.scene";
 import { LoadingScene } from "./loading.scene";
 import { LoginAccountScene } from "./login.account.scene";
@@ -12,6 +11,7 @@ import { LoginScene } from "./login.scene";
 import { MainUIScene } from "./main.ui.scene";
 import { PlayScene } from "./play.scene";
 import { RoomScene } from "./room.scene";
+import { DecorateScene } from "./decorate.scene";
 import { SelectRoleScene } from "./select.role.scene";
 
 export class SceneManager extends BaseSceneManager {

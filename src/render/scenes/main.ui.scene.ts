@@ -1,6 +1,6 @@
-import {BasicScene, BaseLayer} from "baseRender";
-import {Font, Size} from "utils";
-import {SceneName} from "structure";
+import { BasicScene, BaseLayer } from "baseRender";
+import { Font, Size } from "utils";
+import { SceneName } from "structure";
 
 export class MainUIScene extends BasicScene {
   public static readonly LAYER_UI = "uiLayer";
@@ -48,12 +48,12 @@ export class MainUIScene extends BasicScene {
     // this.checkSize(this.mRoom.world.getSize());
     // this.mRoom.world.game.scale.on("orientationchange", this.checkOriention, this);
     // this.scale.on("resize", this.checkSize, this);
-
     // set layers
     this.layerManager.addLayer(this, BaseLayer, MainUIScene.LAYER_UI, 1);
     this.layerManager.addLayer(this, BaseLayer, MainUIScene.LAYER_DIALOG, 2);
     this.layerManager.addLayer(this, BaseLayer, MainUIScene.LAYER_TOOLTIPS, 3);
     super.create();
+    // this.render.guideManager.init();
   }
 
   public setTimeout(caller, time): number {

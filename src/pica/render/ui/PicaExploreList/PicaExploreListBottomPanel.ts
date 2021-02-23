@@ -5,12 +5,12 @@ import { Handler, UIHelper } from "utils";
 import { op_client } from "pixelpai_proto";
 
 export class PicaExploreListBottomPanel extends Phaser.GameObjects.Container {
+    public chapterItems: ChapterItemProgress[] = [];
     private bg: Phaser.GameObjects.Image;
     private leftButton: Button;
     private rightButton: Button;
     private zoom: number;
     private dpr: number;
-    private chapterItems: ChapterItemProgress[] = [];
     private chapterProDatas: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_EXPLORE_CHAPTER_PROGRESS;
     private curChapterID: number = 0;
     private unlockChapterID: number = 0;

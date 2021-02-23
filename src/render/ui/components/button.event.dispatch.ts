@@ -1,4 +1,4 @@
-import { BaseUI, ButtonState, ClickEvent, ISoundGroup } from "apowophaserui";
+import { BaseUI, ClickEvent, ISoundGroup } from "apowophaserui";
 export class ButtonEventDispatcher extends BaseUI {
     protected soundGroup: any;
     protected mDownTime: number = 0;

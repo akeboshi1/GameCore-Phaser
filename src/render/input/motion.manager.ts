@@ -1,6 +1,6 @@
-import { Render } from "gamecoreRender";
+import { Render } from "../render";
 import { NodeType } from "../managers";
-import { MainUIScene } from "../scenes";
+import { MainUIScene } from "../scenes/main.ui.scene";
 import { Logger, LogicPos, Tool } from "utils";
 export class MotionManager {
     public enable: boolean;
