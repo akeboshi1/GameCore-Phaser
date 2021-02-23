@@ -9,11 +9,13 @@ export class DisplayObjectPool {
     private terrains = new Map();
     private mosses = new Map();
     private elements = new Map();
+    private walls = new Map();
 
     private readonly POOLOBJECTCONFIG = {
         terrains: BaseFramesDisplay,
         mosses: BaseFramesDisplay,
         elements: BaseFramesDisplay,
+        walls: BaseFramesDisplay,
     };
 
     constructor(private sceneEditor: SceneEditorCanvas) {}
@@ -22,7 +24,7 @@ export class DisplayObjectPool {
         return this[poolName];
     }
 
-    push(poolName: string, id: string, sprite: Sprite, manager: any) {
+    push(poolName: string, id: string, sprite: Sprite) {
         const pool = this[poolName];
 
         // const obj: BaseFramesDisplay = new this.POOLOBJECTCONFIG[poolName](sprite, manager);
@@ -31,7 +33,7 @@ export class DisplayObjectPool {
         if (obj.nodeType === op_def.NodeType.ElementNodeType || obj.nodeType === op_def.NodeType.MossType || obj.nodeType === op_def.NodeType.SpawnPointType) {
             obj.setInteractive();
             obj.setPosition(sprite.pos.x, sprite.pos.y);
-        } else if (obj.nodeType === op_def.NodeType.TerrainNodeType) {
+        } else if (obj.nodeType === op_def.NodeType.TerrainNodeType || obj.nodeType === op_def.NodeType.WallNodeType) {
             // layer = "groundLayer";
             const pos = Position45.transformTo90(new LogicPos(sprite.pos.x, sprite.pos.y), this.sceneEditor.roomSize);
             obj.setPosition(pos.x, pos.y);
@@ -61,7 +63,7 @@ export class DisplayObjectPool {
             // obj.setModel(newSprite);
             obj.clear();
             obj.updateSprite(newSprite);
-            if (obj.nodeType === op_def.NodeType.TerrainNodeType) {
+            if (obj.nodeType === op_def.NodeType.TerrainNodeType || obj.nodeType === op_def.NodeType.WallNodeType) {
                 const pos = Position45.transformTo90(new LogicPos(newSprite.pos.x, newSprite.pos.y), this.sceneEditor.roomSize);
                 obj.setPosition(pos.x, pos.y);
             }

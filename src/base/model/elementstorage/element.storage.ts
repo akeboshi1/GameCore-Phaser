@@ -8,10 +8,11 @@ import {
     AnimationDataNode,
     MossNode,
     AssetsNode,
+    WallCollectionNode,
 } from "game-capsule";
 import { op_def } from "pixelpai_proto";
 import { MossCollectionNode } from "game-capsule";
-import { Logger, Url } from "utils";
+import { Logger, ResUtils, Url } from "utils";
 import { AnimationModel, IDragonbonesModel, IFramesModel, IScenery} from "structure";
 import { FramesModel } from "../frames.model";
 import { DragonbonesModel } from "../dragonbones.model";
@@ -53,6 +54,7 @@ export class ElementStorage implements IElementStorage {
     private mossPalette = new Map<number, {layer: number, frameModel: FramesModel}>();
     private _terrainCollection: TerrainCollectionNode;
     private _mossCollection: MossCollectionNode;
+    private _wallCollection: WallCollectionNode;
     private _scenerys: IScenery[];
     private _assets: IAsset[];
 
@@ -210,6 +212,7 @@ export class ElementStorage implements IElementStorage {
 
         this._terrainCollection = sceneNode.terrainCollection;
         this._mossCollection = sceneNode.mossCollection;
+        this._wallCollection = sceneNode.wallCollection;
         this._scenerys = sceneNode.getScenerys();
         // const scenerys = sceneNode.getScenerys();
         // this._scenerys = [];
@@ -263,6 +266,10 @@ export class ElementStorage implements IElementStorage {
 
     public getAssets(): IAsset[] {
         return this._assets;
+    }
+
+    public getWallCollection() {
+        return this._wallCollection;
     }
 
     public destroy() {

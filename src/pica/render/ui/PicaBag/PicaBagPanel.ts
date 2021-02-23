@@ -826,7 +826,7 @@ class DetailBubble extends Phaser.GameObjects.Container {
       if (prop.source) {
         // source = `${i18n.t("furni_bag.source")}：${prop.source}`;
         source = `${prop.source}`;
-        tips += `[color=#ffffff][size=${12 * this.dpr}]${source}[/size][/color]`;
+        tips += `\n[color=#ffffff][size=${12 * this.dpr}]${source}[/size][/color]`;
         this.tipsText.text = source;
         mixWidth = mixWidth < this.tipsText.width ? this.tipsText.width : mixWidth;
       }

@@ -2,7 +2,7 @@ import { op_client, op_gameconfig } from "pixelpai_proto";
 import { GameGridTable, GameScroller, NineSliceButton, ClickEvent, Button, BBCodeText } from "apowophaserui";
 import { BasePanel, DynamicImage, ItemInfoTips, UiManager } from "gamecoreRender";
 import { DetailDisplay } from "../Components/detail.display";
-import { ModuleName } from "structure";
+import { AvatarSuitType, ModuleName } from "structure";
 import { UIAtlasKey, UIAtlasName } from "picaRes";
 import { Font, Handler, i18n, Url } from "utils";
 import { ICountablePackageItem } from "picaStructure";
@@ -219,12 +219,6 @@ export class PicaComposePanel extends BasePanel {
         }
     }
 
-    // public setComposeDetialData(data: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_CRAFT_QUERY_FORMULA) {
-    //     this.mDetailBubble.setDetailData(data.productName, data.productDes);
-    //     this.setDetailDisplay(data);
-    //     this.setMaterialItems(data.materials);
-    // }
-
     public setComposeDetialData(data: op_client.IPKT_CRAFT_SKILL) {
         this.mDetailBubble.setDetailData(data.productName, data.productDes);
         this.setDetailDisplay(data);
@@ -251,7 +245,6 @@ export class PicaComposePanel extends BasePanel {
 
     private onSelectItemHandler(item: ComposeItem) {
         const data = item.itemData;
-        // this.emit("reqformula", data.id);
         this.mSelectItemData = item.itemData;
         this.makeBtn.enable = data.skill.active && data.skill.qualified;
         if (this.mSelectItem) this.mSelectItem.select = false;

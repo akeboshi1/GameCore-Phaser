@@ -112,7 +112,9 @@ export class BaseDataConfigManager extends BaseConfigManager {
             if (data.hasOwnProperty(key)) {
                 const element = data[key];
                 if (element.className === "FurnitureItem" && element.rarity === 1) {
-                    temp.push(this.getItemBase(element.id));
+                    const item = this.getItemBase(element.id);
+                    if (item)
+                        temp.push(item);
                 }
             }
         }
@@ -137,7 +139,7 @@ export class BaseDataConfigManager extends BaseConfigManager {
             if (level.clueItems) {
                 for (const clue of level.clueItems) {
                     const item = this.getItemBase(clue.itemId);
-                    Object.assign(clue, item);
+                    if (item) Object.assign(clue, item);
                 }
             }
             level["find"] = true;
@@ -173,11 +175,13 @@ export class BaseDataConfigManager extends BaseConfigManager {
         const temp = data.get(id);
         if (temp && !temp["find"]) {
             const item = this.getItemBase(temp.itemId);
-            temp.name = item.name;
-            temp.icon = item.texturePath;
-            temp.source = item.source;
-            temp["find"] = true;
-            ObjectAssign.excludeTagAssign(temp, item);
+            if (item) {
+                temp.name = item.name;
+                temp.icon = item.texturePath;
+                temp.source = item.source;
+                temp["find"] = true;
+                ObjectAssign.excludeTagAssign(temp, item);
+            }
         }
         return temp;
     }
@@ -188,8 +192,8 @@ export class BaseDataConfigManager extends BaseConfigManager {
         temp.name = this.getI18n(temp.name);
         temp.des = this.getI18n(temp.des);
 
-        const item = {id: "IV0000001", countRange: temp["coinRange"]};
-        temp.rewards = [ this.synItemBase(item) ];
+        const item = { id: "IV0000001", countRange: temp["coinRange"] };
+        temp.rewards = [this.synItemBase(item)];
 
         temp.requirements = [];
         if (temp["attrRequirements"]) {
@@ -293,8 +297,7 @@ export class BaseDataConfigManager extends BaseConfigManager {
                     const item = this.getItemBase(shopitem.itemId);
                     tempItem.name = this.getI18n(shopitem.name);
                     tempItem.source = this.getI18n(shopitem.source);
-                    tempItem["des"] = item.des;
-                    // const valueItem = this.getItemBase(shopitem.currencyId);
+                    tempItem["des"] = item ? item.des : "";
                     tempItem["price"] = [{
                         price: shopitem.price,
                         coinType: itemconfig.getCoinType(shopitem.currencyId),
@@ -303,7 +306,7 @@ export class BaseDataConfigManager extends BaseConfigManager {
                     shopitem["find"] = true;
                     shopitem["exclude"] = data.excludes;
                     if (shopitem.icon === "" || shopitem.icon === undefined)
-                        shopitem.icon = item.texturePath;
+                        shopitem.icon = item ? item.texturePath : undefined;
                     ObjectAssign.excludeTagAssign(shopitem, item);
                 }
             }

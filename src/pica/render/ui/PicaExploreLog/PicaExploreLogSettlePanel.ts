@@ -146,7 +146,7 @@ export class PicaExploreLogSettlePanel extends ButtonEventDispatcher {
         this.maskGraphic.fillStyle(0);
         this.maskGraphic.fillRect(-maskW * 0.5 * this.zoom, -maskH * 0.5 * this.zoom, maskW * this.zoom, maskH * this.zoom);
         const worldpos = this.getWorldTransformMatrix();
-        const offsety = height * 0.5 + 30 * this.dpr;
+        const offsety = height * 0.5 + 50 * this.dpr;
         this.maskGraphic.setPosition(worldpos.tx, worldpos.ty + offsety);
         this.curLayoutGroup.setMask(this.maskGraphic.createGeometryMask());
     }

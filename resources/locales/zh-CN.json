@@ -136,7 +136,8 @@
     "side": "【支线】",
     "daily": "【每日】",
     "receive": "领取",
-    "go": "前往"
+    "go": "前往",
+    "notasktip": "暂时没有新任务~"
   },
   "furni_unlock": {
     "unlock": "修 复",

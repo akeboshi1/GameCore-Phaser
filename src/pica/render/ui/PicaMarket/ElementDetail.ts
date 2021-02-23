@@ -240,7 +240,8 @@ class DetailBubble extends Phaser.GameObjects.Container {
         top: 2 * dpr
       }
     }).setOrigin(0);
-    this.tipsText.setWrapMode("string");
+    this.tipsText.setWrapMode("char");
+    this.tipsText.setWrapWidth(100 * dpr);
     this.mExpires = new BBCodeText(scene, 7 * dpr, 85 * dpr, "", {
       fontSize: 10 * this.dpr,
       fontFamily: Font.DEFULT_FONT,
@@ -256,14 +257,14 @@ class DetailBubble extends Phaser.GameObjects.Container {
       this.mExpires.text = "";
       this.resize();
     } else {
-      this.tipsText.setWrapWidth(undefined);
+      // this.tipsText.setWrapWidth(undefined);
       const name = `[color=#32347b][b][size=${14 * this.dpr}]${prop.shortName || prop.name}[/size][/b][/color]`;
       // let price = "";
       // let source = "";
       let describle = "";
       let attri = "";
       let need = "";
-      let tips = name + "\n";
+      let tips = name;
       let maxWidth: number = 100 * this.dpr;
       // if (prop.price && prop.price.length > 0) {
       //   price = `${i18n.t("furni_bag.sale_price")}：[img=${Coin.getIcon(prop.price[0].coinType)}] x${prop.price[0].price}`;
@@ -322,9 +323,9 @@ class DetailBubble extends Phaser.GameObjects.Container {
           tips += `\n${i18n.t("furni_bag.needproper")}:${need}`;
         }
       }
-      this.tipsText.setWrapWidth(maxWidth);
+      // this.tipsText.setWrapWidth(maxWidth);
       this.tipsText.text = tips;
-      this.width = maxWidth + 14 * this.dpr;
+      this.width = this.tipsText.width + 14 * this.dpr;
       // if (prop.expiredTime > 0) {
       //   if (!isline) {
       //     isline = true;

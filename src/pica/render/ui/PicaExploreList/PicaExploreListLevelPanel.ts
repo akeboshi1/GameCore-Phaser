@@ -335,8 +335,11 @@ class ChapterLevelItem extends ChapterLevelBaseItem {
             item.visible = true;
             if (data["star"] > star) {
                 item.setTexture(UIAtlasName.explorelog, "explore_unknown_clue");
-            } else
+                item.enable = false;
+            } else {
                 item.setItemData(data);
+                item.enable = true;
+            }
         }
         this.setLayoutItems(datas.length);
     }
