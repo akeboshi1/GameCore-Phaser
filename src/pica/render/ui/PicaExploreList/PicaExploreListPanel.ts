@@ -1,9 +1,9 @@
 import { op_client } from "pixelpai_proto";
 import { CommonBackground, UiManager } from "gamecoreRender";
-import { ClickEvent, NineSliceButton } from "apowophaserui";
+import { ClickEvent } from "apowophaserui";
 import { ModuleName } from "structure";
 import { UIAtlasName } from "picaRes";
-import { Font, Handler, i18n, UIHelper, Url } from "utils";
+import { Handler, i18n } from "utils";
 import { PicaBasePanel } from "../pica.base.panel";
 import { PicaExploreListDetailPanel } from "./PicaExploreListDetailPanel";
 import { BackTextButton, EnergyProgressBar } from "../Components";
@@ -11,6 +11,7 @@ import { PicaExploreListBottomPanel } from "./PicaExploreListBottomPanel";
 import { PicaExploreListLevelPanel } from "./PicaExploreListLevelPanel";
 
 export class PicaExploreListPanel extends PicaBasePanel {
+    public bottomPanel: PicaExploreListBottomPanel;
     private bg: CommonBackground;
     private topbg: Phaser.GameObjects.Image;
     private midbg: Phaser.GameObjects.Image;
@@ -18,7 +19,6 @@ export class PicaExploreListPanel extends PicaBasePanel {
     private energyProgress: EnergyProgressBar;
 
     private levelPanel: PicaExploreListLevelPanel;
-    private bottomPanel: PicaExploreListBottomPanel;
     private detialPanel: PicaExploreListDetailPanel;
     constructor(uiManager: UiManager) {
         super(uiManager);

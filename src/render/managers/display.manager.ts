@@ -13,7 +13,6 @@ import { op_def } from "pixelpai_proto";
 import { MatterBodies } from "../display/debugs/matter";
 import { ServerPosition } from "../display/debugs/server.pointer";
 import { BasicScene } from "baseRender";
-import { FallEffect } from "picaRender";
 import { IDisplayObject } from "../display";
 import {Astar} from "../display/debugs/astar";
 import {Grids} from "../display/debugs/grids";
@@ -74,7 +73,7 @@ export class DisplayManager {
     // ====实例id
     private uuid: number = 0;
 
-    constructor(private render: Render) {
+    constructor(protected render: Render) {
         this.sceneManager = render.sceneManager;
         this.displays = new Map();
         this.scenerys = new Map();
@@ -221,11 +220,11 @@ export class DisplayManager {
     }
 
     public addFillEffect(x: number, y: number, status: op_def.PathReachableStatus) {
-        const mainScene: BasicScene = this.render.sceneManager.getMainScene() as BasicScene;
-        const fall = new FallEffect(mainScene, this.render.scaleRatio);
-        fall.show(status);
-        fall.setPosition(x, y);
-        mainScene.layerManager.addToLayer("sceneUILayer", fall);
+        // const mainScene: BasicScene = this.render.sceneManager.getMainScene() as BasicScene;
+        // const fall = new FallEffect(mainScene, this.render.scaleRatio);
+        // fall.show(status);
+        // fall.setPosition(x, y);
+        // mainScene.layerManager.addToLayer("sceneUILayer", fall);
     }
 
     public load(displayID: number, data: any, field?: DisplayField) {

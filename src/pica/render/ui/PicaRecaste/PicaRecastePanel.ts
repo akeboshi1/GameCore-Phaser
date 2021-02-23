@@ -2,7 +2,7 @@ import { NineSliceButton, GameGridTable, GameScroller, Button, NineSlicePatch, C
 import { ButtonEventDispatcher, CommonBackground, ImageValue, Render, TextButton, UiManager } from "gamecoreRender";
 import { DetailDisplay, ItemButton } from "picaRender";
 import { UIAtlasName } from "picaRes";
-import { AvatarSuitType, ModuleName } from "structure";
+import { ModuleName } from "structure";
 import { Font, Handler, i18n, UIHelper, Url } from "utils";
 import { op_client, op_def, op_pkt_def } from "pixelpai_proto";
 import { PicaBasePanel } from "../pica.base.panel";
