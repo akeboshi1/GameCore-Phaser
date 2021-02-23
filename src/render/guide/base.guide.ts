@@ -10,7 +10,7 @@ export class BaseGuide implements IGuide {
     public guideEffect: GuideEffect;
     protected scene: Phaser.Scene;
     protected uiManager: UiManager;
-    constructor(id: number, render: Render) {
+    constructor(id: number, protected render: Render) {
         this.id = id;
         this.scene = render.sceneManager.getSceneByName(SceneName.MAINUI_SCENE) as MainUIScene;
         this.uiManager = render.uiManager;

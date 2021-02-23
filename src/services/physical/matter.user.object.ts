@@ -1,4 +1,4 @@
-import {DirectionChecker, IPos, Logger, LogicPos, Tool} from "utils";
+import { DirectionChecker, IPos, Logger, LogicPos, Tool } from "utils";
 import { delayTime, PhysicalPeer } from "../physical.worker";
 import { IMoveTarget, MatterPlayerObject, MovePos } from "./matter.player.object";
 import { op_def } from "pixelpai_proto";
@@ -107,7 +107,7 @@ export class MatterUserObject extends MatterPlayerObject {
         // const vec = path[0] - pos;
         // vec.normalize * speed;
         const angle = Math.atan2((path[0].y - pos.y), (path[0].x - pos.x));
-        const speed = this.mModel.speed * delayTime;
+        const speed = this.mModel.speed * delayTime * 2;
         this.setVelocity(Math.cos(angle) * speed, Math.sin(angle) * speed);
     }
 

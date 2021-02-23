@@ -5,7 +5,8 @@ import { SceneName } from "structure";
 export class MainUIScene extends BasicScene {
   public static readonly LAYER_UI = "uiLayer";
   public static readonly LAYER_DIALOG = "dialogLayer";
-  public static readonly LAYER_TOOLTIPS = "toolTipsLyaer";
+  public static readonly LAYER_TOOLTIPS = "toolTipsLayer";
+  public static readonly LAYER_MASK = "maskLayer";
   private timeOutID = 0;
   private timeOutCancelMap = {};
   private timeOutCallerList = [];
@@ -52,6 +53,7 @@ export class MainUIScene extends BasicScene {
     this.layerManager.addLayer(this, BaseLayer, MainUIScene.LAYER_UI, 1);
     this.layerManager.addLayer(this, BaseLayer, MainUIScene.LAYER_DIALOG, 2);
     this.layerManager.addLayer(this, BaseLayer, MainUIScene.LAYER_TOOLTIPS, 3);
+    this.layerManager.addLayer(this, BaseLayer, MainUIScene.LAYER_MASK, 4);
     super.create();
     // this.render.guideManager.init();
   }
