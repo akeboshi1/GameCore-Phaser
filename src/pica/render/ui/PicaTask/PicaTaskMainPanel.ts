@@ -1,7 +1,7 @@
 import { ClickEvent, GameScroller, NineSlicePatch } from "apowophaserui";
 import { ButtonEventDispatcher, DynamicImage, ItemInfoTips, ProgressThreeBar } from "gamecoreRender";
 import { UIAtlasName } from "picaRes";
-import { Font, Handler, Url } from "utils";
+import { Font, Handler, i18n, UIHelper, Url } from "utils";
 import { op_client, op_pkt_def } from "pixelpai_proto";
 import { PicaTaskItem } from "./PicaTaskItem";
 import { PicaItemTipsPanel } from "../SinglePanel/PicaItemTipsPanel";
@@ -14,6 +14,7 @@ export class PicaTaskMainPanel extends Phaser.GameObjects.Container {
     private mainItem: MainTaskItem;
     private mainTaskAnimation: MainTaskAnimation;
     private itemTips: ItemInfoTips;
+    private notaskTip: Phaser.GameObjects.Container;
     private dpr: number;
     private zoom: number;
     private send: Handler;
@@ -37,17 +38,22 @@ export class PicaTaskMainPanel extends Phaser.GameObjects.Container {
         if (this.mainItem) this.mainItem.refreshMask();
     }
     setTaskDatas(content: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_QUERY_QUEST_GROUP, questType: op_pkt_def.PKT_Quest_Type) {
+        this.gameScroller.clearItems(false);
         if (!content.id) {
             // console.log("没有新任务了");
+            this.notaskTip.visible = true;
+            this.gameScroller.visible = false;
             return;
         }
+        this.notaskTip.visible = false;
+        this.gameScroller.visible = true;
         if (this.curTaskItem) this.curTaskItem.setExtend(false);
         if (!this.mainItem) {
             this.mainItem = new MainTaskItem(this.scene, 272 * this.dpr, 126 * this.dpr, this.dpr, this.zoom);
-            this.gameScroller.addItem(this.mainItem);
             this.mainItem.setHandler(new Handler(this, this.onRewardHandler));
         }
         this.mainItem.setMainTaskData(content, questType);
+        this.gameScroller.addItem(this.mainItem);
         if (this.questType !== questType) {
             const tempArr = this.getTaskQuests(content.quests, undefined);
             this.setTaskItems(tempArr);
@@ -95,10 +101,10 @@ export class PicaTaskMainPanel extends Phaser.GameObjects.Container {
                 item = this.taskItems[i];
             } else {
                 item = new PicaTaskItem(this.scene, this.dpr, this.zoom);
-                this.gameScroller.addItem(item);
                 item.setHandler(new Handler(this, this.onTaskItemHandler));
                 this.taskItems.push(item);
             }
+            this.gameScroller.addItem(item);
             item.setTaskData(quests[i]);
             item.visible = true;
             item.x = 0;
@@ -156,7 +162,14 @@ export class PicaTaskMainPanel extends Phaser.GameObjects.Container {
         });
         this.itemTips = new ItemInfoTips(this.scene, 121 * this.dpr, 46 * this.dpr, UIAtlasName.uicommon, "tips_bg", this.dpr);
         this.itemTips.setVisible(false);
-        this.add([this.gameScroller, this.itemTips]);
+        const tipimg = this.scene.make.image({ key: UIAtlasName.uicommon, frame: "task_no" });
+        const tiptext = this.scene.make.text({ text: i18n.t("task.notasktip"), style: UIHelper.whiteStyle(this.dpr) }).setOrigin(0.5);
+        tiptext.y = tipimg.height * 0.5 + 15 * this.dpr;
+        this.notaskTip = this.scene.make.container(undefined);
+        this.notaskTip.add([tipimg, tiptext]);
+        this.notaskTip.y = -this.height * 0.5 + 100 * this.dpr;
+        this.notaskTip.visible = false;
+        this.add([this.gameScroller, this.itemTips, this.notaskTip]);
     }
 
     private onPointerUpHandler(gameobject) {
