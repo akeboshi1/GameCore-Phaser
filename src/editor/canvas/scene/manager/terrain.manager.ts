@@ -1,6 +1,7 @@
 import { PacketHandler, PBpacket } from "net-socket-packet";
 import { op_def, op_client, op_editor } from "pixelpai_proto";
-import { IPos, LogicPos } from "utils";
+import { ThreeSliceButton } from "src/render/ui";
+import { IPos } from "utils";
 import { SceneEditorCanvas } from "../scene.editor.canvas";
 
 export class EditorTerrainManager extends PacketHandler {
@@ -89,6 +90,11 @@ export class EditorTerrainManager extends PacketHandler {
     removeFromMap() {
     }
 
+    existTerrain(x: number, y: number) {
+        const locId = this.genLocId(x, y);
+        return this.mEditorTerrains.has(locId);
+    }
+
     protected handleAddTerrains(packet: PBpacket) {
         const content: op_client.IOP_EDITOR_REQ_CLIENT_ADD_SPRITES_WITH_LOCS = packet.content;
         const locs = content.locs;
@@ -168,7 +174,7 @@ export class EditorTerrainManager extends PacketHandler {
                     z: 0
                 });
                 this.mEditorTerrains.set(locId, loc.key);
-                this.sceneEditor.displayObjectPool.push("terrains", locId, sprite, this);
+                this.sceneEditor.displayObjectPool.push("terrains", locId, sprite);
             } else if (action === "DELETE") {
                 this.mEditorTerrains.delete(locId);
                 this.sceneEditor.displayObjectPool.remove("terrains", locId);

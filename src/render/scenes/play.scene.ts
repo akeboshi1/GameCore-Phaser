@@ -16,6 +16,7 @@ export class PlayScene extends RoomScene {
     public static LAYER_MIDDLE = "middleLayer";
     public static LAYER_FLOOR = LayerEnum.Floor.toString();
     public static LAYER_SURFACE = LayerEnum.Surface.toString();
+    public static LAYER_WALL = LayerEnum.Wall.toString();
     public static LAYER_ATMOSPHERE = "atmosphere";
     public static LAYER_SCENEUI = "sceneUILayer";
     protected motionManager: MotionManager;
@@ -76,6 +77,7 @@ export class PlayScene extends RoomScene {
         this.layerManager.addLayer(this, BaseLayer, PlayScene.LAYER_GROUND2, 2);
 
         // ==========舞台层
+        this.layerManager.addLayer(this, GroundLayer, PlayScene.LAYER_WALL, 2).setScale(this.render.scaleRatio);
         this.layerManager.addLayer(this, GroundLayer, PlayScene.LAYER_GROUND, 3).setScale(this.render.scaleRatio);
         this.layerManager.addLayer(this, BaseLayer, PlayScene.LAYER_MIDDLE, 4).setScale(this.render.scaleRatio);
         this.layerManager.addLayer(this, GroundLayer, PlayScene.LAYER_FLOOR, 4).setScale(this.render.scaleRatio);
