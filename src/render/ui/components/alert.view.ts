@@ -4,8 +4,9 @@ import { Font, i18n } from "utils";
 import { UiManager } from "../ui.manager";
 import { BasePanel } from "./base.panel";
 import { MainUIScene } from "../../scenes/main.ui.scene";
+import { BaseBatchPanel } from "./base.batch.panel";
 
-export class AlertView extends BasePanel {
+export class AlertView extends BaseBatchPanel {
     private mOkBtn: Button;
     private mCancelBtn: Button;
     private mContent: BBCodeText;
