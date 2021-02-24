@@ -3,6 +3,7 @@ import { BasePanel, UiManager } from "gamecoreRender";
 import { UIAtlasName } from "picaRes";
 import { op_client } from "pixelpai_proto";
 import { ModuleName } from "structure";
+import { Handler } from "utils";
 import { PicaBasePanel } from "../pica.base.panel";
 import { PicaFurniUnlockEffectPanel } from "./PicaFurniUnlockEffectPanel";
 import { PicaLevelUpEffectPanel } from "./PicaLevelUpEffectPanel";
@@ -59,10 +60,12 @@ export class PicaEffectMgrPanel extends PicaBasePanel {
                 if (!this.levelupEffectPanel) {
                     this.levelupEffectPanel = new PicaLevelUpEffectPanel(this.scene, this.scaleWidth, this.scaleHeight, this.dpr, this.scale);
                     this.content.add(this.levelupEffectPanel);
+                    this.levelupEffectPanel.setHandler(new Handler(this, () => {
+
+                    }));
                 }
                 this.levelupEffectPanel.visible = true;
-                this.levelupEffectPanel.setLevelUpData(data[0]);
-                this.levelupEffectPanel.playAnimation();
+                this.levelupEffectPanel.setLevelUpData(data);
             }
         }
     }

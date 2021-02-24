@@ -13,6 +13,9 @@ export class PicaLevelUpEffectPanel extends Phaser.GameObjects.Container {
     private levelTex: Phaser.GameObjects.Text;
     private tipTex: Phaser.GameObjects.Text;
     private tipCon: Phaser.GameObjects.Container;
+    private sendHander: Handler;
+    private effectQueue: any[] = [];
+    private isPlaying: boolean = false;
     constructor(scene: Phaser.Scene, width: number, height: number, dpr: number, zoom: number) {
         super(scene);
         this.setSize(width, height);
@@ -26,38 +29,52 @@ export class PicaLevelUpEffectPanel extends Phaser.GameObjects.Container {
         const maskW = 592 * this.dpr, maskH = 370 * this.dpr;
         this.maskBlack.fillStyle(0, 1);
         this.maskBlack.fillRect(0, 0, maskW, maskH);
-        const masky = -this.height * 0.5 + 50 * this.dpr;
-        this.maskBlack.y = 50 * this.dpr / this.zoom;
+        const masky = -this.height * 0.5 + 0 * this.dpr;
+        this.maskBlack.y = 0 * this.dpr / this.zoom;
         this.maskBlack.x = -maskW * 0.5;
         this.content.y = masky + maskH;
         this.tipCon.x = -this.width * 0.5;
-        this.tipCon.y = masky + maskH * 0.8 + 5 * this.dpr + this.tipCon.height * 0.5;
+        this.tipCon.y = masky + maskH * 0.8 - 65 * this.dpr + this.tipCon.height * 0.5;
         this.content.visible = false;
         this.tipCon.visible = false;
     }
+
+    public setHandler(send: Handler) {
+        this.sendHander = send;
+    }
     public setLevelUpData(data) {
-        this.tipTex.text = i18n.t("effecttips.unlock", { name: "[合成]" });
-        this.levelTex.text = data.level + "";
+        this.effectQueue = this.effectQueue.concat(data);
+        this.playNext();
     }
 
-    public playAnimation() {
-        const maskW = 592 * this.dpr, maskH = 370 * this.dpr;
-        const masky = -this.height * 0.5 + 50 * this.dpr;
-        const from = masky + maskH * 0.8;
-        const to = masky + maskH * 0.5;
-        UIHelper.playtPosYTween(this.scene, this.content, from, to, 300, "Bounce.easeOut", 0, new Handler(this, () => {
-            this.lightSprite.play("light");
-            this.lightSprite.visible = true;
-            setTimeout(() => {
-                if (!this.scene) return;
-                this.tipCon.visible = true;
-                const xfrom = -this.width * 0.5, xto = 0;
-                this.tipCon.x = xfrom;
-                UIHelper.playtPosXTween(this.scene, this.tipCon, xfrom, xto, 200, "Bounce.easeOut");
-            }, 900);
-        }));
-        this.wingSprite.play("wing");
-        this.content.visible = true;
+    public playNext() {
+        if (this.isPlaying) return;
+        if (this.effectQueue.length > 0) {
+            this.visible = true;
+            const data = this.effectQueue.shift();
+            this.tipTex.text = i18n.t("effecttips.unlock", { name: "[合成]" });
+            this.levelTex.text = data.level + "";
+            const maskW = 592 * this.dpr, maskH = 370 * this.dpr;
+            const masky = -this.height * 0.5 + 0 * this.dpr;
+            const from = masky + maskH * 0.8;
+            const to = masky + maskH * 0.5 - 70 * this.dpr;
+            UIHelper.playtPosYTween(this.scene, this.content, from, to, 300, "Bounce.easeOut", 0, new Handler(this, () => {
+                this.lightSprite.play("light");
+                this.lightSprite.visible = true;
+                setTimeout(() => {
+                    if (!this.scene) return;
+                    this.tipCon.visible = true;
+                    const xfrom = -this.width * 0.5, xto = 0;
+                    this.tipCon.x = xfrom;
+                    UIHelper.playtPosXTween(this.scene, this.tipCon, xfrom, xto, 200, "Bounce.easeOut");
+                }, 900);
+            }));
+            this.wingSprite.play("wing");
+            this.content.visible = true;
+            this.isPlaying = true;
+        } else {
+            if (this.sendHander) this.sendHander.run();
+        }
     }
 
     public destroy() {
@@ -116,6 +133,8 @@ export class PicaLevelUpEffectPanel extends Phaser.GameObjects.Container {
             this.content.visible = false;
             this.lightSprite.visible = false;
             this.yuSprite.visible = false;
+            this.isPlaying = false;
+            this.playNext();
         }));
     }
 }
