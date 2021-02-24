@@ -26,7 +26,7 @@ export class DecorateScene extends PlayScene {
 
     }
 
-    protected initInput() {
+    protected initMotion() {
         this.mDecorateManager = new DecorateManager(this, this.render);
     }
 

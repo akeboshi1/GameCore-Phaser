@@ -1,22 +1,24 @@
-import { PacketHandler, PBpacket } from "net-socket-packet";
-import { op_client, op_def, op_gameconfig } from "pixelpai_proto";
+import {PacketHandler, PBpacket} from "net-socket-packet";
+import {op_client, op_def, op_gameconfig} from "pixelpai_proto";
 import NodeType = op_def.NodeType;
-import { Player } from "./player";
-import { IElementManager } from "../element/element.manager";
-import { User } from "../../actor/user";
-import { IRoomService, Room } from "../room/room";
-import { PlayerModel } from "./player.model";
-import { ISprite } from "structure";
-import { AvatarSuitType, EventType, MessageType, PlayerState } from "structure";
-import { LogicPos, Logger } from "utils";
-import { ConnectionService } from "../../../../lib/net/connection.service";
-import { IElement } from "../element/element";
-import { PlayerElementAction } from "../elementaction/player.element.action";
-import { Sprite } from "baseModel";
+import {Player} from "./player";
+import {IElementManager} from "../element/element.manager";
+import {User} from "../../actor/user";
+import {IRoomService, Room} from "../room/room";
+import {PlayerModel} from "./player.model";
+import {ISprite} from "structure";
+import {AvatarSuitType, EventType, MessageType, PlayerState} from "structure";
+import {LogicPos, Logger} from "utils";
+import {ConnectionService} from "../../../../lib/net/connection.service";
+import {IElement} from "../element/element";
+import {PlayerElementAction} from "../elementaction/player.element.action";
+import {Sprite} from "baseModel";
+
 export class PlayerManager extends PacketHandler implements IElementManager {
     public hasAddComplete: boolean = false;
     private mActor: User;
     private mPlayerMap: Map<number, Player> = new Map();
+
     constructor(private mRoom: Room) {
         super();
         if (this.connection) {
@@ -101,6 +103,7 @@ export class PlayerManager extends PacketHandler implements IElementManager {
     has(id: number) {
         return this.mPlayerMap.has(id);
     }
+
     add(sprite: ISprite[]) {
     }
 
@@ -122,11 +125,14 @@ export class PlayerManager extends PacketHandler implements IElementManager {
         this.mPlayerMap.set(user.id, user);
     }
 
-    public addToMap(sprite: ISprite) { }
+    public addToMap(sprite: ISprite) {
+    }
 
-    public removeFromMap(sprite: ISprite) { }
+    public removeFromMap(sprite: ISprite) {
+    }
 
-    public resetWalkable(sprite: ISprite) { }
+    public resetWalkable(sprite: ISprite) {
+    }
 
     public getElements(): IElement[] {
         return Array.from(this.mPlayerMap.values());
@@ -167,6 +173,7 @@ export class PlayerManager extends PacketHandler implements IElementManager {
             element.play(aniName, times);
         }
     }
+
     // public addPlayer(obj: op_client.IActor): void {
     //     const playerInfo: PlayerInfo = new PlayerInfo();
     //     playerInfo.setInfo(obj);
@@ -208,18 +215,20 @@ export class PlayerManager extends PacketHandler implements IElementManager {
 
     public onDisplayCreated(id: number) {
     }
+
     public onDisplayRemoved(id: number) {
     }
 
-    public hideAll(){
+    public hideAll() {
         this.mPlayerMap.forEach((val, key) => {
             this.mRoom.game.renderPeer.SetDisplayVisible(val.id, false);
-        })
+        });
     }
+
     public showAll() {
         this.mPlayerMap.forEach((val, key) => {
             this.mRoom.game.renderPeer.SetDisplayVisible(val.id, true);
-        })
+        });
     }
 
     private onSync(packet: PBpacket) {
@@ -299,7 +308,7 @@ export class PlayerManager extends PacketHandler implements IElementManager {
     private checkSuitAvatarSprite(sprite: op_client.ISprite) {
         if (this.mRoom.game.avatarType === op_def.AvatarStyle.SuitType) {
             if (!AvatarSuitType.hasAvatarSuit(sprite["attrs"])) {
-                if (!sprite.avatar) sprite.avatar = <any>(AvatarSuitType.createBaseAvatar());
+                if (!sprite.avatar) sprite.avatar = <any> (AvatarSuitType.createBaseAvatar());
             }
         }
     }
@@ -334,8 +343,8 @@ export class PlayerManager extends PacketHandler implements IElementManager {
                 player = this.get(playID);
                 if (player) {
                     // player.move(moveData);
-                    const { x, y } = moveData.destinationPoint3f;
-                    player.move([{ x, y }]);
+                    const {x, y} = moveData.destinationPoint3f;
+                    player.move([{x, y}]);
                 }
             }
         }
@@ -413,15 +422,15 @@ export class PlayerManager extends PacketHandler implements IElementManager {
         let player: Player = null;
         for (const sprite of sprites) {
             if (sprite.id === this.mActor.id) {
-                this.mActor.move([{ x: sprite.point3f.x, y: sprite.point3f.y }]);
+                this.mActor.move([{x: sprite.point3f.x, y: sprite.point3f.y}]);
                 continue;
             }
             player = this.get(sprite.id);
             if (player) {
                 // player.updateModel(sprite);
                 // player.stopMove();
-                const { point3f, direction } = sprite;
-                player.stopAt({ x: point3f.x, y: point3f.y, stopDir: direction });
+                const {point3f, direction} = sprite;
+                player.stopAt({x: point3f.x, y: point3f.y, stopDir: direction});
             }
         }
     }
@@ -442,6 +451,7 @@ export class PlayerManager extends PacketHandler implements IElementManager {
         const ele = this.get(id);
         this.mRoom.game.emitter.emit(EventType.SCENE_RETURN_FIND_ELEMENT, ele);
     }
+
     private checkPlayerAction(id: number) {
         if (this.has(id) && id !== this.mRoom.game.user.id) {
             const ele = this.get(id);
@@ -449,12 +459,14 @@ export class PlayerManager extends PacketHandler implements IElementManager {
             action.executeAction();
         }
     }
+
     private onActiveSpriteHandler(packet: PBpacket) {
         const content: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_ACTIVE_SPRITE = packet.content;
         if (this.has(content.targetId)) {
             this.onActiveSprite(content.spriteId, content.param);
         }
     }
+
     private onActiveSpriteEndHandler(packet: PBpacket) {
         const content: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_ACTIVE_SPRITE_END = packet.content;
         const playerid = content.spriteId;

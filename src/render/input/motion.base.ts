@@ -2,7 +2,14 @@ import { Render } from "../render";
 import { NodeType } from "../managers";
 import { MainUIScene } from "../scenes/main.ui.scene";
 import { Logger, LogicPos, Tool } from "utils";
-export class MotionManager {
+
+export enum MotionType {
+    Base,
+    Decorate
+}
+
+export class MotionBase {
+    public type: MotionType = MotionType.Base;
     public enable: boolean;
     private scaleRatio: number;
     private scene: Phaser.Scene;
@@ -12,7 +19,7 @@ export class MotionManager {
     private holdDelay: number = 200;
     private curtime: number;
     // private curDirection: number = 0;
-    constructor(private render: Render) {
+    constructor(protected render: Render) {
         this.scaleRatio = render.scaleRatio;
     }
 
@@ -78,6 +85,66 @@ export class MotionManager {
         this.removeListener();
     }
 
+    protected async onPointerUpHandler(pointer: Phaser.Input.Pointer) {
+        this.isHolding = false;
+        this.scene.input.off("pointermove", this.onPointerMoveHandler, this);
+        if (Math.abs(pointer.downX - pointer.upX) >= 5 * this.render.scaleRatio && Math.abs(pointer.downY - pointer.upY) >= 5 * this.render.scaleRatio || pointer.upTime - pointer.downTime > this.holdDelay) {
+            this.stop();
+        } else {
+            if (this.gameObject) {
+                const id = this.gameObject.getData("id");
+                if (id) {
+                    const ele = this.render.displayManager.getDisplay(id);
+                    if (ele.nodeType === NodeType.CharacterNodeType) {
+                        // TODO
+                        this.render.mainPeer.activePlayer(id);
+                        this.clearGameObject();
+                        return;
+                    }
+                    // if (ele.nodeType === NodeType.ElementNodeType) {
+                    //     // check enter decorate
+                    //     this.render.mainPeer.onFurnitureHolded(id);
+                    //     return;
+                    // }
+                    let targets = await this.render.physicalPeer.getInteractivePosition(id);
+                    if (!targets || targets.length === 0) {
+                        const { x, y } = ele;
+                        targets = [{ x, y }];
+                    }
+                    this.movePath(pointer.worldX / this.render.scaleRatio, pointer.worldY / this.render.scaleRatio, 0, targets, id);
+                }
+            } else {
+                this.movePath(pointer.worldX / this.render.scaleRatio, pointer.worldY / this.render.scaleRatio, 0, [new LogicPos(pointer.worldX / this.scaleRatio, pointer.worldY / this.scaleRatio)]);
+            }
+        }
+        this.clearGameObject();
+    }
+
+    protected async onPointerDownHandler(pointer: Phaser.Input.Pointer) {
+        this.scene.input.on("pointermove", this.onPointerMoveHandler, this);
+        this.holdTime = setTimeout(() => {
+            this.isHolding = true;
+        }, this.holdDelay);
+    }
+
+    protected async onPointerMoveHandler(pointer: Phaser.Input.Pointer) {
+        this.isHolding = true;
+    }
+
+    protected onPointeroutHandler() {
+        this.isHolding = false;
+        this.scene.input.off("pointermove", this.onPointerMoveHandler, this);
+        this.stop();
+        clearTimeout(this.holdTime);
+    }
+
+    protected onGameObjectDownHandler(pointer, gameObject) {
+        this.gameObject = gameObject;
+    }
+
+    protected onGameObjectUpHandler(pointer, gameObject) {
+    }
+
     private start(worldX: number, worldY: number, id?: number) {
         if (!this.render.displayManager || !this.render.displayManager.user || !this.render.displayManager.user.visible) return;
         // const user = this.render.user;
@@ -104,67 +171,6 @@ export class MotionManager {
         if (!this.render.displayManager || !this.render.displayManager.user || !this.render.displayManager.user.visible) return;
         this.render.physicalPeer.stopMove();
         // this.render.user.stopMove();
-    }
-
-    private async onPointerUpHandler(pointer: Phaser.Input.Pointer) {
-        this.isHolding = false;
-        this.scene.input.off("pointermove", this.onPointerMoveHandler, this);
-        if (Math.abs(pointer.downX - pointer.upX) >= 5 * this.render.scaleRatio && Math.abs(pointer.downY - pointer.upY) >= 5 * this.render.scaleRatio || pointer.upTime - pointer.downTime > this.holdDelay) {
-            this.stop();
-        } else {
-            if (this.gameObject) {
-                const id = this.gameObject.getData("id");
-                if (id) {
-                    const ele = this.render.displayManager.getDisplay(id);
-                    if (ele.nodeType === NodeType.CharacterNodeType) {
-                        // TODO
-                        this.render.mainPeer.activePlayer(id);
-                        this.clearGameObject();
-                        return;
-                    }
-                    // if (ele.nodeType === NodeType.ElementNodeType) {
-                    //     // check enter decorate
-                    //     this.render.mainPeer.onFurnitureHolded(id);
-                    //     return;
-                    // }
-                    // const position = ele.getPosition();
-                    let targets = await this.render.physicalPeer.getInteractivePosition(id);
-                    if (!targets || targets.length === 0) {
-                        const { x, y } = ele;
-                        targets = [{ x, y }];
-                    }
-                    this.movePath(pointer.worldX / this.render.scaleRatio, pointer.worldY / this.render.scaleRatio, 0, targets, id);
-                }
-            } else {
-                this.movePath(pointer.worldX / this.render.scaleRatio, pointer.worldY / this.render.scaleRatio, 0, [new LogicPos(pointer.worldX / this.scaleRatio, pointer.worldY / this.scaleRatio)]);
-            }
-        }
-        this.clearGameObject();
-    }
-
-    private async onPointerDownHandler(pointer: Phaser.Input.Pointer) {
-        this.scene.input.on("pointermove", this.onPointerMoveHandler, this);
-        this.holdTime = setTimeout(() => {
-            this.isHolding = true;
-        }, this.holdDelay);
-    }
-
-    private async onPointerMoveHandler(pointer: Phaser.Input.Pointer) {
-        this.isHolding = true;
-    }
-
-    private onPointeroutHandler() {
-        this.isHolding = false;
-        this.scene.input.off("pointermove", this.onPointerMoveHandler, this);
-        this.stop();
-        clearTimeout(this.holdTime);
-    }
-
-    private onGameObjectDownHandler(pointer, gameObject) {
-        this.gameObject = gameObject;
-    }
-
-    private onGameObjectUpHandler(pointer, gameObject) {
     }
 
     private clearGameObject() {
