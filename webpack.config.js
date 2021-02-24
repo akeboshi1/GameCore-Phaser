@@ -11,22 +11,7 @@ const TSLintPlugin = require("tslint-webpack-plugin");
 const TerserPlugin = require("terser-webpack-plugin");
 const appVer = require("./version");
 
-const config = {
-    entry: {
-        tooqing: path.join(__dirname, "./launcher.ts"),
-        editor: path.join(__dirname, "./src/editor/index.ts"),
-        mainWorker: path.join(__dirname, "./src/game/main.peer.ts"),
-        physicalWorker: path.join(__dirname, "./src/services/physical.worker.ts")
-    },
-    output: {
-        // This is required so workers are known where to be loaded from
-        path: path.resolve(__dirname, "dist"),
-        filename: "js/[name].js",
-        chunkFilename: `js/[name]_v${appVer}.js`,
-        libraryTarget: "umd",
-        globalObject: "this",
-        library: "[name]",
-    },
+const commonConfig = {
     module: {
         rules: [
             { test: /\.ts$/, loader: "ts-loader", options: { allowTsInNodeModules: false }, exclude: "/node_modules/" },
@@ -85,6 +70,28 @@ const config = {
             // default: true
             cleanStaleWebpackAssets: false,
         }),
+        new TSLintPlugin({
+            config: path.resolve(__dirname, "./tslint.json"),
+            files: ["./src/**/*.ts"],
+        }),
+    ]
+};
+
+const gameConfig = Object.assign({}, commonConfig, {
+    entry: {
+        tooqing: path.join(__dirname, "./launcher.ts"),
+        editor: path.join(__dirname, "./src/editor/index.ts"),
+    },
+    output: {
+        // This is required so workers are known where to be loaded from
+        path: path.resolve(__dirname, "dist"),
+        filename: "js/[name].js",
+        chunkFilename: `js/[name]_v${appVer}.js`,
+        libraryTarget: "umd",
+        globalObject: "this",
+        library: "[name]",
+    },
+    plugins: [
         new CopyWebpackPlugin([{
             from: "**/*", to: `resources_v${appVer}`, toType: "dir"
             , force: true, context: "resources"
@@ -94,10 +101,6 @@ const config = {
             title: "图轻播放器",
             template: path.join(__dirname, "./index.html"),
             chunks: ["tooqing"]
-        }),
-        new TSLintPlugin({
-            config: path.resolve(__dirname, "./tslint.json"),
-            files: ["./src/**/*.ts"],
         }),
         new webpack.DefinePlugin({
             WEBGL_RENDERER: true, // I did this to make webpack work, but I"m not really sure it should always be true
@@ -115,7 +118,28 @@ const config = {
         port: 8081,
         open: false,
     },
-};
-module.exports = (env, argv) => {
-    return config;
-};
+});
+
+
+
+const workerConfig = Object.assign({}, commonConfig, {
+    entry: {
+        mainWorker: path.join(__dirname, "./src/game/main.peer.ts"),
+        physicalWorker: path.join(__dirname, "./src/services/physical.worker.ts")
+    },
+    output: {
+        // This is required so workers are known where to be loaded from
+        path: path.resolve(__dirname, "dist"),
+        filename: `js/[name]_v${appVer}.js`,
+        libraryTarget: "umd",
+        globalObject: "this",
+        library: "[name]",
+    },
+});
+module.exports = [
+    gameConfig, workerConfig     
+];
+
+// module.exports = (env, argv) => {
+//     return [gameConfig, workerConfig];
+// };
