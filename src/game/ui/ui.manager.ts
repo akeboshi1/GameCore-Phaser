@@ -1,10 +1,10 @@
-import { PacketHandler, PBpacket } from "net-socket-packet";
-import { op_client, op_pkt_def } from "pixelpai_proto";
-import { EventType, ModuleName } from "structure";
-import {i18n, ResUtils, Size} from "utils";
-import { Game } from "../game";
-import { BasicMediator, UIType } from "./basic/basic.mediator";
-import { UILayoutType, UIMediatorType } from "./ui.mediator.type";
+import {PacketHandler, PBpacket} from "net-socket-packet";
+import {op_client, op_pkt_def} from "pixelpai_proto";
+import {EventType, ModuleName} from "structure";
+import {i18n, Size} from "utils";
+import {Game} from "../game";
+import {BasicMediator, UIType} from "./basic/basic.mediator";
+import {UILayoutType, UIMediatorType} from "./ui.mediator.type";
 
 export class UIManager extends PacketHandler {
     protected mMedMap: Map<UIMediatorType, BasicMediator>;

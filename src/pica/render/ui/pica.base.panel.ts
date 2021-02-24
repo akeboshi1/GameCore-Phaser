@@ -6,7 +6,7 @@ export class PicaBasePanel extends BasePanel {
     protected atlasNames: Array<string | AtlasData>;
     protected textures: Array<string | AtlasData>;
     protected tempDatas: any;
-    constructor(private uiManager: UiManager) {
+    constructor(protected uiManager: UiManager) {
         super(uiManager.scene, uiManager.render);
     }
     protected initResource() {

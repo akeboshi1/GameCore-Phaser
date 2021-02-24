@@ -106,6 +106,11 @@ export class PicaOrderMediator extends BasicMediator {
             return;
         }
         if (this.mView && content) {
+            const configMgr = <BaseDataConfigManager>this.game.configManager;
+            const steps = content.steps;
+            for (const step of steps) {
+                configMgr.getBatchItemDatas(step.rewards);
+            }
             this.mView.setOrderProgress(content);
         }
     }

@@ -1,4 +1,4 @@
-import { Button, ClickEvent } from "apowophaserui";
+import { Button, ClickEvent, GameGridTable } from "apowophaserui";
 import { BaseGuide, ButtonEventDispatcher, Render } from "gamecoreRender";
 import { ModuleName } from "structure";
 import { BottomPanel, PicaExploreListPanel } from "../ui";
@@ -20,19 +20,25 @@ export class TaskGuide extends BaseGuide {
         const bottom: BottomPanel = this.uiManager.getPanel(ModuleName.BOTTOM) as BottomPanel;
         const navigatePanel = bottom.navigatePanel;
         const button: Button = (<any>navigatePanel).exploreButton;
-        this.guideEffect.createGuideEffect({ x: button.x, y: button.y });
+        const worldMatrix = button.getWorldTransformMatrix();
+        this.guideEffect.createGuideEffect({ x: worldMatrix.tx, y: worldMatrix.ty });
         button.on(ClickEvent.Tap, () => {
             this.step2();
         }, this);
     }
 
     private step2() {
-        const exploreListPanel: PicaExploreListPanel = this.uiManager.getPanel(ModuleName.PICAEXPLORELIST_NAME) as PicaExploreListPanel;
-        const picaExploreListBottomPanel: any = exploreListPanel.bottomPanel;
-        const list: any[] = picaExploreListBottomPanel.chapterItems;
-        const item: ButtonEventDispatcher = list[0] as ButtonEventDispatcher;
-        item.on(ClickEvent.Tap, () => {
-            this.stop();
+        // 异步等待过程
+        this.render.emitter.once("PicaExploreListPanel_Data", () => {
+            const exploreListPanel: PicaExploreListPanel = this.uiManager.getPanel(ModuleName.PICAEXPLORELIST_NAME) as PicaExploreListPanel;
+            const picaExploreListLevelPanel: any = exploreListPanel.levelPanel;
+            const list: any[] = picaExploreListLevelPanel.levelItems;
+            const item = list[0];
+            const worldMatrix = item.openButton.getWorldTransformMatrix();
+            this.guideEffect.createGuideEffect({ x: worldMatrix.tx, y: worldMatrix.ty });
+            item.on(ClickEvent.Tap, () => {
+                this.stop();
+            }, this);
         }, this);
     }
 }

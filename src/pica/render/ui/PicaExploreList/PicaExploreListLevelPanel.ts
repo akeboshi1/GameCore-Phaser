@@ -8,6 +8,7 @@ import { ItemButton } from "../Components";
 import { PicaChapterLevelClue } from "./PicaChapterLevelClue";
 import { ICountablePackageItem, IExploreChapterData, IExploreLevelData } from "picaStructure";
 export class PicaExploreListLevelPanel extends Phaser.GameObjects.Container {
+    public levelItems: ChapterLevelItem[] = [];
     private dpr: number;
     private zoom: number;
     private captorScroll: GameScroller;
@@ -17,7 +18,6 @@ export class PicaExploreListLevelPanel extends Phaser.GameObjects.Container {
     private lockItem: ChapterLevelLockItem;
     private finalItem: ChapterLevelItem | ChapterLevelEventuallyItem;
     private topbg: Phaser.GameObjects.Image;
-    private levelItems: ChapterLevelItem[] = [];
     private chapterResult: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_QUERY_CHAPTER_RESULT;
     private send: Handler;
     private posValue: number = 0;
@@ -265,6 +265,7 @@ class ChapterLevelBaseItem extends Phaser.GameObjects.Container {
 }
 
 class ChapterLevelItem extends ChapterLevelBaseItem {
+    public openButton: NineSliceButton;
     protected dpr: number;
     private bg: Phaser.GameObjects.Image;
     private iconbg: Phaser.GameObjects.Image;
@@ -275,7 +276,6 @@ class ChapterLevelItem extends ChapterLevelBaseItem {
     private rightLine: Phaser.GameObjects.Image;
     private starProgress: ProgressMaskBar;
     private icon: DynamicImage;
-    private openButton: NineSliceButton;
     private unlockTex: Phaser.GameObjects.Text;
     private energyImg: ImageValue;
     private lockimg: Phaser.GameObjects.Image;
@@ -335,8 +335,11 @@ class ChapterLevelItem extends ChapterLevelBaseItem {
             item.visible = true;
             if (data["star"] > star) {
                 item.setTexture(UIAtlasName.explorelog, "explore_unknown_clue");
-            } else
+                item.enable = false;
+            } else {
                 item.setItemData(data);
+                item.enable = true;
+            }
         }
         this.setLayoutItems(datas.length);
     }

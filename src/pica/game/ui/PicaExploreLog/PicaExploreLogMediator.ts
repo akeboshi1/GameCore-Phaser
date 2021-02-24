@@ -60,6 +60,8 @@ export class PicaExploreLogMediator extends BasicMediator {
     private onEXPLORE_SUMMARY(content: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_EXPLORE_SUMMARY) {
         const configManager = <BaseDataConfigManager>this.game.configManager;
         const rewards = content.rewards;
+        const levelData: any = configManager.getExploreLevelData(content.levelId);
+        if (levelData.clueItems) content.clue = levelData.clueItems;
         if (rewards) configManager.getBatchItemDatas(rewards);
         if (this.mView) this.mView.setExploreSettleDatas(content);
     }

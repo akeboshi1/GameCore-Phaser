@@ -282,7 +282,7 @@ export class EditorElementManager extends PacketHandler {
             this.taskQueue.delete(key);
 
             if (action === "ADD") {
-                this.sceneEditor.displayObjectPool.push("elements", sprite.id.toString(), sprite, this);
+                this.sceneEditor.displayObjectPool.push("elements", sprite.id.toString(), sprite);
             } else if (action === "DELETE") {
                 this.sceneEditor.displayObjectPool.remove("elements", sprite.id.toString());
             } else if (action === "UPDATE") {

@@ -20,6 +20,7 @@ import { SkyBoxManager } from "../sky.box/sky.box.manager";
 import {GameState, IScenery, LoadState, ModuleName, SceneName} from "structure";
 import { EffectManager } from "../effect/effect.manager";
 import {DecorateManager} from "../decorate/decorate.manager";
+import { WallManager } from "../element/wall.manager";
 export interface SpriteAddCompletedListener {
     onFullPacketReceived(sprite_t: op_def.NodeType): void;
 }
@@ -113,6 +114,7 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
     protected mBlocks: IViewBlockManager;
     protected mEnableDecorate: boolean = false;
     protected mIsDecorating: boolean = false;
+    protected mWallMamager: WallManager;
     protected mScaleRatio: number;
     protected mStateMap: Map<string, State>;
     // protected mMatterWorld: MatterWorld;
@@ -359,6 +361,7 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
         this.mGame.physicalPeer.setMiniRoomSize(this.miniSize);
         // this.mMatterWorld = new MatterWorld(this);
         this.mEffectManager = new EffectManager(this);
+        this.mWallMamager = new WallManager(this);
         // if (this.scene) {
         //     const camera = this.scene.cameras.main;
         //     this.mCameraService.camera = camera;
@@ -399,6 +402,7 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
 
         this.initSkyBox();
         this.mTerrainManager.init();
+        this.mWallMamager.init();
 
         // this.mAstar = new AStar(this);
         const map = [];

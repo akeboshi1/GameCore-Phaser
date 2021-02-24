@@ -11,15 +11,14 @@ import { PicaExploreListBottomPanel } from "./PicaExploreListBottomPanel";
 import { PicaExploreListLevelPanel } from "./PicaExploreListLevelPanel";
 
 export class PicaExploreListPanel extends PicaBasePanel {
-    public bottomPanel: PicaExploreListBottomPanel;
+    public levelPanel: PicaExploreListLevelPanel;
+    private detialPanel: PicaExploreListDetailPanel;
+    private bottomPanel: PicaExploreListBottomPanel;
     private bg: CommonBackground;
     private topbg: Phaser.GameObjects.Image;
     private midbg: Phaser.GameObjects.Image;
     private mBackBtn: BackTextButton;
     private energyProgress: EnergyProgressBar;
-
-    private levelPanel: PicaExploreListLevelPanel;
-    private detialPanel: PicaExploreListDetailPanel;
     constructor(uiManager: UiManager) {
         super(uiManager);
         this.atlasNames = [UIAtlasName.explorelog, UIAtlasName.uicommon1, UIAtlasName.uicommon];
@@ -96,6 +95,7 @@ export class PicaExploreListPanel extends PicaBasePanel {
     setExploreChapterResult(content: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_QUERY_CHAPTER_RESULT) {
         const nextLevelID = this.mShowData.nextLevelId;
         this.levelPanel.setCaptoreResult(content, nextLevelID);
+        this.uiManager.render.emitter.emit("PicaExploreListPanel_Data");
     }
     setExploreChapters(data: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_EXPLORE_CHAPTER_PROGRESS) {
         this.mShowData = data;

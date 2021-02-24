@@ -17,8 +17,8 @@ import { BaseFramesDisplay, BaseLayer, GroundLayer, IRender, LayerManager, Surfa
 import { ElementStorage, Sprite } from "baseModel";
 import * as protos from "pixelpai_proto";
 import { PBpacket } from "net-socket-packet";
-import { BaseSceneManager } from "src/base/render/scene/scene.manager";
 import { EditorSceneManger } from "./manager/scene.manager";
+import { EditorWallManager } from "./manager/wall.manager";
 for (const key in protos) {
     PBpacket.addProtocol(protos[key]);
 }
@@ -40,6 +40,7 @@ export class SceneEditorCanvas extends EditorCanvas implements IRender {
     private mTerrainManager: EditorTerrainManager;
     private mMossManager: EditorMossManager;
     private mElementManager: EditorElementManager;
+    private mWallManager: EditorWallManager;
     private mSkyboxManager: EditorSkyboxManager;
     private mSceneManager: EditorSceneManger;
 
@@ -60,6 +61,7 @@ export class SceneEditorCanvas extends EditorCanvas implements IRender {
         this.mTerrainManager = new EditorTerrainManager(this);
         this.mMossManager = new EditorMossManager(this);
         this.mElementManager = new EditorElementManager(this);
+        this.mWallManager = new EditorWallManager(this);
         this.mSkyboxManager = new EditorSkyboxManager(this);
         this.mSceneManager = new EditorSceneManger(this);
         this.mElementStorage = new ElementStorage();
@@ -70,6 +72,7 @@ export class SceneEditorCanvas extends EditorCanvas implements IRender {
         this.mElementManager.update();
         this.mMossManager.update();
         this.mTerrainManager.update();
+        this.mWallManager.update();
     }
 
     public create(scene: Phaser.Scene) {
@@ -132,7 +135,7 @@ export class SceneEditorCanvas extends EditorCanvas implements IRender {
         if (this.mBrush !== BrushEnum.Select) {
             this.mSelecedElement.unselectedElements();
         }
-        if (this.mBrush === BrushEnum.Eraser) {
+        if (this.mBrush === BrushEnum.Eraser || this.mBrush === BrushEnum.EraserWall) {
             this.mStamp.showEraserArea();
         }
     }
@@ -246,6 +249,20 @@ export class SceneEditorCanvas extends EditorCanvas implements IRender {
         } else if (this.mStamp.nodeType === op_def.NodeType.SpawnPointType) {
             const sprites = this.mStamp.createSprites();
             this.mElementManager.addElements(sprites);
+        } else if (this.mStamp.nodeType === op_def.NodeType.WallNodeType) {
+            const mossesCoorData = this.mStamp.createWallData();
+            this.mWallManager.addWalls(mossesCoorData);
+        }
+    }
+
+    public calcWallFlip(x: number, y: number) {
+        const pos = Position45.transformTo45(new LogicPos(x, y), this.mRoomSize);
+        if (this.mTerrainManager.existTerrain(pos.x, pos.y)) {
+            if (!this.mTerrainManager.existTerrain(pos.x - 1, pos.y)) return true;
+            if (!this.mTerrainManager.existTerrain(pos.x, pos.y - 1)) return false;
+        } else {
+            if (this.mTerrainManager.existTerrain(pos.x, pos.y + 1)) return false;
+            if (this.mTerrainManager.existTerrain(pos.x + 1, pos.y)) return true;
         }
     }
 
@@ -409,7 +426,10 @@ export class SceneEditorCanvas extends EditorCanvas implements IRender {
                 }
                 break;
             case BrushEnum.Eraser:
-                this.eraserTerrains();
+                this.eraser(op_def.NodeType.TerrainNodeType);
+                break;
+            case BrushEnum.EraserWall:
+                this.eraser(op_def.NodeType.WallNodeType);
                 break;
             case BrushEnum.Move:
                 this.mCameraManager.syncCameraScroll();
@@ -421,14 +441,27 @@ export class SceneEditorCanvas extends EditorCanvas implements IRender {
         const key = this.mStamp.key;
         if (key) {
             const nodeType = this.mStamp.nodeType;
-            if (nodeType === op_def.NodeType.TerrainNodeType) {
-                if (!this.mElementStorage.getTerrainPalette(key)) {
-                    this.mEditorPacket.reqEditorSyncPaletteOrMoss(key, nodeType);
-                }
-            } else if (nodeType === op_def.NodeType.ElementNodeType) {
-                if (!this.mElementStorage.getMossPalette(key)) {
-                    this.mEditorPacket.reqEditorSyncPaletteOrMoss(key, nodeType);
-                }
+            // if (nodeType === op_def.NodeType.TerrainNodeType) {
+            //     if (!this.mElementStorage.getTerrainPalette(key)) {
+            //         this.mEditorPacket.reqEditorSyncPaletteOrMoss(key, nodeType);
+            //     }
+            // } else if (nodeType === op_def.NodeType.ElementNodeType) {
+            //     if (!this.mElementStorage.getMossPalette(key)) {
+            //         this.mEditorPacket.reqEditorSyncPaletteOrMoss(key, nodeType);
+            //     }
+            // }
+            switch (nodeType) {
+                case op_def.NodeType.TerrainNodeType:
+                    if (!this.mElementStorage.getTerrainPalette(key)) {
+                        this.mEditorPacket.reqEditorSyncPaletteOrMoss(key, nodeType);
+                    }
+                    break;
+                case op_def.NodeType.WallNodeType:
+                case op_def.NodeType.ElementNodeType:
+                    if (!this.mElementStorage.getMossPalette(key)) {
+                        this.mEditorPacket.reqEditorSyncPaletteOrMoss(key, nodeType);
+                    }
+                    break;
             }
         }
     }
@@ -461,7 +494,13 @@ export class SceneEditorCanvas extends EditorCanvas implements IRender {
             case BrushEnum.Eraser:
                 this.mStamp.pointerMove(pointer.worldX, pointer.worldY);
                 if (pointer.isDown) {
-                    this.eraserTerrains();
+                    this.eraser(op_def.NodeType.TerrainNodeType);
+                }
+                break;
+            case BrushEnum.EraserWall:
+                this.mStamp.pointerMove(pointer.worldX, pointer.worldY);
+                if (pointer.isDown) {
+                    this.eraser(op_def.NodeType.WallNodeType);
                 }
                 break;
         }
@@ -512,9 +551,13 @@ export class SceneEditorCanvas extends EditorCanvas implements IRender {
         (<SceneEditor>this.mScene).layerManager.addToLayer(terrain.layer.toString(), display);
     }
 
-    private eraserTerrains() {
+    private eraser(type: op_def.NodeType) {
         const positions = this.mStamp.getEaserPosition();
-        this.mTerrainManager.removeTerrains(positions);
+        if (type === op_def.NodeType.TerrainNodeType) {
+            this.mTerrainManager.removeTerrains(positions);
+        } else {
+            this.mWallManager.removeWalls(positions);
+        }
     }
 
     private initSkybox() {
@@ -580,6 +623,7 @@ export class SceneEditor extends Phaser.Scene {
     public static LAYER_MIDDLE = "middleLayer";
     public static LAYER_FLOOR = LayerEnum.Floor;
     public static LAYER_SURFACE = LayerEnum.Surface;
+    public static LAYER_WALL = LayerEnum.Wall;
     public static LAYER_ATMOSPHERE = "atmosphere";
     public static SCENE_UI = "sceneUILayer";
     public layerManager: LayerManager;
@@ -601,6 +645,7 @@ export class SceneEditor extends Phaser.Scene {
         this.layerManager = new LayerManager();
         this.sceneEditor.sceneManager.setMainScene(this);
 
+        this.layerManager.addLayer(this, GroundLayer, SceneEditor.LAYER_WALL.toString(), 0);
         this.layerManager.addLayer(this, GroundLayer, SceneEditor.LAYER_GROUND.toString(), 1);
         this.gridLayer = new GridLayer(this);
         this.sys.displayList.add(this.gridLayer);
@@ -656,6 +701,7 @@ enum BrushEnum {
     Fill = "FILL",
     Eraser = "eraser",
     BRUSH = "brush",
+    EraserWall = "eraserWall"
 }
 
 class MouseFollow {
@@ -698,7 +744,7 @@ class MouseFollow {
         this.mNodeType = content.nodeType;
         this.mIsMoss = content.isMoss;
         this.mKey = content.key;
-        this.isTerrain = this.mNodeType === op_def.NodeType.TerrainNodeType;
+        this.isTerrain = this.mNodeType === op_def.NodeType.TerrainNodeType || this.mNodeType === op_def.NodeType.WallNodeType;
         this.mSprite = new Sprite(content.sprite, content.nodeType);
         this.mDisplay = new MouseDisplayContainer(this.sceneEditor);
         const size = this.mNodeType === op_def.NodeType.TerrainNodeType ? this.mSize : 1;
@@ -745,6 +791,22 @@ class MouseFollow {
 
     createTerrainsOrMossesData() {
         const locs = this.mDisplay.displays.map((display) => this.getPosition(display.x, display.y));
+        return { locs, key: this.key };
+    }
+
+    createWallData() {
+        // const locs = this.mDisplay.displays.map((display) => this.getPosition(display.x, display.y));
+        // return { locs, key: this.key };
+        const displays = this.mDisplay.displays;
+        const locs = [];
+        let pos = null;
+        for (const display of displays) {
+            pos = this.getPosition(display.x, display.y);
+            locs.push({
+                ...pos,
+                dir: display.runningAnimation.flip ? 5 : 3
+            });
+        }
         return { locs, key: this.key };
     }
 
@@ -811,11 +873,13 @@ class MouseFollow {
                 return;
             }
         }
+        const p = Position45.transformTo45(new LogicPos(pos.x, pos.y), this.sceneEditor.roomSize);
         this.mDisplay.updatePosition(pos.x, pos.y);
+
     }
 
     private getPosition(rows: number = 0, cols: number = 0) {
-        if (this.mNodeType === op_def.NodeType.TerrainNodeType) {
+        if (this.mNodeType === op_def.NodeType.TerrainNodeType || this.mNodeType === op_def.NodeType.WallNodeType) {
             const pos45 = Position45.transformTo45(
                 new LogicPos(this.mDisplay.x / this.mScaleRatio + rows, this.mDisplay.y / this.mScaleRatio + cols),
                 this.sceneEditor.roomSize);
@@ -957,6 +1021,16 @@ class MouseDisplayContainer extends Phaser.GameObjects.Container {
 
     public updatePosition(x?: number, y?: number, z?: number, w?: number) {
         this.setPosition(x + this.mOffset.x, y + this.mOffset.y, z, w);
+        if (this.mNodeType === op_def.NodeType.WallNodeType) {
+            for (const display of this.mDisplays) {
+                const flip = this.sceneEditor.calcWallFlip(x, y);
+                const ani = display.runningAnimation;
+                if (flip !== undefined &&flip !== ani.flip) {
+                    ani.flip = flip;
+                    display.play(ani);
+                }
+            }
+        }
     }
 
     transformTo90(row: number, col: number) {

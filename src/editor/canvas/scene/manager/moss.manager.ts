@@ -177,7 +177,7 @@ export class EditorMossManager extends PacketHandler {
                     layer: moss.layer
                 });
                 this.editorMosses.set(loc.id, loc);
-                this.sceneEditor.displayObjectPool.push("mosses", loc.id.toString(), sprite, this);
+                this.sceneEditor.displayObjectPool.push("mosses", loc.id.toString(), sprite);
             } else if (action === "DELETE") {
                 if (loc) {
                     this.editorMosses.delete(loc.id);

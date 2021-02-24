@@ -164,6 +164,10 @@ export abstract class BaseDisplay extends Phaser.GameObjects.Container implement
         this.mSortY = (2 * y - x) / 30;
     }
 
+    get runningAnimation() {
+        return this.mAnimation;
+    }
+
     get projectionSize(): IProjection {
         if (!this.mProjectionSize) {
             this.mProjectionSize = {offset: {x: 0, y: 0}, width: 0, height: 0};

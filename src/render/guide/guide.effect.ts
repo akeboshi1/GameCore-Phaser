@@ -1,4 +1,5 @@
 import { IPos } from "utils";
+import { MainUIScene } from "../scenes";
 
 export class GuideEffect extends Phaser.GameObjects.Container {
     private mGuideEffect: Phaser.GameObjects.Graphics;
@@ -17,14 +18,15 @@ export class GuideEffect extends Phaser.GameObjects.Container {
             this.mGuideEffect = this.scene.make.graphics(undefined);
             this.mGuideEffect.fillStyle(0, .5);
             this.mGuideEffect.fillRect(0, 0, this.width, this.height);
+            (<any>this.scene).layerManager.addToLayer(MainUIScene.LAYER_MASK, this.mGuideEffect);
         }
-        if (this.mMask) {
+        if (!this.mMask) {
             this.mMask = this.scene.make.graphics(undefined);
             this.mMask.fillStyle(0);
             this.mMask.fillCircle(0, 0, 100);
             this.mMask.setPosition(pos.x, pos.y);
             const geometryMask = this.mMask.createGeometryMask().setInvertAlpha(true);
-            this.mMask.setMask(geometryMask);
+            this.mGuideEffect.setMask(geometryMask);
         } else {
             const self = this;
             this.scene.tweens.add({

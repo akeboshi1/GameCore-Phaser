@@ -4,7 +4,6 @@ import { CutInMediator } from "./CutIn";
 import { DialogMediator } from "./Dialog";
 import { LoginMediator } from "./Login";
 import { BottomMediator } from "./Bottom/BottomMediator";
-import { PicaChatMediator } from "./PicaChat/PicaChatMediator";
 import { PicaDecorateMediator } from "./PicaDecorate/PicaDecorateMediator";
 import { PicaDecorateControlMediator } from "./PicaDecorateControl/PicaDecorateControlMediator";
 import { PicaFurniFunMediator } from "./PicaFurniFun/PicaFurniFunMediator";
