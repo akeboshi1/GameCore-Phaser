@@ -1,0 +1,377 @@
+{
+	"textures": [
+		{
+			"image": "effectlevelup",
+			"format": "RGBA8888",
+			"size": {
+				"w": 2021,
+				"h": 961
+			},
+			"scale": 1,
+			"frames": [
+				{
+					"filename": "lv_wing_08",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 592,
+						"h": 349
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 70,
+						"w": 591,
+						"h": 219
+					},
+					"frame": {
+						"x": 1,
+						"y": 1,
+						"w": 591,
+						"h": 219
+					}
+				},
+				{
+					"filename": "lv_eclosion_03",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 592,
+						"h": 349
+					},
+					"spriteSourceSize": {
+						"x": 25,
+						"y": 44,
+						"w": 541,
+						"h": 246
+					},
+					"frame": {
+						"x": 1,
+						"y": 222,
+						"w": 541,
+						"h": 246
+					}
+				},
+				{
+					"filename": "lv_eclosion_04",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 592,
+						"h": 349
+					},
+					"spriteSourceSize": {
+						"x": 26,
+						"y": 21,
+						"w": 539,
+						"h": 244
+					},
+					"frame": {
+						"x": 1,
+						"y": 470,
+						"w": 539,
+						"h": 244
+					}
+				},
+				{
+					"filename": "lv_eclosion_02",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 592,
+						"h": 349
+					},
+					"spriteSourceSize": {
+						"x": 29,
+						"y": 52,
+						"w": 534,
+						"h": 244
+					},
+					"frame": {
+						"x": 1,
+						"y": 716,
+						"w": 534,
+						"h": 244
+					}
+				},
+				{
+					"filename": "lv_wing_07",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 592,
+						"h": 349
+					},
+					"spriteSourceSize": {
+						"x": 13,
+						"y": 80,
+						"w": 568,
+						"h": 207
+					},
+					"frame": {
+						"x": 594,
+						"y": 1,
+						"w": 568,
+						"h": 207
+					}
+				},
+				{
+					"filename": "lv_wing_06",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 592,
+						"h": 349
+					},
+					"spriteSourceSize": {
+						"x": 19,
+						"y": 74,
+						"w": 553,
+						"h": 211
+					},
+					"frame": {
+						"x": 1164,
+						"y": 1,
+						"w": 553,
+						"h": 211
+					}
+				},
+				{
+					"filename": "lv_wing_05",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 592,
+						"h": 349
+					},
+					"spriteSourceSize": {
+						"x": 24,
+						"y": 37,
+						"w": 541,
+						"h": 237
+					},
+					"frame": {
+						"x": 594,
+						"y": 210,
+						"w": 541,
+						"h": 237
+					}
+				},
+				{
+					"filename": "lv_wing_04",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 592,
+						"h": 349
+					},
+					"spriteSourceSize": {
+						"x": 31,
+						"y": 58,
+						"w": 529,
+						"h": 220
+					},
+					"frame": {
+						"x": 1137,
+						"y": 214,
+						"w": 529,
+						"h": 220
+					}
+				},
+				{
+					"filename": "lv_eclosion_01",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 592,
+						"h": 349
+					},
+					"spriteSourceSize": {
+						"x": 43,
+						"y": 50,
+						"w": 504,
+						"h": 238
+					},
+					"frame": {
+						"x": 1137,
+						"y": 436,
+						"w": 504,
+						"h": 238
+					}
+				},
+				{
+					"filename": "lv_wing_03",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 592,
+						"h": 349
+					},
+					"spriteSourceSize": {
+						"x": 43,
+						"y": 94,
+						"w": 504,
+						"h": 202
+					},
+					"frame": {
+						"x": 544,
+						"y": 449,
+						"w": 504,
+						"h": 202
+					}
+				},
+				{
+					"filename": "lv_wing_09",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 592,
+						"h": 349
+					},
+					"spriteSourceSize": {
+						"x": 59,
+						"y": 78,
+						"w": 476,
+						"h": 208
+					},
+					"frame": {
+						"x": 542,
+						"y": 653,
+						"w": 476,
+						"h": 208
+					}
+				},
+				{
+					"filename": "lv_wing_02",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 592,
+						"h": 349
+					},
+					"spriteSourceSize": {
+						"x": 73,
+						"y": 114,
+						"w": 441,
+						"h": 179
+					},
+					"frame": {
+						"x": 1020,
+						"y": 676,
+						"w": 441,
+						"h": 179
+					}
+				},
+				{
+					"filename": "lv_prospect",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 592,
+						"h": 349
+					},
+					"spriteSourceSize": {
+						"x": 171,
+						"y": 74,
+						"w": 250,
+						"h": 251
+					},
+					"frame": {
+						"x": 1719,
+						"y": 1,
+						"w": 250,
+						"h": 251
+					}
+				},
+				{
+					"filename": "lv_Unlock_bg",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 380,
+						"h": 61
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 380,
+						"h": 61
+					},
+					"frame": {
+						"x": 537,
+						"y": 863,
+						"w": 380,
+						"h": 61
+					}
+				},
+				{
+					"filename": "lv_light_02",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 592,
+						"h": 349
+					},
+					"spriteSourceSize": {
+						"x": 129,
+						"y": 15,
+						"w": 352,
+						"h": 284
+					},
+					"frame": {
+						"x": 1668,
+						"y": 254,
+						"w": 352,
+						"h": 284
+					}
+				},
+				{
+					"filename": "lv_wing_01",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 592,
+						"h": 349
+					},
+					"spriteSourceSize": {
+						"x": 109,
+						"y": 174,
+						"w": 375,
+						"h": 139
+					},
+					"frame": {
+						"x": 1643,
+						"y": 540,
+						"w": 375,
+						"h": 139
+					}
+				},
+				{
+					"filename": "lv_light_01",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 592,
+						"h": 349
+					},
+					"spriteSourceSize": {
+						"x": 121,
+						"y": 14,
+						"w": 354,
+						"h": 266
+					},
+					"frame": {
+						"x": 1463,
+						"y": 681,
+						"w": 354,
+						"h": 266
+					}
+				}
+			]
+		}
+	],
+	"meta": {
+		"app": "https://www.codeandweb.com/texturepacker",
+		"version": "3.0",
+		"smartupdate": "$TexturePacker:SmartUpdate:b9d777d8cd39c5c8ed4b9df5dbb3f565:68accc1507b805f1a30a32e94346f66d:ecafd4d8cf63a64e11645e7006d3bac0$"
+	}
+}

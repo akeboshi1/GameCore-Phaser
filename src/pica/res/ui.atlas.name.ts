@@ -12,6 +12,7 @@ export class UIAtlasName {
     public static roam = "roam";
     public static iconcommon = "icon_common";
     public static effectcommon = "effect_common";
+    public static effectlevelup = "effectlevelup";
     public static stareffect = "stareffect";
     public static circleeffect = "circleeffect";
     public static explorelog = "explorelog";

@@ -403,5 +403,8 @@
     "finish": "Finish",
     "exit": "Exit",
     "exittips":"Whether to exit the exploration level"
+  },
+  "effecttips": {
+    "unlock": "New feature unlock :{{name}}"
   }
 }
