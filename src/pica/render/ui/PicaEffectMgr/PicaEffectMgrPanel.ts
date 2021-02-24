@@ -5,15 +5,17 @@ import { op_client } from "pixelpai_proto";
 import { ModuleName } from "structure";
 import { PicaBasePanel } from "../pica.base.panel";
 import { PicaFurniUnlockEffectPanel } from "./PicaFurniUnlockEffectPanel";
+import { PicaLevelUpEffectPanel } from "./PicaLevelUpEffectPanel";
 export class PicaEffectMgrPanel extends PicaBasePanel {
 
     private content: Phaser.GameObjects.Container;
     private furniEffectPanel: PicaFurniUnlockEffectPanel;
+    private levelupEffectPanel: PicaLevelUpEffectPanel;
     private tempQueue: Map<string, any[]> = new Map();
     constructor(uiManager: UiManager) {
         super(uiManager);
         this.key = ModuleName.PICAEFFECTMGR_NAME;
-        this.atlasNames = [UIAtlasName.effectcommon];
+        this.atlasNames = [UIAtlasName.effectcommon, UIAtlasName.effectlevelup];
     }
 
     resize(w: number, h: number) {
@@ -32,8 +34,6 @@ export class PicaEffectMgrPanel extends PicaBasePanel {
         this.content = this.scene.make.container(undefined, false);
         this.content.setSize(width, height);
         this.add(this.content);
-        this.furniEffectPanel = new PicaFurniUnlockEffectPanel(this.scene, this.render, width, height, this.key, this.dpr);
-        this.content.add(this.furniEffectPanel);
         this.resize(0, 0);
         super.init();
     }
@@ -49,7 +49,20 @@ export class PicaEffectMgrPanel extends PicaBasePanel {
             this.tempQueue.set(type, arr);
         } else {
             if (type === "unlock") {
+                if (!this.furniEffectPanel) {
+                    this.furniEffectPanel = new PicaFurniUnlockEffectPanel(this.scene, this.render, this.scaleWidth, this.scaleHeight, this.key, this.dpr);
+                    this.content.add(this.furniEffectPanel);
+                }
+                this.furniEffectPanel.visible = true;
                 this.furniEffectPanel.play(data);
+            } else if (type === "levelup") {
+                if (!this.levelupEffectPanel) {
+                    this.levelupEffectPanel = new PicaLevelUpEffectPanel(this.scene, this.scaleWidth, this.scaleHeight, this.dpr, this.scale);
+                    this.content.add(this.levelupEffectPanel);
+                }
+                this.levelupEffectPanel.visible = true;
+                this.levelupEffectPanel.setLevelUpData(data[0]);
+                this.levelupEffectPanel.playAnimation();
             }
         }
     }
