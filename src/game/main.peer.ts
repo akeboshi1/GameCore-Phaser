@@ -393,6 +393,9 @@ export class MainPeer extends RPCPeer {
 
     @Export()
     public elementDisplayReady(id: number) {
+        if (!this.game) return;
+        if (!this.game.roomManager) return;
+        if (!this.game.roomManager.currentRoom) return;
         const elementManager = this.game.roomManager.currentRoom.elementManager;
         if (elementManager) elementManager.onDisplayReady(id);
     }
