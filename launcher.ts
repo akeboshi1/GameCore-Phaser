@@ -77,10 +77,10 @@ export class Launcher {
 
     constructor(config?: ILauncherConfig) {
         if (config.osd) {
-            config.osd = decodeURIComponent(config.osd);
+            config.osd = new URL("/", decodeURIComponent(config.osd)).toString();
         }
         if (config.api_root) {
-            config.api_root = decodeURIComponent(config.api_root);
+            config.api_root = new URL("/", decodeURIComponent(config.api_root)).toString();
         }
         if (config) {
             Object.assign(this.mConfig, config);
