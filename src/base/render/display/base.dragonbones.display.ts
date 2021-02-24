@@ -501,6 +501,7 @@ export class BaseDragonbonesDisplay extends BaseDisplay {
             this.startLoadPartRes();
         } else {
             // 单图加载
+            // TODO: 统一使用refreshAvatar接口，否则无法触发promise/emit
             if (!this.isRenderTexture) {
                 this.mArmatureDisplay.visible = true;
                 this.replaceArr.splice(0);
