@@ -754,8 +754,18 @@ export class Render extends RPCPeer implements GameMain, IRender {
     }
 
     @Export([webworker_rpc.ParamType.str])
-    public hidePanel(panelName: string) {
-        if (this.mUiManager) this.mUiManager.hidePanel(panelName);
+    public hidePanel(type: string) {
+        if (this.mUiManager) this.mUiManager.hidePanel(type);
+    }
+
+    @Export([webworker_rpc.ParamType.str])
+    public showBatchPanel(type: string, data?: any) {
+        if (this.mUiManager) this.mUiManager.showBatchPanel(type, data);
+    }
+
+    @Export([webworker_rpc.ParamType.str])
+    public hideBatchPanel(type) {
+        if (this.mUiManager) this.mUiManager.hideBatchPanel(type);
     }
 
     @Export()

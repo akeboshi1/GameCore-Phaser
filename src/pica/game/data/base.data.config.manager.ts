@@ -11,6 +11,7 @@ import { ShopConfig } from "./shop.config";
 import version from "../../../../version";
 import { JobConfig } from "./job.config";
 import { IJob } from "src/pica/structure/ijob";
+import { CardPoolConfig } from "./cardpool.config";
 
 export enum BaseDataType {
     i18n_zh = "i18n_zh",
@@ -18,7 +19,8 @@ export enum BaseDataType {
     item = "item",
     element = "element",
     shop = "shop",
-    job = "job"
+    job = "job",
+    cardPool = "cardPool"
     // itemcategory = "itemcategory"
 }
 
@@ -315,6 +317,16 @@ export class BaseDataConfigManager extends BaseConfigManager {
         }
     }
 
+    public getCardPool(id: string) {
+        const data: CardPoolConfig = this.getConfig(BaseDataType.cardPool);
+        return data.get(id);
+    }
+
+    public getCardPools() {
+        const data: CardPoolConfig = this.getConfig(BaseDataType.cardPool);
+        return data.pools;
+    }
+
     protected add() {
         this.dataMap.set(BaseDataType.i18n_zh, new I18nZHDataConfig());
         this.dataMap.set(BaseDataType.explore, new ExploreDataConfig());
@@ -322,6 +334,7 @@ export class BaseDataConfigManager extends BaseConfigManager {
         this.dataMap.set(BaseDataType.element, new ElementDataConfig());
         this.dataMap.set(BaseDataType.shop, new ShopConfig());
         this.dataMap.set(BaseDataType.job, new JobConfig());
+        this.dataMap.set(BaseDataType.cardPool, new CardPoolConfig());
     }
 
     protected configUrl(reName: string, tempurl?: string) {
