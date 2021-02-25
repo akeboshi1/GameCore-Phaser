@@ -42,6 +42,7 @@ import { EditorModeDebugger } from "./display/debugs/editor.mode.debugger";
 import { GridsDebugger } from "./display/debugs/grids";
 import { SortDebugger } from "./display/debugs/sort.debugger";
 import { UiManager } from "./ui";
+// import { GuideManager } from "./guide";
 
 // import Stats from "../../Stat";
 
@@ -107,6 +108,7 @@ export class Render extends RPCPeer implements GameMain, IRender {
 
     constructor(config: ILauncherConfig, callBack?: Function) {
         super(RENDER_PEER);
+        Logger.getInstance().log("config ====>",config);
         this.emitter = new Phaser.Events.EventEmitter();
         this.mConfig = config;
         this.mCallBack = callBack;
@@ -1096,7 +1098,10 @@ export class Render extends RPCPeer implements GameMain, IRender {
                 this.resize(this.mConfig.height, this.mConfig.width);
             }
         }
-        if (this.mGameCreatedFunc) this.mGameCreatedFunc.call(this);
+        if (this.mGameCreatedFunc) {
+            Logger.getInstance().log("render game_created");
+            this.mGameCreatedFunc.call(this);
+        }
         this.gameCreated(keyEvents);
     }
 
