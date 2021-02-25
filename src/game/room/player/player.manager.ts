@@ -218,7 +218,6 @@ export class PlayerManager extends PacketHandler implements IElementManager {
             return;
         }
 
-
         let player: Player = null;
         const sprites = content.sprites;
         const command = content.command;
@@ -240,7 +239,7 @@ export class PlayerManager extends PacketHandler implements IElementManager {
     private _loadSprite(sprite: op_client.ISprite) {
         const configMgr = <BaseDataConfigManager>this.mRoom.game.configManager;
         sprite.attrs.forEach((attr) => {
-            let valueObj = JSON.parse(attr.value);
+            const valueObj = JSON.parse(attr.value);
             const newAttrs = [];
             valueObj.forEach((v) => {
                 if (v.id) {
@@ -254,9 +253,9 @@ export class PlayerManager extends PacketHandler implements IElementManager {
                         id: config.id
                     });
                 }
-            })
+            });
             attr.value = JSON.stringify(newAttrs);
-        })
+        });
     }
 
     private onAdjust(packet: PBpacket) {
