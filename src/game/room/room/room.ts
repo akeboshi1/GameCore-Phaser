@@ -21,6 +21,7 @@ import {GameState, IScenery, LoadState, ModuleName, SceneName} from "structure";
 import { EffectManager } from "../effect/effect.manager";
 import {DecorateManager} from "../decorate/decorate.manager";
 import { WallManager } from "../element/wall.manager";
+import {Sprite} from "baseModel";
 export interface SpriteAddCompletedListener {
     onFullPacketReceived(sprite_t: op_def.NodeType): void;
 }
@@ -125,8 +126,6 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
     private moveStyle: op_def.MoveStyle;
     private mActorData: IActor;
     private mUpdateHandlers: Handler[] = [];
-    private mAllSpritesReceived: boolean = false;
-    private mSprites: op_client.ISprite[] = [];
     constructor(protected manager: IRoomManager) {
         super();
         this.mGame = this.manager.game;
@@ -644,9 +643,6 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
 
         // new decorate manager
         this.mDecorateManager = new DecorateManager(this);
-        if (this.mAllSpritesReceived) {
-            this.mDecorateManager.init(this.mSprites);
-        }
     }
 
     public stopDecorating() {
@@ -879,16 +875,17 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
             Logger.getInstance().error("<OP_VIRTUAL_WORLD_REQ_CLIENT_CURRENT_SCENE_ALL_SPRITE> content.sprites is undefined");
             return;
         }
-        const type = content.nodeType;
-        if (type !== NodeType.ElementNodeType) {
-            Logger.getInstance().error("<OP_VIRTUAL_WORLD_REQ_CLIENT_CURRENT_SCENE_ALL_SPRITE> content.nodeType is not element");
-            return;
+        const nodeType = content.nodeType;
+        const addList = [];
+        for (const sp of content.sprites) {
+            const sprite = new Sprite(sp, nodeType);
+            addList.push(sprite);
         }
 
-        this.mAllSpritesReceived = true;
-        this.mSprites = sprites;
-        if (this.mDecorateManager) {
-            this.mDecorateManager.init(sprites);
+        if (nodeType === op_def.NodeType.ElementNodeType || nodeType === op_def.NodeType.SpawnPointType) {
+            this.mElementManager.add(addList);
+        } else if (nodeType === op_def.NodeType.TerrainNodeType) {
+            this.mTerrainManager.add(addList);
         }
     }
 }
