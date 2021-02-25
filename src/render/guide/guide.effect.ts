@@ -79,6 +79,7 @@ export class GuideEffect extends Phaser.GameObjects.Container {
             //     },
             // });
         }
+        this.setInteractive(new Phaser.Geom.Rectangle(width >> 1, height >> 1, width, height), Phaser.Geom.Rectangle.Contains);
         this.start();
     }
 
@@ -118,6 +119,7 @@ export class GuideEffect extends Phaser.GameObjects.Container {
     }
 
     public destroy() {
+        this.disableInteractive();
         this.stop();
         if (this.mGuideEffect) {
             this.mGuideEffect.destroy();

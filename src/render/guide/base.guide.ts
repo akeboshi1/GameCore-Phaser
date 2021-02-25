@@ -16,10 +16,11 @@ export class BaseGuide implements IGuide {
         this.uiManager = render.uiManager;
         this.guideEffect = new GuideEffect(this.scene);
     }
-    public start() {
+    public start(data?: any) {
     }
     public stop() {
     }
     public destroy() {
+        this.guideEffect.destroy();
     }
 }

@@ -2,7 +2,7 @@ import { Render } from "../render";
 
 export interface IGuide {
     id: number;
-    start();
+    start(data?: any);
     stop();
     destroy();
 }
@@ -24,9 +24,9 @@ export class GuideManager {
         this.guideMap = null;
     }
 
-    public startGuide(id: number) {
+    public startGuide(id: number, data?: any) {
         const guide = this.guideMap.get(id);
-        if (guide) guide.start();
+        if (guide) guide.start(data);
     }
 
     public stopGuide(id: number) {
