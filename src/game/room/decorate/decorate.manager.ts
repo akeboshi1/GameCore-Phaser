@@ -151,10 +151,10 @@ export class DecorateManager {
 
         const combinedActs = this.combineActions(this.mSelectedActionQueue);
         combinedActs.forEach((acts, sprite) => {
-           if (sprite.id !== this.mSelectedID) {
-               Logger.getInstance().error("sprite.id is wrong");
-               return;
-           }
+            if (sprite.id !== this.mSelectedID) {
+                Logger.getInstance().error("sprite.id is wrong");
+                return;
+            }
 
             for (const act of acts) {
                 this.mActionQueue.push(act);
@@ -284,21 +284,18 @@ class DecorateAction {
     // 执行
     public execute(room: Room) {
         switch (this.type) {
-            case DecorateActionType.Add: {
+            case DecorateActionType.Add:
                 if (!this.data || typeof (this.data) === "number") return;
                 this.createElement(room, this.data.x, this.data.y);
-            }
                 break;
-            case DecorateActionType.Remove: {
+            case DecorateActionType.Remove:
                 this.removeElement(room);
-            }
                 break;
-            case DecorateActionType.Move: {
+            case DecorateActionType.Move:
                 if (!this.data || typeof (this.data) === "number") return;
                 this.setElementPos(room, this.target.pos.x + this.data.x, this.target.pos.y + this.data.y);
-            }
                 break;
-            case DecorateActionType.Rotate: {
+            case DecorateActionType.Rotate:
                 if (!this.data || typeof (this.data) !== "number") return;
                 let tmp = this.data;
                 let dir = this.target.direction;
@@ -307,7 +304,6 @@ class DecorateAction {
                     dir = this.nextDir(dir);
                 }
                 this.setElementDirection(room, dir);
-            }
                 break;
             default:
                 break;
@@ -317,21 +313,18 @@ class DecorateAction {
     // 撤销
     public reverse(room: Room) {
         switch (this.type) {
-            case DecorateActionType.Add: {
+            case DecorateActionType.Add:
                 this.removeElement(room);
-            }
                 break;
-            case DecorateActionType.Remove: {
+            case DecorateActionType.Remove:
                 if (!this.data || typeof (this.data) === "number") return;
                 this.createElement(room, this.data.x, this.data.y);
-            }
                 break;
-            case DecorateActionType.Move: {
+            case DecorateActionType.Move:
                 if (!this.data || typeof (this.data) === "number") return;
                 this.setElementPos(room, this.target.pos.x - this.data.x, this.target.pos.y - this.data.y);
-            }
                 break;
-            case DecorateActionType.Rotate: {
+            case DecorateActionType.Rotate:
                 if (!this.data || typeof (this.data) !== "number") return;
                 let tmp = this.data;
                 let dir = this.target.direction;
@@ -340,7 +333,6 @@ class DecorateAction {
                     dir = this.preDir(dir);
                 }
                 this.setElementDirection(room, dir);
-            }
                 break;
             default:
                 break;
