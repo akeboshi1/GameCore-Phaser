@@ -3,10 +3,11 @@ import { EventType, ModuleName } from "structure";
 import { PicaRoam } from "./PicaRoam";
 import { op_client, op_virtual_world, op_pkt_def } from "pixelpai_proto";
 import { BaseDataConfigManager } from "picaWorker";
+import { ObjectAssign } from "utils";
 export class PicaRoamMediator extends BasicMediator {
     protected mModel: PicaRoam;
     protected curMoneyData: any;
-    protected poolsData: op_client.IDRAW_POOL_STATUS[];
+    protected poolsData: op_client.IDRAW_POOL_STATUS[] = [];
     private drawResult: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_DRAW_RESULT;
     constructor(game: Game) {
         super(ModuleName.PICAROAM_NAME, game);
@@ -85,24 +86,33 @@ export class PicaRoamMediator extends BasicMediator {
     }
 
     private onRetRoamListResult(pools: op_client.IDRAW_POOL_STATUS[]) {
-        if (this.poolsData === undefined) {
-            this.poolsData = pools;
-        } else {
-            pools.forEach((pool) => {
-                let found = false;
-                for (let i = 0; i < this.poolsData.length; i++) {
-                    if (this.poolsData[i].id === pool.id) {
-                        this.poolsData[i] = pool;
-                        found = true;
-                    }
+        const configMgr = <BaseDataConfigManager>this.game.configManager;
+        const basepools = configMgr.getCardPools();
+        pools.sort((a, b) => {
+            const aindex = basepools.indexOf(configMgr.getCardPool(a.id));
+            const bindex = basepools.indexOf(configMgr.getCardPool(b.id));
+            if (aindex > bindex) return 1;
+            else return -1;
+        });
+        // for (const pool of pools) {
+        for (let i = 0; i < pools.length; i++) {
+            const pool = pools[i];
+            const basePool = configMgr.getCardPool(pool.id);
+            ObjectAssign.excludeTagAssign(pool, basePool);
+            for (const reward of pool.progressAward) {
+                configMgr.getBatchItemDatas(reward.rewards);
+            }
+            let found = false;
+            for (let m = 0; m < this.poolsData.length; m++) {
+                if (this.poolsData[m].id === pool.id) {
+                    this.poolsData[m] = pool;
+                    found = true;
                 }
-                if (!found) {
-                    this.poolsData[pool.id] = pool;
-                }
-            });
+            }
+            if (!found) {
+                this.poolsData.splice(i, 0, pool);
+            }
         }
-
-        // this.poolsData = pools;
         this.updateServiceTime(pools);
         if (this.mView) this.mView.setRoamDataList(pools);
     }
@@ -117,6 +127,8 @@ export class PicaRoamMediator extends BasicMediator {
         this.updateServiceTime(this.poolsData);
         if (this.mView) {
             this.mView.setRoamDataList(this.poolsData);
+            const configMgr = <BaseDataConfigManager>this.game.configManager;
+            configMgr.getBatchItemDatas(content.rewards);
             this.mView.openRoamEffectOnePanel(content.rewards);
         }
         // this.onRetDrawHandler(content.rewards);

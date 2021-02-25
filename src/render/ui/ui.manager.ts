@@ -4,20 +4,16 @@ import { BasePanel } from "./components/base.panel";
 import { BasicScene } from "baseRender";
 import { SceneName } from "structure";
 import { AlertView, Buttons } from "./components";
+import { Panel } from "apowophaserui";
 export class UiManager {
     protected mScene: BasicScene;
     protected mPanelMap: Map<string, BasePanel>;// key: "<ModelName>Panel"
+    protected mBatchPanelList: Panel[] = [];
     /**
      * 前端触发显示ui缓存列表
      */
     protected mCache: any[] = [];
     protected mRemoteCache: Map<string, { resolver: ValueResolver<BasePanel>, param?: any }> = new Map();
-    private readonly mPanelClass = {
-        "BaseMediator": BasePanel,
-        // "LoginMediator": LoginPanel,
-        // "Activity": ActivityPanel,
-        // "Dialog": DialogPanel,
-    };
 
     constructor(protected mRender: Render) {
     }
@@ -49,17 +45,6 @@ export class UiManager {
         }
     }
 
-    public createPanel(mediatorName: string) {
-        if (!this.mPanelClass.hasOwnProperty(mediatorName)) {
-            Logger.getInstance().error("mediatorName error: ", mediatorName);
-            return;
-        }
-
-        const panel = new this.mPanelClass[mediatorName](this.mScene, this.mRender);
-        this.setPanel(mediatorName, panel);
-        return panel;
-    }
-
     public setPanel(value: string, panel: BasePanel) {
         this.mPanelMap.set(value, panel);
     }
@@ -73,10 +58,14 @@ export class UiManager {
         if (!this.mPanelMap) {
             return;
         }
+        this.mBatchPanelList.forEach((panel) => {
+            panel.hide();
+        });
         this.mPanelMap.forEach((med: BasePanel) => {
             med.destroy();
             med = null;
         });
+        this.mBatchPanelList = [];
         this.mPanelMap.clear();
         this.mPanelMap = null;
     }
@@ -85,13 +74,35 @@ export class UiManager {
         if (!this.mScene) {
             return;
         }
-        const alert = new AlertView(this).show({
+        const alert = new AlertView(this);
+        alert.show({
             text,
             callback: () => {
                 if (callBack) callBack();
             },
             btns: Buttons.Ok
         });
+        this.mBatchPanelList.push(alert);
+    }
+
+    /**
+     * 创建批量显示面板
+     * @param type
+     * @param param
+     */
+    public showBatchPanel(type: string, param?: any): BasePanel {
+        if (!this.mScene) {
+            return;
+        }
+        if (!this.mPanelMap) {
+            this.mPanelMap = new Map();
+        }
+        const className: string = type + "Panel";
+        const ns: any = require(`./${type}/${className}`);
+        const panel = new ns[className](this);
+        this.mBatchPanelList.push(panel);
+        panel.show(param);
+        return panel;
     }
 
     public destroy() {
@@ -111,9 +122,7 @@ export class UiManager {
             if (!this.mScene) {
                 const remoteCache = new ValueResolver<BasePanel>();
                 this.mRemoteCache.set(type, { resolver: remoteCache, param });
-
                 return remoteCache.promise(() => {
-                    //
                 });
             } else {
                 return new Promise<BasePanel>((resolve, reject) => {
@@ -121,39 +130,52 @@ export class UiManager {
                 });
             }
         }
-        // else if (scene) {
-        //     return new Promise<BasePanel>((resolve, reject) => {
-        //         this.render.emitter.once("sceneCreated", () => {
-        //             if (this.mCache) {
-        //                 for (const tmp of this.mCache) {
-        //                     resolve(this._showPanel(tmp.name, tmp.param));
-        //                 }
-        //                 this.mCache.length = 0;
-        //             }
-        //         }, this);
-        //     });
-        // }
     }
 
     public hidePanel(type: string) {
+        const panel = this.hideBasePanel(type);
+        if (panel) {
+            panel.hide();
+        }
+    }
+
+    /**
+     * 客户端发起关闭界面
+     * @param type
+     */
+    public hideBasePanel(type: string): BasePanel {
         if (!this.mPanelMap) {
             return;
         }
-        // type = this.getPanelNameByAlias(type);
-        const medName: string = `${type}Panel`;
-        const panel: BasePanel = this.mPanelMap.get(medName);
+        const panel: BasePanel = this.mPanelMap.get(type);
         if (!panel) {
             Logger.getInstance().error(`error ${type} no panel can show!!!`);
             return;
         }
-        panel.hide();
+        this.mPanelMap.delete(type);
+        return panel;
     }
 
-    public updateUIState(panelName: string, ui: any) {
+    /**
+     * 关闭批量界面，因为批量界面class一致，无法通过服务器告知关闭，所以由客户端控制开关（由panel的hide发起方法调用）
+     * @param panel
+     */
+    public hideBatchPanel(panel: Panel) {
+        const len = this.mBatchPanelList.length;
+        for (let i = 0; i < len; i++) {
+            const tmpPanel = this.mBatchPanelList[i];
+            if (tmpPanel === panel) {
+                this.mBatchPanelList.splice(i, 1);
+                return;
+            }
+        }
+    }
+
+    public updateUIState(type: string, ui: any) {
         if (!this.mPanelMap) {
             return;
         }
-        const panel = this.mPanelMap.get(panelName);
+        const panel = this.mPanelMap.get(type);
         if (panel) {
             panel.updateUIState(ui);
         }
@@ -182,12 +204,11 @@ export class UiManager {
         }
         const className: string = type + "Panel";
         const ns: any = require(`./${type}/${className}`);
-        const panel = new ns[className](this);
+        let panel = this.mPanelMap.get(type);
         if (!panel) {
-            Logger.getInstance().error(`error ${type} no panel can show!!!`);
-            return;
+            panel = new ns[className](this);
+            this.mPanelMap.set(type, panel);
         }
-        this.mPanelMap.set(type, panel);
         panel.show(param);
         return panel;
     }

@@ -130,7 +130,7 @@ export class EditorWallManager extends PacketHandler {
                     y: loc.y,
                     z: 0,
                     dir: loc.dir,
-                    layer: LayerEnum.Terrain
+                    layer: LayerEnum.Wall
                 });
                 this.walls.set(locId, loc);
                 this.sceneEditor.displayObjectPool.push("walls", locId, sprite);

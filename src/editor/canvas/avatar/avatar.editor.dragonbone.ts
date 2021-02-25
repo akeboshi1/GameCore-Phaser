@@ -502,7 +502,7 @@ export class AvatarEditorDragonbone extends Phaser.GameObjects.Container {
                         this.reloadDisplay()
                             .then(() => {
                                 resolve(img.src);
-                                Logger.getInstance().debug("ZW-- snapshot result: ", img.src);
+                                Logger.getInstance().log("snapshot result: ", img.src);
                             });
                     });
                 })

@@ -42,7 +42,7 @@ import { EditorModeDebugger } from "./display/debugs/editor.mode.debugger";
 import { GridsDebugger } from "./display/debugs/grids";
 import { SortDebugger } from "./display/debugs/sort.debugger";
 import { UiManager } from "./ui";
-import { GuideManager } from "./guide";
+// import { GuideManager } from "./guide";
 
 // import Stats from "../../Stat";
 
@@ -108,6 +108,7 @@ export class Render extends RPCPeer implements GameMain, IRender {
 
     constructor(config: ILauncherConfig, callBack?: Function) {
         super(RENDER_PEER);
+        Logger.getInstance().log("config ====>",config);
         this.emitter = new Phaser.Events.EventEmitter();
         this.mConfig = config;
         this.mCallBack = callBack;
@@ -755,8 +756,18 @@ export class Render extends RPCPeer implements GameMain, IRender {
     }
 
     @Export([webworker_rpc.ParamType.str])
-    public hidePanel(panelName: string) {
-        if (this.mUiManager) this.mUiManager.hidePanel(panelName);
+    public hidePanel(type: string) {
+        if (this.mUiManager) this.mUiManager.hidePanel(type);
+    }
+
+    @Export([webworker_rpc.ParamType.str])
+    public showBatchPanel(type: string, data?: any) {
+        if (this.mUiManager) this.mUiManager.showBatchPanel(type, data);
+    }
+
+    @Export([webworker_rpc.ParamType.str])
+    public hideBatchPanel(type) {
+        if (this.mUiManager) this.mUiManager.hideBatchPanel(type);
     }
 
     @Export()
@@ -1087,7 +1098,10 @@ export class Render extends RPCPeer implements GameMain, IRender {
                 this.resize(this.mConfig.height, this.mConfig.width);
             }
         }
-        if (this.mGameCreatedFunc) this.mGameCreatedFunc.call(this);
+        if (this.mGameCreatedFunc) {
+            Logger.getInstance().log("render game_created");
+            this.mGameCreatedFunc.call(this);
+        }
         this.gameCreated(keyEvents);
     }
 

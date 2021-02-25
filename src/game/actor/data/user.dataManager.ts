@@ -69,6 +69,10 @@ export class UserDataManager extends PacketHandler {
         if (this.mProperty && this.mProperty.diamond) return this.mProperty.diamond.value;
         return 0;
     }
+    get level(): number {
+        if (this.mProperty && this.mProperty.level) return this.mProperty.level.value;
+        return 0;
+    }
     get isSelfRoom() {
         if (this.mProperty.rooms) {
             const curRoomid = this.curRoomID;

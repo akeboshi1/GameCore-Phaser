@@ -27,7 +27,7 @@ export class PicaEffectMgrMediator extends BasicMediator {
     panelInit() {
         super.panelInit();
         for (const temp of this.tempQueue) {
-            this.mView.play([{ line1: temp.line1, line2: temp.line2 }], "unlock");
+            this.setViewEffect(temp);
         }
     }
     setParam(param) {
@@ -36,8 +36,19 @@ export class PicaEffectMgrMediator extends BasicMediator {
         if (!this.mPanelInit) {
             this.tempQueue.push(param);
         } else {
-            this.mView.play([{ line1: param.line1, line2: param.line2 }], "unlock");
+            this.setViewEffect(param);
         }
+    }
+
+    private setViewEffect(data: any) {
+        const arr = [];
+        if (data.effecttype === "unlock") {
+            arr.push({ line1: data.line1, line2: data.line2 });
+        } else if (data.effecttype === "levelup") {
+            data.level = this.game.user.userData.level;
+            arr.push(data);
+        }
+        this.mView.play(arr, data.effecttype);
     }
     private onCloseHandler() {
         this.hide();
