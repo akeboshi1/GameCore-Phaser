@@ -20,7 +20,7 @@ export class DialogGuide extends BaseGuide {
     }
 
     private step2() {
-
+        this.stop();
     }
 
 }

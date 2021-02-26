@@ -1,5 +1,5 @@
-import { Button, ClickEvent, GameGridTable } from "apowophaserui";
-import { BaseGuide, ButtonEventDispatcher, Render } from "gamecoreRender";
+import { Button, ClickEvent } from "apowophaserui";
+import { BaseGuide, Render } from "gamecoreRender";
 import { ModuleName } from "structure";
 import { BottomPanel, PicaExploreListPanel } from "../ui";
 
@@ -10,10 +10,6 @@ export class TaskGuide extends BaseGuide {
 
     public start() {
         this.step1();
-    }
-
-    public stop() {
-        this.guideEffect.destroy();
     }
 
     private step1() {
