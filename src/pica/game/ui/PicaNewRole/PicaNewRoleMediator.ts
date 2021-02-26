@@ -55,7 +55,7 @@ export class PicaNewRoleMediator extends BasicMediator {
     }
     private onOpeningCharacterHandler(roleData: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_ANOTHER_PLAYER_INFO) {
         const uimanager = this.game.uiManager;
-        uimanager.showMed(ModuleName.CHARACTERINFO_NAME, this.mShowData);
+        uimanager.showMed(ModuleName.PICAPLAYERINFO_NAME, this.mShowData);
     }
 
     private onFollowHandler(data: { uid: string, follow: boolean }) {

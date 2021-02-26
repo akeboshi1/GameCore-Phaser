@@ -12,6 +12,7 @@ export class ModuleName {
     public static VERIFIED_NAME: string = "Verfied";
     public static PICANAVIGATE_NAME: string = "PicaNavigate";
     public static CHARACTERINFO_NAME: string = "CharacterInfo";
+    public static PICAPLAYERINFO_NAME: string = "PicaPlayerInfo";
     public static PICAFRIEND_NAME: string = "PicaFriend";
     public static ACCOUNT_NAME: string = "Account";
     public static SCENEMANAGER_NAME: string = "SceneManager";
@@ -65,5 +66,5 @@ export class ModuleName {
     public static PICARECASTE_NAME: string = "PicaRecaste";
     public static PICAROAM_NAME = "PicaRoam";
     public static PICAEXPLORELOG_NAME = "PicaExploreLog";
-    public static PICAEXPLORELIST_NAME="PicaExploreList";
+    public static PICAEXPLORELIST_NAME = "PicaExploreList";
 }

@@ -12,11 +12,3 @@ export interface IJob {
     rewards?: ICountablePackageItem[];
     requirements?: ICountablePackageItem[]; // converted requirements
 }
-
-// cabinType: 1
-// detail: "目标！升职加薪！"
-// display: Display {texturePath: "pkth5/npc/npc01.png"}
-// id: "JOB0000001"
-// name: "杂活小工"
-// rewards: [CountablePackageItem]
-// targets: []

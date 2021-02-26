@@ -28,7 +28,7 @@ export class CommonBackground extends ButtonEventDispatcher {
     }
     protected init() {
         this.background = this.scene.make.image({ key: this.key, frame: this.bgFrame });
-        this.background.displayWidth = this.width * 1.2;
+        this.background.displayWidth = this.width;
         this.graphic = this.scene.make.graphics(undefined, false);
         this.add([this.graphic, this.background]);
         this.resize(this.width, this.height);

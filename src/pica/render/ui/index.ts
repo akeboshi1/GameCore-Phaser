@@ -112,3 +112,7 @@ export * from "./PicaExploreList/PicaExploreListDetailPanel";
 export * from "./PicaExploreList/PicaExploreListLevelPanel";
 export * from "./PicaExploreList/PicaExploreListPanel";
 export * from "./Bottom/BottomPanel";
+export * from "./PicaPlayerInfo/PicaAttributePanel";
+export * from "./PicaPlayerInfo/PicaGraphicsProgressBar";
+export * from "./PicaPlayerInfo/PicaPlayerEditorPanel";
+export * from "./PicaPlayerInfo/PicaPlayerInfoPanel";

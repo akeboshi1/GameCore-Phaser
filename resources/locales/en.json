@@ -81,6 +81,7 @@
     "player_title": "Title",
     "option_live": "SKILL",
     "option_badge": "BADGE",
+    "option_decorate": "DECORATE",
     "option_attribute": "ATTRIBUTE",
     "option_title": "TITLE",
     "add_friend": "D: Add Friend",
@@ -103,7 +104,8 @@
     "follow": "FOLLOW",
     "followed": "FOLLOWED",
     "report": "Report",
-    "blockuer": "Block User"
+    "blockuer": "Block User",
+    "room": "Room"
   },
   "compose": {
     "title": "Produce",
@@ -402,7 +404,7 @@
     "eventuallytips": "Eventually",
     "finish": "Finish",
     "exit": "Exit",
-    "exittips":"Whether to exit the exploration level"
+    "exittips": "Whether to exit the exploration level"
   },
   "effecttips": {
     "unlock": "New feature unlock :{{name}}"
