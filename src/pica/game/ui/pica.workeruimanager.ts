@@ -29,13 +29,13 @@ export class PicaWorkerUiManager extends UIManager {
         super.showMainUI(hideNames);
     }
 
-    public showDecorateUI() {
-        this.clearMediator();
-        this.mMedMap.set(ModuleName.PICADECORATECONTROL_NAME, new PicaDecorateControlMediator(this.game));
-        this.mMedMap.set(ModuleName.PICADECORATE_NAME, new PicaDecorateMediator(this.game));
-        super.showDecorateUI();
-        // this.mMedMap.set(UIMediatorType.NOTICE, new NoticeMediator(this.mUILayerManager, this.mScene, this.worldService));
-    }
+    // public showDecorateUI() {
+    //     this.clearMediator();
+    //     this.mMedMap.set(ModuleName.PICADECORATECONTROL_NAME, new PicaDecorateControlMediator(this.game));
+    //     this.mMedMap.set(ModuleName.PICADECORATE_NAME, new PicaDecorateMediator(this.game));
+    //     super.showDecorateUI();
+    //     // this.mMedMap.set(UIMediatorType.NOTICE, new NoticeMediator(this.mUILayerManager, this.mScene, this.worldService));
+    // }
 
     public showMed(type: string, param: any) {
         if (!this.mMedMap) {

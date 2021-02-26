@@ -89,13 +89,13 @@ export class UIManager extends PacketHandler {
         this.isshowMainui = true;
     }
 
-    public showDecorateUI() {
-        this.mMedMap.forEach((mediator: any) => {
-            if (mediator.isSceneUI() && !mediator.isShow()) {
-                mediator.show();
-            }
-        });
-    }
+    // public showDecorateUI() {
+    //     this.mMedMap.forEach((mediator: any) => {
+    //         if (mediator.isSceneUI() && !mediator.isShow()) {
+    //             mediator.show();
+    //         }
+    //     });
+    // }
 
     public showMed(type: string, param?: any) {
         if (!this.mMedMap) {

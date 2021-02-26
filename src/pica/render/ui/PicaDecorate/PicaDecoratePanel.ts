@@ -1,345 +1,191 @@
-import { Button, ClickEvent } from "apowophaserui";
-import { BasePanel, PlayScene, UiManager } from "gamecoreRender";
-import { MessageType, ModuleName, RENDER_PEER } from "structure";
-import { Direction, IPosition45Obj, LogicPos, Position45 } from "utils";
+import {AlertView, BasePanel, UiManager} from "gamecoreRender";
+import {ModuleName, RENDER_PEER} from "structure";
+import {UIAtlasName} from "picaRes";
+import {Button, Text} from "apowophaserui";
+import {Font, i18n} from "utils";
+import {op_gameconfig} from "pixelpai_proto";
+import {ItemButton} from "../Components/Item.button";
+import {ICountablePackageItem} from "picaStructure";
+
 export class PicaDecoratePanel extends BasePanel {
-    private readonly resKey = "decorate";
-    private readonly minGrid: number = 2;
-    private readonly maxGrid: number = 10;
-    private mControllContainer: Phaser.GameObjects.Container;
-    private mTurnBtn: Button;
-    private mRecycleBtn: Button;
-    private mOkBtn: Button;
-    private mCancelBtn: Button;
-    private mMenuContainer: Phaser.GameObjects.Container;
-    private mMainMenus: Button[];
 
-    private mHorizontalBtn: Button;
-    private mMoveBtn: Button;
-    private mRepeatBtn: Button;
-    private mExtendBtn: Button;
-    private mSubMenus: Phaser.GameObjects.Container;
+    private mBtn_Close: Button;
+    private mBtn_SaveAndExit: Button;
+    private mBtn_RemoveAll: Button;
+    private mBtn_Reverse: Button;
+    private mBtn_Bag: Button;
+    private mBtn_SelectedFurniture: ItemButton;
+    private mBtn_QuickSelectFurnitures: ItemButton[] = [];
 
-    private mMoveMenuContainer: MoveMenu;
-    private mRepeatMenuContainer: MoveMenu;
-    private mDisplayObject;
-    private mSprite;
-    private offset: LogicPos = new LogicPos();
-    private mScaleRatio: number = 1;
-
-    private mCanPut: boolean;
-
-    constructor(uiManager: UiManager) {
+    constructor(private uiManager: UiManager) {
         super(uiManager.render.sceneManager.getMainScene(), uiManager.render);
         this.key = ModuleName.PICADECORATE_NAME;
-        this.mScaleRatio = uiManager.render.scaleRatio;
     }
 
     public show(param?: any) {
-        this.mShowData = param;
-        if (!this.mInitialized) {
-            this.preload();
-            return;
-        }
-        if (this.mShow) return;
-        if (this.soundGroup && this.soundGroup.open) this.playSound(this.soundGroup.open);
-        if (!this.mTweening && this.mTweenBoo) {
-            this.showTween(true);
-        } else {
-            this.mShow = true;
-        }
-        (<PlayScene>this.scene).layerManager.addToLayer("sceneUILayer", this);
-    }
-
-    public addListen() {
-        if (this.mCancelBtn) this.mCancelBtn.on(ClickEvent.Tap, this.onCancelHandler, this);
-        if (this.mOkBtn) this.mOkBtn.on(ClickEvent.Tap, this.onAddHandler, this);
-        if (this.mRecycleBtn) this.mRecycleBtn.on(ClickEvent.Tap, this.onRecycleHandler, this);
-        if (this.mTurnBtn) this.mTurnBtn.on(ClickEvent.Tap, this.onTurnHandler, this);
-        if (this.mMoveBtn) this.mMoveBtn.on(ClickEvent.Tap, this.onShowMoveMenuHandler, this);
-        if (this.mRepeatBtn) this.mRepeatBtn.on(ClickEvent.Tap, this.onShowRepeatHandler, this);
-        if (this.mExtendBtn) this.mExtendBtn.on(ClickEvent.Tap, this.onShowExtendsHandler, this);
-        if (this.mMoveMenuContainer) {
-            this.mMoveMenuContainer.register();
-            this.mMoveMenuContainer.on(ClickEvent.Tap, this.onMoveHandler, this);
-        }
-        if (this.mRepeatMenuContainer) {
-            this.mRepeatMenuContainer.register();
-            this.mRepeatMenuContainer.on(ClickEvent.Tap, this.onRepeatHandler, this);
-            this.mRepeatMenuContainer.on(ClickEvent.Hold, this.onHoldRepeatHandler, this);
-        }
-    }
-
-    public removeListen() {
-        if (this.mCancelBtn) this.mCancelBtn.off(ClickEvent.Tap, this.onCancelHandler, this);
-        if (this.mOkBtn) this.mOkBtn.off(ClickEvent.Tap, this.onAddHandler, this);
-        if (this.mRecycleBtn) this.mRecycleBtn.off(ClickEvent.Tap, this.onRecycleHandler, this);
-        if (this.mTurnBtn) this.mTurnBtn.off(ClickEvent.Tap, this.onTurnHandler, this);
-        if (this.mMoveBtn) this.mMoveBtn.off(ClickEvent.Tap, this.onShowMoveMenuHandler, this);
-        if (this.mRepeatBtn) this.mRepeatBtn.off(ClickEvent.Tap, this.onShowRepeatHandler, this);
-        if (this.mExtendBtn) this.mExtendBtn.off(ClickEvent.Tap, this.onShowExtendsHandler, this);
-        if (this.mMoveMenuContainer) {
-            this.mMoveMenuContainer.unRegister();
-            this.mMoveMenuContainer.off(ClickEvent.Tap, this.onMoveHandler, this);
-        }
-        if (this.mRepeatMenuContainer) {
-            this.mRepeatMenuContainer.unRegister();
-            this.mRepeatMenuContainer.off(ClickEvent.Tap, this.onRepeatHandler, this);
-            this.mRepeatMenuContainer.off(ClickEvent.Hold, this.onHoldRepeatHandler, this);
-        }
-    }
-
-    public setElement(id: number) {
-        this.mDisplayObject = this.render.displayManager.getDisplay(id);
-        if (!this.mInitialized) {
-            return;
-        }
-        if (this.mDisplayObject) this.setPos(this.mDisplayObject.x, this.mDisplayObject.y);
+        super.show(param);
 
         this.addListen();
     }
 
-    public canPut(val: boolean) {
-        if (val !== this.mCanPut) {
-            this.mCanPut = val;
-            if (!this.mOkBtn) {
-                return;
-            }
-            this.mOkBtn.enable = val;
-        }
+    public addListen() {
+        this.mBtn_Close.on("pointerup", this.btnHandler_Close, this);
+        this.mBtn_SaveAndExit.on("pointerup", this.btnHandler_SaveAndExit, this);
+        this.mBtn_RemoveAll.on("pointerup", this.btnHandler_RemoveAll, this);
+        this.mBtn_Reverse.on("pointerup", this.btnHandler_Reverse, this);
+        this.mBtn_Bag.on("pointerup", this.btnHandler_Bag, this);
     }
 
-    public setPos(x: number, y?: number, z?: number) {
-        this.x = x * this.mScaleRatio;
-        this.y = (y + this.offset.y) * this.mScaleRatio;
-        this.z = z || 0;
-    }
-
-    public setOffset(x: number, y: number) {
-        this.offset.x = x;
-        this.offset.y = y;
-        if (this.mDisplayObject) this.setPos(this.mDisplayObject.x, this.mDisplayObject.y);
+    public removeListen() {
+        this.mBtn_Close.off("pointerup", this.btnHandler_Close, this);
+        this.mBtn_SaveAndExit.off("pointerup", this.btnHandler_SaveAndExit, this);
+        this.mBtn_RemoveAll.off("pointerup", this.btnHandler_RemoveAll, this);
+        this.mBtn_Reverse.off("pointerup", this.btnHandler_Reverse, this);
+        this.mBtn_Bag.off("pointerup", this.btnHandler_Bag, this);
     }
 
     public destroy() {
-        if (this.mRepeatMenuContainer) {
-            this.mRepeatMenuContainer.destroy();
-        }
-        if (this.mMoveMenuContainer) {
-            this.mMoveMenuContainer.destroy();
-        }
+
         super.destroy();
     }
 
+    public setSelectedFurniture(data: ICountablePackageItem) {
+        if (this.mBtn_SelectedFurniture === null) {
+            this.mBtn_SelectedFurniture = new ItemButton(this.scene, UIAtlasName.effectcommon, "synthetic_icon_bg", this.dpr, this.scale, false);
+            this.mBtn_SelectedFurniture.x = 10 * this.dpr;
+            const h = this.scene.cameras.main.height;
+            this.mBtn_SelectedFurniture.y = h - 14 * this.dpr;
+            this.add(this.mBtn_SelectedFurniture);
+
+        }
+        this.mBtn_SelectedFurniture.setData({ data });
+        this.mBtn_SelectedFurniture.setItemData(data, true);
+        this.mBtn_SelectedFurniture.enable = data.count > 0;
+    }
+
+    public setQuickSelectFurnitures(datas: ICountablePackageItem[]) {
+        if (this.mBtn_QuickSelectFurnitures.length > 0) return;
+
+        const h = this.scene.cameras.main.height;
+        let i = 0;
+        for (const data of datas) {
+            const quickBtn = new ItemButton(this.scene, UIAtlasName.effectcommon, "synthetic_icon_bg", this.dpr, this.scale, false);
+            quickBtn.x = 30 * this.dpr + 20 * this.dpr * i;
+            quickBtn.y = h - 14 * this.dpr;
+            quickBtn.setData({data});
+            quickBtn.setItemData(data, true);
+            this.mBtn_QuickSelectFurnitures.push(quickBtn);
+        }
+        this.add(this.mBtn_QuickSelectFurnitures);
+    }
+
     protected preload() {
-        this.addAtlas(this.key, "decorate_edit_menu/decorate_edit_menu.png", "decorate_edit_menu/decorate_edit_menu.json");
+        this.addAtlas(this.key, "room_decorate/room_decorate.png", "room_decorate/room_decorate.json");
         super.preload();
     }
 
     protected init() {
-        const w = this.scene.cameras.main.width / this.scale;
-        const h = this.scene.cameras.main.height / this.scale;
+        const w = this.scene.cameras.main.width;
+        const h = this.scene.cameras.main.height;
+        this.setSize(w, h);
 
-        this.mMainMenus = [];
-        this.mMenuContainer = this.scene.make.container({
-            x: w >> 1,
-        }, false);
-        this.mSubMenus = this.scene.make.container({
-            x: w >> 1,
-            y: 60 * this.dpr
-        }, false);
+        this.mBtn_Close = new Button(this.scene, this.key, "room_decorate_previous", "room_decorate_previous");
+        this.mBtn_Close.x = this.mBtn_Close.width * 0.5 + 5 * this.dpr;
+        this.mBtn_Close.y = this.mBtn_Close.height * 0.5 + 5 * this.dpr;
+        this.add(this.mBtn_Close);
 
-        this.mOkBtn = new Button(this.scene, this.key, "ok_btn.png");
-        this.mRecycleBtn = new Button(this.scene, this.key, "recycly_btn.png");
-        this.mTurnBtn = new Button(this.scene, this.key, "turn_btn.png");
-        this.mCancelBtn = new Button(this.scene, this.key, "cancel_btn.png");
-        this.mMenuContainer.y = this.mOkBtn.height * 0.5;
-        this.mSubMenus.y = this.mMenuContainer.y + 60 * this.dpr;
+        this.mBtn_SaveAndExit = new Button(this.scene, this.key, "room_decorate_save", "room_decorate_save");
+        this.mBtn_SaveAndExit.x = w - this.mBtn_SaveAndExit.width * 0.5 - 5 * this.dpr;
+        this.mBtn_SaveAndExit.y = this.mBtn_SaveAndExit.height * 0.5 + 5 * this.dpr;
+        this.add(this.mBtn_SaveAndExit);
 
-        this.mHorizontalBtn = new Button(this.scene, this.key, "horizontal_btn.png");
-        this.mMoveBtn = new Button(this.scene, this.key, "move_btn.png");
-        this.mRepeatBtn = new Button(this.scene, this.key, "repeat_btn.png");
-        this.mExtendBtn = new Button(this.scene, this.key, "extend_btn.png");
+        const bg1 = this.scene.make.image({key: UIAtlasName.uicommon, frame: "bg"}).setOrigin(0, 1);
+        bg1.displayWidth = w;
+        bg1.x = 0;
+        bg1.y = h;
+        bg1.setDepth(-1);
+        this.add([bg1]);
 
-        this.mMoveMenuContainer = new MoveMenu(this.scene, this.key, this.dpr, this.scale);
-        this.mMoveMenuContainer.y = this.mSubMenus.y + 15 * this.dpr + this.mMoveMenuContainer.height;
-
-        this.mRepeatMenuContainer = new MoveMenu(this.scene, this.key, this.dpr, this.scale);
-        this.mRepeatMenuContainer.y = this.mMoveMenuContainer.y;
-
-        const zoom = this.scale;
-
-        this.add([this.mMenuContainer, this.mSubMenus]);
-        this.mMenuContainer.add([this.mOkBtn, this.mTurnBtn, this.mRecycleBtn, this.mCancelBtn]);
-        this.mSubMenus.add([this.mHorizontalBtn, this.mMoveBtn, this.mRepeatBtn, this.mExtendBtn]);
-        // this.add(this.mSubMenus);
-        let mainMenuW = w - 55 * this.dpr * this.mWorld.uiScale * 2;
-        this.mMenuContainer.x = -mainMenuW >> 1;
-        const list = this.mMenuContainer.list;
-        list.map((btn: Phaser.GameObjects.Image) => mainMenuW -= btn.width);
-        let margin = mainMenuW / (list.length - 1) / zoom;
-        for (let i = 1; i < list.length; i++) {
-            const preButton = <Phaser.GameObjects.Image>list[i - 1];
-            const button = <Phaser.GameObjects.Image>list[i];
-            button.x = preButton.width + preButton.x + margin;
-        }
-
-        mainMenuW = w - 70 * this.dpr * this.mWorld.uiScale * 2;
-        this.mSubMenus.x = -mainMenuW >> 1;
-        const subList = this.mSubMenus.list;
-        subList.map((btn: Phaser.GameObjects.Image) => mainMenuW -= btn.width);
-        margin = mainMenuW / (subList.length - 1) / zoom;
-        for (let i = 1; i < subList.length; i++) {
-            const preButton = <Phaser.GameObjects.Image>subList[i - 1];
-            const button = <Phaser.GameObjects.Image>subList[i];
-            button.x = preButton.width + preButton.x + margin;
-        }
-
-        this.mMoveMenuContainer.x = this.mSubMenus.x + this.mMoveBtn.x + 29 * this.dpr;
-        this.mRepeatMenuContainer.x = this.mSubMenus.x + this.mRepeatBtn.x + 29 * this.dpr;
-
-        this.mOkBtn.enable = this.mCanPut;
+        const bg2 = this.scene.make.image({key: UIAtlasName.uicommon, frame: "bg"}).setOrigin(0, 1);
+        bg2.displayWidth = w;
+        bg2.x = 0;
+        bg2.y = h - bg1.height - 1 * this.dpr;
+        this.mBtn_RemoveAll = new Button(this.scene, this.key, "room_decorate_delete", "room_decorate_delete");
+        this.mBtn_RemoveAll.x = this.mBtn_RemoveAll.width * 0.5 + 10 * this.dpr;
+        this.mBtn_RemoveAll.y = bg2.y - bg2.height * 0.5;
+        this.mBtn_Reverse = new Button(this.scene, this.key, "room_decorate_withdraw", "room_decorate_withdraw");
+        this.mBtn_Reverse.x = this.mBtn_RemoveAll.x + this.mBtn_RemoveAll.width * 0.5 + 15 * this.dpr + this.mBtn_Reverse.width * 0.5;
+        this.mBtn_Reverse.y = bg2.y - bg2.height * 0.5;
+        this.mBtn_Bag = new Button(this.scene, this.key, "room_decorate_Furniture", "room_decorate_Furniture");
+        this.mBtn_Bag.x = w - this.mBtn_Bag.width * 0.5 - 10 * this.dpr;
+        this.mBtn_Bag.y = bg2.y - bg2.height * 0.5;
+        this.add([bg2, this.mBtn_RemoveAll, this.mBtn_Reverse, this.mBtn_Bag]);
 
         super.init();
-
-        if (this.mDisplayObject) this.setElement(this.mDisplayObject);
-    }
-
-    private onTurnHandler() {
-        const mediator = this.mediator;
-        if (mediator) {
-            mediator.turn();
-        }
-    }
-
-    private onRecycleHandler() {
-        const mediator = this.mediator;
-        if (mediator) {
-            mediator.recycle();
-        }
-    }
-
-    private onCancelHandler() {
-        const mediator = this.mediator;
-        if (mediator) {
-            mediator.cancel();
-        }
-    }
-
-    private onAddHandler() {
-        if (this.mCanPut) {
-            const mediator = this.mediator;
-            if (mediator) mediator.putElement();
-        }
-    }
-
-    private onMoveHandler(dir: number) {
-        if (typeof dir !== "number") {
-            return;
-        }
-        const mediator = this.mediator;
-        if (mediator) mediator.moveDir(dir);
-    }
-
-    private onRepeatHandler(dir: Direction) {
-        const mediator = this.mediator;
-        if (!mediator) return;
-        mediator.repeatAdd(dir, 2);
-    }
-
-    private onHoldRepeatHandler(dir: Direction) {
-        const mediator = this.mediator;
-        if (!mediator) return;
-        mediator.repeatAdd(dir, 10);
-    }
-
-    private onShowMoveMenuHandler() {
-        this.add(this.mMoveMenuContainer);
-        this.remove(this.mRepeatMenuContainer);
-    }
-
-    private onShowRepeatHandler() {
-        this.add(this.mRepeatMenuContainer);
-        this.remove(this.mMoveMenuContainer);
-    }
-
-    private onShowExtendsHandler() {
     }
 
     get mediator() {
         return this.render.mainPeer[ModuleName.PICADECORATE_NAME];
     }
+
+    private btnHandler_Close() {
+        const alertView = new AlertView(this.uiManager);
+        alertView.show({
+            // TODO: set i18n
+            text: i18n.t("party.sendgifttips"),
+            oy: 302 * this.dpr * this.render.uiScale,
+            callback: () => {
+                this.mediator.btnHandler_Close();
+            },
+        });
+    }
+
+    private btnHandler_SaveAndExit() {
+        this.mediator.btnHandler_SaveAndExit();
+    }
+
+    private btnHandler_RemoveAll() {
+        this.mediator.btnHandler_RemoveAll();
+    }
+
+    private btnHandler_Reverse() {
+        this.mediator.btnHandler_Reverse();
+    }
+
+    private btnHandler_Bag() {
+        this.mediator.btnHandler_Bag();
+    }
+
+    private onFurnitureClick(id: number) {
+        this.mediator.onFurnitureClick();
+    }
 }
 
-class MoveMenu extends Phaser.GameObjects.Container {
-    private mBtns: any[];
-    private mArrow1: Button;
-    private mArrow3: Button;
-    private mArrow5: Button;
-    private mArrow7: Button;
-    constructor(scene: Phaser.Scene, key: string, dpr: number = 1, uiScale: number = 1) {
+class FurnitureButton extends Phaser.GameObjects.Container {
+
+    private mButton: Button;
+    private mText: Phaser.GameObjects.Text;
+
+    constructor(scene: Phaser.Scene, private key: string, private dpr: number) {
         super(scene);
-        const bg = scene.make.image({
-            key,
-            frame: "bg.png"
-        }, false);
-        this.setSize(bg.displayWidth, bg.displayHeight);
 
-        this.mArrow1 = new Button(this.scene, key, "arrow_1.png");
-        this.mArrow1.setData("dir", Direction.north_west);
-        this.mArrow3 = new Button(this.scene, key, "arrow_3.png");
-        this.mArrow3.setData("dir", Direction.west_south);
-        this.mArrow5 = new Button(this.scene, key, "arrow_5.png");
-        this.mArrow5.setData("dir", Direction.south_east);
-        this.mArrow7 = new Button(this.scene, key, "arrow_7.png");
-        this.mArrow7.setData("dir", Direction.east_north);
-        this.mBtns = [this.mArrow1, this.mArrow3, this.mArrow5, this.mArrow7];
-        this.add(bg);
-        this.add(this.mBtns);
-
-        const w = this.width;
-        let totalWidth = this.width - 20 * dpr;
-        this.mBtns.map((btn) => totalWidth -= btn.displayWidth);
-        const space = totalWidth = totalWidth / (this.mBtns.length - 1);
-        const arrowH = (3 * dpr);
-        for (let i = 0; i < this.mBtns.length; i++) {
-            if (i === 0) {
-                this.mBtns[i].x = 10 * dpr + this.mBtns[i].width / 2 - this.width / 2;
-            } else {
-                this.mBtns[i].x = space + this.mBtns[i - 1].x + this.mBtns[i - 1].width;
-            }
-            this.mBtns[i].y = arrowH;
-        }
-        this.setInteractive();
+        this.mText = this.scene.make.text({
+            x: this.width * 0.5 - 5 * this.dpr, y: 0, text: "", padding: {
+                left: 0,
+                right: 10 * this.dpr,
+            },
+            style: {fontFamily: Font.DEFULT_FONT, fontSize: 28 * this.dpr, color: "#FCF863"}
+        }).setFontStyle("bold italic").setStroke("#C25E0D", 2 * this.dpr).setOrigin(0.5);
+        this.add(this.mText);
     }
 
-    public register() {
-        this.mArrow1.on(ClickEvent.Hold, this.onHoldHandler, this);
-        this.mArrow1.on(ClickEvent.Tap, this.onClickHandler, this);
-        this.mArrow3.on(ClickEvent.Hold, this.onHoldHandler, this);
-        this.mArrow3.on(ClickEvent.Tap, this.onClickHandler, this);
-        this.mArrow5.on(ClickEvent.Hold, this.onHoldHandler, this);
-        this.mArrow5.on(ClickEvent.Tap, this.onClickHandler, this);
-        this.mArrow7.on(ClickEvent.Hold, this.onHoldHandler, this);
-        this.mArrow7.on(ClickEvent.Tap, this.onClickHandler, this);
+    public setDisplay(display: op_gameconfig.IDisplay) {
+        if (this.mButton) this.remove(this.mButton);
+
+        this.mButton = new Button(this.scene, display.texturePath);
     }
 
-    public unRegister() {
-        this.mArrow1.off(ClickEvent.Hold, this.onHoldHandler, this);
-        this.mArrow1.off(ClickEvent.Tap, this.onClickHandler, this);
-        this.mArrow3.off(ClickEvent.Hold, this.onHoldHandler, this);
-        this.mArrow3.off(ClickEvent.Tap, this.onClickHandler, this);
-        this.mArrow5.off(ClickEvent.Hold, this.onHoldHandler, this);
-        this.mArrow5.off(ClickEvent.Tap, this.onClickHandler, this);
-        this.mArrow7.off(ClickEvent.Hold, this.onHoldHandler, this);
-        this.mArrow7.off(ClickEvent.Tap, this.onClickHandler, this);
-    }
-
-    private onHoldHandler(gameobject) {
-        this.emit(ClickEvent.Hold, gameobject.getData("dir"));
-    }
-
-    private onClickHandler(pointer, gameobject) {
-        this.emit(ClickEvent.Tap, gameobject.getData("dir"));
+    public setCount(count: number) {
+        this.mText.text = count + "";
     }
 }

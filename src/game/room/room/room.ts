@@ -34,6 +34,7 @@ export interface IRoomService {
     readonly cameraService: ICameraService;
     // readonly layerManager: LayerManager;
     readonly effectManager: EffectManager;
+    readonly decorateManager: DecorateManager;
     // readonly handlerManager: HandlerManager;
     readonly roomSize: IPosition45Obj;
     readonly miniSize: IPosition45Obj;
@@ -750,6 +751,10 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
 
     get effectManager(): EffectManager {
         return this.mEffectManager;
+    }
+
+    get decorateManager(): DecorateManager {
+        return this.mDecorateManager;
     }
 
     get id(): number {

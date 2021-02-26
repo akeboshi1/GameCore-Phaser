@@ -19,6 +19,7 @@ import { DecorateTerrainManager } from "../terrain/decorate.terrain.manager";
 import { DecorateElementManager } from "../element/decorate.element.manager";
 import { SpawnPoint } from "../display/spawn.point";
 import { Sprite } from "baseModel";
+import {DecorateManager} from "gamecore";
 
 export interface DecorateRoomService extends IRoomService {
     readonly miniSize: IPosition45Obj;
@@ -39,6 +40,7 @@ export class DecorateRoom extends PacketHandler implements DecorateRoomService {
     private mMiniSize: IPosition45Obj;
     private mTerrainManager: DecorateTerrainManager;
     private mElementManager: DecorateElementManager;
+    private mDecorateManager: DecorateManager;
     private mCameraService: ICameraService;
     private mSelectorElement;
     private mSkyboxManager: SkyBoxManager;
@@ -126,7 +128,7 @@ export class DecorateRoom extends PacketHandler implements DecorateRoomService {
     }
 
     initUI() {
-        if (this.game.uiManager) this.game.uiManager.showDecorateUI();
+        // if (this.game.uiManager) this.game.uiManager.showDecorateUI();
     }
 
     destroy() {
@@ -758,6 +760,10 @@ export class DecorateRoom extends PacketHandler implements DecorateRoomService {
 
     get effectManager() {
         return undefined;
+    }
+
+    get decorateManager(): DecorateManager {
+        return this.mDecorateManager;
     }
 
     get matterWorld() {

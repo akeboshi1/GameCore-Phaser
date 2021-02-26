@@ -1,12 +1,12 @@
 import {Room} from "../room/room";
 import {op_client, op_def, op_virtual_world} from "pixelpai_proto";
-import {ISprite, ModuleName, RENDER_PEER} from "structure";
-import {i18n, IPos, Logger, LogicPos, Pos, Position45} from "utils";
-import {AlertView} from "gamecoreRender";
+import {ISprite, MessageType, ModuleName} from "structure";
+import {IPos, Logger, LogicPos, Position45} from "utils";
 import {PBpacket} from "net-socket-packet";
 
 // 小屋布置管理类，包含所有布置过程中的操作接口
 // 文档：https://dej4esdop1.feishu.cn/docs/doccnEbMKpINEkfBVImFJ0nTJUh#
+// TODO:移植到PicaGame
 export class DecorateManager {
 
     private mActionQueue: DecorateAction[] = [];
@@ -88,9 +88,15 @@ export class DecorateManager {
 
     // 返回上一步
     public reverse() {
-        if (this.mActionQueue.length === 0) return;
-        const act = this.mActionQueue.pop();
-        act.reverse(this.mRoom);
+        if (this.mSelectedID > 0) {
+            if (this.mSelectedActionQueue.length === 0) return;
+            const act = this.mSelectedActionQueue.pop();
+            act.reverse(this.mRoom);
+        } else {
+            if (this.mActionQueue.length === 0) return;
+            const act = this.mActionQueue.pop();
+            act.reverse(this.mRoom);
+        }
     }
 
     // 撤销所有编辑，返回进入编辑模式的样子
@@ -108,6 +114,8 @@ export class DecorateManager {
         if (!element) return;
         this.mSelectedID = id;
         this.mRoom.game.uiManager.showMed(ModuleName.PICADECORATECONTROL_NAME, {id, pos: element.model.pos});
+
+        this.mRoom.game.emitter.emit(MessageType.SELECTED_DECORATE_ELEMENT, id);
     }
 
     // 浮动功能栏
@@ -213,6 +221,10 @@ export class DecorateManager {
         this.mSelectedID = -1;
 
         this.mRoom.game.uiManager.hideMed(ModuleName.PICADECORATECONTROL_NAME);
+    }
+
+    private get bagData() {
+        return this.mRoom.game.user.userData;
     }
 
     private combineActions(actions: DecorateAction[]): Map<ISprite, DecorateAction[]> {
