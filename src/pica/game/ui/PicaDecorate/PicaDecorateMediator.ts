@@ -23,9 +23,52 @@ export class PicaDecorateMediator extends BasicMediator {
         this.game.emitter.on(MessageType.SELECTED_DECORATE_ELEMENT, this.updateSelectedFurniture, this);
     }
 
+    destroy() {
+        this.game.emitter.off(MessageType.SELECTED_DECORATE_ELEMENT, this.updateSelectedFurniture, this);
+        super.destroy();
+    }
+
     isSceneUI() {
         return false;
     }
+
+    // called by view
+    public btnHandler_Close() {
+        this.mDecorateManager.exit();
+    }
+
+    public btnHandler_SaveAndExit() {
+        this.mDecorateManager.save();
+    }
+
+    public btnHandler_RemoveAll() {
+        this.mDecorateManager.removeAll();
+    }
+
+    public btnHandler_Reverse() {
+        this.mDecorateManager.reverse();
+    }
+
+    public btnHandler_Bag() {
+        this.mDecorateManager.openBag();
+    }
+
+    public onFurnitureClick(id: number) {
+        this.mDecorateManager.select(id);
+    }
+
+    // ..
+
+    // called by decorate manager
+    public updateSelectedFurniture(id: number) {
+        if (!this.bagData) return;
+
+        const data = this.bagData.getItem(PKT_PackageType.FurniturePackage, id + "");
+
+        this.mView.setSelectedFurniture(data);
+    }
+
+    // ..
 
     protected panelInit() {
         super.panelInit();
@@ -41,42 +84,6 @@ export class PicaDecorateMediator extends BasicMediator {
         furnitures = furnitures.slice(0, this.QUICK_SELECT_COUNT - 1);
         this.mView.setQuickSelectFurnitures(furnitures);
     }
-
-    destroy() {
-        this.game.emitter.off(MessageType.SELECTED_DECORATE_ELEMENT, this.updateSelectedFurniture, this);
-        super.destroy();
-    }
-
-    // called by view
-    public btnHandler_Close() {
-        this.mDecorateManager.exit();
-    }
-    public btnHandler_SaveAndExit() {
-        this.mDecorateManager.save();
-    }
-    public btnHandler_RemoveAll() {
-        this.mDecorateManager.removeAll();
-    }
-    public btnHandler_Reverse() {
-        this.mDecorateManager.reverse();
-    }
-    public btnHandler_Bag() {
-        this.mDecorateManager.openBag();
-    }
-    public onFurnitureClick(id: number) {
-        this.mDecorateManager.select(id);
-    }
-    // ..
-
-    // called by decorate manager
-    public updateSelectedFurniture(id: number) {
-        if (!this.bagData) return;
-
-        const data = this.bagData.getItem(PKT_PackageType.FurniturePackage, id + "");
-
-        this.mView.setSelectedFurniture(data);
-    }
-    // ..
 
     private get bagData() {
         if (!this.game.user || !this.game.user.userData || !this.game.user.userData.playerBag) {

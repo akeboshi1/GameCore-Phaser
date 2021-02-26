@@ -58,7 +58,7 @@ export class PicaDecoratePanel extends BasePanel {
             this.add(this.mBtn_SelectedFurniture);
 
         }
-        this.mBtn_SelectedFurniture.setData({ data });
+        this.mBtn_SelectedFurniture.setData({data});
         this.mBtn_SelectedFurniture.setItemData(data, true);
         this.mBtn_SelectedFurniture.enable = data.count > 0;
     }
@@ -75,6 +75,7 @@ export class PicaDecoratePanel extends BasePanel {
             quickBtn.setData({data});
             quickBtn.setItemData(data, true);
             this.mBtn_QuickSelectFurnitures.push(quickBtn);
+            i++;
         }
         this.add(this.mBtn_QuickSelectFurnitures);
     }
