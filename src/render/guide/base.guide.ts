@@ -24,6 +24,12 @@ export class BaseGuide implements IGuide {
             this.guideEffect = null;
         }
     }
+    /**
+     * 检查是否阻挡交互
+     */
+    public checkInteractive(data?: any): boolean {
+        return true;
+    }
     public destroy() {
         this.stop();
     }

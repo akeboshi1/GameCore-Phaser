@@ -79,7 +79,7 @@ export class GuideEffect extends Phaser.GameObjects.Container {
             //     },
             // });
         }
-        this.setInteractive(new Phaser.Geom.Rectangle(width >> 1, height >> 1, width, height), Phaser.Geom.Rectangle.Contains);
+        // this.setInteractive(new Phaser.Geom.Rectangle(width >> 1, height >> 1, width, height), Phaser.Geom.Rectangle.Contains);
         this.start();
     }
 
