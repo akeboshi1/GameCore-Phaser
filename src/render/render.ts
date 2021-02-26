@@ -44,8 +44,6 @@ import { SortDebugger } from "./display/debugs/sort.debugger";
 import { UiManager } from "./ui";
 // import { GuideManager } from "./guide";
 
-// import Stats from "../../Stat";
-
 for (const key in protos) {
     PBpacket.addProtocol(protos[key]);
 }
@@ -105,10 +103,11 @@ export class Render extends RPCPeer implements GameMain, IRender {
     private isPause: boolean = false;
     private mConnectFailFunc: Function;
     private mGameCreatedFunc: Function;
+    private mGameLoadedFunc: Function;
 
     constructor(config: ILauncherConfig, callBack?: Function) {
         super(RENDER_PEER);
-        Logger.getInstance().log("config ====>",config);
+        Logger.getInstance().log("config ====>", config);
         this.emitter = new Phaser.Events.EventEmitter();
         this.mConfig = config;
         this.mCallBack = callBack;
@@ -118,14 +117,17 @@ export class Render extends RPCPeer implements GameMain, IRender {
         this.editorModeDebugger = new EditorModeDebugger(this);
         this.mConnectFailFunc = this.mConfig.connectFail;
         this.mGameCreatedFunc = this.mConfig.game_created;
+        this.mGameLoadedFunc = this.mConfig.gameLoaded;
         this.mConfig.hasConnectFail = this.mConnectFailFunc ? true : false;
         this.mConfig.hasCloseGame = this.mConfig.closeGame ? true : false;
         this.mConfig.hasGameCreated = this.mConfig.game_created ? true : false;
         this.mConfig.hasReload = this.mConfig.reload ? true : false;
+        this.mConfig.hasGameLoaded = this.mConfig.gameLoaded ? true : false;
         // rpc不传送方法
         delete this.mConfig.connectFail;
         delete this.mConfig.game_created;
         delete this.mConfig.closeGame;
+        delete this.mConfig.gameLoaded;
         // Logger.getInstance().debug("connectfail===>", this.mConnectFailFunc, this.mConfig);
         this.initConfig();
         Logger.getInstance().log("Render version ====>:", `v${version}`);
@@ -1079,6 +1081,11 @@ export class Render extends RPCPeer implements GameMain, IRender {
     @Export([webworker_rpc.ParamType.num])
     public getCurTime(curTime: number) {
         return this._curTime = curTime;
+    }
+
+    @Export()
+    public gameLoadedCallBack() {
+        if (this.mGameLoadedFunc) this.mGameLoadedFunc.call(this);
     }
 
     @Export()

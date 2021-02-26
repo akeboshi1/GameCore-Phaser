@@ -405,6 +405,7 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
         }
         const token = await this.peer.render.getLocalStorage("token");
         const account = token ? JSON.parse(token) : null;
+        if (this.mConfig.hasGameLoaded) this.renderPeer.gameLoadedCallBack();
         if (!this.mConfig.auth_token) {
             if (!account || !account.accessToken) {
                 this.login();
@@ -696,7 +697,7 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
         Logger.getInstance().debug(`mMoveStyle:${content.moveStyle}`);
         let game_id = account.gameId;
         if (game_id === undefined) {
-            Logger.getInstance().debug("!game_ID");
+            Logger.getInstance().log("!game_ID");
             this.mainPeer.render.createGameCallBack(content.keyEvents);
             // if (!this.mainPeer.physicalPeer) return;
             this.gameCreated();
@@ -717,7 +718,7 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
                 this.mainPeer.render.createGameCallBack(content.keyEvents);
                 // if (!this.mainPeer.physicalPeer) return;
                 this.gameCreated();
-                Logger.getInstance().debug("created game suc");
+                Logger.getInstance().log("created game suc");
             })
             .catch((err: any) => {
                 Logger.getInstance().error(err);
