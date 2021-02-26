@@ -1,7 +1,7 @@
 import { BaseConfigData, BaseConfigManager, Game } from "gamecore";
 import { ICountablePackageItem, IElement, IExploreChapterData, IExploreLevelData, IExtendCountablePackageItem } from "picaStructure";
-import { IMarketCommodity, IShopBase } from "src/pica/structure/imarketcommodity";
-import { loadArr, Logger, ObjectAssign, Url } from "utils";
+import { IMarketCommodity, IShopBase } from "../../../pica/structure/imarketcommodity";
+import { Logger, ObjectAssign, Url } from "utils";
 import { ElementDataConfig } from "./element.data.config";
 import { ExploreDataConfig } from "./explore.data.config";
 import { I18nZHDataConfig } from "./i18nzh.config";
@@ -10,7 +10,7 @@ import { ItemCategoryConfig } from "./item.category.config";
 import { ShopConfig } from "./shop.config";
 import version from "../../../../version";
 import { JobConfig } from "./job.config";
-import { IJob } from "src/pica/structure/ijob";
+import { IJob } from "../../../pica/structure/ijob";
 import { CardPoolConfig } from "./cardpool.config";
 
 export enum BaseDataType {

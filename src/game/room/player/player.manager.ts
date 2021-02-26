@@ -1,18 +1,18 @@
 import {PacketHandler, PBpacket} from "net-socket-packet";
 import {op_client, op_def, op_gameconfig} from "pixelpai_proto";
-import NodeType = op_def.NodeType;
 import {Player} from "./player";
 import {IElementManager} from "../element/element.manager";
 import {User} from "../../actor/user";
 import {IRoomService, Room} from "../room/room";
 import {PlayerModel} from "./player.model";
-import {ISprite} from "structure";
-import {AvatarSuitType, EventType, MessageType, PlayerState} from "structure";
-import {LogicPos, Logger} from "utils";
+import {AvatarSuitType, EventType, ISprite, MessageType, PlayerState} from "structure";
+import {Logger, LogicPos} from "utils";
 import {ConnectionService} from "../../../../lib/net/connection.service";
 import {IElement} from "../element/element";
 import {PlayerElementAction} from "../elementaction/player.element.action";
 import {Sprite} from "baseModel";
+import {BaseDataConfigManager} from "src/pica/game/data/base.data.config.manager";
+import NodeType = op_def.NodeType;
 
 export class PlayerManager extends PacketHandler implements IElementManager {
     public hasAddComplete: boolean = false;
@@ -236,12 +236,14 @@ export class PlayerManager extends PacketHandler implements IElementManager {
         if (content.nodeType !== op_def.NodeType.CharacterNodeType) {
             return;
         }
+
         let player: Player = null;
         const sprites = content.sprites;
         const command = content.command;
         for (const sprite of sprites) {
             player = this.get(sprite.id);
             if (player) {
+                this._loadSprite(sprite);
                 //  MineCarSimulateData.addSimulate(this.roomService, sprite, player.model);
                 if (command === op_def.OpCommand.OP_COMMAND_UPDATE) {
                     this.checkSuitAvatarSprite(sprite);
@@ -251,6 +253,28 @@ export class PlayerManager extends PacketHandler implements IElementManager {
                 }
             }
         }
+    }
+
+    private _loadSprite(sprite: op_client.ISprite) {
+        const configMgr = <BaseDataConfigManager>this.mRoom.game.configManager;
+        sprite.attrs.forEach((attr) => {
+            const valueObj = JSON.parse(attr.value);
+            const newAttrs = [];
+            valueObj.forEach((v) => {
+                if (v.id) {
+                    const config = configMgr.getItemBase(v.id);
+                    newAttrs.push({
+                        suit_type: config.suitType,
+                        sn: config.sn,
+                        version: config.version,
+                        slot: config.slot,
+                        tag: config.tag,
+                        id: config.id
+                    });
+                }
+            });
+            attr.value = JSON.stringify(newAttrs);
+        });
     }
 
     private onAdjust(packet: PBpacket) {
@@ -292,6 +316,7 @@ export class PlayerManager extends PacketHandler implements IElementManager {
             return;
         }
         for (const sprite of sprites) {
+            this._loadSprite(sprite);
             this.checkSuitAvatarSprite(sprite);
             this._add(new Sprite(sprite, content.nodeType));
         }
