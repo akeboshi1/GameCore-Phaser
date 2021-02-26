@@ -19,8 +19,12 @@ export class BaseGuide implements IGuide {
     public start(data?: any) {
     }
     public stop() {
+        if (this.guideEffect) {
+            this.guideEffect.destroy();
+            this.guideEffect = null;
+        }
     }
     public destroy() {
-        this.guideEffect.destroy();
+        this.stop();
     }
 }
