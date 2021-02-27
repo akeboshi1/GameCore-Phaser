@@ -32,6 +32,7 @@ export class RoomManager extends PacketHandler implements IRoomManager {
         this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_ENTER_SCENE, this.onEnterSceneHandler);
         this.addHandlerFun(op_client.OPCODE._OP_EDITOR_REQ_CLIENT_CHANGE_TO_EDITOR_MODE, this.onEnterEditor);
         this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_START_EDIT_MODEL, this.onStartDecorate);
+        this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_EDIT_MODEL_RESULT, this.onDecorateResult);
         // this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_EDIT_MODE_READY, this.onEnterDecorate);
     }
 
@@ -87,7 +88,7 @@ export class RoomManager extends PacketHandler implements IRoomManager {
         this.mCurRoom = null;
     }
 
-    public async switchCurrentRoomToDecorate() {
+    public async requestDecorate() {
         if (!this.currentRoom) {
             Logger.getInstance().error("current room is null");
             return;
@@ -235,6 +236,17 @@ export class RoomManager extends PacketHandler implements IRoomManager {
         }
 
         this.currentRoom.startDecorating();
+    }
+
+    private onDecorateResult(packet: PBpacket) {
+        const content: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_EDIT_MODEL_RESULT = packet.content;
+        if (!content.status) {
+            this.game.renderPeer.showAlert(content.msg, true);
+            // Logger.getInstance().warn("enter decorate error: ", content.msg);
+            return;
+        }
+
+        this.currentRoom.stopDecorating();
     }
 
     get game(): Game {

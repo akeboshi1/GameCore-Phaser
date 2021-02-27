@@ -6,8 +6,9 @@ import {Font, i18n} from "utils";
 import {op_gameconfig} from "pixelpai_proto";
 import {ItemButton} from "../Components/Item.button";
 import {ICountablePackageItem} from "picaStructure";
+import {PicaBasePanel} from "../pica.base.panel";
 
-export class PicaDecoratePanel extends BasePanel {
+export class PicaDecoratePanel extends PicaBasePanel {
 
     private mBtn_Close: Button;
     private mBtn_SaveAndExit: Button;
@@ -17,15 +18,14 @@ export class PicaDecoratePanel extends BasePanel {
     private mBtn_SelectedFurniture: ItemButton;
     private mBtn_QuickSelectFurnitures: ItemButton[] = [];
 
-    constructor(private uiManager: UiManager) {
-        super(uiManager.render.sceneManager.getMainScene(), uiManager.render);
+    constructor(uiManager: UiManager) {
+        super(uiManager);
         this.key = ModuleName.PICADECORATE_NAME;
+        this.atlasNames = [UIAtlasName.uicommon, UIAtlasName.effectcommon];
     }
 
     public show(param?: any) {
         super.show(param);
-
-        this.addListen();
     }
 
     public addListen() {
@@ -56,11 +56,38 @@ export class PicaDecoratePanel extends BasePanel {
             const h = this.scene.cameras.main.height;
             this.mBtn_SelectedFurniture.y = h - 14 * this.dpr;
             this.add(this.mBtn_SelectedFurniture);
-
         }
+        const onClick = () => {
+            this.onFurnitureClick(data.id);
+        };
+        this.mBtn_SelectedFurniture.off("pointerup", onClick, this);
+        this.mBtn_SelectedFurniture.on("pointerup", onClick, this);
         this.mBtn_SelectedFurniture.setData({data});
         this.mBtn_SelectedFurniture.setItemData(data, true);
         this.mBtn_SelectedFurniture.enable = data.count > 0;
+    }
+
+    public updateFurnitureCount(baseID: string, count: number) {
+        if (this.mBtn_SelectedFurniture) {
+            if (this.mBtn_SelectedFurniture.itemData.id === baseID) {
+                const data = this.mBtn_SelectedFurniture.itemData;
+                data.count = count;
+                this.mBtn_SelectedFurniture.setData({data});
+                this.mBtn_SelectedFurniture.setItemData(data, true);
+                this.mBtn_SelectedFurniture.enable = data.count > 0;
+            }
+        }
+        if (this.mBtn_QuickSelectFurnitures.length > 0) {
+            for (const btn of this.mBtn_QuickSelectFurnitures) {
+                if (btn.itemData.id === baseID) {
+                    const data = btn.itemData;
+                    data.count = count;
+                    btn.setData({data});
+                    btn.setItemData(data, true);
+                    btn.enable = data.count > 0;
+                }
+            }
+        }
     }
 
     public setQuickSelectFurnitures(datas: ICountablePackageItem[]) {
@@ -74,6 +101,10 @@ export class PicaDecoratePanel extends BasePanel {
             quickBtn.y = h - 14 * this.dpr;
             quickBtn.setData({data});
             quickBtn.setItemData(data, true);
+            quickBtn.enable = data.count > 0;
+            quickBtn.on("pointerup", () => {
+                this.onFurnitureClick(data.id);
+            }, this);
             this.mBtn_QuickSelectFurnitures.push(quickBtn);
             i++;
         }
@@ -90,12 +121,12 @@ export class PicaDecoratePanel extends BasePanel {
         const h = this.scene.cameras.main.height;
         this.setSize(w, h);
 
-        this.mBtn_Close = new Button(this.scene, this.key, "room_decorate_previous", "room_decorate_previous");
+        this.mBtn_Close = new Button(this.scene, this.key, "room_decorate_previous.png", "room_decorate_previous.png");
         this.mBtn_Close.x = this.mBtn_Close.width * 0.5 + 5 * this.dpr;
         this.mBtn_Close.y = this.mBtn_Close.height * 0.5 + 5 * this.dpr;
         this.add(this.mBtn_Close);
 
-        this.mBtn_SaveAndExit = new Button(this.scene, this.key, "room_decorate_save", "room_decorate_save");
+        this.mBtn_SaveAndExit = new Button(this.scene, this.key, "room_decorate_save.png", "room_decorate_save.png");
         this.mBtn_SaveAndExit.x = w - this.mBtn_SaveAndExit.width * 0.5 - 5 * this.dpr;
         this.mBtn_SaveAndExit.y = this.mBtn_SaveAndExit.height * 0.5 + 5 * this.dpr;
         this.add(this.mBtn_SaveAndExit);
@@ -111,13 +142,13 @@ export class PicaDecoratePanel extends BasePanel {
         bg2.displayWidth = w;
         bg2.x = 0;
         bg2.y = h - bg1.height - 1 * this.dpr;
-        this.mBtn_RemoveAll = new Button(this.scene, this.key, "room_decorate_delete", "room_decorate_delete");
+        this.mBtn_RemoveAll = new Button(this.scene, this.key, "room_decorate_delete.png", "room_decorate_delete.png");
         this.mBtn_RemoveAll.x = this.mBtn_RemoveAll.width * 0.5 + 10 * this.dpr;
         this.mBtn_RemoveAll.y = bg2.y - bg2.height * 0.5;
-        this.mBtn_Reverse = new Button(this.scene, this.key, "room_decorate_withdraw", "room_decorate_withdraw");
+        this.mBtn_Reverse = new Button(this.scene, this.key, "room_decorate_withdraw.png", "room_decorate_withdraw.png");
         this.mBtn_Reverse.x = this.mBtn_RemoveAll.x + this.mBtn_RemoveAll.width * 0.5 + 15 * this.dpr + this.mBtn_Reverse.width * 0.5;
         this.mBtn_Reverse.y = bg2.y - bg2.height * 0.5;
-        this.mBtn_Bag = new Button(this.scene, this.key, "room_decorate_Furniture", "room_decorate_Furniture");
+        this.mBtn_Bag = new Button(this.scene, this.key, "room_decorate_Furniture.png", "room_decorate_Furniture.png");
         this.mBtn_Bag.x = w - this.mBtn_Bag.width * 0.5 - 10 * this.dpr;
         this.mBtn_Bag.y = bg2.y - bg2.height * 0.5;
         this.add([bg2, this.mBtn_RemoveAll, this.mBtn_Reverse, this.mBtn_Bag]);
@@ -126,7 +157,7 @@ export class PicaDecoratePanel extends BasePanel {
     }
 
     get mediator() {
-        return this.render.mainPeer[ModuleName.PICADECORATE_NAME];
+        return this.render.mainPeer[this.key];
     }
 
     private btnHandler_Close() {
@@ -157,8 +188,8 @@ export class PicaDecoratePanel extends BasePanel {
         this.mediator.btnHandler_Bag();
     }
 
-    private onFurnitureClick(id: number) {
-        this.mediator.onFurnitureClick();
+    private onFurnitureClick(baseID: string) {
+        this.mediator.onFurnitureClick(baseID);
     }
 }
 

@@ -634,6 +634,9 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
         // hide players (with animations)
         this.playerManager.hideAll();
 
+        // new decorate manager
+        this.mDecorateManager = new DecorateManager(this);
+
         // switch ui
         this.game.uiManager.hideMed(ModuleName.PICANEWMAIN_NAME);
         this.game.uiManager.hideMed(ModuleName.BOTTOM);
@@ -641,9 +644,6 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
 
         // switch motion
         this.game.renderPeer.switchDecorateMotion();
-
-        // new decorate manager
-        this.mDecorateManager = new DecorateManager(this);
     }
 
     public stopDecorating() {

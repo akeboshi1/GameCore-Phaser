@@ -11,9 +11,9 @@ export enum MotionType {
 export class MotionBase {
     public type: MotionType = MotionType.Base;
     public enable: boolean;
-    private scaleRatio: number;
-    private scene: Phaser.Scene;
+    protected scene: Phaser.Scene;
     private gameObject: Phaser.GameObjects.GameObject;
+    private scaleRatio: number;
     private isHolding: boolean = false;
     private holdTime: any;
     private holdDelay: number = 200;

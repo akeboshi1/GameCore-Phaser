@@ -177,9 +177,12 @@ export class PicaBagMediator extends BasicMediator {
         if (enable) {
             // enter decorate locally
             // this.model.enterEditAndSelectedSprite(id);
-            this.game.roomManager.switchCurrentRoomToDecorate();
+            if (this.game.roomManager.currentRoom.isDecorating && this.game.roomManager.currentRoom.decorateManager) {
+                this.game.roomManager.currentRoom.decorateManager.addFromBag(id);
+            } else {
+                this.game.roomManager.requestDecorate();
+            }
         } else {
-            // edit locally
             // this.model.addFurniToScene(id);
         }
         this.hide();

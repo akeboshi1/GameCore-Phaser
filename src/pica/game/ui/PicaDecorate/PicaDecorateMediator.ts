@@ -1,7 +1,7 @@
 import {BasicMediator, DecorateManager, Game} from "gamecore";
 import {MessageType, ModuleName} from "structure";
 import {Logger} from "utils";
-import {op_pkt_def} from "pixelpai_proto";
+import {op_def, op_pkt_def} from "pixelpai_proto";
 import PKT_PackageType = op_pkt_def.PKT_PackageType;
 
 export class PicaDecorateMediator extends BasicMediator {
@@ -13,7 +13,7 @@ export class PicaDecorateMediator extends BasicMediator {
     constructor(game: Game) {
         super(ModuleName.PICADECORATE_NAME, game);
 
-        if (!game.roomManager.currentRoom || !game.roomManager.currentRoom.decorateManager) {
+        if (game.roomManager.currentRoom === null || game.roomManager.currentRoom.decorateManager === null) {
             Logger.getInstance().error("no decorateManager: ",
                 game.roomManager.currentRoom !== null, game.roomManager.currentRoom.decorateManager !== null);
             return;
@@ -21,10 +21,12 @@ export class PicaDecorateMediator extends BasicMediator {
         this.mDecorateManager = game.roomManager.currentRoom.decorateManager;
 
         this.game.emitter.on(MessageType.SELECTED_DECORATE_ELEMENT, this.updateSelectedFurniture, this);
+        this.game.emitter.on(MessageType.UPDATE_DECORATE_ELEMENT_COUNT, this.updateFurnitureCount, this);
     }
 
     destroy() {
         this.game.emitter.off(MessageType.SELECTED_DECORATE_ELEMENT, this.updateSelectedFurniture, this);
+        this.game.emitter.off(MessageType.UPDATE_DECORATE_ELEMENT_COUNT, this.updateFurnitureCount, this);
         super.destroy();
     }
 
@@ -53,8 +55,8 @@ export class PicaDecorateMediator extends BasicMediator {
         this.mDecorateManager.openBag();
     }
 
-    public onFurnitureClick(id: number) {
-        this.mDecorateManager.select(id);
+    public onFurnitureClick(baseID: string) {
+        this.mDecorateManager.addFromBag(baseID);
     }
 
     // ..
@@ -67,7 +69,9 @@ export class PicaDecorateMediator extends BasicMediator {
 
         this.mView.setSelectedFurniture(data);
     }
-
+    public updateFurnitureCount(baseID: string, count: number) {
+        this.mView.updateFurnitureCount(baseID, count);
+    }
     // ..
 
     protected panelInit() {
@@ -81,7 +85,9 @@ export class PicaDecorateMediator extends BasicMediator {
             return b.addedTimestamp - a.addedTimestamp;
         });
 
-        furnitures = furnitures.slice(0, this.QUICK_SELECT_COUNT - 1);
+        if (furnitures.length > this.QUICK_SELECT_COUNT) {
+            furnitures = furnitures.slice(0, this.QUICK_SELECT_COUNT - 1);
+        }
         this.mView.setQuickSelectFurnitures(furnitures);
     }
 

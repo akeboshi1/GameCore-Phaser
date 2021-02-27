@@ -1,8 +1,10 @@
 import {Room} from "../room/room";
-import {op_client, op_def, op_virtual_world} from "pixelpai_proto";
+import {op_client, op_def, op_pkt_def, op_virtual_world} from "pixelpai_proto";
 import {ISprite, MessageType, ModuleName} from "structure";
 import {IPos, Logger, LogicPos, Position45} from "utils";
 import {PBpacket} from "net-socket-packet";
+import {Sprite} from "baseModel";
+import PKT_PackageType = op_pkt_def.PKT_PackageType;
 
 // 小屋布置管理类，包含所有布置过程中的操作接口
 // 文档：https://dej4esdop1.feishu.cn/docs/doccnEbMKpINEkfBVImFJ0nTJUh#
@@ -108,12 +110,22 @@ export class DecorateManager {
         }
     }
 
-    // 选择某一物件
+    // 选择某一物件 call by motion
     public select(id: number) {
         const element = this.mRoom.elementManager.get(id);
         if (!element) return;
+
+        if (this.mSelectedID > 0) {
+            this.reverseSelected();
+        }
+
         this.mSelectedID = id;
-        this.mRoom.game.uiManager.showMed(ModuleName.PICADECORATECONTROL_NAME, {id, pos: element.model.pos});
+        const med = this.mRoom.game.uiManager.getMed(ModuleName.PICADECORATECONTROL_NAME);
+        if (med && med.isShow()) {
+            this.mRoom.game.uiManager.hideMed(ModuleName.PICADECORATECONTROL_NAME);
+        }
+        const canPlace = this.checkCanPlaceSelected();
+        this.mRoom.game.uiManager.showMed(ModuleName.PICADECORATECONTROL_NAME, {id, pos: element.model.pos, canPlace});
 
         this.mRoom.game.emitter.emit(MessageType.SELECTED_DECORATE_ELEMENT, id);
     }
@@ -174,14 +186,44 @@ export class DecorateManager {
         this.mRoom.game.uiManager.hideMed(ModuleName.PICADECORATECONTROL_NAME);
     }
 
-    // 移动选择物
-    public moveSelected(delta: IPos) {
-        if (this.mSelectedID < 0) return;
+    public addFromBag(baseID: string) {
+        const datas = this.bagData.getItems(op_pkt_def.PKT_PackageType.FurniturePackage, baseID);
+        if (datas.length <= 0) return;
+        const typeData = datas[0];
+        // TODO: 此随机方式有重复id的可能
+        const min = 1000000;
+        const max = 0x70000000;
+        const indexID = Math.random() * (max - min) + min;
+        const spriteData = new Sprite({
+            id: indexID,
+            point3f: {x:0, y:0, z: 0},
+            avatar: typeData.avatar,
+            currentAnimationName: "idle",
+            direction: 3,
+            nickname: typeData.name,
+            animations: typeData.animations,
+            display: typeData.display,
+            sn: typeData.sn
+        }, op_def.NodeType.ElementNodeType);
+
+        const act = new DecorateAction(spriteData, DecorateActionType.Add, spriteData.pos);
+        this.mActionQueue.push(act);
+        act.execute(this.mRoom);
+
+        this.select(indexID);
+    }
+
+    // 移动选择物 call by motion
+    public moveSelected(id: number, delta: IPos) {
+        if (this.mSelectedID !== id) return;
         const element = this.mRoom.elementManager.get(this.mSelectedID);
         if (!element) return;
         const act = new DecorateAction(element.model, DecorateActionType.Move, delta);
         this.mSelectedActionQueue.push(act);
         act.execute(this.mRoom);
+
+        const canPlace = this.checkCanPlaceSelected();
+        this.mRoom.game.emitter.emit(MessageType.UPDATE_SELECTED_DECORATE_ELEMENT_CAN_PLACE, canPlace);
     }
 
     // 旋转选择物
@@ -224,7 +266,10 @@ export class DecorateManager {
     }
 
     private get bagData() {
-        return this.mRoom.game.user.userData;
+        if (!this.mRoom.game.user || !this.mRoom.game.user.userData || !this.mRoom.game.user.userData.playerBag) {
+            return;
+        }
+        return this.mRoom.game.user.userData.playerBag;
     }
 
     private combineActions(actions: DecorateAction[]): Map<ISprite, DecorateAction[]> {
@@ -355,13 +400,23 @@ class DecorateAction {
         this.target.setPosition(x, y);
         room.elementManager.add([this.target]);
 
-        // 移除背包中数据
+        const item = room.game.user.userData.playerBag.getItem(PKT_PackageType.FurniturePackage, this.target.id + "");
+        item.count--;
+        room.game.emitter.emit(MessageType.UPDATE_DECORATE_ELEMENT_COUNT, item.id, item.count);
     }
 
     private removeElement(room: Room) {
         room.elementManager.remove(this.target.id);
 
-        // 增加背包中数据
+        // TODO: check baseID
+        const items = room.game.user.userData.playerBag.getItems(PKT_PackageType.FurniturePackage, this.target.platformId);
+        if (items.length === 0) {
+            // TODO: add data
+        } else {
+            const lastItem = items[items.length - 1];
+            lastItem.count ++;
+            room.game.emitter.emit(MessageType.UPDATE_DECORATE_ELEMENT_COUNT, lastItem.id, lastItem.count);
+        }
     }
 
     private setElementPos(room: Room, x: number, y: number) {
