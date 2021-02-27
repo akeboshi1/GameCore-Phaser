@@ -77,15 +77,13 @@ export class PicaDecoratePanel extends PicaBasePanel {
                 this.mBtn_SelectedFurniture.enable = data.count > 0;
             }
         }
-        if (this.mBtn_QuickSelectFurnitures.length > 0) {
-            for (const btn of this.mBtn_QuickSelectFurnitures) {
-                if (btn.itemData.id === baseID) {
-                    const data = btn.itemData;
-                    data.count = count;
-                    btn.setData({data});
-                    btn.setItemData(data, true);
-                    btn.enable = data.count > 0;
-                }
+        for (const btn of this.mBtn_QuickSelectFurnitures) {
+            if (btn.itemData.id === baseID) {
+                const data = btn.itemData;
+                data.count = count;
+                btn.setData({data});
+                btn.setItemData(data, true);
+                btn.enable = data.count > 0;
             }
         }
     }
@@ -95,15 +93,15 @@ export class PicaDecoratePanel extends PicaBasePanel {
 
         const h = this.scene.cameras.main.height;
         let i = 0;
-        for (const data of datas) {
+        for (const item of datas) {
             const quickBtn = new ItemButton(this.scene, UIAtlasName.effectcommon, "synthetic_icon_bg", this.dpr, this.scale, false);
-            quickBtn.x = 30 * this.dpr + 20 * this.dpr * i;
-            quickBtn.y = h - 14 * this.dpr;
-            quickBtn.setData({data});
-            quickBtn.setItemData(data, true);
-            quickBtn.enable = data.count > 0;
+            quickBtn.x = 80 * this.dpr + 80 * this.dpr * i;
+            quickBtn.y = h - 30 * this.dpr;
+            quickBtn.setData({item});
+            quickBtn.setItemData(item, true);
+            quickBtn.enable = item.count > 0;
             quickBtn.on("pointerup", () => {
-                this.onFurnitureClick(data.id);
+                this.onFurnitureClick(item.id);
             }, this);
             this.mBtn_QuickSelectFurnitures.push(quickBtn);
             i++;
@@ -119,39 +117,41 @@ export class PicaDecoratePanel extends PicaBasePanel {
     protected init() {
         const w = this.scene.cameras.main.width;
         const h = this.scene.cameras.main.height;
-        this.setSize(w, h);
 
         this.mBtn_Close = new Button(this.scene, this.key, "room_decorate_previous.png", "room_decorate_previous.png");
-        this.mBtn_Close.x = this.mBtn_Close.width * 0.5 + 5 * this.dpr;
-        this.mBtn_Close.y = this.mBtn_Close.height * 0.5 + 5 * this.dpr;
+        this.mBtn_Close.x = 20 * this.dpr + this.mBtn_Close.width * 0.5;
+        this.mBtn_Close.y = 48 * this.dpr;
         this.add(this.mBtn_Close);
 
         this.mBtn_SaveAndExit = new Button(this.scene, this.key, "room_decorate_save.png", "room_decorate_save.png");
-        this.mBtn_SaveAndExit.x = w - this.mBtn_SaveAndExit.width * 0.5 - 5 * this.dpr;
-        this.mBtn_SaveAndExit.y = this.mBtn_SaveAndExit.height * 0.5 + 5 * this.dpr;
+        this.mBtn_SaveAndExit.x = w - 40 * this.dpr - this.mBtn_SaveAndExit.width * 0.5;
+        this.mBtn_SaveAndExit.y = 48 * this.dpr;
         this.add(this.mBtn_SaveAndExit);
 
-        const bg1 = this.scene.make.image({key: UIAtlasName.uicommon, frame: "bg"}).setOrigin(0, 1);
-        bg1.displayWidth = w;
-        bg1.x = 0;
-        bg1.y = h;
+        const bg1Height = 60 * this.dpr;
+        const bg1 = this.scene.add.graphics();
+        bg1.clear();
+        bg1.fillStyle(0, 0.6);
+        bg1.fillRect(0, 0, w, bg1Height);
+        bg1.y = h - bg1Height;
         bg1.setDepth(-1);
-        this.add([bg1]);
 
-        const bg2 = this.scene.make.image({key: UIAtlasName.uicommon, frame: "bg"}).setOrigin(0, 1);
-        bg2.displayWidth = w;
-        bg2.x = 0;
-        bg2.y = h - bg1.height - 1 * this.dpr;
+        const bg2Height = 63 * this.dpr;
+        const bg2 = this.scene.add.graphics();
+        bg2.clear();
+        bg2.fillStyle(0, 0.6);
+        bg2.fillRect(0, 0, w, bg2Height);
+        bg2.y = bg1.y - 4 * this.dpr - bg2Height;
         this.mBtn_RemoveAll = new Button(this.scene, this.key, "room_decorate_delete.png", "room_decorate_delete.png");
-        this.mBtn_RemoveAll.x = this.mBtn_RemoveAll.width * 0.5 + 10 * this.dpr;
-        this.mBtn_RemoveAll.y = bg2.y - bg2.height * 0.5;
+        this.mBtn_RemoveAll.x = 40 * this.dpr;
+        this.mBtn_RemoveAll.y = bg2.y - bg2Height * 0.5;
         this.mBtn_Reverse = new Button(this.scene, this.key, "room_decorate_withdraw.png", "room_decorate_withdraw.png");
-        this.mBtn_Reverse.x = this.mBtn_RemoveAll.x + this.mBtn_RemoveAll.width * 0.5 + 15 * this.dpr + this.mBtn_Reverse.width * 0.5;
-        this.mBtn_Reverse.y = bg2.y - bg2.height * 0.5;
+        this.mBtn_Reverse.x = this.mBtn_RemoveAll.x + 40 * this.dpr + this.mBtn_Reverse.width * 0.5;
+        this.mBtn_Reverse.y = bg2.y - bg2Height * 0.5;
         this.mBtn_Bag = new Button(this.scene, this.key, "room_decorate_Furniture.png", "room_decorate_Furniture.png");
-        this.mBtn_Bag.x = w - this.mBtn_Bag.width * 0.5 - 10 * this.dpr;
-        this.mBtn_Bag.y = bg2.y - bg2.height * 0.5;
-        this.add([bg2, this.mBtn_RemoveAll, this.mBtn_Reverse, this.mBtn_Bag]);
+        this.mBtn_Bag.x = w - this.mBtn_Bag.width - 40 * this.dpr;
+        this.mBtn_Bag.y = bg2.y - bg2Height * 0.5;
+        this.add([this.mBtn_RemoveAll, this.mBtn_Reverse, this.mBtn_Bag]);
 
         super.init();
     }
