@@ -33,7 +33,7 @@ export class TaskGuide extends BaseGuide {
             const worldMatrix = item.openButton.getWorldTransformMatrix();
             this.guideEffect.createGuideEffect({ x: worldMatrix.tx, y: worldMatrix.ty });
             item.on(ClickEvent.Tap, () => {
-                this.stop();
+                this.end();
             }, this);
         }, this);
     }
