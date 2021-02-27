@@ -156,6 +156,7 @@ export class PicaNewRolePanel extends BasePanel {
             this.headAvatar.play({ name: "idle", flip: false });
             this.headAvatar.visible = true;
         });
+        this.headAvatar.visible = true;
         this.headAvatar.load(dbModel);
         this.nameImage.setFrameValue(content.nickname, this.key, "people_man");
         this.levelLabel.text = `${i18n.t("common.lv")} ${content.level.level}`;

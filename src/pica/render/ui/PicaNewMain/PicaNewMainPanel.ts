@@ -131,7 +131,8 @@ export class PicaNewMainPanel extends PicaBasePanel {
 
     private onHeadHandler(tag: string, data: any) {
         if (tag === "head") {
-            this.render.renderEmitter(ModuleName.PICANEWMAIN_NAME + "_showpanel", ModuleName.CHARACTERINFO_NAME);
+            // this.render.renderEmitter(ModuleName.PICANEWMAIN_NAME + "_showpanel", ModuleName.CHARACTERINFO_NAME);
+            this.render.renderEmitter(ModuleName.PICANEWMAIN_NAME + "_showpanel", ModuleName.PICAPLAYERINFO_NAME);
         } else if (tag === "energy") {
             // this.render.renderEmitter(ModuleName.PICANEWMAIN_NAME + "_showPanel", ModuleName.PICARECHARGE_NAME);
         } else if (tag === "praise") {

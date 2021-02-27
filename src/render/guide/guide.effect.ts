@@ -79,7 +79,7 @@ export class GuideEffect extends Phaser.GameObjects.Container {
             //     },
             // });
         }
-        this.setInteractive(new Phaser.Geom.Rectangle(width >> 1, height >> 1, width, height), Phaser.Geom.Rectangle.Contains);
+        // this.setInteractive(new Phaser.Geom.Rectangle(width >> 1, height >> 1, width, height), Phaser.Geom.Rectangle.Contains);
         this.start();
     }
 
@@ -90,7 +90,6 @@ export class GuideEffect extends Phaser.GameObjects.Container {
     public stop() {
         if (this.mScaleTween) {
             this.mScaleTween.stop();
-            this.mScaleTween.destroy();
             this.mScaleTween = null;
         }
     }
@@ -141,13 +140,17 @@ export class GuideEffect extends Phaser.GameObjects.Container {
     }
 
     private addListen() {
-        this.scene.load.on(Phaser.Loader.Events.FILE_LOAD_ERROR, this.loadError, this);
-        this.scene.load.on(Phaser.Loader.Events.FILE_COMPLETE, this.loadImageHandler, this);
+        if (this.scene) {
+            this.scene.load.on(Phaser.Loader.Events.FILE_LOAD_ERROR, this.loadError, this);
+            this.scene.load.on(Phaser.Loader.Events.FILE_COMPLETE, this.loadImageHandler, this);
+        }
     }
 
     private removeListen() {
-        this.scene.load.off(Phaser.Loader.Events.FILE_LOAD_ERROR, this.loadError, this);
-        this.scene.load.off(Phaser.Loader.Events.FILE_COMPLETE, this.loadImageHandler, this);
+        if (this.scene) {
+            this.scene.load.off(Phaser.Loader.Events.FILE_LOAD_ERROR, this.loadError, this);
+            this.scene.load.off(Phaser.Loader.Events.FILE_COMPLETE, this.loadImageHandler, this);
+        }
     }
 
     private loadImageHandler(key?: string) {
