@@ -16,7 +16,7 @@ export class PicaDecoratePanel extends PicaBasePanel {
     private mBtn_Reverse: Button;
     private mBtn_Bag: Button;
     private mBtn_SelectedFurniture: ItemButton;
-    private mBtn_QuickSelectFurnitures: ItemButton[] = [];
+    private mBtns_QuickSelectFurniture: ItemButton[] = [];
 
     constructor(uiManager: UiManager) {
         super(uiManager);
@@ -77,7 +77,7 @@ export class PicaDecoratePanel extends PicaBasePanel {
                 this.mBtn_SelectedFurniture.enable = data.count > 0;
             }
         }
-        for (const btn of this.mBtn_QuickSelectFurnitures) {
+        for (const btn of this.mBtns_QuickSelectFurniture) {
             if (btn.itemData.id === baseID) {
                 const data = btn.itemData;
                 data.count = count;
@@ -89,24 +89,24 @@ export class PicaDecoratePanel extends PicaBasePanel {
     }
 
     public setQuickSelectFurnitures(datas: ICountablePackageItem[]) {
-        if (this.mBtn_QuickSelectFurnitures.length > 0) return;
+        if (this.mBtns_QuickSelectFurniture.length > 0) return;
 
         const h = this.scene.cameras.main.height;
         let i = 0;
         for (const item of datas) {
-            const quickBtn = new ItemButton(this.scene, UIAtlasName.effectcommon, "synthetic_icon_bg", this.dpr, this.scale, false);
-            quickBtn.x = 80 * this.dpr + 80 * this.dpr * i;
-            quickBtn.y = h - 30 * this.dpr;
+            const quickBtn = new ItemButton(this.scene, UIAtlasName.uicommon, "bag_icon_common_bg", this.dpr, this.scale, false);
+            quickBtn.x = 120 * this.dpr + 80 * this.dpr * i;
+            quickBtn.y = h - 60 * this.dpr - 30 * this.dpr;
             quickBtn.setData({item});
-            quickBtn.setItemData(item, true);
+            quickBtn.setItemData(item);
             quickBtn.enable = item.count > 0;
             quickBtn.on("pointerup", () => {
                 this.onFurnitureClick(item.id);
             }, this);
-            this.mBtn_QuickSelectFurnitures.push(quickBtn);
+            this.mBtns_QuickSelectFurniture.push(quickBtn);
             i++;
         }
-        this.add(this.mBtn_QuickSelectFurnitures);
+        this.add(this.mBtns_QuickSelectFurniture);
     }
 
     protected preload() {
@@ -149,7 +149,7 @@ export class PicaDecoratePanel extends PicaBasePanel {
         this.mBtn_Reverse.x = this.mBtn_RemoveAll.x + 40 * this.dpr + this.mBtn_Reverse.width * 0.5;
         this.mBtn_Reverse.y = bg2.y - bg2Height * 0.5;
         this.mBtn_Bag = new Button(this.scene, this.key, "room_decorate_Furniture.png", "room_decorate_Furniture.png");
-        this.mBtn_Bag.x = w - this.mBtn_Bag.width - 40 * this.dpr;
+        this.mBtn_Bag.x = w - this.mBtn_Bag.width - 20 * this.dpr;
         this.mBtn_Bag.y = bg2.y - bg2Height * 0.5;
         this.add([this.mBtn_RemoveAll, this.mBtn_Reverse, this.mBtn_Bag]);
 
