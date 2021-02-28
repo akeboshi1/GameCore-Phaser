@@ -20,7 +20,7 @@ export class GuideManager {
     }
 
     public canInteractive(data?: any): boolean {
-        if (!this.mGurGuide) return true;
+        if (!this.mGurGuide) return false;
         return this.mGurGuide.checkInteractive(data);
     }
 

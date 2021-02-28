@@ -89,9 +89,6 @@ export class PlayScene extends RoomScene {
         // ======= mainworker startPlay
         this.render.startRoomPlay();
         this.render.changeScene(this);
-
-        this.initListener();
-
         super.create();
     }
 
@@ -157,7 +154,8 @@ export class PlayScene extends RoomScene {
         // this.load.on(Phaser.Loader.Events.COMPLETE, this.onLoadCompleteHandler, this);
     }
 
-    protected onPointerDownHandler(pointer: Phaser.Input.Pointer) {
+    protected onPointerDownHandler(pointer: Phaser.Input.Pointer, currentlyOver: Phaser.GameObjects.GameObject[]) {
+        this.render.emitter.emit("pointerScene", SceneName.PLAY_SCENE, currentlyOver);
         this.addPointerMoveHandler();
     }
 
