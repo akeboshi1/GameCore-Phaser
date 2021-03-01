@@ -24,7 +24,6 @@ export class BottomPanel extends PicaBasePanel {
         super.show(param);
         if (this.initialized) {
             this.checkUpdateActive();
-            // this.render.guideManager.startGuide(1);
         }
     }
 
@@ -98,6 +97,11 @@ export class BottomPanel extends PicaBasePanel {
 
     get navigatePanel(): Phaser.GameObjects.Container {
         return this.mNavigate;
+    }
+
+    protected onShow() {
+        super.onShow();
+        this.render.guideManager.startGuide(1);
     }
 
     protected init() {

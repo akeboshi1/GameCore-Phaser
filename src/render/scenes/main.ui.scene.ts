@@ -1,8 +1,9 @@
-import { BasicScene, BaseLayer } from "baseRender";
+import { BaseLayer } from "baseRender";
 import { Font, Size } from "utils";
 import { SceneName } from "structure";
+import { RoomScene } from "./room.scene";
 
-export class MainUIScene extends BasicScene {
+export class MainUIScene extends RoomScene {
   public static readonly LAYER_UI = "uiLayer";
   public static readonly LAYER_DIALOG = "dialogLayer";
   public static readonly LAYER_TOOLTIPS = "toolTipsLayer";
@@ -55,7 +56,7 @@ export class MainUIScene extends BasicScene {
     this.layerManager.addLayer(this, BaseLayer, MainUIScene.LAYER_TOOLTIPS, 3);
     this.layerManager.addLayer(this, BaseLayer, MainUIScene.LAYER_MASK, 4);
     super.create();
-    // this.render.guideManager.init();
+    this.render.guideManager.init();
   }
 
   public setTimeout(caller, time): number {
@@ -82,6 +83,10 @@ export class MainUIScene extends BasicScene {
 
   getKey(): string {
     return (this.sys.config as Phaser.Types.Scenes.SettingsConfig).key;
+  }
+
+  protected onPointerDownHandler(pointer: Phaser.Input.Pointer, currentlyOver: Phaser.GameObjects.GameObject[]) {
+    this.render.emitter.emit("pointerScene", SceneName.MAINUI_SCENE, currentlyOver);
   }
 
   // private checkOriention(orientation) {

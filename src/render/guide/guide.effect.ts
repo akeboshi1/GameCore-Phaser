@@ -5,6 +5,7 @@ export interface IGuideRes {
     key: string;
     url: string;
     type: string;
+    data?: string;
 }
 export class GuideEffect extends Phaser.GameObjects.Container {
     protected mInitialized: boolean = false;
@@ -14,6 +15,7 @@ export class GuideEffect extends Phaser.GameObjects.Container {
     private mScale: number = 1;
     private mResources: Map<string, IGuideRes> = new Map();
     private mCachePos: IPos;
+    private mHandDisplay: HandDisplay;
     constructor(scene: Phaser.Scene) {
         super(scene);
         this.preload();
@@ -23,13 +25,14 @@ export class GuideEffect extends Phaser.GameObjects.Container {
         let index = 0;
         // this.mResources.set("guideMask", { key: "guideMask", url: "guide/mask.png", type: "image" });
         this.mResources.set("guideBg", { key: "guideBg", url: "guide/guideBg.png", type: "image" });
+        this.mResources.set("fall_effect", { key: "fall_effect", url: "ui/fall_effect/falleffect.png", data: "ui/fall_effect/falleffect.json", type: "atlas" });
         if (this.mResources) {
             this.mResources.forEach((resource) => {
                 if (!this.scene.textures.exists(resource.key)) {
                     index++;
                     if (resource.type) {
                         if (this.scene.load[resource.type]) {
-                            this.scene.load[resource.type](resource.key, Url.getRes(resource.url));
+                            this.scene.load[resource.type](resource.key, Url.getRes(resource.url), Url.getRes(resource.data));
                         }
                     }
                 }
@@ -57,13 +60,16 @@ export class GuideEffect extends Phaser.GameObjects.Container {
             // image调整尺寸只能调整frame的尺寸
             this.mGuideEffect.frame.setSize(width + 20, height + 20);
             this.mGuideEffect.setPosition(0, 0);
+            this.mHandDisplay = new HandDisplay(this.scene, "fall_effect");
             (<any>this.scene).layerManager.addToLayer(MainUIScene.LAYER_MASK, this.mGuideEffect);
+            (<any>this.scene).layerManager.addToLayer(MainUIScene.LAYER_MASK, this.mHandDisplay);
         }
         if (!this.mMask) {
             this.mMask = this.scene.make.graphics(undefined);
             this.mMask.fillStyle(0);
             this.mMask.fillCircle(0, 0, 50);
             this.mMask.setPosition(pos.x, pos.y);
+            this.mHandDisplay.setPosition(pos.x, pos.y);
             const geometryMask = this.mMask.createGeometryMask().setInvertAlpha(true);
             this.mGuideEffect.setMask(geometryMask);
         } else {
@@ -124,6 +130,10 @@ export class GuideEffect extends Phaser.GameObjects.Container {
             this.mGuideEffect.destroy();
             this.mGuideEffect = null;
         }
+        if (this.mHandDisplay) {
+            this.mHandDisplay.destroy();
+            this.mHandDisplay = null;
+        }
         if (this.mMask) {
             this.mMask.clear();
             this.mMask.destroy();
@@ -169,5 +179,39 @@ export class GuideEffect extends Phaser.GameObjects.Container {
             return;
         }
         this.loadImageHandler(file.key);
+    }
+}
+
+class HandDisplay extends Phaser.GameObjects.Container {
+    private mImage: Phaser.GameObjects.Sprite;
+    private mEllipse: Phaser.GameObjects.Sprite;
+    constructor(scene: Phaser.Scene, key: string) {
+        super(scene);
+        this.mImage = scene.make.sprite({
+            key,
+            x: 9,
+            y: -20
+        }, false);
+        this.add(this.mImage);
+        this.mEllipse = scene.make.sprite(undefined, false);
+        this.addAt(this.mEllipse, 0);
+
+        const config = {
+            key: "fill_effect_enable",
+            frames: this.scene.anims.generateFrameNames("fall_effect", { prefix: "enable", end: 6, zeroPad: 2 }),
+            frameRate: 16,
+            repeat: -1
+        };
+        this.scene.anims.create(config);
+        this.mImage.play("fill_effect_enable");
+
+        const ellipseConfig = {
+            key: "fill_effect_ellipse",
+            frames: this.scene.anims.generateFrameNames("fall_effect", { prefix: "ellipse", end: 7, zeroPad: 2 }),
+            frameRate: 10,
+            repeat: -1
+        };
+        this.scene.anims.create(ellipseConfig);
+        this.mEllipse.play("fill_effect_ellipse");
     }
 }
