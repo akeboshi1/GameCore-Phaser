@@ -18,6 +18,7 @@ export class UIAtlasName {
     public static explorelog = "explorelog";
     public static treasure = "treasure";
     public static friend_message = "friend_message";
+    public static createrole = "createrole";
     public static jsonUrl(name: string) {
         return name + ".json";
     }

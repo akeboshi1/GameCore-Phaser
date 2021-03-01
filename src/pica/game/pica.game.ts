@@ -12,7 +12,9 @@ export class PicaGame extends Game {
         const data = <T>(this.mConfigManager.getConfig(type));
         return data;
     }
-
+    public preloadGameConfig(): Promise<any> {
+        return this.mConfigManager.startLoad(this.gameConfigUrl);
+    }
     protected createManager() {
         // 优先初始化datamanager 因为worker全局emitter在datamananger内部初始化
         this.mDataManager = new DataManager(this);
@@ -29,8 +31,4 @@ export class PicaGame extends Game {
         this.mRoomManager.addPackListener();
         this.user.addPackListener();
     }
-    protected preloadGameConfig(): Promise<any> {
-        return this.mConfigManager.startLoad(this.gameConfigUrl);
-    }
-
 }

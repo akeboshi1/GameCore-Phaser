@@ -1,10 +1,10 @@
-import {Button, ClickEvent, NineSliceButton} from "apowophaserui";
-import {Handler, i18n, UIHelper} from "utils";
-import {AvatarSuit, AvatarSuitType, ModuleName, RunningAnimation} from "structure";
-import {UiManager, CommonBackground, UIDragonbonesDisplay, ButtonEventDispatcher, ToggleButton} from "gamecoreRender";
-import {PicaBasePanel} from "../pica.base.panel";
-import {UIAtlasName} from "picaRes";
-import {op_client, op_gameconfig, op_def} from "pixelpai_proto";
+import { Button, ClickEvent, NineSliceButton } from "apowophaserui";
+import { Handler, i18n, UIHelper } from "utils";
+import { AvatarSuit, AvatarSuitType, ModuleName, RunningAnimation } from "structure";
+import { UiManager, CommonBackground, UIDragonbonesDisplay, ButtonEventDispatcher, ToggleButton } from "gamecoreRender";
+import { PicaBasePanel } from "../pica.base.panel";
+import { UIAtlasName } from "picaRes";
+import { op_client, op_gameconfig, op_def } from "pixelpai_proto";
 
 export class PicaCreateRolePanel extends PicaBasePanel {
     private commonBackground: CommonBackground;
@@ -24,11 +24,14 @@ export class PicaCreateRolePanel extends PicaBasePanel {
     private selectSkinBg: Phaser.GameObjects.Image;
 
     private dragonbones: UIDragonbonesDisplay;
+    private consumLeftBtn: Button;
+    private consumRightBtn: Button;
     private suitDatasMap: Map<string, op_client.CountablePackageItem[]> = new Map();
     private curSuitMap: Map<string, op_client.CountablePackageItem> = new Map();
     private suitItemMap: Map<string, SelectSuitAvatarItem> = new Map();
     private mMediator: any;
     private mgender: op_def.Gender;
+    private consumIndex: number = 0;
 
     constructor(uiManager: UiManager) {
         super(uiManager);
@@ -36,8 +39,8 @@ export class PicaCreateRolePanel extends PicaBasePanel {
         const container = this.scene.add.container(0, 0);
         container.add(this);
         this.scene.scale.on("resize", this.onResize, this);
-        this.atlasNames = [UIAtlasName.uicommon];
-        this.textures = [{atlasName: "Create_bg_texture", folder: "texture"}, {
+        this.atlasNames = [UIAtlasName.uicommon, UIAtlasName.createrole];
+        this.textures = [{ atlasName: "Create_bg_texture", folder: "texture" }, {
             atlasName: "Create_role_bg",
             folder: "texture"
         }];
@@ -77,8 +80,10 @@ export class PicaCreateRolePanel extends PicaBasePanel {
                 const item = this.suitItemMap.get(key);
                 item.setSuitDatas(value);
             } else if (key === "base") {
+                this.consumIndex = 1;
                 this.curSuitMap.set(key, value[1]);
             } else if (key === "costume") {
+                this.consumIndex = 0;
                 this.curSuitMap.set(key, value[0]);
             }
         });
@@ -92,14 +97,22 @@ export class PicaCreateRolePanel extends PicaBasePanel {
         this.content = this.scene.make.container(undefined, false);
         this.add(this.content);
         this.commonBackground = new CommonBackground(this.scene, 0, 0, width, height);
-        this.mBottomBg = this.scene.make.image({key: "Create_bg_texture"});
+        this.mBottomBg = this.scene.make.image({ key: "Create_bg_texture" });
         this.mBottomBg.y = height * 0.5 - this.mBottomBg.height * 0.5;
-        const mTopBg = this.scene.make.image({key: "Create_role_bg"});
+        const mTopBg = this.scene.make.image({ key: "Create_role_bg" });
         mTopBg.y = -150 * this.dpr;
         this.dragonbones = new UIDragonbonesDisplay(this.scene, this.render);
         this.dragonbones.scale = this.dpr * 2.2;
         this.dragonbones.y = mTopBg.y + 45 * this.dpr;
         this.dragonbones.on("initialized", this.loadDragonbonesComplete, this);
+        this.consumLeftBtn = new Button(this.scene, UIAtlasName.createrole, "Create_clothe_arrow_left");
+        this.consumLeftBtn.on(ClickEvent.Tap, this.onConsumLeftHandler, this);
+        this.consumLeftBtn.x = -122 * this.dpr;
+        this.consumLeftBtn.y = this.dragonbones.y - 20 * this.dpr;
+        this.consumRightBtn = new Button(this.scene, UIAtlasName.createrole, "Create_clothe_arrow_right");
+        this.consumRightBtn.on(ClickEvent.Tap, this.onConsumRightHandler, this);
+        this.consumRightBtn.x = 122 * this.dpr;
+        this.consumRightBtn.y = this.dragonbones.y - 20 * this.dpr;
         const avatarclickCon = new ButtonEventDispatcher(this.scene, 0, 0);
         avatarclickCon.setSize(130 * this.dpr, 130 * this.dpr);
         avatarclickCon.enable = true;
@@ -120,15 +133,15 @@ export class PicaCreateRolePanel extends PicaBasePanel {
     protected createSixCon() {
         this.sixCon = this.scene.make.container(undefined, false);
         this.sixCon.y = 70 * this.dpr;
-        this.manButton = new ToggleButton(this.scene, 0, 0, UIAtlasName.uicommon, "Create_gender_uncheck", "Create_gender_select", this.dpr);
+        this.manButton = new ToggleButton(this.scene, 0, 0, UIAtlasName.createrole, "Create_gender_uncheck", "Create_gender_select", this.dpr);
         this.manButton.on(ClickEvent.Tap, this.onSixHandler, this);
-        this.manIcon = this.scene.make.image({key: UIAtlasName.uicommon, frame: "Create_gender_boy"});
+        this.manIcon = this.scene.make.image({ key: UIAtlasName.createrole, frame: "Create_gender_boy" });
         this.manButton.add(this.manIcon);
         this.manButton.x = -60 * this.dpr;
         this.manButton.y = -60 * this.dpr;
-        this.womanButton = new ToggleButton(this.scene, 0, 0, UIAtlasName.uicommon, "Create_gender_uncheck", "Create_gender_select", this.dpr);
+        this.womanButton = new ToggleButton(this.scene, 0, 0, UIAtlasName.createrole, "Create_gender_uncheck", "Create_gender_select", this.dpr);
         this.womanButton.on(ClickEvent.Tap, this.onSixHandler, this);
-        this.womanIcon = this.scene.make.image({key: UIAtlasName.uicommon, frame: "Create_gender_girl"});
+        this.womanIcon = this.scene.make.image({ key: UIAtlasName.createrole, frame: "Create_gender_girl" });
         this.womanButton.add(this.womanIcon);
         this.womanButton.x = -this.manButton.x;
         this.womanButton.y = this.manButton.y;
@@ -147,7 +160,7 @@ export class PicaCreateRolePanel extends PicaBasePanel {
         for (let i = 0; i < 5; i++) {
             const indexed = i + 1;
             const frame = "Create_complexion_" + indexed;
-            const button = new Button(this.scene, UIAtlasName.uicommon, frame);
+            const button = new Button(this.scene, UIAtlasName.createrole, frame);
             button.name = indexed + "";
             button.y = posy;
             button.x = posx;
@@ -155,7 +168,7 @@ export class PicaCreateRolePanel extends PicaBasePanel {
             this.skinCon.add(button);
             posx += 25 * this.dpr + 32 * this.dpr;
         }
-        this.selectSkinBg = this.scene.make.image({key: UIAtlasName.uicommon, frame: "Create_complexion_select"});
+        this.selectSkinBg = this.scene.make.image({ key: UIAtlasName.createrole, frame: "Create_complexion_select" });
         this.skinCon.add(this.selectSkinBg);
         posy += 56 * this.dpr;
         this.suitCon = this.scene.make.container(undefined, false);
@@ -196,6 +209,10 @@ export class PicaCreateRolePanel extends PicaBasePanel {
 
     private onNextHandler() {
         this.suitCon.visible = true;
+        this.consumLeftBtn.visible = true;
+        this.consumRightBtn.visible = true;
+        this.content.add(this.consumLeftBtn);
+        this.content.add(this.consumRightBtn);
         this.content.add(this.suitCon);
         this.content.remove(this.sixCon);
         this.content.add(this.backButton);
@@ -235,12 +252,25 @@ export class PicaCreateRolePanel extends PicaBasePanel {
         this.suitItemMap.get("eye").setInexed(eyeIndexed);
         this.suitItemMap.get("mouse").setInexed(mouthIndexed);
         this.displayAvatar();
+    }
 
+    private setCostumeSuitData(index: number) {
+        const key = "costume";
+        const cosumArr = this.suitDatasMap.get(key);
+        if (index < 0) index = cosumArr.length - 1;
+        else if (index > cosumArr.length - 1) index = 0;
+        this.curSuitMap.set(key, cosumArr[index]);
+        this.consumIndex = index;
+        this.displayAvatar();
     }
 
     private onBackHandler() {
         if (this.suitCon.parentContainer) {
             this.suitCon.visible = false;
+            this.consumLeftBtn.visible = true;
+            this.consumRightBtn.visible = true;
+            this.content.remove(this.consumLeftBtn);
+            this.content.remove(this.consumRightBtn);
             this.content.remove(this.suitCon);
         }
         this.content.add(this.sixCon);
@@ -265,6 +295,16 @@ export class PicaCreateRolePanel extends PicaBasePanel {
         }
     }
 
+    private onConsumLeftHandler() {
+        this.consumIndex--;
+        this.setCostumeSuitData(this.consumIndex);
+    }
+
+    private onConsumRightHandler() {
+        this.consumIndex++;
+        this.setCostumeSuitData(this.consumIndex);
+    }
+
     private displayAvatar() {
         const items = Array.from(this.curSuitMap.values());
         const avatar = this.creatAvatars(items);
@@ -276,7 +316,7 @@ export class PicaCreateRolePanel extends PicaBasePanel {
     }
 
     private loadDragonbonesComplete() {
-        this.dragonbones.play({name: "idle", flip: false});
+        this.dragonbones.play({ name: "idle", flip: false });
     }
 
     private creatAvatars(datas: op_client.CountablePackageItem[]) {
@@ -338,12 +378,12 @@ class SelectSuitAvatarItem extends Phaser.GameObjects.Container {
     }
 
     protected init() {
-        this.leftButton = new Button(this.scene, UIAtlasName.uicommon, "Create_arrow_left");
+        this.leftButton = new Button(this.scene, UIAtlasName.createrole, "Create_arrow_left");
         this.leftButton.x = -this.width * 0.5 + this.leftButton.width * 0.5;
         this.leftButton.on(ClickEvent.Tap, this.onLeftButtonHandler, this);
-        this.midBackground = this.scene.make.image({key: UIAtlasName.uicommon, frame: "Create_name_bg"});
-        this.nameTex = this.scene.make.text({text: "", style: UIHelper.whiteStyle(this.dpr, 18)}).setOrigin(0.5);
-        this.rightButton = new Button(this.scene, UIAtlasName.uicommon, "Create_arrow_right");
+        this.midBackground = this.scene.make.image({ key: UIAtlasName.createrole, frame: "Create_name_bg" });
+        this.nameTex = this.scene.make.text({ text: "", style: UIHelper.whiteStyle(this.dpr, 18) }).setOrigin(0.5);
+        this.rightButton = new Button(this.scene, UIAtlasName.createrole, "Create_arrow_right");
         this.rightButton.x = this.width * 0.5 - this.rightButton.width * 0.5;
         this.rightButton.on(ClickEvent.Tap, this.onRightButtonHandler, this);
         this.add([this.leftButton, this.midBackground, this.nameTex, this.rightButton]);

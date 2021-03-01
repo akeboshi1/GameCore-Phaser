@@ -47,6 +47,12 @@ export class PicaPlayerInfo extends BasicModel {
     public invite(id: string) {
         this.playerInteraction(id, op_pkt_def.PKT_PlayerInteraction.PKT_invitePlayer);
     }
+    public goOtherHome(id: string) {
+        const packet = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_PKT_GO_OTHERS_HOME);
+        const content: op_virtual_world.OP_CLIENT_REQ_VIRTUAL_WORLD_PKT_GO_OTHERS_HOME = packet.content;
+        content.id = id;
+        this.connection.send(packet);
+    }
 
     private playerInteraction(id: string, method: op_pkt_def.PKT_PlayerInteraction) {
         const param = op_def.GeneralParam.create();

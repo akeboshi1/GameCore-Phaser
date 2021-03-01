@@ -23,6 +23,7 @@ export class PicaPlayerInfoMediator extends BasicMediator {
         this.game.emitter.on(ModuleName.PICAPLAYERINFO_NAME + "_invite", this.onInviteHandler, this);
         this.game.emitter.on(ModuleName.PICAPLAYERINFO_NAME + "_follow", this.onFollowHandler, this);
         this.game.emitter.on(ModuleName.PICAPLAYERINFO_NAME + "_unfollow", this.onUnfollowHandler, this);
+        this.game.emitter.on(ModuleName.PICAPLAYERINFO_NAME + "_gohome", this.onGoOtherHome, this);
         this.game.emitter.on(ModuleName.PICAPLAYERINFO_NAME + "_addBlack", this.onAddBlackHandler, this);
         this.game.emitter.on(ModuleName.PICAPLAYERINFO_NAME + "_removeBlack", this.onRemoveBlackHandler, this);
     }
@@ -35,6 +36,7 @@ export class PicaPlayerInfoMediator extends BasicMediator {
         this.game.emitter.off(ModuleName.PICAPLAYERINFO_NAME + "_invite", this.onInviteHandler, this);
         this.game.emitter.off(ModuleName.PICAPLAYERINFO_NAME + "_follow", this.onFollowHandler, this);
         this.game.emitter.off(ModuleName.PICAPLAYERINFO_NAME + "_unfollow", this.onUnfollowHandler, this);
+        this.game.emitter.off(ModuleName.PICAPLAYERINFO_NAME + "_gohome", this.onGoOtherHome, this);
         this.game.emitter.off(ModuleName.PICAPLAYERINFO_NAME + "_addBlack", this.onAddBlackHandler, this);
         this.game.emitter.off(ModuleName.PICAPLAYERINFO_NAME + "_removeBlack", this.onRemoveBlackHandler, this);
     }
@@ -167,6 +169,10 @@ export class PicaPlayerInfoMediator extends BasicMediator {
 
     private onInviteHandler(id: string) {
         this.mModel.invite(id);
+    }
+
+    private onGoOtherHome(id: string) {
+        this.mModel.goOtherHome(id);
     }
 
     private updateFrind() {

@@ -116,3 +116,4 @@ export * from "./PicaPlayerInfo/PicaAttributePanel";
 export * from "./PicaPlayerInfo/PicaGraphicsProgressBar";
 export * from "./PicaPlayerInfo/PicaPlayerEditorPanel";
 export * from "./PicaPlayerInfo/PicaPlayerInfoPanel";
+export * from "./PicaRename/PicaRenamePanel";

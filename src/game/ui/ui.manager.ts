@@ -1,4 +1,5 @@
 import { PacketHandler, PBpacket } from "net-socket-packet";
+import { BaseDataConfigManager } from "picaWorker";
 import { op_client, op_pkt_def } from "pixelpai_proto";
 import { EventType, ModuleName } from "structure";
 import { Size } from "utils";
@@ -318,8 +319,14 @@ export class UIManager extends PacketHandler {
 
     protected onHandleShowCreateRoleUI(packet: PBpacket) {
         //  this.showMed(ModuleName.CREATEROLE_NAME, packet.content);
-        const content: op_client.OP_VIRTUAL_WORLD_REQ_CLIENT_PKT_SHOW_CREATE_ROLE_UI = packet.content;
-        this.showMed(ModuleName.PICACREATEROLE_NAME, content);
+        this.game.preloadGameConfig().then(() => {
+            const content: op_client.OP_VIRTUAL_WORLD_REQ_CLIENT_PKT_SHOW_CREATE_ROLE_UI = packet.content;
+            const configMgr = <BaseDataConfigManager>this.game.configManager;
+            configMgr.getBatchItemDatas(content.avatars);
+            this.showMed(ModuleName.PICACREATEROLE_NAME, content);
+        });
+        // const content: op_client.OP_VIRTUAL_WORLD_REQ_CLIENT_PKT_SHOW_CREATE_ROLE_UI = packet.content;
+        // this.showMed(ModuleName.PICACREATEROLE_NAME, content);
     }
 
     protected onHandleCloseCreateRoleUI() {
