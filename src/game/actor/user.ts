@@ -17,6 +17,7 @@ export class User extends Player {
     private mSyncTime: number = 0;
     private mSyncDirty: boolean = false;
     private mInputMask: number;
+    private mSetPostionTime: number = 0;
     constructor(private game: Game) {
         super(undefined, undefined);
         this.mBlockable = false;
@@ -161,9 +162,18 @@ export class User extends Player {
         super.updateModel(model, this.game.avatarType);
     }
 
+    public destroy() {
+        this.mSetPostionTime = 0;
+        super.destroy();
+    }
+
     public setPosition(pos: IPos) {
         super.setPosition(pos);
-        this.syncCameraPosition();
+        const now = new Date().getTime();
+        if (now - this.mSetPostionTime > 1000) {
+            this.mSetPostionTime = now;
+            this.syncCameraPosition();
+        }
     }
 
     protected activeSprite(targetId: number) {
