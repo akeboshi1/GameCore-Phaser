@@ -19,7 +19,7 @@ export class BaseGuide implements IGuide {
     public start(data?: any) {
     }
     public end() {
-        this.render.guideManager.stopGuide(this.id);
+        // this.render.guideManager.stopGuide(this.id);
     }
     public stop() {
         if (this.guideEffect) {
