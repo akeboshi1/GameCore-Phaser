@@ -43,8 +43,8 @@ export class PicaRenameMediator extends BasicMediator {
   private onRandomNameHandler() {
     this.mModel.onRandomNameHandler();
   }
-  private onSubmitHandler(name: string, index: number, avatar?: any) {
-    this.mModel.onSubmitHandler(name, index, avatar);
+  private onSubmitHandler(name: string) {
+    this.mModel.onSubmitHandler(name);
   }
   private onHidePanel() {
     this.hide();

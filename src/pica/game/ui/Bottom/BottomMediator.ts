@@ -58,15 +58,20 @@ export class BottomMediator extends BasicMediator {
             "grids": this.game.renderPeer.gridsDebugger,
             "astar": this.game.renderPeer.astarDebugger,
             "sort": this.game.renderPeer.sortDebugger,
-            "editor": this.game.renderPeer.editorModeDebugger
+            "editor": this.game.renderPeer.editorModeDebugger,
+            "showpanel": { v: () => { this.onShowPanelHandler(params[2]); } }
         };
         const context: ChatCommandInterface = contextMap[contextStr];
         if (context === undefined || context === null) {
             return;
         }
         if (params.length > 2 && params[2].length > 0) {
-            const functionStr = params[2];
-            context[functionStr].apply(context);
+            if (params[1] === "showpanel") { // TODO: 临时显示UI界面
+                context.v();
+            } else {
+                const functionStr = params[2];
+                context[functionStr].apply(context);
+            }
         } else {
             context.v();
         }

@@ -24,6 +24,7 @@ export enum BaseDataType {
     job = "job",
     cardPool = "cardPool",
     skill = "skill",
+    level = "level"
     // itemcategory = "itemcategory"
 }
 

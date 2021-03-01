@@ -7,6 +7,7 @@ export class PicaRename extends BasicModel {
     private mEvent: Map<string, any> = new Map();
     constructor(game: Game) {
         super(game);
+        this.register();
     }
 
     register() {
@@ -46,13 +47,11 @@ export class PicaRename extends BasicModel {
         connection.send(packet);
     }
 
-    public onSubmitHandler(name: string, index: number, avatar?: any) {
+    public onSubmitHandler(name: string) {
         const connection = this.game.connection;
-        const packet = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_CREATE_ROLE);
-        const content: op_virtual_world.IOP_CLIENT_REQ_VIRTUAL_WORLD_CREATE_ROLE = packet.content;
+        const packet = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_PKT_CHANGE_NAME);
+        const content: op_virtual_world.IOP_CLIENT_REQ_VIRTUAL_WORLD_PKT_CHANGE_NAME = packet.content;
         content.name = name;
-        // content.avatar = avatar;
-        content.index = index;
         connection.send(packet);
     }
 
