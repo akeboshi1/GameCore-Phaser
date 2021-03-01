@@ -14,8 +14,8 @@ export class PicaGuideManager extends GuideManager {
 
     public init(data?: any) {
         // todo test
-        this.guideMap.set(GuideID.Explore, new ExploreGuide(GuideID.Explore, this.render));
-        this.guideMap.set(GuideID.Plane, new PlaneGuide(GuideID.Plane, this.render));
-        this.guideMap.set(GuideID.Hotel, new HotelGuide(GuideID.Hotel, this.render));
+        // this.guideMap.set(GuideID.Explore, new ExploreGuide(GuideID.Explore, this.render));
+        // this.guideMap.set(GuideID.Plane, new PlaneGuide(GuideID.Plane, this.render));
+        // this.guideMap.set(GuideID.Hotel, new HotelGuide(GuideID.Hotel, this.render));
     }
 }

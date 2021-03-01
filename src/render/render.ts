@@ -104,7 +104,7 @@ export class Render extends RPCPeer implements GameMain, IRender {
     private mConnectFailFunc: Function;
     private mGameCreatedFunc: Function;
     private mGameLoadedFunc: Function;
-
+    private mCacheTarget: any;
     constructor(config: ILauncherConfig, callBack?: Function) {
         super(RENDER_PEER);
         Logger.getInstance().log("config ====>", config);
@@ -1362,12 +1362,20 @@ export class Render extends RPCPeer implements GameMain, IRender {
         const target = this.mDisplayManager.getDisplay(id);
         if (target) {
             if (effect === "liner") {
-                await this.mCameraManager.pan(target.x, target.y, target.y);
-                if (id === 674096428) {
-                    // this.guideManager.startGuide(2, { x: target.x, y: target.y });
-                } else if (id === 1752777777) {
-
+                if (this.mCacheTarget) {
+                    if (this.mCacheTarget.id === 674096428) {
+                        this.guideManager.startGuide(1, { x: this.mCacheTarget.x, y: this.mCacheTarget.y });
+                    } else if (this.mCacheTarget.id === 1752777777) {
+                    }
+                    this.mCacheTarget = null;
                 }
+                this.mCameraManager.pan(target.x, target.y, target.y).then(() => {
+                    if (id === 674096428) {
+                        this.mCacheTarget = target;
+                    } else if (id === 1752777777) {
+                        this.mCacheTarget = target;
+                    }
+                });
                 this.mCameraManager.startFollow(target);
             } else {
                 this.mCameraManager.startFollow(target);
