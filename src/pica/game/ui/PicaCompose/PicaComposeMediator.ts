@@ -18,7 +18,7 @@ export class PicaComposeMediator extends BasicMediator {
         this.game.emitter.on("formulaDetial", this.onRetFormulaDetial, this);
         this.game.emitter.on(ModuleName.PICACOMPOSE_NAME + "_showpanel", this.onShowPanel, this);
         this.game.emitter.on(ModuleName.PICACOMPOSE_NAME + "_hide", this.onHideView, this);
-        this.game.emitter.on(ModuleName.PICACOMPOSE_NAME + "_reqformula", this.onReqFormulaDetial, this);
+        // this.game.emitter.on(ModuleName.PICACOMPOSE_NAME + "_reqformula", this.onReqFormulaDetial, this);
         this.game.emitter.on(ModuleName.PICACOMPOSE_NAME + "_reqUseFormula", this.onReqUseFormula, this);
         this.game.emitter.on(EventType.PACKAGE_SYNC_FINISH, this.onSyncFinishHandler, this);
         this.game.emitter.on(EventType.PACKAGE_UPDATE, this.onUpdateHandler, this);
@@ -29,7 +29,7 @@ export class PicaComposeMediator extends BasicMediator {
         this.game.emitter.off("formulaDetial", this.onRetFormulaDetial, this);
         this.game.emitter.off(ModuleName.PICACOMPOSE_NAME + "_showpanel", this.onShowPanel, this);
         this.game.emitter.off(ModuleName.PICACOMPOSE_NAME + "_hide", this.onHideView, this);
-        this.game.emitter.off(ModuleName.PICACOMPOSE_NAME + "_reqformula", this.onReqFormulaDetial, this);
+        // this.game.emitter.off(ModuleName.PICACOMPOSE_NAME + "_reqformula", this.onReqFormulaDetial, this);
         this.game.emitter.off(ModuleName.PICACOMPOSE_NAME + "_reqUseFormula", this.onReqUseFormula, this);
         this.game.emitter.off(EventType.PACKAGE_SYNC_FINISH, this.onSyncFinishHandler, this);
         this.game.emitter.off(EventType.PACKAGE_UPDATE, this.onUpdateHandler, this);
@@ -56,9 +56,9 @@ export class PicaComposeMediator extends BasicMediator {
         }
         return null;
     }
-    private onReqFormulaDetial(id: string) {
-        this.mModel.onReqFormulaDetail(id);
-    }
+    // private onReqFormulaDetial(id: string) {
+    //     this.mModel.onReqFormulaDetail(id);
+    // }
     private onReqUseFormula(id: string) {
         this.mModel.onReqUseFormula(id);
     }
