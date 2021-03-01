@@ -18,9 +18,22 @@ export class BaseGuide implements IGuide {
     }
     public start(data?: any) {
     }
+    public end() {
+        // this.render.guideManager.stopGuide(this.id);
+    }
     public stop() {
+        if (this.guideEffect) {
+            this.guideEffect.destroy();
+            this.guideEffect = null;
+        }
+    }
+    /**
+     * 检查是否阻挡交互
+     */
+    public checkInteractive(data?: any): boolean {
+        return true;
     }
     public destroy() {
-        this.guideEffect.destroy();
+        this.stop();
     }
 }

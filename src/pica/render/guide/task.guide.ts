@@ -1,5 +1,5 @@
-import { Button, ClickEvent, GameGridTable } from "apowophaserui";
-import { BaseGuide, ButtonEventDispatcher, Render } from "gamecoreRender";
+import { Button, ClickEvent } from "apowophaserui";
+import { BaseGuide, Render } from "gamecoreRender";
 import { ModuleName } from "structure";
 import { BottomPanel, PicaExploreListPanel } from "../ui";
 
@@ -10,10 +10,6 @@ export class TaskGuide extends BaseGuide {
 
     public start() {
         this.step1();
-    }
-
-    public stop() {
-        this.guideEffect.destroy();
     }
 
     private step1() {
@@ -37,7 +33,7 @@ export class TaskGuide extends BaseGuide {
             const worldMatrix = item.openButton.getWorldTransformMatrix();
             this.guideEffect.createGuideEffect({ x: worldMatrix.tx, y: worldMatrix.ty });
             item.on(ClickEvent.Tap, () => {
-                this.stop();
+                this.end();
             }, this);
         }, this);
     }
