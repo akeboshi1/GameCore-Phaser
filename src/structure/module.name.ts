@@ -67,4 +67,5 @@ export class ModuleName {
     public static PICAROAM_NAME = "PicaRoam";
     public static PICAEXPLORELOG_NAME = "PicaExploreLog";
     public static PICAEXPLORELIST_NAME = "PicaExploreList";
+    public static PICARENAME_NAME = "PicaRename";
 }

@@ -99,3 +99,5 @@ export * from "./ui/PicaExploreList/PicaExploreList";
 export * from "./ui/PicaExploreList/PicaExploreListMediator";
 export * from "./ui/PicaPlayerInfo/PicaPlayerInfo";
 export * from "./ui/PicaPlayerInfo/PicaPlayerInfoMediator";
+export * from "./ui/PicaRename/PicaRename";
+export * from "./ui/PicaRename/PicaRenameMediator";
