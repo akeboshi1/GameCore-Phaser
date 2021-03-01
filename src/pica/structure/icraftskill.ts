@@ -11,4 +11,3 @@ export interface ICraftSkill {
     _materials?: object;
     _product?: object;
 }
-

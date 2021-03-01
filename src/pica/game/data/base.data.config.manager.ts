@@ -203,7 +203,7 @@ export class BaseDataConfigManager extends BaseConfigManager {
         temp.materials = this.convertMapToItem([temp._materials]);
         temp.materials.forEach((m) => {
             m.neededCount = m.count;
-        })
+        });
 
         // const product = this.convertMapToItem([temp._product]);
         // const list = this.getBatchItemDatas(product);
