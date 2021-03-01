@@ -106,6 +106,14 @@ export class AnimationModel implements IAnimationData {
         return ani;
     }
 
+    createMount() {
+        if (!this.mountLayer) {
+            this.mountLayer = op_gameconfig_01.AnimationMountLayer.create();
+            this.mountLayer.mountPoint = [op_def.PBPoint3f.create({ x: 0, y: 0 })];
+            this.mountLayer.index = 0;
+        }
+    }
+
     private stringToArray(string: string, fristJoin: string, lastJoin: string) {
         if (!string) {
             return;

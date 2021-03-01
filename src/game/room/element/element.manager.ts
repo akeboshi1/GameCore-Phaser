@@ -49,6 +49,11 @@ export class ElementManager extends PacketHandler implements IElementManager {
      * 更新element缓存list
      */
     protected mCacheSyncList: any[] = [];
+
+    /**
+     * Add添加 End清空
+     */
+    protected mAddCache: any[] = [];
     protected mMap: number[][];
     /**
      * 移除缓存list
@@ -428,6 +433,13 @@ export class ElementManager extends PacketHandler implements IElementManager {
                 this.mRequestSyncIdList.length = 0;
                 this.mRequestSyncIdList = [];
             }
+            for (const cacheId of this.mAddCache) {
+                const ele = this.mElements.get(cacheId);
+                if (ele) {
+                    ele.asociate();
+                }
+            }
+            this.mAddCache = [];
         }
     }
 
@@ -491,6 +503,7 @@ export class ElementManager extends PacketHandler implements IElementManager {
             return;
         }
         for (const obj of objs) {
+            this.mAddCache.push(obj.id);
             if (this.checkDisplay(new Sprite(obj, 3))) {
                 this.mCacheAddList.push(obj);
             } else {

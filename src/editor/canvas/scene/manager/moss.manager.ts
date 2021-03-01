@@ -122,6 +122,7 @@ export class EditorMossManager extends PacketHandler {
         const locs = content.locs;
 
         for (const loc of locs) {
+            this.sceneEditor.displayObjectPool.addCache(loc.id);
             this.taskQueue.set(loc.id, {
                 action: "ADD",
                 loc,

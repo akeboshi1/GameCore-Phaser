@@ -1,4 +1,4 @@
-import { IPos, IPosition45Obj, LogicPos, Position45 } from "utils";
+import { IPos, IPosition45Obj, Logger, LogicPos, Position45 } from "utils";
 
 export function transitionGrid(x: number, y: number, alignGrid: boolean, roomSize: IPosition45Obj) {
     const source = new LogicPos(x, y);

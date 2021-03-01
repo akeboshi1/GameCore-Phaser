@@ -10,6 +10,7 @@ export class DisplayObjectPool {
     private mosses = new Map();
     private elements = new Map();
     private walls = new Map();
+    private caches = new Map();
 
     private readonly POOLOBJECTCONFIG = {
         terrains: BaseFramesDisplay,
@@ -40,6 +41,18 @@ export class DisplayObjectPool {
         }
         (<any>this.sceneEditor.scene).layerManager.addToLayer(sprite.layer.toString(), obj);
         pool.set(id, obj);
+
+        this.caches.set(sprite.id, true);
+        const cachelist = Array.from(this.caches.values());
+        const result = cachelist.filter((bol) => bol === false);
+        if (result.length === 0) {
+            this.caches.forEach((value, key) => {
+                const ele = this.get(key.toString());
+                if (ele) ele.asociate();
+            });
+            this.caches.clear();
+        }
+        // this.caches.forEach((val) => if (val === false) done = false )
     }
 
     remove(poolName: string, id: string) {
@@ -68,6 +81,10 @@ export class DisplayObjectPool {
                 obj.setPosition(pos.x, pos.y);
             }
         }
+    }
+
+    addCache(id: number) {
+        this.caches.set(id, false);
     }
 
     get(id: string) {

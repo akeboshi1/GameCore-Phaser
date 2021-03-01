@@ -143,6 +143,7 @@ export class EditorElementManager extends PacketHandler {
         const { sprites, nodeType } = content;
 
         for (const sprite of sprites) {
+            this.sceneEditor.displayObjectPool.addCache(sprite.id);
             this.taskQueue.set(sprite.id, {
                 action: "ADD",
                 sprite: new Sprite(sprite,content.nodeType),
@@ -289,5 +290,8 @@ export class EditorElementManager extends PacketHandler {
                 this.sceneEditor.displayObjectPool.update("elements", sprite.id.toString(), sprite);
             }
         }
+        // if (this.taskQueue.size === 0) {
+        // this.sceneEditor.displayObjectPool.asociate("elements", batchTasksKeys);
+        // }
     }
 }

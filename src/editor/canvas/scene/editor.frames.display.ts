@@ -1,5 +1,5 @@
 import { Sprite } from "baseModel";
-import { BaseFramesDisplay, ReferenceArea } from "baseRender";
+import { BaseDragonbonesDisplay, BaseFramesDisplay, ReferenceArea } from "baseRender";
 import { IFramesModel, RunningAnimation } from "structure";
 import { Helpers, Logger, LogicPoint, Position45 } from "utils";
 import { SceneEditorCanvas } from "./scene.editor.canvas";
@@ -14,9 +14,41 @@ export class EditorFramesDisplay extends BaseFramesDisplay {
     protected mTopDisplay: EditorTopDisplay;
     protected mIsMoss: boolean = false;
     protected mOverlapped: boolean = false;
+    protected mLayer: number;
 
     constructor(protected sceneEditor: SceneEditorCanvas, sprite: Sprite) {
         super(sceneEditor.scene, sprite.id, sprite.nodeType);
+        this.mLayer = sprite.layer;
+    }
+
+    mount(display: BaseFramesDisplay | BaseDragonbonesDisplay, targetIndex?: number) {
+        if (!this.mCurAnimation) {
+            return;
+        }
+        if (!this.mCurAnimation.mountLayer) {
+            this.mCurAnimation.createMount();
+        }
+        super.mount(display, targetIndex);
+    }
+
+    unmount(display: BaseFramesDisplay | BaseDragonbonesDisplay) {
+        if (!this.mMountContainer) {
+            return;
+        }
+        super.unmount(display);
+        (<any>this.sceneEditor.scene).layerManager.addToLayer(this.mLayer.toString(), display);
+    }
+
+    asociate() {
+        const mounts = this.sprite.mountSprites;
+        if (mounts && mounts.length > 0) {
+            for (const mount of mounts) {
+                const ele = this.sceneEditor.displayObjectPool.get(mount.toString());
+                if (ele) {
+                    this.mount(ele);
+                }
+            }
+        }
     }
 
     selected() {
@@ -84,7 +116,12 @@ export class EditorFramesDisplay extends BaseFramesDisplay {
         pos.x = this.x;
         pos.y = this.y;
         pos.z = this.z;
-        return this.sprite.toSprite();
+        const sprite = this.sprite.toSprite();
+        const mountIds = this.getMountIds();
+        if (mountIds.length > 0) {
+            sprite.mountSprites = mountIds;
+        }
+        return sprite;
     }
 
     clear() {
@@ -95,6 +132,17 @@ export class EditorFramesDisplay extends BaseFramesDisplay {
         this.mDisplayDatas.clear();
         this.mSprites.forEach((display) => display.destroy());
         this.mSprites.clear();
+    }
+
+    getMountIds() {
+        const result = [];
+        if (this.mMountList) {
+            for (const mount of this.mMountList) {
+                const id = (<BaseFramesDisplay>mount).id;
+                if (id) result.push(id);
+            }
+        }
+        return result;
     }
 
     public play(val: RunningAnimation) {
