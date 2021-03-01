@@ -64,12 +64,17 @@ export class GuideEffect extends Phaser.GameObjects.Container {
             (<any>this.scene).layerManager.addToLayer(MainUIScene.LAYER_MASK, this.mGuideEffect);
             (<any>this.scene).layerManager.addToLayer(MainUIScene.LAYER_MASK, this.mHandDisplay);
         }
+        this.updatePos(pos);
+        // this.setInteractive(new Phaser.Geom.Rectangle(width >> 1, height >> 1, width, height), Phaser.Geom.Rectangle.Contains);
+        this.start();
+    }
+
+    public updatePos(pos: IPos) {
         if (!this.mMask) {
             this.mMask = this.scene.make.graphics(undefined);
             this.mMask.fillStyle(0);
             this.mMask.fillCircle(0, 0, 50);
             this.mMask.setPosition(pos.x, pos.y);
-            this.mHandDisplay.setPosition(pos.x, pos.y);
             const geometryMask = this.mMask.createGeometryMask().setInvertAlpha(true);
             this.mGuideEffect.setMask(geometryMask);
         } else {
@@ -85,8 +90,7 @@ export class GuideEffect extends Phaser.GameObjects.Container {
             //     },
             // });
         }
-        // this.setInteractive(new Phaser.Geom.Rectangle(width >> 1, height >> 1, width, height), Phaser.Geom.Rectangle.Contains);
-        this.start();
+        if (this.mHandDisplay) this.mHandDisplay.setPosition(pos.x, pos.y);
     }
 
     public start() {

@@ -95,7 +95,7 @@ export class PicaExploreListPanel extends PicaBasePanel {
     setExploreChapterResult(content: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_QUERY_CHAPTER_RESULT) {
         const nextLevelID = this.mShowData.nextLevelId;
         this.levelPanel.setCaptoreResult(content, nextLevelID);
-        this.render.emitter.emit("PicaExploreListPanel_Data");
+        this.render.emitter.emit("PicaExploreListPanel_Data", this.levelPanel.addHei);
     }
     setExploreChapters(data: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_EXPLORE_CHAPTER_PROGRESS) {
         this.mShowData = data;
