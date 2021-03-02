@@ -947,6 +947,15 @@ export class Render extends RPCPeer implements GameMain, IRender {
     @Export([webworker_rpc.ParamType.str, webworker_rpc.ParamType.str])
     public showAlert(text: string, title: string) {
         // 告诉render显示警告框
+        if (this.uiManager) this.uiManager.showAlertView(text, true);
+    }
+
+    @Export([webworker_rpc.ParamType.str])
+    public showAlertReconnect(text: string) {
+        // 告诉render显示警告框
+        if (this.uiManager) this.uiManager.showAlertView(text, true, false, () => {
+            this.mainPeer.reconnect();
+        });
     }
 
     @Export()
@@ -1023,7 +1032,7 @@ export class Render extends RPCPeer implements GameMain, IRender {
 
     }
 
-    @Export([webworker_rpc.ParamType.str, webworker_rpc.ParamType.str, webworker_rpc.ParamType.num, webworker_rpc.ParamType.num, webworker_rpc.ParamType.num, webworker_rpc.ParamType.num])
+    @Export([webworker_rpc.ParamType.str, webworker_rpc.ParamType.str])
     public createAnotherGame(gameId: string, worldId: string, sceneId?: number, px?: number, py?: number, pz?: number) {
         // this.newGame().then(() => {
         //     // todo sceneManager loginScene.name

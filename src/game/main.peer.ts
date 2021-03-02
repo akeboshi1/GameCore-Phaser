@@ -116,6 +116,7 @@ export class MainPeer extends RPCPeer {
         this.startDelay = setInterval(() => {
             Logger.getInstance().log("heartBeat request");
             if (this.reConnectCount >= 8) {
+                Logger.getInstance().log("reconnect ====>");
                 this.game.reconnect();
                 return;
             }
@@ -226,6 +227,11 @@ export class MainPeer extends RPCPeer {
         // this.isReconnect = true;
         // 告诉逻辑进程重新链接
         this.game.reconnect();
+    }
+
+    @Export()
+    public refreshConnect() {
+        this.game.onRefreshConnect();
     }
 
     @Export()

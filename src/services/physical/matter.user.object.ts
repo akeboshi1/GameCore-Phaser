@@ -107,7 +107,7 @@ export class MatterUserObject extends MatterPlayerObject {
         // const vec = path[0] - pos;
         // vec.normalize * speed;
         const angle = Math.atan2((path[0].y - pos.y), (path[0].x - pos.x));
-        const speed = this.mModel.speed * delayTime * 2;
+        const speed = this.mModel.speed * delayTime;
         this.setVelocity(Math.cos(angle) * speed, Math.sin(angle) * speed);
     }
 
