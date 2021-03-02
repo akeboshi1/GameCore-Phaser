@@ -170,8 +170,10 @@ export class BaseDataConfigManager extends BaseConfigManager {
             if (data.hasOwnProperty(key)) {
                 const temp = data[key];
                 if (sns.indexOf(temp.sn) !== -1) {
-                    const unlockstri = JSON.stringify(temp.unLockMaterials);
-                    map.set(temp.sn, JSON.parse(unlockstri));
+                    if (!StringUtils.isNullOrUndefined(temp.unLockMaterials)) {
+                        const unlockstri = JSON.stringify(temp.unLockMaterials);
+                        map.set(temp.sn, JSON.parse(unlockstri));
+                    }
                 }
             }
             if (map.size === sns.length) break;
@@ -344,6 +346,11 @@ export class BaseDataConfigManager extends BaseConfigManager {
             tempArr[extend] = true;
             return tempArr;
         }
+    }
+
+    public getLevel(type: string, level: number) {
+        const data: LevelConfig = this.getConfig(BaseDataType.level);
+        return data.get(type, level);
     }
 
     public getCardPool(id: string) {

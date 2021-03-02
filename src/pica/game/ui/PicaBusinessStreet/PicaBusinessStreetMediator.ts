@@ -157,7 +157,10 @@ export class PicaBusinessStreetMediator extends BasicMediator {
         if (content.industry) {
             const config = this.config;
             for (const industry of content.industry) {
-                industry.buffDes = config.getI18n(industry.buffDes);
+                if (industry.buffDes) {
+                    const texts = industry.buffDes.split(" ");
+                    industry.buffDes = config.getI18n(texts[0]) + " " + (texts[1] ? texts[1] : "");
+                }
                 industry.des = config.getI18n(industry.des);
                 industry.name = config.getI18n(industry.name);
                 industry.state = config.getI18n(industry.state);

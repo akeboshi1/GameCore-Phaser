@@ -1,36 +1,34 @@
 import { BaseConfigData } from "gamecore";
 import { ILevel } from "src/pica/structure/ilevel";
+import { Logger } from "utils";
 export class LevelConfig extends BaseConfigData {
-    miningLevel: Map<number, ILevel>;
-    playerLevel: Map<number, ILevel>;
-    cabinLevel: Map<number, ILevel>;
-    storeLevel: Map<number, ILevel>;
-    loggingLevel: Map<number, ILevel>;
-    farmingLevel: Map<number, ILevel>;
-    // public get(type: string, level: string): ILevel {
-    //     if (this.hasOwnProperty(id)) {
-    //         const data = this[id];
-    //         const _skill = {
-    //             id: data.id,
-    //             name: data.name,
-    //             display: { texturePath: data.display.texture_path },
-    //             quality: data.quality,
-    //         };
-    //         const skill = {
-    //             skill: _skill,
-    //             _materials: data.formula.materials,
-    //             _product: data.formula.products,
-    //         };
+    miningLevel: Map<number, ILevel> = new Map();
+    playerLevel: Map<number, ILevel> = new Map();
+    cabinLevel: Map<number, ILevel> = new Map();
+    storeLevel: Map<number, ILevel> = new Map();
+    loggingLevel: Map<number, ILevel> = new Map();
+    farmingLevel: Map<number, ILevel> = new Map();
+    public get(type: string, level: number): ILevel {
+        const map = this.getMap(type);
+        if (map.has(level)) {
 
-    //         return skill;
-    //     } else {
-    //         Logger.getInstance().error(`Skill表未配置ID为:${id}的数据`);
-    //         return undefined;
-    //     }
-    // }
+            return map.get(level);
+        } else {
+            Logger.getInstance().error(`Level表未配置ID为:${level}的数据`);
+            return undefined;
+        }
+    }
 
     parseJson(json) {
-
+        for (const key in json) {
+            if (Object.prototype.hasOwnProperty.call(json, key)) {
+                const arr = json[key];
+                const map = this.getMap(key);
+                for (const data of arr) {
+                    map.set(data.level, data);
+                }
+            }
+        }
     }
 
     protected getMap(tag: string) {
