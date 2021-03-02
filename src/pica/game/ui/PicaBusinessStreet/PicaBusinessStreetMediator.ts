@@ -1,6 +1,7 @@
 import { BasicMediator, Game } from "gamecore";
 import { op_client, op_pkt_def } from "pixelpai_proto";
 import { ModuleName, RENDER_PEER } from "structure";
+import { BaseDataConfigManager } from "../../data";
 import { PicaBusinessStreet } from "./PicaBusinessStreet";
 
 export class PicaBusinessStreetMediator extends BasicMediator {
@@ -153,6 +154,18 @@ export class PicaBusinessStreetMediator extends BasicMediator {
     }
 
     private onINDUSTRY_MODELS(content: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_INDUSTRY_MODELS) {
+        if (content.industry) {
+            const config = this.config;
+            for (const industry of content.industry) {
+                industry.buffDes = config.getI18n(industry.buffDes);
+                industry.des = config.getI18n(industry.des);
+                industry.name = config.getI18n(industry.name);
+                industry.state = config.getI18n(industry.state);
+                for (const room of industry.roomModels) {
+                    room.name = config.getI18n(room.name);
+                }
+            }
+        }
         if (!this.mPanelInit) {
             this.mCacheData_Models = content;
             return;
@@ -160,6 +173,11 @@ export class PicaBusinessStreetMediator extends BasicMediator {
         this.mView.setIndustryModels(content);
     }
     private onSTORE_RANKING_LIST(content: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_QUERY_STORE_RANKING_LIST) {
+        if (content.rankChampions) {
+            for (const data of content.rankChampions) {
+                data.name = this.config.getI18n(data.name);
+            }
+        }
         if (!this.mPanelInit) {
             this.mCacheData_RankindList = content;
             return;
@@ -189,5 +207,9 @@ export class PicaBusinessStreetMediator extends BasicMediator {
     }
     private get model(): PicaBusinessStreet {
         return (<PicaBusinessStreet>this.mModel);
+    }
+
+    private get config(): BaseDataConfigManager {
+        return <BaseDataConfigManager>this.game.configManager;
     }
 }

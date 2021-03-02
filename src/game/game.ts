@@ -666,6 +666,10 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
                     this.mNetWorkManager.destory();
                     this.mNetWorkManager = null;
                 }
+                if (this.mConfigManager) {
+                    this.mConfigManager.destory();
+                    this.mConfigManager = null;
+                }
                 if (this.mDataManager) {
                     this.mDataManager.clear();
                     this.mDataManager = null;

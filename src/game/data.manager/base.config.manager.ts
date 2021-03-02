@@ -6,6 +6,7 @@ export class BaseConfigManager {
     protected dataMap: Map<string, BaseConfigData> = new Map();
     protected mGame: Game;
     protected mInitialization: boolean = false;
+    protected mDispose: boolean = false;
     constructor(game: Game) {
         this.mGame = game;
     }
@@ -16,10 +17,12 @@ export class BaseConfigManager {
     public startLoad(basePath: string): Promise<any> {
         if (this.mInitialization) {
             return new Promise((resolve, reject) => {
+                if (this.mDispose) return;
                 resolve(true);
             });
         } else {
             return this.getBasePath().then((value: string) => {
+                if (this.mDispose) return;
                 this.dataMap.clear();
                 this.dirname(value);
                 this.add();
@@ -29,6 +32,7 @@ export class BaseConfigManager {
     }
 
     public dynamicLoad(dataMap: Map<string, BaseConfigData>): Promise<any> {
+        if (this.mDispose) return;
         dataMap.forEach((value, key) => {
             this.dataMap.set(key, value);
         });
@@ -37,11 +41,13 @@ export class BaseConfigManager {
     public executeLoad(dataMap: Map<string, BaseConfigData>): Promise<any> {
         return new Promise((resolve, reject) => {
             if (dataMap.size === 0) {
+                if (this.mDispose) return;
                 this.mInitialization = true;
                 resolve(true);
                 return;
             }
             this.checkLocalStorage(dataMap).then((values) => {
+                if (this.mDispose) return;
                 const loadUrls = [];
                 for (const value of values) {
                     if (value.obj) {
@@ -54,6 +60,7 @@ export class BaseConfigManager {
                 }
                 if (loadUrls.length > 0) {
                     loadArr(loadUrls).then((data) => {
+                        if (this.mDispose) return;
                         data.forEach((value: XMLHttpRequest, key: string) => {
                             const obj = dataMap.get(key);
                             obj.resName = key;
@@ -70,10 +77,12 @@ export class BaseConfigManager {
                         resolve(true);
                     }, (reponse) => {
                         Logger.getInstance().error("未成功加载配置:" + reponse);
+                        if (this.mDispose) return;
                         this.mInitialization = true;
                         resolve(true);
                     });
                 } else {
+                    if (this.mDispose) return;
                     this.mInitialization = true;
                     resolve(true);
                 }
@@ -103,6 +112,11 @@ export class BaseConfigManager {
             // }
 
         });
+    }
+    public destory() {
+        this.mInitialization = false;
+        this.dataMap.clear();
+        this.mDispose = true;
     }
     protected add() {
     }

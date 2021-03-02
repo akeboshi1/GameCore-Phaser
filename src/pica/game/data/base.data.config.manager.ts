@@ -1,7 +1,7 @@
 import { BaseConfigData, BaseConfigManager, Game } from "gamecore";
 import { ICountablePackageItem, IElement, IExploreChapterData, IExploreLevelData, IExtendCountablePackageItem } from "picaStructure";
 import { IMarketCommodity, IShopBase } from "../../../pica/structure/imarketcommodity";
-import { Logger, ObjectAssign, Url } from "utils";
+import { Logger, ObjectAssign, StringUtils, Url } from "utils";
 import { ElementDataConfig } from "./element.data.config";
 import { ExploreDataConfig } from "./explore.data.config";
 import { I18nZHDataConfig } from "./i18nzh.config";
@@ -14,6 +14,7 @@ import { IJob } from "../../../pica/structure/ijob";
 import { CardPoolConfig } from "./cardpool.config";
 import { ICraftSkill } from "src/pica/structure/icraftskill";
 import { SkillConfig } from "./skill.config";
+import { LevelConfig } from "./level.config";
 
 export enum BaseDataType {
     i18n_zh = "i18n_zh",
@@ -243,6 +244,9 @@ export class BaseDataConfigManager extends BaseConfigManager {
     }
 
     public getI18n(id: string, tips?: any) {
+        if (!StringUtils.isNullOrUndefined(id)) {
+            id = id.toUpperCase();
+        }
         const data: I18nZHDataConfig = this.getConfig(BaseDataType.i18n_zh);
         return data.text(id, tips);
     }
@@ -361,7 +365,7 @@ export class BaseDataConfigManager extends BaseConfigManager {
         this.dataMap.set(BaseDataType.job, new JobConfig());
         this.dataMap.set(BaseDataType.cardPool, new CardPoolConfig());
         this.dataMap.set(BaseDataType.skill, new SkillConfig());
-        this.dataMap.set(BaseDataType.level, new SkillConfig());
+        this.dataMap.set(BaseDataType.level, new LevelConfig());
     }
 
     protected configUrl(reName: string, tempurl?: string) {
