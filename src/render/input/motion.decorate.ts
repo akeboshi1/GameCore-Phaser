@@ -16,6 +16,10 @@ export class MotionDecorate extends MotionBase {
         this.type = MotionType.Decorate;
     }
 
+    public async onPointerDownHandler(pointer: Phaser.Input.Pointer): Promise<void> {
+
+    }
+
     protected async onPointerUpHandler(pointer: Phaser.Input.Pointer): Promise<void> {
 
     }
@@ -31,10 +35,6 @@ export class MotionDecorate extends MotionBase {
         display.setPosition(worldPos.x + this.downDisplayPos.x - this.downPointerPos.x,
             worldPos.y + this.downDisplayPos.y - this.downPointerPos.y);
         this.render.emitter.emit(MessageType.UPDATE_SELECTED_DECORATE_ELEMENT_POSITION);
-    }
-
-    protected async onPointerDownHandler(pointer: Phaser.Input.Pointer): Promise<void> {
-
     }
 
     protected onPointeroutHandler() {
