@@ -3,13 +3,7 @@ import { NodeType } from "../managers";
 import { MainUIScene } from "../scenes/main.ui.scene";
 import { Logger, LogicPos, Tool } from "utils";
 
-export enum MotionType {
-    Base,
-    Decorate
-}
-
-export class MotionBase {
-    public type: MotionType = MotionType.Base;
+export class MotionManager {
     public enable: boolean;
     protected scene: Phaser.Scene;
     private gameObject: Phaser.GameObjects.GameObject;
@@ -110,11 +104,6 @@ export class MotionBase {
                         this.clearGameObject();
                         return;
                     }
-                    // if (ele.nodeType === NodeType.ElementNodeType) {
-                    //     // check enter decorate
-                    //     this.render.mainPeer.onFurnitureHolded(id);
-                    //     return;
-                    // }
                     let targets = await this.render.physicalPeer.getInteractivePosition(id);
                     if (!targets || targets.length === 0) {
                         const { x, y } = ele;

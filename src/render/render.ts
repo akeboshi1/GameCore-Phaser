@@ -42,8 +42,9 @@ import {EditorModeDebugger} from "./display/debugs/editor.mode.debugger";
 import {GridsDebugger} from "./display/debugs/grids";
 import {SortDebugger} from "./display/debugs/sort.debugger";
 import {UiManager} from "./ui";
-import {MotionType} from "./input/motion.base";
 import {GuideManager} from "./guide";
+import {MouseManagerDecorate} from "./input/mouse.manager.decorate";
+import {MouseManager} from "./input/mouse.manager";
 
 for (const key in protos) {
     PBpacket.addProtocol(protos[key]);
@@ -1490,21 +1491,15 @@ export class Render extends RPCPeer implements GameMain, IRender {
     }
 
     @Export()
-    public switchDecorateMotion() {
-        if (!this.mGame) return;
-        const playScene = this.mGame.scene.getScene(PlayScene.name);
-        if (!playScene) return;
-        if (!(playScene instanceof PlayScene)) return;
-        playScene.switchMotion(MotionType.Decorate);
+    public switchDecorateMouseManager() {
+        if (!this.mInputManager) return;
+        this.mInputManager.changeMouseManager(new MouseManagerDecorate(this));
     }
 
     @Export()
-    public switchBaseMotion() {
-        if (!this.mGame) return;
-        const playScene = this.mGame.scene.getScene(PlayScene.name);
-        if (!playScene) return;
-        if (!(playScene instanceof PlayScene)) return;
-        playScene.switchMotion(MotionType.Base);
+    public switchBaseMouseManager() {
+        if (!this.mInputManager) return;
+        this.mInputManager.changeMouseManager(new MouseManager(this));
     }
 
     // private connectReconnect() {

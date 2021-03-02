@@ -6,7 +6,6 @@ import {ConnectionService} from "../../../lib/net/connection.service";
 // import { Logger } from "utils";
 import {Lite} from "game-capsule";
 import {Logger} from "utils";
-import {DecorateRoom} from "./room/decorate.room";
 import {EventType, GameState} from "structure";
 
 export interface IRoomManager {
@@ -93,10 +92,6 @@ export class RoomManager extends PacketHandler implements IRoomManager {
             Logger.getInstance().error("current room is null");
             return;
         }
-        if (this.currentRoom instanceof DecorateRoom) {
-            Logger.getInstance().error("current room is decorate already");
-            return;
-        }
 
         // waite for <onStartDecorate>
         this.connection.send(new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_START_EDIT_MODEL));
@@ -145,18 +140,6 @@ export class RoomManager extends PacketHandler implements IRoomManager {
         this.mCurRoom = room;
     }
 
-    private async onEnterDecorate(scene: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_ENTER_SCENE) {
-        if (this.mCurRoom) {
-            await this.leaveRoom(this.mCurRoom);
-        }
-        const room: DecorateRoom = new DecorateRoom(this);
-        room.enter(scene.scene);
-        const actor = scene.actor;
-        if (actor) room.setEnterPos(actor.x, actor.y);
-        this.mRooms.push(room);
-        this.mCurRoom = room;
-    }
-
     private onEnterEditor(packet: PBpacket) {
         // const content: op_client.IOP_EDITOR_REQ_CLIENT_CHANGE_TO_EDITOR_MODE = packet.content;
         // const room = new EditorRoom(this);
@@ -192,7 +175,7 @@ export class RoomManager extends PacketHandler implements IRoomManager {
                 this.onEnterScene(content);
                 break;
             case op_def.SceneTypeEnum.EDIT_SCENE_TYPE:
-                this.onEnterDecorate(content);
+                Logger.getInstance().error("error message: scene.sceneType === EDIT_SCENE_TYPE");
                 break;
         }
         this.game.peer.state = GameState.EnterScene;
@@ -209,10 +192,6 @@ export class RoomManager extends PacketHandler implements IRoomManager {
 
         if (!this.currentRoom) {
             Logger.getInstance().error("current room is null");
-            return;
-        }
-        if (this.currentRoom instanceof DecorateRoom) {
-            Logger.getInstance().error("current room is decorate room");
             return;
         }
 

@@ -5,9 +5,8 @@ import { MainUIScene } from "./main.ui.scene";
 import { RoomScene } from "./room.scene";
 import { Size } from "src/utils/size";
 import { PlaySceneLoadState, SceneName } from "structure";
-import {MotionBase, MotionType} from "../input/motion.base";
+import {MotionManager} from "../input/motion.manager";
 import { LayerEnum } from "game-capsule";
-import {MotionDecorate} from "../input/motion.decorate";
 
 // 游戏正式运行用 Phaser.Scene
 export class PlayScene extends RoomScene {
@@ -20,7 +19,7 @@ export class PlayScene extends RoomScene {
     public static LAYER_WALL = LayerEnum.Wall.toString();
     public static LAYER_ATMOSPHERE = "atmosphere";
     public static LAYER_SCENEUI = "sceneUILayer";
-    protected motion: MotionBase;
+    protected motion: MotionManager;
     protected mLoadState: PlaySceneLoadState;
 
     constructor(config?: string | Phaser.Types.Scenes.SettingsConfig) {
@@ -32,7 +31,7 @@ export class PlayScene extends RoomScene {
         super.preload();
     }
 
-    get motionMgr(): MotionBase {
+    get motionMgr(): MotionManager {
         return this.motion;
     }
 
@@ -124,27 +123,8 @@ export class PlayScene extends RoomScene {
         this.loadState = PlaySceneLoadState.LOAD_COMPOLETE;
     }
 
-    public switchMotion(type: MotionType) {
-        if (!this.motion) return;
-        if (this.motion.type === type) return;
-
-        this.motion.destroy();
-        switch (type) {
-            case MotionType.Base:
-                this.motion = new MotionBase(this.render);
-                this.motion.setScene(this);
-                break;
-            case MotionType.Decorate:
-                this.motion = new MotionDecorate(this.render);
-                this.motion.setScene(this);
-                break;
-            default:
-                break;
-        }
-    }
-
     protected initMotion() {
-        this.motion = new MotionBase(this.render);
+        this.motion = new MotionManager(this.render);
         this.motion.setScene(this);
     }
 

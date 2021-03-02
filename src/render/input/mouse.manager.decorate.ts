@@ -1,11 +1,10 @@
-import {MotionBase, MotionType} from "./motion.base";
-import {Render} from "../render";
-import {NodeType} from "gamecoreRender";
+import {MouseManager} from "./mouse.manager";
 import {LogicPos} from "utils";
+import {Render} from "../render";
+import {NodeType} from "../managers/display.manager";
 import {MessageType} from "structure";
 
-export class MotionDecorate extends MotionBase {
-
+export class MouseManagerDecorate extends MouseManager {
     private selectedID: number = -1;
     private downPointerPos: LogicPos;
     private downDisplayPos: LogicPos;
@@ -13,10 +12,16 @@ export class MotionDecorate extends MotionBase {
     constructor(protected render: Render) {
         super(render);
 
-        this.type = MotionType.Decorate;
     }
 
-    public async onPointerDownHandler(pointer: Phaser.Input.Pointer): Promise<void> {
+    public changeScene(scene: Phaser.Scene) {
+        this.removeListener();
+        super.changeScene(scene);
+        this.removeListener();
+        this.addListener();
+    }
+
+    protected async onPointerDownHandler(pointer: Phaser.Input.Pointer): Promise<void> {
 
     }
 
@@ -73,5 +78,26 @@ export class MotionDecorate extends MotionBase {
         this.downPointerPos = new LogicPos();
         this.downDisplayPos = new LogicPos();
         this.scene.input.off("pointermove", this.onPointerMoveHandler, this);
+    }
+
+    private addListener() {
+        if (!this.scene) {
+            return;
+        }
+        this.scene.input.on("pointerup", this.onPointerUpHandler, this);
+        this.scene.input.on("pointerdown", this.onPointerDownHandler, this);
+        this.scene.input.on("gameobjectdown", this.onGameObjectDownHandler, this);
+        this.scene.input.on("gameobjectup", this.onGameObjectUpHandler, this);
+    }
+
+    private removeListener() {
+        if (!this.scene) {
+            return;
+        }
+        this.scene.input.off("pointerup", this.onPointerUpHandler, this);
+        this.scene.input.off("pointerdown", this.onPointerDownHandler, this);
+        this.scene.input.off("pointermove", this.onPointerMoveHandler, this);
+        this.scene.input.off("gameobjectdown", this.onGameObjectDownHandler, this);
+        this.scene.input.off("gameobjectup", this.onGameObjectUpHandler, this);
     }
 }
