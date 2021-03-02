@@ -1,7 +1,7 @@
-import { Render } from "../render";
-import { NodeType } from "../managers";
-import { MainUIScene } from "../scenes/main.ui.scene";
-import { Logger, LogicPos, Tool } from "utils";
+import {Render} from "../render";
+import {NodeType} from "../managers";
+import {MainUIScene} from "../scenes/main.ui.scene";
+import {LogicPos} from "utils";
 
 export class MotionManager {
     public enable: boolean;

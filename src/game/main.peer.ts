@@ -116,7 +116,7 @@ export class MainPeer extends RPCPeer {
         this.startDelay = setInterval(() => {
             Logger.getInstance().log("heartBeat request");
             if (this.reConnectCount >= 8) {
-                this.remote[MAIN_WORKER].MainPeer.reconnect();
+                this.game.reconnect();
                 return;
             }
             this.reConnectCount++;

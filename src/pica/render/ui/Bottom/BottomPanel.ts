@@ -95,7 +95,9 @@ export class BottomPanel extends PicaBasePanel {
     getInputFocusing() {
         return this.mInput.getFocusing();
     }
-
+    exitUser() {
+        this.mWorld.exitUser();
+    }
     get navigatePanel(): Phaser.GameObjects.Container {
         return this.mNavigate;
     }
@@ -156,8 +158,7 @@ export class BottomPanel extends PicaBasePanel {
         } else if (tag === "shop") {
             this.render.renderEmitter(ModuleName.BOTTOM + "_showpanel", ModuleName.PICAMARKET_NAME);
         } else if (tag === "explore") {
-            // this.render.renderEmitter(ModuleName.BOTTOM + "_showpanel", ModuleName.PICAEXPLORELIST_NAME);
-            this.render.renderEmitter(ModuleName.BOTTOM + "_showpanel", ModuleName.PICARENAME_NAME);
+            this.render.renderEmitter(ModuleName.BOTTOM + "_showpanel", ModuleName.PICAEXPLORELIST_NAME);
         } else if (tag === "home") {
             this.render.renderEmitter(ModuleName.BOTTOM + "_gohome");
         }

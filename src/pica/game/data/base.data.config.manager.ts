@@ -372,6 +372,7 @@ export class BaseDataConfigManager extends BaseConfigManager {
         this.dataMap.set(BaseDataType.job, new JobConfig());
         this.dataMap.set(BaseDataType.cardPool, new CardPoolConfig());
         this.dataMap.set(BaseDataType.skill, new SkillConfig());
+        this.dataMap.set(BaseDataType.level, new SkillConfig());
     }
 
     protected configUrl(reName: string, tempurl?: string) {

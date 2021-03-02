@@ -112,4 +112,9 @@ export class EventType {
      * navigate初始化好，修改PlayCamera大小
      */
     public static NAVIGATE_RESIZE = "navigateResize";
+
+    /**
+     * 命令协议测试
+     */
+    public static TEST_COMMAND_MESSAGE = "TEST_COMMAND_MESSAGE";
 }
