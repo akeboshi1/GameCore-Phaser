@@ -20,6 +20,7 @@ import { RoomManager } from "./room/room.manager";
 import { User } from "./actor/user";
 import { DataManager, DataMgrType } from "./data.manager/dataManager";
 import { BaseConfigManager } from "./data.manager";
+import { NetworkManager } from "./command";
 
 interface ISize {
     width: number;
@@ -49,6 +50,7 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
     // protected mSoundManager: SoundManager;
     protected mLoadingManager: LoadingManager;
     protected mConfigManager: BaseConfigManager;
+    protected mNetWorkManager: NetworkManager;
 
     protected gameConfigUrls: Map<string, string> = new Map();
     protected gameConfigUrl: string;
@@ -555,6 +557,7 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
         if (!this.mLoadingManager) this.mLoadingManager = new LoadingManager(this);
         if (!this.mDataManager) this.mDataManager = new DataManager(this);
         if (!this.mConfigManager) this.mConfigManager = new BaseConfigManager(this);
+        if (!this.mNetWorkManager) this.mNetWorkManager = new NetworkManager(this);
         // this.mPlayerDataManager = new PlayerDataManager(this);
 
         this.mUIManager.addPackListener();
@@ -659,10 +662,15 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
                     this.mLoadingManager.destroy();
                     this.mLoadingManager = null;
                 }
+                if (this.mNetWorkManager) {
+                    this.mNetWorkManager.destory();
+                    this.mNetWorkManager = null;
+                }
                 if (this.mDataManager) {
                     this.mDataManager.clear();
                     this.mDataManager = null;
                 }
+
                 if (this.user) this.user.removePackListener();
                 // this.peer.destroy();
                 this.hasClear = true;
