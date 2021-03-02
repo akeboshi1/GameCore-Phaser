@@ -216,6 +216,8 @@ export class DecorateManager {
     }
 
     public addFromBag(baseID: string) {
+        this.reverseSelected();
+
         const datas = this.bagData.getItems(op_pkt_def.PKT_PackageType.FurniturePackage, baseID);
         if (datas.length <= 0) return;
         const typeData = datas[0];
@@ -231,15 +233,14 @@ export class DecorateManager {
             direction: 3,
             nickname: typeData.name,
             animations: typeData.animations,
-            display: typeData.display,
+            display: typeData.animationDisplay,
             sn: typeData.sn
         }, op_def.NodeType.ElementNodeType);
 
-        this.select(indexID);
-
         const act = new DecorateAction(spriteData, DecorateActionType.Add, new DecorateActionData({pos: spriteData.pos}));
-        this.mSelectedActionQueue.push(act);
         act.execute(this);
+        this.mActionQueue.push(act);
+        // this.select(indexID);
     }
 
     // 移动选择物 call by motion
