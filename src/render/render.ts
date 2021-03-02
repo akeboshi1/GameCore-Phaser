@@ -1023,11 +1023,6 @@ export class Render extends RPCPeer implements GameMain, IRender {
 
     }
 
-    @Export()
-    public renderReconnect() {
-
-    }
-
     @Export([webworker_rpc.ParamType.str, webworker_rpc.ParamType.str, webworker_rpc.ParamType.num, webworker_rpc.ParamType.num, webworker_rpc.ParamType.num, webworker_rpc.ParamType.num])
     public createAnotherGame(gameId: string, worldId: string, sceneId?: number, px?: number, py?: number, pz?: number) {
         // this.newGame().then(() => {
