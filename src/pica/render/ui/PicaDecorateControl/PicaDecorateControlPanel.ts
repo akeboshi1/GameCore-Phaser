@@ -1,8 +1,7 @@
 import {Button, ClickEvent} from "apowophaserui";
-import {BasePanel, UiManager} from "gamecoreRender";
+import {BasePanel, DragonbonesDisplay, FramesDisplay, UiManager} from "gamecoreRender";
 import {MessageType, ModuleName, RENDER_PEER} from "structure";
 import {IPos, Logger} from "utils";
-import {FollowObject} from "baseRender";
 import {UIAtlasName} from "picaRes";
 import {PicaBasePanel} from "../pica.base.panel";
 
@@ -13,7 +12,7 @@ export class PicaDecorateControlPanel extends PicaBasePanel {
     private mAutoPlaceBtn: Button;
     private mExitBtn: Button;
     private mBtns: Button[];
-    private mFollow: FollowObject;
+    private mTarget: FramesDisplay | DragonbonesDisplay;
 
     constructor(uiManager: UiManager) {
         super(uiManager);
@@ -85,19 +84,21 @@ export class PicaDecorateControlPanel extends PicaBasePanel {
         const {id, pos, canPlace} = this.mShowData;
         const display = this.render.displayManager.getDisplay(id);
         if (display) {
-            this.mFollow = new FollowObject(this, display, this.dpr);
-            this.mFollow.setOffset(0, -100 * this.dpr);
-            this.mFollow.update();
+            this.mTarget = display;
         } else {
             Logger.getInstance().error("cannot find display: ", id);
         }
-        this.updatePosition();
         this.updateCanPlace(canPlace);
+        this.updatePosition();
     }
 
     private updatePosition() {
-        if (!this.mFollow) return;
-        this.mFollow.update();
+        if (!this.mTarget) {
+            this.mediator.hide();
+            return;
+        }
+
+        this.y = this.mTarget.y * this.dpr;
     }
 
     private onSaveHandler() {
