@@ -115,6 +115,7 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
             return this.mainPeer.render.connectFail();
         } else {
             if (this.mReconnect > 2) {
+                this.onRefreshConnect();
                 // todo reconnect Scene
             } else {
                 this.mReconnect++;
