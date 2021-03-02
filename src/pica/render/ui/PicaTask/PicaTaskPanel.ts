@@ -1,17 +1,17 @@
 import { op_client, op_pkt_def } from "pixelpai_proto";
-import { TextButton, ToggleColorButton, UiManager } from "gamecoreRender";
-import { ConnectState, ModuleName } from "structure";
+import { ToggleColorButton, UiManager } from "gamecoreRender";
+import { ModuleName } from "structure";
 import { UIAtlasName } from "picaRes";
 import { Handler, i18n, UIHelper } from "utils";
 import { PicaBasePanel } from "../pica.base.panel";
 import { PicaTaskMainPanel } from "./PicaTaskMainPanel";
 import { ClickEvent } from "apowophaserui";
 export class PicaTaskPanel extends PicaBasePanel {
+    public mainPanel: PicaTaskMainPanel;
     private blackBg: Phaser.GameObjects.Graphics;
     private bg: Phaser.GameObjects.Graphics;
     private tilteName: Phaser.GameObjects.Text;
     private content: Phaser.GameObjects.Container;
-    private mainPanel: PicaTaskMainPanel;
     private selectLine: Phaser.GameObjects.Graphics;
     private rewardLine: Phaser.GameObjects.Graphics;
     private curToggleItem: ToggleColorButton;
@@ -76,7 +76,7 @@ export class PicaTaskPanel extends PicaBasePanel {
         this.rewardLine.y = this.tilteName.y + 55 * this.dpr;
         this.content.add([this.bg, this.tilteName, this.rewardLine, this.selectLine]);
         const mainHeight = this.height * 0.5 - this.rewardLine.y - 10 * this.dpr;
-        this.mainPanel = new PicaTaskMainPanel(this.scene, this.content.width, mainHeight, this.dpr, this.scale);
+        this.mainPanel = new PicaTaskMainPanel(this.scene, this.content.width, mainHeight, this.dpr, this.scale, this.render);
         this.mainPanel.setHandler(new Handler(this, this.onMainPanelHandler));
         this.mainPanel.y = this.height * 0.5 - mainHeight * 0.5;
         this.content.add(this.mainPanel);

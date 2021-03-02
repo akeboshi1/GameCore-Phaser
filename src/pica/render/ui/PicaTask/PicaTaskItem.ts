@@ -6,13 +6,13 @@ import { op_client, op_pkt_def } from "pixelpai_proto";
 import { Handler, i18n, UIHelper, Url } from "utils";
 import { ItemButton } from "../Components";
 export class PicaTaskItem extends Phaser.GameObjects.Container {
+    public taskButton: ThreeSliceButton;
     public questData: op_client.IPKT_Quest;
     private content: Phaser.GameObjects.Container;
     private bg: NineSlicePatch;
     private headIcon: DynamicImage;
     private taskName: Phaser.GameObjects.Text;
     private taskDes: Phaser.GameObjects.Text;
-    private taskButton: ThreeSliceButton;
     private arrow: Phaser.GameObjects.Image;
     private mExtend: TaskItemExtend;
     private dpr: number;

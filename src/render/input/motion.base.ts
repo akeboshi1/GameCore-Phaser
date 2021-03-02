@@ -85,7 +85,16 @@ export class MotionBase {
         this.removeListener();
     }
 
+    public async onPointerDownHandler(pointer: Phaser.Input.Pointer) {
+        if (this.render.guideManager.canInteractive()) return;
+        this.scene.input.on("pointermove", this.onPointerMoveHandler, this);
+        this.holdTime = setTimeout(() => {
+            this.isHolding = true;
+        }, this.holdDelay);
+    }
+
     protected async onPointerUpHandler(pointer: Phaser.Input.Pointer) {
+        if (this.render.guideManager.canInteractive()) return;
         this.isHolding = false;
         this.scene.input.off("pointermove", this.onPointerMoveHandler, this);
         if (Math.abs(pointer.downX - pointer.upX) >= 5 * this.render.scaleRatio && Math.abs(pointer.downY - pointer.upY) >= 5 * this.render.scaleRatio || pointer.upTime - pointer.downTime > this.holdDelay) {
@@ -120,18 +129,12 @@ export class MotionBase {
         this.clearGameObject();
     }
 
-    protected async onPointerDownHandler(pointer: Phaser.Input.Pointer) {
-        this.scene.input.on("pointermove", this.onPointerMoveHandler, this);
-        this.holdTime = setTimeout(() => {
-            this.isHolding = true;
-        }, this.holdDelay);
-    }
-
     protected async onPointerMoveHandler(pointer: Phaser.Input.Pointer) {
         this.isHolding = true;
     }
 
     protected onPointeroutHandler() {
+        if (this.render.guideManager.canInteractive()) return;
         this.isHolding = false;
         this.scene.input.off("pointermove", this.onPointerMoveHandler, this);
         this.stop();
@@ -139,14 +142,15 @@ export class MotionBase {
     }
 
     protected onGameObjectDownHandler(pointer, gameObject) {
+        if (this.render.guideManager.canInteractive()) return;
         this.gameObject = gameObject;
     }
 
     protected onGameObjectUpHandler(pointer, gameObject) {
+        if (this.render.guideManager.canInteractive()) return;
     }
 
     private start(worldX: number, worldY: number, id?: number) {
-        if (!this.render.displayManager || !this.render.displayManager.user || !this.render.displayManager.user.visible) return;
         // const user = this.render.user;
         // if (!user) {
         //     return;
@@ -157,7 +161,6 @@ export class MotionBase {
     }
 
     private movePath(x: number, y: number, z: number, targets: {}, id?: number) {
-        if (!this.render.displayManager || !this.render.displayManager.user || !this.render.displayManager.user.visible) return;
         // const user = this.render.user;
         // if (!user) {
         //     return;'
@@ -168,7 +171,6 @@ export class MotionBase {
     }
 
     private stop() {
-        if (!this.render.displayManager || !this.render.displayManager.user || !this.render.displayManager.user.visible) return;
         this.render.physicalPeer.stopMove();
         // this.render.user.stopMove();
     }

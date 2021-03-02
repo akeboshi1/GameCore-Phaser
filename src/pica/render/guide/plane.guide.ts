@@ -2,7 +2,7 @@ import { BaseGuide, Render } from "gamecoreRender";
 import { SceneName } from "structure";
 import { IPos } from "utils";
 
-export class DialogGuide extends BaseGuide {
+export class PlaneGuide extends BaseGuide {
     private elementID: number = 674096428;
     private playScene: Phaser.Scene;
     private mPointer: Phaser.Input.Pointer;

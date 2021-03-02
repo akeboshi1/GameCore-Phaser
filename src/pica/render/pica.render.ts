@@ -15,7 +15,7 @@ export class Render extends BaseRender {
 
     createManager() {
         if (!this.mUiManager) this.mUiManager = new PicaRenderUiManager(this);
-        // if (!this.mGuideManager) this.mGuideManager = new PicaGuideManager(this);
+        if (!this.mGuideManager) this.mGuideManager = new PicaGuideManager(this);
         if (!this.mCameraManager) this.mCameraManager = new CamerasManager(this);
         if (!this.mLocalStorageManager) this.mLocalStorageManager = new LocalStorageManager();
         if (!this.mSceneManager) this.mSceneManager = new SceneManager(this);

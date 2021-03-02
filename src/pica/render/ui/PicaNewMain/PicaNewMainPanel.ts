@@ -9,13 +9,13 @@ import { PicaNewActivityPanel } from "./PicaNewActivityPanel";
 import { PicaNewChatPanel } from "./PicaNewChatPanel";
 import { PicaNewHeadPanel } from "./PicaNewHeadPanel";
 import { PicaNewLeftPanel } from "./PicaNewLeftPanel";
+import { GuideID } from "../../guide";
 // import { PicaNewNavigatePanel } from "./PicaNewNavigatePanel";
 export class PicaNewMainPanel extends PicaBasePanel {
-
+    public leftPanel: PicaNewLeftPanel;
     protected activityPanel: PicaNewActivityPanel;
     protected chatPanel: PicaNewChatPanel;
     protected headPanel: PicaNewHeadPanel;
-    protected leftPanel: PicaNewLeftPanel;
     // protected navigatePanel: PicaNewNavigatePanel;
     protected foldButton: Button;
     private isFold: boolean = false;
@@ -107,6 +107,11 @@ export class PicaNewMainPanel extends PicaBasePanel {
         // this.add(this.navigatePanel);
         this.resize(width, height);
         super.init();
+    }
+
+    protected onShow() {
+        super.onShow();
+        this.render.guideManager.startGuide(GuideID.Hotel);
     }
 
     protected onInitialized() {

@@ -88,6 +88,7 @@ export class CamerasManager extends PacketHandler implements ICameraService {
     }
 
     public async syncCameraScroll() {
+        // todo 前端先判断进入不同区块，然后告知服务端进入不同区块
         const cameraView = await this.mGame.peer.render.getWorldView();
         if (!cameraView) {
             Logger.getInstance().error("no cameraView");
@@ -116,7 +117,7 @@ export class CamerasManager extends PacketHandler implements ICameraService {
         }
         // 除了客户端移动镜头，后端也会改变镜头位置
         this.syncTime += delta;
-        if (this.syncTime > 200) {
+        if (this.syncTime > 1000) {
             this.syncTime = 0;
             this.syncCameraScroll();
             this.syncDirty = false;

@@ -142,6 +142,8 @@ export class MouseManager {
     }
 
     private groundDown(pointer, gameObject) {
+        const id = gameObject.getData("id");
+        if (this.render.guideManager.canInteractive(id)) return;
         this.mGameObject = gameObject;
         this.mDownTime = setTimeout(this.holdHandler.bind(this), this.mDownDelay, pointer, gameObject);
     }
@@ -152,6 +154,7 @@ export class MouseManager {
     }
 
     private pointerDownHandler(pointer, gameobject) {
+        if (this.render.guideManager.canInteractive()) return;
         if (this.debounce) {
             this.mGameObject = null;
             return;

@@ -234,6 +234,7 @@ class NpcDialogueItem extends Phaser.GameObjects.Container {
             x: 0, y: 0, text: "",
             style: { color: "#000000", fontSize: 15 * dpr, fontFamily: Font.DEFULT_FONT }
         }).setOrigin(0, 0.5);
+        this.content.setLineSpacing(5 * dpr);
         this.add([this.selectBg, this.arrImg, this.content]);
         this.width = this.selectBg.width;
         this.height = this.selectBg.height;

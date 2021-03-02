@@ -519,6 +519,9 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
             Logger.getInstance().debug("no connection gameCreat");
         }
     }
+    public preloadGameConfig(): Promise<any> {
+        return undefined;
+    }
 
     protected async initWorld() {
         this.mUser = new User(this);
@@ -559,10 +562,6 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
         this.user.addPackListener();
         // this.mSoundManager.addPackListener();
         // this.mPlayerDataManager.addPackListener();
-    }
-
-    protected preloadGameConfig(): Promise<any> {
-        return undefined;
     }
 
     private initGame() {

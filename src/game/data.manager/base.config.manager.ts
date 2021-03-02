@@ -14,12 +14,18 @@ export class BaseConfigManager {
         return <T>(this.dataMap.get(key));
     }
     public startLoad(basePath: string): Promise<any> {
-        return this.getBasePath().then((value: string) => {
-            this.dataMap.clear();
-            this.dirname(value);
-            this.add();
-            return this.executeLoad(this.dataMap);
-        });
+        if (this.mInitialization) {
+            return new Promise((resolve, reject) => {
+                resolve(true);
+            });
+        } else {
+            return this.getBasePath().then((value: string) => {
+                this.dataMap.clear();
+                this.dirname(value);
+                this.add();
+                return this.executeLoad(this.dataMap);
+            });
+        }
     }
 
     public dynamicLoad(dataMap: Map<string, BaseConfigData>): Promise<any> {
@@ -139,7 +145,7 @@ export class BaseConfigManager {
 
     protected setLocalStorage(key: string, jsonUrl: string, obj: object) {
         const temp = { url: jsonUrl, obj };
-        // this.mGame.peer.render.setLocalStorage(key, JSON.stringify(temp));
+        this.mGame.peer.render.setLocalStorage(key, JSON.stringify(temp));
     }
     protected getBasePath() {
         return new Promise((resolve, reject) => {

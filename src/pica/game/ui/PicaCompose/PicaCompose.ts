@@ -35,12 +35,12 @@ export class PicaCompose extends BasicModel {
         }
     }
 
-    public onReqFormulaDetail(id: string) {
-        const packet = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_PKT_CRAFT_QUERY_FORMULA);
-        const content: op_virtual_world.OP_CLIENT_REQ_VIRTUAL_WORLD_PKT_CRAFT_QUERY_FORMULA = packet.content;
-        content.id = id;
-        this.connection.send(packet);
-    }
+    // public onReqFormulaDetail(id: string) {
+    //     const packet = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_PKT_CRAFT_QUERY_FORMULA);
+    //     const content: op_virtual_world.OP_CLIENT_REQ_VIRTUAL_WORLD_PKT_CRAFT_QUERY_FORMULA = packet.content;
+    //     content.id = id;
+    //     this.connection.send(packet);
+    // }
     public onReqUseFormula(id: string) {
         const packet = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_PKT_CRAFT_ALCHEMY);
         const content: op_virtual_world.OP_CLIENT_REQ_VIRTUAL_WORLD_PKT_CRAFT_ALCHEMY = packet.content;

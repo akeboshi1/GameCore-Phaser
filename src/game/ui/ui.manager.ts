@@ -5,6 +5,7 @@ import {i18n, Size} from "utils";
 import {Game} from "../game";
 import {BasicMediator, UIType} from "./basic/basic.mediator";
 import {UILayoutType, UIMediatorType} from "./ui.mediator.type";
+import {BaseDataConfigManager} from "picaWorker";
 
 export class UIManager extends PacketHandler {
     protected mMedMap: Map<UIMediatorType, BasicMediator>;
@@ -318,8 +319,14 @@ export class UIManager extends PacketHandler {
 
     protected onHandleShowCreateRoleUI(packet: PBpacket) {
         //  this.showMed(ModuleName.CREATEROLE_NAME, packet.content);
-        const content: op_client.OP_VIRTUAL_WORLD_REQ_CLIENT_PKT_SHOW_CREATE_ROLE_UI = packet.content;
-        this.showMed(ModuleName.PICACREATEROLE_NAME, content);
+        this.game.preloadGameConfig().then(() => {
+            const content: op_client.OP_VIRTUAL_WORLD_REQ_CLIENT_PKT_SHOW_CREATE_ROLE_UI = packet.content;
+            const configMgr = <BaseDataConfigManager> this.game.configManager;
+            configMgr.getBatchItemDatas(content.avatars);
+            this.showMed(ModuleName.PICACREATEROLE_NAME, content);
+        });
+        // const content: op_client.OP_VIRTUAL_WORLD_REQ_CLIENT_PKT_SHOW_CREATE_ROLE_UI = packet.content;
+        // this.showMed(ModuleName.PICACREATEROLE_NAME, content);
     }
 
     protected onHandleCloseCreateRoleUI() {
@@ -349,6 +356,7 @@ export class UIManager extends PacketHandler {
         }
 
     }
+
     // ==== about checkUIState
     private checkSceneUImap(show: boolean, medName: string) {
         const layoutType = this.mUILayoutMap.get(medName);
@@ -361,6 +369,7 @@ export class UIManager extends PacketHandler {
             });
         }
     }
+
     private checkNormalUITween(show: boolean, medName: string) {
         const size: Size = this.game.getSize();
         let len: number = this.mShowuiList.length;
@@ -394,11 +403,13 @@ export class UIManager extends PacketHandler {
             this.mShowuiList.splice(index, 1);
         }
     }
+
     private checkBaseUImap(show: boolean) {
         this.mSceneUIMap.forEach((med) => {
             if (med) med.tweenExpand(show);
         });
     }
+
     private checkNormalUImap(show: boolean) {
         this.mNormalUIMap.forEach((med) => {
             if (med) {
@@ -411,6 +422,7 @@ export class UIManager extends PacketHandler {
         });
         if (!show) this.mNormalUIMap.clear();
     }
+
     private chekcTipUImap(show: boolean) {
         this.mTipUIMap.forEach((med) => {
             if (med) {
@@ -423,6 +435,7 @@ export class UIManager extends PacketHandler {
         });
         if (!show) this.mNormalUIMap.clear();
     }
+
     private initUILayoutType() {
         this.mUILayoutMap.set(ModuleName.PICACHAT_NAME, UILayoutType.Bottom);
         this.mUILayoutMap.set(ModuleName.PICANAVIGATE_NAME, UILayoutType.Bottom);

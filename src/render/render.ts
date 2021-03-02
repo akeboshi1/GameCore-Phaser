@@ -43,7 +43,7 @@ import {GridsDebugger} from "./display/debugs/grids";
 import {SortDebugger} from "./display/debugs/sort.debugger";
 import {UiManager} from "./ui";
 import {MotionType} from "./input/motion.base";
-// import { GuideManager } from "./guide";
+import {GuideManager} from "./guide";
 
 for (const key in protos) {
     PBpacket.addProtocol(protos[key]);
@@ -69,7 +69,7 @@ export class Render extends RPCPeer implements GameMain, IRender {
 
     protected readonly DEFAULT_WIDTH = 360;
     protected readonly DEFAULT_HEIGHT = 640;
-    // protected mGuideManager: GuideManager;
+    protected mGuideManager: GuideManager;
     protected mSceneManager: SceneManager;
     protected mCameraManager: CamerasManager;
     protected mInputManager: InputManager;
@@ -104,7 +104,7 @@ export class Render extends RPCPeer implements GameMain, IRender {
     private mConnectFailFunc: Function;
     private mGameCreatedFunc: Function;
     private mGameLoadedFunc: Function;
-
+    private mCacheTarget: any;
     constructor(config: ILauncherConfig, callBack?: Function) {
         super(RENDER_PEER);
         Logger.getInstance().log("config ====>", config);
@@ -207,9 +207,9 @@ export class Render extends RPCPeer implements GameMain, IRender {
         return this.mSceneManager;
     }
 
-    // get guideManager(): GuideManager {
-    //     return this.mGuideManager;
-    // }
+    get guideManager(): GuideManager {
+        return this.mGuideManager;
+    }
 
     get camerasManager(): CamerasManager {
         return this.mCameraManager;
@@ -248,7 +248,7 @@ export class Render extends RPCPeer implements GameMain, IRender {
         if (!this.mCameraManager) this.mCameraManager = new CamerasManager(this);
         if (!this.mLocalStorageManager) this.mLocalStorageManager = new LocalStorageManager();
         if (!this.mSceneManager) this.mSceneManager = new SceneManager(this);
-        // if (!this.mGuideManager) this.mGuideManager = new GuideManager(this);
+        if (!this.mGuideManager) this.mGuideManager = new GuideManager(this);
         if (!this.mInputManager) this.mInputManager = new InputManager(this);
         if (!this.mDisplayManager) this.mDisplayManager = new DisplayManager(this);
         if (!this.mEditorCanvasManager) this.mEditorCanvasManager = new EditorCanvasManager(this);
@@ -272,10 +272,10 @@ export class Render extends RPCPeer implements GameMain, IRender {
             this.mSceneManager.destroy();
             this.mSceneManager = undefined;
         }
-        // if (this.mGuideManager) {
-        //     this.mGuideManager.destroy();
-        //     this.mGuideManager = undefined;
-        // }
+        if (this.mGuideManager) {
+            this.mGuideManager.destroy();
+            this.mGuideManager = undefined;
+        }
         if (this.mInputManager) {
             this.mInputManager.destroy();
             this.mInputManager = undefined;
@@ -1360,7 +1360,20 @@ export class Render extends RPCPeer implements GameMain, IRender {
         const target = this.mDisplayManager.getDisplay(id);
         if (target) {
             if (effect === "liner") {
-                await this.mCameraManager.pan(target.x, target.y, target.y);
+                if (this.mCacheTarget) {
+                    if (this.mCacheTarget.id === 674096428) {
+                        this.guideManager.startGuide(1, { x: this.mCacheTarget.x, y: this.mCacheTarget.y });
+                    } else if (this.mCacheTarget.id === 1752777777) {
+                    }
+                    this.mCacheTarget = null;
+                }
+                this.mCameraManager.pan(target.x, target.y, target.y).then(() => {
+                    if (id === 674096428) {
+                        this.mCacheTarget = target;
+                    } else if (id === 1752777777) {
+                        this.mCacheTarget = target;
+                    }
+                });
                 this.mCameraManager.startFollow(target);
             } else {
                 this.mCameraManager.startFollow(target);
@@ -1373,7 +1386,9 @@ export class Render extends RPCPeer implements GameMain, IRender {
     @Export([webworker_rpc.ParamType.num])
     public cameraPan(id: number) {
         const display = this.mDisplayManager.getDisplay(id);
-        if (display) this.mCameraManager.pan(display.x, display.y, 300);
+        if (display) {
+            this.mCameraManager.pan(display.x, display.y, 300);
+        }
     }
 
     @Export()

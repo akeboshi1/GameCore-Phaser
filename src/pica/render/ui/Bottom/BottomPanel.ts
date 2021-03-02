@@ -5,6 +5,7 @@ import { Font, Handler, i18n } from "utils";
 import { UIAtlasName } from "picaRes";
 import { PicaNewNavigatePanel } from "../PicaNewMain/PicaNewNavigatePanel";
 import { PicaBasePanel } from "../pica.base.panel";
+import { GuideID } from "../../guide";
 
 export class BottomPanel extends PicaBasePanel {
     private mNavigate: PicaNewNavigatePanel;
@@ -24,7 +25,6 @@ export class BottomPanel extends PicaBasePanel {
         super.show(param);
         if (this.initialized) {
             this.checkUpdateActive();
-            // this.render.guideManager.startGuide(1);
         }
     }
 
@@ -100,6 +100,11 @@ export class BottomPanel extends PicaBasePanel {
         return this.mNavigate;
     }
 
+    protected onShow() {
+        super.onShow();
+        // this.render.guideManager.startGuide(GuideID.Explore);
+    }
+
     protected init() {
         this.mOutput = new OutputContainer(this.scene, this.dpr, this.scale);
         this.mInput = new InputContainer(this.scene, this.key, this.dpr);
@@ -151,7 +156,8 @@ export class BottomPanel extends PicaBasePanel {
         } else if (tag === "shop") {
             this.render.renderEmitter(ModuleName.BOTTOM + "_showpanel", ModuleName.PICAMARKET_NAME);
         } else if (tag === "explore") {
-            this.render.renderEmitter(ModuleName.BOTTOM + "_showpanel", ModuleName.PICAEXPLORELIST_NAME);
+            // this.render.renderEmitter(ModuleName.BOTTOM + "_showpanel", ModuleName.PICAEXPLORELIST_NAME);
+            this.render.renderEmitter(ModuleName.BOTTOM + "_showpanel", ModuleName.PICARENAME_NAME);
         } else if (tag === "home") {
             this.render.renderEmitter(ModuleName.BOTTOM + "_gohome");
         }
