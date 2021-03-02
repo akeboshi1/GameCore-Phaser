@@ -5,12 +5,14 @@ import {IPos, Logger, LogicPos, Position45} from "utils";
 import {PBpacket} from "net-socket-packet";
 import {Sprite} from "baseModel";
 import PKT_PackageType = op_pkt_def.PKT_PackageType;
+import {BaseDataConfigManager} from "picaWorker";
 
 // 小屋布置管理类，包含所有布置过程中的操作接口
 // 文档：https://dej4esdop1.feishu.cn/docs/doccnEbMKpINEkfBVImFJ0nTJUh#
 // TODO:移植到PicaGame
 export class DecorateManager {
 
+    private mBagDataMap: Map<string, number> = new Map<string, number>();
     private mActionQueue: DecorateAction[] = [];
     private mSelectedActionQueue: DecorateAction[] = [];
     private mSelectedID: number = -1;
@@ -24,9 +26,14 @@ export class DecorateManager {
         }
     }
 
+    public get room(): Room {
+        return this.mRoom;
+    }
+
     public destroy() {
         this.mActionQueue.length = 0;
         this.mSelectedActionQueue.length = 0;
+        this.mBagDataMap.clear();
     }
 
     // 固定功能栏
@@ -42,20 +49,38 @@ export class DecorateManager {
         const pkt: PBpacket = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_SYNC_EDIT_MODEL_RESULT);
         const content: op_virtual_world.IOP_CLIENT_REQ_VIRTUAL_WORLD_SYNC_EDIT_MODEL_RESULT = pkt.content;
         const spriteResults: op_client.SpriteModifyResult[] = [];
+        const itemResults: op_client.CountablePackageItem[] = [];
         content.sprite = spriteResults;
+        content.item = itemResults;
+        const changedBagData: string[] = [];
         combinedActions.forEach((acts, sprite) => {
             const result = new op_client.SpriteModifyResult();
             spriteResults.push(result);
             result.id = sprite.id;
             result.sn = sprite.sn;
+            const baseID = this.getBaseIDBySN(sprite.sn);
             for (const act of acts) {
                 switch (act.type) {
                     case DecorateActionType.Add:
                         result.commandMask = 0x0001;
                         result.point3f = sprite.pos;
+                        if (changedBagData.indexOf(baseID) < 0) {
+                            changedBagData.push(baseID);
+                            const cpi = new op_client.CountablePackageItem();
+                            cpi.id = baseID;
+                            cpi.count = this.getBagCount(baseID);
+                            itemResults.push(cpi);
+                        }
                         break;
                     case DecorateActionType.Remove:
                         result.commandMask = 0xffff;
+                        if (changedBagData.indexOf(baseID) < 0) {
+                            changedBagData.push(baseID);
+                            const cpi = new op_client.CountablePackageItem();
+                            cpi.id = baseID;
+                            cpi.count = this.getBagCount(baseID);
+                            itemResults.push(cpi);
+                        }
                         break;
                     case DecorateActionType.Move:
                         result.commandMask = 0x0002;
@@ -82,9 +107,9 @@ export class DecorateManager {
     public removeAll() {
         const elements = this.mRoom.elementManager.getElements();
         for (const element of elements) {
-            const act = new DecorateAction(element.model, DecorateActionType.Remove, element.model.pos);
+            const act = new DecorateAction(element.model, DecorateActionType.Remove, new DecorateActionData({pos: element.model.pos}));
             this.mActionQueue.push(act);
-            act.execute(this.mRoom);
+            act.execute(this);
         }
     }
 
@@ -93,11 +118,11 @@ export class DecorateManager {
         if (this.mSelectedID > 0) {
             if (this.mSelectedActionQueue.length === 0) return;
             const act = this.mSelectedActionQueue.pop();
-            act.reverse(this.mRoom);
+            act.reverse(this);
         } else {
             if (this.mActionQueue.length === 0) return;
             const act = this.mActionQueue.pop();
-            act.reverse(this.mRoom);
+            act.reverse(this);
         }
     }
 
@@ -106,7 +131,7 @@ export class DecorateManager {
         this.reverseSelected();
         while (this.mActionQueue.length > 0) {
             const act = this.mActionQueue.pop();
-            act.reverse(this.mRoom);
+            act.reverse(this);
         }
     }
 
@@ -193,10 +218,10 @@ export class DecorateManager {
         // TODO: 此随机方式有重复id的可能
         const min = 1000000;
         const max = 0x70000000;
-        const indexID = Math.random() * (max - min) + min;
+        const indexID = Math.floor(Math.random() * (max - min) + min);
         const spriteData = new Sprite({
             id: indexID,
-            point3f: {x:0, y:0, z: 0},
+            point3f: {x: 0, y: 0, z: 0},
             avatar: typeData.avatar,
             currentAnimationName: "idle",
             direction: 3,
@@ -206,11 +231,11 @@ export class DecorateManager {
             sn: typeData.sn
         }, op_def.NodeType.ElementNodeType);
 
-        const act = new DecorateAction(spriteData, DecorateActionType.Add, spriteData.pos);
-        this.mActionQueue.push(act);
-        act.execute(this.mRoom);
-
         this.select(indexID);
+
+        const act = new DecorateAction(spriteData, DecorateActionType.Add, new DecorateActionData({pos: spriteData.pos}));
+        this.mSelectedActionQueue.push(act);
+        act.execute(this);
     }
 
     // 移动选择物 call by motion
@@ -218,9 +243,9 @@ export class DecorateManager {
         if (this.mSelectedID !== id) return;
         const element = this.mRoom.elementManager.get(this.mSelectedID);
         if (!element) return;
-        const act = new DecorateAction(element.model, DecorateActionType.Move, delta);
+        const act = new DecorateAction(element.model, DecorateActionType.Move, new DecorateActionData({moveVec: delta}));
         this.mSelectedActionQueue.push(act);
-        act.execute(this.mRoom);
+        act.execute(this);
 
         const canPlace = this.checkCanPlaceSelected();
         this.mRoom.game.emitter.emit(MessageType.UPDATE_SELECTED_DECORATE_ELEMENT_CAN_PLACE, canPlace);
@@ -231,9 +256,9 @@ export class DecorateManager {
         if (this.mSelectedID < 0) return;
         const element = this.mRoom.elementManager.get(this.mSelectedID);
         if (!element) return;
-        const act = new DecorateAction(element.model, DecorateActionType.Rotate, 1);
+        const act = new DecorateAction(element.model, DecorateActionType.Rotate, new DecorateActionData({rotateTimes: 1}));
         this.mSelectedActionQueue.push(act);
-        act.execute(this.mRoom);
+        act.execute(this);
     }
 
     // 回收选择物至背包
@@ -241,9 +266,11 @@ export class DecorateManager {
         if (this.mSelectedID < 0) return;
         const element = this.mRoom.elementManager.get(this.mSelectedID);
         if (!element) return;
-        const act = new DecorateAction(element.model, DecorateActionType.Remove, element.model.pos);
+        const act = new DecorateAction(element.model, DecorateActionType.Remove, new DecorateActionData({pos: element.model.pos}));
         this.mSelectedActionQueue.push(act);
-        act.execute(this.mRoom);
+        act.execute(this);
+
+        this.ensureSelectedChanges();
     }
 
     // 自动放置，放置背包中剩余的同种类物件
@@ -257,7 +284,7 @@ export class DecorateManager {
 
         while (this.mSelectedActionQueue.length > 0) {
             const act = this.mSelectedActionQueue.pop();
-            act.reverse(this.mRoom);
+            act.reverse(this);
         }
 
         this.mSelectedID = -1;
@@ -265,39 +292,70 @@ export class DecorateManager {
         this.mRoom.game.uiManager.hideMed(ModuleName.PICADECORATECONTROL_NAME);
     }
 
+    public getBagCount(baseID: string) {
+        if (!this.mBagDataMap.has(baseID)) {
+            const count = this.bagData.getItemsCount(PKT_PackageType.FurniturePackage, baseID);
+            this.mBagDataMap.set(baseID, count);
+        }
+        return this.mBagDataMap.get(baseID);
+    }
+
+    public setBagCount(baseID: string, delta: number) {
+        if (!this.mBagDataMap.has(baseID)) {
+            const count = this.bagData.getItemsCount(PKT_PackageType.FurniturePackage, baseID);
+            this.mBagDataMap.set(baseID, count);
+        }
+
+        const preCount = this.mBagDataMap.get(baseID);
+        const newCount = preCount + delta;
+        this.mBagDataMap.set(baseID, newCount);
+        return newCount;
+    }
+
+    public getBaseIDBySN(sn: string): string {
+        const configMgr = <BaseDataConfigManager>this.room.game.configManager;
+        const temp = configMgr.getItemBase(sn);
+        if (temp) return temp.id;
+        else {
+            Logger.getInstance().error("cannot find data of sn: ", sn);
+            return "";
+        }
+    }
+
     private get bagData() {
         if (!this.mRoom.game.user || !this.mRoom.game.user.userData || !this.mRoom.game.user.userData.playerBag) {
+            Logger.getInstance().error("get bagData error");
             return;
         }
         return this.mRoom.game.user.userData.playerBag;
     }
 
     private combineActions(actions: DecorateAction[]): Map<ISprite, DecorateAction[]> {
-        const changes: Map<ISprite, { deltaPos: LogicPos, rotateTimes: number, active?: boolean, pos?: LogicPos }> = new Map();
+        const changes: Map<ISprite, { moveVec: LogicPos, rotateTimes: number, active?: boolean, pos?: LogicPos }> = new Map();
         for (const action of actions) {
             if (!changes.has(action.target)) {
-                changes.set(action.target, {deltaPos: new LogicPos(0, 0), rotateTimes: 0});
+                changes.set(action.target, {moveVec: new LogicPos(0, 0), rotateTimes: 0});
             }
             switch (action.type) {
                 case DecorateActionType.Add:
-                    if (action.data && typeof (action.data) !== "number") {
+                    if (action.data.pos !== undefined) {
                         changes.get(action.target).active = true;
-                        changes.get(action.target).pos = new LogicPos(action.data.x, action.data.y);
+                        changes.get(action.target).pos = new LogicPos(action.data.pos.x, action.data.pos.y);
                     }
                     break;
                 case DecorateActionType.Remove:
-                    if (action.data && typeof (action.data) !== "number") {
+                    if (action.data.pos !== undefined) {
                         changes.get(action.target).active = false;
-                        changes.get(action.target).pos = new LogicPos(action.data.x, action.data.y);
+                        changes.get(action.target).pos = new LogicPos(action.data.pos.x, action.data.pos.y);
                     }
                     break;
                 case DecorateActionType.Move:
-                    if (action.data && typeof (action.data) !== "number")
-                        changes.get(action.target).deltaPos.add(action.data.x, action.data.y);
+                    if (action.data.moveVec !== undefined)
+                        changes.get(action.target).moveVec.add(action.data.moveVec.x, action.data.moveVec.y);
                     break;
                 case DecorateActionType.Add:
-                    if (action.data && typeof (action.data) === "number")
-                        changes.get(action.target).rotateTimes += action.data;
+                    if (action.data.rotateTimes)
+                        changes.get(action.target).rotateTimes += action.data.rotateTimes;
                     break;
             }
         }
@@ -306,17 +364,16 @@ export class DecorateManager {
             const acts: DecorateAction[] = [];
             result.set(sprite, acts);
             if (deltaData.active !== undefined && deltaData.active === false) {
-                acts.push(new DecorateAction(sprite, DecorateActionType.Remove, deltaData.pos));
-                return;
+                acts.push(new DecorateAction(sprite, DecorateActionType.Remove, new DecorateActionData({pos: deltaData.pos})));
             }
-            if (deltaData.deltaPos !== new LogicPos(0, 0)) {
-                acts.push(new DecorateAction(sprite, DecorateActionType.Move, deltaData.deltaPos));
+            if (deltaData.moveVec !== new LogicPos(0, 0)) {
+                acts.push(new DecorateAction(sprite, DecorateActionType.Move, new DecorateActionData({moveVec: deltaData.moveVec})));
             }
             if (deltaData.rotateTimes > 0) {
-                acts.push(new DecorateAction(sprite, DecorateActionType.Rotate, deltaData.rotateTimes));
+                acts.push(new DecorateAction(sprite, DecorateActionType.Rotate, new DecorateActionData({rotateTimes: deltaData.rotateTimes})));
             }
             if (deltaData.active !== undefined && deltaData.active === true) {
-                acts.push(new DecorateAction(sprite, DecorateActionType.Add, deltaData.pos));
+                acts.push(new DecorateAction(sprite, DecorateActionType.Add, new DecorateActionData({pos: deltaData.pos})));
             }
         });
         return result;
@@ -331,36 +388,32 @@ export enum DecorateActionType {
 }
 
 class DecorateAction {
-    // data:
-    // add / remove: pos
-    // move: vector of pos
-    // rotate: rotate times
-    constructor(public target: ISprite, public type: DecorateActionType, public data: IPos | number | null) {
+    constructor(public target: ISprite, public type: DecorateActionType, public data: DecorateActionData) {
     }
 
     // 执行
-    public execute(room: Room) {
+    public execute(mng: DecorateManager) {
         switch (this.type) {
             case DecorateActionType.Add:
-                if (!this.data || typeof (this.data) === "number") return;
-                this.createElement(room, this.data.x, this.data.y);
+                if (this.data.pos === undefined) return;
+                this.createElement(mng, this.data.pos.x, this.data.pos.y);
                 break;
             case DecorateActionType.Remove:
-                this.removeElement(room);
+                this.removeElement(mng);
                 break;
             case DecorateActionType.Move:
-                if (!this.data || typeof (this.data) === "number") return;
-                this.setElementPos(room, this.target.pos.x + this.data.x, this.target.pos.y + this.data.y);
+                if (this.data.moveVec === undefined) return;
+                this.setElementPos(mng, this.target.pos.x + this.data.moveVec.x, this.target.pos.y + this.data.moveVec.y);
                 break;
             case DecorateActionType.Rotate:
-                if (!this.data || typeof (this.data) !== "number") return;
-                let tmp = this.data;
+                if (this.data.rotateTimes === undefined) return;
+                let tmp = this.data.rotateTimes;
                 let dir = this.target.direction;
                 while (tmp > 0) {
                     tmp--;
                     dir = this.nextDir(dir);
                 }
-                this.setElementDirection(room, dir);
+                this.setElementDirection(mng, dir);
                 break;
             default:
                 break;
@@ -368,63 +421,59 @@ class DecorateAction {
     }
 
     // 撤销
-    public reverse(room: Room) {
+    public reverse(mng: DecorateManager) {
         switch (this.type) {
             case DecorateActionType.Add:
-                this.removeElement(room);
+                this.removeElement(mng);
                 break;
             case DecorateActionType.Remove:
-                if (!this.data || typeof (this.data) === "number") return;
-                this.createElement(room, this.data.x, this.data.y);
+                if (this.data.pos === undefined) return;
+                this.createElement(mng, this.data.pos.x, this.data.pos.y);
                 break;
             case DecorateActionType.Move:
-                if (!this.data || typeof (this.data) === "number") return;
-                this.setElementPos(room, this.target.pos.x - this.data.x, this.target.pos.y - this.data.y);
+                if (this.data.moveVec === undefined) return;
+                this.setElementPos(mng, this.target.pos.x - this.data.moveVec.x, this.target.pos.y - this.data.moveVec.y);
                 break;
             case DecorateActionType.Rotate:
-                if (!this.data || typeof (this.data) !== "number") return;
-                let tmp = this.data;
+                if (this.data.rotateTimes === undefined) return;
+                let tmp = this.data.rotateTimes;
                 let dir = this.target.direction;
                 while (tmp > 0) {
                     tmp--;
                     dir = this.preDir(dir);
                 }
-                this.setElementDirection(room, dir);
+                this.setElementDirection(mng, dir);
                 break;
             default:
                 break;
         }
     }
 
-    private createElement(room: Room, x: number, y: number) {
+    private createElement(mng: DecorateManager, x: number, y: number) {
         this.target.setPosition(x, y);
-        room.elementManager.add([this.target]);
+        mng.room.elementManager.add([this.target]);
 
-        const item = room.game.user.userData.playerBag.getItem(PKT_PackageType.FurniturePackage, this.target.id + "");
-        item.count--;
-        room.game.emitter.emit(MessageType.UPDATE_DECORATE_ELEMENT_COUNT, item.id, item.count);
+        const baseID = mng.getBaseIDBySN(this.target.sn);
+        const newCount = mng.setBagCount(baseID, -1);
+
+        mng.room.game.emitter.emit(MessageType.UPDATE_DECORATE_ELEMENT_COUNT, baseID, newCount);
     }
 
-    private removeElement(room: Room) {
-        room.elementManager.remove(this.target.id);
+    private removeElement(mng: DecorateManager) {
+        mng.room.elementManager.remove(this.target.id);
 
-        // TODO: check baseID
-        const items = room.game.user.userData.playerBag.getItems(PKT_PackageType.FurniturePackage, this.target.platformId);
-        if (items.length === 0) {
-            // TODO: add data
-        } else {
-            const lastItem = items[items.length - 1];
-            lastItem.count ++;
-            room.game.emitter.emit(MessageType.UPDATE_DECORATE_ELEMENT_COUNT, lastItem.id, lastItem.count);
-        }
+        const baseID = mng.getBaseIDBySN(this.target.sn);
+        const newCount = mng.setBagCount(baseID, 1);
+
+        mng.room.game.emitter.emit(MessageType.UPDATE_DECORATE_ELEMENT_COUNT, baseID, newCount);
     }
 
-    private setElementPos(room: Room, x: number, y: number) {
+    private setElementPos(mng: DecorateManager, x: number, y: number) {
         this.target.setPosition(x, y);
-        room.game.renderPeer.setPosition(this.target.id, this.target.pos.x, this.target.pos.y);
+        mng.room.game.renderPeer.setPosition(this.target.id, this.target.pos.x, this.target.pos.y);
     }
 
-    private setElementDirection(room: Room, dir: number) {
+    private setElementDirection(mng: DecorateManager, dir: number) {
         this.target.setDirection(dir);
     }
 
@@ -453,4 +502,25 @@ class DecorateAction {
                 return op_def.Direction.UPPER_LEFT;
         }
     }
+}
+
+class DecorateActionData {
+
+    // create / remove pos
+    public pos: IPos;
+    // move delta vector
+    public moveVec: IPos;
+    // rotate times
+    public rotateTimes;
+
+    constructor(data: {
+        pos?: IPos,
+        moveVec?: IPos,
+        rotateTimes?: number
+    }) {
+        this.pos = data.pos;
+        this.moveVec = data.moveVec;
+        this.rotateTimes = data.rotateTimes;
+    }
+
 }

@@ -60,7 +60,7 @@ export class PicaDecoratePanel extends PicaBasePanel {
         const onClick = () => {
             this.onFurnitureClick(data.id);
         };
-        this.mBtn_SelectedFurniture.off("pointerup", onClick, this);
+        this.mBtn_SelectedFurniture.off("pointerup");
         this.mBtn_SelectedFurniture.on("pointerup", onClick, this);
         this.mBtn_SelectedFurniture.setData({data});
         this.mBtn_SelectedFurniture.setItemData(data, true);
