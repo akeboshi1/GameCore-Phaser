@@ -1367,9 +1367,8 @@ export class Render extends RPCPeer implements GameMain, IRender {
         if (target) {
             if (effect === "liner") {
                 if (this.mCacheTarget) {
-                    if (this.mCacheTarget.id === 674096428) {
+                    if (this.mCacheTarget.id === 1441619821) {
                         this.guideManager.startGuide(1, { x: this.mCacheTarget.x, y: this.mCacheTarget.y });
-                    } else if (this.mCacheTarget.id === 1752777777) {
                     }
                     this.mCacheTarget = null;
                 }
