@@ -110,25 +110,28 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
 
     public onDisConnected() {
         Logger.getInstance().debug("app connectFail=====");
-        if (this.hasClear || this.connect.pause) return;
+        // if (this.hasClear || this.connect.pause) return;
         if (this.mConfig.hasConnectFail) {
             return this.mainPeer.render.connectFail();
         } else {
-            if (this.mReconnect > 2) {
-                this.onRefreshConnect();
-                // todo reconnect Scene
-            } else {
-                this.mReconnect++;
-                this.clearGame().then(() => {
-                    Logger.getInstance().debug("clearGame", this.mReconnect);
-                    this.renderPeer.reconnect();
-                });
-            }
+            this.renderPeer.showAlertReconnect("网络不稳定,请刷新网页");
+            // if (this.mReconnect > 2) {
+            //     this.renderPeer.showAlertReconnect("网络不稳定,请刷新网页");
+            //     // this.onRefreshConnect();
+            //     // todo reconnect Scene
+            // } else {
+            //     this.mReconnect++;
+            //     this.renderPeer.showAlertReconnect("网络不稳定,请刷新网页");
+            // this.clearGame(true).then(() => {
+            //     Logger.getInstance().debug("clearGame", this.mReconnect);
+            //     this.reconnect();
+            // });
+            // }
         }
     }
 
     public onRefreshConnect() {
-        if (this.hasClear || this.isPause) return;
+        // if (this.hasClear || this.isPause) return;
         Logger.getInstance().debug("game onrefreshconnect");
         if (this.mConfig.hasConnectFail) {
             Logger.getInstance().debug("app connectfail");
@@ -159,7 +162,7 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
     }
 
     public async reconnect() {
-        if (this.hasClear || this.isPause) return;
+        // if (this.hasClear || this.isPause) return;
         Logger.getInstance().debug("game reconnect");
         if (this.mConfig.hasConnectFail) return this.mainPeer.render.connectFail();
         let gameID: string = this.mConfig.game_id;
