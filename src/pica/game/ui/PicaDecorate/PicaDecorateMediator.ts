@@ -62,11 +62,13 @@ export class PicaDecorateMediator extends BasicMediator {
     // ..
 
     // called by decorate manager
-    public updateSelectedFurniture(id: number) {
+    public updateSelectedFurniture(baseID: string) {
         if (!this.bagData) return;
 
-        const data = this.bagData.getItem(PKT_PackageType.FurniturePackage, id + "");
-
+        const data = this.bagData.getItem(PKT_PackageType.FurniturePackage, baseID);
+        if (!data) {
+            Logger.getInstance().warn("select furniture without data, baseID: ", baseID);
+        }
         this.mView.setSelectedFurniture(data);
     }
     public updateFurnitureCount(baseID: string, count: number) {

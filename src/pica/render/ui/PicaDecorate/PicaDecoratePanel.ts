@@ -50,6 +50,14 @@ export class PicaDecoratePanel extends PicaBasePanel {
     }
 
     public setSelectedFurniture(data: ICountablePackageItem) {
+        if (!data) {
+            if (this.mBtn_SelectedFurniture) {
+                this.mBtn_SelectedFurniture.destroy();
+                this.mBtn_SelectedFurniture = null;
+            }
+            return;
+        }
+
         if (this.mBtn_SelectedFurniture === null) {
             this.mBtn_SelectedFurniture = new ItemButton(this.scene, UIAtlasName.effectcommon, "synthetic_icon_bg", this.dpr, this.scale, false);
             this.mBtn_SelectedFurniture.x = 10 * this.dpr;

@@ -4,8 +4,10 @@ import {ISprite, MessageType, ModuleName} from "structure";
 import {IPos, Logger, LogicPos, Position45} from "utils";
 import {PBpacket} from "net-socket-packet";
 import {Sprite} from "baseModel";
-import PKT_PackageType = op_pkt_def.PKT_PackageType;
 import {BaseDataConfigManager} from "picaWorker";
+import {BlockObject} from "../block/block.object";
+import {InputEnable} from "../element/element";
+import PKT_PackageType = op_pkt_def.PKT_PackageType;
 
 // 小屋布置管理类，包含所有布置过程中的操作接口
 // 文档：https://dej4esdop1.feishu.cn/docs/doccnEbMKpINEkfBVImFJ0nTJUh#
@@ -152,7 +154,9 @@ export class DecorateManager {
         const canPlace = this.checkCanPlaceSelected();
         this.mRoom.game.uiManager.showMed(ModuleName.PICADECORATECONTROL_NAME, {id, pos: element.model.pos, canPlace});
 
-        this.mRoom.game.emitter.emit(MessageType.SELECTED_DECORATE_ELEMENT, id);
+        const baseID = this.getBaseIDBySN(element.model.sn);
+
+        this.mRoom.game.emitter.emit(MessageType.SELECTED_DECORATE_ELEMENT, baseID);
     }
 
     // 浮动功能栏
@@ -452,6 +456,10 @@ class DecorateAction {
     private createElement(mng: DecorateManager, x: number, y: number) {
         this.target.setPosition(x, y);
         mng.room.elementManager.add([this.target]);
+        const element = mng.room.elementManager.get(this.target.id);
+        if (element && element instanceof BlockObject) {
+            element.setInputEnable(InputEnable.Enable);
+        }
 
         const baseID = mng.getBaseIDBySN(this.target.sn);
         const newCount = mng.setBagCount(baseID, -1);

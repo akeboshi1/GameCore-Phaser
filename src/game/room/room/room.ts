@@ -1,27 +1,29 @@
-import { op_client, op_def, op_virtual_world } from "pixelpai_proto";
+import {op_client, op_def, op_virtual_world} from "pixelpai_proto";
+import {PacketHandler, PBpacket} from "net-socket-packet";
+import {Handler, IPos, IPosition45Obj, Logger, LogicPos, Position45} from "utils";
+import {Game} from "../../game";
+import {IBlockObject} from "../block/iblock.object";
+import {ClockReadyListener} from "../../loop/clock/clock";
+import {State} from "../state/state.group";
+import {IRoomManager} from "../room.manager";
+import {ConnectionService} from "../../../../lib/net/connection.service";
+import {CamerasManager, ICameraService} from "../camera/cameras.manager";
+import {ViewblockManager} from "../viewblock/viewblock.manager";
+import {PlayerManager} from "../player/player.manager";
+import {ElementManager} from "../element/element.manager";
+import {IElement, InputEnable} from "../element/element";
+import {IViewBlockManager} from "../viewblock/iviewblock.manager";
+import {TerrainManager} from "../terrain/terrain.manager";
+import {SkyBoxManager} from "../sky.box/sky.box.manager";
+import {GameState, IScenery, LoadState, ModuleName, SceneName} from "structure";
+import {EffectManager} from "../effect/effect.manager";
+import {DecorateManager} from "../decorate/decorate.manager";
+import {WallManager} from "../element/wall.manager";
+import {Sprite} from "baseModel";
+import {BlockObject} from "../block/block.object";
 import IActor = op_client.IActor;
 import NodeType = op_def.NodeType;
-import { PacketHandler, PBpacket } from "net-socket-packet";
-import { IPosition45Obj, Position45, IPos, LogicPos, Handler, Logger } from "utils";
-import { Game } from "../../game";
-import { IBlockObject } from "../block/iblock.object";
-import { ClockReadyListener } from "../../loop/clock/clock";
-import { State } from "../state/state.group";
-import { IRoomManager } from "../room.manager";
-import { ConnectionService } from "../../../../lib/net/connection.service";
-import { CamerasManager, ICameraService } from "../camera/cameras.manager";
-import { ViewblockManager } from "../viewblock/viewblock.manager";
-import { PlayerManager } from "../player/player.manager";
-import { ElementManager } from "../element/element.manager";
-import { IElement } from "../element/element";
-import { IViewBlockManager } from "../viewblock/iviewblock.manager";
-import { TerrainManager } from "../terrain/terrain.manager";
-import { SkyBoxManager } from "../sky.box/sky.box.manager";
-import {GameState, IScenery, LoadState, ModuleName, SceneName} from "structure";
-import { EffectManager } from "../effect/effect.manager";
-import {DecorateManager} from "../decorate/decorate.manager";
-import { WallManager } from "../element/wall.manager";
-import {Sprite} from "baseModel";
+
 export interface SpriteAddCompletedListener {
     onFullPacketReceived(sprite_t: op_def.NodeType): void;
 }
@@ -634,6 +636,13 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
         // hide players (with animations)
         this.playerManager.hideAll();
 
+        // set all element interactive
+        const elements =  this.elementManager.getElements();
+        for (const element of elements) {
+            if (!(element instanceof BlockObject)) continue;
+            element.setInputEnable(InputEnable.Enable);
+        }
+
         // new decorate manager
         this.mDecorateManager = new DecorateManager(this);
 
@@ -660,6 +669,13 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
 
         // show players
         this.playerManager.showAll();
+
+        // set all element interactive
+        const elements =  this.elementManager.getElements();
+        for (const element of elements) {
+            if (!(element instanceof BlockObject)) continue;
+            element.setInputEnable(InputEnable.Interactive);
+        }
 
         // switch ui
         this.game.uiManager.hideMed(ModuleName.PICADECORATE_NAME);
