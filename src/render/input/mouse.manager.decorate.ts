@@ -14,6 +14,10 @@ export class MouseManagerDecorate extends MouseManager {
 
     }
 
+    onUpdate(pointer: Phaser.Input.Pointer, gameobject: Phaser.GameObjects.GameObject) {
+        // do nothing
+    }
+
     public changeScene(scene: Phaser.Scene) {
         this.removeListener();
         super.changeScene(scene);

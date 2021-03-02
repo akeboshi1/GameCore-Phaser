@@ -123,6 +123,14 @@ export class PlayScene extends RoomScene {
         this.loadState = PlaySceneLoadState.LOAD_COMPOLETE;
     }
 
+    public pauseMotion() {
+        if (this.motion) this.motion.pauser();
+    }
+
+    public resumeMotion() {
+        if (this.motion) this.motion.resume();
+    }
+
     protected initMotion() {
         this.motion = new MotionManager(this.render);
         this.motion.setScene(this);

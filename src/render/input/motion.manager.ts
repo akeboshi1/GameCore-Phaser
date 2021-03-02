@@ -12,6 +12,7 @@ export class MotionManager {
     private holdTime: any;
     private holdDelay: number = 200;
     private curtime: number;
+    private isRunning = true;
     // private curDirection: number = 0;
     constructor(protected render: Render) {
         this.scaleRatio = render.scaleRatio;
@@ -43,6 +44,7 @@ export class MotionManager {
     }
 
     update(time: number, delta: number) {
+        if (!this.isRunning) return;
         if (this.isHolding === false) return;
         this.curtime += delta;
         if (this.curtime < 200) {
@@ -75,11 +77,20 @@ export class MotionManager {
         this.addListener();
     }
 
+    pauser() {
+        this.isRunning = false;
+    }
+
+    resume() {
+        this.isRunning = true;
+    }
+
     destroy() {
         this.removeListener();
     }
 
     public async onPointerDownHandler(pointer: Phaser.Input.Pointer) {
+        if (!this.isRunning) return;
         if (this.render.guideManager.canInteractive()) return;
         this.scene.input.on("pointermove", this.onPointerMoveHandler, this);
         this.holdTime = setTimeout(() => {
@@ -88,6 +99,7 @@ export class MotionManager {
     }
 
     protected async onPointerUpHandler(pointer: Phaser.Input.Pointer) {
+        if (!this.isRunning) return;
         if (this.render.guideManager.canInteractive()) return;
         this.isHolding = false;
         this.scene.input.off("pointermove", this.onPointerMoveHandler, this);
@@ -119,10 +131,12 @@ export class MotionManager {
     }
 
     protected async onPointerMoveHandler(pointer: Phaser.Input.Pointer) {
+        if (!this.isRunning) return;
         this.isHolding = true;
     }
 
     protected onPointeroutHandler() {
+        if (!this.isRunning) return;
         if (this.render.guideManager.canInteractive()) return;
         this.isHolding = false;
         this.scene.input.off("pointermove", this.onPointerMoveHandler, this);
@@ -131,11 +145,13 @@ export class MotionManager {
     }
 
     protected onGameObjectDownHandler(pointer, gameObject) {
+        if (!this.isRunning) return;
         if (this.render.guideManager.canInteractive()) return;
         this.gameObject = gameObject;
     }
 
     protected onGameObjectUpHandler(pointer, gameObject) {
+        if (!this.isRunning) return;
         if (this.render.guideManager.canInteractive()) return;
     }
 

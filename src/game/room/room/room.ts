@@ -643,7 +643,7 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
         this.game.uiManager.showMed(ModuleName.PICADECORATE_NAME);
 
         // switch motion
-        this.game.renderPeer.switchDecorateMotion();
+        this.game.renderPeer.switchDecorateMouseManager();
     }
 
     public stopDecorating() {
@@ -667,7 +667,7 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
         this.game.uiManager.showMed(ModuleName.BOTTOM);
 
         // switch motion
-        this.game.renderPeer.switchBaseMotion();
+        this.game.renderPeer.switchBaseMouseManager();
 
         // destroy decorate manager
         this.mDecorateManager.destroy();

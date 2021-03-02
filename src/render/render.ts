@@ -1489,12 +1489,18 @@ export class Render extends RPCPeer implements GameMain, IRender {
     public switchDecorateMouseManager() {
         if (!this.mInputManager) return;
         this.mInputManager.changeMouseManager(new MouseManagerDecorate(this));
+
+        const playScene = this.mGame.scene.getScene(PlayScene.name) as PlayScene;
+        if (playScene) playScene.pauseMotion();
     }
 
     @Export()
     public switchBaseMouseManager() {
         if (!this.mInputManager) return;
         this.mInputManager.changeMouseManager(new MouseManager(this));
+
+        const playScene = this.mGame.scene.getScene(PlayScene.name) as PlayScene;
+        if (playScene) playScene.resumeMotion();
     }
 
     // private connectReconnect() {
