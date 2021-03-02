@@ -28,4 +28,25 @@ export class LevelConfig extends BaseConfigData {
     //         return undefined;
     //     }
     // }
+
+    parseJson(json) {
+
+    }
+
+    protected getMap(tag: string) {
+        switch (tag) {
+            case "miningLevel":
+                return this.miningLevel;
+            case "playerLevel":
+                return this.playerLevel;
+            case "cabinLevel":
+                return this.cabinLevel;
+            case "storeLevel":
+                return this.storeLevel;
+            case "loggingLevel":
+                return this.loggingLevel;
+            case "farmingLevel":
+                return this.farmingLevel;
+        }
+    }
 }
