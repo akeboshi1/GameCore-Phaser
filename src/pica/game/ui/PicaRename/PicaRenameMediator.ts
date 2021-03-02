@@ -36,7 +36,7 @@ export class PicaRenameMediator extends BasicMediator {
     }
   }
   private randomNameCallBack(val: string) {
-    if (!this.mView)
+    if (this.mView)
       this.mView.setNickName(val);
   }
 
@@ -45,6 +45,7 @@ export class PicaRenameMediator extends BasicMediator {
   }
   private onSubmitHandler(name: string) {
     this.mModel.onSubmitHandler(name);
+    this.hide();
   }
   private onHidePanel() {
     this.hide();

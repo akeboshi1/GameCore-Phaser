@@ -3,6 +3,7 @@ import { ConnectionService } from "lib/net/connection.service";
 import { PBpacket } from "net-socket-packet";
 import { UIAtlasName } from "picaRes";
 import { op_client, op_virtual_world, op_def } from "pixelpai_proto";
+import { ModuleName } from "structure";
 export class PicaRename extends BasicModel {
     private mEvent: Map<string, any> = new Map();
     constructor(game: Game) {
@@ -66,6 +67,6 @@ export class PicaRename extends BasicModel {
     }
 
     private onGenerateNameHandler(packet: PBpacket) {
-        this.game.emitter.emit(UIAtlasName.createrole + "_generatename", packet.content.name);
+        this.game.emitter.emit(ModuleName.PICARENAME_NAME + "_generatename", packet.content.name);
     }
 }
