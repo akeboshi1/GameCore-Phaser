@@ -25,8 +25,12 @@ export class EditorFramesDisplay extends BaseFramesDisplay {
         if (!this.mCurAnimation) {
             return;
         }
-        if (!this.mCurAnimation.mountLayer) {
-            this.mCurAnimation.createMount();
+        if (this.mMountList && this.mMountList.indexOf(display) > -1) {
+            return;
+        }
+        if (targetIndex === undefined) {
+            targetIndex = this.mMountList.length;
+            this.mCurAnimation.createMountPoint(targetIndex);
         }
         super.mount(display, targetIndex);
     }
@@ -40,15 +44,6 @@ export class EditorFramesDisplay extends BaseFramesDisplay {
     }
 
     asociate() {
-        const mounts = this.sprite.mountSprites;
-        if (mounts && mounts.length > 0) {
-            for (const mount of mounts) {
-                const ele = this.sceneEditor.displayObjectPool.get(mount.toString());
-                if (ele) {
-                    this.mount(ele);
-                }
-            }
-        }
     }
 
     selected() {
@@ -118,9 +113,7 @@ export class EditorFramesDisplay extends BaseFramesDisplay {
         pos.z = this.z;
         const sprite = this.sprite.toSprite();
         const mountIds = this.getMountIds();
-        if (mountIds.length > 0) {
-            sprite.mountSprites = mountIds;
-        }
+        sprite.mountSprites = mountIds;
         return sprite;
     }
 
@@ -143,6 +136,22 @@ export class EditorFramesDisplay extends BaseFramesDisplay {
             }
         }
         return result;
+    }
+
+    updateMountPoint(ele: EditorFramesDisplay, x: number, y: number) {
+        const index = this.mMountList.indexOf(ele);
+        if (index > -1) {
+            this.mCurAnimation.updateMountPoint(index, x, y);
+            const mount = this.mCurAnimation.mountLayer;
+            if (mount) {
+                const pos = mount.mountPoint;
+                if (index < 0 || index >= pos.length) {
+                    return;
+                }
+
+                ele.setPosition(pos[index].x, pos[index].y);
+            }
+        }
     }
 
     public play(val: RunningAnimation) {

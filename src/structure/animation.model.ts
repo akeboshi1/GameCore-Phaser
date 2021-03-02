@@ -106,12 +106,29 @@ export class AnimationModel implements IAnimationData {
         return ani;
     }
 
-    createMount() {
+    createMountPoint(index: number) {
         if (!this.mountLayer) {
             this.mountLayer = op_gameconfig_01.AnimationMountLayer.create();
             this.mountLayer.mountPoint = [op_def.PBPoint3f.create({ x: 0, y: 0 })];
-            this.mountLayer.index = 0;
+            this.mountLayer.index = this.layer.length;
+        } else {
+            const mountPoint = this.mountLayer.mountPoint;
+            if (index >= mountPoint.length) {
+                mountPoint.push(op_def.PBPoint3f.create({ x: 0, y: 0 }));
+            }
         }
+    }
+
+    updateMountPoint(index: number, x: number, y: number) {
+        if (!this.mountLayer) {
+            return;
+        }
+        if (index < 0 || index >= this.mountLayer.mountPoint.length) {
+            return;
+        }
+        const pos = this.mountLayer.mountPoint[index];
+        pos.x -= x;
+        pos.y -= y;
     }
 
     private stringToArray(string: string, fristJoin: string, lastJoin: string) {

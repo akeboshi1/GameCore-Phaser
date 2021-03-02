@@ -59,6 +59,7 @@ export class DisplayObjectPool {
         const obj = this[poolName].get(id);
 
         if (obj) {
+            this.tryDeleteMountSprites(obj.getMountIds());
             obj.isUsed = false;
             obj.destroy();
         }
@@ -100,6 +101,22 @@ export class DisplayObjectPool {
     destroy() {
         for (const key of Object.keys(this.POOLOBJECTCONFIG)) {
             this[key].clear();
+        }
+    }
+
+    private tryDeleteMountSprites(mountIds: number[]) {
+        if (!mountIds || mountIds.length < 1) {
+            return;
+        }
+        for (const mount of mountIds) {
+            const ele = this.get(mount.toString());
+            if (ele) {
+                if (ele.isMoss) {
+                    this.sceneEditor.mossManager.deleteMosses([ele.id]);
+                } else {
+                    this.sceneEditor.elementManager.deleteElements([ele.id]);
+                }
+            }
         }
     }
 }

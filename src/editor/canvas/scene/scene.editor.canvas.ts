@@ -479,7 +479,7 @@ export class SceneEditorCanvas extends EditorCanvas implements IRender {
             case BrushEnum.Select:
                 if (pointer.isDown) {
                     if (this.mSelecedElement) {
-                        this.mSelecedElement.dragElement(pointer.prevPosition.x - pointer.position.x, pointer.prevPosition.y - pointer.position.y);
+                        this.mSelecedElement.dragElement(pointer);
                     }
                     this.mSkyboxManager.move(pointer);
                 }
@@ -610,6 +610,10 @@ export class SceneEditorCanvas extends EditorCanvas implements IRender {
 
     get elementManager() {
         return this.mElementManager;
+    }
+
+    get mossManager() {
+        return this.mMossManager;
     }
 
     get emitter() {
@@ -1135,7 +1139,7 @@ class SelectedElementManager {
         this.selecting = false;
     }
 
-    dragElement(x: number, y: number) {
+    dragElement(pointer: Phaser.Input.Pointer) {
         if (!this.mSelecedElement || this.mSelecedElement.length < 1) {
             return;
         }
@@ -1144,22 +1148,23 @@ class SelectedElementManager {
         }
 
         const roomSize = this.sceneEditor.miniRoomSize;
+        const worldPos = new LogicPos(pointer.worldX, pointer.worldY);
         for (const ele of this.mSelecedElement) {
-            const _x = ele.x - x;
-            const _y = ele.y - y;
-            const elePos = ele.getPosition();
             if (ele.nodeType === op_def.NodeType.ElementNodeType) {
-                if (ele.rootMount) {
-                    ele.setPosition(_x, _y);
+                const rootMount: EditorFramesDisplay = <EditorFramesDisplay>ele.rootMount;
+                if (rootMount) {
+                    const _x = (pointer.prevPosition.x - pointer.position.x);
+                    const _y = (pointer.prevPosition.y - pointer.position.y);
+                    rootMount.updateMountPoint(ele, _x, _y);
                     continue;
                 }
-                const result = this.sceneEditor.checkCollision(new LogicPos(_x, _y), ele.sprite);
+                const result = this.sceneEditor.checkCollision(worldPos, ele.sprite);
                 if (!result) {
                     return;
                 }
             }
-            // const pos = transitionGrid(elePos.x + x, elePos.y + y, this.sceneEditor.alignGrid, roomSize);
-            ele.setPosition(_x, _y);
+            const pos = transitionGrid(worldPos.x, worldPos.y, this.sceneEditor.alignGrid, roomSize);
+            ele.setPosition(pos.x, pos.y);
         }
     }
 
@@ -1210,6 +1215,7 @@ class SelectedElementManager {
     }
 
     private onGameobjectOverHandler(pointer: Phaser.Input.Pointer, gameobject: Phaser.GameObjects.GameObject) {
+        Logger.getInstance().log("gameobject over");
         if (!this.selecting) {
             return;
         }
@@ -1224,22 +1230,26 @@ class SelectedElementManager {
         }
         this.overElement = pool.get(id.toString());
         if (this.overElement) {
+            if (this.overElement.nodeType !== op_def.NodeType.ElementNodeType) {
+                return;
+            }
             this.overElement.selected();
             for (const ele of this.mSelecedElement) {
-                this.overElement.mount(ele);
+                if (this.overElement.id !== ele.id) this.overElement.mount(ele);
             }
+            this.sceneEditor.elementManager.updateElements([this.overElement.toSprite()]);
         }
-        this.sceneEditor.elementManager.updateElements([this.overElement.toSprite()]);
     }
 
     private onGameobjectOutHandler(pointer: Phaser.Input.Pointer, gameobject: Phaser.GameObjects.GameObject) {
         this.overElementID = null;
         if (this.overElement) {
             this.overElement.unselected();
-            for (const ele of this.mSelecedElement) {
-                this.overElement.unmount(ele);
-                // ele.unmount(this.overElement);
-            }
+            // 拖动时改变mount point还是unmount不好区分。unmount先不做
+            // for (const ele of this.mSelecedElement) {
+            //     this.overElement.unmount(ele);
+            // }
+            // this.sceneEditor.elementManager.updateElements([this.overElement.toSprite()]);
             this.overElement = null;
         }
     }
@@ -1249,11 +1259,15 @@ class SelectedElementManager {
     }
 
     set selecting(val: boolean) {
-        this.mSelecting = val;
-        this.unregisterGameobjectOver();
-        if (val) this.registerGameobjectOver();
-        for (const ele of this.mSelecedElement) {
-            val ? ele.disableInteractive() : ele.setInteractive();
+        if (this.mSelecting !== val) {
+            this.mSelecting = val;
+            if (this.mSelecedElement) {
+                for (const ele of this.mSelecedElement) {
+                    val ? ele.disableInteractive() : ele.setInteractive();
+                }
+            }
+            this.unregisterGameobjectOver();
+            if (val) this.registerGameobjectOver();
         }
     }
 

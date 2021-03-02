@@ -41,6 +41,23 @@ export class EditorElementDisplay extends EditorFramesDisplay {
         this.addToMap();
     }
 
+    asociate() {
+        const mounts = this.sprite.mountSprites;
+        if (mounts && mounts.length > 0) {
+            for (let i = 0; i < mounts.length; i++) {
+                const ele = this.sceneEditor.displayObjectPool.get(mounts[i].toString());
+                if (ele) {
+                    this.mount(ele, i);
+                }
+            }
+        }
+    }
+
+    displayCreated() {
+        super.displayCreated();
+        this.asociate();
+    }
+
     destroy() {
         this.removeFromMap();
         super.destroy();
