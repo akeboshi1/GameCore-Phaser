@@ -208,11 +208,6 @@ export class User extends Player {
         this.roomService.cameraService.syncCameraScroll();
     }
 
-    private animationChange(data: any) {
-        // { id: this.id, direction: this.direction }
-        this.game.renderPeer.displayAnimationChange(data);
-    }
-
     set model(val: ISprite) {
         if (!val) {
             return;
@@ -222,8 +217,8 @@ export class User extends Player {
         } else {
             Object.assign(this.mModel, val);
         }
-        (<any>this.mModel).off("Animation_Change", this.animationChange, this);
-        (<any>this.mModel).on("Animation_Change", this.animationChange, this);
+        (<any>this.mModel).off("Animation_Change", this.animationChanged, this);
+        (<any>this.mModel).on("Animation_Change", this.animationChanged, this);
         if (!this.mModel.layer) {
             this.mModel.layer = LayerEnum.Surface;
         }
