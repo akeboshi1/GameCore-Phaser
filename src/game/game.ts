@@ -474,6 +474,7 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
         let virtualWorldUuid = this.mConfig.virtual_world_id;
         let sceneId = null;
         let loc = null;
+        let spawnPointId = null;
         const account = await this.peer.render.getAccount();
         const accountData = account.accountData;
         if (account && account.gameId) {
@@ -481,6 +482,7 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
             virtualWorldUuid = account.virtualWorldId;
             sceneId = account.sceneID;
             loc = account.loc;
+            spawnPointId = account.spawnPointId;
         }
         content.virtualWorldUuid = virtualWorldUuid;
         content.gameId = game_id;
@@ -488,7 +490,9 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
         content.expire = this.mConfig.token_expire = accountData.expire + "";
         content.fingerprint = this.mConfig.token_fingerprint = accountData.fingerprint;
         content.sceneId = sceneId;
-        content.loc = loc;
+        // 后端有个Bug，loc是undefined位置会错误。修复后删掉{ locX: 0, locY: 0, locZ: 0}
+        content.loc = loc || { locX: 0, locY: 0, locZ: 0};
+        content.spawnPointId = spawnPointId;
         this.connect.send(pkt);
         this.peer.state = GameState.EnterWorld;
     }
@@ -588,7 +592,7 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
 
     private onGotoAnotherGame(packet: PBpacket) {
         const content: op_client.IOP_VIRTUAL_WORLD_REQ_CLIENT_GOTO_ANOTHER_GAME = packet.content;
-        this._onGotoAnotherGame(content.gameId, content.virtualWorldId, content.sceneId, content.loc);
+        this._onGotoAnotherGame(content.gameId, content.virtualWorldId, content.sceneId, content.loc, content.spawnPointId);
     }
 
     private _createAnotherGame(gameId, worldId, sceneId, loc, spawnPointId?) {
@@ -605,7 +609,7 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
                 this.mClock.destroy();
                 this.mClock = null;
             }
-            this.mainPeer.render.createAccount(gameId, worldId, sceneId, loc);
+            this.mainPeer.render.createAccount(gameId, worldId, sceneId, loc, spawnPointId);
             // this.mConfig.game_id = gameId;
             // this.mConfig.virtual_world_id = worldId;
             this.createManager();
@@ -617,13 +621,13 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
             }
             this.mClock = new Clock(this.connect, this.peer);
             // setTimeout(() => {
-            this.mainPeer.render.createAnotherGame(gameId, worldId, sceneId, loc ? loc.x : 0, loc ? loc.y : 0, loc ? loc.z : 0);
+            this.mainPeer.render.createAnotherGame(gameId, worldId, sceneId, loc ? loc.x : 0, loc ? loc.y : 0, loc ? loc.z : 0, spawnPointId);
             // }, 1000);
             // this.mGame.scene.start(LoadingScene.name, { world: this }););
         });
     }
 
-    private _onGotoAnotherGame(gameId, worldId, sceneId, loc) {
+    private _onGotoAnotherGame(gameId, worldId, sceneId, loc, spawnPointId?) {
         this.clearGame(true).then(() => {
             this.isPause = false;
             if (this.connect) {
@@ -633,7 +637,7 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
                 this.mClock.destroy();
                 this.mClock = null;
             }
-            this.mainPeer.render.createAccount(gameId, worldId, sceneId, loc);
+            this.mainPeer.render.createAccount(gameId, worldId, sceneId, loc, spawnPointId);
             this.createManager();
             this.removePacketListener();
             this.addPacketListener();
@@ -643,7 +647,7 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
             }
             this.mClock = new Clock(this.connect, this.peer);
             // 告知render进入其他game
-            this.mainPeer.render.createAnotherGame(gameId, worldId, sceneId, loc ? loc.x : 0, loc ? loc.y : 0, loc ? loc.z : 0);
+            this.mainPeer.render.createAnotherGame(gameId, worldId, sceneId, loc ? loc.x : 0, loc ? loc.y : 0, loc ? loc.z : 0, spawnPointId);
         });
     }
 

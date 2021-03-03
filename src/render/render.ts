@@ -886,7 +886,7 @@ export class Render extends RPCPeer implements GameMain, IRender {
     }
 
     @Export([webworker_rpc.ParamType.str, webworker_rpc.ParamType.str])
-    public createAccount(gameID: string, worldID: string, sceneID?: number, locX?: number, locY?: number, locZ?: number): Promise<any> {
+    public createAccount(gameID: string, worldID: string, sceneID?: number, loc?: IPos, spawnPointId?: number): Promise<any> {
         return new Promise<any>((resolve, reject) => {
             if (!this.mAccount) {
                 this.mAccount = new Account();
@@ -895,7 +895,7 @@ export class Render extends RPCPeer implements GameMain, IRender {
             Logger.getInstance().debug("createAccount ====>", now);
             this.exportProperty(this.mAccount, this, ModuleName.ACCOUNT_NAME).onceReady(() => {
                 Logger.getInstance().debug("createAccountExport ====>", new Date().getTime() - now);
-                this.mAccount.enterGame(gameID, worldID, sceneID, {locX, locY, locZ});
+                this.mAccount.enterGame(gameID, worldID, sceneID, loc, spawnPointId);
                 resolve(true);
             });
         });
@@ -1030,12 +1030,12 @@ export class Render extends RPCPeer implements GameMain, IRender {
     }
 
     @Export([webworker_rpc.ParamType.str, webworker_rpc.ParamType.str])
-    public createAnotherGame(gameId: string, worldId: string, sceneId?: number, px?: number, py?: number, pz?: number) {
+    public createAnotherGame(gameId: string, worldId: string, sceneId?: number, px?: number, py?: number, pz?: number, spawnPointId?) {
         // this.newGame().then(() => {
         //     // todo sceneManager loginScene.name
         // });
         Logger.getInstance().debug("gotoanothergame ====>");
-        this.account.enterGame(gameId, worldId, sceneId, {x: px, y: py, z: pz});
+        this.account.enterGame(gameId, worldId, sceneId, {x: px, y: py, z: pz}, spawnPointId);
     }
 
     @Export([webworker_rpc.ParamType.num, webworker_rpc.ParamType.num, webworker_rpc.ParamType.num, webworker_rpc.ParamType.num])
