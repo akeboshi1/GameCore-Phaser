@@ -1,7 +1,7 @@
 import { PacketHandler, PBpacket } from "net-socket-packet";
 import { op_client, op_def, op_virtual_world } from "pixelpai_proto";
 import { ConnectionService } from "../../../../lib/net/connection.service";
-import {IPos, Logger, LogicPos, Position45} from "utils";
+import { Logger, LogicPos } from "utils";
 import { EventType, IDragonbonesModel, IFramesModel, ISprite } from "structure";
 import { IRoomService, Room } from "../room/room";
 import { Element, IElement, InputEnable } from "./element";

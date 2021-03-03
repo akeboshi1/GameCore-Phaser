@@ -5,7 +5,6 @@ import { Font, Handler, i18n } from "utils";
 import { UIAtlasName } from "picaRes";
 import { PicaNewNavigatePanel } from "../PicaNewMain/PicaNewNavigatePanel";
 import { PicaBasePanel } from "../pica.base.panel";
-import { GuideID } from "../../guide";
 
 export class BottomPanel extends PicaBasePanel {
     private mNavigate: PicaNewNavigatePanel;
@@ -104,7 +103,6 @@ export class BottomPanel extends PicaBasePanel {
 
     protected onShow() {
         super.onShow();
-        // this.render.guideManager.startGuide(GuideID.Explore);
     }
 
     protected init() {

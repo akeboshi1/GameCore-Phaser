@@ -3,6 +3,7 @@
 // 2. 做设备兼容
 
 import { ILauncherConfig } from "structure";
+import { Logger } from "utils";
 import version from "./version";
 export class Launcher {
     get config(): ILauncherConfig {
@@ -88,6 +89,9 @@ export class Launcher {
             Object.assign(this.mConfig, config);
         }
 
+        this.mConfig.gameLoaded = () => {
+            Logger.getInstance().log("gameLoaded ===>");
+        };
         this.intervalId = setInterval(() => {
             // const xhr = new XMLHttpRequest(); // TODO
             // xhr.open("GET", "./package.json", true);
