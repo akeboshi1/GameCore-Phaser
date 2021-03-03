@@ -11,13 +11,15 @@ export class PlaneGuide extends BaseGuide {
         this.playScene = this.render.game.scene.getScene(SceneName.PLAY_SCENE);
     }
 
-    public start(pos: IPos) {
-        this.step1(pos);
+    public show(pos: IPos) {
+        const element = this.render.displayManager.getDisplay(1441619821);
+        if (!element) this.end();
+        this.step1({ x: element.x, y: element.y });
     }
 
-    public stop() {
+    public hide() {
         this.playScene.input.off("gameobjectdown", this.gameObjectDownHandler, this);
-        super.stop();
+        super.hide();
         if (this.mPointer) (<any>this.playScene).motionMgr.onPointerDownHandler(this.mPointer);
     }
 

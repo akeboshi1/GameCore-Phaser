@@ -12,14 +12,6 @@ const TerserPlugin = require("terser-webpack-plugin");
 const appVer = require("./version");
 
 const commonConfig = {
-    module: {
-        rules: [
-            { test: /\.ts$/, loader: "ts-loader", options: { allowTsInNodeModules: false }, exclude: "/node_modules/" },
-            { test: /phaser\.js$/, loader: "expose-loader?Phaser" },
-            { test: /dragonBones\.js$/, loader: "expose-loader?dragonBones" },
-            { test: /webworkerrpc\.js$/, loader: "expose-loader?webworker-rpc" },
-        ],
-    },
     resolve: {
         extensions: [".ts", ".js"],
         alias: {
@@ -78,6 +70,14 @@ const commonConfig = {
 };
 
 const gameConfig = Object.assign({}, commonConfig, {
+    module: {
+        rules: [
+            { test: /\.ts$/, loader: "ts-loader", options: { allowTsInNodeModules: false }, exclude: "/node_modules/" },
+            { test: /phaser\.js$/, loader: "expose-loader?Phaser" },
+            { test: /dragonBones\.js$/, loader: "expose-loader?dragonBones" },
+            { test: /webworkerrpc\.js$/, loader: "expose-loader?webworker-rpc" },
+        ],
+    },
     entry: {
         tooqing: path.join(__dirname, "./launcher.ts"),
         editor: path.join(__dirname, "./src/editor/index.ts"),
@@ -123,6 +123,12 @@ const gameConfig = Object.assign({}, commonConfig, {
 
 
 const workerConfig = Object.assign({}, commonConfig, {
+    module: {
+        rules: [
+            { test: /\.ts$/, loader: "ts-loader", options: { allowTsInNodeModules: false }, exclude: "/node_modules/" },
+            { test: /webworkerrpc\.js$/, loader: "expose-loader?webworker-rpc" },
+        ],
+    },
     entry: {
         mainWorker: path.join(__dirname, "./src/game/main.peer.ts"),
         physicalWorker: path.join(__dirname, "./src/services/physical.worker.ts")
@@ -137,7 +143,7 @@ const workerConfig = Object.assign({}, commonConfig, {
     },
 });
 module.exports = [
-    gameConfig, workerConfig     
+    gameConfig, workerConfig
 ];
 
 // module.exports = (env, argv) => {

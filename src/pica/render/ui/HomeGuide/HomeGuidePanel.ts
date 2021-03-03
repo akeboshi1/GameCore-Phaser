@@ -1,14 +1,14 @@
 import { Button, ClickEvent } from "apowophaserui";
 import { BaseGuide, Render } from "gamecoreRender";
 import { ModuleName } from "structure";
-import { BottomPanel } from "../ui";
+import { BottomPanel } from "../Bottom/BottomPanel";
 
 export class HomeGuide extends BaseGuide {
     constructor(id: number, render: Render) {
         super(id, render);
     }
 
-    public start() {
+    public show() {
         this.step1();
     }
 

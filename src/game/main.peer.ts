@@ -539,6 +539,14 @@ export class MainPeer extends RPCPeer {
         this.game.showByName(name, data);
     }
 
+    @Export([webworker_rpc.ParamType.num])
+    public closePanelHandler(id: number) {
+        const packet = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_CLOSE_UI);
+        const content: op_virtual_world.OP_CLIENT_REQ_VIRTUAL_WORLD_CLOSE_UI = packet.content;
+        content.uiIds = [id];
+        this.game.connection.send(packet);
+    }
+
     @Export([webworker_rpc.ParamType.str, webworker_rpc.ParamType.boolean])
     public showMediator(name: string, isShow: boolean, param?: any) {
         if (name.length === 0) return;

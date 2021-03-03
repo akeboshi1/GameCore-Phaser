@@ -1,17 +1,17 @@
 import "tooqinggamephaser";
 import "dragonBones";
-import {Game} from "tooqinggamephaser";
-import {Export, RPCPeer, webworker_rpc} from "webworker-rpc";
-import {i18n, initLocales, IPos, IPosition45Obj, Logger, Pos, Size, Url} from "utils";
-import {PBpacket} from "net-socket-packet";
+import { Game } from "tooqinggamephaser";
+import { Export, RPCPeer, webworker_rpc } from "webworker-rpc";
+import { i18n, initLocales, IPos, IPosition45Obj, Logger, Pos, Size, Url } from "utils";
+import { PBpacket } from "net-socket-packet";
 import * as protos from "pixelpai_proto";
-import {op_client} from "pixelpai_proto";
-import {Account} from "./account/account";
-import {SceneManager} from "./scenes/scene.manager";
-import {LoginScene} from "./scenes/login.scene";
-import {LocalStorageManager} from "./managers/local.storage.manager";
-import {PlayScene} from "./scenes/play.scene";
-import {CamerasManager} from "./cameras/cameras.manager";
+import { op_client } from "pixelpai_proto";
+import { Account } from "./account/account";
+import { SceneManager } from "./scenes/scene.manager";
+import { LoginScene } from "./scenes/login.scene";
+import { LocalStorageManager } from "./managers/local.storage.manager";
+import { PlayScene } from "./scenes/play.scene";
+import { CamerasManager } from "./cameras/cameras.manager";
 import * as path from "path";
 import {
     ElementStateType,
@@ -29,22 +29,22 @@ import {
     RENDER_PEER,
     SceneName
 } from "structure";
-import {DisplayManager} from "./managers/display.manager";
-import {InputManager} from "./input/input.manager";
+import { DisplayManager } from "./managers/display.manager";
+import { InputManager } from "./input/input.manager";
 // import { PicaGuideManager, PicaRenderUiManager } from "picaRender";// TODO: 分离pica模块时，删除该引用
-import {GamePauseScene} from "./scenes/game.pause.scene";
-import {MainUIScene} from "./scenes/main.ui.scene";
-import {EditorCanvasManager} from "./managers/editor.canvas.manager";
+import { GamePauseScene } from "./scenes/game.pause.scene";
+import { MainUIScene } from "./scenes/main.ui.scene";
+import { EditorCanvasManager } from "./managers/editor.canvas.manager";
 import version from "../../version";
-import {BasicScene, IRender} from "baseRender";
-import {AstarDebugger} from "./display/debugs/astar";
-import {EditorModeDebugger} from "./display/debugs/editor.mode.debugger";
-import {GridsDebugger} from "./display/debugs/grids";
-import {SortDebugger} from "./display/debugs/sort.debugger";
-import {UiManager} from "./ui";
-import {GuideManager} from "./guide";
-import {MouseManagerDecorate} from "./input/mouse.manager.decorate";
-import {MouseManager} from "./input/mouse.manager";
+import { BasicScene, IRender } from "baseRender";
+import { AstarDebugger } from "./display/debugs/astar";
+import { EditorModeDebugger } from "./display/debugs/editor.mode.debugger";
+import { GridsDebugger } from "./display/debugs/grids";
+import { SortDebugger } from "./display/debugs/sort.debugger";
+import { UiManager } from "./ui";
+import { GuideManager } from "./guide";
+import { MouseManagerDecorate } from "./input/mouse.manager.decorate";
+import { MouseManager } from "./input/mouse.manager";
 
 for (const key in protos) {
     PBpacket.addProtocol(protos[key]);
@@ -713,7 +713,7 @@ export class Render extends RPCPeer implements GameMain, IRender {
 
     @Export()
     public showCreateRole(params?: any) {
-        if (this.mSceneManager) this.mSceneManager.startScene(SceneName.CREATE_ROLE_SCENE, {render: this, params});
+        if (this.mSceneManager) this.mSceneManager.startScene(SceneName.CREATE_ROLE_SCENE, { render: this, params });
     }
 
     @Export()
@@ -723,7 +723,7 @@ export class Render extends RPCPeer implements GameMain, IRender {
 
     @Export()
     public showPlay(params?: any) {
-        if (this.mSceneManager) this.mSceneManager.startScene(SceneName.PLAY_SCENE, {render: this, params});
+        if (this.mSceneManager) this.mSceneManager.startScene(SceneName.PLAY_SCENE, { render: this, params });
     }
 
     @Export()
@@ -925,7 +925,7 @@ export class Render extends RPCPeer implements GameMain, IRender {
             if (playScene) {
                 const camera = playScene.cameras.main;
                 const rect = camera.worldView;
-                const {x, y} = rect;
+                const { x, y } = rect;
                 const obj = {
                     x,
                     y,
@@ -1035,7 +1035,7 @@ export class Render extends RPCPeer implements GameMain, IRender {
         //     // todo sceneManager loginScene.name
         // });
         Logger.getInstance().debug("gotoanothergame ====>");
-        this.account.enterGame(gameId, worldId, sceneId, {x: px, y: py, z: pz}, spawnPointId);
+        this.account.enterGame(gameId, worldId, sceneId, { x: px, y: py, z: pz }, spawnPointId);
     }
 
     @Export([webworker_rpc.ParamType.num, webworker_rpc.ParamType.num, webworker_rpc.ParamType.num, webworker_rpc.ParamType.num])
@@ -1365,19 +1365,19 @@ export class Render extends RPCPeer implements GameMain, IRender {
         const target = this.mDisplayManager.getDisplay(id);
         if (target) {
             if (effect === "liner") {
-                if (this.mCacheTarget) {
-                    if (this.mCacheTarget.id === 1441619821) {
-                        this.guideManager.startGuide(1, { x: this.mCacheTarget.x, y: this.mCacheTarget.y });
-                    }
-                    this.mCacheTarget = null;
-                }
-                this.mCameraManager.pan(target.x, target.y, target.y).then(() => {
-                    if (id === 674096428) {
-                        this.mCacheTarget = target;
-                    } else if (id === 1752777777) {
-                        this.mCacheTarget = target;
-                    }
-                });
+                // if (this.mCacheTarget) {
+                //     if (this.mCacheTarget.id === 1441619821) {
+                //         this.guideManager.startGuide(1, { x: this.mCacheTarget.x, y: this.mCacheTarget.y });
+                //     }
+                //     this.mCacheTarget = null;
+                // }
+                // this.mCameraManager.pan(target.x, target.y, target.y).then(() => {
+                //     if (id === 674096428) {
+                //         this.mCacheTarget = target;
+                //     } else if (id === 1752777777) {
+                //         this.mCacheTarget = target;
+                //     }
+                // });
                 this.mCameraManager.startFollow(target);
             } else {
                 this.mCameraManager.startFollow(target);
@@ -1608,7 +1608,7 @@ export class Render extends RPCPeer implements GameMain, IRender {
             if (!this.mGame.scene.getScene(GamePauseScene.name)) {
                 this.mGame.scene.add(GamePauseScene.name, GamePauseScene);
             }
-            this.mGame.scene.start(GamePauseScene.name, {render: this});
+            this.mGame.scene.start(GamePauseScene.name, { render: this });
             const playScene = this.mGame.scene.getScene(PlayScene.name);
             if (playScene) playScene.scene.pause();
             const uiScene = this.mGame.scene.getScene(MainUIScene.name);
