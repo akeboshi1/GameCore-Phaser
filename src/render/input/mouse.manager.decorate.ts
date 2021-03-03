@@ -8,6 +8,7 @@ export class MouseManagerDecorate extends MouseManager {
     private selectedID: number = -1;
     private downPointerPos: LogicPos;
     private downDisplayPos: LogicPos;
+    private downWithGO: boolean = false;
 
     constructor(protected render: Render) {
         super(render);
@@ -32,23 +33,38 @@ export class MouseManagerDecorate extends MouseManager {
     }
 
     protected async onPointerDownHandler(pointer: Phaser.Input.Pointer): Promise<void> {
+        if (this.downWithGO) return;
 
+        this.downWithGO = false;
+        this.downPointerPos = new LogicPos(pointer.worldX / this.render.scaleRatio, pointer.worldY / this.render.scaleRatio);
+        this.scene.input.off("pointermove", this.onPointerMoveHandler, this);
+        this.scene.input.on("pointermove", this.onPointerMoveHandler, this);
     }
 
     protected async onPointerUpHandler(pointer: Phaser.Input.Pointer): Promise<void> {
 
+        this.clearDownData();
     }
 
     protected async onPointerMoveHandler(pointer: Phaser.Input.Pointer): Promise<void> {
-        const display = this.render.displayManager.getDisplay(this.selectedID);
-        if (!display) {
-            this.clearDownData();
-            return;
-        }
-
         const worldPos = new LogicPos(pointer.worldX / this.render.scaleRatio, pointer.worldY / this.render.scaleRatio);
-        display.setPosition(worldPos.x + this.downDisplayPos.x - this.downPointerPos.x,
-            worldPos.y + this.downDisplayPos.y - this.downPointerPos.y);
+        if (this.downWithGO) {
+            // move game object
+            const display = this.render.displayManager.getDisplay(this.selectedID);
+            if (!display) {
+                this.clearDownData();
+                return;
+            }
+
+            display.setPosition(worldPos.x + this.downDisplayPos.x - this.downPointerPos.x,
+                worldPos.y + this.downDisplayPos.y - this.downPointerPos.y);
+        } else {
+            // move camera
+            this.render.camerasManager.offsetScroll(
+                pointer.prevPosition.x - pointer.position.x,
+                pointer.prevPosition.y - pointer.position.y
+            );
+        }
         this.render.emitter.emit(MessageType.DECORATE_UPDATE_SELECTED_ELEMENT_POSITION);
     }
 
@@ -73,6 +89,7 @@ export class MouseManagerDecorate extends MouseManager {
             if (id) {
                 const display = this.render.displayManager.getDisplay(id);
                 if (display && display.nodeType === NodeType.ElementNodeType) {
+                    this.downWithGO = true;
                     this.scene.input.off("pointermove", this.onPointerMoveHandler, this);
                     this.scene.input.on("pointermove", this.onPointerMoveHandler, this);
                     this.downPointerPos = new LogicPos(pointer.worldX / this.render.scaleRatio, pointer.worldY / this.render.scaleRatio);
@@ -91,6 +108,7 @@ export class MouseManagerDecorate extends MouseManager {
     }
 
     private clearDownData() {
+        this.downWithGO = false;
         this.downPointerPos = new LogicPos();
         this.downDisplayPos = new LogicPos();
         this.scene.input.off("pointermove", this.onPointerMoveHandler, this);
