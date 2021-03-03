@@ -1,7 +1,7 @@
 import { PacketHandler, PBpacket } from "net-socket-packet";
 import { op_client, op_def, op_virtual_world } from "pixelpai_proto";
 import { ConnectionService } from "../../../../lib/net/connection.service";
-import { Logger, LogicPos } from "utils";
+import {IPos, Logger, LogicPos, Position45} from "utils";
 import { EventType, IDragonbonesModel, IFramesModel, ISprite } from "structure";
 import { IRoomService, Room } from "../room/room";
 import { Element, IElement, InputEnable } from "./element";
@@ -11,6 +11,7 @@ import { DataMgrType } from "../../data.manager";
 import { ElementActionManager } from "../elementaction/element.action.manager";
 import { Sprite, IElementStorage } from "baseModel";
 import NodeType = op_def.NodeType;
+import {LayerEnum} from "game-capsule/index";
 
 export interface IElementManager {
     hasAddComplete: boolean;
@@ -212,6 +213,37 @@ export class ElementManager extends PacketHandler implements IElementManager {
                 }
             }
         }
+    }
+
+    // 检测sprite 是否和已有element有碰撞
+    public checkCollision(sprite: ISprite): boolean {
+        // if (sprite.layer === LayerEnum.Floor) {
+        //     return false;
+        // }
+        const collision = sprite.getCollisionArea();
+        const origin = sprite.getOriginPoint();
+        if (!collision) {
+            return false;
+        }
+        const pos45 = this.mRoom.transformToMini45(sprite.pos);
+        const rows = collision.length;
+        const cols = collision[0].length;
+        let row = 0, col = 0;
+
+        for (let i = 0; i < rows; i++) {
+            row = pos45.y + i - origin.y;
+            for (let j = 0; j < cols; j++) {
+                if (collision[i][j] === 1) {
+                    col = pos45.x + j - origin.x;
+                    if (row >= 0 && row < this.mMap.length && col >= 0 && col < this.mMap[row].length) {
+                        if (this.mMap[row][col] === 1 || this.mMap[row][col] === -1) return true;
+                    } else {
+                        return true;
+                    }
+                }
+            }
+        }
+        return false;
     }
 
     public setState(state: op_client.IStateGroup) {

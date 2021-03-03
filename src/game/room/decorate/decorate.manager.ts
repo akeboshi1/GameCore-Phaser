@@ -18,14 +18,8 @@ export class DecorateManager {
     private mActionQueue: DecorateAction[] = [];
     private mSelectedActionQueue: DecorateAction[] = [];
     private mSelectedID: number = -1;
-    // TODO:移植到Room
-    private mCollisionMap: boolean[][];
 
     constructor(private mRoom: Room) {
-        this.mCollisionMap = new Array(this.mRoom.miniSize.rows);
-        for (let i = 0; i < this.mRoom.miniSize.rows; i++) {
-            this.mCollisionMap[i] = new Array(this.mRoom.miniSize.cols).fill(false);
-        }
     }
 
     public get room(): Room {
@@ -151,48 +145,30 @@ export class DecorateManager {
         if (med && med.isShow()) {
             this.mRoom.game.uiManager.hideMed(ModuleName.PICADECORATECONTROL_NAME);
         }
-        const canPlace = this.checkCanPlaceSelected();
+
+        // set walkable
+        this.mRoom.elementManager.removeFromMap(element.model);
+
+        // show reference
+        element.showRefernceArea();
+
+        const canPlace = this.checkSelectedCanPlace();
         this.mRoom.game.uiManager.showMed(ModuleName.PICADECORATECONTROL_NAME, {id, pos: element.model.pos, canPlace});
 
+        // update decorate panel
         const baseID = this.getBaseIDBySN(element.model.sn);
-
         this.mRoom.game.emitter.emit(MessageType.DECORATE_SELECTE_ELEMENT, baseID);
     }
 
     // 浮动功能栏
     // 检查是否可以放置
-    public checkCanPlaceSelected(): boolean {
-        return true;
+    public checkSelectedCanPlace(): boolean {
         if (this.mSelectedID < 0) return false;
+
         const element = this.mRoom.elementManager.get(this.mSelectedID);
         if (!element) return false;
-        const pos = element.model.pos;
-        const collisionArea = element.model.currentCollisionArea;
-        const origin = element.model.currentCollisionPoint;
-        if (!collisionArea || !origin) {
-            return;
-        }
-        const pos45 = Position45.transformTo45(pos, this.mRoom.miniSize);
-        if (pos45.x < 0 || pos45.y < 0 || pos45.y > this.mRoom.miniSize.rows || pos45.x > this.mRoom.miniSize.cols) {
-            return false;
-        }
-        // return true;
-        let row = 0;
-        let col = 0;
-        const map = this.mCollisionMap;
-        for (let i = 0; i < collisionArea.length; i++) {
-            row = i + pos45.y - origin.y;
-            if (row < 0 || row >= map.length) {
-                return false;
-            }
-            for (let j = 0; j < collisionArea[i].length; j++) {
-                col = j + pos45.x - origin.x;
-                if (col < 0 || col >= map[i].length || map[row][col] === false) {
-                    return false;
-                }
-            }
-        }
-        return true;
+
+        return !this.mRoom.elementManager.checkCollision(element.model);
     }
 
     // 点击浮动栏中的确认按钮，确认选择物的改动，取消选择，关闭选择栏
@@ -201,8 +177,12 @@ export class DecorateManager {
 
         const combinedActs = this.combineActions(this.mSelectedActionQueue);
         combinedActs.forEach((acts, sprite) => {
+            if (!sprite) {
+                Logger.getInstance().error("sprite is null, ",acts, sprite);
+                return;
+            }
             if (sprite.id !== this.mSelectedID) {
-                Logger.getInstance().error("sprite.id is wrong");
+                Logger.getInstance().error("sprite.id is not selected, ",acts, sprite);
                 return;
             }
 
@@ -210,6 +190,39 @@ export class DecorateManager {
                 this.mActionQueue.push(act);
             }
         });
+
+        const element = this.mRoom.elementManager.get(this.mSelectedID);
+        if (element) {
+            // set walkable
+            this.mRoom.elementManager.addToMap(element.model);
+
+            // hide reference
+            element.hideRefernceArea();
+        }
+
+        this.mSelectedID = -1;
+
+        this.mRoom.game.uiManager.hideMed(ModuleName.PICADECORATECONTROL_NAME);
+
+        this.mRoom.game.renderPeer.workerEmitter(MessageType.DECORATE_UNSELECT_ELEMENT);
+    }
+
+    // 将当前选中的物件放回原位/取消放置，取消选择，关闭浮动功能栏
+    public reverseSelected() {
+        if (this.mSelectedID < 0) return;
+
+        while (this.mSelectedActionQueue.length > 0) {
+            const act = this.mSelectedActionQueue.pop();
+            act.reverse(this);
+        }
+        const element = this.mRoom.elementManager.get(this.mSelectedID);
+        if (element) {
+            // set walkable
+            this.mRoom.elementManager.addToMap(element.model);
+
+            // hide reference
+            element.hideRefernceArea();
+        }
 
         this.mSelectedID = -1;
 
@@ -255,7 +268,9 @@ export class DecorateManager {
         this.mSelectedActionQueue.push(act);
         act.execute(this);
 
-        const canPlace = this.checkCanPlaceSelected();
+        this.mRoom.elementManager.removeFromMap(element.model);
+
+        const canPlace = this.checkSelectedCanPlace();
         this.mRoom.game.emitter.emit(MessageType.DECORATE_UPDATE_SELECTED_ELEMENT_CAN_PLACE, canPlace);
     }
 
@@ -267,6 +282,11 @@ export class DecorateManager {
         const act = new DecorateAction(element.model, DecorateActionType.Rotate, new DecorateActionData({rotateTimes: 1}));
         this.mSelectedActionQueue.push(act);
         act.execute(this);
+
+        this.mRoom.elementManager.removeFromMap(element.model);
+
+        const canPlace = this.checkSelectedCanPlace();
+        this.mRoom.game.emitter.emit(MessageType.DECORATE_UPDATE_SELECTED_ELEMENT_CAN_PLACE, canPlace);
     }
 
     // 回收选择物至背包
@@ -284,22 +304,6 @@ export class DecorateManager {
     // 自动放置，放置背包中剩余的同种类物件
     public autoPlace() {
 
-    }
-
-    // 将当前选中的物件放回原位/取消放置，取消选择，关闭浮动功能栏
-    public reverseSelected() {
-        if (this.mSelectedID < 0) return;
-
-        while (this.mSelectedActionQueue.length > 0) {
-            const act = this.mSelectedActionQueue.pop();
-            act.reverse(this);
-        }
-
-        this.mSelectedID = -1;
-
-        this.mRoom.game.uiManager.hideMed(ModuleName.PICADECORATECONTROL_NAME);
-
-        this.mRoom.game.renderPeer.workerEmitter(MessageType.DECORATE_UNSELECT_ELEMENT);
     }
 
     public getBagCount(baseID: string) {
@@ -323,7 +327,7 @@ export class DecorateManager {
     }
 
     public getBaseIDBySN(sn: string): string {
-        const configMgr = <BaseDataConfigManager>this.room.game.configManager;
+        const configMgr = <BaseDataConfigManager> this.room.game.configManager;
         const temp = configMgr.getItemBase(sn);
         if (temp) return temp.id;
         else {
@@ -483,12 +487,16 @@ class DecorateAction {
     }
 
     private setElementPos(mng: DecorateManager, x: number, y: number) {
+        mng.room.elementManager.removeFromMap(this.target);
         this.target.setPosition(x, y);
+        mng.room.elementManager.addToMap(this.target);
         mng.room.game.renderPeer.setPosition(this.target.id, this.target.pos.x, this.target.pos.y);
     }
 
     private setElementDirection(mng: DecorateManager, dir: number) {
+        mng.room.elementManager.removeFromMap(this.target);
         this.target.setDirection(dir);
+        mng.room.elementManager.addToMap(this.target);
     }
 
     private nextDir(dir: number): number {

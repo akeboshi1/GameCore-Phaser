@@ -1,3 +1,5 @@
+import { IPos } from "utils";
+
 interface IAccountData {
     accessToken: string;
     refreshToken: string;
@@ -9,7 +11,8 @@ export class Account {
     public gameId: string;
     public virtualWorldId: string;
     public sceneID: number;
-    public loc: any;
+    public loc: IPos;
+    public spawnPointId: number;
     public accountData: IAccountData;
     constructor() {
         // TODO
@@ -71,14 +74,15 @@ export class Account {
     public destroy() {
         this.clear();
         localStorage.removeItem("token");
-        this.enterGame(undefined, undefined, undefined, undefined);
+        this.enterGame(undefined, undefined, undefined, undefined, undefined);
     }
 
-    public enterGame(gameId: string, virtualWorldId: string, sceneId: number, loc: any) {
+    public enterGame(gameId: string, virtualWorldId: string, sceneId: number, loc: any, spawnPointId) {
         this.gameId = gameId;
         this.virtualWorldId = virtualWorldId;
         this.sceneID = sceneId;
         this.loc = loc;
+        this.spawnPointId = spawnPointId;
     }
 
     get gameID(): string {

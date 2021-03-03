@@ -66,7 +66,7 @@ export class PicaDecorateControlPanel extends PicaBasePanel {
         this.add(this.mBtns);
 
         const zoom = this.render.uiScale;
-        let totalWidth = w - 10 * 2 * this.dpr * zoom;
+        let totalWidth = w - 30 * 2 * this.dpr * zoom;
         this.mBtns.map((btn) => totalWidth -= btn.width * zoom);
         const space = totalWidth / (this.mBtns.length - 1) / zoom;
 
@@ -98,7 +98,8 @@ export class PicaDecorateControlPanel extends PicaBasePanel {
             return;
         }
 
-        this.y = this.mTarget.y * this.dpr;
+        this.x = (this.mTarget.x + 150) * this.dpr;
+        this.y = (this.mTarget.y + 200) * this.dpr;
     }
 
     private onSaveHandler() {
