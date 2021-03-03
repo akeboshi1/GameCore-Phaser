@@ -214,7 +214,7 @@ export class Element extends BlockObject implements IElement {
             this.setPosition(this.mModel.pos);
         }
         const area = model.getCollisionArea();
-        const obj = { id: model.id, pos: model.pos, alpha: model.alpha, titleMask: model.titleMask | 0x00010000 };
+        const obj = { id: model.id, pos: model.pos, alpha: model.alpha, titleMask: model.titleMask | 0x00020000 };
         // render action
         this.load(this.mModel.displayInfo)
             .then(() => this.mElementManager.roomService.game.peer.render.setModel(obj))

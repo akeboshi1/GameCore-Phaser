@@ -86,14 +86,14 @@ export class PicaOnlineMediator extends BasicMediator {
     private on_Another_Info(content: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_ANOTHER_PLAYER_INFO) {
         if (this.panelInit) {
             const uimanager = this.game.uiManager;
-            uimanager.showMed(ModuleName.CHARACTERINFO_NAME, content);
+            uimanager.showMed(ModuleName.PICAPLAYERINFO_NAME, content);
             this.hide();
         }
     }
     private onOpeningCharacterHandler(id: string) {
         if (id === this.game.user.userData.cid) {
             const uimanager = this.game.uiManager;
-            uimanager.showMed(ModuleName.CHARACTERINFO_NAME);
+            uimanager.showMed(ModuleName.PICAPLAYERINFO_NAME);
             this.mModel.fetchPlayerInfo();
         } else {
             this.mModel.fetchAnotherInfo(id);
