@@ -89,9 +89,6 @@ export class Launcher {
             Object.assign(this.mConfig, config);
         }
 
-        this.mConfig.gameLoaded = () => {
-            Logger.getInstance().log("gameLoaded ===>");
-        };
         this.intervalId = setInterval(() => {
             // const xhr = new XMLHttpRequest(); // TODO
             // xhr.open("GET", "./package.json", true);
