@@ -23,6 +23,7 @@ import {Sprite} from "baseModel";
 import {BlockObject} from "../block/block.object";
 import IActor = op_client.IActor;
 import NodeType = op_def.NodeType;
+import {BaseDataConfigManager} from "picaWorker";
 
 export interface SpriteAddCompletedListener {
     onFullPacketReceived(sprite_t: op_def.NodeType): void;
@@ -649,7 +650,8 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
         // switch ui
         this.game.uiManager.hideMed(ModuleName.PICANEWMAIN_NAME);
         this.game.uiManager.hideMed(ModuleName.BOTTOM);
-        this.game.uiManager.showMed(ModuleName.PICADECORATE_NAME);
+        this.game.uiManager.showMed(ModuleName.PICADECORATE_NAME,
+            {closeAlertText: (<BaseDataConfigManager>this.game.configManager).getI18n("PKT_SYS0000021")});
 
         // switch motion
         this.game.renderPeer.switchDecorateMouseManager();

@@ -1,8 +1,8 @@
 import {AlertView, BasePanel, UiManager} from "gamecoreRender";
 import {ModuleName, RENDER_PEER} from "structure";
 import {UIAtlasName} from "picaRes";
-import {Button, Text} from "apowophaserui";
-import {Font, i18n} from "utils";
+import {Button, ClickEvent, Text} from "apowophaserui";
+import {Font, i18n, LogicPos} from "utils";
 import {op_gameconfig} from "pixelpai_proto";
 import {ItemButton} from "../Components/Item.button";
 import {ICountablePackageItem} from "picaStructure";
@@ -60,7 +60,7 @@ export class PicaDecoratePanel extends PicaBasePanel {
 
         if (this.mBtn_SelectedFurniture === null) {
             this.mBtn_SelectedFurniture = new ItemButton(this.scene, UIAtlasName.effectcommon, "synthetic_icon_bg", this.dpr, this.scale, false);
-            this.mBtn_SelectedFurniture.x = 10 * this.dpr;
+            this.mBtn_SelectedFurniture.x = 10 * this.dpr + this.mBtn_SelectedFurniture.width * 0.5;
             const h = this.scene.cameras.main.height;
             this.mBtn_SelectedFurniture.y = h - 14 * this.dpr;
             this.add(this.mBtn_SelectedFurniture);
@@ -103,12 +103,16 @@ export class PicaDecoratePanel extends PicaBasePanel {
         let i = 0;
         for (const item of datas) {
             const quickBtn = new ItemButton(this.scene, UIAtlasName.uicommon, "bag_icon_common_bg", this.dpr, this.scale, false);
-            quickBtn.x = 120 * this.dpr + 80 * this.dpr * i;
-            quickBtn.y = h - 60 * this.dpr - 30 * this.dpr;
-            quickBtn.setData({item});
-            quickBtn.setItemData(item);
+            quickBtn.countTextColor = "#ffffff";
+            quickBtn.countTextOffset = new LogicPos(quickBtn.width * 0.5 - 12 * this.dpr, quickBtn.height * 0.5 - 10 * this.dpr);
+            quickBtn.BGVisible = false;
+            quickBtn.x = 80 * this.dpr + 60 * this.dpr * i;
+            quickBtn.y = h - 60 * this.dpr - quickBtn.height * 0.5;
+            item.grade = 0;
+            quickBtn.setItemData(item, true);
             quickBtn.enable = item.count > 0;
-            quickBtn.on("pointerup", () => {
+            quickBtn.off(ClickEvent.Tap, null, this);
+            quickBtn.on(ClickEvent.Tap, () => {
                 this.onFurnitureClick(item.id);
             }, this);
             this.mBtns_QuickSelectFurniture.push(quickBtn);
@@ -151,14 +155,21 @@ export class PicaDecoratePanel extends PicaBasePanel {
         bg2.fillRect(0, 0, w, bg2Height);
         bg2.y = bg1.y - 4 * this.dpr - bg2Height;
         this.mBtn_RemoveAll = new Button(this.scene, this.key, "room_decorate_delete.png", "room_decorate_delete.png");
-        this.mBtn_RemoveAll.x = 40 * this.dpr;
+        this.mBtn_RemoveAll.x = 10 * this.dpr + this.mBtn_RemoveAll.width * 0.5;
         this.mBtn_RemoveAll.y = bg2.y - bg2Height * 0.5;
         this.mBtn_Reverse = new Button(this.scene, this.key, "room_decorate_withdraw.png", "room_decorate_withdraw.png");
-        this.mBtn_Reverse.x = this.mBtn_RemoveAll.x + 40 * this.dpr + this.mBtn_Reverse.width * 0.5;
+        this.mBtn_Reverse.x = this.mBtn_RemoveAll.x + this.mBtn_RemoveAll.width * 0.5 + 10 * this.dpr + this.mBtn_Reverse.width * 0.5;
         this.mBtn_Reverse.y = bg2.y - bg2Height * 0.5;
-        this.mBtn_Bag = new Button(this.scene, this.key, "room_decorate_Furniture.png", "room_decorate_Furniture.png");
-        this.mBtn_Bag.x = w - this.mBtn_Bag.width - 20 * this.dpr;
+        this.mBtn_Bag = new Button(this.scene, this.key, "room_decorate_Furniture.png", "room_decorate_Furniture.png",
+            i18n.t("furni_bag.furni"));
+        this.mBtn_Bag.x = w - this.mBtn_Bag.width - 10 * this.dpr;
         this.mBtn_Bag.y = bg2.y - bg2Height * 0.5;
+        this.mBtn_Bag.setTextStyle({
+            color: "#ffffff",
+            fontFamily: Font.DEFULT_FONT,
+            fontSize: 13 * this.dpr
+        });
+        this.mBtn_Bag.setTextOffset(9 * this.dpr, 0);
         this.add([this.mBtn_RemoveAll, this.mBtn_Reverse, this.mBtn_Bag]);
 
         super.init();
@@ -171,8 +182,7 @@ export class PicaDecoratePanel extends PicaBasePanel {
     private btnHandler_Close() {
         const alertView = new AlertView(this.uiManager);
         alertView.show({
-            // TODO: set i18n
-            text: i18n.t("party.sendgifttips"),
+            text: this.mShowData.closeAlertText || "no data of PKT_SYS0000021",
             oy: 302 * this.dpr * this.render.uiScale,
             callback: () => {
                 this.mediator.btnHandler_Close();
