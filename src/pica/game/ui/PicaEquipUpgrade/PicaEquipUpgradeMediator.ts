@@ -15,8 +15,8 @@ export class PicaEquipUpgradeMediator extends BasicMediator {
         this.game.emitter.on(ModuleName.PICAEQUIPUPGRADE_NAME + "_hide", this.onHidePanel, this);
         this.game.emitter.on(ModuleName.PICAEQUIPUPGRADE_NAME + "_reqActive", this.onReqActiveEquipment, this);
         this.game.emitter.on(ModuleName.PICAEQUIPUPGRADE_NAME + "_reqEquiped", this.onReqEquipedEquipment, this);
-        this.game.emitter.on("activeEquip", this.onActiveEquipment, this);
-        this.game.emitter.on("showopen", this.onShowEquipPanel, this);
+        this.game.emitter.on(ModuleName.PICAEQUIPUPGRADE_NAME + "_retactiveEquip", this.onActiveEquipment, this);
+       // this.game.emitter.on(ModuleName.PICAEQUIPUPGRADE_NAME + "_retshowopen", this.onShowEquipPanel, this);
     }
 
     hide() {
@@ -24,8 +24,8 @@ export class PicaEquipUpgradeMediator extends BasicMediator {
         this.game.emitter.off(ModuleName.PICAEQUIPUPGRADE_NAME + "_hide", this.onHidePanel, this);
         this.game.emitter.off(ModuleName.PICAEQUIPUPGRADE_NAME + "_reqActive", this.onReqActiveEquipment, this);
         this.game.emitter.off(ModuleName.PICAEQUIPUPGRADE_NAME + "_reqEquiped", this.onReqEquipedEquipment, this);
-        this.game.emitter.off("activeEquip", this.onActiveEquipment, this);
-        this.game.emitter.off("showopen", this.onShowEquipPanel, this);
+        this.game.emitter.off(ModuleName.PICAEQUIPUPGRADE_NAME + "_retactiveEquip", this.onActiveEquipment, this);
+       // this.game.emitter.off(ModuleName.PICAEQUIPUPGRADE_NAME + "_retshowopen", this.onShowEquipPanel, this);
     }
 
     destroy() {

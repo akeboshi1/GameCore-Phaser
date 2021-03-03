@@ -2,6 +2,7 @@ import { BasicModel, Game } from "gamecore";
 import { ConnectionService } from "lib/net/connection.service";
 import { PBpacket } from "net-socket-packet";
 import { op_client, op_virtual_world } from "pixelpai_proto";
+import { ModuleName } from "structure";
 
 export class PicaEquipUpgrade extends BasicModel {
     constructor(game: Game) {
@@ -13,7 +14,7 @@ export class PicaEquipUpgrade extends BasicModel {
         if (connection) {
             this.connection.addPacketListener(this);
             this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_MINING_MODE_ACTIVE_EQUIPMENT, this.onActiveEquipmend);
-            this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_MINING_MODE_SHOW_SELECT_EQUIPMENT_PANEL, this.openEquipUpgrade);
+            // this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_MINING_MODE_SHOW_SELECT_EQUIPMENT_PANEL, this.openEquipUpgrade);
         }
     }
 
@@ -51,11 +52,11 @@ export class PicaEquipUpgrade extends BasicModel {
 
     private onActiveEquipmend(packge: PBpacket) {
         const content: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_MINING_MODE_ACTIVE_EQUIPMENT = packge.content;
-        this.event.emit("activeEquip", content.mineEquipment);
+        this.event.emit(ModuleName.PICAEQUIPUPGRADE_NAME + "_retactiveEquip", content.mineEquipment);
     }
     private openEquipUpgrade(packge: PBpacket) {
         const content: op_client.OP_VIRTUAL_WORLD_REQ_CLIENT_MINING_MODE_SHOW_SELECT_EQUIPMENT_PANEL = packge.content;
-        this.event.emit("showopen", content);
+        this.event.emit(ModuleName.PICAEQUIPUPGRADE_NAME + "_retshowopen", content);
     }
 
 }
