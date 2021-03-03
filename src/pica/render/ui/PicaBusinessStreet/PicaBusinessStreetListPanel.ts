@@ -238,7 +238,7 @@ export class PicaBusinessStreetListPanel extends Phaser.GameObjects.Container {
     }
 
     private onRankHandler() {
-       // if (this.rankHandler) this.rankHandler.run();
+        if (this.rankHandler) this.rankHandler.run();
     }
 
     private onBackHandler() {
