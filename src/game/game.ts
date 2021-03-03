@@ -479,7 +479,7 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
         if (account && account.gameId) {
             game_id = account.gameId;
             virtualWorldUuid = account.virtualWorldId;
-            sceneId = account.sceneId;
+            sceneId = account.sceneID;
             loc = account.loc;
         }
         content.virtualWorldUuid = virtualWorldUuid;
