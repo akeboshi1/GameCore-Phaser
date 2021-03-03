@@ -58,11 +58,14 @@ export class PicaDecoratePanel extends PicaBasePanel {
             return;
         }
 
-        if (this.mBtn_SelectedFurniture === null) {
-            this.mBtn_SelectedFurniture = new ItemButton(this.scene, UIAtlasName.effectcommon, "synthetic_icon_bg", this.dpr, this.scale, false);
-            this.mBtn_SelectedFurniture.x = 10 * this.dpr + this.mBtn_SelectedFurniture.width * 0.5;
+        if (!this.mBtn_SelectedFurniture) {
+            this.mBtn_SelectedFurniture = new ItemButton(this.scene, UIAtlasName.uicommon, "bag_icon_common_bg", this.dpr, this.scale, false);
+            this.mBtn_SelectedFurniture.countTextColor = "#ffffff";
+            this.mBtn_SelectedFurniture.countTextOffset = new LogicPos(this.mBtn_SelectedFurniture.width * 0.5 - 12 * this.dpr, this.mBtn_SelectedFurniture.height * 0.5 - 10 * this.dpr);
+            this.mBtn_SelectedFurniture.BGVisible = false;
+            this.mBtn_SelectedFurniture.x = 30 * this.dpr;
             const h = this.scene.cameras.main.height;
-            this.mBtn_SelectedFurniture.y = h - 14 * this.dpr;
+            this.mBtn_SelectedFurniture.y = h - 60 * this.dpr - this.mBtn_SelectedFurniture.height * 0.5;
             this.add(this.mBtn_SelectedFurniture);
         }
         const onClick = () => {
@@ -70,7 +73,7 @@ export class PicaDecoratePanel extends PicaBasePanel {
         };
         this.mBtn_SelectedFurniture.off("pointerup");
         this.mBtn_SelectedFurniture.on("pointerup", onClick, this);
-        this.mBtn_SelectedFurniture.setData({data});
+        data.grade = 0;
         this.mBtn_SelectedFurniture.setItemData(data, true);
         this.mBtn_SelectedFurniture.enable = data.count > 0;
     }
@@ -80,7 +83,6 @@ export class PicaDecoratePanel extends PicaBasePanel {
             if (this.mBtn_SelectedFurniture.itemData.id === baseID) {
                 const data = this.mBtn_SelectedFurniture.itemData;
                 data.count = count;
-                this.mBtn_SelectedFurniture.setData({data});
                 this.mBtn_SelectedFurniture.setItemData(data, true);
                 this.mBtn_SelectedFurniture.enable = data.count > 0;
             }
@@ -89,7 +91,6 @@ export class PicaDecoratePanel extends PicaBasePanel {
             if (btn.itemData.id === baseID) {
                 const data = btn.itemData;
                 data.count = count;
-                btn.setData({data});
                 btn.setItemData(data, true);
                 btn.enable = data.count > 0;
             }
@@ -106,7 +107,7 @@ export class PicaDecoratePanel extends PicaBasePanel {
             quickBtn.countTextColor = "#ffffff";
             quickBtn.countTextOffset = new LogicPos(quickBtn.width * 0.5 - 12 * this.dpr, quickBtn.height * 0.5 - 10 * this.dpr);
             quickBtn.BGVisible = false;
-            quickBtn.x = 80 * this.dpr + 60 * this.dpr * i;
+            quickBtn.x = 90 * this.dpr + 55 * this.dpr * i;
             quickBtn.y = h - 60 * this.dpr - quickBtn.height * 0.5;
             item.grade = 0;
             quickBtn.setItemData(item, true);

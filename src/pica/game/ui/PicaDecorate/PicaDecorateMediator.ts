@@ -1,8 +1,9 @@
 import {BasicMediator, DecorateManager, Game} from "gamecore";
 import {MessageType, ModuleName} from "structure";
 import {Logger} from "utils";
-import {op_def, op_pkt_def} from "pixelpai_proto";
+import {op_client, op_def, op_pkt_def} from "pixelpai_proto";
 import PKT_PackageType = op_pkt_def.PKT_PackageType;
+import {BaseDataConfigManager} from "../../data/base.data.config.manager";
 
 export class PicaDecorateMediator extends BasicMediator {
 
@@ -65,11 +66,17 @@ export class PicaDecorateMediator extends BasicMediator {
     public updateSelectedFurniture(baseID: string) {
         if (!this.bagData) return;
 
-        const data = this.bagData.getItem(PKT_PackageType.FurniturePackage, baseID);
-        if (!data) {
-            Logger.getInstance().warn("select furniture without data, baseID: ", baseID);
+        const count = this.mDecorateManager.getBagCount(baseID);
+        const bagData = this.bagData.getItem(PKT_PackageType.FurniturePackage, baseID);
+        if (bagData) {
+            bagData.count = count;
+            this.mView.setSelectedFurniture(bagData);
+        } else {
+            const configMgr = <BaseDataConfigManager>this.game.configManager;
+            const configItem = configMgr.getItemBase(baseID);
+            configItem.count = count;
+            this.mView.setSelectedFurniture(configItem);
         }
-        this.mView.setSelectedFurniture(data);
     }
     public updateFurnitureCount(baseID: string, count: number) {
         this.mView.updateFurnitureCount(baseID, count);
