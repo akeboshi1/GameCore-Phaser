@@ -654,7 +654,7 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
         this.game.uiManager.showMed(ModuleName.PICADECORATE_NAME,
             {closeAlertText: (<BaseDataConfigManager>this.game.configManager).getI18n("PKT_SYS0000021")});
 
-        // switch motion
+        // switch mouse manager
         this.game.renderPeer.switchDecorateMouseManager();
     }
 
@@ -685,7 +685,7 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
         this.game.uiManager.showMed(ModuleName.PICANEWMAIN_NAME);
         this.game.uiManager.showMed(ModuleName.BOTTOM);
 
-        // switch motion
+        // switch mouse manager
         this.game.renderPeer.switchBaseMouseManager();
 
         // destroy decorate manager

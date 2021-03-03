@@ -347,51 +347,59 @@ export class DecorateManager {
     }
 
     private combineActions(actions: DecorateAction[]): Map<ISprite, DecorateAction[]> {
-        const changes: Map<ISprite, { moveVec: LogicPos, rotateTimes: number, active?: boolean, pos?: LogicPos }> = new Map();
-        for (const action of actions) {
-            if (!changes.has(action.target)) {
-                changes.set(action.target, {moveVec: new LogicPos(0, 0), rotateTimes: 0});
-            }
-            switch (action.type) {
-                case DecorateActionType.Add:
-                    if (action.data.pos !== undefined) {
-                        changes.get(action.target).active = true;
-                        changes.get(action.target).pos = new LogicPos(action.data.pos.x, action.data.pos.y);
-                    }
-                    break;
-                case DecorateActionType.Remove:
-                    if (action.data.pos !== undefined) {
-                        changes.get(action.target).active = false;
-                        changes.get(action.target).pos = new LogicPos(action.data.pos.x, action.data.pos.y);
-                    }
-                    break;
-                case DecorateActionType.Move:
-                    if (action.data.moveVec !== undefined)
-                        changes.get(action.target).moveVec.add(action.data.moveVec.x, action.data.moveVec.y);
-                    break;
-                case DecorateActionType.Add:
-                    if (action.data.rotateTimes)
-                        changes.get(action.target).rotateTimes += action.data.rotateTimes;
-                    break;
-            }
-        }
+        // const changes: Map<ISprite, { moveVec: LogicPos, rotateTimes: number, active?: boolean, pos?: LogicPos }> = new Map();
+        // for (const action of actions) {
+        //     if (!changes.has(action.target)) {
+        //         changes.set(action.target, {moveVec: new LogicPos(0, 0), rotateTimes: 0});
+        //     }
+        //     switch (action.type) {
+        //         case DecorateActionType.Add:
+        //             if (action.data.pos !== undefined) {
+        //                 changes.get(action.target).active = true;
+        //                 changes.get(action.target).pos = new LogicPos(action.data.pos.x, action.data.pos.y);
+        //             }
+        //             break;
+        //         case DecorateActionType.Remove:
+        //             if (action.data.pos !== undefined) {
+        //                 changes.get(action.target).active = false;
+        //                 changes.get(action.target).pos = new LogicPos(action.data.pos.x, action.data.pos.y);
+        //             }
+        //             break;
+        //         case DecorateActionType.Move:
+        //             if (action.data.moveVec !== undefined)
+        //                 changes.get(action.target).moveVec.add(action.data.moveVec.x, action.data.moveVec.y);
+        //             break;
+        //         case DecorateActionType.Add:
+        //             if (action.data.rotateTimes)
+        //                 changes.get(action.target).rotateTimes += action.data.rotateTimes;
+        //             break;
+        //     }
+        // }
+        // const result: Map<ISprite, DecorateAction[]> = new Map<ISprite, DecorateAction[]>();
+        // changes.forEach((deltaData, sprite) => {
+        //     const acts: DecorateAction[] = [];
+        //     result.set(sprite, acts);
+        //     if (deltaData.active !== undefined && deltaData.active === false) {
+        //         acts.push(new DecorateAction(sprite, DecorateActionType.Remove, new DecorateActionData({pos: deltaData.pos})));
+        //     }
+        //     if (deltaData.moveVec !== new LogicPos(0, 0)) {
+        //         acts.push(new DecorateAction(sprite, DecorateActionType.Move, new DecorateActionData({moveVec: deltaData.moveVec})));
+        //     }
+        //     if (deltaData.rotateTimes > 0) {
+        //         acts.push(new DecorateAction(sprite, DecorateActionType.Rotate, new DecorateActionData({rotateTimes: deltaData.rotateTimes})));
+        //     }
+        //     if (deltaData.active !== undefined && deltaData.active === true) {
+        //         acts.push(new DecorateAction(sprite, DecorateActionType.Add, new DecorateActionData({pos: deltaData.pos})));
+        //     }
+        // });
+        // return result;
         const result: Map<ISprite, DecorateAction[]> = new Map<ISprite, DecorateAction[]>();
-        changes.forEach((deltaData, sprite) => {
-            const acts: DecorateAction[] = [];
-            result.set(sprite, acts);
-            if (deltaData.active !== undefined && deltaData.active === false) {
-                acts.push(new DecorateAction(sprite, DecorateActionType.Remove, new DecorateActionData({pos: deltaData.pos})));
+        for (const action of actions) {
+            if (!result.has(action.target)) {
+                result.set(action.target, []);
             }
-            if (deltaData.moveVec !== new LogicPos(0, 0)) {
-                acts.push(new DecorateAction(sprite, DecorateActionType.Move, new DecorateActionData({moveVec: deltaData.moveVec})));
-            }
-            if (deltaData.rotateTimes > 0) {
-                acts.push(new DecorateAction(sprite, DecorateActionType.Rotate, new DecorateActionData({rotateTimes: deltaData.rotateTimes})));
-            }
-            if (deltaData.active !== undefined && deltaData.active === true) {
-                acts.push(new DecorateAction(sprite, DecorateActionType.Add, new DecorateActionData({pos: deltaData.pos})));
-            }
-        });
+            result.get(action.target).push(action);
+        }
         return result;
     }
 }
