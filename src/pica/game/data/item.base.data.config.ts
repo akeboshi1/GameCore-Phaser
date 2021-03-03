@@ -1,14 +1,26 @@
-import { BaseConfigData } from "gamecore";
-import { ICountablePackageItem } from "picaStructure";
+import {BaseConfigData} from "gamecore";
+import {ICountablePackageItem} from "picaStructure";
 
 export class ItemBaseDataConfig extends BaseConfigData {
     excludes = ["count"];
-    public get(id: string): ICountablePackageItem {
+    snMap: Map<string, ICountablePackageItem>;
+
+    public getByID(id: string): ICountablePackageItem {
         if (this.hasOwnProperty(id)) {
             return this[id];
         } else {
             // tslint:disable-next-line:no-console
-            console.error(`道具表未配置ID为:${id}的道具数据`);
+            // console.error(`道具表未配置ID为:${id}的道具数据`);
+            return undefined;
+        }
+    }
+
+    public getBySN(sn: string): ICountablePackageItem {
+        if (this.snMap.has(sn)) {
+            return this.snMap.get(sn);
+        } else {
+            // tslint:disable-next-line:no-console
+            // console.error(`道具表未配置sn为:${sn}的道具数据`);
             return undefined;
         }
     }
@@ -19,11 +31,18 @@ export class ItemBaseDataConfig extends BaseConfigData {
         else if (id === "IV0000002")
             return 4;
     }
-    // parseJson(json) {
-    //     super.parseJson(json);
-    //     this.consoleCategoryJson();
-    //     this.consoleClassNameJson();
-    // }
+
+    parseJson(json) {
+        super.parseJson(json);
+        // this.consoleCategoryJson();
+        // this.consoleClassNameJson();
+        if (!this.snMap) this.snMap = new Map<string, ICountablePackageItem>();
+        for (const jsonKey in json) {
+            const data = json[jsonKey];
+            this.snMap.set(data.sn, data);
+        }
+
+    }
 
     private consoleCategoryJson() {
         const map = new Map();

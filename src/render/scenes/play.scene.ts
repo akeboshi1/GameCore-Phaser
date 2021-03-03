@@ -5,7 +5,7 @@ import { MainUIScene } from "./main.ui.scene";
 import { RoomScene } from "./room.scene";
 import { Size } from "src/utils/size";
 import { PlaySceneLoadState, SceneName } from "structure";
-import { MotionManager } from "../input/motion.manager";
+import {MotionManager} from "../input/motion.manager";
 import { LayerEnum } from "game-capsule";
 
 // 游戏正式运行用 Phaser.Scene
@@ -19,7 +19,7 @@ export class PlayScene extends RoomScene {
     public static LAYER_WALL = LayerEnum.Wall.toString();
     public static LAYER_ATMOSPHERE = "atmosphere";
     public static LAYER_SCENEUI = "sceneUILayer";
-    protected motionManager: MotionManager;
+    protected motion: MotionManager;
     protected mLoadState: PlaySceneLoadState;
 
     constructor(config?: string | Phaser.Types.Scenes.SettingsConfig) {
@@ -32,7 +32,7 @@ export class PlayScene extends RoomScene {
     }
 
     get motionMgr(): MotionManager {
-        return this.motionManager;
+        return this.motion;
     }
 
     public create() {
@@ -66,7 +66,7 @@ export class PlayScene extends RoomScene {
 
         // ======= render startPlay
         this.render.sceneManager.setMainScene(this);
-        this.initInput();
+        this.initMotion();
         this.render.camerasManager.startRoomPlay(this);
 
         // this.onLoadCompleteHandler();
@@ -94,7 +94,7 @@ export class PlayScene extends RoomScene {
     update(time: number, delta: number) {
         this.render.updateRoom(time, delta);
         this.layerManager.update(time, delta);
-        if (this.motionManager) this.motionManager.update(time, delta);
+        if (this.motion) this.motion.update(time, delta);
     }
 
     // setViewPort(x: number, y: number, width: number, height: number) {
@@ -123,9 +123,17 @@ export class PlayScene extends RoomScene {
         this.loadState = PlaySceneLoadState.LOAD_COMPOLETE;
     }
 
-    protected initInput() {
-        this.motionManager = new MotionManager(this.render);
-        this.motionManager.setScene(this);
+    public pauseMotion() {
+        if (this.motion) this.motion.pauser();
+    }
+
+    public resumeMotion() {
+        if (this.motion) this.motion.resume();
+    }
+
+    protected initMotion() {
+        this.motion = new MotionManager(this.render);
+        this.motion.setScene(this);
     }
 
     protected initListener() {

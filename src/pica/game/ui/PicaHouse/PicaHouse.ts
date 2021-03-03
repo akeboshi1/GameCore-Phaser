@@ -33,11 +33,6 @@ export class PicaHouse extends BasicModel {
             return this.game.connection;
         }
     }
-    sendEnterDecorate() {
-        if (this.connection) {
-            this.connection.send(new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_EDIT_MODE_ENTER));
-        }
-    }
 
     queryRoomInfo(roomid) {
         const packet = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_EDIT_MODE_GET_ROOM_INFO);

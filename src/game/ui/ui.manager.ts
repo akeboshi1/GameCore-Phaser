@@ -1,11 +1,11 @@
-import { PacketHandler, PBpacket } from "net-socket-packet";
-import { BaseDataConfigManager } from "picaWorker";
-import { op_client, op_pkt_def } from "pixelpai_proto";
-import { EventType, ModuleName } from "structure";
-import { Size } from "utils";
-import { Game } from "../game";
-import { BasicMediator, UIType } from "./basic/basic.mediator";
-import { UILayoutType, UIMediatorType } from "./ui.mediator.type";
+import {PacketHandler, PBpacket} from "net-socket-packet";
+import {op_client, op_pkt_def} from "pixelpai_proto";
+import {EventType, ModuleName} from "structure";
+import {i18n, Size} from "utils";
+import {Game} from "../game";
+import {BasicMediator, UIType} from "./basic/basic.mediator";
+import {UILayoutType, UIMediatorType} from "./ui.mediator.type";
+import {BaseDataConfigManager} from "picaWorker";
 
 export class UIManager extends PacketHandler {
     protected mMedMap: Map<UIMediatorType, BasicMediator>;
@@ -90,13 +90,13 @@ export class UIManager extends PacketHandler {
         this.isshowMainui = true;
     }
 
-    public showDecorateUI() {
-        this.mMedMap.forEach((mediator: any) => {
-            if (mediator.isSceneUI() && !mediator.isShow()) {
-                mediator.show();
-            }
-        });
-    }
+    // public showDecorateUI() {
+    //     this.mMedMap.forEach((mediator: any) => {
+    //         if (mediator.isSceneUI() && !mediator.isShow()) {
+    //             mediator.show();
+    //         }
+    //     });
+    // }
 
     public showMed(type: string, param?: any) {
         if (!this.mMedMap) {
@@ -233,7 +233,7 @@ export class UIManager extends PacketHandler {
     }
 
     protected onForceOfflineHandler(packet: PBpacket) {
-        this.game.peer.render.onForceOfflineHandler();
+        this.game.peer.render.showAlert(i18n.t("common.offline"), true);
     }
 
     protected updateUIState(data: op_client.OP_VIRTUAL_WORLD_REQ_CLIENT_PKT_REFRESH_ACTIVE_UI) {
@@ -321,7 +321,7 @@ export class UIManager extends PacketHandler {
         //  this.showMed(ModuleName.CREATEROLE_NAME, packet.content);
         this.game.preloadGameConfig().then(() => {
             const content: op_client.OP_VIRTUAL_WORLD_REQ_CLIENT_PKT_SHOW_CREATE_ROLE_UI = packet.content;
-            const configMgr = <BaseDataConfigManager>this.game.configManager;
+            const configMgr = <BaseDataConfigManager> this.game.configManager;
             configMgr.getBatchItemDatas(content.avatars);
             this.showMed(ModuleName.PICACREATEROLE_NAME, content);
         });
@@ -356,6 +356,7 @@ export class UIManager extends PacketHandler {
         }
 
     }
+
     // ==== about checkUIState
     private checkSceneUImap(show: boolean, medName: string) {
         const layoutType = this.mUILayoutMap.get(medName);
@@ -368,6 +369,7 @@ export class UIManager extends PacketHandler {
             });
         }
     }
+
     private checkNormalUITween(show: boolean, medName: string) {
         const size: Size = this.game.getSize();
         let len: number = this.mShowuiList.length;
@@ -401,11 +403,13 @@ export class UIManager extends PacketHandler {
             this.mShowuiList.splice(index, 1);
         }
     }
+
     private checkBaseUImap(show: boolean) {
         this.mSceneUIMap.forEach((med) => {
             if (med) med.tweenExpand(show);
         });
     }
+
     private checkNormalUImap(show: boolean) {
         this.mNormalUIMap.forEach((med) => {
             if (med) {
@@ -418,6 +422,7 @@ export class UIManager extends PacketHandler {
         });
         if (!show) this.mNormalUIMap.clear();
     }
+
     private chekcTipUImap(show: boolean) {
         this.mTipUIMap.forEach((med) => {
             if (med) {
@@ -430,6 +435,7 @@ export class UIManager extends PacketHandler {
         });
         if (!show) this.mNormalUIMap.clear();
     }
+
     private initUILayoutType() {
         this.mUILayoutMap.set(ModuleName.PICACHAT_NAME, UILayoutType.Bottom);
         this.mUILayoutMap.set(ModuleName.PICANAVIGATE_NAME, UILayoutType.Bottom);

@@ -8,6 +8,7 @@ export interface IBaseDisplay {
     x: number;
     y: number;
     z: number;
+    visible: boolean;
 
     load(data: IDragonbonesModel | IFramesModel, field?: DisplayField): Promise<any>;
 
