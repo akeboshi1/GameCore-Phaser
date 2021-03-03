@@ -9,7 +9,7 @@ import {
     ISprite,
     PlayerState
 } from "structure";
-import {DirectionChecker, IPos, IProjection, Logger, LogicPoint, LogicPos, Tool} from "utils";
+import { DirectionChecker, IPos, IProjection, Logger, LogicPoint, LogicPos, Tool } from "utils";
 import { BlockObject } from "../block/block.object";
 import { IRoomService } from "../room/room";
 import { ElementManager, IElementManager } from "./element.manager";
@@ -202,6 +202,8 @@ export class Element extends BlockObject implements IElement {
         if (!model) {
             return;
         }
+        (<any>model).off("Animation_Change", this.animationChanged, this);
+        (<any>model).on("Animation_Change", this.animationChanged, this);
         if (!model.layer) {
             model.layer = LayerEnum.Surface;
         }
@@ -212,9 +214,10 @@ export class Element extends BlockObject implements IElement {
             this.setPosition(this.mModel.pos);
         }
         const area = model.getCollisionArea();
+        const obj = { id: model.id, pos: model.pos, alpha: model.alpha, titleMask: model.titleMask | 0x00020000 };
         // render action
         this.load(this.mModel.displayInfo)
-            .then(() => this.mElementManager.roomService.game.peer.render.setModel(model))
+            .then(() => this.mElementManager.roomService.game.peer.render.setModel(obj))
             .then(() => {
                 this.showNickname();
                 this.setDirection(this.mModel.direction);
@@ -228,7 +231,16 @@ export class Element extends BlockObject implements IElement {
                 return this.setRenderable(true);
             });
         // physic action
-        this.mRoomService.game.peer.physicalPeer.setModel(model)
+        const obj1 = {
+            id: model.id,
+            point3f: model.pos,
+            currentAnimationName: model.currentAnimationName,
+            direction: model.direction,
+            mountSprites: model.mountSprites,
+            speed: model.speed,
+            displayInfo: model.displayInfo
+        };
+        this.mRoomService.game.peer.physicalPeer.setModel(obj1)
             .then(() => {
                 if (this.mRenderable) {
                     if (model.nodeType !== op_def.NodeType.CharacterNodeType) this.mRoomService.game.physicalPeer.addBody(this.id);
@@ -949,6 +961,11 @@ export class Element extends BlockObject implements IElement {
             case "Task":
                 break;
         }
+    }
+
+    protected animationChanged(data: any) {
+        // { id: this.id, direction: this.direction }
+        this.mElementManager.roomService.game.renderPeer.displayAnimationChange(data);
     }
 }
 

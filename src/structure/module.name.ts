@@ -1,6 +1,7 @@
 export class ModuleName {
     public static DIALOG_NAME: string = "Dialog";
     public static PICAHANDHELD_NAME: string = "PicaHandheld";
+    // deprecated
     public static PICAMAINUI_NAME: string = "PicaMainUI";
     public static PICACHAT_NAME: string = "PicaChat";
     public static CHAT_NAME: string = "Chat";

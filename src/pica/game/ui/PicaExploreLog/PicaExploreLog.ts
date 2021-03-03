@@ -17,6 +17,7 @@ export class PicaExploreLog extends BasicModel {
             this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_PKT_QUERY_CHAPTER_RESULT, this.onQUERY_CHAPTER_RESULT);
             this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_PKT_EXPLORE_SUMMARY, this.onEXPLORE_SUMMARY);
             this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_PKT_EXPLORE_SHOW_COUNTDOWN, this.onSHOW_COUNTDOWN);
+            this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_PKT_ROOM_SHOW_GUIDE_TEXT, this.onSHOW_GUIDE_TEXT);
         }
     }
 
@@ -69,5 +70,10 @@ export class PicaExploreLog extends BasicModel {
     private onSHOW_COUNTDOWN(packge: PBpacket) {
         const content: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_EXPLORE_SHOW_COUNTDOWN = packge.content;
         this.event.emit(ModuleName.PICAEXPLORELOG_NAME + "_retexplorecountdown", content);
+    }
+
+    private onSHOW_GUIDE_TEXT(packge: PBpacket) {
+        const content: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_ROOM_SHOW_GUIDE_TEXT = packge.content;
+        this.event.emit(ModuleName.PICAEXPLORELOG_NAME + "_retguidetext", content);
     }
 }

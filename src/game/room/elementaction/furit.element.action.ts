@@ -1,4 +1,4 @@
-import { EventType } from "structure";
+import { EventType, ModuleName } from "structure";
 import { ElementBaseAction } from "./element.base.action";
 
 export class FuritElementAction extends ElementBaseAction {
@@ -6,7 +6,7 @@ export class FuritElementAction extends ElementBaseAction {
     public executeAction() {
         const tag = this.getActionData();
         if (tag === "FROZEN") {
-            const uiName = "PicaFurniFun";
+            const uiName = ModuleName.PICAFURNIFUN_NAME;
             this.game.emitter.emit(EventType.SCENE_SHOW_UI, uiName, this.data);
         }
     }

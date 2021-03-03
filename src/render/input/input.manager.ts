@@ -32,4 +32,10 @@ export class InputManager {
         if (this.mMouseManager) this.mMouseManager.destroy();
         if (this.mJoystickManager) this.mJoystickManager.destroy();
     }
+
+    public changeMouseManager(mng: MouseManager) {
+        if (this.mMouseManager) this.mMouseManager.destroy();
+        this.mMouseManager = mng;
+        if (this.mScene) this.mMouseManager.changeScene(this.mScene);
+    }
 }

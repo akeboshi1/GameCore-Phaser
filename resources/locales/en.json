@@ -404,7 +404,8 @@
     "eventuallytips": "Eventually",
     "finish": "Finish",
     "exit": "Exit",
-    "exittips": "Whether to exit the exploration level"
+    "exittips": "Whether to exit the exploration level",
+    "exploretask": "Objective"
   },
   "effecttips": {
     "unlock": "New feature unlock :{{name}}"

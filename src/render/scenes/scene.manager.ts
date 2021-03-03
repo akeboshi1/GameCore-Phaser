@@ -11,7 +11,6 @@ import { LoginScene } from "./login.scene";
 import { MainUIScene } from "./main.ui.scene";
 import { PlayScene } from "./play.scene";
 import { RoomScene } from "./room.scene";
-import { DecorateScene } from "./decorate.scene";
 import { SelectRoleScene } from "./select.role.scene";
 
 export class SceneManager extends BaseSceneManager {
@@ -260,8 +259,7 @@ export class SceneManager extends BaseSceneManager {
             "PlayScene": PlayScene,
             "RoomScene": RoomScene,
             "SelectRoleScene": SelectRoleScene,
-            "SkyBoxScene": SkyBoxScene,
-            "DecorateScene": DecorateScene
+            "SkyBoxScene": SkyBoxScene
         };
     }
 

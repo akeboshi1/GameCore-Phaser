@@ -1,7 +1,7 @@
 import { ButtonEventDispatcher, DynamicImage } from "../../../../render/ui/components";
 import { ClickEvent } from "apowophaserui";
 import { UIAtlasName } from "picaRes";
-import { UIHelper, Url } from "utils";
+import {IPos, UIHelper, Url} from "utils";
 import { PicaItemTipsPanel } from "picaRender";
 import { ICountablePackageItem } from "picaStructure";
 export class ItemButton extends ButtonEventDispatcher {
@@ -88,6 +88,12 @@ export class ItemButton extends ButtonEventDispatcher {
     }
     public set BGVisible(value) {
         this.bg.visible = value;
+    }
+    public set countTextColor(color: string) {
+        this.countTex.style.color = color;
+    }
+    public set countTextOffset(pos: IPos) {
+        this.countTex.setPosition(pos.x, pos.y);
     }
 
     public showTips() {
