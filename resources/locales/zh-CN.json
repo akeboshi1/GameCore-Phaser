@@ -106,7 +106,7 @@
     "followed": "已关注",
     "report": "举报",
     "blockuer": "拉黑",
-    "room":"房间"
+    "room": "房间"
   },
   "compose": {
     "title": "合成",
@@ -407,7 +407,8 @@
     "eventuallytips": "最终关卡",
     "finish": "完成",
     "exit": "退出",
-    "exittips": "是否退出探索关卡"
+    "exittips": "是否退出探索关卡",
+    "exploretask": "任务目标"
   },
   "effecttips": {
     "unlock": "新功能解锁:{{name}}"

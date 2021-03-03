@@ -22,6 +22,7 @@ export class PicaExploreLogMediator extends BasicMediator {
         this.game.emitter.on(ModuleName.PICAEXPLORELOG_NAME + "_retchapterlist", this.onQUERY_CHAPTER_RESULT, this);
         this.game.emitter.on(ModuleName.PICAEXPLORELOG_NAME + "_retexploresettle", this.onEXPLORE_SUMMARY, this);
         this.game.emitter.on(ModuleName.PICAEXPLORELOG_NAME + "_retexplorecountdown", this.onSHOW_COUNTDOWN, this);
+        this.game.emitter.on(ModuleName.PICAEXPLORELOG_NAME + "_retguidetext", this.onSHOW_GUIDE_TEXT, this);
         this.game.emitter.on(EventType.CHAT_PANEL_EXTPAND, this.onTipsLayoutHandler, this);
     }
 
@@ -35,6 +36,7 @@ export class PicaExploreLogMediator extends BasicMediator {
         this.game.emitter.off(ModuleName.PICAEXPLORELOG_NAME + "_retchapterlist", this.onQUERY_CHAPTER_RESULT, this);
         this.game.emitter.off(ModuleName.PICAEXPLORELOG_NAME + "_retexploresettle", this.onEXPLORE_SUMMARY, this);
         this.game.emitter.off(ModuleName.PICAEXPLORELOG_NAME + "_retexplorecountdown", this.onSHOW_COUNTDOWN, this);
+        this.game.emitter.on(ModuleName.PICAEXPLORELOG_NAME + "_retguidetext", this.onSHOW_GUIDE_TEXT, this);
         this.game.emitter.off(EventType.CHAT_PANEL_EXTPAND, this.onTipsLayoutHandler, this);
     }
 
@@ -83,5 +85,8 @@ export class PicaExploreLogMediator extends BasicMediator {
     }
     private onSHOW_COUNTDOWN(content: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_EXPLORE_SHOW_COUNTDOWN) {
         if (this.mView) this.mView.setExploreCountDown(content);
+    }
+    private onSHOW_GUIDE_TEXT(content: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_ROOM_SHOW_GUIDE_TEXT) {
+
     }
 }

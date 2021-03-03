@@ -40,12 +40,18 @@ export class PicaWorkMediator extends BasicMediator {
         super.destroy();
     }
 
+    panelInit() {
+        super.panelInit();
+        if (this.mShowData) {
+            this.on_Work_LIST(this.mShowData);
+        }
+    }
     get playerInfo() {
         if (!this.mPlayerInfo) this.mPlayerInfo = this.game.user.userData.playerProperty;
         return this.mPlayerInfo;
     }
     private query_WORK_LIST() {
-        this.mModel.query_JOB_LIST();
+        if (this.mShowData) this.mModel.query_JOB_LIST();
     }
 
     private query_WORK_ON_JOB(id: string) {
