@@ -9,7 +9,7 @@ import {
     ISprite,
     PlayerState
 } from "structure";
-import {DirectionChecker, IPos, IProjection, Logger, LogicPoint, LogicPos, Tool} from "utils";
+import { DirectionChecker, IPos, IProjection, Logger, LogicPoint, LogicPos, Tool } from "utils";
 import { BlockObject } from "../block/block.object";
 import { IRoomService } from "../room/room";
 import { ElementManager, IElementManager } from "./element.manager";
@@ -238,6 +238,7 @@ export class Element extends BlockObject implements IElement {
             direction: model.direction,
             mountSprites: model.mountSprites,
             speed: model.speed,
+            displayInfo: model.displayInfo
         };
         this.mRoomService.game.peer.physicalPeer.setModel(obj1)
             .then(() => {

@@ -234,6 +234,7 @@ export class User extends Player {
                 direction: val.direction,
                 mountSprites: val.mountSprites,
                 speed: val.speed,
+                displayInfo: this.model.displayInfo
             };
             this.game.physicalPeer.setModel(obj1);
             this.setPosition(this.mModel.pos);
