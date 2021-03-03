@@ -583,7 +583,7 @@ class ChapterLevelEventuallyItem extends ChapterLevelBaseItem {
     }
 
     private onGoClickHandler() {
-        if (this.send) this.send.runWith(this.chapterData);
+        if (this.send && this.unlock) this.send.runWith(this.chapterData);
     }
 
 }

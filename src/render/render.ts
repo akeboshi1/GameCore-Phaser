@@ -948,7 +948,16 @@ export class Render extends RPCPeer implements GameMain, IRender {
     @Export()
     public showAlert(text: string, ok: boolean) {
         // 告诉render显示警告框
-        this.uiManager.showAlertView(text, ok);
+        if (ok === undefined) ok = true;
+        if (this.uiManager) this.uiManager.showAlertView(text, ok);
+    }
+
+    @Export([webworker_rpc.ParamType.str])
+    public showAlertReconnect(text: string) {
+        // 告诉render显示警告框
+        if (this.uiManager) this.uiManager.showAlertView(text, true, false, () => {
+            this.mainPeer.reconnect();
+        });
     }
 
     @Export()
@@ -1020,7 +1029,7 @@ export class Render extends RPCPeer implements GameMain, IRender {
 
     }
 
-    @Export([webworker_rpc.ParamType.str, webworker_rpc.ParamType.str, webworker_rpc.ParamType.num, webworker_rpc.ParamType.num, webworker_rpc.ParamType.num, webworker_rpc.ParamType.num])
+    @Export([webworker_rpc.ParamType.str, webworker_rpc.ParamType.str])
     public createAnotherGame(gameId: string, worldId: string, sceneId?: number, px?: number, py?: number, pz?: number) {
         // this.newGame().then(() => {
         //     // todo sceneManager loginScene.name
@@ -1357,9 +1366,8 @@ export class Render extends RPCPeer implements GameMain, IRender {
         if (target) {
             if (effect === "liner") {
                 if (this.mCacheTarget) {
-                    if (this.mCacheTarget.id === 674096428) {
+                    if (this.mCacheTarget.id === 1441619821) {
                         this.guideManager.startGuide(1, { x: this.mCacheTarget.x, y: this.mCacheTarget.y });
-                    } else if (this.mCacheTarget.id === 1752777777) {
                     }
                     this.mCacheTarget = null;
                 }

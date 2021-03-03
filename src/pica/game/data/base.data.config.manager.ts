@@ -7,7 +7,7 @@ import {
     IExtendCountablePackageItem
 } from "picaStructure";
 import {IMarketCommodity, IShopBase} from "../../../pica/structure/imarketcommodity";
-import {Logger, ObjectAssign, Url} from "utils";
+import {Logger, ObjectAssign, StringUtils} from "utils";
 import {ElementDataConfig} from "./element.data.config";
 import {ExploreDataConfig} from "./explore.data.config";
 import {I18nZHDataConfig} from "./i18nzh.config";
@@ -20,6 +20,7 @@ import {IJob} from "../../../pica/structure/ijob";
 import {CardPoolConfig} from "./cardpool.config";
 import {ICraftSkill} from "src/pica/structure/icraftskill";
 import {SkillConfig} from "./skill.config";
+import {LevelConfig} from "./level.config";
 
 export enum BaseDataType {
     i18n_zh = "i18n_zh",
@@ -179,8 +180,10 @@ export class BaseDataConfigManager extends BaseConfigManager {
             if (data.hasOwnProperty(key)) {
                 const temp = data[key];
                 if (sns.indexOf(temp.sn) !== -1) {
-                    const unlockstri = JSON.stringify(temp.unLockMaterials);
-                    map.set(temp.sn, JSON.parse(unlockstri));
+                    if (!StringUtils.isNullOrUndefined(temp.unLockMaterials)) {
+                        const unlockstri = JSON.stringify(temp.unLockMaterials);
+                        map.set(temp.sn, JSON.parse(unlockstri));
+                    }
                 }
             }
             if (map.size === sns.length) break;
@@ -253,6 +256,9 @@ export class BaseDataConfigManager extends BaseConfigManager {
     }
 
     public getI18n(id: string, tips?: any) {
+        if (!StringUtils.isNullOrUndefined(id)) {
+            id = id.toUpperCase();
+        }
         const data: I18nZHDataConfig = this.getConfig(BaseDataType.i18n_zh);
         return data.text(id, tips);
     }
@@ -353,6 +359,11 @@ export class BaseDataConfigManager extends BaseConfigManager {
         }
     }
 
+    public getLevel(type: string, level: number) {
+        const data: LevelConfig = this.getConfig(BaseDataType.level);
+        return data.get(type, level);
+    }
+
     public getCardPool(id: string) {
         const data: CardPoolConfig = this.getConfig(BaseDataType.cardPool);
         return data.get(id);
@@ -372,7 +383,7 @@ export class BaseDataConfigManager extends BaseConfigManager {
         this.dataMap.set(BaseDataType.job, new JobConfig());
         this.dataMap.set(BaseDataType.cardPool, new CardPoolConfig());
         this.dataMap.set(BaseDataType.skill, new SkillConfig());
-        this.dataMap.set(BaseDataType.level, new SkillConfig());
+        this.dataMap.set(BaseDataType.level, new LevelConfig());
     }
 
     protected configUrl(reName: string, tempurl?: string) {

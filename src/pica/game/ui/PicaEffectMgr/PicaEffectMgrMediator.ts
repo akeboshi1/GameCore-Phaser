@@ -2,6 +2,7 @@
 import { BaseDataManager, BasicMediator, DataMgrType, Game } from "gamecore";
 import { op_client, op_pkt_def } from "pixelpai_proto";
 import { EventType, ModuleName } from "structure";
+import { BaseDataConfigManager } from "../../data";
 import { PicaEffectMgr } from "./PicaEffectMgr";
 
 export class PicaEffectMgrMediator extends BasicMediator {
@@ -46,6 +47,9 @@ export class PicaEffectMgrMediator extends BasicMediator {
             arr.push({ line1: data.line1, line2: data.line2 });
         } else if (data.effecttype === "levelup") {
             data.level = this.game.user.userData.level;
+            const level = this.config.getLevel("playerLevel", data.level);
+            const text = this.config.getI18n("PKT_SYS0000017");
+            data.tips = text.replace("%{unlockSystem}", this.config.getI18n(level.unlockSystem));
             arr.push(data);
         }
         this.mView.play(arr, data.effecttype);
@@ -58,6 +62,10 @@ export class PicaEffectMgrMediator extends BasicMediator {
         if (temp.status === 0) {
             const data = temp.data;
         }
+    }
+
+    get config(): BaseDataConfigManager {
+        return <BaseDataConfigManager>this.game.configManager;
     }
 
 }

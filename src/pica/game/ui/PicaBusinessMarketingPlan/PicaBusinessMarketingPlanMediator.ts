@@ -1,9 +1,8 @@
 import { op_client, op_pkt_def } from "pixelpai_proto";
 import { PicaBusinessMarketingPlan } from "./PicaBusinessMarketingPlan";
-import { PicaMainUIMediator } from "../PicaMainUI/PicaMainUIMediator";
 import { BasicMediator, Game } from "gamecore";
 import { ModuleName, RENDER_PEER } from "structure";
-import { PicaWorkerUiManager } from "../pica.workeruimanager";
+import { BaseDataConfigManager } from "../../data";
 export class PicaBusinessMarketingPlanMediator extends BasicMediator {
     constructor(game: Game) {
         super(ModuleName.PICABUSINESSMARKETINGPLAN_NAME, game);
@@ -57,20 +56,21 @@ export class PicaBusinessMarketingPlanMediator extends BasicMediator {
         this.model.query_MARKET_PLAN_MODELS_BY_TYPE(market_plan_type);
     }
     private query_Equiped_MARKET_PLAN() {
-        const uimanager = <PicaWorkerUiManager>this.game.uiManager;
-        const picmainui = <PicaMainUIMediator>uimanager.getMed(ModuleName.PICAMAINUI_NAME + "Mediator");
-        const room_id = picmainui.roomInfo.roomId;
+        const room_id = this.game.user.userData.curRoomID;
         this.model.query_Equiped_MARKET_PLAN(room_id);
     }
 
     private query_SELECT_MARKET_PLAN(marketPlanId: string) {
-        const uimanager = <PicaWorkerUiManager>this.game.uiManager;
-        const picmainui = <PicaMainUIMediator>uimanager.getMed(ModuleName.PICAMAINUI_NAME + "Mediator");
-        const room_id = picmainui.roomInfo.roomId;
+        const room_id = this.game.user.userData.curRoomID;
         this.model.query_SELECT_MARKET_PLAN(room_id, marketPlanId);
     }
     private onEquiped_MARKET_PLAN(content: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_MARKET_PLAN) {
         // const materials = content.marketPlanPairs.
+        if (content.industryBuffDes) {
+            const texts = content.industryBuffDes.split(" ");
+            content.industryBuffDes = this.config.getI18n(texts[0]) + " " + (texts[1] ? texts[1] : "");
+        }
+        content.industryDes = this.config.getI18n(content.industryDes);
         this.mView.setEquipedPlan(content);
     }
     private onMARKET_PLAN_MODELS_BY_TYPE(content: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_MARKET_PLAN_MODELS_BY_TYPE) {
@@ -94,5 +94,9 @@ export class PicaBusinessMarketingPlanMediator extends BasicMediator {
     }
     private get model(): PicaBusinessMarketingPlan {
         return (<PicaBusinessMarketingPlan>this.mModel);
+    }
+
+    private get config(): BaseDataConfigManager {
+        return <BaseDataConfigManager>this.game.configManager;
     }
 }

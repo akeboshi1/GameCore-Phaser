@@ -142,6 +142,7 @@ export class AlertView extends BaseBatchPanel {
         this.closePanel();
     }
     private closePanel() {
+        this.uiManager.hideBatchPanel(this);
         if (this.parentContainer) {
             this.parentContainer.remove(this);
         }

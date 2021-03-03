@@ -4,6 +4,7 @@ import { Handler, i18n } from "utils";
 
 export class PicaNewNavigatePanel extends Phaser.GameObjects.Container {
     public exploreButton: Button;
+    public homeButton: Button;
     private dpr: number;
     private key: string;
     private bg: Phaser.GameObjects.Image;
@@ -11,7 +12,6 @@ export class PicaNewNavigatePanel extends Phaser.GameObjects.Container {
     private friendButton: Button;
     private avatarButton: Button;
     private shopButton: Button;
-    private homeButton: Button;
     private sendHandler: Handler;
     constructor(scene: Phaser.Scene, key: string, dpr: number) {
         super(scene);

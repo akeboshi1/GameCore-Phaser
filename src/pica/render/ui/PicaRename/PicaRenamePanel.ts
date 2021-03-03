@@ -1,7 +1,7 @@
 import { Button, ClickEvent, InputText, NineSliceButton } from "apowophaserui";
 import { Handler, i18n, UIHelper } from "utils";
 import { AvatarSuit, AvatarSuitType, ModuleName, RunningAnimation } from "structure";
-import { UiManager, CommonBackground, UIDragonbonesDisplay, ButtonEventDispatcher, ToggleButton } from "gamecoreRender";
+import { UiManager, CommonBackground, UIDragonbonesDisplay, ButtonEventDispatcher, ToggleButton, MainUIScene } from "gamecoreRender";
 import { PicaBasePanel } from "../pica.base.panel";
 import { UIAtlasName } from "picaRes";
 import { op_client, op_gameconfig, op_def } from "pixelpai_proto";
@@ -28,6 +28,7 @@ export class PicaRenamePanel extends PicaBasePanel {
             folder: "texture"
         }];
         this.key = ModuleName.PICARENAME_NAME;
+        this.uiLayer = MainUIScene.LAYER_DIALOG;
     }
 
     resize(wid: number, hei: number) {
@@ -67,7 +68,7 @@ export class PicaRenamePanel extends PicaBasePanel {
         this.inputCon = this.scene.make.container(undefined, false);
         this.inputCon.y = this.dragonbones.y + 90 * this.dpr;
         const inputbg = this.scene.make.image({ key: UIAtlasName.createrole, frame: "Create_role_id_bg" });
-        this.inputTex = new InputText(this.scene, -20* this.dpr, 0, 190 * this.dpr, 52 * this.dpr, {
+        this.inputTex = new InputText(this.scene, -20 * this.dpr, 0, 190 * this.dpr, 52 * this.dpr, {
             type: "input",
             fontSize: 18 * this.dpr + "px",
             color: "#717171",

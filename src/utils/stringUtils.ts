@@ -11,6 +11,9 @@ export class StringUtils {
             return baseStr;
         }
     }
+    static isNullOrUndefined(text: string) {
+        if (text === null || text === undefined) return true;
+    }
 }
 // var str1 = "hello {0}".format("world"); //log   hello world
 // var str1 = "我叫{0},性别{1}".format("美男子", "男"); //log 我叫美男子,性别男
