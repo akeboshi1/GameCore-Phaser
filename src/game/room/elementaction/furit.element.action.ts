@@ -7,7 +7,8 @@ export class FuritElementAction extends ElementBaseAction {
         const tag = this.getActionData();
         if (tag === "FROZEN") {
             const uiName = ModuleName.PICAFURNIFUN_NAME;
-            this.game.emitter.emit(EventType.SCENE_SHOW_UI, uiName, this.data);
+            const obj = { nickname: this.data.nickname, displayInfo: this.data.displayInfo, sn: this.data.sn };
+            this.game.emitter.emit(EventType.SCENE_SHOW_UI, uiName, obj);
         }
     }
     getActionData() {

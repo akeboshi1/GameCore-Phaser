@@ -178,7 +178,12 @@ export class PicaBusinessStreetMediator extends BasicMediator {
     private onSTORE_RANKING_LIST(content: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_QUERY_STORE_RANKING_LIST) {
         if (content.rankChampions) {
             for (const data of content.rankChampions) {
-                data.name = this.config.getI18n(data.name);
+                if (data.name) {
+                    const arr = data.name.split(" ");
+                    const text1 = this.config.getI18n(arr[0]);
+                    const text2 = this.config.getI18n(arr[1]);
+                    data.name = text1 + (text2 ? text2 : "");
+                }
             }
         }
         if (!this.mPanelInit) {

@@ -23,6 +23,7 @@ export interface IExploreLevelData {
     costEnergy: number;
     progress: number;
     clueItems: IClueItem[];
+    completeScene: string;
 }
 export interface IClueItem {
     star: number;

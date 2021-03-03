@@ -48,8 +48,10 @@ export class PicaEffectMgrMediator extends BasicMediator {
         } else if (data.effecttype === "levelup") {
             data.level = this.game.user.userData.level;
             const level = this.config.getLevel("playerLevel", data.level);
-            const text = this.config.getI18n("PKT_SYS0000017");
-            data.tips = text.replace("%{unlockSystem}", this.config.getI18n(level.unlockSystem));
+            if (level.unlockSystem) {
+                const text = this.config.getI18n("PKT_SYS0000017");
+                data.tips = text.replace("%{unlockSystem}", this.config.getI18n(level.unlockSystem));
+            }
             arr.push(data);
         }
         this.mView.play(arr, data.effecttype);
