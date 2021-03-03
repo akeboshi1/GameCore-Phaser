@@ -317,7 +317,7 @@ export class PicaMainUIPanel extends BasePanel {
         this.render.renderEmitter("openroompanel");
     }
     private onHeadHandler() {
-        this.render.renderEmitter("showPanel", ModuleName.CHARACTERINFO_NAME);
+        this.render.renderEmitter("showPanel", ModuleName.PICAPLAYERINFO_NAME);
     }
 
     private onStrengthHandler() {

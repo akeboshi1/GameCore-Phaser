@@ -81,7 +81,7 @@ export class PicaNewMainMediator extends BasicMediator {
         }
         const uiManager = this.game.uiManager;
         uiManager.showMed(panel);
-        if (panel === ModuleName.CHARACTERINFO_NAME || panel === ModuleName.PICAPLAYERINFO_NAME) {
+        if (panel === ModuleName.PICAPLAYERINFO_NAME || panel === ModuleName.PICAPLAYERINFO_NAME) {
             this.mModel.fetchPlayerInfo();
         } else if (panel === ModuleName.PICAOPENPARTY_NAME) {
 
