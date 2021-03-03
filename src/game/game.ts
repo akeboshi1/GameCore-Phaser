@@ -20,6 +20,7 @@ import { RoomManager } from "./room/room.manager";
 import { User } from "./actor/user";
 import { DataManager, DataMgrType } from "./data.manager/dataManager";
 import { BaseConfigManager } from "./data.manager";
+import { NetworkManager } from "./command";
 
 interface ISize {
     width: number;
@@ -49,6 +50,7 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
     // protected mSoundManager: SoundManager;
     protected mLoadingManager: LoadingManager;
     protected mConfigManager: BaseConfigManager;
+    protected mNetWorkManager: NetworkManager;
 
     protected gameConfigUrls: Map<string, string> = new Map();
     protected gameConfigUrl: string;
@@ -108,24 +110,28 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
 
     public onDisConnected() {
         Logger.getInstance().debug("app connectFail=====");
-        if (this.hasClear || this.connect.pause) return;
+        // if (this.hasClear || this.connect.pause) return;
         if (this.mConfig.hasConnectFail) {
             return this.mainPeer.render.connectFail();
         } else {
-            if (this.mReconnect > 2) {
-                // todo reconnect Scene
-            } else {
-                this.mReconnect++;
-                this.clearGame().then(() => {
-                    Logger.getInstance().debug("clearGame", this.mReconnect);
-                    this.renderPeer.reconnect();
-                });
-            }
+            this.renderPeer.showAlertReconnect("网络不稳定,请刷新网页");
+            // if (this.mReconnect > 2) {
+            //     this.renderPeer.showAlertReconnect("网络不稳定,请刷新网页");
+            //     // this.onRefreshConnect();
+            //     // todo reconnect Scene
+            // } else {
+            //     this.mReconnect++;
+            //     this.renderPeer.showAlertReconnect("网络不稳定,请刷新网页");
+            // this.clearGame(true).then(() => {
+            //     Logger.getInstance().debug("clearGame", this.mReconnect);
+            //     this.reconnect();
+            // });
+            // }
         }
     }
 
     public onRefreshConnect() {
-        if (this.hasClear || this.isPause) return;
+        // if (this.hasClear || this.isPause) return;
         Logger.getInstance().debug("game onrefreshconnect");
         if (this.mConfig.hasConnectFail) {
             Logger.getInstance().debug("app connectfail");
@@ -156,7 +162,7 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
     }
 
     public async reconnect() {
-        if (this.hasClear || this.isPause) return;
+        // if (this.hasClear || this.isPause) return;
         Logger.getInstance().debug("game reconnect");
         if (this.mConfig.hasConnectFail) return this.mainPeer.render.connectFail();
         let gameID: string = this.mConfig.game_id;
@@ -405,6 +411,7 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
         }
         const token = await this.peer.render.getLocalStorage("token");
         const account = token ? JSON.parse(token) : null;
+        if (this.mConfig.hasGameLoaded) this.renderPeer.gameLoadedCallBack();
         if (!this.mConfig.auth_token) {
             if (!account || !account.accessToken) {
                 this.login();
@@ -518,6 +525,9 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
             Logger.getInstance().debug("no connection gameCreat");
         }
     }
+    public preloadGameConfig(): Promise<any> {
+        return undefined;
+    }
 
     protected async initWorld() {
         this.mUser = new User(this);
@@ -551,6 +561,7 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
         if (!this.mLoadingManager) this.mLoadingManager = new LoadingManager(this);
         if (!this.mDataManager) this.mDataManager = new DataManager(this);
         if (!this.mConfigManager) this.mConfigManager = new BaseConfigManager(this);
+        if (!this.mNetWorkManager) this.mNetWorkManager = new NetworkManager(this);
         // this.mPlayerDataManager = new PlayerDataManager(this);
 
         this.mUIManager.addPackListener();
@@ -558,10 +569,6 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
         this.user.addPackListener();
         // this.mSoundManager.addPackListener();
         // this.mPlayerDataManager.addPackListener();
-    }
-
-    protected preloadGameConfig(): Promise<any> {
-        return undefined;
     }
 
     private initGame() {
@@ -659,10 +666,19 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
                     this.mLoadingManager.destroy();
                     this.mLoadingManager = null;
                 }
+                if (this.mNetWorkManager) {
+                    this.mNetWorkManager.destory();
+                    this.mNetWorkManager = null;
+                }
+                if (this.mConfigManager) {
+                    this.mConfigManager.destory();
+                    this.mConfigManager = null;
+                }
                 if (this.mDataManager) {
                     this.mDataManager.clear();
                     this.mDataManager = null;
                 }
+
                 if (this.user) this.user.removePackListener();
                 // this.peer.destroy();
                 this.hasClear = true;
@@ -696,7 +712,7 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
         Logger.getInstance().debug(`mMoveStyle:${content.moveStyle}`);
         let game_id = account.gameId;
         if (game_id === undefined) {
-            Logger.getInstance().debug("!game_ID");
+            Logger.getInstance().log("!game_ID");
             this.mainPeer.render.createGameCallBack(content.keyEvents);
             // if (!this.mainPeer.physicalPeer) return;
             this.gameCreated();
@@ -717,7 +733,7 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
                 this.mainPeer.render.createGameCallBack(content.keyEvents);
                 // if (!this.mainPeer.physicalPeer) return;
                 this.gameCreated();
-                Logger.getInstance().debug("created game suc");
+                Logger.getInstance().log("created game suc");
             })
             .catch((err: any) => {
                 Logger.getInstance().error(err);

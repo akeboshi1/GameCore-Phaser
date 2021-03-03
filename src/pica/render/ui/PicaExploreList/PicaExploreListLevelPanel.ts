@@ -9,6 +9,7 @@ import { PicaChapterLevelClue } from "./PicaChapterLevelClue";
 import { ICountablePackageItem, IExploreChapterData, IExploreLevelData } from "picaStructure";
 export class PicaExploreListLevelPanel extends Phaser.GameObjects.Container {
     public levelItems: ChapterLevelItem[] = [];
+    public addHei: number = 0;
     private dpr: number;
     private zoom: number;
     private captorScroll: GameScroller;
@@ -171,6 +172,7 @@ export class PicaExploreListLevelPanel extends Phaser.GameObjects.Container {
         const thisy = this.captorScroll.getWorldTransformMatrix().ty;
         const bottomdis = (worldy - thisy) / this.zoom - (this.captorScroll.height * 0.5 - item.height * 0.5);
         if (bottomdis > 0) {
+            this.addHei = bottomdis;
             this.captorScroll.setValue(this.posValue - bottomdis);
         }
     }
@@ -581,7 +583,7 @@ class ChapterLevelEventuallyItem extends ChapterLevelBaseItem {
     }
 
     private onGoClickHandler() {
-        if (this.send) this.send.runWith(this.chapterData);
+        if (this.send && this.unlock) this.send.runWith(this.chapterData);
     }
 
 }

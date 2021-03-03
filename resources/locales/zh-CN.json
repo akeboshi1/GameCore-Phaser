@@ -82,6 +82,7 @@
     "player_title": "称号",
     "option_live": "生活",
     "option_badge": "徽章",
+    "option_decorate": "装扮",
     "option_title": "称号",
     "option_attribute": "属性",
     "add_friend": "添加好友",
@@ -104,7 +105,8 @@
     "follow": "关注",
     "followed": "已关注",
     "report": "举报",
-    "blockuer": "拉黑"
+    "blockuer": "拉黑",
+    "room":"房间"
   },
   "compose": {
     "title": "合成",

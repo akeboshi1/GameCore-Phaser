@@ -44,8 +44,6 @@ import { SortDebugger } from "./display/debugs/sort.debugger";
 import { UiManager } from "./ui";
 import { GuideManager } from "./guide";
 
-// import Stats from "../../Stat";
-
 for (const key in protos) {
     PBpacket.addProtocol(protos[key]);
 }
@@ -70,7 +68,7 @@ export class Render extends RPCPeer implements GameMain, IRender {
 
     protected readonly DEFAULT_WIDTH = 360;
     protected readonly DEFAULT_HEIGHT = 640;
-    // protected mGuideManager: GuideManager;
+    protected mGuideManager: GuideManager;
     protected mSceneManager: SceneManager;
     protected mCameraManager: CamerasManager;
     protected mInputManager: InputManager;
@@ -105,9 +103,11 @@ export class Render extends RPCPeer implements GameMain, IRender {
     private isPause: boolean = false;
     private mConnectFailFunc: Function;
     private mGameCreatedFunc: Function;
-
+    private mGameLoadedFunc: Function;
+    private mCacheTarget: any;
     constructor(config: ILauncherConfig, callBack?: Function) {
         super(RENDER_PEER);
+        Logger.getInstance().log("config ====>", config);
         this.emitter = new Phaser.Events.EventEmitter();
         this.mConfig = config;
         this.mCallBack = callBack;
@@ -117,14 +117,17 @@ export class Render extends RPCPeer implements GameMain, IRender {
         this.editorModeDebugger = new EditorModeDebugger(this);
         this.mConnectFailFunc = this.mConfig.connectFail;
         this.mGameCreatedFunc = this.mConfig.game_created;
+        this.mGameLoadedFunc = this.mConfig.gameLoaded;
         this.mConfig.hasConnectFail = this.mConnectFailFunc ? true : false;
         this.mConfig.hasCloseGame = this.mConfig.closeGame ? true : false;
         this.mConfig.hasGameCreated = this.mConfig.game_created ? true : false;
         this.mConfig.hasReload = this.mConfig.reload ? true : false;
+        this.mConfig.hasGameLoaded = this.mConfig.gameLoaded ? true : false;
         // rpc不传送方法
         delete this.mConfig.connectFail;
         delete this.mConfig.game_created;
         delete this.mConfig.closeGame;
+        delete this.mConfig.gameLoaded;
         // Logger.getInstance().debug("connectfail===>", this.mConnectFailFunc, this.mConfig);
         this.initConfig();
         Logger.getInstance().log("Render version ====>:", `v${version}`);
@@ -204,9 +207,9 @@ export class Render extends RPCPeer implements GameMain, IRender {
         return this.mSceneManager;
     }
 
-    // get guideManager(): GuideManager {
-    //     return this.mGuideManager;
-    // }
+    get guideManager(): GuideManager {
+        return this.mGuideManager;
+    }
 
     get camerasManager(): CamerasManager {
         return this.mCameraManager;
@@ -245,7 +248,7 @@ export class Render extends RPCPeer implements GameMain, IRender {
         if (!this.mCameraManager) this.mCameraManager = new CamerasManager(this);
         if (!this.mLocalStorageManager) this.mLocalStorageManager = new LocalStorageManager();
         if (!this.mSceneManager) this.mSceneManager = new SceneManager(this);
-        // if (!this.mGuideManager) this.mGuideManager = new GuideManager(this);
+        if (!this.mGuideManager) this.mGuideManager = new GuideManager(this);
         if (!this.mInputManager) this.mInputManager = new InputManager(this);
         if (!this.mDisplayManager) this.mDisplayManager = new DisplayManager(this);
         if (!this.mEditorCanvasManager) this.mEditorCanvasManager = new EditorCanvasManager(this);
@@ -269,10 +272,10 @@ export class Render extends RPCPeer implements GameMain, IRender {
             this.mSceneManager.destroy();
             this.mSceneManager = undefined;
         }
-        // if (this.mGuideManager) {
-        //     this.mGuideManager.destroy();
-        //     this.mGuideManager = undefined;
-        // }
+        if (this.mGuideManager) {
+            this.mGuideManager.destroy();
+            this.mGuideManager = undefined;
+        }
         if (this.mInputManager) {
             this.mInputManager.destroy();
             this.mInputManager = undefined;
@@ -755,8 +758,18 @@ export class Render extends RPCPeer implements GameMain, IRender {
     }
 
     @Export([webworker_rpc.ParamType.str])
-    public hidePanel(panelName: string) {
-        if (this.mUiManager) this.mUiManager.hidePanel(panelName);
+    public hidePanel(type: string) {
+        if (this.mUiManager) this.mUiManager.hidePanel(type);
+    }
+
+    @Export([webworker_rpc.ParamType.str])
+    public showBatchPanel(type: string, data?: any) {
+        if (this.mUiManager) this.mUiManager.showBatchPanel(type, data);
+    }
+
+    @Export([webworker_rpc.ParamType.str])
+    public hideBatchPanel(type) {
+        if (this.mUiManager) this.mUiManager.hideBatchPanel(type);
     }
 
     @Export()
@@ -934,6 +947,15 @@ export class Render extends RPCPeer implements GameMain, IRender {
     @Export([webworker_rpc.ParamType.str, webworker_rpc.ParamType.str])
     public showAlert(text: string, title: string) {
         // 告诉render显示警告框
+        if (this.uiManager) this.uiManager.showAlertView(text, true);
+    }
+
+    @Export([webworker_rpc.ParamType.str])
+    public showAlertReconnect(text: string) {
+        // 告诉render显示警告框
+        if (this.uiManager) this.uiManager.showAlertView(text, true, false, () => {
+            this.mainPeer.reconnect();
+        });
     }
 
     @Export()
@@ -1010,12 +1032,7 @@ export class Render extends RPCPeer implements GameMain, IRender {
 
     }
 
-    @Export()
-    public renderReconnect() {
-
-    }
-
-    @Export([webworker_rpc.ParamType.str, webworker_rpc.ParamType.str, webworker_rpc.ParamType.num, webworker_rpc.ParamType.num, webworker_rpc.ParamType.num, webworker_rpc.ParamType.num])
+    @Export([webworker_rpc.ParamType.str, webworker_rpc.ParamType.str])
     public createAnotherGame(gameId: string, worldId: string, sceneId?: number, px?: number, py?: number, pz?: number) {
         // this.newGame().then(() => {
         //     // todo sceneManager loginScene.name
@@ -1071,6 +1088,11 @@ export class Render extends RPCPeer implements GameMain, IRender {
     }
 
     @Export()
+    public gameLoadedCallBack() {
+        if (this.mGameLoadedFunc) this.mGameLoadedFunc.call(this);
+    }
+
+    @Export()
     public createGameCallBack(keyEvents: any) {
         this.mGame.events.on(Phaser.Core.Events.FOCUS, this.onFocus, this);
         this.mGame.events.on(Phaser.Core.Events.BLUR, this.onBlur, this);
@@ -1087,7 +1109,10 @@ export class Render extends RPCPeer implements GameMain, IRender {
                 this.resize(this.mConfig.height, this.mConfig.width);
             }
         }
-        if (this.mGameCreatedFunc) this.mGameCreatedFunc.call(this);
+        if (this.mGameCreatedFunc) {
+            Logger.getInstance().log("render game_created");
+            this.mGameCreatedFunc.call(this);
+        }
         this.gameCreated(keyEvents);
     }
 
@@ -1341,7 +1366,19 @@ export class Render extends RPCPeer implements GameMain, IRender {
         const target = this.mDisplayManager.getDisplay(id);
         if (target) {
             if (effect === "liner") {
-                await this.mCameraManager.pan(target.x, target.y, target.y);
+                if (this.mCacheTarget) {
+                    if (this.mCacheTarget.id === 1441619821) {
+                        this.guideManager.startGuide(1, { x: this.mCacheTarget.x, y: this.mCacheTarget.y });
+                    }
+                    this.mCacheTarget = null;
+                }
+                this.mCameraManager.pan(target.x, target.y, target.y).then(() => {
+                    if (id === 674096428) {
+                        this.mCacheTarget = target;
+                    } else if (id === 1752777777) {
+                        this.mCacheTarget = target;
+                    }
+                });
                 this.mCameraManager.startFollow(target);
             } else {
                 this.mCameraManager.startFollow(target);
@@ -1354,7 +1391,9 @@ export class Render extends RPCPeer implements GameMain, IRender {
     @Export([webworker_rpc.ParamType.num])
     public cameraPan(id: number) {
         const display = this.mDisplayManager.getDisplay(id);
-        if (display) this.mCameraManager.pan(display.x, display.y, 300);
+        if (display) {
+            this.mCameraManager.pan(display.x, display.y, 300);
+        }
     }
 
     @Export()

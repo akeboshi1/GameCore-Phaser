@@ -52,7 +52,7 @@ export class PicaLevelUpEffectPanel extends Phaser.GameObjects.Container {
         if (this.effectQueue.length > 0) {
             this.visible = true;
             const data = this.effectQueue.shift();
-            this.tipTex.text = i18n.t("effecttips.unlock", { name: "[合成]" });
+            this.tipTex.text = data.tips;// i18n.t("effecttips.unlock", { name: "[合成]" });
             this.levelTex.text = data.level + "";
             const maskW = 592 * this.dpr, maskH = 370 * this.dpr;
             const masky = -this.height * 0.5 + 0 * this.dpr;

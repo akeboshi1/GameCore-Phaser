@@ -38,7 +38,16 @@ export class SceneDataManager extends BasePacketHandler {
 
     private openComposePanel(packge: PBpacket) {
         const content: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_CRAFT_SKILLS = packge.content;
-        this.mEvent.emit(EventType.SCENE_SHOW_UI, ModuleName.PICACOMPOSE_NAME, content);
+        const list = [];
+        const config = <BaseDataConfigManager>this.game.configManager;
+
+        packge.content.skills.forEach((skill) => {
+            const sk = config.getSkill(skill.skill.id);
+            sk.skill.active = skill.skill.active;
+            list.push(sk);
+        });
+
+        this.mEvent.emit(EventType.SCENE_SHOW_UI, ModuleName.PICACOMPOSE_NAME, { skills: list });
     }
 
     private on_SEND_GIFT_DATA(packet: PBpacket) {

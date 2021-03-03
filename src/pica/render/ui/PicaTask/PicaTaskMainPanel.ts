@@ -1,16 +1,15 @@
 import { ClickEvent, GameScroller, NineSlicePatch } from "apowophaserui";
-import { ButtonEventDispatcher, DynamicImage, ItemInfoTips, ProgressThreeBar } from "gamecoreRender";
+import { ButtonEventDispatcher, DynamicImage, ItemInfoTips, ProgressThreeBar, Render } from "gamecoreRender";
 import { UIAtlasName } from "picaRes";
 import { Font, Handler, i18n, UIHelper, Url } from "utils";
 import { op_client, op_pkt_def } from "pixelpai_proto";
 import { PicaTaskItem } from "./PicaTaskItem";
 import { PicaItemTipsPanel } from "../SinglePanel/PicaItemTipsPanel";
-import { ICountablePackageItem } from "picaStructure";
 
 export class PicaTaskMainPanel extends Phaser.GameObjects.Container {
+    public taskItems: PicaTaskItem[] = [];
     private gameScroller: GameScroller;
     private curTaskItem: PicaTaskItem;
-    private taskItems: PicaTaskItem[] = [];
     private mainItem: MainTaskItem;
     private mainTaskAnimation: MainTaskAnimation;
     private itemTips: ItemInfoTips;
@@ -22,7 +21,7 @@ export class PicaTaskMainPanel extends Phaser.GameObjects.Container {
     private questType: op_pkt_def.PKT_Quest_Type;
     private isFinishGroup: boolean = false;
     private taskGroupData: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_QUERY_QUEST_GROUP;
-    constructor(scene: Phaser.Scene, width: number, height: number, dpr: number, zoom: number) {
+    constructor(scene: Phaser.Scene, width: number, height: number, dpr: number, zoom: number, private render: Render) {
         super(scene);
         this.setSize(width, height);
         this.dpr = dpr;
@@ -80,6 +79,7 @@ export class PicaTaskMainPanel extends Phaser.GameObjects.Container {
         }
         this.taskGroupData = content;
         this.questType = questType;
+        this.render.emitter.emit("PicaTaskPanel_Data");
     }
 
     setTaskDetail(quest: op_client.PKT_Quest) {

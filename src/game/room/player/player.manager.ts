@@ -13,6 +13,7 @@ import { ConnectionService } from "../../../../lib/net/connection.service";
 import { IElement } from "../element/element";
 import { PlayerElementAction } from "../elementaction/player.element.action";
 import { Sprite } from "baseModel";
+import { BaseDataConfigManager } from "src/pica/game/data/base.data.config.manager";
 export class PlayerManager extends PacketHandler implements IElementManager {
     public hasAddComplete: boolean = false;
     private mActor: User;
@@ -216,12 +217,14 @@ export class PlayerManager extends PacketHandler implements IElementManager {
         if (content.nodeType !== op_def.NodeType.CharacterNodeType) {
             return;
         }
+
         let player: Player = null;
         const sprites = content.sprites;
         const command = content.command;
         for (const sprite of sprites) {
             player = this.get(sprite.id);
             if (player) {
+                this._loadSprite(sprite);
                 //  MineCarSimulateData.addSimulate(this.roomService, sprite, player.model);
                 if (command === op_def.OpCommand.OP_COMMAND_UPDATE) {
                     this.checkSuitAvatarSprite(sprite);
@@ -231,6 +234,28 @@ export class PlayerManager extends PacketHandler implements IElementManager {
                 }
             }
         }
+    }
+
+    private _loadSprite(sprite: op_client.ISprite) {
+        const configMgr = <BaseDataConfigManager>this.mRoom.game.configManager;
+        sprite.attrs.forEach((attr) => {
+            const valueObj = JSON.parse(attr.value);
+            const newAttrs = [];
+            valueObj.forEach((v) => {
+                if (v.id) {
+                    const config = configMgr.getItemBase(v.id);
+                    newAttrs.push({
+                        suit_type: config.suitType,
+                        sn: config.sn,
+                        version: config.version,
+                        slot: config.slot,
+                        tag: config.tag,
+                        id: config.id
+                    });
+                }
+            });
+            attr.value = JSON.stringify(newAttrs);
+        });
     }
 
     private onAdjust(packet: PBpacket) {
@@ -272,6 +297,7 @@ export class PlayerManager extends PacketHandler implements IElementManager {
             return;
         }
         for (const sprite of sprites) {
+            this._loadSprite(sprite);
             this.checkSuitAvatarSprite(sprite);
             this._add(new Sprite(sprite, content.nodeType));
         }

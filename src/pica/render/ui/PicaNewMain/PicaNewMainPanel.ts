@@ -9,13 +9,13 @@ import { PicaNewActivityPanel } from "./PicaNewActivityPanel";
 import { PicaNewChatPanel } from "./PicaNewChatPanel";
 import { PicaNewHeadPanel } from "./PicaNewHeadPanel";
 import { PicaNewLeftPanel } from "./PicaNewLeftPanel";
+import { GuideID } from "../../guide";
 // import { PicaNewNavigatePanel } from "./PicaNewNavigatePanel";
 export class PicaNewMainPanel extends PicaBasePanel {
-
+    public leftPanel: PicaNewLeftPanel;
     protected activityPanel: PicaNewActivityPanel;
     protected chatPanel: PicaNewChatPanel;
     protected headPanel: PicaNewHeadPanel;
-    protected leftPanel: PicaNewLeftPanel;
     // protected navigatePanel: PicaNewNavigatePanel;
     protected foldButton: Button;
     private isFold: boolean = false;
@@ -109,6 +109,11 @@ export class PicaNewMainPanel extends PicaBasePanel {
         super.init();
     }
 
+    protected onShow() {
+        super.onShow();
+        this.render.guideManager.startGuide(GuideID.Hotel);
+    }
+
     protected onInitialized() {
         if (this.headData) this.headPanel.setHeadData(this.headData.level, this.headData.energy, this.headData.money, this.headData.diamond);
         if (this.sceneData) this.headPanel.setSceneData(this.sceneData.sceneName, this.sceneData.isPraise, this.sceneData.people, this.sceneData.roomType, this.sceneData.isself);
@@ -131,7 +136,8 @@ export class PicaNewMainPanel extends PicaBasePanel {
 
     private onHeadHandler(tag: string, data: any) {
         if (tag === "head") {
-            this.render.renderEmitter(ModuleName.PICANEWMAIN_NAME + "_showpanel", ModuleName.CHARACTERINFO_NAME);
+            // this.render.renderEmitter(ModuleName.PICANEWMAIN_NAME + "_showpanel", ModuleName.CHARACTERINFO_NAME);
+            this.render.renderEmitter(ModuleName.PICANEWMAIN_NAME + "_showpanel", ModuleName.PICAPLAYERINFO_NAME);
         } else if (tag === "energy") {
             // this.render.renderEmitter(ModuleName.PICANEWMAIN_NAME + "_showPanel", ModuleName.PICARECHARGE_NAME);
         } else if (tag === "praise") {

@@ -1,7 +1,7 @@
 import { Render } from "../render";
 import { NodeType } from "../managers";
 import { MainUIScene } from "../scenes/main.ui.scene";
-import { Logger, LogicPos, Tool } from "utils";
+import { LogicPos } from "utils";
 export class MotionManager {
     public enable: boolean;
     private scaleRatio: number;
@@ -78,6 +78,14 @@ export class MotionManager {
         this.removeListener();
     }
 
+    public async onPointerDownHandler(pointer: Phaser.Input.Pointer) {
+        if (this.render.guideManager.canInteractive()) return;
+        this.scene.input.on("pointermove", this.onPointerMoveHandler, this);
+        this.holdTime = setTimeout(() => {
+            this.dirty = true;
+        }, this.holdDelay);
+    }
+
     private start(worldX: number, worldY: number, id?: number) {
         // const user = this.render.user;
         // if (!user) {
@@ -104,6 +112,7 @@ export class MotionManager {
     }
 
     private async onPointerUpHandler(pointer: Phaser.Input.Pointer) {
+        if (this.render.guideManager.canInteractive()) return;
         this.dirty = false;
         this.scene.input.off("pointermove", this.onPointerMoveHandler, this);
         if (Math.abs(pointer.downX - pointer.upX) >= 5 * this.render.scaleRatio && Math.abs(pointer.downY - pointer.upY) >= 5 * this.render.scaleRatio || pointer.upTime - pointer.downTime > this.holdDelay) {
@@ -134,18 +143,12 @@ export class MotionManager {
         this.clearGameObject();
     }
 
-    private async onPointerDownHandler(pointer: Phaser.Input.Pointer) {
-        this.scene.input.on("pointermove", this.onPointerMoveHandler, this);
-        this.holdTime = setTimeout(() => {
-            this.dirty = true;
-        }, this.holdDelay);
-    }
-
     private async onPointerMoveHandler(pointer: Phaser.Input.Pointer) {
         this.dirty = true;
     }
 
     private onPointeroutHandler() {
+        if (this.render.guideManager.canInteractive()) return;
         this.dirty = false;
         this.scene.input.off("pointermove", this.onPointerMoveHandler, this);
         this.stop();
@@ -153,10 +156,12 @@ export class MotionManager {
     }
 
     private onGameObjectDownHandler(pointer, gameObject) {
+        if (this.render.guideManager.canInteractive()) return;
         this.gameObject = gameObject;
     }
 
     private onGameObjectUpHandler(pointer, gameObject) {
+        if (this.render.guideManager.canInteractive()) return;
     }
 
     private clearGameObject() {

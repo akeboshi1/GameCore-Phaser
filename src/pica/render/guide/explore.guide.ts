@@ -1,19 +1,15 @@
-import { Button, ClickEvent, GameGridTable } from "apowophaserui";
-import { BaseGuide, ButtonEventDispatcher, Render } from "gamecoreRender";
+import { Button, ClickEvent } from "apowophaserui";
+import { BaseGuide, Render } from "gamecoreRender";
 import { ModuleName } from "structure";
 import { BottomPanel, PicaExploreListPanel } from "../ui";
 
-export class TaskGuide extends BaseGuide {
+export class ExploreGuide extends BaseGuide {
     constructor(id: number, render: Render) {
         super(id, render);
     }
 
     public start() {
         this.step1();
-    }
-
-    public stop() {
-        this.guideEffect.destroy();
     }
 
     private step1() {
@@ -29,15 +25,15 @@ export class TaskGuide extends BaseGuide {
 
     private step2() {
         // 异步等待过程
-        this.render.emitter.once("PicaExploreListPanel_Data", () => {
+        this.render.emitter.once("PicaExploreListPanel_Data", (addHei) => {
             const exploreListPanel: PicaExploreListPanel = this.uiManager.getPanel(ModuleName.PICAEXPLORELIST_NAME) as PicaExploreListPanel;
             const picaExploreListLevelPanel: any = exploreListPanel.levelPanel;
             const list: any[] = picaExploreListLevelPanel.levelItems;
             const item = list[0];
             const worldMatrix = item.openButton.getWorldTransformMatrix();
-            this.guideEffect.createGuideEffect({ x: worldMatrix.tx, y: worldMatrix.ty });
+            this.guideEffect.createGuideEffect({ x: worldMatrix.tx, y: worldMatrix.ty + addHei });
             item.on(ClickEvent.Tap, () => {
-                this.stop();
+                this.end();
             }, this);
         }, this);
     }

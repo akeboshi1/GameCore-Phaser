@@ -1,7 +1,7 @@
 import { BaseConfigData, BaseConfigManager, Game } from "gamecore";
 import { ICountablePackageItem, IElement, IExploreChapterData, IExploreLevelData, IExtendCountablePackageItem } from "picaStructure";
-import { IMarketCommodity, IShopBase } from "src/pica/structure/imarketcommodity";
-import { loadArr, Logger, ObjectAssign, Url } from "utils";
+import { IMarketCommodity, IShopBase } from "../../../pica/structure/imarketcommodity";
+import { Logger, ObjectAssign, StringUtils, Url } from "utils";
 import { ElementDataConfig } from "./element.data.config";
 import { ExploreDataConfig } from "./explore.data.config";
 import { I18nZHDataConfig } from "./i18nzh.config";
@@ -10,8 +10,11 @@ import { ItemCategoryConfig } from "./item.category.config";
 import { ShopConfig } from "./shop.config";
 import version from "../../../../version";
 import { JobConfig } from "./job.config";
-import { IJob } from "src/pica/structure/ijob";
+import { IJob } from "../../../pica/structure/ijob";
 import { CardPoolConfig } from "./cardpool.config";
+import { ICraftSkill } from "src/pica/structure/icraftskill";
+import { SkillConfig } from "./skill.config";
+import { LevelConfig } from "./level.config";
 
 export enum BaseDataType {
     i18n_zh = "i18n_zh",
@@ -20,7 +23,9 @@ export enum BaseDataType {
     element = "element",
     shop = "shop",
     job = "job",
-    cardPool = "cardPool"
+    cardPool = "cardPool",
+    skill = "skill",
+    level = "level"
     // itemcategory = "itemcategory"
 }
 
@@ -33,6 +38,7 @@ export class BaseDataConfigManager extends BaseConfigManager {
 
     public getLocalConfigMap() {
         return {
+            // skill: { template: new SkillConfig(), data: SkillConfig["data"]  },
             itemcategory: { template: new ItemCategoryConfig(), data: ItemCategoryConfig["data"] }
         };
     }
@@ -79,10 +85,11 @@ export class BaseDataConfigManager extends BaseConfigManager {
     public convertMapToItem(items: any[]) {
         const list: any[] = [];
         items.forEach((i) => {
-            const id = Object.keys(i)[0];
-            list.push({
-                id,
-                count: i[id]
+            Object.keys(i).forEach((k) => {
+                list.push({
+                    id: k,
+                    count: i[k]
+                });
             });
         });
 
@@ -163,8 +170,10 @@ export class BaseDataConfigManager extends BaseConfigManager {
             if (data.hasOwnProperty(key)) {
                 const temp = data[key];
                 if (sns.indexOf(temp.sn) !== -1) {
-                    const unlockstri = JSON.stringify(temp.unLockMaterials);
-                    map.set(temp.sn, JSON.parse(unlockstri));
+                    if (!StringUtils.isNullOrUndefined(temp.unLockMaterials)) {
+                        const unlockstri = JSON.stringify(temp.unLockMaterials);
+                        map.set(temp.sn, JSON.parse(unlockstri));
+                    }
                 }
             }
             if (map.size === sns.length) break;
@@ -185,6 +194,25 @@ export class BaseDataConfigManager extends BaseConfigManager {
                 ObjectAssign.excludeTagAssign(temp, item);
             }
         }
+        return temp;
+    }
+
+    public getSkill(id: string): ICraftSkill {
+        const data: SkillConfig = this.getConfig(BaseDataType.skill);
+        const temp = data.get(id);
+
+        // const materials = this.convertMapToItem([temp._materials]);
+        // temp.materials = this.getBatchItemDatas(materials);
+
+        temp.materials = this.convertMapToItem([temp._materials]);
+        temp.materials.forEach((m) => {
+            m.neededCount = m.count;
+        });
+
+        // const product = this.convertMapToItem([temp._product]);
+        // const list = this.getBatchItemDatas(product);
+        temp.product = this.convertMapToItem([temp._product])[0];
+
         return temp;
     }
 
@@ -218,6 +246,9 @@ export class BaseDataConfigManager extends BaseConfigManager {
     }
 
     public getI18n(id: string, tips?: any) {
+        if (!StringUtils.isNullOrUndefined(id)) {
+            id = id.toUpperCase();
+        }
         const data: I18nZHDataConfig = this.getConfig(BaseDataType.i18n_zh);
         return data.text(id, tips);
     }
@@ -317,6 +348,11 @@ export class BaseDataConfigManager extends BaseConfigManager {
         }
     }
 
+    public getLevel(type: string, level: number) {
+        const data: LevelConfig = this.getConfig(BaseDataType.level);
+        return data.get(type, level);
+    }
+
     public getCardPool(id: string) {
         const data: CardPoolConfig = this.getConfig(BaseDataType.cardPool);
         return data.get(id);
@@ -335,6 +371,8 @@ export class BaseDataConfigManager extends BaseConfigManager {
         this.dataMap.set(BaseDataType.shop, new ShopConfig());
         this.dataMap.set(BaseDataType.job, new JobConfig());
         this.dataMap.set(BaseDataType.cardPool, new CardPoolConfig());
+        this.dataMap.set(BaseDataType.skill, new SkillConfig());
+        this.dataMap.set(BaseDataType.level, new LevelConfig());
     }
 
     protected configUrl(reName: string, tempurl?: string) {
