@@ -109,11 +109,6 @@ export class PicaNewMainPanel extends PicaBasePanel {
         super.init();
     }
 
-    protected onShow() {
-        super.onShow();
-        this.render.guideManager.startGuide(GuideID.Hotel);
-    }
-
     protected onInitialized() {
         if (this.headData) this.headPanel.setHeadData(this.headData.level, this.headData.energy, this.headData.money, this.headData.diamond);
         if (this.sceneData) this.headPanel.setSceneData(this.sceneData.sceneName, this.sceneData.isPraise, this.sceneData.people, this.sceneData.roomType, this.sceneData.isself);
