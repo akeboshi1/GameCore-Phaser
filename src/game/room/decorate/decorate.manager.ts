@@ -162,6 +162,7 @@ export class DecorateManager {
     // 浮动功能栏
     // 检查是否可以放置
     public checkCanPlaceSelected(): boolean {
+        return true;
         if (this.mSelectedID < 0) return false;
         const element = this.mRoom.elementManager.get(this.mSelectedID);
         if (!element) return false;
