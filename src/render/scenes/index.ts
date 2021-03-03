@@ -7,5 +7,4 @@ export * from "./main.ui.scene";
 export * from "./play.scene";
 export * from "./room.scene";
 export * from "./select.role.scene";
-export * from "./decorate.scene";
 export * from "./scene.manager";

@@ -14,7 +14,6 @@ export class PicaHouseMediator extends BasicMediator {
     show(param?: any) {
         super.show(param);
         this.game.emitter.on(ModuleName.PICAHOUSE_NAME + "_hide", this.hide, this);
-        this.game.emitter.on(ModuleName.PICAHOUSE_NAME + "_scenedecorate", this.onSendEnterDecorate, this);
         this.game.emitter.on(ModuleName.PICAHOUSE_NAME + "_queryrequirements", this.query_REFURBISH_REQUIREMENTS, this);
         this.game.emitter.on(ModuleName.PICAHOUSE_NAME + "_queryrefurbish", this.query_ROOM_REFURBISH, this);
 
@@ -24,7 +23,6 @@ export class PicaHouseMediator extends BasicMediator {
 
     hide() {
         this.game.emitter.off(ModuleName.PICAHOUSE_NAME + "_hide", this.hide, this);
-        this.game.emitter.off(ModuleName.PICAHOUSE_NAME + "_scenedecorate", this.onSendEnterDecorate, this);
         this.game.emitter.off(ModuleName.PICAHOUSE_NAME + "_queryrequirements", this.query_REFURBISH_REQUIREMENTS, this);
         this.game.emitter.off(ModuleName.PICAHOUSE_NAME + "_queryrefurbish", this.query_ROOM_REFURBISH, this);
 
@@ -69,9 +67,5 @@ export class PicaHouseMediator extends BasicMediator {
         const configMgr = <BaseDataConfigManager>this.game.configManager;
         configMgr.getBatchItemDatas(content.requirements);
         this.mView.on_REFURBISH_REQUIREMENTS(content);
-    }
-
-    private onSendEnterDecorate() {
-        this.picaHouse.sendEnterDecorate();
     }
 }

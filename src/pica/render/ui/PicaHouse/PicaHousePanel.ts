@@ -9,7 +9,6 @@ export class PicaHousePanel extends BasePanel {
     private content: Phaser.GameObjects.Container;
     private mBackground: Phaser.GameObjects.Graphics;
     private bg: NineSlicePatch;
-    private editorRoomBtn: NineSliceButton;
     private closeShopBtn: NineSliceButton;
     private closeBtn: Phaser.GameObjects.Image;
     private roomInfoBtn: TabButton;
@@ -60,13 +59,11 @@ export class PicaHousePanel extends BasePanel {
     public addListen() {
         if (!this.mInitialized) return;
         this.closeBtn.on("pointerup", this.onCloseHandler, this);
-        this.editorRoomBtn.on("pointerup", this.onEnterEditorHandler, this);
     }
 
     public removeListen() {
         if (!this.mInitialized) return;
         this.closeBtn.off("pointerup", this.onCloseHandler, this);
-        this.editorRoomBtn.off("pointerup", this.onEnterEditorHandler, this);
     }
 
     public destroy() {
@@ -87,7 +84,6 @@ export class PicaHousePanel extends BasePanel {
             this.roomInfoBtn.y = -this.content.height * 0.5 - this.roomInfoBtn.height * 0.5 + 5 * this.dpr;
             this.roomSettingBtn.y = this.roomInfoBtn.y;
             this.closeBtn.y = -this.bg.height * 0.5 + this.dpr * 5;
-            this.editorRoomBtn.y = this.content.height * 0.5 - 30 * this.dpr;
             this.houseInfoPanel.y = -this.content.height * 0.5 + this.houseInfoPanel.height * 0.5 + 30 * this.dpr;
             //  this.closeShopBtn.on(String(ClickEvent.Tap), this.onCloseShopHandler, this);
         } else {
@@ -95,7 +91,6 @@ export class PicaHousePanel extends BasePanel {
         }
         this.houseInfoPanel.setAttributeData(content, isSelf);
         this.roomSettingBtn.visible = isSelf;
-        this.editorRoomBtn.visible = isSelf;
     }
     on_REFURBISH_REQUIREMENTS(content: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_QUERY_ROOM_REFURBISH_REQUIREMENTS) {
         this.itemsPanel.setHandler(new Handler(this, () => {
@@ -170,25 +165,6 @@ export class PicaHousePanel extends BasePanel {
         this.closeShopBtn.y = shopBtnY;
         this.houseInfoPanel.add(this.closeShopBtn);
         this.closeShopBtn.visible = false;
-        const btnY = this.content.height * 0.5;
-        this.editorRoomBtn = new NineSliceButton(this.scene, 0, btnY - 30 * this.dpr, 100 * this.dpr, 35 * this.dpr, UIAtlasKey.commonKey, "button_g", i18n.t("room_info.editorroom"), this.dpr, this.scale, {
-            left: 16 * this.dpr,
-            top: 16 * this.dpr,
-            right: 16 * this.dpr,
-            bottom: 16 * this.dpr
-        });
-        this.editorRoomBtn.setTextStyle({
-            color: "#022B55",
-            fontSize: 12 * this.dpr,
-            fontFamily: Font.DEFULT_FONT
-        });
-        this.editorRoomBtn.setTextOffset(10 * this.dpr, 0);
-        const editorx = -this.editorRoomBtn.width * 0.5 + 8 * this.dpr;
-        const eidtorimg = this.scene.make.image({ x: editorx, y: -3 * this.dpr, key: this.key, frame: "renovation" });
-        eidtorimg.texture.setFilter(Phaser.Textures.FilterMode.LINEAR);
-        this.editorRoomBtn.add(eidtorimg);
-        this.content.add(this.editorRoomBtn);
-        this.editorRoomBtn.visible = false;
         this.topCheckBox.selectIndex(0);
         this.itemsPanel = new ItemsConsumeFunPanel(this.scene, 278 * this.dpr, 198 * this.dpr, this.dpr, this.scale);
         this.itemsPanel.createBackGrphaic(w, h);
@@ -233,9 +209,5 @@ export class PicaHousePanel extends BasePanel {
     }
     private onCloseHandler() {
         this.render.renderEmitter(ModuleName.PICAHOUSE_NAME + "_hide");
-    }
-
-    private onEnterEditorHandler() {
-        this.render.renderEmitter(ModuleName.PICAHOUSE_NAME + "_scenedecorate");
     }
 }

@@ -1,11 +1,12 @@
-import { BaseDragonbonesDisplay, ReferenceArea } from "baseRender";
-import { Render } from "../../render";
-import { IPos, Logger, IProjection } from "utils";
-import { DisplayField, ElementStateType, IDragonbonesModel, PlayerState, RunningAnimation, TitleMask } from "structure";
-import { IDisplayObject } from "../display.object";
-import { LoadQueue, LoadType } from "../../loadqueue";
-import { ElementTopDisplay } from "../element.top.display";
-import { DisplayMovement } from "../display.movement";
+import {BaseDragonbonesDisplay, ReferenceArea} from "baseRender";
+import {Render} from "../../render";
+import {IPos, Logger, IProjection} from "utils";
+import {DisplayField, ElementStateType, IDragonbonesModel, PlayerState, RunningAnimation, TitleMask} from "structure";
+import {IDisplayObject} from "../display.object";
+import {LoadQueue, LoadType} from "../../loadqueue";
+import {ElementTopDisplay} from "../element.top.display";
+import {DisplayMovement} from "../display.movement";
+
 export class DragonbonesDisplay extends BaseDragonbonesDisplay implements IDisplayObject {
     protected mID: number = undefined;
     protected mTitleMask: number;
@@ -122,6 +123,14 @@ export class DragonbonesDisplay extends BaseDragonbonesDisplay implements IDispl
         if (this.mTopDisplay) this.mTopDisplay.update();
     }
 
+    public setVisible(value: boolean): this {
+        if (this.mTopDisplay) {
+            if (value) this.mTopDisplay.showNickname(this.mName);
+            else this.mTopDisplay.hideNickname();
+        }
+        return super.setVisible(value);
+    }
+
     public showNickname(name?: string) {
         if (name === undefined) {
             name = this.mName;
@@ -165,7 +174,7 @@ export class DragonbonesDisplay extends BaseDragonbonesDisplay implements IDispl
 
     public get projectionSize(): IProjection {
         if (!this.mProjectionSize) {
-            this.mProjectionSize = { offset: { x: 0, y: 0 }, width: 0, height: 0 };
+            this.mProjectionSize = {offset: {x: 0, y: 0}, width: 0, height: 0};
         }
         return this.mProjectionSize;
     }
@@ -223,7 +232,7 @@ export class DragonbonesDisplay extends BaseDragonbonesDisplay implements IDispl
     protected createArmatureDisplay(loader?: any, totalComplete?: number, totalFailed?: number) {
         if (!this.scene) return;
         super.createArmatureDisplay(loader, totalComplete, totalFailed);
-        this.play({ name: "idle", flip: false });
+        this.play({name: "idle", flip: false});
     }
 
     protected refreshAvatar() {

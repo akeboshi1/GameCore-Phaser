@@ -479,7 +479,7 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
         if (account && account.gameId) {
             game_id = account.gameId;
             virtualWorldUuid = account.virtualWorldId;
-            sceneId = account.sceneId;
+            sceneId = account.sceneID;
             loc = account.loc;
         }
         content.virtualWorldUuid = virtualWorldUuid;
@@ -529,13 +529,17 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
         return undefined;
     }
 
+    // public heartBeatCallBack() {
+    //     this.mainPeer.clearBeat();
+    // }
+
     protected async initWorld() {
         this.mUser = new User(this);
         this.addHandlerFun(op_client.OPCODE._OP_GATEWAY_RES_CLIENT_VIRTUAL_WORLD_INIT, this.onInitVirtualWorldPlayerInit);
         this.addHandlerFun(op_client.OPCODE._OP_GATEWAY_RES_CLIENT_ERROR, this.onClientErrorHandler);
         this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_SELECT_CHARACTER, this.onSelectCharacter);
         this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_GOTO_ANOTHER_GAME, this.onGotoAnotherGame);
-        this.addHandlerFun(op_client.OPCODE._OP_GATEWAY_RES_CLIENT_PONG, this.heartBeatCallBack);
+        // this.addHandlerFun(op_client.OPCODE._OP_GATEWAY_RES_CLIENT_PONG, this.heartBeatCallBack);
         this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_GAME_MODE, this.onAvatarGameModeHandler);
         this.createManager();
         const gameID = this.mConfig.game_id;
@@ -802,9 +806,6 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
                 reject("error");
             }
         });
-    }
-    private heartBeatCallBack() {
-        this.mainPeer.clearBeat();
     }
     private onAvatarGameModeHandler(packet: PBpacket) {
         const content: op_client.IOP_VIRTUAL_WORLD_REQ_CLIENT_GAME_MODE = packet.content;

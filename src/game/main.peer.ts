@@ -361,6 +361,24 @@ export class MainPeer extends RPCPeer {
     }
 
     @Export()
+    public decorateSelectElement(id: number) {
+        if (!this.game.roomManager) return;
+        if (!this.game.roomManager.currentRoom) return;
+        if (!this.game.roomManager.currentRoom.isDecorating) return;
+        if (!this.game.roomManager.currentRoom.decorateManager) return;
+        this.game.roomManager.currentRoom.decorateManager.select(id);
+    }
+
+    @Export()
+    public decorateMoveElement(id: number, delta: IPos) {
+        if (!this.game.roomManager) return;
+        if (!this.game.roomManager.currentRoom) return;
+        if (!this.game.roomManager.currentRoom.isDecorating) return;
+        if (!this.game.roomManager.currentRoom.decorateManager) return;
+        this.game.roomManager.currentRoom.decorateManager.moveSelected(id, delta);
+    }
+
+    @Export()
     public exitUser() {
         this.game.exitUser();
     }
@@ -443,7 +461,7 @@ export class MainPeer extends RPCPeer {
     @Export()
     public isCurrentRoomEditEnable(): boolean {
         if (this.game.roomManager && this.game.roomManager.currentRoom) {
-            return this.game.roomManager.currentRoom.enableEdit;
+            return this.game.roomManager.currentRoom.enableDecorate;
         }
         return false;
     }

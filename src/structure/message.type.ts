@@ -85,8 +85,12 @@ export class MessageType {
     // 收起物件容器
     public static EDIT_PACKAGE_COLLAPSE = "editPackageCollapse";
 
-    public static SELECTED_DECORATE_ELEMENT = "selectedDecorateElement";
-    public static CANCEL_DECORATE_ELEMENT = "cancelDecorateElement";
+    // 小屋装扮
+    public static DECORATE_SELECTE_ELEMENT = "decorateSelecteElement";
+    public static DECORATE_UNSELECT_ELEMENT = "decorateUnselectElement";
+    public static DECORATE_UPDATE_SELECTED_ELEMENT_CAN_PLACE = "decorateUpdateSelectedElementCanPlace";
+    public static DECORATE_UPDATE_SELECTED_ELEMENT_POSITION = "decorateUpdateSelectedElementPosition";
+    public static DECORATE_UPDATE_ELEMENT_COUNT = "decorateUpdateElementCount";
 
     public static ADD_ICON_TO_TOP = "addIconToTop";
     public static REMOVE_ICON_FROM_TOP = "removeIconFromTop";
