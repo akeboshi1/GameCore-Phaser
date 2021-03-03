@@ -56,7 +56,7 @@ export class MainUIScene extends RoomScene {
     this.layerManager.addLayer(this, BaseLayer, MainUIScene.LAYER_TOOLTIPS, 3);
     this.layerManager.addLayer(this, BaseLayer, MainUIScene.LAYER_MASK, 4);
     super.create();
-    this.render.guideManager.init();
+    // this.render.guideManager.init();
   }
 
   public setTimeout(caller, time): number {

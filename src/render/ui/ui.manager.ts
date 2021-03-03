@@ -171,6 +171,10 @@ export class UiManager {
         }
     }
 
+    public closePanel(id: number) {
+        this.render.mainPeer.closePanelHandler(id);
+    }
+
     public updateUIState(type: string, ui: any) {
         if (!this.mPanelMap) {
             return;

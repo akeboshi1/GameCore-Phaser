@@ -16,16 +16,19 @@ export class BaseGuide implements IGuide {
         this.uiManager = render.uiManager;
         this.guideEffect = new GuideEffect(this.scene);
     }
-    public start(data?: any) {
+    public show(data?: any) {
+        this.render.guideManager.startGuide(this);
     }
     public end() {
-       this.render.guideManager.stopGuide(this.id);
+        this.hide();
     }
-    public stop() {
+    public hide() {
+        this.render.guideManager.stopGuide();
         if (this.guideEffect) {
             this.guideEffect.destroy();
             this.guideEffect = null;
         }
+        this.render.uiManager.closePanel(this.id);
     }
     /**
      * 检查是否阻挡交互
@@ -34,6 +37,6 @@ export class BaseGuide implements IGuide {
         return true;
     }
     public destroy() {
-        this.stop();
+        this.hide();
     }
 }

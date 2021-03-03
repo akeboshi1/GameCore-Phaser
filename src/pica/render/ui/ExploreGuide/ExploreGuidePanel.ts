@@ -1,14 +1,15 @@
 import { Button, ClickEvent } from "apowophaserui";
 import { BaseGuide, Render } from "gamecoreRender";
 import { ModuleName } from "structure";
-import { BottomPanel, PicaExploreListPanel } from "../ui";
+import { BottomPanel } from "../Bottom/BottomPanel";
+import { PicaExploreListPanel } from "../PicaExploreList/PicaExploreListPanel";
 
 export class ExploreGuide extends BaseGuide {
     constructor(id: number, render: Render) {
         super(id, render);
     }
 
-    public start() {
+    public show() {
         this.step1();
     }
 
