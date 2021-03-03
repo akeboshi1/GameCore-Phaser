@@ -12,6 +12,12 @@ export class MouseManagerDecorate extends MouseManager {
     constructor(protected render: Render) {
         super(render);
 
+        this.render.emitter.on(MessageType.DECORATE_UNSELECT_ELEMENT, this.unselect, this);
+    }
+
+    destroy() {
+        this.render.emitter.off(MessageType.DECORATE_UNSELECT_ELEMENT, this.unselect, this);
+        super.destroy();
     }
 
     onUpdate(pointer: Phaser.Input.Pointer, gameobject: Phaser.GameObjects.GameObject) {
@@ -43,10 +49,11 @@ export class MouseManagerDecorate extends MouseManager {
         const worldPos = new LogicPos(pointer.worldX / this.render.scaleRatio, pointer.worldY / this.render.scaleRatio);
         display.setPosition(worldPos.x + this.downDisplayPos.x - this.downPointerPos.x,
             worldPos.y + this.downDisplayPos.y - this.downPointerPos.y);
-        this.render.emitter.emit(MessageType.UPDATE_SELECTED_DECORATE_ELEMENT_POSITION);
+        this.render.emitter.emit(MessageType.DECORATE_UPDATE_SELECTED_ELEMENT_POSITION);
     }
 
     protected onPointeroutHandler() {
+        this.selectedID = -1;
         this.clearDownData();
     }
 
@@ -66,19 +73,24 @@ export class MouseManagerDecorate extends MouseManager {
             if (id) {
                 const display = this.render.displayManager.getDisplay(id);
                 if (display && display.nodeType === NodeType.ElementNodeType) {
-                    this.selectedID = id;
-                    this.downPointerPos = new LogicPos(pointer.worldX / this.render.scaleRatio, pointer.worldY / this.render.scaleRatio);
-                    this.downDisplayPos = new LogicPos(display.x, display.y);
                     this.scene.input.off("pointermove", this.onPointerMoveHandler, this);
                     this.scene.input.on("pointermove", this.onPointerMoveHandler, this);
-                    this.render.mainPeer.decorateSelectElement(id);
+                    this.downPointerPos = new LogicPos(pointer.worldX / this.render.scaleRatio, pointer.worldY / this.render.scaleRatio);
+                    this.downDisplayPos = new LogicPos(display.x, display.y);
+                    if (id !== this.selectedID) {
+                        this.selectedID = id;
+                        this.render.mainPeer.decorateSelectElement(id);
+                    }
                 }
             }
         }
     }
 
-    private clearDownData() {
+    private unselect() {
         this.selectedID = -1;
+    }
+
+    private clearDownData() {
         this.downPointerPos = new LogicPos();
         this.downDisplayPos = new LogicPos();
         this.scene.input.off("pointermove", this.onPointerMoveHandler, this);

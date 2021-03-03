@@ -16,7 +16,7 @@ export class PicaDecorateControlMediator extends BasicMediator {
         }
         this.mDecorateManager = game.roomManager.currentRoom.decorateManager;
 
-        this.game.emitter.on(MessageType.UPDATE_SELECTED_DECORATE_ELEMENT_CAN_PLACE, this.updateCanPlace, this);
+        this.game.emitter.on(MessageType.DECORATE_UPDATE_SELECTED_ELEMENT_CAN_PLACE, this.updateCanPlace, this);
     }
 
     show(param?: any) {
@@ -28,7 +28,7 @@ export class PicaDecorateControlMediator extends BasicMediator {
     }
 
     destroy() {
-        this.game.emitter.off(MessageType.UPDATE_SELECTED_DECORATE_ELEMENT_CAN_PLACE, this.updateCanPlace, this);
+        this.game.emitter.off(MessageType.DECORATE_UPDATE_SELECTED_ELEMENT_CAN_PLACE, this.updateCanPlace, this);
         super.destroy();
     }
 

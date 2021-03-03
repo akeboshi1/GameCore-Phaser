@@ -20,13 +20,13 @@ export class PicaDecorateMediator extends BasicMediator {
         }
         this.mDecorateManager = game.roomManager.currentRoom.decorateManager;
 
-        this.game.emitter.on(MessageType.SELECTED_DECORATE_ELEMENT, this.updateSelectedFurniture, this);
-        this.game.emitter.on(MessageType.UPDATE_DECORATE_ELEMENT_COUNT, this.updateFurnitureCount, this);
+        this.game.emitter.on(MessageType.DECORATE_SELECTE_ELEMENT, this.updateSelectedFurniture, this);
+        this.game.emitter.on(MessageType.DECORATE_UPDATE_ELEMENT_COUNT, this.updateFurnitureCount, this);
     }
 
     destroy() {
-        this.game.emitter.off(MessageType.SELECTED_DECORATE_ELEMENT, this.updateSelectedFurniture, this);
-        this.game.emitter.off(MessageType.UPDATE_DECORATE_ELEMENT_COUNT, this.updateFurnitureCount, this);
+        this.game.emitter.off(MessageType.DECORATE_SELECTE_ELEMENT, this.updateSelectedFurniture, this);
+        this.game.emitter.off(MessageType.DECORATE_UPDATE_ELEMENT_COUNT, this.updateFurnitureCount, this);
         super.destroy();
     }
 

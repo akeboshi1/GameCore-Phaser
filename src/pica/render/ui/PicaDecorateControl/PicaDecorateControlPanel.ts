@@ -28,7 +28,7 @@ export class PicaDecorateControlPanel extends PicaBasePanel {
         this.mAutoPlaceBtn.on(ClickEvent.Tap, this.onAutoPlaceHandler, this);
         this.mExitBtn.on(ClickEvent.Tap, this.onExitHandler, this);
 
-        this.render.emitter.on(MessageType.UPDATE_SELECTED_DECORATE_ELEMENT_POSITION, this.updatePosition, this);
+        this.render.emitter.on(MessageType.DECORATE_UPDATE_SELECTED_ELEMENT_POSITION, this.updatePosition, this);
     }
 
     public removeListen() {
@@ -39,7 +39,7 @@ export class PicaDecorateControlPanel extends PicaBasePanel {
         this.mAutoPlaceBtn.off(ClickEvent.Tap, this.onAutoPlaceHandler, this);
         this.mExitBtn.off(ClickEvent.Tap, this.onExitHandler, this);
 
-        this.render.emitter.off(MessageType.UPDATE_SELECTED_DECORATE_ELEMENT_POSITION, this.updatePosition, this);
+        this.render.emitter.off(MessageType.DECORATE_UPDATE_SELECTED_ELEMENT_POSITION, this.updatePosition, this);
     }
 
     public resize(w: number, h: number) {

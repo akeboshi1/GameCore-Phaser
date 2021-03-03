@@ -156,7 +156,7 @@ export class DecorateManager {
 
         const baseID = this.getBaseIDBySN(element.model.sn);
 
-        this.mRoom.game.emitter.emit(MessageType.SELECTED_DECORATE_ELEMENT, baseID);
+        this.mRoom.game.emitter.emit(MessageType.DECORATE_SELECTE_ELEMENT, baseID);
     }
 
     // 浮动功能栏
@@ -214,6 +214,8 @@ export class DecorateManager {
         this.mSelectedID = -1;
 
         this.mRoom.game.uiManager.hideMed(ModuleName.PICADECORATECONTROL_NAME);
+
+        this.mRoom.game.renderPeer.workerEmitter(MessageType.DECORATE_UNSELECT_ELEMENT);
     }
 
     public addFromBag(baseID: string) {
@@ -254,7 +256,7 @@ export class DecorateManager {
         act.execute(this);
 
         const canPlace = this.checkCanPlaceSelected();
-        this.mRoom.game.emitter.emit(MessageType.UPDATE_SELECTED_DECORATE_ELEMENT_CAN_PLACE, canPlace);
+        this.mRoom.game.emitter.emit(MessageType.DECORATE_UPDATE_SELECTED_ELEMENT_CAN_PLACE, canPlace);
     }
 
     // 旋转选择物
@@ -296,6 +298,8 @@ export class DecorateManager {
         this.mSelectedID = -1;
 
         this.mRoom.game.uiManager.hideMed(ModuleName.PICADECORATECONTROL_NAME);
+
+        this.mRoom.game.renderPeer.workerEmitter(MessageType.DECORATE_UNSELECT_ELEMENT);
     }
 
     public getBagCount(baseID: string) {
@@ -466,7 +470,7 @@ class DecorateAction {
         const baseID = mng.getBaseIDBySN(this.target.sn);
         const newCount = mng.setBagCount(baseID, -1);
 
-        mng.room.game.emitter.emit(MessageType.UPDATE_DECORATE_ELEMENT_COUNT, baseID, newCount);
+        mng.room.game.emitter.emit(MessageType.DECORATE_UPDATE_ELEMENT_COUNT, baseID, newCount);
     }
 
     private removeElement(mng: DecorateManager) {
@@ -475,7 +479,7 @@ class DecorateAction {
         const baseID = mng.getBaseIDBySN(this.target.sn);
         const newCount = mng.setBagCount(baseID, 1);
 
-        mng.room.game.emitter.emit(MessageType.UPDATE_DECORATE_ELEMENT_COUNT, baseID, newCount);
+        mng.room.game.emitter.emit(MessageType.DECORATE_UPDATE_ELEMENT_COUNT, baseID, newCount);
     }
 
     private setElementPos(mng: DecorateManager, x: number, y: number) {
