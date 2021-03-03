@@ -115,6 +115,8 @@ export class DecorateManager {
             if (this.mSelectedActionQueue.length === 0) return;
             const act = this.mSelectedActionQueue.pop();
             act.reverse(this);
+
+            this.mRoom.game.renderPeer.workerEmitter(MessageType.DECORATE_UPDATE_SELECTED_ELEMENT_POSITION);
         } else {
             if (this.mActionQueue.length === 0) return;
             const act = this.mActionQueue.pop();
