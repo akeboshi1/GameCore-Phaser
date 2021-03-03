@@ -78,12 +78,8 @@ export class UserDataManager extends PacketHandler {
         return 0;
     }
     get isSelfRoom() {
-        if (this.mProperty.rooms) {
-            const curRoomid = this.curRoomID;
-            for (const room of this.mProperty.rooms) {
-                if (room.roomId === curRoomid) return true;
-            }
-        }
+        const dataMgr = this.game.getDataMgr<SceneDataManager>(DataMgrType.SceneMgr);
+        if (dataMgr.curRoom && dataMgr.curRoom.ownerId === this.cid) return true;
         return false;
     }
 

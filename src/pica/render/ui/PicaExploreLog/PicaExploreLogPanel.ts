@@ -37,6 +37,8 @@ export class PicaExploreLogPanel extends PicaBasePanel {
         this.expProgress.y = h - 240 * this.dpr;
         this.textCon.y = this.expProgress.y + 55 * this.dpr;
         this.textCon.x = w * 0.5;
+        this.guideCon.x = 0;
+        this.guideCon.y = this.goOutBtn.y + this.goOutBtn.height * 0.5 + 20 * this.dpr;
         this.expProgress.refreshMask();
         this.textCon.refreshMask();
     }
@@ -63,8 +65,9 @@ export class PicaExploreLogPanel extends PicaBasePanel {
         this.continueText = this.scene.make.text({ style: UIHelper.yellowStyle(this.dpr, 24) }).setOrigin(0, 0.5);
         this.continueText.setFontStyle("bold italic");
         this.textCon = new ExploreTipsTextsCon(this.scene, w, 138 * this.dpr, this.dpr, this.scale);
-      //  this.guideCon = new PicaExploreLogGuideText(this.scene, 132 * this.dpr, 113 * this.dpr, this.dpr);
-        this.add([this.goOutBtn, this.expProgress, this.continueProgress, this.continueText, this.textCon]);
+        this.guideCon = new PicaExploreLogGuideText(this.scene, 132 * this.dpr, 113 * this.dpr, this.dpr);
+        this.guideCon.visible = false;
+        this.add([this.goOutBtn, this.expProgress, this.continueProgress, this.continueText, this.textCon, this.guideCon]);
         this.resize(w, h);
         super.init();
         this.setTimeProgress(30000);
@@ -106,6 +109,15 @@ export class PicaExploreLogPanel extends PicaBasePanel {
         this.openSettlePanel();
         this.settlePanel.setSettleData(content);
         this.clearRotateTween();
+    }
+
+    setExploreGuideTexts(content: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_ROOM_SHOW_GUIDE_TEXT) {
+        if (!content.text || content.text.length === 0) {
+            this.guideCon.visible = false;
+        } else {
+            this.guideCon.visible = true;
+            this.guideCon.setGuideTexts(content.text);
+        }
     }
 
     setTimeProgress(time) {

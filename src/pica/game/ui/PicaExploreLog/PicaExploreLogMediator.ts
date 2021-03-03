@@ -87,6 +87,6 @@ export class PicaExploreLogMediator extends BasicMediator {
         if (this.mView) this.mView.setExploreCountDown(content);
     }
     private onSHOW_GUIDE_TEXT(content: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_ROOM_SHOW_GUIDE_TEXT) {
-
+        if (this.mView) this.mView.setExploreGuideTexts(content);
     }
 }
