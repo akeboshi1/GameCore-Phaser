@@ -2,6 +2,7 @@ import { op_client } from "pixelpai_proto";
 import { PicaNewRole } from "./PicaNewRole";
 import { BasicMediator, Game, UIType } from "gamecore";
 import { ModuleName } from "structure";
+import { BaseDataConfigManager } from "../../data";
 export class PicaNewRoleMediator extends BasicMediator {
     private picaNewRole: PicaNewRole;
     private uid: string;
@@ -50,6 +51,7 @@ export class PicaNewRoleMediator extends BasicMediator {
     private on_Another_Info(content: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_ANOTHER_PLAYER_INFO) {
         if (this.panelInit) {
             this.mShowData = content;
+            this.config.getBatchItemDatas(content.avatarSuit);
             if (this.mView) this.mView.setRoleData(content);
         }
     }
@@ -105,5 +107,9 @@ export class PicaNewRoleMediator extends BasicMediator {
                 }
             }
         });
+    }
+
+    private get config(): BaseDataConfigManager {
+        return <BaseDataConfigManager>this.game.configManager;
     }
 }

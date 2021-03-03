@@ -108,8 +108,9 @@ export class PicaFurniFunMediator extends BasicMediator {
                 }
             }
         }
-
-        this.game.emitter.emit(EventType.SCENE_SHOW_UI, ModuleName.PICAFURNIFUN_NAME, { tag: "teambuild", element: ele.model, materials: list });
+        const model = ele.model;
+        const obj = { nickname: model.nickname, displayInfo: model.displayInfo };
+        this.game.emitter.emit(EventType.SCENE_SHOW_UI, ModuleName.PICAFURNIFUN_NAME, { tag: "teambuild", element: obj, materials: list });
     }
     private query_TEAM_BUILD(ids: number[]) {
         this.picFurni.queryTeamBuild(ids);
