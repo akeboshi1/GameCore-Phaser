@@ -1,7 +1,7 @@
 import {Button, ClickEvent} from "apowophaserui";
 import {BasePanel, DragonbonesDisplay, FramesDisplay, UiManager} from "gamecoreRender";
 import {MessageType, ModuleName, RENDER_PEER} from "structure";
-import {IPos, Logger} from "utils";
+import {IPos, Logger, LogicPos} from "utils";
 import {UIAtlasName} from "picaRes";
 import {PicaBasePanel} from "../pica.base.panel";
 
@@ -98,8 +98,10 @@ export class PicaDecorateControlPanel extends PicaBasePanel {
             return;
         }
 
-        this.x = (this.mTarget.x + 150) * this.dpr;
-        this.y = (this.mTarget.y + 200) * this.dpr;
+        const camPos = new LogicPos(this.uiManager.render.camerasManager.camera.scrollX,
+            this.uiManager.render.camerasManager.camera.scrollY);
+        this.x = (this.mTarget.x - 170) * this.dpr - camPos.x;
+        this.y = (this.mTarget.y + 50) * this.dpr - camPos.y;
     }
 
     private onSaveHandler() {
