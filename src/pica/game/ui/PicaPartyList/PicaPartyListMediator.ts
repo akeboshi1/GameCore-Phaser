@@ -1,7 +1,8 @@
 import { op_client, op_pkt_def } from "pixelpai_proto";
 import { PicaPartyList } from "./PicaPartyList";
-import { BasicMediator, Game } from "gamecore";
+import { BasicMediator, Game, StateParse } from "gamecore";
 import { ModuleName, RENDER_PEER } from "structure";
+import { BaseDataConfigManager } from "../../data";
 export class PicaPartyListMediator extends BasicMediator {
     private mPartyListData: any;
     private mPlayerProgress: any;
@@ -89,9 +90,12 @@ export class PicaPartyListMediator extends BasicMediator {
 
     private on_PLAYER_PROGRESS(content: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_QUERY_PLAYER_PROGRESS) {
         if (!this.mPanelInit) {
-            this.mPlayerProgress = content;
             return;
         }
+        for (const step of content.steps) {
+            this.config.getBatchItemDatas(step.rewards);
+        }
+        this.mPlayerProgress = content;
         this.mView.setOnlineProgress(content);
     }
 
@@ -117,5 +121,8 @@ export class PicaPartyListMediator extends BasicMediator {
 
     private get model(): PicaPartyList {
         return (<PicaPartyList>this.mModel);
+    }
+    private get config(): BaseDataConfigManager {
+        return <BaseDataConfigManager>this.game.configManager;
     }
 }
