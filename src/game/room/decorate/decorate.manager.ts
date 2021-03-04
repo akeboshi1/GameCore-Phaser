@@ -267,8 +267,8 @@ export class DecorateManager {
 
         const act = new DecorateAction(spriteData, DecorateActionType.Add, new DecorateActionData({pos: spriteData.pos}));
         act.execute(this);
-        this.mActionQueue.push(act);
-        // this.select(indexID);
+        this.select(indexID);
+        this.mSelectedActionQueue.push(act);
     }
 
     // 移动选择物 call by motion
