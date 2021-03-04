@@ -18,6 +18,7 @@ export class MouseManagerDecorate extends MouseManager {
 
     destroy() {
         this.render.emitter.off(MessageType.DECORATE_UNSELECT_ELEMENT, this.unselect, this);
+        this.removeListener();
         super.destroy();
     }
 

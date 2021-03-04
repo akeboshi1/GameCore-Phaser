@@ -17,7 +17,7 @@ import {TerrainManager} from "../terrain/terrain.manager";
 import {SkyBoxManager} from "../sky.box/sky.box.manager";
 import {GameState, IScenery, LoadState, ModuleName, SceneName} from "structure";
 import {EffectManager} from "../effect/effect.manager";
-import {DecorateManager} from "../decorate/decorate.manager";
+import {DecorateActionType, DecorateManager} from "../decorate/decorate.manager";
 import {WallManager} from "../element/wall.manager";
 import {Sprite} from "baseModel";
 import {BlockObject} from "../block/block.object";
@@ -143,6 +143,7 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
             this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_SET_CAMERA_FOLLOW, this.onCameraFollowHandler);
             this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_SYNC_STATE, this.onSyncStateHandler);
             this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_CURRENT_SCENE_ALL_SPRITE, this.onAllSpriteReceived);
+            this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_NOTICE_RELOAD_SCENE, this.onReloadScene);
         }
     }
 
@@ -653,7 +654,7 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
         this.game.uiManager.showMed(ModuleName.PICADECORATE_NAME,
             {closeAlertText: (<BaseDataConfigManager>this.game.configManager).getI18n("PKT_SYS0000021")});
 
-        // switch motion
+        // switch mouse manager
         this.game.renderPeer.switchDecorateMouseManager();
     }
 
@@ -684,7 +685,7 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
         this.game.uiManager.showMed(ModuleName.PICANEWMAIN_NAME);
         this.game.uiManager.showMed(ModuleName.BOTTOM);
 
-        // switch motion
+        // switch mouse manager
         this.game.renderPeer.switchBaseMouseManager();
 
         // destroy decorate manager
@@ -900,8 +901,34 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
         }
         const nodeType = content.nodeType;
         const addList = [];
+
+        if (nodeType === op_def.NodeType.ElementNodeType || nodeType === op_def.NodeType.SpawnPointType) {
+            for (const sp of content.sprites) {
+                if (this.mElementManager.get(sp.id)) continue;
+                const sprite = new Sprite(sp, nodeType);
+                addList.push(sprite);
+            }
+            this.mElementManager.add(addList);
+        } else if (nodeType === op_def.NodeType.TerrainNodeType) {
+            for (const sp of content.sprites) {
+                if (this.mTerrainManager.get(sp.id)) continue;
+                const sprite = new Sprite(sp, nodeType);
+                addList.push(sprite);
+            }
+            this.mTerrainManager.add(addList);
+        }
+    }
+
+    private onReloadScene(packet: PBpacket) {
+        const content: op_client.IOP_VIRTUAL_WORLD_REQ_CLIENT_NOTICE_RELOAD_SCENE = packet.content;
+        const sprites: op_client.ISprite[] | undefined = content.sprites;
+        if (!sprites) {
+            Logger.getInstance().error("<OP_VIRTUAL_WORLD_REQ_CLIENT_NOTICE_RELOAD_SCENE> content.sprites is undefined");
+            return;
+        }
+        const nodeType = content.nodeType;
+        const addList = [];
         for (const sp of content.sprites) {
-            if (this.mElementManager.get(sp.id)) continue;
             const sprite = new Sprite(sp, nodeType);
             addList.push(sprite);
         }
