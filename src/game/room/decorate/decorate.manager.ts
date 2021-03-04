@@ -41,6 +41,7 @@ export class DecorateManager {
 
     // 保存当前场景，并离开编辑模式
     public save() {
+        this.reverseSelected();
         const combinedActions = this.combineActions(this.mActionQueue);
         const pkt: PBpacket = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_SYNC_EDIT_MODEL_RESULT);
         const content: op_virtual_world.IOP_CLIENT_REQ_VIRTUAL_WORLD_SYNC_EDIT_MODEL_RESULT = pkt.content;
@@ -79,11 +80,13 @@ export class DecorateManager {
                         }
                         break;
                     case DecorateActionType.Move:
-                        result.commandMask = 0x0002;
+                        result.commandMask = result.commandMask === 0x0001 || result.commandMask === 0x0003 ?
+                            0x0003 : 0x0002;
                         result.point3f = sprite.pos;
                         break;
                     case DecorateActionType.Rotate:
-                        result.commandMask = 0x0002;
+                        result.commandMask = result.commandMask === 0x0001 || result.commandMask === 0x0003 ?
+                            0x0003 : 0x0002;
                         result.currentAnimationName = sprite.currentAnimationName;
                         result.direction = sprite.direction;
                         break;
@@ -135,18 +138,18 @@ export class DecorateManager {
 
     // 选择某一物件 call by motion
     public select(id: number) {
+        if (id < 0) {
+            this.reverseSelected();
+            return;
+        }
         const element = this.mRoom.elementManager.get(id);
         if (!element) return;
 
-        if (this.mSelectedID > 0 && this.mSelectedID !== id) {
+        if (this.mSelectedID !== id) {
             this.reverseSelected();
         }
 
         this.mSelectedID = id;
-        const med = this.mRoom.game.uiManager.getMed(ModuleName.PICADECORATECONTROL_NAME);
-        if (med && med.isShow()) {
-            this.mRoom.game.uiManager.hideMed(ModuleName.PICADECORATECONTROL_NAME);
-        }
 
         // set walkable
         this.mRoom.elementManager.removeFromMap(element.model);
@@ -180,11 +183,11 @@ export class DecorateManager {
         const combinedActs = this.combineActions(this.mSelectedActionQueue);
         combinedActs.forEach((acts, sprite) => {
             if (!sprite) {
-                Logger.getInstance().error("sprite is null, ",acts, sprite);
+                Logger.getInstance().error("sprite is null, ", acts, sprite);
                 return;
             }
             if (sprite.id !== this.mSelectedID) {
-                Logger.getInstance().error("sprite.id is not selected, ",acts, sprite);
+                Logger.getInstance().error("sprite.id is not selected, ", acts, sprite);
                 return;
             }
 
@@ -260,6 +263,7 @@ export class DecorateManager {
     // 移动选择物 call by motion
     public moveSelected(id: number, delta: IPos) {
         if (this.mSelectedID !== id) return;
+        if (delta.x === 0 && delta.y === 0) return;
         const element = this.mRoom.elementManager.get(this.mSelectedID);
         if (!element) return;
         const act = new DecorateAction(element.model, DecorateActionType.Move, new DecorateActionData({moveVec: delta}));
