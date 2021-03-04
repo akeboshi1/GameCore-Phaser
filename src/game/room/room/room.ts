@@ -915,10 +915,9 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
         if (nodeType === op_def.NodeType.ElementNodeType || nodeType === op_def.NodeType.SpawnPointType) {
             for (const sp of content.sprites) {
                 if (this.mElementManager.get(sp.id)) continue;
-                const sprite = new Sprite(sp, nodeType);
-                addList.push(sprite);
+                addList.push(sp);
             }
-            this.mElementManager.add(addList);
+            this.mElementManager.addSpritesToCache(addList);
         } else if (nodeType === op_def.NodeType.TerrainNodeType) {
             for (const sp of content.sprites) {
                 if (this.mTerrainManager.get(sp.id)) continue;
@@ -980,7 +979,7 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
                     this.elementManager.remove(element.id);
                 }
             }
-            this.mElementManager.add(addList);
+            this.mElementManager.addSpritesToCache(content.sprites);
         } else if (nodeType === op_def.NodeType.TerrainNodeType) {
             if (content.packet.currentFrame !== undefined && content.packet.currentFrame === 1) {
                 // remove all elements

@@ -29,6 +29,9 @@ export class BasicScene extends Phaser.Scene {
     public updateProgress(data: any) {
     }
 
+    public loadProgress(data: any) {
+    }
+
     public create() {
         this.initialize = true;
         this.render.emitter.emit("sceneCreated");
