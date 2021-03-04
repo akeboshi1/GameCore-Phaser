@@ -30,8 +30,6 @@ export class RoomManager extends PacketHandler implements IRoomManager {
         this.mGame = game;
         this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_ENTER_SCENE, this.onEnterSceneHandler);
         this.addHandlerFun(op_client.OPCODE._OP_EDITOR_REQ_CLIENT_CHANGE_TO_EDITOR_MODE, this.onEnterEditor);
-        this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_START_EDIT_MODEL, this.onStartDecorate);
-        this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_EDIT_MODEL_RESULT, this.onDecorateResult);
         // this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_EDIT_MODE_READY, this.onEnterDecorate);
     }
 
@@ -85,16 +83,6 @@ export class RoomManager extends PacketHandler implements IRoomManager {
         }
         this.mRooms.length = 0;
         this.mCurRoom = null;
-    }
-
-    public async requestDecorate() {
-        if (!this.currentRoom) {
-            Logger.getInstance().error("current room is null");
-            return;
-        }
-
-        // waite for <onStartDecorate>
-        this.connection.send(new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_START_EDIT_MODEL));
     }
 
     private hasRoom(id: number): boolean {
@@ -180,54 +168,6 @@ export class RoomManager extends PacketHandler implements IRoomManager {
         }
         this.game.peer.state = GameState.EnterScene;
         this.game.emitter.emit(EventType.SCENE_CHANGE);
-    }
-
-    private async onStartDecorate(packet: PBpacket) {
-        const content: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_START_EDIT_MODEL = packet.content;
-        if (!content.status) {
-            this.game.renderPeer.showAlert(content.msg, true);
-            // Logger.getInstance().warn("enter decorate error: ", content.msg);
-            return;
-        }
-
-        if (!this.currentRoom) {
-            Logger.getInstance().error("current room is null");
-            return;
-        }
-
-        // 换room。但是与效果不符，待定
-        // const camViewPort = await this.currentRoom.cameraService.getViewPort();
-        // this.onEnterDecorate({
-        //     scene: {
-        //         id: this.currentRoom.id,
-        //         cols: this.currentRoom.roomSize.cols,
-        //         rows: this.currentRoom.roomSize.rows,
-        //         tileWidth: this.currentRoom.roomSize.tileWidth,
-        //         tileHeight: this.currentRoom.roomSize.tileHeight
-        //     },
-        //     actor: {id: 0, x: camViewPort.x, y: camViewPort.y, uuid: 0}
-        // });
-
-        // 不换room
-        if (this.currentRoom.isDecorating) {
-            Logger.getInstance().error("current room is decorating");
-            return;
-        }
-
-        this.currentRoom.startDecorating();
-    }
-
-    private onDecorateResult(packet: PBpacket) {
-        const content: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_EDIT_MODEL_RESULT = packet.content;
-        if (!content.status) {
-            this.game.renderPeer.showAlert(content.msg, true);
-            // Logger.getInstance().warn("enter decorate error: ", content.msg);
-            return;
-        }
-
-        this.currentRoom.stopDecorating();
-
-        // waite for OP_VIRTUAL_WORLD_REQ_CLIENT_NOTICE_RELOAD_SCENE
     }
 
     get game(): Game {
