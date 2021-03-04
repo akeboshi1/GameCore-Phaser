@@ -162,6 +162,11 @@ export class LoadingScene extends BasicScene {
   }
 
   public sleep() {
+    this.mTxtList.forEach((text) => {
+      text.destroy();
+    });
+    this.mTxtList.length = 0;
+    this.mTxtList = [];
     if (this.progressText) {
       if (this.progressText.active) this.progressText.setText("");
     }
@@ -171,8 +176,6 @@ export class LoadingScene extends BasicScene {
     // if (!this.scene.settings.active) {
     //   return;
     // }
-    this.mTxtList.length = 0;
-    this.mTxtList = [];
     if (this.curtain) {
       this.displayVisible(false);
       this.curtain.close().then(() => {

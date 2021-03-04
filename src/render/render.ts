@@ -776,7 +776,7 @@ export class Render extends RPCPeer implements GameMain, IRender {
     @Export()
     public reload() {
         Logger.getInstance().log("game relaod =====>");
-        window.location.reload();
+        // window.location.reload();
     }
 
     @Export()
