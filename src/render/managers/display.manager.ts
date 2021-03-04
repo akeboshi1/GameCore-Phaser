@@ -1,4 +1,4 @@
-import {Handler, IPos, IPosition45Obj, Logger, LogicPos} from "utils";
+import { Handler, IPos, IPosition45Obj, Logger, LogicPos } from "utils";
 import { SceneManager } from "../scenes/scene.manager";
 import { FramesDisplay } from "../display/frames/frames.display";
 import { PlayScene } from "../scenes/play.scene";
@@ -14,8 +14,8 @@ import { MatterBodies } from "../display/debugs/matter";
 import { ServerPosition } from "../display/debugs/server.pointer";
 import { BasicScene } from "baseRender";
 import { IDisplayObject } from "../display";
-import {Astar} from "../display/debugs/astar";
-import {Grids} from "../display/debugs/grids";
+import { Astar } from "../display/debugs/astar";
+import { Grids } from "../display/debugs/grids";
 
 export enum NodeType {
     UnknownNodeType = 0,
@@ -460,6 +460,12 @@ export class DisplayManager {
             this.serverPosition = new ServerPosition(this.render);
         }
         this.serverPosition.draw(x, y);
+    }
+
+    public hideServerPosition() {
+        if (!this.serverPosition) return;
+        this.serverPosition.destroy();
+        this.serverPosition = null;
     }
 
     public destroy() {

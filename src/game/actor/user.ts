@@ -11,6 +11,7 @@ import { LayerEnum } from "game-capsule";
 // import * as _ from "lodash";
 
 export class User extends Player {
+    private mDebugPoint: boolean = false;
     private mUserData: UserDataManager;
     private mMoveStyle: number;
     // private mTargetPoint: IMoveTarget;
@@ -22,6 +23,14 @@ export class User extends Player {
         super(undefined, undefined);
         this.mBlockable = false;
         this.mUserData = new UserDataManager(game);
+    }
+
+    public set debugPoint(val: boolean) {
+        this.mDebugPoint = val;
+    }
+
+    public get debugPoint(): boolean {
+        return this.mDebugPoint;
     }
 
     public load(displayInfo: IFramesModel | IDragonbonesModel, isUser: boolean = false): Promise<any> {
@@ -112,6 +121,10 @@ export class User extends Player {
     }
 
     public move(moveData: any) {
+        if (!this.mDebugPoint) {
+            this.mRoomService.game.renderPeer.hideServerPosition();
+            return;
+        }
         this.mRoomService.game.renderPeer.drawServerPosition(moveData[0].x, moveData[0].y);
     }
 
