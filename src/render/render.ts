@@ -1318,6 +1318,11 @@ export class Render extends RPCPeer implements GameMain, IRender {
         if (this.mDisplayManager) this.mDisplayManager.drawServerPosition(x, y);
     }
 
+    @Export()
+    public hideServerPosition() {
+        if (this.mDisplayManager) this.mDisplayManager.hideServerPosition();
+    }
+
     @Export([webworker_rpc.ParamType.num, webworker_rpc.ParamType.num])
     public changeAlpha(id: number, alpha: number) {
         if (this.mDisplayManager) this.mDisplayManager.changeAlpha(id, alpha);
