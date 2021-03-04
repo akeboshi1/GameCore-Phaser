@@ -14,7 +14,8 @@ export class PicaDecorateMediator extends BasicMediator {
     constructor(game: Game) {
         super(ModuleName.PICADECORATE_NAME, game);
 
-        this.game.emitter.on(MessageType.DECORATE_SELECTE_ELEMENT, this.updateSelectedFurniture, this);
+        this.game.emitter.on(MessageType.DECORATE_SELECTE_ELEMENT, this.onSelectFurniture, this);
+        this.game.emitter.on(MessageType.DECORATE_UNSELECT_ELEMENT, this.onUnselectFurniture, this);
         this.game.emitter.on(MessageType.DECORATE_UPDATE_ELEMENT_COUNT, this.updateFurnitureCount, this);
     }
 
@@ -30,7 +31,8 @@ export class PicaDecorateMediator extends BasicMediator {
     }
 
     destroy() {
-        this.game.emitter.off(MessageType.DECORATE_SELECTE_ELEMENT, this.updateSelectedFurniture, this);
+        this.game.emitter.off(MessageType.DECORATE_SELECTE_ELEMENT, this.onSelectFurniture, this);
+        this.game.emitter.off(MessageType.DECORATE_UNSELECT_ELEMENT, this.onUnselectFurniture, this);
         this.game.emitter.off(MessageType.DECORATE_UPDATE_ELEMENT_COUNT, this.updateFurnitureCount, this);
         super.destroy();
     }
@@ -67,8 +69,9 @@ export class PicaDecorateMediator extends BasicMediator {
     // ..
 
     // called by decorate manager
-    public updateSelectedFurniture(baseID: string) {
+    public onSelectFurniture(baseID: string) {
         if (!this.bagData) return;
+        if (!this.mView) return;
 
         const count = this.mDecorateManager.getBagCount(baseID);
         const bagData = this.bagData.getItem(PKT_PackageType.FurniturePackage, baseID);
@@ -81,9 +84,13 @@ export class PicaDecorateMediator extends BasicMediator {
             configItem.count = count;
             this.mView.setSelectedFurniture(configItem);
         }
+        this.mView.hideSaveBtn();
+    }
+    public onUnselectFurniture() {
+        if (this.mView) this.mView.showSaveBtn();
     }
     public updateFurnitureCount(baseID: string, count: number) {
-        this.mView.updateFurnitureCount(baseID, count);
+        if (this.mView) this.mView.updateFurnitureCount(baseID, count);
     }
     // ..
 

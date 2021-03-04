@@ -79,6 +79,14 @@ export class PicaDecoratePanel extends PicaBasePanel {
         this.mBtn_SelectedFurniture.enable = data.count > 0;
     }
 
+    public showSaveBtn() {
+        if (this.mBtn_SaveAndExit) this.mBtn_SaveAndExit.visible = true;
+    }
+
+    public hideSaveBtn() {
+        if (this.mBtn_SaveAndExit) this.mBtn_SaveAndExit.visible = false;
+    }
+
     public updateFurnitureCount(baseID: string, count: number) {
         if (this.mBtn_SelectedFurniture) {
             if (this.mBtn_SelectedFurniture.itemData.id === baseID) {
