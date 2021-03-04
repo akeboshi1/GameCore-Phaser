@@ -19,7 +19,7 @@ export class DecorateManager {
     private mSelectedActionQueue: DecorateAction[] = [];
     private mSelectedID: number = -1;
 
-    constructor(private mRoom: Room) {
+    constructor(private mRoom: Room, private mEntryData?: { id: number, baseID?: string }) {
     }
 
     public get room(): Room {
@@ -33,6 +33,16 @@ export class DecorateManager {
     }
 
     // 固定功能栏
+    // 执行入口数据处理
+    public dealEntryData() {
+        if (!this.mEntryData) return;
+        if (this.mEntryData.id !== undefined && this.mEntryData.id > 0) {
+            this.select(this.mEntryData.id);
+        } else if (this.mEntryData.baseID !== undefined && this.mEntryData.baseID.length > 0) {
+            this.addFromBag(this.mEntryData.baseID);
+        }
+    }
+
     // 点击二级确认，离开编辑模式
     public exit() {
         this.reverseAll();

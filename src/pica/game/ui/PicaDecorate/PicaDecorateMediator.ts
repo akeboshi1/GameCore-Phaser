@@ -10,6 +10,7 @@ export class PicaDecorateMediator extends BasicMediator {
     private readonly QUICK_SELECT_COUNT: number = 6;
 
     private mDecorateManager: DecorateManager;
+    private mCacheData: Array<{ baseID: string, count: number }> = [];
 
     constructor(game: Game) {
         super(ModuleName.PICADECORATE_NAME, game);
@@ -28,6 +29,7 @@ export class PicaDecorateMediator extends BasicMediator {
             return;
         }
         this.mDecorateManager = this.game.roomManager.currentRoom.decorateManager;
+        this.mDecorateManager.dealEntryData();
     }
 
     destroy() {
@@ -79,19 +81,26 @@ export class PicaDecorateMediator extends BasicMediator {
             bagData.count = count;
             this.mView.setSelectedFurniture(bagData);
         } else {
-            const configMgr = <BaseDataConfigManager>this.game.configManager;
+            const configMgr = <BaseDataConfigManager> this.game.configManager;
             const configItem = configMgr.getItemBase(baseID);
             configItem.count = count;
             this.mView.setSelectedFurniture(configItem);
         }
         this.mView.hideSaveBtn();
     }
+
     public onUnselectFurniture() {
         if (this.mView) this.mView.showSaveBtn();
     }
+
     public updateFurnitureCount(baseID: string, count: number) {
         if (this.mView) this.mView.updateFurnitureCount(baseID, count);
+        else {
+            const data = {baseID, count};
+            this.mCacheData.push(data);
+        }
     }
+
     // ..
 
     protected panelInit() {
@@ -109,6 +118,11 @@ export class PicaDecorateMediator extends BasicMediator {
             furnitures = furnitures.slice(0, this.QUICK_SELECT_COUNT - 1);
         }
         this.mView.setQuickSelectFurnitures(furnitures);
+
+        while (this.mCacheData.length > 0) {
+            const data = this.mCacheData.pop();
+            this.mView.updateFurnitureCount(data.baseID, data.count);
+        }
     }
 
     private get bagData() {
