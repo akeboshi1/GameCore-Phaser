@@ -475,6 +475,16 @@ export class ElementManager extends PacketHandler implements IElementManager {
         });
     }
 
+    public addSpritesToCache(objs: op_client.ISprite[]) {
+        for (const obj of objs) {
+            if (this.checkDisplay(new Sprite(obj, 3))) {
+                this.mCacheAddList.push(obj);
+            } else {
+                this.mRequestSyncIdList.push(obj.id);
+            }
+        }
+    }
+
     protected addMap(sprite: ISprite) {
         this.addToMap(sprite);
     }
@@ -522,13 +532,7 @@ export class ElementManager extends PacketHandler implements IElementManager {
         if (type !== NodeType.ElementNodeType) {
             return;
         }
-        for (const obj of objs) {
-            if (this.checkDisplay(new Sprite(obj, 3))) {
-                this.mCacheAddList.push(obj);
-            } else {
-                this.mRequestSyncIdList.push(obj.id);
-            }
-        }
+        this.addSpritesToCache(objs);
     }
 
     protected _add(sprite: ISprite, addMap: boolean = false): Element {
