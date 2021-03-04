@@ -144,6 +144,11 @@ export class MainPeer extends RPCPeer {
         // this.remote[MAIN_WORKER].MainPeer.clearHeartBeat();
     }
 
+    @Export([webworker_rpc.ParamType.boolean])
+    public showMovePoint(val: boolean) {
+        if (this.game && this.game.user) this.game.user.debugPoint = val;
+    }
+
     // ============== render调用主进程
     @Export()
     public createGame(config: ILauncherConfig) {

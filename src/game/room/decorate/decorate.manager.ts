@@ -215,6 +215,7 @@ export class DecorateManager {
         }
 
         this.mSelectedID = -1;
+        this.mSelectedActionQueue.length = 0;
 
         this.mRoom.game.uiManager.hideMed(ModuleName.PICADECORATECONTROL_NAME);
         this.mRoom.game.emitter.emit(MessageType.DECORATE_UNSELECT_ELEMENT);

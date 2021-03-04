@@ -57,10 +57,7 @@ export class PicaDecorateControlPanel extends PicaBasePanel {
             return;
         }
 
-        const camPos = new LogicPos(this.uiManager.render.camerasManager.camera.scrollX,
-            this.uiManager.render.camerasManager.camera.scrollY);
-        this.x = (display.x - 170) * this.dpr - camPos.x;
-        this.y = (display.y + 50) * this.dpr - camPos.y;
+        this.changePosFollowTarget(display.getPosition());
     }
 
     // public updatePosition() {
@@ -110,7 +107,14 @@ export class PicaDecorateControlPanel extends PicaBasePanel {
 
         const {id, pos, canPlace} = this.mShowData;
         this.updateCanPlace(canPlace);
-        this.updatePosition();
+        this.changePosFollowTarget(pos);
+    }
+
+    private changePosFollowTarget(pos: IPos) {
+        const camPos = new LogicPos(this.uiManager.render.camerasManager.camera.scrollX,
+            this.uiManager.render.camerasManager.camera.scrollY);
+        this.x = (pos.x - 170) * this.dpr - camPos.x;
+        this.y = (pos.y + 50) * this.dpr - camPos.y;
     }
 
     private onSaveHandler() {

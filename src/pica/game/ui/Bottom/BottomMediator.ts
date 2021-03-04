@@ -62,6 +62,7 @@ export class BottomMediator extends BasicMediator {
             "showpanel": { v: () => { this.onShowPanelHandler(params[2]); } },
             "off": { v: () => { this.exitUser(); } },
             "command": { v: () => { this.onTestCommandHandler(params[2]); } },
+            "point": { v: () => { this.game.peer.showMovePoint(true); }, q: () => { this.game.peer.showMovePoint(false); } },
         };
         const context: ChatCommandInterface = contextMap[contextStr];
         if (context === undefined || context === null) {
