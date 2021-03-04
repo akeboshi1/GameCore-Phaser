@@ -10,14 +10,14 @@ export class EditorElementDisplay extends EditorFramesDisplay {
 
     selected() {
         super.selected();
-        this.removeFromMap();
+        if (!this.rootMount) this.removeFromMap();
         this.showRefernceArea();
     }
 
     unselected() {
         super.unselected();
         this.hideRefernceArea();
-        this.addToMap();
+        if (!this.rootMount) this.addToMap();
     }
 
     showRefernceArea() {

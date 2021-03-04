@@ -1107,7 +1107,6 @@ class EraserArea extends MouseDisplayContainer {
 
 class SelectedElementManager {
     public mSelecting: boolean = false;
-    public overElementID: number = null;
     public overElement: EditorFramesDisplay;
     private mSelecedElement: EditorFramesDisplay[];
     constructor(private sceneEditor: SceneEditorCanvas) {
@@ -1190,6 +1189,7 @@ class SelectedElementManager {
         const input = scene.input;
         input.off("gameobjectover", this.onGameobjectOverHandler, this);
         input.off("gameobjectout", this.onGameobjectOutHandler, this);
+        this.clearOverElement();
     }
 
     public checkMount() {
@@ -1242,16 +1242,18 @@ class SelectedElementManager {
     }
 
     private onGameobjectOutHandler(pointer: Phaser.Input.Pointer, gameobject: Phaser.GameObjects.GameObject) {
-        this.overElementID = null;
-        if (this.overElement) {
-            this.overElement.unselected();
-            // 拖动时改变mount point还是unmount不好区分。unmount先不做
-            // for (const ele of this.mSelecedElement) {
-            //     this.overElement.unmount(ele);
-            // }
-            // this.sceneEditor.elementManager.updateElements([this.overElement.toSprite()]);
-            this.overElement = null;
-        }
+       this.clearOverElement();
+    }
+
+    private clearOverElement() {
+        if (!this.overElement) return;
+        this.overElement.unselected();
+        // 拖动时改变mount point还是unmount不好区分。unmount先不做
+        // for (const ele of this.mSelecedElement) {
+        //     this.overElement.unmount(ele);
+        // }
+        // this.sceneEditor.elementManager.updateElements([this.overElement.toSprite()]);
+        this.overElement = null;
     }
 
     get selecting() {
