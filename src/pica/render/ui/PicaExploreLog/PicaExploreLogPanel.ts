@@ -1,5 +1,5 @@
 import { op_client } from "pixelpai_proto";
-import { ButtonEventDispatcher, ProgressMaskBar, UiManager } from "gamecoreRender";
+import { ButtonEventDispatcher, ImageValue, ProgressMaskBar, UiManager } from "gamecoreRender";
 import { Button, ClickEvent, NineSliceButton } from "apowophaserui";
 import { ModuleName } from "structure";
 import { UIAtlasName } from "picaRes";
@@ -15,6 +15,7 @@ export class PicaExploreLogPanel extends PicaBasePanel {
     private textCon: ExploreTipsTextsCon;
     private settlePanel: PicaExploreLogSettlePanel;
     private rotateTween: Phaser.Tweens.Tween;
+    private guideCon: PicaExploreLogGuideText;
     private timer: any;
     constructor(uiManager: UiManager) {
         super(uiManager);
@@ -36,6 +37,8 @@ export class PicaExploreLogPanel extends PicaBasePanel {
         this.expProgress.y = h - 240 * this.dpr;
         this.textCon.y = this.expProgress.y + 55 * this.dpr;
         this.textCon.x = w * 0.5;
+        this.guideCon.x = 0;
+        this.guideCon.y = this.goOutBtn.y + this.goOutBtn.height * 0.5 + 20 * this.dpr;
         this.expProgress.refreshMask();
         this.textCon.refreshMask();
     }
@@ -62,7 +65,9 @@ export class PicaExploreLogPanel extends PicaBasePanel {
         this.continueText = this.scene.make.text({ style: UIHelper.yellowStyle(this.dpr, 24) }).setOrigin(0, 0.5);
         this.continueText.setFontStyle("bold italic");
         this.textCon = new ExploreTipsTextsCon(this.scene, w, 138 * this.dpr, this.dpr, this.scale);
-        this.add([this.goOutBtn, this.expProgress, this.continueProgress, this.continueText, this.textCon]);
+        this.guideCon = new PicaExploreLogGuideText(this.scene, 132 * this.dpr, 113 * this.dpr, this.dpr);
+        this.guideCon.visible = false;
+        this.add([this.goOutBtn, this.expProgress, this.continueProgress, this.continueText, this.textCon, this.guideCon]);
         this.resize(w, h);
         super.init();
         this.setTimeProgress(30000);
@@ -104,6 +109,15 @@ export class PicaExploreLogPanel extends PicaBasePanel {
         this.openSettlePanel();
         this.settlePanel.setSettleData(content);
         this.clearRotateTween();
+    }
+
+    setExploreGuideTexts(content: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_ROOM_SHOW_GUIDE_TEXT) {
+        if (!content.text || content.text.length === 0) {
+            this.guideCon.visible = false;
+        } else {
+            this.guideCon.visible = true;
+            this.guideCon.setGuideTexts(content.text);
+        }
     }
 
     setTimeProgress(time) {
@@ -396,5 +410,76 @@ class ExploreTipsTextsCon extends Phaser.GameObjects.Container {
     private removeTween(tween: Phaser.Tweens.Tween) {
         const index = this.tweens.indexOf(tween);
         if (index !== -1) this.tweens.splice(index, 1);
+    }
+}
+class PicaExploreLogGuideText extends Phaser.GameObjects.Container {
+    private background: Phaser.GameObjects.Graphics;
+    private title: Phaser.GameObjects.Text;
+    private close: Button;
+    private dpr: number;
+    private imageValues: ImageValue[] = [];
+    private mixWidth: number = 0;
+    private mixHeight: number = 0;
+    constructor(scene: Phaser.Scene, width: number, height: number, dpr: number) {
+        super(scene);
+        this.setSize(width, height);
+        this.mixWidth = width;
+        this.mixHeight = height;
+        this.dpr = dpr;
+        this.background = this.scene.make.graphics(undefined, false);
+        this.title = this.scene.make.text({ style: UIHelper.whiteStyle(dpr) });
+        this.title.setFontStyle("bold");
+        this.title.text = i18n.t("explore.exploretask");
+        this.title.x = 10 * dpr;
+        this.title.y = this.title.height * 0.5 + 10 * dpr;
+        this.close = new Button(scene, UIAtlasName.explorelog, "checkpoint_end_aims_closed", "checkpoint_end_aims_closed");
+        this.close.x = 132 * dpr;
+        this.close.y = this.title.y;
+        this.add([this.background, this.title, this.close]);
+    }
+
+    public setGuideTexts(data: op_client.IGUIDE_TEXT[]) {
+        for (const img of this.imageValues) {
+            img.visible = false;
+        }
+        for (let i = 0; i < data.length; i++) {
+            let item: ImageValue;
+            const temp = data[i];
+            if (i < this.imageValues.length) {
+                item = this.imageValues[i];
+            } else {
+                item = new ImageValue(this.scene, 132 * this.dpr, 13 * this.dpr, UIAtlasName.explorelog, "checkpoint_end_aims_undone", this.dpr);
+                item.setLayout(1);
+                this.imageValues.push(item);
+            }
+            const finish = temp.progress === temp.totalSteps;
+            const frame = finish ? "checkpoint_end_aims_done" : "checkpoint_end_aims_undone";
+            const color = finish ? "#FFFFFF" : "#FFEE5D";
+            const text = `${temp.text} (${temp.progress}/${temp.totalSteps})`;
+            item.setFrameValue(text, UIAtlasName.explorelog, frame);
+            item.setTextStyle({ color });
+            item.visible = true;
+        }
+        this.setLayoutTexts();
+    }
+
+    private setLayoutTexts() {
+        let mixWidth = this.mixWidth;
+        let mixHeight = this.mixHeight;
+        const space = 16 * this.dpr;
+        let posy = 30 * this.dpr;
+        const posx = 20 * this.dpr;
+        for (let i = 0; i < this.imageValues.length; i++) {
+            const item = this.imageValues[i];
+            if (!item.visible) break;
+            item.y = posy;
+            item.x = posx;
+            posy += i * (item.height + space) * i;
+            if (mixWidth < item.width) mixWidth = item.width;
+        }
+        if (mixHeight < posy + 20 * this.dpr) mixHeight = posy + 20 * this.dpr;
+        this.background.clear();
+        this.background.fillStyle(0, 0.3);
+        this.background.fillRoundedRect(0, 0, mixWidth, mixHeight, { tl: 0, tr: 5 * this.dpr, br: 5 * this.dpr, bl: 0 });
     }
 }

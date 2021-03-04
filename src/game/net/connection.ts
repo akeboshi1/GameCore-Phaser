@@ -162,6 +162,7 @@ export class Connection implements ConnectionService {
         this.mUuid = protobuf_packet.header.uuid;
         Logger.getInstance().log(`MainWorker[接收] <<< ${protobuf_packet.toString()} `);
         const handlers = this.mPacketHandlers;
+        this.mPeer.clearBeat();
         handlers.forEach((handler: PacketHandler) => {
             handler.onPacketArrived(protobuf_packet);
         });

@@ -200,7 +200,9 @@ export class PicaExploreListLevelPanel extends Phaser.GameObjects.Container {
     }
 
     private onChapterLevelHandler(data: op_client.IPKT_EXPLORE_LEVEL_DATA) {
-        if (this.send) this.send.runWith(["roomid", data.roomId]);
+        let roomid = data.roomId;
+        if (data.progress === 500) roomid = data["completeScene"];
+        if (this.send) this.send.runWith(["roomid", roomid]);
     }
 
     private onChapterLockHandler(tag: string, data: any) {

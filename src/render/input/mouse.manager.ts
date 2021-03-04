@@ -17,9 +17,9 @@ export enum MouseEvent {
 }
 
 export class MouseManager {
-    private running = false;
+    protected running = false;
     // ===============================
-    private mScene: Phaser.Scene;
+    protected scene: Phaser.Scene;
     private mGameObject: Phaser.GameObjects.GameObject;
     private mDownDelay: number = 1000;
     private mDownTime: any;
@@ -27,7 +27,7 @@ export class MouseManager {
     private readonly delay = 500;
     private debounce: any;
     private mClickID: number;
-    constructor(private render: Render) {
+    constructor(protected render: Render) {
         this.zoom = this.render.scaleRatio || 1;
     }
 
@@ -38,11 +38,11 @@ export class MouseManager {
     public changeScene(scene: Phaser.Scene) {
         this.pause();
         this.mGameObject = null;
-        this.mScene = scene;
-        if (!this.mScene) return;
+        this.scene = scene;
+        if (!this.scene) return;
         // scene.input.on("gameobjectup", this.groundUp, this);
-        scene.input.on("gameobjectdown", this.groundDown, this);
-        scene.input.on("pointerdown", this.pointerDownHandler, this);
+        scene.input.on("gameobjectdown", this.onGameObjectDownHandler, this);
+        scene.input.on("pointerdown", this.onPointerDownHandler, this);
         this.resume();
     }
 
@@ -118,42 +118,42 @@ export class MouseManager {
      * 设置鼠标事件开关
      */
     public set enable(value: boolean) {
-        if (this.mScene) {
-            this.mScene.input.mouse.enabled = value;
+        if (this.scene) {
+            this.scene.input.mouse.enabled = value;
         }
     }
 
     public get enable(): boolean {
-        if (this.mScene) {
-            return this.mScene.input.mouse.enabled;
+        if (this.scene) {
+            return this.scene.input.mouse.enabled;
         }
         return false;
     }
 
     public destroy() {
-        this.mScene = null;
         this.running = false;
-        this.debounce = null;
-        if (this.mScene) {
-            this.mScene.input.off("gameobjectdown", this.groundDown, this);
-            this.mScene.input.off("pointerdown", this.pointerDownHandler, this);
+        if (this.scene) {
+            this.scene.input.off("gameobjectdown", null, this);
+            this.scene.input.off("pointerdown", null, this);
         }
+        this.scene = null;
+        this.debounce = null;
         this.pause();
     }
 
-    private groundDown(pointer, gameObject) {
+    protected onGameObjectDownHandler(pointer, gameObject) {
         const id = gameObject.getData("id");
         if (this.render.guideManager.canInteractive(id)) return;
         this.mGameObject = gameObject;
         this.mDownTime = setTimeout(this.holdHandler.bind(this), this.mDownDelay, pointer, gameObject);
     }
 
-    private groundUp(pointer, gameObject) {
+    protected onGameObjectUpHandler(pointer, gameObject) {
         // this.mGameObject = null;
         this.onUpdate(pointer, gameObject);
     }
 
-    private pointerDownHandler(pointer, gameobject) {
+    protected onPointerDownHandler(pointer, gameobject) {
         if (this.render.guideManager.canInteractive()) return;
         if (this.debounce) {
             this.mGameObject = null;
@@ -162,8 +162,8 @@ export class MouseManager {
         this.debounce = setTimeout(() => {
             this.debounce = null;
         }, this.delay);
-        this.mScene.input.off("pointerup", this.onPointerUpHandler, this);
-        this.mScene.input.once("pointerup", this.onPointerUpHandler, this);
+        this.scene.input.off("pointerup", this.onPointerUp, this);
+        this.scene.input.once("pointerup", this.onPointerUp, this);
         if (this.render) {
             if (this.render.emitter) {
                 this.render.emitter.emit(MessageType.SCENE_BACKGROUND_CLICK, pointer);
@@ -172,7 +172,7 @@ export class MouseManager {
         this.onUpdate(pointer, this.mGameObject);
     }
 
-    private onPointerUpHandler(pointer) {
+    protected onPointerUp(pointer) {
         clearTimeout(this.mDownTime);
         this.onUpdate(pointer, this.mGameObject);
         this.mGameObject = null;

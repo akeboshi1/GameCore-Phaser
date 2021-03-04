@@ -1,25 +1,30 @@
-import { op_client, op_def, op_virtual_world } from "pixelpai_proto";
+import {op_client, op_def, op_virtual_world} from "pixelpai_proto";
+import {PacketHandler, PBpacket} from "net-socket-packet";
+import {Handler, IPos, IPosition45Obj, Logger, LogicPos, Position45} from "utils";
+import {Game} from "../../game";
+import {IBlockObject} from "../block/iblock.object";
+import {ClockReadyListener} from "../../loop/clock/clock";
+import {State} from "../state/state.group";
+import {IRoomManager} from "../room.manager";
+import {ConnectionService} from "../../../../lib/net/connection.service";
+import {CamerasManager, ICameraService} from "../camera/cameras.manager";
+import {ViewblockManager} from "../viewblock/viewblock.manager";
+import {PlayerManager} from "../player/player.manager";
+import {ElementManager} from "../element/element.manager";
+import {IElement, InputEnable} from "../element/element";
+import {IViewBlockManager} from "../viewblock/iviewblock.manager";
+import {TerrainManager} from "../terrain/terrain.manager";
+import {SkyBoxManager} from "../sky.box/sky.box.manager";
+import {GameState, IScenery, LoadState, ModuleName, SceneName} from "structure";
+import {EffectManager} from "../effect/effect.manager";
+import {DecorateManager} from "../decorate/decorate.manager";
+import {WallManager} from "../element/wall.manager";
+import {Sprite} from "baseModel";
+import {BlockObject} from "../block/block.object";
 import IActor = op_client.IActor;
 import NodeType = op_def.NodeType;
-import { PacketHandler, PBpacket } from "net-socket-packet";
-import { IPosition45Obj, Position45, IPos, LogicPos, Handler, Logger } from "utils";
-import { Game } from "../../game";
-import { IBlockObject } from "../block/iblock.object";
-import { ClockReadyListener } from "../../loop/clock/clock";
-import { State } from "../state/state.group";
-import { IRoomManager } from "../room.manager";
-import { ConnectionService } from "../../../../lib/net/connection.service";
-import { CamerasManager, ICameraService } from "../camera/cameras.manager";
-import { ViewblockManager } from "../viewblock/viewblock.manager";
-import { PlayerManager } from "../player/player.manager";
-import { ElementManager } from "../element/element.manager";
-import { IElement } from "../element/element";
-import { IViewBlockManager } from "../viewblock/iviewblock.manager";
-import { TerrainManager } from "../terrain/terrain.manager";
-import { SkyBoxManager } from "../sky.box/sky.box.manager";
-import { GameState, IScenery, LoadState, SceneName } from "structure";
-import { EffectManager } from "../effect/effect.manager";
-import { WallManager } from "../element/wall.manager";
+import {BaseDataConfigManager} from "picaWorker";
+
 export interface SpriteAddCompletedListener {
     onFullPacketReceived(sprite_t: op_def.NodeType): void;
 }
@@ -32,15 +37,17 @@ export interface IRoomService {
     readonly cameraService: ICameraService;
     // readonly layerManager: LayerManager;
     readonly effectManager: EffectManager;
+    readonly decorateManager: DecorateManager;
     // readonly handlerManager: HandlerManager;
     readonly roomSize: IPosition45Obj;
     readonly miniSize: IPosition45Obj;
     readonly game: Game;
-    readonly enableEdit: boolean;
+    readonly enableDecorate: boolean;
     readonly sceneType: op_def.SceneTypeEnum;
     // readonly matterWorld: MatterWorld;
 
     readonly isLoading: boolean;
+    readonly isDecorating: boolean;
 
     now(): number;
 
@@ -84,6 +91,10 @@ export interface IRoomService {
 
     onManagerReady(key: string);
 
+    startDecorating();
+
+    stopDecorating();
+
     destroy();
 }
 
@@ -106,14 +117,16 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
     protected mMiniSize: IPosition45Obj;
     protected mCameraService: ICameraService;
     protected mBlocks: IViewBlockManager;
+    protected mEnableDecorate: boolean = false;
+    protected mIsDecorating: boolean = false;
     protected mWallMamager: WallManager;
-    protected mEnableEdit: boolean = false;
     protected mScaleRatio: number;
     protected mStateMap: Map<string, State>;
     // protected mMatterWorld: MatterWorld;
     // protected mAstar: AStar;
     protected mIsLoading: boolean = false;
     protected mManagersReadyStates: Map<string, boolean> = new Map();
+    protected mDecorateManager: DecorateManager;
     private moveStyle: op_def.MoveStyle;
     private mActorData: IActor;
     private mUpdateHandlers: Handler[] = [];
@@ -129,6 +142,7 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
             this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_MOVE_SPRITE_BY_PATH, this.onMovePathHandler);
             this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_SET_CAMERA_FOLLOW, this.onCameraFollowHandler);
             this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_SYNC_STATE, this.onSyncStateHandler);
+            this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_CURRENT_SCENE_ALL_SPRITE, this.onAllSpriteReceived);
         }
     }
 
@@ -474,6 +488,8 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
         if (this.mEffectManager) this.mEffectManager.destroy();
         if (this.mSkyboxManager) this.mSkyboxManager.destroy();
         if (this.mWallMamager) this.mWallMamager.destroy();
+        // if (this.mWallManager) this.mWallManager.destroy();
+        if (this.mDecorateManager) this.mDecorateManager.destroy();
         if (this.mActorData) this.mActorData = null;
         if (this.mStateMap) this.mStateMap = null;
         Logger.getInstance().debug("room clear");
@@ -612,6 +628,71 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
             this.game.renderPeer.roomReady();
         }
     }
+
+    public startDecorating() {
+        if (this.mIsDecorating) return;
+        this.mIsDecorating = true;
+
+        this.cameraService.stopFollow();
+
+        // hide players (with animations)
+        this.playerManager.hideAll();
+
+        // set all element interactive
+        const elements =  this.elementManager.getElements();
+        for (const element of elements) {
+            if (!(element instanceof BlockObject)) continue;
+            element.setInputEnable(InputEnable.Enable);
+        }
+
+        // new decorate manager
+        this.mDecorateManager = new DecorateManager(this);
+
+        // switch ui
+        this.game.uiManager.hideMed(ModuleName.PICANEWMAIN_NAME);
+        this.game.uiManager.hideMed(ModuleName.BOTTOM);
+        this.game.uiManager.showMed(ModuleName.PICADECORATE_NAME,
+            {closeAlertText: (<BaseDataConfigManager>this.game.configManager).getI18n("PKT_SYS0000021")});
+
+        // switch motion
+        this.game.renderPeer.switchDecorateMouseManager();
+    }
+
+    public stopDecorating() {
+        if (!this.mIsDecorating) return;
+        this.mIsDecorating = false;
+
+        // camera follow
+        this.cameraService.startFollow(this.playerManager.actor.id);
+
+        // set user pos
+        const entrePos = new LogicPos(this.mActorData.x, this.mActorData.y);
+        this.playerManager.actor.setPosition(entrePos);
+        this.game.renderPeer.setPosition(this.playerManager.actor.id, entrePos.x, entrePos.y);
+
+        // show players
+        this.playerManager.showAll();
+
+        // set all element interactive
+        const elements =  this.elementManager.getElements();
+        for (const element of elements) {
+            if (!(element instanceof BlockObject)) continue;
+            element.setInputEnable(InputEnable.Interactive);
+        }
+
+        // switch ui
+        this.game.uiManager.hideMed(ModuleName.PICADECORATE_NAME);
+        this.game.uiManager.showMed(ModuleName.PICANEWMAIN_NAME);
+        this.game.uiManager.showMed(ModuleName.BOTTOM);
+
+        // switch motion
+        this.game.renderPeer.switchBaseMouseManager();
+
+        // destroy decorate manager
+        this.mDecorateManager.destroy();
+        this.mDecorateManager = null;
+    }
+
     //
 
     protected initSkyBox() {
@@ -691,6 +772,10 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
         return this.mEffectManager;
     }
 
+    get decorateManager(): DecorateManager {
+        return this.mDecorateManager;
+    }
+
     get id(): number {
         return this.mID;
     }
@@ -711,8 +796,12 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
         return this.mGame;
     }
 
-    get enableEdit() {
-        return this.mEnableEdit;
+    get enableDecorate() {
+        return this.mEnableDecorate;
+    }
+
+    get isDecorating(): boolean {
+        return this.mIsDecorating;
     }
 
     get connection(): ConnectionService | undefined {
@@ -726,7 +815,7 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
     }
 
     private onEnableEditModeHandler(packet: PBpacket) {
-        this.mEnableEdit = true;
+        this.mEnableDecorate = true;
     }
 
     private onShowMapTitle(packet: PBpacket) {
@@ -800,6 +889,28 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
                     this.elementManager.setState(states);
                     break;
             }
+        }
+    }
+
+    private onAllSpriteReceived(packet: PBpacket) {
+        const content: op_client.IOP_VIRTUAL_WORLD_REQ_CLIENT_CURRENT_SCENE_ALL_SPRITE = packet.content;
+        const sprites: op_client.ISprite[] | undefined = content.sprites;
+        if (!sprites) {
+            Logger.getInstance().error("<OP_VIRTUAL_WORLD_REQ_CLIENT_CURRENT_SCENE_ALL_SPRITE> content.sprites is undefined");
+            return;
+        }
+        const nodeType = content.nodeType;
+        const addList = [];
+        for (const sp of content.sprites) {
+            if (this.mElementManager.get(sp.id)) continue;
+            const sprite = new Sprite(sp, nodeType);
+            addList.push(sprite);
+        }
+
+        if (nodeType === op_def.NodeType.ElementNodeType || nodeType === op_def.NodeType.SpawnPointType) {
+            this.mElementManager.add(addList);
+        } else if (nodeType === op_def.NodeType.TerrainNodeType) {
+            this.mTerrainManager.add(addList);
         }
     }
 }

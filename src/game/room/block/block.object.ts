@@ -72,6 +72,8 @@ export abstract class BlockObject extends MatterObject implements IBlockObject {
             case InputEnable.Interactive:
                 if (this.mModel && this.mModel.hasInteractive) {
                     this.mRoomService.game.peer.render.setInteractive(this.id, this.type);
+                } else {
+                    this.mRoomService.game.peer.render.disableInteractive(this.id, this.type);
                 }
                 break;
             case InputEnable.Enable:

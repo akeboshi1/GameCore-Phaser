@@ -16,11 +16,11 @@ export class Player extends Element implements IElement {
     }
 
     async setModel(model: ISprite): Promise<any> {
-        (<any>model).off("Animation_Change", this.animationChanged, this);
-        (<any>model).on("Animation_Change", this.animationChanged, this);
         if (!model) {
             return;
         }
+        (<any>model).off("Animation_Change", this.animationChanged, this);
+        (<any>model).on("Animation_Change", this.animationChanged, this);
         if (!model.layer) {
             model.layer = LayerEnum.Surface;
         }
@@ -197,10 +197,5 @@ export class Player extends Element implements IElement {
     private mCheckStateHandle(val: string): boolean {
         // if (this.mCurState === val) return false;
         return true;
-    }
-
-    private animationChanged(data: any) {
-        // { id: this.id, direction: this.direction }
-        this.mElementManager.roomService.game.renderPeer.displayAnimationChange(data);
     }
 }

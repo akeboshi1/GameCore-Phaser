@@ -79,6 +79,7 @@ export class PicaPlayerInfoMediator extends BasicMediator {
             const pros = [property.energy, property.getProperty("IV0000014")];
             content["pros"] = pros;
             this.setItemBases(content.properties);
+            this.setItemBases(content.avatarSuit);
             this.mView.setPlayerData(content);
         }
     }
@@ -91,6 +92,7 @@ export class PicaPlayerInfoMediator extends BasicMediator {
         }
         if (this.mView) {
             this.setItemBases(content.properties);
+            this.setItemBases(content.avatarSuit);
             this.mView.setPlayerData(content);
             this.checkRelation(content.cid);
         }

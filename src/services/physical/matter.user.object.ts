@@ -71,10 +71,13 @@ export class MatterUserObject extends MatterPlayerObject {
         // this.peer.mainPeer.removePartMount(this.id, targets[0], path);
 
         const pos = this.mModel.pos;
+        const miniSize = this.matterWorld.miniSize;
         for (const target of targets) {
-            if (target.x === pos.x && target.y === pos.y) {
+            // if (target.x === pos.x && target.y === pos.y) {
+            // findPath坐标转换后存在误差
+            if (Tool.twoPointDistance(target, pos) <= miniSize.tileWidth / 2) {
                 this.mTargetPoint = { targetId };
-                this.tryStopMove();
+                this.tryStopMove(pos);
                 return;
             }
         }
