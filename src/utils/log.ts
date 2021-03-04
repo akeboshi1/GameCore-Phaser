@@ -2,7 +2,7 @@ import { ChatCommandInterface } from "./chat.command";
 
 /* tslint:disable */
 export class Logger implements ChatCommandInterface {
-  public isDebug: boolean = false;
+  public isDebug: boolean = true;
   private static _instance: Logger;
   // private mErrorList: string[];
   // private mWarnList: string[];
