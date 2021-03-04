@@ -227,16 +227,6 @@ export class RoomManager extends PacketHandler implements IRoomManager {
 
         this.currentRoom.stopDecorating();
 
-        // remove all elements
-        const elements = this.currentRoom.elementManager.getElements();
-        for (const element of elements) {
-            this.currentRoom.elementManager.remove(element.id);
-        }
-        const terrains = this.currentRoom.terrainManager.getElements();
-        for (const terrain of terrains) {
-            this.currentRoom.terrainManager.remove(terrain.id);
-        }
-
         // waite for OP_VIRTUAL_WORLD_REQ_CLIENT_NOTICE_RELOAD_SCENE
     }
 

@@ -97,7 +97,7 @@ export class PicaNewMainPanel extends PicaBasePanel {
         this.leftPanel = new PicaNewLeftPanel(this.scene, 40 * this.dpr, 170 * this.dpr, this.key, this.dpr);
         this.leftPanel.setHandler(new Handler(this, this.onLeftHandler));
         this.add(this.leftPanel);
-        this.activityPanel = new PicaNewActivityPanel(this.scene, 40 * this.dpr, 170 * this.dpr, this.key, this.dpr);
+        this.activityPanel = new PicaNewActivityPanel(this.render, this.scene, 40 * this.dpr, 170 * this.dpr, this.key, this.dpr);
         this.activityPanel.setHandler(new Handler(this, this.onActivityHandler));
         this.add(this.activityPanel);
         this.chatPanel = new PicaNewChatPanel(this.scene, width, 201 * this.dpr, this.key, this.dpr);

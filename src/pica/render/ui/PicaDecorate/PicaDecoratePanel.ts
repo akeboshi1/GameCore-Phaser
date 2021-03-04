@@ -12,6 +12,8 @@ export class PicaDecoratePanel extends PicaBasePanel {
 
     private mBtn_Close: Button;
     private mBtn_SaveAndExit: Button;
+    private mGraphics_Bottom: Phaser.GameObjects.Graphics;
+    private mDynamicBtnsY: number;
     private mBtn_RemoveAll: Button;
     private mBtn_Reverse: Button;
     private mBtn_Bag: Button;
@@ -64,8 +66,7 @@ export class PicaDecoratePanel extends PicaBasePanel {
             this.mBtn_SelectedFurniture.countTextOffset = new LogicPos(this.mBtn_SelectedFurniture.width * 0.5 - 12 * this.dpr, this.mBtn_SelectedFurniture.height * 0.5 - 10 * this.dpr);
             this.mBtn_SelectedFurniture.BGVisible = false;
             this.mBtn_SelectedFurniture.x = 30 * this.dpr;
-            const h = this.scene.cameras.main.height;
-            this.mBtn_SelectedFurniture.y = h - 60 * this.dpr - this.mBtn_SelectedFurniture.height * 0.5;
+            this.mBtn_SelectedFurniture.y = this.mDynamicBtnsY;
             this.add(this.mBtn_SelectedFurniture);
         }
         const onClick = () => {
@@ -108,7 +109,7 @@ export class PicaDecoratePanel extends PicaBasePanel {
             quickBtn.countTextOffset = new LogicPos(quickBtn.width * 0.5 - 12 * this.dpr, quickBtn.height * 0.5 - 10 * this.dpr);
             quickBtn.BGVisible = false;
             quickBtn.x = 90 * this.dpr + 55 * this.dpr * i;
-            quickBtn.y = h - 60 * this.dpr - quickBtn.height * 0.5;
+            quickBtn.y = this.mDynamicBtnsY;
             item.grade = 0;
             quickBtn.setItemData(item, true);
             quickBtn.enable = item.count > 0;
@@ -128,43 +129,47 @@ export class PicaDecoratePanel extends PicaBasePanel {
     }
 
     protected init() {
-        const w = this.scene.cameras.main.width;
-        const h = this.scene.cameras.main.height;
+        const w = this.scene.cameras.main.width / this.scaleX;
+        const h = this.scene.cameras.main.height / this.scaleY;
 
         this.mBtn_Close = new Button(this.scene, this.key, "room_decorate_previous.png", "room_decorate_previous.png");
         this.mBtn_Close.x = 20 * this.dpr + this.mBtn_Close.width * 0.5;
         this.mBtn_Close.y = 48 * this.dpr;
+
         this.add(this.mBtn_Close);
 
         this.mBtn_SaveAndExit = new Button(this.scene, this.key, "room_decorate_save.png", "room_decorate_save.png");
-        this.mBtn_SaveAndExit.x = w - 40 * this.dpr - this.mBtn_SaveAndExit.width * 0.5;
+        this.mBtn_SaveAndExit.x = w - 20 * this.dpr - this.mBtn_SaveAndExit.width * 0.5;
         this.mBtn_SaveAndExit.y = 48 * this.dpr;
         this.add(this.mBtn_SaveAndExit);
 
         const bg1Height = 60 * this.dpr;
-        const bg1 = this.scene.add.graphics();
-        bg1.clear();
-        bg1.fillStyle(0, 0.6);
-        bg1.fillRect(0, 0, w, bg1Height);
-        bg1.y = h - bg1Height;
-        bg1.setDepth(-1);
+        this.mGraphics_Bottom = this.scene.add.graphics();
+        this.mGraphics_Bottom.clear();
+        this.mGraphics_Bottom.fillStyle(0, 0.6);
+        this.mGraphics_Bottom.fillRect(0, 0, w * this.scaleX, bg1Height);
+        this.mGraphics_Bottom.y = h - bg1Height;
+        this.mDynamicBtnsY = this.mGraphics_Bottom.y + bg1Height * 0.5;
+        this.mGraphics_Bottom.setDepth(-1);
+        this.add(this.mGraphics_Bottom);
 
         const bg2Height = 63 * this.dpr;
         const bg2 = this.scene.add.graphics();
         bg2.clear();
         bg2.fillStyle(0, 0.6);
-        bg2.fillRect(0, 0, w, bg2Height);
-        bg2.y = bg1.y - 4 * this.dpr - bg2Height;
+        bg2.fillRect(0, 0, w * this.scaleX, bg2Height);
+        bg2.y = h - bg1Height - 4 * this.dpr - bg2Height;
+        this.add(bg2);
         this.mBtn_RemoveAll = new Button(this.scene, this.key, "room_decorate_delete.png", "room_decorate_delete.png");
         this.mBtn_RemoveAll.x = 10 * this.dpr + this.mBtn_RemoveAll.width * 0.5;
-        this.mBtn_RemoveAll.y = bg2.y - bg2Height * 0.5;
+        this.mBtn_RemoveAll.y = bg2.y + bg2Height * 0.5;
         this.mBtn_Reverse = new Button(this.scene, this.key, "room_decorate_withdraw.png", "room_decorate_withdraw.png");
         this.mBtn_Reverse.x = this.mBtn_RemoveAll.x + this.mBtn_RemoveAll.width * 0.5 + 10 * this.dpr + this.mBtn_Reverse.width * 0.5;
-        this.mBtn_Reverse.y = bg2.y - bg2Height * 0.5;
+        this.mBtn_Reverse.y = bg2.y + bg2Height * 0.5;
         this.mBtn_Bag = new Button(this.scene, this.key, "room_decorate_Furniture.png", "room_decorate_Furniture.png",
             i18n.t("furni_bag.furni"));
-        this.mBtn_Bag.x = w - this.mBtn_Bag.width - 10 * this.dpr;
-        this.mBtn_Bag.y = bg2.y - bg2Height * 0.5;
+        this.mBtn_Bag.x = w - this.mBtn_Bag.width * 0.5 - 10 * this.dpr;
+        this.mBtn_Bag.y = bg2.y + bg2Height * 0.5;
         this.mBtn_Bag.setTextStyle({
             color: "#ffffff",
             fontFamily: Font.DEFULT_FONT,

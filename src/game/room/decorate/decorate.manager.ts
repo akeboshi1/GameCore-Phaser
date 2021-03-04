@@ -138,7 +138,7 @@ export class DecorateManager {
         const element = this.mRoom.elementManager.get(id);
         if (!element) return;
 
-        if (this.mSelectedID > 0) {
+        if (this.mSelectedID > 0 && this.mSelectedID !== id) {
             this.reverseSelected();
         }
 
@@ -205,8 +205,6 @@ export class DecorateManager {
         this.mSelectedID = -1;
 
         this.mRoom.game.uiManager.hideMed(ModuleName.PICADECORATECONTROL_NAME);
-
-        this.mRoom.game.renderPeer.workerEmitter(MessageType.DECORATE_UNSELECT_ELEMENT);
     }
 
     // 将当前选中的物件放回原位/取消放置，取消选择，关闭浮动功能栏
@@ -229,8 +227,6 @@ export class DecorateManager {
         this.mSelectedID = -1;
 
         this.mRoom.game.uiManager.hideMed(ModuleName.PICADECORATECONTROL_NAME);
-
-        this.mRoom.game.renderPeer.workerEmitter(MessageType.DECORATE_UNSELECT_ELEMENT);
     }
 
     public addFromBag(baseID: string) {
