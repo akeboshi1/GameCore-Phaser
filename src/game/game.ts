@@ -184,7 +184,7 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
 
     public onClientErrorHandler(packet: PBpacket): void {
         const content: op_client.OP_GATEWAY_RES_CLIENT_ERROR = packet.content;
-        Logger.getInstance().error(`Remote Error[${content.responseStatus}]: ${content.msg}`);
+        Logger.getInstance().info(`Remote Trace[${content.responseStatus}]: ${content.msg}`);
     }
 
     public destroyClock() {
