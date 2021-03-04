@@ -10,6 +10,8 @@ export class PicaDecorateMediator extends BasicMediator {
     private readonly QUICK_SELECT_COUNT: number = 6;
 
     private mDecorateManager: DecorateManager;
+    private mCacheData_UpdateCount: Array<{ baseID: string, count: number }> = [];
+    private mCacheData_SelectFurniture: string = "";
 
     constructor(game: Game) {
         super(ModuleName.PICADECORATE_NAME, game);
@@ -28,6 +30,7 @@ export class PicaDecorateMediator extends BasicMediator {
             return;
         }
         this.mDecorateManager = this.game.roomManager.currentRoom.decorateManager;
+        this.mDecorateManager.dealEntryData();
     }
 
     destroy() {
@@ -71,7 +74,10 @@ export class PicaDecorateMediator extends BasicMediator {
     // called by decorate manager
     public onSelectFurniture(baseID: string) {
         if (!this.bagData) return;
-        if (!this.mView) return;
+        if (!this.mView) {
+            this.mCacheData_SelectFurniture = baseID;
+            return;
+        }
 
         const count = this.mDecorateManager.getBagCount(baseID);
         const bagData = this.bagData.getItem(PKT_PackageType.FurniturePackage, baseID);
@@ -79,19 +85,26 @@ export class PicaDecorateMediator extends BasicMediator {
             bagData.count = count;
             this.mView.setSelectedFurniture(bagData);
         } else {
-            const configMgr = <BaseDataConfigManager>this.game.configManager;
+            const configMgr = <BaseDataConfigManager> this.game.configManager;
             const configItem = configMgr.getItemBase(baseID);
             configItem.count = count;
             this.mView.setSelectedFurniture(configItem);
         }
         this.mView.hideSaveBtn();
     }
+
     public onUnselectFurniture() {
         if (this.mView) this.mView.showSaveBtn();
     }
+
     public updateFurnitureCount(baseID: string, count: number) {
         if (this.mView) this.mView.updateFurnitureCount(baseID, count);
+        else {
+            const data = {baseID, count};
+            this.mCacheData_UpdateCount.push(data);
+        }
     }
+
     // ..
 
     protected panelInit() {
@@ -109,6 +122,16 @@ export class PicaDecorateMediator extends BasicMediator {
             furnitures = furnitures.slice(0, this.QUICK_SELECT_COUNT - 1);
         }
         this.mView.setQuickSelectFurnitures(furnitures);
+
+        while (this.mCacheData_UpdateCount.length > 0) {
+            const data = this.mCacheData_UpdateCount.pop();
+            this.updateFurnitureCount(data.baseID, data.count);
+        }
+
+        if (this.mCacheData_SelectFurniture.length > 0) {
+            this.onSelectFurniture(this.mCacheData_SelectFurniture);
+            this.mCacheData_SelectFurniture = "";
+        }
     }
 
     private get bagData() {

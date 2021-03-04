@@ -12,7 +12,6 @@ export class PicaDecorateControlPanel extends PicaBasePanel {
     private mAutoPlaceBtn: Button;
     private mExitBtn: Button;
     private mBtns: Button[];
-    private mTarget: FramesDisplay | DragonbonesDisplay;
 
     constructor(uiManager: UiManager) {
         super(uiManager);
@@ -51,6 +50,34 @@ export class PicaDecorateControlPanel extends PicaBasePanel {
         if (this.mSaveBtn) this.mSaveBtn.enable = canPlace;
     }
 
+    public updatePosition() {
+        const {id, pos, canPlace} = this.mShowData;
+        const display = this.render.displayManager.getDisplay(id);
+        if (!display) {
+            return;
+        }
+
+        const camPos = new LogicPos(this.uiManager.render.camerasManager.camera.scrollX,
+            this.uiManager.render.camerasManager.camera.scrollY);
+        this.x = (display.x - 170) * this.dpr - camPos.x;
+        this.y = (display.y + 50) * this.dpr - camPos.y;
+    }
+
+    // public updatePosition() {
+    //     const {id, pos, canPlace} = this.mShowData;
+    //     const display = this.render.displayManager.getDisplay(id);
+    //     const displayPos = new LogicPos(pos.x, pos.y);
+    //     if (display) {
+    //         displayPos.x = display.x;
+    //         displayPos.y = display.y;
+    //     }
+    //
+    //     const camPos = new LogicPos(this.uiManager.render.camerasManager.camera.scrollX,
+    //         this.uiManager.render.camerasManager.camera.scrollY);
+    //     this.x = (displayPos.x - 170) * this.dpr - camPos.x;
+    //     this.y = (displayPos.y + 50) * this.dpr - camPos.y;
+    // }
+
     protected init() {
         const w = this.scene.cameras.main.width;
         const h = this.scene.cameras.main.height;
@@ -82,26 +109,8 @@ export class PicaDecorateControlPanel extends PicaBasePanel {
         super.init();
 
         const {id, pos, canPlace} = this.mShowData;
-        const display = this.render.displayManager.getDisplay(id);
-        if (display) {
-            this.mTarget = display;
-        } else {
-            Logger.getInstance().error("cannot find display: ", id);
-        }
         this.updateCanPlace(canPlace);
         this.updatePosition();
-    }
-
-    private updatePosition() {
-        if (!this.mTarget) {
-            this.mediator.hide();
-            return;
-        }
-
-        const camPos = new LogicPos(this.uiManager.render.camerasManager.camera.scrollX,
-            this.uiManager.render.camerasManager.camera.scrollY);
-        this.x = (this.mTarget.x - 170) * this.dpr - camPos.x;
-        this.y = (this.mTarget.y + 50) * this.dpr - camPos.y;
     }
 
     private onSaveHandler() {
