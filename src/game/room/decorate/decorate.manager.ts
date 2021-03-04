@@ -181,11 +181,11 @@ export class DecorateManager {
         const combinedActs = this.combineActions(this.mSelectedActionQueue);
         combinedActs.forEach((acts, sprite) => {
             if (!sprite) {
-                Logger.getInstance().error("sprite is null, ",acts, sprite);
+                Logger.getInstance().error("sprite is null, ", acts, sprite);
                 return;
             }
             if (sprite.id !== this.mSelectedID) {
-                Logger.getInstance().error("sprite.id is not selected, ",acts, sprite);
+                Logger.getInstance().error("sprite.id is not selected, ", acts, sprite);
                 return;
             }
 

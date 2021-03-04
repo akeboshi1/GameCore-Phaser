@@ -91,6 +91,8 @@ export interface IRoomService {
 
     onManagerReady(key: string);
 
+    requestDecorate();
+
     startDecorating();
 
     stopDecorating();
@@ -142,6 +144,8 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
             this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_MOVE_SPRITE_BY_PATH, this.onMovePathHandler);
             this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_SET_CAMERA_FOLLOW, this.onCameraFollowHandler);
             this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_SYNC_STATE, this.onSyncStateHandler);
+            this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_START_EDIT_MODEL, this.onStartDecorate);
+            this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_EDIT_MODEL_RESULT, this.onDecorateResult);
             this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_CURRENT_SCENE_ALL_SPRITE, this.onAllSpriteReceived);
             this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_NOTICE_RELOAD_SCENE, this.onReloadScene);
         }
@@ -629,6 +633,12 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
         }
     }
 
+    public requestDecorate() {
+        this.connection.send(new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_START_EDIT_MODEL));
+
+        // waite for <OP_VIRTUAL_WORLD_RES_CLIENT_START_EDIT_MODEL>
+    }
+
     public startDecorating() {
         if (this.mIsDecorating) return;
         this.mIsDecorating = true;
@@ -666,9 +676,9 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
         this.cameraService.startFollow(this.playerManager.actor.id);
 
         // set user pos
-        const entrePos = new LogicPos(this.mActorData.x, this.mActorData.y);
-        this.playerManager.actor.setPosition(entrePos);
-        this.game.renderPeer.setPosition(this.playerManager.actor.id, entrePos.x, entrePos.y);
+        // const entrePos = new LogicPos(this.mActorData.x, this.mActorData.y);
+        // this.playerManager.actor.setPosition(entrePos);
+        // this.game.renderPeer.setPosition(this.playerManager.actor.id, entrePos.x, entrePos.y);
 
         // show players
         this.playerManager.showAll();
@@ -917,6 +927,35 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
             }
             this.mTerrainManager.add(addList);
         }
+    }
+
+    private async onStartDecorate(packet: PBpacket) {
+        const content: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_START_EDIT_MODEL = packet.content;
+        if (!content.status) {
+            this.game.renderPeer.showAlert(content.msg, true);
+            // Logger.getInstance().warn("enter decorate error: ", content.msg);
+            return;
+        }
+
+        if (this.isDecorating) {
+            Logger.getInstance().error("current room is decorating");
+            return;
+        }
+
+        this.startDecorating();
+    }
+
+    private onDecorateResult(packet: PBpacket) {
+        const content: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_EDIT_MODEL_RESULT = packet.content;
+        if (!content.status) {
+            this.game.renderPeer.showAlert(content.msg, true);
+            // Logger.getInstance().warn("enter decorate error: ", content.msg);
+            return;
+        }
+
+        this.stopDecorating();
+
+        // waite for OP_VIRTUAL_WORLD_REQ_CLIENT_NOTICE_RELOAD_SCENE
     }
 
     private onReloadScene(packet: PBpacket) {
