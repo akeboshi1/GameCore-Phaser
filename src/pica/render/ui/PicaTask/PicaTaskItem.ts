@@ -147,7 +147,7 @@ export class PicaTaskItem extends Phaser.GameObjects.Container {
 
     private setTextLimit(text: Phaser.GameObjects.Text, content?: string, limit: number = 15) {
         if (content.length > limit) {
-            const maxWidth = 155 * this.dpr;
+            const maxWidth = 120 * this.dpr;
             for (let i = 4; i < content.length; i++) {
                 let str = content.slice(0, i);
                 const width = text.setText(str).width;
