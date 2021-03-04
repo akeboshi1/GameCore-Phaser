@@ -41,7 +41,6 @@ export class DecorateManager {
 
     // 保存当前场景，并离开编辑模式
     public save() {
-        this.reverseSelected();
         const combinedActions = this.combineActions(this.mActionQueue);
         const pkt: PBpacket = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_SYNC_EDIT_MODEL_RESULT);
         const content: op_virtual_world.IOP_CLIENT_REQ_VIRTUAL_WORLD_SYNC_EDIT_MODEL_RESULT = pkt.content;
@@ -208,6 +207,7 @@ export class DecorateManager {
         this.mSelectedID = -1;
 
         this.mRoom.game.uiManager.hideMed(ModuleName.PICADECORATECONTROL_NAME);
+        this.mRoom.game.emitter.emit(MessageType.DECORATE_UNSELECT_ELEMENT);
     }
 
     // 将当前选中的物件放回原位/取消放置，取消选择，关闭浮动功能栏
@@ -230,6 +230,7 @@ export class DecorateManager {
         this.mSelectedID = -1;
 
         this.mRoom.game.uiManager.hideMed(ModuleName.PICADECORATECONTROL_NAME);
+        this.mRoom.game.emitter.emit(MessageType.DECORATE_UNSELECT_ELEMENT);
     }
 
     public addFromBag(baseID: string) {
