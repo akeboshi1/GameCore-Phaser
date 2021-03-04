@@ -80,7 +80,8 @@ export class PicaPartyList extends BasicModel {
     }
     private on_PLAYER_PROGRESS(packet: PBpacket) {
         const content: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_QUERY_PLAYER_PROGRESS = packet.content;
-        this.game.emitter.emit("progresslist", content);
+        if (content.name === "online")
+            this.game.emitter.emit("progresslist", content);
     }
 
     private onRoomListHandler(packet: PBpacket) {
