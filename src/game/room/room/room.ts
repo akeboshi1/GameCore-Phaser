@@ -933,6 +933,18 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
             addList.push(sprite);
         }
 
+        if (content.packet.currentFrame !== undefined && content.packet.currentFrame === 1) {
+            // remove all elements
+            const elements = this.elementManager.getElements();
+            for (const element of elements) {
+                this.elementManager.remove(element.id);
+            }
+            const terrains = this.terrainManager.getElements();
+            for (const terrain of terrains) {
+                this.terrainManager.remove(terrain.id);
+            }
+        }
+
         if (nodeType === op_def.NodeType.ElementNodeType || nodeType === op_def.NodeType.SpawnPointType) {
             this.mElementManager.add(addList);
         } else if (nodeType === op_def.NodeType.TerrainNodeType) {
