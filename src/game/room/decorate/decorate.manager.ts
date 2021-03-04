@@ -8,6 +8,7 @@ import {BaseDataConfigManager} from "picaWorker";
 import {BlockObject} from "../block/block.object";
 import {InputEnable} from "../element/element";
 import PKT_PackageType = op_pkt_def.PKT_PackageType;
+import {IExtendCountablePackageItem} from "picaStructure";
 
 // 小屋布置管理类，包含所有布置过程中的操作接口
 // 文档：https://dej4esdop1.feishu.cn/docs/doccnEbMKpINEkfBVImFJ0nTJUh#
@@ -247,9 +248,13 @@ export class DecorateManager {
     public addFromBag(baseID: string) {
         this.reverseSelected();
 
-        const datas = this.bagData.getItems(op_pkt_def.PKT_PackageType.FurniturePackage, baseID);
-        if (datas.length <= 0) return;
-        const typeData = datas[0];
+        const bagCount = this.getBagCount(baseID);
+        if (bagCount <= 0) return;
+        const typeData = <any>this.getBaseData(baseID);
+        if (!typeData) {
+            Logger.getInstance().error("no config data, id: ", baseID);
+            return;
+        }
         // TODO: 此随机方式有重复id的可能
         const min = 1000000;
         const max = 0x70000000;
@@ -257,7 +262,6 @@ export class DecorateManager {
         const spriteData = new Sprite({
             id: indexID,
             point3f: {x: 0, y: 0, z: 0},
-            avatar: typeData.avatar,
             currentAnimationName: "idle",
             direction: 3,
             nickname: typeData.name,
@@ -348,6 +352,11 @@ export class DecorateManager {
             Logger.getInstance().error("cannot find data of sn: ", sn);
             return "";
         }
+    }
+
+    private getBaseData(baseID: string) {
+        const configMgr = <BaseDataConfigManager> this.room.game.configManager;
+        return configMgr.getItemBase(baseID);
     }
 
     private get bagData() {
