@@ -41,6 +41,7 @@ export class DecorateManager {
 
     // 保存当前场景，并离开编辑模式
     public save() {
+        this.reverseSelected();
         const combinedActions = this.combineActions(this.mActionQueue);
         const pkt: PBpacket = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_SYNC_EDIT_MODEL_RESULT);
         const content: op_virtual_world.IOP_CLIENT_REQ_VIRTUAL_WORLD_SYNC_EDIT_MODEL_RESULT = pkt.content;
@@ -135,18 +136,18 @@ export class DecorateManager {
 
     // 选择某一物件 call by motion
     public select(id: number) {
+        if (id < 0) {
+            this.reverseSelected();
+            return;
+        }
         const element = this.mRoom.elementManager.get(id);
         if (!element) return;
 
-        if (this.mSelectedID > 0 && this.mSelectedID !== id) {
+        if (this.mSelectedID !== id) {
             this.reverseSelected();
         }
 
         this.mSelectedID = id;
-        const med = this.mRoom.game.uiManager.getMed(ModuleName.PICADECORATECONTROL_NAME);
-        if (med && med.isShow()) {
-            this.mRoom.game.uiManager.hideMed(ModuleName.PICADECORATECONTROL_NAME);
-        }
 
         // set walkable
         this.mRoom.elementManager.removeFromMap(element.model);
@@ -260,6 +261,7 @@ export class DecorateManager {
     // 移动选择物 call by motion
     public moveSelected(id: number, delta: IPos) {
         if (this.mSelectedID !== id) return;
+        if (delta.x === 0 && delta.y === 0) return;
         const element = this.mRoom.elementManager.get(this.mSelectedID);
         if (!element) return;
         const act = new DecorateAction(element.model, DecorateActionType.Move, new DecorateActionData({moveVec: delta}));
