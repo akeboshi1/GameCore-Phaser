@@ -115,7 +115,7 @@ export class PicaNewHeadPanel extends Phaser.GameObjects.Container {
         peopeclickCon.enable = true;
         peopeclickCon.on(ClickEvent.Tap, this.onOpenOnlineHandler, this);
         peopeclickCon.x = this.peoplevalue.x;
-        const praisebg = new NineSlicePatch(this.scene, 0, -this.dpr, 50 * this.dpr, 27 * this.dpr, UIAtlasName.uicommon, "home_mapname_bg", {
+        const praisebg = new NineSlicePatch(this.scene, 0, 0, 50 * this.dpr, 27 * this.dpr, UIAtlasName.uicommon, "home_mapname_bg", {
             left: 16 * this.dpr,
             top: 0 * this.dpr,
             right: 16 * this.dpr,
@@ -176,13 +176,13 @@ export class PicaNewHeadPanel extends Phaser.GameObjects.Container {
             }
             let bgwidth = this.sceneTex.width + 40 * this.dpr;
             bgwidth = bgwidth < 60 * this.dpr ? 60 * this.dpr : bgwidth;
-            this.praisebg.resize(bgwidth, 25 * this.dpr);
+            this.praisebg.resize(bgwidth, 27 * this.dpr);
             this.praisebg.x = -this.peoplebg.width - 15 * this.dpr - this.praisebg.width * 0.5;
             this.sceneTex.x = this.praisebg.x - 11 * this.dpr;
         } else {
             let bgwidth = this.sceneTex.width + 20 * this.dpr;
             bgwidth = bgwidth < 40 * this.dpr ? 40 * this.dpr : bgwidth;
-            this.praisebg.resize(bgwidth, 25 * this.dpr);
+            this.praisebg.resize(bgwidth, 27 * this.dpr);
             this.praiseButton.visible = false;
             this.praisebg.x = -this.peoplebg.width - 15 * this.dpr - this.praisebg.width * 0.5;
             this.sceneTex.x = this.praisebg.x;
