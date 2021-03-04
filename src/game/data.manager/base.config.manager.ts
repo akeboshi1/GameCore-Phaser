@@ -158,8 +158,8 @@ export class BaseConfigManager {
     }
 
     protected setLocalStorage(key: string, jsonUrl: string, obj: object) {
-        const temp = { url: jsonUrl, obj };
-        this.mGame.peer.render.setLocalStorage(key, JSON.stringify(temp));
+        // const temp = { url: jsonUrl, obj };
+        // this.mGame.peer.render.setLocalStorage(key, JSON.stringify(temp));
     }
     protected getBasePath() {
         return new Promise((resolve, reject) => {
