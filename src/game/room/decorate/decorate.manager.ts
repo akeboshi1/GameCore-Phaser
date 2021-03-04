@@ -62,7 +62,7 @@ export class DecorateManager {
         const changedBagData: string[] = [];
         combinedActions.forEach((acts, sprite) => {
             const result = new op_client.SpriteModifyResult();
-            spriteResults.push(result);
+
             result.id = sprite.id;
             result.sn = sprite.sn;
             const baseID = this.getBaseIDBySN(sprite.sn);
@@ -102,6 +102,8 @@ export class DecorateManager {
                         break;
                 }
             }
+
+            spriteResults.push(result);
         });
         this.mRoom.connection.send(pkt);
         // waite for response: _OP_VIRTUAL_WORLD_RES_CLIENT_EDIT_MODEL_RESULT
@@ -250,7 +252,7 @@ export class DecorateManager {
 
         const bagCount = this.getBagCount(baseID);
         if (bagCount <= 0) return;
-        const typeData = <any>this.getBaseData(baseID);
+        const typeData = <any> this.getBaseData(baseID);
         if (!typeData) {
             Logger.getInstance().error("no config data, id: ", baseID);
             return;
@@ -415,11 +417,26 @@ export class DecorateManager {
         // });
         // return result;
         const result: Map<ISprite, DecorateAction[]> = new Map<ISprite, DecorateAction[]>();
+        const addCount: Map<ISprite, number> = new Map<ISprite, number>();
         for (const action of actions) {
             if (!result.has(action.target)) {
                 result.set(action.target, []);
             }
+            if (!addCount.has(action.target)) {
+                addCount.set(action.target, 0);
+            }
             result.get(action.target).push(action);
+            if (action.type === DecorateActionType.Add) {
+                const c = addCount.get(action.target);
+                addCount.set(action.target, c + 1);
+            } else if (action.type === DecorateActionType.Remove) {
+                const c = addCount.get(action.target);
+                if (c === 1) {
+                    // 添加再删除  清空之前的命令
+                    result.set(action.target, []);
+                }
+                addCount.set(action.target, c - 1);
+            }
         }
         return result;
     }
