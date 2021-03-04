@@ -1360,7 +1360,7 @@ export class Render extends RPCPeer implements GameMain, IRender {
         if (this.mCameraManager) this.mCameraManager.stopFollow();
     }
 
-    @Export([webworker_rpc.ParamType.num, webworker_rpc.ParamType.str])
+    @Export([webworker_rpc.ParamType.num])
     public async cameraFollow(id: number, effect: string) {
         const target = this.mDisplayManager.getDisplay(id);
         if (target) {
