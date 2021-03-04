@@ -80,11 +80,13 @@ export class DecorateManager {
                         }
                         break;
                     case DecorateActionType.Move:
-                        result.commandMask = 0x0002;
+                        result.commandMask = result.commandMask === 0x0001 || result.commandMask === 0x0003 ?
+                            0x0003 : 0x0002;
                         result.point3f = sprite.pos;
                         break;
                     case DecorateActionType.Rotate:
-                        result.commandMask = 0x0002;
+                        result.commandMask = result.commandMask === 0x0001 || result.commandMask === 0x0003 ?
+                            0x0003 : 0x0002;
                         result.currentAnimationName = sprite.currentAnimationName;
                         result.direction = sprite.direction;
                         break;
