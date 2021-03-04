@@ -335,11 +335,12 @@ class OrderItem extends Phaser.GameObjects.Container {
         this.hideAllElement();
         this.bg.setFrame(data.questType === 5 ? "order_precious_bg" : "order_ordinary_bg");// op_pkt_def.PKT_Quest_Type.ORDER_QUEST_ROYAL_MISSION
         if (data.stage !== 4) {// op_pkt_def.PKT_Quest_Stage.PKT_QUEST_STAGE_END
-            const url = Url.getOsdRes(data.display.texturePath);
+            const texturePath = data.display.texturePath + `_${this.dpr}x.png`;
+            const url = Url.getOsdRes(texturePath);
             this.headIcon.load(url, this, () => {
-                this.headIcon.scale = 1;
-                this.headIcon.scaleY = 49 * this.dpr / this.headIcon.displayHeight;
-                this.headIcon.scaleX = this.headIcon.scaleY;
+                // this.headIcon.scale = 1;
+                // this.headIcon.scaleY = 49 * this.dpr / this.headIcon.displayHeight;
+                // this.headIcon.scaleX = this.headIcon.scaleY;
             });
             this.headIcon.visible = true;
         }
