@@ -1504,7 +1504,10 @@ export class Render extends RPCPeer implements GameMain, IRender {
         this.mInputManager.changeMouseManager(new MouseManagerDecorate(this));
 
         const playScene = this.mGame.scene.getScene(PlayScene.name) as PlayScene;
-        if (playScene) playScene.pauseMotion();
+        if (playScene) {
+            playScene.pauseMotion();
+            playScene.disableCameraMove();
+        }
     }
 
     @Export()
@@ -1513,7 +1516,10 @@ export class Render extends RPCPeer implements GameMain, IRender {
         this.mInputManager.changeMouseManager(new MouseManager(this));
 
         const playScene = this.mGame.scene.getScene(PlayScene.name) as PlayScene;
-        if (playScene) playScene.resumeMotion();
+        if (playScene) {
+            playScene.resumeMotion();
+            playScene.enableCameraMove();
+        }
     }
 
     // private connectReconnect() {

@@ -21,6 +21,7 @@ export class PlayScene extends RoomScene {
     public static LAYER_SCENEUI = "sceneUILayer";
     protected motion: MotionManager;
     protected mLoadState: PlaySceneLoadState;
+    private cameraMovable: boolean = true;
 
     constructor(config?: string | Phaser.Types.Scenes.SettingsConfig) {
         super(config || { key: SceneName.PLAY_SCENE });
@@ -131,6 +132,14 @@ export class PlayScene extends RoomScene {
         if (this.motion) this.motion.resume();
     }
 
+    public enableCameraMove() {
+        this.cameraMovable = true;
+    }
+
+    public disableCameraMove() {
+        this.cameraMovable = false;
+    }
+
     protected initMotion() {
         this.motion = new MotionManager(this.render);
         this.motion.setScene(this);
@@ -143,11 +152,13 @@ export class PlayScene extends RoomScene {
     }
 
     protected onPointerDownHandler(pointer: Phaser.Input.Pointer, currentlyOver: Phaser.GameObjects.GameObject[]) {
+        if (!this.cameraMovable) return;
         this.render.emitter.emit("pointerScene", SceneName.PLAY_SCENE, currentlyOver);
         this.addPointerMoveHandler();
     }
 
     protected onPointerUpHandler(pointer: Phaser.Input.Pointer) {
+        if (!this.cameraMovable) return;
         this.removePointerMoveHandler();
     }
 
