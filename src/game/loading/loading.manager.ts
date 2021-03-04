@@ -10,8 +10,8 @@ export class LoadingManager {
         this.mResources = [];
     }
 
-    start(state?: number) {
-        this.mGame.peer.render.showLoading({ "dpr": this.mGame.getGameConfig().scale_ratio, state });
+    start(state?: number, data?: any) {
+        this.mGame.peer.render.showLoading({ "dpr": this.mGame.getGameConfig().scale_ratio, state, data });
         // const sceneManager = this.game.scene;
         // if (!sceneManager) {
         //     return Promise.reject("start faild. SceneManager does not exist");

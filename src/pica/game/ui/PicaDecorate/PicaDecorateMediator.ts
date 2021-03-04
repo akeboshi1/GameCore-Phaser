@@ -14,15 +14,19 @@ export class PicaDecorateMediator extends BasicMediator {
     constructor(game: Game) {
         super(ModuleName.PICADECORATE_NAME, game);
 
-        if (game.roomManager.currentRoom === null || game.roomManager.currentRoom.decorateManager === null) {
-            Logger.getInstance().error("no decorateManager: ",
-                game.roomManager.currentRoom !== null, game.roomManager.currentRoom.decorateManager !== null);
-            return;
-        }
-        this.mDecorateManager = game.roomManager.currentRoom.decorateManager;
-
         this.game.emitter.on(MessageType.DECORATE_SELECTE_ELEMENT, this.updateSelectedFurniture, this);
         this.game.emitter.on(MessageType.DECORATE_UPDATE_ELEMENT_COUNT, this.updateFurnitureCount, this);
+    }
+
+    show(param?: any) {
+        super.show(param);
+
+        if (this.game.roomManager.currentRoom === null || this.game.roomManager.currentRoom.decorateManager === null) {
+            Logger.getInstance().error("no decorateManager: ",
+                this.game.roomManager.currentRoom !== null, this.game.roomManager.currentRoom.decorateManager !== null);
+            return;
+        }
+        this.mDecorateManager = this.game.roomManager.currentRoom.decorateManager;
     }
 
     destroy() {

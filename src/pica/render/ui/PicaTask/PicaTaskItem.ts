@@ -38,7 +38,7 @@ export class PicaTaskItem extends Phaser.GameObjects.Container {
         const headbg = scene.make.image({ key: UIAtlasName.uicommon, frame: "task_head_frame" });
         headbg.x = posx + 25 * dpr;
         this.headIcon = new DynamicImage(scene, headbg.x, 0);
-        this.headIcon.scale = dpr / this.zoom;
+        // this.headIcon.scale = dpr / this.zoom;
         this.headIcon.y = -10 * dpr;
         this.taskName = scene.make.text({ text: "", style: UIHelper.whiteStyle(dpr) }).setOrigin(0, 0.5);
         this.taskName.x = this.headIcon.x + 28 * dpr;
@@ -62,7 +62,8 @@ export class PicaTaskItem extends Phaser.GameObjects.Container {
         this.taskName.text = data.name + this.getProgressStr(data);
         this.setTextLimit(this.taskName, this.taskName.text);
         this.setTextLimit(this.taskDes, data.detail);
-        const url = Url.getOsdRes(data.display.texturePath);
+        const texturePath = data.display.texturePath + `_${this.dpr}x.png`;
+        const url = Url.getOsdRes(texturePath);
         this.headIcon.load(url, this, () => {
 
         });
@@ -147,7 +148,7 @@ export class PicaTaskItem extends Phaser.GameObjects.Container {
 
     private setTextLimit(text: Phaser.GameObjects.Text, content?: string, limit: number = 15) {
         if (content.length > limit) {
-            const maxWidth = 155 * this.dpr;
+            const maxWidth = 120 * this.dpr;
             for (let i = 4; i < content.length; i++) {
                 let str = content.slice(0, i);
                 const width = text.setText(str).width;

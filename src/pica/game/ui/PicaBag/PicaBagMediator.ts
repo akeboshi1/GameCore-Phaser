@@ -180,7 +180,7 @@ export class PicaBagMediator extends BasicMediator {
             if (this.game.roomManager.currentRoom.isDecorating && this.game.roomManager.currentRoom.decorateManager) {
                 this.game.roomManager.currentRoom.decorateManager.addFromBag(id);
             } else {
-                this.game.roomManager.requestDecorate();
+                this.game.roomManager.currentRoom.requestDecorate();
             }
         } else {
             // this.model.addFurniToScene(id);

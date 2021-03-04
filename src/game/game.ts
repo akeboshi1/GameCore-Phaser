@@ -12,7 +12,7 @@ import { Clock, ClockReadyListener } from "./loop/clock/clock";
 import { HttpClock } from "./loop/httpClock/http.clock";
 import { HttpService } from "./loop/httpClock/http.service";
 import { LoadingManager } from "./loading/loading.manager";
-import { GameState, ILauncherConfig, LoadState } from "structure";
+import { GameState, ILauncherConfig, LoadState, MAIN_WORKER, RENDER_PEER, PHYSICAL_WORKER } from "structure";
 import { ServerAddress } from "../../lib/net/address";
 import { IRoomService } from "./room/room/room";
 import { ElementStorage } from "../base/model/elementstorage/element.storage";
@@ -21,7 +21,7 @@ import { User } from "./actor/user";
 import { DataManager, DataMgrType } from "./data.manager/dataManager";
 import { BaseConfigManager } from "./data.manager";
 import { NetworkManager } from "./command";
-
+import version from "../../version";
 interface ISize {
     width: number;
     height: number;
@@ -465,7 +465,7 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
 
     public async loginEnterWorld() {
         Logger.getInstance().debug("loginEnterWorld");
-        this.mLoadingManager.start(LoadState.ENTERWORLD);
+        this.mLoadingManager.start(LoadState.ENTERWORLD, { render: RENDER_PEER + `_v${version}`, main: MAIN_WORKER + `_v${version}`, physical: PHYSICAL_WORKER + `_v${version}` });
         this.renderPeer.hideLogin();
         const pkt: PBpacket = new PBpacket(op_gateway.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_PLAYER_INIT);
         const content: IOP_CLIENT_REQ_VIRTUAL_WORLD_PLAYER_INIT = pkt.content;
@@ -491,7 +491,7 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
         content.fingerprint = this.mConfig.token_fingerprint = accountData.fingerprint;
         content.sceneId = sceneId;
         // 后端有个Bug，loc是undefined位置会错误。修复后删掉{ locX: 0, locY: 0, locZ: 0}
-        content.loc = loc || { locX: 0, locY: 0, locZ: 0};
+        content.loc = loc || { locX: 0, locY: 0, locZ: 0 };
         content.spawnPointId = spawnPointId;
         this.connect.send(pkt);
         this.peer.state = GameState.EnterWorld;

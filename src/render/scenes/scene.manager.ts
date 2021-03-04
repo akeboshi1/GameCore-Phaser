@@ -12,7 +12,8 @@ import { MainUIScene } from "./main.ui.scene";
 import { PlayScene } from "./play.scene";
 import { RoomScene } from "./room.scene";
 import { SelectRoleScene } from "./select.role.scene";
-
+import { MAIN_WORKER, RENDER_PEER, PHYSICAL_WORKER } from "structure";
+import version from "../../../version";
 export class SceneManager extends BaseSceneManager {
 
     private mCurSceneName: string;
@@ -88,24 +89,30 @@ export class SceneManager extends BaseSceneManager {
             const state = data.state;
             switch (state) {
                 case LoadState.ENTERWORLD:
+                    data.loadProgress = RENDER_PEER + `_v${version}` + "/n" + MAIN_WORKER + `_v${version}` + "/n" + PHYSICAL_WORKER + `_v${version}`;
                     data.text = LoadingTips.enterWorld();
                     break;
                 case LoadState.DOWNLOADGAMECONFIG:
+                    data.loadProgress = "正在加载游戏pi";
                     data.text = LoadingTips.downloadGameConfig();
                     break;
                 case LoadState.DOWNLOADSCENECONFIG:
+                    data.loadProgress = "正在加载场景pi";
                     data.text = LoadingTips.downloadSceneConfig();
                     break;
                 case LoadState.LOADINGRESOURCES:
                     data.text = LoadingTips.loadingResources();
                     break;
                 case LoadState.LOGINGAME:
+                    data.loadProgress = "正在请求登陆游戏";
                     data.text = LoadingTips.loginGame();
                     break;
                 case LoadState.PARSECONFIG:
+                    data.loadProgress = "正在解析一大波游戏数据";
                     data.text = LoadingTips.parseConfig();
                     break;
                 case LoadState.WAITENTERROOM:
+                    data.loadProgress = "正在等待进入房间";
                     data.text = LoadingTips.waitEnterRoom();
                     break;
                 case LoadState.CREATESCENE:
@@ -119,7 +126,8 @@ export class SceneManager extends BaseSceneManager {
             if (!isActive) {
                 scene.wake(data);
             } else {
-                scene.updateProgress(data.text);
+                if (data.text) scene.updateProgress(data.text);
+                if (data.loadProgress) scene.loadProgress(data.loadProgress);
             }
             if (data.callBack) data.callBack();
         } else {
