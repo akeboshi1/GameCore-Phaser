@@ -1,8 +1,7 @@
 // 加载器：
 // 1. 在这里接受外部传入的参数并转换为World可以接受的参数
 // 2. 做设备兼容
-
-import { ILauncherConfig } from "structure";
+import { ILauncherConfig, PlatFormType } from "structure";
 import { Logger } from "utils";
 import version from "./version";
 export class Launcher {
@@ -75,7 +74,7 @@ export class Launcher {
         gameLoaded: null,
         reload: null,
         game_created: null,
-        platform: "pc",
+        platform: PlatFormType.PC,
     };
 
     constructor(config?: ILauncherConfig) {

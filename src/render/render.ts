@@ -27,7 +27,8 @@ import {
     PHYSICAL_WORKER,
     PHYSICAL_WORKER_URL,
     RENDER_PEER,
-    SceneName
+    SceneName,
+    PlatFormType
 } from "structure";
 import { DisplayManager } from "./managers/display.manager";
 import { InputManager } from "./input/input.manager";
@@ -1580,32 +1581,43 @@ export class Render extends RPCPeer implements GameMain, IRender {
     }
 
     private resumeScene() {
-        Logger.getInstance().debug(`#BlackSceneFromBackground; world.resumeScene(); isPause:${this.isPause}; mGame:${this.mGame}`);
-        if (!this.isPause) {
-            return;
-        }
-        this.isPause = false;
-        if (this.mGame) {
-            if (this.sceneManager.currentScene) this.sceneManager.currentScene.scene.resume();
-            this.mainPeer.onFocus();
-            // this.mConnection.onFocus();
-            // this.mRoomMamager.onFocus();
-            const pauseScene: Phaser.Scene = this.mGame.scene.getScene(GamePauseScene.name);
-            if (pauseScene) {
-                (pauseScene as GamePauseScene).sleep();
-                this.mGame.scene.stop(GamePauseScene.name);
-            }
-            const playScene = this.mGame.scene.getScene(PlayScene.name);
-            if (playScene) playScene.scene.resume();
-            const uiScene = this.mGame.scene.getScene(MainUIScene.name);
-            if (uiScene) uiScene.scene.resume();
-            // if (!this.mConnection.isConnect) {
-            //     if (this.mConfig.connectFail) {
-            //         return this.mConfig.connectFail();
-            //     } else {
-            //         return this.onDisConnected();
-            //     }
-            // }
+        const type = this.mConfig.platform;
+        switch (type) {
+            case PlatFormType.APP:
+                this.mainPeer.reconnect();
+                break;
+            case PlatFormType.PC:
+                Logger.getInstance().debug(`#BlackSceneFromBackground; world.resumeScene(); isPause:${this.isPause}; mGame:${this.mGame}`);
+                if (!this.isPause) {
+                    return;
+                }
+                this.isPause = false;
+                if (this.mGame) {
+                    if (this.sceneManager.currentScene) this.sceneManager.currentScene.scene.resume();
+                    this.mainPeer.onFocus();
+                    // this.mConnection.onFocus();
+                    // this.mRoomMamager.onFocus();
+                    const pauseScene: Phaser.Scene = this.mGame.scene.getScene(GamePauseScene.name);
+                    if (pauseScene) {
+                        (pauseScene as GamePauseScene).sleep();
+                        this.mGame.scene.stop(GamePauseScene.name);
+                    }
+                    const playScene = this.mGame.scene.getScene(PlayScene.name);
+                    if (playScene) playScene.scene.resume();
+                    const uiScene = this.mGame.scene.getScene(MainUIScene.name);
+                    if (uiScene) uiScene.scene.resume();
+                    // if (!this.mConnection.isConnect) {
+                    //     if (this.mConfig.connectFail) {
+                    //         return this.mConfig.connectFail();
+                    //     } else {
+                    //         return this.onDisConnected();
+                    //     }
+                    // }
+                }
+                break;
+                default:
+                    this.mainPeer.reconnect();
+                    break;
         }
     }
 
