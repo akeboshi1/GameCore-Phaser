@@ -6,6 +6,7 @@ import { AvatarSuitType, ModuleName } from "structure";
 import { Font, i18n } from "utils";
 import { UIAtlasKey, UIAtlasName } from "picaRes";
 import { op_client } from "pixelpai_proto";
+import { IPrice } from "picaStructure";
 export class PicaMarketPanel extends BasePanel {
   private mSelectItem: ElementDetail;
   private mCloseBtn: Button;
@@ -31,6 +32,8 @@ export class PicaMarketPanel extends BasePanel {
   private randomRefreshBtn: NineSliceButton;
   private refreshIcon: Phaser.GameObjects.Image;
   private refreshNeedCount: Phaser.GameObjects.Text;
+  private moneyValue: number;
+  private diamondValue: number;
   constructor(uiManager: UiManager) {
     super(uiManager.scene, uiManager.render);
     this.key = ModuleName.PICAMARKET_NAME;
@@ -48,7 +51,7 @@ export class PicaMarketPanel extends BasePanel {
     if (!this.mInitialized) return;
     this.mSelectItem.off("buyItem", this.onBuyItemHandler, this);
     this.mSelectItem.off("popItemCard", this.onPopItemCardHandler, this);
-  //  this.mCloseBtn.off(ClickEvent.Tap, this.onCloseHandler, this);
+    //  this.mCloseBtn.off(ClickEvent.Tap, this.onCloseHandler, this);
   }
 
   public resize(w: number, h: number) {
@@ -119,6 +122,11 @@ export class PicaMarketPanel extends BasePanel {
     group.on("selected", this.onSelectCategoryHandler, this);
     group.appendItemAll(this.mTabs);
     group.selectIndex(0);
+  }
+
+  public setMoneyData(money: number, diamond: number) {
+    this.moneyValue = money;
+    this.diamondValue = diamond;
   }
 
   public setProp(content: any) {// op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_MARKET_QUERY
@@ -426,11 +434,11 @@ export class PicaMarketPanel extends BasePanel {
     this.mSelectItem.setProp(prop);
     this.mSelectItem.setData("propdata", prop);
     if (!prop.suitType || prop.suitType === "") {
-     // this.render.renderEmitter(this.key + "_queryPropResource", prop);
-     const content = new op_client.OP_VIRTUAL_WORLD_RES_CLIENT_MARKET_QUERY_PACKAGE_ITEM_RESOURCE();
-     content.display = prop.animationDisplay ? prop.animationDisplay : prop.display;
-     content.animations = <any>prop.animations;
-     this.setCommodityResource(content);
+      // this.render.renderEmitter(this.key + "_queryPropResource", prop);
+      const content = new op_client.OP_VIRTUAL_WORLD_RES_CLIENT_MARKET_QUERY_PACKAGE_ITEM_RESOURCE();
+      content.display = prop.animationDisplay ? prop.animationDisplay : prop.display;
+      content.animations = <any>prop.animations;
+      this.setCommodityResource(content);
     } else {
       const content = this.getCommodityResource(prop);
       this.setCommodityResource(content);
@@ -440,6 +448,14 @@ export class PicaMarketPanel extends BasePanel {
   private onBuyItemHandler(prop: any) {// op_def.IOrderCommodities
     const itemdata = this.getBuyPackageData();
     itemdata.count = prop.quantity;
+    const allPrice = prop.quantity * itemdata.sellingPrice.price;
+    if (allPrice > this.moneyValue) {
+      const tempdata = {
+        text: [{ text: i18n.t("market.moneyless"), node: undefined }]
+      };
+      this.render.mainPeer.showMediator(ModuleName.PICANOTICE_NAME, true, tempdata);
+      return;
+    }
     const data = itemdata;
     const title = i18n.t("market.payment");
     const resource = this.mSelectItem.getData("display");
