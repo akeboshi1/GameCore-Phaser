@@ -1,6 +1,7 @@
 export enum PlatFormType {
     PC = "pc",
-    APP = "app"
+    APP = "app",
+    NOPC = "nopc"
 }
 
 export interface ILauncherConfig {

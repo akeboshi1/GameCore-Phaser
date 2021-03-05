@@ -1,21 +1,16 @@
 import { Url, Size } from "utils";
 import { BasicScene } from "baseRender";
+import { SceneName } from "structure";
 
 export class GamePauseScene extends BasicScene {
-    private mRender: any;
     private bg: Phaser.GameObjects.Graphics;
     private pauseImg: Phaser.GameObjects.Image;
     private tipTF: Phaser.GameObjects.Text;
     constructor() {
-        super({ key: GamePauseScene.name });
+        super({ key: SceneName.GAMEPAUSE_SCENE });
     }
     public preload() {
         this.load.image("gamepause.png", Url.getRes("gamepause.png"));
-    }
-
-    public init(data: any) {
-        super.init(data);
-        this.mRender = data.render;
     }
 
     public create() {
@@ -49,7 +44,7 @@ export class GamePauseScene extends BasicScene {
     }
 
     private downHandler() {
-        this.mRender.onFocus();
+        this.render.onFocus();
     }
 
     private checkSize(size: Size) {
@@ -58,12 +53,12 @@ export class GamePauseScene extends BasicScene {
         this.bg.clear();
         this.bg.fillStyle(0, .8);
         this.bg.fillRect(0, 0, width, height);
-        this.pauseImg.scaleX = this.pauseImg.scaleY = this.mRender.uiScale * .7;
+        this.pauseImg.scaleX = this.pauseImg.scaleY = this.render.uiScale * .7;
         this.pauseImg.x = width >> 1;
         this.pauseImg.y = height >> 1;
-        this.tipTF.scaleX = this.tipTF.scaleY = this.mRender.uiScale;
-        this.tipTF.x = width - 280 * this.mRender.uiScale >> 1;
-        this.tipTF.y = height - 50 * this.mRender.uiScale;
+        this.tipTF.scaleX = this.tipTF.scaleY = this.render.uiScale;
+        this.tipTF.x = width - 280 * this.render.uiScale >> 1;
+        this.tipTF.y = height - 50 * this.render.uiScale;
     }
 
 }

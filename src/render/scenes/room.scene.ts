@@ -2,7 +2,6 @@ import { BasicScene } from "baseRender";
 
 export class RoomScene extends BasicScene {
     protected mRoomID: any;
-
     public init(data: any) {
         super.init(data);
         if (data) {

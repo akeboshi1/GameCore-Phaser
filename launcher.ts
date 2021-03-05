@@ -74,7 +74,7 @@ export class Launcher {
         gameLoaded: null,
         reload: null,
         game_created: null,
-        platform: PlatFormType.PC,
+        platform: PlatFormType.NOPC,
     };
 
     constructor(config?: ILauncherConfig) {

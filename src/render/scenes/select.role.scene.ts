@@ -1,9 +1,10 @@
 import { BasicScene } from "baseRender";
+import { SceneName } from "structure";
 
 export class SelectRoleScene extends BasicScene {
   private mWorld: any | undefined;
   constructor() {
-    super({ key: SelectRoleScene.name });
+    super({ key: SceneName.SELECTROLE_SCENE });
   }
 
   public preload() { }
