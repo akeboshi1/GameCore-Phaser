@@ -1,8 +1,8 @@
 import { PacketHandler, PBpacket } from "net-socket-packet";
 import { op_client, op_def, op_virtual_world } from "pixelpai_proto";
 import { ConnectionService } from "../../../../lib/net/connection.service";
-import {IPos, Logger, LogicPos, Position45} from "utils";
-import { EventType, IDragonbonesModel, IFramesModel, ISprite } from "structure";
+import { Logger, LogicPos } from "utils";
+import {EventType, IDragonbonesModel, IFramesModel, ISprite, MessageType} from "structure";
 import { IRoomService, Room } from "../room/room";
 import { Element, IElement, InputEnable } from "./element";
 import { ElementStateManager } from "./element.state.manager";
@@ -435,6 +435,10 @@ export class ElementManager extends PacketHandler implements IElementManager {
         const element = this.mElements.get(id);
         if (!element) return;
         element.state = true;
+        // 编辑小屋时，更新浮动功能栏
+        if (this.mRoom.isDecorating) {
+            this.mRoom.game.emitter.emit(MessageType.DECORATE_ELEMENT_CREATED, id);
+        }
         // 回馈给load缓存队列逻辑
         this.elementLoadCallBack(id);
         // 没有完成全部元素添加或者当物件添加队列缓存存在，则不做创建状态检测
@@ -487,6 +491,17 @@ export class ElementManager extends PacketHandler implements IElementManager {
         });
     }
 
+    public addSpritesToCache(objs: op_client.ISprite[]) {
+        for (const obj of objs) {
+            this.mAddCache.push(obj.id);
+            if (this.checkDisplay(new Sprite(obj, 3))) {
+                this.mCacheAddList.push(obj);
+            } else {
+                this.mRequestSyncIdList.push(obj.id);
+            }
+        }
+    }
+
     protected addMap(sprite: ISprite) {
         this.addToMap(sprite);
     }
@@ -534,14 +549,7 @@ export class ElementManager extends PacketHandler implements IElementManager {
         if (type !== NodeType.ElementNodeType) {
             return;
         }
-        for (const obj of objs) {
-            this.mAddCache.push(obj.id);
-            if (this.checkDisplay(new Sprite(obj, 3))) {
-                this.mCacheAddList.push(obj);
-            } else {
-                this.mRequestSyncIdList.push(obj.id);
-            }
-        }
+        this.addSpritesToCache(objs);
     }
 
     protected _add(sprite: ISprite, addMap: boolean = false): Element {

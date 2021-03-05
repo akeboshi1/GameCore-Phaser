@@ -144,6 +144,11 @@ export class MainPeer extends RPCPeer {
         // this.remote[MAIN_WORKER].MainPeer.clearHeartBeat();
     }
 
+    @Export([webworker_rpc.ParamType.boolean])
+    public showMovePoint(val: boolean) {
+        if (this.game && this.game.user) this.game.user.debugPoint = val;
+    }
+
     // ============== render调用主进程
     @Export()
     public createGame(config: ILauncherConfig) {
@@ -537,6 +542,14 @@ export class MainPeer extends RPCPeer {
     @Export([webworker_rpc.ParamType.str])
     public showPanelHandler(name: string, data?: any) {
         this.game.showByName(name, data);
+    }
+
+    @Export([webworker_rpc.ParamType.num])
+    public closePanelHandler(id: number) {
+        const packet = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_CLOSE_UI);
+        const content: op_virtual_world.OP_CLIENT_REQ_VIRTUAL_WORLD_CLOSE_UI = packet.content;
+        content.uiIds = [id];
+        this.game.connection.send(packet);
     }
 
     @Export([webworker_rpc.ParamType.str, webworker_rpc.ParamType.boolean])

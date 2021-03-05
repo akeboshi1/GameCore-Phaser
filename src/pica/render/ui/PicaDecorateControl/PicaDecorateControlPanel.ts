@@ -1,7 +1,7 @@
 import {Button, ClickEvent} from "apowophaserui";
 import {BasePanel, DragonbonesDisplay, FramesDisplay, UiManager} from "gamecoreRender";
 import {MessageType, ModuleName, RENDER_PEER} from "structure";
-import {IPos, Logger} from "utils";
+import {IPos, Logger, LogicPos} from "utils";
 import {UIAtlasName} from "picaRes";
 import {PicaBasePanel} from "../pica.base.panel";
 
@@ -12,7 +12,6 @@ export class PicaDecorateControlPanel extends PicaBasePanel {
     private mAutoPlaceBtn: Button;
     private mExitBtn: Button;
     private mBtns: Button[];
-    private mTarget: FramesDisplay | DragonbonesDisplay;
 
     constructor(uiManager: UiManager) {
         super(uiManager);
@@ -51,6 +50,31 @@ export class PicaDecorateControlPanel extends PicaBasePanel {
         if (this.mSaveBtn) this.mSaveBtn.enable = canPlace;
     }
 
+    public updatePosition() {
+        const {id, pos, canPlace} = this.mShowData;
+        const display = this.render.displayManager.getDisplay(id);
+        if (!display) {
+            return;
+        }
+
+        this.changePosFollowTarget(display.getPosition());
+    }
+
+    // public updatePosition() {
+    //     const {id, pos, canPlace} = this.mShowData;
+    //     const display = this.render.displayManager.getDisplay(id);
+    //     const displayPos = new LogicPos(pos.x, pos.y);
+    //     if (display) {
+    //         displayPos.x = display.x;
+    //         displayPos.y = display.y;
+    //     }
+    //
+    //     const camPos = new LogicPos(this.uiManager.render.camerasManager.camera.scrollX,
+    //         this.uiManager.render.camerasManager.camera.scrollY);
+    //     this.x = (displayPos.x - 170) * this.dpr - camPos.x;
+    //     this.y = (displayPos.y + 50) * this.dpr - camPos.y;
+    // }
+
     protected init() {
         const w = this.scene.cameras.main.width;
         const h = this.scene.cameras.main.height;
@@ -66,7 +90,7 @@ export class PicaDecorateControlPanel extends PicaBasePanel {
         this.add(this.mBtns);
 
         const zoom = this.render.uiScale;
-        let totalWidth = w - 10 * 2 * this.dpr * zoom;
+        let totalWidth = w - 30 * 2 * this.dpr * zoom;
         this.mBtns.map((btn) => totalWidth -= btn.width * zoom);
         const space = totalWidth / (this.mBtns.length - 1) / zoom;
 
@@ -82,23 +106,15 @@ export class PicaDecorateControlPanel extends PicaBasePanel {
         super.init();
 
         const {id, pos, canPlace} = this.mShowData;
-        const display = this.render.displayManager.getDisplay(id);
-        if (display) {
-            this.mTarget = display;
-        } else {
-            Logger.getInstance().error("cannot find display: ", id);
-        }
         this.updateCanPlace(canPlace);
-        this.updatePosition();
+        this.changePosFollowTarget(pos);
     }
 
-    private updatePosition() {
-        if (!this.mTarget) {
-            this.mediator.hide();
-            return;
-        }
-
-        this.y = this.mTarget.y * this.dpr;
+    private changePosFollowTarget(pos: IPos) {
+        const camPos = new LogicPos(this.uiManager.render.camerasManager.camera.scrollX,
+            this.uiManager.render.camerasManager.camera.scrollY);
+        this.x = (pos.x - 170) * this.dpr - camPos.x;
+        this.y = (pos.y + 50) * this.dpr - camPos.y;
     }
 
     private onSaveHandler() {

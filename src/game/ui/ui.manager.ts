@@ -1,11 +1,11 @@
-import {PacketHandler, PBpacket} from "net-socket-packet";
-import {op_client, op_pkt_def} from "pixelpai_proto";
-import {EventType, ModuleName} from "structure";
-import {i18n, Size} from "utils";
-import {Game} from "../game";
-import {BasicMediator, UIType} from "./basic/basic.mediator";
-import {UILayoutType, UIMediatorType} from "./ui.mediator.type";
-import {BaseDataConfigManager} from "picaWorker";
+import { PacketHandler, PBpacket } from "net-socket-packet";
+import { op_client, op_pkt_def } from "pixelpai_proto";
+import { EventType, ModuleName } from "structure";
+import { i18n, Size } from "utils";
+import { Game } from "../game";
+import { BasicMediator, UIType } from "./basic/basic.mediator";
+import { UILayoutType, UIMediatorType } from "./ui.mediator.type";
+import { BaseDataConfigManager } from "picaWorker";
 
 export class UIManager extends PacketHandler {
     protected mMedMap: Map<UIMediatorType, BasicMediator>;
@@ -110,6 +110,8 @@ export class UIManager extends PacketHandler {
             const ns: any = require(`./${type}/${className}`);
             mediator = new ns[className](this.game);
             if (!mediator) {
+                // todo 处理引导
+                this.game.peer.render.showPanel(type, param);
                 // Logger.getInstance().error(`error ${type} no panel can show!!!`);
                 return;
             }
@@ -320,8 +322,9 @@ export class UIManager extends PacketHandler {
     protected onHandleShowCreateRoleUI(packet: PBpacket) {
         //  this.showMed(ModuleName.CREATEROLE_NAME, packet.content);
         this.game.preloadGameConfig().then(() => {
+            const configMgr = <BaseDataConfigManager>this.game.configManager;
+            if (!configMgr.initialize) return;
             const content: op_client.OP_VIRTUAL_WORLD_REQ_CLIENT_PKT_SHOW_CREATE_ROLE_UI = packet.content;
-            const configMgr = <BaseDataConfigManager> this.game.configManager;
             configMgr.getBatchItemDatas(content.avatars);
             this.showMed(ModuleName.PICACREATEROLE_NAME, content);
         });

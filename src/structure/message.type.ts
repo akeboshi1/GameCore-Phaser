@@ -91,6 +91,7 @@ export class MessageType {
     public static DECORATE_UPDATE_SELECTED_ELEMENT_CAN_PLACE = "decorateUpdateSelectedElementCanPlace";
     public static DECORATE_UPDATE_SELECTED_ELEMENT_POSITION = "decorateUpdateSelectedElementPosition";
     public static DECORATE_UPDATE_ELEMENT_COUNT = "decorateUpdateElementCount";
+    public static DECORATE_ELEMENT_CREATED = "decorateElementCreated";
 
     public static ADD_ICON_TO_TOP = "addIconToTop";
     public static REMOVE_ICON_FROM_TOP = "removeIconFromTop";

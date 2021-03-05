@@ -1,11 +1,3 @@
-<!--
- * @Author: your name
- * @Date: 2020-10-14 17:46:11
- * @LastEditTime: 2020-12-04 11:12:05
- * @LastEditors: Please set LastEditors
- * @Description: In User Settings Edit
- * @FilePath: /game-core/index.html
--->
 <!DOCTYPE html>
 <html lang="en">
 
@@ -87,7 +79,6 @@
             }
             const app = launcher.start(option);
             app.registerReload(window.reload);
-
             window.addEventListener("resize", (e) => {
                 app.onResize(window.innerWidth, window.innerHeight);
 

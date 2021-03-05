@@ -97,7 +97,7 @@ export class PicaNewMainPanel extends PicaBasePanel {
         this.leftPanel = new PicaNewLeftPanel(this.scene, 40 * this.dpr, 170 * this.dpr, this.key, this.dpr);
         this.leftPanel.setHandler(new Handler(this, this.onLeftHandler));
         this.add(this.leftPanel);
-        this.activityPanel = new PicaNewActivityPanel(this.scene, 40 * this.dpr, 170 * this.dpr, this.key, this.dpr);
+        this.activityPanel = new PicaNewActivityPanel(this.render, this.scene, 40 * this.dpr, 170 * this.dpr, this.key, this.dpr);
         this.activityPanel.setHandler(new Handler(this, this.onActivityHandler));
         this.add(this.activityPanel);
         this.chatPanel = new PicaNewChatPanel(this.scene, width, 201 * this.dpr, this.key, this.dpr);
@@ -107,11 +107,6 @@ export class PicaNewMainPanel extends PicaBasePanel {
         // this.add(this.navigatePanel);
         this.resize(width, height);
         super.init();
-    }
-
-    protected onShow() {
-        super.onShow();
-        this.render.guideManager.startGuide(GuideID.Hotel);
     }
 
     protected onInitialized() {
@@ -165,11 +160,11 @@ export class PicaNewMainPanel extends PicaBasePanel {
         if (tag === "activity") {
             this.render.renderEmitter(ModuleName.PICANEWMAIN_NAME + "_showpanel", ModuleName.PICAORDER_NAME);
         } else if (tag === "indent") {
-            this.render.renderEmitter(ModuleName.PICANEWMAIN_NAME + "_showpanel", ModuleName.PICAPARTYLIST_NAME);
+            this.render.renderEmitter(ModuleName.PICANEWMAIN_NAME + "_showpanel", ModuleName.PICAORDER_NAME);
         } else if (tag === "recharge") {
             this.render.renderEmitter(ModuleName.PICANEWMAIN_NAME + "_showpanel", ModuleName.PICAFURNITURECOMPOSE_NAME);
         } else if (tag === "email") {
-            this.render.renderEmitter(ModuleName.PICANEWMAIN_NAME + "_showpanel", ModuleName.PICAROAM_NAME);
+            // this.render.renderEmitter(ModuleName.PICANEWMAIN_NAME + "_showpanel", ModuleName.PICAROAM_NAME);
         } else if (tag === "roam") {
             this.render.renderEmitter(ModuleName.PICANEWMAIN_NAME + "_showpanel", ModuleName.PICAROAM_NAME);
         }

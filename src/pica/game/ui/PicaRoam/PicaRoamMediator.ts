@@ -143,8 +143,8 @@ export class PicaRoamMediator extends BasicMediator {
         if (this.userData && this.userData.playerProperty) {
             const property = this.userData.playerProperty;
             const money = property.getProperty(data.tokenId);
-            const alter = property.getProperty(data.alterId);
-            const altervalue = alter ? alter.value : 0;
+            const alter = this.userData.playerBag.getItemsCount(op_pkt_def.PKT_PackageType.PropPackage, data.alterId);// property.getProperty(data.alterId);
+            const altervalue = alter;// alter ? alter.value : 0;
             if (this.mView) this.mView.setRoamTokenData(money.value, altervalue, data.tokenId);
         }
     }

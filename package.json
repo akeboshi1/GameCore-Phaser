@@ -1,6 +1,6 @@
 {
   "name": "@PixelPai/game-core",
-  "version": "1.0.534",
+  "version": "1.0.545",
   "main": "release/js/editor.js",
   "scripts": {
     "dev": "webpack-dev-server --mode development",
@@ -50,13 +50,13 @@
     "maxrects-packer": "^2.6.0",
     "monotone-convex-hull-2d": "^1.0.1",
     "net-socket-packet": "git+ssh://git@code.apowo.com:PixelPai/net-socket-packet.git",
-    "pathfinding": "git+ssh://git@code.apowo.com:guanxiaomin/PathFinding-js.git",
+    "pathfinding": "git+ssh://git@code.apowo.com/opensource/PathFinding-js",
     "poly-decomp": "^0.3.0",
     "simple-sha1": "^3.0.1",
     "sort-display-object": "git+ssh://git@code.apowo.com:PixelPai/sort-display-object.git",
     "tooqinggamephaser": "^0.2.8",
     "tooqingmatter-js": "0.1.1",
-    "webworker-rpc": "git+ssh://git@code.apowo.com:zhouwei/webworker-rpc.git",
+    "webworker-rpc": "git+ssh://git@code.apowo.com/opensource/webworker-rpc",
     "worker-loader": "^3.0.2"
   }
 }

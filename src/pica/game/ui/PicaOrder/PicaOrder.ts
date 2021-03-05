@@ -72,7 +72,8 @@ export class PicaOrder extends BasicModel {
     }
     private on_PLAYER_PROGRESS(packet: PBpacket) {
         const content: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_QUERY_PLAYER_PROGRESS = packet.content;
-        this.event.emit(ModuleName.PICAORDER_NAME + "_modelProgresslist", content);
+        if (content.name === "order")
+            this.event.emit(ModuleName.PICAORDER_NAME + "_modelProgresslist", content);
     }
 
     private on_CLIENT_TEST(packet: PBpacket) {

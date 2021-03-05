@@ -133,8 +133,9 @@ export class MouseManager {
     public destroy() {
         this.running = false;
         if (this.scene) {
-            this.scene.input.off("gameobjectdown", null, this);
-            this.scene.input.off("pointerdown", null, this);
+            this.scene.input.off("gameobjectdown", this.onGameObjectDownHandler, this);
+            this.scene.input.off("pointerdown", this.onPointerDownHandler, this);
+            this.scene.input.off("pointerup", this.onPointerUp, this);
         }
         this.scene = null;
         this.debounce = null;

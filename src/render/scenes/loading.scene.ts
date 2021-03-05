@@ -12,8 +12,9 @@ export class LoadingScene extends BasicScene {
   private progressText: Phaser.GameObjects.Text;
   private tipsText: string;
   private dpr: number;
+  private progressData: any;
   private mRequestCom: boolean;
-
+  private mTxtList: any[] = [];
   constructor() {
     super({ key: SceneName.LOADING_SCENE });
   }
@@ -31,6 +32,7 @@ export class LoadingScene extends BasicScene {
     this.createFont();
     this.dpr = data.dpr || 2;
     this.mRequestCom = false;
+    this.progressData = data.data;
     this.mCallback = data.callBack;
     this.tipsText = data.text || "";
   }
@@ -86,7 +88,13 @@ export class LoadingScene extends BasicScene {
     //   this.mCallback = undefined;
     // }
     // this.scale.on("resize", this.checkSize, this);
+    for (const tmpData in this.progressData) {
+      this.loadProgress(this.progressData[tmpData]);
+    }
+  }
 
+  getProgress(): string {
+    return "test";
   }
 
   public async show() {
@@ -113,6 +121,17 @@ export class LoadingScene extends BasicScene {
     if (text && this.progressText) {
       if (this.progressText.active) this.progressText.setText(text);
     }
+  }
+
+  public loadProgress(text: any) {
+    const len = this.mTxtList.length;
+    const dpr = this.render.uiRatio;
+    const mainTxt = this.add.text(this.bg.x - this.scale.gameSize.width / 2, this.scale.gameSize.height - 10 * dpr * (len + 1), "", {
+      fontSize: 12 * dpr,
+      fontFamily: Font.DEFULT_FONT
+    }).setOrigin(0, .5);
+    mainTxt.setText(text);
+    this.mTxtList.unshift(mainTxt);
   }
 
   public wake(data?: any) {
@@ -143,6 +162,11 @@ export class LoadingScene extends BasicScene {
   }
 
   public sleep() {
+    this.mTxtList.forEach((text) => {
+      text.destroy();
+    });
+    this.mTxtList.length = 0;
+    this.mTxtList = [];
     if (this.progressText) {
       if (this.progressText.active) this.progressText.setText("");
     }

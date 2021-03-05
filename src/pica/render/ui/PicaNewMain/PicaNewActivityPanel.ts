@@ -1,5 +1,7 @@
 import { Button, ClickEvent } from "apowophaserui";
+import { Render } from "gamecoreRender";
 import { UIAtlasName } from "picaRes";
+import { ModuleName } from "structure";
 import { Handler } from "utils";
 
 export class PicaNewActivityPanel extends Phaser.GameObjects.Container {
@@ -16,7 +18,7 @@ export class PicaNewActivityPanel extends Phaser.GameObjects.Container {
     private listPosY: number[] = [];
     private sendHandler: Handler;
     private isFold: boolean = false;
-    constructor(scene: Phaser.Scene, width: number, height: number, key: string, dpr: number) {
+    constructor(private render: Render, scene: Phaser.Scene, width: number, height: number, key: string, dpr: number) {
         super(scene);
         this.setSize(width, height);
         this.dpr = dpr;
@@ -85,6 +87,11 @@ export class PicaNewActivityPanel extends Phaser.GameObjects.Container {
     }
 
     private onEmailHandler() {
+        const tempdata = {
+            text: [{ text: "敬请期待", node: undefined }]
+        };
+        this.render.mainPeer.showMediator(ModuleName.PICANOTICE_NAME, true, tempdata);
+        return;
         if (this.sendHandler) this.sendHandler.runWith(["email"]);
     }
     private onRoamHandler() {

@@ -1,31 +1,41 @@
 import {BasicMediator, DecorateManager, Game} from "gamecore";
 import {MessageType, ModuleName} from "structure";
 import {Logger} from "utils";
-import {op_def, op_pkt_def} from "pixelpai_proto";
+import {op_client, op_def, op_pkt_def} from "pixelpai_proto";
 import PKT_PackageType = op_pkt_def.PKT_PackageType;
+import {BaseDataConfigManager} from "../../data/base.data.config.manager";
 
 export class PicaDecorateMediator extends BasicMediator {
 
     private readonly QUICK_SELECT_COUNT: number = 6;
 
     private mDecorateManager: DecorateManager;
+    private mCacheData_UpdateCount: Array<{ baseID: string, count: number }> = [];
+    private mCacheData_SelectFurniture: string = "";
 
     constructor(game: Game) {
         super(ModuleName.PICADECORATE_NAME, game);
 
-        if (game.roomManager.currentRoom === null || game.roomManager.currentRoom.decorateManager === null) {
-            Logger.getInstance().error("no decorateManager: ",
-                game.roomManager.currentRoom !== null, game.roomManager.currentRoom.decorateManager !== null);
-            return;
-        }
-        this.mDecorateManager = game.roomManager.currentRoom.decorateManager;
-
-        this.game.emitter.on(MessageType.DECORATE_SELECTE_ELEMENT, this.updateSelectedFurniture, this);
+        this.game.emitter.on(MessageType.DECORATE_SELECTE_ELEMENT, this.onSelectFurniture, this);
+        this.game.emitter.on(MessageType.DECORATE_UNSELECT_ELEMENT, this.onUnselectFurniture, this);
         this.game.emitter.on(MessageType.DECORATE_UPDATE_ELEMENT_COUNT, this.updateFurnitureCount, this);
     }
 
+    show(param?: any) {
+        super.show(param);
+
+        if (this.game.roomManager.currentRoom === null || this.game.roomManager.currentRoom.decorateManager === null) {
+            Logger.getInstance().error("no decorateManager: ",
+                this.game.roomManager.currentRoom !== null, this.game.roomManager.currentRoom.decorateManager !== null);
+            return;
+        }
+        this.mDecorateManager = this.game.roomManager.currentRoom.decorateManager;
+        this.mDecorateManager.dealEntryData();
+    }
+
     destroy() {
-        this.game.emitter.off(MessageType.DECORATE_SELECTE_ELEMENT, this.updateSelectedFurniture, this);
+        this.game.emitter.off(MessageType.DECORATE_SELECTE_ELEMENT, this.onSelectFurniture, this);
+        this.game.emitter.off(MessageType.DECORATE_UNSELECT_ELEMENT, this.onUnselectFurniture, this);
         this.game.emitter.off(MessageType.DECORATE_UPDATE_ELEMENT_COUNT, this.updateFurnitureCount, this);
         super.destroy();
     }
@@ -62,18 +72,39 @@ export class PicaDecorateMediator extends BasicMediator {
     // ..
 
     // called by decorate manager
-    public updateSelectedFurniture(baseID: string) {
+    public onSelectFurniture(baseID: string) {
         if (!this.bagData) return;
-
-        const data = this.bagData.getItem(PKT_PackageType.FurniturePackage, baseID);
-        if (!data) {
-            Logger.getInstance().warn("select furniture without data, baseID: ", baseID);
+        if (!this.mView) {
+            this.mCacheData_SelectFurniture = baseID;
+            return;
         }
-        this.mView.setSelectedFurniture(data);
+
+        const count = this.mDecorateManager.getBagCount(baseID);
+        const bagData = this.bagData.getItem(PKT_PackageType.FurniturePackage, baseID);
+        if (bagData) {
+            bagData.count = count;
+            this.mView.setSelectedFurniture(bagData);
+        } else {
+            const configMgr = <BaseDataConfigManager> this.game.configManager;
+            const configItem = configMgr.getItemBase(baseID);
+            configItem.count = count;
+            this.mView.setSelectedFurniture(configItem);
+        }
+        this.mView.hideSaveBtn();
     }
+
+    public onUnselectFurniture() {
+        if (this.mView) this.mView.showSaveBtn();
+    }
+
     public updateFurnitureCount(baseID: string, count: number) {
-        this.mView.updateFurnitureCount(baseID, count);
+        if (this.mView) this.mView.updateFurnitureCount(baseID, count);
+        else {
+            const data = {baseID, count};
+            this.mCacheData_UpdateCount.push(data);
+        }
     }
+
     // ..
 
     protected panelInit() {
@@ -91,6 +122,16 @@ export class PicaDecorateMediator extends BasicMediator {
             furnitures = furnitures.slice(0, this.QUICK_SELECT_COUNT - 1);
         }
         this.mView.setQuickSelectFurnitures(furnitures);
+
+        while (this.mCacheData_UpdateCount.length > 0) {
+            const data = this.mCacheData_UpdateCount.pop();
+            this.updateFurnitureCount(data.baseID, data.count);
+        }
+
+        if (this.mCacheData_SelectFurniture.length > 0) {
+            this.onSelectFurniture(this.mCacheData_SelectFurniture);
+            this.mCacheData_SelectFurniture = "";
+        }
     }
 
     private get bagData() {

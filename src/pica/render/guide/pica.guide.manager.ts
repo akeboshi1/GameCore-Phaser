@@ -1,12 +1,10 @@
 import { GuideManager, Render } from "gamecoreRender";
-import { ExploreGuide } from "./explore.guide";
-import { HotelGuide } from "./hotel.guide";
-import { PlaneGuide } from "./plane.guide";
 export enum GuideID {
     Explore,
     Plane,
     Hotel,
-    Home
+    Home,
+    Bag
 }
 export class PicaGuideManager extends GuideManager {
     constructor(protected render: Render) {

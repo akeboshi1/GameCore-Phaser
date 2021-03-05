@@ -8,6 +8,7 @@ import {BaseDataConfigManager} from "picaWorker";
 import {BlockObject} from "../block/block.object";
 import {InputEnable} from "../element/element";
 import PKT_PackageType = op_pkt_def.PKT_PackageType;
+import {IExtendCountablePackageItem} from "picaStructure";
 
 // 小屋布置管理类，包含所有布置过程中的操作接口
 // 文档：https://dej4esdop1.feishu.cn/docs/doccnEbMKpINEkfBVImFJ0nTJUh#
@@ -19,7 +20,7 @@ export class DecorateManager {
     private mSelectedActionQueue: DecorateAction[] = [];
     private mSelectedID: number = -1;
 
-    constructor(private mRoom: Room) {
+    constructor(private mRoom: Room, private mEntryData?: { id: number, baseID?: string }) {
     }
 
     public get room(): Room {
@@ -33,6 +34,16 @@ export class DecorateManager {
     }
 
     // 固定功能栏
+    // 执行入口数据处理
+    public dealEntryData() {
+        if (!this.mEntryData) return;
+        if (this.mEntryData.id !== undefined && this.mEntryData.id > 0) {
+            this.select(this.mEntryData.id);
+        } else if (this.mEntryData.baseID !== undefined && this.mEntryData.baseID.length > 0) {
+            this.addFromBag(this.mEntryData.baseID);
+        }
+    }
+
     // 点击二级确认，离开编辑模式
     public exit() {
         this.reverseAll();
@@ -51,7 +62,7 @@ export class DecorateManager {
         const changedBagData: string[] = [];
         combinedActions.forEach((acts, sprite) => {
             const result = new op_client.SpriteModifyResult();
-            spriteResults.push(result);
+
             result.id = sprite.id;
             result.sn = sprite.sn;
             const baseID = this.getBaseIDBySN(sprite.sn);
@@ -79,16 +90,20 @@ export class DecorateManager {
                         }
                         break;
                     case DecorateActionType.Move:
-                        result.commandMask = 0x0002;
+                        result.commandMask = result.commandMask === 0x0001 || result.commandMask === 0x0003 ?
+                            0x0003 : 0x0002;
                         result.point3f = sprite.pos;
                         break;
                     case DecorateActionType.Rotate:
-                        result.commandMask = 0x0002;
+                        result.commandMask = result.commandMask === 0x0001 || result.commandMask === 0x0003 ?
+                            0x0003 : 0x0002;
                         result.currentAnimationName = sprite.currentAnimationName;
                         result.direction = sprite.direction;
                         break;
                 }
             }
+
+            spriteResults.push(result);
         });
         this.mRoom.connection.send(pkt);
         // waite for response: _OP_VIRTUAL_WORLD_RES_CLIENT_EDIT_MODEL_RESULT
@@ -115,6 +130,8 @@ export class DecorateManager {
             if (this.mSelectedActionQueue.length === 0) return;
             const act = this.mSelectedActionQueue.pop();
             act.reverse(this);
+
+            this.mRoom.game.renderPeer.workerEmitter(MessageType.DECORATE_UPDATE_SELECTED_ELEMENT_POSITION);
         } else {
             if (this.mActionQueue.length === 0) return;
             const act = this.mActionQueue.pop();
@@ -133,18 +150,18 @@ export class DecorateManager {
 
     // 选择某一物件 call by motion
     public select(id: number) {
+        if (id < 0) {
+            this.reverseSelected();
+            return;
+        }
         const element = this.mRoom.elementManager.get(id);
         if (!element) return;
 
-        if (this.mSelectedID > 0) {
+        if (this.mSelectedID !== id) {
             this.reverseSelected();
         }
 
         this.mSelectedID = id;
-        const med = this.mRoom.game.uiManager.getMed(ModuleName.PICADECORATECONTROL_NAME);
-        if (med && med.isShow()) {
-            this.mRoom.game.uiManager.hideMed(ModuleName.PICADECORATECONTROL_NAME);
-        }
 
         // set walkable
         this.mRoom.elementManager.removeFromMap(element.model);
@@ -178,11 +195,11 @@ export class DecorateManager {
         const combinedActs = this.combineActions(this.mSelectedActionQueue);
         combinedActs.forEach((acts, sprite) => {
             if (!sprite) {
-                Logger.getInstance().error("sprite is null, ",acts, sprite);
+                Logger.getInstance().error("sprite is null, ", acts, sprite);
                 return;
             }
             if (sprite.id !== this.mSelectedID) {
-                Logger.getInstance().error("sprite.id is not selected, ",acts, sprite);
+                Logger.getInstance().error("sprite.id is not selected, ", acts, sprite);
                 return;
             }
 
@@ -201,10 +218,10 @@ export class DecorateManager {
         }
 
         this.mSelectedID = -1;
+        this.mSelectedActionQueue.length = 0;
 
         this.mRoom.game.uiManager.hideMed(ModuleName.PICADECORATECONTROL_NAME);
-
-        this.mRoom.game.renderPeer.workerEmitter(MessageType.DECORATE_UNSELECT_ELEMENT);
+        this.mRoom.game.emitter.emit(MessageType.DECORATE_UNSELECT_ELEMENT);
     }
 
     // 将当前选中的物件放回原位/取消放置，取消选择，关闭浮动功能栏
@@ -227,16 +244,19 @@ export class DecorateManager {
         this.mSelectedID = -1;
 
         this.mRoom.game.uiManager.hideMed(ModuleName.PICADECORATECONTROL_NAME);
-
-        this.mRoom.game.renderPeer.workerEmitter(MessageType.DECORATE_UNSELECT_ELEMENT);
+        this.mRoom.game.emitter.emit(MessageType.DECORATE_UNSELECT_ELEMENT);
     }
 
     public addFromBag(baseID: string) {
         this.reverseSelected();
 
-        const datas = this.bagData.getItems(op_pkt_def.PKT_PackageType.FurniturePackage, baseID);
-        if (datas.length <= 0) return;
-        const typeData = datas[0];
+        const bagCount = this.getBagCount(baseID);
+        if (bagCount <= 0) return;
+        const typeData = <any> this.getBaseData(baseID);
+        if (!typeData) {
+            Logger.getInstance().error("no config data, id: ", baseID);
+            return;
+        }
         // TODO: 此随机方式有重复id的可能
         const min = 1000000;
         const max = 0x70000000;
@@ -244,7 +264,6 @@ export class DecorateManager {
         const spriteData = new Sprite({
             id: indexID,
             point3f: {x: 0, y: 0, z: 0},
-            avatar: typeData.avatar,
             currentAnimationName: "idle",
             direction: 3,
             nickname: typeData.name,
@@ -255,13 +274,14 @@ export class DecorateManager {
 
         const act = new DecorateAction(spriteData, DecorateActionType.Add, new DecorateActionData({pos: spriteData.pos}));
         act.execute(this);
-        this.mActionQueue.push(act);
-        // this.select(indexID);
+        this.select(indexID);
+        this.mSelectedActionQueue.push(act);
     }
 
     // 移动选择物 call by motion
     public moveSelected(id: number, delta: IPos) {
         if (this.mSelectedID !== id) return;
+        if (delta.x === 0 && delta.y === 0) return;
         const element = this.mRoom.elementManager.get(this.mSelectedID);
         if (!element) return;
         const act = new DecorateAction(element.model, DecorateActionType.Move, new DecorateActionData({moveVec: delta}));
@@ -336,6 +356,11 @@ export class DecorateManager {
         }
     }
 
+    private getBaseData(baseID: string) {
+        const configMgr = <BaseDataConfigManager> this.room.game.configManager;
+        return configMgr.getItemBase(baseID);
+    }
+
     private get bagData() {
         if (!this.mRoom.game.user || !this.mRoom.game.user.userData || !this.mRoom.game.user.userData.playerBag) {
             Logger.getInstance().error("get bagData error");
@@ -345,51 +370,74 @@ export class DecorateManager {
     }
 
     private combineActions(actions: DecorateAction[]): Map<ISprite, DecorateAction[]> {
-        const changes: Map<ISprite, { moveVec: LogicPos, rotateTimes: number, active?: boolean, pos?: LogicPos }> = new Map();
+        // const changes: Map<ISprite, { moveVec: LogicPos, rotateTimes: number, active?: boolean, pos?: LogicPos }> = new Map();
+        // for (const action of actions) {
+        //     if (!changes.has(action.target)) {
+        //         changes.set(action.target, {moveVec: new LogicPos(0, 0), rotateTimes: 0});
+        //     }
+        //     switch (action.type) {
+        //         case DecorateActionType.Add:
+        //             if (action.data.pos !== undefined) {
+        //                 changes.get(action.target).active = true;
+        //                 changes.get(action.target).pos = new LogicPos(action.data.pos.x, action.data.pos.y);
+        //             }
+        //             break;
+        //         case DecorateActionType.Remove:
+        //             if (action.data.pos !== undefined) {
+        //                 changes.get(action.target).active = false;
+        //                 changes.get(action.target).pos = new LogicPos(action.data.pos.x, action.data.pos.y);
+        //             }
+        //             break;
+        //         case DecorateActionType.Move:
+        //             if (action.data.moveVec !== undefined)
+        //                 changes.get(action.target).moveVec.add(action.data.moveVec.x, action.data.moveVec.y);
+        //             break;
+        //         case DecorateActionType.Add:
+        //             if (action.data.rotateTimes)
+        //                 changes.get(action.target).rotateTimes += action.data.rotateTimes;
+        //             break;
+        //     }
+        // }
+        // const result: Map<ISprite, DecorateAction[]> = new Map<ISprite, DecorateAction[]>();
+        // changes.forEach((deltaData, sprite) => {
+        //     const acts: DecorateAction[] = [];
+        //     result.set(sprite, acts);
+        //     if (deltaData.active !== undefined && deltaData.active === false) {
+        //         acts.push(new DecorateAction(sprite, DecorateActionType.Remove, new DecorateActionData({pos: deltaData.pos})));
+        //     }
+        //     if (deltaData.moveVec !== new LogicPos(0, 0)) {
+        //         acts.push(new DecorateAction(sprite, DecorateActionType.Move, new DecorateActionData({moveVec: deltaData.moveVec})));
+        //     }
+        //     if (deltaData.rotateTimes > 0) {
+        //         acts.push(new DecorateAction(sprite, DecorateActionType.Rotate, new DecorateActionData({rotateTimes: deltaData.rotateTimes})));
+        //     }
+        //     if (deltaData.active !== undefined && deltaData.active === true) {
+        //         acts.push(new DecorateAction(sprite, DecorateActionType.Add, new DecorateActionData({pos: deltaData.pos})));
+        //     }
+        // });
+        // return result;
+        const result: Map<ISprite, DecorateAction[]> = new Map<ISprite, DecorateAction[]>();
+        const addCount: Map<ISprite, number> = new Map<ISprite, number>();
         for (const action of actions) {
-            if (!changes.has(action.target)) {
-                changes.set(action.target, {moveVec: new LogicPos(0, 0), rotateTimes: 0});
+            if (!result.has(action.target)) {
+                result.set(action.target, []);
             }
-            switch (action.type) {
-                case DecorateActionType.Add:
-                    if (action.data.pos !== undefined) {
-                        changes.get(action.target).active = true;
-                        changes.get(action.target).pos = new LogicPos(action.data.pos.x, action.data.pos.y);
-                    }
-                    break;
-                case DecorateActionType.Remove:
-                    if (action.data.pos !== undefined) {
-                        changes.get(action.target).active = false;
-                        changes.get(action.target).pos = new LogicPos(action.data.pos.x, action.data.pos.y);
-                    }
-                    break;
-                case DecorateActionType.Move:
-                    if (action.data.moveVec !== undefined)
-                        changes.get(action.target).moveVec.add(action.data.moveVec.x, action.data.moveVec.y);
-                    break;
-                case DecorateActionType.Add:
-                    if (action.data.rotateTimes)
-                        changes.get(action.target).rotateTimes += action.data.rotateTimes;
-                    break;
+            if (!addCount.has(action.target)) {
+                addCount.set(action.target, 0);
+            }
+            result.get(action.target).push(action);
+            if (action.type === DecorateActionType.Add) {
+                const c = addCount.get(action.target);
+                addCount.set(action.target, c + 1);
+            } else if (action.type === DecorateActionType.Remove) {
+                const c = addCount.get(action.target);
+                if (c === 1) {
+                    // 添加再删除  清空之前的命令
+                    result.set(action.target, []);
+                }
+                addCount.set(action.target, c - 1);
             }
         }
-        const result: Map<ISprite, DecorateAction[]> = new Map<ISprite, DecorateAction[]>();
-        changes.forEach((deltaData, sprite) => {
-            const acts: DecorateAction[] = [];
-            result.set(sprite, acts);
-            if (deltaData.active !== undefined && deltaData.active === false) {
-                acts.push(new DecorateAction(sprite, DecorateActionType.Remove, new DecorateActionData({pos: deltaData.pos})));
-            }
-            if (deltaData.moveVec !== new LogicPos(0, 0)) {
-                acts.push(new DecorateAction(sprite, DecorateActionType.Move, new DecorateActionData({moveVec: deltaData.moveVec})));
-            }
-            if (deltaData.rotateTimes > 0) {
-                acts.push(new DecorateAction(sprite, DecorateActionType.Rotate, new DecorateActionData({rotateTimes: deltaData.rotateTimes})));
-            }
-            if (deltaData.active !== undefined && deltaData.active === true) {
-                acts.push(new DecorateAction(sprite, DecorateActionType.Add, new DecorateActionData({pos: deltaData.pos})));
-            }
-        });
         return result;
     }
 }

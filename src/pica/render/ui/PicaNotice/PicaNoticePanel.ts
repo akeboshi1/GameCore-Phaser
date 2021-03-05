@@ -105,11 +105,8 @@ export class PicaNoticePanel extends BasePanel {
             this.imageIcon = new DynamicImage(this.scene, 0, 0);
             this.add(this.imageIcon);
         }
-
-        (<MainUIScene>this.mScene).layerManager.addToLayer(MainUIScene.LAYER_TOOLTIPS, this);
-
         super.init();
-
+        (<MainUIScene>this.mScene).layerManager.addToLayer(MainUIScene.LAYER_TOOLTIPS, this);
         this.resize();
     }
 }

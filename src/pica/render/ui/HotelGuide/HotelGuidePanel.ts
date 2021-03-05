@@ -1,13 +1,14 @@
 import { ClickEvent } from "apowophaserui";
 import { BaseGuide, Render } from "gamecoreRender";
 import { ModuleName } from "structure";
-import { PicaNewMainPanel, PicaTaskPanel } from "../ui";
+import { PicaNewMainPanel } from "../PicaNewMain/PicaNewMainPanel";
+import { PicaTaskPanel } from "../PicaTask/PicaTaskPanel";
 
 export class HotelGuide extends BaseGuide {
     constructor(id: number, render: Render) {
         super(id, render);
     }
-    public start() {
+    public show() {
         this.step1();
     }
 
