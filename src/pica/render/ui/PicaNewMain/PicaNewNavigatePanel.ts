@@ -5,10 +5,10 @@ import { Handler, i18n } from "utils";
 export class PicaNewNavigatePanel extends Phaser.GameObjects.Container {
     public exploreButton: Button;
     public homeButton: Button;
+    public bagButton: Button;
     private dpr: number;
     private key: string;
     private bg: Phaser.GameObjects.Image;
-    private bagButton: Button;
     private friendButton: Button;
     private avatarButton: Button;
     private shopButton: Button;
