@@ -25,9 +25,14 @@ export class EditorFramesDisplay extends BaseFramesDisplay {
         if (!this.mCurAnimation) {
             return;
         }
-        if (this.mMountList && this.mMountList.indexOf(display) > -1) {
-            return;
-        }
+        // const rootMount: BaseFramesDisplay = <BaseFramesDisplay>display.rootMount;
+        // if (rootMount) {
+        //     if (rootMount === this) {
+        //         return;
+        //     } else {
+        //         rootMount.unmount(display);
+        //     }
+        // }
         if (targetIndex === undefined) {
             targetIndex = this.mMountList.length;
             this.mCurAnimation.createMountPoint(targetIndex);
@@ -40,7 +45,7 @@ export class EditorFramesDisplay extends BaseFramesDisplay {
             return;
         }
         super.unmount(display);
-        (<any>this.sceneEditor.scene).layerManager.addToLayer(this.mLayer.toString(), display);
+        // (<any>this.sceneEditor.scene).layerManager.addToLayer(this.mLayer.toString(), display);
     }
 
     asociate() {
@@ -92,6 +97,7 @@ export class EditorFramesDisplay extends BaseFramesDisplay {
         }
         this.name = sprite.nickname;
         this.play(sprite.currentAnimation);
+        this.asociate();
     }
 
     setSprite(sprite: Sprite) {
@@ -118,6 +124,9 @@ export class EditorFramesDisplay extends BaseFramesDisplay {
     }
 
     clear() {
+        for (const display of this.mMountList) {
+            this.unmount(<BaseFramesDisplay>display);
+        }
         this.mAnimation = null;
         this.mCurAnimation = null;
         this.mPreAnimation = null;
@@ -125,6 +134,8 @@ export class EditorFramesDisplay extends BaseFramesDisplay {
         this.mDisplayDatas.clear();
         this.mSprites.forEach((display) => display.destroy());
         this.mSprites.clear();
+        this.mMountContainer = null;
+        // this.mRootMount = null;
     }
 
     getMountIds() {

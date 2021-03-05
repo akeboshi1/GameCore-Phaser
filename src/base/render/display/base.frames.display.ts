@@ -280,6 +280,7 @@ export class BaseFramesDisplay extends BaseDisplay {
         if (index > -1) {
             this.mMountList.splice(index, 1);
         }
+        this.mMountContainer.remove(display, false);
         const list = this.mMountContainer.list;
         if (list.length <= 0 && this.mDisplays.size > 0) {
             // this.mDisplays[0].off("animationupdate", this.onAnimationUpdateHandler, this);
