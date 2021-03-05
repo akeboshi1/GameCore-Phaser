@@ -201,6 +201,7 @@ export class MatterObject implements IMatterObject {
         const oldMounts = this.mModel.mountSprites || [];
         for (const id of oldMounts) {
             if (mounts.indexOf(id) === -1) {
+                if (!id) continue;
                 const ele = this.peer.getMatterObj(id);
                 if (ele) {
                     this.removeMount(ele);

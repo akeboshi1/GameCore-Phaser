@@ -1234,7 +1234,18 @@ class SelectedElementManager {
             }
             this.overElement.selected();
             for (const ele of this.mSelecedElement) {
-                if (this.overElement.id !== ele.id) this.overElement.mount(ele);
+                if (this.overElement.id !== ele.id) {
+                    const rootMount: EditorFramesDisplay = <EditorFramesDisplay>ele.rootMount;
+                    if (rootMount) {
+                        if (rootMount === this.overElement) {
+                            continue;
+                        } else {
+                            rootMount.unmount(ele);
+                            this.sceneEditor.elementManager.updateElements([rootMount.toSprite()]);
+                        }
+                    }
+                    this.overElement.mount(ele);
+                }
             }
             this.sceneEditor.elementManager.updateElements([this.overElement.toSprite()]);
         }
