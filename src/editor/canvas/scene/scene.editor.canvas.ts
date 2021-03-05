@@ -156,7 +156,7 @@ export class SceneEditorCanvas extends EditorCanvas implements IRender {
         this.mStamp.setSprite(content);
     }
 
-    public selectElement(id: number) {
+    public selectElement(id: number, selecting: boolean = true) {
         if (this.mBrush !== BrushEnum.Select) {
             return;
         }
@@ -168,7 +168,7 @@ export class SceneEditorCanvas extends EditorCanvas implements IRender {
             return;
         }
         this.mSkyboxManager.unselected();
-        this.mSelecedElement.selectElements([ele]);
+        this.mSelecedElement.selectElements([ele], selecting);
         this.mEditorPacket.sendFetch(this.mSelecedElement.getSelectedIDs(), op_def.NodeType.ElementNodeType, ele.isMoss);
     }
 
@@ -286,6 +286,9 @@ export class SceneEditorCanvas extends EditorCanvas implements IRender {
         this.init();
     }
 
+    onResize(width: number, height: number) {
+    }
+
     fetchSprite(ids: number[], nodeType: op_def.NodeType) {
         // const map = {
         //     [op_def.NodeType.SpawnPointType]: "elements",
@@ -298,7 +301,7 @@ export class SceneEditorCanvas extends EditorCanvas implements IRender {
         //     const pool = this.displayObjectPool.getPool(poolName);
         //     const displayObj = pool.get(id.toString());
         //     if (displayObj) {
-        this.selectElement(ids[0]);
+        this.selectElement(ids[0], false);
                 // this.selectedElement(displayObj.getDisplay());
         //     }
         // }
@@ -476,7 +479,7 @@ export class SceneEditorCanvas extends EditorCanvas implements IRender {
             case BrushEnum.Select:
                 if (pointer.isDown) {
                     if (this.mSelecedElement) {
-                        this.mSelecedElement.dragElement(pointer.worldX, pointer.worldY);
+                        this.mSelecedElement.dragElement(pointer);
                     }
                     this.mSkyboxManager.move(pointer);
                 }
@@ -607,6 +610,10 @@ export class SceneEditorCanvas extends EditorCanvas implements IRender {
 
     get elementManager() {
         return this.mElementManager;
+    }
+
+    get mossManager() {
+        return this.mMossManager;
     }
 
     get emitter() {
@@ -824,6 +831,8 @@ class MouseFollow {
             sprite.pos = this.getPosition(display.x, display.y);
             sprite.bindID = this.mSprite.id;
             sprite.sn = this.mSprite.sn;
+            const ids = display.getMountIds();
+            if (ids.length > 0) sprite.mountSprites = ids;
             // sprite.nodeType = this.mSprite.node
             result.push(sprite);
         }
@@ -929,7 +938,7 @@ class MouseFollow {
 class MouseDisplayContainer extends Phaser.GameObjects.Container {
     protected mOffset: IPos;
     protected mNodeType;
-    protected mDisplays: BaseFramesDisplay[];
+    protected mDisplays: EditorFramesDisplay[];
     protected mScaleRatio: number = 1;
     protected mSprite: Sprite;
     protected mTileSize: IPosition45Obj;
@@ -1097,13 +1106,14 @@ class EraserArea extends MouseDisplayContainer {
 }
 
 class SelectedElementManager {
-    public selecting: boolean = false;
+    public mSelecting: boolean = false;
+    public overElement: EditorFramesDisplay;
     private mSelecedElement: EditorFramesDisplay[];
     constructor(private sceneEditor: SceneEditorCanvas) {
 
     }
 
-    selectElements(elements: EditorFramesDisplay[]) {
+    selectElements(elements: EditorFramesDisplay[], selecting: boolean = true) {
         this.unselectedElements();
         this.mSelecedElement = elements;
         if (elements.length < 1 ) {
@@ -1112,7 +1122,8 @@ class SelectedElementManager {
         for (const ele of elements) {
             ele.selected();
         }
-        this.selecting = true;
+        // this.registerGameobjectOver();
+        this.selecting = selecting;
     }
 
     unselectedElements() {
@@ -1122,11 +1133,12 @@ class SelectedElementManager {
         for (const ele of this.mSelecedElement) {
             ele.unselected();
         }
+        // this.unregisterGameobjectOver();
         this.mSelecedElement.length = 0;
         this.selecting = false;
     }
 
-    dragElement(x: number, y: number) {
+    dragElement(pointer: Phaser.Input.Pointer) {
         if (!this.mSelecedElement || this.mSelecedElement.length < 1) {
             return;
         }
@@ -1135,14 +1147,22 @@ class SelectedElementManager {
         }
 
         const roomSize = this.sceneEditor.miniRoomSize;
+        const worldPos = new LogicPos(pointer.worldX, pointer.worldY);
         for (const ele of this.mSelecedElement) {
             if (ele.nodeType === op_def.NodeType.ElementNodeType) {
-                const result = this.sceneEditor.checkCollision(new LogicPos(x, y), ele.sprite);
+                const rootMount: EditorFramesDisplay = <EditorFramesDisplay>ele.rootMount;
+                if (rootMount) {
+                    const _x = (pointer.prevPosition.x - pointer.position.x);
+                    const _y = (pointer.prevPosition.y - pointer.position.y);
+                    rootMount.updateMountPoint(ele, _x, _y);
+                    continue;
+                }
+                const result = this.sceneEditor.checkCollision(worldPos, ele.sprite);
                 if (!result) {
                     return;
                 }
             }
-            const pos = transitionGrid(x, y, this.sceneEditor.alignGrid, roomSize);
+            const pos = transitionGrid(worldPos.x, worldPos.y, this.sceneEditor.alignGrid, roomSize);
             ele.setPosition(pos.x, pos.y);
         }
     }
@@ -1154,4 +1174,102 @@ class SelectedElementManager {
     getSelecedElement() {
         return this.mSelecedElement || [];
     }
+
+    public registerGameobjectOver() {
+        const scene = this.sceneEditor.getMainScene();
+        if (!scene) return;
+        const input = scene.input;
+        input.on("gameobjectover", this.onGameobjectOverHandler, this);
+        input.on("gameobjectout", this.onGameobjectOutHandler, this);
+    }
+
+    public unregisterGameobjectOver() {
+        const scene = this.sceneEditor.getMainScene();
+        if (!scene) return;
+        const input = scene.input;
+        input.off("gameobjectover", this.onGameobjectOverHandler, this);
+        input.off("gameobjectout", this.onGameobjectOutHandler, this);
+        this.clearOverElement();
+    }
+
+    public checkMount() {
+        if (this.overElement) {
+            this.mount();
+        }
+    }
+
+    public mount() {
+        if (this.overElement) {
+            for (const ele of this.mSelecedElement) {
+                ele.mount(this.overElement, 0);
+            }
+        }
+    }
+
+    public unmount() {
+        // if (!this.overElement) {
+        //     for (const ele of this.mSelecedElement) {
+        //         ele.unmount();
+        //     }
+        // }
+    }
+
+    private onGameobjectOverHandler(pointer: Phaser.Input.Pointer, gameobject: Phaser.GameObjects.GameObject) {
+        if (!this.selecting) {
+            return;
+        }
+        const id = gameobject.getData("id");
+        if (this.mSelecedElement.length < 1) {
+            return;
+        }
+        if (!id) return;
+        const pool = this.sceneEditor.displayObjectPool.getPool("elements");
+        if (!pool) {
+            return;
+        }
+        this.overElement = pool.get(id.toString());
+        if (this.overElement) {
+            if (this.overElement.nodeType !== op_def.NodeType.ElementNodeType) {
+                return;
+            }
+            this.overElement.selected();
+            for (const ele of this.mSelecedElement) {
+                if (this.overElement.id !== ele.id) this.overElement.mount(ele);
+            }
+            this.sceneEditor.elementManager.updateElements([this.overElement.toSprite()]);
+        }
+    }
+
+    private onGameobjectOutHandler(pointer: Phaser.Input.Pointer, gameobject: Phaser.GameObjects.GameObject) {
+       this.clearOverElement();
+    }
+
+    private clearOverElement() {
+        if (!this.overElement) return;
+        this.overElement.unselected();
+        // 拖动时改变mount point还是unmount不好区分。unmount先不做
+        // for (const ele of this.mSelecedElement) {
+        //     this.overElement.unmount(ele);
+        // }
+        // this.sceneEditor.elementManager.updateElements([this.overElement.toSprite()]);
+        this.overElement = null;
+    }
+
+    get selecting() {
+        return this.mSelecting;
+    }
+
+    set selecting(val: boolean) {
+        if (this.mSelecting !== val) {
+            this.mSelecting = val;
+            if (this.mSelecedElement) {
+                for (const ele of this.mSelecedElement) {
+                    val ? ele.disableInteractive() : ele.setInteractive();
+                }
+            }
+            this.unregisterGameobjectOver();
+            if (val) this.registerGameobjectOver();
+        }
+    }
+
 }

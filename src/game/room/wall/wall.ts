@@ -162,6 +162,12 @@ export class Wall extends BlockObject {
         // return this.mRoomService.game.peer.render.setPosition(this.id, pos.x, pos.y, pos.z);
     }
 
+    protected removeDisplay(): Promise<any> {
+        // Logger.getInstance().debug("removeDisplay ====>", this);
+        this.mCreatedDisplay = false;
+        return this.mRoomService.game.peer.render.removeBlockObject(this.id);
+    }
+
     protected setDepth() {
     }
 

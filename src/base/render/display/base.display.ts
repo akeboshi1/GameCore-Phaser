@@ -168,6 +168,10 @@ export abstract class BaseDisplay extends Phaser.GameObjects.Container implement
         return this.mAnimation;
     }
 
+    get rootMount() {
+        return this.mRootMount;
+    }
+
     get projectionSize(): IProjection {
         if (!this.mProjectionSize) {
             this.mProjectionSize = {offset: {x: 0, y: 0}, width: 0, height: 0};

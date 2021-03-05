@@ -10,14 +10,14 @@ export class EditorElementDisplay extends EditorFramesDisplay {
 
     selected() {
         super.selected();
-        this.removeFromMap();
+        if (!this.rootMount) this.removeFromMap();
         this.showRefernceArea();
     }
 
     unselected() {
         super.unselected();
         this.hideRefernceArea();
-        this.addToMap();
+        if (!this.rootMount) this.addToMap();
     }
 
     showRefernceArea() {
@@ -39,6 +39,23 @@ export class EditorElementDisplay extends EditorFramesDisplay {
         this.sprite = sprite;
         this.defaultLayer();
         this.addToMap();
+    }
+
+    asociate() {
+        const mounts = this.sprite.mountSprites;
+        if (mounts && mounts.length > 0) {
+            for (let i = 0; i < mounts.length; i++) {
+                const ele = this.sceneEditor.displayObjectPool.get(mounts[i].toString());
+                if (ele) {
+                    this.mount(ele, i);
+                }
+            }
+        }
+    }
+
+    displayCreated() {
+        super.displayCreated();
+        this.asociate();
     }
 
     destroy() {

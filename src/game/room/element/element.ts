@@ -725,6 +725,13 @@ export class Element extends BlockObject implements IElement {
         return depth;
     }
 
+    public asociate() {
+        const model = this.mModel;
+        if (model.mountSprites && model.mountSprites.length > 0) {
+            this.updateMounth(model.mountSprites);
+        }
+    }
+
     public destroy() {
         this.mCreatedDisplay = false;
         if (this.mMoveData && this.mMoveData.tweenAnim) {

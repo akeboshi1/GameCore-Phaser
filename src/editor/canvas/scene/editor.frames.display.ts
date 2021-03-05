@@ -1,5 +1,5 @@
 import { Sprite } from "baseModel";
-import { BaseFramesDisplay, ReferenceArea } from "baseRender";
+import { BaseDragonbonesDisplay, BaseFramesDisplay, ReferenceArea } from "baseRender";
 import { IFramesModel, RunningAnimation } from "structure";
 import { Helpers, Logger, LogicPoint, Position45 } from "utils";
 import { SceneEditorCanvas } from "./scene.editor.canvas";
@@ -14,9 +14,36 @@ export class EditorFramesDisplay extends BaseFramesDisplay {
     protected mTopDisplay: EditorTopDisplay;
     protected mIsMoss: boolean = false;
     protected mOverlapped: boolean = false;
+    protected mLayer: number;
 
     constructor(protected sceneEditor: SceneEditorCanvas, sprite: Sprite) {
         super(sceneEditor.scene, sprite.id, sprite.nodeType);
+        this.mLayer = sprite.layer;
+    }
+
+    mount(display: BaseFramesDisplay | BaseDragonbonesDisplay, targetIndex?: number) {
+        if (!this.mCurAnimation) {
+            return;
+        }
+        if (this.mMountList && this.mMountList.indexOf(display) > -1) {
+            return;
+        }
+        if (targetIndex === undefined) {
+            targetIndex = this.mMountList.length;
+            this.mCurAnimation.createMountPoint(targetIndex);
+        }
+        super.mount(display, targetIndex);
+    }
+
+    unmount(display: BaseFramesDisplay | BaseDragonbonesDisplay) {
+        if (!this.mMountContainer) {
+            return;
+        }
+        super.unmount(display);
+        (<any>this.sceneEditor.scene).layerManager.addToLayer(this.mLayer.toString(), display);
+    }
+
+    asociate() {
     }
 
     selected() {
@@ -84,7 +111,10 @@ export class EditorFramesDisplay extends BaseFramesDisplay {
         pos.x = this.x;
         pos.y = this.y;
         pos.z = this.z;
-        return this.sprite.toSprite();
+        const sprite = this.sprite.toSprite();
+        const mountIds = this.getMountIds();
+        sprite.mountSprites = mountIds;
+        return sprite;
     }
 
     clear() {
@@ -95,6 +125,33 @@ export class EditorFramesDisplay extends BaseFramesDisplay {
         this.mDisplayDatas.clear();
         this.mSprites.forEach((display) => display.destroy());
         this.mSprites.clear();
+    }
+
+    getMountIds() {
+        const result = [];
+        if (this.mMountList) {
+            for (const mount of this.mMountList) {
+                const id = (<BaseFramesDisplay>mount).id;
+                if (id) result.push(id);
+            }
+        }
+        return result;
+    }
+
+    updateMountPoint(ele: EditorFramesDisplay, x: number, y: number) {
+        const index = this.mMountList.indexOf(ele);
+        if (index > -1) {
+            this.mCurAnimation.updateMountPoint(index, x, y);
+            const mount = this.mCurAnimation.mountLayer;
+            if (mount) {
+                const pos = mount.mountPoint;
+                if (index < 0 || index >= pos.length) {
+                    return;
+                }
+
+                ele.setPosition(pos[index].x, pos[index].y);
+            }
+        }
     }
 
     public play(val: RunningAnimation) {
