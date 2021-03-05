@@ -118,6 +118,9 @@ export class DecorateManager {
     public removeAll() {
         const elements = this.mRoom.elementManager.getElements();
         for (const element of elements) {
+            // 未解锁家具不移除
+            if (this.mRoom.elementManager.isElementLocked(element)) continue;
+
             const act = new DecorateAction(element.model, DecorateActionType.Remove, new DecorateActionData({pos: element.model.pos}));
             this.mActionQueue.push(act);
             act.execute(this);
@@ -170,7 +173,13 @@ export class DecorateManager {
         element.showRefernceArea();
 
         const canPlace = this.checkSelectedCanPlace();
-        this.mRoom.game.uiManager.showMed(ModuleName.PICADECORATECONTROL_NAME, {id, pos: element.model.pos, canPlace});
+        const locked = this.mRoom.elementManager.isElementLocked(element);
+        this.mRoom.game.uiManager.showMed(ModuleName.PICADECORATECONTROL_NAME, {
+            id,
+            pos: element.model.pos,
+            canPlace,
+            locked
+        });
 
         // update decorate panel
         const baseID = this.getBaseIDBySN(element.model.sn);
@@ -314,6 +323,7 @@ export class DecorateManager {
         if (this.mSelectedID < 0) return;
         const element = this.mRoom.elementManager.get(this.mSelectedID);
         if (!element) return;
+        if (this.mRoom.elementManager.isElementLocked(element)) return;
         const act = new DecorateAction(element.model, DecorateActionType.Remove, new DecorateActionData({pos: element.model.pos}));
         this.mSelectedActionQueue.push(act);
         act.execute(this);

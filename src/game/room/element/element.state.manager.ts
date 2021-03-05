@@ -126,6 +126,10 @@ export class ElementStateManager extends PacketHandler {
         element.setState(state.state);
     }
 
+    public isLocked(element: IElement) {
+        return this.getElementStateType(element) !== ElementStateType.NONE;
+    }
+
     public destroy() {
         if (this.connection) {
             this.connection.removePacketListener(this);
@@ -154,7 +158,7 @@ export class ElementStateManager extends PacketHandler {
         }
     }
 
-    protected getElementStateType(element: Element) {
+    protected getElementStateType(element: IElement) {
         const sprite = element.model;
         if (this.getFrozenType(sprite) === "FROZEN") {
             return ElementStateType.UNFROZEN;

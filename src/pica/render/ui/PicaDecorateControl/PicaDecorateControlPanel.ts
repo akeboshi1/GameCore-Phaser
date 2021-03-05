@@ -105,9 +105,10 @@ export class PicaDecorateControlPanel extends PicaBasePanel {
         this.resize(w, h);
         super.init();
 
-        const {id, pos, canPlace} = this.mShowData;
+        const {id, pos, canPlace, locked} = this.mShowData;
         this.updateCanPlace(canPlace);
         this.changePosFollowTarget(pos);
+        this.mRecycleBtn.enable = !locked;
     }
 
     private changePosFollowTarget(pos: IPos) {
