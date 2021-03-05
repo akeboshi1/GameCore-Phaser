@@ -206,12 +206,6 @@ export class PicaExploreListLevelPanel extends Phaser.GameObjects.Container {
         //     roomid = tempid || roomid;
         // }
         if (this.send) this.send.runWith(["roomid", roomid]);
-        // let roomid = data.roomId;
-        // if (data.progress === 500) {
-        //     const tempid = data["completeScene"];
-        //     roomid = tempid || roomid;
-        // }
-        // if (this.send) this.send.runWith(["roomid", roomid]);
     }
 
     private onChapterLockHandler(tag: string, data: any) {

@@ -275,6 +275,11 @@ export class ElementManager extends PacketHandler implements IElementManager {
         }
     }
 
+    public isElementLocked(element: IElement) {
+        if (!this.mStateMgr) return false;
+        return this.mStateMgr.isLocked(element);
+    }
+
     public destroy() {
         this.hasAddComplete = false;
         this.mRoom.game.emitter.off(EventType.SCENE_INTERACTION_ELEMENT, this.checkElementAction, this);

@@ -3,7 +3,8 @@
     "title": "SHOP",
     "payment": "Buy",
     "refreshtime": "Refresh at ",
-    "refresh": "Refresh"
+    "refresh": "Refresh",
+    "moneyless": "There is not enough money to buy"
   },
   "item": {
     "copy_suc": "{{name}} copied",

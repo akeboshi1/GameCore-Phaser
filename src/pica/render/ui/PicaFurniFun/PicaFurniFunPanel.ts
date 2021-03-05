@@ -370,10 +370,10 @@ class MaterialItem extends Phaser.GameObjects.Container {
     }
     private getCountText(data: ICountablePackageItem) {
         const color = (data.count >= data.neededCount ? "#000000" : "#ff0000");
-        let text = `[color=${color}]${data.count}[/color]/` + data.neededCount;
-        if (data.hasOwnProperty("recommended")) {
-            text = data.recommended + "/" + text;
-        }
+        const text = `[color=${color}]${data.count}[/color]/` + data.neededCount;
+        // if (data.hasOwnProperty("recommended")) {
+        //     text = data.recommended + "/" + text;
+        // }
         return text;
     }
 }

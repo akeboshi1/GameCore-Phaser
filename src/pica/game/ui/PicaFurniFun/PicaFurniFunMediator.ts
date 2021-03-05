@@ -4,6 +4,7 @@ import { EventType, ISprite, ModuleName } from "structure";
 import { BaseDataManager, BasicMediator, DataMgrType, Game } from "gamecore";
 import { BaseDataConfigManager } from "../../data";
 import { ICountablePackageItem } from "picaStructure";
+import { ObjectAssign } from "utils";
 
 export class PicaFurniFunMediator extends BasicMediator {
     private picFurni: PicaFurniFun;
@@ -101,10 +102,10 @@ export class PicaFurniFunMediator extends BasicMediator {
                 for (const data of content.materials) {
                     const configMgr = <BaseDataConfigManager>this.game.configManager;
                     const temp = configMgr.getItemBase(data.id);
-                    temp.neededCount = data.neededCount;
+                    ObjectAssign.excludeTagAssign(data, temp);
                     const count = this.playerData.getItemsCount(op_pkt_def.PKT_PackageType.PropPackage, data.id, data.subcategory);
-                    temp.recommended = "" + count; // hack
-                    list.push(temp as ICountablePackageItem);
+                    data.recommended = count; // hack
+                    list.push(<any>data);
                 }
             }
         }
