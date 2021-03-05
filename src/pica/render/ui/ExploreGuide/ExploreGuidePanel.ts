@@ -10,7 +10,8 @@ export class ExploreGuidePanel extends BaseGuide {
         super(GuideID.Explore, uiManager.render);
     }
 
-    public show() {
+    public show(param?: any) {
+        super.show(param);
         this.step1();
     }
 

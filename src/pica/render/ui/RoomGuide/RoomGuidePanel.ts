@@ -13,7 +13,8 @@ export class RoomGuidePanel extends BaseGuide {
         this.playScene = this.render.game.scene.getScene(SceneName.PLAY_SCENE);
     }
 
-    public show() {
+    public show(param?: any) {
+        super.show(param);
         const element = this.render.displayManager.getDisplay(this.elementID);
         if (!element) this.end();
         this.step1({ x: element.x, y: element.y });

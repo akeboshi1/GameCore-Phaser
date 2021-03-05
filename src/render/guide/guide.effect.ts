@@ -57,6 +57,7 @@ export class GuideEffect extends Phaser.GameObjects.Container {
         this.setSize(width, height);
         if (!this.mGuideEffect) {
             this.mGuideEffect = this.scene.make.image({ x: 0, y: 0, key: "guideBg" });
+            this.mGuideEffect.setOrigin(0, 0);
             // image调整尺寸只能调整frame的尺寸
             this.mGuideEffect.frame.setSize(width + 20, height + 20);
             this.mGuideEffect.setPosition(0, 0);
