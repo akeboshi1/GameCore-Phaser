@@ -1,12 +1,13 @@
 import { Button, ClickEvent } from "apowophaserui";
-import { BaseGuide, Render } from "gamecoreRender";
+import { BaseGuide, Render, UiManager } from "gamecoreRender";
 import { ModuleName } from "structure";
+import { GuideID } from "../../guide";
 import { BottomPanel } from "../Bottom/BottomPanel";
 import { PicaBagPanel } from "../PicaBag/PicaBagPanel";
 
-export class BagGuide extends BaseGuide {
-    constructor(id: number, render: Render) {
-        super(id, render);
+export class BagGuidePanel extends BaseGuide {
+    constructor(uiManager: UiManager) {
+        super(GuideID.Bag, uiManager.render);
     }
 
     public show() {
@@ -26,9 +27,11 @@ export class BagGuide extends BaseGuide {
 
     private step2() {
         // 异步等待过程
-        const bagPanel: PicaBagPanel = this.uiManager.getPanel(ModuleName.PICABAG_NAME) as PicaBagPanel;
         this.render.emitter.on("BagPanel_show", () => {
+            const bagPanel: PicaBagPanel = this.uiManager.getPanel(ModuleName.PICABAG_NAME) as PicaBagPanel;
             const closeBtn = bagPanel.closeBtn;
+            const worldMatrix = closeBtn.getWorldTransformMatrix();
+            this.guideEffect.createGuideEffect({ x: worldMatrix.tx, y: worldMatrix.ty });
             closeBtn.on(ClickEvent.Tap, () => {
                 this.end();
             }, this);

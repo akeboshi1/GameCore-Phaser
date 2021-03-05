@@ -4,7 +4,9 @@ export enum GuideID {
     Plane,
     Hotel,
     Home,
-    Bag
+    Bag,
+    Furniture,
+    Room
 }
 export class PicaGuideManager extends GuideManager {
     constructor(protected render: Render) {

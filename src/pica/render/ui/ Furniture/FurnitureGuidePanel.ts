@@ -3,12 +3,13 @@ import { SceneName } from "structure";
 import { IPos } from "utils";
 import { GuideID } from "../../guide";
 
-export class PlaneGuidePanel extends BaseGuide {
-    private elementID: number = 1441619821;
+export class FurnitureGuidePanel extends BaseGuide {
+    // 沙发
+    private elementID: number = 1649761875;
     private playScene: Phaser.Scene;
     private mPointer: Phaser.Input.Pointer;
     constructor(uiManager: UiManager) {
-        super(GuideID.Plane, uiManager.render);
+        super(GuideID.Furniture, uiManager.render);
         this.playScene = this.render.game.scene.getScene(SceneName.PLAY_SCENE);
     }
 
@@ -22,11 +23,6 @@ export class PlaneGuidePanel extends BaseGuide {
         this.playScene.input.off("gameobjectdown", this.gameObjectDownHandler, this);
         super.hide();
         if (this.mPointer) (<any>this.playScene).motionMgr.onPointerDownHandler(this.mPointer);
-    }
-
-    public checkInteractive(data?: any): boolean {
-        if (data === this.elementID) return false;
-        return true;
     }
 
     private step1(pos: IPos) {
@@ -44,5 +40,4 @@ export class PlaneGuidePanel extends BaseGuide {
             this.end();
         }
     }
-
 }

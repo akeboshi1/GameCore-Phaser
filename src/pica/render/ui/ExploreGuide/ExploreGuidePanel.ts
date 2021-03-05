@@ -1,12 +1,13 @@
 import { Button, ClickEvent } from "apowophaserui";
-import { BaseGuide, Render } from "gamecoreRender";
+import { BaseGuide, Render, UiManager } from "gamecoreRender";
 import { ModuleName } from "structure";
+import { GuideID } from "../../guide";
 import { BottomPanel } from "../Bottom/BottomPanel";
 import { PicaExploreListPanel } from "../PicaExploreList/PicaExploreListPanel";
 
-export class ExploreGuide extends BaseGuide {
-    constructor(id: number, render: Render) {
-        super(id, render);
+export class ExploreGuidePanel extends BaseGuide {
+    constructor(uiManager: UiManager) {
+        super(GuideID.Explore, uiManager.render);
     }
 
     public show() {

@@ -39,4 +39,7 @@ export class BaseGuide implements IGuide {
     public destroy() {
         this.hide();
     }
+
+    public addExportListener(f: Function) {
+    }
 }

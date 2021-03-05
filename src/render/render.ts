@@ -326,6 +326,10 @@ export class Render extends RPCPeer implements GameMain, IRender {
     }
 
     resize(width: number, height: number) {
+        // if (width > height) {
+        //     this.pauseScene();
+        //     return;
+        // }
         const panel: any = this.uiManager.getPanel(ModuleName.BOTTOM);
         if (panel) {
             const inputs = this.game.domContainer.getElementsByTagName("input");
@@ -353,9 +357,9 @@ export class Render extends RPCPeer implements GameMain, IRender {
         }
         const w = width * this.mConfig.devicePixelRatio;
         const h = height * this.mConfig.devicePixelRatio;
-        this.mScaleRatio = Math.ceil(this.mConfig.devicePixelRatio || 1);
+        this.mScaleRatio = Math.ceil(this.mConfig.devicePixelRatio || 2);
         this.mConfig.scale_ratio = this.mScaleRatio;
-        this.mUIRatio = Math.round(this.mConfig.devicePixelRatio || 1);
+        this.mUIRatio = Math.round(this.mConfig.devicePixelRatio || 2);
         const scaleW = (width / this.DEFAULT_WIDTH) * (this.mConfig.devicePixelRatio / this.mUIRatio);
         this.mUIScale = this.game.device.os.desktop ? 1 : scaleW;
         if (this.mGame) {
@@ -1625,6 +1629,11 @@ export class Render extends RPCPeer implements GameMain, IRender {
             const uiScene = this.mGame.scene.getScene(MainUIScene.name);
             if (uiScene) uiScene.scene.pause();
         }
+    }
+
+    // 横屏时 做黑屏处理
+    private blackScene() {
+
     }
 
     get mainPeer() {

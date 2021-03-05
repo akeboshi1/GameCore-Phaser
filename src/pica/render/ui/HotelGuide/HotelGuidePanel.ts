@@ -1,12 +1,13 @@
 import { ClickEvent } from "apowophaserui";
-import { BaseGuide, Render } from "gamecoreRender";
+import { BaseGuide, Render, UiManager } from "gamecoreRender";
 import { ModuleName } from "structure";
+import { GuideID } from "../../guide";
 import { PicaNewMainPanel } from "../PicaNewMain/PicaNewMainPanel";
 import { PicaTaskPanel } from "../PicaTask/PicaTaskPanel";
 
-export class HotelGuide extends BaseGuide {
-    constructor(id: number, render: Render) {
-        super(id, render);
+export class HotelGuidePanel extends BaseGuide {
+    constructor(uiManager: UiManager) {
+        super(GuideID.Hotel, uiManager.render);
     }
     public show() {
         this.step1();
