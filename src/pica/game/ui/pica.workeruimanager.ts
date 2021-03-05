@@ -42,26 +42,37 @@ export class PicaWorkerUiManager extends UIManager {
             this.mMedMap = new Map();
         }
         type = this.getPanelNameByAlias(type);
-        const className: string = type + "Mediator";
-        let mediator: BasicMediator = this.mMedMap.get(type);
-        if (!mediator) {
-            // const path: string = `./${type}/${type}Mediator`;
-            let ns: any = require(`./${type}/${className}`);
-            if (!ns) {
-                ns = this.getMediatorClass(type);
-            }
-            mediator = new ns[className](this.game);
-            if (!mediator) {
-                super.showMed(type, param);
-                // Logger.getInstance().error(`error ${type} no panel can show!!!`);
-                return;
-            }
-            this.mMedMap.set(type, mediator);
-            // mediator.setName(type);
+        switch (type) {
+            case ModuleName.PICABAGGUIDE_NAME:
+            case ModuleName.PICAEXPLOREGUIDE_NAME:
+            case ModuleName.PICAHOMEGUIDE_NAME:
+            case ModuleName.PICAHOTELGUIDE_NAME:
+            case ModuleName.PICAPLANEGUIDE_NAME:
+                this.game.peer.render.showPanel(type, param);
+                break;
+            default:
+                const className: string = type + "Mediator";
+                let mediator: BasicMediator = this.mMedMap.get(type);
+                if (!mediator) {
+                    // const path: string = `./${type}/${type}Mediator`;
+                    let ns: any = require(`./${type}/${className}`);
+                    if (!ns) {
+                        ns = this.getMediatorClass(type);
+                    }
+                    mediator = new ns[className](this.game);
+                    if (!mediator) {
+                        super.showMed(type, param);
+                        // Logger.getInstance().error(`error ${type} no panel can show!!!`);
+                        return;
+                    }
+                    this.mMedMap.set(type, mediator);
+                    // mediator.setName(type);
+                }
+                // if (mediator.showing) return;
+                if (param) mediator.setParam(param);
+                if (mediator.isShow()) return;
+                mediator.show(param);
+                break;
         }
-        // if (mediator.showing) return;
-        if (param) mediator.setParam(param);
-        if (mediator.isShow()) return;
-        mediator.show(param);
     }
 }

@@ -48,6 +48,10 @@ export class PicaBagPanel extends PicaBasePanel {
     this.key = ModuleName.PICABAG_NAME;
   }
 
+  get closeBtn(): Button {
+    return this.mCloseBtn;
+  }
+
   resize(w: number, h: number) {
     const width = this.scaleWidth;
     const height = this.scaleHeight;
@@ -212,6 +216,11 @@ export class PicaBagPanel extends PicaBasePanel {
   }
   public onUsePropsFailedHandler(prop: any) {
     this.mCategoryScroll.addListen();
+  }
+
+  protected onShow() {
+    super.onShow();
+    this.render.emitter.emit("BagPanel_show");
   }
 
   protected onInitialized() {

@@ -14,7 +14,6 @@ export class FramesDisplay extends BaseFramesDisplay implements IDisplayObject {
     protected mID: number = undefined;
     protected mTitleMask: number;
     protected mReferenceArea: ReferenceArea;
-    protected mChildMap: Map<string, any>;
     protected mTopDisplay: ElementTopDisplay;
     protected mMovement: DisplayMovement;
 
@@ -36,10 +35,6 @@ export class FramesDisplay extends BaseFramesDisplay implements IDisplayObject {
         if (this.mReferenceArea) {
             this.mReferenceArea.destroy();
             this.mReferenceArea = undefined;
-        }
-        if (this.mChildMap) {
-            this.mChildMap.clear();
-            this.mChildMap = null;
         }
         if (this.mTopDisplay) {
             this.mTopDisplay.destroy();
@@ -74,9 +69,8 @@ export class FramesDisplay extends BaseFramesDisplay implements IDisplayObject {
         if (!area || area.length <= 0 || !origin) return;
         if (!this.mReferenceArea) {
             this.mReferenceArea = new ReferenceArea(this.scene);
-            this.addChildMap("reference", this.mReferenceArea);
         }
-        const roomSize = this.render.mainPeer.getCurrentRoomSize();
+        const roomSize = await this.render.mainPeer.getCurrentRoomSize();
         this.mReferenceArea.draw(area, origin, roomSize.tileWidth, roomSize.tileHeight);
         this.addAt(this.mReferenceArea, 0);
     }
@@ -257,13 +251,6 @@ export class FramesDisplay extends BaseFramesDisplay implements IDisplayObject {
                 }
             },
         });
-    }
-
-    protected addChildMap(key: string, display: Phaser.GameObjects.GameObject) {
-        if (!this.mChildMap) {
-            this.mChildMap = new Map();
-        }
-        this.mChildMap.set(key, display);
     }
 
     protected async fetchProjection() {

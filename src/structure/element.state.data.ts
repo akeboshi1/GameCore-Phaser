@@ -18,7 +18,7 @@ export interface StateConfig {
 }
 
 export enum ElementStateType {
-    NONE = "none",
-    UNFROZEN = "unfrozen",
-    REPAIR = "repair"
+    NONE = "none",// 已解锁
+    UNFROZEN = "unfrozen",// 未解锁 材料不够
+    REPAIR = "repair"// 未解锁 材料够
 }

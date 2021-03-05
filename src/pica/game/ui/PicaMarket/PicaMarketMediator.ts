@@ -32,6 +32,7 @@ export class PicaMarketMediator extends BasicMediator {
     this.game.emitter.on(this.key + "_close", this.onCloseHandler, this);
     this.game.emitter.on(this.key + "_popItemCard", this.onPopItemCardHandler, this);
     this.game.emitter.on(this.key + "_queryPropResource", this.onQueryPropresouceHandler, this);
+    this.game.emitter.on(EventType.UPDATE_PLAYER_INFO, this.onUpdatePlayerInfoHandler, this);
   }
 
   hide() {
@@ -46,6 +47,7 @@ export class PicaMarketMediator extends BasicMediator {
     this.game.emitter.off(this.key + "_close", this.onCloseHandler, this);
     this.game.emitter.off(this.key + "_popItemCard", this.onPopItemCardHandler, this);
     this.game.emitter.off(this.key + "_queryPropResource", this.onQueryPropresouceHandler, this);
+    this.game.emitter.off(EventType.UPDATE_PLAYER_INFO, this.onUpdatePlayerInfoHandler, this);
     super.hide();
   }
 
@@ -53,6 +55,8 @@ export class PicaMarketMediator extends BasicMediator {
     super.panelInit();
     if (this.mShowData && this.mView) {
       this.mView.setCategories(this.mShowData);
+      const userData = this.game.user.userData;
+      this.mView.setMoneyData(userData.money, userData.diamond);
     }
   }
 
@@ -64,10 +68,14 @@ export class PicaMarketMediator extends BasicMediator {
 
   protected mediatorExport() {
   }
-
+  private onUpdatePlayerInfoHandler() {
+    const userData = this.game.user.userData;
+    this.mView.setMoneyData(userData.money, userData.diamond);
+  }
   private onCategoriesHandler(content: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_GET_MARKET_CATEGORIES) {
-    if (this.mView)
+    if (this.mView) {
       this.mView.setCategories(content);
+    }
   }
 
   private onQueryResuleHandler(content: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_MARKET_QUERY) {
