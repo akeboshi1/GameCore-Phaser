@@ -156,7 +156,7 @@ export class SceneEditorCanvas extends EditorCanvas implements IRender {
         this.mStamp.setSprite(content);
     }
 
-    public selectElement(id: number) {
+    public selectElement(id: number, selecting: boolean = true) {
         if (this.mBrush !== BrushEnum.Select) {
             return;
         }
@@ -168,7 +168,7 @@ export class SceneEditorCanvas extends EditorCanvas implements IRender {
             return;
         }
         this.mSkyboxManager.unselected();
-        this.mSelecedElement.selectElements([ele]);
+        this.mSelecedElement.selectElements([ele], selecting);
         this.mEditorPacket.sendFetch(this.mSelecedElement.getSelectedIDs(), op_def.NodeType.ElementNodeType, ele.isMoss);
     }
 
@@ -301,7 +301,7 @@ export class SceneEditorCanvas extends EditorCanvas implements IRender {
         //     const pool = this.displayObjectPool.getPool(poolName);
         //     const displayObj = pool.get(id.toString());
         //     if (displayObj) {
-        this.selectElement(ids[0]);
+        this.selectElement(ids[0], false);
                 // this.selectedElement(displayObj.getDisplay());
         //     }
         // }
@@ -1113,7 +1113,7 @@ class SelectedElementManager {
 
     }
 
-    selectElements(elements: EditorFramesDisplay[]) {
+    selectElements(elements: EditorFramesDisplay[], selecting: boolean = true) {
         this.unselectedElements();
         this.mSelecedElement = elements;
         if (elements.length < 1 ) {
@@ -1123,7 +1123,7 @@ class SelectedElementManager {
             ele.selected();
         }
         // this.registerGameobjectOver();
-        this.selecting = true;
+        this.selecting = selecting;
     }
 
     unselectedElements() {
@@ -1215,7 +1215,6 @@ class SelectedElementManager {
     }
 
     private onGameobjectOverHandler(pointer: Phaser.Input.Pointer, gameobject: Phaser.GameObjects.GameObject) {
-        Logger.getInstance().log("gameobject over");
         if (!this.selecting) {
             return;
         }
