@@ -173,7 +173,7 @@ export class PicaOrderPanel extends BasePanel {
 
     private onSendHandler(index: number, orderOperator: any) {// op_pkt_def.PKT_Order_Operator
         if (orderOperator === 2) {// op_pkt_def.PKT_Order_Operator.PKT_ORDER_DELETE
-            const alertView = new AlertView(this.uiManager);
+            const alertView = new AlertView(this.scene, this.uiManager);
             alertView.show({
                 text: i18n.t("order.refreshtips"),
                 title: i18n.t("order.refreshtitle"),

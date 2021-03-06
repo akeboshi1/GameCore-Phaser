@@ -1,7 +1,9 @@
 import { Font, Logger, Url } from "utils";
-import { BasicScene } from "baseRender";
+import { BaseLayer, BasicScene } from "baseRender";
 import version from "../../../version";
-import { SceneName } from "../../structure";
+import { ModuleName, SceneName } from "../../structure";
+import { UiManager } from "../ui";
+import { MainUIScene } from "./main.ui.scene";
 
 export class LoadingScene extends BasicScene {
   private bg: Phaser.GameObjects.Sprite;
@@ -25,6 +27,7 @@ export class LoadingScene extends BasicScene {
     this.load.atlas("curtain", Url.getUIRes(this.dpr, "loading/curtain.png"), Url.getUIRes(this.dpr, "loading/curtain.json"));
     this.load.atlas("loading", Url.getRes("ui/loading/loading.png"), Url.getRes("ui/loading/loading.json"));
     this.load.script("webfont", Url.getRes("scripts/webfont/1.6.26/webfont.js"));
+    this.load.atlas(ModuleName.ALERTVIEW_NAME, Url.getUIRes(this.dpr, "pica_alert/pica_alert.png"), Url.getUIRes(this.dpr, "pica_alert/pica_alert.json"));
   }
 
   public init(data: any) {
@@ -39,6 +42,8 @@ export class LoadingScene extends BasicScene {
 
   public create() {
     super.create();
+    const uimanager: UiManager = this.render.uiManager;
+    uimanager.setScene(this);
     try {
       WebFont.load({
         custom: {
@@ -63,7 +68,7 @@ export class LoadingScene extends BasicScene {
 
     this.curtain = new Curtain(this, this.dpr);
 
-    this.mask = this.add.graphics(undefined);
+    this.mask = this.add.graphics({ x: 0, y: 0 });
     this.mask.fillStyle(0);
 
     this.mask.fillRect(0, 0, width, height);
@@ -88,6 +93,10 @@ export class LoadingScene extends BasicScene {
     //   this.mCallback = undefined;
     // }
     // this.scale.on("resize", this.checkSize, this);
+    this.layerManager.addLayer(this, BaseLayer, MainUIScene.LAYER_UI, 1);
+    this.layerManager.addLayer(this, BaseLayer, MainUIScene.LAYER_DIALOG, 2);
+    this.layerManager.addLayer(this, BaseLayer, MainUIScene.LAYER_TOOLTIPS, 3);
+    this.layerManager.addLayer(this, BaseLayer, MainUIScene.LAYER_MASK, 4);
     for (const tmpData in this.progressData) {
       this.loadProgress(this.progressData[tmpData]);
     }

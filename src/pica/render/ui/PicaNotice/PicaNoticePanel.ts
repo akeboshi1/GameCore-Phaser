@@ -1,4 +1,4 @@
-import { BBCodeText, NineSlicePatch } from "apowophaserui";
+import { BBCodeText } from "apowophaserui";
 import { BasePanel, DynamicImage, MainUIScene, UiManager } from "gamecoreRender";
 import { ModuleName, RENDER_PEER } from "structure";
 import { Font, Url } from "utils";
