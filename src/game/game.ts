@@ -166,13 +166,14 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
         Logger.getInstance().debug("game reconnect");
         if (this.mConfig.hasConnectFail) return this.mainPeer.render.connectFail();
         let gameID: string = this.mConfig.game_id;
-        let worldID: string = this.mConfig.virtual_world_id;
+        let virtualWorldId: string = this.mConfig.virtual_world_id;
+        const worldId: string = this.mConfig.world_id;
         const account = await this.mainPeer.render.getAccount();
         if (account.gameID && account.virtualWorldId) {
             gameID = account.gameID;
-            worldID = account.virtualWorldId;
+            virtualWorldId = account.virtualWorldId;
         }
-        this._createAnotherGame(gameID, worldID, null, null);
+        this._createAnotherGame(gameID, virtualWorldId, null, null, null, worldId);
     }
 
     public exitUser() {
@@ -472,6 +473,7 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
         Logger.getInstance().debug(`VW_id: ${this.mConfig.virtual_world_id}`);
         let game_id = this.mConfig.game_id;
         let virtualWorldUuid = this.mConfig.virtual_world_id;
+        const worldId = this.mConfig.world_id;
         let sceneId = null;
         let loc = null;
         let spawnPointId = null;
@@ -490,6 +492,7 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
         content.expire = this.mConfig.token_expire = accountData.expire + "";
         content.fingerprint = this.mConfig.token_fingerprint = accountData.fingerprint;
         content.sceneId = sceneId;
+        content.worldUuid = worldId;
         // 后端有个Bug，loc是undefined位置会错误。修复后删掉{ locX: 0, locY: 0, locZ: 0}
         content.loc = loc || { locX: 0, locY: 0, locZ: 0 };
         content.spawnPointId = spawnPointId;
@@ -592,10 +595,10 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
 
     private onGotoAnotherGame(packet: PBpacket) {
         const content: op_client.IOP_VIRTUAL_WORLD_REQ_CLIENT_GOTO_ANOTHER_GAME = packet.content;
-        this._onGotoAnotherGame(content.gameId, content.virtualWorldId, content.sceneId, content.loc, content.spawnPointId);
+        this._onGotoAnotherGame(content.gameId, content.virtualWorldId, content.sceneId, content.loc, content.spawnPointId, content.worldId);
     }
 
-    private _createAnotherGame(gameId, worldId, sceneId, loc, spawnPointId?) {
+    private _createAnotherGame(gameId, virtualworldId, sceneId, loc, spawnPointId?, worldId?) {
         this.clearGame(true).then(() => {
             this.isPause = false;
             if (this.mUser) {
@@ -609,9 +612,9 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
                 this.mClock.destroy();
                 this.mClock = null;
             }
-            this.mainPeer.render.createAccount(gameId, worldId, sceneId, loc, spawnPointId);
+            this.mainPeer.render.createAccount(gameId, virtualworldId, sceneId, loc, spawnPointId);
             // this.mConfig.game_id = gameId;
-            // this.mConfig.virtual_world_id = worldId;
+            // this.mConfig.virtual_world_id = virtualworldId;
             this.createManager();
             this.addPacketListener();
             const gateway: ServerAddress = this.mConfig.server_addr;
@@ -621,13 +624,13 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
             }
             this.mClock = new Clock(this.connect, this.peer);
             // setTimeout(() => {
-            this.mainPeer.render.createAnotherGame(gameId, worldId, sceneId, loc ? loc.x : 0, loc ? loc.y : 0, loc ? loc.z : 0, spawnPointId);
+            this.mainPeer.render.createAnotherGame(gameId, virtualworldId, sceneId, loc ? loc.x : 0, loc ? loc.y : 0, loc ? loc.z : 0, spawnPointId, worldId);
             // }, 1000);
             // this.mGame.scene.start(LoadingScene.name, { world: this }););
         });
     }
 
-    private _onGotoAnotherGame(gameId, worldId, sceneId, loc, spawnPointId?) {
+    private _onGotoAnotherGame(gameId, virtualworldId, sceneId, loc, spawnPointId?, worldId?) {
         this.clearGame(true).then(() => {
             this.isPause = false;
             if (this.connect) {
@@ -637,7 +640,7 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
                 this.mClock.destroy();
                 this.mClock = null;
             }
-            this.mainPeer.render.createAccount(gameId, worldId, sceneId, loc, spawnPointId);
+            this.mainPeer.render.createAccount(gameId, virtualworldId, sceneId, loc, spawnPointId);
             this.createManager();
             this.removePacketListener();
             this.addPacketListener();
@@ -647,7 +650,7 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
             }
             this.mClock = new Clock(this.connect, this.peer);
             // 告知render进入其他game
-            this.mainPeer.render.createAnotherGame(gameId, worldId, sceneId, loc ? loc.x : 0, loc ? loc.y : 0, loc ? loc.z : 0, spawnPointId);
+            this.mainPeer.render.createAnotherGame(gameId, virtualworldId, sceneId, loc ? loc.x : 0, loc ? loc.y : 0, loc ? loc.z : 0, spawnPointId, worldId);
         });
     }
 

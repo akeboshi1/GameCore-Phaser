@@ -1033,12 +1033,12 @@ export class Render extends RPCPeer implements GameMain, IRender {
     }
 
     @Export([webworker_rpc.ParamType.str, webworker_rpc.ParamType.str])
-    public createAnotherGame(gameId: string, worldId: string, sceneId?: number, px?: number, py?: number, pz?: number, spawnPointId?) {
+    public createAnotherGame(gameId: string, virtualWorldId: string, sceneId?: number, px?: number, py?: number, pz?: number, spawnPointId?, worldId?: string) {
         // this.newGame().then(() => {
         //     // todo sceneManager loginScene.name
         // });
         Logger.getInstance().debug("gotoanothergame ====>");
-        this.account.enterGame(gameId, worldId, sceneId, { x: px, y: py, z: pz }, spawnPointId);
+        this.account.enterGame(gameId, virtualWorldId, sceneId, { x: px, y: py, z: pz }, spawnPointId, worldId);
     }
 
     @Export([webworker_rpc.ParamType.num, webworker_rpc.ParamType.num, webworker_rpc.ParamType.num, webworker_rpc.ParamType.num])
