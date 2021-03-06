@@ -141,6 +141,7 @@ export class ElementDetail extends Phaser.GameObjects.Container {
         this.mDetailBubble.setProp(prop, Math.floor(t / 1000), property);
         this.mDetailBubble.y = this.height - this.y - this.mDetailBubble.height - 6 * this.dpr;
         this.mCounter.setCounter(1);
+        this.mCounter.setItemType(prop.category);
       });
   }
 

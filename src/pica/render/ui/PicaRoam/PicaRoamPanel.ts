@@ -21,11 +21,11 @@ export class PicaRoamPanel extends PicaBasePanel {
         super(uiManager);
         this.key = ModuleName.PICAROAM_NAME;
         this.atlasNames = [UIAtlasName.uicommon, UIAtlasName.uicommon1, UIAtlasName.roam, { atlasName: "roam_effect_1", folder: "roam_effect", foldType: FolderType.NORMAL }];
-        this.textures = [{ atlasName: "roam_stripe", folder: "roam" }, { atlasName: "roam_topic", folder: "roam" }];
-        // { atlasName: "roamone", folder: "roam_effect", foldType: FolderType.NORMAL, uiType: UILoadType.video },
-        // { atlasName: "roamtenrepead", folder: "roam_effect", foldType: FolderType.NORMAL, uiType: UILoadType.video },
-        // { atlasName: "roamreward", folder: "roam_effect", foldType: FolderType.NORMAL, uiType: UILoadType.video },
-        // { atlasName: "roambefore", folder: "roam_effect", foldType: FolderType.NORMAL, uiType: UILoadType.video }];
+        this.textures = [{ atlasName: "roam_stripe", folder: "roam" }, { atlasName: "roam_topic", folder: "roam" },
+        { atlasName: "roamone", folder: "roam_effect", foldType: FolderType.NORMAL, uiType: UILoadType.video },
+        { atlasName: "roamtenrepead", folder: "roam_effect", foldType: FolderType.NORMAL, uiType: UILoadType.video },
+        { atlasName: "roamreward", folder: "roam_effect", foldType: FolderType.NORMAL, uiType: UILoadType.video },
+        { atlasName: "roambefore", folder: "roam_effect", foldType: FolderType.NORMAL, uiType: UILoadType.video }];
     }
     resize(width?: number, height?: number) {
         const w: number = this.scaleWidth;

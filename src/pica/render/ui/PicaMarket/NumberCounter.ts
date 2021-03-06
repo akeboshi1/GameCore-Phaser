@@ -12,6 +12,7 @@ export class NumberCounter extends Phaser.GameObjects.Container {
   private mMaxNum: number = 99;
   private zoom: number = 1;
   private mRectangle: Phaser.Geom.Rectangle;
+  private itemType: string;
   constructor(scene: Phaser.Scene, key: string, x?: number, y?: number, dpr: number = 1, zoom: number = 1) {
     super(scene, x, y);
     this.zoom = zoom;
@@ -84,8 +85,13 @@ export class NumberCounter extends Phaser.GameObjects.Container {
     if (num > this.mMaxNum) {
       num = this.mMaxNum;
     }
+    if (this.itemType === "PKT_MARKET_CATEGORY_3") num = 1;
     this.mLabelInput.setText(num.toString());
     this.emit("change", num);
+  }
+
+  public setItemType(type: string) {
+    this.itemType = type;
   }
 
   setBlur() {
