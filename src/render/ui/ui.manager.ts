@@ -112,7 +112,7 @@ export class UiManager {
     }
 
     public showPanel(type: string, param?: any): Promise<BasePanel> {
-        if (type === "Login") {
+        if (this.mScene) {
             return new Promise<BasePanel>((resolve, reject) => {
                 resolve(this._showPanel(type, param));
             });
