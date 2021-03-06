@@ -1,4 +1,4 @@
-import { LoadState, ModuleName } from "structure";
+import { LoadState, ModuleName, SceneName } from "structure";
 import { Logger, StringUtils } from "utils";
 import { LoadingTips } from "../loadqueue";
 import { Render } from "../render";
@@ -12,8 +12,7 @@ import { MainUIScene } from "./main.ui.scene";
 import { PlayScene } from "./play.scene";
 import { RoomScene } from "./room.scene";
 import { SelectRoleScene } from "./select.role.scene";
-import { MAIN_WORKER, RENDER_PEER, PHYSICAL_WORKER } from "structure";
-import version from "../../../version";
+import { BlackScene } from "./black.scene";
 export class SceneManager extends BaseSceneManager {
 
     private mCurSceneName: string;
@@ -39,9 +38,9 @@ export class SceneManager extends BaseSceneManager {
             return null;
         }
         const zoom = this.render.scaleRatio;
-        const playScene = sceneManager.getScene("PlayScene") as BasicScene;
+        const playScene = sceneManager.getScene(SceneName.PLAY_SCENE) as BasicScene;
         if (playScene) playScene.setScale(zoom);
-        const uiScene = sceneManager.getScene("MainUIScene") as BasicScene;
+        const uiScene = sceneManager.getScene(SceneName.MAINUI_SCENE) as BasicScene;
         if (uiScene) uiScene.setScale(zoom);
     }
 
@@ -55,13 +54,13 @@ export class SceneManager extends BaseSceneManager {
         if (!sceneManager) {
             return;
         }
-        const scene = sceneManager.getScene("LoadingScene") as LoadingScene;
+        const scene = sceneManager.getScene(SceneName.LOADING_SCENE) as LoadingScene;
         if (scene && scene.scene.isActive) {
             progress *= 100;
             const text = StringUtils.format("正在加载资源 {0}", [progress.toFixed(0) + "%"]);
             (<LoadingScene>scene).updateProgress(text);
         }
-        sceneManager.bringToTop("LoadingScene");
+        sceneManager.bringToTop(SceneName.LOADING_SCENE);
     }
 
     public bringToTop(sceneName: string) {
@@ -267,7 +266,8 @@ export class SceneManager extends BaseSceneManager {
             "PlayScene": PlayScene,
             "RoomScene": RoomScene,
             "SelectRoleScene": SelectRoleScene,
-            "SkyBoxScene": SkyBoxScene
+            "SkyBoxScene": SkyBoxScene,
+            "BlackScene": BlackScene,
         };
     }
 

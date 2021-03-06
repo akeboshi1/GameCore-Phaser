@@ -8,3 +8,4 @@ export * from "./play.scene";
 export * from "./room.scene";
 export * from "./select.role.scene";
 export * from "./scene.manager";
+export * from "./black.scene";

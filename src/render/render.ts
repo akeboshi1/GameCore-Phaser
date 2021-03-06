@@ -1,6 +1,6 @@
 import "tooqinggamephaser";
 import "dragonBones";
-import { Game } from "tooqinggamephaser";
+import { Game, Scene } from "tooqinggamephaser";
 import { Export, RPCPeer, webworker_rpc } from "webworker-rpc";
 import { i18n, initLocales, IPos, IPosition45Obj, Logger, Pos, Size, Url } from "utils";
 import { PBpacket } from "net-socket-packet";
@@ -27,7 +27,8 @@ import {
     PHYSICAL_WORKER,
     PHYSICAL_WORKER_URL,
     RENDER_PEER,
-    SceneName
+    SceneName,
+    PlatFormType
 } from "structure";
 import { DisplayManager } from "./managers/display.manager";
 import { InputManager } from "./input/input.manager";
@@ -45,6 +46,7 @@ import { UiManager } from "./ui";
 import { GuideManager } from "./guide";
 import { MouseManagerDecorate } from "./input/mouse.manager.decorate";
 import { MouseManager } from "./input/mouse.manager";
+import { BlackScene } from "./scenes";
 
 for (const key in protos) {
     PBpacket.addProtocol(protos[key]);
@@ -317,19 +319,18 @@ export class Render extends RPCPeer implements GameMain, IRender {
 
     enterGame() {
         this.remote[MAIN_WORKER].MainPeer.loginEnterWorld();
-        // const loginScene: LoginScene = this.mGame.scene.getScene(LoginScene.name) as LoginScene;
-        this.mGame.scene.remove(LoginScene.name);
-        // this.uiManager.destroy();
-        // this.uiManager.addPackListener();
-        // loginScene.remove();
-        // this.mLoadingManager.start(LoadingTips.enterGame());
+        this.mGame.scene.remove(SceneName.LOGIN_SCENE);
     }
 
     resize(width: number, height: number) {
-        // if (width > height) {
-        //     this.pauseScene();
-        //     return;
-        // }
+        if (width > height) {
+            this.dealTipsScene(SceneName.BLACK_SCENE, true);
+        } else {
+            const blackScene = this.mGame.scene.getScene(SceneName.BLACK_SCENE);
+            if (blackScene && blackScene.scene.isActive()) {
+                this.dealTipsScene(SceneName.BLACK_SCENE, false);
+            }
+        }
         const panel: any = this.uiManager.getPanel(ModuleName.BOTTOM);
         if (panel) {
             const inputs = this.game.domContainer.getElementsByTagName("input");
@@ -559,9 +560,7 @@ export class Render extends RPCPeer implements GameMain, IRender {
             this.mGame.input.mouse.capture = true;
             if (this.mGame.device.os.desktop) {
                 this.mUIScale = 1;
-                this.mConfig.platform = "pc";
-            } else {
-                this.mConfig.platform = "nopc";
+                this.mConfig.platform = PlatFormType.PC;
             }
             resolve(true);
         });
@@ -1507,7 +1506,7 @@ export class Render extends RPCPeer implements GameMain, IRender {
         if (!this.mInputManager) return;
         this.mInputManager.changeMouseManager(new MouseManagerDecorate(this));
 
-        const playScene = this.mGame.scene.getScene(PlayScene.name) as PlayScene;
+        const playScene = this.mGame.scene.getScene(SceneName.PLAY_SCENE) as PlayScene;
         if (playScene) {
             playScene.pauseMotion();
             playScene.disableCameraMove();
@@ -1519,7 +1518,7 @@ export class Render extends RPCPeer implements GameMain, IRender {
         if (!this.mInputManager) return;
         this.mInputManager.changeMouseManager(new MouseManager(this));
 
-        const playScene = this.mGame.scene.getScene(PlayScene.name) as PlayScene;
+        const playScene = this.mGame.scene.getScene(SceneName.PLAY_SCENE) as PlayScene;
         if (playScene) {
             playScene.resumeMotion();
             playScene.enableCameraMove();
@@ -1580,32 +1579,26 @@ export class Render extends RPCPeer implements GameMain, IRender {
     }
 
     private resumeScene() {
-        Logger.getInstance().debug(`#BlackSceneFromBackground; world.resumeScene(); isPause:${this.isPause}; mGame:${this.mGame}`);
-        if (!this.isPause) {
-            return;
-        }
-        this.isPause = false;
-        if (this.mGame) {
-            if (this.sceneManager.currentScene) this.sceneManager.currentScene.scene.resume();
-            this.mainPeer.onFocus();
-            // this.mConnection.onFocus();
-            // this.mRoomMamager.onFocus();
-            const pauseScene: Phaser.Scene = this.mGame.scene.getScene(GamePauseScene.name);
-            if (pauseScene) {
-                (pauseScene as GamePauseScene).sleep();
-                this.mGame.scene.stop(GamePauseScene.name);
-            }
-            const playScene = this.mGame.scene.getScene(PlayScene.name);
-            if (playScene) playScene.scene.resume();
-            const uiScene = this.mGame.scene.getScene(MainUIScene.name);
-            if (uiScene) uiScene.scene.resume();
-            // if (!this.mConnection.isConnect) {
-            //     if (this.mConfig.connectFail) {
-            //         return this.mConfig.connectFail();
-            //     } else {
-            //         return this.onDisConnected();
-            //     }
-            // }
+        const type = this.mConfig.platform;
+        switch (type) {
+            case PlatFormType.APP:
+                this.mainPeer.reconnect();
+                break;
+            case PlatFormType.PC:
+            case PlatFormType.NOPC:
+                Logger.getInstance().debug(`#BlackSceneFromBackground; world.resumeScene(); isPause:${this.isPause}; mGame:${this.mGame}`);
+                if (!this.isPause) {
+                    return;
+                }
+                this.isPause = false;
+                if (this.mGame) {
+                    if (this.sceneManager.currentScene) this.sceneManager.currentScene.scene.resume();
+                    this.mainPeer.onFocus();
+                    // this.mConnection.onFocus();
+                    // this.mRoomMamager.onFocus();
+                    this.dealTipsScene(SceneName.GAMEPAUSE_SCENE, false);
+                }
+                break;
         }
     }
 
@@ -1620,20 +1613,33 @@ export class Render extends RPCPeer implements GameMain, IRender {
             this.mainPeer.onBlur();
             // this.mConnection.onBlur();
             // this.mRoomMamager.onBlur();
-            if (!this.mGame.scene.getScene(GamePauseScene.name)) {
-                this.mGame.scene.add(GamePauseScene.name, GamePauseScene);
-            }
-            this.mGame.scene.start(GamePauseScene.name, { render: this });
-            const playScene = this.mGame.scene.getScene(PlayScene.name);
-            if (playScene) playScene.scene.pause();
-            const uiScene = this.mGame.scene.getScene(MainUIScene.name);
-            if (uiScene) uiScene.scene.pause();
+            this.dealTipsScene(SceneName.GAMEPAUSE_SCENE, true);
         }
     }
 
-    // 横屏时 做黑屏处理
-    private blackScene() {
-
+    private dealTipsScene(sceneName: string, show: boolean) {
+        if (!this.mGame.scene.getScene(sceneName)) {
+            const sceneClass = this.sceneManager.getSceneClass(sceneName);
+            this.mGame.scene.add(sceneName, sceneClass);
+        }
+        const pauseScene = this.mGame.scene.getScene(SceneName.GAMEPAUSE_SCENE);
+        const playScene = this.mGame.scene.getScene(SceneName.PLAY_SCENE);
+        const uiScene = this.mGame.scene.getScene(SceneName.MAINUI_SCENE);
+        if (show) {
+            this.mGame.scene.start(sceneName, { render: this });
+            if (sceneName !== SceneName.GAMEPAUSE_SCENE) {
+                if (pauseScene) pauseScene.scene.pause();
+            }
+            if (playScene) playScene.scene.pause();
+            if (uiScene) uiScene.scene.pause();
+        } else {
+            this.mGame.scene.stop(sceneName);
+            if (sceneName !== SceneName.GAMEPAUSE_SCENE) {
+                if (pauseScene) pauseScene.scene.resume();
+            }
+            if (playScene) playScene.scene.resume();
+            if (uiScene) uiScene.scene.resume();
+        }
     }
 
     get mainPeer() {

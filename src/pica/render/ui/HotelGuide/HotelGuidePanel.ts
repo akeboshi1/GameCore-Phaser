@@ -9,7 +9,8 @@ export class HotelGuidePanel extends BaseGuide {
     constructor(uiManager: UiManager) {
         super(GuideID.Hotel, uiManager.render);
     }
-    public show() {
+    public show(param?: any) {
+        super.show(param);
         this.step1();
     }
 

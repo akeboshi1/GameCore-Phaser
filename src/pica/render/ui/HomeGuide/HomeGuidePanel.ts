@@ -9,7 +9,8 @@ export class HomeGuidePanel extends BaseGuide {
         super(GuideID.Home, uiManager.render);
     }
 
-    public show() {
+    public show(param?: any) {
+        super.show(param);
         this.step1();
     }
 

@@ -2,10 +2,14 @@ import { BasicScene } from "./basic.scene";
 import { IRender } from "../render";
 
 export class BaseSceneManager {
-    protected sceneClass: any = { };
+    protected sceneClass: any = {};
     protected mMainScene: Phaser.Scene;
     constructor(protected render: IRender) {
         this.initScene();
+    }
+
+    public getSceneClass(name: string): any {
+        return this.sceneClass[name];
     }
 
     public launchScene(startScene: Phaser.Scene, LaunchName: string, sceneName: string, data?: any) {

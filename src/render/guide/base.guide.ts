@@ -10,19 +10,22 @@ export class BaseGuide implements IGuide {
     public guideEffect: GuideEffect;
     protected scene: Phaser.Scene;
     protected uiManager: UiManager;
+    private mIsShow: boolean = false;
     constructor(id: number, protected render: Render) {
-        this.id = id;
         this.scene = render.sceneManager.getSceneByName(SceneName.MAINUI_SCENE) as MainUIScene;
         this.uiManager = render.uiManager;
-        this.guideEffect = new GuideEffect(this.scene);
     }
     public show(data?: any) {
+        this.mIsShow = true;
+        this.id = data.id;
+        if (!this.guideEffect) this.guideEffect = new GuideEffect(this.scene);
         this.render.guideManager.startGuide(this);
     }
     public end() {
         this.hide();
     }
     public hide() {
+        this.mIsShow = false;
         this.render.guideManager.stopGuide();
         if (this.guideEffect) {
             this.guideEffect.destroy();
@@ -38,6 +41,10 @@ export class BaseGuide implements IGuide {
     }
     public destroy() {
         this.hide();
+    }
+
+    public isShow(): boolean {
+        return this.mIsShow;
     }
 
     public addExportListener(f: Function) {

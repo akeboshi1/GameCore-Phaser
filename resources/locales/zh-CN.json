@@ -232,6 +232,9 @@
     "loading_resources": "正在加载资源....",
     "create_scene": "正在创建游戏场景..."
   },
+  "blackScene": {
+    "tips": "黑幕处理处理。。。"
+  },
   "coin": {
     "coin": "银币",
     "diamond": "钻石",

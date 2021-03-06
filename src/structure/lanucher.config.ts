@@ -1,3 +1,9 @@
+export enum PlatFormType {
+    PC = "pc",
+    APP = "app",
+    NOPC = "nopc"
+}
+
 export interface ILauncherConfig {
     api_root: string;
     auth_token: string;
