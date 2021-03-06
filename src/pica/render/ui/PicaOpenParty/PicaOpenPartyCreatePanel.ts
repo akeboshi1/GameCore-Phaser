@@ -301,7 +301,7 @@ export class PicaOpenPartyCreatePanel extends Phaser.GameObjects.Container {
             if (ticket > 0) {
                 (<HTMLTextAreaElement>(this.describleInput.node)).style.display = "none";
                 this.describleInput.visible = false;
-                new AlertView(this.uiManager).show({
+                new AlertView(this.scene, this.uiManager).show({
                     title: i18n.t("main_ui.party"),
                     text: !created ? i18n.t("party.openconfirm", { count: ticket }) : i18n.t("party.modifyconfirm", { count: ticket }),
                     oy: 302 * this.dpr * this.render.uiScale,

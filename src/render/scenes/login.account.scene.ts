@@ -1,4 +1,5 @@
 import { BasicScene } from "baseRender";
+import { SceneName } from "structure";
 import { Url, Size, Logger } from "utils";
 
 export class LoginAccountScene extends BasicScene {
@@ -6,7 +7,7 @@ export class LoginAccountScene extends BasicScene {
     private bg: Phaser.GameObjects.Sprite;
     private mCallback: Function;
     constructor() {
-        super({ key: LoginAccountScene.name });
+        super({ key: SceneName.LOGINACCOUNT_SCENE });
     }
 
     public preload() {

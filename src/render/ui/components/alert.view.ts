@@ -1,10 +1,10 @@
 import { Button, BBCodeText, ClickEvent } from "apowophaserui";
 import { ModuleName } from "structure";
 import { Font, i18n } from "utils";
-import { UiManager } from "../ui.manager";
-import { BasePanel } from "./base.panel";
 import { MainUIScene } from "../../scenes/main.ui.scene";
 import { BaseBatchPanel } from "./base.batch.panel";
+import { UiManager } from "../ui.manager";
+import { BasicScene } from "baseRender";
 
 export class AlertView extends BaseBatchPanel {
     private mOkBtn: Button;
@@ -13,8 +13,8 @@ export class AlertView extends BaseBatchPanel {
     private mTitleLabel: Phaser.GameObjects.Text;
     private mOkText: string;
     private mBackGround: Phaser.GameObjects.Graphics;
-    constructor(private uiManager: UiManager) {
-        super(uiManager.scene, uiManager.render);
+    constructor(scene: Phaser.Scene, private uiManager: UiManager) {
+        super(scene, uiManager.render);
         this.key = ModuleName.ALERTVIEW_NAME;
         this.disInteractive();
     }
@@ -24,7 +24,6 @@ export class AlertView extends BaseBatchPanel {
         super.show(config);
         if (this.mInitialized) {
             // this.render.uiManager.getUILayerManager().addToDialogLayer(this);
-            (<MainUIScene>this.mScene).layerManager.addToLayer(MainUIScene.LAYER_DIALOG, this);
             const { ox, oy } = config;
             this.x = (ox || this.scene.cameras.main.width / 2);
             this.y = (oy || this.scene.cameras.main.height / 2);
@@ -121,6 +120,7 @@ export class AlertView extends BaseBatchPanel {
         this.mCancelBtn.on(ClickEvent.Tap, this.onCancelHandler, this);
         this.add([bg, title, this.mTitleLabel, this.mTitleLabel, this.mContent, this.mOkBtn, this.mCancelBtn]);
         super.init();
+        (<BasicScene>this.mScene).layerManager.addToLayer(MainUIScene.LAYER_DIALOG, this);
     }
 
     private onOkHandler() {

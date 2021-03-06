@@ -74,7 +74,10 @@ export class UiManager {
         if (!this.mScene) {
             return;
         }
-        const alert = new AlertView(this);
+        let scene = this.mRender.game.scene.getScene(SceneName.MAINUI_SCENE);
+        const loadScene = this.mRender.game.scene.getScene(SceneName.LOADING_SCENE);
+        if (loadScene && loadScene.scene.isActive()) scene = loadScene;
+        const alert = new AlertView(scene, this);
         alert.show({
             text,
             callback: () => {
@@ -112,7 +115,7 @@ export class UiManager {
     }
 
     public showPanel(type: string, param?: any): Promise<BasePanel> {
-        if (type === "Login") {
+        if (this.mScene) {
             return new Promise<BasePanel>((resolve, reject) => {
                 resolve(this._showPanel(type, param));
             });
