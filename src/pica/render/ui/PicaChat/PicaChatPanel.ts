@@ -360,7 +360,7 @@ export class PicaChatPanel extends BasePanel {
                     this.openAppInputPanel();
                 }, 20);
             } else {
-                const jsonUrl =Url.getRes( `/ui/quickchat/${i18n.language}.json`) ;
+                const jsonUrl = Url.getRes(`/ui/quickchat/${i18n.language}.json`);
                 this.scene.load.json("quickchat", jsonUrl);
                 this.scene.load.on(Phaser.Loader.Events.FILE_COMPLETE, this.openAppInputPanel, this);
                 this.scene.load.start();
@@ -429,7 +429,7 @@ export class PicaChatPanel extends BasePanel {
         this.showPanelHandler(ModuleName.PICAHANDHELD_NAME, true);
     }
     private onBuyItemHandler(prop: any, data: any) {// op_def.IOrderCommodities, op_client.CountablePackageItem
-        const alertView = new AlertView(this.uiManager);
+        const alertView = new AlertView(this.scene, this.uiManager);
         const price = data.count * data.sellingPrice.price;
         if (price > 0) {
             alertView.show({

@@ -51,7 +51,7 @@ export class PicaWorkMediator extends BasicMediator {
         return this.mPlayerInfo;
     }
     private query_WORK_LIST() {
-        if (this.mShowData) this.mModel.query_JOB_LIST();
+        if (!this.mShowData) this.mModel.query_JOB_LIST();
     }
 
     private query_WORK_ON_JOB(id: string) {

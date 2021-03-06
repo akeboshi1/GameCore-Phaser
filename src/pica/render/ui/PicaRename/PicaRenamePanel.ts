@@ -94,6 +94,29 @@ export class PicaRenamePanel extends PicaBasePanel {
             this.inputTex.text = val;
         }
     }
+
+    addListen() {
+        this.inputTex.on("blur", this.onTextBlurHandler, this);
+        this.inputTex.on("focus", this.onTextFocusHandler, this);
+    }
+
+    removeListen() {
+        this.inputTex.off("blur", this.onTextBlurHandler, this);
+        this.inputTex.off("focus", this.onTextFocusHandler, this);
+    }
+
+    private onTextBlurHandler() {
+        this.scene.input.off("gameobjectdown", this.onGameobjectDown, this);
+    }
+
+    private onTextFocusHandler() {
+        this.scene.input.on("gameobjectdown", this.onGameobjectDown, this);
+    }
+
+    private onGameobjectDown(pointer: Phaser.Input.Pointer, gameobject: Phaser.GameObjects.GameObject) {
+        if (this.inputTex) this.inputTex.setBlur();
+    }
+
     private onSubmitHandler() {
         this.render.renderEmitter(this.key + "_submit", this.inputTex.text);
     }

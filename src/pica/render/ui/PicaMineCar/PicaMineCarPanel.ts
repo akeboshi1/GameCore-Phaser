@@ -365,7 +365,7 @@ export class PicaMineCarPanel extends BasePanel {
       }
     }
 
-    new AlertView(this.uiManager).show({
+    new AlertView(this.scene, this.uiManager).show({
       text: i18n.t("minecar.confirmation", { name: `${label.join("、")}` }),
       title: i18n.t("minecar.discard"),
       oy: 302 * this.dpr * this.render.uiScale,

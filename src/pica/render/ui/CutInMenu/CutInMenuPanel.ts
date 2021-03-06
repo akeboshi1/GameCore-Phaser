@@ -34,7 +34,7 @@ export class CutInMenuPanel extends BasePanel {
         const posx = width + this.rightPopButton.width * 0.5 - 15 * this.dpr;
         this.rightPopButton.setPosition(posx, height * 0.5 + 20 * this.dpr);
         this.rightPopButton.setClickHandler(new Handler(this, this.onRightClickHandler));
-        this.add(this.rightPopButton);
+        // this.add(this.rightPopButton);
         this.resize(width, height);
         super.init();
         this.opneButton();

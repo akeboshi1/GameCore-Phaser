@@ -46,7 +46,6 @@ import { UiManager } from "./ui";
 import { GuideManager } from "./guide";
 import { MouseManagerDecorate } from "./input/mouse.manager.decorate";
 import { MouseManager } from "./input/mouse.manager";
-import { BlackScene } from "./scenes";
 
 for (const key in protos) {
     PBpacket.addProtocol(protos[key]);
