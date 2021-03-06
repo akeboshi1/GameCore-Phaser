@@ -1,6 +1,6 @@
 import { PBpacket } from "net-socket-packet";
 import { BaseDataConfigManager } from "picaWorker";
-import { op_client, op_virtual_world, op_def, op_gameconfig, op_pkt_def } from "pixelpai_proto";
+import { op_client } from "pixelpai_proto";
 import { EventType, ModuleName, RoomType } from "structure";
 import { EventDispatcher } from "utils";
 import { Game } from "../game";
@@ -67,8 +67,11 @@ export class SceneDataManager extends BasePacketHandler {
     }
     private onUpdateModeRoomInfo(packet: PBpacket) {
         const room: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_EDIT_MODE_ROOM_INFO = packet.content;
-        if (!this.mCurRoom) this.mCurRoom = room;
-        else Object.assign(this.mCurRoom, room);
+        if (!this.mCurRoom) {
+            this.mCurRoom = room;
+        } else {
+            Object.assign(this.mCurRoom, room);
+        }
         this.mEvent.emit(EventType.UPDATE_ROOM_INFO, this.mCurRoom);
         this.mEvent.emit(EventType.UPDATE_PARTY_STATE, this.mCurRoom.openingParty);
         this.showMainUI();
