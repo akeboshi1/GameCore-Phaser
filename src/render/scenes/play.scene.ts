@@ -3,7 +3,6 @@ import { PlayCamera } from "../cameras/play.camera";
 import { BaseLayer, GroundLayer, SurfaceLayer } from "baseRender";
 import { MainUIScene } from "./main.ui.scene";
 import { RoomScene } from "./room.scene";
-import { Size } from "src/utils/size";
 import { PlaySceneLoadState, SceneName } from "structure";
 import {MotionManager} from "../input/motion.manager";
 import { LayerEnum } from "game-capsule";
@@ -59,18 +58,13 @@ export class PlayScene extends RoomScene {
             sceneManager.bringToTop(SceneName.LOADING_SCENE);
         } else {
             this.render.initUI();
-            // this.mRoom.initUI();
         }
         this.scene.sendToBack();
-        this.scale.on("orientationchange", this.checkOriention, this);
-        this.scale.on("resize", this.checkSize, this);
 
         // ======= render startPlay
         this.render.sceneManager.setMainScene(this);
         this.initMotion();
         this.render.camerasManager.startRoomPlay(this);
-
-        // this.onLoadCompleteHandler();
 
         // set layers
         // ==========背景层
@@ -97,11 +91,6 @@ export class PlayScene extends RoomScene {
         this.layerManager.update(time, delta);
         if (this.motion) this.motion.update(time, delta);
     }
-
-    // setViewPort(x: number, y: number, width: number, height: number) {
-    //     super.setViewPort(x, y, width, height);
-    //     this.cameras.main.zoom = Math.ceil(window.devicePixelRatio);
-    // }
 
     getKey(): string {
         return (this.sys.config as Phaser.Types.Scenes.SettingsConfig).key;
@@ -148,7 +137,6 @@ export class PlayScene extends RoomScene {
     protected initListener() {
         this.input.on("pointerdown", this.onPointerDownHandler, this);
         this.input.on("pointerup", this.onPointerUpHandler, this);
-        // this.load.on(Phaser.Loader.Events.COMPLETE, this.onLoadCompleteHandler, this);
     }
 
     protected onPointerDownHandler(pointer: Phaser.Input.Pointer, currentlyOver: Phaser.GameObjects.GameObject[]) {
@@ -187,22 +175,5 @@ export class PlayScene extends RoomScene {
 
     protected onGameOutHandler() {
         this.removePointerMoveHandler();
-    }
-
-    // protected onLoadCompleteHandler() {
-    //     Logger.getInstance().debug("playload complete");
-    //     this.load.off(Phaser.Loader.Events.COMPLETE, this.onLoadCompleteHandler, this);
-    //     this.render.hideLoading();
-    // }
-
-    protected checkOriention(orientation) {
-        if (orientation === Phaser.Scale.PORTRAIT) {
-        } else if (orientation === Phaser.Scale.LANDSCAPE) {
-        }
-    }
-
-    protected checkSize(size: Size) {
-        const width: number = size.width;
-        const height: number = size.height;
     }
 }

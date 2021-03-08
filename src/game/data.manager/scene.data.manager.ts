@@ -9,6 +9,7 @@ import { DataMgrType } from "./dataManager";
 export class SceneDataManager extends BasePacketHandler {
     private mCurRoom: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_EDIT_MODE_ROOM_INFO;
     private isShowMainui: boolean = false;
+    private mRoomID;
     constructor(game: Game, event?: EventDispatcher) {
         super(game, event);
         this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_PKT_PARTY_SEND_GIFT, this.on_SEND_GIFT_DATA);
@@ -72,9 +73,13 @@ export class SceneDataManager extends BasePacketHandler {
         } else {
             Object.assign(this.mCurRoom, room);
         }
+
         this.mEvent.emit(EventType.UPDATE_ROOM_INFO, this.mCurRoom);
         this.mEvent.emit(EventType.UPDATE_PARTY_STATE, this.mCurRoom.openingParty);
-        this.showMainUI();
+        if (this.mRoomID !== room.roomId) {
+            this.showMainUI();
+            this.mRoomID = room.roomId;
+        }
     }
 
     private onShowBlingPanel(packet: PBpacket) {

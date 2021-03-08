@@ -205,12 +205,12 @@ export class BottomPanel extends PicaBasePanel {
         this.background.clear();
         this.background.fillStyle(0, 0);
         this.background.fillRect(0, this.mOutput.y, width, height);
-        const hitArea = new Phaser.Geom.Rectangle(0, this.mOutput.y, width, height);
-        if (this.background.input) {
-            this.background.input.hitArea = hitArea;
-        } else {
-            this.background.setInteractive(hitArea, Phaser.Geom.Rectangle.Contains);
-        }
+        // const hitArea = new Phaser.Geom.Rectangle(0, this.mOutput.y, width, height);
+        // if (this.background.input) {
+        //     this.background.input.hitArea = hitArea;
+        // } else {
+        //     this.background.setInteractive(hitArea, Phaser.Geom.Rectangle.Contains);
+        // }
     }
 
     // private onFocusHandler() {
