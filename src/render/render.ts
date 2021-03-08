@@ -1032,12 +1032,12 @@ export class Render extends RPCPeer implements GameMain, IRender {
     }
 
     @Export([webworker_rpc.ParamType.str, webworker_rpc.ParamType.str])
-    public createAnotherGame(gameId: string, worldId: string, sceneId?: number, px?: number, py?: number, pz?: number, spawnPointId?) {
+    public createAnotherGame(gameId: string, virtualWorldId: string, sceneId?: number, px?: number, py?: number, pz?: number, spawnPointId?, worldId?: string) {
         // this.newGame().then(() => {
         //     // todo sceneManager loginScene.name
         // });
         Logger.getInstance().debug("gotoanothergame ====>");
-        this.account.enterGame(gameId, worldId, sceneId, { x: px, y: py, z: pz }, spawnPointId);
+        this.account.enterGame(gameId, virtualWorldId, sceneId, { x: px, y: py, z: pz }, spawnPointId, worldId);
     }
 
     @Export([webworker_rpc.ParamType.num, webworker_rpc.ParamType.num, webworker_rpc.ParamType.num, webworker_rpc.ParamType.num])
@@ -1559,7 +1559,7 @@ export class Render extends RPCPeer implements GameMain, IRender {
 
     private initConfig() {
         if (!this.mConfig.devicePixelRatio) {
-            this.mConfig.devicePixelRatio = window.devicePixelRatio || 1;
+            this.mConfig.devicePixelRatio = window.devicePixelRatio || 2;
         }
         if (this.mConfig.width === undefined) {
             this.mConfig.width = window.innerWidth;
@@ -1567,9 +1567,9 @@ export class Render extends RPCPeer implements GameMain, IRender {
         if (this.mConfig.height === undefined) {
             this.mConfig.height = window.innerHeight;
         }
-        this.mScaleRatio = Math.ceil(this.mConfig.devicePixelRatio || 1);
+        this.mScaleRatio = Math.ceil(this.mConfig.devicePixelRatio || 2);
         this.mConfig.scale_ratio = this.mScaleRatio;
-        this.mUIRatio = Math.round(this.mConfig.devicePixelRatio || 1);
+        this.mUIRatio = Math.round(this.mConfig.devicePixelRatio || 2);
         this.mUIScale = (this.mConfig.width / this.DEFAULT_WIDTH) * (this.mConfig.devicePixelRatio / this.mUIRatio);
         Url.OSD_PATH = this.mConfig.osd;
         Url.RES_PATH = `./resources_v${version}/`;

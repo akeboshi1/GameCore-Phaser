@@ -14,6 +14,7 @@ export class Account {
     public loc: IPos;
     public spawnPointId: number;
     public accountData: IAccountData;
+    public worldId: string;
     constructor() {
         // TODO
         // 1. 登陆注册的逻辑在这里做
@@ -77,12 +78,13 @@ export class Account {
         this.enterGame(undefined, undefined, undefined, undefined, undefined);
     }
 
-    public enterGame(gameId: string, virtualWorldId: string, sceneId: number, loc: any, spawnPointId) {
+    public enterGame(gameId: string, virtualWorldId: string, sceneId: number, loc: any, spawnPointId, worldId?: string) {
         this.gameId = gameId;
         this.virtualWorldId = virtualWorldId;
         this.sceneID = sceneId;
         this.loc = loc;
         this.spawnPointId = spawnPointId;
+        this.worldId = worldId;
     }
 
     get gameID(): string {

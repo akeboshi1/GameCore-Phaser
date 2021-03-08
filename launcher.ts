@@ -55,6 +55,7 @@ export class Launcher {
         server_addr: undefined, // 不指定会使用CONFIG.gateway,请去 ./config/目录下修改配置文件
         game_id: undefined,
         virtual_world_id: undefined,
+        world_id: undefined,
         // 16:9 = 3840×2160 2560X1440 1920×1080 1600×900 1366×768 1280×720 1024×576 960×540 854×480 720×405
         width: this.minWidth,
         height: this.minHeight,
