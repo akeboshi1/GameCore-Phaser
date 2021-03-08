@@ -214,7 +214,7 @@ export class PicaMarketPanel extends BasePanel {
 
     this.mShelfBackground = this.scene.make.graphics(undefined, false);
     this.mCloseBtn = new Button(this.scene, UIAtlasName.uicommon, "back_arrow", "back_arrow");
-    this.mCloseBtn.setPosition(21 * this.dpr, 35 * this.dpr);
+    this.mCloseBtn.setPosition(21 * this.dpr, 45 * this.dpr);
     this.mCloseBtn.setInteractive(new Phaser.Geom.Rectangle(-28 * this.dpr, -20 * this.dpr, 56 * this.dpr, 40 * this.dpr), Phaser.Geom.Rectangle.Contains);
     this.mCloseBtn.on(ClickEvent.Tap, this.onCloseHandler, this);
 
@@ -235,7 +235,7 @@ export class PicaMarketPanel extends BasePanel {
         fontFamily: Font.DEFULT_FONT
       }
     }).setOrigin(0.5);
-
+    this.mTIle.y = this.mCloseBtn.y - 5 * this.dpr;
     this.add([this.mTIle, this.mSelectItem, this.mCloseBtn]);
     super.init();
 

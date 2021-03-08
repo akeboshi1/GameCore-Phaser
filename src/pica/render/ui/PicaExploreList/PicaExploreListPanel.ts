@@ -38,7 +38,7 @@ export class PicaExploreListPanel extends PicaBasePanel {
         this.midbg.y = this.topbg.y + this.midbg.height * 0.5;
         this.midbg.x = this.topbg.x;
         this.mBackBtn.x = this.mBackBtn.width * 0.5 + 8 * this.dpr;
-        this.mBackBtn.y = this.mBackBtn.height * 0.5 + 12 * this.dpr;
+        this.mBackBtn.y = this.mBackBtn.height * 0.5 + 22 * this.dpr;
         this.energyProgress.x = w - this.energyProgress.width * 0.5 - 17 * this.dpr;
         this.energyProgress.y = this.mBackBtn.y;
         const topHeight = 63 * this.dpr;

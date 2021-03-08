@@ -110,7 +110,7 @@ export class PicaOnlinePanel extends PicaBasePanel {
         this.titleTex = this.scene.make.text({ x: 0, y: 0, text: i18n.t("online.title"), style: UIHelper.whiteStyle(this.dpr, 18) }).setOrigin(0, 0.5);
         this.titleTex.setFontStyle("bold");
         this.titleTex.x = -this.content.width * 0.5 + 10 * this.dpr;
-        this.titleTex.y = -this.content.height * 0.5 + 20 * this.dpr;
+        this.titleTex.y = -this.content.height * 0.5 + 35 * this.dpr;
         this.peopleImg = new ImageValue(this.scene, 50 * this.dpr, 20 * this.dpr, UIAtlasName.uicommon, "online_people", this.dpr);
         this.peopleImg.setOffset(-this.dpr, 0);
         this.peopleImg.setTextStyle(UIHelper.whiteStyle(this.dpr, 14));

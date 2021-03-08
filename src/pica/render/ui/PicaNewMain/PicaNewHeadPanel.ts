@@ -99,7 +99,7 @@ export class PicaNewHeadPanel extends Phaser.GameObjects.Container {
         this.moneyAddBtn.on(ClickEvent.Tap, this.onRechargeHandler, this);
         this.moneyCon.add([moneybg, moneyline, this.moneyvalue, this.diamondvalue, this.moneyAddBtn]);
         this.moneyCon.x = this.width * 0.5 - 10 * this.dpr;
-        this.moneyCon.y = -5 * this.dpr;
+        this.moneyCon.y = -15 * this.dpr;
 
         const peoplebg = this.scene.make.image({ x: 0, y: 0, key: UIAtlasName.uicommon, frame: "home_persons_bg" }, false);
         peoplebg.x = -peoplebg.width * 0.5;
@@ -139,7 +139,7 @@ export class PicaNewHeadPanel extends Phaser.GameObjects.Container {
         sceneclickCon.x = praisebg.x;
         this.sceneCon.add([peoplebg, this.peoplevalue, peopeclickCon, praisebg, this.sceneTex, sceneclickCon, this.praiseButton]);
         this.sceneCon.x = this.width * 0.5 - 10 * this.dpr;
-        this.sceneCon.y = -5 * this.dpr;
+        this.sceneCon.y = -15 * this.dpr;
     }
 
     public setHeadData(level: op_pkt_def.IPKT_Property, energy: op_pkt_def.IPKT_Property, money: number, diamond: number) {
