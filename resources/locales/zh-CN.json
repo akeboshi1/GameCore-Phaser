@@ -263,6 +263,10 @@
     "energy_tips": "当前精力值{{name}}精力不满时，每5分钟恢复1点",
     "party": "派对"
   },
+  "noticeTips": {
+    "staytuned":"敬请期待",
+    "quickclick":"点击太快,请稍等!"
+  },
   "order": {
     "title": "订单",
     "send": "送货",
