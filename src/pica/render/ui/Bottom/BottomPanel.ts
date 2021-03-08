@@ -14,6 +14,7 @@ export class BottomPanel extends PicaBasePanel {
     private chatCatchArr: string[] = [];
     private chatMaxLen: number = 100;
     private expanded: boolean;
+    private background: Phaser.GameObjects.Graphics;
     constructor(uiManager: UiManager) {
         super(uiManager);
         this.atlasNames = [UIAtlasName.uicommon, UIAtlasName.iconcommon];
@@ -110,8 +111,9 @@ export class BottomPanel extends PicaBasePanel {
         this.mInput = new InputContainer(this.scene, this.key, this.dpr);
         this.mNavigate = new PicaNewNavigatePanel(this.scene, this.key, this.dpr);
         this.mNavigate.setHandler(new Handler(this, this.onNavigateHandler));
+        this.background = this.scene.make.graphics(undefined);
         this.resizeColtroll = new ResizeControll(this.scene, this.key, this.dpr);
-        this.add([this.mOutput, this.mInput, this.mNavigate, this.resizeColtroll]);
+        this.add([this.background, this.mOutput, this.mInput, this.mNavigate, this.resizeColtroll]);
         this.resize(this.width, this.mOutput.height + this.mInput.height + this.mNavigate.height);
         super.init();
         this.onToggleSizeHandler(false);
@@ -198,6 +200,17 @@ export class BottomPanel extends PicaBasePanel {
             this.mOutput.collapse();
         }
         this.mOutput.updateLayout();
+        const width = this.scene.cameras.main.width;
+        const height = this.mOutput.y * -1;
+        this.background.clear();
+        this.background.fillStyle(0, 0);
+        this.background.fillRect(0, this.mOutput.y, width, height);
+        const hitArea = new Phaser.Geom.Rectangle(0, this.mOutput.y, width, height);
+        if (this.background.input) {
+            this.background.input.hitArea = hitArea;
+        } else {
+            this.background.setInteractive(hitArea, Phaser.Geom.Rectangle.Contains);
+        }
     }
 
     // private onFocusHandler() {
@@ -338,8 +351,8 @@ class InputContainer extends Phaser.GameObjects.Container {
         this.background.clear();
         this.background.fillStyle(0x000000, 0.6);
         this.background.fillRect(0, 0, w, this.height);
-        this.background.input = undefined;
-        this.background.setInteractive(new Phaser.Geom.Rectangle(0, 0, w / this.scale, this.height / this.scale), Phaser.Geom.Rectangle.Contains);
+        // this.background.input = undefined;
+        // this.background.setInteractive(new Phaser.Geom.Rectangle(0, 0, w / this.scale, this.height / this.scale), Phaser.Geom.Rectangle.Contains);
         // this.inputText.resize(w - 46 * this.dpr, this.height);
     }
 
