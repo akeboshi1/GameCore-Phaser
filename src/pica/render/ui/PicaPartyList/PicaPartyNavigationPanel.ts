@@ -321,9 +321,9 @@ class SignProgressPanel extends Phaser.GameObjects.Container {
 
     public setProgressDatas(content: any) {// op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_QUERY_PLAYER_PROGRESS
         const len = content.steps.length;
-        let maxvalue = 100;
+        const maxvalue = 100, intervalue = maxvalue / (len - 1);
         const width = this.progress.width;
-        let nextValue = 0;
+        let nextValue = 0, progress = 0, beforevalue = 0;
         for (let i = 0; i < len; i++) {
             const data = content.steps[i];
             let item: SignProgressItem;
@@ -338,16 +338,19 @@ class SignProgressPanel extends Phaser.GameObjects.Container {
             item.x = -width * 0.5 + (len > 1 ? width * (i) / (len - 1) : width * 0.5);
             item.y = 15 * this.dpr;
             item.setItemData(data, i, content.currentProgressValue);
-            maxvalue = data.targetValue;
-            if (data.targetValue > content.currentProgressValue && nextValue === 0) {
-                nextValue = data.targetValue;
+            if (data.targetValue <= content.currentProgressValue) {
+                if (i > 0) progress += intervalue;
+            } else {
+                if (nextValue === 0) {
+                    progress += intervalue * (content.currentProgressValue - beforevalue) / (data.targetValue - beforevalue);
+                    nextValue = data.targetValue;
+                }
             }
-            // Logger.getInstance().log("current: ", content.currentProgressValue, "maxvalue: ", maxvalue);
+            beforevalue = data.targetValue;
         }
-        this.progress.setProgress(content.currentProgressValue, maxvalue);
+        this.progress.setProgress(progress, maxvalue);
 
-        this.initCountDown(nextValue - content.currentProgressValue, maxvalue === nextValue);
-        // this.initCountDown(100, maxvalue === nextValue);
+        this.initCountDown(nextValue - content.currentProgressValue, beforevalue === nextValue);
     }
 
     public setHandler(handler: Handler) {

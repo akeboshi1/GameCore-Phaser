@@ -1,6 +1,7 @@
 import { Game } from "gamecore";
 import { load, loadArr, Logger, Url } from "utils";
 import { BaseConfigData } from "./base.config.data";
+import { base_path, config_path } from "./config";
 export class BaseConfigManager {
     protected baseDirname: string;
     protected dataMap: Map<string, BaseConfigData> = new Map();
@@ -163,12 +164,11 @@ export class BaseConfigManager {
     }
     protected getBasePath() {
         return new Promise((resolve, reject) => {
-            const url = "https://cdn.tooqing.com/game/resource/alpha/5e719a0a68196e416ecf7aad/.config.json";
-            const cdnurl = "https://cdn.tooqing.com/game/resource/alpha/5e719a0a68196e416ecf7aad/";
+            const url = config_path;
             load(url, "json").then((value: XMLHttpRequest) => {
                 const json = value.response;
                 const version = json.version;
-                const baseUrl = cdnurl + version + "/";
+                const baseUrl = base_path + version + "/";
                 resolve(baseUrl);
             }, (reponse) => {
                 Logger.getInstance().error("版本配置加载失败URL: ", url);

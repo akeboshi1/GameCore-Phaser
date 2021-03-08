@@ -122,12 +122,12 @@ export class PicaPartyListPanel extends BasePanel {
         if (this.navigationBtn === btn) {
             this.openPartyNavigationPanel();
             this.hideRoomNavigationPanel();
-            this.render.renderEmitter(RENDER_PEER + "_" + this.key + "_querylist");
-            this.render.renderEmitter(RENDER_PEER + "_" + this.key + "_questprogress");
+            this.render.renderEmitter(this.key + "_querylist");
+            this.render.renderEmitter(this.key + "_questprogress");
         } else if (this.mineBtn === btn) {
             this.openRoomNavigationPanel();
             this.hidePartyNavigationPanel();
-            this.render.renderEmitter(RENDER_PEER + "_" + this.key + "_getMyRoomList");
+            this.render.renderEmitter(this.key + "_getMyRoomList");
         } else if (this.searchBtn === btn) {
 
         }
@@ -173,19 +173,19 @@ export class PicaPartyListPanel extends BasePanel {
         return btn;
     }
     private onCloseHandler() {
-        this.render.renderEmitter(RENDER_PEER + "_" + this.key + "_close");
+        this.render.renderEmitter(this.key + "_close");
     }
     private onPartyListHandler(tag: string, data: any) {// op_client.IEditModeRoom
         if (tag === "hotel" || tag === "pictown" || tag === "partylist") {
-            this.render.renderEmitter(RENDER_PEER + "_" + this.key + "_queryenter", data.roomId);
+            this.render.renderEmitter(this.key + "_queryenter", data.roomId);
         } else if (tag === "progress") {
 
         }
     }
     private onProgressRewardHandler(index: number) {
-        this.render.renderEmitter(RENDER_PEER + "_" + this.key + "_questreward", index);
+        this.render.renderEmitter(this.key + "_questreward", index);
     }
     private onEnterRoomHandler(roomID: string) {
-        this.render.renderEmitter(RENDER_PEER + "_" + this.key + "_queryenter", roomID);
+        this.render.renderEmitter(this.key + "_queryenter", roomID);
     }
 }

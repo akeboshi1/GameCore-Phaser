@@ -746,7 +746,8 @@ class OrderProgressPanel extends Phaser.GameObjects.Container {
 
     public setProgressDatas(content: any) {// op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_QUERY_PLAYER_PROGRESS
         const len = content.steps.length;
-        let maxvalue = 100;
+        const maxvalue = 100, interval = maxvalue / len;
+        let beforevalue = 0, progress = 0, lastunfinish = false;
         for (let i = 0; i < len; i++) {
             const data = content.steps[i];
             let item: OrderProgressItem;
@@ -761,9 +762,17 @@ class OrderProgressPanel extends Phaser.GameObjects.Container {
             item.x = -this.width * 0.5 + this.width * (i + 1) / len - 16 * this.dpr;
             item.y = 15 * this.dpr;
             item.setItemData(data, i, content.currentProgressValue);
-            maxvalue = data.targetValue;
+            if (content.currentProgressValue >= data.targetValue) {
+                progress += interval;
+            } else {
+                if (!lastunfinish) {
+                    progress += interval * (content.currentProgressValue - beforevalue) / (data.targetValue - beforevalue);
+                    lastunfinish = true;
+                }
+            }
+            beforevalue = data.targetValue;
         }
-        this.progress.setProgress(content.currentProgressValue, maxvalue);
+        this.progress.setProgress(progress, maxvalue);
     }
 
     public setHandler(handler: Handler) {
