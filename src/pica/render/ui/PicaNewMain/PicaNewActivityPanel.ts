@@ -2,7 +2,7 @@ import { Button, ClickEvent } from "apowophaserui";
 import { Render } from "gamecoreRender";
 import { UIAtlasName } from "picaRes";
 import { ModuleName } from "structure";
-import { Handler } from "utils";
+import { Handler, i18n } from "utils";
 
 export class PicaNewActivityPanel extends Phaser.GameObjects.Container {
     private dpr: number;
@@ -88,7 +88,7 @@ export class PicaNewActivityPanel extends Phaser.GameObjects.Container {
 
     private onEmailHandler() {
         const tempdata = {
-            text: [{ text: "敬请期待", node: undefined }]
+            text: [{ text: i18n.t("noticeTips.staytuned"), node: undefined }]
         };
         this.render.mainPeer.showMediator(ModuleName.PICANOTICE_NAME, true, tempdata);
         return;
