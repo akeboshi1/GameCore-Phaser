@@ -1,6 +1,6 @@
 import { Button, BBCodeText, ClickEvent } from "apowophaserui";
 import { ModuleName } from "structure";
-import { Font, i18n } from "utils";
+import { Font, i18n, UiUtils } from "utils";
 import { MainUIScene } from "../../scenes/main.ui.scene";
 import { BaseBatchPanel } from "./base.batch.panel";
 import { UiManager } from "../ui.manager";
@@ -64,7 +64,7 @@ export class AlertView extends BaseBatchPanel {
     }
 
     protected init() {
-        const zoom = this.mWorld.uiScale || 1;
+        const zoom = this.mWorld.uiScale || UiUtils.baseScale;
         this.mBackGround = this.scene.make.graphics(undefined, false);
         this.add(this.mBackGround);
         const bg = this.scene.make.image({

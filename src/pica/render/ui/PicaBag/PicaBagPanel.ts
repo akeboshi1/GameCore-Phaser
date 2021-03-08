@@ -104,7 +104,7 @@ export class PicaBagPanel extends PicaBasePanel {
     const allCategory = { value: i18n.t("common.all"), key: "alltype" };
     subcategorys.unshift(allCategory);
     for (let i = 0; i < subcategorys.length; i++) {
-      const item = new TextButton(this.scene, this.dpr, 1, subcategorys[i].value, 0, 0);
+      const item = new TextButton(this.scene, this.render, this.dpr, 1, subcategorys[i].value, 0, 0);
       item.setData("item", subcategorys[i]);
       item.setSize(capW, capH);
       this.mCategoryScroll.addItem(item);

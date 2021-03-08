@@ -30,7 +30,7 @@ export class PicaChatInputPanel extends Phaser.Events.EventEmitter {
         super();
         this.key = key;
         this.render = render;
-        this.dpr = window.devicePixelRatio;
+        this.dpr = this.render.devicePixelRatio;
         this.scene = scene;
         this.chatArr = chatArr;
         const width = scene.cameras.main.width;

@@ -108,7 +108,7 @@ export class DragonbonesDisplay extends BaseDragonbonesDisplay implements IDispl
             this.mReferenceArea = new ReferenceArea(this.scene);
         }
         const roomSize = await this.render.mainPeer.getCurrentRoomSize();
-        this.mReferenceArea.draw(area, origin, roomSize.tileWidth, roomSize.tileHeight);
+        this.mReferenceArea.draw(area, origin, roomSize.tileWidth / this.render.scaleRatio, roomSize.tileHeight / this.render.scaleRatio);
         this.addAt(this.mReferenceArea, 0);
     }
 

@@ -1,7 +1,7 @@
 import { SecondaryMenuPanel } from "./SecondaryMenuPanel";
 import { GameGridTable, TabButton, Button, ClickEvent, NineSliceButton, NineSlicePatch } from "apowophaserui";
 import { Font, Handler, i18n } from "utils";
-import { DynamicImage, TextButton, TweenCompent } from "gamecoreRender";
+import { DynamicImage, Render, TextButton, TweenCompent } from "gamecoreRender";
 import { UIAtlasKey } from "picaRes";
 
 export class PicaBusinessStreetListPanel extends Phaser.GameObjects.Container {
@@ -19,7 +19,7 @@ export class PicaBusinessStreetListPanel extends Phaser.GameObjects.Container {
     private curCategoryType: CategoryType = CategoryType.popularity;
     private subCategory: string;
     private curSubCategoryItem: any;
-    constructor(scene: Phaser.Scene, x: number, y: number, width: number, height: number, dpr: number, zoom: number, key: string, key2: string) {
+    constructor(scene: Phaser.Scene, private render: Render, x: number, y: number, width: number, height: number, dpr: number, zoom: number, key: string, key2: string) {
         super(scene, x, y);
         this.dpr = dpr;
         this.key = key;
@@ -105,7 +105,7 @@ export class PicaBusinessStreetListPanel extends Phaser.GameObjects.Container {
         this.secondaryPanel.createGrideTable(0, 13 * this.dpr, this.width - 30 * this.dpr, 40 * this.dpr, 65 * this.dpr, 40 * this.dpr, (cell, cellContainer) => {
             const item = cell.item;
             if (!cellContainer) {
-                cellContainer = new TextButton(this.scene, this.dpr, this.zoom);
+                cellContainer = new TextButton(this.scene, this.render, this.dpr, this.zoom);
                 cellContainer.setFontSize(13 * this.dpr);
             }
             const itemData = cellContainer.getData("itemData");

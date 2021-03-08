@@ -1,4 +1,5 @@
 import { BaseUI } from "apowophaserui";
+import { UiUtils } from "utils";
 
 export class ThreeSlicePath extends BaseUI {
     protected imgs: Phaser.GameObjects.Image[];
@@ -12,8 +13,8 @@ export class ThreeSlicePath extends BaseUI {
         height: number,
         key: string, frame: string[], dpr?: number, scale?: number, correct?: number) {
         super(scene, dpr, scale);
-        this.dpr = dpr || 1;
-        this.scale = scale || 1;
+        this.dpr = dpr || UiUtils.baseDpr;
+        this.scale = scale || UiUtils.baseScale;
         this.mCorrection = correct === undefined ? 4 : correct;
         this.imgs = [];
         this.setTexture(key, frame);

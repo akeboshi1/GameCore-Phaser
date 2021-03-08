@@ -21,6 +21,8 @@ export interface ILauncherConfig {
     keyboardHeight: number;
     width: number;
     height: number;
+    baseWidth: number;
+    baseHeight: number;
     locationhref?: string;
     hasConnectFail?: boolean;
     hasCloseGame?: boolean;
@@ -35,8 +37,6 @@ export interface ILauncherConfig {
     reload?: Function;
     readonly screenWidth: number;
     readonly screenHeight: number;
-    readonly baseWidth: number;
-    readonly baseHeight: number;
     readonly connection?: any;
     readonly parent?: string;
 }

@@ -87,6 +87,8 @@ export class Launcher {
         }
         if (config) {
             Object.assign(this.mConfig, config);
+            this.mConfig.baseWidth = this.mConfig.width;
+            this.mConfig.baseHeight = this.mConfig.height;
         }
 
         this.intervalId = setInterval(() => {

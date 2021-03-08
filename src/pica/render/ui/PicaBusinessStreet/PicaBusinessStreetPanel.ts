@@ -277,7 +277,7 @@ export class PicaBusinessStreetPanel extends BasePanel {
         if (!this.picStreetListPanel) {
             const wid = this.content.width;
             const hei = this.content.height - 50 * this.dpr;
-            this.picStreetListPanel = new PicaBusinessStreetListPanel(this.scene, 0, 0, wid, hei, this.dpr, this.scale, this.key, this.key2);
+            this.picStreetListPanel = new PicaBusinessStreetListPanel(this.scene, this.render, 0, 0, wid, hei, this.dpr, this.scale, this.key, this.key2);
             this.picStreetListPanel.setHandler(new Handler(this, () => {
                 this.openStreetHistoryPanel();
                 this.hideStreetListPanel();

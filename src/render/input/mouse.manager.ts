@@ -2,7 +2,7 @@ import { Render } from "../render";
 import { FramesDisplay } from "../display/frames/frames.display";
 import { MessageType } from "structure";
 import { NodeType } from "../managers/display.manager";
-import { Logger } from "utils";
+import { Logger, UiUtils } from "utils";
 
 export enum MouseEvent {
     RightMouseDown = 1,
@@ -28,7 +28,7 @@ export class MouseManager {
     private debounce: any;
     private mClickID: number;
     constructor(protected render: Render) {
-        this.zoom = this.render.scaleRatio || 1;
+        this.zoom = this.render.scaleRatio || UiUtils.baseDpr;
     }
 
     get clickID(): number {
@@ -47,7 +47,7 @@ export class MouseManager {
     }
 
     public resize(width: number, height: number) {
-        this.zoom = this.render.scaleRatio || 1;
+        this.zoom = this.render.scaleRatio || UiUtils.baseDpr;
     }
 
     public pause(): void {

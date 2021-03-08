@@ -81,7 +81,7 @@ export class PicaAvatarPanel extends PicaBasePanel {
     allCategory.key = "alltype";
     subcategorys.unshift(allCategory);
     for (let i = 0; i < subcategorys.length; i++) {
-      const item = new TextButton(this.scene, this.dpr, 1, subcategorys[i].value, 0, 0);
+      const item = new TextButton(this.scene, this.render, this.dpr, 1, subcategorys[i].value, 0, 0);
       item.x = i * capW;
       item.y = capH - item.text.height - 20 * this.dpr;
       item.setData("item", subcategorys[i]);

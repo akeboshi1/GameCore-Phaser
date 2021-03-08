@@ -52,12 +52,13 @@ export class CreateRolePanel extends BasePanel {
   }
 
   resize(wid: number, hei: number) {
+    super.resize(wid, hei);
     if (!this.mBackground) {
       return;
     }
     const scale = this.scale;
-    const width = this.scene.cameras.main.width / scale;
-    const height = this.scene.cameras.main.height / scale;
+    const width = wid / scale;
+    const height = hei / scale;
     const centerX = this.scene.cameras.main.centerX / scale;
     // this.setScale(scale);
 
