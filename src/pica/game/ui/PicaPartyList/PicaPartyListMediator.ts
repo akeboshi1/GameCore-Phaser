@@ -11,42 +11,42 @@ export class PicaPartyListMediator extends BasicMediator {
 
         if (!this.mModel) {
             this.mModel = new PicaPartyList(game);
-            this.game.emitter.on("questlist", this.on_PARTY_LIST, this);
-            this.game.emitter.on("progresslist", this.on_PLAYER_PROGRESS, this);
-            this.game.emitter.on("myRoomList", this.onMyRoomListHandler, this);
-            this.game.emitter.on("roomList", this.onRoomListHandler, this);
-            this.game.emitter.on("enterRoomResult", this.onEnterRoomResultHandler, this);
+            this.game.emitter.on(this.key + "_questlist", this.on_PARTY_LIST, this);
+            this.game.emitter.on(this.key + "_progresslist", this.on_PLAYER_PROGRESS, this);
+            this.game.emitter.on(this.key + "_myRoomList", this.onMyRoomListHandler, this);
+            this.game.emitter.on(this.key + "_roomList", this.onRoomListHandler, this);
+            this.game.emitter.on(this.key + "_enterRoomResult", this.onEnterRoomResultHandler, this);
         }
     }
 
     show(param?: any) {
         super.show(param);
-        this.game.emitter.on(RENDER_PEER + "_" + this.key + "_close", this.onCloseHandler, this);
-        this.game.emitter.on(RENDER_PEER + "_" + this.key + "_querylist", this.query_PARTY_LIST, this);
-        this.game.emitter.on(RENDER_PEER + "_" + this.key + "_queryenter", this.queryEnterRoom, this);
-        this.game.emitter.on(RENDER_PEER + "_" + this.key + "_questprogress", this.query_PLAYER_PROGRESS, this);
-        this.game.emitter.on(RENDER_PEER + "_" + this.key + "_questreward", this.query_PLAYER_PROGRESS_REWARD, this);
-        this.game.emitter.on(RENDER_PEER + "_" + this.key + "_getRoomList", this.query_GET_ROOM_LIST, this);
-        this.game.emitter.on(RENDER_PEER + "_" + this.key + "_getMyRoomList", this.query_ROOM_HISTORY, this);
+        this.game.emitter.on(this.key + "_close", this.onCloseHandler, this);
+        this.game.emitter.on(this.key + "_querylist", this.query_PARTY_LIST, this);
+        this.game.emitter.on(this.key + "_queryenter", this.queryEnterRoom, this);
+        this.game.emitter.on(this.key + "_questprogress", this.query_PLAYER_PROGRESS, this);
+        this.game.emitter.on(this.key + "_questreward", this.query_PLAYER_PROGRESS_REWARD, this);
+        this.game.emitter.on(this.key + "_getRoomList", this.query_GET_ROOM_LIST, this);
+        this.game.emitter.on(this.key + "_getMyRoomList", this.query_ROOM_HISTORY, this);
     }
 
     hide() {
-        this.game.emitter.off(RENDER_PEER + "_" + this.key + "_close", this.onCloseHandler, this);
-        this.game.emitter.off(RENDER_PEER + "_" + this.key + "_querylist", this.query_PARTY_LIST, this);
-        this.game.emitter.off(RENDER_PEER + "_" + this.key + "_queryenter", this.queryEnterRoom, this);
-        this.game.emitter.off(RENDER_PEER + "_" + this.key + "_questprogress", this.query_PLAYER_PROGRESS, this);
-        this.game.emitter.off(RENDER_PEER + "_" + this.key + "_questreward", this.query_PLAYER_PROGRESS_REWARD, this);
-        this.game.emitter.off(RENDER_PEER + "_" + this.key + "_getRoomList", this.query_GET_ROOM_LIST, this);
-        this.game.emitter.off(RENDER_PEER + "_" + this.key + "_getMyRoomList", this.query_ROOM_HISTORY, this);
+        this.game.emitter.off(this.key + "_close", this.onCloseHandler, this);
+        this.game.emitter.off(this.key + "_querylist", this.query_PARTY_LIST, this);
+        this.game.emitter.off(this.key + "_queryenter", this.queryEnterRoom, this);
+        this.game.emitter.off(this.key + "_questprogress", this.query_PLAYER_PROGRESS, this);
+        this.game.emitter.off(this.key + "_questreward", this.query_PLAYER_PROGRESS_REWARD, this);
+        this.game.emitter.off(this.key + "_getRoomList", this.query_GET_ROOM_LIST, this);
+        this.game.emitter.off(this.key + "_getMyRoomList", this.query_ROOM_HISTORY, this);
         super.hide();
     }
 
     destroy() {
-        this.game.emitter.off("questlist", this.on_PARTY_LIST, this);
-        this.game.emitter.off("progresslist", this.on_PLAYER_PROGRESS, this);
-        this.game.emitter.off("myRoomList", this.onMyRoomListHandler, this);
-        this.game.emitter.off("roomList", this.onRoomListHandler, this);
-        this.game.emitter.off("enterRoomResult", this.onEnterRoomResultHandler, this);
+        this.game.emitter.off(this.key + "_questlist", this.on_PARTY_LIST, this);
+        this.game.emitter.off(this.key + "_progresslist", this.on_PLAYER_PROGRESS, this);
+        this.game.emitter.off(this.key + "_myRoomList", this.onMyRoomListHandler, this);
+        this.game.emitter.off(this.key + "_roomList", this.onRoomListHandler, this);
+        this.game.emitter.off(this.key + "_enterRoomResult", this.onEnterRoomResultHandler, this);
         super.destroy();
     }
 
