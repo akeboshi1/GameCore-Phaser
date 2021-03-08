@@ -1,4 +1,5 @@
 import { ButtonState, ClickEvent, ISoundGroup } from "apowophaserui";
+import { UiUtils } from "utils";
 import { ButtonEventDispatcher } from "./button.event.dispatch";
 
 export class BackgroundScaleButton extends ButtonEventDispatcher {
@@ -12,9 +13,9 @@ export class BackgroundScaleButton extends ButtonEventDispatcher {
     private zoom: number;
     constructor(scene: Phaser.Scene, width: number, height: number, key: string, frame: string, downFrame: string, text?: string, dpr?: number, scale?: number, tweenBoo?: boolean, music?: ISoundGroup) {
         super(scene, 0, 0);
-        this.dpr = dpr || 1;
+        this.dpr = dpr || UiUtils.baseDpr;
         // this.scale = scale || 1;
-        this.zoom = scale || 1;
+        this.zoom = scale || UiUtils.baseScale;
         this.soundGroup = {
             up: {
                 key: "click",

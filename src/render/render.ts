@@ -1,14 +1,13 @@
 import "tooqinggamephaser";
 import "dragonBones";
-import { Game, Scene } from "tooqinggamephaser";
+import { Game } from "tooqinggamephaser";
 import { Export, RPCPeer, webworker_rpc } from "webworker-rpc";
-import { i18n, initLocales, IPos, IPosition45Obj, Logger, Pos, Size, Url } from "utils";
+import { i18n, initLocales, IPos, IPosition45Obj, Logger, Pos, Size, UiUtils, Url } from "utils";
 import { PBpacket } from "net-socket-packet";
 import * as protos from "pixelpai_proto";
 import { op_client } from "pixelpai_proto";
 import { Account } from "./account/account";
 import { SceneManager } from "./scenes/scene.manager";
-import { LoginScene } from "./scenes/login.scene";
 import { LocalStorageManager } from "./managers/local.storage.manager";
 import { PlayScene } from "./scenes/play.scene";
 import { CamerasManager } from "./cameras/cameras.manager";
@@ -32,8 +31,6 @@ import {
 } from "structure";
 import { DisplayManager } from "./managers/display.manager";
 import { InputManager } from "./input/input.manager";
-// import { PicaGuideManager, PicaRenderUiManager } from "picaRender";// TODO: 分离pica模块时，删除该引用
-import { GamePauseScene } from "./scenes/game.pause.scene";
 import { MainUIScene } from "./scenes/main.ui.scene";
 import { EditorCanvasManager } from "./managers/editor.canvas.manager";
 import version from "../../version";
@@ -55,6 +52,11 @@ enum MoveStyle {
     DIRECTION_MOVE_STYLE = 1,
     FOLLOW_MOUSE_MOVE_STYLE = 2,
     PATH_MOVE_STYLE = 3
+}
+
+export interface GlobalGameConfig {
+    Orientation: number;
+    PlatForm: number;
 }
 
 export class Render extends RPCPeer implements GameMain, IRender {
@@ -141,7 +143,7 @@ export class Render extends RPCPeer implements GameMain, IRender {
         });
         this.linkTo(PHYSICAL_WORKER, PHYSICAL_WORKER_URL).onceReady(() => {
             this.mPhysicalPeer = this.remote[PHYSICAL_WORKER].PhysicalPeer;
-            this.mPhysicalPeer.setScaleRatio(Math.ceil(this.mConfig.devicePixelRatio || 1));
+            this.mPhysicalPeer.setScaleRatio(Math.ceil(this.mConfig.devicePixelRatio || UiUtils.baseDpr));
             this.mPhysicalPeer.start();
             Logger.getInstance().debug("Physcialworker onReady");
         });
@@ -187,6 +189,10 @@ export class Render extends RPCPeer implements GameMain, IRender {
 
     get uiRatio(): number {
         return this.mUIRatio;
+    }
+
+    get devicePixelRatio(): number {
+        return this.mConfig.devicePixelRatio;
     }
 
     get uiScale(): number {
@@ -357,11 +363,11 @@ export class Render extends RPCPeer implements GameMain, IRender {
         }
         const w = width * this.mConfig.devicePixelRatio;
         const h = height * this.mConfig.devicePixelRatio;
-        this.mScaleRatio = Math.ceil(this.mConfig.devicePixelRatio || 2);
+        this.mScaleRatio = Math.ceil(this.mConfig.devicePixelRatio || UiUtils.baseDpr);
         this.mConfig.scale_ratio = this.mScaleRatio;
-        this.mUIRatio = Math.round(this.mConfig.devicePixelRatio || 2);
+        this.mUIRatio = Math.round(this.mConfig.devicePixelRatio || UiUtils.baseDpr);
         const scaleW = (width / this.DEFAULT_WIDTH) * (this.mConfig.devicePixelRatio / this.mUIRatio);
-        this.mUIScale = this.game.device.os.desktop ? 1 : scaleW;
+        this.mUIScale = this.game.device.os.desktop ? UiUtils.baseScale : scaleW;
         if (this.mGame) {
             this.mGame.scale.zoom = 1 / this.mConfig.devicePixelRatio;
             this.mGame.scale.resize(w, h);
@@ -549,9 +555,9 @@ export class Render extends RPCPeer implements GameMain, IRender {
                 },
                 scale: {
                     mode: Phaser.Scale.NONE,
-                    width: this.mConfig.width * window.devicePixelRatio,
-                    height: this.mConfig.height * window.devicePixelRatio,
-                    zoom: 1 / window.devicePixelRatio,
+                    width: this.mConfig.baseWidth * this.devicePixelRatio,
+                    height: this.mConfig.baseHeight * this.devicePixelRatio,
+                    zoom: 1 / this.devicePixelRatio,
                 },
             };
             Object.assign(this.gameConfig, this.mConfig);
@@ -1095,19 +1101,20 @@ export class Render extends RPCPeer implements GameMain, IRender {
     public createGameCallBack(keyEvents: any) {
         this.mGame.events.on(Phaser.Core.Events.FOCUS, this.onFocus, this);
         this.mGame.events.on(Phaser.Core.Events.BLUR, this.onBlur, this);
-        if (window.screen.width > window.screen.height) {
-            if (this.mConfig.width > this.mConfig.height) {
-                this.resize(this.mConfig.width, this.mConfig.height);
-            } else {
-                this.resize(this.mConfig.height, this.mConfig.width);
-            }
-        } else {
-            if (this.mConfig.width < this.mConfig.height) {
-                this.resize(this.mConfig.width, this.mConfig.height);
-            } else {
-                this.resize(this.mConfig.height, this.mConfig.width);
-            }
-        }
+        this.resize(this.mConfig.width, this.mConfig.height);
+        // if (window.screen.width > window.screen.height) {
+        //     if (this.mConfig.width > this.mConfig.height) {
+        //         this.resize(this.mConfig.width, this.mConfig.height);
+        //     } else {
+        //         this.resize(this.mConfig.height, this.mConfig.width);
+        //     }
+        // } else {
+        //     if (this.mConfig.width < this.mConfig.height) {
+        //         this.resize(this.mConfig.width, this.mConfig.height);
+        //     } else {
+        //         this.resize(this.mConfig.height, this.mConfig.width);
+        //     }
+        // }
         if (this.mGameCreatedFunc) {
             Logger.getInstance().log("render game_created");
             this.mGameCreatedFunc.call(this);
@@ -1559,7 +1566,7 @@ export class Render extends RPCPeer implements GameMain, IRender {
 
     private initConfig() {
         if (!this.mConfig.devicePixelRatio) {
-            this.mConfig.devicePixelRatio = window.devicePixelRatio || 2;
+            this.mConfig.devicePixelRatio = this.devicePixelRatio || 2;
         }
         if (this.mConfig.width === undefined) {
             this.mConfig.width = window.innerWidth;

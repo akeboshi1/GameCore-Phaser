@@ -1,4 +1,4 @@
-import { Font, Logger, Url } from "utils";
+import { Font, Logger, UiUtils, Url } from "utils";
 import { BaseLayer, BasicScene } from "baseRender";
 import version from "../../../version";
 import { ModuleName, SceneName } from "../../structure";
@@ -33,7 +33,7 @@ export class LoadingScene extends BasicScene {
   public init(data: any) {
     super.init(data);
     this.createFont();
-    this.dpr = data.dpr || 2;
+    this.dpr = data.dpr || UiUtils.baseDpr;
     this.mRequestCom = false;
     this.progressData = data.data;
     this.mCallback = data.callBack;

@@ -1,4 +1,5 @@
 import { BaseUI, ClickEvent, ISoundGroup } from "apowophaserui";
+import { UiUtils } from "utils";
 import { ThreeSlicePath } from "./three.slice.path";
 export enum ButtonState {
     Normal = "normal",
@@ -29,9 +30,9 @@ export class ThreeSliceButton extends BaseUI implements IButtonState {
     private mTweenBoo = true;
     constructor(scene: Phaser.Scene, width: number, height: number, key: string, frame: string[], downFrame: string[], text?: string, dpr?: number, scale?: number, tweenBoo?: boolean, music?: ISoundGroup) {
         super(scene);
-        this.dpr = dpr || 1;
+        this.dpr = dpr || UiUtils.baseDpr;
         // this.scale = scale || 1;
-        this.zoom = scale || 1;
+        this.zoom = scale || UiUtils.baseScale;
         this.soundGroup = {
             up: {
                 key: "click",

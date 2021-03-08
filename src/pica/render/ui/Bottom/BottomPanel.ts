@@ -200,13 +200,13 @@ export class BottomPanel extends PicaBasePanel {
         this.mOutput.updateLayout();
     }
 
-    private onFocusHandler() {
-        this.showKeyboard(window.document.documentElement.clientWidth * window.devicePixelRatio, window.document.documentElement.clientHeight * window.devicePixelRatio);
-    }
+    // private onFocusHandler() {
+    //     this.showKeyboard(window.document.documentElement.clientWidth * window.devicePixelRatio, window.document.documentElement.clientHeight * window.devicePixelRatio);
+    // }
 
-    private onBlurHandler() {
-        this.hideKeyboard();
-    }
+    // private onBlurHandler() {
+    //     this.hideKeyboard();
+    // }
 
     get mediator() {
         return this.render.mainPeer[this.key];

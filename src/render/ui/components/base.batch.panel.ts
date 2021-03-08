@@ -1,6 +1,6 @@
 import { Panel } from "apowophaserui";
 import { MainUIScene } from "../../scenes/main.ui.scene";
-import { Logger, Url } from "utils";
+import { Logger, UiUtils, Url } from "utils";
 import { Render } from "../../render";
 
 export class BaseBatchPanel extends Panel {
@@ -28,7 +28,7 @@ export class BaseBatchPanel extends Panel {
         this.mInitialized = false;
         this.render = render;
         if (render) {
-            this.dpr = Math.round(render.uiRatio || 1);
+            this.dpr = Math.round(render.uiRatio || UiUtils.baseDpr);
             this.scale = this.mWorld.uiScale;
         }
     }
@@ -36,6 +36,12 @@ export class BaseBatchPanel extends Panel {
     get initialized(): boolean {
         return this.mInitialized;
     }
+
+    resize(wid?: number, hei?: number) {
+        super.resize(wid, hei);
+        this.setSize(wid, hei);
+    }
+
     startLoad() {
         if (!this.scene) {
             return;

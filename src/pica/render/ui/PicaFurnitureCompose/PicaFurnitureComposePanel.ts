@@ -80,7 +80,7 @@ export class PicaFurnitureComposePanel extends PicaBasePanel {
     const items = [];
     (<any>this.mCategoryScroll).clearItems();
     for (let i = 0; i < subcategorys.length; i++) {
-      const item = new TextButton(this.scene, this.dpr, 1, subcategorys[i].name, 0, 0);
+      const item = new TextButton(this.scene, this.render, this.dpr, 1, subcategorys[i].name, 0, 0);
       item.setData("item", subcategorys[i]);
       item.setSize(capW, capH);
       this.mCategoryScroll.addItem(item);

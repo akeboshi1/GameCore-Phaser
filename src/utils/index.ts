@@ -28,3 +28,4 @@ export * from "./astar";
 export * from "./time.utils";
 export * from "./stringUtils";
 export * from "./object.assign";
+export * from "./uiUtil";

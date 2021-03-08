@@ -260,7 +260,7 @@ export class PicaMarketPanel extends BasePanel {
         const scene = cell.scene,
           item = cell.item;
         if (cellContainer === null) {
-          cellContainer = new TextButton(scene, this.dpr);
+          cellContainer = new TextButton(scene, this.render, this.dpr);
         }
         const subCategories = cellContainer.getData("item");
         if (subCategories !== item) {
