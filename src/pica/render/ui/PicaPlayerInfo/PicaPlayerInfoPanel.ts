@@ -47,7 +47,7 @@ export class PicaPlayerInfoPanel extends PicaBasePanel {
         this.mBlackBG.clear();
         this.mBlackBG.fillStyle(0, 0.66);
         this.mBlackBG.fillRect(0, 0, w, h);
-        this.topCon.y = -h * 0.5 + 20 * this.dpr + this.topCon.height * 0.5;
+        this.topCon.y = -h * 0.5 + 30 * this.dpr + this.topCon.height * 0.5;
         this.content.height = h;
         this.content.x = -this.content.width * 0.5 - 10 * this.dpr;
         this.content.y = h * 0.5;
@@ -91,7 +91,7 @@ export class PicaPlayerInfoPanel extends PicaBasePanel {
         this.bgImge = this.scene.make.image({ key: "Create_role_bg" });
         this.bgImge.alpha = 0.8;
         this.topCon = this.scene.make.container(undefined, false);
-        this.topCon.setSize(conWidth, 100 * this.dpr);
+        this.topCon.setSize(conWidth, 110* this.dpr);
         this.nickImge = new ImageValue(this.scene, 100 * this.dpr, 20 * this.dpr, UIAtlasName.uicommon, "people_woman", this.dpr, UIHelper.whiteStyle(this.dpr, 18));
         this.nickImge.setLayout(1);
         this.nickImge.x = -conWidth * 0.5 + 25 * this.dpr;

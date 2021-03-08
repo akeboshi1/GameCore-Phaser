@@ -1,7 +1,7 @@
 import { UiManager } from "gamecoreRender";
 import { FolderType, UIAtlasName, UILoadType } from "picaRes";
 import { ModuleName } from "structure";
-import { Font, Handler, i18n, UIHelper, Url } from "utils";
+import { Font, Handler, i18n, Logger, UIHelper, Url } from "utils";
 import { PicaBasePanel } from "../pica.base.panel";
 import { PicaRoamListPanel } from "./PicaRoamListPanel";
 import { op_client, op_pkt_def } from "pixelpai_proto";
@@ -20,7 +20,7 @@ export class PicaRoamPanel extends PicaBasePanel {
     constructor(uiManager: UiManager) {
         super(uiManager);
         this.key = ModuleName.PICAROAM_NAME;
-        this.atlasNames = [UIAtlasName.uicommon, UIAtlasName.uicommon1, UIAtlasName.roam, { atlasName: "roam_effect_1", folder: "roam_effect", foldType: FolderType.NORMAL }];
+        this.atlasNames = [UIAtlasName.uicommon, UIAtlasName.uicommon1, UIAtlasName.roam];
         this.textures = [{ atlasName: "roam_stripe", folder: "roam" }, { atlasName: "roam_topic", folder: "roam" },
         { atlasName: "roamone", folder: "roam_effect", foldType: FolderType.NORMAL, uiType: UILoadType.video },
         { atlasName: "roamtenrepead", folder: "roam_effect", foldType: FolderType.NORMAL, uiType: UILoadType.video },
@@ -68,6 +68,7 @@ export class PicaRoamPanel extends PicaBasePanel {
         this.add(this.content);
         this.resize();
         super.init();
+        Logger.getInstance().error("PicaRoam+++++++++++++init");
     }
 
     onShow() {
@@ -77,6 +78,10 @@ export class PicaRoamPanel extends PicaBasePanel {
         }
     }
 
+    preload() {
+        super.preload();
+        Logger.getInstance().error("PicaRoam+++++++++++++preload");
+    }
     setRoamDataList(pools: op_client.IDRAW_POOL_STATUS[]) {
         this.tempDatas = pools;
         if (!this.mInitialized) return;

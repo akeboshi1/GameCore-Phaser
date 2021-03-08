@@ -31,9 +31,9 @@ export class PicaNewMainPanel extends PicaBasePanel {
         const width = this.scaleWidth;
         const height = this.scaleHeight;
         this.foldButton.x = this.foldButton.width * 0.5 + 5 * this.dpr;
-        this.foldButton.y = this.foldButton.height * 0.5 + 5 * this.dpr;
+        this.foldButton.y = this.foldButton.height * 0.5 + 5 * this.dpr + 10 * this.dpr;
         this.headPanel.x = width * 0.5;
-        this.headPanel.y = this.headPanel.height * 0.5;
+        this.headPanel.y = this.headPanel.height * 0.5 + 20 * this.dpr;
         this.leftPanel.x = this.leftPanel.width * 0.5 + 10 * this.dpr;
         this.leftPanel.y = this.headPanel.height + this.leftPanel.height * 0.5 + 20 * this.dpr;
         this.activityPanel.x = width - this.activityPanel.width * 0.5 - 10 * this.dpr;

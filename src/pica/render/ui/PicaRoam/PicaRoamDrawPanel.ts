@@ -50,7 +50,7 @@ export class PicaRoamDrawPanel extends Phaser.GameObjects.Container {
         topbg.y = -this.height * 0.5 + topbg.height * 0.5;
         topbg1.y = -this.height * 0.5 + topbg1.height * 0.5;
         this.closeBtn = new Button(this.scene, UIAtlasName.uicommon, "back_arrow", "back_arrow");
-        this.closeBtn.setPosition(-this.width * 0.5 + 21 * this.dpr, -this.height * 0.5 + 35 * this.dpr);
+        this.closeBtn.setPosition(-this.width * 0.5 + 21 * this.dpr, -this.height * 0.5 + 45 * this.dpr);
         this.closeBtn.on(ClickEvent.Tap, this.onCloseHandler, this);
         const moneybg = new NineSlicePatch(this.scene, 0, -this.dpr, 190 * this.dpr, 28 * this.dpr, UIAtlasName.uicommon, "home_assets_bg", {
             left: 17 * this.dpr,

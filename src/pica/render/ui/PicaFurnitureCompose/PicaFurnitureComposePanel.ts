@@ -184,7 +184,7 @@ export class PicaFurnitureComposePanel extends PicaBasePanel {
     this.mCloseBtn.setSize(100 * this.dpr, 40 * this.dpr);
     this.mCloseBtn.enable = true;
     this.mCloseBtn.x = this.mCloseBtn.width * 0.5 + 10 * this.dpr;
-    this.mCloseBtn.y = 35 * this.dpr;
+    this.mCloseBtn.y = 45 * this.dpr;
     const closeimg = this.scene.make.image({ key: UIAtlasName.uicommon, frame: "back_arrow" });
     closeimg.x = -this.mCloseBtn.width * 0.5 + closeimg.width * 0.5 + 10 * this.dpr;
     const titleTex = this.scene.make.text({ text: "", style: UIHelper.whiteStyle(this.dpr, 18) }).setOrigin(0, 0.5);

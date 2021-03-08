@@ -83,12 +83,12 @@ export class PicaComposePanel extends BasePanel {
         this.content.add([bggraphics, bg]);
         const titleBg = this.scene.make.image({ key: this.key, frame: "title_bg" });
         titleBg.texture.setFilter(Phaser.Textures.FilterMode.LINEAR);
-        titleBg.y = -height * 0.5 + 23 * this.dpr;
+        titleBg.y = -height * 0.5 + 45 * this.dpr;
         const titleTex = this.scene.make.text({ x: 0, y: titleBg.y, text: i18n.t("compose.title"), style: { color: "#8B5603", fontSize: 15 * this.dpr, fontFamily: Font.DEFULT_FONT } }).setOrigin(0.5);
         titleTex.setFontStyle("bold");
         this.content.add([titleBg, titleTex]);
         const backBtn = new Button(this.scene, UIAtlasKey.commonKey, "back_arrow", "back_arrow");
-        backBtn.setPosition(-width * 0.5 + 20 * this.dpr, -height * 0.5 + 30 * this.dpr);
+        backBtn.setPosition(-width * 0.5 + 20 * this.dpr, -height * 0.5 + 52 * this.dpr);
         backBtn.on(ClickEvent.Tap, this.onBackHandler, this);
         this.content.add(backBtn);
 
@@ -381,6 +381,7 @@ class ComposeItem extends Phaser.GameObjects.Container {
     private itemIcon: DynamicImage;
     private newIcon: Phaser.GameObjects.Image;
     private newText: Phaser.GameObjects.Text;
+    private starImg: Phaser.GameObjects.Image;
     private qualityIcon: Phaser.GameObjects.Image;
     private qualityTex: Phaser.GameObjects.Text;
     private qualifiedIcon: Phaser.GameObjects.Image;
@@ -413,6 +414,9 @@ class ComposeItem extends Phaser.GameObjects.Container {
                 align: "center"
             }
         }).setOrigin(0.5);
+        this.starImg = this.scene.make.image({ key: UIAtlasName.uicommon, frame: "bag_star_small_1" }).setOrigin(0);
+        this.starImg.x = -this.width * 0.5 + 4 * dpr;
+        this.starImg.y = -this.height * 0.5 + 4 * dpr;
         this.qualityIcon = this.scene.make.image({ key: this.key, frame: "tag_rank_a" });
         this.qualityIcon.texture.setFilter(Phaser.Textures.FilterMode.LINEAR);
         this.qualityIcon.setPosition(-width * 0.5 + this.qualityIcon.width * 0.5 - 2 * dpr, height * 0.5 - this.qualityIcon.height * 0.5);
@@ -434,22 +438,25 @@ class ComposeItem extends Phaser.GameObjects.Container {
         this.lockbg.texture.setFilter(Phaser.Textures.FilterMode.LINEAR);
         this.lockIcon = this.scene.make.image({ key: this.key, frame: "lock" });
         this.lockIcon.texture.setFilter(Phaser.Textures.FilterMode.LINEAR);
-        this.add([this.bg, this.itemIcon, this.newIcon, this.newText, this.qualityIcon, this.qualityTex, this.lockbg, this.lockIcon]);
+        this.add([this.bg, this.itemIcon, this.newIcon, this.newText, this.starImg, this.qualityIcon, this.qualityTex, this.lockbg, this.lockIcon]);
+        this.newIcon.visible = false;
+        this.newText.visible = false;
+        this.qualityIcon.visible = false;
+        this.qualityTex.visible = false;
     }
 
     public setItemData(data: op_client.IPKT_CRAFT_SKILL) {
         this.itemData = data;
         const skill = data.skill;
-        const active = skill.active;
-        this.newIcon.visible = active;
-        this.newText.visible = active;
-        this.qualityIcon.visible = active;
-        this.qualityTex.visible = active;
-        this.qualityTex.text = skill.quality;
-        this.qualifiedIcon.visible = active && skill.qualified;
+        // const active = skill.active;
+        // this.qualityIcon.visible = active;
+        // this.qualityTex.visible = active;
+        // this.qualityTex.text = skill.quality;
+        // this.qualifiedIcon.visible = active && skill.qualified;
+        const starFrame = "bag_star_small_" + skill.quality;
+        this.starImg.setFrame(starFrame);
         this.lockbg.visible = !skill.active;
         this.lockIcon.visible = !skill.active;
-        this.setQualityTexture(skill.quality);
         if (skill.display) this.setItemIcon(skill.display);
         this.select = false;
     }
@@ -464,14 +471,6 @@ class ComposeItem extends Phaser.GameObjects.Container {
         this.itemIcon.load(url, this, () => {
             this.itemIcon.setPosition(0, 0);
         });
-    }
-
-    private setQualityTexture(quality: string) {
-        this.qualityIcon.visible = true;
-        if (quality === "A") this.qualityIcon.setFrame("tag_rank_a");
-        else if (quality === "B") this.qualityIcon.setFrame("tag_rank_b");
-        else if (quality === "C") this.qualityIcon.setFrame("tag_rank_c");
-        else this.qualityIcon.visible = false;
     }
 }
 class ComposeMaterialItem extends Phaser.GameObjects.Container {
