@@ -193,7 +193,10 @@ export class User extends Player {
     }
 
     protected activeSprite(targetId: number) {
-        if (!targetId) return;
+        if (!targetId) {
+            this.mPreTargetID = 0;
+            return;
+        }
         // 防止由于网络波动导致多次点击传送点后无法收到房间信息，场景ui无法显示
         this.holdTime = setTimeout(() => {
             if (this.mPreTargetID === targetId) {
