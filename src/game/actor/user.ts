@@ -201,7 +201,7 @@ export class User extends Player {
         this.holdTime = setTimeout(() => {
             if (this.mPreTargetID === targetId) {
                 const tempdata = {
-                    text: [{ text: i18n.t("noticeTips.quickclick"), node: undefined }]
+                    text: [{ text: "点击太快,请稍等!", node: undefined }]
                 };
                 this.game.peer.showMediator(ModuleName.PICANOTICE_NAME, true, tempdata);
                 return;
