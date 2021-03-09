@@ -151,7 +151,7 @@ export class PicaPlayerInfoPanel extends PicaBasePanel {
         this.tradingBtn.visible = false;
         this.bottomCon.add([this.middleCon, this.bottombg, optioncon, this.mAttrPanel, this.followBtn]);
         this.content.add([this.background, this.bgImge, this.topCon, this.avatar, this.bottomCon]);
-        this.content.visible = false;
+        this.content.visible = true;
         this.resize(wid, hei);
         super.init();
         this.playMove(new Handler(this, () => {

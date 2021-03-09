@@ -78,6 +78,7 @@ export class PicaPlayerInfoMediator extends BasicMediator {
             const property = this.game.user.userData.playerProperty;
             const pros = [property.energy, property.getProperty("IV0000014")];
             content["pros"] = pros;
+            content["isUser"] = true;
             this.setItemBases(content.properties);
             this.setItemBases(content.avatarSuit);
             this.mView.setPlayerData(content);
@@ -91,6 +92,7 @@ export class PicaPlayerInfoMediator extends BasicMediator {
             return;
         }
         if (this.mView) {
+            content["isUser"] = false;
             this.setItemBases(content.properties);
             this.setItemBases(content.avatarSuit);
             this.mView.setPlayerData(content);

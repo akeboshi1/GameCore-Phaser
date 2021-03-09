@@ -88,11 +88,6 @@ export class LoadingScene extends BasicScene {
       fontFamily: Font.DEFULT_FONT
     }).setOrigin(1);
 
-    // if (this.mCallback) {
-    //   this.mCallback.call(this, this);
-    //   this.mCallback = undefined;
-    // }
-    // this.scale.on("resize", this.checkSize, this);
     this.layerManager.addLayer(this, BaseLayer, MainUIScene.LAYER_UI, 1);
     this.layerManager.addLayer(this, BaseLayer, MainUIScene.LAYER_DIALOG, 2);
     this.layerManager.addLayer(this, BaseLayer, MainUIScene.LAYER_TOOLTIPS, 3);
@@ -104,23 +99,6 @@ export class LoadingScene extends BasicScene {
 
   getProgress(): string {
     return "test";
-  }
-
-  public async show() {
-    this.wake();
-    if (!this.curtain) {
-      return Promise.resolve();
-    }
-    this.displayVisible(false);
-    return this.curtain.open();
-  }
-
-  public async close() {
-    if (!this.curtain) {
-      return;
-    }
-    this.displayVisible(false);
-    return this.curtain.close();
   }
 
   public updateProgress(text: any) {
@@ -285,12 +263,12 @@ class Curtain {
       const height = this.scene.cameras.main.height;
       this.upDisplay.y = -this.upDisplay.displayHeight;
       this.downDisplay.y = height + this.downDisplay.displayHeight;
-      this.upTween = this.scene.add.tween({
+      this.upTween = this.scene.tweens.add({
         targets: this.upDisplay,
         props: { y: 0 },
         duration: 1000
       });
-      this.downTween = this.scene.add.tween({
+      this.downTween = this.scene.tweens.add({
         targets: this.downDisplay,
         props: { y: height },
         duration: 1000,
@@ -316,12 +294,12 @@ class Curtain {
       this.upDisplay.y = 0;
       this.downDisplay.y = height;
       this.clearTween();
-      this.upTween = this.scene.add.tween({
+      this.upTween = this.scene.tweens.add({
         targets: this.upDisplay,
         props: { y: -this.upDisplay.displayHeight },
         duration: 1000
       });
-      this.downTween = this.scene.add.tween({
+      this.downTween = this.scene.tweens.add({
         targets: this.downDisplay,
         props: { y: height + this.downDisplay.displayHeight },
         duration: 1000,

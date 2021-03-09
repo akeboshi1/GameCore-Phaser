@@ -88,7 +88,6 @@ export class SceneManager extends BaseSceneManager {
             const state = data.state;
             switch (state) {
                 case LoadState.ENTERWORLD:
-                    // data.loadProgress = RENDER_PEER + `_v${version}` + "/n" + MAIN_WORKER + `_v${version}` + "/n" + PHYSICAL_WORKER + `_v${version}`;
                     data.text = LoadingTips.enterWorld();
                     break;
                 case LoadState.DOWNLOADGAMECONFIG:
@@ -132,10 +131,6 @@ export class SceneManager extends BaseSceneManager {
         } else {
             this.render.emitter.once("sceneCreated", () => {
                 Logger.getInstance().debug("sceneCreated===scenemanager");
-                // if (this.mCurSceneName !== name) {
-                //     const curScene: BasicScene = sceneManager.getScene(this.mCurSceneName) as BasicScene;
-                //     if (curScene) curScene.sleep();
-                // }
                 if (data.callBack) data.callBack();
             }, this);
             sceneManager.add(name, this.sceneClass[name]);
