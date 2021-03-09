@@ -31,7 +31,7 @@ export class PlaneGuidePanel extends BaseGuide {
     }
 
     private step1(pos: IPos) {
-        const tmpPos = { x: pos.x + 370, y: pos.y  };
+        const tmpPos = { x: pos.x + 370, y: pos.y + 350 };
         this.guideEffect.createGuideEffect(tmpPos);
         this.playScene.input.on("gameobjectdown", this.gameObjectDownHandler, this);
     }
