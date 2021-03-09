@@ -73,7 +73,7 @@ export class PicaChatMediator extends BasicMediator {
         this.hide();
     }
 
-    private onChatHandler(content: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_CHAT) {
+    private async onChatHandler(content: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_CHAT) {
         if (!this.mView) {
             return;
         }
@@ -83,7 +83,7 @@ export class PicaChatMediator extends BasicMediator {
             speaker = `${player.model.nickname}`;
         } else {
             if (content.chatSenderid) {
-                speaker = i18n.t("chat.mystery");
+                speaker = await this.game.renderPeer.i18nString("chat.mystery");
             }
         }
         let color = "#ffffff";

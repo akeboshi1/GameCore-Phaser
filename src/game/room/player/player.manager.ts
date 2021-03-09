@@ -1,17 +1,17 @@
-import {PacketHandler, PBpacket} from "net-socket-packet";
-import {op_client, op_def, op_gameconfig} from "pixelpai_proto";
-import {Player} from "./player";
-import {IElementManager} from "../element/element.manager";
-import {User} from "../../actor/user";
-import {IRoomService, Room} from "../room/room";
-import {PlayerModel} from "./player.model";
-import {AvatarSuitType, EventType, ISprite, MessageType, PlayerState} from "structure";
-import {Logger, LogicPos} from "utils";
-import {ConnectionService} from "../../../../lib/net/connection.service";
-import {IElement} from "../element/element";
-import {PlayerElementAction} from "../elementaction/player.element.action";
-import {Sprite} from "baseModel";
-import {BaseDataConfigManager} from "src/pica/game/data/base.data.config.manager";
+import { PacketHandler, PBpacket } from "net-socket-packet";
+import { op_client, op_def, op_gameconfig } from "pixelpai_proto";
+import { Player } from "./player";
+import { IElementManager } from "../element/element.manager";
+import { User } from "../../actor/user";
+import { IRoomService, Room } from "../room/room";
+import { PlayerModel } from "./player.model";
+import { AvatarSuitType, EventType, ISprite, MessageType, PlayerState } from "structure";
+import { Logger, LogicPos } from "utils";
+import { ConnectionService } from "../../../../lib/net/connection.service";
+import { IElement } from "../element/element";
+import { PlayerElementAction } from "../elementaction/player.element.action";
+import { Sprite } from "baseModel";
+import { BaseDataConfigManager } from "src/pica/game/data/base.data.config.manager";
 import NodeType = op_def.NodeType;
 
 export class PlayerManager extends PacketHandler implements IElementManager {
@@ -259,21 +259,24 @@ export class PlayerManager extends PacketHandler implements IElementManager {
         const configMgr = <BaseDataConfigManager>this.mRoom.game.configManager;
         sprite.attrs.forEach((attr) => {
             const valueObj = JSON.parse(attr.value);
-            const newAttrs = [];
-            valueObj.forEach((v) => {
-                if (v.id) {
-                    const config = configMgr.getItemBase(v.id);
-                    newAttrs.push({
-                        suit_type: config.suitType,
-                        sn: config.sn,
-                        version: config.version,
-                        slot: config.slot,
-                        tag: config.tag,
-                        id: config.id
-                    });
-                }
-            });
-            attr.value = JSON.stringify(newAttrs);
+            const len = Object.keys(valueObj).length;
+            if (len > 0) {
+                const newAttrs = [];
+                valueObj.forEach((v) => {
+                    if (v.id) {
+                        const config = configMgr.getItemBase(v.id);
+                        newAttrs.push({
+                            suit_type: config.suitType,
+                            sn: config.sn,
+                            version: config.version,
+                            slot: config.slot,
+                            tag: config.tag,
+                            id: config.id
+                        });
+                    }
+                });
+                attr.value = JSON.stringify(newAttrs);
+            }
         });
     }
 
@@ -333,7 +336,7 @@ export class PlayerManager extends PacketHandler implements IElementManager {
     private checkSuitAvatarSprite(sprite: op_client.ISprite) {
         if (this.mRoom.game.avatarType === op_def.AvatarStyle.SuitType) {
             if (!AvatarSuitType.hasAvatarSuit(sprite["attrs"])) {
-                if (!sprite.avatar) sprite.avatar = <any> (AvatarSuitType.createBaseAvatar());
+                if (!sprite.avatar) sprite.avatar = <any>(AvatarSuitType.createBaseAvatar());
             }
         }
     }
@@ -368,8 +371,8 @@ export class PlayerManager extends PacketHandler implements IElementManager {
                 player = this.get(playID);
                 if (player) {
                     // player.move(moveData);
-                    const {x, y} = moveData.destinationPoint3f;
-                    player.move([{x, y}]);
+                    const { x, y } = moveData.destinationPoint3f;
+                    player.move([{ x, y }]);
                 }
             }
         }
@@ -447,15 +450,15 @@ export class PlayerManager extends PacketHandler implements IElementManager {
         let player: Player = null;
         for (const sprite of sprites) {
             if (sprite.id === this.mActor.id) {
-                this.mActor.move([{x: sprite.point3f.x, y: sprite.point3f.y}]);
+                this.mActor.move([{ x: sprite.point3f.x, y: sprite.point3f.y }]);
                 continue;
             }
             player = this.get(sprite.id);
             if (player) {
                 // player.updateModel(sprite);
                 // player.stopMove();
-                const {point3f, direction} = sprite;
-                player.stopAt({x: point3f.x, y: point3f.y, stopDir: direction});
+                const { point3f, direction } = sprite;
+                player.stopAt({ x: point3f.x, y: point3f.y, stopDir: direction });
             }
         }
     }

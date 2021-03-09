@@ -111,11 +111,15 @@ export class DecorateManager {
 
     // 打开背包，选择家具摆放
     public openBag() {
+        this.reverseSelected();
+
         this.mRoom.game.uiManager.showMed(ModuleName.PICABAG_NAME);
     }
 
     // 清空房间内所有物件
     public removeAll() {
+        this.reverseSelected();
+
         const elements = this.mRoom.elementManager.getElements();
         for (const element of elements) {
             // 未解锁家具不移除

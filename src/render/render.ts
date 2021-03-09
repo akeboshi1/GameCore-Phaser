@@ -953,6 +953,11 @@ export class Render extends RPCPeer implements GameMain, IRender {
         // this.mWorld.onClockReady();
     }
 
+    @Export([webworker_rpc.ParamType.str])
+    public i18nString(val: string): string {
+        return i18n.t(val);
+    }
+
     @Export()
     public showAlert(text: string, ok: boolean) {
         // 告诉render显示警告框
