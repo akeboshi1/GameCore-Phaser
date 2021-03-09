@@ -12,7 +12,6 @@ import { RunningAnimation } from "structure";
 import { op_def } from "pixelpai_proto";
 import { MatterBodies } from "../display/debugs/matter";
 import { ServerPosition } from "../display/debugs/server.pointer";
-import { BasicScene } from "baseRender";
 import { IDisplayObject } from "../display";
 import { Astar } from "../display/debugs/astar";
 import { Grids } from "../display/debugs/grids";

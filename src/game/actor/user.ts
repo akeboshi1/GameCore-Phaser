@@ -21,7 +21,7 @@ export class User extends Player {
     private mSetPostionTime: number = 0;
     private mPreTargetID: number = 0;
     private holdTime: any;
-    private holdDelay: number = 200;
+    private holdDelay: number = 80;
     constructor(private game: Game) {
         super(undefined, undefined);
         this.mBlockable = false;
