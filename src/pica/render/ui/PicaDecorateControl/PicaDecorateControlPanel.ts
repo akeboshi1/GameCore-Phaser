@@ -60,6 +60,11 @@ export class PicaDecorateControlPanel extends PicaBasePanel {
         this.changePosFollowTarget(display.getPosition());
     }
 
+    protected preload() {
+        this.addAtlas(this.key, "room_decorate/room_decorate.png", "room_decorate/room_decorate.json");
+        super.preload();
+    }
+
     // public updatePosition() {
     //     const {id, pos, canPlace} = this.mShowData;
     //     const display = this.render.displayManager.getDisplay(id);
