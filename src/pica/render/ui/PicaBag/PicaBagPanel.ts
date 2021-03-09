@@ -718,9 +718,7 @@ export class PicaBagPanel extends PicaBasePanel {
     this.render.mainPeer.showMediator(ModuleName.PICARECASTE_NAME, true, data);
   }
   private onMoreHandler() {
-    // if (!this.mSelectedItemData) return;
-    // this.moreButtonPanel.show();
-    // this.moreButtonPanel.setItemData(this.mSelectedItemData, this.categoryType);
+    if (!this.mSelectedItemData) return;
     this.recasteBtn.visible = true;
     this.moreButton.visible = false;
   }

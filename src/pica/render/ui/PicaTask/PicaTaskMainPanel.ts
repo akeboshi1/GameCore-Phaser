@@ -555,13 +555,11 @@ class MainTaskGooutAnimation {
         if (tempArr.length > 0) {
             this.playMoveX(tempArr, from, to);
             this.playAlpha(tempArr, 0, 1, "Cubic.easeOut");
-            setTimeout(() => {
-                for (let i = 0; i < tempYArr.length; i++) {
-                    const arr = tempYArr[i];
-                    const indexed = tempYIndexeds[i];
-                    this.playMoveGooutY(arr, indexed);
-                }
-            }, 300);
+            for (let i = 0; i < tempYArr.length; i++) {
+                const arr = tempYArr[i];
+                const indexed = tempYIndexeds[i];
+                this.playMoveGooutY(arr, indexed, 300);
+            }
         }
     }
 
@@ -616,7 +614,7 @@ class MainTaskGooutAnimation {
         });
     }
 
-    private playMoveGooutY(tempArr: PicaTaskItem[], indexed: number) {
+    private playMoveGooutY(tempArr: PicaTaskItem[], indexed: number, delay: number) {
         if (this.isDispose) return;
         const from = 0;
         const to = this.listPosY[indexed + 1] - this.listPosY[indexed];
@@ -626,6 +624,7 @@ class MainTaskGooutAnimation {
             to,
             ease: "Linear",
             duration: 200,
+            delay,
             onUpdate: (cope: any, param: any) => {
                 const interval = param.value - tempvalue;
                 for (const item of tempArr) {

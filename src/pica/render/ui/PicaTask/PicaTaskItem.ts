@@ -146,10 +146,10 @@ export class PicaTaskItem extends Phaser.GameObjects.Container {
         this.arrow.visible = true;
     }
 
-    private setTextLimit(text: Phaser.GameObjects.Text, content?: string, limit: number = 15) {
+    private setTextLimit(text: Phaser.GameObjects.Text, content?: string, limit: number =11) {
         if (content.length > limit) {
-            const maxWidth = 120 * this.dpr;
-            for (let i = 4; i < content.length; i++) {
+            const maxWidth = 130 * this.dpr;
+            for (let i = 9; i < content.length; i++) {
                 let str = content.slice(0, i);
                 const width = text.setText(str).width;
                 if (width > maxWidth) {
