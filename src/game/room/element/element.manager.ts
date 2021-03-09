@@ -11,7 +11,6 @@ import { DataMgrType } from "../../data.manager";
 import { ElementActionManager } from "../elementaction/element.action.manager";
 import { Sprite, IElementStorage } from "baseModel";
 import NodeType = op_def.NodeType;
-import {LayerEnum} from "game-capsule/index";
 
 export interface IElementManager {
     hasAddComplete: boolean;

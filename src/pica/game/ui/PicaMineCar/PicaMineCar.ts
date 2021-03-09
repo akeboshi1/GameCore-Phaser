@@ -1,7 +1,6 @@
-import { PacketHandler, PBpacket } from "net-socket-packet";
+import { PBpacket } from "net-socket-packet";
 import { op_client, op_virtual_world, op_def, op_pkt_def } from "pixelpai_proto";
 import { BasicModel, Game } from "gamecore";
-import { i18n } from "utils";
 import { ConnectionService } from "lib/net/connection.service";
 
 export class PicaMineCar extends BasicModel {
@@ -47,12 +46,12 @@ export class PicaMineCar extends BasicModel {
   destroy() {
     this.unregister();
   }
-  private onPackageCategoriesHandler(packet: PBpacket) {
+  private async onPackageCategoriesHandler(packet: PBpacket) {
     const content: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_EDIT_MODE_GET_PACKAGE_CATEGORIES = packet.content;
     if (content.category === op_pkt_def.PKT_PackageType.MinePackage) {
       const allCap = new op_def.StrPair();
       allCap.key = "alltype";
-      allCap.value = i18n.t("common.all");
+      allCap.value = await this.game.renderPeer.i18nString("common.all");
       content.subcategory.unshift(allCap);
       this.subcategory = content.subcategory;
       this.game.emitter.emit("packageCategory", this.subcategory);

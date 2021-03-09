@@ -192,16 +192,17 @@ export class User extends Player {
         }
     }
 
-    protected activeSprite(targetId: number) {
+    protected async activeSprite(targetId: number) {
         if (!targetId) {
             this.mPreTargetID = 0;
             return;
         }
         // 防止由于网络波动导致多次点击传送点后无法收到房间信息，场景ui无法显示
-        this.holdTime = setTimeout(() => {
+        this.holdTime = setTimeout(async () => {
             if (this.mPreTargetID === targetId) {
+                const txt = await this.game.renderPeer.i18nString("noticeTips.quickclick");
                 const tempdata = {
-                    text: [{ text: "点击太快,请稍等!", node: undefined }]
+                    text: [{ text: txt, node: undefined }]
                 };
                 this.game.peer.showMediator(ModuleName.PICANOTICE_NAME, true, tempdata);
                 return;
