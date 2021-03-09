@@ -1,13 +1,12 @@
 import { ClickEvent } from "apowophaserui";
-import { BaseGuide, Render, UiManager } from "gamecoreRender";
+import { BaseGuide, UiManager } from "gamecoreRender";
 import { ModuleName } from "structure";
-import { GuideID } from "../../guide";
 import { PicaNewMainPanel } from "../PicaNewMain/PicaNewMainPanel";
 import { PicaTaskPanel } from "../PicaTask/PicaTaskPanel";
 
 export class HotelGuidePanel extends BaseGuide {
     constructor(uiManager: UiManager) {
-        super(GuideID.Hotel, uiManager.render);
+        super(uiManager.render);
     }
     public show(param?: any) {
         super.show(param);
@@ -27,7 +26,7 @@ export class HotelGuidePanel extends BaseGuide {
 
     private step2() {
         // 异步等待过程
-        this.render.emitter.once("PicaTaskPanel_Data", (pos) => {
+        this.render.emitter.once(PicaTaskPanel.PICATASK_DATA, (pos) => {
             const taskPanel: PicaTaskPanel = this.uiManager.getPanel(ModuleName.PICATASK_NAME) as PicaTaskPanel;
             const picaMainTaskPanel: any = taskPanel.mainPanel;
             const list: any[] = picaMainTaskPanel.taskItems;

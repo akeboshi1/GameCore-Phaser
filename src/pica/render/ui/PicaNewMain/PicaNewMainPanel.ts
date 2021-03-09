@@ -9,11 +9,10 @@ import { PicaNewActivityPanel } from "./PicaNewActivityPanel";
 import { PicaNewChatPanel } from "./PicaNewChatPanel";
 import { PicaNewHeadPanel } from "./PicaNewHeadPanel";
 import { PicaNewLeftPanel } from "./PicaNewLeftPanel";
-import { GuideID } from "../../guide";
 // import { PicaNewNavigatePanel } from "./PicaNewNavigatePanel";
 export class PicaNewMainPanel extends PicaBasePanel {
     public leftPanel: PicaNewLeftPanel;
-    protected activityPanel: PicaNewActivityPanel;
+    public activityPanel: PicaNewActivityPanel;
     protected chatPanel: PicaNewChatPanel;
     protected headPanel: PicaNewHeadPanel;
     // protected navigatePanel: PicaNewNavigatePanel;

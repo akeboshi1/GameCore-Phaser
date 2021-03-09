@@ -5,6 +5,7 @@ import { ModuleName } from "structure";
 import { Handler, i18n } from "utils";
 
 export class PicaNewActivityPanel extends Phaser.GameObjects.Container {
+    public arrowButton: Button;
     private dpr: number;
     private key: string;
     private activityButton: Button;
@@ -12,7 +13,6 @@ export class PicaNewActivityPanel extends Phaser.GameObjects.Container {
     private rechargeButton: Button;
     private emailButton: Button;
     private roamButton: Button;
-    private arrowButton: Button;
     private listBtns: Button[];
     private listBtns2: Button[];
     private listPosY: number[] = [];
