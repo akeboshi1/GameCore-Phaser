@@ -1,4 +1,4 @@
-import { SceneName } from "structure";
+import { ModuleName, SceneName } from "structure";
 import { UiManager } from "../ui";
 import { BasicScene } from "baseRender";
 
@@ -14,7 +14,7 @@ export class LoginScene extends BasicScene {
     public create() {
         super.create();
         if (this.render) {
-            this.render.showMediator("Login", true);
+            this.render.showMediator(ModuleName.PICA_BOOT_NAME, true);
             const uimanager: UiManager = this.render.uiManager;
             uimanager.setScene(this);
             this.render.hideLoading();

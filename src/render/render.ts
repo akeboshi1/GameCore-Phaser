@@ -797,21 +797,6 @@ export class Render extends RPCPeer implements GameMain, IRender {
 
     }
 
-    @Export([webworker_rpc.ParamType.boolean])
-    public setLoginEnable(allow: boolean) {
-
-    }
-
-    @Export()
-    public onShowVerified() {
-
-    }
-
-    @Export([webworker_rpc.ParamType.boolean])
-    public setVerifiedEnable(enable: boolean) {
-
-    }
-
     @Export()
     public onShowErrorHandler(error, okText) {
         this.onShowErrorHandlerCallBack(error, okText);

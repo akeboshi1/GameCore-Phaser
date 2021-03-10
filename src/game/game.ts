@@ -411,25 +411,26 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
             return;
         }
         const token = await this.peer.render.getLocalStorage("token");
-        const account = token ? JSON.parse(token) : null;
+        // const account = token ? JSON.parse(token) : null;
         if (this.mConfig.hasGameLoaded) this.renderPeer.gameLoadedCallBack();
-        if (!this.mConfig.auth_token) {
-            if (!account || !account.accessToken) {
-                this.login();
-                return;
-            }
-            this.peer.render.setAccount(account);
-            this.refreshToken();
-        } else {
-            this.peer.render.setAccount({
-                token: this.mConfig.auth_token,
-                expire: this.mConfig.token_expire,
-                fingerprint: this.mConfig.token_fingerprint,
-                refreshToken: account ? account.refreshToken : "",
-                id: this.mConfig.user_id ? this.mConfig.user_id : account ? account.id : "",
-            });
-            this.loginEnterWorld();
-        }
+        this.login();
+        // if (!this.mConfig.auth_token) {
+        //     if (!account || !account.accessToken) {
+        //         this.login();
+        //         return;
+        //     }
+        //     this.peer.render.setAccount(account);
+        //     this.refreshToken();
+        // } else {
+        //     this.peer.render.setAccount({
+        //         token: this.mConfig.auth_token,
+        //         expire: this.mConfig.token_expire,
+        //         fingerprint: this.mConfig.token_fingerprint,
+        //         refreshToken: account ? account.refreshToken : "",
+        //         id: this.mConfig.user_id ? this.mConfig.user_id : account ? account.id : "",
+        //     });
+        //     this.loginEnterWorld();
+        // }
     }
 
     public login() {

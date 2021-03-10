@@ -7,6 +7,8 @@ export class ModuleName {
     public static CHAT_NAME: string = "Chat";
     public static BOTTOM: string = "Bottom";
     public static LOGIN_NAME: string = "Login";
+    public static PICA_LOGIN_NAME: string = "PicaLogin";
+    public static PICA_BOOT_NAME: string = "PicaBoot";
     public static CUTIN_NAME: string = "CutIn";
     public static ACTIVITY_NAME: string = "Activity";
     public static CREATEROLE_NAME: string = "CreateRole";
