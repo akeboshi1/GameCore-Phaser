@@ -141,6 +141,7 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
     private mDecorateEntryData = null;
     // -1: out of range; 0: not walkable; 1: walkable
     private mWalkableMap: number[][];
+    private mNotWalkablePos2SpriteIDs: Map<number, number[]> = new Map<number, number[]>();
 
     constructor(protected manager: IRoomManager) {
         super();
@@ -517,7 +518,22 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
             tempY = pos.y + i - origin.y;
             for (let j = 0; j < cols; j++) {
                 tempX = pos.x + j - origin.x;
-                this.setWalkable(tempX, tempY, collision[i][j] === 0 || walkable[i][j] === 1);
+                if (tempY < 0 || tempY >= this.mWalkableMap.length || tempX < 0 || tempX >= this.mWalkableMap[tempY].length) {
+                    continue;
+                }
+
+                const canWalk = collision[i][j] === 0 || walkable[i][j] === 1;
+                this.setWalkable(tempX, tempY, canWalk);
+
+                if (!canWalk) {
+                    const wPos = tempX + tempY * this.mMiniSize.cols;
+                    if (!this.mNotWalkablePos2SpriteIDs.get(wPos)) {
+                        this.mNotWalkablePos2SpriteIDs.set(wPos, []);
+                    }
+                    const ids = this.mNotWalkablePos2SpriteIDs.get(wPos);
+                    if (ids.indexOf(sprite.id) < 0) ids.push(sprite.id);
+                    // Logger.getInstance().log("#place not walkable: ", this.mNotWalkablePos2SpriteIDs);
+                }
             }
         }
     }
@@ -544,7 +560,26 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
             for (let j = 0; j < cols; j++) {
                 tempX = pos.x + j - origin.x;
                 if (collision[i][j] === 1 && walkable[i][j] === 0) {
-                    this.setWalkable(tempX, tempY, true);
+                    if (tempY < 0 || tempY >= this.mWalkableMap.length || tempX < 0 || tempX >= this.mWalkableMap[tempY].length) {
+                        continue;
+                    }
+
+                    const wPos = tempX + tempY * this.mMiniSize.cols;
+                    const ids = this.mNotWalkablePos2SpriteIDs.get(wPos);
+                    if (!ids) {
+                        Logger.getInstance().warn(`not walkable map error, pos {${tempX}, ${tempY}} has no data`);
+                        return;
+                    }
+                    const idx = ids.indexOf(sprite.id);
+                    if (idx < 0) {
+                        Logger.getInstance().warn(`not walkable map error, no id {${sprite.id}} at pos {${tempX}, ${tempY}}`);
+                        return;
+                    }
+                    ids.splice(idx, 1);
+                    if (ids.length === 0) {
+                        this.setWalkable(tempX, tempY, true);
+                        // Logger.getInstance().log("#place remove walkable, ", tempX, tempY, sprite.id);
+                    }
                 }
             }
         }
@@ -555,6 +590,7 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
             return false;
         }
 
+        // Logger.getInstance().log("#place walkableMap: ", x, y, this.mWalkableMap[y][x] === 1, this.mWalkableMap);
         return this.mWalkableMap[y][x] === 1;
     }
 
@@ -587,6 +623,8 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
         Logger.getInstance().debug("room clear");
         this.game.renderPeer.clearRoom();
         this.game.uiManager.recover();
+        this.mWalkableMap = [];
+        this.mNotWalkablePos2SpriteIDs.clear();
     }
 
     public move(id: number, x: number, y: number, nodeType: NodeType) {
