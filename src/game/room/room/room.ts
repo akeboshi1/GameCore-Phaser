@@ -511,6 +511,17 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
             for (let i = 0; i < rows; i++) {
                 walkable[i] = new Array(cols).fill(0);
             }
+        } else {
+            const wRows = walkable.length;
+            if (wRows === 0) {
+                Logger.getInstance().error(`data error: WalkableArea {${walkable}}, data: `, sprite);
+                return;
+            }
+            const wCols = walkable[0].length;
+            if (rows !== wRows || cols !== wCols) {
+                Logger.getInstance().error(`data error: CollisionArea {${collision}} not match WalkableArea {${walkable}}, data: `, sprite);
+                return;
+            }
         }
         let tempY = 0;
         let tempX = 0;
@@ -551,6 +562,17 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
             walkable = new Array(rows);
             for (let i = 0; i < rows; i++) {
                 walkable[i] = new Array(cols).fill(0);
+            }
+        } else {
+            const wRows = walkable.length;
+            if (wRows === 0) {
+                Logger.getInstance().error(`data error: WalkableArea {${walkable}}, data: `, sprite);
+                return;
+            }
+            const wCols = walkable[0].length;
+            if (rows !== wRows || cols !== wCols) {
+                Logger.getInstance().error(`data error: CollisionArea {${collision}} not match WalkableArea {${walkable}}, data: `, sprite);
+                return;
             }
         }
         let tempY = 0;
