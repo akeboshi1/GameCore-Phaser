@@ -8,7 +8,8 @@ import { UIAtlasKey, UIAtlasName } from "picaRes";
 import { Font, Handler, i18n, Url } from "utils";
 import { ICountablePackageItem } from "picaStructure";
 export class PicaFurniFunPanel extends BasePanel {
-    private confirmBtn: NineSliceButton;
+    public static PICAFURNIFUN_SHOW: string = "PICAFURNIFUN_SHOW";
+    public confirmBtn: NineSliceButton;
     private blackGraphic: Phaser.GameObjects.Graphics;
     private bg: NineSlicePatch;
     private bgicon: Phaser.GameObjects.Image;
@@ -59,6 +60,7 @@ export class PicaFurniFunPanel extends BasePanel {
         this.addListen();
         this.setFuritDisplay();
         this.setMaterialsData(this._getMaterialData());
+        this.render.emitter.emit(PicaFurniFunPanel.PICAFURNIFUN_SHOW);
     }
 
     addListen() {

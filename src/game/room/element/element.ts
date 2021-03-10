@@ -124,7 +124,7 @@ export class Element extends BlockObject implements IElement {
     }
 
     get dir(): number {
-        return this.mDisplayInfo.avatarDir !== undefined ? this.mDisplayInfo.avatarDir : 3;
+        return (this.mDisplayInfo && this.mDisplayInfo.avatarDir !== undefined) ? this.mDisplayInfo.avatarDir : 3;
     }
 
     get roomService(): IRoomService {

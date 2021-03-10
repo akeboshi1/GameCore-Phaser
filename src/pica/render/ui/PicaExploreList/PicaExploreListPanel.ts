@@ -11,6 +11,7 @@ import { PicaExploreListBottomPanel } from "./PicaExploreListBottomPanel";
 import { PicaExploreListLevelPanel } from "./PicaExploreListLevelPanel";
 
 export class PicaExploreListPanel extends PicaBasePanel {
+    public static PICAEXPLORELIST_DATA: string = "PICAEXPLORELIST_DATA";
     public levelPanel: PicaExploreListLevelPanel;
     private detialPanel: PicaExploreListDetailPanel;
     private bottomPanel: PicaExploreListBottomPanel;
@@ -95,7 +96,7 @@ export class PicaExploreListPanel extends PicaBasePanel {
     setExploreChapterResult(content: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_QUERY_CHAPTER_RESULT) {
         const nextLevelID = this.mShowData.nextLevelId;
         this.levelPanel.setCaptoreResult(content, nextLevelID);
-        this.render.emitter.emit("PicaExploreListPanel_Data", this.levelPanel.addHei);
+        this.render.emitter.emit(PicaExploreListPanel.PICAEXPLORELIST_DATA, this.levelPanel.addHei);
     }
     setExploreChapters(data: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_EXPLORE_CHAPTER_PROGRESS) {
         this.mShowData = data;

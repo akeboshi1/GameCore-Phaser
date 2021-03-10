@@ -8,6 +8,7 @@ import { op_client, op_def } from "pixelpai_proto";
 import { PicaBasePanel } from "../pica.base.panel";
 import { ICountablePackageItem, IExtendCountablePackageItem } from "picaStructure";
 export class PicaBagPanel extends PicaBasePanel {
+  public static PICABAG_SHOW: string = "PICABAG_SHOW";
   private mCloseBtn: Button;
   private topCheckBox: CheckboxGroup;
   private mBackground: CommonBackground;
@@ -220,7 +221,7 @@ export class PicaBagPanel extends PicaBasePanel {
 
   protected onShow() {
     super.onShow();
-    this.render.emitter.emit("BagPanel_show");
+    this.render.emitter.emit(PicaBagPanel.PICABAG_SHOW);
   }
 
   protected onInitialized() {

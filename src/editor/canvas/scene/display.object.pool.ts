@@ -42,15 +42,18 @@ export class DisplayObjectPool {
         (<any>this.sceneEditor.scene).layerManager.addToLayer(sprite.layer.toString(), obj);
         pool.set(id, obj);
 
-        this.caches.set(sprite.id, true);
-        const cachelist = Array.from(this.caches.values());
-        const result = cachelist.filter((bol) => bol === false);
-        if (result.length === 0) {
-            this.caches.forEach((value, key) => {
-                const ele = this.get(key.toString());
-                if (ele) ele.asociate();
-            });
-            this.caches.clear();
+        if (this.caches) {
+            this.caches.set(sprite.id, true);
+            const cachelist = Array.from(this.caches.values());
+            const result = cachelist.filter((bol) => bol === false);
+            if (result.length === 0) {
+                this.caches.forEach((value, key) => {
+                    const ele = this.get(key.toString());
+                    if (ele) ele.asociate();
+                });
+                this.caches.clear();
+                this.caches = null;
+            }
         }
         // this.caches.forEach((val) => if (val === false) done = false )
     }
