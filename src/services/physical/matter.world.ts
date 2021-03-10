@@ -210,7 +210,7 @@ export class MatterWorld implements ChatCommandInterface, ISizeChart {
     }
 
     public setWalkableAt(x: number, y: number, val: boolean) {
-        this.mAstar.setWalkableAt(y, x, val);
+        this.mAstar.setWalkableAt(x, y, val);
         // const map = this.map;
         // const value = map[x][y];
         // if (value === 0) {

@@ -125,10 +125,10 @@ export class PlayerManager extends PacketHandler implements IElementManager {
         this.mPlayerMap.set(user.id, user);
     }
 
-    public addToMap(sprite: ISprite) {
+    public addToWalkableMap(sprite: ISprite) {
     }
 
-    public removeFromMap(sprite: ISprite) {
+    public removeFromWalkableMap(sprite: ISprite) {
     }
 
     public resetWalkable(sprite: ISprite) {
@@ -526,9 +526,5 @@ export class PlayerManager extends PacketHandler implements IElementManager {
             return this.mRoom.connection;
         }
         Logger.getInstance().error("room is undefined");
-    }
-
-    get map(): number[][] {
-        return [];
     }
 }

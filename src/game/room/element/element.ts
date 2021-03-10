@@ -207,7 +207,7 @@ export class Element extends BlockObject implements IElement {
         if (!model.layer) {
             model.layer = LayerEnum.Surface;
         }
-        this.mElementManager.removeFromMap(this.mModel);
+        this.mElementManager.roomService.removeFromWalkableMap(this.mModel);
         this.mModel = model;
         this.mQueueAnimations = undefined;
         if (this.mModel.pos) {
@@ -227,7 +227,7 @@ export class Element extends BlockObject implements IElement {
                 if (model.mountSprites && model.mountSprites.length > 0) {
                     this.updateMounth(model.mountSprites);
                 }
-                this.mElementManager.addToMap(model);
+                this.mElementManager.roomService.addToWalkableMap(model);
                 return this.setRenderable(true);
             });
         // physic action
@@ -252,7 +252,7 @@ export class Element extends BlockObject implements IElement {
         if (this.mModel.id !== model.id) {
             return;
         }
-        this.mElementManager.removeFromMap(this.mModel);
+        this.mElementManager.roomService.removeFromWalkableMap(this.mModel);
         if (model.hasOwnProperty("attrs")) {
             this.mModel.updateAttr(model.attrs);
         }
@@ -289,7 +289,7 @@ export class Element extends BlockObject implements IElement {
         this.load(this.mModel.displayInfo);
         // 更新物理进程的物件/人物element
         this.mRoomService.game.physicalPeer.updateModel(model);
-        this.mElementManager.addToMap(this.mModel);
+        this.mElementManager.roomService.addToWalkableMap(this.mModel);
         // if (model.hasOwnProperty("point3f")) {
         //     const pos = model.point3f;
         //     this.setPosition(new LogicPos(pos.x, pos.y, pos.z));
@@ -309,7 +309,7 @@ export class Element extends BlockObject implements IElement {
         const preWalkable = this.mModel.getWalkableArea();
         this.mModel.setAnimationName(animationName);
         const nextWalkable = this.mModel.getWalkableArea();
-        if (preWalkable !== nextWalkable) this.eleMgr.resetWalkable(this.mModel);
+        if (preWalkable !== nextWalkable) this.eleMgr.roomService.removeFromWalkableMap(this.mModel);
         if (times !== undefined) {
             times = times > 0 ? times - 1 : -1;
         }
