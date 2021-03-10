@@ -24,7 +24,7 @@ export class Player extends Element implements IElement {
         if (!model.layer) {
             model.layer = LayerEnum.Surface;
         }
-        this.mElementManager.removeFromMap(this.mModel);
+        this.mElementManager.roomService.removeFromWalkableMap(this.mModel);
         this.mModel = model;
         this.mQueueAnimations = undefined;
         if (this.mModel.pos) {
@@ -44,7 +44,7 @@ export class Player extends Element implements IElement {
                 if (model.mountSprites && model.mountSprites.length > 0) {
                     this.updateMounth(model.mountSprites);
                 }
-                this.mElementManager.addToMap(model);
+                this.mElementManager.roomService.addToWalkableMap(model);
                 return this.setRenderable(true);
             });
         const obj1 = {
