@@ -1,5 +1,6 @@
 import { SceneName } from "structure";
 import { IPos } from "utils";
+import { NodeType } from "../managers";
 import { UiManager } from "../ui";
 import { BaseGuide } from "./base.guide";
 
@@ -27,7 +28,7 @@ export class BasePlaySceneGuide extends BaseGuide {
     public hide() {
         this.mPlayScene.input.off("gameobjectdown", this.gameObjectDownHandler, this);
         super.hide();
-        if (this.mPointer) (<any>this.mPlayScene).motionMgr.onPointerDownHandler(this.mPointer);
+        if (this.mPointer) (<any>this.mPlayScene).motionMgr.onGuideOnPointUpHandler(this.mPointer, this.mElementID);
     }
 
     public checkInteractive(data?: any): boolean {

@@ -27,6 +27,10 @@ export class DecorateManager {
         return this.mRoom;
     }
 
+    public get selectedID(): number {
+        return this.mSelectedID;
+    }
+
     public destroy() {
         this.mActionQueue.length = 0;
         this.mSelectedActionQueue.length = 0;
@@ -222,7 +226,10 @@ export class DecorateManager {
                 tempX = pos.x + j - origin.x;
                 if (collision[i][j] === 0 || walkable[i][j] === 1) continue;
                 const val = this.mRoom.isWalkable(tempX, tempY);
-                if (!val) return false;
+                if (!val) {
+                    // Logger.getInstance().log("#place ", val, pos, tempX, tempY);
+                    return false;
+                }
             }
         }
         return true;
@@ -327,11 +334,6 @@ export class DecorateManager {
         const act = new DecorateAction(element.model, DecorateActionType.Move, new DecorateActionData({moveVec: delta}));
         this.mSelectedActionQueue.push(act);
         act.execute(this);
-
-        this.mRoom.removeFromWalkableMap(element.model);
-
-        const canPlace = this.checkSelectedCanPlace();
-        this.mRoom.game.emitter.emit(MessageType.DECORATE_UPDATE_SELECTED_ELEMENT_CAN_PLACE, canPlace);
     }
 
     // 旋转选择物
@@ -342,11 +344,6 @@ export class DecorateManager {
         const act = new DecorateAction(element.model, DecorateActionType.Rotate, new DecorateActionData({rotateTimes: 1}));
         this.mSelectedActionQueue.push(act);
         act.execute(this);
-
-        this.mRoom.removeFromWalkableMap(element.model);
-
-        const canPlace = this.checkSelectedCanPlace();
-        this.mRoom.game.emitter.emit(MessageType.DECORATE_UPDATE_SELECTED_ELEMENT_CAN_PLACE, canPlace);
     }
 
     // 回收选择物至背包
@@ -580,12 +577,23 @@ class DecorateAction {
         this.target.setPosition(x, y);
         mng.room.addToWalkableMap(this.target);
         mng.room.game.renderPeer.setPosition(this.target.id, this.target.pos.x, this.target.pos.y);
+
+        if (mng.selectedID === this.target.id) {
+            mng.room.removeFromWalkableMap(this.target);
+            const canPlace = mng.checkSelectedCanPlace();
+            mng.room.game.emitter.emit(MessageType.DECORATE_UPDATE_SELECTED_ELEMENT_CAN_PLACE, canPlace);
+        }
     }
 
     private setElementDirection(mng: DecorateManager, dir: number) {
         mng.room.removeFromWalkableMap(this.target);
         this.target.setDirection(dir);
         mng.room.addToWalkableMap(this.target);
+
+        if (mng.selectedID === this.target.id) {
+            const canPlace = mng.checkSelectedCanPlace();
+            mng.room.game.emitter.emit(MessageType.DECORATE_UPDATE_SELECTED_ELEMENT_CAN_PLACE, canPlace);
+        }
     }
 
     private nextDir(dir: number): number {
