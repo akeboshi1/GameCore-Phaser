@@ -286,6 +286,11 @@ export class SceneEditorCanvas extends EditorCanvas implements IRender {
         this.init();
     }
 
+    toggleStackElement(val: boolean) {
+        // this.stackElemetn = val;
+        if (this.mSelecedElement) this.mSelecedElement.stackElement = val;
+    }
+
     onResize(width: number, height: number) {
     }
 
@@ -1108,6 +1113,7 @@ class EraserArea extends MouseDisplayContainer {
 class SelectedElementManager {
     public mSelecting: boolean = false;
     public overElement: EditorFramesDisplay;
+    private mStackElement: boolean;
     private mSelecedElement: EditorFramesDisplay[];
     constructor(private sceneEditor: SceneEditorCanvas) {
 
@@ -1215,7 +1221,7 @@ class SelectedElementManager {
     }
 
     private onGameobjectOverHandler(pointer: Phaser.Input.Pointer, gameobject: Phaser.GameObjects.GameObject) {
-        if (!this.selecting) {
+        if (!this.selecting || !this.mStackElement) {
             return;
         }
         const id = gameobject.getData("id");
@@ -1281,6 +1287,10 @@ class SelectedElementManager {
             this.unregisterGameobjectOver();
             if (val) this.registerGameobjectOver();
         }
+    }
+
+    set stackElement(val: boolean) {
+        this.mStackElement = val;
     }
 
 }

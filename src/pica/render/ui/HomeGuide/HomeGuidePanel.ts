@@ -1,12 +1,11 @@
 import { Button, ClickEvent } from "apowophaserui";
-import { BaseGuide, Render, UiManager } from "gamecoreRender";
+import { BaseGuide, UiManager } from "gamecoreRender";
 import { ModuleName } from "structure";
-import { GuideID } from "../../guide";
 import { BottomPanel } from "../Bottom/BottomPanel";
 
 export class HomeGuidePanel extends BaseGuide {
     constructor(uiManager: UiManager) {
-        super(GuideID.Home, uiManager.render);
+        super(uiManager.render);
     }
 
     public show(param?: any) {

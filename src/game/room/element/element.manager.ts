@@ -1,34 +1,27 @@
-import { PacketHandler, PBpacket } from "net-socket-packet";
-import { op_client, op_def, op_virtual_world } from "pixelpai_proto";
-import { ConnectionService } from "../../../../lib/net/connection.service";
-import { Logger, LogicPos } from "utils";
+import {PacketHandler, PBpacket} from "net-socket-packet";
+import {op_client, op_def, op_virtual_world} from "pixelpai_proto";
+import {ConnectionService} from "../../../../lib/net/connection.service";
+import {Logger, LogicPos} from "utils";
 import {EventType, IDragonbonesModel, IFramesModel, ISprite, MessageType} from "structure";
-import { IRoomService, Room } from "../room/room";
-import { Element, IElement, InputEnable } from "./element";
-import { ElementStateManager } from "./element.state.manager";
-import { ElementDataManager } from "../../data.manager/element.dataManager";
-import { DataMgrType } from "../../data.manager";
-import { ElementActionManager } from "../elementaction/element.action.manager";
-import { Sprite, IElementStorage } from "baseModel";
+import {IRoomService, Room} from "../room/room";
+import {Element, IElement, InputEnable} from "./element";
+import {ElementStateManager} from "./element.state.manager";
+import {ElementDataManager} from "../../data.manager/element.dataManager";
+import {DataMgrType} from "../../data.manager";
+import {ElementActionManager} from "../elementaction/element.action.manager";
+import {Sprite, IElementStorage} from "baseModel";
 import NodeType = op_def.NodeType;
 
 export interface IElementManager {
     hasAddComplete: boolean;
     readonly connection: ConnectionService | undefined;
     readonly roomService: IRoomService;
-    readonly map: number[][];
 
     add(sprite: ISprite[]);
 
     remove(id: number): IElement;
 
     getElements(): IElement[];
-
-    resetWalkable(sprite: ISprite);
-
-    addToMap(sprite: ISprite);
-
-    removeFromMap(sprite: ISprite);
 
     destroy();
 }
@@ -54,7 +47,6 @@ export class ElementManager extends PacketHandler implements IElementManager {
      * Add添加 End清空
      */
     protected mAddCache: any[] = [];
-    protected mMap: number[][];
     /**
      * 移除缓存list
      */
@@ -88,11 +80,6 @@ export class ElementManager extends PacketHandler implements IElementManager {
             this.mGameConfig = this.mRoom.game.elementStorage;
         }
 
-        const size = this.mRoom.miniSize;
-        this.mMap = new Array(size.rows);
-        for (let i = 0; i < this.mMap.length; i++) {
-            this.mMap[i] = new Array(size.cols).fill(-1);
-        }
         // 进入房间创建地图后将其拷贝给物理进程
         // this.roomService.game.physicalPeer.createMap(this.mMap);
         this.mStateMgr = new ElementStateManager(mRoom);
@@ -124,7 +111,7 @@ export class ElementManager extends PacketHandler implements IElementManager {
         if (element) {
             this.mElements.delete(id);
             element.destroy();
-            this.removeMap(element.model);
+            this.mRoom.removeFromWalkableMap(element.model);
         }
         return element;
     }
@@ -137,117 +124,6 @@ export class ElementManager extends PacketHandler implements IElementManager {
         for (const sprite of sprites) {
             this._add(sprite, addMap);
         }
-    }
-
-    public addToMap(sprite: ISprite) {
-        const displayInfo = sprite.displayInfo;
-        if (!displayInfo) {
-            return;
-        }
-        const collision = sprite.getCollisionArea();
-        let walkable = sprite.getWalkableArea();
-        const origin = sprite.getOriginPoint();
-        if (!collision || !walkable) {
-            return;
-        }
-        const rows = collision.length;
-        const cols = collision[0].length;
-        const pos = this.mRoom.transformToMini45(sprite.pos);
-        if (!walkable) {
-            walkable = new Array(rows);
-            for (let i = 0; i < rows; i++) {
-                walkable[i] = new Array(cols).fill(0);
-            }
-        }
-        let row = 0;
-        let col = 0;
-        for (let i = 0; i < rows; i++) {
-            row = pos.y + i - origin.y;
-            for (let j = 0; j < cols; j++) {
-                if (collision[i][j] === 1) {
-                    col = pos.x + j - origin.x;
-                    if (row >= 0 && row < this.mMap.length && col >= 0 && col < this.mMap[row].length) {
-                        if (walkable[i] === undefined || walkable[i][j] === undefined) {
-                            this.mMap[row][col] = 0;
-                        } else {
-                            this.mMap[row][col] = walkable[i][j];
-                        }
-                        // this.roomService.game.physicalPeer.setElementWalkable(row, col, this.mMap[row][col] === 1);
-                        (<Room>this.roomService).setElementWalkable(row, col, this.mMap[row][col] === 1);
-                    }
-                }
-            }
-        }
-    }
-
-    public removeFromMap(sprite: ISprite) {
-        if (!sprite) return;
-        this.resetWalkable(sprite);
-    }
-
-    public resetWalkable(sprite: any) {
-        const collision = sprite.getCollisionArea();
-        if (!collision) return;
-        let walkable = sprite.getWalkableArea();
-        const origin = sprite.getOriginPoint();
-        if (!walkable) {
-            return;
-        }
-        const rows = collision.length;
-        const cols = collision[0].length;
-        const pos = this.mRoom.transformToMini45(sprite.pos);
-        if (!walkable) {
-            walkable = new Array(rows);
-            for (let i = 0; i < rows; i++) {
-                walkable[i] = new Array(cols).fill(0);
-            }
-        }
-        let row = 0;
-        let col = 0;
-        for (let i = 0; i < rows; i++) {
-            row = pos.y + i - origin.y;
-            for (let j = 0; j < cols; j++) {
-                if (collision[i][j] === 1) {
-                    col = pos.x + j - origin.x;
-                    if (row >= 0 && row < this.mMap.length && col >= 0 && col < this.mMap[row].length) {
-                        this.mMap[row][col] = 0;
-                        (<Room>this.roomService).setElementWalkable(row, col, this.mMap[row][col] === 0);
-                        // this.roomService.game.physicalPeer.setElementWalkable(row, col, this.mMap[row][col] === 0);
-                    }
-                }
-            }
-        }
-    }
-
-    // 检测sprite 是否和已有element有碰撞
-    public checkCollision(sprite: ISprite): boolean {
-        // if (sprite.layer === LayerEnum.Floor) {
-        //     return false;
-        // }
-        const collision = sprite.getCollisionArea();
-        const origin = sprite.getOriginPoint();
-        if (!collision) {
-            return false;
-        }
-        const pos45 = this.mRoom.transformToMini45(sprite.pos);
-        const rows = collision.length;
-        const cols = collision[0].length;
-        let row = 0, col = 0;
-
-        for (let i = 0; i < rows; i++) {
-            row = pos45.y + i - origin.y;
-            for (let j = 0; j < cols; j++) {
-                if (collision[i][j] === 1) {
-                    col = pos45.x + j - origin.x;
-                    if (row >= 0 && row < this.mMap.length && col >= 0 && col < this.mMap[row].length) {
-                        if (this.mMap[row][col] === 1 || this.mMap[row][col] === -1) return true;
-                    } else {
-                        return true;
-                    }
-                }
-            }
-        }
-        return false;
     }
 
     public setState(state: op_client.IStateGroup) {
@@ -409,11 +285,11 @@ export class ElementManager extends PacketHandler implements IElementManager {
                 }
                 // 更新elementstorage中显示对象的数据信息
                 const data = new Sprite(sprite, 3);
-                this.mRoom.game.elementStorage.add(<any>data);
+                this.mRoom.game.elementStorage.add(<any> data);
                 element = this.get(sprite.id);
                 if (element) {
                     this.mDealSyncMap.set(sprite.id, false);
-                    const command = (<any>sprite).command;
+                    const command = (<any> sprite).command;
                     if (command === op_def.OpCommand.OP_COMMAND_UPDATE) { //  全部
                         element.model = data;
                     } else if (command === op_def.OpCommand.OP_COMMAND_PATCH) { //  增量
@@ -506,14 +382,6 @@ export class ElementManager extends PacketHandler implements IElementManager {
         }
     }
 
-    protected addMap(sprite: ISprite) {
-        this.addToMap(sprite);
-    }
-
-    protected removeMap(sprite: ISprite) {
-        this.removeFromMap(sprite);
-    }
-
     get connection(): ConnectionService {
         if (this.mRoom) {
             return this.mRoom.game.connection;
@@ -566,7 +434,7 @@ export class ElementManager extends PacketHandler implements IElementManager {
             ele.setInputEnable(InputEnable.Interactive);
         }
         // if (!ele) ele = new Element(sprite, this);
-        if (addMap) this.addMap(sprite);
+        if (addMap) this.mRoom.addToWalkableMap(sprite);
         this.mElements.set(ele.id || 0, ele);
         return ele;
     }
@@ -617,10 +485,6 @@ export class ElementManager extends PacketHandler implements IElementManager {
 
     get roomService(): IRoomService {
         return this.mRoom;
-    }
-
-    get map(): number[][] {
-        return this.mMap;
     }
 
     get eleDataMgr() {
@@ -678,7 +542,7 @@ export class ElementManager extends PacketHandler implements IElementManager {
         const command = content.command;
         const sprites = content.sprites;
         for (const sprite of sprites) {
-            (<any>sprite).command = command;
+            (<any> sprite).command = command;
             this.mCacheSyncList.push(sprite);
         }
         this.dealSyncList();
@@ -701,8 +565,8 @@ export class ElementManager extends PacketHandler implements IElementManager {
                 if (!element) {
                     continue;
                 }
-                const { x, y } = moveData.destinationPoint3f;
-                element.move([{ x, y }]);
+                const {x, y} = moveData.destinationPoint3f;
+                element.move([{x, y}]);
                 // element.move(moveData);
             }
         }

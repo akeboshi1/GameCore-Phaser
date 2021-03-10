@@ -25,7 +25,7 @@ export class GuideEffect extends Phaser.GameObjects.Container {
         let index = 0;
         // this.mResources.set("guideMask", { key: "guideMask", url: "guide/mask.png", type: "image" });
         this.mResources.set("guideBg", { key: "guideBg", url: "guide/guideBg.png", type: "image" });
-        this.mResources.set("fall_effect", { key: "fall_effect", url: "ui/fall_effect/falleffect.png", data: "ui/fall_effect/falleffect.json", type: "atlas" });
+        this.mResources.set("handEffect", { key: "handEffect", url: "ui/fall_effect/falleffect.png", data: "ui/fall_effect/falleffect.json", type: "atlas" });
         if (this.mResources) {
             this.mResources.forEach((resource) => {
                 if (!this.scene.textures.exists(resource.key)) {
@@ -61,7 +61,7 @@ export class GuideEffect extends Phaser.GameObjects.Container {
             // image调整尺寸只能调整frame的尺寸
             this.mGuideEffect.frame.setSize(width + 20, height + 20);
             this.mGuideEffect.setPosition(0, 0);
-            this.mHandDisplay = new HandDisplay(this.scene, "fall_effect");
+            this.mHandDisplay = new HandDisplay(this.scene, "handEffect");
             (<any>this.scene).layerManager.addToLayer(MainUIScene.LAYER_MASK, this.mGuideEffect);
             (<any>this.scene).layerManager.addToLayer(MainUIScene.LAYER_MASK, this.mHandDisplay);
         }
@@ -202,21 +202,21 @@ class HandDisplay extends Phaser.GameObjects.Container {
         this.addAt(this.mEllipse, 0);
 
         const config = {
-            key: "fill_effect_enable",
-            frames: this.scene.anims.generateFrameNames("fall_effect", { prefix: "enable", end: 6, zeroPad: 2 }),
+            key: "hand_enable",
+            frames: this.scene.anims.generateFrameNames("handEffect", { prefix: "enable", end: 6, zeroPad: 2 }),
             frameRate: 16,
             repeat: -1
         };
         this.scene.anims.create(config);
-        this.mImage.play("fill_effect_enable");
+        this.mImage.play("hand_enable");
 
         const ellipseConfig = {
-            key: "fill_effect_ellipse",
-            frames: this.scene.anims.generateFrameNames("fall_effect", { prefix: "ellipse", end: 7, zeroPad: 2 }),
+            key: "hand_ellipse",
+            frames: this.scene.anims.generateFrameNames("handEffect", { prefix: "ellipse", end: 7, zeroPad: 2 }),
             frameRate: 10,
             repeat: -1
         };
         this.scene.anims.create(ellipseConfig);
-        this.mEllipse.play("fill_effect_ellipse");
+        this.mEllipse.play("hand_ellipse");
     }
 }

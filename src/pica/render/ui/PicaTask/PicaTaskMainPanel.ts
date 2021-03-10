@@ -5,6 +5,7 @@ import { Font, Handler, i18n, UIHelper, Url } from "utils";
 import { op_client, op_pkt_def } from "pixelpai_proto";
 import { PicaTaskItem } from "./PicaTaskItem";
 import { PicaItemTipsPanel } from "../SinglePanel/PicaItemTipsPanel";
+import { PicaTaskPanel } from "./PicaTaskPanel";
 
 export class PicaTaskMainPanel extends Phaser.GameObjects.Container {
     public taskItems: PicaTaskItem[] = [];
@@ -79,7 +80,7 @@ export class PicaTaskMainPanel extends Phaser.GameObjects.Container {
         }
         this.taskGroupData = content;
         this.questType = questType;
-        this.render.emitter.emit("PicaTaskPanel_Data");
+        this.render.emitter.emit(PicaTaskPanel.PICATASK_DATA);
     }
 
     setTaskDetail(quest: op_client.PKT_Quest) {

@@ -26,7 +26,7 @@ export class MainPeer extends RPCPeer {
      */
     private isReady: boolean = false;
     private mPhysicalPeer: any;
-    private delayTime: number = 20000;
+    private delayTime: number = 15000;
     private reConnectCount: number = 0;
     private startDelay: any;
     private isStartUpdateFps: boolean = false;

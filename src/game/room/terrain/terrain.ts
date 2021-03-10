@@ -46,13 +46,13 @@ export class Terrain extends BlockObject implements IElement {
         }
         await this.mElementManager.roomService.game.peer.render.setModel(val);
         await this.mRoomService.game.peer.physicalPeer.setModel(val);
-        this.mElementManager.removeFromMap(val);
+        this.mElementManager.roomService.removeFromWalkableMap(val);
         this.load(<IFramesModel>this.mModel.displayInfo);
         // this.mDisplayInfo = <IFramesModel> this.mModel.displayInfo;
         // this.createDisplay();
         this.setPosition(this.mModel.pos);
         this.setRenderable(true);
-        this.mElementManager.addToMap(val);
+        this.mElementManager.roomService.addToWalkableMap(val, true);
         // this.addDisplay();
     }
 

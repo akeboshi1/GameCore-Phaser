@@ -1,13 +1,12 @@
 import { Button, ClickEvent } from "apowophaserui";
-import { BaseGuide, Render, UiManager } from "gamecoreRender";
+import { BaseGuide, UiManager } from "gamecoreRender";
 import { ModuleName } from "structure";
-import { GuideID } from "../../guide";
 import { BottomPanel } from "../Bottom/BottomPanel";
 import { PicaExploreListPanel } from "../PicaExploreList/PicaExploreListPanel";
 
 export class ExploreGuidePanel extends BaseGuide {
     constructor(uiManager: UiManager) {
-        super(GuideID.Explore, uiManager.render);
+        super(uiManager.render);
     }
 
     public show(param?: any) {
@@ -28,7 +27,7 @@ export class ExploreGuidePanel extends BaseGuide {
 
     private step2() {
         // 异步等待过程
-        this.render.emitter.once("PicaExploreListPanel_Data", (addHei) => {
+        this.render.emitter.once(PicaExploreListPanel.PICAEXPLORELIST_DATA, (addHei) => {
             const exploreListPanel: PicaExploreListPanel = this.uiManager.getPanel(ModuleName.PICAEXPLORELIST_NAME) as PicaExploreListPanel;
             const picaExploreListLevelPanel: any = exploreListPanel.levelPanel;
             const list: any[] = picaExploreListLevelPanel.levelItems;

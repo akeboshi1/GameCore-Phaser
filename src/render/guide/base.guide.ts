@@ -11,7 +11,7 @@ export class BaseGuide implements IGuide {
     protected scene: Phaser.Scene;
     protected uiManager: UiManager;
     private mIsShow: boolean = false;
-    constructor(id: number, protected render: Render) {
+    constructor(protected render: Render) {
         this.scene = render.sceneManager.getSceneByName(SceneName.MAINUI_SCENE) as MainUIScene;
         this.uiManager = render.uiManager;
     }
