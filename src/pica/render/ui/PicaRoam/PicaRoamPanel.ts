@@ -18,17 +18,13 @@ export class PicaRoamPanel extends PicaBasePanel {
     private roamEffectOnePanel: PicaRoamEffectOnePanel;
     private tokenId: string;
     private isOneDraw: boolean = true;
-    private videoRes: any[]=[];
+    private videoRes: any[];
     constructor(uiManager: UiManager) {
         super(uiManager);
         this.key = ModuleName.PICAROAM_NAME;
         this.atlasNames = [UIAtlasName.uicommon, UIAtlasName.uicommon1, UIAtlasName.roam];
         this.textures = [{ atlasName: "roam_stripe", folder: "roam" }, { atlasName: "roam_topic", folder: "roam" }];
         // { atlasName: "roamone", folder: "roam_effect", foldType: FolderType.NORMAL, uiType: UILoadType.video },
-        // { atlasName: "roamtenrepead", folder: "roam_effect", foldType: FolderType.NORMAL, uiType: UILoadType.video },
-        // { atlasName: "roamreward", folder: "roam_effect", foldType: FolderType.NORMAL, uiType: UILoadType.video },
-        // { atlasName: "roambefore", folder: "roam_effect", foldType: FolderType.NORMAL, uiType: UILoadType.video }];
-        // this.videoRes = [{ atlasName: "roamone", folder: "roam_effect", foldType: FolderType.NORMAL, uiType: UILoadType.video },
         // { atlasName: "roamtenrepead", folder: "roam_effect", foldType: FolderType.NORMAL, uiType: UILoadType.video },
         // { atlasName: "roamreward", folder: "roam_effect", foldType: FolderType.NORMAL, uiType: UILoadType.video },
         // { atlasName: "roambefore", folder: "roam_effect", foldType: FolderType.NORMAL, uiType: UILoadType.video }];
@@ -48,23 +44,6 @@ export class PicaRoamPanel extends PicaBasePanel {
 
     preload() {
         super.preload();
-        const uimanager: PicaRenderUiManager = <PicaRenderUiManager>(this.uiManager);
-        const tempdatas = uimanager.getUrlDatas(this.videoRes, UILoadType.texture);
-        for (const data of tempdatas) {
-            if (!this.cacheExists(UILoadType[data.uiType], data.atlasName)) {
-                let obj = {};
-                if (data.uiType === UILoadType.atlas) {
-                    obj = { type: "atlas", dpr: this.dpr, texture: data.atlasUrl, data: data.jsonUrl, foldType: data.foldType };
-                } else if (data.uiType === UILoadType.texture) {
-                    obj = { type: "image", dpr: this.dpr, texture: data.atlasUrl, data: undefined, foldType: data.foldType };
-
-                } else if (data.uiType === UILoadType.video) {
-                    obj = { type: "video", dpr: this.dpr, texture: data.atlasUrl, data: undefined, foldType: data.foldType };
-                }
-                this.addResources(data.atlasName, obj);
-            }
-        }
-        this.scene.load.start();
     }
     public addListen() {
         if (!this.mInitialized) return;

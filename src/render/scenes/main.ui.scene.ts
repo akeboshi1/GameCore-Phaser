@@ -1,5 +1,5 @@
 import { BaseLayer } from "baseRender";
-import { Font, Size } from "utils";
+import { Font, Size, Url } from "utils";
 import { SceneName } from "structure";
 import { RoomScene } from "./room.scene";
 
@@ -19,6 +19,8 @@ export class MainUIScene extends RoomScene {
   }
 
   public preload() {
+    this.loadRaomVideos();
+    super.preload();
   }
 
   public init(data: any) {
@@ -105,5 +107,14 @@ export class MainUIScene extends RoomScene {
     // ui scale: ${world.uiScale.toFixed(5)}
     // `;
     //  this.sizeTF.text = "width:" + size.width + ";height:" + size.height;
+  }
+
+  private loadRaomVideos() {
+    const folder = "roam_effect";
+    const video = ["roamone", "roamtenrepead", "roamreward", "roambefore"];
+    for (const res of video) {
+      const url = Url.getNormalUIRes(`${folder}/${res}.mp4`);
+      this.load.video(res, url, undefined, undefined, true);
+    }
   }
 }
