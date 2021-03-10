@@ -13,6 +13,7 @@ export class PicaChat extends BasicModel {
   register() {
     const connection = this.connection;
     if (connection) {
+      connection.removePacketListener(this);
       connection.addPacketListener(this);
       this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_CHAT, this.handleCharacterChat);
       this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_MARKET_QUERY, this.onQueryMarketHandler);
@@ -74,7 +75,7 @@ export class PicaChat extends BasicModel {
   queryGoHome() {
     const packet = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_PKT_GO_HOME);
     this.connection.send(packet);
-}
+  }
   private handleCharacterChat(packet: PBpacket) {
     this.game.emitter.emit("chat", packet.content);
   }

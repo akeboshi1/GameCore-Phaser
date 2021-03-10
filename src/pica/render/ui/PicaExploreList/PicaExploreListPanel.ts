@@ -11,6 +11,7 @@ import { PicaExploreListBottomPanel } from "./PicaExploreListBottomPanel";
 import { PicaExploreListLevelPanel } from "./PicaExploreListLevelPanel";
 
 export class PicaExploreListPanel extends PicaBasePanel {
+    public static PICAEXPLORELIST_DATA: string = "PICAEXPLORELIST_DATA";
     public levelPanel: PicaExploreListLevelPanel;
     private detialPanel: PicaExploreListDetailPanel;
     private bottomPanel: PicaExploreListBottomPanel;
@@ -89,13 +90,13 @@ export class PicaExploreListPanel extends PicaBasePanel {
     onShow() {
         if (this.mShowData)
             this.setExploreChapters(this.mShowData);
-        if (this.tempDatas)
-            this.setEnergyData(this.tempDatas.value, this.tempDatas.max);
+        if (this.powerDatas)
+            this.setEnergyData(this.powerDatas.value, this.powerDatas.max);
     }
     setExploreChapterResult(content: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_QUERY_CHAPTER_RESULT) {
         const nextLevelID = this.mShowData.nextLevelId;
         this.levelPanel.setCaptoreResult(content, nextLevelID);
-        this.render.emitter.emit("PicaExploreListPanel_Data", this.levelPanel.addHei);
+        this.render.emitter.emit(PicaExploreListPanel.PICAEXPLORELIST_DATA, this.levelPanel.addHei);
     }
     setExploreChapters(data: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_EXPLORE_CHAPTER_PROGRESS) {
         this.mShowData = data;
@@ -104,9 +105,10 @@ export class PicaExploreListPanel extends PicaBasePanel {
     }
 
     setEnergyData(value: number, max: number) {
-        this.tempDatas = { value, max };
+        this.powerDatas = { value, max };
         if (!this.mInitialized) return;
         this.energyProgress.setEnergyData(value, max);
+        this.levelPanel.setPowerValue(value);
     }
 
     openDetialPanel() {
@@ -146,7 +148,14 @@ export class PicaExploreListPanel extends PicaBasePanel {
             this.openDetialPanel();
             this.detialPanel.setCaptoreResultData(data);
         } else if (tag === "roomid") {
-            this.render.renderEmitter(ModuleName.PICAEXPLORELIST_NAME + "_queyenterroom", data);
+            if (this.powerDatas.value < data.energyCost) {
+                const noticedata = {
+                    text: [{ text: i18n.t("furnicompose.selecttips"), node: undefined }]
+                };
+                this.render.mainPeer.showMediator(ModuleName.PICANOTICE_NAME, true, noticedata);
+            } else {
+                this.render.renderEmitter(ModuleName.PICAEXPLORELIST_NAME + "_queyenterroom", data.roomId);
+            }
         } else if (tag === "move") {
             if (data) {
                 this.topbg.visible = false;

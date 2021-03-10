@@ -560,3 +560,39 @@ class RewardLayoutGroup extends Phaser.GameObjects.Container {
         }
     }
 }
+
+class UnKnownAnimation extends Phaser.GameObjects.Container {
+    private unknImg: Phaser.GameObjects.Image;
+    private dpr: number;
+    private pos = [];
+    private tween: Phaser.Tweens.Tween;
+    constructor(scene: Phaser.Scene, dpr: number) {
+        super(scene);
+        this.dpr = dpr;
+        this.unknImg = this.scene.make.image({ key: UIAtlasName.explorelog, frame: "Settlement_unkown_clue" }).setOrigin(0.3, 0.8);
+        this.unknImg.y = 0;
+        this.add(this.unknImg);
+        this.pos = [{ x: 0, y: 0 }, { x: -4, y: 0 }, { x: -6, y: -2 }, { x: -8, y: -4 }, { x: -10, y: -7 }, { x: -10, y: -10 },
+        { x: -8, y: -12 }, { x: -6, y: -14 }, { x: -4, y: -16 }, { x: -2, y: -14 }, { x: 0, y: -12 }, { x: 2, y: -10 }, { x: 4, y: -8 },
+        { x: 4, y: -6 }, { x: 4, y: -3 }, { x: 4, y: 0 }, { x: 4, y: 3 }, { x: 2, y: 1 }];
+    }
+    destroy(fromScene?: boolean) {
+        if (this.tween) this.tween.destroy();
+        super.destroy(fromScene);
+    }
+    playAni() {
+        if (this.pos.length === 0) return;
+        const pos = this.pos.shift();
+        this.tween = this.scene.tweens.add({
+            targets: this.unknImg,
+            x: pos.x,
+            y: pos.y,
+            duration: 100,
+            onComplete: () => {
+                this.playAni();
+            }
+        });
+
+    }
+
+}

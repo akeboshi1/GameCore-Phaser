@@ -90,12 +90,17 @@ export class BaseBatchPanel extends Panel {
         let index = 0;
         if (this.mResources) {
             this.mResources.forEach((resource, key) => {
-                if (!this.scene.textures.exists(key)) {
+                // if (!this.scene.textures.exists(key)) {
+                //     index++;
+                //     this.addResources(key, resource);
+                // }
+                if (!this.cacheExists(resource.type, key)) {
                     index++;
                     this.addResources(key, resource);
                 }
             }, this);
         }
+        Logger.getInstance().error("Load+++++++++++++    :", index);
         if (index > 0) {
             this.startLoad();
         } else {
@@ -107,12 +112,15 @@ export class BaseBatchPanel extends Panel {
     }
 
     protected init() {
-        (<MainUIScene>this.mScene).layerManager.addToLayer(this.uiLayer, this);
-        super.init();
-        this.setLinear(this.key);
-        Logger.getInstance().debug("init========", this.key);
-        this.__exportProperty();
-        this.onInitialized();
+        // 异步过程中存在某些ui在销毁之前初始化完成
+        if (this.mScene && this.mScene.sys && this.mScene.sys.displayList) {
+            (<MainUIScene>this.mScene).layerManager.addToLayer(this.uiLayer, this);
+            super.init();
+            this.setLinear(this.key);
+            Logger.getInstance().debug("init========", this.key);
+            this.__exportProperty();
+            this.onInitialized();
+        }
     }
 
     protected setLinear(key: string) {
@@ -130,6 +138,14 @@ export class BaseBatchPanel extends Panel {
             }
         }
         super.addResources(key, resource);
+    }
+    protected cacheExists(type: string, key: string) {
+        if (type === "image" || type === "atlas" || type === "texture") {
+            return this.scene.textures.exists(key);
+        } else if (type === "json" || type === "video") {
+            return this.scene.cache[type].exists(key);
+        }
+        return false;
     }
 
     protected get scaleWidth() {

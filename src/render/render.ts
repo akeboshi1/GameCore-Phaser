@@ -60,7 +60,10 @@ export interface GlobalGameConfig {
 }
 
 export class Render extends RPCPeer implements GameMain, IRender {
+    public static SCENE_CREATED: string = "SCENE_CREATED";
+    public static SCENE_DESTROY: string = "SCENE_DESTROY";
     public isConnect: boolean = false;
+    public sceneCreated: boolean = false;
     public emitter: Phaser.Events.EventEmitter;
     @Export()
     public gridsDebugger: GridsDebugger;
@@ -300,6 +303,8 @@ export class Render extends RPCPeer implements GameMain, IRender {
 
     // 切换scene时，清除各个manager缓存
     clearManager() {
+        this.sceneCreated = false;
+        this.emitter.emit(Render.SCENE_DESTROY);
         if (this.mUiManager)
             this.mUiManager.destroy();
 
@@ -462,6 +467,8 @@ export class Render extends RPCPeer implements GameMain, IRender {
     }
 
     startRoomPlay() {
+        this.sceneCreated = true;
+        this.emitter.emit(Render.SCENE_CREATED);
         this.remote[MAIN_WORKER].MainPeer.startRoomPlay();
     }
 

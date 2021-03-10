@@ -8,6 +8,7 @@ import { op_client, op_def } from "pixelpai_proto";
 import { PicaBasePanel } from "../pica.base.panel";
 import { ICountablePackageItem, IExtendCountablePackageItem } from "picaStructure";
 export class PicaBagPanel extends PicaBasePanel {
+  public static PICABAG_SHOW: string = "PICABAG_SHOW";
   private mCloseBtn: Button;
   private topCheckBox: CheckboxGroup;
   private mBackground: CommonBackground;
@@ -220,7 +221,7 @@ export class PicaBagPanel extends PicaBasePanel {
 
   protected onShow() {
     super.onShow();
-    this.render.emitter.emit("BagPanel_show");
+    this.render.emitter.emit(PicaBagPanel.PICABAG_SHOW);
   }
 
   protected onInitialized() {
@@ -286,6 +287,7 @@ export class PicaBagPanel extends PicaBasePanel {
     this.starImage = this.scene.make.image({ key: UIAtlasName.uicommon, frame: "bag_star_big_1" });
     this.starImage.x = nameBg.x;
     this.starImage.y = nameBg.y + nameBg.height * 0.5 + 15 * this.dpr;
+    this.starImage.visible = false;
     this.moreButton = new Button(this.scene, UIAtlasName.uicommon, "online_more");
     this.moreButton.x = width - this.moreButton.width * 0.5 - 20 * this.dpr;
     this.moreButton.y = nameBg.y;

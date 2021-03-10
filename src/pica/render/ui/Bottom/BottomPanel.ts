@@ -106,6 +106,10 @@ export class BottomPanel extends PicaBasePanel {
         super.onShow();
     }
 
+    protected onHide() {
+        this.mInput.blurInput();
+    }
+
     protected init() {
         this.mOutput = new OutputContainer(this.scene, this.dpr, this.scale);
         this.mInput = new InputContainer(this.scene, this.key, this.dpr);

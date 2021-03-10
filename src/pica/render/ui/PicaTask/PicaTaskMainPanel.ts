@@ -5,6 +5,7 @@ import { Font, Handler, i18n, UIHelper, Url } from "utils";
 import { op_client, op_pkt_def } from "pixelpai_proto";
 import { PicaTaskItem } from "./PicaTaskItem";
 import { PicaItemTipsPanel } from "../SinglePanel/PicaItemTipsPanel";
+import { PicaTaskPanel } from "./PicaTaskPanel";
 
 export class PicaTaskMainPanel extends Phaser.GameObjects.Container {
     public taskItems: PicaTaskItem[] = [];
@@ -38,6 +39,7 @@ export class PicaTaskMainPanel extends Phaser.GameObjects.Container {
     }
     setTaskDatas(content: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_QUERY_QUEST_GROUP, questType: op_pkt_def.PKT_Quest_Type) {
         this.gameScroller.clearItems(false);
+        if (this.mainTaskAnimation) this.mainTaskAnimation.dispose();
         if (!content.id) {
             // console.log("没有新任务了");
             this.notaskTip.visible = true;
@@ -53,6 +55,7 @@ export class PicaTaskMainPanel extends Phaser.GameObjects.Container {
         }
         this.mainItem.setMainTaskData(content, questType);
         this.gameScroller.addItem(this.mainItem);
+
         if (this.questType !== questType) {
             const tempArr = this.getTaskQuests(content.quests, undefined);
             this.setTaskItems(tempArr);
@@ -68,6 +71,7 @@ export class PicaTaskMainPanel extends Phaser.GameObjects.Container {
             for (const item of this.taskItems) {
                 if (item.visible) tempitems.push(item);
             }
+            this.isFinishGroup = true;
             if (this.isFinishGroup) {
                 this.mainTaskAnimation = new MainTaskAnimation(this.scene, this.mainItem, tempitems, this.width, this.dpr);
                 if (this.isMoveFinish) this.mainTaskAnimation.playIntoAnimation();
@@ -79,7 +83,7 @@ export class PicaTaskMainPanel extends Phaser.GameObjects.Container {
         }
         this.taskGroupData = content;
         this.questType = questType;
-        this.render.emitter.emit("PicaTaskPanel_Data");
+        this.render.emitter.emit(PicaTaskPanel.PICATASK_DATA);
     }
 
     setTaskDetail(quest: op_client.PKT_Quest) {
@@ -398,6 +402,7 @@ class MainTaskAnimation {
     private taskItems: PicaTaskItem[];
     private listPosY = [];
     private tempItems = [];
+    private itemTweens: Phaser.Tweens.Tween[] = [];
     private width: number;
     private dpr: number;
     private isDispose: boolean = false;
@@ -421,8 +426,14 @@ class MainTaskAnimation {
     }
 
     public dispose() {
+        if (this.isDispose) return;
+        for (const tween of this.itemTweens) {
+            tween.stop();
+            tween.remove();
+        }
         this.tempItems.length = 0;
         this.taskItems.length = 0;
+        this.itemTweens.length = 0;
         this.mainItem = undefined;
         this.taskItems = undefined;
         this.tempItems = undefined;
@@ -465,6 +476,7 @@ class MainTaskAnimation {
             onComplete: () => {
                 tween.stop();
                 tween.remove();
+                this.removeTween(tween);
                 if (moveY) {
                     if (this.indexed > 0)
                         this.playMoveY();
@@ -472,6 +484,7 @@ class MainTaskAnimation {
                 }
             },
         });
+        this.itemTweens.push(tween);
     }
 
     private playAlpha(target, from, to, ease: string) {
@@ -487,8 +500,10 @@ class MainTaskAnimation {
             onComplete: () => {
                 tween.stop();
                 tween.remove();
+                this.removeTween(tween);
             },
         });
+        this.itemTweens.push(tween);
     }
 
     private playMoveY() {
@@ -511,9 +526,18 @@ class MainTaskAnimation {
             onComplete: () => {
                 tween.stop();
                 tween.remove();
+                this.removeTween(tween);
                 this.playNextAnimation();
             },
         });
+        this.itemTweens.push(tween);
+    }
+    private removeTween(tween: Phaser.Tweens.Tween) {
+        if (this.isDispose) return;
+        const index = this.itemTweens.indexOf(tween);
+        if (index !== -1) {
+            this.itemTweens.splice(index, 1);
+        }
     }
 }
 
@@ -525,6 +549,7 @@ class MainTaskGooutAnimation {
     private dpr: number;
     private isDispose: boolean = false;
     private scene: Phaser.Scene;
+    private itemTweens: Phaser.Tweens.Tween[] = [];
     constructor(scene: Phaser.Scene, taskItems: PicaTaskItem[], width: number, dpr: number) {
         this.scene = scene;
         this.taskItems = taskItems;
@@ -564,8 +589,14 @@ class MainTaskGooutAnimation {
     }
 
     public dispose() {
+        if (this.isDispose) return;
+        for (const tween of this.itemTweens) {
+            tween.stop();
+            tween.remove();
+        }
         this.tempItems.length = 0;
         this.taskItems.length = 0;
+        this.itemTweens.length = 0;
         this.taskItems = undefined;
         this.tempItems = undefined;
         this.isDispose = true;
@@ -589,12 +620,14 @@ class MainTaskGooutAnimation {
             onComplete: () => {
                 tween.stop();
                 tween.remove();
+                this.removeTween(tween);
                 if (!this.scene) return;
                 for (const item of target) {
                     item.visible = false;
                 }
             },
         });
+        this.itemTweens.push(tween);
     }
 
     private playAlpha(target, from, to, ease: string) {
@@ -610,8 +643,10 @@ class MainTaskGooutAnimation {
             onComplete: () => {
                 tween.stop();
                 tween.remove();
+                this.removeTween(tween);
             },
         });
+        this.itemTweens.push(tween);
     }
 
     private playMoveGooutY(tempArr: PicaTaskItem[], indexed: number, delay: number) {
@@ -635,10 +670,21 @@ class MainTaskGooutAnimation {
             onComplete: () => {
                 tween.stop();
                 tween.remove();
+                this.removeTween(tween);
                 if (!this.isDispose) {
                     this.dispose();
                 }
             },
         });
+
+        this.itemTweens.push(tween);
+    }
+
+    private removeTween(tween: Phaser.Tweens.Tween) {
+        if (this.isDispose) return;
+        const index = this.itemTweens.indexOf(tween);
+        if (index !== -1) {
+            this.itemTweens.splice(index, 1);
+        }
     }
 }

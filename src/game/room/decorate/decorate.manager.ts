@@ -27,6 +27,10 @@ export class DecorateManager {
         return this.mRoom;
     }
 
+    public get selectedID(): number {
+        return this.mSelectedID;
+    }
+
     public destroy() {
         this.mActionQueue.length = 0;
         this.mSelectedActionQueue.length = 0;
@@ -171,7 +175,7 @@ export class DecorateManager {
         this.mSelectedID = id;
 
         // set walkable
-        this.mRoom.elementManager.removeFromMap(element.model);
+        this.mRoom.removeFromWalkableMap(element.model);
 
         // show reference
         element.showRefernceArea();
@@ -197,8 +201,38 @@ export class DecorateManager {
 
         const element = this.mRoom.elementManager.get(this.mSelectedID);
         if (!element) return false;
+        const sprite = element.model;
 
-        return !this.mRoom.elementManager.checkCollision(element.model);
+        const collision = sprite.getCollisionArea();
+        let walkable = sprite.getWalkableArea();
+        const origin = sprite.getOriginPoint();
+        if (!collision) {
+            return true;
+        }
+        const rows = collision.length;
+        const cols = collision[0].length;
+        const pos = this.mRoom.transformToMini45(new LogicPos(sprite.pos.x, sprite.pos.y));
+        if (!walkable) {
+            walkable = new Array(rows);
+            for (let i = 0; i < rows; i++) {
+                walkable[i] = new Array(cols).fill(0);
+            }
+        }
+        let tempY = 0;
+        let tempX = 0;
+        for (let i = 0; i < rows; i++) {
+            tempY = pos.y + i - origin.y;
+            for (let j = 0; j < cols; j++) {
+                tempX = pos.x + j - origin.x;
+                if (collision[i][j] === 0 || walkable[i][j] === 1) continue;
+                const val = this.mRoom.isWalkable(tempX, tempY);
+                if (!val) {
+                    // Logger.getInstance().log("#place ", val, pos, tempX, tempY);
+                    return false;
+                }
+            }
+        }
+        return true;
     }
 
     // 点击浮动栏中的确认按钮，确认选择物的改动，取消选择，关闭选择栏
@@ -224,7 +258,7 @@ export class DecorateManager {
         const element = this.mRoom.elementManager.get(this.mSelectedID);
         if (element) {
             // set walkable
-            this.mRoom.elementManager.addToMap(element.model);
+            this.mRoom.addToWalkableMap(element.model);
 
             // hide reference
             element.hideRefernceArea();
@@ -248,7 +282,7 @@ export class DecorateManager {
         const element = this.mRoom.elementManager.get(this.mSelectedID);
         if (element) {
             // set walkable
-            this.mRoom.elementManager.addToMap(element.model);
+            this.mRoom.addToWalkableMap(element.model);
 
             // hide reference
             element.hideRefernceArea();
@@ -300,11 +334,6 @@ export class DecorateManager {
         const act = new DecorateAction(element.model, DecorateActionType.Move, new DecorateActionData({moveVec: delta}));
         this.mSelectedActionQueue.push(act);
         act.execute(this);
-
-        this.mRoom.elementManager.removeFromMap(element.model);
-
-        const canPlace = this.checkSelectedCanPlace();
-        this.mRoom.game.emitter.emit(MessageType.DECORATE_UPDATE_SELECTED_ELEMENT_CAN_PLACE, canPlace);
     }
 
     // 旋转选择物
@@ -315,11 +344,6 @@ export class DecorateManager {
         const act = new DecorateAction(element.model, DecorateActionType.Rotate, new DecorateActionData({rotateTimes: 1}));
         this.mSelectedActionQueue.push(act);
         act.execute(this);
-
-        this.mRoom.elementManager.removeFromMap(element.model);
-
-        const canPlace = this.checkSelectedCanPlace();
-        this.mRoom.game.emitter.emit(MessageType.DECORATE_UPDATE_SELECTED_ELEMENT_CAN_PLACE, canPlace);
     }
 
     // 回收选择物至背包
@@ -549,16 +573,27 @@ class DecorateAction {
     }
 
     private setElementPos(mng: DecorateManager, x: number, y: number) {
-        mng.room.elementManager.removeFromMap(this.target);
+        mng.room.removeFromWalkableMap(this.target);
         this.target.setPosition(x, y);
-        mng.room.elementManager.addToMap(this.target);
+        mng.room.addToWalkableMap(this.target);
         mng.room.game.renderPeer.setPosition(this.target.id, this.target.pos.x, this.target.pos.y);
+
+        if (mng.selectedID === this.target.id) {
+            mng.room.removeFromWalkableMap(this.target);
+            const canPlace = mng.checkSelectedCanPlace();
+            mng.room.game.emitter.emit(MessageType.DECORATE_UPDATE_SELECTED_ELEMENT_CAN_PLACE, canPlace);
+        }
     }
 
     private setElementDirection(mng: DecorateManager, dir: number) {
-        mng.room.elementManager.removeFromMap(this.target);
+        mng.room.removeFromWalkableMap(this.target);
         this.target.setDirection(dir);
-        mng.room.elementManager.addToMap(this.target);
+        mng.room.addToWalkableMap(this.target);
+
+        if (mng.selectedID === this.target.id) {
+            const canPlace = mng.checkSelectedCanPlace();
+            mng.room.game.emitter.emit(MessageType.DECORATE_UPDATE_SELECTED_ELEMENT_CAN_PLACE, canPlace);
+        }
     }
 
     private nextDir(dir: number): number {

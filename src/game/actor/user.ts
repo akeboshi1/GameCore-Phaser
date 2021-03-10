@@ -20,7 +20,7 @@ export class User extends Player {
     private mInputMask: number;
     private mSetPostionTime: number = 0;
     private mPreTargetID: number = 0;
-    private holdTime: any;
+    private holdTime: number = 0;
     private holdDelay: number = 80;
     constructor(private game: Game) {
         super(undefined, undefined);
@@ -146,6 +146,7 @@ export class User extends Player {
     }
 
     public clear() {
+        this.holdTime = 0;
         this.removePackListener();
         super.clear();
         if (this.mUserData) this.userData.destroy();
@@ -197,9 +198,11 @@ export class User extends Player {
             this.mPreTargetID = 0;
             return;
         }
+        const now = new Date().getTime();
         // 防止由于网络波动导致多次点击传送点后无法收到房间信息，场景ui无法显示
-        this.holdTime = setTimeout(async () => {
-            if (this.mPreTargetID === targetId) {
+        if (this.mPreTargetID === targetId) {
+            if (now - this.holdTime < this.holdDelay) {
+                this.holdTime = now;
                 const txt = await this.game.renderPeer.i18nString("noticeTips.quickclick");
                 const tempdata = {
                     text: [{ text: txt, node: undefined }]
@@ -207,14 +210,13 @@ export class User extends Player {
                 this.game.peer.showMediator(ModuleName.PICANOTICE_NAME, true, tempdata);
                 return;
             }
-            clearTimeout(this.holdTime);
-            this.mPreTargetID = targetId;
-            const packet: PBpacket = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_ACTIVE_SPRITE);
-            const content: op_virtual_world.IOP_CLIENT_REQ_VIRTUAL_WORLD_ACTIVE_SPRITE = packet.content;
-            content.spriteId = targetId;
-            this.game.connection.send(packet);
-            this.game.emitter.emit(EventType.SCENE_INTERACTION_ELEMENT, targetId, this.id);
-        }, this.holdDelay);
+        }
+        this.mPreTargetID = targetId;
+        const packet: PBpacket = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_ACTIVE_SPRITE);
+        const content: op_virtual_world.IOP_CLIENT_REQ_VIRTUAL_WORLD_ACTIVE_SPRITE = packet.content;
+        content.spriteId = targetId;
+        this.game.connection.send(packet);
+        this.game.emitter.emit(EventType.SCENE_INTERACTION_ELEMENT, targetId, this.id);
     }
 
     protected unmountSprite(id: number, pos: IPos) {

@@ -20,7 +20,6 @@ export class TerrainManager extends PacketHandler implements IElementManager {
     protected mPacketFrameCount: number = 0;
     protected mListener: SpriteAddCompletedListener;
     // ---- by 7
-    protected mMap: number[][];
     private mEmptyMap: EmptyTerrain[][];
     private mDirty: boolean = false;
 
@@ -41,12 +40,6 @@ export class TerrainManager extends PacketHandler implements IElementManager {
         }
         if (this.mRoom) {
             this.mGameConfig = this.mRoom.game.elementStorage;
-        }
-
-        const miniSize = this.roomService.miniSize;
-        this.mMap = new Array(miniSize.rows);
-        for (let i = 0; i < miniSize.rows; i++) {
-            this.mMap[i] = new Array(miniSize.cols).fill(0);
         }
     }
 
@@ -110,87 +103,6 @@ export class TerrainManager extends PacketHandler implements IElementManager {
             terrain.destroy();
         }
         return terrain;
-    }
-
-    public addToMap(sprite: ISprite) {
-        if (!sprite) return;
-        const collision = sprite.getCollisionArea();
-        let walkable = sprite.getWalkableArea();
-        const origin = sprite.getOriginPoint();
-        if (!collision || !walkable) {
-            return;
-        }
-        let rows = collision.length;
-        let cols = collision[0].length;
-        const { x, y } = sprite.pos;
-        const pos = this.mRoom.transformTo45(new LogicPos(x, y));
-        // terrain pos为60*30大格子
-        pos.x *= 2;
-        pos.y *= 2;
-        if (!walkable) {
-            walkable = new Array(rows);
-            for (let i = 0; i < rows; i++) {
-                walkable[i] = new Array(cols).fill(0);
-            }
-        }
-        if (rows === 1 && cols === 1) {
-            rows = 2;
-            cols = 2;
-        }
-        let row = 0;
-        let col = 0;
-        for (let i = 0; i < rows; i++) {
-            row = pos.y + i - origin.y;
-            for (let j = 0; j < cols; j++) {
-                col = pos.x + j - origin.x;
-                if (row >= 0 && row < this.mMap.length && col >= 0 && col < this.mMap[row].length) {
-                    if (collision.length > i && collision[i][j] === 1) {
-                        this.mMap[row][col] = walkable[i][j];
-                    } else {
-                        this.mMap[row][col] = 1;
-                    }
-                    (<Room>this.roomService).setTerrainWalkable(row, col, this.mMap[row][col] === 1);
-                }
-            }
-        }
-    }
-
-    public removeFromMap(sprite: ISprite) {
-        if (!sprite) return;
-        this.resetWalkable(sprite);
-    }
-
-    public resetWalkable(sprite: ISprite) {
-        const collision = sprite.getCollisionArea();
-        const walkable = sprite.getWalkableArea();
-        const origin = sprite.getOriginPoint();
-        if (!collision || !walkable) {
-            return;
-        }
-        let rows = collision.length;
-        let cols = collision[0].length;
-        // const pos = sprite.pos;
-        const { x, y } = sprite.pos;
-        const pos = new LogicPos(x, y);
-        // terrain pos为60*30大格子
-        pos.x *= 2;
-        pos.y *= 2;
-        if (rows === 1 && cols === 1) {
-            rows = 2;
-            cols = 2;
-        }
-        let row = 0;
-        let col = 0;
-        for (let i = 0; i < rows; i++) {
-            row = pos.y + i - origin.y;
-            for (let j = 0; j < cols; j++) {
-                col = pos.x + j - origin.x;
-                if (row >= 0 && row < this.mMap.length && col >= 0 && col < this.mMap[row].length) {
-                    this.mMap[row][col] = 0;
-                    (<Room>this.roomService).setTerrainWalkable(row, col, false);
-                }
-            }
-        }
     }
 
     public getElements(): IElement[] {
@@ -402,8 +314,5 @@ export class TerrainManager extends PacketHandler implements IElementManager {
 
     get roomService(): IRoomService {
         return this.mRoom;
-    }
-    get map(): number[][] {
-        return this.mMap;
     }
 }

@@ -83,9 +83,11 @@ export class PicaRoamEffectOnePanel extends Phaser.GameObjects.Container {
     }
 
     private setVideoSize() {
-        this.video.scale = 1;
-        const scaleX = this.width / this.video.displayWidth;
-        const scaleY = this.height / this.video.displayHeight;
-        this.video.scale = scaleX > scaleY ? scaleX : scaleY;
+        if (this.video.frame) {
+            this.video.scale = 1;
+            const scaleX = this.width / this.video.displayWidth;
+            const scaleY = this.height / this.video.displayHeight;
+            this.video.scale = scaleX > scaleY ? scaleX : scaleY;
+        }
     }
 }

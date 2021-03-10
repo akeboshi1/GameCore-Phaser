@@ -1,7 +1,7 @@
-import {Render} from "../render";
-import {NodeType} from "../managers";
-import {MainUIScene} from "../scenes/main.ui.scene";
-import {LogicPos} from "utils";
+import { Render } from "../render";
+import { NodeType } from "../managers";
+import { MainUIScene } from "../scenes/main.ui.scene";
+import { LogicPos } from "utils";
 
 export class MotionManager {
     public enable: boolean;
@@ -89,7 +89,31 @@ export class MotionManager {
         this.removeListener();
     }
 
-    public async onPointerDownHandler(pointer: Phaser.Input.Pointer) {
+    public async onGuideOnPointUpHandler(pointer: Phaser.Input.Pointer, id: number) {
+        this.scene.input.off("pointermove", this.onPointerMoveHandler, this);
+        if (id) {
+            if (id) {
+                const ele = this.render.displayManager.getDisplay(id);
+                if (ele.nodeType === NodeType.CharacterNodeType) {
+                    // TODO
+                    this.render.mainPeer.activePlayer(id);
+                    this.clearGameObject();
+                    return;
+                }
+                let targets = await this.render.physicalPeer.getInteractivePosition(id);
+                if (!targets || targets.length === 0) {
+                    const { x, y } = ele;
+                    targets = [{ x, y }];
+                }
+                this.movePath(pointer.worldX / this.render.scaleRatio, pointer.worldY / this.render.scaleRatio, 0, targets, id);
+            }
+        } else {
+            this.movePath(pointer.worldX / this.render.scaleRatio, pointer.worldY / this.render.scaleRatio, 0, [new LogicPos(pointer.worldX / this.scaleRatio, pointer.worldY / this.scaleRatio)]);
+        }
+        this.clearGameObject();
+    }
+
+    protected async onPointerDownHandler(pointer: Phaser.Input.Pointer) {
         if (!this.isRunning) return;
         if (this.render.guideManager.canInteractive()) return;
         this.scene.input.on("pointermove", this.onPointerMoveHandler, this);

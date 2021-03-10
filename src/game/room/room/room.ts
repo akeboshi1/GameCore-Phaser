@@ -15,7 +15,7 @@ import {IElement, InputEnable} from "../element/element";
 import {IViewBlockManager} from "../viewblock/iviewblock.manager";
 import {TerrainManager} from "../terrain/terrain.manager";
 import {SkyBoxManager} from "../sky.box/sky.box.manager";
-import {GameState, IScenery, LoadState, ModuleName, SceneName} from "structure";
+import {GameState, IScenery, ISprite, LoadState, ModuleName, SceneName} from "structure";
 import {EffectManager} from "../effect/effect.manager";
 import {DecorateActionType, DecorateManager} from "../decorate/decorate.manager";
 import {WallManager} from "../element/wall.manager";
@@ -97,6 +97,12 @@ export interface IRoomService {
 
     stopDecorating();
 
+    addToWalkableMap(sprite: ISprite, isTerrain?: boolean);
+
+    removeFromWalkableMap(sprite: ISprite);
+
+    isWalkable(x: number, y: number): boolean;
+
     destroy();
 }
 
@@ -133,6 +139,9 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
     private mActorData: IActor;
     private mUpdateHandlers: Handler[] = [];
     private mDecorateEntryData = null;
+    // -1: out of range; 0: not walkable; 1: walkable
+    private mWalkableMap: number[][];
+    private mNotWalkablePos2SpriteIDs: Map<number, number[]> = new Map<number, number[]>();
 
     constructor(protected manager: IRoomManager) {
         super();
@@ -186,6 +195,11 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
             tileWidth: data.tileWidth / 2,
             tileHeight: data.tileHeight / 2,
         };
+
+        this.mWalkableMap = new Array(this.mMiniSize.rows);
+        for (let i = 0; i < this.mWalkableMap.length; i++) {
+            this.mWalkableMap[i] = new Array(this.mMiniSize.cols).fill(-1);
+        }
 
         // create render scene
         this.mGame.showLoading({
@@ -456,21 +470,150 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
     //     return reult;
     // }
 
-    public setTerrainWalkable(x: number, y: number, val: boolean) {
-        const map = this.mElementManager.map;
-        const value = map[x][y];
-        if (value === 0) {
-            this.game.physicalPeer.setWalkableAt(x, y, false);
-            // this.mAstar.setWalkableAt(y, x, false);
+    public addToWalkableMap(sprite: ISprite, isTerrain: boolean = false) {
+        const displayInfo = sprite.displayInfo;
+        if (!displayInfo) {
+            return;
+        }
+        let collision = sprite.getCollisionArea();
+        let walkable = sprite.getWalkableArea();
+        const origin = sprite.getOriginPoint();
+        if (!collision) {
+            return;
+        }
+        let rows = collision.length;
+        let cols = collision[0].length;
+        let pos: IPos;
+        if (isTerrain) {
+            pos = this.transformTo45(new LogicPos(sprite.pos.x, sprite.pos.y));
+            pos.x *= 2;
+            pos.y *= 2;
+            if (rows === 1 && cols === 1) {
+                rows = 2;
+                cols = 2;
+
+                const colVal = collision[0][0];
+                collision = new Array(rows);
+                for (let i = 0; i < rows; i++) {
+                    collision[i] = new Array(cols).fill(colVal);
+                }
+
+                walkable = new Array(rows);
+                for (let i = 0; i < rows; i++) {
+                    walkable[i] = new Array(cols).fill(0);
+                }
+            }
         } else {
-            this.game.physicalPeer.setWalkableAt(x, y, val);
-            // this.mAstar.setWalkableAt(y, x, val);
+            pos = this.transformToMini45(new LogicPos(sprite.pos.x, sprite.pos.y));
+        }
+        if (!walkable) {
+            walkable = new Array(rows);
+            for (let i = 0; i < rows; i++) {
+                walkable[i] = new Array(cols).fill(0);
+            }
+        } else {
+            const wRows = walkable.length;
+            if (wRows === 0) {
+                Logger.getInstance().error(`data error: WalkableArea {${walkable}}, data: `, sprite);
+                return;
+            }
+            const wCols = walkable[0].length;
+            if (rows !== wRows || cols !== wCols) {
+                Logger.getInstance().error(`data error: CollisionArea {${collision}} not match WalkableArea {${walkable}}, data: `, sprite);
+                return;
+            }
+        }
+        let tempY = 0;
+        let tempX = 0;
+        for (let i = 0; i < rows; i++) {
+            tempY = pos.y + i - origin.y;
+            for (let j = 0; j < cols; j++) {
+                tempX = pos.x + j - origin.x;
+                if (tempY < 0 || tempY >= this.mWalkableMap.length || tempX < 0 || tempX >= this.mWalkableMap[tempY].length) {
+                    continue;
+                }
+
+                const canWalk = collision[i][j] === 0 || walkable[i][j] === 1;
+                this.setWalkable(tempX, tempY, canWalk);
+
+                if (!canWalk) {
+                    const wPos = tempX + tempY * this.mMiniSize.cols;
+                    if (!this.mNotWalkablePos2SpriteIDs.get(wPos)) {
+                        this.mNotWalkablePos2SpriteIDs.set(wPos, []);
+                    }
+                    const ids = this.mNotWalkablePos2SpriteIDs.get(wPos);
+                    if (ids.indexOf(sprite.id) < 0) ids.push(sprite.id);
+                    // Logger.getInstance().log("#place not walkable: ", this.mNotWalkablePos2SpriteIDs);
+                }
+            }
         }
     }
 
-    public setElementWalkable(x: number, y: number, val: boolean) {
-        this.game.physicalPeer.setWalkableAt(x, y, val);
-        // this.mAstar.setWalkableAt(y, x, val);
+    public removeFromWalkableMap(sprite: ISprite) {
+        if (!sprite) return;
+        const collision = sprite.getCollisionArea();
+        if (!collision) return;
+        let walkable = sprite.getWalkableArea();
+        const origin = sprite.getOriginPoint();
+        const rows = collision.length;
+        const cols = collision[0].length;
+        const pos = this.transformToMini45(new LogicPos(sprite.pos.x, sprite.pos.y));
+        if (!walkable) {
+            walkable = new Array(rows);
+            for (let i = 0; i < rows; i++) {
+                walkable[i] = new Array(cols).fill(0);
+            }
+        } else {
+            const wRows = walkable.length;
+            if (wRows === 0) {
+                Logger.getInstance().error(`data error: WalkableArea {${walkable}}, data: `, sprite);
+                return;
+            }
+            const wCols = walkable[0].length;
+            if (rows !== wRows || cols !== wCols) {
+                Logger.getInstance().error(`data error: CollisionArea {${collision}} not match WalkableArea {${walkable}}, data: `, sprite);
+                return;
+            }
+        }
+        let tempY = 0;
+        let tempX = 0;
+        for (let i = 0; i < rows; i++) {
+            tempY = pos.y + i - origin.y;
+            for (let j = 0; j < cols; j++) {
+                tempX = pos.x + j - origin.x;
+                if (collision[i][j] === 1 && walkable[i][j] === 0) {
+                    if (tempY < 0 || tempY >= this.mWalkableMap.length || tempX < 0 || tempX >= this.mWalkableMap[tempY].length) {
+                        continue;
+                    }
+
+                    const wPos = tempX + tempY * this.mMiniSize.cols;
+                    const ids = this.mNotWalkablePos2SpriteIDs.get(wPos);
+                    if (!ids) {
+                        Logger.getInstance().warn(`not walkable map error, pos {${tempX}, ${tempY}} has no data`);
+                        return;
+                    }
+                    const idx = ids.indexOf(sprite.id);
+                    if (idx < 0) {
+                        Logger.getInstance().warn(`not walkable map error, no id {${sprite.id}} at pos {${tempX}, ${tempY}}`);
+                        return;
+                    }
+                    ids.splice(idx, 1);
+                    if (ids.length === 0) {
+                        this.setWalkable(tempX, tempY, true);
+                        // Logger.getInstance().log("#place remove walkable, ", tempX, tempY, sprite.id);
+                    }
+                }
+            }
+        }
+    }
+
+    public isWalkable(x: number, y: number): boolean {
+        if (y < 0 || y >= this.mWalkableMap.length || x < 0 || x >= this.mWalkableMap[y].length) {
+            return false;
+        }
+
+        // Logger.getInstance().log("#place walkableMap: ", x, y, this.mWalkableMap[y][x] === 1, this.mWalkableMap);
+        return this.mWalkableMap[y][x] === 1;
     }
 
     public async findPath(startPos: IPos, targetPosList: IPos[], toReverse: boolean) {
@@ -502,6 +645,8 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
         Logger.getInstance().debug("room clear");
         this.game.renderPeer.clearRoom();
         this.game.uiManager.recover();
+        this.mWalkableMap = [];
+        this.mNotWalkablePos2SpriteIDs.clear();
     }
 
     public move(id: number, x: number, y: number, nodeType: NodeType) {
@@ -1001,5 +1146,16 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
             }
             this.mTerrainManager.add(addList);
         }
+    }
+
+    private setWalkable(x: number, y: number, walkable: boolean) {
+        if (y < 0 || y >= this.mWalkableMap.length || x < 0 || x >= this.mWalkableMap[y].length) {
+            return;
+        }
+        const newVal = walkable ? 1 : 0;
+        if (this.mWalkableMap[y][x] === newVal) return;
+
+        this.mWalkableMap[y][x] = newVal;
+        this.game.physicalPeer.setWalkableAt(x, y, walkable);
     }
 }

@@ -7,6 +7,7 @@ import { PicaBasePanel } from "../pica.base.panel";
 import { PicaTaskMainPanel } from "./PicaTaskMainPanel";
 import { ClickEvent } from "apowophaserui";
 export class PicaTaskPanel extends PicaBasePanel {
+    public static PICATASK_DATA: string = "PICATASK_DATA";
     public mainPanel: PicaTaskMainPanel;
     private blackBg: Phaser.GameObjects.Graphics;
     private bg: Phaser.GameObjects.Graphics;

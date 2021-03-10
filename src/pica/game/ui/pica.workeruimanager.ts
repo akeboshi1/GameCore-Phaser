@@ -4,8 +4,6 @@ import { CutInMediator } from "./CutIn";
 import { DialogMediator } from "./Dialog";
 import { LoginMediator } from "./Login";
 import { BottomMediator } from "./Bottom/BottomMediator";
-import { PicaDecorateMediator } from "./PicaDecorate/PicaDecorateMediator";
-import { PicaDecorateControlMediator } from "./PicaDecorateControl/PicaDecorateControlMediator";
 import { PicaFurniFunMediator } from "./PicaFurniFun/PicaFurniFunMediator";
 import { PicaNewMainMediator } from "./PicaNewMain/PicaNewMainMediator";
 export class PicaWorkerUiManager extends UIManager {
@@ -14,19 +12,25 @@ export class PicaWorkerUiManager extends UIManager {
     }
 
     public showMainUI(hideNames?: string[]) {
-        this.clearMediator();
-        this.mMedMap.set(ModuleName.LOGIN_NAME, new LoginMediator(this.game));
-        this.mMedMap.set(ModuleName.DIALOG_NAME, new DialogMediator(this.game));
-        this.mMedMap.set(ModuleName.CUTIN_NAME, new CutInMediator(this.game));
+        // this.clearMediator();
+        this.setMedName(ModuleName.LOGIN_NAME, LoginMediator);
+        this.setMedName(ModuleName.DIALOG_NAME, DialogMediator);
+        this.setMedName(ModuleName.CUTIN_NAME, CutInMediator);
+        this.setMedName(ModuleName.BOTTOM, BottomMediator);
+        this.setMedName(ModuleName.PICANEWMAIN_NAME, PicaNewMainMediator);
+        this.setMedName(ModuleName.PICAFURNIFUN_NAME, PicaFurniFunMediator);
+
         // this.mMedMap.set(ModuleName.ACTIVITY_NAME, new ActivityMediator(this.game));
         // this.mMedMap.set(ModuleName.PICACHAT_NAME, new PicaChatMediator(this.game));
-        this.mMedMap.set(ModuleName.BOTTOM, new BottomMediator(this.game));
         // this.mMedMap.set(ModuleName.PICAMAINUI_NAME, new PicaMainUIMediator(this.game));
-        this.mMedMap.set(ModuleName.PICANEWMAIN_NAME, new PicaNewMainMediator(this.game));
-
-        this.mMedMap.set(ModuleName.PICAFURNIFUN_NAME, new PicaFurniFunMediator(this.game)); // 这个的确要弄成全局的..
+        // this.mMedMap.set(ModuleName.PICANEWMAIN_NAME, new PicaNewMainMediator(this.game));
+        // this.mMedMap.set(ModuleName.PICAFURNIFUN_NAME, new PicaFurniFunMediator(this.game)); // 这个的确要弄成全局的..
 
         super.showMainUI(hideNames);
+    }
+
+    public setMedName(name: string, medClass: any) {
+        if (!this.mMedMap.get(name)) this.mMedMap.set(name, new medClass(this.game));
     }
 
     // public showDecorateUI() {

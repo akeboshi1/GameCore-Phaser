@@ -60,6 +60,8 @@ export class SceneManager extends BaseSceneManager {
             const text = StringUtils.format("正在加载资源 {0}", [progress.toFixed(0) + "%"]);
             (<LoadingScene>scene).updateProgress(text);
         }
+        const pauseScene = sceneManager.getScene(SceneName.GAMEPAUSE_SCENE) as GamePauseScene;
+        if (pauseScene && pauseScene.scene.isActive()) return;
         sceneManager.bringToTop(SceneName.LOADING_SCENE);
     }
 

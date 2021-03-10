@@ -24,6 +24,7 @@ export class PicaExploreListLevelPanel extends Phaser.GameObjects.Container {
     private posValue: number = 0;
     private topHeight: number = 0;
     private bottomHeight: number = 0;
+    private powerValue: number = 0;
     constructor(scene: Phaser.Scene, width: number, height: number, dpr: number, zoom: number) {
         super(scene);
         this.setSize(width, height);
@@ -132,6 +133,10 @@ export class PicaExploreListLevelPanel extends Phaser.GameObjects.Container {
         }
     }
 
+    setPowerValue(value: number) {
+        this.powerValue = value;
+    }
+
     protected init() {
         this.topbg = this.scene.make.image({ key: "explore_mask" });
         this.titlebg = this.scene.make.image({ key: UIAtlasName.explorelog, frame: "explore_title" });
@@ -205,7 +210,7 @@ export class PicaExploreListLevelPanel extends Phaser.GameObjects.Container {
         //     const tempid = data["completeScene"];
         //     roomid = tempid || roomid;
         // }
-        if (this.send) this.send.runWith(["roomid", roomid]);
+        if (this.send) this.send.runWith(["roomid", data]);
     }
 
     private onChapterLockHandler(tag: string, data: any) {

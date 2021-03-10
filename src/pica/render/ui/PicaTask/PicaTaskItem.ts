@@ -1,5 +1,5 @@
-import { BBCodeText, ClickEvent, NineSlicePatch } from "apowophaserui";
-import { ButtonEventDispatcher, DynamicImage, ThreeSliceButton } from "gamecoreRender";
+import { ClickEvent, NineSlicePatch } from "apowophaserui";
+import { DynamicImage, ThreeSliceButton } from "gamecoreRender";
 import { UIAtlasName } from "picaRes";
 import { ICountablePackageItem } from "picaStructure";
 import { op_client, op_pkt_def } from "pixelpai_proto";
@@ -146,7 +146,7 @@ export class PicaTaskItem extends Phaser.GameObjects.Container {
         this.arrow.visible = true;
     }
 
-    private setTextLimit(text: Phaser.GameObjects.Text, content?: string, limit: number =11) {
+    private setTextLimit(text: Phaser.GameObjects.Text, content?: string, limit: number = 11) {
         if (content.length > limit) {
             const maxWidth = 130 * this.dpr;
             for (let i = 9; i < content.length; i++) {
@@ -299,55 +299,5 @@ class TaskItemExtend extends Phaser.GameObjects.Container {
 
     private onTaskCellHandler(pointer, gameobject) {
         if (this.send) this.send.runWith(["item", gameobject]);
-    }
-}
-class TaskCell extends ButtonEventDispatcher {
-    public itemData: ICountablePackageItem;
-    protected dpr: number;
-    protected zoom: number;
-    private bg: Phaser.GameObjects.Image;
-    private itemIcon: DynamicImage;
-    private countTex: BBCodeText;
-    constructor(scene: Phaser.Scene, dpr: number, zoom: number) {
-        super(scene, 0, 0);
-        this.dpr = dpr;
-        this.zoom = zoom;
-        this.bg = scene.make.image({ key: UIAtlasName.uicommon, frame: "task_icon_bg" });
-        this.bg.texture.setFilter(Phaser.Textures.FilterMode.LINEAR);
-        this.setSize(this.bg.width, this.bg.height);
-        this.itemIcon = new DynamicImage(scene, 0, 0);
-        this.itemIcon.scale = this.dpr / this.zoom;
-        this.countTex = new BBCodeText(this.scene, 0, 0, "", UIHelper.colorNumberStyle("#ffffff", 12 * dpr))
-            .setOrigin(0.5).setStroke("#000000", 2 * dpr);
-        (<any>this.countTex).setPosition(this.width * 0.5, this.height * 0.5 - 2 * dpr);
-        this.add([this.bg, this.itemIcon, this.countTex]);
-        this.enable = true;
-    }
-
-    public setCellData(itemData: ICountablePackageItem, isTask: boolean = true) {
-        this.itemData = itemData;
-        const frame = isTask ? "task_icon_bg" : "task_reward_bg";
-        this.bg.setTexture(UIAtlasName.uicommon, frame);
-        const url = Url.getOsdRes(itemData.texturePath);
-        this.itemIcon.load(url, this, () => {
-        });
-        if (!isTask) {
-            this.countTex.text = `[stroke=#2D2D2D][color=#ffffff]${itemData.count}[/color][/stroke]`;
-            this.countTex.x = this.width * 0.5 - 2 * this.dpr;
-            this.countTex.y = this.height * 0.5;
-            this.countTex.setOrigin(1, 1);
-        } else {
-            this.countTex.text = this.getCountText(itemData.count, itemData.neededCount);
-            this.countTex.setOrigin(0.5);
-            this.countTex.x = 0;
-            this.countTex.y = this.height * 0.5 + 7 * this.dpr;
-        }
-    }
-    private getCountText(count: number, needcount: number) {
-        const color = (count >= needcount ? "#0054FF" : "#FF0000");
-        const countText = `[color=${color}]${count}[/color]`;
-        const needText = `[color=#2D2D2D]/${needcount}[/color]`;
-        const text = `${countText}${needText}`;
-        return text;
     }
 }

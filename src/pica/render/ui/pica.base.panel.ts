@@ -1,11 +1,11 @@
 import { UiManager, BasePanel } from "gamecoreRender";
 import { AtlasData, FolderType, UILoadType } from "picaRes";
-import { Url } from "utils";
+import { Logger, Url } from "utils";
 import { PicaRenderUiManager } from "./pica.Renderuimanager";
 export class PicaBasePanel extends BasePanel {
     protected atlasNames: Array<string | AtlasData>;
     protected textures: Array<string | AtlasData>;
-    protected tempDatas: any;
+    protected powerDatas: any;
     constructor(protected uiManager: UiManager) {
         super(uiManager.scene, uiManager.render);
     }
@@ -82,12 +82,4 @@ export class PicaBasePanel extends BasePanel {
         }
     }
 
-    protected cacheExists(type: string, key: string) {
-        if (type === "image" || type === "atlas" || type === "texture") {
-            return this.scene.textures.exists(key);
-        } else if (type === "json" || type === "video") {
-            return this.scene.cache[type].exists(key);
-        }
-        return false;
-    }
 }
