@@ -1,4 +1,4 @@
-import { BBCodeText, CheckBox, ClickEvent, NineSliceButton, NineSlicePatch } from "apowophaserui";
+import { BBCodeText, Button, CheckBox, ClickEvent, NineSliceButton, NineSlicePatch } from "apowophaserui";
 import { BasePanel, InputField, UiManager } from "gamecoreRender";
 import { UIAtlasKey, UIAtlasName } from "picaRes";
 import { ModuleName } from "structure";
@@ -11,9 +11,12 @@ export class PicaLoginPanel extends BasePanel {
     private fetchTime: any;
     private acceptBtn: CheckBox;
     private downcount: number = -1;
-    private fetchCode: Phaser.GameObjects.Text;
+    private fetchCode: Button;
     private mMediator: any;
     private mLoginBtn: NineSliceButton;
+    private mErrorTips: Phaser.GameObjects.Text;
+    private mMaskBg: Phaser.GameObjects.Graphics;
+    private parent: Phaser.GameObjects.Container;
 
     constructor(uiManager: UiManager) {
         super(uiManager.scene, uiManager.render);
@@ -28,6 +31,7 @@ export class PicaLoginPanel extends BasePanel {
     }
 
     destroy() {
+        if (this.parent) this.parent.destroy(true);
         super.destroy();
         if (this.fetchTime) {
             clearTimeout(this.fetchTime);
@@ -46,8 +50,25 @@ export class PicaLoginPanel extends BasePanel {
         this.mLoginBtn.off(ClickEvent.Tap, this.onLoginHandler, this);
     }
 
+    showError(err: string) {
+        this.mErrorTips.setText(err);
+    }
+
+    resize() {
+        const { width, height } = this.scene.cameras.main;
+        const hitArea = new Phaser.Geom.Rectangle(-width * 0.5, -height * 0.5, width, height);
+        this.mMaskBg.clear();
+        this.mMaskBg.fillStyle(0, 0);
+        this.mMaskBg.fillRect(hitArea.x, hitArea.y, hitArea.width, hitArea.height);
+        if (this.mMaskBg.input) {
+            this.mMaskBg.input.hitArea = hitArea;
+        } else {
+            this.mMaskBg.setInteractive(hitArea, Phaser.Geom.Rectangle.Contains);
+        }
+    }
+
     protected preload() {
-        this.addAtlas(this.key, "login/login.png", "login/login.json");
+        this.addAtlas(this.key, "pica_login/pica_login.png", "pica_login/pica_login.json");
         this.addAtlas(UIAtlasKey.commonKey, UIAtlasName.commonUrl + ".png", UIAtlasName.commonUrl + ".json");
         super.preload();
     }
@@ -55,7 +76,13 @@ export class PicaLoginPanel extends BasePanel {
     protected init() {
         const { width, height } = this.scene.cameras.main;
 
-        const container = this.scene.add.container(width * this.originX, height * this.originY, this);
+        this.parent = this.scene.add.container(width * this.originX, height * this.originY, this);
+
+        const container = this.scene.make.container(undefined, false);
+        container.add(this);
+
+        this.mMaskBg = this.scene.make.graphics(undefined, false);
+        this.parent.add([this.mMaskBg, container]);
 
         const bg = this.scene.make.image({
             key: UIAtlasKey.commonKey,
@@ -82,6 +109,7 @@ export class PicaLoginPanel extends BasePanel {
             fontSize: 16 * this.dpr + "px"
         });
         this.mPhoneInput.on("enter", this.onEnterPhoneHandler, this);
+        this.mPhoneInput.on("textchange", this.onCodeChangeHandler, this);
 
         const phoneContaier = this.createInput(this.mPhoneInput, 0, -container.height * 0.5 + 100 * this.dpr);
         const accountData: string = localStorage.getItem("accountphone");
@@ -101,28 +129,19 @@ export class PicaLoginPanel extends BasePanel {
             fontSize: 16 * this.dpr + "px"
         }).setOrigin(0, 0.5);
         this.mPhoneCodeInput.on("enter", this.onEnterCodeHandler, this);
+        this.mPhoneCodeInput.on("textchange", this.onCodeChangeHandler, this);
         const codeContainer = this.createInput(this.mPhoneCodeInput, 0, -container.height * 0.5 + 180 * this.dpr, 220 * this.dpr);
         this.mPhoneCodeInput.x = -codeContainer.width / 2 + 8 * this.dpr;
 
-        const line = this.scene.make.image({
-            x: 12 * this.dpr,
-            key: this.key,
-            frame: "line",
-        }, false);
-        line.texture.setFilter(Phaser.Textures.FilterMode.LINEAR);
-        this.fetchCode = this.scene.make.text({
-            text: "获取验证码",
-            style: {
-                fontSize: 14 * this.dpr+ "px",
-                fontFamily: Font.DEFULT_FONT,
-                color: "#2B5AF3"
-            }
-        }, false).setOrigin(0.5).setInteractive();
-        this.fetchCode.x = (codeContainer.width - this.fetchCode.width) * 0.5 - 22 * this.dpr;
-        // this.fetchCode.setResolution(this.dpr);
+        this.fetchCode = new Button(this.scene, this.key, "login_resend_pin_butt", undefined, "发送验证码");
+        this.fetchCode.x = (codeContainer.width - this.fetchCode.width) * 0.5 - 4.33 * this.dpr;
+        this.fetchCode.setTextStyle({
+            fontSize: 12.45 * this.dpr,
+            fontFamily: Font.DEFULT_FONT
+        });
         this.fetchCode.on("pointerup", this.onFetchCodeHandler, this);
         this.fetchCode.on("pointerdown", this.onFetchCodeDownHandler, this);
-        codeContainer.add([line, this.fetchCode]);
+        codeContainer.add([this.fetchCode]);
 
         this.mLoginBtn = new NineSliceButton(this.scene, 0, container.height * 0.5 - 51 * this.dpr, 191 * this.dpr, 60 * this.dpr, UIAtlasKey.commonKey, "yellow_btn", "登 陆", this.dpr, 1, {
             left: 12 * this.dpr,
@@ -136,6 +155,16 @@ export class PicaLoginPanel extends BasePanel {
             fontFamily: Font.DEFULT_FONT
         });
         this.mLoginBtn.setFontStyle("bold");
+
+        this.mErrorTips = this.scene.make.text({
+            x: -codeContainer.width * 0.5,
+            y: codeContainer.y + codeContainer.height * 0.5 + 8 * this.dpr,
+            style: {
+                color: "#FF0000",
+                fontSize: 12 * this.dpr + "px",
+                fontFamily: Font.DEFULT_FONT
+            }
+        }, false).setOrigin(0, 0);
 
         const label = new BBCodeText(this.scene, 0, 0, "我已阅读并同意皮卡堂的[area=userService][color=#253FCA]《用户服务协议》[/color][/area]", {
             color: "#8C8C8C",
@@ -159,24 +188,23 @@ export class PicaLoginPanel extends BasePanel {
         this.acceptBtn.y = label.y;
         this.acceptBtn.selected = true;
 
-        this.add([bg, title, phoneContaier, codeContainer, label, this.mLoginBtn, this.acceptBtn]);
-        // this.add(container);
+        this.add([bg, title, phoneContaier, codeContainer, label, this.mLoginBtn, this.mErrorTips, this.acceptBtn]);
         super.init();
 
-        // this.x = width * this.originX;
-        // this.y = height * this.originY;
+        this.resize();
     }
 
     private createInput(input: InputField, x: number, y: number, width?: number) {
         const container = this.scene.make.container({ x, y }, false);
         const frame = this.scene.textures.getFrame(this.key, "input_bg");
         // const height = frame ? frame.height || 50 * this.dpr;
-        const bg = new NineSlicePatch(this.scene, input.x - 8 * this.dpr, input.y, (width ? width : input.width) + 14 * this.dpr, frame.height, this.key, "input_bg", {
-            left: 27 * this.dpr,
-            top: 0 * this.dpr,
-            right: 28 * this.dpr,
-            bottom: 0 * this.dpr
-        }, this.dpr, 1);
+        // const bg = new NineSlicePatch(this.scene, input.x - 8 * this.dpr, input.y, (width ? width : input.width) + 14 * this.dpr, frame.height, this.key, "input_bg", {
+        //     left: 27 * this.dpr,
+        //     top: 0 * this.dpr,
+        //     right: 28 * this.dpr,
+        //     bottom: 0 * this.dpr
+        // }, this.dpr, 1);
+        const bg = this.scene.make.image({ key: this.key, frame: "input_bg" });
         container.add([input, bg]);
         container.setSize(bg.width, bg.height);
         return container;
@@ -192,15 +220,13 @@ export class PicaLoginPanel extends BasePanel {
     private onFetchCodeHandler() {
         const text = this.mPhoneInput.text;
         if (text.length !== 11) {
-            this.render.onLoginErrorHanler("error", "手机格式错误");
+            this.mErrorTips.setText("手机格式错误");
+            // this.render.onLoginErrorHanler("error", "手机格式错误");
             return;
         }
         if (this.fetchTime) {
             return;
         }
-        // this.fetchTime = setTimeout(() => {
-        //     this.fetchTime = null;
-        // }, 60000);
         this.downcount = 60;
         this.fetchTime = setInterval(() => {
             if (--this.downcount <= 0) {
@@ -220,11 +246,17 @@ export class PicaLoginPanel extends BasePanel {
         const phone = this.mPhoneInput.text;
         const code = this.mPhoneCodeInput.text;
         if (phone.length !== 11) {
-            this.render.onLoginErrorHanler("error", "手机格式错误");
+            // this.render.onLoginErrorHanler("error", "手机格式错误");
+            this.mErrorTips.setText("手机格式错误");
             return;
         }
         if (!code) {
-            this.render.onLoginErrorHanler("error", "验证码格式错误");
+            // this.render.onLoginErrorHanler("error", "验证码格式错误");
+            this.mErrorTips.setText("验证码格式错误");
+            return;
+        }
+        if (!this.acceptBtn.selected) {
+            this.mErrorTips.setText("必须接受用户协议");
             return;
         }
         if (!this.mMediator) this.mMediator = this.render.mainPeer[ModuleName.PICA_LOGIN_NAME];
@@ -247,5 +279,11 @@ export class PicaLoginPanel extends BasePanel {
 
     private onLoginHandler() {
         this.tryLogin();
+    }
+
+    private onCodeChangeHandler() {
+        if (this.mErrorTips.text) {
+            this.mErrorTips.setText("");
+        }
     }
 }

@@ -16,6 +16,8 @@ export class PicaLoginMediator extends BasicMediator {
             if (response.code === 200 || response.code === 201) {
                 const data = response.data;
                 this.loginSuc(response.data);
+            } else if (response.code >= 400) {
+                if (this.mView) this.mView.showError(response.msg || "服务器错误");
             }
                 // localStorage.setItem("accountphone", JSON.stringify({ account: phone }));
                 // const verifiedEnable = CONFIG["verified_enable"];

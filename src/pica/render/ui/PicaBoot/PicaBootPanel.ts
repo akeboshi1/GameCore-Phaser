@@ -27,6 +27,13 @@ export class PicaBootPanel extends BasePanel {
         this.navigate.off("showLogin", this.onShowLoginHandler, this);
     }
 
+    destroy() {
+        if (this.parentContainer) {
+            this.parentContainer.destroy();
+        }
+        super.destroy();
+    }
+
     init() {
         const width = this.scene.cameras.main.width;
         const height = this.scene.cameras.main.height;

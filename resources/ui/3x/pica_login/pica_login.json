@@ -1,0 +1,95 @@
+{
+	"frames": {
+		"accept_checked.png": {
+			"frame": {
+				"x": 1,
+				"y": 1,
+				"w": 30,
+				"h": 30
+			},
+			"rotated": false,
+			"trimmed": false,
+			"spriteSourceSize": {
+				"x": 0,
+				"y": 0,
+				"w": 30,
+				"h": 30
+			},
+			"sourceSize": {
+				"w": 30,
+				"h": 30
+			}
+		},
+		"accept_unchecked.png": {
+			"frame": {
+				"x": 33,
+				"y": 1,
+				"w": 30,
+				"h": 30
+			},
+			"rotated": false,
+			"trimmed": false,
+			"spriteSourceSize": {
+				"x": 0,
+				"y": 0,
+				"w": 30,
+				"h": 30
+			},
+			"sourceSize": {
+				"w": 30,
+				"h": 30
+			}
+		},
+		"input_bg.png": {
+			"frame": {
+				"x": 1,
+				"y": 33,
+				"w": 716,
+				"h": 120
+			},
+			"rotated": false,
+			"trimmed": false,
+			"spriteSourceSize": {
+				"x": 0,
+				"y": 0,
+				"w": 716,
+				"h": 120
+			},
+			"sourceSize": {
+				"w": 716,
+				"h": 120
+			}
+		},
+		"login_resend  pin_butt.png": {
+			"frame": {
+				"x": 1,
+				"y": 155,
+				"w": 283,
+				"h": 96
+			},
+			"rotated": false,
+			"trimmed": false,
+			"spriteSourceSize": {
+				"x": 0,
+				"y": 0,
+				"w": 283,
+				"h": 96
+			},
+			"sourceSize": {
+				"w": 283,
+				"h": 96
+			}
+		}
+	},
+	"meta": {
+		"app": "http://www.codeandweb.com/texturepacker",
+		"version": "1.0",
+		"image": "spritesheet.png",
+		"format": "RGBA8888",
+		"size": {
+			"w": 718,
+			"h": 252
+		},
+		"scale": "1"
+	}
+}
