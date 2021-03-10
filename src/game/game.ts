@@ -410,10 +410,15 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
         if (!this.mConfig || !this.connect) {
             return;
         }
-        const token = await this.peer.render.getLocalStorage("token");
-        // const account = token ? JSON.parse(token) : null;
+        // const token = await this.peer.render.getLocalStorage("token");
+        const account = await this.peer.render.getAccount();
+        Logger.getInstance().log("account: ", account);
         if (this.mConfig.hasGameLoaded) this.renderPeer.gameLoadedCallBack();
-        this.login();
+        if (account && account.accountData) {
+            this.loginEnterWorld();
+        } else {
+            this.login();
+        }
         // if (!this.mConfig.auth_token) {
         //     if (!account || !account.accessToken) {
         //         this.login();

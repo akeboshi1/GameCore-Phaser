@@ -104,10 +104,6 @@ export class PicaBootPanel extends BasePanel {
         super.init();
 
         this.resize();
-
-        if (!this.logged()) {
-            this.showLogin();
-        }
     }
 
     public tryLogin(phone: string, code: string, phoneArea: string) {

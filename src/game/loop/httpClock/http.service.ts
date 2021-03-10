@@ -153,12 +153,12 @@ export class HttpService {
             return Promise.reject("account does not exist");
         }
         const accountData = account.accountData;
-        if (!accountData) {
-            return Promise.reject("token does not exist");
-        }
+        // if (!accountData) {
+        //     return Promise.reject("token does not exist");
+        // }
         headers = Object.assign({
             "Content-Type": "application/json",
-            "X-Pixelpai-TK": accountData.accessToken
+            "X-Pixelpai-TK": accountData ? accountData.accessToken : undefined
         }, headers);
         const data = {
             body: JSON.stringify(body),

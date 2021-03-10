@@ -1,5 +1,5 @@
 import { BasicMediator, Game } from "gamecore";
-import { ModuleName } from "structure";
+import { GameState, ModuleName } from "structure";
 import { Logger } from "utils";
 
 export class PicaBootMediator extends BasicMediator {
@@ -11,17 +11,51 @@ export class PicaBootMediator extends BasicMediator {
         this.game.showMediator(ModuleName.PICA_LOGIN_NAME, true);
     }
 
-    phoneLogin(phone, code, areaCode) {
-        this.game.httpService.loginByPhoneCode(phone, code, areaCode)
-            .then((response: any) => {
-                if (response.code === 200 || response.code === 201) {
-
-                }
-            });
-    }
-
     enterGame() {
         this.game.loginEnterWorld();
+    }
+
+    show(param?: any): void {
+        if (param) this.mShowData = param;
+        if (this.mPanelInit && this.mShow) {
+            this._show();
+            return;
+        }
+        this.mShow = true;
+        this.__exportProperty(async () => {
+            await this.referToken();
+            this.game.peer.render.showPanel(this.key, param).then(() => {
+                this.mView = this.game.peer.render[this.key];
+                this.panelInit();
+            });
+            this.mediatorExport();
+        });
+    }
+
+    async referToken() {
+        const token = await this.game.peer.render.getLocalStorage("token");
+        const account = token ? JSON.parse(token) : null;
+        if (!account || !account.accessToken) {
+            this.showLogin();
+            return;
+        }
+        this.game.peer.state = GameState.RequestToken;
+        // this.peer.render[ModuleName.].then((account) => {
+        this.game.httpService.refreshToekn(account.refreshToken, account.accessToken)
+            .then((response: any) => {
+                this.game.peer.state = GameState.GetToken;
+                if (response.code === 200) {
+                    this.game.peer.render.refreshAccount(response);
+                    // this.mAccount.refreshToken(response);
+                    // this.loginEnterWorld();
+                } else {
+                    this.showLogin();
+                }
+            }).catch((error) => {
+                this.game.peer.state = GameState.GetToken;
+                Logger.getInstance().error("refreshToken:", error);
+                this.game.login();
+            });
     }
 
     public enterWorld(adult: boolean) {
