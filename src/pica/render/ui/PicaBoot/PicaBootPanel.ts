@@ -84,7 +84,7 @@ export class PicaBootPanel extends BasePanel {
         // label2.setResolution(this.dpr);
         label2.y = (scaleH - label2.height) * 0.5 - 16 * this.dpr ;
 
-        this.playBtn = new NineSliceButton(this.scene, 0, -scaleH * 0.5 + 452 * this.dpr * heightRatio, 191 * this.dpr, 60 * this.dpr, UIAtlasKey.commonKey, "yellow_btn", "PLAY", this.dpr, 1, {
+        this.playBtn = new NineSliceButton(this.scene, 0, -scaleH * 0.5 + scaleH * 0.75, 191 * this.dpr, 60 * this.dpr, UIAtlasKey.commonKey, "yellow_btn", "PLAY", this.dpr, 1, {
             left: 12 * this.dpr,
             top: 12 * this.dpr,
             right: 14 * this.dpr,
