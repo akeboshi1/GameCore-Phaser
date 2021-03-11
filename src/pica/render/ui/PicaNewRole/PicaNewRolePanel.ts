@@ -4,8 +4,9 @@ import { Button, ClickEvent, UIType } from "apowophaserui";
 import { BasePanel, ImageValue, ThreeSliceButton, ThreeSlicePath, UIDragonbonesDisplay, UiManager } from "gamecoreRender";
 import { AvatarSuit, AvatarSuitType, ModuleName } from "structure";
 import { UIAtlasName } from "picaRes";
-import { i18n, UIHelper } from "utils";
-export class PicaNewRolePanel extends BasePanel {
+import { Handler, i18n, UIHelper } from "utils";
+import { PicaBasePanel } from "../pica.base.panel";
+export class PicaNewRolePanel extends PicaBasePanel {
     private blackGraphic: Phaser.GameObjects.Graphics;
     private bg: ThreeSlicePath;
     private nameImage: ImageValue;
@@ -16,12 +17,14 @@ export class PicaNewRolePanel extends BasePanel {
     // private vipvalue: ImageValue;
     private followBtn: ThreeSliceButton;
     private tradingBtn: ThreeSliceButton;
+    private actionContanier: PeopleActionContainer;
     private roleData: any;
     private followed: boolean = false;
 
     constructor(uiManager: UiManager) {
-        super(uiManager.scene, uiManager.render);
+        super(uiManager);
         this.key = ModuleName.PICANEWROLE_NAME;
+        this.atlasNames = [UIAtlasName.uicommon, UIAtlasName.people_action];
         this.UIType = UIType.Scene;
     }
     resize(width?: number, height?: number) {
@@ -42,21 +45,7 @@ export class PicaNewRolePanel extends BasePanel {
         this.playMove(fromy, toy);
     }
 
-    public show(param?: any) {
-        this.mShowData = param;
-        if (this.mPreLoad) return;
-        if (!this.mInitialized) {
-            this.preload();
-            return;
-        }
-        if (this.mShow) return;
-        if (this.soundGroup && this.soundGroup.open) this.playSound(this.soundGroup.open);
-        if (!this.mTweening && this.mTweenBoo) {
-            this.showTween(true);
-        } else {
-            this.mShow = true;
-        }
-        this.addListen();
+    public onShow() {
         this.render.renderEmitter(this.key + "_initialized");
         this.setRoleData(this.roleData);
         this.setFollowButton(this.followed);
@@ -67,7 +56,7 @@ export class PicaNewRolePanel extends BasePanel {
         this.openBigBtn.on(ClickEvent.Tap, this.onOpeningCharacterHandler, this);
         this.followBtn.on(ClickEvent.Tap, this.onFollowHandler, this);
         this.tradingBtn.on(ClickEvent.Tap, this.onTradingHandler, this);
-        this.on("pointerdown", this.OnClosePanel, this);
+        this.on("pointerdown", this.OnCloseHandler, this);
     }
 
     public removeListen() {
@@ -75,17 +64,9 @@ export class PicaNewRolePanel extends BasePanel {
         this.openBigBtn.off(ClickEvent.Tap, this.onOpeningCharacterHandler, this);
         this.followBtn.off(ClickEvent.Tap, this.onFollowHandler, this);
         this.tradingBtn.off(ClickEvent.Tap, this.onTradingHandler, this);
-        this.off("pointerdown", this.OnClosePanel, this);
+        this.off("pointerdown", this.OnCloseHandler, this);
     }
 
-    destroy() {
-        super.destroy();
-    }
-
-    preload() {
-        this.addAtlas(this.key, UIAtlasName.textureUrl(UIAtlasName.uicommonurl), UIAtlasName.jsonUrl(UIAtlasName.uicommonurl));
-        super.preload();
-    }
     init() {
         const conWdith = this.scaleWidth;
         const conHeight = 87 * this.dpr;
@@ -94,7 +75,7 @@ export class PicaNewRolePanel extends BasePanel {
         this.content = this.scene.make.container(undefined, false);
         this.content.setSize(conWdith, conHeight);
         this.add(this.content);
-        this.bg = new ThreeSlicePath(this.scene, 0, 0, conWdith, 87 * this.dpr, this.key,
+        this.bg = new ThreeSlicePath(this.scene, 0, 0, conWdith, 87 * this.dpr, UIAtlasName.people_action,
             ["people_panel_bg_left", "people_panel_bg_middle", "people_panel_bg_right"], this.dpr);
         this.bg.y = conHeight * 0.5 - this.bg.height * 0.5;
         this.content.add(this.bg);
@@ -104,7 +85,7 @@ export class PicaNewRolePanel extends BasePanel {
         this.headAvatar.scale = this.dpr * 2;
         this.headAvatar.visible = false;
         this.content.add(this.headAvatar);
-        this.nameImage = new ImageValue(this.scene, 60 * this.dpr, 20 * this.dpr, this.key, "people_woman", this.dpr);
+        this.nameImage = new ImageValue(this.scene, 60 * this.dpr, 20 * this.dpr, UIAtlasName.people_action, "people_woman", this.dpr);
         this.nameImage.setOffset(-this.dpr, 0);
         this.nameImage.setTextStyle(UIHelper.whiteStyle(this.dpr, 14));
         this.nameImage.setLayout(1);
@@ -122,7 +103,7 @@ export class PicaNewRolePanel extends BasePanel {
         // this.vipvalue.x = this.levelLabel.x + this.levelLabel.width +  20* this.dpr;
         // this.vipvalue.y = this.levelLabel.y;
         // this.content.add(this.vipvalue);
-        this.openBigBtn = new Button(this.scene, this.key, "people_minute", "people_minute");
+        this.openBigBtn = new Button(this.scene, UIAtlasName.people_action, "people_minute", "people_minute");
         this.openBigBtn.setSize(20 * this.dpr, 20 * this.dpr);
         this.openBigBtn.removeInteractive();
         this.openBigBtn.setInteractive();
@@ -130,17 +111,21 @@ export class PicaNewRolePanel extends BasePanel {
         this.openBigBtn.x = conWdith * 0.5 - 20 * this.dpr;
         this.content.add(this.openBigBtn);
         const fnormals = ["butt_yellow_left_s", "butt_yellow_middle_s", "butt_yellow_right_s"];
-        this.followBtn = new ThreeSliceButton(this.scene, 84 * this.dpr, 31 * this.dpr, this.key, fnormals, fnormals, i18n.t("player_info.follow"));
+        this.followBtn = new ThreeSliceButton(this.scene, 84 * this.dpr, 31 * this.dpr, UIAtlasName.uicommon, fnormals, fnormals, i18n.t("player_info.follow"));
         this.followBtn.setTextStyle(UIHelper.brownishStyle(this.dpr));
         this.followBtn.y = conHeight * 0.5 - this.followBtn.height * 0.5 - 5 * this.dpr;
         this.followBtn.x = -this.followBtn.width * 0.5 + 20 * this.dpr;
         this.content.add(this.followBtn);
         const tnormals = ["butt_red_left_s", "butt_red_middle_s", "butt_red_right_s"];
-        this.tradingBtn = new ThreeSliceButton(this.scene, 84 * this.dpr, 31 * this.dpr, this.key, tnormals, tnormals, i18n.t("player_info.trading"));
+        this.tradingBtn = new ThreeSliceButton(this.scene, 84 * this.dpr, 31 * this.dpr, UIAtlasName.uicommon, tnormals, tnormals, i18n.t("player_info.trading"));
         this.tradingBtn.setTextStyle(UIHelper.brownishStyle(this.dpr));
         this.tradingBtn.y = this.followBtn.y;
         this.tradingBtn.x = this.tradingBtn.width * 0.5 + 40 * this.dpr;
         this.content.add(this.tradingBtn);
+        this.actionContanier = new PeopleActionContainer(this.scene, this.dpr);
+        this.actionContanier.setHandler(new Handler(this, this.onPeopleActionHandler));
+        this.actionContanier.y = -this.content.height * 0.5 - this.actionContanier.height * 0.5 - 10 * this.dpr;
+        this.content.add(this.actionContanier);
         this.resize();
         super.init();
     }
@@ -158,7 +143,7 @@ export class PicaNewRolePanel extends BasePanel {
         });
         this.headAvatar.visible = true;
         this.headAvatar.load(dbModel);
-        this.nameImage.setFrameValue(content.nickname, this.key, "people_man");
+        this.nameImage.setFrameValue(content.nickname, UIAtlasName.people_action, "people_man");
         this.levelLabel.text = `${i18n.t("common.lv")} ${content.level.level}`;
         const tnormals = ["butt_gray_left_s", "butt_gray_middle_s", "butt_gray_right_s"];
         this.tradingBtn.setFrameNormal(tnormals, tnormals);
@@ -189,7 +174,7 @@ export class PicaNewRolePanel extends BasePanel {
     }
     private onOpeningCharacterHandler() {
         this.render.renderEmitter(ModuleName.PICANEWROLE_NAME + "_openingcharacter", this.roleData);
-        this.OnClosePanel();
+        this.OnCloseHandler();
     }
 
     private onFollowHandler() {
@@ -201,7 +186,51 @@ export class PicaNewRolePanel extends BasePanel {
         this.render.renderEmitter(ModuleName.PICANEWROLE_NAME + "_tradingcharacter", this.roleData);
     }
 
-    private OnClosePanel() {
+    private onPeopleActionHandler(tag: string) {
+        let action;
+        if (tag === "people_action_1") {
+            action = "dance03";
+        } else if (tag === "people_action_2") {
+            action = "nap";
+        } else if (tag === "people_action_3") {
+            action = "greet01";
+        } else if (tag === "people_action_4") {
+            action = "wave";
+        } else if (tag === "people_action_5") {
+            action = "jump";
+        }
+        this.render.renderEmitter(this.key + "_peopleaction", action);
+    }
+    private OnCloseHandler() {
         this.render.renderEmitter(this.key + "_hide");
+    }
+}
+
+class PeopleActionContainer extends Phaser.GameObjects.Container {
+    private dpr: number;
+    private background: Phaser.GameObjects.Image;
+    private actionHandler: Handler;
+    constructor(scene: Phaser.Scene, dpr: number) {
+        super(scene);
+        this.dpr = dpr;
+        this.background = this.scene.make.image({ key: UIAtlasName.people_action, frame: "people_action_bg" });
+        this.setSize(this.background.width, this.background.height);
+        this.add(this.background);
+        const posx = -this.width * 0.5;
+        for (let i = 0; i < 5; i++) {
+            const frame = "people_action_" + (i + 1);
+            const button = new Button(this.scene, UIAtlasName.people_action, frame);
+            button.x = posx + button.width * 0.5 + (button.width + 20 * dpr) * i;
+            button["action"] = frame;
+            button.on(ClickEvent.Tap, this.onActionHandler, this);
+            this.add(button);
+        }
+    }
+
+    public setHandler(send: Handler) {
+        this.actionHandler = send;
+    }
+    private onActionHandler(pointer, button) {
+        if (this.actionHandler) this.actionHandler.runWith(button["action"]);
     }
 }
