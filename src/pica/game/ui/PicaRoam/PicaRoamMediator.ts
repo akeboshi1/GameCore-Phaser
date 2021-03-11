@@ -122,6 +122,9 @@ export class PicaRoamMediator extends BasicMediator {
         for (const data of this.poolsData) {
             if (data.id === content.poolUpdate.id) {
                 Object.assign(data, content.poolUpdate);
+                for (const reward of data.progressAward) {
+                    this.config.getBatchItemDatas(reward.rewards);
+                }
             }
         }
         this.updateServiceTime(this.poolsData);
@@ -204,5 +207,9 @@ export class PicaRoamMediator extends BasicMediator {
             return;
         }
         return this.game.user.userData;
+    }
+
+    get config(): BaseDataConfigManager {
+        return <BaseDataConfigManager>this.game.configManager;
     }
 }

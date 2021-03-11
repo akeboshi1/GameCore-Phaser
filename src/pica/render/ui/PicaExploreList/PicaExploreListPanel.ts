@@ -148,7 +148,7 @@ export class PicaExploreListPanel extends PicaBasePanel {
             this.openDetialPanel();
             this.detialPanel.setCaptoreResultData(data);
         } else if (tag === "roomid") {
-            if (this.tempDatas.value < data.energyCost) {
+            if (this.tempDatas.value < data.costEnergy) {
                 const noticedata = {
                     text: [{ text: i18n.t("furnicompose.selecttips"), node: undefined }]
                 };

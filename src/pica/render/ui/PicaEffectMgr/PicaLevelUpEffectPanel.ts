@@ -43,7 +43,17 @@ export class PicaLevelUpEffectPanel extends Phaser.GameObjects.Container {
         this.sendHander = send;
     }
     public setLevelUpData(data) {
-        this.effectQueue = this.effectQueue.concat(data);
+        for (const temp of data) {
+            let have: boolean = false;
+            for (const mm of this.effectQueue) {
+                if (temp.level === mm.level) {
+                    have = true;
+                }
+            }
+            if (!have) {
+                this.effectQueue.push(temp);
+            }
+        }
         this.playNext();
     }
 

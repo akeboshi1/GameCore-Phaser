@@ -6,8 +6,6 @@ import { Font, Handler, i18n, Url } from "utils";
 
 export class PicaTownNavigationPanel extends Phaser.GameObjects.Container {
     private mGameGrid: GameGridTable;
-    private hotelBtn: Button;
-    private picatownBtn: Button;
     private key: string;
     private dpr: number;
     private zoom: number;
@@ -24,7 +22,6 @@ export class PicaTownNavigationPanel extends Phaser.GameObjects.Container {
         this.create();
     }
     create() {
-      
         const tableConfig = {
             x: 0,
             y: 60 * this.dpr,
@@ -44,7 +41,7 @@ export class PicaTownNavigationPanel extends Phaser.GameObjects.Container {
                 const scene = cell.scene, index = cell.index,
                     item = cell.item;
                 if (cellContainer === null) {
-                    cellContainer = new PartyListItem(this.scene, this.key, this.dpr);
+                    cellContainer = new TownListItem(this.scene, this.key, this.dpr);
                 }
                 cellContainer.setPartyData(item, index);
                 return cellContainer;
@@ -86,23 +83,15 @@ export class PicaTownNavigationPanel extends Phaser.GameObjects.Container {
     destroy() {
         super.destroy();
     }
-    private onGridTableHandler(item: PartyListItem) {
+    private onGridTableHandler(item: TownListItem) {
         this.onSendHandler(item.partyData);
-    }
-    private onHotelHandler() {
-        if (!this.partyData) return;
-        if (this.sendHandler) this.sendHandler.runWith(["hotel", this.partyData.hotel]);
-    }
-    private onPicatownHandler() {
-        if (!this.partyData) return;
-        if (this.sendHandler) this.sendHandler.runWith(["pictown", this.partyData.picatown]);
     }
     private onSendHandler(data: any) {// op_client.IEditModeRoom
         if (this.sendHandler) this.sendHandler.runWith(["partylist", data]);
     }
 }
 
-class PartyListItem extends Phaser.GameObjects.Container {
+class TownListItem extends Phaser.GameObjects.Container {
     public partyData: any;// op_client.IEditModeRoom
     private key: string;
     private dpr: number;

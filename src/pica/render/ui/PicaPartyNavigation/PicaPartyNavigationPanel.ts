@@ -73,16 +73,21 @@ export class PicaPartyNavigationPanel extends PicaBasePanel {
         this.signProgressPanel = new SignProgressPanel(this.scene, 252 * this.dpr, 45 * this.dpr, this.key, this.dpr);
         this.signProgressPanel.y = -this.height * 0.5 + 15 * this.dpr;
         this.signProgressPanel.setHandler(new Handler(this, this.onProgressHandler));
+        this.content.add([this.bg, this.tilteName, this.signProgressPanel]);
         this.selectLine = this.scene.make.graphics(undefined, false);
         this.itemtips = new ItemInfoTips(this.scene, 121 * this.dpr, 46 * this.dpr, UIAtlasName.uicommon, "tips_bg", this.dpr);
         this.itemtips.setVisible(false);
-        this.content.add([this.bg, this.signProgressPanel]);
+        this.content.add([this.selectLine, this.itemtips]);
+        this.createOptionButtons();
 
         this.add(this.content);
         this.resize(0, 0);
         super.init();
+        this.playMove(new Handler(this, () => {
+
+        }));
     }
-    createOptionButtons() {
+    protected createOptionButtons() {
         const arr = [{ text: i18n.t("partynav.town"), type: 1 }, { text: i18n.t("player_info.room"), type: 2 }, { text: i18n.t("partynav.store"), type: 3 }];
         const allLin = 272 * this.dpr;
         const cellwidth = allLin / arr.length;
