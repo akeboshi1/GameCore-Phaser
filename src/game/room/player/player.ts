@@ -194,6 +194,11 @@ export class Player extends Element implements IElement {
         // this.setBody();
     }
 
+    // Player 和 User不需要参与碰撞
+    protected addToWalkableMap(model: ISprite) { }
+
+    protected removeFromWalkableMap(model: ISprite) { }
+
     private mCheckStateHandle(val: string): boolean {
         // if (this.mCurState === val) return false;
         return true;
