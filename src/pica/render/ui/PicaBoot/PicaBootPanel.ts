@@ -54,6 +54,8 @@ export class PicaBootPanel extends BasePanel {
             key: this.key,
             frame: "login_bg"
         });
+        const heightRatio = height / bg.height;
+        bg.setScale(heightRatio);
         bg.texture.setFilter(Phaser.Textures.FilterMode.LINEAR);
         // bg.x = 0;
         // bg.y = height * 0.5;
@@ -82,7 +84,7 @@ export class PicaBootPanel extends BasePanel {
         // label2.setResolution(this.dpr);
         label2.y = (scaleH - label2.height) * 0.5 - 16 * this.dpr ;
 
-        this.playBtn = new NineSliceButton(this.scene, 0, -scaleH * 0.5 + 452 * this.dpr, 191 * this.dpr, 60 * this.dpr, UIAtlasKey.commonKey, "yellow_btn", "PLAY", this.dpr, 1, {
+        this.playBtn = new NineSliceButton(this.scene, 0, -scaleH * 0.5 + 452 * this.dpr * heightRatio, 191 * this.dpr, 60 * this.dpr, UIAtlasKey.commonKey, "yellow_btn", "PLAY", this.dpr, 1, {
             left: 12 * this.dpr,
             top: 12 * this.dpr,
             right: 14 * this.dpr,
@@ -160,7 +162,8 @@ class Navigate extends Phaser.GameObjects.Container {
         super(scene);
 
         this.btns = [];
-        const frames = ["login_notice", "login_user", "login_repair", "login_feedback"];
+        // const frames = ["login_notice", "login_user", "login_repair", "login_feedback"];
+        const frames = ["login_user"];
         for (let i = 0; i < frames.length; i++) {
             const btn = new Button(this.scene, this.key, frames[i]);
             btn.y = i * 58 * dpr;
