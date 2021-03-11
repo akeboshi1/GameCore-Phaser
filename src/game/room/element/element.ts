@@ -911,7 +911,7 @@ export class Element extends BlockObject implements IElement {
             if (mounts.indexOf(id) === -1) {
                 const ele = room.getElement(id);
                 if (ele) {
-                    this.removeMount(ele);
+                    this.removeMount(ele, this.mModel.pos);
                 }
             }
         }
