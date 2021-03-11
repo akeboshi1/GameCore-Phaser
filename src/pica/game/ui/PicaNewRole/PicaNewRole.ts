@@ -43,6 +43,15 @@ export class PicaNewRole extends BasicModel {
         this.connection.send(packet);
     }
 
+    queryAction(uiid: number, cid: string, action: number) {
+        const packet = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_TARGET_UI);
+        const content: op_virtual_world.OP_CLIENT_REQ_VIRTUAL_WORLD_TARGET_UI = packet.content;
+        content.uiId = uiid;
+        content.componentId = action;
+        content.strData = cid;
+        this.connection.send(packet);
+    }
+
     private onOtherCharacterInfo(packge: PBpacket) {
         const content: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_ANOTHER_PLAYER_INFO = packge.content;
         this.game.emitter.emit(ModuleName.PICANEWROLE_NAME + "_anotherinfo", content);

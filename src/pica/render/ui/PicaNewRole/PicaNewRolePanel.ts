@@ -188,17 +188,17 @@ export class PicaNewRolePanel extends PicaBasePanel {
     }
 
     private onPeopleActionHandler(tag: string) {
-        let action;
+        let action: number = 0;
         if (tag === "people_action_1") {
-            action = "dance03";
+            action = 1;
         } else if (tag === "people_action_2") {
-            action = "nap";
+            action = 2;
         } else if (tag === "people_action_3") {
-            action = "greet01";
+            action = 3;
         } else if (tag === "people_action_4") {
-            action = "wave";
+            action = 4;
         } else if (tag === "people_action_5") {
-            action = "jump";
+            action = 5;
         }
         this.render.renderEmitter(this.key + "_peopleaction", action);
     }
@@ -217,7 +217,7 @@ class PeopleActionContainer extends Phaser.GameObjects.Container {
         this.background = this.scene.make.image({ key: UIAtlasName.people_action, frame: "people_action_bg" });
         this.setSize(this.background.width, this.background.height);
         this.add(this.background);
-        const posx = -this.width * 0.5+5*dpr;
+        const posx = -this.width * 0.5 + 5 * dpr;
         for (let i = 0; i < 5; i++) {
             const frame = "people_action_" + (i + 1);
             const button = new Button(this.scene, UIAtlasName.people_action, frame);
@@ -226,6 +226,7 @@ class PeopleActionContainer extends Phaser.GameObjects.Container {
             button.on(ClickEvent.Tap, this.onActionHandler, this);
             this.add(button);
         }
+        this.setInteractive();
     }
 
     public setHandler(send: Handler) {
