@@ -229,12 +229,6 @@ export class DragonbonesDisplay extends BaseDragonbonesDisplay implements IDispl
         this.closePlaceholder();
     }
 
-    protected createArmatureDisplay(loader?: any, totalComplete?: number, totalFailed?: number) {
-        if (!this.scene) return;
-        super.createArmatureDisplay(loader, totalComplete, totalFailed);
-        this.play({name: "idle", flip: false});
-    }
-
     protected refreshAvatar() {
         super.refreshAvatar();
     }

@@ -3,12 +3,13 @@ import { PicaNewRole } from "./PicaNewRole";
 import { BasicMediator, Game, UIType } from "gamecore";
 import { ModuleName } from "structure";
 import { BaseDataConfigManager } from "../../data";
+import { Logger } from "utils";
 export class PicaNewRoleMediator extends BasicMediator {
-    private picaNewRole: PicaNewRole;
+    protected mModel: PicaNewRole;
     private uid: string;
     constructor(game: Game) {
         super(ModuleName.PICANEWROLE_NAME, game);
-        this.picaNewRole = new PicaNewRole(game);
+        this.mModel = new PicaNewRole(game);
         this.mUIType = UIType.Scene;
     }
 
@@ -21,6 +22,7 @@ export class PicaNewRoleMediator extends BasicMediator {
         this.game.emitter.on(ModuleName.PICANEWROLE_NAME + "_openingcharacter", this.onOpeningCharacterHandler, this);
         this.game.emitter.on(ModuleName.PICANEWROLE_NAME + "_followcharacter", this.onFollowHandler, this);
         this.game.emitter.on(ModuleName.PICANEWROLE_NAME + "_tradingcharacter", this.onTradingHandler, this);
+        this.game.emitter.on(ModuleName.PICANEWROLE_NAME + "_peopleaction", this.onPeopleActionHandler, this);
     }
 
     hide() {
@@ -32,6 +34,7 @@ export class PicaNewRoleMediator extends BasicMediator {
         this.game.emitter.off(ModuleName.PICANEWROLE_NAME + "_openingcharacter", this.onOpeningCharacterHandler, this);
         this.game.emitter.off(ModuleName.PICANEWROLE_NAME + "_followcharacter", this.onFollowHandler, this);
         this.game.emitter.off(ModuleName.PICANEWROLE_NAME + "_tradingcharacter", this.onTradingHandler, this);
+        this.game.emitter.off(ModuleName.PICANEWROLE_NAME + "_peopleaction", this.onPeopleActionHandler, this);
     }
 
     destroy() {
@@ -45,7 +48,7 @@ export class PicaNewRoleMediator extends BasicMediator {
     }
 
     private query_Another_Info(id: string) {
-        this.picaNewRole.fetchAnotherInfo(id);
+        this.mModel.fetchAnotherInfo(id);
     }
 
     private on_Another_Info(content: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_ANOTHER_PLAYER_INFO) {
@@ -86,6 +89,11 @@ export class PicaNewRoleMediator extends BasicMediator {
 
     private onTradingHandler(roleData: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_ANOTHER_PLAYER_INFO) {
 
+    }
+
+    private onPeopleActionHandler(action: number) {
+        Logger.getInstance().log(action);
+        this.mModel.queryAction(0, this.game.user.userData.cid, action);
     }
     private onHideView() {
         // const uimanager = this.game.uiManager;

@@ -315,9 +315,9 @@ export class Element extends BlockObject implements IElement {
         }
         if (this.mElementManager) {
             if (times === undefined) {
-                this.mElementManager.roomService.game.physicalPeer.changeAnimation(this.id, this.mModel.currentAnimationName);
+                this.mElementManager.roomService.game.physicalPeer.changeAnimation(this.id, this.mModel.currentAnimation.name);
             } else {
-                this.mElementManager.roomService.game.physicalPeer.changeAnimation(this.id, this.mModel.currentAnimationName, times);
+                this.mElementManager.roomService.game.physicalPeer.changeAnimation(this.id, this.mModel.currentAnimation.name, times);
             }
             this.mElementManager.roomService.game.renderPeer.playAnimation(this.id, this.mModel.currentAnimation, undefined, times);
         }
@@ -833,7 +833,7 @@ export class Element extends BlockObject implements IElement {
     }
 
     protected onDisplayReady() {
-        this.mRoomService.game.renderPeer.displayReady(this.id, this.model.currentAnimation);
+        // this.mRoomService.game.renderPeer.displayReady(this.id, this.model.currentAnimation);
         if (this.mModel.mountSprites && this.mModel.mountSprites.length > 0) {
             this.updateMounth(this.mModel.mountSprites);
         }
@@ -911,7 +911,7 @@ export class Element extends BlockObject implements IElement {
             if (mounts.indexOf(id) === -1) {
                 const ele = room.getElement(id);
                 if (ele) {
-                    this.removeMount(ele);
+                    this.removeMount(ele, this.mModel.pos);
                 }
             }
         }
