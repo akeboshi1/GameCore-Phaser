@@ -110,7 +110,7 @@ export class MainUIScene extends RoomScene {
     const video = ["roamone", "roamtenrepead", "roamreward", "roambefore"];
     for (const res of video) {
       const url = Url.getNormalUIRes(`${folder}/${res}.mp4`);
-      this.load.video(res, url, undefined, undefined, true);
+      this.load.video(res, url, undefined, true, true);
     }
   }
 }

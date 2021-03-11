@@ -1,11 +1,11 @@
-import { Sprite } from "baseModel";
-import { BaseDragonbonesDisplay, BaseFramesDisplay, ReferenceArea } from "baseRender";
-import { IFramesModel, RunningAnimation } from "structure";
-import { Helpers, Logger, LogicPoint, Position45 } from "utils";
-import { SceneEditorCanvas } from "./scene.editor.canvas";
-import { EditorTopDisplay } from "./top.display";
-import { op_def } from "pixelpai_proto";
-import { LayerEnum } from "game-capsule";
+import {Sprite} from "baseModel";
+import {BaseDragonbonesDisplay, BaseFramesDisplay, ReferenceArea} from "baseRender";
+import {IFramesModel, RunningAnimation} from "structure";
+import {Helpers, Logger, LogicPoint, Position45} from "utils";
+import {SceneEditorCanvas} from "./scene.editor.canvas";
+import {EditorTopDisplay} from "./top.display";
+import {op_def} from "pixelpai_proto";
+import {LayerEnum} from "game-capsule";
 
 export class EditorFramesDisplay extends BaseFramesDisplay {
 
@@ -34,7 +34,16 @@ export class EditorFramesDisplay extends BaseFramesDisplay {
         //     }
         // }
         if (targetIndex === undefined) {
-            targetIndex = this.mMountList.length;
+            let i = 0;
+            while (this.mMountList.get(i)) {
+                i++;
+                // 理应为互动点数上限
+                if (i === 10) {
+                    Logger.getInstance().error("mount index is out of control");
+                    return;
+                }
+            }
+            targetIndex = i;
             this.mCurAnimation.createMountPoint(targetIndex);
         }
         super.mount(display, targetIndex);
@@ -89,7 +98,7 @@ export class EditorFramesDisplay extends BaseFramesDisplay {
         this.setSprite(sprite);
         const displayInfo = sprite.displayInfo;
         if (displayInfo) {
-            this.load(<IFramesModel>displayInfo);
+            this.load(<IFramesModel> displayInfo);
         }
         const pos = sprite.pos;
         if (pos) {
@@ -124,9 +133,9 @@ export class EditorFramesDisplay extends BaseFramesDisplay {
     }
 
     clear() {
-        for (const display of this.mMountList) {
-            this.unmount(<BaseFramesDisplay>display);
-        }
+        this.mMountList.forEach((val, key) => {
+            this.unmount(<BaseFramesDisplay> val);
+        });
         this.mAnimation = null;
         this.mCurAnimation = null;
         this.mPreAnimation = null;
@@ -141,16 +150,21 @@ export class EditorFramesDisplay extends BaseFramesDisplay {
     getMountIds() {
         const result = [];
         if (this.mMountList) {
-            for (const mount of this.mMountList) {
-                const id = (<BaseFramesDisplay>mount).id;
+            this.mMountList.forEach((val, key) => {
+                const id = (<BaseFramesDisplay> val).id;
                 if (id) result.push(id);
-            }
+            });
         }
         return result;
     }
 
     updateMountPoint(ele: EditorFramesDisplay, x: number, y: number) {
-        const index = this.mMountList.indexOf(ele);
+        let index = -1;
+        this.mMountList.forEach((val, key) => {
+           if (val === ele) {
+               index = key;
+           }
+        });
         if (index > -1) {
             this.mCurAnimation.updateMountPoint(index, x, y);
             const mount = this.mCurAnimation.mountLayer;
@@ -187,7 +201,7 @@ export class EditorFramesDisplay extends BaseFramesDisplay {
         const width = cols;
         const height = rows;
         const offset = Position45.transformTo90(new LogicPoint(origin.x, origin.y), miniSize);
-        this.mProjectionSize = { offset, width, height };
+        this.mProjectionSize = {offset, width, height};
         this.updateSort();
     }
 

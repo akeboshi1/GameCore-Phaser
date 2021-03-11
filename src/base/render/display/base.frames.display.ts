@@ -16,7 +16,7 @@ export class BaseFramesDisplay extends BaseDisplay {
     protected mMainSprite: Phaser.GameObjects.Sprite;
     protected mMountContainer: Phaser.GameObjects.Container;
     protected mCurAnimation: any;
-    protected mMountList: Phaser.GameObjects.Container[];
+    protected mMountList: Map<number, Phaser.GameObjects.Container> = new Map<number, Phaser.GameObjects.Container>();
     protected mIsSetInteractive: boolean = false;
     protected mIsInteracitve: boolean = false;
     protected mPreAnimation: RunningAnimation;
@@ -229,6 +229,9 @@ export class BaseFramesDisplay extends BaseDisplay {
             Logger.getInstance().error(`mountLyaer does not exist ${this.mAnimation}`);
             return;
         }
+        if (targetIndex !== undefined && this.mMountList.get(targetIndex) && this.mMountList.get(targetIndex) === display) {
+            return;
+        }
         const { index, mountPoint } = this.mCurAnimation.mountLayer;
         if (targetIndex === undefined) targetIndex = 0;
         if (targetIndex >= mountPoint.length) {
@@ -251,7 +254,7 @@ export class BaseFramesDisplay extends BaseDisplay {
         }
         this.mMountContainer.addAt(display, targetIndex);
         display.setRootMount(this);
-        this.mMountList[targetIndex] = display;
+        this.mMountList.set(targetIndex, display);
         if (this.mMainSprite) {
             // 侦听前先移除，避免重复添加
             // this.mMainSprite.off("animationupdate", this.onAnimationUpdateHandler, this);
@@ -264,10 +267,15 @@ export class BaseFramesDisplay extends BaseDisplay {
             return;
         }
         display.setRootMount(undefined);
-        const index = this.mMountList.indexOf(display);
         display.visible = true;
-        if (index > -1) {
-            this.mMountList.splice(index, 1);
+        let index = -1;
+        this.mMountList.forEach((val, key) => {
+            if (val === display) {
+                index = key;
+            }
+        });
+        if (index >= 0) {
+            this.mMountList.delete(index);
         }
         this.mMountContainer.remove(display, false);
         const list = this.mMountContainer.list;
@@ -347,7 +355,7 @@ export class BaseFramesDisplay extends BaseDisplay {
         //     display.destroy();
         // }
         this.mDisplays.forEach((display) => display.destroy());
-        this.mMountList = [];
+        this.mMountList.clear();
         this.mDisplays.clear();
         this.mMainSprite = null;
         this.mPreAnimation = null;
