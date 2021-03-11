@@ -18,11 +18,6 @@ export class MainUIScene extends RoomScene {
     super({ key: SceneName.MAINUI_SCENE });
   }
 
-  public preload() {
-    this.loadRaomVideos();
-    super.preload();
-  }
-
   public init(data: any) {
     super.init(data);
     if (this.render) {
@@ -49,6 +44,7 @@ export class MainUIScene extends RoomScene {
     // }
     this.render.uiManager.setScene(this);
     this.render.initUI();
+    this.loadRaomVideos();
     // this.checkSize(this.mRoom.world.getSize());
     // this.mRoom.world.game.scale.on("orientationchange", this.checkOriention, this);
     // this.scale.on("resize", this.checkSize, this);

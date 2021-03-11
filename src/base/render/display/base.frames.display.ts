@@ -60,16 +60,13 @@ export class BaseFramesDisplay extends BaseDisplay {
                     if (key !== this.framesInfo.gene) return;
                     this.onAddTextureHandler(key, field, onAdd);
                     if (this.scene) {
-                        // this.scene.load.off(Phaser.Loader.Events.COMPLETE, this.mAllLoadCompleted, this);
                         this.scene.load.off(Phaser.Loader.Events.FILE_LOAD_ERROR, onLoadError, this);
                     }
                 };
                 const onLoadError = (imageFile: ImageFile) => {
                     Logger.getInstance().debug("update frame loadError");
-                    // Logger.error(`Loading Error: key = ${imageFile} >> ${imageFile.url}`);
                     this.displayCreated();
                 };
-                // this.scene.load.on(Phaser.Loader.Events.COMPLETE, this.mAllLoadCompleted, this);
                 this.scene.load.on(Phaser.Loader.Events.FILE_LOAD_ERROR, onLoadError, this);
                 this.scene.textures.on(Phaser.Textures.Events.ADD, onAdd, this);
                 this.scene.load.start();
@@ -115,11 +112,6 @@ export class BaseFramesDisplay extends BaseDisplay {
             }
             display.scaleX = animation.flip ? -1 : 1;
             this.updateBaseLoc(display, animation.flip, offsetLoc);
-
-            // const graphics = this.scene.make.graphics(undefined, false);
-            // graphics.fillStyle(0xFF0000);
-            // graphics.fillCircle(0, 0, 10);
-            // this.add(graphics);
         }
         this.emit("updateAnimation");
         if (this.mMainSprite) {
@@ -129,7 +121,6 @@ export class BaseFramesDisplay extends BaseDisplay {
         if (this.mMountContainer && this.mMountContainer.parentContainer && this.mCurAnimation.mountLayer) {
             const stageContainer = <Phaser.GameObjects.Container> this.mSprites.get(DisplayField.STAGE);
             stageContainer.moveTo(this.mMountContainer, this.mCurAnimation.mountLayer.index);
-            // if (stageContainer) stageContainer.addAt(this.mMountContainer, this.mCurAnimation.mountLayer.index);
         }
         this.mPreAnimation = animation;
     }
@@ -202,7 +193,6 @@ export class BaseFramesDisplay extends BaseDisplay {
     }
 
     public setInteractive(shape?: Phaser.Types.Input.InputConfiguration | any, callback?: (hitArea: any, x: number, y: number, gameObject: Phaser.GameObjects.GameObject) => void, dropZone?: boolean): this {
-        // super.setInteractive(shape, callback, dropZone);
         this.mIsInteracitve = true;
         this.mDisplays.forEach((display) => {
             display.setInteractive({ pixelPerfect: true });
@@ -273,7 +263,6 @@ export class BaseFramesDisplay extends BaseDisplay {
         if (!this.mMountContainer) {
             return;
         }
-        // this.render.displayManager.addToSurfaceLayer(display);
         display.setRootMount(undefined);
         const index = this.mMountList.indexOf(display);
         display.visible = true;
