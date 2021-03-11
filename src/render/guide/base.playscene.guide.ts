@@ -1,6 +1,5 @@
 import { SceneName } from "structure";
 import { IPos } from "utils";
-import { NodeType } from "../managers";
 import { UiManager } from "../ui";
 import { BaseGuide } from "./base.guide";
 

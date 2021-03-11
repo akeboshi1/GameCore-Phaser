@@ -186,7 +186,7 @@ class Navigate extends Phaser.GameObjects.Container {
 
     private onClickBtnHandler(pointer, target) {
         switch (target) {
-            case this.btns[1]:
+            case this.btns[0]:
             this.emit("showLogin");
             break;
         }

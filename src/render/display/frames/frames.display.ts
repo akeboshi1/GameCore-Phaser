@@ -286,9 +286,9 @@ export class FramesDisplay extends BaseFramesDisplay implements IDisplayObject {
         if (index > frameVisible.length) {
             return;
         }
-        for (let i = 0; i < this.mMountList.length; i++) {
-            this.mMountList[i].visible = this.getMaskValue(frameVisible[index], i);
-        }
+        this.mMountList.forEach((value, key) => {
+            value.visible = this.getMaskValue(frameVisible[index], key);
+        });
     }
 
     private getMaskValue(mask: number, idx: number): boolean {
