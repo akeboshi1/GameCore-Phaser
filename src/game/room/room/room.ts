@@ -534,6 +534,9 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
                 }
 
                 const canWalk = collision[i][j] === 0 || walkable[i][j] === 1;
+                if (isTerrain && this.mWalkableMap[tempY][tempX] === 0 && canWalk) {
+                    continue;
+                }
                 this.setWalkable(tempX, tempY, canWalk);
 
                 if (!canWalk) {
