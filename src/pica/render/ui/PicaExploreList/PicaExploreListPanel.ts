@@ -90,8 +90,8 @@ export class PicaExploreListPanel extends PicaBasePanel {
     onShow() {
         if (this.mShowData)
             this.setExploreChapters(this.mShowData);
-        if (this.powerDatas)
-            this.setEnergyData(this.powerDatas.value, this.powerDatas.max);
+        if (this.tempDatas)
+            this.setEnergyData(this.tempDatas.value, this.tempDatas.max);
     }
     setExploreChapterResult(content: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_QUERY_CHAPTER_RESULT) {
         const nextLevelID = this.mShowData.nextLevelId;
@@ -105,7 +105,7 @@ export class PicaExploreListPanel extends PicaBasePanel {
     }
 
     setEnergyData(value: number, max: number) {
-        this.powerDatas = { value, max };
+        this.tempDatas = { value, max };
         if (!this.mInitialized) return;
         this.energyProgress.setEnergyData(value, max);
         this.levelPanel.setPowerValue(value);
@@ -148,7 +148,7 @@ export class PicaExploreListPanel extends PicaBasePanel {
             this.openDetialPanel();
             this.detialPanel.setCaptoreResultData(data);
         } else if (tag === "roomid") {
-            if (this.powerDatas.value < data.energyCost) {
+            if (this.tempDatas.value < data.energyCost) {
                 const noticedata = {
                     text: [{ text: i18n.t("furnicompose.selecttips"), node: undefined }]
                 };

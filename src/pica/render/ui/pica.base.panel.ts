@@ -5,7 +5,6 @@ import { PicaRenderUiManager } from "./pica.Renderuimanager";
 export class PicaBasePanel extends BasePanel {
     protected atlasNames: Array<string | AtlasData>;
     protected textures: Array<string | AtlasData>;
-    protected powerDatas: any;
     protected tempDatas: any;
     constructor(protected uiManager: UiManager) {
         super(uiManager.scene, uiManager.render);
