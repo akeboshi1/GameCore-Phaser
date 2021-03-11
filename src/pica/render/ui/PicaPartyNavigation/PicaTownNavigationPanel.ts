@@ -79,7 +79,6 @@ export class PicaTownNavigationPanel extends Phaser.GameObjects.Container {
         }
     }
 
-
     destroy() {
         super.destroy();
     }

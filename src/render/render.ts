@@ -821,6 +821,7 @@ export class Render extends RPCPeer implements GameMain, IRender {
 
     @Export([webworker_rpc.ParamType.num])
     public displayReady(id: number, animation: any) {
+        if (this.mDisplayManager) return;
         const display = this.mDisplayManager.getDisplay(id);
         if (!display || !animation) return;
         display.play(animation);
@@ -1047,14 +1048,13 @@ export class Render extends RPCPeer implements GameMain, IRender {
     @Export([webworker_rpc.ParamType.num, webworker_rpc.ParamType.num])
     public setInteractive(id: number, type: number) {
         if (!this.mDisplayManager) return;
-        const display = this.mDisplayManager.getDisplay(id);
-        if (display) display.setInteractive();
+        this.mDisplayManager.setInteractive(id, true);
     }
 
     @Export([webworker_rpc.ParamType.num, webworker_rpc.ParamType.num])
     public disableInteractive(id: number, type: number) {
-        const display = this.mDisplayManager.getDisplay(id);
-        if (display) display.disableInteractive();
+        if (!this.mDisplayManager) return;
+        this.mDisplayManager.setInteractive(id, false);
     }
 
     @Export([webworker_rpc.ParamType.num, webworker_rpc.ParamType.num])
@@ -1087,19 +1087,6 @@ export class Render extends RPCPeer implements GameMain, IRender {
         this.mGame.events.on(Phaser.Core.Events.FOCUS, this.onFocus, this);
         this.mGame.events.on(Phaser.Core.Events.BLUR, this.onBlur, this);
         this.resize(this.mConfig.width, this.mConfig.height);
-        // if (window.screen.width > window.screen.height) {
-        //     if (this.mConfig.width > this.mConfig.height) {
-        //         this.resize(this.mConfig.width, this.mConfig.height);
-        //     } else {
-        //         this.resize(this.mConfig.height, this.mConfig.width);
-        //     }
-        // } else {
-        //     if (this.mConfig.width < this.mConfig.height) {
-        //         this.resize(this.mConfig.width, this.mConfig.height);
-        //     } else {
-        //         this.resize(this.mConfig.height, this.mConfig.width);
-        //     }
-        // }
         if (this.mGameCreatedFunc) {
             Logger.getInstance().log("render game_created");
             this.mGameCreatedFunc.call(this);
@@ -1235,8 +1222,7 @@ export class Render extends RPCPeer implements GameMain, IRender {
     @Export([webworker_rpc.ParamType.num])
     public playAnimation(id: number, animation: any, field?: any, times?: number) {
         if (!this.mDisplayManager) return;
-        const display = this.mDisplayManager.getDisplay(id);
-        if (display) display.play(animation);
+        this.mDisplayManager.playAnimation(id, animation, field, times);
     }
 
     @Export([webworker_rpc.ParamType.num, webworker_rpc.ParamType.num])
@@ -1278,14 +1264,6 @@ export class Render extends RPCPeer implements GameMain, IRender {
     public setModel(sprite: any) {
         if (this.mDisplayManager) this.mDisplayManager.setModel(sprite);
     }
-
-    // @Export([webworker_rpc.ParamType.num, webworker_rpc.ParamType.num])
-    // public updateDirection(id: number, dir: number) {
-    //     if (this.mDisplayManager) {
-    //         const display = this.mDisplayManager.getDisplay(id);
-    //         display.setDirection(dir);
-    //     }
-    // }
 
     @Export()
     public addSkybox(scenery: IScenery) {
@@ -1364,19 +1342,6 @@ export class Render extends RPCPeer implements GameMain, IRender {
         const target = this.mDisplayManager.getDisplay(id);
         if (target) {
             if (effect === "liner") {
-                // if (this.mCacheTarget) {
-                //     if (this.mCacheTarget.id === 1441619821) {
-                //         this.guideManager.startGuide(1, { x: this.mCacheTarget.x, y: this.mCacheTarget.y });
-                //     }
-                //     this.mCacheTarget = null;
-                // }
-                // this.mCameraManager.pan(target.x, target.y, target.y).then(() => {
-                //     if (id === 674096428) {
-                //         this.mCacheTarget = target;
-                //     } else if (id === 1752777777) {
-                //         this.mCacheTarget = target;
-                //     }
-                // });
                 this.mCameraManager.startFollow(target);
             } else {
                 this.mCameraManager.startFollow(target);
@@ -1452,6 +1417,7 @@ export class Render extends RPCPeer implements GameMain, IRender {
         const direction = data.direction;
         const display = this.mDisplayManager.getDisplay(id);
         if (display) {
+            Logger.getInstance().log("displayAnimationChange ====>", data);
             display.direction = direction;
             display.play(data.animation);
         }
@@ -1516,11 +1482,6 @@ export class Render extends RPCPeer implements GameMain, IRender {
         }
     }
 
-    // private connectReconnect() {
-    //     if (!this.game) return;
-    //     this.createGame();
-    // }
-
     private onFullScreenChange() {
         this.resize(this.mGame.scale.gameSize.width, this.mGame.scale.gameSize.height);
     }
@@ -1532,21 +1493,8 @@ export class Render extends RPCPeer implements GameMain, IRender {
         if (this.mConfig.game_created) {
             this.mConfig.game_created();
         }
-        // if (this.moveStyle === MoveStyle.DIRECTION_MOVE_STYLE || this.moveStyle === 1) {
-        //     if (this.mGame.device.os.desktop) {
-        //         this.mInputManager = new KeyBoardManager(this, keyEvents);
-        //     } else {
-        //         this.mInputManager = new JoyStickManager(this, keyEvents);
-        //     }
-        // } else {
-        //     if (this.mGame.device.os.desktop) {
-        //         this.mInputManager = new KeyBoardManager(this, keyEvents);
-        //     }
-        // }
-        // if (this.mInputManager) this.mInputManager.enable = false;
         this.mGame.scale.on("enterfullscreen", this.onFullScreenChange, this);
         this.mGame.scale.on("leavefullscreen", this.onFullScreenChange, this);
-        // this.mGame.scale.on("orientationchange", this.onOrientationChange, this);
     }
 
     private initConfig() {
@@ -1585,8 +1533,6 @@ export class Render extends RPCPeer implements GameMain, IRender {
                 if (this.mGame) {
                     if (this.sceneManager.currentScene) this.sceneManager.currentScene.scene.resume();
                     this.mainPeer.onFocus();
-                    // this.mConnection.onFocus();
-                    // this.mRoomMamager.onFocus();
                     this.dealTipsScene(SceneName.GAMEPAUSE_SCENE, false);
                 }
                 break;
@@ -1602,8 +1548,6 @@ export class Render extends RPCPeer implements GameMain, IRender {
         if (this.mGame) {
             if (this.sceneManager.currentScene) this.sceneManager.currentScene.scene.pause();
             this.mainPeer.onBlur();
-            // this.mConnection.onBlur();
-            // this.mRoomMamager.onBlur();
             this.dealTipsScene(SceneName.GAMEPAUSE_SCENE, true);
         }
     }

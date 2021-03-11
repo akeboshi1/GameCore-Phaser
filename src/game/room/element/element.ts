@@ -782,7 +782,6 @@ export class Element extends BlockObject implements IElement {
 
         if (!this.mDisplayInfo || !this.mElementManager) {
             Logger.getInstance().debug("no displayInfo", this);
-            // (<ElementManager>this.mElementManager).onDisplayReady(this.id);
             return;
         }
         Logger.getInstance().debug("createDisplay displayInfo", this);
@@ -819,22 +818,11 @@ export class Element extends BlockObject implements IElement {
     }
 
     protected loadDisplayInfo(): Promise<any> {
-        // this.mElementManager.roomService.game.peer.render.loadDisplayInfo(this.mDisplayInfo);
-        // if (!this.mDisplayInfo) {
-        //     return;
-        // }
-        // if (!this.mDisplay) {
-        //  this.createDisplay();
-        // }
         this.mRoomService.game.emitter.once("dragonBones_initialized", this.onDisplayReady, this);
-        // return this.mRoomService.game.renderPeer.setModel(this.mModel);
         return this.mRoomService.game.renderPeer.updateModel(this.id, this.mDisplayInfo || this.mModel.displayInfo);
-        // this.mDisplay.on("updateAnimation", this.onUpdateAnimationHandler, this);
-        // this.mDisplay.load(this.mDisplayInfo);
     }
 
     protected onDisplayReady() {
-        // this.mRoomService.game.renderPeer.displayReady(this.id, this.model.currentAnimation);
         if (this.mModel.mountSprites && this.mModel.mountSprites.length > 0) {
             this.updateMounth(this.mModel.mountSprites);
         }
@@ -842,10 +830,6 @@ export class Element extends BlockObject implements IElement {
         if (this.model && this.model.pos) {
             depth = this.model.pos.depth ? this.model.pos.depth : 0;
         }
-        // this.setDepth(depth);
-        // this.update();
-        // this.mDisplay.showRefernceArea();
-        // }
     }
 
     protected async addDisplay(): Promise<any> {
@@ -854,7 +838,6 @@ export class Element extends BlockObject implements IElement {
         if (this.model && this.model.pos) {
             depth = this.model.pos.depth ? this.model.pos.depth : 0;
         }
-        // this.setDepth(depth);
         return Promise.resolve();
     }
 
@@ -877,10 +860,9 @@ export class Element extends BlockObject implements IElement {
             ) {
                 return 0;
             }
-            // this.mOffsetY = 0;
             this.mOffsetY = this.mElementManager.roomService.roomSize.tileHeight >> 2;
         }
-        return 0; // this.mOffsetY;
+        return 0;
     }
 
     protected addToBlock(): Promise<any> {

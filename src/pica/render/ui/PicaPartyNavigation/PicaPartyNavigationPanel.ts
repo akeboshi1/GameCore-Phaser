@@ -114,7 +114,6 @@ export class PicaPartyNavigationPanel extends PicaBasePanel {
         this.onToggleButtonHandler(undefined, tempitem);
     }
 
-
     private openPartyNavigationPanel() {
         if (!this.partyNavigationPanel) {
             this.partyNavigationPanel = new PicaTownNavigationPanel(this.scene, this.content.width - 40 * this.dpr, this.content.height - 40 * this.dpr, this.key, this.dpr, this.scale);

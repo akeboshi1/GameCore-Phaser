@@ -6,7 +6,7 @@ export class PlaneGuidePanel extends BasePlaySceneGuide {
     }
 
     protected step1(pos: IPos) {
-        const tmpPos = { x: pos.x + 370, y: pos.y + 350 };
+        const tmpPos = { x: pos.x + 360, y: pos.y + 370 };
         this.guideEffect.createGuideEffect(tmpPos);
         this.mPlayScene.input.on("gameobjectdown", this.gameObjectDownHandler, this);
     }
