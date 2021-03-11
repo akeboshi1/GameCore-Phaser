@@ -431,4 +431,3 @@ class SignProgressItem extends Phaser.GameObjects.Container {
         if (this.receiveHandler) this.receiveHandler.runWith([this.index, this]);
     }
 }
-
