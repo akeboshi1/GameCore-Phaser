@@ -410,5 +410,12 @@
   },
   "effecttips": {
     "unlock": "New feature unlock :{{name}}"
+  },
+  "partynav": {
+    "town": "Town",
+    "activity": "Activity",
+    "newworld": "New World",
+    "picahotel": "Pica Hotel",
+    "store": "Store"
   }
 }

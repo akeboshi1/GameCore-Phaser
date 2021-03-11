@@ -264,8 +264,8 @@
     "party": "派对"
   },
   "noticeTips": {
-    "staytuned":"敬请期待",
-    "quickclick":"点击太快,请稍等!"
+    "staytuned": "敬请期待",
+    "quickclick": "点击太快,请稍等!"
   },
   "order": {
     "title": "订单",
@@ -420,5 +420,12 @@
   },
   "effecttips": {
     "unlock": "新功能解锁:{{name}}"
+  },
+  "partynav": {
+    "town":"小镇",
+    "activity":"活动",
+    "newworld":"新世界",
+    "picahotel":"皮卡堂大酒店",
+    "store":"商铺"
   }
 }

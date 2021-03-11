@@ -1,132 +1,163 @@
-import { NineSlicePatch, GameGridTable, Button, ClickEvent, BBCodeText, ProgressBar } from "apowophaserui";
-import { DynamicImage, ImageBBCodeValue, ItemInfoTips } from "gamecoreRender";
-import { UIAtlasKey } from "picaRes";
-import { ChineseUnit } from "structure";
-import { Font, Handler, i18n, Url } from "utils";
-
-export class PicaPartyNavigationPanel extends Phaser.GameObjects.Container {
-    private mGameGrid: GameGridTable;
+import { TabButton, ClickEvent, Button, ProgressBar } from "apowophaserui";
+import { CommonBackground, DynamicImage, ItemInfoTips, ToggleColorButton, UiManager } from "gamecoreRender";
+import { ModuleName } from "structure";
+import { Font, Handler, i18n, UIHelper, Url } from "utils";
+import { PicaTownNavigationPanel } from "./PicaTownNavigationPanel";
+import { PicaMyRoomNavigationPanel } from "./PicaMyRoomNavigationPanel";
+import { PicaBasePanel } from "../pica.base.panel";
+import { UIAtlasName } from "picaRes";
+export class PicaPartyNavigationPanel extends PicaBasePanel {
+    private content: Phaser.GameObjects.Container;
+    private blackBg: Phaser.GameObjects.Graphics;
+    private bg: CommonBackground;
+    private tilteName: Phaser.GameObjects.Text;
     private signProgressPanel: SignProgressPanel;
+    private selectLine: Phaser.GameObjects.Graphics;
+    private curToggleItem: ToggleColorButton;
     private itemtips: ItemInfoTips;
-    private hotelBtn: Button;
-    private picatownBtn: Button;
-    private key: string;
-    private dpr: number;
-    private zoom: number;
-    private sendHandler: Handler;
-    private partyData: any;// op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_PARTY_LIST
+    private partyNavigationPanel: PicaTownNavigationPanel;
+    private myRoomNavigationPanel: PicaMyRoomNavigationPanel;
+    private optionType: number;
+    private mPartyData: any;// op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_PARTY_LIST
     private progressData: any;// op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_QUERY_PLAYER_PROGRESS
-    private noPartyImg: Phaser.GameObjects.Image;
-    private noPartyText: Phaser.GameObjects.Text;
-    constructor(scene: Phaser.Scene, width: number, height: number, key: string, dpr: number, zoom: number) {
-        super(scene);
+    constructor(uiManager: UiManager) {
+        super(uiManager);
+        this.key = ModuleName.PICAPARTYNAVIGATION_NAME;
+    }
+
+    public resize(w: number, h: number) {
+        const scale = this.scale;
+        const width = this.scaleWidth;
+        const height = this.scaleHeight;
+        this.blackBg.clear();
+        this.blackBg.fillStyle(0, 0.66);
+        this.blackBg.fillRect(0, 0, w, h);
+        this.content.x = -this.content.width * 0.5 - 10 * this.dpr;
+        this.content.y = height * 0.5 + 20 * this.dpr;
+        this.selectLine.clear();
+        this.selectLine.fillStyle(0xFFF449, 0.5);
+        this.selectLine.fillRect(-29 * this.dpr, 0, 58 * this.dpr, 2 * this.dpr);
         this.setSize(width, height);
-        this.key = key;
-        this.dpr = dpr;
-        this.zoom = zoom;
-        this.create();
-    }
-    create() {
-        this.signProgressPanel = new SignProgressPanel(this.scene, 252 * this.dpr, 45 * this.dpr, this.key, this.dpr);
-        this.signProgressPanel.y = -this.height * 0.5 + 15 * this.dpr;
-        this.signProgressPanel.setHandler(new Handler(this, this.onProgressHandler));
-        this.add(this.signProgressPanel);
-        const tableConfig = {
-            x: 0,
-            y: 60 * this.dpr,
-            table: {
-                width: 254 * this.dpr,
-                height: 330 * this.dpr,
-                columns: 1,
-                cellWidth: 254 * this.dpr,
-                cellHeight: 50 * this.dpr,
-                reuseCellContainer: true,
-                zoom: this.zoom
-            },
-            scrollMode: 0,
-            clamplChildOY: false,
-            // background: (<any>this.scene).rexUI.add.roundRectangle(0, 0, 2, 2, 0, 0xFF9900, .2),
-            createCellContainerCallback: (cell, cellContainer) => {
-                const scene = cell.scene, index = cell.index,
-                    item = cell.item;
-                if (cellContainer === null) {
-                    cellContainer = new PartyListItem(this.scene, this.key, this.dpr);
-                }
-                cellContainer.setPartyData(item, index);
-                return cellContainer;
-            },
-        };
-        this.mGameGrid = new GameGridTable(this.scene, tableConfig);
-        this.mGameGrid.layout();
-        this.mGameGrid.on("cellTap", this.onGridTableHandler, this);
-        this.add(this.mGameGrid);
-        this.noPartyImg = this.scene.make.image({ key: this.key, frame: "no_party" });
-        this.noPartyImg.texture.setFilter(Phaser.Textures.FilterMode.LINEAR);
-        this.noPartyImg.y = 20 * this.dpr;
-        this.add(this.noPartyImg);
-        this.noPartyText = this.scene.make.text({ x: 0, y: this.noPartyImg.y + this.noPartyImg.height * 0.5 + 10 * this.dpr, text: i18n.t("party.nopartytips"), style: { color: "#AAAAAA", fontSize: 13 * this.dpr, fontFamily: Font.DEFULT_FONT } }).setOrigin(0.5);
-        this.add(this.noPartyText);
-        this.itemtips = new ItemInfoTips(this.scene, 121 * this.dpr, 46 * this.dpr, UIAtlasKey.common2Key, "tips_bg", this.dpr);
-        this.itemtips.setVisible(false);
-        this.add(this.itemtips);
-        this.hotelBtn = new Button(this.scene, this.key, "hotel", "hotel", i18n.t("party.hotel"));
-        this.hotelBtn.text.setOrigin(0, 1);
-        this.hotelBtn.tweenScale = 0.88;
-        this.hotelBtn.setTextStyle({ fontSize: 13 * this.dpr, fontFamily: Font.DEFULT_FONT, color: "#FFDE00", stroke: "#222222", strokeThickness: 2 * this.dpr });
-        this.hotelBtn.setTextOffset(-this.hotelBtn.width * 0.5 + 5 * this.dpr, this.hotelBtn.height * 0.5 - 2 * this.dpr);
-        this.hotelBtn.setPosition(-this.hotelBtn.width * 0.5 - 18 * this.dpr, this.signProgressPanel.y + this.signProgressPanel.height * 0.5 + this.hotelBtn.height * 0.5 + 20 * this.dpr);
-        this.hotelBtn.on(String(ClickEvent.Tap), this.onHotelHandler, this);
-        this.add(this.hotelBtn);
-        this.picatownBtn = new Button(this.scene, this.key, "town", "town", i18n.t("party.picatown"));
-        this.picatownBtn.text.setOrigin(0, 1);
-        this.picatownBtn.tweenScale = 0.88;
-        this.picatownBtn.setTextStyle({ fontSize: 13 * this.dpr, fontFamily: Font.DEFULT_FONT, color: "#FFDE00", stroke: "#222222", strokeThickness: 2 * this.dpr });
-        this.picatownBtn.setTextOffset(-this.picatownBtn.width * 0.5 + 5 * this.dpr, this.picatownBtn.height * 0.5 - 2 * this.dpr);
-        this.picatownBtn.setPosition(this.picatownBtn.width * 0.5 - 10 * this.dpr, this.hotelBtn.y);
-        this.picatownBtn.on(String(ClickEvent.Tap), this.onPicatownHandler, this);
-        this.add(this.picatownBtn);
     }
 
-    public refreshMask() {
-        this.mGameGrid.resetMask();
+    public setPartyListData(content: any, isSelf: boolean = true) {// op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_PARTY_LIST
+        this.mPartyData = content;
+        this.partyNavigationPanel.setPartyDataList(content);
     }
-    public setHandler(handler: Handler) {
-        this.sendHandler = handler;
-    }
-    public setPartyDataList(content: any) {// op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_PARTY_LIST
-        this.partyData = content;
-        if (content.party.length > 0) {
-            this.mGameGrid.setItems(content.party);
-            this.mGameGrid.visible = true;
-            this.noPartyText.visible = false;
-            this.noPartyImg.visible = false;
-        } else {
-            this.noPartyText.visible = true;
-            this.noPartyImg.visible = true;
-            this.mGameGrid.visible = false;
-        }
-    }
-
-    public setSignProgress(content: any) {// op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_QUERY_PLAYER_PROGRESS
+    public setOnlineProgress(content: any) {// op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_QUERY_PLAYER_PROGRESS
         this.progressData = content;
         this.signProgressPanel.setProgressDatas(content);
     }
-    destroy() {
-        super.destroy();
+
+    public setRoomListData(content: any) {// op_client.OP_VIRTUAL_WORLD_RES_CLIENT_EDIT_MODE_GET_PLAYER_ENTER_ROOM_HISTORY
+        this.myRoomNavigationPanel.setRoomDataList(content);
     }
-    private onGridTableHandler(item: PartyListItem) {
-        this.onSendHandler(item.partyData);
+
+    protected init() {
+        if (this.mInitialized) return;
+        const w = this.scaleWidth;
+        const h = this.scaleHeight;
+        this.blackBg = this.scene.make.graphics(undefined, false);
+        this.blackBg.setInteractive(new Phaser.Geom.Rectangle(0, 0, w, h), Phaser.Geom.Rectangle.Contains);
+        this.blackBg.on("pointerup", this.onCloseHandler, this);
+        this.add(this.blackBg);
+        this.content = this.scene.make.container(undefined, false);
+        const bgwidth = 300 * this.dpr, bgheight = h;
+        this.content.setSize(bgwidth, bgheight);
+        this.bg = new CommonBackground(this.scene, 0, 0, bgwidth, bgheight);
+        this.tilteName = this.scene.make.text({ text: i18n.t("task.title"), style: UIHelper.whiteStyle(this.dpr, 18) });
+        this.tilteName.setOrigin(0, 0.5);
+        this.tilteName.setFontStyle("bold");
+        this.tilteName.x = -bgwidth * 0.5 + 20 * this.dpr;
+        this.tilteName.y = -bgheight * 0.5 + 40 * this.dpr;
+        this.signProgressPanel = new SignProgressPanel(this.scene, 252 * this.dpr, 45 * this.dpr, this.key, this.dpr);
+        this.signProgressPanel.y = -this.height * 0.5 + 15 * this.dpr;
+        this.signProgressPanel.setHandler(new Handler(this, this.onProgressHandler));
+        this.selectLine = this.scene.make.graphics(undefined, false);
+        this.itemtips = new ItemInfoTips(this.scene, 121 * this.dpr, 46 * this.dpr, UIAtlasName.uicommon, "tips_bg", this.dpr);
+        this.itemtips.setVisible(false);
+        this.content.add([this.bg, this.signProgressPanel]);
+
+        this.add(this.content);
+        this.resize(0, 0);
+        super.init();
     }
-    private onHotelHandler() {
-        if (!this.partyData) return;
-        if (this.sendHandler) this.sendHandler.runWith(["hotel", this.partyData.hotel]);
+    createOptionButtons() {
+        const arr = [{ text: i18n.t("partynav.town"), type: 1 }, { text: i18n.t("player_info.room"), type: 2 }, { text: i18n.t("partynav.store"), type: 3 }];
+        const allLin = 272 * this.dpr;
+        const cellwidth = allLin / arr.length;
+        const cellHeight = 20 * this.dpr;
+        let posx = -allLin / 2;
+        const posy = -this.height * 0.5 + 75 * this.dpr;
+        let tempitem: ToggleColorButton;
+        // tslint:disable-next-line:prefer-for-of
+        for (let i = 0; i < arr.length; i++) {
+            const data = arr[i];
+            const item = new ToggleColorButton(this.scene, cellwidth, 20 * this.dpr, this.dpr, data.text);
+            item.on(ClickEvent.Tap, this.onToggleButtonHandler, this);
+            item.x = posx + cellwidth * 0.5;
+            item.y = posy;
+            item.setData("item", data.type);
+            item.setSize(cellwidth, cellHeight);
+            this.content.add(item);
+            item.setChangeColor("#FFF449");
+            item.setFontSize(14 * this.dpr);
+            posx += cellwidth;
+            if (!tempitem) tempitem = item;
+        }
+        tempitem.isOn = true;
+        this.onToggleButtonHandler(undefined, tempitem);
     }
-    private onPicatownHandler() {
-        if (!this.partyData) return;
-        if (this.sendHandler) this.sendHandler.runWith(["pictown", this.partyData.picatown]);
+
+
+    private openPartyNavigationPanel() {
+        if (!this.partyNavigationPanel) {
+            this.partyNavigationPanel = new PicaTownNavigationPanel(this.scene, this.content.width - 40 * this.dpr, this.content.height - 40 * this.dpr, this.key, this.dpr, this.scale);
+            this.partyNavigationPanel.setHandler(new Handler(this, this.onPartyListHandler));
+            this.partyNavigationPanel.y = 0 * this.dpr;
+            this.partyNavigationPanel.on("questreward", this.onProgressRewardHandler, this);
+        }
+        this.content.add(this.partyNavigationPanel);
+        this.partyNavigationPanel.refreshMask();
     }
-    private onSendHandler(data: any) {// op_client.IEditModeRoom
-        if (this.sendHandler) this.sendHandler.runWith(["partylist", data]);
+
+    private hidePartyNavigationPanel() {
+        if (this.partyNavigationPanel)
+            this.content.remove(this.partyNavigationPanel);
+    }
+
+    private openRoomNavigationPanel() {
+        if (!this.myRoomNavigationPanel) {
+            this.myRoomNavigationPanel = new PicaMyRoomNavigationPanel(this.scene, this.content.width - 40 * this.dpr, this.content.height - 34 * this.dpr, this.key, this.dpr, this.scale);
+            this.myRoomNavigationPanel.setHandler(new Handler(this, this.onEnterRoomHandler));
+            this.myRoomNavigationPanel.y = -10 * this.dpr;
+        }
+        this.content.add(this.myRoomNavigationPanel);
+        this.myRoomNavigationPanel.refreshMask();
+    }
+
+    private hideRoomNavigationPanel() {
+        if (this.myRoomNavigationPanel) {
+            this.myRoomNavigationPanel.clear();
+            this.content.remove(this.myRoomNavigationPanel);
+        }
+    }
+    private onToggleButtonHandler(pointer: any, toggle: ToggleColorButton) {
+        if (this.curToggleItem === toggle) return;
+        if (this.curToggleItem) this.curToggleItem.isOn = false;
+        this.curToggleItem = toggle;
+        this.optionType = toggle.getData("item");
+        this.selectLine.x = toggle.x;
+        this.selectLine.y = toggle.y + 20 * this.dpr;
+        this.render.renderEmitter(ModuleName.PICATASK_NAME + "_questlist", this.optionType);
+    }
+
+    private onPartyListHandler(tag: string, data: any) {// op_client.IEditModeRoom
+        if (tag === "hotel" || tag === "pictown" || tag === "partylist") {
+            this.render.renderEmitter(this.key + "_queryenter", data.roomId);
+        } else if (tag === "progress") {
+
+        }
     }
     private onProgressHandler(index: number, item: SignProgressItem) {
         if (!this.progressData) return;
@@ -140,7 +171,12 @@ export class PicaPartyNavigationPanel extends Phaser.GameObjects.Container {
             }
         }
     }
-
+    private onProgressRewardHandler(index: number) {
+        this.render.renderEmitter(this.key + "_questreward", index);
+    }
+    private onEnterRoomHandler(roomID: string) {
+        this.render.renderEmitter(this.key + "_queryenter", roomID);
+    }
     private showItemTipsState(item: Phaser.GameObjects.Container, offsety: number = 0) {
         const posx = this.itemtips.x;
         const posy = this.itemtips.y;
@@ -169,95 +205,26 @@ export class PicaPartyNavigationPanel extends Phaser.GameObjects.Container {
         }
         this.itemtips.y = posy - this.itemtips.height * 0.5 + 10 * this.dpr + offsety;
     }
-}
-
-class PartyListItem extends Phaser.GameObjects.Container {
-    public partyData: any;// op_client.IEditModeRoom
-    private key: string;
-    private dpr: number;
-    private bg: NineSlicePatch;
-    private partyName: BBCodeText;
-    private imagIcon: DynamicImage;
-    private hotImageValue: ImageBBCodeValue;
-    private partyOwnerName: ImageBBCodeValue;
-    private playerCount: ImageBBCodeValue;
-    constructor(scene: Phaser.Scene, key: string, dpr: number) {
-        super(scene);
-        this.key = key;
-        this.dpr = dpr;
-        this.bg = new NineSlicePatch(this.scene, 0, 0, 254 * dpr, 40 * dpr, this.key, "list_bg", {
-            left: 12 * this.dpr,
-            top: 0 * this.dpr,
-            right: 12 * this.dpr,
-            bottom: 0 * this.dpr
-        });
-        this.add(this.bg);
-        this.setSize(this.bg.width, this.bg.height);
-        this.imagIcon = new DynamicImage(scene, 0, 0);
-        this.imagIcon.setTexture(this.key, "party_icon_1");
-        this.imagIcon.x = -this.width * 0.5 + this.imagIcon.width * 0.5 + 8 * dpr;
-        this.imagIcon.y = -this.height * 0.5 + this.imagIcon.height * 0.5 + 5 * dpr;
-        this.add(this.imagIcon);
-        this.hotImageValue = new ImageBBCodeValue(scene, 30 * dpr, 10 * dpr, key, "hot", dpr, {
-            fontSize: 9 * dpr,
-            color: "#FFDD00",
-            fontFamily: Font.DEFULT_FONT,
-            stroke: "#666666",
-            strokeThickness: 2 * dpr,
-        });
-        this.hotImageValue.setOffset(-3 * dpr, 0);
-        this.hotImageValue.x = -this.width * 0.5 + this.hotImageValue.width * 0.5 + 8 * dpr;
-        this.hotImageValue.y = this.height * 0.5 - this.hotImageValue.height * 0.5 - 5 * dpr;
-        this.add(this.hotImageValue);
-        this.partyName = new BBCodeText(this.scene, -this.width * 0.5 + 45 * dpr, -this.height * 0.5 + 5 * dpr, "", {
-            fontFamily: Font.DEFULT_FONT,
-            fontSize: 12 * dpr,
-            color: "#333333"
-        });
-        this.partyName.setOrigin(0);
-        this.add(this.partyName);
-        this.partyOwnerName = new ImageBBCodeValue(scene, 50 * dpr, 20 * dpr, key, "user", dpr, {
-            fontFamily: Font.DEFULT_FONT,
-            fontSize: 11 * dpr,
-            color: "#333333"
-        });
-        this.partyOwnerName.x = this.partyName.x + this.partyOwnerName.width * 0.5;
-        this.partyOwnerName.y = this.partyName.y + 25 * dpr;
-        this.add(this.partyOwnerName);
-        this.playerCount = new ImageBBCodeValue(scene, 30 * dpr, 20 * dpr, UIAtlasKey.commonKey, "home_persons", dpr, {
-            fontFamily: Font.DEFULT_FONT,
-            fontSize: 12 * dpr,
-            color: "#333333"
-        });
-        this.playerCount.x = this.width * 0.5 - 35 * dpr;
-        this.add(this.playerCount);
+    private onCloseHandler() {
+        this.render.renderEmitter(this.key + "_close");
     }
-    public setPartyData(data: any) {// op_client.IEditModeRoom
-        this.partyData = data;
-        const texturepath = data.topic.display.texturePath;
-        const lastindex = texturepath.lastIndexOf("/");
-        const frame = texturepath.slice(lastindex + 1, texturepath.length);
-        const burl = texturepath.slice(0, lastindex + 1);
-        const url = Url.getOsdRes(burl + frame + `_s_${this.dpr}x` + ".png");
-        this.imagIcon.load(url);
-        this.hotImageValue.setText(this.getHotText(data.focus));
-        this.partyName.text = `[b]${data.name}[/b]`;
-        this.playerCount.setText(`[b]${data.playerCount}[/b]`);
-        this.partyOwnerName.setText(data.ownerName);
-    }
-    private getHotText(value) {
-        let text = value + "";
-        if (i18n.language === "en") {
-            if (text.length >= 4 && text.length < 7) {
-                text = Math.floor(value / 100) / 10 + i18n.t("quantityunit.k");
-            } else if (text.length >= 7) {
-                text = Math.floor(value / 100000) / 10 + i18n.t("quantityunit.m");
-            }
-        } else {
-            text = ChineseUnit.getChineseUnit(value, 1);
-        }
-
-        return `[stroke]${text} [/stroke]`;
+    private playMove(handler: Handler) {
+        const from = -this.content.width * 0.5 - 10 * this.dpr;
+        const to = this.content.width * 0.5;
+        const tween = this.scene.tweens.add({
+            targets: this.content,
+            x: {
+                from,
+                to
+            },
+            ease: "Linear",
+            duration: 300,
+            onComplete: () => {
+                tween.stop();
+                tween.remove();
+                if (handler) handler.run();
+            },
+        });
     }
 }
 
@@ -459,3 +426,4 @@ class SignProgressItem extends Phaser.GameObjects.Container {
         if (this.receiveHandler) this.receiveHandler.runWith([this.index, this]);
     }
 }
+
