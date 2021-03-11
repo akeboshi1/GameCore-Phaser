@@ -125,6 +125,7 @@ export class PicaNewRolePanel extends PicaBasePanel {
         this.actionContanier = new PeopleActionContainer(this.scene, this.dpr);
         this.actionContanier.setHandler(new Handler(this, this.onPeopleActionHandler));
         this.actionContanier.y = -this.content.height * 0.5 - this.actionContanier.height * 0.5 - 10 * this.dpr;
+        this.actionContanier.x = 40 * this.dpr;
         this.content.add(this.actionContanier);
         this.resize();
         super.init();
@@ -216,11 +217,11 @@ class PeopleActionContainer extends Phaser.GameObjects.Container {
         this.background = this.scene.make.image({ key: UIAtlasName.people_action, frame: "people_action_bg" });
         this.setSize(this.background.width, this.background.height);
         this.add(this.background);
-        const posx = -this.width * 0.5;
+        const posx = -this.width * 0.5+5*dpr;
         for (let i = 0; i < 5; i++) {
             const frame = "people_action_" + (i + 1);
             const button = new Button(this.scene, UIAtlasName.people_action, frame);
-            button.x = posx + button.width * 0.5 + (button.width + 20 * dpr) * i;
+            button.x = posx + button.width * 0.5 + (button.width + 10 * dpr) * i;
             button["action"] = frame;
             button.on(ClickEvent.Tap, this.onActionHandler, this);
             this.add(button);
