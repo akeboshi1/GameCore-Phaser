@@ -72,6 +72,7 @@ export class ModuleName {
     public static PICAEXPLORELIST_NAME = "PicaExploreList";
     public static PICARENAME_NAME = "PicaRename";
     public static FRIEND_INVITE = "FriendInvite";
+    public static PICAPARTYNAVIGATION_NAME: string = "PicaPartyNavigation";
     // =================todo guide name
     public static PICABAGGUIDE_NAME = "BagGuide";
     public static PICAEXPLOREGUIDE_NAME = "ExploreGuide";
