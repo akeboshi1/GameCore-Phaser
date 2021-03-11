@@ -1,4 +1,4 @@
-import { op_client } from "pixelpai_proto";
+import { op_client,op_def } from "pixelpai_proto";
 import { PicaNewRole } from "./PicaNewRole";
 import { BasicMediator, Game, UIType } from "gamecore";
 import { ModuleName } from "structure";
@@ -93,7 +93,7 @@ export class PicaNewRoleMediator extends BasicMediator {
 
     private onPeopleActionHandler(action: number) {
         Logger.getInstance().log(action);
-        this.mModel.queryAction(0, this.game.user.userData.cid, action);
+        this.mModel.queryAction(op_def.FrontEndUniqueUIEnum.PicaNewRole, this.uid, action);
     }
     private onHideView() {
         // const uimanager = this.game.uiManager;

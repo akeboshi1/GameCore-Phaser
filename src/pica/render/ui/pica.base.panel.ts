@@ -76,7 +76,7 @@ export class PicaBasePanel extends BasePanel {
                 if (resource.type !== "video") {
                     this.scene.load[resource.type](key, textureUrl, jsonUrl);
                 } else {
-                    this.scene.load.video(key, textureUrl, undefined, undefined, true);
+                    this.scene.load.video(key, textureUrl, undefined, true, true);
                 }
             }
         }
