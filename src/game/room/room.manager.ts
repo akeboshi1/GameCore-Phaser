@@ -15,6 +15,8 @@ export interface IRoomManager {
 
     readonly connection: ConnectionService | undefined;
 
+    removeAllRoom();
+
     addPackListener();
 
     removePackListener();
@@ -75,14 +77,18 @@ export class RoomManager extends PacketHandler implements IRoomManager {
         });
     }
 
-    public destroy() {
-        this.removePackListener();
+    public removeAllRoom() {
         for (let room of this.mRooms) {
             room.destroy();
             room = null;
         }
         this.mRooms.length = 0;
         this.mCurRoom = null;
+    }
+
+    public destroy() {
+        this.removePackListener();
+        this.removeAllRoom();
     }
 
     private hasRoom(id: number): boolean {
