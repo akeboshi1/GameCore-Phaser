@@ -111,7 +111,7 @@ export class ElementManager extends PacketHandler implements IElementManager {
         if (element) {
             this.mElements.delete(id);
             element.destroy();
-            this.mRoom.removeFromWalkableMap(element.model);
+            element.removeFromWalkableMap();
         }
         return element;
     }
@@ -434,7 +434,7 @@ export class ElementManager extends PacketHandler implements IElementManager {
             ele.setInputEnable(InputEnable.Interactive);
         }
         // if (!ele) ele = new Element(sprite, this);
-        if (addMap) this.mRoom.addToWalkableMap(sprite);
+        if (addMap) ele.addToWalkableMap();
         this.mElements.set(ele.id || 0, ele);
         return ele;
     }
