@@ -24,7 +24,7 @@ export class Player extends Element implements IElement {
         if (!model.layer) {
             model.layer = LayerEnum.Surface;
         }
-        this.mElementManager.roomService.removeFromWalkableMap(this.mModel);
+        this.removeFromWalkableMap();
         this.mModel = model;
         this.mQueueAnimations = undefined;
         if (this.mModel.pos) {
@@ -44,7 +44,7 @@ export class Player extends Element implements IElement {
                 if (model.mountSprites && model.mountSprites.length > 0) {
                     this.updateMounth(model.mountSprites);
                 }
-                this.mElementManager.roomService.addToWalkableMap(model);
+                this.addToWalkableMap();
                 return this.setRenderable(true);
             });
         const obj1 = {
@@ -109,6 +109,11 @@ export class Player extends Element implements IElement {
         }
 
     }
+
+    // Player 和 User不需要参与碰撞
+    public addToWalkableMap() { }
+
+    public removeFromWalkableMap() { }
 
     protected async checkDirection() {
         const pos = this.moveControll.position;
@@ -193,11 +198,6 @@ export class Player extends Element implements IElement {
         // super.addBody();
         // this.setBody();
     }
-
-    // Player 和 User不需要参与碰撞
-    protected addToWalkableMap(model: ISprite) { }
-
-    protected removeFromWalkableMap(model: ISprite) { }
 
     private mCheckStateHandle(val: string): boolean {
         // if (this.mCurState === val) return false;

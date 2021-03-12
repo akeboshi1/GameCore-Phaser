@@ -77,6 +77,10 @@ export interface IElement {
     getInteractivePositionList(): Promise<IPos[]>;
 
     getProjectionSize(): IProjection;
+
+    addToWalkableMap();
+
+    removeFromWalkableMap();
 }
 
 export interface MoveData {
@@ -207,7 +211,7 @@ export class Element extends BlockObject implements IElement {
         if (!model.layer) {
             model.layer = LayerEnum.Surface;
         }
-        this.removeFromWalkableMap(this.mModel);
+        this.removeFromWalkableMap();
         // this.mElementManager.roomService.removeFromWalkableMap(this.mModel);
         this.mModel = model;
         this.mQueueAnimations = undefined;
@@ -228,7 +232,7 @@ export class Element extends BlockObject implements IElement {
                 if (model.mountSprites && model.mountSprites.length > 0) {
                     this.updateMounth(model.mountSprites);
                 }
-                this.addToWalkableMap(model);
+                this.addToWalkableMap();
                 return this.setRenderable(true);
             });
         // physic action
@@ -253,7 +257,7 @@ export class Element extends BlockObject implements IElement {
         if (this.mModel.id !== model.id) {
             return;
         }
-        this.removeFromWalkableMap(this.mModel);
+        this.removeFromWalkableMap();
         if (model.hasOwnProperty("attrs")) {
             this.mModel.updateAttr(model.attrs);
         }
@@ -290,7 +294,7 @@ export class Element extends BlockObject implements IElement {
         this.load(this.mModel.displayInfo);
         // 更新物理进程的物件/人物element
         this.mRoomService.game.physicalPeer.updateModel(model);
-        this.addToWalkableMap(this.mModel);
+        this.addToWalkableMap();
         // if (model.hasOwnProperty("point3f")) {
         //     const pos = model.point3f;
         //     this.setPosition(new LogicPos(pos.x, pos.y, pos.z));
@@ -310,7 +314,7 @@ export class Element extends BlockObject implements IElement {
         const preWalkable = this.mModel.getWalkableArea();
         this.mModel.setAnimationName(animationName);
         const nextWalkable = this.mModel.getWalkableArea();
-        if (preWalkable !== nextWalkable) this.removeFromWalkableMap(this.mModel);
+        if (preWalkable !== nextWalkable) this.removeFromWalkableMap();
         if (times !== undefined) {
             times = times > 0 ? times - 1 : -1;
         }
@@ -733,6 +737,14 @@ export class Element extends BlockObject implements IElement {
         }
     }
 
+    public addToWalkableMap() {
+        if (this.model && this.mElementManager) this.mElementManager.roomService.addToWalkableMap(this.model);
+    }
+
+    public removeFromWalkableMap() {
+        if (this.model && this.mElementManager) this.mElementManager.roomService.removeFromWalkableMap(this.model);
+    }
+
     public destroy() {
         this.mCreatedDisplay = false;
         if (this.mMoveData && this.mMoveData.tweenAnim) {
@@ -956,14 +968,6 @@ export class Element extends BlockObject implements IElement {
     protected animationChanged(data: any) {
         // { id: this.id, direction: this.direction }
         this.mElementManager.roomService.game.renderPeer.displayAnimationChange(data);
-    }
-
-    protected addToWalkableMap(model: ISprite) {
-        if (model) this.mElementManager.roomService.addToWalkableMap(model);
-    }
-
-    protected removeFromWalkableMap(model: ISprite) {
-        if (this.mElementManager) this.mElementManager.roomService.removeFromWalkableMap(model);
     }
 }
 
