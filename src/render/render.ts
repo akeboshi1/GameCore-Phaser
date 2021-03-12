@@ -438,6 +438,12 @@ export class Render extends RPCPeer implements GameMain, IRender {
         }
     }
 
+    hidden() {
+        if (this.game) {
+            this.mainPeer.hidden();
+        }
+    }
+
     startFullscreen(): void {
 
     }
@@ -595,11 +601,11 @@ export class Render extends RPCPeer implements GameMain, IRender {
     }
 
     public onFocus() {
-        this.resumeScene();
+        // this.resumeScene();
     }
 
     public onBlur() {
-        this.pauseScene();
+        // this.pauseScene();
     }
 
     public syncClock(times: number) {
@@ -918,6 +924,11 @@ export class Render extends RPCPeer implements GameMain, IRender {
     }
 
     @Export()
+    public clearAccount() {
+        this.mAccount.clear();
+    }
+
+    @Export()
     public getWorldView(): Promise<any> {
         if (!this.sceneManager) return;
         return new Promise<any>((resolve, reject) => {
@@ -1121,6 +1132,7 @@ export class Render extends RPCPeer implements GameMain, IRender {
     public clearGame(boo: boolean): Promise<void> {
         return new Promise((resolve, reject) => {
             if (this.mGame) {
+                Logger.getInstance().log("====================>>>>>>>> clear game");
                 this.mGame.events.off(Phaser.Core.Events.FOCUS, this.onFocus, this);
                 this.mGame.events.off(Phaser.Core.Events.BLUR, this.onBlur, this);
                 this.mGame.scale.off("enterfullscreen", this.onFullScreenChange, this);
