@@ -137,6 +137,10 @@ export class Launcher {
         if (this.world) this.world.keyboardDidHide();
     }
 
+    public hidden() {
+        if (this.world) this.world.hidden();
+    }
+
     public enableClick() {
         if (this.world) this.world.enableClick();
     }

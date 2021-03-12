@@ -50,6 +50,7 @@ export class BottomPanel extends PicaBasePanel {
     }
 
     removeListen() {
+        if (!this.mInitialized) return;
         this.mInput.on("enter", this.onSendMsgHandler, this);
         this.mInput.off("pointerScene", this.onPointerSceneHandler, this);
         this.resizeColtroll.removeListen();
