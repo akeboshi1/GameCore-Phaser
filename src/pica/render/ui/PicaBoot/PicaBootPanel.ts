@@ -22,16 +22,10 @@ export class PicaBootPanel extends BasePanel {
     }
 
     removeListen() {
+        if (!this.mInitialized) return;
         this.playBtn.off(ClickEvent.Tap, this.onPlayHandler, this);
-        this.navigate.addListen();
+        this.navigate.removeListen();
         this.navigate.off("showLogin", this.onShowLoginHandler, this);
-    }
-
-    destroy() {
-        if (this.parentContainer) {
-            this.parentContainer.destroy();
-        }
-        super.destroy();
     }
 
     init() {
@@ -39,9 +33,8 @@ export class PicaBootPanel extends BasePanel {
         const height = this.scene.cameras.main.height;
         const scaleW = width / this.scale;
         const scaleH = height / this.scale;
-        const container = this.scene.add.container(0, 0, this);
-        container.x = width * this.originX;
-        container.y = height * this.originY;
+        this.x = width * this.originX;
+        this.y = height * this.originY;
 
         const logo = this.scene.make.image({
             x: 0,
@@ -106,6 +99,27 @@ export class PicaBootPanel extends BasePanel {
         super.init();
 
         this.resize();
+
+        this.scene.children.add(this);
+    }
+
+    updatePanelList() {
+        if (!this.scene) {
+            return;
+        }
+        const children = this.scene.children;
+        if (!children) {
+            return;
+        }
+        this.hasPanel(children.length > 1);
+    }
+
+    popPanel() {
+        this.hasPanel(true);
+    }
+
+    hidePanel() {
+        this.hasPanel(false);
     }
 
     public tryLogin(phone: string, code: string, phoneArea: string) {
@@ -153,6 +167,11 @@ export class PicaBootPanel extends BasePanel {
 
     private onShowLoginHandler() {
         this.showLogin();
+    }
+
+    private hasPanel(val: boolean) {
+        this.playBtn.visible = !val;
+        this.navigate.visible = !val;
     }
 }
 

@@ -32,8 +32,10 @@ export class PicaLoginPanel extends BasePanel {
     }
 
     destroy() {
-        if (this.parent) this.parent.destroy(true);
+        if (this.parentContainer) this.parentContainer.remove(this, false);
+        if (this.parent) this.parent.destroy();
         super.destroy();
+        this.updatePanelList();
         if (this.fetchTime) {
             clearTimeout(this.fetchTime);
         }
@@ -87,7 +89,7 @@ export class PicaLoginPanel extends BasePanel {
     protected init() {
         const { width, height } = this.scene.cameras.main;
 
-        this.parent = this.scene.add.container(width * this.originX, height * this.originY, this);
+        this.parent = this.scene.add.container(width * this.originX, height * this.originY);
 
         const container = this.scene.make.container(undefined, false);
         container.add(this);
@@ -197,6 +199,12 @@ export class PicaLoginPanel extends BasePanel {
         super.init();
 
         this.resize();
+        this.updatePanelList();
+    }
+
+    private updatePanelList() {
+        const boot: any = this.render.uiManager.getPanel(ModuleName.PICA_BOOT_NAME);
+        if (boot) boot.updatePanelList();
     }
 
     private createInput(input: InputField, x: number, y: number, width?: number) {
@@ -235,9 +243,11 @@ export class PicaLoginPanel extends BasePanel {
                 this.fetchCode.setText(`获取验证码(${this.downcount})`);
             } else {
                 this.fetchCode.setText(`获取验证码`);
+                // this.fetchCode.enable = false;
             }
         }, 1000);
         if (this.mMediator) this.mMediator.fetchCode(text, this.areaCode);
+        // this.fetchCode.enable = false;
         // this.render.remote[MAIN_WORKER].onFetchCodeHandler();
     }
 
