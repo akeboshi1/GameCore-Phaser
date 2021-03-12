@@ -971,6 +971,9 @@ export class Render extends RPCPeer implements GameMain, IRender {
         if (!this.mSceneManager) {
             return;
         }
+        if (data === undefined) {
+            data = {};
+        }
         data.callBack = () => {
             if (data.sceneName) this.mSceneManager.startScene(data.sceneName);
         };
