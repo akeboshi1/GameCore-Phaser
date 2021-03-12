@@ -177,6 +177,7 @@ export class Element extends BlockObject implements IElement {
     protected mCreatedDisplay: boolean = false;
     protected isUser: boolean = false;
     protected moveControll: MoveControll;
+    protected mTopDisplay: any;
 
     private delayTime = 1000 / 45;
     private mState: boolean = false;
@@ -611,7 +612,8 @@ export class Element extends BlockObject implements IElement {
     }
 
     public showTopDisplay(data?: ElementStateType) {
-        this.mRoomService.game.renderPeer.showTopDisplay(this.id, data);
+        this.mTopDisplay = data;
+        if (this.mCreatedDisplay) this.mRoomService.game.renderPeer.showTopDisplay(this.id, data);
     }
 
     public removeTopDisplay() {
@@ -824,6 +826,7 @@ export class Element extends BlockObject implements IElement {
         });
         const currentAnimation = this.mModel.currentAnimation;
         if (this.mInputEnable) this.setInputEnable(this.mInputEnable);
+        if (this.mTopDisplay) this.showTopDisplay(this.mTopDisplay);
         if (this.mModel.nodeType !== op_def.NodeType.CharacterNodeType) this.mRoomService.game.physicalPeer.addBody(this.id);
         this.roomService.game.emitter.emit("ElementCreated", this.id);
         return Promise.resolve();

@@ -206,9 +206,10 @@ export class ElementStateManager extends PacketHandler {
     protected getElementsBySN(type: ElementStateType, sn: string) {
         const map = this.getMap(type);
         const eles: Element[] = [];
-        map.forEach((temp) => {
+        map.forEach((temp, key) => {
             if (temp && temp.model && temp.model.sn === sn) {
                 eles.push(temp);
+                map.delete(key);
             }
         });
         return eles;
