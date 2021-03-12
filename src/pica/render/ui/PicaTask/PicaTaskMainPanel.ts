@@ -71,7 +71,6 @@ export class PicaTaskMainPanel extends Phaser.GameObjects.Container {
             for (const item of this.taskItems) {
                 if (item.visible) tempitems.push(item);
             }
-            this.isFinishGroup = true;
             if (this.isFinishGroup) {
                 this.mainTaskAnimation = new MainTaskAnimation(this.scene, this.mainItem, tempitems, this.width, this.dpr);
                 if (this.isMoveFinish) this.mainTaskAnimation.playIntoAnimation();

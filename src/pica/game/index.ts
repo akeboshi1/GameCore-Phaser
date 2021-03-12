@@ -101,3 +101,5 @@ export * from "./ui/PicaPlayerInfo/PicaPlayerInfo";
 export * from "./ui/PicaPlayerInfo/PicaPlayerInfoMediator";
 export * from "./ui/PicaRename/PicaRename";
 export * from "./ui/PicaRename/PicaRenameMediator";
+export * from "./ui/PicaPartyNavigation/PicaPartyNavigation";
+export * from "./ui/PicaPartyNavigation/PicaPartyNavigationMediator";
