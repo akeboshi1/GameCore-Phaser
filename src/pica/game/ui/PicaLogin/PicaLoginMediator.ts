@@ -39,6 +39,10 @@ export class PicaLoginMediator extends BasicMediator {
         });
     }
 
+    fetchCode(phone: string, areaCode: string) {
+        this.game.httpService.requestPhoneCode(phone, areaCode);
+    }
+
     private loginSuc(data) {
         this.game.renderPeer.setAccount(data);
         this.hide();
