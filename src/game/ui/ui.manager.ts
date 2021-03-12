@@ -246,8 +246,9 @@ export class UIManager extends PacketHandler {
         this.isshowMainui = false;
     }
 
-    protected onForceOfflineHandler(packet: PBpacket) {
-        this.game.peer.render.showAlert(i18n.t("common.offline"), true);
+    protected async onForceOfflineHandler(packet: PBpacket) {
+        const txt = await this.game.renderPeer.i18nString("common.offline");
+        this.game.peer.render.showAlert(txt, true);
     }
 
     protected updateUIState(data: op_client.OP_VIRTUAL_WORLD_REQ_CLIENT_PKT_REFRESH_ACTIVE_UI) {

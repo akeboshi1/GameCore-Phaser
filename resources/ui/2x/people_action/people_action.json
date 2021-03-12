@@ -73,24 +73,24 @@
 					}
 				},
 				{
-					"filename": "people_action_2",
+					"filename": "people_action_1",
 					"rotated": false,
 					"trimmed": true,
 					"sourceSize": {
-						"w": 60,
-						"h": 60
+						"w": 62,
+						"h": 62
 					},
 					"spriteSourceSize": {
-						"x": 8,
-						"y": 10,
-						"w": 44,
-						"h": 40
+						"x": 1,
+						"y": 4,
+						"w": 60,
+						"h": 53
 					},
 					"frame": {
 						"x": 96,
 						"y": 1,
-						"w": 44,
-						"h": 40
+						"w": 60,
+						"h": 53
 					}
 				},
 				{
@@ -98,41 +98,20 @@
 					"rotated": false,
 					"trimmed": true,
 					"sourceSize": {
-						"w": 60,
-						"h": 60
+						"w": 62,
+						"h": 62
 					},
 					"spriteSourceSize": {
-						"x": 7,
-						"y": 6,
-						"w": 47,
-						"h": 48
+						"x": 2,
+						"y": 4,
+						"w": 59,
+						"h": 54
 					},
 					"frame": {
-						"x": 142,
+						"x": 158,
 						"y": 1,
-						"w": 47,
-						"h": 48
-					}
-				},
-				{
-					"filename": "people_action_5",
-					"rotated": false,
-					"trimmed": true,
-					"sourceSize": {
-						"w": 60,
-						"h": 60
-					},
-					"spriteSourceSize": {
-						"x": 6,
-						"y": 6,
-						"w": 48,
-						"h": 48
-					},
-					"frame": {
-						"x": 191,
-						"y": 1,
-						"w": 48,
-						"h": 48
+						"w": 59,
+						"h": 54
 					}
 				},
 				{
@@ -140,41 +119,62 @@
 					"rotated": false,
 					"trimmed": true,
 					"sourceSize": {
-						"w": 60,
-						"h": 60
+						"w": 62,
+						"h": 62
 					},
 					"spriteSourceSize": {
-						"x": 6,
-						"y": 5,
-						"w": 48,
-						"h": 50
+						"x": 2,
+						"y": 2,
+						"w": 55,
+						"h": 56
 					},
 					"frame": {
-						"x": 241,
+						"x": 219,
 						"y": 1,
-						"w": 48,
-						"h": 50
+						"w": 55,
+						"h": 56
 					}
 				},
 				{
-					"filename": "people_action_1",
+					"filename": "people_action_5",
 					"rotated": false,
 					"trimmed": true,
 					"sourceSize": {
-						"w": 60,
-						"h": 60
+						"w": 62,
+						"h": 62
 					},
 					"spriteSourceSize": {
-						"x": 4,
-						"y": 2,
-						"w": 54,
+						"x": 2,
+						"y": 3,
+						"w": 57,
 						"h": 56
 					},
 					"frame": {
-						"x": 291,
+						"x": 276,
 						"y": 1,
-						"w": 54,
+						"w": 57,
 						"h": 56
+					}
+				},
+				{
+					"filename": "people_action_2",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 62,
+						"h": 62
+					},
+					"spriteSourceSize": {
+						"x": 13,
+						"y": 2,
+						"w": 40,
+						"h": 57
+					},
+					"frame": {
+						"x": 335,
+						"y": 1,
+						"w": 40,
+						"h": 57
 					}
 				},
 				{
@@ -193,7 +193,7 @@
 					},
 					"frame": {
 						"x": 1,
-						"y": 59,
+						"y": 60,
 						"w": 400,
 						"h": 78
 					}
@@ -267,6 +267,6 @@
 	"meta": {
 		"app": "https://www.codeandweb.com/texturepacker",
 		"version": "3.0",
-		"smartupdate": "$TexturePacker:SmartUpdate:f6948e171be8a48f5ec0d56de9c3f8d2:bc6a47a139bffdb5efa721c9513bf8ac:56c7cfe4f8ba631299158ce96cff8067$"
+		"smartupdate": "$TexturePacker:SmartUpdate:c5551398fca09e0d43fefe0a876deba7:9fb5d50f8ad0251f5e6d8bb32ad7d8f1:56c7cfe4f8ba631299158ce96cff8067$"
 	}
 }

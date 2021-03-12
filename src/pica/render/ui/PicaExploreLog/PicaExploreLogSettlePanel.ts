@@ -112,6 +112,7 @@ export class PicaExploreLogSettlePanel extends ButtonEventDispatcher {
         this.setLayoutMask(this.maskWidth, this.maskHeight);
         const previous = this.getProgressValue(content.previousProgress);
         this.starPro.setProgress(previous, 500);
+        this.setStarProgressInfo();
     }
 
     private initParam() {
@@ -272,7 +273,7 @@ export class PicaExploreLogSettlePanel extends ButtonEventDispatcher {
             },
         });
         this.tweens.push(tween);
-        this.setStarProgressInfo();
+        // this.setStarProgressInfo();
         this.starText.visible = true;
     }
 
@@ -304,8 +305,10 @@ export class PicaExploreLogSettlePanel extends ButtonEventDispatcher {
         const clues = this.settleData.clue;
         this.unkownImg.visible = false;
         if (clues) {
+            let first: boolean = false;
             for (const clue of clues) {
-                if (clue.star > riado) {
+                if (!first && clue.star > riado) {
+                    first = true;
                     this.unkownImg.visible = true;
                     const xx = -width * 0.5 + (clue.star - 1) * (cellWidth + space) + cellWidth * 0.5;
                     this.unkownImg.x = xx;

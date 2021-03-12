@@ -599,16 +599,4 @@ export class MatterObject implements IMatterObject {
     get model(): any {
         return this.mModel;
     }
-
-    private mCheckStateHandle(val: string): boolean {
-        // if (this.mCurState === val) return false;
-        return true;
-    }
-
-    private onDisplayReady() {
-        this.peer.render.displayReady(this.id, this.model.currentAnimation);
-        // if (this.mModel.mountSprites && this.mModel.mountSprites.length > 0) {
-        //     this.updateMounth(this.mModel.mountSprites);
-        // }
-    }
 }

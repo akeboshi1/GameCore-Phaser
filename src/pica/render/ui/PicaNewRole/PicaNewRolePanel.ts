@@ -217,11 +217,11 @@ class PeopleActionContainer extends Phaser.GameObjects.Container {
         this.background = this.scene.make.image({ key: UIAtlasName.people_action, frame: "people_action_bg" });
         this.setSize(this.background.width, this.background.height);
         this.add(this.background);
-        const posx = -this.width * 0.5 + 5 * dpr;
+        const posx = -this.width * 0.5 + 6 * dpr;
         for (let i = 0; i < 5; i++) {
             const frame = "people_action_" + (i + 1);
             const button = new Button(this.scene, UIAtlasName.people_action, frame);
-            button.x = posx + button.width * 0.5 + (button.width + 10 * dpr) * i;
+            button.x = posx + button.width * 0.5 + (button.width + 8* dpr) * i;
             button["action"] = frame;
             button.on(ClickEvent.Tap, this.onActionHandler, this);
             this.add(button);
