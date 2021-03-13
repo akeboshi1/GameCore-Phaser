@@ -13,6 +13,7 @@ export class PicaBootMediator extends BasicMediator {
 
     enterGame() {
         this.game.loginEnterWorld();
+        this.hide();
     }
 
     show(param?: any): void {
@@ -30,6 +31,12 @@ export class PicaBootMediator extends BasicMediator {
             });
             this.mediatorExport();
         });
+    }
+
+    hide() {
+        this.game.renderPeer.hidePanel(ModuleName.PICA_BOOT_NAME);
+        this.mView = undefined;
+        super.hide();
     }
 
     async referToken() {

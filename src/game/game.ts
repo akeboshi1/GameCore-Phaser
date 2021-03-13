@@ -194,7 +194,14 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
     }
 
     public onClientErrorHandler(packet: PBpacket): void {
-        const content: op_client.OP_GATEWAY_RES_CLIENT_ERROR = packet.content;
+        const content: op_client.IOP_GATEWAY_RES_CLIENT_ERROR = packet.content;
+        switch (content.responseStatus) {
+            case op_def.ResponseStatus.REQUEST_UNAUTHORIZED:
+                // 校验没成功
+                this.renderPeer.showAlert("登陆过期，请重新登陆")
+                .then(this.login.bind(this));
+                break;
+        }
         Logger.getInstance().log(`Remote Trace[${content.responseStatus}]: ${content.msg}`);
     }
 

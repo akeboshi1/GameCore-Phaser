@@ -965,7 +965,9 @@ export class Render extends RPCPeer implements GameMain, IRender {
     public showAlert(text: string, ok: boolean) {
         // 告诉render显示警告框
         if (ok === undefined) ok = true;
-        if (this.uiManager) this.uiManager.showAlertView(text, ok);
+        return new Promise((resolve, reject) => {
+            if (this.uiManager) this.uiManager.showAlertView(text, ok, undefined, resolve);
+        });
     }
 
     @Export([webworker_rpc.ParamType.str])
