@@ -9,14 +9,28 @@ export class TweenCompent {
     private mPingpang: boolean = false;
     private mTempPing: boolean = false;
     private tempData: { scale: number, x: number, y: number };
-    constructor(scene: Phaser.Scene, gameobject: any, config: { scale?: number, x?: number, y?: number, pingpang?: boolean }) {
+    private mOnce: boolean;
+    constructor(scene: Phaser.Scene, gameobject: any, config: { scale?: number, x?: number, y?: number, pingpang?: boolean, once?: boolean }) {
         this.mScene = scene;
         this.mTarget = gameobject;
         this.mScale = config.scale || gameobject.scale;
         this.mX = config.x === undefined ? gameobject.x : config.x;
         this.mY = config.y === undefined ? gameobject.y : config.y;
         this.mPingpang = config.pingpang || false;
-        if (this.mPingpang) this.tempData = { scale: gameobject.scale, x: gameobject.x, y: gameobject.y };
+        this.mOnce = config.once || false;
+        this.tempData = { scale: gameobject.scale, x: gameobject.x, y: gameobject.y };
+    }
+    setObject(obj: any) {
+        this.mTarget = obj;
+    }
+    zoomIn() {
+        this.mTempPing = false;
+        this.tween();
+    }
+    zoomOut(once?: boolean) {
+        this.mOnce = once || false;
+        this.mTempPing = true;
+        this.tween();
     }
     tween() {
         this.mTweening = true;
@@ -53,6 +67,10 @@ export class TweenCompent {
                 this.mTween = undefined;
             }
             this.mTempPing = false;
+            if (this.mOnce) {
+                this.mTarget = undefined;
+                this.tempData = undefined;
+            }
         }
     }
 }

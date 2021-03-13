@@ -664,9 +664,11 @@ export class MainPeer extends RPCPeer {
     }
 
     @Export([webworker_rpc.ParamType.num, webworker_rpc.ParamType.boolean])
-    public tryStopMove(id: number, interactiveBoo: boolean, targetID?: number, pos?: any) {
+    public tryStopMove(id: number, interactiveBoo: boolean, targetId?: number, stopPos?: any) {
         if (this.game.user) {
-            this.game.user.tryStopMove(targetID, interactiveBoo, pos);
+            const room = this.game.roomManager.currentRoom;
+            const needBroadcast = room.elementManager.checkElementAction(targetId);
+            this.game.user.tryStopMove({ targetId, needBroadcast, interactiveBoo, stopPos });
         }
     }
 

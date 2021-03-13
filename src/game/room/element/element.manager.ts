@@ -1,15 +1,15 @@
-import {PacketHandler, PBpacket} from "net-socket-packet";
-import {op_client, op_def, op_virtual_world} from "pixelpai_proto";
-import {ConnectionService} from "../../../../lib/net/connection.service";
-import {Logger, LogicPos} from "utils";
-import {EventType, IDragonbonesModel, IFramesModel, ISprite, MessageType} from "structure";
-import {IRoomService, Room} from "../room/room";
-import {Element, IElement, InputEnable} from "./element";
-import {ElementStateManager} from "./element.state.manager";
-import {ElementDataManager} from "../../data.manager/element.dataManager";
-import {DataMgrType} from "../../data.manager";
-import {ElementActionManager} from "../elementaction/element.action.manager";
-import {Sprite, IElementStorage} from "baseModel";
+import { PacketHandler, PBpacket } from "net-socket-packet";
+import { op_client, op_def, op_virtual_world } from "pixelpai_proto";
+import { ConnectionService } from "../../../../lib/net/connection.service";
+import { Logger, LogicPos } from "utils";
+import { EventType, IDragonbonesModel, IFramesModel, ISprite, MessageType } from "structure";
+import { IRoomService, Room } from "../room/room";
+import { Element, IElement, InputEnable } from "./element";
+import { ElementStateManager } from "./element.state.manager";
+import { ElementDataManager } from "../../data.manager/element.dataManager";
+import { DataMgrType } from "../../data.manager";
+import { ElementActionManager } from "../elementaction/element.action.manager";
+import { Sprite, IElementStorage } from "baseModel";
 import NodeType = op_def.NodeType;
 
 export interface IElementManager {
@@ -143,11 +143,13 @@ export class ElementManager extends PacketHandler implements IElementManager {
 
     public checkElementAction(id: number, userid?: number): boolean {
         const ele = this.get(id);
-        if (!ele) return;
+        if (!ele) return false;
         if (ele.model.nodeType !== NodeType.ElementNodeType) return false;
         if (this.mActionMgr.checkAllAction(ele.model).length > 0) {
             this.mActionMgr.executeElementActions(ele.model, userid);
+            return true;
         }
+        return false;
     }
 
     public isElementLocked(element: IElement) {
@@ -285,11 +287,11 @@ export class ElementManager extends PacketHandler implements IElementManager {
                 }
                 // 更新elementstorage中显示对象的数据信息
                 const data = new Sprite(sprite, 3);
-                this.mRoom.game.elementStorage.add(<any> data);
+                this.mRoom.game.elementStorage.add(<any>data);
                 element = this.get(sprite.id);
                 if (element) {
                     this.mDealSyncMap.set(sprite.id, false);
-                    const command = (<any> sprite).command;
+                    const command = (<any>sprite).command;
                     if (command === op_def.OpCommand.OP_COMMAND_UPDATE) { //  全部
                         element.model = data;
                     } else if (command === op_def.OpCommand.OP_COMMAND_PATCH) { //  增量
@@ -542,7 +544,7 @@ export class ElementManager extends PacketHandler implements IElementManager {
         const command = content.command;
         const sprites = content.sprites;
         for (const sprite of sprites) {
-            (<any> sprite).command = command;
+            (<any>sprite).command = command;
             this.mCacheSyncList.push(sprite);
         }
         this.dealSyncList();
@@ -565,8 +567,8 @@ export class ElementManager extends PacketHandler implements IElementManager {
                 if (!element) {
                     continue;
                 }
-                const {x, y} = moveData.destinationPoint3f;
-                element.move([{x, y}]);
+                const { x, y } = moveData.destinationPoint3f;
+                element.move([{ x, y }]);
                 // element.move(moveData);
             }
         }

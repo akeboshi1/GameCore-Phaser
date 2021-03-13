@@ -55,7 +55,6 @@ export class PicaTaskMainPanel extends Phaser.GameObjects.Container {
         }
         this.mainItem.setMainTaskData(content, questType);
         this.gameScroller.addItem(this.mainItem);
-
         if (this.questType !== questType) {
             const tempArr = this.getTaskQuests(content.quests, undefined);
             this.setTaskItems(tempArr);
@@ -251,6 +250,10 @@ class MainTaskItem extends Phaser.GameObjects.Container {
         this.taskDes.text = content.des;
         const max = 100;
         const fvalue = this.getFinishProgress(content);
+        if (this.intervalTimer) {
+            clearInterval(this.intervalTimer);
+            this.intervalTimer = undefined;
+        }
         if (this.questType !== questType) {
             this.progress.setProgress(fvalue, max);
         } else {
@@ -259,7 +262,6 @@ class MainTaskItem extends Phaser.GameObjects.Container {
             const duration = allTime * fvalue / max;
             this.playProgressTween(from, fvalue, max, duration);
         }
-
         this.progressTex.text = fvalue + "%";
         this.isFinish = fvalue === max;
         this.previousProgress = fvalue;
@@ -270,7 +272,7 @@ class MainTaskItem extends Phaser.GameObjects.Container {
         this.rewardsImg.load(url, this, () => {
 
         });
-
+        this.questType = questType;
     }
 
     public setHandler(send: Handler) {
@@ -351,6 +353,8 @@ class MainTaskItem extends Phaser.GameObjects.Container {
     private onReceiveAwardHandler() {
         if (this.isFinish && !this.mainData.rewardsReceived) {
             if (this.send) this.send.runWith([this.mainData.id]);
+        } else {
+            PicaItemTipsPanel.Inst.showTips(this.rewardsImg, <any>this.mainData.reward);
         }
     }
     private getFinishProgress(content: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_QUERY_QUEST_GROUP) {

@@ -7,7 +7,7 @@ export class PicaPartyNavigationMediator extends BasicMediator {
     private mPartyListData: any;
     private mPlayerProgress: any;
     constructor(game: Game) {
-        super(ModuleName.PICAPARTYLIST_NAME, game);
+        super(ModuleName.PICAPARTYNAVIGATION_NAME, game);
 
         if (!this.mModel) {
             this.mModel = new PicaPartyNavigation(game);

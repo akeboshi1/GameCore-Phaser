@@ -153,10 +153,10 @@ export class User extends Player {
         this.destroy();
     }
 
-    public tryStopMove(targetId: number, interactiveBoo: boolean, stopPos?: IPos) {
+    public tryStopMove(data: { targetId: number, needBroadcast?: boolean, interactiveBoo: boolean, stopPos?: IPos }) {
         this.stopMove();
-        if (stopPos) {
-            this.setPosition(stopPos);
+        if (data.stopPos) {
+            this.setPosition(data.stopPos);
         }
         const pos = this.getPosition();
         const position = op_def.PBPoint3f.create();
@@ -168,7 +168,15 @@ export class User extends Player {
         content.position = position;
         this.game.connection.send(packet);
         Logger.getInstance().debug("send stop move==========>>>", pos);
-        if (interactiveBoo) this.activeSprite(targetId);
+        if (data.interactiveBoo) {
+            this.activeSprite(data.targetId, undefined, data.needBroadcast);
+            // this.game.emitter.emit(EventType.SCENE_INTERACTION_ELEMENT, data.targetId, this.id);
+        }
+    }
+
+    public tryActiveAction(targetId: number, param?: any, needBroadcast?: boolean) {
+        this.activeSprite(targetId, param, needBroadcast);
+        this.game.emitter.emit(EventType.SCENE_PLAYER_ACTION, this.game.user.id, param);
     }
 
     public updateModel(model: op_client.IActor) {
@@ -193,7 +201,7 @@ export class User extends Player {
         }
     }
 
-    protected async activeSprite(targetId: number) {
+    protected async activeSprite(targetId: number, param?: any, needBroadcast?: boolean) {
         if (!targetId) {
             this.mPreTargetID = 0;
             return;
@@ -215,8 +223,9 @@ export class User extends Player {
         const packet: PBpacket = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_ACTIVE_SPRITE);
         const content: op_virtual_world.IOP_CLIENT_REQ_VIRTUAL_WORLD_ACTIVE_SPRITE = packet.content;
         content.spriteId = targetId;
+        content.param = param ? JSON.stringify(param) : "";
+        content.needBroadcast = needBroadcast;
         this.game.connection.send(packet);
-        this.game.emitter.emit(EventType.SCENE_INTERACTION_ELEMENT, targetId, this.id);
     }
 
     protected unmountSprite(id: number, pos: IPos) {
