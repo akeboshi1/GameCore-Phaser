@@ -1,11 +1,12 @@
 
 import { op_client } from "pixelpai_proto";
-import { Button, ClickEvent, UIType } from "apowophaserui";
-import { BasePanel, ImageValue, ThreeSliceButton, ThreeSlicePath, UIDragonbonesDisplay, UiManager } from "gamecoreRender";
+import { Button, ClickEvent, GameScroller, UIType } from "apowophaserui";
+import { BasePanel, ImageValue, ThreeSliceButton, ThreeSlicePath, TweenCompent, UIDragonbonesDisplay, UiManager } from "gamecoreRender";
 import { AvatarSuit, AvatarSuitType, ModuleName } from "structure";
 import { UIAtlasName } from "picaRes";
 import { Handler, i18n, UIHelper } from "utils";
 import { PicaBasePanel } from "../pica.base.panel";
+import { ISocial } from "picaStructure";
 export class PicaNewRolePanel extends PicaBasePanel {
     private blackGraphic: Phaser.GameObjects.Graphics;
     private bg: ThreeSlicePath;
@@ -122,7 +123,7 @@ export class PicaNewRolePanel extends PicaBasePanel {
         this.tradingBtn.y = this.followBtn.y;
         this.tradingBtn.x = this.tradingBtn.width * 0.5 + 40 * this.dpr;
         this.content.add(this.tradingBtn);
-        this.actionContanier = new PeopleActionContainer(this.scene, this.dpr);
+        this.actionContanier = new PeopleActionContainer(this.scene, this.dpr, this.scale);
         this.actionContanier.setHandler(new Handler(this, this.onPeopleActionHandler));
         this.actionContanier.y = -this.content.height * 0.5 - this.actionContanier.height * 0.5 - 10 * this.dpr;
         this.actionContanier.x = 40 * this.dpr;
@@ -152,6 +153,10 @@ export class PicaNewRolePanel extends PicaBasePanel {
         this.tradingBtn.setEnable(false, false);
     }
 
+    public setActionDatas(datas: ISocial[]) {
+        this.actionContanier.setActionDatas(datas);
+    }
+
     public setFollowButton(follow: boolean) {
         this.followed = follow;
         if (!this.mInitialized) return;
@@ -170,6 +175,7 @@ export class PicaNewRolePanel extends PicaBasePanel {
             onComplete: () => {
                 tween.stop();
                 tween.remove();
+                this.actionContanier.refreshMask();
             },
         });
     }
@@ -187,19 +193,7 @@ export class PicaNewRolePanel extends PicaBasePanel {
         this.render.renderEmitter(ModuleName.PICANEWROLE_NAME + "_tradingcharacter", this.roleData);
     }
 
-    private onPeopleActionHandler(tag: string) {
-        let action: number = 0;
-        if (tag === "people_action_1") {
-            action = 1;
-        } else if (tag === "people_action_2") {
-            action = 2;
-        } else if (tag === "people_action_3") {
-            action = 3;
-        } else if (tag === "people_action_4") {
-            action = 4;
-        } else if (tag === "people_action_5") {
-            action = 5;
-        }
+    private onPeopleActionHandler(action: ISocial) {
         this.render.renderEmitter(this.key + "_peopleaction", action);
     }
     private OnCloseHandler() {
@@ -211,28 +205,70 @@ class PeopleActionContainer extends Phaser.GameObjects.Container {
     private dpr: number;
     private background: Phaser.GameObjects.Image;
     private actionHandler: Handler;
-    constructor(scene: Phaser.Scene, dpr: number) {
+    private gamescroller: GameScroller;
+    private zoom: number;
+    private tween: TweenCompent;
+    constructor(scene: Phaser.Scene, dpr: number, zoom: number) {
         super(scene);
         this.dpr = dpr;
         this.background = this.scene.make.image({ key: UIAtlasName.people_action, frame: "people_action_bg" });
         this.setSize(this.background.width, this.background.height);
         this.add(this.background);
-        const posx = -this.width * 0.5 + 6 * dpr;
-        for (let i = 0; i < 5; i++) {
-            const frame = "people_action_" + (i + 1);
-            const button = new Button(this.scene, UIAtlasName.people_action, frame);
-            button.x = posx + button.width * 0.5 + (button.width + 8* dpr) * i;
-            button["action"] = frame;
-            button.on(ClickEvent.Tap, this.onActionHandler, this);
-            this.add(button);
-        }
+        this.zoom = zoom;
+        this.gamescroller = new GameScroller(this.scene, {
+            x: 0,
+            y: 0,
+            width: this.width,
+            height: this.height,
+            zoom,
+            dpr: this.dpr,
+            align: 2,
+            orientation: 1,
+            space: 10 * this.dpr,
+            selfevent: true,
+            padding: { left: 3 * this.dpr },
+            cellupCallBack: (gameobject) => {
+                this.onActionHandler(gameobject);
+            },
+            celldownCallBack: (gameobject) => {
+                this.tween = new TweenCompent(this.scene, gameobject, { scale: 0.88, pingpang: false });
+                this.tween.zoomIn();
+            },
+        });
+        this.gamescroller.on("pointerup", () => {
+            this.tween.zoomOut(true);
+        }, this);
+        this.gamescroller.on("pointerout", () => {
+            this.tween.zoomOut(true);
+        }, this);
+        this.add(this.gamescroller);
         this.setInteractive();
+    }
+
+    public refreshMask() {
+        this.gamescroller.refreshMask();
+    }
+
+    public setActionDatas(datas: ISocial[]) {
+        const posx = -this.width * 0.5 + 6 * this.dpr;
+        for (let i = 0; i < datas.length; i++) {
+            const data = datas[i];
+            const frame = data.texturePath;
+            const button = new Button(this.scene, UIAtlasName.people_action, frame);
+            button.x = posx + button.width * 0.5 + (button.width + 8 * this.dpr) * i;
+            button["action"] = data;
+            button.on(ClickEvent.Tap, this.onActionHandler, this);
+            button.disInteractive();
+            // this.add(button);
+            this.gamescroller.addItem(button);
+        }
+        this.gamescroller.Sort();
     }
 
     public setHandler(send: Handler) {
         this.actionHandler = send;
     }
-    private onActionHandler(pointer, button) {
+    private onActionHandler(button) {
         if (this.actionHandler) this.actionHandler.runWith(button["action"]);
     }
 }

@@ -1,4 +1,4 @@
-import {BaseConfigData, BaseConfigManager, Game} from "gamecore";
+import { BaseConfigData, BaseConfigManager, Game } from "gamecore";
 import {
     ICountablePackageItem,
     IElement,
@@ -6,21 +6,22 @@ import {
     IExploreLevelData,
     IExtendCountablePackageItem
 } from "picaStructure";
-import {IMarketCommodity, IShopBase} from "../../../pica/structure/imarketcommodity";
-import {Logger, ObjectAssign, StringUtils} from "utils";
-import {ElementDataConfig} from "./element.data.config";
-import {ExploreDataConfig} from "./explore.data.config";
-import {I18nZHDataConfig} from "./i18nzh.config";
-import {ItemBaseDataConfig} from "./item.base.data.config";
-import {ItemCategoryConfig} from "./item.category.config";
-import {ShopConfig} from "./shop.config";
+import { IMarketCommodity, IShopBase } from "../../../pica/structure/imarketcommodity";
+import { Logger, ObjectAssign, StringUtils } from "utils";
+import { ElementDataConfig } from "./element.data.config";
+import { ExploreDataConfig } from "./explore.data.config";
+import { I18nZHDataConfig } from "./i18nzh.config";
+import { ItemBaseDataConfig } from "./item.base.data.config";
+import { ItemCategoryConfig } from "./item.category.config";
+import { ShopConfig } from "./shop.config";
 import version from "../../../../version";
-import {JobConfig} from "./job.config";
-import {IJob} from "../../../pica/structure/ijob";
-import {CardPoolConfig} from "./cardpool.config";
-import {ICraftSkill} from "src/pica/structure/icraftskill";
-import {SkillConfig} from "./skill.config";
-import {LevelConfig} from "./level.config";
+import { JobConfig } from "./job.config";
+import { IJob } from "../../../pica/structure/ijob";
+import { CardPoolConfig } from "./cardpool.config";
+import { ICraftSkill } from "src/pica/structure/icraftskill";
+import { SkillConfig } from "./skill.config";
+import { LevelConfig } from "./level.config";
+import { SocialConfig } from "./social.config";
 
 export enum BaseDataType {
     i18n_zh = "i18n_zh",
@@ -31,7 +32,8 @@ export enum BaseDataType {
     job = "job",
     cardPool = "cardPool",
     skill = "skill",
-    level = "level"
+    level = "level",
+    social = "social"
     // itemcategory = "itemcategory"
 }
 
@@ -46,7 +48,7 @@ export class BaseDataConfigManager extends BaseConfigManager {
     public getLocalConfigMap() {
         return {
             // skill: { template: new SkillConfig(), data: SkillConfig["data"]  },
-            itemcategory: {template: new ItemCategoryConfig(), data: ItemCategoryConfig["data"]}
+            itemcategory: { template: new ItemCategoryConfig(), data: ItemCategoryConfig["data"] }
         };
     }
 
@@ -59,20 +61,20 @@ export class BaseDataConfigManager extends BaseConfigManager {
     // data: id / sn
     public getItemBase(data: string): ICountablePackageItem | IExtendCountablePackageItem {
         const config: ItemBaseDataConfig = this.getConfig(BaseDataType.item);
-        const item = config.getByID(data)? config.getByID(data) : config.getBySN(data);
+        const item = config.getByID(data) ? config.getByID(data) : config.getBySN(data);
         if (item && !item["find"]) {
-            item.name = this.getI18n(item.name, {id: item.id, name: "name"});
-            item.source = this.getI18n(item.source, {id: item.id, source: "source"});
-            item.des = this.getI18n(item.des, {id: item.id, des: "des"});
+            item.name = this.getI18n(item.name, { id: item.id, name: "name" });
+            item.source = this.getI18n(item.source, { id: item.id, source: "source" });
+            item.des = this.getI18n(item.des, { id: item.id, des: "des" });
             item["exclude"] = config.excludes;
-            if (item.texturePath) item["display"] = {texturePath: item.texturePath};
+            if (item.texturePath) item["display"] = { texturePath: item.texturePath };
             if (item.elementId && item.elementId !== "") {
                 const element = this.getElementData(item.elementId);
                 if (element) {
                     const texture_path = element.texture_path;
                     item["animations"] = element["AnimationData"];
                     if (texture_path) {
-                        item["animationDisplay"] = {dataPath: element.data_path, texturePath: texture_path};
+                        item["animationDisplay"] = { dataPath: element.data_path, texturePath: texture_path };
                         const index = texture_path.lastIndexOf(".");
                         if (index === -1) {
                             item.texturePath = element.texture_path + "_s";
@@ -81,7 +83,7 @@ export class BaseDataConfigManager extends BaseConfigManager {
                             const path = texture_path.slice(0, index);
                             item.texturePath = path + "_s" + extensions;
                         }
-                        item["display"] = {texturePath: item.texturePath};
+                        item["display"] = { texturePath: item.texturePath };
                     }
                 }
             }
@@ -232,7 +234,7 @@ export class BaseDataConfigManager extends BaseConfigManager {
         temp.name = this.getI18n(temp.name);
         temp.des = this.getI18n(temp.des);
 
-        const item = {id: "IV0000001", countRange: temp["coinRange"]};
+        const item = { id: "IV0000001", countRange: temp["coinRange"] };
         temp.rewards = [this.synItemBase(item)];
 
         temp.requirements = [];
@@ -284,7 +286,7 @@ export class BaseDataConfigManager extends BaseConfigManager {
             const arr = data[key];
             for (const temp of arr) {
                 const value = this.getI18n(temp);
-                categorys.push({key: temp, value});
+                categorys.push({ key: temp, value });
             }
             this["extend"] = categorys;
             return categorys;
@@ -314,9 +316,9 @@ export class BaseDataConfigManager extends BaseConfigManager {
                 const subCategorys: Array<{ key: string, value: string }> = [];
                 for (const temp of value) {
                     const tvalue = this.getI18n(temp);
-                    subCategorys.push({key: temp, value: tvalue});
+                    subCategorys.push({ key: temp, value: tvalue });
                 }
-                const category = {key, value: this.getI18n(key)};
+                const category = { key, value: this.getI18n(key) };
                 extendMap.set(category, subCategorys);
             });
             data.categoryMap["find"] = true;
@@ -336,7 +338,7 @@ export class BaseDataConfigManager extends BaseConfigManager {
             return tempArr;
         } else {
             for (const shopitem of tempArr) {
-                const tempItem: IMarketCommodity = <any> shopitem;
+                const tempItem: IMarketCommodity = <any>shopitem;
                 if (!shopitem["find"]) {
                     const item = this.getItemBase(shopitem.itemId);
                     tempItem.name = this.getI18n(shopitem.name);
@@ -373,6 +375,10 @@ export class BaseDataConfigManager extends BaseConfigManager {
         const data: CardPoolConfig = this.getConfig(BaseDataType.cardPool);
         return data.pools;
     }
+    public getSocails() {
+        const data: SocialConfig = this.getConfig(BaseDataType.social);
+        return data.socails;
+    }
 
     protected add() {
         this.dataMap.set(BaseDataType.i18n_zh, new I18nZHDataConfig());
@@ -384,6 +390,7 @@ export class BaseDataConfigManager extends BaseConfigManager {
         this.dataMap.set(BaseDataType.cardPool, new CardPoolConfig());
         this.dataMap.set(BaseDataType.skill, new SkillConfig());
         this.dataMap.set(BaseDataType.level, new LevelConfig());
+        this.dataMap.set(BaseDataType.social, new SocialConfig());
     }
 
     protected configUrl(reName: string, tempurl?: string) {

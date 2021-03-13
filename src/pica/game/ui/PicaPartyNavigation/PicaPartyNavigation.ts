@@ -77,26 +77,26 @@ export class PicaPartyNavigation extends BasicModel {
     }
     private on_PARTY_LIST(packet: PBpacket) {
         const content: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_PARTY_LIST = packet.content;
-        this.game.emitter.emit(ModuleName.PICAPARTYLIST_NAME + "_questlist", content);
+        this.game.emitter.emit(ModuleName.PICAPARTYNAVIGATION_NAME + "_questlist", content);
     }
     private on_PLAYER_PROGRESS(packet: PBpacket) {
         const content: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_QUERY_PLAYER_PROGRESS = packet.content;
         if (content.name === "online")
-            this.game.emitter.emit(ModuleName.PICAPARTYLIST_NAME + "_progresslist", content);
+            this.game.emitter.emit(ModuleName.PICAPARTYNAVIGATION_NAME + "_progresslist", content);
     }
 
     private onRoomListHandler(packet: PBpacket) {
         const content: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_EDIT_MODE_ROOM_LIST = packet.content;
-        this.game.emitter.emit(ModuleName.PICAPARTYLIST_NAME + "_roomList", content);
+        this.game.emitter.emit(ModuleName.PICAPARTYNAVIGATION_NAME + "_roomList", content);
     }
 
     private onMyRoomListHandler(packet: PBpacket) {
         const content: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_EDIT_MODE_GET_PLAYER_ENTER_ROOM_HISTORY = packet.content;
-        this.game.emitter.emit(ModuleName.PICAPARTYLIST_NAME + "_myRoomList", content);
+        this.game.emitter.emit(ModuleName.PICAPARTYNAVIGATION_NAME + "_myRoomList", content);
     }
 
     private onEnterRoomResultHandler(packet: PBpacket) {
         const content: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_EDIT_MODE_ENTER_ROOM = packet.content;
-        this.game.emitter.emit(ModuleName.PICAPARTYLIST_NAME + "_enterRoomResult", content);
+        this.game.emitter.emit(ModuleName.PICAPARTYNAVIGATION_NAME + "_enterRoomResult", content);
     }
 }

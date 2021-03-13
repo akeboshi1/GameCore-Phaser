@@ -1,9 +1,10 @@
-import { op_client,op_def } from "pixelpai_proto";
+import { op_client, op_def } from "pixelpai_proto";
 import { PicaNewRole } from "./PicaNewRole";
 import { BasicMediator, Game, UIType } from "gamecore";
-import { ModuleName } from "structure";
+import { EventType, ModuleName } from "structure";
 import { BaseDataConfigManager } from "../../data";
 import { Logger } from "utils";
+import { ISocial } from "picaStructure";
 export class PicaNewRoleMediator extends BasicMediator {
     protected mModel: PicaNewRole;
     private uid: string;
@@ -55,7 +56,11 @@ export class PicaNewRoleMediator extends BasicMediator {
         if (this.panelInit) {
             this.mShowData = content;
             this.config.getBatchItemDatas(content.avatarSuit);
-            if (this.mView) this.mView.setRoleData(content);
+            if (this.mView) {
+                const socails = this.config.getSocails();
+                this.mView.setRoleData(content);
+                this.mView.setActionDatas(socails);
+            }
         }
     }
     private onOpeningCharacterHandler(roleData: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_ANOTHER_PLAYER_INFO) {
@@ -91,9 +96,11 @@ export class PicaNewRoleMediator extends BasicMediator {
 
     }
 
-    private onPeopleActionHandler(action: number) {
+    private onPeopleActionHandler(action: ISocial) {
         Logger.getInstance().log(action);
-        this.mModel.queryAction(op_def.FrontEndUniqueUIEnum.PicaNewRole, this.uid, action);
+        this.mModel.queryAction(op_def.FrontEndUniqueUIEnum.PicaNewRole, this.uid, action.id);
+        const tempdata = { animation: action.tag.type, times: action.tag.repeat };
+        this.game.user.tryActiveAction(this.mShowData.id, tempdata, true);
     }
     private onHideView() {
         // const uimanager = this.game.uiManager;

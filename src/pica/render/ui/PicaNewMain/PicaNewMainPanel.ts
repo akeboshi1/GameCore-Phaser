@@ -149,7 +149,7 @@ export class PicaNewMainPanel extends PicaBasePanel {
 
     private onLeftHandler(tag: string, data: any) {
         if (tag === "maphome") {
-            this.render.renderEmitter(ModuleName.PICANEWMAIN_NAME + "_showpanel", ModuleName.PICAPARTYLIST_NAME);
+            this.render.renderEmitter(ModuleName.PICANEWMAIN_NAME + "_showpanel", ModuleName.PICAPARTYNAVIGATION_NAME);
         } else if (tag === "task") {
             this.render.renderEmitter(ModuleName.PICANEWMAIN_NAME + "_showpanel", ModuleName.PICATASK_NAME);
         }

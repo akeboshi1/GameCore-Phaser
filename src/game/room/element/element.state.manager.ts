@@ -8,6 +8,7 @@ import { Element, IElement } from "./element";
 export class ElementStateManager extends PacketHandler {
 
     protected mElements: Map<string, Map<number, Element>> = new Map();
+    protected mRepairMap: Map<number, boolean> = new Map();
     constructor(protected mRoom: IRoomService) {
         super();
         if (this.connection) {
@@ -67,6 +68,7 @@ export class ElementStateManager extends PacketHandler {
                 }
             });
         }
+        if (this.mRepairMap.has(id)) this.mRepairMap.delete(id);
         return element;
     }
 
@@ -198,7 +200,10 @@ export class ElementStateManager extends PacketHandler {
                 if (item.neededCount > count) repair = false;
             }
             for (const ele of eles) {
-                ele.showTopDisplay(repair ? ElementStateType.REPAIR : ElementStateType.UNFROZEN);
+                if (!this.mRepairMap.has(ele.id) || this.mRepairMap.get(ele.id) !== repair) {
+                    ele.showTopDisplay(repair ? ElementStateType.REPAIR : ElementStateType.UNFROZEN);
+                    this.mRepairMap.set(ele.id, repair);
+                }
             }
         });
     }
@@ -209,7 +214,6 @@ export class ElementStateManager extends PacketHandler {
         map.forEach((temp, key) => {
             if (temp && temp.model && temp.model.sn === sn) {
                 eles.push(temp);
-                map.delete(key);
             }
         });
         return eles;

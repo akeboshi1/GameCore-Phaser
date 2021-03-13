@@ -149,6 +149,7 @@ export class PlayerManager extends PacketHandler implements IElementManager {
         id = id || this.mRoom.game.user.id;
         if (this.has(id)) {
             if (data) {
+                if (typeof data === "string") data = JSON.parse(data);
                 const element = this.get(id);
                 if (data.weaponID) {
                     element.setWeapon(data.weaponID);

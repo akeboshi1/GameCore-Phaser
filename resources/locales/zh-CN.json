@@ -56,7 +56,7 @@
     "offline": "您的账号在另一地点登录，您已被迫下线",
     "setting": "设置",
     "manager": "管理",
-    "sign": "在线奖励",
+    "sign": "签到",
     "shop": "商店",
     "editnow": "立即修改",
     "open": "打开",
@@ -422,10 +422,11 @@
     "unlock": "新功能解锁:{{name}}"
   },
   "partynav": {
-    "town":"小镇",
-    "activity":"活动",
-    "newworld":"新世界",
-    "picahotel":"皮卡堂大酒店",
-    "store":"商铺"
+    "town": "小镇",
+    "activity": "活动",
+    "newworld": "新世界",
+    "picahotel": "皮卡堂大酒店",
+    "store": "商铺",
+    "onlinetips": "在线奖励"
   }
 }

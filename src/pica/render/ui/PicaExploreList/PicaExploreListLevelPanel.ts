@@ -25,6 +25,7 @@ export class PicaExploreListLevelPanel extends Phaser.GameObjects.Container {
     private topHeight: number = 0;
     private bottomHeight: number = 0;
     private powerValue: number = 0;
+    private scrollToIndex = -1;
     constructor(scene: Phaser.Scene, width: number, height: number, dpr: number, zoom: number) {
         super(scene);
         this.setSize(width, height);
@@ -70,13 +71,15 @@ export class PicaExploreListLevelPanel extends Phaser.GameObjects.Container {
         this.captorScroll.clearItems(false);
         this.setForwardDatas(<any>result.chapter, lock);
         if (!lock) this.setLevelDatas(<any>result.levels, nextLevelID);
-        this.posValue = 0;
         this.captorScroll.Sort();
+        this.posValue = this.captorScroll["mRightBound"];
+        this.scrollToIndex = -1;
         if (lock) {
             this.captorScroll.setEnable(false);
         } else {
             this.captorScroll.setEnable(true);
-            this.setIndexedLayout(nextLevelID - result.levels[0].levelId);
+            this.scrollToIndex = nextLevelID - result.levels[0].levelId;
+            this.setIndexedLayout(this.scrollToIndex);
         }
     }
 
@@ -167,19 +170,22 @@ export class PicaExploreListLevelPanel extends Phaser.GameObjects.Container {
     }
 
     private setIndexedLayout(indexed: number) {
-        let item;
+        const left = this.captorScroll["mLeftBound"];
+        const right = this.captorScroll["mRightBound"];
+        let item, value = right;
         if (indexed < this.chapterResult.levels.length - 1) {
             item = this.levelItems[indexed];
+            const height = (item.height + 10 * this.dpr) * indexed + this.forewordItem.height;
+            if (height < this.captorScroll.height) {
+                value = right;
+            } else {
+                value = right - (height - this.captorScroll.height);
+            }
         } else {
             item = this.finalItem;
+            value = left;
         }
-        const worldy = item.getWorldTransformMatrix().ty;
-        const thisy = this.captorScroll.getWorldTransformMatrix().ty;
-        const bottomdis = (worldy - thisy) / this.zoom - (this.captorScroll.height * 0.5 - item.height * 0.5);
-        if (bottomdis > 0) {
-            this.addHei = bottomdis;
-            this.captorScroll.setValue(this.posValue - bottomdis);
-        }
+        this.captorScroll.setValue(value);
     }
     private onScrollClickHandler(obj) {
         if (obj instanceof ForewordChapterItem) {
@@ -187,7 +193,6 @@ export class PicaExploreListLevelPanel extends Phaser.GameObjects.Container {
         }
     }
     private onScrollValueChange(value: number) {
-        if (this.posValue === 0) this.posValue = value;
         if (value < this.posValue - 20 * this.dpr) {
             if (this.send) this.send.runWith(["move", true]);
             this.topbg.visible = true;
@@ -301,6 +306,9 @@ class ChapterLevelItem extends ChapterLevelBaseItem {
     }
     public setLevelData(data: IExploreLevelData, lock: boolean) {
         super.setLevelData(data, lock);
+        for (const item of this.clueItms) {
+            item.visible = false;
+        }
         this.levelTex.text = data.id + "";
         this.leftLine.x = this.levelTex.x - this.leftLine.width * 0.5 - this.levelTex.width * 0.5 - 2 * this.dpr;
         this.rightLine.x = this.levelTex.x + this.rightLine.width * 0.5 + this.levelTex.width * 0.5 + 2 * this.dpr;

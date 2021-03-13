@@ -419,7 +419,7 @@ class SignProgressItem extends Phaser.GameObjects.Container {
     public setItemData(data: any, index: number, curvalue: number) {// op_client.IPKT_Progress
         this.progressData = data;
         this.index = index;
-        this.text.text = index === 0 ? i18n.t("common.sign") : i18n.t("party.onlinetime", { name: Math.floor(data.targetValue / 60) });
+        this.text.text = index === 0 ? i18n.t("partynav.onlinetips") : i18n.t("party.onlinetime", { name: Math.floor(data.targetValue / 60) });
         this.text.visible = index === 0 ? true : false;
         if (data.rewards && data.rewards.length > 0) {
             const url = Url.getOsdRes(data.rewards[0].display.texturePath);

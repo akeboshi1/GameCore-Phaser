@@ -1,55 +1,54 @@
 import { TabButton, ClickEvent, Button, ProgressBar } from "apowophaserui";
-import { CommonBackground, DynamicImage, ItemInfoTips, ToggleColorButton, UiManager } from "gamecoreRender";
+import { CommonBackground, DynamicImage, ItemInfoTips, ProgressMaskBar, ToggleColorButton, UiManager } from "gamecoreRender";
 import { ModuleName } from "structure";
 import { Font, Handler, i18n, UIHelper, Url } from "utils";
 import { PicaTownNavigationPanel } from "./PicaTownNavigationPanel";
-import { PicaMyRoomNavigationPanel } from "./PicaMyRoomNavigationPanel";
+import { PicaMyNavigationPanel } from "./PicaMyNavigationPanel";
 import { PicaBasePanel } from "../pica.base.panel";
 import { UIAtlasName } from "picaRes";
+import { op_client } from "pixelpai_proto";
 export class PicaPartyNavigationPanel extends PicaBasePanel {
     private content: Phaser.GameObjects.Container;
     private blackBg: Phaser.GameObjects.Graphics;
     private bg: CommonBackground;
     private tilteName: Phaser.GameObjects.Text;
     private signProgressPanel: SignProgressPanel;
-    private selectLine: Phaser.GameObjects.Graphics;
+    private optionLine: Phaser.GameObjects.Image;
+    private selectLine: Phaser.GameObjects.Image;
     private curToggleItem: ToggleColorButton;
     private itemtips: ItemInfoTips;
     private partyNavigationPanel: PicaTownNavigationPanel;
-    private myRoomNavigationPanel: PicaMyRoomNavigationPanel;
+    private myRoomNavigationPanel: PicaMyNavigationPanel;
     private optionType: number;
-    private mPartyData: any;// op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_PARTY_LIST
-    private progressData: any;// op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_QUERY_PLAYER_PROGRESS
+    private mPartyData: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_PARTY_LIST;
+    private progressData: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_QUERY_PLAYER_PROGRESS;
     constructor(uiManager: UiManager) {
         super(uiManager);
         this.key = ModuleName.PICAPARTYNAVIGATION_NAME;
+        this.atlasNames = [UIAtlasName.map];
     }
 
     public resize(w: number, h: number) {
-        const scale = this.scale;
         const width = this.scaleWidth;
         const height = this.scaleHeight;
         this.blackBg.clear();
         this.blackBg.fillStyle(0, 0.66);
-        this.blackBg.fillRect(0, 0, w, h);
+        this.blackBg.fillRect(0, 0, width, height);
         this.content.x = -this.content.width * 0.5 - 10 * this.dpr;
-        this.content.y = height * 0.5 + 20 * this.dpr;
-        this.selectLine.clear();
-        this.selectLine.fillStyle(0xFFF449, 0.5);
-        this.selectLine.fillRect(-29 * this.dpr, 0, 58 * this.dpr, 2 * this.dpr);
+        this.content.y = height * 0.5;
         this.setSize(width, height);
     }
 
-    public setPartyListData(content: any, isSelf: boolean = true) {// op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_PARTY_LIST
+    public setPartyListData(content: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_PARTY_LIST, isSelf: boolean = true) {
         this.mPartyData = content;
         this.partyNavigationPanel.setPartyDataList(content);
     }
-    public setOnlineProgress(content: any) {// op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_QUERY_PLAYER_PROGRESS
+    public setOnlineProgress(content: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_QUERY_PLAYER_PROGRESS) {
         this.progressData = content;
         this.signProgressPanel.setProgressDatas(content);
     }
 
-    public setRoomListData(content: any) {// op_client.OP_VIRTUAL_WORLD_RES_CLIENT_EDIT_MODE_GET_PLAYER_ENTER_ROOM_HISTORY
+    public setRoomListData(content: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_EDIT_MODE_GET_PLAYER_ENTER_ROOM_HISTORY) {
         this.myRoomNavigationPanel.setRoomDataList(content);
     }
 
@@ -65,21 +64,20 @@ export class PicaPartyNavigationPanel extends PicaBasePanel {
         const bgwidth = 300 * this.dpr, bgheight = h;
         this.content.setSize(bgwidth, bgheight);
         this.bg = new CommonBackground(this.scene, 0, 0, bgwidth, bgheight);
-        this.tilteName = this.scene.make.text({ text: i18n.t("task.title"), style: UIHelper.whiteStyle(this.dpr, 18) });
+        this.tilteName = this.scene.make.text({ text: i18n.t("partynav.onlinetips"), style: UIHelper.colorStyle("#FFF449", this.dpr * 12) });
         this.tilteName.setOrigin(0, 0.5);
         this.tilteName.setFontStyle("bold");
         this.tilteName.x = -bgwidth * 0.5 + 20 * this.dpr;
         this.tilteName.y = -bgheight * 0.5 + 40 * this.dpr;
-        this.signProgressPanel = new SignProgressPanel(this.scene, 252 * this.dpr, 45 * this.dpr, this.key, this.dpr);
-        this.signProgressPanel.y = -this.height * 0.5 + 15 * this.dpr;
+        this.signProgressPanel = new SignProgressPanel(this.scene, 252 * this.dpr, 45 * this.dpr, UIAtlasName.map, this.dpr);
+        this.signProgressPanel.y = this.tilteName.y + this.signProgressPanel.height * 0.5 + 30 * this.dpr;
         this.signProgressPanel.setHandler(new Handler(this, this.onProgressHandler));
-        this.content.add([this.bg, this.tilteName, this.signProgressPanel]);
-        this.selectLine = this.scene.make.graphics(undefined, false);
+        this.optionLine = this.scene.make.image({ key: UIAtlasName.map, frame: "map_nav_line" });
+        this.selectLine = this.scene.make.image({ key: UIAtlasName.map, frame: "map_nav_select" });
         this.itemtips = new ItemInfoTips(this.scene, 121 * this.dpr, 46 * this.dpr, UIAtlasName.uicommon, "tips_bg", this.dpr);
         this.itemtips.setVisible(false);
-        this.content.add([this.selectLine, this.itemtips]);
+        this.content.add([this.bg, this.tilteName, this.signProgressPanel, this.optionLine, this.selectLine, this.itemtips]);
         this.createOptionButtons();
-
         this.add(this.content);
         this.resize(0, 0);
         super.init();
@@ -112,11 +110,13 @@ export class PicaPartyNavigationPanel extends PicaBasePanel {
         }
         tempitem.isOn = true;
         this.onToggleButtonHandler(undefined, tempitem);
+        this.optionLine.y = posy + 20 * this.dpr;
+        this.selectLine.y = this.optionLine.y;
     }
 
-    private openPartyNavigationPanel() {
+    private openTownNavigationPanel() {
         if (!this.partyNavigationPanel) {
-            this.partyNavigationPanel = new PicaTownNavigationPanel(this.scene, this.content.width - 40 * this.dpr, this.content.height - 40 * this.dpr, this.key, this.dpr, this.scale);
+            this.partyNavigationPanel = new PicaTownNavigationPanel(this.scene, 274 * this.dpr, 487 * this.dpr, this.dpr, this.scale);
             this.partyNavigationPanel.setHandler(new Handler(this, this.onPartyListHandler));
             this.partyNavigationPanel.y = 0 * this.dpr;
             this.partyNavigationPanel.on("questreward", this.onProgressRewardHandler, this);
@@ -125,14 +125,14 @@ export class PicaPartyNavigationPanel extends PicaBasePanel {
         this.partyNavigationPanel.refreshMask();
     }
 
-    private hidePartyNavigationPanel() {
+    private hideTownNavigationPanel() {
         if (this.partyNavigationPanel)
             this.content.remove(this.partyNavigationPanel);
     }
 
     private openRoomNavigationPanel() {
         if (!this.myRoomNavigationPanel) {
-            this.myRoomNavigationPanel = new PicaMyRoomNavigationPanel(this.scene, this.content.width - 40 * this.dpr, this.content.height - 34 * this.dpr, this.key, this.dpr, this.scale);
+            this.myRoomNavigationPanel = new PicaMyNavigationPanel(this.scene, this.content.width - 40 * this.dpr, this.content.height - 34 * this.dpr, this.key, this.dpr, this.scale);
             this.myRoomNavigationPanel.setHandler(new Handler(this, this.onEnterRoomHandler));
             this.myRoomNavigationPanel.y = -10 * this.dpr;
         }
@@ -152,8 +152,15 @@ export class PicaPartyNavigationPanel extends PicaBasePanel {
         this.curToggleItem = toggle;
         this.optionType = toggle.getData("item");
         this.selectLine.x = toggle.x;
-        this.selectLine.y = toggle.y + 20 * this.dpr;
-        this.render.renderEmitter(ModuleName.PICATASK_NAME + "_questlist", this.optionType);
+        if (this.optionType === 1) {
+            this.render.renderEmitter(this.key + "_querylist");
+            this.render.renderEmitter(this.key + "_questprogress");
+
+        } else if (this.optionType === 2) {
+
+        } else {
+
+        }
     }
 
     private onPartyListHandler(tag: string, data: any) {// op_client.IEditModeRoom
@@ -235,7 +242,7 @@ export class PicaPartyNavigationPanel extends PicaBasePanel {
 class SignProgressPanel extends Phaser.GameObjects.Container {
     private key: string;
     private dpr: number;
-    private progress: ProgressBar;
+    private progress: ProgressMaskBar;
     private progressItems: SignProgressItem[] = [];
     private receiveHandler: Handler;
     private text: Phaser.GameObjects.Text;
@@ -246,46 +253,9 @@ class SignProgressPanel extends Phaser.GameObjects.Container {
         this.setSize(width, height);
         this.dpr = dpr;
         this.key = key;
-        const barConfig = {
-            x: 0 * dpr / 2,
-            y: 15 * dpr,
-            width: 218 * dpr,
-            height: 11 * dpr,
-            background: {
-                x: 0,
-                y: 0,
-                width: 251 * dpr,
-                height: 11 * dpr,
-                config: {
-                    top: 0 * dpr,
-                    left: 7 * dpr,
-                    right: 7 * dpr,
-                    bottom: 0 * dpr,
-                },
-                key,
-                frame: "order_progress_bottom"
-            },
-            bar: {
-                x: 0,
-                y: 0,
-                width: 251 * dpr,
-                height: 11 * dpr,
-                config: {
-                    top: 0 * dpr,
-                    left: 7 * dpr,
-                    right: 7 * dpr,
-                    bottom: 0 * dpr,
-                },
-                key,
-                frame: "order_progress_top"
-            },
-            dpr,
-            textConfig: undefined
-        };
-        this.progress = new ProgressBar(scene, barConfig);
+        this.progress = new ProgressMaskBar(scene, key, "map_online_progress_bottom", "map_online_progress_top");
         this.add(this.progress);
         this.text = scene.make.text({ x: this.width / 2, y: -this.height * 0.5 + 11 * dpr, text: "", style: { color: "#6666FF", fontSize: 13 * dpr, fontFamily: Font.DEFULT_FONT } });
-        // this.text.setStroke("#6666FF", 1 * dpr);
         this.text.setOrigin(1, 0.5);
         this.add(this.text);
     }
@@ -361,37 +331,30 @@ class SignProgressPanel extends Phaser.GameObjects.Container {
 class SignProgressItem extends Phaser.GameObjects.Container {
     public progressData: any;// op_client.IPKT_Progress
     public index: number;
-    private key: string;
     private dpr: number;
     private bg: Button;
     private icon: DynamicImage;
-    private text: Phaser.GameObjects.Text;
     private receiveHandler: Handler;
     private finishIcon: Phaser.GameObjects.Image;
     private balckgraphic: Phaser.GameObjects.Graphics;
     constructor(scene: Phaser.Scene, x: number, y: number, key: string, dpr: number) {
         super(scene, x, y);
         this.dpr = dpr;
-        this.key = key;
-        this.bg = new Button(scene, key, "order_progress_unfinished", "order_progress_unfinished");
+        this.bg = new Button(scene, key, "map_online_undone_frame", "map_online_undone_frame");
         this.icon = new DynamicImage(scene, 0, 0);
-        this.text = scene.make.text({ x: 2 * dpr, y: -this.bg.height * 0.5 - 8 * dpr, text: "10", style: { color: "#FFDD00", fontSize: 13 * dpr, fontFamily: Font.DEFULT_FONT } });
-        this.text.setStroke("#905B06", 2 * dpr).setOrigin(0.5);
-        this.finishIcon = scene.make.image({ key, frame: "order_progress_ok" });
+        this.finishIcon = scene.make.image({ key, frame: "map_online_Check" });
         this.finishIcon.texture.setFilter(Phaser.Textures.FilterMode.LINEAR);
         this.balckgraphic = scene.make.graphics(undefined, false);
         this.balckgraphic.clear();
         this.balckgraphic.fillStyle(0, 0.5);
         this.balckgraphic.fillCircle(0, 0, 16 * dpr);
-        this.add([this.bg, this.icon, this.text, this.balckgraphic, this.finishIcon]);
+        this.add([this.bg, this.icon, this.balckgraphic, this.finishIcon]);
         this.finishIcon.visible = false;
     }
 
     public setItemData(data: any, index: number, curvalue: number) {// op_client.IPKT_Progress
         this.progressData = data;
         this.index = index;
-        this.text.text = index === 0 ? i18n.t("common.sign") : i18n.t("party.onlinetime", { name: Math.floor(data.targetValue / 60) });
-        this.text.visible = index === 0 ? true : false;
         if (data.rewards && data.rewards.length > 0) {
             const url = Url.getOsdRes(data.rewards[0].display.texturePath);
             this.icon.load(url, this, () => {
@@ -403,14 +366,14 @@ class SignProgressItem extends Phaser.GameObjects.Container {
         this.finishIcon.visible = false;
         this.balckgraphic.visible = false;
         if (data.targetValue <= curvalue) {
-            this.bg.setFrameNormal("order_progress_finished", "order_progress_finished");
+            this.bg.setFrameNormal("map_online_receive_frame", "map_online_receive_frame");
             if (data.received) {
                 this.finishIcon.visible = true;
                 this.balckgraphic.visible = true;
             }
             this.icon.clearTint();
         } else {
-            this.bg.setFrameNormal("order_progress_unfinished", "order_progress_unfinished");
+            this.bg.setFrameNormal("map_online_undone_frame", "map_online_undone_frame");
             this.icon.setTint(0x8B8B7A);
         }
         if (!data.received) {
