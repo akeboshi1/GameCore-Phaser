@@ -114,7 +114,7 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
         if (this.mConfig.hasConnectFail) {
             return this.mainPeer.render.connectFail();
         } else {
-            this.renderPeer.showAlertReconnect("网络不稳定,请刷新网页");
+            if (this.peer.state !== GameState.Hidden) this.renderPeer.showAlertReconnect("网络不稳定,请刷新网页");
             // if (this.mReconnect > 2) {
             //     this.renderPeer.showAlertReconnect("网络不稳定,请刷新网页");
             //     // this.onRefreshConnect();
@@ -128,6 +128,16 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
             // });
             // }
         }
+    }
+
+    public async hidden() {
+        this.peer.state = GameState.Hidden;
+        // TODO
+        // if (this.connection) this.connection.closeConnect();
+        // await this.renderPeer.clearAccount();
+        // const account = await this.renderPeer.getAccount();
+        // Logger.getInstance().log("account: ", account);
+        // this._createAnotherGame(account.gameId, account.virtualWorldId, account.sceneID, account.loc, account.spawnPointId, account.worldId);
     }
 
     public onRefreshConnect() {

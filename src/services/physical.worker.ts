@@ -114,10 +114,7 @@ export class PhysicalPeer extends RPCPeer {
     @Export()
     public destroyMatterWorld() {
         if (this.matterWorld) {
-            if (this.matterWorld.matterUser) {
-                const id = this.matterWorld.matterUser.id;
-                this.matterObjectMap.delete(id);
-            }
+            this.matterObjectMap.clear();
             this.matterWorld.debugDisable();
             this.matterWorld.clear();
             this.matterWorld = undefined;

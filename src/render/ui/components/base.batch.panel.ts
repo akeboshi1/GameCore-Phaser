@@ -100,7 +100,6 @@ export class BaseBatchPanel extends Panel {
                 }
             }, this);
         }
-        Logger.getInstance().error("Load+++++++++++++    :", index);
         if (index > 0) {
             this.startLoad();
         } else {

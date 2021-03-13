@@ -21,6 +21,7 @@ export class PicaLoginPanel extends BasePanel {
     constructor(uiManager: UiManager) {
         super(uiManager.scene, uiManager.render);
         this.key = ModuleName.PICA_LOGIN_NAME;
+        this.mMediator = this.render.mainPeer[ModuleName.PICA_LOGIN_NAME];
     }
 
     setInputVisible(val: boolean) {
@@ -31,8 +32,10 @@ export class PicaLoginPanel extends BasePanel {
     }
 
     destroy() {
-        if (this.parent) this.parent.destroy(true);
+        if (this.parentContainer) this.parentContainer.remove(this, false);
+        if (this.parent) this.parent.destroy();
         super.destroy();
+        this.updatePanelList();
         if (this.fetchTime) {
             clearTimeout(this.fetchTime);
         }
@@ -44,10 +47,20 @@ export class PicaLoginPanel extends BasePanel {
 
     addListen() {
         this.mLoginBtn.on(ClickEvent.Tap, this.onLoginHandler, this);
+        this.mPhoneInput.on("enter", this.onEnterPhoneHandler, this);
+        this.mPhoneInput.on("textchange", this.onCodeChangeHandler, this);
+        this.mPhoneCodeInput.on("enter", this.onEnterCodeHandler, this);
+        this.mPhoneCodeInput.on("textchange", this.onCodeChangeHandler, this);
+        this.fetchCode.on(ClickEvent.Tap, this.onFetchCodeHandler, this);
     }
 
     removeListen() {
         this.mLoginBtn.off(ClickEvent.Tap, this.onLoginHandler, this);
+        this.mPhoneInput.off("enter", this.onEnterPhoneHandler, this);
+        this.mPhoneInput.off("textchange", this.onCodeChangeHandler, this);
+        this.mPhoneCodeInput.off("enter", this.onEnterCodeHandler, this);
+        this.mPhoneCodeInput.off("textchange", this.onCodeChangeHandler, this);
+        this.fetchCode.off(ClickEvent.Tap, this.onFetchCodeHandler, this);
     }
 
     showError(err: string) {
@@ -76,7 +89,7 @@ export class PicaLoginPanel extends BasePanel {
     protected init() {
         const { width, height } = this.scene.cameras.main;
 
-        this.parent = this.scene.add.container(width * this.originX, height * this.originY, this);
+        this.parent = this.scene.add.container(width * this.originX, height * this.originY);
 
         const container = this.scene.make.container(undefined, false);
         container.add(this);
@@ -108,8 +121,6 @@ export class PicaLoginPanel extends BasePanel {
             color: "#717171",
             fontSize: 16 * this.dpr + "px"
         });
-        this.mPhoneInput.on("enter", this.onEnterPhoneHandler, this);
-        this.mPhoneInput.on("textchange", this.onCodeChangeHandler, this);
 
         const phoneContaier = this.createInput(this.mPhoneInput, 0, -container.height * 0.5 + 100 * this.dpr);
         const accountData: string = localStorage.getItem("accountphone");
@@ -128,8 +139,6 @@ export class PicaLoginPanel extends BasePanel {
             text: "",
             fontSize: 16 * this.dpr + "px"
         }).setOrigin(0, 0.5);
-        this.mPhoneCodeInput.on("enter", this.onEnterCodeHandler, this);
-        this.mPhoneCodeInput.on("textchange", this.onCodeChangeHandler, this);
         const codeContainer = this.createInput(this.mPhoneCodeInput, 0, -container.height * 0.5 + 180 * this.dpr, 220 * this.dpr);
         this.mPhoneCodeInput.x = -codeContainer.width / 2 + 8 * this.dpr;
 
@@ -139,8 +148,6 @@ export class PicaLoginPanel extends BasePanel {
             fontSize: 12.45 * this.dpr,
             fontFamily: Font.DEFULT_FONT
         });
-        this.fetchCode.on("pointerup", this.onFetchCodeHandler, this);
-        this.fetchCode.on("pointerdown", this.onFetchCodeDownHandler, this);
         codeContainer.add([this.fetchCode]);
 
         this.mLoginBtn = new NineSliceButton(this.scene, 0, container.height * 0.5 - 51 * this.dpr, 191 * this.dpr, 60 * this.dpr, UIAtlasKey.commonKey, "yellow_btn", "登 陆", this.dpr, 1, {
@@ -192,6 +199,12 @@ export class PicaLoginPanel extends BasePanel {
         super.init();
 
         this.resize();
+        this.updatePanelList();
+    }
+
+    private updatePanelList() {
+        const boot: any = this.render.uiManager.getPanel(ModuleName.PICA_BOOT_NAME);
+        if (boot) boot.updatePanelList();
     }
 
     private createInput(input: InputField, x: number, y: number, width?: number) {
@@ -208,13 +221,6 @@ export class PicaLoginPanel extends BasePanel {
         container.add([input, bg]);
         container.setSize(bg.width, bg.height);
         return container;
-    }
-
-    private onFetchCodeDownHandler() {
-        if (this.mPhoneInput) {
-            this.mPhoneCodeInput.setBlur();
-            this.mPhoneInput.setBlur();
-        }
     }
 
     private onFetchCodeHandler() {
@@ -237,8 +243,11 @@ export class PicaLoginPanel extends BasePanel {
                 this.fetchCode.setText(`获取验证码(${this.downcount})`);
             } else {
                 this.fetchCode.setText(`获取验证码`);
+                // this.fetchCode.enable = false;
             }
         }, 1000);
+        if (this.mMediator) this.mMediator.fetchCode(text, this.areaCode);
+        // this.fetchCode.enable = false;
         // this.render.remote[MAIN_WORKER].onFetchCodeHandler();
     }
 

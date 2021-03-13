@@ -268,13 +268,13 @@ export class FramesDisplay extends BaseFramesDisplay implements IDisplayObject {
         return (this.mTitleMask & TitleMask.TQ_NickName) > 0;
     }
 
-    protected clearDisplay() {
-        super.clearDisplay();
+    // protected clearDisplay() {
+    //     super.clearDisplay();
 
-        if (this.mMountContainer && this.mMountContainer.parentContainer) {
-            this.mMountContainer.parentContainer.remove(this.mMountContainer);
-        }
-    }
+        // if (this.mMountContainer && this.mMountContainer.parentContainer) {
+        //     this.mMountContainer.parentContainer.remove(this.mMountContainer);
+        // }
+    // }
 
     private onAnimationUpdateHandler(ani: Phaser.Animations.Animation, frame: Phaser.Animations.AnimationFrame) {
         if (!this.mMountContainer || !this.mCurAnimation) return;

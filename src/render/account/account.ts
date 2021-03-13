@@ -63,13 +63,7 @@ export class Account {
     }
 
     public clear() {
-        this.accountData = {
-            accessToken: "",
-            expire: 0,
-            fingerprint: "",
-            id: "",
-            refreshToken: ""
-        };
+        this.accountData = null;
     }
 
     public destroy() {

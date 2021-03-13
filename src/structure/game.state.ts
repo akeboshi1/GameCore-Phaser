@@ -34,6 +34,9 @@ export enum GameState {
     // ===============进入游戏后状态：
     // =====第0步 收到房间信息，展示不同ui
     RoomInfo = "RoomInfo",
+
+    // 窗口最小化或被隐藏
+    Hidden = "Hidden",
 }
 
 export enum ConnectState {
