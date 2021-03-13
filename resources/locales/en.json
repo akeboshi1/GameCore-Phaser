@@ -306,7 +306,7 @@
     "modifyconfirm": "Are you sure to consume {{count}} time cards to modify the party?",
     "onlinetime": "Online {{name}} minutes",
     "nopartytips": "There is no party yet, let's start the party~",
-    "progresstips": "Next award: {{timer}}"
+    "progresstips": "Next award: "
   },
   "picelevator": {
     "floor": "F"

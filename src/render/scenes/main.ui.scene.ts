@@ -44,7 +44,6 @@ export class MainUIScene extends RoomScene {
     // }
     this.render.uiManager.setScene(this);
     this.render.initUI();
-    this.loadRaomVideos();
     // this.checkSize(this.mRoom.world.getSize());
     // this.mRoom.world.game.scale.on("orientationchange", this.checkOriention, this);
     // this.scale.on("resize", this.checkSize, this);
@@ -82,7 +81,10 @@ export class MainUIScene extends RoomScene {
   getKey(): string {
     return (this.sys.config as Phaser.Types.Scenes.SettingsConfig).key;
   }
-
+  preload() {
+    this.loadRaomVideos();
+    super.preload();
+  }
   protected onPointerDownHandler(pointer: Phaser.Input.Pointer, currentlyOver: Phaser.GameObjects.GameObject[]) {
     this.render.emitter.emit("pointerScene", SceneName.MAINUI_SCENE, currentlyOver);
   }

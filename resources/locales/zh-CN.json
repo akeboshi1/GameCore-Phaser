@@ -316,7 +316,7 @@
     "modifyconfirm": "确定消耗{{count}}个时长卡，修改派对吗？",
     "onlinetime": "在线{{name}}分钟",
     "nopartytips": "暂无派对，快去开启派对吧~",
-    "progresstips": "下次领取：{{timer}}"
+    "progresstips": "下次领取: "
   },
   "picelevator": {
     "floor": "层"
