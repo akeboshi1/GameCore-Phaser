@@ -123,6 +123,9 @@ export class FramesDisplay extends BaseFramesDisplay implements IDisplayObject {
 
     public displayCreated() {
         super.displayCreated();
+        if (this.mTopDisplay) {
+            this.mTopDisplay.updateOffset();
+        }
         this.render.mainPeer.elementDisplayReady(this.id);
     }
 

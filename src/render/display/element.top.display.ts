@@ -115,6 +115,11 @@ export class ElementTopDisplay extends TopDisplay {
         }
     }
 
+    updateOffset() {
+        const offset = this.getYOffset();
+        this.mFollows.forEach((follow) => follow.setOffset(0, offset.y));
+    }
+
     public getYOffset() {
         const pos = new Phaser.Geom.Point();
         pos.x = 0, pos.y = this.mOwner.topPoint.y;
