@@ -1,4 +1,4 @@
-import { TabButton, ClickEvent, Button, ProgressBar } from "apowophaserui";
+import { TabButton, ClickEvent, Button, ProgressBar, BBCodeText } from "apowophaserui";
 import { CommonBackground, DynamicImage, ItemInfoTips, ProgressMaskBar, ToggleColorButton, UiManager } from "gamecoreRender";
 import { ModuleName } from "structure";
 import { Font, Handler, i18n, UIHelper, Url } from "utils";
@@ -13,6 +13,7 @@ export class PicaPartyNavigationPanel extends PicaBasePanel {
     private bg: CommonBackground;
     private tilteName: Phaser.GameObjects.Text;
     private signProgressPanel: SignProgressPanel;
+    private toggleCon: Phaser.GameObjects.Container;
     private optionLine: Phaser.GameObjects.Image;
     private selectLine: Phaser.GameObjects.Image;
     private curToggleItem: ToggleColorButton;
@@ -41,7 +42,7 @@ export class PicaPartyNavigationPanel extends PicaBasePanel {
 
     public setPartyListData(content: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_PARTY_LIST, isSelf: boolean = true) {
         this.mPartyData = content;
-        this.partyNavigationPanel.setPartyDataList(content);
+        //  this.partyNavigationPanel.setPartyDataList(content);
     }
     public setOnlineProgress(content: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_QUERY_PLAYER_PROGRESS) {
         this.progressData = content;
@@ -49,7 +50,7 @@ export class PicaPartyNavigationPanel extends PicaBasePanel {
     }
 
     public setRoomListData(content: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_EDIT_MODE_GET_PLAYER_ENTER_ROOM_HISTORY) {
-        this.myRoomNavigationPanel.setRoomDataList(content);
+        // this.myRoomNavigationPanel.setRoomDataList(content);
     }
 
     protected init() {
@@ -67,22 +68,27 @@ export class PicaPartyNavigationPanel extends PicaBasePanel {
         this.tilteName = this.scene.make.text({ text: i18n.t("partynav.onlinetips"), style: UIHelper.colorStyle("#FFF449", this.dpr * 12) });
         this.tilteName.setOrigin(0, 0.5);
         this.tilteName.setFontStyle("bold");
-        this.tilteName.x = -bgwidth * 0.5 + 20 * this.dpr;
+        this.tilteName.x = -bgwidth * 0.5 + 17 * this.dpr;
         this.tilteName.y = -bgheight * 0.5 + 40 * this.dpr;
-        this.signProgressPanel = new SignProgressPanel(this.scene, 252 * this.dpr, 45 * this.dpr, UIAtlasName.map, this.dpr);
-        this.signProgressPanel.y = this.tilteName.y + this.signProgressPanel.height * 0.5 + 30 * this.dpr;
+        this.signProgressPanel = new SignProgressPanel(this.scene, bgwidth, 45 * this.dpr, UIAtlasName.map, this.dpr);
+        this.signProgressPanel.y = this.tilteName.y + this.signProgressPanel.height * 0.5 + 13 * this.dpr;
         this.signProgressPanel.setHandler(new Handler(this, this.onProgressHandler));
+        this.toggleCon = this.scene.make.container(undefined, false);
+        this.toggleCon.y = this.signProgressPanel.y + this.signProgressPanel.height * 0.5 + 20 * this.dpr;
+        this.add(this.toggleCon);
         this.optionLine = this.scene.make.image({ key: UIAtlasName.map, frame: "map_nav_line" });
+        this.optionLine.displayHeight = 2 * this.dpr;
         this.selectLine = this.scene.make.image({ key: UIAtlasName.map, frame: "map_nav_select" });
+        this.toggleCon.add([this.optionLine, this.selectLine]);
         this.itemtips = new ItemInfoTips(this.scene, 121 * this.dpr, 46 * this.dpr, UIAtlasName.uicommon, "tips_bg", this.dpr);
         this.itemtips.setVisible(false);
-        this.content.add([this.bg, this.tilteName, this.signProgressPanel, this.optionLine, this.selectLine, this.itemtips]);
+        this.content.add([this.bg, this.tilteName, this.signProgressPanel, this.toggleCon, this.itemtips]);
         this.createOptionButtons();
         this.add(this.content);
         this.resize(0, 0);
         super.init();
         this.playMove(new Handler(this, () => {
-
+            this.signProgressPanel.refreshMask();
         }));
     }
     protected createOptionButtons() {
@@ -91,7 +97,6 @@ export class PicaPartyNavigationPanel extends PicaBasePanel {
         const cellwidth = allLin / arr.length;
         const cellHeight = 20 * this.dpr;
         let posx = -allLin / 2;
-        const posy = -this.height * 0.5 + 75 * this.dpr;
         let tempitem: ToggleColorButton;
         // tslint:disable-next-line:prefer-for-of
         for (let i = 0; i < arr.length; i++) {
@@ -99,10 +104,9 @@ export class PicaPartyNavigationPanel extends PicaBasePanel {
             const item = new ToggleColorButton(this.scene, cellwidth, 20 * this.dpr, this.dpr, data.text);
             item.on(ClickEvent.Tap, this.onToggleButtonHandler, this);
             item.x = posx + cellwidth * 0.5;
-            item.y = posy;
             item.setData("item", data.type);
             item.setSize(cellwidth, cellHeight);
-            this.content.add(item);
+            this.toggleCon.add(item);
             item.setChangeColor("#FFF449");
             item.setFontSize(14 * this.dpr);
             posx += cellwidth;
@@ -110,7 +114,7 @@ export class PicaPartyNavigationPanel extends PicaBasePanel {
         }
         tempitem.isOn = true;
         this.onToggleButtonHandler(undefined, tempitem);
-        this.optionLine.y = posy + 20 * this.dpr;
+        this.optionLine.y = 20 * this.dpr;
         this.selectLine.y = this.optionLine.y;
     }
 
@@ -119,7 +123,6 @@ export class PicaPartyNavigationPanel extends PicaBasePanel {
             this.partyNavigationPanel = new PicaTownNavigationPanel(this.scene, 274 * this.dpr, 487 * this.dpr, this.dpr, this.scale);
             this.partyNavigationPanel.setHandler(new Handler(this, this.onPartyListHandler));
             this.partyNavigationPanel.y = 0 * this.dpr;
-            this.partyNavigationPanel.on("questreward", this.onProgressRewardHandler, this);
         }
         this.content.add(this.partyNavigationPanel);
         this.partyNavigationPanel.refreshMask();
@@ -175,15 +178,12 @@ export class PicaPartyNavigationPanel extends PicaBasePanel {
         const data = item.progressData;
         if (!data.received) {
             if (data.targetValue <= this.progressData.currentProgressValue) {
-                this.emit("questreward", index);
+                this.render.renderEmitter(this.key + "_questreward", index);
             } else {
                 this.itemtips.setItemData(data.rewards[0]);
                 this.showItemTipsState(item);
             }
         }
-    }
-    private onProgressRewardHandler(index: number) {
-        this.render.renderEmitter(this.key + "_questreward", index);
     }
     private onEnterRoomHandler(roomID: string) {
         this.render.renderEmitter(this.key + "_queryenter", roomID);
@@ -245,7 +245,7 @@ class SignProgressPanel extends Phaser.GameObjects.Container {
     private progress: ProgressMaskBar;
     private progressItems: SignProgressItem[] = [];
     private receiveHandler: Handler;
-    private text: Phaser.GameObjects.Text;
+    private text: BBCodeText;
     private timerID: any;
 
     constructor(scene: Phaser.Scene, width: number, height: number, key: string, dpr: number) {
@@ -255,15 +255,17 @@ class SignProgressPanel extends Phaser.GameObjects.Container {
         this.key = key;
         this.progress = new ProgressMaskBar(scene, key, "map_online_progress_bottom", "map_online_progress_top");
         this.add(this.progress);
-        this.text = scene.make.text({ x: this.width / 2, y: -this.height * 0.5 + 11 * dpr, text: "", style: { color: "#6666FF", fontSize: 13 * dpr, fontFamily: Font.DEFULT_FONT } });
-        this.text.setOrigin(1, 0.5);
+        this.text = new BBCodeText(scene, this.width * 0.5 - 13 * dpr, -35 * dpr, "", UIHelper.whiteStyle(dpr, 10)).setOrigin(1, 0.5);
         this.add(this.text);
     }
 
+    public refreshMask() {
+        this.progress.refreshMask();
+    }
     public setProgressDatas(content: any) {// op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_QUERY_PLAYER_PROGRESS
         const len = content.steps.length;
         const maxvalue = 100, intervalue = maxvalue / (len - 1);
-        const width = this.progress.width;
+        const width = this.progress.width - 37 * this.dpr;
         let nextValue = 0, progress = 0, beforevalue = 0;
         for (let i = 0; i < len; i++) {
             const data = content.steps[i];
@@ -277,7 +279,7 @@ class SignProgressPanel extends Phaser.GameObjects.Container {
                 item.setHandler(this.receiveHandler);
             }
             item.x = -width * 0.5 + (len > 1 ? width * (i) / (len - 1) : width * 0.5);
-            item.y = 15 * this.dpr;
+            item.y = 0;
             item.setItemData(data, i, content.currentProgressValue);
             if (data.targetValue <= content.currentProgressValue) {
                 if (i > 0) progress += intervalue;
@@ -313,7 +315,7 @@ class SignProgressPanel extends Phaser.GameObjects.Container {
             const minute = Math.floor(time / 60);
             const second = time % 60;
             const timetext = `${minute < 10 ? "0" + minute : minute + ""}:${second < 10 ? "0" + second : second + ""}`;
-            this.text.text = i18n.t("party.progresstips", { timer: timetext });
+            this.text.text = i18n.t("party.progresstips") + `[color=#FFF449]${timetext}[/color]`;
             time--;
             if (time > 0) {
                 this.timerID = setTimeout(() => {

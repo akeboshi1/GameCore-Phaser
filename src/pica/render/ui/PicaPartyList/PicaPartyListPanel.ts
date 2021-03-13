@@ -3,7 +3,7 @@ import { BasePanel, CheckboxGroup, UiManager } from "gamecoreRender";
 import { UIAtlasKey, UIAtlasName } from "picaRes";
 import { ModuleName } from "structure";
 import { Font, Handler, i18n } from "utils";
-import { PicaPartyNavigationPanel } from "./PicaPartyNavigationPanel";
+import { PicaOldPartyNavigationPanel } from "./PicaOldPartyNavigationPanel";
 import { PicaMyRoomNavigationPanel } from "./PicaMyRoomNavigationPanel";
 export class PicaPartyListPanel extends BasePanel {
     private content: Phaser.GameObjects.Container;
@@ -14,7 +14,7 @@ export class PicaPartyListPanel extends BasePanel {
     private mineBtn: TabButton;
     private searchBtn: TabButton;
     private topCheckBox: CheckboxGroup;
-    private partyNavigationPanel: PicaPartyNavigationPanel;
+    private partyNavigationPanel: PicaOldPartyNavigationPanel;
     private myRoomNavigationPanel: PicaMyRoomNavigationPanel;
     private mPartyData: any;// op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_PARTY_LIST
     constructor(uiManager: UiManager) {
@@ -135,7 +135,7 @@ export class PicaPartyListPanel extends BasePanel {
 
     private openPartyNavigationPanel() {
         if (!this.partyNavigationPanel) {
-            this.partyNavigationPanel = new PicaPartyNavigationPanel(this.scene, this.content.width - 40 * this.dpr, this.content.height - 40 * this.dpr, this.key, this.dpr, this.scale);
+            this.partyNavigationPanel = new PicaOldPartyNavigationPanel(this.scene, this.content.width - 40 * this.dpr, this.content.height - 40 * this.dpr, this.key, this.dpr, this.scale);
             this.partyNavigationPanel.setHandler(new Handler(this, this.onPartyListHandler));
             this.partyNavigationPanel.y = 0 * this.dpr;
             this.partyNavigationPanel.on("questreward", this.onProgressRewardHandler, this);
