@@ -109,6 +109,7 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
         Logger.getInstance().info(`enterVirtualWorld`);
         this.connect.connect = true;
         this.loginEnterWorld();
+        if (this.mConfig.hasGameLoaded) this.renderPeer.gameLoadedCallBack();
         // this.enterVirtualWorld();
         // this.login();
     }
@@ -425,7 +426,6 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
         // const token = await this.peer.render.getLocalStorage("token");
         const account = await this.peer.render.getAccount();
         Logger.getInstance().log("account: ", account);
-        if (this.mConfig.hasGameLoaded) this.renderPeer.gameLoadedCallBack();
         if (account && account.accountData) {
             this.loginEnterWorld();
         } else {
