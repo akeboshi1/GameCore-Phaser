@@ -345,6 +345,7 @@ export class DisplayManager {
         display.setPosition(sprite.pos.x, sprite.pos.y, sprite.pos.z);
         display.checkCollision(sprite);
         display.changeAlpha(sprite.alpha);
+        if (sprite.nickname) display.showNickname(sprite.nickname);
     }
 
     public addSkybox(scenery: IScenery) {
