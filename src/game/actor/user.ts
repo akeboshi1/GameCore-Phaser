@@ -276,7 +276,6 @@ export class User extends Player {
                 currentAnimationName: val.currentAnimationName,
                 direction: val.direction,
                 mountSprites: val.mountSprites,
-                nickname: this.model.nickname,
                 speed: val.speed,
                 displayInfo: this.model.displayInfo
             };
@@ -285,7 +284,6 @@ export class User extends Player {
         }
         // todo change display alpha
         Logger.getInstance().debug("showNickname===use", this.mModel.direction);
-        // if (this.mModel.nickname) this.showNickname();
         this.setDirection(this.mModel.direction);
     }
 
