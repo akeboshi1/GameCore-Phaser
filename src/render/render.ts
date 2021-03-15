@@ -1296,6 +1296,10 @@ export class Render extends RPCPeer implements GameMain, IRender {
         if (this.mDisplayManager) this.mDisplayManager.setModel(sprite);
     }
 
+    @Export()
+    public setPlayerModel(sprite: any) {
+        if (this.mDisplayManager) this.mDisplayManager.setModel(sprite);
+    }
     // @Export([webworker_rpc.ParamType.num, webworker_rpc.ParamType.num])
     // public updateDirection(id: number, dir: number) {
     //     if (this.mDisplayManager) {

@@ -86,7 +86,7 @@ export class PicaRecasteMediator extends BasicMediator {
     private onRetRescateHandler(reward: op_client.ICountablePackageItem) {
         if (this.mView) {
             const configMgr = <BaseDataConfigManager>this.game.configManager;
-            const temp = configMgr.getItemBase(reward.id);
+            const temp = configMgr.getItemBaseByID(reward.id);
             ObjectAssign.excludeTagAssign(reward, temp);
             this.mView.setRecasteResult(reward);
             const uimgr = this.game.uiManager;

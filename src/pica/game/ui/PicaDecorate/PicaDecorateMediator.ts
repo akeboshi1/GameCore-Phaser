@@ -86,7 +86,7 @@ export class PicaDecorateMediator extends BasicMediator {
             this.mView.setSelectedFurniture(bagData);
         } else {
             const configMgr = <BaseDataConfigManager> this.game.configManager;
-            const configItem = configMgr.getItemBase(baseID);
+            const configItem = configMgr.getItemBaseByID(baseID);
             configItem.count = count;
             this.mView.setSelectedFurniture(configItem);
         }

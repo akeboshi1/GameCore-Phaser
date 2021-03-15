@@ -265,7 +265,7 @@ export class PlayerManager extends PacketHandler implements IElementManager {
                 const newAttrs = [];
                 valueObj.forEach((v) => {
                     if (v.id) {
-                        const config = configMgr.getItemBase(v.id);
+                        const config = configMgr.getItemBaseByID(v.id);
                         newAttrs.push({
                             suit_type: config.suitType,
                             sn: config.sn,

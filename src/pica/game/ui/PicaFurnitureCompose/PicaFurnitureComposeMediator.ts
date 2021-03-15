@@ -101,7 +101,7 @@ export class PicaFurnitureComposeMediator extends BasicMediator {
     private onRetComposeHandler(reward: op_client.ICountablePackageItem) {
         if (this.mView) {
             const configMgr = <BaseDataConfigManager>this.game.configManager;
-            const temp = configMgr.getItemBase(reward.id);
+            const temp = configMgr.getItemBaseByID(reward.id);
             ObjectAssign.excludeTagAssign(reward, temp);
             this.mView.setComposeResult(reward);
             const uimgr = this.game.uiManager;

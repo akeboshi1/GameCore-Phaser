@@ -31,12 +31,12 @@ export class Player extends Element implements IElement {
             this.setPosition(this.mModel.pos);
         }
         const area = model.getCollisionArea();
-        const obj = { id: model.id, pos: model.pos, alpha: model.alpha, titleMask: model.titleMask | 0x00010000 };
+        const obj = { id: model.id, pos: model.pos, alpha: model.alpha,nickname:model.nickname, titleMask: model.titleMask | 0x00010000 };
         // render action
         this.load(this.mModel.displayInfo)
-            .then(() => this.mElementManager.roomService.game.peer.render.setModel(obj))
+            .then(() => this.mElementManager.roomService.game.renderPeer.setPlayerModel(obj))
             .then(() => {
-                this.showNickname();
+                // this.showNickname();
                 this.setDirection(this.mModel.direction);
                 if (this.mInputEnable === InputEnable.Interactive) {
                     this.setInputEnable(this.mInputEnable);

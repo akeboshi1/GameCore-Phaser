@@ -58,37 +58,17 @@ export class BaseDataConfigManager extends BaseConfigManager {
         return configMap.template;
     }
 
-    // data: id / sn
-    public getItemBase(data: string): ICountablePackageItem | IExtendCountablePackageItem {
+    public getItemBaseBySN(data: string): ICountablePackageItem | IExtendCountablePackageItem {
         const config: ItemBaseDataConfig = this.getConfig(BaseDataType.item);
-        const item = config.getByID(data) ? config.getByID(data) : config.getBySN(data);
-        if (item && !item["find"]) {
-            item.name = this.getI18n(item.name, { id: item.id, name: "name" });
-            item.source = this.getI18n(item.source, { id: item.id, source: "source" });
-            item.des = this.getI18n(item.des, { id: item.id, des: "des" });
-            item["exclude"] = config.excludes;
-            if (item.texturePath) item["display"] = { texturePath: item.texturePath };
-            if (item.elementId && item.elementId !== "") {
-                const element = this.getElementData(item.elementId);
-                if (element) {
-                    const texture_path = element.texture_path;
-                    item["animations"] = element["AnimationData"];
-                    if (texture_path) {
-                        item["animationDisplay"] = { dataPath: element.data_path, texturePath: texture_path };
-                        const index = texture_path.lastIndexOf(".");
-                        if (index === -1) {
-                            item.texturePath = element.texture_path + "_s";
-                        } else {
-                            const extensions = texture_path.slice(index, texture_path.length);
-                            const path = texture_path.slice(0, index);
-                            item.texturePath = path + "_s" + extensions;
-                        }
-                        item["display"] = { texturePath: item.texturePath };
-                    }
-                }
-            }
-            item["find"] = true;
-        }
+        const item = config.getBySN(data);
+        this.checkItemData(item);
+        return item;
+    }
+
+    public getItemBaseByID(data: string): ICountablePackageItem | IExtendCountablePackageItem {
+        const config: ItemBaseDataConfig = this.getConfig(BaseDataType.item);
+        const item = config.getByID(data);
+        this.checkItemData(item);
         return item;
     }
 
@@ -110,7 +90,7 @@ export class BaseDataConfigManager extends BaseConfigManager {
         if (!items) return [];
         for (const item of items) {
             if (!item["find"]) {
-                const tempitem = this.getItemBase(item.id);
+                const tempitem = this.getItemBaseByID(item.id);
                 ObjectAssign.excludeTagAssign(item, tempitem, "exclude");
                 item["find"] = true;
             }
@@ -120,7 +100,7 @@ export class BaseDataConfigManager extends BaseConfigManager {
 
     public synItemBase(item: any) {
         if (!item) return undefined;
-        const tempitem = this.getItemBase(item.id);
+        const tempitem = this.getItemBaseByID(item.id);
         ObjectAssign.excludeTagAssign(item, tempitem, "exclude");
         return item;
     }
@@ -132,7 +112,7 @@ export class BaseDataConfigManager extends BaseConfigManager {
             if (data.hasOwnProperty(key)) {
                 const element = data[key];
                 if (element.className === "FurnitureItem" && element.rarity === 1) {
-                    const item = this.getItemBase(element.id);
+                    const item = this.getItemBaseByID(element.id);
                     if (item)
                         temp.push(item);
                 }
@@ -159,7 +139,7 @@ export class BaseDataConfigManager extends BaseConfigManager {
             level.name = this.getI18n(level.name);
             if (level.clueItems) {
                 for (const clue of level.clueItems) {
-                    const item = this.getItemBase(clue.itemId);
+                    const item = this.getItemBaseByID(clue.itemId);
                     if (item) Object.assign(clue, item);
                 }
             }
@@ -197,7 +177,7 @@ export class BaseDataConfigManager extends BaseConfigManager {
         const data: ShopConfig = this.getConfig(BaseDataType.shop);
         const temp = data.get(id);
         if (temp && !temp["find"]) {
-            const item = this.getItemBase(temp.itemId);
+            const item = this.getItemBaseByID(temp.itemId);
             if (item) {
                 temp.name = item.name;
                 temp.icon = item.texturePath;
@@ -340,7 +320,7 @@ export class BaseDataConfigManager extends BaseConfigManager {
             for (const shopitem of tempArr) {
                 const tempItem: IMarketCommodity = <any>shopitem;
                 if (!shopitem["find"]) {
-                    const item = this.getItemBase(shopitem.itemId);
+                    const item = this.getItemBaseByID(shopitem.itemId);
                     tempItem.name = this.getI18n(shopitem.name);
                     tempItem.source = this.getI18n(shopitem.source);
                     tempItem["des"] = item ? item.des : "";
@@ -399,5 +379,37 @@ export class BaseDataConfigManager extends BaseConfigManager {
         }
         const url = this.baseDirname + `client_resource/${reName}.json`;
         return url;
+    }
+
+    private checkItemData(item: ICountablePackageItem) {
+        if (!item || item["find"]) {
+            return;
+        }
+        const config: ItemBaseDataConfig = this.getConfig(BaseDataType.item);
+        item.name = this.getI18n(item.name, { id: item.id, name: "name" });
+        item.source = this.getI18n(item.source, { id: item.id, source: "source" });
+        item.des = this.getI18n(item.des, { id: item.id, des: "des" });
+        item["exclude"] = config.excludes;
+        if (item.texturePath) item["display"] = { texturePath: item.texturePath };
+        if (item.elementId && item.elementId !== "") {
+            const element = this.getElementData(item.elementId);
+            if (element) {
+                const texture_path = element.texture_path;
+                item["animations"] = element["AnimationData"];
+                if (texture_path) {
+                    item["animationDisplay"] = { dataPath: element.data_path, texturePath: texture_path };
+                    const index = texture_path.lastIndexOf(".");
+                    if (index === -1) {
+                        item.texturePath = element.texture_path + "_s";
+                    } else {
+                        const extensions = texture_path.slice(index, texture_path.length);
+                        const path = texture_path.slice(0, index);
+                        item.texturePath = path + "_s" + extensions;
+                    }
+                    item["display"] = { texturePath: item.texturePath };
+                }
+            }
+        }
+        item["find"] = true;
     }
 }

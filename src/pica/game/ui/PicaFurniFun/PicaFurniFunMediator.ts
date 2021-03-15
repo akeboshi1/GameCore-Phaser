@@ -101,7 +101,7 @@ export class PicaFurniFunMediator extends BasicMediator {
                 // configMgr.getBatchItemDatas(content.materials);
                 for (const data of content.materials) {
                     const configMgr = <BaseDataConfigManager>this.game.configManager;
-                    const temp = configMgr.getItemBase(data.id);
+                    const temp = configMgr.getItemBaseByID(data.id);
                     ObjectAssign.excludeTagAssign(data, temp);
                     const count = this.playerData.getItemsCount(op_pkt_def.PKT_PackageType.PropPackage, data.id, data.subcategory);
                     data.recommended = count; // hack

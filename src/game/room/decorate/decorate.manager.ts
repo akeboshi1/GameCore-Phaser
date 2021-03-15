@@ -386,17 +386,21 @@ export class DecorateManager {
 
     public getBaseIDBySN(sn: string): string {
         const configMgr = <BaseDataConfigManager> this.room.game.configManager;
-        const temp = configMgr.getItemBase(sn);
+        const temp = configMgr.getItemBaseBySN(sn);
         if (temp) return temp.id;
         else {
             Logger.getInstance().error("cannot find data of sn: ", sn);
+            const tempdata = {
+                text: [{ text: "cannot find data of sn: " + sn, node: undefined }]
+            };
+            this.room.game.showMediator(ModuleName.PICANOTICE_NAME, true, tempdata);
             return "";
         }
     }
 
     private getBaseData(baseID: string) {
         const configMgr = <BaseDataConfigManager> this.room.game.configManager;
-        return configMgr.getItemBase(baseID);
+        return configMgr.getItemBaseByID(baseID);
     }
 
     private get bagData() {
