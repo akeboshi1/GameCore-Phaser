@@ -57,7 +57,7 @@ export class ElementActionManager {
 
     public destroy() {
         this.game = undefined;
-        this.mActionTags.length = 0;
+        if (this.mActionTags) this.mActionTags.length = 0;
         this.mActionTags = undefined;
     }
 

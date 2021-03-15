@@ -12,7 +12,7 @@ export class PicaBootMediator extends BasicMediator {
     }
 
     enterGame() {
-        this.game.loginEnterWorld();
+        this.game.startConnect();
         this.hide();
     }
 
