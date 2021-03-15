@@ -1,19 +1,22 @@
-import { PBpacket } from "net-socket-packet";
-import { BaseDataConfigManager } from "picaWorker";
-import { op_client } from "pixelpai_proto";
-import { EventType, ModuleName, RoomType } from "structure";
-import { EventDispatcher } from "utils";
-import { Game } from "../game";
-import { BasePacketHandler } from "./base.packet.handler";
-import { DataMgrType } from "./dataManager";
+import {PBpacket} from "net-socket-packet";
+import {BaseDataConfigManager} from "picaWorker";
+import {op_client} from "pixelpai_proto";
+import {EventType, ModuleName, RoomType} from "structure";
+import {EventDispatcher} from "utils";
+import {Game} from "../game";
+import {BasePacketHandler} from "./base.packet.handler";
+import {DataMgrType} from "./dataManager";
+
 export class SceneDataManager extends BasePacketHandler {
     private mCurRoom: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_EDIT_MODE_ROOM_INFO;
     private isShowMainui: boolean = false;
     private mRoomID;
+
     constructor(game: Game, event?: EventDispatcher) {
         super(game, event);
         this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_PKT_PARTY_SEND_GIFT, this.on_SEND_GIFT_DATA);
-        this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_EDIT_MODE_ROOM_INFO, this.onUpdateModeRoomInfo);
+        this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_EDIT_MODE_ROOM_INFO, this.onInitModeRoomInfo);
+        this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_EDIT_MODE_UPDATE_ROOM_INFO, this.onUpdateModeRoomInfo);
         this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_PKT_CRAFT_SKILLS, this.openComposePanel);
         this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_SHOW_REWARD_TIPS, this.onReAwardTipsHandler);
         this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_SHOW_BLING_PANEL, this.onShowBlingPanel);
@@ -24,6 +27,7 @@ export class SceneDataManager extends BasePacketHandler {
         this.mEvent.on(EventType.SCENE_CHANGE, this.onSceneChangeHandler, this);
         this.addPackListener();
     }
+
     clear() {
         super.clear();
         this.mCurRoom = undefined;
@@ -42,7 +46,7 @@ export class SceneDataManager extends BasePacketHandler {
     private openComposePanel(packge: PBpacket) {
         const content: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_CRAFT_SKILLS = packge.content;
         const list = [];
-        const config = <BaseDataConfigManager>this.game.configManager;
+        const config = <BaseDataConfigManager> this.game.configManager;
 
         packge.content.skills.forEach((skill) => {
             const sk = config.getSkill(skill.skill.id);
@@ -50,7 +54,7 @@ export class SceneDataManager extends BasePacketHandler {
             list.push(sk);
         });
 
-        this.mEvent.emit(EventType.SCENE_SHOW_UI, ModuleName.PICACOMPOSE_NAME, { skills: list });
+        this.mEvent.emit(EventType.SCENE_SHOW_UI, ModuleName.PICACOMPOSE_NAME, {skills: list});
     }
 
     private on_SEND_GIFT_DATA(packet: PBpacket) {
@@ -58,6 +62,7 @@ export class SceneDataManager extends BasePacketHandler {
         this.mEvent.emit(EventType.SEND_GIFT_DATA_UPDATE, content);
         this.sendOpenGiftEffect(content);
     }
+
     private sendOpenGiftEffect(content: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_PKT_PARTY_SEND_GIFT) {
         this.mEvent.emit(EventType.SCENE_SHOW_UI, ModuleName.PICAGIFTEFFECT_NAME, content);
         const dataMgr = this.game.dataManager;
@@ -66,6 +71,21 @@ export class SceneDataManager extends BasePacketHandler {
             mgr.query_ELEMENT_ITEM_REQUIREMENTS(content.itemId, "QueryItems");
         }
     }
+
+    private onInitModeRoomInfo(packet: PBpacket) {
+        const room: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_EDIT_MODE_ROOM_INFO = packet.content;
+        if (!this.mCurRoom) {
+            this.mCurRoom = room;
+        } else {
+            Object.assign(this.mCurRoom, room);
+        }
+
+        this.mEvent.emit(EventType.UPDATE_ROOM_INFO, this.mCurRoom);
+        this.mEvent.emit(EventType.UPDATE_PARTY_STATE, this.mCurRoom.openingParty);
+        this.showMainUI();
+        this.mRoomID = room.roomId;
+    }
+
     private onUpdateModeRoomInfo(packet: PBpacket) {
         const room: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_EDIT_MODE_ROOM_INFO = packet.content;
         if (!this.mCurRoom) {
@@ -76,10 +96,6 @@ export class SceneDataManager extends BasePacketHandler {
 
         this.mEvent.emit(EventType.UPDATE_ROOM_INFO, this.mCurRoom);
         this.mEvent.emit(EventType.UPDATE_PARTY_STATE, this.mCurRoom.openingParty);
-        if (this.mRoomID !== room.roomId) {
-            this.showMainUI();
-            this.mRoomID = room.roomId;
-        }
     }
 
     private onShowBlingPanel(packet: PBpacket) {
@@ -97,16 +113,19 @@ export class SceneDataManager extends BasePacketHandler {
     private onHIGH_QUALITY_REWARD_TIPS(packet: PBpacket) {
         const content: op_client.OP_VIRTUAL_WORLD_REQ_CLIENT_SHOW_HIGH_QUALITY_REWARD_TIPS = packet.content;
         this.syncItemBases(content.list);
-        this.mEvent.emit(EventType.SCENE_SHOW_UI, ModuleName.PICATREASURE_NAME, { data: content.list, type: "open" });
+        this.mEvent.emit(EventType.SCENE_SHOW_UI, ModuleName.PICATREASURE_NAME, {data: content.list, type: "open"});
     }
+
     private on_JOB_LIST(packet: PBpacket) {
         const content: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_JOB_LIST = packet.content;
         this.mEvent.emit(EventType.SCENE_SHOW_UI, ModuleName.PICAWORK_NAME, content);
     }
+
     private openMineEquipUpgrade(packge: PBpacket) {
         const content: op_client.OP_VIRTUAL_WORLD_REQ_CLIENT_MINING_MODE_SHOW_SELECT_EQUIPMENT_PANEL = packge.content;
         this.mEvent.emit(EventType.SCENE_SHOW_UI, ModuleName.PICAEQUIPUPGRADE_NAME, content);
     }
+
     get curRoomID() {
         if (this.mCurRoom) return this.mCurRoom.roomId;
         return undefined;
@@ -115,6 +134,7 @@ export class SceneDataManager extends BasePacketHandler {
     get curRoom() {
         return this.mCurRoom;
     }
+
     private showMainUI() {
         if (!this.isShowMainui) {
             const hideArr = [];
@@ -127,11 +147,13 @@ export class SceneDataManager extends BasePacketHandler {
             this.isShowMainui = true;
         }
     }
+
     private onSceneChangeHandler() {
         this.isShowMainui = false;
     }
+
     private syncItemBases(items: op_client.ICountablePackageItem[]) {
-        const config = <BaseDataConfigManager>this.game.configManager;
+        const config = <BaseDataConfigManager> this.game.configManager;
         for (const item of items) {
             config.synItemBase(item);
         }
