@@ -1,13 +1,13 @@
-import { ElementEditorEmitType } from "./element.editor.canvas";
+import {ElementEditorEmitType} from "./element.editor.canvas";
 import * as path from "path";
 import * as os from "os";
-import { SPRITE_SHEET_KEY, ResourcesChangeListener, IMAGE_BLANK_KEY } from "./element.editor.resource.manager";
+import {SPRITE_SHEET_KEY, ResourcesChangeListener, IMAGE_BLANK_KEY} from "./element.editor.resource.manager";
 import ElementEditorGrids from "./element.editor.grids";
-import { Handler, Logger } from "utils";
-import { BaseDragonbonesDisplay, BaseFramesDisplay } from "baseRender";
-import { AnimationDataNode } from "game-capsule";
-import { AnimationModel } from "structure";
-import { DragonbonesEditorDisplay } from "./dragonbones.editor.display";
+import {Handler, Logger} from "utils";
+import {BaseDragonbonesDisplay, BaseFramesDisplay} from "baseRender";
+import {AnimationDataNode} from "game-capsule";
+import {AnimationModel} from "structure";
+import {DragonbonesEditorDisplay} from "./dragonbones.editor.display";
 
 export const LOCAL_HOME_PATH: string = path.resolve(os.homedir(), ".pixelpai");
 
@@ -67,6 +67,7 @@ export default class ElementFramesDisplay extends BaseFramesDisplay implements R
         this.updatePlay();
         this.createMountDisplay();
     }
+
     public onResourcesCleared() {
         this.clearDisplays();
     }
@@ -78,27 +79,27 @@ export default class ElementFramesDisplay extends BaseFramesDisplay implements R
     }
 
     public setMountAnimation(aniName: string, idx?: number) {
-        const ani = { name: aniName, flip: false };
+        const ani = {name: aniName, flip: false};
         if (idx !== undefined) {
             if (!this.mMountList.get(idx)) {
                 Logger.getInstance().warn("wrong idx: " + idx);
                 return;
             }
 
-            const arm: BaseDragonbonesDisplay = this.mMountList[idx] as BaseDragonbonesDisplay;
+            const arm: BaseDragonbonesDisplay = this.mMountList.get(idx) as BaseDragonbonesDisplay;
             // if (aniName && arm.animation.hasAnimation(aniName)) {
-            arm.play({ name: aniName, flip: false });
+            arm.play({name: aniName, flip: false});
             // } else {
             // arm.stop();
             // }
         } else {
             // this.mMountList.forEach((arm) => {
-                // if (aniName && arm.animation.hasAnimation(aniName)) {
-                //     arm.animation.play(aniName);
-                // } else {
-                //     arm.animation.stop();
-                // }
-                // arm.play(ani);
+            // if (aniName && arm.animation.hasAnimation(aniName)) {
+            //     arm.animation.play(aniName);
+            // } else {
+            //     arm.animation.stop();
+            // }
+            // arm.play(ani);
             // });
             this.mMountList.forEach((val) => {
                 (val as BaseDragonbonesDisplay).play(ani);
@@ -107,8 +108,8 @@ export default class ElementFramesDisplay extends BaseFramesDisplay implements R
     }
 
     public updateMountDisplay() {
-        this.createMountDisplay();
         this.updatePlay();
+        this.createMountDisplay();
     }
 
     public setPlay(playing: boolean) {
@@ -152,7 +153,7 @@ export default class ElementFramesDisplay extends BaseFramesDisplay implements R
                 Logger.getInstance().warn("wrong idx: " + mountPointIndex);
                 return;
             }
-            this.setSelectedGameObjects(this.mMountList[mountPointIndex]);
+            this.setSelectedGameObjects(this.mMountList.get(mountPointIndex));
         } else {
             // 全选所有挂载点
             const arr = Array.from(this.mMountList.values());
@@ -219,7 +220,7 @@ export default class ElementFramesDisplay extends BaseFramesDisplay implements R
         if (!data) {
             return;
         }
-        const baseLoc = data.offsetLoc || { x: 0, y: 0 };
+        const baseLoc = data.offsetLoc || {x: 0, y: 0};
         display.x = baseLoc.x;
         display.y = baseLoc.y;
     }
@@ -252,7 +253,7 @@ export default class ElementFramesDisplay extends BaseFramesDisplay implements R
                 reject(null);
                 return;
             }
-            const image = this.scene.make.image({ key: SPRITE_SHEET_KEY, frame: frameName }).setOrigin(0, 0);
+            const image = this.scene.make.image({key: SPRITE_SHEET_KEY, frame: frameName}).setOrigin(0, 0);
             let scaleRatio = 1;
             if (image.width > 48 || image.height > 48) {
                 if (image.width > image.height) {
@@ -294,7 +295,8 @@ export default class ElementFramesDisplay extends BaseFramesDisplay implements R
         });
         this.mDisplays.clear();
         this.mMountList.forEach((val) => {
-            val.destroy();
+            this.unmount(val as BaseDragonbonesDisplay);
+            val.destroy(true);
         });
         this.mMountList.clear();
     }
@@ -312,7 +314,7 @@ export default class ElementFramesDisplay extends BaseFramesDisplay implements R
 
         super.createDisplays(SPRITE_SHEET_KEY, this.mAnimationData.createProtocolObject());
         // this.mAnimationData.layerDict.forEach((val, key) => {
-            // this.createDisplay(key);
+        // this.createDisplay(key);
         // });
     }
 
@@ -353,7 +355,7 @@ export default class ElementFramesDisplay extends BaseFramesDisplay implements R
                 val.visible = false;
                 return;
             }
-            const pos = { x: data.mountPoint[key].x, y: data.mountPoint[key].y };
+            const pos = {x: data.mountPoint[key].x, y: data.mountPoint[key].y};
             val.setPosition(pos.x, pos.y);
 
             val.visible = true;
@@ -413,23 +415,20 @@ export default class ElementFramesDisplay extends BaseFramesDisplay implements R
                     return;
                 }
             });
+        } else if (gameObject instanceof dragonBones.phaser.display.ArmatureDisplay) {
+            const arm = gameObject as dragonBones.phaser.display.ArmatureDisplay;
+            this.mMountList.forEach((val, key) => {
+                if (val === arm) {
+                    this.mEmitter.emit(ElementEditorEmitType.Active_Mount_Layer, key);
+                    Logger.getInstance().debug(ElementEditorEmitType.Active_Mount_Layer, key);
+                    return;
+                }
+            });
         }
-        // TODO
-        //  else if (gameObject instanceof dragonBones.phaser.display.ArmatureDisplay) {
-        //     const arm = gameObject as dragonBones.phaser.display.ArmatureDisplay;
-        //     for (let i = 0; i < this.mMountList.length; i++) {
-        //         const element = this.mMountList[i];
-        //         if (element === arm) {
-        //             this.mEmitter.emit(ElementEditorEmitType.Active_Mount_Layer, i);
-        //             Logger.getInstance().debug(ElementEditorEmitType.Active_Mount_Layer, i);
-        //             return;
-        //         }
-        //     }
-        // }
     }
 
     private onDragHandler(pointer, gameObject, dragX, dragY) {
-        const delta = { x: 0, y: 0 };
+        const delta = {x: 0, y: 0};
         this.mSelectedGameObjects.forEach((element) => {
             if (element === gameObject) {
                 delta.x = dragX - element.x;
@@ -455,7 +454,7 @@ export default class ElementFramesDisplay extends BaseFramesDisplay implements R
         this.mDisplays.forEach((val, key) => {
             const data = this.mAnimationData.layerDict.get(key);
             // const point = { x: val.x, y: val.y };
-            let { x, y } = val;
+            let {x, y} = val;
             x -= val.width * 0.5;
             y -= val.height * 0.5;
             if (!data.offsetLoc || data.offsetLoc.x !== x || data.offsetLoc.y !== y) {
@@ -467,8 +466,8 @@ export default class ElementFramesDisplay extends BaseFramesDisplay implements R
         if (mountPoints) {
             for (let i = 0; i < mountPoints.length; i++) {
                 const data = mountPoints[i];
-                const mountObject = this.mMountList[i];
-                const { x, y } = mountObject;
+                const mountObject = this.mMountList.get(i);
+                const {x, y} = mountObject;
                 if (x !== data.x || y !== data.y) {
                     data.x = x;
                     data.y = y;
@@ -496,7 +495,7 @@ export default class ElementFramesDisplay extends BaseFramesDisplay implements R
         // this.mCurAnimation = this.mAnimationData.createProtocolObject();
         if (this.scene.textures.exists(SPRITE_SHEET_KEY)) {
             let index = 0;
-            this.play({ name: this.mAnimationData.name, flip: false });
+            this.play({name: this.mAnimationData.name, flip: false});
             this.mAnimationData.layerDict.forEach((val, key) => {
                 const display = this.mDisplays.get(key);
                 if (!display) return;
@@ -511,7 +510,7 @@ export default class ElementFramesDisplay extends BaseFramesDisplay implements R
                     display.visible = true;
                     // if (isSprite) (<Phaser.GameObjects.Sprite>display).play(animationName);
                 } else {
-                    if (isSprite) (<Phaser.GameObjects.Sprite>display).anims.stop();
+                    if (isSprite) (<Phaser.GameObjects.Sprite> display).anims.stop();
                     if (this.mCurFrameIdx >= val.frameName.length) {
                         Logger.getInstance().warn("wrong frame idx: " + this.mCurFrameIdx + "; frameName.length: " + val.frameName.length);
                         display.visible = false;
@@ -525,7 +524,7 @@ export default class ElementFramesDisplay extends BaseFramesDisplay implements R
                     }
                     display.setTexture(SPRITE_SHEET_KEY, frameName);
                     // if (display.input) {
-                        // display.input.hitArea.setSize(display.displayWidth, display.displayHeight);
+                    // display.input.hitArea.setSize(display.displayWidth, display.displayHeight);
                     // } else {
                     display.setInteractive();
                     // this.updateBaseLoc(display, false, val.offsetLoc);
@@ -548,7 +547,7 @@ export default class ElementFramesDisplay extends BaseFramesDisplay implements R
         }
         for (let i = 0; i < mountlayer.mountPoint.length; i++) {
             if (!this.mMountList.get(i)) continue;
-            const armature = this.mMountList[i];
+            const armature = this.mMountList.get(i);
             if (this.mPlaying) {
                 // this.mMountAnimationTimer = this.scene.time.addEvent({
                 //     delay: 0,
@@ -617,7 +616,7 @@ export default class ElementFramesDisplay extends BaseFramesDisplay implements R
 
         for (let i = 0; i < mountlayer.mountPoint.length; i++) {
             if (!this.mMountList.get(i)) continue;
-            const armature = this.mMountList[i];
+            const armature = this.mMountList.get(i);
             if (mountlayer.frameVisible) {
                 const mountPointsVisible: number = mountlayer.frameVisible[curFrame];
                 const visible: boolean = this.getMaskValue(mountPointsVisible, i);
