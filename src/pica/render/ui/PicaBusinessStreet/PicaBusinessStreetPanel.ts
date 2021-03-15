@@ -203,13 +203,14 @@ export class PicaBusinessStreetPanel extends BasePanel {
             }), new Handler(this, (roomid, password) => {
                 this.render.renderEmitter(RENDER_PEER + "_" + this.key + "_queryenterroom", { roomid, password });
             }));
+            this.content.add(this.picMyStreetPanel);
         }
-        this.content.add(this.picMyStreetPanel);
+        this.picMyStreetPanel.visible = true;
         this.picMyStreetPanel.resetMask();
     }
 
     private hideMyStreetPanel() {
-        this.content.remove(this.picMyStreetPanel);
+        this.picMyStreetPanel.visible = false;
     }
 
     private showStoreCreatePanel() {
@@ -233,13 +234,15 @@ export class PicaBusinessStreetPanel extends BasePanel {
                 this.hideStoreCreatePanel();
                 this.setSecondStore(datas);
             }));
+            this.content.add(this.picStoreCreatePanel);
         }
-        this.content.add(this.picStoreCreatePanel);
+        this.picStoreCreatePanel.visible = true;
         this.picStoreCreatePanel.resetMask();
     }
 
     private hideStoreCreatePanel() {
-        this.content.remove(this.picStoreCreatePanel);
+        // this.content.remove(this.picStoreCreatePanel);
+         this.picStoreCreatePanel.visible = false;
     }
 
     private showSecondStorePanel() {
@@ -261,13 +264,15 @@ export class PicaBusinessStreetPanel extends BasePanel {
             }), new Handler(this, (data) => {
                 this.render.renderEmitter(RENDER_PEER + "_" + this.key + "_querycreatestore", data.modelId);
             }));
+            this.content.add(this.picSecondStorePanel);
         }
-        this.content.add(this.picSecondStorePanel);
+        this.picSecondStorePanel.visible = true;
         this.picSecondStorePanel.resetMask();
     }
 
     private hideSecondStorePanel() {
-        this.content.remove(this.picSecondStorePanel);
+        // this.content.remove(this.picSecondStorePanel);
+        this.picSecondStorePanel.visible = false;
     }
 
     private showStreetListPanel() {
@@ -294,13 +299,14 @@ export class PicaBusinessStreetPanel extends BasePanel {
             }), new Handler(this, (roomid, password) => {
                 this.render.renderEmitter(RENDER_PEER + "_" + this.key + "_queryenterroom", { roomid, password });
             }));
+            this.content.add(this.picStreetListPanel);
         }
-        this.content.add(this.picStreetListPanel);
+        this.picStreetListPanel.visible = true;
         this.picStreetListPanel.resetMask();
     }
 
     private hideStreetListPanel() {
-        this.content.remove(this.picStreetListPanel);
+        this.picStreetListPanel.visible = false;
     }
 
     private showStreetHistoryPanel() {
@@ -315,13 +321,15 @@ export class PicaBusinessStreetPanel extends BasePanel {
                 this.hideStreetHistoryPanel();
                 this.openStoreStreetPanel();
             }));
+            this.content.add(this.picStreetHistoryPanel);
         }
-        this.content.add(this.picStreetHistoryPanel);
+        this.picStreetHistoryPanel.visible = true;
         this.picStreetHistoryPanel.resetMask();
     }
 
     private hideStreetHistoryPanel() {
-        this.content.remove(this.picStreetHistoryPanel);
+        this.picStreetHistoryPanel.visible = false;
+        // this.content.remove(this.picStreetHistoryPanel);
     }
     private showStreetRankingPanel() {
         const topoffset = 110 * this.dpr;
@@ -339,14 +347,14 @@ export class PicaBusinessStreetPanel extends BasePanel {
                 this.hideStreetRankingPanel();
                 this.render.renderEmitter(RENDER_PEER + "_" + this.key + "_queryrankdetail", { key, type });
             }));
+            this.content.add(this.picStreetRankingPanel);
         }
-        this.content.add(this.picStreetRankingPanel);
         this.picStreetRankingPanel.show();
         this.picStreetRankingPanel.resetMask();
     }
 
     private hideStreetRankingPanel() {
-        this.content.remove(this.picStreetRankingPanel);
+        // this.content.remove(this.picStreetRankingPanel);
         this.picStreetRankingPanel.hide();
     }
 
@@ -366,13 +374,14 @@ export class PicaBusinessStreetPanel extends BasePanel {
                 this.openRankRewardPanel();
                 this.render.renderEmitter(RENDER_PEER + "_" + this.key + "_queryrankreward", { key, type });
             }));
+            this.content.add(this.picRankingDetailPanel);
         }
-        this.content.add(this.picRankingDetailPanel);
+        this.picRankingDetailPanel.visible = true;
         this.picRankingDetailPanel.resetMask();
     }
 
     private hideRankingDetailPanel() {
-        this.content.remove(this.picRankingDetailPanel);
+        this.picRankingDetailPanel.visible = false;
     }
 
     private showRankRewardPanel() {
@@ -387,13 +396,14 @@ export class PicaBusinessStreetPanel extends BasePanel {
                 this.hideRankRewardPanel();
                 this.openRankingDetailPanel();
             }));
+            this.content.add(this.picRankRewardPanel);
         }
-        this.content.add(this.picRankRewardPanel);
+        this.picRankRewardPanel.visible = true;
         this.picRankRewardPanel.resetMask();
     }
 
     private hideRankRewardPanel() {
-        this.content.remove(this.picRankRewardPanel);
+        this.picRankRewardPanel.visible = false;
     }
 
     private setContentSize(topoffset: number, bottomoffset: number) {

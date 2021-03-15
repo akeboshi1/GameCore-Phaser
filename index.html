@@ -83,6 +83,11 @@
                 app.onResize(window.innerWidth, window.innerHeight);
 
             });
+            document.addEventListener("visibilitychange", function() {
+                if (document.visibilityState === "hidden") {
+                    app.hidden();
+                }
+            });
         });
     </script>
 </body>
