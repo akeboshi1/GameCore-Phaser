@@ -7,6 +7,7 @@ import { PicaMyNavigationPanel } from "./PicaMyNavigationPanel";
 import { PicaBasePanel } from "../pica.base.panel";
 import { UIAtlasName } from "picaRes";
 import { op_client } from "pixelpai_proto";
+import { PicaRoomNavigationPanel } from "./PicaRoomNavigationPanel";
 export class PicaPartyNavigationPanel extends PicaBasePanel {
     private content: Phaser.GameObjects.Container;
     private blackBg: Phaser.GameObjects.Graphics;
@@ -18,8 +19,9 @@ export class PicaPartyNavigationPanel extends PicaBasePanel {
     private selectLine: Phaser.GameObjects.Image;
     private curToggleItem: ToggleColorButton;
     private itemtips: ItemInfoTips;
-    private partyNavigationPanel: PicaTownNavigationPanel;
-    private myRoomNavigationPanel: PicaMyNavigationPanel;
+    private townPanel: PicaTownNavigationPanel;
+    private myRoomPanel: PicaMyNavigationPanel;
+    private roomPanel: PicaRoomNavigationPanel;
     private optionType: number;
     private mPartyData: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_PARTY_LIST;
     private progressData: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_QUERY_PLAYER_PROGRESS;
@@ -27,6 +29,7 @@ export class PicaPartyNavigationPanel extends PicaBasePanel {
         super(uiManager);
         this.key = ModuleName.PICAPARTYNAVIGATION_NAME;
         this.atlasNames = [UIAtlasName.map];
+        this.textures = [{ atlasName: "town_entrance_1", folder: UIAtlasName.map }, { atlasName: "party_icon_1", folder: UIAtlasName.map }];
     }
 
     public resize(w: number, h: number) {
@@ -51,6 +54,10 @@ export class PicaPartyNavigationPanel extends PicaBasePanel {
 
     public setRoomListData(content: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_EDIT_MODE_GET_PLAYER_ENTER_ROOM_HISTORY) {
         // this.myRoomNavigationPanel.setRoomDataList(content);
+    }
+
+    public destroy() {
+        super.destroy();
     }
 
     protected init() {
@@ -87,8 +94,13 @@ export class PicaPartyNavigationPanel extends PicaBasePanel {
         this.add(this.content);
         this.resize(0, 0);
         super.init();
+        this.render.renderEmitter(this.key + "_questprogress");
         this.playMove(new Handler(this, () => {
             this.signProgressPanel.refreshMask();
+            if (this.townPanel) {
+                this.townPanel.refreshMask();
+                this.townPanel.setTownDatas(undefined);
+            }
         }));
     }
     protected createOptionButtons() {
@@ -119,34 +131,58 @@ export class PicaPartyNavigationPanel extends PicaBasePanel {
     }
 
     private openTownNavigationPanel() {
-        if (!this.partyNavigationPanel) {
-            this.partyNavigationPanel = new PicaTownNavigationPanel(this.scene, 274 * this.dpr, 487 * this.dpr, this.dpr, this.scale);
-            this.partyNavigationPanel.setHandler(new Handler(this, this.onPartyListHandler));
-            this.partyNavigationPanel.y = 0 * this.dpr;
+        if (!this.townPanel) {
+            const height = this.scaleHeight * 0.5 - this.toggleCon.y - 30 * this.dpr;
+            this.townPanel = new PicaTownNavigationPanel(this.scene, 274 * this.dpr, height, this.dpr, this.scale);
+            this.townPanel.setHandler(new Handler(this, this.onPartyListHandler));
+            this.townPanel.y = this.scaleHeight - height - 75 * this.dpr;
+            this.content.add(this.townPanel);
         }
-        this.content.add(this.partyNavigationPanel);
-        this.partyNavigationPanel.refreshMask();
+        this.townPanel.visible = true;
+        this.townPanel.refreshMask();
+        this.render.renderEmitter(this.key + "_querylist");
     }
 
     private hideTownNavigationPanel() {
-        if (this.partyNavigationPanel)
-            this.content.remove(this.partyNavigationPanel);
+        if (this.townPanel)
+            this.townPanel.visible = false;
     }
-
-    private openRoomNavigationPanel() {
-        if (!this.myRoomNavigationPanel) {
-            this.myRoomNavigationPanel = new PicaMyNavigationPanel(this.scene, this.content.width - 40 * this.dpr, this.content.height - 34 * this.dpr, this.key, this.dpr, this.scale);
-            this.myRoomNavigationPanel.setHandler(new Handler(this, this.onEnterRoomHandler));
-            this.myRoomNavigationPanel.y = -10 * this.dpr;
+    private openMyRoomPanel() {
+        if (!this.myRoomPanel) {
+            const height = this.scaleHeight * 0.5 - this.toggleCon.y - 30 * this.dpr;
+            this.myRoomPanel = new PicaMyNavigationPanel(this.scene, 274 * this.dpr, height, this.dpr, this.scale);
+            this.myRoomPanel.y = this.scaleHeight - height - 75 * this.dpr;
+            this.myRoomPanel.setHandler(new Handler(this, this.onEnterRoomHandler));
+            this.content.add(this.myRoomPanel);
         }
-        this.content.add(this.myRoomNavigationPanel);
-        this.myRoomNavigationPanel.refreshMask();
+        this.myRoomPanel.visible = true;
+        this.myRoomPanel.refreshMask();
+        this.myRoomPanel.setRoomDatas(undefined);
     }
 
-    private hideRoomNavigationPanel() {
-        if (this.myRoomNavigationPanel) {
-            this.myRoomNavigationPanel.clear();
-            this.content.remove(this.myRoomNavigationPanel);
+    private hideMyRoomPanel() {
+        if (this.myRoomPanel) {
+            // this.content.remove(this.myRoomPanel);
+            this.myRoomPanel.visible = false;
+        }
+    }
+    private openRoomPanel() {
+        if (!this.roomPanel) {
+            const height = this.scaleHeight * 0.5 - this.toggleCon.y - 30 * this.dpr;
+            this.roomPanel = new PicaRoomNavigationPanel(this.scene, 274 * this.dpr, height, this.dpr, this.scale);
+            this.roomPanel.setHandler(new Handler(this, this.onEnterRoomHandler));
+            this.roomPanel.y = this.scaleHeight - height - 75 * this.dpr;
+            this.content.add(this.roomPanel);
+            this.roomPanel.y = -10 * this.dpr;
+        }
+        this.roomPanel.visible = true;
+        this.roomPanel.setRoomDatas(undefined);
+        this.roomPanel.refreshMask();
+    }
+
+    private hideRoomPanel() {
+        if (this.roomPanel) {
+            this.roomPanel.visible = false;
         }
     }
     private onToggleButtonHandler(pointer: any, toggle: ToggleColorButton) {
@@ -155,14 +191,15 @@ export class PicaPartyNavigationPanel extends PicaBasePanel {
         this.curToggleItem = toggle;
         this.optionType = toggle.getData("item");
         this.selectLine.x = toggle.x;
+        this.hideTownNavigationPanel();
+        this.hideRoomPanel();
+        this.hideMyRoomPanel();
         if (this.optionType === 1) {
-            this.render.renderEmitter(this.key + "_querylist");
-            this.render.renderEmitter(this.key + "_questprogress");
-
+            this.openTownNavigationPanel();
         } else if (this.optionType === 2) {
-
+            this.openRoomPanel();
         } else {
-
+            this.openMyRoomPanel();
         }
     }
 

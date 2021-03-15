@@ -4,8 +4,8 @@
 			"image": "map",
 			"format": "RGBA8888",
 			"size": {
-				"w": 879,
-				"h": 203
+				"w": 1108,
+				"h": 232
 			},
 			"scale": 1,
 			"frames": [
@@ -14,146 +14,20 @@
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
-						"w": 61,
+						"w": 817,
 						"h": 201
 					},
 					"spriteSourceSize": {
 						"x": 0,
 						"y": 0,
-						"w": 61,
+						"w": 817,
 						"h": 201
 					},
 					"frame": {
 						"x": 1,
 						"y": 1,
-						"w": 61,
+						"w": 817,
 						"h": 201
-					}
-				},
-				{
-					"filename": "map_nav_line",
-					"rotated": false,
-					"trimmed": false,
-					"sourceSize": {
-						"w": 814,
-						"h": 1
-					},
-					"spriteSourceSize": {
-						"x": 0,
-						"y": 0,
-						"w": 814,
-						"h": 1
-					},
-					"frame": {
-						"x": 64,
-						"y": 1,
-						"w": 814,
-						"h": 1
-					}
-				},
-				{
-					"filename": "map_online_progress_bottom",
-					"rotated": false,
-					"trimmed": false,
-					"sourceSize": {
-						"w": 808,
-						"h": 8
-					},
-					"spriteSourceSize": {
-						"x": 0,
-						"y": 0,
-						"w": 808,
-						"h": 8
-					},
-					"frame": {
-						"x": 64,
-						"y": 4,
-						"w": 808,
-						"h": 8
-					}
-				},
-				{
-					"filename": "map_online_progress_top",
-					"rotated": false,
-					"trimmed": false,
-					"sourceSize": {
-						"w": 808,
-						"h": 8
-					},
-					"spriteSourceSize": {
-						"x": 0,
-						"y": 0,
-						"w": 808,
-						"h": 8
-					},
-					"frame": {
-						"x": 64,
-						"y": 14,
-						"w": 808,
-						"h": 8
-					}
-				},
-				{
-					"filename": "map_town_list_bg",
-					"rotated": false,
-					"trimmed": false,
-					"sourceSize": {
-						"w": 31,
-						"h": 120
-					},
-					"spriteSourceSize": {
-						"x": 0,
-						"y": 0,
-						"w": 31,
-						"h": 120
-					},
-					"frame": {
-						"x": 64,
-						"y": 24,
-						"w": 31,
-						"h": 120
-					}
-				},
-				{
-					"filename": "map_online_Check",
-					"rotated": false,
-					"trimmed": false,
-					"sourceSize": {
-						"w": 65,
-						"h": 49
-					},
-					"spriteSourceSize": {
-						"x": 0,
-						"y": 0,
-						"w": 65,
-						"h": 49
-					},
-					"frame": {
-						"x": 64,
-						"y": 146,
-						"w": 65,
-						"h": 49
-					}
-				},
-				{
-					"filename": "map_nav_select",
-					"rotated": false,
-					"trimmed": false,
-					"sourceSize": {
-						"w": 146,
-						"h": 4
-					},
-					"spriteSourceSize": {
-						"x": 0,
-						"y": 0,
-						"w": 146,
-						"h": 4
-					},
-					"frame": {
-						"x": 64,
-						"y": 197,
-						"w": 146,
-						"h": 4
 					}
 				},
 				{
@@ -171,8 +45,8 @@
 						"h": 118
 					},
 					"frame": {
-						"x": 97,
-						"y": 24,
+						"x": 820,
+						"y": 1,
 						"w": 118,
 						"h": 118
 					}
@@ -192,8 +66,8 @@
 						"h": 45
 					},
 					"frame": {
-						"x": 131,
-						"y": 144,
+						"x": 820,
+						"y": 121,
 						"w": 175,
 						"h": 45
 					}
@@ -213,52 +87,10 @@
 						"h": 118
 					},
 					"frame": {
-						"x": 217,
-						"y": 24,
+						"x": 940,
+						"y": 1,
 						"w": 118,
 						"h": 118
-					}
-				},
-				{
-					"filename": "map_party_homeowners",
-					"rotated": false,
-					"trimmed": false,
-					"sourceSize": {
-						"w": 30,
-						"h": 35
-					},
-					"spriteSourceSize": {
-						"x": 0,
-						"y": 0,
-						"w": 30,
-						"h": 35
-					},
-					"frame": {
-						"x": 308,
-						"y": 144,
-						"w": 30,
-						"h": 35
-					}
-				},
-				{
-					"filename": "map_list_arrow_unfold",
-					"rotated": false,
-					"trimmed": false,
-					"sourceSize": {
-						"w": 31,
-						"h": 21
-					},
-					"spriteSourceSize": {
-						"x": 0,
-						"y": 0,
-						"w": 31,
-						"h": 21
-					},
-					"frame": {
-						"x": 308,
-						"y": 181,
-						"w": 31,
-						"h": 21
 					}
 				},
 				{
@@ -276,8 +108,8 @@
 						"h": 110
 					},
 					"frame": {
-						"x": 337,
-						"y": 24,
+						"x": 997,
+						"y": 121,
 						"w": 110,
 						"h": 110
 					}
@@ -297,10 +129,52 @@
 						"h": 61
 					},
 					"frame": {
-						"x": 341,
-						"y": 136,
+						"x": 1060,
+						"y": 1,
 						"w": 39,
 						"h": 61
+					}
+				},
+				{
+					"filename": "map_party_homeowners",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 30,
+						"h": 35
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 30,
+						"h": 35
+					},
+					"frame": {
+						"x": 1060,
+						"y": 64,
+						"w": 30,
+						"h": 35
+					}
+				},
+				{
+					"filename": "map_nav_select",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 146,
+						"h": 4
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 146,
+						"h": 4
+					},
+					"frame": {
+						"x": 820,
+						"y": 168,
+						"w": 146,
+						"h": 4
 					}
 				},
 				{
@@ -318,10 +192,115 @@
 						"h": 31
 					},
 					"frame": {
-						"x": 382,
-						"y": 136,
+						"x": 968,
+						"y": 168,
 						"w": 21,
 						"h": 31
+					}
+				},
+				{
+					"filename": "map_online_Check",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 65,
+						"h": 49
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 65,
+						"h": 49
+					},
+					"frame": {
+						"x": 820,
+						"y": 174,
+						"w": 65,
+						"h": 49
+					}
+				},
+				{
+					"filename": "map_online_progress_bottom",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 808,
+						"h": 8
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 808,
+						"h": 8
+					},
+					"frame": {
+						"x": 1,
+						"y": 204,
+						"w": 808,
+						"h": 8
+					}
+				},
+				{
+					"filename": "map_online_progress_top",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 808,
+						"h": 8
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 808,
+						"h": 8
+					},
+					"frame": {
+						"x": 1,
+						"y": 214,
+						"w": 808,
+						"h": 8
+					}
+				},
+				{
+					"filename": "map_nav_line",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 814,
+						"h": 1
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 814,
+						"h": 1
+					},
+					"frame": {
+						"x": 1,
+						"y": 224,
+						"w": 814,
+						"h": 1
+					}
+				},
+				{
+					"filename": "map_list_arrow_unfold",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 31,
+						"h": 21
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 31,
+						"h": 21
+					},
+					"frame": {
+						"x": 887,
+						"y": 174,
+						"w": 31,
+						"h": 21
 					}
 				}
 			]
@@ -330,6 +309,6 @@
 	"meta": {
 		"app": "https://www.codeandweb.com/texturepacker",
 		"version": "3.0",
-		"smartupdate": "$TexturePacker:SmartUpdate:e3a72dbec369c7fe6aae3a78c9d058d5:6c16e59345f5f463defb576404e5624f:68463c66230aaeb26021edb8ea8cd9b6$"
+		"smartupdate": "$TexturePacker:SmartUpdate:8868cd6375864b60ffc4a434238418d9:3bfed0047055d0fea5261da06a889df2:68463c66230aaeb26021edb8ea8cd9b6$"
 	}
 }

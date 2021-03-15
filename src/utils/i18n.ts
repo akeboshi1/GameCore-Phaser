@@ -7,7 +7,7 @@ export function initLocales(path: string): Promise<any> {
     .use(i18nextXHRBackend)
     .use(LanguageDetector)
     .init({
-      fallbackLng: "en",
+      fallbackLng: "zh-CN",
       backend: {
         loadPath: path,
         crossDomain: true

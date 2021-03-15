@@ -265,7 +265,7 @@ class MainTaskItem extends Phaser.GameObjects.Container {
         this.progressTex.text = fvalue + "%";
         this.isFinish = fvalue === max;
         this.previousProgress = fvalue;
-
+        this.rewardRotateImg.visible = false;
         this.mainData = content;
 
         const url = Url.getOsdRes((<any>content.reward).texturePath);
@@ -327,6 +327,7 @@ class MainTaskItem extends Phaser.GameObjects.Container {
         this.rewardRotateImg = this.scene.make.image({ key: UIAtlasName.uicommon, frame: "task_chapter_gift_bg1" });
         this.rewardRotateImg.x = rewardbg.x;
         this.rewardRotateImg.y = rewardbg.y;
+        this.rewardRotateImg.visible = false;
         this.rewardsImg = new DynamicImage(this.scene, 0, 0);
         this.rewardsImg.x = rewardbg.x;
         this.rewardsImg.y = rewardbg.y;
@@ -389,6 +390,7 @@ class MainTaskItem extends Phaser.GameObjects.Container {
     private playRotateTween() {
         if (!this.scene) return;
         if (this.intervalTimer) clearInterval(this.intervalTimer);
+        this.rewardRotateImg.visible = true;
         this.intervalTimer = setInterval(() => {
             if (!this.scene) {
                 if (this.intervalTimer) clearInterval(this.intervalTimer);

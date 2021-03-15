@@ -1,159 +1,211 @@
-import { BBCodeText, GameScroller, NineSlicePatch } from "apowophaserui";
-import { ImageBBCodeValue, ImageValue } from "gamecoreRender";
-import { UIAtlasKey } from "picaRes";
-import { Font, Handler, i18n } from "utils";
+import { GameGridTable, GameScroller } from "apowophaserui";
+import { AlignmentType, AxisType, ConstraintType, DynamicImage, GridLayoutGroup } from "gamecoreRender";
+import { UIAtlasName } from "picaRes";
+import { Font, Handler, i18n, Logger, Tool, UIHelper, Url } from "utils";
+import { op_client } from "pixelpai_proto";
+import { PicaRoomListItem } from "./PicaRoomListItem";
 export class PicaMyNavigationPanel extends Phaser.GameObjects.Container {
-    private gameScroll: GameScroller;
-    private key: string;
     private dpr: number;
     private zoom: number;
     private sendHandler: Handler;
-    constructor(scene: Phaser.Scene, width: number, height: number, key: string, dpr: number, zoom: number) {
+    private mGameScroll: GameScroller;
+    private curRoomItem: NavigationRoomListItem;
+    private roomsItems: NavigationRoomListItem[] = [];
+    constructor(scene: Phaser.Scene, width: number, height: number, dpr: number, zoom: number) {
         super(scene);
         this.setSize(width, height);
-        this.key = key;
         this.dpr = dpr;
         this.zoom = zoom;
         this.create();
     }
     create() {
-        this.gameScroll = new GameScroller(this.scene, {
+        this.mGameScroll = new GameScroller(this.scene, {
             x: 0,
-            y: 10 * this.dpr,
+            y: 0,
             width: this.width,
-            height: this.height,
+            height: this.height - 10 * this.dpr,
             zoom: this.zoom,
+            dpr: this.dpr,
             align: 2,
             orientation: 0,
-            dpr: this.dpr,
-            space: 10 * this.dpr,
-            padding: { top: 10 * this.dpr },
+            space: 6 * this.dpr,
+            selfevent: true,
             cellupCallBack: (gameobject) => {
-                this.onGameScrollHandler(gameobject);
+                this.onPointerUpHandler(gameobject);
             }
         });
+        this.add(this.mGameScroll);
 
-        this.add(this.gameScroll);
-    }
-
-    public clear() {
-        this.gameScroll.clearItems(true);
     }
 
     public refreshMask() {
-        this.gameScroll.refreshMask();
+        this.mGameScroll.refreshMask();
     }
     public setHandler(handler: Handler) {
         this.sendHandler = handler;
     }
-    public setRoomDataList(content: any) {// op_client.OP_VIRTUAL_WORLD_RES_CLIENT_EDIT_MODE_GET_PLAYER_ENTER_ROOM_HISTORY
-        this.gameScroll.clearItems(true);
-        this.setMyRoomDatas(content.selfRooms, new Handler(this, () => {
-            this.setHistoryDatas(content.historyRooms);
-        }));
-    }
-
-    private setMyRoomDatas(datas: any[], compl?: Handler) {// op_client.IEditModeRoom
-        const titleimg: ImageValue = new ImageValue(this.scene, 78 * this.dpr, 15 * this.dpr, this.key, "my_house", this.dpr, {
-            color: "#FFC51A", fontSize: 13 * this.dpr, fontFamily: Font.DEFULT_FONT
-        });
-        titleimg.setStroke("#744803", 2 * this.dpr);
-        titleimg.x = -this.width * 0.5 + 20 * this.dpr;
-        titleimg.setFrameValue(i18n.t("room_list.my_room"), this.key, "my_house");
-        this.gameScroll.addItem(titleimg);
-        this.createRoomItemByFrame(datas, "my_home_bg", "#744803", compl);
-    }
-
-    private createRoomItemByFrame(datas: any[], bg: string = "list_bg", color: string = "#333333", compl?: Handler) {// op_client.IEditModeRoom
-        const frameCount = 5;
-        let indexed = 0;
-        const framefun = () => {
-            const temps = datas.slice(indexed, indexed + frameCount);
-            for (const data of temps) {
-                const item = new RoomListItem(this.scene, this.key, this.dpr, bg, color);
-                item.setRoomData(data);
-                this.gameScroll.addItem(item);
-            }
-            this.gameScroll.Sort(true);
-            indexed += frameCount;
-            if (indexed < datas.length) {
-                setTimeout(() => {
-                    framefun();
-                }, 20);
+    public setRoomDatas(content: any) {
+        for (const item of this.roomsItems) {
+            item.visible = false;
+        }
+        for (let i = 0; i < 2; i++) {
+            let item: NavigationRoomListItem;
+            if (i < this.roomsItems.length) {
+                item = this.roomsItems[i];
             } else {
-                if (compl) compl.run();
+                item = new NavigationRoomListItem(this.scene, this.dpr, "活动");
+                item.setHandler(new Handler(this, this.onTownItemHandler));
+                this.mGameScroll.addItem(item);
+                this.roomsItems.push(item);
             }
-        };
-        framefun();
+            item.visible = true;
+            item.setListData(undefined);
+        }
+        this.mGameScroll.Sort();
     }
 
-    private setHistoryDatas(datas: any[]) {// op_client.IEditModeRoom
-        const titleimg: ImageValue = new ImageValue(this.scene, 78 * this.dpr, 30 * this.dpr, this.key, "footprint", this.dpr, {
-            color: "#FFC51A", fontSize: 13 * this.dpr, fontFamily: Font.DEFULT_FONT
-        });
-        titleimg.setStroke("#744803", 2 * this.dpr);
-        titleimg.x = -this.width * 0.5 + 20 * this.dpr;
-        titleimg.setFrameValue(i18n.t("room_list.my_history"), this.key, "footprint");
-        this.gameScroll.addItem(titleimg);
-        this.createRoomItemByFrame(datas);
+    private onPointerUpHandler(gameobject) {
+        const extend = gameobject.extend ? false : true;
+        const pointer = this.scene.input.activePointer;
+        if (!gameobject.checkExtendRect(pointer)) {
+            gameobject.setExtend(extend, true);
+        }
     }
-    private onGameScrollHandler(item: RoomListItem) {
-        if (item && item.roomData)
-            this.onSendHandler(item.roomData);
-    }
-
     private onSendHandler(data: any) {// op_client.IEditModeRoom
-        if (this.sendHandler) this.sendHandler.runWith(data.roomId);
+        if (this.sendHandler) this.sendHandler.runWith(["partylist", data]);
+    }
+
+    private onTownItemHandler(tag: string, data: any) {
+        if (tag === "extend") {
+            const extend = data.extend;
+            const item = data.item;
+            this.onExtendsHandler(extend, item);
+        } else if (tag === "go") {
+            Logger.getInstance().error(data);
+        }
+    }
+
+    private onExtendsHandler(isExtend: boolean, item: NavigationRoomListItem) {
+        if (this.curRoomItem) {
+            this.curRoomItem.setExtend(false, false);
+        }
+        if (isExtend) {
+            this.curRoomItem = item;
+        } else
+            this.curRoomItem = null;
+        this.mGameScroll.Sort(true);
     }
 }
 
-class RoomListItem extends Phaser.GameObjects.Container {
-    public roomData: any;// op_client.IEditModeRoom
-    private key: string;
-    private dpr: number;
-    private bg: NineSlicePatch;
-    private roomName: BBCodeText;
-    private roomOwnerName: ImageBBCodeValue;
-    private playerCount: ImageBBCodeValue;
-    constructor(scene: Phaser.Scene, key: string, dpr: number, bg: string = "list_bg", titlecolor = "#333333") {
+class NavigationRoomListItem extends Phaser.GameObjects.Container {
+    public dpr: number;
+    public topCon: Phaser.GameObjects.Container;
+    private titleTex: Phaser.GameObjects.Text;
+    private arrow: Phaser.GameObjects.Image;
+    private mExtend: GridLayoutGroup;
+    private send: Handler;
+    private mIsExtend: boolean;
+    private townItems: PicaRoomListItem[] = [];
+    constructor(scene: Phaser.Scene, dpr: number, title: string) {
         super(scene);
-        this.key = key;
         this.dpr = dpr;
-        this.bg = new NineSlicePatch(this.scene, 0, 0, 254 * dpr, 40 * dpr, this.key, bg, {
-            left: 12 * this.dpr,
-            top: 0 * this.dpr,
-            right: 12 * this.dpr,
-            bottom: 0 * this.dpr
+        this.setSize(274 * dpr, 40 * dpr);
+        this.topCon = this.scene.make.container(undefined, false);
+        this.topCon.setSize(274 * dpr, 40 * dpr);
+        // const bg = this.scene.make.image({ key: UIAtlasName.map, frame: "map_town_list_bg" });
+        // bg.displayWidth = this.width;
+        const background = this.scene.make.graphics(undefined, false);
+        background.clear();
+        background.fillStyle(0xffffff, 0.4);
+        background.fillRoundedRect(-this.width * 0.5, -this.height * 0.5, this.width, this.height, 5 * dpr);
+        this.titleTex = this.scene.make.text({ text: title, style: UIHelper.whiteStyle(dpr) }).setOrigin(0, 0.5);
+        this.titleTex.x = -this.width * 0.5 + 5 * dpr;
+        this.arrow = this.scene.make.image({ key: UIAtlasName.map, frame: "map_list_arrow_fold" });
+        this.arrow.x = this.width * 0.5 - 15 * dpr;
+        this.topCon.add([background, this.titleTex, this.arrow]);
+        this.mExtend = new GridLayoutGroup(this.scene, 0, 0, {
+            cellSize: new Phaser.Math.Vector2(this.width * dpr, 68 * this.dpr),
+            space: new Phaser.Math.Vector2(5 * this.dpr, 5 * this.dpr),
+            startAxis: AxisType.Horizontal,
+            constraint: ConstraintType.FixedColumnCount,
+            constraintCount: 1,
+            alignmentType: AlignmentType.UpperLeft
         });
-        this.add(this.bg);
-        this.setSize(this.bg.width, this.bg.height);
-        this.roomName = new BBCodeText(this.scene, -this.width * 0.5 + 10 * dpr, -this.height * 0.5 + 5 * dpr, "", {
-            fontFamily: Font.DEFULT_FONT,
-            fontSize: 12 * dpr,
-            color: titlecolor
-        });
-        this.roomName.setOrigin(0);
-        this.add(this.roomName);
-        this.roomOwnerName = new ImageBBCodeValue(scene, 50 * dpr, 20 * dpr, key, "user", dpr, {
-            fontFamily: Font.DEFULT_FONT,
-            fontSize: 11 * dpr,
-            color: "#333333"
-        });
-        this.roomOwnerName.x = this.roomName.x + this.roomOwnerName.width * 0.5;
-        this.roomOwnerName.y = this.roomName.y + 25 * dpr;
-        this.add(this.roomOwnerName);
-        this.playerCount = new ImageBBCodeValue(scene, 30 * dpr, 20 * dpr, UIAtlasKey.commonKey, "home_persons", dpr, {
-            fontFamily: Font.DEFULT_FONT,
-            fontSize: 12 * dpr,
-            color: "#333333"
-        });
-        this.playerCount.x = this.width * 0.5 - 35 * dpr;
-        this.add(this.playerCount);
+        this.add(this.topCon);
+        this.add(this.mExtend);
     }
-    public setRoomData(data: any) {// op_client.IEditModeRoom
-        this.roomData = data;
-        this.roomName.text = `[b]${data.name}[/b]`;
-        this.playerCount.setText(`[b]${data.playerCount}[/b]`);
-        this.roomOwnerName.setText(data.ownerName);
+    public setListData(datas: any[]) {
+        for (const item of this.townItems) {
+            item.visible = false;
+        }
+        for (let i = 0; i < 20; i++) {
+            let item: PicaRoomListItem;
+            if (i < this.townItems.length) {
+                item = this.townItems[i];
+            } else {
+                item = new PicaRoomListItem(this.scene, UIAtlasName.map, this.dpr);
+                item.name = i + "";
+                this.mExtend.add(item);
+                this.townItems.push(item);
+            }
+            item.visible = true;
+            item.setRoomData(undefined);
+        }
+
+        this.mExtend.Layout();
+        this.closeExtend();
+    }
+    public checkExtendRect(pointer: any) {
+        if (!this.mExtend.visible) return false;
+        const isCheck = Tool.checkPointerContains(this.mExtend, pointer);
+        if (isCheck) {
+            const list = this.mExtend.list;
+            for (const obj of list) {
+                if (Tool.checkPointerContains(obj, pointer)) {
+                    if (this.send) this.send.runWith(["go", "############: " + obj.name]);
+                }
+            }
+        }
+        return isCheck;
+    }
+    public setHandler(send: Handler) {
+        this.send = send;
+    }
+
+    public setExtend(isExtend: boolean, haveCallBack: boolean = true) {
+        if (isExtend) {
+            this.openExtend();
+            if (haveCallBack)
+                if (this.send) this.send.runWith(["extend", { extend: true, item: this }]);
+        } else {
+            this.closeExtend();
+            if (haveCallBack) {
+                if (this.send)
+                    this.send.runWith(["extend", { extend: false, item: this }]);
+            }
+        }
+    }
+
+    get extend() {
+        return this.mIsExtend;
+    }
+
+    private openExtend() {
+        this.mExtend.visible = true;
+        this.height = this.topCon.height + this.mExtend.height + 0 * this.dpr;
+        this.topCon.y = -this.height * 0.5 + this.topCon.height * 0.5;
+        this.mExtend.y = this.topCon.y + this.topCon.height * 0.5 + this.mExtend.height * 0.5 + 5 * this.dpr;
+        this.mIsExtend = true;
+        this.arrow.setFrame("map_list_arrow_unfold");
+        this.titleTex.setColor("#FFF449");
+    }
+
+    private closeExtend() {
+        if (this.mExtend) this.mExtend.visible = false;
+        this.height = this.topCon.height;
+        this.topCon.y = 0;
+        this.mIsExtend = false;
+        this.arrow.setFrame("map_list_arrow_fold");
+        this.titleTex.setColor("#ffffff");
     }
 }

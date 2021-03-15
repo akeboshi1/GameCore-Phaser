@@ -44,7 +44,7 @@ export class PicaElevatorPanel extends BasePanel {
         }
         this.setInteractive();
         this.addListen();
-        this.setElevtorDataList(this.mShowData[0]);
+        this.setElevtorDataList(this.mShowData);
     }
 
     public addListen() {

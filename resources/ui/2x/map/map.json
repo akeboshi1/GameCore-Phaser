@@ -4,8 +4,8 @@
 			"image": "map",
 			"format": "RGBA8888",
 			"size": {
-				"w": 588,
-				"h": 136
+				"w": 785,
+				"h": 155
 			},
 			"scale": 1,
 			"frames": [
@@ -14,20 +14,41 @@
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
-						"w": 41,
+						"w": 545,
 						"h": 134
 					},
 					"spriteSourceSize": {
 						"x": 0,
 						"y": 0,
-						"w": 41,
+						"w": 545,
 						"h": 134
 					},
 					"frame": {
 						"x": 1,
 						"y": 1,
-						"w": 41,
+						"w": 545,
 						"h": 134
+					}
+				},
+				{
+					"filename": "map_list_arrow_unfold",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 21,
+						"h": 14
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 21,
+						"h": 14
+					},
+					"frame": {
+						"x": 1,
+						"y": 137,
+						"w": 21,
+						"h": 14
 					}
 				},
 				{
@@ -45,8 +66,8 @@
 						"h": 1
 					},
 					"frame": {
-						"x": 44,
-						"y": 1,
+						"x": 1,
+						"y": 153,
 						"w": 543,
 						"h": 1
 					}
@@ -66,8 +87,8 @@
 						"h": 6
 					},
 					"frame": {
-						"x": 44,
-						"y": 4,
+						"x": 24,
+						"y": 137,
 						"w": 539,
 						"h": 6
 					}
@@ -87,52 +108,10 @@
 						"h": 6
 					},
 					"frame": {
-						"x": 44,
-						"y": 12,
+						"x": 24,
+						"y": 145,
 						"w": 539,
 						"h": 6
-					}
-				},
-				{
-					"filename": "map_town_list_bg",
-					"rotated": false,
-					"trimmed": false,
-					"sourceSize": {
-						"w": 21,
-						"h": 80
-					},
-					"spriteSourceSize": {
-						"x": 0,
-						"y": 0,
-						"w": 21,
-						"h": 80
-					},
-					"frame": {
-						"x": 44,
-						"y": 20,
-						"w": 21,
-						"h": 80
-					}
-				},
-				{
-					"filename": "map_online_Check",
-					"rotated": false,
-					"trimmed": false,
-					"sourceSize": {
-						"w": 44,
-						"h": 33
-					},
-					"spriteSourceSize": {
-						"x": 0,
-						"y": 0,
-						"w": 44,
-						"h": 33
-					},
-					"frame": {
-						"x": 44,
-						"y": 102,
-						"w": 44,
-						"h": 33
 					}
 				},
 				{
@@ -150,52 +129,31 @@
 						"h": 79
 					},
 					"frame": {
-						"x": 67,
-						"y": 20,
+						"x": 548,
+						"y": 1,
 						"w": 79,
 						"h": 79
 					}
 				},
 				{
-					"filename": "map_list_entrance_name",
+					"filename": "map_party_people",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
-						"w": 117,
-						"h": 30
+						"w": 26,
+						"h": 41
 					},
 					"spriteSourceSize": {
 						"x": 0,
 						"y": 0,
-						"w": 117,
-						"h": 30
+						"w": 26,
+						"h": 41
 					},
 					"frame": {
-						"x": 90,
-						"y": 101,
-						"w": 117,
-						"h": 30
-					}
-				},
-				{
-					"filename": "map_online_undone_frame",
-					"rotated": false,
-					"trimmed": false,
-					"sourceSize": {
-						"w": 79,
-						"h": 79
-					},
-					"spriteSourceSize": {
-						"x": 0,
-						"y": 0,
-						"w": 79,
-						"h": 79
-					},
-					"frame": {
-						"x": 148,
-						"y": 20,
-						"w": 79,
-						"h": 79
+						"x": 548,
+						"y": 82,
+						"w": 26,
+						"h": 41
 					}
 				},
 				{
@@ -213,8 +171,8 @@
 						"h": 24
 					},
 					"frame": {
-						"x": 209,
-						"y": 101,
+						"x": 565,
+						"y": 125,
 						"w": 20,
 						"h": 24
 					}
@@ -234,31 +192,52 @@
 						"h": 3
 					},
 					"frame": {
-						"x": 209,
-						"y": 127,
+						"x": 565,
+						"y": 151,
 						"w": 98,
 						"h": 3
 					}
 				},
 				{
-					"filename": "map_online_mask",
+					"filename": "map_online_Check",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
-						"w": 74,
-						"h": 74
+						"w": 44,
+						"h": 33
 					},
 					"spriteSourceSize": {
 						"x": 0,
 						"y": 0,
-						"w": 74,
-						"h": 74
+						"w": 44,
+						"h": 33
 					},
 					"frame": {
-						"x": 229,
-						"y": 20,
-						"w": 74,
-						"h": 74
+						"x": 576,
+						"y": 82,
+						"w": 44,
+						"h": 33
+					}
+				},
+				{
+					"filename": "map_list_entrance_name",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 117,
+						"h": 30
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 117,
+						"h": 30
+					},
+					"frame": {
+						"x": 587,
+						"y": 117,
+						"w": 117,
+						"h": 30
 					}
 				},
 				{
@@ -276,52 +255,52 @@
 						"h": 21
 					},
 					"frame": {
-						"x": 231,
-						"y": 96,
+						"x": 622,
+						"y": 82,
 						"w": 14,
 						"h": 21
 					}
 				},
 				{
-					"filename": "map_list_arrow_unfold",
+					"filename": "map_online_undone_frame",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
-						"w": 21,
-						"h": 14
+						"w": 79,
+						"h": 79
 					},
 					"spriteSourceSize": {
 						"x": 0,
 						"y": 0,
-						"w": 21,
-						"h": 14
+						"w": 79,
+						"h": 79
 					},
 					"frame": {
-						"x": 247,
-						"y": 96,
-						"w": 21,
-						"h": 14
+						"x": 629,
+						"y": 1,
+						"w": 79,
+						"h": 79
 					}
 				},
 				{
-					"filename": "map_party_people",
+					"filename": "map_online_mask",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
-						"w": 26,
-						"h": 41
+						"w": 74,
+						"h": 74
 					},
 					"spriteSourceSize": {
 						"x": 0,
 						"y": 0,
-						"w": 26,
-						"h": 41
+						"w": 74,
+						"h": 74
 					},
 					"frame": {
-						"x": 305,
-						"y": 20,
-						"w": 26,
-						"h": 41
+						"x": 710,
+						"y": 1,
+						"w": 74,
+						"h": 74
 					}
 				}
 			]
@@ -330,6 +309,6 @@
 	"meta": {
 		"app": "https://www.codeandweb.com/texturepacker",
 		"version": "3.0",
-		"smartupdate": "$TexturePacker:SmartUpdate:90d41096feb28173f0445e870ec4f3cf:3b02fdfc16cde7bd5b444ec1f8fbc484:68463c66230aaeb26021edb8ea8cd9b6$"
+		"smartupdate": "$TexturePacker:SmartUpdate:960027f99b2ed010743e82b2b37c305c:c48a16ba8b5f130099eea2879abdae4c:68463c66230aaeb26021edb8ea8cd9b6$"
 	}
 }
