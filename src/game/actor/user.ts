@@ -174,16 +174,6 @@ export class User extends Player {
             this.setPosition(data.stopPos);
         }
         this.stopMove(data.stopPos);
-        // const pos = this.getPosition();
-        // const position = op_def.PBPoint3f.create();
-        // position.x = pos.x;
-        // position.y = pos.y;
-        // position.z = pos.z;
-        // const packet: PBpacket = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_STOP_SPRITE);
-        // const content: op_virtual_world.IOP_CLIENT_REQ_VIRTUAL_WORLD_STOP_SPRITE = packet.content;
-        // content.movePath = this.mMovePoints;
-        // this.game.connection.send(packet);
-        // Logger.getInstance().debug("send stop move==========>>>", pos);
         if (data.interactiveBoo) {
             this.activeSprite(data.targetId, undefined, data.needBroadcast);
         }
