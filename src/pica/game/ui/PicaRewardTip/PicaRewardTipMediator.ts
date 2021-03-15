@@ -45,7 +45,7 @@ export class PicaRewardTipMediator extends BasicMediator {
     }
     private onUpdateItemBase(content: any) {
         const configMgr = <BaseDataConfigManager>this.game.configManager;
-        const tempitem = configMgr.getItemBase(content.itemId);
+        const tempitem = configMgr.getItemBaseByID(content.itemId);
         if (tempitem) {
             content.display = tempitem["display"];
         }

@@ -386,7 +386,7 @@ export class DecorateManager {
 
     public getBaseIDBySN(sn: string): string {
         const configMgr = <BaseDataConfigManager> this.room.game.configManager;
-        const temp = configMgr.getItemBase(sn);
+        const temp = configMgr.getItemBaseBySN(sn);
         if (temp) return temp.id;
         else {
             Logger.getInstance().error("cannot find data of sn: ", sn);
@@ -400,7 +400,7 @@ export class DecorateManager {
 
     private getBaseData(baseID: string) {
         const configMgr = <BaseDataConfigManager> this.room.game.configManager;
-        return configMgr.getItemBase(baseID);
+        return configMgr.getItemBaseByID(baseID);
     }
 
     private get bagData() {

@@ -1,5 +1,6 @@
 import {BaseConfigData} from "gamecore";
 import {ICountablePackageItem} from "picaStructure";
+import {Logger} from "utils";
 
 export class ItemBaseDataConfig extends BaseConfigData {
     excludes = ["count"];
@@ -9,8 +10,7 @@ export class ItemBaseDataConfig extends BaseConfigData {
         if (this.hasOwnProperty(id)) {
             return this[id];
         } else {
-            // tslint:disable-next-line:no-console
-            // console.error(`道具表未配置ID为:${id}的道具数据`);
+            Logger.getInstance().error(`道具表未配置ID为:${id}的道具数据`);
             return undefined;
         }
     }
@@ -19,8 +19,7 @@ export class ItemBaseDataConfig extends BaseConfigData {
         if (this.snMap.has(sn)) {
             return this.snMap.get(sn);
         } else {
-            // tslint:disable-next-line:no-console
-            // console.error(`道具表未配置sn为:${sn}的道具数据`);
+            Logger.getInstance().error(`道具表未配置sn为:${sn}的道具数据`);
             return undefined;
         }
     }
