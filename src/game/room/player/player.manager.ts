@@ -28,7 +28,7 @@ export class PlayerManager extends PacketHandler implements IElementManager {
             this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_ADD_SPRITE_END, this.addComplete);
             this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_DELETE_SPRITE, this.onRemove);
             this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_ADJUST_POSITION, this.onAdjust);
-            this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_MOVE_SPRITE, this.onMove);
+            this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_MOVE_SPRITE, this.onMove);
             this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_SHOW_EFFECT, this.onShowEffect);
             this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_ONLY_BUBBLE, this.onOnlyBubbleHandler);
             this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_CHAT, this.onShowBubble);
@@ -38,7 +38,7 @@ export class PlayerManager extends PacketHandler implements IElementManager {
             this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_SET_SPRITE_POSITION, this.onSetPosition);
             // this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_MOVE_SPRITE_BY_PATH, this.onMovePath);
             this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_SET_POSITION, this.onSetPosition);
-            this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_STOP, this.onStop);
+            // this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_STOP, this.onStop);
             this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_ACTIVE_SPRITE, this.onActiveSpriteHandler);
             this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_ACTIVE_SPRITE_END, this.onActiveSpriteEndHandler);
             this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_SYNC_ACTOR, this.onSyncActorHandler);
@@ -359,21 +359,20 @@ export class PlayerManager extends PacketHandler implements IElementManager {
     }
 
     private onMove(packet: PBpacket) {
-        const content: op_client.IOP_VIRTUAL_WORLD_REQ_CLIENT_MOVE_SPRITE = packet.content;
-        if (content.moveData) {
-            const moveDataList: op_client.IMoveData[] = content.moveData;
-            const len: number = moveDataList.length;
-            let moveData: op_client.IMoveData;
+        const content: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_MOVE_SPRITE = packet.content;
+        if (content.movePath) {
+            const movePaths: op_def.IMovePath[] = content.movePath;
+            const len: number = movePaths.length;
+            let movePath: op_def.IMovePath;
             let playID: number;
             let player: Player;
             for (let i: number = 0; i < len; i++) {
-                moveData = moveDataList[i];
-                playID = moveData.moveObjectId;
+                movePath = movePaths[i];
+                playID = movePath.id;
                 player = this.get(playID);
                 if (player) {
                     // player.move(moveData);
-                    const { x, y } = moveData.destinationPoint3f;
-                    player.move([{ x, y }]);
+                    player.move(movePath.movePos);
                 }
             }
         }
@@ -444,37 +443,6 @@ export class PlayerManager extends PacketHandler implements IElementManager {
             }
         }
     }
-
-    private onStop(packet: PBpacket) {
-        const content: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_STOP = packet.content;
-        const sprites = content.sprites;
-        let player: Player = null;
-        for (const sprite of sprites) {
-            if (sprite.id === this.mActor.id) {
-                this.mActor.move([{ x: sprite.point3f.x, y: sprite.point3f.y }]);
-                continue;
-            }
-            player = this.get(sprite.id);
-            if (player) {
-                // player.updateModel(sprite);
-                // player.stopMove();
-                const { point3f, direction } = sprite;
-                player.stopAt({ x: point3f.x, y: point3f.y, stopDir: direction });
-            }
-        }
-    }
-
-    // private onMovePath(packet: PBpacket) {
-    //     let content: op_client.IOP_VIRTUAL_WORLD_REQ_CLIENT_MOVE_SPRITE_BY_PATH = packet.content;
-    //     if (content.nodeType !== NodeType.CharacterNodeType) {
-    //         return;
-    //     }
-    //     const play = this.get(content.id);
-    //     if (play) {
-    //         play.movePath(content);
-    //     }
-    //     content = null;
-    // }
 
     private onQueryElementHandler(id: number) {
         const ele = this.get(id);

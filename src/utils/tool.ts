@@ -1,6 +1,26 @@
-import {Pos} from "./pos";
+import { Pos } from "./pos";
 
 export class Tool {
+
+    /**
+     * 判断两个数组是否相同
+     * @param a
+     * @param b
+     * @returns
+     */
+    public static equalArr(a: any[], b: any[]): boolean {
+        if (a.length !== b.length) {
+            return false;
+        }
+        // 循环遍历数组的值进行比较
+        for (let i = 0; i < a.length; i++) {
+            if (a[i] !== b[i]) {
+                return false;
+            }
+        }
+        return true;
+    }
+
     /**
      * scene之间坐标转换
      * @param fromScene 当前所在scene

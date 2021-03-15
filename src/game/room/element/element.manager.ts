@@ -67,7 +67,7 @@ export class ElementManager extends PacketHandler implements IElementManager {
             this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_ADD_SPRITE, this.onAdd);
             this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_ADD_SPRITE_END, this.addComplete);
             this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_DELETE_SPRITE, this.onRemove);
-            this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_MOVE_SPRITE, this.onMove);
+            this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_MOVE_SPRITE, this.onMove);
             this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_ADJUST_POSITION, this.onAdjust);
             this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_SYNC_SPRITE, this.onSync);
             this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_ONLY_BUBBLE, this.onShowBubble);
@@ -472,7 +472,6 @@ export class ElementManager extends PacketHandler implements IElementManager {
                 this.mRoom.game.physicalPeer.updateAnimations(sprite);
                 return displayInfo;
             }
-            // Logger.getInstance().error("checkdisplay error====>", sprite);
         }
         return sprite.displayInfo;
     }
@@ -551,25 +550,21 @@ export class ElementManager extends PacketHandler implements IElementManager {
     }
 
     protected onMove(packet: PBpacket) {
-        const content: op_client.IOP_VIRTUAL_WORLD_REQ_CLIENT_MOVE_SPRITE = packet.content;
-        if (content.moveData) {
-            const moveDataList: op_client.IMoveData[] = content.moveData;
+        const content: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_MOVE_SPRITE = packet.content;
+        if (content.movePath) {
+            const moveDataList: op_def.IMovePath[] = content.movePath;
             const len: number = moveDataList.length;
-            const type: op_def.NodeType = content.nodeType || null;
-            let moveData: op_client.IMoveData;
+            let moveData: op_def.IMovePath;
             let elementID: number;
             let element: Element;
             for (let i: number = 0; i < len; i++) {
                 moveData = moveDataList[i];
-                elementID = moveData.moveObjectId;
+                elementID = moveData.id;
                 element = this.get(elementID);
-                // Logger.getInstance().debug(player.x + "," + player.y + ":" + moveData.destinationPoint3f.x + "," + moveData.destinationPoint3f.y + ":" + moveData.timeSpan);
                 if (!element) {
                     continue;
                 }
-                const { x, y } = moveData.destinationPoint3f;
-                element.move([{ x, y }]);
-                // element.move(moveData);
+                element.move(moveData.movePos);
             }
         }
     }
