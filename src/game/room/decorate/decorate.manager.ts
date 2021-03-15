@@ -390,6 +390,10 @@ export class DecorateManager {
         if (temp) return temp.id;
         else {
             Logger.getInstance().error("cannot find data of sn: ", sn);
+            const tempdata = {
+                text: [{ text: "cannot find data of sn: " + sn, node: undefined }]
+            };
+            this.room.game.showMediator(ModuleName.PICANOTICE_NAME, true, tempdata);
             return "";
         }
     }
