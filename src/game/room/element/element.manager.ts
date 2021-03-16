@@ -423,6 +423,15 @@ export class ElementManager extends PacketHandler implements IElementManager {
         if (type !== NodeType.ElementNodeType) {
             return;
         }
+
+        // test debug
+        // for (const obj of objs) {
+        //     if (obj.id === 680015589) {
+        //         Logger.getInstance().log("#decorate wrong pos: ", obj);
+        //         break;
+        //     }
+        // }
+
         this.addSpritesToCache(objs);
     }
 
