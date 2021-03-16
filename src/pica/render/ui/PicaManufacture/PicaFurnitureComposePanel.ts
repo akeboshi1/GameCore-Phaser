@@ -1,5 +1,5 @@
 import { NineSliceButton, GameGridTable, GameScroller, Button, BBCodeText, NineSlicePatch, ClickEvent } from "apowophaserui";
-import { ButtonEventDispatcher, CommonBackground, DynamicImage, ImageValue, TextButton, UiManager } from "gamecoreRender";
+import { ButtonEventDispatcher, CommonBackground, DynamicImage, ImageValue, Render, TextButton, UiManager } from "gamecoreRender";
 import { ItemButton } from "picaRender";
 import { UIAtlasName } from "picaRes";
 import { ModuleName } from "structure";
@@ -7,8 +7,7 @@ import { Font, Handler, i18n, UIHelper, Url } from "utils";
 import { op_client, op_def } from "pixelpai_proto";
 import { PicaBasePanel } from "../pica.base.panel";
 import { ICountablePackageItem } from "picaStructure";
-export class PicaFurnitureComposePanel extends PicaBasePanel {
-  private mCloseBtn: ButtonEventDispatcher;
+export class PicaFurnitureComposePanel extends Phaser.GameObjects.Container {
   private mBackground: CommonBackground;
   private topBackground: Phaser.GameObjects.Image;
   private mCategoriesBar: Phaser.GameObjects.Graphics;
@@ -25,16 +24,22 @@ export class PicaFurnitureComposePanel extends PicaBasePanel {
   private starCount: number;
   private mSelectedItemData: op_client.CountablePackageItem[] = [];
   private subCategoryType: number = 1;
-  constructor(uiManager: UiManager) {
-    super(uiManager);
-    this.atlasNames = [UIAtlasName.uicommon, UIAtlasName.effectcommon];
-    this.key = ModuleName.PICAFURNITURECOMPOSE_NAME;
+  private dpr: number;
+  private zoom: number;
+  private recastData: any;
+  private key: string;
+  constructor(scene: Phaser.Scene, protected render: Render, width: number, height: number, dpr: number, zoom: number) {
+    super(scene);
+    this.setSize(width, height);
+    this.dpr = dpr;
+    this.zoom = zoom;
+    this.key = ModuleName.PICAMANUFACTURE_NAME;
+    this.init();
   }
 
   resize(w: number, h: number) {
-    const width = this.scaleWidth;
-    const height = this.scaleHeight;
-    super.resize(width, height);
+    const width = w;
+    const height = h;
     this.mBackground.x = width * 0.5;
     this.mBackground.y = height * 0.5;
     this.topBackground.x = width * 0.5;
@@ -117,7 +122,6 @@ export class PicaFurnitureComposePanel extends PicaBasePanel {
 
   public setStarData(value: number) {
     this.starCount = value;
-    if (!this.mInitialized) return;
     this.starvalue.setText(value + "");
   }
 
@@ -138,18 +142,6 @@ export class PicaFurnitureComposePanel extends PicaBasePanel {
 
   }
 
-  public addListen() {
-    if (!this.mInitialized) return;
-    this.mCloseBtn.on(ClickEvent.Tap, this.onCloseHandler, this);
-    this.composeBtn.on(ClickEvent.Tap, this.onComposeBtnHandler, this);
-  }
-
-  public removeListen() {
-    if (!this.mInitialized) return;
-    this.mCloseBtn.off(ClickEvent.Tap, this.onCloseHandler, this);
-    this.composeBtn.off(ClickEvent.Tap, this.onComposeBtnHandler, this);
-  }
-
   destroy() {
     if (this.mCategoryScroll) {
       this.mCategoryScroll.destroy();
@@ -164,15 +156,9 @@ export class PicaFurnitureComposePanel extends PicaBasePanel {
     this.queryPackege(update);
   }
 
-  protected onInitialized() {
-    if (this.starCount) {
-      this.starvalue.setText(this.starCount + "");
-    }
-  }
-
   protected init() {
-    const width = this.scaleWidth;
-    const height = this.scaleHeight;
+    const width = this.width;
+    const height = this.height;
     this.mBackground = new CommonBackground(this.scene, 0, 0, width, height, UIAtlasName.effectcommon, "synthetic_bg", 0xc97af3);
     this.topBackground = this.scene.make.image({ key: UIAtlasName.effectcommon, frame: "synthetic_bg_stripe" });
     this.mCategoryCon = this.scene.make.container(undefined, false);
@@ -180,17 +166,6 @@ export class PicaFurnitureComposePanel extends PicaBasePanel {
     this.mCategoryCon.y = height - this.mCategoryCon.height;
     this.mCategoriesBar = this.scene.make.graphics(undefined, false);
     this.mBackground.setInteractive(new Phaser.Geom.Rectangle(0, 0, width, height), Phaser.Geom.Rectangle.Contains);
-    this.mCloseBtn = new ButtonEventDispatcher(this.scene, 0, 0);
-    this.mCloseBtn.setSize(100 * this.dpr, 40 * this.dpr);
-    this.mCloseBtn.enable = true;
-    this.mCloseBtn.x = this.mCloseBtn.width * 0.5 + 10 * this.dpr;
-    this.mCloseBtn.y = 45 * this.dpr;
-    const closeimg = this.scene.make.image({ key: UIAtlasName.uicommon, frame: "back_arrow" });
-    closeimg.x = -this.mCloseBtn.width * 0.5 + closeimg.width * 0.5 + 10 * this.dpr;
-    const titleTex = this.scene.make.text({ text: "", style: UIHelper.whiteStyle(this.dpr, 18) }).setOrigin(0, 0.5);
-    titleTex.text = i18n.t("compose.title");
-    titleTex.x = closeimg.x + closeimg.width * 0.5 + 10 * this.dpr;
-    this.mCloseBtn.add([closeimg, titleTex]);
     this.furiAnimation = new FuriComposeAnimation(this.scene, this.dpr, this.scale);
     this.furiAnimation.setHandler(new Handler(this, this.onFuriComposeAnimationHandler));
     const starbg = new NineSlicePatch(this.scene, 0, -this.dpr, 80 * this.dpr, 28 * this.dpr, UIAtlasName.uicommon, "home_assets_bg", {
@@ -209,12 +184,12 @@ export class PicaFurnitureComposePanel extends PicaBasePanel {
     this.starCountCon.setSize(starbg.width, starbg.height);
     this.starCountCon.add([starbg, this.starvalue]);
     this.starCountCon.x = width - 20 * this.dpr;
-    this.starCountCon.y = this.mCloseBtn.y;
+    this.starCountCon.y = -this.height * 0.5 + 20 * this.dpr;
 
     const btnwidth = 100 * this.dpr, btnHeight = 40 * this.dpr;
     const btnPosX = width - btnwidth / 2 - 20 * this.dpr, btnPosY = this.mCategoryCon.y - 25 * this.dpr;
     this.composeBtn = this.createNineButton(btnPosX + 100 * this.dpr, btnPosY, btnwidth, btnHeight, UIAtlasName.uicommon, "yellow_btn", i18n.t("compose.title"), "#996600");
-
+    this.composeBtn.on(ClickEvent.Tap, this.onComposeBtnHandler, this);
     this.mCategoryScroll = new GameScroller(this.scene, {
       x: 0,
       y: 60 * this.dpr,
@@ -231,7 +206,7 @@ export class PicaFurnitureComposePanel extends PicaBasePanel {
     });
     this.mPropGridBg = this.scene.make.graphics(undefined, false);
     this.mCategoryCon.add([this.mCategoriesBar, this.mCategoryScroll]);
-    this.add([this.mBackground, this.topBackground, this.mPropGridBg, this.mCloseBtn, this.furiAnimation, this.starCountCon, this.mCategoryCon, this.composeBtn]);
+    this.add([this.mBackground, this.topBackground, this.mPropGridBg, this.furiAnimation, this.starCountCon, this.mCategoryCon, this.composeBtn]);
 
     const propFrame = this.scene.textures.getFrame(UIAtlasName.uicommon, "bag_icon_common_bg");
     const capW = (propFrame.width) + 9 * this.dpr;
@@ -270,8 +245,7 @@ export class PicaFurnitureComposePanel extends PicaBasePanel {
       }
     });
     this.add(this.mPropGrid);
-    this.resize(0, 0);
-    super.init();
+    this.resize(this.width, this.height);
   }
 
   private createNineButton(x: number, y: number, width: number, height: number, key: string, frame: string, text?: string, color?: string) {
@@ -306,10 +280,6 @@ export class PicaFurnitureComposePanel extends PicaBasePanel {
     this.mPropGrid.setT(0);
     this.furiAnimation.clearItemDatas(true);
     this.furiAnimation.setStarType(this.subCategoryType);
-  }
-
-  private onCloseHandler() {
-    this.render.renderEmitter(this.key + "_close");
   }
 
   private queryPackege(update) {
