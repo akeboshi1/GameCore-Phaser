@@ -431,10 +431,11 @@ class PicaExploreLogGuideText extends Phaser.GameObjects.Container {
         this.title.setFontStyle("bold");
         this.title.text = i18n.t("explore.exploretask");
         this.title.x = 10 * dpr;
-        this.title.y = this.title.height * 0.5 + 10 * dpr;
+        this.title.y = -height * 0.5 + 15 * dpr;
         this.close = new Button(scene, UIAtlasName.explorelog, "checkpoint_end_aims_closed", "checkpoint_end_aims_closed");
         this.close.x = 132 * dpr;
         this.close.y = this.title.y;
+        this.close.visible = false;
         this.add([this.background, this.title, this.close]);
     }
 
@@ -450,6 +451,7 @@ class PicaExploreLogGuideText extends Phaser.GameObjects.Container {
             } else {
                 item = new ImageValue(this.scene, 132 * this.dpr, 13 * this.dpr, UIAtlasName.explorelog, "checkpoint_end_aims_undone", this.dpr);
                 item.setLayout(1);
+                this.add(item);
                 this.imageValues.push(item);
             }
             const finish = temp.progress === temp.totalSteps;
@@ -481,5 +483,6 @@ class PicaExploreLogGuideText extends Phaser.GameObjects.Container {
         this.background.clear();
         this.background.fillStyle(0, 0.3);
         this.background.fillRoundedRect(0, 0, mixWidth, mixHeight, { tl: 0, tr: 5 * this.dpr, br: 5 * this.dpr, bl: 0 });
+        this.close.x = mixWidth;
     }
 }

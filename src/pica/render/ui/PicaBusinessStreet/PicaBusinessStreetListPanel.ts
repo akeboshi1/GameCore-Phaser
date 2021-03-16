@@ -105,7 +105,7 @@ export class PicaBusinessStreetListPanel extends Phaser.GameObjects.Container {
         this.secondaryPanel.createGrideTable(0, 13 * this.dpr, this.width - 30 * this.dpr, 40 * this.dpr, 65 * this.dpr, 40 * this.dpr, (cell, cellContainer) => {
             const item = cell.item;
             if (!cellContainer) {
-                cellContainer = new TextButton(this.scene, this.render, this.dpr, this.zoom);
+                cellContainer = new TextButton(this.scene, this.dpr, this.zoom);
                 cellContainer.setFontSize(13 * this.dpr);
             }
             const itemData = cellContainer.getData("itemData");

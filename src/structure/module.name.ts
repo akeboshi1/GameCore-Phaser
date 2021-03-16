@@ -67,6 +67,7 @@ export class ModuleName {
     public static PICAITEMTIPSPANEL_NAME: string = "PicaItemTipsPanel";
     public static PICAFURNITURECOMPOSE_NAME = "PicaFurnitureCompose";
     public static PICARECASTE_NAME: string = "PicaRecaste";
+    public static PICAMANUFACTURE_NAME: string = "PicaManufacture";
     public static PICAROAM_NAME = "PicaRoam";
     public static PICAEXPLORELOG_NAME = "PicaExploreLog";
     public static PICAEXPLORELIST_NAME = "PicaExploreList";

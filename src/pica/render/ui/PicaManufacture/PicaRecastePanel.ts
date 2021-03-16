@@ -6,8 +6,7 @@ import { ModuleName } from "structure";
 import { Font, Handler, i18n, UIHelper, Url } from "utils";
 import { op_client, op_def, op_pkt_def } from "pixelpai_proto";
 import { PicaBasePanel } from "../pica.base.panel";
-export class PicaRecastePanel extends PicaBasePanel {
-  private mCloseBtn: ButtonEventDispatcher;
+export class PicaRecastePanel extends Phaser.GameObjects.Container {
   private mBackground: CommonBackground;
   private mCategoriesBar: Phaser.GameObjects.Graphics;
   private mCategoryCon: Phaser.GameObjects.Container;
@@ -27,18 +26,22 @@ export class PicaRecastePanel extends PicaBasePanel {
   private mSelectedItem: ItemButton;
   private mRecasteItemData: op_client.ICountablePackageItem;
   private labelTipTex: Phaser.GameObjects.Text;
-  private tempData: any = {};
-  constructor(uiManager: UiManager) {
-    super(uiManager);
-    this.atlasNames = [UIAtlasName.uicommon];
-    this.textures = [{ atlasName: "Recast_aims_icon_bg", folder: "texture" }, { atlasName: "Recast_bg_texture", folder: "texture" }];
-    this.key = ModuleName.PICARECASTE_NAME;
+  private dpr: number;
+  private zoom: number;
+  private recastData: any;
+  private key: string;
+  constructor(scene: Phaser.Scene, protected render: Render, width: number, height: number, dpr: number, zoom: number) {
+    super(scene);
+    this.setSize(width, height);
+    this.dpr = dpr;
+    this.zoom = zoom;
+    this.key = ModuleName.PICAMANUFACTURE_NAME;
   }
 
   resize(w: number, h: number) {
-    const width = this.scaleWidth;
-    const height = this.scaleHeight;
-    super.resize(width, height);
+    const width = w;
+    const height = h;
+    this.setSize(w, h);
     this.mBackground.x = width * 0.5;
     this.mBackground.y = height * 0.5;
     this.mTopBg.x = width * 0.5;
@@ -78,8 +81,7 @@ export class PicaRecastePanel extends PicaBasePanel {
     }
   }
   setCategories(subcategorys: any[]) {// op_def.IStrPair
-    this.tempData.subcategory = subcategorys;
-    if (!this.mInitialized || !subcategorys) return;
+    if (!subcategorys) return;
     this.mPreCategoryBtn = null;
     this.mSelectedCategeories = null;
     const capW = 60 * this.dpr;
@@ -107,11 +109,6 @@ export class PicaRecastePanel extends PicaBasePanel {
     if (items.length > 1) this.onSelectSubCategoryHandler(items[0]);
   }
 
-  onShow() {
-    this.setStarData(this.starCount);
-    this.setRecasteItemData(this.mShowData);
-    this.setCategories(this.tempData.subcategory);
-  }
   public setProp(props: any[]) {// op_client.ICountablePackageItem
     props = !props ? [] : props;
     const len = props.length;
@@ -123,25 +120,12 @@ export class PicaRecastePanel extends PicaBasePanel {
 
   public setStarData(value: number) {
     this.starCount = value;
-    if (!this.mInitialized) return;
     this.starvalue.setText(value + "");
   }
 
   public setRecasteItemData(data: op_client.ICountablePackageItem) {
     this.mRecasteItemData = data;
     this.displayPanel.setRecasteItemData(data);
-  }
-
-  public addListen() {
-    if (!this.mInitialized) return;
-    this.mCloseBtn.on(ClickEvent.Tap, this.onCloseHandler, this);
-    this.confirmBtn.on(ClickEvent.Tap, this.onConfirmBtnHandler, this);
-  }
-
-  public removeListen() {
-    if (!this.mInitialized) return;
-    this.mCloseBtn.off(ClickEvent.Tap, this.onCloseHandler, this);
-    this.confirmBtn.off(ClickEvent.Tap, this.onConfirmBtnHandler, this);
   }
 
   destroy() {
@@ -166,8 +150,8 @@ export class PicaRecastePanel extends PicaBasePanel {
   }
 
   protected init() {
-    const width = this.scaleWidth;
-    const height = this.scaleHeight;
+    const width = this.width;
+    const height = this.height;
     this.mBackground = new CommonBackground(this.scene, 0, 0, width, height);
     this.mTopBg = this.scene.make.image({
       key: "Recast_bg_texture"
@@ -182,18 +166,6 @@ export class PicaRecastePanel extends PicaBasePanel {
     this.mCategoriesBar = this.scene.make.graphics(undefined, false);
     this.mCategoryCon.add(this.mCategoriesBar);
     this.mBackground.setInteractive(new Phaser.Geom.Rectangle(0, 0, width, height), Phaser.Geom.Rectangle.Contains);
-    this.mCloseBtn = new ButtonEventDispatcher(this.scene, 0, 0);
-    this.mCloseBtn.setSize(100 * this.dpr, 40 * this.dpr);
-    this.mCloseBtn.enable = true;
-    this.mCloseBtn.x = this.mCloseBtn.width * 0.5 + 10 * this.dpr;
-    this.mCloseBtn.y = 45 * this.dpr;
-    const closeimg = this.scene.make.image({ key: UIAtlasName.uicommon, frame: "back_arrow" });
-    closeimg.x = -this.mCloseBtn.width * 0.5 + closeimg.width * 0.5 + 10 * this.dpr;
-    const titleTex = this.scene.make.text({ text: "", style: UIHelper.whiteStyle(this.dpr, 18) }).setOrigin(0, 0.5);
-    titleTex.setFontStyle("bold");
-    titleTex.text = i18n.t("furni_bag.recaste");
-    titleTex.x = closeimg.x + closeimg.width * 0.5 + 10 * this.dpr;
-    this.mCloseBtn.add([closeimg, titleTex]);
 
     const starbg = new NineSlicePatch(this.scene, 0, -this.dpr, 80 * this.dpr, 28 * this.dpr, UIAtlasName.uicommon, "home_assets_bg", {
       left: 17 * this.dpr,
@@ -211,7 +183,7 @@ export class PicaRecastePanel extends PicaBasePanel {
     this.starCountCon.setSize(starbg.width, starbg.height);
     this.starCountCon.add([starbg, this.starvalue]);
     this.starCountCon.x = width - 20 * this.dpr;
-    this.starCountCon.y = this.mCloseBtn.y;
+    this.starCountCon.y = -this.height * 0.5 + 20 * this.dpr;
 
     const btnwidth = 100 * this.dpr, btnHeight = 40 * this.dpr;
     const btnPosX = width - btnwidth / 2 - 20 * this.dpr, btnPosY = this.mCategoryCon.y - 25 * this.dpr;
@@ -233,7 +205,7 @@ export class PicaRecastePanel extends PicaBasePanel {
     });
     this.mPropGridBg = this.scene.make.graphics(undefined, false);
     this.mCategoryCon.add(this.mCategoryScroll);
-    this.add([this.mBackground, this.mPropGridBg, this.mTopBg, this.displayPanel, this.mCloseBtn, this.starCountCon, this.mCategoryCon, this.confirmBtn, this.labelTipTex]);
+    this.add([this.mBackground, this.mPropGridBg, this.mTopBg, this.displayPanel, this.starCountCon, this.mCategoryCon, this.confirmBtn, this.labelTipTex]);
     const propFrame = this.scene.textures.getFrame(UIAtlasName.uicommon, "bag_icon_common_bg");
     const capW = (propFrame.width) + 9 * this.dpr;
     const capH = (propFrame.height) + 9 * this.dpr;
@@ -276,7 +248,6 @@ export class PicaRecastePanel extends PicaBasePanel {
     });
     this.add(this.mPropGrid);
     this.resize(0, 0);
-    super.init();
   }
 
   private createNineButton(x: number, y: number, width: number, height: number, key: string, frame: string, text?: string, color?: string) {

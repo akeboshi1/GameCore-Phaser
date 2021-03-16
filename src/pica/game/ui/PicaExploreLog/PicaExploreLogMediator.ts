@@ -1,5 +1,5 @@
 import { op_client } from "pixelpai_proto";
-import { BasicMediator, Game } from "gamecore";
+import { BasicMediator, CacheDataManager, DataMgrType, Game } from "gamecore";
 import { EventType, ModuleName } from "structure";
 import { PicaExploreLog } from "./PicaExploreLog";
 import { BaseDataConfigManager } from "picaWorker";
@@ -43,6 +43,7 @@ export class PicaExploreLogMediator extends BasicMediator {
     protected panelInit() {
         super.panelInit();
         if (this.mShowData) this.onEXPLORE_REQUIRE_LIST(this.mShowData);
+        if (this.cacheMgr.guidText) this.onSHOW_GUIDE_TEXT(this.cacheMgr.guidText);
     }
 
     private onHidePanel() {
@@ -88,5 +89,10 @@ export class PicaExploreLogMediator extends BasicMediator {
     }
     private onSHOW_GUIDE_TEXT(content: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_ROOM_SHOW_GUIDE_TEXT) {
         if (this.mView) this.mView.setExploreGuideTexts(content);
+    }
+
+    private get cacheMgr() {
+        const cacheMgr = this.game.dataManager.getDataMgr<CacheDataManager>(DataMgrType.CacheMgr);
+        return cacheMgr;
     }
 }

@@ -81,10 +81,10 @@ export class MainUIScene extends RoomScene {
   getKey(): string {
     return (this.sys.config as Phaser.Types.Scenes.SettingsConfig).key;
   }
-  preload() {
-    this.loadRaomVideos();
-    super.preload();
-  }
+  // preload() {
+  //   this.loadRaomVideos();
+  //   super.preload();
+  // }
   protected onPointerDownHandler(pointer: Phaser.Input.Pointer, currentlyOver: Phaser.GameObjects.GameObject[]) {
     this.render.emitter.emit("pointerScene", SceneName.MAINUI_SCENE, currentlyOver);
   }
