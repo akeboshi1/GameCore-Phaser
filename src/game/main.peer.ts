@@ -774,10 +774,5 @@ export class MainPeer extends RPCPeer {
     public isPlatform_PC() {
         return this.mConfig && this.mConfig.platform && this.mConfig.platform === "pc";
     }
-
-    @Export()
-    public hidden() {
-        if (this.game) this.game.hidden();
-    }
 }
 const context: MainPeer = new MainPeer();

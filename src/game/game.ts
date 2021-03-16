@@ -88,6 +88,10 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
         this.peer.state = GameState.InitWorld;
         this.initGame();
         this.hasClear = false;
+        this.login();
+    }
+
+    public startConnect() {
         const gateway: ServerAddress = this.mConfig.server_addr;
         if (gateway) {
             // connect to game server.
@@ -104,7 +108,9 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
         if (!this.mHttpClock) this.mHttpClock = new HttpClock(this);
         Logger.getInstance().info(`enterVirtualWorld`);
         this.connect.connect = true;
-        this.enterVirtualWorld();
+        this.loginEnterWorld();
+        if (this.mConfig.hasGameLoaded) this.renderPeer.gameLoadedCallBack();
+        // this.enterVirtualWorld();
         // this.login();
     }
 
@@ -114,7 +120,7 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
         if (this.mConfig.hasConnectFail) {
             return this.mainPeer.render.connectFail();
         } else {
-            if (this.peer.state !== GameState.Hidden) this.renderPeer.showAlertReconnect("网络不稳定,请刷新网页");
+            this.renderPeer.showAlertReconnect("网络不稳定,请刷新网页");
             // if (this.mReconnect > 2) {
             //     this.renderPeer.showAlertReconnect("网络不稳定,请刷新网页");
             //     // this.onRefreshConnect();
@@ -128,16 +134,6 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
             // });
             // }
         }
-    }
-
-    public async hidden() {
-        this.peer.state = GameState.Hidden;
-        // TODO
-        // if (this.connection) this.connection.closeConnect();
-        // await this.renderPeer.clearAccount();
-        // const account = await this.renderPeer.getAccount();
-        // Logger.getInstance().log("account: ", account);
-        // this._createAnotherGame(account.gameId, account.virtualWorldId, account.sceneID, account.loc, account.spawnPointId, account.worldId);
     }
 
     public onRefreshConnect() {
@@ -430,7 +426,6 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
         // const token = await this.peer.render.getLocalStorage("token");
         const account = await this.peer.render.getAccount();
         Logger.getInstance().log("account: ", account);
-        if (this.mConfig.hasGameLoaded) this.renderPeer.gameLoadedCallBack();
         if (account && account.accountData) {
             this.loginEnterWorld();
         } else {
@@ -640,11 +635,7 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
             // this.mConfig.virtual_world_id = virtualworldId;
             this.createManager();
             this.addPacketListener();
-            const gateway: ServerAddress = this.mConfig.server_addr;
-            if (gateway) {
-                // connect to game server.
-                this.connect.startConnect(gateway);
-            }
+            this.startConnect();
             this.mClock = new Clock(this.connect, this.peer);
             // setTimeout(() => {
             this.mainPeer.render.createAnotherGame(gameId, virtualworldId, sceneId, loc ? loc.x : 0, loc ? loc.y : 0, loc ? loc.z : 0, spawnPointId, worldId);
@@ -667,10 +658,7 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
             this.createManager();
             this.removePacketListener();
             this.addPacketListener();
-            const gateway: ServerAddress = this.mConfig.server_addr;
-            if (gateway) {
-                this.connect.startConnect(gateway);
-            }
+            this.startConnect();
             this.mClock = new Clock(this.connect, this.peer);
             // 告知render进入其他game
             this.mainPeer.render.createAnotherGame(gameId, virtualworldId, sceneId, loc ? loc.x : 0, loc ? loc.y : 0, loc ? loc.z : 0, spawnPointId, worldId);

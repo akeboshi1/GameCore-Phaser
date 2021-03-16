@@ -70,6 +70,10 @@ export class DecorateManager {
             result.id = sprite.id;
             result.sn = sprite.sn;
             const baseID = this.getBaseIDBySN(sprite.sn);
+            if (baseID === "") {
+                Logger.getInstance().error("can not find data from config : ", sprite);
+                return;
+            }
             for (const act of acts) {
                 switch (act.type) {
                     case DecorateActionType.Add:
@@ -191,6 +195,10 @@ export class DecorateManager {
 
         // update decorate panel
         const baseID = this.getBaseIDBySN(element.model.sn);
+        if (baseID === "") {
+            Logger.getInstance().error("can not find data from config : ", element.model);
+            return;
+        }
         this.mRoom.game.emitter.emit(MessageType.DECORATE_SELECTE_ELEMENT, baseID);
     }
 
@@ -389,7 +397,7 @@ export class DecorateManager {
         const temp = configMgr.getItemBaseBySN(sn);
         if (temp) return temp.id;
         else {
-            Logger.getInstance().error("cannot find data of sn: ", sn);
+            // Logger.getInstance().error("cannot find data of sn: ", sn);
             const tempdata = {
                 text: [{ text: "cannot find data of sn: " + sn, node: undefined }]
             };
@@ -562,6 +570,10 @@ class DecorateAction {
         }
 
         const baseID = mng.getBaseIDBySN(this.target.sn);
+        if (baseID === "") {
+            Logger.getInstance().error("can not find data from config : ", this.target);
+            return;
+        }
         const newCount = mng.setBagCount(baseID, -1);
 
         mng.room.game.emitter.emit(MessageType.DECORATE_UPDATE_ELEMENT_COUNT, baseID, newCount);
@@ -571,6 +583,10 @@ class DecorateAction {
         mng.room.elementManager.remove(this.target.id);
 
         const baseID = mng.getBaseIDBySN(this.target.sn);
+        if (baseID === "") {
+            Logger.getInstance().error("can not find data from config : ", this.target);
+            return;
+        }
         const newCount = mng.setBagCount(baseID, 1);
 
         mng.room.game.emitter.emit(MessageType.DECORATE_UPDATE_ELEMENT_COUNT, baseID, newCount);

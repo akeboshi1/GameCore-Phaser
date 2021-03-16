@@ -2,7 +2,7 @@ import "tooqinggamephaser";
 import "dragonBones";
 import { Game } from "tooqinggamephaser";
 import { Export, RPCPeer, webworker_rpc } from "webworker-rpc";
-import { i18n, initLocales, IPos, IPosition45Obj, Logger, Pos, Size, UiUtils, Url } from "utils";
+import { i18n, initLocales, IPos, IPosition45Obj, Logger, Pos, Size, UiUtils, Url, ValueResolver } from "utils";
 import { PBpacket } from "net-socket-packet";
 import * as protos from "pixelpai_proto";
 import { op_client } from "pixelpai_proto";
@@ -111,6 +111,7 @@ export class Render extends RPCPeer implements GameMain, IRender {
     private mConnectFailFunc: Function;
     private mGameCreatedFunc: Function;
     private mGameLoadedFunc: Function;
+    private mWorkerDestroyMap: Map<string, ValueResolver<null>> = new Map();
     private mCacheTarget: any;
     constructor(config: ILauncherConfig, callBack?: Function) {
         super(RENDER_PEER);
@@ -439,9 +440,20 @@ export class Render extends RPCPeer implements GameMain, IRender {
     }
 
     hidden() {
-        if (this.game) {
-            this.mainPeer.hidden();
-        }
+        this.destroy(false).then(() => {
+            this.linkTo(MAIN_WORKER, MAIN_WORKER_URL).onceReady(() => {
+                this.mMainPeer = this.remote[MAIN_WORKER].MainPeer;
+                this.mMainPeer.updateFps();
+                this.createGame();
+                Logger.getInstance().debug("worker onReady");
+            });
+            this.linkTo(PHYSICAL_WORKER, PHYSICAL_WORKER_URL).onceReady(() => {
+                this.mPhysicalPeer = this.remote[PHYSICAL_WORKER].PhysicalPeer;
+                this.mPhysicalPeer.setScaleRatio(Math.ceil(this.mConfig.devicePixelRatio || UiUtils.baseDpr));
+                this.mPhysicalPeer.start();
+                Logger.getInstance().debug("Physcialworker onReady");
+            });
+        });
     }
 
     startFullscreen(): void {
@@ -484,33 +496,56 @@ export class Render extends RPCPeer implements GameMain, IRender {
         this.mDisplayManager.update(time, delta);
     }
 
-    destroy(): Promise<void> {
-        this.mainPeer.destroy();
-        this.physicalPeer.destroy();
+    destroyWorker(workers: string[]): Promise<any> {
+        const arr = [];
+        for (const w of workers) {
+            const valuePromse = new ValueResolver<null>();
+            const p = valuePromse.promise(() => {
+                // if (this.remote[w]) this.remote[w].destroy();
+                const worker = this.remote[w];
+                for (const key in worker) {
+                    if (Object.prototype.hasOwnProperty.call(worker, key)) {
+                        const element = worker[key];
+                        element.destroy();
+                    }
+                }
+            });
+            arr.push(p);
+            this.mWorkerDestroyMap.set(w, valuePromse);
+        }
+        return Promise.all(arr);
+    }
+
+    destroy(destroyPeer: boolean = true): Promise<void> {
+
+        // this.mainPeer.destroy();
+        // this.physicalPeer.destroy();
         return new Promise((resolve, reject) => {
-            if (this.mGame) {
-                this.destroyManager();
-                this.mGame.events.off(Phaser.Core.Events.FOCUS, this.onFocus, this);
-                this.mGame.events.off(Phaser.Core.Events.BLUR, this.onBlur, this);
-                this.mGame.scale.off("enterfullscreen", this.onFullScreenChange, this);
-                this.mGame.scale.off("leavefullscreen", this.onFullScreenChange, this);
-                this.mGame.scale.off("orientationchange", this.onOrientationChange, this);
-                this.mGame.plugins.removeGlobalPlugin("rexButton");
-                this.mGame.plugins.removeGlobalPlugin("rexNinePatchPlugin");
-                this.mGame.plugins.removeGlobalPlugin("rexInputText");
-                this.mGame.plugins.removeGlobalPlugin("rexBBCodeTextPlugin");
-                this.mGame.plugins.removeGlobalPlugin("rexMoveTo");
-                this.mGame.plugins.removeScenePlugin("DragonBones");
-                this.mGame.events.once(Phaser.Core.Events.DESTROY, () => {
-                    this.mGame = undefined;
-                    super.destroy();
+            this.destroyWorker([MAIN_WORKER, PHYSICAL_WORKER]).then(() => {
+                if (this.mGame) {
+                    this.destroyManager();
+                    this.mGame.events.off(Phaser.Core.Events.FOCUS, this.onFocus, this);
+                    this.mGame.events.off(Phaser.Core.Events.BLUR, this.onBlur, this);
+                    this.mGame.scale.off("enterfullscreen", this.onFullScreenChange, this);
+                    this.mGame.scale.off("leavefullscreen", this.onFullScreenChange, this);
+                    this.mGame.scale.off("orientationchange", this.onOrientationChange, this);
+                    this.mGame.plugins.removeGlobalPlugin("rexButton");
+                    this.mGame.plugins.removeGlobalPlugin("rexNinePatchPlugin");
+                    this.mGame.plugins.removeGlobalPlugin("rexInputText");
+                    this.mGame.plugins.removeGlobalPlugin("rexBBCodeTextPlugin");
+                    this.mGame.plugins.removeGlobalPlugin("rexMoveTo");
+                    this.mGame.plugins.removeScenePlugin("DragonBones");
+                    this.mGame.events.once(Phaser.Core.Events.DESTROY, () => {
+                        this.mGame = undefined;
+                        if (destroyPeer) super.destroy();
+                        resolve();
+                    });
+                    this.mGame.destroy(true);
+                } else {
+                    if (destroyPeer) super.destroy();
                     resolve();
-                });
-                this.mGame.destroy(true);
-            } else {
-                super.destroy();
-                resolve();
-            }
+                }
+            });
         });
     }
 
@@ -1535,6 +1570,13 @@ export class Render extends RPCPeer implements GameMain, IRender {
             playScene.resumeMotion();
             playScene.enableCameraMove();
         }
+    }
+
+    protected onWorkerUnlinked(worker: string) {
+        if (!this.mWorkerDestroyMap.has(worker)) return;
+
+        this.mWorkerDestroyMap.get(worker).resolve(null);
+        this.mWorkerDestroyMap.delete(worker);
     }
 
     // private connectReconnect() {

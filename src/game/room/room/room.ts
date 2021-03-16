@@ -1,29 +1,29 @@
-import {op_client, op_def, op_virtual_world} from "pixelpai_proto";
-import {PacketHandler, PBpacket} from "net-socket-packet";
-import {Handler, IPos, IPosition45Obj, Logger, LogicPos, Position45} from "utils";
-import {Game} from "../../game";
-import {IBlockObject} from "../block/iblock.object";
-import {ClockReadyListener} from "../../loop/clock/clock";
-import {State} from "../state/state.group";
-import {IRoomManager} from "../room.manager";
-import {ConnectionService} from "../../../../lib/net/connection.service";
-import {CamerasManager, ICameraService} from "../camera/cameras.manager";
-import {ViewblockManager} from "../viewblock/viewblock.manager";
-import {PlayerManager} from "../player/player.manager";
-import {ElementManager} from "../element/element.manager";
-import {IElement, InputEnable} from "../element/element";
-import {IViewBlockManager} from "../viewblock/iviewblock.manager";
-import {TerrainManager} from "../terrain/terrain.manager";
-import {SkyBoxManager} from "../sky.box/sky.box.manager";
-import {GameState, IScenery, ISprite, LoadState, ModuleName, SceneName} from "structure";
-import {EffectManager} from "../effect/effect.manager";
-import {DecorateActionType, DecorateManager} from "../decorate/decorate.manager";
-import {WallManager} from "../element/wall.manager";
-import {Sprite} from "baseModel";
-import {BlockObject} from "../block/block.object";
+import { op_client, op_def, op_virtual_world } from "pixelpai_proto";
+import { PacketHandler, PBpacket } from "net-socket-packet";
+import { Handler, IPos, IPosition45Obj, Logger, LogicPos, Position45 } from "utils";
+import { Game } from "../../game";
+import { IBlockObject } from "../block/iblock.object";
+import { ClockReadyListener } from "../../loop/clock/clock";
+import { State } from "../state/state.group";
+import { IRoomManager } from "../room.manager";
+import { ConnectionService } from "../../../../lib/net/connection.service";
+import { CamerasManager, ICameraService } from "../camera/cameras.manager";
+import { ViewblockManager } from "../viewblock/viewblock.manager";
+import { PlayerManager } from "../player/player.manager";
+import { ElementManager } from "../element/element.manager";
+import { IElement, InputEnable } from "../element/element";
+import { IViewBlockManager } from "../viewblock/iviewblock.manager";
+import { TerrainManager } from "../terrain/terrain.manager";
+import { SkyBoxManager } from "../sky.box/sky.box.manager";
+import { GameState, IScenery, ISprite, LoadState, ModuleName, SceneName } from "structure";
+import { EffectManager } from "../effect/effect.manager";
+import { DecorateActionType, DecorateManager } from "../decorate/decorate.manager";
+import { WallManager } from "../element/wall.manager";
+import { Sprite } from "baseModel";
+import { BlockObject } from "../block/block.object";
 import IActor = op_client.IActor;
 import NodeType = op_def.NodeType;
-import {BaseDataConfigManager} from "picaWorker";
+import { BaseDataConfigManager } from "picaWorker";
 
 export interface SpriteAddCompletedListener {
     onFullPacketReceived(sprite_t: op_def.NodeType): void;
@@ -152,7 +152,7 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
             this.addListen();
             this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_ENABLE_EDIT_MODE, this.onEnableEditModeHandler);
             this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_UNWALKABLE_BIT_MAP, this.onShowMapTitle);
-            this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_MOVE_SPRITE_BY_PATH, this.onMovePathHandler);
+            // this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_MOVE_SPRITE_BY_PATH, this.onMovePathHandler);
             this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_SET_CAMERA_FOLLOW, this.onCameraFollowHandler);
             this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_SYNC_STATE, this.onSyncStateHandler);
             this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_START_EDIT_MODEL, this.onStartDecorate);
@@ -356,7 +356,7 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
         //         }
         //     }
         // }
-        return {width: w, height: h};
+        return { width: w, height: h };
     }
 
     public async startPlay() {
@@ -652,45 +652,33 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
         this.mNotWalkablePos2SpriteIDs.clear();
     }
 
-    public move(id: number, x: number, y: number, nodeType: NodeType) {
-        if (this.moveStyle !== op_def.MoveStyle.PATH_MOVE_STYLE) {
-            return;
-        }
-        if (!this.mPlayerManager) {
-            return;
-        }
-        const actor = this.mPlayerManager.actor;
-        if (!actor) {
-            return;
-        }
-        // const pos45 = actor.getPosition45();
-        // const click45 = this.transformTo45(new LogicPos(x, y));
-        // if (Math.abs(pos45.x - click45.x) > 20 || Math.abs(pos45.y - click45.y) > 20) {
-        // this.addFillEffect({ x, y }, op_def.PathReachableStatus.PATH_UNREACHABLE_AREA);
-        //     return;
-        // }
+    // public move(id: number, x: number, y: number, nodeType: NodeType) {
+    //     if (this.moveStyle !== op_def.MoveStyle.PATH_MOVE_STYLE) {
+    //         return;
+    //     }
+    //     if (!this.mPlayerManager) {
+    //         return;
+    //     }
+    //     const actor = this.mPlayerManager.actor;
+    //     if (!actor) {
+    //         return;
+    //     }
+    //     const pkt: PBpacket = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_MOVE_TO_TARGET_BY_PATH);
+    //     const content: op_virtual_world.IOP_CLIENT_REQ_VIRTUAL_WORLD_MOVE_TO_TARGET_BY_PATH = pkt.content;
+    //     if (id) content.id = id;
+    //     if (nodeType) content.nodeType = nodeType;
 
-        const pkt: PBpacket = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_MOVE_TO_TARGET_BY_PATH);
-        const content: op_virtual_world.IOP_CLIENT_REQ_VIRTUAL_WORLD_MOVE_TO_TARGET_BY_PATH = pkt.content;
-        if (id) content.id = id;
-        if (nodeType) content.nodeType = nodeType;
+    //     content.point3f = {x, y};
+    //     this.connection.send(pkt);
 
-        // content.mouseEvent = [9];
-        content.point3f = {x, y};
-        this.connection.send(pkt);
+    //     this.tryMove();
 
-        this.tryMove();
-
-        // this.game.physicalPeer.tryMove();
-    }
+    // }
 
     public destroy() {
         this.removeListen();
         this.clear();
         this.game.renderPeer.removeScene(SceneName.PLAY_SCENE);
-        // if (this.mScene) {
-        //   this.mScene = null;
-        // }
     }
 
     // update handlers. TODO: remove method
@@ -726,41 +714,41 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
         return this.mIsLoading;
     }
 
-    public tryMove() {
-        const player = this.mPlayerManager.actor;
-        if (!player) {
-            return;
-        }
-        const moveData = player.moveData;
-        const pos = moveData.posPath;
-        if (!pos || pos.length < 0) {
-            return;
-        }
+    // public tryMove() {
+    //     const player = this.mPlayerManager.actor;
+    //     if (!player) {
+    //         return;
+    //     }
+    //     const moveData = player.moveData;
+    //     const pos = moveData.path;
+    //     if (!pos || pos.length < 0) {
+    //         return;
+    //     }
 
-        const step = moveData.step || 0;
-        if (step >= pos.length) {
-            return;
-        }
+    //     const step = moveData.step || 0;
+    //     if (step >= pos.length) {
+    //         return;
+    //     }
 
-        const playerPosition = player.getPosition();
-        const position = op_def.PBPoint3f.create();
-        position.x = playerPosition.x;
-        position.y = playerPosition.y;
+    //     const playerPosition = player.getPosition();
+    //     const position = op_def.PBPoint3f.create();
+    //     position.x = playerPosition.x;
+    //     position.y = playerPosition.y;
 
-        if (pos[step] === undefined) {
-            // Logger.getInstance().debug("move error", pos, step);
-        }
-        const nextPosition = op_def.PBPoint3f.create();
-        nextPosition.x = pos[step].x;
-        nextPosition.y = pos[step].y;
+    //     if (pos[step] === undefined) {
+    //         // Logger.getInstance().debug("move error", pos, step);
+    //     }
+    //     const nextPosition = op_def.PBPoint3f.create();
+    //     nextPosition.x = pos[step].x;
+    //     nextPosition.y = pos[step].y;
 
-        const packet = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_CHECK_MOVE_PATH_NEXT_POINT);
-        const conten: op_virtual_world.IOP_CLIENT_REQ_VIRTUAL_WORLD_CHECK_MOVE_PATH_NEXT_POINT = packet.content;
-        conten.timestemp = this.now();
-        conten.position = position;
-        conten.nextPoint = nextPosition;
-        this.connection.send(packet);
-    }
+    //     const packet = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_CHECK_MOVE_PATH_NEXT_POINT);
+    //     const conten: op_virtual_world.IOP_CLIENT_REQ_VIRTUAL_WORLD_CHECK_MOVE_PATH_NEXT_POINT = packet.content;
+    //     conten.timestemp = this.now();
+    //     conten.position = position;
+    //     conten.nextPoint = nextPosition;
+    //     this.connection.send(packet);
+    // }
 
     // room创建状态管理
     public onManagerCreated(key: string) {
@@ -788,7 +776,7 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
     }
 
     public requestDecorate(id: number, baseID?: string) {
-        this.mDecorateEntryData = {id, baseID};
+        this.mDecorateEntryData = { id, baseID };
 
         this.connection.send(new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_START_EDIT_MODEL));
 
@@ -818,7 +806,7 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
         this.game.uiManager.hideMed(ModuleName.PICANEWMAIN_NAME);
         this.game.uiManager.hideMed(ModuleName.BOTTOM);
         this.game.uiManager.showMed(ModuleName.PICADECORATE_NAME,
-            {closeAlertText: (<BaseDataConfigManager> this.game.configManager).getI18n("PKT_SYS0000021")});
+            { closeAlertText: (<BaseDataConfigManager>this.game.configManager).getI18n("PKT_SYS0000021") });
 
         // switch mouse manager
         this.game.renderPeer.switchDecorateMouseManager();
@@ -897,7 +885,7 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
                     // Logger.getInstance().debug("setCameraBounds error", bounds);
                     return;
                 }
-                let {x, y, width, height} = bounds;
+                let { x, y, width, height } = bounds;
                 x = -width * 0.5 + (x ? x : 0);
                 y = (this.mSize.sceneHeight - height) * 0.5 + (y ? y : 0);
                 x *= this.mScaleRatio;
@@ -1022,15 +1010,15 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
     //     this.mGame.addFillEffect(pos, status);
     // }
 
-    private onMovePathHandler(packet: PBpacket) {
-        const content: op_client.IOP_VIRTUAL_WORLD_REQ_CLIENT_MOVE_SPRITE_BY_PATH = packet.content;
-        const status = content.pathStatus;
-        if (!status) {
-            return;
-        }
-        const pos = content.targetPos;
-        // this.addFillEffect({ x: pos.x, y: pos.y }, status);
-    }
+    // private onMovePathHandler(packet: PBpacket) {
+    //     const content: op_client.IOP_VIRTUAL_WORLD_REQ_CLIENT_MOVE_SPRITE_BY_PATH = packet.content;
+    //     const status = content.pathStatus;
+    //     if (!status) {
+    //         return;
+    //     }
+    //     const pos = content.targetPos;
+    //     // this.addFillEffect({ x: pos.x, y: pos.y }, status);
+    // }
 
     private onCameraFollowHandler(packet: PBpacket) {
         const content: op_client.IOP_VIRTUAL_WORLD_REQ_CLIENT_SET_CAMERA_FOLLOW = packet.content;
