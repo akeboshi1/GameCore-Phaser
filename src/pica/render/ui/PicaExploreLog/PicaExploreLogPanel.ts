@@ -84,6 +84,7 @@ export class PicaExploreLogPanel extends PicaBasePanel {
             this.continueProgress.visible = true;
             const to = this.continueProgress.height * 0.5 + 20 * this.dpr;
             this.continueText.scale = 0.01;
+            this.continueText.visible = true;
             UIHelper.playtPosYTween(this.scene, this.continueProgress, 0, to, 300, "Bounce.easeOut", undefined, new Handler(this, () => {
                 if (!this.scene) return;
                 this.playRotateTween(0, 100, content.seconds * 1000);
@@ -101,6 +102,7 @@ export class PicaExploreLogPanel extends PicaBasePanel {
                 this.playRotateTween(0, 100, content.seconds * 1000);
                 this.continueText.scale = 0.1;
                 this.continueText.alpha = 1;
+                this.continueText.visible = true;
                 UIHelper.playScaleTween(this.scene, this.continueText, 0.1, 1, 200, "Linear", undefined);
             }
         }
@@ -222,10 +224,13 @@ export class PicaExploreLogPanel extends PicaBasePanel {
         UIHelper.playAlphaTween(this.scene, this.continueProgress, 1, 0, 500, "Linear", undefined, new Handler(this, () => {
             if (!this.scene) return;
             this.continueProgress.visible = false;
+            this.continueText.visible = false;
             this.continueProgress.y = -this.continueProgress.height * 0.5;
             this.continueProgress.alpha = 1;
-        }), new Handler(this, (value: number) => {
-            this.continueText.alpha = value;
+        }));
+        UIHelper.playAlphaTween(this.scene, this.continueText, 1, 0, 500, "Linear", undefined, new Handler(this, () => {
+            if (!this.scene) return;
+            this.continueText.visible = false;
         }));
     }
 }
@@ -471,8 +476,7 @@ class PicaExploreLogGuideText extends Phaser.GameObjects.Container {
         let mixHeight = this.mixHeight;
         const space = 16 * this.dpr;
         let posy = 40 * this.dpr;
-        for (let i = 0; i < this.imageValues.length; i++) {
-            const item = this.imageValues[i];
+        for (const item of this.imageValues) {
             if (!item.visible) break;
             item.y = posy;
             posy += (item.height + space);
