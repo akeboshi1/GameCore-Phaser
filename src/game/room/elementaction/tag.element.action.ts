@@ -38,15 +38,15 @@ export class TAGElementAction extends ElementBaseAction {
 
     private executeMine(data: any) {
         const tempdata = { weaponID: "5f912f98c4486f3a23bd2eb4", animation: "mining", times: data.repeat };
-        this.game.emitter.emit(EventType.SCENE_PLAYER_ACTION, this.userid, tempdata);
+        this.game.emitter.emit(EventType.SCENE_PLAYER_ACTION, this.userid, this.data.id, tempdata);
     }
 
     private executeCrop(data: any) {
         const tempdata = { weaponID: "5f912fc1f1d58a7199b745f0", animation: "crafting", times: data.repeat };
-        this.game.emitter.emit(EventType.SCENE_PLAYER_ACTION, this.userid, tempdata);
+        this.game.emitter.emit(EventType.SCENE_PLAYER_ACTION, this.userid, this.data.id, tempdata);
     }
     private executeCollect(data: any) {
         const tempdata = { animation: "collect", times: data.repeat };
-        this.game.emitter.emit(EventType.SCENE_PLAYER_ACTION, this.userid, tempdata);
+        this.game.emitter.emit(EventType.SCENE_PLAYER_ACTION, this.userid, this.data.id, tempdata);
     }
 }

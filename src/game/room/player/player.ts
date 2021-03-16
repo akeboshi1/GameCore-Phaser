@@ -108,6 +108,11 @@ export class Player extends Element implements IElement {
 
     public removeFromWalkableMap() { }
 
+    public calcDirection(pos: IPos, target: IPos) {
+        const dir = DirectionChecker.check(pos, target);
+        this.setDirection(dir);
+    }
+
     protected async checkDirection() {
         const pos = this.moveControll.position;
         const prePos = this.moveControll.prePosition;

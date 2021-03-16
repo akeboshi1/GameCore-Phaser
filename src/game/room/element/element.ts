@@ -346,11 +346,11 @@ export class Element extends BlockObject implements IElement {
         }
         if (this.model && !this.model.currentAnimationName) {
             this.model.currentAnimationName = PlayerState.IDLE;
-            this.changeState(this.model.currentAnimationName);
         }
         if (this.model) {
             this.model.setDirection(val);
         }
+        // this.play(this.model.currentAnimationName);
     }
 
     public getDirection(): number {

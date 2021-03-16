@@ -145,7 +145,7 @@ export class PlayerManager extends PacketHandler implements IElementManager {
         this.mPlayerMap.set(id, player);
     }
 
-    public onActiveSprite(id: number, data: any) {
+    public onActiveSprite(id: number, targetId: number, data: any) {
         id = id || this.mRoom.game.user.id;
         if (this.has(id)) {
             if (data) {
@@ -153,6 +153,10 @@ export class PlayerManager extends PacketHandler implements IElementManager {
                 const element = this.get(id);
                 if (data.weaponID) {
                     element.setWeapon(data.weaponID);
+                }
+                const target = this.roomService.getElement(targetId);
+                if (target) {
+                    element.calcDirection(element.getPosition(), target.getPosition());
                 }
                 if (data.animation) {
                     element.play(data.animation, data.times);
@@ -460,7 +464,7 @@ export class PlayerManager extends PacketHandler implements IElementManager {
     private onActiveSpriteHandler(packet: PBpacket) {
         const content: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_ACTIVE_SPRITE = packet.content;
         if (this.has(content.targetId)) {
-            this.onActiveSprite(content.spriteId, content.param);
+            this.onActiveSprite(content.spriteId, content.targetId, content.param);
         }
     }
 
