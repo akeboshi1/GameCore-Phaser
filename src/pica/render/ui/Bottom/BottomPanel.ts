@@ -239,6 +239,7 @@ class OutputContainer extends Phaser.GameObjects.Container {
     private background: Phaser.GameObjects.Graphics;
     private mOutputText: BBCodeText;
     private mTextArea: TextArea;
+    private mTextMask: any;
     constructor(scene: Phaser.Scene, private dpr: number, private scaleRatio: number) {
         super(scene);
         this.background = this.scene.make.graphics(undefined, false);
@@ -264,6 +265,7 @@ class OutputContainer extends Phaser.GameObjects.Container {
                 width: width - 12 * this.dpr * scaleRatio
             }
         }).setOrigin(0, 0);
+        this.mOutputText.height = 40 * this.dpr * scaleRatio;
 
         this.mTextArea = new TextArea(this.scene, { text: this.mOutputText })
             .layout()
@@ -275,6 +277,7 @@ class OutputContainer extends Phaser.GameObjects.Container {
             this.mOutputText,
             this.mTextArea.childrenMap.child
         ]);
+        this.mTextMask = this.mTextArea.childrenMap.text;
     }
 
     resize(width: number, height: number) {
@@ -289,7 +292,7 @@ class OutputContainer extends Phaser.GameObjects.Container {
         // (<any>this.mTextArea).setChildOY(1 * this.dpr * this.scaleRatio);
         this.updateLayout();
         const textMask = this.mTextArea.childrenMap.text;
-        textMask.y = 4 * this.dpr;
+        textMask.y = 4 * this.dpr * this.scaleRatio;
         this.mTextArea.scrollToBottom();
     }
 
@@ -314,6 +317,7 @@ class OutputContainer extends Phaser.GameObjects.Container {
         if (this.mTextArea) {
             this.mTextArea.appendText(val);
             this.mTextArea.scrollToBottom();
+            if (this.mTextMask) this.mTextMask.y = 4 * this.dpr * this.scaleRatio;
         }
     }
 }
