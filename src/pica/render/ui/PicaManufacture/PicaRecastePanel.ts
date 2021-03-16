@@ -36,6 +36,7 @@ export class PicaRecastePanel extends Phaser.GameObjects.Container {
     this.dpr = dpr;
     this.zoom = zoom;
     this.key = ModuleName.PICAMANUFACTURE_NAME;
+    this.init();
   }
 
   resize(w: number, h: number) {
