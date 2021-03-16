@@ -610,8 +610,11 @@ export class Element extends BlockObject implements IElement {
         const pos = this.moveControll.position;
         this.mModel.setPosition(pos.x, pos.y);
         this.mRoomService.game.renderPeer.setPosition(this.id, pos.x, pos.y);
+        if (!this.mMoveData) return;
         const path = this.mMoveData.path;
+        if (!path || !path[0]) return;
         const pathData = path[0];
+        if (!pathData) return;
         const pathPos = pathData.pos;
         const speed = this.mModel.speed * delta;
         if (Tool.twoPointDistance(pos, pathPos) <= speed) {

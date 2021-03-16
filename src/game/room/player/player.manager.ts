@@ -179,19 +179,6 @@ export class PlayerManager extends PacketHandler implements IElementManager {
         }
     }
 
-    // public addPlayer(obj: op_client.IActor): void {
-    //     const playerInfo: PlayerInfo = new PlayerInfo();
-    //     playerInfo.setInfo(obj);
-    //     if (obj.walkOriginPoint) {
-    //         playerInfo.setOriginWalkPoint(obj.walkOriginPoint);
-    //     }
-    //     if (obj.originPoint) {
-    //         playerInfo.setOriginCollisionPoint(obj.originPoint);
-    //     }
-    //     this.mPlayerInfoList.push(playerInfo);
-    //     this.mModelDispatch.emit(MessageType.SCENE_ADD_PLAYER, playerInfo);
-    // }
-
     public addPackItems(elementId: number, items: op_gameconfig.IItem[]): void {
         const character: Player = this.mPlayerMap.get(elementId);
         if (character && character.id === this.mActor.id) {
@@ -374,7 +361,7 @@ export class PlayerManager extends PacketHandler implements IElementManager {
                 movePath = movePaths[i];
                 playID = movePath.id;
                 player = this.get(playID);
-                if (player) {
+                if (player && movePath.movePos && movePath.movePos.length > 0) {
                     // player.move(moveData);
                     player.move(movePath.movePos);
                 }

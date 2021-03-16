@@ -250,12 +250,16 @@ class MainTaskItem extends Phaser.GameObjects.Container {
         this.taskDes.text = content.des;
         const max = 100;
         const fvalue = this.getFinishProgress(content);
+        this.rewardRotateImg.visible = false;
         if (this.intervalTimer) {
             clearInterval(this.intervalTimer);
             this.intervalTimer = undefined;
         }
         if (this.questType !== questType) {
             this.progress.setProgress(fvalue, max);
+            if (fvalue === max) {
+                this.playRotateTween();
+            }
         } else {
             const from = this.previousProgress;
             const allTime = 2000;
@@ -265,7 +269,6 @@ class MainTaskItem extends Phaser.GameObjects.Container {
         this.progressTex.text = fvalue + "%";
         this.isFinish = fvalue === max;
         this.previousProgress = fvalue;
-        this.rewardRotateImg.visible = false;
         this.mainData = content;
 
         const url = Url.getOsdRes((<any>content.reward).texturePath);

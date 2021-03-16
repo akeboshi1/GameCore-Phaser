@@ -116,7 +116,6 @@ export class MatterUserObject extends MatterPlayerObject {
 
     public stopMove() {
         this.mMoving = false;
-        Logger.getInstance().debug("stopMatterMove");
         this.peer.mainPeer.stopMove(this.id);
         if (this.mMoveData && this.mMoveData.posPath) {
             delete this.mMoveData.posPath;
@@ -133,8 +132,20 @@ export class MatterUserObject extends MatterPlayerObject {
     }
 
     public tryStopMove(pos?: IPos) {
-        this.stopMove();
+        // 点击移动
         if (this.mTargetPoint) {
+            this.mMoving = false;
+            if (this.mMoveData && this.mMoveData.posPath) {
+                delete this.mMoveData.posPath;
+                if (this.mMoveData.arrivalTime) this.mMoveData.arrivalTime = 0;
+                if (this.mMoveData.tweenLineAnim) {
+                    this.mMoveData.tweenLineAnim.stop();
+                    this.mMoveData.tweenLineAnim.destroy();
+                }
+            }
+            // this.peer.mainPeer.changePlayerState(this.id, PlayerState.IDLE);
+            if (!this.body) return;
+            this.setVelocity(0, 0);
             let interactiveBoo = false;
             if (pos) {
                 interactiveBoo = true;
@@ -154,6 +165,8 @@ export class MatterUserObject extends MatterPlayerObject {
             this.peer.mainPeer.tryStopMove(this.id, interactiveBoo, this.mTargetPoint.targetId, pos);
             this.mTargetPoint = null;
             this.mTargetID = undefined;
+        } else {
+            this.stopMove();
         }
     }
 
@@ -196,7 +209,7 @@ export class MatterUserObject extends MatterPlayerObject {
         }
         if (delta === undefined) delta = 0;
         this.mSyncTime += delta;
-        if (this.mSyncTime > 50) {
+        if (this.mSyncTime > 400) {
             this.mSyncTime = 0;
             this.mSyncDirty = true;
         }

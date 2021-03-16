@@ -2,6 +2,13 @@ import {Render} from "../../render";
 import {PlayScene} from "../../scenes/play.scene";
 import {ChatCommandInterface, IPos, IPosition45Obj, Logger, LogicPos, Position45} from "utils";
 
+enum PointsShowType {
+    None,// 全部不显示
+    All,// 全部显示（性能消耗巨大）
+    OnlyWalkable,// 只显示可行走区域（绿点）
+    OnlyNotWalkable// 只显示不可行走区域（红点）
+}
+
 export class Astar {
     private readonly CIRCLE_RADIUS_POINTS = 2;
     private readonly CIRCLE_RADIUS_START_POSITION = 4;
@@ -13,7 +20,7 @@ export class Astar {
     private readonly LINE_COLOR_PATH = 0xFFFF00;
 
     // 是否显示所有可行经点。如果打开会非常消耗性能
-    private mShowAllPoints: boolean = false;
+    private mPointsShowType: PointsShowType = PointsShowType.None;
 
     private mPoints: Map<LogicPos, Phaser.GameObjects.Graphics> =
         new Map<LogicPos, Phaser.GameObjects.Graphics>();
@@ -63,7 +70,7 @@ export class Astar {
     }
 
     public drawPoints() {
-        if (!this.mShowAllPoints) return;
+        if (this.mPointsShowType === PointsShowType.None) return;
         if (!this.mAstarSize) return;
         const scene = this.render.sceneManager.getMainScene();
         if (!scene || !(scene instanceof PlayScene)) {
@@ -75,6 +82,9 @@ export class Astar {
             for (let x = 0; x < this.mAstarSize.cols; x++) {
                 this.render.physicalPeer.isWalkableAt(x, y)
                     .then((walkable: boolean) => {
+                        if (this.mPointsShowType === PointsShowType.OnlyWalkable && !walkable) return;
+                        if (this.mPointsShowType === PointsShowType.OnlyNotWalkable && walkable) return;
+
                         const color = this.getColorByValue(walkable);
                         let pos = new LogicPos(x, y);
                         pos = Position45.transformTo90(pos, this.mAstarSize);
@@ -132,6 +142,7 @@ export class Astar {
         graphics.fillStyle(color, 1);
         graphics.fillCircle(pos.x, pos.y, radius);
         scene.layerManager.addToLayer("middleLayer", graphics);
+
         return graphics;
     }
 

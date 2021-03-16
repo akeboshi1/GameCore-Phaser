@@ -1,5 +1,6 @@
 import { SceneName } from "structure";
-import { IPos } from "utils";
+import { Scene } from "tooqinggamephaser";
+import { IPos, Tool } from "utils";
 import { UiManager } from "../ui";
 import { BaseGuide } from "./base.guide";
 
@@ -10,18 +11,21 @@ export class BasePlaySceneGuide extends BaseGuide {
     protected mElementID: number;
     protected mElement: any;
     protected mPlayScene: Phaser.Scene;
+    protected mUiScene: Phaser.Scene;
     protected mPointer: Phaser.Input.Pointer;
     constructor(id: number, uiManager: UiManager) {
         super(uiManager.render);
         this.mElementID = id;
         this.mPlayScene = this.render.game.scene.getScene(SceneName.PLAY_SCENE);
+        this.mUiScene = this.render.game.scene.getScene(SceneName.MAINUI_SCENE);
     }
 
     public show(param?: any) {
         super.show(param);
         this.mElement = this.render.displayManager.getDisplay(this.mElementID);
         if (!this.mElement) this.end();
-        this.step1({ x: this.mElement.x, y: this.mElement.y });
+        const pos: IPos = Tool.getPosByScenes(this.mPlayScene, { x: this.mElement.x, y: this.mElement.y });
+        this.step1(pos);
     }
 
     public hide() {
