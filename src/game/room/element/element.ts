@@ -373,12 +373,12 @@ export class Element extends BlockObject implements IElement {
         // Logger.getInstance().debug("#dir element setDirection:=====", this.id, val);
         if (this.model && !this.model.currentAnimationName) {
             this.model.currentAnimationName = PlayerState.IDLE;
-            this.changeState(this.model.currentAnimationName);
         }
         // Logger.getInstance().debug("user direction ====>", val);
         if (this.model) {
             this.model.setDirection(val);
         }
+        this.changeState(this.model.currentAnimationName);
         // this.play(this.model.currentAnimationName);
     }
 

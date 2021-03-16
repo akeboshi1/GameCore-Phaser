@@ -176,7 +176,7 @@ export class User extends Player {
 
     public tryActiveAction(targetId: number, param?: any, needBroadcast?: boolean) {
         this.activeSprite(targetId, param, needBroadcast);
-        this.game.emitter.emit(EventType.SCENE_PLAYER_ACTION, this.game.user.id, param);
+        this.game.emitter.emit(EventType.SCENE_PLAYER_ACTION, this.game.user.id, targetId, param);
     }
 
     public updateModel(model: op_client.IActor) {
