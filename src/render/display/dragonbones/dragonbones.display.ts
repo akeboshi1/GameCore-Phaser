@@ -5,7 +5,6 @@ import {DisplayField, ElementStateType, IDragonbonesModel, PlayerState, RunningA
 import {IDisplayObject} from "../display.object";
 import {LoadQueue, LoadType} from "../../loadqueue";
 import {ElementTopDisplay} from "../element.top.display";
-import {DisplayMovement} from "../display.movement";
 
 export class DragonbonesDisplay extends BaseDragonbonesDisplay implements IDisplayObject {
     protected mID: number = undefined;
@@ -13,7 +12,6 @@ export class DragonbonesDisplay extends BaseDragonbonesDisplay implements IDispl
     protected mNodeType: number = undefined;
     protected mReferenceArea: ReferenceArea;
     protected mTopDisplay: ElementTopDisplay;
-    protected mMovement: DisplayMovement;
     protected mSortX: number = 0;
     protected mSortY: number = 0;
 
@@ -29,8 +27,6 @@ export class DragonbonesDisplay extends BaseDragonbonesDisplay implements IDispl
         this.mLoadQueue = new LoadQueue(scene);
         this.mLoadQueue.on("QueueProgress", this.fileComplete, this);
         this.mLoadQueue.on("QueueError", this.fileError, this);
-
-        this.mMovement = new DisplayMovement(scene, this, render);
     }
 
     public load(display: IDragonbonesModel, field?: DisplayField): Promise<any> {
@@ -67,9 +63,6 @@ export class DragonbonesDisplay extends BaseDragonbonesDisplay implements IDispl
         }
         if (this.mTopDisplay) {
             this.mTopDisplay.destroy();
-        }
-        if (this.mMovement) {
-            this.mMovement.destroy();
         }
         super.destroy();
     }
@@ -185,7 +178,6 @@ export class DragonbonesDisplay extends BaseDragonbonesDisplay implements IDispl
     }
 
     public doMove(moveData: any) {
-        this.mMovement.doMove(moveData);
     }
 
     public setPosition(x?: number, y?: number, z?: number, w?: number): this {

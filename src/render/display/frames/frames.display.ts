@@ -4,7 +4,6 @@ import { DisplayField, ElementStateType, RunningAnimation, TitleMask } from "str
 import { IDisplayObject } from "../display.object";
 import { IPos, Logger } from "utils";
 import { ElementTopDisplay } from "../element.top.display";
-import { DisplayMovement } from "../display.movement";
 import { DragonbonesDisplay } from "../dragonbones/dragonbones.display";
 
 /**
@@ -15,15 +14,11 @@ export class FramesDisplay extends BaseFramesDisplay implements IDisplayObject {
     protected mTitleMask: number;
     protected mReferenceArea: ReferenceArea;
     protected mTopDisplay: ElementTopDisplay;
-    protected mMovement: DisplayMovement;
-
     private mName: string = undefined;
 
     constructor(scene: Phaser.Scene, private render: Render, id?: number, type?: number) {
         super(scene, id, type);
         this.mID = id;
-
-        this.mMovement = new DisplayMovement(scene, this, render);
     }
 
     public startLoad(): Promise<any> {
@@ -38,9 +33,6 @@ export class FramesDisplay extends BaseFramesDisplay implements IDisplayObject {
         }
         if (this.mTopDisplay) {
             this.mTopDisplay.destroy();
-        }
-        if (this.mMovement) {
-            this.mMovement.destroy();
         }
         super.destroy();
     }
@@ -135,7 +127,6 @@ export class FramesDisplay extends BaseFramesDisplay implements IDisplayObject {
     }
 
     public doMove(moveData: any) {
-        this.mMovement.doMove(moveData);
     }
 
     public setPosition(x?: number, y?: number, z?: number, w?: number): this {

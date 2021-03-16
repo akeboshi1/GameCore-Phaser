@@ -22,6 +22,10 @@ export class User extends Player {
     private mPreTargetID: number = 0;
     private holdTime: number = 0;
     private holdDelay: number = 80;
+    // 移动
+    private mMoveDelayTime: number = 400;
+    private mMoveTime: number = 0;
+    private mMovePoints: any[];
     constructor(private game: Game) {
         super(undefined, undefined);
         this.mBlockable = false;
@@ -70,6 +74,24 @@ export class User extends Player {
     }
 
     update() {
+        const now = new Date().getTime();
+        if (!this.mMovePoints || this.mMovePoints.length < 1) {
+            this.mMoveTime = now;
+            return;
+        }
+        if (now - this.mMoveTime > this.mMoveDelayTime) {
+            Logger.getInstance().log("user update ===>", now - this.mMoveTime, this.mMoveTime);
+            const movePath = op_def.MovePath.create();
+            movePath.id = this.id;
+            movePath.movePos = this.mMovePoints;
+            const packet = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_MOVE_SPRITE);
+            const content: op_virtual_world.IOP_CLIENT_REQ_VIRTUAL_WORLD_MOVE_SPRITE = packet.content;
+            content.movePath = movePath;
+            this.game.connection.send(packet);
+            this.mMovePoints.length = 0;
+            this.mMovePoints = [];
+            this.mMoveTime = now;
+        }
     }
 
     public unmount(targetPos?: IPos): Promise<this> {
@@ -80,21 +102,16 @@ export class User extends Player {
     }
 
     public syncPosition(targetPoint: any) {
-        const target = op_def.PBPoint3f.create();
-        target.x = targetPoint.path[0].x / this.game.scaleRatio;
-        target.y = targetPoint.path[0].y / this.game.scaleRatio;
-
         const userPos = this.getPosition();
         const pos = op_def.PBPoint3f.create();
         pos.x = userPos.x;
         pos.y = userPos.y;
-
-        const packet = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_MOVE_SELF);
-        const content: op_virtual_world.IOP_CLIENT_REQ_VIRTUAL_WORLD_MOVE_SELF = packet.content;
-        content.goal = target;
-        content.position = pos;
-        content.targetId = targetPoint.targetId;
-        this.game.connection.send(packet);
+        const movePoint = op_def.MovePoint.create();
+        movePoint.pos = pos;
+        // 给每个同步点时间戳
+        movePoint.timestamp = new Date().getTime();
+        if (!this.mMovePoints) this.mMovePoints = [];
+        this.mMovePoints.push(movePoint);
     }
 
     public startMove() {
@@ -102,25 +119,24 @@ export class User extends Player {
         this.mMoving = true;
     }
 
-    public stopMove() {
+    public stopMove(stopPos?: IPos) {
         this.changeState(PlayerState.IDLE);
         this.mMoving = false;
-        if (this.mRoomService && this.mRoomService.game.moveStyle === op_def.MoveStyle.DIRECTION_MOVE_STYLE) {
-            const pkt: PBpacket = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_STOP_SPRITE);
-            const ct: op_virtual_world.IOP_CLIENT_REQ_VIRTUAL_WORLD_STOP_SPRITE = pkt.content;
-            ct.nodeType = this.nodeType;
-            const pos = this.getPosition();
-            ct.spritePositions = {
-                id: this.id,
-                point3f: {
-                    x: pos.x,
-                    y: pos.y,
-                    z: pos.z,
-                },
-                direction: this.dir
-            };
-            this.mElementManager.connection.send(pkt);
+        if (stopPos) {
+            const movePoint = op_def.MovePoint.create();
+            movePoint.pos = stopPos;
+            // 给每个同步点时间戳
+            movePoint.timestamp = new Date().getTime();
+            this.mMovePoints.push(movePoint);
         }
+        const movePath = op_def.MovePath.create();
+        movePath.id = this.id;
+        movePath.movePos = this.mMovePoints;
+        const pkt: PBpacket = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_STOP_SPRITE);
+        const ct: op_virtual_world.IOP_CLIENT_REQ_VIRTUAL_WORLD_STOP_SPRITE = pkt.content;
+        ct.movePath = movePath;
+        this.mElementManager.connection.send(pkt);
+        this.mMovePoints = [];
     }
 
     public move(moveData: any) {
@@ -154,23 +170,12 @@ export class User extends Player {
     }
 
     public tryStopMove(data: { targetId: number, needBroadcast?: boolean, interactiveBoo: boolean, stopPos?: IPos }) {
-        this.stopMove();
         if (data.stopPos) {
             this.setPosition(data.stopPos);
         }
-        const pos = this.getPosition();
-        const position = op_def.PBPoint3f.create();
-        position.x = pos.x;
-        position.y = pos.y;
-        position.z = pos.z;
-        const packet: PBpacket = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_STOP_SELF);
-        const content: op_virtual_world.IOP_CLIENT_REQ_VIRTUAL_WORLD_STOP_SELF = packet.content;
-        content.position = position;
-        this.game.connection.send(packet);
-        Logger.getInstance().debug("send stop move==========>>>", pos);
+        this.stopMove(data.stopPos);
         if (data.interactiveBoo) {
             this.activeSprite(data.targetId, undefined, data.needBroadcast);
-            // this.game.emitter.emit(EventType.SCENE_INTERACTION_ELEMENT, data.targetId, this.id);
         }
     }
 

@@ -1,15 +1,15 @@
-import {PBpacket} from "net-socket-packet";
-import {BaseDataConfigManager} from "picaWorker";
-import {op_client} from "pixelpai_proto";
-import {EventType, ModuleName, RoomType} from "structure";
-import {EventDispatcher} from "utils";
-import {Game} from "../game";
-import {BasePacketHandler} from "./base.packet.handler";
-import {DataMgrType} from "./dataManager";
+import { PBpacket } from "net-socket-packet";
+import { BaseDataConfigManager } from "picaWorker";
+import { op_client } from "pixelpai_proto";
+import { EventType, ModuleName, RoomType } from "structure";
+import { EventDispatcher, Logger } from "utils";
+import { Game } from "../game";
+import { BasePacketHandler } from "./base.packet.handler";
+import { DataMgrType } from "./dataManager";
 
 export class SceneDataManager extends BasePacketHandler {
     private mCurRoom: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_EDIT_MODE_ROOM_INFO;
-    private isShowMainui: boolean = false;
+    // private isShowMainui: boolean = false;
     private mRoomID;
 
     constructor(game: Game, event?: EventDispatcher) {
@@ -46,7 +46,7 @@ export class SceneDataManager extends BasePacketHandler {
     private openComposePanel(packge: PBpacket) {
         const content: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_CRAFT_SKILLS = packge.content;
         const list = [];
-        const config = <BaseDataConfigManager> this.game.configManager;
+        const config = <BaseDataConfigManager>this.game.configManager;
 
         packge.content.skills.forEach((skill) => {
             const sk = config.getSkill(skill.skill.id);
@@ -54,7 +54,7 @@ export class SceneDataManager extends BasePacketHandler {
             list.push(sk);
         });
 
-        this.mEvent.emit(EventType.SCENE_SHOW_UI, ModuleName.PICACOMPOSE_NAME, {skills: list});
+        this.mEvent.emit(EventType.SCENE_SHOW_UI, ModuleName.PICACOMPOSE_NAME, { skills: list });
     }
 
     private on_SEND_GIFT_DATA(packet: PBpacket) {
@@ -113,7 +113,7 @@ export class SceneDataManager extends BasePacketHandler {
     private onHIGH_QUALITY_REWARD_TIPS(packet: PBpacket) {
         const content: op_client.OP_VIRTUAL_WORLD_REQ_CLIENT_SHOW_HIGH_QUALITY_REWARD_TIPS = packet.content;
         this.syncItemBases(content.list);
-        this.mEvent.emit(EventType.SCENE_SHOW_UI, ModuleName.PICATREASURE_NAME, {data: content.list, type: "open"});
+        this.mEvent.emit(EventType.SCENE_SHOW_UI, ModuleName.PICATREASURE_NAME, { data: content.list, type: "open" });
     }
 
     private on_JOB_LIST(packet: PBpacket) {
@@ -136,24 +136,25 @@ export class SceneDataManager extends BasePacketHandler {
     }
 
     private showMainUI() {
-        if (!this.isShowMainui) {
-            const hideArr = [];
-            if (this.mCurRoom.roomType === RoomType.EPISODE) {
-                hideArr.push(ModuleName.PICANEWMAIN_NAME);
-            }
-            this.mEvent.emit(EventType.SCENE_SHOW_MAIN_UI, hideArr);
-            if (this.mCurRoom.roomType === RoomType.EPISODE)
-                this.mEvent.emit(EventType.SCENE_SHOW_UI, ModuleName.PICAEXPLORELOG_NAME);
-            this.isShowMainui = true;
+        // if (!this.isShowMainui) {
+        const hideArr = [];
+        if (this.mCurRoom.roomType === RoomType.EPISODE) {
+            hideArr.push(ModuleName.PICANEWMAIN_NAME);
         }
+        this.mEvent.emit(EventType.SCENE_SHOW_MAIN_UI, hideArr);
+        Logger.getInstance().log("hideArr ====>", hideArr);
+        if (this.mCurRoom.roomType === RoomType.EPISODE)
+            this.mEvent.emit(EventType.SCENE_SHOW_UI, ModuleName.PICAEXPLORELOG_NAME);
+        //     this.isShowMainui = true;
+        // }
     }
 
     private onSceneChangeHandler() {
-        this.isShowMainui = false;
+        // this.isShowMainui = false;
     }
 
     private syncItemBases(items: op_client.ICountablePackageItem[]) {
-        const config = <BaseDataConfigManager> this.game.configManager;
+        const config = <BaseDataConfigManager>this.game.configManager;
         for (const item of items) {
             config.synItemBase(item);
         }
