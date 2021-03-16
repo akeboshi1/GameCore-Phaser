@@ -361,7 +361,7 @@ export class PlayerManager extends PacketHandler implements IElementManager {
                 movePath = movePaths[i];
                 playID = movePath.id;
                 player = this.get(playID);
-                if (player) {
+                if (player && movePath.movePos && movePath.movePos.length > 0) {
                     // player.move(moveData);
                     player.move(movePath.movePos);
                 }
