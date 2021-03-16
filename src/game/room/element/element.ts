@@ -350,7 +350,6 @@ export class Element extends BlockObject implements IElement {
         if (this.model) {
             this.model.setDirection(val);
         }
-        this.changeState(this.model.currentAnimationName);
         // this.play(this.model.currentAnimationName);
     }
 
