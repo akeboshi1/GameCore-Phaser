@@ -30,7 +30,7 @@ export class PicaRecastePanel extends PicaBasePanel {
   private tempData: any = {};
   constructor(uiManager: UiManager) {
     super(uiManager);
-    this.atlasNames = [UIAtlasName.uicommon];
+    this.atlasNames = [UIAtlasName.uicommon,UIAtlasName.recast];
     this.textures = [{ atlasName: "Recast_aims_icon_bg", folder: "texture" }, { atlasName: "Recast_bg_texture", folder: "texture" }];
     this.key = ModuleName.PICARECASTE_NAME;
   }
@@ -96,7 +96,7 @@ export class PicaRecastePanel extends PicaBasePanel {
       items[i] = item;
       item.setFontSize(18 * this.dpr);
       item.setFontStyle("bold");
-      const lineImg = this.scene.make.image({ key: UIAtlasName.uicommon, frame: "Recast_nav_Select" });
+      const lineImg = this.scene.make.image({ key: UIAtlasName.recast, frame: "Recast_nav_Select" });
       lineImg.y = 21 * this.dpr;
       item.add(lineImg);
       lineImg.visible = false;
@@ -202,7 +202,7 @@ export class PicaRecastePanel extends PicaBasePanel {
       bottom: 0 * this.dpr
     });
     starbg.x = -starbg.width * 0.5;
-    this.starvalue = new ImageValue(this.scene, 60 * this.dpr, 26 * this.dpr, UIAtlasName.uicommon, "Recast_pica star_big", this.dpr, {
+    this.starvalue = new ImageValue(this.scene, 60 * this.dpr, 26 * this.dpr, UIAtlasName.recast, "Recast_pica star_big", this.dpr, {
       color: "#ffffff", fontSize: 15 * this.dpr, fontFamily: Font.NUMBER
     });
     this.starvalue.setLayout(1);
@@ -392,20 +392,20 @@ class RecasteDisplayPanel extends Phaser.GameObjects.Container {
     const rightbg = this.scene.make.image({ key: "Recast_aims_icon_bg" });
     rightbg.x = this.width * 0.5 - rightbg.width * 0.5 - 15 * this.dpr;
 
-    this.recasteItem = new ItemButton(this.scene, UIAtlasName.uicommon, "Recast_default_icon_bg", this.dpr, this.zoom, false);
+    this.recasteItem = new ItemButton(this.scene, UIAtlasName.recast, "Recast_default_icon_bg", this.dpr, this.zoom, false);
     this.recasteItem.x = -this.width * 0.5 + this.recasteItem.width * 0.5 + 20 * this.dpr;
     this.recasteItem.y = 0;
-    const arrowbg = this.scene.make.image({ key: UIAtlasName.uicommon, frame: "Recast_arrow" });
+    const arrowbg = this.scene.make.image({ key: UIAtlasName.recast, frame: "Recast_arrow" });
     arrowbg.x = this.recasteItem.x + this.recasteItem.width * 0.5 + arrowbg.width * 0.5 + 6 * this.dpr;
     arrowbg.y = this.recasteItem.y;
-    this.starvalue = new ImageValue(this.scene, 60 * this.dpr, 20 * this.dpr, UIAtlasName.uicommon, "Recast_pica star_small", this.dpr, UIHelper.colorNumberStyle("#ffffff", 20 * this.dpr));
+    this.starvalue = new ImageValue(this.scene, 60 * this.dpr, 20 * this.dpr, UIAtlasName.recast, "Recast_pica star_small", this.dpr, UIHelper.colorNumberStyle("#ffffff", 20 * this.dpr));
     this.starvalue.x = arrowbg.x - 11 * this.dpr;
     this.starvalue.y = arrowbg.y - 10 * this.dpr;
     this.nameTex = this.scene.make.text({ text: "", style: UIHelper.colorStyle("#FFFF00", 14 * this.dpr) }).setOrigin(0, 0.5);
     this.nameTex.setFontStyle("bold");
     this.nameTex.x = rightbg.x - rightbg.width * 0.5;
     this.nameTex.y = rightbg.y - rightbg.height * 0.5 - 18 * this.dpr;
-    this.starLevelImg = this.scene.make.image({ key: UIAtlasName.uicommon, frame: "Recast_star_big_1" }).setOrigin(1, 0.5);
+    this.starLevelImg = this.scene.make.image({ key: UIAtlasName.recast, frame: "Recast_star_big_1" }).setOrigin(1, 0.5);
     this.starLevelImg.x = rightbg.x + rightbg.width * 0.5 - this.starLevelImg.width * 0.5 - 12 * this.dpr;
     this.starLevelImg.y = rightbg.y - rightbg.height * 0.5 + this.starLevelImg.height * 0.5 + 8 * this.dpr;
     this.starLevelImg.visible = false;

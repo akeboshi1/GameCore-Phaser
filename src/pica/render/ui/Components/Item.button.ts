@@ -1,7 +1,7 @@
 import { ButtonEventDispatcher, DynamicImage } from "../../../../render/ui/components";
 import { ClickEvent } from "apowophaserui";
 import { UIAtlasName } from "picaRes";
-import {IPos, UIHelper, Url} from "utils";
+import { IPos, UIHelper, Url } from "utils";
 import { PicaItemTipsPanel } from "picaRender";
 import { ICountablePackageItem } from "picaStructure";
 export class ItemButton extends ButtonEventDispatcher {
@@ -44,6 +44,14 @@ export class ItemButton extends ButtonEventDispatcher {
     public setStateFrames(bg: string, rarity: string) {
         this.bgFrame = bg;
         this.rarityFrame = rarity;
+    }
+
+    public setBGTexture(key: string, frame: string) {
+        this.bg.setTexture(key, frame);
+    }
+
+    public setIconTexture(key: string, frame: string) {
+        this.itemIcon.setTexture(key, frame);
     }
 
     public setItemData(itemData: ICountablePackageItem | any, alldisplay: boolean = false) {
@@ -100,6 +108,7 @@ export class ItemButton extends ButtonEventDispatcher {
         this.onTabClickHandler();
     }
     protected onTabClickHandler() {
+        if (!this.itemData) return;
         PicaItemTipsPanel.Inst.showTips(this, this.itemData);
     }
 }

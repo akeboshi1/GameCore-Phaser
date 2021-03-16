@@ -134,7 +134,7 @@ export class PicaElevatorPanel extends BasePanel {
 
     }
     private onSelectItemHandler(floorData: any) {// op_gameconfig_01.IButton
-        const ui: any = this.showData[0];// op_client.OP_VIRTUAL_WORLD_RES_CLIENT_SHOW_UI
+        const ui: any = this.showData;// op_client.OP_VIRTUAL_WORLD_RES_CLIENT_SHOW_UI
         const texs = floorData.text.split("#");
         const enabletag = texs[1];
         const bool = enabletag === "false" ? false : true;

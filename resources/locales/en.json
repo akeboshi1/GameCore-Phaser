@@ -59,7 +59,9 @@
     "sign": "SignIn",
     "editnow": "Edit Now",
     "open": "Open",
-    "give": "Give"
+    "give": "Give",
+    "bag":"BAG",
+    "recast":"RECAST"
   },
   "quantityunit": {
     "k": "k",

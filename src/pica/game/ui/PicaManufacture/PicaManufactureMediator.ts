@@ -9,7 +9,7 @@ export class PicaManufactureMediator extends BasicMediator {
     protected mModel: PicaManufacture;
     private mScneType: op_def.SceneTypeEnum;
     constructor(game: Game) {
-        super(ModuleName.PICAFURNITURECOMPOSE_NAME, game);
+        super(ModuleName.PICAMANUFACTURE_NAME, game);
         this.mScneType = op_def.SceneTypeEnum.NORMAL_SCENE_TYPE;
         this.mModel = new PicaManufacture(game, this.mScneType);
         this.addLisenter();
@@ -67,8 +67,10 @@ export class PicaManufactureMediator extends BasicMediator {
     protected panelInit() {
         if (this.panelInit) {
             if (this.mView) {
-                this.mView.setCategories();
                 this.onUpdatePlayerInfoHandler();
+                if (this.mShowData) this.setRecasteCategories(op_pkt_def.PKT_PackageType.FurniturePackage);
+                else this.mView.setCategories();
+
             }
         }
     }
