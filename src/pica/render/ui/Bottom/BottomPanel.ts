@@ -259,6 +259,10 @@ class OutputContainer extends Phaser.GameObjects.Container {
                 stroke: true,
                 fill: true
             },
+            wrap: {
+                mode: "char",
+                width: width - 12 * this.dpr * scaleRatio
+            }
         }).setOrigin(0, 0);
 
         this.mTextArea = new TextArea(this.scene, { text: this.mOutputText })
