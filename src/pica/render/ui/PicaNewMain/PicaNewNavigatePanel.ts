@@ -13,10 +13,11 @@ export class PicaNewNavigatePanel extends Phaser.GameObjects.Container {
     private avatarButton: Button;
     private shopButton: Button;
     private sendHandler: Handler;
-    constructor(scene: Phaser.Scene, key: string, dpr: number) {
+    constructor(scene: Phaser.Scene, key: string, dpr: number, scale: number) {
         super(scene);
         this.dpr = dpr;
         this.key = key;
+        this.scale = scale;
         this.init();
     }
     init() {

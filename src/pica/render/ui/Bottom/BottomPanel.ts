@@ -14,11 +14,14 @@ export class BottomPanel extends PicaBasePanel {
     private chatCatchArr: string[] = [];
     private chatMaxLen: number = 100;
     private expanded: boolean;
+    private scaleRatio: number;
     private background: Phaser.GameObjects.Graphics;
     constructor(uiManager: UiManager) {
         super(uiManager);
+        this.scaleRatio = this.scale;
         this.atlasNames = [UIAtlasName.uicommon, UIAtlasName.iconcommon];
         this.key = ModuleName.BOTTOM;
+        this.scale = 1;
     }
 
     show(param?: any) {
@@ -34,8 +37,8 @@ export class BottomPanel extends PicaBasePanel {
         const height = this.scene.cameras.main.height;
         this.mInput.resize();
         this.y = height;
-        this.mNavigate.y = -this.mNavigate.height;
-        this.mInput.y = this.mNavigate.y - this.mInput.height;
+        this.mNavigate.y = -this.mNavigate.displayHeight;
+        this.mInput.y = this.mNavigate.y - this.mInput.displayHeight;
 
         this.updateOutputLayout();
     }
@@ -71,14 +74,14 @@ export class BottomPanel extends PicaBasePanel {
     }
 
     showKeyboard(width: number, height: number) {
-        const ch = this.cameraHeight / this.scale;
-        const keyboard = ch - height / this.scale;
+        const ch = this.cameraHeight;
+        const keyboard = ch - height;
         if (keyboard === 0) {
             // 第三方输入法收起键盘没有事件
             this.hideKeyboard();
             return;
         }
-        this.mInput.y = (-keyboard - this.mInput.height);
+        this.mInput.y = (-keyboard - this.mInput.height * this.scaleRatio);
         // this.mOutput.y = this.mInput.y - 1 * this.dpr - this.mOutput.height;
         // this.resizeColtroll.y = this.mInput.y - this.resizeColtroll.height * 0.5;
         // this.mOutput.updateLayout();
@@ -86,7 +89,7 @@ export class BottomPanel extends PicaBasePanel {
     }
 
     hideKeyboard() {
-        this.mInput.y = this.mNavigate.y - this.mInput.height;
+        this.mInput.y = this.mNavigate.y - this.mInput.height * this.scaleRatio;
         this.updateOutputLayout();
         // this.mOutput.y = this.mInput.y - 1 * this.dpr - this.mOutput.height;
         // this.resizeColtroll.y = this.mInput.y - this.resizeColtroll.height * 0.5;
@@ -112,13 +115,14 @@ export class BottomPanel extends PicaBasePanel {
     }
 
     protected init() {
-        this.mOutput = new OutputContainer(this.scene, this.dpr, this.scale);
-        this.mInput = new InputContainer(this.scene, this.key, this.dpr);
-        this.mNavigate = new PicaNewNavigatePanel(this.scene, this.key, this.dpr);
+        this.mOutput = new OutputContainer(this.scene, this.dpr, this.scaleRatio);
+        this.mInput = new InputContainer(this.scene, this.key, this.dpr, this.scaleRatio);
+        this.mNavigate = new PicaNewNavigatePanel(this.scene, this.key, this.dpr, this.scaleRatio);
         this.mNavigate.setHandler(new Handler(this, this.onNavigateHandler));
         this.background = this.scene.make.graphics(undefined);
-        this.resizeColtroll = new ResizeControll(this.scene, this.key, this.dpr);
-        this.add([this.background, this.mOutput, this.mInput, this.mNavigate, this.resizeColtroll]);
+        this.resizeColtroll = new ResizeControll(this.scene, this.key, this.dpr, this.scaleRatio);
+        this.addAt(this.background, 0);
+        this.add([this.mOutput, this.mInput, this.mNavigate, this.resizeColtroll]);
         this.resize(this.width, this.mOutput.height + this.mInput.height + this.mNavigate.height);
         super.init();
         this.onToggleSizeHandler(false);
@@ -196,12 +200,12 @@ export class BottomPanel extends PicaBasePanel {
         if (this.expanded) {
             this.mOutput.x = 0;
             this.mOutput.y = this.mInput.y - 1 * this.dpr - this.mOutput.height;
-            this.resizeColtroll.y = this.mOutput.y - this.resizeColtroll.height * 0.5;
+            this.resizeColtroll.y = this.mOutput.y - this.resizeColtroll.displayHeight * 0.5;
             this.mOutput.expand();
         } else {
-            this.mOutput.x = this.resizeColtroll.width - 1 * this.dpr;
+            this.mOutput.x = this.resizeColtroll.displayWidth;
             this.mOutput.y = this.mInput.y - 1 * this.dpr - this.mOutput.height;
-            this.resizeColtroll.y = this.mInput.y - 1 * this.dpr - this.resizeColtroll.height * 0.5;
+            this.resizeColtroll.y = this.mInput.y - 1 * this.dpr - this.resizeColtroll.displayHeight * 0.5;
             this.mOutput.collapse();
         }
         this.mOutput.updateLayout();
@@ -210,12 +214,12 @@ export class BottomPanel extends PicaBasePanel {
         this.background.clear();
         this.background.fillStyle(0, 0);
         this.background.fillRect(0, this.mOutput.y, width, height);
-        // const hitArea = new Phaser.Geom.Rectangle(0, this.mOutput.y, width, height);
-        // if (this.background.input) {
-        //     this.background.input.hitArea = hitArea;
-        // } else {
-        //     this.background.setInteractive(hitArea, Phaser.Geom.Rectangle.Contains);
-        // }
+        const hitArea = new Phaser.Geom.Rectangle(0, this.mOutput.y, width, height);
+        if (this.background.input) {
+            this.background.input.hitArea = hitArea;
+        } else {
+            this.background.setInteractive(hitArea, Phaser.Geom.Rectangle.Contains);
+        }
     }
 
     // private onFocusHandler() {
@@ -241,12 +245,12 @@ class OutputContainer extends Phaser.GameObjects.Container {
         this.background.clear();
 
         const width = this.scene.cameras.main.width;
-        const zoom = this.scaleRatio;
+        // const zoom = this.scaleRatio;
         this.mOutputText = new BBCodeText(this.scene, 0, 0, "", {
-            fontSize: 12 * this.dpr + "px",
+            fontSize: 12 * this.dpr * scaleRatio + "px",
             fontFamily: Font.DEFULT_FONT,
             stroke: "#000000",
-            strokeThickness: 1 * this.dpr * zoom,
+            strokeThickness: 1 * this.dpr * scaleRatio,
             shadow: {
                 offsetX: 0,
                 offsetY: 0,
@@ -257,24 +261,19 @@ class OutputContainer extends Phaser.GameObjects.Container {
             },
             wrap: {
                 mode: "char",
-                width: width - 12 * this.dpr * zoom
+                width: width - 12 * this.dpr * scaleRatio
             }
-        });
+        }).setOrigin(0, 0);
 
-        this.mTextArea = new TextArea(this.scene, {
-            x: width * 0.5 + 8 * this.dpr * zoom,
-            y: 6 * this.dpr,
-            textWidth: width - 4 * this.dpr * zoom,
-            textHeight: 126 * this.dpr * zoom,
-            text: this.mOutputText,
-            // textMask: false
-        })
-            .layout();
+        this.mTextArea = new TextArea(this.scene, { text: this.mOutputText })
+            .layout()
+            .setOrigin(0, 0);
         this.updateLayout();
         this.add([
             this.background,
             this.mTextArea,
             this.mOutputText,
+            this.mTextArea.childrenMap.child
         ]);
     }
 
@@ -282,10 +281,12 @@ class OutputContainer extends Phaser.GameObjects.Container {
         this.setSize(width, height);
         this.background.clear();
         this.background.fillStyle(0, 0.6);
-        this.background.fillRect(0, 0, width + 1 * this.dpr, height);
-        this.mTextArea.childrenMap.child.setMinSize(width * this.scaleRatio, height * this.scaleRatio);
+        this.background.fillRect(0, 0, width, height);
+        this.mTextArea.childrenMap.child.setMinSize((width - 12 * this.dpr * this.scaleRatio), (height - 8 * this.dpr * this.scaleRatio));
+
         this.mTextArea.layout();
-        (<any>this.mTextArea).setChildOY(4 * this.dpr * this.scaleRatio);
+        this.mOutputText.setWrapWidth(width - 4 * this.dpr * this.scaleRatio);
+        // (<any>this.mTextArea).setChildOY(1 * this.dpr * this.scaleRatio);
         this.updateLayout();
         const textMask = this.mTextArea.childrenMap.text;
         textMask.y = 4 * this.dpr;
@@ -293,18 +294,19 @@ class OutputContainer extends Phaser.GameObjects.Container {
     }
 
     public expand() {
-        this.resize(this.scene.cameras.main.width, 125.33 * this.dpr);
+        this.resize(this.scene.cameras.main.width, 125.33 * this.dpr * this.scaleRatio);
         this.mTextArea.setScrollerEnable(true);
     }
 
     public collapse() {
-        this.resize(296 * this.dpr, 40 * this.dpr);
+        this.resize(296 * this.dpr * this.scaleRatio, 40 * this.dpr * this.scaleRatio);
         this.mTextArea.setScrollerEnable(false);
     }
 
     public updateLayout() {
-        const matrix = this.getWorldTransformMatrix(this.getLocalTransformMatrix());
-        this.mTextArea.setPosition(this.width * this.scaleRatio * 0.5 + 8 * this.dpr, matrix.ty + this.mTextArea.height * 0.5);
+        // const matrix = this.getWorldTransformMatrix(this.getLocalTransformMatrix());
+        // this.mTextArea.setPosition(this.width * this.scaleRatio * 0.5, this.mTextArea.height * 0.5 + 6 * this.scaleRatio);
+        this.mTextArea.setPosition(4 * this.dpr * this.scaleRatio, 4 * this.dpr * this.scaleRatio);
         this.mTextArea.scrollToBottom();
     }
 
@@ -321,8 +323,9 @@ class InputContainer extends Phaser.GameObjects.Container {
     private inputText: LabelInput;
     private emoji: Phaser.GameObjects.Image;
     private mFocusing: boolean = false;
-    constructor(scene: Phaser.Scene, key: string, private dpr: number) {
+    constructor(scene: Phaser.Scene, key: string, private dpr: number, scale: number) {
         super(scene);
+        this.scale = scale;
         this.background = scene.make.graphics(undefined, false);
         const text = i18n.t("chat.placeholder");
         this.emoji = scene.make.image({
@@ -356,9 +359,6 @@ class InputContainer extends Phaser.GameObjects.Container {
         this.background.clear();
         this.background.fillStyle(0x000000, 0.6);
         this.background.fillRect(0, 0, w, this.height);
-        // this.background.input = undefined;
-        // this.background.setInteractive(new Phaser.Geom.Rectangle(0, 0, w / this.scale, this.height / this.scale), Phaser.Geom.Rectangle.Contains);
-        // this.inputText.resize(w - 46 * this.dpr, this.height);
     }
 
     public setText(text: string) {
@@ -375,13 +375,11 @@ class InputContainer extends Phaser.GameObjects.Container {
 
     private onEnterHandler(text: string) {
         this.emit("enter", text);
-        // this.inputText.setBlur();
         this.inputText.setText("");
     }
 
     private onInputBlurHandler() {
         this.scene.input.off("pointerdown", this.onPointerSceneHandler, this);
-        // this.emit("blur");
         this.inputText.setBlur();
     }
 
@@ -403,8 +401,9 @@ class ResizeControll extends Phaser.GameObjects.Container {
     private bubble: Phaser.GameObjects.Image;
     private arrow: Phaser.GameObjects.Image;
     private expaned: boolean = true;
-    constructor(scene: Phaser.Scene, key: string, private dpr: number) {
+    constructor(scene: Phaser.Scene, key: string, private dpr: number, scale: number) {
         super(scene);
+        this.scale = scale;
         this.background = new Button(this.scene, key, "home_chat_pack_up_bg");
         this.background.tweenEnable = false;
         this.bubble = this.scene.make.image({
@@ -420,7 +419,7 @@ class ResizeControll extends Phaser.GameObjects.Container {
         this.bubble.x = (-this.width + this.bubble.width) * 0.5 + 12.67 * dpr;
         this.arrow.x = (-this.width + this.arrow.width) * 0.5 + 43 * dpr;
         this.add([this.background, this.bubble, this.arrow]);
-        this.x = this.background.width * 0.5;
+        this.x = this.displayWidth * 0.5;
     }
 
     addListen() {

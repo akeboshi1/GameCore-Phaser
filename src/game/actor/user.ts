@@ -106,6 +106,7 @@ export class User extends Player {
         const pos = op_def.PBPoint3f.create();
         pos.x = userPos.x;
         pos.y = userPos.y;
+        Logger.getInstance().log("syncPos user===>", pos);
         const movePoint = op_def.MovePoint.create();
         movePoint.pos = pos;
         // 给每个同步点时间戳
@@ -173,7 +174,7 @@ export class User extends Player {
         if (data.stopPos) {
             this.setPosition(data.stopPos);
         }
-        this.stopMove(data.stopPos);
+        if (this.mMoving) this.stopMove(data.stopPos);
         if (data.interactiveBoo) {
             this.activeSprite(data.targetId, undefined, data.needBroadcast);
         }
@@ -181,7 +182,7 @@ export class User extends Player {
 
     public tryActiveAction(targetId: number, param?: any, needBroadcast?: boolean) {
         this.activeSprite(targetId, param, needBroadcast);
-        this.game.emitter.emit(EventType.SCENE_PLAYER_ACTION, this.game.user.id, targetId, param);
+        this.game.emitter.emit(EventType.SCENE_PLAYER_ACTION, this.game.user.id, param);
     }
 
     public updateModel(model: op_client.IActor) {

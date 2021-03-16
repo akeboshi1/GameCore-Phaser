@@ -1614,7 +1614,7 @@ export class Render extends RPCPeer implements GameMain, IRender {
 
     private initConfig() {
         if (!this.mConfig.devicePixelRatio) {
-            this.mConfig.devicePixelRatio = this.devicePixelRatio || 2;
+            this.mConfig.devicePixelRatio = window.devicePixelRatio || 2;
         }
         if (this.mConfig.width === undefined) {
             this.mConfig.width = window.innerWidth;

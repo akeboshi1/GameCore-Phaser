@@ -6,7 +6,7 @@ import ElementEditorGrids from "./element.editor.grids";
 import {Handler, Logger} from "utils";
 import {BaseDragonbonesDisplay, BaseFramesDisplay} from "baseRender";
 import {AnimationDataNode} from "game-capsule";
-import {AnimationModel} from "structure";
+import {AnimationModel, RunningAnimation} from "structure";
 import {DragonbonesEditorDisplay} from "./dragonbones.editor.display";
 
 export const LOCAL_HOME_PATH: string = path.resolve(os.homedir(), ".pixelpai");
@@ -22,6 +22,7 @@ export default class ElementFramesDisplay extends BaseFramesDisplay implements R
     // private mMountArmatureParent: Phaser.GameObjects.Container;
     private mCurFrameIdx: number = 0;
     private mPlaying: boolean = false;
+    private mCurMountAnimation: RunningAnimation = {name: "idle", flip: false};
 
     constructor(scene: Phaser.Scene, node: any, grids: ElementEditorGrids, emitter: Phaser.Events.EventEmitter) {// AnimationDataNode
         super(scene);
@@ -58,18 +59,16 @@ export default class ElementFramesDisplay extends BaseFramesDisplay implements R
         this.x = originPos.x;
         this.y = originPos.y;
         this.updatePlay();
-        this.createMountDisplay();
     }
 
     public onResourcesLoaded() {
-        this.clearDisplays();
+        this.clearDisplay();
         this.createDisplays();
         this.updatePlay();
-        this.createMountDisplay();
     }
 
     public onResourcesCleared() {
-        this.clearDisplays();
+        this.clearDisplay();
     }
 
     public setFrame(frameIdx: number) {
@@ -79,7 +78,7 @@ export default class ElementFramesDisplay extends BaseFramesDisplay implements R
     }
 
     public setMountAnimation(aniName: string, idx?: number) {
-        const ani = {name: aniName, flip: false};
+        this.mCurMountAnimation.name = aniName;
         if (idx !== undefined) {
             if (!this.mMountList.get(idx)) {
                 Logger.getInstance().warn("wrong idx: " + idx);
@@ -87,29 +86,16 @@ export default class ElementFramesDisplay extends BaseFramesDisplay implements R
             }
 
             const arm: BaseDragonbonesDisplay = this.mMountList.get(idx) as BaseDragonbonesDisplay;
-            // if (aniName && arm.animation.hasAnimation(aniName)) {
-            arm.play({name: aniName, flip: false});
-            // } else {
-            // arm.stop();
-            // }
+            if (arm) arm.play(this.mCurMountAnimation);
         } else {
-            // this.mMountList.forEach((arm) => {
-            // if (aniName && arm.animation.hasAnimation(aniName)) {
-            //     arm.animation.play(aniName);
-            // } else {
-            //     arm.animation.stop();
-            // }
-            // arm.play(ani);
-            // });
             this.mMountList.forEach((val) => {
-                (val as BaseDragonbonesDisplay).play(ani);
+                (val as BaseDragonbonesDisplay).play(this.mCurMountAnimation);
             });
         }
     }
 
     public updateMountDisplay() {
-        this.updatePlay();
-        this.createMountDisplay();
+        this.updateMountLayerPlay();
     }
 
     public setPlay(playing: boolean) {
@@ -203,7 +189,7 @@ export default class ElementFramesDisplay extends BaseFramesDisplay implements R
     }
 
     public updateAnimationLayer() {
-        this.clearDisplays();
+        this.clearDisplay();
         this.createDisplays();
         this.updatePlay();
     }
@@ -281,13 +267,13 @@ export default class ElementFramesDisplay extends BaseFramesDisplay implements R
     }
 
     public clear() {
-        this.clearDisplays();
+        this.clearDisplay();
 
         this.mSelectedGameObjects.length = 0;
         this.mDisplayDatas.clear();
     }
 
-    public clearDisplays() {
+    protected clearDisplay() {
         this.mDisplays.forEach((element) => {
             if (element) {
                 element.destroy();
@@ -299,6 +285,8 @@ export default class ElementFramesDisplay extends BaseFramesDisplay implements R
             val.destroy(true);
         });
         this.mMountList.clear();
+
+        super.clearDisplay();
     }
 
     protected makeAnimation(gen: string, key: string, frameName: string[], frameVisible: boolean[], frameRate: number, loop: boolean, frameDuration?: number[]) {
@@ -329,40 +317,6 @@ export default class ElementFramesDisplay extends BaseFramesDisplay implements R
 
         // this.createMountDisplay();
         // this.updatePlay();
-    }
-
-    private createMountDisplay() {
-        if (!this.mAnimationData) return;
-
-        const data = this.mAnimationData.mountLayer;
-        if (!data) {
-            this.mMountList.forEach((element) => {
-                element.visible = false;
-            });
-            return;
-        }
-
-        if (data.mountPoint) {
-            for (let i = 0; i < data.mountPoint.length; i++) {
-                if (this.mMountList.get(i)) continue;
-                const arm = new DragonbonesEditorDisplay(this.scene);
-                this.mount(arm, i);
-            }
-        }
-
-        this.mMountList.forEach((val, key) => {
-            if (!data.mountPoint || key >= data.mountPoint.length) {
-                val.visible = false;
-                return;
-            }
-            const pos = {x: data.mountPoint[key].x, y: data.mountPoint[key].y};
-            val.setPosition(pos.x, pos.y);
-
-            val.visible = true;
-        });
-
-        // this.mMountArmatureParent.setDepth(data.index);
-        this.updateChildrenIdxByDepth();
     }
 
     private keyboardEvent(value) {
@@ -538,8 +492,34 @@ export default class ElementFramesDisplay extends BaseFramesDisplay implements R
             });
         }
 
+        this.updateMountLayerPlay();
+        // if (!this.mPlaying) this.generateFrameSumb();
+    }
+
+    private updateMountLayerPlay() {
+        if (!this.mAnimationData) return;
         const mountlayer = this.mAnimationData.mountLayer;
+
+        this.mMountList.forEach((val) => {
+            this.unmount(val as BaseDragonbonesDisplay);
+            val.destroy(true);
+        });
+        this.mMountList.clear();
+
         if (!mountlayer || !mountlayer.mountPoint) return;
+        for (let i = 0; i < mountlayer.mountPoint.length; i++) {
+            if (this.mMountList.get(i)) continue;
+            const arm = new DragonbonesEditorDisplay(this.scene);
+            this.mount(arm, i);
+            const pos = {x: mountlayer.mountPoint[i].x, y: mountlayer.mountPoint[i].y};
+            arm.setPosition(pos.x, pos.y);
+            arm.play(this.mCurMountAnimation);
+
+            arm.visible = true;
+        }
+
+        // this.mMountArmatureParent.setDepth(data.index);
+        this.updateChildrenIdxByDepth();
         const firstLayer = this.mAnimationData.layerDict.values().next().value;
         if (mountlayer.frameVisible && mountlayer.frameVisible.length !== firstLayer.frameName.length) {
             Logger.getInstance().error("wrong data: frameName.length: " + firstLayer.frameName.length + "; mountlayer.frameVisible.length: " + mountlayer.frameVisible.length);
@@ -566,8 +546,6 @@ export default class ElementFramesDisplay extends BaseFramesDisplay implements R
                 }
             }
         }
-
-        // if (!this.mPlaying) this.generateFrameSumb();
     }
 
     private onMountTimerEvent() {

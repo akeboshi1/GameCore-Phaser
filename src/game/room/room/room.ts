@@ -1,29 +1,29 @@
-import { op_client, op_def, op_virtual_world } from "pixelpai_proto";
-import { PacketHandler, PBpacket } from "net-socket-packet";
-import { Handler, IPos, IPosition45Obj, Logger, LogicPos, Position45 } from "utils";
-import { Game } from "../../game";
-import { IBlockObject } from "../block/iblock.object";
-import { ClockReadyListener } from "../../loop/clock/clock";
-import { State } from "../state/state.group";
-import { IRoomManager } from "../room.manager";
-import { ConnectionService } from "../../../../lib/net/connection.service";
-import { CamerasManager, ICameraService } from "../camera/cameras.manager";
-import { ViewblockManager } from "../viewblock/viewblock.manager";
-import { PlayerManager } from "../player/player.manager";
-import { ElementManager } from "../element/element.manager";
-import { IElement, InputEnable } from "../element/element";
-import { IViewBlockManager } from "../viewblock/iviewblock.manager";
-import { TerrainManager } from "../terrain/terrain.manager";
-import { SkyBoxManager } from "../sky.box/sky.box.manager";
-import { GameState, IScenery, ISprite, LoadState, ModuleName, SceneName } from "structure";
-import { EffectManager } from "../effect/effect.manager";
-import { DecorateActionType, DecorateManager } from "../decorate/decorate.manager";
-import { WallManager } from "../element/wall.manager";
-import { Sprite } from "baseModel";
-import { BlockObject } from "../block/block.object";
+import {op_client, op_def, op_virtual_world} from "pixelpai_proto";
+import {PacketHandler, PBpacket} from "net-socket-packet";
+import {Handler, IPos, IPosition45Obj, Logger, LogicPos, Position45} from "utils";
+import {Game} from "../../game";
+import {IBlockObject} from "../block/iblock.object";
+import {ClockReadyListener} from "../../loop/clock/clock";
+import {State} from "../state/state.group";
+import {IRoomManager} from "../room.manager";
+import {ConnectionService} from "../../../../lib/net/connection.service";
+import {CamerasManager, ICameraService} from "../camera/cameras.manager";
+import {ViewblockManager} from "../viewblock/viewblock.manager";
+import {PlayerManager} from "../player/player.manager";
+import {ElementManager} from "../element/element.manager";
+import {IElement, InputEnable} from "../element/element";
+import {IViewBlockManager} from "../viewblock/iviewblock.manager";
+import {TerrainManager} from "../terrain/terrain.manager";
+import {SkyBoxManager} from "../sky.box/sky.box.manager";
+import {GameState, IScenery, ISprite, LoadState, ModuleName, SceneName} from "structure";
+import {EffectManager} from "../effect/effect.manager";
+import {DecorateActionType, DecorateManager} from "../decorate/decorate.manager";
+import {WallManager} from "../element/wall.manager";
+import {Sprite} from "baseModel";
+import {BlockObject} from "../block/block.object";
 import IActor = op_client.IActor;
 import NodeType = op_def.NodeType;
-import { BaseDataConfigManager } from "picaWorker";
+import {BaseDataConfigManager} from "picaWorker";
 
 export interface SpriteAddCompletedListener {
     onFullPacketReceived(sprite_t: op_def.NodeType): void;
@@ -99,7 +99,7 @@ export interface IRoomService {
 
     addToWalkableMap(sprite: ISprite, isTerrain?: boolean);
 
-    removeFromWalkableMap(sprite: ISprite);
+    removeFromWalkableMap(sprite: ISprite, isTerrain?: boolean);
 
     isWalkable(x: number, y: number): boolean;
 
@@ -141,7 +141,9 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
     private mDecorateEntryData = null;
     // -1: out of range; 0: not walkable; 1: walkable
     private mWalkableMap: number[][];
-    private mNotWalkablePos2SpriteIDs: Map<number, number[]> = new Map<number, number[]>();
+    // 地块可行走标记map。每格标记由多个不同优先级（暂时仅地块和物件）标记组成，最终是否可行走由高优先级标记决定
+    private mWalkableMarkMap: Map<number, Map<number, { level: number; walkable: boolean }>> =
+        new Map<number, Map<number, { level: number; walkable: boolean }>>();
 
     constructor(protected manager: IRoomManager) {
         super();
@@ -356,7 +358,7 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
         //         }
         //     }
         // }
-        return { width: w, height: h };
+        return {width: w, height: h};
     }
 
     public async startPlay() {
@@ -475,137 +477,47 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
         if (!displayInfo) {
             return;
         }
-        let collision = sprite.getCollisionArea();
-        let walkable = sprite.getWalkableArea();
-        const origin = sprite.getOriginPoint();
-        if (!collision) {
-            return;
-        }
-        let rows = collision.length;
-        let cols = collision[0].length;
-        let pos: IPos;
-        if (isTerrain) {
-            pos = this.transformTo45(new LogicPos(sprite.pos.x, sprite.pos.y));
-            pos.x *= 2;
-            pos.y *= 2;
-            if (rows === 1 && cols === 1) {
-                rows = 2;
-                cols = 2;
 
-                const colVal = collision[0][0];
-                collision = new Array(rows);
-                for (let i = 0; i < rows; i++) {
-                    collision[i] = new Array(cols).fill(colVal);
-                }
+        const walkableData = this.getSpriteWalkableData(sprite, isTerrain);
+        if (!walkableData) return;
 
-                walkable = new Array(rows);
-                for (let i = 0; i < rows; i++) {
-                    walkable[i] = new Array(cols).fill(0);
-                }
-            }
-        } else {
-            pos = this.transformToMini45(new LogicPos(sprite.pos.x, sprite.pos.y));
-        }
-        if (!walkable) {
-            walkable = new Array(rows);
-            for (let i = 0; i < rows; i++) {
-                walkable[i] = new Array(cols).fill(0);
-            }
-        } else {
-            const wRows = walkable.length;
-            if (wRows === 0) {
-                Logger.getInstance().error(`data error: WalkableArea {${walkable}}, data: `, sprite);
-                return;
-            }
-            const wCols = walkable[0].length;
-            if (rows !== wRows || cols !== wCols) {
-                Logger.getInstance().error(`data error: CollisionArea {${collision}} not match WalkableArea {${walkable}}, data: `, sprite);
-                return;
-            }
-        }
+        const {origin, collisionArea, walkableArea, pos45, rows, cols} = walkableData;
+
         let tempY = 0;
         let tempX = 0;
         for (let i = 0; i < rows; i++) {
-            tempY = pos.y + i - origin.y;
+            tempY = pos45.y + i - origin.y;
             for (let j = 0; j < cols; j++) {
-                tempX = pos.x + j - origin.x;
+                tempX = pos45.x + j - origin.x;
                 if (tempY < 0 || tempY >= this.mWalkableMap.length || tempX < 0 || tempX >= this.mWalkableMap[tempY].length) {
                     continue;
                 }
 
-                const canWalk = collision[i][j] === 0 || walkable[i][j] === 1;
-                if (isTerrain && this.mWalkableMap[tempY][tempX] === 0 && canWalk) {
-                    continue;
-                }
-                this.setWalkable(tempX, tempY, canWalk);
-
-                if (!canWalk) {
-                    const wPos = tempX + tempY * this.mMiniSize.cols;
-                    if (!this.mNotWalkablePos2SpriteIDs.get(wPos)) {
-                        this.mNotWalkablePos2SpriteIDs.set(wPos, []);
-                    }
-                    const ids = this.mNotWalkablePos2SpriteIDs.get(wPos);
-                    if (ids.indexOf(sprite.id) < 0) ids.push(sprite.id);
-                    // Logger.getInstance().log("#place not walkable: ", this.mNotWalkablePos2SpriteIDs);
-                }
+                const canWalk = collisionArea[i][j] === 0 || walkableArea[i][j] === 1;
+                this.addWalkableMark(tempX, tempY, sprite.id, isTerrain ? 0 : 1, canWalk);
             }
         }
     }
 
-    public removeFromWalkableMap(sprite: ISprite) {
+    public removeFromWalkableMap(sprite: ISprite, isTerrain: boolean = false) {
         if (!sprite) return;
-        const collision = sprite.getCollisionArea();
-        if (!collision) return;
-        let walkable = sprite.getWalkableArea();
-        const origin = sprite.getOriginPoint();
-        const rows = collision.length;
-        const cols = collision[0].length;
-        const pos = this.transformToMini45(new LogicPos(sprite.pos.x, sprite.pos.y));
-        if (!walkable) {
-            walkable = new Array(rows);
-            for (let i = 0; i < rows; i++) {
-                walkable[i] = new Array(cols).fill(0);
-            }
-        } else {
-            const wRows = walkable.length;
-            if (wRows === 0) {
-                Logger.getInstance().error(`data error: WalkableArea {${walkable}}, data: `, sprite);
-                return;
-            }
-            const wCols = walkable[0].length;
-            if (rows !== wRows || cols !== wCols) {
-                Logger.getInstance().error(`data error: CollisionArea {${collision}} not match WalkableArea {${walkable}}, data: `, sprite);
-                return;
-            }
-        }
+
+        const walkableData = this.getSpriteWalkableData(sprite, isTerrain);
+        if (!walkableData) return;
+
+        const {origin, collisionArea, walkableArea, pos45, rows, cols} = walkableData;
+
         let tempY = 0;
         let tempX = 0;
         for (let i = 0; i < rows; i++) {
-            tempY = pos.y + i - origin.y;
+            tempY = pos45.y + i - origin.y;
             for (let j = 0; j < cols; j++) {
-                tempX = pos.x + j - origin.x;
-                if (collision[i][j] === 1 && walkable[i][j] === 0) {
-                    if (tempY < 0 || tempY >= this.mWalkableMap.length || tempX < 0 || tempX >= this.mWalkableMap[tempY].length) {
-                        continue;
-                    }
-
-                    const wPos = tempX + tempY * this.mMiniSize.cols;
-                    const ids = this.mNotWalkablePos2SpriteIDs.get(wPos);
-                    if (!ids) {
-                        Logger.getInstance().warn(`not walkable map error, pos {${tempX}, ${tempY}} has no data`);
-                        return;
-                    }
-                    const idx = ids.indexOf(sprite.id);
-                    if (idx < 0) {
-                        Logger.getInstance().warn(`not walkable map error, no id {${sprite.id}} at pos {${tempX}, ${tempY}}`);
-                        return;
-                    }
-                    ids.splice(idx, 1);
-                    if (ids.length === 0) {
-                        this.setWalkable(tempX, tempY, true);
-                        // Logger.getInstance().log("#place remove walkable, ", tempX, tempY, sprite.id);
-                    }
+                tempX = pos45.x + j - origin.x;
+                if (tempY < 0 || tempY >= this.mWalkableMap.length || tempX < 0 || tempX >= this.mWalkableMap[tempY].length) {
+                    continue;
                 }
+
+                this.removeWalkableMark(tempX, tempY, sprite.id);
             }
         }
     }
@@ -649,7 +561,7 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
         this.game.renderPeer.clearRoom();
         this.game.uiManager.recover();
         this.mWalkableMap = [];
-        this.mNotWalkablePos2SpriteIDs.clear();
+        this.mWalkableMarkMap.clear();
     }
 
     // public move(id: number, x: number, y: number, nodeType: NodeType) {
@@ -776,7 +688,7 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
     }
 
     public requestDecorate(id: number, baseID?: string) {
-        this.mDecorateEntryData = { id, baseID };
+        this.mDecorateEntryData = {id, baseID};
 
         this.connection.send(new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_START_EDIT_MODEL));
 
@@ -806,7 +718,7 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
         this.game.uiManager.hideMed(ModuleName.PICANEWMAIN_NAME);
         this.game.uiManager.hideMed(ModuleName.BOTTOM);
         this.game.uiManager.showMed(ModuleName.PICADECORATE_NAME,
-            { closeAlertText: (<BaseDataConfigManager>this.game.configManager).getI18n("PKT_SYS0000021") });
+            {closeAlertText: (<BaseDataConfigManager> this.game.configManager).getI18n("PKT_SYS0000021")});
 
         // switch mouse manager
         this.game.renderPeer.switchDecorateMouseManager();
@@ -885,7 +797,7 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
                     // Logger.getInstance().debug("setCameraBounds error", bounds);
                     return;
                 }
-                let { x, y, width, height } = bounds;
+                let {x, y, width, height} = bounds;
                 x = -width * 0.5 + (x ? x : 0);
                 y = (this.mSize.sceneHeight - height) * 0.5 + (y ? y : 0);
                 x *= this.mScaleRatio;
@@ -1139,7 +1051,125 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
         }
     }
 
-    private setWalkable(x: number, y: number, walkable: boolean) {
+    private getSpriteWalkableData(sprite: ISprite, isTerrain: boolean):
+        { origin: IPos, collisionArea: number[][], walkableArea: number[][], pos45: IPos, rows: number, cols: number } {
+        let collisionArea = sprite.getCollisionArea();
+        let walkableArea = sprite.getWalkableArea();
+        const origin = sprite.getOriginPoint();
+        if (!collisionArea) {
+            return null;
+        }
+        let rows = collisionArea.length;
+        let cols = collisionArea[0].length;
+        let pos45: IPos;
+        if (isTerrain) {
+            pos45 = this.transformTo45(new LogicPos(sprite.pos.x, sprite.pos.y));
+            pos45.x *= 2;
+            pos45.y *= 2;
+            if (rows === 1 && cols === 1) {
+                rows = 2;
+                cols = 2;
+
+                const colVal = collisionArea[0][0];
+                collisionArea = new Array(rows);
+                for (let i = 0; i < rows; i++) {
+                    collisionArea[i] = new Array(cols).fill(colVal);
+                }
+
+                walkableArea = new Array(rows);
+                for (let i = 0; i < rows; i++) {
+                    walkableArea[i] = new Array(cols).fill(0);
+                }
+            }
+        } else {
+            pos45 = this.transformToMini45(new LogicPos(sprite.pos.x, sprite.pos.y));
+        }
+        if (!walkableArea) {
+            walkableArea = new Array(rows);
+            for (let i = 0; i < rows; i++) {
+                walkableArea[i] = new Array(cols).fill(0);
+            }
+        } else {
+            const wRows = walkableArea.length;
+            if (wRows === 0) {
+                Logger.getInstance().error(`data error: WalkableArea {${walkableArea}}, data: `, sprite);
+                return null;
+            }
+            const wCols = walkableArea[0].length;
+            if (rows !== wRows || cols !== wCols) {
+                Logger.getInstance().error(`data error: CollisionArea {${collisionArea}} not match WalkableArea {${walkableArea}}, data: `, sprite);
+                return null;
+            }
+        }
+
+        return {origin, collisionArea, walkableArea, pos45, rows, cols};
+    }
+
+    private addWalkableMark(x: number, y: number, id: number, level: number, walkable: boolean) {
+        const idx = this.mapPos2Idx(x, y);
+
+        if (!this.mWalkableMarkMap.has(idx)) {
+            this.mWalkableMarkMap.set(idx, new Map<number, { level: number; walkable: boolean }>());
+        }
+
+        const marks = this.mWalkableMarkMap.get(idx);
+        if (marks.has(id)) {
+            marks.delete(id);
+        }
+
+        marks.set(id, {level, walkable});
+        this.caculateWalkableMark(x, y);
+    }
+
+    private removeWalkableMark(x: number, y: number, id: number) {
+        const idx = this.mapPos2Idx(x, y);
+
+        if (!this.mWalkableMarkMap.has(idx)) {
+            this.mWalkableMarkMap.set(idx, new Map<number, { level: number; walkable: boolean }>());
+        }
+
+        const marks = this.mWalkableMarkMap.get(idx);
+        if (marks.has(id)) {
+            marks.delete(id);
+        }
+        this.caculateWalkableMark(x, y);
+    }
+
+    private caculateWalkableMark(x: number, y: number) {
+        const idx = this.mapPos2Idx(x, y);
+        if (!this.mWalkableMarkMap.has(idx)) {
+            this.setWalkableMap(x, y, false);
+            return;
+        }
+
+        const marks = this.mWalkableMarkMap.get(idx);
+        if (marks.size === 0) {
+            this.setWalkableMap(x, y, false);
+            return;
+        }
+        let highestLv = -1;
+        let result = false;
+        marks.forEach((val) => {
+            // 低优先级不影响结果
+            if (val.level < highestLv) return;
+
+            // 高优先级 直接覆盖
+            if (val.level > highestLv) {
+                highestLv = val.level;
+                result = val.walkable;
+                return;
+            }
+
+            // 相同优先级 不可行走覆盖可行走
+            if (!val.walkable) {
+                result = false;
+            }
+        });
+
+        this.setWalkableMap(x, y, result);
+    }
+
+    private setWalkableMap(x: number, y: number, walkable: boolean) {
         if (y < 0 || y >= this.mWalkableMap.length || x < 0 || x >= this.mWalkableMap[y].length) {
             return;
         }
@@ -1148,5 +1178,9 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
 
         this.mWalkableMap[y][x] = newVal;
         this.game.physicalPeer.setWalkableAt(x, y, walkable);
+    }
+
+    private mapPos2Idx(x: number, y: number): number {
+        return x + y * this.mMiniSize.cols;
     }
 }
