@@ -50,16 +50,16 @@ export class PicaManufacture extends BasicModel {
 
   private onRetRescasteResult(packet: PBpacket) {
     const content: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_PKT_FORGE_RESULT = packet.content;
-    this.game.emitter.emit(ModuleName.PICARECASTE_NAME + "_retrecasteresult", content.reward);
+    this.game.emitter.emit(ModuleName.PICAMANUFACTURE_NAME + "_retrecasteresult", content.reward);
   }
 
   private onRetRecasteListResult(packet: PBpacket) {
     const content: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_PKT_FORGE_LIST_RESULT = packet.content;
-    this.game.emitter.emit(ModuleName.PICARECASTE_NAME + "_retrecastelistresult", content.list);
+    this.game.emitter.emit(ModuleName.PICAMANUFACTURE_NAME + "_retrecastelistresult", content.list);
   }
   private onRetComposeResult(packet: PBpacket) {
     const content: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_PKT_COMBINE_RESULT = packet.content;
-    this.game.emitter.emit(ModuleName.PICAFURNITURECOMPOSE_NAME + "_retcomposeresult", content.reward);
+    this.game.emitter.emit(ModuleName.PICAMANUFACTURE_NAME + "_retcomposeresult", content.reward);
   }
   get connection(): ConnectionService {
     if (this.game) {

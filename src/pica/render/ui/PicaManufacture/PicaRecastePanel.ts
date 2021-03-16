@@ -30,6 +30,7 @@ export class PicaRecastePanel extends Phaser.GameObjects.Container {
   private zoom: number;
   private recastData: any;
   private key: string;
+  private isBag: boolean = true;
   constructor(scene: Phaser.Scene, protected render: Render, width: number, height: number, dpr: number, zoom: number) {
     super(scene);
     this.setSize(width, height);
@@ -89,7 +90,8 @@ export class PicaRecastePanel extends Phaser.GameObjects.Container {
     const capH = 41 * this.dpr;
     const items = [];
     (<any>this.mCategoryScroll).clearItems();
-    const allCategory = { value: i18n.t("common.all"), key: "alltype" };
+    const allName = this.isBag ? i18n.t("common.bag") : i18n.t("common.recast");
+    const allCategory = { value: allName, key: "alltype" };
     subcategorys.unshift(allCategory);
     for (let i = 0; i < subcategorys.length; i++) {
       const item = new TextButton(this.scene, this.dpr, 1, subcategorys[i].value, 0, 0);
@@ -99,7 +101,7 @@ export class PicaRecastePanel extends Phaser.GameObjects.Container {
       items[i] = item;
       item.setFontSize(18 * this.dpr);
       item.setFontStyle("bold");
-      const lineImg = this.scene.make.image({ key: UIAtlasName.uicommon, frame: "Recast_nav_Select" });
+      const lineImg = this.scene.make.image({ key: UIAtlasName.recast, frame: "Recast_nav_Select" });
       lineImg.y = 21 * this.dpr;
       item.add(lineImg);
       lineImg.visible = false;
@@ -144,12 +146,6 @@ export class PicaRecastePanel extends Phaser.GameObjects.Container {
       this.render.renderEmitter(this.key + "_queryrecastelist", { type: subCate.key, star: this.mRecasteItemData.grade });
     }
   }
-  protected onInitialized() {
-    if (this.starCount) {
-      this.starvalue.setText(this.starCount + "");
-    }
-  }
-
   protected init() {
     const width = this.width;
     const height = this.height;
@@ -158,12 +154,11 @@ export class PicaRecastePanel extends Phaser.GameObjects.Container {
       key: "Recast_bg_texture"
     }, false);
     this.displayPanel = new RecasteDisplayPanel(this.scene, width, 248 * this.dpr, this.render, this.dpr, this.scale);
+    this.displayPanel.setHandler(new Handler(this, this.onDisplayPanelHandler));
     this.mTopBg.texture.setFilter(Phaser.Textures.FilterMode.LINEAR);
     this.mCategoryCon = this.scene.make.container(undefined, false);
     this.mCategoryCon.setSize(width, 295 * this.dpr);
     this.mCategoryCon.y = height - this.mCategoryCon.height;
-    // const navbgline = this.scene.make.image({ key: UIAtlasName.uicommon, frame: "Recast_nav_line" });
-    // navbgline.y = 20 * this.dpr;
     this.mCategoriesBar = this.scene.make.graphics(undefined, false);
     this.mCategoryCon.add(this.mCategoriesBar);
     this.mBackground.setInteractive(new Phaser.Geom.Rectangle(0, 0, width, height), Phaser.Geom.Rectangle.Contains);
@@ -175,7 +170,7 @@ export class PicaRecastePanel extends Phaser.GameObjects.Container {
       bottom: 0 * this.dpr
     });
     starbg.x = -starbg.width * 0.5;
-    this.starvalue = new ImageValue(this.scene, 60 * this.dpr, 26 * this.dpr, UIAtlasName.uicommon, "Recast_pica star_big", this.dpr, {
+    this.starvalue = new ImageValue(this.scene, 60 * this.dpr, 26 * this.dpr, UIAtlasName.recast, "Recast_pica star_big", this.dpr, {
       color: "#ffffff", fontSize: 15 * this.dpr, fontFamily: Font.NUMBER
     });
     this.starvalue.setLayout(1);
@@ -189,6 +184,7 @@ export class PicaRecastePanel extends Phaser.GameObjects.Container {
     const btnwidth = 100 * this.dpr, btnHeight = 40 * this.dpr;
     const btnPosX = width - btnwidth / 2 - 20 * this.dpr, btnPosY = this.mCategoryCon.y - 25 * this.dpr;
     this.confirmBtn = this.createNineButton(btnPosX + 100 * this.dpr, btnPosY, btnwidth, btnHeight, UIAtlasName.uicommon, "yellow_btn", i18n.t("common.confirm"), "#996600");
+    this.confirmBtn.on(ClickEvent.Tap, this.onConfirmBtnHandler, this);
     this.labelTipTex = this.scene.make.text({ text: i18n.t("recaste.tip"), style: UIHelper.colorStyle("#FAF916", this.dpr * 14) }).setOrigin(0, 0.5);
     this.mCategoryScroll = new GameScroller(this.scene, {
       x: 0,
@@ -284,12 +280,9 @@ export class PicaRecastePanel extends Phaser.GameObjects.Container {
       this.mPreCategoryBtn = gameobject;
       const selectlin: any = gameobject.getData("lineImg");
       selectlin.visible = true;
+      selectlin.setFrame(this.isBag ? "Recast_nav_Select" : "Recast_nav_Select_1");
     }
     this.mPropGrid.setT(0);
-  }
-
-  private onCloseHandler() {
-    this.render.renderEmitter(this.key + "_close");
   }
 
   private onSelectItemHandler(cell: ItemButton) {
@@ -324,6 +317,22 @@ export class PicaRecastePanel extends Phaser.GameObjects.Container {
     }
     this.render.renderEmitter(this.key + "_queryrecaste", { consumedId: this.mRecasteItemData.id, targetId: this.mSelectedItemData.id });
   }
+
+  private onDisplayPanelHandler(tag: string) {
+    if (tag === "itembutton") {
+      this.mPropGridBg.clear();
+      this.mPropGridBg.fillStyle(0x7DE5FE);
+      this.mPropGridBg.fillRect(0, 0, this.mPropGrid.width, this.mPropGrid.height + 10 * this.dpr);
+      this.isBag = true;
+      this.render.renderEmitter(this.key + "_querybag");
+    } else if (tag === "blueprint") {
+      this.mPropGridBg.clear();
+      this.mPropGridBg.fillStyle(0xC6BDF6);
+      this.mPropGridBg.fillRect(0, 0, this.mPropGrid.width, this.mPropGrid.height + 10 * this.dpr);
+      this.isBag = false;
+      this.render.renderEmitter(this.key + "_queryblueprint");
+    }
+  }
 }
 
 class RecasteDisplayPanel extends Phaser.GameObjects.Container {
@@ -335,6 +344,9 @@ class RecasteDisplayPanel extends Phaser.GameObjects.Container {
   private starvalue: ImageValue;
   private nameTex: Phaser.GameObjects.Text;
   private starLevelImg: Phaser.GameObjects.Image;
+  private rightButton: Button;
+  private rightTips: Phaser.GameObjects.Text;
+  private send: Handler;
   constructor(scene: Phaser.Scene, width: number, height: number, render: Render, dpr: number, zoom: number) {
     super(scene);
     this.setSize(width, height);
@@ -344,6 +356,9 @@ class RecasteDisplayPanel extends Phaser.GameObjects.Container {
     this.init();
   }
 
+  public setHandler(send: Handler) {
+    this.send = send;
+  }
   public setRecasteItemData(data: op_client.ICountablePackageItem) {
     this.recasteItem.setItemData(data, true);
     this.starvalue.setText(data.grade + "");
@@ -355,29 +370,33 @@ class RecasteDisplayPanel extends Phaser.GameObjects.Container {
     content.display = data.animationDisplay;
     content.animations = data.animations;
     this.recasteTarget.loadDisplay(content);
+    this.recasteTarget.visible = true;
     this.starLevelImg.setFrame("Recast_star_big_" + data.grade);
     this.nameTex.text = data.name || data.shortName;
     this.starLevelImg.visible = true;
+    this.rightTips.visible = false;
+    this.rightButton.visible = false;
   }
 
   protected init() {
     const rightbg = this.scene.make.image({ key: "Recast_aims_icon_bg" });
     rightbg.x = this.width * 0.5 - rightbg.width * 0.5 - 15 * this.dpr;
 
-    this.recasteItem = new ItemButton(this.scene, UIAtlasName.uicommon, "Recast_default_icon_bg", this.dpr, this.zoom, false);
+    this.recasteItem = new ItemButton(this.scene, UIAtlasName.recast, "Recast_default_icon_bg", this.dpr, this.zoom, false);
+    this.recasteItem.on(ClickEvent.Tap, this.onItemButtonHandler, this);
     this.recasteItem.x = -this.width * 0.5 + this.recasteItem.width * 0.5 + 20 * this.dpr;
     this.recasteItem.y = 0;
-    const arrowbg = this.scene.make.image({ key: UIAtlasName.uicommon, frame: "Recast_arrow" });
+    const arrowbg = this.scene.make.image({ key: UIAtlasName.recast, frame: "Recast_arrow" });
     arrowbg.x = this.recasteItem.x + this.recasteItem.width * 0.5 + arrowbg.width * 0.5 + 6 * this.dpr;
     arrowbg.y = this.recasteItem.y;
-    this.starvalue = new ImageValue(this.scene, 60 * this.dpr, 20 * this.dpr, UIAtlasName.uicommon, "Recast_pica star_small", this.dpr, UIHelper.colorNumberStyle("#ffffff", 20 * this.dpr));
+    this.starvalue = new ImageValue(this.scene, 60 * this.dpr, 20 * this.dpr, UIAtlasName.recast, "Recast_pica star_small", this.dpr, UIHelper.colorNumberStyle("#ffffff", 20 * this.dpr));
     this.starvalue.x = arrowbg.x - 11 * this.dpr;
     this.starvalue.y = arrowbg.y - 10 * this.dpr;
     this.nameTex = this.scene.make.text({ text: "", style: UIHelper.colorStyle("#FFFF00", 14 * this.dpr) }).setOrigin(0, 0.5);
     this.nameTex.setFontStyle("bold");
     this.nameTex.x = rightbg.x - rightbg.width * 0.5;
     this.nameTex.y = rightbg.y - rightbg.height * 0.5 - 18 * this.dpr;
-    this.starLevelImg = this.scene.make.image({ key: UIAtlasName.uicommon, frame: "Recast_star_big_1" }).setOrigin(1, 0.5);
+    this.starLevelImg = this.scene.make.image({ key: UIAtlasName.recast, frame: "Recast_star_big_1" }).setOrigin(1, 0.5);
     this.starLevelImg.x = rightbg.x + rightbg.width * 0.5 - this.starLevelImg.width * 0.5 - 12 * this.dpr;
     this.starLevelImg.y = rightbg.y - rightbg.height * 0.5 + this.starLevelImg.height * 0.5 + 8 * this.dpr;
     this.starLevelImg.visible = false;
@@ -390,7 +409,31 @@ class RecasteDisplayPanel extends Phaser.GameObjects.Container {
     this.recasteTarget.setNearest();
     this.recasteTarget.x = rightbg.x;
     this.recasteTarget.y = rightbg.y;
-    this.add([rightbg, this.recasteItem, this.recasteTarget, arrowbg, this.starvalue, this.nameTex, this.starLevelImg]);
+    this.rightButton = new Button(this.scene, UIAtlasName.recast, "Recast_add");
+    this.rightButton.on(ClickEvent.Tap, this.onBlueprintHandler, this);
+    this.rightButton.x = this.recasteTarget.x;
+    this.rightButton.y = this.recasteTarget.y;
+    this.rightTips = this.scene.make.text({ text: i18n.t("recaste.selecttips"), style: UIHelper.whiteStyle(this.dpr) }).setOrigin(0.5);
+    this.rightTips.x = this.rightButton.x;
+    this.rightTips.y = this.rightButton.y + this.rightButton.height * 0.5 + 20 * this.dpr;
+    this.add([rightbg, this.recasteItem, this.recasteTarget, this.rightButton, this.rightTips, arrowbg, this.starvalue, this.nameTex, this.starLevelImg]);
+    this.clearDisplay();
   }
 
+  private onItemButtonHandler() {
+    this.clearDisplay();
+    if (this.send) this.send.runWith("itembutton");
+  }
+
+  private onBlueprintHandler() {
+    if (this.send) this.send.runWith("blueprint");
+  }
+
+  private clearDisplay() {
+    this.recasteItem.setItemData(undefined);
+    this.recasteItem.setIconTexture(UIAtlasName.recast, "Recast_default_icon");
+    this.recasteTarget.visible = false;
+    this.rightButton.visible = true;
+    this.rightTips.visible = true;
+  }
 }

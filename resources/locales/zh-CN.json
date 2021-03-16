@@ -60,7 +60,9 @@
     "shop": "商店",
     "editnow": "立即修改",
     "open": "打开",
-    "give": "赠送"
+    "give": "赠送",
+    "bag":"背包",
+    "recast":"重铸"
   },
   "quantityunit": {
     "k": "千",
