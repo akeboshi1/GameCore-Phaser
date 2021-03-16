@@ -1,10 +1,10 @@
-import {BaseDragonbonesDisplay, ReferenceArea} from "baseRender";
-import {Render} from "../../render";
-import {IPos, Logger, IProjection} from "utils";
-import {DisplayField, ElementStateType, IDragonbonesModel, PlayerState, RunningAnimation, TitleMask} from "structure";
-import {IDisplayObject} from "../display.object";
-import {LoadQueue, LoadType} from "../../loadqueue";
-import {ElementTopDisplay} from "../element.top.display";
+import { BaseDragonbonesDisplay, ReferenceArea } from "baseRender";
+import { Render } from "../../render";
+import { IPos, Logger, IProjection } from "utils";
+import { DisplayField, ElementStateType, IDragonbonesModel, PlayerState, RunningAnimation, TitleMask } from "structure";
+import { IDisplayObject } from "../display.object";
+import { LoadQueue, LoadType } from "../../loadqueue";
+import { ElementTopDisplay } from "../element.top.display";
 
 export class DragonbonesDisplay extends BaseDragonbonesDisplay implements IDisplayObject {
     protected mID: number = undefined;
@@ -161,13 +161,16 @@ export class DragonbonesDisplay extends BaseDragonbonesDisplay implements IDispl
 
     public displayCreated() {
         super.displayCreated();
+        if (this.mTopDisplay) {
+            this.mTopDisplay.updateOffset();
+        }
         this.render.mainPeer.elementDisplayReady(this.id);
         this.render.renderEmitter("dragonBones_initialized");
     }
 
     public get projectionSize(): IProjection {
         if (!this.mProjectionSize) {
-            this.mProjectionSize = {offset: {x: 0, y: 0}, width: 0, height: 0};
+            this.mProjectionSize = { offset: { x: 0, y: 0 }, width: 0, height: 0 };
         }
         return this.mProjectionSize;
     }
