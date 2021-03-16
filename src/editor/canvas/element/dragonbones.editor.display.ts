@@ -12,6 +12,9 @@ export class DragonbonesEditorDisplay extends BaseDragonbonesDisplay {
         super.displayCreated();
         this.clearArmatureUnusedSlots();
         this.setDraggable(this.mInteractive);
+        if (this.mAnimation) {
+            this.play(this.mAnimation);
+        }
     }
 
     public setDraggable(val: boolean) {
