@@ -45,7 +45,7 @@ export class Terrain extends BlockObject implements IElement {
     }
 
     public removeFromWalkableMap() {
-        if (this.model && this.mElementManager) this.mElementManager.roomService.removeFromWalkableMap(this.model);
+        if (this.model && this.mElementManager) this.mElementManager.roomService.removeFromWalkableMap(this.model, true);
     }
 
     async setModel(val: ISprite) {
