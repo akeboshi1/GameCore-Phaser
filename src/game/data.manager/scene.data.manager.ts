@@ -3,6 +3,7 @@ import { BaseDataConfigManager } from "picaWorker";
 import { op_client } from "pixelpai_proto";
 import { EventType, ModuleName, RoomType } from "structure";
 import { EventDispatcher, Logger } from "utils";
+import { CacheDataManager } from ".";
 import { Game } from "../game";
 import { BasePacketHandler } from "./base.packet.handler";
 import { DataMgrType } from "./dataManager";
@@ -24,6 +25,7 @@ export class SceneDataManager extends BasePacketHandler {
         this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_SHOW_HIGH_QUALITY_REWARD_TIPS, this.onHIGH_QUALITY_REWARD_TIPS);
         this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_PKT_JOB_LIST, this.on_JOB_LIST);
         this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_MINING_MODE_SHOW_SELECT_EQUIPMENT_PANEL, this.openMineEquipUpgrade);
+        this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_PKT_ROOM_SHOW_GUIDE_TEXT, this.onSHOW_GUIDE_TEXT);
         this.mEvent.on(EventType.SCENE_CHANGE, this.onSceneChangeHandler, this);
         this.addPackListener();
     }
@@ -124,6 +126,12 @@ export class SceneDataManager extends BasePacketHandler {
     private openMineEquipUpgrade(packge: PBpacket) {
         const content: op_client.OP_VIRTUAL_WORLD_REQ_CLIENT_MINING_MODE_SHOW_SELECT_EQUIPMENT_PANEL = packge.content;
         this.mEvent.emit(EventType.SCENE_SHOW_UI, ModuleName.PICAEQUIPUPGRADE_NAME, content);
+    }
+
+    private onSHOW_GUIDE_TEXT(packge: PBpacket) {
+        const content: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_ROOM_SHOW_GUIDE_TEXT = packge.content;
+        const mgr = this.game.getDataMgr<CacheDataManager>(DataMgrType.CacheMgr);
+        mgr.guidText = content;
     }
 
     get curRoomID() {
