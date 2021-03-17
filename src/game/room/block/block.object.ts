@@ -45,7 +45,7 @@ export abstract class BlockObject extends MatterObject implements IBlockObject {
     public getPosition45(): IPos {
         const pos = this.getPosition();
         if (!pos) return new LogicPos();
-        return this.mRoomService.transformTo45(pos);
+        return this.mRoomService.transformToMini45(pos);
     }
 
     public getRenderable() {
