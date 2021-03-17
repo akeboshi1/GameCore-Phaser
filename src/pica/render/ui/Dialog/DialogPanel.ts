@@ -1,8 +1,8 @@
 import { Button, ClickEvent } from "apowophaserui";
 import { Font, Handler, Url } from "utils";
 import { ModuleName } from "structure";
-import { BasePanel, DynamicImage, MainUIScene, UiManager } from "gamecoreRender";
-import { UIAtlasKey, UIAtlasName } from "picaRes";
+import { BasePanel, DynamicImage, MainUIScene, UiManager, Tap } from "gamecoreRender";
+import { UIAtlasName } from "picaRes";
 
 enum HorizontalAlignment {
     HORIZONTAL_LEFT = 0,
@@ -238,7 +238,9 @@ class NpcDialogueItem extends Phaser.GameObjects.Container {
         this.add([this.selectBg, this.arrImg, this.content]);
         this.width = this.selectBg.width;
         this.height = this.selectBg.height;
-        this.on("pointerdown", this.onClickHandler, this);
+        const tap = new Tap(this);
+        this.on(ClickEvent.Tap, this.onClickHandler, this);
+        // this.on("pointerdown", this.onClickHandler, this);
     }
 
     public setItemData(data: any) {

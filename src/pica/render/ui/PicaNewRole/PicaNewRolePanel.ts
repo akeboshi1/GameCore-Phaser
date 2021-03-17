@@ -139,10 +139,6 @@ export class PicaNewRolePanel extends PicaBasePanel {
         const dbModel = { id: content.id, avatar: temp.avatar };
         this.headAvatar.visible = false;
         this.headAvatar.setSuits(temp.suits);
-        this.headAvatar.once("replacefinished", () => {
-            this.headAvatar.play({ name: "idle", flip: false });
-            this.headAvatar.visible = true;
-        });
         this.headAvatar.visible = true;
         this.headAvatar.load(dbModel);
         this.nameImage.setFrameValue(content.nickname, UIAtlasName.people_action, "people_man");
