@@ -941,7 +941,7 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
 
     private onCameraResetSizeHandler() {
         this.cameraService.initialize = true;
-        this.cameraService.syncCameraScroll();
+        // this.cameraService.syncCameraScroll();
     }
 
     private onCameraFollowHandler(packet: PBpacket) {
