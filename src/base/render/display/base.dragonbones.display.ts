@@ -474,7 +474,6 @@ export class BaseDragonbonesDisplay extends BaseDisplay {
             }
         }
         this.mArmatureDisplay.visible = true;
-        this.emit("replacefinished");
     }
 
     private clearReplaceArmature() {
