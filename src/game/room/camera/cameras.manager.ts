@@ -7,6 +7,7 @@ import { IRoomService } from "../room/room";
 
 export interface ICameraService {
     syncDirty: boolean;
+    initialize: boolean;
     getViewPort(): Promise<LogicRectangle | undefined>;
     getMiniViewPort(): Promise<LogicRectangle45 | undefined>;
     syncToEditor(): void;
@@ -33,9 +34,19 @@ export class CamerasManager extends PacketHandler implements ICameraService {
     private syncTime: number = 0;
     private target: any;
     private preCamerasList: any[];
+    private mInitialize: boolean = false;
     constructor(protected mGame: Game, private mRoomService: IRoomService) {
         super();
         this.zoom = this.mGame.scaleRatio;
+    }
+
+    public set initialize(val: boolean) {
+        this.mInitialize = val;
+        this.syncDirty = true;
+    }
+
+    public get initialize(): boolean {
+        return this.mInitialize;
     }
 
     public getViewPort(): Promise<LogicRectangle | undefined> {
@@ -102,10 +113,10 @@ export class CamerasManager extends PacketHandler implements ICameraService {
         const height = cameraView.height / this.zoom;
         const baseX = cameraView.x / this.zoom;
         const baseY = cameraView.y / this.zoom;
-        const aPoint = { x: baseX, y: baseY};
+        const aPoint = { x: baseX, y: baseY };
         const bPoint = { x: baseX + width, y: baseY + height };
         const cPoint = { x: baseX, y: baseY + height };
-        const dPoint = { x: baseX + width, y: baseY};
+        const dPoint = { x: baseX + width, y: baseY };
         const list = [aPoint, bPoint, cPoint, dPoint];
         const size = this.mGame.roomManager.currentRoom.roomSize;
         const cols = size.cols;
@@ -157,6 +168,10 @@ export class CamerasManager extends PacketHandler implements ICameraService {
         }
         // 数组去重
         Array.from(new Set(blockIndex));
+        Logger.getInstance().log("cameraview ----->", cameraView);
+        Logger.getInstance().log("List ----->", list);
+        Logger.getInstance().log("pointer ----->", pointerList);
+        Logger.getInstance().log("blockIndex ----->", blockIndex);
         if (!Tool.equalArr(this.preCamerasList, blockIndex)) {
             const pkt = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_UPDATE_HOT_BLOCK);
             const content: op_virtual_world.IOP_CLIENT_REQ_VIRTUAL_WORLD_UPDATE_HOT_BLOCK = pkt.content;
@@ -176,7 +191,7 @@ export class CamerasManager extends PacketHandler implements ICameraService {
     }
 
     public update(time?: number, delta?: number) {
-        if (!this.syncDirty) {
+        if (!this.syncDirty || !this.mInitialize) {
             return;
         }
         // 除了客户端移动镜头，后端也会改变镜头位置
@@ -189,6 +204,7 @@ export class CamerasManager extends PacketHandler implements ICameraService {
     }
 
     public destroy() {
+        this.mInitialize = false;
         this.preCamerasList.length = 0;
         this.preCamerasList = null;
     }

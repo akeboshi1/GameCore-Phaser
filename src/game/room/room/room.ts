@@ -1,29 +1,29 @@
-import {op_client, op_def, op_virtual_world} from "pixelpai_proto";
-import {PacketHandler, PBpacket} from "net-socket-packet";
-import {Handler, IPos, IPosition45Obj, Logger, LogicPos, Position45} from "utils";
-import {Game} from "../../game";
-import {IBlockObject} from "../block/iblock.object";
-import {ClockReadyListener} from "../../loop/clock/clock";
-import {State} from "../state/state.group";
-import {IRoomManager} from "../room.manager";
-import {ConnectionService} from "../../../../lib/net/connection.service";
-import {CamerasManager, ICameraService} from "../camera/cameras.manager";
-import {ViewblockManager} from "../viewblock/viewblock.manager";
-import {PlayerManager} from "../player/player.manager";
-import {ElementManager} from "../element/element.manager";
-import {IElement, InputEnable} from "../element/element";
-import {IViewBlockManager} from "../viewblock/iviewblock.manager";
-import {TerrainManager} from "../terrain/terrain.manager";
-import {SkyBoxManager} from "../sky.box/sky.box.manager";
-import {GameState, IScenery, ISprite, LoadState, ModuleName, SceneName} from "structure";
-import {EffectManager} from "../effect/effect.manager";
-import {DecorateActionType, DecorateManager} from "../decorate/decorate.manager";
-import {WallManager} from "../element/wall.manager";
-import {Sprite} from "baseModel";
-import {BlockObject} from "../block/block.object";
+import { op_client, op_def, op_virtual_world } from "pixelpai_proto";
+import { PacketHandler, PBpacket } from "net-socket-packet";
+import { Handler, IPos, IPosition45Obj, Logger, LogicPos, Position45 } from "utils";
+import { Game } from "../../game";
+import { IBlockObject } from "../block/iblock.object";
+import { ClockReadyListener } from "../../loop/clock/clock";
+import { State } from "../state/state.group";
+import { IRoomManager } from "../room.manager";
+import { ConnectionService } from "../../../../lib/net/connection.service";
+import { CamerasManager, ICameraService } from "../camera/cameras.manager";
+import { ViewblockManager } from "../viewblock/viewblock.manager";
+import { PlayerManager } from "../player/player.manager";
+import { ElementManager } from "../element/element.manager";
+import { IElement, InputEnable } from "../element/element";
+import { IViewBlockManager } from "../viewblock/iviewblock.manager";
+import { TerrainManager } from "../terrain/terrain.manager";
+import { SkyBoxManager } from "../sky.box/sky.box.manager";
+import { GameState, IScenery, ISprite, LoadState, ModuleName, SceneName } from "structure";
+import { EffectManager } from "../effect/effect.manager";
+import { DecorateActionType, DecorateManager } from "../decorate/decorate.manager";
+import { WallManager } from "../element/wall.manager";
+import { Sprite } from "baseModel";
+import { BlockObject } from "../block/block.object";
 import IActor = op_client.IActor;
 import NodeType = op_def.NodeType;
-import {BaseDataConfigManager} from "picaWorker";
+import { BaseDataConfigManager } from "picaWorker";
 
 export interface SpriteAddCompletedListener {
     onFullPacketReceived(sprite_t: op_def.NodeType): void;
@@ -72,6 +72,8 @@ export interface IRoomService {
     removeBlockObject(object: IBlockObject);
 
     updateBlockObject(object: IBlockObject);
+
+    cameraFollowHandler();
 
     // addToGround(element: ElementDisplay | ElementDisplay[], index?: number);
 
@@ -144,7 +146,6 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
     // 地块可行走标记map。每格标记由多个不同优先级（暂时仅地块和物件）标记组成，最终是否可行走由高优先级标记决定
     private mWalkableMarkMap: Map<number, Map<number, { level: number; walkable: boolean }>> =
         new Map<number, Map<number, { level: number; walkable: boolean }>>();
-
     constructor(protected manager: IRoomManager) {
         super();
         this.mGame = this.manager.game;
@@ -156,6 +157,7 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
             this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_UNWALKABLE_BIT_MAP, this.onShowMapTitle);
             // this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_MOVE_SPRITE_BY_PATH, this.onMovePathHandler);
             this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_SET_CAMERA_FOLLOW, this.onCameraFollowHandler);
+            this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_RESET_CAMERA_SIZE, this.onCameraResetSizeHandler);
             this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_SYNC_STATE, this.onSyncStateHandler);
             this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_START_EDIT_MODEL, this.onStartDecorate);
             this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_EDIT_MODEL_RESULT, this.onDecorateResult);
@@ -358,7 +360,7 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
         //         }
         //     }
         // }
-        return {width: w, height: h};
+        return { width: w, height: h };
     }
 
     public async startPlay() {
@@ -414,7 +416,7 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
 
         if (this.connection) {
             await this.cameraService.syncCamera();
-            await this.cameraService.syncCameraScroll();
+            if (this.cameraService.initialize) await this.cameraService.syncCameraScroll();
             this.connection.send(new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_SCENE_CREATED));
         }
 
@@ -481,7 +483,7 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
         const walkableData = this.getSpriteWalkableData(sprite, isTerrain);
         if (!walkableData) return;
 
-        const {origin, collisionArea, walkableArea, pos45, rows, cols} = walkableData;
+        const { origin, collisionArea, walkableArea, pos45, rows, cols } = walkableData;
 
         let tempY = 0;
         let tempX = 0;
@@ -505,7 +507,7 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
         const walkableData = this.getSpriteWalkableData(sprite, isTerrain);
         if (!walkableData) return;
 
-        const {origin, collisionArea, walkableArea, pos45, rows, cols} = walkableData;
+        const { origin, collisionArea, walkableArea, pos45, rows, cols } = walkableData;
 
         let tempY = 0;
         let tempX = 0;
@@ -688,7 +690,7 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
     }
 
     public requestDecorate(id: number, baseID?: string) {
-        this.mDecorateEntryData = {id, baseID};
+        this.mDecorateEntryData = { id, baseID };
 
         this.connection.send(new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_START_EDIT_MODEL));
 
@@ -718,10 +720,15 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
         this.game.uiManager.hideMed(ModuleName.PICANEWMAIN_NAME);
         this.game.uiManager.hideMed(ModuleName.BOTTOM);
         this.game.uiManager.showMed(ModuleName.PICADECORATE_NAME,
-            {closeAlertText: (<BaseDataConfigManager> this.game.configManager).getI18n("PKT_SYS0000021")});
+            { closeAlertText: (<BaseDataConfigManager>this.game.configManager).getI18n("PKT_SYS0000021") });
 
         // switch mouse manager
         this.game.renderPeer.switchDecorateMouseManager();
+    }
+
+    public cameraFollowHandler() {
+        if (!this.cameraService.initialize) return;
+        this.cameraService.syncCameraScroll();
     }
 
     public stopDecorating() {
@@ -797,7 +804,7 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
                     // Logger.getInstance().debug("setCameraBounds error", bounds);
                     return;
                 }
-                let {x, y, width, height} = bounds;
+                let { x, y, width, height } = bounds;
                 x = -width * 0.5 + (x ? x : 0);
                 y = (this.mSize.sceneHeight - height) * 0.5 + (y ? y : 0);
                 x *= this.mScaleRatio;
@@ -932,7 +939,13 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
     //     // this.addFillEffect({ x: pos.x, y: pos.y }, status);
     // }
 
+    private onCameraResetSizeHandler() {
+        this.cameraService.initialize = true;
+        this.cameraService.syncCameraScroll();
+    }
+
     private onCameraFollowHandler(packet: PBpacket) {
+        if (!this.cameraService.initialize) return;
         const content: op_client.IOP_VIRTUAL_WORLD_REQ_CLIENT_SET_CAMERA_FOLLOW = packet.content;
         if (content.hasOwnProperty("id")) {
             const id = content.id ? content.id : 0;
@@ -1051,8 +1064,7 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
         }
     }
 
-    private getSpriteWalkableData(sprite: ISprite, isTerrain: boolean):
-        { origin: IPos, collisionArea: number[][], walkableArea: number[][], pos45: IPos, rows: number, cols: number } {
+    private getSpriteWalkableData(sprite: ISprite, isTerrain: boolean): { origin: IPos, collisionArea: number[][], walkableArea: number[][], pos45: IPos, rows: number, cols: number } {
         let collisionArea = sprite.getCollisionArea();
         let walkableArea = sprite.getWalkableArea();
         const origin = sprite.getOriginPoint();
@@ -1102,7 +1114,7 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
             }
         }
 
-        return {origin, collisionArea, walkableArea, pos45, rows, cols};
+        return { origin, collisionArea, walkableArea, pos45, rows, cols };
     }
 
     private addWalkableMark(x: number, y: number, id: number, level: number, walkable: boolean) {
@@ -1117,7 +1129,7 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
             marks.delete(id);
         }
 
-        marks.set(id, {level, walkable});
+        marks.set(id, { level, walkable });
         this.caculateWalkableMark(x, y);
     }
 
