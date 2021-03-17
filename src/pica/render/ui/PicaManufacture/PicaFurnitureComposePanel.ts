@@ -26,7 +26,6 @@ export class PicaFurnitureComposePanel extends Phaser.GameObjects.Container {
   private subCategoryType: number = 1;
   private dpr: number;
   private zoom: number;
-  private recastData: any;
   private key: string;
   constructor(scene: Phaser.Scene, protected render: Render, width: number, height: number, dpr: number, zoom: number) {
     super(scene);
@@ -58,10 +57,10 @@ export class PicaFurnitureComposePanel extends Phaser.GameObjects.Container {
     this.mCategoriesBar.fillRect(0, 0, width, 40 * this.dpr);
     this.mCategoriesBar.fillStyle(0x824CD4);
     this.mCategoriesBar.fillRect(0, 40 * this.dpr, width, 3 * this.dpr);
-
     this.composeBtn.x = width - this.composeBtn.width / 2 - 20 * this.dpr;
     this.composeBtn.y = this.mCategoryCon.y - this.composeBtn.height / 2 + 35 * this.dpr;
-
+    this.starCountCon.x = this.starCountCon.width * 0.5 + 60* this.dpr;
+    this.starCountCon.y = this.composeBtn.y;
     this.mPropGridBg.clear();
     this.mPropGridBg.fillStyle(0xCE7AF3);
     this.mPropGridBg.fillRect(0, 0, this.mPropGrid.width, this.mPropGrid.height + 10 * this.dpr);
@@ -183,8 +182,6 @@ export class PicaFurnitureComposePanel extends Phaser.GameObjects.Container {
     this.starCountCon = this.scene.make.container(undefined, false);
     this.starCountCon.setSize(starbg.width, starbg.height);
     this.starCountCon.add([starbg, this.starvalue]);
-    this.starCountCon.x = width - 20 * this.dpr;
-    this.starCountCon.y = -this.height * 0.5 + 20 * this.dpr;
 
     const btnwidth = 100 * this.dpr, btnHeight = 40 * this.dpr;
     const btnPosX = width - btnwidth / 2 - 20 * this.dpr, btnPosY = this.mCategoryCon.y - 25 * this.dpr;

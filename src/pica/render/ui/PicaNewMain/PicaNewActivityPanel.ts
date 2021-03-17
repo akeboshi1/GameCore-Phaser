@@ -13,6 +13,7 @@ export class PicaNewActivityPanel extends Phaser.GameObjects.Container {
     private rechargeButton: Button;
     private emailButton: Button;
     private roamButton: Button;
+    private shopButton: Button;
     private listBtns: Button[];
     private listBtns2: Button[];
     private listPosY: number[] = [];
@@ -51,12 +52,17 @@ export class PicaNewActivityPanel extends Phaser.GameObjects.Container {
         this.roamButton.x = activityButton.x - this.roamButton.width * 0.5 - activityButton.width * 0.5 - 15 * this.dpr;
         this.roamButton.on(ClickEvent.Tap, this.onRoamHandler, this);
 
+        this.shopButton = new Button(this.scene, UIAtlasName.iconcommon, "home_shop", "home_shop");
+        this.shopButton.y = this.roamButton.y + this.roamButton.height * 0.5 + 15 * this.dpr + this.shopButton.height * 0.5;
+        this.shopButton.x = this.roamButton.x;
+        this.shopButton.on(ClickEvent.Tap, this.onShopHandler, this);
+
         this.arrowButton = new Button(this.scene, UIAtlasName.uicommon, "home_more_2", "home_more_2");
         this.arrowButton.y = emailButton.y + emailButton.height * 0.5 + 10 * this.dpr + this.arrowButton.height * 0.5;
         this.arrowButton.on(ClickEvent.Tap, this.onArrowHandler, this);
 
         this.listBtns = [activityButton, indentButton, rechargeButton, emailButton];
-        this.listBtns2 = [this.roamButton];
+        this.listBtns2 = [this.roamButton, this.shopButton];
         this.listPosY = [activityButton.y, indentButton.y, rechargeButton.y, emailButton.y];
         this.add(this.listBtns);
         this.add(this.listBtns2);
@@ -96,6 +102,9 @@ export class PicaNewActivityPanel extends Phaser.GameObjects.Container {
     }
     private onRoamHandler() {
         if (this.sendHandler) this.sendHandler.runWith(["roam"]);
+    }
+    private onShopHandler() {
+        if (this.sendHandler) this.sendHandler.runWith(["shop"]);
     }
     private onArrowHandler() {
         this.isFold = !this.isFold;

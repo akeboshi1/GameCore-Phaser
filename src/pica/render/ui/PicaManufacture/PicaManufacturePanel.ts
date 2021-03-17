@@ -10,7 +10,7 @@ import { ICountablePackageItem } from "picaStructure";
 import { PicaFurnitureComposePanel } from "./PicaFurnitureComposePanel";
 import { PicaRecastePanel } from "./PicaRecastePanel";
 export class PicaManufacturePanel extends PicaBasePanel {
-    private mCloseBtn: ButtonEventDispatcher;
+    private mCloseBtn: Button;
     private toggleCon: Phaser.GameObjects.Container;
     private selectLine: Phaser.GameObjects.Image;
     private curToggleItem: ToggleColorButton;
@@ -38,20 +38,35 @@ export class PicaManufacturePanel extends PicaBasePanel {
         this.setInteractive();
     }
     onShow() {
+        const index = this.mShowData ? 2 : 1;
+        this.onToggleButtonHandler(undefined, <any>this.toggleCon.getAt(index));
         if (this.optionType === 2) {
             this.recastPanel.setStarData(this.starCount);
-            this.recastPanel.setRecasteItemData(this.mShowData);
-            this.recastPanel.setCategories(this.tempDatas.subcategory);
+            this.recastPanel.setRecasteItemData(this.mShowData, true);
+            if (this.tempDatas && this.tempDatas.subcategory) this.recastPanel.setCategories(this.tempDatas.subcategory);
+            const bagPanel = this.render.uiManager.getPanel(ModuleName.PICABAG_NAME);
+            if (bagPanel) bagPanel.visible = false;
+        }
+    }
+
+    onHide() {
+        if (this.mShowData) {
+            const bagPanel = this.render.uiManager.getPanel(ModuleName.PICABAG_NAME);
+            if (bagPanel) bagPanel.visible = true;
         }
     }
     setCategories(categorys?: any[]) {
+        this.tempDatas = { subcategory: categorys };
+        if (!this.mInitialized) return;
         if (this.optionType === 1) {
             this.composePanel.setCategories();
         } else if (this.optionType === 2) {
             this.recastPanel.setCategories(categorys);
         }
     }
-
+    setRecasteResult(data) {
+        this.recastPanel.setRecasteResult(data);
+    }
     public setGridProp(props: any[]) {
         if (this.optionType === 1) {
             this.composePanel.setGridProp(props);
@@ -67,6 +82,8 @@ export class PicaManufacturePanel extends PicaBasePanel {
     public setStarData(value: number) {
         this.starCount = value;
         if (!this.mInitialized) return;
+        this.composePanel.setStarData(this.starCount);
+        this.recastPanel.setStarData(this.starCount);
     }
 
     public setComposeResult(reward: op_client.ICountablePackageItem) {
@@ -90,15 +107,14 @@ export class PicaManufacturePanel extends PicaBasePanel {
         this.setSize(width, height);
         this.composePanel = new PicaFurnitureComposePanel(this.scene, this.render, this.width, this.height, this.dpr, this.scale);
         this.recastPanel = new PicaRecastePanel(this.scene, this.render, this.width, this.height, this.dpr, this.scale);
-        this.mCloseBtn = new ButtonEventDispatcher(this.scene, 0, 0);
+        this.mCloseBtn = new Button(this.scene, UIAtlasName.uicommon, "back_arrow", "back_arrow");
+        this.mCloseBtn.tweenEnable = true;
         this.mCloseBtn.on(ClickEvent.Tap, this.onCloseHandler, this);
-        this.mCloseBtn.setSize(100 * this.dpr, 40 * this.dpr);
-        this.mCloseBtn.enable = true;
         this.mCloseBtn.x = this.mCloseBtn.width * 0.5 + 10 * this.dpr;
         this.mCloseBtn.y = 45 * this.dpr;
         this.toggleCon = this.scene.make.container(undefined, false);
         this.toggleCon.y = 20 * this.dpr;
-        this.selectLine = this.scene.make.image({ key: UIAtlasName.map, frame: "Recast_bookmark_select" });
+        this.selectLine = this.scene.make.image({ key: UIAtlasName.recast, frame: "Recast_bookmark_select" });
         this.toggleCon.add(this.selectLine);
         this.add([this.composePanel, this.recastPanel, this.mCloseBtn, this.toggleCon]);
         this.createOptionButtons();
@@ -107,7 +123,7 @@ export class PicaManufacturePanel extends PicaBasePanel {
     }
     protected createOptionButtons() {
         const arr = [{ text: i18n.t("compose.title"), type: 1 }, { text: i18n.t("common.recast"), type: 2 }];
-        const allLin = 272 * this.dpr;
+        const allLin = 120 * this.dpr;
         const cellwidth = allLin / arr.length;
         const cellHeight = 20 * this.dpr;
         let posx = -allLin / 2;
@@ -115,7 +131,7 @@ export class PicaManufacturePanel extends PicaBasePanel {
         // tslint:disable-next-line:prefer-for-of
         for (let i = 0; i < arr.length; i++) {
             const data = arr[i];
-            const item = new ToggleColorButton(this.scene, cellwidth, 20 * this.dpr, this.dpr, data.text);
+            const item = new ToggleColorButton(this.scene, cellwidth, 20 * this.dpr, this.dpr, data.text, UIHelper.colorStyle("#EEEEEE", 14 * this.dpr));
             item.on(ClickEvent.Tap, this.onToggleButtonHandler, this);
             item.x = posx + cellwidth * 0.5;
             item.setData("item", data.type);
@@ -123,13 +139,12 @@ export class PicaManufacturePanel extends PicaBasePanel {
             this.toggleCon.add(item);
             item.setChangeColor("#FFFF00");
             item.setNormalColor("#EEEEEE");
-            item.setFontSize(14 * this.dpr);
             item.setFontStyle("bold");
             posx += cellwidth;
             if (!tempitem) tempitem = item;
         }
         tempitem.isOn = true;
-        this.selectLine.y = 20 * this.dpr;
+        this.selectLine.y = 15 * this.dpr;
     }
     private onToggleButtonHandler(pointer: any, toggle: ToggleColorButton) {
         if (this.curToggleItem === toggle) return;
@@ -143,6 +158,7 @@ export class PicaManufacturePanel extends PicaBasePanel {
         } else if (this.optionType === 2) {
             this.composePanel.visible = false;
             this.recastPanel.visible = true;
+            this.recastPanel.setRecasteItemData(this.mShowData, true);
         }
     }
     private onCloseHandler() {
