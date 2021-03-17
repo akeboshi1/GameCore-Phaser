@@ -258,7 +258,7 @@ export class User extends Player {
     }
 
     protected syncCameraPosition() {
-        this.roomService.cameraService.syncCameraScroll();
+        this.roomService.cameraFollowHandler();
     }
 
     set model(val: ISprite) {
