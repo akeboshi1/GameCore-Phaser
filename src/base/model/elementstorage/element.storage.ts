@@ -43,6 +43,7 @@ export interface IElementStorage {
 interface IDisplayRef {
     // element id
     id: number;
+    name?: string;
     displayModel?: FramesModel | DragonbonesModel;
 }
 
@@ -202,6 +203,7 @@ export class ElementStorage implements IElementStorage {
                 }
                 const ele: IDisplayRef = {
                     id: obj.id,
+                    name: obj.name,
                     displayModel,
                 };
                 this.mElementRef.set(obj.id, ele);
@@ -223,6 +225,10 @@ export class ElementStorage implements IElementStorage {
 
     public add(obj: FramesModel | DragonbonesModel) {
         this.mModels.set(obj.id, obj);
+    }
+
+    public getElementRef(id) {
+        return this.mElementRef.get(id);
     }
 
     public getDisplayModel(id: number): FramesModel | DragonbonesModel {
