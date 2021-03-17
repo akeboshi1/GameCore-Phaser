@@ -20,12 +20,10 @@ export class Astar {
     private readonly LINE_COLOR_PATH = 0xFFFF00;
 
     // 是否显示所有可行经点。如果打开会非常消耗性能
-    private mPointsShowType: PointsShowType = PointsShowType.None;
+    private mPointsShowType: PointsShowType = PointsShowType.All;
 
-    private mPoints: Map<LogicPos, Phaser.GameObjects.Graphics> =
-        new Map<LogicPos, Phaser.GameObjects.Graphics>();
-    private mStartPos: Phaser.GameObjects.Graphics = null;
-    private mTargetPos: Phaser.GameObjects.Graphics = null;
+    private mPoints_Walkable: Phaser.GameObjects.Graphics = null;
+    private mPoints_NotWalkable: Phaser.GameObjects.Graphics = null;
     private mPath: Phaser.GameObjects.Graphics = null;
     private mAstarSize: IPosition45Obj;
 
@@ -69,7 +67,7 @@ export class Astar {
         }
     }
 
-    public drawPoints() {
+    public async drawPoints() {
         if (this.mPointsShowType === PointsShowType.None) return;
         if (!this.mAstarSize) return;
         const scene = this.render.sceneManager.getMainScene();
@@ -78,42 +76,65 @@ export class Astar {
         }
         this.clearAll();
 
+        const walkablePoses: IPos[] = [];
+        const notWalkablePoses: IPos[] = [];
         for (let y = 0; y < this.mAstarSize.rows; y++) {
             for (let x = 0; x < this.mAstarSize.cols; x++) {
-                this.render.physicalPeer.isWalkableAt(x, y)
-                    .then((walkable: boolean) => {
-                        if (this.mPointsShowType === PointsShowType.OnlyWalkable && !walkable) return;
-                        if (this.mPointsShowType === PointsShowType.OnlyNotWalkable && walkable) return;
+                const walkable = await this.render.physicalPeer.isWalkableAt(x, y);
+                if (this.mPointsShowType === PointsShowType.OnlyWalkable && !walkable) continue;
+                if (this.mPointsShowType === PointsShowType.OnlyNotWalkable && walkable) continue;
 
-                        const color = this.getColorByValue(walkable);
-                        let pos = new LogicPos(x, y);
-                        pos = Position45.transformTo90(pos, this.mAstarSize);
-                        pos.y += this.mAstarSize.tileHeight / 2;
-                        const newGraphics = this.drawCircle(scene, pos, color, this.CIRCLE_RADIUS_POINTS);
-                        this.mPoints.set(new LogicPos(x, y), newGraphics);
-                    });
+                let pos = new LogicPos(x, y);
+                pos = Position45.transformTo90(pos, this.mAstarSize);
+                pos.y += this.mAstarSize.tileHeight / 2;
+
+                if (walkable) {
+                    walkablePoses.push(pos);
+                } else {
+                    notWalkablePoses.push(pos);
+                }
             }
+        }
+
+        if (walkablePoses.length > 0) {
+            this.mPoints_Walkable = scene.make.graphics(undefined, false);
+            this.mPoints_Walkable.clear();
+            this.mPoints_Walkable.fillStyle(this.CIRCLE_COLOR_POINTS_PASS, 1);
+
+            for (const pos of walkablePoses) {
+                this.mPoints_Walkable.fillCircle(pos.x, pos.y, this.CIRCLE_RADIUS_POINTS);
+            }
+
+            scene.layerManager.addToLayer("middleLayer", this.mPoints_Walkable);
+        }
+
+        if (notWalkablePoses.length > 0) {
+            this.mPoints_NotWalkable = scene.make.graphics(undefined, false);
+            this.mPoints_NotWalkable.clear();
+            this.mPoints_NotWalkable.fillStyle(this.CIRCLE_COLOR_POINTS_NOTPASS, 1);
+
+            for (const pos of notWalkablePoses) {
+                this.mPoints_NotWalkable.fillCircle(pos.x, pos.y, this.CIRCLE_RADIUS_POINTS);
+            }
+
+            scene.layerManager.addToLayer("middleLayer", this.mPoints_NotWalkable);
         }
     }
 
     public clearAll() {
-        this.mPoints.forEach((value) => {
-            value.destroy();
-        });
-        this.mPoints.clear();
+        if (this.mPoints_Walkable) {
+            this.mPoints_Walkable.destroy();
+            this.mPoints_Walkable = null;
+        }
+        if (this.mPoints_NotWalkable) {
+            this.mPoints_NotWalkable.destroy();
+            this.mPoints_NotWalkable = null;
+        }
 
         this.clearPath();
     }
 
     private clearPath() {
-        if (this.mStartPos) {
-            this.mStartPos.destroy();
-            this.mStartPos = null;
-        }
-        if (this.mTargetPos) {
-            this.mTargetPos.destroy();
-            this.mTargetPos = null;
-        }
         if (this.mPath) {
             this.mPath.destroy();
             this.mPath = null;
@@ -128,46 +149,29 @@ export class Astar {
         }
         this.clearPath();
 
-        this.mStartPos = this.drawCircle(scene, start, this.CIRCLE_COLOR_START_POSITION, this.CIRCLE_RADIUS_START_POSITION);
-        this.mTargetPos = this.drawCircle(scene, tar, this.CIRCLE_COLOR_TARGET_POSITION, this.CIRCLE_RADIUS_TARGET_POSITION);
-
+        this.mPath = scene.make.graphics(undefined, false);
+        this.mPath.clear();
+        this.mPath.fillStyle(this.CIRCLE_COLOR_START_POSITION, 1);
+        this.mPath.fillCircle(start.x, start.y, this.CIRCLE_RADIUS_START_POSITION);
+        this.mPath.fillStyle(this.CIRCLE_COLOR_TARGET_POSITION, 1);
+        this.mPath.fillCircle(tar.x, tar.y, this.CIRCLE_RADIUS_TARGET_POSITION);
         if (path.length > 1) {
-            this.mPath = this.drawLine(scene, path, this.LINE_COLOR_PATH);
+            this.mPath.lineStyle(1, this.LINE_COLOR_PATH);
+            this.mPath.beginPath();
+
+            for (let i = 0; i < path.length - 1; i++) {
+                let iPo = path[i];
+                let point = new LogicPos(iPo.x, iPo.y);
+                this.mPath.moveTo(point.x, point.y);
+                iPo = path[i + 1];
+                point = new LogicPos(iPo.x, iPo.y);
+                this.mPath.lineTo(point.x, point.y);
+            }
+
+            this.mPath.closePath();
+            this.mPath.strokePath();
         }
-    }
-
-    private drawCircle(scene: PlayScene, pos: IPos, color: number, radius: number): Phaser.GameObjects.Graphics {
-        const graphics = scene.make.graphics(undefined, false);
-        graphics.clear();
-        graphics.fillStyle(color, 1);
-        graphics.fillCircle(pos.x, pos.y, radius);
-        scene.layerManager.addToLayer("middleLayer", graphics);
-
-        return graphics;
-    }
-
-    private drawLine(scene: PlayScene, path: IPos[], color: number): Phaser.GameObjects.Graphics {
-        const graphics = scene.make.graphics(undefined, false);
-        graphics.lineStyle(1, color);
-        graphics.beginPath();
-
-        for (let i = 0; i < path.length - 1; i++) {
-            let iPo = path[i];
-            let point = new LogicPos(iPo.x, iPo.y);
-            graphics.moveTo(point.x, point.y);
-            iPo = path[i + 1];
-            point = new LogicPos(iPo.x, iPo.y);
-            graphics.lineTo(point.x, point.y);
-        }
-
-        graphics.closePath();
-        graphics.strokePath();
-        scene.layerManager.addToLayer("middleLayer", graphics);
-        return graphics;
-    }
-
-    private getColorByValue(val: boolean) {
-        return val ? this.CIRCLE_COLOR_POINTS_PASS : this.CIRCLE_COLOR_POINTS_NOTPASS;
+        scene.layerManager.addToLayer("middleLayer", this.mPath);
     }
 }
 

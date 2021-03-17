@@ -1,5 +1,4 @@
 import { SceneName } from "structure";
-import { Scene } from "tooqinggamephaser";
 import { IPos, Tool } from "utils";
 import { UiManager } from "../ui";
 import { BaseGuide } from "./base.guide";
@@ -11,13 +10,11 @@ export class BasePlaySceneGuide extends BaseGuide {
     protected mElementID: number;
     protected mElement: any;
     protected mPlayScene: Phaser.Scene;
-    protected mUiScene: Phaser.Scene;
     protected mPointer: Phaser.Input.Pointer;
     constructor(id: number, uiManager: UiManager) {
         super(uiManager.render);
         this.mElementID = id;
         this.mPlayScene = this.render.game.scene.getScene(SceneName.PLAY_SCENE);
-        this.mUiScene = this.render.game.scene.getScene(SceneName.MAINUI_SCENE);
     }
 
     public show(param?: any) {
