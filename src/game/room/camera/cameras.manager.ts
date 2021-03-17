@@ -169,10 +169,10 @@ export class CamerasManager extends PacketHandler implements ICameraService {
         }
         // 数组去重
         Array.from(new Set(blockIndex));
-        Logger.getInstance().log("cameraview ----->", cameraView);
-        Logger.getInstance().log("List ----->", list);
-        Logger.getInstance().log("pointer ----->", pointerList);
-        Logger.getInstance().log("blockIndex ----->", blockIndex);
+        // Logger.getInstance().log("cameraview ----->", cameraView);
+        // Logger.getInstance().log("List ----->", list);
+        // Logger.getInstance().log("pointer ----->", pointerList);
+        // Logger.getInstance().log("blockIndex ----->", blockIndex);
         if (!Tool.equalArr(this.preCamerasList, blockIndex)) {
             const pkt = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_UPDATE_HOT_BLOCK);
             const content: op_virtual_world.IOP_CLIENT_REQ_VIRTUAL_WORLD_UPDATE_HOT_BLOCK = pkt.content;
