@@ -439,6 +439,7 @@ export class Render extends RPCPeer implements GameMain, IRender {
         }
     }
 
+    @Export()
     hidden() {
         this.destroy(false).then(() => {
             this.linkTo(MAIN_WORKER, MAIN_WORKER_URL).onceReady(() => {
