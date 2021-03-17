@@ -1,5 +1,6 @@
-import { InputText } from "apowophaserui";
-import { Font } from "utils";
+import { ClickEvent, InputText } from "apowophaserui";
+import { Font, Logger } from "utils";
+import { Tap } from "./tap";
 
 export class LabelInput extends Phaser.GameObjects.Container {
     private mBackground: Phaser.GameObjects.Graphics;
@@ -26,8 +27,8 @@ export class LabelInput extends Phaser.GameObjects.Container {
         }, false).setInteractive(new Phaser.Geom.Rectangle(-clickW * 0.5, -clickH * 0.5, clickW, clickH), Phaser.Geom.Rectangle.Contains);
         this.mOriginX = this.mLabel.originX;
         this.mOriginY = this.mLabel.originY;
-        this.mLabel.on("pointerdown", this.onPointerDownHandler, this);
-        this.mLabel.on("pointerup", this.onShowInputHandler, this);
+        const tap = new Tap(this.mLabel);
+        this.mLabel.on(ClickEvent.Tap, this.onShowInputHandler, this);
         this.add(this.mLabel);
 
         this.setSize(clickW, clickH);
@@ -148,6 +149,10 @@ export class LabelInput extends Phaser.GameObjects.Container {
 
     private onTextFocusHandler(e) {
         this.emit("focus");
+    }
+
+    private onTapHandler() {
+        Logger.getInstance().log("tap ================");
     }
 
     get object(): Phaser.GameObjects.Text | InputText {
