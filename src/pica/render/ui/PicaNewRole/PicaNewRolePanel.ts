@@ -57,7 +57,7 @@ export class PicaNewRolePanel extends PicaBasePanel {
         this.openBigBtn.on(ClickEvent.Tap, this.onOpeningCharacterHandler, this);
         this.followBtn.on(ClickEvent.Tap, this.onFollowHandler, this);
         this.tradingBtn.on(ClickEvent.Tap, this.onTradingHandler, this);
-        this.on("pointerdown", this.OnCloseHandler, this);
+        this.on("pointerup", this.OnCloseHandler, this);
     }
 
     public removeListen() {
@@ -65,7 +65,7 @@ export class PicaNewRolePanel extends PicaBasePanel {
         this.openBigBtn.off(ClickEvent.Tap, this.onOpeningCharacterHandler, this);
         this.followBtn.off(ClickEvent.Tap, this.onFollowHandler, this);
         this.tradingBtn.off(ClickEvent.Tap, this.onTradingHandler, this);
-        this.off("pointerdown", this.OnCloseHandler, this);
+        this.off("pointerup", this.OnCloseHandler, this);
     }
 
     init() {
@@ -139,10 +139,6 @@ export class PicaNewRolePanel extends PicaBasePanel {
         const dbModel = { id: content.id, avatar: temp.avatar };
         this.headAvatar.visible = false;
         this.headAvatar.setSuits(temp.suits);
-        this.headAvatar.once("replacefinished", () => {
-            this.headAvatar.play({ name: "idle", flip: false });
-            this.headAvatar.visible = true;
-        });
         this.headAvatar.visible = true;
         this.headAvatar.load(dbModel);
         this.nameImage.setFrameValue(content.nickname, UIAtlasName.people_action, "people_man");

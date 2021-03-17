@@ -61,7 +61,8 @@
     "open": "Open",
     "give": "Give",
     "bag":"BAG",
-    "recast":"RECAST"
+    "recast":"RECAST",
+    "make":"Make"
   },
   "quantityunit": {
     "k": "k",

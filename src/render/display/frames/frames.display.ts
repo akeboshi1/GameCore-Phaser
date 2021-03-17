@@ -89,8 +89,8 @@ export class FramesDisplay extends BaseFramesDisplay implements IDisplayObject {
         if (!this.checkShowNickname()) return;
         this.mTopDisplay.showNickname(name);
 
-        // test
-        // this.mTopDisplay.showNickname(name + "; " + this.mID);
+        // debug
+        // this.mTopDisplay.showNickname(name + "; " + this.mID + "; " + this.x + "; " + this.y);
     }
 
     public showTopDisplay(data?: ElementStateType) {

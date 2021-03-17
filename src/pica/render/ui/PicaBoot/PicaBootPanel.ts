@@ -15,6 +15,13 @@ export class PicaBootPanel extends BasePanel {
         this.mMediator = this.render.mainPeer[ModuleName.PICA_BOOT_NAME];
     }
 
+    show(param?: any) {
+        super.show(param);
+        if (this.mInitialized) {
+            this.playBtn.enable = true;
+        }
+    }
+
     addListen() {
         this.playBtn.on(ClickEvent.Tap, this.onPlayHandler, this);
         this.navigate.addListen();
@@ -141,6 +148,7 @@ export class PicaBootPanel extends BasePanel {
         }
         if (this.mMediator) {
             this.mMediator.enterGame();
+            this.playBtn.enable = false;
         }
     }
 

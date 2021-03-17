@@ -26,6 +26,8 @@ export class PicaManufactureMediator extends BasicMediator {
         this.game.emitter.on(this.key + "_close", this.onCloseHandler, this);
         this.game.emitter.on(this.key + "_queryrecaste", this.queryRecaste, this);
         this.game.emitter.on(this.key + "_queryrecastelist", this.queryFuriListByStar, this);
+        this.game.emitter.on(this.key + "_queryPackage", this.onQueryPackage, this);
+        this.game.emitter.on(this.key + "_queryRecastCategories", this.queryRecastCategories, this);
     }
 
     hide() {
@@ -38,6 +40,8 @@ export class PicaManufactureMediator extends BasicMediator {
         this.game.emitter.off(this.key + "_close", this.onCloseHandler, this);
         this.game.emitter.off(this.key + "_queryrecaste", this.queryRecaste, this);
         this.game.emitter.off(this.key + "_queryrecastelist", this.queryFuriListByStar, this);
+        this.game.emitter.off(this.key + "_queryPackage", this.onQueryPackage, this);
+        this.game.emitter.off(this.key + "_queryRecastCategories", this.queryRecastCategories, this);
         super.hide();
     }
 
@@ -164,23 +168,51 @@ export class PicaManufactureMediator extends BasicMediator {
     private queryFuriListByStar(data: { type: string, star: number }) {
         const tempArr = this.cacheMgr.getRecasteList(data.type, data.star);
         if (tempArr) {
-            this.mView.setProp(tempArr);
+            this.mView.setGridProp(tempArr);
         } else {
             // this.mModel.queryRecasteList();
             const configMgr = <BaseDataConfigManager>this.game.configManager;
             const list = configMgr.getRecastItemBases();
             this.cacheMgr.setRecasteList(list);
             const temp = this.cacheMgr.getRecasteList(data.type, data.star);
-            this.mView.setProp(temp);
+            this.mView.setGridProp(temp);
         }
+    }
+    private queryRecastCategories() {
+        this.setRecasteCategories(op_pkt_def.PKT_PackageType.FurniturePackage);
     }
     private setRecasteCategories(categoryType: number) {
         if (this.mView) {
             const data = this.cacheMgr.getBagCategory(categoryType);
-            this.mView.setCategories(data.subcategory);
+            if (data) {
+                this.mView.setCategories(data.subcategory);
+            } else {
+                const configMgr = <BaseDataConfigManager>this.game.configManager;
+                const subcategory = configMgr.getItemSubCategory(categoryType);
+                this.mView.setCategories(subcategory);
+                this.cacheMgr.setBagCategory({ category: categoryType, subcategory });
+            }
         }
     }
-
+    private onQueryPackage(subCategoryType) {
+        if (this.bag) {
+            const packType = op_pkt_def.PKT_PackageType.FurniturePackage;
+            const items = this.bag.getItemsByCategory(packType, subCategoryType);
+            if (items) {
+                const configMgr = <BaseDataConfigManager>this.game.configManager;
+                configMgr.getBatchItemDatas(items);
+                const temps = [];
+                for (const item of items) {
+                    if (item.rarity < 5) {
+                        temps.push(item);
+                    }
+                }
+                this.mView.setGridProp(temps);
+            } else {
+                this.mView.setGridProp(undefined);
+            }
+        }
+    }
     private get cacheMgr() {
         const mgr = this.game.getDataMgr<CacheDataManager>(DataMgrType.CacheMgr);
         return mgr;

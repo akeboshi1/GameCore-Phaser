@@ -474,12 +474,18 @@ export class ElementManager extends PacketHandler implements IElementManager {
 
     protected checkDisplay(sprite: ISprite): IFramesModel | IDragonbonesModel {
         if (!sprite.displayInfo) {
-            const displayInfo = this.roomService.game.elementStorage.getDisplayModel(sprite.bindID || sprite.id);
-            if (displayInfo) {
-                sprite.setDisplayInfo(displayInfo);
-                // 更新物理进程的物件/人物element
-                this.mRoom.game.physicalPeer.updateAnimations(sprite);
-                return displayInfo;
+            // const displayInfo = this.roomService.game.elementStorage.getDisplayModel(sprite.bindID || sprite.id);
+            const elementRef = this.roomService.game.elementStorage.getElementRef(sprite.bindID || sprite.id);
+            if (elementRef) {
+                // 名字以服务器发送为主。没有从pi中读取
+                if (!sprite.nickname) sprite.nickname = elementRef.name;
+                const displayInfo = elementRef.displayModel;
+                if (displayInfo) {
+                    sprite.setDisplayInfo(displayInfo);
+                    // 更新物理进程的物件/人物element
+                    this.mRoom.game.physicalPeer.updateAnimations(sprite);
+                    return displayInfo;
+                }
             }
         }
         return sprite.displayInfo;
