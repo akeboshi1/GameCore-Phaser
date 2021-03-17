@@ -26,12 +26,12 @@ export class PicaLevelUpEffectPanel extends Phaser.GameObjects.Container {
 
     public resize(width, height) {
         this.setSize(width, height);
-        const maskW = 592 * this.dpr, maskH = 370 * this.dpr;
+        const maskW = width, maskH = 370 * this.dpr;
         this.maskBlack.fillStyle(0, 1);
         this.maskBlack.fillRect(0, 0, maskW, maskH);
         const masky = -this.height * 0.5 + 0 * this.dpr;
         this.maskBlack.y = 0 * this.dpr / this.zoom;
-        this.maskBlack.x = -maskW * 0.5;
+        this.maskBlack.x = 0;
         this.content.y = masky + maskH;
         this.tipCon.x = -this.width * 0.5;
         this.tipCon.y = masky + maskH * 0.8 - 65 * this.dpr + this.tipCon.height * 0.5;

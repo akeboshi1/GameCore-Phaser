@@ -7,12 +7,13 @@ export class ToggleColorButton extends ButtonEventDispatcher {
     private normalColor: string = "#FFFFFF";
     private changeColor: string = "#0099cc";
     private mIsOn: boolean = false;
-    constructor(scene: Phaser.Scene, width: number, height: number, dpr: number, text?: string) {
+    constructor(scene: Phaser.Scene, width: number, height: number, dpr: number, text?: string, style?: any) {
         super(scene, 0, 0);
         this.setSize(width, height);
+        style = style || UIHelper.whiteStyle(dpr, 15);
         this.mText = this.scene.make.text({
             text,
-            style: UIHelper.whiteStyle(dpr, 15)
+            style
         }, false).setOrigin(0.5, 0.5);
         this.add(this.mText);
         this.enable = true;

@@ -17,6 +17,7 @@ export class ItemButton extends ButtonEventDispatcher {
     protected selectFrame: string = "bag_icon_select_bg";
     protected rarityFrame: string = "bag_icon_rare_bg";
     protected key: string;
+    protected isShowTips: boolean = true;
     constructor(scene: Phaser.Scene, key: string, bg: string, dpr: number, zoom: number, enable: boolean) {
         super(scene, 0, 0);
         this.dpr = dpr;
@@ -27,7 +28,6 @@ export class ItemButton extends ButtonEventDispatcher {
         this.selectbg = scene.make.image({ key: UIAtlasName.uicommon, frame: this.selectFrame });
         this.setSize(this.selectbg.width, this.selectbg.height);
         this.itemIcon = new DynamicImage(scene, 0, 0);
-        this.itemIcon.scale = this.dpr / this.zoom;
         this.countTex = this.scene.make.text({ text: "", style: UIHelper.blackStyle(dpr) })
             .setOrigin(1)
             .setPosition(this.width * 0.5 - 5 * dpr, this.height * 0.5 - 4 * dpr);
@@ -50,8 +50,13 @@ export class ItemButton extends ButtonEventDispatcher {
         this.bg.setTexture(key, frame);
     }
 
-    public setIconTexture(key: string, frame: string) {
+    public setIconTexture(key: string, frame: string, visible?: boolean) {
         this.itemIcon.setTexture(key, frame);
+        if (visible !== undefined) this.itemIcon.visible = visible;
+    }
+
+    public setShowTips(show: boolean) {
+        this.isShowTips = show;
     }
 
     public setItemData(itemData: ICountablePackageItem | any, alldisplay: boolean = false) {
@@ -59,6 +64,7 @@ export class ItemButton extends ButtonEventDispatcher {
         this.select = false;
         this.itemIcon.visible = false;
         this.starImg.visible = false;
+        this.itemIcon.scale = 1;
         if (!itemData) {
             this.countTex.visible = false;
             this.bg.setTexture(this.key, this.bgFrame);
@@ -73,7 +79,7 @@ export class ItemButton extends ButtonEventDispatcher {
         this.itemIcon.load(url, this, () => {
             this.itemIcon.visible = true;
         });
-
+        this.itemIcon.scale = this.dpr / this.zoom;
         if (!alldisplay) {
             if (itemData.count > 1) {
                 this.countTex.visible = true;
@@ -108,7 +114,7 @@ export class ItemButton extends ButtonEventDispatcher {
         this.onTabClickHandler();
     }
     protected onTabClickHandler() {
-        if (!this.itemData) return;
+        if (!this.itemData || !this.isShowTips) return;
         PicaItemTipsPanel.Inst.showTips(this, this.itemData);
     }
 }
