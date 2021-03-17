@@ -138,6 +138,9 @@ export class User extends Player {
         ct.movePath = movePath;
         this.mElementManager.connection.send(pkt);
         this.mMovePoints = [];
+
+        // debug
+        // Logger.getInstance().log("#path cur pos : ", this.getPosition45(), "; ", this.getPosition());
     }
 
     public move(moveData: any) {
@@ -255,7 +258,7 @@ export class User extends Player {
     }
 
     protected syncCameraPosition() {
-        this.roomService.cameraService.syncCameraScroll();
+        this.roomService.cameraFollowHandler();
     }
 
     set model(val: ISprite) {
