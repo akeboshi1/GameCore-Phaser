@@ -195,7 +195,7 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
             case op_def.ResponseStatus.REQUEST_UNAUTHORIZED:
                 // 校验没成功
                 this.renderPeer.showAlert("登陆过期，请重新登陆")
-                .then(this.login.bind(this));
+                    .then(this.login.bind(this));
                 break;
         }
         Logger.getInstance().log(`Remote Trace[${content.responseStatus}]: ${content.msg}`);
@@ -550,6 +550,15 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
             Logger.getInstance().debug("no connection gameCreat");
         }
     }
+
+    /**
+     * 加载前端json文件
+     * @param name
+     */
+    public loadJson() {
+        this.mLoadingManager.start(LoadState.LOADJSON);
+    }
+
     public preloadGameConfig(): Promise<any> {
         return undefined;
     }

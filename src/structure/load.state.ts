@@ -1,4 +1,3 @@
-
 export enum LoadState {
     ENTERWORLD,
     DOWNLOADGAMECONFIG,
@@ -8,6 +7,7 @@ export enum LoadState {
     LOADINGRESOURCES,
     LOGINGAME,
     CREATESCENE,
+    LOADJSON,
 }
 
 export enum PlaySceneLoadState {
