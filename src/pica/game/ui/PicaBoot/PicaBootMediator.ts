@@ -23,11 +23,11 @@ export class PicaBootMediator extends BasicMediator {
             return;
         }
         this.mShow = true;
-        this.__exportProperty(async () => {
-            await this.referToken();
+        this.__exportProperty(() => {
             this.game.peer.render.showPanel(this.key, param).then(() => {
                 this.mView = this.game.peer.render[this.key];
                 this.panelInit();
+                this.referToken();
             });
             this.mediatorExport();
         });
