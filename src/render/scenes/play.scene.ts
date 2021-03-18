@@ -28,8 +28,6 @@ export class PlayScene extends RoomScene {
     }
 
     public preload() {
-        const dpr = this.render.uiRatio;
-        this.load.atlas(ModuleName.MASK_LOADING_NAME, Url.getUIRes(dpr, "mask_loading/mask_loading.png"), Url.getUIRes(dpr, "mask_loading/mask_loading.json"));
         super.preload();
     }
 
