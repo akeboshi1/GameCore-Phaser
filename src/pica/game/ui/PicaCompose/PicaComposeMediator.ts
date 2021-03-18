@@ -86,6 +86,7 @@ export class PicaComposeMediator extends BasicMediator {
     private isQualified(item: op_client.IPKT_CRAFT_SKILL) {
         if (this.playerBag) {
             const configMgr = <BaseDataConfigManager>this.game.configManager;
+            const curAvatar = Object.assign({}, this.game.roomManager.currentRoom.playerManager.actor.model.avatar);
             if (item.product) {
                 configMgr.getBatchItemDatas([item.product]);
                 const product = item.product;
@@ -95,7 +96,8 @@ export class PicaComposeMediator extends BasicMediator {
                 item.productAnimations = product.animations;
                 item.productDisplay = product.animationDisplay;
                 if (item.product.suitType) {
-                    const dataAvatar: any = AvatarSuitType.createHasBaseAvatarBySn(product.suitType, product.sn, product.slot, product.tag, product.version);
+                    const dataAvatar: any = AvatarSuitType.createAvatarBySn(product.suitType, product.sn, product.slot, product.tag, product.version, curAvatar);
+                    // const dataAvatar: any = AvatarSuitType.createHasBaseAvatarBySn(product.suitType, product.sn, product.slot, product.tag, product.version);
                     item.productAvatar = dataAvatar;
                 }
             }

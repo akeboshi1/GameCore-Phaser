@@ -235,6 +235,7 @@ class MainTaskItem extends Phaser.GameObjects.Container {
     private send: Handler;
     private intervalTimer: any;
     private previousProgress: number;
+    private isCanRecievd: boolean = true;
     constructor(scene: Phaser.Scene, width: number, height: number, dpr: number, zoom: number) {
         super(scene);
         this.dpr = dpr;
@@ -355,7 +356,7 @@ class MainTaskItem extends Phaser.GameObjects.Container {
     }
 
     private onReceiveAwardHandler() {
-        if (this.isFinish && !this.mainData.rewardsReceived) {
+        if (this.isFinish && !this.mainData.rewardsReceived && this.isCanRecievd) {
             if (this.send) this.send.runWith([this.mainData.id]);
         } else {
             PicaItemTipsPanel.Inst.showTips(this.rewardsImg, <any>this.mainData.reward);
@@ -367,6 +368,7 @@ class MainTaskItem extends Phaser.GameObjects.Container {
 
     private playProgressTween(from: number, to: number, max: number, duration: number) {
         if (!this.scene) return;
+        this.isCanRecievd = false;
         const tween = this.scene.tweens.addCounter({
             from,
             to,
@@ -394,6 +396,7 @@ class MainTaskItem extends Phaser.GameObjects.Container {
         if (!this.scene) return;
         if (this.intervalTimer) clearInterval(this.intervalTimer);
         this.rewardRotateImg.visible = true;
+        this.isCanRecievd = true;
         this.intervalTimer = setInterval(() => {
             if (!this.scene) {
                 if (this.intervalTimer) clearInterval(this.intervalTimer);

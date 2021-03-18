@@ -32,6 +32,9 @@ export class TAGElementAction extends ElementBaseAction {
                 case "pick":
                     this.executeCollect(data);
                     break;
+                case "openchest":
+                    this.executeOpenChest(data);
+                    break;
             }
         }
     }
@@ -47,6 +50,10 @@ export class TAGElementAction extends ElementBaseAction {
     }
     private executeCollect(data: any) {
         const tempdata = { animation: "collect", times: data.repeat };
+        this.game.emitter.emit(EventType.SCENE_PLAYER_ACTION, this.userid, this.data.id, tempdata);
+    }
+    private executeOpenChest(data: any) {
+        const tempdata = { animation: "open_chest", times: data.repeat };
         this.game.emitter.emit(EventType.SCENE_PLAYER_ACTION, this.userid, this.data.id, tempdata);
     }
 }

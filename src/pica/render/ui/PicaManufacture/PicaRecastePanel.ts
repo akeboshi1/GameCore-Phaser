@@ -17,8 +17,6 @@ export class PicaRecastePanel extends Phaser.GameObjects.Container {
   private mPropGridBg: Phaser.GameObjects.Graphics;
   private mCategoryScroll: GameScroller;
   private confirmBtn: NineSliceButton;
-  private starCountCon: Phaser.GameObjects.Container;
-  private starvalue: ImageValue;
   private displayPanel: RecasteDisplayPanel;
   private starCount: number;
   private categoryType: any;
@@ -61,13 +59,11 @@ export class PicaRecastePanel extends Phaser.GameObjects.Container {
     this.mCategoriesBar.fillRect(0, 0, width, 40 * this.dpr);
     this.confirmBtn.x = width - this.confirmBtn.width / 2 - 10 * this.dpr;
     this.confirmBtn.y = this.mCategoryCon.y - this.confirmBtn.height / 2 + 25 * this.dpr;
-    this.starCountCon.x = this.starCountCon.width * 0.5 + 60 * this.dpr;
-    this.starCountCon.y = this.confirmBtn.y + 10 * this.dpr;
     this.labelTipTex.x = 15 * this.dpr;
     this.labelTipTex.y = this.confirmBtn.y;
     this.labelTipTex.visible = false;
     this.mDetailBubble.x = this.labelTipTex.x;
-    this.mDetailBubble.y = this.labelTipTex.y - 10 * this.dpr - this.mDetailBubble.height;
+    this.mDetailBubble.y = this.labelTipTex.y + 20 * this.dpr - this.mDetailBubble.height;
     this.displayPanel.x = width * 0.5;
     this.displayPanel.y = topHeight * 0.5 + 17 * this.dpr;
     this.mPropGridBg.clear();
@@ -131,16 +127,17 @@ export class PicaRecastePanel extends Phaser.GameObjects.Container {
 
   public setStarData(value: number) {
     this.starCount = value;
-    this.starvalue.setText(value + "");
   }
 
   public setRecasteItemData(data: op_client.ICountablePackageItem, blueprint: boolean) {
     if (data) {
       this.mRecasteItemData = data;
       this.displayPanel.setRecasteItemData(data);
-      if (blueprint) this.onDisplayPanelHandler("blueprint");
+      this.mDetailBubble.setProp(data, 0, undefined);
+      if (blueprint) this.onDisplayPanelHandler("blueprint", true);
     } else {
       this.onDisplayPanelHandler("itembutton");
+      this.displayPanel.setRecasteItemData(undefined);
     }
   }
 
@@ -176,29 +173,11 @@ export class PicaRecastePanel extends Phaser.GameObjects.Container {
     this.mCategoryCon.add(this.mCategoriesBar);
     this.mBackground.setInteractive(new Phaser.Geom.Rectangle(0, 0, width, height), Phaser.Geom.Rectangle.Contains);
 
-    const starbg = new NineSlicePatch(this.scene, 0, -this.dpr, 80 * this.dpr, 28 * this.dpr, UIAtlasName.uicommon, "home_assets_bg", {
-      left: 17 * this.dpr,
-      top: 0 * this.dpr,
-      right: 17 * this.dpr,
-      bottom: 0 * this.dpr
-    });
-    starbg.x = -starbg.width * 0.5;
-    this.starvalue = new ImageValue(this.scene, 60 * this.dpr, 26 * this.dpr, UIAtlasName.recast, "Recast_pica star_big", this.dpr, {
-      color: "#ffffff", fontSize: 15 * this.dpr, fontFamily: Font.NUMBER
-    });
-    this.starvalue.setLayout(1);
-    this.starvalue.x = starbg.x - starbg.width * 0.5 + 22 * this.dpr;
-    this.starCountCon = this.scene.make.container(undefined, false);
-    this.starCountCon.setSize(starbg.width, starbg.height);
-    this.starCountCon.add([starbg, this.starvalue]);
-    this.starCountCon.x = width - 20 * this.dpr;
-    this.starCountCon.y = -this.height * 0.5 + 20 * this.dpr;
-
     const btnwidth = 100 * this.dpr, btnHeight = 40 * this.dpr;
     const btnPosX = width - btnwidth / 2 - 20 * this.dpr, btnPosY = this.mCategoryCon.y - 25 * this.dpr;
     this.confirmBtn = this.createNineButton(btnPosX + 100 * this.dpr, btnPosY, btnwidth, btnHeight, UIAtlasName.uicommon, "yellow_btn", i18n.t("common.confirm"), "#996600");
     this.confirmBtn.on(ClickEvent.Tap, this.onConfirmBtnHandler, this);
-    this.mDetailBubble = new DetailBubble(this.scene, UIAtlasName.uicommon, this.dpr);
+    this.mDetailBubble = new DetailBubble(this.scene, UIAtlasName.uicommon, this.dpr, this.zoom, 100 * this.dpr, 50 * this.dpr);
     this.mDetailBubble.x = 10 * this.dpr;
     this.labelTipTex = this.scene.make.text({ text: i18n.t("recaste.tip"), style: UIHelper.colorStyle("#FAF916", this.dpr * 14) }).setOrigin(0, 0.5);
     this.mCategoryScroll = new GameScroller(this.scene, {
@@ -217,7 +196,7 @@ export class PicaRecastePanel extends Phaser.GameObjects.Container {
     });
     this.mPropGridBg = this.scene.make.graphics(undefined, false);
     this.mCategoryCon.add(this.mCategoryScroll);
-    this.add([this.mBackground, this.mPropGridBg, this.mTopBg, this.displayPanel, this.starCountCon, this.mCategoryCon, this.confirmBtn, this.mDetailBubble, this.labelTipTex]);
+    this.add([this.mBackground, this.mPropGridBg, this.mTopBg, this.displayPanel, this.mCategoryCon, this.confirmBtn, this.mDetailBubble, this.labelTipTex]);
     const propFrame = this.scene.textures.getFrame(UIAtlasName.uicommon, "bag_icon_common_bg");
     const capW = (propFrame.width) + 9 * this.dpr;
     const capH = (propFrame.height) + 9 * this.dpr;
@@ -319,7 +298,7 @@ export class PicaRecastePanel extends Phaser.GameObjects.Container {
     cell.select = true;
     this.mSelectedItem = cell;
     this.mDetailBubble.setProp(item, 0, undefined);
-    this.mDetailBubble.y = this.labelTipTex.y - 10 * this.dpr - this.mDetailBubble.height;
+    this.mDetailBubble.y = this.labelTipTex.y + 20 * this.dpr - this.mDetailBubble.height;
   }
 
   private clearRecastData() {
@@ -352,7 +331,7 @@ export class PicaRecastePanel extends Phaser.GameObjects.Container {
     this.render.renderEmitter(this.key + "_queryrecaste", { consumedId: this.mRecasteItemData.id, targetId: this.mSelectedItemData.id });
   }
 
-  private onDisplayPanelHandler(tag: string) {
+  private onDisplayPanelHandler(tag: string, data?: any) {
     if (tag === "itembutton") {
       this.mCategoriesBar.clear();
       this.mCategoriesBar.fillStyle(0x3EE1FF);
@@ -363,6 +342,14 @@ export class PicaRecastePanel extends Phaser.GameObjects.Container {
       this.isBag = true;
       this.clearRecastData();
     } else if (tag === "blueprint") {
+      if (!data) {
+        const notice = i18n.t("recaste.selecttips");
+        const tempdata = {
+          text: [{ text: notice, node: undefined }]
+        };
+        this.render.mainPeer.showMediator(ModuleName.PICANOTICE_NAME, true, tempdata);
+        return;
+      }
       this.mCategoriesBar.clear();
       this.mCategoriesBar.fillStyle(0xC6BDF6);
       this.mCategoriesBar.fillRect(0, 0, this.width, 40 * this.dpr);
@@ -389,6 +376,7 @@ class RecasteDisplayPanel extends Phaser.GameObjects.Container {
   private rightTips: Phaser.GameObjects.Text;
   private maskGraphic: Phaser.GameObjects.Graphics;
   private send: Handler;
+  private haveRecastData: boolean = false;
   constructor(scene: Phaser.Scene, width: number, height: number, render: Render, dpr: number, zoom: number) {
     super(scene);
     this.setSize(width, height);
@@ -407,8 +395,13 @@ class RecasteDisplayPanel extends Phaser.GameObjects.Container {
     this.send = send;
   }
   public setRecasteItemData(data: op_client.ICountablePackageItem) {
+    if (!data) {
+      this.clearDisplay();
+      return;
+    }
     this.recasteItem.setItemData(data, true);
     this.starvalue.setText(data.grade + "");
+    this.haveRecastData = true;
   }
 
   public setRecasteTargetData(data: op_client.ICountablePackageItem) {
@@ -479,7 +472,7 @@ class RecasteDisplayPanel extends Phaser.GameObjects.Container {
   }
 
   private onBlueprintHandler() {
-    if (this.send) this.send.runWith("blueprint");
+    if (this.send) this.send.runWith(["blueprint", this.haveRecastData]);
   }
 
   private clearDisplay() {
@@ -488,5 +481,6 @@ class RecasteDisplayPanel extends Phaser.GameObjects.Container {
     this.recasteTarget.visible = false;
     this.rightButton.visible = true;
     this.rightTips.visible = true;
+    this.haveRecastData = false;
   }
 }
