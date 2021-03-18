@@ -762,6 +762,8 @@ class MouseFollow {
         const size = this.mNodeType === op_def.NodeType.TerrainNodeType ? this.mSize : 1;
         this.mDisplay.setDisplay(this.mSprite, size);
         (<SceneEditor>scene).layerManager.addToLayer(SceneEditor.SCENE_UI, this.mDisplay);
+        const activePointer = this.sceneEditor.scene.input.activePointer;
+        if (activePointer) this.pointerMove(activePointer.worldX, activePointer.worldY);
     }
 
     // setDisplay(content: ElementNode | TerrainNode) {
@@ -791,6 +793,8 @@ class MouseFollow {
         this.mDisplay.setDisplay(null, this.mSize);
         this.isTerrain = true;
         (<SceneEditor>scene).layerManager.addToLayer(SceneEditor.SCENE_UI, this.mDisplay);
+        const activePointer = this.sceneEditor.scene.input.activePointer;
+        if (activePointer) this.pointerMove(activePointer.worldX, activePointer.worldY);
         // this.mLayerManager.addToSceneToUI(this.mDisplay);
     }
 

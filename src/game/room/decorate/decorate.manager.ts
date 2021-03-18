@@ -12,6 +12,7 @@ import {IExtendCountablePackageItem} from "picaStructure";
 
 // 小屋布置管理类，包含所有布置过程中的操作接口
 // 文档：https://dej4esdop1.feishu.cn/docs/doccnEbMKpINEkfBVImFJ0nTJUh#
+// api: https://code.apowo.com/PixelPai/pixelpai_proto/-/blob/dev/client_proto.md#anchor-2021220
 // TODO:移植到PicaGame
 export class DecorateManager {
 

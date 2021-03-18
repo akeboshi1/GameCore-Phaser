@@ -1,7 +1,7 @@
 import { PacketHandler, PBpacket } from "net-socket-packet";
 import { op_client, op_def, op_virtual_world } from "pixelpai_proto";
 import { Terrain } from "./terrain";
-import { IElementManager } from "../element/element.manager";
+import { ElementManager, IElementManager } from "../element/element.manager";
 import { IElement } from "../element/element";
 import NodeType = op_def.NodeType;
 import { IRoomService, Room, SpriteAddCompletedListener } from "../room/room";
@@ -22,7 +22,9 @@ export class TerrainManager extends PacketHandler implements IElementManager {
     // ---- by 7
     private mEmptyMap: EmptyTerrain[][];
     private mDirty: boolean = false;
-
+    private mTerrainCache: any[] = [];
+    private mCacheLen: number = 10;
+    private canDealTerrain = false;
     constructor(protected mRoom: IRoomService, listener?: SpriteAddCompletedListener) {
         super();
         this.mListener = listener;
@@ -41,6 +43,7 @@ export class TerrainManager extends PacketHandler implements IElementManager {
         if (this.mRoom) {
             this.mGameConfig = this.mRoom.game.elementStorage;
         }
+        this.roomService.game.emitter.on(ElementManager.ELEMENT_READY, this.dealTerrainCache, this);
     }
 
     public init() {
@@ -55,6 +58,14 @@ export class TerrainManager extends PacketHandler implements IElementManager {
     }
 
     public update(time: number, delta: number) {
+        if (this.hasAddComplete && this.mTerrainCache && this.canDealTerrain) {
+            const tmpLen = this.mTerrainCache.length > this.mCacheLen ? this.mCacheLen : this.mTerrainCache.length;
+            const tmpList = this.mTerrainCache.splice(0, tmpLen);
+            tmpList.forEach((sprite) => {
+                this._add(sprite);
+            });
+            this.canDealTerrain = false;
+        }
         if (this.mDirty) {
             const len = this.mEmptyMap.length;
             for (let i: number = 0; i < len; i++) {
@@ -73,12 +84,16 @@ export class TerrainManager extends PacketHandler implements IElementManager {
     }
 
     public destroy() {
+        this.roomService.game.emitter.off(ElementManager.ELEMENT_READY, this.dealTerrainCache, this);
         if (this.connection) {
             this.connection.removePacketListener(this);
         }
         if (!this.mTerrains) return;
         this.mTerrains.forEach((terrain) => this.remove(terrain.id));
         this.mTerrains.clear();
+        if (!this.mTerrainCache) return;
+        this.mTerrainCache.length = 0;
+        this.mTerrainCache = [];
     }
 
     public get(id: number): Terrain {
@@ -123,16 +138,16 @@ export class TerrainManager extends PacketHandler implements IElementManager {
         const sprites = content.sprites;
         const type = content.nodeType;
         const pf: op_def.IPacket = content.packet;
-
         if (type !== op_def.NodeType.TerrainNodeType) {
             return;
         }
-
+        Logger.getInstance().log("terrain add ====>", sprites);
         let point: op_def.IPBPoint3f;
         const ids = [];
         // sprites 服务端
         for (const sprite of sprites) {
             point = sprite.point3f;
+
             this.removeEmpty(new LogicPos(point.x, point.y));
             if (point) {
                 const s = new Sprite(sprite, type);
@@ -142,7 +157,8 @@ export class TerrainManager extends PacketHandler implements IElementManager {
                 if (!s.displayInfo) {
                     ids.push(s.id);
                 }
-                this._add(s);
+                this.mTerrainCache.push(s);
+                // this._add(s);
             }
         }
         this.fetchDisplay(ids);
@@ -303,6 +319,10 @@ export class TerrainManager extends PacketHandler implements IElementManager {
             block.dirty = true;
             this.mDirty = true;
         }
+    }
+
+    private dealTerrainCache() {
+        this.canDealTerrain = true;
     }
 
     get connection(): ConnectionService | undefined {

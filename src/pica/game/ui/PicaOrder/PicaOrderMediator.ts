@@ -17,7 +17,7 @@ export class PicaOrderMediator extends BasicMediator {
     }
 
     isSceneUI() {
-        return true;
+        return false;
     }
 
     show(param?: any) {

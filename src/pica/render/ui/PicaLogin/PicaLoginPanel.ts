@@ -105,7 +105,7 @@ export class PicaLoginPanel extends BasePanel {
 
         const title = this.scene.make.text({
             y: -container.height * 0.5 + 19 * this.dpr,
-            text: "登  陆",
+            text: "登  录",
             style: {
                 color: "#FFD248",
                 fontSize: 26 * this.dpr,
@@ -150,7 +150,7 @@ export class PicaLoginPanel extends BasePanel {
         });
         codeContainer.add([this.fetchCode]);
 
-        this.mLoginBtn = new NineSliceButton(this.scene, 0, container.height * 0.5 - 51 * this.dpr, 191 * this.dpr, 60 * this.dpr, UIAtlasKey.commonKey, "yellow_btn", "登 陆", this.dpr, 1, {
+        this.mLoginBtn = new NineSliceButton(this.scene, 0, container.height * 0.5 - 51 * this.dpr, 191 * this.dpr, 60 * this.dpr, UIAtlasKey.commonKey, "yellow_btn", "登 录", this.dpr, 1, {
             left: 12 * this.dpr,
             top: 12 * this.dpr,
             right: 14 * this.dpr,

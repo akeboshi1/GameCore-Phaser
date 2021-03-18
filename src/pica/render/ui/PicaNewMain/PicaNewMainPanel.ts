@@ -24,6 +24,7 @@ export class PicaNewMainPanel extends PicaBasePanel {
         super(uiManager);
         this.atlasNames = [UIAtlasName.uicommon, UIAtlasName.iconcommon];
         this.key = ModuleName.PICANEWMAIN_NAME;
+        this.maskLoadingEnable = false;
     }
 
     resize(w: number, h: number) {

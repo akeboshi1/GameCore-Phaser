@@ -21,7 +21,8 @@ export class GuideManager {
 
     public canInteractive(data?: any): boolean {
         if (!this.mGurGuide) return false;
-        return this.mGurGuide.checkInteractive(data);
+        const boo = data ? this.mGurGuide.checkInteractive(data) : true;
+        return boo;
     }
 
     public init(data?: any) {

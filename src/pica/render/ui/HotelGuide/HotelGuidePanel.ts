@@ -5,6 +5,8 @@ import { PicaNewMainPanel } from "../PicaNewMain/PicaNewMainPanel";
 import { PicaTaskPanel } from "../PicaTask/PicaTaskPanel";
 
 export class HotelGuidePanel extends BaseGuide {
+    private taskButton;
+    private itemTaskBtn;
     constructor(uiManager: UiManager) {
         super(uiManager.render);
     }
@@ -13,32 +15,37 @@ export class HotelGuidePanel extends BaseGuide {
         this.step1();
     }
 
+    public end() {
+        if (this.itemTaskBtn) this.itemTaskBtn.off(ClickEvent.Tap, this.end, this);
+        super.end();
+    }
+
     private step1() {
         const main: PicaNewMainPanel = this.uiManager.getPanel(ModuleName.PICANEWMAIN_NAME) as PicaNewMainPanel;
         const leftPanel = main.leftPanel;
-        const btn = leftPanel.taskButton;
-        const worldMatrix = (<any>btn).getWorldTransformMatrix();
+        this.taskButton = leftPanel.taskButton;
+        const worldMatrix = (<any>this.taskButton).getWorldTransformMatrix();
         this.guideEffect.createGuideEffect({ x: worldMatrix.tx, y: worldMatrix.ty });
-        btn.on(ClickEvent.Tap, () => {
-            this.step2();
-        }, this);
+        this.taskButton.on(ClickEvent.Tap, this.step2, this);
     }
 
     private step2() {
         // 异步等待过程
-        this.render.emitter.once(PicaTaskPanel.PICATASK_DATA, (pos) => {
-            const taskPanel: PicaTaskPanel = this.uiManager.getPanel(ModuleName.PICATASK_NAME) as PicaTaskPanel;
-            const picaMainTaskPanel: any = taskPanel.mainPanel;
-            const list: any[] = picaMainTaskPanel.taskItems;
-            const item = list[0];
-            if (!item) this.end();
-            const taskButton = item.taskButton;
-            const worldMatrix = taskButton.getWorldTransformMatrix();
-            this.guideEffect.createGuideEffect({ x: item.width, y: worldMatrix.ty });
-            taskButton.on(ClickEvent.Tap, () => {
-                this.end();
-            }, this);
-        }, this);
+        this.render.emitter.on(PicaTaskPanel.PICATASK_DATA, this.step3, this);
+    }
+
+    private step3(pos) {
+        this.taskButton.off(ClickEvent.Tap, this.step2, this);
+        this.render.emitter.off(PicaTaskPanel.PICATASK_DATA, this.step3, this);
+        const taskPanel: PicaTaskPanel = this.uiManager.getPanel(ModuleName.PICATASK_NAME) as PicaTaskPanel;
+        const picaMainTaskPanel: any = taskPanel.mainPanel;
+        const list: any[] = picaMainTaskPanel.taskItems;
+        const item = list[0];
+        if (!item) this.end();
+        this.itemTaskBtn = item.taskButton;
+        const worldMatrix = this.itemTaskBtn.getWorldTransformMatrix();
+        this.guideEffect.createGuideEffect({ x: item.width, y: worldMatrix.ty });
+        this.itemTaskBtn.on(ClickEvent.Tap, this.end, this);
     }
 
 }
