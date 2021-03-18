@@ -203,6 +203,7 @@ export class PicaLoginPanel extends BasePanel {
     }
 
     private updatePanelList() {
+        if (!this.render || !this.render.uiManager) return;
         const boot: any = this.render.uiManager.getPanel(ModuleName.PICA_BOOT_NAME);
         if (boot) boot.updatePanelList();
     }

@@ -140,7 +140,7 @@ export class MotionManager {
                         this.clearGameObject();
                         return;
                     }
-                    let targets = await this.render.physicalPeer.getInteractivePosition(id);
+                    let targets = await this.render.physicalPeer.getInteractivePosition(this.getMountId(id));
                     if (!targets || targets.length === 0) {
                         const { x, y } = ele;
                         targets = [{ x, y }];
@@ -177,6 +177,15 @@ export class MotionManager {
     protected onGameObjectUpHandler(pointer, gameObject) {
         if (!this.isRunning) return;
         if (this.render.guideManager.canInteractive()) return;
+    }
+
+    protected getMountId(id: number) {
+        const ele = this.render.displayManager.getDisplay(id);
+        if (!ele) return -1;
+        if (ele.rootMount) {
+            return this.getMountId((<any>ele.rootMount).id);
+        }
+        return ele.id;
     }
 
     private start(worldX: number, worldY: number, id?: number) {
