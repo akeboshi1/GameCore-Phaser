@@ -168,7 +168,7 @@ export class Sprite extends EventDispatcher implements ISprite {
         const index = dirable.indexOf(this.direction);
         if (index > -1) {
             this.setDirection(dirable[(index + 1) % dirable.length]);
-           //  Logger.getInstance().debug("turn sprite ===>", dirable[(index + 1) % dirable.length]);
+            //  Logger.getInstance().debug("turn sprite ===>", dirable[(index + 1) % dirable.length]);
         } else {
             Logger.getInstance().error(`${Sprite.name}: error dir ${this.direction}`);
         }
@@ -377,14 +377,18 @@ export class Sprite extends EventDispatcher implements ISprite {
                 baseAniName = this.registerAnimation.get(baseAniName);
             }
         }
-        this.currentAnimation = this.displayInfo.findAnimation(baseAniName, direction);
-        this.currentAnimation.times = times;
-        if (this.animationQueue && this.animationQueue.length > 0) this.currentAnimation.playingQueue = this.animationQueue[0];
-        if (this.currentCollisionArea) {
-            this.setArea();
+        if (!this.displayInfo.findAnimation) {
+            Logger.getInstance().error("displayInfo no findanimation ====>", this.displayInfo);
+        } else {
+            this.currentAnimation = this.displayInfo.findAnimation(baseAniName, direction);
+            this.currentAnimation.times = times;
+            if (this.animationQueue && this.animationQueue.length > 0) this.currentAnimation.playingQueue = this.animationQueue[0];
+            if (this.currentCollisionArea) {
+                this.setArea();
+            }
+            // Logger.getInstance().debug("#dir ", direction, this.direction);
+            this.emit("Animation_Change", { id: this.id, direction: this.direction, animation: this.currentAnimation, playTimes: times });
         }
-        // Logger.getInstance().debug("#dir ", direction, this.direction);
-        this.emit("Animation_Change", { id: this.id, direction: this.direction, animation: this.currentAnimation, playTimes: times });
         return this.currentAnimation;
     }
 

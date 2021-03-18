@@ -1,9 +1,10 @@
-import { Button, ClickEvent } from "apowophaserui";
+import {  ClickEvent } from "apowophaserui";
 import { BaseGuide, UiManager } from "gamecoreRender";
 import { ModuleName } from "structure";
 import { BottomPanel } from "../Bottom/BottomPanel";
 
 export class HomeGuidePanel extends BaseGuide {
+    private homeBtn;
     constructor(uiManager: UiManager) {
         super(uiManager.render);
     }
@@ -13,14 +14,17 @@ export class HomeGuidePanel extends BaseGuide {
         this.step1();
     }
 
+    public end() {
+        if (this.homeBtn) this.homeBtn.off(ClickEvent.Tap, this.end, this);
+        super.end();
+    }
+
     private step1() {
         const bottom: BottomPanel = this.uiManager.getPanel(ModuleName.BOTTOM) as BottomPanel;
         const navigatePanel = bottom.navigatePanel;
-        const button: Button = (<any>navigatePanel).homeButton;
-        const worldMatrix = button.getWorldTransformMatrix();
+        this.homeBtn = (<any>navigatePanel).homeButton;
+        const worldMatrix = this.homeBtn.getWorldTransformMatrix();
         this.guideEffect.createGuideEffect({ x: worldMatrix.tx, y: worldMatrix.ty });
-        button.on(ClickEvent.Tap, () => {
-            this.end();
-        }, this);
+        this.homeBtn.on(ClickEvent.Tap, this.end, this);
     }
 }

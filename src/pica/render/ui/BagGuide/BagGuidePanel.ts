@@ -6,6 +6,7 @@ import { PicaBagPanel } from "../PicaBag/PicaBagPanel";
 
 export class BagGuidePanel extends BaseGuide {
     private bagBtn: Button;
+    private clsBtn;
     constructor(uiManager: UiManager) {
         super(uiManager.render);
     }
@@ -13,6 +14,10 @@ export class BagGuidePanel extends BaseGuide {
     public show(param?: any) {
         super.show(param);
         this.step1();
+    }
+    public end() {
+        if (this.clsBtn) this.clsBtn.off(ClickEvent.Tap, this.end, this);
+        super.end();
     }
 
     private step1() {
@@ -33,12 +38,10 @@ export class BagGuidePanel extends BaseGuide {
     private step3() {
         this.render.emitter.off(PicaBagPanel.PICABAG_SHOW, this.step3, this);
         const bagPanel: PicaBagPanel = this.uiManager.getPanel(ModuleName.PICABAG_NAME) as PicaBagPanel;
-        const closeBtn = bagPanel.closeBtn;
-        const worldMatrix = closeBtn.getWorldTransformMatrix();
+        this.clsBtn = bagPanel.closeBtn;
+        const worldMatrix = this.clsBtn.getWorldTransformMatrix();
         this.guideEffect.createGuideEffect({ x: worldMatrix.tx, y: worldMatrix.ty });
-        closeBtn.on(ClickEvent.Tap, () => {
-            this.end();
-        }, this);
+        this.clsBtn.on(ClickEvent.Tap, this.end, this);
     }
 
 }

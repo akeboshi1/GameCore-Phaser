@@ -23,7 +23,7 @@ export class TerrainManager extends PacketHandler implements IElementManager {
     private mEmptyMap: EmptyTerrain[][];
     private mDirty: boolean = false;
     private mTerrainCache: any[] = [];
-    private mCacheLen: number = 30;
+    private mCacheLen: number = 10;
     private canDealTerrain = false;
     constructor(protected mRoom: IRoomService, listener?: SpriteAddCompletedListener) {
         super();
