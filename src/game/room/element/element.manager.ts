@@ -32,6 +32,7 @@ export interface Task {
 }
 
 export class ElementManager extends PacketHandler implements IElementManager {
+    public static ELEMENT_READY: string = "ELEMENT_READY";
     public hasAddComplete: boolean = false;
     protected mElements: Map<number, Element> = new Map();
     /**
@@ -189,6 +190,10 @@ export class ElementManager extends PacketHandler implements IElementManager {
 
     public update(time: number, delta: number) {
         if (!this.hasAddComplete) return;
+        if (this.mCacheAddList && this.mCacheAddList.length < 1 && this.mCacheSyncList && this.mCacheSyncList.length < 1
+            && this.mDealAddList && this.mDealAddList.length < 1) {
+            this.roomService.game.emitter.emit(ElementManager.ELEMENT_READY);
+        }
         this.mElements.forEach((ele) => ele.update(time, delta));
         if (this.mCacheRemoveList.length > 0) this.dealRemoveList(this.mCacheRemoveList);
     }
@@ -234,7 +239,6 @@ export class ElementManager extends PacketHandler implements IElementManager {
             point = obj.point3f;
             if (point) {
                 sprite = new Sprite(obj, 3);
-                // if (!sprite.displayInfo) {
                 if (!this.checkDisplay(sprite)) {
                     ids.push(sprite.id);
                 } else {
@@ -243,7 +247,6 @@ export class ElementManager extends PacketHandler implements IElementManager {
                         this.mDealAddList.push(obj);
                     }
                 }
-                // }
                 const ele = this._add(sprite);
                 eles.push(ele);
             }
@@ -297,14 +300,9 @@ export class ElementManager extends PacketHandler implements IElementManager {
                     } else if (command === op_def.OpCommand.OP_COMMAND_PATCH) { //  增量
                         element.updateModel(sprite);
                     }
-                    // const displayInfo = element.model.displayInfo;
-                    // if (displayInfo) {
-                    //     this.mRoom.game.elementStorage.add(<any>displayInfo);
-                    // }
                     ele.push(element);
                 } else {
                     this.mDealAddList.push(sprite);
-                    // element = this._add(new Sprite(sprite, 3));
                 }
             }
             this.dealAddList(true);

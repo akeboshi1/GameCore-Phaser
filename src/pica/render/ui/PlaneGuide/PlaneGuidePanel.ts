@@ -7,7 +7,7 @@ export class PlaneGuidePanel extends BasePlaySceneGuide {
 
     protected step1(pos: IPos) {
         const dpr = this.render.config.scale_ratio;
-        const tmpPos = { x: pos.x + dpr * 120 - 100, y: pos.y + 10 * dpr };
+        const tmpPos = { x: pos.x + dpr * 120 - 100, y: pos.y + 1 * dpr };
         this.guideEffect.createGuideEffect(tmpPos);
         this.mPlayScene.input.on("gameobjectdown", this.gameObjectDownHandler, this);
     }
