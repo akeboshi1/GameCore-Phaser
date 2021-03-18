@@ -110,7 +110,7 @@ export class MatterObject implements IMatterObject {
     }
 
     update(time?: number, delta?: number) {
-        if (this.mDirty === false && this.mMoving === false) return;
+        if ((this.mDirty === false && this.mMoving === false) || !this.peer) return;
         this._doMove(time, delta);
         this.mDirty = false;
     }
