@@ -137,7 +137,7 @@ export class UiManager {
     public hidePanel(type: string) {
         const panel = this.hideBasePanel(type);
         if (panel) {
-            panel.hide();
+            panel.hide(true);
         }
     }
 

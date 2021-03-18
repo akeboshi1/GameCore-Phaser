@@ -22,6 +22,7 @@ export class BottomPanel extends PicaBasePanel {
         this.atlasNames = [UIAtlasName.uicommon, UIAtlasName.iconcommon];
         this.key = ModuleName.BOTTOM;
         this.scale = 1;
+        this.maskLoadingEnable = false;
     }
 
     show(param?: any) {

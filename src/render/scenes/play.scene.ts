@@ -1,9 +1,9 @@
-import { Logger } from "utils";
+import { Logger, Url } from "utils";
 import { PlayCamera } from "../cameras/play.camera";
 import { BaseLayer, GroundLayer, SurfaceLayer } from "baseRender";
 import { MainUIScene } from "./main.ui.scene";
 import { RoomScene } from "./room.scene";
-import { PlaySceneLoadState, SceneName } from "structure";
+import { ModuleName, PlaySceneLoadState, SceneName } from "structure";
 import {MotionManager} from "../input/motion.manager";
 import { LayerEnum } from "game-capsule";
 
@@ -28,6 +28,8 @@ export class PlayScene extends RoomScene {
     }
 
     public preload() {
+        const dpr = this.render.uiRatio;
+        this.load.atlas(ModuleName.MASK_LOADING_NAME, Url.getUIRes(dpr, "mask_loading/mask_loading.png"), Url.getUIRes(dpr, "mask_loading/mask_loading.json"));
         super.preload();
     }
 

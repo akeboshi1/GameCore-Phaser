@@ -178,6 +178,7 @@ export class PicaBootPanel extends BasePanel {
     }
 
     private hasPanel(val: boolean) {
+        if (!this.mInitialized) return;
         this.playBtn.visible = !val;
         this.navigate.visible = !val;
     }

@@ -1,10 +1,12 @@
 import { UiManager, BasePanel } from "gamecoreRender";
 import { AtlasData, FolderType, UILoadType } from "picaRes";
+import { ModuleName } from "structure";
 import { Logger, Url } from "utils";
 import { PicaRenderUiManager } from "./pica.Renderuimanager";
 export class PicaBasePanel extends BasePanel {
     protected atlasNames: Array<string | AtlasData>;
     protected textures: Array<string | AtlasData>;
+    protected maskLoadingEnable = true;
     protected tempDatas: any;
     constructor(protected uiManager: UiManager) {
         super(uiManager.scene, uiManager.render);
@@ -37,9 +39,18 @@ export class PicaBasePanel extends BasePanel {
     }
 
     protected preload() {
+        if (this.maskLoadingEnable) {
+            this.uiManager.showPanel(ModuleName.MASK_LOADING_NAME);
+        }
         this.initResource();
         super.preload();
     }
+
+    protected init() {
+        super.init();
+        if (this.maskLoadingEnable) this.uiManager.hidePanel(ModuleName.MASK_LOADING_NAME);
+    }
+
     protected setLinear(key: string) {
         super.setLinear(key);
         if (this.atlasNames) {
