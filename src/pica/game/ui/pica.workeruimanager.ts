@@ -12,7 +12,6 @@ export class PicaWorkerUiManager extends UIManager {
     }
 
     public showMainUI(hideNames?: string[]) {
-        // this.clearMediator();
         this.setMedName(ModuleName.LOGIN_NAME, LoginMediator);
         this.setMedName(ModuleName.DIALOG_NAME, DialogMediator);
         this.setMedName(ModuleName.CUTIN_NAME, CutInMediator);
@@ -25,7 +24,13 @@ export class PicaWorkerUiManager extends UIManager {
         // this.mMedMap.set(ModuleName.PICAMAINUI_NAME, new PicaMainUIMediator(this.game));
         // this.mMedMap.set(ModuleName.PICANEWMAIN_NAME, new PicaNewMainMediator(this.game));
         // this.mMedMap.set(ModuleName.PICAFURNIFUN_NAME, new PicaFurniFunMediator(this.game)); // 这个的确要弄成全局的..
-
+        if (!this.checkActiveUIState(ModuleName.PICANEWMAIN_NAME)) {
+            if (hideNames) {
+                hideNames.push(ModuleName.PICANEWMAIN_NAME);
+            } else {
+                hideNames = [ModuleName.PICANEWMAIN_NAME];
+            }
+        }
         super.showMainUI(hideNames);
     }
 
@@ -46,6 +51,7 @@ export class PicaWorkerUiManager extends UIManager {
             this.mMedMap = new Map();
         }
         type = this.getPanelNameByAlias(type);
+        if (!this.checkActiveUIState(type)) return;
         switch (type) {
             case ModuleName.PICABAGGUIDE_NAME:
             case ModuleName.PICAEXPLOREGUIDE_NAME:
@@ -78,5 +84,30 @@ export class PicaWorkerUiManager extends UIManager {
                 mediator.show(param);
                 break;
         }
+    }
+    protected getPanelNameByAlias(tag: string) {
+        switch (tag) {
+            case "mainui":
+                return ModuleName.PICANEWMAIN_NAME;
+            case "bottom":
+                return ModuleName.BOTTOM;
+            case "minirole":
+                return ModuleName.PICANEWROLE_NAME;
+            case "MessageBox":
+                return "PicaMessageBox";
+        }
+        return tag;
+    }
+
+    protected checkActiveUIState(panelName: string) {
+        const datas = this.getUIStateData(panelName);
+        if (!datas) return true;
+        for (const data of datas) {
+            const tempName = this.getPanelNameByAlias(data.name);
+            if (tempName === panelName) {
+                return data.visible;
+            }
+        }
+        return true;
     }
 }

@@ -14,6 +14,8 @@ export class PicaManufacturePanel extends PicaBasePanel {
     private toggleCon: Phaser.GameObjects.Container;
     private selectLine: Phaser.GameObjects.Image;
     private curToggleItem: ToggleColorButton;
+    private starCountCon: Phaser.GameObjects.Container;
+    private starvalue: ImageValue;
     private composePanel: PicaFurnitureComposePanel;
     private recastPanel: PicaRecastePanel;
     private starCount: number;
@@ -30,6 +32,8 @@ export class PicaManufacturePanel extends PicaBasePanel {
         const height = this.scaleHeight;
         this.mCloseBtn.x = this.mCloseBtn.width * 0.5 + 10 * this.dpr;
         this.mCloseBtn.y = 45 * this.dpr;
+        this.starCountCon.y = this.mCloseBtn.y;
+        this.starCountCon.x = width - 15 * this.dpr;
         this.toggleCon.x = width * 0.5;
         this.toggleCon.y = this.toggleCon.height * 0.5 + 20 * this.dpr;
         this.composePanel.resize(width, height);
@@ -84,6 +88,7 @@ export class PicaManufacturePanel extends PicaBasePanel {
         if (!this.mInitialized) return;
         this.composePanel.setStarData(this.starCount);
         this.recastPanel.setStarData(this.starCount);
+        this.starvalue.setText(value + "");
     }
 
     public setComposeResult(reward: op_client.ICountablePackageItem) {
@@ -98,6 +103,7 @@ export class PicaManufacturePanel extends PicaBasePanel {
         if (this.starCount) {
             this.composePanel.setStarData(this.starCount);
             this.recastPanel.setStarData(this.starCount);
+            this.starvalue.setText(this.starCount + "");
         }
     }
 
@@ -112,11 +118,28 @@ export class PicaManufacturePanel extends PicaBasePanel {
         this.mCloseBtn.on(ClickEvent.Tap, this.onCloseHandler, this);
         this.mCloseBtn.x = this.mCloseBtn.width * 0.5 + 10 * this.dpr;
         this.mCloseBtn.y = 45 * this.dpr;
+        const starbg = new NineSlicePatch(this.scene, 0, -this.dpr, 80 * this.dpr, 28 * this.dpr, UIAtlasName.uicommon, "home_assets_bg", {
+            left: 17 * this.dpr,
+            top: 0 * this.dpr,
+            right: 17 * this.dpr,
+            bottom: 0 * this.dpr
+        });
+        starbg.x = -starbg.width * 0.5;
+        this.starvalue = new ImageValue(this.scene, 60 * this.dpr, 26 * this.dpr, UIAtlasName.recast, "Recast_pica star_big", this.dpr, {
+            color: "#ffffff", fontSize: 15 * this.dpr, fontFamily: Font.NUMBER
+        });
+        this.starvalue.setLayout(1);
+        this.starvalue.x = starbg.x - starbg.width * 0.5 + 22 * this.dpr;
+        this.starCountCon = this.scene.make.container(undefined, false);
+        this.starCountCon.setSize(starbg.width, starbg.height);
+        this.starCountCon.add([starbg, this.starvalue]);
+        this.starCountCon.x = width - 20 * this.dpr;
+        this.starCountCon.y = -this.height * 0.5 + 20 * this.dpr;
         this.toggleCon = this.scene.make.container(undefined, false);
         this.toggleCon.y = 20 * this.dpr;
         this.selectLine = this.scene.make.image({ key: UIAtlasName.recast, frame: "Recast_bookmark_select" });
         this.toggleCon.add(this.selectLine);
-        this.add([this.composePanel, this.recastPanel, this.mCloseBtn, this.toggleCon]);
+        this.add([this.composePanel, this.recastPanel, this.mCloseBtn, this.starCountCon, this.toggleCon]);
         this.createOptionButtons();
         this.resize(0, 0);
         super.init();
@@ -127,7 +150,6 @@ export class PicaManufacturePanel extends PicaBasePanel {
         const cellwidth = allLin / arr.length;
         const cellHeight = 20 * this.dpr;
         let posx = -allLin / 2;
-        let tempitem: ToggleColorButton;
         // tslint:disable-next-line:prefer-for-of
         for (let i = 0; i < arr.length; i++) {
             const data = arr[i];
@@ -141,14 +163,15 @@ export class PicaManufacturePanel extends PicaBasePanel {
             item.setNormalColor("#EEEEEE");
             item.setFontStyle("bold");
             posx += cellwidth;
-            if (!tempitem) tempitem = item;
         }
-        tempitem.isOn = true;
         this.selectLine.y = 15 * this.dpr;
     }
     private onToggleButtonHandler(pointer: any, toggle: ToggleColorButton) {
         if (this.curToggleItem === toggle) return;
-        if (this.curToggleItem) this.curToggleItem.isOn = false;
+        if (this.curToggleItem) {
+            this.curToggleItem.isOn = false;
+        }
+        toggle.isOn = true;
         this.curToggleItem = toggle;
         this.optionType = toggle.getData("item");
         this.selectLine.x = toggle.x;

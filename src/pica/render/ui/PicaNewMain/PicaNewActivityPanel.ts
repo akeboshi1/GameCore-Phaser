@@ -17,6 +17,7 @@ export class PicaNewActivityPanel extends Phaser.GameObjects.Container {
     private listBtns: Button[];
     private listBtns2: Button[];
     private listPosY: number[] = [];
+    private tempButtons: Button[][] = [];
     private sendHandler: Handler;
     private isFold: boolean = false;
     constructor(private render: Render, scene: Phaser.Scene, width: number, height: number, key: string, dpr: number) {
@@ -27,46 +28,42 @@ export class PicaNewActivityPanel extends Phaser.GameObjects.Container {
         this.init();
     }
     init() {
-        const activityButton = new Button(this.scene, UIAtlasName.iconcommon, "home_activity", "home_activity");
-        activityButton.y = -this.height * 0.5 + activityButton.height * 0.5;
-        this.activityButton = activityButton;
+        this.activityButton = new Button(this.scene, UIAtlasName.iconcommon, "home_activity", "home_activity");
+        // this.activityButton.y = -this.height * 0.5 + this.activityButton.height * 0.5;
         this.activityButton.on(ClickEvent.Tap, this.onActivityHandler, this);
 
-        const indentButton = new Button(this.scene, UIAtlasName.iconcommon, "home_indent", "home_indent");
-        indentButton.y = activityButton.y + activityButton.height * 0.5 + 15 * this.dpr + indentButton.height * 0.5;
-        this.indentButton = indentButton;
+        this.indentButton = new Button(this.scene, UIAtlasName.iconcommon, "home_indent", "home_indent");
+        // this.indentButton.y = this.activityButton.y + this.activityButton.height * 0.5 + 15 * this.dpr + this.indentButton.height * 0.5;
         this.indentButton.on(ClickEvent.Tap, this.onIndentHandler, this);
 
-        const rechargeButton = new Button(this.scene, UIAtlasName.iconcommon, "home_recharge", "home_recharge");
-        rechargeButton.y = indentButton.y + indentButton.height * 0.5 + 15 * this.dpr + rechargeButton.height * 0.5;
-        this.rechargeButton = rechargeButton;
+        this.rechargeButton = new Button(this.scene, UIAtlasName.iconcommon, "home_recharge", "home_recharge");
+        // this.rechargeButton.y = this.indentButton.y + this.indentButton.height * 0.5 + 15 * this.dpr + this.rechargeButton.height * 0.5;
         this.rechargeButton.on(ClickEvent.Tap, this.onRechargeHandler, this);
 
-        const emailButton = new Button(this.scene, UIAtlasName.iconcommon, "home_email", "home_email");
-        emailButton.y = rechargeButton.y + rechargeButton.height * 0.5 + 15 * this.dpr + emailButton.height * 0.5;
-        this.emailButton = emailButton;
+        this.emailButton = new Button(this.scene, UIAtlasName.iconcommon, "home_email", "home_email");
+        // this.emailButton.y = this.rechargeButton.y + this.rechargeButton.height * 0.5 + 15 * this.dpr + this.emailButton.height * 0.5;
         this.emailButton.on(ClickEvent.Tap, this.onEmailHandler, this);
 
         this.roamButton = new Button(this.scene, UIAtlasName.iconcommon, "home_roam", "home_roam");
-        this.roamButton.y = activityButton.y;
-        this.roamButton.x = activityButton.x - this.roamButton.width * 0.5 - activityButton.width * 0.5 - 15 * this.dpr;
+        // this.roamButton.y = this.activityButton.y;
+        // this.roamButton.x = this.activityButton.x - this.roamButton.width * 0.5 - this.activityButton.width * 0.5 - 15 * this.dpr;
         this.roamButton.on(ClickEvent.Tap, this.onRoamHandler, this);
 
         this.shopButton = new Button(this.scene, UIAtlasName.iconcommon, "home_shop", "home_shop");
-        this.shopButton.y = this.roamButton.y + this.roamButton.height * 0.5 + 15 * this.dpr + this.shopButton.height * 0.5;
-        this.shopButton.x = this.roamButton.x;
+        // this.shopButton.y = this.roamButton.y + this.roamButton.height * 0.5 + 15 * this.dpr + this.shopButton.height * 0.5;
+        // this.shopButton.x = this.roamButton.x;
         this.shopButton.on(ClickEvent.Tap, this.onShopHandler, this);
 
         this.arrowButton = new Button(this.scene, UIAtlasName.uicommon, "home_more_2", "home_more_2");
-        this.arrowButton.y = emailButton.y + emailButton.height * 0.5 + 10 * this.dpr + this.arrowButton.height * 0.5;
+        // this.arrowButton.y = this.emailButton.y + this.emailButton.height * 0.5 + 10 * this.dpr + this.arrowButton.height * 0.5;
         this.arrowButton.on(ClickEvent.Tap, this.onArrowHandler, this);
-
-        this.listBtns = [activityButton, indentButton, rechargeButton, emailButton];
+        this.listBtns = [this.activityButton, this.indentButton, this.rechargeButton, this.emailButton];
         this.listBtns2 = [this.roamButton, this.shopButton];
-        this.listPosY = [activityButton.y, indentButton.y, rechargeButton.y, emailButton.y];
+        this.listPosY = [this.activityButton.y, this.indentButton.y, this.rechargeButton.y, this.emailButton.y];
         this.add(this.listBtns);
         this.add(this.listBtns2);
         this.add(this.arrowButton);
+        this.LayoutAllButtons();
     }
     public addListen() {
         this.indentButton.on(ClickEvent.Tap, this.onIndentHandler, this);
@@ -82,6 +79,52 @@ export class PicaNewActivityPanel extends Phaser.GameObjects.Container {
     public setHandler(send: Handler) {
         this.sendHandler = send;
     }
+
+    public updateUIState(datas: any[]) {
+        for (const data of datas) {
+            const button = this.getButton(data.name);
+            if (button) button.visible = data.visible;
+            // if (data.visible) button.enable = data.disable;
+        }
+        this.LayoutAllButtons();
+    }
+
+    protected LayoutAllButtons() {
+        this.tempButtons.forEach((value) => {
+            value.length = 0;
+        });
+        this.tempButtons.length = 0;
+        const items = this.LayoutButton(this.listBtns);
+        const posx = this.listBtns[0].x - this.listBtns2[0].width * 0.5 - this.listBtns[0].width * 0.5 - 15 * this.dpr;
+        const items2 = this.LayoutButton(this.listBtns2, posx);
+        this.tempButtons.push(items);
+        this.tempButtons.push(items2);
+        const tempItems = items.length > items2.length ? items : items2;
+        this.listPosY.length = 0;
+        let lastButton: Button;
+        for (const item of tempItems) {
+            this.listPosY.push(item.y);
+            lastButton = item;
+        }
+        if (lastButton) {
+            this.arrowButton.y = lastButton.y + lastButton.height * 0.5 + 10 * this.dpr + this.arrowButton.height * 0.5;
+            this.arrowButton.visible = true;
+        } else this.arrowButton.visible = false;
+    }
+    protected LayoutButton(buttons: Button[], posX: number = 0) {
+        const space: number = 15 * this.dpr;
+        let posy = -this.height * 0.5;
+        const temps = [];
+        for (const button of buttons) {
+            if (!button.visible) continue;
+            button.x = posX;
+            button.y = posy + button.height * 0.5;
+            posy += button.height + space;
+            temps.push(button);
+        }
+        return temps;
+    }
+
     private onActivityHandler() {
         if (this.sendHandler) this.sendHandler.runWith(["activity"]);
     }
@@ -155,13 +198,26 @@ export class PicaNewActivityPanel extends Phaser.GameObjects.Container {
     }
 
     private updateAllButtons(tempY: number) {
-        this.updateButtons(tempY, this.listBtns);
-        this.updateButtons(tempY, this.listBtns2);
-        const lastButton = this.listBtns[this.listBtns.length - 1];
-        this.arrowButton.y = lastButton.y + lastButton.height * 0.5 + 10 * this.dpr + this.arrowButton.height * 0.5;
-        if (lastButton.y === this.listPosY[0]) {
-            this.listBtns2[0].visible = false;
-        } else this.listBtns2[0].visible = true;
+        let temparr: Button[];
+        this.tempButtons.forEach((value) => {
+            this.updateButtons(tempY, value);
+            if (!temparr) temparr = value;
+            else {
+                if (temparr.length < value.length) temparr = value;
+            }
+        });
+        if (temparr.length > 0) {
+            const lastButton = temparr[temparr.length - 1];
+            this.arrowButton.y = lastButton.y + lastButton.height * 0.5 + 10 * this.dpr + this.arrowButton.height * 0.5;
+            const temps2 = this.tempButtons[1];
+            if (temps2.length > 0) {
+                if (lastButton.y === this.listPosY[0]) {
+                    temps2[0].visible = false;
+                } else temps2[0].visible = true;
+            }
+
+        }
+
     }
 
     private updateButtons(tempY: number, buttons: Button[]) {
@@ -179,6 +235,21 @@ export class PicaNewActivityPanel extends Phaser.GameObjects.Container {
             alpha = alpha > 1 ? 1 : alpha;
             button.alpha = alpha;
             button.y = posy;
+        }
+    }
+    private getButton(name: string) {
+        if (name === "mainui.activity") {
+            return this.activityButton;
+        } else if (name === "mainui.indent") {
+            return this.indentButton;
+        } else if (name === "mainui.recharge") {
+            return this.rechargeButton;
+        } else if (name === "mainui.email") {
+            return this.emailButton;
+        } else if (name === "mainui.roam") {
+            return this.roamButton;
+        } else if (name === "mainui.shop") {
+            return this.shopButton;
         }
     }
 }
