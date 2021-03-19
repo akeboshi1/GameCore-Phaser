@@ -1,13 +1,15 @@
-import { op_def } from "pixelpai_proto";
-import { IElementManager } from "../element/element.manager";
-import { ISprite, PlayerState } from "structure";
-import { IPos } from "../../../utils/logic.pos";
-import { Element, IElement, InputEnable, MovePath } from "../element/element";
-import { DirectionChecker, Logger } from "utils";
-import { LayerEnum } from "game-capsule";
+import {op_def} from "pixelpai_proto";
+import {IElementManager} from "../element/element.manager";
+import {ISprite, PlayerState} from "structure";
+import {IPos} from "../../../utils/logic.pos";
+import {Element, IElement, InputEnable, MovePath} from "../element/element";
+import {DirectionChecker, Logger} from "utils";
+import {LayerEnum} from "game-capsule";
+
 export class Player extends Element implements IElement {
     protected nodeType: number = op_def.NodeType.CharacterNodeType;
     protected mOffsetY: number = undefined;
+
     constructor(sprite: ISprite, protected mElementManager: IElementManager) {
         super(sprite, mElementManager);
         this.setInputEnable(InputEnable.Enable);
@@ -17,8 +19,8 @@ export class Player extends Element implements IElement {
         if (!model) {
             return;
         }
-        (<any>model).off("Animation_Change", this.animationChanged, this);
-        (<any>model).on("Animation_Change", this.animationChanged, this);
+        (<any> model).off("Animation_Change", this.animationChanged, this);
+        (<any> model).on("Animation_Change", this.animationChanged, this);
         if (!model.layer) {
             model.layer = LayerEnum.Surface;
         }
@@ -29,7 +31,13 @@ export class Player extends Element implements IElement {
             this.setPosition(this.mModel.pos);
         }
         const area = model.getCollisionArea();
-        const obj = { id: model.id, pos: model.pos, alpha: model.alpha, nickname: model.nickname, titleMask: model.titleMask | 0x00010000 };
+        const obj = {
+            id: model.id,
+            pos: model.pos,
+            alpha: model.alpha,
+            nickname: model.nickname,
+            titleMask: model.titleMask | 0x00010000
+        };
         // render action
         this.load(this.mModel.displayInfo)
             .then(() => this.mElementManager.roomService.game.renderPeer.setPlayerModel(obj))
@@ -83,9 +91,10 @@ export class Player extends Element implements IElement {
         // this.onMovePathPointComplete(this.mMoveData.onCompleteParams);
         // this.mMovePathPointFinished(this.mMoveData.onCompleteParams);
     }
+
     public setWeapon(weaponid: string) {
         if (!this.mModel || !this.mModel.avatar) return;
-        const avatar: any = { farmWeapId: weaponid, barmWeapId: weaponid };
+        const avatar: any = {barmWeapId: {sn: weaponid, slot: "NDE5NDMwNA==", suit_type: "weapon"}};
         this.model.setTempAvatar(avatar);
         this.load(this.mModel.displayInfo);
     }
@@ -104,9 +113,11 @@ export class Player extends Element implements IElement {
     }
 
     // Player 和 User不需要参与碰撞
-    public addToWalkableMap() { }
+    public addToWalkableMap() {
+    }
 
-    public removeFromWalkableMap() { }
+    public removeFromWalkableMap() {
+    }
 
     public calcDirection(pos: IPos, target: IPos) {
         const dir = DirectionChecker.check(pos, target);
