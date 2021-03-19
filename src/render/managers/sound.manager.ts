@@ -35,6 +35,7 @@ export class SoundManager {
 
     resume() {
         if (!this.mScene) {
+
             Logger.getInstance().fatal(`${SoundManager.name} scene does not exist,can't resumeAll`);
             return;
         }
@@ -42,18 +43,22 @@ export class SoundManager {
     }
 
     destroy() {
-        if (this.mSoundMap) {
-            this.mSoundMap.forEach((sound) => { if (sound) sound.destroy(); });
-            this.mSoundMap.clear();
-            this.mSoundMap = undefined;
-        }
-        this.mScene = undefined;
+        // if (this.mSoundMap) {
+        //     this.mSoundMap.forEach((sound) => {
+        //         if (sound) {
+        //             sound.stop();
+        //             sound.destroy();
+        //         }
+        //     });
+        //     this.mSoundMap.clear();
+        //     this.mSoundMap = undefined;
+        // }
     }
 
     public playOsdSound(content: any) {
         // const content: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_SOUND_CTL = packet.content;
         if (content.loop === undefined) {
-            content.loop = true;
+            content.loop = false;
         }
         // TODO
         this.play({
@@ -66,7 +71,7 @@ export class SoundManager {
     public playSound(content: any) {
         // const content: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_SOUND_CTL = packet.content;
         if (content.loop === undefined) {
-            content.loop = true;
+            content.loop = false;
         }
         // TODO
         this.play({
