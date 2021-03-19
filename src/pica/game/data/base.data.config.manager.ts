@@ -192,7 +192,6 @@ export class BaseDataConfigManager extends BaseConfigManager {
     public getSkill(id: string): ICraftSkill {
         const data: SkillConfig = this.getConfig(BaseDataType.skill);
         const temp = data.get(id);
-
         // const materials = this.convertMapToItem([temp._materials]);
         // temp.materials = this.getBatchItemDatas(materials);
 
@@ -204,7 +203,10 @@ export class BaseDataConfigManager extends BaseConfigManager {
         // const product = this.convertMapToItem([temp._product]);
         // const list = this.getBatchItemDatas(product);
         temp.product = this.convertMapToItem([temp._product])[0];
-
+        if (temp.product) {
+            const item = this.getItemBaseByID(temp.product.id);
+            temp.skill.display.texturePath = item.texturePath;
+        }
         return temp;
     }
 

@@ -111,6 +111,11 @@ export class SceneManager extends BaseSceneManager {
                     data.loadProgress = "正在解析一大波游戏数据";
                     data.text = LoadingTips.parseConfig();
                     break;
+                case LoadState.LOADJSON:
+                    const text = "正在加载前端json配置"; // StringUtils.format("正在加载资源 {0}", [data.data.resName]);
+                    data.loadProgress = text;
+                    data.text = text;
+                    break;
                 case LoadState.WAITENTERROOM:
                     data.loadProgress = "正在等待进入房间";
                     data.text = LoadingTips.waitEnterRoom();

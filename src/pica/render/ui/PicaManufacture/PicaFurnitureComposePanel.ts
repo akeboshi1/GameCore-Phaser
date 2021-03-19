@@ -18,8 +18,7 @@ export class PicaFurnitureComposePanel extends Phaser.GameObjects.Container {
   private mPropGridBg: Phaser.GameObjects.Graphics;
   private mCategoryScroll: GameScroller;
   private composeBtn: NineSliceButton;
-  private starCountCon: Phaser.GameObjects.Container;
-  private starvalue: ImageValue;
+
   private furiAnimation: FuriComposeAnimation;
   private starCount: number;
   private mSelectedItemData: op_client.CountablePackageItem[] = [];
@@ -59,8 +58,7 @@ export class PicaFurnitureComposePanel extends Phaser.GameObjects.Container {
     this.mCategoriesBar.fillRect(0, 40 * this.dpr, width, 3 * this.dpr);
     this.composeBtn.x = width - this.composeBtn.width / 2 - 20 * this.dpr;
     this.composeBtn.y = this.mCategoryCon.y - this.composeBtn.height / 2 + 35 * this.dpr;
-    this.starCountCon.x = this.starCountCon.width * 0.5 + 60* this.dpr;
-    this.starCountCon.y = this.composeBtn.y;
+
     this.mPropGridBg.clear();
     this.mPropGridBg.fillStyle(0xCE7AF3);
     this.mPropGridBg.fillRect(0, 0, this.mPropGrid.width, this.mPropGrid.height + 10 * this.dpr);
@@ -121,7 +119,6 @@ export class PicaFurnitureComposePanel extends Phaser.GameObjects.Container {
 
   public setStarData(value: number) {
     this.starCount = value;
-    this.starvalue.setText(value + "");
   }
 
   public updateSelectItemDatas(props: any[]) {
@@ -167,21 +164,6 @@ export class PicaFurnitureComposePanel extends Phaser.GameObjects.Container {
     this.mBackground.setInteractive(new Phaser.Geom.Rectangle(0, 0, width, height), Phaser.Geom.Rectangle.Contains);
     this.furiAnimation = new FuriComposeAnimation(this.scene, this.dpr, this.scale);
     this.furiAnimation.setHandler(new Handler(this, this.onFuriComposeAnimationHandler));
-    const starbg = new NineSlicePatch(this.scene, 0, -this.dpr, 80 * this.dpr, 28 * this.dpr, UIAtlasName.uicommon, "home_assets_bg", {
-      left: 17 * this.dpr,
-      top: 0 * this.dpr,
-      right: 17 * this.dpr,
-      bottom: 0 * this.dpr
-    });
-    starbg.x = -starbg.width * 0.5;
-    this.starvalue = new ImageValue(this.scene, 60 * this.dpr, 26 * this.dpr, UIAtlasName.recast, "Recast_pica star_big", this.dpr, {
-      color: "#ffffff", fontSize: 15 * this.dpr, fontFamily: Font.NUMBER
-    });
-    this.starvalue.setLayout(1);
-    this.starvalue.x = starbg.x - starbg.width * 0.5 + 22 * this.dpr;
-    this.starCountCon = this.scene.make.container(undefined, false);
-    this.starCountCon.setSize(starbg.width, starbg.height);
-    this.starCountCon.add([starbg, this.starvalue]);
 
     const btnwidth = 100 * this.dpr, btnHeight = 40 * this.dpr;
     const btnPosX = width - btnwidth / 2 - 20 * this.dpr, btnPosY = this.mCategoryCon.y - 25 * this.dpr;
@@ -203,7 +185,7 @@ export class PicaFurnitureComposePanel extends Phaser.GameObjects.Container {
     });
     this.mPropGridBg = this.scene.make.graphics(undefined, false);
     this.mCategoryCon.add([this.mCategoriesBar, this.mCategoryScroll]);
-    this.add([this.mBackground, this.topBackground, this.mPropGridBg, this.furiAnimation, this.starCountCon, this.mCategoryCon, this.composeBtn]);
+    this.add([this.mBackground, this.topBackground, this.mPropGridBg, this.furiAnimation, this.mCategoryCon, this.composeBtn]);
 
     const propFrame = this.scene.textures.getFrame(UIAtlasName.uicommon, "bag_icon_common_bg");
     const capW = (propFrame.width) + 9 * this.dpr;

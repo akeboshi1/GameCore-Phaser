@@ -9,7 +9,7 @@ import { BaseDataConfigManager } from "picaWorker";
 
 export class UIManager extends PacketHandler {
     protected mMedMap: Map<UIMediatorType, BasicMediator>;
-    protected mAtiveUIData: op_client.OP_VIRTUAL_WORLD_REQ_CLIENT_PKT_REFRESH_ACTIVE_UI;
+    protected mUIStateData: op_client.OP_VIRTUAL_WORLD_REQ_CLIENT_PKT_REFRESH_ACTIVE_UI;
     protected isshowMainui: boolean = false;
 
     // ==== about checkUIState
@@ -75,8 +75,8 @@ export class UIManager extends PacketHandler {
     }
 
     public showMainUI(hideNames?: string[]) {
-        if (this.mAtiveUIData) {
-            this.updateUIState(this.mAtiveUIData);
+        if (this.mUIStateData) {
+            this.updateUIState(this.mUIStateData);
         }
         this.mMedMap.forEach((mediator: any) => {
             if (mediator.isSceneUI() && !mediator.isShow()) {
@@ -175,12 +175,12 @@ export class UIManager extends PacketHandler {
         if (mediator) mediator.show();
     }
 
-    public getActiveUIData(name: string): any[] {
-        if (!this.mAtiveUIData) return null;
+    public getUIStateData(name: string): any[] {
+        if (!this.mUIStateData) return null;
         const arr: op_pkt_def.IPKT_UI[] = [];
-        for (const data of this.mAtiveUIData.ui) {
+        for (const data of this.mUIStateData.ui) {
             const tagName = data.name.split(".")[0];
-            const paneName = this.getPanelNameByStateTag(tagName);
+            const paneName = this.getPanelNameByAlias(tagName);
             if (paneName === name) {
                 arr.push(data);
             }
@@ -242,7 +242,7 @@ export class UIManager extends PacketHandler {
             this.mMedMap.clear();
             this.mMedMap = null;
         }
-        if (this.mAtiveUIData) this.mAtiveUIData = undefined;
+        if (this.mUIStateData) this.mUIStateData = undefined;
         this.isshowMainui = false;
     }
 
@@ -257,7 +257,7 @@ export class UIManager extends PacketHandler {
         for (const ui of data.ui) {
             const tag = ui.name;
             const paneltags = tag.split(".");
-            const panelName = this.getPanelNameByStateTag(paneltags[0]);
+            const panelName = this.getPanelNameByAlias(paneltags[0]);
             if (panelName) {
                 const mediator: BasicMediator = this.mMedMap.get(panelName);
                 if (mediator) {
@@ -281,26 +281,10 @@ export class UIManager extends PacketHandler {
     }
 
     protected onUIStateHandler(packge: PBpacket) {
-        this.mAtiveUIData = packge.content;
-        if (this.mAtiveUIData && this.mMedMap) {
-            this.updateUIState(this.mAtiveUIData);
+        this.mUIStateData = packge.content;
+        if (this.mUIStateData && this.mMedMap) {
+            this.updateUIState(this.mUIStateData);
         }
-    }
-
-    protected getPanelNameByStateTag(tag: string) {
-        switch (tag) {
-            case "mainui":
-                return "PicaMainUI";
-            case "activity":
-                return "Activity";
-            case "picachat":
-                return "PicaChat";
-            case "picanavigate":
-                return "PicaNavigate";
-            case "PicaHandheld":
-                return "PicaHandheld";
-        }
-        return tag;
     }
 
     protected handleShowUI(packet: PBpacket): void {

@@ -26,6 +26,7 @@ export class BaseConfigManager {
                 if (this.mDispose) return;
                 this.dataMap.clear();
                 this.dirname(value);
+                this.mGame.loadJson();
                 this.add();
                 return this.executeLoad(this.dataMap);
             });

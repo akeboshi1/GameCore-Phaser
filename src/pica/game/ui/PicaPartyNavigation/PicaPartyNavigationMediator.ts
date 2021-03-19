@@ -51,7 +51,7 @@ export class PicaPartyNavigationMediator extends BasicMediator {
     }
 
     isSceneUI() {
-        return true;
+        return false;
     }
 
     protected panelInit() {

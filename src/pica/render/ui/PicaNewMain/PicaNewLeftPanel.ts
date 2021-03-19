@@ -4,6 +4,7 @@ import { Handler } from "utils";
 
 export class PicaNewLeftPanel extends Phaser.GameObjects.Container {
     public taskButton: Button;
+    public mapButton: Button;
     private dpr: number;
     private key: string;
     private sendHandler: Handler;
@@ -16,15 +17,21 @@ export class PicaNewLeftPanel extends Phaser.GameObjects.Container {
     }
 
     public init() {
-        const mapButton = new Button(this.scene, UIAtlasName.iconcommon, "home_map", "home_map");
-        mapButton.y = -this.height * 0.5 + mapButton.height * 0.5;
-        mapButton.on(ClickEvent.Tap, this.onMapButtonHandler, this);
+        this.mapButton = new Button(this.scene, UIAtlasName.iconcommon, "home_map", "home_map");
+        this.mapButton.y = -this.height * 0.5 + this.mapButton.height * 0.5;
+        this.mapButton.on(ClickEvent.Tap, this.onMapButtonHandler, this);
         this.taskButton = new Button(this.scene, UIAtlasName.iconcommon, "home_task", "home_task");
-        this.taskButton.y = mapButton.y + mapButton.height * 0.5 + 20 * this.dpr + this.taskButton.height * 0.5;
+        this.taskButton.y = this.mapButton.y + this.mapButton.height * 0.5 + 20 * this.dpr + this.taskButton.height * 0.5;
         this.taskButton.on(ClickEvent.Tap, this.onTaskButtonHandler, this);
-        this.add([mapButton, this.taskButton]);
+        this.add([this.mapButton, this.taskButton]);
     }
-
+    public updateUIState(datas: any) {
+        for (const data of datas) {
+            const button = this.getButton(data.name);
+            if (button) button.visible = data.visible;
+            // if (data.visible) button.enable = data.disable;
+        }
+    }
     public setHandler(send: Handler) {
         this.sendHandler = send;
     }
@@ -34,5 +41,12 @@ export class PicaNewLeftPanel extends Phaser.GameObjects.Container {
     }
     private onTaskButtonHandler() {
         if (this.sendHandler) this.sendHandler.runWith(["task"]);
+    }
+    private getButton(name: string) {
+        if (name === "mainui.maphome") {
+            return this.mapButton;
+        } else if (name === "mainui.task") {
+            return this.taskButton;
+        }
     }
 }

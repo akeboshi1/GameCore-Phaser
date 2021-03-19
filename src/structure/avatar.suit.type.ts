@@ -38,6 +38,7 @@ export class AvatarSuitType {
         return avatar;
     }
 
+    // 注意传入avatar为引用，会修改其属性值
     static createAvatarBySn(suit_type: string, sn: string, slot: string, tag: string, version?: string, avatar?: any) {
         this.avatarSuit = this.avatarSuit || new AvatarSuitType();
         avatar = avatar || {};

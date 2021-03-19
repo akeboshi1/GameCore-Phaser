@@ -43,7 +43,10 @@ export class BottomPanel extends PicaBasePanel {
 
         this.updateOutputLayout();
     }
-
+    public updateUIState(datas: any) {
+        if (this.mInitialized) return;
+        this.mNavigate.updateUIState(datas);
+    }
     addListen() {
         this.mInput.on("enter", this.onSendMsgHandler, this);
         this.mInput.on("pointerScene", this.onPointerSceneHandler, this);
@@ -138,9 +141,7 @@ export class BottomPanel extends PicaBasePanel {
         this.render.mainPeer.getActiveUIData(ModuleName.PICACHAT_NAME)
             .then((arr) => {
                 if (arr) {
-                    for (const data of arr) {
-                        this.updateUIState(data);
-                    }
+                    this.updateUIState(arr);
                 }
             });
     }

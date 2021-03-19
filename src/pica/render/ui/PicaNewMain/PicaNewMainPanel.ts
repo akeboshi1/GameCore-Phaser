@@ -61,6 +61,9 @@ export class PicaNewMainPanel extends PicaBasePanel {
         super.hide();
     }
 
+    onShow() {
+        this.checkUpdateActive();
+    }
     update(param) {
         super.update();
     }
@@ -83,7 +86,9 @@ export class PicaNewMainPanel extends PicaBasePanel {
     }
 
     updateUIState(active?: any) {
-
+        if (!this.mInitialized) return;
+        this.activityPanel.updateUIState(active);
+        this.leftPanel.updateUIState(active);
     }
     init() {
         const width = this.scaleWidth;
@@ -142,7 +147,8 @@ export class PicaNewMainPanel extends PicaBasePanel {
         } else if (tag === "room") {
             this.render.renderEmitter(ModuleName.PICANEWMAIN_NAME + "_openhousepanel");
         } else if (tag === "party") {
-            this.render.renderEmitter(ModuleName.PICANEWMAIN_NAME + "_showpanel", ModuleName.PICAOPENPARTY_NAME);
+            // this.render.renderEmitter(ModuleName.PICANEWMAIN_NAME + "_showpanel", ModuleName.PICAOPENPARTY_NAME);
+            this.render.renderEmitter(ModuleName.PICANEWMAIN_NAME + "_querydecorate");
         } else if (tag === "online") {
             this.render.renderEmitter(ModuleName.PICANEWMAIN_NAME + "_showpanel", ModuleName.PICAONLINE_NAME);
         }
@@ -184,5 +190,18 @@ export class PicaNewMainPanel extends PicaBasePanel {
         } else if (tag === "explore") {
             this.render.renderEmitter(ModuleName.PICANEWMAIN_NAME + "_showpanel", ModuleName.PICAEXPLORELIST_NAME);
         }
+    }
+    private checkUpdateActive() {
+        // this.render.mainPeer.getCurRoom()
+        //     .then((curRoom) => {
+        //         if (curRoom)
+        //             this.setGiftButtonState(curRoom.openingParty);
+        //     });
+        this.render.mainPeer.getActiveUIData(ModuleName.PICANEWMAIN_NAME)
+            .then((arr) => {
+                if (arr) {
+                    this.updateUIState(arr);
+                }
+            });
     }
 }

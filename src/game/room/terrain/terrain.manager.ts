@@ -23,8 +23,8 @@ export class TerrainManager extends PacketHandler implements IElementManager {
     private mEmptyMap: EmptyTerrain[][];
     private mDirty: boolean = false;
     private mTerrainCache: any[] = [];
-    private mCacheLen: number = 30;
-    private canDealTerrain = false;
+    // private mCacheLen: number = 10;
+    // private canDealTerrain = false;
     constructor(protected mRoom: IRoomService, listener?: SpriteAddCompletedListener) {
         super();
         this.mListener = listener;
@@ -58,14 +58,6 @@ export class TerrainManager extends PacketHandler implements IElementManager {
     }
 
     public update(time: number, delta: number) {
-        if (this.hasAddComplete && this.mTerrainCache && this.canDealTerrain) {
-            const tmpLen = this.mTerrainCache.length > this.mCacheLen ? this.mCacheLen : this.mTerrainCache.length;
-            const tmpList = this.mTerrainCache.splice(0, tmpLen);
-            tmpList.forEach((sprite) => {
-                this._add(sprite);
-            });
-            this.canDealTerrain = false;
-        }
         if (this.mDirty) {
             const len = this.mEmptyMap.length;
             for (let i: number = 0; i < len; i++) {
@@ -141,7 +133,7 @@ export class TerrainManager extends PacketHandler implements IElementManager {
         if (type !== op_def.NodeType.TerrainNodeType) {
             return;
         }
-        Logger.getInstance().log("terrain add ====>", sprites);
+        // Logger.getInstance().log("terrain add ====>", sprites);
         let point: op_def.IPBPoint3f;
         const ids = [];
         // sprites 服务端
@@ -322,7 +314,13 @@ export class TerrainManager extends PacketHandler implements IElementManager {
     }
 
     private dealTerrainCache() {
-        this.canDealTerrain = true;
+        if (this.mTerrainCache) {
+            this.mTerrainCache.forEach((sprite) => {
+                this._add(sprite);
+            });
+            this.mTerrainCache.length = 0;
+            this.mTerrainCache = [];
+        }
     }
 
     get connection(): ConnectionService | undefined {

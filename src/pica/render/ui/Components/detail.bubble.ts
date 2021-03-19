@@ -9,13 +9,17 @@ export class DetailBubble extends Phaser.GameObjects.Container {
     private tipsbg: NineSlicePatch;
     private tipsText: BBCodeText;
     private mExpires: BBCodeText;
+    private mixWidth: number;
+    private mixHeight: number;
     // private testText: Phaser.GameObjects.Text;
-    constructor(scene: Phaser.Scene, key: string, dpr: number, zoom: number = 1) {
+    constructor(scene: Phaser.Scene, key: string, dpr: number, zoom: number = 1, mixWidth?: number, mixHeight?: number,) {
         super(scene);
         this.dpr = dpr;
         this.key = key;
-        const tipsWidth = 100 * dpr;
-        const tipsHeight = 96 * dpr;
+        this.mixWidth = mixWidth || 100 * dpr;
+        this.mixHeight = mixHeight || 96 * dpr;
+        const tipsWidth = this.mixWidth;
+        const tipsHeight = this.mixHeight;
         this.setSize(tipsWidth, tipsHeight);
         this.tipsbg = new NineSlicePatch(this.scene, 0, 0, tipsWidth, tipsHeight, this.key, "tips_bg", {
             left: 10 * this.dpr,
@@ -62,7 +66,7 @@ export class DetailBubble extends Phaser.GameObjects.Container {
             let attri = "";
             let need = "";
             let tips = name;
-            let mixWidth: number = 100 * this.dpr;
+            let mixWidth: number = this.mixWidth;
             this.tipsText.text = tips;
             mixWidth = mixWidth < this.tipsText.width ? this.tipsText.width : mixWidth;
             if (prop.source) {
@@ -151,7 +155,7 @@ export class DetailBubble extends Phaser.GameObjects.Container {
         return this;
     }
     private resize(w?: number, h?: number) {
-        const mixheight: number = 96 * this.dpr;
+        const mixheight: number = this.mixHeight;
         let height = this.tipsText.height;
         if ((<any>this.mExpires).visible) height += this.mExpires.height + 3 * this.dpr;
         height += 14 * this.dpr;

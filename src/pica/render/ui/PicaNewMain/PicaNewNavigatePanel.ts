@@ -13,6 +13,7 @@ export class PicaNewNavigatePanel extends Phaser.GameObjects.Container {
     private avatarButton: Button;
     private makeButton: Button;
     private sendHandler: Handler;
+    private buttons: Button[];
     constructor(scene: Phaser.Scene, key: string, dpr: number, scale: number) {
         super(scene);
         this.dpr = dpr;
@@ -28,20 +29,16 @@ export class PicaNewNavigatePanel extends Phaser.GameObjects.Container {
         // this.bg.x = w * 0.5;
         this.setSize(this.bg.width, this.bg.height);
         this.bagButton = this.createButton("home_bag");
-        this.bagButton.x = -this.width * 0.5 + this.bagButton.width * 0.5 + 1 * this.dpr;
         this.friendButton = this.createButton("home_friend");
-        this.friendButton.x = this.bagButton.x + this.bagButton.width * 0.5 + 0 * this.dpr + this.friendButton.width * 0.5;
         this.avatarButton = this.createButton("home_avater");
-        this.avatarButton.x = this.friendButton.x + this.friendButton.width * 0.5 + 0 * this.dpr + this.avatarButton.width * 0.5;
         this.makeButton = this.createButton("home_make");
-        this.makeButton.x = this.avatarButton.x + this.avatarButton.width * 0.5 + 0 * this.dpr + this.makeButton.width * 0.5;
         this.exploreButton = this.createButton("home_explore");
-        this.exploreButton.x = this.makeButton.x + this.makeButton.width * 0.5 + 0 * this.dpr + this.exploreButton.width * 0.5;
         this.homeButton = this.createButton("home_home");
-        this.homeButton.x = this.exploreButton.x + this.exploreButton.width * 0.5 + 0 * this.dpr + this.homeButton.width * 0.5;
-        this.add([this.bg, this.bagButton, this.friendButton, this.avatarButton, this.makeButton, this.exploreButton, this.homeButton]);
+        this.buttons = [this.bagButton, this.friendButton, this.avatarButton, this.makeButton, this.exploreButton, this.homeButton];
+        this.add(this.bg);
+        this.add(this.buttons);
         this.addListen();
-
+        this.LayoutButton();
         // this.render.emitter.emit(EventType.NAVIGATE_RESIZE, this.width, this.height);
     }
     public addListen() {
@@ -61,8 +58,29 @@ export class PicaNewNavigatePanel extends Phaser.GameObjects.Container {
         this.exploreButton.off(ClickEvent.Tap, this.onExploreHandler, this);
         this.homeButton.off(ClickEvent.Tap, this.onHomeHandler, this);
     }
+
+    public updateUIState(datas: any) {
+        if (datas.length)
+            for (const data of datas) {
+                const button = this.getButton(data.name);
+                if (button) button.visible = data.visible;
+                // if (data.visible) button.enable = data.disable;
+            }
+        this.LayoutButton();
+    }
     public setHandler(send: Handler) {
         this.sendHandler = send;
+    }
+
+    protected LayoutButton() {
+        let posx = -this.width * 0.5 + this.dpr;
+        let before: Button;
+        for (const button of this.buttons) {
+            if (!button.visible) continue;
+            button.x = posx + button.width * 0.5 + (before ? before.width * 0.5 : 0);
+            posx = button.x;
+            before = button;
+        }
     }
     private onBagHandler() {
         if (this.sendHandler) this.sendHandler.runWith(["bag"]);
@@ -95,5 +113,20 @@ export class PicaNewNavigatePanel extends Phaser.GameObjects.Container {
             return false;
         }
         return true;
+    }
+    private getButton(name: string) {
+        if (name === "bottom.bag") {
+            return this.bagButton;
+        } else if (name === "bottom.friend") {
+            return this.friendButton;
+        } else if (name === "bottom.avatar") {
+            return this.avatarButton;
+        } else if (name === "bottom.make") {
+            return this.makeButton;
+        } else if (name === "bottom.explore") {
+            return this.exploreButton;
+        } else if (name === "bottom.home") {
+            return this.homeButton;
+        }
     }
 }
