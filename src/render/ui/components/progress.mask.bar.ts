@@ -65,7 +65,7 @@ export class ProgressMaskBar extends BaseUI {
         if (bgconfig) {
             const bgW = bgconfig.width || this.width;
             const bgH = bgconfig.height || this.height;
-            this.mBackground = new NineSlicePatch(this.scene, 0, -2 * this.dpr, bgW, bgH, key, bar, bgconfig);
+            this.mBackground = new NineSlicePatch(this.scene, 0, -2 * this.dpr, bgW, bgH, key, background, bgconfig);
             this.setSize(bgW, bgH);
         } else {
             this.mBackground = this.scene.make.image({ key, frame: background });

@@ -331,7 +331,7 @@ class ChapterLevelItem extends ChapterLevelBaseItem {
             this.openButton.setFrameNormal("yellow_btn_normal");
             this.openButton.setTextStyle(UIHelper.brownishStyle(this.dpr, 13));
             this.energyImg.setTextStyle(UIHelper.brownishStyle(this.dpr, 13));
-            const star = Math.ceil(data.progress / 100);
+            const star = Math.floor(data.progress / 100);
             this.setClueData(<any>data.clueItems, star);
         }
     }

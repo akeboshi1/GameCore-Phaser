@@ -3,6 +3,7 @@ import { AlignmentType, AxisType, ConstraintType, DynamicImage, GridLayoutGroup 
 import { UIAtlasName } from "picaRes";
 import { Font, Handler, i18n, Logger, Tool, UIHelper, Url } from "utils";
 import { op_client } from "pixelpai_proto";
+import { IScene } from "picaStructure";
 export class PicaTownNavigationPanel extends Phaser.GameObjects.Container {
     private dpr: number;
     private zoom: number;
@@ -37,17 +38,28 @@ export class PicaTownNavigationPanel extends Phaser.GameObjects.Container {
 
     }
 
+    public show() {
+        this.visible = true;
+    }
+
+    public hide() {
+        for (const item of this.townItems) {
+            item.visible = false;
+            item.setExtend(false, false);
+        }
+        this.curTownItem = undefined;
+        this.visible = false;
+    }
+
     public refreshMask() {
         this.mGameScroll.refreshMask();
     }
     public setHandler(handler: Handler) {
         this.sendHandler = handler;
     }
-    public setTownDatas(content: any) {
-        for (const item of this.townItems) {
-            item.visible = false;
-        }
-        for (let i = 0; i < 3; i++) {
+    public setTownDatas(datas: any[]) {
+        let firstItem: NavigationTownListItem;
+        for (let i = 0; i < datas.length; i++) {
             let item: NavigationTownListItem;
             if (i < this.townItems.length) {
                 item = this.townItems[i];
@@ -58,9 +70,11 @@ export class PicaTownNavigationPanel extends Phaser.GameObjects.Container {
                 this.townItems.push(item);
             }
             item.visible = true;
-            item.setListData(undefined);
+            item.setGroupData(datas[i]);
+            firstItem = firstItem || item;
         }
         this.mGameScroll.Sort();
+        this.onPointerUpHandler(firstItem);
     }
 
     private onPointerUpHandler(gameobject) {
@@ -70,9 +84,6 @@ export class PicaTownNavigationPanel extends Phaser.GameObjects.Container {
             gameobject.setExtend(extend, true);
         }
     }
-    private onSendHandler(data: any) {// op_client.IEditModeRoom
-        if (this.sendHandler) this.sendHandler.runWith(["partylist", data]);
-    }
 
     private onTownItemHandler(tag: string, data: any) {
         if (tag === "extend") {
@@ -80,7 +91,7 @@ export class PicaTownNavigationPanel extends Phaser.GameObjects.Container {
             const item = data.item;
             this.onExtendsHandler(extend, item);
         } else if (tag === "go") {
-            Logger.getInstance().error(data);
+            if (this.sendHandler) this.sendHandler.runWith(["enter", data.sceneId]);
         }
     }
 
@@ -91,7 +102,7 @@ export class PicaTownNavigationPanel extends Phaser.GameObjects.Container {
         if (isExtend) {
             this.curTownItem = item;
         } else
-            this.curTownItem = null;
+            this.curTownItem = undefined;
         this.mGameScroll.Sort(true);
     }
 }
@@ -122,7 +133,7 @@ class NavigationTownListItem extends Phaser.GameObjects.Container {
         this.arrow = this.scene.make.image({ key: UIAtlasName.map, frame: "map_list_arrow_fold" });
         this.arrow.x = this.width * 0.5 - 15 * dpr;
         this.topCon.add([background, this.titleTex, this.arrow]);
-        this.mExtend = new GridLayoutGroup(this.scene, 0, 0, {
+        this.mExtend = new GridLayoutGroup(this.scene, this.width, 0, {
             cellSize: new Phaser.Math.Vector2(135 * dpr, 57 * this.dpr),
             space: new Phaser.Math.Vector2(5 * this.dpr, 5 * this.dpr),
             startAxis: AxisType.Horizontal,
@@ -133,11 +144,17 @@ class NavigationTownListItem extends Phaser.GameObjects.Container {
         this.add(this.topCon);
         this.add(this.mExtend);
     }
+
+    public setGroupData(obj: any) {
+        this.titleTex.text = obj.name;
+        const datas: any[] = obj.datas;
+        this.setListData(datas);
+    }
     public setListData(datas: any[]) {
         for (const item of this.townItems) {
             item.visible = false;
         }
-        for (let i = 0; i < 20; i++) {
+        for (let i = 0; i < datas.length; i++) {
             let item: TownMapItem;
             if (i < this.townItems.length) {
                 item = this.townItems[i];
@@ -148,7 +165,7 @@ class NavigationTownListItem extends Phaser.GameObjects.Container {
                 this.townItems.push(item);
             }
             item.visible = true;
-            item.setTownData();
+            item.setTownData(datas[i]);
         }
 
         this.mExtend.Layout();
@@ -161,7 +178,7 @@ class NavigationTownListItem extends Phaser.GameObjects.Container {
             const list = this.mExtend.list;
             for (const obj of list) {
                 if (Tool.checkPointerContains(obj, pointer)) {
-                    if (this.send) this.send.runWith(["go", "############: " + obj.name]);
+                    if (this.send) this.send.runWith(["go", (<TownMapItem>obj).roomData]);
                 }
             }
         }
@@ -210,6 +227,7 @@ class NavigationTownListItem extends Phaser.GameObjects.Container {
 }
 
 class TownMapItem extends Phaser.GameObjects.Container {
+    public roomData: IScene;
     private dpr: number;
     private imge: DynamicImage;
     private namebg: Phaser.GameObjects.Image;
@@ -223,13 +241,19 @@ class TownMapItem extends Phaser.GameObjects.Container {
         this.namebg = this.scene.make.image({ key: UIAtlasName.map, frame: "map_list_entrance_name" }).setOrigin(1, 0.5);
         this.namebg.x = this.width * 0.5 - 2 * dpr;
         this.namebg.y = this.height * 0.5 - this.namebg.height * 0.5 - 2 * dpr;
-        this.nameTex = this.scene.make.text({ style: UIHelper.whiteStyle(dpr, 10) }).setOrigin(1, 0.5);
-        this.nameTex.x = this.namebg.x;
+        this.nameTex = this.scene.make.text({ style: UIHelper.whiteStyle(dpr, 10) }).setOrigin(0.5);
+        this.nameTex.x = this.namebg.x - this.namebg.width * 0.5;
         this.nameTex.y = this.namebg.y;
         this.add([this.imge, this.namebg, this.nameTex]);
     }
 
-    public setTownData() {
+    public setTownData(data: IScene) {
+        this.roomData = data;
+        if (data.texturePath && data.texturePath !== "") {
+            const url = Url.getOsdRes(data.texturePath + ".png");
+            this.imge.load(url);
+        }
 
+        this.nameTex.text = data.roomName;
     }
 }

@@ -1,15 +1,18 @@
-import { NineSlicePatch, GameGridTable, Button, ClickEvent, BBCodeText, ProgressBar } from "apowophaserui";
-import { DynamicImage, ImageBBCodeValue, ItemInfoTips } from "gamecoreRender";
-import { UIAtlasKey, UIAtlasName } from "picaRes";
-import { ChineseUnit } from "structure";
-import { Font, Handler, i18n, Url } from "utils";
+import { GameGridTable } from "apowophaserui";
+import { UIAtlasName } from "picaRes";
+import { Font, Handler } from "utils";
 import { PicaRoomListItem } from "./PicaRoomListItem";
-
+import { op_client } from "pixelpai_proto";
 export class PicaRoomNavigationPanel extends Phaser.GameObjects.Container {
     private mGameGrid: GameGridTable;
     private dpr: number;
     private zoom: number;
     private sendHandler: Handler;
+    private datas: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_ROOM_LIST[] = [];
+    private isQuerying: boolean = false;
+    private dataLength: number = 0;
+    private nextPageNum: number = 0;
+    private maxPage: number = 0;
     constructor(scene: Phaser.Scene, width: number, height: number, dpr: number, zoom: number) {
         super(scene);
         this.setSize(width, height);
@@ -39,6 +42,7 @@ export class PicaRoomNavigationPanel extends Phaser.GameObjects.Container {
                     cellContainer = new PicaRoomListItem(this.scene, UIAtlasName.map, this.dpr);
                 }
                 cellContainer.setRoomData(item, index);
+                if (this.isCanQuery(index)) this.queryNextPage();
                 return cellContainer;
             },
         };
@@ -54,16 +58,40 @@ export class PicaRoomNavigationPanel extends Phaser.GameObjects.Container {
     public setHandler(handler: Handler) {
         this.sendHandler = handler;
     }
-    public setRoomDatas(content: any) {// op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_PARTY_LIST
-        const arr = new Array(100000);
-        this.mGameGrid.setItems(arr);
+    public setRoomDatas(content: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_ROOM_LIST) {
+        if (this.datas.length === 0) this.mGameGrid.setItems(content.rooms);
+        else this.mGameGrid.setpartItems(content.rooms);
+        this.datas.push(content);
+        this.dataLength += content.rooms.length;
+        this.nextPageNum = content.page + 1;
+        this.maxPage = content.maxPage;
+        this.isQuerying = false;
+    }
+
+    public clearDatas() {
+        this.datas.length = 0;
+        this.dataLength = 1;
+        this.nextPageNum = -1;
+        this.isQuerying = false;
     }
 
     private onGridTableHandler(item: PicaRoomListItem) {
-        this.onSendHandler(item.roomData);
+        if (this.sendHandler) this.sendHandler.runWith(["enter", item.roomData.roomId]);
     }
 
-    private onSendHandler(data: any) {// op_client.IEditModeRoom
-        if (this.sendHandler) this.sendHandler.runWith(["partylist", data]);
+    private queryNextPage() {
+        if (this.isQuerying) return;
+        const data: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_ROOM_LIST = this.datas[this.datas.length - 1];
+        if (this.sendHandler) this.sendHandler.runWith(["query", data.page]);
+        this.isQuerying = true;
     }
+
+    private isCanQuery(index: number) {
+        if (this.nextPageNum === -1) return false;
+        if (!this.isQuerying && this.maxPage >= this.nextPageNum && this.dataLength < index + 10) {
+            return true;
+        }
+        return false;
+    }
+
 }

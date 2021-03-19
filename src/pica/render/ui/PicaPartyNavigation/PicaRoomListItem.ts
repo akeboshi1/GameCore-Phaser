@@ -1,7 +1,7 @@
 import { BBCodeText, NineSlicePatch } from "apowophaserui";
 import { DynamicImage, ImageBBCodeValue } from "gamecoreRender";
 import { UIAtlasName } from "picaRes";
-import { UIHelper, Url } from "utils";
+import { Handler, UIHelper, Url } from "utils";
 
 export class PicaRoomListItem extends Phaser.GameObjects.Container {
     public roomData: any;// op_client.IEditModeRoom
@@ -24,8 +24,8 @@ export class PicaRoomListItem extends Phaser.GameObjects.Container {
         this.imagIcon.x = -this.width * 0.5 + this.imagIcon.width * 0.5 + 8 * dpr;
         this.imagIcon.y = 0;// -this.height * 0.5 + this.imagIcon.height * 0.5 + 5 * dpr;
         this.add(this.imagIcon);
-
-        this.roomName = new BBCodeText(this.scene, -this.width * 0.5 + 45 * dpr, -18 * dpr, "", UIHelper.colorStyle("#FFFFFF", 14 * dpr));
+        this.imagIcon.visible = false;
+        this.roomName = new BBCodeText(this.scene, -this.width * 0.5 + 25 * dpr, -18 * dpr, "", UIHelper.colorStyle("#FFFFFF", 14 * dpr));
         this.roomName.setOrigin(0);
         this.add(this.roomName);
         this.ownerName = new ImageBBCodeValue(scene, 50 * dpr, 20 * dpr, key, "map_party_homeowners", dpr, UIHelper.colorStyle("#242AC1", 12 * dpr));
@@ -37,7 +37,7 @@ export class PicaRoomListItem extends Phaser.GameObjects.Container {
         this.add(this.playerCount);
     }
     public setRoomData(data: any) {// op_client.IEditModeRoom
-        // this.partyData = data;
+        this.roomData = data;
         // const texturepath = data.topic.display.texturePath;
         // const lastindex = texturepath.lastIndexOf("/");
         // const frame = texturepath.slice(lastindex + 1, texturepath.length);
@@ -47,8 +47,8 @@ export class PicaRoomListItem extends Phaser.GameObjects.Container {
         // this.partyName.text = `[b]${data.name}[/b]`;
         // this.playerCount.setText(`[b]${data.playerCount}[/b]`);
         // this.partyOwnerName.setText(data.ownerName);
-        this.roomName.text = "某某某某陆某房间";
-        this.ownerName.setText("房间主人昵称");
-        this.playerCount.setText("200");
+        this.roomName.text = data.name;
+        this.ownerName.setText(data.ownerName);
+        this.playerCount.setText(data.playerCount);
     }
 }
