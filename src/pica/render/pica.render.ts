@@ -2,7 +2,7 @@ import "tooqinggamephaser";
 import "gamecoreRender";
 import "dragonBones";
 import "apowophaserui";
-import { LocalStorageManager, Render as BaseRender, SceneManager, CamerasManager, InputManager } from "gamecoreRender";
+import { LocalStorageManager, Render as BaseRender, SceneManager, CamerasManager, InputManager, SoundManager } from "gamecoreRender";
 import { EditorCanvasManager } from "../../render/managers/editor.canvas.manager";
 import { ILauncherConfig } from "structure";
 import { PicaGuideManager } from "./guide";
@@ -20,6 +20,7 @@ export class Render extends BaseRender {
         if (!this.mCameraManager) this.mCameraManager = new CamerasManager(this);
         if (!this.mLocalStorageManager) this.mLocalStorageManager = new LocalStorageManager();
         if (!this.mSceneManager) this.mSceneManager = new SceneManager(this);
+        if (!this.mSoundManager) this.mSoundManager = new SoundManager(this);
         if (!this.mInputManager) this.mInputManager = new InputManager(this);
         if (!this.mDisplayManager) this.mDisplayManager = new PicaDisplayManager(this);
         if (!this.mEditorCanvasManager) this.mEditorCanvasManager = new EditorCanvasManager(this);

@@ -9,3 +9,4 @@ export * from "./data.manager";
 export * from "./net";
 export * from "./main.peer";
 export * from "./command";
+export * from "./sound.manager";
