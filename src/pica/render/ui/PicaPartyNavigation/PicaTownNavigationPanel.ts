@@ -91,7 +91,7 @@ export class PicaTownNavigationPanel extends Phaser.GameObjects.Container {
             const item = data.item;
             this.onExtendsHandler(extend, item);
         } else if (tag === "go") {
-            if (this.sendHandler) this.sendHandler.runWith(["enter", data.sceneId]);
+            if (this.sendHandler) this.sendHandler.runWith(["enter", data.sceneId + ""]);
         }
     }
 
