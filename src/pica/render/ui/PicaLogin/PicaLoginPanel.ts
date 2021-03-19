@@ -17,6 +17,7 @@ export class PicaLoginPanel extends BasePanel {
     private mErrorTips: Phaser.GameObjects.Text;
     private mMaskBg: Phaser.GameObjects.Graphics;
     private parent: Phaser.GameObjects.Container;
+    private mCloseBtn: Button;
 
     constructor(uiManager: UiManager) {
         super(uiManager.scene, uiManager.render);
@@ -51,6 +52,7 @@ export class PicaLoginPanel extends BasePanel {
         this.mPhoneInput.on("textchange", this.onCodeChangeHandler, this);
         this.mPhoneCodeInput.on("enter", this.onEnterCodeHandler, this);
         this.mPhoneCodeInput.on("textchange", this.onCodeChangeHandler, this);
+        this.mCloseBtn.on(ClickEvent.Tap, this.onCloseHandler, this);
         this.fetchCode.on(ClickEvent.Tap, this.onFetchCodeHandler, this);
     }
 
@@ -61,6 +63,7 @@ export class PicaLoginPanel extends BasePanel {
         this.mPhoneCodeInput.off("enter", this.onEnterCodeHandler, this);
         this.mPhoneCodeInput.off("textchange", this.onCodeChangeHandler, this);
         this.fetchCode.off(ClickEvent.Tap, this.onFetchCodeHandler, this);
+        this.mCloseBtn.off(ClickEvent.Tap, this.onCloseHandler, this);
     }
 
     showError(err: string) {
@@ -173,6 +176,10 @@ export class PicaLoginPanel extends BasePanel {
             }
         }, false).setOrigin(0, 0);
 
+        this.mCloseBtn = new Button(this.scene, UIAtlasKey.commonKey, "close");
+        this.mCloseBtn.x = (bg.width - this.mCloseBtn.width) * 0.5;
+        this.mCloseBtn.y = -(bg.height - this.mCloseBtn.height) * 0.5;
+
         const label = new BBCodeText(this.scene, 0, 0, "我已阅读并同意皮卡堂的[area=userService][color=#253FCA]《用户服务协议》[/color][/area]", {
             color: "#8C8C8C",
             fontSize: 11 * this.dpr,
@@ -195,7 +202,7 @@ export class PicaLoginPanel extends BasePanel {
         this.acceptBtn.y = label.y;
         this.acceptBtn.selected = true;
 
-        this.add([bg, title, phoneContaier, codeContainer, label, this.mLoginBtn, this.mErrorTips, this.acceptBtn]);
+        this.add([bg, title, this.mCloseBtn, phoneContaier, codeContainer, label, this.mLoginBtn, this.mErrorTips, this.acceptBtn]);
         super.init();
 
         this.resize();
@@ -295,5 +302,9 @@ export class PicaLoginPanel extends BasePanel {
         if (this.mErrorTips.text) {
             this.mErrorTips.setText("");
         }
+    }
+
+    private onCloseHandler() {
+        this.mMediator.hide();
     }
 }
