@@ -166,8 +166,8 @@ export class AvatarSuitType {
     public hat = ["headHatsId"];
     public mask = ["headMaskId"];
     public face = ["headFaceId"];
-    public weapon = ["farmWeapId", "barmWeapId"];
-    public shield = ["farmShldId", "barmShldId"];
+    public weapon = ["barmWeapId"];
+    public shield = ["farmShldId"];
     public tail = ["bodyTailId"];
     public wing = ["bodyWingId"];
     public helmet = ["headSpecId"];

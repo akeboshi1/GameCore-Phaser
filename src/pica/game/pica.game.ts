@@ -1,5 +1,5 @@
 import { ElementStorage } from "baseModel";
-import { BaseConfigData, DataManager, Game, HttpService, LoadingManager, MainPeer, RoomManager } from "gamecore";
+import { SoundManager, BaseConfigData, DataManager, Game, HttpService, LoadingManager, MainPeer, RoomManager } from "gamecore";
 import { PicaNetworkManager } from "./command/pica.network.manager";
 import { BaseDataConfigManager, BaseDataType } from "./data";
 import { PicaWorkerUiManager } from "./ui/pica.workeruimanager";
@@ -24,7 +24,7 @@ export class PicaGame extends Game {
         this.mElementStorage = new ElementStorage();
         this.mUIManager = new PicaWorkerUiManager(this);
         this.mHttpService = new HttpService(this);
-        // this.mSoundManager = new SoundManager(this);
+        this.mSoundManager = new SoundManager(this);
         this.mLoadingManager = new LoadingManager(this);
         this.mConfigManager = new BaseDataConfigManager(this);
         this.mNetWorkManager = new PicaNetworkManager(this);
@@ -32,5 +32,6 @@ export class PicaGame extends Game {
         this.mUIManager.addPackListener();
         this.mRoomManager.addPackListener();
         this.user.addPackListener();
+        this.mSoundManager.addPackListener();
     }
 }

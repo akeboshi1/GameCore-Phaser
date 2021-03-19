@@ -1,7 +1,7 @@
 import { EditorCanvas, IEditorCanvasConfig } from "../editor.canvas";
 import { AvatarEditorDragonbone } from "./avatar.editor.dragonbone";
 import { Scene } from "tooqinggamephaser";
-import { Logger } from "utils";
+import {Logger, Url} from "utils";
 
 /**
  * api:https://dej4esdop1.feishu.cn/docs/doccn2zhhTyXaB3HYm69a0sIYhh
@@ -169,6 +169,8 @@ export class AvatarEditorScene extends Phaser.Scene {
         Logger.getInstance().debug("AvatarEditorScene preload");
 
         this.game.plugins.installScenePlugin("DragonBones", dragonBones.phaser.plugin.DragonBonesScenePlugin, "dragonbone", this, true);
+
+        this.load.image("avatar_placeholder", Url.getRes("dragonbones/avatar.png"));
     }
 
     public init(data: { onCreated?: (scene: Phaser.Scene) => any, onUpdate?: () => any, onDestroy?: () => any }): void {

@@ -299,8 +299,8 @@ export class BaseDragonbonesDisplay extends BaseDisplay {
 
     protected createArmatureDisplay(loader?: any, totalComplete?: number, totalFailed?: number) {
         if (!this.scene) return;
-        this.showPlaceholder();
         if (!this.mArmatureDisplay) {
+            this.showPlaceholder();
             this.mArmatureDisplay = this.scene.add.armature(
                 this.mArmatureName,
                 this.resourceName,
@@ -493,6 +493,10 @@ export class BaseDragonbonesDisplay extends BaseDisplay {
     }
 
     private showReplaceArmatrue() {
+        // 未加载完资源，在complete之后不做替换操作
+        this.mLoadMap.clear();
+
+        // set loadMap
         for (const obj of this.replaceArr) {
             this.replacePartDisplay(obj.slot, obj.part, obj.dir, obj.skin);
         }
@@ -573,8 +577,8 @@ export class BaseDragonbonesDisplay extends BaseDisplay {
 
     private startLoadPartRes() {
         const configList: Phaser.Types.Loader.FileTypes.ImageFileConfig[] = [];
+        this.showPlaceholder();
         if (!this.isRenderTexture) {
-            this.showPlaceholder();
             // ============只有check到新资源时才会重新load，否则直接从当前龙骨的贴图资源上，获取对应贴图
             this.scene.load.once(Phaser.Loader.Events.COMPLETE, (data, totalComplete: integer, totalFailed: integer) => {
                 if (!configList || !this.scene) return;

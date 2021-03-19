@@ -220,10 +220,6 @@ export class DragonbonesDisplay extends BaseDragonbonesDisplay implements IDispl
         return this.mSortY;
     }
 
-    protected loadCompleteHander() {
-        this.closePlaceholder();
-    }
-
     protected refreshAvatar() {
         super.refreshAvatar();
     }

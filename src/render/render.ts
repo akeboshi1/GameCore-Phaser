@@ -43,6 +43,7 @@ import { UiManager } from "./ui";
 import { GuideManager } from "./guide";
 import { MouseManagerDecorate } from "./input/mouse.manager.decorate";
 import { MouseManager } from "./input/mouse.manager";
+import { SoundManager } from "./managers";
 
 for (const key in protos) {
     PBpacket.addProtocol(protos[key]);
@@ -80,6 +81,7 @@ export class Render extends RPCPeer implements GameMain, IRender {
     protected mSceneManager: SceneManager;
     protected mCameraManager: CamerasManager;
     protected mInputManager: InputManager;
+    protected mSoundManager: SoundManager;
     // protected mInputManager: InputManager;
     protected mConfig: ILauncherConfig;
     protected mUiManager: UiManager;
@@ -231,6 +233,10 @@ export class Render extends RPCPeer implements GameMain, IRender {
         return this.mDisplayManager;
     }
 
+    get soundManager(): SoundManager {
+        return this.mSoundManager;
+    }
+
     get localStorageManager(): LocalStorageManager {
         return this.mLocalStorageManager;
     }
@@ -262,6 +268,7 @@ export class Render extends RPCPeer implements GameMain, IRender {
         if (!this.mSceneManager) this.mSceneManager = new SceneManager(this);
         if (!this.mGuideManager) this.mGuideManager = new GuideManager(this);
         if (!this.mInputManager) this.mInputManager = new InputManager(this);
+        if (!this.mSoundManager) this.mSoundManager = new SoundManager(this);
         if (!this.mDisplayManager) this.mDisplayManager = new DisplayManager(this);
         if (!this.mEditorCanvasManager) this.mEditorCanvasManager = new EditorCanvasManager(this);
     }
@@ -283,6 +290,10 @@ export class Render extends RPCPeer implements GameMain, IRender {
         if (this.mSceneManager) {
             this.mSceneManager.destroy();
             this.mSceneManager = undefined;
+        }
+        if (this.mSoundManager) {
+            this.mSoundManager.destroy();
+            this.mSoundManager = undefined;
         }
         if (this.mGuideManager) {
             this.mGuideManager.destroy();
@@ -314,6 +325,9 @@ export class Render extends RPCPeer implements GameMain, IRender {
 
         // if (this.mLocalStorageManager)
         //     this.mLocalStorageManager.destroy();
+
+        if (this.mSoundManager)
+            this.mSoundManager.destroy();
 
         if (this.mSceneManager)
             this.mSceneManager.destroy();
@@ -634,6 +648,7 @@ export class Render extends RPCPeer implements GameMain, IRender {
 
     public changeScene(scene: Phaser.Scene) {
         if (this.mInputManager) this.mInputManager.setScene(scene);
+        if (this.mSoundManager) this.mSoundManager.setScene(scene);
     }
 
     public onFocus() {
@@ -875,8 +890,28 @@ export class Render extends RPCPeer implements GameMain, IRender {
     }
 
     @Export()
-    public playSound(content: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_SOUND_CTL) {
+    public playOsdSound(content: any) {
+        if (this.mSoundManager) this.mSoundManager.playOsdSound(content);
+    }
 
+    @Export()
+    public playSound(content: any) {
+        if (this.mSoundManager) this.mSoundManager.playSound(content);
+    }
+
+    @Export()
+    public stopAllSound() {
+        if (this.mSoundManager) this.mSoundManager.stopAll();
+    }
+
+    @Export()
+    public pauseAll() {
+        if (this.mSoundManager) this.mSoundManager.pauseAll();
+    }
+
+    @Export()
+    public resume() {
+        if (this.mSoundManager) this.mSoundManager.resume();
     }
 
     @Export()
@@ -1421,20 +1456,10 @@ export class Render extends RPCPeer implements GameMain, IRender {
         const target = this.mDisplayManager.getDisplay(id);
         if (target) {
             if (effect === "liner") {
-                // if (this.mCacheTarget) {
-                //     if (this.mCacheTarget.id === 1441619821) {
-                //         this.guideManager.startGuide(1, { x: this.mCacheTarget.x, y: this.mCacheTarget.y });
-                //     }
-                //     this.mCacheTarget = null;
-                // }
-                // this.mCameraManager.pan(target.x, target.y, target.y).then(() => {
-                //     if (id === 674096428) {
-                //         this.mCacheTarget = target;
-                //     } else if (id === 1752777777) {
-                //         this.mCacheTarget = target;
-                //     }
-                // });
-                this.mCameraManager.startFollow(target);
+                const position = target.getPosition();
+                this.mCameraManager.pan(position.x, position.y, 300).then(() => {
+                    this.mCameraManager.startFollow(target);
+                });
             } else {
                 this.mCameraManager.startFollow(target);
             }

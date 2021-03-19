@@ -4,7 +4,7 @@ import { BaseLayer, GroundLayer, SurfaceLayer } from "baseRender";
 import { MainUIScene } from "./main.ui.scene";
 import { RoomScene } from "./room.scene";
 import { ModuleName, PlaySceneLoadState, SceneName } from "structure";
-import {MotionManager} from "../input/motion.manager";
+import { MotionManager } from "../input/motion.manager";
 import { LayerEnum } from "game-capsule";
 
 // 游戏正式运行用 Phaser.Scene
@@ -28,6 +28,7 @@ export class PlayScene extends RoomScene {
     }
 
     public preload() {
+        this.load.audio("click", Url.getRes("sound/click.mp3"));
         super.preload();
     }
 
