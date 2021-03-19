@@ -17,6 +17,7 @@ export class LoginScene extends BasicScene {
             const uimanager: UiManager = this.render.uiManager;
             uimanager.setScene(this);
             this.render.showMediator(ModuleName.PICA_BOOT_NAME, true);
+            this.render.gameLoadedCallBack();
             this.render.hideLoading();
             // uimanager.showPanel(ModuleName.LOGIN_NAME);
         }

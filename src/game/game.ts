@@ -109,7 +109,7 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
         Logger.getInstance().info(`enterVirtualWorld`);
         this.connect.connect = true;
         this.loginEnterWorld();
-        if (this.mConfig.hasGameLoaded) this.renderPeer.gameLoadedCallBack();
+        // if (this.mConfig.hasGameLoaded) this.renderPeer.gameLoadedCallBack();
         // this.enterVirtualWorld();
         // this.login();
     }
