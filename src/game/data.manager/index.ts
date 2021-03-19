@@ -7,3 +7,4 @@ export * from "./element.dataManager";
 export * from "./scene.data.manager";
 export * from "./base.config.data";
 export * from "./base.config.manager";
+export * from "./chat.manager";
