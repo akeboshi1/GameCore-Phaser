@@ -215,7 +215,7 @@ export class User extends Player {
         }
     }
 
-    protected async activeSprite(targetId: number, param?: any, needBroadcast?: boolean) {
+    public async activeSprite(targetId: number, param?: any, needBroadcast?: boolean) {
         if (!targetId) {
             this.mPreTargetID = 0;
             return;

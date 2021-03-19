@@ -4,6 +4,7 @@ import { BaseDataManager } from "./base.dataManager";
 import { BaseHandler } from "./base.handler";
 import { BasePacketHandler } from "./base.packet.handler";
 import { CacheDataManager } from "./cache.dataManager";
+import { ChatManager } from "./chat.manager";
 import { CommonDataManager } from "./common.data.manager";
 import { ElementDataManager } from "./element.dataManager";
 import { SceneDataManager } from "./scene.data.manager";
@@ -27,6 +28,7 @@ export class DataManager {
         this.mPackMap.set(DataMgrType.BaseMgr, baseMgr);
         this.mPackMap.set(DataMgrType.SceneMgr, sceneMgr);
         this.mPackMap.set(DataMgrType.CommonMgr, commonMgr);
+        this.mPackMap.set(DataMgrType.ChatMgr, new ChatManager(this.mGame, this.mEvent));
     }
 
     public initDataMap() {
@@ -112,5 +114,6 @@ export enum DataMgrType {
     CacheMgr,
     EleMgr,
     SceneMgr,
-    CommonMgr
+    CommonMgr,
+    ChatMgr
 }

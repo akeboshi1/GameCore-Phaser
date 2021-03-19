@@ -2,7 +2,7 @@ import { Render } from "../render";
 import { FramesDisplay } from "../display/frames/frames.display";
 import { MessageType } from "structure";
 import { NodeType } from "../managers/display.manager";
-import { Logger, UiUtils } from "utils";
+import { Logger, UiUtils, Url } from "utils";
 
 export enum MouseEvent {
     RightMouseDown = 1,
@@ -143,6 +143,9 @@ export class MouseManager {
     }
 
     protected onGameObjectDownHandler(pointer, gameObject) {
+        this.render.soundManager.playSound({
+            soundKey: "sound/click.mp3",
+        });
         const id = gameObject.getData("id");
         if (this.render.guideManager.canInteractive(id)) return;
         this.mGameObject = gameObject;

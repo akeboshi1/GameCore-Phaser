@@ -22,6 +22,7 @@ import { DataManager, DataMgrType } from "./data.manager/dataManager";
 import { BaseConfigManager } from "./data.manager";
 import { NetworkManager } from "./command";
 import version from "../../version";
+import { SoundManager } from "./sound.manager";
 interface ISize {
     width: number;
     height: number;
@@ -47,7 +48,7 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
     protected mElementStorage: ElementStorage;
     // protected mPlayerDataManager: PlayerDataManager;
     protected mUIManager: UIManager;
-    // protected mSoundManager: SoundManager;
+    protected mSoundManager: SoundManager;
     protected mLoadingManager: LoadingManager;
     protected mConfigManager: BaseConfigManager;
     protected mNetWorkManager: NetworkManager;
@@ -109,7 +110,7 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
         Logger.getInstance().info(`enterVirtualWorld`);
         this.connect.connect = true;
         this.loginEnterWorld();
-        if (this.mConfig.hasGameLoaded) this.renderPeer.gameLoadedCallBack();
+        // if (this.mConfig.hasGameLoaded) this.renderPeer.gameLoadedCallBack();
         // this.enterVirtualWorld();
         // this.login();
     }
@@ -322,9 +323,9 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
         return this.mUIManager;
     }
 
-    // get soundManager(): SoundManager {
-    //     return this.mSoundManager;
-    // }
+    get soundManager(): SoundManager {
+        return this.mSoundManager;
+    }
 
     get clock(): Clock {
         return this.mClock;
@@ -595,7 +596,7 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
         if (!this.mElementStorage) this.mElementStorage = new ElementStorage();
         if (!this.mUIManager) this.mUIManager = new UIManager(this);
         if (!this.mHttpService) this.mHttpService = new HttpService(this);
-        // this.mSoundManager = new SoundManager(this);
+        if (!this.mSoundManager) this.mSoundManager = new SoundManager(this);
         if (!this.mLoadingManager) this.mLoadingManager = new LoadingManager(this);
         if (!this.mDataManager) this.mDataManager = new DataManager(this);
         if (!this.mConfigManager) this.mConfigManager = new BaseConfigManager(this);
@@ -605,7 +606,7 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
         this.mUIManager.addPackListener();
         this.mRoomManager.addPackListener();
         this.user.addPackListener();
-        // this.mSoundManager.addPackListener();
+        this.mSoundManager.addPackListener();
         // this.mPlayerDataManager.addPackListener();
     }
 
@@ -708,6 +709,11 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
                 if (this.mDataManager) {
                     this.mDataManager.clear();
                     this.mDataManager = null;
+                }
+
+                if (this.mSoundManager) {
+                    this.mSoundManager.destroy();
+                    this.mSoundManager = null;
                 }
 
                 if (this.user) this.user.removePackListener();
