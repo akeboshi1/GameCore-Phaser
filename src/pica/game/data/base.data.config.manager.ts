@@ -4,7 +4,8 @@ import {
     IElement,
     IExploreChapterData,
     IExploreLevelData,
-    IExtendCountablePackageItem
+    IExtendCountablePackageItem,
+    IScene
 } from "picaStructure";
 import { IMarketCommodity, IShopBase } from "../../../pica/structure/imarketcommodity";
 import { Logger, ObjectAssign, StringUtils } from "utils";
@@ -22,6 +23,7 @@ import { ICraftSkill } from "src/pica/structure/icraftskill";
 import { SkillConfig } from "./skill.config";
 import { LevelConfig } from "./level.config";
 import { SocialConfig } from "./social.config";
+import { SceneConfig } from ".";
 
 export enum BaseDataType {
     i18n_zh = "i18n_zh",
@@ -33,14 +35,16 @@ export enum BaseDataType {
     cardPool = "cardPool",
     skill = "skill",
     level = "level",
-    social = "social"
+    social = "social",
+    minescene = "mineScene",
+    publicscene = "publicScene"
     // itemcategory = "itemcategory"
 }
 
 export class BaseDataConfigManager extends BaseConfigManager {
     protected baseDirname: string;
     protected dataMap: Map<string, BaseConfigData> = new Map();
-
+    protected sceneMap: Map<string, IScene[]> = new Map();
     constructor(game: Game) {
         super(game);
     }
@@ -362,6 +366,49 @@ export class BaseDataConfigManager extends BaseConfigManager {
         return data.socails;
     }
 
+    public getScene(id: string) {
+        const dataTypes = [BaseDataType.minescene, BaseDataType.publicscene];
+        for (const dataType of dataTypes) {
+            const config: SceneConfig = this.getConfig(dataType);
+            const data: IScene = config.get(id);
+            if (data) {
+                return data;
+            }
+        }
+        return undefined;
+    }
+
+    public getScenes(type?: string) {
+        if (this.sceneMap.size === 0) {
+            const dataTypes = [BaseDataType.minescene, BaseDataType.publicscene];
+            for (const dataType of dataTypes) {
+                const config: SceneConfig = this.getConfig(dataType);
+                const map = this.sceneMap;
+                config.sceneMap.forEach((value, key) => {
+                    if (map.has(key)) {
+                        const datas = map.get(key);
+                        for (const temp of value) {
+                            temp.roomName = this.getI18n(temp.roomName);
+                            datas.push(temp);
+                        }
+                    } else {
+                        const datas = [];
+                        for (const temp of value) {
+                            temp.roomName = this.getI18n(temp.roomName);
+                            datas.push(temp);
+                        }
+                        map.set(key, datas);
+                    }
+                });
+            }
+        }
+        if (type) {
+            return this.sceneMap.get(type);
+        } else {
+            return this.sceneMap;
+        }
+    }
+
     protected add() {
         this.dataMap.set(BaseDataType.i18n_zh, new I18nZHDataConfig());
         this.dataMap.set(BaseDataType.explore, new ExploreDataConfig());
@@ -373,6 +420,8 @@ export class BaseDataConfigManager extends BaseConfigManager {
         this.dataMap.set(BaseDataType.skill, new SkillConfig());
         this.dataMap.set(BaseDataType.level, new LevelConfig());
         this.dataMap.set(BaseDataType.social, new SocialConfig());
+        this.dataMap.set(BaseDataType.publicscene, new SceneConfig());
+        this.dataMap.set(BaseDataType.minescene, new SceneConfig());
     }
 
     protected configUrl(reName: string, tempurl?: string) {

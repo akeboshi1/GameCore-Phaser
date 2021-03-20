@@ -18,6 +18,8 @@ export class PicaPartyNavigation extends BasicModel {
             this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_EDIT_MODE_ROOM_LIST, this.onRoomListHandler);
             this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_EDIT_MODE_GET_PLAYER_ENTER_ROOM_HISTORY, this.onMyRoomListHandler);
             this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_EDIT_MODE_ENTER_ROOM, this.onEnterRoomResultHandler);
+            this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_ROOM_LIST, this.onNewRoomListHandler);
+            this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_SELF_ROOM_LIST, this.onNewSelfRoomListHandler);
         }
     }
 
@@ -75,6 +77,20 @@ export class PicaPartyNavigation extends BasicModel {
     public query_ROOM_HISTORY() {
         this.connection.send(new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_EDIT_MODE_GET_PLAYER_ENTER_ROOM_HISTORY));
     }
+    public query_ROOM_LIST(roomType: number, page?: number, perPage?: number) {
+        const packet = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_ROOM_LIST);
+        const content: op_virtual_world.OP_CLIENT_REQ_VIRTUAL_WORLD_ROOM_LIST = packet.content;
+        content.roomType = roomType;
+        content.page = page;
+        content.perPage = perPage;
+        this.connection.send(packet);
+    }
+    public query_SELF_ROOM_LIST(roomType: number) {
+        const packet = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_SELF_ROOM_LIST);
+        const content: op_virtual_world.OP_CLIENT_REQ_VIRTUAL_WORLD_SELF_ROOM_LIST = packet.content;
+        content.roomType = roomType;
+        this.connection.send(packet);
+    }
     private on_PARTY_LIST(packet: PBpacket) {
         const content: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_PARTY_LIST = packet.content;
         this.game.emitter.emit(ModuleName.PICAPARTYNAVIGATION_NAME + "_questlist", content);
@@ -98,5 +114,14 @@ export class PicaPartyNavigation extends BasicModel {
     private onEnterRoomResultHandler(packet: PBpacket) {
         const content: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_EDIT_MODE_ENTER_ROOM = packet.content;
         this.game.emitter.emit(ModuleName.PICAPARTYNAVIGATION_NAME + "_enterRoomResult", content);
+    }
+    private onNewRoomListHandler(packet: PBpacket) {
+        const content: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_ROOM_LIST = packet.content;
+        this.game.emitter.emit(ModuleName.PICAPARTYNAVIGATION_NAME + "_newroomlist", content);
+    }
+
+    private onNewSelfRoomListHandler(packet: PBpacket) {
+        const content: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_SELF_ROOM_LIST = packet.content;
+        this.game.emitter.emit(ModuleName.PICAPARTYNAVIGATION_NAME + "_newselfroomlist", content);
     }
 }

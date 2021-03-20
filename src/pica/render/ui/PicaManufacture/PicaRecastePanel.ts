@@ -185,7 +185,7 @@ export class PicaRecastePanel extends Phaser.GameObjects.Container {
       y: 60 * this.dpr,
       width,
       height: 44 * this.dpr,
-      zoom: this.scale,
+      zoom: this.zoom,
       orientation: 1,
       dpr: this.dpr,
       space: 10 * this.dpr,

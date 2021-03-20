@@ -1,7 +1,7 @@
 import { BasicMediator, Game } from "gamecore";
 import { BaseDataConfigManager } from "picaWorker";
 import { op_client } from "pixelpai_proto";
-import { ModuleName } from "structure";
+import { EventType, ModuleName } from "structure";
 import { PicaHouse } from "./PicaHouse";
 
 export class PicaHouseMediator extends BasicMediator {
@@ -17,7 +17,7 @@ export class PicaHouseMediator extends BasicMediator {
         this.game.emitter.on(ModuleName.PICAHOUSE_NAME + "_queryrequirements", this.query_REFURBISH_REQUIREMENTS, this);
         this.game.emitter.on(ModuleName.PICAHOUSE_NAME + "_queryrefurbish", this.query_ROOM_REFURBISH, this);
 
-        this.game.emitter.on("roominfo", this.onRoomInfoHandler, this);
+        this.game.emitter.on(EventType.UPDATE_ROOM_INFO, this.onRoomInfoHandler, this);
         this.game.emitter.on("refurbish", this.on_REFURBISH_REQUIREMENTS, this);
     }
 
@@ -26,7 +26,7 @@ export class PicaHouseMediator extends BasicMediator {
         this.game.emitter.off(ModuleName.PICAHOUSE_NAME + "_queryrequirements", this.query_REFURBISH_REQUIREMENTS, this);
         this.game.emitter.off(ModuleName.PICAHOUSE_NAME + "_queryrefurbish", this.query_ROOM_REFURBISH, this);
 
-        this.game.emitter.off("roominfo", this.onRoomInfoHandler, this);
+        this.game.emitter.off(EventType.UPDATE_ROOM_INFO, this.onRoomInfoHandler, this);
         this.game.emitter.off("refurbish", this.on_REFURBISH_REQUIREMENTS, this);
         super.hide();
     }

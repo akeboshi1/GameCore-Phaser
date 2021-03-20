@@ -10,6 +10,7 @@ export class PicaNewHeadPanel extends Phaser.GameObjects.Container {
     private headCon: Phaser.GameObjects.Container;
     private moneyCon: Phaser.GameObjects.Container;
     private sceneCon: Phaser.GameObjects.Container;
+    private sceneclickCon: ButtonEventDispatcher;
     private levelTex: Phaser.GameObjects.Text;
     private powerTex: ImageValue;
     private powerPro: ProgressMaskBar;
@@ -132,12 +133,11 @@ export class PicaNewHeadPanel extends Phaser.GameObjects.Container {
         this.praiseButton.x = -peoplebg.width - 29 * this.dpr;
         this.praiseButton.y = 0;
         this.praiseButton.visible = false;
-        const sceneclickCon = new ButtonEventDispatcher(this.scene, 0, 0);
-        sceneclickCon.setSize(100 * this.dpr, 30 * this.dpr);
-        sceneclickCon.enable = true;
-        sceneclickCon.on(ClickEvent.Tap, this.onOpenHouseHandler, this);
-        sceneclickCon.x = praisebg.x;
-        this.sceneCon.add([peoplebg, this.peoplevalue, peopeclickCon, praisebg, this.sceneTex, sceneclickCon, this.praiseButton]);
+        this.sceneclickCon = new ButtonEventDispatcher(this.scene, 0, 0);
+        this.sceneclickCon.setSize(100 * this.dpr, 30 * this.dpr);
+        this.sceneclickCon.on(ClickEvent.Tap, this.onOpenHouseHandler, this);
+        this.sceneclickCon.x = praisebg.x;
+        this.sceneCon.add([peoplebg, this.peoplevalue, peopeclickCon, praisebg, this.sceneTex, this.sceneclickCon, this.praiseButton]);
         this.sceneCon.x = this.width * 0.5 - 10 * this.dpr;
         this.sceneCon.y = -15 * this.dpr;
     }
@@ -187,6 +187,9 @@ export class PicaNewHeadPanel extends Phaser.GameObjects.Container {
             this.praisebg.x = -this.peoplebg.width - 15 * this.dpr - this.praisebg.width * 0.5;
             this.sceneTex.x = this.praisebg.x;
         }
+        this.sceneclickCon.setSize(this.praisebg.width, this.praisebg.height);
+        this.sceneclickCon.x = this.praisebg.x;
+        this.sceneclickCon.enable = true;
     }
 
     public setSelfRoomInfo(isself: boolean = false) {

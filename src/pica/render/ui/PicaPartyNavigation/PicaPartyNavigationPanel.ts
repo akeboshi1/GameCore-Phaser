@@ -24,7 +24,9 @@ export class PicaPartyNavigationPanel extends PicaBasePanel {
     private roomPanel: PicaRoomNavigationPanel;
     private optionType: number;
     private mPartyData: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_PARTY_LIST;
+    private mNavigationData: any;
     private progressData: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_QUERY_PLAYER_PROGRESS;
+    private toggleItems: ToggleColorButton[] = [];
     constructor(uiManager: UiManager) {
         super(uiManager);
         this.key = ModuleName.PICAPARTYNAVIGATION_NAME;
@@ -47,13 +49,21 @@ export class PicaPartyNavigationPanel extends PicaBasePanel {
         this.mPartyData = content;
         //  this.partyNavigationPanel.setPartyDataList(content);
     }
+    public setNavigationListData(content: any[]) {
+        this.mNavigationData = content;
+        this.townPanel.setTownDatas(content);
+    }
     public setOnlineProgress(content: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_QUERY_PLAYER_PROGRESS) {
         this.progressData = content;
         this.signProgressPanel.setProgressDatas(content);
     }
 
-    public setRoomListData(content: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_EDIT_MODE_GET_PLAYER_ENTER_ROOM_HISTORY) {
-        // this.myRoomNavigationPanel.setRoomDataList(content);
+    public setRoomListData(content: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_ROOM_LIST) {
+        this.roomPanel.setRoomDatas(content);
+    }
+
+    public setSelfRoomListData(content: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_SELF_ROOM_LIST) {
+        this.myRoomPanel.setRoomDatas(content);
     }
 
     public destroy() {
@@ -89,9 +99,9 @@ export class PicaPartyNavigationPanel extends PicaBasePanel {
         this.toggleCon.add([this.optionLine, this.selectLine]);
         this.itemtips = new ItemInfoTips(this.scene, 121 * this.dpr, 46 * this.dpr, UIAtlasName.uicommon, "tips_bg", this.dpr);
         this.itemtips.setVisible(false);
-        this.content.add([this.bg, this.tilteName, this.signProgressPanel, this.toggleCon, this.itemtips]);
+        this.content.add([this.bg, this.tilteName, this.signProgressPanel, this.toggleCon]);
         this.createOptionButtons();
-        this.add(this.content);
+        this.add([this.content, this.itemtips]);
         this.resize(0, 0);
         super.init();
         this.render.renderEmitter(this.key + "_questprogress");
@@ -99,12 +109,13 @@ export class PicaPartyNavigationPanel extends PicaBasePanel {
             this.signProgressPanel.refreshMask();
             if (this.townPanel) {
                 this.townPanel.refreshMask();
-                this.townPanel.setTownDatas(undefined);
             }
+        }), new Handler(this, () => {
+            if (this.townPanel) this.townPanel.refreshMask();
         }));
     }
     protected createOptionButtons() {
-        const arr = [{ text: i18n.t("partynav.town"), type: 1 }, { text: i18n.t("player_info.room"), type: 2 }, { text: i18n.t("partynav.store"), type: 3 }];
+        const arr = [{ text: i18n.t("partynav.town"), type: 1 }, { text: i18n.t("player_info.room"), type: 2 }, { text: i18n.t("party.mine"), type: 3 }];
         const allLin = 272 * this.dpr;
         const cellwidth = allLin / arr.length;
         const cellHeight = 20 * this.dpr;
@@ -122,6 +133,7 @@ export class PicaPartyNavigationPanel extends PicaBasePanel {
             item.setChangeColor("#FFF449");
             item.setFontSize(14 * this.dpr);
             posx += cellwidth;
+            this.toggleItems.push(item);
             if (!tempitem) tempitem = item;
         }
         tempitem.isOn = true;
@@ -134,50 +146,48 @@ export class PicaPartyNavigationPanel extends PicaBasePanel {
         if (!this.townPanel) {
             const height = this.scaleHeight * 0.5 - this.toggleCon.y - 30 * this.dpr;
             this.townPanel = new PicaTownNavigationPanel(this.scene, 274 * this.dpr, height, this.dpr, this.scale);
-            this.townPanel.setHandler(new Handler(this, this.onPartyListHandler));
+            this.townPanel.setHandler(new Handler(this, this.onTownHandler));
             this.townPanel.y = this.scaleHeight - height - 75 * this.dpr;
             this.content.add(this.townPanel);
         }
-        this.townPanel.visible = true;
+        this.townPanel.show();
         this.townPanel.refreshMask();
-        this.render.renderEmitter(this.key + "_querylist");
     }
 
     private hideTownNavigationPanel() {
         if (this.townPanel)
-            this.townPanel.visible = false;
+            this.townPanel.hide();
     }
     private openMyRoomPanel() {
         if (!this.myRoomPanel) {
             const height = this.scaleHeight * 0.5 - this.toggleCon.y - 30 * this.dpr;
             this.myRoomPanel = new PicaMyNavigationPanel(this.scene, 274 * this.dpr, height, this.dpr, this.scale);
             this.myRoomPanel.y = this.scaleHeight - height - 75 * this.dpr;
-            this.myRoomPanel.setHandler(new Handler(this, this.onEnterRoomHandler));
+            this.myRoomPanel.setHandler(new Handler(this, this.onMyRoomHandler));
             this.content.add(this.myRoomPanel);
         }
-        this.myRoomPanel.visible = true;
+        this.myRoomPanel.show();
         this.myRoomPanel.refreshMask();
-        this.myRoomPanel.setRoomDatas(undefined);
     }
 
     private hideMyRoomPanel() {
         if (this.myRoomPanel) {
             // this.content.remove(this.myRoomPanel);
-            this.myRoomPanel.visible = false;
+            this.myRoomPanel.hide();
         }
     }
     private openRoomPanel() {
         if (!this.roomPanel) {
             const height = this.scaleHeight * 0.5 - this.toggleCon.y - 30 * this.dpr;
             this.roomPanel = new PicaRoomNavigationPanel(this.scene, 274 * this.dpr, height, this.dpr, this.scale);
-            this.roomPanel.setHandler(new Handler(this, this.onEnterRoomHandler));
+            this.roomPanel.setHandler(new Handler(this, this.onRoomHandler));
             this.roomPanel.y = this.scaleHeight - height - 75 * this.dpr;
             this.content.add(this.roomPanel);
             this.roomPanel.y = -10 * this.dpr;
         }
         this.roomPanel.visible = true;
-        this.roomPanel.setRoomDatas(undefined);
         this.roomPanel.refreshMask();
+        this.roomPanel.clearDatas();
     }
 
     private hideRoomPanel() {
@@ -196,20 +206,24 @@ export class PicaPartyNavigationPanel extends PicaBasePanel {
         this.hideMyRoomPanel();
         if (this.optionType === 1) {
             this.openTownNavigationPanel();
+            this.render.renderEmitter(this.key + "_getnavigatelist");
         } else if (this.optionType === 2) {
             this.openRoomPanel();
+            this.render.renderEmitter(this.key + "_getRoomList", { page: 1, perPage: 100 });
         } else {
             this.openMyRoomPanel();
+            this.render.renderEmitter(this.key + "_getMyRoomList");
         }
     }
 
-    private onPartyListHandler(tag: string, data: any) {// op_client.IEditModeRoom
-        if (tag === "hotel" || tag === "pictown" || tag === "partylist") {
-            this.render.renderEmitter(this.key + "_queryenter", data.roomId);
+    private onTownHandler(tag: string, data: any) {// op_client.IEditModeRoom
+        if (tag === "enter") {
+            this.render.renderEmitter(this.key + "_queryenter", data);
         } else if (tag === "progress") {
 
         }
     }
+
     private onProgressHandler(index: number, item: SignProgressItem) {
         if (!this.progressData) return;
         const data = item.progressData;
@@ -222,10 +236,25 @@ export class PicaPartyNavigationPanel extends PicaBasePanel {
             }
         }
     }
+
+    private onRoomHandler(tag: string, data: any) {
+        if (tag === "enter") {
+            this.onEnterRoomHandler(data);
+        } else if (tag === "query") {
+            this.render.renderEmitter(this.key + "_getRoomList", { page: data, perPage: 100 });
+        }
+    }
+    private onMyRoomHandler(tag: string, data: any) {
+        if (tag === "enter") {
+            this.onEnterRoomHandler(data);
+        } else if (tag === "query") {
+            this.render.renderEmitter(this.key + "_getMyRoomList");
+        }
+    }
     private onEnterRoomHandler(roomID: string) {
         this.render.renderEmitter(this.key + "_queryenter", roomID);
     }
-    private showItemTipsState(item: Phaser.GameObjects.Container, offsety: number = 0) {
+    private showItemTipsState(item: Phaser.GameObjects.Container, offsety: number = 50 * this.dpr) {
         const posx = this.itemtips.x;
         const posy = this.itemtips.y;
         this.setTipsPosition(item, offsety);
@@ -244,19 +273,19 @@ export class PicaPartyNavigationPanel extends PicaBasePanel {
             posy += tempobject.parentContainer.y;
             tempobject = tempobject.parentContainer;
         }
-        if (posx - this.itemtips.width * 0.5 < -this.width * 0.5) {
-            this.itemtips.x = this.itemtips.width * 0.5 - this.width * 0.5 + 20 * this.dpr;
-        } else if (posx + this.itemtips.width * 0.5 > this.width * 0.5) {
-            this.itemtips.x = this.width * 0.5 - this.itemtips.width * 0.5 - 20 * this.dpr;
+        if (posx - this.itemtips.width * 0.5 < 0) {
+            this.itemtips.x = this.itemtips.width * 0.5 + 10 * this.dpr;
+        } else if (posx + this.itemtips.width * 0.5 > this.content.width) {
+            this.itemtips.x = this.content.width - this.itemtips.width * 0.5 - 20 * this.dpr;
         } else {
             this.itemtips.x = posx;
         }
-        this.itemtips.y = posy - this.itemtips.height * 0.5 + 10 * this.dpr + offsety;
+        this.itemtips.y = posy + this.itemtips.height * 0.5 + 10 * this.dpr + offsety;
     }
     private onCloseHandler() {
         this.render.renderEmitter(this.key + "_close");
     }
-    private playMove(handler: Handler) {
+    private playMove(handler: Handler, update: Handler) {
         const from = -this.content.width * 0.5 - 10 * this.dpr;
         const to = this.content.width * 0.5;
         const tween = this.scene.tweens.add({
@@ -272,6 +301,9 @@ export class PicaPartyNavigationPanel extends PicaBasePanel {
                 tween.remove();
                 if (handler) handler.run();
             },
+            onUpdate: () => {
+                if (update) update.run();
+            }
         });
     }
 }

@@ -3,3 +3,4 @@ export * from "./icountablepackageitem";
 export * from "./ielement";
 export * from "./imarketcommodity";
 export * from "./isocial";
+export * from "./iscene";

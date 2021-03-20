@@ -115,8 +115,8 @@ export class PicaTaskPanel extends PicaBasePanel {
     }
 
     setTaskDatas(content: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_QUERY_QUEST_GROUP) {
-        // if (content.questType !== this.questType) return;
-        this.mainPanel.setTaskDatas(content, this.questType);
+        if (content.questType !== this.questType) return;
+        this.mainPanel.setTaskDatas(content, content.questType);
     }
 
     setTaskDetail(quest: op_client.PKT_Quest) {

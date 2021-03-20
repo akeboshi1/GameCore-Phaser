@@ -4,3 +4,4 @@ export * from "./item.base.data.config";
 export * from "./element.data.config";
 export * from "./shop.config";
 export * from "./item.category.config";
+export * from "./scene.config";

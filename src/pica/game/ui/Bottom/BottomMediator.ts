@@ -1,10 +1,11 @@
-import { BasicMediator, Game, IElement, UIType } from "gamecore";
+import { BasicMediator, CacheDataManager, ChatManager, DataMgrType, Game, IElement, UIType } from "gamecore";
 import { EventType, ModuleName } from "structure";
 import { op_def, op_client } from "pixelpai_proto";
 import { PicaChat } from "picaWorker";
 import { ChatCommandInterface, Logger } from "utils";
 
 export class BottomMediator extends BasicMediator {
+    private mCacheManager: ChatManager;
     constructor(game: Game) {
         super(ModuleName.BOTTOM, game);
         if (!this.mModel) {
@@ -14,14 +15,14 @@ export class BottomMediator extends BasicMediator {
     }
 
     public show() {
-        this.game.emitter.on("chat", this.onChatHandler, this);
+        this.game.emitter.on("chat", this.appendChat, this);
         this.game.emitter.on(ModuleName.BOTTOM + "_showpanel", this.onShowPanelHandler, this);
         this.game.emitter.on(ModuleName.BOTTOM + "_gohome", this.onGoHomeHandler, this);
         super.show();
     }
 
     public hide() {
-        this.game.emitter.off("chat", this.onChatHandler, this);
+        this.game.emitter.off("chat", this.appendChat, this);
         this.game.emitter.off(ModuleName.BOTTOM + "_showpanel", this.onShowPanelHandler, this);
         this.game.emitter.off(ModuleName.BOTTOM + "_gohome", this.onGoHomeHandler, this);
         super.hide();
@@ -44,6 +45,17 @@ export class BottomMediator extends BasicMediator {
             return;
         }
         model.sendMessage(val);
+    }
+
+    protected panelInit() {
+        super.panelInit();
+        const cacheManager = this.cacheManager ;
+        if (cacheManager) {
+            const msgs = cacheManager.getMsgs();
+            for (const msg of msgs) {
+                this.appendChat(msg);
+            }
+        }
     }
 
     // "##matterWorld.debugEnable"
@@ -81,27 +93,28 @@ export class BottomMediator extends BasicMediator {
         }
     }
 
-    private onChatHandler(content: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_CHAT) {
-        if (!this.mView) {
-            return;
-        }
-        const player = this.getSpeaker(content.chatSenderid);
-        let speaker = "";
-        if (player) {
-            speaker = `${player.model.nickname}`;
-        } else {
-            if (content.chatSenderid) {
-                // speaker = i18n.t("chat.mystery");
-            }
-        }
-        let color = "#ffffff";
-        if (content.chatSetting) {
-            color = content.chatSetting.textColor;
-        }
-        this.getChannel(content.chatChannel).then((str) => {
-            this.appendChat(`[color=${color}][${str}]${speaker}: ${content.chatContext}[/color]\n`);
-        });
-    }
+    // private onChatHandler(content: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_CHAT) {
+    //     if (!this.mView) {
+    //         return;
+    //     }
+    //     const player = this.getSpeaker(content.chatSenderid);
+    //     let speaker = "";
+    //     if (player) {
+    //         speaker = `${player.model.nickname}`;
+    //     } else {
+    //         if (content.chatSenderid) {
+    //             // speaker = i18n.t("chat.mystery");
+    //         }
+    //     }
+    //     let color = "#ffffff";
+    //     if (content.chatSetting) {
+    //         color = content.chatSetting.textColor;
+    //     }
+    //     this.getChannel(content.chatChannel).then((str) => {
+    //         const msg = `[color=${color}][${str}]${speaker}: ${content.chatContext}[/color]\n`;
+    //         this.appendChat(msg);
+    //     });
+    // }
 
     private appendChat(chat: string) {
         if (!this.mView) {
@@ -110,28 +123,28 @@ export class BottomMediator extends BasicMediator {
         this.mView.appendChat(chat);
     }
 
-    private getSpeaker(id: number): IElement {
-        if (id) {
-            if (!this.game || !this.game.roomManager || !this.game.roomManager.currentRoom) {
-                return;
-            }
-            return this.game.roomManager.currentRoom.getElement(id);
-        }
-    }
+    // private getSpeaker(id: number): IElement {
+    //     if (id) {
+    //         if (!this.game || !this.game.roomManager || !this.game.roomManager.currentRoom) {
+    //             return;
+    //         }
+    //         return this.game.roomManager.currentRoom.getElement(id);
+    //     }
+    // }
 
-    private async getChannel(channel: op_def.ChatChannel): Promise<string> {
-        return new Promise<string>(async (resolve, rejcet) => {
-            let str = "";
-            if (channel === op_def.ChatChannel.CurrentScene) {
-                str = await this.game.peer.render.getMessage("chat.current");
-            } else if (channel === op_def.ChatChannel.World) {
-                str = await this.game.peer.render.getMessage("chat.world");
-            } else {
-                str = await this.game.peer.render.getMessage("chat.system");
-            }
-            resolve(str);
-        });
-    }
+    // private async getChannel(channel: op_def.ChatChannel): Promise<string> {
+    //     return new Promise<string>(async (resolve, rejcet) => {
+    //         let str = "";
+    //         if (channel === op_def.ChatChannel.CurrentScene) {
+    //             str = await this.game.peer.render.getMessage("chat.current");
+    //         } else if (channel === op_def.ChatChannel.World) {
+    //             str = await this.game.peer.render.getMessage("chat.world");
+    //         } else {
+    //             str = await this.game.peer.render.getMessage("chat.system");
+    //         }
+    //         resolve(str);
+    //     });
+    // }
     private onShowPanelHandler(panel: string, data?: any) {
         if (!this.mModel || !this.game) {
             return;
@@ -156,5 +169,12 @@ export class BottomMediator extends BasicMediator {
 
     private get model(): PicaChat {
         return (<PicaChat>this.mModel);
+    }
+
+    private get cacheManager() {
+        if (!this.mCacheManager) {
+            this.mCacheManager = this.game.getDataMgr<ChatManager>(DataMgrType.ChatMgr);
+        }
+        return this.mCacheManager;
     }
 }

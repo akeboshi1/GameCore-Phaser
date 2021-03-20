@@ -2,7 +2,7 @@ import { GameGridTable, GameScroller } from "apowophaserui";
 import { AlignmentType, AxisType, ConstraintType, DynamicImage, GridLayoutGroup } from "gamecoreRender";
 import { UIAtlasName } from "picaRes";
 import { Font, Handler, i18n, Logger, Tool, UIHelper, Url } from "utils";
-import { op_client } from "pixelpai_proto";
+import { op_client, op_def } from "pixelpai_proto";
 import { PicaRoomListItem } from "./PicaRoomListItem";
 export class PicaMyNavigationPanel extends Phaser.GameObjects.Container {
     private dpr: number;
@@ -11,12 +11,16 @@ export class PicaMyNavigationPanel extends Phaser.GameObjects.Container {
     private mGameScroll: GameScroller;
     private curRoomItem: NavigationRoomListItem;
     private roomsItems: NavigationRoomListItem[] = [];
+    private datas: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_SELF_ROOM_LIST[] = [];
+    private queryType: op_def.RoomTypeEnum[];
+    private haveCount: number = 0;
     constructor(scene: Phaser.Scene, width: number, height: number, dpr: number, zoom: number) {
         super(scene);
         this.setSize(width, height);
         this.dpr = dpr;
         this.zoom = zoom;
         this.create();
+        this.queryType = [op_def.RoomTypeEnum.NORMAL_ROOM, op_def.RoomTypeEnum.SHOP];
     }
     create() {
         this.mGameScroll = new GameScroller(this.scene, {
@@ -37,18 +41,42 @@ export class PicaMyNavigationPanel extends Phaser.GameObjects.Container {
         this.add(this.mGameScroll);
 
     }
+    public show() {
+        this.visible = true;
+    }
 
+    public hide() {
+        for (const item of this.roomsItems) {
+            item.visible = false;
+            item.setExtend(false, false);
+        }
+        this.curRoomItem = undefined;
+        this.visible = false;
+        this.clearDatas();
+    }
     public refreshMask() {
         this.mGameScroll.refreshMask();
     }
     public setHandler(handler: Handler) {
         this.sendHandler = handler;
     }
-    public setRoomDatas(content: any) {
-        for (const item of this.roomsItems) {
-            item.visible = false;
+    public setRoomDatas(content: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_SELF_ROOM_LIST) {
+        this.datas.push(content);
+        const index = this.queryType.indexOf(content.roomType);
+        if (index !== -1) this.haveCount++;
+        if (this.haveCount === this.queryType.length) {
+            this.setGameScrollData();
         }
-        for (let i = 0; i < 2; i++) {
+    }
+
+    public clearDatas() {
+        this.datas.length = 0;
+        this.haveCount = 0;
+    }
+
+    private setGameScrollData() {
+        let firstItem: NavigationRoomListItem;
+        for (let i = 0; i < this.datas.length; i++) {
             let item: NavigationRoomListItem;
             if (i < this.roomsItems.length) {
                 item = this.roomsItems[i];
@@ -59,9 +87,11 @@ export class PicaMyNavigationPanel extends Phaser.GameObjects.Container {
                 this.roomsItems.push(item);
             }
             item.visible = true;
-            item.setListData(undefined);
+            item.setGroupData(this.datas[i]);
+            firstItem = firstItem || item;
         }
         this.mGameScroll.Sort();
+        this.onPointerUpHandler(firstItem);
     }
 
     private onPointerUpHandler(gameobject) {
@@ -71,9 +101,6 @@ export class PicaMyNavigationPanel extends Phaser.GameObjects.Container {
             gameobject.setExtend(extend, true);
         }
     }
-    private onSendHandler(data: any) {// op_client.IEditModeRoom
-        if (this.sendHandler) this.sendHandler.runWith(["partylist", data]);
-    }
 
     private onTownItemHandler(tag: string, data: any) {
         if (tag === "extend") {
@@ -81,7 +108,7 @@ export class PicaMyNavigationPanel extends Phaser.GameObjects.Container {
             const item = data.item;
             this.onExtendsHandler(extend, item);
         } else if (tag === "go") {
-            Logger.getInstance().error(data);
+            this.sendHandler.runWith(["enter", data.roomId]);
         }
     }
 
@@ -123,8 +150,8 @@ class NavigationRoomListItem extends Phaser.GameObjects.Container {
         this.arrow = this.scene.make.image({ key: UIAtlasName.map, frame: "map_list_arrow_fold" });
         this.arrow.x = this.width * 0.5 - 15 * dpr;
         this.topCon.add([background, this.titleTex, this.arrow]);
-        this.mExtend = new GridLayoutGroup(this.scene, 0, 0, {
-            cellSize: new Phaser.Math.Vector2(this.width * dpr, 68 * this.dpr),
+        this.mExtend = new GridLayoutGroup(this.scene, this.width, 0, {
+            cellSize: new Phaser.Math.Vector2(this.width, 68 * this.dpr),
             space: new Phaser.Math.Vector2(5 * this.dpr, 5 * this.dpr),
             startAxis: AxisType.Horizontal,
             constraint: ConstraintType.FixedColumnCount,
@@ -134,22 +161,26 @@ class NavigationRoomListItem extends Phaser.GameObjects.Container {
         this.add(this.topCon);
         this.add(this.mExtend);
     }
-    public setListData(datas: any[]) {
+
+    public setGroupData(group: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_SELF_ROOM_LIST) {
+        this.titleTex.text = this.getTitleName(group.roomType);
+        this.setListData(group.rooms);
+    }
+    public setListData(datas: any) {
         for (const item of this.townItems) {
             item.visible = false;
         }
-        for (let i = 0; i < 20; i++) {
+        for (let i = 0; i < datas.length; i++) {
             let item: PicaRoomListItem;
             if (i < this.townItems.length) {
                 item = this.townItems[i];
             } else {
                 item = new PicaRoomListItem(this.scene, UIAtlasName.map, this.dpr);
-                item.name = i + "";
                 this.mExtend.add(item);
                 this.townItems.push(item);
             }
             item.visible = true;
-            item.setRoomData(undefined);
+            item.setRoomData(datas[i]);
         }
 
         this.mExtend.Layout();
@@ -162,7 +193,7 @@ class NavigationRoomListItem extends Phaser.GameObjects.Container {
             const list = this.mExtend.list;
             for (const obj of list) {
                 if (Tool.checkPointerContains(obj, pointer)) {
-                    if (this.send) this.send.runWith(["go", "############: " + obj.name]);
+                    if (this.send) this.send.runWith(["go", (<PicaRoomListItem>obj).roomData]);
                 }
             }
         }
@@ -188,6 +219,13 @@ class NavigationRoomListItem extends Phaser.GameObjects.Container {
 
     get extend() {
         return this.mIsExtend;
+    }
+    getTitleName(type: number) {
+        if (type === op_def.RoomTypeEnum.NORMAL_ROOM) {
+            return i18n.t("room_list.room");
+        } else if (type === op_def.RoomTypeEnum.SHOP) {
+            return i18n.t("partynav.store");
+        }
     }
 
     private openExtend() {

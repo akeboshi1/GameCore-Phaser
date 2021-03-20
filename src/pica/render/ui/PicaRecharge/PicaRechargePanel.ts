@@ -191,7 +191,7 @@ export class PicaRechargePanel extends BasePanel {
                 lineposy += 131 * this.dpr;
                 this.middle.add(topline);
             }
-            this.gridlayout = new GridLayoutGroup(this.scene, 0, 0, {
+            this.gridlayout = new GridLayoutGroup(this.scene, this.width, this.height, {
                 cellSize: new Phaser.Math.Vector2(149 * this.dpr, 110 * this.dpr),
                 space: new Phaser.Math.Vector2(10 * this.dpr, 21 * this.dpr),
                 startAxis: AxisType.Horizontal,

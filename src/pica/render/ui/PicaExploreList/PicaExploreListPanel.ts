@@ -107,7 +107,7 @@ export class PicaExploreListPanel extends PicaBasePanel {
     setEnergyData(value: number, max: number) {
         this.tempDatas = { value, max };
         if (!this.mInitialized) return;
-        this.energyProgress.setEnergyData(value, max);
+        this.energyProgress.setEnergyData(10, 100);
         this.levelPanel.setPowerValue(value);
     }
 
@@ -150,7 +150,7 @@ export class PicaExploreListPanel extends PicaBasePanel {
         } else if (tag === "roomid") {
             if (this.tempDatas.value < data.costEnergy) {
                 const noticedata = {
-                    text: [{ text: i18n.t("furnicompose.selecttips"), node: undefined }]
+                    text: [{ text: i18n.t("explore.energytips"), node: undefined }]
                 };
                 this.render.mainPeer.showMediator(ModuleName.PICANOTICE_NAME, true, noticedata);
             } else {

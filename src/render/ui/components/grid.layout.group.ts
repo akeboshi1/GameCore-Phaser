@@ -10,8 +10,9 @@ export class GridLayoutGroup extends Phaser.GameObjects.Container {
     private _constraint: ConstraintType;
     private _constraintCount: number;
     private layoutElements: any[] = [];
-    constructor(scene: Phaser.Scene, x: number, y: number, config: GridLayoutGroupConfig) {
-        super(scene, x, y);
+    constructor(scene: Phaser.Scene, width: number, height: number, config: GridLayoutGroupConfig) {
+        super(scene);
+        this.setSize(width, height);
         this._padding = config.padding || new Phaser.Math.Vector4(0, 0, 0, 0);
         this._cellSize = config.cellSize || new Phaser.Math.Vector2(100, 100);
         this._spacing = config.space || new Phaser.Math.Vector2(0, 0);
@@ -163,18 +164,10 @@ export class GridLayoutGroup extends Phaser.GameObjects.Container {
         }
         const maxWidth = startOffset.x + (this._cellSize.x + this._spacing.x) * (positionX + 1);
         const maxHeight = startOffset.y + (this._cellSize.y + this._spacing.y) * (positionY + 1);
-        // if (this.startAxis === AxisType.Horizontal) {
-        //     this.height = maxHeight;
-        //     this.setAllChildPositionOffset(0);
-        // } else {
-        //     this.width = maxWidth;
-        //     this.setAllChildPositionOffset(1);
-        // }
-        if (this.width < maxWidth) {
-            this.width = maxWidth;
-        }
-        if (this.height < maxHeight) {
+        if (this.startAxis === AxisType.Horizontal) {
             this.height = maxHeight;
+        } else {
+            this.width = maxWidth;
         }
         this.setAllChildPositionOffset(0);
         this.setAllChildPositionOffset(1);
