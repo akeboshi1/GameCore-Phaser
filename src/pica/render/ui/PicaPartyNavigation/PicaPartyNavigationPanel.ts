@@ -26,6 +26,7 @@ export class PicaPartyNavigationPanel extends PicaBasePanel {
     private mPartyData: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_PARTY_LIST;
     private mNavigationData: any;
     private progressData: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_QUERY_PLAYER_PROGRESS;
+    private toggleItems: ToggleColorButton[] = [];
     constructor(uiManager: UiManager) {
         super(uiManager);
         this.key = ModuleName.PICAPARTYNAVIGATION_NAME;
@@ -132,6 +133,7 @@ export class PicaPartyNavigationPanel extends PicaBasePanel {
             item.setChangeColor("#FFF449");
             item.setFontSize(14 * this.dpr);
             posx += cellwidth;
+            this.toggleItems.push(item);
             if (!tempitem) tempitem = item;
         }
         tempitem.isOn = true;
