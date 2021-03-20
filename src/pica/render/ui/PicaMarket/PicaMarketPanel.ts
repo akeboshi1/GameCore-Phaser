@@ -78,6 +78,7 @@ export class PicaMarketPanel extends BasePanel {
     this.mCategoriesBar.fillStyle(0x04b3d3);
     this.mCategoriesBar.fillRect(0, 40 * this.dpr, width, 3 * this.dpr);
     this.mSubCategeoriesContainer.setSize(width, 43 * this.dpr);
+    this.layoutCategories();
   }
 
   public setCategories(content: any) {// op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_GET_MARKET_CATEGORIES

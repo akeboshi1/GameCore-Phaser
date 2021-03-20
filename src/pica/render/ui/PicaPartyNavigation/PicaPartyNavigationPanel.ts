@@ -45,6 +45,11 @@ export class PicaPartyNavigationPanel extends PicaBasePanel {
         this.setSize(width, height);
     }
 
+    public onShow() {
+        const index = this.mShowData || 1;
+        this.onToggleButtonHandler(undefined, this.toggleItems[index - 1]);
+    }
+
     public setPartyListData(content: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_PARTY_LIST, isSelf: boolean = true) {
         this.mPartyData = content;
         //  this.partyNavigationPanel.setPartyDataList(content);
@@ -110,8 +115,20 @@ export class PicaPartyNavigationPanel extends PicaBasePanel {
             if (this.townPanel) {
                 this.townPanel.refreshMask();
             }
+            if (this.myRoomPanel) {
+                this.myRoomPanel.refreshMask();
+            }
+            if (this.roomPanel) {
+                this.roomPanel.refreshMask();
+            }
         }), new Handler(this, () => {
             if (this.townPanel) this.townPanel.refreshMask();
+            if (this.myRoomPanel) {
+                this.myRoomPanel.refreshMask();
+            }
+            if (this.roomPanel) {
+                this.roomPanel.refreshMask();
+            }
         }));
     }
     protected createOptionButtons() {
@@ -120,7 +137,6 @@ export class PicaPartyNavigationPanel extends PicaBasePanel {
         const cellwidth = allLin / arr.length;
         const cellHeight = 20 * this.dpr;
         let posx = -allLin / 2;
-        let tempitem: ToggleColorButton;
         // tslint:disable-next-line:prefer-for-of
         for (let i = 0; i < arr.length; i++) {
             const data = arr[i];
@@ -134,10 +150,7 @@ export class PicaPartyNavigationPanel extends PicaBasePanel {
             item.setFontSize(14 * this.dpr);
             posx += cellwidth;
             this.toggleItems.push(item);
-            if (!tempitem) tempitem = item;
         }
-        tempitem.isOn = true;
-        this.onToggleButtonHandler(undefined, tempitem);
         this.optionLine.y = 20 * this.dpr;
         this.selectLine.y = this.optionLine.y;
     }
@@ -201,6 +214,7 @@ export class PicaPartyNavigationPanel extends PicaBasePanel {
         this.curToggleItem = toggle;
         this.optionType = toggle.getData("item");
         this.selectLine.x = toggle.x;
+        toggle.isOn = true;
         this.hideTownNavigationPanel();
         this.hideRoomPanel();
         this.hideMyRoomPanel();
