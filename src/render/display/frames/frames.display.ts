@@ -59,10 +59,10 @@ export class FramesDisplay extends BaseFramesDisplay implements IDisplayObject {
 
     public async showRefernceArea(area: number[][], origin: IPos) {
         if (!area || area.length <= 0 || !origin) return;
+        const roomSize = await this.render.mainPeer.getCurrentRoomSize();
         if (!this.mReferenceArea) {
             this.mReferenceArea = new ReferenceArea(this.scene);
         }
-        const roomSize = await this.render.mainPeer.getCurrentRoomSize();
         this.mReferenceArea.draw(area, origin, roomSize.tileWidth / this.render.scaleRatio, roomSize.tileHeight / this.render.scaleRatio);
         this.addAt(this.mReferenceArea, 0);
     }
