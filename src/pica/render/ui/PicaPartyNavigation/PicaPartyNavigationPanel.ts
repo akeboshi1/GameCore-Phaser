@@ -239,7 +239,7 @@ export class PicaPartyNavigationPanel extends PicaBasePanel {
         if (tag === "enter") {
             this.onEnterRoomHandler(data);
         } else if (tag === "query") {
-            this.render.renderEmitter(this.key + "_getRoomList", [data, 100]);
+            this.render.renderEmitter(this.key + "_getRoomList", { page: data, perPage: 100 });
         }
     }
     private onMyRoomHandler(tag: string, data: any) {

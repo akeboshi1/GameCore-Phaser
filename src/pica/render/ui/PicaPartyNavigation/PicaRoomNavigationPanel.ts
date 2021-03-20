@@ -60,7 +60,12 @@ export class PicaRoomNavigationPanel extends Phaser.GameObjects.Container {
     }
     public setRoomDatas(content: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_ROOM_LIST) {
         if (this.datas.length === 0) this.mGameGrid.setItems(content.rooms);
-        else this.mGameGrid.setpartItems(content.rooms);
+        else{
+            let item = this.mGameGrid.items;
+            item = item.concat(content.rooms);
+            // this.mGameGrid["setPartItems"](content.rooms);
+            this.mGameGrid.gridTable.setItems(item);
+        }
         this.datas.push(content);
         this.dataLength += content.rooms.length;
         this.nextPageNum = content.page + 1;
@@ -81,8 +86,7 @@ export class PicaRoomNavigationPanel extends Phaser.GameObjects.Container {
 
     private queryNextPage() {
         if (this.isQuerying) return;
-        const data: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_ROOM_LIST = this.datas[this.datas.length - 1];
-        if (this.sendHandler) this.sendHandler.runWith(["query", data.page]);
+        if (this.sendHandler) this.sendHandler.runWith(["query", this.nextPageNum]);
         this.isQuerying = true;
     }
 
