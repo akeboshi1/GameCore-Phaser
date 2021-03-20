@@ -350,6 +350,11 @@ export class Element extends BlockObject implements IElement {
         if (this.model) {
             this.model.setDirection(val);
         }
+        if (this.mMounts) {
+            for (const mount of this.mMounts) {
+                mount.setDirection(val);
+            }
+        }
         // this.play(this.model.currentAnimationName);
     }
 

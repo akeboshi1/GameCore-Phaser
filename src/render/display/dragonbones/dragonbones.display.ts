@@ -1,10 +1,11 @@
 import { BaseDragonbonesDisplay, ReferenceArea } from "baseRender";
 import { Render } from "../../render";
 import { IPos, Logger, IProjection } from "utils";
-import { DisplayField, ElementStateType, IDragonbonesModel, PlayerState, RunningAnimation, TitleMask } from "structure";
+import { DisplayField, ElementStateType, IDragonbonesModel, RunningAnimation, TitleMask } from "structure";
 import { IDisplayObject } from "../display.object";
 import { LoadQueue, LoadType } from "../../loadqueue";
 import { ElementTopDisplay } from "../element.top.display";
+import { FramesDisplay } from "../frames/frames.display";
 
 export class DragonbonesDisplay extends BaseDragonbonesDisplay implements IDisplayObject {
     protected mID: number = undefined;
@@ -206,10 +207,29 @@ export class DragonbonesDisplay extends BaseDragonbonesDisplay implements IDispl
     public removeEffect(display: IDisplayObject) {
     }
 
-    public mount(ele: Phaser.GameObjects.Container, targetIndex?: number) {
+    public mount(display: FramesDisplay | DragonbonesDisplay, index?: number) {
+        if (!this.mMountContainer) {
+            this.mMountContainer = this.scene.make.container(undefined, false);
+        }
+        display.x = this.topPoint.x;
+        display.y = this.topPoint.y;
+        if (!this.mMountContainer.parentContainer) {
+            // const container = <Phaser.GameObjects.Container>this.mSprites.get(DisplayField.STAGE);
+            // if (container) container.addAt(this.mMountContainer, index);
+            this.add(this.mMountContainer);
+        }
+        this.mMountContainer.addAt(display, index);
+        display.setRootMount(this);
     }
 
-    public unmount(ele: Phaser.GameObjects.Container) {
+    public unmount(display: FramesDisplay | DragonbonesDisplay) {
+        if (!this.mMountContainer) {
+            return;
+        }
+        display.setRootMount(undefined);
+        display.visible = true;
+        this.mMountContainer.remove(display, false);
+        this.render.displayManager.addToSurfaceLayer(display);
     }
 
     public get sortX() {
