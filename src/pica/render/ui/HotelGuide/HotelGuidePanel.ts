@@ -17,6 +17,7 @@ export class HotelGuidePanel extends BaseGuide {
 
     public end() {
         if (this.itemTaskBtn) this.itemTaskBtn.off(ClickEvent.Tap, this.end, this);
+        this.render.emitter.off("close_panel", this.end, this);
         super.end();
     }
 
@@ -37,6 +38,7 @@ export class HotelGuidePanel extends BaseGuide {
     private step3(pos) {
         this.taskButton.off(ClickEvent.Tap, this.step2, this);
         this.render.emitter.off(PicaTaskPanel.PICATASK_DATA, this.step3, this);
+        this.render.emitter.on("close_panel", this.end, this);
         const taskPanel: PicaTaskPanel = this.uiManager.getPanel(ModuleName.PICATASK_NAME) as PicaTaskPanel;
         const picaMainTaskPanel: any = taskPanel.mainPanel;
         const list: any[] = picaMainTaskPanel.taskItems;

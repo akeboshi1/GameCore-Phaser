@@ -23,6 +23,10 @@ export class PicaTaskPanel extends PicaBasePanel {
         this.key = ModuleName.PICATASK_NAME;
         this.atlasNames = [UIAtlasName.uicommon];
     }
+    public hide() {
+        this.render.emitter.emit("close_panel");
+        super.hide();
+    }
     resize(width?: number, height?: number) {
         const w: number = this.scaleWidth;
         const h: number = this.scaleHeight;
