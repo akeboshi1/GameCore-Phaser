@@ -1551,27 +1551,27 @@ export class Render extends RPCPeer implements GameMain, IRender {
 
     @Export([webworker_rpc.ParamType.num, webworker_rpc.ParamType.num, webworker_rpc.ParamType.num])
     public mount(id: number, targetID: number, targetIndex: number) {
-        this.mDisplayManager.mount(id, targetID, targetIndex);
+        if (this.mDisplayManager) this.mDisplayManager.mount(id, targetID, targetIndex);
     }
 
     @Export([webworker_rpc.ParamType.num, webworker_rpc.ParamType.num])
     public unmount(id: number, targetID: number) {
-        this.mDisplayManager.unmount(id, targetID);
+        if (this.mDisplayManager) this.mDisplayManager.unmount(id, targetID);
     }
 
     @Export([webworker_rpc.ParamType.num])
     public updateInput(val: number) {
-        this.sceneManager.updateInput(val);
+        if (this.sceneManager) this.sceneManager.updateInput(val);
     }
 
     @Export()
     public addEffect(target: number, effectID: number, display: IFramesModel) {
-        this.mDisplayManager.addEffect(target, effectID, display);
+        if (this.mDisplayManager) this.mDisplayManager.addEffect(target, effectID, display);
     }
 
     @Export()
     public removeEffect(target: number, effectID: number) {
-        this.mDisplayManager.removeEffect(target, effectID);
+        if (this.mDisplayManager) this.mDisplayManager.removeEffect(target, effectID);
     }
 
     @Export()

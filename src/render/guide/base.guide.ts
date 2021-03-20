@@ -18,7 +18,7 @@ export class BaseGuide implements IGuide {
     public show(data?: any) {
         this.mIsShow = true;
         this.id = data.id;
-        if (!this.guideEffect) this.guideEffect = new GuideEffect(this.scene);
+        if (!this.guideEffect) this.guideEffect = new GuideEffect(this.scene, this.render.uiRatio);
         this.render.guideManager.startGuide(this);
     }
     public end() {

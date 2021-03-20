@@ -16,8 +16,9 @@ export class GuideEffect extends Phaser.GameObjects.Container {
     private mResources: Map<string, IGuideRes> = new Map();
     private mCachePos: IPos;
     private mHandDisplay: HandDisplay;
-    constructor(scene: Phaser.Scene) {
+    constructor(scene: Phaser.Scene, private tmpScale = 1) {
         super(scene);
+        this.mScale *= this.tmpScale;
         this.preload();
     }
 
@@ -62,6 +63,7 @@ export class GuideEffect extends Phaser.GameObjects.Container {
             this.mGuideEffect.frame.setSize(width + 20, height + 20);
             this.mGuideEffect.setPosition(0, 0);
             this.mHandDisplay = new HandDisplay(this.scene, "handEffect");
+            this.mHandDisplay.scale = this.tmpScale;
             (<any>this.scene).layerManager.addToLayer(MainUIScene.LAYER_MASK, this.mGuideEffect);
             (<any>this.scene).layerManager.addToLayer(MainUIScene.LAYER_MASK, this.mHandDisplay);
         }
@@ -115,11 +117,11 @@ export class GuideEffect extends Phaser.GameObjects.Container {
             duration: 700,
             ease: "Linear",
             props: {
-                scaleX: { value: self.mScale > 0.5 ? 0.5 : 1 },
-                scaleY: { value: self.mScale > 0.5 ? 0.5 : 1 },
+                scaleX: { value: self.mScale > 0.5 * this.tmpScale ? 0.5 * this.tmpScale : 1 * this.tmpScale },
+                scaleY: { value: self.mScale > 0.5 * this.tmpScale ? 0.5 * this.tmpScale : 1 * this.tmpScale },
             },
             onComplete: () => {
-                self.mScale = self.mScale > 0.5 ? 0.5 : 1;
+                self.mScale = self.mScale > 0.5 * this.tmpScale ? 0.5 * this.tmpScale : 1 * this.tmpScale;
                 if (self.mScaleTween) {
                     self.mScaleTween = undefined;
                 }
@@ -189,7 +191,6 @@ export class GuideEffect extends Phaser.GameObjects.Container {
 
 class HandDisplay extends Phaser.GameObjects.Container {
     private mImage: Phaser.GameObjects.Sprite;
-    private mEllipse: Phaser.GameObjects.Sprite;
     constructor(scene: Phaser.Scene, key: string) {
         super(scene);
         this.mImage = scene.make.sprite({
@@ -198,25 +199,14 @@ class HandDisplay extends Phaser.GameObjects.Container {
             y: -20
         }, false);
         this.add(this.mImage);
-        this.mEllipse = scene.make.sprite(undefined, false);
-        this.addAt(this.mEllipse, 0);
 
         const config = {
             key: "hand_enable",
-            frames: this.scene.anims.generateFrameNames("handEffect", { prefix: "enable", end: 6, zeroPad: 2 }),
-            frameRate: 16,
+            frames: this.scene.anims.generateFrameNames("handEffect", { prefix: "enable", end: 3, zeroPad: 2 }),
+            frameRate: 4,
             repeat: -1
         };
         this.scene.anims.create(config);
         this.mImage.play("hand_enable");
-
-        const ellipseConfig = {
-            key: "hand_ellipse",
-            frames: this.scene.anims.generateFrameNames("handEffect", { prefix: "ellipse", end: 7, zeroPad: 2 }),
-            frameRate: 10,
-            repeat: -1
-        };
-        this.scene.anims.create(ellipseConfig);
-        this.mEllipse.play("hand_ellipse");
     }
 }

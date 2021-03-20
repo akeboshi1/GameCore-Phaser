@@ -33,8 +33,8 @@ export class ElementTopDisplay extends TopDisplay {
             this.mFollows.set(FollowEnum.Nickname, follow);
         }
         nickname.text = name;
-        if (!this.mOwner.topPoint) return;
         this.addToSceneUI(nickname);
+        if (!this.mOwner.topPoint) return;
         follow.setOffset(0, this.mOwner.topPoint.y);
         follow.update();
     }
