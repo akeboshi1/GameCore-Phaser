@@ -400,7 +400,7 @@ export class DecorateManager {
         else {
             // Logger.getInstance().error("cannot find data of sn: ", sn);
             const tempdata = {
-                text: [{ text: "cannot find data of sn: " + sn, node: undefined }]
+                text: [{text: "cannot find data of sn: " + sn, node: undefined}]
             };
             this.room.game.showMediator(ModuleName.PICANOTICE_NAME, true, tempdata);
             return "";
@@ -612,8 +612,11 @@ class DecorateAction {
         mng.room.addToWalkableMap(this.target);
 
         if (mng.selectedID === this.target.id) {
+            mng.room.removeFromWalkableMap(this.target);
             const canPlace = mng.checkSelectedCanPlace();
             mng.room.game.emitter.emit(MessageType.DECORATE_UPDATE_SELECTED_ELEMENT_CAN_PLACE, canPlace);
+            const element = mng.room.elementManager.get(this.target.id);
+            if (element) element.showRefernceArea();
         }
     }
 
