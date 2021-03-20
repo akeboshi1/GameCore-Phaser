@@ -125,11 +125,11 @@ class AwardItem extends Phaser.GameObjects.Container {
             this.mImage.load(Url.getOsdRes(award.display.texturePath));
         }
         this.mLabel.setText(award.text);
-        this.mLabel.x = this.mImage.x + this.mImage.width * 0.5 + 5 * this.mScaleRatio;
+        this.mLabel.x = this.mImage.x + this.mImage.displayWidth * 0.5 + 5 * this.mScaleRatio;
         this.blackGraphic.clear();
         this.blackGraphic.fillStyle(0, 1);
-        const bwidth = this.mImage.width + this.mLabel.width + 10 * this.mScaleRatio;
-        const bheight = this.mImage.height;
+        const bwidth = this.mImage.displayWidth + this.mLabel.width + 3 * this.mScaleRatio;
+        const bheight = this.mBg.displayHeight;
         const radius = bheight * 0.5;
         this.blackGraphic.fillRoundedRect(0, -bheight * 0.5, bwidth, bheight, { tl: 0, tr: radius, br: radius, bl: 0 });
         this.showTween();
