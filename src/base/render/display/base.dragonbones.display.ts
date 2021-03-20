@@ -84,6 +84,7 @@ export class BaseDragonbonesDisplay extends BaseDisplay {
      */
     protected isRenderTexture: boolean = false;
     protected mPlaceholder: Phaser.GameObjects.Image;
+    protected mMountContainer: Phaser.GameObjects.Container;
     private replaceArr = [];
     private mHasLoadMap: Map<string, any> = new Map();
     // key: slotName; val: partName
