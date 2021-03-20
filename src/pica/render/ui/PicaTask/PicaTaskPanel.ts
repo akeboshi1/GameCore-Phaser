@@ -16,6 +16,7 @@ export class PicaTaskPanel extends PicaBasePanel {
     private selectLine: Phaser.GameObjects.Graphics;
     private rewardLine: Phaser.GameObjects.Graphics;
     private curToggleItem: ToggleColorButton;
+    private toggleItems: ToggleColorButton[] = [];
     private questType: op_pkt_def.PKT_Quest_Type;
     constructor(uiManager: UiManager) {
         super(uiManager);
@@ -47,6 +48,10 @@ export class PicaTaskPanel extends PicaBasePanel {
         this.mainPanel.refreshMask();
     }
 
+    onShow() {
+        const index = this.mShowData || 1;
+        this.onToggleButtonHandler(undefined, this.toggleItems[index - 1]);
+    }
     public addListen() {
         if (!this.mInitialized) return;
         this.blackBg.on("pointerup", this.OnClosePanel, this);
@@ -94,7 +99,6 @@ export class PicaTaskPanel extends PicaBasePanel {
         const cellHeight = 20 * this.dpr;
         let posx = -allLin / 2;
         const posy = -this.height * 0.5 + 75 * this.dpr;
-        let tempitem: ToggleColorButton;
         // tslint:disable-next-line:prefer-for-of
         for (let i = 0; i < arr.length; i++) {
             const data = arr[i];
@@ -108,10 +112,8 @@ export class PicaTaskPanel extends PicaBasePanel {
             item.setChangeColor("#FFF449");
             item.setFontSize(14 * this.dpr);
             posx += cellwidth;
-            if (!tempitem) tempitem = item;
+            this.toggleItems.push(item);
         }
-        tempitem.isOn = true;
-        this.onToggleButtonHandler(undefined, tempitem);
     }
 
     setTaskDatas(content: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_QUERY_QUEST_GROUP) {
@@ -127,6 +129,7 @@ export class PicaTaskPanel extends PicaBasePanel {
         if (this.curToggleItem === toggle) return;
         if (this.curToggleItem) this.curToggleItem.isOn = false;
         this.curToggleItem = toggle;
+        toggle.isOn = true;
         this.questType = toggle.getData("item");
         this.selectLine.x = toggle.x;
         this.selectLine.y = toggle.y + 20 * this.dpr;

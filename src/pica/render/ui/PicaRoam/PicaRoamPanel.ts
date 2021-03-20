@@ -79,6 +79,7 @@ export class PicaRoamPanel extends PicaBasePanel {
         this.openRoamList();
         if (this.tempDatas) {
             this.roamListPanel.setRoamDataList(this.tempDatas);
+            this.openFirstDrawPanel();
         }
     }
 
@@ -90,15 +91,26 @@ export class PicaRoamPanel extends PicaBasePanel {
             const datas = this.roamListPanel.getRoamTokenDatas();
             this.roamDrawPanel.setRoamDatas(datas);
         }
+        this.openFirstDrawPanel();
+    }
+
+    openFirstDrawPanel() {
+        if (this.mShowData) {
+            const datas = this.roamListPanel.getRoamTokenDatas(this.mShowData - 1);
+            this.onRoamListHandler("roam", datas);
+            this.mShowData = undefined;
+        }
     }
 
     openRoamEffectOnePanel(datas: op_client.ICountablePackageItem[]) {
+        this.hideRoamDrawPanel();
         this.showRoamEffectOnePanel();
         this.roamEffectOnePanel.setRewardDatas(datas, this.isOneDraw);
     }
     hideRoamEffectOnePanel() {
         //  this.content.remove(this.roamEffectOnePanel);
         this.roamEffectOnePanel.visible = false;
+        this.showRoamDrawPanel();
     }
     public payDrawHandler(id: string) {
         this.render.renderEmitter(this.key + "_queryroamdraw", id);
@@ -145,8 +157,8 @@ export class PicaRoamPanel extends PicaBasePanel {
         if (!this.roamDrawPanel) {
             this.roamDrawPanel = new PicaRoamDrawPanel(this.scene, this.scaleWidth, this.scaleHeight, this.dpr, this.scale);
             this.roamDrawPanel.setHandler(new Handler(this, this.onRoamDrawHandler));
+            this.content.add(this.roamDrawPanel);
         }
-        this.content.add(this.roamDrawPanel);
         this.roamDrawPanel.visible = true;
         this.roamDrawPanel.resize(this.scaleWidth, this.scaleHeight);
     }
@@ -160,8 +172,8 @@ export class PicaRoamPanel extends PicaBasePanel {
         if (!this.roamPreviewPanel) {
             this.roamPreviewPanel = new PicaRoamPreviewPanel(this.scene, this.scaleWidth, this.scaleHeight, this.dpr, this.scale);
             this.roamPreviewPanel.setHandler(new Handler(this, this.onRoamPreviewHandler));
+            this.content.add(this.roamPreviewPanel);
         }
-        this.content.add(this.roamPreviewPanel);
         this.roamPreviewPanel.visible = true;
         this.roamPreviewPanel.resize(this.scaleWidth, this.scaleHeight);
     }
@@ -175,8 +187,8 @@ export class PicaRoamPanel extends PicaBasePanel {
         if (!this.roamEffectOnePanel) {
             this.roamEffectOnePanel = new PicaRoamEffectOnePanel(this.scene, this.scaleWidth, this.scaleHeight, this.dpr);
             this.roamEffectOnePanel.setHandler(new Handler(this, this.onRoamEffectOneHandler));
+            this.content.add(this.roamEffectOnePanel);
         }
-        this.content.add(this.roamEffectOnePanel);
         this.roamEffectOnePanel.visible = true;
     }
 
@@ -184,6 +196,7 @@ export class PicaRoamPanel extends PicaBasePanel {
         if (tag === "close") {
             this.onCloseHandler();
         } else if (tag === "roam") {
+            this.hideRoamListPanel();
             this.openRoamDrawPanel(data);
         }
     }
