@@ -297,7 +297,6 @@ export class User extends Player {
             this.setPosition(this.mModel.pos);
         }
         // todo change display alpha
-        Logger.getInstance().debug("showNickname===use", this.mModel.direction);
         this.setDirection(this.mModel.direction);
     }
 

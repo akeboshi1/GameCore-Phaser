@@ -70,7 +70,7 @@ export class FallEffect extends Phaser.GameObjects.Container {
             targets: this,
             duration: 1000,
             ease: "Expo",
-            delay: 1000,
+            delay: 300,
             props: { alpha: 0 },
             onComplete: () => {
                 this.destroy();
@@ -92,30 +92,13 @@ class EnableDisplay extends Phaser.GameObjects.Container {
         }, false).setScale(0.5);
         this.add(this.mImage);
 
-        // const tween = this.scene.tweens.add({
-        //     targets: this.mImage,
-        //     duration: 1000,
-        //     delay: 600,
-        //     props: {
-        //         alpha: 0.6
-        //     },
-        //     onComplete: () => {
-        //         tween.destroy();
-        //         this.mImage.destroy();
-        //         this.mImage = undefined;
-        //     }
-        // })
-
-        // this.mEllipse = scene.make.graphics(undefined, false);
-        // this.mEllipse.fillStyle(0, 0.6);
-        // this.mEllipse.fillEllipse(0, 0, 30, 15)
         this.mEllipse = scene.make.sprite(undefined, false);
         this.addAt(this.mEllipse, 0);
 
         const config = {
             key: "fill_effect_enable",
-            frames: this.scene.anims.generateFrameNames("fall_effect", { prefix: "enable", end: 6, zeroPad: 2 }),
-            frameRate: 16,
+            frames: this.scene.anims.generateFrameNames("fall_effect", { prefix: "enable", end: 3, zeroPad: 2 }),
+            frameRate: 10,
             repeat: 0
         };
         this.scene.anims.create(config);
@@ -124,7 +107,7 @@ class EnableDisplay extends Phaser.GameObjects.Container {
         const ellipseConfig = {
             key: "fill_effect_ellipse",
             frames: this.scene.anims.generateFrameNames("fall_effect", { prefix: "ellipse", end: 7, zeroPad: 2 }),
-            frameRate: 10,
+            frameRate: 18,
             repeat: 0
         };
         this.scene.anims.create(ellipseConfig);

@@ -68,6 +68,7 @@ export class DisplayManager {
     private mGridsDebug: Grids;
     private preLoadList: any[];
     private loading: boolean = false;
+    private mModelCache: Map<number, any>;
 
     // ====实例id
     private uuid: number = 0;
@@ -76,6 +77,7 @@ export class DisplayManager {
         this.sceneManager = render.sceneManager;
         this.displays = new Map();
         this.scenerys = new Map();
+        this.mModelCache = new Map();
         this.preLoadList = [];
     }
 
@@ -127,6 +129,12 @@ export class DisplayManager {
             display = this.displays.get(id) as DragonbonesDisplay;
         }
         display.load(data);
+        const sprite = this.mModelCache.get(id);
+        if (sprite) {
+            display.titleMask = sprite.titleMask;
+            if (sprite.nickname) display.showNickname(sprite.nickname);
+            this.mModelCache.delete(id);
+        }
         (<PlayScene>scene).layerManager.addToLayer(layer.toString(), display);
     }
 
@@ -149,8 +157,15 @@ export class DisplayManager {
         // 主角龙骨无视其余资源优先加载
         display.load(data);
         display.startLoad();
-        (<PlayScene>scene).layerManager.addToLayer(layer.toString(), display);
         if (isUser) this.mUser = display;
+        const id = data.id;
+        const sprite = this.mModelCache.get(id);
+        if (sprite) {
+            display.titleMask = sprite.titleMask;
+            if (sprite.nickname) display.showNickname(sprite.nickname);
+            this.mModelCache.delete(id);
+        }
+        (<PlayScene>scene).layerManager.addToLayer(layer.toString(), display);
         return display;
     }
 
@@ -171,6 +186,12 @@ export class DisplayManager {
             display = this.displays.get(id) as FramesDisplay;
         }
         display.load(data);
+        const sprite = this.mModelCache.get(id);
+        if (sprite) {
+            display.titleMask = sprite.titleMask;
+            if (sprite.nickname) display.showNickname(sprite.nickname);
+            this.mModelCache.delete(id);
+        }
         (<PlayScene>scene).layerManager.addToLayer(layer.toString(), display);
         return display;
     }
@@ -193,6 +214,12 @@ export class DisplayManager {
             display = this.displays.get(id) as FramesDisplay;
         }
         display.load(data, field);
+        const sprite = this.mModelCache.get(id);
+        if (sprite) {
+            display.titleMask = sprite.titleMask;
+            if (sprite.nickname) display.showNickname(sprite.nickname);
+            this.mModelCache.delete(id);
+        }
         (<PlayScene>scene).layerManager.addToLayer(layer.toString(), display);
         return display;
     }
@@ -217,11 +244,6 @@ export class DisplayManager {
     }
 
     public addFillEffect(x: number, y: number, status: op_def.PathReachableStatus) {
-        // const mainScene: BasicScene = this.render.sceneManager.getMainScene() as BasicScene;
-        // const fall = new FallEffect(mainScene, this.render.scaleRatio);
-        // fall.show(status);
-        // fall.setPosition(x, y);
-        // mainScene.layerManager.addToLayer("sceneUILayer", fall);
     }
 
     public load(displayID: number, data: any, field?: DisplayField) {
@@ -339,7 +361,10 @@ export class DisplayManager {
 
     public setModel(sprite: any) {
         const display = this.displays.get(sprite.id);
-        if (!display) return;
+        if (!display) {
+            this.mModelCache.set(sprite.id, sprite);
+            return;
+        }
         if (!sprite.pos) sprite.pos = new LogicPos(0, 0, 0);
         display.titleMask = sprite.titleMask;
         display.setPosition(sprite.pos.x, sprite.pos.y, sprite.pos.z);
@@ -479,6 +504,10 @@ export class DisplayManager {
                 if (display) display.destroy();
             });
             this.displays.clear();
+        }
+
+        if (this.mModelCache) {
+            this.mModelCache.clear();
         }
 
         if (this.scenerys) {
