@@ -909,6 +909,11 @@ export class Render extends RPCPeer implements GameMain, IRender {
         if (this.mSoundManager) this.mSoundManager.pauseAll();
     }
 
+    @Export([webworker_rpc.ParamType.num])
+    public startFireMove(id: number, pos: any) {
+        if (this.mDisplayManager) this.mDisplayManager.startFireMove(id, pos);
+    }
+
     @Export()
     public resume() {
         if (this.mSoundManager) this.mSoundManager.resume();
