@@ -15,9 +15,8 @@ export class PicaMarketMediator extends BasicMediator {
 
   show(param?: any) {
     super.show(param);
-
-    if (param && param[0]) {
-      this.model.setMarketName(param[0].marketName);
+    if (param) {
+      this.model.setMarketName(param.marketName);
     } else {
       this.model.setMarketName("shop");
     }
@@ -54,7 +53,8 @@ export class PicaMarketMediator extends BasicMediator {
   panelInit() {
     super.panelInit();
     if (this.mShowData && this.mView) {
-      this.mView.setCategories(this.mShowData);
+      // this.mView.setCategories(this.mShowData);
+      this.onGetCategoriesHandler();
       const userData = this.game.user.userData;
       this.mView.setMoneyData(userData.money, userData.diamond);
     }

@@ -5,8 +5,10 @@ import { ModuleName } from "structure";
 import { BaseDataConfigManager } from "picaWorker";
 import { IScene } from "picaStructure";
 export class PicaPartyNavigationMediator extends BasicMediator {
-    private mPartyListData: any;
     private mPlayerProgress: any;
+    private mPartyListData: any;
+    private tempData: any;
+    private chooseType: number = 1;
     constructor(game: Game) {
         super(ModuleName.PICAPARTYNAVIGATION_NAME, game);
 
@@ -23,6 +25,7 @@ export class PicaPartyNavigationMediator extends BasicMediator {
     }
 
     show(param?: any) {
+        this.chooseType = param || 1;
         super.show(param);
         this.game.emitter.on(this.key + "_close", this.onCloseHandler, this);
         this.game.emitter.on(this.key + "_querylist", this.query_PARTY_LIST, this);
@@ -36,6 +39,7 @@ export class PicaPartyNavigationMediator extends BasicMediator {
     }
 
     hide() {
+        this.tempData = undefined;
         this.game.emitter.off(this.key + "_close", this.onCloseHandler, this);
         this.game.emitter.off(this.key + "_querylist", this.query_PARTY_LIST, this);
         this.game.emitter.off(this.key + "_queryenter", this.queryEnterRoom, this);
@@ -67,7 +71,15 @@ export class PicaPartyNavigationMediator extends BasicMediator {
         // if (this.mPartyListData) {
         //     this.mView.setPartyListData(this.mPartyListData, this.game.user.userData.isSelfRoom);
         // }
-        this.setNavigationData();
+        if (this.tempData) {
+            if (this.chooseType === 1) {
+                this.mView.setNavigationListData(this.tempData);
+            } else if (this.chooseType === 2) {
+                this.onNewRoomListHandler(this.tempData);
+            } else if (this.chooseType === 3) {
+                this.onNewSelfRoomListHandler(this.tempData);
+            }
+        }
         if (this.mPlayerProgress) {
             this.mView.setOnlineProgress(this.mPlayerProgress);
         }
@@ -134,15 +146,18 @@ export class PicaPartyNavigationMediator extends BasicMediator {
 
     }
     private onNewRoomListHandler(content: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_ROOM_LIST) {
+        this.tempData = content;
+        if (!this.mPanelInit) return;
         this.mView.setRoomListData(content);
     }
 
     private onNewSelfRoomListHandler(content: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_SELF_ROOM_LIST) {
+        this.tempData = content;
+        if (!this.mPanelInit) return;
         this.mView.setSelfRoomListData(content);
     }
 
     private setNavigationData() {
-        if (!this.mPanelInit) return;
         const map = <Map<string, IScene[]>>this.config.getScenes();
         const arr = [];
         map.forEach((value, key) => {
@@ -151,6 +166,8 @@ export class PicaPartyNavigationMediator extends BasicMediator {
                 arr.push(obj);
             }
         });
+        this.tempData = arr;
+        if (!this.mPanelInit) return;
         this.mView.setNavigationListData(arr);
     }
     private get model(): PicaPartyNavigation {

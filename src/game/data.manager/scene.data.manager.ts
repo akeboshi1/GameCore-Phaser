@@ -26,6 +26,7 @@ export class SceneDataManager extends BasePacketHandler {
         this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_PKT_JOB_LIST, this.on_JOB_LIST);
         this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_MINING_MODE_SHOW_SELECT_EQUIPMENT_PANEL, this.openMineEquipUpgrade);
         this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_PKT_ROOM_SHOW_GUIDE_TEXT, this.onSHOW_GUIDE_TEXT);
+        this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_MARKET_SHOW_MARKET_BY_NAME, this.onShowMarketPanel);
         this.mEvent.on(EventType.SCENE_CHANGE, this.onSceneChangeHandler, this);
         this.addPackListener();
     }
@@ -133,7 +134,10 @@ export class SceneDataManager extends BasePacketHandler {
         const mgr = this.game.getDataMgr<CacheDataManager>(DataMgrType.CacheMgr);
         mgr.guidText = content;
     }
-
+    private onShowMarketPanel(packge: PBpacket) {
+        const content: op_client.OP_VIRTUAL_WORLD_REQ_CLIENT_MARKET_SHOW_MARKET_BY_NAME = packge.content;
+        this.mEvent.emit(EventType.SCENE_SHOW_UI, ModuleName.PICAMARKET_NAME, content);
+    }
     get curRoomID() {
         if (this.mCurRoom) return this.mCurRoom.roomId;
         return undefined;

@@ -3,7 +3,7 @@ import { MarketItem } from "./item";
 import { NinePatchTabButton, GameGridTable, NineSliceButton, Button, ClickEvent } from "apowophaserui";
 import { BasePanel, CheckboxGroup, TextButton, UiManager } from "gamecoreRender";
 import { AvatarSuitType, ModuleName } from "structure";
-import { Font, i18n } from "utils";
+import { CoinType, Font, i18n } from "utils";
 import { UIAtlasKey, UIAtlasName } from "picaRes";
 import { op_client } from "pixelpai_proto";
 import { IPrice } from "picaStructure";
@@ -78,6 +78,7 @@ export class PicaMarketPanel extends BasePanel {
     this.mCategoriesBar.fillStyle(0x04b3d3);
     this.mCategoriesBar.fillRect(0, 40 * this.dpr, width, 3 * this.dpr);
     this.mSubCategeoriesContainer.setSize(width, 43 * this.dpr);
+    this.layoutCategories();
   }
 
   public setCategories(content: any) {// op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_GET_MARKET_CATEGORIES
@@ -449,7 +450,8 @@ export class PicaMarketPanel extends BasePanel {
     const itemdata = this.getBuyPackageData();
     itemdata.count = prop.quantity;
     const allPrice = prop.quantity * itemdata.sellingPrice.price;
-    if (allPrice > this.moneyValue) {
+    const haveValue = itemdata.sellingPrice.coinType === CoinType.DIAMOND ? this.diamondValue : this.moneyValue;
+    if (allPrice > haveValue) {
       const tempdata = {
         text: [{ text: i18n.t("market.moneyless"), node: undefined }]
       };
