@@ -59,8 +59,9 @@ export class PicaRoomNavigationPanel extends Phaser.GameObjects.Container {
         this.sendHandler = handler;
     }
     public setRoomDatas(content: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_ROOM_LIST) {
-        if (this.datas.length === 0) this.mGameGrid.setItems(content.rooms);
-        else{
+        if (this.datas.length === 0) {
+            this.mGameGrid.setItems(content.rooms);
+        } else {
             let item = this.mGameGrid.items;
             item = item.concat(content.rooms);
             // this.mGameGrid["setPartItems"](content.rooms);

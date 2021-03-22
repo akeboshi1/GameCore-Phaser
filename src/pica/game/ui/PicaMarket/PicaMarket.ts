@@ -6,6 +6,7 @@ import { ModuleName } from "structure";
 
 export class PicaMarket extends BasicModel {
   public market_name: string;
+  public market_data: any;
   constructor(game: Game) {
     super(game);
     this.register();
@@ -14,10 +15,11 @@ export class PicaMarket extends BasicModel {
     const connection = this.connection;
     if (connection) {
       this.connection.addPacketListener(this);
-      this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_GET_MARKET_CATEGORIES, this.onGetMarketCategoriesHandler);
+      // this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_GET_MARKET_CATEGORIES, this.onGetMarketCategoriesHandler);
       this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_MARKET_QUERY, this.onQueryMarketHandler);
       this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_MARKET_QUERY_COMMODITY_RESOURCE, this.onQueryCommodityResultHandler);
       this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_MARKET_SHOW_MARKET_BY_NAME, this.openMarketPanel);
+      this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_PKT_SHOP_DATA, this.setMarketData);
 
     }
   }
@@ -33,15 +35,15 @@ export class PicaMarket extends BasicModel {
     this.market_name = market_name;
   }
 
-  /**
-   * 获取商品分类
-   */
-  getMarkCategories() {
-    const packet = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_MARKET_GET_CATEGORIES);
-    const content: op_virtual_world.OP_CLIENT_REQ_VIRTUAL_WORLD_MARKET_GET_CATEGORIES = packet.content;
-    content.marketName = this.market_name;
-    this.connection.send(packet);
-  }
+  // /**
+  //  * 获取商品分类
+  //  */
+  // getMarkCategories() {
+  //   const packet = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_MARKET_GET_CATEGORIES);
+  //   const content: op_virtual_world.OP_CLIENT_REQ_VIRTUAL_WORLD_MARKET_GET_CATEGORIES = packet.content;
+  //   content.marketName = this.market_name;
+  //   this.connection.send(packet);
+  // }
 
   queryMarket(page: number, category: string, subCategory: string) {
     const packet = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_MARKET_QUERY);
@@ -71,6 +73,13 @@ export class PicaMarket extends BasicModel {
     this.connection.send(packet);
   }
 
+  queryShopData() {
+    const packet = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_PKT_SHOP_DATA);
+    const content: op_virtual_world.OP_CLIENT_REQ_VIRTUAL_WORLD_PKT_SHOP_DATA = packet.content;
+    content.shopName = this.market_name;
+    this.connection.send(packet);
+  }
+
   destroy() {
     this.unregister();
   }
@@ -94,6 +103,11 @@ export class PicaMarket extends BasicModel {
   private openMarketPanel(packge: PBpacket) {
     const content: op_client.OP_VIRTUAL_WORLD_REQ_CLIENT_MARKET_SHOW_MARKET_BY_NAME = packge.content;
     this.game.emitter.emit(ModuleName.PICAMARKET_NAME + "_showopen", content);
+  }
+
+  private setMarketData(packet: PBpacket) {
+    const content: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_SHOP_DATA = packet.content;
+    this.game.emitter.emit(ModuleName.PICAMARKET_NAME + "_setmarketdata", content);
   }
 
   get connection(): ConnectionService {

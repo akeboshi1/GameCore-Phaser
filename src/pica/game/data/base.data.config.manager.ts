@@ -294,6 +294,33 @@ export class BaseDataConfigManager extends BaseConfigManager {
         });
     }
 
+    public convertDynamicCategory(list: any) {
+        const result = { marketName: "shop", marketCategory: []};
+        const cate = result.marketCategory;
+        list.items.forEach((item) => {
+            let existing = cate.find((c) => c.category.key === item.category);
+            if (existing == null) {
+                existing = {
+                    category: {
+                        key: item.category,
+                        value: this.getI18n(item.category)
+                    },
+                    subcategory: []
+                };
+                cate.push(existing);
+            }
+            let existingSub = existing.subcategory.find((s) => s.key === item.subcategory);
+            if (existingSub == null) {
+                existingSub = {
+                    key: item.subcategory,
+                    value: this.getI18n(item.subcategory)
+                };
+                existing.subcategory.push(existingSub);
+            }
+        });
+        return result;
+    }
+
     public getShopSubCategory(shopName: string = BaseDataType.shop) {
         const data: ShopConfig = this.getConfig(shopName);
         if (!data.categoryMap["find"]) {
@@ -316,7 +343,6 @@ export class BaseDataConfigManager extends BaseConfigManager {
 
     public getShopItems(category: string, sub: string, shopName: string = BaseDataType.shop) {
         const data: ShopConfig = this.getConfig(shopName);
-        const itemconfig: ItemBaseDataConfig = this.getConfig(BaseDataType.item);
         const map = data.propMap.get(category);
         const extend = "extendfind";
         const tempArr = map.get(sub);
@@ -324,26 +350,37 @@ export class BaseDataConfigManager extends BaseConfigManager {
             return tempArr;
         } else {
             for (const shopitem of tempArr) {
-                const tempItem: IMarketCommodity = <any>shopitem;
-                if (!shopitem["find"]) {
-                    const item = this.getItemBaseByID(shopitem.itemId);
-                    tempItem.name = this.getI18n(shopitem.name);
-                    tempItem.source = this.getI18n(shopitem.source);
-                    tempItem["des"] = item ? item.des : "";
-                    tempItem["price"] = [{
-                        price: shopitem.price,
-                        coinType: itemconfig.getCoinType(shopitem.currencyId),
-                        displayPrecision: 0
-                    }];
-                    shopitem["find"] = true;
-                    shopitem["exclude"] = data.excludes;
-                    if (shopitem.icon === "" || shopitem.icon === undefined)
-                        shopitem.icon = item ? item.texturePath : undefined;
-                    ObjectAssign.excludeTagAssign(shopitem, item);
-                }
+                this.convertShopItem(shopitem, data);
             }
             tempArr[extend] = true;
             return tempArr;
+        }
+    }
+
+    public convertShopItem(shopitem, data: ShopConfig) {
+        const itemconfig: ItemBaseDataConfig = this.getConfig(BaseDataType.item);
+        const tempItem: IMarketCommodity = <any>shopitem;
+        if (!shopitem["find"]) {
+            const item = this.getItemBaseByID(shopitem.itemId);
+            if (item == null) {
+                Logger.getInstance().error("商城中有不存在的道具ID: " + shopitem.itemId);
+                return;
+            }
+            shopitem.currencyId = shopitem.currencyId || shopitem.currency;
+
+            tempItem.name = item.name;
+            tempItem.source = item.source;
+            tempItem["des"] = item ? item.des : "";
+            tempItem["price"] = [{
+                price: shopitem.price,
+                coinType: itemconfig.getCoinType(shopitem.currencyId),
+                displayPrecision: 0
+            }];
+            shopitem["find"] = true;
+            shopitem["exclude"] = data.excludes;
+            if (shopitem.icon === "" || shopitem.icon === undefined)
+                shopitem.icon = item ? item.texturePath : undefined;
+            ObjectAssign.excludeTagAssign(shopitem, item);
         }
     }
 
