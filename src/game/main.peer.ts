@@ -384,6 +384,15 @@ export class MainPeer extends RPCPeer {
     }
 
     @Export()
+    public requestDecorate(id?: number, baseID?: string) {
+        if (!this.game.roomManager) return;
+        if (!this.game.roomManager.currentRoom) return;
+        if (!this.game.roomManager.currentRoom.enableDecorate) return;
+        if (this.game.roomManager.currentRoom.isDecorating) return;
+        this.game.roomManager.currentRoom.requestDecorate(id, baseID);
+    }
+
+    @Export()
     public exitUser() {
         this.game.exitUser();
     }

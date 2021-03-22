@@ -91,7 +91,7 @@ export class PicaNewMainMediator extends BasicMediator {
     }
 
     private queryDecorate() {
-        this.game.roomManager.currentRoom.requestDecorate(-1);
+        this.game.roomManager.currentRoom.requestDecorate();
     }
 
     get playerInfo() {
