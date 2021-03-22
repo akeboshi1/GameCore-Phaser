@@ -131,8 +131,8 @@ export class ElementTopDisplay extends TopDisplay {
         // }
         return pos;
     }
-    public addDisplay() {
 
+    public addDisplay() {
         if (this.mFollows) {
             this.mFollows.forEach((follow) => {
                 if (follow.object) this.addToSceneUI(<any>follow.object);

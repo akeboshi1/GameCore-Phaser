@@ -128,6 +128,8 @@ export class PlayScene extends RoomScene {
 
     public disableCameraMove() {
         this.cameraMovable = false;
+
+        this.removePointerMoveHandler();
     }
 
     protected initMotion() {

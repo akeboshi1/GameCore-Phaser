@@ -238,7 +238,8 @@ export class Element extends BlockObject implements IElement {
         this.mRoomService.game.peer.physicalPeer.setModel(obj1)
             .then(() => {
                 if (this.mRenderable) {
-                    if (model.nodeType !== op_def.NodeType.CharacterNodeType) this.mRoomService.game.physicalPeer.addBody(this.id);
+                    this.addBody();
+                    // if (model.nodeType !== op_def.NodeType.CharacterNodeType) this.mRoomService.game.physicalPeer.addBody(this.id);
                 }
             });
     }
@@ -281,7 +282,8 @@ export class Element extends BlockObject implements IElement {
         }
         this.load(this.mModel.displayInfo);
         // 更新物理进程的物件/人物element
-        this.mRoomService.game.physicalPeer.updateModel(model);
+        // this.mRoomService.game.physicalPeer.updateModel(model);
+        this.updateBody(model);
         this.addToWalkableMap();
     }
 
@@ -297,13 +299,15 @@ export class Element extends BlockObject implements IElement {
         if (times !== undefined) {
             times = times > 0 ? times - 1 : -1;
         }
-        if (this.mElementManager) {
-            if (times === undefined) {
-                this.mElementManager.roomService.game.physicalPeer.changeAnimation(this.id, this.mModel.currentAnimation.name);
-            } else {
-                this.mElementManager.roomService.game.physicalPeer.changeAnimation(this.id, this.mModel.currentAnimation.name, times);
+        if (this.mRoomService) {
+            if (!this.mRootMount) {
+                if (times === undefined) {
+                    this.mRoomService.game.physicalPeer.changeAnimation(this.id, this.mModel.currentAnimation.name);
+                } else {
+                    this.mRoomService.game.physicalPeer.changeAnimation(this.id, this.mModel.currentAnimation.name, times);
+                }
             }
-            this.mElementManager.roomService.game.renderPeer.playAnimation(this.id, this.mModel.currentAnimation, undefined, times);
+            this.mRoomService.game.renderPeer.playAnimation(this.id, this.mModel.currentAnimation, undefined, times);
         }
     }
 
@@ -553,6 +557,8 @@ export class Element extends BlockObject implements IElement {
             this.stopMove();
         }
         this.mDirty = true;
+        this.removeFromWalkableMap();
+        this.removeBody();
         return this;
     }
 
@@ -561,6 +567,8 @@ export class Element extends BlockObject implements IElement {
             const pos = this.mRootMount.getPosition();
             this.mRootMount = null;
             this.setPosition(pos, true);
+            this.addToWalkableMap();
+            this.addBody();
             this.mDirty = true;
         }
         return this;
@@ -618,6 +626,7 @@ export class Element extends BlockObject implements IElement {
     }
 
     public addToWalkableMap() {
+        if (this.mRootMount) return;
         if (this.model && this.mElementManager) this.mElementManager.roomService.addToWalkableMap(this.model);
     }
 
@@ -699,7 +708,7 @@ export class Element extends BlockObject implements IElement {
         const currentAnimation = this.mModel.currentAnimation;
         if (this.mInputEnable) this.setInputEnable(this.mInputEnable);
         if (this.mTopDisplay) this.showTopDisplay(this.mTopDisplay);
-        if (this.mModel.nodeType !== op_def.NodeType.CharacterNodeType) this.mRoomService.game.physicalPeer.addBody(this.id);
+        this.addBody();
         this.roomService.game.emitter.emit("ElementCreated", this.id);
         return Promise.resolve();
     }
@@ -838,6 +847,20 @@ export class Element extends BlockObject implements IElement {
 
     protected animationChanged(data: any) {
         this.mElementManager.roomService.game.renderPeer.displayAnimationChange(data);
+    }
+
+    protected addBody() {
+        if (this.mRootMount) {
+            return;
+        }
+        super.addBody();
+    }
+
+    protected updateBody(model) {
+        if (this.mRootMount) {
+            return;
+        }
+        super.updateBody(model);
     }
 }
 

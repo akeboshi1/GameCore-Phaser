@@ -63,9 +63,10 @@ export class Player extends Element implements IElement {
         // physic action
         this.mRoomService.game.peer.physicalPeer.setModel(obj1)
             .then(() => {
-                if (this.mRenderable) {
-                    if (model.nodeType !== op_def.NodeType.CharacterNodeType) this.mRoomService.game.physicalPeer.addBody(this.id);
-                }
+        //         if (this.mRenderable) {
+        //             if (model.nodeType !== op_def.NodeType.CharacterNodeType) this.mRoomService.game.physicalPeer.addBody(this.id);
+                // }
+                this.addBody();
             });
     }
 

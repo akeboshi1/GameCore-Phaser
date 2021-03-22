@@ -65,6 +65,10 @@ export class MatterObject {
         this.hasBody = true;
     }
 
+    protected updateBody(model) {
+        this.mRoomService.game.physicalPeer.updateModel(model);
+    }
+
     protected removeBody() {
         this.mRoomService.game.peer.physicalPeer.removeBody(this.guid);
         this.hasBody = false;

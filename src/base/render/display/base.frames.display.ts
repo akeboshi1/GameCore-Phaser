@@ -16,7 +16,6 @@ export class BaseFramesDisplay extends BaseDisplay {
     protected mMainSprite: Phaser.GameObjects.Sprite;
     protected mMountContainer: Phaser.GameObjects.Container;
     protected mCurAnimation: any;
-    protected mMountList: Map<number, Phaser.GameObjects.Container> = new Map<number, Phaser.GameObjects.Container>();
     protected mIsSetInteractive: boolean = false;
     protected mIsInteracitve: boolean = false;
     protected mPreAnimation: RunningAnimation;

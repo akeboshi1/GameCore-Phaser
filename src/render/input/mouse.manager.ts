@@ -139,6 +139,7 @@ export class MouseManager {
         }
         this.scene = null;
         this.debounce = null;
+        this.mGameObject = null;
         this.pause();
     }
 
@@ -196,6 +197,9 @@ export class MouseManager {
             // TODO 提供个接口
             com = gameobject.parentContainer.parentContainer || gameobject.parentContainer;
             this.sendMouseEvent([MouseEvent.LeftMouseHolding], id, { x: pointer.worldX / this.zoom, y: pointer.worldY / this.zoom });
+
+            // 触发小屋装饰
+            this.render.mainPeer.requestDecorate(id);
         }
     }
 

@@ -262,6 +262,7 @@ export class User extends Player {
     }
 
     protected addBody() {
+        if (this.mRootMount) return;
         this.game.peer.physicalPeer.addBody(this.id, false);
     }
 

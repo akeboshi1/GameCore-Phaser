@@ -147,7 +147,9 @@ export class DecorateManager {
             const act = this.mSelectedActionQueue.pop();
             act.reverse(this);
 
-            this.mRoom.game.renderPeer.workerEmitter(MessageType.DECORATE_UPDATE_SELECTED_ELEMENT_POSITION);
+            if (this.mSelectedActionQueue.length === 0) {
+                this.unselect();
+            }
         } else {
             if (this.mActionQueue.length === 0) return;
             const act = this.mActionQueue.pop();
@@ -201,6 +203,24 @@ export class DecorateManager {
             return;
         }
         this.mRoom.game.emitter.emit(MessageType.DECORATE_SELECTE_ELEMENT, baseID);
+    }
+
+    // 取消选择，关闭浮动栏
+    public unselect() {
+        if (this.mSelectedID < 0) return;
+        const element = this.mRoom.elementManager.get(this.mSelectedID);
+        if (element) {
+            // set walkable
+            this.mRoom.addToWalkableMap(element.model);
+
+            // hide reference
+            element.hideRefernceArea();
+        }
+
+        this.mSelectedID = -1;
+
+        this.mRoom.game.uiManager.hideMed(ModuleName.PICADECORATECONTROL_NAME);
+        this.mRoom.game.emitter.emit(MessageType.DECORATE_UNSELECT_ELEMENT);
     }
 
     // 浮动功能栏
@@ -288,19 +308,8 @@ export class DecorateManager {
             const act = this.mSelectedActionQueue.pop();
             act.reverse(this);
         }
-        const element = this.mRoom.elementManager.get(this.mSelectedID);
-        if (element) {
-            // set walkable
-            this.mRoom.addToWalkableMap(element.model);
 
-            // hide reference
-            element.hideRefernceArea();
-        }
-
-        this.mSelectedID = -1;
-
-        this.mRoom.game.uiManager.hideMed(ModuleName.PICADECORATECONTROL_NAME);
-        this.mRoom.game.emitter.emit(MessageType.DECORATE_UNSELECT_ELEMENT);
+        this.unselect();
     }
 
     public addFromBag(baseID: string) {
@@ -603,6 +612,7 @@ class DecorateAction {
             mng.room.removeFromWalkableMap(this.target);
             const canPlace = mng.checkSelectedCanPlace();
             mng.room.game.emitter.emit(MessageType.DECORATE_UPDATE_SELECTED_ELEMENT_CAN_PLACE, canPlace);
+            mng.room.game.renderPeer.workerEmitter(MessageType.DECORATE_UPDATE_SELECTED_ELEMENT_POSITION);
         }
     }
 

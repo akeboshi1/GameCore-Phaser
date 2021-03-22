@@ -48,7 +48,8 @@ export abstract class BaseDisplay extends Phaser.GameObjects.Container implement
     protected mDirection: number = 3;
     protected mDisplayInfo: IDragonbonesModel | IFramesModel | undefined;
     protected mAnimation: RunningAnimation;
-    protected mRootMount: Phaser.GameObjects.Container;
+    protected mRootMount: BaseDisplay;
+    protected mMountList: Map<number, Phaser.GameObjects.Container> = new Map<number, Phaser.GameObjects.Container>();
     protected moveData: any;
     protected mCreated: boolean = false;
     protected mSprites: Map<DisplayField, Phaser.GameObjects.Sprite | Phaser.GameObjects.Image | Phaser.GameObjects.Container> = new Map<DisplayField,
@@ -130,21 +131,30 @@ export abstract class BaseDisplay extends Phaser.GameObjects.Container implement
 
     public setPosition(x?: number, y?: number, z?: number, w?: number) {
         super.setPosition(x, y, z, w);
-        this.updateSort();
+        this.update();
         return this;
+    }
+
+    public update() {
+        this.updateSort();
+        if (this.mMountList) {
+            this.mMountList.forEach((mount) => mount.update());
+        }
     }
 
     public getPosition(): LogicPos {
         const pos = new LogicPos(this.x, this.y);
         if (this.mRootMount) {
-            pos.x += this.mRootMount.x;
-            pos.y += this.mRootMount.y;
+            const rootPos = this.mRootMount.getPosition();
+            pos.x += rootPos.x;
+            pos.y += rootPos.y;
         }
         return pos;
     }
 
-    public setRootMount(gameObject: Phaser.GameObjects.Container) {
+    public setRootMount(gameObject: BaseDisplay) {
         this.mRootMount = gameObject;
+        this.update();
     }
 
     public fadeIn(callback?: () => void) {
@@ -158,6 +168,7 @@ export abstract class BaseDisplay extends Phaser.GameObjects.Container implement
     }
 
     protected updateSort() {
+        if (this.mRootMount) return;
         const x = this.x - this.projectionSize.offset.x;
         const y = this.y - this.projectionSize.offset.y;
         this.mSortX = (x + 2 * y) / 30; // 转化为斜45度的格子

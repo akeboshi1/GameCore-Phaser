@@ -37,6 +37,8 @@ export class MouseManagerDecorate extends MouseManager {
         this.downPointerPos = new LogicPos(pointer.worldX / this.render.scaleRatio, pointer.worldY / this.render.scaleRatio);
         this.scene.input.off("pointermove", this.onPointerMoveHandler, this);
         this.scene.input.on("pointermove", this.onPointerMoveHandler, this);
+        this.scene.input.off("pointerup", this.onPointerUpHandler, this);
+        this.scene.input.on("pointerup", this.onPointerUpHandler, this);
     }
 
     protected async onPointerUpHandler(pointer: Phaser.Input.Pointer): Promise<void> {
@@ -84,6 +86,8 @@ export class MouseManagerDecorate extends MouseManager {
                     this.downDisplay = display;
                     this.scene.input.off("pointermove", this.onPointerMoveHandler, this);
                     this.scene.input.on("pointermove", this.onPointerMoveHandler, this);
+                    this.scene.input.off("gameobjectup", this.onGameObjectUpHandler, this);
+                    this.scene.input.on("gameobjectup", this.onGameObjectUpHandler, this);
                     this.downPointerPos = new LogicPos(pointer.worldX / this.render.scaleRatio, pointer.worldY / this.render.scaleRatio);
                     this.downDisplayPos = new LogicPos(display.x, display.y);
                     this.render.mainPeer.decorateSelectElement(id);
@@ -97,16 +101,16 @@ export class MouseManagerDecorate extends MouseManager {
         this.downPointerPos = new LogicPos();
         this.downDisplayPos = new LogicPos();
         this.scene.input.off("pointermove", this.onPointerMoveHandler, this);
+        this.scene.input.off("gameobjectup", this.onGameObjectUpHandler, this);
+        this.scene.input.off("pointerup", this.onPointerUpHandler, this);
     }
 
     private addListener() {
         if (!this.scene) {
             return;
         }
-        this.scene.input.on("pointerup", this.onPointerUpHandler, this);
         this.scene.input.on("pointerdown", this.onPointerDownHandler, this);
         this.scene.input.on("gameobjectdown", this.onGameObjectDownHandler, this);
-        this.scene.input.on("gameobjectup", this.onGameObjectUpHandler, this);
     }
 
     private removeListener() {
