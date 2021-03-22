@@ -129,4 +129,8 @@ export class DynamicImageValue extends ImageValue {
         const width = this.icon.displayWidth + this.value.width;
         this.setSize(width, this.height);
     }
+
+    get textWidth() {
+        return this.value.width;
+    }
 }
