@@ -45,9 +45,8 @@ export class FramesDisplay extends BaseFramesDisplay implements IDisplayObject {
         return this.mTitleMask;
     }
 
-    public setRootMount(gameObject: Phaser.GameObjects.Container) {
-        super.setRootMount(gameObject);
-
+    public update() {
+        super.update();
         this.updateTopDisplay();
     }
 

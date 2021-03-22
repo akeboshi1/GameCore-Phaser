@@ -59,9 +59,7 @@ export class TopDisplay {
                 this.mFollows.delete(key);
             }
         }
-
     }
-
 }
 export class FollowObject {
     private mObject: any;

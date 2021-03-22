@@ -1,4 +1,4 @@
-import { BaseDragonbonesDisplay, ReferenceArea } from "baseRender";
+import { BaseDisplay, BaseDragonbonesDisplay, ReferenceArea } from "baseRender";
 import { Render } from "../../render";
 import { IPos, Logger, IProjection } from "utils";
 import { DisplayField, ElementStateType, IDragonbonesModel, RunningAnimation, TitleMask } from "structure";
@@ -82,12 +82,6 @@ export class DragonbonesDisplay extends BaseDragonbonesDisplay implements IDispl
 
     public get titleMask(): number {
         return this.mTitleMask;
-    }
-
-    public setRootMount(gameObject: Phaser.GameObjects.Container) {
-        super.setRootMount(gameObject);
-
-        this.updateTopDisplay();
     }
 
     public checkCollision(sprite: any): boolean {
@@ -184,10 +178,9 @@ export class DragonbonesDisplay extends BaseDragonbonesDisplay implements IDispl
     public doMove(moveData: any) {
     }
 
-    public setPosition(x?: number, y?: number, z?: number, w?: number): this {
-        super.setPosition(x, y, z, w);
+    public update() {
+        super.update();
         this.updateTopDisplay();
-        return this;
     }
 
     public addEffect(display: IDisplayObject) {
@@ -219,6 +212,7 @@ export class DragonbonesDisplay extends BaseDragonbonesDisplay implements IDispl
             this.add(this.mMountContainer);
         }
         this.mMountContainer.addAt(display, index);
+        this.mMountList.set(index, display);
         display.setRootMount(this);
     }
 
@@ -228,6 +222,15 @@ export class DragonbonesDisplay extends BaseDragonbonesDisplay implements IDispl
         }
         display.setRootMount(undefined);
         display.visible = true;
+        let index = -1;
+        this.mMountList.forEach((val, key) => {
+            if (val === display) {
+                index = key;
+            }
+        });
+        if (index >= 0) {
+            this.mMountList.delete(index);
+        }
         this.mMountContainer.remove(display, false);
         this.render.displayManager.addToSurfaceLayer(display);
     }
