@@ -25,6 +25,7 @@ import { LevelConfig } from "./level.config";
 import { SocialConfig } from "./social.config";
 import { SceneConfig } from "./scene.config";
 import { QuestConfig } from "./quest.config";
+import { GuideConfig } from "./guide.config";
 
 export enum BaseDataType {
     i18n_zh = "i18n_zh",
@@ -39,7 +40,8 @@ export enum BaseDataType {
     social = "social",
     minescene = "mineScene",
     publicscene = "publicScene",
-    quest = "quest"
+    quest = "quest",
+    guide = "guide",
     // itemcategory = "itemcategory"
 }
 
@@ -452,6 +454,11 @@ export class BaseDataConfigManager extends BaseConfigManager {
         return data.get(id);
     }
 
+    public getGuide(id: string) {
+        const data: GuideConfig = this.getConfig(BaseDataType.guide);
+        return data.get(id);
+    }
+
     protected add() {
         this.dataMap.set(BaseDataType.i18n_zh, new I18nZHDataConfig());
         this.dataMap.set(BaseDataType.explore, new ExploreDataConfig());
@@ -466,6 +473,7 @@ export class BaseDataConfigManager extends BaseConfigManager {
         this.dataMap.set(BaseDataType.publicscene, new SceneConfig());
         this.dataMap.set(BaseDataType.minescene, new SceneConfig());
         this.dataMap.set(BaseDataType.quest, new QuestConfig());
+        this.dataMap.set(BaseDataType.guide, new GuideConfig());
     }
 
     protected configUrl(reName: string, tempurl?: string) {

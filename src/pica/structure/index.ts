@@ -5,3 +5,4 @@ export * from "./imarketcommodity";
 export * from "./isocial";
 export * from "./iscene";
 export * from "./iquest";
+export * from "./iguide";

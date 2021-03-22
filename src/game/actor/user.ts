@@ -8,6 +8,7 @@ import { i18n, IPos, Logger } from "utils";
 import { UserDataManager } from "./data/user.dataManager";
 import { AvatarSuitType, EventType, IDragonbonesModel, IFramesModel, PlayerState, ISprite, ModuleName } from "structure";
 import { LayerEnum } from "game-capsule";
+import { BaseDataConfigManager } from "src/pica/game/data/base.data.config.manager";
 // import * as _ from "lodash";
 
 export class User extends Player {
@@ -71,6 +72,10 @@ export class User extends Player {
         // todo render setScroll
         Logger.getInstance().debug("setCameraScroller");
         this.game.renderPeer.setCameraScroller(actor.x, actor.y);
+
+        const configMgr = <BaseDataConfigManager>this.game.configManager;
+        const guideConfig = configMgr.getGuide("1");
+        console.log(guideConfig);
     }
 
     update() {
