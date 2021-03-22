@@ -454,9 +454,9 @@ export class BaseDataConfigManager extends BaseConfigManager {
         return data.get(id);
     }
 
-    public getGuide(id: string) {
+    public findGuide(uiName: string) {
         const data: GuideConfig = this.getConfig(BaseDataType.guide);
-        return data.get(id);
+        return data.findGuide(uiName);
     }
 
     protected add() {

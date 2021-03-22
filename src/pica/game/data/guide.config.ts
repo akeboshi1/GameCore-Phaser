@@ -12,4 +12,9 @@ export class GuideConfig extends BaseConfigData {
         return undefined;
     }
 
+    public findGuide(uiName: string): IGuide {
+        const result = this.Sheet1.find((c) => { return c.uiName === uiName; })
+        return result;
+    }
+
 }
