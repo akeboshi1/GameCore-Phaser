@@ -23,7 +23,7 @@ import { ICraftSkill } from "src/pica/structure/icraftskill";
 import { SkillConfig } from "./skill.config";
 import { LevelConfig } from "./level.config";
 import { SocialConfig } from "./social.config";
-import { SceneConfig } from ".";
+import { SceneConfig } from "./scene.config";
 
 export enum BaseDataType {
     i18n_zh = "i18n_zh",
