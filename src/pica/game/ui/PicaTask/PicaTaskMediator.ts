@@ -1,6 +1,7 @@
 import { BasicMediator, Game } from "gamecore";
 import { op_client, op_pkt_def } from "pixelpai_proto";
 import { ModuleName } from "structure";
+import { ObjectAssign } from "utils";
 import { BaseDataConfigManager } from "../../data";
 import { PicaTask } from "./PicaTask";
 export class PicaTaskMediator extends BasicMediator {
@@ -12,7 +13,6 @@ export class PicaTaskMediator extends BasicMediator {
     }
 
     show(param?: any) {
-        param = 2;
         super.show(param);
         this.game.emitter.on(ModuleName.PICATASK_NAME + "_hide", this.onHideView, this);
         this.game.emitter.on(ModuleName.PICATASK_NAME + "_questlist", this.onQueryQuestGroup, this);
@@ -23,6 +23,7 @@ export class PicaTaskMediator extends BasicMediator {
         this.game.emitter.on(ModuleName.PICATASK_NAME + "_retquestlist", this.onRetQuestList, this);
         this.game.emitter.on(ModuleName.PICATASK_NAME + "_retquestdetail", this.onRetQuestDetail, this);
         this.game.emitter.on(ModuleName.PICATASK_NAME + "_retquestgroup", this.onRetQuestGroup, this);
+        this.game.emitter.on(ModuleName.PICATASK_NAME + "_querygo", this.onGoHandler, this);
     }
 
     hide() {
@@ -37,6 +38,7 @@ export class PicaTaskMediator extends BasicMediator {
         this.game.emitter.off(ModuleName.PICATASK_NAME + "_retquestlist", this.onRetQuestList, this);
         this.game.emitter.off(ModuleName.PICATASK_NAME + "_retquestdetail", this.onRetQuestDetail, this);
         this.game.emitter.off(ModuleName.PICATASK_NAME + "_retquestgroup", this.onRetQuestGroup, this);
+        this.game.emitter.on(ModuleName.PICATASK_NAME + "_querygo", this.onGoHandler, this);
     }
     panelInit() {
         super.panelInit();
@@ -79,10 +81,20 @@ export class PicaTaskMediator extends BasicMediator {
                 for (const quest of content.quests) {
                     configMgr.getBatchItemDatas(quest.targets);
                     configMgr.getBatchItemDatas(quest.rewards);
+                    const temp = configMgr.getQuest(quest.id);
+                    quest["Uinames"] = temp.Uinames;
                 }
             }
         }
         if (this.mView) this.mView.setTaskDatas(content);
         else this.taskGroup = content;
+    }
+
+    private onGoHandler(data: string) {
+        if (data) {
+            const datas = data.split("-");
+            this.game.uiManager.showMed(datas[0], datas[1]);
+            this.hide();
+        }
     }
 }

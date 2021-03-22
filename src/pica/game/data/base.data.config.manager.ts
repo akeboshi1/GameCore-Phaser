@@ -24,6 +24,7 @@ import { SkillConfig } from "./skill.config";
 import { LevelConfig } from "./level.config";
 import { SocialConfig } from "./social.config";
 import { SceneConfig } from "./scene.config";
+import { QuestConfig } from "./quest.config";
 
 export enum BaseDataType {
     i18n_zh = "i18n_zh",
@@ -37,7 +38,8 @@ export enum BaseDataType {
     level = "level",
     social = "social",
     minescene = "mineScene",
-    publicscene = "publicScene"
+    publicscene = "publicScene",
+    quest = "quest"
     // itemcategory = "itemcategory"
 }
 
@@ -295,7 +297,7 @@ export class BaseDataConfigManager extends BaseConfigManager {
     }
 
     public convertDynamicCategory(list: any) {
-        const result = { marketName: "shop", marketCategory: []};
+        const result = { marketName: "shop", marketCategory: [] };
         const cate = result.marketCategory;
         list.items.forEach((item) => {
             let existing = cate.find((c) => c.category.key === item.category);
@@ -445,6 +447,10 @@ export class BaseDataConfigManager extends BaseConfigManager {
             return this.sceneMap;
         }
     }
+    public getQuest(id: string) {
+        const data: QuestConfig = this.getConfig(BaseDataType.quest);
+        return data.get(id);
+    }
 
     protected add() {
         this.dataMap.set(BaseDataType.i18n_zh, new I18nZHDataConfig());
@@ -459,6 +465,7 @@ export class BaseDataConfigManager extends BaseConfigManager {
         this.dataMap.set(BaseDataType.social, new SocialConfig());
         this.dataMap.set(BaseDataType.publicscene, new SceneConfig());
         this.dataMap.set(BaseDataType.minescene, new SceneConfig());
+        this.dataMap.set(BaseDataType.quest, new QuestConfig());
     }
 
     protected configUrl(reName: string, tempurl?: string) {

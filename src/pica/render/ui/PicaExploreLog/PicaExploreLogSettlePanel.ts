@@ -1,10 +1,10 @@
 
 import { op_client } from "pixelpai_proto";
 import { ClickEvent, Button } from "apowophaserui";
-import { Font, Handler, i18n, ResUtils, UIHelper } from "utils";
+import { Font, Handler, i18n, ResUtils, UIHelper, Url } from "utils";
 import { UIAtlasName } from "picaRes";
 import { ItemButton } from "../Components";
-import { ButtonEventDispatcher, ProgressMaskBar } from "gamecoreRender";
+import { ButtonEventDispatcher, DynamicImage, ProgressMaskBar } from "gamecoreRender";
 export class PicaExploreLogSettlePanel extends ButtonEventDispatcher {
     protected dpr: number;
     protected zoom: number;
@@ -19,7 +19,7 @@ export class PicaExploreLogSettlePanel extends ButtonEventDispatcher {
     private scoreTipsCon: Phaser.GameObjects.Container;
     private curLayoutGroup: RewardLayoutGroup;
     private maskGraphic: Phaser.GameObjects.Graphics;
-    private unkownImg: Phaser.GameObjects.Image;
+    private unkownImg: UnKnownAnimation;
     private settleData: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_EXPLORE_SUMMARY;
     private scoreDatas: Array<{ tip: string, score: number }>;
     private closeHandler: Handler;
@@ -33,6 +33,7 @@ export class PicaExploreLogSettlePanel extends ButtonEventDispatcher {
     private allScore: number = 0;
     private isPlayed: boolean = false;
     private finished: boolean = false;
+    private received: boolean = false;
     constructor(scene: Phaser.Scene, width: number, height: number, dpr: number, zoom: number) {
         super(scene, 0, 0, false);
         this.dpr = dpr;
@@ -67,7 +68,7 @@ export class PicaExploreLogSettlePanel extends ButtonEventDispatcher {
         }).setOrigin(0.5);
         this.starText.y = this.starPro.y + this.starPro.height * 0.5 + 10 * this.dpr;
         this.starText.visible = false;
-        this.unkownImg = this.scene.make.image({ key: UIAtlasName.explorelog, frame: "Settlement_unkown_clue" }).setOrigin(0.3, 0.8);
+        this.unkownImg = new UnKnownAnimation(this.scene, this.dpr);// this.scene.make.image({ key: UIAtlasName.explorelog, frame: "Settlement_unkown_clue" }).setOrigin(0.3, 0.8);
         this.unkownImg.y = this.starText.y;
         this.unkownImg.visible = false;
         this.scorebg = this.scene.make.image({ key: UIAtlasName.explorelog, frame: "Settlement_score_bg" });
@@ -270,6 +271,9 @@ export class PicaExploreLogSettlePanel extends ButtonEventDispatcher {
                 tween.stop();
                 tween.remove();
                 this.removeTween(tween);
+                if (this.received) {
+                    this.unkownImg.playAni();
+                }
             },
         });
         this.tweens.push(tween);
@@ -290,6 +294,7 @@ export class PicaExploreLogSettlePanel extends ButtonEventDispatcher {
     private setStarProgressInfo() {
         const to = this.settleData.latestProgress;
         let riado = Math.floor(to / 100);
+        const beforeriado = Math.floor(this.settleData.previousProgress / 100);
         let temprem = Math.floor(to % 100);
         if (to !== 0) {
             if (temprem === 0) {
@@ -302,16 +307,19 @@ export class PicaExploreLogSettlePanel extends ButtonEventDispatcher {
         const space = 12 * this.dpr;
         this.starText.text = temprem + "%";
         this.starText.x = -width * 0.5 + riado * (cellWidth + space) + cellWidth * 0.5;
-        const clues = this.settleData.clue;
+        const clues: any[] = this.settleData.clue;
         this.unkownImg.visible = false;
         if (clues) {
-            let first: boolean = false;
             for (const clue of clues) {
-                if (!first && clue.star > riado) {
-                    first = true;
+                if (clue.star > beforeriado) {
+                    if (clue.star <= riado) {
+                        this.received = true;
+                        this.unkownImg.setRewards(clue.texturePath);
+                    }
                     this.unkownImg.visible = true;
                     const xx = -width * 0.5 + (clue.star - 1) * (cellWidth + space) + cellWidth * 0.5;
                     this.unkownImg.x = xx;
+                    break;
                 }
             }
         }
@@ -566,6 +574,7 @@ class RewardLayoutGroup extends Phaser.GameObjects.Container {
 
 class UnKnownAnimation extends Phaser.GameObjects.Container {
     private unknImg: Phaser.GameObjects.Image;
+    private rewards: DynamicImage;
     private dpr: number;
     private pos = [];
     private tween: Phaser.Tweens.Tween;
@@ -574,23 +583,44 @@ class UnKnownAnimation extends Phaser.GameObjects.Container {
         this.dpr = dpr;
         this.unknImg = this.scene.make.image({ key: UIAtlasName.explorelog, frame: "Settlement_unkown_clue" }).setOrigin(0.3, 0.8);
         this.unknImg.y = 0;
-        this.add(this.unknImg);
+        this.rewards = new DynamicImage(this.scene, 0, 0);
+        this.rewards.scale = dpr;
+        this.rewards.visible = false;
+        this.add([this.rewards, this.unknImg]);
+
         this.pos = [{ x: 0, y: 0 }, { x: -4, y: 0 }, { x: -6, y: -2 }, { x: -8, y: -4 }, { x: -10, y: -7 }, { x: -10, y: -10 },
         { x: -8, y: -12 }, { x: -6, y: -14 }, { x: -4, y: -16 }, { x: -2, y: -14 }, { x: 0, y: -12 }, { x: 2, y: -10 }, { x: 4, y: -8 },
         { x: 4, y: -6 }, { x: 4, y: -3 }, { x: 4, y: 0 }, { x: 4, y: 3 }, { x: 2, y: 1 }];
+        this.pos = this.pos.concat(this.pos);
+
     }
     destroy(fromScene?: boolean) {
-        if (this.tween) this.tween.destroy();
+        if (this.tween) {
+            this.tween.stop();
+            this.tween.remove();
+        }
         super.destroy(fromScene);
     }
+    setRewards(texturePath: string) {
+        const url = Url.getOsdRes(texturePath);
+        this.rewards.load(url);
+    }
     playAni() {
-        if (this.pos.length === 0) return;
+        if (this.pos.length === 0) {
+            this.rewards.x = this.unknImg.x;
+            this.rewards.y = this.unknImg.y - this.unknImg.height * 0.3 - 20 * this.dpr;
+            UIHelper.playAlphaTween(this.scene, this.unknImg, 1, 0, 100, undefined, 0, new Handler(this, () => {
+                this.rewards.visible = true;
+            }));
+            UIHelper.playtPosYTween(this.scene, this.rewards, this.unknImg.y, this.unknImg.y - 120 * this.dpr, 200, undefined, 90);
+            return;
+        }
         const pos = this.pos.shift();
         this.tween = this.scene.tweens.add({
             targets: this.unknImg,
-            x: pos.x,
-            y: pos.y,
-            duration: 100,
+            x: pos.x * this.dpr,
+            y: pos.y * this.dpr,
+            duration: 25,
             onComplete: () => {
                 this.playAni();
             }

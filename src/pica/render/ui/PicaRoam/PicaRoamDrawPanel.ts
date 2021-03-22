@@ -89,6 +89,7 @@ export class PicaRoamDrawPanel extends Phaser.GameObjects.Container {
         previewBtn.x = this.width * 0.5 - previewBtn.width * 0.5 - 15 * this.dpr;
         previewBtn.y = this.moneyCon.y + this.moneyCon.height * 0.5 + previewBtn.height * 0.5 + 15 * this.dpr;
         previewBtn.on(ClickEvent.Tap, this.onDrawPreviewHandler, this);
+        previewBtn.visible = false;
         this.cloudPanel = new CloudDisplayItem(this.scene, this.width, 137 * this.dpr, this.dpr);
         this.cloudPanel.y = this.height * 0.5 - this.cloudPanel.height * 0.5;
         this.drawProgress = new RoamDrawProgress(this.scene, this.dpr, this.zoom);

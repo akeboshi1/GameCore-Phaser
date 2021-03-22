@@ -225,6 +225,7 @@ export class PicaPropFunPanel extends BasePanel {
             this.pricText.text = `${Coin.getName(this.itemData.sellingPrice.coinType)} x ${this.itemData.sellingPrice.price * this.itemCount}`;
             const coinIcon = Coin.getIcon(this.itemData.sellingPrice.coinType);
             this.mCoinIcon.setFrame(coinIcon);
+            this.pricText.x = this.mCoinIcon.x + this.mCoinIcon.width * 0.5 + this.pricText.width * 0.5 + 5 * this.dpr;
         } else {
             this.pricText.visible = false;
             this.priceBg.visible = false;

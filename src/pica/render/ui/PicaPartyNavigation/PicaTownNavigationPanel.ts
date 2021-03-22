@@ -72,9 +72,10 @@ export class PicaTownNavigationPanel extends Phaser.GameObjects.Container {
             item.visible = true;
             item.setGroupData(datas[i]);
             firstItem = firstItem || item;
+            this.onPointerUpHandler(item);
         }
         this.mGameScroll.Sort();
-        this.onPointerUpHandler(firstItem);
+       // this.onPointerUpHandler(firstItem);
     }
 
     private onPointerUpHandler(gameobject) {
@@ -96,9 +97,9 @@ export class PicaTownNavigationPanel extends Phaser.GameObjects.Container {
     }
 
     private onExtendsHandler(isExtend: boolean, item: NavigationTownListItem) {
-        if (this.curTownItem) {
-            this.curTownItem.setExtend(false, false);
-        }
+        // if (this.curTownItem) {
+        //     this.curTownItem.setExtend(false, false);
+        // }
         if (isExtend) {
             this.curTownItem = item;
         } else
@@ -250,7 +251,7 @@ class TownMapItem extends Phaser.GameObjects.Container {
     public setTownData(data: IScene) {
         this.roomData = data;
         if (data.texturePath && data.texturePath !== "") {
-            const url = Url.getOsdRes(data.texturePath + ".png");
+            const url = Url.getOsdRes(`${data.texturePath}_${this.dpr}x.png`);
             this.imge.load(url);
         }
 

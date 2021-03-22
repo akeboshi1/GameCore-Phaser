@@ -516,7 +516,8 @@ export class UIHelper {
         return tweenY;
     }
 
-    public static playAlphaTween(scene: any, obj: any, from: number, to: number, duration: number = 500, ease = "Linear", delay?: number, compl?: Handler, update?: Handler) {
+    public static playAlphaTween(scene: any, obj: any, from: number, to: number, duration: number = 500, ease?: string, delay?: number, compl?: Handler, update?: Handler) {
+        ease = ease || "Linear";
         const onUpdate = update ? (cope: any, param: any) => {
             if (update) update.runWith(param.value);
         } : undefined;

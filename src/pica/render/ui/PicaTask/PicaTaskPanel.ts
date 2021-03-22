@@ -144,7 +144,7 @@ export class PicaTaskPanel extends PicaBasePanel {
         if (tag === "finish") {
             this.render.renderEmitter(ModuleName.PICATASK_NAME + "_submitquest", data);
         } else if (tag === "go") {
-
+            this.render.renderEmitter(ModuleName.PICATASK_NAME + "_querygo", data.Uinames);
         } else if (tag === "detail") {
             // this.render.renderEmitter(ModuleName.PICATASK_NAME + "_questdetail", { id: data, type: this.questType });
         } else if (tag === "reward") {

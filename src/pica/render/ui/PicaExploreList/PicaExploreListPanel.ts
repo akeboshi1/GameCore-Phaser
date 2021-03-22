@@ -107,7 +107,7 @@ export class PicaExploreListPanel extends PicaBasePanel {
     setEnergyData(value: number, max: number) {
         this.tempDatas = { value, max };
         if (!this.mInitialized) return;
-        this.energyProgress.setEnergyData(10, 100);
+        this.energyProgress.setEnergyData(value, max);
         this.levelPanel.setPowerValue(value);
     }
 
