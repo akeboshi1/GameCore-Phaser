@@ -14,12 +14,13 @@ export class PicaMarketMediator extends BasicMediator {
   }
 
   show(param?: any) {
-    super.show(param);
     if (param) {
       this.model.setMarketName(param.marketName);
     } else {
       this.model.setMarketName("shop");
     }
+    if (this.isShow()) return;
+    super.show(param);
     this.game.emitter.on(this.key + "_getMarketCategories", this.onCategoriesHandler, this);
     this.game.emitter.on(this.key + "_queryMarket", this.onQueryResuleHandler, this);
     this.game.emitter.on(this.key + "_queryCommodityResource", this.onQueryCommodityResourceHandler, this);
@@ -41,6 +42,7 @@ export class PicaMarketMediator extends BasicMediator {
     this.game.emitter.off(this.key + "_queryCommodityResource", this.onQueryCommodityResourceHandler, this);
     this.game.emitter.off(this.key + "_showopen", this.onShowOpenPanel, this);
 
+    this.game.emitter.off(this.key + "_queryPropResource", this.onQueryPropresouceHandler, this);
     this.game.emitter.off(this.key + "_getCategories", this.onGetCategoriesHandler, this);
     this.game.emitter.off(this.key + "_queryProp", this.onQueryPropHandler, this);
     this.game.emitter.off(this.key + "_buyItem", this.onBuyItemHandler, this);

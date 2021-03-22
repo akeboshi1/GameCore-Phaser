@@ -1,5 +1,5 @@
 import { NineSlicePatch, GameGridTable, Button, ClickEvent, BBCodeText, ProgressBar } from "apowophaserui";
-import { AlertView, BasePanel, DynamicImage, ImageValue, ItemInfoTips, Render, UiManager } from "gamecoreRender";
+import { AlertView, BasePanel, DynamicImage, DynamicImageValue, ImageValue, ItemInfoTips, Render, UiManager } from "gamecoreRender";
 import { ModuleName } from "structure";
 import { UIAtlasKey, UIAtlasName } from "picaRes";
 import { Font, Handler, i18n, Logger, Url } from "utils";
@@ -258,7 +258,7 @@ class OrderItem extends Phaser.GameObjects.Container {
     private acceleSpend: ImageValue;
     private calcuTime: ImageValue;
     private materialItems: MaterialItem[] = [];
-    private imageValues: ImageValue[] = [];
+    private imageValues: DynamicImageValue[] = [];
     private orderRewards: OrderRewardItem[] = [];
     private deliverybg: Phaser.GameObjects.Image;
     private sendHandler: Handler;
@@ -423,20 +423,23 @@ class OrderItem extends Phaser.GameObjects.Container {
         offsetpos = -this.width * 0.5 + 58 * this.dpr;
         for (let i = 0; i < data.rewards.length; i++) {
             const reward = data.rewards[i];
-            let item: ImageValue;
+            let item: DynamicImageValue;
             if (i < this.imageValues.length) {
                 item = this.imageValues[i];
             } else {
-                item = new ImageValue(this.scene, 30 * this.dpr, 13 * this.dpr, this.key, "iv_coin_s", this.dpr);
+                item = new DynamicImageValue(this.scene, 30 * this.dpr, 20 * this.dpr, this.key, "iv_coin_s", this.dpr);
                 this.add(item);
                 this.imageValues.push(item);
             }
             item.setOffset(0, this.dpr);
-            item.setFrameValue(`${reward.count}`, this.key, this.getIconName(reward.texturePath) + "_s");
+            item.setText(`${reward.count}`);
+            item.load(Url.getOsdRes(reward.texturePath));
+            // item.setFrameValue(`${reward.count}`, this.key, this.getIconName(reward.texturePath) + "_s");
             item.setTextStyle({ color: questType === 5 ? "#ffffff" : "#2154BD" });// op_pkt_def.PKT_Quest_Type.ORDER_QUEST_ROYAL_MISSION
-            item.x = offsetpos + item.width * 0.5;
-            offsetpos += item.width + 20 * this.dpr;
-            item.y = this.height * 0.5 - item.height * 0.5 - 4 * this.dpr;
+            const imageWidth = item.textWidth + 20 * this.dpr;
+            item.x = offsetpos + imageWidth * 0.5;
+            offsetpos += imageWidth + 5 * this.dpr;
+            item.y = this.height * 0.5 - item.height * 0.5 + 0 * this.dpr;
             item.visible = true;
         }
     }
@@ -481,19 +484,22 @@ class OrderItem extends Phaser.GameObjects.Container {
         let offsetpos = -this.width * 0.5 + 60 * this.dpr;
         for (let i = 0; i < data.rewards.length; i++) {
             const reward = data.rewards[i];
-            let item: ImageValue;
+            let item: DynamicImageValue;
             if (i < this.imageValues.length) {
                 item = this.imageValues[i];
             } else {
-                item = new ImageValue(this.scene, 30 * this.dpr, 13 * this.dpr, this.key, "iv_coin_s", this.dpr);
+                item = new DynamicImageValue(this.scene, 30 * this.dpr, 20 * this.dpr, this.key, "iv_coin_s", this.dpr);
                 this.add(item);
                 this.imageValues.push(item);
             }
-            item.setFrameValue(`${reward.count}`, this.key, this.getIconName(reward.display.texturePath) + "_s");
+            // item.setFrameValue(`${reward.count}`, this.key, this.getIconName(reward.display.texturePath) + "_s");
+            item.setText(`${reward.count}`);
+            item.load(Url.getOsdRes(reward.texturePath));
             item.setTextStyle({ color: "#2154BD" });
-            item.x = offsetpos + item.width * 0.5;
-            offsetpos += item.width + 20 * this.dpr;
-            item.y = this.height * 0.5 - item.height * 0.5 - 4 * this.dpr;
+            const imageWidth = item.textWidth + 20 * this.dpr;
+            item.x = offsetpos + imageWidth * 0.5;
+            offsetpos += imageWidth + 5 * this.dpr;
+            item.y = this.height * 0.5 - item.height * 0.5 + 0 * this.dpr;
             item.visible = true;
         }
     }
@@ -660,28 +666,31 @@ class OrderRewardItem extends Phaser.GameObjects.Container {
     private key: string;
     private dpr: number;
     private bg: Phaser.GameObjects.Image;
-    private icon: Phaser.GameObjects.Image;
-    private imageValue: ImageValue;
-
+    private icon: DynamicImage;
+    private imageValue: DynamicImageValue;
     constructor(scene: Phaser.Scene, key: string, dpr: number) {
         super(scene);
         this.key = key;
         this.dpr = dpr;
         this.bg = scene.make.image({ key, frame: "order_reward" });
         this.setSize(this.bg.width, this.bg.height);
-        this.icon = scene.make.image({ key, frame: "order_silver_middle" });
+        this.icon = new DynamicImage(this.scene, 0, 0);// scene.make.image({ key, frame: "order_silver_middle" });
+        this.icon.scale = dpr * 0.8;
         this.add([this.bg, this.icon]);
     }
 
     public setItemData(data: ICountablePackageItem) {// op_client.ICountablePackageItem
-        this.imageValue = new ImageValue(this.scene, 30 * this.dpr, 13 * this.dpr, this.key, undefined, this.dpr);
-        this.imageValue.setFrameValue(`${data.count}`, this.key, this.getIconName(data.texturePath) + "_s");
-        this.imageValue.x = -4 * this.dpr;
-        this.imageValue.y = this.height - this.imageValue.height * 0.5 + 2 * this.dpr;
+        this.imageValue = new DynamicImageValue(this.scene, 30 * this.dpr, 20 * this.dpr, this.key, undefined, this.dpr);
+        this.imageValue.setText(`${data.count}`);
+        this.imageValue.load(Url.getOsdRes(data.texturePath));
+        // this.imageValue.setFrameValue(`${data.count}`, this.key, this.getIconName(data.texturePath) + "_s");
+        this.imageValue.x = 3 * this.dpr;
+        this.imageValue.y = this.height - this.imageValue.height * 0.5 + 6 * this.dpr;
         this.imageValue.setOffset(0, this.dpr);
         this.imageValue.setTextStyle({ color: "#2154BD" });
         this.add([this.imageValue]);
-        this.icon.setFrame(this.getIconName(data.texturePath));
+        // this.icon.setFrame(this.getIconName(data.texturePath));
+        this.icon.load(Url.getOsdRes(data.texturePath));
     }
 
     private getIconName(url: string) {
