@@ -1,12 +1,12 @@
-import {BlockObject} from "../block/block.object";
-import {ISprite} from "structure";
-import {IElement, MoveData} from "../element/element";
-import {IElementManager} from "../element/element.manager";
-import {op_client} from "pixelpai_proto";
-import {IPos, Logger} from "utils";
-import {IRoomService} from "../room/room";
-import {IFramesModel} from "structure";
-import {LayerEnum} from "game-capsule";
+import { BlockObject } from "../block/block.object";
+import { ISprite } from "structure";
+import { IElement, MoveData } from "../element/element";
+import { IElementManager } from "../element/element.manager";
+import { op_client } from "pixelpai_proto";
+import { IPos, Logger } from "utils";
+import { IRoomService } from "../room/room";
+import { IFramesModel } from "structure";
+import { LayerEnum } from "game-capsule";
 
 export class Terrain extends BlockObject implements IElement {
     protected mId: number;
@@ -40,6 +40,9 @@ export class Terrain extends BlockObject implements IElement {
     public stopMove() {
     }
 
+    public startFireMove(pos: IPos) {
+    }
+
     public addToWalkableMap() {
         if (this.model && this.mElementManager) this.mElementManager.roomService.addToWalkableMap(this.model, true);
     }
@@ -59,7 +62,7 @@ export class Terrain extends BlockObject implements IElement {
         await this.mElementManager.roomService.game.peer.render.setModel(val);
         await this.mRoomService.game.peer.physicalPeer.setModel(val);
         this.removeFromWalkableMap();
-        this.load(<IFramesModel> this.mModel.displayInfo);
+        this.load(<IFramesModel>this.mModel.displayInfo);
         // this.mDisplayInfo = <IFramesModel> this.mModel.displayInfo;
         // this.createDisplay();
         this.setPosition(this.mModel.pos);

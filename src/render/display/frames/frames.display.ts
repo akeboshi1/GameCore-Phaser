@@ -15,6 +15,7 @@ export class FramesDisplay extends BaseFramesDisplay implements IDisplayObject {
     protected mReferenceArea: ReferenceArea;
     protected mTopDisplay: ElementTopDisplay;
     private mName: string = undefined;
+    private mStartFireTween: Phaser.Tweens.Tween;
 
     constructor(scene: Phaser.Scene, private render: Render, id?: number, type?: number) {
         super(scene, id, type);
@@ -33,6 +34,10 @@ export class FramesDisplay extends BaseFramesDisplay implements IDisplayObject {
         }
         if (this.mTopDisplay) {
             this.mTopDisplay.destroy();
+        }
+        if (this.mStartFireTween) {
+            this.mStartFireTween.stop();
+            this.mStartFireTween = undefined;
         }
         super.destroy();
     }
@@ -129,6 +134,23 @@ export class FramesDisplay extends BaseFramesDisplay implements IDisplayObject {
     }
 
     public doMove(moveData: any) {
+    }
+
+    public startFireMove(pos: any) {
+        this.mStartFireTween = this.scene.tweens.add({
+            targets: this,
+            duration: 500,
+            ease: "Linear",
+            props: {
+                x: pos.x,
+                y: pos.y
+            },
+            onComplete: () => {
+                this.mStartFireTween.stop();
+                this.mStartFireTween = undefined;
+            },
+            onCompleteParams: [this]
+        });
     }
 
     public setPosition(x?: number, y?: number, z?: number, w?: number): this {
@@ -267,9 +289,9 @@ export class FramesDisplay extends BaseFramesDisplay implements IDisplayObject {
     // protected clearDisplay() {
     //     super.clearDisplay();
 
-        // if (this.mMountContainer && this.mMountContainer.parentContainer) {
-        //     this.mMountContainer.parentContainer.remove(this.mMountContainer);
-        // }
+    // if (this.mMountContainer && this.mMountContainer.parentContainer) {
+    //     this.mMountContainer.parentContainer.remove(this.mMountContainer);
+    // }
     // }
 
     private onAnimationUpdateHandler(ani: Phaser.Animations.Animation, frame: Phaser.Animations.AnimationFrame) {

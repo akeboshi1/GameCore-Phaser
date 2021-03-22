@@ -18,6 +18,7 @@ export class DragonbonesDisplay extends BaseDragonbonesDisplay implements IDispl
 
     private mLoadQueue: LoadQueue;
     private mName: string = undefined;
+    private mStartFireTween: Phaser.Tweens.Tween;
 
     constructor(scene: Phaser.Scene, private render: Render, id?: number, private uuid?: number, type?: number) {
         super(scene);
@@ -57,6 +58,10 @@ export class DragonbonesDisplay extends BaseDragonbonesDisplay implements IDispl
             this.mLoadQueue.off("QueueProgress", this.fileComplete, this);
             this.mLoadQueue.off("QueueError", this.fileError, this);
             this.mLoadQueue.destroy();
+        }
+        if (this.mStartFireTween) {
+            this.mStartFireTween.stop();
+            this.mStartFireTween = undefined;
         }
         if (this.mReferenceArea) {
             this.mReferenceArea.destroy();
@@ -173,6 +178,23 @@ export class DragonbonesDisplay extends BaseDragonbonesDisplay implements IDispl
     public play(val: RunningAnimation) {
         super.play(val);
         this.fetchProjection();
+    }
+
+    public startFireMove(pos: any) {
+        this.mStartFireTween = this.scene.tweens.add({
+            targets: this,
+            duration: 500,
+            ease: "Linear",
+            props: {
+                x: pos.x,
+                y: pos.y
+            },
+            onComplete: () => {
+                this.mStartFireTween.stop();
+                this.mStartFireTween = undefined;
+            },
+            onCompleteParams: [this]
+        });
     }
 
     public doMove(moveData: any) {
