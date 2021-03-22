@@ -909,6 +909,11 @@ export class Render extends RPCPeer implements GameMain, IRender {
         if (this.mSoundManager) this.mSoundManager.pauseAll();
     }
 
+    @Export([webworker_rpc.ParamType.num])
+    public startFireMove(id: number, pos: any) {
+        if (this.mDisplayManager) this.mDisplayManager.startFireMove(id, pos);
+    }
+
     @Export()
     public resume() {
         if (this.mSoundManager) this.mSoundManager.resume();
@@ -1705,6 +1710,7 @@ export class Render extends RPCPeer implements GameMain, IRender {
         const pauseScene = this.mGame.scene.getScene(SceneName.GAMEPAUSE_SCENE);
         const playScene = this.mGame.scene.getScene(SceneName.PLAY_SCENE);
         const uiScene = this.mGame.scene.getScene(SceneName.MAINUI_SCENE);
+        const loginScene = this.mGame.scene.getScene(SceneName.LOGIN_SCENE);
         if (show) {
             this.mGame.scene.start(sceneName, { render: this });
             if (sceneName !== SceneName.GAMEPAUSE_SCENE) {
@@ -1712,6 +1718,7 @@ export class Render extends RPCPeer implements GameMain, IRender {
             }
             if (playScene) playScene.scene.pause();
             if (uiScene) uiScene.scene.pause();
+            if (loginScene && loginScene.scene.isActive()) loginScene.scene.setVisible(false);
         } else {
             this.mGame.scene.stop(sceneName);
             if (sceneName !== SceneName.GAMEPAUSE_SCENE) {
@@ -1719,6 +1726,7 @@ export class Render extends RPCPeer implements GameMain, IRender {
             }
             if (playScene) playScene.scene.resume();
             if (uiScene) uiScene.scene.resume();
+            if (loginScene && loginScene.scene.isActive()) loginScene.scene.setVisible(true);
         }
     }
 

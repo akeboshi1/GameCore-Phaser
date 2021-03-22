@@ -216,6 +216,9 @@ export class User extends Player {
     }
 
     public async activeSprite(targetId: number, param?: any, needBroadcast?: boolean) {
+        // const ele  = this.mRoomService.getElement(targetId);
+        // if (ele) this.addMount(ele, 0);
+        // return;
         if (!targetId) {
             this.mPreTargetID = 0;
             return;

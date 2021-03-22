@@ -28,6 +28,10 @@ export interface IElement {
 
     update(time?: number, delta?: number);
 
+    startFireMove(pos: IPos);
+
+    startMove();
+
     stopMove();
 
     setModel(model: ISprite);
@@ -350,6 +354,11 @@ export class Element extends BlockObject implements IElement {
         if (this.model) {
             this.model.setDirection(val);
         }
+        if (this.mMounts) {
+            for (const mount of this.mMounts) {
+                mount.setDirection(val);
+            }
+        }
         // this.play(this.model.currentAnimationName);
     }
 
@@ -380,6 +389,28 @@ export class Element extends BlockObject implements IElement {
         }
         this._doMove(time, delta);
         this.mDirty = false;
+    }
+
+    /**
+     * 发射
+     * id 发射对象
+     * pos 发射终点
+     */
+    public fire(id: number, pos: IPos) {
+        // 没有挂载物
+        if (!this.mMounts) return;
+        const len = this.mMounts.length;
+        for (let i: number = 0; i < len; i++) {
+            const mount = this.mMounts[i];
+            if (mount && mount.id === id) {
+                mount.startFireMove(pos);
+                break;
+            }
+        }
+    }
+
+    public startFireMove(pos: IPos) {
+        this.mRoomService.game.renderPeer.startFireMove(this.id, pos);
     }
 
     public move(path: op_def.IMovePoint[]) {

@@ -12,6 +12,7 @@ export class PicaTaskMediator extends BasicMediator {
     }
 
     show(param?: any) {
+        param = 2;
         super.show(param);
         this.game.emitter.on(ModuleName.PICATASK_NAME + "_hide", this.onHideView, this);
         this.game.emitter.on(ModuleName.PICATASK_NAME + "_questlist", this.onQueryQuestGroup, this);

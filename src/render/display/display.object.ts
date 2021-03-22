@@ -27,6 +27,8 @@ export interface IDisplayObject extends IBaseDisplay {
 
     doMove(moveData: any);
 
+    startFireMove(pos);
+
     mount(ele: Phaser.GameObjects.Container, targetIndex?: number);
 
     unmount(ele: Phaser.GameObjects.Container);

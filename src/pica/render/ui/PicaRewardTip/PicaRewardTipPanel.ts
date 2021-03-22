@@ -85,6 +85,7 @@ export class PicaRewardTipPanel extends BasePanel {
 
 class AwardItem extends Phaser.GameObjects.Container {
     private mBg: Phaser.GameObjects.Image;
+    private blackGraphic: Phaser.GameObjects.Graphics;
     private mImage: DynamicImage;
     private mLabel: Phaser.GameObjects.Text;
     private mScaleRatio: number;
@@ -95,7 +96,7 @@ class AwardItem extends Phaser.GameObjects.Container {
             key,
         }, false);
         this.mScaleRatio = dpr * zoom;
-
+        this.blackGraphic = this.scene.make.graphics(undefined, false);
         this.mImage = new DynamicImage(this.scene, 0, 0);
         this.mImage.setScale(dpr);
         this.mImage.setOrigin(0.5, 1);
@@ -108,10 +109,10 @@ class AwardItem extends Phaser.GameObjects.Container {
                 fontSize: 11 * this.mScaleRatio,
                 color: "#00FF00"
             }
-        }, false).setOrigin(1, 0.5);
+        }, false).setOrigin(0, 0.5);
         // this.add([this.mBg, this.mImage, this.mLabel]);
         this.addAt(this.mBg, 0);
-        this.add([this.mImage, this.mLabel]);
+        this.add([this.blackGraphic, this.mImage, this.mLabel]);
 
         this.setSize(this.mBg.width * zoom, this.mBg.height * zoom);
     }
@@ -124,6 +125,13 @@ class AwardItem extends Phaser.GameObjects.Container {
             this.mImage.load(Url.getOsdRes(award.display.texturePath));
         }
         this.mLabel.setText(award.text);
+        this.mLabel.x = this.mImage.x + this.mImage.displayWidth * 0.5 + 5 * this.mScaleRatio;
+        this.blackGraphic.clear();
+        this.blackGraphic.fillStyle(0, 1);
+        const bwidth = this.mImage.displayWidth + this.mLabel.width + 3 * this.mScaleRatio;
+        const bheight = this.mBg.displayHeight;
+        const radius = bheight * 0.5;
+        this.blackGraphic.fillRoundedRect(0, -bheight * 0.5, bwidth, bheight, { tl: 0, tr: radius, br: radius, bl: 0 });
         this.showTween();
     }
 

@@ -373,6 +373,11 @@ export class DisplayManager {
         if (sprite.nickname) display.showNickname(sprite.nickname);
     }
 
+    public startFireMove(id: number, pos: any) {
+        const display = this.displays.get(id);
+        if (display) display.startFireMove(pos);
+    }
+
     public addSkybox(scenery: IScenery) {
         const skybox = new BlockManager(scenery, this.render);
         this.scenerys.set(scenery.id, skybox);

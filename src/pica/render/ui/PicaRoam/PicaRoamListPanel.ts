@@ -108,7 +108,13 @@ export class PicaRoamListPanel extends Phaser.GameObjects.Container {
         this.mGameGrid.setT(0);
     }
 
-    public getRoamTokenDatas() {
+    public getRoamTokenDatas(index?: number) {
+        if (index) {
+            const values = Array.from(this.poolsStatus.values());
+            const value = values[index - 1];
+            this.tokenId = value[0].tokenId;
+            return value;
+        }
         return this.poolsStatus.get(this.tokenId);
     }
 

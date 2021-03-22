@@ -1,10 +1,11 @@
 import { BaseDragonbonesDisplay, ReferenceArea } from "baseRender";
 import { Render } from "../../render";
 import { IPos, Logger, IProjection } from "utils";
-import { DisplayField, ElementStateType, IDragonbonesModel, PlayerState, RunningAnimation, TitleMask } from "structure";
+import { DisplayField, ElementStateType, IDragonbonesModel, RunningAnimation, TitleMask } from "structure";
 import { IDisplayObject } from "../display.object";
 import { LoadQueue, LoadType } from "../../loadqueue";
 import { ElementTopDisplay } from "../element.top.display";
+import { FramesDisplay } from "../frames/frames.display";
 
 export class DragonbonesDisplay extends BaseDragonbonesDisplay implements IDisplayObject {
     protected mID: number = undefined;
@@ -17,6 +18,7 @@ export class DragonbonesDisplay extends BaseDragonbonesDisplay implements IDispl
 
     private mLoadQueue: LoadQueue;
     private mName: string = undefined;
+    private mStartFireTween: Phaser.Tweens.Tween;
 
     constructor(scene: Phaser.Scene, private render: Render, id?: number, private uuid?: number, type?: number) {
         super(scene);
@@ -56,6 +58,10 @@ export class DragonbonesDisplay extends BaseDragonbonesDisplay implements IDispl
             this.mLoadQueue.off("QueueProgress", this.fileComplete, this);
             this.mLoadQueue.off("QueueError", this.fileError, this);
             this.mLoadQueue.destroy();
+        }
+        if (this.mStartFireTween) {
+            this.mStartFireTween.stop();
+            this.mStartFireTween = undefined;
         }
         if (this.mReferenceArea) {
             this.mReferenceArea.destroy();
@@ -180,6 +186,23 @@ export class DragonbonesDisplay extends BaseDragonbonesDisplay implements IDispl
         this.fetchProjection();
     }
 
+    public startFireMove(pos: any) {
+        this.mStartFireTween = this.scene.tweens.add({
+            targets: this,
+            duration: 500,
+            ease: "Linear",
+            props: {
+                x: pos.x,
+                y: pos.y
+            },
+            onComplete: () => {
+                this.mStartFireTween.stop();
+                this.mStartFireTween = undefined;
+            },
+            onCompleteParams: [this]
+        });
+    }
+
     public doMove(moveData: any) {
     }
 
@@ -206,10 +229,29 @@ export class DragonbonesDisplay extends BaseDragonbonesDisplay implements IDispl
     public removeEffect(display: IDisplayObject) {
     }
 
-    public mount(ele: Phaser.GameObjects.Container, targetIndex?: number) {
+    public mount(display: FramesDisplay | DragonbonesDisplay, index?: number) {
+        if (!this.mMountContainer) {
+            this.mMountContainer = this.scene.make.container(undefined, false);
+        }
+        display.x = this.topPoint.x;
+        display.y = this.topPoint.y;
+        if (!this.mMountContainer.parentContainer) {
+            // const container = <Phaser.GameObjects.Container>this.mSprites.get(DisplayField.STAGE);
+            // if (container) container.addAt(this.mMountContainer, index);
+            this.add(this.mMountContainer);
+        }
+        this.mMountContainer.addAt(display, index);
+        display.setRootMount(this);
     }
 
-    public unmount(ele: Phaser.GameObjects.Container) {
+    public unmount(display: FramesDisplay | DragonbonesDisplay) {
+        if (!this.mMountContainer) {
+            return;
+        }
+        display.setRootMount(undefined);
+        display.visible = true;
+        this.mMountContainer.remove(display, false);
+        this.render.displayManager.addToSurfaceLayer(display);
     }
 
     public get sortX() {
