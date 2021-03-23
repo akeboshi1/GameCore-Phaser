@@ -10,7 +10,7 @@ import { ICountablePackageItem } from "picaStructure";
 import { PicaFurnitureComposePanel } from "./PicaFurnitureComposePanel";
 import { PicaRecastePanel } from "./PicaRecastePanel";
 export class PicaManufacturePanel extends PicaBasePanel {
-    private mCloseBtn: Button;
+    private mCloseBtn: ButtonEventDispatcher;
     private toggleCon: Phaser.GameObjects.Container;
     private selectLine: Phaser.GameObjects.Image;
     private curToggleItem: ToggleColorButton;
@@ -30,7 +30,7 @@ export class PicaManufacturePanel extends PicaBasePanel {
     resize(w: number, h: number) {
         const width = this.scaleWidth;
         const height = this.scaleHeight;
-        this.mCloseBtn.x = this.mCloseBtn.width * 0.5 + 10 * this.dpr;
+        this.mCloseBtn.x = this.mCloseBtn.width * 0.5 + 0 * this.dpr;
         this.mCloseBtn.y = 45 * this.dpr;
         this.starCountCon.y = this.mCloseBtn.y;
         this.starCountCon.x = width - 15 * this.dpr;
@@ -113,11 +113,14 @@ export class PicaManufacturePanel extends PicaBasePanel {
         this.setSize(width, height);
         this.composePanel = new PicaFurnitureComposePanel(this.scene, this.render, this.width, this.height, this.dpr, this.scale);
         this.recastPanel = new PicaRecastePanel(this.scene, this.render, this.width, this.height, this.dpr, this.scale);
-        this.mCloseBtn = new Button(this.scene, UIAtlasName.uicommon, "back_arrow", "back_arrow");
-        this.mCloseBtn.tweenEnable = true;
+        this.mCloseBtn = new ButtonEventDispatcher(this.scene, 0, 0);
         this.mCloseBtn.on(ClickEvent.Tap, this.onCloseHandler, this);
         this.mCloseBtn.x = this.mCloseBtn.width * 0.5 + 10 * this.dpr;
         this.mCloseBtn.y = 45 * this.dpr;
+        const closeImg = this.scene.make.image({ key: UIAtlasName.uicommon, frame: "back_arrow" });
+        this.mCloseBtn.add(closeImg);
+        this.mCloseBtn.setSize(80 * this.dpr, closeImg.height);
+        this.mCloseBtn.enable = true;
         const starbg = new NineSlicePatch(this.scene, 0, -this.dpr, 80 * this.dpr, 28 * this.dpr, UIAtlasName.uicommon, "home_assets_bg", {
             left: 17 * this.dpr,
             top: 0 * this.dpr,
