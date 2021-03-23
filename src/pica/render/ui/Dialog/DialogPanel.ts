@@ -162,8 +162,9 @@ export class DialogPanel extends BasePanel {
             this.npcIcon.load(url, this, () => {
                 const width = this.content.width;
                 const height = this.content.height;
-                const iconWidth = this.npcIcon.width;
-                const iconHeight = this.npcIcon.height;
+                this.npcIcon.displayWidth = 212 * this.dpr;
+                this.npcIcon.scaleY = this.npcIcon.scaleX;
+                const iconWidth = this.npcIcon.displayWidth;
                 let x = this.npcIcon.x;
                 const y = -height * 0.5 - 50 * this.dpr;
                 if (display.horizontal === HorizontalAlignment.HORIZONTAL_LEFT) {
@@ -172,10 +173,9 @@ export class DialogPanel extends BasePanel {
                 } else if (display.horizontal === HorizontalAlignment.HORIZONTAL_CENTER) {
                     x = 0;
                 } else if (display.horizontal === HorizontalAlignment.HORIZONTAL_RIGHT) {
-                    x = width * 0.5 - iconWidth * 0.5 - 20 * this.dpr;
+                    x = width * 0.5 - iconWidth * 0.5;// - 20 * this.dpr;
                 }
-                this.npcIcon.displayWidth = 212 * this.dpr;
-                this.npcIcon.scaleY = this.npcIcon.scaleX;
+
                 this.npcIcon.x = x;
                 this.npcIcon.y = y;
             });
