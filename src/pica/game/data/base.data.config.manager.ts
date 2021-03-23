@@ -459,6 +459,13 @@ export class BaseDataConfigManager extends BaseConfigManager {
         return data.findGuide(uiName);
     }
 
+    public updateGuideState(id: number, val: boolean = false) {
+        const data: GuideConfig = this.getConfig(BaseDataType.guide);
+        const guideData = data.get(id);
+        if (!guideData) return;
+        guideData.state = val;
+    }
+
     protected add() {
         this.dataMap.set(BaseDataType.i18n_zh, new I18nZHDataConfig());
         this.dataMap.set(BaseDataType.explore, new ExploreDataConfig());

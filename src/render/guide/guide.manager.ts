@@ -2,6 +2,7 @@ import { Render } from "../render";
 
 export interface IGuide {
     id: number;
+    guideID: number;
     show(data?: any);
     hide();
     checkInteractive(data?: any): boolean;
@@ -38,20 +39,9 @@ export class GuideManager {
 
     public startGuide(guide: IGuide) {
         this.mGurGuide = guide;
-        // const guide = this.guideMap.get(id);
-        // if (guide) {
-        //     this.mGurGuide = guide;
-        //     guide.show(data);
-        // }
     }
 
     public stopGuide() {
         this.mGurGuide = null;
-        // const guide = this.guideMap.get(id);
-        // if (guide) {
-        //     this.mGurGuide = null;
-        //     guide.hide();
-        // }
     }
-
 }

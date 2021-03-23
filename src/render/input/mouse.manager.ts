@@ -150,6 +150,8 @@ export class MouseManager {
         const id = gameObject.getData("id");
         if (this.render.guideManager.canInteractive(id)) return;
         this.mGameObject = gameObject;
+        // 重置hold时间
+        clearTimeout(this.mDownTime);
         this.mDownTime = setTimeout(this.holdHandler.bind(this), this.mDownDelay, pointer, gameObject);
     }
 
