@@ -61,10 +61,10 @@ export class PicaDecoratePanel extends PicaBasePanel {
         }
 
         if (!this.mBtn_SelectedFurniture) {
-            this.mBtn_SelectedFurniture = new ItemButton(this.scene, UIAtlasName.uicommon, "bag_icon_common_bg", this.dpr, this.scale, false);
+            this.mBtn_SelectedFurniture = new ItemButton(this.scene, this.key, "room_decorate_icon_default.png", this.dpr, this.scale, false);
             this.mBtn_SelectedFurniture.countTextColor = "#ffffff";
             this.mBtn_SelectedFurniture.countTextOffset = new LogicPos(this.mBtn_SelectedFurniture.width * 0.5 - 12 * this.dpr, this.mBtn_SelectedFurniture.height * 0.5 - 10 * this.dpr);
-            this.mBtn_SelectedFurniture.BGVisible = false;
+            this.mBtn_SelectedFurniture.BGVisible = true;
             this.mBtn_SelectedFurniture.x = 30 * this.dpr;
             this.mBtn_SelectedFurniture.y = this.mDynamicBtnsY;
             this.add(this.mBtn_SelectedFurniture);
