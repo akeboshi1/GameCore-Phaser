@@ -612,7 +612,7 @@ class UnKnownAnimation extends Phaser.GameObjects.Container {
             UIHelper.playAlphaTween(this.scene, this.unknImg, 1, 0, 100, undefined, 0, new Handler(this, () => {
                 this.rewards.visible = true;
             }));
-            UIHelper.playtPosYTween(this.scene, this.rewards, this.unknImg.y, this.unknImg.y - 120 * this.dpr, 200, undefined, 90);
+            UIHelper.playtPosYTween(this.scene, this.rewards, this.unknImg.y, this.unknImg.y - 0 * this.dpr, 200, undefined, 90);
             return;
         }
         const pos = this.pos.shift();
