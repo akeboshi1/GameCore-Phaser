@@ -6,6 +6,7 @@ import { LoginMediator } from "./Login";
 import { BottomMediator } from "./Bottom/BottomMediator";
 import { PicaFurniFunMediator } from "./PicaFurniFun/PicaFurniFunMediator";
 import { PicaNewMainMediator } from "./PicaNewMain/PicaNewMainMediator";
+import { BaseDataConfigManager } from "../data";
 export class PicaWorkerUiManager extends UIManager {
     constructor(game: Game) {
         super(game);
@@ -58,7 +59,12 @@ export class PicaWorkerUiManager extends UIManager {
             case ModuleName.PICAHOMEGUIDE_NAME:
             case ModuleName.PICAHOTELGUIDE_NAME:
             case ModuleName.PICAPLANEGUIDE_NAME:
-                this.game.peer.render.showPanel(type, param);
+            case ModuleName.PICAROOMGUIDE_NAME:
+                const guideConfig = (<BaseDataConfigManager>this.game.configManager).findGuide(type);
+                if (guideConfig && !guideConfig.state) {
+                    param.guideID = guideConfig.id;
+                    this.game.peer.render.showPanel(type, param);
+                }
                 break;
             default:
                 const className: string = type + "Mediator";

@@ -4,12 +4,10 @@ import { Game } from "../game";
 import { Player } from "../room/player/player";
 import { IRoomService } from "../room/room/room";
 import { PlayerModel } from "../room/player/player.model";
-import { i18n, IPos, Logger } from "utils";
+import { IPos, Logger } from "utils";
 import { UserDataManager } from "./data/user.dataManager";
-import { AvatarSuitType, EventType, IDragonbonesModel, IFramesModel, PlayerState, ISprite, ModuleName } from "structure";
+import { AvatarSuitType, EventType, IDragonbonesModel, IFramesModel, PlayerState, ISprite, ModuleName, SceneName } from "structure";
 import { LayerEnum } from "game-capsule";
-import { BaseDataConfigManager, BaseDataType } from "src/pica/game/data/base.data.config.manager";
-import { GuideConfig } from "src/pica/game/data/guide.config";
 // import * as _ from "lodash";
 
 export class User extends Player {
@@ -74,9 +72,9 @@ export class User extends Player {
         Logger.getInstance().debug("setCameraScroller");
         this.game.renderPeer.setCameraScroller(actor.x, actor.y);
 
-        const configMgr = <BaseDataConfigManager>this.game.configManager;
-        const guideConfig = configMgr.findGuide("PicaPartyNavigation");
-        Logger.getInstance().log(guideConfig);
+        // const configMgr = <BaseDataConfigManager>this.game.configManager;
+        // const guideConfig = configMgr.findGuide(ModuleName.PICAPARTYNAVIGATION_NAME);
+        // Logger.getInstance().log(guideConfig);
     }
 
     update() {

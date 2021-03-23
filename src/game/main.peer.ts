@@ -493,6 +493,11 @@ export class MainPeer extends RPCPeer {
         }
     }
 
+    @Export([webworker_rpc.ParamType.num])
+    public stopGuide(id: number) {
+        if (this.game.guideManager) this.game.guideManager.stopGuide(id);
+    }
+
     // ============= 心跳调用主进程
     // @Export()
     // public startHeartBeat() {

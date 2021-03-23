@@ -81,4 +81,5 @@ export class ModuleName {
     public static PICAHOTELGUIDE_NAME = "HotelGuide";
     public static PICAPLANEGUIDE_NAME = "PlaneGuide";
     public static MASK_LOADING_NAME = "MaskLoading";
+    public static PICAROOMGUIDE_NAME = "RoomGuide";
 }

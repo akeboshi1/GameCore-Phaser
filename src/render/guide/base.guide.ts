@@ -7,6 +7,7 @@ import { IGuide } from "./guide.manager";
 
 export class BaseGuide implements IGuide {
     public id: number;
+    public guideID: number;
     public guideEffect: GuideEffect;
     protected scene: Phaser.Scene;
     protected uiManager: UiManager;
@@ -18,6 +19,7 @@ export class BaseGuide implements IGuide {
     public show(data?: any) {
         this.mIsShow = true;
         this.id = data.id;
+        this.guideID = data.guideID;
         if (!this.guideEffect) this.guideEffect = new GuideEffect(this.scene, this.render.uiRatio);
         this.render.guideManager.startGuide(this);
     }
