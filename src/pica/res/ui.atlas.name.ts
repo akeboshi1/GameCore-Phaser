@@ -22,6 +22,7 @@ export class UIAtlasName {
     public static people_action = "people_action";
     public static map = "map";
     public static recast = "recast";
+    public static layout = "layout";
     public static jsonUrl(name: string) {
         return name + ".json";
     }

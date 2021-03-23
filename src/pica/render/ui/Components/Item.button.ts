@@ -22,9 +22,9 @@ export class ItemButton extends ButtonEventDispatcher {
         super(scene, 0, 0);
         this.dpr = dpr;
         this.zoom = zoom;
-        this.bgFrame = bg;
-        this.key = key;
-        this.bg = scene.make.image({ key, frame: bg });
+        this.bgFrame = bg || this.bgFrame;
+        this.key = key || UIAtlasName.uicommon;
+        this.bg = scene.make.image({ key: this.key, frame: bg });
         this.selectbg = scene.make.image({ key: UIAtlasName.uicommon, frame: this.selectFrame });
         this.setSize(this.selectbg.width, this.selectbg.height);
         this.itemIcon = new DynamicImage(scene, 0, 0);

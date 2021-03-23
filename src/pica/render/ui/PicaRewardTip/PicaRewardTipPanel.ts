@@ -43,7 +43,7 @@ export class PicaRewardTipPanel extends BasePanel {
     protected init() {
         this.setSize(20, 20);
         super.init();
-        this.y = 250 * this.dpr;
+        this.y = this.scaleHeight * 0.5;// 250 * this.dpr;
     }
 
     private showAward() {
