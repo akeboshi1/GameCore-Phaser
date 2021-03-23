@@ -1,5 +1,5 @@
 export interface IGuide {
-    id: number;
+    id: string;
     state: boolean;
     uiName?: string;
     uiGuide?: string;

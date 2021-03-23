@@ -25,13 +25,13 @@ export class GuideManager extends PacketHandler {
         connection.removePacketListener(this);
     }
 
-    public stopGuide(id: number) {
+    public stopGuide(id: string) {
         const configMgr = <BaseDataConfigManager>this.game.configManager;
         if (!configMgr) return;
         configMgr.updateGuideState(id, true);
         const packet = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_PKT_FINISH_GUIDE);
         const content: op_virtual_world.OP_CLIENT_REQ_VIRTUAL_WORLD_PKT_FINISH_GUIDE = packet.content;
-        content.index = id;
+        content.index = Number(id);
         this.game.connection.send(packet);
     }
 
@@ -45,7 +45,7 @@ export class GuideManager extends PacketHandler {
         if (!ids || ids.length < 1) return;
         const configMgr = <BaseDataConfigManager>this.game.configManager;
         ids.forEach((id) => {
-            configMgr.updateGuideState(id, true);
+            configMgr.updateGuideState(String(id), true);
         });
     }
 }

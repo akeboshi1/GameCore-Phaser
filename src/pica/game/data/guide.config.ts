@@ -4,7 +4,7 @@ import { Logger } from "utils";
 export class GuideConfig extends BaseConfigData {
     Sheet1: IGuide[];
 
-    public get(id: number): IGuide {
+    public get(id: string): IGuide {
         const result = this.Sheet1.find((c) => c.id  === id);
         if (result != null) return result;
 
