@@ -9,6 +9,7 @@ export class FuritElementAction extends ElementBaseAction {
             const uiName = ModuleName.PICAFURNIFUN_NAME;
             const obj = { nickname: this.data.nickname, displayInfo: this.data.displayInfo, sn: this.data.sn, id: this.data.id };
             if (this.game.user.userData.isSelfRoom) this.game.emitter.emit(EventType.SCENE_SHOW_UI, uiName, obj);
+            this.game.emitter.emit(EventType.SCENE_SHOW_UI, ModuleName.PICAREPAIRCHOOSE_NAME, obj);
         }
     }
     getActionData() {

@@ -93,8 +93,8 @@ export class PicaTaskMediator extends BasicMediator {
     private onGoHandler(data: string) {
         if (data) {
             const datas = data.split("-");
-            this.game.uiManager.showMed(datas[0], datas[1]);
             this.hide();
+            this.game.uiManager.showMed(datas[0], datas[1]);
         }
     }
 }

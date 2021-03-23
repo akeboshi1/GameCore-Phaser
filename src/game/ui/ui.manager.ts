@@ -443,5 +443,6 @@ export class UIManager extends PacketHandler {
         this.mUILayoutMap.set(ModuleName.PICANAVIGATE_NAME, UILayoutType.Bottom);
         this.mUILayoutMap.set(ModuleName.PICAWORK_NAME, UILayoutType.Bottom);
         this.mUILayoutMap.set(ModuleName.PICANEWROLE_NAME, UILayoutType.Bottom);
+        this.mUILayoutMap.set(ModuleName.PICAREPAIRCHOOSE_NAME, UILayoutType.Bottom);
     }
 }
