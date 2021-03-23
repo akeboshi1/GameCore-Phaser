@@ -690,6 +690,14 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
     }
 
     public requestDecorate(id?: number, baseID?: string) {
+        if (id !== undefined) {
+            const element = this.elementManager.get(id);
+            if (!element) return;
+            const locked = this.elementManager.isElementLocked(element);
+            // 未解锁家具不给选中
+            if (locked) return;
+        }
+
         this.mDecorateEntryData = { id, baseID };
 
         this.connection.send(new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_START_EDIT_MODEL));
