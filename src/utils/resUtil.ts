@@ -2,6 +2,7 @@ import { HTTP_REGEX, ModuleName } from "structure";
 import { Font } from "./font";
 import { Handler } from "./Handler";
 import { i18n } from "./i18n";
+import { Logger } from "./log";
 
 export enum CoinType {
     TU_DING_COIN = 0,
@@ -16,12 +17,31 @@ export class Url {
     static RES_PATH: string = "";
     static RESUI_PATH: string = "";
     static getRes(value: string): string {
-        return Url.RES_PATH + value;
+        // return Url.RES_PATH + value;
+        if (!value) return undefined;
+        try {
+            return require(`resources/${value}`).default;
+        } catch {
+            return undefined;
+        }
     }
 
     static getUIRes(dpr: number, value: string): string {
-        return Url.RESUI_PATH + `${dpr}x/${value}`;
+        if (!value) return undefined;
+        // return Url.RESUI_PATH + `${dpr}x/${value}`;
+        // const req = require(Url.RESUI_PATH + `${dpr}x/${value}`);
+        // return req;
+        try {
+            return require(`resources/ui/${dpr}x/${value}`).default;
+        } catch {
+            Logger.getInstance().error("");
+        }
     }
+
+    static requireRes(value: string) {
+        return require(`resources/ui/${value}`).default;
+    }
+
     static getNormalUIRes(value: string) {
         return Url.RESUI_PATH + value;
     }
