@@ -459,6 +459,11 @@ export class BaseDataConfigManager extends BaseConfigManager {
         return data.findGuide(uiName);
     }
 
+    public findGuideByUiGuide(uiGuide: string) {
+        const data: GuideConfig = this.getConfig(BaseDataType.guide);
+        return data.findGuideByUiGuide(uiGuide);
+    }
+
     public updateGuideState(id: string, val: boolean = false) {
         const data: GuideConfig = this.getConfig(BaseDataType.guide);
         const guideData = data.get(id);
