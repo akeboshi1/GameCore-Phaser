@@ -7,7 +7,7 @@ export class RoomGuidePanel extends BasePlaySceneGuide {
 
     protected step1(pos: IPos) {
         const dpr = this.render.config.scale_ratio;
-        const tmpPos = { x: pos.x - dpr * 20, y: pos.y + 75 * dpr };
+        const tmpPos = { x: pos.x - dpr * 15, y: pos.y + 70 * dpr };
         this.guideEffect.createGuideEffect(tmpPos);
         this.mPlayScene.input.on("gameobjectdown", this.gameObjectDownHandler, this);
     }
