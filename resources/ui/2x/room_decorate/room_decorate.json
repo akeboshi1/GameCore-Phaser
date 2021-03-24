@@ -100,6 +100,46 @@
 				"h": 71
 			}
 		},
+		"room_decorate_icon_default.png": {
+			"frame": {
+				"x": 546,
+				"y": 1,
+				"w": 78,
+				"h": 77
+			},
+			"rotated": false,
+			"trimmed": false,
+			"spriteSourceSize": {
+				"x": 0,
+				"y": 0,
+				"w": 78,
+				"h": 77
+			},
+			"sourceSize": {
+				"w": 78,
+				"h": 77
+			}
+		},
+		"room_decorate_icon_select.png": {
+			"frame": {
+				"x": 626,
+				"y": 1,
+				"w": 78,
+				"h": 77
+			},
+			"rotated": false,
+			"trimmed": false,
+			"spriteSourceSize": {
+				"x": 0,
+				"y": 0,
+				"w": 78,
+				"h": 77
+			},
+			"sourceSize": {
+				"w": 78,
+				"h": 77
+			}
+		},
 		"room_decorate_line.png": {
 			"frame": {
 				"x": 1,
@@ -122,8 +162,8 @@
 		},
 		"room_decorate_operating.png": {
 			"frame": {
-				"x": 546,
-				"y": 1,
+				"x": 1,
+				"y": 96,
 				"w": 150,
 				"h": 71
 			},
@@ -142,7 +182,7 @@
 		},
 		"room_decorate_previous.png": {
 			"frame": {
-				"x": 1,
+				"x": 153,
 				"y": 96,
 				"w": 30,
 				"h": 51
@@ -162,7 +202,7 @@
 		},
 		"room_decorate_put.png": {
 			"frame": {
-				"x": 33,
+				"x": 185,
 				"y": 96,
 				"w": 124,
 				"h": 88
@@ -182,7 +222,7 @@
 		},
 		"room_decorate_save.png": {
 			"frame": {
-				"x": 159,
+				"x": 311,
 				"y": 96,
 				"w": 86,
 				"h": 86
@@ -202,7 +242,7 @@
 		},
 		"room_decorate_tiled.png": {
 			"frame": {
-				"x": 247,
+				"x": 399,
 				"y": 96,
 				"w": 88,
 				"h": 87
@@ -222,7 +262,7 @@
 		},
 		"room_decorate_withdraw.png": {
 			"frame": {
-				"x": 337,
+				"x": 489,
 				"y": 96,
 				"w": 71,
 				"h": 71

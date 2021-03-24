@@ -187,7 +187,7 @@ export class PicaTaskMainPanel extends Phaser.GameObjects.Container {
             const item = data.item;
             this.onExtendsHandler(extend, item);
         } else if (tag === "go") {
-
+            this.send.runWith(["go", data]);
         } else if (tag === "finish") {
             this.send.runWith(["finish", data]);
         } else if (tag === "item") {

@@ -89,9 +89,10 @@ export class PicaMyNavigationPanel extends Phaser.GameObjects.Container {
             item.visible = true;
             item.setGroupData(this.datas[i]);
             firstItem = firstItem || item;
+            this.onPointerUpHandler(item);
         }
         this.mGameScroll.Sort();
-        this.onPointerUpHandler(firstItem);
+        // this.onPointerUpHandler(firstItem);
     }
 
     private onPointerUpHandler(gameobject) {
@@ -113,9 +114,9 @@ export class PicaMyNavigationPanel extends Phaser.GameObjects.Container {
     }
 
     private onExtendsHandler(isExtend: boolean, item: NavigationRoomListItem) {
-        if (this.curRoomItem) {
-            this.curRoomItem.setExtend(false, false);
-        }
+        // if (this.curRoomItem) {
+        //     this.curRoomItem.setExtend(false, false);
+        // }
         if (isExtend) {
             this.curRoomItem = item;
         } else

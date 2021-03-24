@@ -440,7 +440,13 @@ export class ElementManager extends PacketHandler implements IElementManager {
             ele.model = sprite;
         } else {
             ele = new Element(sprite, this);
-            ele.setInputEnable(InputEnable.Interactive);
+
+            // 有小屋装扮权限时，设置全部家具可互动
+            if (this.roomService.enableDecorate) {
+                ele.setInputEnable(InputEnable.Enable);
+            } else {
+                ele.setInputEnable(InputEnable.Interactive);
+            }
         }
         // if (!ele) ele = new Element(sprite, this);
         if (addMap) ele.addToWalkableMap();

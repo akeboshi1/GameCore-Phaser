@@ -1719,7 +1719,10 @@ export class Render extends RPCPeer implements GameMain, IRender {
                 if (pauseScene) pauseScene.scene.pause();
             }
             if (playScene) playScene.scene.pause();
-            if (uiScene) uiScene.scene.pause();
+            if (uiScene) {
+                uiScene.scene.pause();
+                uiScene.scene.setVisible(false);
+            }
             if (loginScene && loginScene.scene.isActive()) loginScene.scene.setVisible(false);
         } else {
             this.mGame.scene.stop(sceneName);
@@ -1727,7 +1730,10 @@ export class Render extends RPCPeer implements GameMain, IRender {
                 if (pauseScene) pauseScene.scene.resume();
             }
             if (playScene) playScene.scene.resume();
-            if (uiScene) uiScene.scene.resume();
+            if (uiScene) {
+                uiScene.scene.resume();
+                uiScene.scene.setVisible(true);
+            }
             if (loginScene && loginScene.scene.isActive()) loginScene.scene.setVisible(true);
         }
     }

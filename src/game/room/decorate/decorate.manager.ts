@@ -174,6 +174,9 @@ export class DecorateManager {
         }
         const element = this.mRoom.elementManager.get(id);
         if (!element) return;
+        const locked = this.mRoom.elementManager.isElementLocked(element);
+        // 未解锁家具不给选中
+        if (locked) return;
 
         if (this.mSelectedID !== id) {
             this.reverseSelected();
@@ -188,7 +191,6 @@ export class DecorateManager {
         element.showRefernceArea();
 
         const canPlace = this.checkSelectedCanPlace();
-        const locked = this.mRoom.elementManager.isElementLocked(element);
         this.mRoom.game.uiManager.showMed(ModuleName.PICADECORATECONTROL_NAME, {
             id,
             pos: element.model.pos,
@@ -603,6 +605,9 @@ class DecorateAction {
     }
 
     private setElementPos(mng: DecorateManager, x: number, y: number) {
+        // const freePos = new LogicPos(x, y);
+        // const gridPos = Position45.transformTo90(Position45.transformTo45(freePos, mng.room.miniSize), mng.room.miniSize);
+
         mng.room.removeFromWalkableMap(this.target);
         this.target.setPosition(x, y);
         mng.room.addToWalkableMap(this.target);

@@ -23,6 +23,7 @@ import { BaseConfigManager } from "./data.manager";
 import { NetworkManager } from "./command";
 import version from "../../version";
 import { SoundManager } from "./sound.manager";
+import { GuideManager } from "./guide.manager/guide.manager";
 interface ISize {
     width: number;
     height: number;
@@ -43,6 +44,7 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
     protected mHttpService: HttpService;
     protected mConfig: ILauncherConfig;
     protected mDataManager: DataManager;
+    protected mGuideManager: GuideManager;
     // protected mAccount: Account;
     protected mRoomManager: RoomManager;
     protected mElementStorage: ElementStorage;
@@ -343,6 +345,10 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
         return this.mRoomManager;
     }
 
+    get guideManager(): GuideManager {
+        return this.mGuideManager;
+    }
+
     get loadingManager(): LoadingManager {
         return this.mLoadingManager;
     }
@@ -592,6 +598,7 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
 
     protected createManager() {
         if (!this.mRoomManager) this.mRoomManager = new RoomManager(this);
+        if(!this.mGuideManager)this.mGuideManager = new GuideManager(this);
         // this.mUiManager = new UiManager(this);
         if (!this.mElementStorage) this.mElementStorage = new ElementStorage();
         if (!this.mUIManager) this.mUIManager = new UIManager(this);
@@ -605,6 +612,7 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
 
         this.mUIManager.addPackListener();
         this.mRoomManager.addPackListener();
+        this.mGuideManager.addPackListener();
         this.user.addPackListener();
         this.mSoundManager.addPackListener();
         // this.mPlayerDataManager.addPackListener();
@@ -685,6 +693,10 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
                 if (this.mRoomManager) {
                     this.mRoomManager.destroy();
                     this.mRoomManager = null;
+                }
+                if(this.mGuideManager) {
+                    this.mGuideManager.destroy();
+                    this.mGuideManager = null;
                 }
                 if (this.mUIManager) {
                     this.mUIManager.destroy();

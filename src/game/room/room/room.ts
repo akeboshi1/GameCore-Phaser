@@ -93,7 +93,7 @@ export interface IRoomService {
 
     onManagerReady(key: string);
 
-    requestDecorate(id: number, baseID?: string);
+    requestDecorate(id?: number, baseID?: string);
 
     startDecorating();
 
@@ -689,7 +689,15 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
         }
     }
 
-    public requestDecorate(id: number, baseID?: string) {
+    public requestDecorate(id?: number, baseID?: string) {
+        if (id !== undefined) {
+            const element = this.elementManager.get(id);
+            if (!element) return;
+            const locked = this.elementManager.isElementLocked(element);
+            // 未解锁家具不给选中
+            if (locked) return;
+        }
+
         this.mDecorateEntryData = { id, baseID };
 
         this.connection.send(new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_START_EDIT_MODEL));
@@ -707,11 +715,11 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
         this.playerManager.hideAll();
 
         // set all element interactive
-        const elements = this.elementManager.getElements();
-        for (const element of elements) {
-            if (!(element instanceof BlockObject)) continue;
-            element.setInputEnable(InputEnable.Enable);
-        }
+        // const elements = this.elementManager.getElements();
+        // for (const element of elements) {
+        //     if (!(element instanceof BlockObject)) continue;
+        //     element.setInputEnable(InputEnable.Enable);
+        // }
 
         // new decorate manager
         this.mDecorateManager = new DecorateManager(this, this.mDecorateEntryData);
@@ -747,11 +755,11 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
         this.playerManager.showAll();
 
         // set all element interactive
-        const elements = this.elementManager.getElements();
-        for (const element of elements) {
-            if (!(element instanceof BlockObject)) continue;
-            element.setInputEnable(InputEnable.Interactive);
-        }
+        // const elements = this.elementManager.getElements();
+        // for (const element of elements) {
+        //     if (!(element instanceof BlockObject)) continue;
+        //     element.setInputEnable(InputEnable.Interactive);
+        // }
 
         // switch ui
         this.game.uiManager.hideMed(ModuleName.PICADECORATE_NAME);

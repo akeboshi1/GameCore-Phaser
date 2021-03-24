@@ -126,3 +126,4 @@ export * from "./PlaneGuide/PlaneGuidePanel";
 export * from "./PicaPartyNavigation/PicaMyNavigationPanel";
 export * from "./PicaPartyNavigation/PicaPartyNavigationPanel";
 export * from "./PicaPartyNavigation/PicaTownNavigationPanel";
+export * from "./PicaRepairChoose/PicaRepairChoosePanel";

@@ -24,6 +24,8 @@ import { SkillConfig } from "./skill.config";
 import { LevelConfig } from "./level.config";
 import { SocialConfig } from "./social.config";
 import { SceneConfig } from "./scene.config";
+import { QuestConfig } from "./quest.config";
+import { GuideConfig } from "./guide.config";
 
 export enum BaseDataType {
     i18n_zh = "i18n_zh",
@@ -37,7 +39,9 @@ export enum BaseDataType {
     level = "level",
     social = "social",
     minescene = "mineScene",
-    publicscene = "publicScene"
+    publicscene = "publicScene",
+    quest = "quest",
+    guide = "guide",
     // itemcategory = "itemcategory"
 }
 
@@ -295,7 +299,7 @@ export class BaseDataConfigManager extends BaseConfigManager {
     }
 
     public convertDynamicCategory(list: any) {
-        const result = { marketName: "shop", marketCategory: []};
+        const result = { marketName: "shop", marketCategory: [] };
         const cate = result.marketCategory;
         list.items.forEach((item) => {
             let existing = cate.find((c) => c.category.key === item.category);
@@ -445,6 +449,27 @@ export class BaseDataConfigManager extends BaseConfigManager {
             return this.sceneMap;
         }
     }
+    public getQuest(id: string) {
+        const data: QuestConfig = this.getConfig(BaseDataType.quest);
+        return data.get(id);
+    }
+
+    public findGuide(uiName: string) {
+        const data: GuideConfig = this.getConfig(BaseDataType.guide);
+        return data.findGuide(uiName);
+    }
+
+    public findGuideByUiGuide(uiGuide: string) {
+        const data: GuideConfig = this.getConfig(BaseDataType.guide);
+        return data.findGuideByUiGuide(uiGuide);
+    }
+
+    public updateGuideState(id: string, val: boolean = false) {
+        const data: GuideConfig = this.getConfig(BaseDataType.guide);
+        const guideData = data.get(id);
+        if (!guideData) return;
+        guideData.state = val;
+    }
 
     protected add() {
         this.dataMap.set(BaseDataType.i18n_zh, new I18nZHDataConfig());
@@ -459,6 +484,8 @@ export class BaseDataConfigManager extends BaseConfigManager {
         this.dataMap.set(BaseDataType.social, new SocialConfig());
         this.dataMap.set(BaseDataType.publicscene, new SceneConfig());
         this.dataMap.set(BaseDataType.minescene, new SceneConfig());
+        this.dataMap.set(BaseDataType.quest, new QuestConfig());
+        this.dataMap.set(BaseDataType.guide, new GuideConfig());
     }
 
     protected configUrl(reName: string, tempurl?: string) {
