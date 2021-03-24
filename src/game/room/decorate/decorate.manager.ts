@@ -605,6 +605,9 @@ class DecorateAction {
     }
 
     private setElementPos(mng: DecorateManager, x: number, y: number) {
+        // const freePos = new LogicPos(x, y);
+        // const gridPos = Position45.transformTo90(Position45.transformTo45(freePos, mng.room.miniSize), mng.room.miniSize);
+
         mng.room.removeFromWalkableMap(this.target);
         this.target.setPosition(x, y);
         mng.room.addToWalkableMap(this.target);
