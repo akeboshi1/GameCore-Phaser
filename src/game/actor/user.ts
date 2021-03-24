@@ -96,6 +96,9 @@ export class User extends Player {
             this.mMovePoints = [];
             this.mMoveTime = now;
         }
+
+        // debug
+        // Logger.getInstance().debug("#path cur pos : ", this.getPosition45(), "; ", this.getPosition());
     }
 
     public unmount(targetPos?: IPos): Promise<this> {
@@ -147,9 +150,6 @@ export class User extends Player {
         ct.movePath = movePath;
         this.mElementManager.connection.send(pkt);
         this.mMovePoints = [];
-
-        // debug
-        // Logger.getInstance().log("#path cur pos : ", this.getPosition45(), "; ", this.getPosition());
     }
 
     public move(moveData: any) {
