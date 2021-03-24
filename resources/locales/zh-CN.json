@@ -63,7 +63,8 @@
     "give": "赠送",
     "bag":"背包",
     "recast":"重铸",
-    "make":"制作"
+    "make":"制作",
+    "editor":"编辑"
   },
   "quantityunit": {
     "k": "千",

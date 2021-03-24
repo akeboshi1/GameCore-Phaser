@@ -729,7 +729,7 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
         this.game.uiManager.hideMed(ModuleName.BOTTOM);
         this.game.uiManager.showMed(ModuleName.PICADECORATE_NAME,
             { closeAlertText: (<BaseDataConfigManager>this.game.configManager).getI18n("PKT_SYS0000021") });
-
+        this.game.uiManager.hideMed(ModuleName.CUTINMENU_NAME);
         // switch mouse manager
         this.game.renderPeer.switchDecorateMouseManager();
     }
@@ -765,7 +765,7 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
         this.game.uiManager.hideMed(ModuleName.PICADECORATE_NAME);
         this.game.uiManager.showMed(ModuleName.PICANEWMAIN_NAME);
         this.game.uiManager.showMed(ModuleName.BOTTOM);
-
+        this.game.uiManager.showMed(ModuleName.CUTINMENU_NAME, { button: [{ text: "editor" }] });
         // switch mouse manager
         this.game.renderPeer.switchBaseMouseManager();
 
@@ -900,6 +900,7 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
 
     private onEnableEditModeHandler(packet: PBpacket) {
         this.mEnableDecorate = true;
+        this.game.uiManager.showMed(ModuleName.CUTINMENU_NAME, { button: [{ text: "editor" }] });
     }
 
     private onShowMapTitle(packet: PBpacket) {

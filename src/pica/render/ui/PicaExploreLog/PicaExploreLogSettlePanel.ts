@@ -67,7 +67,6 @@ export class PicaExploreLogSettlePanel extends ButtonEventDispatcher {
             x: 0, y: this.titleimage.y + 40 * this.dpr, text: "", style: UIHelper.whiteStyle(this.dpr, 11)
         }).setOrigin(0.5);
         this.starText.y = this.starPro.y + this.starPro.height * 0.5 + 10 * this.dpr;
-        this.starText.visible = false;
         this.unkownImg = new UnKnownAnimation(this.scene, this.dpr);// this.scene.make.image({ key: UIAtlasName.explorelog, frame: "Settlement_unkown_clue" }).setOrigin(0.3, 0.8);
         this.unkownImg.y = this.starText.y;
         this.unkownImg.visible = false;
@@ -277,8 +276,6 @@ export class PicaExploreLogSettlePanel extends ButtonEventDispatcher {
             },
         });
         this.tweens.push(tween);
-        // this.setStarProgressInfo();
-        this.starText.visible = true;
     }
 
     private getProgressValue(value: number) {
@@ -293,20 +290,19 @@ export class PicaExploreLogSettlePanel extends ButtonEventDispatcher {
 
     private setStarProgressInfo() {
         const to = this.settleData.latestProgress;
-        let riado = Math.floor(to / 100);
+        const riado = Math.floor(to / 100);
         const beforeriado = Math.floor(this.settleData.previousProgress / 100);
         let temprem = Math.floor(to % 100);
-        if (to !== 0) {
-            if (temprem === 0) {
-                temprem = 100;
-                riado -= 1;
-            }
-        }
+        temprem = temprem || 100;
         const width = 196 * this.dpr;
         const cellWidth = 29 * this.dpr;
         const space = 12 * this.dpr;
         this.starText.text = temprem + "%";
-        this.starText.x = -width * 0.5 + riado * (cellWidth + space) + cellWidth * 0.5;
+        if (temprem === 100 && riado > 0) {
+            this.starText.x = -width * 0.5 + (riado - 1) * (cellWidth + space) + cellWidth * 0.5;
+
+        } else
+            this.starText.x = -width * 0.5 + riado * (cellWidth + space) + cellWidth * 0.5;
         const clues: any[] = this.settleData.clue;
         this.unkownImg.visible = false;
         if (clues) {
@@ -612,7 +608,7 @@ class UnKnownAnimation extends Phaser.GameObjects.Container {
             UIHelper.playAlphaTween(this.scene, this.unknImg, 1, 0, 100, undefined, 0, new Handler(this, () => {
                 this.rewards.visible = true;
             }));
-            UIHelper.playtPosYTween(this.scene, this.rewards, this.unknImg.y, this.unknImg.y - 60 * this.dpr, 200, undefined, 90);
+            UIHelper.playtPosYTween(this.scene, this.rewards, this.unknImg.y, this.unknImg.y - 30 * this.dpr, 200, undefined, 90);
             return;
         }
         const pos = this.pos.shift();

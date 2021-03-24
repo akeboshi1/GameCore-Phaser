@@ -141,8 +141,8 @@ export class PicaExploreLogPanel extends PicaBasePanel {
             this.settlePanel = new PicaExploreLogSettlePanel(this.scene, wid, hei, this.dpr, this.scale);
             this.settlePanel.setHandler(new Handler(this, this.onSettleHandler));
             this.settlePanel.y = -20 * this.dpr;
+            this.add(this.settlePanel);
         }
-        this.add(this.settlePanel);
         this.settlePanel.x = wid * 0.5;
         this.settlePanel.y = hei * 0.5;
         this.settlePanel.resize(wid, hei);
@@ -151,6 +151,8 @@ export class PicaExploreLogPanel extends PicaBasePanel {
 
     hideSettlePanel() {
         this.settlePanel.visible = false;
+        this.settlePanel.destroy();
+        this.settlePanel = undefined;
     }
 
     setTipsLayout(extpand: boolean) {

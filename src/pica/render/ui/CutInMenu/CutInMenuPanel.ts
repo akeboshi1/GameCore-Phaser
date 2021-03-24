@@ -28,13 +28,17 @@ export class CutInMenuPanel extends BasePanel {
         if (buttonType === "work") {
             this.rightPopButton = new WorkPopContainer(this.scene, width, this.key, this.dpr);
         } else if (buttonType === "minecar") {
-            this.rightPopButton = new RightPopContainer(this.scene, width, this.key, this.dpr);
+            this.rightPopButton = new MinePopContainer(this.scene, width, this.key, this.dpr);
+        } else if (buttonType === "editor") {
+            this.rightPopButton = new EditorPopContainer(this.scene, width, this.key, this.dpr);
         } else
             this.rightPopButton = new RightPopContainer(this.scene, width, this.key, this.dpr);
-        const posx = width + this.rightPopButton.width * 0.5 - 15 * this.dpr;
-        this.rightPopButton.setPosition(posx, height * 0.5 + 20 * this.dpr);
-        this.rightPopButton.setClickHandler(new Handler(this, this.onRightClickHandler));
-        // this.add(this.rightPopButton);
+        if (this.rightPopButton) {
+            const posx = width + this.rightPopButton.width * 0.5 - 15 * this.dpr;
+            this.rightPopButton.setPosition(posx, height * 0.5 + 20 * this.dpr);
+            this.rightPopButton.setClickHandler(new Handler(this, this.onRightClickHandler));
+            this.add(this.rightPopButton);
+        }
         this.resize(width, height);
         super.init();
         this.opneButton();
@@ -65,6 +69,8 @@ export class CutInMenuPanel extends BasePanel {
             this.render.renderEmitter(ModuleName.CUTINMENU_NAME + "_openmed", ModuleName.PICAWORK_NAME);
         } else if (type === "minecar") {
             this.render.renderEmitter(ModuleName.CUTINMENU_NAME + "_openmed", ModuleName.PICAMINECAR_NAME);
+        } else if (type === "editor") {
+            this.render.renderEmitter(ModuleName.CUTINMENU_NAME + "_editor");
         }
     }
 
@@ -74,14 +80,15 @@ export class CutInMenuPanel extends BasePanel {
         return button.text;
     }
 }
+
 class RightPopContainer extends Phaser.GameObjects.Container {
     public isPop: boolean = false;
     protected readonly dpr: number;
     protected readonly key: string;
     protected imgIcon: Phaser.GameObjects.Image;
-    // private teximg: Phaser.GameObjects.Image;
     protected text: Phaser.GameObjects.Text;
     protected bgSprite: Phaser.GameObjects.Image;
+    protected minecarbg: Phaser.GameObjects.Image;
     protected clickHandler: Handler;
     protected popData: any;
     protected scaleWidth: number;
@@ -93,16 +100,16 @@ class RightPopContainer extends Phaser.GameObjects.Container {
         this.dpr = dpr;
         this.key = key;
         this.scaleWidth = width;
-        const minecarbg = this.scene.make.image({ key: this.key, frame: "minebag_bg" });
-        minecarbg.texture.setFilter(Phaser.Textures.FilterMode.LINEAR);
+        this.minecarbg = this.scene.make.image({ key: this.key, frame: "minebag_bg" });
+        this.minecarbg.texture.setFilter(Phaser.Textures.FilterMode.LINEAR);
+        this.minecarbg.on("pointerup", this.onClickHandler, this);
+        this.minecarbg.setInteractive();
+        this.setSize(this.minecarbg.width, this.minecarbg.height);
         this.bgSprite = this.scene.make.image({ key: this.key, frame: "minebag_bg_brth" }, false);
         this.bgSprite.texture.setFilter(Phaser.Textures.FilterMode.LINEAR);
         this.imgIcon = this.scene.make.image({ key: this.key, frame: "minecar" });
         this.imgIcon.texture.setFilter(Phaser.Textures.FilterMode.LINEAR);
         this.imgIcon.setPosition(-12 * dpr, -this.imgIcon.height * 0.5);
-        // this.teximg = this.scene.make.image({ key: this.key, frame: "text_minebag" });
-        // this.teximg.texture.setFilter(Phaser.Textures.FilterMode.LINEAR);
-        // this.teximg.setPosition(this.minecar.x, 2 * dpr);
         this.text = scene.make.text({
             x: this.imgIcon.x,
             y: 2 * dpr,
@@ -111,19 +118,7 @@ class RightPopContainer extends Phaser.GameObjects.Container {
         }, false).setOrigin(0.5);
         this.text.setFontStyle("bold");
         this.text.setStroke("#2D1415", 3 * dpr);
-        const arrow = this.scene.make.image({ key: this.key, frame: "arow" });
-        arrow.texture.setFilter(Phaser.Textures.FilterMode.LINEAR);
-        const arrowcon = scene.make.container(undefined, false);
-        arrowcon.setSize(25 * dpr, 31 * dpr);
-        arrowcon.add(arrow);
-        arrowcon.setPosition(-minecarbg.width * 0.5 + 10 * dpr, 0);
-        this.add([this.bgSprite, minecarbg, this.imgIcon, this.text, arrowcon]);
-        minecarbg.on("pointerup", this.onClickHandler, this);
-        minecarbg.setInteractive();
-        arrowcon.on("pointerup", this.onTakeBack, this);
-        arrowcon.setInteractive();
-        this.setSize(minecarbg.width, minecarbg.height);
-
+        this.add([this.bgSprite, this.minecarbg, this.imgIcon, this.text]);
         this.tween = this.scene.tweens.add({
             targets: this.bgSprite,
             alpha: { value: 0, duration: 500, ease: "Power1", yoyo: true },
@@ -195,7 +190,22 @@ class RightPopContainer extends Phaser.GameObjects.Container {
     }
 }
 
-class WorkPopContainer extends RightPopContainer {
+class MinePopContainer extends RightPopContainer {
+    constructor(scene: Phaser.Scene, width: number, key: string, dpr: number) {
+        super(scene, width, key, dpr);
+        const arrow = this.scene.make.image({ key: this.key, frame: "arow" });
+        arrow.texture.setFilter(Phaser.Textures.FilterMode.LINEAR);
+        const arrowcon = scene.make.container(undefined, false);
+        arrowcon.setSize(25 * dpr, 31 * dpr);
+        arrowcon.add(arrow);
+        arrowcon.setPosition(-this.minecarbg.width * 0.5 + 10 * dpr, 0);
+        this.add(arrowcon);
+        arrowcon.on("pointerup", this.onTakeBack, this);
+        arrowcon.setInteractive();
+    }
+}
+
+class WorkPopContainer extends MinePopContainer {
     protected countTex: Phaser.GameObjects.Text;
     constructor(scene: Phaser.Scene, width: number, key: string, dpr: number) {
         super(scene, width, key, dpr);
@@ -250,5 +260,17 @@ class WorkPopContainer extends RightPopContainer {
                 target.isPlaying = false;
             }
         });
+    }
+}
+class EditorPopContainer extends RightPopContainer {
+    constructor(scene: Phaser.Scene, width: number, key: string, dpr: number) {
+        super(scene, width, key, dpr);
+        this.bgSprite.visible = false;
+        this.imgIcon.visible = false;
+        this.text.x -= 2 * dpr;
+        this.text.y = 0;
+        this.text.setText(i18n.t("common.editor"));
+        this.text.setStyle(UIHelper.brownishStyle(dpr, 19));
+        this.text.setStroke(undefined, 0);
     }
 }
