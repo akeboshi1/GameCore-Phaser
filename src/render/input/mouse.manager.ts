@@ -170,7 +170,7 @@ export class MouseManager {
             this.debounce = null;
         }, this.delay);
         this.scene.input.off("pointerup", this.onPointerUp, this);
-        this.scene.input.once("pointerup", this.onPointerUp, this);
+        this.scene.input.on("pointerup", this.onPointerUp, this);
         if (this.render) {
             if (this.render.emitter) {
                 this.render.emitter.emit(MessageType.SCENE_BACKGROUND_CLICK, pointer);

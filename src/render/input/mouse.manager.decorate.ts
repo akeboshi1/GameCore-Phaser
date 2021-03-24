@@ -85,12 +85,12 @@ export class MouseManagerDecorate extends MouseManager {
         this.clearDownData();
     }
 
-    protected onGameObjectDownHandler(pointer: Phaser.Input.Pointer, gameObject: Phaser.GameObjects.GameObject) {
+    protected async onGameObjectDownHandler(pointer: Phaser.Input.Pointer, gameObject: Phaser.GameObjects.GameObject) {
         if (gameObject) {
             const id = gameObject.getData("id");
             if (id) {
                 const display = this.render.displayManager.getDisplay(id);
-                if (display && display.nodeType === NodeType.ElementNodeType) {
+                if (display && display.nodeType === NodeType.ElementNodeType && !await this.render.mainPeer.isElementLocked(id)) {
                     this.downDisplay = display;
                     this.scene.input.off("pointermove", this.onPointerMoveHandler, this);
                     this.scene.input.on("pointermove", this.onPointerMoveHandler, this);
