@@ -8,12 +8,12 @@ export class DragonbonesAnimation extends BaseAnimation {
         super(scene);
     }
 
-    public load(resName: string, resUrl: string, data?: string) {
-        super.load(resName, resUrl, data);
+    public load(resName: string, textureUrl: string, jsonUrl?: string,  boneUrl?: string) {
+        super.load(resName, textureUrl, jsonUrl);
         this.animUrlData = new AnimationUrlData();
         if (resName)
-            this.animUrlData.setData(this.resName, this.resUrl, true, ".dbbin");
-        else this.animUrlData.setDisplayData(resUrl, data);
+            this.animUrlData.setData(this.resName, this.textureUrl, boneUrl, ".dbbin");
+        else this.animUrlData.setDisplayData(textureUrl, jsonUrl);
         this.scene.load.dragonbone(this.resName, this.animUrlData.pngUrl, this.animUrlData.jsonUrl, this.animUrlData.boneUrl,
             this.animUrlData.textureXhrSettings, this.animUrlData.atlasXhrSettings, this.animUrlData.boneXhrSettings);
         this.scene.load.once(

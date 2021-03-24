@@ -83,7 +83,7 @@ export class PicaBasePanel extends BasePanel {
             if (this.scene.load[resource.type]) {
                 resource.foldType = resource.foldType || FolderType.DPR;
                 const textureUrl = resource.foldType === FolderType.DPR ? Url.getUIRes(resource.dpr, resource.texture) : Url.getNormalUIRes(resource.texture);
-                const jsonUrl = resource.foldType === FolderType.DPR ? Url.getUIRes(resource.dpr, resource.data) : Url.getNormalUIRes(resource.data);
+                const jsonUrl = resource.foldType === FolderType.DPR ? resource.data ? Url.getUIRes(resource.dpr, resource.data) : undefined : Url.getNormalUIRes(resource.data);
                 if (resource.type !== "video") {
                     this.scene.load[resource.type](key, textureUrl, jsonUrl);
                 } else {

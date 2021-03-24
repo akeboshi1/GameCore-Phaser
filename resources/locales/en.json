@@ -423,5 +423,9 @@
     "picahotel": "Pica Hotel",
     "store": "Store",
     "onlinetips": "Online rewards"
+  },
+  "boot": {
+    "play": "开始游戏",
+    "notice": "公 告"
   }
 }

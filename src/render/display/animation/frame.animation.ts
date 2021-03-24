@@ -7,14 +7,18 @@ export class FrameAnimation extends BaseAnimation {
     constructor(scene: Phaser.Scene) {
         super(scene);
     }
-
-    public load(resName: string, resUrl: string, data?: string, compl?: Handler) {
-        super.load(resName, resUrl, data);
+    // this.resName = resName;
+    //     this.pngUrl = resUrl + "/" + resName + (!isbone ? ".png" : "_tex.png");
+    //     this.jsonUrl = resUrl + "/" + resName + (!isbone ? ".json" : "_tex.json");
+    //     if (isbone)
+    //         this.boneUrl = resUrl + "/" + resName + "_ske" + extension;
+    public load(resName: string, textureUrl: string, jsonUrl?: string, compl?: Handler) {
+        super.load(resName, textureUrl, jsonUrl);
         this.complHandler = compl;
         this.animUrlData = new AnimationUrlData();
         if (resName)
-            this.animUrlData.setData(this.resName, this.resUrl);
-        else this.animUrlData.setDisplayData(resUrl, data);
+            this.animUrlData.setData(this.resName,textureUrl,jsonUrl);
+        else this.animUrlData.setDisplayData(textureUrl, jsonUrl);
         if (this.scene.textures.exists(this.resName)) {
             this.onLoadComplete();
         } else {
