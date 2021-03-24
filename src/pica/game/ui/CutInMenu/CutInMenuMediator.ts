@@ -15,6 +15,7 @@ export class CutInMenuMediator extends BasicMediator {
         this.game.emitter.on(ModuleName.CUTINMENU_NAME + "_hide", this.onHideView, this);
         this.game.emitter.on(ModuleName.CUTINMENU_NAME + "_rightButton", this.onRightButtonHandler, this);
         this.game.emitter.on(ModuleName.CUTINMENU_NAME + "_openmed", this.openPanelMediator, this);
+        this.game.emitter.on(ModuleName.CUTINMENU_NAME + "_editor", this.onOpenEditorHandler, this);
         if (this.buttonType === "work") {
             this.game.emitter.on(EventType.UPDATE_PLAYER_INFO, this.onUpdatePlayerInfo, this);
         }
@@ -25,6 +26,7 @@ export class CutInMenuMediator extends BasicMediator {
         this.game.emitter.off(ModuleName.CUTINMENU_NAME + "_hide", this.onHideView, this);
         this.game.emitter.off(ModuleName.CUTINMENU_NAME + "_rightButton", this.onRightButtonHandler, this);
         this.game.emitter.off(ModuleName.CUTINMENU_NAME + "_openmed", this.openPanelMediator, this);
+        this.game.emitter.off(ModuleName.CUTINMENU_NAME + "_editor", this.onOpenEditorHandler, this);
         if (this.buttonType === "work") {
             this.game.emitter.off(EventType.UPDATE_PLAYER_INFO, this.onUpdatePlayerInfo, this);
         }
@@ -51,6 +53,10 @@ export class CutInMenuMediator extends BasicMediator {
         if (data)
             uiManager.showMed(panel, data);
         else uiManager.showMed(panel);
+    }
+    private onOpenEditorHandler() {
+        this.game.roomManager.currentRoom.requestDecorate();
+        this.hide();
     }
     private onHideView() {
         this.hide();

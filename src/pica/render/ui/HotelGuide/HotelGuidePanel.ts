@@ -1,6 +1,7 @@
 import { ClickEvent } from "apowophaserui";
 import { BaseGuide, UiManager } from "gamecoreRender";
 import { ModuleName } from "structure";
+import { UiUtils } from "utils";
 import { PicaNewMainPanel } from "../PicaNewMain/PicaNewMainPanel";
 import { PicaTaskPanel } from "../PicaTask/PicaTaskPanel";
 
@@ -46,7 +47,7 @@ export class HotelGuidePanel extends BaseGuide {
         if (!item) this.end();
         this.itemTaskBtn = item.taskButton;
         const worldMatrix = this.itemTaskBtn.getWorldTransformMatrix();
-        this.guideEffect.createGuideEffect({ x: item.width - 30 * this.render.uiRatio, y: worldMatrix.ty });
+        this.guideEffect.createGuideEffect({ x: item.width - worldMatrix.tx - 60 * UiUtils.baseDpr, y: worldMatrix.ty });
         this.itemTaskBtn.on(ClickEvent.Tap, this.end, this);
     }
 
