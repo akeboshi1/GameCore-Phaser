@@ -432,5 +432,8 @@
     "picahotel": "皮卡堂大酒店",
     "store": "商铺",
     "onlinetips": "在线奖励"
+  },
+  "boot": {
+    "play": "开始游戏"
   }
 }
