@@ -460,7 +460,7 @@ export class PicaBagPanel extends PicaBasePanel {
     this.mSelectedItemData = data;
     this.mSelectedItem = cell;
     cell.select = true;
-    this.mDetailDisplay.displayLoading("loading_ui", Url.getUIRes(this.dpr, "loading_ui"), Url.getUIRes(this.dpr, "loading_ui"));
+    this.mDetailDisplay.displayLoading("loading_ui", Url.getUIRes(this.dpr, "loading_ui/loading_ui.png"), Url.getUIRes(this.dpr, "loading_ui/loading_ui.json"));
     const content = new op_client.OP_VIRTUAL_WORLD_RES_CLIENT_MARKET_QUERY_PACKAGE_ITEM_RESOURCE();
     content.display = this.categoryType === 1 ? data.animationDisplay : data.display;
     content.animations = <any>data.animations;

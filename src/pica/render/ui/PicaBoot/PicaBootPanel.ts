@@ -101,6 +101,8 @@ export class PicaBootPanel extends BasePanel {
         this.navigate.x = scaleW * 0.5 - 38 * this.dpr;
         this.navigate.y = -scaleH * 0.5 + 41 * this.dpr;
 
+        // const frame: any = this.scene.add.dom(scaleW * 0.5, scaleH * 0.5, "iframe", { width: window.innerWidth * 0.8 + "px", height: window.innerHeight * 0.8 + "px" });
+        // frame.node.src = "https://baidu.com";
         // this.register = new PhoneRegisterPanel(this, this.scene, this.key, this.dpr);
         this.add([bg, logo, label1, label2, this.playBtn, this.navigate]);
         super.init();

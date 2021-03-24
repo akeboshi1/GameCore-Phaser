@@ -378,7 +378,7 @@ class RecasteDisplayPanel extends Phaser.GameObjects.Container {
   }
 
   public setRecasteTargetData(data: op_client.ICountablePackageItem) {
-    this.recasteTarget.displayLoading("loading_ui", Url.getUIRes(this.dpr, "loading_ui"), Url.getUIRes(this.dpr, "loading_ui"), this.dpr / this.zoom);
+    this.recasteTarget.displayLoading("loading_ui", Url.getUIRes(this.dpr, "loading_ui/loading_ui.png"), Url.getUIRes(this.dpr, "loading_ui/loading_ui.json"), this.dpr / this.zoom);
     const content = new op_client.OP_VIRTUAL_WORLD_RES_CLIENT_MARKET_QUERY_PACKAGE_ITEM_RESOURCE();
     content.display = data.animationDisplay;
     content.animations = data.animations;

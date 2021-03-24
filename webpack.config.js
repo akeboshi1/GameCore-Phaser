@@ -11,6 +11,7 @@ const TSLintPlugin = require("tslint-webpack-plugin");
 const TerserPlugin = require("terser-webpack-plugin");
 const appVer = require("./version");
 
+const resourcesOut = { name: "[name]_[hash].[ext]", outputPath: "resources" };
 const commonConfig = {
     resolve: {
         extensions: [".ts", ".js"],
@@ -78,8 +79,8 @@ const gameConfig = Object.assign({}, commonConfig, {
             { test: /phaser\.js$/, loader: "expose-loader?Phaser" },
             { test: /dragonBones\.js$/, loader: "expose-loader?dragonBones" },
             { test: /webworkerrpc\.js$/, loader: "expose-loader?webworker-rpc" },
-            { test: /\.(gif|png|dbbin|ttf|jpe?g|svg|mp3|mp4|xml)$/i, loader: "file-loader", options: { name: "[name][hash].[ext]", outputPath: "resources" } },
-            { test: /\.json/, type: "javascript/auto", loader: "file-loader", exclude: "/resources/locales/", options: { name: "[name][hash].[ext]", outputPath: "resources" } },
+            { test: /\.(gif|png|dbbin|ttf|jpe?g|svg|mp3|mp4|xml)$/i, loader: "file-loader", options: resourcesOut },
+            { test: /\.json/, type: "javascript/auto", loader: "file-loader", exclude: "/resources/locales/", options: resourcesOut },
         ],
     },
     entry: {
@@ -131,8 +132,8 @@ const workerConfig = Object.assign({}, commonConfig, {
         rules: [
             { test: /\.ts$/, loader: "ts-loader", options: { allowTsInNodeModules: false }, exclude: "/node_modules/" },
             { test: /webworkerrpc\.js$/, loader: "expose-loader?webworker-rpc" },
-            { test: /\.(gif|png|dbbin|ttf|jpe?g|svg|mp3|mp4|xml)$/i, loader: "file-loader", options: { name: "[name][hash].[ext]", outputPath: "resources" } },
-            { test: /\.json/, type: "javascript/auto", loader: "file-loader", exclude: "/resources/locales/", options: { name: "[name][hash].[ext]", outputPath: "resources" } },
+            { test: /\.(gif|png|dbbin|ttf|jpe?g|svg|mp3|mp4|xml)$/i, loader: "file-loader", options: resourcesOut },
+            { test: /\.json/, type: "javascript/auto", loader: "file-loader", exclude: "/resources/locales/", options: resourcesOut },
         ],
     },
     entry: {

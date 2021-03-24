@@ -6,12 +6,12 @@ export class BubbleAnimation extends BaseAnimation {
     constructor(scene: Phaser.Scene) {
         super(scene);
     }
-    public load(resName: string, resUrl: string, data?: string) {
-        super.load(resName, resUrl, data);
+    public load(resName: string, textureUrl: string, jsonUrl?: string,) {
+        super.load(resName, textureUrl, jsonUrl);
         this.animUrlData = new AnimationUrlData();
         if (resName)
-            this.animUrlData.setData(this.resName, this.resUrl);
-        else this.animUrlData.setDisplayData(resUrl, data);
+            this.animUrlData.setData(this.resName, this.textureUrl, jsonUrl);
+        else this.animUrlData.setDisplayData(textureUrl, jsonUrl);
         this.scene.load.image(this.resName, this.animUrlData.pngUrl);
         this.scene.load.image(this.animUrlData.jsonUrl, this.animUrlData.jsonUrl);
         this.scene.load.once(

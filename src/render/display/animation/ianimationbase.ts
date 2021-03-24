@@ -1,7 +1,7 @@
 
 export interface IAnimationBase {
     resName: string;
-    resUrl: string;
+    textureUrl: string;
     rate?: number;
     animUrlData: AnimationUrlData;
     loaded: boolean;
@@ -22,13 +22,11 @@ export class AnimationUrlData {
     textureXhrSettings?: any;
     atlasXhrSettings?: any;
     boneXhrSettings?: any;
-    setData(resName: string, resUrl: string, isbone: boolean = false, extension: string = ".json") {
+    setData(resName: string,textureUrl: string,  jsonUrl: string, boneUrl?: string, extension: string = ".json") {
         this.resName = resName;
-        this.resUrl = resUrl;
-        this.pngUrl = resUrl + "/" + resName + (!isbone ? ".png" : "_tex.png");
-        this.jsonUrl = resUrl + "/" + resName + (!isbone ? ".json" : "_tex.json");
-        if (isbone)
-            this.boneUrl = resUrl + "/" + resName + "_ske" + extension;
+        this.pngUrl = textureUrl;
+        this.jsonUrl = jsonUrl;
+        this.boneUrl = boneUrl;
         this.responseType = extension === ".dbbin" ? "arraybuffer" : null;
         this.boneXhrSettings = this.responseType ? { responseType: "arraybuffer" } : null;
     }

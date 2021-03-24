@@ -34,19 +34,24 @@ export class Url {
         try {
             return require(`resources/ui/${dpr}x/${value}`).default;
         } catch {
-            Logger.getInstance().error("");
+            Logger.getInstance().error(`${value} does not exist`);
         }
     }
 
-    static requireRes(value: string) {
-        return require(`resources/ui/${value}`).default;
-    }
-
     static getNormalUIRes(value: string) {
-        return Url.RESUI_PATH + value;
+        // return Url.RESUI_PATH + value;
+        try {
+            return require(`resources/ui/${value}`).default;
+        } catch {
+            Logger.getInstance().error(`${value} does not exist`);
+        }
     }
 
     static getOsdRes(value: string): string {
+        if (!value) {
+            Logger.getInstance().warn("splicing url failed");
+            return;
+        }
         if (Url.OSD_PATH) {
             if (HTTP_REGEX.test(Url.OSD_PATH)) {
                 return Url.OSD_PATH + value;
