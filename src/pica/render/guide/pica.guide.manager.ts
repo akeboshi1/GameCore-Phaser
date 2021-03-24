@@ -5,6 +5,7 @@ export class PicaGuideManager extends GuideManager {
     }
 
     public stopGuide() {
+        if (!this.mGurGuide) return;
         const guideID = this.mGurGuide.guideID;
         this.render.mainPeer.stopGuide(guideID);
         super.stopGuide();
