@@ -1,12 +1,12 @@
-import { AlertView, BasePanel, UiManager } from "gamecoreRender";
-import { ModuleName, RENDER_PEER } from "structure";
-import { UIAtlasName } from "picaRes";
-import { Button, ClickEvent, Text } from "apowophaserui";
-import { Font, i18n, LogicPos } from "utils";
-import { op_gameconfig } from "pixelpai_proto";
-import { ItemButton } from "../Components/Item.button";
-import { ICountablePackageItem } from "picaStructure";
-import { PicaBasePanel } from "../pica.base.panel";
+import {AlertView, BasePanel, UiManager} from "gamecoreRender";
+import {ModuleName, RENDER_PEER} from "structure";
+import {UIAtlasName} from "picaRes";
+import {Button, ClickEvent, Text} from "apowophaserui";
+import {Font, i18n, LogicPos} from "utils";
+import {op_gameconfig} from "pixelpai_proto";
+import {ItemButton} from "../Components/Item.button";
+import {ICountablePackageItem} from "picaStructure";
+import {PicaBasePanel} from "../pica.base.panel";
 
 export class PicaDecoratePanel extends PicaBasePanel {
 
@@ -53,22 +53,9 @@ export class PicaDecoratePanel extends PicaBasePanel {
 
     public setSelectedFurniture(data: ICountablePackageItem) {
         if (!data) {
-            if (this.mBtn_SelectedFurniture) {
-                this.mBtn_SelectedFurniture.destroy();
-                this.mBtn_SelectedFurniture = null;
-            }
             return;
         }
 
-        if (!this.mBtn_SelectedFurniture) {
-            this.mBtn_SelectedFurniture = new ItemButton(this.scene, this.key, "room_decorate_icon_default.png", this.dpr, this.scale, false);
-            this.mBtn_SelectedFurniture.countTextColor = "#ffffff";
-            this.mBtn_SelectedFurniture.countTextOffset = new LogicPos(this.mBtn_SelectedFurniture.width * 0.5 - 12 * this.dpr, this.mBtn_SelectedFurniture.height * 0.5 - 10 * this.dpr);
-            this.mBtn_SelectedFurniture.BGVisible = true;
-            this.mBtn_SelectedFurniture.x = 30 * this.dpr;
-            this.mBtn_SelectedFurniture.y = this.mDynamicBtnsY;
-            this.add(this.mBtn_SelectedFurniture);
-        }
         const onClick = () => {
             this.onFurnitureClick(data.id);
         };
@@ -186,6 +173,14 @@ export class PicaDecoratePanel extends PicaBasePanel {
         this.mBtn_Bag.setTextOffset(9 * this.dpr, 0);
         this.add([this.mBtn_RemoveAll, this.mBtn_Reverse, this.mBtn_Bag]);
 
+        this.mBtn_SelectedFurniture = new ItemButton(this.scene, this.key, "room_decorate_icon_default.png", this.dpr, this.scale, false);
+        this.mBtn_SelectedFurniture.countTextColor = "#ffffff";
+        this.mBtn_SelectedFurniture.countTextOffset = new LogicPos(this.mBtn_SelectedFurniture.width * 0.5 - 12 * this.dpr, this.mBtn_SelectedFurniture.height * 0.5 - 10 * this.dpr);
+        this.mBtn_SelectedFurniture.BGVisible = true;
+        this.mBtn_SelectedFurniture.x = 30 * this.dpr;
+        this.mBtn_SelectedFurniture.y = this.mDynamicBtnsY;
+        this.add(this.mBtn_SelectedFurniture);
+
         super.init();
     }
 
@@ -238,7 +233,7 @@ class FurnitureButton extends Phaser.GameObjects.Container {
                 left: 0,
                 right: 10 * this.dpr,
             },
-            style: { fontFamily: Font.DEFULT_FONT, fontSize: 28 * this.dpr, color: "#FCF863" }
+            style: {fontFamily: Font.DEFULT_FONT, fontSize: 28 * this.dpr, color: "#FCF863"}
         }).setFontStyle("bold italic").setStroke("#C25E0D", 2 * this.dpr).setOrigin(0.5);
         this.add(this.mText);
     }
