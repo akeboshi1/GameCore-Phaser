@@ -1,4 +1,4 @@
-import { BasicMediator, Game } from "gamecore";
+import { BasicMediator, Game, notice_url } from "gamecore";
 import { GameState, ModuleName } from "structure";
 import { Logger } from "utils";
 
@@ -17,6 +17,7 @@ export class PicaBootMediator extends BasicMediator {
     }
 
     show(param?: any): void {
+        param = { notice_url };
         if (param) this.mShowData = param;
         if (this.mPanelInit && this.mShow) {
             this._show();
@@ -53,6 +54,7 @@ export class PicaBootMediator extends BasicMediator {
                 this.game.peer.state = GameState.GetToken;
                 if (response.code === 200) {
                     this.game.peer.render.refreshAccount(response);
+                    this.showNotice();
                     // this.mAccount.refreshToken(response);
                     // this.loginEnterWorld();
                 } else {
@@ -115,5 +117,9 @@ export class PicaBootMediator extends BasicMediator {
 
     private loginSuc(data) {
         this.game.renderPeer.setAccount(data);
+    }
+
+    private showNotice() {
+        this.mView.showNotice();
     }
 }
