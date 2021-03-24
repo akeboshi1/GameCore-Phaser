@@ -393,6 +393,16 @@ export class MainPeer extends RPCPeer {
     }
 
     @Export()
+    public isElementLocked(id: number) {
+        if (!this.game.roomManager) return false;
+        if (!this.game.roomManager.currentRoom) return false;
+        if (!this.game.roomManager.currentRoom.elementManager) return false;
+        const element = this.game.roomManager.currentRoom.elementManager.get(id);
+        if (!element) return false;
+        return this.game.roomManager.currentRoom.elementManager.isElementLocked(element);
+    }
+
+    @Export()
     public exitUser() {
         this.game.exitUser();
     }
