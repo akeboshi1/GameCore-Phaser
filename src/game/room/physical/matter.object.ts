@@ -44,10 +44,6 @@ export class MatterObject {
     }
 
     public setPosition(pos: IPos) {
-        // const scaleRatio = this.mRoomService.game.scaleRatio;
-        // this._tempVec2.x = pos.x * scaleRatio;
-        // this._tempVec2.y = pos.y * scaleRatio;
-        // this.mRoomService.game.peer.physicalPeer.setPosition(this.guid, pos.x, pos.y);
     }
 
     public destroy() {

@@ -433,6 +433,16 @@ export class MainPeer extends RPCPeer {
         this.game.user.syncPosition(targetPoint);
     }
 
+    @Export([webworker_rpc.ParamType.num])
+    public syncElementPosition(id, targetPoint) {
+        if (!this.game.roomManager || this.game.roomManager.currentRoom) return;
+        const elementManager = this.game.roomManager.currentRoom.elementManager;
+        if (!elementManager) return;
+        const ele = elementManager.get(id);
+        if (!ele) return;
+        // ele.syncPosition(targetPoint);
+    }
+
     @Export([webworker_rpc.ParamType.boolean])
     public setSyncDirty(boo: boolean) {
         if (!this.game.roomManager.currentRoom) return;
@@ -475,6 +485,15 @@ export class MainPeer extends RPCPeer {
     public elementsHideReferenceArea() {
         const elementManager = this.game.roomManager.currentRoom.elementManager;
         if (elementManager) elementManager.hideReferenceArea();
+    }
+
+    @Export([webworker_rpc.ParamType.num])
+    public pushMovePoints(id: number, points: any) {
+        const elementManager = this.game.roomManager.currentRoom.elementManager;
+        if (elementManager) {
+            const ele = elementManager.get(id);
+            if (ele) ele.startMove(points);
+        }
     }
 
     @Export()
@@ -703,10 +722,15 @@ export class MainPeer extends RPCPeer {
     }
 
     @Export([webworker_rpc.ParamType.num])
-    public tryStopElementMove(id: number, stopPos?: any) {
+    public tryStopElementMove(id: number, points?: any) {
         const ele = this.game.roomManager.currentRoom.elementManager.get(id);
         if (!ele) return;
-        ele.stopMove(stopPos);
+        ele.stopMove(points);
+    }
+
+    @Export([webworker_rpc.ParamType.num])
+    public requestPushBox(id: number) {
+        this.game.user.requestPushBox(id);
     }
 
     @Export()

@@ -13,7 +13,7 @@ export class MatterWorld implements ChatCommandInterface, ISizeChart {
     // public map: number[][];
     public matterUser: MatterUserObject;
     private mAstar: AStar;
-    private drawBodies: boolean = false;
+    private drawBodies: boolean = true;
     private ignoreSensors?: Map<number, MatterObject>;
     private mSize: IPosition45Obj;
     private mMiniSize: IPosition45Obj;

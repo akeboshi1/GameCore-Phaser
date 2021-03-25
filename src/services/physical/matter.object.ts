@@ -96,6 +96,10 @@ export class MatterObject implements IMatterObject {
     protected curSprite: any;
     protected _offsetOrigin: Vector;
     protected _scale: number = 0;
+    protected mTargetPos;
+    private mMoveDelayTime = 400;
+    private mMoveTime: number = 0;
+    private mMovePoints: any[];
     constructor(public peer: PhysicalPeer, public id: number) {
         this._tempVec = Vector.create(0, 0);
         this._offset = Vector.create(0, 0);
@@ -108,24 +112,72 @@ export class MatterObject implements IMatterObject {
     }
 
     update(time?: number, delta?: number) {
-        if ((this.mDirty === false && !this.mMoving) || !this.peer) return;
+        if (!this.body) return;
+        const _pos = this.body.position;
+        const _prePos = this.body.positionPrev;
+        if ((this.mDirty === false || !this.peer) && (Math.round(_pos.x) === Math.round(_prePos.x) && Math.round(_pos.y) === Math.round(_prePos.y))) return;
         this._doMove(time, delta);
+        if (this.mMovePoints && this.mMovePoints.length > 0) {
+            this._pushMoveData();
+        }
         this.mDirty = false;
+    }
+
+    public _pushMoveData() {
+        const now = new Date().getTime();
+        if (!this.mMovePoints || this.mMovePoints.length < 1) {
+            this.mMoveTime = now;
+            return;
+        }
+        if (now - this.mMoveTime > this.mMoveDelayTime) {
+            this.peer.mainPeer.pushMovePoints(this.id, this.mMovePoints);
+            this.mMovePoints.length = 0;
+            this.mMovePoints = undefined;
+            this.mMoveTime = now;
+        }
     }
 
     public _doMove(time?: number, delta?: number) {
         if (!this.body) {
             return;
         }
+        this.checkDirection();
         const _pos = this.body.position;
         const _prePos = this.body.positionPrev;
-        if (_pos.x === _prePos.x && _pos.y === _prePos.y) {
-            this.tryStopMove({ x: _pos.x, y: _pos.y });
+        const pos = new LogicPos(_pos.x / this._scale, _pos.y / this._scale);
+        const path = this.mMoveData.path;
+        this.peer.render.setPosition(this.id, pos.x, pos.y);
+        this.peer.mainPeer.setPosition(this.id, true, pos.x, pos.y);
+        if (!path) {
+            if (!this.mMovePoints) {
+                this.mMovePoints = [];
+                this.peer.mainPeer.requestPushBox(this.id);
+            }
+            this.mMovePoints.push(pos);
+            Logger.getInstance().log("doMove ====>", _pos, _prePos, this.mTargetPos);
+            if (!this.mTargetPos) return;
+            // 该情况仅在依靠物理进程同步物件移动才处理，其余情况不做该判断处理
+            if (Math.round(_pos.x) === Math.round(this.mTargetPos.x) && Math.round(_pos.y) === Math.round(this.mTargetPos.y)) {
+                this.tryStopMove({ x: _pos.x, y: _pos.y });
+                this.mTargetPos = undefined;
+                return;
+            }
             return;
         }
-        this.checkDirection();
-        const pos = new LogicPos(Math.round(_pos.x / this.peer.scaleRatio), Math.round(_pos.y / this.peer.scaleRatio));
-        this.peer.render.setPosition(this.id, pos.x, pos.y);
+        const speed = this.mModel.speed * delta;
+        if (Tool.twoPointDistance(pos, path[0]) <= speed) {
+            if (path.length > 1) {
+                path.shift();
+                this.startMove();
+            } else {
+                if (path[0].stopDir) {
+                    this.stopMove();
+                    this.peer.mainPeer.setDirection(this.id, path[0].stopDir);
+                }
+            }
+        } else {
+            this.startMove();
+        }
     }
 
     public setModel(sprite: any) {
@@ -242,13 +294,17 @@ export class MatterObject implements IMatterObject {
         this.mMoving = false;
         if (!this.body) return;
         this.setVelocity(0, 0);
+        if (!this.mMovePoints) return;
         if (pos) {
             const tmpPos = { x: Math.round(pos.x / this.peer.scaleRatio), y: Math.round(pos.y / this.peer.scaleRatio) };
             if (this.mModel) this.mModel.setPosition(tmpPos.x, tmpPos.y);
             this._tempVec.x = pos.x;
             this._tempVec.y = pos.y;
             Body.setPosition(this.body, Vector.create(this._tempVec.x * this._scale + this._offset.x, this._tempVec.y * this._scale + this._offset.y));
-            this.peer.mainPeer.tryStopElementMove(this.id, tmpPos);
+            this.mMovePoints.push(tmpPos);
+            this.peer.mainPeer.tryStopElementMove(this.id, this.mMovePoints);
+            this.mMovePoints.length = 0;
+            this.mMovePoints = undefined;
         }
     }
 
@@ -287,7 +343,6 @@ export class MatterObject implements IMatterObject {
 
     public setVelocity(x: number, y: number) {
         if (!this.body) {
-            // render todo setVelocity
             return;
         }
         if (!x && !y) {
@@ -311,9 +366,9 @@ export class MatterObject implements IMatterObject {
         } else {
             this.mMoving = true;
         }
+        const pos = this.body.position;
+        this.mTargetPos = { x: x * 1000 + pos.x, y: y * 1000 + pos.y };
         Body.setVelocity(this.body, Vector.create(x, y));
-        // 设置碰撞体是否旋转
-        Body.setInertia(this.body, Infinity);
     }
 
     public setPosition(p: IPos, update: boolean = false) {
