@@ -25,7 +25,9 @@ export interface IMatterObject {
 
     setVelocityY();
 
-    setVelocity(x: number, b: number);
+    setBaseVelocity(x: number, y: number);
+
+    setVelocity(x: number, y: number);
 
     changeState(state: string, times?: number);
 
