@@ -3,8 +3,7 @@ import { delayTime, PhysicalPeer } from "../physical.worker";
 import { IMoveTarget, MatterPlayerObject, MovePos } from "./matter.player.object";
 import { op_def } from "pixelpai_proto";
 import { IPoint } from "game-capsule";
-import { Vector, Body } from "tooqingmatter-js";
-
+import { Vector, Body, Events } from "tooqingmatter-js";
 export class MatterUserObject extends MatterPlayerObject {
     private mTargetPoint: IMoveTarget;
     private mSyncDirty: boolean = false;
@@ -97,6 +96,50 @@ export class MatterUserObject extends MatterPlayerObject {
         this.addFillEffect({ x: firstPos.x, y: firstPos.y }, op_def.PathReachableStatus.PATH_REACHABLE_AREA);
         this.startMove();
         this.checkDirection();
+    }
+
+    public setExistingBody(body: Body, addToWorld?: boolean) {
+        if (addToWorld === undefined) {
+            addToWorld = true;
+        }
+
+        if (this.body) {
+            // ====todo no remove
+            this.matterWorld.remove(this.body, true);
+        }
+        this.body = body;
+        // Events.on(this.peer.world.engine, "collisionStart", (event) => {
+        //     const pairs = event.pairs;
+        //     if (!pairs) return;
+        //     const len = pairs.length;
+        //     for (let i: number = 0; i < len; i++) {
+        //         const pair = pairs[i];
+        //         const bodyA = pair.bodyA;
+        //         const bodyB = pair.bodyB;
+        //         if (bodyA === this.body || bodyB === this.body) {
+        //             this.peer.mainPeer.requestPushBox(this.id);
+        //             return;
+        //         }
+        //     }
+        // });
+        // Events.on(this.peer.world.engine, "collisionEnd", (event) => {
+        //     const pairs = event.pairs;
+        //     if (!pairs) return;
+        //     const len = pairs.length;
+        //     for (let i: number = 0; i < len; i++) {
+        //         const pair = pairs[i];
+        //         const bodyA = pair.bodyA;
+        //         const bodyB = pair.bodyB;
+        //         if (bodyA === this.body || bodyB === this.body) {
+        //             this.endMove = true;
+        //             return;
+        //         }
+        //     }
+        // });
+        body.isSensor = this._sensor;
+        if (addToWorld) {
+            this.matterWorld.add(body, this._sensor, this);
+        }
     }
 
     public startMove() {

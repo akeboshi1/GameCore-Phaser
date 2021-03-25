@@ -1,10 +1,10 @@
+
 import { Bodies, Body, Composite, Engine, World, Events } from "tooqingmatter-js";
 import { PhysicalPeer } from "../../services/physical.worker";
 import { ISizeChart } from "structure";
 import { AStar, ChatCommandInterface, IPos, IPosition45Obj, Pos, Position45 } from "utils";
 import { MatterObject } from "./matter.object";
 import { MatterUserObject } from "./matter.user.object";
-
 export class MatterWorld implements ChatCommandInterface, ISizeChart {
     public readonly engine: Engine;
     public readonly localWorld: World;

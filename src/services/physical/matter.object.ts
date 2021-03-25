@@ -1,4 +1,4 @@
-import { Bodies, Body, Vector } from "tooqingmatter-js";
+import { Bodies, Body, Vector, Events } from "tooqingmatter-js";
 import { IPos, IPosition45Obj, Logger, LogicPos, Position45, Tool } from "utils";
 import { delayTime, PhysicalPeer } from "../physical.worker";
 import { MatterWorld } from "./matter.world";
@@ -91,6 +91,7 @@ export class MatterObject implements IMatterObject {
     protected mOffsetY: number = undefined;
     protected mMounts: IMatterObject[];
     protected mDirty: boolean = false;
+    protected endMove: boolean = false;
     protected mRootMount: IMatterObject;
     protected hasPos: boolean = false;
     protected curSprite: any;
@@ -112,7 +113,7 @@ export class MatterObject implements IMatterObject {
     }
 
     update(time?: number, delta?: number) {
-        if (!this.body) return;
+        if (!this.mMoving || !this.body) return;
         const _pos = this.body.position;
         const _prePos = this.body.positionPrev;
         if ((this.mDirty === false || !this.peer) && (Math.round(_pos.x) === Math.round(_prePos.x) && Math.round(_pos.y) === Math.round(_prePos.y))) return;
@@ -138,7 +139,7 @@ export class MatterObject implements IMatterObject {
     }
 
     public _doMove(time?: number, delta?: number) {
-        if (!this.body) {
+        if (!this.mMoving || !this.body) {
             return;
         }
         this.checkDirection();
@@ -151,15 +152,13 @@ export class MatterObject implements IMatterObject {
         if (!path) {
             if (!this.mMovePoints) {
                 this.mMovePoints = [];
-                this.peer.mainPeer.requestPushBox(this.id);
+                // this.peer.mainPeer.requestPushBox(this.id);
             }
             this.mMovePoints.push(pos);
-            Logger.getInstance().log("doMove ====>", _pos, _prePos, this.mTargetPos);
-            if (!this.mTargetPos) return;
             // 该情况仅在依靠物理进程同步物件移动才处理，其余情况不做该判断处理
-            if (Math.round(_pos.x) === Math.round(_prePos.x) && Math.round(_pos.y) === Math.round(_prePos.y)) {
-                this.tryStopMove({ x: _pos.x, y: _pos.y });
-                this.mTargetPos = undefined;
+            if (this.endMove) {
+                this.tryStopMove({ x: pos.x, y: pos.y });
+                this.endMove = false;
                 return;
             }
             return;
@@ -366,8 +365,6 @@ export class MatterObject implements IMatterObject {
         } else {
             this.mMoving = true;
         }
-        const pos = this.body.position;
-        this.mTargetPos = { x: x * 1000 + pos.x, y: y * 1000 + pos.y };
         Body.setVelocity(this.body, Vector.create(x, y));
     }
 
@@ -396,6 +393,8 @@ export class MatterObject implements IMatterObject {
 
     public destroy() {
         this.removeBody();
+        Events.off(this.peer.world.engine, "collisionStart");
+        Events.off(this.peer.world.engine, "collisionEnd");
         this.body = undefined;
     }
 
@@ -449,6 +448,35 @@ export class MatterObject implements IMatterObject {
             this.matterWorld.remove(this.body, true);
         }
         this.body = body;
+        Events.on(this.peer.world.engine, "collisionStart", (event) => {
+            const pairs = event.pairs;
+            if (!pairs) return;
+            const len = pairs.length;
+            for (let i: number = 0; i < len; i++) {
+                const pair = pairs[i];
+                const bodyA = pair.bodyA;
+                const bodyB = pair.bodyB;
+                if (bodyA === this.body || bodyB === this.body) {
+                    this.peer.mainPeer.requestPushBox(this.id);
+                    this.mMoving = true;
+                    return;
+                }
+            }
+        });
+        Events.on(this.peer.world.engine, "collisionEnd", (event) => {
+            const pairs = event.pairs;
+            if (!pairs) return;
+            const len = pairs.length;
+            for (let i: number = 0; i < len; i++) {
+                const pair = pairs[i];
+                const bodyA = pair.bodyA;
+                const bodyB = pair.bodyB;
+                if (bodyA === this.body || bodyB === this.body) {
+                    this.endMove = true;
+                    return;
+                }
+            }
+        });
         body.isSensor = this._sensor;
         if (addToWorld) {
             this.matterWorld.add(body, this._sensor, this);
