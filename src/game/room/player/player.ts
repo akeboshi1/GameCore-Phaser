@@ -63,9 +63,6 @@ export class Player extends Element implements IElement {
         // physic action
         this.mRoomService.game.peer.physicalPeer.setModel(obj1)
             .then(() => {
-        //         if (this.mRenderable) {
-        //             if (model.nodeType !== op_def.NodeType.CharacterNodeType) this.mRoomService.game.physicalPeer.addBody(this.id);
-                // }
                 this.addBody();
             });
     }
@@ -89,8 +86,6 @@ export class Player extends Element implements IElement {
     }
 
     public completeMove() {
-        // this.onMovePathPointComplete(this.mMoveData.onCompleteParams);
-        // this.mMovePathPointFinished(this.mMoveData.onCompleteParams);
     }
 
     public setWeapon(weaponid: string) {
@@ -133,42 +128,7 @@ export class Player extends Element implements IElement {
     }
 
     protected preMoveComplete() {
-        // if (this.mMoveData && this.mMoveData.posPath) {
-        //     const complete = this.mMoveData.onCompleteParams;
-        //     if (complete) {
-        //         this.mMovePathPointFinished(this.mMoveData.onCompleteParams);
-        //         delete this.mMoveData.onCompleteParams;
-        //     }
-        // }
     }
-
-    // protected onMovePathPointComplete(params) {
-    //     if (!this.mMoveData) {
-    //         return;
-    //     }
-    //     this.mMoveData.step += 1;
-    // }
-
-    // protected mMovePathPointFinished(path: MovePath) {
-    //     if (!path || !this.mRoomService) {
-    //         return;
-    //     }
-    //     const pkt: PBpacket = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_MOVE_PATH_POINT_FINISHED);
-    //     const content: op_virtual_world.IOP_CLIENT_REQ_VIRTUAL_WORLD_MOVE_PATH_POINT_FINISHED = pkt.content;
-    //     const currentPoint = op_def.PBPoint3f.create();
-    //     const pos = this.getPosition();
-    //     currentPoint.x = pos.x;
-    //     currentPoint.y = pos.y;
-    //     currentPoint.z = pos.z;
-
-    //     const targetPoint = op_def.PBPoint3f.create();
-    //     targetPoint.x = path.x;
-    //     targetPoint.y = path.y;
-    //     content.currentPoint = currentPoint;
-    //     content.lastTargetPoint = targetPoint;
-    //     content.timestemp = this.mRoomService.game.clock.unixTime;
-    //     this.mRoomService.game.peer.send(pkt.Serialization());
-    // }
 
     protected get offsetY(): number {
         if (this.mOffsetY === undefined) {

@@ -210,6 +210,7 @@ export class MotionManager {
         // }
         // this.render.user.findPath(worldX, worldY, id);
         // const startPos = this.render.displayManager.user.getPosition();
+        this.render.mainPeer.startFireMove({ x, y });
         this.render.physicalPeer.findPath(targets, id);
     }
 

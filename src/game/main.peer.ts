@@ -508,6 +508,11 @@ export class MainPeer extends RPCPeer {
         if (this.game.guideManager) this.game.guideManager.stopGuide(id);
     }
 
+    @Export()
+    public startFireMove(pointer: any) {
+        if (this.game.user) this.game.user.startFireMove(pointer);
+    }
+
     // ============= 心跳调用主进程
     // @Export()
     // public startHeartBeat() {

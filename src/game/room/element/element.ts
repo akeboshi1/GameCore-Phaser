@@ -169,6 +169,7 @@ export class Element extends BlockObject implements IElement {
     protected isUser: boolean = false;
     protected moveControll: MoveControll;
     protected mTopDisplay: any;
+    protected mTarget;
 
     private delayTime = 1000 / 45;
     private mState: boolean = false;
@@ -413,8 +414,12 @@ export class Element extends BlockObject implements IElement {
         }
     }
 
-    public startFireMove(pos: IPos) {
-        this.mRoomService.game.renderPeer.startFireMove(this.id, pos);
+    public async startFireMove(pos: IPos) {
+        if (this.mTarget) {
+            await this.removeMount(this.mTarget);
+            this.mRoomService.game.renderPeer.startFireMove(this.mTarget.id, pos);
+            this.mTarget = null;
+        }
     }
 
     public move(path: op_def.IMovePoint[]) {
@@ -569,6 +574,7 @@ export class Element extends BlockObject implements IElement {
             this.setPosition(pos, true);
             this.addToWalkableMap();
             this.addBody();
+            await this.mRoomService.game.renderPeer.setPosition(this.id, pos.x, pos.y);
             this.mDirty = true;
         }
         return this;
@@ -590,7 +596,8 @@ export class Element extends BlockObject implements IElement {
             return Promise.resolve();
         }
         this.mMounts.splice(index, 1);
-        ele.unmount(targetPos);
+        await ele.unmount(targetPos);
+        Logger.getInstance().log("removeMount ===>", targetPos);
         if (!this.mMounts) return Promise.resolve();
         this.mRoomService.game.renderPeer.unmount(this.id, ele.id);
         return Promise.resolve();
