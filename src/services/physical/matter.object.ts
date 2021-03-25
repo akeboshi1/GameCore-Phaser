@@ -118,7 +118,7 @@ export class MatterObject implements IMatterObject {
         const _prePos = this.body.positionPrev;
         if ((this.mDirty === false || !this.peer) && (Math.round(_pos.x) === Math.round(_prePos.x) && Math.round(_pos.y) === Math.round(_prePos.y))) return;
         this._doMove(time, delta);
-        if (this.mMovePoints && this.mMovePoints.length > 0) {
+        if (this.mMovePoints && this.mMovePoints.length > 0 && !this.endMove) {
             this._pushMoveData();
         }
         this.mDirty = false;
@@ -155,7 +155,7 @@ export class MatterObject implements IMatterObject {
                 // this.peer.mainPeer.requestPushBox(this.id);
             }
             this.mMovePoints.push(pos);
-            // 该情况仅在依靠物理进程同步物件移动才处理，其余情况不做该判断处理
+            // 当物理对象停止时，监听到停止事件的状态
             if (this.endMove) {
                 this.tryStopMove({ x: pos.x, y: pos.y });
                 this.endMove = false;
@@ -364,8 +364,9 @@ export class MatterObject implements IMatterObject {
             this.mMoving = false;
         } else {
             this.mMoving = true;
+            Body.setVelocity(this.body, Vector.create(x, y));
         }
-        Body.setVelocity(this.body, Vector.create(x, y));
+        this.setStatic(!this.mMoving);
     }
 
     public setPosition(p: IPos, update: boolean = false) {
@@ -501,7 +502,7 @@ export class MatterObject implements IMatterObject {
     public setVertices(vertexSets) {
         let body;
         if (!this.mModel || !this.mModel.eventName) {
-            body = Bodies.fromVertices(this._tempVec.x * this._scale + this._offset.x, this._tempVec.y * this._scale + this._offset.y, vertexSets, { isStatic: true, friction: 0, frictionAir: 0, inertia: Infinity, inverseInertia: Infinity });
+            body = Bodies.fromVertices(this._tempVec.x * this._scale + this._offset.x, this._tempVec.y * this._scale + this._offset.y, vertexSets, { isStatic: false, friction: 0, frictionAir: 0, inertia: Infinity, inverseInertia: Infinity });
         } else {
             body = Bodies.fromVertices(this._tempVec.x * this._scale + this._offset.x, this._tempVec.y * this._scale + this._offset.y, vertexSets, { isStatic: false, friction: 0.8, frictionAir: 0.05, inertia: Infinity, inverseInertia: Infinity, restitution: 0 });
         }
@@ -595,7 +596,7 @@ export class MatterObject implements IMatterObject {
         if (!this.mModel.eventName) {
             body = Bodies.fromVertices(this._tempVec.x * this._scale + this._offset.x, this._tempVec.y * this._scale + this._offset.y, paths, { isStatic: true, friction: 0, frictionAir: 0, inertia: Infinity, inverseInertia: Infinity });
         } else {
-            body = Bodies.fromVertices(this._tempVec.x * this._scale + this._offset.x, this._tempVec.y * this._scale + this._offset.y, paths, { isStatic: false, friction: 0.8, frictionAir: 0.05, inertia: Infinity, inverseInertia: Infinity, restitution: 0 });
+            body = Bodies.fromVertices(this._tempVec.x * this._scale + this._offset.x, this._tempVec.y * this._scale + this._offset.y, paths, { isStatic: true, friction: 0.8, frictionAir: 0.05, inertia: Infinity, inverseInertia: Infinity, restitution: 0 });
         }
         this.setExistingBody(body, true);
     }
