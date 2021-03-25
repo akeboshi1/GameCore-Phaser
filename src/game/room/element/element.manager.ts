@@ -10,7 +10,6 @@ import {ElementDataManager} from "../../data.manager/element.dataManager";
 import {DataMgrType} from "../../data.manager";
 import {ElementActionManager} from "../elementaction/element.action.manager";
 import {IElementStorage, Sprite} from "baseModel";
-import {PicaElementActionManager} from "picaWorker";
 import NodeType = op_def.NodeType;
 import { PicaElementActionManager } from "gamecore";
 
