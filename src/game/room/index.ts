@@ -13,7 +13,6 @@ export * from "./player/player.model";
 export * from "./room/room";
 export * from "./sky.box/scenery";
 export * from "./sky.box/sky.box.manager";
-export * from "./state/parse";
 export * from "./state/state.group";
 export * from "./state/state.listener";
 export * from "./terrain/terrain";

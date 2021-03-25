@@ -1,4 +1,3 @@
-import { State } from "../state/state.group";
 import { IRoomService } from "../room/room";
 import { IScenery } from "structure";
 import { Game } from "src/game/game";

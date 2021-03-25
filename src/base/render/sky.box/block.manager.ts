@@ -153,8 +153,7 @@ export class BlockManager implements IBlockManager {
   }
 
   protected handlerState(state) {
-    const packet = state.packet;
-    for (const prop of packet) {
+    for (const prop of state) {
       if (this.mScenery.id === prop.id) {
         this.playSkyBoxAnimation(prop);
       }
