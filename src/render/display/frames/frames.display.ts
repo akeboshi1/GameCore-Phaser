@@ -137,17 +137,18 @@ export class FramesDisplay extends BaseFramesDisplay implements IDisplayObject {
     }
 
     public startFireMove(pos: any) {
+        Logger.getInstance().log("startFireMove ===>", pos, this.x, this.y);
         this.mStartFireTween = this.scene.tweens.add({
             targets: this,
-            duration: 500,
-            ease: "Linear",
+            duration: 900,
+            ease: "Expo.Out",
             props: {
                 x: pos.x,
                 y: pos.y
             },
             onComplete: () => {
-                this.mStartFireTween.stop();
-                this.mStartFireTween = undefined;
+                if (this.mStartFireTween) this.mStartFireTween.stop();
+                if (this.mStartFireTween) this.mStartFireTween = undefined;
             },
             onCompleteParams: [this]
         });

@@ -2,8 +2,8 @@ import { op_client } from "pixelpai_proto";
 import { PicaWork } from "./PicaWork";
 import { BasicMediator, Game, PlayerProperty, UIType } from "gamecore";
 import { EventType, ModuleName } from "structure";
-import { BaseDataConfigManager } from "picaWorker";
 import { IJob } from "src/pica/structure/ijob";
+import { BaseDataConfigManager } from "picaWorker";
 export class PicaWorkMediator extends BasicMediator {
     protected mModel: PicaWork;
     private mPlayerInfo: PlayerProperty;

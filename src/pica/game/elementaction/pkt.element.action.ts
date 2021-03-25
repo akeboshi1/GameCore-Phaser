@@ -1,10 +1,10 @@
+import { ElementBaseAction } from "gamecore";
 import { EventType } from "structure";
-import { ElementBaseAction } from "./element.base.action";
-
 export class PKTElementAction extends ElementBaseAction {
     public actionTag: string = "TQ_PKT_Action";
     public executeAction() {
-        const data = this.getActionData();
+        const value = this.getActionData();
+        const data = value ? JSON.parse(value) : undefined;
         if (data && data.action === "ShowUI") {
             const senddata = data.data;
             const uiName = senddata.uiName;

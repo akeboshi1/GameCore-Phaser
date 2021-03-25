@@ -26,7 +26,7 @@ export class CutInMenuPanel extends BasePanel {
         const height = this.scaleHeight;
         const buttonType = this.buttonType;
         if (buttonType === "work") {
-            this.rightPopButton = new WorkPopContainer(this.scene, width, this.key, this.dpr);
+            // this.rightPopButton = new WorkPopContainer(this.scene, width, this.key, this.dpr);
         } else if (buttonType === "minecar") {
             this.rightPopButton = new MinePopContainer(this.scene, width, this.key, this.dpr);
         } else if (buttonType === "editor") {
@@ -48,7 +48,7 @@ export class CutInMenuPanel extends BasePanel {
     }
     setPopData(data: any) {
         this.popData = data;
-        if (!this.mInitialized) return;
+        if (!this.mInitialized || !this.rightPopButton) return;
         const type = this.buttonType;
         if (type === "work") {
             (<WorkPopContainer>(this.rightPopButton)).setCount(data);
@@ -61,6 +61,7 @@ export class CutInMenuPanel extends BasePanel {
         super.destroy();
     }
     public opneButton() {
+        if (!this.mInitialized || !this.rightPopButton) return;
         this.rightPopButton.onTakeBack();
     }
     private onRightClickHandler() {
@@ -266,11 +267,14 @@ class EditorPopContainer extends RightPopContainer {
     constructor(scene: Phaser.Scene, width: number, key: string, dpr: number) {
         super(scene, width, key, dpr);
         this.bgSprite.visible = false;
-        this.imgIcon.visible = false;
-        this.text.x -= 2 * dpr;
-        this.text.y = 0;
-        this.text.setText(i18n.t("common.editor"));
-        this.text.setStyle(UIHelper.brownishStyle(dpr, 19));
-        this.text.setStroke(undefined, 0);
+        this.text.visible = false;
+        // this.text.x -= 2 * dpr;
+        // this.text.y = 0;
+        // this.text.setText(i18n.t("common.editor"));
+        // this.text.setStyle(UIHelper.brownishStyle(dpr, 19));
+        // this.text.setStroke(undefined, 0);
+        this.minecarbg.x += 10 * dpr;
+        this.setIconFrame("edit_icon");
+        this.imgIcon.y = 0;
     }
 }

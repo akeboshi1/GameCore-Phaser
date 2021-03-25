@@ -16,7 +16,7 @@ export class PicaRepairChoose extends BasicModel {
     const connection = this.connection;
     if (connection) {
       this.connection.addPacketListener(this);
-     // this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_PKT_FORGE_RESULT, this.onRetRescasteResult);
+      // this.addHandlerFun(op_client.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_PKT_CHANGE_FURNITURE, this.onRetRescasteResult);
     }
   }
 
@@ -27,11 +27,11 @@ export class PicaRepairChoose extends BasicModel {
     }
   }
 
-  queryRecaste(consumedId: string, targetId: string) {
-    const packet = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_PKT_FORGE);
-    const content: op_virtual_world.IOP_CLIENT_REQ_VIRTUAL_WORLD_PKT_FORGE = packet.content;
-    content.consumedId = consumedId;
-    content.targetId = targetId;
+  queryChange(element_id: string, target_type: string) {
+    const packet = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_PKT_CHANGE_FURNITURE);
+    const content: op_virtual_world.IOP_CLIENT_REQ_VIRTUAL_WORLD_PKT_CHANGE_FURNITURE = packet.content;
+    content.elementId = element_id;
+    content.targetType = target_type;
     this.connection.send(packet);
   }
 

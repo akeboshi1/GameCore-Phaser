@@ -4,6 +4,7 @@ import { ConnectState, EventType, ModuleName } from "structure";
 import { BaseDataConfigManager } from "picaWorker";
 import { ObjectAssign } from "utils";
 import { PicaRepairChoose } from "./PicaRepairChoose";
+import { IFurnitureGroup } from "picaStructure";
 
 export class PicaRepairChooseMediator extends BasicMediator {
     protected mModel: PicaRepairChoose;
@@ -16,15 +17,12 @@ export class PicaRepairChooseMediator extends BasicMediator {
 
     show(param?: any) {
         super.show(param);
-
         this.game.emitter.on(this.key + "_close", this.onCloseHandler, this);
-        // this.game.emitter.on(this.key + "_queryrecaste", this.queryRecaste, this);
-        // this.game.emitter.on(this.key + "_queryrecastelist", this.queryFuriListByStar, this);
+        this.game.emitter.on(this.key + "_querychange", this.onQueryChangeHandler, this);
     }
 
     hide() {
-        // this.game.emitter.off(this.key + "_retrecasteresult", this.onRetRescateHandler, this);
-        // this.game.emitter.off(this.key + "_retrecastelistresult", this.onRetRescateListHandler, this);
+        this.game.emitter.off(this.key + "_querychange", this.onQueryChangeHandler, this);
         this.game.emitter.off(this.key + "_close", this.onCloseHandler, this);
         super.hide();
     }
@@ -34,25 +32,39 @@ export class PicaRepairChooseMediator extends BasicMediator {
     }
 
     protected panelInit() {
-        if (this.panelInit) {
+        super.panelInit();
+        if (this.mPanelInit) {
             if (this.mView) {
+                this.setFurnitureGroup();
             }
         }
+        this.onViewInitComplete();
     }
 
     private onCloseHandler() {
         this.hide();
+        this.onHideView();
     }
 
-    private onRetRescateHandler(reward: op_client.ICountablePackageItem) {
-        if (this.mView) {
-            const configMgr = <BaseDataConfigManager>this.game.configManager;
-            const temp = configMgr.getItemBaseByID(reward.id);
-            ObjectAssign.excludeTagAssign(reward, temp);
-            this.mView.setRecasteResult(reward);
-            const uimgr = this.game.uiManager;
-            uimgr.showMed(ModuleName.PICATREASURE_NAME, { data: [reward], type: "open" });
-        }
+    private onQueryChangeHandler(data: { element_id: string, target_type: string }) {
+        this.mModel.queryChange(data.element_id, data.target_type);
+        this.onCloseHandler();
     }
 
+    private setFurnitureGroup() {
+        if (!this.mPanelInit) return;
+        this.mView.setChooseData(this.mShowData);
+    }
+    private get configMgr() {
+        return <BaseDataConfigManager>this.game.configManager;
+    }
+    private onHideView() {
+        const uimanager = this.game.uiManager;
+        uimanager.showMed(ModuleName.BOTTOM);
+        this.destroy();
+    }
+    private onViewInitComplete() {
+        const uimanager = this.game.uiManager;
+        uimanager.hideMed(ModuleName.BOTTOM);
+    }
 }

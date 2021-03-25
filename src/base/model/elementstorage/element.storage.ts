@@ -9,11 +9,12 @@ import {
     MossNode,
     AssetsNode,
     WallCollectionNode,
+    EventNode,
 } from "game-capsule";
 import { op_def } from "pixelpai_proto";
 import { MossCollectionNode } from "game-capsule";
 import { Logger, ResUtils, Url } from "utils";
-import { AnimationModel, IDragonbonesModel, IFramesModel, IScenery} from "structure";
+import { AnimationModel, IDragonbonesModel, IFramesModel, IScenery } from "structure";
 import { FramesModel } from "../frames.model";
 import { DragonbonesModel } from "../dragonbones.model";
 export interface IAsset {
@@ -52,7 +53,7 @@ export class ElementStorage implements IElementStorage {
     private mElementRef = new Map<number, IDisplayRef>();
     private terrainPalette = new Map<number, FramesModel>();
     private terrainPaletteWithBindId = new Map<number, FramesModel>();
-    private mossPalette = new Map<number, {layer: number, frameModel: FramesModel}>();
+    private mossPalette = new Map<number, { layer: number, frameModel: FramesModel }>();
     private _terrainCollection: TerrainCollectionNode;
     private _mossCollection: MossCollectionNode;
     private _wallCollection: WallCollectionNode;
@@ -153,7 +154,7 @@ export class ElementStorage implements IElementStorage {
                         ),
                     },
                 });
-                this.mossPalette.set(peerKey, { layer: elementMoss.layer, frameModel});
+                this.mossPalette.set(peerKey, { layer: elementMoss.layer, frameModel });
             }
         }
     }
@@ -183,6 +184,13 @@ export class ElementStorage implements IElementStorage {
         for (const obj of objs) {
             if (obj.type === op_def.NodeType.ElementNodeType) {
                 displayModel = this.mModels.get(obj.id);
+                const eventName = [];
+                obj.children.forEach((item) => {
+                    if (item.className === "EventNode" && item.eventName === op_def.GameEvent.onElementHit) {
+                        eventName.push(item.eventName);
+                    }
+                    Logger.getInstance().log("eventnode ====>", item);
+                });
                 if (!displayModel) {
                     const anis = [];
                     const eleAnis = (<ElementNode>obj).animations;
@@ -193,6 +201,7 @@ export class ElementStorage implements IElementStorage {
                     displayModel = new FramesModel({
                         id: obj.id,
                         sn: obj.sn,
+                        eventName,
                         animations: {
                             defaultAnimationName: eleAnis.defaultAnimationName,
                             display: eleAnis.display,
