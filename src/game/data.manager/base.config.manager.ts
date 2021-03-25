@@ -1,5 +1,5 @@
 import { Game } from "gamecore";
-import { load, loadArr, Logger, Url } from "utils";
+import { i18n, load, loadArr, Logger, Url } from "utils";
 import { BaseConfigData } from "./base.config.data";
 import { base_path, config_path } from "./config";
 export class BaseConfigManager {
@@ -78,7 +78,9 @@ export class BaseConfigManager {
                         this.mInitialization = true;
                         resolve(true);
                     }, (reponse) => {
-                        Logger.getInstance().error("未成功加载配置:" + reponse);
+                        const errorTex = "未成功加载配置:" + reponse;
+                        Logger.getInstance().error(errorTex);
+                        // this.mGame.renderPeer.showAlertReconnect(i18n.t("commontips.configerror"));
                         if (this.mDispose) return;
                         this.mInitialization = true;
                         resolve(true);

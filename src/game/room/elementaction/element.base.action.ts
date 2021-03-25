@@ -19,15 +19,14 @@ export class ElementBaseAction {
         this.game = undefined;
         this.data = undefined;
     }
-    getActionData() {
+    getActionData(actionName?: string) {
         const data = this.data;
-        const tag = this.actionTag;
+        const tag = actionName || this.actionTag;
         if (data && data.attrs) {
             const attrs = data.attrs;
             for (const att of attrs) {
                 if (att.key === tag) {
-                    const actjson = att.value ? JSON.parse(att.value) : null;
-                    return actjson;
+                    return att.value ;
                 }
             }
         }

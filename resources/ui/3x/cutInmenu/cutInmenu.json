@@ -1,175 +1,209 @@
 {
-	"frames": {
-		"arow": {
-			"frame": {
-				"x": 1,
-				"y": 1,
-				"w": 17,
-				"h": 30
+	"textures": [
+		{
+			"image": "cutInmenu",
+			"format": "RGBA8888",
+			"size": {
+				"w": 489,
+				"h": 478
 			},
-			"rotated": false,
-			"trimmed": false,
-			"spriteSourceSize": {
-				"x": 0,
-				"y": 0,
-				"w": 17,
-				"h": 30
-			},
-			"sourceSize": {
-				"w": 17,
-				"h": 30
-			}
-		},
-		"minebag_bg": {
-			"frame": {
-				"x": 20,
-				"y": 1,
-				"w": 368,
-				"h": 118
-			},
-			"rotated": false,
-			"trimmed": false,
-			"spriteSourceSize": {
-				"x": 0,
-				"y": 0,
-				"w": 368,
-				"h": 118
-			},
-			"sourceSize": {
-				"w": 368,
-				"h": 118
-			}
-		},
-		"minebag_bg_brth": {
-			"frame": {
-				"x": 1,
-				"y": 121,
-				"w": 424,
-				"h": 175
-			},
-			"rotated": false,
-			"trimmed": false,
-			"spriteSourceSize": {
-				"x": 0,
-				"y": 0,
-				"w": 424,
-				"h": 175
-			},
-			"sourceSize": {
-				"w": 424,
-				"h": 175
-			}
-		},
-		"minecar": {
-			"frame": {
-				"x": 1,
-				"y": 298,
-				"w": 138,
-				"h": 136
-			},
-			"rotated": false,
-			"trimmed": false,
-			"spriteSourceSize": {
-				"x": 0,
-				"y": 0,
-				"w": 138,
-				"h": 136
-			},
-			"sourceSize": {
-				"w": 138,
-				"h": 136
-			}
-		},
-		"text_minebag": {
-			"frame": {
-				"x": 141,
-				"y": 298,
-				"w": 82,
-				"h": 45
-			},
-			"rotated": false,
-			"trimmed": false,
-			"spriteSourceSize": {
-				"x": 0,
-				"y": 0,
-				"w": 82,
-				"h": 45
-			},
-			"sourceSize": {
-				"w": 82,
-				"h": 45
-			}
-		},
-		"time": {
-			"frame": {
-				"x": 225,
-				"y": 298,
-				"w": 66,
-				"h": 40
-			},
-			"rotated": false,
-			"trimmed": false,
-			"spriteSourceSize": {
-				"x": 0,
-				"y": 0,
-				"w": 66,
-				"h": 40
-			},
-			"sourceSize": {
-				"w": 66,
-				"h": 40
-			}
-		},
-		"work": {
-			"frame": {
-				"x": 427,
-				"y": 1,
-				"w": 166,
-				"h": 188
-			},
-			"rotated": false,
-			"trimmed": false,
-			"spriteSourceSize": {
-				"x": 0,
-				"y": 0,
-				"w": 166,
-				"h": 188
-			},
-			"sourceSize": {
-				"w": 166,
-				"h": 188
-			}
-		},
-		"work_icon": {
-			"frame": {
-				"x": 427,
-				"y": 191,
-				"w": 123,
-				"h": 108
-			},
-			"rotated": false,
-			"trimmed": false,
-			"spriteSourceSize": {
-				"x": 0,
-				"y": 0,
-				"w": 123,
-				"h": 108
-			},
-			"sourceSize": {
-				"w": 123,
-				"h": 108
-			}
+			"scale": 1,
+			"frames": [
+				{
+					"filename": "minebag_bg_brth",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 424,
+						"h": 175
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 424,
+						"h": 175
+					},
+					"frame": {
+						"x": 1,
+						"y": 1,
+						"w": 424,
+						"h": 175
+					}
+				},
+				{
+					"filename": "minebag_bg",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 368,
+						"h": 118
+					},
+					"spriteSourceSize": {
+						"x": 3,
+						"y": 3,
+						"w": 362,
+						"h": 111
+					},
+					"frame": {
+						"x": 1,
+						"y": 178,
+						"w": 362,
+						"h": 111
+					}
+				},
+				{
+					"filename": "work_icon",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 123,
+						"h": 108
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 123,
+						"h": 108
+					},
+					"frame": {
+						"x": 365,
+						"y": 178,
+						"w": 123,
+						"h": 108
+					}
+				},
+				{
+					"filename": "arow",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 17,
+						"h": 30
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 17,
+						"h": 30
+					},
+					"frame": {
+						"x": 427,
+						"y": 1,
+						"w": 17,
+						"h": 30
+					}
+				},
+				{
+					"filename": "text_minebag",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 82,
+						"h": 45
+					},
+					"spriteSourceSize": {
+						"x": 1,
+						"y": 1,
+						"w": 80,
+						"h": 43
+					},
+					"frame": {
+						"x": 365,
+						"y": 288,
+						"w": 80,
+						"h": 43
+					}
+				},
+				{
+					"filename": "work",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 166,
+						"h": 188
+					},
+					"spriteSourceSize": {
+						"x": 1,
+						"y": 1,
+						"w": 164,
+						"h": 186
+					},
+					"frame": {
+						"x": 1,
+						"y": 291,
+						"w": 164,
+						"h": 186
+					}
+				},
+				{
+					"filename": "minecar",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 138,
+						"h": 136
+					},
+					"spriteSourceSize": {
+						"x": 1,
+						"y": 1,
+						"w": 136,
+						"h": 134
+					},
+					"frame": {
+						"x": 167,
+						"y": 291,
+						"w": 136,
+						"h": 134
+					}
+				},
+				{
+					"filename": "edit_icon",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 129,
+						"h": 121
+					},
+					"spriteSourceSize": {
+						"x": 1,
+						"y": 1,
+						"w": 127,
+						"h": 119
+					},
+					"frame": {
+						"x": 305,
+						"y": 333,
+						"w": 127,
+						"h": 119
+					}
+				},
+				{
+					"filename": "time",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 66,
+						"h": 40
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 66,
+						"h": 40
+					},
+					"frame": {
+						"x": 167,
+						"y": 427,
+						"w": 66,
+						"h": 40
+					}
+				}
+			]
 		}
-	},
+	],
 	"meta": {
-		"app": "http://www.codeandweb.com/texturepacker",
-		"version": "1.0",
-		"image": "spritesheet",
-		"format": "RGBA8888",
-		"size": {
-			"w": 594,
-			"h": 435
-		},
-		"scale": "1"
+		"app": "https://www.codeandweb.com/texturepacker",
+		"version": "3.0",
+		"smartupdate": "$TexturePacker:SmartUpdate:bf323df4ce40fbab666624f5e35668dd:71065c4baf527888b6b9e838a7f41d8e:62d6b26235e61156d1d541f9630a287a$"
 	}
 }

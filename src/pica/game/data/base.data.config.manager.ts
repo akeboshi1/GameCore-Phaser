@@ -5,6 +5,7 @@ import {
     IExploreChapterData,
     IExploreLevelData,
     IExtendCountablePackageItem,
+    IFurnitureGroup,
     IScene
 } from "picaStructure";
 import { IMarketCommodity, IShopBase } from "../../../pica/structure/imarketcommodity";
@@ -26,6 +27,7 @@ import { SocialConfig } from "./social.config";
 import { SceneConfig } from "./scene.config";
 import { QuestConfig } from "./quest.config";
 import { GuideConfig } from "./guide.config";
+import { FurnitureGroup } from "./furniture.group";
 
 export enum BaseDataType {
     i18n_zh = "i18n_zh",
@@ -42,6 +44,7 @@ export enum BaseDataType {
     publicscene = "publicScene",
     quest = "quest",
     guide = "guide",
+    furnituregroup = "furnituregroup"
     // itemcategory = "itemcategory"
 }
 
@@ -471,6 +474,38 @@ export class BaseDataConfigManager extends BaseConfigManager {
         guideData.state = val;
     }
 
+    public getFurnitureGroup(id: string) {
+        const data: FurnitureGroup = this.getConfig(BaseDataType.furnituregroup);
+        const group: IFurnitureGroup = data.get(id);
+        if (group && !group["find"]) {
+            for (let i = 0; i < group.group.length; i++) {
+                const item = this.getItemBaseByID(group.group[i]);
+                group.group[i] = item;
+            }
+            group["find"] = true;
+        }
+        return group;
+    }
+
+    public getFurnitureGroupBySN(sn: string) {
+        const item = this.getItemBaseBySN(sn);
+        if (item) {
+            return this.getFurnitureGroup(item.id);
+        }
+        return undefined;
+    }
+    public checkFurnitureGroup(id: string) {
+        const data: FurnitureGroup = this.getConfig(BaseDataType.furnituregroup);
+        return data.checkGroup(id);
+    }
+    public checkFurnitureGroupBySN(sn: string) {
+        const item = this.getItemBaseBySN(sn);
+        if (item && this.checkFurnitureGroup(item.id)) {
+            return true;
+        }
+        return false;
+    }
+
     protected add() {
         this.dataMap.set(BaseDataType.i18n_zh, new I18nZHDataConfig());
         this.dataMap.set(BaseDataType.explore, new ExploreDataConfig());
@@ -486,6 +521,7 @@ export class BaseDataConfigManager extends BaseConfigManager {
         this.dataMap.set(BaseDataType.minescene, new SceneConfig());
         this.dataMap.set(BaseDataType.quest, new QuestConfig());
         this.dataMap.set(BaseDataType.guide, new GuideConfig());
+        this.dataMap.set(BaseDataType.furnituregroup, new FurnitureGroup());
     }
 
     protected configUrl(reName: string, tempurl?: string) {
