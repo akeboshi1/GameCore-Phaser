@@ -128,21 +128,6 @@ export class ElementManager extends PacketHandler implements IElementManager {
         }
     }
 
-    public setState(state: op_client.IStateGroup) {
-        if (!state) {
-            return;
-        }
-        const owner = state.owner;
-        if (!owner || owner.type !== op_def.NodeType.ElementNodeType) {
-            return;
-        }
-        const element = this.get(owner.id);
-        if (!element) {
-            return;
-        }
-        element.setState(state.state);
-    }
-
     public checkElementAction(id: number, userid?: number): boolean {
         const ele = this.get(id);
         if (!ele) return false;

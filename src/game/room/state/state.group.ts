@@ -1,4 +1,4 @@
-import { op_def, op_client } from "pixelpai_proto";
+import { op_def, op_client, op_gameconfig_01 } from "pixelpai_proto";
 import { StateParse } from "./parse";
 
 export class StateGroup {
@@ -17,7 +17,7 @@ export class State {
     public name: string;
     public type: op_def.NodeType;
     public packet: any;
-    constructor(state: op_def.IState) {
+    constructor(state: op_def.IState, public owner: op_gameconfig_01.INode) {
         this.type = state.type;
         this.name = state.name;
         if (state.packet) {
