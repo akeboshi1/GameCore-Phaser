@@ -9,11 +9,8 @@ export class PicaElementActionManager extends ElementActionManager {
     protected mActionTags = ["TQ_PKT_Action", "TQ_PKT_tag", "frozenType", "FuritChange"];
     public checkAction(data: ISprite, actionName?: string) {
         if (actionName) {
-            if (actionName === "FuritChange") {
-                if (data.nodeType === 3) {
-                    if (this.checkAction(data, "frozenType")) return false;
-                    else return true;
-                }
+            if (actionName === "FuritChange" && data.nodeType === 3) {
+                return true;
             } else {
                 if (data && data.attrs) {
                     const attrs = data.attrs;

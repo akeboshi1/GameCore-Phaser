@@ -5,7 +5,8 @@ import { EventType } from "structure";
 export class TAGElementAction extends ElementBaseAction {
     public actionTag: string = "TQ_PKT_tag";
     public executeAction() {
-        const data = this.getActionData();
+        const value = this.getActionData();
+        const data = value ? JSON.parse(value) : undefined;
         if (data) {
             switch (data.type) {
                 case "mine":

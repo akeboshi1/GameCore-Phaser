@@ -38,7 +38,8 @@ export class PicaRepairChoosePanel extends PicaBasePanel {
         this.playMove(fromy, toy);
     }
     onShow() {
-        this.setChooseData(undefined);
+        if (this.tempDatas)
+            this.setChooseData(this.tempDatas);
 
     }
     public addListen() {
@@ -85,13 +86,16 @@ export class PicaRepairChoosePanel extends PicaBasePanel {
     public setChooseData(content: IFurnitureGroup) {
         this.tempDatas = content;
         if (!this.mInitialized) return;
-        // tslint:disable-next-line: prefer-for-of
         for (let i = 0; i < content.group.length; i++) {
             const data = content.group[i];
             const item = new ItemButton(this.scene, UIAtlasName.uicommon, "bag_icon_common_bg", this.dpr, this.scale, true);
             item.on(ClickEvent.Tap, this.onItemButtonHandler, this);
             this.grid.add(item);
             item.setItemData(data);
+            if (data.id === content.id) {
+                this.curSelectItem = item;
+                item.select = true;
+            }
         }
         this.grid.Layout();
     }
@@ -99,7 +103,7 @@ export class PicaRepairChoosePanel extends PicaBasePanel {
     private onItemButtonHandler(pointer, item: ItemButton) {
         if (this.curSelectItem) this.curSelectItem.select = false;
         this.curSelectItem = item;
-        item.select = false;
+        item.select = true;
     }
 
     private playMove(from: number, to: number) {
@@ -122,6 +126,10 @@ export class PicaRepairChoosePanel extends PicaBasePanel {
     }
 
     private onConfirmHandler() {
-        // this.render.renderEmitter(ModuleName.PICANEWROLE_NAME + "_followcharacter", { uid: this.roleData.cid, follow: this.followed });
+        if (this.curSelectItem && this.curSelectItem.itemData) {
+            const data = this.curSelectItem.itemData;
+            if (this.tempDatas.id === data.id) return;
+            this.render.renderEmitter(ModuleName.PICAREPAIRCHOOSE_NAME + "_querychange", { element_id: this.tempDatas.id, target_type: data.id });
+        }
     }
 }
