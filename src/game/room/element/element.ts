@@ -432,7 +432,7 @@ export class Element extends BlockObject implements IElement {
     }
 
     public startMove(points?: any) {
-        if (points) {
+        if (points && this.mRoomService.playerManager.actor.stopBoxMove) {
             this._startMove(points);
             return;
         }
@@ -459,6 +459,7 @@ export class Element extends BlockObject implements IElement {
         this.mMoving = false;
         this.moveControll.setVelocity(0, 0);
         this.changeState(PlayerState.IDLE);
+        if (!this.mRoomService.playerManager.actor.stopBoxMove) return;
         const mMovePoints = [];
         if (points) {
             points.forEach((pos) => {
@@ -479,6 +480,7 @@ export class Element extends BlockObject implements IElement {
         const ct: op_virtual_world.IOP_CLIENT_REQ_VIRTUAL_WORLD_STOP_SPRITE = pkt.content;
         ct.movePath = movePath;
         this.mElementManager.connection.send(pkt);
+        this.mRoomService.playerManager.actor.stopBoxMove = false;
     }
 
     public getPosition(): IPos {
