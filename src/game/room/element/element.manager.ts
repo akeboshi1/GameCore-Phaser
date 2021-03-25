@@ -11,6 +11,7 @@ import { DataMgrType } from "../../data.manager";
 import { ElementActionManager } from "../elementaction/element.action.manager";
 import { Sprite, IElementStorage } from "baseModel";
 import NodeType = op_def.NodeType;
+import { PicaElementActionManager } from "picaWorker";
 
 export interface IElementManager {
     hasAddComplete: boolean;
@@ -84,7 +85,7 @@ export class ElementManager extends PacketHandler implements IElementManager {
 
         // 进入房间创建地图后将其拷贝给物理进程
         this.mStateMgr = new ElementStateManager(mRoom);
-        this.mActionMgr = new ElementActionManager(mRoom.game);
+        this.mActionMgr = new PicaElementActionManager(mRoom.game);
         this.eleDataMgr.on(EventType.SCENE_ELEMENT_FIND, this.onQueryElementHandler, this);
         this.mRoom.game.emitter.on(EventType.SCENE_INTERACTION_ELEMENT, this.checkElementAction, this);
 

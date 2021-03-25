@@ -45,6 +45,7 @@ export class PicaFurniFun extends PacketHandler {
         const content: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_TEAMBUILD_ELEMENT_REQUIREMENT = packet.content;
         this.game.emitter.emit(ModuleName.PICAFURNIFUN_NAME + "_teambuild", content);
     }
+
     get connection(): ConnectionService {
         if (this.game) {
             return this.game.connection;

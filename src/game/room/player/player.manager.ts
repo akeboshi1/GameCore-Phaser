@@ -9,10 +9,10 @@ import { AvatarSuitType, EventType, ISprite, MessageType, PlayerState } from "st
 import { Logger, LogicPos } from "utils";
 import { ConnectionService } from "../../../../lib/net/connection.service";
 import { IElement } from "../element/element";
-import { PlayerElementAction } from "../elementaction/player.element.action";
 import { Sprite } from "baseModel";
 import { BaseDataConfigManager } from "src/pica/game/data/base.data.config.manager";
 import NodeType = op_def.NodeType;
+import { PlayerElementAction } from "picaWorker";
 
 export class PlayerManager extends PacketHandler implements IElementManager {
     public hasAddComplete: boolean = false;

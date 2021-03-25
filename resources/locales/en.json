@@ -424,6 +424,9 @@
     "store": "Store",
     "onlinetips": "Online rewards"
   },
+  "commontips": {
+    "configerror": "The configuration did not load successfully, please refresh the game"
+  },
   "boot": {
     "play": "开始游戏",
     "notice": "公 告"
