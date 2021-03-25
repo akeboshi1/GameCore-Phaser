@@ -1,15 +1,13 @@
 // 加载器：
 // 1. 在这里接受外部传入的参数并转换为World可以接受的参数
 // 2. 做设备兼容
-import { ILauncherConfig, PlatFormType } from "structure";
-import { Logger } from "utils";
 import version from "./version";
 export class Launcher {
-    get config(): ILauncherConfig {
+    get config() {
         return this.mConfig;
     }
 
-    public static start(config?: ILauncherConfig): Launcher {
+    public static start(config?): Launcher {
         return new this(config);
     }
 
@@ -46,7 +44,7 @@ export class Launcher {
     private intervalId: any;
     private mReload: Function;
     private mCompleteFunc: Function;
-    private mConfig: ILauncherConfig = {
+    private mConfig = {
         api_root: undefined,
         auth_token: undefined,
         token_expire: undefined,
@@ -75,10 +73,10 @@ export class Launcher {
         gameLoaded: null,
         reload: null,
         game_created: null,
-        platform: PlatFormType.NOPC,
+        platform: "nopc",
     };
 
-    constructor(config?: ILauncherConfig) {
+    constructor(config?) {
         if (config.osd) {
             config.osd = new URL("/", decodeURIComponent(config.osd)).toString();
         }
@@ -176,7 +174,7 @@ export class Launcher {
         this.world.updatePalette(palette);
     }
 
-    public restart(config?: ILauncherConfig, callBack?: Function) {
+    public restart(config?, callBack?: Function) {
         if (this.world) this.world.restart(config, callBack);
     }
 

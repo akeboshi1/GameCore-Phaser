@@ -273,10 +273,10 @@ export class BaseDragonbonesDisplay extends BaseDisplay {
         if (this.scene.cache.custom.dragonbone.get(this.resourceName)) {
             this.createArmatureDisplay();
         } else {
-            const res = `${this.localResourceRoot}dragonbones`;
-            const pngUrl = `${res}/${this.resourceName}_tex.png`;
-            const jsonUrl = `${res}/${this.resourceName}_tex.json`;
-            const dbbinUrl = `${res}/${this.resourceName}_ske.dbbin`;
+            const res = `dragonbones`;
+            const pngUrl = Url.getRes(`${res}/${this.resourceName}_tex.png`);
+            const jsonUrl = Url.getRes(`${res}/${this.resourceName}_tex.json`);
+            const dbbinUrl = Url.getRes(`${res}/${this.resourceName}_ske.dbbin`);
             this.loadDragonBones(pngUrl, jsonUrl, dbbinUrl);
         }
     }

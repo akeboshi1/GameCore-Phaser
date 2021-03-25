@@ -2,7 +2,7 @@ import { IAnimationBase, AnimationUrlData } from "./ianimationbase";
 
 export class BaseAnimation extends Phaser.GameObjects.Container implements IAnimationBase {
     public resName: string;
-    public resUrl: string;
+    public textureUrl: string;
     public animUrlData: AnimationUrlData;
     public loaded: boolean = false;
     public isPlaying: boolean = false;
@@ -11,11 +11,11 @@ export class BaseAnimation extends Phaser.GameObjects.Container implements IAnim
     constructor(scene: Phaser.Scene) {
         super(scene);
     }
-    public load(resName: string, resUrl: string, data?: string) {
+    public load(resName: string, textureUrl: string, jsonUrl?: string) {
         this.destroy();
-        this.resName = resName ? resName : resUrl;
+        this.resName = resName ? resName : textureUrl;
         this.curAniName = resName;
-        this.resUrl = resUrl;
+        this.textureUrl = textureUrl;
     }
 
     public play(aniName?: string) {

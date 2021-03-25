@@ -436,5 +436,9 @@
   },
   "commontips": {
     "configerror": "配置未成功加载，请刷新游戏"
+  },
+  "boot": {
+    "play": "开始游戏",
+    "notice": "公 告"
   }
 }

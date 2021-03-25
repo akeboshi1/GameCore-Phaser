@@ -11,6 +11,7 @@ const TSLintPlugin = require("tslint-webpack-plugin");
 const TerserPlugin = require("terser-webpack-plugin");
 const appVer = require("./version");
 
+const resourcesOut = { name: "[name]_[hash].[ext]", outputPath: "resources" };
 const commonConfig = {
     resolve: {
         extensions: [".ts", ".js"],
@@ -29,7 +30,8 @@ const commonConfig = {
             editorCanvas: path.join(__dirname, "./src/editor"),
             display: path.join(__dirname, "./src/base/display"),
             baseRender: path.join(__dirname, "./src/base/render"),
-            baseModel: path.join(__dirname, "./src/base/model")
+            baseModel: path.join(__dirname, "./src/base/model"),
+            resources: path.join(__dirname, "./resources")
         },
     },
     optimization: {
@@ -69,6 +71,7 @@ const commonConfig = {
     ]
 };
 
+// TODO webpack 5 https://webpack.js.org/guides/asset-modules/ 将取代file-loader raw-loader
 const gameConfig = Object.assign({}, commonConfig, {
     module: {
         rules: [
@@ -76,6 +79,8 @@ const gameConfig = Object.assign({}, commonConfig, {
             { test: /phaser\.js$/, loader: "expose-loader?Phaser" },
             { test: /dragonBones\.js$/, loader: "expose-loader?dragonBones" },
             { test: /webworkerrpc\.js$/, loader: "expose-loader?webworker-rpc" },
+            { test: /\.(gif|png|dbbin|ttf|jpe?g|svg|mp3|mp4|xml)$/i, loader: "file-loader", options: resourcesOut },
+            { test: /\.json/, type: "javascript/auto", loader: "file-loader", exclude: "/resources/locales/", options: resourcesOut },
         ],
     },
     entry: {
@@ -93,8 +98,8 @@ const gameConfig = Object.assign({}, commonConfig, {
     },
     plugins: [
         new CopyWebpackPlugin([{
-            from: "**/*", to: `resources_v${appVer}`, toType: "dir"
-            , force: true, context: "resources"
+            from: "./resources/locales", to: `resources/locales`, toType: "dir"
+            , force: true
         }]),
         new HtmlWebpackPlugin({
             inject: "head",
@@ -127,6 +132,8 @@ const workerConfig = Object.assign({}, commonConfig, {
         rules: [
             { test: /\.ts$/, loader: "ts-loader", options: { allowTsInNodeModules: false }, exclude: "/node_modules/" },
             { test: /webworkerrpc\.js$/, loader: "expose-loader?webworker-rpc" },
+            { test: /\.(gif|png|dbbin|ttf|jpe?g|svg|mp3|mp4|xml)$/i, loader: "file-loader", options: resourcesOut },
+            { test: /\.json/, type: "javascript/auto", loader: "file-loader", exclude: "/resources/locales/", options: resourcesOut },
         ],
     },
     entry: {

@@ -1658,9 +1658,11 @@ export class Render extends RPCPeer implements GameMain, IRender {
         this.mUIRatio = Math.round(this.mConfig.devicePixelRatio || 2);
         this.mUIScale = (this.mConfig.width / this.DEFAULT_WIDTH) * (this.mConfig.devicePixelRatio / this.mUIRatio);
         Url.OSD_PATH = this.mConfig.osd;
-        Url.RES_PATH = `./resources_v${version}/`;
+        Url.RES_PATH = `resources/`;
         Url.RESUI_PATH = `${Url.RES_PATH}ui/`;
-        initLocales(path.relative(__dirname, `../${Url.RES_PATH}/locales/{{lng}}.json`));
+        initLocales(path.relative(__dirname, `${Url.RES_PATH}/locales/{{lng}}.json`));
+        // const locales = require(`${Url.RES_PATH}locales`);
+        // initLocales(resources);
     }
 
     private resumeScene() {
