@@ -120,7 +120,7 @@ export class MatterObject implements IMatterObject {
         const _pos = this.body.position;
         const _prePos = this.body.positionPrev;
         if (_pos.x === _prePos.x && _pos.y === _prePos.y) {
-            this.stopMove();
+            this.tryStopMove({ x: _pos.x, y: _pos.y });
             return;
         }
         this.checkDirection();
@@ -238,6 +238,20 @@ export class MatterObject implements IMatterObject {
         this.setVelocity(0, 0);
     }
 
+    public tryStopMove(pos?: IPos) {
+        this.mMoving = false;
+        if (!this.body) return;
+        this.setVelocity(0, 0);
+        if (pos) {
+            const tmpPos = { x: Math.round(pos.x / this.peer.scaleRatio), y: Math.round(pos.y / this.peer.scaleRatio) };
+            if (this.mModel) this.mModel.setPosition(tmpPos.x, tmpPos.y);
+            this._tempVec.x = pos.x;
+            this._tempVec.y = pos.y;
+            Body.setPosition(this.body, Vector.create(this._tempVec.x * this._scale + this._offset.x, this._tempVec.y * this._scale + this._offset.y));
+            this.peer.mainPeer.tryStopElementMove(this.id, tmpPos);
+        }
+    }
+
     /**
      * 设置object是否是静态物件受力是否可移动
      * @param value
@@ -292,10 +306,14 @@ export class MatterObject implements IMatterObject {
         if (!this.body) {
             return;
         }
-        const speed = this.mModel.speed * delayTime;
-        x *= speed;
-        y *= speed;
-        this.setVelocity(x, y);
+        if (!x && !y) {
+            this.mMoving = false;
+        } else {
+            this.mMoving = true;
+        }
+        Body.setVelocity(this.body, Vector.create(x, y));
+        // 设置碰撞体是否旋转
+        Body.setInertia(this.body, Infinity);
     }
 
     public setPosition(p: IPos, update: boolean = false) {

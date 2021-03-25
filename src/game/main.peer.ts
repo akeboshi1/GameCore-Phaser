@@ -702,6 +702,13 @@ export class MainPeer extends RPCPeer {
         }
     }
 
+    @Export([webworker_rpc.ParamType.num])
+    public tryStopElementMove(id: number, stopPos?: any) {
+        const ele = this.game.roomManager.currentRoom.elementManager.get(id);
+        if (!ele) return;
+        ele.stopMove(stopPos);
+    }
+
     @Export()
     public async removeMount(id: number, mountID: number, stopPos: IPos) {
         const room = this.game.roomManager.currentRoom;

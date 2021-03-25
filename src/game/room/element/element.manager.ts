@@ -582,7 +582,7 @@ export class ElementManager extends PacketHandler implements IElementManager {
         const id = content.id;
         const veloctiy = content.velocity;
         const len = content.length;
-        this.mRoom.game.physicalPeer.setVelocity(id, veloctiy.x, veloctiy.y);
+        this.mRoom.game.physicalPeer.setBaseVelocity(id, veloctiy.x, veloctiy.y);
     }
 
     private onShowBubble(packet: PBpacket) {
