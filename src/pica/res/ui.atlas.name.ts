@@ -23,6 +23,7 @@ export class UIAtlasName {
     public static map = "map";
     public static recast = "recast";
     public static layout = "layout";
+    public static illustrate = "illustrate";
     public static jsonUrl(name: string) {
         return name + ".json";
     }

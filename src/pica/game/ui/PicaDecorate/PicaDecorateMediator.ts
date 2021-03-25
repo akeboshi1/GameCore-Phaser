@@ -3,7 +3,7 @@ import {MessageType, ModuleName} from "structure";
 import {Logger} from "utils";
 import {op_client, op_def, op_pkt_def} from "pixelpai_proto";
 import PKT_PackageType = op_pkt_def.PKT_PackageType;
-import {BaseDataConfigManager} from "../../data/base.data.config.manager";
+import {BaseDataConfigManager} from "../../config/base.data.config.manager";
 
 export class PicaDecorateMediator extends BasicMediator {
 

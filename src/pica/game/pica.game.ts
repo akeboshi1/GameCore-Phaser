@@ -1,7 +1,7 @@
 import { ElementStorage } from "baseModel";
 import { SoundManager, BaseConfigData, DataManager, Game, HttpService, LoadingManager, MainPeer, RoomManager } from "gamecore";
 import { PicaNetworkManager } from "./command/pica.network.manager";
-import { BaseDataConfigManager, BaseDataType } from "./data";
+import { BaseDataConfigManager, BaseDataType } from "./config";
 import { PicaGuideManager } from "./guide.manager";
 import { PicaWorkerUiManager } from "./ui/pica.workeruimanager";
 

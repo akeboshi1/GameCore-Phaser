@@ -6,6 +6,7 @@ import { BaseHandler } from "./base.handler";
 export class CacheDataManager extends BaseHandler {
     public chapters: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_EXPLORE_CHAPTER_PROGRESS;
     public guidText: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_ROOM_SHOW_GUIDE_TEXT;
+    public gallery: op_client.OP_CLIENT_REQ_VIRTUAL_WORLD_PKT_UPDATE_GALLERY;
     private mBagCategory: Map<number, any> = new Map();
     private furiRecasteMap: Map<string, any> = new Map();
     private mChaptersMap: Map<number, any> = new Map();
@@ -82,5 +83,26 @@ export class CacheDataManager extends BaseHandler {
             return this.mChaptersMap.get(chapterId);
         }
         return undefined;
+    }
+
+    setGallery(content: op_client.OP_CLIENT_REQ_VIRTUAL_WORLD_PKT_UPDATE_GALLERY) {
+        if (!this.gallery) this.gallery = content;
+        else {
+            this.gallery.reward1NextIndex = content.reward1NextIndex;
+            this.gallery.reward2NextIndex = content.reward2NextIndex;
+            this.gallery.reward1Progress = content.reward1Progress;
+            this.gallery.reward2Progress = content.reward2Progress;
+            for (const item of content.list) {
+                let have = false;
+                for (const temp of this.gallery.list) {
+                    if (temp.id === item.id) {
+                        temp.status = item.status;
+                        have = true;
+                    }
+                }
+                if (!have) this.gallery.list.push(item);
+            }
+        }
+        this.game.emitter.emit(EventType.GALLERY_UPDATE, this.gallery);
     }
 }

@@ -2,7 +2,7 @@ import { op_client, op_def } from "pixelpai_proto";
 import { PicaNewRole } from "./PicaNewRole";
 import { BasicMediator, Game, UIType } from "gamecore";
 import { EventType, ModuleName } from "structure";
-import { BaseDataConfigManager } from "../../data";
+import { BaseDataConfigManager } from "../../config";
 import { Logger } from "utils";
 import { ISocial } from "picaStructure";
 export class PicaNewRoleMediator extends BasicMediator {

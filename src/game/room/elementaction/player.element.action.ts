@@ -1,5 +1,5 @@
-import { ElementBaseAction } from "gamecore";
 import { EventType } from "structure";
+import { ElementBaseAction } from "./element.base.action";
 
 export class PlayerElementAction extends ElementBaseAction {
     public actionTag: string = "Player";
