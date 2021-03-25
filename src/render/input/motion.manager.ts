@@ -47,7 +47,7 @@ export class MotionManager {
         if (!this.isRunning) return;
         if (this.isHolding === false) return;
         // 长按可互动物品不触发移动，详见：https://dej4esdop1.feishu.cn/docs/doccnEbMKpINEkfBVImFJ0nTJUh （入口3）
-        if (this.gameObject) return;
+        // if (this.gameObject) return;
         this.curtime += delta;
         if (this.curtime < 200) {
             return;
