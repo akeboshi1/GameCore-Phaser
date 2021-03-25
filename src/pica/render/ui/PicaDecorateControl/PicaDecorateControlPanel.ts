@@ -9,7 +9,7 @@ export class PicaDecorateControlPanel extends PicaBasePanel {
     private mSaveBtn: Button;
     private mRotateBtn: Button;
     private mRecycleBtn: Button;
-    private mAutoPlaceBtn: Button;
+    // private mAutoPlaceBtn: Button;
     private mExitBtn: Button;
     private mBtns: Button[];
 
@@ -24,7 +24,7 @@ export class PicaDecorateControlPanel extends PicaBasePanel {
         this.mSaveBtn.on(ClickEvent.Tap, this.onSaveHandler, this);
         this.mRotateBtn.on(ClickEvent.Tap, this.onRotateHandler, this);
         this.mRecycleBtn.on(ClickEvent.Tap, this.onRecycleAllHandler, this);
-        this.mAutoPlaceBtn.on(ClickEvent.Tap, this.onAutoPlaceHandler, this);
+        // this.mAutoPlaceBtn.on(ClickEvent.Tap, this.onAutoPlaceHandler, this);
         this.mExitBtn.on(ClickEvent.Tap, this.onExitHandler, this);
 
         this.render.emitter.on(MessageType.DECORATE_UPDATE_SELECTED_ELEMENT_POSITION, this.updatePosition, this);
@@ -35,7 +35,7 @@ export class PicaDecorateControlPanel extends PicaBasePanel {
         this.mSaveBtn.off(ClickEvent.Tap, this.onSaveHandler, this);
         this.mRotateBtn.off(ClickEvent.Tap, this.onRotateHandler, this);
         this.mRecycleBtn.off(ClickEvent.Tap, this.onRecycleAllHandler, this);
-        this.mAutoPlaceBtn.off(ClickEvent.Tap, this.onAutoPlaceHandler, this);
+        // this.mAutoPlaceBtn.off(ClickEvent.Tap, this.onAutoPlaceHandler, this);
         this.mExitBtn.off(ClickEvent.Tap, this.onExitHandler, this);
 
         this.render.emitter.off(MessageType.DECORATE_UPDATE_SELECTED_ELEMENT_POSITION, this.updatePosition, this);
@@ -88,14 +88,14 @@ export class PicaDecorateControlPanel extends PicaBasePanel {
         this.mSaveBtn = new Button(this.scene, ModuleName.PICADECORATE_NAME, "room_decorate_confirm.png");
         this.mRotateBtn = new Button(this.scene, ModuleName.PICADECORATE_NAME, "room_decorate_Spin.png");
         this.mRecycleBtn = new Button(this.scene, ModuleName.PICADECORATE_NAME, "room_decorate_put.png");
-        this.mAutoPlaceBtn = new Button(this.scene, ModuleName.PICADECORATE_NAME, "room_decorate_tiled.png");
+        // this.mAutoPlaceBtn = new Button(this.scene, ModuleName.PICADECORATE_NAME, "room_decorate_tiled.png");
         this.mExitBtn = new Button(this.scene, ModuleName.PICADECORATE_NAME, "room_decorate_closed.png");
 
-        this.mBtns = [this.mSaveBtn, this.mRotateBtn, this.mRecycleBtn, this.mAutoPlaceBtn, this.mExitBtn];
+        this.mBtns = [this.mSaveBtn, this.mRotateBtn, this.mRecycleBtn, this.mExitBtn];
         this.add(this.mBtns);
 
         const zoom = this.render.uiScale;
-        let totalWidth = w - 30 * 2 * this.dpr * zoom;
+        let totalWidth = w - 60 * 2 * this.dpr * zoom;
         this.mBtns.map((btn) => totalWidth -= btn.width * zoom);
         const space = totalWidth / (this.mBtns.length - 1) / zoom;
 
@@ -103,7 +103,7 @@ export class PicaDecorateControlPanel extends PicaBasePanel {
             if (i > 0) {
                 this.mBtns[i].x = space + (this.mBtns[i - 1].width * 0.5) + this.mBtns[i - 1].x + this.mBtns[i].width * 0.5;
             } else {
-                this.mBtns[i].x = 10 * this.dpr + this.mBtns[i].width * 0.5;
+                this.mBtns[i].x = 40 * this.dpr + this.mBtns[i].width * 0.5;
             }
             this.mBtns[i].y = 11 * this.dpr + this.mBtns[i].height * 0.5;
         }

@@ -1,6 +1,6 @@
 
-import { ElementBaseAction } from "gamecore";
 import { EventType, ModuleName } from "structure";
+import { ElementBaseAction } from "./element.base.action";
 
 export class FuritElementChangeAction extends ElementBaseAction {
     public actionTag: string = "FuritChange";

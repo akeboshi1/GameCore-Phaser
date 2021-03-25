@@ -14,6 +14,12 @@ export class MatterUserObject extends MatterPlayerObject {
         super(peer, id);
     }
 
+    update(time?: number, delta?: number) {
+        if ((this.mDirty === false && this.mMoving === false) || !this.peer) return;
+        this._doMove(time, delta);
+        this.mDirty = false;
+    }
+
     public async unmount(targetPos?: IPos) {
         if (this.mRootMount) {
             let landingPos: IPos;
@@ -34,9 +40,7 @@ export class MatterUserObject extends MatterPlayerObject {
                 landingPos = pos[0];
             }
             this.setPosition(landingPos);
-            // this.unmountSprite(mountID, landingPos);
             this.addBody();
-            // this.enableBlock();
             this.mDirty = true;
         }
     }
@@ -68,12 +72,10 @@ export class MatterUserObject extends MatterPlayerObject {
         if (this.mRootMount) {
             await this.mRootMount.removeMount(this, targets[0]);
         }
-        // this.peer.mainPeer.removePartMount(this.id, targets[0], path);
 
         const pos = this.mModel.pos;
         const miniSize = this.matterWorld.miniSize;
         for (const target of targets) {
-            // if (target.x === pos.x && target.y === pos.y) {
             // findPath坐标转换后存在误差
             if (Tool.twoPointDistance(target, pos) <= miniSize.tileWidth / 2) {
                 this.mTargetPoint = { targetId };
@@ -103,12 +105,8 @@ export class MatterUserObject extends MatterPlayerObject {
             return;
         }
         this.mMoving = true;
-        // this.setStatic(false);
-        // this.peer.mainPeer.changePlayerState(this.id, PlayerState.WALK);
         this.peer.mainPeer.selfStartMove();
         const pos = this.getPosition();
-        // const vec = path[0] - pos;
-        // vec.normalize * speed;
         const angle = Math.atan2((path[0].y - pos.y), (path[0].x - pos.x));
         const speed = this.mModel.speed * delayTime;
         this.setVelocity(Math.cos(angle) * speed, Math.sin(angle) * speed);
@@ -125,10 +123,8 @@ export class MatterUserObject extends MatterPlayerObject {
                 this.mMoveData.tweenLineAnim.destroy();
             }
         }
-        // this.peer.mainPeer.changePlayerState(this.id, PlayerState.IDLE);
         if (!this.body) return;
         this.setVelocity(0, 0);
-        // this.setStatic(true);
     }
 
     public tryStopMove(pos?: IPos) {
@@ -143,7 +139,6 @@ export class MatterUserObject extends MatterPlayerObject {
                     this.mMoveData.tweenLineAnim.destroy();
                 }
             }
-            // this.peer.mainPeer.changePlayerState(this.id, PlayerState.IDLE);
             if (!this.body) return;
             this.setVelocity(0, 0);
             let interactiveBoo = false;
@@ -224,7 +219,6 @@ export class MatterUserObject extends MatterPlayerObject {
         const prePos = (<any>this.body).positionPrev;
         const pos = this.body.position;
         const dir = DirectionChecker.check(prePos, pos);
-        // Logger.getInstance().debug("matterDirection ====>", dir);
         this.mModel.setDirection(dir);
         this.peer.mainPeer.setDirection(this.id, dir);
     }

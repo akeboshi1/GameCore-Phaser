@@ -183,15 +183,15 @@ export class DragonbonesDisplay extends BaseDragonbonesDisplay implements IDispl
     public startFireMove(pos: any) {
         this.mStartFireTween = this.scene.tweens.add({
             targets: this,
-            duration: 500,
+            duration: 5000,
             ease: "Linear",
             props: {
                 x: pos.x,
                 y: pos.y
             },
             onComplete: () => {
-                this.mStartFireTween.stop();
-                this.mStartFireTween = undefined;
+                if (this.mStartFireTween) this.mStartFireTween.stop();
+                if (this.mStartFireTween) this.mStartFireTween = undefined;
             },
             onCompleteParams: [this]
         });

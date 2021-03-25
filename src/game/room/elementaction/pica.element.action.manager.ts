@@ -1,5 +1,6 @@
-import { ElementActionManager, ElementBaseAction, Game } from "gamecore";
 import { ISprite } from "structure";
+import { ElementActionManager } from "./element.action.manager";
+import { ElementBaseAction } from "./element.base.action";
 import { FuritElementAction } from "./furit.element.action";
 import { FuritElementChangeAction } from "./furit.element.change.action";
 import { PKTElementAction } from "./pkt.element.action";

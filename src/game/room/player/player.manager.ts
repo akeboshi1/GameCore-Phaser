@@ -10,9 +10,9 @@ import { Logger, LogicPos } from "utils";
 import { ConnectionService } from "../../../../lib/net/connection.service";
 import { IElement } from "../element/element";
 import { Sprite } from "baseModel";
-import { BaseDataConfigManager } from "src/pica/game/data/base.data.config.manager";
+import { BaseDataConfigManager } from "src/pica/game/config/base.data.config.manager";
 import NodeType = op_def.NodeType;
-import { PlayerElementAction } from "picaWorker";
+import { PlayerElementAction } from "gamecore";
 
 export class PlayerManager extends PacketHandler implements IElementManager {
     public hasAddComplete: boolean = false;
@@ -36,9 +36,7 @@ export class PlayerManager extends PacketHandler implements IElementManager {
             this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_SYNC_SPRITE, this.onSync);
             this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_CHANGE_SPRITE_ANIMATION, this.onChangeAnimation);
             this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_SET_SPRITE_POSITION, this.onSetPosition);
-            // this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_MOVE_SPRITE_BY_PATH, this.onMovePath);
             this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_SET_POSITION, this.onSetPosition);
-            // this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_STOP, this.onStop);
             this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_ACTIVE_SPRITE, this.onActiveSpriteHandler);
             this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_ACTIVE_SPRITE_END, this.onActiveSpriteEndHandler);
             this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_SYNC_ACTOR, this.onSyncActorHandler);
@@ -113,10 +111,6 @@ export class PlayerManager extends PacketHandler implements IElementManager {
             this.mPlayerMap.delete(id);
             element.destroy();
         }
-        // if (this.mActor) {
-        //     this.mActor.destroy();
-        //     this.mActor = null;
-        // }
         return element;
     }
 
@@ -236,7 +230,6 @@ export class PlayerManager extends PacketHandler implements IElementManager {
             player = this.get(sprite.id);
             if (player) {
                 this._loadSprite(sprite);
-                //  MineCarSimulateData.addSimulate(this.roomService, sprite, player.model);
                 if (command === op_def.OpCommand.OP_COMMAND_UPDATE) {
                     this.checkSuitAvatarSprite(sprite);
                     player.model = new Sprite(sprite, content.nodeType);
@@ -284,18 +277,10 @@ export class PlayerManager extends PacketHandler implements IElementManager {
             let point: op_def.IPBPoint3f;
             for (const position of positions) {
                 player = this.mPlayerMap.get(position.id);
-                // if (!player) {
-                //     if (position.id === this.mActor.id) {
-                //         player = this.mActor;
-                //     } else {
-                //         continue;
-                //     }
-                // }
                 if (player) {
                     point = position.point3f;
                     player.setPosition(new LogicPos(point.x || 0, point.y || 0, point.z || 0));
                 }
-                // Logger.getInstance().debug(`adjust,x:${point.x},y:${point.y}`);
             }
         }
     }
@@ -362,7 +347,6 @@ export class PlayerManager extends PacketHandler implements IElementManager {
                 playID = movePath.id;
                 player = this.get(playID);
                 if (player && movePath.movePos && movePath.movePos.length > 0) {
-                    // player.move(moveData);
                     player.move(movePath.movePos);
                 }
             }
@@ -379,7 +363,6 @@ export class PlayerManager extends PacketHandler implements IElementManager {
         const role: Player = this.get(id);
         if (role) {
             role.setPosition(new LogicPos(content.position.x, content.position.y, content.position.z));
-
             this.mRoom.game.renderPeer.setPosition(id, content.position.x, content.position.y, content.position.z);
         }
     }
@@ -468,18 +451,11 @@ export class PlayerManager extends PacketHandler implements IElementManager {
     private onSyncActorHandler(packet: PBpacket) {
         const content: op_client.IOP_VIRTUAL_WORLD_REQ_CLIENT_SYNC_ACTOR = packet.content;
         this.mActor.updateModel(content.actor);
-        // Logger.getInstance().debug("====>>", content);
     }
 
     get roomService(): IRoomService {
         return this.mRoom;
     }
-
-    // get scene(): Phaser.Scene | undefined {
-    //     if (this.mRoom) {
-    //         return this.mRoom.scene;
-    //     }
-    // }
 
     get connection(): ConnectionService {
         if (this.mRoom) {

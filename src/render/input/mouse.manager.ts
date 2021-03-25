@@ -201,7 +201,7 @@ export class MouseManager {
             this.sendMouseEvent([MouseEvent.LeftMouseHolding], id, { x: pointer.worldX / this.zoom, y: pointer.worldY / this.zoom });
 
             // 触发小屋装饰
-            this.render.mainPeer.requestDecorate(id);
+            // this.render.mainPeer.requestDecorate(id);
         }
     }
 

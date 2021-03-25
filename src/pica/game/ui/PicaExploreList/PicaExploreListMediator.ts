@@ -3,7 +3,7 @@ import { BasicMediator, CacheDataManager, DataMgrType, Game } from "gamecore";
 import { EventType, ModuleName } from "structure";
 import { PicaExploreList } from "./PicaExploreList";
 import { PicaGame } from "picaWorker";
-import { BaseDataConfigManager } from "../../data";
+import { BaseDataConfigManager } from "../../config";
 import { ObjectAssign } from "utils";
 
 export class PicaExploreListMediator extends BasicMediator {

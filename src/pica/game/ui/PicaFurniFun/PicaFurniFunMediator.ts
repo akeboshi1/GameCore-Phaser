@@ -2,7 +2,7 @@ import { op_client, op_pkt_def } from "pixelpai_proto";
 import { PicaFurniFun } from "./PicaFurniFun";
 import { EventType, ISprite, ModuleName } from "structure";
 import { BaseDataManager, BasicMediator, DataMgrType, Game } from "gamecore";
-import { BaseDataConfigManager } from "../../data";
+import { BaseDataConfigManager } from "../../config";
 import { ICountablePackageItem } from "picaStructure";
 import { ObjectAssign } from "utils";
 

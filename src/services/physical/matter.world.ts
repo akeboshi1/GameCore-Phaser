@@ -1,4 +1,4 @@
-import { Bodies, Body, Composite, Engine, World } from "tooqingmatter-js";
+import { Bodies, Body, Composite, Engine, World, Events } from "tooqingmatter-js";
 import { PhysicalPeer } from "../../services/physical.worker";
 import { ISizeChart } from "structure";
 import { AStar, ChatCommandInterface, IPos, IPosition45Obj, Pos, Position45 } from "utils";
@@ -13,7 +13,7 @@ export class MatterWorld implements ChatCommandInterface, ISizeChart {
     // public map: number[][];
     public matterUser: MatterUserObject;
     private mAstar: AStar;
-    private drawBodies: boolean = false;
+    private drawBodies: boolean = true;
     private ignoreSensors?: Map<number, MatterObject>;
     private mSize: IPosition45Obj;
     private mMiniSize: IPosition45Obj;
@@ -58,6 +58,13 @@ export class MatterWorld implements ChatCommandInterface, ISizeChart {
     public update() {
         if (this.enabled && this.autoUpdate) {
             Engine.update(this.engine);
+            // ====物理引擎两物体碰撞
+            // if (this.engine.pairs.collisionStart.length > 0) {
+            //     this.engine.pairs.collisionStart.forEach((data) => {
+            //         // data.bodyA.gameObject.setTint(0xff0000);
+            //         // data.bodyB.gameObject.setTint(0x00ff00);
+            //     });
+            // }
             if (!this.drawBodies) {
                 return;
             }

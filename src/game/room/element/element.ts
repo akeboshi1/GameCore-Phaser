@@ -1,5 +1,6 @@
 import { LayerEnum } from "game-capsule";
-import { op_client, op_def } from "pixelpai_proto";
+import { PBpacket } from "net-socket-packet";
+import { op_client, op_def, op_virtual_world } from "pixelpai_proto";
 import {
     AnimationQueue,
     AvatarSuitType,
@@ -169,6 +170,7 @@ export class Element extends BlockObject implements IElement {
     protected isUser: boolean = false;
     protected moveControll: MoveControll;
     protected mTopDisplay: any;
+    protected mTarget;
 
     private delayTime = 1000 / 45;
     private mState: boolean = false;
@@ -413,8 +415,12 @@ export class Element extends BlockObject implements IElement {
         }
     }
 
-    public startFireMove(pos: IPos) {
-        this.mRoomService.game.renderPeer.startFireMove(this.id, pos);
+    public async startFireMove(pos: IPos) {
+        if (this.mTarget) {
+            await this.removeMount(this.mTarget);
+            this.mRoomService.game.renderPeer.startFireMove(this.mTarget.id, pos);
+            this.mTarget = null;
+        }
     }
 
     public move(path: op_def.IMovePoint[]) {
@@ -425,7 +431,11 @@ export class Element extends BlockObject implements IElement {
         this.startMove();
     }
 
-    public startMove() {
+    public startMove(points?: any) {
+        if (points) {
+            this._startMove(points);
+            return;
+        }
         if (!this.mMoveData) {
             return;
         }
@@ -445,14 +455,30 @@ export class Element extends BlockObject implements IElement {
         this.changeState(PlayerState.WALK);
     }
 
-    public stopMove() {
+    public stopMove(points?: any) {
         this.mMoving = false;
         this.moveControll.setVelocity(0, 0);
-        // TODO display未创建的情况下处理
-        // if (!this.mDisplay) {
-        //     return;
-        // }
         this.changeState(PlayerState.IDLE);
+        const mMovePoints = [];
+        if (points) {
+            points.forEach((pos) => {
+                const movePoint = op_def.MovePoint.create();
+                const tmpPos = op_def.PBPoint3f.create();
+                tmpPos.x = pos.x;
+                tmpPos.y = pos.y;
+                movePoint.pos = tmpPos;
+                // 给每个同步点时间戳
+                movePoint.timestamp = new Date().getTime();
+                mMovePoints.push(tmpPos);
+            });
+        }
+        const movePath = op_def.MovePath.create();
+        movePath.id = this.id;
+        movePath.movePos = mMovePoints;
+        const pkt: PBpacket = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_STOP_SPRITE);
+        const ct: op_virtual_world.IOP_CLIENT_REQ_VIRTUAL_WORLD_STOP_SPRITE = pkt.content;
+        ct.movePath = movePath;
+        this.mElementManager.connection.send(pkt);
     }
 
     public getPosition(): IPos {
@@ -569,6 +595,7 @@ export class Element extends BlockObject implements IElement {
             this.setPosition(pos, true);
             this.addToWalkableMap();
             this.addBody();
+            await this.mRoomService.game.renderPeer.setPosition(this.id, pos.x, pos.y);
             this.mDirty = true;
         }
         return this;
@@ -590,7 +617,8 @@ export class Element extends BlockObject implements IElement {
             return Promise.resolve();
         }
         this.mMounts.splice(index, 1);
-        ele.unmount(targetPos);
+        await ele.unmount(targetPos);
+        Logger.getInstance().log("removeMount ===>", targetPos);
         if (!this.mMounts) return Promise.resolve();
         this.mRoomService.game.renderPeer.unmount(this.id, ele.id);
         return Promise.resolve();
@@ -812,6 +840,27 @@ export class Element extends BlockObject implements IElement {
             return;
         }
         super.updateBody(model);
+    }
+
+    private _startMove(points: any) {
+        const _points = [];
+        points.forEach((pos) => {
+            const movePoint = op_def.MovePoint.create();
+            const tmpPos = op_def.PBPoint3f.create();
+            tmpPos.x = pos.x;
+            tmpPos.y = pos.y;
+            movePoint.pos = tmpPos;
+            // 给每个同步点时间戳
+            movePoint.timestamp = new Date().getTime();
+            _points.push(movePoint);
+        });
+        const movePath = op_def.MovePath.create();
+        movePath.id = this.id;
+        movePath.movePos = _points;
+        const packet = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_MOVE_SPRITE);
+        const content: op_virtual_world.IOP_CLIENT_REQ_VIRTUAL_WORLD_MOVE_SPRITE = packet.content;
+        content.movePath = movePath;
+        this.mRoomService.game.connection.send(packet);
     }
 }
 

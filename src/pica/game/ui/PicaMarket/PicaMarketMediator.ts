@@ -2,7 +2,7 @@ import { PicaMarket } from "./PicaMarket";
 import { op_client, op_def } from "pixelpai_proto";
 import { BasicMediator, Game } from "gamecore";
 import { EventType, MessageType, ModuleName, RENDER_PEER } from "structure";
-import { BaseDataConfigManager } from "../../data";
+import { BaseDataConfigManager } from "../../config";
 import { Logger } from "utils";
 
 export class PicaMarketMediator extends BasicMediator {

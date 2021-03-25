@@ -2,7 +2,7 @@ import { BasicMediator, Game } from "gamecore";
 import { op_client, op_pkt_def } from "pixelpai_proto";
 import { ModuleName } from "structure";
 import { ObjectAssign } from "utils";
-import { BaseDataConfigManager } from "../../data";
+import { BaseDataConfigManager } from "../../config";
 import { PicaTask } from "./PicaTask";
 export class PicaTaskMediator extends BasicMediator {
     protected mModel: PicaTask;

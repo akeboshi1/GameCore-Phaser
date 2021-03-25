@@ -1,7 +1,7 @@
 import { BasicMediator, Game } from "gamecore";
 import { op_client, op_pkt_def } from "pixelpai_proto";
 import { ModuleName, RENDER_PEER } from "structure";
-import { BaseDataConfigManager } from "../../data";
+import { BaseDataConfigManager } from "../../config";
 import { PicaBusinessStreet } from "./PicaBusinessStreet";
 
 export class PicaBusinessStreetMediator extends BasicMediator {

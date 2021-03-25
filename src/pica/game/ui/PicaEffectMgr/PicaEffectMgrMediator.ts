@@ -2,7 +2,7 @@
 import { BaseDataManager, BasicMediator, DataMgrType, Game } from "gamecore";
 import { op_client, op_pkt_def } from "pixelpai_proto";
 import { EventType, ModuleName } from "structure";
-import { BaseDataConfigManager } from "../../data";
+import { BaseDataConfigManager } from "../../config";
 import { PicaEffectMgr } from "./PicaEffectMgr";
 
 export class PicaEffectMgrMediator extends BasicMediator {

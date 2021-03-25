@@ -5,6 +5,7 @@ import { op_def } from "pixelpai_proto";
 export class DragonbonesModel implements IDragonbonesModel {
     discriminator: string = "DragonbonesModel";
     id: number;
+    public eventName: number[];
     avatarDir?: number;
     avatar?: IAvatar;
     animationName?: string;
@@ -14,6 +15,7 @@ export class DragonbonesModel implements IDragonbonesModel {
         if (data) {
             this.id = data.id;
             this.avatar = data.avatar;
+            this.eventName = data.eventName;
         }
     }
 

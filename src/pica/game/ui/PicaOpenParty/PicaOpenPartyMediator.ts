@@ -2,7 +2,7 @@ import { op_client } from "pixelpai_proto";
 import { PicaOpenParty } from "./PicaOpenParty";
 import { BasicMediator, Game } from "gamecore";
 import { ModuleName } from "structure";
-import { BaseDataConfigManager } from "../../data";
+import { BaseDataConfigManager } from "../../config";
 export class PicaOpenPartyMediator extends BasicMediator {
     private picOpen: PicaOpenParty;
     constructor(game: Game) {

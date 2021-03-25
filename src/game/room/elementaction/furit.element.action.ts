@@ -1,6 +1,5 @@
-import { ElementBaseAction } from "gamecore";
 import { EventType, ModuleName } from "structure";
-
+import { ElementBaseAction } from "./element.base.action";
 export class FuritElementAction extends ElementBaseAction {
     public actionTag: string = "frozenType";
     public executeAction() {

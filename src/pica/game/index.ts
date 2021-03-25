@@ -1,5 +1,4 @@
-export * from "./data/index";
-export * from "./elementaction/index";
+export * from "./config/index";
 export { CharacterInfo } from "./ui/CharacterInfo/CharacterInfo";
 export { CharacterInfoMediator } from "./ui/CharacterInfo/CharacterInfoMediator";
 export { PicaChat } from "./ui/PicaChat/PicaChat";

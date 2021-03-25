@@ -3,7 +3,7 @@ import { PicaOrder } from "./PicaOrder";
 import { BasicMediator } from "gamecore";
 import { ModuleName } from "structure";
 import { PicaGame } from "../../pica.game";
-import { BaseDataConfigManager } from "../../data";
+import { BaseDataConfigManager } from "../../config";
 export class PicaOrderMediator extends BasicMediator {
 
     private mListData: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_ORDER_LIST = null;

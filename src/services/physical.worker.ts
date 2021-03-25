@@ -61,6 +61,9 @@ export class PhysicalPeer extends RPCPeer {
             if (this.matterWorld) {
                 this.matterWorld.update();
                 if (this.matterWorld.matterUser) this.matterWorld.matterUser.update(now, delay);
+                if (this.matterObjectMap) this.matterObjectMap.forEach((matterObj) => {
+                    matterObj.update(now, delay);
+                });
             }
             tmpTime = now;
         }
@@ -275,6 +278,16 @@ export class PhysicalPeer extends RPCPeer {
             this.matterObjectMap.set(id, obj);
         }
         obj.setVelocity(x, y);
+    }
+
+    @Export([webworker_rpc.ParamType.num, webworker_rpc.ParamType.num, webworker_rpc.ParamType.num])
+    public setBaseVelocity(id: number, x: number, y: number) {
+        let obj = this.matterObjectMap.get(id);
+        if (!obj) {
+            obj = new MatterObject(this, id);
+            this.matterObjectMap.set(id, obj);
+        }
+        obj.setBaseVelocity(x, y);
     }
 
     @Export([webworker_rpc.ParamType.num])

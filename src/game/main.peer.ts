@@ -433,6 +433,16 @@ export class MainPeer extends RPCPeer {
         this.game.user.syncPosition(targetPoint);
     }
 
+    @Export([webworker_rpc.ParamType.num])
+    public syncElementPosition(id, targetPoint) {
+        if (!this.game.roomManager || this.game.roomManager.currentRoom) return;
+        const elementManager = this.game.roomManager.currentRoom.elementManager;
+        if (!elementManager) return;
+        const ele = elementManager.get(id);
+        if (!ele) return;
+        // ele.syncPosition(targetPoint);
+    }
+
     @Export([webworker_rpc.ParamType.boolean])
     public setSyncDirty(boo: boolean) {
         if (!this.game.roomManager.currentRoom) return;
@@ -477,6 +487,15 @@ export class MainPeer extends RPCPeer {
         if (elementManager) elementManager.hideReferenceArea();
     }
 
+    @Export([webworker_rpc.ParamType.num])
+    public pushMovePoints(id: number, points: any) {
+        const elementManager = this.game.roomManager.currentRoom.elementManager;
+        if (elementManager) {
+            const ele = elementManager.get(id);
+            if (ele) ele.startMove(points);
+        }
+    }
+
     @Export()
     public onTapHandler(obj: any) {
         // if (this.game.roomManager.currentRoom) this.game.roomManager.currentRoom.move(obj.id, obj.x, obj.y, obj.nodeType);
@@ -506,6 +525,11 @@ export class MainPeer extends RPCPeer {
     @Export([webworker_rpc.ParamType.str])
     public stopGuide(id: string) {
         if (this.game.guideManager) this.game.guideManager.stopGuide(id);
+    }
+
+    @Export()
+    public startFireMove(pointer: any) {
+        if (this.game.user) this.game.user.startFireMove(pointer);
     }
 
     // ============= 心跳调用主进程
@@ -695,6 +719,18 @@ export class MainPeer extends RPCPeer {
             const needBroadcast = room.elementManager.checkElementAction(targetId);
             if (interactiveBoo) this.game.user.activeSprite(targetId, undefined, needBroadcast);
         }
+    }
+
+    @Export([webworker_rpc.ParamType.num])
+    public tryStopElementMove(id: number, points?: any) {
+        const ele = this.game.roomManager.currentRoom.elementManager.get(id);
+        if (!ele) return;
+        ele.stopMove(points);
+    }
+
+    @Export([webworker_rpc.ParamType.num])
+    public requestPushBox(id: number) {
+        this.game.user.requestPushBox(id);
     }
 
     @Export()

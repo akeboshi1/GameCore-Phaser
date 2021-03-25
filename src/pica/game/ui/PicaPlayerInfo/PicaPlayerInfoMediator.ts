@@ -4,7 +4,7 @@ import { ModuleName } from "structure";
 import { PicaFriendRelation } from "../PicaFriend/PicaFriendRelation";
 import { PicaFriendMediator } from "../PicaFriend/PicaFriendMediator";
 import { BasicMediator, Game } from "gamecore";
-import { BaseDataConfigManager } from "../../data";
+import { BaseDataConfigManager } from "../../config";
 
 export class PicaPlayerInfoMediator extends BasicMediator {
     protected mModel: PicaPlayerInfo;

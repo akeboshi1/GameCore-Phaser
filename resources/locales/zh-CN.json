@@ -444,5 +444,12 @@
   },
   "dropElement":{
     "tips": "放下"
+  },
+  "illustrate": {
+    "title": "图鉴",
+    "collect": "收集",
+    "furin": "点击打开家具图鉴面板",
+    "avatar": "点击打开装扮图鉴面板",
+    "make": "点击打开制造面板"
   }
 }

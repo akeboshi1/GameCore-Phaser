@@ -8,7 +8,7 @@ import {
     IFurnitureGroup,
     IScene
 } from "picaStructure";
-import { IMarketCommodity, IShopBase } from "../../../pica/structure/imarketcommodity";
+import { IMarketCommodity, IShopBase } from "../../structure/imarketcommodity";
 import { Logger, ObjectAssign, StringUtils } from "utils";
 import { ElementDataConfig } from "./element.data.config";
 import { ExploreDataConfig } from "./explore.data.config";
@@ -18,7 +18,7 @@ import { ItemCategoryConfig } from "./item.category.config";
 import { ShopConfig } from "./shop.config";
 import version from "../../../../version";
 import { JobConfig } from "./job.config";
-import { IJob } from "../../../pica/structure/ijob";
+import { IJob } from "../../structure/ijob";
 import { CardPoolConfig } from "./cardpool.config";
 import { ICraftSkill } from "src/pica/structure/icraftskill";
 import { SkillConfig } from "./skill.config";
@@ -44,7 +44,8 @@ export enum BaseDataType {
     publicscene = "publicScene",
     quest = "quest",
     guide = "guide",
-    furnituregroup = "furnituregroup"
+    furnituregroup = "furnituregroup",
+    gallery = "gallery"
     // itemcategory = "itemcategory"
 }
 
