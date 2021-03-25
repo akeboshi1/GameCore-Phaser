@@ -295,7 +295,7 @@ class PicaNotice extends Phaser.GameObjects.Container {
         }).setOrigin(0.5).setFontStyle("bold");
 
         this.view = this.scene.add.dom(0, 0, "iframe", { width: `${this.width - 28 * dpr}px`, height: `${this.height - 28 * dpr}px`, border: "0" });
-        this.view.node.src = url;
+        this.view.node.src = `${url}?t=${Date.now()}`;
 
         this.add([this.view, maskGrap, bg, tileImg, tileText, this.closeBtn]);
     }
