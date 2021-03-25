@@ -156,9 +156,10 @@ export class MatterObject implements IMatterObject {
             }
             this.mMovePoints.push(pos);
             // 当物理对象停止时，监听到停止事件的状态
-            if (this.endMove) {
+            if (this.endMove && this.matterWorld.matterUser.stopBoxMove) {
                 this.tryStopMove({ x: pos.x, y: pos.y });
                 this.endMove = false;
+                this.matterWorld.matterUser.stopBoxMove = false;
                 return;
             }
             return;
@@ -367,6 +368,8 @@ export class MatterObject implements IMatterObject {
             Body.setVelocity(this.body, Vector.create(x, y));
         }
         this.setStatic(!this.mMoving);
+        // 设置碰撞体是否旋转
+        Body.setInertia(this.body, Infinity);
     }
 
     public setPosition(p: IPos, update: boolean = false) {

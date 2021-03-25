@@ -287,6 +287,7 @@ export class PhysicalPeer extends RPCPeer {
             obj = new MatterObject(this, id);
             this.matterObjectMap.set(id, obj);
         }
+        this.world.matterUser.stopBoxMove = true;
         obj.setBaseVelocity(x, y);
     }
 

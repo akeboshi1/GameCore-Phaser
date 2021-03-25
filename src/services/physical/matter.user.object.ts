@@ -5,6 +5,7 @@ import { op_def } from "pixelpai_proto";
 import { IPoint } from "game-capsule";
 import { Vector, Body, Events } from "tooqingmatter-js";
 export class MatterUserObject extends MatterPlayerObject {
+    public stopBoxMove: boolean = false;
     private mTargetPoint: IMoveTarget;
     private mSyncDirty: boolean = false;
     private mSyncTime: number = 0;
