@@ -6,7 +6,7 @@ import { AvatarSuit, AvatarSuitType, ModuleName } from "structure";
 import { UIAtlasName } from "picaRes";
 import { Handler, i18n, UIHelper } from "utils";
 import { PicaBasePanel } from "../pica.base.panel";
-import { ISocial } from "picaStructure";
+import { IFurnitureGroup, ISocial } from "picaStructure";
 import { ItemButton } from "picaRender";
 export class PicaRepairChoosePanel extends PicaBasePanel {
     private blackGraphic: Phaser.GameObjects.Graphics;
@@ -15,6 +15,7 @@ export class PicaRepairChoosePanel extends PicaBasePanel {
     private grid: GridLayoutGroup;
     private cancelBtn: Button;
     private confirmBtn: Button;
+    private curSelectItem: ItemButton;
     constructor(uiManager: UiManager) {
         super(uiManager);
         this.key = ModuleName.PICAREPAIRCHOOSE_NAME;
@@ -81,14 +82,24 @@ export class PicaRepairChoosePanel extends PicaBasePanel {
         super.init();
     }
 
-    public setChooseData(content: any) {
+    public setChooseData(content: IFurnitureGroup) {
         this.tempDatas = content;
         if (!this.mInitialized) return;
-        for (let i = 0; i < 3; i++) {
+        // tslint:disable-next-line: prefer-for-of
+        for (let i = 0; i < content.group.length; i++) {
+            const data = content.group[i];
             const item = new ItemButton(this.scene, UIAtlasName.uicommon, "bag_icon_common_bg", this.dpr, this.scale, true);
+            item.on(ClickEvent.Tap, this.onItemButtonHandler, this);
             this.grid.add(item);
+            item.setItemData(data);
         }
         this.grid.Layout();
+    }
+
+    private onItemButtonHandler(pointer, item: ItemButton) {
+        if (this.curSelectItem) this.curSelectItem.select = false;
+        this.curSelectItem = item;
+        item.select = false;
     }
 
     private playMove(from: number, to: number) {

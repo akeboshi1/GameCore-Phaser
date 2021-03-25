@@ -423,5 +423,8 @@
     "picahotel": "Pica Hotel",
     "store": "Store",
     "onlinetips": "Online rewards"
+  },
+  "commontips": {
+    "configerror": "The configuration did not load successfully, please refresh the game"
   }
 }

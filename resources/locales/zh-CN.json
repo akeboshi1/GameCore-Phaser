@@ -61,10 +61,10 @@
     "editnow": "立即修改",
     "open": "打开",
     "give": "赠送",
-    "bag":"背包",
-    "recast":"重铸",
-    "make":"制作",
-    "editor":"编辑"
+    "bag": "背包",
+    "recast": "重铸",
+    "make": "制作",
+    "editor": "编辑"
   },
   "quantityunit": {
     "k": "千",
@@ -421,7 +421,7 @@
     "exit": "退出",
     "exittips": "是否退出探索关卡",
     "exploretask": "任务目标",
-    "energytips":"精力不足无法进入关卡"
+    "energytips": "精力不足无法进入关卡"
   },
   "effecttips": {
     "unlock": "新功能解锁:{{name}}"
@@ -433,5 +433,8 @@
     "picahotel": "皮卡堂大酒店",
     "store": "商铺",
     "onlinetips": "在线奖励"
+  },
+  "commontips": {
+    "configerror": "配置未成功加载，请刷新游戏"
   }
 }

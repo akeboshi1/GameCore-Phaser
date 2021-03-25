@@ -4,6 +4,7 @@ import { ConnectState, EventType, ModuleName } from "structure";
 import { BaseDataConfigManager } from "picaWorker";
 import { ObjectAssign } from "utils";
 import { PicaRepairChoose } from "./PicaRepairChoose";
+import { IFurnitureGroup } from "picaStructure";
 
 export class PicaRepairChooseMediator extends BasicMediator {
     protected mModel: PicaRepairChoose;
@@ -18,12 +19,12 @@ export class PicaRepairChooseMediator extends BasicMediator {
         super.show(param);
 
         this.game.emitter.on(this.key + "_close", this.onCloseHandler, this);
-        // this.game.emitter.on(this.key + "_queryrecaste", this.queryRecaste, this);
+        this.game.emitter.on(this.key + "_querychange", this.onQueryChangeHandler, this);
         // this.game.emitter.on(this.key + "_queryrecastelist", this.queryFuriListByStar, this);
     }
 
     hide() {
-        // this.game.emitter.off(this.key + "_retrecasteresult", this.onRetRescateHandler, this);
+        this.game.emitter.off(this.key + "_querychange", this.onQueryChangeHandler, this);
         // this.game.emitter.off(this.key + "_retrecastelistresult", this.onRetRescateListHandler, this);
         this.game.emitter.off(this.key + "_close", this.onCloseHandler, this);
         super.hide();
@@ -34,8 +35,9 @@ export class PicaRepairChooseMediator extends BasicMediator {
     }
 
     protected panelInit() {
-        if (this.panelInit) {
+        if (this.mPanelInit) {
             if (this.mView) {
+                this.setFurnitureGroup();
             }
         }
     }
@@ -44,15 +46,16 @@ export class PicaRepairChooseMediator extends BasicMediator {
         this.hide();
     }
 
-    private onRetRescateHandler(reward: op_client.ICountablePackageItem) {
-        if (this.mView) {
-            const configMgr = <BaseDataConfigManager>this.game.configManager;
-            const temp = configMgr.getItemBaseByID(reward.id);
-            ObjectAssign.excludeTagAssign(reward, temp);
-            this.mView.setRecasteResult(reward);
-            const uimgr = this.game.uiManager;
-            uimgr.showMed(ModuleName.PICATREASURE_NAME, { data: [reward], type: "open" });
-        }
+    private onQueryChangeHandler(element_id: string, target_type: string) {
+        this.mModel.queryChange(element_id, target_type);
     }
 
+    private setFurnitureGroup() {
+        if (this.mPanelInit) return;
+        const group: IFurnitureGroup = this.configMgr.getFurnitureGroup(this.mShowData);
+        this.mView.setChooseData(group);
+    }
+    private get configMgr() {
+        return <BaseDataConfigManager>this.game.configManager;
+    }
 }
