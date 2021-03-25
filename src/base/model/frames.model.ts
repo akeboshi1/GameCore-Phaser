@@ -10,6 +10,7 @@ export class FramesModel implements IFramesModel {
     readonly discriminator: string = "FramesModel";
     public id: number;
     public type: string;
+    public eventName: number[];
     public display: IDisplay | null;
     public animations: Map<string, AnimationModel>;
     public animationName: string;
@@ -21,6 +22,7 @@ export class FramesModel implements IFramesModel {
         // TODO 定义IElement接口
         this.id = data.id || 0;
         this.type = data.sn || "";
+        this.eventName = data.eventName;
         const anis = data.animations;
         if (anis) {
             this.animationName = anis.defaultAnimationName;

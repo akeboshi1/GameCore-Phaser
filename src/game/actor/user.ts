@@ -167,6 +167,15 @@ export class User extends Player {
         super.setQueue(animations);
     }
 
+    public requestPushBox(targetId: number) {
+        const pkt: PBpacket = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_UPDATE_CLIENT_HIT_SPRITE);
+        const ct: op_virtual_world.IOP_CLIENT_REQ_VIRTUAL_WORLD_UPDATE_CLIENT_HIT_SPRITE = pkt.content;
+        ct.targetId = targetId;
+        ct.timestamp = new Date().getTime();
+        ct.dir = this.mModel.direction;
+        this.mElementManager.connection.send(pkt);
+    }
+
     // override super's method.
     public setRenderable(isRenderable: boolean): Promise<any> {
         // do nothing!
@@ -220,11 +229,18 @@ export class User extends Player {
     }
 
     public async activeSprite(targetId: number, param?: any, needBroadcast?: boolean) {
-        // const ele  = this.mRoomService.getElement(targetId);
-        // if (ele) this.addMount(ele, 0);
-        // return;
+        const ele = this.mRoomService.getElement(targetId);
+        // if (ele) {
+        //     this.mTarget = ele;
+        //     this.addMount(ele, 0);
+        // }
         if (!targetId) {
             this.mPreTargetID = 0;
+            return;
+        }
+        // 有element交互事件的发送推箱子协议
+        if (ele.model && ele.model.displayInfo && ele.model.displayInfo.eventName) {
+            this.requestPushBox(targetId);
             return;
         }
         const now = new Date().getTime();

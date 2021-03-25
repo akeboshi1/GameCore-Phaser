@@ -508,6 +508,11 @@ export class MainPeer extends RPCPeer {
         if (this.game.guideManager) this.game.guideManager.stopGuide(id);
     }
 
+    @Export()
+    public startFireMove(pointer: any) {
+        if (this.game.user) this.game.user.startFireMove(pointer);
+    }
+
     // ============= 心跳调用主进程
     // @Export()
     // public startHeartBeat() {
@@ -695,6 +700,13 @@ export class MainPeer extends RPCPeer {
             const needBroadcast = room.elementManager.checkElementAction(targetId);
             if (interactiveBoo) this.game.user.activeSprite(targetId, undefined, needBroadcast);
         }
+    }
+
+    @Export([webworker_rpc.ParamType.num])
+    public tryStopElementMove(id: number, stopPos?: any) {
+        const ele = this.game.roomManager.currentRoom.elementManager.get(id);
+        if (!ele) return;
+        ele.stopMove(stopPos);
     }
 
     @Export()

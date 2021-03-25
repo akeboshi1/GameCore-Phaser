@@ -3,6 +3,7 @@ export interface IFramesModel {
     readonly discriminator: string;
     gene: string | undefined;
     id: number;
+    eventName?: number[];
     avatarDir?: number;
     type?: string;
     display?: IDisplay | null;

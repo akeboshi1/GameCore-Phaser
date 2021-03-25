@@ -1,15 +1,16 @@
-import { PacketHandler, PBpacket } from "net-socket-packet";
-import { op_client, op_def, op_virtual_world } from "pixelpai_proto";
-import { ConnectionService } from "../../../../lib/net/connection.service";
-import { Logger, LogicPos } from "utils";
-import { EventType, IDragonbonesModel, IFramesModel, ISprite, MessageType } from "structure";
-import { IRoomService, Room } from "../room/room";
-import { Element, IElement, InputEnable } from "./element";
-import { ElementStateManager } from "./element.state.manager";
-import { ElementDataManager } from "../../data.manager/element.dataManager";
-import { DataMgrType } from "../../data.manager";
-import { ElementActionManager } from "../elementaction/element.action.manager";
-import { Sprite, IElementStorage } from "baseModel";
+import {PacketHandler, PBpacket} from "net-socket-packet";
+import {op_client, op_def, op_virtual_world} from "pixelpai_proto";
+import {ConnectionService} from "../../../../lib/net/connection.service";
+import {Logger, LogicPos} from "utils";
+import {EventType, IDragonbonesModel, IFramesModel, ISprite, MessageType} from "structure";
+import {IRoomService} from "../room/room";
+import {Element, IElement, InputEnable} from "./element";
+import {ElementStateManager} from "./element.state.manager";
+import {ElementDataManager} from "../../data.manager/element.dataManager";
+import {DataMgrType} from "../../data.manager";
+import {ElementActionManager} from "../elementaction/element.action.manager";
+import {IElementStorage, Sprite} from "baseModel";
+import {PicaElementActionManager} from "picaWorker";
 import NodeType = op_def.NodeType;
 import { PicaElementActionManager } from "gamecore";
 
@@ -77,13 +78,13 @@ export class ElementManager extends PacketHandler implements IElementManager {
             this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_CHANGE_SPRITE_ANIMATION, this.onChangeAnimation);
             this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_SET_SPRITE_POSITION, this.onSetPosition);
             this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_ACTIVE_SPRITE, this.onActiveSpriteHandler);
+            this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_TRIGGER_MOVE_SPRITE, this.onTiggerMove);
         }
         if (this.mRoom && this.mRoom.game) {
             this.mGameConfig = this.mRoom.game.elementStorage;
         }
 
         // 进入房间创建地图后将其拷贝给物理进程
-        // this.roomService.game.physicalPeer.createMap(this.mMap);
         this.mStateMgr = new ElementStateManager(mRoom);
         this.mActionMgr = new PicaElementActionManager(mRoom.game);
         this.eleDataMgr.on(EventType.SCENE_ELEMENT_FIND, this.onQueryElementHandler, this);
@@ -291,11 +292,11 @@ export class ElementManager extends PacketHandler implements IElementManager {
                 }
                 // 更新elementstorage中显示对象的数据信息
                 const data = new Sprite(sprite, 3);
-                this.mRoom.game.elementStorage.add(<any>data);
+                this.mRoom.game.elementStorage.add(<any> data);
                 element = this.get(sprite.id);
                 if (element) {
                     this.mDealSyncMap.set(sprite.id, false);
-                    const command = (<any>sprite).command;
+                    const command = (<any> sprite).command;
                     if (command === op_def.OpCommand.OP_COMMAND_UPDATE) { //  全部
                         element.model = data;
                     } else if (command === op_def.OpCommand.OP_COMMAND_PATCH) { //  增量
@@ -422,15 +423,6 @@ export class ElementManager extends PacketHandler implements IElementManager {
         if (type !== NodeType.ElementNodeType) {
             return;
         }
-
-        // test debug
-        // for (const obj of objs) {
-        //     if (obj.id === 680015589) {
-        //         Logger.getInstance().log("#decorate wrong pos: ", obj);
-        //         break;
-        //     }
-        // }
-
         this.addSpritesToCache(objs);
     }
 
@@ -441,15 +433,13 @@ export class ElementManager extends PacketHandler implements IElementManager {
             ele.model = sprite;
         } else {
             ele = new Element(sprite, this);
-
             // 有小屋装扮权限时，设置全部家具可互动
-            if (this.roomService.enableDecorate) {
-                ele.setInputEnable(InputEnable.Enable);
-            } else {
-                ele.setInputEnable(InputEnable.Interactive);
-            }
+            // if (this.roomService.enableDecorate) {
+            //     ele.setInputEnable(InputEnable.Enable);
+            // } else {
+            ele.setInputEnable(InputEnable.Interactive);
+            // }
         }
-        // if (!ele) ele = new Element(sprite, this);
         if (addMap) ele.addToWalkableMap();
         this.mElements.set(ele.id || 0, ele);
         return ele;
@@ -479,7 +469,6 @@ export class ElementManager extends PacketHandler implements IElementManager {
 
     protected checkDisplay(sprite: ISprite): IFramesModel | IDragonbonesModel {
         if (!sprite.displayInfo) {
-            // const displayInfo = this.roomService.game.elementStorage.getDisplayModel(sprite.bindID || sprite.id);
             const elementRef = this.roomService.game.elementStorage.getElementRef(sprite.bindID || sprite.id);
             if (elementRef) {
                 // 名字以服务器发送为主。没有从pi中读取
@@ -563,7 +552,7 @@ export class ElementManager extends PacketHandler implements IElementManager {
         const command = content.command;
         const sprites = content.sprites;
         for (const sprite of sprites) {
-            (<any>sprite).command = command;
+            (<any> sprite).command = command;
             this.mCacheSyncList.push(sprite);
         }
         this.dealSyncList();
@@ -587,6 +576,14 @@ export class ElementManager extends PacketHandler implements IElementManager {
                 element.move(moveData.movePos);
             }
         }
+    }
+
+    private onTiggerMove(packet: PBpacket) {
+        const content: op_client.IOP_VIRTUAL_WORLD_REQ_CLIENT_TRIGGER_MOVE_SPRITE = packet.content;
+        const id = content.id;
+        const veloctiy = content.velocity;
+        const len = content.length;
+        this.mRoom.game.physicalPeer.setBaseVelocity(id, veloctiy.x, veloctiy.y);
     }
 
     private onShowBubble(packet: PBpacket) {

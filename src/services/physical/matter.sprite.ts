@@ -16,6 +16,7 @@ export class MatterSprite {
     public originCollisionPoint: LogicPoint;
     public mountSprites: number[];
     public animator: Animator;
+    public eventName: number[];
     protected sprite: any;
     protected currentCollisionArea: number[][];
     protected currentWalkableArea: number[][];
@@ -35,6 +36,7 @@ export class MatterSprite {
         } else {
             this.pos = new LogicPos(0, 0);
         }
+        this.eventName = obj.displayInfo ? obj.displayInfo.eventName : undefined;
         this.currentAnimationName = obj.currentAnimationName || "";
         this.setDirection(obj.direction || 3);
         const anis = obj.displayInfo ? obj.displayInfo.animations : obj.animations;
