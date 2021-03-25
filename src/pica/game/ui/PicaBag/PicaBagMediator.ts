@@ -2,7 +2,7 @@ import { PicaBag } from "./PicaBag";
 import { op_client, op_def, op_gameconfig, op_pkt_def } from "pixelpai_proto";
 import { BasicMediator, CacheDataManager, DataMgrType, Game } from "gamecore";
 import { EventType, ModuleName, RENDER_PEER } from "structure";
-import { BaseDataConfigManager } from "../../data";
+import { BaseDataConfigManager } from "../../config";
 import { ObjectAssign } from "utils";
 
 export class PicaBagMediator extends BasicMediator {

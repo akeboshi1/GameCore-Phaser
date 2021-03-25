@@ -6,7 +6,7 @@ import { LoginMediator } from "./Login";
 import { BottomMediator } from "./Bottom/BottomMediator";
 import { PicaFurniFunMediator } from "./PicaFurniFun/PicaFurniFunMediator";
 import { PicaNewMainMediator } from "./PicaNewMain/PicaNewMainMediator";
-import { BaseDataConfigManager } from "../data";
+import { BaseDataConfigManager } from "../config";
 import { Logger } from "utils";
 export class PicaWorkerUiManager extends UIManager {
     constructor(game: Game) {

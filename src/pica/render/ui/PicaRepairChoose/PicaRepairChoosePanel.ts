@@ -86,8 +86,8 @@ export class PicaRepairChoosePanel extends PicaBasePanel {
     public setChooseData(content: IFurnitureGroup) {
         this.tempDatas = content;
         if (!this.mInitialized) return;
-        for (let i = 0; i < content.group.length; i++) {
-            const data = content.group[i];
+        // tslint:disable-next-line: prefer-for-of
+        for (const data of content.group) {
             const item = new ItemButton(this.scene, UIAtlasName.uicommon, "bag_icon_common_bg", this.dpr, this.scale, true);
             item.on(ClickEvent.Tap, this.onItemButtonHandler, this);
             this.grid.add(item);

@@ -117,4 +117,8 @@ export class EventType {
      * 命令协议测试
      */
     public static TEST_COMMAND_MESSAGE = "TEST_COMMAND_MESSAGE";
+    /**
+     * 图鉴数据更新
+     */
+    public static GALLERY_UPDATE = "GALLERY_UPDATE";
 }

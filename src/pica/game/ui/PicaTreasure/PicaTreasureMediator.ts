@@ -1,6 +1,6 @@
 import { BasicMediator, Game } from "gamecore";
 import { ModuleName, RENDER_PEER } from "structure";
-import { BaseDataConfigManager } from "../../data";
+import { BaseDataConfigManager } from "../../config";
 import { PicaTreasure } from "./PicaTreasure";
 
 export class PicaTreasureMediator extends BasicMediator {

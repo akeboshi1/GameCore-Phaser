@@ -10,9 +10,9 @@ import { Logger, LogicPos } from "utils";
 import { ConnectionService } from "../../../../lib/net/connection.service";
 import { IElement } from "../element/element";
 import { Sprite } from "baseModel";
-import { BaseDataConfigManager } from "src/pica/game/data/base.data.config.manager";
+import { BaseDataConfigManager } from "src/pica/game/config/base.data.config.manager";
 import NodeType = op_def.NodeType;
-import { PlayerElementAction } from "picaWorker";
+import { PlayerElementAction } from "gamecore";
 
 export class PlayerManager extends PacketHandler implements IElementManager {
     public hasAddComplete: boolean = false;

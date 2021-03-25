@@ -11,7 +11,7 @@ import { DataMgrType } from "../../data.manager";
 import { ElementActionManager } from "../elementaction/element.action.manager";
 import { Sprite, IElementStorage } from "baseModel";
 import NodeType = op_def.NodeType;
-import { PicaElementActionManager } from "picaWorker";
+import { PicaElementActionManager } from "gamecore";
 
 export interface IElementManager {
     hasAddComplete: boolean;
