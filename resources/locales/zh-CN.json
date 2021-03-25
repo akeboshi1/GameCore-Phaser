@@ -38,7 +38,8 @@
     "properties": "道具属性",
     "needproper": "需求属性",
     "placetips": "布置自己的小屋的时候才能放置",
-    "recaste": "重铸"
+    "recaste": "重铸",
+    "show": "展示"
   },
   "common": {
     "cancel": "取消",
@@ -440,5 +441,8 @@
   "boot": {
     "play": "开始游戏",
     "notice": "公 告"
+  },
+  "dropElement":{
+    "tips": "放下"
   }
 }

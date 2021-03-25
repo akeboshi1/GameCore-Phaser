@@ -138,6 +138,9 @@ export class SpawnPoint implements ISprite {
         return [];
     }
 
+    registerAnimationMap(key: string, value: string) { }
+    unregisterAnimationMap(key: string) { }
+
     get currentCollisionArea(): number[][] {
         return [[1, 1], [1, 1]];
     }

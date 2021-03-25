@@ -3,7 +3,7 @@ import { SceneManager } from "../scenes/scene.manager";
 import { FramesDisplay } from "../display/frames/frames.display";
 import { PlayScene } from "../scenes/play.scene";
 import { DragonbonesDisplay } from "../display/dragonbones/dragonbones.display";
-import { DisplayField, ElementStateType, IScenery } from "structure";
+import { AnimationModel, DisplayField, ElementStateType, IScenery } from "structure";
 import { BlockManager } from "../../base/render/sky.box/block.manager";
 import { Render } from "../render";
 import { IFramesModel } from "structure";
@@ -15,6 +15,7 @@ import { ServerPosition } from "../display/debugs/server.pointer";
 import { IDisplayObject } from "../display";
 import { Astar } from "../display/debugs/astar";
 import { Grids } from "../display/debugs/grids";
+import * as sha1 from "simple-sha1";
 
 export enum NodeType {
     UnknownNodeType = 0,
@@ -496,6 +497,50 @@ export class DisplayManager {
         if (!this.serverPosition) return;
         this.serverPosition.destroy();
         this.serverPosition = null;
+    }
+
+    public liftItem(id: number, display, animation) {
+        const player = this.displays.get(id);
+        if (!player) {
+            return;
+        }
+        if (!display || !animation) return;
+        player.clearMount();
+        const anis = [];
+        const aniName = animation[0].node.name;
+        // TODO 统一方法创建
+        for (const ani of animation) {
+            anis.push(new AnimationModel(ani));
+          }
+        const animations = new Map();
+        for (const aniData of anis) {
+            animations.set(aniData.name, aniData);
+        }
+        const animode = {
+            animations,
+            id: 0,
+            gene: sha1.sync(display.dataPath + display.texturePath),
+            discriminator: "FramesModel",
+            animationName: aniName,
+            display
+        };
+
+        const scene = this.sceneManager.getMainScene();
+        if (!scene) {
+            Logger.getInstance().fatal(`scene does not exist`);
+            return;
+        }
+
+        const displayFrame = new FramesDisplay(scene, this.render);
+        displayFrame.load(animode);
+        player.mount(displayFrame, 0);
+    }
+
+    public clearMount(id: number) {
+        const player = this.displays.get(id);
+        if (player) {
+            player.clearMount();
+        }
     }
 
     public destroy() {

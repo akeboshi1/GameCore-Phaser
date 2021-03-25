@@ -1,6 +1,7 @@
+import { FramesModel } from "baseModel";
 import { PacketHandler, PBpacket } from "net-socket-packet";
 import { op_def, op_client } from "pixelpai_proto";
-import { ElementStateType } from "structure";
+import { ElementStateType, ModuleName } from "structure";
 import { Logger } from "utils";
 import { IRoomService } from "..";
 import { Element } from "../element/element";
@@ -131,14 +132,20 @@ class AddHandler extends BaseHandler {
     }
 
     private ShowOff(state: State) {
-        const conf = this.room.game.configManager.getConfig("item");
-        if (conf) {
-            const buf = Buffer.from(state.packet);
-            const id = buf.toString("utf-8", 4, buf.readIntBE(0, 4) + 4);
-            const e = conf[id];
-            // this.mRoomService.game.uiManager.showMed()
-            Logger.getInstance().log(e);
+        // const conf = this.room.game.configManager.getConfig("item");
+        const buf = Buffer.from(state.packet);
+        const id = buf.toString("utf-8", 4, buf.readIntBE(0, 4) + 4);
+        const ownerId = state.owner.id;
+        const element = (<any> this.room.game.configManager).getItemBaseByID(id);
+        const owner = this.room.getElement(ownerId);
+        if (owner) {
+            owner.model.registerAnimationMap("idle", "lift");
+            owner.model.registerAnimationMap("walk", "liftwalk");
         }
+        if (element) {
+            this.room.game.renderPeer.liftItem(state.owner.id, element.animationDisplay, element.animations);
+        }
+        if (owner === this.room.playerManager.actor) this.room.game.uiManager.showMed(ModuleName.PICA_DROP_ELEMENT_NAME, element.display);
     }
 }
 
@@ -150,5 +157,18 @@ class DeleteHandler extends BaseHandler {
     private effect(state: State) {
         if (!state || !state.owner) return;
         this.room.effectManager.remove(state.owner.id);
+    }
+
+    private ShowOff(state: State) {
+        const buf = Buffer.from(state.packet);
+        const ownerId = state.owner.id;
+        const owner = this.room.getElement(ownerId);
+        if (owner) {
+            owner.model.unregisterAnimationMap("idle");
+            owner.model.unregisterAnimationMap("walk");
+
+        }
+        if (owner === this.room.playerManager.actor) this.room.game.uiManager.hideMed(ModuleName.PICA_DROP_ELEMENT_NAME);
+        this.room.game.renderPeer.clearMount(state.owner.id);
     }
 }

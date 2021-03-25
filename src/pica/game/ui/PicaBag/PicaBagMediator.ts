@@ -201,6 +201,7 @@ export class PicaBagMediator extends BasicMediator {
 
     private onShowElementHandler(id: string) {
         this.model.useProps(id, 1);
+        this.hide();
     }
 
     private get model(): PicaBag {
