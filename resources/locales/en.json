@@ -432,6 +432,9 @@
     "play": "Play",
     "notice": "Notice"
   },
+  "dropElement":{
+    "tips": "Drop Element"
+  },
   "illustrate": {
     "title": "Illustrate",
     "collect": "Collect",
