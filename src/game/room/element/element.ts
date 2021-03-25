@@ -901,7 +901,7 @@ export class Element extends BlockObject implements IElement {
             movePoint.pos = tmpPos;
             // 给每个同步点时间戳
             movePoint.timestamp = new Date().getTime();
-            _points.push(tmpPos);
+            _points.push(movePoint);
         });
         const movePath = op_def.MovePath.create();
         movePath.id = this.id;

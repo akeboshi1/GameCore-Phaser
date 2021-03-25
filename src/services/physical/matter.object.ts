@@ -157,7 +157,7 @@ export class MatterObject implements IMatterObject {
             Logger.getInstance().log("doMove ====>", _pos, _prePos, this.mTargetPos);
             if (!this.mTargetPos) return;
             // 该情况仅在依靠物理进程同步物件移动才处理，其余情况不做该判断处理
-            if (Math.round(_pos.x) === Math.round(this.mTargetPos.x) && Math.round(_pos.y) === Math.round(this.mTargetPos.y)) {
+            if (Math.round(_pos.x) === Math.round(_prePos.x) && Math.round(_pos.y) === Math.round(_prePos.y)) {
                 this.tryStopMove({ x: _pos.x, y: _pos.y });
                 this.mTargetPos = undefined;
                 return;
