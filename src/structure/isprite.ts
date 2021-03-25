@@ -55,4 +55,6 @@ export interface ISprite {
     getInteractive(): any;
     turn(): ISprite;
     toSprite(): op_client.ISprite;
+    registerAnimationMap(key: string, value: string);
+    unregisterAnimationMap(key: string);
 }

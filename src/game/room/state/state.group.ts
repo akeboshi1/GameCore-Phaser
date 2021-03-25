@@ -1,5 +1,4 @@
-import { op_def, op_client } from "pixelpai_proto";
-import { StateParse } from "./parse";
+import { op_def, op_client, op_gameconfig_01 } from "pixelpai_proto";
 
 export class StateGroup {
     private mName: string;
@@ -16,13 +15,10 @@ export class StateGroup {
 export class State {
     public name: string;
     public type: op_def.NodeType;
-    public packet: any;
-    constructor(state: op_def.IState) {
+    public packet: Uint8Array;
+    constructor(state: op_def.IState, public owner: op_gameconfig_01.INode) {
         this.type = state.type;
         this.name = state.name;
-        if (state.packet) {
-            // TODO 外部拿不到packet类型
-            this.packet = StateParse.decode(state.name, state.packet);
-        }
+        this.packet = state.packet;
     }
 }

@@ -22,6 +22,7 @@ export class PicaBagPanel extends PicaBasePanel {
   private mPropGridBg: Phaser.GameObjects.Graphics;
   private mCategoryScroll: GameScroller;
   private useBtn: NineSliceButton;
+  private showBtn: NineSliceButton;
   private recasteBtn: NineSliceButton;
   private topBtns: TabButton[] = [];
   private moneyCon: Phaser.GameObjects.Container;
@@ -75,6 +76,9 @@ export class PicaBagPanel extends PicaBasePanel {
     this.useBtn.y = this.mCategoryCon.y - this.useBtn.height / 2;
     this.recasteBtn.x = this.useBtn.x;
     this.recasteBtn.y = this.useBtn.y - this.recasteBtn.height - 15 * this.dpr;
+
+    this.showBtn.x = this.useBtn.x;
+    this.showBtn.y = this.useBtn.y - this.recasteBtn.height - 15 * this.dpr;
 
     this.mDetailDisplay.x = width / 2;
     this.mDetailDisplay.y = (height - 296 * this.dpr - 60 * this.dpr) * 0.5 + 60 * this.dpr;
@@ -180,6 +184,7 @@ export class PicaBagPanel extends PicaBasePanel {
     this.mCloseBtn.on(ClickEvent.Tap, this.onCloseHandler, this);
     this.useBtn.on(ClickEvent.Tap, this.onUseBtnHandler, this);
     this.recasteBtn.on(ClickEvent.Tap, this.onRecasteHandler, this);
+    this.showBtn.on(ClickEvent.Tap, this.onShowHandler, this);
   }
 
   public removeListen() {
@@ -187,6 +192,7 @@ export class PicaBagPanel extends PicaBasePanel {
     this.mCloseBtn.off(ClickEvent.Tap, this.onCloseHandler, this);
     this.useBtn.off(ClickEvent.Tap, this.onUseBtnHandler, this);
     this.recasteBtn.off(ClickEvent.Tap, this.onRecasteHandler, this);
+    this.showBtn.off(ClickEvent.Tap, this.onShowHandler, this);
   }
 
   destroy() {
@@ -297,7 +303,9 @@ export class PicaBagPanel extends PicaBasePanel {
     const btnPosX = width - btnwidth / 2 - 20 * this.dpr, btnPosY = this.mCategoryCon.y - 25 * this.dpr;
     this.useBtn = this.createNineButton(btnPosX + 100 * this.dpr, btnPosY, btnwidth, btnHeight, UIAtlasName.uicommon, "yellow_btn", i18n.t("common.use"), "#996600");
     this.recasteBtn = this.createNineButton(this.useBtn.x, this.useBtn.y, btnwidth, btnHeight, UIAtlasName.uicommon, "yellow_btn", i18n.t("common.make"), "#996600");
+    this.showBtn = this.createNineButton(this.useBtn.x, this.useBtn.y - 30 * this.dpr, btnwidth, btnHeight, UIAtlasName.uicommon, "button_g", i18n.t("furni_bag.show"), "#042663");
     this.recasteBtn.visible = false;
+    this.showBtn.visible = false;
     this.mDetailDisplay = new DetailDisplay(this.scene, this.render);
     this.mDetailDisplay.setFixedScale(2 * this.dpr / this.scale);
     this.mDetailDisplay.setComplHandler(new Handler(this, () => {
@@ -326,7 +334,7 @@ export class PicaBagPanel extends PicaBasePanel {
     this.mPropGridBg = this.scene.make.graphics(undefined, false);
     this.mCategoryCon.add([this.mCategoriesBar, this.mCategoryScroll]);
     this.add([this.mBackground, this.mPropGridBg, this.mIconBg, this.mCloseBtn, this.moneyCon, this.mDetailDisplay, nameBg, this.nameText, this.starImage,
-    this.moreButton, this.mDetailBubble, this.mCategoryCon, this.useBtn, this.recasteBtn]);
+    this.moreButton, this.mDetailBubble, this.mCategoryCon, this.useBtn, this.recasteBtn, this.showBtn]);
     const propFrame = this.scene.textures.getFrame(UIAtlasName.uicommon, "bag_icon_common_bg");
     const capW = (propFrame.width) + 9 * this.dpr;
     const capH = (propFrame.height) + 9 * this.dpr;
@@ -625,11 +633,15 @@ export class PicaBagPanel extends PicaBasePanel {
     const categoryType = item.getData("data");
     this.clearCategoryData();
     this.recasteBtn.visible = false;
+    this.showBtn.visible = false;
     if (categoryType) {
       this.onSelectedCategory(categoryType);
       if (categoryType === 1 || categoryType === 5) {// op_pkt_def.PKT_PackageType.FurniturePackage || op_pkt_def.PKT_PackageType.EditFurniturePackage
         this.useBtn.setText(i18n.t("furni_bag.add"));
-        if (categoryType === 1) this.moreButton.visible = true;
+        if (categoryType === 1) {
+          this.moreButton.visible = true;
+          this.showBtn.visible = true;
+        }
       } else {
         this.useBtn.setText(i18n.t("common.use"));
         this.moreButton.visible = false;
@@ -748,6 +760,10 @@ export class PicaBagPanel extends PicaBasePanel {
 
   private showPropFun(config: any) {// PicPropFunConfig
     this.render.mainPeer.showMediator(ModuleName.PICAPROPFUN_NAME, true, config);
+  }
+
+  private onShowHandler() {
+    this.render.renderEmitter(this.key + "_showElement", this.mSelectedItemData.id);
   }
 
   private get serviceTimestamp(): Promise<number> {

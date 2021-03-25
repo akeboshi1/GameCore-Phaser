@@ -115,11 +115,12 @@ export class PicaBootMediator extends BasicMediator {
         });
     }
 
+    public showNotice() {
+        this.mView.showNotice();
+    }
+
     private loginSuc(data) {
         this.game.renderPeer.setAccount(data);
     }
 
-    private showNotice() {
-        this.mView.showNotice();
-    }
 }

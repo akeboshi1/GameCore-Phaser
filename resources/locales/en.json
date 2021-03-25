@@ -37,7 +37,8 @@
     "properties": "Prop Properties",
     "needproper": "Requirement",
     "placetips": "Put down when editing room",
-    "recaste": "Recaste"
+    "recaste": "Recaste",
+    "show": "Show"
   },
   "common": {
     "cancel": "Cancel",
@@ -428,8 +429,11 @@
     "configerror": "The configuration did not load successfully, please refresh the game"
   },
   "boot": {
-    "play": "开始游戏",
-    "notice": "公 告"
+    "play": "Play",
+    "notice": "Notice"
+  },
+  "dropElement":{
+    "tips": "Drop Element"
   },
   "illustrate": {
     "title": "Illustrate",

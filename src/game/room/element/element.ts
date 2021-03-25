@@ -624,20 +624,6 @@ export class Element extends BlockObject implements IElement {
         return Promise.resolve();
     }
 
-    public setState(states: op_def.IState[]) {
-        for (const state of states) {
-            switch (state.execCode) {
-                case op_def.ExecCode.EXEC_CODE_ADD:
-                case op_def.ExecCode.EXEC_CODE_UPDATE:
-                    this.updateStateHandler(state);
-                    break;
-                case op_def.ExecCode.EXEC_CODE_DELETE:
-                    this.removeStateHandler(state);
-                    break;
-            }
-        }
-    }
-
     public getDepth() {
         let depth = 0;
         if (this.model && this.model.pos) {
@@ -836,41 +822,6 @@ export class Element extends BlockObject implements IElement {
         }
 
         this.mModel.mountSprites = mounts;
-    }
-
-    protected updateStateHandler(state: op_def.IState) {
-        let buf = null;
-        let id = null;
-        switch (state.name) {
-            case "effect":
-                buf = Buffer.from(state.packet);
-                id = buf.readDoubleBE(0);
-                this.roomService.effectManager.add(this.id, id);
-                break;
-            case "Task":
-                buf = Buffer.from(state.packet);
-                const type = buf.readDoubleBE(0);
-                id = buf.readDoubleBE(8);
-                const ele = this.roomService.getElement(id);
-                if (ele) {
-                    if (type === 0) {
-                        (<Element>ele).removeTopDisplay();
-                    } else {
-                        (<Element>ele).showTopDisplay(ElementStateType.REPAIR);
-                    }
-                }
-                break;
-        }
-    }
-
-    protected removeStateHandler(state: op_def.IState) {
-        switch (state.name) {
-            case "effect":
-                this.roomService.effectManager.remove(this.id);
-                break;
-            case "Task":
-                break;
-        }
     }
 
     protected animationChanged(data: any) {

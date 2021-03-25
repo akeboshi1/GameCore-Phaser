@@ -33,6 +33,7 @@ export class PicaBagMediator extends BasicMediator {
         this.game.emitter.on(this.key + "_addFurniToScene", this.onAddFurniHandler, this);
         this.game.emitter.on(this.key + "_sellProps", this.onSellPropsHandler, this);
         this.game.emitter.on(this.key + "_useprops", this.onUsePropsHandler, this);
+        this.game.emitter.on(this.key + "_showElement", this.onShowElementHandler, this);
     }
 
     hide() {
@@ -48,6 +49,8 @@ export class PicaBagMediator extends BasicMediator {
         this.game.emitter.off(this.key + "_addFurniToScene", this.onAddFurniHandler, this);
         this.game.emitter.off(this.key + "_sellProps", this.onSellPropsHandler, this);
         this.game.emitter.off(this.key + "_useprops", this.onUsePropsHandler, this);
+        this.game.emitter.off(this.key + "_showElement", this.onShowElementHandler, this);
+
         super.hide();
     }
 
@@ -194,6 +197,11 @@ export class PicaBagMediator extends BasicMediator {
 
     private onUsePropsHandler(data: { itemid: string, count: number }) {
         this.model.useProps(data.itemid, data.count);
+    }
+
+    private onShowElementHandler(id: string) {
+        this.model.useProps(id, 1);
+        this.hide();
     }
 
     private get model(): PicaBag {

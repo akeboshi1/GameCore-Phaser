@@ -4,26 +4,25 @@ import { Handler, IPos, IPosition45Obj, Logger, LogicPos, Position45 } from "uti
 import { Game } from "../../game";
 import { IBlockObject } from "../block/iblock.object";
 import { ClockReadyListener } from "../../loop/clock/clock";
-import { State } from "../state/state.group";
 import { IRoomManager } from "../room.manager";
 import { ConnectionService } from "../../../../lib/net/connection.service";
 import { CamerasManager, ICameraService } from "../camera/cameras.manager";
 import { ViewblockManager } from "../viewblock/viewblock.manager";
 import { PlayerManager } from "../player/player.manager";
 import { ElementManager } from "../element/element.manager";
-import { IElement, InputEnable } from "../element/element";
+import { IElement } from "../element/element";
 import { IViewBlockManager } from "../viewblock/iviewblock.manager";
 import { TerrainManager } from "../terrain/terrain.manager";
 import { SkyBoxManager } from "../sky.box/sky.box.manager";
 import { GameState, IScenery, ISprite, LoadState, ModuleName, SceneName } from "structure";
 import { EffectManager } from "../effect/effect.manager";
-import { DecorateActionType, DecorateManager } from "../decorate/decorate.manager";
+import { DecorateManager } from "../decorate/decorate.manager";
 import { WallManager } from "../element/wall.manager";
 import { Sprite } from "baseModel";
-import { BlockObject } from "../block/block.object";
 import IActor = op_client.IActor;
 import NodeType = op_def.NodeType;
 import { BaseDataConfigManager } from "picaWorker";
+import { StateManager } from "../state/state.manager";
 
 export interface SpriteAddCompletedListener {
     onFullPacketReceived(sprite_t: op_def.NodeType): void;
@@ -38,6 +37,7 @@ export interface IRoomService {
     // readonly layerManager: LayerManager;
     readonly effectManager: EffectManager;
     readonly decorateManager: DecorateManager;
+    readonly skyboxManager: SkyBoxManager;
     // readonly handlerManager: HandlerManager;
     readonly roomSize: IPosition45Obj;
     readonly miniSize: IPosition45Obj;
@@ -131,7 +131,7 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
     protected mIsDecorating: boolean = false;
     protected mWallMamager: WallManager;
     protected mScaleRatio: number;
-    protected mStateMap: Map<string, State>;
+    protected mStateManager: StateManager;
     // protected mMatterWorld: MatterWorld;
     // protected mAstar: AStar;
     protected mIsLoading: boolean = false;
@@ -158,7 +158,7 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
             // this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_MOVE_SPRITE_BY_PATH, this.onMovePathHandler);
             this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_SET_CAMERA_FOLLOW, this.onCameraFollowHandler);
             this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_RESET_CAMERA_SIZE, this.onCameraResetSizeHandler);
-            this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_SYNC_STATE, this.onSyncStateHandler);
+            // this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_SYNC_STATE, this.onSyncStateHandler);
             this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_START_EDIT_MODEL, this.onStartDecorate);
             this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_EDIT_MODEL_RESULT, this.onDecorateResult);
             this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_CURRENT_SCENE_ALL_SPRITE, this.onAllSpriteReceived);
@@ -390,6 +390,7 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
         // this.mMatterWorld = new MatterWorld(this);
         this.mEffectManager = new EffectManager(this);
         this.mWallMamager = new WallManager(this);
+        this.mStateManager = new StateManager(this);
         // if (this.scene) {
         //     const camera = this.scene.cameras.main;
         //     this.mCameraService.camera = camera;
@@ -446,33 +447,10 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
         // const joystick = new JoystickManager(this.game);
     }
 
-    public setState(states: op_def.IState[]) {
-        if (!this.mStateMap) this.mStateMap = new Map();
-        let state: State;
-        for (const sta of states) {
-            switch (sta.execCode) {
-                case op_def.ExecCode.EXEC_CODE_ADD:
-                case op_def.ExecCode.EXEC_CODE_UPDATE:
-                    state = new State(sta);
-                    this.mStateMap.set(sta.name, new State(sta));
-                    this.handlerState(state);
-                    break;
-                case op_def.ExecCode.EXEC_CODE_DELETE:
-                    this.mStateMap.delete(sta.name);
-                    break;
-            }
-        }
-    }
-
     public initUI() {
         // if (this.game.uiManager) this.game.uiManager.showMainUI();
         this.mIsLoading = false;
     }
-
-    // public isWalkableAt(x: number, y: number) {
-    //     const reult = this.mAstar.isWalkableAt(x, y);
-    //     return reult;
-    // }
 
     public addToWalkableMap(sprite: ISprite, isTerrain: boolean = false) {
         const displayInfo = sprite.displayInfo;
@@ -558,7 +536,6 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
         // if (this.mWallManager) this.mWallManager.destroy();
         if (this.mDecorateManager) this.mDecorateManager.destroy();
         if (this.mActorData) this.mActorData = null;
-        if (this.mStateMap) this.mStateMap = null;
         Logger.getInstance().debug("room clear");
         this.game.renderPeer.clearRoom();
         this.game.uiManager.recover();
@@ -801,29 +778,6 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
         this.mSkyboxManager.add(scenery);
     }
 
-    protected handlerState(state: State) {
-        switch (state.name) {
-            case "skyBoxAnimation":
-                this.mSkyboxManager.setState(state);
-                break;
-            case "setCameraBounds":
-                const bounds = state.packet;
-                if (!bounds || !bounds.width || !bounds.height) {
-                    // Logger.getInstance().debug("setCameraBounds error", bounds);
-                    return;
-                }
-                let { x, y, width, height } = bounds;
-                x = -width * 0.5 + (x ? x : 0);
-                y = (this.mSize.sceneHeight - height) * 0.5 + (y ? y : 0);
-                x *= this.mScaleRatio;
-                y *= this.mScaleRatio;
-                width *= this.mScaleRatio;
-                height *= this.mScaleRatio;
-                this.mGame.renderPeer.setCamerasBounds(x, y, width, height);
-                break;
-        }
-    }
-
     get terrainManager(): TerrainManager {
         return this.mTerrainManager || undefined;
     }
@@ -834,6 +788,10 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
 
     get playerManager(): PlayerManager {
         return this.mPlayerManager || undefined;
+    }
+
+    get skyboxManager() {
+        return this.mSkyboxManager;
     }
 
     // get layerManager(): LayerManager {
@@ -965,21 +923,6 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
         if (content.hasOwnProperty("pos")) {
             const pos = content.pos;
             this.cameraService.setCamerasScroll(pos.x, pos.y, content.effect);
-        }
-    }
-
-    private onSyncStateHandler(packet: PBpacket) {
-        const content: op_client.IOP_VIRTUAL_WORLD_REQ_CLIENT_SYNC_STATE = packet.content;
-        const group = content.stateGroup;
-        for (const states of group) {
-            switch (states.owner.type) {
-                case op_def.NodeType.SceneNodeType:
-                    this.setState(states.state);
-                    break;
-                case op_def.NodeType.ElementNodeType:
-                    this.elementManager.setState(states);
-                    break;
-            }
         }
     }
 

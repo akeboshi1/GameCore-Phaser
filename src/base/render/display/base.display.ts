@@ -157,6 +157,16 @@ export abstract class BaseDisplay extends Phaser.GameObjects.Container implement
         this.update();
     }
 
+    public mount(display: Phaser.GameObjects.Container, index?: number) {
+    }
+
+    public unmount(display: Phaser.GameObjects.Container) {
+    }
+
+    public clearMount() {
+        this.mMountList.forEach((mount, index) => this.unmount(mount));
+    }
+
     public fadeIn(callback?: () => void) {
     }
 

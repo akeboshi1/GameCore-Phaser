@@ -113,21 +113,6 @@ export class ElementStateManager extends PacketHandler {
         this.checkElementHeadState();
     }
 
-    public setState(state: op_client.IStateGroup) {
-        if (!state) {
-            return;
-        }
-        const owner = state.owner;
-        if (!owner || owner.type !== op_def.NodeType.ElementNodeType) {
-            return;
-        }
-        const element = this.get(owner.id);
-        if (!element) {
-            return;
-        }
-        element.setState(state.state);
-    }
-
     public isLocked(element: IElement) {
         return this.getElementStateType(element) !== ElementStateType.NONE;
     }

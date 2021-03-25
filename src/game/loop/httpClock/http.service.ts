@@ -86,11 +86,13 @@ export class HttpService {
     }
 
     loginByPhoneCode(phone: string, code: string, areaCode: string): Promise<Response> {
+        // TODO App-Key外部传入
         return fetch(`${this.api_root}${`account/phone_signin`}`, {
             body: JSON.stringify({ phone, code, areaCode }),
             method: "POST",
             headers: {
-                "Content-Type": "application/json"
+                "Content-Type": "application/json",
+                "App-Key": "831dab"
             }
         }).then((response) => response.json());
     }

@@ -1603,6 +1603,16 @@ export class Render extends RPCPeer implements GameMain, IRender {
         }
     }
 
+    @Export()
+    public liftItem(id: number, display, animation) {
+        this.displayManager.liftItem(id, display, animation);
+    }
+
+    @Export()
+    public clearMount(id: number) {
+        this.mDisplayManager.clearMount(id);
+    }
+
     protected onWorkerUnlinked(worker: string) {
         if (!this.mWorkerDestroyMap.has(worker)) return;
 

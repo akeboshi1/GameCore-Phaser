@@ -367,6 +367,16 @@ export class Sprite extends EventDispatcher implements ISprite {
         return this.displayInfo.getOriginPoint(animationName, flip);
     }
 
+    registerAnimationMap(key: string, value: string) {
+        if(!this.registerAnimation) this.registerAnimation = new Map();
+        this.registerAnimation.set(key, value);
+    }
+
+    unregisterAnimationMap(key: string) {
+        if (!this.registerAnimation) return;
+        this.registerAnimation.delete(key);
+    }
+
     private setAnimationData(animationName: string, direction: number, times?: number) {
         if (!this.displayInfo || !animationName) {
             return;
