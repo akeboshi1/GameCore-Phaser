@@ -43,8 +43,13 @@ export class PicaLoginMediator extends BasicMediator {
         this.game.httpService.requestPhoneCode(phone, areaCode);
     }
 
-    private loginSuc(data) {
-        this.game.renderPeer.setAccount(data);
+    private async loginSuc(data) {
         this.hide();
+        const account = await this.game.renderPeer.getAccount();
+        if (!account.accountData) {
+            const bootMeditor: any = this.game.uiManager.getMed(ModuleName.PICA_BOOT_NAME);
+            if (bootMeditor) bootMeditor.showNotice();
+        }
+        this.game.renderPeer.setAccount(data);
     }
 }
