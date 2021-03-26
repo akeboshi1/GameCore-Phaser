@@ -1,4 +1,4 @@
-import { IPos } from "utils";
+import { IPos, Logger } from "utils";
 
 interface IAccountData {
     accessToken: string;
@@ -45,13 +45,18 @@ export class Account {
     }
 
     public refreshToken(data: any) {
-        if (this.accountData) {
-            const { newExpire, newFingerprint, newToken } = data;
-            this.accountData.expire = newExpire;
-            this.accountData.fingerprint = newFingerprint;
-            this.accountData.accessToken = newToken;
-            this.saveLocalStorage();
+        if (!this.accountData) {
+            try {
+                this.accountData = JSON.parse(localStorage.getItem("token"));
+            } catch {
+                return Logger.getInstance().error(`parse token error`);
+            }
         }
+        const { newExpire, newFingerprint, newToken } = data;
+        this.accountData.expire = newExpire;
+        this.accountData.fingerprint = newFingerprint;
+        this.accountData.accessToken = newToken;
+        this.saveLocalStorage();
     }
 
     public saveLocalStorage() {

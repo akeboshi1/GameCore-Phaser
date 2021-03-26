@@ -163,8 +163,9 @@ export abstract class BaseDisplay extends Phaser.GameObjects.Container implement
     public unmount(display: Phaser.GameObjects.Container) {
     }
 
-    public clearMount() {
-        this.mMountList.forEach((mount, index) => this.unmount(mount));
+    public destroyMount() {
+        this.mMountList.forEach((mount, index) => mount.destroy());
+        this.mMountList.clear();
     }
 
     public fadeIn(callback?: () => void) {

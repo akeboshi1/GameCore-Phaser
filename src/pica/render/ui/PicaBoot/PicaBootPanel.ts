@@ -73,7 +73,7 @@ export class PicaBootPanel extends PicaBasePanel {
                 fontSize: 11 * this.dpr + "px",
                 fontFamily: Font.DEFULT_FONT
             }
-        }, false).setOrigin(0.5);
+        }, false).setOrigin(0.5).setStroke("0x0", 2 * this.dpr * this.scale);
        // label1.setResolution(this.dpr);
         label1.y = (scaleH - label1.height) * 0.5 - 50 * this.dpr ;
 
@@ -85,7 +85,7 @@ export class PicaBootPanel extends PicaBasePanel {
                 fontSize: 9.33 * this.dpr,
                 fontFamily: Font.DEFULT_FONT
             }
-        }).setOrigin(0.5);
+        }).setOrigin(0.5).setStroke("0x0", 2 * this.dpr * this.scale);
         // label2.setResolution(this.dpr);
         label2.y = (scaleH - label2.height) * 0.5 - 16 * this.dpr ;
 

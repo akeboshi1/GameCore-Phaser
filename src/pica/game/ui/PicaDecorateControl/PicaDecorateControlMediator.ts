@@ -35,7 +35,7 @@ export class PicaDecorateControlMediator extends BasicMediator {
     }
 
     isSceneUI(): boolean {
-        return true;
+        return false;
     }
 
     // called by view
