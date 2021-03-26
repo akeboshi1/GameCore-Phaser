@@ -27,7 +27,7 @@ export class PicaRepairChoose extends BasicModel {
     }
   }
 
-  queryChange(element_id: string, target_type: string) {
+  queryChange(element_id: number, target_type: string) {
     const packet = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_PKT_CHANGE_FURNITURE);
     const content: op_virtual_world.IOP_CLIENT_REQ_VIRTUAL_WORLD_PKT_CHANGE_FURNITURE = packet.content;
     content.elementId = element_id;
