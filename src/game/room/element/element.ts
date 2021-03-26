@@ -428,6 +428,7 @@ export class Element extends BlockObject implements IElement {
             return;
         }
         this.mMoveData.path = path;
+        // this.mRoomService.game.physicalPeer.move(this.id, this.mMoveData.path);
         this.startMove();
     }
 
@@ -451,6 +452,7 @@ export class Element extends BlockObject implements IElement {
         const speed = this.mModel.speed * this.delayTime;
         this.moveControll.setVelocity(Math.cos(angle) * speed, Math.sin(angle) * speed);
         const dir = DirectionChecker.check(pos, pathPos);
+
         this.setDirection(dir);
         this.changeState(PlayerState.WALK);
     }

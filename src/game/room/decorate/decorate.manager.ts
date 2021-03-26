@@ -231,7 +231,10 @@ export class DecorateManager {
         if (this.mSelectedID < 0) return false;
 
         const element = this.mRoom.elementManager.get(this.mSelectedID);
-        if (!element) return false;
+        if (!element) {
+            // Logger.getInstance().debug("#place, no element: ", this.mSelectedID);
+            return false;
+        }
         const sprite = element.model;
 
         const collision = sprite.getCollisionArea();
@@ -258,7 +261,7 @@ export class DecorateManager {
                 if (collision[i][j] === 0 || walkable[i][j] === 1) continue;
                 const val = this.mRoom.isWalkable(tempX, tempY);
                 if (!val) {
-                    // Logger.getInstance().log("#place ", val, pos, tempX, tempY);
+                    // Logger.getInstance().debug("#place ", val, pos, tempX, tempY);
                     return false;
                 }
             }
@@ -527,6 +530,7 @@ class DecorateAction {
                 break;
             case DecorateActionType.Move:
                 if (this.data.moveVec === undefined) return;
+                // Logger.getInstance().debug("#place moveVec: ", this.data.moveVec);
                 this.setElementPos(mng, this.target.pos.x + this.data.moveVec.x, this.target.pos.y + this.data.moveVec.y);
                 break;
             case DecorateActionType.Rotate:
@@ -612,6 +616,7 @@ class DecorateAction {
         this.target.setPosition(x, y);
         mng.room.addToWalkableMap(this.target);
         mng.room.game.renderPeer.setPosition(this.target.id, this.target.pos.x, this.target.pos.y);
+        mng.room.game.physicalPeer.setPosition(this.target.id, this.target.pos.x, this.target.pos.y);
 
         if (mng.selectedID === this.target.id) {
             mng.room.removeFromWalkableMap(this.target);

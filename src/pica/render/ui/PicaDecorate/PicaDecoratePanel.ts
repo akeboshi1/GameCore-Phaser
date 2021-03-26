@@ -75,7 +75,7 @@ export class PicaDecoratePanel extends PicaBasePanel {
     }
 
     public updateFurnitureCount(baseID: string, count: number) {
-        if (this.mBtn_SelectedFurniture) {
+        if (this.mBtn_SelectedFurniture.itemData) {
             if (this.mBtn_SelectedFurniture.itemData.id === baseID) {
                 const data = this.mBtn_SelectedFurniture.itemData;
                 data.count = count;
