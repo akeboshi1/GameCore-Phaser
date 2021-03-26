@@ -4,7 +4,7 @@ import { UIAtlasName } from "picaRes";
 import { Font, Handler, i18n, TimeUtils, UIHelper, Url } from "utils";
 import { op_client, op_pkt_def } from "pixelpai_proto";
 import { ItemButton } from "picaRender";
-import { ICountablePackageItem } from "picaStructure";
+import { ICountablePackageItem, IGalleryCombination } from "picaStructure";
 export class PicaIllustratedDetailPanel extends Phaser.GameObjects.Container {
     private bg: CommonBackground;
     private acquire: ButtonEventDispatcher;
@@ -49,7 +49,7 @@ export class PicaIllustratedDetailPanel extends Phaser.GameObjects.Container {
 
     setGallaryData(content: any) { // op_client.OP_CLIENT_REQ_VIRTUAL_WORLD_PKT_UPDATE_GALLERY
 
-        this.mGameGrid.setItems(new Array(60));
+        this.mGameGrid.setItems(content.list);
         this.horProgress.setProgress(content.reward1Progress, content.reward1Max);
         this.acquireTex.text = `${content.reward2Progress}/${content.reward2Max}`;
         this.horLevelTex.text = content.reward1NextIndex + "";
@@ -91,7 +91,7 @@ export class PicaIllustratedDetailPanel extends Phaser.GameObjects.Container {
         this.createOptionButtons();
         const tableHeight = this.height - this.topCon.height - 23 * this.dpr;
         const cellWidth = 87 * this.dpr;
-        const cellHeight = 87 * this.dpr;
+        const cellHeight = 92 * this.dpr;
         const tableConfig = {
             x: 0,
             y: 10 * this.dpr,
@@ -183,25 +183,32 @@ class IllustratedItem extends ItemButton {
         super(scene, undefined, undefined, dpr, zoom, false);
         this.setSize(width, height);
         this.codeTex = this.scene.make.text({ style: UIHelper.whiteStyle(dpr, 10) }).setOrigin(0, 0.5);
-        this.codeTex.x = -this.width * 0.5;
-        this.codeTex.y = this.height * 0.5 + 4 * dpr;
+        this.codeTex.x = -this.width * 0.5 + 9 * dpr;
+        this.codeTex.y = this.height * 0.5 - 4 * dpr;
         this.star = this.scene.make.image({ key: UIAtlasName.illustrate, frame: "illustrate_survey_star_empty" });
         this.star.x = this.width * 0.5 - this.star.width * 0.5 - 2 * dpr;
         this.star.y = this.codeTex.y;
         this.star.visible = false;
         this.surveyImg = this.scene.make.image({ key: UIAtlasName.illustrate, frame: "illustrate_survey_nohave" });
         this.add([this.codeTex, this.star]);
+        for (const item of this.list) {
+            const temp = <Phaser.GameObjects.Container>item;
+            temp.y -= 10 * dpr;
+        }
     }
 
     setItemData(item: ICountablePackageItem) {
         super.setItemData(item, false);
-        if (item) this.codeTex.text = item.code;
-        const status = item["status"];
-        this.surveyImg.visible = status === 1 ? true : false;
+        if (item) {
+            this.codeTex.text = item.code;
+            const status = item["status"];
+            this.surveyImg.visible = status === 1 ? true : false;
+        }
     }
 }
 
 class IllustratedCollectItem extends Phaser.GameObjects.Container {
+    private background: Phaser.GameObjects.Graphics;
     private titleTex: Phaser.GameObjects.Text;
     private desTex: Phaser.GameObjects.Text;
     private progress: ProgressMaskBar;
@@ -215,6 +222,10 @@ class IllustratedCollectItem extends Phaser.GameObjects.Container {
         this.setSize(width, height);
         this.dpr = dpr;
         this.zoom = zoom;
+        this.background = this.scene.make.graphics(undefined, false);
+        this.background.clear();
+        this.background.fillStyle(0x5EC6FF, 1);
+        this.background.fillRect(-width * 0.5, -height * 0.5, width, height);
         this.topCon = this.scene.make.container(undefined, false);
         this.topCon.setSize(this.width, 58 * this.dpr);
         this.titleTex = this.scene.make.text({ style: UIHelper.whiteStyle(dpr) }).setOrigin(0, 0.5);
@@ -230,18 +241,48 @@ class IllustratedCollectItem extends Phaser.GameObjects.Container {
         this.rewardsBtn.y = this.progress.y;
         this.rewardsBtn.on(ClickEvent.Tap, this.onRewardsHandler, this);
         this.topCon.add([this.titleTex, this.desTex, this.progress, this.rewardsBtn]);
-        const conWidth = 305 * this.dpr, conHeight = 330 * this.dpr;
+        const conWidth = 305 * this.dpr, conHeight = this.height - this.topCon.height;
         this.gridLayout = new GridLayoutGroup(this.scene, conWidth, conHeight, {
-            cellSize: new Phaser.Math.Vector2(304 * this.dpr, 96 * this.dpr),
-            space: new Phaser.Math.Vector2(0, 21 * this.dpr),
+            cellSize: new Phaser.Math.Vector2(68 * this.dpr, 80 * this.dpr),
+            space: new Phaser.Math.Vector2(14, 10 * this.dpr),
             startAxis: AxisType.Horizontal,
             constraint: ConstraintType.FixedColumnCount,
-            constraintCount: 1,
+            constraintCount: 4,
             alignmentType: AlignmentType.UpperCenter
         });
-        this.add(this.gridLayout);
+        this.add([this.background, this.topCon, this.gridLayout]);
     }
 
+    public setCombinationData(data: IGalleryCombination) {
+        const list = this.gridLayout.list;
+        for (const item of list) {
+            (<any>item).visible = false;
+        }
+        for (let i = 0; i < data.requirement.length; i++) {
+            const temp = data.requirement[i];
+            let item: IllustratedItem;
+            if (i < list.length) {
+                item = <any>list[i];
+            } else {
+                item = new IllustratedItem(this.scene, 68 * this.dpr, 80 * this.dpr, this.dpr, this.zoom);
+                this.gridLayout.add(item);
+            }
+            item.visible = true;
+            item.setItemData(<ICountablePackageItem>temp);
+        }
+        this.layout();
+    }
+
+    private layout() {
+        const offsetY = 20 * this.dpr;
+        const height = this.topCon.height + this.gridLayout.height + offsetY;
+        this.setSize(this.width, height);
+        this.background.clear();
+        this.background.fillStyle(0x5EC6FF, 1);
+        this.background.fillRect(-this.width * 0.5, -height * 0.5, this.width, height);
+        this.topCon.y = -height * 0.5 + this.topCon.height * 0.5;
+        this.gridLayout.y = this.topCon.y + this.topCon.height * 0.5 + this.gridLayout.height * 0.5 + offsetY;
+    }
     private onRewardsHandler() {
 
     }
