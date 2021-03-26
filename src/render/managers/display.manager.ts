@@ -505,7 +505,7 @@ export class DisplayManager {
             return;
         }
         if (!display || !animation) return;
-        player.clearMount();
+        player.destroyMount();
         const anis = [];
         const aniName = animation[0].node.name;
         // TODO 统一方法创建
@@ -539,7 +539,7 @@ export class DisplayManager {
     public clearMount(id: number) {
         const player = this.displays.get(id);
         if (player) {
-            player.clearMount();
+            player.destroyMount();
         }
     }
 

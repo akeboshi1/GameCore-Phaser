@@ -35,7 +35,7 @@ export interface IAnimation {
     frameDurations: number[];
     interactiveArea: Array<{ x: number, y: number }>;
     layers: ILayer[];
-    mountLayer: IMountLayer[];
+    mountLayers: IMountLayer;
     loop: boolean;
 }
 
@@ -65,6 +65,6 @@ export interface IAnimationData {
     mainInteractivePoints?: Array<{ x: number, y: number }>;
     frameDuration?: number[];
     layer?: ILayer[];
-    mountLayer?: IMountLayer[];
+    mountLayer?: IMountLayer;
     aniName?: string;
 }

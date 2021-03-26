@@ -10,6 +10,7 @@ export class DynamicImage extends Phaser.GameObjects.Image {
     }
 
     public load(value: string, loadContext?: any, completeCallBack?: Function, errorCallBack?: Function) {
+        if (!value) return Logger.getInstance().error("load value is undefined");
         this.mLoadCompleteCallbak = completeCallBack;
         this.mLoadErrorCallback = errorCallBack;
         this.mLoadContext = loadContext;

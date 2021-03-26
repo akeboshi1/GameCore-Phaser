@@ -16,7 +16,6 @@ export class PicaIllustrated extends BasicModel {
     const connection = this.connection;
     if (connection) {
       this.connection.addPacketListener(this);
-      // this.addHandlerFun(op_client.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_PKT_CHANGE_FURNITURE, this.onRetRescasteResult);
     }
   }
 

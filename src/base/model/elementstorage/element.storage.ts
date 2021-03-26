@@ -189,7 +189,6 @@ export class ElementStorage implements IElementStorage {
                     if (item.className === "EventNode" && item.eventName === op_def.GameEvent.onElementHit) {
                         eventName.push(item.eventName);
                     }
-                    Logger.getInstance().log("eventnode ====>", item);
                 });
                 if (!displayModel) {
                     const anis = [];

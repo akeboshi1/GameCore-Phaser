@@ -28,6 +28,8 @@ import { SceneConfig } from "./scene.config";
 import { QuestConfig } from "./quest.config";
 import { GuideConfig } from "./guide.config";
 import { FurnitureGroup } from "./furniture.group";
+import { GalleryConfig, GalleryType } from "./gallery.config";
+import { IGalleryCombination, IGalleryLevel } from "src/pica/structure/igallery";
 
 export enum BaseDataType {
     i18n_zh = "i18n_zh",
@@ -507,6 +509,46 @@ export class BaseDataConfigManager extends BaseConfigManager {
         return false;
     }
 
+    public getGallery(id: number | string, type: GalleryType): IGalleryCombination | IGalleryLevel {
+        const data: GalleryConfig = this.getConfig(BaseDataType.gallery);
+        const temp = data.get(id, type);
+        if (type === GalleryType.combination) {
+            if (!temp["find"]) {
+                const combine = <IGalleryCombination>temp;
+                combine.name = this.getI18n(combine.name);
+                combine.des = this.getI18n(combine.des);
+                const requirement = combine.requirement;
+                if (requirement) {
+                    for (let i = 0; i < requirement.length; i++) {
+                        const value = <string>requirement[i];
+                        requirement[i] = this.getItemBaseByID(value);
+                    }
+                }
+                const rewardItems = combine.rewardItems;
+                if (rewardItems) {
+                    for (const value of rewardItems) {
+                        const coutitem = this.getItemBaseByID(value.id);
+                        ObjectAssign.excludeAssign(value, coutitem);
+                    }
+                }
+                temp["find"] = true;
+            }
+        } else if (type === GalleryType.dexLevel) {
+            if (!temp["find"]) {
+                const dex = <IGalleryLevel>temp;
+                const rewardItems = dex.rewardItems;
+                if (rewardItems) {
+                    for (const value of rewardItems) {
+                        const coutitem = this.getItemBaseByID(value.id);
+                        ObjectAssign.excludeAssign(value, coutitem);
+                    }
+                }
+                temp["find"] = true;
+            }
+        }
+        return temp;
+    }
+
     protected add() {
         this.dataMap.set(BaseDataType.i18n_zh, new I18nZHDataConfig());
         this.dataMap.set(BaseDataType.explore, new ExploreDataConfig());
@@ -523,6 +565,7 @@ export class BaseDataConfigManager extends BaseConfigManager {
         this.dataMap.set(BaseDataType.quest, new QuestConfig());
         this.dataMap.set(BaseDataType.guide, new GuideConfig());
         this.dataMap.set(BaseDataType.furnituregroup, new FurnitureGroup());
+        this.dataMap.set(BaseDataType.gallery, new GalleryConfig());
     }
 
     protected configUrl(reName: string, tempurl?: string) {
