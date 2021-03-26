@@ -531,11 +531,13 @@ export class PicaBagPanel extends PicaBasePanel {
         } else this.useBtn.visible = true;
       } else {
         this.useBtn.visible = true;
+        this.showBtn.visible = true;
       }
       this.setSelectedItem(item, cell);
     } else {
       if (this.categoryType !== 2 && this.mSelectedItemData === undefined) {// op_pkt_def.PKT_PackageType.AvatarPackage
         this.useBtn.visible = false;
+        this.showBtn.visible = false;
         this.mDetailDisplay.setTexture(UIAtlasName.uicommon, "bag_nothing", 1);
         this.mDetailDisplay.setNearest();
         this.nameText.text = "";

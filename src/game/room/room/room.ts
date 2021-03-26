@@ -518,6 +518,9 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
     public clear() {
         this.mGame.peer.physicalPeer.destroyMatterWorld();
         // if (this.mLayManager) this.mLayManager.destroy();
+        if (this.mStateManager) {
+            this.mStateManager.destroy();
+        }
         if (this.mTerrainManager) {
             this.mTerrainManager.destroy();
         }

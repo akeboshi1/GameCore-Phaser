@@ -19,6 +19,11 @@ export class StateManager extends PacketHandler {
         this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_SYNC_STATE, this.onSyncStateHandler);
     }
 
+    public destroy() {
+        this.stateMap.forEach((state) => this.delete.handler(state));
+        this.stateMap.clear();
+    }
+
     private onSyncStateHandler(packet: PBpacket) {
         const content: op_client.IOP_VIRTUAL_WORLD_REQ_CLIENT_SYNC_STATE = packet.content;
         const group = content.stateGroup;
@@ -36,9 +41,11 @@ export class StateManager extends PacketHandler {
                 case op_def.ExecCode.EXEC_CODE_ADD:
                 case op_def.ExecCode.EXEC_CODE_UPDATE:
                     this.add.handler(parse);
+                    this.stateMap.set(parse.name, parse);
                     break;
                 case op_def.ExecCode.EXEC_CODE_DELETE:
                     this.delete.handler(parse);
+                    this.stateMap.delete(parse.name);
                     break;
                 default:
                     Logger.getInstance().warn(`${sta.execCode} is not defined`);
