@@ -91,6 +91,7 @@ export class MatterObject implements IMatterObject {
     protected mOffsetY: number = undefined;
     protected mMounts: IMatterObject[];
     protected mDirty: boolean = false;
+    protected startCollison: boolean = false;
     protected endMove: boolean = false;
     protected mRootMount: IMatterObject;
     protected hasPos: boolean = false;
@@ -113,10 +114,13 @@ export class MatterObject implements IMatterObject {
     }
 
     update(time?: number, delta?: number) {
-        if (!this.mMoving || !this.body) return;
+        if (!this.body || !this.peer) return;
         const _pos = this.body.position;
         const _prePos = this.body.positionPrev;
-        if ((this.mDirty === false || !this.peer) && (Math.round(_pos.x) === Math.round(_prePos.x) && Math.round(_pos.y) === Math.round(_prePos.y))) return;
+        if ((Math.round(_pos.x) !== Math.round(_prePos.x) || Math.round(_pos.y) !== Math.round(_prePos.y))) {
+            this.mDirty = true;
+        }
+        if (!this.mDirty) return;
         this._doMove(time, delta);
         if (this.mMovePoints && this.mMovePoints.length > 0 && !this.endMove) {
             this._pushMoveData();
@@ -144,15 +148,17 @@ export class MatterObject implements IMatterObject {
         }
         this.checkDirection();
         const _pos = this.body.position;
-        const _prePos = this.body.positionPrev;
         const pos = new LogicPos(_pos.x / this._scale, _pos.y / this._scale);
+        if (!this.matterWorld.matterUser.stopBoxMove) {
+            Logger.getInstance().log("other user ===>", this);
+            Body.setPosition(this.body, Vector.create(_pos.x + this._offset.x, _pos.y + this._offset.y));
+        }
         const path = this.mMoveData.path;
         this.peer.render.setPosition(this.id, pos.x, pos.y);
         this.peer.mainPeer.setPosition(this.id, true, pos.x, pos.y);
         if (!path) {
             if (!this.mMovePoints) {
                 this.mMovePoints = [];
-                // this.peer.mainPeer.requestPushBox(this.id);
             }
             this.mMovePoints.push(pos);
             // 当物理对象停止时，监听到停止事件的状态
@@ -164,16 +170,14 @@ export class MatterObject implements IMatterObject {
             }
             return;
         }
+        // this.removeBody();
         const speed = this.mModel.speed * delta;
-        if (Tool.twoPointDistance(pos, path[0]) <= speed) {
+        if (Tool.twoPointDistance(pos, path[0].pos) <= speed) {
             if (path.length > 1) {
                 path.shift();
                 this.startMove();
             } else {
-                if (path[0].stopDir) {
-                    this.stopMove();
-                    this.peer.mainPeer.setDirection(this.id, path[0].stopDir);
-                }
+                this.stopMove();
             }
         } else {
             this.startMove();
@@ -270,13 +274,14 @@ export class MatterObject implements IMatterObject {
             return;
         }
         const pos = this.getPosition();
-        const angle = Math.atan2(path[0].y * this._scale - pos.y, path[0].x * this._scale - pos.x);
+        const angle = Math.atan2(path[0].pos.y * this._scale - pos.y, path[0].pos.x * this._scale - pos.x);
         const speed = this.mModel.speed * delayTime;
         this.setVelocity(Math.cos(angle) * speed, Math.sin(angle) * speed);
     }
 
     public stopMove() {
         this.mMoving = false;
+        this.mDirty = false;
         if (this.mMoveData && this.mMoveData.posPath) {
             delete this.mMoveData.posPath;
             if (this.mMoveData.arrivalTime) this.mMoveData.arrivalTime = 0;
@@ -292,6 +297,7 @@ export class MatterObject implements IMatterObject {
 
     public tryStopMove(pos?: IPos) {
         this.mMoving = false;
+        this.mDirty = false;
         if (!this.body) return;
         this.setVelocity(0, 0);
         if (!this.mMovePoints) return;
@@ -347,8 +353,10 @@ export class MatterObject implements IMatterObject {
         }
         if (!x && !y) {
             this.mMoving = false;
+            this.mDirty = false;
         } else {
             this.mMoving = true;
+            this.mDirty = true;
         }
         x *= this._scale;
         y *= this._scale;
@@ -363,8 +371,10 @@ export class MatterObject implements IMatterObject {
         }
         if (!x && !y) {
             this.mMoving = false;
+            this.mDirty = false;
         } else {
             this.mMoving = true;
+            this.mDirty = true;
             Body.setVelocity(this.body, Vector.create(x, y));
         }
         this.setStatic(!this.mMoving);
@@ -452,7 +462,7 @@ export class MatterObject implements IMatterObject {
             this.matterWorld.remove(this.body, true);
         }
         this.body = body;
-        Events.on(this.peer.world.engine, "collisionStart", (event) => {
+        const startFunc = (event) => {
             const pairs = event.pairs;
             if (!pairs) return;
             const len = pairs.length;
@@ -463,11 +473,12 @@ export class MatterObject implements IMatterObject {
                 if (bodyA === this.body || bodyB === this.body) {
                     this.peer.mainPeer.requestPushBox(this.id);
                     this.mMoving = true;
+                    this.mDirty = true;
                     return;
                 }
             }
-        });
-        Events.on(this.peer.world.engine, "collisionEnd", (event) => {
+        };
+        const endFunc = (event) => {
             const pairs = event.pairs;
             if (!pairs) return;
             const len = pairs.length;
@@ -480,7 +491,9 @@ export class MatterObject implements IMatterObject {
                     return;
                 }
             }
-        });
+        };
+        Events.on(this.peer.world.engine, "collisionStart", startFunc);
+        Events.on(this.peer.world.engine, "collisionEnd", endFunc);
         body.isSensor = this._sensor;
         if (addToWorld) {
             this.matterWorld.add(body, this._sensor, this);
@@ -503,13 +516,12 @@ export class MatterObject implements IMatterObject {
     }
 
     public setVertices(vertexSets) {
-        let body;
         if (!this.mModel || !this.mModel.eventName) {
-            body = Bodies.fromVertices(this._tempVec.x * this._scale + this._offset.x, this._tempVec.y * this._scale + this._offset.y, vertexSets, { isStatic: false, friction: 0, frictionAir: 0, inertia: Infinity, inverseInertia: Infinity });
+            this.body = Bodies.fromVertices(this._tempVec.x * this._scale + this._offset.x, this._tempVec.y * this._scale + this._offset.y, vertexSets, { isStatic: false, friction: 0, frictionAir: 0, inertia: Infinity, inverseInertia: Infinity, restitution: 0 });
         } else {
-            body = Bodies.fromVertices(this._tempVec.x * this._scale + this._offset.x, this._tempVec.y * this._scale + this._offset.y, vertexSets, { isStatic: false, friction: 0.8, frictionAir: 0.05, inertia: Infinity, inverseInertia: Infinity, restitution: 0 });
+            this.body = Bodies.fromVertices(this._tempVec.x * this._scale + this._offset.x, this._tempVec.y * this._scale + this._offset.y, vertexSets, { isStatic: false, friction: 0.8, frictionAir: 0.05, inertia: Infinity, inverseInertia: Infinity, restitution: 0 });
         }
-        return body;
+        return this.body;
     }
 
     public getSensor() {
@@ -523,7 +535,8 @@ export class MatterObject implements IMatterObject {
 
     public move(path: MovePos[]) {
         this.mMoveData.path = path;
-        this.startMove();
+        this.mDirty = path || path.length > 0 ? true : false;
+        if (this.mDirty) this.startMove();
     }
 
     public getInteractivePositionList(): IPos[] {
@@ -593,13 +606,12 @@ export class MatterObject implements IMatterObject {
         const origin = Position45.transformTo90(originPos, miniSize);
         origin.x *= this._scale;
         origin.y *= this._scale;
-
         this._offset.x = mapWidth * this._offsetOrigin.x - (cols * (miniSize.tileWidth / 2) * this._scale) - origin.x;
         this._offset.y = mapHeight * this._offsetOrigin.y - origin.y;
         if (!this.mModel.eventName) {
-            body = Bodies.fromVertices(this._tempVec.x * this._scale + this._offset.x, this._tempVec.y * this._scale + this._offset.y, paths, { isStatic: true, friction: 0, frictionAir: 0, inertia: Infinity, inverseInertia: Infinity });
+            body = Bodies.fromVertices(this._tempVec.x * this._scale + this._offset.x, this._tempVec.y * this._scale + this._offset.y, paths, { isStatic: true, friction: 0, frictionAir: 0, inertia: Infinity, inverseInertia: Infinity, restitution: 0 });
         } else {
-            body = Bodies.fromVertices(this._tempVec.x * this._scale + this._offset.x, this._tempVec.y * this._scale + this._offset.y, paths, { isStatic: true, friction: 0.8, frictionAir: 0.05, inertia: Infinity, inverseInertia: Infinity, restitution: 0 });
+            body = Bodies.fromVertices(this._tempVec.x * this._scale + this._offset.x, this._tempVec.y * this._scale + this._offset.y, paths, { isStatic: true, friction: 0.4, frictionAir: 1, inertia: Infinity, inverseInertia: Infinity, restitution: 0 });
         }
         this.setExistingBody(body, true);
     }

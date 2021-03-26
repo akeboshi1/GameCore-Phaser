@@ -24,6 +24,7 @@ export class MatterWorld implements ChatCommandInterface, ISizeChart {
         this.localWorld = this.engine.world;
         this.localWorld.gravity.x = 0;
         this.localWorld.gravity.y = 0;
+        this.localWorld.scale = 0;
         this.ignoreSensors = new Map();
         this.mAstar = new AStar(this);
         this.drawWall();
@@ -58,13 +59,6 @@ export class MatterWorld implements ChatCommandInterface, ISizeChart {
     public update() {
         if (this.enabled && this.autoUpdate) {
             Engine.update(this.engine);
-            // ====物理引擎两物体碰撞
-            // if (this.engine.pairs.collisionStart.length > 0) {
-            //     this.engine.pairs.collisionStart.forEach((data) => {
-            //         // data.bodyA.gameObject.setTint(0xff0000);
-            //         // data.bodyB.gameObject.setTint(0x00ff00);
-            //     });
-            // }
             if (!this.drawBodies) {
                 return;
             }
@@ -202,12 +196,13 @@ export class MatterWorld implements ChatCommandInterface, ISizeChart {
             curVertex = vertexSets[i];
             nextBody = vertexSets[i + 1];
             if (!nextBody) nextBody = vertexSets[0];
-            walls[i] = Bodies.fromVertices(curVertex.x - (curVertex.x - nextBody.x >> 1), curVertex.y - (curVertex.y - nextBody.y >> 1), [[{ x: curVertex.x, y: curVertex.y }, { x: nextBody.x, y: nextBody.y }, { x: nextBody.x, y: nextBody.y - 5 * dpr }, { x: curVertex.x, y: curVertex.y - 5 * dpr }]], { isStatic: true });
+            walls[i] = Bodies.fromVertices(curVertex.x - (curVertex.x - nextBody.x >> 1), curVertex.y - (curVertex.y - nextBody.y >> 1), [[{ x: curVertex.x, y: curVertex.y }, { x: nextBody.x, y: nextBody.y }, { x: nextBody.x, y: nextBody.y - 5 * dpr }, { x: curVertex.x, y: curVertex.y - 5 * dpr }]], { isStatic: true, inertia: Infinity, inverseInertia: Infinity, restitution: 0 });
         }
 
         walls.map((body) => {
             body.inertia = Infinity;
             body.inverseInertia = Infinity;
+            body.restitution = 0;
         });
         this.add(walls);
     }

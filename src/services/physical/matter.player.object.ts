@@ -52,7 +52,7 @@ export interface MoveData {
     onCompleteParams?: any;
     // onComplete?: Function;
     step?: number;
-    path?: MovePos[];
+    path?: any[];
 }
 
 export interface MovePos {
