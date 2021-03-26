@@ -36,6 +36,7 @@ export class PicaIllustratedListPanel extends Phaser.GameObjects.Container {
             constraintCount: 1,
             alignmentType: AlignmentType.UpperCenter
         });
+        this.add(this.gridLayout);
         this.resize();
     }
 
@@ -74,11 +75,11 @@ export class PicaIllustratedListPanel extends Phaser.GameObjects.Container {
             left: "illustrate_make_picture",
             textImg: "illustrate_make_title",
             text: i18n.t("illustrate.make"),
-            textColor: "##3027A1",
+            textColor: "#3027A1",
             send,
             tag: "make"
         };
-        const datas = [temp1, temp2, temp3];
+        const datas = [temp1, temp3];
         return datas;
     }
 
@@ -105,10 +106,11 @@ class IllustratedItem extends ButtonEventDispatcher {
         this.textImg = this.scene.make.image({ key: UIAtlasName.illustrate, frame: "illustrate_furniture_title" });
         this.textTex = this.scene.make.text({ style: UIHelper.colorStyle("#0C6DA3", 12 * dpr) }).setOrigin(0.5);
         this.leftImg.x = -this.leftImg.width * 0.5;
-        this.leftImg.y = 15 * dpr;
-        this.textImg.x = this.width * 0.5;
+        this.leftImg.y = 9 * dpr;
+        this.textImg.x = this.width * 0.25;
         this.textImg.y = -this.textImg.height * 0.5;
-        this.textTex.x = this.width * 0.5;
+        this.textTex.x = this.textImg.x;
+        this.textTex.y = this.textImg.y + this.textImg.height * 0.5 + 13 * dpr;
         this.add([this.bg, this.leftImg, this.textImg, this.textTex]);
         this.on(ClickEvent.Tap, this.onClickHandler, this);
         this.enable = true;

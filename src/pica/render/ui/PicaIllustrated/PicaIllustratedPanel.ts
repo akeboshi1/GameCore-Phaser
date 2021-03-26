@@ -16,30 +16,19 @@ export class PicaIllustratedPanel extends PicaBasePanel {
     private titleTex: Phaser.GameObjects.Text;
     constructor(uiManager: UiManager) {
         super(uiManager);
-        this.key = ModuleName.PICAROAM_NAME;
+        this.key = ModuleName.PICAILLUSTRATED_NAME;
         this.atlasNames = [UIAtlasName.uicommon, UIAtlasName.illustrate];
     }
     resize(width?: number, height?: number) {
         const w: number = this.scaleWidth;
         const h: number = this.scaleHeight;
-        super.resize(w, h);
-        this.setSize(w, h);
+        this.mBackground.x = w * 0.5;
+        this.mBackground.y = h * 0.5;
         this.content.x = w * 0.5;
         this.content.y = h * 0.5;
         this.mBackground.setInteractive(new Phaser.Geom.Rectangle(0, 0, w, h), Phaser.Geom.Rectangle.Contains);
-    }
-
-    preload() {
-        super.preload();
-    }
-    public addListen() {
-        if (!this.mInitialized) return;
-
-    }
-
-    public removeListen() {
-        if (!this.mInitialized) return;
-
+        super.resize(w, h);
+        this.setSize(w, h);
     }
 
     public destroy() {
@@ -74,9 +63,6 @@ export class PicaIllustratedPanel extends PicaBasePanel {
 
     onShow() {
         this.openListPanel();
-        if (this.tempDatas) {
-            this.listPanel.setListData();
-        }
     }
 
     setGallaryData(content: op_client.OP_CLIENT_REQ_VIRTUAL_WORLD_PKT_UPDATE_GALLERY) {
@@ -89,6 +75,7 @@ export class PicaIllustratedPanel extends PicaBasePanel {
 
     private openListPanel() {
         this.showListPanel();
+        this.listPanel.setListData();
     }
 
     private showListPanel() {
@@ -117,6 +104,7 @@ export class PicaIllustratedPanel extends PicaBasePanel {
             this.detailPanel.setHandler(new Handler(this, this.onDetailHandler));
             this.content.add(this.detailPanel);
         }
+        this.detailPanel.resize(this.scaleWidth, this.scaleHeight);
         this.detailPanel.visible = true;
         this.titleTex.visible = false;
     }
@@ -143,6 +131,12 @@ export class PicaIllustratedPanel extends PicaBasePanel {
         }
     }
     private onCloseHandler() {
+        if (this.detailPanel && this.detailPanel.visible) {
+            this.hideDetailPanel();
+            // this.openListPanel();
+            this.showListPanel();
+            return;
+        }
         this.render.renderEmitter(this.key + "_close");
     }
 }

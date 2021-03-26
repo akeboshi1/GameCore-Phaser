@@ -33,8 +33,14 @@ export class PicaIllustratedDetailPanel extends Phaser.GameObjects.Container {
     resize(width?: number, height?: number) {
         const w = width || this.width;
         const h = height || this.height;
-        this.setSize(w, h);
+        const topOffset = 20 * this.dpr;
+        this.topCon.y = -h * 0.5 + this.topCon.height * 0.5 + topOffset;
         this.horProgress.refreshMask();
+        const tableHeight = this.height - this.topCon.height - topOffset - 23 * this.dpr;
+        this.mGameGrid.y = this.topCon.y +  this.topCon.height  * 0.5 + tableHeight * 0.5 + 20 * this.dpr;
+        this.mGameGrid.setSize(w, tableHeight);
+        this.mGameGrid.resetMask();
+        this.setSize(w, h);
     }
 
     setHandler(send: Handler) {
@@ -50,12 +56,13 @@ export class PicaIllustratedDetailPanel extends Phaser.GameObjects.Container {
 
     init() {
         this.topCon = this.scene.make.container(undefined, false);
-        this.topCon.setSize(100 * this.dpr, this.width);
+        this.topCon.setSize(this.width, 100 * this.dpr);
         this.acquire = new ButtonEventDispatcher(this.scene, 0, 0);
         this.acquire.setSize(42 * this.dpr, 38 * this.dpr);
         const acquireImg = this.scene.make.image({ key: UIAtlasName.illustrate, frame: "illustrate_badge_icon" });
-        this.acquireTex = this.scene.make.text({ style: UIHelper.whiteStyle(this.dpr, 10) });
+        this.acquireTex = this.scene.make.text({ style: UIHelper.whiteStyle(this.dpr, 10) }).setOrigin(0.5);
         this.acquireTex.setStroke("#26365A", 2 * this.dpr);
+        this.acquireTex.y = acquireImg.y + acquireImg.height * 0.5 + 3 * this.dpr;
         this.acquire.add([acquireImg, this.acquireTex]);
         this.acquire.x = this.topCon.width * 0.5 - this.acquire.width * 0.5 - 20 * this.dpr;
         this.acquire.y = -this.topCon.height * 0.5 + this.acquire.height * 0.5 + 15 * this.dpr;
@@ -64,9 +71,13 @@ export class PicaIllustratedDetailPanel extends Phaser.GameObjects.Container {
         this.toggleCon.add(this.selectLine);
         this.toggleCon.y = 0;
         this.horProgress = new ProgressMaskBar(this.scene, UIAtlasName.illustrate, "illustrate_survey_lv_bottom", "illustrate_survey_lv_top", UIHelper.whiteStyle(this.dpr, 6));
+        this.horProgress.y = this.toggleCon.y + this.toggleCon.height * 0.5 + 50 * this.dpr;
+        this.horProgress.x = -5 * this.dpr;
         const levelBg = this.scene.make.image({ key: UIAtlasName.illustrate, frame: "illustrate_survey_lv_icon" });
-        levelBg.x = this.horProgress.x - this.horProgress.width * 0.5 - levelBg.width * 0.5 - 5 * this.dpr;
+        levelBg.x = this.horProgress.x - this.horProgress.width * 0.5 - levelBg.width * 0.5 - 8 * this.dpr;
         levelBg.y = this.horProgress.y;
+        this.horLevelTex = this.scene.make.text({ style: UIHelper.whiteStyle(this.dpr, 12) }).setOrigin(0.5);
+        this.horLevelTex.setFontStyle("bold");
         this.horLevelTex.x = levelBg.x;
         this.horLevelTex.y = levelBg.y;
         this.horRewards = new Button(this.scene, UIAtlasName.illustrate, "illustrate_survey_icon", "illustrate_survey_icon");
@@ -106,6 +117,7 @@ export class PicaIllustratedDetailPanel extends Phaser.GameObjects.Container {
         this.mGameGrid.on("cellTap", (cell) => {
             this.onSelectItemHandler(cell);
         });
+        this.add([this.topCon, this.mGameGrid]);
         this.resize();
     }
     protected createOptionButtons() {
@@ -117,7 +129,7 @@ export class PicaIllustratedDetailPanel extends Phaser.GameObjects.Container {
         // tslint:disable-next-line:prefer-for-of
         for (let i = 0; i < arr.length; i++) {
             const data = arr[i];
-            const item = new ToggleColorButton(this.scene, cellwidth, 20 * this.dpr, this.dpr, data.text, UIHelper.colorStyle("#EEEEEE", 14 * this.dpr));
+            const item = new ToggleColorButton(this.scene, cellwidth, 20 * this.dpr, this.dpr, data.text, UIHelper.colorStyle("#ffffff", 14 * this.dpr));
             item.on(ClickEvent.Tap, this.onToggleButtonHandler, this);
             item.x = posx + cellwidth * 0.5;
             item.setData("item", data.type);
@@ -127,8 +139,11 @@ export class PicaIllustratedDetailPanel extends Phaser.GameObjects.Container {
             item.setNormalColor("#ffffff");
             item.setFontStyle("bold");
             posx += cellwidth;
+            if (!this.curToggle) {
+                this.onToggleButtonHandler(undefined, item);
+            }
         }
-        this.selectLine.y = 15 * this.dpr;
+        this.selectLine.y = 20 * this.dpr;
     }
 
     private onToggleButtonHandler(pointer: any, toggle: ToggleColorButton) {

@@ -1,9 +1,9 @@
 import { op_client, op_def, op_gameconfig, op_pkt_def } from "pixelpai_proto";
 import { BasicMediator, CacheDataManager, DataMgrType, Game } from "gamecore";
 import { ConnectState, EventType, ModuleName } from "structure";
-import { BaseDataConfigManager } from "picaWorker";
+import { BaseDataConfigManager, GalleryType } from "picaWorker";
 import { PicaIllustrated } from "./PicaIllustrated";
-
+import { IGalleryLevel } from "picaStructure";
 export class PicaIllustratedMediator extends BasicMediator {
     protected mModel: PicaIllustrated;
     private mScneType: op_def.SceneTypeEnum;
@@ -55,6 +55,11 @@ export class PicaIllustratedMediator extends BasicMediator {
         if (!this.mPanelInit) return;
         const cache: CacheDataManager = this.game.getDataMgr<CacheDataManager>(DataMgrType.CacheMgr);
         this.mShowData = cache.gallery;
+        this.sortGallery(this.mShowData.list);
+        const dexLevel = <IGalleryLevel>this.config.getGallery(this.mShowData.reward1NextIndex, GalleryType.dexLevel);
+        this.mShowData.reward1Max = dexLevel.exp;
+        const galleryLevel = <IGalleryLevel>this.config.getGallery(this.mShowData.reward1NextIndex, GalleryType.dexLevel);
+        this.mShowData.reward2Max = galleryLevel.exp;
         this.mView.setGallaryData(this.mShowData);
     }
 
@@ -62,5 +67,25 @@ export class PicaIllustratedMediator extends BasicMediator {
         const uiManager = this.game.uiManager;
         uiManager.showMed(ModuleName.PICAMANUFACTURE_NAME);
         this.onCloseHandler();
+    }
+
+    private sortGallery(list: op_client.IPKT_GALLERY_ITEM[]) {
+        const ids: string[] = [];
+        const map: Map<string, op_client.IPKT_GALLERY_ITEM> = new Map();
+        for (const temp of list) {
+            ids.push(temp.id);
+            map.set(temp.id, temp);
+        }
+        ids.sort();
+        list.length = 0;
+        for (const id of ids) {
+            list.push(map.get(id));
+        }
+        this.config.getBatchItemDatas(list);
+        map.clear();
+    }
+
+    private get config(): BaseDataConfigManager {
+        return <BaseDataConfigManager>this.game.configManager;
     }
 }
