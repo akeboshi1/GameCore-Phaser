@@ -225,7 +225,7 @@ export class BaseFramesDisplay extends BaseDisplay {
             return;
         }
         if (!this.mCurAnimation.mountLayer) {
-            Logger.getInstance().error(`mountLayer does not exist ${this.mAnimation}`);
+            Logger.getInstance().error("mountLayer does not exist: ", this.mCurAnimation);
             return;
         }
         if (targetIndex !== undefined && this.mMountList.get(targetIndex) && this.mMountList.get(targetIndex) === display) {
