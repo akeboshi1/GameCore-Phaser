@@ -10,6 +10,6 @@ export class FuritElementChangeAction extends ElementBaseAction {
         }
         const group = (<any>this.game.configManager).getFurnitureGroupBySN(this.data.sn);
         if (group)
-            this.game.emitter.emit(EventType.SCENE_SHOW_UI, ModuleName.PICAREPAIRCHOOSE_NAME, group);
+            this.game.emitter.emit(EventType.SCENE_SHOW_UI, ModuleName.PICAREPAIRCHOOSE_NAME, { id: this.data.id, group });
     }
 }

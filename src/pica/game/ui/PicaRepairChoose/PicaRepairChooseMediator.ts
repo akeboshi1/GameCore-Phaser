@@ -46,14 +46,14 @@ export class PicaRepairChooseMediator extends BasicMediator {
         this.onHideView();
     }
 
-    private onQueryChangeHandler(data: { element_id: string, target_type: string }) {
-        this.mModel.queryChange(data.element_id, data.target_type);
+    private onQueryChangeHandler(data: { element_id: number, target_type: string }) {
+        this.mModel.queryChange(this.mShowData.id, data.target_type);
         this.onCloseHandler();
     }
 
     private setFurnitureGroup() {
         if (!this.mPanelInit) return;
-        this.mView.setChooseData(this.mShowData);
+        this.mView.setChooseData(this.mShowData.group);
     }
     private get configMgr() {
         return <BaseDataConfigManager>this.game.configManager;

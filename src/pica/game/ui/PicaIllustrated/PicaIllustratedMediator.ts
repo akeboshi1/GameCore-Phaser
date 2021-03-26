@@ -48,7 +48,6 @@ export class PicaIllustratedMediator extends BasicMediator {
 
     private onQueryRewardsHandler(type: number) {
         this.mModel.query_GALLARY_PROGRESS_REWARD(type);
-        this.onCloseHandler();
     }
 
     private setGallaryData() {
