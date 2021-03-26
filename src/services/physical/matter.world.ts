@@ -1,10 +1,10 @@
+
 import { Bodies, Body, Composite, Engine, World, Events } from "tooqingmatter-js";
 import { PhysicalPeer } from "../../services/physical.worker";
 import { ISizeChart } from "structure";
 import { AStar, ChatCommandInterface, IPos, IPosition45Obj, Pos, Position45 } from "utils";
 import { MatterObject } from "./matter.object";
 import { MatterUserObject } from "./matter.user.object";
-
 export class MatterWorld implements ChatCommandInterface, ISizeChart {
     public readonly engine: Engine;
     public readonly localWorld: World;
@@ -13,7 +13,7 @@ export class MatterWorld implements ChatCommandInterface, ISizeChart {
     // public map: number[][];
     public matterUser: MatterUserObject;
     private mAstar: AStar;
-    private drawBodies: boolean = false;
+    private drawBodies: boolean = true;
     private ignoreSensors?: Map<number, MatterObject>;
     private mSize: IPosition45Obj;
     private mMiniSize: IPosition45Obj;

@@ -11,6 +11,7 @@ import { LayerEnum } from "game-capsule";
 // import * as _ from "lodash";
 
 export class User extends Player {
+    public stopBoxMove: boolean = false;
     private mDebugPoint: boolean = false;
     private mUserData: UserDataManager;
     private mMoveStyle: number;
