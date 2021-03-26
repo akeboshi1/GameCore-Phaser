@@ -16,9 +16,6 @@ export class HttpClock {
     }
 
     update(time: number, delta: number) {
-        if (this.mEnable === false) {
-            return;
-        }
         if (this.mTimestamp > this.interval) {
             this.sync();
             this.mTimestamp = 0;
@@ -46,11 +43,14 @@ export class HttpClock {
     }
 
     fetch() {
-        return this.httpService.playedDuration("831dabefd919aa6259c25f9322fa57b88050d526", this.game.getGameConfig().game_id);
+        return this.httpService.playedDuration("831dab", this.game.getGameConfig().game_id);
     }
 
     sync() {
         this.fetch().then((response: any) => {
+            if (this.mEnable === false) {
+                return;
+            }
             const { code, data } = response;
             if (code === 0) {
                 if (!this.checkTimeAllowed(data) || !this.allowedPeriod(data)) {
