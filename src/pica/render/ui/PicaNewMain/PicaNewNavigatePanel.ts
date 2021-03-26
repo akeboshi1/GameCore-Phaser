@@ -31,7 +31,7 @@ export class PicaNewNavigatePanel extends Phaser.GameObjects.Container {
         this.bagButton = this.createButton("home_bag");
         this.friendButton = this.createButton("home_friend");
         this.avatarButton = this.createButton("home_avater");
-        this.makeButton = this.createButton("home_make");
+        this.makeButton = this.createButton("home_pikadex");
         this.exploreButton = this.createButton("home_explore");
         this.homeButton = this.createButton("home_home");
         this.buttons = [this.bagButton, this.friendButton, this.avatarButton, this.makeButton, this.exploreButton, this.homeButton];

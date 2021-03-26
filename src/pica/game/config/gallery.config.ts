@@ -1,24 +1,45 @@
 import { BaseConfigData } from "gamecore";
-import { ISocial } from "src/pica/structure/isocial";
+import { IGalleryCombination, IGalleryLevel } from "picaStructure";
 import { Logger } from "utils";
 export class GalleryConfig extends BaseConfigData {
 
-    public socailMap: Map<string, ISocial> = new Map();
-    public socails: ISocial[];
-    public get(id: string): ISocial {
-        if (this.socailMap.has(id)) {
-            return this.socailMap.get(id);
+    public combMap: Map<string | number, IGalleryCombination> = new Map();
+    public dexMap: Map<string | number, IGalleryLevel> = new Map();
+    public galleryMap: Map<string | number, IGalleryLevel> = new Map();
+    public get(id: string | number, type: GalleryType) {
+        const map = this.getMap(type);
+        if (map.has(id)) {
+            return map.get(id);
         } else {
-            Logger.getInstance().error(`gallery表未配置ID为:${id}的数据`);
+            Logger.getInstance().error(`gallery表${type}未配置ID为:${id}的数据`);
             return undefined;
         }
     }
-    public parseJson(json) {
-        const socails = json["social"];
-        for (const temp of socails) {
-            temp.tag = JSON.parse(temp.tag);
-            this.socailMap.set(temp.id, temp);
+
+    public getMap(type: string) {
+        if (type === GalleryType.combination) {
+            return this.combMap;
+        } else if (type === GalleryType.dexLevel) {
+            return this.dexMap;
+        } else {
+            return this.galleryMap;
         }
-        this.socails = socails;
     }
+    public parseJson(json) {
+        for (const key in json) {
+            if (Object.prototype.hasOwnProperty.call(json, key)) {
+                const tempArr = json[key];
+                const map = this.getMap(key);
+                for (const temp of tempArr) {
+                    map.set(temp.id, temp);
+                }
+            }
+        }
+    }
+}
+
+export enum GalleryType {
+    combination = "combination",
+    dexLevel = "dexLevel",
+    galleryLevel = "galleryLevel"
 }

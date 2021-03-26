@@ -7,3 +7,4 @@ export * from "./iscene";
 export * from "./iquest";
 export * from "./iguide";
 export * from "./Ifurniture.group";
+export * from "./igallery";

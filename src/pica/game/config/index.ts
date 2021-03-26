@@ -5,3 +5,4 @@ export * from "./element.data.config";
 export * from "./shop.config";
 export * from "./item.category.config";
 export * from "./scene.config";
+export * from "./gallery.config";
