@@ -99,7 +99,7 @@ export class PicaNewRoleMediator extends BasicMediator {
     private onPeopleActionHandler(action: ISocial) {
         Logger.getInstance().log(action);
         this.mModel.queryAction(op_def.FrontEndUniqueUIEnum.PicaNewRole, this.uid, action.id);
-        const tempdata = { animation: action.tag.type, times: action.tag.repeat, id: action.tag.id };
+        const tempdata = { animation: action.tag.type, times: action.tag.repeat, id: action.tag.bulletId };
         this.game.user.tryActiveAction(this.mShowData.id, tempdata, true);
         this.onHideView();
     }
