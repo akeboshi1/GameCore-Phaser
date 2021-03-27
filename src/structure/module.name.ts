@@ -77,6 +77,7 @@ export class ModuleName {
     public static PICAREPAIRCHOOSE_NAME: string = "PicaRepairChoose";
     public static MASK_LOADING_NAME = "MaskLoading";
     public static PICAILLUSTRATED_NAME = "PicaIllustrated";
+    public static PICA_DROP_ELEMENT_NAME = "DropElement";
     // =================todo guide name
     public static PICABAGGUIDE_NAME = "BagGuide";
     public static PICAEXPLOREGUIDE_NAME = "ExploreGuide";
@@ -86,5 +87,4 @@ export class ModuleName {
     public static PICAROOMGUIDE_NAME = "RoomGuide";
     public static PICAFURNITURE_NAME = "FurnitureGuide";
     public static PICAACTIVITY_NAME = "ActivityGuide";
-    public static PICA_DROP_ELEMENT_NAME = "DropElement";
 }
