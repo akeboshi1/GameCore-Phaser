@@ -123,7 +123,7 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
         if (this.mConfig.hasConnectFail) {
             return this.mainPeer.render.connectFail();
         } else {
-            this.renderPeer.showAlertReconnect("网络不稳定,请刷新网页");
+            this.renderPeer.showAlertReconnect("网络不稳定,请重新进入游戏");
             // if (this.mReconnect > 2) {
             //     this.renderPeer.showAlertReconnect("网络不稳定,请刷新网页");
             //     // this.onRefreshConnect();
