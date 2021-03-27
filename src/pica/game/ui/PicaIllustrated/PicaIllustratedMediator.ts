@@ -3,7 +3,7 @@ import { BasicMediator, CacheDataManager, DataMgrType, Game } from "gamecore";
 import { ConnectState, EventType, ModuleName } from "structure";
 import { BaseDataConfigManager, GalleryType } from "picaWorker";
 import { PicaIllustrated } from "./PicaIllustrated";
-import { IGalleryLevel } from "picaStructure";
+import { ICountablePackageItem, IGalleryCombination, IGalleryLevel } from "picaStructure";
 export class PicaIllustratedMediator extends BasicMediator {
     protected mModel: PicaIllustrated;
     private mScneType: op_def.SceneTypeEnum;
@@ -16,6 +16,7 @@ export class PicaIllustratedMediator extends BasicMediator {
     show(param?: any) {
         super.show(param);
         this.game.emitter.on(this.key + "_queryrewards", this.onQueryRewardsHandler, this);
+        this.game.emitter.on(this.key + "_querycombinations", this.onQueryCombinationsHandler, this);
         this.game.emitter.on(this.key + "_openmake", this.onShowMakePanel, this);
         this.game.emitter.on(this.key + "_close", this.onCloseHandler, this);
         this.game.emitter.on(EventType.GALLERY_UPDATE, this.setGallaryData, this);
@@ -23,6 +24,7 @@ export class PicaIllustratedMediator extends BasicMediator {
 
     hide() {
         this.game.emitter.off(this.key + "_queryrewards", this.onQueryRewardsHandler, this);
+        this.game.emitter.on(this.key + "_querycombinations", this.onQueryCombinationsHandler, this);
         this.game.emitter.off(this.key + "_openmake", this.onShowMakePanel, this);
         this.game.emitter.off(this.key + "_close", this.onCloseHandler, this);
         this.game.emitter.off(EventType.GALLERY_UPDATE, this.setGallaryData, this);
@@ -50,6 +52,10 @@ export class PicaIllustratedMediator extends BasicMediator {
         this.mModel.query_GALLARY_PROGRESS_REWARD(type);
     }
 
+    private onQueryCombinationsHandler(id: number) {
+        this.mModel.query_GALLARY_COLLECTION_REWARD(id);
+    }
+
     private setGallaryData() {
         if (!this.mPanelInit) return;
         const cache: CacheDataManager = this.game.getDataMgr<CacheDataManager>(DataMgrType.CacheMgr);
@@ -59,7 +65,7 @@ export class PicaIllustratedMediator extends BasicMediator {
         this.mShowData.reward1Max = dexLevel.exp;
         const galleryLevel = <IGalleryLevel>this.config.getGallery(this.mShowData.reward1NextIndex, GalleryType.dexLevel);
         this.mShowData.reward2Max = galleryLevel.exp;
-        this.mView.setGallaryData(this.mShowData);
+        this.mView.setGallaryData(this.mShowData, this.getCombinations(this.mShowData.list));
     }
 
     private onShowMakePanel() {
@@ -68,20 +74,39 @@ export class PicaIllustratedMediator extends BasicMediator {
         this.onCloseHandler();
     }
 
-    private sortGallery(list: op_client.IPKT_GALLERY_ITEM[]) {
-        const ids: string[] = [];
-        const map: Map<string, op_client.IPKT_GALLERY_ITEM> = new Map();
-        for (const temp of list) {
-            ids.push(temp.id);
-            map.set(temp.id, temp);
-        }
-        ids.sort();
-        list.length = 0;
-        for (const id of ids) {
-            list.push(map.get(id));
-        }
+    private sortGallery(list: any[]) {
+
         this.config.getBatchItemDatas(list);
-        map.clear();
+        list.sort((a, b) => {
+            if (a.code >= b.code) return 1;
+            else return -1;
+        });
+    }
+
+    private getCombinations(list: op_client.IPKT_GALLERY_ITEM[]) {
+        const map = <any>this.config.getGalleryMap(GalleryType.combination);
+        const combinations: IGalleryCombination[] = Array.from(map.values());
+        const tempMap = new Map();
+        list.forEach((value) => {
+            tempMap.set(value.id, value);
+        });
+        for (const data of combinations) {
+            if (data.requirement) {
+                data.requirement.sort((a, b) => {
+                    if (a.code >= b.code) return 1;
+                    else return -1;
+                });
+
+                for (const temp of <any>data.requirement) {
+                    if (tempMap.has(temp.id)) {
+                        temp.status = tempMap.get(temp.id).status;
+                    } else {
+                        temp.status = 1;
+                    }
+                }
+            }
+        }
+        return combinations;
     }
 
     private get config(): BaseDataConfigManager {

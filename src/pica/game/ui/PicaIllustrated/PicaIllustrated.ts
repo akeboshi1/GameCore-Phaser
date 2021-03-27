@@ -25,14 +25,18 @@ export class PicaIllustrated extends BasicModel {
       this.connection.removePacketListener(this);
     }
   }
-
   query_GALLARY_PROGRESS_REWARD(type: number) {
     const packet = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_PKT_TAKE_GALLARY_PROGRESS_REWARD);
     const content: op_virtual_world.OP_CLIENT_REQ_VIRTUAL_WORLD_PKT_TAKE_GALLARY_PROGRESS_REWARD = packet.content;
     content.type = type;
     this.connection.send(packet);
   }
-
+  query_GALLARY_COLLECTION_REWARD(id: number) {
+    const packet = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_PKT_TAKE_GALLARY_COLLECTION_REWARD);
+    const content: op_virtual_world.OP_CLIENT_REQ_VIRTUAL_WORLD_PKT_TAKE_GALLARY_COLLECTION_REWARD = packet.content;
+    content.id = id;
+    this.connection.send(packet);
+  }
   get connection(): ConnectionService {
     if (this.game) {
       return this.game.connection;
