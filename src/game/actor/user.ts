@@ -105,6 +105,9 @@ export class User extends Player {
     public unmount(targetPos?: IPos): Promise<this> {
         const mountID = this.mRootMount.id;
         this.mRootMount = null;
+        if (!targetPos) {
+            return Promise.resolve(this);
+        }
         this.unmountSprite(mountID, targetPos);
         return Promise.resolve(this);
     }
