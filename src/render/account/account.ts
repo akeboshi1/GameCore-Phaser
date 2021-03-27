@@ -64,7 +64,11 @@ export class Account {
             return;
         }
         const { id, fingerprint, refreshToken, expire, accessToken } = this.accountData;
-        localStorage.setItem("token", JSON.stringify({ id, fingerprint, refreshToken, expire, accessToken }));
+        try {
+            localStorage.setItem("token", JSON.stringify({ id, fingerprint, refreshToken, expire, accessToken }));
+        } catch {
+            Logger.getInstance().warn("write localStorage fail");
+        }
     }
 
     public clear() {

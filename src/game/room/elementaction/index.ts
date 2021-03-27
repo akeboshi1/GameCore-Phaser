@@ -6,3 +6,4 @@ export * from "./pica.element.action.manager";
 export * from "./pkt.element.action";
 export * from "./player.element.action";
 export * from "./tag.element.action";
+export * from "./pica.player.action.manager";

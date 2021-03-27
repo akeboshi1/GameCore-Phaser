@@ -1,6 +1,5 @@
 import { Game } from "gamecore";
 import { ISprite } from "structure";
-import { ElementBaseAction } from "./element.base.action";
 export class ElementActionManager {
     protected mActionTags = [];
     protected game: Game;

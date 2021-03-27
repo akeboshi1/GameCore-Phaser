@@ -6,6 +6,27 @@ import * as sha1 from "simple-sha1";
 import { Sprite } from "./sprite";
 
 export class FramesModel implements IFramesModel {
+
+    static createFromDisplay(display, animation, id?: number) {
+        const anis = [];
+        const aniName = animation[0].node.name;
+        for (const ani of animation) {
+            anis.push(new AnimationModel(ani));
+          }
+        const animations = new Map();
+        for (const aniData of anis) {
+            animations.set(aniData.name, aniData);
+        }
+        return {
+            animations,
+            id: id || 0,
+            gene: sha1.sync(display.dataPath + display.texturePath),
+            discriminator: "FramesModel",
+            animationName: aniName,
+            display
+        };
+    }
+
     avatarDir?: number;
     readonly discriminator: string = "FramesModel";
     public id: number;
