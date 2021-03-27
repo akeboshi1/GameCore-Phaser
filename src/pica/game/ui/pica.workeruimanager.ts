@@ -56,6 +56,7 @@ export class PicaWorkerUiManager extends UIManager {
         if (!this.checkActiveUIState(type)) return;
         Logger.getInstance().log("type ====>", type);
         switch (type) {
+            case ModuleName.PICAFURNITURE_NAME:
             case ModuleName.PICABAGGUIDE_NAME:
             case ModuleName.PICAEXPLOREGUIDE_NAME:
             case ModuleName.PICAHOMEGUIDE_NAME:

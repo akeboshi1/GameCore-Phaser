@@ -33,8 +33,6 @@ export class BottomPanel extends PicaBasePanel {
     }
 
     resize(w: number, h: number) {
-        const zoom = this.scale;
-        const width = this.scene.cameras.main.width;
         const height = this.scene.cameras.main.height;
         this.mInput.resize();
         this.y = height;
@@ -48,17 +46,17 @@ export class BottomPanel extends PicaBasePanel {
         this.mNavigate.updateUIState(datas);
     }
     addListen() {
+        this.mInput.addListen();
         this.mInput.on("enter", this.onSendMsgHandler, this);
         this.mInput.on("pointerScene", this.onPointerSceneHandler, this);
         this.resizeColtroll.addListen();
         this.resizeColtroll.on("toggleSize", this.onToggleSizeHandler, this);
-        // this.mInput.on("focus", this.onFocusHandler, this);
-        // this.mInput.on("blur", this.onBlurHandler, this);
     }
 
     removeListen() {
         if (!this.mInitialized) return;
-        this.mInput.on("enter", this.onSendMsgHandler, this);
+        this.mInput.removeListen();
+        this.mInput.off("enter", this.onSendMsgHandler, this);
         this.mInput.off("pointerScene", this.onPointerSceneHandler, this);
         this.resizeColtroll.removeListen();
         this.resizeColtroll.off("toggleSize", this.onToggleSizeHandler, this);
@@ -349,9 +347,19 @@ class InputContainer extends Phaser.GameObjects.Container {
             color: "#ffffff",
         }).setOrigin(0, 0.5).setAutoBlur(false);
         this.add([this.background, this.emoji, this.inputText]);
+        this.addListen();
+    }
+
+    public addListen() {
         this.inputText.on("enter", this.onEnterHandler, this);
         this.inputText.on("blur", this.onInputBlurHandler, this);
         this.inputText.on("focus", this.onInputFocusHandler, this);
+    }
+
+    public removeListen() {
+        this.inputText.off("enter", this.onEnterHandler, this);
+        this.inputText.off("blur", this.onInputBlurHandler, this);
+        this.inputText.off("focus", this.onInputFocusHandler, this);
     }
 
     public resize() {

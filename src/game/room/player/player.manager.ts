@@ -13,11 +13,13 @@ import { Sprite } from "baseModel";
 import { BaseDataConfigManager } from "src/pica/game/config/base.data.config.manager";
 import NodeType = op_def.NodeType;
 import { PlayerElementAction } from "gamecore";
+import { PicaPlayerActionManager } from "../elementaction";
 
 export class PlayerManager extends PacketHandler implements IElementManager {
     public hasAddComplete: boolean = false;
     private mActor: User;
     private mPlayerMap: Map<number, Player> = new Map();
+    private mActionMgr: PicaPlayerActionManager;
 
     constructor(private mRoom: Room) {
         super();
@@ -41,6 +43,7 @@ export class PlayerManager extends PacketHandler implements IElementManager {
             this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_ACTIVE_SPRITE_END, this.onActiveSpriteEndHandler);
             this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_SYNC_ACTOR, this.onSyncActorHandler);
         }
+        this.mActionMgr = new PicaPlayerActionManager(this.mRoom.game);
         this.addLisenter();
     }
 
@@ -155,6 +158,7 @@ export class PlayerManager extends PacketHandler implements IElementManager {
                 if (data.animation) {
                     element.play(data.animation, data.times);
                 }
+                this.mActionMgr.executeElementActions(data.animation, { targetId, id: data.id }, id);
             }
         }
     }

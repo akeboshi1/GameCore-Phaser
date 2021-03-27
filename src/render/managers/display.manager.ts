@@ -1,9 +1,9 @@
-import { Handler, IPos, IPosition45Obj, Logger, LogicPos } from "utils";
+import { Handler, IPos, IPosition45Obj, Logger, LogicPos, Tool } from "utils";
 import { SceneManager } from "../scenes/scene.manager";
 import { FramesDisplay } from "../display/frames/frames.display";
 import { PlayScene } from "../scenes/play.scene";
 import { DragonbonesDisplay } from "../display/dragonbones/dragonbones.display";
-import { AnimationModel, DisplayField, ElementStateType, IScenery } from "structure";
+import { DisplayField, ElementStateType, IScenery } from "structure";
 import { BlockManager } from "../../base/render/sky.box/block.manager";
 import { Render } from "../render";
 import { IFramesModel } from "structure";
@@ -15,7 +15,7 @@ import { ServerPosition } from "../display/debugs/server.pointer";
 import { IDisplayObject } from "../display";
 import { Astar } from "../display/debugs/astar";
 import { Grids } from "../display/debugs/grids";
-import * as sha1 from "simple-sha1";
+import { FramesModel } from "baseModel";
 
 export enum NodeType {
     UnknownNodeType = 0,
@@ -325,7 +325,8 @@ export class DisplayManager {
 
     public addEffect(targetID: number, effectID: number, display: IFramesModel) {
         const target = this.getDisplay(targetID);
-        const effect = this.addFramesDisplay(effectID, display, parseInt(PlayScene.LAYER_SURFACE, 10), DisplayField.Effect);
+        let effect = this.getDisplay(effectID);
+        if (!effect) effect = this.addFramesDisplay(effectID, display, parseInt(PlayScene.LAYER_SURFACE, 10), DisplayField.Effect);
         if (!target || !effect) {
             return;
         }
@@ -506,25 +507,6 @@ export class DisplayManager {
         }
         if (!display || !animation) return;
         player.destroyMount();
-        const anis = [];
-        const aniName = animation[0].node.name;
-        // TODO 统一方法创建
-        for (const ani of animation) {
-            anis.push(new AnimationModel(ani));
-          }
-        const animations = new Map();
-        for (const aniData of anis) {
-            animations.set(aniData.name, aniData);
-        }
-        const animode = {
-            animations,
-            id: 0,
-            gene: sha1.sync(display.dataPath + display.texturePath),
-            discriminator: "FramesModel",
-            animationName: aniName,
-            display
-        };
-
         const scene = this.sceneManager.getMainScene();
         if (!scene) {
             Logger.getInstance().fatal(`scene does not exist`);
@@ -532,7 +514,7 @@ export class DisplayManager {
         }
 
         const displayFrame = new FramesDisplay(scene, this.render);
-        displayFrame.load(animode);
+        displayFrame.load(FramesModel.createFromDisplay(display, animation));
         player.mount(displayFrame, 0);
     }
 
@@ -541,6 +523,37 @@ export class DisplayManager {
         if (player) {
             player.destroyMount();
         }
+    }
+
+    public throwElement(userId: number, targetId: number, display, animation) {
+        const player = this.getDisplay(userId);
+        if (!player) {
+            return;
+        }
+        const target = this.getDisplay(targetId);
+        if (!target) {
+            return;
+        }
+
+        const scene = this.render.sceneManager.getMainScene();
+        const displayFrame = new FramesDisplay(scene, this.render);
+        displayFrame.load(FramesModel.createFromDisplay(display, animation));
+        this.addToSurfaceLayer(displayFrame);
+        const playerPos = player.getPosition();
+        const targetPos = target.getPosition();
+        // 30 大概手的位置
+        displayFrame.setPosition(playerPos.x, playerPos.y - 30, playerPos.z);
+        const distance = Tool.twoPointDistance(playerPos, targetPos);
+        const tween = scene.tweens.add({
+            targets: displayFrame,
+            duration: distance,
+            props: { x: targetPos.x, y: targetPos.y - 30 },
+            onComplete: () => {
+                tween.stop();
+                displayFrame.destroy();
+            }
+        });
+
     }
 
     public destroy() {

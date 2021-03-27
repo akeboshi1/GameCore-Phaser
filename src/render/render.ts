@@ -348,7 +348,7 @@ export class Render extends RPCPeer implements GameMain, IRender {
     }
 
     resize(width: number, height: number) {
-        if (width > height) {
+        if (width * .8 > height) {
             this.dealTipsScene(SceneName.BLACK_SCENE, true);
         } else {
             const blackScene = this.mGame.scene.getScene(SceneName.BLACK_SCENE);
@@ -1611,6 +1611,11 @@ export class Render extends RPCPeer implements GameMain, IRender {
     @Export()
     public clearMount(id: number) {
         this.mDisplayManager.clearMount(id);
+    }
+
+    @Export()
+    public throwElement(userid: number, target: number, display, animation) {
+        this.displayManager.throwElement(userid, target, display, animation);
     }
 
     protected onWorkerUnlinked(worker: string) {
