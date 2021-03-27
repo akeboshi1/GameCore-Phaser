@@ -325,7 +325,8 @@ export class DisplayManager {
 
     public addEffect(targetID: number, effectID: number, display: IFramesModel) {
         const target = this.getDisplay(targetID);
-        const effect = this.addFramesDisplay(effectID, display, parseInt(PlayScene.LAYER_SURFACE, 10), DisplayField.Effect);
+        let effect = this.getDisplay(effectID);
+        if (!effect) effect = this.addFramesDisplay(effectID, display, parseInt(PlayScene.LAYER_SURFACE, 10), DisplayField.Effect);
         if (!target || !effect) {
             return;
         }

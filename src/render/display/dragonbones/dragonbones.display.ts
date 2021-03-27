@@ -220,6 +220,17 @@ export class DragonbonesDisplay extends BaseDragonbonesDisplay implements IDispl
     }
 
     public removeEffect(display: IDisplayObject) {
+        if (!display) {
+            return Logger.getInstance().error("Failed to remove effect, display does not exist");
+        }
+        const backend = display.getSprite(DisplayField.BACKEND);
+        if (backend) {
+            this.remove(backend, true);
+        }
+        const frontend = display.getSprite(DisplayField.FRONTEND);
+        if (frontend) {
+            this.remove(frontend, true);
+        }
     }
 
     public mount(display: FramesDisplay | DragonbonesDisplay, index?: number) {
