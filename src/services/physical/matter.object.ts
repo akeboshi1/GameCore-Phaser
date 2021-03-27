@@ -457,6 +457,9 @@ export class MatterObject implements IMatterObject {
                 const bodyA = pair.bodyA;
                 const bodyB = pair.bodyB;
                 if (bodyA === this.body || bodyB === this.body) {
+                    if (!this.mModel || !this.mModel.eventName || this.mModel.eventName.length < 1) {
+                        continue;
+                    }
                     this.peer.mainPeer.requestPushBox(this.id);
                     this.mMoving = true;
                     return;
