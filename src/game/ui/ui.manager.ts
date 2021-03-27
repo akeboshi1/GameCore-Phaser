@@ -263,7 +263,7 @@ export class UIManager extends PacketHandler {
                 if (mediator) {
                     if (paneltags.length === 1) {
                         if (ui.visible || ui.visible === undefined) {
-                            this.showMed(panelName);
+                            if (mediator.isSceneUI()) this.showMed(panelName);
                         } else {
                             this.hideMed(panelName);
                         }
