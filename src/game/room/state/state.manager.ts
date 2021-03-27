@@ -20,6 +20,7 @@ export class StateManager extends PacketHandler {
     }
 
     public destroy() {
+        if (!this.stateMap) return;
         this.stateMap.forEach((state) => this.delete.handler(state));
         this.stateMap.clear();
     }
