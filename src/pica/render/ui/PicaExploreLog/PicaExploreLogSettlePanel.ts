@@ -424,6 +424,9 @@ export class PicaExploreLogSettlePanel extends ButtonEventDispatcher {
             this.clearScoreAnimation();
             this.isPlayed = true;
             this.playLayoutAnimation();
+            if (this.received) {
+                this.unkownImg.playAni();
+            }
         } else if (this.finished) {
             if (this.closeHandler) this.closeHandler.run();
         }
