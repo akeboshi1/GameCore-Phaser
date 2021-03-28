@@ -1,7 +1,7 @@
-import { TabButton, ClickEvent, Button, ProgressBar, BBCodeText } from "apowophaserui";
+import { ClickEvent, Button, BBCodeText } from "apowophaserui";
 import { CommonBackground, DynamicImage, ItemInfoTips, ProgressMaskBar, ToggleColorButton, UiManager } from "gamecoreRender";
 import { ModuleName } from "structure";
-import { Font, Handler, i18n, UIHelper, Url } from "utils";
+import { Handler, i18n, UIHelper, Url } from "utils";
 import { PicaTownNavigationPanel } from "./PicaTownNavigationPanel";
 import { PicaMyNavigationPanel } from "./PicaMyNavigationPanel";
 import { PicaBasePanel } from "../pica.base.panel";
@@ -9,6 +9,9 @@ import { UIAtlasName } from "picaRes";
 import { op_client } from "pixelpai_proto";
 import { PicaRoomNavigationPanel } from "./PicaRoomNavigationPanel";
 export class PicaPartyNavigationPanel extends PicaBasePanel {
+    public static PicaPartyNavigationPanel_CLOSE: string = "PicaPartyNavigationPanel_CLOSE";
+    public static PICASELFROOM_DATA: string = "PICASELFROOM_DATA";
+    public myRoomPanel: PicaMyNavigationPanel;
     private content: Phaser.GameObjects.Container;
     private blackBg: Phaser.GameObjects.Graphics;
     private bg: CommonBackground;
@@ -20,7 +23,6 @@ export class PicaPartyNavigationPanel extends PicaBasePanel {
     private curToggleItem: ToggleColorButton;
     private itemtips: ItemInfoTips;
     private townPanel: PicaTownNavigationPanel;
-    private myRoomPanel: PicaMyNavigationPanel;
     private roomPanel: PicaRoomNavigationPanel;
     private optionType: number;
     private mPartyData: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_PARTY_LIST;
@@ -69,10 +71,16 @@ export class PicaPartyNavigationPanel extends PicaBasePanel {
 
     public setSelfRoomListData(content: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_SELF_ROOM_LIST) {
         this.myRoomPanel.setRoomDatas(content);
+        this.render.emitter.emit(PicaPartyNavigationPanel.PICASELFROOM_DATA);
     }
 
     public destroy() {
         super.destroy();
+    }
+
+    protected onHide() {
+        super.onHide();
+        this.render.emitter.emit(PicaPartyNavigationPanel.PicaPartyNavigationPanel_CLOSE);
     }
 
     protected init() {

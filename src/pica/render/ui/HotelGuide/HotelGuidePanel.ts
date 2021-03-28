@@ -1,54 +1,52 @@
-import { ClickEvent } from "apowophaserui";
-import { BaseGuide, UiManager } from "gamecoreRender";
+import { UiManager } from "gamecoreRender";
+import { PicaPartyNavigationPanel } from "picaRender";
 import { ModuleName } from "structure";
-import { UiUtils } from "utils";
-import { PicaNewMainPanel } from "../PicaNewMain/PicaNewMainPanel";
-import { PicaTaskPanel } from "../PicaTask/PicaTaskPanel";
-
-export class HotelGuidePanel extends BaseGuide {
-    private taskButton;
-    private itemTaskBtn;
+import { BaseHotelGuidePanel } from "./BaseHotelGuidePanel";
+export class HotelGuide2Panel extends BaseHotelGuidePanel {
+    private mPartyNavigationPanel;
+    private myRoomPanel;
+    private room;
     constructor(uiManager: UiManager) {
-        super(uiManager.render);
-    }
-    public show(param?: any) {
-        super.show(param);
-        this.step1();
+        super(uiManager);
     }
 
     public end() {
-        if (this.itemTaskBtn) this.itemTaskBtn.off(ClickEvent.Tap, this.end, this);
-        this.render.emitter.off("close_panel", this.end, this);
+        this.room.off("pointerdown", this.end, this);
+        this.render.emitter.off(PicaPartyNavigationPanel.PicaPartyNavigationPanel_CLOSE, this.end, this);
         super.end();
     }
 
-    private step1() {
-        const main: PicaNewMainPanel = this.uiManager.getPanel(ModuleName.PICANEWMAIN_NAME) as PicaNewMainPanel;
-        const leftPanel = main.leftPanel;
-        this.taskButton = leftPanel.taskButton;
-        const worldMatrix = (<any>this.taskButton).getWorldTransformMatrix();
+    protected step4() {
+        this.mPartyNavigationPanel = this.uiManager.getPanel(ModuleName.PICAPARTYNAVIGATION_NAME) as PicaPartyNavigationPanel;
+        this.render.emitter.on(PicaPartyNavigationPanel.PICASELFROOM_DATA, this.step5, this);
+    }
+
+    protected step5() {
+        this.render.emitter.off(PicaPartyNavigationPanel.PICASELFROOM_DATA, this.step5, this);
+        this.render.emitter.on(PicaPartyNavigationPanel.PicaPartyNavigationPanel_CLOSE, this.end, this);
+        this.myRoomPanel = this.mPartyNavigationPanel.myRoomPanel;
+        const items = this.myRoomPanel.roomsItems;
+        if (!items) {
+            this.end();
+            return;
+        }
+        const item = items[0];
+        if (!item) {
+            this.end();
+            return;
+        }
+        const roomList = item.townItems;
+        if (!roomList) {
+            this.end();
+            return;
+        }
+        this.room = roomList[0];
+        if (!this.room) {
+            this.end();
+            return;
+        }
+        const worldMatrix = this.room.getWorldTransformMatrix();
         this.guideEffect.createGuideEffect({ x: worldMatrix.tx, y: worldMatrix.ty });
-        this.taskButton.on(ClickEvent.Tap, this.step2, this);
+        this.room.on("pointerdown", this.end, this);
     }
-
-    private step2() {
-        // 异步等待过程
-        this.render.emitter.on(PicaTaskPanel.PICATASK_DATA, this.step3, this);
-    }
-
-    private step3(pos) {
-        this.taskButton.off(ClickEvent.Tap, this.step2, this);
-        this.render.emitter.off(PicaTaskPanel.PICATASK_DATA, this.step3, this);
-        this.render.emitter.on("close_panel", this.end, this);
-        const taskPanel: PicaTaskPanel = this.uiManager.getPanel(ModuleName.PICATASK_NAME) as PicaTaskPanel;
-        const picaMainTaskPanel: any = taskPanel.mainPanel;
-        const list: any[] = picaMainTaskPanel.taskItems;
-        const item = list[0];
-        if (!item) this.end();
-        this.itemTaskBtn = item.taskButton;
-        const worldMatrix = this.itemTaskBtn.getWorldTransformMatrix();
-        this.guideEffect.createGuideEffect({ x: item.width, y: worldMatrix.ty });
-        this.itemTaskBtn.on(ClickEvent.Tap, this.end, this);
-    }
-
 }

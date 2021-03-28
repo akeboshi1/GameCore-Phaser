@@ -5,12 +5,12 @@ import { Font, Handler, i18n, Logger, Tool, UIHelper, Url } from "utils";
 import { op_client, op_def } from "pixelpai_proto";
 import { PicaRoomListItem } from "./PicaRoomListItem";
 export class PicaMyNavigationPanel extends Phaser.GameObjects.Container {
+    public roomsItems: NavigationRoomListItem[] = [];
     private dpr: number;
     private zoom: number;
     private sendHandler: Handler;
     private mGameScroll: GameScroller;
     private curRoomItem: NavigationRoomListItem;
-    private roomsItems: NavigationRoomListItem[] = [];
     private datas: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_SELF_ROOM_LIST[] = [];
     private queryType: op_def.RoomTypeEnum[];
     private haveCount: number = 0;
@@ -128,12 +128,12 @@ export class PicaMyNavigationPanel extends Phaser.GameObjects.Container {
 class NavigationRoomListItem extends Phaser.GameObjects.Container {
     public dpr: number;
     public topCon: Phaser.GameObjects.Container;
+    public townItems: PicaRoomListItem[] = [];
     private titleTex: Phaser.GameObjects.Text;
     private arrow: Phaser.GameObjects.Image;
     private mExtend: GridLayoutGroup;
     private send: Handler;
     private mIsExtend: boolean;
-    private townItems: PicaRoomListItem[] = [];
     constructor(scene: Phaser.Scene, dpr: number, title: string) {
         super(scene);
         this.dpr = dpr;
