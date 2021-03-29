@@ -16,9 +16,11 @@ export class State {
     public name: string;
     public type: op_def.NodeType;
     public packet: Uint8Array;
+    public execCode: op_def.ExecCode;
     constructor(state: op_def.IState, public owner: op_gameconfig_01.INode) {
         this.type = state.type;
         this.name = state.name;
+        this.execCode = state.execCode;
         this.packet = state.packet;
     }
 }

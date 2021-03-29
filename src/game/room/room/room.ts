@@ -22,7 +22,7 @@ import { Sprite } from "baseModel";
 import IActor = op_client.IActor;
 import NodeType = op_def.NodeType;
 import { BaseDataConfigManager } from "picaWorker";
-import { StateManager } from "../state/state.manager";
+import { RoomStateManager } from "../state/room.state.manager";
 import {BlockObject} from "../block/block.object";
 
 export interface SpriteAddCompletedListener {
@@ -132,7 +132,7 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
     protected mIsDecorating: boolean = false;
     protected mWallMamager: WallManager;
     protected mScaleRatio: number;
-    protected mStateManager: StateManager;
+    protected mStateManager: RoomStateManager;
     // protected mMatterWorld: MatterWorld;
     // protected mAstar: AStar;
     protected mIsLoading: boolean = false;
@@ -159,7 +159,7 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
             // this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_MOVE_SPRITE_BY_PATH, this.onMovePathHandler);
             this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_SET_CAMERA_FOLLOW, this.onCameraFollowHandler);
             this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_RESET_CAMERA_SIZE, this.onCameraResetSizeHandler);
-            // this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_SYNC_STATE, this.onSyncStateHandler);
+            this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_SYNC_STATE, this.onSyncStateHandler);
             this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_START_EDIT_MODEL, this.onStartDecorate);
             this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_EDIT_MODEL_RESULT, this.onDecorateResult);
             this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_CURRENT_SCENE_ALL_SPRITE, this.onAllSpriteReceived);
@@ -391,7 +391,6 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
         // this.mMatterWorld = new MatterWorld(this);
         this.mEffectManager = new EffectManager(this);
         this.mWallMamager = new WallManager(this);
-        this.mStateManager = new StateManager(this);
         // if (this.scene) {
         //     const camera = this.scene.cameras.main;
         //     this.mCameraService.camera = camera;
@@ -1020,6 +1019,24 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
         }
     }
 
+    private onSyncStateHandler(packet: PBpacket) {
+        const content: op_client.IOP_VIRTUAL_WORLD_REQ_CLIENT_SYNC_STATE = packet.content;
+        const states = content.stateGroup;
+        for (const state of states) {
+            switch (state.owner.type) {
+                case op_def.NodeType.ElementNodeType:
+                    this.mElementManager.setState(state);
+                    break;
+                case op_def.NodeType.CharacterNodeType:
+                    this.mPlayerManager.setState(state);
+                    break;
+                case op_def.NodeType.SceneNodeType:
+                    this.setState(state);
+                    break;
+            }
+        }
+    }
+
     private getSpriteWalkableData(sprite: ISprite, isTerrain: boolean): { origin: IPos, collisionArea: number[][], walkableArea: number[][], pos45: IPos, rows: number, cols: number } {
         let collisionArea = sprite.getCollisionArea();
         let walkableArea = sprite.getWalkableArea();
@@ -1150,5 +1167,10 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
 
     private mapPos2Idx(x: number, y: number): number {
         return x + y * this.mMiniSize.cols;
+    }
+
+    private setState(state: op_client.IStateGroup) {
+        if (!this.mStateManager) this.mStateManager = new RoomStateManager(this);
+        this.mStateManager.setState(state);
     }
 }

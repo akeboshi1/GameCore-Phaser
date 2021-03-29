@@ -144,6 +144,11 @@ export class ElementManager extends PacketHandler implements IElementManager {
         return this.mStateMgr.isLocked(element);
     }
 
+    public setState(state: op_client.IStateGroup) {
+        const ele = this.get(state.owner.id);
+        if (ele) ele.setState(state);
+    }
+
     public destroy() {
         this.hasAddComplete = false;
         this.mRoom.game.emitter.off(EventType.SCENE_INTERACTION_ELEMENT, this.checkElementAction, this);

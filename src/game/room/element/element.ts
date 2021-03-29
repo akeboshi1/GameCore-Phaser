@@ -13,6 +13,7 @@ import {
 import { DirectionChecker, IPos, IProjection, Logger, LogicPoint, LogicPos, Tool } from "utils";
 import { BlockObject } from "../block/block.object";
 import { IRoomService } from "../room/room";
+import { ElementStateManager } from "../state/element.state.manager";
 import { IElementManager } from "./element.manager";
 
 export interface IElement {
@@ -169,6 +170,7 @@ export class Element extends BlockObject implements IElement {
     protected mCreatedDisplay: boolean = false;
     protected isUser: boolean = false;
     protected moveControll: MoveControll;
+    protected mStateManager: ElementStateManager;
     protected mTopDisplay: any;
     protected mTarget;
 
@@ -652,6 +654,11 @@ export class Element extends BlockObject implements IElement {
         if (this.model && this.mElementManager) this.mElementManager.roomService.removeFromWalkableMap(this.model);
     }
 
+    public setState(stateGroup: op_client.IStateGroup) {
+        if (!this.mStateManager) this.mStateManager = new ElementStateManager(this, this.mRoomService);
+        this.mStateManager.setState(stateGroup);
+    }
+
     public destroy() {
         this.mCreatedDisplay = false;
         if (this.mMoveData && this.mMoveData.path) {
@@ -659,6 +666,7 @@ export class Element extends BlockObject implements IElement {
             this.mMoveData.path = [];
             this.mMoveData = null;
         }
+        if (this.mStateManager) this.mStateManager.destroy();
         this.removeDisplay();
         super.destroy();
     }
@@ -751,6 +759,9 @@ export class Element extends BlockObject implements IElement {
         let depth = 0;
         if (this.model && this.model.pos) {
             depth = this.model.pos.depth ? this.model.pos.depth : 0;
+        }
+        if (this.mStateManager) {
+            this.mStateManager.execAllState();
         }
         return Promise.resolve();
     }

@@ -222,6 +222,11 @@ export class PlayerManager extends PacketHandler implements IElementManager {
         });
     }
 
+    public setState(state: op_client.IStateGroup) {
+        const ele = this.get(state.owner.id);
+        if (ele) ele.setState(state);
+    }
+
     private onSync(packet: PBpacket) {
         const content: op_client.IOP_VIRTUAL_WORLD_REQ_CLIENT_SYNC_SPRITE = packet.content;
         if (content.nodeType !== op_def.NodeType.CharacterNodeType) {

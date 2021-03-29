@@ -1,1 +1,1 @@
-export { StateManager } from "./state.manager";
+export { BaseStateManager, BaseHandler } from "./state.manager";
