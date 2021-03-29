@@ -92,13 +92,15 @@ export class PicaLoginPanel extends BasePanel {
     protected init() {
         const { width, height } = this.scene.cameras.main;
 
-        this.parent = this.scene.add.container(width * this.originX, height * this.originY);
+        // this.parent = this.scene.add.container(width * this.originX, height * this.originY);
+        this.x = width * this.originX;
+        this.y = height * this.originY;
 
         const container = this.scene.make.container(undefined, false);
         container.add(this);
 
         this.mMaskBg = this.scene.make.graphics(undefined, false);
-        this.parent.add([this.mMaskBg, container]);
+        this.add([this.mMaskBg, container]);
 
         const bg = this.scene.make.image({
             key: UIAtlasKey.commonKey,

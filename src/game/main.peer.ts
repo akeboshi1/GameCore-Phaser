@@ -297,16 +297,6 @@ export class MainPeer extends RPCPeer {
     //     this.game.roomManager.currentRoom.update(time, delta);
     // }
 
-    @Export()
-    public allowLogin() {
-
-    }
-
-    @Export([webworker_rpc.ParamType.str, webworker_rpc.ParamType.str, webworker_rpc.ParamType.str])
-    public loginByPhoneCode(phone: string, code: string, areaCode: string) {
-
-    }
-
     @Export([webworker_rpc.ParamType.str, webworker_rpc.ParamType.str])
     public onVerifiedHandler(name: string, idcard: string) {
 
@@ -550,11 +540,6 @@ export class MainPeer extends RPCPeer {
 
     // }
 
-    @Export()
-    public creareRole() {
-
-    }
-
     @Export([webworker_rpc.ParamType.num])
     public syncClock(times: number) {
         this.game.syncClock(times);
@@ -623,22 +608,6 @@ export class MainPeer extends RPCPeer {
     @Export([webworker_rpc.ParamType.str])
     public renderEmitter(eventType: string, data: any) {
         this.game.emitter.emit(eventType, data);
-    }
-
-    // display data getter
-    @Export()
-    public framesModel_getAnimations(id: number, name: string): any {// IAnimationData
-        return null;
-    }
-
-    @Export()
-    public framesModel_getCollisionArea(id: number): number[][] {
-        return null;
-    }
-
-    @Export()
-    public framesModel_getOriginPoint(id: number): LogicPoint {
-        return null;
     }
 
     @Export([webworker_rpc.ParamType.num])
@@ -812,6 +781,12 @@ export class MainPeer extends RPCPeer {
     public completeFrameAnimationQueue(id: number) {
         const frames = this.game.roomManager.currentRoom.elementManager.get(id);
         if (frames) frames.completeAnimationQueue();
+    }
+
+    @Export()
+    public setConfig(config: ILauncherConfig) {
+        this.mConfig = config;
+        this.game.setConfig(config);
     }
 
     // ==== todo

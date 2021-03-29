@@ -74,10 +74,10 @@ export class UiManager {
         if (!this.mScene) {
             return;
         }
-        let scene = this.mRender.game.scene.getScene(SceneName.MAINUI_SCENE);
-        const loadScene = this.mRender.game.scene.getScene(SceneName.LOADING_SCENE);
-        if (loadScene && loadScene.scene.isActive()) scene = loadScene;
-        const alert = new AlertView(scene, this);
+        // let scene = this.mRender.game.scene.getScene(SceneName.MAINUI_SCENE);
+        // const loadScene = this.mRender.game.scene.getScene(SceneName.LOADING_SCENE);
+        // if (loadScene && loadScene.scene.isActive()) scene = loadScene;
+        const alert = new AlertView(this.mScene, this);
         alert.show({
             text,
             callback: () => {

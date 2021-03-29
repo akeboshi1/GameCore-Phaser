@@ -114,14 +114,14 @@ export class PicaBootPanel extends PicaBasePanel {
 
         this.resize();
 
-        this.scene.children.add(this);
+        // this.scene.children.add(this);
     }
 
     updatePanelList() {
         if (!this.scene) {
             return;
         }
-        const children = this.scene.children;
+        const children = this.parentContainer.list;
         if (!children) {
             return;
         }
@@ -143,7 +143,8 @@ export class PicaBootPanel extends PicaBasePanel {
             this.notice.x = this.x;
             this.notice.y = this.y;
         }
-        this.scene.children.add(this.notice);
+        // this.scene.children.add(this.notice);
+        (<any>this.mScene).layerManager.addToLayer(this.uiLayer, this.notice);
         this.updatePanelList();
     }
 

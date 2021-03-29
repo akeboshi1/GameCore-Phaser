@@ -719,6 +719,14 @@ export class Render extends RPCPeer implements GameMain, IRender {
         return this.mSceneManager.getMainScene();
     }
 
+    public updateGateway() {
+        const accountData = this.account.accountData;
+        if (accountData && accountData.gateway) {
+            this.mConfig.server_addr.host = accountData.gateway;
+            this.mainPeer.setConfig(this.mConfig);
+        }
+    }
+
     @Export()
     public async destroyAccount(): Promise<void> {
         return new Promise((resolve, reject) => {
@@ -987,6 +995,7 @@ export class Render extends RPCPeer implements GameMain, IRender {
     @Export()
     public refreshAccount(account: any) {
         this.account.refreshToken(account);
+        this.updateGateway();
     }
 
     @Export()
@@ -997,6 +1006,7 @@ export class Render extends RPCPeer implements GameMain, IRender {
     @Export()
     public setAccount(val: any): void {
         this.mAccount.setAccount(val);
+        this.updateGateway();
     }
 
     @Export()
@@ -1050,7 +1060,12 @@ export class Render extends RPCPeer implements GameMain, IRender {
     public showAlertReconnect(text: string) {
         // 告诉render显示警告框
         if (this.uiManager) this.uiManager.showAlertView(text, true, false, () => {
-            this.mainPeer.reconnect();
+            const bootPanel = this.uiManager.getPanel(ModuleName.PICA_BOOT_NAME);
+            if (bootPanel && bootPanel.isShow()) {
+                bootPanel.show();
+            } else {
+                this.mainPeer.reconnect();
+            }
         });
     }
 
