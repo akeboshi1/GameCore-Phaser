@@ -117,7 +117,12 @@ export class PhysicalPeer extends RPCPeer {
     @Export()
     public destroyMatterWorld() {
         if (this.matterWorld) {
-            this.matterObjectMap.clear();
+            if (this.matterObjectMap) {
+                this.matterObjectMap.forEach((matterObj) => {
+                    matterObj.destroy();
+                });
+                this.matterObjectMap.clear();
+            }
             this.matterWorld.debugDisable();
             this.matterWorld.clear();
             this.matterWorld = undefined;
@@ -136,17 +141,18 @@ export class PhysicalPeer extends RPCPeer {
 
     @Export()
     public debugEnable() {
-        this.matterWorld.debugEnable();
+        if (this.matterWorld) this.matterWorld.debugEnable();
     }
 
     @Export()
     public debugDisable() {
-        this.matterWorld.debugDisable();
+        if (this.matterWorld) this.matterWorld.debugDisable();
     }
 
     // render通知physical移动
     @Export([webworker_rpc.ParamType.num, webworker_rpc.ParamType.num])
     public moveMotion(worldX: number, worldY: number, id?: number) {
+        if (!this.matterWorld) return;
         const matterUser = this.matterWorld.matterUser;
         if (!matterUser) {
             return;
@@ -413,7 +419,7 @@ export class PhysicalPeer extends RPCPeer {
     @Export([webworker_rpc.ParamType.num, webworker_rpc.ParamType.boolean])
     public setSensor(id: number, boo: boolean) {
         const obj = this.matterObjectMap.get(id);
-        if (!obj) return;
+        if (!obj || !this.matterWorld) return;
         this.matterWorld.setSensor(obj.body, boo);
     }
 

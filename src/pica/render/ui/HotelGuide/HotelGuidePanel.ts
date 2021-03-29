@@ -2,7 +2,7 @@ import { UiManager } from "gamecoreRender";
 import { PicaPartyNavigationPanel } from "picaRender";
 import { ModuleName } from "structure";
 import { BaseHotelGuidePanel } from "./BaseHotelGuidePanel";
-export class HotelGuide2Panel extends BaseHotelGuidePanel {
+export class HotelGuidePanel extends BaseHotelGuidePanel {
     private mPartyNavigationPanel;
     private myRoomPanel;
     private room;

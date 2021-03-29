@@ -80,12 +80,14 @@ export class TerrainManager extends PacketHandler implements IElementManager {
         if (this.connection) {
             this.connection.removePacketListener(this);
         }
-        if (!this.mTerrains) return;
-        this.mTerrains.forEach((terrain) => this.remove(terrain.id));
-        this.mTerrains.clear();
-        if (!this.mTerrainCache) return;
-        this.mTerrainCache.length = 0;
-        this.mTerrainCache = [];
+        if (this.mTerrains) {
+            this.mTerrains.forEach((terrain) => this.remove(terrain.id));
+            this.mTerrains.clear();
+        }
+        if (this.mTerrainCache) {
+            this.mTerrainCache.length = 0;
+            this.mTerrainCache = [];
+        }
     }
 
     public get(id: number): Terrain {
