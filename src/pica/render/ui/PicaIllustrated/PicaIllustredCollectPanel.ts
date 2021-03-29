@@ -206,7 +206,7 @@ class IllustratedCollectItem extends Phaser.GameObjects.Container {
             const list = this.gridLayout.list;
             for (const obj of list) {
                 if (Tool.checkPointerContains(obj, pointer)) {
-                    (<IllustratedItem>obj).showTips();
+                   // (<IllustratedItem>obj).showTips();
                     if (this.send) this.send.runWith(["furidetail", (<IllustratedItem>obj).itemData]);
                 }
             }

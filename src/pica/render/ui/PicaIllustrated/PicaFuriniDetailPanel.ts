@@ -48,7 +48,7 @@ export class PicaFuriniDetailPanel extends Phaser.GameObjects.Container {
         });
         this.closeButton = new Button(this.scene, UIAtlasName.uicommon, "close");
         this.closeButton.x = this.width * 0.5 - this.closeButton.width * 0.5 + 10 * this.dpr;
-        this.closeButton.y = -this.height * 0.5 + this.closeButton.height * 0.5 + 10 * this.dpr;
+        this.closeButton.y = -this.height * 0.5 + this.closeButton.height * 0.5 - 10 * this.dpr;
         this.closeButton.on(ClickEvent.Tap, this.onCloseHandler, this);
         const posY = -bg.height * 0.5 + 3 * this.dpr;
         const titlebg = this.scene.make.image({ x: 0, y: posY, key: UIAtlasName.uicommon1, frame: "title" });
@@ -59,26 +59,26 @@ export class PicaFuriniDetailPanel extends Phaser.GameObjects.Container {
         }, false).setOrigin(0.5);
         this.titleName.setFontStyle("bold");
         this.codeName = this.scene.make.text({
-            x: this.width * 0.5 - 10 * this.dpr, y: posY + 40 * this.dpr,
+            x: this.width * 0.5 - 25 * this.dpr, y: posY + 40 * this.dpr,
             style: UIHelper.colorStyle("#205BBC", this.dpr * 12)
         }, false).setOrigin(1, 0.5);
         this.mDetailDisplay = new DetailDisplay(this.scene, this.render);
         this.mDetailDisplay.setFixedScale(this.dpr / this.scale);
-        this.mDetailDisplay.y = -20 * this.dpr;
+        this.mDetailDisplay.y = -60 * this.dpr;
         this.starImg = this.scene.make.image({ key: UIAtlasName.uicommon, frame: "bag_star_big_1" });
-        this.starImg.y = 30 * this.dpr;
+        this.starImg.y = 50 * this.dpr;
         this.bottomBg = this.scene.make.graphics(undefined, false);
         this.bottomBg.clear();
-        this.bottomBg.fillStyle(0x52D1FF, 1);
+        this.bottomBg.fillStyle(0x52D1FF, 0.22);
         const bottomWidth = 293 * this.dpr, bottomHeight = 78 * this.dpr;
         this.bottomBg.fillRoundedRect(-bottomWidth * 0.5, -bottomHeight * 0.5, bottomWidth, bottomHeight);
-        this.bottomBg.y = this.starImg.y + bottomHeight * 0.5 + 30 * this.dpr;
+        this.bottomBg.y = this.height * 0.5 - bottomHeight * 0.5 - 25 * this.dpr;
         this.furinName = this.scene.make.text({ style: UIHelper.colorStyle("#205BBC", 15 * this.dpr) }).setOrigin(0, 0.5);
         this.furinName.x = -bottomWidth * 0.5 + 10 * this.dpr;
-        this.furinName.y = this.bottomBg.y - bottomHeight * 0.5 + 10 * this.dpr;
+        this.furinName.y = this.bottomBg.y - bottomHeight * 0.5 + 18 * this.dpr;
         this.furiDes = this.scene.make.text({ style: UIHelper.colorStyle("#000000", 11 * this.dpr) }).setOrigin(0, 0.5);
         this.furiDes.x = this.furinName.x;
-        this.furiDes.y = this.furinName.y + 20 * this.dpr;
+        this.furiDes.y = this.furinName.y + 25 * this.dpr;
         this.add([this.backgrand, bg, titlebg, this.titleName, this.closeButton, this.codeName, this.mDetailDisplay, this.starImg, this.bottomBg, this.furinName, this.furiDes]);
         this.resize(0, 0);
     }
