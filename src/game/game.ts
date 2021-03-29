@@ -536,6 +536,7 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
         content.spawnPointId = spawnPointId;
         this.connect.send(pkt);
         this.peer.state = GameState.EnterWorld;
+        if (this.mHttpClock) this.mHttpClock.gameId = game_id;
     }
 
     public leaveRoom(room: IRoomService) {

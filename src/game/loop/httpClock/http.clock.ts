@@ -11,8 +11,10 @@ export class HttpClock {
     private mTimestamp: number = 0;
     private httpService: HttpService;
     private mEnable: boolean = false;
+    private mGameId: string;
     constructor(private game: Game) {
         this.httpService = game.httpService;
+        this.gameId = game.getGameConfig().game_id;
     }
 
     update(time: number, delta: number) {
@@ -43,7 +45,7 @@ export class HttpClock {
     }
 
     fetch() {
-        return this.httpService.playedDuration("831dab", this.game.getGameConfig().game_id);
+        return this.httpService.playedDuration("831dab", this.mGameId);
     }
 
     sync() {
@@ -82,5 +84,14 @@ export class HttpClock {
 
     set enable(val: boolean) {
         this.mEnable = val;
+    }
+
+    set gameId(val: string) {
+        let gameId = val;
+        const index = val.lastIndexOf(".");
+        if (index > -1) {
+            gameId = gameId.slice(index + 1, gameId.length);
+        }
+        this.mGameId = gameId;
     }
 }
