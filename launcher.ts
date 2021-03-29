@@ -2,6 +2,7 @@
 // 1. 在这里接受外部传入的参数并转换为World可以接受的参数
 // 2. 做设备兼容
 import version from "./version";
+export { version };
 export class Launcher {
     get config() {
         return this.mConfig;
