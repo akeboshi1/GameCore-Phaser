@@ -65,6 +65,11 @@ export class PicaCreateRolePanel extends PicaBasePanel {
         this.resize(gameSize.width, gameSize.height);
     }
 
+    destroy() {
+        this.scene.scale.off("resize", this.onResize, this);
+        super.destroy();
+    }
+
     public setSuitDatas(datas: op_client.CountablePackageItem[]) {
         this.suitDatasMap.clear();
         for (const data of datas) {
