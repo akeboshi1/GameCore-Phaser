@@ -1,0 +1,104 @@
+{
+	"textures": [
+		{
+			"image": "survey",
+			"format": "RGBA8888",
+			"size": {
+				"w": 915,
+				"h": 777
+			},
+			"scale": 1,
+			"frames": [
+				{
+					"filename": "survey_light",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 684,
+						"h": 681
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 684,
+						"h": 681
+					},
+					"frame": {
+						"x": 1,
+						"y": 1,
+						"w": 684,
+						"h": 681
+					}
+				},
+				{
+					"filename": "survey_ordinary_bg",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 227,
+						"h": 307
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 227,
+						"h": 307
+					},
+					"frame": {
+						"x": 687,
+						"y": 1,
+						"w": 227,
+						"h": 307
+					}
+				},
+				{
+					"filename": "survey_rare_bg",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 227,
+						"h": 307
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 227,
+						"h": 307
+					},
+					"frame": {
+						"x": 687,
+						"y": 310,
+						"w": 227,
+						"h": 307
+					}
+				},
+				{
+					"filename": "survey_title_bg",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 461,
+						"h": 92
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 461,
+						"h": 92
+					},
+					"frame": {
+						"x": 1,
+						"y": 684,
+						"w": 461,
+						"h": 92
+					}
+				}
+			]
+		}
+	],
+	"meta": {
+		"app": "https://www.codeandweb.com/texturepacker",
+		"version": "3.0",
+		"smartupdate": "$TexturePacker:SmartUpdate:15185ff759c4d0ec1c620e4acb6e2917:41659b4346f798e7567f6d5afc0538b2:7fcb4557e5fdb7ec9ae11eb5f19a4a49$"
+	}
+}

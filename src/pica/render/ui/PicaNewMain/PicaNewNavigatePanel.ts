@@ -41,6 +41,13 @@ export class PicaNewNavigatePanel extends Phaser.GameObjects.Container {
         this.LayoutButton();
         // this.render.emitter.emit(EventType.NAVIGATE_RESIZE, this.width, this.height);
     }
+
+    public getIllustredPos() {
+        const world = this.makeButton.getWorldTransformMatrix();
+        const x = world.tx;
+        const y = world.ty;
+        return { x, y };
+    }
     public addListen() {
         this.bagButton.on(ClickEvent.Tap, this.onBagHandler, this);
         this.friendButton.on(ClickEvent.Tap, this.onFriendHandler, this);

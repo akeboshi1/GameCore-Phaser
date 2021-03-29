@@ -106,3 +106,5 @@ export * from "./ui/PicaPartyNavigation/PicaPartyNavigationMediator";
 export * from "./guide.manager";
 export * from "./ui/PicaRepairChoose/PicaRepairChoose";
 export * from "./ui/PicaRepairChoose/PicaRepairChooseMediator";
+export * from "./ui/PicaSurvey/PicaSurvey";
+export * from "./ui/PicaSurvey/PicaSurveyMediator";

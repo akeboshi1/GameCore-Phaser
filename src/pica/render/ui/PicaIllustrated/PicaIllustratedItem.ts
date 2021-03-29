@@ -25,10 +25,10 @@ export class IllustratedItem extends ItemButton {
         }
     }
 
-    setItemData(item: ICountablePackageItem) {
+    setItemData(item: ICountablePackageItem, code: boolean = true) {
         super.setItemData(item, false);
         if (item) {
-            this.codeTex.text = item.code;
+            this.codeTex.text = code ? item.code : item.name;
             const status = item["status"];
             if (status === 1) {
                 this.bg.setTexture(UIAtlasName.illustrate, "illustrate_survey_nohave");

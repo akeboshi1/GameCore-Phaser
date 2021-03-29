@@ -7,6 +7,7 @@ export class CacheDataManager extends BaseHandler {
     public chapters: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_EXPLORE_CHAPTER_PROGRESS;
     public guidText: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_ROOM_SHOW_GUIDE_TEXT;
     public gallery: op_client.OP_CLIENT_REQ_VIRTUAL_WORLD_PKT_UPDATE_GALLERY;
+    public isSurveyStatus: boolean = false;
     private mBagCategory: Map<number, any> = new Map();
     private furiRecasteMap: Map<string, any> = new Map();
     private mChaptersMap: Map<number, any> = new Map();

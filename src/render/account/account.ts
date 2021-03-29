@@ -42,7 +42,6 @@ export class Account {
             refreshToken: val.refreshToken,
             expire: val.expire,
             accessToken: val.token || val.accessToken,
-            gateway: val.gateway
         };
         this.saveLocalStorage();
     }
@@ -66,9 +65,9 @@ export class Account {
         if (!this.accountData) {
             return;
         }
-        const { id, fingerprint, refreshToken, expire, accessToken, gateway } = this.accountData;
+        const { id, fingerprint, refreshToken, expire, accessToken } = this.accountData;
         try {
-            localStorage.setItem("token", JSON.stringify({ id, fingerprint, refreshToken, expire, accessToken, gateway }));
+            localStorage.setItem("token", JSON.stringify({ id, fingerprint, refreshToken, expire, accessToken }));
         } catch {
             Logger.getInstance().warn("write localStorage fail");
         }

@@ -27,11 +27,13 @@ export class CutInMenuPanel extends BasePanel {
         const height = this.scaleHeight;
         const buttonType = this.buttonType;
         if (buttonType === "work") {
-            // this.rightPopButton = new WorkPopContainer(this.scene, width, this.key, this.dpr);
+            this.rightPopButton = new WorkPopContainer(this.scene, width, this.key, "work_icon", i18n.t("work.title"), this.dpr);
         } else if (buttonType === "minecar") {
             this.rightPopButton = new MinePopContainer(this.scene, width, this.key, this.dpr);
         } else if (buttonType === "editor") {
             this.rightPopButton = new EditorPopContainer(this.scene, width, this.key, this.dpr);
+        } else if (buttonType === "survey") {
+            this.rightPopButton = new WorkPopContainer(this.scene, width, this.key, "survey_magnifier", i18n.t("common.survey"), this.dpr);
         } else
             this.rightPopButton = new RightPopContainer(this.scene, width, this.key, this.dpr);
         if (this.rightPopButton) {
@@ -55,8 +57,8 @@ export class CutInMenuPanel extends BasePanel {
             (<WorkPopContainer>(this.rightPopButton)).setCount(data);
         } else if (type === "minecar") {
 
-        } else if (type === "surver") {
-
+        } else if (type === "survey") {
+            (<WorkPopContainer>(this.rightPopButton)).setCount(data);
         }
     }
 
@@ -75,6 +77,8 @@ export class CutInMenuPanel extends BasePanel {
             this.render.renderEmitter(ModuleName.CUTINMENU_NAME + "_openmed", ModuleName.PICAMINECAR_NAME);
         } else if (type === "editor") {
             this.render.renderEmitter(ModuleName.CUTINMENU_NAME + "_editor");
+        } else if (type === "survey") {
+            this.render.renderEmitter(ModuleName.CUTINMENU_NAME + "_openmedsurvey");
         }
     }
 
@@ -227,8 +231,8 @@ class WorkPopContainer extends MinePopContainer {
         }, false).setOrigin(0.5);
         this.countTex.setFontStyle("bold");
         this.add(this.countTex);
-        this.setIconFrame("work_icon");
-        this.text.text = i18n.t("work.title");
+        this.setIconFrame(frame);
+        this.text.text = title;
     }
     public setCount(count: number) {
         this.countTex.text = count + "";
