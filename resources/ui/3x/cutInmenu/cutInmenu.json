@@ -4,8 +4,8 @@
 			"image": "cutInmenu",
 			"format": "RGBA8888",
 			"size": {
-				"w": 489,
-				"h": 478
+				"w": 502,
+				"h": 526
 			},
 			"scale": 1,
 			"frames": [
@@ -31,6 +31,48 @@
 					}
 				},
 				{
+					"filename": "time",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 66,
+						"h": 40
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 66,
+						"h": 40
+					},
+					"frame": {
+						"x": 427,
+						"y": 1,
+						"w": 66,
+						"h": 40
+					}
+				},
+				{
+					"filename": "arow",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 17,
+						"h": 30
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 17,
+						"h": 30
+					},
+					"frame": {
+						"x": 427,
+						"y": 43,
+						"w": 17,
+						"h": 30
+					}
+				},
+				{
 					"filename": "minebag_bg",
 					"rotated": false,
 					"trimmed": true,
@@ -52,66 +94,24 @@
 					}
 				},
 				{
-					"filename": "work_icon",
-					"rotated": false,
-					"trimmed": false,
-					"sourceSize": {
-						"w": 123,
-						"h": 108
-					},
-					"spriteSourceSize": {
-						"x": 0,
-						"y": 0,
-						"w": 123,
-						"h": 108
-					},
-					"frame": {
-						"x": 365,
-						"y": 178,
-						"w": 123,
-						"h": 108
-					}
-				},
-				{
-					"filename": "arow",
-					"rotated": false,
-					"trimmed": false,
-					"sourceSize": {
-						"w": 17,
-						"h": 30
-					},
-					"spriteSourceSize": {
-						"x": 0,
-						"y": 0,
-						"w": 17,
-						"h": 30
-					},
-					"frame": {
-						"x": 427,
-						"y": 1,
-						"w": 17,
-						"h": 30
-					}
-				},
-				{
-					"filename": "text_minebag",
+					"filename": "minecar",
 					"rotated": false,
 					"trimmed": true,
 					"sourceSize": {
-						"w": 82,
-						"h": 45
+						"w": 138,
+						"h": 136
 					},
 					"spriteSourceSize": {
 						"x": 1,
 						"y": 1,
-						"w": 80,
-						"h": 43
+						"w": 136,
+						"h": 134
 					},
 					"frame": {
 						"x": 365,
-						"y": 288,
-						"w": 80,
-						"h": 43
+						"y": 178,
+						"w": 136,
+						"h": 134
 					}
 				},
 				{
@@ -130,30 +130,72 @@
 					},
 					"frame": {
 						"x": 1,
-						"y": 291,
+						"y": 314,
 						"w": 164,
 						"h": 186
 					}
 				},
 				{
-					"filename": "minecar",
+					"filename": "survey_magnifier",
 					"rotated": false,
-					"trimmed": true,
+					"trimmed": false,
 					"sourceSize": {
-						"w": 138,
-						"h": 136
+						"w": 132,
+						"h": 124
 					},
 					"spriteSourceSize": {
-						"x": 1,
-						"y": 1,
-						"w": 136,
-						"h": 134
+						"x": 0,
+						"y": 0,
+						"w": 132,
+						"h": 124
 					},
 					"frame": {
 						"x": 167,
 						"y": 291,
-						"w": 136,
-						"h": 134
+						"w": 132,
+						"h": 124
+					}
+				},
+				{
+					"filename": "work_icon",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 123,
+						"h": 108
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 123,
+						"h": 108
+					},
+					"frame": {
+						"x": 167,
+						"y": 417,
+						"w": 123,
+						"h": 108
+					}
+				},
+				{
+					"filename": "text_minebag",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 82,
+						"h": 45
+					},
+					"spriteSourceSize": {
+						"x": 1,
+						"y": 1,
+						"w": 80,
+						"h": 43
+					},
+					"frame": {
+						"x": 292,
+						"y": 417,
+						"w": 80,
+						"h": 43
 					}
 				},
 				{
@@ -171,31 +213,10 @@
 						"h": 119
 					},
 					"frame": {
-						"x": 305,
-						"y": 333,
+						"x": 374,
+						"y": 314,
 						"w": 127,
 						"h": 119
-					}
-				},
-				{
-					"filename": "time",
-					"rotated": false,
-					"trimmed": false,
-					"sourceSize": {
-						"w": 66,
-						"h": 40
-					},
-					"spriteSourceSize": {
-						"x": 0,
-						"y": 0,
-						"w": 66,
-						"h": 40
-					},
-					"frame": {
-						"x": 167,
-						"y": 427,
-						"w": 66,
-						"h": 40
 					}
 				}
 			]
@@ -204,6 +225,6 @@
 	"meta": {
 		"app": "https://www.codeandweb.com/texturepacker",
 		"version": "3.0",
-		"smartupdate": "$TexturePacker:SmartUpdate:bf323df4ce40fbab666624f5e35668dd:71065c4baf527888b6b9e838a7f41d8e:62d6b26235e61156d1d541f9630a287a$"
+		"smartupdate": "$TexturePacker:SmartUpdate:53e69766ddc241792c21825e8387b0b0:ac01f598173175722a61f8b65c231912:62d6b26235e61156d1d541f9630a287a$"
 	}
 }

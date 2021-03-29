@@ -480,12 +480,16 @@ export class BaseDataConfigManager extends BaseConfigManager {
     public getFurnitureGroup(id: string) {
         const data: FurnitureGroup = this.getConfig(BaseDataType.furnituregroup);
         const group: IFurnitureGroup = data.get(id);
-        const obj: any = {};
-        ObjectAssign.excludeAssign(obj, group);
-        for (let i = 0; i < obj.group.length; i++) {
-            obj.group[i] = this.getItemBaseByID(obj.group[i]);
+        if (group) {
+            const obj: any = {};
+            ObjectAssign.excludeAssign(obj, group);
+            for (let i = 0; i < obj.group.length; i++) {
+                obj.group[i] = this.getItemBaseByID(obj.group[i]);
+            }
+            return obj;
         }
-        return obj;
+        return undefined;
+
     }
 
     public getFurnitureGroupBySN(sn: string) {

@@ -1,7 +1,8 @@
 import { op_client } from "pixelpai_proto";
-import { BasePanel, UiManager } from "gamecoreRender";
+import { BasePanel, ButtonEventDispatcher, UiManager } from "gamecoreRender";
 import { ModuleName } from "structure";
 import { Handler, i18n, UIHelper } from "utils";
+import { Button, ClickEvent } from "apowophaserui";
 export class CutInMenuPanel extends BasePanel {
     private rightPopButton: RightPopContainer;
     private mapPop: Map<any, any> = new Map();
@@ -54,6 +55,8 @@ export class CutInMenuPanel extends BasePanel {
             (<WorkPopContainer>(this.rightPopButton)).setCount(data);
         } else if (type === "minecar") {
 
+        } else if (type === "surver") {
+
         }
     }
 
@@ -96,6 +99,7 @@ class RightPopContainer extends Phaser.GameObjects.Container {
     protected isPlaying: boolean = false;
     protected timeID: any;
     protected tween: Phaser.Tweens.Tween;
+    protected arrow: ButtonEventDispatcher;
     constructor(scene: Phaser.Scene, width: number, key: string, dpr: number) {
         super(scene);
         this.dpr = dpr;
@@ -119,7 +123,14 @@ class RightPopContainer extends Phaser.GameObjects.Container {
         }, false).setOrigin(0.5);
         this.text.setFontStyle("bold");
         this.text.setStroke("#2D1415", 3 * dpr);
-        this.add([this.bgSprite, this.minecarbg, this.imgIcon, this.text]);
+        this.arrow = new ButtonEventDispatcher(this.scene, 0, 0);
+        this.arrow.setSize(25 * dpr, 31 * dpr);
+        const arrowIcon = this.scene.make.image({ key: this.key, frame: "arow" });
+        this.arrow.add(arrowIcon);
+        this.arrow.enable = true;
+        this.arrow.on(ClickEvent.Tap, this.onTakeBack, this);
+        this.arrow.setPosition(-this.minecarbg.width * 0.5 + 10 * dpr, 0);
+        this.add([this.bgSprite, this.minecarbg, this.imgIcon, this.text, this.arrow]);
         this.tween = this.scene.tweens.add({
             targets: this.bgSprite,
             alpha: { value: 0, duration: 500, ease: "Power1", yoyo: true },
@@ -194,21 +205,13 @@ class RightPopContainer extends Phaser.GameObjects.Container {
 class MinePopContainer extends RightPopContainer {
     constructor(scene: Phaser.Scene, width: number, key: string, dpr: number) {
         super(scene, width, key, dpr);
-        const arrow = this.scene.make.image({ key: this.key, frame: "arow" });
-        arrow.texture.setFilter(Phaser.Textures.FilterMode.LINEAR);
-        const arrowcon = scene.make.container(undefined, false);
-        arrowcon.setSize(25 * dpr, 31 * dpr);
-        arrowcon.add(arrow);
-        arrowcon.setPosition(-this.minecarbg.width * 0.5 + 10 * dpr, 0);
-        this.add(arrowcon);
-        arrowcon.on("pointerup", this.onTakeBack, this);
-        arrowcon.setInteractive();
+
     }
 }
 
 class WorkPopContainer extends MinePopContainer {
     protected countTex: Phaser.GameObjects.Text;
-    constructor(scene: Phaser.Scene, width: number, key: string, dpr: number) {
+    constructor(scene: Phaser.Scene, width: number, key: string, frame: string, title: string, dpr: number) {
         super(scene, width, key, dpr);
         this.imgIcon.x = -22 * dpr;
         this.text.x = this.imgIcon.x;
@@ -266,15 +269,10 @@ class WorkPopContainer extends MinePopContainer {
 class EditorPopContainer extends RightPopContainer {
     constructor(scene: Phaser.Scene, width: number, key: string, dpr: number) {
         super(scene, width, key, dpr);
-        this.bgSprite.visible = false;
-        this.text.visible = false;
-        // this.text.x -= 2 * dpr;
-        // this.text.y = 0;
-        // this.text.setText(i18n.t("common.editor"));
-        // this.text.setStyle(UIHelper.brownishStyle(dpr, 19));
-        // this.text.setStroke(undefined, 0);
-        this.minecarbg.x += 10 * dpr;
+        this.text.setText(i18n.t("common.editor"));
         this.setIconFrame("edit_icon");
-        this.imgIcon.y = 0;
+        this.imgIcon.y = -12 * dpr;
+        this.imgIcon.x -= 3 * dpr;
+        this.text.x = this.imgIcon.x;
     }
 }

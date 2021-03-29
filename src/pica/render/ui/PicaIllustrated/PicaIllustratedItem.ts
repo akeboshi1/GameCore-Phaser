@@ -18,7 +18,7 @@ export class IllustratedItem extends ItemButton {
         this.star.y = this.codeTex.y;
         this.star.visible = false;
         this.surveyImg = this.scene.make.image({ key: UIAtlasName.illustrate, frame: "illustrate_survey_nohave" });
-        this.add([this.codeTex, this.star,this.surveyImg]);
+        this.add([this.codeTex, this.star, this.surveyImg]);
         for (const item of this.list) {
             const temp = <Phaser.GameObjects.Container>item;
             temp.y -= 10 * dpr;
@@ -30,7 +30,16 @@ export class IllustratedItem extends ItemButton {
         if (item) {
             this.codeTex.text = item.code;
             const status = item["status"];
-            this.surveyImg.visible = status === 1 ? true : false;
+            if (status === 1) {
+                this.bg.setTexture(UIAtlasName.illustrate, "illustrate_survey_nohave");
+                this.itemIcon.alpha = 0.4;
+                this.star.alpha = 0.4;
+            } else {
+                this.bg.setTexture(UIAtlasName.uicommon, this.bgFrame);
+                this.itemIcon.alpha = 1;
+                this.star.alpha = 1;
+            }
+            this.surveyImg.visible = false;
         }
     }
 }

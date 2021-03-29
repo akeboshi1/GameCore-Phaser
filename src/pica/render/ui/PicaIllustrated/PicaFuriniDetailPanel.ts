@@ -39,7 +39,7 @@ export class PicaFuriniDetailPanel extends Phaser.GameObjects.Container {
     init() {
         this.backgrand = this.scene.make.graphics(undefined, false);
         this.backgrand.fillStyle(0x000000, 0.66);
-        this.backgrand.fillRect(-this.width * 0.75, -this.height * 0.75, this.width * 1.5, this.height * 1.5);
+        this.backgrand.fillRect(-this.width * 0.75, -this.height * 1.5, this.width * 1.5, this.height * 3);
         const bg = new NineSlicePatch(this.scene, 0, 0, this.width, this.height, UIAtlasName.uicommon1, "bg", {
             left: 20 * this.dpr,
             top: 20 * this.dpr,

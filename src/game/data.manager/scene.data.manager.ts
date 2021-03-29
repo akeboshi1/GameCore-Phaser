@@ -142,9 +142,10 @@ export class SceneDataManager extends BasePacketHandler {
     private onUnlockDoneHandler(packge: PBpacket) {
         const content: op_client.OP_VIRTUAL_WORLD_REQ_CLIENT_UNLOCK_DONE = packge.content;
         const ele = (<BaseDataConfigManager>this.game.configManager).getElementData(content.eid);
-        const group = (<any>this.game.configManager).getFurnitureGroupBySN(ele.sn);
+        const config = (<any>this.game.configManager);
+        const group = config.getFurnitureGroupBySN(ele.sn);
         if (group)
-            this.game.emitter.emit(EventType.SCENE_SHOW_UI, ModuleName.PICAREPAIRCHOOSE_NAME, group);
+            this.game.emitter.emit(EventType.SCENE_SHOW_UI, ModuleName.PICAREPAIRCHOOSE_NAME, { id: content.eid, group });
     }
 
     get curRoomID() {
