@@ -86,6 +86,9 @@ export class SceneDataManager extends BasePacketHandler {
 
         this.mEvent.emit(EventType.UPDATE_ROOM_INFO, this.mCurRoom);
         this.mEvent.emit(EventType.UPDATE_PARTY_STATE, this.mCurRoom.openingParty);
+        if (this.mCurRoom.ownerId !== this.game.user.userData.cid && this.mCurRoom.roomType === RoomType.ROOM) {
+            this.mEvent.emit(EventType.SCENE_SHOW_UI, ModuleName.CUTINMENU_NAME, { button: [{ text: "survey" }] });
+        }
         this.showMainUI();
         this.mRoomID = room.roomId;
     }

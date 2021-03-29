@@ -1,4 +1,4 @@
-import { BasicMediator, Game, PlayerProperty } from "gamecore";
+import { BasicMediator, CacheDataManager, DataMgrType, Game, PlayerProperty } from "gamecore";
 import { op_client } from "pixelpai_proto";
 import { EventType, ModuleName } from "structure";
 import { CutInMenu } from "./CutInMenu";
@@ -15,8 +15,9 @@ export class CutInMenuMediator extends BasicMediator {
         this.game.emitter.on(ModuleName.CUTINMENU_NAME + "_hide", this.onHideView, this);
         this.game.emitter.on(ModuleName.CUTINMENU_NAME + "_rightButton", this.onRightButtonHandler, this);
         this.game.emitter.on(ModuleName.CUTINMENU_NAME + "_openmed", this.openPanelMediator, this);
+        this.game.emitter.on(ModuleName.CUTINMENU_NAME + "_openmedsurvey", this.openSurveyMediator, this);
         this.game.emitter.on(ModuleName.CUTINMENU_NAME + "_editor", this.onOpenEditorHandler, this);
-        if (this.buttonType === "work") {
+        if (this.buttonType === "work" || this.buttonType === "survey") {
             this.game.emitter.on(EventType.UPDATE_PLAYER_INFO, this.onUpdatePlayerInfo, this);
         }
     }
@@ -26,8 +27,9 @@ export class CutInMenuMediator extends BasicMediator {
         this.game.emitter.off(ModuleName.CUTINMENU_NAME + "_hide", this.onHideView, this);
         this.game.emitter.off(ModuleName.CUTINMENU_NAME + "_rightButton", this.onRightButtonHandler, this);
         this.game.emitter.off(ModuleName.CUTINMENU_NAME + "_openmed", this.openPanelMediator, this);
+        this.game.emitter.off(ModuleName.CUTINMENU_NAME + "_openmedsurvey", this.openSurveyMediator, this);
         this.game.emitter.off(ModuleName.CUTINMENU_NAME + "_editor", this.onOpenEditorHandler, this);
-        if (this.buttonType === "work") {
+        if (this.buttonType === "work" || this.buttonType === "survey") {
             this.game.emitter.off(EventType.UPDATE_PLAYER_INFO, this.onUpdatePlayerInfo, this);
         }
     }
@@ -41,8 +43,13 @@ export class CutInMenuMediator extends BasicMediator {
         return playerInfo;
     }
     private onUpdatePlayerInfo(content: PlayerProperty) {
-        if (this.mView)
-            this.mView.setPopData(content.workChance.value);
+        if (this.mView) {
+            if (this.buttonType === "work") {
+                this.mView.setPopData(content.workChance.value);
+            } else if (this.buttonType === "survey") {
+                this.mView.setPopData(5);
+            }
+        }
     }
     private onRightButtonHandler(uiid: number, btnid: number) {
         this.mModel.reqRightButton(uiid, btnid);
@@ -53,6 +60,12 @@ export class CutInMenuMediator extends BasicMediator {
         if (data)
             uiManager.showMed(panel, data);
         else uiManager.showMed(panel);
+    }
+
+    private openSurveyMediator() {
+        if (!this.cacheMgr.isSurveyStatus)
+            this.openPanelMediator(ModuleName.PICASURVEY_NAME, undefined);
+        else this.game.uiManager.hideMed(ModuleName.PICASURVEY_NAME);
     }
     private onOpenEditorHandler() {
         this.game.roomManager.currentRoom.requestDecorate();
@@ -65,6 +78,10 @@ export class CutInMenuMediator extends BasicMediator {
         const data: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_SHOW_UI = this.mShowData;
         const button = data.button[0];
         return button.text;
+    }
+
+    private get cacheMgr() {
+        return this.game.getDataMgr<CacheDataManager>(DataMgrType.CacheMgr);
     }
 
 }

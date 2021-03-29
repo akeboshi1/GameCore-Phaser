@@ -5,6 +5,7 @@ export class PlayerProperty {
     public nickname: string;
     public cid: string;
     public picaStar: op_pkt_def.IPKT_Property;
+    public survey: op_pkt_def.IPKT_Property;
     public coin: op_pkt_def.IPKT_Property;
     public diamond: op_pkt_def.IPKT_Property;
     public level: op_pkt_def.IPKT_Property;
@@ -136,6 +137,8 @@ export class PlayerProperty {
                 this.experience = proper;
             } else if (proper.id === "IV0000019") {
                 this.picaStar = proper;
+            } else if (proper.id === "IV0000022") {
+                this.survey = proper;
             }
         }
     }

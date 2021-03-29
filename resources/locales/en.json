@@ -64,7 +64,8 @@
     "bag": "BAG",
     "recast": "RECAST",
     "make": "Make",
-    "editor": "Editor"
+    "editor": "Editor",
+    "survey":"Survey"
   },
   "quantityunit": {
     "k": "k",
@@ -441,6 +442,7 @@
     "furin": "Click to open the furniture map panel",
     "avatar": "Click to open the dress-up map panel",
     "make": "Click to open the manufacturing panel",
-    "furindetail":"Furniture details"
+    "furindetail":"Furniture details",
+    "surveyfurni": " SURVEY "
   }
 }

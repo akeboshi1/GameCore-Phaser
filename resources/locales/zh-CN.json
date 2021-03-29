@@ -65,7 +65,8 @@
     "bag": "背包",
     "recast": "重铸",
     "make": "制作",
-    "editor": "编辑"
+    "editor": "编辑",
+    "survey": "调查"
   },
   "quantityunit": {
     "k": "千",
@@ -442,7 +443,7 @@
     "play": "开始游戏",
     "notice": "公 告"
   },
-  "dropElement":{
+  "dropElement": {
     "tips": "放下"
   },
   "illustrate": {
@@ -451,6 +452,7 @@
     "furin": "点击打开家具图鉴面板",
     "avatar": "点击打开装扮图鉴面板",
     "make": "点击打开制造面板",
-    "furindetail":"家具详情"
+    "furindetail": "家具详情",
+    "surveyfurni": "调查家具"
   }
 }

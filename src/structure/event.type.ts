@@ -22,6 +22,9 @@ export class EventType {
     public static SCENE_SHOW_MAIN_UI = "SCENE_SHOW_MAIN_UI"; // 显示场景主界面
     public static CHAT_PANEL_EXTPAND = "CHAT_PANEL_EXTPAND";// 聊天面板展开
     public static SCENE_CHANGE = "SCENE_CHANGE";// 切换场景
+    public static QUERY_SURVEY_FURNITURE = "QUERY_SURVEY_FURNITURE";// 请求调查家具
+    public static ENTER_SURVEY_FURNITURE_STATUSE = "ENTER_SURVEY_FURNITURE_STATUSE";// 进入家具调查状态
+    public static EXECUTE_SURVEY_FURNITURE = "EXECUTE_SURVEY_FURNITURE"; // TEMP: 执行调查家具
     /**
      * 请求好友、关注、粉丝数据
      */

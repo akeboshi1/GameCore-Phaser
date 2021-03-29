@@ -24,6 +24,9 @@ export class ElementActionManager {
     }
 
     public checkAction(data: ISprite, actionName?: string) {
+        return this.checkAttrsAction(data, actionName);
+    }
+    public checkAttrsAction(data: ISprite, actionName?: string) {
         if (actionName) {
             if (data && data.attrs) {
                 const attrs = data.attrs;
@@ -34,7 +37,6 @@ export class ElementActionManager {
                 }
             }
             return false;
-        } else {
         }
     }
     public getActionData(data: ISprite, actionName: string) {
