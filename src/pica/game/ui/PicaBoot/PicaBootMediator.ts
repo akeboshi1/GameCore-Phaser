@@ -13,7 +13,6 @@ export class PicaBootMediator extends BasicMediator {
 
     enterGame() {
         this.game.startConnect();
-        this.hide();
     }
 
     show(param?: any): void {
@@ -117,6 +116,10 @@ export class PicaBootMediator extends BasicMediator {
 
     public showNotice() {
         this.mView.showNotice();
+    }
+
+    protected _show() {
+        if (this.mView) this.mView.show();
     }
 
     private loginSuc(data) {

@@ -41,7 +41,7 @@ export class EffectManager extends PacketHandler {
 
     public getByID(id: number) {
         const effects = Array.from(this.mEffects.values());
-        return effects.filter((effect) => id === effect.id);
+        return effects.filter((effect) => id === effect.bindId);
     }
 
     public destroy() {
@@ -53,7 +53,7 @@ export class EffectManager extends PacketHandler {
     }
 
     protected updateDisplay(effect: Effect) {
-        const id = effect.id;
+        const id = effect.bindId;
         const display = this.room.game.elementStorage.getDisplayModel(id);
         if (display) {
             effect.displayInfo = display;
@@ -77,7 +77,7 @@ export class EffectManager extends PacketHandler {
         const sprites = content.sprites;
         for (const sprite of sprites) {
             this.mEffects.forEach((effect) => {
-                if (effect.id === sprite.id) {
+                if (effect.bindId === sprite.id) {
                     effect.syncSprite(sprite);
                 }
             });

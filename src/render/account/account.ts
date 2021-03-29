@@ -1,4 +1,5 @@
 import { IPos, Logger } from "utils";
+import { Render } from "../render";
 
 interface IAccountData {
     accessToken: string;
@@ -6,6 +7,7 @@ interface IAccountData {
     expire: number;
     fingerprint: string;
     id: string;
+    gateway?: string;
 }
 export class Account {
     public gameId: string;
@@ -39,7 +41,8 @@ export class Account {
             fingerprint: val.fingerprint,
             refreshToken: val.refreshToken,
             expire: val.expire,
-            accessToken: val.token || val.accessToken
+            accessToken: val.token || val.accessToken,
+            gateway: val.gateway
         };
         this.saveLocalStorage();
     }
@@ -63,9 +66,9 @@ export class Account {
         if (!this.accountData) {
             return;
         }
-        const { id, fingerprint, refreshToken, expire, accessToken } = this.accountData;
+        const { id, fingerprint, refreshToken, expire, accessToken, gateway } = this.accountData;
         try {
-            localStorage.setItem("token", JSON.stringify({ id, fingerprint, refreshToken, expire, accessToken }));
+            localStorage.setItem("token", JSON.stringify({ id, fingerprint, refreshToken, expire, accessToken, gateway }));
         } catch {
             Logger.getInstance().warn("write localStorage fail");
         }
@@ -97,5 +100,4 @@ export class Account {
     get sceneId(): number {
         return this.sceneID;
     }
-
 }

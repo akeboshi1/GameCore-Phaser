@@ -12,7 +12,7 @@ import { Clock, ClockReadyListener } from "./loop/clock/clock";
 import { HttpClock } from "./loop/httpClock/http.clock";
 import { HttpService } from "./loop/httpClock/http.service";
 import { LoadingManager } from "./loading/loading.manager";
-import { GameState, ILauncherConfig, LoadState, MAIN_WORKER, RENDER_PEER, PHYSICAL_WORKER } from "structure";
+import { GameState, ILauncherConfig, LoadState, MAIN_WORKER, RENDER_PEER, PHYSICAL_WORKER, ModuleName } from "structure";
 import { ServerAddress } from "../../lib/net/address";
 import { IRoomService } from "./room/room/room";
 import { ElementStorage } from "../base/model/elementstorage/element.storage";
@@ -94,6 +94,10 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
         this.login();
     }
 
+    public setConfig(config: ILauncherConfig) {
+        this.mConfig = config;
+    }
+
     public startConnect() {
         const gateway: ServerAddress = this.mConfig.server_addr;
         if (gateway) {
@@ -109,6 +113,7 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
     public onConnected() {
         if (!this.mClock) this.mClock = new Clock(this.connect, this.mainPeer, this);
         if (!this.mHttpClock) this.mHttpClock = new HttpClock(this);
+        this.hideMediator(ModuleName.PICA_BOOT_NAME);
         Logger.getInstance().info(`enterVirtualWorld`);
         this.connect.connect = true;
         this.loginEnterWorld();
@@ -123,7 +128,15 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
         if (this.mConfig.hasConnectFail) {
             return this.mainPeer.render.connectFail();
         } else {
-            this.renderPeer.showAlertReconnect("网络不稳定,请重新进入游戏");
+            this.renderPeer.showAlert("网络连接失败，请稍后再试").then(() => {
+                const mediator = this.uiManager.getMed(ModuleName.PICA_BOOT_NAME);
+                if (mediator && mediator.isShow()) {
+                    mediator.show();
+                } else {
+                    this.login();
+                }
+            });
+            // this.renderPeer.showAlertReconnect("网络连接失败，请稍后再试");
             // if (this.mReconnect > 2) {
             //     this.renderPeer.showAlertReconnect("网络不稳定,请刷新网页");
             //     // this.onRefreshConnect();
@@ -523,6 +536,7 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
         content.spawnPointId = spawnPointId;
         this.connect.send(pkt);
         this.peer.state = GameState.EnterWorld;
+        if (this.mHttpClock) this.mHttpClock.gameId = game_id;
     }
 
     public leaveRoom(room: IRoomService) {
