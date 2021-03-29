@@ -12,13 +12,9 @@ export class GuideConfig extends BaseConfigData {
         return undefined;
     }
 
-    public findGuide(uiName: string): IGuide {
-        const result = this.Sheet1.find((c) => c.uiName === uiName);
+    public findGuide(id: string): IGuide {
+        const result = this.Sheet1.find((c) => c.id === id);
         return result;
     }
 
-    public findGuideByUiGuide(uiGuide: string): IGuide {
-        const result = this.Sheet1.find((c) => c.uiGuide === uiGuide);
-        return result;
-    }
 }
