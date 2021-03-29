@@ -460,14 +460,9 @@ export class BaseDataConfigManager extends BaseConfigManager {
         return data.get(id);
     }
 
-    public findGuide(uiName: string) {
+    public findGuide(id: string) {
         const data: GuideConfig = this.getConfig(BaseDataType.guide);
-        return data.findGuide(uiName);
-    }
-
-    public findGuideByUiGuide(uiGuide: string) {
-        const data: GuideConfig = this.getConfig(BaseDataType.guide);
-        return data.findGuideByUiGuide(uiGuide);
+        return data.findGuide(id);
     }
 
     public updateGuideState(id: string, val: boolean = false) {
@@ -480,18 +475,16 @@ export class BaseDataConfigManager extends BaseConfigManager {
     public getFurnitureGroup(id: string) {
         const data: FurnitureGroup = this.getConfig(BaseDataType.furnituregroup);
         const group: IFurnitureGroup = data.get(id);
-        const obj: any = {};
-        ObjectAssign.excludeAssign(obj, group);
-        // if (obj && !obj["find"]) {
-        //     for (let i = 0; i < obj.group.length; i++) {
-        //         obj.group[i] = this.getItemBaseByID(obj.group[i]);
-        //     }
-        //     obj["find"] = true;
-        // }
-        for (let i = 0; i < obj.group.length; i++) {
-            obj.group[i] = this.getItemBaseByID(obj.group[i]);
+        if (group) {
+            const obj: any = {};
+            ObjectAssign.excludeAssign(obj, group);
+            for (let i = 0; i < obj.group.length; i++) {
+                obj.group[i] = this.getItemBaseByID(obj.group[i]);
+            }
+            return obj;
         }
-        return obj;
+        return undefined;
+
     }
 
     public getFurnitureGroupBySN(sn: string) {

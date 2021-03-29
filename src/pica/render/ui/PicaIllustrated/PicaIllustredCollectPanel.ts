@@ -36,14 +36,21 @@ export class PicaIllustredCollectPanel extends Phaser.GameObjects.Container {
 
     setCombinationData(content: IGalleryCombination[]) {
         this.mGameGrid.setItems(content);
+        const arr = this.getCellsHeights(content);
+        for (let i = 0; i < arr.length; i++) {
+            const height = arr[i];
+            const cell = this.mGameGrid.getCell(i);
+            cell.setHeight(arr[cell.index]);
+        }
         this.mGameGrid.layout();
         this.mGameGrid.setT(0);
+        return arr;
     }
 
     init() {
         const tableHeight = this.height;
         const cellWidth = 326 * this.dpr;
-        const cellHeight = 290 * this.dpr;
+        const cellHeight = 100 * this.dpr;
         const tableConfig = {
             x: 15 * this.dpr,
             y: 0,
@@ -67,7 +74,7 @@ export class PicaIllustredCollectPanel extends Phaser.GameObjects.Container {
                     cellContainer.setHandler(this.send);
                 }
                 cellContainer.setCombinationData(item);
-                // cell.setHeight(cellContainer.height);
+                cell.setHeight(cellContainer.height);
                 return cellContainer;
             },
         };
@@ -83,6 +90,18 @@ export class PicaIllustredCollectPanel extends Phaser.GameObjects.Container {
     private onSelectItemHandler(cell: IllustratedCollectItem) {
         // if (this.curSelectItem) this.curSelectItem.select = true;
         cell.checkExtendRect();
+    }
+
+    private getCellsHeights(content: IGalleryCombination[]) {
+        const arr = [];
+        for (const temp of content) {
+            const requirement = temp.requirement;
+            let height = 78 * this.dpr;
+            const row = Math.ceil(requirement.length / 4);
+            height += row * 92 * this.dpr;
+            arr.push(height);
+        }
+        return arr;
     }
 }
 
@@ -112,7 +131,7 @@ class IllustratedCollectItem extends Phaser.GameObjects.Container {
         this.topCon = this.scene.make.container(undefined, false);
         this.topCon.setSize(this.width, 58 * this.dpr);
         this.titleTex = this.scene.make.text({ style: UIHelper.whiteStyle(dpr) }).setOrigin(0, 0.5);
-        this.titleTex.x = -this.topCon.width * 0.5 + 15 * dpr;
+        this.titleTex.x = -this.topCon.width * 0.5 + 10 * dpr;
         this.titleTex.y = -this.topCon.height * 0.5 + 20 * dpr;
         this.titleTex.setFontStyle("bold");
         this.desTex = this.scene.make.text({ style: UIHelper.colorStyle("#006ED4", 10 * dpr) }).setOrigin(0, 0.5);
@@ -188,21 +207,22 @@ class IllustratedCollectItem extends Phaser.GameObjects.Container {
             for (const obj of list) {
                 if (Tool.checkPointerContains(obj, pointer)) {
                     (<IllustratedItem>obj).showTips();
+                    if (this.send) this.send.runWith(["furidetail", (<IllustratedItem>obj).itemData]);
                 }
             }
         }
     }
     private layout() {
         const offsetY = 20 * this.dpr;
-        const height = this.height;// this.topCon.height + this.gridLayout.height;
+        const height = this.topCon.height + this.gridLayout.height + offsetY;
 
         this.setSize(this.width, height);
         this.background.clear();
         this.background.fillStyle(0x5EC6FF, 1);
-        const backheight = height - 10 * this.dpr;
+        const backheight = height - offsetY + 10 * this.dpr;
         this.background.fillRect(-this.width * 0.5, -height * 0.5, this.width, backheight);
         this.topCon.y = -this.height * 0.5 + this.topCon.height * 0.5;
-        this.gridLayout.y = this.topCon.y + this.topCon.height * 0.5 + this.gridLayout.height * 0.5 + offsetY;
+        this.gridLayout.y = this.topCon.y + this.topCon.height * 0.5 + this.gridLayout.height * 0.5 + offsetY - 5 * this.dpr;
     }
     private onRewardsHandler() {
         if (this.send && this.iscallRewards) this.send.runWith(["combinations", this.combiData.id]);

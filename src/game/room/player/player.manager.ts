@@ -78,9 +78,10 @@ export class PlayerManager extends PacketHandler implements IElementManager {
             this.mActor.destroy();
             this.mActor = null;
         }
-        if (!this.mPlayerMap) return;
-        this.mPlayerMap.forEach((player) => this.remove(player.id));
-        this.mPlayerMap.clear();
+        if (this.mPlayerMap) {
+            this.mPlayerMap.forEach((player) => this.remove(player.id));
+            this.mPlayerMap.clear();
+        }
     }
 
     update(time: number, delta: number) {

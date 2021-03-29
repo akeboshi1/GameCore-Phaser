@@ -7,7 +7,8 @@ import { PicaIllustratedListPanel } from "./PicaIllustratedListPanel";
 import { op_client, op_pkt_def } from "pixelpai_proto";
 import { PicaIllustratedDetailPanel } from "./PicaIllustratedDetailPanel";
 import { ClickEvent } from "apowophaserui";
-import { IGalleryCombination } from "picaStructure";
+import { IExtendCountablePackageItem, IGalleryCombination } from "picaStructure";
+import { PicaFuriniDetailPanel } from "./PicaFuriniDetailPanel";
 export class PicaIllustratedPanel extends PicaBasePanel {
     private mBackground: CommonBackground;
     private content: Phaser.GameObjects.Container;
@@ -15,6 +16,7 @@ export class PicaIllustratedPanel extends PicaBasePanel {
     private detailPanel: PicaIllustratedDetailPanel;
     private backButton: ButtonEventDispatcher;
     private titleTex: Phaser.GameObjects.Text;
+    private furiDetail: PicaFuriniDetailPanel;
     constructor(uiManager: UiManager) {
         super(uiManager);
         this.key = ModuleName.PICAILLUSTRATED_NAME;
@@ -113,6 +115,24 @@ export class PicaIllustratedPanel extends PicaBasePanel {
         this.detailPanel.visible = false;
     }
 
+    private openFuriDetail(prop: IExtendCountablePackageItem) {
+        this.showFuriDetailPanel();
+        this.furiDetail.setProp(prop);
+    }
+    private showFuriDetailPanel() {
+        if (!this.furiDetail) {
+            this.furiDetail = new PicaFuriniDetailPanel(this.scene, this.render, 334 * this.dpr, 353 * this.dpr, this.dpr, this.scale);
+            this.furiDetail.setHandler(new Handler(this, this.onFuriDetailHandler));
+        }
+        this.content.add(this.furiDetail);
+        this.furiDetail.visible = true;
+    }
+
+    private hideFuriDetailPanel() {
+        this.content.remove(this.furiDetail);
+        this.furiDetail.visible = false;
+    }
+
     private onListHandler(tag: string, data?: any) {
         if (tag === "make") {
             this.render.renderEmitter(this.key + "_openmake", data);
@@ -130,7 +150,13 @@ export class PicaIllustratedPanel extends PicaBasePanel {
             this.render.renderEmitter(this.key + "_queryrewards", data);
         } else if (tag === "combinations") {
             this.render.renderEmitter(this.key + "_querycombinations", data);
+        } else if (tag === "furidetail") {
+            this.openFuriDetail(data);
         }
+    }
+
+    private onFuriDetailHandler() {
+        this.hideFuriDetailPanel();
     }
     private onCloseHandler() {
         if (this.detailPanel && this.detailPanel.visible) {

@@ -440,6 +440,7 @@
     "collect": "Collect",
     "furin": "Click to open the furniture map panel",
     "avatar": "Click to open the dress-up map panel",
-    "make": "Click to open the manufacturing panel"
+    "make": "Click to open the manufacturing panel",
+    "furindetail":"Furniture details"
   }
 }
