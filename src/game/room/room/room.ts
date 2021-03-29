@@ -10,7 +10,7 @@ import { CamerasManager, ICameraService } from "../camera/cameras.manager";
 import { ViewblockManager } from "../viewblock/viewblock.manager";
 import { PlayerManager } from "../player/player.manager";
 import { ElementManager } from "../element/element.manager";
-import { IElement } from "../element/element";
+import {IElement, InputEnable} from "../element/element";
 import { IViewBlockManager } from "../viewblock/iviewblock.manager";
 import { TerrainManager } from "../terrain/terrain.manager";
 import { SkyBoxManager } from "../sky.box/sky.box.manager";
@@ -23,6 +23,7 @@ import IActor = op_client.IActor;
 import NodeType = op_def.NodeType;
 import { BaseDataConfigManager } from "picaWorker";
 import { StateManager } from "../state/state.manager";
+import {BlockObject} from "../block/block.object";
 
 export interface SpriteAddCompletedListener {
     onFullPacketReceived(sprite_t: op_def.NodeType): void;
@@ -695,11 +696,11 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
         this.playerManager.hideAll();
 
         // set all element interactive
-        // const elements = this.elementManager.getElements();
-        // for (const element of elements) {
-        //     if (!(element instanceof BlockObject)) continue;
-        //     element.setInputEnable(InputEnable.Enable);
-        // }
+        const elements = this.elementManager.getElements();
+        for (const element of elements) {
+            if (!(element instanceof BlockObject)) continue;
+            element.setInputEnable(InputEnable.Enable);
+        }
 
         // new decorate manager
         this.mDecorateManager = new DecorateManager(this, this.mDecorateEntryData);
@@ -735,11 +736,11 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
         this.playerManager.showAll();
 
         // set all element interactive
-        // const elements = this.elementManager.getElements();
-        // for (const element of elements) {
-        //     if (!(element instanceof BlockObject)) continue;
-        //     element.setInputEnable(InputEnable.Interactive);
-        // }
+        const elements = this.elementManager.getElements();
+        for (const element of elements) {
+            if (!(element instanceof BlockObject)) continue;
+            element.setInputEnable(InputEnable.Interactive);
+        }
 
         // switch ui
         this.game.uiManager.hideMed(ModuleName.PICADECORATE_NAME);
