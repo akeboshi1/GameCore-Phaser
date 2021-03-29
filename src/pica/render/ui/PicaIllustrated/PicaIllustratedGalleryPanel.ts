@@ -79,6 +79,7 @@ export class PicaIllustratedGalleryPanel extends Phaser.GameObjects.Container {
 
     private onSelectItemHandler(cell: IllustratedItem) {
         // if (this.curSelectItem) this.curSelectItem.select = true;
-        cell.showTips();
+        //  cell.showTips();
+        if (this.send) this.send.runWith(["furidetail", cell.itemData]);
     }
 }

@@ -106,6 +106,7 @@ export class PicaIllustratedDetailPanel extends Phaser.GameObjects.Container {
         const tableHeight = this.height * 0.5 - this.topCon.y - this.topCon.height * 0.5;
         this.galleryPanel = new PicaIllustratedGalleryPanel(this.scene, this.width - 20 * this.dpr, tableHeight - 23 * this.dpr, this.dpr, this.zoom);
         this.collectPanel = new PicaIllustredCollectPanel(this.scene, this.width, tableHeight - 13 * this.dpr, this.dpr, this.zoom);
+        this.galleryPanel.setHandler(new Handler(this, this.onCollectHandler));
         this.collectPanel.setHandler(new Handler(this, this.onCollectHandler));
         this.collectPanel.visible = false;
         this.galleryPanel.visible = false;
@@ -197,6 +198,10 @@ export class PicaIllustratedDetailPanel extends Phaser.GameObjects.Container {
     }
 
     private onCollectHandler(tag: string, data: any) {
+        if (this.send) this.send.runWith([tag, data]);
+    }
+
+    private onGalleryHandler(tag: string, data: any) {
         if (this.send) this.send.runWith([tag, data]);
     }
 }

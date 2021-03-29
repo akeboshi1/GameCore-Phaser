@@ -15,7 +15,8 @@ export class ProgressMaskBar extends BaseUI {
         this.maskGraphics.fillStyle(0, 1);
         this.maskGraphics.fillRect(0, 0, this.width, this.height);
         this.mBar.setMask(this.maskGraphics.createGeometryMask());
-        this.add([this.mBackground, this.mBar]);
+        if (this.mBackground) this.add(this.mBackground);
+        if (this.mBar) this.add(this.mBar);
         if (this.mText) this.add(this.mText);
         this.disInteractive();
     }
@@ -62,14 +63,16 @@ export class ProgressMaskBar extends BaseUI {
     }
 
     protected createBackgroundBar(key: string, background: string, bar: string, style?: any, barconfig?: any, bgconfig?: any) {
-        if (bgconfig) {
-            const bgW = bgconfig.width || this.width;
-            const bgH = bgconfig.height || this.height;
-            this.mBackground = new NineSlicePatch(this.scene, 0, -2 * this.dpr, bgW, bgH, key, background, bgconfig);
-            this.setSize(bgW, bgH);
-        } else {
-            this.mBackground = this.scene.make.image({ key, frame: background });
-            this.setSize(this.mBackground.width, this.mBackground.height);
+        if (background) {
+            if (bgconfig) {
+                const bgW = bgconfig.width || this.width;
+                const bgH = bgconfig.height || this.height;
+                this.mBackground = new NineSlicePatch(this.scene, 0, -2 * this.dpr, bgW, bgH, key, background, bgconfig);
+                this.setSize(bgW, bgH);
+            } else {
+                this.mBackground = this.scene.make.image({ key, frame: background });
+                this.setSize(this.mBackground.width, this.mBackground.height);
+            }
         }
         if (barconfig) {
             const barW = barconfig.width || this.width;
