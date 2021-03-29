@@ -7,6 +7,7 @@ import { PicaBasePanel } from "../pica.base.panel";
 import { PicaTaskMainPanel } from "./PicaTaskMainPanel";
 import { ClickEvent } from "apowophaserui";
 export class PicaTaskPanel extends PicaBasePanel {
+    public static PICATASK_CLOSE: string = "PICATASK_CLOSE";
     public static PICATASK_DATA: string = "PICATASK_DATA";
     public mainPanel: PicaTaskMainPanel;
     private blackBg: Phaser.GameObjects.Graphics;
@@ -24,7 +25,7 @@ export class PicaTaskPanel extends PicaBasePanel {
         this.atlasNames = [UIAtlasName.uicommon];
     }
     public hide() {
-        this.render.emitter.emit("close_panel");
+        this.render.emitter.emit(PicaTaskPanel.PICATASK_CLOSE);
         super.hide();
     }
     resize(width?: number, height?: number) {

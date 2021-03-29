@@ -7,6 +7,7 @@ import { PicaIllustratedListPanel } from "./PicaIllustratedListPanel";
 import { op_client, op_pkt_def } from "pixelpai_proto";
 import { PicaIllustratedDetailPanel } from "./PicaIllustratedDetailPanel";
 import { ClickEvent } from "apowophaserui";
+import { IGalleryCombination } from "picaStructure";
 export class PicaIllustratedPanel extends PicaBasePanel {
     private mBackground: CommonBackground;
     private content: Phaser.GameObjects.Container;
@@ -65,14 +66,13 @@ export class PicaIllustratedPanel extends PicaBasePanel {
         this.openListPanel();
     }
 
-    setGallaryData(content: op_client.OP_CLIENT_REQ_VIRTUAL_WORLD_PKT_UPDATE_GALLERY) {
-        this.tempDatas = content;
+    setGallaryData(content: op_client.OP_CLIENT_REQ_VIRTUAL_WORLD_PKT_UPDATE_GALLERY, combinations: IGalleryCombination[]) {
+        this.tempDatas = { gallery: content, combinations };
         if (!this.mInitialized) return;
         if (this.detailPanel) {
-            this.detailPanel.setGallaryData(content);
+            this.detailPanel.setGallaryData(content, combinations);
         }
     }
-
     private openListPanel() {
         this.showListPanel();
         this.listPanel.setListData();
@@ -94,7 +94,7 @@ export class PicaIllustratedPanel extends PicaBasePanel {
     private openDetailPanel() {
         this.showDetailPanel();
         if (this.tempDatas) {
-            this.detailPanel.setGallaryData(this.tempDatas);
+            this.detailPanel.setGallaryData(this.tempDatas.gallery, this.tempDatas.combinations);
         }
     }
 
@@ -128,6 +128,8 @@ export class PicaIllustratedPanel extends PicaBasePanel {
             this.showListPanel();
         } else if (tag === "rewards") {
             this.render.renderEmitter(this.key + "_queryrewards", data);
+        } else if (tag === "combinations") {
+            this.render.renderEmitter(this.key + "_querycombinations", data);
         }
     }
     private onCloseHandler() {

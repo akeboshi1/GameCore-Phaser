@@ -95,7 +95,7 @@ export class BaseFramesDisplay extends BaseDisplay {
 
         let display = null;
         for (let i = 0; i < layer.length; i++) {
-            const {frameName, offsetLoc} = layer[i];
+            const { frameName, offsetLoc } = layer[i];
             display = this.mDisplays.get(layer[i].id || i);
             if (!display) {
                 Logger.getInstance().error(`display ${this.mID} play fail, display does not exist!`);
@@ -105,7 +105,7 @@ export class BaseFramesDisplay extends BaseDisplay {
                 const key = `${data.gene}_${animation.name}_${i}`;
                 this.makeAnimation(data.gene, key, layer[i].frameName, layer[i].frameVisible,
                     this.mCurAnimation.frameRate, this.mCurAnimation.loop, this.mCurAnimation.frameDuration);
-                const anis = (<Phaser.GameObjects.Sprite> display).anims;
+                const anis = (<Phaser.GameObjects.Sprite>display).anims;
                 anis.play(key);
                 if (typeof times === "number") anis.setRepeat(times);
             }
@@ -118,7 +118,7 @@ export class BaseFramesDisplay extends BaseDisplay {
         }
 
         if (this.mMountContainer && this.mMountContainer.parentContainer && this.mCurAnimation.mountLayer) {
-            const stageContainer = <Phaser.GameObjects.Container> this.mSprites.get(DisplayField.STAGE);
+            const stageContainer = <Phaser.GameObjects.Container>this.mSprites.get(DisplayField.STAGE);
             stageContainer.moveTo(this.mMountContainer, this.mCurAnimation.mountLayer.index);
         }
         this.mPreAnimation = animation;
@@ -232,6 +232,10 @@ export class BaseFramesDisplay extends BaseDisplay {
             return;
         }
         const { index, mountPoint } = this.mCurAnimation.mountLayer;
+        if (!mountPoint) {
+            Logger.getInstance().error("mount mountPoint does not exist,id:", this.id);
+            return;
+        }
         if (targetIndex === undefined) targetIndex = 0;
         if (targetIndex >= mountPoint.length) {
             Logger.getInstance().error("mount index does not exist");
@@ -304,7 +308,7 @@ export class BaseFramesDisplay extends BaseDisplay {
         // const ani = data.getAnimations(animationName);
         this.clearDisplay();
 
-        let container: Phaser.GameObjects.Container = <Phaser.GameObjects.Container> this.mSprites.get(DisplayField.STAGE);
+        let container: Phaser.GameObjects.Container = <Phaser.GameObjects.Container>this.mSprites.get(DisplayField.STAGE);
         if (!container) {
             container = this.scene.make.container(undefined, false);
             container.setData("id", this.mID);
@@ -329,10 +333,10 @@ export class BaseFramesDisplay extends BaseDisplay {
         if (frameName.length > 1) {
             display = this.scene.make.sprite(undefined, false);
             if (!this.mMainSprite) {
-                this.mMainSprite = <Phaser.GameObjects.Sprite> display;
+                this.mMainSprite = <Phaser.GameObjects.Sprite>display;
             }
         } else {
-            display = this.scene.make.image({key, frame: frameName[0]});
+            display = this.scene.make.image({ key, frame: frameName[0] });
         }
         display.setData("id", this.mID);
         return display;

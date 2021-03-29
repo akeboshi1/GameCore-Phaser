@@ -480,14 +480,18 @@ export class BaseDataConfigManager extends BaseConfigManager {
     public getFurnitureGroup(id: string) {
         const data: FurnitureGroup = this.getConfig(BaseDataType.furnituregroup);
         const group: IFurnitureGroup = data.get(id);
-        if (group && !group["find"]) {
-            for (let i = 0; i < group.group.length; i++) {
-                const item = this.getItemBaseByID(group.group[i]);
-                group.group[i] = item;
-            }
-            group["find"] = true;
+        const obj: any = {};
+        ObjectAssign.excludeAssign(obj, group);
+        // if (obj && !obj["find"]) {
+        //     for (let i = 0; i < obj.group.length; i++) {
+        //         obj.group[i] = this.getItemBaseByID(obj.group[i]);
+        //     }
+        //     obj["find"] = true;
+        // }
+        for (let i = 0; i < obj.group.length; i++) {
+            obj.group[i] = this.getItemBaseByID(obj.group[i]);
         }
-        return group;
+        return obj;
     }
 
     public getFurnitureGroupBySN(sn: string) {
@@ -546,6 +550,15 @@ export class BaseDataConfigManager extends BaseConfigManager {
                 temp["find"] = true;
             }
         }
+        return temp;
+    }
+
+    public getGalleryMap(type: GalleryType) {
+        const data: GalleryConfig = this.getConfig(BaseDataType.gallery);
+        const temp = data.getMap(type);
+        temp.forEach((value, key) => {
+            this.getGallery(key, type);
+        });
         return temp;
     }
 

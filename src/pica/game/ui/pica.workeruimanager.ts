@@ -55,7 +55,9 @@ export class PicaWorkerUiManager extends UIManager {
         type = this.getPanelNameByAlias(type);
         if (!this.checkActiveUIState(type)) return;
         Logger.getInstance().log("type ====>", type);
-        switch (type) {
+        const nameList = type.split("_");
+        const name = nameList[0];
+        switch (name) {
             case ModuleName.PICAFURNITURE_NAME:
             case ModuleName.PICABAGGUIDE_NAME:
             case ModuleName.PICAEXPLOREGUIDE_NAME:
@@ -63,28 +65,29 @@ export class PicaWorkerUiManager extends UIManager {
             case ModuleName.PICAHOTELGUIDE_NAME:
             case ModuleName.PICAPLANEGUIDE_NAME:
             case ModuleName.PICAROOMGUIDE_NAME:
-                const guideConfig = (<BaseDataConfigManager>this.game.configManager).findGuideByUiGuide(type);
+                // const id = nameList[1];
+                const guideConfig = (<BaseDataConfigManager>this.game.configManager).findGuideByUiGuide(name);
                 if (guideConfig && !guideConfig.state) {
                     param.guideID = guideConfig.id;
-                    this.game.peer.render.showPanel(type, param);
+                    this.game.peer.render.showPanel(name, param);
                 }
                 break;
             default:
-                const className: string = type + "Mediator";
-                let mediator: BasicMediator = this.mMedMap.get(type);
+                const className: string = name + "Mediator";
+                let mediator: BasicMediator = this.mMedMap.get(name);
                 if (!mediator) {
                     // const path: string = `./${type}/${type}Mediator`;
-                    let ns: any = require(`./${type}/${className}`);
+                    let ns: any = require(`./${name}/${className}`);
                     if (!ns) {
-                        ns = this.getMediatorClass(type);
+                        ns = this.getMediatorClass(name);
                     }
                     mediator = new ns[className](this.game);
                     if (!mediator) {
-                        super.showMed(type, param);
+                        super.showMed(name, param);
                         // Logger.getInstance().error(`error ${type} no panel can show!!!`);
                         return;
                     }
-                    this.mMedMap.set(type, mediator);
+                    this.mMedMap.set(name, mediator);
                     // mediator.setName(type);
                 }
                 // if (mediator.showing) return;

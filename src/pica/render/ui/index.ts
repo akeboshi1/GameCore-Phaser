@@ -121,6 +121,7 @@ export * from "./FriendInvite/FriendInvitePanel";
 export * from "./BagGuide/BagGuidePanel";
 export * from "./ExploreGuide/ExploreGuidePanel";
 export * from "./HomeGuide/HomeGuidePanel";
+export * from "./HotelGuide/BaseHotelGuidePanel";
 export * from "./HotelGuide/HotelGuidePanel";
 export * from "./PlaneGuide/PlaneGuidePanel";
 export * from "./PicaPartyNavigation/PicaMyNavigationPanel";

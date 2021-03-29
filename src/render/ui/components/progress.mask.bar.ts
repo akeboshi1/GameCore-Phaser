@@ -80,7 +80,7 @@ export class ProgressMaskBar extends BaseUI {
         if (style) {
             this.mText = this.scene.make.text({
                 style
-            }, false);
+            }, false).setOrigin(0.5);
         }
     }
 }
