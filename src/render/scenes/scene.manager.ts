@@ -130,7 +130,7 @@ export class SceneManager extends BaseSceneManager {
             if (!isActive) {
                 scene.wake(data);
             } else {
-                if (data.text) scene.updateProgress(data.text);
+                if (data.text && data.text.length > 0) scene.updateProgress(data.text);
                 if (data.loadProgress) scene.loadProgress(data.loadProgress);
             }
             if (data.callBack) data.callBack();
