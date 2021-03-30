@@ -1,4 +1,4 @@
-import { op_client, op_def } from "pixelpai_proto";
+import { op_client, op_def, op_pkt_def } from "pixelpai_proto";
 import { PicaNewRole } from "./PicaNewRole";
 import { BasicMediator, Game, UIType } from "gamecore";
 import { EventType, ModuleName } from "structure";
@@ -99,9 +99,25 @@ export class PicaNewRoleMediator extends BasicMediator {
     private onPeopleActionHandler(action: ISocial) {
         Logger.getInstance().log(action);
         this.mModel.queryAction(op_def.FrontEndUniqueUIEnum.PicaNewRole, this.uid, action.id);
-        const tempdata = { animation: action.tag.type, times: action.tag.repeat, id: action.tag.bulletId };
-        this.game.user.tryActiveAction(this.mShowData.id, tempdata, true);
-        this.onHideView();
+        const tempdata = { animation: action.tag.type, times: action.tag.repeat, action: action.tag.action, id: action.tag.bulletId };
+        let activeEnable = true;
+        // this.game.user.userData.playerBag.getItemsCount(op_pkt_def.PKT_PackageType.PropPackage, action.tag.)
+        if (action.tag.propUseId) {
+            const count = this.game.user.userData.playerBag.getItemsCount(op_pkt_def.PKT_PackageType.PropPackage, action.tag.propUseId);
+            activeEnable = count > 0;
+            if (!activeEnable) {
+                const item = (<any> this.game.configManager).getItemBaseByID(action.tag.propUseId);
+                if (item) {
+                    // TODO i18n.t("common.notEnough");
+                    this.game.renderPeer.showAlert(`${item.name}数量不足`);
+                    return;
+                }
+            }
+        }
+        if (activeEnable) {
+            this.game.user.tryActiveAction(this.mShowData.id, tempdata, true);
+            this.onHideView();
+        }
     }
     private onHideView() {
         // const uimanager = this.game.uiManager;

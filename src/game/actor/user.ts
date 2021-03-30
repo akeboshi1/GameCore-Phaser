@@ -117,7 +117,6 @@ export class User extends Player {
         const pos = op_def.PBPoint3f.create();
         pos.x = userPos.x;
         pos.y = userPos.y;
-        Logger.getInstance().log("syncPos user===>", pos);
         const movePoint = op_def.MovePoint.create();
         movePoint.pos = pos;
         // 给每个同步点时间戳
