@@ -721,7 +721,7 @@ export class Render extends RPCPeer implements GameMain, IRender {
 
     public updateGateway() {
         const accountData = this.account.accountData;
-        if (accountData && accountData.gateway) {
+        if (accountData && accountData.gateway && !this.mConfig.server_addr.host) {
             this.mConfig.server_addr.host = accountData.gateway;
             this.mainPeer.setConfig(this.mConfig);
         }
