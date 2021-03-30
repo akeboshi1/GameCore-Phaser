@@ -1,5 +1,6 @@
+import { ClickEvent } from "apowophaserui";
 import { UiManager } from "gamecoreRender";
-import { PicaPartyNavigationPanel } from "picaRender";
+import { PicaMyNavigationPanel, PicaPartyNavigationPanel, PicaTaskPanel } from "picaRender";
 import { ModuleName } from "structure";
 import { BaseHotelGuidePanel } from "./BaseHotelGuidePanel";
 export class HotelGuidePanel extends BaseHotelGuidePanel {
@@ -16,14 +17,32 @@ export class HotelGuidePanel extends BaseHotelGuidePanel {
         super.end();
     }
 
+    protected step3(pos) {
+        this.taskButton.off(ClickEvent.Tap, this.step2, this);
+        this.render.emitter.off(PicaTaskPanel.PICATASK_DATA, this.step3, this);
+        const taskPanel: PicaTaskPanel = this.uiManager.getPanel(ModuleName.PICATASK_NAME) as PicaTaskPanel;
+        const picaMainTaskPanel: any = taskPanel.mainPanel;
+        const list: any[] = picaMainTaskPanel.taskItems;
+        const item = list[0];
+        if (!item) this.end();
+        this.itemTaskBtn = item.taskButton;
+        const worldMatrix = this.itemTaskBtn.getWorldTransformMatrix();
+        this.guideEffect.createGuideEffect({ x: item.width, y: worldMatrix.ty });
+        this.itemTaskBtn.on(ClickEvent.Tap, this.step4, this);
+    }
+
     protected step4() {
-        this.mPartyNavigationPanel = this.uiManager.getPanel(ModuleName.PICAPARTYNAVIGATION_NAME) as PicaPartyNavigationPanel;
         this.render.emitter.on(PicaPartyNavigationPanel.PICASELFROOM_DATA, this.step5, this);
     }
 
     protected step5() {
         this.render.emitter.off(PicaPartyNavigationPanel.PICASELFROOM_DATA, this.step5, this);
         this.render.emitter.on(PicaPartyNavigationPanel.PicaPartyNavigationPanel_CLOSE, this.end, this);
+        this.render.emitter.on(PicaMyNavigationPanel.PICAMYNAVIGATIONPANEL_DATA, this.step6, this);
+        this.mPartyNavigationPanel = this.uiManager.getPanel(ModuleName.PICAPARTYNAVIGATION_NAME) as PicaPartyNavigationPanel;
+    }
+    protected step6() {
+        this.render.emitter.off(PicaMyNavigationPanel.PICAMYNAVIGATIONPANEL_DATA, this.step6, this);
         this.myRoomPanel = this.mPartyNavigationPanel.myRoomPanel;
         const items = this.myRoomPanel.roomsItems;
         if (!items) {
@@ -35,7 +54,7 @@ export class HotelGuidePanel extends BaseHotelGuidePanel {
             this.end();
             return;
         }
-        const roomList = item.townItems;
+        const roomList = item.roomList();
         if (!roomList) {
             this.end();
             return;

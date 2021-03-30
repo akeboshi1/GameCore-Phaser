@@ -12,28 +12,6 @@ export class LoadingManager {
 
     start(state?: number, data?: any) {
         this.mGame.peer.render.showLoading({ "dpr": this.mGame.getGameConfig().scale_ratio, state, data });
-        // const sceneManager = this.game.scene;
-        // if (!sceneManager) {
-        //     return Promise.reject("start faild. SceneManager does not exist");
-        // }
-        // const loading: LoadingScene = <LoadingScene>sceneManager.getScene(LoadingScene.name);
-        // if (!loading) {
-        //     sceneManager.add(LoadingScene.name, LoadingScene);
-        // }
-        // if (loading) {
-        //     // if (!loading.getShow()) {
-        //     loading.awake({
-        //         world: this.game,
-        //         text,
-        //         callBack: this.sceneCallback.bind(this)
-        //     });
-        // } else {
-        //     sceneManager.start(LoadingScene.name, {
-        //         world: this.game,
-        //         text,
-        //         callBack: this.sceneCallback.bind(this)
-        //     });
-        // }
     }
 
     sceneCallback() {

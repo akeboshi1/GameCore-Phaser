@@ -63,7 +63,6 @@ export class UiManager {
         });
         this.mPanelMap.forEach((med: BasePanel) => {
             med.destroy();
-            med = null;
         });
         this.mBatchPanelList = [];
         this.mPanelMap.clear();
