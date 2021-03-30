@@ -93,31 +93,31 @@ export class SceneManager extends BaseSceneManager {
                     data.text = LoadingTips.enterWorld();
                     break;
                 case LoadState.DOWNLOADGAMECONFIG:
-                    data.loadProgress = "正在加载游戏pi";
+                    data.loadProgress = "异世界发现中..."; // "正在加载游戏pi";
                     data.text = LoadingTips.downloadGameConfig();
                     break;
                 case LoadState.DOWNLOADSCENECONFIG:
-                    data.loadProgress = "正在加载场景pi";
+                    data.loadProgress = "构建次元空间...";// "正在加载场景pi";
                     data.text = LoadingTips.downloadSceneConfig();
                     break;
                 case LoadState.LOADINGRESOURCES:
                     data.text = LoadingTips.loadingResources();
                     break;
                 case LoadState.LOGINGAME:
-                    data.loadProgress = "正在请求登陆游戏";
+                    data.loadProgress = "勇者，正在穿越异世界...";// "正在请求登陆游戏";
                     data.text = LoadingTips.loginGame();
                     break;
                 case LoadState.PARSECONFIG:
-                    data.loadProgress = "正在解析一大波游戏数据";
+                    data.loadProgress = "大贤者迪塔装载中...";// "正在解析一大波游戏数据";
                     data.text = LoadingTips.parseConfig();
                     break;
                 case LoadState.LOADJSON:
-                    const text = "正在加载前端json配置"; // StringUtils.format("正在加载资源 {0}", [data.data.resName]);
+                    const text = "大贤者杰森装载中...";// "正在加载前端json配置"; // StringUtils.format("正在加载资源 {0}", [data.data.resName]);
                     data.loadProgress = text;
                     data.text = text;
                     break;
                 case LoadState.WAITENTERROOM:
-                    data.loadProgress = "正在等待进入房间";
+                    data.loadProgress = "大魔术咏唱:真理之门...";// "正在等待进入房间";
                     data.text = LoadingTips.waitEnterRoom();
                     break;
                 case LoadState.CREATESCENE:
