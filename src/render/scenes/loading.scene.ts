@@ -103,7 +103,7 @@ export class LoadingScene extends BasicScene {
   }
 
   public updateProgress(text: any) {
-    if (!text) return;
+    if (!text || text.length < 0) return;
     // 更新load状态
     this.tipsText = text;
     if (text && this.progressText) {

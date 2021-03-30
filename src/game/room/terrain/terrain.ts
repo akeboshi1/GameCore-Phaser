@@ -59,8 +59,19 @@ export class Terrain extends BlockObject implements IElement {
         if (!this.mModel.layer) {
             this.mModel.layer = LayerEnum.Terrain;
         }
-        await this.mElementManager.roomService.game.peer.render.setModel(val);
-        await this.mRoomService.game.peer.physicalPeer.setModel(val);
+        const area = this.mModel.getCollisionArea();
+        const obj = { id: this.mModel.id, pos: this.mModel.pos, nickname: this.mModel.nickname, alpha: this.mModel.alpha, titleMask: this.mModel.titleMask | 0x00020000 };
+        await this.mElementManager.roomService.game.renderPeer.setModel(obj);
+        const obj1 = {
+            id: this.mModel.id,
+            point3f: this.mModel.pos,
+            currentAnimationName: this.mModel.currentAnimationName,
+            direction: this.mModel.direction,
+            mountSprites: this.mModel.mountSprites,
+            speed: this.mModel.speed,
+            displayInfo: this.mModel.displayInfo
+        };
+        await this.mRoomService.game.physicalPeer.setModel(obj1);
         this.removeFromWalkableMap();
         this.load(<IFramesModel>this.mModel.displayInfo);
         // this.mDisplayInfo = <IFramesModel> this.mModel.displayInfo;
@@ -98,7 +109,7 @@ export class Terrain extends BlockObject implements IElement {
             this.mModel.currentAnimationName = animationName;
             this.mRoomService.game.peer.render.playElementAnimation(this.id, this.mModel.currentAnimationName);
             // if (this.mDisplay) {
-            //     this.mDisplay.play(this.model.currentAnimation);
+            //     this.mDisplay.play(this.this.mModel.currentAnimation);
             // }
         }
     }

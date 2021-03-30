@@ -1,20 +1,22 @@
-import { GameGridTable, GameScroller } from "apowophaserui";
+import { GameScroller } from "apowophaserui";
 import { AlignmentType, AxisType, ConstraintType, DynamicImage, GridLayoutGroup } from "gamecoreRender";
 import { UIAtlasName } from "picaRes";
 import { Font, Handler, i18n, Logger, Tool, UIHelper, Url } from "utils";
 import { op_client, op_def } from "pixelpai_proto";
 import { PicaRoomListItem } from "./PicaRoomListItem";
+import { Render } from "../../pica.render";
 export class PicaMyNavigationPanel extends Phaser.GameObjects.Container {
+    public static PICAMYNAVIGATIONPANEL_DATA: string = "PICAMYNAVIGATIONPANEL_DATA";
     public roomsItems: NavigationRoomListItem[] = [];
+    public mGameScroll: GameScroller;
     private dpr: number;
     private zoom: number;
     private sendHandler: Handler;
-    private mGameScroll: GameScroller;
     private curRoomItem: NavigationRoomListItem;
     private datas: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_SELF_ROOM_LIST[] = [];
     private queryType: op_def.RoomTypeEnum[];
     private haveCount: number = 0;
-    constructor(scene: Phaser.Scene, width: number, height: number, dpr: number, zoom: number) {
+    constructor(private render: Render, scene: Phaser.Scene, width: number, height: number, dpr: number, zoom: number) {
         super(scene);
         this.setSize(width, height);
         this.dpr = dpr;
@@ -67,6 +69,7 @@ export class PicaMyNavigationPanel extends Phaser.GameObjects.Container {
         if (this.haveCount === this.queryType.length) {
             this.setGameScrollData();
         }
+        this.render.emitter.emit(PicaMyNavigationPanel.PICAMYNAVIGATIONPANEL_DATA);
     }
 
     public clearDatas() {
@@ -186,6 +189,9 @@ class NavigationRoomListItem extends Phaser.GameObjects.Container {
 
         this.mExtend.Layout();
         this.closeExtend();
+    }
+    public roomList(): any {
+        return this.mExtend.list;
     }
     public checkExtendRect(pointer: any) {
         if (!this.mExtend.visible) return false;

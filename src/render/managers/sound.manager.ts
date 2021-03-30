@@ -43,6 +43,7 @@ export class SoundManager {
     }
 
     destroy() {
+        // phaser 内部会做统一处理，不需要手动清除sound
         // if (this.mSoundMap) {
         //     this.mSoundMap.forEach((sound) => {
         //         if (sound) {

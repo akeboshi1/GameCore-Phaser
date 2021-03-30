@@ -312,8 +312,8 @@ class FriendContainer extends Container {
 
     protected sortByOnlien(array: FriendData[]) {
         return array.sort((a: FriendData, b: FriendData) => {
-            const aLv = a.lv ? 1 : 0;
-            const bLv = b.lv ? 1 : 0;
+            const aLv = a.online ? 1 : 0;
+            const bLv = b.online ? 1 : 0;
             if (a.type === FriendChannel.Menu || b.type === FriendChannel.Menu) {
                 return 1;
             }
@@ -409,7 +409,14 @@ class MainContainer extends FriendContainer {
                 if (target.createAt) {
                     createAt = Date.parse(target.createAt);
                 }
-                result.push({ type, id: target._id, nickname: target.nickname, relation, createAt });
+                let online = false;
+                const game = friend.game;
+                if (game && game.length > 0) {
+                    if (friend.nowtime - game[0].lastTime <= 60) {
+                        online = true;
+                    }
+                }
+                result.push({ type, id: target._id, nickname: target.nickname, relation, createAt, online });
                 ids.push(target._id);
             }
         }
@@ -822,6 +829,7 @@ class FriendRenderer implements IRenderer {
     public setItemData(data: FriendData) {
         this.itemData = data;
         this.nameText.text = data.nickname;
+        this.icon.setFrame(data.online ? "head" : "offline_head");
         const lv = data.lv ? `${i18n.t("friendlist.lv")}：${data.lv}` : i18n.t("friendlist.unregistered_game");
         this.level.setText(lv);
         if (this.curRelation !== data.relation) {
