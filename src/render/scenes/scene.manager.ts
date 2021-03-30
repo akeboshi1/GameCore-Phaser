@@ -112,9 +112,8 @@ export class SceneManager extends BaseSceneManager {
                     data.text = LoadingTips.parseConfig();
                     break;
                 case LoadState.LOADJSON:
-                    const text = "大贤者杰森装载中...";// "正在加载前端json配置"; // StringUtils.format("正在加载资源 {0}", [data.data.resName]);
-                    data.loadProgress = text;
-                    data.text = text;
+                    data.loadProgress = "大贤者杰森装载中...";// "正在加载前端json配置"; // StringUtils.format("正在加载资源 {0}", [data.data.resName]);
+                    data.text = LoadingTips.downloadSceneConfig();
                     break;
                 case LoadState.WAITENTERROOM:
                     data.loadProgress = "大魔术咏唱:真理之门...";// "正在等待进入房间";

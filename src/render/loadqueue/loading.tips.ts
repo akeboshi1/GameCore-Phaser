@@ -26,6 +26,11 @@ export class LoadingTips {
         return i18n.t("loading.parse_config");
     }
 
+    // 加载 前端json配置
+    static downloadJsonConfig() {
+        return i18n.t("loading.downloading_json_config");
+    }
+
     // 正在加载资源
     static loadingResources() {
         return i18n.t("loading.loading_resources");
