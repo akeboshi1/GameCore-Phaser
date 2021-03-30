@@ -20,6 +20,7 @@ export class PicaIllustratedMediator extends BasicMediator {
         this.game.emitter.on(this.key + "_openmake", this.onShowMakePanel, this);
         this.game.emitter.on(this.key + "_close", this.onCloseHandler, this);
         this.game.emitter.on(EventType.GALLERY_UPDATE, this.setGallaryData, this);
+        this.game.emitter.on(EventType.DONE_MISSION_LIST, this.setDoneMissionIdListHandler, this);
     }
 
     hide() {
@@ -28,6 +29,7 @@ export class PicaIllustratedMediator extends BasicMediator {
         this.game.emitter.off(this.key + "_openmake", this.onShowMakePanel, this);
         this.game.emitter.off(this.key + "_close", this.onCloseHandler, this);
         this.game.emitter.off(EventType.GALLERY_UPDATE, this.setGallaryData, this);
+        this.game.emitter.off(EventType.DONE_MISSION_LIST, this.setDoneMissionIdListHandler, this);
         super.hide();
     }
 
@@ -40,6 +42,7 @@ export class PicaIllustratedMediator extends BasicMediator {
         if (this.mPanelInit) {
             if (this.mView) {
                 this.setGallaryData();
+                this.setDoneMissionIdListHandler();
             }
         }
     }
@@ -81,6 +84,12 @@ export class PicaIllustratedMediator extends BasicMediator {
             if (a.code >= b.code) return 1;
             else return -1;
         });
+    }
+
+    private setDoneMissionIdListHandler() {
+        const cache: CacheDataManager = this.game.getDataMgr<CacheDataManager>(DataMgrType.CacheMgr);
+        const list = cache.doneMissionIdList;
+        if (this.mView) this.mView.setDoneMissionList(list);
     }
 
     private getCombinations(list: op_client.IPKT_GALLERY_ITEM[]) {

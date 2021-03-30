@@ -101,6 +101,7 @@ export class PicaBusinessRankingPanel extends Phaser.GameObjects.Container {
     }
 
     public hide() {
+        this.visible = false;
         this.removeListen();
     }
 

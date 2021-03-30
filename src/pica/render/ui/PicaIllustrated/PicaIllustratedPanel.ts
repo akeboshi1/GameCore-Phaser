@@ -21,6 +21,7 @@ export class PicaIllustratedPanel extends PicaBasePanel {
         super(uiManager);
         this.key = ModuleName.PICAILLUSTRATED_NAME;
         this.atlasNames = [UIAtlasName.uicommon, UIAtlasName.uicommon1, UIAtlasName.illustrate];
+        this.tempDatas = {};
     }
     resize(width?: number, height?: number) {
         const w: number = this.scaleWidth;
@@ -69,11 +70,17 @@ export class PicaIllustratedPanel extends PicaBasePanel {
     }
 
     setGallaryData(content: op_client.OP_CLIENT_REQ_VIRTUAL_WORLD_PKT_UPDATE_GALLERY, combinations: IGalleryCombination[]) {
-        this.tempDatas = { gallery: content, combinations };
+        this.tempDatas["gallery"] = content;
+        this.tempDatas["combinations"] = combinations;
         if (!this.mInitialized) return;
         if (this.detailPanel) {
             this.detailPanel.setGallaryData(content, combinations);
         }
+    }
+    setDoneMissionList(list: number[]) {
+        this.tempDatas["donemission"] = list;
+        if (!this.mInitialized) return;
+        if (this.detailPanel) this.detailPanel.setDoneMissionList(list);
     }
     private openListPanel() {
         this.showListPanel();
@@ -97,6 +104,7 @@ export class PicaIllustratedPanel extends PicaBasePanel {
         this.showDetailPanel();
         if (this.tempDatas) {
             this.detailPanel.setGallaryData(this.tempDatas.gallery, this.tempDatas.combinations);
+            if (this.tempDatas.donemission) this.detailPanel.setDoneMissionList(this.tempDatas.donemission);
         }
     }
 

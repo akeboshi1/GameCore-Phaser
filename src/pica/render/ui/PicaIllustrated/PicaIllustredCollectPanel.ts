@@ -14,6 +14,7 @@ export class PicaIllustredCollectPanel extends Phaser.GameObjects.Container {
     private send: Handler;
     private curSelectItem: IllustratedCollectItem;
     private combinations: IGalleryCombination[];
+    private doneMissions: number[] = [];
     constructor(scene: Phaser.Scene, width: number, height: number, dpr: number, zoom: number) {
         super(scene);
         this.setSize(width, height);
@@ -46,7 +47,9 @@ export class PicaIllustredCollectPanel extends Phaser.GameObjects.Container {
         this.mGameGrid.setT(0);
         return arr;
     }
-
+    setDoneMissionList(list: number[]) {
+        if (list) this.doneMissions = list;
+    }
     init() {
         const tableHeight = this.height;
         const cellWidth = 326 * this.dpr;
@@ -165,7 +168,7 @@ class IllustratedCollectItem extends Phaser.GameObjects.Container {
     public getAllChildren() {
 
     }
-    public setCombinationData(data: IGalleryCombination) {
+    public setCombinationData(data: IGalleryCombination, rewarded: boolean) {
         this.combiData = data;
         this.titleTex.text = data.name;
         this.desTex.text = data.des;
@@ -191,6 +194,9 @@ class IllustratedCollectItem extends Phaser.GameObjects.Container {
         this.progress.setProgress(curprogress, maxprogress);
         this.progress.setText(`${curprogress}/${maxprogress}`);
         this.iscallRewards = curprogress === maxprogress;
+        if (rewarded) {
+            this.iscallRewards = false;
+        }
         this.gridLayout.Layout();
         this.layout();
     }
@@ -206,7 +212,7 @@ class IllustratedCollectItem extends Phaser.GameObjects.Container {
             const list = this.gridLayout.list;
             for (const obj of list) {
                 if (Tool.checkPointerContains(obj, pointer)) {
-                   // (<IllustratedItem>obj).showTips();
+                    // (<IllustratedItem>obj).showTips();
                     if (this.send) this.send.runWith(["furidetail", (<IllustratedItem>obj).itemData]);
                 }
             }

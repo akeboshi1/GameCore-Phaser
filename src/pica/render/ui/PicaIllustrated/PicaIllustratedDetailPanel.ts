@@ -68,7 +68,9 @@ export class PicaIllustratedDetailPanel extends Phaser.GameObjects.Container {
             this.collectPanel.setCombinationData(combinations);
         }
     }
-
+    setDoneMissionList(list: number[]) {
+        if (this.collectPanel) this.collectPanel.setDoneMissionList(list);
+    }
     init() {
         this.topCon = this.scene.make.container(undefined, false);
         this.topCon.setSize(this.width, 100 * this.dpr);

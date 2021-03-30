@@ -3,6 +3,7 @@ import { BackgroundScaleButton, CommonBackground, DynamicImage, ImageValue } fro
 import { UIAtlasName } from "picaRes";
 import { Font, Handler, i18n, TimeUtils, UIHelper, Url } from "utils";
 import { op_client, op_pkt_def } from "pixelpai_proto";
+import { ModuleName } from "structure";
 export class PicaRoamDrawPanel extends Phaser.GameObjects.Container {
     private bg: CommonBackground;
     private closeBtn: Button;
@@ -179,6 +180,7 @@ export class PicaRoamDrawPanel extends Phaser.GameObjects.Container {
         if (this.send) this.send.runWith("close");
     }
     private onRechargeHandler() {
+        if (this.send) this.send.runWith(["notice", i18n.t("noticeTips.staytuned")]);
     }
 
     private onDrawPreviewHandler() {

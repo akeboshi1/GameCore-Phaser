@@ -3,7 +3,7 @@ import { UIAtlasName } from "picaRes";
 import { op_pkt_def, op_def } from "pixelpai_proto";
 import { UiManager } from "gamecoreRender";
 import { EventType, ModuleName } from "structure";
-import { Handler } from "utils";
+import { Handler, i18n } from "utils";
 import { PicaBasePanel } from "../pica.base.panel";
 import { PicaNewActivityPanel } from "./PicaNewActivityPanel";
 import { PicaNewChatPanel } from "./PicaNewChatPanel";
@@ -166,6 +166,10 @@ export class PicaNewMainPanel extends PicaBasePanel {
     }
 
     private onActivityHandler(tag: string, data: any) {
+        if (tag === "email" || tag === "recharge") {
+            this.onNoticeHandler();
+            return;
+        }
         if (tag === "activity") {
             this.render.renderEmitter(ModuleName.PICANEWMAIN_NAME + "_showpanel", ModuleName.PICAORDER_NAME);
         } else if (tag === "indent") {
@@ -206,5 +210,13 @@ export class PicaNewMainPanel extends PicaBasePanel {
                     this.updateUIState(arr);
                 }
             });
+    }
+
+    private onNoticeHandler() {
+        const tempdata = {
+            text: [{ text: i18n.t("noticeTips.staytuned"), node: undefined }]
+        };
+        this.render.mainPeer.showMediator(ModuleName.PICANOTICE_NAME, true, tempdata);
+        return;
     }
 }
