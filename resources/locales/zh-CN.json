@@ -66,7 +66,8 @@
     "recast": "重铸",
     "make": "制作",
     "editor": "编辑",
-    "survey": "调查"
+    "survey": "调查",
+    "notEnough": "{{}}数量不足"
   },
   "quantityunit": {
     "k": "千",
