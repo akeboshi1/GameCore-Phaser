@@ -364,6 +364,9 @@ export class ElementManager extends PacketHandler implements IElementManager {
 
     public addSpritesToCache(objs: op_client.ISprite[]) {
         for (const obj of objs) {
+            if (this.get(obj.id)) {
+                continue;
+            }
             this.mAddCache.push(obj.id);
             if (this.checkDisplay(new Sprite(obj, 3))) {
                 this.mCacheAddList.push(obj);
