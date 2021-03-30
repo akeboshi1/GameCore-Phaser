@@ -144,7 +144,7 @@ export class SceneDataManager extends BasePacketHandler {
     }
     private onUnlockDoneHandler(packge: PBpacket) {
         const content: op_client.OP_VIRTUAL_WORLD_REQ_CLIENT_UNLOCK_DONE = packge.content;
-        const ele = (<BaseDataConfigManager>this.game.configManager).getElementData(content.eid);
+        const ele = (<BaseDataConfigManager>this.game.configManager).getElementData(content.configId);
         const config = (<any>this.game.configManager);
         const group = config.getFurnitureGroupBySN(ele.sn);
         if (group)
