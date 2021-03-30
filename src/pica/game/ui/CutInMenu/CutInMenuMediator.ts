@@ -47,7 +47,7 @@ export class CutInMenuMediator extends BasicMediator {
             if (this.buttonType === "work") {
                 this.mView.setPopData(content.workChance.value);
             } else if (this.buttonType === "survey") {
-                this.mView.setPopData(5);
+                this.mView.setPopData(content.survey.value);
             }
         }
     }

@@ -99,6 +99,8 @@ export class PicaRoamMediator extends BasicMediator {
             const pool = pools[i];
             const basePool = configMgr.getCardPool(pool.id);
             ObjectAssign.excludeTagAssign(pool, basePool);
+            const item = configMgr.getItemBaseByID(pool.alterTokenId);
+            pool["name"] = item ? item.name : "";
             for (const reward of pool.progressAward) {
                 configMgr.getBatchItemDatas(reward.rewards);
             }
