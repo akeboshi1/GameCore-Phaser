@@ -99,13 +99,14 @@ class FurnitureItem extends Phaser.GameObjects.Container {
         this.bg = this.scene.make.image({ key: UIAtlasName.survey, frame: "survey_ordinary_bg" });
         this.iconImg = new DynamicImage(this.scene, 0, 0);
         this.star = this.scene.make.image({ key: UIAtlasName.uicommon, frame: "bag_star_small_1" }).setOrigin(0, 0.5);
-        this.nameTex = this.scene.make.text({ style: UIHelper.whiteStyle(dpr, 12) }).setOrigin(0.5);
+        this.nameTex = this.scene.make.text({ style: UIHelper.whiteStyle(dpr, 11) }).setOrigin(0.5);
         this.setSize(this.bg.width, this.bg.height);
         this.iconImg.y = -5 * dpr;
         this.star.x = -this.width * 0.5 + 5 * dpr;
         this.star.y = -this.height * 0.5 + 10 * dpr;
         this.nameTex.y = this.height * 0.5 - 10 * dpr;
         this.add([this.lightBg, this.bg, this.iconImg, this.star, this.nameTex]);
+        this.lightBg.setInteractive();
     }
 
     public setItemData(data: ICountablePackageItem) {
@@ -117,6 +118,11 @@ class FurnitureItem extends Phaser.GameObjects.Container {
         this.iconImg.scale = this.dpr / this.zoom;
         this.nameTex.text = data.name;
         this.star.setFrame("bag_star_small_" + data.grade);
+        if (data.rarity === 5) {
+            this.bg.setFrame("survey_rare_bg");
+        } else {
+            this.bg.setFrame("survey_ordinary_bg");
+        }
         this.playRotateTween();
     }
 

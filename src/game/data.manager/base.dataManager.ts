@@ -1,4 +1,4 @@
-import { PacketHandler, PBpacket } from "net-socket-packet";
+import { PBpacket } from "net-socket-packet";
 import { BaseDataConfigManager } from "picaWorker";
 import { op_client, op_virtual_world, op_def, op_gameconfig, op_pkt_def } from "pixelpai_proto";
 import { EventType } from "structure";

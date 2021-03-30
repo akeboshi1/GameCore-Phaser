@@ -1,5 +1,5 @@
 import { Game } from "gamecore";
-import { i18n, load, loadArr, Logger, Url } from "utils";
+import { load, loadArr, Logger } from "utils";
 import { BaseConfigData } from "./base.config.data";
 import { base_path, config_path } from "./config";
 export class BaseConfigManager {

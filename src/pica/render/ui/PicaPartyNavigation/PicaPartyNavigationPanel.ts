@@ -182,7 +182,7 @@ export class PicaPartyNavigationPanel extends PicaBasePanel {
     private openMyRoomPanel() {
         if (!this.myRoomPanel) {
             const height = this.scaleHeight * 0.5 - this.toggleCon.y - 30 * this.dpr;
-            this.myRoomPanel = new PicaMyNavigationPanel(this.scene, 274 * this.dpr, height, this.dpr, this.scale);
+            this.myRoomPanel = new PicaMyNavigationPanel(this.render, this.scene, 274 * this.dpr, height, this.dpr, this.scale);
             this.myRoomPanel.y = this.scaleHeight - height - 75 * this.dpr;
             this.myRoomPanel.setHandler(new Handler(this, this.onMyRoomHandler));
             this.content.add(this.myRoomPanel);

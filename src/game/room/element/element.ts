@@ -741,7 +741,32 @@ export class Element extends BlockObject implements IElement {
 
     protected loadDisplayInfo(): Promise<any> {
         this.mRoomService.game.emitter.once("dragonBones_initialized", this.onDisplayReady, this);
-        return this.mRoomService.game.renderPeer.updateModel(this.id, this.mDisplayInfo || this.mModel.displayInfo);
+        const id = this.mDisplayInfo.id || this.mModel.displayInfo.id;
+        const discriminator = this.mDisplayInfo.discriminator || this.mModel.displayInfo.discriminator;
+        const eventName = this.mDisplayInfo.eventName || this.mModel.displayInfo.eventName;
+        const avatarDir = this.mDisplayInfo.avatarDir || this.mModel.displayInfo.avatarDir;
+        const animationName = this.mDisplayInfo.animationName || this.mModel.displayInfo.animationName;
+        const obj = {
+            discriminator,
+            id,
+            eventName,
+            avatarDir,
+            animationName,
+            avatar: undefined,
+            gene: undefined,
+            type: "",
+            display: null,
+            animations: undefined,
+        };
+        if (discriminator === "DragonbonesModel") {
+            obj.avatar = (<any>this.mDisplayInfo).avatar || (<any>this.mModel.displayInfo).avatar;
+        } else {
+            obj.gene = (<any>this.mDisplayInfo).type || (<any>this.mModel.displayInfo).gene;
+            obj.type = (<any>this.mDisplayInfo).type || (<any>this.mModel.displayInfo).type;
+            obj.display = (<any>this.mDisplayInfo).display || (<any>this.mModel.displayInfo).avatar;
+            obj.animations = (<any>this.mDisplayInfo).animations || (<any>this.mModel.displayInfo).animations;
+        }
+        return this.mRoomService.game.renderPeer.updateModel(this.id, obj);
     }
 
     protected onDisplayReady() {

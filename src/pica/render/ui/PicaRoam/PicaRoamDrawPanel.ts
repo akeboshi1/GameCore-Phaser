@@ -160,7 +160,7 @@ export class PicaRoamDrawPanel extends Phaser.GameObjects.Container {
             roamData["one"] = false;
             if (!roamData["free"] && this.token < roamData.drawTime) {
                 const moneyName = this.tokenid === "IV0000002" ? i18n.t("coin.diamond") : i18n.t("coin.coin");
-                const moneytag = this.tokenid === "IV0000002" ? i18n.t("coin.gold") : i18n.t("coin.silver");
+                const moneytag = roamData["name"];// this.tokenid === "IV0000002" ? i18n.t("coin.gold") : i18n.t("coin.silver");
                 const tokenvalue = roamData.drawTime - this.token;
                 const value = roamData.unitPrice * tokenvalue;
                 if (value <= this.money) {
