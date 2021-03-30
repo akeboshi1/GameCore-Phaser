@@ -58,6 +58,7 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
     protected gameConfigUrls: Map<string, string> = new Map();
     protected gameConfigUrl: string;
     protected isPause: boolean = false;
+    protected isGotoGame: boolean = false;
     protected mMoveStyle: number;
     protected mReconnect: number = 0;
     protected hasClear: boolean = false;
@@ -129,6 +130,7 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
 
     public onDisConnected() {
         Logger.getInstance().debug("app connectFail=====");
+        if (this.isGotoGame) return;
         // if (this.hasClear || this.connect.pause) return;
         if (this.mConfig.hasConnectFail) {
             return this.mainPeer.render.connectFail();
@@ -617,7 +619,7 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
 
     protected createManager() {
         if (!this.mRoomManager) this.mRoomManager = new RoomManager(this);
-        if(!this.mGuideManager)this.mGuideManager = new GuideManager(this);
+        if (!this.mGuideManager) this.mGuideManager = new GuideManager(this);
         // this.mUiManager = new UiManager(this);
         if (!this.mElementStorage) this.mElementStorage = new ElementStorage();
         if (!this.mUIManager) this.mUIManager = new UIManager(this);
@@ -654,6 +656,7 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
     }
 
     private _createAnotherGame(gameId, virtualworldId, sceneId, loc, spawnPointId?, worldId?) {
+        this.isGotoGame = true;
         this.clearGame(true).then(() => {
             this.isPause = false;
             if (this.mUser) {
@@ -676,12 +679,14 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
             this.mClock = new Clock(this.connect, this.peer);
             // setTimeout(() => {
             this.mainPeer.render.createAnotherGame(gameId, virtualworldId, sceneId, loc ? loc.x : 0, loc ? loc.y : 0, loc ? loc.z : 0, spawnPointId, worldId);
+            this.isGotoGame = false;
             // }, 1000);
             // this.mGame.scene.start(LoadingScene.name, { world: this }););
         });
     }
 
     private _onGotoAnotherGame(gameId, virtualworldId, sceneId, loc, spawnPointId?, worldId?) {
+        this.isGotoGame = true;
         this.clearGame(true).then(() => {
             this.isPause = false;
             if (this.connect) {
@@ -699,6 +704,7 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
             this.mClock = new Clock(this.connect, this.peer);
             // 告知render进入其他game
             this.mainPeer.render.createAnotherGame(gameId, virtualworldId, sceneId, loc ? loc.x : 0, loc ? loc.y : 0, loc ? loc.z : 0, spawnPointId, worldId);
+            this.isGotoGame = false;
         });
     }
 
@@ -713,7 +719,7 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
                     this.mRoomManager.destroy();
                     this.mRoomManager = null;
                 }
-                if(this.mGuideManager) {
+                if (this.mGuideManager) {
                     this.mGuideManager.destroy();
                     this.mGuideManager = null;
                 }
