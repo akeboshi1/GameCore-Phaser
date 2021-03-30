@@ -1,4 +1,5 @@
 import { Button, ClickEvent } from "apowophaserui";
+import { TweenCompent } from "gamecoreRender";
 import { UIAtlasName } from "picaRes";
 import { Handler, i18n } from "utils";
 
@@ -6,12 +7,12 @@ export class PicaNewNavigatePanel extends Phaser.GameObjects.Container {
     public exploreButton: Button;
     public homeButton: Button;
     public bagButton: Button;
+    public makeButton: Button;
     private dpr: number;
     private key: string;
     private bg: Phaser.GameObjects.Image;
     private friendButton: Button;
     private avatarButton: Button;
-    private makeButton: Button;
     private sendHandler: Handler;
     private buttons: Button[];
     constructor(scene: Phaser.Scene, key: string, dpr: number, scale: number) {
@@ -47,6 +48,14 @@ export class PicaNewNavigatePanel extends Phaser.GameObjects.Container {
         const x = world.tx;
         const y = world.ty;
         return { x, y };
+    }
+
+    public tweenButton(index: number) {
+        const button = this.buttons[index];
+        if (button) {
+            const tween = new TweenCompent(this.scene, button, { scale: 1.2, pingpang: true });
+            tween.tween();
+        }
     }
     public addListen() {
         this.bagButton.on(ClickEvent.Tap, this.onBagHandler, this);

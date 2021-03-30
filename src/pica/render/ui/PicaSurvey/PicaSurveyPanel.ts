@@ -67,17 +67,19 @@ export class PicaSurveyPanel extends PicaBasePanel {
                 to: targetY
             },
             ease: "Linear",
-            duration: 1000,
-            delay: 2000,
+            duration: 500,
+            delay: 1500,
             onComplete: () => {
                 this.moveTween.stop();
                 this.moveTween.remove();
                 this.moveTween = undefined;
                 this.furniItem.visible = false;
+                const bottomPanel: any = this.render.uiManager.getPanel(ModuleName.BOTTOM);
+                bottomPanel.navigatePanel.tweenButton(3);
                 this.disInteractive();
             }
         });
-        const scaleTween = UIHelper.playScaleTween(this.scene, this.furniItem, 1, 0, 1000, "Linear", 2000);
+        const scaleTween = UIHelper.playScaleTween(this.scene, this.furniItem, 1, 0, 500, "Linear", 1500);
     }
 }
 
@@ -135,12 +137,18 @@ class FurnitureItem extends Phaser.GameObjects.Container {
         this.lightBg.rotation = 0;
         if (this.intervalTimer) clearInterval(this.intervalTimer);
         this.lightBg.visible = true;
+        let time = 0;
         this.intervalTimer = setInterval(() => {
             if (!this.scene) {
                 if (this.intervalTimer) clearInterval(this.intervalTimer);
                 return;
             }
             this.lightBg.rotation += 0.1;
+            time += 30;
+            if (time > 1500) {
+                clearInterval(this.intervalTimer);
+                this.lightBg.visible = false;
+            }
         }, 30);
     }
 }

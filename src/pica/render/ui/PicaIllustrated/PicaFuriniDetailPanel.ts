@@ -37,9 +37,11 @@ export class PicaFuriniDetailPanel extends Phaser.GameObjects.Container {
     }
 
     init() {
+        const backWidth = 1.5 * this.width, backheight = 3 * this.height;
         this.backgrand = this.scene.make.graphics(undefined, false);
         this.backgrand.fillStyle(0x000000, 0.66);
-        this.backgrand.fillRect(-this.width * 0.75, -this.height * 1.5, this.width * 1.5, this.height * 3);
+        this.backgrand.fillRect(-backWidth * 0.5, -backheight * 0.5, backWidth, backheight);
+        this.backgrand.setInteractive(new Phaser.Geom.Rectangle(-backWidth * 0.5, -backheight * 0.5, backWidth, backheight), Phaser.Geom.Rectangle.Contains);
         const bg = new NineSlicePatch(this.scene, 0, 0, this.width, this.height, UIAtlasName.uicommon1, "bg", {
             left: 20 * this.dpr,
             top: 20 * this.dpr,
@@ -77,6 +79,7 @@ export class PicaFuriniDetailPanel extends Phaser.GameObjects.Container {
         this.furinName.x = -bottomWidth * 0.5 + 10 * this.dpr;
         this.furinName.y = this.bottomBg.y - bottomHeight * 0.5 + 18 * this.dpr;
         this.furiDes = this.scene.make.text({ style: UIHelper.colorStyle("#000000", 11 * this.dpr) }).setOrigin(0, 0.5);
+        this.furiDes.setWordWrapWidth(bottomWidth);
         this.furiDes.x = this.furinName.x;
         this.furiDes.y = this.furinName.y + 25 * this.dpr;
         this.add([this.backgrand, bg, titlebg, this.titleName, this.closeButton, this.codeName, this.mDetailDisplay, this.starImg, this.bottomBg, this.furinName, this.furiDes]);

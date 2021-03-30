@@ -13,19 +13,23 @@ export class PicaRewardTipMediator extends BasicMediator {
 
     show(param?: any) {
         super.show(param);
+        if (param) {
+            this.onUpdateItemBase(param);
+            this.mCacheData = [param];
+        }
+
     }
 
     panelInit() {
         super.panelInit();
         if (!this.mShowData) return;
-        if (this.mShowData.itemId) {
-            this.onUpdateItemBase(this.mShowData);
-        }
-        this.mView.appendAward(this.mShowData);
+        // if (this.mShowData.itemId) {
+        //     this.onUpdateItemBase(this.mShowData);
+        // }
+        // this.mView.appendAward(this.mShowData);
         for (const oneData of this.mCacheData) {
             this.mView.appendAward(oneData);
         }
-        this.mCacheData = [];
     }
 
     public destroy() {

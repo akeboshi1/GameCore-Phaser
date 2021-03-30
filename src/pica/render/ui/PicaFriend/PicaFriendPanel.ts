@@ -769,7 +769,7 @@ class NullRenderer implements IRenderer {
     constructor(scene: Phaser.Scene, private owner: PicFriendItem) {
         this.graphics = scene.make.graphics(undefined, false);
         this.graphics.fillStyle(0xF5F5F5);
-        this.graphics.fillRect(-this.owner.width * 0.5, -18 * owner.dpr, this.owner.width, this.owner.height);
+        this.graphics.fillRect(-this.owner.width * 0.5, -5.5 * owner.dpr, this.owner.width, this.owner.height);
         // this.graphics.fillRect(0, 0, this.owner.width * 2, this.owner.height * 2);
         owner.add(this.graphics);
     }

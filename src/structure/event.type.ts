@@ -25,6 +25,7 @@ export class EventType {
     public static QUERY_SURVEY_FURNITURE = "QUERY_SURVEY_FURNITURE";// 请求调查家具
     public static ENTER_SURVEY_FURNITURE_STATUSE = "ENTER_SURVEY_FURNITURE_STATUSE";// 进入家具调查状态
     public static EXECUTE_SURVEY_FURNITURE = "EXECUTE_SURVEY_FURNITURE"; // TEMP: 执行调查家具
+    public static FECTH_FOLD_MAIN_UI = "FECTH_FOLD_MAIN_UI"; // 请求折叠主界面
     /**
      * 请求好友、关注、粉丝数据
      */

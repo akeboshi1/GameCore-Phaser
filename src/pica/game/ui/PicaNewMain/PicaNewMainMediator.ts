@@ -18,6 +18,7 @@ export class PicaNewMainMediator extends BasicMediator {
         this.game.emitter.on(EventType.UPDATE_ROOM_INFO, this.onUpdateRoomHandler, this);
         this.game.emitter.on(EventType.UPDATE_PLAYER_INFO, this.onUpdatePlayerHandler, this);
         this.game.emitter.on(this.key + "_querydecorate", this.queryDecorate, this);
+        this.game.emitter.on(EventType.FECTH_FOLD_MAIN_UI, this.onFoldButtonHandler, this);
     }
 
     hide() {
@@ -28,6 +29,7 @@ export class PicaNewMainMediator extends BasicMediator {
         this.game.emitter.off(EventType.UPDATE_ROOM_INFO, this.onUpdateRoomHandler, this);
         this.game.emitter.off(EventType.UPDATE_PLAYER_INFO, this.onUpdatePlayerHandler, this);
         this.game.emitter.off(this.key + "_querydecorate", this.queryDecorate, this);
+        this.game.emitter.off(EventType.FECTH_FOLD_MAIN_UI, this.onFoldButtonHandler, this);
     }
 
     destroy() {
@@ -89,7 +91,9 @@ export class PicaNewMainMediator extends BasicMediator {
 
         }
     }
-
+    private onFoldButtonHandler() {
+        if (this.mView) this.mView.fetchFoldButton();
+    }
     private queryDecorate() {
         this.game.roomManager.currentRoom.requestDecorate();
     }
