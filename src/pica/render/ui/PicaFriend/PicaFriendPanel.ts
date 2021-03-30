@@ -323,6 +323,20 @@ class FriendContainer extends Container {
             return bLv - aLv;
         });
     }
+
+    protected sortByLv(array: FriendData[]) {
+        return array.sort((a: FriendData, b: FriendData) => {
+            const aLv = a.lv ? 1 : 0;
+            const bLv = b.lv ? 1 : 0;
+            if (a.type === FriendChannel.Menu || b.type === FriendChannel.Menu) {
+                return 1;
+            }
+            if (a.type === FriendChannel.Null || b.type === FriendChannel.Null) {
+                return 1;
+            }
+            return bLv - aLv;
+        });
+    }
 }
 
 class MainContainer extends FriendContainer {
@@ -432,7 +446,7 @@ class MainContainer extends FriendContainer {
         let friendType = "";
         switch (type) {
             case FriendChannel.Friends:
-                this.sortByOnlien(data);
+                // this.sortByOnlien(data);
                 title = i18n.t("friendlist.title");
                 friendType = i18n.t("friendlist.friends");
                 const menu: FriendData[] = [{ type: FriendChannel.Menu, menuData: { type: FriendChannel.Notice } }, { type: FriendChannel.Menu, menuData: { type: FriendChannel.Blacklist } }, { type: FriendChannel.Null }];
@@ -453,6 +467,7 @@ class MainContainer extends FriendContainer {
         if (type !== FriendChannel.Friends) {
             this.sortByCreate(data);
         }
+        // this.sortByLv(data);
         this.sortByOnlien(data);
 
         this.showingFriends = data;
