@@ -7,7 +7,7 @@ interface IAccountData {
     expire: number;
     fingerprint: string;
     id: string;
-    gateway?: string;
+    gateway?: { host: string, port: number };
 }
 export class Account {
     public gameId: string;
