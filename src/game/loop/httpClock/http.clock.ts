@@ -93,5 +93,6 @@ export class HttpClock {
             gameId = gameId.slice(index + 1, gameId.length);
         }
         this.mGameId = gameId;
+        this.sync();
     }
 }
