@@ -21,7 +21,7 @@ export class PicaSurveyMediator extends BasicMediator {
         this.game.emitter.on(ModuleName.PICASURVEY_NAME + "_surveysuccess", this.onSurveySuccessHandler, this);
         //  this.game.emitter.on(EventType.EXECUTE_SURVEY_FURNITURE, this.onSurveySuccessHandler, this);
         this.cacheMgr.isSurveyStatus = true;
-        this.game.emitter.emit(EventType.FECTH_FOLD_MAIN_UI);
+        this.game.emitter.emit(EventType.FECTH_FOLD_MAIN_UI, true);
     }
 
     hide() {
@@ -30,7 +30,7 @@ export class PicaSurveyMediator extends BasicMediator {
         this.game.emitter.off(EventType.UPDATE_PLAYER_INFO, this.onUpdatePlayerInfo, this);
         this.game.emitter.off(ModuleName.PICASURVEY_NAME + "_surveysuccess", this.onSurveySuccessHandler, this);
         // this.game.emitter.off(EventType.EXECUTE_SURVEY_FURNITURE, this.onSurveySuccessHandler, this);
-        this.game.emitter.emit(EventType.FECTH_FOLD_MAIN_UI);
+        this.game.emitter.emit(EventType.FECTH_FOLD_MAIN_UI, false);
         this.cacheMgr.isSurveyStatus = false;
         this.mShowData = undefined;
     }

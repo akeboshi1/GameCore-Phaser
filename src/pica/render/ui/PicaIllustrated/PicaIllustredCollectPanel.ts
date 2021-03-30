@@ -49,6 +49,7 @@ export class PicaIllustredCollectPanel extends Phaser.GameObjects.Container {
     }
     setDoneMissionList(list: number[]) {
         if (list) this.doneMissions = list;
+        this.mGameGrid.refresh();
     }
     init() {
         const tableHeight = this.height;
@@ -76,7 +77,11 @@ export class PicaIllustredCollectPanel extends Phaser.GameObjects.Container {
                     cellContainer = new IllustratedCollectItem(this.scene, cellWidth, cellHeight, this.dpr, this.zoom);
                     cellContainer.setHandler(this.send);
                 }
-                cellContainer.setCombinationData(item);
+                let reweard = false;
+                if (this.doneMissions.indexOf(item.id) !== -1) {
+                    reweard = true;
+                }
+                cellContainer.setCombinationData(item, reweard);
                 cell.setHeight(cellContainer.height);
                 return cellContainer;
             },
@@ -196,6 +201,13 @@ class IllustratedCollectItem extends Phaser.GameObjects.Container {
         this.iscallRewards = curprogress === maxprogress;
         if (rewarded) {
             this.iscallRewards = false;
+            this.rewardsBtn.setFrameNormal("illustrate_survey_icon_1", "illustrate_survey_icon_1");
+        } else {
+            if (this.iscallRewards) {
+                this.rewardsBtn.setFrameNormal("illustrate_survey_icon", "illustrate_survey_icon");
+            } else {
+                this.rewardsBtn.setFrameNormal("illustrate_survey_icon_2", "illustrate_survey_icon_2");
+            }
         }
         this.gridLayout.Layout();
         this.layout();

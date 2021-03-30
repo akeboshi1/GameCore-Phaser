@@ -114,7 +114,8 @@ export class PicaNewMainPanel extends PicaBasePanel {
         super.init();
     }
 
-    public fetchFoldButton() {
+    public fetchFoldButton(fold: boolean) {
+        this.isFold = !fold;
         this.onFoldButtonHandler();
     }
     protected onInitialized() {

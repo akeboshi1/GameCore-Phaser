@@ -65,9 +65,17 @@ export class PicaIllustratedMediator extends BasicMediator {
         this.mShowData = cache.gallery;
         this.sortGallery(this.mShowData.list);
         const dexLevel = <IGalleryLevel>this.config.getGallery(this.mShowData.reward1NextIndex, GalleryType.dexLevel);
-        this.mShowData.reward1Max = dexLevel.exp;
-        const galleryLevel = <IGalleryLevel>this.config.getGallery(this.mShowData.reward1NextIndex, GalleryType.dexLevel);
-        this.mShowData.reward2Max = galleryLevel.exp;
+        if (dexLevel === undefined) {
+            this.mShowData.reward1Max = -1;
+        } else {
+            this.mShowData.reward1Max = dexLevel.exp;
+        }
+        const galleryLevel = <IGalleryLevel>this.config.getGallery(this.mShowData.reward2NextIndex, GalleryType.galleryLevel);
+        if (galleryLevel === undefined) {
+            this.mShowData.reward2Max = -1;
+        } else {
+            this.mShowData.reward2Max = galleryLevel.exp || 0;
+        }
         this.mView.setGallaryData(this.mShowData, this.getCombinations(this.mShowData.list));
     }
 
