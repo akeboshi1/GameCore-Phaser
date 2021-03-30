@@ -4,6 +4,7 @@ import { MatterObject } from "../physical/matter.object";
 import { IRoomService } from "../room/room";
 import { IBlockObject } from "./iblock.object";
 import { ISprite } from "structure";
+import { op_def } from "pixelpai_proto";
 
 export abstract class BlockObject extends MatterObject implements IBlockObject {
     public isUsed = false;
@@ -70,7 +71,7 @@ export abstract class BlockObject extends MatterObject implements IBlockObject {
         if (!this.mRoomService) return;
         switch (val) {
             case InputEnable.Interactive:
-                if (this.mModel && this.mModel.hasInteractive) {
+                if (this.mModel && (this.mModel.hasInteractive || this.mModel.nodeType === op_def.NodeType.ElementNodeType)) {
                     this.mRoomService.game.peer.render.setInteractive(this.id, this.type);
                 } else {
                     this.mRoomService.game.peer.render.disableInteractive(this.id, this.type);
