@@ -132,7 +132,7 @@ export class MatterSprite {
             return;
         }
         const { name: animationName, flip } = this.currentAnimation;
-        return this.getInteractiveArea(animationName, flip);
+        return this.getInteractiveArea(this.currentAnimationName, flip);
     }
 
     public setOriginCollisionPoint(value: number[] | null): void {
@@ -229,29 +229,29 @@ export class MatterSprite {
     }
 
     public findFramesAnimation(baseName: string, dir: number): RunningAnimation {
-        let animationName = this.checkDirectionAnimation(baseName, dir);
+        // let animationName = this.checkDirectionAnimation(baseName, dir);
         let flip = false;
-        if (animationName) {
-            return { name: animationName, flip };
-        }
+        // if (animationName) {
+        //     return { name: animationName, flip };
+        // }
         switch (dir) {
             case Direction.west_south:
             case Direction.east_north:
-                animationName = this.getDefaultAnimation(baseName);
+                // animationName = this.getDefaultAnimation(baseName);
                 break;
             case Direction.south_east:
-                animationName = this.getDefaultAnimation(baseName);
+                // animationName = this.getDefaultAnimation(baseName);
                 flip = true;
                 break;
             case Direction.north_west:
-                animationName = this.checkDirectionAnimation(baseName, Direction.east_north);
-                if (animationName === null) {
-                    animationName = this.getDefaultAnimation(baseName);
-                }
+                // animationName = this.checkDirectionAnimation(baseName, Direction.east_north);
+                // if (animationName === null) {
+                //     animationName = this.getDefaultAnimation(baseName);
+                // }
                 flip = true;
                 break;
         }
-        return { name: animationName, flip };
+        return { name: baseName, flip };
     }
 
     public setAnimationName(name: string, playTimes?: number): RunningAnimation {
@@ -264,30 +264,30 @@ export class MatterSprite {
         return null;
     }
 
-    public existAnimation(aniName: string): boolean {
-        if (!this.animations) return false;
-        return this.animations.has(aniName);
-    }
+    // public existAnimation(aniName: string): boolean {
+    //     if (!this.animations) return false;
+    //     return this.animations.has(aniName);
+    // }
 
-    private getDefaultAnimation(baseName: string) {
-        let animationName = this.checkDirectionAnimation(baseName, Direction.west_south);
-        if (animationName === null) {
-            if (this.existAnimation(baseName)) {
-                animationName = baseName;
-            } else {
-                animationName = "idle";
-            }
-        }
-        return animationName;
-    }
+    // private getDefaultAnimation(baseName: string) {
+    //     let animationName = this.checkDirectionAnimation(baseName, Direction.west_south);
+    //     if (animationName === null) {
+    //         if (this.existAnimation(baseName)) {
+    //             animationName = baseName;
+    //         } else {
+    //             animationName = "idle";
+    //         }
+    //     }
+    //     return animationName;
+    // }
 
-    private checkDirectionAnimation(baseAniName: string, dir: Direction) {
-        const aniName = `${baseAniName}_${dir}`;
-        if (this.existAnimation(aniName)) {
-            return aniName;
-        }
-        return null;
-    }
+    // private checkDirectionAnimation(baseAniName: string, dir: Direction) {
+    //     const aniName = `${baseAniName}`;
+    //     if (this.existAnimation(aniName)) {
+    //         return aniName;
+    //     }
+    //     return null;
+    // }
 
     private setAnimationData(animationName: string, direction: number, times?: number) {
         if (!animationName) {
