@@ -56,11 +56,13 @@ export class PicaRoamMediator extends BasicMediator {
     private addLisenter() {
         if (!this.userData) return;
         this.game.emitter.on(EventType.UPDATE_PLAYER_INFO, this.onUpdatePlayerInfoHandler, this);
+        this.game.emitter.on(EventType.PACKAGE_UPDATE, this.onUpdateHandler, this);
     }
 
     private removeLisenter() {
         if (!this.userData) return;
         this.game.emitter.off(EventType.UPDATE_PLAYER_INFO, this.onUpdatePlayerInfoHandler, this);
+        this.game.emitter.off(EventType.PACKAGE_UPDATE, this.onUpdateHandler, this);
     }
 
     private onUpdatePlayerInfoHandler() {
@@ -68,7 +70,11 @@ export class PicaRoamMediator extends BasicMediator {
             this.updateTokenData(this.curMoneyData);
         }
     }
-
+    private onUpdateHandler() {
+        if (this.curMoneyData) {
+            this.updateTokenData(this.curMoneyData);
+        }
+    }
     private query_ROAM_LIST() {
         this.mModel.query_ROAM_LIST();
     }

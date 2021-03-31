@@ -134,7 +134,6 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
     public onDisConnected() {
         Logger.getInstance().debug("app connectFail=====");
         if (this.isGotoGame) return;
-        // if (this.hasClear || this.connect.pause) return;
         if (this.mConfig.hasConnectFail) {
             return this.mainPeer.render.connectFail();
         } else {
@@ -146,19 +145,6 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
                     this.login();
                 }
             });
-            // this.renderPeer.showAlertReconnect("网络连接失败，请稍后再试");
-            // if (this.mReconnect > 2) {
-            //     this.renderPeer.showAlertReconnect("网络不稳定,请刷新网页");
-            //     // this.onRefreshConnect();
-            //     // todo reconnect Scene
-            // } else {
-            //     this.mReconnect++;
-            //     this.renderPeer.showAlertReconnect("网络不稳定,请刷新网页");
-            // this.clearGame(true).then(() => {
-            //     Logger.getInstance().debug("clearGame", this.mReconnect);
-            //     this.reconnect();
-            // });
-            // }
         }
     }
 

@@ -175,7 +175,7 @@ class PackageData {
                 let index = -1;
                 for (const temp of this.list) {
                     index++;
-                    if (temp.indexId === tempItem.indexId) {
+                    if (Number(temp.indexId) === Number(tempItem.indexId)) {
                         item = temp;
                         break;
                     }

@@ -1,14 +1,14 @@
 import { BasePlaySceneGuide, UiManager } from "gamecoreRender";
 import { IPos } from "utils";
-export class PlaneGuidePanel extends BasePlaySceneGuide {
+export class SofaGuidePanel extends BasePlaySceneGuide {
     constructor(uiManager: UiManager) {
-        super(1441619821, uiManager);
+        super(1589349967, uiManager);
     }
 
     protected step1(pos: IPos) {
         const dpr = this.render.config.scale_ratio;
-        const tmpPos = { x: pos.x + dpr * 120 - 100, y: pos.y + 1 * dpr };
+        const tmpPos = { x: pos.x - dpr * 10, y: pos.y + 70 * dpr };
         this.guideEffect.createGuideEffect(tmpPos);
-        this.mPlayScene.input.on("gameobjectup", this.gameObjectUpHandler, this);
+        this.mPlayScene.input.on("gameobjectdown", this.gameObjectUpHandler, this);
     }
 }

@@ -213,6 +213,11 @@ export class MatterObject implements IMatterObject {
             this.mergeMounth(mounts);
             this.updateMounth(mounts);
         }
+        if (model.hasOwnProperty("currentAnimation")) {
+            const currentAnimation = model.currentAnimation;
+            this.mModel.currentAnimation = currentAnimation;
+        }
+
         this.update();
     }
 

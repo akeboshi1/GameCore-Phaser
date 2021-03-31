@@ -62,6 +62,7 @@ export class MatterObject {
     }
 
     protected updateBody(model) {
+        // TODO:精简数据
         this.mRoomService.game.physicalPeer.updateModel(model);
     }
 

@@ -202,6 +202,14 @@ export class FramesModel implements IFramesModel {
         return { name: animationName, flip };
     }
 
+    public checkDirectionAnimation(baseAniName: string, dir: Direction) {
+        const aniName = `${baseAniName}_${dir}`;
+        if (this.existAnimation(aniName)) {
+            return aniName;
+        }
+        return null;
+    }
+
     private setDisplay(display: op_gameconfig.IDisplay) {
         if (!display) {
             Logger.getInstance().error(`${this.type} display does not exist`);
@@ -238,14 +246,6 @@ export class FramesModel implements IFramesModel {
             // this.animations.set(aniData.name + "_1", aniData);
             // this.animations.set(aniData.name + "_5", aniData);
         }
-    }
-
-    private checkDirectionAnimation(baseAniName: string, dir: Direction) {
-        const aniName = `${baseAniName}_${dir}`;
-        if (this.existAnimation(aniName)) {
-            return aniName;
-        }
-        return null;
     }
 
     private getDefaultAnimation(baseName: string) {

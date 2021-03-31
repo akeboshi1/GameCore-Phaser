@@ -167,7 +167,7 @@ export class PicaNewMainPanel extends PicaBasePanel {
     }
 
     private onActivityHandler(tag: string, data: any) {
-        if (tag === "email" || tag === "recharge") {
+        if (tag === "email" || tag === "recharge" || tag === "activity") {
             this.onNoticeHandler();
             return;
         }
