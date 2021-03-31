@@ -40,7 +40,6 @@ export class MouseManager {
         this.mGameObject = null;
         this.scene = scene;
         if (!this.scene) return;
-        // scene.input.on("gameobjectup", this.groundUp, this);
         scene.input.on("gameobjectdown", this.onGameObjectDownHandler, this);
         scene.input.on("pointerdown", this.onPointerDownHandler, this);
         this.resume();
@@ -89,14 +88,7 @@ export class MouseManager {
             const diffX = Math.abs(pointer.downX - pointer.upX);
             const diffY = Math.abs(pointer.downY - pointer.upY);
             if (diffX < 10 && diffY < 10) {
-                // events.push(MouseEvent.Tap);
-                // this.render.emitter.emit(ClickEvent.Tap, pointer, gameobject);
                 if (gameobject && gameobject.parentContainer) {
-                    // const displsy = gameobject.parentContainer.parentContainer || gameobject.parentContainer;
-                    // let nodeType = -1;
-                    // if (displsy && displsy instanceof IDisplayObject) {
-                    //     nodeType = displsy.nodeType;
-                    // }
                     if (com && com instanceof FramesDisplay) {
                         if (com.nodeType === NodeType.ElementNodeType) {
                             if (com.hasInteractive) {
@@ -104,9 +96,6 @@ export class MouseManager {
                             }
                         }
                     }
-                    // this.render.mainPeer.onTapHandler({ id, x: pointer.worldX / this.render.scaleRatio, y: pointer.worldY / this.render.scaleRatio, nodeType });
-                } else {
-                    // this.render.mainPeer.onTapHandler({ x: pointer.worldX / this.render.scaleRatio, y: pointer.worldY / this.render.scaleRatio });
                 }
             }
         }
@@ -160,7 +149,6 @@ export class MouseManager {
     }
 
     protected onGameObjectUpHandler(pointer, gameObject) {
-        // this.mGameObject = null;
         this.onUpdate(pointer, gameObject);
     }
 
@@ -186,11 +174,11 @@ export class MouseManager {
     protected onPointerUp(pointer) {
         clearTimeout(this.mDownTime);
         this.onUpdate(pointer, this.mGameObject);
+        Logger.getInstance().log("onPointerUp mouseManager===>", pointer);
         this.mGameObject = null;
     }
 
     private holdHandler(pointer, gameobject) {
-        // this.worldService.emitter.emit(MessageType.PRESS_ELEMENT, pointer, gameobject);
         clearTimeout(this.mDownTime);
         if (Math.abs(pointer.downX - pointer.x) > 5 * this.zoom || Math.abs(pointer.downY - pointer.y) > 5 * this.zoom) {
             return;
@@ -203,21 +191,12 @@ export class MouseManager {
             // TODO 提供个接口
             com = gameobject.parentContainer.parentContainer || gameobject.parentContainer;
             this.sendMouseEvent([MouseEvent.LeftMouseHolding], id, { x: pointer.worldX / this.zoom, y: pointer.worldY / this.zoom });
-
-            // 触发小屋装饰
-            // this.render.mainPeer.requestDecorate(id);
         }
     }
 
     private sendMouseEvent(mouseEvent: MouseEvent[], id, point3f: { x: number, y: number, z?: number }) {
         this.mClickID = id;
         this.render.mainPeer.sendMouseEvent(id, mouseEvent, point3f);
-        // const pkt: PBpacket = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_MOUSE_EVENT);
-        // const content: op_virtual_world.IOP_CLIENT_REQ_VIRTUAL_WORLD_MOUSE_EVENT = pkt.content;
-        // content.id = id;
-        // content.mouseEvent = mouseEvent;
-        // content.point3f = point3f;
-        // this.mConnect.send(pkt);
     }
 
 }
