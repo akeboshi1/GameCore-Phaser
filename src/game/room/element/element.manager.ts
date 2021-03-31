@@ -64,6 +64,19 @@ export class ElementManager extends PacketHandler implements IElementManager {
 
     constructor(protected mRoom: IRoomService) {
         super();
+        if (this.mRoom && this.mRoom.game) {
+            this.mGameConfig = this.mRoom.game.elementStorage;
+        }
+
+        // 进入房间创建地图后将其拷贝给物理进程
+        this.mStateMgr = new ElementStateManager(mRoom);
+        this.mActionMgr = new PicaElementActionManager(mRoom.game);
+        this.addListen();
+
+        this.mRoom.onManagerCreated(this.constructor.name);
+    }
+
+    public addListen() {
         if (this.connection) {
             this.connection.addPacketListener(this);
             this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_ADD_SPRITE, this.onAdd);
@@ -79,20 +92,20 @@ export class ElementManager extends PacketHandler implements IElementManager {
             this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_ACTIVE_SPRITE, this.onActiveSpriteHandler);
             this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_TRIGGER_MOVE_SPRITE, this.onTiggerMove);
         }
-        if (this.mRoom && this.mRoom.game) {
-            this.mGameConfig = this.mRoom.game.elementStorage;
-        }
-
-        // 进入房间创建地图后将其拷贝给物理进程
-        this.mStateMgr = new ElementStateManager(mRoom);
-        this.mActionMgr = new PicaElementActionManager(mRoom.game);
-        this.eleDataMgr.on(EventType.SCENE_ELEMENT_FIND, this.onQueryElementHandler, this);
+        if (this.eleDataMgr) this.eleDataMgr.on(EventType.SCENE_ELEMENT_FIND, this.onQueryElementHandler, this);
         this.mRoom.game.emitter.on(EventType.SCENE_INTERACTION_ELEMENT, this.checkElementAction, this);
         this.mRoom.game.emitter.on("FurnitureEvent", this.checkElementAction, this);
-
-        this.mRoom.onManagerCreated(this.constructor.name);
     }
 
+    public removeListen() {
+        if (this.connection) {
+            Logger.getInstance().debug("elementmanager ---- removepacklistener");
+            this.connection.removePacketListener(this);
+        }
+        this.mRoom.game.emitter.off(EventType.SCENE_INTERACTION_ELEMENT, this.checkElementAction, this);
+        this.mRoom.game.emitter.off("FurnitureEvent", this.checkElementAction, this);
+        if (this.eleDataMgr) this.eleDataMgr.off(EventType.SCENE_ELEMENT_FIND, this.onQueryElementHandler, this);
+    }
     public init() {
         // this.destroy();
     }
@@ -152,13 +165,7 @@ export class ElementManager extends PacketHandler implements IElementManager {
 
     public destroy() {
         this.hasAddComplete = false;
-        this.mRoom.game.emitter.off(EventType.SCENE_INTERACTION_ELEMENT, this.checkElementAction, this);
-        this.mRoom.game.emitter.off("FurnitureEvent", this.checkElementAction, this);
-        if (this.eleDataMgr) this.eleDataMgr.off(EventType.SCENE_ELEMENT_FIND, this.onQueryElementHandler, this);
-        if (this.connection) {
-            Logger.getInstance().debug("elementmanager ---- removepacklistener");
-            this.connection.removePacketListener(this);
-        }
+        this.removeListen();
         if (this.mElements) {
             this.mElements.forEach((element) => this.remove(element.id));
             this.mElements.clear();
