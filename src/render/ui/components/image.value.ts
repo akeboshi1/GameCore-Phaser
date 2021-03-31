@@ -1,4 +1,5 @@
 import { BBCodeText } from "apowophaserui";
+import { UIAtlasName } from "picaRes";
 import { Font, UIHelper } from "utils";
 import { DynamicImage } from "./dynamic.image";
 
@@ -6,9 +7,10 @@ export class ImageValue extends Phaser.GameObjects.Container {
     protected dpr: number;
     protected icon: Phaser.GameObjects.Image | DynamicImage;
     protected value: BBCodeText | Phaser.GameObjects.Text;
-    protected uintText: Phaser.GameObjects.Text;
+    protected uintText: any;
     protected offset: Phaser.Geom.Point;
     protected layoutType: number = 1;
+    protected uintImg: boolean = false;
     constructor(scene: Phaser.Scene, width: number, height: number, key: string, frame: string, dpr: number, style?: any) {
         super(scene);
         this.dpr = dpr;
@@ -19,14 +21,25 @@ export class ImageValue extends Phaser.GameObjects.Container {
         this.resetSize();
     }
 
-    public setUintText(data: { text?: string, style?: any, fontStyle?: string }) {
+    public setUintText(data: { text?: string, style?: any, fontStyle?: string, img?: boolean, key?: string, frame?: string }) {
         if (!this.uintText) {
-            this.uintText = this.scene.make.text({ style: data.style }).setOrigin(0, 0.5);
+            if (data.img) {
+                this.uintText = this.scene.make.image({ key: UIAtlasName.uicommon, frame: "home_silver_myriad" }).setOrigin(0, 0.5);
+                this.uintImg = true;
+            } else {
+                this.uintText = this.scene.make.text({ style: data.style }).setOrigin(0, 0.5);
+            }
             this.add(this.uintText);
         }
-        if (data.style) this.uintText.setStyle(data.style);
-        if (data.fontStyle) this.uintText.setFontStyle(data.fontStyle);
-        if (data.text) this.uintText.text = data.text;
+        if (data.img) {
+            if (data.key) this.uintText.setTexture(data.key, data.frame);
+            else if (data.frame) this.uintText.setFrame(data.frame);
+        } else {
+            if (data.style) this.uintText.setStyle(data.style);
+            if (data.fontStyle) this.uintText.setFontStyle(data.fontStyle);
+            if (data.text) this.uintText.text = data.text;
+        }
+
         this.uintText.visible = true;
         this.resetSize();
     }
@@ -104,7 +117,7 @@ export class ImageValue extends Phaser.GameObjects.Container {
         this.value.y = this.offset.y;
         if (this.uintText) {
             this.uintText.x = this.value.x + this.value.width + 3 * this.dpr;
-            this.uintText.y = this.value.y;
+            this.uintText.y = this.value.y + (this.uintImg ? 1 * this.dpr : 0);
         }
     }
 }

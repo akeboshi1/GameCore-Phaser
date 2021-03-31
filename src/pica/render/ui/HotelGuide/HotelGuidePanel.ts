@@ -27,7 +27,9 @@ export class HotelGuidePanel extends BaseHotelGuidePanel {
         if (!item) this.end();
         this.itemTaskBtn = item.taskButton;
         const worldMatrix = this.itemTaskBtn.getWorldTransformMatrix();
-        this.guideEffect.createGuideEffect({ x: item.width, y: worldMatrix.ty });
+        const scalx = worldMatrix.scaleX;
+        const posx = (item.width - this.itemTaskBtn.width * 0.5) * scalx;
+        this.guideEffect.createGuideEffect({ x: posx, y: worldMatrix.ty });
         this.itemTaskBtn.on(ClickEvent.Tap, this.step4, this);
     }
 

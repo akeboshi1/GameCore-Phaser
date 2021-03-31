@@ -65,6 +65,7 @@ export class PicaWorkerUiManager extends UIManager {
             case ModuleName.PICAHOTELGUIDE_NAME:
             case ModuleName.PICAPLANEGUIDE_NAME:
             case ModuleName.PICAROOMGUIDE_NAME:
+            case ModuleName.PICASOFA_NAME:
                 const id = nameList[1] || name;
                 const guideConfig = (<BaseDataConfigManager>this.game.configManager).findGuide(id);
                 if (guideConfig && !guideConfig.state) {

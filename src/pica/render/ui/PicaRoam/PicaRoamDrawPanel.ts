@@ -65,7 +65,7 @@ export class PicaRoamDrawPanel extends Phaser.GameObjects.Container {
             color: "#ffffff", fontSize: 15 * this.dpr, fontFamily: Font.NUMBER
         });
         this.moneyvalue.setLayout(1);
-        this.moneyvalue.setUintText({ style: UIHelper.whiteStyle(this.dpr, 15) });
+        // this.moneyvalue.setUintText({ style: UIHelper.whiteStyle(this.dpr, 15) });
         this.moneyvalue.x = moneybg.x - moneybg.width * 0.5 + 22 * this.dpr;
         this.tokenvalue = new ImageValue(this.scene, 60 * this.dpr, 26 * this.dpr, UIAtlasName.uicommon, "roam_ordinary_icon", this.dpr, {
             color: "#ffffff", fontSize: 15 * this.dpr, fontFamily: Font.NUMBER
@@ -144,7 +144,7 @@ export class PicaRoamDrawPanel extends Phaser.GameObjects.Container {
         }
         if (money > 99999) {
             this.moneyvalue.setFrameValue((Math.floor(money / 1000) / 10) + "", UIAtlasName.uicommon, moneyframe);
-            this.moneyvalue.setUintText({ text: i18n.t("quantityunit.w") });
+            this.moneyvalue.setUintText({ img: true });
         } else {
             this.moneyvalue.setFrameValue(money + "", UIAtlasName.uicommon, moneyframe);
             this.moneyvalue.setUintTextVisible(false);
