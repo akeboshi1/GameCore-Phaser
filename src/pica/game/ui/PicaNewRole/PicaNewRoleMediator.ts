@@ -1,7 +1,7 @@
 import { op_client, op_def, op_pkt_def } from "pixelpai_proto";
 import { PicaNewRole } from "./PicaNewRole";
 import { BasicMediator, Game, UIType } from "gamecore";
-import { EventType, ModuleName } from "structure";
+import { ModuleName } from "structure";
 import { BaseDataConfigManager } from "../../config";
 import { Logger } from "utils";
 import { ISocial } from "picaStructure";
@@ -101,7 +101,6 @@ export class PicaNewRoleMediator extends BasicMediator {
         this.mModel.queryAction(op_def.FrontEndUniqueUIEnum.PicaNewRole, this.uid, action.id);
         const tempdata = { animation: action.tag.type, times: action.tag.repeat, action: action.tag.action, id: action.tag.bulletId };
         let activeEnable = true;
-        // this.game.user.userData.playerBag.getItemsCount(op_pkt_def.PKT_PackageType.PropPackage, action.tag.)
         if (action.tag.propUseId) {
             const count = this.game.user.userData.playerBag.getItemsCount(op_pkt_def.PKT_PackageType.PropPackage, action.tag.propUseId);
             activeEnable = count > 0;
@@ -120,13 +119,9 @@ export class PicaNewRoleMediator extends BasicMediator {
         }
     }
     private onHideView() {
-        // const uimanager = this.game.uiManager;
-        // uimanager.showMed(ModuleName.PICANEWMAIN_NAME);
         this.hide();
     }
     private onViewInitComplete() {
-        // const uimanager = this.game.uiManager;
-        // uimanager.hideMed(ModuleName.PICANEWMAIN_NAME);
     }
     private checkFollowState(uid: string) {
         this.game.httpService.checkFollowed([uid]).then((response: any) => {
