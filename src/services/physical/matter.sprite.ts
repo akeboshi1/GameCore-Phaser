@@ -229,21 +229,29 @@ export class MatterSprite {
     }
 
     public findFramesAnimation(baseName: string, dir: number): RunningAnimation {
+        let animationName = this.checkDirectionAnimation(baseName, dir);
         let flip = false;
+        if (animationName) {
+            return { name: animationName, flip };
+        }
         switch (dir) {
             case Direction.west_south:
             case Direction.east_north:
+                animationName = this.getDefaultAnimation(baseName);
                 break;
             case Direction.south_east:
+                animationName = this.getDefaultAnimation(baseName);
                 flip = true;
                 break;
             case Direction.north_west:
+                animationName = this.checkDirectionAnimation(baseName, Direction.east_north);
+                if (animationName === null) {
+                    animationName = this.getDefaultAnimation(baseName);
+                }
                 flip = true;
                 break;
         }
-        let addName: string = "";
-        if ((dir >= Direction.north && dir < Direction.west) || dir > Direction.east && dir <= Direction.east_north) addName = "_back";
-        return { name: `${baseName}${addName}`, flip };
+        return { name: animationName, flip };
     }
 
     public setAnimationName(name: string, playTimes?: number): RunningAnimation {
@@ -252,6 +260,31 @@ export class MatterSprite {
             this.currentAnimationName = name;
             const ani = this.setAnimationData(name, this.direction, playTimes);
             return ani;
+        }
+        return null;
+    }
+
+    public existAnimation(aniName: string): boolean {
+        if (!this.animations) return false;
+        return this.animations.has(aniName);
+    }
+
+    private getDefaultAnimation(baseName: string) {
+        let animationName = this.checkDirectionAnimation(baseName, Direction.west_south);
+        if (animationName === null) {
+            if (this.existAnimation(baseName)) {
+                animationName = baseName;
+            } else {
+                animationName = "idle";
+            }
+        }
+        return animationName;
+    }
+
+    private checkDirectionAnimation(baseAniName: string, dir: Direction) {
+        const aniName = `${baseAniName}_${dir}`;
+        if (this.existAnimation(aniName)) {
+            return aniName;
         }
         return null;
     }
