@@ -65,8 +65,12 @@ class AddHandler extends ElementHandler {
         const id = buf.toString("utf-8", 4, buf.readIntBE(0, 4) + 4);
         const element = (<any> this.room.game.configManager).getItemBaseByID(id);
         if (this.element) {
-            this.element.model.registerAnimationMap("idle", "lift");
-            this.element.model.registerAnimationMap("walk", "liftwalk");
+            const model = this.element.model;
+            if (model) {
+                model.registerAnimationMap("idle", "lift");
+                model.registerAnimationMap("walk", "liftwalk");
+                this.element.play(model.currentAnimationName);
+            }
         }
         if (element) {
             this.room.game.renderPeer.liftItem(state.owner.id, element.animationDisplay, element.animations);
@@ -82,14 +86,15 @@ class DeleteHandler extends ElementHandler {
     }
 
     private ShowOff(state: State) {
-        const buf = Buffer.from(state.packet);
-        const ownerId = state.owner.id;
-        const owner = this.room.getElement(ownerId);
-        if (owner) {
-            owner.model.unregisterAnimationMap("idle");
-            owner.model.unregisterAnimationMap("walk");
+        if (this.element) {
+            const model = this.element.model;
+            if (model) {
+                model.unregisterAnimationMap("idle");
+                model.unregisterAnimationMap("walk");
+                this.element.play(model.currentAnimationName);
+            }
         }
-        if (owner === this.room.playerManager.actor) this.room.game.uiManager.hideMed(ModuleName.PICA_DROP_ELEMENT_NAME);
+        if (this.element === this.room.playerManager.actor) this.room.game.uiManager.hideMed(ModuleName.PICA_DROP_ELEMENT_NAME);
         this.room.game.renderPeer.clearMount(state.owner.id);
     }
 }

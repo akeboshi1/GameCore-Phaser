@@ -267,7 +267,7 @@ export class Sprite extends EventDispatcher implements ISprite {
     }
 
     public setAnimationName(name: string, times?: number) {
-        if (!this.currentAnimation || this.currentAnimationName !== name) {
+        if (!this.currentAnimation || this.currentAnimation.name !== name) {
             if (this.displayInfo) {
                 name = this.animator ? this.animator.getAnimationName(name) : name;
                 this.displayInfo.animationName = name;

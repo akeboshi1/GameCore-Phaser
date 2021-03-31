@@ -2,6 +2,7 @@ import { Game } from "gamecore";
 import { ISprite } from "structure";
 export class ElementActionManager {
     protected mActionTags = [];
+    protected mNeedBroadcastTags = [];
     protected game: Game;
     constructor(game) {
         this.game = game;
@@ -13,6 +14,11 @@ export class ElementActionManager {
             action.executeAction();
         }
     }
+
+    public executeFeatureActions(actionName: string, data?: any) {
+        const action = this.createElementAction(data, actionName);
+        if (action) action.executeAction();
+    }
     public checkAllAction(data: ISprite) {
         const temptag = [];
         for (const value of this.mActionTags) {
@@ -22,7 +28,13 @@ export class ElementActionManager {
         }
         return temptag;
     }
-
+    public checkActionNeedBroadcast(data: ISprite) {
+        const tags = this.checkAllAction(data);
+        for (const tag of tags) {
+            if (this.mNeedBroadcastTags.indexOf(tag) !== -1) return true;
+        }
+        return false;
+    }
     public checkAction(data: ISprite, actionName?: string) {
         return this.checkAttrsAction(data, actionName);
     }
@@ -58,7 +70,7 @@ export class ElementActionManager {
         this.mActionTags = undefined;
     }
 
-    protected createElementAction(data: ISprite, actionName: string, userid?: number) {
+    protected createElementAction(data: any, actionName: string, userid?: number) {
         return undefined;
     }
 }

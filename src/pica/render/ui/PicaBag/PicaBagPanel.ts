@@ -442,7 +442,7 @@ export class PicaBagPanel extends PicaBasePanel {
     this.topCheckBox.on("selected", this.onTopCategoryHandler, this);
     this.mCategoryCon.add(this.topBtns);
     if (editor) {
-      const index = topCategorys.indexOf(5);// op_pkt_def.PKT_PackageType.EditFurniturePackage
+      const index = topCategorys.indexOf(1);// op_pkt_def.PKT_PackageType.EditFurniturePackage
       this.topCheckBox.selectIndex(index);
     } else {
       this.topCheckBox.selectIndex(0);
