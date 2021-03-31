@@ -85,6 +85,7 @@ export class DialogPanel extends BasePanel {
         this.bg.texture.setFilter(Phaser.Textures.FilterMode.LINEAR);
         this.bg.displayWidth = width;
         this.bg.displayHeight = cheight;
+        const tap = new Tap(this.bg);
         const whiteGraphic = this.scene.make.graphics(undefined, false);
         const graphicWidth = width - 30 * this.dpr;
         const graphicHeight = 122 * this.dpr;
@@ -111,7 +112,8 @@ export class DialogPanel extends BasePanel {
         closeBtn.visible = false;
         this.content.add([this.bg, this.npcIcon, whiteGraphic, this.text, nameBg, this.npcName, closeBtn]);
         this.bg.setInteractive();
-        this.bg.on("pointerdown", this.onNextDialogHandler, this);
+        this.bg.on(ClickEvent.Tap, this.onNextDialogHandler, this);
+        // this.bg.on("pointerdown", this.onNextDialogHandler, this);
         this.add(this.content);
         this.resize(0, 0);
         super.init();
