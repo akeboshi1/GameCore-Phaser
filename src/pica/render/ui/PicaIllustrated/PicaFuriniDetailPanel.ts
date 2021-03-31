@@ -79,7 +79,7 @@ export class PicaFuriniDetailPanel extends Phaser.GameObjects.Container {
         this.furinName.x = -bottomWidth * 0.5 + 10 * this.dpr;
         this.furinName.y = this.bottomBg.y - bottomHeight * 0.5 + 18 * this.dpr;
         this.furiDes = this.scene.make.text({ style: UIHelper.colorStyle("#000000", 11 * this.dpr) }).setOrigin(0, 0.5);
-        this.furiDes.setWordWrapWidth(bottomWidth - 20 * this.dpr);
+        this.furiDes.setWordWrapWidth(bottomWidth - 10 * this.dpr, true);
         this.furiDes.x = this.furinName.x;
         this.furiDes.y = this.furinName.y + 25 * this.dpr;
         this.add([this.backgrand, bg, titlebg, this.titleName, this.closeButton, this.codeName, this.mDetailDisplay, this.starImg, this.bottomBg, this.furinName, this.furiDes]);
