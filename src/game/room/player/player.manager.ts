@@ -159,7 +159,7 @@ export class PlayerManager extends PacketHandler implements IElementManager {
                 if (data.animation) {
                     element.play(data.animation, data.times);
                 }
-                this.mActionMgr.executeElementActions(data.animation, { targetId, id: data.id }, id);
+                this.mActionMgr.executeElementActions(data.action, { targetId, id: data.id }, id);
             }
         }
     }

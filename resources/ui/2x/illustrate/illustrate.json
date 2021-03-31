@@ -4,156 +4,30 @@
 			"image": "illustrate",
 			"format": "RGBA8888",
 			"size": {
-				"w": 898,
-				"h": 718
+				"w": 1922,
+				"h": 828
 			},
 			"scale": 1,
 			"frames": [
 				{
-					"filename": "illustrate_dress_bg",
+					"filename": "illustrate_collect_bg_1",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
-						"w": 608,
-						"h": 192
+						"w": 654,
+						"h": 672
 					},
 					"spriteSourceSize": {
 						"x": 0,
 						"y": 0,
-						"w": 608,
-						"h": 192
+						"w": 654,
+						"h": 672
 					},
 					"frame": {
 						"x": 1,
 						"y": 1,
-						"w": 608,
-						"h": 192
-					}
-				},
-				{
-					"filename": "illustrate_dress_picture",
-					"rotated": false,
-					"trimmed": false,
-					"sourceSize": {
-						"w": 286,
-						"h": 204
-					},
-					"spriteSourceSize": {
-						"x": 0,
-						"y": 0,
-						"w": 286,
-						"h": 204
-					},
-					"frame": {
-						"x": 611,
-						"y": 1,
-						"w": 286,
-						"h": 204
-					}
-				},
-				{
-					"filename": "illustrate_furniture_bg",
-					"rotated": false,
-					"trimmed": false,
-					"sourceSize": {
-						"w": 608,
-						"h": 192
-					},
-					"spriteSourceSize": {
-						"x": 0,
-						"y": 0,
-						"w": 608,
-						"h": 192
-					},
-					"frame": {
-						"x": 1,
-						"y": 195,
-						"w": 608,
-						"h": 192
-					}
-				},
-				{
-					"filename": "illustrate_furniture_picture",
-					"rotated": false,
-					"trimmed": true,
-					"sourceSize": {
-						"w": 286,
-						"h": 204
-					},
-					"spriteSourceSize": {
-						"x": 0,
-						"y": 25,
-						"w": 286,
-						"h": 176
-					},
-					"frame": {
-						"x": 611,
-						"y": 207,
-						"w": 286,
-						"h": 176
-					}
-				},
-				{
-					"filename": "illustrate_make_picture",
-					"rotated": false,
-					"trimmed": true,
-					"sourceSize": {
-						"w": 286,
-						"h": 204
-					},
-					"spriteSourceSize": {
-						"x": 0,
-						"y": 0,
-						"w": 281,
-						"h": 204
-					},
-					"frame": {
-						"x": 611,
-						"y": 385,
-						"w": 281,
-						"h": 204
-					}
-				},
-				{
-					"filename": "illustrate_make_bg",
-					"rotated": false,
-					"trimmed": false,
-					"sourceSize": {
-						"w": 608,
-						"h": 192
-					},
-					"spriteSourceSize": {
-						"x": 0,
-						"y": 0,
-						"w": 608,
-						"h": 192
-					},
-					"frame": {
-						"x": 1,
-						"y": 389,
-						"w": 608,
-						"h": 192
-					}
-				},
-				{
-					"filename": "illustrate_nav_interval",
-					"rotated": false,
-					"trimmed": false,
-					"sourceSize": {
-						"w": 3,
-						"h": 32
-					},
-					"spriteSourceSize": {
-						"x": 0,
-						"y": 0,
-						"w": 3,
-						"h": 32
-					},
-					"frame": {
-						"x": 894,
-						"y": 385,
-						"w": 3,
-						"h": 32
+						"w": 654,
+						"h": 672
 					}
 				},
 				{
@@ -172,30 +46,9 @@
 					},
 					"frame": {
 						"x": 1,
-						"y": 583,
+						"y": 675,
 						"w": 134,
 						"h": 134
-					}
-				},
-				{
-					"filename": "illustrate_badge_icon",
-					"rotated": false,
-					"trimmed": false,
-					"sourceSize": {
-						"w": 84,
-						"h": 76
-					},
-					"spriteSourceSize": {
-						"x": 0,
-						"y": 0,
-						"w": 84,
-						"h": 76
-					},
-					"frame": {
-						"x": 137,
-						"y": 591,
-						"w": 84,
-						"h": 76
 					}
 				},
 				{
@@ -213,94 +66,10 @@
 						"h": 3
 					},
 					"frame": {
-						"x": 137,
-						"y": 583,
+						"x": 1,
+						"y": 811,
 						"w": 84,
 						"h": 3
-					}
-				},
-				{
-					"filename": "illustrate_survey_lv_icon",
-					"rotated": false,
-					"trimmed": false,
-					"sourceSize": {
-						"w": 46,
-						"h": 46
-					},
-					"spriteSourceSize": {
-						"x": 0,
-						"y": 0,
-						"w": 46,
-						"h": 46
-					},
-					"frame": {
-						"x": 137,
-						"y": 669,
-						"w": 46,
-						"h": 46
-					}
-				},
-				{
-					"filename": "illustrate_survey_lv_bottom",
-					"rotated": false,
-					"trimmed": false,
-					"sourceSize": {
-						"w": 508,
-						"h": 21
-					},
-					"spriteSourceSize": {
-						"x": 0,
-						"y": 0,
-						"w": 508,
-						"h": 21
-					},
-					"frame": {
-						"x": 185,
-						"y": 669,
-						"w": 508,
-						"h": 21
-					}
-				},
-				{
-					"filename": "illustrate_survey_lv_top",
-					"rotated": false,
-					"trimmed": false,
-					"sourceSize": {
-						"w": 506,
-						"h": 20
-					},
-					"spriteSourceSize": {
-						"x": 0,
-						"y": 0,
-						"w": 506,
-						"h": 20
-					},
-					"frame": {
-						"x": 185,
-						"y": 692,
-						"w": 506,
-						"h": 20
-					}
-				},
-				{
-					"filename": "illustrate_survey_icon",
-					"rotated": false,
-					"trimmed": false,
-					"sourceSize": {
-						"w": 76,
-						"h": 66
-					},
-					"spriteSourceSize": {
-						"x": 0,
-						"y": 0,
-						"w": 76,
-						"h": 66
-					},
-					"frame": {
-						"x": 223,
-						"y": 591,
-						"w": 76,
-						"h": 66
 					}
 				},
 				{
@@ -318,8 +87,29 @@
 						"h": 16
 					},
 					"frame": {
-						"x": 693,
-						"y": 692,
+						"x": 87,
+						"y": 811,
+						"w": 17,
+						"h": 16
+					}
+				},
+				{
+					"filename": "illustrate_survey_star_full",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 17,
+						"h": 16
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 17,
+						"h": 16
+					},
+					"frame": {
+						"x": 106,
+						"y": 811,
 						"w": 17,
 						"h": 16
 					}
@@ -339,8 +129,8 @@
 						"h": 63
 					},
 					"frame": {
-						"x": 301,
-						"y": 591,
+						"x": 137,
+						"y": 675,
 						"w": 235,
 						"h": 63
 					}
@@ -360,10 +150,52 @@
 						"h": 61
 					},
 					"frame": {
-						"x": 538,
-						"y": 591,
+						"x": 137,
+						"y": 740,
 						"w": 235,
 						"h": 61
+					}
+				},
+				{
+					"filename": "illustrate_survey_lv_bottom",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 508,
+						"h": 21
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 508,
+						"h": 21
+					},
+					"frame": {
+						"x": 137,
+						"y": 803,
+						"w": 508,
+						"h": 21
+					}
+				},
+				{
+					"filename": "illustrate_survey_lv_top",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 506,
+						"h": 20
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 506,
+						"h": 20
+					},
+					"frame": {
+						"x": 374,
+						"y": 675,
+						"w": 506,
+						"h": 20
 					}
 				},
 				{
@@ -381,31 +213,304 @@
 						"h": 60
 					},
 					"frame": {
-						"x": 775,
-						"y": 591,
+						"x": 374,
+						"y": 697,
 						"w": 122,
 						"h": 60
 					}
 				},
 				{
-					"filename": "illustrate_survey_star_full",
+					"filename": "illustrate_nav_interval",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
-						"w": 17,
-						"h": 16
+						"w": 3,
+						"h": 32
 					},
 					"spriteSourceSize": {
 						"x": 0,
 						"y": 0,
-						"w": 17,
-						"h": 16
+						"w": 3,
+						"h": 32
 					},
 					"frame": {
-						"x": 695,
-						"y": 654,
-						"w": 17,
-						"h": 16
+						"x": 374,
+						"y": 759,
+						"w": 3,
+						"h": 32
+					}
+				},
+				{
+					"filename": "illustrate_badge_icon",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 84,
+						"h": 76
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 84,
+						"h": 76
+					},
+					"frame": {
+						"x": 498,
+						"y": 697,
+						"w": 84,
+						"h": 76
+					}
+				},
+				{
+					"filename": "illustrate_survey_icon_1",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 80,
+						"h": 80
+					},
+					"spriteSourceSize": {
+						"x": 1,
+						"y": 4,
+						"w": 78,
+						"h": 74
+					},
+					"frame": {
+						"x": 584,
+						"y": 697,
+						"w": 78,
+						"h": 74
+					}
+				},
+				{
+					"filename": "illustrate_survey_lv_icon",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 46,
+						"h": 46
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 46,
+						"h": 46
+					},
+					"frame": {
+						"x": 647,
+						"y": 773,
+						"w": 46,
+						"h": 46
+					}
+				},
+				{
+					"filename": "illustrate_survey_icon",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 80,
+						"h": 80
+					},
+					"spriteSourceSize": {
+						"x": 1,
+						"y": 10,
+						"w": 78,
+						"h": 68
+					},
+					"frame": {
+						"x": 664,
+						"y": 697,
+						"w": 78,
+						"h": 68
+					}
+				},
+				{
+					"filename": "illustrate_survey_icon_2",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 80,
+						"h": 80
+					},
+					"spriteSourceSize": {
+						"x": 2,
+						"y": 10,
+						"w": 77,
+						"h": 68
+					},
+					"frame": {
+						"x": 744,
+						"y": 697,
+						"w": 77,
+						"h": 68
+					}
+				},
+				{
+					"filename": "illustrate_collect_bg_2",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 654,
+						"h": 319
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 654,
+						"h": 319
+					},
+					"frame": {
+						"x": 657,
+						"y": 1,
+						"w": 654,
+						"h": 319
+					}
+				},
+				{
+					"filename": "illustrate_collect_bg_3",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 654,
+						"h": 319
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 654,
+						"h": 319
+					},
+					"frame": {
+						"x": 657,
+						"y": 322,
+						"w": 654,
+						"h": 319
+					}
+				},
+				{
+					"filename": "illustrate_furniture_picture",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 286,
+						"h": 204
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 25,
+						"w": 286,
+						"h": 176
+					},
+					"frame": {
+						"x": 882,
+						"y": 643,
+						"w": 286,
+						"h": 176
+					}
+				},
+				{
+					"filename": "illustrate_dress_bg",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 608,
+						"h": 192
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 608,
+						"h": 192
+					},
+					"frame": {
+						"x": 1313,
+						"y": 1,
+						"w": 608,
+						"h": 192
+					}
+				},
+				{
+					"filename": "illustrate_furniture_bg",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 608,
+						"h": 192
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 608,
+						"h": 192
+					},
+					"frame": {
+						"x": 1313,
+						"y": 195,
+						"w": 608,
+						"h": 192
+					}
+				},
+				{
+					"filename": "illustrate_make_bg",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 608,
+						"h": 192
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 608,
+						"h": 192
+					},
+					"frame": {
+						"x": 1313,
+						"y": 389,
+						"w": 608,
+						"h": 192
+					}
+				},
+				{
+					"filename": "illustrate_dress_picture",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 286,
+						"h": 204
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 286,
+						"h": 204
+					},
+					"frame": {
+						"x": 1313,
+						"y": 583,
+						"w": 286,
+						"h": 204
+					}
+				},
+				{
+					"filename": "illustrate_make_picture",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 286,
+						"h": 204
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 281,
+						"h": 204
+					},
+					"frame": {
+						"x": 1601,
+						"y": 583,
+						"w": 281,
+						"h": 204
 					}
 				}
 			]
@@ -414,6 +519,6 @@
 	"meta": {
 		"app": "https://www.codeandweb.com/texturepacker",
 		"version": "3.0",
-		"smartupdate": "$TexturePacker:SmartUpdate:81328db085c649444594fcbb91dfbced:935218def5c3b404df120e86c93cbfdb:122453b6f89bfdf17dd5f5f907a1c15c$"
+		"smartupdate": "$TexturePacker:SmartUpdate:b113748aeab8dac7270a8b5d8c9a8d41:87674b168ce492460069168093bf5b23:122453b6f89bfdf17dd5f5f907a1c15c$"
 	}
 }

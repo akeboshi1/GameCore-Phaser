@@ -58,8 +58,17 @@ export class PicaIllustratedDetailPanel extends Phaser.GameObjects.Container {
         this.combinations = combinations;
         if (this.optionType === 1) {
             if (content) {
-                this.horProgress.setProgress(content.reward1Progress, content.reward1Max);
-                this.horProgress.setText(`${content.reward1Progress} / ${content.reward1Max}`);
+                this.setHorRewardsStatus(content.reward1Progress, content.reward1Max);
+                if (content.reward2Max === -1) {
+                    content.reward2Max = content.reward2Progress;
+                    this.acquire.enable = false;
+                } else {
+                    if (content.reward2Progress >= content.reward2Max) {
+                        this.acquire.enable = true;
+                    } else {
+                        this.acquire.enable = false;
+                    }
+                }
                 this.acquireTex.text = `${content.reward2Progress}/${content.reward2Max}`;
                 this.horLevelTex.text = content.reward1NextIndex + "";
                 this.galleryPanel.setGallaryData(content);
@@ -68,7 +77,27 @@ export class PicaIllustratedDetailPanel extends Phaser.GameObjects.Container {
             this.collectPanel.setCombinationData(combinations);
         }
     }
+    setHorRewardsStatus(reward1Progress, reward1Max) {
+        if (reward1Max === -1) {
+            reward1Max = reward1Progress;
+            this.horRewards.setFrameNormal("illustrate_survey_icon_1", "illustrate_survey_icon_1");
+            this.horRewards.disInteractive();
+        } else {
+            if (reward1Progress >= reward1Max) {
+                this.horRewards.setFrameNormal("illustrate_survey_icon", "illustrate_survey_icon");
+                this.horRewards.setInteractive();
+            } else {
+                this.horRewards.setFrameNormal("illustrate_survey_icon_2", "illustrate_survey_icon_2");
+                this.horRewards.disInteractive();
+            }
+        }
+        this.horProgress.setProgress(reward1Progress, reward1Max);
+        this.horProgress.setText(`${reward1Progress} / ${reward1Max}`);
+    }
 
+    setDoneMissionList(list: number[]) {
+        if (this.collectPanel) this.collectPanel.setDoneMissionList(list);
+    }
     init() {
         this.topCon = this.scene.make.container(undefined, false);
         this.topCon.setSize(this.width, 100 * this.dpr);

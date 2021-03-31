@@ -27,15 +27,16 @@ export class PicaRepairChoosePanel extends PicaBasePanel {
         const h: number = this.scaleHeight;
         super.resize(w, h);
         this.setSize(w, h);
-        // this.blackGraphic.clear();
-        // this.blackGraphic.fillStyle(0x000000, 0.66);
-        // this.blackGraphic.fillRect(0, 0, w, h);
+        this.blackGraphic.clear();
+        this.blackGraphic.fillStyle(0x000000, 0.66);
+        this.blackGraphic.fillRect(0, 0, w, h);
         this.content.x = w * 0.5;
         this.content.y = h + this.content.height * 0.5 + 10 * this.dpr;
         this.content.setInteractive();
         const fromy = this.scaleHeight + this.content.height * 0.5 + 10 * this.dpr;
         const toy = this.scaleHeight - this.content.height * 0.5;
         this.playMove(fromy, toy);
+        this.blackGraphic.setInteractive(new Phaser.Geom.Rectangle(0, 0, w, h), Phaser.Geom.Rectangle.Contains);
     }
     onShow() {
         if (this.tempDatas)
@@ -57,8 +58,8 @@ export class PicaRepairChoosePanel extends PicaBasePanel {
     init() {
         const conWdith = this.scaleWidth;
         const conHeight = 88 * this.dpr;
-        // this.blackGraphic = this.scene.make.graphics(undefined, false);
-        // this.add(this.blackGraphic);
+        this.blackGraphic = this.scene.make.graphics(undefined, false);
+        this.add(this.blackGraphic);
         this.content = this.scene.make.container(undefined, false);
         this.content.setSize(conWdith, conHeight);
         this.add(this.content);

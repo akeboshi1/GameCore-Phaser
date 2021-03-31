@@ -12,7 +12,7 @@ export class PicaPlayerActionManager  {
 
     createElementAction(tag: string, data: any, userid?: number) {
         switch (tag) {
-            case "push":
+            case "throwElement":
                 return new ThrowElementAction(this.game, data, userid);
             default:
                 //

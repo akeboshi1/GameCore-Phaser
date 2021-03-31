@@ -47,10 +47,6 @@ export class MainPeer extends RPCPeer {
         return this.remote[PHYSICAL_WORKER].PhysicalPeer;
     }
 
-    // get heartBeatPeer() {
-    //     return this.remote[HEARTBEAT_WORKER].HeartBeatPeer;
-    // }
-
     set state(val) {
         const now: number = new Date().getTime();
         Logger.getInstance().log("gameState: ====>", val, "delayTime:=====>", now - this.stateTime);
@@ -292,11 +288,6 @@ export class MainPeer extends RPCPeer {
         this.game.roomManager.currentRoom.startPlay();
     }
 
-    // @Export([webworker_rpc.ParamType.num, webworker_rpc.ParamType.num])
-    // public updateRoom(time: number, delta: number) {
-    //     this.game.roomManager.currentRoom.update(time, delta);
-    // }
-
     @Export([webworker_rpc.ParamType.str, webworker_rpc.ParamType.str])
     public onVerifiedHandler(name: string, idcard: string) {
 
@@ -397,26 +388,12 @@ export class MainPeer extends RPCPeer {
         this.game.exitUser();
     }
 
-    // @Export([webworker_rpc.ParamType.num])
-    // public displayStartMove(id: number) {
-    //     if (!this.game.roomManager.currentRoom) return;
-    //     const element = this.game.roomManager.currentRoom.playerManager.get(id);
-    //     if (element) element.startMove();
-    // }
-
     @Export([webworker_rpc.ParamType.num])
     public displayCompleteMove(id: number) {
         if (!this.game.roomManager.currentRoom) return;
         const element = this.game.roomManager.currentRoom.playerManager.get(id);
         if (element) element.completeMove();
     }
-
-    // @Export([webworker_rpc.ParamType.num])
-    // public displayStopMove(id: number) {
-    //     if (!this.game.roomManager.currentRoom) return;
-    //     const element = this.game.roomManager.currentRoom.playerManager.get(id);
-    //     if (element) element.stopMove();
-    // }
 
     @Export()
     public syncPosition(targetPoint) {
@@ -521,24 +498,6 @@ export class MainPeer extends RPCPeer {
     public startFireMove(pointer: any) {
         if (this.game.user) this.game.user.startFireMove(pointer);
     }
-
-    // ============= 心跳调用主进程
-    // @Export()
-    // public startHeartBeat() {
-    //     // ==========同步心跳
-    //     const pkt: PBpacket = new PBpacket(op_gateway.OPCODE._OP_CLIENT_REQ_GATEWAY_PING);
-    //     this.game.socket.send(pkt.Serialization());
-    // }
-
-    // @Export()
-    // public endHeartBeat() {
-
-    // }
-
-    // @Export()
-    // public clearHeartBeat() {
-
-    // }
 
     @Export([webworker_rpc.ParamType.num])
     public syncClock(times: number) {
@@ -716,16 +675,6 @@ export class MainPeer extends RPCPeer {
         return ele.removeMount(target, stopPos);
     }
 
-    // @Export([webworker_rpc.ParamType.num, webworker_rpc.ParamType.num])
-    // public findPath(x: number, y: number, targets: [], targetId?: number, toReverse: boolean = false) {
-    //     this.game.user.findPath(x, y, targets, targetId, toReverse);
-    // }
-
-    // @Export([webworker_rpc.ParamType.num, webworker_rpc.ParamType.num])
-    // public moveMotion(x: number, y: number, targetId?: number) {
-    //     this.game.user.moveMotion(x, y, targetId);
-    // }
-
     @Export([webworker_rpc.ParamType.num])
     public stopMove(id: number) {
         const ele = this.game.roomManager.currentRoom.getElement(id);
@@ -733,36 +682,6 @@ export class MainPeer extends RPCPeer {
             ele.stopMove();
         }
     }
-
-    // @Export([webworker_rpc.ParamType.num, webworker_rpc.ParamType.num, webworker_rpc.ParamType.num, webworker_rpc.ParamType.num])
-    // public tryMove(px, py, npx, npy) {
-    //     this.game.roomManager.currentRoom.tryMove(px, py, npx, npy);
-    // }
-
-    // @Export([webworker_rpc.ParamType.num])
-    // public getInteractivePosition(id: number) {
-    //     const ele = this.game.roomManager.currentRoom.getElement(id);
-    //     if (ele) {
-    //         return ele.getInteractivePositionList();
-    //     }
-    //     return null;
-    // }
-
-    // @Export([webworker_rpc.ParamType.num])
-    // public disableBlock(id: number) {
-    //     const ele = this.game.roomManager.currentRoom.getElement(id);
-    //     if (ele) {
-    //         ele.disableBlock();
-    //     }
-    // }
-
-    // @Export([webworker_rpc.ParamType.num])
-    // public enableBlock(id: number) {
-    //     const ele = this.game.roomManager.currentRoom.getElement(id);
-    //     if (ele) {
-    //         ele.enableBlock();
-    //     }
-    // }
 
     @Export([webworker_rpc.ParamType.str])
     public uploadHeadImage(url: string) {
@@ -803,7 +722,6 @@ export class MainPeer extends RPCPeer {
     public destroy() {
         if (this.game) this.game.isDestroy = true;
         super.destroy();
-        // this.remote[HEARTBEAT_WORKER].HeartBeatPeer.destroy();
     }
 
     // ==== config

@@ -543,7 +543,7 @@ export class DisplayManager {
         const targetPos = target.getPosition();
         // 30 大概手的位置
         displayFrame.setPosition(playerPos.x, playerPos.y - 30, playerPos.z);
-        const distance = Tool.twoPointDistance(playerPos, targetPos);
+        const distance = Tool.twoPointDistance(playerPos, targetPos) * 2;
         const tween = scene.tweens.add({
             targets: displayFrame,
             duration: distance,

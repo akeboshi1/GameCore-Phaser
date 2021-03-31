@@ -509,6 +509,7 @@ export class BaseDataConfigManager extends BaseConfigManager {
     public getGallery(id: number | string, type: GalleryType): IGalleryCombination | IGalleryLevel {
         const data: GalleryConfig = this.getConfig(BaseDataType.gallery);
         const temp = data.get(id, type);
+        if (!temp) return undefined;
         if (type === GalleryType.combination) {
             if (!temp["find"]) {
                 const combine = <IGalleryCombination>temp;
@@ -518,7 +519,9 @@ export class BaseDataConfigManager extends BaseConfigManager {
                 if (requirement) {
                     for (let i = 0; i < requirement.length; i++) {
                         const value = <string>requirement[i];
-                        requirement[i] = this.getItemBaseByID(value);
+                        const tempobj: any = {};
+                        ObjectAssign.excludeTagAssign(tempobj, this.getItemBaseByID(value));
+                        requirement[i] = tempobj;
                     }
                 }
                 const rewardItems = combine.rewardItems;

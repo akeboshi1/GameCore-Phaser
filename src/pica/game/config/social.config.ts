@@ -16,8 +16,12 @@ export class SocialConfig extends BaseConfigData {
     public parseJson(json) {
         const socails = json["social"];
         for (const temp of socails) {
-            temp.tag = JSON.parse(temp.tag);
-            this.socailMap.set(temp.id, temp);
+            try {
+                temp.tag = JSON.parse(temp.tag);
+                this.socailMap.set(temp.id, temp);
+            } catch {
+                Logger.getInstance().error(`parse ${temp.tag} error`);
+            }
         }
         this.socails = socails;
     }

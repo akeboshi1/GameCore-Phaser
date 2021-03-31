@@ -136,11 +136,6 @@ export class PicaNewActivityPanel extends Phaser.GameObjects.Container {
     }
 
     private onEmailHandler() {
-        const tempdata = {
-            text: [{ text: i18n.t("noticeTips.staytuned"), node: undefined }]
-        };
-        this.render.mainPeer.showMediator(ModuleName.PICANOTICE_NAME, true, tempdata);
-        return;
         if (this.sendHandler) this.sendHandler.runWith(["email"]);
     }
     private onRoamHandler() {

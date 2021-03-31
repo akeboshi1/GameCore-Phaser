@@ -65,7 +65,8 @@
     "recast": "RECAST",
     "make": "Make",
     "editor": "Editor",
-    "survey":"Survey"
+    "survey":"Survey",
+    "notEnough": "Not enough {{name}}"
   },
   "quantityunit": {
     "k": "k",

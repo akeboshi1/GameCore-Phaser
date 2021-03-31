@@ -88,6 +88,7 @@ export class ElementManager extends PacketHandler implements IElementManager {
         this.mActionMgr = new PicaElementActionManager(mRoom.game);
         this.eleDataMgr.on(EventType.SCENE_ELEMENT_FIND, this.onQueryElementHandler, this);
         this.mRoom.game.emitter.on(EventType.SCENE_INTERACTION_ELEMENT, this.checkElementAction, this);
+        this.mRoom.game.emitter.on("FurnitureEvent", this.checkElementAction, this);
 
         this.mRoom.onManagerCreated(this.constructor.name);
     }
@@ -152,6 +153,7 @@ export class ElementManager extends PacketHandler implements IElementManager {
     public destroy() {
         this.hasAddComplete = false;
         this.mRoom.game.emitter.off(EventType.SCENE_INTERACTION_ELEMENT, this.checkElementAction, this);
+        this.mRoom.game.emitter.off("FurnitureEvent", this.checkElementAction, this);
         if (this.eleDataMgr) this.eleDataMgr.off(EventType.SCENE_ELEMENT_FIND, this.onQueryElementHandler, this);
         if (this.connection) {
             Logger.getInstance().debug("elementmanager ---- removepacklistener");
@@ -364,6 +366,9 @@ export class ElementManager extends PacketHandler implements IElementManager {
 
     public addSpritesToCache(objs: op_client.ISprite[]) {
         for (const obj of objs) {
+            if (this.get(obj.id)) {
+                continue;
+            }
             this.mAddCache.push(obj.id);
             if (this.checkDisplay(new Sprite(obj, 3))) {
                 this.mCacheAddList.push(obj);

@@ -206,6 +206,7 @@ export class Element extends BlockObject implements IElement {
         (<any>model).on("Animation_Change", this.animationChanged, this);
         if (!model.layer) {
             model.layer = LayerEnum.Surface;
+            Logger.getInstance().warn(`${Element.name}: sprite layer is empty`);
         }
         this.removeFromWalkableMap();
         this.mModel = model;
@@ -297,12 +298,12 @@ export class Element extends BlockObject implements IElement {
             return;
         }
         const preWalkable = this.mModel.getWalkableArea();
-        this.mModel.setAnimationName(animationName);
+        if (times !== undefined) {
+            times = times > 0 ? times : -1;
+        }
+        this.mModel.setAnimationName(animationName, times);
         const nextWalkable = this.mModel.getWalkableArea();
         if (preWalkable !== nextWalkable) this.removeFromWalkableMap();
-        if (times !== undefined) {
-            times = times > 0 ? times - 1 : -1;
-        }
         if (this.mRoomService) {
             if (!this.mRootMount) {
                 if (times === undefined) {

@@ -125,4 +125,5 @@ export class EventType {
      * 图鉴数据更新
      */
     public static GALLERY_UPDATE = "GALLERY_UPDATE";
+    public static DONE_MISSION_LIST = "DONE_MISSION_LIST";// 收集奖励领取
 }
