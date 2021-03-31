@@ -372,6 +372,7 @@ export class DisplayManager {
         display.setPosition(sprite.pos.x, sprite.pos.y, sprite.pos.z);
         display.checkCollision(sprite);
         display.changeAlpha(sprite.alpha);
+        display.hasInteractive = sprite.hasInteractive;
         if (sprite.nickname) display.showNickname(sprite.nickname);
     }
 

@@ -99,7 +99,9 @@ export class MouseManager {
                     // }
                     if (com && com instanceof FramesDisplay) {
                         if (com.nodeType === NodeType.ElementNodeType) {
-                            com.scaleTween();
+                            if (com.hasInteractive) {
+                                com.scaleTween();
+                            }
                         }
                     }
                     // this.render.mainPeer.onTapHandler({ id, x: pointer.worldX / this.render.scaleRatio, y: pointer.worldY / this.render.scaleRatio, nodeType });

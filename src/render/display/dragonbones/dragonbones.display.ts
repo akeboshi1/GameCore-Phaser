@@ -19,7 +19,6 @@ export class DragonbonesDisplay extends BaseDragonbonesDisplay implements IDispl
     private mLoadQueue: LoadQueue;
     private mName: string = undefined;
     private mStartFireTween: Phaser.Tweens.Tween;
-
     constructor(scene: Phaser.Scene, private render: Render, id?: number, private uuid?: number, type?: number) {
         super(scene);
 
@@ -38,6 +37,14 @@ export class DragonbonesDisplay extends BaseDragonbonesDisplay implements IDispl
         }
 
         return super.load(display);
+    }
+
+    get hasInteractive(): boolean {
+        return this.mHasInteractive;
+    }
+
+    set hasInteractive(val) {
+        this.mHasInteractive = val;
     }
 
     public startLoad(): Promise<any> {

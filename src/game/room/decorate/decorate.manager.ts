@@ -8,7 +8,6 @@ import {BaseDataConfigManager} from "picaWorker";
 import {BlockObject} from "../block/block.object";
 import {InputEnable} from "../element/element";
 import PKT_PackageType = op_pkt_def.PKT_PackageType;
-import {IExtendCountablePackageItem} from "picaStructure";
 
 // 小屋布置管理类，包含所有布置过程中的操作接口
 // 文档：https://dej4esdop1.feishu.cn/docs/doccnEbMKpINEkfBVImFJ0nTJUh#

@@ -157,7 +157,7 @@ export class MotionManager {
 
     protected async getEleMovePath(id, pointer) {
         const ele = this.render.displayManager.getDisplay(id);
-        if (!ele) {
+        if (!ele || !ele.hasInteractive) { // 无交互数据的家具走点击地面逻辑
             this.movePath(pointer.worldX / this.render.scaleRatio, pointer.worldY / this.render.scaleRatio, 0, [new LogicPos(pointer.worldX / this.scaleRatio, pointer.worldY / this.scaleRatio)]);
             return;
         }

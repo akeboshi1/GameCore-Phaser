@@ -1708,11 +1708,11 @@ export class Render extends RPCPeer implements GameMain, IRender {
     }
 
     private initRatio() {
-        this.mScaleRatio = Math.ceil(this.mConfig.devicePixelRatio || 2);
+        this.mScaleRatio = Math.ceil(this.mConfig.devicePixelRatio || UiUtils.baseDpr);
         this.mConfig.scale_ratio = this.mScaleRatio;
-        this.mUIRatio = Math.round(this.mConfig.devicePixelRatio || 2);
-        if (this.mUIRatio > 3) {
-            this.mUIRatio = 3;
+        this.mUIRatio = Math.round(this.mConfig.devicePixelRatio || UiUtils.baseDpr);
+        if (this.mUIRatio > UiUtils.MaxDpr) {
+            this.mUIRatio = UiUtils.MaxDpr;
         }
         const scaleW = (this.mConfig.width / this.DEFAULT_WIDTH) * (this.mConfig.devicePixelRatio / this.mUIRatio);
         let desktop = false;
