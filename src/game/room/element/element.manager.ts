@@ -94,7 +94,7 @@ export class ElementManager extends PacketHandler implements IElementManager {
         }
         if (this.eleDataMgr) this.eleDataMgr.on(EventType.SCENE_ELEMENT_FIND, this.onQueryElementHandler, this);
         this.mRoom.game.emitter.on(EventType.SCENE_INTERACTION_ELEMENT, this.checkElementAction, this);
-        this.mRoom.game.emitter.on("FurnitureEvent", this.checkElementAction, this);
+        this.mRoom.game.emitter.on("FurnitureEvent", this.checkFurnitureSurvey, this);
     }
 
     public removeListen() {
@@ -103,7 +103,7 @@ export class ElementManager extends PacketHandler implements IElementManager {
             this.connection.removePacketListener(this);
         }
         this.mRoom.game.emitter.off(EventType.SCENE_INTERACTION_ELEMENT, this.checkElementAction, this);
-        this.mRoom.game.emitter.off("FurnitureEvent", this.checkElementAction, this);
+        this.mRoom.game.emitter.off("FurnitureEvent", this.checkFurnitureSurvey, this);
         if (this.eleDataMgr) this.eleDataMgr.off(EventType.SCENE_ELEMENT_FIND, this.onQueryElementHandler, this);
     }
     public init() {
@@ -151,6 +151,18 @@ export class ElementManager extends PacketHandler implements IElementManager {
             return true;
         }
         return false;
+    }
+    public checkActionNeedBroadcast(id: number, userid?: number) {
+        const ele = this.get(id);
+        if (!ele) return false;
+        if (ele.model.nodeType !== NodeType.ElementNodeType) return false;
+        return this.mActionMgr.checkActionNeedBroadcast(ele.model);
+    }
+    public checkFurnitureSurvey(id: number, userid?: number) {
+        const ele = this.get(id);
+        if (!ele) return false;
+        if (ele.model.nodeType !== NodeType.ElementNodeType) return false;
+        this.mActionMgr.executeFeatureActions("FurniSurvey", ele.model);
     }
 
     public isElementLocked(element: IElement) {
