@@ -7,6 +7,7 @@ import { CoinType, Font, i18n } from "utils";
 import { UIAtlasKey, UIAtlasName } from "picaRes";
 import { op_client } from "pixelpai_proto";
 import { IPrice } from "picaStructure";
+import { MoneyCompent } from "picaRender";
 export class PicaMarketPanel extends BasePanel {
   private mSelectItem: ElementDetail;
   private mCloseBtn: Button;
@@ -32,6 +33,7 @@ export class PicaMarketPanel extends BasePanel {
   private randomRefreshBtn: NineSliceButton;
   private refreshIcon: Phaser.GameObjects.Image;
   private refreshNeedCount: Phaser.GameObjects.Text;
+  private moneycomp: MoneyCompent;
   private moneyValue: number;
   private diamondValue: number;
   constructor(uiManager: UiManager) {
@@ -59,7 +61,7 @@ export class PicaMarketPanel extends BasePanel {
     const width = this.scaleWidth;
     const height = this.scaleHeight;
     this.setSize(width, height);
-    this.mTIle.x = width / 2;
+    // this.mTIle.x = width / 2;
 
     const shelfHeight = 290 * this.dpr;
     this.mBackgroundColor.setInteractive(new Phaser.Geom.Rectangle(0, 0, width, height), Phaser.Geom.Rectangle.Contains);
@@ -128,6 +130,7 @@ export class PicaMarketPanel extends BasePanel {
   public setMoneyData(money: number, diamond: number) {
     this.moneyValue = money;
     this.diamondValue = diamond;
+    this.moneycomp.setMoneyData(money, diamond);
   }
 
   public setProp(content: any) {// op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_MARKET_QUERY
@@ -218,7 +221,9 @@ export class PicaMarketPanel extends BasePanel {
     this.mCloseBtn.setPosition(21 * this.dpr, 45 * this.dpr);
     this.mCloseBtn.setInteractive(new Phaser.Geom.Rectangle(-28 * this.dpr, -20 * this.dpr, 56 * this.dpr, 40 * this.dpr), Phaser.Geom.Rectangle.Contains);
     this.mCloseBtn.on(ClickEvent.Tap, this.onCloseHandler, this);
-
+    this.moneycomp = new MoneyCompent(this.scene, 190 * this.dpr, 28 * this.dpr, this.dpr, this.scale);
+    this.moneycomp.x = w - 20 * this.dpr;
+    this.moneycomp.y = this.mCloseBtn.y;
     this.mPropContainer = this.scene.make.container(undefined, false);
     this.mCategoriesContainer = this.scene.make.container(undefined, false);
     this.mSubCategeoriesContainer = this.scene.make.container(undefined, false);
@@ -232,12 +237,13 @@ export class PicaMarketPanel extends BasePanel {
       text: i18n.t("market.title"),
       y: 30 * this.dpr,
       style: {
-        fontSize: 36 * this.dpr,
+        fontSize: 23 * this.dpr,
         fontFamily: Font.DEFULT_FONT
       }
-    }).setOrigin(0.5);
-    this.mTIle.y = this.mCloseBtn.y - 5 * this.dpr;
-    this.add([this.mTIle, this.mSelectItem, this.mCloseBtn]);
+    }).setOrigin(0, 0.5);
+    this.mTIle.y = this.mCloseBtn.y;
+    this.mTIle.x = this.mCloseBtn.x + this.mCloseBtn.width * 0.5 + 10 * this.dpr;
+    this.add([this.mTIle, this.mSelectItem, this.mCloseBtn, this.moneycomp]);
     super.init();
 
     this.mCategoriesBar = this.scene.make.graphics(undefined, false);
