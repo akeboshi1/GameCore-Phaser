@@ -347,7 +347,6 @@ class InputContainer extends Phaser.GameObjects.Container {
             color: "#ffffff",
         }).setOrigin(0, 0.5).setAutoBlur(false);
         this.add([this.background, this.emoji, this.inputText]);
-        this.addListen();
     }
 
     public addListen() {

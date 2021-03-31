@@ -6,6 +6,7 @@ export class ImageValue extends Phaser.GameObjects.Container {
     protected dpr: number;
     protected icon: Phaser.GameObjects.Image | DynamicImage;
     protected value: BBCodeText | Phaser.GameObjects.Text;
+    protected uintText: Phaser.GameObjects.Text;
     protected offset: Phaser.Geom.Point;
     protected layoutType: number = 1;
     constructor(scene: Phaser.Scene, width: number, height: number, key: string, frame: string, dpr: number, style?: any) {
@@ -16,6 +17,22 @@ export class ImageValue extends Phaser.GameObjects.Container {
         this.create(key, frame, style);
         this.add([this.icon, this.value]);
         this.resetSize();
+    }
+
+    public setUintText(data: { text?: string, style?: any, fontStyle?: string }) {
+        if (!this.uintText) {
+            this.uintText = this.scene.make.text({ style: data.style }).setOrigin(0, 0.5);
+            this.add(this.uintText);
+        }
+        if (data.style) this.uintText.setStyle(data.style);
+        if (data.fontStyle) this.uintText.setFontStyle(data.fontStyle);
+        if (data.text) this.uintText.text = data.text;
+        this.uintText.visible = true;
+        this.resetSize();
+    }
+
+    public setUintTextVisible(visible: boolean) {
+        if (this.uintText) this.uintText.visible = visible;
     }
     public setFrameValue(text: string, key: string, frame: string) {
         this.icon.setTexture(key, frame);
@@ -47,7 +64,8 @@ export class ImageValue extends Phaser.GameObjects.Container {
         this.resetSize();
     }
     public resetSize() {
-        const width = this.icon.displayWidth + this.value.width;
+        const uintWidth = this.uintText ? this.uintText.width : 0;
+        const width = this.icon.displayWidth + this.value.width + uintWidth;
         const dis = this.width - width;
         if (this.layoutType === 1) {
             this.x -= dis * 0.5;
@@ -84,6 +102,10 @@ export class ImageValue extends Phaser.GameObjects.Container {
         this.icon.x = -this.width * 0.5 + this.icon.displayWidth * 0.5;
         this.value.x = this.icon.x + this.icon.displayWidth * 0.5 + 4 * this.dpr + this.offset.x;
         this.value.y = this.offset.y;
+        if (this.uintText) {
+            this.uintText.x = this.value.x + this.value.width + 3 * this.dpr;
+            this.uintText.y = this.value.y;
+        }
     }
 }
 export class ImageBBCodeValue extends ImageValue {

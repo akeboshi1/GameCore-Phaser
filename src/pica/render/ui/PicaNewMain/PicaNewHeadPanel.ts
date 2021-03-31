@@ -1,7 +1,7 @@
 import { Button, ClickEvent, NineSliceButton, NineSlicePatch } from "apowophaserui";
 import { ButtonEventDispatcher, ImageValue, ProgressMaskBar } from "gamecoreRender";
 import { UIAtlasName } from "picaRes";
-import { Font, Handler, UIHelper } from "utils";
+import { Font, Handler, i18n, UIHelper } from "utils";
 import { op_pkt_def, op_def } from "pixelpai_proto";
 import { Tweens } from "tooqinggamephaser";
 export class PicaNewHeadPanel extends Phaser.GameObjects.Container {
@@ -87,11 +87,13 @@ export class PicaNewHeadPanel extends Phaser.GameObjects.Container {
             color: "#ffffff", fontSize: 15 * this.dpr, fontFamily: Font.NUMBER
         });
         this.moneyvalue.setLayout(1);
+        this.moneyvalue.setUintText({ style: UIHelper.whiteStyle(this.dpr, 15) });
         this.moneyvalue.x = moneybg.x - moneybg.width * 0.5 + 22 * this.dpr;
         this.diamondvalue = new ImageValue(this.scene, 60 * this.dpr, 26 * this.dpr, UIAtlasName.uicommon, "home_diamond", this.dpr, {
             color: "#ffffff", fontSize: 15 * this.dpr, fontFamily: Font.NUMBER
         });
         this.diamondvalue.setLayout(1);
+        this.diamondvalue.setUintText({ style: UIHelper.whiteStyle(this.dpr, 15) });
         this.diamondvalue.x = moneybg.x + 22 * this.dpr;
         this.moneyAddBtn = new Button(this.scene, UIAtlasName.uicommon, "home_praise_bg", "home_praise_bg");
         const moneyAddicon = this.scene.make.image({ x: 0, y: 0, key: UIAtlasName.uicommon, frame: "home_assets_add" }, false);
@@ -150,9 +152,22 @@ export class PicaNewHeadPanel extends Phaser.GameObjects.Container {
             this.powerPro.setProgress(energy.value, energy.max);
         }
         money = money || 0;
-        this.moneyvalue.setText(money + "");
+        if (money > 99999) {
+            this.moneyvalue.setText((Math.floor(money / 1000) / 10) + "");
+            this.moneyvalue.setUintText({ text: i18n.t("quantityunit.w") });
+        } else {
+            this.moneyvalue.setText(money + "");
+            this.moneyvalue.setUintTextVisible(false);
+        }
         diamond = diamond || 0;
-        this.diamondvalue.setText(diamond + "");
+        if (diamond > 99999) {
+            this.diamondvalue.setText((Math.floor(diamond / 1000) / 10) + "");
+            this.diamondvalue.setUintText({ text: i18n.t("quantityunit.w") });
+        } else {
+            this.diamondvalue.setText(diamond + "");
+            this.diamondvalue.setUintTextVisible(false);
+        }
+
         if (this.money !== money || this.diamond !== diamond) {
             this.moveMoneyCon();
         }
