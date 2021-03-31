@@ -47,8 +47,6 @@ export class MotionManager {
     update(time: number, delta: number) {
         if (!this.isRunning) return;
         if (this.isHolding === false) return;
-        // 长按可互动物品不触发移动，详见：https://dej4esdop1.feishu.cn/docs/doccnEbMKpINEkfBVImFJ0nTJUh （入口3）
-        // if (this.gameObject) return;
         this.curtime += delta;
         if (this.curtime < 200) {
             return;
@@ -152,6 +150,7 @@ export class MotionManager {
                 }
             }
         }
+        Logger.getInstance().log("onPointerUp motion===>", pointer);
         this.clearGameObject();
     }
 
@@ -216,6 +215,7 @@ export class MotionManager {
     private movePath(x: number, y: number, z: number, targets: {}, id?: number) {
         this.render.mainPeer.startFireMove({ x, y });
         this.render.physicalPeer.findPath(targets, id);
+        Logger.getInstance().log("movePath ====>", x, y, targets, id);
     }
 
     private stop() {

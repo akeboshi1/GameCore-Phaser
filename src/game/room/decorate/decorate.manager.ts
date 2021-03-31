@@ -72,6 +72,7 @@ export class DecorateManager {
             const baseID = this.getBaseIDBySN(sprite.sn);
             if (baseID === "") {
                 Logger.getInstance().error("can not find data from config : ", sprite);
+                this.room.game.renderPeer.showAlertView("can not find data from config : " + sprite.nickname);
                 return;
             }
             for (const act of acts) {
@@ -203,6 +204,7 @@ export class DecorateManager {
         const baseID = this.getBaseIDBySN(element.model.sn);
         if (baseID === "") {
             Logger.getInstance().error("can not find data from config : ", element.model);
+            this.room.game.renderPeer.showAlertView("can not find data from config : " + element.model.nickname);
             return;
         }
         this.mRoom.game.emitter.emit(MessageType.DECORATE_SELECTE_ELEMENT, baseID);
@@ -326,6 +328,7 @@ export class DecorateManager {
         const typeData = <any> this.getBaseData(baseID);
         if (!typeData) {
             Logger.getInstance().error("no config data, id: ", baseID);
+            this.room.game.renderPeer.showAlertView("no config data, id: " + baseID);
             return;
         }
         // TODO: 此随机方式有重复id的可能
@@ -414,10 +417,11 @@ export class DecorateManager {
         if (temp) return temp.id;
         else {
             // Logger.getInstance().error("cannot find data of sn: ", sn);
-            const tempdata = {
-                text: [{text: "cannot find data of sn: " + sn, node: undefined}]
-            };
-            this.room.game.showMediator(ModuleName.PICANOTICE_NAME, true, tempdata);
+            // const tempdata = {
+            //     text: [{text: "cannot find data of sn: " + sn, node: undefined}]
+            // };
+            // this.room.game.showMediator(ModuleName.PICANOTICE_NAME, true, tempdata);
+            this.room.game.renderPeer.showAlertView("cannot find data of sn: " + sn);
             return "";
         }
     }
@@ -589,6 +593,7 @@ class DecorateAction {
         const baseID = mng.getBaseIDBySN(this.target.sn);
         if (baseID === "") {
             Logger.getInstance().error("can not find data from config : ", this.target);
+            mng.room.game.renderPeer.showAlertView("can not find data from config : " + this.target.nickname);
             return;
         }
         const newCount = mng.setBagCount(baseID, -1);
@@ -602,6 +607,7 @@ class DecorateAction {
         const baseID = mng.getBaseIDBySN(this.target.sn);
         if (baseID === "") {
             Logger.getInstance().error("can not find data from config : ", this.target);
+            mng.room.game.renderPeer.showAlertView("can not find data from config : " + this.target.nickname);
             return;
         }
         const newCount = mng.setBagCount(baseID, 1);
@@ -631,6 +637,8 @@ class DecorateAction {
         mng.room.removeFromWalkableMap(this.target);
         this.target.setDirection(dir);
         mng.room.addToWalkableMap(this.target);
+        mng.room.game.physicalPeer.updateModel({id: this.target.id, currentAnimation: this.target.currentAnimation});
+        mng.room.game.physicalPeer.addBody(this.target.id);
 
         if (mng.selectedID === this.target.id) {
             mng.room.removeFromWalkableMap(this.target);

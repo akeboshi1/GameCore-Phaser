@@ -30,9 +30,9 @@ export class BasePlaySceneGuide extends BaseGuide {
     }
 
     public hide() {
-        this.mPlayScene.input.off("gameobjectdown", this.gameObjectDownHandler, this);
+        this.mPlayScene.input.off("gameobjectup", this.gameObjectUpHandler, this);
+        if (this.mPointer) (<any>this.mPlayScene).motionMgr.onGuideOnPointUpHandler(this.mPointer, this.mElementID);
         super.hide();
-        // if (this.mPointer) (<any>this.mPlayScene).motionMgr.onGuideOnPointUpHandler(this.mPointer, this.mElementID);
     }
 
     public checkInteractive(data?: any): boolean {
@@ -43,10 +43,10 @@ export class BasePlaySceneGuide extends BaseGuide {
     protected step1(pos: IPos) {
         const tmpPos = { x: pos.x, y: pos.y };
         this.guideEffect.createGuideEffect(tmpPos);
-        this.mPlayScene.input.on("gameobjectdown", this.gameObjectDownHandler, this);
+        this.mPlayScene.input.on("gameobjectup", this.gameObjectUpHandler, this);
     }
 
-    protected gameObjectDownHandler(pointer: Phaser.Input.Pointer, gameobject: Phaser.GameObjects.GameObject) {
+    protected gameObjectUpHandler(pointer: Phaser.Input.Pointer, gameobject: Phaser.GameObjects.GameObject) {
         const id = gameobject.getData("id");
         // todo 写死护照id
         if (id === this.mElementID) {
