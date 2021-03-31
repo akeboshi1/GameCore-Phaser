@@ -309,7 +309,7 @@ export class User extends Player {
         }
         this.load(this.mModel.displayInfo, this.isUser);
         if (this.mModel.pos) {
-            const obj = { id: val.id, pos: val.pos, nickname: this.model.nickname, alpha: val.alpha, titleMask: val.titleMask | 0x00010000 };
+            const obj = { id: val.id, pos: val.pos, nickname: this.model.nickname, alpha: val.alpha, titleMask: val.titleMask | 0x00010000, hasInteractive: true };
             this.game.renderPeer.setModel(obj);
             const obj1 = {
                 id: val.id,

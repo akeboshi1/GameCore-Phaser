@@ -36,7 +36,8 @@ export class Player extends Element implements IElement {
             pos: model.pos,
             alpha: model.alpha,
             nickname: model.nickname,
-            titleMask: model.titleMask | 0x00010000
+            titleMask: model.titleMask | 0x00010000,
+            hasInteractive: true
         };
         // render action
         this.load(this.mModel.displayInfo)

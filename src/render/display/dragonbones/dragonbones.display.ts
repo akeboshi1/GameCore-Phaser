@@ -28,6 +28,7 @@ export class DragonbonesDisplay extends BaseDragonbonesDisplay implements IDispl
         this.mLoadQueue = new LoadQueue(scene);
         this.mLoadQueue.on("QueueProgress", this.fileComplete, this);
         this.mLoadQueue.on("QueueError", this.fileError, this);
+        this.mHasInteractive = true;
     }
 
     public load(display: IDragonbonesModel, field?: DisplayField): Promise<any> {
