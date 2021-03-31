@@ -9,6 +9,6 @@ export class SofaGuidePanel extends BasePlaySceneGuide {
         const dpr = this.render.config.scale_ratio;
         const tmpPos = { x: pos.x - dpr * 10, y: pos.y + 70 * dpr };
         this.guideEffect.createGuideEffect(tmpPos);
-        this.mPlayScene.input.on("gameobjectdown", this.gameObjectDownHandler, this);
+        this.mPlayScene.input.on("gameobjectdown", this.gameObjectUpHandler, this);
     }
 }
