@@ -279,7 +279,7 @@ export class PicaLoginPanel extends BasePanel {
             return;
         }
         if (!this.mMediator) this.mMediator = this.render.mainPeer[ModuleName.PICA_LOGIN_NAME];
-        this.mMediator.phoneLogin(phone, code, this.areaCode);
+        this.mMediator.phoneLogin(phone.toString(), code, this.areaCode);
         // this.render.remote[MAIN_WORKER].onLoginHandler();
     }
 

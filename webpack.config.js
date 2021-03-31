@@ -100,6 +100,10 @@ const gameConfig = Object.assign({}, commonConfig, {
         new CopyWebpackPlugin([{
             from: "./resources/locales", to: `resources/locales`, toType: "dir"
             , force: true
+        },
+        {
+            from: "./resources/script", to: `resources/script`, toType: "dir"
+            , force: true
         }]),
         new HtmlWebpackPlugin({
             inject: "head",
