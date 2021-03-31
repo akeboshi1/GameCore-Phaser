@@ -58,7 +58,7 @@ export abstract class BaseDisplay extends Phaser.GameObjects.Container implement
     protected mProjectionSize: IProjection;
     protected mSortX: number = 0;
     protected mSortY: number = 0;
-
+    protected mHasInteractive: boolean = false;
     public destroy(fromScene?: boolean) {
         this.mSprites.forEach((sprite) => sprite.destroy());
         this.mSprites.clear();
@@ -66,6 +66,7 @@ export abstract class BaseDisplay extends Phaser.GameObjects.Container implement
         if (this.parentContainer) {
             this.parentContainer.remove(this);
         }
+        this.mHasInteractive = false;
         super.destroy(fromScene);
     }
 
@@ -196,7 +197,7 @@ export abstract class BaseDisplay extends Phaser.GameObjects.Container implement
 
     get projectionSize(): IProjection {
         if (!this.mProjectionSize) {
-            this.mProjectionSize = {offset: {x: 0, y: 0}, width: 0, height: 0};
+            this.mProjectionSize = { offset: { x: 0, y: 0 }, width: 0, height: 0 };
         }
         return this.mProjectionSize;
     }
@@ -211,5 +212,13 @@ export abstract class BaseDisplay extends Phaser.GameObjects.Container implement
 
     get sortZ(): number {
         return this.z || 0;
+    }
+
+    get hasInteractive(): boolean {
+        return this.mHasInteractive;
+    }
+
+    set hasInteractive(val) {
+        this.mHasInteractive = val;
     }
 }

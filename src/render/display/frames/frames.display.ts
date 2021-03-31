@@ -16,7 +16,6 @@ export class FramesDisplay extends BaseFramesDisplay implements IDisplayObject {
     protected mTopDisplay: ElementTopDisplay;
     private mName: string = undefined;
     private mStartFireTween: Phaser.Tweens.Tween;
-
     constructor(scene: Phaser.Scene, private render: Render, id?: number, type?: number) {
         super(scene, id, type);
         this.mID = id;
@@ -48,6 +47,14 @@ export class FramesDisplay extends BaseFramesDisplay implements IDisplayObject {
 
     public get titleMask(): number {
         return this.mTitleMask;
+    }
+
+    get hasInteractive(): boolean {
+        return this.mHasInteractive;
+    }
+
+    set hasInteractive(val) {
+        this.mHasInteractive = val;
     }
 
     public update() {
