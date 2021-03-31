@@ -1,6 +1,6 @@
 import { PicaBag } from "./PicaBag";
 import { op_client, op_def, op_gameconfig, op_pkt_def } from "pixelpai_proto";
-import { BasicMediator, CacheDataManager, DataMgrType, Game } from "gamecore";
+import { BasicMediator, CacheDataManager, DataMgrType, Game, PlayerProperty } from "gamecore";
 import { EventType, ModuleName, RENDER_PEER } from "structure";
 import { BaseDataConfigManager } from "../../config";
 import { ObjectAssign } from "utils";
@@ -34,6 +34,7 @@ export class PicaBagMediator extends BasicMediator {
         this.game.emitter.on(this.key + "_sellProps", this.onSellPropsHandler, this);
         this.game.emitter.on(this.key + "_useprops", this.onUsePropsHandler, this);
         this.game.emitter.on(this.key + "_showElement", this.onShowElementHandler, this);
+        this.game.emitter.on(EventType.UPDATE_PLAYER_INFO, this.onUpdatePlayerHandler, this);
     }
 
     hide() {
@@ -50,6 +51,7 @@ export class PicaBagMediator extends BasicMediator {
         this.game.emitter.off(this.key + "_sellProps", this.onSellPropsHandler, this);
         this.game.emitter.off(this.key + "_useprops", this.onUsePropsHandler, this);
         this.game.emitter.off(this.key + "_showElement", this.onShowElementHandler, this);
+        this.game.emitter.off(EventType.UPDATE_PLAYER_INFO, this.onUpdatePlayerHandler, this);
 
         super.hide();
     }
@@ -203,7 +205,13 @@ export class PicaBagMediator extends BasicMediator {
         this.model.useProps(id, 1);
         this.hide();
     }
-
+    private onUpdatePlayerHandler(content: PlayerProperty) {
+        if (this.mPanelInit) {
+            if (this.mView) {
+                this.mView.setMoneyData(this.userData.money, this.userData.diamond);
+            }
+        }
+    }
     private get model(): PicaBag {
         return (<PicaBag>this.mModel);
     }

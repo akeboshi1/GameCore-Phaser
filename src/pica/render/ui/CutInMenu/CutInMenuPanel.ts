@@ -27,7 +27,7 @@ export class CutInMenuPanel extends BasePanel {
         const height = this.scaleHeight;
         const buttonType = this.buttonType;
         if (buttonType === "work") {
-            this.rightPopButton = new WorkPopContainer(this.scene, width, this.key, "work_icon", i18n.t("work.title"), this.dpr);
+           // this.rightPopButton = new WorkPopContainer(this.scene, width, this.key, "work_icon", i18n.t("work.title"), this.dpr);
         } else if (buttonType === "minecar") {
             this.rightPopButton = new MinePopContainer(this.scene, width, this.key, this.dpr);
         } else if (buttonType === "editor") {

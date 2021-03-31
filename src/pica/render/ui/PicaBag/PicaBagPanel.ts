@@ -163,14 +163,14 @@ export class PicaBagPanel extends PicaBasePanel {
     if (!this.mInitialized) return;
     if (money > 99999) {
       this.moneyvalue.setText((Math.floor(money / 1000) / 10) + "");
-      this.moneyvalue.setUintText({ text: i18n.t("quantityunit.w") });
+      this.moneyvalue.setUintText({ img: true });
     } else {
       this.moneyvalue.setText(money + "");
       this.moneyvalue.setUintTextVisible(false);
     }
     if (diamond > 99999) {
       this.diamondvalue.setText((Math.floor(diamond / 1000) / 10) + "");
-      this.diamondvalue.setUintText({ text: i18n.t("quantityunit.w") });
+      this.diamondvalue.setUintText({ img: true  });
     } else {
       this.diamondvalue.setText(diamond + "");
       this.diamondvalue.setUintTextVisible(false);
@@ -279,13 +279,13 @@ export class PicaBagPanel extends PicaBasePanel {
       color: "#ffffff", fontSize: 15 * this.dpr, fontFamily: Font.NUMBER
     });
     this.moneyvalue.setLayout(1);
-    this.moneyvalue.setUintText({ style: UIHelper.whiteStyle(this.dpr, 15) });
+    // this.moneyvalue.setUintText({ style: UIHelper.whiteStyle(this.dpr, 15) });
     this.moneyvalue.x = moneybg.x - moneybg.width * 0.5 + 22 * this.dpr;
     this.diamondvalue = new ImageValue(this.scene, 60 * this.dpr, 26 * this.dpr, UIAtlasName.uicommon, "home_diamond", this.dpr, {
       color: "#ffffff", fontSize: 15 * this.dpr, fontFamily: Font.NUMBER
     });
     this.diamondvalue.setLayout(1);
-    this.diamondvalue.setUintText({ style: UIHelper.whiteStyle(this.dpr, 15) });
+    // this.diamondvalue.setUintText({ style: UIHelper.whiteStyle(this.dpr, 15) });
     this.diamondvalue.x = moneybg.x + 22 * this.dpr;
     this.moneyAddBtn = new Button(this.scene, UIAtlasName.uicommon, "home_praise_bg", "home_praise_bg");
     const moneyAddicon = this.scene.make.image({ x: 0, y: 0, key: UIAtlasName.uicommon, frame: "home_assets_add" }, false);
