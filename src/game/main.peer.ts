@@ -644,7 +644,8 @@ export class MainPeer extends RPCPeer {
         if (this.game.user) {
             const room = this.game.roomManager.currentRoom;
             this.game.user.tryStopMove({ targetId, interactiveBoo: false, stopPos });
-            const needBroadcast = room.elementManager.checkElementAction(targetId);
+            room.elementManager.checkElementAction(targetId);
+            const needBroadcast = room.elementManager.checkActionNeedBroadcast(targetId);
             if (interactiveBoo) this.game.user.activeSprite(targetId, undefined, needBroadcast);
         }
     }

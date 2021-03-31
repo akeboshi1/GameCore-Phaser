@@ -8,10 +8,11 @@ import { PKTElementAction } from "./pkt.element.action";
 import { TAGElementAction } from "./tag.element.action";
 
 export class PicaElementActionManager extends ElementActionManager {
-    protected mActionTags = ["TQ_PKT_Action", "TQ_PKT_tag", "frozenType", "FuritChange", "FurniSurvey"];
+    protected mActionTags = ["TQ_PKT_Action", "TQ_PKT_tag", "frozenType", "FuritChange"];
+    protected mNeedBroadcastTags = ["TQ_PKT_tag"];
     public checkAction(data: ISprite, actionName?: string) {
         if (actionName) {
-            if ((actionName === "FuritChange" || actionName === "FurniSurvey") && data.nodeType === 3) {
+            if ((actionName === "FuritChange") && data.nodeType === 3) {
                 return true;
             } else {
                 return this.checkAttrsAction(data, actionName);
@@ -19,8 +20,7 @@ export class PicaElementActionManager extends ElementActionManager {
             return false;
         }
     }
-
-    protected createElementAction(data: ISprite, actionName: string, userid?: number) {
+    protected createElementAction(data: any, actionName: string, userid?: number) {
         let eleaction: ElementBaseAction;
         switch (actionName) {
             case "TQ_PKT_Action":

@@ -73,14 +73,14 @@ export class PicaWorkMediator extends BasicMediator {
         const configMgr = <BaseDataConfigManager>this.game.configManager;
         for (const j of content.jobs) {
             const job = configMgr.getJob(j.id);
-            let issatisfy: boolean = true;
-            for (const target of job.requirements) {
-                const property = this.playerInfo.getProperty(target.id);
-                if (target.count > property.value) {
-                    issatisfy = false;
-                    break;
-                }
-            }
+            const issatisfy: boolean = true;
+            // for (const target of job.requirements) {
+            //     const property = this.playerInfo.getProperty(target.id);
+            //     if (target.count > property.value) {
+            //         issatisfy = false;
+            //         break;
+            //     }
+            // }
             if (issatisfy) jobs.push(job);
         }
         jobs.sort((a, b) => {
