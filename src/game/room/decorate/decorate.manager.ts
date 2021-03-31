@@ -80,6 +80,7 @@ export class DecorateManager {
                     case DecorateActionType.Add:
                         result.commandMask = 0x0001;
                         result.point3f = sprite.pos;
+                        result.direction = sprite.direction;
                         if (changedBagData.indexOf(baseID) < 0) {
                             changedBagData.push(baseID);
                             const cpi = new op_client.CountablePackageItem();
@@ -102,6 +103,7 @@ export class DecorateManager {
                         result.commandMask = result.commandMask === 0x0001 || result.commandMask === 0x0003 ?
                             0x0003 : 0x0002;
                         result.point3f = sprite.pos;
+                        result.direction = sprite.direction;
                         break;
                     case DecorateActionType.Rotate:
                         result.commandMask = result.commandMask === 0x0001 || result.commandMask === 0x0003 ?

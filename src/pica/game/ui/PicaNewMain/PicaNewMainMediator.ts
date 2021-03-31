@@ -91,8 +91,8 @@ export class PicaNewMainMediator extends BasicMediator {
 
         }
     }
-    private onFoldButtonHandler() {
-        if (this.mView) this.mView.fetchFoldButton();
+    private onFoldButtonHandler(fold: boolean) {
+        if (this.mView) this.mView.fetchFoldButton(fold);
     }
     private queryDecorate() {
         this.game.roomManager.currentRoom.requestDecorate();

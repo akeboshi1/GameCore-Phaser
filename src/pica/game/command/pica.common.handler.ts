@@ -6,6 +6,7 @@ export class PicaCommonHandler extends MessageHandler {
 
     protected onAddListener() {
         this.addHandlerFun(op_client.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_PKT_UPDATE_GALLERY, this.on_UPDATE_GALLEPY);
+        this.addHandlerFun(op_client.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_PKT_UPDATE_GALLERY_COLLECTION_DATA, this.on_GALLERY_COLLECTION_DATA);
         this.game.emitter.on(EventType.QUERY_SURVEY_FURNITURE, this.query_INVESTIGATE_FURNITURE, this);
     }
 
@@ -23,5 +24,13 @@ export class PicaCommonHandler extends MessageHandler {
         const content: op_virtual_world.OP_CLIENT_REQ_VIRTUAL_WORLD_PKT_INVESTIGATE_FURNITURE = packet.content;
         content.elementId = elementID;
         this.connection.send(packet);
+    }
+
+    private on_GALLERY_COLLECTION_DATA(packet: PBpacket) {
+        const content: op_client.OP_CLIENT_REQ_VIRTUAL_WORLD_PKT_UPDATE_GALLERY_COLLECTION_DATA = packet.content;
+        const cache = this.game.getDataMgr<CacheDataManager>(DataMgrType.CacheMgr);
+        cache.doneMissionIdList = content.DoneMissionIdList;
+        this.game.emitter.emit(EventType.DONE_MISSION_LIST);
+
     }
 }

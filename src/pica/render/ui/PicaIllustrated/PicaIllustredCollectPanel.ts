@@ -14,6 +14,7 @@ export class PicaIllustredCollectPanel extends Phaser.GameObjects.Container {
     private send: Handler;
     private curSelectItem: IllustratedCollectItem;
     private combinations: IGalleryCombination[];
+    private doneMissions: number[] = [];
     constructor(scene: Phaser.Scene, width: number, height: number, dpr: number, zoom: number) {
         super(scene);
         this.setSize(width, height);
@@ -46,7 +47,10 @@ export class PicaIllustredCollectPanel extends Phaser.GameObjects.Container {
         this.mGameGrid.setT(0);
         return arr;
     }
-
+    setDoneMissionList(list: number[]) {
+        if (list) this.doneMissions = list;
+        this.mGameGrid.refresh();
+    }
     init() {
         const tableHeight = this.height;
         const cellWidth = 326 * this.dpr;
@@ -73,7 +77,11 @@ export class PicaIllustredCollectPanel extends Phaser.GameObjects.Container {
                     cellContainer = new IllustratedCollectItem(this.scene, cellWidth, cellHeight, this.dpr, this.zoom);
                     cellContainer.setHandler(this.send);
                 }
-                cellContainer.setCombinationData(item);
+                let reweard = false;
+                if (this.doneMissions.indexOf(item.id) !== -1) {
+                    reweard = true;
+                }
+                cellContainer.setCombinationData(item, reweard);
                 cell.setHeight(cellContainer.height);
                 return cellContainer;
             },
@@ -165,7 +173,7 @@ class IllustratedCollectItem extends Phaser.GameObjects.Container {
     public getAllChildren() {
 
     }
-    public setCombinationData(data: IGalleryCombination) {
+    public setCombinationData(data: IGalleryCombination, rewarded: boolean) {
         this.combiData = data;
         this.titleTex.text = data.name;
         this.desTex.text = data.des;
@@ -191,6 +199,16 @@ class IllustratedCollectItem extends Phaser.GameObjects.Container {
         this.progress.setProgress(curprogress, maxprogress);
         this.progress.setText(`${curprogress}/${maxprogress}`);
         this.iscallRewards = curprogress === maxprogress;
+        if (rewarded) {
+            this.iscallRewards = false;
+            this.rewardsBtn.setFrameNormal("illustrate_survey_icon_1", "illustrate_survey_icon_1");
+        } else {
+            if (this.iscallRewards) {
+                this.rewardsBtn.setFrameNormal("illustrate_survey_icon", "illustrate_survey_icon");
+            } else {
+                this.rewardsBtn.setFrameNormal("illustrate_survey_icon_2", "illustrate_survey_icon_2");
+            }
+        }
         this.gridLayout.Layout();
         this.layout();
     }
@@ -206,7 +224,7 @@ class IllustratedCollectItem extends Phaser.GameObjects.Container {
             const list = this.gridLayout.list;
             for (const obj of list) {
                 if (Tool.checkPointerContains(obj, pointer)) {
-                   // (<IllustratedItem>obj).showTips();
+                    // (<IllustratedItem>obj).showTips();
                     if (this.send) this.send.runWith(["furidetail", (<IllustratedItem>obj).itemData]);
                 }
             }

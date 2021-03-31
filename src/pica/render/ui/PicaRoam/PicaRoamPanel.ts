@@ -221,6 +221,7 @@ export class PicaRoamPanel extends PicaBasePanel {
             this.showRoamPreviewPanel();
         } else if (tag === "progressrewards") {
             this.render.renderEmitter(this.key + "_queryprogressrewards", data);
+        } else if (tag === "recharge") {
         }
     }
 
