@@ -102,7 +102,7 @@ const gameConfig = Object.assign({}, commonConfig, {
             , force: true
         },
         {
-            from: "./resources/script", to: `resources/script`, toType: "dir"
+            from: "./resources/scripts", to: `resources/scripts`, toType: "dir"
             , force: true
         }]),
         new HtmlWebpackPlugin({
