@@ -1,7 +1,7 @@
 import { Render } from "../render";
 import { NodeType } from "../managers";
 import { MainUIScene } from "../scenes/main.ui.scene";
-import { Logger, LogicPos } from "utils";
+import { IPos, Logger, LogicPos } from "utils";
 import { BasePlaySceneGuide } from "../guide";
 
 export class MotionManager {
@@ -62,10 +62,7 @@ export class MotionManager {
             }
         }
         if (!pointer || !this.render.displayManager || !this.render.displayManager.user || !this.render.displayManager.user.visible) return;
-        const { x, y } = this.render.displayManager.user;
-        const tmpX = pointer.worldX / this.scaleRatio - x;
-        const tmpY = pointer.worldY / this.scaleRatio - y;
-        const position = this.scene.cameras.main.getWorldPoint(pointer.x - tmpX, pointer.y - tmpY);
+        const position = this.getPreUserPos(pointer);
         this.start(position.x / this.scaleRatio, position.y / this.scaleRatio);
     }
 
@@ -131,7 +128,8 @@ export class MotionManager {
         this.isHolding = false;
         this.scene.input.off("pointermove", this.onPointerMoveHandler, this);
         if (Math.abs(pointer.downX - pointer.upX) >= 5 * this.render.scaleRatio && Math.abs(pointer.downY - pointer.upY) >= 5 * this.render.scaleRatio || pointer.upTime - pointer.downTime > this.holdDelay) {
-            this.stop();
+            const position = this.getPreUserPos(pointer);
+            this.stop({ x: position.x / this.scaleRatio, y: position.y / this.scaleRatio });
         } else {
             if (this.gameObject) {
                 const id = this.gameObject.getData("id");
@@ -179,12 +177,13 @@ export class MotionManager {
         this.isHolding = true;
     }
 
-    protected onPointeroutHandler() {
+    protected onPointeroutHandler(pointer) {
         if (!this.isRunning) return;
         if (this.render.guideManager.canInteractive()) return;
         this.isHolding = false;
         this.scene.input.off("pointermove", this.onPointerMoveHandler, this);
-        this.stop();
+        const position = this.getPreUserPos(pointer);
+        this.stop({ x: position.x / this.scaleRatio, y: position.y / this.scaleRatio });
         clearTimeout(this.holdTime);
     }
 
@@ -218,8 +217,15 @@ export class MotionManager {
         Logger.getInstance().log("movePath ====>", x, y, targets, id);
     }
 
-    private stop() {
-        this.render.physicalPeer.stopMove();
+    private stop(pos: any) {
+        this.render.physicalPeer.stopMove(pos.x, pos.y);
+    }
+
+    private getPreUserPos(pointer): Phaser.Math.Vector2 {
+        const { x, y } = this.render.displayManager.user;
+        const tmpX = pointer.worldX / this.scaleRatio - x;
+        const tmpY = pointer.worldY / this.scaleRatio - y;
+        return this.scene.cameras.main.getWorldPoint(pointer.x - tmpX, pointer.y - tmpY);
     }
 
     private clearGameObject() {

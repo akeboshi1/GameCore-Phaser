@@ -134,9 +134,9 @@ export class PhysicalPeer extends RPCPeer {
         if (this.matterWorld.matterUser) this.matterWorld.matterUser.startMove();
     }
 
-    @Export()
-    public stopMove() {
-        if (this.matterWorld.matterUser) this.matterWorld.matterUser.tryStopMove();
+    @Export([webworker_rpc.ParamType.num, webworker_rpc.ParamType.num])
+    public stopMove(x, y) {
+        if (this.matterWorld.matterUser) this.matterWorld.matterUser.moveMotion(x, y);
     }
 
     @Export()
@@ -365,7 +365,6 @@ export class PhysicalPeer extends RPCPeer {
             return;
         }
         obj.model.setAnimationName(animationName, times);
-        obj.removeBody();
         obj.addBody(this.scaleRatio);
     }
 

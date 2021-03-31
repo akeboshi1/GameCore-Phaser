@@ -12,6 +12,7 @@ export class MatterUserObject extends MatterPlayerObject {
     private mTargetID: number;
     constructor(public peer: PhysicalPeer, public id: number) {
         super(peer, id);
+        this._offsetOrigin.y = 0;
     }
 
     update(time?: number, delta?: number) {
@@ -47,7 +48,6 @@ export class MatterUserObject extends MatterPlayerObject {
 
     public addBody() {
         this._sensor = false;
-        this._offsetOrigin.y = 0;
         this.setBody();
 
         this.setStatic(false);
@@ -58,6 +58,8 @@ export class MatterUserObject extends MatterPlayerObject {
         if (this.mRootMount) {
             await this.mRootMount.removeMount(this, pos);
         }
+        this._tempVec.x = x;
+        this._tempVec.y = y;
         this.mTargetPoint = { path: [pos], targetId };
         this.mSyncDirty = true;
         this.matterWorld.setSensor(this.body, false);
@@ -129,6 +131,7 @@ export class MatterUserObject extends MatterPlayerObject {
     }
 
     public stopMove() {
+
         this.mMoving = false;
         this.peer.mainPeer.stopMove(this.id);
         if (this.mMoveData && this.mMoveData.posPath) {
