@@ -281,10 +281,14 @@ export class Sprite extends EventDispatcher implements ISprite {
 
     setDirection(val: number) {
         if (!val) return;
+
         this.direction = val;
         if (!this.displayInfo) {
             return;
         }
+
+        this.checkDirectionByExistAnimations();
+
         // Logger.getInstance().debug("#dir sprite setDirection:=====", this.id, val);
         this.setAnimationData(this.currentAnimationName, this.direction);
     }
@@ -408,6 +412,18 @@ export class Sprite extends EventDispatcher implements ISprite {
             return aniName;
         }
         return null;
+    }
+
+    // 适配部分只有3 5 两个方向动画的家具
+    private checkDirectionByExistAnimations() {
+        if (!this.displayInfo) return;
+        if (this.displayInfo.checkDirectionAnimation(this.currentAnimationName, this.direction) === null) {
+            if (this.direction === Direction.east_north) {
+                this.direction = Direction.west_south;
+            } else if (this.direction === Direction.north_west) {
+                this.direction = Direction.south_east;
+            }
+        }
     }
 
     private setArea() {

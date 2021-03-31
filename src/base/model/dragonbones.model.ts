@@ -61,8 +61,17 @@ export class DragonbonesModel implements IDragonbonesModel {
             case Direction.north_west:
                 break;
         }
+        const aniName = this.checkDirectionAnimation(baseName, dir);
+        return { name: aniName, flip };
+    }
+
+    public checkDirectionAnimation(baseName: string, dir: Direction) {
         let addName: string = "";
         if (dir === Direction.north_west || dir === Direction.east_north) addName = "_back";
-        return { name: `${baseName}${addName}`, flip };
+        const aniName = `${baseName}${addName}`;
+        if (this.existAnimation(aniName)) {
+            return aniName;
+        }
+        return null;
     }
 }

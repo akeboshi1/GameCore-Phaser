@@ -102,8 +102,11 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
     public startConnect() {
         const gateway: ServerAddress = this.mConfig.server_addr;
         if (!gateway || !gateway.host || !gateway.port) {
-            this.renderPeer.showAlert("登陆失败，请重新登陆或稍后再试")
-                    .then(this.login.bind(this));
+            this.renderPeer.showAlert("登录失败，请重新登录或稍后再试")
+                    .then(async () => {
+                        await this.renderPeer.clearAccount();
+                        this.login();
+                    });
             return;
         }
         if (gateway) {
