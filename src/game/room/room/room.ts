@@ -88,7 +88,7 @@ export interface IRoomService {
 
     initUI(): void;
 
-    findPath(start: IPos, targetPosList: IPos[], toReverse: boolean): Promise<IPos[]>;
+    // findPath(start: IPos, targetPosList: IPos[], toReverse: boolean): Promise<IPos[]>;
 
     onManagerCreated(key: string);
 
@@ -511,9 +511,9 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
         return this.mWalkableMap[y][x] === 1;
     }
 
-    public async findPath(startPos: IPos, targetPosList: IPos[], toReverse: boolean) {
-        return await this.game.physicalPeer.getPath(startPos, targetPosList, toReverse);
-    }
+    // public async findPath(startPos: IPos, targetPosList: IPos[], toReverse: boolean) {
+    //     return await this.game.physicalPeer.getPath(startPos, targetPosList, toReverse);
+    // }
 
     public clear() {
         this.mGame.peer.physicalPeer.destroyMatterWorld();

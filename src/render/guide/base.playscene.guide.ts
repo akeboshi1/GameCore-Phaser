@@ -17,6 +17,10 @@ export class BasePlaySceneGuide extends BaseGuide {
         this.mPlayScene = this.render.game.scene.getScene(SceneName.PLAY_SCENE);
     }
 
+    get data() {
+        return this.mElementID;
+    }
+
     public show(param?: any) {
         super.show(param);
         this.mElement = this.render.displayManager.getDisplay(this.mElementID);
@@ -28,7 +32,7 @@ export class BasePlaySceneGuide extends BaseGuide {
     public hide() {
         this.mPlayScene.input.off("gameobjectdown", this.gameObjectDownHandler, this);
         super.hide();
-        if (this.mPointer) (<any>this.mPlayScene).motionMgr.onGuideOnPointUpHandler(this.mPointer, this.mElementID);
+        // if (this.mPointer) (<any>this.mPlayScene).motionMgr.onGuideOnPointUpHandler(this.mPointer, this.mElementID);
     }
 
     public checkInteractive(data?: any): boolean {
@@ -47,7 +51,6 @@ export class BasePlaySceneGuide extends BaseGuide {
         // todo 写死护照id
         if (id === this.mElementID) {
             this.mPointer = pointer;
-            this.mPlayScene.input.off("gameobjectdown", this.gameObjectDownHandler, this);
             this.end();
         }
     }

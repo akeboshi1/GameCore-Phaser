@@ -17,7 +17,7 @@ export class MatterSprite {
     public mountSprites: number[];
     public animator: Animator;
     public eventName: number[];
-    protected sprite: any;
+    public sprite: any;
     protected currentCollisionArea: number[][];
     protected currentWalkableArea: number[][];
     protected currentCollisionPoint: LogicPoint;

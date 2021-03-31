@@ -11,13 +11,20 @@ export class BaseGuide implements IGuide {
     public guideEffect: GuideEffect;
     protected scene: Phaser.Scene;
     protected uiManager: UiManager;
+    protected mData: any;
     private mIsShow: boolean = false;
     constructor(protected render: Render) {
         this.scene = render.sceneManager.getSceneByName(SceneName.MAINUI_SCENE) as MainUIScene;
         this.uiManager = render.uiManager;
     }
+
+    get data() {
+        return this.mData;
+    }
+
     public show(data?: any) {
         this.mIsShow = true;
+        this.mData = data;
         this.id = data.id;
         this.guideID = data.guideID;
         if (!this.guideEffect) this.guideEffect = new GuideEffect(this.scene, this.render.uiRatio);

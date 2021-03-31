@@ -1,7 +1,8 @@
 import { Render } from "../render";
 import { NodeType } from "../managers";
 import { MainUIScene } from "../scenes/main.ui.scene";
-import { LogicPos } from "utils";
+import { Logger, LogicPos } from "utils";
+import { BasePlaySceneGuide } from "../guide";
 
 export class MotionManager {
     public enable: boolean;
@@ -129,7 +130,6 @@ export class MotionManager {
 
     protected async onPointerUpHandler(pointer: Phaser.Input.Pointer) {
         if (!this.isRunning) return;
-        if (this.render.guideManager.canInteractive()) return;
         this.isHolding = false;
         this.scene.input.off("pointermove", this.onPointerMoveHandler, this);
         if (Math.abs(pointer.downX - pointer.upX) >= 5 * this.render.scaleRatio && Math.abs(pointer.downY - pointer.upY) >= 5 * this.render.scaleRatio || pointer.upTime - pointer.downTime > this.holdDelay) {
@@ -138,25 +138,41 @@ export class MotionManager {
             if (this.gameObject) {
                 const id = this.gameObject.getData("id");
                 if (id) {
-                    const ele = this.render.displayManager.getDisplay(id);
-                    if (ele.nodeType === NodeType.CharacterNodeType) {
-                        // TODO
-                        this.render.mainPeer.activePlayer(id);
-                        this.clearGameObject();
-                        return;
-                    }
-                    let targets = await this.render.physicalPeer.getInteractivePosition(this.getMountId(id));
-                    if (!targets || targets.length === 0) {
-                        const { x, y } = ele;
-                        targets = [{ x, y }];
-                    }
-                    this.movePath(pointer.worldX / this.render.scaleRatio, pointer.worldY / this.render.scaleRatio, 0, targets, id);
+                    if (this.render.guideManager.canInteractive(id)) return;
+                    await this.getEleMovePath(id, pointer);
                 }
             } else {
-                this.movePath(pointer.worldX / this.render.scaleRatio, pointer.worldY / this.render.scaleRatio, 0, [new LogicPos(pointer.worldX / this.scaleRatio, pointer.worldY / this.scaleRatio)]);
+                if (this.render.guideManager.canInteractive()) {
+                    const curGuide = this.render.guideManager.curGuide;
+                    Logger.getInstance().log("pointerup ====>", curGuide);
+                    const id = (<BasePlaySceneGuide>curGuide).data;
+                    await this.getEleMovePath(id, pointer);
+                } else {
+                    this.movePath(pointer.worldX / this.render.scaleRatio, pointer.worldY / this.render.scaleRatio, 0, [new LogicPos(pointer.worldX / this.scaleRatio, pointer.worldY / this.scaleRatio)]);
+                }
             }
         }
         this.clearGameObject();
+    }
+
+    protected async getEleMovePath(id, pointer) {
+        const ele = this.render.displayManager.getDisplay(id);
+        if (!ele) {
+            this.movePath(pointer.worldX / this.render.scaleRatio, pointer.worldY / this.render.scaleRatio, 0, [new LogicPos(pointer.worldX / this.scaleRatio, pointer.worldY / this.scaleRatio)]);
+            return;
+        }
+        if (ele.nodeType === NodeType.CharacterNodeType) {
+            // TODO
+            this.render.mainPeer.activePlayer(id);
+            this.clearGameObject();
+            return;
+        }
+        let targets = await this.render.physicalPeer.getInteractivePosition(this.getMountId(id));
+        if (!targets || targets.length === 0) {
+            const { x, y } = ele;
+            targets = [{ x, y }];
+        }
+        this.movePath(pointer.worldX / this.render.scaleRatio, pointer.worldY / this.render.scaleRatio, 0, targets, id);
     }
 
     protected async onPointerMoveHandler(pointer: Phaser.Input.Pointer) {
@@ -194,29 +210,16 @@ export class MotionManager {
     }
 
     private start(worldX: number, worldY: number, id?: number) {
-        // const user = this.render.user;
-        // if (!user) {
-        //     return;
-        // }
-        // this.render.user.moveMotion(worldX, worldY, id);
-        // this.render.mainPeer.moveMotion(worldX, worldY, id);
         this.render.physicalPeer.moveMotion(worldX, worldY, id);
     }
 
     private movePath(x: number, y: number, z: number, targets: {}, id?: number) {
-        // const user = this.render.user;
-        // if (!user) {
-        //     return;'
-        // }
-        // this.render.user.findPath(worldX, worldY, id);
-        // const startPos = this.render.displayManager.user.getPosition();
         this.render.mainPeer.startFireMove({ x, y });
         this.render.physicalPeer.findPath(targets, id);
     }
 
     private stop() {
         this.render.physicalPeer.stopMove();
-        // this.render.user.stopMove();
     }
 
     private clearGameObject() {
