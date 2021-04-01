@@ -667,7 +667,10 @@ export class Element extends BlockObject implements IElement {
             this.mMoveData.path = [];
             this.mMoveData = null;
         }
-        if (this.mStateManager) this.mStateManager.destroy();
+        if (this.mStateManager) {
+            this.mStateManager.destroy();
+            this.mStateManager = null;
+        }
         this.removeDisplay();
         super.destroy();
     }
