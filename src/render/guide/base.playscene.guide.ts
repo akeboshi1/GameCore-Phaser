@@ -25,12 +25,12 @@ export class BasePlaySceneGuide extends BaseGuide {
         super.show(param);
         this.mElement = this.render.displayManager.getDisplay(this.mElementID);
         if (!this.mElement) this.end();
-        const pos: IPos = Tool.getPosByScenes(this.mPlayScene, { x: this.mElement.x, y: this.mElement.y });
-        this.step1(pos);
+        this.step1(this.getGuidePosition());
     }
 
     public hide() {
         this.mPlayScene.input.off("gameobjectup", this.gameObjectUpHandler, this);
+        // this.scene.sys.events.off("update", this.updateGuidePos, this);
         if (this.mPointer) (<any>this.mPlayScene).motionMgr.onGuideOnPointUpHandler(this.mPointer, this.mElementID);
         super.hide();
     }
@@ -53,5 +53,15 @@ export class BasePlaySceneGuide extends BaseGuide {
             this.mPointer = pointer;
             this.end();
         }
+    }
+
+    protected updateGuidePos() {
+        this.guideEffect.createGuideEffect(this.getGuidePosition());
+    }
+
+    protected getGuidePosition() {
+        const pos: IPos = Tool.getPosByScenes(this.mPlayScene, { x: this.mElement.x, y: this.mElement.y });
+        const tmpPos = { x: pos.x, y: pos.y };
+        return tmpPos;
     }
 }
