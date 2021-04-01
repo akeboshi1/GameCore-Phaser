@@ -103,10 +103,10 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
         const gateway: ServerAddress = this.mConfig.server_addr;
         if (!gateway || !gateway.host || !gateway.port) {
             this.renderPeer.showAlert("登录失败，请重新登录或稍后再试")
-                    .then(async () => {
-                        await this.renderPeer.clearAccount();
-                        this.login();
-                    });
+                .then(async () => {
+                    await this.renderPeer.clearAccount();
+                    this.login();
+                });
             return;
         }
         if (gateway) {
@@ -231,7 +231,9 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
                 return this.loadGameConfig(remotePath);
 
             }, (reason) => {
-                return this.loadGameConfig(remotePath);
+                // return this.loadGameConfig(remotePath);
+                //    this.renderPeer.showAlert("配置加载错误，请重新登陆")
+                //         .then(this.login.bind(this));
             });
         }
     }

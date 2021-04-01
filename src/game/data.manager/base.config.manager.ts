@@ -82,8 +82,7 @@ export class BaseConfigManager {
                         Logger.getInstance().error(errorTex);
                         // this.mGame.renderPeer.showAlertReconnect(i18n.t("commontips.configerror"));
                         if (this.mDispose) return;
-                        this.mInitialization = true;
-                        resolve(true);
+                        reject(errorTex);
                     });
                 } else {
                     if (this.mDispose) return;

@@ -11,7 +11,7 @@ export function load(path: string, responseType: XMLHttpRequestResponseType): Pr
       const currentTarget = response.currentTarget;
       if (currentTarget && currentTarget["status"] === 200)
         resolve(response.currentTarget);
-      // else reject(`${path} load error ${currentTarget["status"]}`);
+      else reject(`${path} load error ${currentTarget["status"]}`);
     };
     http.onerror = () => {
       // Logger.getInstance().warn(`${path} load error`);

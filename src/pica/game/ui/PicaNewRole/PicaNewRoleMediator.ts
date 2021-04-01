@@ -49,7 +49,7 @@ export class PicaNewRoleMediator extends BasicMediator {
     }
 
     private query_Another_Info(id: string) {
-        this.mModel.fetchAnotherInfo(id);
+     //   this.mModel.fetchAnotherInfo(id);
     }
 
     private on_Another_Info(content: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_ANOTHER_PLAYER_INFO) {
