@@ -73,7 +73,7 @@ export class PicaLevelUpEffectPanel extends Phaser.GameObjects.Container {
                 this.lightSprite.visible = true;
                 setTimeout(() => {
                     if (!this.scene) return;
-                    this.tipCon.visible = true;
+                    this.tipCon.visible = false;
                     const xfrom = -this.width * 0.5, xto = 0;
                     this.tipCon.x = xfrom;
                     UIHelper.playtPosXTween(this.scene, this.tipCon, xfrom, xto, 200, "Bounce.easeOut");
@@ -109,6 +109,7 @@ export class PicaLevelUpEffectPanel extends Phaser.GameObjects.Container {
         const unlockbg = this.scene.make.image({ key: UIAtlasName.effectlevelup, frame: "lv_Unlock_bg" });
         this.tipTex = this.scene.make.text({ style: UIHelper.yellowStyle(this.dpr) }).setOrigin(0.5);
         this.tipCon.add([unlockbg, this.tipTex]);
+        this.tipCon.visible = false;
         this.tipCon.setSize(unlockbg.width, unlockbg.height);
         this.content.add([this.lightSprite, this.yuSprite, this.wingSprite, this.levelbg, this.levelTex]);
         this.add(this.tipCon);
