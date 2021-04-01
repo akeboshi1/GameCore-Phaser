@@ -13,6 +13,7 @@ export class InputField extends InputText {
         if (this.node) this.node.removeEventListener("keypress", this.onKeypressHandler.bind(this));
         this.off("focus", this.onFocusHandler, this);
         this.off("blur", this.onBlurHandler, this);
+        if (this.scene) this.scene.input.off("gameobjectdown", this.onGameobjectDown, this);
         super.destroy();
     }
 
