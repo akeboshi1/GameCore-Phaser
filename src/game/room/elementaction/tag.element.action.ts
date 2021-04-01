@@ -39,7 +39,7 @@ export class TAGElementAction extends ElementBaseAction {
         this.game.emitter.emit(EventType.SCENE_PLAYER_ACTION, this.userid, this.data.id, tempdata);
     }
     private executeOpenChest(data: any) {
-        const tempdata = { animation: "open_chest", times: data.repeat };
+        const tempdata = { animation: "openchest", times: data.repeat };
         this.game.emitter.emit(EventType.SCENE_PLAYER_ACTION, this.userid, this.data.id, tempdata);
     }
 }
