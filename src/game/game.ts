@@ -232,8 +232,11 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
 
             }, (reason) => {
                 // return this.loadGameConfig(remotePath);
-                //    this.renderPeer.showAlert("配置加载错误，请重新登陆")
-                //         .then(this.login.bind(this));
+                return new Promise((resolve, reject) => {
+                    this.renderPeer.showAlert("配置加载错误，请重新登陆")
+                        .then(this.login.bind(this));
+                    reject();
+                });
             });
         }
     }
