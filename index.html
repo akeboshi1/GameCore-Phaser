@@ -63,8 +63,8 @@
         window.addEventListener('load', (event) => {
             const launcher = tooqing.Launcher;
             const option = {
-                width: window.innerWidth,
-                height: window.innerHeight,
+                width: document.documentElement.clientWidth,
+                height: document.documentElement.clientHeight,
                 api_root: "https://api-dev.tooqing.com",
                 osd: "https://osd-alpha.tooqing.com",
                 // server_addr: {
@@ -80,7 +80,7 @@
             const app = launcher.start(option);
             app.registerReload(window.reload);
             window.addEventListener("resize", (e) => {
-                app.onResize(window.innerWidth, window.innerHeight);
+                app.onResize(document.documentElement.clientWidth, document.documentElement.clientHeight);
 
             });
             document.addEventListener("visibilitychange", function() {

@@ -226,7 +226,7 @@ export class PicaComposePanel extends BasePanel {
     }
 
     private setDetailDisplay(data: op_client.IPKT_CRAFT_SKILL) {
-        this.mDetailDisplay.loadSprite("loading_ui", Url.getUIRes(this.dpr, "loading_ui"), Url.getUIRes(this.dpr, "loading_ui"));
+        this.mDetailDisplay.loadSprite("loading_ui", Url.getUIRes(this.dpr, "loading_ui/loading_ui.png"), Url.getUIRes(this.dpr, "loading_ui/loading_ui.json"));
         const resData = new op_client.OP_VIRTUAL_WORLD_RES_CLIENT_MARKET_QUERY_PACKAGE_ITEM_RESOURCE();
         resData.animations = data.productAnimations;
         resData.display = data.productDisplay;

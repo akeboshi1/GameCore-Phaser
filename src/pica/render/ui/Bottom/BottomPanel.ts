@@ -387,6 +387,11 @@ class InputContainer extends Phaser.GameObjects.Container {
         return this.mFocusing;
     }
 
+    public destroy() {
+        if(this.scene) this.scene.input.off("pointerdown", this.onPointerSceneHandler, this);
+        super.destroy();
+    }
+
     private onEnterHandler(text: string) {
         this.emit("enter", text);
         this.inputText.setText("");
