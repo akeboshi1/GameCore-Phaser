@@ -1,5 +1,5 @@
 import { DynamicNinepatch } from "../../ui/components/dynamic.ninepatch";
-import { BBCodeText, NinePatch } from "apowophaserui";
+import { BBCodeText, NineSlicePatch } from "apowophaserui";
 import { Font, Url } from "utils";
 
 export class Bubble extends Phaser.GameObjects.Container {
@@ -16,38 +16,46 @@ export class Bubble extends Phaser.GameObjects.Container {
     constructor(scene: Phaser.Scene, scale: number) {
         super(scene);
         this.mScale = scale;
-        this.x = -40 * scale;
+        // this.x = 40 * scale;
     }
 
     public show(text: string, bubble: any) {// op_client.IChat_Setting
-        this.mChatContent = new BBCodeText(this.scene, 0, 4 * this.mScale, text, {
+        this.mChatContent = new BBCodeText(this.scene, 0, 0, text, {
             fontFamily: Font.DEFULT_FONT,
             fontSize: 14 * this.mScale,
             color: "#000000",
             origin: { x: 0, y: 0 },
             wrap: { width: 200 * this.mScale, mode: "character" }
-        });
+        }).setOrigin(0.5, 0.5);
         this.add(this.mChatContent);
 
-        const _minH = 36 * this.mScale;
-        const _minW = 60 * this.mScale;
-        this.mMinHeight = this.mChatContent.height + 18 * this.mScale;
+        const _minH = 50 * this.mScale;
+        const _minW = 100 * this.mScale;
+        this.mMinHeight = this.mChatContent.height + 30 * this.mScale;
         this.mMinHeight = this.mMinHeight < _minH ? _minH : this.mMinHeight;
-        this.mMinWidth = this.mChatContent.width + 20 * this.mScale;
+        this.mMinWidth = this.mChatContent.width + 30 * this.mScale;
         this.mMinWidth = this.mMinWidth < _minW ? _minW : this.mMinWidth;
+
+        this.y = this.mMinHeight;
 
         this.mBubbleBg = new DynamicNinepatch(this.scene, this);
         const res = Url.getOsdRes(bubble.bubbleResource || "platformitem/thumbnail/bubble_01.png");
         this.mBubbleBg.load(res, {
-            width: this.mMinWidth,
-            height: this.mMinHeight,
+            width: this.mMinWidth / this.mScale,
+            height: this.mMinHeight / this.mScale,
             key: res,
-            columns: [34, 2, 32],
-            rows: [42, 2, 9]
+            scale: 1,
+            config: {
+                left: 20,
+                top: 28,
+                right: 20,
+                bottom: 10
+            }
         }, this.onComplete, this);
     }
 
     public tweenTo(toY: number) {
+        toY += this.mMinHeight;
         this.mToY = toY;
         this.scene.tweens.add({
             targets: this,
@@ -96,13 +104,13 @@ export class Bubble extends Phaser.GameObjects.Container {
         super.destroy(true);
     }
 
-    private onComplete(img: NinePatch) {
+    private onComplete(img: NineSlicePatch) {
         if (img && this.scene) {
-            img.setOrigin(0, 0);
+            img.scale = this.mScale;
             this.addAt(img, 0);
-            const bound = this.getBounds();
-            this.mChatContent.x = this.mMinWidth - this.mChatContent.width >> 1;
-            this.mChatContent.y = (this.mMinHeight - this.mChatContent.height >> 1) + 6;
+            img.y = -img.displayHeight >> 1;
+            this.mChatContent.y = -(img.displayHeight >> 1) + 8 * this.mScale;
+            // img.texture.setFilter(Phaser.Textures.FilterMode.LINEAR);
         }
     }
 
