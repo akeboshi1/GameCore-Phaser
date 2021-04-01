@@ -52,6 +52,9 @@ export class BaseGuide implements IGuide {
         this.hide();
     }
 
+    public resize() {
+    }
+
     public isShow(): boolean {
         return this.mIsShow;
     }
