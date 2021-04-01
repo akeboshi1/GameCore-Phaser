@@ -89,14 +89,8 @@ export class SocketConnection {
     // Frees all resources for garbage collection.
     destroy(): void {
         Logger.getInstance().debug("socket close");
-        this.isConnect = false;
-        this.isAuto = true;
         if (this.mTransport) {
             this.mTransport.destroy();
-        }
-        if (this.closeConnectResolver) {
-            this.closeConnectResolver.resolve(null);
-            this.closeConnectResolver = null;
         }
     }
 
