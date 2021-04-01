@@ -54,20 +54,20 @@ export class MainPeer extends RPCPeer {
         this.stateTime = now;
     }
     // ============= connection调用主进程
-    public onConnected() {
+    public onConnected(isAuto: boolean) {
         // 告诉主进程链接成功
-        this.remote[RENDER_PEER].Render.onConnected();
+        this.remote[RENDER_PEER].Render.onConnected(isAuto);
         this.startBeat();
         // 逻辑层game链接成功
         this.game.onConnected();
     }
 
-    public onDisConnected() {
+    public onDisConnected(isAuto) {
         // 告诉主进程断开链接
         this.remote[RENDER_PEER].Render.onDisConnected();
         // 停止心跳
         this.endBeat();
-        this.game.onDisConnected();
+        this.game.onDisConnected(isAuto);
     }
 
     public onConnectError(error: string) {
@@ -223,7 +223,7 @@ export class MainPeer extends RPCPeer {
     }
 
     @Export()
-    public reconnect() {
+    public reconnect(isAuto: boolean) {
         // if (this.isReconnect) return;
         // this.isReconnect = true;
         // 告诉逻辑进程重新链接

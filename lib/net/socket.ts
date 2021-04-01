@@ -1,14 +1,14 @@
-import { Logger } from "utils";
+import { Logger, ValueResolver } from "utils";
 import { ServerAddress } from "./address";
 import { WSWrapper, ReadyState } from "./transport/websocket";
 export interface IConnectListener {
-    onConnected(connection?: SocketConnection): void;
+    onConnected(isAuto?: boolean): void;
 
-    onRefreshConnect(connection?: SocketConnection): void;
+    onRefreshConnect(isAuto?: boolean): void;
 
-    onDisConnected(connection?: SocketConnection): void;
+    onDisConnected(isAuto?: boolean): void;
 
-    onError(reason?: SocketConnectionError | undefined): void;
+    onError(reason?: SocketConnectionError | undefined, isAuto?: boolean): void;
 }
 
 export class SocketConnectionError extends Error {
@@ -25,7 +25,10 @@ export class SocketConnection {
     protected mTransport: WSWrapper;
     protected mServerAddr: ServerAddress = { host: "localhost", port: 80 };
     protected mConnectListener?: IConnectListener;
+    // true是外部断网，false是手动断网
+    protected isAuto: boolean = true;
     private isConnect: boolean = false;
+    private closeConnectResolver: ValueResolver<any> = null;
     constructor($listener: IConnectListener) {
         this.mTransport = new WSWrapper();
         this.mConnectListener = $listener;
@@ -35,14 +38,19 @@ export class SocketConnection {
             const listener: IConnectListener = this.mConnectListener;
             this.mTransport.on("open", () => {
                 Logger.getInstance().info(`SocketConnection ready.[${this.mServerAddr.host}:${this.mServerAddr.port}]`);
-                listener.onConnected(this);
+                listener.onConnected(this.isAuto);
                 this.onConnected();
                 this.isConnect = true;
+                this.isAuto = true;
             });
             this.mTransport.on("close", () => {
                 Logger.getInstance().info(`SocketConnection close.`);
-                listener.onDisConnected(this);
+                listener.onDisConnected(this.isAuto);
                 this.isConnect = false;
+                if (this.closeConnectResolver) {
+                    this.closeConnectResolver.resolve(null);
+                    this.closeConnectResolver = null;
+                }
             });
             this.mTransport.on("error", (reason: SocketConnectionError) => {
                 Logger.getInstance().info(`SocketConnection error.`);
@@ -51,13 +59,24 @@ export class SocketConnection {
         }
     }
 
+    set state(val: boolean) {
+        this.isAuto = val;
+    }
+
     startConnect(addr: ServerAddress): void {
         this.mServerAddr = addr;
         this.doConnect();
     }
 
-    stopConnect(): void {
-        if (this.mTransport && this.mTransport.readyState() === ReadyState.OPEN) return this.mTransport.Close();
+    stopConnect(): Promise<any> {
+        if (this.closeConnectResolver) {
+            this.closeConnectResolver.reject("called <stopConnect> again");
+            this.closeConnectResolver = null;
+        }
+        this.closeConnectResolver = ValueResolver.create<any>();
+        return this.closeConnectResolver.promise(() => {
+            if (this.mTransport && this.mTransport.readyState() === ReadyState.OPEN) this.mTransport.Close();
+        });
     }
 
     send(data: any): void {

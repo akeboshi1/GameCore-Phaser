@@ -22,6 +22,10 @@ export class GameSocket extends SocketConnection {
         // this.socketList = [];
     }
 
+    set state(val: boolean) {
+        this.isAuto = val;
+    }
+
     send(data: any): void {
         super.send(data);
     }
@@ -35,18 +39,18 @@ export class ConnListener implements IConnectListener {
     constructor(peer: MainPeer) {
         this.mainPeer = peer;
     }
-    onConnected(): void {
-        this.mainPeer.onConnected();
+    onConnected(isAuto?: boolean): void {
+        this.mainPeer.onConnected(isAuto);
         Logger.getInstance().log(`MainWorker[已连接]`);
     }
 
-    onDisConnected(): void {
-        this.mainPeer.onDisConnected();
+    onDisConnected(isAuto?: boolean): void {
+        this.mainPeer.onDisConnected(isAuto);
         Logger.getInstance().log(`MainWorker[已断开]`);
     }
 
-    onRefreshConnect() {
-        this.mainPeer.reconnect();
+    onRefreshConnect(isAuto?: boolean) {
+        this.mainPeer.reconnect(isAuto);
         Logger.getInstance().log(`MainWorker[正在刷新链接]`);
     }
 
@@ -77,6 +81,8 @@ export class Connection implements ConnectionService {
     private isPause: boolean = false;
     private mClock: Clock;
     private mPeer: MainPeer;
+    private gateway: any;
+    private isCloseing: boolean = false;
     constructor(peer: MainPeer) {
         this.mPeer = peer;
     }
@@ -101,6 +107,10 @@ export class Connection implements ConnectionService {
     }
 
     startConnect(addr: ServerAddress, keepalive?: boolean): void {
+        if (this.isCloseing) {
+            this.gateway = { addr, keepalive };
+            return;
+        }
         if (this.isConnect) this.closeConnect();
         this.mCachedServerAddress = addr;
         if (!this.mSocket) {
@@ -111,11 +121,16 @@ export class Connection implements ConnectionService {
 
     closeConnect(): void {
         this.isConnect = false;
+        this.isCloseing = true;
         this.mCachedServerAddress = undefined;
         if (this.mSocket) {
-            this.mSocket.stopConnect();
-            this.mSocket.destroy();
-            this.mSocket = null;
+            this.mSocket.state = false;
+            this.mSocket.stopConnect().then(() => {
+                this.isCloseing = false;
+                this.mSocket.destroy();
+                this.mSocket = null;
+                if (this.gateway) this.startConnect(this.gateway.addr, this.gateway.keepalive);
+            });
         }
         this.clearPacketListeners();
     }
