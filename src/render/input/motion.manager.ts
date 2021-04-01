@@ -127,6 +127,8 @@ export class MotionManager {
         if (!this.isRunning) return;
         this.isHolding = false;
         this.scene.input.off("pointermove", this.onPointerMoveHandler, this);
+
+        if (this.render.guideManager.canInteractive()) return;
         if (Math.abs(pointer.downX - pointer.upX) >= 5 * this.render.scaleRatio && Math.abs(pointer.downY - pointer.upY) >= 5 * this.render.scaleRatio || pointer.upTime - pointer.downTime > this.holdDelay) {
             const position = this.getPreUserPos(pointer);
             this.stop({ x: position.x / this.scaleRatio, y: position.y / this.scaleRatio });
@@ -138,14 +140,14 @@ export class MotionManager {
                     await this.getEleMovePath(id, pointer);
                 }
             } else {
-                if (this.render.guideManager.canInteractive()) {
-                    const curGuide = this.render.guideManager.curGuide;
-                    Logger.getInstance().log("pointerup ====>", curGuide);
-                    const id = (<BasePlaySceneGuide>curGuide).data;
-                    await this.getEleMovePath(id, pointer);
-                } else {
-                    this.movePath(pointer.worldX / this.render.scaleRatio, pointer.worldY / this.render.scaleRatio, 0, [new LogicPos(pointer.worldX / this.scaleRatio, pointer.worldY / this.scaleRatio)]);
-                }
+                // if (this.render.guideManager.canInteractive()) {
+                //     const curGuide = this.render.guideManager.curGuide;
+                //     Logger.getInstance().log("pointerup ====>", curGuide);
+                //     const id = (<BasePlaySceneGuide>curGuide).data;
+                //     await this.getEleMovePath(id, pointer);
+                // } else {
+                // }
+                this.movePath(pointer.worldX / this.render.scaleRatio, pointer.worldY / this.render.scaleRatio, 0, [new LogicPos(pointer.worldX / this.scaleRatio, pointer.worldY / this.scaleRatio)]);
             }
         }
         Logger.getInstance().log("onPointerUp motion===>", pointer);
