@@ -18,11 +18,19 @@ export class PicaLoginPanel extends BasePanel {
     private mMaskBg: Phaser.GameObjects.Graphics;
     private parent: Phaser.GameObjects.Container;
     private mCloseBtn: Button;
+    private errorCode: Map<number, string>;
 
     constructor(uiManager: UiManager) {
         super(uiManager.scene, uiManager.render);
         this.key = ModuleName.PICA_LOGIN_NAME;
         this.mMediator = this.render.mainPeer[ModuleName.PICA_LOGIN_NAME];
+        this.errorCode = new Map();
+        this.errorCode.set(40004, "手机验证码已过期");
+        this.errorCode.set(40001, "用户名或手机号没找到");
+        this.errorCode.set(40002, "密码不正确");
+        this.errorCode.set(40003, "该商品已经添加到购物车");
+        this.errorCode.set(40005, "手机验证码不正确");
+        this.errorCode.set(40006, "您未获得测试资格，关注官博下次一定！");
     }
 
     setInputVisible(val: boolean) {
@@ -66,8 +74,14 @@ export class PicaLoginPanel extends BasePanel {
         this.mCloseBtn.off(ClickEvent.Tap, this.onCloseHandler, this);
     }
 
-    showError(err: string) {
-        this.mErrorTips.setText(err);
+    showError(response: any) {
+        const code = response.code;
+        const error = this.errorCode.get(code);
+        if (error) {
+            this.mErrorTips.setText(error);
+        } else {
+            this.mErrorTips.setText(response.msg);
+        }
     }
 
     resize() {
@@ -175,7 +189,7 @@ export class PicaLoginPanel extends BasePanel {
                 color: "#FF0000",
                 fontSize: 12 * this.dpr + "px",
                 fontFamily: Font.DEFULT_FONT
-            }
+            },
         }, false).setOrigin(0, 0);
 
         this.mCloseBtn = new Button(this.scene, UIAtlasKey.commonKey, "close");
