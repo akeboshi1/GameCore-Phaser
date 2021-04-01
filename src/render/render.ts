@@ -459,6 +459,10 @@ export class Render extends RPCPeer implements GameMain, IRender {
 
     @Export()
     hidden() {
+        const loginScene = this.sceneManager.getSceneByName(SceneName.LOGIN_SCENE);
+        if (loginScene && loginScene.scene.isActive()) {
+            return;
+        }
         this.destroy(false).then(() => {
             this.linkTo(MAIN_WORKER, MAIN_WORKER_URL).onceReady(() => {
                 this.mMainPeer = this.remote[MAIN_WORKER].MainPeer;
