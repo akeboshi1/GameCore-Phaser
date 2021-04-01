@@ -134,6 +134,7 @@ export class PicaIllustratedPanel extends PicaBasePanel {
         }
         this.content.add(this.furiDetail);
         this.furiDetail.visible = true;
+        this.furiDetail.refreshMask();
     }
 
     private hideFuriDetailPanel() {
