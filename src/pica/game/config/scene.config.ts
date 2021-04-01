@@ -25,5 +25,6 @@ export class SceneConfig extends BaseConfigData {
                 this.sceneMap.set(subcategory, arr);
             }
         }
+
     }
 }

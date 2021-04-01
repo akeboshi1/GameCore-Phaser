@@ -428,9 +428,9 @@ export class BaseDataConfigManager extends BaseConfigManager {
     public getScenes(type?: string) {
         if (this.sceneMap.size === 0) {
             const dataTypes = [BaseDataType.minescene, BaseDataType.publicscene];
+            const map = new Map();
             for (const dataType of dataTypes) {
                 const config: SceneConfig = this.getConfig(dataType);
-                const map = this.sceneMap;
                 config.sceneMap.forEach((value, key) => {
                     if (map.has(key)) {
                         const datas = map.get(key);
@@ -448,6 +448,19 @@ export class BaseDataConfigManager extends BaseConfigManager {
                     }
                 });
             }
+            const keys = Array.from(map.keys());
+            keys.sort((a, b) => {
+                let av = Number(a[a.length - 1]);
+                av = isNaN(av) ? Number.MAX_VALUE : av;
+                let bv = Number(b[b.length - 1]);
+                bv = isNaN(bv) ? Number.MAX_VALUE : bv;
+                if (av > bv) return 1;
+                else return -1;
+            });
+            for (const key of keys) {
+                this.sceneMap.set(key, map.get(key));
+            }
+            map.clear();
         }
         if (type) {
             return this.sceneMap.get(type);
