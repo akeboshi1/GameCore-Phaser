@@ -131,7 +131,6 @@ export class MatterUserObject extends MatterPlayerObject {
     }
 
     public stopMove() {
-
         this.mMoving = false;
         this.peer.mainPeer.stopMove(this.id);
         if (this.mMoveData && this.mMoveData.posPath) {
@@ -143,6 +142,9 @@ export class MatterUserObject extends MatterPlayerObject {
             }
         }
         if (!this.body) return;
+        const _pos = this.body.position;
+        this._tempVec.x = (_pos.x - this._offset.x) / this._scale;
+        this._tempVec.y = (_pos.y - this._offset.y) / this._scale;
         this.setVelocity(0, 0);
     }
 
@@ -175,6 +177,10 @@ export class MatterUserObject extends MatterPlayerObject {
                 this._tempVec.x = pos.x;
                 this._tempVec.y = pos.y;
                 Body.setPosition(this.body, Vector.create(this._tempVec.x * this._scale + this._offset.x, this._tempVec.y * this._scale + this._offset.y));
+            } else {
+                const _pos = this.body.position;
+                this._tempVec.x = (_pos.x - this._offset.x) / this._scale;
+                this._tempVec.y = (_pos.y - this._offset.y) / this._scale;
             }
             this.peer.mainPeer.tryStopMove(this.id, interactiveBoo, this.mTargetPoint.targetId, pos);
             this.mTargetPoint = null;
