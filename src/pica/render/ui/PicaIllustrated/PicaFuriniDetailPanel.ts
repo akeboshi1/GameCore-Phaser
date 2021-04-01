@@ -15,6 +15,7 @@ export class PicaFuriniDetailPanel extends Phaser.GameObjects.Container {
     private bottomBg: Phaser.GameObjects.Graphics;
     private furinName: Phaser.GameObjects.Text;
     private furiDes: Phaser.GameObjects.Text;
+    private maskGraphic: Phaser.GameObjects.Graphics;
     private closeButton: Button;
     private dpr: number;
     private zoom: number;
@@ -34,8 +35,17 @@ export class PicaFuriniDetailPanel extends Phaser.GameObjects.Container {
         w = w || this.width;
         h = h || this.height;
         this.setSize(w, h);
+        this.maskGraphic.clear();
+        this.maskGraphic.fillStyle(0x3EE1FF);
+        const maskWidth = (this.width - 20 * this.dpr) * this.zoom;
+        const maskHeight = 150 * this.dpr * this.zoom;
+        this.maskGraphic.fillRect(-maskWidth * 0.5, -maskHeight * 0.5, maskWidth, maskHeight);
     }
-
+    public refreshMask() {
+        const wpos = this.mDetailDisplay.getWorldTransformMatrix();
+        this.maskGraphic.x = wpos.tx;
+        this.maskGraphic.y = wpos.ty;
+    }
     init() {
         const backWidth = 1.5 * this.width, backheight = 3 * this.height;
         this.backgrand = this.scene.make.graphics(undefined, false);
@@ -67,6 +77,8 @@ export class PicaFuriniDetailPanel extends Phaser.GameObjects.Container {
         this.mDetailDisplay = new DetailDisplay(this.scene, this.render);
         this.mDetailDisplay.setFixedScale(this.dpr / this.scale);
         this.mDetailDisplay.y = -60 * this.dpr;
+        this.maskGraphic = this.scene.make.graphics(undefined, false);
+        this.mDetailDisplay.mask = this.maskGraphic.createGeometryMask();
         this.starImg = this.scene.make.image({ key: UIAtlasName.uicommon, frame: "bag_star_big_1" });
         this.starImg.y = 50 * this.dpr;
         this.bottomBg = this.scene.make.graphics(undefined, false);
@@ -88,6 +100,7 @@ export class PicaFuriniDetailPanel extends Phaser.GameObjects.Container {
 
     destroy() {
         super.destroy();
+        this.maskGraphic.destroy();
     }
 
     public setProp(prop: IExtendCountablePackageItem) {// PicPropFunConfig
