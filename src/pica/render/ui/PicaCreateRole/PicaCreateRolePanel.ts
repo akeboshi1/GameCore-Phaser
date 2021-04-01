@@ -66,7 +66,7 @@ export class PicaCreateRolePanel extends PicaBasePanel {
     }
 
     destroy() {
-        this.scene.scale.off("resize", this.onResize, this);
+        if (this.scene) this.scene.scale.off("resize", this.onResize, this);
         super.destroy();
     }
 

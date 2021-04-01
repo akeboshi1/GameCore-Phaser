@@ -162,10 +162,14 @@ export class DecorateManager {
     // 撤销所有编辑，返回进入编辑模式的样子
     public reverseAll() {
         this.reverseSelected();
-        while (this.mActionQueue.length > 0) {
-            const act = this.mActionQueue.pop();
-            act.reverse(this);
-        }
+
+        const combinedActs = this.combineActions(this.mActionQueue);
+        combinedActs.forEach((acts, sprite) => {
+            for (const act of acts) {
+                act.reverse(this);
+            }
+        });
+        this.mActionQueue.length = 0;
     }
 
     // 选择某一物件 call by motion
@@ -312,10 +316,22 @@ export class DecorateManager {
     public reverseSelected() {
         if (this.mSelectedID < 0) return;
 
-        while (this.mSelectedActionQueue.length > 0) {
-            const act = this.mSelectedActionQueue.pop();
-            act.reverse(this);
-        }
+        const combinedActs = this.combineActions(this.mSelectedActionQueue);
+        combinedActs.forEach((acts, sprite) => {
+            if (!sprite) {
+                Logger.getInstance().error("sprite is null, ", acts, sprite);
+                return;
+            }
+            if (sprite.id !== this.mSelectedID) {
+                Logger.getInstance().error("sprite.id is not selected, ", acts, sprite);
+                return;
+            }
+
+            for (const act of acts) {
+                act.reverse(this);
+            }
+        });
+        this.mSelectedActionQueue.length = 0;
 
         this.unselect();
     }
@@ -440,52 +456,6 @@ export class DecorateManager {
     }
 
     private combineActions(actions: DecorateAction[]): Map<ISprite, DecorateAction[]> {
-        // const changes: Map<ISprite, { moveVec: LogicPos, rotateTimes: number, active?: boolean, pos?: LogicPos }> = new Map();
-        // for (const action of actions) {
-        //     if (!changes.has(action.target)) {
-        //         changes.set(action.target, {moveVec: new LogicPos(0, 0), rotateTimes: 0});
-        //     }
-        //     switch (action.type) {
-        //         case DecorateActionType.Add:
-        //             if (action.data.pos !== undefined) {
-        //                 changes.get(action.target).active = true;
-        //                 changes.get(action.target).pos = new LogicPos(action.data.pos.x, action.data.pos.y);
-        //             }
-        //             break;
-        //         case DecorateActionType.Remove:
-        //             if (action.data.pos !== undefined) {
-        //                 changes.get(action.target).active = false;
-        //                 changes.get(action.target).pos = new LogicPos(action.data.pos.x, action.data.pos.y);
-        //             }
-        //             break;
-        //         case DecorateActionType.Move:
-        //             if (action.data.moveVec !== undefined)
-        //                 changes.get(action.target).moveVec.add(action.data.moveVec.x, action.data.moveVec.y);
-        //             break;
-        //         case DecorateActionType.Add:
-        //             if (action.data.rotateTimes)
-        //                 changes.get(action.target).rotateTimes += action.data.rotateTimes;
-        //             break;
-        //     }
-        // }
-        // const result: Map<ISprite, DecorateAction[]> = new Map<ISprite, DecorateAction[]>();
-        // changes.forEach((deltaData, sprite) => {
-        //     const acts: DecorateAction[] = [];
-        //     result.set(sprite, acts);
-        //     if (deltaData.active !== undefined && deltaData.active === false) {
-        //         acts.push(new DecorateAction(sprite, DecorateActionType.Remove, new DecorateActionData({pos: deltaData.pos})));
-        //     }
-        //     if (deltaData.moveVec !== new LogicPos(0, 0)) {
-        //         acts.push(new DecorateAction(sprite, DecorateActionType.Move, new DecorateActionData({moveVec: deltaData.moveVec})));
-        //     }
-        //     if (deltaData.rotateTimes > 0) {
-        //         acts.push(new DecorateAction(sprite, DecorateActionType.Rotate, new DecorateActionData({rotateTimes: deltaData.rotateTimes})));
-        //     }
-        //     if (deltaData.active !== undefined && deltaData.active === true) {
-        //         acts.push(new DecorateAction(sprite, DecorateActionType.Add, new DecorateActionData({pos: deltaData.pos})));
-        //     }
-        // });
-        // return result;
         const result: Map<ISprite, DecorateAction[]> = new Map<ISprite, DecorateAction[]>();
         const addCount: Map<ISprite, number> = new Map<ISprite, number>();
         for (const action of actions) {

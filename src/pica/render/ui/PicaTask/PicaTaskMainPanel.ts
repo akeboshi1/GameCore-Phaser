@@ -109,6 +109,7 @@ export class PicaTaskMainPanel extends Phaser.GameObjects.Container {
             this.gameScroller.addItem(item);
             item.setTaskData(quests[i]);
             item.visible = true;
+            item.alpha = 1;
             item.x = 0;
         }
         this.gameScroller.Sort();
