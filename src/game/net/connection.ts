@@ -174,6 +174,7 @@ export class Connection implements ConnectionService {
     }
 
     onData(data: ArrayBuffer) {
+        if (!this.isConnect) return;
         const protobuf_packet = PBpacket.Create(data);
         this.mUuid = protobuf_packet.header.uuid;
         Logger.getInstance().log(`MainWorker[接收] <<< ${protobuf_packet.toString()} `);
