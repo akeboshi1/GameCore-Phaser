@@ -13,7 +13,7 @@ export class PicaRewardTip extends BasicModel {
         const connection = this.connection;
         if (connection) {
             this.connection.addPacketListener(this);
-            this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_SHOW_REWARD_TIPS, this.onReAwardTipsHandler);
+            //  this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_SHOW_REWARD_TIPS, this.onReAwardTipsHandler);
         }
     }
 
