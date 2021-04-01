@@ -4,7 +4,7 @@ import { MainPeer } from "./main.peer";
 import { op_def, op_client, op_virtual_world, op_gateway } from "pixelpai_proto";
 import { Lite } from "game-capsule";
 import { ConnectionService } from "../../lib/net/connection.service";
-import { IConnectListener } from "../../lib/net/socket";
+import { IConnectListener, SocketConnection } from "../../lib/net/socket";
 import { Logger, ResUtils, Tool, load, EventDispatcher, Handler } from "utils";
 import IOP_CLIENT_REQ_VIRTUAL_WORLD_PLAYER_INIT = op_gateway.IOP_CLIENT_REQ_VIRTUAL_WORLD_PLAYER_INIT;
 import { Connection, GameSocket } from "./net/connection";
@@ -58,7 +58,7 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
     protected gameConfigUrls: Map<string, string> = new Map();
     protected gameConfigUrl: string;
     protected isPause: boolean = false;
-    protected isGotoGame: boolean = false;
+    protected isAuto: boolean = true;
     protected mMoveStyle: number;
     protected mReconnect: number = 0;
     protected hasClear: boolean = false;
@@ -119,7 +119,8 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
         this.mainPeer.render.showLoading(data);
     }
 
-    public onConnected() {
+    public onConnected( isAuto?: boolean) {
+        this.isAuto = isAuto;
         if (!this.mClock) this.mClock = new Clock(this.connect, this.mainPeer, this);
         if (!this.mHttpClock) this.mHttpClock = new HttpClock(this);
         this.hideMediator(ModuleName.PICA_BOOT_NAME);
@@ -131,9 +132,10 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
         // this.login();
     }
 
-    public onDisConnected() {
+    public onDisConnected( isAuto?: boolean) {
         Logger.getInstance().debug("app connectFail=====");
-        if (this.isGotoGame) return;
+        this.isAuto = isAuto;
+        if (!this.isAuto) return;
         if (this.mConfig.hasConnectFail) {
             return this.mainPeer.render.connectFail();
         } else {
@@ -148,7 +150,9 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
         }
     }
 
-    public onRefreshConnect() {
+    public onRefreshConnect( isAuto?: boolean) {
+        this.isAuto = isAuto;
+        if (!this.isAuto) return;
         // if (this.hasClear || this.isPause) return;
         Logger.getInstance().debug("game onrefreshconnect");
         if (this.mConfig.hasConnectFail) {
@@ -163,6 +167,7 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
     }
 
     public onError(): void {
+        if (!this.isAuto) return;
         Logger.getInstance().debug("socket error");
         if (this.mReconnect > 2) {
             // todo reconnect scene
@@ -180,6 +185,7 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
     }
 
     public async reconnect() {
+        if (!this.isAuto) return;
         // if (this.hasClear || this.isPause) return;
         Logger.getInstance().debug("game reconnect");
         if (this.mConfig.hasConnectFail) return this.mainPeer.render.connectFail();
@@ -647,7 +653,6 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
     }
 
     private _createAnotherGame(gameId, virtualworldId, sceneId, loc, spawnPointId?, worldId?) {
-        this.isGotoGame = true;
         this.clearGame(true).then(() => {
             this.isPause = false;
             if (this.mUser) {
@@ -670,14 +675,12 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
             this.mClock = new Clock(this.connect, this.peer);
             // setTimeout(() => {
             this.mainPeer.render.createAnotherGame(gameId, virtualworldId, sceneId, loc ? loc.x : 0, loc ? loc.y : 0, loc ? loc.z : 0, spawnPointId, worldId);
-            this.isGotoGame = false;
             // }, 1000);
             // this.mGame.scene.start(LoadingScene.name, { world: this }););
         });
     }
 
     private _onGotoAnotherGame(gameId, virtualworldId, sceneId, loc, spawnPointId?, worldId?) {
-        this.isGotoGame = true;
         this.clearGame(true).then(() => {
             this.isPause = false;
             if (this.connect) {
@@ -695,13 +698,13 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
             this.mClock = new Clock(this.connect, this.peer);
             // 告知render进入其他game
             this.mainPeer.render.createAnotherGame(gameId, virtualworldId, sceneId, loc ? loc.x : 0, loc ? loc.y : 0, loc ? loc.z : 0, spawnPointId, worldId);
-            this.isGotoGame = false;
         });
     }
 
     private clearGame(bool: boolean = false): Promise<void> {
         return new Promise((resolve, reject) => {
             this.renderPeer.clearGame(bool).then(() => {
+                this.isAuto = true;
                 if (this.mClock) {
                     this.mClock.destroy();
                     this.mClock = null;

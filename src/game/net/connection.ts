@@ -22,6 +22,10 @@ export class GameSocket extends SocketConnection {
         // this.socketList = [];
     }
 
+    set state(val: boolean) {
+        this.isAuto = val;
+    }
+
     send(data: any): void {
         super.send(data);
     }
@@ -35,18 +39,18 @@ export class ConnListener implements IConnectListener {
     constructor(peer: MainPeer) {
         this.mainPeer = peer;
     }
-    onConnected(): void {
-        this.mainPeer.onConnected();
+    onConnected(isAuto?: boolean): void {
+        this.mainPeer.onConnected(isAuto);
         Logger.getInstance().log(`MainWorker[已连接]`);
     }
 
-    onDisConnected(): void {
-        this.mainPeer.onDisConnected();
+    onDisConnected(isAuto?: boolean): void {
+        this.mainPeer.onDisConnected(isAuto);
         Logger.getInstance().log(`MainWorker[已断开]`);
     }
 
-    onRefreshConnect() {
-        this.mainPeer.reconnect();
+    onRefreshConnect(isAuto?: boolean) {
+        this.mainPeer.reconnect(isAuto);
         Logger.getInstance().log(`MainWorker[正在刷新链接]`);
     }
 
@@ -113,9 +117,11 @@ export class Connection implements ConnectionService {
         this.isConnect = false;
         this.mCachedServerAddress = undefined;
         if (this.mSocket) {
-            this.mSocket.stopConnect();
-            this.mSocket.destroy();
-            this.mSocket = null;
+            this.mSocket.state = false;
+            this.mSocket.stopConnect().then(() => {
+                this.mSocket.destroy();
+                this.mSocket = null;
+            });
         }
         this.clearPacketListeners();
     }
