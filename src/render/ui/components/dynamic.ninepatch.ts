@@ -1,11 +1,11 @@
-import { NinePatch } from "apowophaserui";
+import { NineSlicePatch } from "apowophaserui";
 
 export class DynamicNinepatch {
     protected mUrl: string;
     protected mLoadCompleteCallBack?: Function;
     protected mLoadContext?: any;
-    protected mImage: NinePatch;
-    protected mConfig: object;
+    protected mImage: NineSlicePatch;
+    protected mConfig: any;
     constructor(
         private mScene: Phaser.Scene,
         private mParent?: Phaser.GameObjects.Container) {
@@ -27,7 +27,8 @@ export class DynamicNinepatch {
     }
 
     private onLoadCompleteHandler() {
-        this.mImage = new NinePatch(this.mScene, this.mConfig);
+        // x: number, y: number, width: number, height: number, key: string, frame: string
+        this.mImage = new NineSlicePatch(this.mScene, 0, 0, this.mConfig.width, this.mConfig.height, this.mConfig.key, undefined, this.mConfig.config, this.mConfig.scale);
         if (this.mLoadCompleteCallBack) {
             this.mLoadCompleteCallBack.call(this.mLoadContext, this.mImage);
             this.mLoadCompleteCallBack = null;
@@ -35,7 +36,7 @@ export class DynamicNinepatch {
         }
     }
 
-    get image(): NinePatch {
+    get image(): NineSlicePatch {
         return this.mImage;
     }
 }
