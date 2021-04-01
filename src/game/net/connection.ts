@@ -101,6 +101,7 @@ export class Connection implements ConnectionService {
     }
 
     startConnect(addr: ServerAddress, keepalive?: boolean): void {
+        if (this.isConnect) this.closeConnect();
         this.mCachedServerAddress = addr;
         if (!this.mSocket) {
             this.mSocket = new GameSocket(this.mPeer, new ConnListener(this.mPeer));

@@ -49,7 +49,7 @@ export class PicaNewRoleMediator extends BasicMediator {
     }
 
     private query_Another_Info(id: string) {
-     //   this.mModel.fetchAnotherInfo(id);
+        this.mModel.fetchAnotherInfo(id);
     }
 
     private on_Another_Info(content: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_ANOTHER_PLAYER_INFO) {
@@ -105,7 +105,7 @@ export class PicaNewRoleMediator extends BasicMediator {
             const count = this.game.user.userData.playerBag.getItemsCount(op_pkt_def.PKT_PackageType.PropPackage, action.tag.propUseId);
             activeEnable = count > 0;
             if (!activeEnable) {
-                const item = (<any> this.game.configManager).getItemBaseByID(action.tag.propUseId);
+                const item = (<any>this.game.configManager).getItemBaseByID(action.tag.propUseId);
                 if (item) {
                     // TODO i18n.t("common.notEnough");
                     this.game.renderPeer.showAlert(`${item.name}数量不足`);
