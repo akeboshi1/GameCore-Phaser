@@ -16,12 +16,12 @@ export class DropElementPanel extends BasePanel {
     }
 
     protected preload() {
-        this.addAtlas(this.key, "cutInmenu/cutInmenu.png", "cutInmenu/cutInmenu.json");
+        this.addAtlas(ModuleName.CUTINMENU_NAME, "cutInmenu/cutInmenu.png", "cutInmenu/cutInmenu.json");
         super.preload();
     }
 
     protected init() {
-        const bg = this.scene.make.image({ key: this.key, frame: "minebag_bg" }, false).setInteractive();
+        const bg = this.scene.make.image({ key: ModuleName.CUTINMENU_NAME, frame: "minebag_bg" }, false).setInteractive();
         const tap = new Tap(bg);
         bg.on(ClickEvent.Tap, this.onTapHandler, this);
         this.setSize(bg.width, bg.height);
@@ -44,8 +44,9 @@ export class DropElementPanel extends BasePanel {
         super.init();
 
         const { width, height } = this.scene.cameras.main;
-        this.x = width;
-        this.y = height - 200 * this.dpr;
+        // this.x = width - 15 * this.dpr;
+        this.x = width - 5 * this.dpr;
+        this.y = height * 0.5 + 40 * this.dpr + this.displayHeight;
     }
 
     private updateElement() {
@@ -54,7 +55,7 @@ export class DropElementPanel extends BasePanel {
         }
         if (!this.showData.texturePath) return;
         if (!this.element) {
-            this.element = new DynamicImage(this.scene, -this.width * 0.2, this.height * 0.5 - 4 * this.dpr).setOrigin(0.5, 1);
+            this.element = new DynamicImage(this.scene, -this.width * 0.2, this.height * 0.5 - 8 * this.dpr).setOrigin(0.5, 1);
             this.element.scale = this.dpr;
         }
         this.element.load(Url.getOsdRes(this.mShowData.texturePath));
