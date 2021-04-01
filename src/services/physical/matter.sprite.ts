@@ -112,7 +112,9 @@ export class MatterSprite {
     }
 
     public getInteractiveArea(aniName: string, flip: boolean = false): op_def.IPBPoint2i[] | undefined {
-        const ani = this.animations.get(aniName);
+        const aniNameList = aniName.split("_");
+        const name = aniNameList[0];
+        const ani = this.animations.get(name);
         if (ani) {
             if (flip) {
                 const area = [];
