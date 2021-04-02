@@ -1,9 +1,9 @@
-import { AnimationModel, IAnimationData, IDisplay, IFramesModel, RunningAnimation } from "structure";
-import { Direction, Logger, LogicPoint } from "utils";
-import { op_gameconfig, op_gameconfig_01, op_def, op_client } from "pixelpai_proto";
-import { Helpers } from "game-capsule";
+import {AnimationModel, IAnimationData, IDisplay, IFramesModel, RunningAnimation} from "structure";
+import {Direction, Logger, LogicPoint} from "utils";
+import {op_client, op_def, op_gameconfig, op_gameconfig_01} from "pixelpai_proto";
+import {Helpers} from "game-capsule";
 import * as sha1 from "simple-sha1";
-import { Sprite } from "./sprite";
+import {Sprite} from "./sprite";
 
 export class FramesModel implements IFramesModel {
 
@@ -208,6 +208,27 @@ export class FramesModel implements IFramesModel {
             return aniName;
         }
         return null;
+    }
+
+    // 方向数据检查
+    public checkDirectionByExistAnimations(baseAniName: string, dir: number): number {
+        let result = dir;
+        switch (dir) {
+        case Direction.west_south:
+        case Direction.south_east:
+        case Direction.east_north:
+            if (!this.existAnimation(`${baseAniName}_${Direction.east_north}`)) {
+                result = Direction.west_south;
+            }
+            break;
+        case Direction.north_west:
+            if (!this.existAnimation(`${baseAniName}_${Direction.north_west}`) &&
+                !this.existAnimation(`${baseAniName}_${Direction.east_north}`)) {
+                result = Direction.south_east;
+            }
+            break;
+        }
+        return result;
     }
 
     private setDisplay(display: op_gameconfig.IDisplay) {

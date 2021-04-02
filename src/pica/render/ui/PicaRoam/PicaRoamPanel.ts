@@ -23,7 +23,7 @@ export class PicaRoamPanel extends PicaBasePanel {
         super(uiManager);
         this.key = ModuleName.PICAROAM_NAME;
         this.atlasNames = [UIAtlasName.uicommon, UIAtlasName.uicommon1, UIAtlasName.roam];
-        this.textures = [{ atlasName: "roam_stripe", folder: "roam" }, { atlasName: "roam_topic", folder: "roam" },
+        this.textures = [{ atlasName: "roam_stripe", folder: "roam" }, { atlasName: "roam_topic", folder: "roam" }, { atlasName: "roam_topic1", folder: "roam" },
         { atlasName: "roamone", folder: "roam_effect", foldType: FolderType.NORMAL, uiType: UILoadType.video },
         { atlasName: "roamtenrepead", folder: "roam_effect", foldType: FolderType.NORMAL, uiType: UILoadType.video },
         { atlasName: "roamreward", folder: "roam_effect", foldType: FolderType.NORMAL, uiType: UILoadType.video },

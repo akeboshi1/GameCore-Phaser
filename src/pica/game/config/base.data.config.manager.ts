@@ -125,7 +125,7 @@ export class BaseDataConfigManager extends BaseConfigManager {
         for (const key in data) {
             if (data.hasOwnProperty(key)) {
                 const element = data[key];
-                if (element.className === "FurnitureItem" && element.rarity === 1) {
+                if (element.className === "FurnitureItem" && element.rarity === 1 && element.forge === 1) {
                     const item = this.getItemBaseByID(element.id);
                     if (item)
                         temp.push(item);
