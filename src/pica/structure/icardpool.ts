@@ -9,11 +9,15 @@ export interface ICardPool {
     alterTokenId: string;
     drawTime: number;
     picaStarCount: number;
+    cardPoolGroup: number;
+    coverPath: string;
+    backPath: string;
+
 }
 
 export interface IDrawPoolStatus extends ICardPool {
     nextFreeTime?: number;
-    progressAward?: IProgress;
+    progressAward?: IProgress[];
     progress?: number;
     progressExpireTime?: number;
 }

@@ -9,6 +9,7 @@ import { PicaRoamDrawPanel } from "./PicaRoamDrawPanel";
 import { PicaRoamPreviewPanel } from "./PicaRoamPreviewPanel";
 import { PicaRoamEffectOnePanel } from "./PicaRoamEffectOnePanel";
 import { PicaRenderUiManager } from "picaRender";
+import { ICardPool, IDrawPoolStatus } from "src/pica/structure/icardpool";
 export class PicaRoamPanel extends PicaBasePanel {
     private mBackground: Phaser.GameObjects.Graphics;
     private content: Phaser.GameObjects.Container;
@@ -83,7 +84,7 @@ export class PicaRoamPanel extends PicaBasePanel {
         }
     }
 
-    setRoamDataList(pools: op_client.IDRAW_POOL_STATUS[]) {
+    setRoamDataList(pools: []) {
         this.tempDatas = pools;
         if (!this.mInitialized) return;
         this.roamListPanel.setRoamDataList(pools);
@@ -144,7 +145,7 @@ export class PicaRoamPanel extends PicaBasePanel {
         this.roamListPanel.visible = false;
     }
 
-    private openRoamDrawPanel(data: op_client.IDRAW_POOL_STATUS[]) {
+    private openRoamDrawPanel(data: IDrawPoolStatus[]) {
         this.showRoamDrawPanel();
         this.roamDrawPanel.setRoamDatas(data);
         const temp = data[0];
