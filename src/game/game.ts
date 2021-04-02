@@ -144,7 +144,7 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
                 if (mediator && mediator.isShow()) {
                     mediator.show();
                 } else {
-                    this.login();
+                    this.renderPeer.hidden();
                 }
             });
         }
@@ -239,8 +239,10 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
             }, (reason) => {
                 // return this.loadGameConfig(remotePath);
                 return new Promise((resolve, reject) => {
-                    this.renderPeer.showAlert("配置加载错误，请重新登陆:  " + reason)
-                        .then(this.login.bind(this));
+                    this.renderPeer.showAlert("配置加载错误，请重新登陆" + reason)
+                        .then(() => {
+                            this.renderPeer.hidden();
+                        });
                     reject();
                 });
             });
