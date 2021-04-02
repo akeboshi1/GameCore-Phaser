@@ -298,12 +298,13 @@ export class Element extends BlockObject implements IElement {
             return;
         }
         const preWalkable = this.mModel.getWalkableArea();
+        this.removeFromWalkableMap();
         if (times !== undefined) {
             times = times > 0 ? times : -1;
         }
         this.mModel.setAnimationName(animationName, times);
         const nextWalkable = this.mModel.getWalkableArea();
-        if (preWalkable !== nextWalkable) this.removeFromWalkableMap();
+        this.addToWalkableMap();
         if (this.mRoomService) {
             if (!this.mRootMount) {
                 if (times === undefined) {

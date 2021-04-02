@@ -350,7 +350,7 @@ export class Render extends RPCPeer implements GameMain, IRender {
     }
 
     resize(width: number, height: number) {
-        if (width * .8 > height) {
+        if (width * .65 > height) {
             this.dealTipsScene(SceneName.BLACK_SCENE, true);
         } else {
             const blackScene = this.mGame.scene.getScene(SceneName.BLACK_SCENE);
