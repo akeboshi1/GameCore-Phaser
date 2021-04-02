@@ -84,9 +84,10 @@
 
             });
             document.addEventListener("visibilitychange", function() {
-                if (document.visibilityState === "hidden") {
-                    app.hidden();
-                }
+                // if (document.visibilityState === "hidden") {
+                //     app.hidden();
+                // }
+                app.visibilitychange(document.visibilityState);
             });
         });
     </script>

@@ -26,7 +26,8 @@ export class Logger implements ChatCommandInterface {
    * @param optionalParams 
    */
   log(message?: any, ...optionalParams: any[]) {
-    console.log(message, ...optionalParams);
+    if (this.isDebug)
+      console.log(message, ...optionalParams);
   }
 
   /**
