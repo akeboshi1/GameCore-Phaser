@@ -54,6 +54,7 @@ export class PicaTaskMainPanel extends Phaser.GameObjects.Container {
             this.mainItem.setHandler(new Handler(this, this.onRewardHandler));
         }
         this.mainItem.setMainTaskData(content, questType);
+        this.mainItem.x = 0;
         this.gameScroller.addItem(this.mainItem);
         if (this.questType !== questType) {
             const tempArr = this.getTaskQuests(content.quests, undefined);
