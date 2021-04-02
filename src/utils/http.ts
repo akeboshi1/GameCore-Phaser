@@ -6,7 +6,7 @@ export function load(path: string, responseType: XMLHttpRequestResponseType): Pr
     http.addEventListener("error", () => {
       Logger.getInstance().log("http error =============>>>>");
     });
-    http.timeout = 8000; // 超时时间，单位是毫秒
+    http.timeout = 20000; // 超时时间，单位是毫秒
     http.onload = (response: ProgressEvent) => {
       const currentTarget = response.currentTarget;
       if (currentTarget && currentTarget["status"] === 200)
