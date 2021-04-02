@@ -213,7 +213,9 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
             case op_def.ResponseStatus.REQUEST_UNAUTHORIZED:
                 // 校验没成功
                 this.renderPeer.showAlert("登陆过期，请重新登陆")
-                    .then(this.login.bind(this));
+                    .then(() => {
+                        this.renderPeer.hidden();
+                    });
                 break;
         }
         Logger.getInstance().log(`Remote Trace[${content.responseStatus}]: ${content.msg}`);

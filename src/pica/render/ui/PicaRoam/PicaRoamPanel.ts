@@ -120,11 +120,11 @@ export class PicaRoamPanel extends PicaBasePanel {
     public setRoamTokenData(money: number, token: number, tokenId: string) {
         if (this.roamDrawPanel) this.roamDrawPanel.setMoneyData(money, token, tokenId);
     }
-    protected onFileKeyComplete(key: string) {
-        super.onFileKeyComplete(key);
-        if (this.mResources)
-            Logger.getInstance().error("Load+++++++++++++    :" + key, this.mResources.size);
-    }
+    // protected onFileKeyComplete(key: string) {
+    //     super.onFileKeyComplete(key);
+    //     if (this.mResources)
+    //         Logger.getInstance().error("Load+++++++++++++    :" + key, this.mResources.size);
+    // }
     private openRoamList() {
         this.showRoamListPanel();
     }
