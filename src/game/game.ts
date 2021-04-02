@@ -119,7 +119,7 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
         this.mainPeer.render.showLoading(data);
     }
 
-    public onConnected( isAuto?: boolean) {
+    public onConnected(isAuto?: boolean) {
         this.isAuto = isAuto;
         if (!this.mClock) this.mClock = new Clock(this.connect, this.mainPeer, this);
         if (!this.mHttpClock) this.mHttpClock = new HttpClock(this);
@@ -132,7 +132,7 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
         // this.login();
     }
 
-    public onDisConnected( isAuto?: boolean) {
+    public onDisConnected(isAuto?: boolean) {
         Logger.getInstance().debug("app connectFail=====");
         this.isAuto = isAuto;
         if (!this.isAuto) return;
@@ -144,13 +144,13 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
                 if (mediator && mediator.isShow()) {
                     mediator.show();
                 } else {
-                    this.login();
+                    this.renderPeer.hidden();
                 }
             });
         }
     }
 
-    public onRefreshConnect( isAuto?: boolean) {
+    public onRefreshConnect(isAuto?: boolean) {
         this.isAuto = isAuto;
         if (!this.isAuto) return;
         // if (this.hasClear || this.isPause) return;
@@ -239,8 +239,10 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
             }, (reason) => {
                 // return this.loadGameConfig(remotePath);
                 return new Promise((resolve, reject) => {
-                    this.renderPeer.showAlert("配置加载错误，请重新登陆")
-                        .then(this.login.bind(this));
+                    this.renderPeer.showAlert("配置加载错误，请重新登陆" + reason)
+                        .then(() => {
+                            this.renderPeer.hidden();
+                        });
                     reject();
                 });
             });
