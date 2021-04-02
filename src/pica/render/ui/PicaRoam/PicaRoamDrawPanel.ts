@@ -96,7 +96,7 @@ export class PicaRoamDrawPanel extends Phaser.GameObjects.Container {
         this.cloudPanel.y = this.height * 0.5 - this.cloudPanel.height * 0.5;
         this.drawProgress = new RoamDrawProgress(this.scene, this.dpr, this.zoom);
         this.drawProgress.setHandler(new Handler(this, this.onProgressHandler));
-        this.drawProgress.y = topbg.y + topbg.height * 0.5 - 66 * this.dpr;
+        this.drawProgress.y = this.height * 0.5 - 120 * this.dpr;
         this.oneRoamItem = new RoamDrawItem(this.scene, this.dpr, this.zoom);
         this.oneRoamItem.x = -this.oneRoamItem.width * 0.5 - 10 * this.dpr;
         this.oneRoamItem.y = this.height * 0.5 - this.oneRoamItem.height * 0.5 - 60 * this.dpr;
