@@ -116,8 +116,8 @@ export class DecorateManager {
 
             spriteResults.push(result);
         });
-        this.mRoom.connection.send(pkt);
-        // waite for response: _OP_VIRTUAL_WORLD_RES_CLIENT_EDIT_MODEL_RESULT
+        this.mActionQueue.length = 0;
+        this.mRoom.requestSaveDecorating(pkt);
     }
 
     // 打开背包，选择家具摆放
