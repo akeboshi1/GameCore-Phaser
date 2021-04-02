@@ -133,7 +133,7 @@ export class PicaRoamDrawPanel extends Phaser.GameObjects.Container {
                     this.drawProgress.visible = false;
                     this.topbg.setTexture("roam_topic1");
                 }
-
+                this.topbg.y = -this.height * 0.5 + this.topbg.displayHeight * 0.5;
             }
         }
     }
