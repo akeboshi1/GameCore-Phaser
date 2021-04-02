@@ -74,4 +74,9 @@ export class DragonbonesModel implements IDragonbonesModel {
         }
         return null;
     }
+
+    // 方向数据检查
+    public checkDirectionByExistAnimations(baseAniName: string, dir: number): number {
+        return dir;
+    }
 }

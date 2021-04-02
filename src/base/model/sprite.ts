@@ -287,7 +287,8 @@ export class Sprite extends EventDispatcher implements ISprite {
             return;
         }
 
-        this.checkDirectionByExistAnimations();
+        if (this.currentAnimationName) this.direction = this.displayInfo.checkDirectionByExistAnimations(
+            this.getBaseAniName(this.currentAnimationName), this.direction);
 
         // Logger.getInstance().debug("#dir sprite setDirection:=====", this.id, val);
         this.setAnimationData(this.currentAnimationName, this.direction);
@@ -385,12 +386,7 @@ export class Sprite extends EventDispatcher implements ISprite {
         if (!this.displayInfo || !animationName) {
             return;
         }
-        let baseAniName = animationName.split(`_`)[0];
-        if (this.registerAnimation) {
-            if (this.registerAnimation.has(baseAniName)) {
-                baseAniName = this.registerAnimation.get(baseAniName);
-            }
-        }
+        const baseAniName = this.getBaseAniName(animationName);
         if (!this.displayInfo.findAnimation) {
             Logger.getInstance().error("displayInfo no findanimation ====>", this.displayInfo);
         } else {
@@ -412,18 +408,6 @@ export class Sprite extends EventDispatcher implements ISprite {
             return aniName;
         }
         return null;
-    }
-
-    // 适配部分只有3 5 两个方向动画的家具
-    private checkDirectionByExistAnimations() {
-        if (!this.displayInfo) return;
-        if (this.displayInfo.checkDirectionAnimation(this.currentAnimationName, this.direction) === null) {
-            if (this.direction === Direction.east_north) {
-                this.direction = Direction.west_south;
-            } else if (this.direction === Direction.north_west) {
-                this.direction = Direction.south_east;
-            }
-        }
     }
 
     private setArea() {
@@ -450,5 +434,15 @@ export class Sprite extends EventDispatcher implements ISprite {
         for (const ani of anis) {
             this.registerAnimation.set(ani.key, ani.value);
         }
+    }
+
+    private getBaseAniName(animationName: string): string {
+        let baseAniName = animationName.split(`_`)[0];
+        if (this.registerAnimation) {
+            if (this.registerAnimation.has(baseAniName)) {
+                baseAniName = this.registerAnimation.get(baseAniName);
+            }
+        }
+        return baseAniName;
     }
 }
