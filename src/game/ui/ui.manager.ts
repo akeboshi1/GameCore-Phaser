@@ -326,8 +326,8 @@ export class UIManager extends PacketHandler {
             const content: op_client.OP_VIRTUAL_WORLD_REQ_CLIENT_PKT_SHOW_CREATE_ROLE_UI = packet.content;
             configMgr.getBatchItemDatas(content.avatars);
             this.showMed(ModuleName.PICACREATEROLE_NAME, content);
-        }, () => {
-            this.game.renderPeer.showAlert("配置加载错误，请重新登陆")
+        }, (response) => {
+            this.game.renderPeer.showAlert("配置加载错误，请重新登陆: " + response)
                 .then(this.game.login.bind(this.game));
         });
         // const content: op_client.OP_VIRTUAL_WORLD_REQ_CLIENT_PKT_SHOW_CREATE_ROLE_UI = packet.content;

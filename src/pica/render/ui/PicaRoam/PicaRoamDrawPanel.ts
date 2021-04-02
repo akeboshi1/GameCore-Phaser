@@ -6,6 +6,7 @@ import { op_client, op_pkt_def } from "pixelpai_proto";
 import { ModuleName } from "structure";
 export class PicaRoamDrawPanel extends Phaser.GameObjects.Container {
     private bg: CommonBackground;
+    private topbg: Phaser.GameObjects.Image;
     private closeBtn: Button;
     private moneyCon: Phaser.GameObjects.Container;
     private moneyvalue: ImageValue;
@@ -44,12 +45,12 @@ export class PicaRoamDrawPanel extends Phaser.GameObjects.Container {
 
     init() {
         this.bg = new CommonBackground(this.scene, 0, 0, this.width, this.height, UIAtlasName.roam, "roam_bg", 0x72e7fb);
-        const topbg = this.scene.make.image({ key: "roam_topic" });
-        topbg.texture.setFilter(Phaser.Textures.FilterMode.LINEAR);
-        const topbg1 = this.scene.make.image({ key: "roam_stripe" });
-        topbg1.texture.setFilter(Phaser.Textures.FilterMode.LINEAR);
-        topbg.y = -this.height * 0.5 + topbg.height * 0.5;
-        topbg1.y = -this.height * 0.5 + topbg1.height * 0.5;
+        this.topbg = this.scene.make.image({ key: "roam_topic" });
+        this.topbg.texture.setFilter(Phaser.Textures.FilterMode.LINEAR);
+        const stripebg = this.scene.make.image({ key: "roam_stripe" });
+        stripebg.texture.setFilter(Phaser.Textures.FilterMode.LINEAR);
+        this.topbg.y = -this.height * 0.5 + this.topbg.height * 0.5;
+        stripebg.y = -this.height * 0.5 + stripebg.height * 0.5;
         this.closeBtn = new Button(this.scene, UIAtlasName.uicommon, "back_arrow", "back_arrow");
         this.closeBtn.setPosition(-this.width * 0.5 + 21 * this.dpr, -this.height * 0.5 + 45 * this.dpr);
         this.closeBtn.on(ClickEvent.Tap, this.onCloseHandler, this);
@@ -107,7 +108,7 @@ export class PicaRoamDrawPanel extends Phaser.GameObjects.Container {
         this.tenRoamItem.setHandler(new Handler(this, this.onRoamDrawHandler, ["ten"]));
         this.bottomtips = this.scene.make.text({ text: i18n.t("roam.bottomtips"), style: UIHelper.blackStyle(this.dpr, 14) }).setOrigin(0.5);
         this.bottomtips.y = this.height * 0.5 - 20 * this.dpr;
-        this.add([this.bg, topbg1, topbg, this.closeBtn, this.moneyCon, previewBtn, this.cloudPanel, this.drawProgress, this.oneRoamItem, this.tenRoamItem, this.bottomtips]);
+        this.add([this.bg, stripebg, this.topbg, this.closeBtn, this.moneyCon, previewBtn, this.cloudPanel, this.drawProgress, this.oneRoamItem, this.tenRoamItem, this.bottomtips]);
         this.resize();
     }
 
@@ -127,8 +128,10 @@ export class PicaRoamDrawPanel extends Phaser.GameObjects.Container {
                             break;
                         }
                     }
+                    this.topbg.setTexture("roam_topic");
                 } else {
                     this.drawProgress.visible = false;
+                    this.topbg.setTexture("roam_topic1");
                 }
 
             }
