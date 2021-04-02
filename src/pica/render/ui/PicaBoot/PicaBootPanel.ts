@@ -5,7 +5,7 @@ import { ModuleName } from "structure";
 import { Font, i18n, Logger } from "utils";
 import { PicaBasePanel } from "../pica.base.panel";
 export class PicaBootPanel extends PicaBasePanel {
-    private playBtn: Button;
+    private playBtn: PlayBtn;
     private navigate: Navigate;
     private notice: PicaNotice;
 
@@ -21,7 +21,7 @@ export class PicaBootPanel extends PicaBasePanel {
     show(param?: any) {
         super.show(param);
         if (this.mInitialized) {
-            this.playBtn.enable = true;
+            this.playBtn.enabled = true;
         }
     }
 
@@ -89,7 +89,7 @@ export class PicaBootPanel extends PicaBasePanel {
         // label2.setResolution(this.dpr);
         label2.y = (scaleH - label2.height) * 0.5 - 16 * this.dpr ;
 
-        this.playBtn = new NineSliceButton(this.scene, 0, -scaleH * 0.5 + scaleH * 0.75, 191 * this.dpr, 60 * this.dpr, UIAtlasName.uicommon, "yellow_btn", i18n.t("boot.play"), this.dpr, 1, {
+        this.playBtn = new PlayBtn(this.scene, 0, -scaleH * 0.5 + scaleH * 0.75, 191 * this.dpr, 60 * this.dpr, UIAtlasName.uicommon, "yellow_btn", i18n.t("boot.play"), this.dpr, 1, {
             left: 12 * this.dpr,
             top: 12 * this.dpr,
             right: 14 * this.dpr,
@@ -169,7 +169,7 @@ export class PicaBootPanel extends PicaBasePanel {
         }
         if (this.mMediator) {
             this.mMediator.enterGame();
-            this.playBtn.enable = false;
+            this.playBtn.enabled = false;
         }
     }
 
@@ -303,5 +303,32 @@ class PicaNotice extends Phaser.GameObjects.Container {
 
     private onCloseHandler() {
         this.emit("close");
+    }
+}
+
+class PlayBtn extends NineSliceButton {
+    constructor(scene: Phaser.Scene, x: number, y: number, width: number, height: number, key: string, frame: string, text?: string, dpr?: number, scale?: number, config?: any, music?: any, data?: any) {
+        super(scene, x, y, width, height, key, frame, text, dpr, scale, config, music, data);
+    }
+
+    set enabled(val) {
+        if (this.mBackground) {
+            this.remove(this.mBackground);
+            this.mBackground.destroy();
+        }
+        if (this.mText) this.remove(this.mText);
+        if (val) {
+            this.mFrame = "yellow_btn";
+            this.createBackground();
+            this.setInteractive();
+        } else {
+            this.mFrame = "butt_gray";
+            this.createBackground();
+            this.removeInteractive();
+        }
+        if (this.mText) {
+            this.add(this.mText);
+            this.mText.setColor(val ? "#995E00" : "#808080");
+        }
     }
 }
