@@ -115,6 +115,8 @@ export class Render extends RPCPeer implements GameMain, IRender {
     private mGameLoadedFunc: Function;
     private mWorkerDestroyMap: Map<string, ValueResolver<null>> = new Map();
     private mCacheTarget: any;
+    private readonly hiddenDelay = 60000;
+    private mHiddenTime: any;
     constructor(config: ILauncherConfig, callBack?: Function) {
         super(RENDER_PEER);
         Logger.getInstance().log("config ====>", config);
@@ -454,6 +456,17 @@ export class Render extends RPCPeer implements GameMain, IRender {
         const bottom: any = this.uiManager.getPanel(ModuleName.BOTTOM);
         if (bottom) {
             bottom.hideKeyboard();
+        }
+    }
+
+    visibilitychange(state: string) {
+        if (state === "hidden") {
+            this.mHiddenTime = setTimeout(() => {
+                clearTimeout(this.mHiddenTime);
+                this.hidden();
+            }, this.hiddenDelay);
+        } else {
+            clearTimeout(this.mHiddenTime);
         }
     }
 

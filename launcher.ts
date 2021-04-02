@@ -140,6 +140,10 @@ export class Launcher {
         if (this.world) this.world.hidden();
     }
 
+    public visibilitychange(state: string) {
+        if (this.world) this.world.visibilitychange(state);
+    }
+
     public enableClick() {
         if (this.world) this.world.enableClick();
     }
