@@ -238,7 +238,7 @@ export class ElementManager extends PacketHandler implements IElementManager {
     }
 
     public dealAddList(spliceBoo: boolean = false) {
-        const len = 3;
+        const len = 30;
         let point: op_def.IPBPoint3f;
         let sprite: ISprite = null;
         const ids = [];
