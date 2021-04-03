@@ -482,7 +482,7 @@ class PicaExploreLogGuideText extends Phaser.GameObjects.Container {
             if (!item.visible) break;
             item.y = posy;
             posy += (item.height + space);
-            if (mixWidth < item.width) mixWidth = item.width;
+            if (mixWidth < item.width) mixWidth = item.width + 20 * this.dpr;
         }
         if (mixHeight < posy + 20 * this.dpr) mixHeight = posy + 20 * this.dpr;
         this.background.clear();

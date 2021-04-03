@@ -138,7 +138,9 @@ export class PicaRoamDrawPanel extends Phaser.GameObjects.Container {
                     this.stripebg.visible = false;
                 }
                 const url = Url.getOsdRes(data.backPath + `_${this.dpr}x.png`);
-                this.topbg.load(url);
+                this.topbg.load(url, this, () => {
+                    this.topbg.y = -this.height * 0.5 + this.topbg.displayHeight * 0.5;
+                });
                 this.topbg.y = -this.height * 0.5 + this.topbg.displayHeight * 0.5;
             }
         }
