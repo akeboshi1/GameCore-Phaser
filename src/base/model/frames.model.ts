@@ -215,7 +215,9 @@ export class FramesModel implements IFramesModel {
         let result = dir;
         switch (dir) {
         case Direction.west_south:
+            break;
         case Direction.south_east:
+            break;
         case Direction.east_north:
             if (!this.existAnimation(`${baseAniName}_${Direction.east_north}`)) {
                 result = Direction.west_south;

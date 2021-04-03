@@ -3,6 +3,7 @@ import { DynamicImage } from "gamecoreRender";
 import { UIAtlasName } from "picaRes";
 import { Font, Handler, i18n, TimeUtils, UIHelper, Url } from "utils";
 import { op_client, op_pkt_def } from "pixelpai_proto";
+import { ICardPool, IDrawPoolStatus } from "src/pica/structure/icardpool";
 export class PicaRoamListPanel extends Phaser.GameObjects.Container {
     private bg: NineSlicePatch;
     private titlebg: Phaser.GameObjects.Image;
@@ -10,11 +11,12 @@ export class PicaRoamListPanel extends Phaser.GameObjects.Container {
     private closeBtn: Button;
     private mGameGrid: GameGridTable;
     private content: Phaser.GameObjects.Container;
-    private poolsStatus: Map<string, op_client.IDRAW_POOL_STATUS[]> = new Map();
+    private poolsStatus: Map<number, IDrawPoolStatus[]> = new Map();
     private dpr: number;
     private zoom: number;
     private send: Handler;
     private tokenId: string;
+    private cardPoolGroup: number;
     constructor(scene: Phaser.Scene, width: number, height: number, dpr: number, zoom: number) {
         super(scene);
         this.setSize(width, height);
@@ -89,15 +91,15 @@ export class PicaRoamListPanel extends Phaser.GameObjects.Container {
         this.resize();
     }
 
-    public setRoamDataList(datas: op_client.IDRAW_POOL_STATUS[]) {
+    public setRoamDataList(datas: ICardPool[]) {
         this.poolsStatus.clear();
         for (const data of datas) {
-            if (this.poolsStatus.has(data.tokenId)) {
-                const tempArr = this.poolsStatus.get(data.tokenId);
+            if (this.poolsStatus.has(data.cardPoolGroup)) {
+                const tempArr = this.poolsStatus.get(data.cardPoolGroup);
                 tempArr.push(data);
             } else {
                 const tempArr = [data];
-                this.poolsStatus.set(data.tokenId, tempArr);
+                this.poolsStatus.set(data.cardPoolGroup, tempArr);
             }
         }
         const tempDatas = [];
@@ -115,12 +117,13 @@ export class PicaRoamListPanel extends Phaser.GameObjects.Container {
             this.tokenId = value[0].tokenId;
             return value;
         }
-        return this.poolsStatus.get(this.tokenId);
+        return this.poolsStatus.get(this.cardPoolGroup);
     }
 
-    private onSelectItemHandler(roamData: op_client.IDRAW_POOL_STATUS) {
+    private onSelectItemHandler(roamData: ICardPool) {
         this.tokenId = roamData.tokenId;
-        if (this.send) this.send.runWith(["roam", this.poolsStatus.get(roamData.tokenId)]);
+        this.cardPoolGroup = roamData.cardPoolGroup;
+        if (this.send) this.send.runWith(["roam", this.poolsStatus.get(roamData.cardPoolGroup)]);
     }
     private onCloseHandler() {
         if (this.send) this.send.runWith("close");
@@ -129,7 +132,7 @@ export class PicaRoamListPanel extends Phaser.GameObjects.Container {
 }
 
 class RoamItem extends Phaser.GameObjects.Container {
-    private roamData: op_client.IDRAW_POOL_STATUS;
+    private roamData: IDrawPoolStatus;
     private dpr: number;
     private zoom: number;
     private bg: NineSlicePatch;
@@ -183,23 +186,24 @@ class RoamItem extends Phaser.GameObjects.Container {
         this.desTex.visible = false;
         this.nameTex.visible = false;
     }
-    public setRoamData(data: op_client.IDRAW_POOL_STATUS) {
+    public setRoamData(data: IDrawPoolStatus) {
         this.roamData = data;
         // this.desTex.text = "欢乐大礼包等你拿";
         // this.nameTex.text = "皮卡速递";
-
         if (data.tokenId === "IV0000002") {
             this.dybg.setTexture(UIAtlasName.roam, "roan_banner_diamond");
             const time = 604800000;
             this.timeTex.text = this.getTimeTex(time);
-            this.loopTimeOut(time);
-            this.timeTex["visible"] = true;
+           // this.loopTimeOut(time);
+            this.timeTex["visible"] = false;
             this.timebg.visible = true;
         } else {
             this.dybg.setTexture(UIAtlasName.roam, "roan_banner_silver");
             this.timeTex["visible"] = false;
             this.timebg.visible = false;
         }
+        const url = Url.getOsdRes(data.coverPath + `_${this.dpr}x.png`);
+        this.dybg.load(url);
     }
 
     private loopTimeOut(time: number) {

@@ -4,9 +4,10 @@ import { UIAtlasName } from "picaRes";
 import { Font, Handler, i18n, TimeUtils, UIHelper, Url } from "utils";
 import { op_client, op_pkt_def } from "pixelpai_proto";
 import { ModuleName } from "structure";
+import { ICardPool, IDrawPoolStatus, IProgress } from "src/pica/structure/icardpool";
 export class PicaRoamDrawPanel extends Phaser.GameObjects.Container {
     private bg: CommonBackground;
-    private topbg: Phaser.GameObjects.Image;
+    private topbg: DynamicImage;
     private stripebg: Phaser.GameObjects.Image;
     private closeBtn: Button;
     private moneyCon: Phaser.GameObjects.Container;
@@ -24,7 +25,7 @@ export class PicaRoamDrawPanel extends Phaser.GameObjects.Container {
     private money: number = 0;
     private token: number = 0;
     private tokenid: string;
-    private poolDatas: op_client.IDRAW_POOL_STATUS[];
+    private poolDatas: IDrawPoolStatus[];
     constructor(scene: Phaser.Scene, width: number, height: number, dpr: number, zoom: number) {
         super(scene);
         this.setSize(width, height);
@@ -46,11 +47,11 @@ export class PicaRoamDrawPanel extends Phaser.GameObjects.Container {
 
     init() {
         this.bg = new CommonBackground(this.scene, 0, 0, this.width, this.height, UIAtlasName.roam, "roam_bg", 0x72e7fb);
-        this.topbg = this.scene.make.image({ key: "roam_topic" });
-        this.topbg.texture.setFilter(Phaser.Textures.FilterMode.LINEAR);
+        this.topbg = new DynamicImage(this.scene, 0, 0);// this.scene.make.image({ key: "roam_topic" });
+        // this.topbg.texture.setFilter(Phaser.Textures.FilterMode.LINEAR);
         this.stripebg = this.scene.make.image({ key: "roam_stripe" });
         this.stripebg.texture.setFilter(Phaser.Textures.FilterMode.LINEAR);
-        this.topbg.y = -this.height * 0.5 + this.topbg.height * 0.5;
+        // this.topbg.y = -this.height * 0.5 + this.topbg.height * 0.5;
         this.stripebg.y = -this.height * 0.5 + this.stripebg.height * 0.5;
         this.closeBtn = new Button(this.scene, UIAtlasName.uicommon, "back_arrow", "back_arrow");
         this.closeBtn.setPosition(-this.width * 0.5 + 21 * this.dpr, -this.height * 0.5 + 45 * this.dpr);
@@ -113,7 +114,7 @@ export class PicaRoamDrawPanel extends Phaser.GameObjects.Container {
         this.resize();
     }
 
-    public setRoamDatas(datas: op_client.IDRAW_POOL_STATUS[]) {
+    public setRoamDatas(datas: IDrawPoolStatus[]) {
         this.poolDatas = datas;
         for (const data of datas) {
             if (data.drawTime === 1) this.oneRoamItem.setRoamData(data);
@@ -136,6 +137,10 @@ export class PicaRoamDrawPanel extends Phaser.GameObjects.Container {
                     this.topbg.setTexture("roam_topic1");
                     this.stripebg.visible = false;
                 }
+                const url = Url.getOsdRes(data.backPath + `_${this.dpr}x.png`);
+                this.topbg.load(url, this, () => {
+                    this.topbg.y = -this.height * 0.5 + this.topbg.displayHeight * 0.5;
+                });
                 this.topbg.y = -this.height * 0.5 + this.topbg.displayHeight * 0.5;
             }
         }
@@ -257,7 +262,7 @@ class RoamDrawProgress extends Phaser.GameObjects.Container {
         this.on("pointerup", this.onRecivedRewardHandler, this);
     }
 
-    public setRoadLvData(progress: number, expireTime: number, index: number, data: op_client.IPKT_Progress) {
+    public setRoadLvData(progress: number, expireTime: number, index: number, data: IProgress) {
         this.indexed = index;
         this.expireTime = expireTime;
         this.roamLevTex.text = i18n.t("roam.roamlv", { name: "" }) + ` [color=#FF693A][size=${14 * this.dpr}][b]LV${index}[/b][/size][/color]`;
@@ -385,7 +390,7 @@ class ProgressItem extends Phaser.GameObjects.Container {
 }
 
 class RoamDrawItem extends Phaser.GameObjects.Container {
-    private roamData: op_client.IDRAW_POOL_STATUS;
+    private roamData: IDrawPoolStatus;
     private dpr: number;
     private zoom: number;
     private drawTips: Phaser.GameObjects.Text;
@@ -412,7 +417,7 @@ class RoamDrawItem extends Phaser.GameObjects.Container {
         this.send = send;
     }
 
-    public setRoamData(data: op_client.IDRAW_POOL_STATUS) {
+    public setRoamData(data: IDrawPoolStatus) {
         this.roamData = data;
         let normal = data.drawTime === 1 ? "roam_butt_one" : "roam_butt_ten";
         let down = data.drawTime === 1 ? "roam_butt_one_1" : "roam_butt_ten_1";

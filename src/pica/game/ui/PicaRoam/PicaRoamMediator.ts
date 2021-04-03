@@ -4,10 +4,11 @@ import { PicaRoam } from "./PicaRoam";
 import { op_client, op_virtual_world, op_pkt_def } from "pixelpai_proto";
 import { BaseDataConfigManager } from "picaWorker";
 import { ObjectAssign } from "utils";
+import { IDrawPoolStatus } from "src/pica/structure/icardpool";
 export class PicaRoamMediator extends BasicMediator {
     protected mModel: PicaRoam;
     protected curMoneyData: any;
-    protected poolsData: op_client.IDRAW_POOL_STATUS[] = [];
+    protected poolsData: IDrawPoolStatus[] = [];
     private drawResult: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_DRAW_RESULT;
     constructor(game: Game) {
         super(ModuleName.PICAROAM_NAME, game);
@@ -91,20 +92,19 @@ export class PicaRoamMediator extends BasicMediator {
         this.onRetDrawHandler(this.drawResult.rewards);
     }
 
-    private onRetRoamListResult(pools: op_client.IDRAW_POOL_STATUS[]) {
+    private onRetRoamListResult(pools: IDrawPoolStatus[]) {
         const configMgr = <BaseDataConfigManager>this.game.configManager;
-        const basepools = configMgr.getCardPools();
+        for (const pool of pools) {
+            const basePool = configMgr.getCardPool(pool.id);
+            ObjectAssign.excludeTagAssign(pool, basePool);
+        }
         pools.sort((a, b) => {
-            const aindex = basepools.indexOf(configMgr.getCardPool(a.id));
-            const bindex = basepools.indexOf(configMgr.getCardPool(b.id));
-            if (aindex > bindex) return 1;
+            if (a.cardPoolGroup > b.cardPoolGroup) return 1;
             else return -1;
         });
         // for (const pool of pools) {
         for (let i = 0; i < pools.length; i++) {
             const pool = pools[i];
-            const basePool = configMgr.getCardPool(pool.id);
-            ObjectAssign.excludeTagAssign(pool, basePool);
             const item = configMgr.getItemBaseByID(pool.alterTokenId);
             pool["name"] = item ? item.name : "";
             for (const reward of pool.progressAward) {
@@ -172,7 +172,7 @@ export class PicaRoamMediator extends BasicMediator {
         let tempData;
         for (const data of this.poolsData) {
             if (data.tokenId === tokenId && data.drawTime !== 1) {
-                data.progressAward = content.steps;
+                data.progressAward = <any>content.steps;
                 data.progress = content.currentProgressValue;
                 tempData = data;
             }
@@ -187,7 +187,7 @@ export class PicaRoamMediator extends BasicMediator {
     private onTreasureHideHandler() {
         if (this.mView) this.mView.hideRoamEffectOnePanel();
     }
-    private updateServiceTime(pools: op_client.IDRAW_POOL_STATUS[]) {
+    private updateServiceTime(pools: IDrawPoolStatus[]) {
 
         const unixTime = this.game.clock.unixTime;
         for (const data of pools) {

@@ -401,6 +401,7 @@ export class BaseDataConfigManager extends BaseConfigManager {
 
     public getCardPool(id: string) {
         const data: CardPoolConfig = this.getConfig(BaseDataType.cardPool);
+        data.parseJson({});
         return data.get(id);
     }
 

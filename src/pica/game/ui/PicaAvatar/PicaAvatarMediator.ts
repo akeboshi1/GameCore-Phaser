@@ -7,6 +7,7 @@ import { BaseDataConfigManager } from "picaWorker";
 export class PicaAvatarMediator extends BasicMediator {
     private mScneType: op_def.SceneTypeEnum;
     private timeID: any;
+    private skinID: string;
     constructor(game: Game) {
         super(ModuleName.PICAAVATAR_NAME, game);
         if (this.game && this.game.roomManager && this.game.roomManager.currentRoom) {
@@ -48,6 +49,7 @@ export class PicaAvatarMediator extends BasicMediator {
         this.game.emitter.off(this.key + "_queryResetAvatar", this.onQueryResetAvatar, this);
         this.game.emitter.off(this.key + "_queryDressAvatarIDS", this.queryDressAvatarIDS, this);
         super.hide();
+        this.skinID = undefined;
     }
 
     destroy() {
@@ -119,13 +121,13 @@ export class PicaAvatarMediator extends BasicMediator {
 
     private onGetCategoriesHandler(categoryType: number) {
         if (this.model) {
-           // this.model.getCategories(categoryType);
-           const configMgr = <BaseDataConfigManager>this.game.configManager;
-           const subcategory = configMgr.getItemSubCategory(categoryType);
-           // for (const sub of subcategory) {
-           //     sub.value = configMgr.getI18n(sub.key);
-           // }
-           this.mView.setCategories(subcategory);
+            // this.model.getCategories(categoryType);
+            const configMgr = <BaseDataConfigManager>this.game.configManager;
+            const subcategory = configMgr.getItemSubCategory(categoryType);
+            // for (const sub of subcategory) {
+            //     sub.value = configMgr.getI18n(sub.key);
+            // }
+            this.mView.setCategories(subcategory);
         }
     }
 
@@ -156,6 +158,8 @@ export class PicaAvatarMediator extends BasicMediator {
     }
 
     private onQuerySaveAvatar(avatarids: string[]) {
+        if (avatarids.length === 0) return;
+        if (this.skinID) avatarids.push(this.skinID);
         this.model.querySaveAvatar(avatarids);
     }
 
@@ -169,6 +173,13 @@ export class PicaAvatarMediator extends BasicMediator {
 
     private onDressAvatarIDS(ids: string[]) {
         //  if (this.mView)
+        for (const id of ids) {
+            const item = this.config.getItemBaseByID(id);
+            if (item.suitType === "base") {
+                this.skinID = id;
+                break;
+            }
+        }
         this.mView.setDressAvatarIds(ids);
     }
 
@@ -178,5 +189,9 @@ export class PicaAvatarMediator extends BasicMediator {
 
     private get model(): PicaAvatar {
         return (<PicaAvatar>this.mModel);
+    }
+
+    private get config(): BaseDataConfigManager {
+        return <BaseDataConfigManager>this.game.configManager;
     }
 }

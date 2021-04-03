@@ -147,6 +147,7 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
     // 地块可行走标记map。每格标记由多个不同优先级（暂时仅地块和物件）标记组成，最终是否可行走由高优先级标记决定
     private mWalkableMarkMap: Map<number, Map<number, { level: number; walkable: boolean }>> =
         new Map<number, Map<number, { level: number; walkable: boolean }>>();
+    private mIsWaitingForDecorateResponse: boolean = false;
     constructor(protected manager: IRoomManager) {
         super();
         this.mGame = this.manager.game;
@@ -678,6 +679,9 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
             if (locked) return;
         }
 
+        if (this.mIsWaitingForDecorateResponse) return;
+        this.mIsWaitingForDecorateResponse = true;
+
         this.mDecorateEntryData = { id, baseID };
 
         this.connection.send(new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_START_EDIT_MODEL));
@@ -720,6 +724,7 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
     }
 
     public stopDecorating() {
+        if (this.mIsWaitingForDecorateResponse) return;
         if (!this.mIsDecorating) return;
         this.mIsDecorating = false;
 
@@ -755,6 +760,17 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
 
         // cleat entry data
         this.mDecorateEntryData = null;
+
+        this.mIsWaitingForDecorateResponse = false;
+    }
+
+    public requestSaveDecorating(pkt: PBpacket) {
+        if (this.mIsWaitingForDecorateResponse) return;
+        this.mIsWaitingForDecorateResponse = true;
+
+        this.connection.send(pkt);
+
+        // waite for response: _OP_VIRTUAL_WORLD_RES_CLIENT_EDIT_MODEL_RESULT
     }
 
     //
@@ -956,6 +972,7 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
     }
 
     private async onStartDecorate(packet: PBpacket) {
+        this.mIsWaitingForDecorateResponse = false;
         const content: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_START_EDIT_MODEL = packet.content;
         if (!content.status) {
             this.game.renderPeer.showAlert(content.msg, true);
@@ -972,6 +989,7 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
     }
 
     private onDecorateResult(packet: PBpacket) {
+        this.mIsWaitingForDecorateResponse = false;
         const content: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_EDIT_MODEL_RESULT = packet.content;
         if (!content.status) {
             this.game.renderPeer.showAlert(content.msg, true);

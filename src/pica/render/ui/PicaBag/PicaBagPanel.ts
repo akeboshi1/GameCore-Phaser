@@ -170,7 +170,7 @@ export class PicaBagPanel extends PicaBasePanel {
     }
     if (diamond > 99999) {
       this.diamondvalue.setText((Math.floor(diamond / 1000) / 10) + "");
-      this.diamondvalue.setUintText({ img: true  });
+      this.diamondvalue.setUintText({ img: true });
     } else {
       this.diamondvalue.setText(diamond + "");
       this.diamondvalue.setUintTextVisible(false);
@@ -748,7 +748,7 @@ export class PicaBagPanel extends PicaBasePanel {
   }
   private onMoreHandler() {
     if (!this.mSelectedItemData) return;
-    this.recasteBtn.visible = true;
+    this.recasteBtn.visible = false;
     this.moreButton.visible = false;
   }
   private updateCategeoriesLoc(inputBoo: boolean) {

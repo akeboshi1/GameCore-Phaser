@@ -173,9 +173,10 @@ export class PicaExploreListLevelPanel extends Phaser.GameObjects.Container {
         const left = this.captorScroll["mLeftBound"];
         const right = this.captorScroll["mRightBound"];
         let item, value = right;
+        const levels = this.chapterResult.levels;
         if (indexed < this.chapterResult.levels.length - 1) {
             item = this.levelItems[indexed];
-            const height = (item.height + 10 * this.dpr) * indexed + this.forewordItem.height;
+            const height = (item.height + 10 * this.dpr) * (indexed + 2) + this.forewordItem.height;
             if (height < this.captorScroll.height) {
                 value = right;
             } else {
