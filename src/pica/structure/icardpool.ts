@@ -9,6 +9,7 @@ export interface ICardPool {
     alterTokenId: string;
     drawTime: number;
     picaStarCount: number;
+    picaStarName: string;
     cardPoolGroup: number;
     coverPath: string;
     backPath: string;

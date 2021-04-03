@@ -117,8 +117,10 @@ export class PicaRoamDrawPanel extends Phaser.GameObjects.Container {
     public setRoamDatas(datas: IDrawPoolStatus[]) {
         this.poolDatas = datas;
         for (const data of datas) {
-            if (data.drawTime === 1) this.oneRoamItem.setRoamData(data);
-            else {
+            if (data.drawTime === 1) {
+                this.oneRoamItem.setRoamData(data);
+                this.bottomtips.text = i18n.t("roam.bottomtips", { name: data.picaStarName, count: data.picaStarCount });
+            } else {
                 this.tenRoamItem.setRoamData(data);
                 if (!data["diamond"]) {
                     this.drawProgress.visible = true;

@@ -65,7 +65,7 @@
     "recast": "RECAST",
     "make": "Make",
     "editor": "Editor",
-    "survey":"Survey",
+    "survey": "Survey",
     "notEnough": "Not enough {{name}}"
   },
   "quantityunit": {
@@ -389,9 +389,9 @@
     "endtips": "Free after {{name}}",
     "roamlv": "Current roaming level{{name}}",
     "resettips": "Reset after {{name}}",
-    "bottomtips": "Earn Picarstar X1 per roam, plus a random bonus.",
+    "bottomtips": "Earn {{name}} x {{count}} per roam, plus a random bonus.",
     "moneytips": "You don't have enough {{name}} roaming!",
-    "paytips": "Do you want to spend {{name}} to buy {{count}}x{{tag}}?",
+    "paytips": "Do you want to spend {{name}} to buy {{tag}} x {{count}}?",
     "drawfreetips": "This draw is free of charge"
   },
   "explore": {
@@ -434,7 +434,7 @@
     "play": "Play",
     "notice": "Notice"
   },
-  "dropElement":{
+  "dropElement": {
     "tips": "Drop Element"
   },
   "illustrate": {
@@ -443,7 +443,7 @@
     "furin": "Click to open the furniture map panel",
     "avatar": "Click to open the dress-up map panel",
     "make": "Click to open the manufacturing panel",
-    "furindetail":"Furniture details",
+    "furindetail": "Furniture details",
     "surveyfurni": " SURVEY "
   }
 }
