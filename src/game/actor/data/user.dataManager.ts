@@ -128,7 +128,8 @@ export class UserDataManager extends PacketHandler {
     private syncItemBases(items: op_client.ICountablePackageItem[]) {
         const config = <BaseDataConfigManager>this.game.configManager;
         for (const item of items) {
-            config.synItemBase(item);
+            if (item.id !== "-1")
+                config.synItemBase(item);
         }
     }
 }

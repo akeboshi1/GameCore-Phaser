@@ -185,6 +185,8 @@ class RoamItem extends Phaser.GameObjects.Container {
         this.add([this.bg, this.dybg, this.nameTex, this.desTex, this.timebg, this.timetips, this.timeTex]);
         this.desTex.visible = false;
         this.nameTex.visible = false;
+        this.timetips.visible = false;
+        this.timebg.visible = false;
     }
     public setRoamData(data: IDrawPoolStatus) {
         this.roamData = data;
@@ -194,9 +196,9 @@ class RoamItem extends Phaser.GameObjects.Container {
             this.dybg.setTexture(UIAtlasName.roam, "roan_banner_diamond");
             const time = 604800000;
             this.timeTex.text = this.getTimeTex(time);
-           // this.loopTimeOut(time);
+            // this.loopTimeOut(time);
             this.timeTex["visible"] = false;
-            this.timebg.visible = true;
+            this.timebg.visible = false;
         } else {
             this.dybg.setTexture(UIAtlasName.roam, "roan_banner_silver");
             this.timeTex["visible"] = false;

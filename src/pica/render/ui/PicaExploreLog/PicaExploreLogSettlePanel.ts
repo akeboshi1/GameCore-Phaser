@@ -106,10 +106,12 @@ export class PicaExploreLogSettlePanel extends ButtonEventDispatcher {
         this.settleData = content;
         this.scoreDatas = this.getScoreArr(content);
         this.playScoreTipsAnimation();
+        this.maskWidth = 336 * this.dpr;
+        this.maskHeight = 215 * this.dpr;
         this.curLayoutGroup = this.createLayoutGroup(content.rewards);
         this.curLayoutGroup.y = this.height * 0.5;
         this.curLayoutGroup.visible = false;
-        this.setLayoutMask(this.maskWidth, this.maskHeight);
+        this.setLayoutMask(this.maskWidth, this.curLayoutGroup.height + 20 * this.dpr);
         const previous = this.getProgressValue(content.previousProgress);
         this.starPro.setProgress(previous, 500);
         this.setStarProgressInfo();
