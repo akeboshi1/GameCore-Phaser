@@ -288,7 +288,7 @@ export class ElementManager extends PacketHandler implements IElementManager {
     }
 
     public dealSyncList() {
-        const len = 3;
+        const len = 30;
         if (this.mCacheSyncList && this.mCacheSyncList.length > 0) {
             let element: Element = null;
             const tmpLen = this.mCacheSyncList.length > len ? len : this.mCacheSyncList.length;
