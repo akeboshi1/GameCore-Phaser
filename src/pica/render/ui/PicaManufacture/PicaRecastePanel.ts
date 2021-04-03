@@ -130,7 +130,7 @@ export class PicaRecastePanel extends Phaser.GameObjects.Container {
   }
 
   public setRecasteItemData(data: op_client.ICountablePackageItem, blueprint: boolean) {
-    if (data) {
+    if (data && typeof data === "object") {
       this.mRecasteItemData = data;
       this.displayPanel.setRecasteItemData(data);
       this.mDetailBubble.setProp(data, 0, undefined);

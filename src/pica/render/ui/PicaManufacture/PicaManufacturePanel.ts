@@ -35,7 +35,7 @@ export class PicaManufacturePanel extends PicaBasePanel {
         this.starCountCon.y = this.mCloseBtn.y;
         this.starCountCon.x = width - 15 * this.dpr;
         this.toggleCon.x = width * 0.5;
-        this.toggleCon.y = this.toggleCon.height * 0.5 + 20 * this.dpr;
+        this.toggleCon.y = this.toggleCon.height * 0.5 +40 * this.dpr;
         this.composePanel.resize(width, height);
         this.recastPanel.resize(width, height);
         super.resize(width, height);
