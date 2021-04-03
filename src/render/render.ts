@@ -151,7 +151,7 @@ export class Render extends RPCPeer implements GameMain, IRender {
         });
         this.linkTo(PHYSICAL_WORKER, PHYSICAL_WORKER_URL).onceReady(() => {
             this.mPhysicalPeer = this.remote[PHYSICAL_WORKER].PhysicalPeer;
-            this.mPhysicalPeer.setScaleRatio(this.scaleRatio);
+            this.mPhysicalPeer.setScaleRatio(Math.ceil(this.mConfig.devicePixelRatio || UiUtils.baseDpr));
             this.mPhysicalPeer.start();
             Logger.getInstance().debug("Physcialworker onReady");
         });
@@ -1725,6 +1725,8 @@ export class Render extends RPCPeer implements GameMain, IRender {
     }
 
     private initRatio() {
+        this.mScaleRatio = Math.ceil(this.mConfig.devicePixelRatio || UiUtils.baseDpr);
+        this.mConfig.scale_ratio = this.mScaleRatio;
         this.mUIRatio = Math.round(this.mConfig.devicePixelRatio || UiUtils.baseDpr);
         if (this.mUIRatio > UiUtils.MaxDpr) {
             this.mUIRatio = UiUtils.MaxDpr;
@@ -1733,9 +1735,6 @@ export class Render extends RPCPeer implements GameMain, IRender {
         let desktop = false;
         if (this.game) desktop = this.game.device.os.desktop;
         this.mUIScale = desktop ? UiUtils.baseScale : scaleW;
-        // this.mScaleRatio = Math.ceil(this.mConfig.devicePixelRatio || UiUtils.baseDpr);
-        this.mScaleRatio = this.mUIRatio * this.mUIScale;
-        this.mConfig.scale_ratio = this.mScaleRatio;
         // this.mUIScale = (this.mConfig.width / this.DEFAULT_WIDTH) * (this.mConfig.devicePixelRatio / this.mUIRatio);
     }
 
