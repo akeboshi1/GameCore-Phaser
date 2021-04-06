@@ -42,15 +42,17 @@ export class PicaNoticePanel extends BasePanel {
                 });
             }
             const width = this.scene.cameras.main.width;
+            const showDelay = 500;
+            const time = (param.time * 1000 || 2000) + showDelay;
             // this.view.alpha = 0;
             this.scene.tweens.timeline({
                 targets: this,
-                duration: 500,
+                duration: showDelay,
                 tweens: [{
                     y: `-=${20 * this.dpr}`,
                     ease: "Bounce.easeOut",
                 }, {
-                    delay: 2000,
+                    delay: time,
                     y: `-=${20 * this.dpr}`,
                     ease: "Linear",
                     alpha: 0
@@ -59,6 +61,9 @@ export class PicaNoticePanel extends BasePanel {
                     this.render.renderEmitter(RENDER_PEER + "_" + this.key + "_close");
                 }
             });
+            let scaleY = this.mContent.height / (32 * this.dpr);
+            scaleY = scaleY < 1 ? 1 : scaleY;
+            this.bg.scaleY = scaleY;
         }
     }
 
@@ -79,6 +84,7 @@ export class PicaNoticePanel extends BasePanel {
         this.bg = this.scene.make.image({
             key
         }, false);
+        this.bg.scaleY = 3;
         this.mContent = new BBCodeText(this.mScene, 0, 0, "", {
             fontSize: 16 * this.dpr + "px",
             fontFamily: Font.DEFULT_FONT,
