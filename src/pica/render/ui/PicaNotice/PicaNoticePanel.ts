@@ -43,7 +43,12 @@ export class PicaNoticePanel extends BasePanel {
             }
             const width = this.scene.cameras.main.width;
             const showDelay = 500;
-            const time = (param.time * 1000 || 2000) + showDelay;
+
+            let time = 2000;
+            if (param.time && param.time.length > 0) {
+                time = param.time * 1000;
+            }
+            time += showDelay;
             // this.view.alpha = 0;
             this.scene.tweens.timeline({
                 targets: this,
@@ -61,6 +66,12 @@ export class PicaNoticePanel extends BasePanel {
                     this.render.renderEmitter(RENDER_PEER + "_" + this.key + "_close");
                 }
             });
+            let align = "center";
+            if (param.data && param.data.length > 0) {
+                const alignMap = ["left", "center", "right"];
+                align = alignMap[param.data];
+            }
+            this.mContent.setAlign(align);
             let scaleY = this.mContent.height / (32 * this.dpr);
             scaleY = scaleY < 1 ? 1 : scaleY;
             this.bg.scaleY = scaleY;
