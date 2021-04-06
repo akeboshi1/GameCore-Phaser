@@ -24,7 +24,7 @@ import { ICraftSkill } from "src/pica/structure/icraftskill";
 import { SkillConfig } from "./skill.config";
 import { LevelConfig } from "./level.config";
 import { SocialConfig } from "./social.config";
-import { SceneConfig } from "./scene.config";
+import { SceneConfig, SceneConfigMap } from "./scene.config";
 import { QuestConfig } from "./quest.config";
 import { GuideConfig } from "./guide.config";
 import { FurnitureGroup } from "./furniture.group";
@@ -54,7 +54,7 @@ export enum BaseDataType {
 export class BaseDataConfigManager extends BaseConfigManager {
     protected baseDirname: string;
     protected dataMap: Map<string, BaseConfigData> = new Map();
-    protected sceneMap: Map<string, IScene[]> = new Map();
+    protected sceneMap: SceneConfigMap;
     constructor(game: Game) {
         super(game);
     }
@@ -515,48 +515,17 @@ export class BaseDataConfigManager extends BaseConfigManager {
         return undefined;
     }
 
-    public getScenes(type?: string) {
-        if (this.sceneMap.size === 0) {
+    public getScenes(type?: string, tag?: number) {
+        if (!this.sceneMap) {
+            this.sceneMap = new SceneConfigMap();
             const dataTypes = [BaseDataType.minescene, BaseDataType.publicscene];
-            const map = new Map();
             for (const dataType of dataTypes) {
                 const config: SceneConfig = this.getConfig(dataType);
-                config.sceneMap.forEach((value, key) => {
-                    if (map.has(key)) {
-                        const datas = map.get(key);
-                        for (const temp of value) {
-                            temp.roomName = this.getI18n(temp.roomName);
-                            datas.push(temp);
-                        }
-                    } else {
-                        const datas = [];
-                        for (const temp of value) {
-                            temp.roomName = this.getI18n(temp.roomName);
-                            datas.push(temp);
-                        }
-                        map.set(key, datas);
-                    }
-                });
+                this.sceneMap.setSceneMap(config.sceneMap, this.getI18n.bind(this));
             }
-            const keys = Array.from(map.keys());
-            keys.sort((a, b) => {
-                let av = Number(a[a.length - 1]);
-                av = isNaN(av) ? Number.MAX_VALUE : av;
-                let bv = Number(b[b.length - 1]);
-                bv = isNaN(bv) ? Number.MAX_VALUE : bv;
-                if (av > bv) return 1;
-                else return -1;
-            });
-            for (const key of keys) {
-                this.sceneMap.set(key, map.get(key));
-            }
-            map.clear();
+            this.sceneMap.sort();
         }
-        if (type) {
-            return this.sceneMap.get(type);
-        } else {
-            return this.sceneMap;
-        }
+        return this.sceneMap.getScenes(type, tag);
     }
     public getQuest(id: string) {
         const data: QuestConfig = this.getConfig(BaseDataType.quest);

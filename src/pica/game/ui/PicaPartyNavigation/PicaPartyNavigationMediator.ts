@@ -158,7 +158,7 @@ export class PicaPartyNavigationMediator extends BasicMediator {
     }
 
     private setNavigationData() {
-        const map = <Map<string, IScene[]>>this.config.getScenes();
+        const map = <Map<string, IScene[]>>this.config.getScenes(undefined, 0);
         const arr = [];
         map.forEach((value, key) => {
             if (key !== "undefined") {
