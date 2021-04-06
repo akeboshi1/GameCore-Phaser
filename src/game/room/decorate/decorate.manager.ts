@@ -65,6 +65,7 @@ export class DecorateManager {
         content.item = itemResults;
         const changedBagData: string[] = [];
         combinedActions.forEach((acts, sprite) => {
+            if (acts.length === 0) return;
             const result = new op_client.SpriteModifyResult();
 
             result.id = sprite.id;
@@ -455,6 +456,7 @@ export class DecorateManager {
         return this.mRoom.game.user.userData.playerBag;
     }
 
+    // 合并动作
     private combineActions(actions: DecorateAction[]): Map<ISprite, DecorateAction[]> {
         const result: Map<ISprite, DecorateAction[]> = new Map<ISprite, DecorateAction[]>();
         const addCount: Map<ISprite, number> = new Map<ISprite, number>();
@@ -473,7 +475,8 @@ export class DecorateManager {
                 const c = addCount.get(action.target);
                 if (c === 1) {
                     // 添加再删除  清空之前的命令
-                    result.set(action.target, []);
+                    // result.set(action.target, []);
+                    result.delete(action.target);
                 }
                 addCount.set(action.target, c - 1);
             }

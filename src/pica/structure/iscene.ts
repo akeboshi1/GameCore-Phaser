@@ -6,4 +6,5 @@ export interface IScene {
     roomName: string;
     texturePath: string;
     subcategory: string;
+    tag: number;
 }

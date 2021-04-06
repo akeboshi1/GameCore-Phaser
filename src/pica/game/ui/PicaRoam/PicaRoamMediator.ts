@@ -107,6 +107,7 @@ export class PicaRoamMediator extends BasicMediator {
             const pool = pools[i];
             const item = configMgr.getItemBaseByID(pool.alterTokenId);
             pool["name"] = item ? item.name : "";
+            pool.picaStarName = this.userData.playerProperty.picaStar.name;
             for (const reward of pool.progressAward) {
                 configMgr.getBatchItemDatas(reward.rewards);
             }
