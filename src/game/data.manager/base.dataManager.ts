@@ -110,7 +110,7 @@ export class BaseDataManager extends BasePacketHandler {
 
     private syncElementSNUnlockMaterials(sn: string[]) {
         const config = <BaseDataConfigManager>this.game.configManager;
-        const map = config.getElementSNUnlockMaterials(sn);
+        const map = config.getElementUnlockMaterialsBySN(sn);
         map.forEach((value, key) => {
             this.mSNRequirements.set(key, value);
             this.syncItemBases(value);

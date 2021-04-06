@@ -24,6 +24,7 @@ import { NetworkManager } from "./command";
 import version from "../../version";
 import { SoundManager } from "./sound.manager";
 import { GuideManager } from "./guide.manager/guide.manager";
+import { HttpLoadManager } from "src/utils/http.load.manager";
 interface ISize {
     width: number;
     height: number;
@@ -54,6 +55,7 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
     protected mLoadingManager: LoadingManager;
     protected mConfigManager: BaseConfigManager;
     protected mNetWorkManager: NetworkManager;
+    protected mHttpLoadManager: HttpLoadManager;
 
     protected gameConfigUrls: Map<string, string> = new Map();
     protected gameConfigUrl: string;
@@ -383,6 +385,9 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
     get configManager() {
         return this.mConfigManager;
     }
+    get httpLoaderManager() {
+        return this.mHttpLoadManager;
+    }
     get emitter(): EventDispatcher {
         return this.mDataManager.emitter;
     }
@@ -633,6 +638,7 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
         if (!this.mDataManager) this.mDataManager = new DataManager(this);
         if (!this.mConfigManager) this.mConfigManager = new BaseConfigManager(this);
         if (!this.mNetWorkManager) this.mNetWorkManager = new NetworkManager(this);
+        if (!this.mHttpLoadManager) this.mHttpLoadManager = new HttpLoadManager();
         // this.mPlayerDataManager = new PlayerDataManager(this);
 
         this.mUIManager.addPackListener();
@@ -740,6 +746,10 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
                     this.mNetWorkManager.destory();
                     this.mNetWorkManager = null;
                 }
+                if (this.mHttpLoadManager) {
+                    this.mHttpLoadManager.destroy();
+                    this.mHttpLoadManager = null;
+                }
                 if (this.mConfigManager) {
                     this.mConfigManager.destory();
                     this.mConfigManager = null;
@@ -748,7 +758,6 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
                     this.mDataManager.clear();
                     this.mDataManager = null;
                 }
-
                 if (this.mSoundManager) {
                     this.mSoundManager.destroy();
                     this.mSoundManager = null;
@@ -890,6 +899,7 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
         // TODO do something here.
         if (this.connect) this.connect.update();
         if (this.mRoomManager) this.mRoomManager.update(current, delta);
+        if (this.mHttpLoadManager) this.mHttpLoadManager.update(current, delta);
     }
 
     private update(current: number, delta: number = 0) {

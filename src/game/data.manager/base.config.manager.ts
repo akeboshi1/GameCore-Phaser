@@ -24,10 +24,12 @@ export class BaseConfigManager {
         } else {
             return this.getBasePath().then((value: string) => {
                 if (this.mDispose) return;
-                this.dataMap.clear();
                 this.dirname(value);
-                this.mGame.loadJson();
+                // 开始加载时先清空配置
+                this.dataMap.clear();
+                // 再添加对应的配置
                 this.add();
+                this.mGame.loadJson();
                 return this.executeLoad(this.dataMap);
             });
         }
@@ -67,12 +69,12 @@ export class BaseConfigManager {
                             const obj = dataMap.get(key);
                             obj.resName = key;
                             const json = value.response;
-                            try {
-                                this.setLocalStorage(key, value.responseURL, json);
-                            } catch (error) {
-                                // tslint:disable-next-line:no-console
-                                console.log("Local Storage is full, Please empty data");
-                            }
+                            // try {
+                            //     // this.setLocalStorage(key, value.responseURL, json);
+                            // } catch (error) {
+                            //     // tslint:disable-next-line:no-console
+                            //     console.log("Local Storage is full, Please empty data");
+                            // }
                             obj.parseJson(json);
                         });
                         this.mInitialization = true;

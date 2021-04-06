@@ -1,4 +1,4 @@
-import { BaseConfigData, BaseConfigManager, Game } from "gamecore";
+import { BaseConfigManager, Game } from "gamecore";
 import {
     ICountablePackageItem,
     IElement,
@@ -53,7 +53,6 @@ export enum BaseDataType {
 
 export class BaseDataConfigManager extends BaseConfigManager {
     protected baseDirname: string;
-    protected dataMap: Map<string, BaseConfigData> = new Map();
     protected sceneMap: Map<string, IScene[]> = new Map();
     constructor(game: Game) {
         super(game);
@@ -196,10 +195,28 @@ export class BaseDataConfigManager extends BaseConfigManager {
      * @param id
      * @returns
      */
-    public getElementData(id: string): IElement {
+    public async getElementData(id: string): Promise<IElement> {
         const data: ElementDataConfig = this.getConfig(BaseDataType.element);
         const element = data.get(id);
+        if (!element.serialize) {
+            const path = element.serializeString;
+            const responseType = "json";
+            this.mGame.httpLoaderManager.createHttpRequest({ path, responseType }).then(() => {
+                element.serialize = true;
+            });
+        }
         return element;
+    }
+
+    /**
+     * 通过id获取element需要连载的pi地址
+     * @param id
+     * @returns
+     */
+    public getSerializeStr(id: string): string {
+        const data: ElementDataConfig = this.getConfig(BaseDataType.element);
+        const element = data.get(id);
+        return element.serializeString;
     }
 
     /**
@@ -207,7 +224,7 @@ export class BaseDataConfigManager extends BaseConfigManager {
      * @param sn
      * @returns
      */
-    public getElementSNUnlockMaterials(sns: string[]) {
+    public getElementUnlockMaterialsBySN(sns: string[]) {
         const data: ElementDataConfig = this.getConfig(BaseDataType.element);
         const map: Map<string, any> = new Map();
         for (const key in data) {
@@ -215,8 +232,8 @@ export class BaseDataConfigManager extends BaseConfigManager {
                 const temp = data[key];
                 if (sns.indexOf(temp.sn) !== -1) {
                     if (!StringUtils.isNullOrUndefined(temp.unLockMaterials)) {
-                        const unlockstri = JSON.stringify(temp.unLockMaterials);
-                        map.set(temp.sn, JSON.parse(unlockstri));
+                        const unlockstr = JSON.stringify(temp.unLockMaterials);
+                        map.set(temp.sn, JSON.parse(unlockstr));
                     }
                 }
             }
@@ -673,6 +690,7 @@ export class BaseDataConfigManager extends BaseConfigManager {
     }
 
     protected add() {
+        super.add();
         this.dataMap.set(BaseDataType.i18n_zh, new I18nZHDataConfig());
         this.dataMap.set(BaseDataType.explore, new ExploreDataConfig());
         this.dataMap.set(BaseDataType.item, new ItemBaseDataConfig());
@@ -699,7 +717,7 @@ export class BaseDataConfigManager extends BaseConfigManager {
         return url;
     }
 
-    private checkItemData(item: ICountablePackageItem) {
+    private async checkItemData(item: ICountablePackageItem) {
         if (!item || item["find"]) {
             return;
         }
@@ -710,7 +728,7 @@ export class BaseDataConfigManager extends BaseConfigManager {
         item["exclude"] = config.excludes;
         if (item.texturePath) item["display"] = { texturePath: item.texturePath };
         if (item.elementId && item.elementId !== "") {
-            const element = this.getElementData(item.elementId);
+            const element = await this.getElementData(item.elementId);
             if (element) {
                 const texture_path = element.texture_path;
                 item["animations"] = element["AnimationData"];

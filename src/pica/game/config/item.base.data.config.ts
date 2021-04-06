@@ -3,8 +3,8 @@ import {ICountablePackageItem} from "picaStructure";
 import {Logger} from "utils";
 
 export class ItemBaseDataConfig extends BaseConfigData {
-    excludes = ["count"];
-    snMap: Map<string, ICountablePackageItem> = new Map<string, ICountablePackageItem>();
+    public excludes = ["count"];
+    public snMap: Map<string, ICountablePackageItem> = new Map<string, ICountablePackageItem>();
 
     public getByID(id: string): ICountablePackageItem {
         if (this.hasOwnProperty(id)) {
