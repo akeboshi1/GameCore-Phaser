@@ -30,8 +30,8 @@ export class PicaNewMainPanel extends PicaBasePanel {
     resize(w: number, h: number) {
         const width = this.scaleWidth;
         const height = this.scaleHeight;
-        this.foldButton.x = this.foldButton.width * 0.5 + 5 * this.dpr;
-        this.foldButton.y = this.foldButton.height * 0.5 + 5 * this.dpr + 10 * this.dpr;
+        this.foldButton.x = 15 * this.dpr;
+        this.foldButton.y = 15 * this.dpr + 10 * this.dpr;
         this.headPanel.x = width * 0.5;
         this.headPanel.y = this.headPanel.height * 0.5 + 20 * this.dpr;
         this.leftPanel.x = this.leftPanel.width * 0.5 + 10 * this.dpr;
@@ -94,6 +94,7 @@ export class PicaNewMainPanel extends PicaBasePanel {
         const width = this.scaleWidth;
         const height = this.scaleHeight;
         this.foldButton = new Button(this.scene, UIAtlasName.uicommon, "home_retract");
+        this.foldButton["setInteractiveSize"](50 * this.dpr, 50 * this.dpr);
         this.foldButton.on(ClickEvent.Tap, this.onFoldButtonHandler, this);
         this.add(this.foldButton);
         this.headPanel = new PicaNewHeadPanel(this.scene, width, 70 * this.dpr, this.key, this.dpr);
@@ -155,6 +156,8 @@ export class PicaNewMainPanel extends PicaBasePanel {
             this.render.renderEmitter(ModuleName.PICANEWMAIN_NAME + "_querydecorate");
         } else if (tag === "online") {
             this.render.renderEmitter(ModuleName.PICANEWMAIN_NAME + "_showpanel", ModuleName.PICAONLINE_NAME);
+        } else if (tag === "tooqing") {
+            this.render.renderEmitter(ModuleName.PICANEWMAIN_NAME + "_showpanel", ModuleName.PICASCENENAVIGATION_NAME);
         }
     }
 

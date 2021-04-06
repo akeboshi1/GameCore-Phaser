@@ -70,10 +70,13 @@ export class PicaNewHeadPanel extends Phaser.GameObjects.Container {
         this.powerAddBtn.x = this.powerPro.x + this.powerPro.width * 0.5 + 7 * this.dpr;
         this.powerAddBtn.y = this.powerPro.y;
         this.powerAddBtn.on(ClickEvent.Tap, this.onEnergyHandler, this);
-        this.headCon.add([this.powerPro, headbg, vipmark, this.levelTex, headclickCon, this.powerTex, this.powerAddBtn]);
+        const tooqingBtn = new Button(this.scene, UIAtlasName.iconcommon, "home_toqing", "home_toqing");
+        tooqingBtn.on(ClickEvent.Tap, this.onTooqingHandler, this);
+        tooqingBtn.x = headclickCon.x + headclickCon.width * 0.5 + tooqingBtn.width * 0.5 + 15 * this.dpr;
+        tooqingBtn.y = headclickCon.y;
+        this.headCon.add([this.powerPro, headbg, vipmark, this.levelTex, headclickCon, this.powerTex, this.powerAddBtn, tooqingBtn]);
         this.headCon.x = -this.width * 0.5 + 33 * this.dpr;
         this.headCon.y = -2 * this.dpr;
-
         const moneybg = new NineSlicePatch(this.scene, 0, -this.dpr, 190 * this.dpr, 28 * this.dpr, UIAtlasName.uicommon, "home_assets_bg", {
             left: 17 * this.dpr,
             top: 0 * this.dpr,
@@ -161,7 +164,7 @@ export class PicaNewHeadPanel extends Phaser.GameObjects.Container {
         diamond = diamond || 0;
         if (diamond > 99999) {
             this.diamondvalue.setText((Math.floor(diamond / 1000) / 10) + "");
-            this.diamondvalue.setUintText({ img: true  });
+            this.diamondvalue.setUintText({ img: true });
         } else {
             this.diamondvalue.setText(diamond + "");
             this.diamondvalue.setUintTextVisible(false);
@@ -243,6 +246,9 @@ export class PicaNewHeadPanel extends Phaser.GameObjects.Container {
 
     private onOpenOnlineHandler() {
         if (this.sendHandler) this.sendHandler.runWith("online");
+    }
+    private onTooqingHandler() {
+        if (this.sendHandler) this.sendHandler.runWith("tooqing");
     }
 
     private moveMoneyCon() {
