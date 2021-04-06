@@ -89,4 +89,5 @@ export class ModuleName {
     public static PICAFURNITURE_NAME = "FurnitureGuide";
     public static PICAACTIVITY_NAME = "ActivityGuide";
     public static PICASURVEY_NAME = "PicaSurvey";
+    public static PICASCENENAVIGATION_NAME = "PicaSceneNavigation";
 }
