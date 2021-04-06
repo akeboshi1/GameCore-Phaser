@@ -72,6 +72,11 @@ export class BaseDataConfigManager extends BaseConfigManager {
         return configMap.template;
     }
 
+    /**
+     * 通过SN获取道具数据
+     * @param data
+     * @returns
+     */
     public getItemBaseBySN(data: string): ICountablePackageItem | IExtendCountablePackageItem {
         const config: ItemBaseDataConfig = this.getConfig(BaseDataType.item);
         const item = config.getBySN(data);
@@ -79,6 +84,11 @@ export class BaseDataConfigManager extends BaseConfigManager {
         return item;
     }
 
+    /**
+     * 通过ID 获取道具数据
+     * @param data
+     * @returns
+     */
     public getItemBaseByID(data: string): ICountablePackageItem | IExtendCountablePackageItem {
         const config: ItemBaseDataConfig = this.getConfig(BaseDataType.item);
         const item = config.getByID(data);
@@ -99,7 +109,11 @@ export class BaseDataConfigManager extends BaseConfigManager {
 
         return list;
     }
-
+    /**
+     * 批量获取道具数据
+     * @param items
+     * @returns
+     */
     public getBatchItemDatas(items: any[]) {
         if (!items) return [];
         for (const item of items) {
@@ -119,6 +133,10 @@ export class BaseDataConfigManager extends BaseConfigManager {
         return item;
     }
 
+    /**
+     * 获取重铸数据
+     * @returns
+     */
     public getRecastItemBases() {
         const temp = [];
         const data: ItemBaseDataConfig = this.getConfig(BaseDataType.item);
@@ -135,6 +153,11 @@ export class BaseDataConfigManager extends BaseConfigManager {
         return temp;
     }
 
+    /**
+     * 获取章节数据
+     * @param id
+     * @returns
+     */
     public getChapterData(id: number): IExploreChapterData {
         const data: ExploreDataConfig = this.getConfig(BaseDataType.explore);
         const chapter = data.getChapter(id);
@@ -146,6 +169,11 @@ export class BaseDataConfigManager extends BaseConfigManager {
         return chapter;
     }
 
+    /**
+     * 获取探索关卡数据
+     * @param id
+     * @returns
+     */
     public getExploreLevelData(id: number): IExploreLevelData {
         const data: ExploreDataConfig = this.getConfig(BaseDataType.explore);
         const level = data.getLevel(id);
@@ -163,12 +191,22 @@ export class BaseDataConfigManager extends BaseConfigManager {
         return level;
     }
 
+    /**
+     * 通过ID获取element 数据
+     * @param id
+     * @returns
+     */
     public getElementData(id: string): IElement {
         const data: ElementDataConfig = this.getConfig(BaseDataType.element);
         const element = data.get(id);
         return element;
     }
 
+    /**
+     * 通过SN来获取家具解锁需要到道具
+     * @param sn
+     * @returns
+     */
     public getElementSNUnlockMaterials(sns: string[]) {
         const data: ElementDataConfig = this.getConfig(BaseDataType.element);
         const map: Map<string, any> = new Map();
@@ -187,6 +225,11 @@ export class BaseDataConfigManager extends BaseConfigManager {
         return map;
     }
 
+    /**
+     * 获取商城数据
+     * @param id
+     * @returns
+     */
     public getShopBase(id: string): IShopBase {
         const data: ShopConfig = this.getConfig(BaseDataType.shop);
         const temp = data.get(id);
@@ -203,6 +246,11 @@ export class BaseDataConfigManager extends BaseConfigManager {
         return temp;
     }
 
+    /**
+     * 获取合成蓝图数据
+     * @param id
+     * @returns
+     */
     public getSkill(id: string): ICraftSkill {
         const data: SkillConfig = this.getConfig(BaseDataType.skill);
         const temp = data.get(id);
@@ -224,6 +272,11 @@ export class BaseDataConfigManager extends BaseConfigManager {
         return temp;
     }
 
+    /**
+     * 获取工作数据
+     * @param id
+     * @returns
+     */
     public getJob(id: string): IJob {
         const data: JobConfig = this.getConfig(BaseDataType.job);
         const temp = data.get(id);
@@ -252,7 +305,12 @@ export class BaseDataConfigManager extends BaseConfigManager {
         }
         return temps;
     }
-
+    /**
+     * 多语言配置
+     * @param id
+     * @param tips 加载错误提示
+     * @returns
+     */
     public getI18n(id: string, tips?: any) {
         if (!StringUtils.isNullOrUndefined(id)) {
             id = id.toUpperCase();
@@ -272,6 +330,11 @@ export class BaseDataConfigManager extends BaseConfigManager {
         return texts;
     }
 
+    /**
+     * 获取道具分类
+     * @param type
+     * @returns
+     */
     public getItemSubCategory(type: number) {
         const data: ItemCategoryConfig = this.getLocalConfig("itemcategory") as ItemCategoryConfig;
         const key = data.getClassName(type);
@@ -289,6 +352,11 @@ export class BaseDataConfigManager extends BaseConfigManager {
         }
     }
 
+    /**
+     * 动态加载商城数据
+     * @param shopName
+     * @returns
+     */
     public checkDynamicShop(shopName): Promise<any> {
         return new Promise((resolve, reject) => {
             if (!this.dataMap.has(shopName)) {
@@ -331,6 +399,11 @@ export class BaseDataConfigManager extends BaseConfigManager {
         return result;
     }
 
+    /**
+     * 获取商城子分类
+     * @param shopName
+     * @returns
+     */
     public getShopSubCategory(shopName: string = BaseDataType.shop) {
         const data: ShopConfig = this.getConfig(shopName);
         if (!data.categoryMap["find"]) {
@@ -394,11 +467,22 @@ export class BaseDataConfigManager extends BaseConfigManager {
         }
     }
 
+    /**
+     * 等级表 各种
+     * @param type
+     * @param level
+     * @returns
+     */
     public getLevel(type: string, level: number) {
         const data: LevelConfig = this.getConfig(BaseDataType.level);
         return data.get(type, level);
     }
 
+    /**
+     * 卡池表
+     * @param id
+     * @returns
+     */
     public getCardPool(id: string) {
         const data: CardPoolConfig = this.getConfig(BaseDataType.cardPool);
         data.parseJson({});
@@ -414,6 +498,11 @@ export class BaseDataConfigManager extends BaseConfigManager {
         return data.socails;
     }
 
+    /**
+     * 场景表
+     * @param id
+     * @returns
+     */
     public getScene(id: string) {
         const dataTypes = [BaseDataType.minescene, BaseDataType.publicscene];
         for (const dataType of dataTypes) {
@@ -486,6 +575,11 @@ export class BaseDataConfigManager extends BaseConfigManager {
         guideData.state = val;
     }
 
+    /**
+     * 家具鉴定组
+     * @param id
+     * @returns
+     */
     public getFurnitureGroup(id: string) {
         const data: FurnitureGroup = this.getConfig(BaseDataType.furnituregroup);
         const group: IFurnitureGroup = data.get(id);
@@ -520,6 +614,12 @@ export class BaseDataConfigManager extends BaseConfigManager {
         return false;
     }
 
+    /**
+     * 家具鉴定
+     * @param id
+     * @param type
+     * @returns
+     */
     public getGallery(id: number | string, type: GalleryType): IGalleryCombination | IGalleryLevel {
         const data: GalleryConfig = this.getConfig(BaseDataType.gallery);
         const temp = data.get(id, type);
