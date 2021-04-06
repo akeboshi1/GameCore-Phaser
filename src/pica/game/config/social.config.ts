@@ -9,7 +9,7 @@ export class SocialConfig extends BaseConfigData {
         if (this.socailMap.has(id)) {
             return this.socailMap.get(id);
         } else {
-            Logger.getInstance().error(`Job表未配置ID为:${id}的数据`);
+            Logger.getInstance().error(`social表未配置ID为:${id}的数据`);
             return undefined;
         }
     }

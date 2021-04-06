@@ -30,7 +30,7 @@ export class PicaSceneNavigationPanel extends PicaBasePanel {
     }
 
     public onShow() {
-        this.setNavigationListData(this.mNavigationData);
+        if (this.mNavigationData) this.setNavigationListData(this.mNavigationData);
     }
 
     public setNavigationListData(content: any[]) {
@@ -52,10 +52,10 @@ export class PicaSceneNavigationPanel extends PicaBasePanel {
         const bgwidth = 300 * this.dpr, bgheight = h;
         this.content.setSize(bgwidth, bgheight);
         this.bg = new CommonBackground(this.scene, 0, 0, bgwidth, bgheight);
+        this.content.add([this.bg]);
         this.add([this.content]);
         this.resize(0, 0);
         super.init();
-        this.render.renderEmitter(this.key + "_questprogress");
         this.playMove(new Handler(this, () => {
             if (this.townPanel) {
                 this.townPanel.refreshMask();
@@ -71,10 +71,11 @@ export class PicaSceneNavigationPanel extends PicaBasePanel {
 
     private openTownNavigationPanel() {
         if (!this.townPanel) {
-            const height = this.scaleHeight * 0.5 - 60 * this.dpr;
+            const offset = 60 * this.dpr;
+            const height = this.scaleHeight - offset;
             this.townPanel = new PicaSceneNavigationMapPanel(this.scene, 274 * this.dpr, height, this.dpr, this.scale);
             this.townPanel.setHandler(new Handler(this, this.onTownHandler));
-            this.townPanel.y = this.scaleHeight - height - 75 * this.dpr;
+            this.townPanel.y = (offset) * 0.5;
             this.content.add(this.townPanel);
         }
         this.townPanel.show();

@@ -44,9 +44,7 @@ export class PicaSceneNavigationMediator extends BasicMediator {
 
     protected panelInit() {
         super.panelInit();
-        if (this.tempData) {
-            this.setNavigationData();
-        }
+        this.setNavigationData();
     }
 
     private onCloseHandler() {
@@ -62,7 +60,7 @@ export class PicaSceneNavigationMediator extends BasicMediator {
     }
 
     private setNavigationData() {
-        if (this.tempData) {
+        if (!this.tempData) {
             const map = <Map<string, IScene[]>>this.config.getScenes(undefined, 1);
             const arr = [];
             map.forEach((value, key) => {
