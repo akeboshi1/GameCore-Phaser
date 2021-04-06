@@ -1,10 +1,11 @@
-import {op_def} from "pixelpai_proto";
+import {op_def, op_virtual_world} from "pixelpai_proto";
 import {IElementManager} from "../element/element.manager";
 import {ISprite, PlayerState} from "structure";
 import {IPos} from "../../../utils/logic.pos";
 import {Element, IElement, InputEnable, MovePath} from "../element/element";
 import {DirectionChecker, Logger} from "utils";
 import {LayerEnum} from "game-capsule";
+import {PBpacket} from "net-socket-packet";
 
 export class Player extends Element implements IElement {
     protected nodeType: number = op_def.NodeType.CharacterNodeType;
@@ -80,6 +81,34 @@ export class Player extends Element implements IElement {
             const id = this.mModel.id;
             this.mElementManager.roomService.game.renderPeer.playAnimation(id, this.mModel.currentAnimation, undefined, times);
         }
+    }
+
+    public stopMove(points?: any) {
+        this.mMoving = false;
+        this.moveControll.setVelocity(0, 0);
+        this.changeState(PlayerState.IDLE);
+        // if (!this.mRoomService.playerManager.actor.stopBoxMove) return;
+        // const mMovePoints = [];
+        // if (points) {
+        //     points.forEach((pos) => {
+        //         const movePoint = op_def.MovePoint.create();
+        //         const tmpPos = op_def.PBPoint3f.create();
+        //         tmpPos.x = pos.x;
+        //         tmpPos.y = pos.y;
+        //         movePoint.pos = tmpPos;
+        //         // 给每个同步点时间戳
+        //         movePoint.timestamp = new Date().getTime();
+        //         mMovePoints.push(tmpPos);
+        //     });
+        // }
+        // const movePath = op_def.MovePath.create();
+        // movePath.id = this.id;
+        // movePath.movePos = mMovePoints;
+        // const pkt: PBpacket = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_STOP_SPRITE);
+        // const ct: op_virtual_world.IOP_CLIENT_REQ_VIRTUAL_WORLD_STOP_SPRITE = pkt.content;
+        // ct.movePath = movePath;
+        // this.mElementManager.connection.send(pkt);
+        // this.mRoomService.playerManager.actor.stopBoxMove = false;
     }
 
     public setPosition(pos: IPos) {
