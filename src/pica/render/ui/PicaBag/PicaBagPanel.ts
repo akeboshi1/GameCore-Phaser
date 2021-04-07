@@ -37,11 +37,11 @@ export class PicaBagPanel extends PicaBasePanel {
   private mDetailBubble: DetailBubble;
   private mSceneType: any;
   private mEnableEdit: boolean = false;
+  private isDecorating: boolean = false;
   private categoryType: any;
   private mSelectedItemData;
   private mSelectedItem: ItemButton;
   private mAttributes: DynamicImageValue[] = [];
-  private sceneData: any;
   private moneyData: any;
   constructor(uiManager: UiManager) {
     super(uiManager);
@@ -177,12 +177,12 @@ export class PicaBagPanel extends PicaBasePanel {
     }
   }
 
-  public setSceneData(sceneType: number, editor: boolean) {
+  public setSceneData(sceneType: number, isDecorating: boolean, editor: boolean) {
     this.mSceneType = sceneType;
     this.mEnableEdit = editor;
-    this.sceneData = { sceneType, editor };
+    this.isDecorating = isDecorating;
     if (!this.mInitialized) return;
-    this.createCategory(sceneType, editor);
+    this.createCategory(sceneType, isDecorating);
   }
 
   public setSelectedResource(content: any) {// op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_MARKET_QUERY_PACKAGE_ITEM_RESOURCE
@@ -246,9 +246,7 @@ export class PicaBagPanel extends PicaBasePanel {
     if (this.moneyData) {
       this.setMoneyData(this.moneyData.money, this.moneyData.diamond);
     }
-    if (this.sceneData) {
-      this.createCategory(this.sceneData.sceneType, this.sceneData.editor);
-    }
+    if (this.mSceneType !== undefined) this.createCategory(this.mSceneType, this.isDecorating);
   }
 
   protected init() {
