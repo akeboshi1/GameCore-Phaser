@@ -200,10 +200,14 @@ export class BaseDataConfigManager extends BaseConfigManager {
         const element = data.get(id);
         if (!element.serialize) {
             const path = element.serializeString;
-            const responseType = "json";
-            this.mGame.httpLoaderManager.createHttpRequest({ path, responseType }).then(() => {
+            if (path && path.length > 0) {
+                const responseType = "arraybuffer";
+                this.mGame.httpLoaderManager.createHttpRequest({ path, responseType }).then((req: any) => {
+                    element.serialize = true;
+                });
+            } else {
                 element.serialize = true;
-            });
+            }
         }
         return element;
     }

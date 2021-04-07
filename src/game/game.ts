@@ -4,8 +4,8 @@ import { MainPeer } from "./main.peer";
 import { op_def, op_client, op_virtual_world, op_gateway } from "pixelpai_proto";
 import { Lite } from "game-capsule";
 import { ConnectionService } from "../../lib/net/connection.service";
-import { IConnectListener, SocketConnection } from "../../lib/net/socket";
-import { Logger, ResUtils, Tool, load, EventDispatcher, Handler } from "utils";
+import { IConnectListener } from "../../lib/net/socket";
+import { Logger, ResUtils, Tool, load, EventDispatcher, HttpLoadManager } from "utils";
 import IOP_CLIENT_REQ_VIRTUAL_WORLD_PLAYER_INIT = op_gateway.IOP_CLIENT_REQ_VIRTUAL_WORLD_PLAYER_INIT;
 import { Connection, GameSocket } from "./net/connection";
 import { Clock, ClockReadyListener } from "./loop/clock/clock";
@@ -24,7 +24,6 @@ import { NetworkManager } from "./command";
 import version from "../../version";
 import { SoundManager } from "./sound.manager";
 import { GuideManager } from "./guide.manager/guide.manager";
-import { HttpLoadManager } from "src/utils/http.load.manager";
 interface ISize {
     width: number;
     height: number;
