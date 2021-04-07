@@ -238,6 +238,7 @@ class MainTaskItem extends Phaser.GameObjects.Container {
     private intervalTimer: any;
     private previousProgress: number;
     private isCanRecievd: boolean = true;
+    private tween: Phaser.Tweens.Tween;
     constructor(scene: Phaser.Scene, width: number, height: number, dpr: number, zoom: number) {
         super(scene);
         this.dpr = dpr;
@@ -254,10 +255,7 @@ class MainTaskItem extends Phaser.GameObjects.Container {
         const max = 100;
         const fvalue = this.getFinishProgress(content);
         this.rewardRotateImg.visible = false;
-        if (this.intervalTimer) {
-            clearInterval(this.intervalTimer);
-            this.intervalTimer = undefined;
-        }
+        this.clearTweens();
         if (this.questType !== questType) {
             this.progress.setProgress(fvalue, max);
             if (fvalue === max) {
@@ -287,7 +285,18 @@ class MainTaskItem extends Phaser.GameObjects.Container {
 
     destroy() {
         super.destroy();
-        if (this.intervalTimer) clearInterval(this.intervalTimer);
+        this.clearTweens();
+    }
+    protected clearTweens() {
+        if (this.tween) {
+            this.tween.stop();
+            this.tween.remove();
+            this.tween = undefined;
+        }
+        if (this.intervalTimer) {
+            clearInterval(this.intervalTimer);
+            this.intervalTimer = undefined;
+        }
     }
     protected init() {
         this.bg = new NineSlicePatch(this.scene, 0, 0, this.width, this.height, UIAtlasName.uicommon, "task_chapter_bg", {
@@ -393,6 +402,7 @@ class MainTaskItem extends Phaser.GameObjects.Container {
                 }
             },
         });
+        this.tween = tween;
     }
     private playRotateTween() {
         if (!this.scene) return;
