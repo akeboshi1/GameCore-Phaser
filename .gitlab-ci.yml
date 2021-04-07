@@ -15,7 +15,7 @@ Build:
     only:
         - /^beta/
     tags:
-        - prod-platform-delivery
+        - game-core
     before_script:
         ##
         ## Install ssh-agent if not already installed, it is required by Docker.
@@ -43,7 +43,7 @@ Deploy:
         - /^beta/
         - /^deploy/
     tags:
-        - prod-platform-delivery
+        - game-core
     script:
         - npm config set @PixelPai:registry https://code.apowo.com/api/v4/packages/npm/
         - npm config set '//code.apowo.com/api/v4/projects/${CI_PROJECT_ID}/packages/npm/:_authToken' "${NPM_TOKEN}"
