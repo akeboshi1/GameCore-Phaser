@@ -46,10 +46,14 @@ export class PicaLoginMediator extends BasicMediator {
     private async loginSuc(data) {
         this.hide();
         const account = await this.game.renderPeer.getAccount();
-        if (!account.accountData) {
-            const bootMeditor: any = this.game.uiManager.getMed(ModuleName.PICA_BOOT_NAME);
-            if (bootMeditor) bootMeditor.showNotice();
+        const bootMeditor: any = this.game.uiManager.getMed(ModuleName.PICA_BOOT_NAME);
+        if (bootMeditor) {
+            if (!account.accountData) {
+                if (bootMeditor) bootMeditor.showNotice();
+            }
+            bootMeditor.setState("ready");
         }
+
         this.game.renderPeer.setAccount(data);
     }
 }

@@ -8,6 +8,7 @@ export class PicaBootMediator extends BasicMediator {
     }
 
     showLogin() {
+        this.setState("login");
         this.game.showMediator(ModuleName.PICA_LOGIN_NAME, true);
     }
 
@@ -39,6 +40,10 @@ export class PicaBootMediator extends BasicMediator {
         super.hide();
     }
 
+    setState(val: string) {
+        if (this.mView) this.mView.setBootState(val);
+    }
+
     async referToken() {
         const token = await this.game.peer.render.getLocalStorage("token");
         const account = token ? JSON.parse(token) : null;
@@ -47,6 +52,7 @@ export class PicaBootMediator extends BasicMediator {
             return;
         }
         this.game.peer.state = GameState.RequestToken;
+        this.setState("referToken");
         // this.peer.render[ModuleName.].then((account) => {
         this.game.httpService.refreshToekn(account.refreshToken, account.accessToken)
             .then((response: any) => {
@@ -54,6 +60,7 @@ export class PicaBootMediator extends BasicMediator {
                 if (response.code === 200) {
                     this.game.peer.render.refreshAccount(response);
                     this.showNotice();
+                    this.setState("ready");
                     // this.mAccount.refreshToken(response);
                     // this.loginEnterWorld();
                 } else {

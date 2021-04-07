@@ -10,12 +10,21 @@ export class PicaBootPanel extends PicaBasePanel {
     private notice: PicaNotice;
 
     private mMediator: any;
+    /**
+     * init
+     * login
+     * referToken
+     * ready
+     */
+    private mState: string;
     constructor(uimanager: UiManager) {
         super(uimanager);
         this.maskLoadingEnable = false;
         this.key = ModuleName.PICA_BOOT_NAME;
         this.atlasNames = [UIAtlasName.uicommon1, UIAtlasName.uicommon];
         this.mMediator = this.render.mainPeer[ModuleName.PICA_BOOT_NAME];
+        // const game = uimanager.render.game;
+        // (<Phaser.Renderer.WebGL.WebGLRenderer>game.renderer).addPipeline("Grayscale", new GrayScalePipeline(game));
     }
 
     show(param?: any) {
@@ -62,8 +71,9 @@ export class PicaBootPanel extends PicaBasePanel {
         const heightRatio = height / bg.height;
         bg.setScale(heightRatio);
         bg.texture.setFilter(Phaser.Textures.FilterMode.LINEAR);
-        // bg.x = 0;
-        // bg.y = height * 0.5;
+
+        // const garyPipe = (<Phaser.Renderer.WebGL.WebGLRenderer>this.scene.game.renderer).getPipeline("Grayscale");
+        // bg.setPipeline("Grayscale");
 
         const label1 = this.scene.make.text({
             text: `抵制不良游戏，拒绝盗版游戏。注意自我保护，谨防受骗上当。\n适度游戏益脑，沉迷游戏伤身。合理安排时间，享受健康生活。`,
@@ -136,6 +146,10 @@ export class PicaBootPanel extends PicaBasePanel {
         this.hasPanel(false);
     }
 
+    setBootState(val: string) {
+        this.mState = val;
+    }
+
     public showNotice() {
         if (!this.notice) {
             this.notice = new PicaNotice(this.scene, this.dpr, this.mShowData.notice_url, this.scale);
@@ -166,6 +180,9 @@ export class PicaBootPanel extends PicaBasePanel {
     private onPlayHandler() {
         if (!this.logged()) {
             return this.showLogin();
+        }
+        if (this.mState !== "ready") {
+            return;
         }
         if (this.mMediator) {
             this.mMediator.enterGame();
@@ -330,5 +347,23 @@ class PlayBtn extends NineSliceButton {
             this.add(this.mText);
             this.mText.setColor(val ? "#995E00" : "#808080");
         }
+    }
+}
+
+class GrayScalePipeline extends Phaser.Renderer.WebGL.Pipelines.TextureTintPipeline {
+    constructor(game: Phaser.Game) {
+        super({
+            game,
+            renderer: game.renderer,
+            fragShader: `
+            precision mediump float;
+            uniform sampler2D uMainSampler;
+            varying vec2 outTexCoord;
+            void main(void) {
+            vec4 color = texture2D(uMainSampler, outTexCoord);
+            float gray = dot(color.rgb, vec3(0.299, 0.587, 0.114));
+            gl_FragColor = vec4(vec3(gray), 1.0);
+            }`
+        });
     }
 }
