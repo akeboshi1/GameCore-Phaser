@@ -82,7 +82,7 @@ export class PicaBagMediator extends BasicMediator {
     protected panelInit() {
         super.panelInit();
         if (this.mPanelInit) {
-            this.mView.setSceneData(this.mScneType, this.game.roomManager.currentRoom.enableDecorate);
+            this.mView.setSceneData(this.mScneType, this.game.roomManager.currentRoom.isDecorating);
             this.mView.setMoneyData(this.userData.money, this.userData.diamond);
         }
     }
