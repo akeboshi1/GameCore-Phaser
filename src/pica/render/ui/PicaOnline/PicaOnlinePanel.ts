@@ -66,7 +66,7 @@ export class PicaOnlinePanel extends PicaBasePanel {
     }
 
     public setBlackList(blacklist: string[]) {
-        this.blackList = blacklist;
+        this.blackList = blacklist || [];
         if (!this.mInitialized) return;
         this.refreshBottomPanel();
     }
