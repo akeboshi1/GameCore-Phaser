@@ -195,21 +195,30 @@ export class BaseDataConfigManager extends BaseConfigManager {
      * @param id
      * @returns
      */
-    public async getElementData(id: string): Promise<IElement> {
-        const data: ElementDataConfig = this.getConfig(BaseDataType.element);
-        const element = data.get(id);
-        if (!element.serialize) {
-            const path = element.serializeString;
-            if (path && path.length > 0) {
-                const responseType = "arraybuffer";
-                this.mGame.httpLoaderManager.createHttpRequest({ path, responseType }).then((req: any) => {
+    public getElementData(id: string): Promise<IElement> {
+        return new Promise<IElement>((reslove, reject) => {
+            const data: ElementDataConfig = this.getConfig(BaseDataType.element);
+            const element = data.get(id);
+            if (!element.serialize) {
+                const path = element.serializeString;
+                if (path && path.length > 0) {
+                    const responseType = "arraybuffer";
+                    this.mGame.httpLoaderManager.startSingleLoader({ path, responseType }).then((req: any) => {
+                        element.serialize = true;
+                        // todo
+                        reslove(element);
+                    }).catch(() => {
+                        reslove(element);
+                    });
+                } else {
                     element.serialize = true;
-                });
+                    // todo
+                    reslove(element);
+                }
             } else {
-                element.serialize = true;
+                reslove(element);
             }
-        }
-        return element;
+        });
     }
 
     /**

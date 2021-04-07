@@ -1,4 +1,4 @@
-import { IHttpLoaderConfig } from "./http";
+import { IHttpLoaderConfig, load } from "./http";
 import { Logger } from "./log";
 
 export class HttpLoadManager {
@@ -26,7 +26,7 @@ export class HttpLoadManager {
         this.mCurLen = 0;
     }
 
-    public createHttpRequest(loaderConfig: IHttpLoaderConfig): Promise<any> {
+    public startSingleLoader(loaderConfig: IHttpLoaderConfig): Promise<any> {
         const path = loaderConfig.path;
         const responseType = loaderConfig.responseType;
         return new Promise((resolve, reject) => {
@@ -61,6 +61,21 @@ export class HttpLoadManager {
             } else {
                 this.mCurLen++;
                 http.send();
+            }
+        });
+    }
+
+    public startListLoader(loaderConfigs: IHttpLoaderConfig[]): Promise<any> {
+        return new Promise((reslove, reject) => {
+            const len = loaderConfigs.length;
+            for (let i: number = 0; i < len; i++) {
+                const loaderConfig = loaderConfigs[i];
+                if (!loaderConfig) continue;
+                this.startSingleLoader(loaderConfig).then((req: any) => {
+                    reslove(req);
+                }).catch(() => {
+                    reslove(null);
+                });
             }
         });
     }
