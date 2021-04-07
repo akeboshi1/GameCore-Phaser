@@ -711,7 +711,6 @@ export class Element extends BlockObject implements IElement {
             Logger.getInstance().debug("no displayInfo", this);
             return;
         }
-        Logger.getInstance().debug("createDisplay displayInfo", this);
         let createPromise: Promise<any> = null;
         if (this.mDisplayInfo.discriminator === "DragonbonesModel") {
             if (this.isUser) {
@@ -731,7 +730,6 @@ export class Element extends BlockObject implements IElement {
         createPromise.then(() => {
             const pos = this.mModel.pos;
             this.mElementManager.roomService.game.peer.render.setPosition(this.id, pos.x, pos.y);
-            Logger.getInstance().debug("createPromise ====>", this.id);
             if (currentAnimation) this.mElementManager.roomService.game.renderPeer.playAnimation(this.id, this.mModel.currentAnimation);
         }).catch((error) => {
             Logger.getInstance().error("promise error ====>", error);

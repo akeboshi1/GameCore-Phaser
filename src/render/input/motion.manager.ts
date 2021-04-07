@@ -216,7 +216,6 @@ export class MotionManager {
     private movePath(x: number, y: number, z: number, targets: {}, id?: number) {
         this.render.mainPeer.startFireMove({ x, y });
         this.render.physicalPeer.findPath(targets, id);
-        Logger.getInstance().log("movePath ====>", x, y, targets, id);
     }
 
     private stop(pos: any) {

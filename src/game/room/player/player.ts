@@ -70,7 +70,6 @@ export class Player extends Element implements IElement {
     }
 
     public changeState(val?: string, times?: number) {
-        Logger.getInstance().debug("change state: ", val);
         if (this.mCurState === val) return;
         if (!val) {
             val = PlayerState.IDLE;
