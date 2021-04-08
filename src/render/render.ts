@@ -2,7 +2,7 @@ import "tooqinggamephaser";
 import "dragonBones";
 import { Game } from "tooqinggamephaser";
 import { Export, RPCPeer, webworker_rpc } from "webworker-rpc";
-import { i18n, initLocales, IPos, IPosition45Obj, Logger, Pos, Size, UiUtils, Url, ValueResolver } from "utils";
+import {i18n, initLocales, IPos, IPosition45Obj, Logger, LogicPos, Pos, Size, UiUtils, Url, ValueResolver} from "utils";
 import { PBpacket } from "net-socket-packet";
 import * as protos from "pixelpai_proto";
 import { op_client } from "pixelpai_proto";
@@ -1173,6 +1173,14 @@ export class Render extends RPCPeer implements GameMain, IRender {
     @Export([webworker_rpc.ParamType.num, webworker_rpc.ParamType.num, webworker_rpc.ParamType.num, webworker_rpc.ParamType.num])
     public setCamerasBounds(x: number, y: number, width: number, height: number) {
         if (this.mCameraManager) this.mCameraManager.setBounds(x, y, width, height);
+    }
+
+    // 获取当前主摄像机注视中心点位置(世界坐标)
+    @Export()
+    public getCameraMidPos() {
+        if (!this.mCameraManager) return new LogicPos(0, 0);
+        const rect = this.mCameraManager.camera.worldView;
+        return new LogicPos((rect.x + rect.width / 2) / this.scaleRatio, (rect.y + rect.height / 2) / this.scaleRatio);
     }
 
     @Export([webworker_rpc.ParamType.num, webworker_rpc.ParamType.num])

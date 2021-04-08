@@ -174,7 +174,6 @@ export class MouseManager {
     protected onPointerUp(pointer) {
         clearTimeout(this.mDownTime);
         this.onUpdate(pointer, this.mGameObject);
-        Logger.getInstance().log("onPointerUp mouseManager===>", pointer);
         this.mGameObject = null;
     }
 

@@ -7,7 +7,6 @@ export class EmptyTerrain extends BlockObject {
     constructor(room: IRoomService, public pos: IPos, i, j) {
         super(Number(i * 10 + "" + j * 10), room);
         this.setPosition(pos);
-        this.addDisplay();
     }
 
     public setPosition(pos: IPos) {
@@ -22,7 +21,6 @@ export class EmptyTerrain extends BlockObject {
     }
 
     addDisplay(): Promise<any> {
-        this.mRoomService.game.physicalPeer.addBody(this.guid);
         this.drawBody();
         return Promise.resolve();
     }
@@ -38,6 +36,7 @@ export class EmptyTerrain extends BlockObject {
         const height = roomSize.tileHeight * dpr;
         const width = roomSize.tileWidth * dpr;
         const paths = [{ x: 0, y: -height / 2 }, { x: width / 2, y: 0 }, { x: 0, y: height / 2 }, { x: -width / 2, y: 0 }];
+        // this.mRoomService.game.physicalPeer.addBody(this.guid);
         this.mRoomService.game.peer.physicalPeer.createBodyFromVertices(this.guid, this._tempVec2.x * dpr, this._tempVec2.y * dpr + height * 0.5,
             [paths], true, true, { isStatic: true, inertia: Infinity, inverseInertia: Infinity });
     }

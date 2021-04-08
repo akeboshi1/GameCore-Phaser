@@ -19,7 +19,7 @@ export class MatterWorld implements ChatCommandInterface, ISizeChart {
     private mMiniSize: IPosition45Obj;
     // private elements: Map<number, MatterObject>;
 
-    constructor(private peer: PhysicalPeer) {
+    constructor(public peer: PhysicalPeer) {
         this.engine = Engine.create(undefined, { positionIterations: 8, velocityIterations: 10 });
         this.localWorld = this.engine.world;
         this.localWorld.gravity.x = 0;

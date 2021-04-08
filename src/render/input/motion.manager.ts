@@ -1,12 +1,12 @@
 import { Render } from "../render";
 import { NodeType } from "../managers";
 import { MainUIScene } from "../scenes/main.ui.scene";
-import { IPos, Logger, LogicPos } from "utils";
-import { BasePlaySceneGuide } from "../guide";
-
+import { Logger, LogicPos } from "utils";
+import { SceneName } from "structure";
 export class MotionManager {
     public enable: boolean;
     protected scene: Phaser.Scene;
+    protected uiScene: Phaser.Scene;
     private gameObject: Phaser.GameObjects.GameObject;
     private scaleRatio: number;
     private isHolding: boolean = false;
@@ -27,6 +27,7 @@ export class MotionManager {
         this.scene.input.on("pointerdown", this.onPointerDownHandler, this);
         this.scene.input.on("gameobjectdown", this.onGameObjectDownHandler, this);
         this.scene.input.on("gameobjectup", this.onGameObjectUpHandler, this);
+        if (this.uiScene) this.uiScene.input.on("pointerup", this.onPointeroutHandler, this);
     }
 
     removeListener() {
@@ -38,6 +39,7 @@ export class MotionManager {
         this.scene.input.off("pointermove", this.onPointerMoveHandler, this);
         this.scene.input.off("gameobjectdown", this.onGameObjectDownHandler, this);
         this.scene.input.off("gameobjectup", this.onGameObjectUpHandler, this);
+        if (this.uiScene) this.uiScene.input.off("pointerup", this.onPointeroutHandler, this);
     }
 
     resize(width: number, height: number) {
@@ -72,6 +74,7 @@ export class MotionManager {
         if (!this.scene) {
             return;
         }
+        this.uiScene = this.render.game.scene.getScene(SceneName.MAINUI_SCENE);
         this.addListener();
     }
 
@@ -182,9 +185,11 @@ export class MotionManager {
     protected onPointeroutHandler(pointer) {
         if (!this.isRunning) return;
         if (this.render.guideManager.canInteractive()) return;
+        Logger.getInstance().log("pointerout ===>",);
         this.isHolding = false;
         this.scene.input.off("pointermove", this.onPointerMoveHandler, this);
         const position = this.getPreUserPos(pointer);
+        if (!position) return;
         this.stop({ x: position.x / this.scaleRatio, y: position.y / this.scaleRatio });
         clearTimeout(this.holdTime);
     }
@@ -216,7 +221,6 @@ export class MotionManager {
     private movePath(x: number, y: number, z: number, targets: {}, id?: number) {
         this.render.mainPeer.startFireMove({ x, y });
         this.render.physicalPeer.findPath(targets, id);
-        Logger.getInstance().log("movePath ====>", x, y, targets, id);
     }
 
     private stop(pos: any) {
@@ -224,6 +228,7 @@ export class MotionManager {
     }
 
     private getPreUserPos(pointer): Phaser.Math.Vector2 {
+        if (!this.scene||!this.scene.cameras || !this.scene.cameras.main) return null;
         const { x, y } = this.render.displayManager.user;
         const tmpX = pointer.worldX / this.scaleRatio - x;
         const tmpY = pointer.worldY / this.scaleRatio - y;

@@ -6,7 +6,7 @@ export class Font {
     static readonly YAHEI_18_BOLD: string = "bold 18px YaHei";
     static readonly YAHEI_20_BOLD: string = "bold 20px YaHei";
 
-    static readonly DEFULT_FONT = "Helvetica, 'Source Han Sans', -apple-system, 'Noto Sans', 'Helvetica Neue', 'Nimbus Sans L', Arial, 'Liberation Sans', 'PingFang SC', 'Hiragino Sans GB', 'Noto Sans CJK SC', 'Source Han Sans SC', 'Source Han Sans CN', 'Microsoft YaHei'";
+    static readonly DEFULT_FONT = "'Source Han Sans', Helvetica, -apple-system, 'Noto Sans', 'Helvetica Neue', 'Nimbus Sans L', Arial, 'Liberation Sans', 'PingFang SC', 'Hiragino Sans GB', 'Noto Sans CJK SC', 'Source Han Sans SC', 'Source Han Sans CN', 'Microsoft YaHei'";
     static readonly ZH_MAIN = "Source Han Sans";
     static readonly EN_MAINT = "tt0503m_";
     static readonly EN_BOLD = "tt0173m_";
