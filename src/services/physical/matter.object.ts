@@ -1,5 +1,5 @@
 import { Bodies, Body, Vector, Events } from "tooqingmatter-js";
-import { IPos, IPosition45Obj, Logger, LogicPos, Position45, Tool } from "utils";
+import { IPos, IPosition45Obj, LogicPos, Position45, Tool } from "utils";
 import { delayTime, PhysicalPeer } from "../physical.worker";
 import { MatterWorld } from "./matter.world";
 import { MoveData, MovePos } from "./matter.player.object";
@@ -93,7 +93,7 @@ export class MatterObject implements IMatterObject {
     protected mDirty: boolean = false;
     protected endMove: boolean = false;
     protected mRootMount: IMatterObject;
-    protected hasPos: boolean = false;
+    protected hasPos: IPos;
     protected curSprite: any;
     protected _offsetOrigin: Vector;
     protected _scale: number = 0;
@@ -383,7 +383,7 @@ export class MatterObject implements IMatterObject {
         this.peer.mainPeer.setPosition(this.id, update, p.x, p.y);
         this.peer.render.setPosition(this.id, p.x, p.y);
         if (!this.body) {
-            this.hasPos = true;
+            this.hasPos = p;
             // ==== todo render setPositon
             return;
         }
@@ -486,6 +486,10 @@ export class MatterObject implements IMatterObject {
             }
         });
         body.isSensor = this._sensor;
+        // if (this.hasPos) {
+        //     this.setPosition(this.hasPos);
+        //     this.hasPos = undefined;
+        // }
         if (addToWorld) {
             this.matterWorld.add(body, this._sensor, this);
         }

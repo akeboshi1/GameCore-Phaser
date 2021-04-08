@@ -189,6 +189,7 @@ export class MotionManager {
         this.isHolding = false;
         this.scene.input.off("pointermove", this.onPointerMoveHandler, this);
         const position = this.getPreUserPos(pointer);
+        if (!position) return;
         this.stop({ x: position.x / this.scaleRatio, y: position.y / this.scaleRatio });
         clearTimeout(this.holdTime);
     }
@@ -227,6 +228,7 @@ export class MotionManager {
     }
 
     private getPreUserPos(pointer): Phaser.Math.Vector2 {
+        if (!this.scene||!this.scene.cameras || !this.scene.cameras.main) return null;
         const { x, y } = this.render.displayManager.user;
         const tmpX = pointer.worldX / this.scaleRatio - x;
         const tmpY = pointer.worldY / this.scaleRatio - y;

@@ -13,13 +13,13 @@ export class MatterWorld implements ChatCommandInterface, ISizeChart {
     // public map: number[][];
     public matterUser: MatterUserObject;
     private mAstar: AStar;
-    private drawBodies: boolean = false;
+    private drawBodies: boolean = true;
     private ignoreSensors?: Map<number, MatterObject>;
     private mSize: IPosition45Obj;
     private mMiniSize: IPosition45Obj;
     // private elements: Map<number, MatterObject>;
 
-    constructor(private peer: PhysicalPeer) {
+    constructor(public peer: PhysicalPeer) {
         this.engine = Engine.create(undefined, { positionIterations: 8, velocityIterations: 10 });
         this.localWorld = this.engine.world;
         this.localWorld.gravity.x = 0;

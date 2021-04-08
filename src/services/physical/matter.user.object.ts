@@ -1,9 +1,9 @@
-import { DirectionChecker, IPos, Logger, LogicPos, Tool } from "utils";
+import { DirectionChecker, IPos, Logger, LogicPos, Position45, Tool } from "utils";
 import { delayTime, PhysicalPeer } from "../physical.worker";
 import { IMoveTarget, MatterPlayerObject, MovePos } from "./matter.player.object";
 import { op_def } from "pixelpai_proto";
 import { IPoint } from "game-capsule";
-import { Vector, Body, Events } from "tooqingmatter-js";
+import { Vector, Body, Bodies } from "tooqingmatter-js";
 export class MatterUserObject extends MatterPlayerObject {
     public stopBoxMove: boolean = false;
     private mTargetPoint: IMoveTarget;
@@ -94,7 +94,7 @@ export class MatterUserObject extends MatterPlayerObject {
             this.addFillEffect({ x: firstPos.x, y: firstPos.y }, op_def.PathReachableStatus.PATH_UNREACHABLE_AREA);
             return;
         }
-        this.matterWorld.setSensor(this.body, true);
+        this.matterWorld.setSensor(this.body, false);
         this.mTargetPoint = { path, targetId };
         this.addFillEffect({ x: firstPos.x, y: firstPos.y }, op_def.PathReachableStatus.PATH_REACHABLE_AREA);
         this.startMove();
@@ -125,12 +125,14 @@ export class MatterUserObject extends MatterPlayerObject {
         this.mMoving = true;
         this.peer.mainPeer.selfStartMove();
         const pos = this.getPosition();
+        Logger.getInstance().log("setPostion usr move ===>",  { x: this._tempVec.x * this._scale + this._offset.x, y: this._tempVec.y * this._scale + this._offset.y }, this.body);
         const angle = Math.atan2((path[0].y - pos.y), (path[0].x - pos.x));
         const speed = this.mModel.speed * delayTime;
         this.setVelocity(Math.cos(angle) * speed, Math.sin(angle) * speed);
     }
 
     public stopMove() {
+        if (!this.mMoving) return;
         this.mMoving = false;
         this.peer.mainPeer.stopMove(this.id);
         if (this.mMoveData && this.mMoveData.posPath) {
@@ -149,6 +151,7 @@ export class MatterUserObject extends MatterPlayerObject {
     }
 
     public tryStopMove(pos?: IPos) {
+        if (!this.mMoving) return;
         // 点击移动
         if (this.mTargetPoint) {
             this.mMoving = false;

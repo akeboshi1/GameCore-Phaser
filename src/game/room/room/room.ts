@@ -10,7 +10,7 @@ import { CamerasManager, ICameraService } from "../camera/cameras.manager";
 import { ViewblockManager } from "../viewblock/viewblock.manager";
 import { PlayerManager } from "../player/player.manager";
 import { ElementManager } from "../element/element.manager";
-import {IElement, InputEnable} from "../element/element";
+import { IElement, InputEnable } from "../element/element";
 import { IViewBlockManager } from "../viewblock/iviewblock.manager";
 import { TerrainManager } from "../terrain/terrain.manager";
 import { SkyBoxManager } from "../sky.box/sky.box.manager";
@@ -23,7 +23,7 @@ import IActor = op_client.IActor;
 import NodeType = op_def.NodeType;
 import { BaseDataConfigManager } from "picaWorker";
 import { RoomStateManager } from "../state/room.state.manager";
-import {BlockObject} from "../block/block.object";
+import { BlockObject } from "../block/block.object";
 
 export interface SpriteAddCompletedListener {
     onFullPacketReceived(sprite_t: op_def.NodeType): void;
@@ -201,7 +201,6 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
             tileWidth: data.tileWidth / 2,
             tileHeight: data.tileHeight / 2,
         };
-
         this.mWalkableMap = new Array(this.mMiniSize.rows);
         for (let i = 0; i < this.mWalkableMap.length; i++) {
             this.mWalkableMap[i] = new Array(this.mMiniSize.cols).fill(-1);
@@ -386,9 +385,6 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
         this.mSkyboxManager = new SkyBoxManager(this);
         // mainworker通知physicalWorker创建matterworld
         this.mGame.peer.physicalPeer.createMatterWorld();
-        // 将场景尺寸传递给physical进程
-        this.mGame.physicalPeer.setRoomSize(this.mSize);
-        this.mGame.physicalPeer.setMiniRoomSize(this.miniSize);
         // this.mMatterWorld = new MatterWorld(this);
         this.mEffectManager = new EffectManager(this);
         this.mWallMamager = new WallManager(this);
@@ -402,7 +398,9 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
         this.mGame.peer.render.setCamerasBounds(-padding - offsetX * this.mScaleRatio, -padding, this.mSize.sceneWidth * this.mScaleRatio + padding * 2, this.mSize.sceneHeight * this.mScaleRatio + padding * 2);
         //     // init block
         this.mBlocks.int(this.mSize);
-
+        // 将场景尺寸传递给physical进程
+        this.mGame.physicalPeer.setRoomSize(this.mSize);
+        this.mGame.physicalPeer.setMiniRoomSize(this.miniSize);
         //     if (this.mWorld.moveStyle !== op_def.MoveStyle.DIRECTION_MOVE_STYLE) {
         //         this.mFallEffectContainer = new FallEffectContainer(this.mScene, this);
         //     }
