@@ -309,7 +309,7 @@ export class DecorateManager {
         this.unselect();
     }
 
-    public addFromBag(baseID: string) {
+    public async addFromBag(baseID: string) {
         this.reverseSelected();
 
         const bagCount = this.getBagCount(baseID);
@@ -324,9 +324,10 @@ export class DecorateManager {
         const min = 1000000;
         const max = 0x70000000;
         const indexID = Math.floor(Math.random() * (max - min) + min);
+        const pos = await this.room.game.renderPeer.getCameraMidPos();
         const spriteData = new Sprite({
             id: indexID,
-            point3f: {x: 0, y: 0, z: 0},
+            point3f: {x: pos.x, y: pos.y, z: 0},
             currentAnimationName: "idle",
             direction: 3,
             nickname: typeData.name,
