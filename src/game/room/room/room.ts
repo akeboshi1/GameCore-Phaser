@@ -773,6 +773,30 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
         // waite for response: _OP_VIRTUAL_WORLD_RES_CLIENT_EDIT_MODEL_RESULT
     }
 
+    // 检测sprite是否与现有walkableMap有碰撞重叠
+    public checkSpriteConflictToWalkableMap(sprite: ISprite, isTerrain: boolean = false): boolean {
+        const walkableData = this.getSpriteWalkableData(sprite, isTerrain);
+        if (!walkableData) return true;
+
+        const { origin, collisionArea, walkableArea, pos45, rows, cols } = walkableData;
+
+        let tempY = 0;
+        let tempX = 0;
+        for (let i = 0; i < rows; i++) {
+            tempY = pos45.y + i - origin.y;
+            for (let j = 0; j < cols; j++) {
+                tempX = pos45.x + j - origin.x;
+                if (collisionArea[i][j] === 0 || walkableArea[i][j] === 1) continue;
+                const val = this.isWalkable(tempX, tempY);
+                if (!val) {
+                    // Logger.getInstance().debug("#place ", val, pos, tempX, tempY);
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
     //
 
     protected initSkyBox() {
@@ -1087,21 +1111,33 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
         } else {
             pos45 = this.transformToMini45(new LogicPos(sprite.pos.x, sprite.pos.y));
         }
-        if (!walkableArea) {
+        if (!walkableArea || walkableArea.length === 0) {
             walkableArea = new Array(rows);
             for (let i = 0; i < rows; i++) {
                 walkableArea[i] = new Array(cols).fill(0);
             }
         } else {
             const wRows = walkableArea.length;
-            if (wRows === 0) {
-                Logger.getInstance().error(`data error: WalkableArea {${walkableArea}}, data: `, sprite);
-                return null;
-            }
             const wCols = walkableArea[0].length;
             if (rows !== wRows || cols !== wCols) {
-                Logger.getInstance().error(`data error: CollisionArea {${collisionArea}} not match WalkableArea {${walkableArea}}, data: `, sprite);
-                return null;
+                // 数据尺寸不一致 做求交集处理
+                // Logger.getInstance().debug("#walkable before ", walkableArea);
+
+                const temp = new Array(rows);
+                for (let i = 0; i < rows; i++) {
+                    temp[i] = new Array(cols).fill(0);
+                }
+                for (let i = 0; i < rows; i++) {
+                    for (let j = 0; j < cols; j++) {
+                        if (i >= wRows || j >= wCols) {
+                            continue;
+                        }
+                        temp[i][j] = walkableArea[i][j];
+                    }
+                }
+                walkableArea = temp;
+
+                // Logger.getInstance().debug("#walkable after ", walkableArea);
             }
         }
 
