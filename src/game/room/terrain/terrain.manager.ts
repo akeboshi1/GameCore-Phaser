@@ -75,6 +75,14 @@ export class TerrainManager extends PacketHandler implements IElementManager {
         }
     }
 
+    public dealEmptyTerrain() {
+        this.mEmptyMap.forEach((emptyTerrainList) => {
+            if (emptyTerrainList) emptyTerrainList.forEach((emptyTerrain) => {
+                if (emptyTerrain) emptyTerrain.addDisplay();
+            });
+        });
+    }
+
     public destroy() {
         this.roomService.game.emitter.off(ElementManager.ELEMENT_READY, this.dealTerrainCache, this);
         if (this.connection) {
@@ -176,7 +184,7 @@ export class TerrainManager extends PacketHandler implements IElementManager {
 
     protected addComplete(packet: PBpacket) {
         this.hasAddComplete = true;
-        this.dealEmptyTerrain();
+        // this.dealEmptyTerrain();
     }
 
     protected onRemove(packet: PBpacket) {
@@ -324,14 +332,6 @@ export class TerrainManager extends PacketHandler implements IElementManager {
             this.mTerrainCache.length = 0;
             this.mTerrainCache = [];
         }
-    }
-
-    private dealEmptyTerrain() {
-        this.mEmptyMap.forEach((emptyTerrainList) => {
-            if (emptyTerrainList) emptyTerrainList.forEach((emptyTerrain) => {
-                if (emptyTerrain) emptyTerrain.addDisplay();
-            });
-        });
     }
 
     get connection(): ConnectionService | undefined {

@@ -662,7 +662,7 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
                 allReady = false;
             }
         });
-
+        this.terrainManager.dealEmptyTerrain();
         if (allReady) {
             this.game.renderPeer.roomReady();
         }
