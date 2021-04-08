@@ -4,6 +4,7 @@ import { BasicMediator } from "gamecore";
 import { ModuleName } from "structure";
 import { PicaGame } from "../../pica.game";
 import { BaseDataConfigManager } from "../../config";
+import { ObjectAssign } from "utils";
 export class PicaOrderMediator extends BasicMediator {
 
     private mListData: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_ORDER_LIST = null;
@@ -81,6 +82,9 @@ export class PicaOrderMediator extends BasicMediator {
         const list = content.orders;
         const configMgr = <BaseDataConfigManager>this.game.configManager;
         for (const order of list) {
+            const temp = configMgr.getQuest(order.id);
+            ObjectAssign.excludeAllAssign(order, temp);
+            order.display = { texturePath: "pkth5/npc/task_head_npc_1" };
             const materials = order.targets;
             configMgr.getBatchItemDatas(materials);
             configMgr.getBatchItemDatas(order.rewards);
