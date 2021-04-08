@@ -344,12 +344,6 @@ export class ElementManager extends PacketHandler implements IElementManager {
             }
         });
 
-        if (notReadyElements.length < 10) {
-            Logger.getInstance().debug("#loading left not ready display: ", notReadyElements);
-        } else {
-            Logger.getInstance().debug("#loading left not ready display: ", notReadyElements.length);
-        }
-
         if (this.mLoadLen > 0) {
             this.mRoom.game.renderPeer.updateProgress(this.mCurIndex++ / this.mLoadLen);
         }

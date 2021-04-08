@@ -37,7 +37,7 @@ export class PicaOnlineMediator extends BasicMediator {
                 if (response.code === 200) {
                     const arrs = response.data;
                     for (const item of arrs) {
-                        if (item.ban) {
+                        if (item.ban && item.ban_user) {
                             this.blacklist.push(item.ban_user._id);
                         }
                     }
