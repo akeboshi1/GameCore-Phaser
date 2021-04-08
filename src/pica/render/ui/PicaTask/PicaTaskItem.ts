@@ -61,7 +61,7 @@ export class PicaTaskItem extends Phaser.GameObjects.Container {
         this.questData = data;
         this.taskName.text = data.name + this.getProgressStr(data);
         this.setTextLimit(this.taskName, this.taskName.text);
-        this.setTextLimit(this.taskDes, data.detail);
+        this.setTextLimit(this.taskDes, data.detail || data["des"]);
         const texturePath = data.display.texturePath + `_${this.dpr}x.png`;
         const url = Url.getOsdRes(texturePath);
         this.headIcon.load(url, this, () => {

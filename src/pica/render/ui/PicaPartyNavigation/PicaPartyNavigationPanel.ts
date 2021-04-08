@@ -1,7 +1,7 @@
 import { ClickEvent, Button, BBCodeText } from "apowophaserui";
 import { CommonBackground, DynamicImage, ItemInfoTips, ProgressMaskBar, ToggleColorButton, UiManager } from "gamecoreRender";
 import { ModuleName } from "structure";
-import { Handler, i18n, UIHelper, Url } from "utils";
+import { Handler, i18n, Logger, UIHelper, Url } from "utils";
 import { PicaTownNavigationPanel } from "./PicaTownNavigationPanel";
 import { PicaMyNavigationPanel } from "./PicaMyNavigationPanel";
 import { PicaBasePanel } from "../pica.base.panel";

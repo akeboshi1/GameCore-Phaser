@@ -82,7 +82,8 @@ export class PicaTaskMediator extends BasicMediator {
                     configMgr.getBatchItemDatas(quest.targets);
                     configMgr.getBatchItemDatas(quest.rewards);
                     const temp = configMgr.getQuest(quest.id);
-                    quest["Uinames"] = temp.Uinames;
+                    ObjectAssign.excludeAllAssign(quest, temp);
+                    quest.display = { texturePath: "pkth5/npc/task_head_npc_1" };
                 }
             }
         }
