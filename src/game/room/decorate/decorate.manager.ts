@@ -245,36 +245,8 @@ export class DecorateManager {
         }
         const sprite = element.model;
 
-        const collision = sprite.getCollisionArea();
-        let walkable = sprite.getWalkableArea();
-        const origin = sprite.getOriginPoint();
-        if (!collision) {
-            return true;
-        }
-        const rows = collision.length;
-        const cols = collision[0].length;
-        const pos = this.mRoom.transformToMini45(new LogicPos(sprite.pos.x, sprite.pos.y));
-        if (!walkable) {
-            walkable = new Array(rows);
-            for (let i = 0; i < rows; i++) {
-                walkable[i] = new Array(cols).fill(0);
-            }
-        }
-        let tempY = 0;
-        let tempX = 0;
-        for (let i = 0; i < rows; i++) {
-            tempY = pos.y + i - origin.y;
-            for (let j = 0; j < cols; j++) {
-                tempX = pos.x + j - origin.x;
-                if (collision[i][j] === 0 || walkable[i][j] === 1) continue;
-                const val = this.mRoom.isWalkable(tempX, tempY);
-                if (!val) {
-                    // Logger.getInstance().debug("#place ", val, pos, tempX, tempY);
-                    return false;
-                }
-            }
-        }
-        return true;
+        const conflictToWalkableMap = this.mRoom.checkSpriteConflictToWalkableMap(sprite);
+        return !conflictToWalkableMap;
     }
 
     // 点击浮动栏中的确认按钮，确认选择物的改动，取消选择，关闭选择栏
