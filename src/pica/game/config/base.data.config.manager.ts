@@ -529,6 +529,12 @@ export class BaseDataConfigManager extends BaseConfigManager {
     }
     public getQuest(id: string) {
         const data: QuestConfig = this.getConfig(BaseDataType.quest);
+        const quest = data.get(id);
+        if (quest && !quest["find"]) {
+            quest.name = this.getI18n(quest.name);
+            quest.des = this.getI18n(quest.des);
+            quest["find"] = true;
+        }
         return data.get(id);
     }
 
