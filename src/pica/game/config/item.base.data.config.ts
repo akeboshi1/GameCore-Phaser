@@ -5,6 +5,13 @@ import {Logger} from "utils";
 export class ItemBaseDataConfig extends BaseConfigData {
     public excludes = ["count"];
     public snMap: Map<string, ICountablePackageItem> = new Map<string, ICountablePackageItem>();
+    getSerialize(id: string): boolean {
+        if (this.hasOwnProperty(id)) {
+            const item = this[id];
+            return item.serialize;
+        }
+        return true;
+    }
 
     public getByID(id: string): ICountablePackageItem {
         if (this.hasOwnProperty(id)) {

@@ -9,7 +9,7 @@ import {
     IScene
 } from "picaStructure";
 import { IMarketCommodity, IShopBase } from "../../structure/imarketcommodity";
-import { Logger, ObjectAssign, StringUtils } from "utils";
+import { Logger, ObjectAssign, ResUtils, StringUtils } from "utils";
 import { ElementDataConfig } from "./element.data.config";
 import { ExploreDataConfig } from "./explore.data.config";
 import { I18nZHDataConfig } from "./i18nzh.config";
@@ -201,7 +201,7 @@ export class BaseDataConfigManager extends BaseConfigManager {
             const data: ElementDataConfig = this.getConfig(BaseDataType.element);
             const element = data.get(id);
             if (!element.serialize) {
-                const path = element.serializeString;
+                const path = ResUtils.getGameConfig(element.serializeString);
                 if (path && path.length > 0) {
                     const responseType = "arraybuffer";
                     this.mGame.httpLoaderManager.startSingleLoader({ path, responseType }).then((req: any) => {
@@ -209,7 +209,7 @@ export class BaseDataConfigManager extends BaseConfigManager {
                         // todo
                         reslove(element);
                     }).catch(() => {
-                        reslove(element);
+                        reject(element);
                     });
                 } else {
                     element.serialize = true;
@@ -706,35 +706,54 @@ export class BaseDataConfigManager extends BaseConfigManager {
         return url;
     }
 
-    private async checkItemData(item: ICountablePackageItem) {
-        if (!item || item["find"]) {
-            return;
-        }
-        const config: ItemBaseDataConfig = this.getConfig(BaseDataType.item);
-        item.name = this.getI18n(item.name, { id: item.id, name: "name" });
-        item.source = this.getI18n(item.source, { id: item.id, source: "source" });
-        item.des = this.getI18n(item.des, { id: item.id, des: "des" });
-        item["exclude"] = config.excludes;
-        if (item.texturePath) item["display"] = { texturePath: item.texturePath };
-        if (item.elementId && item.elementId !== "") {
-            const element = await this.getElementData(item.elementId);
-            if (element) {
-                const texture_path = element.texture_path;
-                item["animations"] = element["AnimationData"];
-                if (texture_path) {
-                    item["animationDisplay"] = { dataPath: element.data_path, texturePath: texture_path };
-                    const index = texture_path.lastIndexOf(".");
-                    if (index === -1) {
-                        item.texturePath = element.texture_path + "_s";
-                    } else {
-                        const extensions = texture_path.slice(index, texture_path.length);
-                        const path = texture_path.slice(0, index);
-                        item.texturePath = path + "_s" + extensions;
-                    }
-                    item["display"] = { texturePath: item.texturePath };
+    private async checkItemData(item: ICountablePackageItem): Promise<ICountablePackageItem> {
+        return new Promise<ICountablePackageItem>((reslove, reject) => {
+            if (!item) {
+                return;
+            }
+            if (item["find"]) reslove(item);
+            const config: ItemBaseDataConfig = this.getConfig(BaseDataType.item);
+            item.name = this.getI18n(item.name, { id: item.id, name: "name" });
+            item.source = this.getI18n(item.source, { id: item.id, source: "source" });
+            item.des = this.getI18n(item.des, { id: item.id, des: "des" });
+            item["exclude"] = config.excludes;
+            if (item.texturePath) item["display"] = { texturePath: item.texturePath };
+            if (item.serializeString && item.serializeString !== "") {
+                const path = ResUtils.getGameConfig(item.serializeString);
+                if (path && path.length > 0) {
+                    const responseType = "arraybuffer";
+                    this.mGame.httpLoaderManager.startSingleLoader({ path, responseType }).then((req: any) => {
+                        item["find"] = true;
+                        // todo
+                        reslove(item);
+                    }).catch(() => {
+                        reject(item);
+                    });
+                } else {
+                    item["find"] = true;
+                    // todo
+                    reslove(item);
                 }
             }
-        }
-        item["find"] = true;
+        });
+        // const element = await this.getElementData(item.elementId);
+        // if (element) {
+        //     const texture_path = element.texture_path;
+        //     item["animations"] = element["AnimationData"];
+        //     if (texture_path) {
+        //         item["animationDisplay"] = { dataPath: element.data_path, texturePath: texture_path };
+        //         const index = texture_path.lastIndexOf(".");
+        //         if (index === -1) {
+        //             item.texturePath = element.texture_path + "_s";
+        //         } else {
+        //             const extensions = texture_path.slice(index, texture_path.length);
+        //             const path = texture_path.slice(0, index);
+        //             item.texturePath = path + "_s" + extensions;
+        //         }
+        //         item["display"] = { texturePath: item.texturePath };
+        //     }
+        // }
+        // item["find"] = true;
+        // });
     }
 }

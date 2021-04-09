@@ -3,6 +3,7 @@ import { ICompareValue, IPrice } from "./imarketcommodity";
 export interface ICountablePackageItem {
     id: string;
     count: number;
+    serializeString: string;
     neededCount: number;
     name: string;
     shortName: string;
