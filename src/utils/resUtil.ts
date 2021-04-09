@@ -16,6 +16,7 @@ export class Url {
     static OSD_PATH = "";
     static RES_PATH: string = "";
     static RESUI_PATH: string = "";
+    static RESOURCE_ROOT: string = "";
     static getRes(value: string): string {
         // return Url.RES_PATH + value;
         if (!value) return undefined;
@@ -77,6 +78,11 @@ export class ResUtils {
             return value;
         }
         return Url.OSD_PATH + value;
+    }
+
+    static getResRoot(value: string): string {
+        if (Url.RESOURCE_ROOT) return Url.RESOURCE_ROOT + "/" + value;
+        return value;
     }
 }
 

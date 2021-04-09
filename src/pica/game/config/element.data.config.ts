@@ -47,8 +47,7 @@ export class ElementDataConfig extends BaseConfigData {
             this.extendAnimationData(element);
             return element;
         } else {
-            // tslint:disable-next-line:no-console
-            console.error(`Element表未配置ID为:${id}的数据`);
+            Logger.getInstance().error(`Element表未配置ID为:${id}的数据`);
             return undefined;
         }
     }

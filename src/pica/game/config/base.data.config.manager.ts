@@ -30,6 +30,7 @@ import { GuideConfig } from "./guide.config";
 import { FurnitureGroup } from "./furniture.group";
 import { GalleryConfig, GalleryType } from "./gallery.config";
 import { IGalleryCombination, IGalleryLevel } from "src/pica/structure/igallery";
+import { Lite } from "game-capsule";
 
 export enum BaseDataType {
     i18n_zh = "i18n_zh",
@@ -207,7 +208,11 @@ export class BaseDataConfigManager extends BaseConfigManager {
                     this.mGame.httpLoaderManager.startSingleLoader({ path, responseType }).then((req: any) => {
                         element.serialize = true;
                         // todo
-                        reslove(element);
+                        // 保存到elementstorage中
+                        this.decodeItem(req).then((lite) => {
+                            this.mGame.elementStorage.setGameConfig(lite);
+                            reslove(element);
+                        });
                     }).catch(() => {
                         reject(element);
                     });
@@ -719,13 +724,16 @@ export class BaseDataConfigManager extends BaseConfigManager {
             item["exclude"] = config.excludes;
             if (item.texturePath) item["display"] = { texturePath: item.texturePath };
             if (item.serializeString && item.serializeString !== "") {
-                const path = ResUtils.getGameConfig(item.serializeString);
+                const path = ResUtils.getResRoot(item.serializeString);
                 if (path && path.length > 0) {
                     const responseType = "arraybuffer";
                     this.mGame.httpLoaderManager.startSingleLoader({ path, responseType }).then((req: any) => {
                         item["find"] = true;
-                        // todo
-                        reslove(item);
+                        // 保存到elementstorage中
+                        this.decodeItem(req).then((lite) => {
+                            this.mGame.elementStorage.setGameConfig(lite);
+                            reslove(item);
+                        });
                     }).catch(() => {
                         reject(item);
                     });
@@ -736,24 +744,25 @@ export class BaseDataConfigManager extends BaseConfigManager {
                 }
             }
         });
-        // const element = await this.getElementData(item.elementId);
-        // if (element) {
-        //     const texture_path = element.texture_path;
-        //     item["animations"] = element["AnimationData"];
-        //     if (texture_path) {
-        //         item["animationDisplay"] = { dataPath: element.data_path, texturePath: texture_path };
-        //         const index = texture_path.lastIndexOf(".");
-        //         if (index === -1) {
-        //             item.texturePath = element.texture_path + "_s";
-        //         } else {
-        //             const extensions = texture_path.slice(index, texture_path.length);
-        //             const path = texture_path.slice(0, index);
-        //             item.texturePath = path + "_s" + extensions;
-        //         }
-        //         item["display"] = { texturePath: item.texturePath };
-        //     }
-        // }
-        // item["find"] = true;
-        // });
+    }
+
+    private decodeItem(req): Promise<Lite> {
+        return new Promise((resolve, reject) => {
+            const arraybuffer = req.response;
+            if (arraybuffer) {
+                try {
+                    const item = new Lite();
+                    item.deserialize(new Uint8Array(arraybuffer));
+                    Logger.getInstance().debug("Decode: ItemPi -> lite", item);
+                    resolve(item);
+                } catch (error) {
+                    Logger.getInstance().error("catch error", error);
+                    reject(error);
+                }
+            } else {
+                Logger.getInstance().error("reject error");
+                reject("error");
+            }
+        });
     }
 }

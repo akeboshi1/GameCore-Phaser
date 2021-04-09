@@ -73,8 +73,7 @@ export class ItemBaseDataConfig extends BaseConfigData {
         map.forEach((value, key) => {
             obj[key] = value;
         });
-        // tslint:disable-next-line:no-console
-        console.error(JSON.stringify(obj));
+        Logger.getInstance().error(JSON.stringify(obj));
     }
 
     private consoleClassNameJson() {
@@ -100,7 +99,6 @@ export class ItemBaseDataConfig extends BaseConfigData {
         map.forEach((value, key) => {
             obj[key] = value;
         });
-        // tslint:disable-next-line:no-console
-        console.error(JSON.stringify(obj));
+        Logger.getInstance().error(JSON.stringify(obj));
     }
 }

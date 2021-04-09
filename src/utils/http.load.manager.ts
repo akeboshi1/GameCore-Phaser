@@ -13,9 +13,11 @@ export class HttpLoadManager {
             const tmpLen = HttpLoadManager.maxLen - this.mCurLen;
             const list = this.mCacheList.splice(0, tmpLen);
             for (let i: number = 0; i < tmpLen; i++) {
-                this.mCurLen++;
                 const http = list[i];
-                if (http) http.send();
+                if (http) {
+                    this.mCurLen++;
+                    http.send();
+                }
             }
         }
     }

@@ -257,7 +257,6 @@ export class PicaChatInputPanel extends Phaser.Events.EventEmitter {
         //     this.dpr +
         //     "   " +
         //     camheight;
-        // // tslint:disable-next-line:no-console
         this.setQuickChatItems();
     }
 

@@ -69,12 +69,6 @@ export class BaseConfigManager {
                             const obj = dataMap.get(key);
                             obj.resName = key;
                             const json = value.response;
-                            // try {
-                            //     // this.setLocalStorage(key, value.responseURL, json);
-                            // } catch (error) {
-                            //     // tslint:disable-next-line:no-console
-                            //     console.log("Local Storage is full, Please empty data");
-                            // }
                             obj.parseJson(json);
                         });
                         this.mInitialization = true;
