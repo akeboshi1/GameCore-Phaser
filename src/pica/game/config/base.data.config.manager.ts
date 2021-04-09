@@ -744,6 +744,26 @@ export class BaseDataConfigManager extends BaseConfigManager {
                 }
             }
         });
+
+         // const element = await this.getElementData(item.elementId);
+        // if (element) {
+        //     const texture_path = element.texture_path;
+        //     item["animations"] = element["AnimationData"];
+        //     if (texture_path) {
+        //         item["animationDisplay"] = { dataPath: element.data_path, texturePath: texture_path };
+        //         const index = texture_path.lastIndexOf(".");
+        //         if (index === -1) {
+        //             item.texturePath = element.texture_path + "_s";
+        //         } else {
+        //             const extensions = texture_path.slice(index, texture_path.length);
+        //             const path = texture_path.slice(0, index);
+        //             item.texturePath = path + "_s" + extensions;
+        //         }
+        //         item["display"] = { texturePath: item.texturePath };
+        //     }
+        // }
+        // item["find"] = true;
+        // });
     }
 
     private decodeItem(req): Promise<Lite> {
