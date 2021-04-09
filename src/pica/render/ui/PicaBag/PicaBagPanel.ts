@@ -148,8 +148,10 @@ export class PicaBagPanel extends PicaBasePanel {
       subProps = subProps.concat(new Array(18 - len));
     }
     this.mPropGrid.setItems(subProps);
+    this.mPropGrid.layout();
     if (!isupdate) {
       this.mSelectedItemData = undefined;
+      this.mPropGrid.setT(0);
       const cell = this.mPropGrid.getCell(0);
       if (cell.container)
         this.onSelectItemHandler(cell.container);
@@ -373,7 +375,7 @@ export class PicaBagPanel extends PicaBasePanel {
         cellContainer.setData({ item });
         cellContainer.setItemData(item);
         if (item && this.isSelectedItemData(item)) {
-          cellContainer.isSelect = true;
+          cellContainer.select = true;
           this.mSelectedItem = cellContainer;
           this.mSelectedItemData = item;
         }
