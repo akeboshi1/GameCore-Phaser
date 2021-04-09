@@ -28,6 +28,44 @@ export class HttpLoadManager {
         this.mCurLen = 0;
     }
 
+    public addLoader(loaderConfig: IHttpLoaderConfig) {
+        if (this.mCurLen < HttpLoadManager.maxLen) {
+            const path = loaderConfig.path;
+            const responseType = loaderConfig.responseType;
+            return new Promise((resolve, reject) => {
+                const http = new XMLHttpRequest();
+                http.addEventListener("error", () => {
+                    Logger.getInstance().log("http error =============>>>>");
+                });
+                http.timeout = 20000; // 超时时间，单位是毫秒
+                http.onload = (response: ProgressEvent) => {
+                    this.mCurLen--;
+                    const currentTarget = response.currentTarget;
+                    if (currentTarget && currentTarget["status"] === 200)
+                        resolve(response.currentTarget);
+                    else reject(`${path} load error ${currentTarget["status"]}`);
+                };
+                http.onerror = () => {
+                    this.mCurLen--;
+                    Logger.getInstance().log("http error ====>");
+                    reject(`${path} load error!!!!!`);
+                };
+                http.ontimeout = (e) => {
+                    this.mCurLen--;
+                    // XMLHttpRequest 超时。在此做某事。
+                    Logger.getInstance().log("http timeout ====>");
+                    reject(`${path} load ontimeout!!!!!`);
+                };
+                http.open("GET", path, true);
+                http.responseType = responseType || "";
+                this.mCurLen++;
+                http.send();
+            });
+        } else {
+            this.mCacheList.unshift(loaderConfig);
+        }
+    }
+
     public startSingleLoader(loaderConfig: IHttpLoaderConfig): Promise<any> {
         const path = loaderConfig.path;
         const responseType = loaderConfig.responseType;
