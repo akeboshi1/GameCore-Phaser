@@ -16,7 +16,7 @@ import { TerrainManager } from "../terrain/terrain.manager";
 import { SkyBoxManager } from "../sky.box/sky.box.manager";
 import { GameState, IScenery, ISprite, LoadState, ModuleName, SceneName } from "structure";
 import { EffectManager } from "../effect/effect.manager";
-import { DecorateManager } from "../decorate/decorate.manager";
+import { DecorateManager } from "../../../pica/game/room/decorate/decorate.manager";
 import { WallManager } from "../element/wall.manager";
 import { Sprite } from "baseModel";
 import IActor = op_client.IActor;

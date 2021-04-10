@@ -1,5 +1,3 @@
-import { PBpacket } from "net-socket-packet";
-import { op_editor } from "pixelpai_proto";
 import { CamerasManager } from "./cameras.manager";
 
 export class EditorCamerasManager extends CamerasManager {

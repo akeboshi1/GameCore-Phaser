@@ -20,5 +20,5 @@ export * from "./viewblock/view.block";
 export * from "./viewblock/viewblock.manager";
 export * from "./room.manager";
 export * from "./display/spawn.point";
-export * from "./decorate/decorate.manager";
+export * from "../../pica/game/room/decorate/decorate.manager";
 export * from "./elementaction";

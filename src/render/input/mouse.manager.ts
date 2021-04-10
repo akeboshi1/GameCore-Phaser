@@ -2,7 +2,7 @@ import { Render } from "../render";
 import { FramesDisplay } from "../display/frames/frames.display";
 import { MessageType } from "structure";
 import { NodeType } from "../managers/display.manager";
-import { Logger, UiUtils, Url } from "utils";
+import { UiUtils } from "utils";
 
 export enum MouseEvent {
     RightMouseDown = 1,

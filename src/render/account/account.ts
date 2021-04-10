@@ -1,5 +1,4 @@
 import { IPos, Logger } from "utils";
-import { Render } from "../render";
 
 interface IAccountData {
     accessToken: string;

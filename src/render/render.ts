@@ -2,7 +2,7 @@ import "tooqinggamephaser";
 import "dragonBones";
 import { Game } from "tooqinggamephaser";
 import { Export, RPCPeer, webworker_rpc } from "webworker-rpc";
-import {i18n, initLocales, IPos, IPosition45Obj, Logger, LogicPos, Pos, Size, UiUtils, Url, ValueResolver} from "utils";
+import { i18n, initLocales, IPos, IPosition45Obj, Logger, LogicPos, Pos, Size, UiUtils, Url, ValueResolver } from "utils";
 import { PBpacket } from "net-socket-packet";
 import * as protos from "pixelpai_proto";
 import { op_client } from "pixelpai_proto";
@@ -41,7 +41,6 @@ import { GridsDebugger } from "./display/debugs/grids";
 import { SortDebugger } from "./display/debugs/sort.debugger";
 import { UiManager } from "./ui";
 import { GuideManager } from "./guide";
-import { MouseManagerDecorate } from "./input/mouse.manager.decorate";
 import { MouseManager } from "./input/mouse.manager";
 import { SoundManager } from "./managers";
 
@@ -1635,18 +1634,6 @@ export class Render extends RPCPeer implements GameMain, IRender {
     }
 
     @Export()
-    public switchDecorateMouseManager() {
-        if (!this.mInputManager) return;
-        this.mInputManager.changeMouseManager(new MouseManagerDecorate(this));
-
-        const playScene = this.mGame.scene.getScene(SceneName.PLAY_SCENE) as PlayScene;
-        if (playScene) {
-            playScene.pauseMotion();
-            playScene.disableCameraMove();
-        }
-    }
-
-    @Export()
     public switchBaseMouseManager() {
         if (!this.mInputManager) return;
         this.mInputManager.changeMouseManager(new MouseManager(this));
@@ -1671,6 +1658,10 @@ export class Render extends RPCPeer implements GameMain, IRender {
     @Export()
     public throwElement(userid: number, target: number, display, animation) {
         this.displayManager.throwElement(userid, target, display, animation);
+    }
+
+    @Export()
+    public switchDecorateMouseManager() {
     }
 
     protected onWorkerUnlinked(worker: string) {

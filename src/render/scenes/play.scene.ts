@@ -3,7 +3,7 @@ import { PlayCamera } from "../cameras/play.camera";
 import { BaseLayer, GroundLayer, SurfaceLayer } from "baseRender";
 import { MainUIScene } from "./main.ui.scene";
 import { RoomScene } from "./room.scene";
-import { ModuleName, PlaySceneLoadState, SceneName } from "structure";
+import { PlaySceneLoadState, SceneName } from "structure";
 import { MotionManager } from "../input/motion.manager";
 import { LayerEnum } from "game-capsule";
 
