@@ -1,5 +1,5 @@
 import { BaseConfigData } from "gamecore";
-import { IMarketCommodity, IShopBase } from "../../structureture";
+import { IMarketCommodity, IShopBase } from "../../structure";
 import { Logger } from "utils";
 export class ShopConfig extends BaseConfigData {
 

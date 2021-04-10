@@ -2,7 +2,7 @@ import { PicaAvatar } from "./PicaAvatar";
 import { op_client, op_def, op_gameconfig, op_pkt_def } from "pixelpai_proto";
 import { BasicMediator, Game } from "gamecore";
 import { EventType, ModuleName, RENDER_PEER } from "structure";
-import { BaseDataConfigManager } from "picaWorker";
+import { BaseDataConfigManager } from "../../config";
 
 export class PicaAvatarMediator extends BasicMediator {
     private mScneType: op_def.SceneTypeEnum;

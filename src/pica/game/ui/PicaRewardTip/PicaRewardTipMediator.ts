@@ -1,7 +1,7 @@
 import { BasicMediator, Game } from "gamecore";
 import { ModuleName } from "structure";
 import { PicaRewardTip } from "./PicaRewardTip";
-import { BaseDataConfigManager } from "picaWorker";
+import { BaseDataConfigManager } from "../../config";
 
 export class PicaRewardTipMediator extends BasicMediator {
     private mCacheData: any[] = [];

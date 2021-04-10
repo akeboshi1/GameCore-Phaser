@@ -1,11 +1,8 @@
-import { op_client, op_def, op_gameconfig, op_pkt_def } from "pixelpai_proto";
-import { BasicMediator, CacheDataManager, DataMgrType, Game } from "gamecore";
-import { ConnectState, EventType, ModuleName } from "structure";
-import { BaseDataConfigManager } from "picaWorker";
-import { ObjectAssign } from "utils";
+import { op_def } from "pixelpai_proto";
+import { BasicMediator, Game } from "gamecore";
+import { ModuleName } from "structure";
+import { BaseDataConfigManager } from "../../config";
 import { PicaRepairChoose } from "./PicaRepairChoose";
-import { IFurnitureGroup } from "../../structureture";
-
 export class PicaRepairChooseMediator extends BasicMediator {
     protected mModel: PicaRepairChoose;
     private mScneType: op_def.SceneTypeEnum;

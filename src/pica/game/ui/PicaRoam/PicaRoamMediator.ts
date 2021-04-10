@@ -2,7 +2,7 @@ import { BasicMediator, Game } from "gamecore";
 import { EventType, ModuleName } from "structure";
 import { PicaRoam } from "./PicaRoam";
 import { op_client, op_virtual_world, op_pkt_def } from "pixelpai_proto";
-import { BaseDataConfigManager } from "picaWorker";
+import { BaseDataConfigManager } from "../../config";
 import { ObjectAssign } from "utils";
 import { IDrawPoolStatus } from "src/pica/structure/icardpool";
 export class PicaRoamMediator extends BasicMediator {

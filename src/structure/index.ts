@@ -1,5 +1,4 @@
 import { Export } from "webworker-rpc";
-
 export { RunningAnimation, AnimationQueue } from "./animation";
 export { PI_EXTENSION_REGEX, HTTP_REGEX } from "./constants";
 export * from "./display";

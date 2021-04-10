@@ -4,7 +4,7 @@ import {ISprite, MessageType, ModuleName} from "structure";
 import {IPos, Logger } from "utils";
 import {PBpacket} from "net-socket-packet";
 import {Sprite} from "baseModel";
-import {BaseDataConfigManager} from "picaWorker";
+import {BaseDataConfigManager} from "../../config";
 import {BlockObject} from "../../../../game/room/block/block.object";
 import {InputEnable} from "../../../../game/room/element/element";
 import PKT_PackageType = op_pkt_def.PKT_PackageType;

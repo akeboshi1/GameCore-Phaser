@@ -1,5 +1,4 @@
 import { BaseConfigData, BaseConfigManager, Game } from "gamecore";
-import { IMarketCommodity, IShopBase } from "../../structure/imarketcommodity";
 import { Logger, ObjectAssign, StringUtils } from "utils";
 import { ElementDataConfig } from "./element.data.config";
 import { ExploreDataConfig } from "./explore.data.config";
@@ -9,9 +8,8 @@ import { ItemCategoryConfig } from "./item.category.config";
 import { ShopConfig } from "./shop.config";
 import version from "../../../../version";
 import { JobConfig } from "./job.config";
-import { IJob } from "../../structure/ijob";
 import { CardPoolConfig } from "./cardpool.config";
-import { ICraftSkill } from "src/pica/structure/icraftskill";
+import { ICraftSkill, IGalleryCombination, IGalleryLevel, IJob, IMarketCommodity, IShopBase } from "../../structure";
 import { SkillConfig } from "./skill.config";
 import { LevelConfig } from "./level.config";
 import { SocialConfig } from "./social.config";
@@ -20,7 +18,6 @@ import { QuestConfig } from "./quest.config";
 import { GuideConfig } from "./guide.config";
 import { FurnitureGroup } from "./furniture.group";
 import { GalleryConfig, GalleryType } from "./gallery.config";
-import { IGalleryCombination, IGalleryLevel } from "src/pica/structure/igallery";
 
 export enum BaseDataType {
     i18n_zh = "i18n_zh",

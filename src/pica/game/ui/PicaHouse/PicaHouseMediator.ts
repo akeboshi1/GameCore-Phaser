@@ -1,5 +1,5 @@
 import { BasicMediator, Game } from "gamecore";
-import { BaseDataConfigManager } from "picaWorker";
+import { BaseDataConfigManager } from "../../config";
 import { op_client } from "pixelpai_proto";
 import { EventType, ModuleName } from "structure";
 import { PicaHouse } from "./PicaHouse";

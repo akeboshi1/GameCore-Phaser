@@ -1,8 +1,8 @@
 import { op_client } from "pixelpai_proto";
 import { BasicMediator, CacheDataManager, DataMgrType, Game } from "gamecore";
-import { EventType, ModuleName } from "structure";
+import { ModuleName } from "structure";
 import { PicaExploreList } from "./PicaExploreList";
-import { PicaGame } from "picaWorker";
+import { PicaGame } from "../../pica.game";
 import { BaseDataConfigManager } from "../../config";
 import { ObjectAssign } from "utils";
 
