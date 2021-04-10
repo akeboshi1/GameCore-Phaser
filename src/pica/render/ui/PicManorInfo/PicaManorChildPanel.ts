@@ -1,6 +1,6 @@
-import { BBCodeText, Button, ClickEvent, NineSliceButton } from "apowophaserui";
+import { BBCodeText, ClickEvent, NineSliceButton } from "apowophaserui";
 import { DynamicImage, InputView, Render } from "gamecoreRender";
-import { UIAtlasKey } from "picaRes";
+import { UIAtlasKey } from "../../../res";
 import { Font, Handler, i18n, Logger, UIHelper } from "utils";
 import { PicaManorBasePanel } from "./PicaManorBasePanel";
 

@@ -1,5 +1,5 @@
-import {AlertView, BasePanel, UiManager} from "gamecoreRender";
-import {ModuleName, RENDER_PEER} from "structure";
+import {AlertView, UiManager} from "gamecoreRender";
+import {ModuleName } from "structure";
 import {UIAtlasName} from "picaRes";
 import {Button, ClickEvent, Text} from "apowophaserui";
 import {Font, i18n, LogicPos} from "utils";

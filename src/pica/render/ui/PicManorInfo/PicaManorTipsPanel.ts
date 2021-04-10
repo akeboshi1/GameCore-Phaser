@@ -1,5 +1,5 @@
 import { ClickEvent, NineSliceButton } from "apowophaserui";
-import { UIAtlasKey } from "picaRes";
+import { UIAtlasKey } from "../../../res";
 import { Font, Handler, i18n } from "utils";
 import { PicaManorBasePanel } from "./PicaManorBasePanel";
 

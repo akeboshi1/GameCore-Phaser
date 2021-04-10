@@ -1,7 +1,7 @@
 import { UiManager, BasePanel } from "gamecoreRender";
-import { AtlasData, FolderType, UILoadType } from "picaRes";
+import { AtlasData, FolderType, UILoadType } from "../../res";
 import { ModuleName } from "structure";
-import { Logger, Url } from "utils";
+import { Url } from "utils";
 import { PicaRenderUiManager } from "./pica.Renderuimanager";
 export class PicaBasePanel extends BasePanel {
     protected atlasNames: Array<string | AtlasData>;

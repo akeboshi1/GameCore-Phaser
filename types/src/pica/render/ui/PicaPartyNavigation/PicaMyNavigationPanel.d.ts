@@ -1,0 +1,52 @@
+import { GameScroller } from "apowophaserui";
+import { Handler } from "utils";
+import { op_client } from "pixelpai_proto";
+import { PicaRoomListItem } from "./PicaRoomListItem";
+import { Render } from "../../pica.render";
+export declare class PicaMyNavigationPanel extends Phaser.GameObjects.Container {
+    private render;
+    static PICAMYNAVIGATIONPANEL_DATA: string;
+    roomsItems: NavigationRoomListItem[];
+    mGameScroll: GameScroller;
+    private dpr;
+    private zoom;
+    private sendHandler;
+    private curRoomItem;
+    private datas;
+    private queryType;
+    private haveCount;
+    constructor(render: Render, scene: Phaser.Scene, width: number, height: number, dpr: number, zoom: number);
+    create(): void;
+    show(): void;
+    hide(): void;
+    refreshMask(): void;
+    setHandler(handler: Handler): void;
+    setRoomDatas(content: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_SELF_ROOM_LIST): void;
+    clearDatas(): void;
+    private setGameScrollData;
+    private onPointerUpHandler;
+    private onTownItemHandler;
+    private onExtendsHandler;
+}
+declare class NavigationRoomListItem extends Phaser.GameObjects.Container {
+    dpr: number;
+    topCon: Phaser.GameObjects.Container;
+    townItems: PicaRoomListItem[];
+    private titleTex;
+    private arrow;
+    private mExtend;
+    private send;
+    private mIsExtend;
+    constructor(scene: Phaser.Scene, dpr: number, title: string);
+    setGroupData(group: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_SELF_ROOM_LIST): void;
+    setListData(datas: any): void;
+    roomList(): any;
+    checkExtendRect(pointer: any): boolean;
+    setHandler(send: Handler): void;
+    setExtend(isExtend: boolean, haveCallBack?: boolean): void;
+    get extend(): boolean;
+    getTitleName(type: number): string;
+    private openExtend;
+    private closeExtend;
+}
+export {};

@@ -1,0 +1,31 @@
+import { BasicMediator, Game } from "gamecore";
+export declare class PicaPartyNavigationMediator extends BasicMediator {
+    private mPlayerProgress;
+    private mPartyListData;
+    private tempData;
+    private chooseType;
+    constructor(game: Game);
+    show(param?: any): void;
+    hide(): void;
+    destroy(): void;
+    isSceneUI(): boolean;
+    protected panelInit(): void;
+    private onCloseHandler;
+    private on_PARTY_LIST;
+    private query_PARTY_LIST;
+    private queryEnterRoom;
+    private query_PLAYER_PROGRESS;
+    private query_PLAYER_PROGRESS_REWARD;
+    private on_PLAYER_PROGRESS;
+    private query_GET_ROOM_LIST;
+    private query_SELF_ROOM_LIST;
+    private query_ROOM_HISTORY;
+    private onRoomListHandler;
+    private onMyRoomListHandler;
+    private onEnterRoomResultHandler;
+    private onNewRoomListHandler;
+    private onNewSelfRoomListHandler;
+    private setNavigationData;
+    private get model();
+    private get config();
+}

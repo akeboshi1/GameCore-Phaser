@@ -1,0 +1,30 @@
+import { op_client } from "pixelpai_proto";
+import { EventDispatcher } from "utils";
+import { Game } from "../game";
+import { BasePacketHandler } from "./base.packet.handler";
+export declare class SceneDataManager extends BasePacketHandler {
+    private mCurRoom;
+    private mRoomID;
+    constructor(game: Game, event?: EventDispatcher);
+    clear(): void;
+    destroy(): void;
+    private onReAwardTipsHandler;
+    private openComposePanel;
+    private on_SEND_GIFT_DATA;
+    private sendOpenGiftEffect;
+    private onInitModeRoomInfo;
+    private onUpdateModeRoomInfo;
+    private onShowBlingPanel;
+    private onShowLevelUpPanel;
+    private onHIGH_QUALITY_REWARD_TIPS;
+    private on_JOB_LIST;
+    private openMineEquipUpgrade;
+    private onSHOW_GUIDE_TEXT;
+    private onShowMarketPanel;
+    private onUnlockDoneHandler;
+    get curRoomID(): string;
+    get curRoom(): op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_EDIT_MODE_ROOM_INFO;
+    private showMainUI;
+    private onSceneChangeHandler;
+    private syncItemBases;
+}

@@ -1,0 +1,32 @@
+import { Handler } from "utils";
+import { Render } from "gamecoreRender";
+export declare class PicaBusinessStreetListPanel extends Phaser.GameObjects.Container {
+    private render;
+    private gridtable;
+    private dpr;
+    private key;
+    private key2;
+    private zoom;
+    private historyHandler;
+    private rankHandler;
+    private backHandler;
+    private queryHandler;
+    private enterHandler;
+    private secondaryPanel;
+    private curCategoryType;
+    private subCategory;
+    private curSubCategoryItem;
+    constructor(scene: Phaser.Scene, render: Render, x: number, y: number, width: number, height: number, dpr: number, zoom: number, key: string, key2: string);
+    setIndustryModels(content: any): void;
+    setStreetListData(datas: any[]): void;
+    setHandler(history: Handler, rank: Handler, back: Handler, query: Handler, enter: Handler): void;
+    resetMask(): void;
+    protected create(): void;
+    private createGrideTable;
+    private onCategoryHandler;
+    private onSubCategoryHandle;
+    private onSelectItemHandler;
+    private onHistoryHandler;
+    private onRankHandler;
+    private onBackHandler;
+}

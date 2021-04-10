@@ -1,6 +1,6 @@
 import { NineSlicePatch, Button, ClickEvent, TabButton, NineSliceButton, GameGridTable } from "apowophaserui";
 import { DynamicImage, ImageValue, ThreeSliceButton } from "gamecoreRender";
-import { UIAtlasKey } from "picaRes";
+import { UIAtlasKey } from "../../../res";
 import { Coin, Color, Font, Handler, i18n, UIHelper, Url } from "utils";
 import { SecondaryMenuPanel } from "../PicaBusinessStreet/SecondaryMenuPanel";
 export class PicaManorShopPanel extends Phaser.GameObjects.Container {

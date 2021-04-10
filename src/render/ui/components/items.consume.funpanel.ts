@@ -1,10 +1,8 @@
-import { op_client } from "pixelpai_proto";
 import { DynamicImage } from "./dynamic.image";
 import { NineSliceButton, Button, GameScroller, ClickEvent, BBCodeText } from "apowophaserui";
 import { ItemInfoTips } from "./tips/ItemInfoTips";
 import { Font, Handler, i18n, Url } from "utils";
 import { UIAtlasKey } from "picaRes";
-import { ICountablePackageItem } from "picaStructure";
 
 export class ItemsConsumeFunPanel extends Phaser.GameObjects.Container {
     private confirmBtn: NineSliceButton;
@@ -53,7 +51,7 @@ export class ItemsConsumeFunPanel extends Phaser.GameObjects.Container {
         if (this.havebutton && buttontex !== undefined)
             this.confirmBtn.setText(buttontex);
     }
-    public setItemDatas(datas: ICountablePackageItem[]) {
+    public setItemDatas(datas: any[]) {
         this.gameScroll.visible = true;
         this.gameScroll.clearItems(false);
         for (const item of this.materialItems) {
@@ -224,7 +222,7 @@ export class ItemsConsumeFunPanel extends Phaser.GameObjects.Container {
     }
 }
 class MaterialItem extends Phaser.GameObjects.Container {
-    public itemData: ICountablePackageItem;
+    public itemData: any;
     private readonly dpr: number;
     private itemIcon: DynamicImage;
     private itemCount: BBCodeText;
@@ -242,7 +240,7 @@ class MaterialItem extends Phaser.GameObjects.Container {
         this.setSize(this.bg.width, this.bg.height);
         this.itemCount.y = this.height * 0.5 + 8 * dpr;
     }
-    public setItemData(data: ICountablePackageItem) {
+    public setItemData(data: any) {
         this.itemData = data;
         this.itemCount.text = this.getCountText(data.count, data.neededCount);
         const url = Url.getOsdRes(data.texturePath);

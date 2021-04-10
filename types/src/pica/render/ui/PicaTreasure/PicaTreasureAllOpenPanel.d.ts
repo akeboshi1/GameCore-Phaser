@@ -1,0 +1,38 @@
+import { Handler } from "utils";
+export declare class PicaTreasureAllOpenPanel extends Phaser.GameObjects.Container {
+    private confirmBtn;
+    private titleimage;
+    private content;
+    private maskGraphic;
+    private lightSprite;
+    private starSprite;
+    private dpr;
+    private zoom;
+    private key;
+    private treasureData;
+    private closeHandler;
+    private lightAniKey;
+    private starAniKey;
+    private curLayoutGroup;
+    private indexed;
+    private isDispose;
+    private tweens;
+    private maskWidth;
+    private maskHeight;
+    constructor(scene: Phaser.Scene, width: number, height: number, key: string, dpr: number, zoom: number);
+    resize(w: number, h: number): void;
+    addListen(): void;
+    removeListen(): void;
+    init(): void;
+    setHandler(close: Handler): void;
+    destroy(): void;
+    setTreasureData(datas: any[]): void;
+    private setLayoutPanel;
+    private playAnimation;
+    private playItemTween;
+    private playPageCount;
+    private getNextDatas;
+    private createLayoutGroup;
+    private createSprite;
+    private onConfirmBtnClick;
+}

@@ -1,13 +1,4 @@
 import { BaseConfigData, BaseConfigManager, Game } from "gamecore";
-import {
-    ICountablePackageItem,
-    IElement,
-    IExploreChapterData,
-    IExploreLevelData,
-    IExtendCountablePackageItem,
-    IFurnitureGroup,
-    IScene
-} from "picaStructure";
 import { IMarketCommodity, IShopBase } from "../../structure/imarketcommodity";
 import { Logger, ObjectAssign, StringUtils } from "utils";
 import { ElementDataConfig } from "./element.data.config";
@@ -77,7 +68,7 @@ export class BaseDataConfigManager extends BaseConfigManager {
      * @param data
      * @returns
      */
-    public getItemBaseBySN(data: string): ICountablePackageItem | IExtendCountablePackageItem {
+    public getItemBaseBySN(data: string): any {
         const config: ItemBaseDataConfig = this.getConfig(BaseDataType.item);
         const item = config.getBySN(data);
         this.checkItemData(item);
@@ -89,7 +80,7 @@ export class BaseDataConfigManager extends BaseConfigManager {
      * @param data
      * @returns
      */
-    public getItemBaseByID(data: string): ICountablePackageItem | IExtendCountablePackageItem {
+    public getItemBaseByID(data: string): any {
         const config: ItemBaseDataConfig = this.getConfig(BaseDataType.item);
         const item = config.getByID(data);
         this.checkItemData(item);
@@ -158,7 +149,7 @@ export class BaseDataConfigManager extends BaseConfigManager {
      * @param id
      * @returns
      */
-    public getChapterData(id: number): IExploreChapterData {
+    public getChapterData(id: number): any {
         const data: ExploreDataConfig = this.getConfig(BaseDataType.explore);
         const chapter = data.getChapter(id);
         if (chapter && !chapter["find"]) {
@@ -174,7 +165,7 @@ export class BaseDataConfigManager extends BaseConfigManager {
      * @param id
      * @returns
      */
-    public getExploreLevelData(id: number): IExploreLevelData {
+    public getExploreLevelData(id: number): any {
         const data: ExploreDataConfig = this.getConfig(BaseDataType.explore);
         const level = data.getLevel(id);
         if (level && !level["find"]) {
@@ -196,7 +187,7 @@ export class BaseDataConfigManager extends BaseConfigManager {
      * @param id
      * @returns
      */
-    public getElementData(id: string): IElement {
+    public getElementData(id: string): any {
         const data: ElementDataConfig = this.getConfig(BaseDataType.element);
         const element = data.get(id);
         return element;
@@ -507,7 +498,7 @@ export class BaseDataConfigManager extends BaseConfigManager {
         const dataTypes = [BaseDataType.minescene, BaseDataType.publicscene];
         for (const dataType of dataTypes) {
             const config: SceneConfig = this.getConfig(dataType);
-            const data: IScene = config.get(id);
+            const data = config.get(id);
             if (data) {
                 return data;
             }
@@ -557,7 +548,7 @@ export class BaseDataConfigManager extends BaseConfigManager {
      */
     public getFurnitureGroup(id: string) {
         const data: FurnitureGroup = this.getConfig(BaseDataType.furnituregroup);
-        const group: IFurnitureGroup = data.get(id);
+        const group = data.get(id);
         if (group) {
             const obj: any = {};
             ObjectAssign.excludeAssign(obj, group);
@@ -674,7 +665,7 @@ export class BaseDataConfigManager extends BaseConfigManager {
         return url;
     }
 
-    private checkItemData(item: ICountablePackageItem) {
+    private checkItemData(item: any) {
         if (!item || item["find"]) {
             return;
         }
