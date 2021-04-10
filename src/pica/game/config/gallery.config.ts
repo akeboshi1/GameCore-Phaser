@@ -1,5 +1,5 @@
 import { BaseConfigData } from "gamecore";
-import { IGalleryCombination, IGalleryLevel } from "picaStructure";
+import { IGalleryCombination, IGalleryLevel } from "../../structureture";
 import { Logger } from "utils";
 export class GalleryConfig extends BaseConfigData {
 

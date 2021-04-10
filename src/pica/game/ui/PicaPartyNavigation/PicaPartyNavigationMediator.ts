@@ -3,7 +3,7 @@ import { PicaPartyNavigation } from "./PicaPartyNavigation";
 import { BasicMediator, Game } from "gamecore";
 import { ModuleName } from "structure";
 import { BaseDataConfigManager } from "picaWorker";
-import { IScene } from "picaStructure";
+import { IScene } from "../../structureture";
 export class PicaPartyNavigationMediator extends BasicMediator {
     private mPlayerProgress: any;
     private mPartyListData: any;

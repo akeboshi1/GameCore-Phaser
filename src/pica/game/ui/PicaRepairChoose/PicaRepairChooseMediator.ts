@@ -4,7 +4,7 @@ import { ConnectState, EventType, ModuleName } from "structure";
 import { BaseDataConfigManager } from "picaWorker";
 import { ObjectAssign } from "utils";
 import { PicaRepairChoose } from "./PicaRepairChoose";
-import { IFurnitureGroup } from "picaStructure";
+import { IFurnitureGroup } from "../../structureture";
 
 export class PicaRepairChooseMediator extends BasicMediator {
     protected mModel: PicaRepairChoose;

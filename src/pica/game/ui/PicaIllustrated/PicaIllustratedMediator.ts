@@ -3,7 +3,7 @@ import { BasicMediator, CacheDataManager, DataMgrType, Game } from "gamecore";
 import { EventType, ModuleName } from "structure";
 import { BaseDataConfigManager, GalleryType } from "../../config";
 import { PicaIllustrated } from "./PicaIllustrated";
-import { IGalleryCombination, IGalleryLevel } from "picaStructure";
+import { IGalleryCombination, IGalleryLevel } from "../../../structure";
 export class PicaIllustratedMediator extends BasicMediator {
     protected mModel: PicaIllustrated;
     private mScneType: op_def.SceneTypeEnum;

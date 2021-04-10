@@ -1,5 +1,5 @@
 import { BaseConfigData } from "gamecore";
-import { IScene } from "picaStructure";
+import { IScene } from "../../structureture";
 import { Logger } from "utils";
 export class SceneConfig extends BaseConfigData {
     public sceneMap: Map<string, IScene[]> = new Map();

@@ -3,7 +3,7 @@ import { PicaFurniFun } from "./PicaFurniFun";
 import { EventType, ISprite, ModuleName } from "structure";
 import { BaseDataManager, BasicMediator, DataMgrType, Game } from "gamecore";
 import { BaseDataConfigManager } from "../../config";
-import { ICountablePackageItem } from "picaStructure";
+import { ICountablePackageItem } from "../../structureture";
 import { ObjectAssign } from "utils";
 
 export class PicaFurniFunMediator extends BasicMediator {

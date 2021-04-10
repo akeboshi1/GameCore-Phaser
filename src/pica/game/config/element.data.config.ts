@@ -1,5 +1,5 @@
 import { BaseConfigData } from "gamecore";
-import { IAnimation, IAnimationData, IElement } from "picaStructure";
+import { IAnimation, IAnimationData, IElement } from "../../structure";
 import { Logger } from "utils";
 
 export class ElementDataConfig extends BaseConfigData {

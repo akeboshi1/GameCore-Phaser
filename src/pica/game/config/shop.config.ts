@@ -1,5 +1,5 @@
 import { BaseConfigData } from "gamecore";
-import { IMarketCommodity, IShopBase } from "picaStructure";
+import { IMarketCommodity, IShopBase } from "../../structureture";
 import { Logger } from "utils";
 export class ShopConfig extends BaseConfigData {
 

@@ -4,7 +4,7 @@ import { EventType, ModuleName } from "structure";
 import { IJob } from "src/pica/structure/ijob";
 import { BaseDataConfigManager } from "picaWorker";
 import { PicaSurvey } from "./PicaSurvey";
-import { ICountablePackageItem } from "picaStructure";
+import { ICountablePackageItem } from "../../structureture";
 export class PicaSurveyMediator extends BasicMediator {
     protected mModel: PicaSurvey;
     private mPlayerInfo: PlayerProperty;
