@@ -1,0 +1,37 @@
+import { UiManager, BasePanel } from "gamecoreRender";
+export declare class CreateRolePanel extends BasePanel {
+    private mFoot;
+    private mBackgroundColor;
+    private mBackground;
+    private mSubmit;
+    private mInputTextBg;
+    private inputText;
+    private mPrePageBtn;
+    private mNextPageBtn;
+    private mRandomBtn;
+    private mError;
+    private mErrorBg;
+    private dragonbones;
+    private avatars;
+    private mCurPageNum;
+    private mMediator;
+    constructor(uiManager: UiManager);
+    show(param: any): void;
+    preload(): void;
+    hide(): void;
+    resize(wid: number, hei: number): void;
+    init(): void;
+    setAvatars(avatars: any): void;
+    showError(msg: string): void;
+    setNickName(val: string): void;
+    destroy(): void;
+    private creatAvatars;
+    private onRandomNameHandler;
+    private onSubmitHandler;
+    private onPrePageHandler;
+    private onNextPageHandler;
+    private setPageNum;
+    private onResize;
+    private loadDragonbonesComplete;
+    get mediator(): any;
+}

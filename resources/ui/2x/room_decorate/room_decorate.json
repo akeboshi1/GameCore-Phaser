@@ -1,0 +1,295 @@
+{
+	"frames": {
+		"room_decorate_Furniture.png": {
+			"frame": {
+				"x": 1,
+				"y": 1,
+				"w": 128,
+				"h": 71
+			},
+			"rotated": false,
+			"trimmed": false,
+			"spriteSourceSize": {
+				"x": 0,
+				"y": 0,
+				"w": 128,
+				"h": 71
+			},
+			"sourceSize": {
+				"w": 128,
+				"h": 71
+			}
+		},
+		"room_decorate_Spin.png": {
+			"frame": {
+				"x": 131,
+				"y": 1,
+				"w": 124,
+				"h": 88
+			},
+			"rotated": false,
+			"trimmed": false,
+			"spriteSourceSize": {
+				"x": 0,
+				"y": 0,
+				"w": 124,
+				"h": 88
+			},
+			"sourceSize": {
+				"w": 124,
+				"h": 88
+			}
+		},
+		"room_decorate_closed.png": {
+			"frame": {
+				"x": 257,
+				"y": 1,
+				"w": 88,
+				"h": 88
+			},
+			"rotated": false,
+			"trimmed": false,
+			"spriteSourceSize": {
+				"x": 0,
+				"y": 0,
+				"w": 88,
+				"h": 88
+			},
+			"sourceSize": {
+				"w": 88,
+				"h": 88
+			}
+		},
+		"room_decorate_confirm.png": {
+			"frame": {
+				"x": 347,
+				"y": 1,
+				"w": 124,
+				"h": 88
+			},
+			"rotated": false,
+			"trimmed": false,
+			"spriteSourceSize": {
+				"x": 0,
+				"y": 0,
+				"w": 124,
+				"h": 88
+			},
+			"sourceSize": {
+				"w": 124,
+				"h": 88
+			}
+		},
+		"room_decorate_delete.png": {
+			"frame": {
+				"x": 473,
+				"y": 1,
+				"w": 71,
+				"h": 71
+			},
+			"rotated": false,
+			"trimmed": false,
+			"spriteSourceSize": {
+				"x": 0,
+				"y": 0,
+				"w": 71,
+				"h": 71
+			},
+			"sourceSize": {
+				"w": 71,
+				"h": 71
+			}
+		},
+		"room_decorate_icon_default.png": {
+			"frame": {
+				"x": 546,
+				"y": 1,
+				"w": 78,
+				"h": 77
+			},
+			"rotated": false,
+			"trimmed": false,
+			"spriteSourceSize": {
+				"x": 0,
+				"y": 0,
+				"w": 78,
+				"h": 77
+			},
+			"sourceSize": {
+				"w": 78,
+				"h": 77
+			}
+		},
+		"room_decorate_icon_select.png": {
+			"frame": {
+				"x": 626,
+				"y": 1,
+				"w": 78,
+				"h": 77
+			},
+			"rotated": false,
+			"trimmed": false,
+			"spriteSourceSize": {
+				"x": 0,
+				"y": 0,
+				"w": 78,
+				"h": 77
+			},
+			"sourceSize": {
+				"w": 78,
+				"h": 77
+			}
+		},
+		"room_decorate_line.png": {
+			"frame": {
+				"x": 1,
+				"y": 91,
+				"w": 719,
+				"h": 3
+			},
+			"rotated": false,
+			"trimmed": false,
+			"spriteSourceSize": {
+				"x": 0,
+				"y": 0,
+				"w": 719,
+				"h": 3
+			},
+			"sourceSize": {
+				"w": 719,
+				"h": 3
+			}
+		},
+		"room_decorate_operating.png": {
+			"frame": {
+				"x": 1,
+				"y": 96,
+				"w": 150,
+				"h": 71
+			},
+			"rotated": false,
+			"trimmed": false,
+			"spriteSourceSize": {
+				"x": 0,
+				"y": 0,
+				"w": 150,
+				"h": 71
+			},
+			"sourceSize": {
+				"w": 150,
+				"h": 71
+			}
+		},
+		"room_decorate_previous.png": {
+			"frame": {
+				"x": 153,
+				"y": 96,
+				"w": 30,
+				"h": 51
+			},
+			"rotated": false,
+			"trimmed": false,
+			"spriteSourceSize": {
+				"x": 0,
+				"y": 0,
+				"w": 30,
+				"h": 51
+			},
+			"sourceSize": {
+				"w": 30,
+				"h": 51
+			}
+		},
+		"room_decorate_put.png": {
+			"frame": {
+				"x": 185,
+				"y": 96,
+				"w": 124,
+				"h": 88
+			},
+			"rotated": false,
+			"trimmed": false,
+			"spriteSourceSize": {
+				"x": 0,
+				"y": 0,
+				"w": 124,
+				"h": 88
+			},
+			"sourceSize": {
+				"w": 124,
+				"h": 88
+			}
+		},
+		"room_decorate_save.png": {
+			"frame": {
+				"x": 311,
+				"y": 96,
+				"w": 86,
+				"h": 86
+			},
+			"rotated": false,
+			"trimmed": false,
+			"spriteSourceSize": {
+				"x": 0,
+				"y": 0,
+				"w": 86,
+				"h": 86
+			},
+			"sourceSize": {
+				"w": 86,
+				"h": 86
+			}
+		},
+		"room_decorate_tiled.png": {
+			"frame": {
+				"x": 399,
+				"y": 96,
+				"w": 88,
+				"h": 87
+			},
+			"rotated": false,
+			"trimmed": false,
+			"spriteSourceSize": {
+				"x": 0,
+				"y": 0,
+				"w": 88,
+				"h": 87
+			},
+			"sourceSize": {
+				"w": 88,
+				"h": 87
+			}
+		},
+		"room_decorate_withdraw.png": {
+			"frame": {
+				"x": 489,
+				"y": 96,
+				"w": 71,
+				"h": 71
+			},
+			"rotated": false,
+			"trimmed": false,
+			"spriteSourceSize": {
+				"x": 0,
+				"y": 0,
+				"w": 71,
+				"h": 71
+			},
+			"sourceSize": {
+				"w": 71,
+				"h": 71
+			}
+		}
+	},
+	"meta": {
+		"app": "http://www.codeandweb.com/texturepacker",
+		"version": "1.0",
+		"image": "spritesheet.png",
+		"format": "RGBA8888",
+		"size": {
+			"w": 721,
+			"h": 185
+		},
+		"scale": "1"
+	}
+}

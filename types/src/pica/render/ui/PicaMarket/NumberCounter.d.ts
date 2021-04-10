@@ -1,0 +1,36 @@
+export declare class NumberCounter extends Phaser.GameObjects.Container {
+    private mBackground;
+    private mReduceBtn;
+    private mIncreaseBtn;
+    private mLabelInput;
+    private readonly pressDelay;
+    private pressTimeout;
+    private tween;
+    private mMinNum;
+    private mMaxNum;
+    private zoom;
+    private mRectangle;
+    private itemType;
+    constructor(scene: Phaser.Scene, key: string, x?: number, y?: number, dpr?: number, zoom?: number);
+    resize(): void;
+    setMinNumber(val: number): void;
+    setMaxNumber(val: number): void;
+    addActionListener(): void;
+    removeActionListener(): void;
+    setCounter(num: number): void;
+    setItemType(type: string): void;
+    setBlur(): void;
+    destroy(): void;
+    get number(): number;
+    private onReduceHandler;
+    private onIncreaseHandler;
+    private onTextChangeHandler;
+    private onTextBlurHandler;
+    private onReduceDownHandler;
+    private onIncreaseDownHandler;
+    private delayTweenNumber;
+    private clearTween;
+    private pointerDownHandler;
+    private onFocusHandler;
+    private checkPointerInBounds;
+}

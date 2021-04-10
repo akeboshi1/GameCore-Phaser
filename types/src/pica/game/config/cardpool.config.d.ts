@@ -1,0 +1,104 @@
+import { BaseConfigData } from "gamecore";
+import { ICardPool } from "src/pica/structure/icardpool";
+export declare class CardPoolConfig extends BaseConfigData {
+    pools: any[];
+    get(id: string): ICardPool;
+    parseJson(json: any): void;
+    protected get testData(): {
+        CP0000001: {
+            className: string;
+            id: string;
+            tokenId: string;
+            price: number;
+            unitPrice: number;
+            alterTokenId: string;
+            drawTime: number;
+            freeCycleHours: number;
+            rewardId: string;
+            picaStarCount: number;
+            cardPoolGroup: number;
+            coverPath: string;
+            backPath: string;
+        };
+        CP0000002: {
+            className: string;
+            id: string;
+            tokenId: string;
+            price: number;
+            unitPrice: number;
+            alterTokenId: string;
+            drawTime: number;
+            freeCycleHours: number;
+            rewardId: string;
+            rewardIdHigh: string;
+            rewardHighTime: number;
+            progressReward: string;
+            picaStarCount: number;
+            cardPoolGroup: number;
+            coverPath: string;
+            backPath: string;
+        };
+        CP0000003: {
+            className: string;
+            id: string;
+            tokenId: string;
+            price: number;
+            unitPrice: number;
+            alterTokenId: string;
+            drawTime: number;
+            rewardId: string;
+            picaStarCount: number;
+            cardPoolGroup: number;
+            coverPath: string;
+            backPath: string;
+        };
+        CP0000004: {
+            className: string;
+            id: string;
+            tokenId: string;
+            price: number;
+            unitPrice: number;
+            alterTokenId: string;
+            drawTime: number;
+            rewardId: string;
+            rewardIdHigh: string;
+            rewardHighTime: number;
+            progressReward: string;
+            picaStarCount: number;
+            cardPoolGroup: number;
+            coverPath: string;
+            backPath: string;
+        };
+        CP0000005: {
+            className: string;
+            id: string;
+            tokenId: string;
+            price: number;
+            unitPrice: number;
+            alterTokenId: string;
+            drawTime: number;
+            rewardId: string;
+            picaStarCount: number;
+            cardPoolGroup: number;
+            coverPath: string;
+            backPath: string;
+        };
+        CP0000006: {
+            className: string;
+            id: string;
+            tokenId: string;
+            price: number;
+            unitPrice: number;
+            alterTokenId: string;
+            drawTime: number;
+            rewardId: string;
+            rewardIdHigh: string;
+            rewardHighTime: number;
+            progressReward: string;
+            picaStarCount: number;
+            cardPoolGroup: number;
+            coverPath: string;
+            backPath: string;
+        };
+    };
+}

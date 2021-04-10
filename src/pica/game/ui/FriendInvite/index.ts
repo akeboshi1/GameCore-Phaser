@@ -1,0 +1,1 @@
+export { FriendInviteMediator } from "./FriendInviteMediator";

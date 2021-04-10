@@ -1,0 +1,31 @@
+import { op_client } from "pixelpai_proto";
+import { BasePanel, UiManager } from "gamecoreRender";
+export declare class PicaHousePanel extends BasePanel {
+    private content;
+    private mBackground;
+    private bg;
+    private closeShopBtn;
+    private closeBtn;
+    private roomInfoBtn;
+    private roomSettingBtn;
+    private topCheckBox;
+    private houseInfoPanel;
+    private mRoomInfoData;
+    private itemsPanel;
+    constructor(uiManager: UiManager);
+    resize(w: number, h: number): void;
+    show(param?: any): void;
+    hide(): void;
+    addListen(): void;
+    removeListen(): void;
+    destroy(): void;
+    setRoomInfoData(content: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_EDIT_MODE_ROOM_INFO, isSelf?: boolean): void;
+    on_REFURBISH_REQUIREMENTS(content: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_QUERY_ROOM_REFURBISH_REQUIREMENTS): void;
+    protected preload(): void;
+    protected init(): void;
+    private updateData;
+    private onTabBtnHandler;
+    private createTabButton;
+    private onCloseShopHandler;
+    private onCloseHandler;
+}

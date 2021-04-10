@@ -1,0 +1,35 @@
+import { op_client } from "pixelpai_proto";
+import { BasePanel, UiManager } from "gamecoreRender";
+import { FriendChannel, FriendRelation } from "structure";
+export declare class PicaFriendPanel extends BasePanel {
+    private uiManager;
+    private bg;
+    private closeBtn;
+    private content;
+    private friendContainer;
+    private mBackGround;
+    private mShowingSubContainer;
+    private mSubContanerMap;
+    constructor(uiManager: UiManager);
+    resize(width: number, height: number): void;
+    show(param?: any): void;
+    hide(): void;
+    addListen(): void;
+    removeListen(): void;
+    setFriend(type: FriendChannel, friends: any[]): void;
+    updateFriend(content: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_PKT_PLAYER_LIST): void;
+    updateRelation(relations: FriendRelation[]): void;
+    filterById(id: string): void;
+    fetchCurrentFriend(): void;
+    preload(): void;
+    init(): void;
+    destroy(): void;
+    private OnClosePanel;
+    private onFetchFriendHandler;
+    private onReqFriendAttributesHandler;
+    private onShowAddFriendHandler;
+    private onHideSearchHandler;
+    private onReqFriendListHandler;
+    private onRendererEventHandler;
+    private onReqFriendRelationHandler;
+}

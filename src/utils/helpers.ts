@@ -1,6 +1,6 @@
 import * as Chance from "chance";
 
-export default class Helpers {
+export class Helpers {
     static readonly MAX_ID: number = Math.pow(2, 31);
     static genId(): number {
         return new Chance().natural({
@@ -23,5 +23,10 @@ export default class Helpers {
             }
         }
         return result;
+    }
+
+    static openUrl(url: string) {
+        const tempwindow = window.open("", "_blank"); // 先打开页面
+        if (tempwindow) tempwindow.location.href = url; // 后更改页面地址
     }
 }

@@ -1,0 +1,30 @@
+import { ButtonEventDispatcher, DynamicImage } from "../../../../render/ui/components";
+import { IPos } from "utils";
+import { ICountablePackageItem } from "picaStructure";
+export declare class ItemButton extends ButtonEventDispatcher {
+    itemData: ICountablePackageItem;
+    protected dpr: number;
+    protected zoom: number;
+    protected itemIcon: DynamicImage;
+    protected bg: Phaser.GameObjects.Image;
+    protected selectbg: Phaser.GameObjects.Image;
+    protected countTex: Phaser.GameObjects.Text;
+    protected starImg: Phaser.GameObjects.Image;
+    protected bgFrame: string;
+    protected selectFrame: string;
+    protected rarityFrame: string;
+    protected key: string;
+    protected isShowTips: boolean;
+    constructor(scene: Phaser.Scene, key: string, bg: string, dpr: number, zoom: number, enable: boolean);
+    setStateFrames(bg: string, rarity: string): void;
+    setBGTexture(key: string, frame: string): void;
+    setIconTexture(key: string, frame: string, visible?: boolean): void;
+    setShowTips(show: boolean): void;
+    setItemData(itemData: ICountablePackageItem | any, alldisplay?: boolean): void;
+    set select(value: any);
+    set BGVisible(value: any);
+    set countTextColor(color: string);
+    set countTextOffset(pos: IPos);
+    showTips(): void;
+    protected onTabClickHandler(): void;
+}

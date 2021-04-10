@@ -1,5 +1,4 @@
-export class Size extends Phaser.Structs.Size {
-    constructor(width?: number, height?: number) {
-        super(width, height);
+export class Size {
+    constructor(public width?: number, public height?: number) {
     }
 }

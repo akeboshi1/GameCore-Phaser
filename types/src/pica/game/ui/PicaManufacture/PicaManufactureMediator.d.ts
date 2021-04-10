@@ -1,0 +1,31 @@
+import { BasicMediator, Game } from "gamecore";
+import { PicaManufacture } from "./PicaManufacture";
+export declare class PicaManufactureMediator extends BasicMediator {
+    protected mModel: PicaManufacture;
+    private mScneType;
+    constructor(game: Game);
+    show(param?: any): void;
+    hide(): void;
+    destroy(): void;
+    get bag(): import("../../../../game").PlayerBag;
+    get userData(): import("../../../../game").UserDataManager;
+    protected _show(): void;
+    protected panelInit(): void;
+    private onCloseHandler;
+    private addLisenter;
+    private removeLisenter;
+    private onSyncFinishHandler;
+    private onUpdateHandler;
+    private onUpdatePlayerInfoHandler;
+    private onRetComposeHandler;
+    private queryFuriCompose;
+    private queryFuriPackageByStar;
+    private onRetRescateHandler;
+    private onRetRescateListHandler;
+    private queryRecaste;
+    private queryFuriListByStar;
+    private queryRecastCategories;
+    private setRecasteCategories;
+    private onQueryPackage;
+    private get cacheMgr();
+}

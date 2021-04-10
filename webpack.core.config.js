@@ -6,7 +6,6 @@ const ConfigWebpackPlugin = require("config-webpack");
 const CopyWebpackPlugin = require("copy-webpack-plugin");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const TSLintPlugin = require("tslint-webpack-plugin");
-const TerserPlugin = require("terser-webpack-plugin");
 const appVer = require("./version");
 
 const config = {

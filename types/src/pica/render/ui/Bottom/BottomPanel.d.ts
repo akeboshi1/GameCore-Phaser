@@ -1,0 +1,37 @@
+import { UiManager } from "gamecoreRender";
+import { PicaBasePanel } from "../pica.base.panel";
+export declare class BottomPanel extends PicaBasePanel {
+    private mNavigate;
+    private mOutput;
+    private mInput;
+    private resizeColtroll;
+    private chatCatchArr;
+    private chatMaxLen;
+    private expanded;
+    private scaleRatio;
+    private background;
+    constructor(uiManager: UiManager);
+    show(param?: any): void;
+    resize(w: number, h: number): void;
+    updateUIState(datas: any): void;
+    addListen(): void;
+    removeListen(): void;
+    appendChat(val: string): void;
+    preload(): void;
+    showKeyboard(width: number, height: number): void;
+    hideKeyboard(): void;
+    getInputFocusing(): boolean;
+    exitUser(): void;
+    get navigatePanel(): Phaser.GameObjects.Container;
+    protected onShow(): void;
+    protected onHide(): void;
+    protected init(): void;
+    private checkUpdateActive;
+    private sendChat;
+    private onSendMsgHandler;
+    private onNavigateHandler;
+    private onToggleSizeHandler;
+    private onPointerSceneHandler;
+    private updateOutputLayout;
+    get mediator(): any;
+}

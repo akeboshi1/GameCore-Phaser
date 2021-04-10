@@ -1,68 +1,28 @@
 {
 	"frames": {
-		"Mana": {
+		"bg": {
 			"frame": {
 				"x": 1,
 				"y": 1,
-				"w": 44,
-				"h": 36
+				"w": 608,
+				"h": 1108
 			},
 			"rotated": false,
 			"trimmed": false,
 			"spriteSourceSize": {
 				"x": 0,
 				"y": 0,
-				"w": 44,
-				"h": 36
+				"w": 608,
+				"h": 1108
 			},
 			"sourceSize": {
-				"w": 44,
-				"h": 36
-			}
-		},
-		"aggressivity": {
-			"frame": {
-				"x": 47,
-				"y": 1,
-				"w": 34,
-				"h": 30
-			},
-			"rotated": false,
-			"trimmed": false,
-			"spriteSourceSize": {
-				"x": 0,
-				"y": 0,
-				"w": 34,
-				"h": 30
-			},
-			"sourceSize": {
-				"w": 34,
-				"h": 30
-			}
-		},
-		"bg": {
-			"frame": {
-				"x": 83,
-				"y": 1,
-				"w": 542,
-				"h": 1100
-			},
-			"rotated": false,
-			"trimmed": false,
-			"spriteSourceSize": {
-				"x": 0,
-				"y": 0,
-				"w": 542,
-				"h": 1100
-			},
-			"sourceSize": {
-				"w": 542,
-				"h": 1100
+				"w": 608,
+				"h": 1108
 			}
 		},
 		"button_g": {
 			"frame": {
-				"x": 627,
+				"x": 611,
 				"y": 1,
 				"w": 68,
 				"h": 68
@@ -82,7 +42,7 @@
 		},
 		"edit": {
 			"frame": {
-				"x": 697,
+				"x": 681,
 				"y": 1,
 				"w": 26,
 				"h": 26
@@ -98,72 +58,32 @@
 			"sourceSize": {
 				"w": 26,
 				"h": 26
-			}
-		},
-		"health": {
-			"frame": {
-				"x": 725,
-				"y": 1,
-				"w": 32,
-				"h": 28
-			},
-			"rotated": false,
-			"trimmed": false,
-			"spriteSourceSize": {
-				"x": 0,
-				"y": 0,
-				"w": 32,
-				"h": 28
-			},
-			"sourceSize": {
-				"w": 32,
-				"h": 28
 			}
 		},
 		"level_bg": {
 			"frame": {
-				"x": 697,
-				"y": 31,
-				"w": 76,
-				"h": 35
-			},
-			"rotated": false,
-			"trimmed": false,
-			"spriteSourceSize": {
-				"x": 0,
-				"y": 0,
-				"w": 76,
-				"h": 35
-			},
-			"sourceSize": {
-				"w": 76,
-				"h": 35
-			}
-		},
-		"magic": {
-			"frame": {
-				"x": 775,
+				"x": 709,
 				"y": 1,
-				"w": 34,
-				"h": 34
+				"w": 76,
+				"h": 35
 			},
 			"rotated": false,
 			"trimmed": false,
 			"spriteSourceSize": {
 				"x": 0,
 				"y": 0,
-				"w": 34,
-				"h": 34
+				"w": 76,
+				"h": 35
 			},
 			"sourceSize": {
-				"w": 34,
-				"h": 34
+				"w": 76,
+				"h": 35
 			}
 		},
 		"more": {
 			"frame": {
-				"x": 47,
-				"y": 37,
+				"x": 787,
+				"y": 1,
 				"w": 34,
 				"h": 7
 			},
@@ -182,8 +102,8 @@
 		},
 		"operate": {
 			"frame": {
-				"x": 697,
-				"y": 68,
+				"x": 681,
+				"y": 38,
 				"w": 117,
 				"h": 38
 			},
@@ -202,8 +122,8 @@
 		},
 		"praise_aft": {
 			"frame": {
-				"x": 775,
-				"y": 37,
+				"x": 823,
+				"y": 1,
 				"w": 26,
 				"h": 26
 			},
@@ -222,8 +142,8 @@
 		},
 		"praise_bef": {
 			"frame": {
-				"x": 1,
-				"y": 108,
+				"x": 800,
+				"y": 29,
 				"w": 32,
 				"h": 32
 			},
@@ -242,8 +162,8 @@
 		},
 		"skill_bg": {
 			"frame": {
-				"x": 816,
-				"y": 1,
+				"x": 611,
+				"y": 78,
 				"w": 195,
 				"h": 95
 			},
@@ -262,8 +182,8 @@
 		},
 		"slider_bg": {
 			"frame": {
-				"x": 1,
-				"y": 98,
+				"x": 834,
+				"y": 29,
 				"w": 16,
 				"h": 8
 			},
@@ -282,8 +202,8 @@
 		},
 		"slider_rate": {
 			"frame": {
-				"x": 759,
-				"y": 1,
+				"x": 681,
+				"y": 29,
 				"w": 14,
 				"h": 6
 			},
@@ -298,32 +218,12 @@
 			"sourceSize": {
 				"w": 14,
 				"h": 6
-			}
-		},
-		"speed": {
-			"frame": {
-				"x": 35,
-				"y": 98,
-				"w": 41,
-				"h": 36
-			},
-			"rotated": false,
-			"trimmed": false,
-			"spriteSourceSize": {
-				"x": 0,
-				"y": 0,
-				"w": 41,
-				"h": 36
-			},
-			"sourceSize": {
-				"w": 41,
-				"h": 36
 			}
 		},
 		"splitters": {
 			"frame": {
-				"x": 1,
-				"y": 1103,
+				"x": 851,
+				"y": 1,
 				"w": 462,
 				"h": 1
 			},
@@ -338,32 +238,12 @@
 			"sourceSize": {
 				"w": 462,
 				"h": 1
-			}
-		},
-		"strength": {
-			"frame": {
-				"x": 627,
-				"y": 98,
-				"w": 26,
-				"h": 34
-			},
-			"rotated": false,
-			"trimmed": false,
-			"spriteSourceSize": {
-				"x": 0,
-				"y": 0,
-				"w": 26,
-				"h": 34
-			},
-			"sourceSize": {
-				"w": 26,
-				"h": 34
 			}
 		},
 		"test_skillicon": {
 			"frame": {
-				"x": 816,
-				"y": 98,
+				"x": 852,
+				"y": 4,
 				"w": 66,
 				"h": 74
 			},
@@ -382,8 +262,8 @@
 		},
 		"title_normal": {
 			"frame": {
-				"x": 884,
-				"y": 98,
+				"x": 920,
+				"y": 4,
 				"w": 122,
 				"h": 54
 			},
@@ -402,8 +282,8 @@
 		},
 		"title_select": {
 			"frame": {
-				"x": 627,
-				"y": 154,
+				"x": 1044,
+				"y": 4,
 				"w": 151,
 				"h": 68
 			},
@@ -418,26 +298,6 @@
 			"sourceSize": {
 				"w": 151,
 				"h": 68
-			}
-		},
-		"wing": {
-			"frame": {
-				"x": 655,
-				"y": 98,
-				"w": 32,
-				"h": 36
-			},
-			"rotated": false,
-			"trimmed": false,
-			"spriteSourceSize": {
-				"x": 0,
-				"y": 0,
-				"w": 32,
-				"h": 36
-			},
-			"sourceSize": {
-				"w": 32,
-				"h": 36
 			}
 		}
 	},
@@ -447,8 +307,8 @@
 		"image": "spritesheet",
 		"format": "RGBA8888",
 		"size": {
-			"w": 1012,
-			"h": 1105
+			"w": 1314,
+			"h": 1110
 		},
 		"scale": "1"
 	}

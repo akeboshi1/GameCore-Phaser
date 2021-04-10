@@ -1,10 +1,10 @@
-import { IRectangle } from "game-capsule/lib/helpers";
-
 export interface IEditorCanvasConfig {
     width: number;
     height: number;
     node: {};
-    LOCAL_HOME_PATH: string;
+    connection: any;
+    game_created: () => void;
+    LOCAL_HOME_PATH?: string;
     parent?: string;
 }
 
@@ -24,7 +24,8 @@ export class EditorCanvas {
             backgroundColor: "#464646",
             render: {
                 pixelArt: true,
-                roundPixels: true
+                roundPixels: true,
+                premultipliedAlpha: false,
             },
             plugins: {
                 scene: [
@@ -46,9 +47,9 @@ export class EditorCanvas {
         this.mEmitter = new Phaser.Events.EventEmitter();
     }
 
-    public resize(bounds: IRectangle) {
+    public resize(width: number, height: number) {
         if (this.mGame) {
-            this.mGame.scale.setGameSize(bounds.width, bounds.height);
+            this.mGame.scale.setGameSize(width, height);
         }
     }
 

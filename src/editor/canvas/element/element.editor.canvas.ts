@@ -1,10 +1,10 @@
 import { EditorCanvas, IEditorCanvasConfig } from "../editor.canvas";
-import { ElementNode, DisplayNode } from "game-capsule";
 import ElementEditorGrids from "./element.editor.grids";
 import ElementEditorAnimations from "./element.editor.animations";
-import { Logger } from "../../../utils/log";
 import ElementEditorResourceManager from "./element.editor.resource.manager";
-import { IImage } from "game-capsule/lib/configobjects/animations";
+import { Logger, Url } from "utils";
+import ElementFramesDisplay from "./element.frames.display";
+import version from "../../../../version";
 
 export enum ElementEditorBrushType {
     Drag,
@@ -20,9 +20,12 @@ export enum ElementEditorEmitType {
     Update_Frame_Sumb = "updateFrameSumb"
 }
 
+/**
+ * api:https://dej4esdop1.feishu.cn/docs/doccn1Ez79LjYywnNiAGbaP35Tc
+ */
 export class ElementEditorCanvas extends EditorCanvas {
 
-    public mData: ElementNode;
+    public mData: any;// ElementNode
 
     private readonly SCENEKEY: string = "ElementEditorScene";
     private readonly ERROR_UNINITED: string = "canvas not inited";
@@ -30,22 +33,23 @@ export class ElementEditorCanvas extends EditorCanvas {
 
     private mResManager: ElementEditorResourceManager;
     private mGrids: ElementEditorGrids;
-    private mAnimations: ElementEditorAnimations;
+    private mAnimations: ElementFramesDisplay | ElementEditorAnimations;
 
     constructor(config: IEditorCanvasConfig) {
         super(config);
-        Logger.getInstance().log("ElementEditorCanvas.constructor()");
+        Logger.getInstance().debug("ElementEditorCanvas.constructor()");
+        Url.RES_PATH = `./resources_v${version}/`;
 
         this.mGame.scene.add(this.SCENEKEY, ElementEditorScene);
 
         // start
-        this.mData = config.node as ElementNode;
+        this.mData = config.node;// ElementNode
         this.mResManager = new ElementEditorResourceManager(this.mData, this.mEmitter, this.mConfig.LOCAL_HOME_PATH);
         this.mGame.scene.start(this.SCENEKEY, this);
     }
 
     public destroy() {
-        Logger.getInstance().log("ElementEditorCanvas.destroy()");
+        Logger.getInstance().debug("ElementEditorCanvas.destroy()");
         if (this.mData) {
             this.mData = null;
         }
@@ -78,7 +82,8 @@ export class ElementEditorCanvas extends EditorCanvas {
 
         const scene = this.getScene();
         this.mGrids = new ElementEditorGrids(scene, this.mData.animations.getDefaultAnimationData());
-        this.mAnimations = new ElementEditorAnimations(scene, this.mData.animations.getDefaultAnimationData(), this.mGrids, this.mEmitter);
+        this.mAnimations = new ElementFramesDisplay(scene, this.mData.animations.getDefaultAnimationData(), this.mGrids, this.mEmitter);
+        // this.mAnimations = new ElementEditorAnimations(scene, this.mData.animations.getDefaultAnimationData(), this.mGrids, this.mEmitter);
         this.mResManager.init(scene);
 
         this.mResManager.addResourcesChangeListener(this.mAnimations);
@@ -100,12 +105,12 @@ export class ElementEditorCanvas extends EditorCanvas {
     }
 
     // 解析数据
-    public deserializeDisplay(): Promise<IImage[]> {
+    public deserializeDisplay(): Promise<any[]> {// IImage
         return this.mResManager.deserializeDisplay();
     }
 
     // 合图
-    public generateSpriteSheet(images: IImage[]): Promise<{ url: string, json: string }> {
+    public generateSpriteSheet(images: any[]): Promise<{ url: string, json: string }> {// IImage
         return this.mResManager.generateSpriteSheet(images);
     }
 

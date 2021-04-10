@@ -1,0 +1,36 @@
+import { BasePanel, UiManager } from "gamecoreRender";
+export declare class PicaMineCarPanel extends BasePanel {
+    protected uiManager: UiManager;
+    private mCloseBtn;
+    private mCounter;
+    private mPropGrid;
+    private mTips;
+    private mDiscardBtn;
+    private mFilterItem;
+    private mLimit;
+    private categoriesBg;
+    private mCategoryTable;
+    private mPreSelectedCategorie;
+    private mPreSelectedCategorieData;
+    private mBg;
+    private carIcon;
+    private mBackGround;
+    constructor(uiManager: UiManager);
+    resize(width: number, height: number): void;
+    show(param?: any): void;
+    setCategories(subcategorys: any[]): void;
+    setCategoriesData(subcategorys: any[]): void;
+    addListen(): void;
+    removeListen(): void;
+    setProp(items: any[], limit: number): void;
+    destroy(): void;
+    queryRefreshPackage(): void;
+    protected preload(): void;
+    protected init(): void;
+    private onCloseHandler;
+    private onSelectItemHandler;
+    private onClickCategoryHandler;
+    private checkMode;
+    private onDiscardSelectedItem;
+    private enterDiscardMode;
+}

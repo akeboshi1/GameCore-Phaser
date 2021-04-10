@@ -4,7 +4,7 @@
 /node_modules/*
 /builds/*
 /dist/*
-/lib/rexui/*
+/release/*
 /yarn-error.log
 .idea/**/workspace.xml
 .idea/**/tasks.xml
@@ -19,6 +19,7 @@
 .idea/**/dbnavigator.xml
 .idea/**/gradle.xml
 .idea/**/libraries
+.idea/workspace.xml
 cmake-build-debug/
 cmake-build-release/
 .idea/**/mongoSettings.xml
@@ -247,6 +248,4 @@ webpack.config.js
 yargs.d.ts
 .gitignore
 webpack.config.js
-!/release/
 *.DS_Store
-/types/

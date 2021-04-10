@@ -1,4 +1,4 @@
-import { i18n } from "../i18n";
+import { i18n } from "./i18n";
 
 export class Font {
     static readonly YAHEI_14_BOLD: string = "bold 14px YaHei";
@@ -6,22 +6,33 @@ export class Font {
     static readonly YAHEI_18_BOLD: string = "bold 18px YaHei";
     static readonly YAHEI_20_BOLD: string = "bold 20px YaHei";
 
-    // static readonly DEFULT_FONT = "-apple-system, 'Noto Sans', 'Helvetica Neue', Helvetica, 'Nimbus Sans L', Arial, 'Liberation Sans', 'PingFang SC', 'Hiragino Sans GB', 'Noto Sans CJK SC', 'Source Han Sans SC', 'Source Han Sans CN', 'Microsoft YaHei'";
+    static readonly DEFULT_FONT = "'Source Han Sans', Helvetica, -apple-system, 'Noto Sans', 'Helvetica Neue', 'Nimbus Sans L', Arial, 'Liberation Sans', 'PingFang SC', 'Hiragino Sans GB', 'Noto Sans CJK SC', 'Source Han Sans SC', 'Source Han Sans CN', 'Microsoft YaHei'";
     static readonly ZH_MAIN = "Source Han Sans";
     static readonly EN_MAINT = "tt0503m_";
     static readonly EN_BOLD = "tt0173m_";
-    static get DEFULT_FONT() {
-        if (i18n.language === "en") {
-            return this.EN_MAINT;
-        } else {
-            return this.ZH_MAIN;
+    static readonly NUMBER = "t04B25";
+    static readonly HELVETICA = "Helvetica";
+    static isChineseChar(c: string) {
+        const pattern = new RegExp("[\u4E00-\u9FA5]+");
+        if (pattern.test(c)) {
+            return true;
         }
+        return false;
     }
-    static get BOLD_FONT() {
-        if (i18n.language === "en") {
-            return this.EN_BOLD;
-        } else {
-            return this.ZH_MAIN;
+
+    static isEnglishChar(c: string) {
+        const pattern = new RegExp("[A-Za-z]+");
+        if (pattern.test(c)) {
+            return true;
         }
+        return false;
+    }
+
+    static isNumberChar(c: string) {
+        const pattern = new RegExp("[0-9]+");
+        if (pattern.test(c)) {
+            return true;
+        }
+        return false;
     }
 }

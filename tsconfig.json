@@ -1,21 +1,64 @@
 {
-  "compileOnSave": false,
   "compilerOptions": {
+    "experimentalDecorators": true,
     "module": "esnext",
     "moduleResolution": "node",
-    "target": "es6",
+    "target": "es5",
     "lib": [
       "es2015",
       "webworker",
       "dom"
     ],
-    "declaration": true,
-    "sourceMap": false,
-    "outDir": "types",
+    "declaration": false,
+    "sourceMap": true,
     "typeRoots": [
       "node_modules/@types",
       "node_modules/apowophaserui/types"
-    ]
-  }
+    ],
+    "baseUrl": ".",
+    "noImplicitUseStrict": true,
+    "alwaysStrict": false,
+    "paths": {
+      "gamecoreRender": [
+        "./src/render/index"
+      ],
+      "gamecore": [
+        "./src/game/index"
+      ],
+      "utils": [
+        "./src/utils/index"
+      ],
+      "structure": [
+        "./src/structure/index"
+      ],
+      "picaWorker": [
+        "./src/pica/game/index"
+      ],
+      "picaRender": [
+        "./src/pica/render/index"
+      ],
+      "picaRes": [
+        "./src/pica/res/index"
+      ],
+      "picaStructure": [
+        "./src/pica/structure/index"
+      ],
+      "editorCanvas": [
+        "./src/editor/index"
+      ],
+      "display": [
+        "src/base/render/display/index"
+      ],
+      "baseModel": [
+        "./src/base/model/index"
+      ],
+      "baseRender": [
+        "./src/base/render/index"
+      ]
+    }
+  },
+  "exclude": [
+    "node_modules",
+    "lib/rexui/scripts"
+  ]
 }
-

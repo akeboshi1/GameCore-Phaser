@@ -1,12 +1,11 @@
-import { WorldService } from "../game";
 
 export class BasicPlugin {
-    protected mWorld: WorldService;
+    // protected mRender: Render;
     constructor() {
     }
-    init(worldService: WorldService) {
-        this.mWorld = worldService;
-    }
+    // init(worldService: WorldService) {
+    //     this.mWorld = worldService;
+    // }
 
     preUpdate(time, delta) { }
 
@@ -16,7 +15,7 @@ export class BasicPlugin {
 
     destroy() { }
 
-    get world(): WorldService {
-        return this.mWorld;
-    }
+    // get world(): WorldService {
+    //     return this.mWorld;
+    // }
 }

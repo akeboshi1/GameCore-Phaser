@@ -1,1 +1,0 @@
-export { PopUpTextUI } from "./PopUpTextUI";

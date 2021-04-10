@@ -1,0 +1,35 @@
+import { BasePanel, UiManager } from "gamecoreRender";
+export declare class PicaPartyListPanel extends BasePanel {
+    private content;
+    private mBackground;
+    private bg;
+    private closeBtn;
+    private navigationBtn;
+    private mineBtn;
+    private searchBtn;
+    private topCheckBox;
+    private partyNavigationPanel;
+    private myRoomNavigationPanel;
+    private mPartyData;
+    constructor(uiManager: UiManager);
+    resize(w: number, h: number): void;
+    show(param?: any): void;
+    addListen(): void;
+    removeListen(): void;
+    destroy(): void;
+    setPartyListData(content: any, isSelf?: boolean): void;
+    setOnlineProgress(content: any): void;
+    setRoomListData(content: any): void;
+    protected preload(): void;
+    protected init(): void;
+    private onTabBtnHandler;
+    private openPartyNavigationPanel;
+    private hidePartyNavigationPanel;
+    private openRoomNavigationPanel;
+    private hideRoomNavigationPanel;
+    private createTabButton;
+    private onCloseHandler;
+    private onPartyListHandler;
+    private onProgressRewardHandler;
+    private onEnterRoomHandler;
+}

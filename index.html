@@ -2,8 +2,8 @@
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8" name="viewport" content="width=device-width,height=device-height" />
-    <title>Tooqing-Game</title>
+    <meta charset="UTF-8" name="viewport" content="width=device-width,height=device-height, initial-scale=1.0" />
+    <title>Tooqing-phaser3</title>
     <style>
         body {
             margin: 0;
@@ -25,9 +25,9 @@
 
 <body>
     <!-- <input type="file" id="files" name="files[]" /> -->
-    <div class="container">
-        <div id="game"></div>
-    </div>
+    <!-- <div class="container"> -->
+    <div id="game"></div>
+    <!-- </div> -->
     <!-- <script>
         let fileBin;
         function handleFileSelect(evt) {
@@ -61,64 +61,45 @@
     </script> -->
     <script>
         window.addEventListener('load', (event) => {
-            // const launcher = TooqingLauncher.Launcher;
-            // const app = launcher.start({ width: window.innerWidth, height: window.innerHeight, screenWidth: window.innerWidth, screenHeight: window.innerHeight });
-            // app.registerReload(window.reload);
-            // app.registerComplete(() => {
-            //     const loadingImg = document.getElementById('loading_img');
-            //     if (loadingImg) loadingImg.remove();
-            //     const loadingGif = document.getElementById('loading_gif');
-            //     if (loadingGif) loadingGif.remove();
-            // })
-            const app = new window["game-core"].World({
-                width: window.innerWidth,
-                height: window.innerHeight,
-                screenWidth: window.innerWidth,
-                screenHeight: window.innerHeight,
+            const launcher = tooqing.Launcher;
+            const option = {
+                width: document.documentElement.clientWidth,
+                height: document.documentElement.clientHeight,
+                api_root: "https://api-dev.tooqing.com",
+                osd: "https://osd-alpha.tooqing.com",
+                // server_addr: {
+                //     host: "gdev.tooqing.com",
+                //     port: 11100,
+                //     secure: true
+                // },
+                parent: "game",
+                game_id: "5e719a0a68196e416ecf7aad",
+                virtual_world_id: "0",
+                locationhref: window.location.href
+                // api_root: "http://172.18.0.100:17170/",
+                // osd: "https://osd-alpha.tooqing.com/",
+                // server_addr: {
+                //     host: "172.18.0.100",
+                //     port: 12100,
+                //     secure: false
+                // },
+                // parent: "game",
+                // game_id: "5e719a0a68196e416ecf7aad",
+                // virtual_world_id: "65559",
+                // locationhref: window.location.href
+            }
+            const app = launcher.start(option);
+            app.registerReload(window.reload);
+            window.addEventListener("resize", (e) => {
+                app.onResize(document.documentElement.clientWidth, document.documentElement.clientHeight);
+
             });
-
-            if (!window.navigator) {
-                // FR.Msg.alert("提示", "当前设备：移动端APP")
-                window.addEventListener("resize", (e) => {
-                    // app.onResize(window.innerWidth, window.innerHeight);
-                });
-            }
-            else {
-                // if (/Mobile|Android|webOS|iPhone|iPad|Phone/i.test(navigator.userAgent)) {
-                //     window.addEventListener('orientationchange', (e) => {
-                //         // window.orientation === 0 为竖屏，1为横屏
-                //         app.onOrientationChange(window.orientation, window.innerWidth, window.innerHeight);
-                //     });
+            document.addEventListener("visibilitychange", function () {
+                // if (document.visibilityState === "hidden") {
+                //     app.hidden();
                 // }
-                // else {
-                window.addEventListener("resize", (e) => {
-                    // app.onResize(window.innerWidth, window.innerHeight);
-                    // if (window.orientation) {
-                    //     window.addEventListener('deviceorientation', (e) => {
-                    //         // window.orientation === 0 为竖屏，1为横屏
-                    //         app.onOrientationChange(window.innerWidth, window.innerHeight);
-                    //     });
-                    // } else {
-                    //     window.addEventListener("resize", (e) => {
-                    //         app.onResize(window.innerWidth, window.innerHeight);
-                    //     });
-                    // }
-                    // window.addEventListener(window.ori ? "deviceorientation" : "reisze", function () {
-                    //     window.ondeviceorientation ? app.onOrientationChange(window.orientation) :
-                    //         app.onResize(window.innerWidth, window.innerHeight);
-                    // }, false);
-                    // window.addEventListener("resize", (e) => {
-                    //     app.onResize(window.innerWidth, window.innerHeight);
-                    // });
-                    // window.addEventListener("orientationchange", (e) => {
-                    //     // window.orientation === 0 为竖屏，1为横屏
-                    //     app.onOrientationChange(window.orientation);
-                    // });
-                    // console.log(document.fullscreen(Element.ALLOW_KEYBOARD_INPUT));
-
-                });
-                //}
-            }
+                app.visibilitychange(document.visibilityState);
+            });
         });
     </script>
 </body>

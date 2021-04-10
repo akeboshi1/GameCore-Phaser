@@ -1,10 +1,8 @@
-import { WorldService } from "../game";
 import { BasicPlugin } from "./basic.plugin";
-import { Logger } from "../utils";
 
 export class PluginManager {
     private mPlugins: Map<string, BasicPlugin>;
-    constructor(private mWorld: WorldService) {
+    constructor(private mWorld: any) {
         this.mPlugins = new Map();
     }
 
@@ -21,7 +19,7 @@ export class PluginManager {
                     }
                     if (def) {
                         const plugin: BasicPlugin = new def();
-                        plugin.init(this.mWorld);
+                        // plugin.init(this.mWorld);
                         this.add(name, plugin);
                         this.mWorld.emitter.emit("MODULE_INIT", plugin);
                         resolve(plugin);

@@ -1,9 +1,0 @@
-{
-  "api_root": "http://172.18.0.100:17170/",
-  "osd": "https://osd-dev.tooqing.com/",
-  "gateway": {
-    "host": "172.18.0.100",
-    "port": 12100,
-    "secure": false
-  }
-}

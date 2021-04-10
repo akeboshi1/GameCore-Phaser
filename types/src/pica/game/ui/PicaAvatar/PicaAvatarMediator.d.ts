@@ -1,0 +1,32 @@
+import { BasicMediator, Game } from "gamecore";
+export declare class PicaAvatarMediator extends BasicMediator {
+    private mScneType;
+    private timeID;
+    private skinID;
+    constructor(game: Game);
+    show(param?: any): void;
+    hide(): void;
+    destroy(): void;
+    get playerData(): import("../../../../game").PlayerBag;
+    get bag(): import("../../../../game").UserDataManager;
+    protected _show(): void;
+    protected panelInit(): void;
+    protected mediatorExport(): void;
+    private onCloseHandler;
+    private addLisenter;
+    private removeLisenter;
+    private onSyncFinishHandler;
+    private onUpdateHandler;
+    private onPackageCategoryHandler;
+    private onQueryCommodityResourceHandler;
+    private onGetCategoriesHandler;
+    private onQueryPackage;
+    private onQueryPropResourceHandler;
+    private onQuerySaveAvatar;
+    private onQueryResetAvatar;
+    private onResetAvatar;
+    private onDressAvatarIDS;
+    private queryDressAvatarIDS;
+    private get model();
+    private get config();
+}

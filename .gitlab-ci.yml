@@ -1,0 +1,56 @@
+stages:
+    - build
+    - deploy
+variables:
+    CI_DEBUG_TRACE: "false"
+    DOCKER_DRIVER: overlay2
+    GIT_SUBMODULE_STRATEGY: normal #recursive
+cache:
+    paths:
+        - node_modules/
+        - .yarn
+
+Build:
+    stage: build
+    only:
+        - /^beta/
+    tags:
+        - game-core
+    before_script:
+        ##
+        ## Install ssh-agent if not already installed, it is required by Docker.
+        ## (change apt-get to yum if you use an RPM-based image)
+        ##
+        ##
+        ## Optionally, if you will be using any Git commands, set the user name and
+        ## and email.
+        ##
+        - git config --global user.email "ci@apowo.com"
+        - git config --global user.name "gitlab-runner"
+
+    script:
+        - yarn
+        - yarn build
+    cache:
+        key: "${CI_COMMIT_REF_SLUG}"
+        paths: 
+            - release/
+        policy: pull-push
+
+Deploy:
+    stage: deploy
+    only:
+        - /^beta/
+        - /^deploy/
+    tags:
+        - game-core
+    script:
+        - npm config set @PixelPai:registry https://code.apowo.com/api/v4/packages/npm/
+        - npm config set '//code.apowo.com/api/v4/projects/${CI_PROJECT_ID}/packages/npm/:_authToken' "${NPM_TOKEN}"
+        - npm config set '//code.apowo.com/api/v4/packages/npm/:_authToken' "${NPM_TOKEN}"
+        - npm publish
+    cache:
+        key: "${CI_COMMIT_REF_SLUG}"
+        paths: 
+            - release/
+        policy: pull
