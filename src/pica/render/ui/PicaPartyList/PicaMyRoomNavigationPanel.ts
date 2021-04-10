@@ -1,6 +1,6 @@
 import { BBCodeText, GameScroller, NineSlicePatch } from "apowophaserui";
-import { ImageBBCodeValue, ImageValue } from "gamecoreRender";
-import { UIAtlasKey } from "picaRes";
+import { ImageBBCodeValue, ImageValue } from "../../ui";
+import { UIAtlasKey } from "../../../res";
 import { Font, Handler, i18n } from "utils";
 export class PicaMyRoomNavigationPanel extends Phaser.GameObjects.Container {
     private gameScroll: GameScroller;

@@ -1,10 +1,11 @@
 import { op_client } from "pixelpai_proto";
 import { NineSlicePatch, NineSliceButton, TabButton } from "apowophaserui";
-import { BasePanel, CheckboxGroup, ItemsConsumeFunPanel, UiManager } from "gamecoreRender";
+import { BasePanel, CheckboxGroup, UiManager } from "gamecoreRender";
 import { PicaHouseInfoPanel } from "./PicaHouseInfoPanel";
 import { ModuleName } from "structure";
 import { Font, Handler, i18n } from "utils";
-import { UIAtlasKey, UIAtlasName } from "picaRes";
+import { UIAtlasKey, UIAtlasName } from "../../../res";
+import { ItemsConsumeFunPanel } from "../../ui";
 export class PicaHousePanel extends BasePanel {
     private content: Phaser.GameObjects.Container;
     private mBackground: Phaser.GameObjects.Graphics;

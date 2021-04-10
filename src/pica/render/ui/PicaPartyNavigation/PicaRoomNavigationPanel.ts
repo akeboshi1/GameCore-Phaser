@@ -1,6 +1,6 @@
 import { GameGridTable } from "apowophaserui";
-import { UIAtlasName } from "picaRes";
-import { Font, Handler } from "utils";
+import { UIAtlasName } from "../../../res";
+import { Handler } from "utils";
 import { PicaRoomListItem } from "./PicaRoomListItem";
 import { op_client } from "pixelpai_proto";
 export class PicaRoomNavigationPanel extends Phaser.GameObjects.Container {

@@ -1,7 +1,7 @@
 import { BBCodeText } from "apowophaserui";
-import { UIAtlasName } from "picaRes";
+import { UIAtlasName } from "../../../res";
 import { Font, UIHelper } from "utils";
-import { DynamicImage } from "./dynamic.image";
+import { DynamicImage } from "gamecoreRender";
 
 export class ImageValue extends Phaser.GameObjects.Container {
     protected dpr: number;

@@ -1,5 +1,5 @@
 import { BasePanel, UiManager } from "gamecoreRender";
-import { UIAtlasKey, UIAtlasName } from "picaRes";
+import { UIAtlasKey, UIAtlasName } from "../../../res";
 import { ModuleName, RENDER_PEER } from "structure";
 import { Handler, i18n } from "utils";
 import { PicaManorContentPanel } from "./PicaManorContentPanel";

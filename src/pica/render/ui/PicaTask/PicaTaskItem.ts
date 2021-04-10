@@ -1,7 +1,7 @@
 import { ClickEvent, NineSlicePatch } from "apowophaserui";
 import { DynamicImage, ThreeSliceButton } from "gamecoreRender";
-import { UIAtlasName } from "picaRes";
-import { ICountablePackageItem } from "picaStructure";
+import { UIAtlasName } from "../../../res";
+import { ICountablePackageItem } from "../../../structure";
 import { op_client, op_pkt_def } from "pixelpai_proto";
 import { Handler, i18n, UIHelper, Url } from "utils";
 import { ItemButton } from "../Components";

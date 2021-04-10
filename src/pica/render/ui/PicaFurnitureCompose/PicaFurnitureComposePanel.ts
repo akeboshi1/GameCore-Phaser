@@ -1,12 +1,13 @@
-import { NineSliceButton, GameGridTable, GameScroller, Button, BBCodeText, NineSlicePatch, ClickEvent } from "apowophaserui";
-import { ButtonEventDispatcher, CommonBackground, DynamicImage, ImageValue, TextButton, UiManager } from "gamecoreRender";
-import { ItemButton } from "picaRender";
-import { UIAtlasName } from "picaRes";
+import { NineSliceButton, GameGridTable, GameScroller, BBCodeText, NineSlicePatch, ClickEvent } from "apowophaserui";
+import { ButtonEventDispatcher, DynamicImage, TextButton, UiManager } from "gamecoreRender";
+import { ItemButton } from "../../ui";
+import { UIAtlasName } from "../../../res";
 import { ModuleName } from "structure";
 import { Font, Handler, i18n, UIHelper, Url } from "utils";
 import { op_client, op_def } from "pixelpai_proto";
 import { PicaBasePanel } from "../pica.base.panel";
-import { ICountablePackageItem } from "picaStructure";
+import { ICountablePackageItem } from "../../../structure";
+import { CommonBackground, ImageValue } from "../../ui";
 export class PicaFurnitureComposePanel extends PicaBasePanel {
   private mCloseBtn: ButtonEventDispatcher;
   private mBackground: CommonBackground;

@@ -1,9 +1,10 @@
 import { op_client, op_pkt_def } from "pixelpai_proto";
 import { NineSlicePatch, Button, GameScroller, NineSliceButton, ClickEvent, ProgressBar } from "apowophaserui";
-import { BasePanel, DynamicImage, ImageValue, ItemInfoTips, UiManager } from "gamecoreRender";
+import { BasePanel, DynamicImage, ItemInfoTips, UiManager } from "gamecoreRender";
 import { ModuleName } from "structure";
-import { UIAtlasKey, UIAtlasName } from "picaRes";
+import { UIAtlasKey, UIAtlasName } from "../../../res";
 import { Font, Handler, i18n, Url, Tool } from "utils";
+import { ImageValue } from "../../ui";
 export class PicaWorkPanel extends BasePanel {
     private mBackground: Phaser.GameObjects.Graphics;
     private bg: NineSlicePatch;

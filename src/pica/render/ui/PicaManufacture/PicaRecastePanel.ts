@@ -1,11 +1,11 @@
-import { NineSliceButton, GameGridTable, GameScroller, Button, NineSlicePatch, ClickEvent } from "apowophaserui";
-import { ButtonEventDispatcher, CommonBackground, ImageValue, Render, TextButton, UiManager } from "gamecoreRender";
-import { DetailBubble, DetailDisplay, ItemButton, PicaItemTipsPanel } from "picaRender";
-import { UIAtlasName } from "picaRes";
+import { NineSliceButton, GameGridTable, GameScroller, Button, ClickEvent } from "apowophaserui";
+import { Render, TextButton } from "gamecoreRender";
+import { DetailBubble, DetailDisplay, ItemButton } from "../../ui";
+import { UIAtlasName } from "../../../res";
 import { ModuleName } from "structure";
 import { Font, Handler, i18n, UIHelper, Url } from "utils";
-import { op_client, op_def, op_pkt_def } from "pixelpai_proto";
-import { PicaBasePanel } from "../pica.base.panel";
+import { op_client } from "pixelpai_proto";
+import { CommonBackground, ImageValue } from "../../ui";
 export class PicaRecastePanel extends Phaser.GameObjects.Container {
   private mBackground: CommonBackground;
   private mCategoriesBar: Phaser.GameObjects.Graphics;

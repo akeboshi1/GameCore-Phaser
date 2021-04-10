@@ -1,7 +1,7 @@
 import { op_client, op_pkt_def } from "pixelpai_proto";
 import { ToggleColorButton, UiManager } from "gamecoreRender";
 import { ModuleName } from "structure";
-import { UIAtlasName } from "picaRes";
+import { UIAtlasName } from "../../../res";
 import { Handler, i18n, UIHelper } from "utils";
 import { PicaBasePanel } from "../pica.base.panel";
 import { PicaTaskMainPanel } from "./PicaTaskMainPanel";

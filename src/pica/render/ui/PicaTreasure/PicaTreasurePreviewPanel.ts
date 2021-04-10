@@ -4,7 +4,7 @@ import { NineSlicePatch, GameScroller, ClickEvent, Button } from "apowophaserui"
 import { DetailDisplay } from "picaRender";
 import { Render } from "gamecoreRender";
 import { Font, Handler, i18n, UIHelper } from "utils";
-import { UIAtlasKey, UIAtlasName } from "picaRes";
+import { UIAtlasKey, UIAtlasName } from "../../../res";
 import { ItemButton } from "../Components";
 export class PicaTreasurePreviewPanel extends Phaser.GameObjects.Container {
     private confirmBtn: Button;

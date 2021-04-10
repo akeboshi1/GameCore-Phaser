@@ -1,8 +1,7 @@
-import { BBCodeText, Button, NineSliceButton, NineSlicePatch, ClickEvent, InputText } from "apowophaserui";
-import { UIAtlasKey, UIAtlasName } from "picaRes";
+import { Button, NineSliceButton, ClickEvent, InputText } from "apowophaserui";
+import { UIAtlasKey, UIAtlasName } from "../../../res";
 import { Font, Handler, i18n, UIHelper } from "utils";
-import { Render } from "../../render";
-import { BasePanel } from "./base.panel";
+import { Render, BasePanel } from "gamecoreRender";
 
 export class InputView extends BasePanel {
     private mTitleLabel: Phaser.GameObjects.Text;

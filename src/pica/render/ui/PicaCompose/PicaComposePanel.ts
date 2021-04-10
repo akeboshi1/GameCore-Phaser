@@ -3,9 +3,9 @@ import { GameGridTable, GameScroller, NineSliceButton, ClickEvent, Button, BBCod
 import { BasePanel, DynamicImage, ItemInfoTips, UiManager } from "gamecoreRender";
 import { DetailDisplay } from "../Components/detail.display";
 import { AvatarSuitType, ModuleName } from "structure";
-import { UIAtlasKey, UIAtlasName } from "picaRes";
+import { UIAtlasKey, UIAtlasName } from "../../../res";
 import { Font, Handler, i18n, Url } from "utils";
-import { ICountablePackageItem } from "picaStructure";
+import { ICountablePackageItem } from "../../../structure";
 export class PicaComposePanel extends BasePanel {
     private content: Phaser.GameObjects.Container;
     private mDetailDisplay: DetailDisplay;

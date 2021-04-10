@@ -1,11 +1,11 @@
 import { Button, ClickEvent, NineSliceButton } from "apowophaserui";
 import { Handler, i18n, UIHelper } from "utils";
 import { AvatarSuit, AvatarSuitType, ModuleName, RunningAnimation } from "structure";
-import { UiManager, CommonBackground, UIDragonbonesDisplay, ButtonEventDispatcher, ToggleButton } from "gamecoreRender";
+import { UiManager, UIDragonbonesDisplay, ButtonEventDispatcher, ToggleButton } from "gamecoreRender";
 import { PicaBasePanel } from "../pica.base.panel";
-import { UIAtlasName } from "picaRes";
-import { op_client, op_gameconfig, op_def } from "pixelpai_proto";
-
+import { UIAtlasName } from "../../../res";
+import { op_client, op_def } from "pixelpai_proto";
+import { CommonBackground } from "../../ui";
 export class PicaCreateRolePanel extends PicaBasePanel {
     private commonBackground: CommonBackground;
     private mBottomBg: Phaser.GameObjects.Image;

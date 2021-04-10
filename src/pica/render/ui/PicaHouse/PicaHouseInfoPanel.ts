@@ -2,7 +2,7 @@ import { op_client } from "pixelpai_proto";
 import { BBCodeText, Button, ClickEvent } from "apowophaserui";
 import { Font, Handler, i18n, Tool } from "utils";
 import { ItemInfoTips } from "gamecoreRender";
-import { UIAtlasKey } from "picaRes";
+import { UIAtlasKey } from "../../../res";
 export class PicaHouseInfoPanel extends Phaser.GameObjects.Container {
     private dpr: number;
     private key: string;

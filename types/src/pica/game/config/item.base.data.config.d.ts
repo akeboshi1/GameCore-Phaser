@@ -4,7 +4,7 @@ export declare class ItemBaseDataConfig extends BaseConfigData {
     snMap: Map<string, any>;
     getByID(id: string): any;
     getBySN(sn: string): any;
-    getCoinType(id: string): 4 | 3;
+    getCoinType(id: string): 3 | 4;
     parseJson(json: any): void;
     private consoleCategoryJson;
     private consoleClassNameJson;

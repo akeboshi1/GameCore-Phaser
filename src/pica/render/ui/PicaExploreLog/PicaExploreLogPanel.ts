@@ -1,12 +1,12 @@
 import { op_client } from "pixelpai_proto";
-import { ButtonEventDispatcher, ImageValue, ProgressMaskBar, UiManager } from "gamecoreRender";
+import { ButtonEventDispatcher, ProgressMaskBar, UiManager } from "gamecoreRender";
 import { Button, ClickEvent, NineSliceButton } from "apowophaserui";
 import { ModuleName } from "structure";
-import { UIAtlasName } from "picaRes";
-import { Font, Handler, i18n, UIHelper } from "utils";
+import { UIAtlasName } from "../../../res";
+import { Handler, i18n, UIHelper } from "utils";
 import { PicaBasePanel } from "../pica.base.panel";
 import { PicaExploreLogSettlePanel } from "./PicaExploreLogSettlePanel";
-
+import { ImageValue } from "../../ui";
 export class PicaExploreLogPanel extends PicaBasePanel {
     private goOutBtn: Button;
     private continueProgress: ProgressMaskBar;

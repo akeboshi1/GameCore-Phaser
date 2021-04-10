@@ -1,9 +1,9 @@
 import { NineSlicePatch, GameGridTable, Button, ClickEvent, BBCodeText, ProgressBar } from "apowophaserui";
-import { DynamicImage, ImageBBCodeValue, ItemInfoTips } from "gamecoreRender";
-import { UIAtlasKey } from "picaRes";
+import { DynamicImage, ItemInfoTips } from "gamecoreRender";
+import { UIAtlasKey } from "../../../res";
 import { ChineseUnit } from "structure";
 import { Font, Handler, i18n, Url } from "utils";
-
+import { ImageBBCodeValue } from "../../ui";
 export class PicaOldPartyNavigationPanel extends Phaser.GameObjects.Container {
     private mGameGrid: GameGridTable;
     private signProgressPanel: SignProgressPanel;

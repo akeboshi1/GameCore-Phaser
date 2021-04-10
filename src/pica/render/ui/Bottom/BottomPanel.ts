@@ -2,7 +2,7 @@ import { UiManager, LabelInput } from "gamecoreRender";
 import { BBCodeText, Button, ClickEvent, TextArea } from "apowophaserui";
 import { EventType, ModuleName } from "structure";
 import { Font, Handler, i18n } from "utils";
-import { UIAtlasName } from "picaRes";
+import { UIAtlasName } from "../../../res";
 import { PicaNewNavigatePanel } from "../PicaNewMain/PicaNewNavigatePanel";
 import { PicaBasePanel } from "../pica.base.panel";
 

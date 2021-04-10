@@ -1,8 +1,7 @@
-import { Button, GameGridTable, ClickEvent, NineSliceButton, NineSlicePatch } from "apowophaserui";
-import { ImageValue } from "gamecoreRender";
-import { UIAtlasKey } from "picaRes";
+import { GameGridTable, NineSlicePatch } from "apowophaserui";
+import { UIAtlasKey } from "../../../res";
 import { Font, Handler, i18n } from "utils";
-
+import { ImageValue } from "../../ui";
 export class PicaManorScrollPanel extends Phaser.GameObjects.Container {
     // private sortBtn: Button;
     // private filtrateBtn: Button;

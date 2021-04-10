@@ -1,11 +1,12 @@
-import { NineSliceButton, GameGridTable, GameScroller, Button, NineSlicePatch, ClickEvent } from "apowophaserui";
-import { ButtonEventDispatcher, CommonBackground, ImageValue, Render, TextButton, UiManager } from "gamecoreRender";
-import { DetailDisplay, ItemButton } from "picaRender";
-import { UIAtlasName } from "picaRes";
+import { NineSliceButton, GameGridTable, GameScroller, NineSlicePatch, ClickEvent } from "apowophaserui";
+import { ButtonEventDispatcher, Render, TextButton, UiManager } from "gamecoreRender";
+import { DetailDisplay, ItemButton } from "../../ui";
+import { UIAtlasName } from "../../../res";
 import { ModuleName } from "structure";
 import { Font, Handler, i18n, UIHelper, Url } from "utils";
-import { op_client, op_def, op_pkt_def } from "pixelpai_proto";
+import { op_client } from "pixelpai_proto";
 import { PicaBasePanel } from "../pica.base.panel";
+import { CommonBackground, ImageValue } from "../../ui";
 export class PicaRecastePanel extends PicaBasePanel {
   private mCloseBtn: ButtonEventDispatcher;
   private mBackground: CommonBackground;
@@ -30,7 +31,7 @@ export class PicaRecastePanel extends PicaBasePanel {
   private tempData: any = {};
   constructor(uiManager: UiManager) {
     super(uiManager);
-    this.atlasNames = [UIAtlasName.uicommon,UIAtlasName.recast];
+    this.atlasNames = [UIAtlasName.uicommon, UIAtlasName.recast];
     this.textures = [{ atlasName: "Recast_aims_icon_bg", folder: "texture" }, { atlasName: "Recast_bg_texture", folder: "texture" }];
     this.key = ModuleName.PICARECASTE_NAME;
   }

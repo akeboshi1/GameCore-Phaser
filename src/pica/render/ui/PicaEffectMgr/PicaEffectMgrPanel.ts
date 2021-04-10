@@ -1,7 +1,6 @@
 
-import { BasePanel, UiManager } from "gamecoreRender";
-import { UIAtlasName } from "picaRes";
-import { op_client } from "pixelpai_proto";
+import { UiManager } from "gamecoreRender";
+import { UIAtlasName } from "../../../res";
 import { ModuleName } from "structure";
 import { Handler } from "utils";
 import { PicaBasePanel } from "../pica.base.panel";

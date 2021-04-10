@@ -1,7 +1,6 @@
 import { BasicModel, Game } from "gamecore";
 import { ConnectionService } from "lib/net/connection.service";
 import { PBpacket } from "net-socket-packet";
-import { UIAtlasName } from "picaRes";
 import { op_client, op_virtual_world, op_pkt_def } from "pixelpai_proto";
 import { ModuleName } from "structure";
 import { CopyProtoType } from "utils";

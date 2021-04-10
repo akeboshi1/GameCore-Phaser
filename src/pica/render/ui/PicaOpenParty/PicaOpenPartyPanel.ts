@@ -3,7 +3,7 @@ import { NineSlicePatch, TabButton } from "apowophaserui";
 import { BasePanel, CheckboxGroup, UiManager } from "gamecoreRender";
 import { ModuleName } from "structure";
 import { Font, i18n } from "utils";
-import { UIAtlasKey, UIAtlasName } from "picaRes";
+import { UIAtlasKey, UIAtlasName } from "../../../res";
 import { PicaOpenPartyCreatePanel } from "./PicaOpenPartyCreatePanel";
 export class PicaOpenPartyPanel extends BasePanel {
     private content: Phaser.GameObjects.Container;

@@ -1,6 +1,6 @@
-import { NineSlicePatch, TabButton, ClickEvent, NinePatchTabButton } from "apowophaserui";
+import { NineSlicePatch, TabButton } from "apowophaserui";
 import { BasePanel, CheckboxGroup, UiManager } from "gamecoreRender";
-import { UIAtlasKey, UIAtlasName } from "picaRes";
+import { UIAtlasKey, UIAtlasName } from "../../../res";
 import { ModuleName } from "structure";
 import { Font, Handler, i18n } from "utils";
 import { PicaOldPartyNavigationPanel } from "./PicaOldPartyNavigationPanel";

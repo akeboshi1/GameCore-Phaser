@@ -1,10 +1,9 @@
 
-import { op_client, op_pkt_def, op_def } from "pixelpai_proto";
 import { DynamicImage, UiManager } from "gamecoreRender";
 import { ModuleName } from "structure";
-import { UIAtlasName } from "picaRes";
-import { Font, Handler, i18n, UIHelper, Url } from "utils";
-import { ICountablePackageItem } from "picaStructure";
+import { UIAtlasName } from "../../../res";
+import { i18n, UIHelper, Url } from "utils";
+import { ICountablePackageItem } from "../../../structure";
 import { PicaBasePanel } from "../pica.base.panel";
 export class PicaSurveyPanel extends PicaBasePanel {
     private topbg: Phaser.GameObjects.Image;

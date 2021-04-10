@@ -1,5 +1,5 @@
 import { CheckBox, NineSlicePatch, ClickEvent, Button } from "apowophaserui";
-import { UIAtlasKey, UIAtlasName } from "picaRes";
+import { UIAtlasKey, UIAtlasName } from "../../../res";
 import { op_client, op_pkt_def } from "pixelpai_proto";
 import { Render } from "src/render/render";
 import { BasePanel, DynamicImage, TextToolTips, UiManager } from "gamecoreRender";

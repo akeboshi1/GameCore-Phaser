@@ -1,8 +1,7 @@
-import { DynamicImage } from "./dynamic.image";
 import { NineSliceButton, Button, GameScroller, ClickEvent, BBCodeText } from "apowophaserui";
-import { ItemInfoTips } from "./tips/ItemInfoTips";
+import { ItemInfoTips, DynamicImage } from "gamecoreRender";
 import { Font, Handler, i18n, Url } from "utils";
-import { UIAtlasKey } from "picaRes";
+import { UIAtlasKey } from "../../../res";
 
 export class ItemsConsumeFunPanel extends Phaser.GameObjects.Container {
     private confirmBtn: NineSliceButton;

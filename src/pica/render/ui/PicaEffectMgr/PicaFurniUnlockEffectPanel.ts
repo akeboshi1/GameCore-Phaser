@@ -1,7 +1,7 @@
 import { BBCodeText } from "apowophaserui";
 import { DynamicImage, Render } from "gamecoreRender";
-import { UIAtlasName } from "picaRes";
-import { Font, Handler, i18n, UIHelper } from "utils";
+import { UIAtlasName } from "../../../res";
+import { Font, Handler } from "utils";
 export class PicaFurniUnlockEffectPanel extends Phaser.GameObjects.Container {
     private key: string;
     private dpr: number;

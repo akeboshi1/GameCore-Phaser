@@ -1,6 +1,6 @@
 import { Button, ClickEvent } from "apowophaserui";
 import { ButtonEventDispatcher } from "gamecoreRender";
-import { UIAtlasName } from "picaRes";
+import { UIAtlasName } from "../../../res";
 import { Handler, UIHelper } from "utils";
 import { op_client } from "pixelpai_proto";
 

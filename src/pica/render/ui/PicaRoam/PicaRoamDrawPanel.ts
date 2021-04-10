@@ -1,10 +1,10 @@
-import { NineSlicePatch, GameGridTable, Button, ClickEvent, BBCodeText, NineSliceButton } from "apowophaserui";
-import { BackgroundScaleButton, CommonBackground, DynamicImage, ImageValue } from "gamecoreRender";
-import { UIAtlasName } from "picaRes";
+import { NineSlicePatch, Button, ClickEvent, BBCodeText, NineSliceButton } from "apowophaserui";
+import { BackgroundScaleButton, DynamicImage } from "gamecoreRender";
+import { UIAtlasName } from "../../../res";
 import { Font, Handler, i18n, TimeUtils, UIHelper, Url } from "utils";
-import { op_client, op_pkt_def } from "pixelpai_proto";
-import { ModuleName } from "structure";
-import { ICardPool, IDrawPoolStatus, IProgress } from "src/pica/structure/icardpool";
+import { op_client } from "pixelpai_proto";
+import { IDrawPoolStatus, IProgress } from "src/pica/structure/icardpool";
+import { CommonBackground, ImageValue } from "../../ui";
 export class PicaRoamDrawPanel extends Phaser.GameObjects.Container {
     private bg: CommonBackground;
     private topbg: DynamicImage;

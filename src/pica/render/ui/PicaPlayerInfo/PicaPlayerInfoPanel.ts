@@ -1,14 +1,12 @@
-import { op_client } from "pixelpai_proto";
-import { PicaPlayerEditorPanel } from "./PicaPlayerEditorPanel";
+
 import { PicaAttributePanel } from "./PicaAttributePanel";
-import { Button, BBCodeText, NineSliceButton, GameGridTable, GameScroller, ClickEvent, ProgressBar } from "apowophaserui";
-import { UIAtlasKey, UIAtlasName } from "picaRes";
+import { NineSliceButton, GameGridTable, ClickEvent, ProgressBar } from "apowophaserui";
+import { UIAtlasName } from "../../../res";
 import { Font, Handler, i18n, UIHelper, Url } from "utils";
 import { AvatarSuitType, FriendRelationEnum, ModuleName } from "structure";
-import { DynamicImage, UiManager, Render, UIDragonbonesDisplay, CommonBackground, ImageValue, ButtonEventDispatcher, ProgressMaskBar, ThreeSliceButton, ToggleColorButton } from "gamecoreRender";
+import { DynamicImage, UiManager, UIDragonbonesDisplay, ButtonEventDispatcher, ProgressMaskBar, ToggleColorButton } from "gamecoreRender";
 import { PicaBasePanel } from "../pica.base.panel";
-import { EvalSourceMapDevToolPlugin } from "webpack";
-
+import { CommonBackground, ImageValue } from "../../ui";
 export class PicaPlayerInfoPanel extends PicaBasePanel {
     private mBlackBG: Phaser.GameObjects.Graphics;
     private background: CommonBackground;
@@ -91,7 +89,7 @@ export class PicaPlayerInfoPanel extends PicaBasePanel {
         this.bgImge = this.scene.make.image({ key: "Create_role_bg" });
         this.bgImge.alpha = 0.8;
         this.topCon = this.scene.make.container(undefined, false);
-        this.topCon.setSize(conWidth, 110* this.dpr);
+        this.topCon.setSize(conWidth, 110 * this.dpr);
         this.nickImge = new ImageValue(this.scene, 100 * this.dpr, 20 * this.dpr, UIAtlasName.uicommon, "people_woman", this.dpr, UIHelper.whiteStyle(this.dpr, 18));
         this.nickImge.setLayout(1);
         this.nickImge.x = -conWidth * 0.5 + 25 * this.dpr;

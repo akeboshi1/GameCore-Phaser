@@ -8,7 +8,7 @@ import { PicaBusinessRankingDetailPanel } from "./PicaBusinessRankingDetailPanel
 import { PicaBusinessRankRewardPanel } from "./PicaBusinessRankRewardPanel";
 import { BasePanel, UiManager } from "gamecoreRender";
 import { ModuleName, RENDER_PEER } from "structure";
-import { UIAtlasKey, UIAtlasName } from "picaRes";
+import { UIAtlasKey, UIAtlasName } from "../../../res";
 import { Handler, i18n } from "utils";
 export class PicaBusinessStreetPanel extends BasePanel {
     private key2 = "c_street_2";

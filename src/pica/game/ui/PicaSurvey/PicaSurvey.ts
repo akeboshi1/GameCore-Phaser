@@ -1,8 +1,7 @@
 import { BasicModel, Game } from "gamecore";
 import { ConnectionService } from "lib/net/connection.service";
 import { PBpacket } from "net-socket-packet";
-import { UIAtlasName } from "picaRes";
-import { op_client, op_virtual_world } from "pixelpai_proto";
+import { op_client } from "pixelpai_proto";
 import { ModuleName } from "structure";
 
 export class PicaSurvey extends BasicModel {

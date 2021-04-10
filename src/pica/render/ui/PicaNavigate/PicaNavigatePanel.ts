@@ -1,8 +1,8 @@
 import { UIType } from "apowophaserui";
 import { BasePanel, UiManager } from "gamecoreRender";
-import { UIAtlasKey, UIAtlasName } from "picaRes";
-import { EventType, ModuleName, RENDER_PEER } from "structure";
-import { i18n, Logger } from "utils";
+import { UIAtlasKey, UIAtlasName } from "../../../res";
+import { ModuleName, RENDER_PEER } from "structure";
+import { i18n } from "utils";
 export class PicaNavigatePanel extends BasePanel {
   private readonly key_lang: string = "key_lang";
   private mBackground: Phaser.GameObjects.Image;

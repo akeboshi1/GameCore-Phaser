@@ -1,5 +1,5 @@
-import { UIAtlasName } from "picaRes";
-import { ButtonEventDispatcher } from "./button.event.dispatch";
+import { UIAtlasName } from "../../../res";
+import { ButtonEventDispatcher } from "gamecoreRender";
 
 export class CommonBackground extends ButtonEventDispatcher {
     private background: Phaser.GameObjects.Image;

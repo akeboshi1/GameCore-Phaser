@@ -1,7 +1,7 @@
 import { ClickEvent } from "apowophaserui";
-import { UIAtlasName } from "picaRes";
+import { UIAtlasName } from "../../../res";
 import { Handler, i18n, UIHelper } from "utils";
-import { BackgroundScaleButton, ThreeSlicePath } from ".";
+import { BackgroundScaleButton, ThreeSlicePath } from "gamecoreRender";
 
 export class MoreButtonPanel extends Phaser.GameObjects.Container {
     private blackGraphic: Phaser.GameObjects.Graphics;

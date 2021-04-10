@@ -1,8 +1,8 @@
 
 import { op_client } from "pixelpai_proto";
-import { ClickEvent, Button } from "apowophaserui";
-import { Font, Handler, i18n, ResUtils, UIHelper, Url } from "utils";
-import { UIAtlasName } from "picaRes";
+import { ClickEvent, } from "apowophaserui";
+import { Handler, i18n, UIHelper, Url } from "utils";
+import { UIAtlasName } from "../../../res";
 import { ItemButton } from "../Components";
 import { ButtonEventDispatcher, DynamicImage, ProgressMaskBar } from "gamecoreRender";
 export class PicaExploreLogSettlePanel extends ButtonEventDispatcher {

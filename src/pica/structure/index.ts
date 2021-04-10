@@ -8,3 +8,5 @@ export * from "./iquest";
 export * from "./iguide";
 export * from "./Ifurniture.group";
 export * from "./igallery";
+export * from "./icardpool";
+export * from "./ijob";
