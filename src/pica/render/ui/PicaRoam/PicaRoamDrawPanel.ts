@@ -3,7 +3,7 @@ import { BackgroundScaleButton, DynamicImage } from "gamecoreRender";
 import { UIAtlasName } from "../../../res";
 import { Font, Handler, i18n, TimeUtils, UIHelper, Url } from "utils";
 import { op_client } from "pixelpai_proto";
-import { IDrawPoolStatus, IProgress } from "src/pica/structure/icardpool";
+import { IDrawPoolStatus, IProgress } from "../../../structure";
 import { CommonBackground, ImageValue } from "../../ui";
 export class PicaRoamDrawPanel extends Phaser.GameObjects.Container {
     private bg: CommonBackground;

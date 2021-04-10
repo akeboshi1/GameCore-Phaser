@@ -1,5 +1,4 @@
-import { BubbleAnimation, DragonbonesAnimation, FrameAnimation } from "gamecoreRender";
-import { BaseAnimation } from "src/render/display/animation/base.animation";
+import { BubbleAnimation, BaseAnimation } from "gamecoreRender";
 import { Handler } from "utils";
 
 export class InteractionBubbleCell extends Phaser.GameObjects.Container {

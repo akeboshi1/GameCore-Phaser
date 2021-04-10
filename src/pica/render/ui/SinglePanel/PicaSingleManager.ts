@@ -1,4 +1,4 @@
-import { UiManager } from "src/render/ui";
+import { UiManager } from "gamecoreRender";
 import { Logger } from "utils";
 import { PicaBasePanel } from "../pica.base.panel";
 

@@ -11,3 +11,4 @@ export * from "./igallery";
 export * from "./icardpool";
 export * from "./ijob";
 export * from "./ICraftSkill";
+export * from "./ilevel";

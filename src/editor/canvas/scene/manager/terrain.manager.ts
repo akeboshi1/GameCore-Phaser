@@ -1,6 +1,5 @@
 import { PacketHandler, PBpacket } from "net-socket-packet";
 import { op_def, op_client, op_editor } from "pixelpai_proto";
-import { ThreeSliceButton } from "src/render/ui";
 import { IPos } from "utils";
 import { SceneEditorCanvas } from "../scene.editor.canvas";
 

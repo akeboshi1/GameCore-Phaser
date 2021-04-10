@@ -1,8 +1,7 @@
 import { CheckBox, NineSlicePatch, ClickEvent, Button } from "apowophaserui";
 import { UIAtlasKey, UIAtlasName } from "../../../res";
 import { op_client, op_pkt_def } from "pixelpai_proto";
-import { Render } from "src/render/render";
-import { BasePanel, DynamicImage, TextToolTips, UiManager } from "gamecoreRender";
+import { BasePanel, DynamicImage, TextToolTips, UiManager, Render } from "gamecoreRender";
 import { EventType, ModuleName } from "structure";
 import { Font, Handler, i18n, Logger, Url } from "utils";
 export class PicaMainUIPanel extends BasePanel {
