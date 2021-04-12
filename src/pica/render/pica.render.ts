@@ -2,14 +2,13 @@ import "tooqinggamephaser";
 import "gamecoreRender";
 import "dragonBones";
 import "apowophaserui";
-import { LocalStorageManager, Render as BaseRender, SceneManager, CamerasManager, InputManager, SoundManager } from "gamecoreRender";
+import { LocalStorageManager, Render as BaseRender, SceneManager, CamerasManager, InputManager, SoundManager, PlayScene } from "gamecoreRender";
 import { EditorCanvasManager } from "../../render/managers/editor.canvas.manager";
 import { ILauncherConfig, SceneName } from "structure";
 import { PicaGuideManager } from "./guide";
 import { PicaRenderUiManager } from "./ui";
 import { PicaDisplayManager } from "./manager/pica.display.manager";
 import { MouseManagerDecorate } from "./input";
-import { PlayScene } from "game-core";
 import { Export } from "webworker-rpc";
 
 export class Render extends BaseRender {
