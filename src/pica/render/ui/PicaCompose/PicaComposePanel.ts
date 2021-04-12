@@ -6,6 +6,7 @@ import { AvatarSuitType, ModuleName } from "structure";
 import { UIAtlasKey, UIAtlasName } from "picaRes";
 import { Font, Handler, i18n, Url } from "utils";
 import { ICountablePackageItem } from "picaStructure";
+import { UITools } from "picaRender";
 export class PicaComposePanel extends BasePanel {
     private content: Phaser.GameObjects.Container;
     private mDetailDisplay: DetailDisplay;
@@ -227,19 +228,16 @@ export class PicaComposePanel extends BasePanel {
 
     private setDetailDisplay(data: op_client.IPKT_CRAFT_SKILL) {
         this.mDetailDisplay.loadSprite("loading_ui", Url.getUIRes(this.dpr, "loading_ui/loading_ui.png"), Url.getUIRes(this.dpr, "loading_ui/loading_ui.json"));
-        const resData = new op_client.OP_VIRTUAL_WORLD_RES_CLIENT_MARKET_QUERY_PACKAGE_ITEM_RESOURCE();
-        resData.animations = data.productAnimations;
-        resData.display = data.productDisplay;
-        resData.avatar = data.productAvatar;
-        if (resData.display) {
-            this.mDetailDisplay.loadDisplay(resData);
-        } else if (resData.avatar) {
+        if (data.productAvatar) {
+            const resData = { avatar: data.productAvatar };
             const point = new Phaser.Geom.Point();
             point.x = 0;
             point.y = 20 * this.dpr;
             this.mDetailDisplay.loadAvatar(resData, 2 * this.dpr, point);
         } else {
-            // this.mDetailDisplay.loadUrl(this.mSelectedProp.icon);
+            const item = data["item"];
+            const detail = item.serializeString ? item["elepi"] : item;
+            UITools.showDetailDisplay({ display: this.mDetailDisplay, dpr: this.dpr, data: detail, render: this.render, sn: item.sn, itemid: item.id, serialize: item.serializeString });
         }
     }
 

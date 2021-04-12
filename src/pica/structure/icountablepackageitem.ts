@@ -34,6 +34,7 @@ export interface ICountablePackageItem {
     affectValues: ICompareValue[];
     sellingPrice: IPrice;
     countRange: number[];
+    unLockMaterials?: any;
 }
 
 export interface IExtendCountablePackageItem extends ICountablePackageItem {

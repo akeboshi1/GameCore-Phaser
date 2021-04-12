@@ -142,11 +142,11 @@ export class SceneDataManager extends BasePacketHandler {
         const content: op_client.OP_VIRTUAL_WORLD_REQ_CLIENT_MARKET_SHOW_MARKET_BY_NAME = packge.content;
         this.mEvent.emit(EventType.SCENE_SHOW_UI, ModuleName.PICAMARKET_NAME, content);
     }
-    private async onUnlockDoneHandler(packge: PBpacket) {
+    private onUnlockDoneHandler(packge: PBpacket) {
         const content: op_client.OP_VIRTUAL_WORLD_REQ_CLIENT_UNLOCK_DONE = packge.content;
-        const ele = await (<BaseDataConfigManager>this.game.configManager).getElementData(content.configId);
+        const item = (<BaseDataConfigManager>this.game.configManager).getItemBaseByID(content.configId);
         const config = (<any>this.game.configManager);
-        const group = config.getFurnitureGroupBySN(ele.sn);
+        const group = config.getFurnitureGroupBySN(item.sn);
         if (group)
             this.game.emitter.emit(EventType.SCENE_SHOW_UI, ModuleName.PICAREPAIRCHOOSE_NAME, { id: content.eid, group });
     }

@@ -140,7 +140,7 @@ export class PicaPartyNavigationPanel extends PicaBasePanel {
         }));
     }
     protected createOptionButtons() {
-        const arr = [{ text: i18n.t("partynav.town"), type: 1 }, { text: i18n.t("player_info.room"), type: 2 }, { text: i18n.t("party.mine"), type: 3 }];
+        const arr = [{ text: i18n.t("player_info.room"), type: 2 }, { text: i18n.t("partynav.town"), type: 1 }, { text: i18n.t("party.mine"), type: 3 }];
         const allLin = 272 * this.dpr;
         const cellwidth = allLin / arr.length;
         const cellHeight = 20 * this.dpr;

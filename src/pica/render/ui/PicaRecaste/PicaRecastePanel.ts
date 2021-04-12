@@ -1,11 +1,12 @@
 import { NineSliceButton, GameGridTable, GameScroller, Button, NineSlicePatch, ClickEvent } from "apowophaserui";
 import { ButtonEventDispatcher, CommonBackground, ImageValue, Render, TextButton, UiManager } from "gamecoreRender";
-import { DetailDisplay, ItemButton } from "picaRender";
+import { DetailDisplay, ItemButton, UITools } from "picaRender";
 import { UIAtlasName } from "picaRes";
 import { ModuleName } from "structure";
 import { Font, Handler, i18n, UIHelper, Url } from "utils";
 import { op_client, op_def, op_pkt_def } from "pixelpai_proto";
 import { PicaBasePanel } from "../pica.base.panel";
+import { ICountablePackageItem } from "picaStructure";
 export class PicaRecastePanel extends PicaBasePanel {
   private mCloseBtn: ButtonEventDispatcher;
   private mBackground: CommonBackground;
@@ -30,7 +31,7 @@ export class PicaRecastePanel extends PicaBasePanel {
   private tempData: any = {};
   constructor(uiManager: UiManager) {
     super(uiManager);
-    this.atlasNames = [UIAtlasName.uicommon,UIAtlasName.recast];
+    this.atlasNames = [UIAtlasName.uicommon, UIAtlasName.recast];
     this.textures = [{ atlasName: "Recast_aims_icon_bg", folder: "texture" }, { atlasName: "Recast_bg_texture", folder: "texture" }];
     this.key = ModuleName.PICARECASTE_NAME;
   }
@@ -377,12 +378,9 @@ class RecasteDisplayPanel extends Phaser.GameObjects.Container {
     this.starvalue.setText(data.grade + "");
   }
 
-  public setRecasteTargetData(data: op_client.ICountablePackageItem) {
-    this.recasteTarget.displayLoading("loading_ui", Url.getUIRes(this.dpr, "loading_ui/loading_ui.png"), Url.getUIRes(this.dpr, "loading_ui/loading_ui.json"), this.dpr / this.zoom);
-    const content = new op_client.OP_VIRTUAL_WORLD_RES_CLIENT_MARKET_QUERY_PACKAGE_ITEM_RESOURCE();
-    content.display = data.animationDisplay;
-    content.animations = data.animations;
-    this.recasteTarget.loadDisplay(content);
+  public setRecasteTargetData(data: ICountablePackageItem) {
+    const detail = data["elepi"];
+    UITools.showDetailDisplay({ display: this.recasteTarget, dpr: this.dpr, data: detail, render: this.render, sn: data.sn, itemid: data.id, serialize: data.serializeString });
     this.starLevelImg.setFrame("Recast_star_big_" + data.grade);
     this.nameTex.text = data.name || data.shortName;
     this.starLevelImg.visible = true;

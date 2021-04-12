@@ -1,4 +1,4 @@
-import { HTTP_REGEX, ModuleName } from "structure";
+import { AvatarSuitType, HTTP_REGEX, ModuleName } from "structure";
 import { Font } from "./font";
 import { Handler } from "./Handler";
 import { i18n } from "./i18n";
@@ -596,5 +596,7 @@ export class UIHelper {
         });
         return tweenScale;
     }
+
     private static mText: Phaser.GameObjects.Text;
+
 }

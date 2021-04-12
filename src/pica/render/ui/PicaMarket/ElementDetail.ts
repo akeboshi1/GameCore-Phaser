@@ -4,6 +4,8 @@ import { Render } from "gamecoreRender";
 import { NumberCounter } from "./NumberCounter";
 import { Coin, Font, i18n } from "utils";
 import { UIAtlasKey, UIAtlasName } from "picaRes";
+import { UITools } from "picaRender";
+import { ICountablePackageItem } from "picaStructure";
 
 export class ElementDetail extends Phaser.GameObjects.Container {
   private mCounter: NumberCounter;
@@ -125,6 +127,7 @@ export class ElementDetail extends Phaser.GameObjects.Container {
 
   setProp(prop: any) {// op_client.IMarketCommodity
     this.mSelectedProp = prop;
+    const item = prop["item"];
     if (prop.price && prop.price.length > 0) {
       this.mPriceIcon.setTexture(this.key, Coin.getIcon(prop.price[0].coinType));
       this.updatePrice(prop.price[0].price.toString());
@@ -138,16 +141,17 @@ export class ElementDetail extends Phaser.GameObjects.Container {
         return this.serviceTimestamp;
       })
       .then((t) => {
-        this.mDetailBubble.setProp(prop, Math.floor(t / 1000), property);
+        this.mDetailBubble.setProp(item, Math.floor(t / 1000), property);
         this.mDetailBubble.y = this.height - this.y - this.mDetailBubble.height - 6 * this.dpr;
         this.mCounter.setCounter(1);
-        this.mCounter.setItemType(prop.category);
+        this.mCounter.setItemType(item.category);
       });
   }
 
   setResource(content: any) {
-    if (content.display) {
-      this.mDetailDisplay.loadDisplay(content);
+    if (content.serializeString) {
+      const detail = content["elepi"];
+      UITools.showDetailDisplay({ display: this.mDetailDisplay, dpr: this.dpr, data: detail, render: this.render, sn: content.sn, itemid: content.id, serialize: content.serializeString });
     } else if (content.avatar) {
       this.render.mainPeer.getPlayerAvatar()
         .then(({ avatar, suits }) => {

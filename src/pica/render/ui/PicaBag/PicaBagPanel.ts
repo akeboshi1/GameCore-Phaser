@@ -1,12 +1,13 @@
 import { NineSliceButton, GameGridTable, GameScroller, TabButton, Button, BBCodeText, NineSlicePatch, ClickEvent, NinePatchTabButton } from "apowophaserui";
 import { CheckboxGroup, CommonBackground, DynamicImage, DynamicImageValue, ImageValue, MoreButtonPanel, TextButton, UiManager } from "gamecoreRender";
-import { DetailBubble, DetailDisplay, ItemButton } from "picaRender";
+import { DetailBubble, DetailDisplay, ItemButton, UITools } from "picaRender";
 import { UIAtlasName } from "picaRes";
 import { AvatarSuitType, ModuleName } from "structure";
 import { Font, Handler, i18n, UIHelper, Url } from "utils";
 import { op_client, op_def } from "pixelpai_proto";
 import { PicaBasePanel } from "../pica.base.panel";
 import { ICountablePackageItem, IExtendCountablePackageItem } from "picaStructure";
+import { Item } from "../PicaElementStorage/Item";
 export class PicaBagPanel extends PicaBasePanel {
   public static PICABAG_SHOW: string = "PICABAG_SHOW";
   private mCloseBtn: Button;
@@ -479,11 +480,13 @@ export class PicaBagPanel extends PicaBasePanel {
     this.mSelectedItemData = data;
     this.mSelectedItem = cell;
     cell.select = true;
-    this.mDetailDisplay.displayLoading("loading_ui", Url.getUIRes(this.dpr, "loading_ui/loading_ui.png"), Url.getUIRes(this.dpr, "loading_ui/loading_ui.json"));
-    const content = new op_client.OP_VIRTUAL_WORLD_RES_CLIENT_MARKET_QUERY_PACKAGE_ITEM_RESOURCE();
-    content.display = this.categoryType === 1 ? data.animationDisplay : data.display;
-    content.animations = <any>data.animations;
-    this.setSelectedResource(content);
+    // this.mDetailDisplay.displayLoading("loading_ui", Url.getUIRes(this.dpr, "loading_ui/loading_ui.png"), Url.getUIRes(this.dpr, "loading_ui/loading_ui.json"));
+    // const content: any = {};
+    // content.display = this.categoryType === 1 ? data.animationDisplay : data.display;
+    // content.animations = <any>data.animations;
+    // this.setSelectedResource(content);
+    const detail = data.serializeString ? data["elepi"] : data;
+    UITools.showDetailDisplay({ display: this.mDetailDisplay, dpr: this.dpr, data: detail, render: this.render, sn: data.sn, itemid: data.id, serialize: data.serializeString });
   }
 
   private isSelectedItemData(data: op_client.ICountablePackageItem) {// op_client.ICountablePackageItem
@@ -674,7 +677,7 @@ export class PicaBagPanel extends PicaBasePanel {
     if (data.suitType) {
       resource.avatar = AvatarSuitType.createAvatarBySn(data.suitType, data.sn, data.slot, data.tag, data.version);
     } else {
-      resource.display = data.display;
+      resource.display = data.animationDisplay || data.display;
     }
     resource.suit = [{ suit_type: data.suitType, sn: data.sn, tag: data.tag, version: data.version }];
     resource.animations = data.animations;
@@ -695,12 +698,12 @@ export class PicaBagPanel extends PicaBasePanel {
       if (!data.recyclable) return;
       const title = i18n.t("common.sold");
       const resource = this.getPropResource(data);// op_client.OP_VIRTUAL_WORLD_RES_CLIENT_MARKET_QUERY_PACKAGE_ITEM_RESOURCE
-      if (data.avatar) {
-        resource.avatar = data.avatar;
-      } else {
-        resource.display = data.display;
-      }
-      resource.animations = data.animations;
+      // if (data.avatar) {
+      //   resource.avatar = data.avatar;
+      // } else {
+      //   resource.display = data.display;
+      // }
+      // resource.animations = data.animations;
       const resultHandler = {
         key: this.key,
         confirmFunc: "onSellPropsHandler",

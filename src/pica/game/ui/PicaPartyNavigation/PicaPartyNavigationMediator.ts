@@ -26,7 +26,7 @@ export class PicaPartyNavigationMediator extends BasicMediator {
     }
 
     show(param?: any) {
-        this.chooseType = Number(param || 2);
+        this.chooseType = Number(param || 1);
         param = this.chooseType;
         super.show(param);
         this.game.emitter.on(this.key + "_close", this.onCloseHandler, this);

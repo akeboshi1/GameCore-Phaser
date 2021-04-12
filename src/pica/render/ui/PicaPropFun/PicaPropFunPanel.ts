@@ -5,6 +5,7 @@ import { ModuleName, RENDER_PEER } from "structure";
 import { Coin, Font, i18n } from "utils";
 import { UIAtlasKey, UIAtlasName } from "picaRes";
 import { ICountablePackageItem } from "picaStructure";
+import { UITools } from "picaRender";
 export class PicaPropFunPanel extends BasePanel {
     public itemCount: number = 1;
     private itemName: Phaser.GameObjects.Text;
@@ -14,7 +15,7 @@ export class PicaPropFunPanel extends BasePanel {
     private priceBg: Phaser.GameObjects.Image;
     private mCoinIcon: Phaser.GameObjects.Image;
     private itemCountText: Phaser.GameObjects.Text;
-    private itemData: ICountablePackageItem;
+    private itemData: any;
     private confirmHandler: Function;
     private confirmHandlerAddData: any;
     private cancelHandler: Function;
@@ -200,11 +201,12 @@ export class PicaPropFunPanel extends BasePanel {
 
     public setProp(config: any) {// PicPropFunConfig
         this.prop = config;
+        const data = this.prop.data;
         let price = (config.price !== undefined ? config.price : true);
-        price = this.prop.data.sellingPrice ? price : false;
+        price = data.sellingPrice ? price : false;
         const slider = (config.slider !== undefined ? config.slider : true);
         this.line = config.line || false;
-        this.itemData = this.prop.data;
+        this.itemData = data;
         if (slider)
             this.itemCount = 1;
         else this.itemCount = this.itemData.count;
@@ -251,13 +253,14 @@ export class PicaPropFunPanel extends BasePanel {
     }
     setResource(content: any) {// op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_MARKET_QUERY_COMMODITY_RESOURCE
         if (content) {
-            if (content.display) {
-                this.mDetailDisplay.loadDisplay(content);
+            if (content.serializeString) {
+                const detail = content["elepi"];
+                UITools.showDetailDisplay({ display: this.mDetailDisplay, dpr: this.dpr, data: detail, render: this.render, sn: content.sn, itemid: content.id, serialize: content.serializeString });
             } else if (content.avatar) {
                 this.mDetailDisplay.loadAvatar(content, 2, new Phaser.Geom.Point(0, 35 * 2));
             }
         } else {
-            this.mDetailDisplay.loadUrl(this.itemData.texturePath);
+            this.mDetailDisplay.loadUrl(this.itemData.icon);
         }
     }
     private updateData() {

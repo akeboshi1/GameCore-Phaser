@@ -5,6 +5,7 @@ import { Coin, Font, Handler, i18n, UIHelper } from "utils";
 import { UIAtlasName } from "picaRes";
 import { ICountablePackageItem, IExtendCountablePackageItem } from "picaStructure";
 import { ProgressMaskBar, Render } from "gamecoreRender";
+import { UITools } from "picaRender";
 export class PicaFuriniDetailPanel extends Phaser.GameObjects.Container {
     private backgrand: Phaser.GameObjects.Graphics;
     private codeName: Phaser.GameObjects.Text;
@@ -117,16 +118,18 @@ export class PicaFuriniDetailPanel extends Phaser.GameObjects.Container {
     }
 
     private setResource(prop: IExtendCountablePackageItem) {
-        const content: any = {};
-        content.display = prop.animationDisplay || prop.display;
-        content.animations = <any>prop.animations;
-        if (content.display) {
-            this.mDetailDisplay.loadDisplay(content);
-        } else if (content.avatar) {
-            this.mDetailDisplay.loadAvatar(content, 2, new Phaser.Geom.Point(0, 35 * 2));
-        } else {
-            this.mDetailDisplay.loadUrl(this.itemData.texturePath);
-        }
+        // const content: any = {};
+        // content.display = prop.animationDisplay || prop.display;
+        // content.animations = <any>prop.animations;
+        // if (content.display) {
+        //     this.mDetailDisplay.loadDisplay(content);
+        // } else if (content.avatar) {
+        //     this.mDetailDisplay.loadAvatar(content, 2, new Phaser.Geom.Point(0, 35 * 2));
+        // } else {
+        //     this.mDetailDisplay.loadUrl(this.itemData.texturePath);
+        // }
+        const detail = prop.serializeString ? prop["elepi"] : prop;
+        UITools.showDetailDisplay({ display: this.mDetailDisplay, dpr: this.dpr, data: detail, render: this.render, sn: prop.sn, itemid: prop.id, serialize: prop.serializeString });
     }
 
     private onCloseHandler() {

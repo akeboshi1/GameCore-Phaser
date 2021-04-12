@@ -31,6 +31,9 @@ import { FurnitureGroup } from "./furniture.group";
 import { GalleryConfig, GalleryType } from "./gallery.config";
 import { IGalleryCombination, IGalleryLevel } from "src/pica/structure/igallery";
 import { Lite } from "game-capsule";
+import { ElmentPiConfig } from "./element.pi.config";
+import { IElementPi } from "src/pica/structure/ielementpi";
+import { EventType } from "structure";
 
 export enum BaseDataType {
     i18n_zh = "i18n_zh",
@@ -48,7 +51,8 @@ export enum BaseDataType {
     quest = "quest",
     guide = "guide",
     furnituregroup = "furnituregroup",
-    gallery = "gallery"
+    gallery = "gallery",
+    elementpi = "elementpi" // 不作为文件名加载文件，只作为类型区分
     // itemcategory = "itemcategory"
 }
 
@@ -58,6 +62,7 @@ export class BaseDataConfigManager extends BaseConfigManager {
     protected sceneMap: SceneConfigMap;
     constructor(game: Game) {
         super(game);
+        this.mGame.emitter.on(EventType.QUEST_ELEMENT_PI_DATA, this.checkDynamicElementPI, this);
     }
 
     public getLocalConfigMap() {
@@ -197,34 +202,9 @@ export class BaseDataConfigManager extends BaseConfigManager {
      * @param id
      * @returns
      */
-    public getElementData(id: string): Promise<IElement> {
-        return new Promise<IElement>((reslove, reject) => {
-            const data: ElementDataConfig = this.getConfig(BaseDataType.element);
-            const element = data.get(id);
-            if (!element.serialize) {
-                const path = ResUtils.getGameConfig(element.serializeString);
-                if (path && path.length > 0) {
-                    const responseType = "arraybuffer";
-                    this.mGame.httpLoaderManager.startSingleLoader({ path, responseType }).then((req: any) => {
-                        element.serialize = true;
-                        // todo
-                        // 保存到elementstorage中
-                        this.decodeItem(req).then((lite) => {
-                            this.mGame.elementStorage.setGameConfig(lite);
-                            reslove(element);
-                        });
-                    }).catch(() => {
-                        reject(element);
-                    });
-                } else {
-                    element.serialize = true;
-                    // todo
-                    reslove(element);
-                }
-            } else {
-                reslove(element);
-            }
-        });
+    public getElementData(id: string) {
+        const data: ElementDataConfig = this.getConfig(BaseDataType.element);
+        const element = data.get(id);
     }
 
     /**
@@ -244,19 +224,16 @@ export class BaseDataConfigManager extends BaseConfigManager {
      * @returns
      */
     public getElementUnlockMaterialsBySN(sns: string[]) {
-        const data: ElementDataConfig = this.getConfig(BaseDataType.element);
+        const data: ItemBaseDataConfig = this.getConfig(BaseDataType.item);
         const map: Map<string, any> = new Map();
-        for (const key in data) {
-            if (data.hasOwnProperty(key)) {
-                const temp = data[key];
-                if (sns.indexOf(temp.sn) !== -1) {
-                    if (!StringUtils.isNullOrUndefined(temp.unLockMaterials)) {
-                        const unlockstr = JSON.stringify(temp.unLockMaterials);
-                        map.set(temp.sn, JSON.parse(unlockstr));
-                    }
+        for (const sn of sns) {
+            const temp = this.getItemBaseBySN(sn);
+            if (sns.indexOf(temp.sn) !== -1) {
+                if (!StringUtils.isNullOrUndefined(temp.unLockMaterials)) {
+                    const unlockstr = JSON.stringify(temp.unLockMaterials);
+                    map.set(temp.sn, JSON.parse(unlockstr));
                 }
             }
-            if (map.size === sns.length) break;
         }
         return map;
     }
@@ -275,8 +252,8 @@ export class BaseDataConfigManager extends BaseConfigManager {
                 temp.name = item.name;
                 temp.icon = item.texturePath;
                 temp.source = item.source;
+                temp["item"] = item;
                 temp["find"] = true;
-                ObjectAssign.excludeTagAssign(temp, item);
             }
         }
         return temp;
@@ -396,7 +373,7 @@ export class BaseDataConfigManager extends BaseConfigManager {
     public checkDynamicShop(shopName): Promise<any> {
         return new Promise((resolve, reject) => {
             if (!this.dataMap.has(shopName)) {
-                this.dynamicLoad(new Map([shopName, new ShopConfig()])).then(() => {
+                this.dynamicLoad(new Map([[shopName, new ShopConfig()]])).then(() => {
                     resolve(true);
                 }, (reponse) => {
                     Logger.getInstance().error("未成功加载配置:" + reponse);
@@ -486,7 +463,6 @@ export class BaseDataConfigManager extends BaseConfigManager {
                 return;
             }
             shopitem.currencyId = shopitem.currencyId || shopitem.currency;
-
             tempItem.name = item.name;
             tempItem.source = item.source;
             tempItem["des"] = item ? item.des : "";
@@ -496,10 +472,8 @@ export class BaseDataConfigManager extends BaseConfigManager {
                 displayPrecision: 0
             }];
             shopitem["find"] = true;
-            shopitem["exclude"] = data.excludes;
-            if (shopitem.icon === "" || shopitem.icon === undefined)
-                shopitem.icon = item ? item.texturePath : undefined;
-            ObjectAssign.excludeTagAssign(shopitem, item);
+            shopitem.icon = shopitem.icon || item.texturePath;
+            shopitem["item"] = item;
         }
     }
 
@@ -683,6 +657,37 @@ export class BaseDataConfigManager extends BaseConfigManager {
         return temp;
     }
 
+    /**
+     * 动态加载LementPI数据
+     * @param ownerType 请求来源配置
+     * @param serialize 请求路径
+     * @returns
+     */
+    public checkDynamicElementPI(data: { sn: string, itemid: string, serialize: string, ownerType?: number }) {
+        const configType: any = BaseDataType.elementpi;
+        const ownerType = data.ownerType === 2 ? BaseDataType.element : BaseDataType.item;
+        if (!this.dataMap.has(configType)) {
+            const tempconfig = new ElmentPiConfig();
+            this.dataMap.set(configType, tempconfig);
+        }
+        const config = <ElmentPiConfig>this.dataMap.get(configType);
+        config.url = ResUtils.getResRoot(data.serialize);
+        this.dynamicLoad(new Map([[configType, config]])).then(() => {
+            const elepi: IElementPi = config.get(data.sn);
+            elepi.itemId = data.itemid;
+            const item = this.dataMap.get(ownerType);
+            item["elepi"] = elepi;
+            this.mGame.peer.workerEmitter(EventType.RETURN_ELEMENT_PI_DATA + "_" + data.sn, elepi);
+        }, (reponse) => {
+            Logger.getInstance().error("未成功加载配置:" + reponse);
+            this.mGame.peer.workerEmitter(EventType.RETURN_ELEMENT_PI_DATA + "_" + data.sn, undefined);
+        });
+    }
+
+    public destory() {
+        super.destory();
+        this.mGame.emitter.off(EventType.QUEST_ELEMENT_PI_DATA, this.checkDynamicElementPI, this);
+    }
     protected add() {
         super.add();
         this.dataMap.set(BaseDataType.i18n_zh, new I18nZHDataConfig());
@@ -705,66 +710,88 @@ export class BaseDataConfigManager extends BaseConfigManager {
 
     protected configUrl(reName: string, tempurl?: string) {
         if (tempurl) {
-            return this.mGame.getGameConfig().locationhref + `resources_v${version}/${tempurl}`;
+            return tempurl;// this.mGame.getGameConfig().locationhref + `resources_v${version}/${tempurl}`;
         }
         const url = this.baseDirname + `client_resource/${reName}.json`;
         return url;
     }
-
-    private async checkItemData(item: ICountablePackageItem): Promise<ICountablePackageItem> {
-        return new Promise<ICountablePackageItem>((reslove, reject) => {
-            if (!item) {
-                return;
+    private checkItemData(item: ICountablePackageItem) {
+        if (!item || item["find"]) return;
+        const config: ItemBaseDataConfig = this.getConfig(BaseDataType.item);
+        item.name = this.getI18n(item.name, { id: item.id, name: item.name });
+        item.source = this.getI18n("PKT_MARKET_TAG_SOURCE_" + item.source, { id: item.id, source: item.source });
+        item.des = this.getI18n(item.des, { id: item.id, des: item.source });
+        item.category = "PKT_PACKAGE_CATEGORY_" + item.category;
+        item.subcategory = "PKT_MARKET_TAG_" + item.subcategory;
+        item["exclude"] = config.excludes;
+        if (item.texturePath) item["display"] = { texturePath: item.texturePath };
+        const serializeString = item.serializeString;
+        if (serializeString) {
+            const index = serializeString.lastIndexOf(".");
+            if (index === -1) {
+                item.texturePath = serializeString + "_s";
+            } else {
+                const path = serializeString.slice(0, index);
+                item.texturePath = path + "_s.png";
             }
-            if (item["find"]) reslove(item);
-            const config: ItemBaseDataConfig = this.getConfig(BaseDataType.item);
-            item.name = this.getI18n(item.name, { id: item.id, name: "name" });
-            item.source = this.getI18n(item.source, { id: item.id, source: "source" });
-            item.des = this.getI18n(item.des, { id: item.id, des: "des" });
-            item["exclude"] = config.excludes;
-            if (item.texturePath) item["display"] = { texturePath: item.texturePath };
-            if (item.serializeString && item.serializeString !== "") {
-                const path = ResUtils.getResRoot(item.serializeString);
-                if (path && path.length > 0) {
-                    const responseType = "arraybuffer";
-                    this.mGame.httpLoaderManager.startSingleLoader({ path, responseType }).then((req: any) => {
-                        item["find"] = true;
-                        // 保存到elementstorage中
-                        this.decodeItem(req).then((lite) => {
-                            this.mGame.elementStorage.setGameConfig(lite);
-                            reslove(item);
-                        });
-                    }).catch(() => {
-                        reject(item);
-                    });
-                } else {
-                    item["find"] = true;
-                    // todo
-                    reslove(item);
-                }
-            }
-        });
-
-         // const element = await this.getElementData(item.elementId);
-        // if (element) {
-        //     const texture_path = element.texture_path;
-        //     item["animations"] = element["AnimationData"];
-        //     if (texture_path) {
-        //         item["animationDisplay"] = { dataPath: element.data_path, texturePath: texture_path };
-        //         const index = texture_path.lastIndexOf(".");
-        //         if (index === -1) {
-        //             item.texturePath = element.texture_path + "_s";
-        //         } else {
-        //             const extensions = texture_path.slice(index, texture_path.length);
-        //             const path = texture_path.slice(0, index);
-        //             item.texturePath = path + "_s" + extensions;
-        //         }
-        //         item["display"] = { texturePath: item.texturePath };
-        //     }
-        // }
-        // item["find"] = true;
-        // });
+        }
+        item["find"] = true;
     }
+
+    // private async checkItemData(item: ICountablePackageItem): Promise<ICountablePackageItem> {
+    //     return new Promise<ICountablePackageItem>((reslove, reject) => {
+    //         if (!item) {
+    //             return;
+    //         }
+    //         if (item["find"]) reslove(item);
+    //         const config: ItemBaseDataConfig = this.getConfig(BaseDataType.item);
+    //         item.name = this.getI18n(item.name, { id: item.id, name: "name" });
+    //         item.source = this.getI18n(item.source, { id: item.id, source: "source" });
+    //         item.des = this.getI18n(item.des, { id: item.id, des: "des" });
+    //         item["exclude"] = config.excludes;
+    //         if (item.texturePath) item["display"] = { texturePath: item.texturePath };
+    //         if (item.serializeString && item.serializeString !== "") {
+    //             const path = ResUtils.getResRoot(item.serializeString);
+    //             if (path && path.length > 0) {
+    //                 const responseType = "arraybuffer";
+    //                 this.mGame.httpLoaderManager.startSingleLoader({ path, responseType }).then((req: any) => {
+    //                     item["find"] = true;
+    //                     // 保存到elementstorage中
+    //                     this.decodeItem(req).then((lite) => {
+    //                         this.mGame.elementStorage.setGameConfig(lite);
+    //                         reslove(item);
+    //                     });
+    //                 }).catch(() => {
+    //                     reject(item);
+    //                 });
+    //             } else {
+    //                 item["find"] = true;
+    //                 // todo
+    //                 reslove(item);
+    //             }
+    //         }
+    //     });
+
+    //     // const element = await this.getElementData(item.elementId);
+    //     // if (element) {
+    //     //     const texture_path = element.texture_path;
+    //     //     item["animations"] = element["AnimationData"];
+    //     //     if (texture_path) {
+    //     //         item["animationDisplay"] = { dataPath: element.data_path, texturePath: texture_path };
+    //     //         const index = texture_path.lastIndexOf(".");
+    //     //         if (index === -1) {
+    //     //             item.texturePath = element.texture_path + "_s";
+    //     //         } else {
+    //     //             const extensions = texture_path.slice(index, texture_path.length);
+    //     //             const path = texture_path.slice(0, index);
+    //     //             item.texturePath = path + "_s" + extensions;
+    //     //         }
+    //     //         item["display"] = { texturePath: item.texturePath };
+    //     //     }
+    //     // }
+    //     // item["find"] = true;
+    //     // });
+    // }
 
     private decodeItem(req): Promise<Lite> {
         return new Promise((resolve, reject) => {

@@ -6,7 +6,7 @@ import { AvatarSuitType, ModuleName } from "structure";
 import { CoinType, Font, i18n } from "utils";
 import { UIAtlasKey, UIAtlasName } from "picaRes";
 import { op_client } from "pixelpai_proto";
-import { IPrice } from "picaStructure";
+import { IExtendCountablePackageItem, IPrice } from "picaStructure";
 import { MoneyCompent } from "picaRender";
 export class PicaMarketPanel extends BasePanel {
   private mSelectItem: ElementDetail;
@@ -440,14 +440,11 @@ export class PicaMarketPanel extends BasePanel {
   private onSelectItemHandler(prop: any) {// op_client.IMarketCommodity
     this.mSelectItem.setProp(prop);
     this.mSelectItem.setData("propdata", prop);
-    if (!prop.suitType || prop.suitType === "") {
-      // this.render.renderEmitter(this.key + "_queryPropResource", prop);
-      const content = new op_client.OP_VIRTUAL_WORLD_RES_CLIENT_MARKET_QUERY_PACKAGE_ITEM_RESOURCE();
-      content.display = prop.animationDisplay ? prop.animationDisplay : prop.display;
-      content.animations = <any>prop.animations;
-      this.setCommodityResource(content);
+    const item = prop["item"];
+    if (!item.suitType || item.suitType === "") {
+      this.setCommodityResource(item);
     } else {
-      const content = this.getCommodityResource(prop);
+      const content = this.getCommodityResource(item);
       this.setCommodityResource(content);
     }
   }
@@ -492,7 +489,7 @@ export class PicaMarketPanel extends BasePanel {
   private showPropFun(config: any) {// PicPropFunConfig
     this.render.mainPeer.showMediator(ModuleName.PICAPROPFUN_NAME, true, config);
   }
-  private getCommodityResource(data: op_client.IMarketCommodity) {
+  private getCommodityResource(data: IExtendCountablePackageItem) {
     const content: any = {};
     content.avatar = AvatarSuitType.createAvatarBySn(data.suitType, data.sn, data.slot, data.tag, data.version);
     content.suits = [{ suit_type: data.suitType, sn: data.sn, tag: data.tag, version: data.version }];
