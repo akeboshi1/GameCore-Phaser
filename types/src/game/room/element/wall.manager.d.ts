@@ -1,4 +1,4 @@
-import { IRoomService } from "..";
+import { IRoomService } from "../room";
 export declare class WallManager {
     private roomService;
     private walls;

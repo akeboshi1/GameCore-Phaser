@@ -1,6 +1,5 @@
-import { Helpers, Logger } from "utils";
-import { IRoomService } from "..";
-import { op_def } from "pixelpai_proto";
+import { Helpers } from "utils";
+import { IRoomService } from "../room";
 import { Wall } from "../wall/wall";
 import { Sprite } from "baseModel";
 import { LayerEnum } from "game-capsule";

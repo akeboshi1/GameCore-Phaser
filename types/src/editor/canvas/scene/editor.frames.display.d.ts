@@ -37,7 +37,7 @@ export declare class EditorFramesDisplay extends BaseFramesDisplay {
     protected getCollisionArea(): any;
     protected getOriginPoint(): any;
     protected get topDisplay(): EditorTopDisplay;
-    protected get elementManager(): import("./manager/element.manager").EditorElementManager;
+    protected get elementManager(): import("./manager").EditorElementManager;
     /**
      * 兼容没有Layer的情况
      * @deprecated

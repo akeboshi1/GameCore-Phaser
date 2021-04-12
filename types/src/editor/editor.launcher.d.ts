@@ -10,5 +10,5 @@ export declare enum EditorCanvasType {
     Scene = 2
 }
 export declare class EditorLauncher {
-    static CreateCanvas(type: EditorCanvasType, config: IEditorCanvasConfig): AvatarEditorCanvas | ElementEditorCanvas | SceneEditorCanvas;
+    static CreateCanvas(type: EditorCanvasType, config: IEditorCanvasConfig): ElementEditorCanvas | AvatarEditorCanvas | SceneEditorCanvas;
 }

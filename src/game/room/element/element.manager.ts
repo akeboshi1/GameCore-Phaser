@@ -3,7 +3,7 @@ import { op_client, op_def, op_virtual_world } from "pixelpai_proto";
 import { ConnectionService } from "../../../../lib/net/connection.service";
 import { Logger, LogicPos } from "utils";
 import { EventType, IDragonbonesModel, IFramesModel, ISprite, MessageType } from "structure";
-import { IRoomService } from "../room/room";
+import { IRoomService } from "../room";
 import { Element, IElement, InputEnable } from "./element";
 import { ElementStateManager } from "./element.state.manager";
 import { ElementDataManager } from "../../data.manager/element.dataManager";

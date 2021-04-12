@@ -142,6 +142,7 @@ export class Render extends RPCPeer implements GameMain, IRender {
         // Logger.getInstance().debug("connectfail===>", this.mConnectFailFunc, this.mConfig);
         this.initConfig();
         Logger.getInstance().log("Render version ====>:", `v${version}`);
+        // todo protected createFunc
         this.linkTo(MAIN_WORKER, MAIN_WORKER_URL).onceReady(() => {
             this.mMainPeer = this.remote[MAIN_WORKER].MainPeer;
             this.mMainPeer.updateFps();

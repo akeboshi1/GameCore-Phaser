@@ -2,7 +2,7 @@ import { PacketHandler, PBpacket } from "net-socket-packet";
 import { op_client, op_def } from "pixelpai_proto";
 import { ConnectionService } from "../../../../lib/net/connection.service";
 import { IDragonbonesModel, IFramesModel, ISprite } from "structure";
-import { IRoomService } from "../room/room";
+import { IRoomService } from "../room";
 import { Element, IElement } from "./element";
 import { ElementDataManager } from "../../data.manager/element.dataManager";
 export interface IElementManager {

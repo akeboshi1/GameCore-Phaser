@@ -6,7 +6,6 @@ import { ServerAddress } from "../../lib/net/address";
 import { Game } from "./game";
 import { IPos, Logger } from "utils";
 import { ILauncherConfig, MAIN_WORKER, RENDER_PEER, ModuleName, EventType, PHYSICAL_WORKER, PHYSICAL_WORKER_URL, GameState } from "structure";
-import { PicaGame } from "picaWorker";
 import { DataMgrType } from "./data.manager/dataManager";
 import { SceneDataManager } from "./data.manager";
 import version from "../../version";
@@ -35,7 +34,7 @@ export class MainPeer extends RPCPeer {
     constructor() {
         super(MAIN_WORKER);
         Logger.getInstance().log("Game version ====>:", `v${version}`);
-        this.game = new PicaGame(this);
+        this.game = new Game(this);
         this.stateTime = new Date().getTime();
     }
 

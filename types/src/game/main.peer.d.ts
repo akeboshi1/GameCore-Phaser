@@ -1,7 +1,6 @@
 import { RPCPeer } from "webworker-rpc";
 import { op_client } from "pixelpai_proto";
 import { Buffer } from "net-socket-packet";
-import * as protos from "pixelpai_proto";
 import { IPos } from "utils";
 import { ILauncherConfig } from "structure";
 export declare class MainPeer extends RPCPeer {
@@ -58,7 +57,7 @@ export declare class MainPeer extends RPCPeer {
     getActiveUIData(str: string): any;
     startRoomPlay(): void;
     onVerifiedHandler(name: string, idcard: string): void;
-    getRoomTransformTo90(p: any): IPos;
+    getRoomTransformTo90(p: any): any;
     getCurrentRoomSize(): any;
     getCurrentRoomMiniSize(): any;
     getPlayerName(id: number): string;
@@ -69,7 +68,7 @@ export declare class MainPeer extends RPCPeer {
     decorateSelectElement(id: number): void;
     decorateMoveElement(id: number, delta: IPos): void;
     requestDecorate(id?: number, baseID?: string): void;
-    isElementLocked(id: number): boolean;
+    isElementLocked(id: number): any;
     exitUser(): void;
     displayCompleteMove(id: number): void;
     syncPosition(targetPoint: any): void;
@@ -84,7 +83,7 @@ export declare class MainPeer extends RPCPeer {
     pushMovePoints(id: number, points: any): void;
     onTapHandler(obj: any): void;
     isCurrentRoomEditEnable(): boolean;
-    getCurrentRoomType(): protos.op_def.SceneTypeEnum;
+    getCurrentRoomType(): any;
     activePlayer(id: number): void;
     stopGuide(id: string): void;
     startFireMove(pointer: any): void;
@@ -99,7 +98,7 @@ export declare class MainPeer extends RPCPeer {
     exportUimanager(): Promise<boolean>;
     hideMediator(name: string): void;
     renderEmitter(eventType: string, data: any): void;
-    fetchProjectionSize(id: number): import("../utils").IProjection;
+    fetchProjectionSize(id: number): any;
     getUserData_PlayerProperty(): any;
     getUserData_CurRoomID(): string;
     getCurRoom(): op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_EDIT_MODE_ROOM_INFO;
@@ -110,7 +109,7 @@ export declare class MainPeer extends RPCPeer {
     tryStopMove(id: number, interactiveBoo: boolean, targetId?: number, stopPos?: any): void;
     tryStopElementMove(id: number, points?: any): void;
     requestPushBox(id: number): void;
-    removeMount(id: number, mountID: number, stopPos: IPos): Promise<void>;
+    removeMount(id: number, mountID: number, stopPos: IPos): Promise<any>;
     stopMove(id: number): void;
     uploadHeadImage(url: string): void;
     completeDragonBonesAnimationQueue(id: number): void;

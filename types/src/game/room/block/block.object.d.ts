@@ -1,7 +1,7 @@
 import { IPos, IProjection } from "utils";
 import { InputEnable } from "../element/element";
 import { MatterObject } from "../physical/matter.object";
-import { IRoomService } from "../room/room";
+import { IRoomService } from "../room";
 import { IBlockObject } from "./iblock.object";
 import { ISprite } from "structure";
 export declare abstract class BlockObject extends MatterObject implements IBlockObject {
