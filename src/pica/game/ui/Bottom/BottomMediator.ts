@@ -1,7 +1,6 @@
-import { BasicMediator, CacheDataManager, ChatManager, DataMgrType, Game, IElement, UIType } from "gamecore";
+import { BasicMediator, ChatManager, DataMgrType, Game, IElement, UIType } from "gamecore";
 import { EventType, ModuleName } from "structure";
-import { op_def, op_client } from "pixelpai_proto";
-import { PicaChat } from "picaWorker";
+import { PicaChat } from "../PicaChat/PicaChat";
 import { ChatCommandInterface, Logger } from "utils";
 
 export class BottomMediator extends BasicMediator {
@@ -49,7 +48,7 @@ export class BottomMediator extends BasicMediator {
 
     protected panelInit() {
         super.panelInit();
-        const cacheManager = this.cacheManager ;
+        const cacheManager = this.cacheManager;
         if (cacheManager) {
             const msgs = cacheManager.getMsgs();
             for (const msg of msgs) {

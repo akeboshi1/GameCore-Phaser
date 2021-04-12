@@ -1,0 +1,34 @@
+import { BasePanel, UiManager } from "gamecoreRender";
+export declare class PicaOrderPanel extends BasePanel {
+    private uiManager;
+    private mBackground;
+    private bg;
+    private titlebg;
+    private tilteName;
+    private closeBtn;
+    private mGameGrid;
+    private content;
+    private orderProgressPanel;
+    private goldImageValue;
+    private royalOrderLimit;
+    private itemtips;
+    private progressData;
+    constructor(uiManager: UiManager);
+    resize(width?: number, height?: number): void;
+    show(param?: any): void;
+    addListen(): void;
+    removeListen(): void;
+    preload(): void;
+    init(): void;
+    setOrderDataList(content: any): void;
+    setOrderProgress(content: any): void;
+    destroy(): void;
+    private OnClosePanel;
+    private onSendHandler;
+    private onProgressHandler;
+    private onRefreshOrderList;
+    private onItemInfoTips;
+    private onClickDownHandler;
+    private showItemTipsState;
+    private setTipsPosition;
+}

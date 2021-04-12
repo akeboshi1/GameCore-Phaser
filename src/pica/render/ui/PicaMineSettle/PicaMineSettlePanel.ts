@@ -1,7 +1,7 @@
 import { NineSliceButton, GameGridTable, ClickEvent } from "apowophaserui";
 import { BasePanel, DynamicImage, NinePatch, UiManager } from "gamecoreRender";
-import { UIAtlasKey, UIAtlasName } from "picaRes";
-import { ICountablePackageItem } from "picaStructure";
+import { UIAtlasKey, UIAtlasName } from "../../../res";
+import { ICountablePackageItem } from "../../../structure";
 import { ModuleName, RENDER_PEER } from "structure";
 import { Font, i18n, Url } from "utils";
 export class PicaMineSettlePanel extends BasePanel {

@@ -1,5 +1,5 @@
 import { UiManager, Render, BasePanel } from "gamecoreRender";
-import { AtlasData, AtlasManager, UILoadType } from "picaRes";
+import { AtlasData, AtlasManager, UILoadType } from "../../res";
 import { PicaSingleManager } from "./SinglePanel/PicaSingleManager";
 export class PicaRenderUiManager extends UiManager {
     protected mAtalsManager: AtlasManager;

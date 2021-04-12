@@ -1,6 +1,6 @@
-import { BBCodeText, Button, CheckBox, ClickEvent, NineSliceButton, NineSlicePatch } from "apowophaserui";
+import { BBCodeText, Button, CheckBox, ClickEvent, NineSliceButton } from "apowophaserui";
 import { BasePanel, InputField, UiManager } from "gamecoreRender";
-import { UIAtlasKey, UIAtlasName } from "picaRes";
+import { UIAtlasKey, UIAtlasName } from "../../../res";
 import { ModuleName } from "structure";
 import { Font, Helpers } from "utils";
 

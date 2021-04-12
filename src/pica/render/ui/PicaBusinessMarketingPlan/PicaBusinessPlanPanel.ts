@@ -1,6 +1,6 @@
 import { BBCodeText, GameGridTable, NineSlicePatch, NineSliceButton, ProgressBar, Button, ClickEvent } from "apowophaserui";
 import { DynamicImage, Render } from "gamecoreRender";
-import { UIAtlasKey } from "picaRes";
+import { UIAtlasKey } from "../../../res";
 import { Font, Handler, i18n, Url } from "utils";
 
 export class PicaBusinessPlanPanel extends Phaser.GameObjects.Container {

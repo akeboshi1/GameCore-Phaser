@@ -2,9 +2,8 @@ import { DynamicImage } from "./dynamic.image";
 import { BBCodeText } from "apowophaserui";
 import { SoundButton } from "./soundButton";
 import { Font, Handler, Url } from "utils";
-import { ICountablePackageItem } from "picaStructure";
 export class PropItem extends SoundButton {
-    public itemData: ICountablePackageItem;
+    public itemData: any;
     protected dpr: number;
     protected key: string;
     protected itemIcon: DynamicImage;
@@ -31,7 +30,7 @@ export class PropItem extends SoundButton {
     public setHandler(handler: Handler) {
         this.send = handler;
     }
-    public setItemData(data: ICountablePackageItem) {
+    public setItemData(data: any) {
         this.itemData = data;
         this.itemCount.text = data.count + "";
         const url = Url.getOsdRes(data.texturePath);

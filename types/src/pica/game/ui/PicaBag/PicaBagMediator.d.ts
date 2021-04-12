@@ -1,0 +1,33 @@
+import { BasicMediator, Game } from "gamecore";
+export declare class PicaBagMediator extends BasicMediator {
+    private mScneType;
+    private timeID;
+    constructor(game: Game);
+    show(param?: any): void;
+    hide(): void;
+    destroy(): void;
+    get bagData(): import("../../../../game").PlayerBag;
+    get userData(): import("../../../../game").UserDataManager;
+    protected _show(): void;
+    protected panelInit(): void;
+    protected mediatorExport(): void;
+    private onCloseHandler;
+    private addLisenter;
+    private removeLisenter;
+    private onSyncFinishHandler;
+    private onUpdateHandler;
+    private onPackageCategoryHandler;
+    private onQueryCommodityResourceHandler;
+    private onGetCategoriesHandler;
+    private onQueryPackageHandler;
+    private onQueryPackage;
+    private onQueryPropResourceHandler;
+    private onSeachPackageHandler;
+    private onAddFurniHandler;
+    private onSellPropsHandler;
+    private onUsePropsHandler;
+    private onShowElementHandler;
+    private onUpdatePlayerHandler;
+    private get model();
+    private get cacheMgr();
+}

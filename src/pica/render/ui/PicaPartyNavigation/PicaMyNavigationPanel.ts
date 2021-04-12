@@ -1,7 +1,7 @@
 import { GameScroller } from "apowophaserui";
-import { AlignmentType, AxisType, ConstraintType, DynamicImage, GridLayoutGroup } from "gamecoreRender";
-import { UIAtlasName } from "picaRes";
-import { Font, Handler, i18n, Logger, Tool, UIHelper, Url } from "utils";
+import { AlignmentType, AxisType, ConstraintType, GridLayoutGroup } from "gamecoreRender";
+import { UIAtlasName } from "../../../res";
+import { Handler, i18n, Tool, UIHelper } from "utils";
 import { op_client, op_def } from "pixelpai_proto";
 import { PicaRoomListItem } from "./PicaRoomListItem";
 import { Render } from "../../pica.render";

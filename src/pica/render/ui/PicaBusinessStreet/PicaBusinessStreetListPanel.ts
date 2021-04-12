@@ -2,7 +2,7 @@ import { SecondaryMenuPanel } from "./SecondaryMenuPanel";
 import { GameGridTable, TabButton, Button, ClickEvent, NineSliceButton, NineSlicePatch } from "apowophaserui";
 import { Font, Handler, i18n } from "utils";
 import { DynamicImage, Render, TextButton, TweenCompent } from "gamecoreRender";
-import { UIAtlasKey } from "picaRes";
+import { UIAtlasKey } from "../../../res";
 
 export class PicaBusinessStreetListPanel extends Phaser.GameObjects.Container {
     private gridtable: GameGridTable;

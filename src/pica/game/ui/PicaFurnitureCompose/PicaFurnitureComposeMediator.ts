@@ -1,8 +1,8 @@
 import { PicaFurnitureCompose } from "./PicaFurnitureCompose";
 import { op_client, op_def, op_gameconfig, op_pkt_def } from "pixelpai_proto";
 import { BasicMediator, Game } from "gamecore";
-import { ConnectState, EventType, ModuleName } from "structure";
-import { BaseDataConfigManager } from "picaWorker";
+import { EventType, ModuleName } from "structure";
+import { BaseDataConfigManager } from "../../config/base.data.config.manager";
 import { ObjectAssign } from "utils";
 
 export class PicaFurnitureComposeMediator extends BasicMediator {

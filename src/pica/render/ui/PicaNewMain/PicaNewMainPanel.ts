@@ -1,5 +1,5 @@
 import { ClickEvent, Button } from "apowophaserui";
-import { UIAtlasName } from "picaRes";
+import { UIAtlasName } from "../../../res";
 import { op_pkt_def, op_def } from "pixelpai_proto";
 import { UiManager } from "gamecoreRender";
 import { EventType, ModuleName } from "structure";

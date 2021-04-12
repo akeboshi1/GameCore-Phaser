@@ -2,7 +2,7 @@ import { op_client, op_pkt_def } from "pixelpai_proto";
 import { NineSlicePatch, GameScroller, Button, NineSliceButton, BBCodeText, ClickEvent } from "apowophaserui";
 import { BasePanel, DynamicImage, UiManager } from "gamecoreRender";
 import { ModuleName } from "structure";
-import { UIAtlasKey, UIAtlasName } from "picaRes";
+import { UIAtlasKey, UIAtlasName } from "../../../res";
 import { Font, Handler, i18n, Url } from "utils";
 export class TaskPanel extends BasePanel {
     private blackBg: Phaser.GameObjects.Graphics;

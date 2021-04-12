@@ -1,14 +1,15 @@
-import { ButtonEventDispatcher, CommonBackground, UiManager } from "gamecoreRender";
-import { FolderType, UIAtlasName, UILoadType } from "picaRes";
+import { ButtonEventDispatcher, UiManager } from "gamecoreRender";
+import { UIAtlasName } from "../../../res";
 import { ModuleName } from "structure";
-import { Font, Handler, i18n, Logger, UIHelper, Url } from "utils";
+import { Handler, i18n, UIHelper } from "utils";
 import { PicaBasePanel } from "../pica.base.panel";
 import { PicaIllustratedListPanel } from "./PicaIllustratedListPanel";
-import { op_client, op_pkt_def } from "pixelpai_proto";
+import { op_client } from "pixelpai_proto";
 import { PicaIllustratedDetailPanel } from "./PicaIllustratedDetailPanel";
 import { ClickEvent } from "apowophaserui";
-import { IExtendCountablePackageItem, IGalleryCombination } from "picaStructure";
+import { IExtendCountablePackageItem, IGalleryCombination } from "../../../structure";
 import { PicaFuriniDetailPanel } from "./PicaFuriniDetailPanel";
+import { CommonBackground } from "../../ui";
 export class PicaIllustratedPanel extends PicaBasePanel {
     private mBackground: CommonBackground;
     private content: Phaser.GameObjects.Container;

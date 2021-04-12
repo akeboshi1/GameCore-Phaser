@@ -1,5 +1,5 @@
 import { DynamicImage } from "gamecoreRender";
-import { UIAtlasName } from "picaRes";
+import { UIAtlasName } from "../../../res";
 import { ModuleName } from "structure";
 import { Coin, Font, Logger, Url } from "utils";
 

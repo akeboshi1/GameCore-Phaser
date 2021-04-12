@@ -1,6 +1,6 @@
 import { Button, ClickEvent } from "apowophaserui";
 import { TweenCompent } from "gamecoreRender";
-import { UIAtlasName } from "picaRes";
+import { UIAtlasName } from "../../../res";
 import { Handler, i18n } from "utils";
 
 export class PicaNewNavigatePanel extends Phaser.GameObjects.Container {

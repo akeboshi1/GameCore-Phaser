@@ -2,9 +2,7 @@ import { op_client } from "pixelpai_proto";
 import { BasicMediator, CacheDataManager, DataMgrType, Game } from "gamecore";
 import { EventType, ModuleName } from "structure";
 import { PicaExploreLog } from "./PicaExploreLog";
-import { BaseDataConfigManager } from "picaWorker";
-import { ObjectAssign } from "utils";
-
+import { BaseDataConfigManager } from "../../config/base.data.config.manager";
 export class PicaExploreLogMediator extends BasicMediator {
     protected mModel: PicaExploreLog;
     constructor(game: Game) {

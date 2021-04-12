@@ -1,13 +1,12 @@
 
 import { op_client } from "pixelpai_proto";
 import { ClickEvent, Button, GameGridTable } from "apowophaserui";
-import { Font, Handler, i18n, ResUtils, Tool, UIHelper } from "utils";
-import { UIAtlasName } from "picaRes";
-import { ItemButton } from "../Components";
-import { AlignmentType, AxisType, ButtonEventDispatcher, ConstraintType, GridLayoutGroup, GridLayoutGroupConfig, ProgressMaskBar } from "gamecoreRender";
+import { Handler, i18n, Tool, UIHelper } from "utils";
+import { UIAtlasName } from "../../../res";
+import { AlignmentType, AxisType, ConstraintType, GridLayoutGroup, GridLayoutGroupConfig } from "gamecoreRender";
 import { ChineseUnit } from "structure";
 import { PicaChapterLevelClue } from "./PicaChapterLevelClue";
-import { ICountablePackageItem } from "picaStructure";
+import { ICountablePackageItem } from "../../../structure";
 export class PicaExploreListDetailPanel extends Phaser.GameObjects.Container {
     protected dpr: number;
     protected zoom: number;

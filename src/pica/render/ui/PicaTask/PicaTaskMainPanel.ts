@@ -1,6 +1,6 @@
 import { ClickEvent, GameScroller, NineSlicePatch } from "apowophaserui";
 import { ButtonEventDispatcher, DynamicImage, ItemInfoTips, ProgressThreeBar, Render } from "gamecoreRender";
-import { UIAtlasName } from "picaRes";
+import { UIAtlasName } from "../../../res";
 import { Font, Handler, i18n, UIHelper, Url } from "utils";
 import { op_client, op_pkt_def } from "pixelpai_proto";
 import { PicaTaskItem } from "./PicaTaskItem";

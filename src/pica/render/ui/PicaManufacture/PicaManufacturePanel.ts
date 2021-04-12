@@ -1,14 +1,13 @@
-import { NineSliceButton, GameGridTable, GameScroller, Button, BBCodeText, NineSlicePatch, ClickEvent } from "apowophaserui";
-import { ButtonEventDispatcher, CommonBackground, DynamicImage, ImageValue, TextButton, ToggleColorButton, UiManager } from "gamecoreRender";
-import { ItemButton } from "picaRender";
-import { UIAtlasName } from "picaRes";
+import { NineSlicePatch, ClickEvent } from "apowophaserui";
+import { ButtonEventDispatcher, ToggleColorButton, UiManager } from "gamecoreRender";
+import { UIAtlasName } from "../../../res";
 import { ModuleName } from "structure";
-import { Font, Handler, i18n, UIHelper, Url } from "utils";
-import { op_client, op_def } from "pixelpai_proto";
+import { Font, i18n, UIHelper } from "utils";
+import { op_client } from "pixelpai_proto";
 import { PicaBasePanel } from "../pica.base.panel";
-import { ICountablePackageItem } from "picaStructure";
 import { PicaFurnitureComposePanel } from "./PicaFurnitureComposePanel";
 import { PicaRecastePanel } from "./PicaRecastePanel";
+import { ImageValue } from "../../ui";
 export class PicaManufacturePanel extends PicaBasePanel {
     private mCloseBtn: ButtonEventDispatcher;
     private toggleCon: Phaser.GameObjects.Container;
@@ -35,7 +34,7 @@ export class PicaManufacturePanel extends PicaBasePanel {
         this.starCountCon.y = this.mCloseBtn.y;
         this.starCountCon.x = width - 15 * this.dpr;
         this.toggleCon.x = width * 0.5;
-        this.toggleCon.y = this.toggleCon.height * 0.5 +40 * this.dpr;
+        this.toggleCon.y = this.toggleCon.height * 0.5 + 40 * this.dpr;
         this.composePanel.resize(width, height);
         this.recastPanel.resize(width, height);
         super.resize(width, height);

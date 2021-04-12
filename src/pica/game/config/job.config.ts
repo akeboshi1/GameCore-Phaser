@@ -1,5 +1,5 @@
 import { BaseConfigData } from "gamecore";
-import { IJob } from "src/pica/structure/ijob";
+import { IJob } from "../../structure";
 import { Logger } from "utils";
 export class JobConfig extends BaseConfigData {
 

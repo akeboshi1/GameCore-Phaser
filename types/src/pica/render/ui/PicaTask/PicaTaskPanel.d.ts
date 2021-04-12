@@ -1,0 +1,32 @@
+import { op_client } from "pixelpai_proto";
+import { UiManager } from "gamecoreRender";
+import { PicaBasePanel } from "../pica.base.panel";
+import { PicaTaskMainPanel } from "./PicaTaskMainPanel";
+export declare class PicaTaskPanel extends PicaBasePanel {
+    static PICATASK_CLOSE: string;
+    static PICATASK_DATA: string;
+    mainPanel: PicaTaskMainPanel;
+    private blackBg;
+    private bg;
+    private tilteName;
+    private content;
+    private selectLine;
+    private rewardLine;
+    private curToggleItem;
+    private toggleItems;
+    private questType;
+    constructor(uiManager: UiManager);
+    hide(): void;
+    resize(width?: number, height?: number): void;
+    onShow(): void;
+    addListen(): void;
+    removeListen(): void;
+    init(): void;
+    createOptionButtons(): void;
+    setTaskDatas(content: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_QUERY_QUEST_GROUP): void;
+    setTaskDetail(quest: op_client.PKT_Quest): void;
+    private onToggleButtonHandler;
+    private onMainPanelHandler;
+    private OnClosePanel;
+    private playMove;
+}

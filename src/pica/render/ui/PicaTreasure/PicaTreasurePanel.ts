@@ -1,6 +1,6 @@
-import { BasePanel, UiManager } from "gamecoreRender";
-import { UIAtlasKey, UIAtlasName } from "picaRes";
-import { ModuleName, RENDER_PEER } from "structure";
+import { UiManager } from "gamecoreRender";
+import { UIAtlasName } from "../../../res";
+import { ModuleName } from "structure";
 import { Handler } from "utils";
 import { PicaBasePanel } from "../pica.base.panel";
 import { PicaTreasureAllOpenPanel } from "./PicaTreasureAllOpenPanel";

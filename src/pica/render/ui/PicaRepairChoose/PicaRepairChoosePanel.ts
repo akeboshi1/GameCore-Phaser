@@ -1,13 +1,11 @@
 
-import { op_client } from "pixelpai_proto";
-import { Button, ClickEvent, GameScroller, UIType } from "apowophaserui";
-import { AlignmentType, AxisType, BasePanel, ConstraintType, GridLayoutGroup, ImageValue, ThreeSliceButton, ThreeSlicePath, TweenCompent, UIDragonbonesDisplay, UiManager } from "gamecoreRender";
-import { AvatarSuit, AvatarSuitType, ModuleName } from "structure";
-import { UIAtlasName } from "picaRes";
-import { Handler, i18n, UIHelper } from "utils";
+import { Button, ClickEvent, UIType } from "apowophaserui";
+import { AlignmentType, AxisType, ConstraintType, GridLayoutGroup, UiManager } from "gamecoreRender";
+import { ModuleName } from "structure";
+import { UIAtlasName } from "../../../res";
 import { PicaBasePanel } from "../pica.base.panel";
-import { IFurnitureGroup, ISocial } from "picaStructure";
-import { ItemButton } from "picaRender";
+import { IFurnitureGroup } from "../../../structure";
+import { ItemButton } from "../../ui";
 export class PicaRepairChoosePanel extends PicaBasePanel {
     private blackGraphic: Phaser.GameObjects.Graphics;
     private bg: Phaser.GameObjects.Image;

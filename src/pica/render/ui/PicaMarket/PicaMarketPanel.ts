@@ -4,10 +4,9 @@ import { NinePatchTabButton, GameGridTable, NineSliceButton, Button, ClickEvent 
 import { BasePanel, CheckboxGroup, TextButton, UiManager } from "gamecoreRender";
 import { AvatarSuitType, ModuleName } from "structure";
 import { CoinType, Font, i18n } from "utils";
-import { UIAtlasKey, UIAtlasName } from "picaRes";
+import { UIAtlasKey, UIAtlasName } from "../../../res";
 import { op_client } from "pixelpai_proto";
-import { IPrice } from "picaStructure";
-import { MoneyCompent } from "picaRender";
+import { MoneyCompent } from "../../ui";
 export class PicaMarketPanel extends BasePanel {
   private mSelectItem: ElementDetail;
   private mCloseBtn: Button;

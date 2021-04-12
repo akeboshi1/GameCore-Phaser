@@ -1,9 +1,7 @@
 
-import { op_client } from "pixelpai_proto";
 import { ClickEvent, Button } from "apowophaserui";
-import { MaterialItem } from "gamecoreRender";
 import { Font, Handler, i18n, UIHelper } from "utils";
-import { UIAtlasName } from "picaRes";
+import { UIAtlasName } from "../../../res";
 import { ItemButton } from "../Components";
 export class PicaTreasureOpenPanel extends Phaser.GameObjects.Container {
     private confirmBtn: Button;

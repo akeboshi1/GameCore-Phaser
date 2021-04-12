@@ -1,9 +1,7 @@
 import { BaseConfigData } from "gamecore";
-import { IExploreChapterData, IExploreLevelData } from "picaStructure";
-
 export class ExploreDataConfig extends BaseConfigData {
-    chapters: IExploreChapterData[];
-    levels: IExploreLevelData[];
+    chapters: any[];
+    levels: any[];
     excludes = ["clueItems"];
     public getChapter(id: number) {
         if (!this.chapters) return undefined;

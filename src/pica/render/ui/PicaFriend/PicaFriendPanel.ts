@@ -5,7 +5,7 @@ import { op_client } from "pixelpai_proto";
 import { Button, ClickEvent, GameGridTable, CheckBox, NineSlicePatch, TabButton, NineSliceButton, BBCodeText } from "apowophaserui";
 import { BasePanel, Render, UiManager } from "gamecoreRender";
 import { EventType, FriendChannel, FriendData, FriendRelation, FriendRelationEnum, ModuleName, RENDER_PEER } from "structure";
-import { UIAtlasName, UIAtlasKey } from "picaRes";
+import { UIAtlasName, UIAtlasKey } from "../../../res";
 import { Font, Handler, i18n } from "utils";
 import { LabelInput, CheckboxGroup } from "gamecoreRender";
 export class PicaFriendPanel extends BasePanel {

@@ -1,5 +1,5 @@
 import { BaseConfigData } from "gamecore";
-import { ICraftSkill } from "src/pica/structure/icraftskill";
+import { ICraftSkill } from "../../structure";
 import { Logger } from "utils";
 export class SkillConfig extends BaseConfigData {
     public get(id: string): ICraftSkill {

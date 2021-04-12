@@ -1,15 +1,14 @@
 import { UiManager } from "gamecoreRender";
-import { FolderType, UIAtlasName, UILoadType } from "picaRes";
+import { FolderType, UIAtlasName, UILoadType } from "../../../res";
 import { ModuleName } from "structure";
-import { Font, Handler, i18n, Logger, UIHelper, Url } from "utils";
+import { Handler, i18n, UIHelper } from "utils";
 import { PicaBasePanel } from "../pica.base.panel";
 import { PicaRoamListPanel } from "./PicaRoamListPanel";
-import { op_client, op_pkt_def } from "pixelpai_proto";
+import { op_client } from "pixelpai_proto";
 import { PicaRoamDrawPanel } from "./PicaRoamDrawPanel";
 import { PicaRoamPreviewPanel } from "./PicaRoamPreviewPanel";
 import { PicaRoamEffectOnePanel } from "./PicaRoamEffectOnePanel";
-import { PicaRenderUiManager } from "picaRender";
-import { ICardPool, IDrawPoolStatus } from "src/pica/structure/icardpool";
+import { IDrawPoolStatus } from "../../../structure";
 export class PicaRoamPanel extends PicaBasePanel {
     private mBackground: Phaser.GameObjects.Graphics;
     private content: Phaser.GameObjects.Container;

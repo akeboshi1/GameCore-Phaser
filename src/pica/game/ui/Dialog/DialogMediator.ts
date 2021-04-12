@@ -1,7 +1,6 @@
 import { Dialog } from "./Dialog";
-import { Game } from "src/game/game";
 import { ModuleName } from "structure";
-import { BasicMediator } from "gamecore";
+import { BasicMediator, Game } from "gamecore";
 export class DialogMediator extends BasicMediator {
     constructor(protected game: Game) {
         super(ModuleName.DIALOG_NAME, game);

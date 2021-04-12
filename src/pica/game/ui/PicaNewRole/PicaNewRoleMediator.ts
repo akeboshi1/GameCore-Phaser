@@ -4,7 +4,7 @@ import { BasicMediator, Game, UIType } from "gamecore";
 import { ModuleName } from "structure";
 import { BaseDataConfigManager } from "../../config";
 import { Logger } from "utils";
-import { ISocial } from "picaStructure";
+import { ISocial } from "../../../structure";
 export class PicaNewRoleMediator extends BasicMediator {
     protected mModel: PicaNewRole;
     private uid: string;

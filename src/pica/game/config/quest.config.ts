@@ -1,5 +1,5 @@
 import { BaseConfigData } from "gamecore";
-import { IQuest } from "picaStructure";
+import { IQuest } from "../../structure";
 import { Logger } from "utils";
 export class QuestConfig extends BaseConfigData {
 

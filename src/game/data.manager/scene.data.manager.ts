@@ -1,5 +1,4 @@
 import { PBpacket } from "net-socket-packet";
-import { BaseDataConfigManager } from "picaWorker";
 import { op_client } from "pixelpai_proto";
 import { EventType, ModuleName, RoomType } from "structure";
 import { EventDispatcher, Logger } from "utils";
@@ -50,7 +49,7 @@ export class SceneDataManager extends BasePacketHandler {
     private openComposePanel(packge: PBpacket) {
         const content: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_CRAFT_SKILLS = packge.content;
         const list = [];
-        const config = <BaseDataConfigManager>this.game.configManager;
+        const config = <any>this.game.configManager;
 
         packge.content.skills.forEach((skill) => {
             const sk = config.getSkill(skill.skill.id);
@@ -144,7 +143,7 @@ export class SceneDataManager extends BasePacketHandler {
     }
     private onUnlockDoneHandler(packge: PBpacket) {
         const content: op_client.OP_VIRTUAL_WORLD_REQ_CLIENT_UNLOCK_DONE = packge.content;
-        const ele = (<BaseDataConfigManager>this.game.configManager).getElementData(content.configId);
+        const ele = (<any>this.game.configManager).getElementData(content.configId);
         const config = (<any>this.game.configManager);
         const group = config.getFurnitureGroupBySN(ele.sn);
         if (group)
@@ -179,7 +178,7 @@ export class SceneDataManager extends BasePacketHandler {
     }
 
     private syncItemBases(items: op_client.ICountablePackageItem[]) {
-        const config = <BaseDataConfigManager>this.game.configManager;
+        const config = <any>this.game.configManager;
         for (const item of items) {
             config.synItemBase(item);
         }

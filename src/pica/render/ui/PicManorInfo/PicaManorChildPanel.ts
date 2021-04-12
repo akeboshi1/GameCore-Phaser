@@ -1,9 +1,9 @@
-import { BBCodeText, Button, ClickEvent, NineSliceButton } from "apowophaserui";
-import { DynamicImage, InputView, Render } from "gamecoreRender";
-import { UIAtlasKey } from "picaRes";
+import { BBCodeText, ClickEvent, NineSliceButton } from "apowophaserui";
+import { DynamicImage, Render } from "gamecoreRender";
+import { UIAtlasKey } from "../../../res";
 import { Font, Handler, i18n, Logger, UIHelper } from "utils";
 import { PicaManorBasePanel } from "./PicaManorBasePanel";
-
+import { InputView } from "../../ui";
 export class PicaManorChildPanel extends PicaManorBasePanel {
     private editorButton: NineSliceButton;
     private shopButton: NineSliceButton;

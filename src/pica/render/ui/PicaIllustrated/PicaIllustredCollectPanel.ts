@@ -1,10 +1,8 @@
 import { GameGridTable, Button, ClickEvent } from "apowophaserui";
 import { AlignmentType, AxisType, ConstraintType, GridLayoutGroup, ProgressMaskBar } from "gamecoreRender";
-import { UIAtlasName } from "picaRes";
-import { Font, Handler, i18n, Tool, UIHelper, Url } from "utils";
-import { op_client, op_pkt_def } from "pixelpai_proto";
-import { ItemButton } from "picaRender";
-import { ICountablePackageItem, IGalleryCombination } from "picaStructure";
+import { UIAtlasName } from "../../../res";
+import { Handler, Tool, UIHelper, } from "utils";
+import { ICountablePackageItem, IGalleryCombination } from "../../../structure";
 import { IllustratedItem } from "./PicaIllustratedItem";
 export class PicaIllustredCollectPanel extends Phaser.GameObjects.Container {
 

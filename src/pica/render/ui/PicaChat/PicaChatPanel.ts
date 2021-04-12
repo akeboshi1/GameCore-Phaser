@@ -1,6 +1,6 @@
 import { BBCodeText, TextArea, UIType } from "apowophaserui";
 import { AlertView, BasePanel, DragonbonesDisplay, InputPanel, Render, UiManager } from "gamecoreRender";
-import { UIAtlasKey, UIAtlasName } from "picaRes";
+import { UIAtlasKey, UIAtlasName } from "../../../res";
 import { EventType, ModuleName, RENDER_PEER } from "structure";
 import { Font, i18n, Url } from "utils";
 import { PicaChatInputPanel } from "./PicaChatInputPanel";

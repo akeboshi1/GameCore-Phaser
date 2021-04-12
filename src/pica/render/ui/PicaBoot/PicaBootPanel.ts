@@ -1,5 +1,5 @@
 import { Button, ClickEvent, NineSliceButton } from "apowophaserui";
-import { UIAtlasName } from "picaRes";
+import { UIAtlasName } from "../../../res";
 import { UiManager } from "gamecoreRender";
 import { ModuleName } from "structure";
 import { Font, i18n, Logger } from "utils";

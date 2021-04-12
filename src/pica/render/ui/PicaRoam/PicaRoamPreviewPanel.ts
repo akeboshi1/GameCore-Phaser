@@ -1,8 +1,7 @@
-import { NineSlicePatch, GameGridTable, Button, ClickEvent, BBCodeText } from "apowophaserui";
-import { DynamicImage } from "gamecoreRender";
-import { UIAtlasName } from "picaRes";
-import { Font, Handler, i18n, TimeUtils, UIHelper, Url } from "utils";
-import { op_client, op_pkt_def } from "pixelpai_proto";
+import { NineSlicePatch, GameGridTable, Button, ClickEvent } from "apowophaserui";
+import { UIAtlasName } from "../../../res";
+import { Handler, i18n, UIHelper, Url } from "utils";
+import { op_client } from "pixelpai_proto";
 export class PicaRoamPreviewPanel extends Phaser.GameObjects.Container {
     private mBackground: Phaser.GameObjects.Graphics;
     private bg: NineSlicePatch;
@@ -185,6 +184,6 @@ class PreviewCellItem extends Phaser.GameObjects.Container {
         this.value.text = data.prob + "%";
         this.nameTex.x = -this.width * 0.5 + 15 * this.dpr;
         this.image.x = this.nameTex.x + this.nameTex.width + this.image.width * 0.5 + 3 * this.dpr;
-        this.value.x = this.width * 0.5 - this.value.width - 15* this.dpr;
+        this.value.x = this.width * 0.5 - this.value.width - 15 * this.dpr;
     }
 }

@@ -1,0 +1,33 @@
+import { UiManager } from "gamecoreRender";
+import { ICountablePackageItem } from "picaStructure";
+import { PicaBasePanel } from "../pica.base.panel";
+export declare class PicaDecoratePanel extends PicaBasePanel {
+    private mBtn_Close;
+    private mBtn_SaveAndExit;
+    private mGraphics_Bottom;
+    private mDynamicBtnsY;
+    private mBtn_RemoveAll;
+    private mBtn_Reverse;
+    private mBtn_Bag;
+    private mBtn_SelectedFurniture;
+    private mBtns_QuickSelectFurniture;
+    constructor(uiManager: UiManager);
+    show(param?: any): void;
+    addListen(): void;
+    removeListen(): void;
+    destroy(): void;
+    setSelectedFurniture(data: ICountablePackageItem): void;
+    showSaveBtn(): void;
+    hideSaveBtn(): void;
+    updateFurnitureCount(baseID: string, count: number): void;
+    setQuickSelectFurnitures(datas: ICountablePackageItem[]): void;
+    protected preload(): void;
+    protected init(): void;
+    get mediator(): any;
+    private btnHandler_Close;
+    private btnHandler_SaveAndExit;
+    private btnHandler_RemoveAll;
+    private btnHandler_Reverse;
+    private btnHandler_Bag;
+    private onFurnitureClick;
+}

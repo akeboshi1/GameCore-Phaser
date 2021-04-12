@@ -1,6 +1,6 @@
-import { ItemButton } from "picaRender";
-import { UIAtlasName } from "picaRes";
-import { ICountablePackageItem } from "picaStructure";
+import { ItemButton } from "../../ui";
+import { UIAtlasName } from "../../../res";
+import { ICountablePackageItem } from "../../../structure";
 import { UIHelper } from "utils";
 
 export class IllustratedItem extends ItemButton {

@@ -3,7 +3,7 @@ import { PicaBusinessChoosePlanPanel } from "./PicaBusinessChoosePlanPanel";
 import { BasePanel, UiManager } from "gamecoreRender";
 import { PicaBusinessContentPanel } from "../PicaBusinessStreet/PicaBusinessContentPanel";
 import { ModuleName, RENDER_PEER } from "structure";
-import { UIAtlasKey, UIAtlasName } from "picaRes";
+import { UIAtlasKey, UIAtlasName } from "../../../res";
 import { Handler } from "utils";
 export class PicaBusinessMarketingPlanPanel extends BasePanel {
     private key2 = "c_street_2";

@@ -4,7 +4,7 @@ import Text = Phaser.GameObjects.Text;
 import Container = Phaser.GameObjects.Container;
 import { CharacterAttributePanel } from "./CharacterAttributePanel";
 import { Button, BBCodeText, NineSliceButton, GameGridTable, GameScroller, ClickEvent, ProgressBar } from "apowophaserui";
-import { UIAtlasKey, UIAtlasName } from "picaRes";
+import { UIAtlasKey, UIAtlasName } from "../../../res";
 import { Font, Handler, i18n, Url } from "utils";
 import { AvatarSuitType, FriendRelationEnum, ModuleName } from "structure";
 import { BasePanel, DynamicImage, UiManager, Render, UIDragonbonesDisplay } from "gamecoreRender";

@@ -1,14 +1,15 @@
 import { op_client } from "pixelpai_proto";
-import { CommonBackground, UiManager } from "gamecoreRender";
+import { UiManager } from "gamecoreRender";
 import { ClickEvent } from "apowophaserui";
 import { ModuleName } from "structure";
-import { UIAtlasName } from "picaRes";
+import { UIAtlasName } from "../../../res";
 import { Handler, i18n } from "utils";
 import { PicaBasePanel } from "../pica.base.panel";
 import { PicaExploreListDetailPanel } from "./PicaExploreListDetailPanel";
 import { BackTextButton, EnergyProgressBar } from "../Components";
 import { PicaExploreListBottomPanel } from "./PicaExploreListBottomPanel";
 import { PicaExploreListLevelPanel } from "./PicaExploreListLevelPanel";
+import { CommonBackground } from "../../ui";
 
 export class PicaExploreListPanel extends PicaBasePanel {
     public static PICAEXPLORELIST_DATA: string = "PICAEXPLORELIST_DATA";

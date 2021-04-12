@@ -1,6 +1,6 @@
 import { Button, GameGridTable, ClickEvent, NineSliceButton, NineSlicePatch } from "apowophaserui";
 import { DynamicImage } from "gamecoreRender";
-import { UIAtlasKey } from "picaRes";
+import { UIAtlasKey } from "../../../res";
 import { Font, Handler, i18n } from "utils";
 
 export class PicaBusinessMyStreetPanel extends Phaser.GameObjects.Container {

@@ -1,5 +1,5 @@
 import { Button, ClickEvent, GameGridTable } from "apowophaserui";
-import { UIAtlasKey, UIAtlasName } from "picaRes";
+import { UIAtlasKey, UIAtlasName } from "../../../res";
 import { BasePanel, LabelInput, UiManager } from "gamecoreRender";
 import { ModuleName } from "structure";
 
@@ -66,14 +66,14 @@ export class GMToolsPanel extends BasePanel {
         this.commitBtn.x = this.command.x + this.command.width + this.commitBtn.width * 0.5 + 16 * this.dpr;
         this.commitBtn.y = this.command.y + this.command.height * 0.5;
 
-        this.gridtable.setSize(this.width,  height - 110 * this.dpr);
+        this.gridtable.setSize(this.width, height - 110 * this.dpr);
         this.gridtable.layout();
 
         this.gridtable.resetMask();
     }
 
     protected preload() {
-        this.addAtlas(UIAtlasKey.commonKey, UIAtlasName .commonUrl + ".png", UIAtlasName.commonUrl + ".json");
+        this.addAtlas(UIAtlasKey.commonKey, UIAtlasName.commonUrl + ".png", UIAtlasName.commonUrl + ".json");
         super.preload();
     }
 
@@ -136,7 +136,7 @@ export class GMToolsPanel extends BasePanel {
                 zoom: scale,
                 cellPadX: 0,
                 cellPadY: 10 * this.dpr
-              },
+            },
             scrollMode: 0,
             clamplChildOY: false,
             createCellContainerCallback: (cell, cellContainer) => {
@@ -188,12 +188,12 @@ export class GMToolsPanel extends BasePanel {
             return;
         }
         this.emit("targetUI", this.mShowData.id, id);
-        this.render.renderEmitter(this.key + "_targetUI",  { id: this.mShowData.id, componentId: id } );
+        this.render.renderEmitter(this.key + "_targetUI", { id: this.mShowData.id, componentId: id });
         this.command.setBlur();
     }
 
     private onCloseHandler() {
-        this.render.renderEmitter(this.key + "_close" );
+        this.render.renderEmitter(this.key + "_close");
         // this.emit("close");
     }
 
@@ -209,7 +209,7 @@ export class GMToolsPanel extends BasePanel {
         const item = this.command.getData("item");
         // if (item && item.node) this.emit("targetUI");
         if (item && item.node) {
-            this.render.renderEmitter(this.key + "_targetUI",  { id: this.mShowData.id, componentId: item.node.id, text } );
+            this.render.renderEmitter(this.key + "_targetUI", { id: this.mShowData.id, componentId: item.node.id, text });
         }
     }
 

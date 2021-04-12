@@ -1,0 +1,53 @@
+import { PacketHandler } from "net-socket-packet";
+import { ConnectionService } from "../../../../lib/net/connection.service";
+import { LogicRectangle, LogicRectangle45 } from "utils";
+import { Game } from "../../game";
+import { IRoomService } from "../room/room";
+export interface ICameraService {
+    syncDirty: boolean;
+    initialize: boolean;
+    getViewPort(): Promise<LogicRectangle | undefined>;
+    getMiniViewPort(): Promise<LogicRectangle45 | undefined>;
+    syncToEditor(): void;
+    centerCameas(): void;
+    syncCamera(): void;
+    syncCameraScroll(): void;
+    resetCameraSize(width: number, height: number): any;
+    startFollow(target: any, effect?: string): any;
+    stopFollow(): any;
+    setCamerasScroll(x: number, y: number, effect?: string): any;
+    update(time?: number, delta?: number): void;
+    destroy(): void;
+}
+export declare class CamerasManager extends PacketHandler implements ICameraService {
+    protected mGame: Game;
+    private mRoomService;
+    syncDirty: boolean;
+    readonly m_blockWidth = 300;
+    readonly m_blockHeight = 150;
+    readonly MINI_VIEW_SIZE = 50;
+    readonly VIEW_PORT_SIZE = 50;
+    protected viewPort: LogicRectangle;
+    protected miniViewPort: LogicRectangle;
+    private zoom;
+    private syncTime;
+    private target;
+    private preCamerasList;
+    private mInitialize;
+    constructor(mGame: Game, mRoomService: IRoomService);
+    set initialize(val: boolean);
+    get initialize(): boolean;
+    getViewPort(): Promise<LogicRectangle | undefined>;
+    getMiniViewPort(): Promise<LogicRectangle45 | undefined>;
+    syncToEditor(): void;
+    centerCameas(): void;
+    syncCamera(): Promise<void>;
+    syncCameraScroll(): Promise<void>;
+    resetCameraSize(width: number, height: number): void;
+    update(time?: number, delta?: number): void;
+    destroy(): void;
+    startFollow(target: any, effect?: string): void;
+    stopFollow(): void;
+    setCamerasScroll(x: number, y: number, effect?: string): void;
+    get connection(): ConnectionService;
+}

@@ -1,11 +1,12 @@
-import { ButtonEventDispatcher, DynamicImage, ImageValue, UiManager } from "gamecoreRender";
-import { UIAtlasName } from "picaRes";
+import { ButtonEventDispatcher, DynamicImage, UiManager } from "gamecoreRender";
+import { UIAtlasName } from "../../../res";
 import { ModuleName } from "structure";
-import { Font, Handler, i18n, UIHelper, Url } from "utils";
-import { op_client, op_pkt_def } from "pixelpai_proto";
+import { Handler, i18n, UIHelper, Url } from "utils";
+import { op_pkt_def } from "pixelpai_proto";
 import { PicaBasePanel } from "../pica.base.panel";
 import { Button, ClickEvent, GameGridTable } from "apowophaserui";
 import { PicaOnlineBottomPanel } from "./PicaOnlineBottomPanel";
+import { ImageValue } from "../../ui";
 export class PicaOnlinePanel extends PicaBasePanel {
     private content: Phaser.GameObjects.Container;
     private mBlack: Phaser.GameObjects.Graphics;

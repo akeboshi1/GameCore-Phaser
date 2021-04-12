@@ -11,6 +11,7 @@
     ],
     "declaration": false,
     "sourceMap": true,
+    // "outDir": "types",
     "typeRoots": [
       "node_modules/@types",
       "node_modules/apowophaserui/types"
@@ -59,6 +60,5 @@
   },
   "exclude": [
     "node_modules",
-    "lib/rexui/scripts"
   ]
 }

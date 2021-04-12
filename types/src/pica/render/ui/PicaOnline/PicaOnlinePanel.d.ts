@@ -1,0 +1,34 @@
+import { UiManager } from "gamecoreRender";
+import { op_pkt_def } from "pixelpai_proto";
+import { PicaBasePanel } from "../pica.base.panel";
+export declare class PicaOnlinePanel extends PicaBasePanel {
+    private content;
+    private mBlack;
+    private mBackground;
+    private bg;
+    private titleTex;
+    private peopleImg;
+    private mGameGrid;
+    private bottomPanel;
+    private userid;
+    private blackList;
+    private onlineData;
+    private people;
+    constructor(uiManager: UiManager);
+    resize(w: number, h: number): void;
+    addListen(): void;
+    removeListen(): void;
+    destroy(): void;
+    setOnlineDatas(datas: op_pkt_def.PKT_PlayerInfo[], people: number, userid: string): void;
+    setBlackList(blacklist: string[]): void;
+    setAvatarList(avatars: any): void;
+    protected onInitialized(): void;
+    protected init(): void;
+    private onGridTableHandler;
+    private playMove;
+    private onCloseHandler;
+    private onSimpleHandler;
+    private refreshBottomPanel;
+    private onBottomPanelHandler;
+    private closeBottomPanel;
+}

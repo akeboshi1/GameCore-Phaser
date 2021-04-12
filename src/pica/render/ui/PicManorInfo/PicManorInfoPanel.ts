@@ -1,10 +1,9 @@
-import { PicaManorBasePanel } from "./PicaManorBasePanel";
 import { PicaManorChildPanel } from "./PicaManorChildPanel";
 import { PicaManorTipsPanel } from "./PicaManorTipsPanel";
 import { PicaManorShopPanel } from "./PicaManorShopPanel";
-import { BasePanel, Render, UiManager } from "gamecoreRender";
+import { BasePanel, UiManager } from "gamecoreRender";
 import { ModuleName, RENDER_PEER } from "structure";
-import { UIAtlasKey, UIAtlasName } from "picaRes";
+import { UIAtlasKey, UIAtlasName } from "../../../res";
 import { Handler, i18n } from "utils";
 export class PicManorInfoPanel extends BasePanel {
     private content: Phaser.GameObjects.Container;

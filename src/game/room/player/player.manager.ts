@@ -10,7 +10,6 @@ import { Logger, LogicPos } from "utils";
 import { ConnectionService } from "../../../../lib/net/connection.service";
 import { IElement } from "../element/element";
 import { Sprite } from "baseModel";
-import { BaseDataConfigManager } from "src/pica/game/config/base.data.config.manager";
 import NodeType = op_def.NodeType;
 import { PlayerElementAction } from "gamecore";
 import { PicaPlayerActionManager } from "../elementaction";
@@ -251,7 +250,7 @@ export class PlayerManager extends PacketHandler implements IElementManager {
     }
 
     private _loadSprite(sprite: op_client.ISprite) {
-        const configMgr = <BaseDataConfigManager>this.mRoom.game.configManager;
+        const configMgr = <any>this.mRoom.game.configManager;
         sprite.attrs.forEach((attr) => {
             const valueObj = JSON.parse(attr.value);
             const len = Object.keys(valueObj).length;

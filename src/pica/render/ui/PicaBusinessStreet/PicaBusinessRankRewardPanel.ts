@@ -1,6 +1,6 @@
 import { GameGridTable, NineSliceButton, ClickEvent } from "apowophaserui";
 import { DynamicImage } from "gamecoreRender";
-import { UIAtlasKey } from "picaRes";
+import { UIAtlasKey } from "../../../res";
 import { Font, Handler, i18n, Url } from "utils";
 export class PicaBusinessRankRewardPanel extends Phaser.GameObjects.Container {
     private gridtable: GameGridTable;
