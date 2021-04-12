@@ -10,5 +10,5 @@ export * from "./Ifurniture.group";
 export * from "./igallery";
 export * from "./icardpool";
 export * from "./ijob";
-export * from "./ICraftSkill";
+export * from "./icraftskill";
 export * from "./ilevel";
