@@ -9,7 +9,7 @@ export class MouseManagerDecorate extends MouseManager {
     private downGameObject: boolean = false;
     private downPointerPos: LogicPos;
     private downDisplayPos: LogicPos;
-    private downDisplay: DragonbonesDisplay | FramesDisplay | null = null;
+    private selectedDisplay: DragonbonesDisplay | FramesDisplay | null = null;
     private roomSize: IPosition45Obj;
 
     constructor(protected render: Render) {
@@ -39,7 +39,7 @@ export class MouseManagerDecorate extends MouseManager {
     protected async onPointerDownHandler(pointer: Phaser.Input.Pointer): Promise<void> {
         if (this.downGameObject) return;
 
-        this.downDisplay = null;
+        this.selectedDisplay = null;
         this.downPointerPos = new LogicPos(pointer.worldX / this.render.scaleRatio, pointer.worldY / this.render.scaleRatio);
         this.scene.input.off("pointermove", this.onPointerMoveHandler, this);
         this.scene.input.on("pointermove", this.onPointerMoveHandler, this);
@@ -48,11 +48,13 @@ export class MouseManagerDecorate extends MouseManager {
     }
 
     protected async onPointerUpHandler(pointer: Phaser.Input.Pointer): Promise<void> {
-        if (this.downDisplay) {
+        if (this.selectedDisplay) {
             const worldPos = new LogicPos(pointer.worldX / this.render.scaleRatio, pointer.worldY / this.render.scaleRatio);
-            const delta = new LogicPos(worldPos.x - this.downPointerPos.x, worldPos.y - this.downPointerPos.y);
-            const gridDelta = Position45.transformTo90(Position45.transformTo45(delta, this.roomSize), this.roomSize);
-            this.render.mainPeer.decorateMoveElement(this.downDisplay.id, gridDelta);
+            const freePos = new LogicPos(worldPos.x + this.downDisplayPos.x - this.downPointerPos.x,
+                worldPos.y + this.downDisplayPos.y - this.downPointerPos.y);
+            const gridPos = Position45.transformTo90(Position45.transformTo45(freePos, this.roomSize), this.roomSize);
+            const gridDelta = new LogicPos(gridPos.x - this.downDisplayPos.x, gridPos.y - this.downDisplayPos.y);
+            this.render.mainPeer.decorateMoveElement(this.selectedDisplay.id, gridDelta);
         }
 
         this.clearDownData();
@@ -60,12 +62,12 @@ export class MouseManagerDecorate extends MouseManager {
 
     protected async onPointerMoveHandler(pointer: Phaser.Input.Pointer): Promise<void> {
         const worldPos = new LogicPos(pointer.worldX / this.render.scaleRatio, pointer.worldY / this.render.scaleRatio);
-        if (this.downDisplay) {
+        if (this.selectedDisplay) {
             // move game object
             const freePos = new LogicPos(worldPos.x + this.downDisplayPos.x - this.downPointerPos.x,
                 worldPos.y + this.downDisplayPos.y - this.downPointerPos.y);
             const gridPos = Position45.transformTo90(Position45.transformTo45(freePos, this.roomSize), this.roomSize);
-            this.downDisplay.setPosition(gridPos.x, gridPos.y);
+            this.selectedDisplay.setPosition(gridPos.x, gridPos.y);
         } else {
             // move camera
             this.render.camerasManager.offsetScroll(
@@ -92,7 +94,7 @@ export class MouseManagerDecorate extends MouseManager {
         if (id) {
             const display = this.render.displayManager.getDisplay(id);
             if (display && display.nodeType === NodeType.ElementNodeType && !await this.render.mainPeer.isElementLocked(id)) {
-                this.downDisplay = display;
+                this.selectedDisplay = display;
                 this.downPointerPos = new LogicPos(pointer.worldX / this.render.scaleRatio, pointer.worldY / this.render.scaleRatio);
                 this.downDisplayPos = new LogicPos(display.x, display.y);
                 this.render.mainPeer.decorateSelectElement(id);
@@ -102,7 +104,7 @@ export class MouseManagerDecorate extends MouseManager {
 
     private clearDownData() {
         this.downGameObject = false;
-        this.downDisplay = null;
+        this.selectedDisplay = null;
         this.downPointerPos = new LogicPos();
         this.downDisplayPos = new LogicPos();
         this.scene.input.off("pointermove", this.onPointerMoveHandler, this);
