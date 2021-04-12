@@ -1,7 +1,7 @@
 import {Room} from "../../../../game/room/room/room";
 import {op_client, op_def, op_pkt_def, op_virtual_world} from "pixelpai_proto";
 import {ISprite, MessageType, ModuleName} from "structure";
-import {IPos, Logger } from "utils";
+import {IPos, Logger, Position45} from "utils";
 import {PBpacket} from "net-socket-packet";
 import {Sprite} from "baseModel";
 import {BaseDataConfigManager} from "../../config";
@@ -327,9 +327,10 @@ export class DecorateManager {
         const max = 0x70000000;
         const indexID = Math.floor(Math.random() * (max - min) + min);
         const pos = await this.room.game.renderPeer.getCameraMidPos();
+        const gridPos = Position45.transformTo90(Position45.transformTo45(pos, this.room.miniSize), this.room.miniSize);
         const spriteData = new Sprite({
             id: indexID,
-            point3f: {x: pos.x, y: pos.y, z: 0},
+            point3f: {x: gridPos.x, y: gridPos.y, z: 0},
             currentAnimationName: "idle",
             direction: 3,
             nickname: typeData.name,
