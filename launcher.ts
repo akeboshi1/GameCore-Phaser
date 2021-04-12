@@ -106,7 +106,7 @@ export class Launcher {
             // xhr.send(null);
         }, 4 * 60 * 60 * 1000 /* ms */);
         // todo 通过外部传入路径可加载不同模块游戏
-        import("./src/pica/render/pica.render").then((game) => {
+        import("./src/render/render").then((game) => {
             if (!game) {
                 // tslint:disable-next-line:no-console
                 console.log("no game error");

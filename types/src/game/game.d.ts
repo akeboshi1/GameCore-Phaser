@@ -11,7 +11,7 @@ import { HttpClock } from "./loop/httpClock/http.clock";
 import { HttpService } from "./loop/httpClock/http.service";
 import { LoadingManager } from "./loading/loading.manager";
 import { ILauncherConfig } from "structure";
-import { IRoomService } from "./room/room/room";
+import { IRoomService } from "./room";
 import { ElementStorage } from "../base/model/elementstorage/element.storage";
 import { RoomManager } from "./room/room.manager";
 import { User } from "./actor/user";

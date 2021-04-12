@@ -1,6 +1,6 @@
 import { PacketHandler, PBpacket } from "net-socket-packet";
 import { op_virtual_world, op_client, op_def } from "pixelpai_proto";
-import { IRoomService } from "../room/room";
+import { IRoomService } from "../room";
 import { Effect } from "./effect";
 
 export class EffectManager extends PacketHandler {

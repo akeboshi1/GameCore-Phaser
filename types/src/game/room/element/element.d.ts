@@ -2,7 +2,7 @@ import { op_client, op_def } from "pixelpai_proto";
 import { AnimationQueue, ElementStateType, IDragonbonesModel, IFramesModel, ISprite } from "structure";
 import { IPos, IProjection } from "utils";
 import { BlockObject } from "../block/block.object";
-import { IRoomService } from "../room/room";
+import { IRoomService } from "../room";
 import { ElementStateManager } from "../state/element.state.manager";
 import { IElementManager } from "./element.manager";
 export interface IElement {

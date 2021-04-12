@@ -1,5 +1,5 @@
 import { PacketHandler } from "net-socket-packet";
-import { IRoomService } from "../room/room";
+import { IRoomService } from "../room";
 import { Effect } from "./effect";
 export declare class EffectManager extends PacketHandler {
     private room;
@@ -13,5 +13,5 @@ export declare class EffectManager extends PacketHandler {
     protected updateDisplay(effect: Effect): void;
     protected fetchDisplay(ids: number[]): void;
     private onSyncSprite;
-    get connection(): any;
+    get connection(): import("../../../../lib/net/connection.service").ConnectionService;
 }

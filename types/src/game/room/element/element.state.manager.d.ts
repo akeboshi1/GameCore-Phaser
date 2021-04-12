@@ -2,7 +2,7 @@ import { ConnectionService } from "lib/net/connection.service";
 import { PacketHandler } from "net-socket-packet";
 import { op_client } from "pixelpai_proto";
 import { ElementStateType, ISprite } from "structure";
-import { IRoomService } from "../room/room";
+import { IRoomService } from "../room";
 import { Element, IElement } from "./element";
 export declare class ElementStateManager extends PacketHandler {
     protected mRoom: IRoomService;

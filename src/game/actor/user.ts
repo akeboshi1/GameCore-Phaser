@@ -2,7 +2,7 @@ import { op_def, op_client, op_gameconfig, op_virtual_world } from "pixelpai_pro
 import { PBpacket } from "net-socket-packet";
 import { Game } from "../game";
 import { Player } from "../room/player/player";
-import { IRoomService } from "../room/room/room";
+import { IRoomService } from "../room/room";
 import { PlayerModel } from "../room/player/player.model";
 import { IPos, Logger } from "utils";
 import { UserDataManager } from "./data/user.dataManager";

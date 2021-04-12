@@ -3,7 +3,7 @@ import { op_client, op_gameconfig } from "pixelpai_proto";
 import { Player } from "./player";
 import { IElementManager } from "../element/element.manager";
 import { User } from "../../actor/user";
-import { IRoomService, Room } from "../room/room";
+import { IRoomService, Room } from "../room";
 import { ISprite } from "structure";
 import { ConnectionService } from "../../../../lib/net/connection.service";
 import { IElement } from "../element/element";

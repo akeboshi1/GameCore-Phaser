@@ -14,7 +14,7 @@ import { HttpService } from "./loop/httpClock/http.service";
 import { LoadingManager } from "./loading/loading.manager";
 import { GameState, ILauncherConfig, LoadState, MAIN_WORKER, RENDER_PEER, PHYSICAL_WORKER, ModuleName } from "structure";
 import { ServerAddress } from "../../lib/net/address";
-import { IRoomService } from "./room/room/room";
+import { IRoomService } from "./room";
 import { ElementStorage } from "../base/model/elementstorage/element.storage";
 import { RoomManager } from "./room/room.manager";
 import { User } from "./actor/user";

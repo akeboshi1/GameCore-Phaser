@@ -350,8 +350,8 @@ export class MainPeer extends RPCPeer {
         if (!this.game.roomManager) return;
         if (!this.game.roomManager.currentRoom) return;
         if (!this.game.roomManager.currentRoom.isDecorating) return;
-        if (!this.game.roomManager.currentRoom.decorateManager) return;
-        this.game.roomManager.currentRoom.decorateManager.select(id);
+        // if (!this.game.roomManager.currentRoom.decorateManager) return;
+        // this.game.roomManager.currentRoom.decorateManager.select(id);
     }
 
     @Export()
@@ -359,8 +359,8 @@ export class MainPeer extends RPCPeer {
         if (!this.game.roomManager) return;
         if (!this.game.roomManager.currentRoom) return;
         if (!this.game.roomManager.currentRoom.isDecorating) return;
-        if (!this.game.roomManager.currentRoom.decorateManager) return;
-        this.game.roomManager.currentRoom.decorateManager.moveSelected(id, delta);
+        // if (!this.game.roomManager.currentRoom.decorateManager) return;
+        // this.game.roomManager.currentRoom.decorateManager.moveSelected(id, delta);
     }
 
     @Export()

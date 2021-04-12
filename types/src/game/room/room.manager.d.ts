@@ -1,4 +1,4 @@
-import { IRoomService } from "./room/room";
+import { IRoomService } from "./room";
 import { PacketHandler } from "net-socket-packet";
 import { Game } from "../game";
 import { ConnectionService } from "../../../lib/net/connection.service";

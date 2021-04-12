@@ -3,7 +3,7 @@ import { op_editor, op_virtual_world, op_def } from "pixelpai_proto";
 import { ConnectionService } from "../../../../lib/net/connection.service";
 import { Logger, LogicPos, LogicRectangle, LogicRectangle45, Tool } from "utils";
 import { Game } from "../../game";
-import { IRoomService } from "../room/room";
+import { IRoomService } from "../room";
 
 export interface ICameraService {
     syncDirty: boolean;

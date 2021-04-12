@@ -4,7 +4,7 @@ import { IElement, MoveData } from "../element/element";
 import { IElementManager } from "../element/element.manager";
 import { op_client } from "pixelpai_proto";
 import { IPos, Logger } from "utils";
-import { IRoomService } from "../room/room";
+import { IRoomService } from "../room";
 import { IFramesModel } from "structure";
 import { LayerEnum } from "game-capsule";
 

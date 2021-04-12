@@ -1,6 +1,6 @@
 import { IPos } from "utils";
 import { BlockObject } from "../block/block.object";
-import { IRoomService } from "../room/room";
+import { IRoomService } from "../room";
 
 export class EmptyTerrain extends BlockObject {
     public dirty: boolean = false;

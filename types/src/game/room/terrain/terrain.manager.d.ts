@@ -2,7 +2,7 @@ import { PacketHandler, PBpacket } from "net-socket-packet";
 import { Terrain } from "./terrain";
 import { IElementManager } from "../element/element.manager";
 import { IElement } from "../element/element";
-import { IRoomService, SpriteAddCompletedListener } from "../room/room";
+import { IRoomService, SpriteAddCompletedListener } from "../room";
 import { ISprite } from "structure";
 import { ConnectionService } from "lib/net/connection.service";
 import { IFramesModel } from "structure";

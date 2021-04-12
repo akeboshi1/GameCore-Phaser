@@ -1,4 +1,4 @@
-import { IRoomService } from "../room/room";
+import { IRoomService } from "../room";
 import { IScenery } from "structure";
 import { Game } from "../../game";
 

@@ -3,7 +3,7 @@ import { ConnectionService } from "lib/net/connection.service";
 import { PacketHandler } from "net-socket-packet";
 import { op_client, op_def, op_pkt_def } from "pixelpai_proto";
 import { ElementStateType, EventType, ISprite } from "structure";
-import { IRoomService } from "../room/room";
+import { IRoomService } from "../room";
 import { Element, IElement } from "./element";
 export class ElementStateManager extends PacketHandler {
 

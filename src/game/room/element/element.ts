@@ -12,7 +12,7 @@ import {
 } from "structure";
 import { DirectionChecker, IPos, IProjection, Logger, LogicPoint, LogicPos, Tool } from "utils";
 import { BlockObject } from "../block/block.object";
-import { IRoomService } from "../room/room";
+import { IRoomService } from "../room";
 import { ElementStateManager } from "../state/element.state.manager";
 import { IElementManager } from "./element.manager";
 

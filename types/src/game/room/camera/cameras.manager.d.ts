@@ -2,7 +2,7 @@ import { PacketHandler } from "net-socket-packet";
 import { ConnectionService } from "../../../../lib/net/connection.service";
 import { LogicRectangle, LogicRectangle45 } from "utils";
 import { Game } from "../../game";
-import { IRoomService } from "../room/room";
+import { IRoomService } from "../room";
 export interface ICameraService {
     syncDirty: boolean;
     initialize: boolean;

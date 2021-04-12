@@ -4,7 +4,7 @@ import { IElement, MoveData } from "../element/element";
 import { IElementManager } from "../element/element.manager";
 import { op_client } from "pixelpai_proto";
 import { IPos } from "utils";
-import { IRoomService } from "../room/room";
+import { IRoomService } from "../room";
 import { IFramesModel } from "structure";
 export declare class Terrain extends BlockObject implements IElement {
     protected mElementManager: IElementManager;

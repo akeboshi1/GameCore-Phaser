@@ -1,5 +1,5 @@
 import { IPos } from "utils";
-import { IRoomService } from "../room/room";
+import { IRoomService } from "../room";
 export class MatterObject {
     protected mGuid: number;
     protected hasBody: boolean = false;

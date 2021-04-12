@@ -1,5 +1,5 @@
 import {op_client, op_def} from "pixelpai_proto";
-import {IRoomService, Room} from "./room/room";
+import {IRoomService, Room} from "./room";
 import {PacketHandler, PBpacket} from "net-socket-packet";
 import {Game} from "../game";
 import {ConnectionService} from "../../../lib/net/connection.service";

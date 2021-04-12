@@ -1,5 +1,5 @@
 import { IPos } from "utils";
-import { IRoomService } from "../room/room";
+import { IRoomService } from "../room";
 export declare class MatterObject {
     protected mRoomService: IRoomService;
     protected mGuid: number;

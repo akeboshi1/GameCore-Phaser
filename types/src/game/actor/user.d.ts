@@ -1,7 +1,7 @@
 import { op_client, op_gameconfig } from "pixelpai_proto";
 import { Game } from "../game";
 import { Player } from "../room/player/player";
-import { IRoomService } from "../room/room/room";
+import { IRoomService } from "../room/room";
 import { IPos } from "utils";
 import { UserDataManager } from "./data/user.dataManager";
 import { IDragonbonesModel, IFramesModel, ISprite } from "structure";
