@@ -166,7 +166,8 @@ export class DecorateManager {
 
         const combinedActs = this.combineActions(this.mActionQueue);
         combinedActs.forEach((acts, sprite) => {
-            for (const act of acts) {
+            while (acts.length > 0) {
+                const act = acts.pop();
                 act.reverse(this);
             }
         });
@@ -300,7 +301,8 @@ export class DecorateManager {
                 return;
             }
 
-            for (const act of acts) {
+            while (acts.length > 0) {
+                const act = acts.pop();
                 act.reverse(this);
             }
         });

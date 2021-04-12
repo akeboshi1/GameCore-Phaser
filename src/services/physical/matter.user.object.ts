@@ -151,7 +151,7 @@ export class MatterUserObject extends MatterPlayerObject {
     }
 
     public tryStopMove(pos?: IPos) {
-        if (!this.mMoving) return;
+        // if (!this.mMoving) return;
         // 点击移动
         if (this.mTargetPoint) {
             this.mMoving = false;
