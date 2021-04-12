@@ -1,7 +1,7 @@
 import { BasicMediator, Game } from "gamecore";
 import { PicaRoam } from "./PicaRoam";
-import { BaseDataConfigManager } from "picaWorker";
-import { IDrawPoolStatus } from "src/pica/structure/icardpool";
+import { BaseDataConfigManager } from "../../config";
+import { IDrawPoolStatus } from "../../../structure";
 export declare class PicaRoamMediator extends BasicMediator {
     protected mModel: PicaRoam;
     protected curMoneyData: any;

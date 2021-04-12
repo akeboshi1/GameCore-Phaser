@@ -1,4 +1,4 @@
-import { Render } from "../../../../src/render/render";
+import { Render } from "../../render";
 export declare class InputPanel extends Phaser.Events.EventEmitter {
     private render;
     private mBackground;

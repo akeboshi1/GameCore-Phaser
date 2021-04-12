@@ -1,7 +1,7 @@
 import { UiManager } from "gamecoreRender";
 import { PicaBasePanel } from "../pica.base.panel";
 import { op_client } from "pixelpai_proto";
-import { IGalleryCombination } from "picaStructure";
+import { IGalleryCombination } from "../../../structure";
 export declare class PicaIllustratedPanel extends PicaBasePanel {
     private mBackground;
     private content;

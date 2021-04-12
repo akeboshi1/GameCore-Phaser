@@ -1,5 +1,5 @@
 import { BasePanel, UiManager } from "gamecoreRender";
-import { IJob } from "src/pica/structure/ijob";
+import { IJob } from "../../../structure";
 export declare class PicaWorkPanel extends BasePanel {
     private bg;
     private titleName;

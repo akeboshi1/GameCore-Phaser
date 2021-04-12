@@ -1,6 +1,6 @@
 import { NineSliceButton } from "apowophaserui";
 import { BasePanel, UiManager } from "gamecoreRender";
-import { ICountablePackageItem } from "picaStructure";
+import { ICountablePackageItem } from "../../../structure";
 export declare class PicaFurniFunPanel extends BasePanel {
     static PICAFURNIFUN_SHOW: string;
     confirmBtn: NineSliceButton;

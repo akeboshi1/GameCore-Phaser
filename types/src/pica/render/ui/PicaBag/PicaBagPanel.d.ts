@@ -1,7 +1,7 @@
 import { Button } from "apowophaserui";
 import { UiManager } from "gamecoreRender";
 import { PicaBasePanel } from "../pica.base.panel";
-import { IExtendCountablePackageItem } from "picaStructure";
+import { IExtendCountablePackageItem } from "../../../structure";
 export declare class PicaBagPanel extends PicaBasePanel {
     static PICABAG_SHOW: string;
     private mCloseBtn;

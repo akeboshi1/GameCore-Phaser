@@ -1,5 +1,5 @@
 import { op_client } from "pixelpai_proto";
-import { Game } from "src/game/game";
+import { Game } from "../../game";
 import { DragonbonesModel, FramesModel } from "baseModel";
 export declare class Effect {
     private game;

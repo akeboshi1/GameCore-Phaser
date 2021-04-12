@@ -1,4 +1,4 @@
-import { ICountablePackageItem } from "picaStructure";
+import { ICountablePackageItem } from "../../../structure";
 import { ItemButton } from "../Components";
 export declare class PicaChapterLevelClue extends ItemButton {
     private gou;

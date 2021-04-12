@@ -1,6 +1,6 @@
 import { BasicMediator } from "gamecore";
 import { PicaExploreList } from "./PicaExploreList";
-import { PicaGame } from "picaWorker";
+import { PicaGame } from "../../pica.game";
 export declare class PicaExploreListMediator extends BasicMediator {
     protected mModel: PicaExploreList;
     protected game: PicaGame;
@@ -8,7 +8,7 @@ export declare class PicaExploreListMediator extends BasicMediator {
     show(param?: any): void;
     hide(): void;
     protected panelInit(): void;
-    get playerInfo(): any;
+    get playerInfo(): import("../../../../game").PlayerProperty;
     private onHidePanel;
     private onQUERY_CHAPTER_RESULT;
     private onChapterResultHandler;

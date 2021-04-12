@@ -1,5 +1,5 @@
 import { BaseConfigData } from "gamecore";
-import { ICardPool } from "src/pica/structure/icardpool";
+import { ICardPool } from "../../structure";
 export declare class CardPoolConfig extends BaseConfigData {
     pools: any[];
     get(id: string): ICardPool;

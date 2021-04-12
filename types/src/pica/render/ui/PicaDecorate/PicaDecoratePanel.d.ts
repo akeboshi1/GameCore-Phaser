@@ -1,5 +1,5 @@
 import { UiManager } from "gamecoreRender";
-import { ICountablePackageItem } from "picaStructure";
+import { ICountablePackageItem } from "../../../structure";
 import { PicaBasePanel } from "../pica.base.panel";
 export declare class PicaDecoratePanel extends PicaBasePanel {
     private mBtn_Close;

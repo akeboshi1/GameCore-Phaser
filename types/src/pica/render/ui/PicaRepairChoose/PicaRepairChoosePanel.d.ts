@@ -1,6 +1,6 @@
 import { UiManager } from "gamecoreRender";
 import { PicaBasePanel } from "../pica.base.panel";
-import { IFurnitureGroup } from "picaStructure";
+import { IFurnitureGroup } from "../../../structure";
 export declare class PicaRepairChoosePanel extends PicaBasePanel {
     private blackGraphic;
     private bg;

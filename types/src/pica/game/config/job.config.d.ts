@@ -1,5 +1,5 @@
 import { BaseConfigData } from "gamecore";
-import { IJob } from "src/pica/structure/ijob";
+import { IJob } from "../../structure";
 export declare class JobConfig extends BaseConfigData {
     excludes: string[];
     jobMap: Map<string, Map<string, IJob[]>>;

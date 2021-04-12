@@ -9,9 +9,9 @@
       "webworker",
       "dom"
     ],
-    "declaration": false,
+    "declaration": true,
     "sourceMap": true,
-    // "outDir": "types",
+    "outDir": "types",
     "typeRoots": [
       "node_modules/@types",
       "node_modules/apowophaserui/types"

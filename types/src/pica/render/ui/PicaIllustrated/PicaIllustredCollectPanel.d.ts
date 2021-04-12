@@ -1,5 +1,5 @@
 import { Handler } from "utils";
-import { IGalleryCombination } from "picaStructure";
+import { IGalleryCombination } from "../../../structure";
 export declare class PicaIllustredCollectPanel extends Phaser.GameObjects.Container {
     private mGameGrid;
     private dpr;

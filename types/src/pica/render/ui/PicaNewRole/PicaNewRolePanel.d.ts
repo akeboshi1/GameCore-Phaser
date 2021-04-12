@@ -1,7 +1,7 @@
 import { op_client } from "pixelpai_proto";
 import { UiManager } from "gamecoreRender";
 import { PicaBasePanel } from "../pica.base.panel";
-import { ISocial } from "picaStructure";
+import { ISocial } from "../../../structure";
 export declare class PicaNewRolePanel extends PicaBasePanel {
     private blackGraphic;
     private bg;

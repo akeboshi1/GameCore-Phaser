@@ -1,4 +1,4 @@
-import { UiManager } from "src/render/ui";
+import { UiManager } from "gamecoreRender";
 import { PicaBasePanel } from "../pica.base.panel";
 export declare class PicaSingleManager {
     private uiMgr;

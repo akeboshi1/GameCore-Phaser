@@ -1,5 +1,5 @@
 import { BaseConfigData } from "gamecore";
-import { IGuide } from "picaStructure";
+import { IGuide } from "../../structure";
 export declare class GuideConfig extends BaseConfigData {
     Sheet1: IGuide[];
     get(id: string): IGuide;

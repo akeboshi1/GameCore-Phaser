@@ -1,5 +1,4 @@
-import { Game } from "src/game/game";
-import { BasicMediator } from "gamecore";
+import { BasicMediator, Game } from "gamecore";
 export declare class DialogMediator extends BasicMediator {
     protected game: Game;
     constructor(game: Game);

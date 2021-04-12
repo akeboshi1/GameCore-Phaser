@@ -5,7 +5,7 @@ export declare class MouseManagerDecorate extends MouseManager {
     private downGameObject;
     private downPointerPos;
     private downDisplayPos;
-    private downDisplay;
+    private selectedDisplay;
     private roomSize;
     constructor(render: Render);
     destroy(): void;

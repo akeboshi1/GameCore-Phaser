@@ -19,7 +19,9 @@ export declare class TerrainManager extends PacketHandler implements IElementMan
     private mEmptyMap;
     private mDirty;
     private mTerrainCache;
+    private mIsDealEmptyTerrain;
     constructor(mRoom: IRoomService, listener?: SpriteAddCompletedListener);
+    get isDealEmptyTerrain(): boolean;
     init(): void;
     update(time: number, delta: number): void;
     dealEmptyTerrain(): void;

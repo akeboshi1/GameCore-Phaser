@@ -1,5 +1,5 @@
 import { Handler } from "utils";
-import { IExtendCountablePackageItem } from "picaStructure";
+import { IExtendCountablePackageItem } from "../../../structure";
 import { Render } from "gamecoreRender";
 export declare class PicaFuriniDetailPanel extends Phaser.GameObjects.Container {
     private backgrand;

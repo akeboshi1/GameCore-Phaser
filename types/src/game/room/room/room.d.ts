@@ -56,6 +56,7 @@ export interface IRoomService {
     initUI(): void;
     onManagerCreated(key: string): any;
     onManagerReady(key: string): any;
+    onRoomReady(): any;
     requestDecorate(id?: number, baseID?: string): any;
     startDecorating(): any;
     stopDecorating(): any;
@@ -129,6 +130,7 @@ export declare class Room extends PacketHandler implements IRoomService, SpriteA
     get isLoading(): boolean;
     onManagerCreated(key: string): void;
     onManagerReady(key: string): void;
+    onRoomReady(): void;
     requestDecorate(id?: number, baseID?: string): void;
     startDecorating(): void;
     cameraFollowHandler(): void;

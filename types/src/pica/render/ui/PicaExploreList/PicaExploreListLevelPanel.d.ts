@@ -1,7 +1,7 @@
 import { Handler } from "utils";
 import { op_client } from "pixelpai_proto";
 import { NineSliceButton } from "apowophaserui";
-import { ICountablePackageItem, IExploreChapterData, IExploreLevelData } from "picaStructure";
+import { ICountablePackageItem, IExploreChapterData, IExploreLevelData } from "../../../structure";
 export declare class PicaExploreListLevelPanel extends Phaser.GameObjects.Container {
     levelItems: ChapterLevelItem[];
     addHei: number;

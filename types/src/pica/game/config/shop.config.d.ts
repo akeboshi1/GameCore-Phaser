@@ -1,5 +1,5 @@
 import { BaseConfigData } from "gamecore";
-import { IShopBase } from "picaStructure";
+import { IShopBase } from "../../structure";
 export declare class ShopConfig extends BaseConfigData {
     excludes: string[];
     propMap: Map<string, Map<string, IShopBase[]>>;

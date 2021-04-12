@@ -1,5 +1,5 @@
-import { ItemButton } from "picaRender";
-import { ICountablePackageItem } from "picaStructure";
+import { ItemButton } from "../../ui";
+import { ICountablePackageItem } from "../../../structure";
 export declare class IllustratedItem extends ItemButton {
     private codeTex;
     private star;

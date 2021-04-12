@@ -1,5 +1,5 @@
 import { Handler } from "utils";
-import { ICardPool, IDrawPoolStatus } from "src/pica/structure/icardpool";
+import { ICardPool, IDrawPoolStatus } from "../../../structure";
 export declare class PicaRoamListPanel extends Phaser.GameObjects.Container {
     private bg;
     private titlebg;

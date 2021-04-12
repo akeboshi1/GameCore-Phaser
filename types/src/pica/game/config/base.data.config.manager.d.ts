@@ -1,12 +1,9 @@
 import { BaseConfigData, BaseConfigManager, Game } from "gamecore";
-import { IShopBase } from "../../structure/imarketcommodity";
 import { ItemCategoryConfig } from "./item.category.config";
 import { ShopConfig } from "./shop.config";
-import { IJob } from "../../structure/ijob";
-import { ICraftSkill } from "src/pica/structure/icraftskill";
+import { ICraftSkill, IGalleryCombination, IGalleryLevel, IJob, IShopBase } from "../../structure";
 import { SceneConfigMap } from "./scene.config";
 import { GalleryType } from "./gallery.config";
-import { IGalleryCombination, IGalleryLevel } from "src/pica/structure/igallery";
 export declare enum BaseDataType {
     i18n_zh = "i18n_zh",
     explore = "explore",
@@ -41,7 +38,11 @@ export declare class BaseDataConfigManager extends BaseConfigManager {
                 PropItem: string[];
                 HandheldItem: string[];
                 ValueItem: string[];
-                AvatarItem: string[];
+                AvatarItem: string[]; /**
+                 * 通过ID 获取道具数据
+                 * @param data
+                 * @returns
+                 */
                 FurnitureItem: string[];
             };
         };
@@ -145,7 +146,7 @@ export declare class BaseDataConfigManager extends BaseConfigManager {
      * @returns
      */
     getShopSubCategory(shopName?: string): any;
-    getShopItems(category: string, sub: string, shopName?: string): any[];
+    getShopItems(category: string, sub: string, shopName?: string): IShopBase[];
     convertShopItem(shopitem: any, data: ShopConfig): void;
     /**
      * 等级表 各种
@@ -153,13 +154,13 @@ export declare class BaseDataConfigManager extends BaseConfigManager {
      * @param level
      * @returns
      */
-    getLevel(type: string, level: number): import("../../structure/ilevel").ILevel;
+    getLevel(type: string, level: number): import("../../structure").ILevel;
     /**
      * 卡池表
      * @param id
      * @returns
      */
-    getCardPool(id: string): import("../../structure/icardpool").ICardPool;
+    getCardPool(id: string): import("../../structure").ICardPool;
     getCardPools(): any[];
     getSocails(): import("../../structure").ISocial[];
     /**
@@ -167,10 +168,10 @@ export declare class BaseDataConfigManager extends BaseConfigManager {
      * @param id
      * @returns
      */
-    getScene(id: string): any;
-    getScenes(type?: string, tag?: number): Map<any, any> | any[];
-    getQuest(id: string): any;
-    findGuide(id: string): any;
+    getScene(id: string): import("../../structure").IScene;
+    getScenes(type?: string, tag?: number): Map<any, any> | import("../../structure").IScene[];
+    getQuest(id: string): import("../../structure").IQuest;
+    findGuide(id: string): import("../../structure").IGuide;
     updateGuideState(id: string, val?: boolean): void;
     /**
      * 家具鉴定组
@@ -188,7 +189,7 @@ export declare class BaseDataConfigManager extends BaseConfigManager {
      * @returns
      */
     getGallery(id: number | string, type: GalleryType): IGalleryCombination | IGalleryLevel;
-    getGalleryMap(type: GalleryType): Map<string | number, any>;
+    getGalleryMap(type: GalleryType): Map<string | number, IGalleryCombination> | Map<string | number, IGalleryLevel>;
     protected add(): void;
     protected configUrl(reName: string, tempurl?: string): string;
     private checkItemData;

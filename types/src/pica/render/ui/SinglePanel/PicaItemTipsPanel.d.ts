@@ -1,6 +1,6 @@
 import { UiManager } from "gamecoreRender";
 import { PicaBasePanel } from "../pica.base.panel";
-import { ICountablePackageItem } from "picaStructure";
+import { ICountablePackageItem } from "../../../structure";
 export declare class PicaItemTipsPanel extends PicaBasePanel {
     static get Inst(): PicaItemTipsPanel;
     private static mInstance;

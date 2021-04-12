@@ -1,6 +1,6 @@
 import { ConnectionService } from "lib/net/connection.service";
 import { PacketHandler, PBpacket } from "net-socket-packet";
-import { Game } from "src/game/game";
+import { Game } from "../../game";
 import { PlayerBag } from "./player.bag";
 import { PlayerProperty } from "./player.property";
 export declare class UserDataManager extends PacketHandler {
