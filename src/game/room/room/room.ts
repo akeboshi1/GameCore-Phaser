@@ -93,6 +93,8 @@ export interface IRoomService {
 
     onManagerReady(key: string);
 
+    onRoomReady();
+
     requestDecorate(id?: number, baseID?: string);
 
     startDecorating();
@@ -661,9 +663,14 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
                 allReady = false;
             }
         });
-        this.terrainManager.dealEmptyTerrain();
         if (allReady) {
             this.game.renderPeer.roomReady();
+        }
+    }
+
+    public onRoomReady() {
+        if (!this.terrainManager.isDealEmptyTerrain) {
+            this.terrainManager.dealEmptyTerrain();
         }
     }
 
