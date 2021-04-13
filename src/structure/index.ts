@@ -6,7 +6,6 @@ export { IDragonbonesModel, IAvatar, SlotSkin } from "./dragonbones";
 export { IFramesModel } from "./frame";
 export { GameMain } from "./game.main";
 export { ILauncherConfig, PlatFormType } from "./lanucher.config";
-export { MessageType } from "./message.type";
 export { SceneName } from "./scene.name";
 export { IScenery, Fit } from "./scenery";
 export { RENDER_PEER, MAIN_WORKER, MAIN_WORKER_URL, PHYSICAL_WORKER, PHYSICAL_WORKER_URL } from "./worker.name";

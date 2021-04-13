@@ -1,1 +1,1 @@
-export { ICameraService, BaseCamerasManager } from "./cameras.manager";
+export { IBaseCameraService, BaseCamerasManager } from "./cameras.manager";

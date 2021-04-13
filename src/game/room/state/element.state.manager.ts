@@ -3,7 +3,7 @@ import { Logger } from "utils";
 import { IRoomService } from "..";
 import { Element, IElement } from "../element/element";
 import { State } from "./state.group";
-import { BaseHandler, BaseStateManager } from "./state.manager";
+import { BaseStateHandler, BaseStateManager } from "./state.manager";
 
 export class ElementStateManager extends BaseStateManager {
     constructor(private element: IElement, room: IRoomService) {
@@ -22,7 +22,7 @@ export class ElementStateManager extends BaseStateManager {
     }
 }
 
-class ElementHandler extends BaseHandler {
+class ElementHandler extends BaseStateHandler {
     public element: IElement;
     constructor(room: IRoomService) {
         super(room);

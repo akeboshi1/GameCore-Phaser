@@ -10,7 +10,7 @@ import { IBlockObject } from "./block/iblock.object";
 import { TerrainManager } from "./terrain/terrain.manager";
 import { PlayerManager } from "./player/player.manager";
 import { ElementManager } from "./element/element.manager";
-import { CamerasManager, ICameraService } from "./camera/cameras.manager";
+import { CamerasWorkerManager, ICameraService } from "./camera/cameras.worker.manager";
 import { EffectManager } from "./effect/effect.manager";
 import { SkyBoxManager } from "./sky.box/sky.box.manager";
 import { IElement, InputEnable } from "./element/element";
@@ -369,7 +369,7 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
         Logger.getInstance().debug("room startplay =====");
         this.game.renderPeer.showPlay();
         // Logger.getInstance().debug("roomstartPlay");
-        this.mCameraService = new CamerasManager(this.mGame, this);
+        this.mCameraService = new CamerasWorkerManager(this.mGame, this);
         // this.mScene = this.world.game.scene.getScene(PlayScene.name);
         this.mTerrainManager = new TerrainManager(this, this);
         this.mElementManager = new ElementManager(this);

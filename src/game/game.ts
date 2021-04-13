@@ -22,15 +22,15 @@ import { DataManager, DataMgrType } from "./data.manager/dataManager";
 import { BaseConfigManager } from "./data.manager";
 import { NetworkManager } from "./command";
 import version from "../../version";
-import { SoundManager } from "./sound.manager";
-import { GuideManager } from "./guide.manager/guide.manager";
+import { SoundWorkerManager } from "./sound.manager";
+import { GuideWorkerManager } from "./guide.manager/guide.worker.manager";
 interface ISize {
     width: number;
     height: number;
 }
 
-export const fps: number = 45;
-export const interval = fps > 0 ? 1000 / fps : 1000 / 30;
+export const wokerfps: number = 45;
+export const interval = wokerfps > 0 ? 1000 / wokerfps : 1000 / 30;
 export class Game extends PacketHandler implements IConnectListener, ClockReadyListener {
     public isDestroy: boolean = false;
     protected mainPeer: MainPeer;
@@ -44,13 +44,13 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
     protected mHttpService: HttpService;
     protected mConfig: ILauncherConfig;
     protected mDataManager: DataManager;
-    protected mGuideManager: GuideManager;
+    protected mGuideWorkerManager: GuideWorkerManager;
     // protected mAccount: Account;
     protected mRoomManager: RoomManager;
     protected mElementStorage: ElementStorage;
     // protected mPlayerDataManager: PlayerDataManager;
     protected mUIManager: UIManager;
-    protected mSoundManager: SoundManager;
+    protected mSoundManager: SoundWorkerManager;
     protected mLoadingManager: LoadingManager;
     protected mConfigManager: BaseConfigManager;
     protected mNetWorkManager: NetworkManager;
@@ -349,7 +349,7 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
         return this.mUIManager;
     }
 
-    get soundManager(): SoundManager {
+    get SoundWorkerManager(): SoundWorkerManager {
         return this.mSoundManager;
     }
 
@@ -369,8 +369,8 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
         return this.mRoomManager;
     }
 
-    get guideManager(): GuideManager {
-        return this.mGuideManager;
+    get guideWorkerManager(): GuideWorkerManager {
+        return this.mGuideWorkerManager;
     }
 
     get loadingManager(): LoadingManager {
@@ -623,12 +623,12 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
 
     protected createManager() {
         if (!this.mRoomManager) this.mRoomManager = new RoomManager(this);
-        if (!this.mGuideManager) this.mGuideManager = new GuideManager(this);
+        if (!this.mGuideWorkerManager) this.mGuideWorkerManager = new GuideWorkerManager(this);
         // this.mUiManager = new UiManager(this);
         if (!this.mElementStorage) this.mElementStorage = new ElementStorage();
         if (!this.mUIManager) this.mUIManager = new UIManager(this);
         if (!this.mHttpService) this.mHttpService = new HttpService(this);
-        if (!this.mSoundManager) this.mSoundManager = new SoundManager(this);
+        if (!this.mSoundManager) this.mSoundManager = new SoundWorkerManager(this);
         if (!this.mLoadingManager) this.mLoadingManager = new LoadingManager(this);
         if (!this.mDataManager) this.mDataManager = new DataManager(this);
         if (!this.mConfigManager) this.mConfigManager = new BaseConfigManager(this);
@@ -637,7 +637,7 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
 
         this.mUIManager.addPackListener();
         this.mRoomManager.addPackListener();
-        this.mGuideManager.addPackListener();
+        this.mGuideWorkerManager.addPackListener();
         this.user.addPackListener();
         this.mSoundManager.addPackListener();
         // this.mPlayerDataManager.addPackListener();
@@ -720,9 +720,9 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
                     this.mRoomManager.destroy();
                     this.mRoomManager = null;
                 }
-                if (this.mGuideManager) {
-                    this.mGuideManager.destroy();
-                    this.mGuideManager = null;
+                if (this.mGuideWorkerManager) {
+                    this.mGuideWorkerManager.destroy();
+                    this.mGuideWorkerManager = null;
                 }
                 if (this.mUIManager) {
                     this.mUIManager.destroy();

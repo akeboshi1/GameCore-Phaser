@@ -1,6 +1,5 @@
 export { i18n } from "./i18n";
 export { Font } from "./font";
-export * from "./resUtil";
 export { Handler } from "./Handler";
 export { Logger } from "./log";
 export { Direction, DirectionChecker } from "./direction";
@@ -29,3 +28,6 @@ export * from "./time.utils";
 export * from "./stringUtils";
 export * from "./object.assign";
 export * from "./uiUtil";
+export * from "./device";
+export * from "./rectangle45";
+export * from "./sort.rectangle";

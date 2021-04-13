@@ -22,7 +22,7 @@ export interface IElement {
     readonly roomService: IRoomService;
     readonly created: boolean;
 
-    readonly moveData: MoveData;
+    readonly moveData: MoveWorkerData;
 
     state: boolean;
 
@@ -87,19 +87,19 @@ export interface IElement {
     removeFromWalkableMap();
 }
 
-export interface MoveData {
+export interface MoveWorkerData {
     step?: number;
     path?: op_def.IMovePoint[];
     arrivalTime?: number;
 }
 
-export interface MovePos {
+export interface MoveWorkerPos {
     x: number;
     y: number;
     stopDir?: number;
 }
 
-export interface MovePath {
+export interface MoveWorkerPath {
     x: number;
     y: number;
     direction: number;
@@ -142,7 +142,7 @@ export class Element extends BlockObject implements IElement {
         this.setModel(val);
     }
 
-    get moveData(): MoveData {
+    get moveData(): MoveWorkerData {
         return this.mMoveData;
     }
 
@@ -159,7 +159,7 @@ export class Element extends BlockObject implements IElement {
     protected mId: number;
     protected mDisplayInfo: IFramesModel | IDragonbonesModel;
     protected mAnimationName: string = "";
-    protected mMoveData: MoveData = {};
+    protected mMoveData: MoveWorkerData = {};
     protected mCurState: string = PlayerState.IDLE;
     protected mOffsetY: number = undefined;
     protected mQueueAnimations: AnimationQueue[];

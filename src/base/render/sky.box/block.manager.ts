@@ -1,7 +1,7 @@
 import { Logger, Url } from "utils";
 import { Fit, IScenery } from "structure";
 import { DynamicImage } from "../../../render/ui/components/dynamic.image";
-import { ICameraService } from "../cameras/cameras.manager";
+import { IBaseCameraService } from "../cameras/cameras.manager";
 import { IRender } from "../render";
 export interface IBlockManager {
   startPlay(scene: Phaser.Scene);
@@ -21,7 +21,7 @@ export class BlockManager implements IBlockManager {
   private mSceneName: string = "";
   private scene: Phaser.Scene;
   private mScenery: IScenery;
-  private mCameras: ICameraService;
+  private mCameras: IBaseCameraService;
   private mStateMap: Map<string, any>;
   private _bound: Phaser.Geom.Rectangle;
   private tween: Phaser.Tweens.Tween;

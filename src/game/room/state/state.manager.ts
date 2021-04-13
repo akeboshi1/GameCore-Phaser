@@ -4,8 +4,8 @@ import { IRoomService } from "..";
 import { State } from "./state.group";
 
 export class BaseStateManager {
-    protected add: BaseHandler;
-    protected delete: BaseHandler;
+    protected add: BaseStateHandler;
+    protected delete: BaseStateHandler;
     protected stateMap: Map<string, State>;
     constructor(protected room: IRoomService) {
         this.init();
@@ -55,7 +55,7 @@ export class BaseStateManager {
     }
 }
 
-export class BaseHandler {
+export class BaseStateHandler {
     constructor(protected room: IRoomService) {
     }
 

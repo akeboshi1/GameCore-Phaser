@@ -10,8 +10,8 @@ import { EventDispatcher, IPos } from "utils";
 // @ts-ignore
 global.decomp = decomp;
 
-export const fps: number = 45;
-export const delayTime = 1000 / fps;
+export const physicalFps: number = 45;
+export const delayTime = 1000 / physicalFps;
 export class PhysicalPeer extends RPCPeer {
     public scaleRatio: number;
     protected currentTime: number = 0;

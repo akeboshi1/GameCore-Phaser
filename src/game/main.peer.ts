@@ -490,7 +490,7 @@ export class MainPeer extends RPCPeer {
 
     @Export([webworker_rpc.ParamType.str])
     public stopGuide(id: string) {
-        if (this.game.guideManager) this.game.guideManager.stopGuide(id);
+        if (this.game.guideWorkerManager) this.game.guideWorkerManager.stopGuide(id);
     }
 
     @Export()

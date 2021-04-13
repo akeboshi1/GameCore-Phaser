@@ -1,4 +1,3 @@
-export * from "./animation.model";
 export * from "./base.animation";
 export * from "./bubble.animation";
 export * from "./dragonbones.animation";

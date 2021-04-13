@@ -1,6 +1,6 @@
 import { IPos, Logger } from "utils";
 
-export interface ICameraService {
+export interface IBaseCameraService {
     camera: Phaser.Cameras.Scene2D.Camera | undefined;
     moving: boolean;
     readonly targetFollow: any;
@@ -24,7 +24,7 @@ export interface ICameraService {
     destroy(): void;
 }
 
-export class BaseCamerasManager implements ICameraService {
+export class BaseCamerasManager implements IBaseCameraService {
     protected mMain: Phaser.Cameras.Scene2D.Camera;
     protected mMoving: boolean;
     protected mTarget: any;

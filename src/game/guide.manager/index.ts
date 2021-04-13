@@ -1,1 +1,1 @@
-export * from "./guide.manager";
+export * from "./guide.worker.manager";

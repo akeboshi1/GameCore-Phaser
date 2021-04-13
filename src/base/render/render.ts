@@ -1,8 +1,8 @@
-import { ICameraService } from "./cameras/cameras.manager";
+import { IBaseCameraService } from "./cameras/cameras.manager";
 import { BaseSceneManager } from "./scene/scene.manager";
 
 export interface IRender {
-    readonly camerasManager: ICameraService;
+    readonly camerasManager: IBaseCameraService;
     readonly scaleRatio: number;
     readonly game: Phaser.Game;
     readonly emitter: Phaser.Events.EventEmitter;

@@ -84,8 +84,9 @@ const gameConfig = Object.assign({}, commonConfig, {
         ],
     },
     entry: {
-        tooqing: path.join(__dirname, "./launcher.ts"),
         editor: path.join(__dirname, "./src/editor/index.ts"),
+        renderPeer: path.join(__dirname, "./src/render/index.ts"),
+        mainPeer: path.join(__dirname, "./src/game/index.ts"),
     },
     output: {
         // This is required so workers are known where to be loaded from

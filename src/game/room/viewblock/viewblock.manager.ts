@@ -2,7 +2,7 @@
 import { IPosition45Obj, IPos, LogicRectangle, Logger } from "utils";
 import { IBlockObject } from "../block/iblock.object";
 import { Viewblock } from "./view.block";
-import { ICameraService } from "../camera/cameras.manager";
+import { ICameraService } from "../camera/cameras.worker.manager";
 import { IViewBlockManager } from "./iviewblock.manager";
 export class ViewblockManager implements IViewBlockManager {
     private mCameras: ICameraService;

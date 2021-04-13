@@ -1,12 +1,12 @@
 import { IPos, LogicPos, IProjection, Logger } from "utils";
 import { InputEnable } from "../element/element";
-import { MatterObject } from "../physical/matter.object";
+import { MatterWorkerObject } from "../physical/matter.worker.object";
 import { IRoomService } from "../room";
 import { IBlockObject } from "./iblock.object";
 import { ISprite } from "structure";
 import { op_def } from "pixelpai_proto";
 
-export abstract class BlockObject extends MatterObject implements IBlockObject {
+export abstract class BlockObject extends MatterWorkerObject implements IBlockObject {
     public isUsed = false;
     protected mRenderable: boolean = false;
     protected mBlockable: boolean = false;

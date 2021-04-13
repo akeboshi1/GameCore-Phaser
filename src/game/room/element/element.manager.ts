@@ -26,12 +26,6 @@ export interface IElementManager {
 
     destroy();
 }
-
-export interface Task {
-    action: string;
-    loc: Partial<op_def.IMossMetaData>;
-}
-
 export class ElementManager extends PacketHandler implements IElementManager {
     public static ELEMENT_READY: string = "ELEMENT_READY";
     public hasAddComplete: boolean = false;

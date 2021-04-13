@@ -8,3 +8,4 @@ export * from "./player.element.action";
 export * from "./tag.element.action";
 export * from "./pica.player.action.manager";
 export * from "./pica.furni.survey.action";
+export * from "./throw.element.action";

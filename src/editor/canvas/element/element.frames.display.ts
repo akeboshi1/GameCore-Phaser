@@ -9,8 +9,6 @@ import {AnimationDataNode} from "game-capsule";
 import {AnimationModel, RunningAnimation} from "structure";
 import {DragonbonesEditorDisplay} from "./dragonbones.editor.display";
 
-export const LOCAL_HOME_PATH: string = path.resolve(os.homedir(), ".pixelpai");
-
 export default class ElementFramesDisplay extends BaseFramesDisplay implements ResourcesChangeListener {
 
     private readonly MOUNT_ANIMATION_TIME_SCALE: number = 1000 / 12;
