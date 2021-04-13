@@ -20,7 +20,7 @@ export class Astar {
     private readonly LINE_COLOR_PATH = 0xFFFF00;
 
     // 是否显示所有可行经点。如果打开会非常消耗性能
-    private mPointsShowType: PointsShowType = PointsShowType.All;
+    private mPointsShowType: PointsShowType = PointsShowType.None;
 
     private mPoints_Walkable: Phaser.GameObjects.Graphics = null;
     private mPoints_NotWalkable: Phaser.GameObjects.Graphics = null;

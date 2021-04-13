@@ -3,21 +3,12 @@ import { PlayCamera } from "../cameras/play.camera";
 import { BaseLayer, GroundLayer, SurfaceLayer } from "baseRender";
 import { MainUIScene } from "./main.ui.scene";
 import { RoomScene } from "./room.scene";
-import { PlaySceneLoadState, SceneName } from "structure";
+import { LayerName, PlaySceneLoadState, SceneName} from "structure";
 import { MotionManager } from "../input/motion.manager";
 import { LayerEnum } from "game-capsule";
 
 // 游戏正式运行用 Phaser.Scene
 export class PlayScene extends RoomScene {
-    public static LAYER_GROUNDCLICK = "groundClickLayer";
-    public static LAYER_GROUND2 = "groundLayer2";
-    public static LAYER_GROUND = LayerEnum.Terrain.toString();
-    public static LAYER_MIDDLE = "middleLayer";
-    public static LAYER_FLOOR = LayerEnum.Floor.toString();
-    public static LAYER_SURFACE = LayerEnum.Surface.toString();
-    public static LAYER_WALL = LayerEnum.Wall.toString();
-    public static LAYER_ATMOSPHERE = "atmosphere";
-    public static LAYER_SCENEUI = "sceneUILayer";
     protected motion: MotionManager;
     protected mLoadState: PlaySceneLoadState;
     private cameraMovable: boolean = true;
@@ -69,17 +60,18 @@ export class PlayScene extends RoomScene {
 
         // set layers
         // ==========背景层
-        this.layerManager.addLayer(this, BaseLayer, PlayScene.LAYER_GROUNDCLICK, 1);
-        this.layerManager.addLayer(this, BaseLayer, PlayScene.LAYER_GROUND2, 2);
+        this.layerManager.addLayer(this, BaseLayer, LayerName.GROUNDCLICK, 1);
+        this.layerManager.addLayer(this, BaseLayer, LayerName.GROUND2, 2);
 
         // ==========舞台层
-        this.layerManager.addLayer(this, GroundLayer, PlayScene.LAYER_WALL, 2).setScale(this.render.scaleRatio);
-        this.layerManager.addLayer(this, GroundLayer, PlayScene.LAYER_GROUND, 3).setScale(this.render.scaleRatio);
-        this.layerManager.addLayer(this, BaseLayer, PlayScene.LAYER_MIDDLE, 4).setScale(this.render.scaleRatio);
-        this.layerManager.addLayer(this, GroundLayer, PlayScene.LAYER_FLOOR, 4).setScale(this.render.scaleRatio);
-        this.layerManager.addLayer(this, SurfaceLayer, PlayScene.LAYER_SURFACE, 5).setScale(this.render.scaleRatio);
-        this.layerManager.addLayer(this, BaseLayer, PlayScene.LAYER_ATMOSPHERE, 6);
-        this.layerManager.addLayer(this, BaseLayer, PlayScene.LAYER_SCENEUI, 7);
+        this.layerManager.addLayer(this, GroundLayer, LayerName.WALL, 2).setScale(this.render.scaleRatio);
+        this.layerManager.addLayer(this, GroundLayer, LayerName.GROUND, 3).setScale(this.render.scaleRatio);
+        this.layerManager.addLayer(this, BaseLayer, LayerName.MIDDLE, 4).setScale(this.render.scaleRatio);
+        this.layerManager.addLayer(this, GroundLayer, LayerName.FLOOR, 4).setScale(this.render.scaleRatio);
+        this.layerManager.addLayer(this, SurfaceLayer, LayerName.SURFACE, 5).setScale(this.render.scaleRatio);
+        this.layerManager.addLayer(this, SurfaceLayer, LayerName.DECORATE, 6).setScale(this.render.scaleRatio);
+        this.layerManager.addLayer(this, BaseLayer, LayerName.ATMOSPHERE, 6);
+        this.layerManager.addLayer(this, BaseLayer, LayerName.SCENEUI, 7);
 
         // ======= mainworker startPlay
         this.render.startRoomPlay();

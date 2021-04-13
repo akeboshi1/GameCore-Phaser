@@ -1,6 +1,6 @@
 {
   "name": "game-core",
-  "version": "1.0.626",
+  "version": "1.0.631",
   "main": "release/js/editor.js",
   "scripts": {
     "dev": "webpack-dev-server --mode development",

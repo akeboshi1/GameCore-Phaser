@@ -1,7 +1,7 @@
 import { BaseDisplay, BaseDragonbonesDisplay, ReferenceArea } from "baseRender";
 import { Render } from "../../render";
 import { IPos, Logger, IProjection } from "utils";
-import { DisplayField, ElementStateType, IDragonbonesModel, RunningAnimation, TitleMask } from "structure";
+import { DisplayField, ElementStateType, IDragonbonesModel, LayerName, RunningAnimation, TitleMask} from "structure";
 import { IDisplayObject } from "../display.object";
 import { LoadQueue, LoadType } from "../../loadqueue";
 import { ElementTopDisplay } from "../element.top.display";
@@ -273,7 +273,7 @@ export class DragonbonesDisplay extends BaseDragonbonesDisplay implements IDispl
             this.mMountList.delete(index);
         }
         this.mMountContainer.remove(display, false);
-        this.render.displayManager.addToSurfaceLayer(display);
+        this.render.displayManager.addToLayer(LayerName.SURFACE, display);
     }
 
     public get sortX() {
