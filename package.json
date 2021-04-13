@@ -1,5 +1,5 @@
 {
-  "name": "@PixelPai/game-core",
+  "name": "game-core",
   "version": "1.0.626",
   "main": "release/js/editor.js",
   "scripts": {
