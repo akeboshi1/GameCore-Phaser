@@ -15,10 +15,10 @@ for (const key in protos) {
 }
 
 export class MainPeer extends RPCPeer {
+    @Export()
+    protected game: Game;
     private gameState;
     private stateTime: number = 0;
-    @Export()
-    private game: Game;
     private mConfig: ILauncherConfig;
     /**
      * 主进程和render之间完全链接成功
@@ -346,33 +346,6 @@ export class MainPeer extends RPCPeer {
     }
 
     @Export()
-    public decorateSelectElement(id: number) {
-        if (!this.game.roomManager) return;
-        if (!this.game.roomManager.currentRoom) return;
-        if (!this.game.roomManager.currentRoom.isDecorating) return;
-        // if (!this.game.roomManager.currentRoom.decorateManager) return;
-        // this.game.roomManager.currentRoom.decorateManager.select(id);
-    }
-
-    @Export()
-    public decorateMoveElement(id: number, delta: IPos) {
-        if (!this.game.roomManager) return;
-        if (!this.game.roomManager.currentRoom) return;
-        if (!this.game.roomManager.currentRoom.isDecorating) return;
-        // if (!this.game.roomManager.currentRoom.decorateManager) return;
-        // this.game.roomManager.currentRoom.decorateManager.moveSelected(id, delta);
-    }
-
-    @Export()
-    public requestDecorate(id?: number, baseID?: string) {
-        if (!this.game.roomManager) return;
-        if (!this.game.roomManager.currentRoom) return;
-        if (!this.game.roomManager.currentRoom.enableDecorate) return;
-        if (this.game.roomManager.currentRoom.isDecorating) return;
-        this.game.roomManager.currentRoom.requestDecorate(id, baseID);
-    }
-
-    @Export()
     public isElementLocked(id: number) {
         if (!this.game.roomManager) return false;
         if (!this.game.roomManager.currentRoom) return false;
@@ -465,14 +438,6 @@ export class MainPeer extends RPCPeer {
     @Export()
     public onTapHandler(obj: any) {
         // if (this.game.roomManager.currentRoom) this.game.roomManager.currentRoom.move(obj.id, obj.x, obj.y, obj.nodeType);
-    }
-
-    @Export()
-    public isCurrentRoomEditEnable(): boolean {
-        if (this.game.roomManager && this.game.roomManager.currentRoom) {
-            return this.game.roomManager.currentRoom.enableDecorate;
-        }
-        return false;
     }
 
     @Export()

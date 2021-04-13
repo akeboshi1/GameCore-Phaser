@@ -39,12 +39,10 @@ export interface IRoomService {
     readonly roomSize: IPosition45Obj;
     readonly miniSize: IPosition45Obj;
     readonly game: Game;
-    readonly enableDecorate: boolean;
     readonly sceneType: op_def.SceneTypeEnum;
     // readonly matterWorld: MatterWorld;
 
     readonly isLoading: boolean;
-    readonly isDecorating: boolean;
 
     now(): number;
 
@@ -92,12 +90,6 @@ export interface IRoomService {
 
     onRoomReady();
 
-    requestDecorate(id?: number, baseID?: string);
-
-    startDecorating();
-
-    stopDecorating();
-
     addToWalkableMap(sprite: ISprite, isTerrain?: boolean);
 
     removeFromWalkableMap(sprite: ISprite, isTerrain?: boolean);
@@ -126,8 +118,6 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
     protected mMiniSize: IPosition45Obj;
     protected mCameraService: ICameraService;
     protected mBlocks: IViewBlockManager;
-    protected mEnableDecorate: boolean = false;
-    protected mIsDecorating: boolean = false;
     protected mWallMamager: WallManager;
     protected mScaleRatio: number;
     protected mStateManager: RoomStateManager;
@@ -138,13 +128,11 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
     private moveStyle: op_def.MoveStyle;
     private mActorData: IActor;
     private mUpdateHandlers: Handler[] = [];
-    private mDecorateEntryData = null;
     // -1: out of range; 0: not walkable; 1: walkable
     private mWalkableMap: number[][];
     // 地块可行走标记map。每格标记由多个不同优先级（暂时仅地块和物件）标记组成，最终是否可行走由高优先级标记决定
     private mWalkableMarkMap: Map<number, Map<number, { level: number; walkable: boolean }>> =
         new Map<number, Map<number, { level: number; walkable: boolean }>>();
-    private mIsWaitingForDecorateResponse: boolean = false;
     constructor(protected manager: IRoomManager) {
         super();
         this.mGame = this.manager.game;
@@ -158,8 +146,6 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
             this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_SET_CAMERA_FOLLOW, this.onCameraFollowHandler);
             this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_RESET_CAMERA_SIZE, this.onCameraResetSizeHandler);
             this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_SYNC_STATE, this.onSyncStateHandler);
-            this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_START_EDIT_MODEL, this.onStartDecorate);
-            this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_EDIT_MODEL_RESULT, this.onDecorateResult);
             this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_CURRENT_SCENE_ALL_SPRITE, this.onAllSpriteReceived);
             this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_NOTICE_RELOAD_SCENE, this.onReloadScene);
         }
@@ -669,107 +655,9 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
         }
     }
 
-    public requestDecorate(id?: number, baseID?: string) {
-        if (id !== undefined) {
-            const element = this.elementManager.get(id);
-            if (!element) return;
-            const locked = this.elementManager.isElementLocked(element);
-            // 未解锁家具不给选中
-            if (locked) return;
-        }
-
-        if (this.mIsWaitingForDecorateResponse) return;
-        this.mIsWaitingForDecorateResponse = true;
-
-        this.mDecorateEntryData = { id, baseID };
-
-        this.connection.send(new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_START_EDIT_MODEL));
-
-        // waite for <OP_VIRTUAL_WORLD_RES_CLIENT_START_EDIT_MODEL>
-    }
-
-    public startDecorating() {
-        if (this.mIsDecorating) return;
-        this.mIsDecorating = true;
-
-        this.cameraService.stopFollow();
-
-        // hide players (with animations)
-        this.playerManager.hideAll();
-
-        // set all element interactive
-        const elements = this.elementManager.getElements();
-        for (const element of elements) {
-            if (!(element instanceof BlockObject)) continue;
-            element.setInputEnable(InputEnable.Enable);
-        }
-
-        // new decorate manager
-        // this.mDecorateManager = new DecorateManager(this, this.mDecorateEntryData);
-
-        // switch ui
-        this.game.uiManager.hideMed(ModuleName.PICANEWMAIN_NAME);
-        this.game.uiManager.hideMed(ModuleName.BOTTOM);
-        this.game.uiManager.showMed(ModuleName.PICADECORATE_NAME,
-            { closeAlertText: (<any>this.game.configManager).getI18n("PKT_SYS0000021") });
-        this.game.uiManager.hideMed(ModuleName.CUTINMENU_NAME);
-        // switch mouse manager
-        this.game.renderPeer.switchDecorateMouseManager();
-    }
-
     public cameraFollowHandler() {
         if (!this.cameraService.initialize) return;
         this.cameraService.syncCameraScroll();
-    }
-
-    public stopDecorating() {
-        if (this.mIsWaitingForDecorateResponse) return;
-        if (!this.mIsDecorating) return;
-        this.mIsDecorating = false;
-
-        // camera follow
-        this.cameraService.startFollow(this.playerManager.actor.id);
-
-        // set user pos
-        // const entrePos = new LogicPos(this.mActorData.x, this.mActorData.y);
-        // this.playerManager.actor.setPosition(entrePos);
-        // this.game.renderPeer.setPosition(this.playerManager.actor.id, entrePos.x, entrePos.y);
-
-        // show players
-        this.playerManager.showAll();
-
-        // set all element interactive
-        const elements = this.elementManager.getElements();
-        for (const element of elements) {
-            if (!(element instanceof BlockObject)) continue;
-            element.setInputEnable(InputEnable.Interactive);
-        }
-
-        // switch ui
-        this.game.uiManager.hideMed(ModuleName.PICADECORATE_NAME);
-        this.game.uiManager.showMed(ModuleName.PICANEWMAIN_NAME);
-        this.game.uiManager.showMed(ModuleName.BOTTOM);
-        this.game.uiManager.showMed(ModuleName.CUTINMENU_NAME, { button: [{ text: "editor" }] });
-        // switch mouse manager
-        this.game.renderPeer.switchBaseMouseManager();
-
-        // destroy decorate manager
-        // this.mDecorateManager.destroy();
-        // this.mDecorateManager = null;
-
-        // cleat entry data
-        this.mDecorateEntryData = null;
-
-        this.mIsWaitingForDecorateResponse = false;
-    }
-
-    public requestSaveDecorating(pkt: PBpacket) {
-        if (this.mIsWaitingForDecorateResponse) return;
-        this.mIsWaitingForDecorateResponse = true;
-
-        this.connection.send(pkt);
-
-        // waite for response: _OP_VIRTUAL_WORLD_RES_CLIENT_EDIT_MODEL_RESULT
     }
 
     // 检测sprite是否与现有walkableMap有碰撞重叠
@@ -880,14 +768,6 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
         return this.mGame;
     }
 
-    get enableDecorate() {
-        return this.mEnableDecorate;
-    }
-
-    get isDecorating(): boolean {
-        return this.mIsDecorating;
-    }
-
     get connection(): ConnectionService | undefined {
         if (this.manager) {
             return this.manager.connection;
@@ -898,8 +778,7 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
         return op_def.SceneTypeEnum.NORMAL_SCENE_TYPE;
     }
 
-    private onEnableEditModeHandler(packet: PBpacket) {
-        this.mEnableDecorate = true;
+    protected onEnableEditModeHandler(packet: PBpacket) {
         this.game.uiManager.showMed(ModuleName.CUTINMENU_NAME, { button: [{ text: "editor" }] });
     }
 
@@ -992,37 +871,6 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
             }
             this.mTerrainManager.add(addList);
         }
-    }
-
-    private async onStartDecorate(packet: PBpacket) {
-        this.mIsWaitingForDecorateResponse = false;
-        const content: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_START_EDIT_MODEL = packet.content;
-        if (!content.status) {
-            this.game.renderPeer.showAlert(content.msg, true);
-            // Logger.getInstance().warn("enter decorate error: ", content.msg);
-            return;
-        }
-
-        if (this.isDecorating) {
-            Logger.getInstance().error("current room is decorating");
-            return;
-        }
-
-        this.startDecorating();
-    }
-
-    private onDecorateResult(packet: PBpacket) {
-        this.mIsWaitingForDecorateResponse = false;
-        const content: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_EDIT_MODEL_RESULT = packet.content;
-        if (!content.status) {
-            this.game.renderPeer.showAlert(content.msg, true);
-            // Logger.getInstance().warn("enter decorate error: ", content.msg);
-            return;
-        }
-
-        this.stopDecorating();
-
-        // waite for OP_VIRTUAL_WORLD_REQ_CLIENT_NOTICE_RELOAD_SCENE
     }
 
     private onReloadScene(packet: PBpacket) {

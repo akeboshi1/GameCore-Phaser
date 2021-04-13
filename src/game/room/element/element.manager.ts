@@ -322,9 +322,9 @@ export class ElementManager extends PacketHandler implements IElementManager {
         if (!element) return;
         element.state = true;
         // 编辑小屋时，更新浮动功能栏
-        if (this.mRoom.isDecorating) {
-            this.mRoom.game.emitter.emit(MessageType.DECORATE_ELEMENT_CREATED, id);
-        }
+        // if (this.mRoom.isDecorating) {
+        //     this.mRoom.game.emitter.emit(MessageType.DECORATE_ELEMENT_CREATED, id);
+        // }
         // 回馈给load缓存队列逻辑
         this.elementLoadCallBack(id);
         // 没有完成全部元素添加或者当物件添加队列缓存存在，则不做创建状态检测
