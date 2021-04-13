@@ -1,6 +1,6 @@
 import {Room} from "../../../../game/room/room/room";
 import {op_client, op_def, op_pkt_def, op_virtual_world} from "pixelpai_proto";
-import {ISprite, MessageType, ModuleName} from "structure";
+import {ISprite, LayerName, MessageType, ModuleName} from "structure";
 import {IPos, Logger, Position45} from "utils";
 import {PBpacket} from "net-socket-packet";
 import {Sprite} from "baseModel";
@@ -195,6 +195,9 @@ export class DecorateManager {
         // set walkable
         this.mRoom.removeFromWalkableMap(element.model);
 
+        // 排序
+        this.mRoom.game.renderPeer.changeLayer(id, LayerName.DECORATE);
+
         // show reference
         element.showRefernceArea();
 
@@ -223,6 +226,9 @@ export class DecorateManager {
         if (element) {
             // set walkable
             this.mRoom.addToWalkableMap(element.model);
+
+            // 排序
+            this.mRoom.game.renderPeer.changeLayer(element.model.id, element.model.layer.toString());
 
             // hide reference
             element.hideRefernceArea();
@@ -269,21 +275,9 @@ export class DecorateManager {
                 this.mActionQueue.push(act);
             }
         });
-
-        const element = this.mRoom.elementManager.get(this.mSelectedID);
-        if (element) {
-            // set walkable
-            this.mRoom.addToWalkableMap(element.model);
-
-            // hide reference
-            element.hideRefernceArea();
-        }
-
-        this.mSelectedID = -1;
         this.mSelectedActionQueue.length = 0;
 
-        this.mRoom.game.uiManager.hideMed(ModuleName.PICADECORATECONTROL_NAME);
-        this.mRoom.game.emitter.emit(MessageType.DECORATE_UNSELECT_ELEMENT);
+        this.unselect();
     }
 
     // 将当前选中的物件放回原位/取消放置，取消选择，关闭浮动功能栏

@@ -27,3 +27,4 @@ export * from "./isprite";
 export * from "./animator";
 export * from "./size.chart";
 export * from "./room.type";
+export * from "./LayerName";

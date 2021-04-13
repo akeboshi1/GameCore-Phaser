@@ -823,6 +823,15 @@ export class Render extends RPCPeer implements GameMain, IRender {
     }
 
     @Export()
+    public changeLayer(id: number, layerName: string) {
+        if (!this.displayManager) return;
+        const display = this.displayManager.getDisplay(id);
+        if (!display) return;
+        display.parentContainer.remove(display);
+        this.displayManager.addToLayer(layerName, display);
+    }
+
+    @Export()
     public showCreateRole(params?: any) {
         if (this.mSceneManager) this.mSceneManager.startScene(SceneName.CREATE_ROLE_SCENE, { render: this, params });
     }
