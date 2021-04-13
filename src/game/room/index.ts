@@ -21,3 +21,5 @@ export * from "./viewblock/viewblock.manager";
 export * from "./room.manager";
 export * from "./display/spawn.point";
 export * from "./elementaction";
+export * from "./element/element.state.manager";
+export * from "./element/wall.manager";

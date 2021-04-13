@@ -1,6 +1,5 @@
 import { PBpacket } from "net-socket-packet";
-import { op_client, op_virtual_world, op_def, op_gameconfig, op_pkt_def } from "pixelpai_proto";
-import { EventType, ModuleName, RoomType } from "structure";
+import { op_client } from "pixelpai_proto";
 import { EventDispatcher } from "utils";
 import { Game } from "../game";
 import { BasePacketHandler } from "./base.packet.handler";
