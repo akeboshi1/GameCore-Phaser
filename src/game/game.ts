@@ -3,7 +3,7 @@ import { PBpacket, PacketHandler } from "net-socket-packet";
 import { MainPeer } from "./main.peer";
 import { op_def, op_client, op_virtual_world, op_gateway } from "pixelpai_proto";
 import { Lite } from "game-capsule";
-import { ConnectionService, IConnectListener, ServerAddress } from "../../lib/net";
+import { IConnectListener, ServerAddress } from "../../lib/net";
 import { Logger, ResUtils, Tool, load, EventDispatcher, Handler } from "utils";
 import IOP_CLIENT_REQ_VIRTUAL_WORLD_PLAYER_INIT = op_gateway.IOP_CLIENT_REQ_VIRTUAL_WORLD_PLAYER_INIT;
 import { Connection, GameSocket } from "./net/connection";
@@ -32,7 +32,7 @@ export const interval = wokerfps > 0 ? 1000 / wokerfps : 1000 / 30;
 export class Game extends PacketHandler implements IConnectListener, ClockReadyListener {
     public isDestroy: boolean = false;
     protected mainPeer: MainPeer;
-    protected connect: ConnectionService;
+    protected connect: Connection;
     protected mUser: User;
     // protected mUiManager: UiManager;
     // protected mMoveStyle: number = -1;
@@ -335,7 +335,7 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
         return this.mainPeer;
     }
 
-    get connection(): ConnectionService {
+    get connection(): Connection {
         return this.connect;
     }
 

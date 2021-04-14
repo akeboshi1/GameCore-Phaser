@@ -9,7 +9,6 @@ import { Clock } from "../loop/clock/clock";
 for (const key in protos) {
     PBpacket.addProtocol(protos[key]);
 }
-
 export class GameSocket extends SocketConnection {
     private mainPeer: MainPeer;
     // private socketList: any[];
