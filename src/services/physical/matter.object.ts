@@ -368,7 +368,7 @@ export class MatterObject implements IMatterObject {
             this.mMoving = true;
             Body.setVelocity(this.body, Vector.create(x, y));
         }
-        this.setStatic(!this.mMoving);
+        // this.setStatic(!this.mMoving);
         // 设置碰撞体是否旋转
         Body.setInertia(this.body, Infinity);
     }
