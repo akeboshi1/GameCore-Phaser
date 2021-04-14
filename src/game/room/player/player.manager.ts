@@ -7,7 +7,7 @@ import { IRoomService, Room } from "../room";
 import { PlayerModel } from "./player.model";
 import { AvatarSuitType, EventType, ISprite, MessageType, PlayerState } from "structure";
 import { Logger, LogicPos } from "utils";
-import { ConnectionService } from "../../../../lib/net/connection.service";
+import { ConnectionService } from "../../../../lib/net";
 import { IElement } from "../element/element";
 import { Sprite } from "baseModel";
 import NodeType = op_def.NodeType;

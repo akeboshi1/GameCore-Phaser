@@ -2,7 +2,7 @@ import { RPCPeer, Export, webworker_rpc } from "webworker-rpc";
 import { op_gateway, op_virtual_world, op_client } from "pixelpai_proto";
 import { PBpacket, Buffer } from "net-socket-packet";
 import * as protos from "pixelpai_proto";
-import { ServerAddress } from "../../lib/net/address";
+import { ServerAddress } from "../../lib/net";
 import { Game } from "./game";
 import { IPos, Logger } from "utils";
 import { ILauncherConfig, MAIN_WORKER, RENDER_PEER, ModuleName, EventType, PHYSICAL_WORKER, PHYSICAL_WORKER_URL, GameState } from "structure";

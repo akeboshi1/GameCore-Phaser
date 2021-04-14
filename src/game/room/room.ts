@@ -21,7 +21,7 @@ import { RoomStateManager } from "./state/room.state.manager";
 import { IRoomManager } from "./room.manager";
 import { ViewblockManager } from "./viewblock/viewblock.manager";
 import { BlockObject } from "./block/block.object";
-import { ConnectionService } from "lib/net/connection.service";
+import { ConnectionService } from "lib/net";
 export interface SpriteAddCompletedListener {
     onFullPacketReceived(sprite_t: op_def.NodeType): void;
 }

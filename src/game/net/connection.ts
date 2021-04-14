@@ -3,9 +3,7 @@ import { PacketHandler, PBpacket } from "net-socket-packet";
 import * as protos from "pixelpai_proto";
 import { MainPeer } from "../main.peer";
 import { Logger } from "utils";
-import { SocketConnection, IConnectListener, SocketConnectionError } from "../../../lib/net/socket";
-import { ConnectionService } from "../../../lib/net/connection.service";
-import { ServerAddress } from "../../../lib/net/address";
+import { SocketConnection, IConnectListener, SocketConnectionError, ConnectionService, ServerAddress } from "../../../lib/net";
 import { Clock } from "../loop/clock/clock";
 
 for (const key in protos) {

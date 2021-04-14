@@ -1,4 +1,4 @@
-import { ConnectionService } from "lib/net/connection.service";
+import { ConnectionService } from "lib/net";
 import { PacketHandler } from "net-socket-packet";
 import { EventDispatcher } from "utils";
 import { Game } from "../game";
