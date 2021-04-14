@@ -1,9 +1,7 @@
 import { Button, ClickEvent } from "apowophaserui";
 import { Render } from "gamecoreRender";
-import { UIAtlasName } from "picaRes";
-import { ModuleName } from "structure";
-import { Handler, i18n } from "utils";
-
+import { UIAtlasName } from "../../../res";
+import { Handler } from "utils";
 export class PicaNewActivityPanel extends Phaser.GameObjects.Container {
     public arrowButton: Button;
     private dpr: number;

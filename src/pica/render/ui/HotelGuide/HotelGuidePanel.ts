@@ -1,6 +1,6 @@
 import { ClickEvent } from "apowophaserui";
 import { UiManager } from "gamecoreRender";
-import { PicaMyNavigationPanel, PicaPartyNavigationPanel, PicaTaskPanel } from "picaRender";
+import { PicaMyNavigationPanel, PicaPartyNavigationPanel, PicaTaskPanel } from "../../../render";
 import { ModuleName } from "structure";
 import { BaseHotelGuidePanel } from "./BaseHotelGuidePanel";
 export class HotelGuidePanel extends BaseHotelGuidePanel {

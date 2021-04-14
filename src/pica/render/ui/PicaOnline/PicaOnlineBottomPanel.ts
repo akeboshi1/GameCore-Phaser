@@ -1,9 +1,6 @@
 
-import { op_client } from "pixelpai_proto";
-import { Button, ClickEvent, UIType } from "apowophaserui";
-import { DynamicImage, ImageValue, ThreeSliceButton, ThreeSlicePath } from "gamecoreRender";
-import { AvatarSuit, AvatarSuitType, ModuleName } from "structure";
-import { UIAtlasName } from "picaRes";
+import { ClickEvent } from "apowophaserui";
+import { DynamicImage, ThreeSliceButton, ThreeSlicePath } from "gamecoreRender";
 import { Handler, i18n, UIHelper, Url } from "utils";
 export class PicaOnlineBottomPanel extends Phaser.GameObjects.Container {
     public roleData: any;

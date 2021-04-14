@@ -1,12 +1,13 @@
-import { NineSliceButton, GameGridTable, GameScroller, TabButton, Button, BBCodeText, NineSlicePatch, ClickEvent, NinePatchTabButton } from "apowophaserui";
-import { CheckboxGroup, CommonBackground, DynamicImage, DynamicImageValue, ImageValue, MoreButtonPanel, TextButton, UiManager } from "gamecoreRender";
-import { DetailBubble, DetailDisplay, ItemButton } from "picaRender";
-import { UIAtlasName } from "picaRes";
+import { NineSliceButton, GameGridTable, GameScroller, TabButton, Button, NineSlicePatch, ClickEvent, NinePatchTabButton } from "apowophaserui";
+import { CheckboxGroup, TextButton, UiManager } from "gamecoreRender";
+import { DetailBubble, DetailDisplay, ItemButton } from "../../ui";
+import { UIAtlasName } from "../../../res";
 import { AvatarSuitType, ModuleName } from "structure";
 import { Font, Handler, i18n, UIHelper, Url } from "utils";
 import { op_client, op_def } from "pixelpai_proto";
 import { PicaBasePanel } from "../pica.base.panel";
-import { ICountablePackageItem, IExtendCountablePackageItem } from "picaStructure";
+import { ICountablePackageItem, IExtendCountablePackageItem } from "../../../structure";
+import { CommonBackground, DynamicImageValue, ImageValue } from "../../ui";
 export class PicaBagPanel extends PicaBasePanel {
   public static PICABAG_SHOW: string = "PICABAG_SHOW";
   private mCloseBtn: Button;

@@ -1,12 +1,10 @@
 import { Button, ClickEvent, InputText, NineSliceButton } from "apowophaserui";
-import { Handler, i18n, UIHelper } from "utils";
+import { i18n, UIHelper } from "utils";
 import { AvatarSuit, AvatarSuitType, ModuleName, RunningAnimation } from "structure";
-import { UiManager, CommonBackground, UIDragonbonesDisplay, ButtonEventDispatcher, ToggleButton, MainUIScene } from "gamecoreRender";
+import { UiManager, UIDragonbonesDisplay, ButtonEventDispatcher, MainUIScene } from "gamecoreRender";
 import { PicaBasePanel } from "../pica.base.panel";
-import { UIAtlasName } from "picaRes";
-import { op_client, op_gameconfig, op_def } from "pixelpai_proto";
-import { ICountablePackageItem } from "picaStructure";
-
+import { UIAtlasName } from "../../../res";
+import { CommonBackground } from "../../ui";
 export class PicaRenamePanel extends PicaBasePanel {
     private commonBackground: CommonBackground;
     private mBottomBg: Phaser.GameObjects.Image;

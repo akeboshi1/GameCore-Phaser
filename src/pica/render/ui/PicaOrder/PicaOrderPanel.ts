@@ -1,9 +1,10 @@
 import { NineSlicePatch, GameGridTable, Button, ClickEvent, BBCodeText, ProgressBar } from "apowophaserui";
-import { AlertView, BasePanel, DynamicImage, DynamicImageValue, ImageValue, ItemInfoTips, Render, UiManager } from "gamecoreRender";
+import { AlertView, BasePanel, DynamicImage, ItemInfoTips, Render, UiManager } from "gamecoreRender";
 import { ModuleName } from "structure";
-import { UIAtlasKey, UIAtlasName } from "picaRes";
+import { UIAtlasKey, UIAtlasName } from "../../../res";
 import { Font, Handler, i18n, Logger, Url } from "utils";
-import { ICountablePackageItem } from "picaStructure";
+import { ICountablePackageItem } from "../../../structure";
+import { DynamicImageValue, ImageValue } from "../../ui";
 export class PicaOrderPanel extends BasePanel {
     private mBackground: Phaser.GameObjects.Graphics;
     private bg: NineSlicePatch;

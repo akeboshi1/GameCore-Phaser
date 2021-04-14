@@ -1,8 +1,8 @@
-import { BBCodeText, NineSlicePatch } from "apowophaserui";
-import { DynamicImage, ImageBBCodeValue } from "gamecoreRender";
-import { UIAtlasName } from "picaRes";
-import { Handler, UIHelper, Url } from "utils";
-
+import { BBCodeText } from "apowophaserui";
+import { DynamicImage } from "gamecoreRender";
+import { UIAtlasName } from "../../../res";
+import { UIHelper } from "utils";
+import { ImageBBCodeValue } from "../../ui";
 export class PicaRoomListItem extends Phaser.GameObjects.Container {
     public roomData: any;// op_client.IEditModeRoom
     private key: string;

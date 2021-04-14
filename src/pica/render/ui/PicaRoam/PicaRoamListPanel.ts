@@ -1,9 +1,8 @@
 import { NineSlicePatch, GameGridTable, Button, ClickEvent, BBCodeText } from "apowophaserui";
 import { DynamicImage } from "gamecoreRender";
-import { UIAtlasName } from "picaRes";
-import { Font, Handler, i18n, TimeUtils, UIHelper, Url } from "utils";
-import { op_client, op_pkt_def } from "pixelpai_proto";
-import { ICardPool, IDrawPoolStatus } from "src/pica/structure/icardpool";
+import { UIAtlasName } from "../../../res";
+import { Handler, i18n, UIHelper, Url } from "utils";
+import { ICardPool, IDrawPoolStatus } from "../../../structure";
 export class PicaRoamListPanel extends Phaser.GameObjects.Container {
     private bg: NineSlicePatch;
     private titlebg: Phaser.GameObjects.Image;

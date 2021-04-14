@@ -23,6 +23,7 @@ export class TerrainManager extends PacketHandler implements IElementManager {
     private mEmptyMap: EmptyTerrain[][];
     private mDirty: boolean = false;
     private mTerrainCache: any[] = [];
+    private mIsDealEmptyTerrain: boolean = false;
     // private mCacheLen: number = 10;
     // private canDealTerrain = false;
     constructor(protected mRoom: IRoomService, listener?: SpriteAddCompletedListener) {
@@ -46,7 +47,12 @@ export class TerrainManager extends PacketHandler implements IElementManager {
         this.roomService.game.emitter.on(ElementManager.ELEMENT_READY, this.dealTerrainCache, this);
     }
 
+    public get isDealEmptyTerrain(): boolean {
+        return this.mIsDealEmptyTerrain;
+    }
+
     public init() {
+        this.mIsDealEmptyTerrain = false;
         const roomSize = this.roomService.roomSize;
         this.mEmptyMap = new Array(roomSize.cols);
         for (let i = 0; i < roomSize.cols; i++) {
@@ -76,6 +82,7 @@ export class TerrainManager extends PacketHandler implements IElementManager {
     }
 
     public dealEmptyTerrain() {
+        this.mIsDealEmptyTerrain = true;
         this.mEmptyMap.forEach((emptyTerrainList) => {
             if (emptyTerrainList) emptyTerrainList.forEach((emptyTerrain) => {
                 if (emptyTerrain) emptyTerrain.addDisplay();
@@ -84,6 +91,7 @@ export class TerrainManager extends PacketHandler implements IElementManager {
     }
 
     public destroy() {
+        this.mIsDealEmptyTerrain = false;
         this.roomService.game.emitter.off(ElementManager.ELEMENT_READY, this.dealTerrainCache, this);
         if (this.connection) {
             this.connection.removePacketListener(this);

@@ -1,8 +1,7 @@
-import { NineSlicePatch, GameGridTable, Button, ClickEvent, BBCodeText } from "apowophaserui";
-import { AlignmentType, AxisType, ButtonEventDispatcher, ConstraintType, DynamicImage, GridLayoutGroup } from "gamecoreRender";
-import { UIAtlasName } from "picaRes";
-import { Font, Handler, i18n, TimeUtils, UIHelper, Url } from "utils";
-import { op_client, op_pkt_def } from "pixelpai_proto";
+import { ClickEvent } from "apowophaserui";
+import { AlignmentType, AxisType, ButtonEventDispatcher, ConstraintType, GridLayoutGroup } from "gamecoreRender";
+import { UIAtlasName } from "../../../res";
+import { Handler, i18n, UIHelper } from "utils";
 export class PicaIllustratedListPanel extends Phaser.GameObjects.Container {
     private dpr: number;
     private zoom: number;

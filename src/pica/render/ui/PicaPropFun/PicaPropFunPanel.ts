@@ -3,8 +3,8 @@ import { NineSliceButton, GameSlider, NineSlicePatch, ClickEvent } from "apowoph
 import { BasePanel, UiManager } from "gamecoreRender";
 import { ModuleName, RENDER_PEER } from "structure";
 import { Coin, Font, i18n } from "utils";
-import { UIAtlasKey, UIAtlasName } from "picaRes";
-import { ICountablePackageItem } from "picaStructure";
+import { UIAtlasKey, UIAtlasName } from "../../../res";
+import { ICountablePackageItem } from "../../../structure";
 export class PicaPropFunPanel extends BasePanel {
     public itemCount: number = 1;
     private itemName: Phaser.GameObjects.Text;

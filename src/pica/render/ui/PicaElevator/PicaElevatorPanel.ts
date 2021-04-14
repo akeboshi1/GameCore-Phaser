@@ -1,6 +1,6 @@
-import { NineSlicePatch, GameGridTable, Button, ClickEvent, BBCodeText } from "apowophaserui";
+import { NineSlicePatch, GameGridTable, Button } from "apowophaserui";
 import { BasePanel, DynamicImage, UiManager } from "gamecoreRender";
-import { UIAtlasKey, UIAtlasName } from "picaRes";
+import { UIAtlasKey, UIAtlasName } from "../../../res";
 import { ModuleName, RENDER_PEER } from "structure";
 import { Font, i18n, Url } from "utils";
 export class PicaElevatorPanel extends BasePanel {

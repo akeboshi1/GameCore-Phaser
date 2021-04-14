@@ -1,7 +1,7 @@
 import { Button, ClickEvent, NineSlicePatch } from "apowophaserui";
-import { ImageValue } from "gamecoreRender";
-import { UIAtlasName } from "picaRes";
-import { Font, Handler, i18n, UIHelper } from "utils";
+import { ImageValue } from "./image.value";
+import { UIAtlasName } from "../../../res";
+import { Font, Handler } from "utils";
 
 export class MoneyCompent extends Phaser.GameObjects.Container {
     public money: number;

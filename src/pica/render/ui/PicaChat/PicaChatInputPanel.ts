@@ -1,6 +1,6 @@
 import { BBCodeText, Button, ClickEvent, GameScroller, InputText, NineSliceButton, NineSlicePatch } from "apowophaserui";
 import { Render } from "gamecoreRender";
-import { UIAtlasKey } from "picaRes";
+import { UIAtlasKey } from "../../../res";
 import { Font, i18n, Logger } from "utils";
 
 export class PicaChatInputPanel extends Phaser.Events.EventEmitter {

@@ -1,5 +1,5 @@
 import { BaseConfigData } from "gamecore";
-import { IFurnitureGroup } from "picaStructure";
+import { IFurnitureGroup } from "../../structure";
 import { Logger } from "utils";
 export class FurnitureGroup extends BaseConfigData {
     public groupMap: Map<string, IFurnitureGroup> = new Map();

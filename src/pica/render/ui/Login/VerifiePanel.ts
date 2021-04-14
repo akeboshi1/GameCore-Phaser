@@ -1,6 +1,6 @@
 import { NineSliceButton, InputText, ClickEvent } from "apowophaserui";
 import { BasePanel, Render } from "gamecoreRender";
-import { UIAtlasKey, UIAtlasName } from "picaRes";
+import { UIAtlasKey, UIAtlasName } from "../../../res";
 import { Font } from "utils";
 import { MAIN_WORKER, ModuleName } from "structure";
 

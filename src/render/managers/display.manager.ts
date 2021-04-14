@@ -3,7 +3,7 @@ import { SceneManager } from "../scenes/scene.manager";
 import { FramesDisplay } from "../display/frames/frames.display";
 import { PlayScene } from "../scenes/play.scene";
 import { DragonbonesDisplay } from "../display/dragonbones/dragonbones.display";
-import { DisplayField, ElementStateType, IScenery } from "structure";
+import {DisplayField, ElementStateType, IScenery, LayerName} from "structure";
 import { BlockManager } from "../../base/render/sky.box/block.manager";
 import { Render } from "../render";
 import { IFramesModel } from "structure";
@@ -225,13 +225,13 @@ export class DisplayManager {
         return display;
     }
 
-    public addToSurfaceLayer(display: FramesDisplay | DragonbonesDisplay) {
+    public addToLayer(layerName: string, display: FramesDisplay | DragonbonesDisplay) {
         const scene: PlayScene = <PlayScene>this.sceneManager.getMainScene();
         if (!scene) {
             Logger.getInstance().fatal(`scene does not exist`);
             return;
         }
-        scene.layerManager.addToLayer(PlayScene.LAYER_SURFACE, display);
+        scene.layerManager.addToLayer(layerName, display);
     }
 
     public removeDisplay(displayID: number): void {
@@ -326,7 +326,7 @@ export class DisplayManager {
     public addEffect(targetID: number, effectID: number, display: IFramesModel) {
         const target = this.getDisplay(targetID);
         let effect = this.getDisplay(effectID);
-        if (!effect) effect = this.addFramesDisplay(effectID, display, parseInt(PlayScene.LAYER_SURFACE, 10), DisplayField.Effect);
+        if (!effect) effect = this.addFramesDisplay(effectID, display, parseInt(LayerName.SURFACE, 10), DisplayField.Effect);
         if (!target || !effect) {
             return;
         }
@@ -539,7 +539,7 @@ export class DisplayManager {
         const scene = this.render.sceneManager.getMainScene();
         const displayFrame = new FramesDisplay(scene, this.render);
         displayFrame.load(FramesModel.createFromDisplay(display, animation));
-        this.addToSurfaceLayer(displayFrame);
+        this.addToLayer(LayerName.SURFACE, displayFrame);
         const playerPos = player.getPosition();
         const targetPos = target.getPosition();
         // 30 大概手的位置

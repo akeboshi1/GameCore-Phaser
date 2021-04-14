@@ -16,12 +16,11 @@ import { TerrainManager } from "../terrain/terrain.manager";
 import { SkyBoxManager } from "../sky.box/sky.box.manager";
 import { GameState, IScenery, ISprite, LoadState, ModuleName, SceneName } from "structure";
 import { EffectManager } from "../effect/effect.manager";
-import { DecorateManager } from "../decorate/decorate.manager";
+import { DecorateManager } from "../../../pica/game/room/decorate/decorate.manager";
 import { WallManager } from "../element/wall.manager";
 import { Sprite } from "baseModel";
 import IActor = op_client.IActor;
 import NodeType = op_def.NodeType;
-import { BaseDataConfigManager } from "picaWorker";
 import { RoomStateManager } from "../state/room.state.manager";
 import { BlockObject } from "../block/block.object";
 
@@ -93,6 +92,8 @@ export interface IRoomService {
     onManagerCreated(key: string);
 
     onManagerReady(key: string);
+
+    onRoomReady();
 
     requestDecorate(id?: number, baseID?: string);
 
@@ -662,9 +663,14 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
                 allReady = false;
             }
         });
-        this.terrainManager.dealEmptyTerrain();
         if (allReady) {
             this.game.renderPeer.roomReady();
+        }
+    }
+
+    public onRoomReady() {
+        if (!this.terrainManager.isDealEmptyTerrain) {
+            this.terrainManager.dealEmptyTerrain();
         }
     }
 
@@ -710,7 +716,7 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
         this.game.uiManager.hideMed(ModuleName.PICANEWMAIN_NAME);
         this.game.uiManager.hideMed(ModuleName.BOTTOM);
         this.game.uiManager.showMed(ModuleName.PICADECORATE_NAME,
-            { closeAlertText: (<BaseDataConfigManager>this.game.configManager).getI18n("PKT_SYS0000021") });
+            { closeAlertText: (<any>this.game.configManager).getI18n("PKT_SYS0000021") });
         this.game.uiManager.hideMed(ModuleName.CUTINMENU_NAME);
         // switch mouse manager
         this.game.renderPeer.switchDecorateMouseManager();

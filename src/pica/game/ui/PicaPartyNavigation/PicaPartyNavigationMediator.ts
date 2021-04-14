@@ -2,8 +2,8 @@ import { op_client, op_pkt_def, op_def } from "pixelpai_proto";
 import { PicaPartyNavigation } from "./PicaPartyNavigation";
 import { BasicMediator, Game } from "gamecore";
 import { ModuleName } from "structure";
-import { BaseDataConfigManager } from "picaWorker";
-import { IScene } from "picaStructure";
+import { BaseDataConfigManager } from "../../config";
+import { IScene } from "../../../structure";
 export class PicaPartyNavigationMediator extends BasicMediator {
     private mPlayerProgress: any;
     private mPartyListData: any;

@@ -1,10 +1,9 @@
 import { DetailDisplay } from "../Components/detail.display";
-import { NineSliceButton, GameSlider, NineSlicePatch, ClickEvent, Button } from "apowophaserui";
-import { ModuleName, RENDER_PEER } from "structure";
-import { Coin, Font, Handler, i18n, UIHelper } from "utils";
-import { UIAtlasName } from "picaRes";
-import { ICountablePackageItem, IExtendCountablePackageItem } from "picaStructure";
-import { ProgressMaskBar, Render } from "gamecoreRender";
+import { NineSlicePatch, ClickEvent, Button } from "apowophaserui";
+import { Handler, i18n, UIHelper } from "utils";
+import { UIAtlasName } from "../../../res";
+import { ICountablePackageItem, IExtendCountablePackageItem } from "../../../structure";
+import { Render } from "gamecoreRender";
 export class PicaFuriniDetailPanel extends Phaser.GameObjects.Container {
     private backgrand: Phaser.GameObjects.Graphics;
     private codeName: Phaser.GameObjects.Text;

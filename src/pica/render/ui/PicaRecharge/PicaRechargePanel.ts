@@ -2,7 +2,7 @@ import { op_client } from "pixelpai_proto";
 import { BBCodeText, Button, ClickEvent, GameScroller, TabButton } from "apowophaserui";
 import { BasePanel, CheckboxGroup, DynamicImage, GridLayoutGroup, ItemInfoTips, PropItem, SoundButton, ThreeSliceButton, UiManager, ValueContainer, AxisType, ConstraintType, AlignmentType } from "gamecoreRender";
 import { ModuleName } from "structure";
-import { UIAtlasKey, UIAtlasName } from "picaRes";
+import { UIAtlasKey, UIAtlasName } from "../../../res";
 import { Font, Handler, i18n, UIHelper } from "utils";
 export class PicaRechargePanel extends BasePanel {
     private mBackground: Phaser.GameObjects.Graphics;

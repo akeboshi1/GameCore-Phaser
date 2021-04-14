@@ -1,4 +1,4 @@
-import { Render } from "src/render/render";
+import { Render } from "../../render";
 import { Font } from "utils";
 
 export class TextButton extends Phaser.GameObjects.Container {

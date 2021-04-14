@@ -3,7 +3,7 @@ import { TabButton, BaseScroller, Button } from "apowophaserui";
 import { BasePanel, CheckboxGroup, Render, UiManager } from "gamecoreRender";
 import { ModuleName } from "structure";
 import { Font, i18n } from "utils";
-import { UIAtlasKey, UIAtlasName } from "picaRes";
+import { UIAtlasKey, UIAtlasName } from "../../../res";
 
 export class PicaRoomListPanel extends BasePanel {
   private mCloseBtn: Phaser.GameObjects.Image;

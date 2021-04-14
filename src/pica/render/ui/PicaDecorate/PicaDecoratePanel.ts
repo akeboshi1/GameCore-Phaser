@@ -1,12 +1,12 @@
-import {AlertView, BasePanel, UiManager} from "gamecoreRender";
-import {ModuleName, RENDER_PEER} from "structure";
-import {UIAtlasName} from "picaRes";
-import {Button, ClickEvent, Text} from "apowophaserui";
-import {Font, i18n, LogicPos} from "utils";
-import {op_gameconfig} from "pixelpai_proto";
-import {ItemButton} from "../Components/Item.button";
-import {ICountablePackageItem} from "picaStructure";
-import {PicaBasePanel} from "../pica.base.panel";
+import { AlertView, UiManager } from "gamecoreRender";
+import { ModuleName } from "structure";
+import { UIAtlasName } from "../../../res";
+import { Button, ClickEvent } from "apowophaserui";
+import { Font, i18n, LogicPos } from "utils";
+import { op_gameconfig } from "pixelpai_proto";
+import { ItemButton } from "../Components/Item.button";
+import { ICountablePackageItem } from "../../../structure";
+import { PicaBasePanel } from "../pica.base.panel";
 
 export class PicaDecoratePanel extends PicaBasePanel {
 
@@ -233,7 +233,7 @@ class FurnitureButton extends Phaser.GameObjects.Container {
                 left: 0,
                 right: 10 * this.dpr,
             },
-            style: {fontFamily: Font.DEFULT_FONT, fontSize: 28 * this.dpr, color: "#FCF863"}
+            style: { fontFamily: Font.DEFULT_FONT, fontSize: 28 * this.dpr, color: "#FCF863" }
         }).setFontStyle("bold italic").setStroke("#C25E0D", 2 * this.dpr).setOrigin(0.5);
         this.add(this.mText);
     }

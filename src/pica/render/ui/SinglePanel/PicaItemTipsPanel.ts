@@ -1,10 +1,9 @@
-import { UIAtlasName } from "picaRes";
+import { UIAtlasName } from "../../../res";
 import { ItemInfoTips, MainUIScene, UiManager } from "gamecoreRender";
 import { PicaBasePanel } from "../pica.base.panel";
 import { PicaSingleManager } from "./PicaSingleManager";
-import { op_client, op_pkt_def } from "pixelpai_proto";
 import { ModuleName } from "structure";
-import { ICountablePackageItem } from "picaStructure";
+import { ICountablePackageItem } from "../../../structure";
 export class PicaItemTipsPanel extends PicaBasePanel {
     public static get Inst() {
         if (!this.mInstance) {

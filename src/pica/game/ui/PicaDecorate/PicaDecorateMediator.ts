@@ -1,7 +1,7 @@
 import {BasicMediator, DecorateManager, Game} from "gamecore";
 import {MessageType, ModuleName} from "structure";
 import {Logger} from "utils";
-import {op_client, op_def, op_pkt_def} from "pixelpai_proto";
+import {op_pkt_def} from "pixelpai_proto";
 import PKT_PackageType = op_pkt_def.PKT_PackageType;
 import {BaseDataConfigManager} from "../../config/base.data.config.manager";
 

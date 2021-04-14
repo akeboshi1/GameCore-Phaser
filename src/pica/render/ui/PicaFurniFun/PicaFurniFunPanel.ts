@@ -2,11 +2,11 @@
 import { op_client } from "pixelpai_proto";
 import { NineSliceButton, NineSlicePatch, GameScroller, BBCodeText, ClickEvent, Button } from "apowophaserui";
 import { AnimationModel, BasePanel, DynamicImage, ItemInfoTips, UiManager } from "gamecoreRender";
-import { DetailDisplay } from "picaRender";
+import { DetailDisplay } from "../../ui";
 import { ModuleName } from "structure";
-import { UIAtlasKey, UIAtlasName } from "picaRes";
+import { UIAtlasKey, UIAtlasName } from "../../../res";
 import { Font, Handler, i18n, Url } from "utils";
-import { ICountablePackageItem } from "picaStructure";
+import { ICountablePackageItem } from "../../../structure";
 export class PicaFurniFunPanel extends BasePanel {
     public static PICAFURNIFUN_SHOW: string = "PICAFURNIFUN_SHOW";
     public confirmBtn: NineSliceButton;

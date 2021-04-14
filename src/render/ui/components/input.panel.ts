@@ -1,5 +1,5 @@
 import { InputText } from "apowophaserui";
-import { Render } from "../../../../src/render/render";
+import { Render } from "../../render";
 
 export class InputPanel extends Phaser.Events.EventEmitter {
     private mBackground: Phaser.GameObjects.Graphics;

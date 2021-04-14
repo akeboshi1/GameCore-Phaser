@@ -1,5 +1,5 @@
 import { BaseConfigData } from "gamecore";
-import { ISocial } from "src/pica/structure/isocial";
+import { ISocial } from "../../structure";
 import { Logger } from "utils";
 export class SocialConfig extends BaseConfigData {
 

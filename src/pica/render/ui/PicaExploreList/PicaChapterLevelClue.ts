@@ -1,5 +1,5 @@
-import { UIAtlasName } from "picaRes";
-import { ICountablePackageItem } from "picaStructure";
+import { UIAtlasName } from "../../../res";
+import { ICountablePackageItem } from "../../../structure";
 import { ItemButton } from "../Components";
 export class PicaChapterLevelClue extends ItemButton {
     private gou: Phaser.GameObjects.Image;

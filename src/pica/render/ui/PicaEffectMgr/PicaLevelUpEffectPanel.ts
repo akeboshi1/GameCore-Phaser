@@ -1,5 +1,5 @@
-import { UIAtlasName } from "picaRes";
-import { Handler, i18n, UIHelper } from "utils";
+import { UIAtlasName } from "../../../res";
+import { Handler, UIHelper } from "utils";
 
 export class PicaLevelUpEffectPanel extends Phaser.GameObjects.Container {
     private dpr: number;

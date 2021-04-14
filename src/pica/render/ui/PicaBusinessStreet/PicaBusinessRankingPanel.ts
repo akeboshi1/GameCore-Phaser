@@ -1,5 +1,5 @@
 import { GameScroller, NineSliceButton, ClickEvent, NineSlicePatch } from "apowophaserui";
-import { UIAtlasKey } from "picaRes";
+import { UIAtlasKey } from "../../../res";
 import { Font, Handler, i18n } from "utils";
 
 export class PicaBusinessRankingPanel extends Phaser.GameObjects.Container {

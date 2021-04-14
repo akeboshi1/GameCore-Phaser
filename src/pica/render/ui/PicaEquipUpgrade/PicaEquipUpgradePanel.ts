@@ -2,7 +2,7 @@ import { op_client } from "pixelpai_proto";
 import { BasePanel, UiManager } from "gamecoreRender";
 import { NinePatch } from "apowophaserui";
 import { ModuleName } from "structure";
-import { UIAtlasKey, UIAtlasName } from "picaRes";
+import { UIAtlasKey, UIAtlasName } from "../../../res";
 import { Font, i18n } from "utils";
 import { PicaEquipUpgradeItem } from "./PicaEquipUpgradeItem";
 

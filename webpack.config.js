@@ -156,7 +156,3 @@ const workerConfig = Object.assign({}, commonConfig, {
 module.exports = [
     gameConfig, workerConfig
 ];
-
-// module.exports = (env, argv) => {
-//     return [gameConfig, workerConfig];
-// };

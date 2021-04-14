@@ -350,6 +350,7 @@ export class ElementManager extends PacketHandler implements IElementManager {
         if (notReadyElements.length < 1) {
             Logger.getInstance().debug("#loading onManagerReady ", this.constructor.name);
             this.mRoom.onManagerReady(this.constructor.name);
+            this.mRoom.onRoomReady();
             if (this.mRequestSyncIdList && this.mRequestSyncIdList.length > 0) {
                 this.fetchDisplay(this.mRequestSyncIdList);
                 this.mRequestSyncIdList.length = 0;

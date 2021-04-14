@@ -1,6 +1,6 @@
 import { ClickEvent } from "apowophaserui";
 import { BasePlaySceneGuide, UiManager } from "gamecoreRender";
-import { PicaFurniFunPanel } from "picaRender";
+import { PicaFurniFunPanel } from "../PicaFurniFun/PicaFurniFunPanel";
 import { ModuleName } from "structure";
 export class FurnitureGuidePanel extends BasePlaySceneGuide {
     constructor(uiManager: UiManager) {

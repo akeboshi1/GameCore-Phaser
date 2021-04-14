@@ -1,9 +1,9 @@
 import { ButtonEventDispatcher, DynamicImage } from "../../../../render/ui/components";
 import { ClickEvent } from "apowophaserui";
-import { UIAtlasName } from "picaRes";
+import { UIAtlasName } from "../../../res";
 import { IPos, UIHelper, Url } from "utils";
-import { PicaItemTipsPanel } from "picaRender";
-import { ICountablePackageItem } from "picaStructure";
+import { PicaItemTipsPanel } from "../SinglePanel/PicaItemTipsPanel";
+import { ICountablePackageItem } from "../../../structure";
 export class ItemButton extends ButtonEventDispatcher {
     public itemData: ICountablePackageItem;
     protected dpr: number;

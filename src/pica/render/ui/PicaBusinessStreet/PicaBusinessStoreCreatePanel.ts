@@ -1,5 +1,5 @@
 import { BBCodeText, GameGridTable, NineSlicePatch, NineSliceButton, ClickEvent } from "apowophaserui";
-import { UIAtlasKey } from "picaRes";
+import { UIAtlasKey } from "../../../res";
 import { Coin, Font, Handler, i18n } from "utils";
 
 export class PicaBusinessStoreCreatePanel extends Phaser.GameObjects.Container {

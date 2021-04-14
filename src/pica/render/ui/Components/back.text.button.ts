@@ -1,5 +1,5 @@
 import { ButtonEventDispatcher } from "gamecoreRender";
-import { UIAtlasName } from "picaRes";
+import { UIAtlasName } from "../../../res";
 import { UIHelper } from "utils";
 
 export class BackTextButton extends ButtonEventDispatcher {

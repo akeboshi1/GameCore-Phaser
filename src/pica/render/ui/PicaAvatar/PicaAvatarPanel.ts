@@ -1,10 +1,10 @@
 import { NineSliceButton, GameGridTable, GameScroller, Button, BBCodeText, NineSlicePatch, ClickEvent } from "apowophaserui";
 import { DynamicImage, Render, TextButton, UiManager } from "gamecoreRender";
-import { DetailDisplay } from "picaRender";
-import { UIAtlasName } from "picaRes";
-import { AvatarSuit, AvatarSuitType, ModuleName, RunningAnimation, SuitAlternativeType } from "structure";
-import { Coin, Font, Handler, i18n, Logger, UIHelper, Url } from "utils";
-import { op_client, op_pkt_def, op_def } from "pixelpai_proto";
+import { DetailDisplay } from "../../ui";
+import { UIAtlasName } from "../../../res";
+import { AvatarSuitType, ModuleName, RunningAnimation, SuitAlternativeType } from "structure";
+import { Font, Handler, i18n, Logger, UIHelper, Url } from "utils";
+import { op_client, op_pkt_def} from "pixelpai_proto";
 import { PicaBasePanel } from "../pica.base.panel";
 
 export class PicaAvatarPanel extends PicaBasePanel {

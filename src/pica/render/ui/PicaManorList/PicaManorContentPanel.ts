@@ -1,5 +1,5 @@
 import { NineSlicePatch, Button, ClickEvent } from "apowophaserui";
-import { UIAtlasKey } from "picaRes";
+import { UIAtlasKey } from "../../../res";
 import { Handler, i18n, UIHelper } from "utils";
 export class PicaManorContentPanel extends Phaser.GameObjects.Container {
     private bg: NineSlicePatch;

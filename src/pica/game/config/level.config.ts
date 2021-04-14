@@ -1,5 +1,5 @@
 import { BaseConfigData } from "gamecore";
-import { ILevel } from "src/pica/structure/ilevel";
+import { ILevel } from "../../structure";
 import { Logger } from "utils";
 export class LevelConfig extends BaseConfigData {
     miningLevel: Map<number, ILevel> = new Map();

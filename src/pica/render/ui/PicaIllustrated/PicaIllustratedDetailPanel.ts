@@ -1,12 +1,12 @@
-import { GameGridTable, Button, ClickEvent } from "apowophaserui";
-import { AlignmentType, AxisType, ButtonEventDispatcher, CommonBackground, ConstraintType, GridLayoutGroup, ProgressMaskBar, ToggleColorButton } from "gamecoreRender";
-import { UIAtlasName } from "picaRes";
-import { Font, Handler, i18n, Tool, UIHelper, Url } from "utils";
-import { op_client, op_pkt_def } from "pixelpai_proto";
-import { ItemButton } from "picaRender";
-import { ICountablePackageItem, IGalleryCombination } from "picaStructure";
+import { Button, ClickEvent } from "apowophaserui";
+import { ButtonEventDispatcher, ProgressMaskBar, ToggleColorButton } from "gamecoreRender";
+import { UIAtlasName } from "../../../res";
+import { Handler, i18n, UIHelper } from "utils";
+import { ItemButton } from "../../ui";
+import { ICountablePackageItem, IGalleryCombination } from "../../../structure";
 import { PicaIllustratedGalleryPanel } from "./PicaIllustratedGalleryPanel";
 import { PicaIllustredCollectPanel } from "./PicaIllustredCollectPanel";
+import { CommonBackground } from "../../ui";
 export class PicaIllustratedDetailPanel extends Phaser.GameObjects.Container {
     private bg: CommonBackground;
     private acquire: ButtonEventDispatcher;

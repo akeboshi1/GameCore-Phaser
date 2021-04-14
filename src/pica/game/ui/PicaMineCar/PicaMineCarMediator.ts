@@ -2,7 +2,7 @@ import { PicaMineCar } from "./PicaMineCar";
 import { op_pkt_def, op_def } from "pixelpai_proto";
 import { BasicMediator, Game } from "gamecore";
 import { EventType, ModuleName, RENDER_PEER } from "structure";
-import { BaseDataConfigManager } from "picaWorker";
+import { BaseDataConfigManager } from "../../config";
 
 export class PicaMineCarMediator extends BasicMediator {
   constructor(game: Game) {

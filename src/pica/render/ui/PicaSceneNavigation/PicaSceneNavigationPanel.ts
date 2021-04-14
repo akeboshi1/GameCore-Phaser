@@ -1,12 +1,10 @@
-import { ClickEvent, Button, BBCodeText } from "apowophaserui";
-import { CommonBackground, DynamicImage, ItemInfoTips, ProgressMaskBar, ToggleColorButton, UiManager } from "gamecoreRender";
+import { UiManager } from "gamecoreRender";
 import { ModuleName } from "structure";
-import { Handler, i18n, UIHelper, Url } from "utils";
+import { Handler } from "utils";
 import { PicaSceneNavigationMapPanel } from "./PicaSceneNavigationMapPanel";
 import { PicaBasePanel } from "../pica.base.panel";
-import { UIAtlasName } from "picaRes";
-import { op_client } from "pixelpai_proto";
-export class PicaSceneNavigationPanel extends PicaBasePanel {
+import { CommonBackground } from "../../ui";
+import { UIAtlasName } from "../../../res"; export class PicaSceneNavigationPanel extends PicaBasePanel {
     private content: Phaser.GameObjects.Container;
     private blackBg: Phaser.GameObjects.Graphics;
     private bg: CommonBackground;

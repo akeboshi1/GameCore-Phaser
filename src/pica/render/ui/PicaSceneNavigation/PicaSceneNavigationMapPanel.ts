@@ -1,9 +1,8 @@
-import { GameGridTable, GameScroller } from "apowophaserui";
+import { GameScroller } from "apowophaserui";
 import { AlignmentType, AxisType, ConstraintType, DynamicImage, GridLayoutGroup } from "gamecoreRender";
-import { UIAtlasName } from "picaRes";
-import { Font, Handler, i18n, Logger, Tool, UIHelper, Url } from "utils";
-import { op_client } from "pixelpai_proto";
-import { IScene } from "picaStructure";
+import { UIAtlasName } from "../../../res";
+import { Handler, Tool, UIHelper, Url } from "utils";
+import { IScene } from "../../../structure";
 export class PicaSceneNavigationMapPanel extends Phaser.GameObjects.Container {
     private dpr: number;
     private zoom: number;

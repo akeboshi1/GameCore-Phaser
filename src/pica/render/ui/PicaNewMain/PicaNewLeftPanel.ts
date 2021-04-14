@@ -1,5 +1,5 @@
 import { Button, ClickEvent } from "apowophaserui";
-import { UIAtlasName } from "picaRes";
+import { UIAtlasName } from "../../../res";
 import { Handler } from "utils";
 
 export class PicaNewLeftPanel extends Phaser.GameObjects.Container {

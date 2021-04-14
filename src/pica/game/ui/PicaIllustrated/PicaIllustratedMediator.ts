@@ -1,9 +1,9 @@
-import { op_client, op_def, op_gameconfig, op_pkt_def } from "pixelpai_proto";
+import { op_client, op_def } from "pixelpai_proto";
 import { BasicMediator, CacheDataManager, DataMgrType, Game } from "gamecore";
-import { ConnectState, EventType, ModuleName } from "structure";
-import { BaseDataConfigManager, GalleryType } from "picaWorker";
+import { EventType, ModuleName } from "structure";
+import { BaseDataConfigManager, GalleryType } from "../../config";
 import { PicaIllustrated } from "./PicaIllustrated";
-import { ICountablePackageItem, IGalleryCombination, IGalleryLevel } from "picaStructure";
+import { IGalleryCombination, IGalleryLevel } from "../../../structure";
 export class PicaIllustratedMediator extends BasicMediator {
     protected mModel: PicaIllustrated;
     private mScneType: op_def.SceneTypeEnum;

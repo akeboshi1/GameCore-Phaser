@@ -1,6 +1,6 @@
 import { BaseFramesDisplay, ReferenceArea } from "baseRender";
 import { Render } from "../../render";
-import { DisplayField, ElementStateType, RunningAnimation, TitleMask } from "structure";
+import { DisplayField, ElementStateType, LayerName, RunningAnimation, TitleMask} from "structure";
 import { IDisplayObject } from "../display.object";
 import { IPos, Logger } from "utils";
 import { ElementTopDisplay } from "../element.top.display";
@@ -242,7 +242,7 @@ export class FramesDisplay extends BaseFramesDisplay implements IDisplayObject {
             return;
         }
         super.unmount(display);
-        this.render.displayManager.addToSurfaceLayer(display);
+        this.render.displayManager.addToLayer(LayerName.SURFACE, display);
         //     display.setRootMount(undefined);
         //     const index = this.mMountList.indexOf(display);
         //     display.visible = true;

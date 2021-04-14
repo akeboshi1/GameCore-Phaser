@@ -1,12 +1,13 @@
 
 import { op_client } from "pixelpai_proto";
 import { Button, ClickEvent, GameScroller, UIType } from "apowophaserui";
-import { BasePanel, ImageValue, ThreeSliceButton, ThreeSlicePath, TweenCompent, UIDragonbonesDisplay, UiManager } from "gamecoreRender";
-import { AvatarSuit, AvatarSuitType, ModuleName } from "structure";
-import { UIAtlasName } from "picaRes";
+import { ThreeSliceButton, ThreeSlicePath, TweenCompent, UIDragonbonesDisplay, UiManager } from "gamecoreRender";
+import { AvatarSuitType, ModuleName } from "structure";
+import { UIAtlasName } from "../../../res";
 import { Handler, i18n, UIHelper } from "utils";
 import { PicaBasePanel } from "../pica.base.panel";
-import { ISocial } from "picaStructure";
+import { ISocial } from "../../../structure";
+import { ImageValue } from "../../ui";
 export class PicaNewRolePanel extends PicaBasePanel {
     private blackGraphic: Phaser.GameObjects.Graphics;
     private bg: ThreeSlicePath;

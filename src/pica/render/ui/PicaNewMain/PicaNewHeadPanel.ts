@@ -1,8 +1,9 @@
 import { Button, ClickEvent, NineSlicePatch } from "apowophaserui";
-import { ButtonEventDispatcher, ImageValue, ProgressMaskBar } from "gamecoreRender";
-import { UIAtlasName } from "picaRes";
-import { Font, Handler, i18n, UIHelper } from "utils";
+import { ButtonEventDispatcher, ProgressMaskBar } from "gamecoreRender";
+import { UIAtlasName } from "../../../res";
+import { Font, Handler } from "utils";
 import { op_pkt_def } from "pixelpai_proto";
+import { ImageValue } from "../../ui";
 export class PicaNewHeadPanel extends Phaser.GameObjects.Container {
     private dpr: number;
     private key: string;

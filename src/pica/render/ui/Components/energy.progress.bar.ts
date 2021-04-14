@@ -1,6 +1,7 @@
-import { ImageValue, ProgressMaskBar } from "gamecoreRender";
-import { UIAtlasName } from "picaRes";
-import { Font, UIHelper } from "utils";
+import { ProgressMaskBar } from "gamecoreRender";
+import { UIAtlasName } from "../../../res";
+import { ImageValue } from "./image.value";
+import { UIHelper } from "utils";
 
 export class EnergyProgressBar extends Phaser.GameObjects.Container {
     private powerTex: ImageValue;

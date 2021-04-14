@@ -1,10 +1,7 @@
-import { op_client } from "pixelpai_proto";
 import { BasicMediator, CacheDataManager, DataMgrType, Game, PlayerProperty, UIType } from "gamecore";
 import { EventType, ModuleName } from "structure";
-import { IJob } from "src/pica/structure/ijob";
-import { BaseDataConfigManager } from "picaWorker";
+import { BaseDataConfigManager } from "../../config";
 import { PicaSurvey } from "./PicaSurvey";
-import { ICountablePackageItem } from "picaStructure";
 export class PicaSurveyMediator extends BasicMediator {
     protected mModel: PicaSurvey;
     private mPlayerInfo: PlayerProperty;

@@ -1,5 +1,5 @@
 import { CheckBox, NineSliceButton, ClickEvent, BBCodeText, NineSlicePatch } from "apowophaserui";
-import { UIAtlasKey, UIAtlasName } from "picaRes";
+import { UIAtlasKey, UIAtlasName } from "../../../res";
 import { BasePanel, UiManager } from "gamecoreRender";
 import { MAIN_WORKER, ModuleName } from "structure";
 import { Font, Helpers } from "utils";
@@ -139,7 +139,7 @@ export class LoginPanel extends BasePanel {
                 fontFamily: Font.DEFULT_FONT
             }
         }, false).setOrigin(0.5);
-       // label1.setResolution(this.dpr);
+        // label1.setResolution(this.dpr);
         label1.y = height - 50 * this.dpr - label1.height * 0.5;
 
         const label2 = this.scene.make.text({
@@ -164,7 +164,7 @@ export class LoginPanel extends BasePanel {
         this.fetchCode = this.scene.make.text({
             text: "获取验证码",
             style: {
-                fontSize: 14 * this.dpr+ "px",
+                fontSize: 14 * this.dpr + "px",
                 fontFamily: Font.DEFULT_FONT,
                 color: "#2B5AF3"
             }

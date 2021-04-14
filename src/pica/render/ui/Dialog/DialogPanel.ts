@@ -2,7 +2,7 @@ import { Button, ClickEvent } from "apowophaserui";
 import { Font, Handler, Url } from "utils";
 import { ModuleName } from "structure";
 import { BasePanel, DynamicImage, MainUIScene, UiManager, Tap } from "gamecoreRender";
-import { UIAtlasName } from "picaRes";
+import { UIAtlasName } from "../../../res";
 
 enum HorizontalAlignment {
     HORIZONTAL_LEFT = 0,

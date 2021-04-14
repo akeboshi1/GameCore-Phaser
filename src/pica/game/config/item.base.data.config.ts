@@ -1,12 +1,11 @@
 import {BaseConfigData} from "gamecore";
-import {ICountablePackageItem} from "picaStructure";
 import {Logger} from "utils";
 
 export class ItemBaseDataConfig extends BaseConfigData {
     excludes = ["count"];
-    snMap: Map<string, ICountablePackageItem> = new Map<string, ICountablePackageItem>();
+    snMap: Map<string, any> = new Map<string, any>();
 
-    public getByID(id: string): ICountablePackageItem {
+    public getByID(id: string): any {
         if (this.hasOwnProperty(id)) {
             return this[id];
         } else {
@@ -15,7 +14,7 @@ export class ItemBaseDataConfig extends BaseConfigData {
         }
     }
 
-    public getBySN(sn: string): ICountablePackageItem {
+    public getBySN(sn: string): any {
         if (this.snMap.has(sn)) {
             return this.snMap.get(sn);
         } else {
@@ -35,7 +34,7 @@ export class ItemBaseDataConfig extends BaseConfigData {
         super.parseJson(json);
         // this.consoleCategoryJson();
         // this.consoleClassNameJson();
-        if (!this.snMap) this.snMap = new Map<string, ICountablePackageItem>();
+        if (!this.snMap) this.snMap = new Map<string, any>();
         for (const jsonKey in json) {
             const data = json[jsonKey];
             this.snMap.set(data.sn, data);
