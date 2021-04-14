@@ -126,12 +126,24 @@ export class Sprite extends EventDispatcher implements ISprite {
         if (this.displayInfo instanceof FramesModel) {
             sprite.display = this.displayInfo.display;
             sprite.currentAnimationName = this.currentAnimationName;
+            sprite.animations = (<any>this.displayInfo).createProtocolObject();
+        } else if (this.displayInfo instanceof DragonbonesModel) {
+            if (this.avatar) {
+                const avatar = op_gameconfig.Avatar.create();
+                for (const key in this.avatar) {
+                    if (Object.prototype.hasOwnProperty.call(this.avatar, key)) {
+                        avatar[key] = this.avatar[key];
+                    }
+                }
+                sprite.avatar = avatar;
+            }
+        }
+        if (this.pos) {
             const point3f = op_def.PBPoint3f.create();
             point3f.x = this.pos.x;
             point3f.y = this.pos.y;
             point3f.z = this.pos.z;
             sprite.point3f = point3f;
-            sprite.animations = (<any>this.displayInfo).createProtocolObject();
         }
         sprite.direction = this.direction;
         sprite.bindId = this.bindID;
@@ -232,6 +244,9 @@ export class Sprite extends EventDispatcher implements ISprite {
 
     public updateDisplay(display: op_gameconfig.IDisplay, animations: op_gameconfig_01.IAnimationData[], defAnimation?: string) {
         if (!display || !animations) {
+            return;
+        }
+        if (!display.dataPath || !display.texturePath) {
             return;
         }
         if (this.displayInfo) {

@@ -13,12 +13,13 @@ import { EditorMossManager } from "./manager/moss.manager";
 import { EditorElementManager } from "./manager/element.manager";
 import { EditorCamerasManager } from "./manager/cameras.manager";
 import { EditorSkyboxManager } from "./manager/skybox.manager";
-import { BaseFramesDisplay, BaseLayer, GroundLayer, IRender, LayerManager, SurfaceLayer } from "baseRender";
+import { BaseLayer, GroundLayer, IRender, LayerManager, SurfaceLayer } from "baseRender";
 import { ElementStorage, Sprite } from "baseModel";
 import * as protos from "pixelpai_proto";
 import { PBpacket } from "net-socket-packet";
 import { EditorSceneManger } from "./manager/scene.manager";
 import { EditorWallManager } from "./manager/wall.manager";
+import { EditorDragonbonesDisplay } from "./editor.dragonbones.display";
 for (const key in protos) {
     PBpacket.addProtocol(protos[key]);
 }
@@ -947,7 +948,8 @@ class MouseFollow {
 class MouseDisplayContainer extends Phaser.GameObjects.Container {
     protected mOffset: IPos;
     protected mNodeType;
-    protected mDisplays: EditorFramesDisplay[];
+    // TODO Display 接口
+    protected mDisplays: any[];
     protected mScaleRatio: number = 1;
     protected mSprite: Sprite;
     protected mTileSize: IPosition45Obj;
@@ -1006,7 +1008,7 @@ class MouseDisplayContainer extends Phaser.GameObjects.Container {
         }
         const frame = <IFramesModel>sprite.displayInfo;
         this.mNodeType = sprite.nodeType;
-        let frameDisplay: EditorFramesDisplay;
+        let frameDisplay: EditorFramesDisplay | EditorDragonbonesDisplay;
         const { tileWidth, tileHeight } = this.sceneEditor.roomSize;
         this.mTileSize = {
             tileWidth,
@@ -1022,7 +1024,11 @@ class MouseDisplayContainer extends Phaser.GameObjects.Container {
 
         for (let i = 0; i < size; i++) {
             for (let j = 0; j < size; j++) {
-                frameDisplay = new EditorFramesDisplay(this.sceneEditor, sprite);
+                if (sprite.avatar) {
+                    frameDisplay = new EditorDragonbonesDisplay(this.sceneEditor.scene, sprite);
+                } else {
+                    frameDisplay = new EditorFramesDisplay(this.sceneEditor, sprite);
+                }
                 frameDisplay.setAlpha(0.8);
                 // frameDisplay.once("initialized", this.onInitializedHandler, this);
                 frameDisplay.load(frame);
@@ -1032,6 +1038,8 @@ class MouseDisplayContainer extends Phaser.GameObjects.Container {
                 frameDisplay.y = pos.y;
                 frameDisplay.showRefernceArea();
                 this.add(frameDisplay);
+                // TODO 定义统一接口
+                // @ts-ignore
                 this.mDisplays.push(frameDisplay);
             }
         }

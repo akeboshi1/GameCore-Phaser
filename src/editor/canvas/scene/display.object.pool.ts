@@ -30,7 +30,7 @@ export class DisplayObjectPool {
 
         // const obj: BaseFramesDisplay = new this.POOLOBJECTCONFIG[poolName](sprite, manager);
         // let layer = "surfaceLayer";
-        const obj = this.sceneEditor.factory.createFramesDisplayBYSprite(sprite);
+        const obj = this.sceneEditor.factory.createDisplay(sprite);
         if (obj.nodeType === op_def.NodeType.ElementNodeType || obj.nodeType === op_def.NodeType.MossType || obj.nodeType === op_def.NodeType.SpawnPointType) {
             obj.setInteractive();
             obj.setPosition(sprite.pos.x, sprite.pos.y);
