@@ -120,6 +120,10 @@ export class EditorDragonbonesDisplay extends BaseDragonbonesDisplay {
         return this.mNodeType;
     }
 
+    get id(): number {
+        return this.sprite.id;
+    }
+
     /**
      * 兼容没有Layer的情况
      * @deprecated
