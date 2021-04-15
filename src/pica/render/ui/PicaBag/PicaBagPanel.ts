@@ -1,6 +1,6 @@
 import { NineSliceButton, GameGridTable, GameScroller, TabButton, Button, BBCodeText, NineSlicePatch, ClickEvent, NinePatchTabButton } from "apowophaserui";
-import { CheckboxGroup, CommonBackground, DynamicImage, DynamicImageValue, ImageValue, MoreButtonPanel, TextButton, UiManager } from "gamecoreRender";
-import { DetailBubble, DetailDisplay, ItemButton, UITools } from "picaRender";
+import { CheckboxGroup, TextButton, UiManager } from "gamecoreRender";
+import { CommonBackground, DetailBubble, DetailDisplay, DynamicImageValue, ImageValue, ItemButton, UITools } from "picaRender";
 import { UIAtlasName } from "picaRes";
 import { AvatarSuitType, ModuleName } from "structure";
 import { Font, Handler, i18n, UIHelper, Url } from "utils";

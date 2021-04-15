@@ -1,10 +1,10 @@
 import { ClickEvent, GameScroller, NineSlicePatch } from "apowophaserui";
-import { DynamicImage, ImageValue, ThreeSliceButton } from "gamecoreRender";
+import { DynamicImage, ThreeSliceButton } from "gamecoreRender";
 import { UIAtlasName } from "picaRes";
 import { ICountablePackageItem } from "picaStructure";
 import { op_client, op_pkt_def } from "pixelpai_proto";
 import { Handler, i18n, TimeUtils, UIHelper, Url } from "utils";
-import { ItemButton } from "../Components";
+import { ImageValue, ItemButton } from "../Components";
 export class PicaMailItem extends Phaser.GameObjects.Container {
     public mailButton: ThreeSliceButton;
     public mailData: any;

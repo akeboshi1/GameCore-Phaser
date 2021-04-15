@@ -1,8 +1,8 @@
 
 import { op_client } from "pixelpai_proto";
 import { Button, ClickEvent, GameScroller, NineSliceButton, UIType } from "apowophaserui";
-import { AlignmentType, AxisType, BasePanel, ButtonEventDispatcher, ConstraintType, DynamicImage, GridLayoutGroup, ImageValue, ThreeSliceButton, ThreeSlicePath, ToggleButton, TweenCompent, UIDragonbonesDisplay, UiManager } from "gamecoreRender";
-import { AvatarSuit, AvatarSuitType, ModuleName } from "structure";
+import { AlignmentType, AxisType, ConstraintType, GridLayoutGroup, ToggleButton, UiManager } from "gamecoreRender";
+import { ModuleName } from "structure";
 import { UIAtlasName } from "picaRes";
 import { Handler, i18n, UIHelper, Url } from "utils";
 import { PicaBasePanel } from "../pica.base.panel";

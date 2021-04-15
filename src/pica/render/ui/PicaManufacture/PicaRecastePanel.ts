@@ -1,6 +1,6 @@
 import { NineSliceButton, GameGridTable, GameScroller, Button, NineSlicePatch, ClickEvent } from "apowophaserui";
-import { ButtonEventDispatcher, CommonBackground, ImageValue, Render, TextButton, UiManager } from "gamecoreRender";
-import { DetailBubble, DetailDisplay, ItemButton, PicaItemTipsPanel, UITools } from "picaRender";
+import { ButtonEventDispatcher,Render, TextButton, UiManager } from "gamecoreRender";
+import { CommonBackground, DetailBubble, DetailDisplay, ImageValue, ItemButton, PicaItemTipsPanel, UITools } from "picaRender";
 import { UIAtlasName } from "picaRes";
 import { ModuleName } from "structure";
 import { Font, Handler, i18n, UIHelper, Url } from "utils";

@@ -1,5 +1,5 @@
 import { op_def } from "pixelpai_proto";
-import { BasicMediator, Game } from "gamecore";
+import { BasicMediator, CacheDataManager, DataMgrType, Game } from "gamecore";
 import { ModuleName } from "structure";
 import { BaseDataConfigManager } from "../../config";
 import { PicaRepairChoose } from "./PicaRepairChoose";
