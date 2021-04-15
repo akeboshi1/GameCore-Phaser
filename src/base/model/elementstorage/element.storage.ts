@@ -88,6 +88,7 @@ export class ElementStorage implements IElementStorage {
                 if (!displayModel) {
                     const anis = [];
                     const eleAnis = (<ElementNode>obj).animations;
+                    if (!eleAnis) continue;
                     const objAnis = eleAnis.animationData;
                     for (const ani of objAnis) {
                         anis.push(new AnimationModel(ani.createProtocolObject()));
