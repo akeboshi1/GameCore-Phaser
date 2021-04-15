@@ -110,3 +110,5 @@ export * from "./ui/PicaSurvey/PicaSurvey";
 export * from "./ui/PicaSurvey/PicaSurveyMediator";
 export * from "./ui/PicaSceneNavigation/PicaSceneNavigation";
 export * from "./ui/PicaSceneNavigation/PicaSceneNavigationMediator";
+export * from "./ui/PicaMail/PicaMail";
+export * from "./ui/PicaMail/PicaMailMediator";

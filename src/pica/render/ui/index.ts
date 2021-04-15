@@ -132,3 +132,6 @@ export * from "./PicaRepairChoose/PicaRepairChoosePanel";
 export * from "./PicaSurvey/PicaSurveyPanel";
 export * from "./PicaSceneNavigation/PicaSceneNavigationMapPanel";
 export * from "./PicaSceneNavigation/PicaSceneNavigationPanel";
+export * from "./PicaMail/PicaMailItem";
+export * from "./PicaMail/PicaMailMainPanel";
+export * from "./PicaMail/PicaMailPanel";

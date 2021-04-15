@@ -66,7 +66,8 @@
     "make": "Make",
     "editor": "Editor",
     "survey": "Survey",
-    "notEnough": "Not enough {{name}}"
+    "notEnough": "Not enough {{name}}",
+    "receive": "Receive"
   },
   "quantityunit": {
     "k": "k",
@@ -444,6 +445,13 @@
     "avatar": "Click to open the dress-up map panel",
     "make": "Click to open the manufacturing panel",
     "furindetail": "Furniture details",
-    "surveyfurni": " SURVEY "
+    "surveyfurni": " SURVEY ",
+    "cooking":"Cooking"
+  },
+  "mail": {
+    "onekey": "All Receive",
+    "title": "Mail",
+    "sender": "Sender: ",
+    "expiration": "It expires after {{time}}"
   }
 }

@@ -3,13 +3,13 @@ import { op_client, op_pkt_def } from "pixelpai_proto";
 import { ModuleName } from "structure";
 import { ObjectAssign } from "utils";
 import { BaseDataConfigManager } from "../../config";
-import { PicaTask } from "./PicaTask";
+import { PicaMail } from "./PicaTask";
 export class PicaTaskMediator extends BasicMediator {
-    protected mModel: PicaTask;
+    protected mModel: PicaMail;
     protected taskGroup: any;
     constructor(game: Game) {
         super(ModuleName.PICATASK_NAME, game);
-        this.mModel = new PicaTask(game);
+        this.mModel = new PicaMail(game);
     }
 
     show(param?: any) {
@@ -76,7 +76,11 @@ export class PicaTaskMediator extends BasicMediator {
     private onRetQuestGroup(content: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_QUERY_QUEST_GROUP) {
         if (content.id) {
             const configMgr = <BaseDataConfigManager>this.game.configManager;
-            configMgr.synItemBase(content.reward);
+            //    configMgr.synItemBase(content.reward);
+            const tempgroup = configMgr.getQuestGroupMap(content.id);
+            ObjectAssign.excludeAssign(content, tempgroup);
+            // content.name = configMgr.getI18n(content.name);
+            // content.des = configMgr.getI18n(content.des);
             if (content.quests) {
                 for (const quest of content.quests) {
                     configMgr.getBatchItemDatas(quest.targets);

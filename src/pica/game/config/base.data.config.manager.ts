@@ -34,6 +34,7 @@ import { Lite } from "game-capsule";
 import { ElmentPiConfig } from "./element.pi.config";
 import { IElementPi } from "src/pica/structure/ielementpi";
 import { EventType } from "structure";
+import { QuestGroupConfig } from "./quest.group.config";
 
 export enum BaseDataType {
     i18n_zh = "i18n_zh",
@@ -52,6 +53,8 @@ export enum BaseDataType {
     guide = "guide",
     furnituregroup = "furnituregroup",
     gallery = "gallery",
+    questGroup = "questGroup",
+    dailyQuestGroup = "dailyQuestGroup",
     elementpi = "elementpi" // 不作为文件名加载文件，只作为类型区分
     // itemcategory = "itemcategory"
 }
@@ -126,6 +129,7 @@ export class BaseDataConfigManager extends BaseConfigManager {
             if (!item["find"]) {
                 const tempitem = this.getItemBaseByID(item.id);
                 ObjectAssign.excludeTagAssign(item, tempitem, "exclude");
+                // Object.setPrototypeOf(item, tempitem);
                 item["find"] = true;
             }
         }
@@ -656,6 +660,25 @@ export class BaseDataConfigManager extends BaseConfigManager {
         });
         return temp;
     }
+    public getQuestGroupMap(id: string) {
+        const dataTypes = [BaseDataType.questGroup, BaseDataType.dailyQuestGroup];
+        for (const dataType of dataTypes) {
+            const config: QuestGroupConfig = this.getConfig(dataType);
+            const group = config.get(id);
+            if (group) {
+                if (!group["find"]) {
+                    group.name = this.getI18n(group.name);
+                    group.des = this.getI18n(group.des);
+                    group.itemid = "IP1220019";
+                    group.reward = this.getItemBaseByID(group.itemid);
+                    group["find"] = true;
+                }
+                return group;
+            }
+        }
+
+        return undefined;
+    }
 
     /**
      * 动态加载LementPI数据
@@ -706,6 +729,8 @@ export class BaseDataConfigManager extends BaseConfigManager {
         this.dataMap.set(BaseDataType.guide, new GuideConfig());
         this.dataMap.set(BaseDataType.furnituregroup, new FurnitureGroup());
         this.dataMap.set(BaseDataType.gallery, new GalleryConfig());
+        this.dataMap.set(BaseDataType.questGroup, new QuestGroupConfig());
+        this.dataMap.set(BaseDataType.dailyQuestGroup, new QuestGroupConfig());
     }
 
     protected configUrl(reName: string, tempurl?: string) {

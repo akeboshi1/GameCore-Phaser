@@ -6,7 +6,7 @@ import { op_client, op_virtual_world, op_pkt_def } from "pixelpai_proto";
 import { ModuleName } from "structure";
 import { CopyProtoType } from "utils";
 
-export class PicaMail extends BasicModel {
+export class PicaTask extends BasicModel {
     constructor(game: Game) {
         super(game);
         this.register();

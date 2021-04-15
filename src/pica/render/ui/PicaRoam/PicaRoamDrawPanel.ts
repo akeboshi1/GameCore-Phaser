@@ -279,7 +279,7 @@ class RoamDrawProgress extends Phaser.GameObjects.Container {
         this.roamLevTips.text = data.rewards[0].des;
         if (expireTime > 0) {
             this.resetTimeTex.visible = true;
-            this.resetTimeTex.text = i18n.t("roam.resettips", { name: TimeUtils.getDataFormat(expireTime, false) });
+            this.resetTimeTex.text = i18n.t("roam.resettips", { name: TimeUtils.getDateFormat(expireTime, false) });
             this.loopTimeOut(expireTime);
         } else {
             this.resetTimeTex.visible = false;
@@ -310,7 +310,7 @@ class RoamDrawProgress extends Phaser.GameObjects.Container {
                 time -= 1000;
                 if (time > 0) {
                     excute();
-                    this.resetTimeTex.text = i18n.t("roam.resettips", { name: TimeUtils.getDataFormat(time, false) });
+                    this.resetTimeTex.text = i18n.t("roam.resettips", { name: TimeUtils.getDateFormat(time, false) });
                 } else {
                     this.resetTimeTex.visible = false;
                 }
@@ -436,7 +436,7 @@ class RoamDrawItem extends Phaser.GameObjects.Container {
                 const interval = data.nextFreeTime * 1000 - data["unixTime"];
                 if (interval > 0) {
                     this.drawTips.visible = true;
-                    this.drawTips.text = i18n.t("roam.endtips", { name: TimeUtils.getDataFormat(interval, false) });
+                    this.drawTips.text = i18n.t("roam.endtips", { name: TimeUtils.getDateFormat(interval, false) });
                     this.loopTimeOut(interval);
                 } else {
                     this.drawTips.visible = true;
@@ -461,7 +461,7 @@ class RoamDrawItem extends Phaser.GameObjects.Container {
                 if (!this.scene) return;
                 time -= 1000;
                 if (time > 0) {
-                    this.drawTips.text = i18n.t("roam.endtips", { name: TimeUtils.getDataFormat(time, false) });
+                    this.drawTips.text = i18n.t("roam.endtips", { name: TimeUtils.getDateFormat(time, false) });
                     excute();
                 } else {
                     this.drawTips.text = i18n.t("roam.drawfreetips");
