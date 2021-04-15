@@ -20,9 +20,15 @@ export class PicaItemTipsPanel extends PicaBasePanel {
         this.key = ModuleName.PICAITEMTIPSPANEL_NAME;
         this.uiLayer = MainUIScene.LAYER_TOOLTIPS;
     }
-    public showTips(gameobj: any, data: ICountablePackageItem) {
-        if (!this.mInitialized) this.show({ gameobj, data });
-        else this.displayTips(gameobj, data);
+    /**
+     *
+     * @param gameobj 显示的物体对象
+     * @param data 道具数据
+     * @param eventType 关闭tips监听事件类型
+     */
+    public showTips(gameobj: any, data: ICountablePackageItem, eventType?: string) {
+        if (!this.mInitialized) this.show({ gameobj, data, eventType });
+        else this.displayTips(gameobj, data, eventType);
     }
 
     public destroy() {
@@ -32,7 +38,7 @@ export class PicaItemTipsPanel extends PicaBasePanel {
     protected onShow() {
         if (!this.mShowData) return;
         const obj = this.mShowData;
-        this.displayTips(obj.gameobj, obj.data);
+        this.displayTips(obj.gameobj, obj.data, obj.eventType);
     }
     protected init() {
         const width = this.scaleWidth;
@@ -44,7 +50,8 @@ export class PicaItemTipsPanel extends PicaBasePanel {
         super.init();
     }
 
-    protected displayTips(gameobj: Phaser.GameObjects.Container, data: ICountablePackageItem) {
+    protected displayTips(gameobj: Phaser.GameObjects.Container, data: ICountablePackageItem, eventType?: string) {
+        this.itemTips.setListenType(eventType);
         this.itemTips.setVisible(true);
         this.itemTips.setItemData(data);
         this.setTipsPosition(gameobj, -gameobj.height * 0.5 - 5 * this.dpr);

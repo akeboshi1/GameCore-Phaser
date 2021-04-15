@@ -1,20 +1,20 @@
 
 import { op_client } from "pixelpai_proto";
-import { Button, ClickEvent, GameScroller, UIType } from "apowophaserui";
+import { Button, ClickEvent, GameScroller, NineSliceButton, UIType } from "apowophaserui";
 import { AlignmentType, AxisType, BasePanel, ButtonEventDispatcher, ConstraintType, DynamicImage, GridLayoutGroup, ImageValue, ThreeSliceButton, ThreeSlicePath, ToggleButton, TweenCompent, UIDragonbonesDisplay, UiManager } from "gamecoreRender";
 import { AvatarSuit, AvatarSuitType, ModuleName } from "structure";
 import { UIAtlasName } from "picaRes";
 import { Handler, i18n, UIHelper, Url } from "utils";
 import { PicaBasePanel } from "../pica.base.panel";
 import { ICountablePackageItem, ISocial } from "picaStructure";
-import { ItemButton } from "picaRender";
+import { ItemButton, PicaItemTipsPanel } from "picaRender";
 export class PicaCookingPanel extends PicaBasePanel {
     private blackGraphic: Phaser.GameObjects.Graphics;
     private bg: Phaser.GameObjects.Image;
     private content: Phaser.GameObjects.Container;
     private chooseContanier: ChooseContainer;
     private categoryDatas: any;
-    private cookingButton: ThreeSliceButton;
+    private cookingButton: NineSliceButton;
     private cookingGrid: GridLayoutGroup;
     private cookingIDs = [];
     private curCookingItem: CookingItem;
@@ -30,21 +30,20 @@ export class PicaCookingPanel extends PicaBasePanel {
         super.resize(w, h);
         this.setSize(w, h);
         this.blackGraphic.clear();
-        this.blackGraphic.fillStyle(0x000000, 0);
+        this.blackGraphic.fillStyle(0x000000, 0.1);
         this.blackGraphic.fillRect(0, 0, w, h);
         this.content.x = w * 0.5;
         this.content.y = h + this.content.height * 0.5 + 10 * this.dpr;
         this.content.setInteractive();
-        this.blackGraphic.setInteractive(new Phaser.Geom.Rectangle(0, 0, w * 2, h * 2), Phaser.Geom.Rectangle.Contains);
-
         const fromy = this.scaleHeight + this.content.height * 0.5 + 10 * this.dpr;
         const toy = this.scaleHeight - this.content.height * 0.5;
         this.playMove(fromy, toy);
+        this.setInteractive(new Phaser.Geom.Rectangle(0, 0, w * 2, h * 2), Phaser.Geom.Rectangle.Contains);
     }
 
     public onShow() {
         this.render.renderEmitter(this.key + "_initialized");
-        this.setCategoryDatas(this.categoryDatas);
+        if (this.categoryDatas) this.setCategoryDatas(this.categoryDatas);
     }
 
     public addListen() {
@@ -63,25 +62,32 @@ export class PicaCookingPanel extends PicaBasePanel {
         this.content = this.scene.make.container(undefined, false);
         this.bg = this.scene.make.image({ key: UIAtlasName.cooking, frame: "cooking_cook_panel" });
         this.content.setSize(this.scaleWidth, this.bg.height);
-        const conWidth = this.width - 104 * this.dpr, conHeight = 60 * this.dpr;
+        const conWidth = this.scaleWidth - 104 * this.dpr, conHeight = 60 * this.dpr;
         this.cookingGrid = new GridLayoutGroup(this.scene, conWidth, conHeight, {
             cellSize: new Phaser.Math.Vector2(57 * this.dpr, 57 * this.dpr),
-            space: new Phaser.Math.Vector2(5 * this.dpr, 0),
+            space: new Phaser.Math.Vector2(8 * this.dpr, 0),
             startAxis: AxisType.Horizontal,
             constraint: ConstraintType.FixedRowCount,
             constraintCount: 1,
             alignmentType: AlignmentType.UpperCenter
         });
-        this.cookingGrid.x = -72 * this.dpr;
-        const fnormals = ["butt_yellow_left_s", "butt_yellow_middle_s", "butt_yellow_right_s"];
-        this.cookingButton = new ThreeSliceButton(this.scene, 84 * this.dpr, 31 * this.dpr, UIAtlasName.uicommon, fnormals, fnormals, i18n.t("player_info.follow"));
-        this.cookingButton.setTextStyle(UIHelper.brownishStyle(this.dpr));
+        this.cookingGrid.x = -48 * this.dpr;
+        const fnormals = UIHelper.threeYellowBig;
+        this.cookingButton = new NineSliceButton(this.scene, 0, 0, 85 * this.dpr, 40 * this.dpr, UIAtlasName.uicommon, "yellow_btn_normal", i18n.t("illustrate.cooking"), this.dpr, this.scale, {
+            left: 18 * this.dpr,
+            top: 18 * this.dpr,
+            right: 18 * this.dpr,
+            bottom: 20 * this.dpr
+        });
+        this.cookingButton.setTextStyle(UIHelper.brownishStyle(this.dpr, 16));
+        this.cookingButton.setFontStyle("bold");
         this.cookingButton.y = conHeight * 0.5 - this.cookingButton.height * 0.5 - 5 * this.dpr;
-        this.cookingButton.x = -this.cookingButton.width * 0.5 + 20 * this.dpr;
+        this.cookingButton.x = this.content.width * 0.5 - this.cookingButton.width * 0.5 - 6 * this.dpr;
         this.cookingButton.on(ClickEvent.Tap, this.onCookingButtonHandler, this);
         this.chooseContanier = new ChooseContainer(this.scene, this.dpr, this.scale);
         this.chooseContanier.setHandler(new Handler(this, this.onCookingCategoryHandler));
-        this.chooseContanier.y = -this.content.height * 0.5 - this.chooseContanier.height * 0.5 - 10 * this.dpr;
+        this.chooseContanier.y = -this.content.height * 0.5 - this.chooseContanier.height * 0.5 - 2 * this.dpr;
+        this.chooseContanier.visible = false;
         this.content.add([this.bg, this.cookingGrid, this.cookingButton, this.chooseContanier]);
         this.add([this.blackGraphic, this.content]);
         this.createCookingItem();
@@ -91,7 +97,7 @@ export class PicaCookingPanel extends PicaBasePanel {
 
     public setCategoryDatas(datas: any[]) {
         this.categoryDatas = datas;
-        if (!this.mInitialized) return;
+        if (!this.mInitialized || !datas) return;
         this.chooseContanier.setCategoryDatas(datas);
     }
 
@@ -130,9 +136,9 @@ export class PicaCookingPanel extends PicaBasePanel {
         this.OnCloseHandler();
     }
 
-    private onCookingItemHandler(button) {
+    private onCookingItemHandler(pointer, button) {
         this.curCookingItem = button;
-        this.chooseContanier.visible = true;
+        this.chooseContanier.show();
     }
     private onCookingCategoryHandler(type: any, data: any) {
         if (type === "category") {
@@ -143,7 +149,7 @@ export class PicaCookingPanel extends PicaBasePanel {
                 const indexed = this.curCookingItem["indexed"];
                 this.cookingIDs[indexed] = data.id;
             }
-            this.chooseContanier.visible = false;
+            this.chooseContanier.hide();
         }
     }
     private OnCloseHandler() {
@@ -157,6 +163,7 @@ class CookingItem extends ItemButton {
         this.itemIcon.setTexture(UIAtlasName.cooking, "cooking_cook_icon_add");
         this.countTex.visible = false;
         this.starImg.visible = false;
+        this.isShowTips = false;
     }
     public setItemData(itemData: ICountablePackageItem) {
         if (this.itemData === itemData) return;
@@ -172,6 +179,11 @@ class CookingItem extends ItemButton {
             this.itemIcon.visible = true;
         });
         this.itemIcon.scale = this.dpr / this.zoom;
+        if (itemData.grade > 0) {
+            this.starImg.visible = true;
+            const starFrame = "bag_star_small_" + itemData.grade;
+            this.starImg.setFrame(starFrame);
+        } else this.starImg.visible = false;
     }
 }
 
@@ -192,21 +204,21 @@ class ChooseContainer extends Phaser.GameObjects.Container {
         const width = this.background.width;
         const height = 144 * dpr;
         this.setSize(width, height);
+        this.background.y = height * 0.5 - this.background.height * 0.5;
         this.add(this.background);
         this.zoom = zoom;
         const togHeight = 38 * dpr;
         this.toggleScroll = new GameScroller(this.scene, {
             x: 0,
-            y: -height * 0.5 + togHeight * 0.5,
-            width: this.width,
+            y: -height * 0.5 + togHeight * 0.5 + 3 * dpr,
+            width: this.width - 44 * dpr,
             height: togHeight,
             zoom,
             dpr: this.dpr,
             align: 2,
             orientation: 1,
-            space: 10 * this.dpr,
+            space: 3 * this.dpr,
             selfevent: true,
-            padding: { left: 3 * this.dpr },
             cellupCallBack: (gameobject) => {
                 this.onToggleHandler(gameobject);
             },
@@ -214,24 +226,33 @@ class ChooseContainer extends Phaser.GameObjects.Container {
         const scrollHeight = this.background.height;
         this.gamescroller = new GameScroller(this.scene, {
             x: 0,
-            y: height * 0.5 - scrollHeight * 0.5,
-            width: this.width,
+            y: this.background.y + 5 * dpr,
+            width: this.width - 28 * dpr,
             height: scrollHeight,
             zoom,
             dpr: this.dpr,
             align: 2,
             orientation: 1,
-            space: 10 * this.dpr,
+            space: 3 * this.dpr,
             selfevent: true,
-            padding: { left: 3 * this.dpr },
             cellupCallBack: (gameobject) => {
                 this.onChooseHandler(gameobject);
+            },
+            celldownCallBack: (gameobject) => {
+                PicaItemTipsPanel.Inst.showTips(gameobject, gameobject.itemData, "pointerup");
             }
         });
-        this.add(this.gamescroller);
+        this.add([this.toggleScroll, this.gamescroller]);
         this.setInteractive();
     }
 
+    public show() {
+        this.onToggleHandler(<any>this.toggleScroll.getItemAt(0));
+        this.visible = true;
+    }
+    public hide() {
+        this.visible = false;
+    }
     public refreshMask() {
         this.gamescroller.refreshMask();
         this.toggleScroll.refreshMask();
@@ -242,9 +263,10 @@ class ChooseContainer extends Phaser.GameObjects.Container {
         for (const category of categoryDatas) {
             const item = new ToggleButton(this.scene, 77 * this.dpr, 37 * this.dpr, UIAtlasName.cooking, "cooking_nav_unselected", "cooking_nav_selected", this.dpr, "");
             item.setNormalColor("#ffffff");
-            item.setText(category.text);
+            item.setText(category.name);
             item["category"] = category;
             this.toggleScroll.addItem(item);
+            item.enable = false;
         }
         this.toggleScroll.Sort();
     }
@@ -265,6 +287,7 @@ class ChooseContainer extends Phaser.GameObjects.Container {
                 this.itemsArr.push(item);
             }
             item.setItemData(datas[i]);
+            item.visible = true;
         }
         this.gamescroller.addItems(this.itemsArr);
         this.gamescroller.Sort();

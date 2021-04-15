@@ -70,6 +70,7 @@ export class PicaIllustratedDetailPanel extends Phaser.GameObjects.Container {
                     }
                 }
                 this.acquireTex.text = `${content.reward2Progress}/${content.reward2Max}`;
+                this.acquireImg.setFrame("illustrate_badge_icon_" + content.reward2NextIndex);
                 this.horLevelTex.text = content.reward1NextIndex + "";
                 this.galleryPanel.setGallaryData(content);
             }
@@ -105,7 +106,7 @@ export class PicaIllustratedDetailPanel extends Phaser.GameObjects.Container {
         this.acquire.setSize(42 * this.dpr, 38 * this.dpr);
         this.acquire.enable = true;
         this.acquire.on(ClickEvent.Tap, this.onAcquireRewardsHandler, this);
-        this.acquireImg = this.scene.make.image({ key: UIAtlasName.illustrate, frame: "illustrate_badge_icon" });
+        this.acquireImg = this.scene.make.image({ key: UIAtlasName.illustrate, frame: "illustrate_badge_icon_1" });
         this.acquireTex = this.scene.make.text({ style: UIHelper.whiteStyle(this.dpr, 10) }).setOrigin(0.5);
         this.acquireTex.setStroke("#26365A", 2 * this.dpr);
         this.acquireTex.y = this.acquireImg.y + this.acquireImg.height * 0.5 + 3 * this.dpr;
