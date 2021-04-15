@@ -1,5 +1,6 @@
 import * as copy from "copy-text-to-clipboard";
 import { BasePanel, UiManager } from "gamecoreRender";
+import { UITools } from "picaRender";
 import { MessageType, ModuleName, RENDER_PEER } from "structure";
 import { Font, i18n } from "utils";
 import { DetailDisplay } from "../Components/detail.display";
@@ -79,16 +80,18 @@ export class PicaItemPopCardPanel extends BasePanel {
     } else {
       this.mSource.setText("");
     }
-    const resource = this.mShowData[0].display;// op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_MARKET_QUERY_COMMODITY_RESOURCE
-    if (resource) {
-      if (resource.display) {
-        this.mDetailDisplay.loadDisplay(resource);
-      } else if (resource.avatar) {
-        this.mDetailDisplay.loadAvatar(resource.avatar);
-      } else {
-        this.mDetailDisplay.loadUrl(prop.icon);
-      }
-    }
+    // const resource = this.mShowData[0].display;// op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_MARKET_QUERY_COMMODITY_RESOURCE
+    // if (resource) {
+    //   if (resource.display) {
+    //     this.mDetailDisplay.loadDisplay(resource);
+    //   } else if (resource.avatar) {
+    //     this.mDetailDisplay.loadAvatar(resource.avatar);
+    //   } else {
+    //     this.mDetailDisplay.loadUrl(prop.icon);
+    //   }
+    // }
+    const detail = prop.serializeString ? prop["elepi"] : prop;
+    UITools.showDetailDisplay({ display: this.mDetailDisplay, dpr: this.dpr, data: detail, render: this.render, sn: prop.sn, itemid: prop.id, serialize: prop.serializeString });
   }
 
   protected preload() {

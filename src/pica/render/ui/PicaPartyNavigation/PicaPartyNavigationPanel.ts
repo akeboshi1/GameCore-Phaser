@@ -1,7 +1,7 @@
 import { ClickEvent, Button, BBCodeText } from "apowophaserui";
 import { DynamicImage, ItemInfoTips, ProgressMaskBar, ToggleColorButton, UiManager } from "gamecoreRender";
 import { ModuleName } from "structure";
-import { Handler, i18n, UIHelper, Url } from "utils";
+import { Handler, i18n, Logger, UIHelper, Url } from "utils";
 import { PicaTownNavigationPanel } from "./PicaTownNavigationPanel";
 import { PicaMyNavigationPanel } from "./PicaMyNavigationPanel";
 import { PicaBasePanel } from "../pica.base.panel";
@@ -141,7 +141,7 @@ export class PicaPartyNavigationPanel extends PicaBasePanel {
         }));
     }
     protected createOptionButtons() {
-        const arr = [{ text: i18n.t("partynav.town"), type: 1 }, { text: i18n.t("player_info.room"), type: 2 }, { text: i18n.t("party.mine"), type: 3 }];
+        const arr = [{ text: i18n.t("player_info.room"), type: 2 }, { text: i18n.t("partynav.town"), type: 1 }, { text: i18n.t("party.mine"), type: 3 }];
         const allLin = 272 * this.dpr;
         const cellwidth = allLin / arr.length;
         const cellHeight = 20 * this.dpr;

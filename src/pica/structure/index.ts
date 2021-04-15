@@ -12,3 +12,4 @@ export * from "./icardpool";
 export * from "./ijob";
 export * from "./icraftskill";
 export * from "./ilevel";
+export * from "./iquestgroup";

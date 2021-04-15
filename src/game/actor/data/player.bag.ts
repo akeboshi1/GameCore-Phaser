@@ -170,7 +170,7 @@ class PackageData {
     public updatePackage(content: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_PKT_UPDATE_PACKAGE) {
         const items = content.items;
         for (const tempItem of items) {
-            if (tempItem.id === "-1") {
+            if (tempItem.id === "-1"||tempItem.count===0) {
                 let item: op_client.ICountablePackageItem;
                 let index = -1;
                 for (const temp of this.list) {

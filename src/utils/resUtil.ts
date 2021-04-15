@@ -1,4 +1,4 @@
-import { HTTP_REGEX, ModuleName } from "structure";
+import { AvatarSuitType, HTTP_REGEX, ModuleName } from "structure";
 import { Font } from "./font";
 import { Handler } from "./Handler";
 import { i18n } from "./i18n";
@@ -18,6 +18,7 @@ export class Url {
     // 本地资源路径
     static RES_PATH: string = "";
     static RESUI_PATH: string = "";
+    static RESOURCE_ROOT: string = "";
     static getRes(value: string): string {
         // return Url.RES_PATH + value;
         if (!value) return undefined;
@@ -79,6 +80,11 @@ export class ResUtils {
             return value;
         }
         return Url.OSD_PATH + value;
+    }
+
+    static getResRoot(value: string): string {
+        if (Url.RESOURCE_ROOT) return Url.RESOURCE_ROOT + "/" + value;
+        return value;
     }
 }
 
@@ -682,5 +688,7 @@ export class UIHelper {
         });
         return tweenScale;
     }
+
     private static mText: Phaser.GameObjects.Text;
+
 }

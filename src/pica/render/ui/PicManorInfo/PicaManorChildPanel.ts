@@ -75,7 +75,6 @@ export class PicaManorChildPanel extends PicaManorBasePanel {
                 Logger.getInstance().debug(key);
             })
             .on("areaup", (key) => {
-                // tslint:disable-next-line:no-console
                 new InputView(this.scene, this.render).show({
                     title: i18n.t("manor.eidtnickname"),
                     placeholder: i18n.t("manor.nicknameplaceholder"),

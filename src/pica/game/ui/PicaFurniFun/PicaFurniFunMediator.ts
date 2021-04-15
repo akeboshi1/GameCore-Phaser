@@ -1,7 +1,7 @@
 import { op_client, op_pkt_def } from "pixelpai_proto";
 import { PicaFurniFun } from "./PicaFurniFun";
 import { EventType, ISprite, ModuleName } from "structure";
-import { BaseDataManager, BasicMediator, DataMgrType, Game } from "gamecore";
+import { BaseDataManager, BasicMediator, CacheDataManager, DataMgrType, Game } from "gamecore";
 import { BaseDataConfigManager } from "../../config";
 import { ICountablePackageItem } from "../../../structure";
 import { ObjectAssign } from "utils";
@@ -64,6 +64,7 @@ export class PicaFurniFunMediator extends BasicMediator {
     }
     private queryUnlockElement(ids: number[]) {
         this.picFurni.queryUnlockElement(ids);
+        this.cache.queryUnlockFurinture = true;
     }
 
     private onSyncSNMaterials(map: Map<string, op_client.ICountablePackageItem[]>) {
@@ -115,5 +116,8 @@ export class PicaFurniFunMediator extends BasicMediator {
     }
     private query_TEAM_BUILD(ids: number[]) {
         this.picFurni.queryTeamBuild(ids);
+    }
+    private get cache() {
+        return this.game.getDataMgr<CacheDataManager>(DataMgrType.ChatMgr);
     }
 }

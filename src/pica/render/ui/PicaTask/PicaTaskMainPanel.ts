@@ -41,7 +41,6 @@ export class PicaTaskMainPanel extends Phaser.GameObjects.Container {
         this.gameScroller.clearItems(false);
         if (this.mainTaskAnimation) this.mainTaskAnimation.dispose();
         if (!content.id) {
-            // console.log("没有新任务了");
             this.notaskTip.visible = true;
             this.gameScroller.visible = false;
             return;

@@ -1,4 +1,6 @@
 import { PBpacket } from "net-socket-packet";
+import { BaseDataConfigManager } from "picaWorker";
+import { op_client, op_virtual_world, op_def, op_gameconfig, op_pkt_def } from "pixelpai_proto";
 import { op_client, op_virtual_world } from "pixelpai_proto";
 import { EventType } from "structure";
 import { EventDispatcher } from "utils";
@@ -109,7 +111,7 @@ export class BaseDataManager extends BasePacketHandler {
 
     private syncElementSNUnlockMaterials(sn: string[]) {
         const config = <any>this.game.configManager;
-        const map = config.getElementSNUnlockMaterials(sn);
+        const map = config.getElementUnlockMaterialsBySN(sn);
         map.forEach((value, key) => {
             this.mSNRequirements.set(key, value);
             this.syncItemBases(value);

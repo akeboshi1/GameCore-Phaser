@@ -1,4 +1,8 @@
 import { Logger } from "./log";
+export interface IHttpLoaderConfig {
+  path: string;
+  responseType: XMLHttpRequestResponseType;
+}
 
 export function load(path: string, responseType: XMLHttpRequestResponseType): Promise<any> {
   return new Promise((resolve, reject) => {
