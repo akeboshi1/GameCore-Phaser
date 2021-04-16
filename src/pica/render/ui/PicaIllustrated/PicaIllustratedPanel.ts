@@ -145,10 +145,12 @@ export class PicaIllustratedPanel extends PicaBasePanel {
 
     private onListHandler(tag: string, data?: any) {
         if (tag === "make") {
-            this.render.renderEmitter(this.key + "_openmake", data);
+            this.render.renderEmitter(this.key + "_openpanel", tag);
         } else if (tag === "gallary") {
             this.hideListPanel();
             this.openDetailPanel();
+        } else if (tag === "cooking") {
+            this.render.renderEmitter(this.key + "_openpanel", tag);
         }
     }
 

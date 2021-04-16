@@ -1,5 +1,6 @@
 import { ElementStorage } from "baseModel";
 import { SoundManager, BaseConfigData, DataManager, Game, HttpService, LoadingManager, MainPeer, RoomManager } from "gamecore";
+import { HttpLoadManager } from "utils";
 import { PicaNetworkManager } from "./command/pica.network.manager";
 import { BaseDataConfigManager, BaseDataType } from "./config";
 import { PicaGuideManager } from "./guide.manager";
@@ -30,6 +31,7 @@ export class PicaGame extends Game {
         this.mLoadingManager = new LoadingManager(this);
         this.mConfigManager = new BaseDataConfigManager(this);
         this.mNetWorkManager = new PicaNetworkManager(this);
+        this.mHttpLoadManager = new HttpLoadManager();
         // this.mPlayerDataManager = new PlayerDataManager(this);
         this.mUIManager.addPackListener();
         this.mRoomManager.addPackListener();

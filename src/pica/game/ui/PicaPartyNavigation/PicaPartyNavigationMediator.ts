@@ -2,8 +2,9 @@ import { op_client, op_pkt_def, op_def } from "pixelpai_proto";
 import { PicaPartyNavigation } from "./PicaPartyNavigation";
 import { BasicMediator, Game } from "gamecore";
 import { ModuleName } from "structure";
-import { BaseDataConfigManager } from "../../config";
-import { IScene } from "../../../structure";
+import { BaseDataConfigManager } from "picaWorker";
+import { IScene } from "picaStructure";
+import { Logger } from "utils";
 export class PicaPartyNavigationMediator extends BasicMediator {
     private mPlayerProgress: any;
     private mPartyListData: any;
@@ -25,7 +26,7 @@ export class PicaPartyNavigationMediator extends BasicMediator {
     }
 
     show(param?: any) {
-        this.chooseType = Number(param || 2);
+        this.chooseType = Number(param || 1);
         param = this.chooseType;
         super.show(param);
         this.game.emitter.on(this.key + "_close", this.onCloseHandler, this);
@@ -41,6 +42,7 @@ export class PicaPartyNavigationMediator extends BasicMediator {
 
     hide() {
         this.tempData = undefined;
+        this.mPlayerProgress = undefined;
         this.game.emitter.off(this.key + "_close", this.onCloseHandler, this);
         this.game.emitter.off(this.key + "_querylist", this.query_PARTY_LIST, this);
         this.game.emitter.off(this.key + "_queryenter", this.queryEnterRoom, this);
@@ -118,7 +120,9 @@ export class PicaPartyNavigationMediator extends BasicMediator {
             this.config.getBatchItemDatas(step.rewards);
         }
         this.mPlayerProgress = content;
+        // content.currentProgressValue = 200;
         this.mView.setOnlineProgress(content);
+        Logger.getInstance().error(content.currentProgressValue);
     }
 
     private query_GET_ROOM_LIST(data: { page: number, perPage: number }) {

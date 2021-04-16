@@ -17,7 +17,7 @@ export class PicaIllustratedMediator extends BasicMediator {
         super.show(param);
         this.game.emitter.on(this.key + "_queryrewards", this.onQueryRewardsHandler, this);
         this.game.emitter.on(this.key + "_querycombinations", this.onQueryCombinationsHandler, this);
-        this.game.emitter.on(this.key + "_openmake", this.onShowMakePanel, this);
+        this.game.emitter.on(this.key + "_openpanel", this.onShowPanelHandler, this);
         this.game.emitter.on(this.key + "_close", this.onCloseHandler, this);
         this.game.emitter.on(EventType.GALLERY_UPDATE, this.setGallaryData, this);
         this.game.emitter.on(EventType.DONE_MISSION_LIST, this.setDoneMissionIdListHandler, this);
@@ -26,7 +26,7 @@ export class PicaIllustratedMediator extends BasicMediator {
     hide() {
         this.game.emitter.off(this.key + "_queryrewards", this.onQueryRewardsHandler, this);
         this.game.emitter.on(this.key + "_querycombinations", this.onQueryCombinationsHandler, this);
-        this.game.emitter.off(this.key + "_openmake", this.onShowMakePanel, this);
+        this.game.emitter.off(this.key + "_openpanel", this.onShowPanelHandler, this);
         this.game.emitter.off(this.key + "_close", this.onCloseHandler, this);
         this.game.emitter.off(EventType.GALLERY_UPDATE, this.setGallaryData, this);
         this.game.emitter.off(EventType.DONE_MISSION_LIST, this.setDoneMissionIdListHandler, this);
@@ -79,9 +79,13 @@ export class PicaIllustratedMediator extends BasicMediator {
         this.mView.setGallaryData(this.mShowData, this.getCombinations(this.mShowData.list));
     }
 
-    private onShowMakePanel() {
+    private onShowPanelHandler(type: string) {
         const uiManager = this.game.uiManager;
-        uiManager.showMed(ModuleName.PICAMANUFACTURE_NAME);
+        if (type === "make") {
+            uiManager.showMed(ModuleName.PICAMANUFACTURE_NAME);
+        } else if (type === "cooking") {
+            uiManager.showMed(ModuleName.PICACOOKING_NAME);
+        }
         this.onCloseHandler();
     }
 

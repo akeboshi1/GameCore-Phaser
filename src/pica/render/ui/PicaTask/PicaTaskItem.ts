@@ -52,16 +52,16 @@ export class PicaTaskItem extends Phaser.GameObjects.Container {
         this.taskButton.on(ClickEvent.Tap, this.onTaskButtonHandler, this);
         this.arrow = this.scene.make.image({ key: UIAtlasName.uicommon, frame: "task_list_arrow" });
         this.arrow.y = conHeight * 0.5 - this.arrow.height * 0.5;
-        this.content.add([this.bg, headbg, this.headIcon, this.taskName, this.taskDes, this.taskButton, this.arrow]);
-        this.add(this.content);
+        this.content.add([headbg, this.headIcon, this.taskName, this.taskDes, this.taskButton, this.arrow]);
+        this.add([this.bg, this.content]);
         this.setSize(conWidth, conHeight);
     }
 
     public setTaskData(data: op_client.IPKT_Quest) {
         this.questData = data;
         this.taskName.text = data.name + this.getProgressStr(data);
-        this.setTextLimit(this.taskName, this.taskName.text);
-        this.setTextLimit(this.taskDes, data.detail);
+        this.setTextLimit(this.taskName, this.taskName.text, 16);
+        this.setTextLimit(this.taskDes, data["des"]);
         const texturePath = data.display.texturePath + `_${this.dpr}x.png`;
         const url = Url.getOsdRes(texturePath);
         this.headIcon.load(url, this, () => {
@@ -124,23 +124,24 @@ export class PicaTaskItem extends Phaser.GameObjects.Container {
     }
     private openExtend() {
         if (!this.mExtend) {
-            this.mExtend = new TaskItemExtend(this.scene, this.width, 0, this.dpr, this.zoom);
+            this.mExtend = new TaskItemExtend(this.scene, this.width - 6 * this.dpr, 0, this.dpr, this.zoom);
             this.mExtend.setHandler(this.send);
             this.add(this.mExtend);
         }
         this.mExtend.setItemData(this.questData);
         this.mExtend.visible = true;
-        this.height = this.content.height + this.mExtend.height;
+        this.height = this.content.height + this.mExtend.height + 3 * this.dpr;
         this.content.y = -this.height * 0.5 + this.content.height * 0.5;
         this.mExtend.y = this.content.y + this.content.height * 0.5;
         this.mIsExtend = true;
-        // this.mExtend.setItemData(this.questData);
         this.arrow.visible = false;
+        this.bg.resize(this.bg.width, this.height);
     }
 
     private closeExtend() {
         if (this.mExtend) this.mExtend.visible = false;
         this.height = this.content.height;
+        this.bg.resize(this.bg.width, this.content.height);
         this.content.y = 0;
         this.mIsExtend = false;
         this.arrow.visible = true;
@@ -274,15 +275,7 @@ class TaskItemExtend extends Phaser.GameObjects.Container {
 
     private getTaskTargetText(questData: op_client.IPKT_Quest) {
         const targets = questData.targets;
-        const text: string = questData.detail + this.getProgressStr(questData);
-        // if (targets.length === 0) {
-        //     text = questData.detail;
-        // } else {
-        //     text = i18n.t("task.collect_materials");
-        //     for (const item of targets) {
-        //         text += `${item.name}*${item.neededCount}`;
-        //     }
-        // }
+        const text: string = (questData["des"]) + this.getProgressStr(questData);
         return text;
     }
 

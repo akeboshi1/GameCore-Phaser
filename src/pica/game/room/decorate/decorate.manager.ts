@@ -8,6 +8,7 @@ import {BaseDataConfigManager} from "../../config";
 import {BlockObject} from "../../../../game/room/block/block.object";
 import {InputEnable} from "../../../../game/room/element/element";
 import PKT_PackageType = op_pkt_def.PKT_PackageType;
+import {IElementPi} from "../../../structure/ielementpi";
 
 // 小屋布置管理类，包含所有布置过程中的操作接口
 // 文档：https://dej4esdop1.feishu.cn/docs/doccnEbMKpINEkfBVImFJ0nTJUh#
@@ -310,7 +311,7 @@ export class DecorateManager {
 
         const bagCount = this.getBagCount(baseID);
         if (bagCount <= 0) return;
-        const typeData = <any> this.getBaseData(baseID);
+        const typeData = await <any> this.getPIData(baseID);
         if (!typeData) {
             Logger.getInstance().error("no config data, id: ", baseID);
             this.room.game.renderPeer.showAlertView("no config data, id: " + baseID);
@@ -413,9 +414,9 @@ export class DecorateManager {
         }
     }
 
-    private getBaseData(baseID: string) {
+    private getPIData(baseID: string): Promise<IElementPi> {
         const configMgr = <BaseDataConfigManager> this.room.game.configManager;
-        return configMgr.getItemBaseByID(baseID);
+        return configMgr.getItemPIDataByID(baseID);
     }
 
     private get bagData() {

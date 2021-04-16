@@ -67,7 +67,8 @@
     "make": "制作",
     "editor": "编辑",
     "survey": "调查",
-    "notEnough": "{{}}数量不足"
+    "notEnough": "{{}}数量不足",
+    "receive": "领取"
   },
   "quantityunit": {
     "k": "千",
@@ -455,6 +456,13 @@
     "avatar": "点击打开装扮图鉴面板",
     "make": "点击打开制造面板",
     "furindetail": "家具详情",
-    "surveyfurni": "调查家具"
+    "surveyfurni": "调查家具",
+    "cooking":"烹饪"
+  },
+  "mail": {
+    "onekey": "一键领取",
+    "title": "邮件",
+    "sender": "发件人: ",
+    "expiration": "{{time}}后过期"
   }
 }

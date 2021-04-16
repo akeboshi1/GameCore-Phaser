@@ -20,6 +20,7 @@ export interface IElement {
     forge: number;
     grade: number;
     uiid: number;
+    serialize: boolean;
 }
 
 export interface IAnimation {

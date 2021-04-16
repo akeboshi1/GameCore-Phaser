@@ -78,7 +78,16 @@ export class PicaIllustratedListPanel extends Phaser.GameObjects.Container {
             send,
             tag: "make"
         };
-        const datas = [temp1, temp3];
+        const temp4: IllustratedItemData = {
+            bg: "illustrate_cooking_bg",
+            left: "illustrate_cooking_picture",
+            textImg: "illustrate_cooking_title",
+            text: i18n.t("illustrate.cooking"),
+            textColor: "#3027A1",
+            send,
+            tag: "cooking"
+        };
+        const datas = [temp1, temp3,temp4];
         return datas;
     }
 

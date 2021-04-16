@@ -11,7 +11,7 @@ export class EditorDragonbonesDisplay extends BaseDragonbonesDisplay {
     protected mTopDisplay: EditorTopDisplay;
     protected mNodeType: op_def.NodeType;
     constructor(scene: Phaser.Scene, sprite: Sprite) {
-        super(scene);
+        super(scene, sprite.id);
         this.setSprite(sprite);
         this.mNodeType = sprite.nodeType;
     }
