@@ -1,5 +1,3 @@
-import "tooqinggamephaser";
-import "dragonBones";
 import { Game } from "tooqinggamephaser";
 import { Export, RPCPeer, webworker_rpc } from "webworker-rpc";
 import { i18n, initLocales, IPos, IPosition45Obj, Logger, LogicPos, Pos, Size, UiUtils, Url, ValueResolver } from "utils";
