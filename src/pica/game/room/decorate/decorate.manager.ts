@@ -416,8 +416,7 @@ export class DecorateManager {
 
     private getPIData(baseID: string): Promise<IElementPi> {
         const configMgr = <BaseDataConfigManager> this.room.game.configManager;
-        const baseData = configMgr.getItemBaseByID(baseID);
-        return configMgr.checkDynamicElementPI({sn: baseData.sn, itemid: baseID, serialize: baseData.serializeString});
+        return configMgr.getItemPIDataByID(baseID);
     }
 
     private get bagData() {

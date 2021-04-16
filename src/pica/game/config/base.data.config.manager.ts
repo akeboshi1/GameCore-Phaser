@@ -680,13 +680,18 @@ export class BaseDataConfigManager extends BaseConfigManager {
         return undefined;
     }
 
+    public getItemPIDataByID(baseID: string): Promise<IElementPi> {
+        const baseData = this.getItemBaseByID(baseID);
+        return this.checkDynamicElementPI({sn: baseData.sn, itemid: baseID, serialize: baseData.serializeString});
+    }
+
     /**
      * 动态加载LementPI数据
      * @param ownerType 请求来源配置
      * @param serialize 请求路径
      * @returns
      */
-    public checkDynamicElementPI(data: { sn: string, itemid: string, serialize: string, ownerType?: number }): Promise<IElementPi>{
+    public checkDynamicElementPI(data: { sn: string, itemid: string, serialize: string, ownerType?: number }): Promise<IElementPi> {
         return new Promise<IElementPi>((resolve, reject) => {
             const configType: any = BaseDataType.elementpi;
             const ownerType = data.ownerType === 2 ? BaseDataType.element : BaseDataType.item;
