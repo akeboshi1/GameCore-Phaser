@@ -80,7 +80,7 @@ export class BaseDragonbonesDisplay extends BaseDisplay {
     protected mFadeTween: Phaser.Tweens.Tween;
     protected mInteractive: boolean = true;
     /***
-     * 是否合图 & 单图替换
+     * 全量换装时，是否合图 & 单图替换
      */
     protected isRenderTexture: boolean = false;
     protected mPlaceholder: Phaser.GameObjects.Image;
@@ -163,7 +163,7 @@ export class BaseDragonbonesDisplay extends BaseDisplay {
         return this.mBoardPoint;
     }
 
-    // 改变装扮接口
+    // 改变装扮接口(全量)
     public load(display: IDragonbonesModel): Promise<any> {
         this.displayInfo = <IDragonbonesModel>display;
         if (!this.displayInfo) return Promise.reject("displayInfo error");
@@ -171,6 +171,11 @@ export class BaseDragonbonesDisplay extends BaseDisplay {
         return this.mLoadDisplayPromise.promise(() => {
             this.buildDragbones();
         });
+    }
+
+    // 改变装扮接口(增量)
+    public changeParts(avatar: IAvatar) {
+
     }
 
     public getDisplay(): dragonBones.phaser.display.ArmatureDisplay | undefined {
@@ -707,6 +712,15 @@ export class BaseDragonbonesDisplay extends BaseDisplay {
         } else {
             return arr[0] + "_" + arr[1] + "_" + arr[2] + "_" + arr[4];
         }
+    }
+
+    // doc: https://code.apowo.com/PixelPai/game-core/-/issues/239
+    private serializeAvatarData(data: IAvatar): string {
+
+    }
+
+    private deserializeAvatarData(val: string): IAvatar {
+
     }
 
     // TODO: 待优化
