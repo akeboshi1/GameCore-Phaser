@@ -16,6 +16,8 @@ export class DragonbonesModel implements IDragonbonesModel {
             this.id = data.id;
             this.avatar = data.avatar;
             this.eventName = data.eventName;
+            const aniName = data.avatar.defaultAnimation;
+            if (aniName) this.animationName = aniName;
         }
     }
 

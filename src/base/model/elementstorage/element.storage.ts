@@ -193,30 +193,34 @@ export class ElementStorage implements IElementStorage {
                 });
                 if (!displayModel) {
                     const anis = [];
+                    const ele = <ElementNode>obj;
                     const eleAnis = (<ElementNode>obj).animations;
-                    if (!eleAnis) continue;
-                    const objAnis = eleAnis.animationData;
-                    for (const ani of objAnis) {
-                        anis.push(new AnimationModel(ani.createProtocolObject()));
+                    if (ele.avatar) {
+                        displayModel = new DragonbonesModel({ id: ele.id, avatar: ele.avatar.createProtocolObject() });
+                    } else {
+                        const objAnis = eleAnis.animationData;
+                        for (const ani of objAnis) {
+                            anis.push(new AnimationModel(ani.createProtocolObject()));
+                        }
+                        displayModel = new FramesModel({
+                            id: obj.id,
+                            sn: obj.sn,
+                            eventName,
+                            animations: {
+                                defaultAnimationName: eleAnis.defaultAnimationName,
+                                display: eleAnis.display,
+                                animationData: anis,
+                            },
+                        });
                     }
-                    displayModel = new FramesModel({
-                        id: obj.id,
-                        sn: obj.sn,
-                        eventName,
-                        animations: {
-                            defaultAnimationName: eleAnis.defaultAnimationName,
-                            display: eleAnis.display,
-                            animationData: anis,
-                        },
-                    });
                     this.mModels.set(obj.id, displayModel);
                 }
-                const ele: IDisplayRef = {
+                const eleRef: IDisplayRef = {
                     id: obj.id,
                     name: obj.name,
                     displayModel,
                 };
-                this.mElementRef.set(obj.id, ele);
+                this.mElementRef.set(obj.id, eleRef);
             }
         }
 
