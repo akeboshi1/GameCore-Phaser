@@ -66,7 +66,8 @@ export class Sprite extends EventDispatcher implements ISprite {
             this.updateAvatarSuits(this.suits);
         this.avatar = this.avatar || obj.avatar;
         if (this.avatar) {
-            this.updateAvatar(this.avatar);
+            // 临时方案。 物件avatar从pi里获取。收到服务器数据不稳定
+            if (nodeType !== op_def.NodeType.ElementNodeType) this.updateAvatar(this.avatar);
         }
         if (obj.display) {
             this.updateDisplay(obj.display, obj.animations, obj.currentAnimationName);
@@ -313,8 +314,13 @@ export class Sprite extends EventDispatcher implements ISprite {
         this.displayInfo = displayInfo;
         this.displayInfo.id = this.id;
         if (this.currentAnimationName) {
-            this.displayInfo.animationName = this.currentAnimationName;
-            this.setAnimationData(this.currentAnimationName, this.direction);
+            // DragonbonesModel 设置的动画在avatar上
+            if (displayInfo instanceof FramesModel) {
+                this.displayInfo.animationName = this.currentAnimationName;
+                this.setAnimationData(this.currentAnimationName, this.direction);
+            } else {
+                if (displayInfo.animationName) this.setAnimationName(displayInfo.animationName);
+            }
         } else {
             if (displayInfo.animationName) {
                 this.setAnimationName(displayInfo.animationName);

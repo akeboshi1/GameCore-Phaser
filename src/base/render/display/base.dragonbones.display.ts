@@ -129,8 +129,8 @@ export class BaseDragonbonesDisplay extends BaseDisplay {
     private mReplaceTextureKey: string = "";
     private mTmpIndex: number = 0;
 
-    public constructor(scene: Phaser.Scene) {
-        super(scene);
+    public constructor(scene: Phaser.Scene, id?: number) {
+        super(scene, id);
         this.scene.textures.on("onload", this.onLoadFunc, this);
     }
 
@@ -217,6 +217,13 @@ export class BaseDragonbonesDisplay extends BaseDisplay {
                 if (callback) callback();
             }
         });
+    }
+
+    public displayCreated() {
+        super.displayCreated();
+        if (this.mAnimation) {
+            this.play(this.mAnimation);
+        }
     }
 
     public destroy() {
