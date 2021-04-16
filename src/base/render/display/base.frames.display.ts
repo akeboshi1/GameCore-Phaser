@@ -19,12 +19,11 @@ export class BaseFramesDisplay extends BaseDisplay {
     protected mIsSetInteractive: boolean = false;
     protected mIsInteracitve: boolean = false;
     protected mPreAnimation: RunningAnimation;
-    protected mID: number = 0;
     protected mNodeType: number;
     private mField;
 
     constructor(scene: Phaser.Scene, id?: number, nodeType?: number) {
-        super(scene);
+        super(scene, id);
         this.mNodeType = nodeType;
         this.mID = id;
     }
@@ -507,9 +506,5 @@ export class BaseFramesDisplay extends BaseDisplay {
 
     get nodeType(): number {
         return this.mNodeType;
-    }
-
-    get id(): number {
-        return this.mID;
     }
 }

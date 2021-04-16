@@ -680,30 +680,39 @@ export class BaseDataConfigManager extends BaseConfigManager {
         return undefined;
     }
 
+    public getItemPIDataByID(baseID: string): Promise<IElementPi> {
+        const baseData = this.getItemBaseByID(baseID);
+        return this.checkDynamicElementPI({sn: baseData.sn, itemid: baseID, serialize: baseData.serializeString});
+    }
+
     /**
      * 动态加载LementPI数据
      * @param ownerType 请求来源配置
      * @param serialize 请求路径
      * @returns
      */
-    public checkDynamicElementPI(data: { sn: string, itemid: string, serialize: string, ownerType?: number }) {
-        const configType: any = BaseDataType.elementpi;
-        const ownerType = data.ownerType === 2 ? BaseDataType.element : BaseDataType.item;
-        if (!this.dataMap.has(configType)) {
-            const tempconfig = new ElmentPiConfig();
-            this.dataMap.set(configType, tempconfig);
-        }
-        const config = <ElmentPiConfig>this.dataMap.get(configType);
-        config.url = ResUtils.getResRoot(data.serialize);
-        this.dynamicLoad(new Map([[configType, config]])).then(() => {
-            const elepi: IElementPi = config.get(data.sn);
-            elepi.itemId = data.itemid;
-            const item = this.dataMap.get(ownerType);
-            item["elepi"] = elepi;
-            this.mGame.peer.workerEmitter(EventType.RETURN_ELEMENT_PI_DATA + "_" + data.sn, elepi);
-        }, (reponse) => {
-            Logger.getInstance().error("未成功加载配置:" + reponse);
-            this.mGame.peer.workerEmitter(EventType.RETURN_ELEMENT_PI_DATA + "_" + data.sn, undefined);
+    public checkDynamicElementPI(data: { sn: string, itemid: string, serialize: string, ownerType?: number }): Promise<IElementPi> {
+        return new Promise<IElementPi>((resolve, reject) => {
+            const configType: any = BaseDataType.elementpi;
+            const ownerType = data.ownerType === 2 ? BaseDataType.element : BaseDataType.item;
+            if (!this.dataMap.has(configType)) {
+                const tempconfig = new ElmentPiConfig();
+                this.dataMap.set(configType, tempconfig);
+            }
+            const config = <ElmentPiConfig>this.dataMap.get(configType);
+            config.url = ResUtils.getResRoot(data.serialize);
+            this.dynamicLoad(new Map([[configType, config]])).then(() => {
+                const elepi: IElementPi = config.get(data.sn);
+                elepi.itemId = data.itemid;
+                const item = this.dataMap.get(ownerType);
+                item["elepi"] = elepi;
+                this.mGame.peer.workerEmitter(EventType.RETURN_ELEMENT_PI_DATA + "_" + data.sn, elepi);
+                resolve(elepi);
+            }, (reponse) => {
+                Logger.getInstance().error("未成功加载配置:" + reponse);
+                this.mGame.peer.workerEmitter(EventType.RETURN_ELEMENT_PI_DATA + "_" + data.sn, undefined);
+                resolve(undefined);
+            });
         });
     }
 

@@ -5,7 +5,6 @@ import { MainUIScene } from "./main.ui.scene";
 import { RoomScene } from "./room.scene";
 import { LayerName, PlaySceneLoadState, SceneName} from "structure";
 import { MotionManager } from "../input/motion.manager";
-import { LayerEnum } from "game-capsule";
 
 // 游戏正式运行用 Phaser.Scene
 export class PlayScene extends RoomScene {
@@ -87,6 +86,40 @@ export class PlayScene extends RoomScene {
 
     getKey(): string {
         return (this.sys.config as Phaser.Types.Scenes.SettingsConfig).key;
+    }
+
+    async snapshot() {
+        // tets snapshot
+        // const size = await this.render.getCurrentRoomSize();
+    //     const sceneryScenes = [];
+    //     const offsetX = size.rows * (size.tileWidth / 2);
+    //     for (const scene of this.game.scene.getScenes()) {
+    //         if (scene instanceof SkyBoxScene) {
+    //             const object = scene.children.list[0];
+    //             // @ts-ignore
+    //             object.setScale(1);
+    //             sceneryScenes.push(object);
+    //         }
+    //     }
+
+    //     const rt = this.make.renderTexture({x: 0, y: 0, width: size.sceneWidth, height: size.sceneHeight});
+        // this.game.scale.resize(size.sceneWidth, size.sceneHeight);
+        // const camera: any = this.cameras.main;
+        // if (camera && camera.setPixelRatio) camera.setPixelRatio(1);
+        // scene.
+        // this.render.sceneManager.sleepScene(MainUIScene.name);
+        // this.game.renderer.snapshot((image) => {
+        //     Logger.getInstance().log(image);
+        // });
+    //     this.layerManager.getLayer(LayerEnum.Surface.toString()).setScale(1);
+    //     this.layerManager.getLayer(LayerEnum.Terrain.toString()).setScale(1);
+    //     sceneryScenes.push(this.layerManager.getLayer(LayerEnum.Terrain.toString()));
+    //     sceneryScenes.push(this.layerManager.getLayer(LayerEnum.Surface.toString()));
+    //     rt.draw(sceneryScenes, offsetX, 0);
+    //     rt.snapshot((image) => {
+    //         Logger.getInstance().log(image);
+    //         this.layerManager.getLayer(LayerEnum.Surface.toString()).setScale(this.render.scaleRatio);
+    //     });
     }
 
     get loadState(): PlaySceneLoadState {
