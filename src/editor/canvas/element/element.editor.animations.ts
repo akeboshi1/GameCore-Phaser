@@ -1,4 +1,4 @@
-import { ElementEditorCanvas, ElementEditorEmitType } from "./element.editor.canvas";
+import { ElementEditorEmitType } from "./element.editor.canvas";
 import * as path from "path";
 import * as os from "os";
 import { SPRITE_SHEET_KEY, ResourcesChangeListener, IMAGE_BLANK_KEY } from "./element.editor.resource.manager";

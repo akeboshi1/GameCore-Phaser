@@ -32,18 +32,6 @@
       "structure": [
         "./src/structure/index"
       ],
-      "picaWorker": [
-        "./src/pica/game/index"
-      ],
-      "picaRender": [
-        "./src/pica/render/index"
-      ],
-      "picaRes": [
-        "./src/pica/res/index"
-      ],
-      "picaStructure": [
-        "./src/pica/structure/index"
-      ],
       "editorCanvas": [
         "./src/editor/index"
       ],

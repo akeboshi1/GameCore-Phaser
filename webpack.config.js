@@ -23,10 +23,6 @@ const commonConfig = {
             gamecoreRender: path.join(__dirname, "./src/render"),
             structure: path.join(__dirname, "./src/structure"),
             utils: path.join(__dirname, "./src/utils"),
-            picaWorker: path.join(__dirname, "./src/pica/game"),
-            picaRender: path.join(__dirname, "./src/pica/render"),
-            picaRes: path.join(__dirname, "./src/pica/res"),
-            picaStructure: path.join(__dirname, "./src/pica/structure"),
             editorCanvas: path.join(__dirname, "./src/editor"),
             display: path.join(__dirname, "./src/base/display"),
             baseRender: path.join(__dirname, "./src/base/render"),
@@ -91,7 +87,7 @@ const gameConfig = Object.assign({}, commonConfig, {
         // This is required so workers are known where to be loaded from
         path: path.resolve(__dirname, "dist"),
         filename: "js/[name].js",
-        chunkFilename: `js/[name]_v${appVer}.js`,
+        chunkFilename: `js/[name].js`,
         libraryTarget: "umd",
         globalObject: "this",
         library: "[name]",
@@ -147,7 +143,8 @@ const workerConfig = Object.assign({}, commonConfig, {
     output: {
         // This is required so workers are known where to be loaded from
         path: path.resolve(__dirname, "dist"),
-        filename: `js/[name]_v${appVer}.js`,
+        // filename: `js/[name]_v${appVer}.js`,
+        filename: `js/[name]_worker.js`,
         libraryTarget: "umd",
         globalObject: "this",
         library: "[name]",
