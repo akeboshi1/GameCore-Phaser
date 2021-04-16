@@ -1,4 +1,4 @@
-import { Handler } from "../../../utils";
+import { Handler } from "utils";
 import { BaseAnimation } from "./base.animation";
 import { AnimationUrlData } from "./ianimationbase";
 export class FrameAnimation extends BaseAnimation {

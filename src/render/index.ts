@@ -8,4 +8,4 @@ export * from "./managers";
 export * from "./render";
 export * from "./scenes";
 export * from "./ui";
-export * from "../base/render";
+export * from "./render";

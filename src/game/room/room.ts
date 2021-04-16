@@ -1,7 +1,7 @@
 import { op_client, op_def, op_virtual_world } from "pixelpai_proto";
 import { PacketHandler, PBpacket } from "net-socket-packet";
 import { Handler, IPos, IPosition45Obj, Logger, LogicPos, Position45 } from "utils";
-import { Game } from "../../game";
+import { Game } from "..";
 import { GameState, IScenery, ISprite, LoadState, ModuleName, SceneName } from "structure";
 import { Sprite } from "baseModel";
 import IActor = op_client.IActor;

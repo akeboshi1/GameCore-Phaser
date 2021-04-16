@@ -1,4 +1,4 @@
-import { Render } from "gamecoreRender";
+import { Render } from "../../render";
 import { Logger } from "utils";
 import { PlayScene } from "../../scenes/play.scene";
 

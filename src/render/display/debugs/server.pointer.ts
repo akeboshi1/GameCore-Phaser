@@ -1,4 +1,4 @@
-import { Render } from "gamecoreRender";
+import { Render } from "../../render";
 import { PlayScene } from "../../scenes/play.scene";
 
 export class ServerPosition {

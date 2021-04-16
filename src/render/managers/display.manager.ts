@@ -4,7 +4,6 @@ import { FramesDisplay } from "../display/frames/frames.display";
 import { PlayScene } from "../scenes/play.scene";
 import { DragonbonesDisplay } from "../display/dragonbones/dragonbones.display";
 import {DisplayField, ElementStateType, IScenery, LayerName} from "structure";
-import { BlockManager } from "../../base/render/sky.box/block.manager";
 import { Render } from "../render";
 import { IFramesModel } from "structure";
 import { IDragonbonesModel } from "structure";
@@ -16,6 +15,7 @@ import { IDisplayObject } from "../display";
 import { Astar } from "../display/debugs/astar";
 import { Grids } from "../display/debugs/grids";
 import { FramesModel } from "baseModel";
+import { BlockManager } from "baseRender";
 
 export enum NodeType {
     UnknownNodeType = 0,

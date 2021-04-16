@@ -1,9 +1,9 @@
 import { Font, Logger, UiUtils, Url } from "utils";
 import { BaseLayer, BasicScene } from "baseRender";
-import version from "../../../version";
-import { ModuleName, SceneName } from "../../structure";
 import { UiManager } from "../ui";
 import { MainUIScene } from "./main.ui.scene";
+import { ModuleName, SceneName } from "structure";
+import { version } from "../../../version";
 
 export class LoadingScene extends BasicScene {
   private bg: Phaser.GameObjects.Sprite;

@@ -21,7 +21,7 @@
     "alwaysStrict": false,
     "paths": {
       "gamecoreRender": [
-        "./src/render/index"
+        "../../redner/index"
       ],
       "gamecore": [
         "./src/game/index"

@@ -1,4 +1,4 @@
-import { Render } from "gamecoreRender";
+import { Render } from "../../render";
 import { Pos } from "utils";
 
 /**

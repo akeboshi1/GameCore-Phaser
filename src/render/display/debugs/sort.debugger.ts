@@ -1,4 +1,4 @@
-import {ChatCommandInterface, IPosition45Obj, Logger, LogicPoint, LogicPos, Position45} from "utils";
+import {ChatCommandInterface, IPosition45Obj, Logger, LogicPos } from "utils";
 import {Render} from "../../render";
 import {PlayScene} from "../../scenes";
 
