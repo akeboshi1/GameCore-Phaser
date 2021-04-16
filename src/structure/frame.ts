@@ -1,7 +1,7 @@
 import { IDisplay } from "./display";
 export interface IFramesModel {
     readonly discriminator: string;
-    gene: string | undefined;
+    gene: string | undefined; // hash
     id: number;
     eventName?: number[];
     avatarDir?: number;

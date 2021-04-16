@@ -85,8 +85,9 @@ export class MarketItem extends Phaser.GameObjects.Container {
 
   setProp(content: any) {// op_client.IMarketCommodity
     this.mProp = content;
+    const item = content["item"];
     if (content.icon) {
-      const url = Url.getOsdRes(content.icon || content.texturePath);
+      const url = Url.getOsdRes(content.icon);
       this.mPropImage.load(url, this, this.onPropLoadComplete);
     } else {
       Logger.getInstance().error(`${content.name} : ${content.id} icon value is empty`);
@@ -111,9 +112,9 @@ export class MarketItem extends Phaser.GameObjects.Container {
     this.mPriceText.setText(content.price[0].price.toString());
     const coinIcon = Coin.getIcon(content.price[0].coinType);
     this.mCoinIcon.setFrame(coinIcon);
-    if (content.grade > 0) {
+    if (item.grade > 0) {
       this.starImg.visible = true;
-      const starFrame = "bag_star_small_" + content.grade;
+      const starFrame = "bag_star_small_" + item.grade;
       this.starImg.setFrame(starFrame);
     } else this.starImg.visible = false;
   }

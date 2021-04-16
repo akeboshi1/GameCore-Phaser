@@ -1,5 +1,5 @@
 import { op_def } from "pixelpai_proto";
-import { BasicMediator, Game } from "gamecore";
+import { BasicMediator, CacheDataManager, DataMgrType, Game } from "gamecore";
 import { ModuleName } from "structure";
 import { BaseDataConfigManager } from "../../config";
 import { PicaRepairChoose } from "./PicaRepairChoose";
@@ -22,10 +22,10 @@ export class PicaRepairChooseMediator extends BasicMediator {
         this.game.emitter.off(this.key + "_querychange", this.onQueryChangeHandler, this);
         this.game.emitter.off(this.key + "_close", this.onCloseHandler, this);
         super.hide();
-    }
-
-    destroy() {
-        super.destroy();
+        this.cache.queryUnlockFurinture = false;
+        if (this.cache.roomUpgradeState) {
+            this.game.showMediator(ModuleName.PICAROOMUPGRADE_NAME, true, this.cache.roomUpgradeState);
+        }
     }
 
     protected panelInit() {
@@ -63,5 +63,8 @@ export class PicaRepairChooseMediator extends BasicMediator {
     private onViewInitComplete() {
         const uimanager = this.game.uiManager;
         uimanager.hideMed(ModuleName.BOTTOM);
+    }
+    private get cache() {
+        return this.game.getDataMgr<CacheDataManager>(DataMgrType.ChatMgr);
     }
 }

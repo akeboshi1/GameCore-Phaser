@@ -1,4 +1,5 @@
 import { PBpacket } from "net-socket-packet";
+import { BaseDataConfigManager } from "picaWorker";
 import { op_client } from "pixelpai_proto";
 import { EventType, ModuleName, RoomType } from "structure";
 import { EventDispatcher, Logger } from "utils";
@@ -49,7 +50,7 @@ export class SceneDataManager extends BasePacketHandler {
     private openComposePanel(packge: PBpacket) {
         const content: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_CRAFT_SKILLS = packge.content;
         const list = [];
-        const config = <any>this.game.configManager;
+        const config = <BaseDataConfigManager>this.game.configManager;
 
         packge.content.skills.forEach((skill) => {
             const sk = config.getSkill(skill.skill.id);
@@ -143,9 +144,9 @@ export class SceneDataManager extends BasePacketHandler {
     }
     private onUnlockDoneHandler(packge: PBpacket) {
         const content: op_client.OP_VIRTUAL_WORLD_REQ_CLIENT_UNLOCK_DONE = packge.content;
-        const ele = (<any>this.game.configManager).getElementData(content.configId);
+        const item = (<BaseDataConfigManager>this.game.configManager).getItemBaseByID(content.configId);
         const config = (<any>this.game.configManager);
-        const group = config.getFurnitureGroupBySN(ele.sn);
+        const group = config.getFurnitureGroupBySN(item.sn);
         if (group)
             this.game.emitter.emit(EventType.SCENE_SHOW_UI, ModuleName.PICAREPAIRCHOOSE_NAME, { id: content.eid, group });
     }
@@ -178,7 +179,7 @@ export class SceneDataManager extends BasePacketHandler {
     }
 
     private syncItemBases(items: op_client.ICountablePackageItem[]) {
-        const config = <any>this.game.configManager;
+        const config = <BaseDataConfigManager>this.game.configManager;
         for (const item of items) {
             config.synItemBase(item);
         }

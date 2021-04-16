@@ -1,12 +1,12 @@
-import { NineSliceButton, GameGridTable, GameScroller, NineSlicePatch, ClickEvent } from "apowophaserui";
+import { NineSliceButton, GameGridTable, GameScroller, Button, NineSlicePatch, ClickEvent } from "apowophaserui";
 import { ButtonEventDispatcher, Render, TextButton, UiManager } from "gamecoreRender";
-import { DetailDisplay, ItemButton } from "../../ui";
-import { UIAtlasName } from "../../../res";
+import { CommonBackground, DetailDisplay, ImageValue, ItemButton, UITools } from "picaRender";
+import { UIAtlasName } from "picaRes";
 import { ModuleName } from "structure";
 import { Font, Handler, i18n, UIHelper, Url } from "utils";
-import { op_client } from "pixelpai_proto";
+import { op_client, op_def, op_pkt_def } from "pixelpai_proto";
 import { PicaBasePanel } from "../pica.base.panel";
-import { CommonBackground, ImageValue } from "../../ui";
+import { ICountablePackageItem } from "picaStructure";
 export class PicaRecastePanel extends PicaBasePanel {
   private mCloseBtn: ButtonEventDispatcher;
   private mBackground: CommonBackground;
@@ -378,12 +378,9 @@ class RecasteDisplayPanel extends Phaser.GameObjects.Container {
     this.starvalue.setText(data.grade + "");
   }
 
-  public setRecasteTargetData(data: op_client.ICountablePackageItem) {
-    this.recasteTarget.displayLoading("loading_ui", Url.getUIRes(this.dpr, "loading_ui/loading_ui.png"), Url.getUIRes(this.dpr, "loading_ui/loading_ui.json"), this.dpr / this.zoom);
-    const content = new op_client.OP_VIRTUAL_WORLD_RES_CLIENT_MARKET_QUERY_PACKAGE_ITEM_RESOURCE();
-    content.display = data.animationDisplay;
-    content.animations = data.animations;
-    this.recasteTarget.loadDisplay(content);
+  public setRecasteTargetData(data: ICountablePackageItem) {
+    const detail = data["elepi"];
+    UITools.showDetailDisplay({ display: this.recasteTarget, dpr: this.dpr, data: detail, render: this.render, sn: data.sn, itemid: data.id, serialize: data.serializeString });
     this.starLevelImg.setFrame("Recast_star_big_" + data.grade);
     this.nameTex.text = data.name || data.shortName;
     this.starLevelImg.visible = true;

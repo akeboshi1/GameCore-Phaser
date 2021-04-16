@@ -9,6 +9,8 @@ export class CacheDataManager extends BaseHandler {
     public gallery: op_client.OP_CLIENT_REQ_VIRTUAL_WORLD_PKT_UPDATE_GALLERY;
     public doneMissionIdList: number[];
     public isSurveyStatus: boolean = false;
+    public queryUnlockFurinture: boolean = false;
+    public roomUpgradeState: any;
     private mBagCategory: Map<number, any> = new Map();
     private furiRecasteMap: Map<string, any> = new Map();
     private mChaptersMap: Map<number, any> = new Map();

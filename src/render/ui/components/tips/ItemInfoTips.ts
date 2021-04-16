@@ -10,6 +10,7 @@ export class ItemInfoTips extends Phaser.GameObjects.Container {
     private fullHide: boolean = true;
     private invalidArea: Phaser.Geom.Rectangle;
     private callback: Handler;
+    private listenType: string;
     constructor(scene: Phaser.Scene, width: number, height: number, key: string, bg: string, dpr: number, config?: IPatchesConfig) {
         super(scene);
         this.setSize(width, height);
@@ -21,7 +22,11 @@ export class ItemInfoTips extends Phaser.GameObjects.Container {
             right: 15 * this.dpr,
             bottom: 15 * this.dpr
         };
+        this.listenType = "pointerdown";
         this.create(bg);
+    }
+    public setListenType(event: string) {
+        this.listenType = event || "pointerdown";
     }
     public setInvalidArea(invalidArea?: Phaser.Geom.Rectangle) {
         this.fullHide = true;
@@ -43,7 +48,7 @@ export class ItemInfoTips extends Phaser.GameObjects.Container {
     }
     public hide() {
         if (this.fullHide && this.visible) {
-            this.scene.input.off("pointerdown", this.onHideHandler, this);
+            this.scene.input.off(this.listenType, this.onHideHandler, this);
         }
         this.visible = false;
         if (this.callback) this.callback.run();
@@ -51,7 +56,7 @@ export class ItemInfoTips extends Phaser.GameObjects.Container {
 
     public show() {
         if (this.fullHide && !this.visible) {
-            this.scene.input.on("pointerdown", this.onHideHandler, this);
+            this.scene.input.on(this.listenType, this.onHideHandler, this);
         }
         this.visible = true;
     }

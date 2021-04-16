@@ -111,3 +111,5 @@ export * from "./ui/PicaSurvey/PicaSurveyMediator";
 export * from "./ui/PicaSceneNavigation/PicaSceneNavigation";
 export * from "./ui/PicaSceneNavigation/PicaSceneNavigationMediator";
 export * from "./room";
+export * from "./ui/PicaMail/PicaMail";
+export * from "./ui/PicaMail/PicaMailMediator";

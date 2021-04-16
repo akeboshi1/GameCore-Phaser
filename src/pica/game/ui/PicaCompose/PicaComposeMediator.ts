@@ -93,11 +93,9 @@ export class PicaComposeMediator extends BasicMediator {
                 item.productDes = product.des;
                 item.productName = product.name;
                 item.productSource = product.source;
-                item.productAnimations = product.animations;
-                item.productDisplay = product.animationDisplay;
+                item["item"] = product;
                 if (item.product.suitType) {
                     const dataAvatar: any = AvatarSuitType.createAvatarBySn(product.suitType, product.sn, product.slot, product.tag, product.version, curAvatar);
-                    // const dataAvatar: any = AvatarSuitType.createHasBaseAvatarBySn(product.suitType, product.sn, product.slot, product.tag, product.version);
                     item.productAvatar = dataAvatar;
                 }
             }

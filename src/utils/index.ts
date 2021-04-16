@@ -29,3 +29,4 @@ export * from "./time.utils";
 export * from "./stringUtils";
 export * from "./object.assign";
 export * from "./uiUtil";
+export * from "./http.load.manager";
