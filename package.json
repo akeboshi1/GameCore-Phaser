@@ -1,7 +1,8 @@
 {
   "name": "game-core",
   "version": "1.0.631",
-  "main": "release/js/renderPeer.js",
+  "main": "js/renderPeer.js",
+  "types": "types/index.d.ts",
   "scripts": {
     "dev": "webpack-dev-server --mode development",
     "up": "yarn upgrade game-capsule && yarn upgrade webworker-rpc && yarn upgrade tooqinggamephaser && yarn upgrade tooqingmatter-js && yarn upgrade sort-display-object && yarn upgrade net-socket-packet",

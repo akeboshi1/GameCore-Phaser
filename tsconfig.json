@@ -11,7 +11,7 @@
     ],
     "declaration": true,
     "sourceMap": true,
-    "outDir": "types",
+    "outDir": "release/types",
     "typeRoots": [
       "node_modules/@types",
       "node_modules/apowophaserui/types"
