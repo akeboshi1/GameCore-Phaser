@@ -140,10 +140,13 @@ export class HttpService {
 
     /**
      * 上传人物头像
-     * @param file
+     * @param url
      */
-    uploadHeadImage(file: string) {
-        return this.post("update_blob", { file });
+    uploadHeadImage(url: string) {
+        return this.post("update_blob", { file: url });
+    }
+    uploadDBTexture(key: string, url: string, json: string) {
+
     }
 
     userHeadsImage(uids: string[]) {
