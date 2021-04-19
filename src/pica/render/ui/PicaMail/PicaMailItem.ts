@@ -82,6 +82,7 @@ export class PicaMailItem extends Phaser.GameObjects.Container {
         this.setTextLimit(this.mailSender, `${i18n.t("mail.sender")}${data.senderName}`);
         this.setMailState(data.hasRead);
         this.expirationTime.setTimeData(data.sentTime, data.expireTime, data.hasRead);
+        if (this.mIsExtend) this.setExtendMailData(data);
     }
 
     public setMailState(read: boolean) {
@@ -128,7 +129,7 @@ export class PicaMailItem extends Phaser.GameObjects.Container {
             this.mExtend.setHandler(this.send);
             this.add(this.mExtend);
         }
-        this.mExtend.setItemData(this.mailData);
+        this.setExtendMailData(this.mailData);
         this.mExtend.visible = true;
         this.height = this.content.height + this.mExtend.height + 3 * this.dpr;
         this.content.y = -this.height * 0.5 + this.content.height * 0.5;
@@ -139,11 +140,15 @@ export class PicaMailItem extends Phaser.GameObjects.Container {
         this.bg.visible = false;
         this.extendBg.resize(this.extendBg.width, this.height);
         this.expirationTime.visible = false;
-        if (this.mailData.attachments) this.mailButton.visible = true;
-        else this.mailButton.visible = false;
         this.setMailState(true);
         this.expirationTime.clearTimer();
+    }
+
+    private setExtendMailData(mailData: op_client.PKT_MAIL_DATA) {
+        this.mExtend.setItemData(mailData);
         if (!this.mailData.hasRead) this.send.runWith(["readmail", this.mailData.id]);
+        if (this.mailData.attachments) this.mailButton.visible = true;
+        else this.mailButton.visible = false;
     }
 
     private closeExtend() {

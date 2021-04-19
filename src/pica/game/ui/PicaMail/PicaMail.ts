@@ -63,6 +63,6 @@ export class PicaTask extends BasicModel {
 
     private onRetMailList(packet: PBpacket) {
         const content: op_client.OP_CLIENT_REQ_VIRTUAL_WORLD_PKT_UPDATE_MAILS_DATA = packet.content;
-        this.event.emit(ModuleName.PICATASK_NAME + "_retmaillist", content);
+        this.event.emit(ModuleName.PICAMAIL_NAME + "_retmaillist", content);
     }
 }

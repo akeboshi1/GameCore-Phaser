@@ -3,7 +3,7 @@ import { ConnectionService } from "lib/net/connection.service";
 import { PBpacket } from "net-socket-packet";
 import { op_client, op_virtual_world, op_def } from "pixelpai_proto";
 
-export class PicaHouse extends BasicModel {
+export class PicaRoom extends BasicModel {
     constructor(game: Game) {
         super(game);
         this.register();
