@@ -152,7 +152,6 @@ export class MotionManager {
                 this.movePath(pointer.worldX / this.render.scaleRatio, pointer.worldY / this.render.scaleRatio, 0, [new LogicPos(pointer.worldX / this.scaleRatio, pointer.worldY / this.scaleRatio)]);
             }
         }
-        Logger.getInstance().log("onPointerUp motion===>", pointer);
         this.clearGameObject();
     }
 
@@ -184,7 +183,6 @@ export class MotionManager {
     protected onPointeroutHandler(pointer) {
         if (!this.isRunning) return;
         if (this.render.guideManager.canInteractive()) return;
-        Logger.getInstance().log("pointerout ===>",);
         this.isHolding = false;
         this.scene.input.off("pointermove", this.onPointerMoveHandler, this);
         const position = this.getPreUserPos(pointer);

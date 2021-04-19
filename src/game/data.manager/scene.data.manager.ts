@@ -8,7 +8,7 @@ import { DataMgrType } from "./dataManager";
 
 export class SceneDataManager extends BasePacketHandler {
     private mCurRoom: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_EDIT_MODE_ROOM_INFO;
-    // private isShowMainui: boolean = false;
+    private rewardTipCaches: any[];
     private mRoomID;
 
     constructor(game: Game, event?: EventDispatcher) {
@@ -41,7 +41,13 @@ export class SceneDataManager extends BasePacketHandler {
     }
 
     private onReAwardTipsHandler(packet: PBpacket) {
-        this.game.showMediator(ModuleName.PICAREWARDTIP_NAME, true, packet.content);
+        const config = <BaseDataConfigManager>this.game.configManager;
+        if (config.initialize) {
+            this.game.showMediator(ModuleName.PICAREWARDTIP_NAME, true, packet.content);
+        } else {
+            this.rewardTipCaches = this.rewardTipCaches || [];
+            this.rewardTipCaches.push(packet);
+        }
         // this.mEvent.emit("showAward", packet.content);
     }
 
@@ -170,6 +176,12 @@ export class SceneDataManager extends BasePacketHandler {
             this.mEvent.emit(EventType.SCENE_SHOW_UI, ModuleName.PICAEXPLORELOG_NAME);
         //     this.isShowMainui = true;
         // }
+        if (this.rewardTipCaches && this.rewardTipCaches.length > 0) {
+            for (const tips of this.rewardTipCaches) {
+                this.game.showMediator(ModuleName.PICAREWARDTIP_NAME, true, tips.content);
+            }
+            this.rewardTipCaches = undefined;
+        }
     }
 
     private onSceneChangeHandler() {

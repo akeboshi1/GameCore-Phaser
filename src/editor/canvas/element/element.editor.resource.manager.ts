@@ -1,9 +1,8 @@
-import Atlas from "../../utils/atlas";
 import * as path from "path";
-import IFrame from "../../utils/iframe";
-import { MaxRectsPacker } from "maxrects-packer";
-import { ElementEditorEmitType } from "./element.editor.canvas";
-import { Logger } from "structure";
+import {MaxRectsPacker} from "maxrects-packer";
+import {ElementEditorEmitType} from "./element.editor.canvas";
+import {Logger} from "utils";
+import {Atlas} from "structure";
 
 export const WEB_HOME_PATH: string = "https://osd.tooqing.com/";
 export const SPRITE_SHEET_KEY: string = "ELEMENT_EDITOR_SPRITE_SHEET_KEY";
@@ -111,7 +110,7 @@ export default class ElementEditorResourceManager {
                 packer.bins.forEach((bin) => {
                     bin.rects.forEach((rect) => {
                         canvas.drawFrame(rect.data.name, "__BASE", rect.x, rect.y);
-                        atlas.addFrame(this.getFrame(rect));
+                        atlas.addFrame(rect.data.name, rect);
                     });
                 });
 
@@ -180,17 +179,6 @@ export default class ElementEditorResourceManager {
     public destroy() {
         this.clearResource();
         this.mResourcesChangeListeners.length = 0;
-    }
-
-    private getFrame(rect): IFrame {
-        return {
-            filename: rect.data.name,
-            frame: { x: rect.x, y: rect.y, w: rect.width, h: rect.height },
-            rotated: false,
-            trimmed: false,
-            spriteSourceSize: { x: 0, y: 0, w: rect.width, h: rect.height },
-            sourceSize: { w: rect.width, h: rect.height }
-        };
     }
 
     private imageLoaded() {

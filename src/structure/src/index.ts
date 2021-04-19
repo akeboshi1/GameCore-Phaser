@@ -47,3 +47,6 @@ export * from "./size";
 export * from "./sort.rectangle";
 export { TimerCountDown } from "./TimerCountDown";
 export { RENDER_PEER, MAIN_WORKER, MAIN_WORKER_URL, PHYSICAL_WORKER, PHYSICAL_WORKER_URL } from "./worker.name";
+export * from "./room.type";
+export * from "./LayerName";
+export * from "./atlas";

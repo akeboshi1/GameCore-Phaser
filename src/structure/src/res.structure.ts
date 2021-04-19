@@ -14,9 +14,11 @@ export class UIHelper {
     public static get threeGreenNormal() {
         return ["butt_green_left", "butt_green_middle", "butt_green_right"];
     }
+
     public static get threeRedNormal() {
         return ["butt_red_left", "butt_red_middle", "butt_red_right"];
     }
+
     public static get threeYellowNormal() {
         return ["butt_yellow_left", "butt_yellow_middle", "butt_yellow_right"];
     }
@@ -24,9 +26,11 @@ export class UIHelper {
     public static get threeGreenSmall() {
         return ["butt_green_left_s", "butt_green_middle_s", "butt_green_right_s"];
     }
+
     public static get threeRedSmall() {
         return ["butt_red_left_s", "butt_red_middle_s", "butt_red_right_s"];
     }
+
     public static get threeYellowSmall() {
         return ["butt_yellow_left_s", "butt_yellow_middle_s", "butt_yellow_right_s"];
     }
@@ -34,9 +38,11 @@ export class UIHelper {
     public static get threeGreenBig() {
         return ["butt_green_left_b", "butt_green_middle_b", "butt_green_right_b"];
     }
+
     public static get threeRedBig() {
         return ["butt_red_left_b", "butt_red_middle_b", "butt_red_right_b"];
     }
+
     public static get threeYellowBig() {
         return ["butt_yellow_left_b", "butt_yellow_middle_b", "butt_yellow_right_b"];
     }
@@ -48,6 +54,7 @@ export class UIHelper {
             color
         };
     }
+
     public static colorNumberStyle(color: string, fontSize: number) {
         return {
             fontSize,
@@ -55,6 +62,7 @@ export class UIHelper {
             color
         };
     }
+
     public static titleYellowStyle_m(dpr, size: number = 20) {
         return {
             fontSize: size * dpr,
@@ -70,6 +78,7 @@ export class UIHelper {
             color: "#000000"
         };
     }
+
     public static whiteStyle(dpr, size: number = 12) {
         return {
             fontSize: size * dpr,
@@ -77,6 +86,7 @@ export class UIHelper {
             color: "#ffffff"
         };
     }
+
     public static brownishStyle(dpr, size: number = 12) {
         return {
             fontSize: size * dpr,
@@ -84,6 +94,7 @@ export class UIHelper {
             color: "#996600"
         };
     }
+
     public static yellowStyle(dpr, size: number = 12) {
         return {
             fontSize: size * dpr,
@@ -91,6 +102,7 @@ export class UIHelper {
             color: "#ffd136"
         };
     }
+
     public static redStyle(dpr, size: number = 12) {
         return {
             fontSize: size * dpr,
@@ -106,6 +118,7 @@ export class UIHelper {
             color: "#2B4BB5"
         };
     }
+
     public static background_w(dpr: number) {
         return {
             left: 50 * dpr,
@@ -114,6 +127,7 @@ export class UIHelper {
             bottom: 95 * dpr
         };
     }
+
     public static background_w_s(dpr: number) {
         return {
             left: 50 * dpr,
@@ -122,6 +136,7 @@ export class UIHelper {
             bottom: 70 * dpr
         };
     }
+
     public static background_n(dpr: number) {
         return {
             left: 30 * dpr,
@@ -161,7 +176,12 @@ export class UIHelper {
     public static createSprite(scene, key: string, animkey: string, frame: string, indexs: number[], frameRate: number = 30, repeat = 0, compl?: Handler) {
         const sprite = scene.make.sprite({ key, frame: frame + "1" });
         sprite.visible = false;
-        const anima: any = scene.anims.create({ key: animkey, frames: scene.anims.generateFrameNames(key, { prefix: frame + "", start: indexs[0], end: indexs[1] }), frameRate, repeat });
+        const anima: any = scene.anims.create({
+            key: animkey,
+            frames: scene.anims.generateFrameNames(key, {prefix: frame + "", start: indexs[0], end: indexs[1]}),
+            frameRate,
+            repeat
+        });
         anima.removeAllListeners();
         anima.on("complete", () => {
             sprite.visible = false;
@@ -231,6 +251,7 @@ export class UIHelper {
         });
         return tweenY;
     }
+
     public static playtPosXTween(scene: any, obj: any, from: number, to: number, duration: number = 500, ease: string = "Bounce.easeOut", delay?: number, compl?: Handler, update?: Handler) {
         const onUpdate = update ? (cope: any, param: any) => {
             if (update) update.runWith(param.value);
@@ -277,6 +298,7 @@ export class UIHelper {
         });
         return tweenAlpha;
     }
+
     public static playScaleTween(scene: any, obj: any, from: number, to: number, duration: number = 500, ease = "Linear", delay?: number, compl?: Handler, update?: Handler) {
         const onUpdate = update ? (cope: any, param: any) => {
             if (update) update.runWith(param.value);

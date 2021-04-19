@@ -549,13 +549,12 @@ class EditorDragonbonesDisplay extends BaseDragonbonesDisplay {
         super(scene);
 
         this.resourceName = resName;
-        this.isRenderTexture = true;
         this.uuid = EditorDragonbonesDisplay.GenerateCount ++;
     }
 
-    protected generateReplaceTextureKey(): string {
-        return super.generateReplaceTextureKey() + "_editor_" + this.resourceName + "_" + this.uuid;
-    }
+    // protected generateReplaceTextureKey(): string {
+    //     return super.generateReplaceTextureKey() + "_editor_" + this.resourceName + "_" + this.uuid;
+    // }
 
     protected get localResourceRoot(): string {
         return `./resources_v${version}/`;
