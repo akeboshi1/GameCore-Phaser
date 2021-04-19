@@ -27,6 +27,7 @@ export class UIAtlasName {
     public static survey = "survey";
     public static mail = "mail";
     public static cooking = "cooking";
+    public static room_info = "room_information";
     public static jsonUrl(name: string) {
         return name + ".json";
     }

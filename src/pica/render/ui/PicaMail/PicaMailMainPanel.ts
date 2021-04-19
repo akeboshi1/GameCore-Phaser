@@ -8,7 +8,6 @@ import { PicaItemTipsPanel } from "../SinglePanel/PicaItemTipsPanel";
 import { PicaMailPanel } from "./PicaMailPanel";
 
 export class PicaMailMainPanel extends Phaser.GameObjects.Container {
-    public mailItems: PicaMailItem[] = [];
     private gameScroller: GameScroller;
     private curMailItem: PicaMailItem;
     private noMailTip: Phaser.GameObjects.Container;
@@ -16,6 +15,7 @@ export class PicaMailMainPanel extends Phaser.GameObjects.Container {
     private zoom: number;
     private send: Handler;
     private mailDatas: Map<string, op_client.PKT_MAIL_DATA> = new Map();
+    private mailItemMap: Map<string, PicaMailItem> = new Map();
     constructor(scene: Phaser.Scene, width: number, height: number, dpr: number, zoom: number, private render: Render) {
         super(scene);
         this.setSize(width, height);
@@ -32,23 +32,45 @@ export class PicaMailMainPanel extends Phaser.GameObjects.Container {
     }
 
     setMailDatas(content: any) {
-        const mails = this.syncMailDatas(content);
+        this.syncMailDatas(content);
+        if (content.isAll) {
+            const mails = Array.from(this.mailDatas.values());
+            this.setAllMailDatas(mails);
+        } else {
+            this.setUpdateMailDatas(content.list);
+        }
+    }
+
+    setAllMailDatas(mails: any[]) {
         if (mails.length === 0) {
             this.noMailTip.visible = true;
             this.gameScroller.visible = false;
             return;
         }
-        this.gameScroller.clearItems(false);
         this.noMailTip.visible = false;
         this.gameScroller.visible = true;
         if (this.curMailItem) this.curMailItem.setExtend(false);
-        this.setMailItems(content);
-        const tempitems = [];
-        for (const item of this.mailItems) {
-            if (item.visible) tempitems.push(item);
-        }
-        this.mailDatas = content;
+        this.setMailItems(mails);
         this.render.emitter.emit(PicaMailPanel.PICAMAIL_DATA);
+    }
+
+    setUpdateMailDatas(mails: op_client.PKT_MAIL_DATA[]) {
+        for (const mail of mails) {
+            if (this.mailItemMap.has(mail.id)) {
+                const item = this.mailItemMap.get(mail.id);
+                item.setMailData(mail);
+            } else {
+                const item = new PicaMailItem(this.scene, this.dpr, this.zoom);
+                item.setHandler(new Handler(this, this.onMailItemHandler));
+                this.gameScroller.addItem(item);
+                this.mailItemMap.set(mail.id, item);
+                item.setMailData(mail);
+                item.visible = true;
+                item.alpha = 1;
+                item.x = 0;
+            }
+        }
+        this.gameScroller.Sort();
     }
     syncMailDatas(content: any) {
         if (content.isAll) {
@@ -57,33 +79,33 @@ export class PicaMailMainPanel extends Phaser.GameObjects.Container {
         for (const mail of content.list) {
             this.mailDatas.set(mail.id, mail);
         }
-        return Array.from(this.mailDatas.values());
     }
     setMailItems(mailDatas: op_client.PKT_MAIL_DATA[]) {
-        for (const item of this.mailItems) {
-            const task = <PicaMailItem>item;
-            task.visible = false;
-        }
+        this.mailItemMap.forEach((value, key) => {
+            value.visible = false;
+        });
         this.framingCreateMail(mailDatas);
         this.gameScroller.Sort();
     }
 
     framingCreateMail(mails: op_client.PKT_MAIL_DATA[], length: number = 5) {
         let indexed = 0;
+        const mailitems = <PicaMailItem[]>this.gameScroller.getItemList();
         const createMails = () => {
             for (let i = 0; i < length; i++) {
                 let item: PicaMailItem;
                 const curIndexed = indexed + i;
+                const data = mails[curIndexed];
                 if (curIndexed >= mails.length) break;
-                if (curIndexed < this.mailItems.length) {
-                    item = this.mailItems[curIndexed];
+                if (curIndexed < mailitems.length) {
+                    item = mailitems[curIndexed];
                 } else {
                     item = new PicaMailItem(this.scene, this.dpr, this.zoom);
                     item.setHandler(new Handler(this, this.onMailItemHandler));
-                    this.mailItems.push(item);
+                    this.gameScroller.addItem(item);
                 }
-                this.gameScroller.addItem(item);
-                item.setMailData(mails[curIndexed]);
+                this.mailItemMap.set(data.id, item);
+                item.setMailData(data);
                 item.visible = true;
                 item.alpha = 1;
                 item.x = 0;

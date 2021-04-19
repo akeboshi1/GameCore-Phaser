@@ -1,5 +1,5 @@
 import { Button, ClickEvent, NineSliceButton } from "apowophaserui";
-import { Handler, i18n, UIHelper } from "utils";
+import {Handler, i18n, Logger, UIHelper} from "utils";
 import { AvatarSuit, AvatarSuitType, ModuleName, RunningAnimation } from "structure";
 import { UiManager, UIDragonbonesDisplay, ButtonEventDispatcher, ToggleButton } from "gamecoreRender";
 import { PicaBasePanel } from "../pica.base.panel";
@@ -207,6 +207,13 @@ export class PicaCreateRolePanel extends PicaBasePanel {
         });
         this.mediator.submit(this.mgender, ids);
 
+        this.dragonbones.save()
+            .then((saveData) => {
+                this.render.mainPeer.uploadDBTexture(saveData.key, saveData.url, saveData.json);
+            })
+            .catch((reason) => {
+                Logger.getInstance().error("save avatar error: " + reason);
+            });
         // create head icon
         const str = await this.render.editorCanvasManager.createHeadIcon(avatarSets);
         this.render.mainPeer.uploadHeadImage(str);

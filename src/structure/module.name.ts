@@ -42,7 +42,7 @@ export class ModuleName {
     public static PICAROOMLIST_NAME: string = "PicaRoomList";
     public static PICAWORK_NAME: string = "PicaWork";
     public static PICAMINECAR_NAME: string = "PicaMineCar";
-    public static PICAHOUSE_NAME: string = "PicaHouse";
+    public static PICAROOM_NAME: string = "PicaRoom";
     public static PICAMINESETTLE_NAME: string = "PicaMineSettle";
     public static PICAREWARDTIP_NAME: string = "PicaRewardTip";
     public static STORAGE_NAME: string = "Storage";
