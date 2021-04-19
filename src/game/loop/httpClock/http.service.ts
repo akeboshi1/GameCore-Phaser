@@ -1,4 +1,5 @@
 import { Game } from "../../game";
+import {Logger} from "utils";
 
 export class HttpService {
     private api_root: string;
@@ -146,7 +147,13 @@ export class HttpService {
         return this.post("update_blob", { file: url });
     }
     uploadDBTexture(key: string, url: string, json: string) {
-
+        const path = "user_avatar/texture/";
+        const imgFullName = path + key + ".png";
+        const jsonFullName = path + key + ".json";
+        return this.post("upload_file", { filename: imgFullName, blob: url })
+            .then( () => {
+                return this.post("upload_file", { filename: jsonFullName, blob: url });
+            });
     }
 
     userHeadsImage(uids: string[]) {
@@ -170,6 +177,7 @@ export class HttpService {
             method: "POST",
             headers,
         };
+        Logger.getInstance().debug("#post ", `${this.api_root}${uri}`, data);
         return fetch(`${this.api_root}${uri}`, data).then((response) => response.json());
     }
 

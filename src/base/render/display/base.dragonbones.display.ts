@@ -1,7 +1,8 @@
 import {Logger, ResUtils, Tool, Url, ValueResolver} from "utils";
 import {IAvatar, IDragonbonesModel, RunningAnimation, SlotSkin, Atlas} from "structure";
 import {BaseDisplay} from "./base.display";
-var hash = require('object-hash');
+
+var hash = require("object-hash");
 import ImageFile = Phaser.Loader.FileTypes.ImageFile;
 
 export enum AvatarSlotNameTemp {
@@ -178,7 +179,8 @@ export class BaseDragonbonesDisplay extends BaseDisplay {
         }
         this.mLoadDisplayPromise = new ValueResolver<any>();
         return this.mLoadDisplayPromise.promise(() => {
-            if (this.isRenderTextureWhenReload) {
+            if (this.isRenderTextureWhenReload && this.mNeedReplaceTexture) {
+                this.mNeedReplaceTexture = false;
                 this.mPreReplaceTextureKey = this.mReplaceTextureKey;
                 this.mReplaceTextureKey = this.generateReplaceTextureKey();
                 if (this.scene.textures.exists(this.mReplaceTextureKey)) {
@@ -228,7 +230,7 @@ export class BaseDragonbonesDisplay extends BaseDisplay {
     }
 
     // 生成合图
-    public save(): Promise<{key:string, url: string, json: string }> {
+    public save(): Promise<{ key: string, url: string, json: string }> {
         return new Promise((resolve, reject) => {
             if (this.mLoadDisplayPromise) {
                 reject("load not complete");
@@ -806,6 +808,17 @@ export class BaseDragonbonesDisplay extends BaseDisplay {
             if (this.UNCHECK_AVATAR_PROPERTY.indexOf(key) >= 0) continue;
 
             if (!preAvatar.hasOwnProperty(key)) return true;
+
+            if (typeof preAvatar[key] === "string" && typeof newAvatar[key] === "string") {
+                if (preAvatar[key] !== newAvatar[key]) return true;
+                else continue;
+            }
+
+            if (preAvatar[key].hasOwnProperty("sn") && newAvatar[key].hasOwnProperty("sn")) {
+                if (preAvatar[key].sn !== newAvatar[key].sn) return true;
+                else if (preAvatar[key].version !== newAvatar[key].version) return true;
+                else continue;
+            }
 
             if (preAvatar[key] !== newAvatar[key]) return true;
         }
