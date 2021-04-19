@@ -15,9 +15,7 @@ export class PicaTask extends BasicModel {
         const connection = this.connection;
         if (connection) {
             this.connection.addPacketListener(this);
-            this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_PKT_QUERY_QUEST_LIST, this.onRetQuestList);
-            this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_PKT_QUERY_QUEST_DETAIL, this.onRetQuestDetail);
-            this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_PKT_QUERY_QUEST_GROUP, this.onRetQuestMainGroup);
+            this.addHandlerFun(op_client.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_PKT_UPDATE_MAILS_DATA, this.onRetMailList);
         }
     }
 
@@ -39,54 +37,32 @@ export class PicaTask extends BasicModel {
         }
     }
 
-    public queryQuestList() {
-        const packet = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_PKT_QUERY_QUEST_LIST);
+    public queryMailList() {
+        const packet = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_PKT_CHECK_ALL_MAILS);
         this.connection.send(packet);
     }
 
-    public queryQuestGroup(type: op_pkt_def.PKT_Quest_Type) {
-        const packet = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_PKT_QUERY_QUEST_GROUP);
-        const content: op_virtual_world.IOP_CLIENT_REQ_VIRTUAL_WORLD_PKT_QUERY_QUEST_GROUP = packet.content;
-        content.questType = type;
-        this.connection.send(packet);
-    }
-
-    public queryGroupRewards(type: op_pkt_def.PKT_Quest_Type) {
-        const packet = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_PKT_GET_QUEST_GROUP_REWARDS);
-        const content: op_virtual_world.IOP_CLIENT_REQ_VIRTUAL_WORLD_PKT_GET_QUEST_GROUP_REWARDS = packet.content;
-        content.questType = type;
-        this.connection.send(packet);
-    }
-
-    public queryQuestDetail(id: string) {
-        const packet = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_PKT_QUERY_QUEST_DETAIL);
-        const content: op_virtual_world.OP_CLIENT_REQ_VIRTUAL_WORLD_PKT_QUERY_QUEST_DETAIL = packet.content;
+    public queryReadMail(id: string) {
+        const packet = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_PKT_READ_TARGET_MAIL);
+        const content: op_virtual_world.IOP_CLIENT_REQ_VIRTUAL_WORLD_PKT_READ_TARGET_MAIL = packet.content;
         content.id = id;
         this.connection.send(packet);
     }
 
-    public querySubmitQuest(id: string) {
-        const packet = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_PKT_SUBMIT_QUEST);
-        const content: op_virtual_world.OP_CLIENT_REQ_VIRTUAL_WORLD_PKT_SUBMIT_QUEST = packet.content;
+    public queryGetAllRewards() {
+        const packet = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_PKT_GET_ALL_ATTACHMENTS);
+        this.connection.send(packet);
+    }
+
+    public queryGetTargetMail(id: string) {
+        const packet = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_PKT_GET_TARGET_MAIL_ATTACHMENTS);
+        const content: op_virtual_world.IOP_CLIENT_REQ_VIRTUAL_WORLD_PKT_GET_TARGET_MAIL_ATTACHMENTS = packet.content;
         content.id = id;
         this.connection.send(packet);
     }
 
-    private onRetQuestList(packet: PBpacket) {
-        const content: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_QUERY_QUEST_LIST = packet.content;
-        const quests: any = CopyProtoType.copyProtoParam(content.quests);
-        this.event.emit(ModuleName.PICATASK_NAME + "_retquestlist", quests);
+    private onRetMailList(packet: PBpacket) {
+        const content: op_client.OP_CLIENT_REQ_VIRTUAL_WORLD_PKT_UPDATE_MAILS_DATA = packet.content;
+        this.event.emit(ModuleName.PICATASK_NAME + "_retmaillist", content);
     }
-
-    private onRetQuestDetail(packet: PBpacket) {
-        const content: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_QUERY_QUEST_DETAIL = packet.content;
-        const quests: any = CopyProtoType.copyProtoParam([content.quest]);
-        this.event.emit(ModuleName.PICATASK_NAME + "_retquestdetail", quests[0]);
-    }
-
-    private onRetQuestMainGroup(packet: PBpacket) {
-        const content: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_QUERY_QUEST_GROUP = packet.content;
-        this.event.emit(ModuleName.PICATASK_NAME + "_retquestgroup", content);
-    }
-
 }

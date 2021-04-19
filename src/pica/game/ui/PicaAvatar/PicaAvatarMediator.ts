@@ -24,7 +24,6 @@ export class PicaAvatarMediator extends BasicMediator {
         this.game.emitter.on(this.key + "_retpackageCategory", this.onPackageCategoryHandler, this);
         this.game.emitter.on(this.key + "_retcommodityresource", this.onQueryCommodityResourceHandler, this);
         this.game.emitter.on(this.key + "_retResetAvatar", this.onResetAvatar, this);
-        this.game.emitter.on(this.key + "_retavatarIDs", this.onDressAvatarIDS, this);
 
         this.game.emitter.on(this.key + "_getCategories", this.onGetCategoriesHandler, this);
         this.game.emitter.on(this.key + "_queryPackage", this.onQueryPackage, this);
@@ -33,13 +32,14 @@ export class PicaAvatarMediator extends BasicMediator {
         this.game.emitter.on(this.key + "_querySaveAvatar", this.onQuerySaveAvatar, this);
         this.game.emitter.on(this.key + "_queryResetAvatar", this.onQueryResetAvatar, this);
         this.game.emitter.on(this.key + "_queryDressAvatarIDS", this.queryDressAvatarIDS, this);
+        this.game.emitter.on(EventType.RETURN_DRESS_AVATAR_IDS, this.onDressAvatarIDS, this);
+
     }
 
     hide() {
         this.game.emitter.off(this.key + "_retpackageCategory", this.onPackageCategoryHandler, this);
         this.game.emitter.off(this.key + "_retcommodityresource", this.onQueryCommodityResourceHandler, this);
         this.game.emitter.off(this.key + "_retResetAvatar", this.onResetAvatar, this);
-        this.game.emitter.off(this.key + "_retavatarIDs", this.onDressAvatarIDS, this);
 
         this.game.emitter.off(this.key + "_getCategories", this.onGetCategoriesHandler, this);
         this.game.emitter.off(this.key + "_queryPackage", this.onQueryPackage, this);
@@ -48,6 +48,8 @@ export class PicaAvatarMediator extends BasicMediator {
         this.game.emitter.off(this.key + "_querySaveAvatar", this.onQuerySaveAvatar, this);
         this.game.emitter.off(this.key + "_queryResetAvatar", this.onQueryResetAvatar, this);
         this.game.emitter.off(this.key + "_queryDressAvatarIDS", this.queryDressAvatarIDS, this);
+        this.game.emitter.off(EventType.RETURN_DRESS_AVATAR_IDS, this.onDressAvatarIDS, this);
+
         super.hide();
         this.skinID = undefined;
     }
@@ -58,14 +60,14 @@ export class PicaAvatarMediator extends BasicMediator {
     }
 
     get playerData() {
-        const bag = this.bag;
+        const bag = this.userData;
         if (!bag) {
             return;
         }
-        return this.bag.playerBag;
+        return this.userData.playerBag;
     }
 
-    get bag() {
+    get userData() {
         if (!this.game.user || !this.game.user.userData) {
             return;
         }
@@ -89,13 +91,13 @@ export class PicaAvatarMediator extends BasicMediator {
     }
 
     private addLisenter() {
-        if (!this.bag) return;
+        if (!this.userData) return;
         this.game.emitter.on(EventType.PACKAGE_SYNC_FINISH, this.onSyncFinishHandler, this);
         this.game.emitter.on(EventType.PACKAGE_UPDATE, this.onUpdateHandler, this);
     }
 
     private removeLisenter() {
-        if (!this.bag) return;
+        if (!this.userData) return;
         this.game.emitter.off(EventType.PACKAGE_SYNC_FINISH, this.onSyncFinishHandler, this);
         this.game.emitter.off(EventType.PACKAGE_UPDATE, this.onUpdateHandler, this);
     }
@@ -159,7 +161,7 @@ export class PicaAvatarMediator extends BasicMediator {
 
     private onQuerySaveAvatar(avatarids: string[]) {
         if (avatarids.length === 0) return;
-        if (this.skinID) avatarids.push(this.skinID);
+       // if (this.skinID) avatarids.push(this.skinID);
         this.model.querySaveAvatar(avatarids);
     }
 
@@ -173,18 +175,21 @@ export class PicaAvatarMediator extends BasicMediator {
 
     private onDressAvatarIDS(ids: string[]) {
         //  if (this.mView)
+        const avatarDatas = [];
         for (const id of ids) {
-            const item = this.config.getItemBaseByID(id);
-            if (item.suitType === "base") {
-                this.skinID = id;
-                break;
-            }
+            let item: any = this.playerData.avatarBag.getItem(undefined, id);
+            item = item || this.config.getItemBaseByID(id);
+            // if (item.suitType === "base") {
+            //     this.skinID = id;
+            // }
+            avatarDatas.push(item);
         }
-        this.mView.setDressAvatarIds(ids);
+        this.mView.setDressAvatarIds(avatarDatas);
     }
 
     private queryDressAvatarIDS() {
-        this.model.queryDressAvatarItemIDs();
+        // this.model.queryDressAvatarItemIDs();
+        this.onDressAvatarIDS(this.userData.avatarIDs);
     }
 
     private get model(): PicaAvatar {

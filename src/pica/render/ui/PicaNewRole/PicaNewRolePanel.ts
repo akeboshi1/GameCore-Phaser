@@ -233,10 +233,10 @@ class PeopleActionContainer extends Phaser.GameObjects.Container {
             },
         });
         this.gamescroller.on("pointerup", () => {
-            this.tween.zoomOut(true);
+            if (this.tween) this.tween.zoomOut(true);
         }, this);
         this.gamescroller.on("pointerout", () => {
-            this.tween.zoomOut(true);
+            if (this.tween) this.tween.zoomOut(true);
         }, this);
         this.add(this.gamescroller);
         this.setInteractive();

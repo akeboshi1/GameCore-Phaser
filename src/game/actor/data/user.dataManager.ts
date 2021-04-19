@@ -2,7 +2,7 @@ import { ConnectionService } from "lib/net/connection.service";
 import { PacketHandler, PBpacket } from "net-socket-packet";
 import { op_client, op_virtual_world, op_pkt_def } from "pixelpai_proto";
 import { Game } from "../../game";
-import { EventType } from "structure";
+import { EventType, ModuleName } from "structure";
 import { PlayerBag } from "./player.bag";
 import { PlayerProperty } from "./player.property";
 import { SceneDataManager } from "../../data.manager/scene.data.manager";
@@ -10,6 +10,7 @@ import { DataMgrType } from "../../data.manager/dataManager";
 export class UserDataManager extends PacketHandler {
     private readonly mPlayerBag: PlayerBag;
     private readonly mProperty: PlayerProperty;
+    private mDressAvatarIDs: string[];
     constructor(private game: Game) {
         super();
         this.mPlayerBag = new PlayerBag();
@@ -17,6 +18,7 @@ export class UserDataManager extends PacketHandler {
         this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_PKT_SYNC_PACKAGE, this.onSYNC_PACKAHE);
         this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_PKT_UPDATE_PACKAGE, this.onUPDATE_PACKAGE);
         this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_PKT_PLAYER_INFO, this.onUPDATE_PLAYER_INFO);
+        this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_PKT_CURRENT_DRESS_AVATAR_ITEM_ID, this.onRetDressAvatarItemIDS);
     }
 
     public addPackListener() {
@@ -89,6 +91,9 @@ export class UserDataManager extends PacketHandler {
     get cid() {
         return this.playerProperty.cid;
     }
+    get avatarIDs() {
+        return this.mDressAvatarIDs;
+    }
 
     querySYNC_ALL_PACKAGE() {
         this.querySYNC_PACKAGE(op_pkt_def.PKT_PackageType.PropPackage);
@@ -130,5 +135,10 @@ export class UserDataManager extends PacketHandler {
             if (item.id !== "-1")
                 config.synItemBase(item);
         }
+    }
+    private onRetDressAvatarItemIDS(packet: PBpacket) {
+        const content: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_CURRENT_DRESS_AVATAR_ITEM_ID = packet.content;
+        this.mDressAvatarIDs = content.avatarItemIds;
+        this.game.emitter.emit(EventType.RETURN_DRESS_AVATAR_IDS, content.avatarItemIds);
     }
 }

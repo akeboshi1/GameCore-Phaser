@@ -44,6 +44,7 @@ export class PicaMailPanel extends PicaBasePanel {
     }
 
     onShow() {
+        if (this.tempDatas) this.setMailDatas(this.tempDatas);
     }
     public addListen() {
         if (!this.mInitialized) return;
@@ -86,21 +87,19 @@ export class PicaMailPanel extends PicaBasePanel {
     }
 
     setMailDatas(content: any) {
+        this.tempDatas = content;
+        if (!this.mInitialized) return;
         this.mainPanel.setMailDatas(content);
     }
 
     private onAllReceiveHandler() {
-
+        this.render.renderEmitter(ModuleName.PICAMAIL_NAME + "_allrewards");
     }
     private onMainPanelHandler(tag: string, data?: any) {
-        if (tag === "finish") {
-            this.render.renderEmitter(ModuleName.PICAMAIL_NAME + "_submitquest", data);
-        } else if (tag === "go") {
-            this.render.renderEmitter(ModuleName.PICAMAIL_NAME + "_querygo", data.Uinames);
-        } else if (tag === "detail") {
-            // this.render.renderEmitter(ModuleName.PICAMAIL_NAME + "_questdetail", { id: data, type: this.questType });
-        } else if (tag === "reward") {
-            //  this.render.renderEmitter(ModuleName.PICAMAIL_NAME + "_queryreward", this.questType);
+        if (tag === "readmail") {
+            this.render.renderEmitter(ModuleName.PICAMAIL_NAME + "_readmail", data);
+        } else if (tag === "getrewards") {
+            this.render.renderEmitter(ModuleName.PICAMAIL_NAME + "_getrewards", data);
         }
     }
     private onClosePanel() {
