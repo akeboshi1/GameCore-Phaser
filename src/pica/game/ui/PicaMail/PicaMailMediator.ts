@@ -14,50 +14,52 @@ export class PicaMailMediator extends BasicMediator {
     show(param?: any) {
         super.show(param);
         this.game.emitter.on(ModuleName.PICAMAIL_NAME + "_hide", this.onHideView, this);
-        this.game.emitter.on(ModuleName.PICAMAIL_NAME + "_submitquest", this.onQuerySubmitMail, this);
-        this.game.emitter.on(ModuleName.PICAMAIL_NAME + "_queryreward", this.onQueryMailReward, this);
-
-        this.game.emitter.on(ModuleName.PICAMAIL_NAME + "_retquestgroup", this.onRetQuestMailDatas, this);
+        this.game.emitter.on(ModuleName.PICAMAIL_NAME + "_readmail", this.onQueryReadMail, this);
+        this.game.emitter.on(ModuleName.PICAMAIL_NAME + "_getrewards", this.onQueryMailReward, this);
+        this.game.emitter.on(ModuleName.PICAMAIL_NAME + "_allrewards", this.onQueryAllMailRewards, this);
+        this.game.emitter.on(ModuleName.PICAMAIL_NAME + "_retmaillist", this.onRetQuestMailDatas, this);
     }
 
     hide() {
         if (!this.mView) this.mView = this.game.peer.render[ModuleName.PICAMAIL_NAME];
         super.hide();
         this.game.emitter.off(ModuleName.PICAMAIL_NAME + "_hide", this.onHideView, this);
-        this.game.emitter.off(ModuleName.PICAMAIL_NAME + "_submitquest", this.onQuerySubmitMail, this);
-        this.game.emitter.off(ModuleName.PICAMAIL_NAME + "_queryreward", this.onQueryMailReward, this);
-
-        this.game.emitter.off(ModuleName.PICAMAIL_NAME + "_retquestgroup", this.onRetQuestMailDatas, this);
+        this.game.emitter.off(ModuleName.PICAMAIL_NAME + "_readmail", this.onQueryReadMail, this);
+        this.game.emitter.off(ModuleName.PICAMAIL_NAME + "_getrewards", this.onQueryMailReward, this);
+        this.game.emitter.off(ModuleName.PICAMAIL_NAME + "_allrewards", this.onQueryAllMailRewards, this);
+        this.game.emitter.off(ModuleName.PICAMAIL_NAME + "_retmaillist", this.onRetQuestMailDatas, this);
     }
     panelInit() {
         super.panelInit();
-        // if (this.mailDatas) {
-        //     this.onRetQuestGroup(this.mailDatas);
-        //     this.mailDatas = undefined;
-        // }
-        this.onRetQuestMailDatas(this.mailDatas);
+        this.queryMailList();
     }
     private onHideView() {
         this.hide();
     }
 
-    private onQueryMailReward(type: number) {
-        this.mModel.queryGroupRewards(type);
+    private onQueryMailReward(id: string) {
+        this.mModel.queryGetTargetMail(id);
     }
-    private onQuerySubmitMail(id: string) {
-        this.mModel.querySubmitQuest(id);
+    private onQueryReadMail(id: string) {
+        this.mModel.queryReadMail(id);
+    }
+
+    private onQueryAllMailRewards() {
+        this.mModel.queryGetAllRewards();
+    }
+    private queryMailList() {
+        this.mModel.queryMailList();
     }
 
     private onRetQuestMailDatas(content: any) {
-        content = this.getTestMails();
+        const list = content.list;
         const configMgr = <BaseDataConfigManager>this.game.configManager;
-        for (const temp of content) {
-            if (temp.rewards) {
-                configMgr.getBatchItemDatas(temp.rewards);
+        for (const temp of list) {
+            if (temp.attachments ) {
+                configMgr.getBatchItemDatas(temp.attachments );
             }
         }
-        if (this.mView) this.mView.setMailDatas(content);
-        else this.mailDatas = content;
+        this.mView.setMailDatas(content);
     }
 
     private getTestMails() {

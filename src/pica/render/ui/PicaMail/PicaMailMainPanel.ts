@@ -11,11 +11,11 @@ export class PicaMailMainPanel extends Phaser.GameObjects.Container {
     public mailItems: PicaMailItem[] = [];
     private gameScroller: GameScroller;
     private curMailItem: PicaMailItem;
-    private notaskTip: Phaser.GameObjects.Container;
+    private noMailTip: Phaser.GameObjects.Container;
     private dpr: number;
     private zoom: number;
     private send: Handler;
-    private mailDatas: any[];
+    private mailDatas: Map<string, op_client.PKT_MAIL_DATA> = new Map();
     constructor(scene: Phaser.Scene, width: number, height: number, dpr: number, zoom: number, private render: Render) {
         super(scene);
         this.setSize(width, height);
@@ -30,14 +30,16 @@ export class PicaMailMainPanel extends Phaser.GameObjects.Container {
     refreshMask() {
         this.gameScroller.refreshMask();
     }
-    setMailDatas(content: any[]) {
-        this.gameScroller.clearItems(false);
-        if (content.length === 0) {
-            this.notaskTip.visible = true;
+
+    setMailDatas(content: any) {
+        const mails = this.syncMailDatas(content);
+        if (mails.length === 0) {
+            this.noMailTip.visible = true;
             this.gameScroller.visible = false;
             return;
         }
-        this.notaskTip.visible = false;
+        this.gameScroller.clearItems(false);
+        this.noMailTip.visible = false;
         this.gameScroller.visible = true;
         if (this.curMailItem) this.curMailItem.setExtend(false);
         this.setMailItems(content);
@@ -48,40 +50,25 @@ export class PicaMailMainPanel extends Phaser.GameObjects.Container {
         this.mailDatas = content;
         this.render.emitter.emit(PicaMailPanel.PICAMAIL_DATA);
     }
-
-    setTaskDetail(quest: op_client.PKT_Quest) {
-        if (this.curMailItem && quest) {
-            if (this.curMailItem.mailData.id === quest.id) {
-                this.curMailItem.setMailDetail(quest);
-            }
+    syncMailDatas(content: any) {
+        if (content.isAll) {
+            this.mailDatas.clear();
         }
+        for (const mail of content.list) {
+            this.mailDatas.set(mail.id, mail);
+        }
+        return Array.from(this.mailDatas.values());
     }
-
-    setMailItems(mailDatas: any[]) {
+    setMailItems(mailDatas: op_client.PKT_MAIL_DATA[]) {
         for (const item of this.mailItems) {
             const task = <PicaMailItem>item;
             task.visible = false;
         }
         this.framingCreateMail(mailDatas);
-        // for (let i = 0; i < mailDatas.length; i++) {
-        //     let item: PicaMailItem;
-        //     if (i < this.mailItems.length) {
-        //         item = this.mailItems[i];
-        //     } else {
-        //         item = new PicaMailItem(this.scene, this.dpr, this.zoom);
-        //         item.setHandler(new Handler(this, this.onMailItemHandler));
-        //         this.mailItems.push(item);
-        //     }
-        //     this.gameScroller.addItem(item);
-        //     item.setMailData(mailDatas[i]);
-        //     item.visible = true;
-        //     item.alpha = 1;
-        //     item.x = 0;
-        // }
         this.gameScroller.Sort();
     }
 
-    framingCreateMail(mails: any[], length: number = 5) {
+    framingCreateMail(mails: op_client.PKT_MAIL_DATA[], length: number = 5) {
         let indexed = 0;
         const createMails = () => {
             for (let i = 0; i < length; i++) {
@@ -111,24 +98,6 @@ export class PicaMailMainPanel extends Phaser.GameObjects.Container {
         };
         createMails();
     }
-
-    getTaskQuests(quests: op_client.IPKT_Quest[], before: op_client.IPKT_Quest[]) {
-        const tempArr = [];
-        for (const quest of quests) {
-            if (quest.stage === op_pkt_def.PKT_Quest_Stage.PKT_QUEST_STAGE_PROCESSING || quest.stage === op_pkt_def.PKT_Quest_Stage.PKT_QUEST_STAGE_FINISHED) {
-                tempArr.push(quest);
-            } else if (quest.stage === op_pkt_def.PKT_Quest_Stage.PKT_QUEST_STAGE_END) {
-                if (before) {
-                    for (const item of before) {
-                        if (item.id === quest.id && item.stage === op_pkt_def.PKT_Quest_Stage.PKT_QUEST_STAGE_FINISHED) {
-                            tempArr.push(quest);
-                        }
-                    }
-                }
-            }
-        }
-        return tempArr;
-    }
     protected init() {
         this.gameScroller = new GameScroller(this.scene, {
             x: 0,
@@ -150,13 +119,13 @@ export class PicaMailMainPanel extends Phaser.GameObjects.Container {
             }
         });
         const tipimg = this.scene.make.image({ key: UIAtlasName.uicommon, frame: "task_no" });
-        const tiptext = this.scene.make.text({ text: i18n.t("task.notasktip"), style: UIHelper.whiteStyle(this.dpr) }).setOrigin(0.5);
+        const tiptext = this.scene.make.text({ text: i18n.t("mail.nomailtip"), style: UIHelper.whiteStyle(this.dpr) }).setOrigin(0.5);
         tiptext.y = tipimg.height * 0.5 + 15 * this.dpr;
-        this.notaskTip = this.scene.make.container(undefined);
-        this.notaskTip.add([tipimg, tiptext]);
-        this.notaskTip.y = -this.height * 0.5 + 100 * this.dpr;
-        this.notaskTip.visible = false;
-        this.add([this.gameScroller, this.notaskTip]);
+        this.noMailTip = this.scene.make.container(undefined);
+        this.noMailTip.add([tipimg, tiptext]);
+        this.noMailTip.y = -this.height * 0.5 + 100 * this.dpr;
+        this.noMailTip.visible = false;
+        this.add([this.gameScroller, this.noMailTip]);
     }
 
     private onPointerUpHandler(gameobject) {
@@ -169,10 +138,10 @@ export class PicaMailMainPanel extends Phaser.GameObjects.Container {
             const extend = data.extend;
             const item = data.item;
             this.onExtendsHandler(extend, item);
-        } else if (tag === "reward") {
-            this.send.runWith(["reward", data]);
-        } else if (tag === "finish") {
-            this.send.runWith(["finish", data]);
+        } else if (tag === "getrewards") {
+            this.send.runWith(["getrewards", data]);
+        } else if (tag === "readmail") {
+            this.send.runWith(["readmail", data]);
         } else if (tag === "item") {
             this.onMaterialItemHandler(data);
         }
@@ -194,9 +163,5 @@ export class PicaMailMainPanel extends Phaser.GameObjects.Container {
     }
     private refreshMailIem() {
         if (this.curMailItem) this.curMailItem.refreshMask();
-    }
-
-    private checkBoundPoint() {
-
     }
 }

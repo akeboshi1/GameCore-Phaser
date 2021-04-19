@@ -373,7 +373,8 @@ class MainTaskItem extends Phaser.GameObjects.Container {
         }
     }
     private getFinishProgress(content: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_QUERY_QUEST_GROUP) {
-        return content.progress;
+        const progress = content.progress < 0 ? 0 : content.progress;
+        return progress;
     }
 
     private playProgressTween(from: number, to: number, max: number, duration: number) {
