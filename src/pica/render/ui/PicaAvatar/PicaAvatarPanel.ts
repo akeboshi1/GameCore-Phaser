@@ -464,6 +464,13 @@ export class PicaAvatarPanel extends PicaBasePanel {
       result.push({ "parts": suitPart[item.suitType], id: item.sn });
     }
     this.render.renderEmitter(this.key + "_querySaveAvatar", idsArr);
+    this.mDetailDisplay.saveAvatar()
+        .then((saveData) => {
+          return this.render.mainPeer.uploadDBTexture(saveData.key, saveData.url, saveData.json);
+        })
+        .catch((reason) => {
+          Logger.getInstance().error("save avatar error: " + reason);
+        });
     const str = await this.render.editorCanvasManager.createHeadIcon(result);
     this.render.mainPeer.uploadHeadImage(str);
   }

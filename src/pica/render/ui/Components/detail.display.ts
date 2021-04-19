@@ -132,6 +132,13 @@ export class DetailDisplay extends Phaser.GameObjects.Container {
     this.mDragonboneDisplay.scale = scale;
     this.scale = 1;
   }
+  saveAvatar(): Promise<{key: string, url: string, json: string }> {
+    if (!this.mDragonboneDisplay) {
+      return Promise.reject("not display");
+    }
+
+    return this.mDragonboneDisplay.save();
+  }
 
   loadUrl(url: string, data?: string) {
     this.mUrl = url;

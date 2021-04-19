@@ -322,9 +322,9 @@ export class DragonbonesDisplay extends BaseDragonbonesDisplay implements IDispl
         }]);
     }
 
-    protected generateReplaceTextureKey() {
-        return super.generateReplaceTextureKey() + (this.uuid || 0);
-    }
+    // protected generateReplaceTextureKey() {
+    //     return super.generateReplaceTextureKey() + (this.uuid || 0);
+    // }
 
     protected checkShowNickname(): boolean {
         return (this.mTitleMask & TitleMask.TQ_NickName) > 0;
