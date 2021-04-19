@@ -4,7 +4,6 @@ export { load, loadArr } from "./http";
 export { Algorithm } from "./algorithm";
 export * from "./copy.prototype";
 export * from "./promise";
-export * from "./time.utils";
 export * from "./stringUtils";
 export * from "./object.assign";
 export * from "./uiUtil";

@@ -1,4 +1,4 @@
-import { i18n } from "../structure/i18n";
+import { i18n } from "./i18n";
 
 export class TimeUtils {
     static getDataFormat(time: number, haveday: boolean, color?: string) {

@@ -163,11 +163,11 @@ export class UIHelper {
         sprite.visible = false;
         const anima: any = scene.anims.create({ key: animkey, frames: scene.anims.generateFrameNames(key, { prefix: frame + "", start: indexs[0], end: indexs[1] }), frameRate, repeat });
         anima.removeAllListeners();
-        anima.on(Phaser.Animations.Events.ANIMATION_COMPLETE, () => {
+        anima.on("complete", () => {
             sprite.visible = false;
             if (compl) compl.run();
         }, this);
-        anima.on(Phaser.Animations.Events.ANIMATION_START, () => {
+        anima.on("animationstart", () => {
             sprite.visible = true;
         }, this);
         return sprite;
