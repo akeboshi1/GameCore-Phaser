@@ -140,7 +140,7 @@ export class UIHelper {
         };
     }
 
-    static spliceText(maxwidth: number, text: string, fontSize: number, scene: Phaser.Scene) {
+    static spliceText(maxwidth: number, text: string, fontSize: number, scene: any) {
         const mlabel = this.Text(scene);
         for (let i = 0; i < text.length; i++) {
             const temp = text.slice(0, i);
@@ -151,14 +151,14 @@ export class UIHelper {
         }
         return text;
     }
-    public static Text(scene: Phaser.Scene) {
+    public static Text(scene) {
         if (!this.mText) {
             this.mText = scene.make.text(this.whiteStyle, false);
         }
         return this.mText;
     }
 
-    public static createSprite(scene: Phaser.Scene, key: string, animkey: string, frame: string, indexs: number[], frameRate: number = 30, repeat = 0, compl?: Handler) {
+    public static createSprite(scene, key: string, animkey: string, frame: string, indexs: number[], frameRate: number = 30, repeat = 0, compl?: Handler) {
         const sprite = scene.make.sprite({ key, frame: frame + "1" });
         sprite.visible = false;
         const anima: any = scene.anims.create({ key: animkey, frames: scene.anims.generateFrameNames(key, { prefix: frame + "", start: indexs[0], end: indexs[1] }), frameRate, repeat });
@@ -303,7 +303,7 @@ export class UIHelper {
         });
         return tweenScale;
     }
-    private static mText: Phaser.GameObjects.Text;
+    private static mText: any;
 }
 
 export class Coin {
