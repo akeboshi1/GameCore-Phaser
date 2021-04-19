@@ -150,9 +150,10 @@ export class HttpService {
         const path = "user_avatar/texture/";
         const imgFullName = path + key + ".png";
         const jsonFullName = path + key + ".json";
-        return this.post("upload_file", { filename: imgFullName, blob: url })
+
+        return this.post("file_upload", { filename: jsonFullName, blob: json, type: "json" })
             .then( () => {
-                return this.post("upload_file", { filename: jsonFullName, blob: url });
+                return this.post("file_upload", { filename: imgFullName, blob: url, type: "png"});
             });
     }
 

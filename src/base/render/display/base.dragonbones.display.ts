@@ -2,7 +2,7 @@ import {Logger, ResUtils, Tool, Url, ValueResolver} from "utils";
 import {IAvatar, IDragonbonesModel, RunningAnimation, SlotSkin, Atlas} from "structure";
 import {BaseDisplay} from "./base.display";
 
-var hash = require("object-hash");
+const hash = require("object-hash");
 import ImageFile = Phaser.Loader.FileTypes.ImageFile;
 
 export enum AvatarSlotNameTemp {
@@ -173,10 +173,10 @@ export class BaseDragonbonesDisplay extends BaseDisplay {
     public load(display: IDragonbonesModel): Promise<any> {
         this.displayInfo = <IDragonbonesModel> display;
         if (!this.displayInfo) return Promise.reject("displayInfo error");
-        if (this.mLoadDisplayPromise) {
-            this.mLoadDisplayPromise.reject("load func called again");
-            this.mLoadDisplayPromise = null;
-        }
+        // if (this.mLoadDisplayPromise) {
+        //     this.mLoadDisplayPromise.reject("load func called again");
+        //     this.mLoadDisplayPromise = null;
+        // }
         this.mLoadDisplayPromise = new ValueResolver<any>();
         return this.mLoadDisplayPromise.promise(() => {
             if (this.isRenderTextureWhenReload && this.mNeedReplaceTexture) {
@@ -219,10 +219,10 @@ export class BaseDragonbonesDisplay extends BaseDisplay {
         this.displayInfo = tempDisplayInfo;
 
         if (!this.displayInfo) return Promise.reject("displayInfo error");
-        if (this.mLoadDisplayPromise) {
-            this.mLoadDisplayPromise.reject("load func called again");
-            this.mLoadDisplayPromise = null;
-        }
+        // if (this.mLoadDisplayPromise) {
+        //     this.mLoadDisplayPromise.reject("load func called again");
+        //     this.mLoadDisplayPromise = null;
+        // }
         this.mLoadDisplayPromise = new ValueResolver<any>();
         return this.mLoadDisplayPromise.promise(() => {
             this.buildDragbones();
@@ -232,10 +232,10 @@ export class BaseDragonbonesDisplay extends BaseDisplay {
     // 生成合图
     public save(): Promise<{ key: string, url: string, json: string }> {
         return new Promise((resolve, reject) => {
-            if (this.mLoadDisplayPromise) {
-                reject("load not complete");
-                return;
-            }
+            // if (this.mLoadDisplayPromise) {
+            //     reject("load not complete");
+            //     return;
+            // }
 
             const textureKey = this.generateReplaceTextureKey();
             const replaceData = this.generateReplaceTexture(textureKey);
