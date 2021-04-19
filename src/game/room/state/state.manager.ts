@@ -1,5 +1,5 @@
 import { op_def, op_client } from "pixelpai_proto";
-import { Logger } from "utils";
+import { Logger } from "structure";
 import { IRoomService } from "..";
 import { State } from "./state.group";
 

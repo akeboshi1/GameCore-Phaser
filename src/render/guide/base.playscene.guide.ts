@@ -1,5 +1,5 @@
-import { SceneName } from "structure";
-import { IPos, Tool } from "utils";
+import { IPos, SceneName } from "structure";
+import { Tool } from "utils";
 import { UiManager } from "../ui";
 import { BaseGuide } from "./base.guide";
 

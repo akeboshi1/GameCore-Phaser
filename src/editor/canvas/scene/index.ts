@@ -4,7 +4,6 @@ export * from "./editor.element.display";
 export * from "./editor.frames.display";
 export * from "./factory";
 export * from "./scene.editor.canvas";
-export * from "./tool.manager";
 export * from "./top.display";
 export * from "./connection";
 export * from "./manager";

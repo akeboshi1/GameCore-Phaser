@@ -1,4 +1,4 @@
-import { i18n } from "utils";
+import { i18n } from "structure";
 import { Game } from "../../game";
 import { HttpService } from "./http.service";
 

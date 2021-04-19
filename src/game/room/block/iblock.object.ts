@@ -1,5 +1,4 @@
-import { IPos } from "utils";
-
+import { IPos } from "structure";
 export interface IBlockObject {
 
     readonly id: number;

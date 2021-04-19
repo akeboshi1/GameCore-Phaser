@@ -1,4 +1,4 @@
-import { IPosition45Obj } from "utils";
+import { IPosition45Obj } from "structure";
 import { IBlockObject } from "../block/iblock.object";
 
 export interface IViewBlockManager {

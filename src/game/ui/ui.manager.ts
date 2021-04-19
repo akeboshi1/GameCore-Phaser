@@ -1,7 +1,6 @@
 import { PacketHandler, PBpacket } from "net-socket-packet";
 import { op_client, op_pkt_def } from "pixelpai_proto";
-import { EventType, ModuleName } from "structure";
-import { Size } from "utils";
+import { EventType, ModuleName, Size } from "structure";
 import { Game } from "../game";
 import { BasicMediator, UIType } from "./basic/basic.mediator";
 import { UILayoutType, UIMediatorType } from "./ui.mediator.type";

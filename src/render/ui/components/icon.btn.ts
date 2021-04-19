@@ -1,5 +1,6 @@
 import { Render } from "../../render";
-import { Pos, Url } from "utils";
+import { Url } from "utils";
+import { Pos } from "structure";
 
 export interface IBtnData {
     readonly name?: string;

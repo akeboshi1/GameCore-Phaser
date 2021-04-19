@@ -5,12 +5,9 @@ import { ElementManager, IElementManager } from "../element/element.manager";
 import { IElement } from "../element/element";
 import NodeType = op_def.NodeType;
 import { IRoomService, SpriteAddCompletedListener } from "../room";
-import { ISprite } from "structure";
+import { ISprite, IPos, Logger, LogicPos, IDragonbonesModel, IFramesModel } from "structure";
 import { ConnectionService } from "lib/net";
-import { IFramesModel } from "structure";
-import { IDragonbonesModel } from "structure";
 import { EmptyTerrain } from "./empty.terrain";
-import { IPos, Logger, LogicPos } from "utils";
 import { IElementStorage, Sprite } from "baseModel";
 export class TerrainManager extends PacketHandler implements IElementManager {
     public hasAddComplete: boolean = false;

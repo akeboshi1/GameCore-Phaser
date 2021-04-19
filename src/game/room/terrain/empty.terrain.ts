@@ -1,4 +1,4 @@
-import { IPos } from "utils";
+import { IPos } from "structure";
 import { BlockObject } from "../block/block.object";
 import { IRoomService } from "../room";
 

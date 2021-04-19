@@ -2,8 +2,7 @@ import { Sprite } from "baseModel";
 import { LayerEnum } from "game-capsule";
 import { PacketHandler, PBpacket } from "net-socket-packet";
 import { op_client, op_editor, op_def } from "pixelpai_proto";
-import { ISprite } from "structure";
-import { IPos, Position45 } from "utils";
+import { ISprite, IPos, Position45 } from "structure";
 import { SceneEditorCanvas } from "../scene.editor.canvas";
 
 export class EditorElementManager extends PacketHandler {
@@ -146,7 +145,7 @@ export class EditorElementManager extends PacketHandler {
             this.sceneEditor.displayObjectPool.addCache(sprite.id);
             this.taskQueue.set(sprite.id, {
                 action: "ADD",
-                sprite: new Sprite(sprite,content.nodeType),
+                sprite: new Sprite(sprite, content.nodeType),
             });
         }
 

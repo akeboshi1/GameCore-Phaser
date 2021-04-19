@@ -1,6 +1,6 @@
-import {Render} from "../../render";
-import {PlayScene} from "../../scenes/play.scene";
-import {ChatCommandInterface, IPos, IPosition45Obj, Logger, LogicPos, Position45} from "utils";
+import { Render } from "../../render";
+import { PlayScene } from "../../scenes/play.scene";
+import { ChatCommandInterface, IPos, IPosition45Obj, LogicPos, Position45 } from "structure";
 
 enum PointsShowType {
     None,// 全部不显示

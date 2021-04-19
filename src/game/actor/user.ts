@@ -4,9 +4,8 @@ import { Game } from "../game";
 import { Player } from "../room/player/player";
 import { IRoomService } from "../room/room";
 import { PlayerModel } from "../room/player/player.model";
-import { IPos, Logger } from "utils";
 import { UserDataManager } from "./data/user.dataManager";
-import { AvatarSuitType, EventType, IDragonbonesModel, IFramesModel, PlayerState, ISprite, ModuleName, SceneName } from "structure";
+import { AvatarSuitType, EventType, IDragonbonesModel, IFramesModel, PlayerState, ISprite, ModuleName, IPos, Logger } from "structure";
 import { LayerEnum } from "game-capsule";
 // import * as _ from "lodash";
 

@@ -4,8 +4,8 @@ import { op_gameconfig } from "pixelpai_proto";
 import { InputText } from "apowophaserui";
 import { BasePanel, IconBtn } from "../../components";
 import { UiManager } from "../../ui.manager";
-import { Background, Border, Logger, Size, Tool, Url } from "utils";
-import { ModuleName } from "structure";
+import { Background, Border, Tool, Url } from "utils";
+import { Logger, Size, ModuleName } from "structure";
 export class BagPanel extends BasePanel {
     public static PageMaxCount: number = 32;
     public bagSlotList: ItemSlot[];
@@ -315,7 +315,7 @@ export class BagPanel extends BasePanel {
     }
 
     private closeHandler() {
-        this.render.renderEmitter(ModuleName.BAG_NAME+"_close");
+        this.render.renderEmitter(ModuleName.BAG_NAME + "_close");
     }
 
     private onFocusHandler() {

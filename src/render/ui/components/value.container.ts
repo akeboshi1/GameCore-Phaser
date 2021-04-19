@@ -1,5 +1,5 @@
 import { Button, ClickEvent } from "apowophaserui";
-import { Font, Handler } from "utils";
+import { Font, Handler } from "structure";
 
 export class ValueContainer extends Phaser.GameObjects.Container {
     protected mText: Phaser.GameObjects.Text;

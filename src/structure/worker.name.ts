@@ -1,11 +1,3 @@
-/*
- * @Author: your name
- * @Date: 2021-04-16 17:35:37
- * @LastEditTime: 2021-04-16 17:48:35
- * @LastEditors: your name
- * @Description: In User Settings Edit
- * @FilePath: /game-core/src/structure/worker.name.ts
- */
 export const RENDER_PEER = "render";
 export const PICARENDER_PEER = "pica.render";
 export const MAIN_WORKER = "mainWorker";

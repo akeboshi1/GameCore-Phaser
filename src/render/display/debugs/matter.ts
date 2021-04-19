@@ -1,5 +1,5 @@
 import { Render } from "../../render";
-import { Logger } from "utils";
+import { Logger } from "structure";
 import { PlayScene } from "../../scenes/play.scene";
 
 export class MatterBodies {

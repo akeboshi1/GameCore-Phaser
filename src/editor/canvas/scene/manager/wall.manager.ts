@@ -1,7 +1,7 @@
 import { LayerEnum } from "game-capsule";
 import { PacketHandler, PBpacket } from "net-socket-packet";
 import { op_editor, op_def, op_client } from "pixelpai_proto";
-import { IPos } from "utils";
+import { IPos } from "structure";
 import { SceneEditorCanvas } from "../scene.editor.canvas";
 
 export class EditorWallManager extends PacketHandler {

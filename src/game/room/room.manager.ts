@@ -1,12 +1,10 @@
-import {op_client, op_def} from "pixelpai_proto";
-import {IRoomService, Room} from "./room";
-import {PacketHandler, PBpacket} from "net-socket-packet";
-import {Game} from "../game";
-import {ConnectionService} from "../../../lib/net";
-// import { Logger } from "utils";
-import {Lite} from "game-capsule";
-import {Logger} from "utils";
-import {EventType, GameState} from "structure";
+import { op_client, op_def } from "pixelpai_proto";
+import { IRoomService, Room } from "./room";
+import { PacketHandler, PBpacket } from "net-socket-packet";
+import { Game } from "../game";
+import { ConnectionService } from "../../../lib/net";
+import { Lite } from "game-capsule";
+import { EventType, GameState, Logger } from "structure";
 
 export interface IRoomManager {
     readonly game: Game | undefined;

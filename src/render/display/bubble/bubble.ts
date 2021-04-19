@@ -1,7 +1,7 @@
 import { DynamicNinepatch } from "../../ui/components/dynamic.ninepatch";
 import { BBCodeText, NineSlicePatch } from "apowophaserui";
-import { Font, Url } from "utils";
-
+import { Url } from "utils";
+import { Font } from "structure";
 export class Bubble extends Phaser.GameObjects.Container {
     private mChatContent: BBCodeText;
     private mBubbleBg: DynamicNinepatch;

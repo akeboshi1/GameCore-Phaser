@@ -1,7 +1,8 @@
 import { EditorCanvas, IEditorCanvasConfig } from "../editor.canvas";
 import { AvatarEditorDragonbone } from "./avatar.editor.dragonbone";
 import { Scene } from "tooqinggamephaser";
-import {Logger, Url} from "utils";
+import { Url } from "utils";
+import { Logger } from "structure";
 
 /**
  * api:https://dej4esdop1.feishu.cn/docs/doccn2zhhTyXaB3HYm69a0sIYhh

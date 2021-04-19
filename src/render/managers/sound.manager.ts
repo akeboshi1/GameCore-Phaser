@@ -1,6 +1,7 @@
 import { SoundField } from "apowophaserui";
-import { Logger, Url } from "utils";
+import { Url } from "utils";
 import { Render } from "../render";
+import { Logger } from "structure";
 
 export class SoundManager {
 

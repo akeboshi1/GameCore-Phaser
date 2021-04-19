@@ -2,8 +2,8 @@ import Atlas from "../../utils/atlas";
 import * as path from "path";
 import IFrame from "../../utils/iframe";
 import { MaxRectsPacker } from "maxrects-packer";
-import { ElementEditorCanvas, ElementEditorEmitType } from "./element.editor.canvas";
-import { Logger } from "utils";
+import { ElementEditorEmitType } from "./element.editor.canvas";
+import { Logger } from "structure";
 
 export const WEB_HOME_PATH: string = "https://osd.tooqing.com/";
 export const SPRITE_SHEET_KEY: string = "ELEMENT_EDITOR_SPRITE_SHEET_KEY";

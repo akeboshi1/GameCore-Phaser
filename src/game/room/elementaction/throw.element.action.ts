@@ -1,5 +1,5 @@
 import { Game } from "gamecore";
-import { Logger } from "utils";
+import { Logger } from "structure";
 export class ThrowElementAction {
     public actionTag: string = "push";
     constructor(private game: Game, private data: any, private userid: number) {

@@ -1,6 +1,6 @@
 import { DragonbonesModel } from "baseModel";
 import { BaseDragonbonesDisplay } from "baseRender";
-import { Logger } from "utils";
+import { Logger } from "structure";
 
 export class DragonbonesEditorDisplay extends BaseDragonbonesDisplay {
     constructor(scene: Phaser.Scene) {

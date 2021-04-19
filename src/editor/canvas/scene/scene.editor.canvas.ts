@@ -1,7 +1,7 @@
 import { Capsule, ElementNode, LayerEnum, MossNode, PaletteNode, SceneNode, TerrainNode } from "game-capsule";
 import { op_def, op_client } from "pixelpai_proto";
-import { IFramesModel, ISprite } from "structure";
-import { IPos, IPosition45Obj, load, Logger, LogicPos, Position45, Url } from "utils";
+import { IFramesModel, ISprite, Logger, LogicPos, Position45, IPos, IPosition45Obj } from "structure";
+import { load, Url } from "utils";
 import { EditorCanvas, IEditorCanvasConfig } from "../editor.canvas";
 import { EditorFramesDisplay } from "./editor.frames.display";
 import { EditorFactory } from "./factory";
@@ -13,7 +13,7 @@ import { EditorMossManager } from "./manager/moss.manager";
 import { EditorElementManager } from "./manager/element.manager";
 import { EditorCamerasManager } from "./manager/cameras.manager";
 import { EditorSkyboxManager } from "./manager/skybox.manager";
-import { BaseFramesDisplay, BaseLayer, GroundLayer, IRender, LayerManager, SurfaceLayer } from "baseRender";
+import { BaseLayer, GroundLayer, IRender, LayerManager, SurfaceLayer } from "baseRender";
 import { ElementStorage, Sprite } from "baseModel";
 import * as protos from "pixelpai_proto";
 import { PBpacket } from "net-socket-packet";
@@ -307,7 +307,7 @@ export class SceneEditorCanvas extends EditorCanvas implements IRender {
         //     const displayObj = pool.get(id.toString());
         //     if (displayObj) {
         this.selectElement(ids[0], false);
-                // this.selectedElement(displayObj.getDisplay());
+        // this.selectedElement(displayObj.getDisplay());
         //     }
         // }
     }
@@ -528,7 +528,7 @@ export class SceneEditorCanvas extends EditorCanvas implements IRender {
     }
 
     private onWheelHandler(pointer: Phaser.Input.Pointer) {
-        switch(this.mBrush) {
+        switch (this.mBrush) {
             case BrushEnum.Move:
             case BrushEnum.Select:
                 // 缩放地图
@@ -1043,7 +1043,7 @@ class MouseDisplayContainer extends Phaser.GameObjects.Container {
             for (const display of this.mDisplays) {
                 const flip = this.sceneEditor.calcWallFlip(x, y);
                 const ani = display.runningAnimation;
-                if (flip !== undefined &&flip !== ani.flip) {
+                if (flip !== undefined && flip !== ani.flip) {
                     ani.flip = flip;
                     display.play(ani);
                 }
@@ -1126,7 +1126,7 @@ class SelectedElementManager {
     selectElements(elements: EditorFramesDisplay[], selecting: boolean = true) {
         this.unselectedElements();
         this.mSelecedElement = elements;
-        if (elements.length < 1 ) {
+        if (elements.length < 1) {
             return;
         }
         for (const ele of elements) {
@@ -1262,7 +1262,7 @@ class SelectedElementManager {
     }
 
     private onGameobjectOutHandler(pointer: Phaser.Input.Pointer, gameobject: Phaser.GameObjects.GameObject) {
-       this.clearOverElement();
+        this.clearOverElement();
     }
 
     private clearOverElement() {

@@ -1,8 +1,7 @@
 import { Sprite } from "baseModel";
 import { BaseFramesDisplay } from "baseRender";
-import { op_def  } from "pixelpai_proto";
-import { ISprite } from "structure";
-import { LogicPos, Position45 } from "utils";
+import { op_def } from "pixelpai_proto";
+import { LogicPos, Position45, ISprite } from "structure";
 import { SceneEditorCanvas } from "./scene.editor.canvas";
 
 export class DisplayObjectPool {
@@ -19,7 +18,7 @@ export class DisplayObjectPool {
         walls: BaseFramesDisplay,
     };
 
-    constructor(private sceneEditor: SceneEditorCanvas) {}
+    constructor(private sceneEditor: SceneEditorCanvas) { }
 
     getPool(poolName: string) {
         return this[poolName];

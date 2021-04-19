@@ -3,7 +3,8 @@ import { IMoveTarget, MatterPlayerObject, MovePos } from "./matter.player.object
 import { op_def } from "pixelpai_proto";
 import { IPoint } from "game-capsule";
 import { Vector, Body } from "tooqingmatter-js";
-import { DirectionChecker, IPos, Logger, LogicPos, Tool } from "utils";
+import { Tool } from "utils";
+import { DirectionChecker, IPos, Logger, LogicPos } from "structure";
 export class MatterUserObject extends MatterPlayerObject {
     public stopBoxMove: boolean = false;
     private mTargetPoint: IMoveTarget;

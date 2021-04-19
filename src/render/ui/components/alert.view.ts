@@ -1,6 +1,6 @@
 import { Button, BBCodeText, ClickEvent } from "apowophaserui";
-import { ModuleName } from "structure";
-import { Font, i18n, UiUtils } from "utils";
+import { Font, i18n, ModuleName } from "structure";
+import { UiUtils } from "utils";
 import { MainUIScene } from "../../scenes/main.ui.scene";
 import { BaseBatchPanel } from "./base.batch.panel";
 import { UiManager } from "../ui.manager";

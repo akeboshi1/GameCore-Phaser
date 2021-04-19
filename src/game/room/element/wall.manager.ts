@@ -1,4 +1,4 @@
-import { Helpers } from "utils";
+import { Helpers } from "structure";
 import { IRoomService } from "../room";
 import { Wall } from "../wall/wall";
 import { Sprite } from "baseModel";

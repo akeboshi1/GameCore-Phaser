@@ -1,5 +1,5 @@
 import { CacheDataManager, DataMgrType } from "gamecore";
-import { EventType, ModuleName } from "structure";
+import { EventType } from "structure";
 import { ElementBaseAction } from "./element.base.action";
 
 export class PicaFurniSurveyAction extends ElementBaseAction {

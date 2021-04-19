@@ -1,5 +1,3 @@
-import { Logger } from "./log";
-
 export class ObjectAssign {
 
     /**
@@ -10,7 +8,8 @@ export class ObjectAssign {
      */
     public static excludeTagAssign(source: object, target: object, tag: string = "exclude") {
         if (!source || !target) {
-            Logger.getInstance().error("source", source, "target", target);
+            // tslint:disable-next-line:no-console
+            console.error("source", source, "target", target);
             return;
         }
         const excludes = source[tag] || target[tag];

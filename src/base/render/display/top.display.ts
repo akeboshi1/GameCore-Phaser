@@ -1,4 +1,4 @@
-import { Font } from "utils";
+import { Font } from "structure";
 
 export class TopDisplay {
     protected mFollows: Map<FollowEnum, FollowObject>;

@@ -1,5 +1,4 @@
-import { AnimationModel, AnimationQueue, Animator, AvatarSuit, AvatarSuitType, IAvatar, ISprite, RunningAnimation } from "structure";
-import { Direction, EventDispatcher, IPos, Logger, LogicPoint, LogicPos } from "utils";
+import { AnimationModel, AnimationQueue, Animator, AvatarSuit, AvatarSuitType, IAvatar, ISprite, RunningAnimation, Direction, EventDispatcher, IPos, Logger, LogicPoint, LogicPos } from "structure";
 import { op_def, op_gameconfig, op_client, op_gameconfig_01 } from "pixelpai_proto";
 import { Helpers } from "game-capsule";
 import { DragonbonesModel } from "./dragonbones.model";
@@ -373,7 +372,7 @@ export class Sprite extends EventDispatcher implements ISprite {
     }
 
     registerAnimationMap(key: string, value: string) {
-        if(!this.registerAnimation) this.registerAnimation = new Map();
+        if (!this.registerAnimation) this.registerAnimation = new Map();
         this.registerAnimation.set(key, value);
     }
 

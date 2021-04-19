@@ -1,6 +1,6 @@
 import { Sprite } from "../../../base/model";
 import { op_client } from "pixelpai_proto";
-import { LogicPos } from "utils";
+import { LogicPos } from "structure";
 export class PlayerModel extends Sprite {
     constructor(data: op_client.IActor) {
         super(data);

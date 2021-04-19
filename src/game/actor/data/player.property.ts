@@ -1,5 +1,5 @@
 import { op_client, op_pkt_def, op_def } from "pixelpai_proto";
-import { Logger } from "utils";
+import { Logger } from "structure";
 export class PlayerProperty {
     public playerInfo: op_client.IOP_VIRTUAL_WORLD_REQ_CLIENT_PKT_PLAYER_INFO;
     public nickname: string;

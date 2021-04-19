@@ -1,10 +1,8 @@
-import {op_def} from "pixelpai_proto";
-import {IElementManager} from "../element/element.manager";
-import {ISprite, PlayerState} from "structure";
-import {IPos} from "../../../utils/logic.pos";
-import {Element, IElement, InputEnable } from "../element/element";
-import {DirectionChecker, Logger} from "utils";
-import {LayerEnum} from "game-capsule";
+import { op_def } from "pixelpai_proto";
+import { IElementManager } from "../element/element.manager";
+import { ISprite, PlayerState, IPos, DirectionChecker } from "structure";
+import { Element, IElement, InputEnable } from "../element/element";
+import { LayerEnum } from "game-capsule";
 
 export class Player extends Element implements IElement {
     protected nodeType: number = op_def.NodeType.CharacterNodeType;
@@ -19,8 +17,8 @@ export class Player extends Element implements IElement {
         if (!model) {
             return;
         }
-        (<any> model).off("Animation_Change", this.animationChanged, this);
-        (<any> model).on("Animation_Change", this.animationChanged, this);
+        (<any>model).off("Animation_Change", this.animationChanged, this);
+        (<any>model).on("Animation_Change", this.animationChanged, this);
         if (!model.layer) {
             model.layer = LayerEnum.Surface;
         }
@@ -118,7 +116,7 @@ export class Player extends Element implements IElement {
 
     public setWeapon(weaponid: string) {
         if (!this.mModel || !this.mModel.avatar) return;
-        const avatar: any = {barmWeapId: {sn: weaponid, slot: "NDE5NDMwNA==", suit_type: "weapon"}};
+        const avatar: any = { barmWeapId: { sn: weaponid, slot: "NDE5NDMwNA==", suit_type: "weapon" } };
         this.model.setTempAvatar(avatar);
         this.load(this.mModel.displayInfo);
     }

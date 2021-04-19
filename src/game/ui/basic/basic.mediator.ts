@@ -1,4 +1,4 @@
-import { Logger } from "utils";
+import { Logger } from "structure";
 import { Game } from "../../game";
 import { BasicModel } from "./basic.model";
 

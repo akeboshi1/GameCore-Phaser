@@ -1,6 +1,5 @@
 import { op_client } from "pixelpai_proto";
-import { EventType } from "structure";
-import { EventDispatcher } from "utils";
+import { EventType, EventDispatcher } from "structure";
 import { Game } from "../game";
 import { BaseHandler } from "./base.handler";
 export class CacheDataManager extends BaseHandler {

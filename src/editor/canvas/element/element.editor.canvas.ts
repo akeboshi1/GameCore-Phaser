@@ -2,7 +2,8 @@ import { EditorCanvas, IEditorCanvasConfig } from "../editor.canvas";
 import ElementEditorGrids from "./element.editor.grids";
 import ElementEditorAnimations from "./element.editor.animations";
 import ElementEditorResourceManager from "./element.editor.resource.manager";
-import { Logger, Url } from "utils";
+import { Url } from "utils";
+import { Logger } from "structure";
 import ElementFramesDisplay from "./element.frames.display";
 import version from "../../../../version";
 

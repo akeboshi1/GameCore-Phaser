@@ -1,8 +1,6 @@
 import { BasicScene } from "baseRender";
 import { UiManager } from "../ui/ui.manager";
-import { SceneName } from "structure";
-import { Logger } from "utils";
-
+import { Logger, SceneName } from "structure";
 export class CreateRoleScene extends BasicScene {
   private params: any;
   constructor() {

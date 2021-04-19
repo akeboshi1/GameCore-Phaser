@@ -1,5 +1,5 @@
 import { Render } from "../../render";
-import { Pos } from "utils";
+import { Pos } from "structure";
 
 /**
  * 切换状态按钮(点击后状态改变的按钮，需要多帧资源)

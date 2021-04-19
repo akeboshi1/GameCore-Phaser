@@ -1,4 +1,4 @@
-import { IPosition45Obj } from "utils";
+import { IPosition45Obj } from "./position45";
 
 export interface ISizeChart {
     size: IPosition45Obj;

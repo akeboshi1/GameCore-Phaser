@@ -1,6 +1,6 @@
-import {ChatCommandInterface, IPosition45Obj, Logger, LogicPos } from "utils";
-import {Render} from "../../render";
-import {PlayScene} from "../../scenes";
+import { ChatCommandInterface, IPosition45Obj, Logger, LogicPos } from "structure";
+import { Render } from "../../render";
+import { PlayScene } from "../../scenes";
 
 export class SortDebugger implements ChatCommandInterface {
     public static getInstance(): SortDebugger {

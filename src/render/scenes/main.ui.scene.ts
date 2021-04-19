@@ -1,6 +1,6 @@
 import { BaseLayer } from "baseRender";
-import { Font, Size, Url } from "utils";
-import { SceneName } from "structure";
+import { Url } from "utils";
+import { Font, Size, SceneName } from "structure";
 import { RoomScene } from "./room.scene";
 
 export class MainUIScene extends RoomScene {

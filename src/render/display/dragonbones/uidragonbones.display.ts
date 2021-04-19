@@ -1,5 +1,4 @@
-import { AvatarSuit, RunningAnimation } from "structure";
-import { Handler } from "utils";
+import { AvatarSuit, RunningAnimation, Handler } from "structure";
 import { DragonbonesDisplay } from "./dragonbones.display";
 
 export class UIDragonbonesDisplay extends DragonbonesDisplay {

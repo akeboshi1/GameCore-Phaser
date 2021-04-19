@@ -1,5 +1,3 @@
-import { IPos } from "./logic.pos";
-
 export class Tool {
 
     /**
@@ -26,7 +24,7 @@ export class Tool {
      * @param fromScene 当前所在scene
      * @param pos 需要转换去scene上的position
      */
-    public static getPosByScenes(fromScene: Phaser.Scene, pos: IPos): IPos {
+    public static getPosByScenes(fromScene: Phaser.Scene, pos: any): any {
         const camera = fromScene.cameras.main;
         const px = pos.x - camera.scrollX;
         const py = pos.y - camera.scrollY;

@@ -1,6 +1,6 @@
-import { Url, Size } from "utils";
+import { Url } from "utils";
 import { BasicScene } from "baseRender";
-import { SceneName } from "structure";
+import { Size, SceneName } from "structure";
 
 export class GamePauseScene extends BasicScene {
     private bg: Phaser.GameObjects.Graphics;

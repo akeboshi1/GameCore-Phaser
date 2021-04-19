@@ -1,6 +1,6 @@
 import { ConnectionService } from "lib/net";
 import { PacketHandler } from "net-socket-packet";
-import { EventDispatcher } from "utils";
+import { EventDispatcher } from "structure";
 import { Game } from "../game";
 
 export class BasePacketHandler extends PacketHandler {

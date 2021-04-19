@@ -1,6 +1,6 @@
 import { BasicScene } from "baseRender";
-import { SceneName } from "structure";
-import { Url, Size, Logger } from "utils";
+import { Size, Logger, SceneName } from "structure";
+import { Url } from "utils";
 
 export class LoginAccountScene extends BasicScene {
     private mWorld: any;

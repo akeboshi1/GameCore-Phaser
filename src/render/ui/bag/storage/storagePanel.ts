@@ -1,5 +1,5 @@
-import { ModuleName } from "structure";
-import { Background, Border, Size, Url } from "utils";
+import { Size, ModuleName } from "structure";
+import { Background, Border, Url } from "utils";
 import { BasePanel, IconBtn } from "../../components";
 import { ItemSlot } from "../../components/item.slot";
 import { NinePatch } from "../../components/nine.patch";

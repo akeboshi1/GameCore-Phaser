@@ -1,8 +1,8 @@
-import { Font, Logger, UiUtils, Url } from "utils";
+import { UiUtils, Url } from "utils";
 import { BaseLayer, BasicScene } from "baseRender";
 import { UiManager } from "../ui";
 import { MainUIScene } from "./main.ui.scene";
-import { ModuleName, SceneName } from "structure";
+import { Font, Logger, ModuleName, SceneName } from "structure";
 import { version } from "../../../version";
 
 export class LoadingScene extends BasicScene {

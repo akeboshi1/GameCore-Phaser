@@ -1,9 +1,7 @@
-import {Logger, ResUtils} from "utils";
+import { ResUtils} from "utils";
 import version from "../../../../version";
 import {BaseDragonbonesDisplay} from "baseRender";
-import {IAvatar, IDragonbonesModel} from "structure";
-import * as stream from "stream";
-
+import {Logger,IAvatar, IDragonbonesModel} from "structure";
 export class AvatarEditorDragonbone extends Phaser.GameObjects.Container {
 
     private static readonly DRAGONBONE_NAME_DEFAULT = "bones_human01";

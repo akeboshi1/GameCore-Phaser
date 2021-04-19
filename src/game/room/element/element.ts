@@ -8,9 +8,9 @@ import {
     IDragonbonesModel,
     IFramesModel,
     ISprite,
-    PlayerState
+    PlayerState, DirectionChecker, IPos, IProjection, Logger, LogicPoint, LogicPos
 } from "structure";
-import { DirectionChecker, IPos, IProjection, Logger, LogicPoint, LogicPos, Tool } from "utils";
+import { Tool } from "utils";
 import { BlockObject } from "../block/block.object";
 import { IRoomService } from "../room";
 import { ElementStateManager } from "../state/element.state.manager";

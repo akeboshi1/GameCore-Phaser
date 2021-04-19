@@ -1,8 +1,6 @@
 import { op_def, op_gameconfig_01 } from "pixelpai_proto";
-import { Helpers } from "game-capsule";
-import { IPoint } from "game-capsule";
-import { Direction, IPos, Logger, LogicPoint, LogicPos } from "utils";
-import { AnimationQueue, Animator, IDragonbonesModel, IFramesModel, RunningAnimation } from "structure";
+import { Helpers, IPoint } from "game-capsule";
+import { AnimationQueue, Animator, IDragonbonesModel, IFramesModel, RunningAnimation, Direction, IPos, Logger, LogicPoint, LogicPos } from "structure";
 export class MatterSprite {
     public id: number;
     public pos: IPos;

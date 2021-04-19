@@ -1,5 +1,5 @@
 import { BaseCamerasManager } from "baseRender";
-import { Logger } from "utils";
+import { Logger } from "structure";
 import { Render } from "../render";
 export class CamerasManager extends BaseCamerasManager {
     readonly MINI_VIEW_SIZE = 50;

@@ -1,5 +1,5 @@
-import { Logger, ResUtils, Tool, Url, ValueResolver } from "utils";
-import { IAvatar, IDragonbonesModel, RunningAnimation, SlotSkin } from "structure";
+import { ResUtils, Tool, Url, ValueResolver } from "utils";
+import { Logger, IAvatar, IDragonbonesModel, RunningAnimation, SlotSkin } from "structure";
 import { BaseDisplay } from "./base.display";
 
 export enum AvatarSlotNameTemp {

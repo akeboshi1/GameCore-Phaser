@@ -1,5 +1,5 @@
 import { Game } from "../game";
-import { ConnectionService } from "lib/net";
+import { ConnectionService } from "../../../lib/net";
 import { PacketHandler, PBpacket } from "net-socket-packet";
 import { op_client } from "pixelpai_proto";
 export class SoundWorkerManager extends PacketHandler {

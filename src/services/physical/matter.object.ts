@@ -4,8 +4,8 @@ import { MatterWorld } from "./matter.world";
 import { MoveData, MovePos } from "./matter.player.object";
 import { op_client } from "pixelpai_proto";
 import { MatterSprite } from "./matter.sprite";
-import { IPos, IPosition45Obj, LogicPos, Position45, Tool } from "utils";
-import { PlayerState } from "structure";
+import { Tool } from "utils";
+import { IPos, IPosition45Obj, LogicPos, Position45, PlayerState } from "structure";
 export interface IMatterObject {
     id: number;
 

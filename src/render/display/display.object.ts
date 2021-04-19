@@ -1,5 +1,5 @@
-import { IPos, IProjection } from "utils";
-import { ElementStateType } from "structure";
+
+import { ElementStateType, IPos, IProjection } from "structure";
 import { IBaseDisplay } from "display";
 export interface IDisplayObject extends IBaseDisplay {
     id: number;

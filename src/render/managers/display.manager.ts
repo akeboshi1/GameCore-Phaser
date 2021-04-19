@@ -1,13 +1,13 @@
-import { Handler, IPos, IPosition45Obj, Logger, LogicPos, Tool } from "utils";
+import { Tool } from "utils";
 import { SceneManager } from "../scenes/scene.manager";
 import { FramesDisplay } from "../display/frames/frames.display";
 import { PlayScene } from "../scenes/play.scene";
 import { DragonbonesDisplay } from "../display/dragonbones/dragonbones.display";
-import {DisplayField, ElementStateType, IScenery, LayerName} from "structure";
 import { Render } from "../render";
-import { IFramesModel } from "structure";
-import { IDragonbonesModel } from "structure";
-import { RunningAnimation } from "structure";
+import {
+    RunningAnimation, IDragonbonesModel, DisplayField, ElementStateType,
+    IScenery, LayerName, Handler, IPos, IPosition45Obj, Logger, LogicPos, IFramesModel
+} from "structure";
 import { op_def } from "pixelpai_proto";
 import { MatterBodies } from "../display/debugs/matter";
 import { ServerPosition } from "../display/debugs/server.pointer";

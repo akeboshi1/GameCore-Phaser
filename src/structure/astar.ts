@@ -1,8 +1,8 @@
-import {Grid, AStarFinder} from "pathfinding";
-import {ISizeChart} from "structure";
-import {Logger} from "./log";
-import {IPos, LogicPos} from "./logic.pos";
-import {Position45} from "./position45";
+import { Grid, AStarFinder } from "pathfinding";
+import { ISizeChart } from "./size.chart";
+import { Logger } from "./log";
+import { IPos, LogicPos } from "./logic.pos";
+import { Position45 } from "./position45";
 
 export class AStar {
     private grid: Grid;
@@ -55,7 +55,7 @@ export class AStar {
 
         const result = [];
         const miniSize = this.sizeChart.miniSize;
-        const {rows, cols} = miniSize;
+        const { rows, cols } = miniSize;
 
         const start45 = Position45.transformTo45(startPos, miniSize);
         if (this._invalidPoint(start45, cols, rows)) return result;

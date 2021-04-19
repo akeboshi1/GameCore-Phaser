@@ -1,10 +1,8 @@
 import { ElementStateType, ModuleName } from "structure";
-import { Logger } from "utils";
 import { IRoomService } from "..";
 import { Element, IElement } from "../element/element";
 import { State } from "./state.group";
 import { BaseStateHandler, BaseStateManager } from "./state.manager";
-
 export class ElementStateManager extends BaseStateManager {
     constructor(private element: IElement, room: IRoomService) {
         super(room);

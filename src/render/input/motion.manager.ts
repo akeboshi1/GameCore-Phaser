@@ -1,8 +1,7 @@
 import { Render } from "../render";
 import { NodeType } from "../managers";
 import { MainUIScene } from "../scenes/main.ui.scene";
-import { Logger, LogicPos } from "utils";
-import { SceneName } from "structure";
+import { Logger, LogicPos, SceneName } from "structure";
 export class MotionManager {
     public enable: boolean;
     protected scene: Phaser.Scene;
@@ -228,7 +227,7 @@ export class MotionManager {
     }
 
     private getPreUserPos(pointer): Phaser.Math.Vector2 {
-        if (!this.scene||!this.scene.cameras || !this.scene.cameras.main) return null;
+        if (!this.scene || !this.scene.cameras || !this.scene.cameras.main) return null;
         const { x, y } = this.render.displayManager.user;
         const tmpX = pointer.worldX / this.scaleRatio - x;
         const tmpY = pointer.worldY / this.scaleRatio - y;

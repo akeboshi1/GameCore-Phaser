@@ -1,7 +1,8 @@
-import { Background, Border, Font, Url } from "utils";
+import { Background, Border, Url } from "utils";
 import { BasePanel } from "../components/base.panel";
 import { NinePatch } from "../components/nine.patch";
 import { UiManager } from "../ui.manager";
+import { Font } from "structure";
 
 export class BasicRankPanel extends BasePanel {
     protected mTitleLabel: Phaser.GameObjects.Text;

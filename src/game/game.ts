@@ -4,14 +4,14 @@ import { op_def, op_client, op_virtual_world, op_gateway } from "pixelpai_proto"
 import { Lite } from "game-capsule";
 import { MainPeer } from "./main.peer";
 import { IConnectListener, ServerAddress } from "../../lib/net";
-import { Logger, ResUtils, Tool, load, EventDispatcher, Handler } from "utils";
+import { ResUtils, Tool, load } from "utils";
 import IOP_CLIENT_REQ_VIRTUAL_WORLD_PLAYER_INIT = op_gateway.IOP_CLIENT_REQ_VIRTUAL_WORLD_PLAYER_INIT;
 import { Connection, GameSocket } from "./net/connection";
 import { Clock, ClockReadyListener } from "./loop/clock/clock";
 import { HttpClock } from "./loop/httpClock/http.clock";
 import { HttpService } from "./loop/httpClock/http.service";
 import { LoadingManager } from "./loading/loading.manager";
-import { GameState, ILauncherConfig, LoadState, MAIN_WORKER, RENDER_PEER, PHYSICAL_WORKER, ModuleName } from "structure";
+import { GameState, ILauncherConfig, LoadState, MAIN_WORKER, RENDER_PEER, PHYSICAL_WORKER, ModuleName, Logger, EventDispatcher } from "structure";
 import { IRoomService } from "./room";
 import { ElementStorage } from "../base/model/elementstorage/element.storage";
 import { RoomManager } from "./room/room.manager";

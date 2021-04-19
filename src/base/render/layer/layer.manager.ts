@@ -4,7 +4,7 @@
 //     setScene(scene: Phaser.Scene): void;
 
 import { BaseLayer } from "./base.layer";
-import {Logger} from "utils";
+import {Logger} from "structure";
 
 //     addToUILayer(obj: Phaser.GameObjects.GameObject, index?: number);
 //     addToDialogLayer(obj: Phaser.GameObjects.GameObject);

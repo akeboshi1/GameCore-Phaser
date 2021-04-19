@@ -1,5 +1,5 @@
 import { BBCodeText, NineSlicePatch } from "apowophaserui";
-import { Font, Handler } from "utils";
+import { Font, Handler } from "structure";
 export class TextToolTips extends Phaser.GameObjects.Container {
     private bg: NineSlicePatch;
     private text: BBCodeText;

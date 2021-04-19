@@ -4,7 +4,7 @@ import * as os from "os";
 import { SPRITE_SHEET_KEY, ResourcesChangeListener, IMAGE_BLANK_KEY } from "./element.editor.resource.manager";
 import ElementEditorGrids from "./element.editor.grids";
 import version from "../../../../version";
-import { Logger } from "utils";
+import { Logger } from "structure";
 
 export const LOCAL_HOME_PATH: string = path.resolve(os.homedir(), ".pixelpai");
 

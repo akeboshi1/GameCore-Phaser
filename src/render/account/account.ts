@@ -1,4 +1,4 @@
-import { IPos, Logger } from "utils";
+import { IPos, Logger } from "structure";
 
 interface IAccountData {
     accessToken: string;

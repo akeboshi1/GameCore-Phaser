@@ -1,5 +1,6 @@
-import { IPos, Url } from "utils";
+import { Url } from "utils";
 import { MainUIScene } from "../scenes";
+import { IPos } from "structure";
 
 export interface IGuideRes {
     key: string;

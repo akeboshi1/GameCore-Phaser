@@ -1,10 +1,11 @@
 import { op_client, op_gameconfig, op_gameconfig_01, op_def } from "pixelpai_proto";
-import { IPos, LogicPoint } from "utils";
+import { LogicPoint } from "./logic.point";
 import { AnimationQueue, RunningAnimation } from "./animation";
 import { Animator } from "./animator";
 import { AvatarSuit } from "./avatar.suit.type";
 import { IAvatar, IDragonbonesModel } from "./dragonbones";
 import { IFramesModel } from "./frame";
+import { IPos } from "./logic.pos";
 
 export interface ISprite {
     id: number;

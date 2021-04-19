@@ -1,6 +1,6 @@
 import { PacketHandler, PBpacket } from "net-socket-packet";
 import { op_def, op_client, op_editor } from "pixelpai_proto";
-import { IPos } from "utils";
+import { IPos } from "structure";
 import { SceneEditorCanvas } from "../scene.editor.canvas";
 
 export class EditorTerrainManager extends PacketHandler {

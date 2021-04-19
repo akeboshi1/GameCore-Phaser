@@ -81,6 +81,8 @@ const gameConfig = Object.assign({}, commonConfig, {
     },
     entry: {
         editor: path.join(__dirname, "./src/editor/index.ts"),
+        utils: path.join(__dirname, "./src/utils/index.ts"),
+        structure: path.join(__dirname, "./src/structure/index.ts"),
         renderPeer: path.join(__dirname, "./src/render/index.ts"),
     },
     output: {

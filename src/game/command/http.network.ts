@@ -1,4 +1,4 @@
-import { Handler } from "utils";
+import { Handler } from "structure";
 
 export class HttpNetWork {
     static Get(url, compl?: Handler, error?: Handler) {

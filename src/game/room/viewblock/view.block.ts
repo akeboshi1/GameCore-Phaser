@@ -1,4 +1,4 @@
-import { Intersects, LogicRectangle, LogicRectangle45 } from "utils";
+import { Intersects, LogicRectangle, LogicRectangle45 } from "structure";
 import { IBlockObject } from "../block/iblock.object";
 
 /**

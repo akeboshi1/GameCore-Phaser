@@ -1,8 +1,7 @@
 import { BaseFramesDisplay, ReferenceArea } from "baseRender";
 import { Render } from "../../render";
-import { DisplayField, ElementStateType, LayerName, RunningAnimation, TitleMask} from "structure";
+import { DisplayField, ElementStateType, LayerName, RunningAnimation, TitleMask, IPos, Logger } from "structure";
 import { IDisplayObject } from "../display.object";
-import { IPos, Logger } from "utils";
 import { ElementTopDisplay } from "../element.top.display";
 import { DragonbonesDisplay } from "../dragonbones/dragonbones.display";
 

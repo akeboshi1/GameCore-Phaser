@@ -1,6 +1,6 @@
 import { Game } from "tooqinggamephaser";
 import { Export, RPCPeer, webworker_rpc } from "webworker-rpc";
-import { i18n, initLocales, IPos, IPosition45Obj, Logger, LogicPos, Pos, Size, UiUtils, Url, ValueResolver } from "utils";
+import { UiUtils, Url, ValueResolver } from "utils";
 import { PBpacket } from "net-socket-packet";
 import * as protos from "pixelpai_proto";
 import { op_client } from "pixelpai_proto";
@@ -25,7 +25,7 @@ import {
     PHYSICAL_WORKER_URL,
     RENDER_PEER,
     SceneName,
-    PlatFormType
+    PlatFormType, i18n, initLocales, IPos, IPosition45Obj, Logger, LogicPos, Pos, Size
 } from "structure";
 import { DisplayManager } from "./managers/display.manager";
 import { InputManager } from "./input/input.manager";

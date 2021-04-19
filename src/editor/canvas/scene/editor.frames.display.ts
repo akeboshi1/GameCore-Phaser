@@ -1,11 +1,10 @@
-import {Sprite} from "baseModel";
-import {BaseDragonbonesDisplay, BaseFramesDisplay, ReferenceArea} from "baseRender";
-import {IFramesModel, RunningAnimation} from "structure";
-import {Helpers, Logger, LogicPoint, Position45} from "utils";
-import {SceneEditorCanvas} from "./scene.editor.canvas";
-import {EditorTopDisplay} from "./top.display";
-import {op_def} from "pixelpai_proto";
-import {LayerEnum} from "game-capsule";
+import { Sprite } from "baseModel";
+import { BaseDragonbonesDisplay, BaseFramesDisplay, ReferenceArea } from "baseRender";
+import { IFramesModel, RunningAnimation, Helpers, Logger, LogicPoint, Position45 } from "structure";
+import { SceneEditorCanvas } from "./scene.editor.canvas";
+import { EditorTopDisplay } from "./top.display";
+import { op_def } from "pixelpai_proto";
+import { LayerEnum } from "game-capsule";
 
 export class EditorFramesDisplay extends BaseFramesDisplay {
 
@@ -98,7 +97,7 @@ export class EditorFramesDisplay extends BaseFramesDisplay {
         this.setSprite(sprite);
         const displayInfo = sprite.displayInfo;
         if (displayInfo) {
-            this.load(<IFramesModel> displayInfo);
+            this.load(<IFramesModel>displayInfo);
         }
         const pos = sprite.pos;
         if (pos) {
@@ -134,7 +133,7 @@ export class EditorFramesDisplay extends BaseFramesDisplay {
 
     clear() {
         this.mMountList.forEach((val, key) => {
-            this.unmount(<BaseFramesDisplay> val);
+            this.unmount(<BaseFramesDisplay>val);
         });
         this.mAnimation = null;
         this.mCurAnimation = null;
@@ -151,7 +150,7 @@ export class EditorFramesDisplay extends BaseFramesDisplay {
         const result = [];
         if (this.mMountList) {
             this.mMountList.forEach((val, key) => {
-                const id = (<BaseFramesDisplay> val).id;
+                const id = (<BaseFramesDisplay>val).id;
                 if (id) result.push(id);
             });
         }
@@ -161,9 +160,9 @@ export class EditorFramesDisplay extends BaseFramesDisplay {
     updateMountPoint(ele: EditorFramesDisplay, x: number, y: number) {
         let index = -1;
         this.mMountList.forEach((val, key) => {
-           if (val === ele) {
-               index = key;
-           }
+            if (val === ele) {
+                index = key;
+            }
         });
         if (index > -1) {
             this.mCurAnimation.updateMountPoint(index, x, y);
@@ -201,7 +200,7 @@ export class EditorFramesDisplay extends BaseFramesDisplay {
         const width = cols;
         const height = rows;
         const offset = Position45.transformTo90(new LogicPoint(origin.x, origin.y), miniSize);
-        this.mProjectionSize = {offset, width, height};
+        this.mProjectionSize = { offset, width, height };
         this.updateSort();
     }
 

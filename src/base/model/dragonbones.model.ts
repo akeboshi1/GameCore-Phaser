@@ -1,7 +1,5 @@
-import { IAvatar, IDragonbonesModel, RunningAnimation } from "structure";
-import { Direction, LogicPoint } from "utils";
+import { IAvatar, IDragonbonesModel, RunningAnimation, Direction, LogicPoint } from "structure";
 import { op_def } from "pixelpai_proto";
-
 export class DragonbonesModel implements IDragonbonesModel {
     discriminator: string = "DragonbonesModel";
     id: number;

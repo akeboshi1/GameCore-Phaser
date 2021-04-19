@@ -1,5 +1,5 @@
-import { NineSlicePatch, BBCodeText, IPatchesConfig, ClickEvent } from "apowophaserui";
-import { Font, Handler, i18n } from "utils";
+import { NineSlicePatch, BBCodeText, IPatchesConfig } from "apowophaserui";
+import { Font, Handler } from "structure";
 
 export class ItemInfoTips extends Phaser.GameObjects.Container {
     private tipsbg: NineSlicePatch;

@@ -1,5 +1,5 @@
 import {Render} from "../../render";
-import {ChatCommandInterface, IPosition45Obj, LogicPos, Position45} from "utils";
+import {ChatCommandInterface, IPosition45Obj, LogicPos, Position45} from "structure";
 import {PlayScene} from "../../scenes/play.scene";
 
 export class Grids {

@@ -1,5 +1,5 @@
 import { Render } from "../../render";
-import {ChatCommandInterface, Logger} from "utils";
+import { ChatCommandInterface, Logger } from "structure";
 
 export class EditorModeDebugger implements ChatCommandInterface {
     public static getInstance(): EditorModeDebugger {

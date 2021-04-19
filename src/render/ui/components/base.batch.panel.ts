@@ -1,6 +1,7 @@
 import { Panel } from "apowophaserui";
 import { MainUIScene } from "../../scenes/main.ui.scene";
-import { Logger, UiUtils, Url } from "utils";
+import { UiUtils, Url } from "utils";
+import { Logger } from "structure";
 import { Render } from "../../render";
 
 export class BaseBatchPanel extends Panel {

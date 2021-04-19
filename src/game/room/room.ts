@@ -1,8 +1,7 @@
 import { op_client, op_def, op_virtual_world } from "pixelpai_proto";
 import { PacketHandler, PBpacket } from "net-socket-packet";
-import { Handler, IPos, IPosition45Obj, Logger, LogicPos, Position45 } from "utils";
 import { Game } from "..";
-import { GameState, IScenery, ISprite, LoadState, ModuleName, SceneName } from "structure";
+import { GameState, IScenery, ISprite, LoadState, Handler, IPos, IPosition45Obj, Logger, LogicPos, Position45, SceneName } from "structure";
 import { Sprite } from "baseModel";
 import IActor = op_client.IActor;
 import NodeType = op_def.NodeType;
@@ -13,14 +12,13 @@ import { ElementManager } from "./element/element.manager";
 import { CamerasWorkerManager, ICameraService } from "./camera/cameras.worker.manager";
 import { EffectManager } from "./effect/effect.manager";
 import { SkyBoxManager } from "./sky.box/sky.box.manager";
-import { IElement, InputEnable } from "./element/element";
+import { IElement } from "./element/element";
 import { ClockReadyListener } from "../loop";
 import { IViewBlockManager } from "./viewblock/iviewblock.manager";
 import { WallManager } from "./element/wall.manager";
 import { RoomStateManager } from "./state/room.state.manager";
 import { IRoomManager } from "./room.manager";
 import { ViewblockManager } from "./viewblock/viewblock.manager";
-import { BlockObject } from "./block/block.object";
 import { ConnectionService } from "lib/net";
 export interface SpriteAddCompletedListener {
     onFullPacketReceived(sprite_t: op_def.NodeType): void;

@@ -1,4 +1,4 @@
-import { i18n } from "utils";
+import { i18n } from "structure";
 
 export class LoadingTips {
     // 进入游戏 socket链接成功

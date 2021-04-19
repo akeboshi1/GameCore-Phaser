@@ -1,5 +1,6 @@
 import { Game } from "gamecore";
-import { load, loadArr, Logger } from "utils";
+import { load, loadArr } from "utils";
+import { Logger } from "structure";
 import { BaseConfigData } from "./base.config.data";
 import { base_path, config_path } from "./config";
 export class BaseConfigManager {

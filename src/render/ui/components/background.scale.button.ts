@@ -1,4 +1,4 @@
-import { ButtonState, ClickEvent, ISoundGroup } from "apowophaserui";
+import { ClickEvent, ISoundGroup } from "apowophaserui";
 import { UiUtils } from "utils";
 import { ButtonEventDispatcher } from "./button.event.dispatch";
 

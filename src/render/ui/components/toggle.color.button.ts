@@ -1,5 +1,5 @@
 import { ClickEvent } from "apowophaserui";
-import { UIHelper } from "utils";
+import { UIHelper } from "structure";
 import { ButtonEventDispatcher } from "./button.event.dispatch";
 
 export class ToggleColorButton extends ButtonEventDispatcher {

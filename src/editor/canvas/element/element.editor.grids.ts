@@ -1,6 +1,6 @@
-import { Logger } from "utils";
+import { Logger } from "structure";
 import Position45Utils from "../../utils/position45.utils";
-import { ElementEditorCanvas, ElementEditorBrushType } from "./element.editor.canvas";
+import { ElementEditorBrushType } from "./element.editor.canvas";
 
 export default class ElementEditorGrids extends Phaser.GameObjects.Container {
     private mRows = 5;

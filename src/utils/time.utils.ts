@@ -1,7 +1,6 @@
-import { i18n } from "./i18n";
+import { i18n } from "../structure/i18n";
 
 export class TimeUtils {
-
     static getDataFormat(time: number, haveday: boolean, color?: string) {
         const day = haveday ? Math.floor(time / 86400000) : 0;
         const hour = haveday ? Math.floor(time / 3600000) % 24 : Math.floor(time / 3600000);

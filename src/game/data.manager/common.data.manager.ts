@@ -1,6 +1,6 @@
 import { PBpacket } from "net-socket-packet";
 import { op_client } from "pixelpai_proto";
-import { EventDispatcher } from "utils";
+import { EventDispatcher } from "structure";
 import { Game } from "../game";
 import { BasePacketHandler } from "./base.packet.handler";
 import { CacheDataManager } from "./cache.dataManager";

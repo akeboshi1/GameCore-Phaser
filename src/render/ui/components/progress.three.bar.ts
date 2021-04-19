@@ -1,6 +1,6 @@
 
 import { BaseUI } from "apowophaserui";
-import { ThreeSlicePath } from ".";
+import { ThreeSlicePath } from "./three.slice.path";
 export class ProgressThreeBar extends BaseUI {
     public value: number = 0;
     public max: number = 1;

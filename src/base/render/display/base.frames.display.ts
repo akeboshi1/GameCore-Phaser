@@ -1,6 +1,6 @@
-import { Direction, Logger, Url } from "utils";
+import { Url } from "utils";
 import { BaseDisplay } from "./base.display";
-import { DisplayField, IFramesModel, RunningAnimation } from "structure";
+import { Direction, Logger, DisplayField, IFramesModel, RunningAnimation } from "structure";
 import ImageFile = Phaser.Loader.FileTypes.ImageFile;
 import { BaseDragonbonesDisplay } from "./base.dragonbones.display";
 

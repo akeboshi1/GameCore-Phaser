@@ -1,7 +1,6 @@
 import { IRoomService } from "../room";
 import { IScenery } from "structure";
 import { Game } from "../../game";
-
 export interface ISkyBoxConfig {
   key: string;
   width: number;

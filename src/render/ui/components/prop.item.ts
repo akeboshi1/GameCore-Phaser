@@ -1,7 +1,8 @@
 import { DynamicImage } from "./dynamic.image";
 import { BBCodeText } from "apowophaserui";
 import { SoundButton } from "./soundButton";
-import { Font, Handler, Url } from "utils";
+import { Url } from "utils";
+import { Font, Handler } from "structure";
 export class PropItem extends SoundButton {
     public itemData: any;
     protected dpr: number;

@@ -1,4 +1,4 @@
-import { EventDispatcher } from "utils";
+import { EventDispatcher } from "structure";
 import { Game } from "../game";
 import { BaseHandler } from "./base.handler";
 export class ElementDataManager extends BaseHandler {

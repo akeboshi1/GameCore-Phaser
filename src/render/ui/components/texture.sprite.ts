@@ -1,4 +1,4 @@
-import { Handler, Logger } from "utils";
+import { Handler, Logger } from "structure";
 
 export class TextureSprite extends Phaser.GameObjects.Container {
     private compl: Handler;

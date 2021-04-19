@@ -1,4 +1,4 @@
-import { IPos } from "utils";
+import { IPos } from "structure";
 import { IRoomService } from "../room";
 export class MatterWorkerObject {
     protected mGuid: number;

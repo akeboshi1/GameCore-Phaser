@@ -1,8 +1,8 @@
-import { Logger, ValueResolver } from "utils";
+import { ValueResolver } from "utils";
 import { Render } from "../render";
 import { BasePanel } from "./components/base.panel";
 import { BasicScene } from "baseRender";
-import { SceneName } from "structure";
+import { SceneName, Logger } from "structure";
 import { AlertView, Buttons } from "./components";
 import { Panel } from "apowophaserui";
 export class UiManager {

@@ -1,5 +1,5 @@
 
-import { IPosition45Obj, IPos, LogicRectangle, Logger } from "utils";
+import { IPosition45Obj, IPos, LogicRectangle, Logger } from "structure";
 import { IBlockObject } from "../block/iblock.object";
 import { Viewblock } from "./view.block";
 import { ICameraService } from "../camera/cameras.worker.manager";

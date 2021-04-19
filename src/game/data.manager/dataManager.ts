@@ -1,4 +1,4 @@
-import { EventDispatcher } from "utils";
+import { EventDispatcher } from "structure";
 import { Game } from "../game";
 import { BaseDataManager } from "./base.dataManager";
 import { BaseHandler } from "./base.handler";

@@ -1,5 +1,5 @@
 import { ClickEvent, InputText } from "apowophaserui";
-import { Font, Logger } from "utils";
+import { Font, Logger } from "structure";
 import { Tap } from "./tap";
 
 export class LabelInput extends Phaser.GameObjects.Container {

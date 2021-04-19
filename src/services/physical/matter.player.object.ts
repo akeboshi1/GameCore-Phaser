@@ -1,5 +1,4 @@
-import { PlayerState } from "structure";
-import { LogicPos } from "utils";
+import { PlayerState, LogicPos } from "structure";
 import { PhysicalPeer } from "../physical.worker";
 import { MatterObject } from "./matter.object";
 

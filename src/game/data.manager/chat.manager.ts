@@ -1,4 +1,4 @@
-import { EventDispatcher } from "utils";
+import { EventDispatcher } from "structure";
 import { Game } from "../game";
 import { op_client, op_def } from "pixelpai_proto";
 import { BasePacketHandler } from "./base.packet.handler";
