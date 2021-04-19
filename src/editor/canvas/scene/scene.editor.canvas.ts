@@ -496,7 +496,7 @@ export class SceneEditorCanvas extends EditorCanvas implements IRender {
                 break;
             case BrushEnum.BRUSH:
                 this.mStamp.pointerMove(pointer.worldX, pointer.worldY);
-                if (pointer.isDown && this.mStamp.nodeType === op_def.NodeType.TerrainNodeType) {
+                if (pointer.isDown && (this.mStamp.nodeType === op_def.NodeType.TerrainNodeType || this.mStamp.nodeType === op_def.NodeType.WallNodeType)) {
                     this.createElement();
                 }
                 break;
