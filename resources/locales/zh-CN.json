@@ -463,6 +463,7 @@
     "onekey": "一键领取",
     "title": "邮件",
     "sender": "发件人: ",
-    "expiration": "{{time}}后过期"
+    "expiration": "{{time}}后过期",
+    "nomailtip":"暂时没有新邮件~"
   }
 }

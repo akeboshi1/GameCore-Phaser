@@ -7,7 +7,7 @@ import { Handler, i18n, TimeUtils, UIHelper, Url } from "utils";
 import { ImageValue, ItemButton } from "../Components";
 export class PicaMailItem extends Phaser.GameObjects.Container {
     public mailButton: ThreeSliceButton;
-    public mailData: any;
+    public mailData: op_client.PKT_MAIL_DATA;
     private content: Phaser.GameObjects.Container;
     private bg: Phaser.GameObjects.Image;
     private extendBg: NineSlicePatch;
@@ -74,15 +74,14 @@ export class PicaMailItem extends Phaser.GameObjects.Container {
     public refreshMask() {
         if (this.extend && this.mExtend) this.mExtend.refreshMask();
     }
-    public setMailData(data: any) {
+    public setMailData(data: op_client.PKT_MAIL_DATA) {
         this.mailData = data;
         this.mailData["localTime"] = (Date.now() / 1000);
-        this.mailName.text = data.name;
-        this.setTextLimit(this.mailName, data.name);
-        this.setTextLimit(this.mailSender, `${i18n.t("mail.sender")}${data.sender}`);
-        const read = Math.floor(Math.random() * 2) === 1;
-        this.setMailState(read);
-        this.expirationTime.setTimeData(data.time, data.end, read);
+        this.mailName.text = data.title;
+        this.setTextLimit(this.mailName, data.title);
+        this.setTextLimit(this.mailSender, `${i18n.t("mail.sender")}${data.senderName}`);
+        this.setMailState(data.hasRead);
+        this.expirationTime.setTimeData(data.sentTime, data.expireTime, data.hasRead);
     }
 
     public setMailState(read: boolean) {
@@ -95,7 +94,7 @@ export class PicaMailItem extends Phaser.GameObjects.Container {
 
     }
 
-    public setMailDetail(data: op_client.PKT_Quest) {
+    public setMailDetail(data: op_client.PKT_MAIL_DATA) {
         if (this.mExtend) this.mExtend.setItemData(data);
     }
 
@@ -121,11 +120,7 @@ export class PicaMailItem extends Phaser.GameObjects.Container {
         return this.mIsExtend;
     }
     private onMailButtonHandler() {
-        if (this.mailData.stage === op_pkt_def.PKT_Quest_Stage.PKT_QUEST_STAGE_PROCESSING) {
-            if (this.send) this.send.runWith(["go", this.mailData]);
-        } else if (this.mailData.stage === op_pkt_def.PKT_Quest_Stage.PKT_QUEST_STAGE_FINISHED) {
-            if (this.send) this.send.runWith(["finish", this.mailData.id]);
-        }
+        if (this.mailData && this.mailData.attachTaken) this.send.runWith(["getrewards", this.mailData.id]);
     }
     private openExtend() {
         if (!this.mExtend) {
@@ -144,10 +139,11 @@ export class PicaMailItem extends Phaser.GameObjects.Container {
         this.bg.visible = false;
         this.extendBg.resize(this.extendBg.width, this.height);
         this.expirationTime.visible = false;
-        if (this.mailData.rewards) this.mailButton.visible = true;
+        if (this.mailData.attachments) this.mailButton.visible = true;
         else this.mailButton.visible = false;
         this.setMailState(true);
         this.expirationTime.clearTimer();
+        if (!this.mailData.hasRead) this.send.runWith(["readmail", this.mailData.id]);
     }
 
     private closeExtend() {
@@ -162,7 +158,7 @@ export class PicaMailItem extends Phaser.GameObjects.Container {
         this.mailButton.visible = false;
         this.mExtend.clearTimer();
         const continueTime = Date.now() / 1000 - this.mailData["localTime"];
-        this.expirationTime.setTimeData(this.mailData.time + continueTime, this.mailData.end, true);
+        this.expirationTime.setTimeData(this.mailData.sentTime + continueTime, this.mailData.expireTime, true);
     }
 
     private setTextLimit(text: Phaser.GameObjects.Text, content?: string, limit: number = 11) {
@@ -232,18 +228,18 @@ class MailItemExtend extends Phaser.GameObjects.Container {
     public refreshMask() {
         this.gameScroll.refreshMask();
     }
-    public setItemData(mailData: any) {
+    public setItemData(mailData: op_client.IPKT_MAIL_DATA) {
         let taskPosy = 0;
         const cellHeight = 67 * this.dpr;
         this.mailTex.text = mailData.content;
-        this.sendTex.text = `${i18n.t("mail.sender")}${mailData.sender}`;
+        this.sendTex.text = `${i18n.t("mail.sender")}${mailData.senderName}`;
         this.sendTex.y = this.mailTex.y + this.mailTex.height + 15 * this.dpr;
-        this.expirationTex.text = i18n.t("mail.expiration", { time: TimeUtils.getBriefFormat(mailData.expiration) });
+        this.expirationTex.text = i18n.t("mail.expiration", { time: TimeUtils.getBriefFormat(mailData.expireTime) });
         this.expirationTex.y = this.sendTex.y + this.sendTex.height + 6 * this.dpr;
         taskPosy = this.expirationTex.y + this.expirationTex.height + 10 * this.dpr;
         this.line.y = taskPosy;
         taskPosy += 5 * this.dpr;
-        this.createMailCells(this.rewardArr, <any>mailData.rewards, false);
+        this.createMailCells(this.rewardArr, <any>mailData.attachments, false);
         taskPosy += cellHeight * 0.5;
         this.gameScroll.y = taskPosy;
         this.gameScroll.clearItems(false);
@@ -252,7 +248,7 @@ class MailItemExtend extends Phaser.GameObjects.Container {
         this.gameScroll.refreshMask();
         this.height = taskPosy + cellHeight * 0.5 + 10 * this.dpr;
         const continueTime = Date.now() / 1000 - mailData["localTime"];
-        const time = mailData.end - mailData.time - continueTime;
+        const time = mailData.expireTime - mailData.sentTime - continueTime;
         this.countDown(time * 1000);
     }
 

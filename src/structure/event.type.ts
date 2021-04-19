@@ -136,4 +136,6 @@ export class EventType {
      * 返回家具PI数据
      */
     public static RETURN_ELEMENT_PI_DATA = "RETURN_ELEMENT_PI_DATA";
+
+    public static RETURN_DRESS_AVATAR_IDS = "RETURN_DRESS_AVATAR_IDS";// 返回当前装备的装扮
 }

@@ -452,6 +452,7 @@
     "onekey": "All Receive",
     "title": "Mail",
     "sender": "Sender: ",
-    "expiration": "It expires after {{time}}"
+    "expiration": "It expires after {{time}}",
+    "nomailtip":"No new email for now ~"
   }
 }

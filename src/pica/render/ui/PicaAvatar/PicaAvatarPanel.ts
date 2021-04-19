@@ -2,10 +2,11 @@ import { NineSliceButton, GameGridTable, GameScroller, Button, BBCodeText, NineS
 import { DynamicImage, Render, TextButton, UiManager } from "gamecoreRender";
 import { DetailDisplay } from "../../ui";
 import { UIAtlasName } from "../../../res";
-import { AvatarSuitType, ModuleName, RunningAnimation, SuitAlternativeType } from "structure";
+import { AvatarSuit, AvatarSuitType, ModuleName, RunningAnimation, SuitAlternativeType } from "structure";
 import { Font, Handler, i18n, Logger, UIHelper, Url } from "utils";
-import { op_client, op_pkt_def} from "pixelpai_proto";
+import { op_client, op_pkt_def } from "pixelpai_proto";
 import { PicaBasePanel } from "../pica.base.panel";
+import { ICountablePackageItem, IExtendCountablePackageItem } from "picaStructure";
 
 export class PicaAvatarPanel extends PicaBasePanel {
   private mCloseBtn: Button;
@@ -25,10 +26,10 @@ export class PicaAvatarPanel extends PicaBasePanel {
   private mDetailBubble: DetailBubble;
   private mSceneType: any;// op_def.SceneTypeEnum
   private categoryType: any;// op_pkt_def.PKT_PackageType
-  private mSelectedItemData: any[] = [];// op_client.ICountablePackageItem
+  private mSelectedItemData: IExtendCountablePackageItem[] = [];
   private mSelectedItems: Item[] = [];
   private dressAvatarIDS: string[] = [];
-  private dressAvatarDatas: op_client.ICountablePackageItem[] = [];
+  private dressAvatarDatas: IExtendCountablePackageItem[] = [];
   private isInitAvatar: boolean = false;
   private avatarDirection: number = 0;// 0-正向，1-反向
   constructor(uiManager: UiManager, sceneType: any) {// sceneType: op_def.SceneTypeEnum
@@ -103,88 +104,57 @@ export class PicaAvatarPanel extends PicaBasePanel {
     if (len < 24) {
       props = props.concat(new Array(24 - len));
     }
-    this.mPropGrid.setItems(props);
-    if (this.dressAvatarDatas.length === 0) {
-      for (const prop of props) {
-        if (prop && prop.rightSubscript === op_pkt_def.PKT_Subscript.PKT_SUBSCRIPT_CHECKMARK) {
-          this.dressAvatarDatas.push(prop);
-        }
+    for (const prop of props) {
+      if (prop) {
+        if (this.dressAvatarIDS.indexOf(prop.id) !== -1)
+          prop.rightSubscript = op_pkt_def.PKT_Subscript.PKT_SUBSCRIPT_CHECKMARK;
+        else
+          prop.rightSubscript = op_pkt_def.PKT_Subscript.PKT_SUBSCRIPT_UNSET;
       }
-      if (this.isInitAvatar) {
-        this.initBaseAvatar();
-      }
-      this.isInitAvatar = true;
     }
+    this.mPropGrid.setItems(props);
   }
 
-  public setDressAvatarIds(ids: string[]) {
-    this.dressAvatarIDS = ids;
-    if (this.isInitAvatar) {
-      this.initBaseAvatar();
+  public setDressAvatarIds(dressDatas: IExtendCountablePackageItem[]) {
+    this.dressAvatarIDS.length = 0;
+    this.mSelectedItemData.length = 0;
+    for (const item of dressDatas) {
+      this.dressAvatarIDS.push(item.id);
     }
-    this.isInitAvatar = true;
+    this.dressAvatarDatas = dressDatas;
+    this.initBaseAvatar();
   }
 
   public initBaseAvatar() {
-    if (this.isInitAvatar) {
-      const arr = [];
-      for (const id of this.dressAvatarIDS) {
-        for (const avatar of this.dressAvatarDatas) {
-          if (avatar.id === id) {
-            arr.push(avatar);
-            this.mSelectedItemData.push(avatar);
-          }
-        }
-      }
-      this.dressAvatarDatas.length = 0;
-      this.dressAvatarDatas = arr;
-      this.displayAvatar();
-      this.mDetailBubble.visible = false;
-    } else {
-      let property = null;
-      this.render.mainPeer.getUserData_PlayerProperty()
-        .then((val) => {
-          property = val;
-          return this.serviceTimestamp;
-        })
-        .then((t) => {
-          this.mDetailBubble.setProp(null, Math.floor(t / 1000), property);
-          this.mDetailBubble.y = this.mShelfContainer.y - 10 * this.dpr - this.mDetailBubble.height;
-        });
+    for (const avatar of this.dressAvatarDatas) {
+      this.mSelectedItemData.push(avatar);
     }
+    this.displayAvatar();
+    this.mDetailBubble.visible = false;
   }
 
   public displayAvatar(content?: any) {
     if (!content) {
       content = { avatar: {} };
     }
-    this.render.mainPeer.getPlayerAvatar()
-      .then(({ avatar, suits }) => {
-        avatar = avatar || AvatarSuitType.createBaseAvatar();
-        for (const key in avatar) {
-          if (avatar.hasOwnProperty(key)) {
-            const element = avatar[key];
-            if (element) content.avatar[key] = element;
-          }
-        }
-        for (const item of this.mSelectedItemData) {
-          const dataAvatar = AvatarSuitType.createAvatarBySn(item.suitType, item.sn, item.slot, item.tag, item.version);
-          // const dataAvatar = item.avatar;
-          for (const key in dataAvatar) {
-            if (dataAvatar.hasOwnProperty(key)) {
-              const element = dataAvatar[key];
-              if (element) content.avatar[key] = element;
-            }
-          }
-          if (item.suitType === "weapon") {
-            const suit = { suit_type: item.suitType, tag: item.tag };
-            content.suits = [suit];
-          }
-        }
-        const offset = new Phaser.Geom.Point(0, 50 * this.dpr);
-        this.mDetailDisplay.loadAvatar(content, 2 * this.dpr, offset);
-        Logger.getInstance().error("测试调用+++++装扮重置问题", this.mSelectedItemData);
-      });
+    const suitArr: AvatarSuit[] = [];
+    for (const item of this.mSelectedItemData) {
+      const suit: AvatarSuit = { id: item.id, suit_type: item.suitType, sn: item.sn, slot: item.slot, tag: item.tag, version: item.version };
+      suitArr.push(suit);
+      if (item.suitType === "weapon") {
+        content.suits = [suit];
+      }
+    }
+    const dataAvatar = AvatarSuitType.createHasBaseAvatar(suitArr);
+    for (const key in dataAvatar) {
+      if (dataAvatar.hasOwnProperty(key)) {
+        const element = dataAvatar[key];
+        if (element) content.avatar[key] = element;
+      }
+    }
+    const offset = new Phaser.Geom.Point(0, 50 * this.dpr);
+    this.mDetailDisplay.loadAvatar(content, 2 * this.dpr, offset);
+    Logger.getInstance().error("测试调用+++++装扮重置问题", this.mSelectedItemData);
   }
   public setSelectedResource(content: any) {// op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_MARKET_QUERY_PACKAGE_ITEM_RESOURCE
     if (content.display) {
@@ -335,7 +305,10 @@ export class PicaAvatarPanel extends PicaBasePanel {
         cellContainer.setData({ item });
         cellContainer.setProp(item);
         if (item && this.isSelectedItemData(item)) {
-          cellContainer.isSelect = true;
+          const endData = this.mSelectedItemData[this.mSelectedItemData.length - 1];
+          if (endData.indexId === item.indexId) {
+            cellContainer.isSelect = true;
+          }
           this.mSelectedItems.push(cellContainer);
         } else {
           const index = this.mSelectedItems.indexOf(cellContainer);
@@ -375,7 +348,7 @@ export class PicaAvatarPanel extends PicaBasePanel {
     return btn;
   }
 
-  private setSelectAvatarSuitItem(data: op_client.ICountablePackageItem, cell: Item) {
+  private setSelectAvatarSuitItem(data: IExtendCountablePackageItem, cell: Item) {
     const suit_type = data.suitType;
     if (!suit_type) {
       Logger.getInstance().error("CountablePackageItem avatar does not exist", data);
@@ -401,29 +374,22 @@ export class PicaAvatarPanel extends PicaBasePanel {
         }
       }
     }
-    if (this)
-      this.mSelectedItemData.push(data);
+    this.mSelectedItemData.push(data);
     this.mSelectedItems.push(cell);
     cell.isSelect = true;
-    const content = new op_client.OP_VIRTUAL_WORLD_RES_CLIENT_MARKET_QUERY_PACKAGE_ITEM_RESOURCE();
+    const content: any = {};
     content.avatar = AvatarSuitType.createAvatarBySn(data.suitType, data.sn, data.slot, data.tag, data.version);
     content.animations = data.animations;
     this.setSelectedResource(content);
   }
-  private isSelectedItemData(data: op_client.ICountablePackageItem) {// op_client.ICountablePackageItem
+  private isSelectedItemData(data: IExtendCountablePackageItem) {// op_client.ICountablePackageItem
     if (this.mSelectedItemData.length > 0) {
-      // for (const temp of this.mSelectedItemData) {
-      //   if (temp.indexId === data.indexId) {
-      //     return true;
-      //   }
-      // }
-      const temp = this.mSelectedItemData[this.mSelectedItemData.length - 1];
-      if (temp.indexId === data.indexId) return true;
+      for (const temp of this.mSelectedItemData) {
+        if (temp.indexId === data.indexId) {
+          return true;
+        }
+      }
     }
-    // else {
-    //   if (data.rightSubscript === op_pkt_def.PKT_Subscript.PKT_SUBSCRIPT_CHECKMARK) return true;
-    // }
-
     return false;
   }
 
@@ -458,6 +424,9 @@ export class PicaAvatarPanel extends PicaBasePanel {
   private onSelectItemHandler(cell: Item) {
     const item: any = cell.getData("item");// op_client.ICountablePackageItem
     if (!item) return;
+    for (const temp of this.mSelectedItems) {
+      temp.isSelect = false;
+    }
     if (this.isSelectedItemData(item)) {
       cell.isSelect = true;
       return;
@@ -487,20 +456,14 @@ export class PicaAvatarPanel extends PicaBasePanel {
   }
 
   private async onSaveBtnHandler() {
-    this.dressAvatarIDS.length = 0;
-    this.dressAvatarDatas.length = 0;
-    const idsArr = [];
+
+    const idsArr = [], result = [];
+    const suitPart = AvatarSuitType.suitPart;
     for (const item of this.mSelectedItemData) {
       idsArr.push(item.id);
-      this.dressAvatarIDS.push(item.id);
-      this.dressAvatarDatas.push(item);
+      result.push({ "parts": suitPart[item.suitType], id: item.sn });
     }
     this.render.renderEmitter(this.key + "_querySaveAvatar", idsArr);
-    const result = [];
-    const suitPart = AvatarSuitType.suitPart;
-    for (const avatar of this.dressAvatarDatas) {
-      result.push({ "parts": suitPart[avatar.suitType], id: avatar.sn });
-    }
     const str = await this.render.editorCanvasManager.createHeadIcon(result);
     this.render.mainPeer.uploadHeadImage(str);
   }
