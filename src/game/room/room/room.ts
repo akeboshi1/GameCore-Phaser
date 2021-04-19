@@ -720,6 +720,9 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
         this.game.uiManager.hideMed(ModuleName.CUTINMENU_NAME);
         // switch mouse manager
         this.game.renderPeer.switchDecorateMouseManager();
+
+        // show girds
+        this.game.renderPeer.showEditGrids(this.miniSize);
     }
 
     public cameraFollowHandler() {
@@ -764,6 +767,9 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
 
         // cleat entry data
         this.mDecorateEntryData = null;
+
+        // hide girds
+        this.game.renderPeer.hideEditGrids();
 
         this.mIsWaitingForDecorateResponse = false;
     }

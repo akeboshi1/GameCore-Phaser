@@ -1597,6 +1597,20 @@ export class Render extends RPCPeer implements GameMain, IRender {
     }
 
     @Export()
+    public showEditGrids(size: IPosition45Obj) {
+        if (this.displayManager) {
+            this.displayManager.showGrids(size);
+        }
+    }
+
+    @Export()
+    public hideEditGrids() {
+        if (this.displayManager) {
+            this.displayManager.hideGrids();
+        }
+    }
+
+    @Export()
     public displayAnimationChange(data: any) {
         const id = data.id;
         const direction = data.direction;
