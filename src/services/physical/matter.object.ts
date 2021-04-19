@@ -452,6 +452,9 @@ export class MatterObject implements IMatterObject {
             // ====todo no remove
             this.matterWorld.remove(this.body, true);
         }
+        if (body === undefined) {
+            return;
+        }
         this.body = body;
         Events.on(this.peer.world.engine, "collisionStart", (event) => {
             const pairs = event.pairs;
@@ -555,7 +558,7 @@ export class MatterObject implements IMatterObject {
         const collision = this.mModel.getCollisionArea();
         let body;
         if (!collision) {
-            body = Bodies.circle(this._tempVec.x * this._scale, this._tempVec.y * this._scale, 10);
+            // body = Bodies.circle(this._tempVec.x * this._scale, this._tempVec.y * this._scale, 10);
             this.setExistingBody(body, true);
             return;
         }
@@ -594,6 +597,7 @@ export class MatterObject implements IMatterObject {
         };
         paths.map((path) => path.map(scaleDpr));
         if (paths.length < 1 || paths[0].length < 3) {
+            this.setExistingBody(body, true);
             return;
         }
         const curOrigin = this.mModel.getOriginPoint();

@@ -4,8 +4,8 @@
 			"image": "illustrate",
 			"format": "RGBA8888",
 			"size": {
-				"w": 1964,
-				"h": 1780
+				"w": 1896,
+				"h": 2266
 			},
 			"scale": 1,
 			"frames": [
@@ -52,27 +52,6 @@
 					}
 				},
 				{
-					"filename": "illustrate_dress_bg",
-					"rotated": false,
-					"trimmed": false,
-					"sourceSize": {
-						"w": 912,
-						"h": 288
-					},
-					"spriteSourceSize": {
-						"x": 0,
-						"y": 0,
-						"w": 912,
-						"h": 288
-					},
-					"frame": {
-						"x": 1,
-						"y": 1491,
-						"w": 912,
-						"h": 288
-					}
-				},
-				{
 					"filename": "illustrate_collect_bg_3",
 					"rotated": false,
 					"trimmed": false,
@@ -87,10 +66,73 @@
 						"h": 478
 					},
 					"frame": {
-						"x": 983,
-						"y": 1,
+						"x": 1,
+						"y": 1491,
 						"w": 980,
 						"h": 478
+					}
+				},
+				{
+					"filename": "detail_props_message_bg",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 899,
+						"h": 423
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 899,
+						"h": 423
+					},
+					"frame": {
+						"x": 983,
+						"y": 1,
+						"w": 899,
+						"h": 423
+					}
+				},
+				{
+					"filename": "illustrate_cooking_bg",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 912,
+						"h": 288
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 912,
+						"h": 288
+					},
+					"frame": {
+						"x": 1,
+						"y": 1971,
+						"w": 912,
+						"h": 288
+					}
+				},
+				{
+					"filename": "illustrate_dress_bg",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 912,
+						"h": 288
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 912,
+						"h": 288
+					},
+					"frame": {
+						"x": 983,
+						"y": 426,
+						"w": 912,
+						"h": 288
 					}
 				},
 				{
@@ -108,8 +150,8 @@
 						"h": 288
 					},
 					"frame": {
-						"x": 915,
-						"y": 1491,
+						"x": 983,
+						"y": 716,
 						"w": 912,
 						"h": 288
 					}
@@ -130,7 +172,7 @@
 					},
 					"frame": {
 						"x": 983,
-						"y": 481,
+						"y": 1006,
 						"w": 912,
 						"h": 288
 					}
@@ -151,7 +193,7 @@
 					},
 					"frame": {
 						"x": 983,
-						"y": 771,
+						"y": 1296,
 						"w": 761,
 						"h": 31
 					}
@@ -172,7 +214,7 @@
 					},
 					"frame": {
 						"x": 983,
-						"y": 804,
+						"y": 1329,
 						"w": 759,
 						"h": 29
 					}
@@ -193,7 +235,7 @@
 					},
 					"frame": {
 						"x": 983,
-						"y": 835,
+						"y": 1360,
 						"w": 428,
 						"h": 306
 					}
@@ -214,8 +256,29 @@
 					},
 					"frame": {
 						"x": 983,
-						"y": 1143,
+						"y": 1668,
 						"w": 420,
+						"h": 305
+					}
+				},
+				{
+					"filename": "illustrate_cooking_picture",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 428,
+						"h": 306
+					},
+					"spriteSourceSize": {
+						"x": 15,
+						"y": 0,
+						"w": 387,
+						"h": 305
+					},
+					"frame": {
+						"x": 1413,
+						"y": 1360,
+						"w": 387,
 						"h": 305
 					}
 				},
@@ -234,8 +297,8 @@
 						"h": 263
 					},
 					"frame": {
-						"x": 1413,
-						"y": 835,
+						"x": 915,
+						"y": 1975,
 						"w": 428,
 						"h": 263
 					}
@@ -256,7 +319,7 @@
 					},
 					"frame": {
 						"x": 1413,
-						"y": 1100,
+						"y": 1667,
 						"w": 350,
 						"h": 92
 					}
@@ -277,7 +340,7 @@
 					},
 					"frame": {
 						"x": 1405,
-						"y": 1194,
+						"y": 1761,
 						"w": 350,
 						"h": 92
 					}
@@ -298,51 +361,51 @@
 					},
 					"frame": {
 						"x": 1405,
-						"y": 1288,
+						"y": 1855,
 						"w": 200,
 						"h": 200
 					}
 				},
 				{
-					"filename": "illustrate_badge_icon",
-					"rotated": false,
-					"trimmed": false,
-					"sourceSize": {
-						"w": 125,
-						"h": 113
-					},
-					"spriteSourceSize": {
-						"x": 0,
-						"y": 0,
-						"w": 125,
-						"h": 113
-					},
-					"frame": {
-						"x": 1607,
-						"y": 1288,
-						"w": 125,
-						"h": 113
-					}
-				},
-				{
-					"filename": "illustrate_survey_icon",
+					"filename": "illustrate_badge_icon_1",
 					"rotated": false,
 					"trimmed": true,
 					"sourceSize": {
-						"w": 120,
-						"h": 120
+						"w": 136,
+						"h": 134
 					},
 					"spriteSourceSize": {
 						"x": 3,
-						"y": 16,
-						"w": 115,
-						"h": 100
+						"y": 0,
+						"w": 129,
+						"h": 130
 					},
 					"frame": {
-						"x": 1765,
-						"y": 1100,
-						"w": 115,
-						"h": 100
+						"x": 1607,
+						"y": 1855,
+						"w": 129,
+						"h": 130
+					}
+				},
+				{
+					"filename": "illustrate_cooking_title",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 186,
+						"h": 96
+					},
+					"spriteSourceSize": {
+						"x": 1,
+						"y": 1,
+						"w": 184,
+						"h": 94
+					},
+					"frame": {
+						"x": 1345,
+						"y": 2057,
+						"w": 184,
+						"h": 94
 					}
 				},
 				{
@@ -360,31 +423,73 @@
 						"h": 88
 					},
 					"frame": {
-						"x": 1757,
-						"y": 1202,
+						"x": 1345,
+						"y": 2153,
 						"w": 180,
 						"h": 88
 					}
 				},
 				{
-					"filename": "illustrate_survey_icon_1",
+					"filename": "illustrate_badge_icon_2",
 					"rotated": false,
 					"trimmed": true,
 					"sourceSize": {
-						"w": 120,
-						"h": 120
+						"w": 136,
+						"h": 134
 					},
 					"spriteSourceSize": {
 						"x": 3,
-						"y": 6,
-						"w": 115,
-						"h": 110
+						"y": 0,
+						"w": 129,
+						"h": 130
 					},
 					"frame": {
-						"x": 1734,
-						"y": 1292,
-						"w": 115,
-						"h": 110
+						"x": 1607,
+						"y": 1987,
+						"w": 129,
+						"h": 130
+					}
+				},
+				{
+					"filename": "illustrate_badge_icon_3",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 136,
+						"h": 134
+					},
+					"spriteSourceSize": {
+						"x": 3,
+						"y": 0,
+						"w": 129,
+						"h": 130
+					},
+					"frame": {
+						"x": 1738,
+						"y": 1855,
+						"w": 129,
+						"h": 130
+					}
+				},
+				{
+					"filename": "illustrate_badge_icon_4",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 136,
+						"h": 134
+					},
+					"spriteSourceSize": {
+						"x": 3,
+						"y": 0,
+						"w": 129,
+						"h": 130
+					},
+					"frame": {
+						"x": 1738,
+						"y": 1987,
+						"w": 129,
+						"h": 130
 					}
 				},
 				{
@@ -402,8 +507,8 @@
 						"h": 69
 					},
 					"frame": {
-						"x": 1607,
-						"y": 1403,
+						"x": 1531,
+						"y": 2057,
 						"w": 69,
 						"h": 69
 					}
@@ -423,10 +528,52 @@
 						"h": 4
 					},
 					"frame": {
-						"x": 1746,
-						"y": 771,
+						"x": 1,
+						"y": 2261,
 						"w": 126,
 						"h": 4
+					}
+				},
+				{
+					"filename": "illustrate_survey_icon",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 120,
+						"h": 120
+					},
+					"spriteSourceSize": {
+						"x": 3,
+						"y": 16,
+						"w": 115,
+						"h": 100
+					},
+					"frame": {
+						"x": 1765,
+						"y": 1667,
+						"w": 115,
+						"h": 100
+					}
+				},
+				{
+					"filename": "illustrate_survey_icon_1",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 120,
+						"h": 120
+					},
+					"spriteSourceSize": {
+						"x": 3,
+						"y": 6,
+						"w": 115,
+						"h": 110
+					},
+					"frame": {
+						"x": 1602,
+						"y": 2119,
+						"w": 115,
+						"h": 110
 					}
 				},
 				{
@@ -444,8 +591,8 @@
 						"h": 100
 					},
 					"frame": {
-						"x": 1843,
-						"y": 777,
+						"x": 1719,
+						"y": 2119,
 						"w": 115,
 						"h": 100
 					}
@@ -465,8 +612,8 @@
 						"h": 50
 					},
 					"frame": {
-						"x": 1851,
-						"y": 1292,
+						"x": 1884,
+						"y": 1,
 						"w": 4,
 						"h": 50
 					}
@@ -486,8 +633,8 @@
 						"h": 24
 					},
 					"frame": {
-						"x": 983,
-						"y": 1450,
+						"x": 1746,
+						"y": 1296,
 						"w": 25,
 						"h": 24
 					}
@@ -507,8 +654,8 @@
 						"h": 24
 					},
 					"frame": {
-						"x": 1678,
-						"y": 1403,
+						"x": 1345,
+						"y": 1975,
 						"w": 25,
 						"h": 24
 					}
@@ -519,6 +666,6 @@
 	"meta": {
 		"app": "https://www.codeandweb.com/texturepacker",
 		"version": "3.0",
-		"smartupdate": "$TexturePacker:SmartUpdate:243fe6c5fc7b182f6e08375f8b5ce7d6:da7caad1d66a793b2778a784ced68c25:122453b6f89bfdf17dd5f5f907a1c15c$"
+		"smartupdate": "$TexturePacker:SmartUpdate:5dc5b09fcb8cb6449d4b21be29f63471:18957b0a74d65246e9c31773db3114ea:122453b6f89bfdf17dd5f5f907a1c15c$"
 	}
 }

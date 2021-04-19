@@ -126,7 +126,6 @@ export class MatterUserObject extends MatterPlayerObject {
         this.mMoving = true;
         this.peer.mainPeer.selfStartMove();
         const pos = this.getPosition();
-        Logger.getInstance().log("setPostion usr move ===>", { x: this._tempVec.x * this._scale + this._offset.x, y: this._tempVec.y * this._scale + this._offset.y }, this.body);
         const angle = Math.atan2((path[0].y - pos.y), (path[0].x - pos.x));
         const speed = this.mModel.speed * delayTime;
         this.setVelocity(Math.cos(angle) * speed, Math.sin(angle) * speed);

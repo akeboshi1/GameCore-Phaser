@@ -25,10 +25,12 @@ export class BaseConfigManager {
         } else {
             return this.getBasePath().then((value: string) => {
                 if (this.mDispose) return;
-                this.dataMap.clear();
                 this.dirname(value);
-                this.mGame.loadJson();
+                // 开始加载时先清空配置
+                this.dataMap.clear();
+                // 再添加对应的配置
                 this.add();
+                this.mGame.loadJson();
                 return this.executeLoad(this.dataMap);
             });
         }
@@ -57,7 +59,7 @@ export class BaseConfigManager {
                         const dataconfig = dataMap.get(value.key);
                         dataconfig.parseJson(value.obj);
                     } else {
-                        const temp = { resName: value.key, path: value.url, type: "json" };
+                        const temp = { resName: value.key, path: value.url, type: value.responseType || "json" };
                         loadUrls.push(temp);
                     }
                 }
@@ -68,12 +70,6 @@ export class BaseConfigManager {
                             const obj = dataMap.get(key);
                             obj.resName = key;
                             const json = value.response;
-                            try {
-                                this.setLocalStorage(key, value.responseURL, json);
-                            } catch (error) {
-                                // tslint:disable-next-line:no-console
-                                console.log("Local Storage is full, Please empty data");
-                            }
                             obj.parseJson(json);
                         });
                         this.mInitialization = true;
@@ -142,23 +138,23 @@ export class BaseConfigManager {
         const promises = [];
         dataMap.forEach(async (value, key: string) => {
             const temppath = this.configUrl(key, value.url);
-            const obj = this.getLocalStorage(key, temppath);
+            const obj = this.getLocalStorage(key, temppath, value.responseType);
             promises.push(obj);
         });
         return Promise.all(promises);
     }
 
-    protected async getLocalStorage(key: string, jsonUrl: string) {
+    protected async getLocalStorage(key: string, jsonUrl: string, responseType: string) {
         const cachestring = await this.mGame.peer.render.getLocalStorage(key);
         if (cachestring !== null) {
             const temp = JSON.parse(cachestring);
             if (temp.url === jsonUrl) {
-                return { key, url: jsonUrl, obj: temp.obj };
+                return { key, url: jsonUrl, obj: temp.obj, responseType };
             } else {
                 this.mGame.peer.render.removeLocalStorage(key);
             }
         }
-        return { key, url: jsonUrl, obj: null };
+        return { key, url: jsonUrl, obj: null, responseType };
     }
 
     protected setLocalStorage(key: string, jsonUrl: string, obj: object) {

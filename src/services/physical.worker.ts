@@ -425,8 +425,6 @@ export class PhysicalPeer extends RPCPeer {
     public positionPrev(id: number) {
         const obj = this.matterObjectMap.get(id);
         if (!obj) return;
-        // tslint:disable-next-line:no-console
-        // console.log("positionPrev====", obj.body.positionPrev);
         return (<any>obj.body).positionPrev;
     }
 
@@ -434,8 +432,6 @@ export class PhysicalPeer extends RPCPeer {
     public position(id: number) {
         const obj = this.matterObjectMap.get(id);
         if (!obj) return;
-        // tslint:disable-next-line:no-console
-        // console.log("position====", obj.body.position);
         return obj.body.position;
     }
 

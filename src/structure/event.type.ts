@@ -126,4 +126,14 @@ export class EventType {
      */
     public static GALLERY_UPDATE = "GALLERY_UPDATE";
     public static DONE_MISSION_LIST = "DONE_MISSION_LIST";// 收集奖励领取
+
+    /**
+     * 请求家具PI数据
+     */
+    public static QUEST_ELEMENT_PI_DATA = "QUEST_ELEMENT_PI_DATA";
+
+    /**
+     * 返回家具PI数据
+     */
+    public static RETURN_ELEMENT_PI_DATA = "RETURN_ELEMENT_PI_DATA";
 }

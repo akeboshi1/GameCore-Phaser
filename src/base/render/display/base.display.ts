@@ -58,7 +58,14 @@ export abstract class BaseDisplay extends Phaser.GameObjects.Container implement
     protected mProjectionSize: IProjection;
     protected mSortX: number = 0;
     protected mSortY: number = 0;
+    protected mID: number = 0;
     protected mHasInteractive: boolean = false;
+
+    constructor(scene: Phaser.Scene, id?: number) {
+        super(scene);
+        this.mID = id;
+    }
+
     public destroy(fromScene?: boolean) {
         this.mSprites.forEach((sprite) => sprite.destroy());
         this.mSprites.clear();
@@ -212,6 +219,10 @@ export abstract class BaseDisplay extends Phaser.GameObjects.Container implement
 
     get sortZ(): number {
         return this.z || 0;
+    }
+
+    get id() {
+        return this.mID;
     }
 
     get hasInteractive(): boolean {

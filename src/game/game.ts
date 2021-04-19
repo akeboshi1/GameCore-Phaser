@@ -2,9 +2,8 @@ import { UIManager } from "./ui/ui.manager";
 import { PBpacket, PacketHandler } from "net-socket-packet";
 import { op_def, op_client, op_virtual_world, op_gateway } from "pixelpai_proto";
 import { Lite } from "game-capsule";
-import { MainPeer } from "./main.peer";
-import { IConnectListener, ServerAddress } from "../../lib/net";
-import { ResUtils, Tool, load } from "utils";
+import { IConnectListener } from "../../lib/net/socket";
+import { ResUtils, Tool, load, HttpLoadManager, Url } from "utils";
 import IOP_CLIENT_REQ_VIRTUAL_WORLD_PLAYER_INIT = op_gateway.IOP_CLIENT_REQ_VIRTUAL_WORLD_PLAYER_INIT;
 import { Connection, GameSocket } from "./net/connection";
 import { Clock, ClockReadyListener } from "./loop/clock/clock";
@@ -22,6 +21,7 @@ import { NetworkManager } from "./command";
 import version from "../../version";
 import { SoundWorkerManager } from "./sound.manager";
 import { GuideWorkerManager } from "./guide.manager/guide.worker.manager";
+import { ServerAddress } from "../../lib";
 interface ISize {
     width: number;
     height: number;
@@ -31,7 +31,7 @@ export const wokerfps: number = 45;
 export const interval = wokerfps > 0 ? 1000 / wokerfps : 1000 / 30;
 export class Game extends PacketHandler implements IConnectListener, ClockReadyListener {
     public isDestroy: boolean = false;
-    protected mainPeer: MainPeer;
+    protected mainPeer: any;
     protected connect: Connection;
     protected mUser: User;
     // protected mUiManager: UiManager;
@@ -52,6 +52,7 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
     protected mLoadingManager: LoadingManager;
     protected mConfigManager: BaseConfigManager;
     protected mNetWorkManager: NetworkManager;
+    protected mHttpLoadManager: HttpLoadManager;
 
     protected gameConfigUrls: Map<string, string> = new Map();
     protected gameConfigUrl: string;
@@ -64,7 +65,7 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
     protected mWorkerLoop: any;
     protected mAvatarType: op_def.AvatarStyle;
     protected mRunning: boolean = true;
-    constructor(peer: MainPeer) {
+    constructor(peer: any) {
         super();
         this.mainPeer = peer;
         this.connect = new Connection(peer);
@@ -331,7 +332,7 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
         return this.mHttpService;
     }
 
-    get peer(): MainPeer {
+    get peer(): any {
         return this.mainPeer;
     }
 
@@ -380,6 +381,9 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
     }
     get configManager() {
         return this.mConfigManager;
+    }
+    get httpLoaderManager() {
+        return this.mHttpLoadManager;
     }
     get emitter(): EventDispatcher {
         return this.mDataManager.emitter;
@@ -631,6 +635,7 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
         if (!this.mDataManager) this.mDataManager = new DataManager(this);
         if (!this.mConfigManager) this.mConfigManager = new BaseConfigManager(this);
         if (!this.mNetWorkManager) this.mNetWorkManager = new NetworkManager(this);
+        if (!this.mHttpLoadManager) this.mHttpLoadManager = new HttpLoadManager();
         // this.mPlayerDataManager = new PlayerDataManager(this);
 
         this.mUIManager.addPackListener();
@@ -738,6 +743,10 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
                     this.mNetWorkManager.destory();
                     this.mNetWorkManager = null;
                 }
+                if (this.mHttpLoadManager) {
+                    this.mHttpLoadManager.destroy();
+                    this.mHttpLoadManager = null;
+                }
                 if (this.mConfigManager) {
                     this.mConfigManager.destory();
                     this.mConfigManager = null;
@@ -746,7 +755,6 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
                     this.mDataManager.clear();
                     this.mDataManager = null;
                 }
-
                 if (this.mSoundManager) {
                     this.mSoundManager.destroy();
                     this.mSoundManager = null;
@@ -768,7 +776,7 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
         const content: op_client.IOP_GATEWAY_RES_CLIENT_VIRTUAL_WORLD_INIT = packet.content;
         const configUrls = content.configUrls;
         this.moveStyle = content.moveStyle;
-
+        if (content.resourceRoot) Url.RESOURCE_ROOT = content.resourceRoot[0];
         this.mClock.sync(-1);
 
         this.initgameConfigUrls(configUrls);
@@ -888,6 +896,7 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
         // TODO do something here.
         if (this.connect) this.connect.update();
         if (this.mRoomManager) this.mRoomManager.update(current, delta);
+        if (this.mHttpLoadManager) this.mHttpLoadManager.update(current, delta);
     }
 
     private update(current: number, delta: number = 0) {

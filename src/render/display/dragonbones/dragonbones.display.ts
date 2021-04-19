@@ -7,7 +7,6 @@ import { ElementTopDisplay } from "../element.top.display";
 import { FramesDisplay } from "../frames/frames.display";
 
 export class DragonbonesDisplay extends BaseDragonbonesDisplay implements IDisplayObject {
-    protected mID: number = undefined;
     protected mTitleMask: number;
     protected mNodeType: number = undefined;
     protected mReferenceArea: ReferenceArea;
@@ -19,9 +18,8 @@ export class DragonbonesDisplay extends BaseDragonbonesDisplay implements IDispl
     private mName: string = undefined;
     private mStartFireTween: Phaser.Tweens.Tween;
     constructor(scene: Phaser.Scene, private render: Render, id?: number, private uuid?: number, type?: number) {
-        super(scene);
+        super(scene, id);
 
-        this.mID = id;
         this.mNodeType = type;
 
         this.mLoadQueue = new LoadQueue(scene);
