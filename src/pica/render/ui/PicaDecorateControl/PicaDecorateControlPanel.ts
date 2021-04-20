@@ -6,7 +6,7 @@ import { UIAtlasName } from "../../../res";
 import { PicaBasePanel } from "../pica.base.panel";
 
 export class PicaDecorateControlPanel extends PicaBasePanel {
-    private mSaveBtn: Button;
+    // private mSaveBtn: Button;
     private mRotateBtn: Button;
     private mRecycleBtn: Button;
     // private mAutoPlaceBtn: Button;
@@ -21,7 +21,7 @@ export class PicaDecorateControlPanel extends PicaBasePanel {
 
     public addListen() {
         if (!this.mInitialized) return;
-        this.mSaveBtn.on(ClickEvent.Tap, this.onSaveHandler, this);
+        // this.mSaveBtn.on(ClickEvent.Tap, this.onSaveHandler, this);
         this.mRotateBtn.on(ClickEvent.Tap, this.onRotateHandler, this);
         this.mRecycleBtn.on(ClickEvent.Tap, this.onRecycleAllHandler, this);
         // this.mAutoPlaceBtn.on(ClickEvent.Tap, this.onAutoPlaceHandler, this);
@@ -32,7 +32,7 @@ export class PicaDecorateControlPanel extends PicaBasePanel {
 
     public removeListen() {
         if (!this.mInitialized) return;
-        this.mSaveBtn.off(ClickEvent.Tap, this.onSaveHandler, this);
+        // this.mSaveBtn.off(ClickEvent.Tap, this.onSaveHandler, this);
         this.mRotateBtn.off(ClickEvent.Tap, this.onRotateHandler, this);
         this.mRecycleBtn.off(ClickEvent.Tap, this.onRecycleAllHandler, this);
         // this.mAutoPlaceBtn.off(ClickEvent.Tap, this.onAutoPlaceHandler, this);
@@ -47,7 +47,7 @@ export class PicaDecorateControlPanel extends PicaBasePanel {
     }
 
     public updateCanPlace(canPlace: boolean) {
-        if (this.mSaveBtn) this.mSaveBtn.enable = canPlace;
+        // if (this.mSaveBtn) this.mSaveBtn.enable = canPlace;
     }
 
     public updatePosition() {
@@ -85,25 +85,23 @@ export class PicaDecorateControlPanel extends PicaBasePanel {
         const h = this.scene.cameras.main.height;
 
         this.mBtns = [];
-        this.mSaveBtn = new Button(this.scene, ModuleName.PICADECORATE_NAME, "room_decorate_confirm.png");
+        // this.mSaveBtn = new Button(this.scene, ModuleName.PICADECORATE_NAME, "room_decorate_confirm.png");
         this.mRotateBtn = new Button(this.scene, ModuleName.PICADECORATE_NAME, "room_decorate_Spin.png");
         this.mRecycleBtn = new Button(this.scene, ModuleName.PICADECORATE_NAME, "room_decorate_put.png");
         // this.mAutoPlaceBtn = new Button(this.scene, ModuleName.PICADECORATE_NAME, "room_decorate_tiled.png");
         this.mExitBtn = new Button(this.scene, ModuleName.PICADECORATE_NAME, "room_decorate_closed.png");
 
-        this.mBtns = [this.mSaveBtn, this.mRotateBtn, this.mRecycleBtn, this.mExitBtn];
+        this.mBtns = [this.mRotateBtn, this.mRecycleBtn, this.mExitBtn];
         this.add(this.mBtns);
 
         const zoom = this.render.uiScale;
-        let totalWidth = w - 60 * 2 * this.dpr * zoom;
-        this.mBtns.map((btn) => totalWidth -= btn.width * zoom);
-        const space = totalWidth / (this.mBtns.length - 1) / zoom;
+        const space = 6 * this.dpr;
 
         for (let i = 0; i < this.mBtns.length; i++) {
             if (i > 0) {
                 this.mBtns[i].x = space + (this.mBtns[i - 1].width * 0.5) + this.mBtns[i - 1].x + this.mBtns[i].width * 0.5;
             } else {
-                this.mBtns[i].x = 40 * this.dpr + this.mBtns[i].width * 0.5;
+                this.mBtns[i].x = 60 * this.dpr + this.mBtns[i].width * 0.5;
             }
             this.mBtns[i].y = 11 * this.dpr + this.mBtns[i].height * 0.5;
         }
