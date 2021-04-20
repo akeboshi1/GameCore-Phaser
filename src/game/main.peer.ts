@@ -692,8 +692,8 @@ export class MainPeer extends RPCPeer {
     }
 
     @Export([webworker_rpc.ParamType.str, webworker_rpc.ParamType.str, webworker_rpc.ParamType.str])
-    public uploadDBTexture(key: string, url: string, json: string) {
-        this.game.httpService.uploadDBTexture(key, url, json);
+    public uploadDBTexture(key: string, url: string, json: string): Promise<any> {
+        return this.game.httpService.uploadDBTexture(key, url, json);
     }
 
     @Export([webworker_rpc.ParamType.num])

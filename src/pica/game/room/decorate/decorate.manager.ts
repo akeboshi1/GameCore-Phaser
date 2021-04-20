@@ -278,7 +278,7 @@ export class DecorateManager {
         });
         this.mSelectedActionQueue.length = 0;
 
-        this.unselect();
+        // this.unselect();
     }
 
     // 将当前选中的物件放回原位/取消放置，取消选择，关闭浮动功能栏
@@ -338,6 +338,11 @@ export class DecorateManager {
         act.execute(this);
         this.select(indexID);
         this.mSelectedActionQueue.push(act);
+
+        const canPlace = this.checkSelectedCanPlace();
+        if (canPlace) {
+            this.ensureSelectedChanges();
+        }
     }
 
     // 移动选择物 call by motion
@@ -574,6 +579,10 @@ class DecorateAction {
             const canPlace = mng.checkSelectedCanPlace();
             mng.room.game.emitter.emit(MessageType.DECORATE_UPDATE_SELECTED_ELEMENT_CAN_PLACE, canPlace);
             mng.room.game.renderPeer.workerEmitter(MessageType.DECORATE_UPDATE_SELECTED_ELEMENT_POSITION);
+
+            if (canPlace) {
+                mng.ensureSelectedChanges();
+            }
         }
     }
 
@@ -590,6 +599,10 @@ class DecorateAction {
             mng.room.game.emitter.emit(MessageType.DECORATE_UPDATE_SELECTED_ELEMENT_CAN_PLACE, canPlace);
             const element = mng.room.elementManager.get(this.target.id);
             if (element) element.showRefernceArea();
+
+            if (canPlace) {
+                mng.ensureSelectedChanges();
+            }
         }
     }
 
