@@ -68,13 +68,17 @@ export class FramesDisplay extends BaseFramesDisplay implements IDisplayObject {
         return false;
     }
 
-    public async showRefernceArea(area: number[][], origin: IPos) {
+    public async showRefernceArea(area: number[][], origin: IPos, conflictMap?: number[][]) {
         if (!area || area.length <= 0 || !origin) return;
-        const roomSize = await this.render.mainPeer.getCurrentRoomSize();
+        const roomSize = this.render.roomSize;
         if (!this.mReferenceArea) {
             this.mReferenceArea = new ReferenceArea(this.scene);
         }
-        this.mReferenceArea.draw(area, origin, roomSize.tileWidth / this.render.scaleRatio, roomSize.tileHeight / this.render.scaleRatio);
+        let drawArea = area;
+        if (conflictMap !== undefined && conflictMap.length > 0) {
+            drawArea = conflictMap;
+        }
+        this.mReferenceArea.draw(drawArea, origin, roomSize.tileWidth / this.render.scaleRatio, roomSize.tileHeight / this.render.scaleRatio);
         this.addAt(this.mReferenceArea, 0);
     }
 

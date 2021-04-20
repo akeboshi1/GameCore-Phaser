@@ -68,6 +68,7 @@ export class MouseManagerDecorate extends MouseManager {
                 worldPos.y + this.downDisplayPos.y - this.downPointerPos.y);
             const gridPos = Position45.transformTo90(Position45.transformTo45(freePos, this.roomSize), this.roomSize);
             this.selectedDisplay.setPosition(gridPos.x, gridPos.y);
+            this.render.mainPeer.updateDecorateElementReference(this.selectedDisplay.id, gridPos.x, gridPos.y);
         } else {
             // move camera
             this.render.camerasManager.offsetScroll(

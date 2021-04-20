@@ -4,7 +4,7 @@ import { PBpacket, Buffer } from "net-socket-packet";
 import * as protos from "pixelpai_proto";
 import { ServerAddress } from "../../lib/net/address";
 import { Game } from "./game";
-import { IPos, Logger } from "utils";
+import {IPos, Logger, LogicPos} from "utils";
 import { ILauncherConfig, MAIN_WORKER, RENDER_PEER, ModuleName, EventType, PHYSICAL_WORKER, PHYSICAL_WORKER_URL, GameState } from "structure";
 import { PicaGame } from "picaWorker";
 import { DataMgrType } from "./data.manager/dataManager";
@@ -381,6 +381,18 @@ export class MainPeer extends RPCPeer {
         const element = this.game.roomManager.currentRoom.elementManager.get(id);
         if (!element) return false;
         return this.game.roomManager.currentRoom.elementManager.isElementLocked(element);
+    }
+
+    // 小屋装扮过程中，更新物件编辑提示区域
+    @Export()
+    public updateDecorateElementReference(id: number, x: number, y: number) {
+        if (!this.game.roomManager) return;
+        if (!this.game.roomManager.currentRoom) return;
+        if (!this.game.roomManager.currentRoom.elementManager) return;
+        const element = this.game.roomManager.currentRoom.elementManager.get(id);
+        if (!element) return;
+        const conflictMap = this.game.roomManager.currentRoom.checkSpriteConflictToWalkableMap(element.model, false, new LogicPos(x, y));
+        element.showRefernceArea(conflictMap);
     }
 
     @Export()

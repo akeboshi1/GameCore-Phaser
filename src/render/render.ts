@@ -105,6 +105,11 @@ export class Render extends RPCPeer implements GameMain, IRender {
      * 面板缩放系数
      */
     private mUIScale: number;
+    /**
+     * 房间尺寸
+     */
+    private mRoomSize: IPosition45Obj;
+    private mRoomMiniSize: IPosition45Obj;
 
     private mMainPeer: any;
     private mPhysicalPeer: any;
@@ -208,6 +213,14 @@ export class Render extends RPCPeer implements GameMain, IRender {
 
     get scaleRatio(): number {
         return this.mScaleRatio;
+    }
+
+    get roomSize(): IPosition45Obj {
+        return this.mRoomSize;
+    }
+
+    get roomMiniSize(): IPosition45Obj {
+        return this.mRoomMiniSize;
     }
 
     get account(): Account {
@@ -1583,10 +1596,10 @@ export class Render extends RPCPeer implements GameMain, IRender {
     }
 
     @Export()
-    public showRefernceArea(id: number, area: number[][], origin: IPos) {
+    public showRefernceArea(id: number, area: number[][], origin: IPos, conflictMap?: number[][]) {
         const ele = this.mDisplayManager.getDisplay(id);
         if (!ele) return;
-        ele.showRefernceArea(area, origin);
+        ele.showRefernceArea(area, origin, conflictMap);
     }
 
     @Export()
@@ -1685,6 +1698,12 @@ export class Render extends RPCPeer implements GameMain, IRender {
 
     @Export()
     public switchDecorateMouseManager() {
+    }
+
+    @Export()
+    public setRoomSize(size: IPosition45Obj, miniSize: IPosition45Obj) {
+        this.mRoomSize = size;
+        this.mRoomMiniSize = miniSize;
     }
 
     protected onWorkerUnlinked(worker: string) {
