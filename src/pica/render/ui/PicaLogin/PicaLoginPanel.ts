@@ -30,7 +30,7 @@ export class PicaLoginPanel extends BasePanel {
         this.errorCode.set(40002, "密码不正确");
         this.errorCode.set(40003, "该商品已经添加到购物车");
         this.errorCode.set(40005, "手机验证码不正确");
-        this.errorCode.set(40006, "您未获得测试资格，关注官博下次一定！");
+        this.errorCode.set(40006, "您未获得测试资格\n关注“皮卡堂手游”微信公众号下次一定！");
     }
 
     setInputVisible(val: boolean) {
@@ -158,7 +158,7 @@ export class PicaLoginPanel extends BasePanel {
             text: "",
             fontSize: 16 * this.dpr + "px"
         }).setOrigin(0, 0.5);
-        const codeContainer = this.createInput(this.mPhoneCodeInput, 0, -container.height * 0.5 + 180 * this.dpr, 220 * this.dpr);
+        const codeContainer = this.createInput(this.mPhoneCodeInput, 0, -container.height * 0.5 + 176 * this.dpr, 220 * this.dpr);
         this.mPhoneCodeInput.x = -codeContainer.width / 2 + 8 * this.dpr;
 
         this.fetchCode = new Button(this.scene, this.key, "login_resend_pin_butt", undefined, "发送验证码");
