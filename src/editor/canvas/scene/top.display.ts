@@ -1,4 +1,4 @@
-import { TopDisplay } from "baseRender";
+import { TopDisplay } from "src/base/render";
 
 export class EditorTopDisplay extends TopDisplay {
     constructor(scene: Phaser.Scene, owner: any, dpr: number) {

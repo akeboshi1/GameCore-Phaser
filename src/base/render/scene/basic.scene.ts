@@ -1,6 +1,6 @@
-import { LayerManager } from "baseRender";
+import { LayerManager } from "src/base/render";
 import { StringUtils } from "utils";
-import { Render } from "../../../render/render";
+import { Render } from "../../../gamecore/render/render";
 
 export class BasicScene extends Phaser.Scene {
     public layerManager: LayerManager;

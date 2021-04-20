@@ -24,25 +24,25 @@
         "../../redner/index"
       ],
       "gamecore": [
-        "./src/game/index"
+        "src/gamecore/game/index"
       ],
       "utils": [
-        "./src/utils/index"
+        "src/utils/index"
       ],
       "structure": [
-        "./src/structure/index"
+        "src/structure/index"
       ],
       "editorCanvas": [
-        "./src/editor/index"
+        "src/editor/index"
       ],
       "display": [
         "src/base/render/display/index"
       ],
       "baseModel": [
-        "./src/base/model/index"
+        "src/base/model/index"
       ],
       "baseRender": [
-        "./src/base/render/index"
+        "src/base/render/index"
       ]
     }
   },

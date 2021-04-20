@@ -1,5 +1,5 @@
-import { Sprite } from "baseModel";
-import { BaseFramesDisplay } from "baseRender";
+import { Sprite } from "src/base/model";
+import { BaseFramesDisplay } from "src/base/render";
 import { op_def } from "pixelpai_proto";
 import { LogicPos, Position45, ISprite } from "structure";
 import { SceneEditorCanvas } from "./scene.editor.canvas";

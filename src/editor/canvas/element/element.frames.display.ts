@@ -1,7 +1,7 @@
 import { ElementEditorEmitType } from "./element.editor.canvas";
 import { SPRITE_SHEET_KEY, ResourcesChangeListener, IMAGE_BLANK_KEY } from "./element.editor.resource.manager";
 import ElementEditorGrids from "./element.editor.grids";
-import { BaseDragonbonesDisplay, BaseFramesDisplay } from "baseRender";
+import { BaseDragonbonesDisplay, BaseFramesDisplay } from "src/base/render";
 import { AnimationDataNode } from "game-capsule";
 import { Logger, AnimationModel, RunningAnimation } from "structure";
 import { DragonbonesEditorDisplay } from "./dragonbones.editor.display";

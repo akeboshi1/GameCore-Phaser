@@ -1,5 +1,5 @@
 import { PacketHandler, PBpacket } from "net-socket-packet";
-import { Clock } from "../../src/game/loop/clock/clock";
+import { Clock } from "../../src/gamecore/game/loop/clock/clock";
 import { ServerAddress } from "./address";
 import { SocketConnection } from "./socket";
 

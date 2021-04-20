@@ -1,7 +1,7 @@
 import { EditorFramesDisplay } from "./editor.frames.display";
 import { SceneEditorCanvas } from "./scene.editor.canvas";
-import { ReferenceArea } from "baseRender";
-import { Sprite } from "baseModel";
+import { ReferenceArea } from "src/base/render";
+import { Sprite } from "src/base/model";
 
 export class EditorElementDisplay extends EditorFramesDisplay {
     constructor(sceneEditor: SceneEditorCanvas, sprite: Sprite) {

@@ -2,7 +2,7 @@ import { PacketHandler, PBpacket } from "net-socket-packet";
 import { SceneEditorCanvas } from "../scene.editor.canvas";
 import { op_client, op_editor, op_def } from "pixelpai_proto";
 import { IScenery, Logger } from "structure";
-import { BlockManager, BaseScenery } from "baseRender";
+import { BlockManager, BaseScenery } from "src/base/render";
 export class EditorSkyboxManager extends PacketHandler {
     private blocks: Map<number, BlockManager>;
     private mSelected: BlockManager;
