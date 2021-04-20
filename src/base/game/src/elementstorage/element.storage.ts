@@ -9,9 +9,9 @@ import {
     MossNode,
     AssetsNode,
     WallCollectionNode,
+    MossCollectionNode
 } from "game-capsule";
 import { op_def } from "pixelpai_proto";
-import { MossCollectionNode } from "game-capsule";
 import { Url } from "utils";
 import { AnimationModel, IDragonbonesModel, IFramesModel, IScenery, Logger } from "structure";
 import { DragonbonesModel } from "../dragonbones.model";
