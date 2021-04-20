@@ -39,7 +39,7 @@
         "src/base/render/display/index"
       ],
       "baseModel": [
-        "src/base/model/index"
+        "src/base/game/index"
       ],
       "baseRender": [
         "src/base/render/index"

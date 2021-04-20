@@ -1,0 +1,23 @@
+{
+  "name": "render",
+  "version": "1.0.0",
+  "main": "release/render.js",
+  "types": "release/types/index.d.ts",
+  "license": "MIT",
+  "devDependencies": {
+    "terser-webpack-plugin": "^2.1.3",
+    "ts-loader": "^6.0.4",
+    "typescript": "^3.5.2",
+    "webpack": "^4.35.2",
+    "webpack-cli": "^3.3.5"
+  },
+  "dependencies": {
+    "game-capsule": "git+ssh://git@code.apowo.com:PixelPai/game-capsule.git#dev",
+    "path": "^0.12.7",
+    "tooqinggamephaser": "^0.3.0",
+    "webworker-rpc": "git+ssh://git@code.apowo.com/opensource/webworker-rpc"
+  },
+  "scripts": {
+    "build": "webpack --mode=development --output-path=./release --progress"
+  }
+}

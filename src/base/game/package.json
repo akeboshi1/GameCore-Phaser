@@ -1,0 +1,14 @@
+{
+  "name": "basegame",
+  "version": "1.0.0",
+  "main": "release/basegame.js",
+  "types": "releaese/types/index.d.ts",
+  "license": "MIT",
+  "dependencies": {
+    "game-capsule": "^0.0.5",
+    "simple-sha1": "^3.0.1"
+  },
+  "scripts": {
+    "build": "webpack --mode=development --output-path=./release --progress"
+  }
+}
