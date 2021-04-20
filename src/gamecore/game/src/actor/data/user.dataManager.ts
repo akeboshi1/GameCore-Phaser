@@ -1,4 +1,4 @@
-import { ConnectionService } from "lib/net";
+import { ConnectionService } from "src/structure/src/net";
 import { PacketHandler, PBpacket } from "net-socket-packet";
 import { op_client, op_virtual_world, op_pkt_def } from "pixelpai_proto";
 import { Game } from "../../game";

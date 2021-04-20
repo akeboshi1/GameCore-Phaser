@@ -1,4 +1,4 @@
-import { Logger, ValueResolver } from "utils";
+import { ValueResolver } from "../promise";
 import { ServerAddress } from "./address";
 import { WSWrapper, ReadyState } from "./transport/websocket";
 export interface IConnectListener {
@@ -32,19 +32,22 @@ export class SocketConnection {
     constructor($listener: IConnectListener) {
         this.mTransport = new WSWrapper();
         this.mConnectListener = $listener;
-        Logger.getInstance().info(`SocketConnection init.`);
+        // tslint:disable-next-line:no-console
+        console.info(`SocketConnection init.`);
         // add connection event to listener
         if (typeof this.mTransport !== "undefined" && typeof this.mConnectListener !== "undefined") {
             const listener: IConnectListener = this.mConnectListener;
             this.mTransport.on("open", () => {
-                Logger.getInstance().info(`SocketConnection ready.[${this.mServerAddr.host}:${this.mServerAddr.port}]`);
+                // tslint:disable-next-line:no-console
+                console.info(`SocketConnection ready.[${this.mServerAddr.host}:${this.mServerAddr.port}]`);
                 listener.onConnected(this.isAuto);
                 this.onConnected();
                 this.isConnect = true;
                 this.isAuto = true;
             });
             this.mTransport.on("close", () => {
-                Logger.getInstance().info(`SocketConnection close.`);
+                // tslint:disable-next-line:no-console
+                console.info(`SocketConnection close.`);
                 listener.onDisConnected(this.isAuto);
                 this.isConnect = false;
                 if (this.closeConnectResolver) {
@@ -53,7 +56,8 @@ export class SocketConnection {
                 }
             });
             this.mTransport.on("error", (reason: SocketConnectionError) => {
-                Logger.getInstance().info(`SocketConnection error.`);
+                // tslint:disable-next-line:no-console
+                console.info(`SocketConnection error.`);
                 if (this.isConnect) listener.onError(reason);
             });
         }
@@ -81,14 +85,16 @@ export class SocketConnection {
 
     send(data: any): void {
         if (!this.mTransport) {
-            return Logger.getInstance().error(`Empty transport.`);
+            // tslint:disable-next-line:no-console
+            return console.error(`Empty transport.`);
         }
         this.mTransport.Send(data);
     }
 
     // Frees all resources for garbage collection.
     destroy(): void {
-        Logger.getInstance().debug("socket close");
+        // tslint:disable-next-line:no-console
+        console.debug("socket close");
         if (this.mTransport) {
             this.mTransport.destroy();
         }
@@ -96,7 +102,8 @@ export class SocketConnection {
 
     protected onConnected() {
         if (!this.mTransport) {
-            return Logger.getInstance().error(`Empty transport.`);
+            // tslint:disable-next-line:no-console
+            return console.error(`Empty transport.`);
         }
         this.mTransport.on("packet", this.onData.bind(this));
     }
@@ -108,7 +115,8 @@ export class SocketConnection {
 
     private doConnect() {
         if (!this.mTransport) {
-            return Logger.getInstance().error(`Empty transport.`);
+            // tslint:disable-next-line:no-console
+            return console.error(`Empty transport.`);
         }
         if (this.mTransport.readyState() === ReadyState.OPEN) return this.mTransport.Close();
         if (this.mServerAddr.secure !== undefined) this.mTransport.secure = this.mServerAddr.secure;

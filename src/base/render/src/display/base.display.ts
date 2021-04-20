@@ -1,5 +1,4 @@
-import { ValueResolver } from "utils";
-import { DisplayField, IDragonbonesModel, IFramesModel, RunningAnimation, Handler, IProjection, LogicPos } from "structure";
+import { ValueResolver, DisplayField, IDragonbonesModel, IFramesModel, RunningAnimation, Handler, IProjection, LogicPos } from "structure";
 import { ISortObject } from "./sort.object";
 export interface IBaseDisplay {
     displayInfo: IDragonbonesModel | IFramesModel | undefined;

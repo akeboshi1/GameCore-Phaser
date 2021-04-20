@@ -1,6 +1,6 @@
-import {Logger, ResUtils, Tool, Url, ValueResolver} from "utils";
-import {IAvatar, IDragonbonesModel, RunningAnimation, SlotSkin, Atlas} from "structure";
-import {BaseDisplay} from "./base.display";
+import { ResUtils, Tool, Url } from "utils";
+import { ValueResolver, Logger, IAvatar, IDragonbonesModel, RunningAnimation, SlotSkin, Atlas } from "structure";
+import { BaseDisplay } from "./base.display";
 
 const hash = require("object-hash");
 import ImageFile = Phaser.Loader.FileTypes.ImageFile;
@@ -171,7 +171,7 @@ export class BaseDragonbonesDisplay extends BaseDisplay {
 
     // 改变装扮接口(全量)
     public load(display: IDragonbonesModel): Promise<any> {
-        this.displayInfo = <IDragonbonesModel> display;
+        this.displayInfo = <IDragonbonesModel>display;
         if (!this.displayInfo) return Promise.reject("displayInfo error");
         // if (this.mLoadDisplayPromise) {
         //     this.mLoadDisplayPromise.reject("load func called again");
@@ -239,7 +239,7 @@ export class BaseDragonbonesDisplay extends BaseDisplay {
 
             const textureKey = this.generateReplaceTextureKey();
             const replaceData = this.generateReplaceTexture(textureKey);
-            resolve({key: textureKey, url: replaceData.url, json: replaceData.json});
+            resolve({ key: textureKey, url: replaceData.url, json: replaceData.json });
         });
     }
 
@@ -447,7 +447,7 @@ export class BaseDragonbonesDisplay extends BaseDisplay {
         if (this.mPlaceholder) {
             this.mPlaceholder.destroy();
         }
-        this.mPlaceholder = this.scene.make.image({key: "avatar_placeholder", x: -22, y: -68}).setOrigin(0);
+        this.mPlaceholder = this.scene.make.image({ key: "avatar_placeholder", x: -22, y: -68 }).setOrigin(0);
         this.add(this.mPlaceholder);
     }
 
@@ -466,7 +466,7 @@ export class BaseDragonbonesDisplay extends BaseDisplay {
             dbbinUrl,
             null,
             null,
-            {responseType: "arraybuffer"}
+            { responseType: "arraybuffer" }
         );
         this.scene.load.once(Phaser.Loader.Events.COMPLETE, this.createArmatureDisplay, this);
         this.scene.load.start();
@@ -589,7 +589,7 @@ export class BaseDragonbonesDisplay extends BaseDisplay {
         const url = canvas.canvas.toDataURL("image/png", 1);
         canvas.destroy();
 
-        return {url, json: atlas.toString()};
+        return { url, json: atlas.toString() };
     }
 
     private clearReplaceArmature() {
@@ -744,7 +744,7 @@ export class BaseDragonbonesDisplay extends BaseDisplay {
         this.mLoadMap.forEach((pName, sName) => {
             const partUrl: string = this.partNameToLoadUrl(pName);
             const partName: string = this.partNameToLoadKey(pName);
-            configList.push({key: partName, url: partUrl});
+            configList.push({ key: partName, url: partUrl });
         });
         this.scene.load.image(configList);
         this.scene.load.start();
@@ -781,7 +781,7 @@ export class BaseDragonbonesDisplay extends BaseDisplay {
             version = (skin.version === undefined || skin.version === "" ? "" : `_${skin.version}`);
             sn = skin.sn;
         }
-        return {sn, version};
+        return { sn, version };
     }
 
     private clearFadeTween() {

@@ -1,4 +1,4 @@
-export * from "./src/account";
+export * from "./account";
 export * from "./cameras";
 export * from "./display";
 export * from "./guide";

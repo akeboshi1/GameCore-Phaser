@@ -6,7 +6,7 @@ import { IElement } from "../element/element";
 import NodeType = op_def.NodeType;
 import { IRoomService, SpriteAddCompletedListener } from "../room";
 import { ISprite, IPos, Logger, LogicPos, IDragonbonesModel, IFramesModel } from "structure";
-import { ConnectionService } from "lib/net";
+import { ConnectionService } from "src/structure/src/net";
 import { EmptyTerrain } from "./empty.terrain";
 import { IElementStorage, Sprite } from "src/base/model";
 export class TerrainManager extends PacketHandler implements IElementManager {

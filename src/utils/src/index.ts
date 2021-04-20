@@ -3,7 +3,6 @@ export { Tool } from "./tool";
 export { load, loadArr } from "./http";
 export { Algorithm } from "./algorithm";
 export * from "./copy.prototype";
-export * from "./promise";
 export * from "./stringUtils";
 export * from "./object.assign";
 export * from "./uiUtil";

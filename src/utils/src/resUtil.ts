@@ -65,6 +65,12 @@ export class ResUtils {
         }
         return Url.OSD_PATH + "avatar/part/" + value + ".png";
     }
+    static getUsrAvatarTextureUrls(value: string): { img: string, json: string } {
+        return {
+            img: Url.OSD_PATH + "user_avatar/texture/" + value + ".png",
+            json: Url.OSD_PATH + "user_avatar/texture/" + value + ".json"
+        };
+    }
     static getGameConfig(value: string): string {
         if (HTTP_REGEX.test(value)) {
             return value;

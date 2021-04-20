@@ -19,7 +19,6 @@ export { FriendRelation, FriendRelationEnum, FriendData, FriendChannel, MenuData
 export { GameMain } from "./game.main";
 export * from "./game.state";
 export * from "./Handler";
-export * from "./helpers";
 export * from "./i18n";
 export * from "./intersects";
 export * from "./isprite";
@@ -50,3 +49,5 @@ export { RENDER_PEER, MAIN_WORKER, MAIN_WORKER_URL, PHYSICAL_WORKER, PHYSICAL_WO
 export * from "./room.type";
 export * from "./LayerName";
 export * from "./atlas";
+export * from "./net";
+export * from "./promise";

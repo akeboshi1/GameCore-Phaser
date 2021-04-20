@@ -19,7 +19,7 @@ import { WallManager } from "./element/wall.manager";
 import { RoomStateManager } from "./state/room.state.manager";
 import { IRoomManager } from "./room.manager";
 import { ViewblockManager } from "./viewblock/viewblock.manager";
-import { ConnectionService } from "lib/net";
+import { ConnectionService } from "src/structure/src/net";
 export interface SpriteAddCompletedListener {
     onFullPacketReceived(sprite_t: op_def.NodeType): void;
 }
