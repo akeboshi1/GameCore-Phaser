@@ -12,10 +12,10 @@
     "declaration": true,
     "sourceMap": true,
     "outDir": "release/types",
-    "typeRoots": [
-      "node_modules/@types",
-      "node_modules/apowophaserui/types"
-    ],
+    // "typeRoots": [
+    //   "node_modules/@types",
+    //   "node_modules/apowophaserui/types"
+    // ],
     "baseUrl": ".",
     "noImplicitUseStrict": true,
     "alwaysStrict": false,

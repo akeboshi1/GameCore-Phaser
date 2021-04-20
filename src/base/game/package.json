@@ -1,14 +1,23 @@
 {
   "name": "basegame",
   "version": "1.0.0",
-  "main": "release/basegame.js",
-  "types": "releaese/types/index.d.ts",
+  "main": "./basegame.js",
+  "types": "./types/index.d.ts",
   "license": "MIT",
   "dependencies": {
-    "game-capsule": "^0.0.5",
+    "game-capsule": "git+ssh://git@code.apowo.com:PixelPai/game-capsule.git#dev",
     "simple-sha1": "^3.0.1"
   },
   "scripts": {
     "build": "webpack --mode=development --output-path=./release --progress"
+  },
+  "devDependencies": {
+    "expose-loader": "^0.7.5",
+    "path": "^0.12.7",
+    "terser-webpack-plugin": "^2.1.3",
+    "ts-loader": "^6.0.4",
+    "typescript": "^3.5.2",
+    "webpack": "^4.35.2",
+    "webpack-cli": "^3.3.5"
   }
 }
