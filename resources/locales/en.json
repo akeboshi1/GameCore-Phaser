@@ -167,6 +167,9 @@
     "editorroom": "Edit",
     "roomname": "Name",
     "roomlevel": "Level",
+    "roomstate": "State",
+    "roomevaluate": "Evaluate",
+    "openparty": "Open Party",
     "expvalue": "Exp",
     "popvalue": "Popularity",
     "goodvalue": "Likes",
@@ -177,7 +180,8 @@
     "depreciation": "Depreciation",
     "needmaterials": "Materials needed for renovation",
     "renovatetips": "Currently no refurbishment is required",
-    "helptips": "**The depreciation degree will affect the daily income of the store"
+    "helptips": "**The depreciation degree will affect the daily income of the store",
+    "commontips": "common"
   },
   "business_street": {
     "commercial_street": "STORES",
@@ -446,13 +450,13 @@
     "make": "Click to open the manufacturing panel",
     "furindetail": "Furniture details",
     "surveyfurni": " SURVEY ",
-    "cooking":"Cooking"
+    "cooking": "Cooking"
   },
   "mail": {
     "onekey": "All Receive",
     "title": "Mail",
     "sender": "Sender: ",
     "expiration": "It expires after {{time}}",
-    "nomailtip":"No new email for now ~"
+    "nomailtip": "No new email for now ~"
   }
 }
