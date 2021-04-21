@@ -416,6 +416,11 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
     get avatarType() {
         return this.mAvatarType;
     }
+
+    get customProto() {
+        return this.mCustomProtoManager;
+    }
+
     public onFocus() {
         if (this.mWorkerLoop) clearInterval(this.mWorkerLoop);
         this.mRunning = true;
