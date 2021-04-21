@@ -2,29 +2,29 @@ import { BasicMediator, Game } from "gamecore";
 import { BaseDataConfigManager } from "../../config";
 import { op_client } from "pixelpai_proto";
 import { EventType, ModuleName } from "structure";
-import { PicaHouse } from "./PicaHouse";
+import { PicaRoom } from "./PicaRoom";
 
-export class PicaHouseMediator extends BasicMediator {
-    private picaHouse: PicaHouse;
+export class PicaRoomMediator extends BasicMediator {
+    private picaHouse: PicaRoom;
     constructor(game: Game) {
-        super(ModuleName.PICAHOUSE_NAME, game);
-        this.picaHouse = new PicaHouse(game);
+        super(ModuleName.PICAROOM_NAME, game);
+        this.picaHouse = new PicaRoom(game);
     }
 
     show(param?: any) {
         super.show(param);
-        this.game.emitter.on(ModuleName.PICAHOUSE_NAME + "_hide", this.hide, this);
-        this.game.emitter.on(ModuleName.PICAHOUSE_NAME + "_queryrequirements", this.query_REFURBISH_REQUIREMENTS, this);
-        this.game.emitter.on(ModuleName.PICAHOUSE_NAME + "_queryrefurbish", this.query_ROOM_REFURBISH, this);
+        this.game.emitter.on(ModuleName.PICAROOM_NAME + "_hide", this.hide, this);
+        this.game.emitter.on(ModuleName.PICAROOM_NAME + "_queryrequirements", this.query_REFURBISH_REQUIREMENTS, this);
+        this.game.emitter.on(ModuleName.PICAROOM_NAME + "_queryrefurbish", this.query_ROOM_REFURBISH, this);
 
         this.game.emitter.on(EventType.UPDATE_ROOM_INFO, this.onRoomInfoHandler, this);
         this.game.emitter.on("refurbish", this.on_REFURBISH_REQUIREMENTS, this);
     }
 
     hide() {
-        this.game.emitter.off(ModuleName.PICAHOUSE_NAME + "_hide", this.hide, this);
-        this.game.emitter.off(ModuleName.PICAHOUSE_NAME + "_queryrequirements", this.query_REFURBISH_REQUIREMENTS, this);
-        this.game.emitter.off(ModuleName.PICAHOUSE_NAME + "_queryrefurbish", this.query_ROOM_REFURBISH, this);
+        this.game.emitter.off(ModuleName.PICAROOM_NAME + "_hide", this.hide, this);
+        this.game.emitter.off(ModuleName.PICAROOM_NAME + "_queryrequirements", this.query_REFURBISH_REQUIREMENTS, this);
+        this.game.emitter.off(ModuleName.PICAROOM_NAME + "_queryrefurbish", this.query_ROOM_REFURBISH, this);
 
         this.game.emitter.off(EventType.UPDATE_ROOM_INFO, this.onRoomInfoHandler, this);
         this.game.emitter.off("refurbish", this.on_REFURBISH_REQUIREMENTS, this);

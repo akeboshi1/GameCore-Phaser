@@ -1,8 +1,8 @@
-import { AvatarSuitType, HTTP_REGEX, ModuleName } from "structure";
-import { Font } from "./font";
-import { Handler } from "./Handler";
-import { i18n } from "./i18n";
-import { Logger } from "./log";
+import {AvatarSuitType, HTTP_REGEX, ModuleName} from "structure";
+import {Font} from "./font";
+import {Handler} from "./Handler";
+import {i18n} from "./i18n";
+import {Logger} from "./log";
 
 export enum CoinType {
     TU_DING_COIN = 0,
@@ -19,6 +19,7 @@ export class Url {
     static RES_PATH: string = "";
     static RESUI_PATH: string = "";
     static RESOURCE_ROOT: string = "";
+
     static getRes(value: string): string {
         // return Url.RES_PATH + value;
         if (!value) return undefined;
@@ -64,10 +65,12 @@ export class Url {
         return value;
     }
 }
+
 export class ResUtils {
     static getPartName(value: string): string {
         return value + "_png";
     }
+
     static getPartUrl(value: string): string {
         // TOOD 编辑器或调式会传入本地资源。Avatar资源只存在cdn
         if (HTTP_REGEX.test(Url.OSD_PATH)) {
@@ -75,6 +78,14 @@ export class ResUtils {
         }
         return Url.OSD_PATH + "avatar/part/" + value + ".png";
     }
+
+    static getUsrAvatarTextureUrls(value: string): { img: string, json: string } {
+        return {
+            img: Url.OSD_PATH + "user_avatar/texture/" + value + ".png",
+            json: Url.OSD_PATH + "user_avatar/texture/" + value + ".json"
+        };
+    }
+
     static getGameConfig(value: string): string {
         if (HTTP_REGEX.test(value)) {
             return value;
@@ -112,6 +123,7 @@ export class BlackButton {
     static top(): number {
         return 4;
     }
+
     static right(): number {
         return 4;
     }
@@ -158,6 +170,7 @@ export class BlueButton {
     static top(): number {
         return 7;
     }
+
     static right(): number {
         return 7;
     }
@@ -204,6 +217,7 @@ export class WhiteButton {
     static top(): number {
         return 7;
     }
+
     static right(): number {
         return 7;
     }
@@ -236,7 +250,7 @@ export class CloseButton {
     }
 
     static getFrameConfig(): Phaser.Types.Loader.FileTypes.ImageFrameConfig {
-        return { frameWidth: 16, frameHeight: 16, startFrame: 1, endFrame: 3 };
+        return {frameWidth: 16, frameHeight: 16, startFrame: 1, endFrame: 3};
     }
 }
 
@@ -264,6 +278,7 @@ export class Background {
     static top(): number {
         return 15;
     }
+
     static right(): number {
         return 10;
     }
@@ -306,6 +321,7 @@ export class Border {
     static top(): number {
         return 4;
     }
+
     static right(): number {
         return 4;
     }
@@ -344,6 +360,7 @@ export class TransparentButton {
     static top(): number {
         return 4;
     }
+
     static right(): number {
         return 4;
     }
@@ -361,10 +378,11 @@ export class TransparentButton {
         };
     }
 }
+
 export class Coin {
     static getIcon(coinType: number) {
         let res = "tuding_icon";
-        const type = <CoinType>coinType;
+        const type = <CoinType> coinType;
         if (type === CoinType.COIN) {
             res = "iv_coin";
         } else if (type === CoinType.DIAMOND) {
@@ -378,9 +396,10 @@ export class Coin {
         }
         return res;
     }
+
     static getName(coinType: number) {
         let res = "银币";
-        const type = <CoinType>coinType;
+        const type = <CoinType> coinType;
         if (type === CoinType.COIN) {
             res = i18n.t("coin.coin");
         } else if (type === CoinType.DIAMOND) {
@@ -395,13 +414,16 @@ export class Coin {
         return res;
     }
 }
+
 export class UIHelper {
     public static get threeGreenNormal() {
         return ["butt_green_left", "butt_green_middle", "butt_green_right"];
     }
+
     public static get threeRedNormal() {
         return ["butt_red_left", "butt_red_middle", "butt_red_right"];
     }
+
     public static get threeYellowNormal() {
         return ["butt_yellow_left", "butt_yellow_middle", "butt_yellow_right"];
     }
@@ -409,9 +431,11 @@ export class UIHelper {
     public static get threeGreenSmall() {
         return ["butt_green_left_s", "butt_green_middle_s", "butt_green_right_s"];
     }
+
     public static get threeRedSmall() {
         return ["butt_red_left_s", "butt_red_middle_s", "butt_red_right_s"];
     }
+
     public static get threeYellowSmall() {
         return ["butt_yellow_left_s", "butt_yellow_middle_s", "butt_yellow_right_s"];
     }
@@ -419,9 +443,11 @@ export class UIHelper {
     public static get threeGreenBig() {
         return ["butt_green_left_b", "butt_green_middle_b", "butt_green_right_b"];
     }
+
     public static get threeRedBig() {
         return ["butt_red_left_b", "butt_red_middle_b", "butt_red_right_b"];
     }
+
     public static get threeYellowBig() {
         return ["butt_yellow_left_b", "butt_yellow_middle_b", "butt_yellow_right_b"];
     }
@@ -433,6 +459,7 @@ export class UIHelper {
             color
         };
     }
+
     public static colorNumberStyle(color: string, fontSize: number) {
         return {
             fontSize,
@@ -440,6 +467,7 @@ export class UIHelper {
             color
         };
     }
+
     public static titleYellowStyle_m(dpr, size: number = 20) {
         return {
             fontSize: size * dpr,
@@ -455,6 +483,7 @@ export class UIHelper {
             color: "#000000"
         };
     }
+
     public static whiteStyle(dpr, size: number = 12) {
         return {
             fontSize: size * dpr,
@@ -462,6 +491,7 @@ export class UIHelper {
             color: "#ffffff"
         };
     }
+
     public static brownishStyle(dpr, size: number = 12) {
         return {
             fontSize: size * dpr,
@@ -469,6 +499,7 @@ export class UIHelper {
             color: "#996600"
         };
     }
+
     public static yellowStyle(dpr, size: number = 12) {
         return {
             fontSize: size * dpr,
@@ -476,6 +507,7 @@ export class UIHelper {
             color: "#ffd136"
         };
     }
+
     public static redStyle(dpr, size: number = 12) {
         return {
             fontSize: size * dpr,
@@ -491,6 +523,7 @@ export class UIHelper {
             color: "#2B4BB5"
         };
     }
+
     public static background_w(dpr: number) {
         return {
             left: 50 * dpr,
@@ -499,6 +532,7 @@ export class UIHelper {
             bottom: 95 * dpr
         };
     }
+
     public static background_w_s(dpr: number) {
         return {
             left: 50 * dpr,
@@ -507,6 +541,7 @@ export class UIHelper {
             bottom: 70 * dpr
         };
     }
+
     public static background_n(dpr: number) {
         return {
             left: 30 * dpr,
@@ -536,6 +571,7 @@ export class UIHelper {
         }
         return text;
     }
+
     public static Text(scene: Phaser.Scene) {
         if (!this.mText) {
             this.mText = scene.make.text(this.whiteStyle, false);
@@ -544,9 +580,14 @@ export class UIHelper {
     }
 
     public static createSprite(scene: Phaser.Scene, key: string, animkey: string, frame: string, indexs: number[], frameRate: number = 30, repeat = 0, compl?: Handler) {
-        const sprite = scene.make.sprite({ key, frame: frame + "1" });
+        const sprite = scene.make.sprite({key, frame: frame + "1"});
         sprite.visible = false;
-        const anima: any = scene.anims.create({ key: animkey, frames: scene.anims.generateFrameNames(key, { prefix: frame + "", start: indexs[0], end: indexs[1] }), frameRate, repeat });
+        const anima: any = scene.anims.create({
+            key: animkey,
+            frames: scene.anims.generateFrameNames(key, {prefix: frame + "", start: indexs[0], end: indexs[1]}),
+            frameRate,
+            repeat
+        });
         anima.removeAllListeners();
         anima.on(Phaser.Animations.Events.ANIMATION_COMPLETE, () => {
             sprite.visible = false;
@@ -616,6 +657,7 @@ export class UIHelper {
         });
         return tweenY;
     }
+
     public static playtPosXTween(scene: any, obj: any, from: number, to: number, duration: number = 500, ease: string = "Bounce.easeOut", delay?: number, compl?: Handler, update?: Handler) {
         const onUpdate = update ? (cope: any, param: any) => {
             if (update) update.runWith(param.value);
@@ -662,6 +704,7 @@ export class UIHelper {
         });
         return tweenAlpha;
     }
+
     public static playScaleTween(scene: any, obj: any, from: number, to: number, duration: number = 500, ease = "Linear", delay?: number, compl?: Handler, update?: Handler) {
         const onUpdate = update ? (cope: any, param: any) => {
             if (update) update.runWith(param.value);

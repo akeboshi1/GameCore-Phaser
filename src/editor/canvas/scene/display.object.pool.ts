@@ -88,7 +88,7 @@ export class DisplayObjectPool {
     }
 
     addCache(id: number) {
-        this.caches.set(id, false);
+        if (this.caches) this.caches.set(id, false);
     }
 
     get(id: string) {

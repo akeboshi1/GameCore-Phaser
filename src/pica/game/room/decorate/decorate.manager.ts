@@ -199,14 +199,16 @@ export class DecorateManager {
         // 排序
         this.mRoom.game.renderPeer.changeLayer(id, LayerName.DECORATE);
 
-        // show reference
-        element.showRefernceArea();
+        const checkData = this.checkSelectedCanPlace();
 
-        const canPlace = this.checkSelectedCanPlace();
+        // show reference
+        element.showRefernceArea(checkData.conflictMap);
+
+        // show control panel
         this.mRoom.game.uiManager.showMed(ModuleName.PICADECORATECONTROL_NAME, {
             id,
             pos: element.model.pos,
-            canPlace,
+            canPlace: checkData.canPlace,
             locked
         });
 
@@ -243,21 +245,28 @@ export class DecorateManager {
 
     // 浮动功能栏
     // 检查是否可以放置
-    public checkSelectedCanPlace(): boolean {
-        if (this.mSelectedID < 0) return false;
+    public checkSelectedCanPlace(): { canPlace: boolean, conflictMap: number[][] } {
+        if (this.mSelectedID < 0) return {canPlace: false, conflictMap: []};
 
         const element = this.mRoom.elementManager.get(this.mSelectedID);
         if (!element) {
             // Logger.getInstance().debug("#place, no element: ", this.mSelectedID);
-            return false;
+            return {canPlace: false, conflictMap: []};
         }
         const sprite = element.model;
 
-        const conflictToWalkableMap = this.mRoom.checkSpriteConflictToWalkableMap(sprite);
-        return !conflictToWalkableMap;
+        const conflictMap = this.mRoom.checkSpriteConflictToWalkableMap(sprite);
+        let canPlace = true;
+        for (const rows of conflictMap) {
+            if (rows.indexOf(0) >= 0) {
+                canPlace = false;
+                break;
+            }
+        }
+        return {canPlace, conflictMap};
     }
 
-    // 点击浮动栏中的确认按钮，确认选择物的改动，取消选择，关闭选择栏
+    // 确认选择物的改动
     public ensureSelectedChanges() {
         if (this.mSelectedID < 0) return;
 
@@ -277,8 +286,6 @@ export class DecorateManager {
             }
         });
         this.mSelectedActionQueue.length = 0;
-
-        this.unselect();
     }
 
     // 将当前选中的物件放回原位/取消放置，取消选择，关闭浮动功能栏
@@ -338,6 +345,11 @@ export class DecorateManager {
         act.execute(this);
         this.select(indexID);
         this.mSelectedActionQueue.push(act);
+
+        const checkData = this.checkSelectedCanPlace();
+        if (checkData.canPlace) {
+            this.ensureSelectedChanges();
+        }
     }
 
     // 移动选择物 call by motion
@@ -372,6 +384,7 @@ export class DecorateManager {
         act.execute(this);
 
         this.ensureSelectedChanges();
+        this.unselect();
     }
 
     // 自动放置，放置背包中剩余的同种类物件
@@ -571,9 +584,15 @@ class DecorateAction {
 
         if (mng.selectedID === this.target.id) {
             mng.room.removeFromWalkableMap(this.target);
-            const canPlace = mng.checkSelectedCanPlace();
-            mng.room.game.emitter.emit(MessageType.DECORATE_UPDATE_SELECTED_ELEMENT_CAN_PLACE, canPlace);
+            const checkData = mng.checkSelectedCanPlace();
+            mng.room.game.emitter.emit(MessageType.DECORATE_UPDATE_SELECTED_ELEMENT_CAN_PLACE, checkData.canPlace);
             mng.room.game.renderPeer.workerEmitter(MessageType.DECORATE_UPDATE_SELECTED_ELEMENT_POSITION);
+            const element = mng.room.elementManager.get(this.target.id);
+            if (element) element.showRefernceArea(checkData.conflictMap);
+
+            if (checkData.canPlace) {
+                mng.ensureSelectedChanges();
+            }
         }
     }
 
@@ -586,10 +605,14 @@ class DecorateAction {
 
         if (mng.selectedID === this.target.id) {
             mng.room.removeFromWalkableMap(this.target);
-            const canPlace = mng.checkSelectedCanPlace();
-            mng.room.game.emitter.emit(MessageType.DECORATE_UPDATE_SELECTED_ELEMENT_CAN_PLACE, canPlace);
+            const checkData = mng.checkSelectedCanPlace();
+            mng.room.game.emitter.emit(MessageType.DECORATE_UPDATE_SELECTED_ELEMENT_CAN_PLACE, checkData.canPlace);
             const element = mng.room.elementManager.get(this.target.id);
-            if (element) element.showRefernceArea();
+            if (element) element.showRefernceArea(checkData.conflictMap);
+
+            if (checkData.canPlace) {
+                mng.ensureSelectedChanges();
+            }
         }
     }
 

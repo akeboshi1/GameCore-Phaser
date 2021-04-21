@@ -1,33 +1,31 @@
 import { op_client } from "pixelpai_proto";
 import { BBCodeText, Button, ClickEvent } from "apowophaserui";
-import { Font, Handler, i18n, Tool } from "utils";
+import { Font, Handler, i18n, Tool, UIHelper } from "utils";
 import { ItemInfoTips } from "gamecoreRender";
 import { UIAtlasKey } from "../../../res";
-export class PicaHouseInfoPanel extends Phaser.GameObjects.Container {
+export class PicaRoomInfoPanel extends Phaser.GameObjects.Container {
     private dpr: number;
-    private key: string;
-    private roomname: HouseAttributeValue;
-    private roomlevel: HouseAttributeValue;
-    private expvalue: HouseAttributeValue;
-    private popvalue: HouseAttributeValue;
-    private goodvalue: HouseAttributeValue;
-    private compviness: HouseAttributeValue;
-    private turnover: HouseAttributeValue;
-    private deprecia: HouseAttributeValue;
+    private roomName: RoomAttributeValue;
+    private roomlevel: RoomAttributeValue;
+    private expvalue: RoomAttributeValue;
+    private popvalue: RoomAttributeValue;
+    private goodvalue: RoomAttributeValue;
+    private compviness: RoomAttributeValue;
+    private turnover: RoomAttributeValue;
+    private deprecia: RoomAttributeValue;
     private renovateBtn: Button;
     private help: Button;
     private equirementsHandler: Handler;
     private helptips: ItemInfoTips;
-    constructor(scene: Phaser.Scene, x: number, y: number, width: number, height: number, key: string, dpr: number) {
+    constructor(scene: Phaser.Scene, x: number, y: number, width: number, height: number, dpr: number) {
         super(scene, x, y);
-        this.key = key;
         this.dpr = dpr;
         this.setSize(width, height);
         this.createAttribute();
 
     }
-    public setAttributeData(data: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_EDIT_MODE_ROOM_INFO, isSelf: boolean) {
-        this.roomname.setTextInfo(i18n.t("room_info.roomname"), data.name);
+    public setAttributeData(data: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_EDIT_MODE_ROOM_INFO) {
+        this.roomName.setTextInfo(i18n.t("room_info.roomname"), data.name);
         let level = 0;
         let curExp = 0;
         let nexExp = 0;
@@ -57,11 +55,7 @@ export class PicaHouseInfoPanel extends Phaser.GameObjects.Container {
             this.turnover.setTextInfo(i18n.t("room_info.turnover"), turnovervalue);
             this.deprecia.setTextInfo(i18n.t("room_info.depreciation"), Math.floor(data.undepreciated * 100) + "%");
             this.add([this.compviness, this.turnover, this.deprecia, this.helptips]);
-            if (isSelf) {
-                this.deprecia.add([this.renovateBtn, this.help]);
-            } else {
-                this.deprecia.remove([this.renovateBtn, this.help]);
-            }
+            this.deprecia.add([this.renovateBtn, this.help]);
         } else {
             this.compviness.visible = false;
             this.turnover.visible = false;
@@ -81,21 +75,21 @@ export class PicaHouseInfoPanel extends Phaser.GameObjects.Container {
         const itemWidth = this.width;
         const space = 20 * this.dpr + itemHeight;
 
-        this.roomname = new HouseAttributeValue(this.scene, 0, posy, itemWidth, itemHeight, this.dpr);
+        this.roomName = new RoomAttributeValue(this.scene, 0, posy, itemWidth, itemHeight, this.dpr);
         posy += space;
-        this.roomlevel = new HouseAttributeValue(this.scene, 0, posy, itemWidth, itemHeight, this.dpr);
+        this.roomlevel = new RoomAttributeValue(this.scene, 0, posy, itemWidth, itemHeight, this.dpr);
         posy += space;
-        this.expvalue = new HouseAttributeValue(this.scene, 0, posy, itemWidth, itemHeight, this.dpr);
+        this.expvalue = new RoomAttributeValue(this.scene, 0, posy, itemWidth, itemHeight, this.dpr);
         posy += space;
-        this.popvalue = new HouseAttributeValue(this.scene, 0, posy, itemWidth, itemHeight, this.dpr);
+        this.popvalue = new RoomAttributeValue(this.scene, 0, posy, itemWidth, itemHeight, this.dpr);
         posy += space;
-        this.goodvalue = new HouseAttributeValue(this.scene, 0, posy, itemWidth, itemHeight, this.dpr);
+        this.goodvalue = new RoomAttributeValue(this.scene, 0, posy, itemWidth, itemHeight, this.dpr);
         posy += space;
-        this.compviness = new HouseAttributeValue(this.scene, 0, posy, itemWidth, itemHeight, this.dpr);
+        this.compviness = new RoomAttributeValue(this.scene, 0, posy, itemWidth, itemHeight, this.dpr);
         posy += space;
-        this.turnover = new HouseAttributeValue(this.scene, 0, posy, itemWidth, itemHeight, this.dpr);
+        this.turnover = new RoomAttributeValue(this.scene, 0, posy, itemWidth, itemHeight, this.dpr);
         posy += space;
-        this.deprecia = new HouseAttributeValue(this.scene, 0, posy, itemWidth, itemHeight, this.dpr);
+        this.deprecia = new RoomAttributeValue(this.scene, 0, posy, itemWidth, itemHeight, this.dpr);
         this.renovateBtn = new Button(this.scene, UIAtlasKey.commonKey, "order_yellow_butt", "order_yellow_butt", i18n.t("room_info.renovate"));
         this.renovateBtn.scale = 1.1;
         this.renovateBtn.setTextStyle({ fontSize: 12 * this.dpr, color: "#ED7814" });
@@ -111,7 +105,7 @@ export class PicaHouseInfoPanel extends Phaser.GameObjects.Container {
         this.helptips.setText(i18n.t("room_info.helptips"), 1);
         this.helptips.setInvalidArea(Tool.getRectangle(this.help, this.scene));
         this.helptips.setVisible(false);
-        this.add([this.roomname, this.roomlevel, this.expvalue, this.popvalue, this.goodvalue]);
+        this.add([this.roomName, this.roomlevel, this.expvalue, this.popvalue, this.goodvalue]);
     }
 
     private onRenovateHandler() {
@@ -156,7 +150,31 @@ export class PicaHouseInfoPanel extends Phaser.GameObjects.Container {
     }
 
 }
-class HouseAttributeValue extends Phaser.GameObjects.Container {
+class RoomBaseAttribute extends Phaser.GameObjects.Container {
+    public dpr: number;
+    public zoom: number;
+    public title: Phaser.GameObjects.Text;
+    constructor(scene: Phaser.Scene, width: number, height: number, dpr: number, zoom: number) {
+        super(scene);
+        this.dpr = dpr;
+        this.zoom = zoom;
+        this.setSize(width, height);
+        this.title = this.scene.make.text({ style: UIHelper.blackStyle(dpr, 14) }).setOrigin(0, 0.5);
+        this.title.x = -this.width * 0.5;
+        this.add(this.title);
+    }
+
+    public setAttributeData(title: string, value: string) {
+
+    }
+}
+class RoomNameAttribute extends Phaser.GameObjects.Container {
+
+}
+class RoomStateAttribute extends RoomBaseAttribute {
+
+}
+class RoomAttributeValue extends Phaser.GameObjects.Container {
     private nameText: Phaser.GameObjects.Text;
     private valueText: BBCodeText;
     private imgCon: Phaser.GameObjects.Container;

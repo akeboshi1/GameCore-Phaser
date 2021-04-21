@@ -97,7 +97,8 @@ export class BaseFramesDisplay extends BaseDisplay {
             const { frameName, offsetLoc } = layer[i];
             display = this.mDisplays.get(layer[i].id || i);
             if (!display) {
-                Logger.getInstance().error(`display ${this.mID} play fail, display does not exist!`);
+                // 空地块不会创建display
+                // Logger.getInstance().error(`display ${this.mID} play fail, display does not exist!`);
                 continue;
             }
             if (frameName.length > 1) {
@@ -319,8 +320,10 @@ export class BaseFramesDisplay extends BaseDisplay {
         let display: any;
         for (let i = 0; i < layer.length; i++) {
             display = this.createDisplay(key, layer[i]);
-            this.mDisplays.set(layer[i].id || i, display);
-            container.add(display);
+            if (display) {
+                this.mDisplays.set(layer[i].id || i, display);
+                container.add(display);
+            }
         }
         this.mIsInteracitve ? this.setInteractive() : this.disableInteractive();
         this.mIsSetInteractive = true;
@@ -334,8 +337,10 @@ export class BaseFramesDisplay extends BaseDisplay {
             if (!this.mMainSprite) {
                 this.mMainSprite = <Phaser.GameObjects.Sprite>display;
             }
-        } else {
+        } else if (frameName.length === 1) {
             display = this.scene.make.image({ key, frame: frameName[0] });
+        } else {
+            return;
         }
         display.setData("id", this.mID);
         return display;
