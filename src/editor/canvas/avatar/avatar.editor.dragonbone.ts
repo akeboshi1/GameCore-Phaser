@@ -551,6 +551,7 @@ class EditorDragonbonesDisplay extends BaseDragonbonesDisplay {
         super(scene);
 
         this.resourceName = resName;
+        this.isRenderTextureWhenChange = true;
         this.uuid = EditorDragonbonesDisplay.GenerateCount ++;
     }
 
