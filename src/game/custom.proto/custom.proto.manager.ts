@@ -20,7 +20,7 @@ export class CustomProtoManager extends PacketHandler {
         if (!proto) {
             return Logger.getInstance().error(`${msgName} does not exist`);
         }
-        const obj = proto.fromObject(msg);
+        const obj = proto.fromObject(msg || { });
         if (!obj) {
             return Logger.getInstance().error(`parse message ${msg.toString()} failed`);
         }
@@ -57,8 +57,7 @@ export class CustomProtoManager extends PacketHandler {
         if (!proto) {
             return Logger.getInstance().error(`${msgName} does not exist`);
         }
-        const obj = { cmd, content: proto.decode(msg) };
-        this.emitter.emit(content.msgName, obj);
+        this.emitter.emit(content.msgName, { cmd, content: proto.decode(msg) });
     }
 
     private get connection() {
