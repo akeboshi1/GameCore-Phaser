@@ -66,7 +66,6 @@ export class Sprite extends EventDispatcher implements ISprite {
             this.updateAvatarSuits(this.suits);
         this.avatar = this.avatar || obj.avatar;
         if (this.avatar) {
-            // 临时方案。 物件avatar从pi里获取。收到服务器数据不稳定
             this.updateAvatar(this.avatar);
         }
         if (obj.display) {
