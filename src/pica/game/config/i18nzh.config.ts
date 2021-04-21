@@ -7,14 +7,14 @@
  * @FilePath: /game-core/src/pica/game/config/i18nzh.config.ts
  */
 import { BaseConfigData } from "gamecore";
-import { Logger } from "utils";
+import { Logger, StringUtils } from "utils";
 
 export class I18nZHDataConfig extends BaseConfigData {
     public text(id: string, tips?: string) {
-        if (this.hasOwnProperty(id))
+        if (!StringUtils.isNullOrUndefined(id) && this.hasOwnProperty(id))
             return this[id];
         else {
-            Logger.getInstance().error((!tips ? "" : tips), `语言表未配置ID为:${id}的数据`);
+            if (!StringUtils.isNullOrUndefined(id)) Logger.getInstance().error((!tips ? "" : tips), `语言表未配置ID为:${id}的数据`);
             return id;
         }
     }

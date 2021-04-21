@@ -26,8 +26,6 @@ export class PicaPartyNavigationPanel extends PicaBasePanel {
     private townPanel: PicaTownNavigationPanel;
     private roomPanel: PicaRoomNavigationPanel;
     private optionType: number;
-    private mPartyData: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_PARTY_LIST;
-    private mNavigationData: any;
     private progressData: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_QUERY_PLAYER_PROGRESS;
     private toggleItems: ToggleColorButton[] = [];
     constructor(uiManager: UiManager) {
@@ -51,27 +49,43 @@ export class PicaPartyNavigationPanel extends PicaBasePanel {
     public onShow() {
         const index = this.mShowData || 1;
         this.onToggleButtonHandler(undefined, this.toggleItems[index - 1]);
+        if (this.tempDatas) {
+            if (this.optionType === 1) {
+                this.setNavigationListData(this.tempDatas);
+            } else if (this.optionType === 2) {
+                this.setRoomListData(this.tempDatas);
+            } else if (this.optionType === 3) {
+                this.setSelfRoomListData(this.tempDatas);
+            }
+        }
+        if (this.progressData) this.setOnlineProgress(this.progressData);
     }
 
     public setPartyListData(content: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_PARTY_LIST, isSelf: boolean = true) {
-        this.mPartyData = content;
+        this.tempDatas = content;
         //  this.partyNavigationPanel.setPartyDataList(content);
     }
     public setNavigationListData(content: any[]) {
-        this.mNavigationData = content;
-        this.townPanel.setTownDatas(content);
+        this.tempDatas = content;
+        if (this.townPanel)
+            this.townPanel.setTownDatas(content);
     }
     public setOnlineProgress(content: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_QUERY_PLAYER_PROGRESS) {
         this.progressData = content;
-        this.signProgressPanel.setProgressDatas(content);
+        if (this.signProgressPanel)
+            this.signProgressPanel.setProgressDatas(content);
     }
 
     public setRoomListData(content: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_ROOM_LIST) {
-        this.roomPanel.setRoomDatas(content);
+        this.tempDatas = content;
+        if (this.roomPanel)
+            this.roomPanel.setRoomDatas(content);
     }
 
     public setSelfRoomListData(content: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_SELF_ROOM_LIST) {
-        this.myRoomPanel.setRoomDatas(content);
+        this.tempDatas = content;
+        if (this.myRoomPanel)
+            this.myRoomPanel.setRoomDatas(content);
         this.render.emitter.emit(PicaPartyNavigationPanel.PICASELFROOM_DATA);
     }
 

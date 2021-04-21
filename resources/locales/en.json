@@ -163,12 +163,12 @@
   },
   "room_info": {
     "infobtn": "INFO",
-    "setting": "SETTING",
+    "setting": "PERMISSIONS",
     "editorroom": "Edit",
-    "roomname": "Name",
+    "roomname": "Name:",
     "roomlevel": "Level",
-    "roomstate": "State",
-    "roomevaluate": "Evaluate",
+    "roomstate": "State:",
+    "roomevaluate": "Evaluate:",
     "openparty": "Open Party",
     "expvalue": "Exp",
     "popvalue": "Popularity",
@@ -181,7 +181,14 @@
     "needmaterials": "Materials needed for renovation",
     "renovatetips": "Currently no refurbishment is required",
     "helptips": "**The depreciation degree will affect the daily income of the store",
-    "commontips": "common"
+    "commontips": "common",
+    "partystate": "PartyState",
+    "partycardtips": "Also has a party time card:",
+    "friendtips": "Friends only",
+    "friendvisittips": "Invited friends only",
+    "passwordtips": "If the password is empty, it defaults to open mode",
+    "savesetting": "Save Setting",
+    "inputtips": "Please enter the password"
   },
   "business_street": {
     "commercial_street": "STORES",

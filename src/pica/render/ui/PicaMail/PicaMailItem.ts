@@ -147,8 +147,7 @@ export class PicaMailItem extends Phaser.GameObjects.Container {
     private setExtendMailData(mailData: op_client.PKT_MAIL_DATA) {
         this.mExtend.setItemData(mailData);
         if (!this.mailData.hasRead) this.send.runWith(["readmail", this.mailData.id]);
-        if (this.mailData.attachments) this.mailButton.visible = true;
-        else this.mailButton.visible = false;
+        this.mailButton.visible = !mailData.attachTaken;
     }
 
     private closeExtend() {

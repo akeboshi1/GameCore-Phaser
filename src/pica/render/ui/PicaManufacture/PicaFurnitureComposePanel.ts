@@ -582,6 +582,7 @@ class FuriComposeItem extends ButtonEventDispatcher {
   private lightbg: Phaser.GameObjects.Image;
   private icon: DynamicImage;
   private zoom: number;
+  private alphaTween: Phaser.Tweens.Tween;
   constructor(scene: Phaser.Scene, dpr: number, zoom: number) {
     super(scene, 0, 0);
     this.dpr = dpr;
@@ -592,6 +593,7 @@ class FuriComposeItem extends ButtonEventDispatcher {
   }
   public setItemData(data: ICountablePackageItem) {
     this.itemData = data;
+    this.clearTween();
     this.lightbg.alpha = 0;
     this.icon.alpha = 0;
     if (!data) {
@@ -615,6 +617,7 @@ class FuriComposeItem extends ButtonEventDispatcher {
 
   private playAlphaAni(target) {
     if (!this.scene) return;
+    this.clearTween();
     const tween = this.scene.tweens.add({
       targets: target,
       alpha: {
@@ -628,5 +631,13 @@ class FuriComposeItem extends ButtonEventDispatcher {
         tween.remove();
       },
     });
+    this.alphaTween = tween;
+  }
+  private clearTween() {
+    if (this.alphaTween) {
+      this.alphaTween.stop();
+      this.alphaTween.remove();
+      this.alphaTween = undefined;
+    }
   }
 }

@@ -110,7 +110,7 @@ export class PicaOpenPartyCreatePanel extends Phaser.GameObjects.Container {
                 // if (this.timer) this.timer.clear();
             }
         }));
-        this.timer.execute(interval);
+        this.timer.executeText(interval);
     }
 
     private setPartyInfoType(create: boolean) {
