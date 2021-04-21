@@ -1,8 +1,8 @@
-import {AvatarSuitType, HTTP_REGEX, ModuleName} from "structure";
-import {Font} from "./font";
-import {Handler} from "./Handler";
-import {i18n} from "./i18n";
-import {Logger} from "./log";
+import { AvatarSuitType, HTTP_REGEX, ModuleName } from "structure";
+import { Font } from "./font";
+import { Handler } from "./Handler";
+import { i18n } from "./i18n";
+import { Logger } from "./log";
 
 export enum CoinType {
     TU_DING_COIN = 0,
@@ -250,7 +250,7 @@ export class CloseButton {
     }
 
     static getFrameConfig(): Phaser.Types.Loader.FileTypes.ImageFrameConfig {
-        return {frameWidth: 16, frameHeight: 16, startFrame: 1, endFrame: 3};
+        return { frameWidth: 16, frameHeight: 16, startFrame: 1, endFrame: 3 };
     }
 }
 
@@ -382,7 +382,7 @@ export class TransparentButton {
 export class Coin {
     static getIcon(coinType: number) {
         let res = "tuding_icon";
-        const type = <CoinType> coinType;
+        const type = <CoinType>coinType;
         if (type === CoinType.COIN) {
             res = "iv_coin";
         } else if (type === CoinType.DIAMOND) {
@@ -399,7 +399,7 @@ export class Coin {
 
     static getName(coinType: number) {
         let res = "银币";
-        const type = <CoinType> coinType;
+        const type = <CoinType>coinType;
         if (type === CoinType.COIN) {
             res = i18n.t("coin.coin");
         } else if (type === CoinType.DIAMOND) {
@@ -562,13 +562,19 @@ export class UIHelper {
 
     static spliceText(maxwidth: number, text: string, fontSize: number, scene: Phaser.Scene) {
         const mlabel = this.Text(scene);
-        for (let i = 0; i < text.length; i++) {
-            const temp = text.slice(0, i);
-            const width = mlabel.setText(text).width;
-            if (width > maxwidth) {
-                return temp;
+        let width = mlabel.setText(text).width;
+        if (width <= maxwidth) {
+            return text;
+        } else {
+            for (let i = 0; i < text.length; i++) {
+                const temp = text.slice(0, i);
+                width = mlabel.setText(temp).width;
+                if (width > maxwidth) {
+                    return temp;
+                }
             }
         }
+
         return text;
     }
 
@@ -580,11 +586,11 @@ export class UIHelper {
     }
 
     public static createSprite(scene: Phaser.Scene, key: string, animkey: string, frame: string, indexs: number[], frameRate: number = 30, repeat = 0, compl?: Handler) {
-        const sprite = scene.make.sprite({key, frame: frame + "1"});
+        const sprite = scene.make.sprite({ key, frame: frame + "1" });
         sprite.visible = false;
         const anima: any = scene.anims.create({
             key: animkey,
-            frames: scene.anims.generateFrameNames(key, {prefix: frame + "", start: indexs[0], end: indexs[1]}),
+            frames: scene.anims.generateFrameNames(key, { prefix: frame + "", start: indexs[0], end: indexs[1] }),
             frameRate,
             repeat
         });
