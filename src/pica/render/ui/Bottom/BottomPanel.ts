@@ -104,6 +104,12 @@ export class BottomPanel extends PicaBasePanel {
     exitUser() {
         this.mWorld.exitUser();
     }
+
+    snapshot() {
+        this.mInput.blurInput();
+        this.render.displayManager.snapshot();
+    }
+
     get navigatePanel(): Phaser.GameObjects.Container {
         return this.mNavigate;
     }

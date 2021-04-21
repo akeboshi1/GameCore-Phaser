@@ -112,6 +112,18 @@ export class BlockManager implements IBlockManager {
     }
   }
 
+  updateScale(val: number) {
+    this.mContainer.setScale(val);
+    for (const grid of this.mGrids) {
+      grid.setScaleRatio(val);
+    }
+    this.updatePosition();
+  }
+
+  getLayer() {
+    return this.mContainer;
+  }
+
   async updatePosition() {
     const camera = this.scene.cameras.main;
     const { offset } = this.mScenery;
