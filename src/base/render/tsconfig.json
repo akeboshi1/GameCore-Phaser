@@ -14,7 +14,8 @@
     "outDir": "release/types",
     "typeRoots": [
       "node_modules/@types",
-      "node_modules/apowophaserui/types"
+      "node_modules/apowophaserui/types",
+      "node_modules/tooqinggamephaser/types"
     ],
     "baseUrl": ".",
     "noImplicitUseStrict": true,

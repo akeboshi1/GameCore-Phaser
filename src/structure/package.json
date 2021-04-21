@@ -1,8 +1,8 @@
 {
   "name": "structure",
   "version": "1.0.0",
-  "main": "./structure.js",
-  "types": "./types/index.d.ts",
+  "main": "release/structure.js",
+  "types": "release/types/index.d.ts",
   "license": "MIT",
   "devDependencies": {
     "expose-loader": "^0.7.5",

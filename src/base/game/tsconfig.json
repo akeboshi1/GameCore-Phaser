@@ -12,6 +12,14 @@
     "declaration": true,
     "sourceMap": true,
     "outDir": "release/types",
+    "paths": {
+      // "game-capsule": [
+      //   "node_modules/game-capsule"
+      // ],
+      // "simple-sha1": [
+      //   "node_modules/simple-sha1/index.js"
+      // ]
+    },
     // "typeRoots": [
     //   "node_modules/@types",
     //   "node_modules/apowophaserui/types"

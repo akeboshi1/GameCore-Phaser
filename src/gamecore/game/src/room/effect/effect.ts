@@ -1,6 +1,7 @@
 import { op_client } from "pixelpai_proto";
 import { Game } from "../../game";
-import { AnimationModel,Helpers } from "structure";
+import { Helpers } from "game-capsule";
+import { AnimationModel } from "structure";
 import { DragonbonesModel, FramesModel } from "basemodel";
 export class Effect {
     /**

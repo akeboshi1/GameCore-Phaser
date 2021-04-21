@@ -1,7 +1,7 @@
-import { Helpers } from "structure";
+import { Helpers } from "game-capsule";
 import { IRoomService } from "../room";
 import { Wall } from "../wall/wall";
-import { Sprite } from "src/base/model";
+import { Sprite } from "basemodel";
 import { LayerEnum } from "game-capsule";
 
 export class WallManager {

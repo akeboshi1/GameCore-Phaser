@@ -4,10 +4,6 @@
   "main": "./basegame.js",
   "types": "./types/index.d.ts",
   "license": "MIT",
-  "dependencies": {
-    "game-capsule": "git+ssh://git@code.apowo.com:PixelPai/game-capsule.git#dev",
-    "simple-sha1": "^3.0.1"
-  },
   "scripts": {
     "build": "webpack --mode=development --output-path=./release --progress"
   },
@@ -19,5 +15,9 @@
     "typescript": "^3.5.2",
     "webpack": "^4.35.2",
     "webpack-cli": "^3.3.5"
+  },
+  "dependencies": {
+    "game-capsule": "git+ssh://git@code.apowo.com:PixelPai/game-capsule.git#dev",
+    "simple-sha1": "^3.0.1"
   }
 }

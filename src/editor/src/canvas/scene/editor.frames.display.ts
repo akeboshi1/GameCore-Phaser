@@ -1,10 +1,10 @@
 import { Sprite } from "basemodel";
 import { BaseDragonbonesDisplay, BaseFramesDisplay, ReferenceArea } from "baserender";
-import { IFramesModel, RunningAnimation, Helpers, Logger, LogicPoint, Position45 } from "structure";
+import { IFramesModel, RunningAnimation, Logger, LogicPoint, Position45 } from "structure";
 import { SceneEditorCanvas } from "./scene.editor.canvas";
 import { EditorTopDisplay } from "./top.display";
 import { op_def } from "pixelpai_proto";
-import { LayerEnum } from "game-capsule";
+import { LayerEnum, Helpers } from "game-capsule";
 
 export class EditorFramesDisplay extends BaseFramesDisplay {
 
