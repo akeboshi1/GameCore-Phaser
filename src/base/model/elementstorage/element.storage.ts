@@ -121,6 +121,7 @@ export class ElementStorage implements IElementStorage {
         for (const key of Array.from(palette.peersDict.keys())) {
             const terrainPalette = palette.peersDict.get(key) as TerrainNode;
             const terrainModel = this.terrainPalette.get(terrainPalette.id);
+            if (!terrainPalette.animations) continue;
             if (!terrainModel) {
                 const frameModel = new FramesModel({
                     id: terrainPalette.id,
@@ -143,6 +144,7 @@ export class ElementStorage implements IElementStorage {
         for (const peerKey of Array.from(moss.peersDict.keys())) {
             const elementMoss = moss.peersDict.get(peerKey) as ElementNode;
             const elementModel = this.mossPalette.get(elementMoss.id);
+            if (!elementMoss.animations) continue;
             if (!elementModel) {
                 const frameModel = new FramesModel({
                     id: elementMoss.id,

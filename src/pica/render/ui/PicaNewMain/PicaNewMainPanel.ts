@@ -9,6 +9,7 @@ import { PicaNewActivityPanel } from "./PicaNewActivityPanel";
 import { PicaNewChatPanel } from "./PicaNewChatPanel";
 import { PicaNewHeadPanel } from "./PicaNewHeadPanel";
 import { PicaNewLeftPanel } from "./PicaNewLeftPanel";
+import { UITools } from "../uitool";
 // import { PicaNewNavigatePanel } from "./PicaNewNavigatePanel";
 export class PicaNewMainPanel extends PicaBasePanel {
     public leftPanel: PicaNewLeftPanel;
@@ -21,6 +22,7 @@ export class PicaNewMainPanel extends PicaBasePanel {
     private headData: any;
     private sceneData: any;
     private isSelfRoom: boolean = false;
+    private redMap: Map<number, Phaser.GameObjects.Image> = new Map();
     constructor(uiManager: UiManager) {
         super(uiManager);
         this.atlasNames = [UIAtlasName.uicommon, UIAtlasName.iconcommon];
@@ -64,6 +66,7 @@ export class PicaNewMainPanel extends PicaBasePanel {
 
     onShow() {
         this.checkUpdateActive();
+        if (this.tempDatas) this.setRedsState(this.tempDatas);
     }
     update(param) {
         super.update();
@@ -93,6 +96,13 @@ export class PicaNewMainPanel extends PicaBasePanel {
         this.activityPanel.updateUIState(active);
         this.leftPanel.updateUIState(active);
     }
+    public setRedsState(reds: number[]) {
+        this.tempDatas = reds;
+        if (!this.mInitialized) return;
+        this.redMap.forEach((value, key) => {
+            value.visible = reds.indexOf(key) !== -1;
+        });
+    }
     init() {
         const width = this.scaleWidth;
         const height = this.scaleHeight;
@@ -114,6 +124,7 @@ export class PicaNewMainPanel extends PicaBasePanel {
         // this.navigatePanel = new PicaNewNavigatePanel(this.scene, width, 56 * this.dpr, this.key, this.dpr);
         // this.navigatePanel.setHandler(new Handler(this, this.onNavigateHandler));
         // this.add(this.navigatePanel);
+        this.creatRedMap();
         this.resize(width, height);
         super.init();
     }
@@ -126,7 +137,18 @@ export class PicaNewMainPanel extends PicaBasePanel {
         if (this.headData) this.headPanel.setHeadData(this.headData.level, this.headData.energy, this.headData.money, this.headData.diamond);
         if (this.sceneData) this.headPanel.setSceneData(this.sceneData.sceneName, this.sceneData.isPraise, this.sceneData.people, this.sceneData.roomType, this.sceneData.isself);
     }
-
+    private creatRedMap() {
+        const activity = this.activityPanel.redMap;
+        const left = this.leftPanel.redMap;
+        activity.forEach((value, key) => {
+            const img = UITools.creatRedImge(this.scene, value);
+            this.redMap.set(key, img);
+        });
+        left.forEach((value, key) => {
+            const img = UITools.creatRedImge(this.scene, value);
+            this.redMap.set(key, img);
+        });
+    }
     private onFoldButtonHandler() {
         this.isFold = !this.isFold;
         if (this.isFold) {

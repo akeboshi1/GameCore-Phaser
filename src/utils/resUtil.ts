@@ -737,7 +737,6 @@ export class UIHelper {
         });
         return tweenScale;
     }
-
     private static mText: Phaser.GameObjects.Text;
 
 }

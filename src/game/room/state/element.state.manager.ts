@@ -1,3 +1,4 @@
+import { BaseDataConfigManager } from "picaWorker";
 import { ElementStateType, ModuleName } from "structure";
 import { Logger } from "utils";
 import { IRoomService } from "..";
@@ -59,11 +60,13 @@ class AddHandler extends ElementHandler {
         }
     }
 
-    private ShowOff(state: State) {
-        // const conf = this.room.game.configManager.getConfig("item");
+    private async ShowOff(state: State) {
         const buf = Buffer.from(state.packet);
         const id = buf.toString("utf-8", 4, buf.readIntBE(0, 4) + 4);
-        const element = (<any> this.room.game.configManager).getItemBaseByID(id);
+        const configManager = <BaseDataConfigManager>this.room.game.configManager;
+        const item = <any>configManager.getItemBaseByID(id);
+        if (!item) return;
+        const element = await configManager.checkDynamicElementPI({ sn: item.sn, itemid: id, serialize: item.serializeString });
         if (this.element) {
             const model = this.element.model;
             if (model) {
@@ -75,7 +78,7 @@ class AddHandler extends ElementHandler {
         if (element) {
             this.room.game.renderPeer.liftItem(state.owner.id, element.animationDisplay, element.animations);
         }
-        if (this.element === this.room.playerManager.actor) this.room.game.uiManager.showMed(ModuleName.PICA_DROP_ELEMENT_NAME, element.display);
+        if (this.element === this.room.playerManager.actor) this.room.game.uiManager.showMed(ModuleName.PICA_DROP_ELEMENT_NAME, { texturePath: item.texturePath });
     }
 }
 

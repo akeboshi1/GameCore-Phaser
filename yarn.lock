@@ -1407,8 +1407,8 @@ currently-unhandled@^0.4.1:
     array-find-index "^1.0.1"
 
 "custom_proto@git+ssh://git@code.apowo.com:PixelPai/custom_proto.git#typescriptdev":
-  version "1.0.1"
-  resolved "git+ssh://git@code.apowo.com:PixelPai/custom_proto.git#535c55e7ba722d9a64be031324b8de4818a89cbd"
+  version "1.0.4"
+  resolved "git+ssh://git@code.apowo.com:PixelPai/custom_proto.git#53fb13e5094cdf3af604d2480c73dd510e6d1879"
   dependencies:
     protobufjs "^6.8.8"
 

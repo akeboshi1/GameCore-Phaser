@@ -3,7 +3,8 @@ import { BasicMediator, CacheDataManager, DataMgrType, Game } from "gamecore";
 import { EventType, ModuleName } from "structure";
 import { BaseDataConfigManager, GalleryType } from "../../config";
 import { PicaIllustrated } from "./PicaIllustrated";
-import { IGalleryCombination, IGalleryLevel } from "../../../structure";
+import { IGalleryCombination, IGalleryLevel, MainUIRedType, RedEventType } from "../../../structure";
+import { PicaGame } from "../../pica.game";
 export class PicaIllustratedMediator extends BasicMediator {
     protected mModel: PicaIllustrated;
     private mScneType: op_def.SceneTypeEnum;
@@ -21,6 +22,7 @@ export class PicaIllustratedMediator extends BasicMediator {
         this.game.emitter.on(this.key + "_close", this.onCloseHandler, this);
         this.game.emitter.on(EventType.GALLERY_UPDATE, this.setGallaryData, this);
         this.game.emitter.on(EventType.DONE_MISSION_LIST, this.setDoneMissionIdListHandler, this);
+        this.game.emitter.on(RedEventType.MAIN_PANEL_RED, this.onRedSystemHandler, this);
     }
 
     hide() {
@@ -30,6 +32,7 @@ export class PicaIllustratedMediator extends BasicMediator {
         this.game.emitter.off(this.key + "_close", this.onCloseHandler, this);
         this.game.emitter.off(EventType.GALLERY_UPDATE, this.setGallaryData, this);
         this.game.emitter.off(EventType.DONE_MISSION_LIST, this.setDoneMissionIdListHandler, this);
+        this.game.emitter.on(RedEventType.MAIN_PANEL_RED, this.onRedSystemHandler, this);
         super.hide();
     }
 
@@ -45,6 +48,7 @@ export class PicaIllustratedMediator extends BasicMediator {
                 this.setDoneMissionIdListHandler();
             }
         }
+        if (this.mView) this.mView.setRedsState(this.getRedSystem());
     }
 
     private onCloseHandler() {
@@ -130,6 +134,20 @@ export class PicaIllustratedMediator extends BasicMediator {
         return combinations;
     }
 
+    private getRedSystem() {
+        const game = <PicaGame>this.game;
+        const obj = {};
+        const gallery = game.getRedPoints(MainUIRedType.GALLERY);
+        const redlist = [];
+        if (gallery && gallery.length > 0) redlist.push(MainUIRedType.GALLERY);
+        obj["redlist"] = redlist;
+        obj[MainUIRedType.GALLERY] = gallery;
+        return obj;
+    }
+    private onRedSystemHandler(reds: number[]) {
+        const obj = this.getRedSystem();
+        if (this.mView) this.mView.setRedsState(obj);
+    }
     private get config(): BaseDataConfigManager {
         return <BaseDataConfigManager>this.game.configManager;
     }

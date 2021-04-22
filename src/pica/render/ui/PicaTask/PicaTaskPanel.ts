@@ -1,4 +1,4 @@
-import { op_client, op_pkt_def } from "pixelpai_proto";
+import { op_client, op_pkt_def, op_def } from "pixelpai_proto";
 import { ToggleColorButton, UiManager } from "gamecoreRender";
 import { ModuleName } from "structure";
 import { UIAtlasName } from "../../../res";
@@ -6,6 +6,8 @@ import { Handler, i18n, UIHelper } from "utils";
 import { PicaBasePanel } from "../pica.base.panel";
 import { PicaTaskMainPanel } from "./PicaTaskMainPanel";
 import { ClickEvent } from "apowophaserui";
+import { MainUIRedType } from "picaStructure";
+import { UITools } from "../uitool";
 export class PicaTaskPanel extends PicaBasePanel {
     public static PICATASK_CLOSE: string = "PICATASK_CLOSE";
     public static PICATASK_DATA: string = "PICATASK_DATA";
@@ -19,6 +21,7 @@ export class PicaTaskPanel extends PicaBasePanel {
     private curToggleItem: ToggleColorButton;
     private toggleItems: ToggleColorButton[] = [];
     private questType: op_pkt_def.PKT_Quest_Type;
+    private redMap: Map<number, Phaser.GameObjects.Image> = new Map();
     constructor(uiManager: UiManager) {
         super(uiManager);
         this.key = ModuleName.PICATASK_NAME;
@@ -99,6 +102,7 @@ export class PicaTaskPanel extends PicaBasePanel {
 
     createOptionButtons() {
         const arr = [{ text: i18n.t("task.main_quest"), type: op_pkt_def.PKT_Quest_Type.QUEST_MAIN_MISSION }, { text: i18n.t("task.daily_quest"), type: op_pkt_def.PKT_Quest_Type.QUEST_DAILY_GOAL }];
+        const redArr = [op_def.RedDotTypeEnum.MAIN_QUEST_REDDOTSTATUS, op_def.RedDotTypeEnum.DAILY_QUEST_REDDOTSTATUS];
         const allLin = 272 * this.dpr;
         const cellwidth = allLin / arr.length;
         const cellHeight = 20 * this.dpr;
@@ -119,6 +123,12 @@ export class PicaTaskPanel extends PicaBasePanel {
             posx += cellwidth;
             this.toggleItems.push(item);
         }
+        for (let i = 0; i < this.toggleItems.length; i++) {
+            const item = this.toggleItems[i];
+            const key = redArr[i];
+            const img = UITools.creatRedImge(this.scene, item, { x: -30 * this.dpr, y: -10 * this.dpr });
+            this.redMap.set(key, img);
+        }
     }
 
     setTaskDatas(content: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_QUERY_QUEST_GROUP) {
@@ -128,6 +138,13 @@ export class PicaTaskPanel extends PicaBasePanel {
 
     setTaskDetail(quest: op_client.PKT_Quest) {
 
+    }
+    setRedsState(reds: number[]) {
+        this.tempDatas = reds;
+        if (!this.mInitialized) return;
+        this.redMap.forEach((value, key) => {
+            value.visible = reds.indexOf(key) !== -1;
+        });
     }
 
     private onToggleButtonHandler(pointer: any, toggle: ToggleColorButton) {

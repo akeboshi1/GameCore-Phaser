@@ -29,6 +29,7 @@ export class PicaIllustratedDetailPanel extends Phaser.GameObjects.Container {
     private galleryData: any;
     private combinations: IGalleryCombination[];
     private minit: boolean = false;
+    private redMap: Map<number, Phaser.GameObjects.Image> = new Map();
     constructor(scene: Phaser.Scene, width: number, height: number, dpr: number, zoom: number) {
         super(scene);
         this.setSize(width, height);
@@ -98,6 +99,11 @@ export class PicaIllustratedDetailPanel extends Phaser.GameObjects.Container {
 
     setDoneMissionList(list: number[]) {
         if (this.collectPanel) this.collectPanel.setDoneMissionList(list);
+    }
+    setRedsState(reds: number[]) {
+        this.redMap.forEach((value, key) => {
+            value.visible = reds.indexOf(key) !== -1;
+        });
     }
     init() {
         this.topCon = this.scene.make.container(undefined, false);
