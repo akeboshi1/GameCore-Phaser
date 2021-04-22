@@ -8,12 +8,28 @@ export class TimerCountDown {
     constructor(callback: Handler) {
         this.callback = callback;
     }
-    public execute(interval: number) {
+    public executeText(interval: number) {
         this.clear();
         this.interval = interval;
         const timeout = () => {
             const text = this.getDataFormat(this.interval * 1000);
             if (this.callback) this.callback.runWith([this.interval, text]);
+            if (this.interval > 0) {
+                this.timerid = setTimeout(() => {
+                    this.interval -= 1;
+                    timeout();
+                }, 1000);
+            } else {
+                this.timerid = undefined;
+            }
+        };
+        timeout();
+    }
+    public executeTime(interval: number) {
+        this.clear();
+        this.interval = interval;
+        const timeout = () => {
+            if (this.callback) this.callback.runWith([this.interval]);
             if (this.interval > 0) {
                 this.timerid = setTimeout(() => {
                     this.interval -= 1;

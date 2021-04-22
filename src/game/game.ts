@@ -24,6 +24,7 @@ import { NetworkManager } from "./command";
 import version from "../../version";
 import { SoundManager } from "./sound.manager";
 import { GuideManager } from "./guide.manager/guide.manager";
+import { CustomProtoManager } from "./custom.proto/custom.proto.manager";
 interface ISize {
     width: number;
     height: number;
@@ -55,6 +56,7 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
     protected mConfigManager: BaseConfigManager;
     protected mNetWorkManager: NetworkManager;
     protected mHttpLoadManager: HttpLoadManager;
+    protected mCustomProtoManager: CustomProtoManager;
 
     protected gameConfigUrls: Map<string, string> = new Map();
     protected gameConfigUrl: string;
@@ -414,6 +416,11 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
     get avatarType() {
         return this.mAvatarType;
     }
+
+    get customProto() {
+        return this.mCustomProtoManager;
+    }
+
     public onFocus() {
         if (this.mWorkerLoop) clearInterval(this.mWorkerLoop);
         this.mRunning = true;
@@ -599,6 +606,13 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
         return undefined;
     }
 
+    public sendCustomProto(msgName: string, cmd: string, msg: any) {
+        if (!this.mCustomProtoManager) {
+            return Logger.getInstance().warn(`send ${msgName} failed`);
+        }
+        this.mCustomProtoManager.send(msgName, cmd, msg);
+    }
+
     // public heartBeatCallBack() {
     //     this.mainPeer.clearBeat();
     // }
@@ -611,6 +625,7 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
         this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_GOTO_ANOTHER_GAME, this.onGotoAnotherGame);
         // this.addHandlerFun(op_client.OPCODE._OP_GATEWAY_RES_CLIENT_PONG, this.heartBeatCallBack);
         this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_GAME_MODE, this.onAvatarGameModeHandler);
+        this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_CUSTOM_PROTO, this.onCustomHandler);
         this.createManager();
         const gameID = this.mConfig.game_id;
         const worldId = this.mConfig.virtual_world_id;
@@ -638,6 +653,7 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
         if (!this.mConfigManager) this.mConfigManager = new BaseConfigManager(this);
         if (!this.mNetWorkManager) this.mNetWorkManager = new NetworkManager(this);
         if (!this.mHttpLoadManager) this.mHttpLoadManager = new HttpLoadManager();
+        if (!this.mCustomProtoManager) this.mCustomProtoManager = new CustomProtoManager(this);
         // this.mPlayerDataManager = new PlayerDataManager(this);
 
         this.mUIManager.addPackListener();
@@ -760,6 +776,11 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
                 if (this.mSoundManager) {
                     this.mSoundManager.destroy();
                     this.mSoundManager = null;
+                }
+
+                if (this.mCustomProtoManager) {
+                    this.mCustomProtoManager.destroy();
+                    this.mCustomProtoManager = null;
                 }
 
                 if (this.user) this.user.removePackListener();
@@ -889,6 +910,11 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
     private onAvatarGameModeHandler(packet: PBpacket) {
         const content: op_client.IOP_VIRTUAL_WORLD_REQ_CLIENT_GAME_MODE = packet.content;
         this.mAvatarType = content.avatarStyle;
+    }
+
+    private onCustomHandler(packet: PBpacket) {
+        const content: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_CUSTOM_PROTO = packet.content;
+        this.emitter.emit(content.msgName, content);
     }
 
     private _run(current: number, delta: number) {

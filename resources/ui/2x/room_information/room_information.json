@@ -1,215 +1,608 @@
 {
-	"frames": {
-		"check tab": {
-			"frame": {
-				"x": 1,
-				"y": 1,
-				"w": 227,
-				"h": 76
+	"textures": [
+		{
+			"image": "room_information",
+			"format": "RGBA8888",
+			"size": {
+				"w": 1243,
+				"h": 243
 			},
-			"rotated": false,
-			"trimmed": false,
-			"spriteSourceSize": {
-				"x": 0,
-				"y": 0,
-				"w": 227,
-				"h": 76
-			},
-			"sourceSize": {
-				"w": 227,
-				"h": 76
-			}
-		},
-		"close": {
-			"frame": {
-				"x": 1,
-				"y": 79,
-				"w": 58,
-				"h": 58
-			},
-			"rotated": false,
-			"trimmed": false,
-			"spriteSourceSize": {
-				"x": 0,
-				"y": 0,
-				"w": 58,
-				"h": 58
-			},
-			"sourceSize": {
-				"w": 58,
-				"h": 58
-			}
-		},
-		"close_shop": {
-			"frame": {
-				"x": 61,
-				"y": 79,
-				"w": 74,
-				"h": 58
-			},
-			"rotated": false,
-			"trimmed": false,
-			"spriteSourceSize": {
-				"x": 0,
-				"y": 0,
-				"w": 74,
-				"h": 58
-			},
-			"sourceSize": {
-				"w": 74,
-				"h": 58
-			}
-		},
-		"default tab": {
-			"frame": {
-				"x": 1,
-				"y": 139,
-				"w": 227,
-				"h": 66
-			},
-			"rotated": false,
-			"trimmed": false,
-			"spriteSourceSize": {
-				"x": 0,
-				"y": 0,
-				"w": 227,
-				"h": 66
-			},
-			"sourceSize": {
-				"w": 227,
-				"h": 66
-			}
-		},
-		"good": {
-			"frame": {
-				"x": 137,
-				"y": 79,
-				"w": 33,
-				"h": 35
-			},
-			"rotated": false,
-			"trimmed": false,
-			"spriteSourceSize": {
-				"x": 0,
-				"y": 0,
-				"w": 33,
-				"h": 35
-			},
-			"sourceSize": {
-				"w": 33,
-				"h": 35
-			}
-		},
-		"good1": {
-			"frame": {
-				"x": 172,
-				"y": 79,
-				"w": 33,
-				"h": 33
-			},
-			"rotated": false,
-			"trimmed": false,
-			"spriteSourceSize": {
-				"x": 0,
-				"y": 0,
-				"w": 33,
-				"h": 33
-			},
-			"sourceSize": {
-				"w": 33,
-				"h": 33
-			}
-		},
-		"popularity": {
-			"frame": {
-				"x": 230,
-				"y": 1,
-				"w": 28,
-				"h": 38
-			},
-			"rotated": false,
-			"trimmed": false,
-			"spriteSourceSize": {
-				"x": 0,
-				"y": 0,
-				"w": 28,
-				"h": 38
-			},
-			"sourceSize": {
-				"w": 28,
-				"h": 38
-			}
-		},
-		"renovation": {
-			"frame": {
-				"x": 260,
-				"y": 1,
-				"w": 82,
-				"h": 68
-			},
-			"rotated": false,
-			"trimmed": false,
-			"spriteSourceSize": {
-				"x": 0,
-				"y": 0,
-				"w": 82,
-				"h": 68
-			},
-			"sourceSize": {
-				"w": 82,
-				"h": 68
-			}
-		},
-		"small_information": {
-			"frame": {
-				"x": 230,
-				"y": 71,
-				"w": 47,
-				"h": 35
-			},
-			"rotated": false,
-			"trimmed": false,
-			"spriteSourceSize": {
-				"x": 0,
-				"y": 0,
-				"w": 47,
-				"h": 35
-			},
-			"sourceSize": {
-				"w": 47,
-				"h": 35
-			}
-		},
-		"small_setting": {
-			"frame": {
-				"x": 279,
-				"y": 71,
-				"w": 48,
-				"h": 34
-			},
-			"rotated": false,
-			"trimmed": false,
-			"spriteSourceSize": {
-				"x": 0,
-				"y": 0,
-				"w": 48,
-				"h": 34
-			},
-			"sourceSize": {
-				"w": 48,
-				"h": 34
-			}
+			"scale": 1,
+			"frames": [
+				{
+					"filename": "room_party_icon_bg",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 200,
+						"h": 200
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 200,
+						"h": 200
+					},
+					"frame": {
+						"x": 1,
+						"y": 1,
+						"w": 200,
+						"h": 200
+					}
+				},
+				{
+					"filename": "party_card",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 39,
+						"h": 39
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 39,
+						"h": 39
+					},
+					"frame": {
+						"x": 1,
+						"y": 203,
+						"w": 39,
+						"h": 39
+					}
+				},
+				{
+					"filename": "room_name_edit",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 37,
+						"h": 37
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 37,
+						"h": 37
+					},
+					"frame": {
+						"x": 42,
+						"y": 203,
+						"w": 37,
+						"h": 37
+					}
+				},
+				{
+					"filename": "small_information",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 47,
+						"h": 35
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 47,
+						"h": 35
+					},
+					"frame": {
+						"x": 81,
+						"y": 203,
+						"w": 47,
+						"h": 35
+					}
+				},
+				{
+					"filename": "popularity",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 28,
+						"h": 38
+					},
+					"spriteSourceSize": {
+						"x": 1,
+						"y": 3,
+						"w": 27,
+						"h": 35
+					},
+					"frame": {
+						"x": 130,
+						"y": 203,
+						"w": 27,
+						"h": 35
+					}
+				},
+				{
+					"filename": "small_setting",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 48,
+						"h": 34
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 48,
+						"h": 34
+					},
+					"frame": {
+						"x": 159,
+						"y": 203,
+						"w": 48,
+						"h": 34
+					}
+				},
+				{
+					"filename": "room_party_icon",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 142,
+						"h": 130
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 142,
+						"h": 130
+					},
+					"frame": {
+						"x": 203,
+						"y": 1,
+						"w": 142,
+						"h": 130
+					}
+				},
+				{
+					"filename": "room_tab_unselected",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 274,
+						"h": 75
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 274,
+						"h": 68
+					},
+					"frame": {
+						"x": 203,
+						"y": 133,
+						"w": 274,
+						"h": 68
+					}
+				},
+				{
+					"filename": "room_party_icon_1",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 142,
+						"h": 130
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 142,
+						"h": 130
+					},
+					"frame": {
+						"x": 347,
+						"y": 1,
+						"w": 142,
+						"h": 130
+					}
+				},
+				{
+					"filename": "good",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 33,
+						"h": 35
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 2,
+						"w": 33,
+						"h": 33
+					},
+					"frame": {
+						"x": 209,
+						"y": 203,
+						"w": 33,
+						"h": 33
+					}
+				},
+				{
+					"filename": "good1",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 33,
+						"h": 33
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 33,
+						"h": 33
+					},
+					"frame": {
+						"x": 244,
+						"y": 203,
+						"w": 33,
+						"h": 33
+					}
+				},
+				{
+					"filename": "room_authority_selected",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 32,
+						"h": 32
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 32,
+						"h": 32
+					},
+					"frame": {
+						"x": 279,
+						"y": 203,
+						"w": 32,
+						"h": 32
+					}
+				},
+				{
+					"filename": "room_authority_unselected",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 32,
+						"h": 32
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 32,
+						"h": 32
+					},
+					"frame": {
+						"x": 313,
+						"y": 203,
+						"w": 32,
+						"h": 32
+					}
+				},
+				{
+					"filename": "room_tab_selected",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 274,
+						"h": 75
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 274,
+						"h": 75
+					},
+					"frame": {
+						"x": 479,
+						"y": 133,
+						"w": 274,
+						"h": 75
+					}
+				},
+				{
+					"filename": "room_password_input box",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 558,
+						"h": 127
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 558,
+						"h": 127
+					},
+					"frame": {
+						"x": 491,
+						"y": 1,
+						"w": 558,
+						"h": 127
+					}
+				},
+				{
+					"filename": "renovation",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 82,
+						"h": 68
+					},
+					"spriteSourceSize": {
+						"x": 4,
+						"y": 0,
+						"w": 78,
+						"h": 68
+					},
+					"frame": {
+						"x": 755,
+						"y": 130,
+						"w": 78,
+						"h": 68
+					}
+				},
+				{
+					"filename": "room_name_bg",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 407,
+						"h": 67
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 407,
+						"h": 67
+					},
+					"frame": {
+						"x": 835,
+						"y": 130,
+						"w": 407,
+						"h": 67
+					}
+				},
+				{
+					"filename": "room_party_status_title",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 250,
+						"h": 42
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 250,
+						"h": 42
+					},
+					"frame": {
+						"x": 755,
+						"y": 200,
+						"w": 250,
+						"h": 42
+					}
+				},
+				{
+					"filename": "map_party_homeowners",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 226,
+						"h": 40
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 226,
+						"h": 40
+					},
+					"frame": {
+						"x": 1007,
+						"y": 199,
+						"w": 226,
+						"h": 40
+					}
+				},
+				{
+					"filename": "map_party_list_bg",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 226,
+						"h": 40
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 226,
+						"h": 40
+					},
+					"frame": {
+						"x": 1007,
+						"y": 199,
+						"w": 226,
+						"h": 40
+					}
+				},
+				{
+					"filename": "map_party_people",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 226,
+						"h": 40
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 226,
+						"h": 40
+					},
+					"frame": {
+						"x": 1007,
+						"y": 199,
+						"w": 226,
+						"h": 40
+					}
+				},
+				{
+					"filename": "room_password_line_horizontal",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 226,
+						"h": 40
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 226,
+						"h": 40
+					},
+					"frame": {
+						"x": 1007,
+						"y": 199,
+						"w": 226,
+						"h": 40
+					}
+				},
+				{
+					"filename": "room_password_line_vertical",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 226,
+						"h": 40
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 226,
+						"h": 40
+					},
+					"frame": {
+						"x": 1007,
+						"y": 199,
+						"w": 226,
+						"h": 40
+					}
+				},
+				{
+					"filename": "room_status_party",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 130,
+						"h": 58
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 129,
+						"h": 58
+					},
+					"frame": {
+						"x": 1051,
+						"y": 1,
+						"w": 129,
+						"h": 58
+					}
+				},
+				{
+					"filename": "close",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 58,
+						"h": 58
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 58,
+						"h": 58
+					},
+					"frame": {
+						"x": 1182,
+						"y": 1,
+						"w": 58,
+						"h": 58
+					}
+				},
+				{
+					"filename": "close_shop",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 74,
+						"h": 58
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 74,
+						"h": 58
+					},
+					"frame": {
+						"x": 1051,
+						"y": 61,
+						"w": 74,
+						"h": 58
+					}
+				},
+				{
+					"filename": "room_password_return",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 48,
+						"h": 47
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 48,
+						"h": 47
+					},
+					"frame": {
+						"x": 1127,
+						"y": 61,
+						"w": 48,
+						"h": 47
+					}
+				},
+				{
+					"filename": "room_party_countdown",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 34,
+						"h": 40
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 34,
+						"h": 40
+					},
+					"frame": {
+						"x": 1177,
+						"y": 61,
+						"w": 34,
+						"h": 40
+					}
+				}
+			]
 		}
-	},
+	],
 	"meta": {
-		"app": "http://www.codeandweb.com/texturepacker",
-		"version": "1.0",
-		"image": "spritesheet",
-		"format": "RGBA8888",
-		"size": {
-			"w": 343,
-			"h": 206
-		},
-		"scale": "1"
+		"app": "https://www.codeandweb.com/texturepacker",
+		"version": "3.0",
+		"smartupdate": "$TexturePacker:SmartUpdate:9c96bd88330103f1ea9135e32c8d2b4c:d9c04be201446128719337ad86780867:5fafa64d74ed2b3189bbac2eb55d710f$"
 	}
 }
