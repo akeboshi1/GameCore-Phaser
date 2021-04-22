@@ -21,7 +21,7 @@ export class PicaRoomInfoPanel extends Phaser.GameObjects.Container {
 
     }
     public setAttributeData(data: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_EDIT_MODE_ROOM_INFO) {
-        this.roomName.setAttributeData(data.name + "这是一个测试名称");
+        this.roomName.setAttributeData(data.name);
         this.roomState.setAttributeData(data.openingParty);
         this.roomEvaluate.setAttributeData(data.praise);
     }
@@ -109,7 +109,7 @@ class RoomPartyInfoPanel extends Phaser.GameObjects.Container {
         this.countImg.setLayout(1);
         this.countImg.x = this.cardTips.x + this.cardTips.width + 5 * dpr + this.countImg.width * 0.5;
         this.countImg.y = this.cardTips.y;
-        this.openButton = new NineSliceButton(scene, 0, 0, 114 * dpr, 36 * dpr, UIAtlasName.uicommon, "button_g", i18n.t("room_info.openparty"), dpr, 1, UIHelper.button(dpr));
+        this.openButton = new NineSliceButton(scene, 0, 0, 114 * dpr, 36 * dpr, UIAtlasName.uicommon, "butt_gray", i18n.t("room_info.openparty"), dpr, 1, UIHelper.button(dpr));
         this.openButton.y = height * 0.5 - this.openButton.height * 0.5 - 15 * dpr;
         this.openButton.on(ClickEvent.Tap, this.onOpenHandler, this);
         this.openButton.setTextStyle(UIHelper.blackStyle(dpr, 16));
@@ -120,22 +120,22 @@ class RoomPartyInfoPanel extends Phaser.GameObjects.Container {
         this.send = send;
     }
     public setPartyData(data: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_CREATE_PARTY_REQUIREMENTS) {
-        if (data.created) {
-            this.openButton.setFrameNormal("butt_gray", "butt_gray");
-            this.openButton.disInteractive();
-            this.partyIcon.setFrame("room_party_icon");
-            if (!this.timeCountDown) this.timeCountDown = new TimerCountDown(new Handler(this, (time: number) => {
-                this.timeValue.setTimeValue(time * 1000);
-            }));
-            this.timeCountDown.executeTime(data.expired);
-            this.openButton.setTextColor("#ffffff");
-        } else {
-            this.openButton.setFrameNormal("button_g", "button_g");
-            this.openButton.setInteractive();
-            this.partyIcon.setFrame("room_party_icon_1");
-            this.openButton.setTextColor("#000000");
-            this.timeValue.setTimeValue(0);
-        }
+        // if (data.created) {
+        //     this.openButton.setFrameNormal("butt_gray", "butt_gray");
+        //     this.openButton.disInteractive();
+        //     this.partyIcon.setFrame("room_party_icon");
+        //     if (!this.timeCountDown) this.timeCountDown = new TimerCountDown(new Handler(this, (time: number) => {
+        //         this.timeValue.setTimeValue(time * 1000);
+        //     }));
+        //     this.timeCountDown.executeTime(data.expired);
+        //     this.openButton.setTextColor("#ffffff");
+        // } else {
+        // this.openButton.setFrameNormal("button_g", "button_g");
+        this.openButton.setInteractive();
+        this.partyIcon.setFrame("room_party_icon_1");
+        this.openButton.setTextColor("#000000");
+        this.timeValue.setTimeValue(0);
+        //  }
         this.countImg.setText("*" + data.ticketsCount);
     }
 

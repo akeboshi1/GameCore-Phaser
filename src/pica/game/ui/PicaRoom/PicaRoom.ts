@@ -36,6 +36,10 @@ export class PicaRoom extends BasicModel {
         }
     }
 
+    get proto() {
+        return this.game.customProto;
+    }
+
     queryRoomInfo(roomid) {
         const packet = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_EDIT_MODE_GET_ROOM_INFO);
         const content: op_virtual_world.IOP_CLIENT_REQ_VIRTUAL_WORLD_EDIT_MODE_GET_ROOM_INFO = packet.content;
@@ -68,6 +72,16 @@ export class PicaRoom extends BasicModel {
         content.name = name;
         content.des = des;
         content.ticketCount = ticket;
+        this.connection.send(packet);
+    }
+
+    query_UPDATE_EDITOR_ROOM(roomId: string, name: string, password?: string, privacy?: op_def.EditModeRoomPrivacy) {
+        const packet = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_EDIT_MODE_UPDATE_ROOM_INFO);
+        const content: op_virtual_world.IOP_CLIENT_REQ_VIRTUAL_WORLD_EDIT_MODE_UPDATE_ROOM_INFO = packet.content;
+        content.name = name;
+        content.password = password;
+        content.roomId = roomId;
+        content.privacy = privacy;
         this.connection.send(packet);
     }
 

@@ -133,7 +133,7 @@ export class PicaRoomPanel extends PicaBasePanel {
         btn.setTextOffset(13 * this.dpr, 0);
         const img = this.scene.make.image({ key: UIAtlasName.room_info, frame: icon });
         btn.add(img);
-        img.x = -btn.width * 0.5 + img.width * 0.5 + 23* this.dpr;
+        img.x = -btn.width * 0.5 + img.width * 0.5 + 23 * this.dpr;
         btn.setData("optionType", optionType);
         return btn;
     }
@@ -144,9 +144,18 @@ export class PicaRoomPanel extends PicaBasePanel {
 
     private onSendHandler(tag: string, data: any) {
         if (tag === "name") {
-            this.render.renderEmitter(ModuleName.PICAROOM_NAME + "_name");
+            this.render.renderEmitter(ModuleName.PICAROOM_NAME + "_name", data);
         } else if (tag === "open") {
-            this.render.renderEmitter(ModuleName.PICAROOM_NAME + "_openparty");
+            // this.render.renderEmitter(ModuleName.PICAROOM_NAME + "_openparty");
+            this.onNoticeHandler();
         }
+    }
+
+    private onNoticeHandler() {
+        const tempdata = {
+            text: [{ text: i18n.t("noticeTips.staytuned"), node: undefined }]
+        };
+        this.render.mainPeer.showMediator(ModuleName.PICANOTICE_NAME, true, tempdata);
+        return;
     }
 }

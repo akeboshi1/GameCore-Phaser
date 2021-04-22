@@ -5,10 +5,10 @@ import { EventType, ModuleName } from "structure";
 import { PicaRoom } from "./PicaRoom";
 
 export class PicaRoomMediator extends BasicMediator {
-    private picaRoom: PicaRoom;
+    protected mModel: PicaRoom;
     constructor(game: Game) {
         super(ModuleName.PICAROOM_NAME, game);
-        this.picaRoom = new PicaRoom(game);
+        this.mModel = new PicaRoom(game);
     }
 
     show(param?: any) {
@@ -38,9 +38,9 @@ export class PicaRoomMediator extends BasicMediator {
     }
 
     destroy() {
-        if (this.picaRoom) {
-            this.picaRoom.destroy();
-            this.picaRoom = undefined;
+        if (this.mModel) {
+            this.mModel.destroy();
+            this.mModel = undefined;
         }
         super.destroy();
     }
@@ -53,25 +53,25 @@ export class PicaRoomMediator extends BasicMediator {
 
     private onRoomInfoHandler(content: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_EDIT_MODE_ROOM_INFO) {
         const isSelfRoom = this.game.user.userData.isSelfRoom;
-        this.mView.setRoomInfoData(content, isSelfRoom);
+        this.mView.setRoomInfoData(content);
     }
 
     private queryRoomInfoHandler() {
         const curRoomID = this.game.user.userData.curRoomID;
         if (curRoomID) {
-            this.picaRoom.queryRoomInfo(curRoomID);
+            this.mModel.queryRoomInfo(curRoomID);
         }
     }
 
     private query_REFURBISH_REQUIREMENTS(roomid) {
-        this.picaRoom.query_REFURBISH_REQUIREMENTS(roomid);
+        this.mModel.query_REFURBISH_REQUIREMENTS(roomid);
     }
     private query_ROOM_REFURBISH(roomid) {
-        this.picaRoom.query_ROOM_REFURBISH(roomid);
+        this.mModel.query_ROOM_REFURBISH(roomid);
     }
     private query_PartyData() {
         const curRoomID = this.game.user.userData.curRoomID;
-        if (curRoomID) this.picaRoom.query_PARTY_REQUIREMENTS(curRoomID);
+        if (curRoomID) this.mModel.query_PARTY_REQUIREMENTS(curRoomID);
     }
 
     private query_Open_Party() {
@@ -81,8 +81,8 @@ export class PicaRoomMediator extends BasicMediator {
     }
 
     private query_EditorRoomName(name: string) {
-        // tslint:disable-next-line: no-console
-        console.error(name);
+        const curRoomID = this.game.user.userData.curRoomID;
+        this.mModel.query_UPDATE_EDITOR_ROOM(curRoomID, name);
     }
 
     private on_REFURBISH_REQUIREMENTS(content: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_QUERY_ROOM_REFURBISH_REQUIREMENTS) {
