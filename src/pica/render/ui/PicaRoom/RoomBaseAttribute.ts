@@ -55,6 +55,10 @@ export class RoomNameAttribute extends RoomBaseAttribute {
         this.visible = true;
         this.changeInputState(true);
     }
+
+    setAttributeData(name: string) {
+        this.mNameInput.setText(name);
+    }
     private createInput(x: number, y: number, width: number, height: number, font: number, type: string = "text", placeholder = "") {
         const mblackbg = this.scene.make.graphics(undefined, false);
         mblackbg.fillStyle(0xA4EFF3, 1);

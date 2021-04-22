@@ -258,6 +258,8 @@ export class PicaPropFunPanel extends BasePanel {
                 UITools.showDetailDisplay({ display: this.mDetailDisplay, dpr: this.dpr, data: detail, render: this.render, sn: content.sn, itemid: content.id, serialize: content.serializeString });
             } else if (content.avatar) {
                 this.mDetailDisplay.loadAvatar(content, 2, new Phaser.Geom.Point(0, 35 * 2));
+            } else if (content.display) {
+                this.mDetailDisplay.loadDisplay(content);
             }
         } else {
             this.mDetailDisplay.loadUrl(this.itemData.icon);

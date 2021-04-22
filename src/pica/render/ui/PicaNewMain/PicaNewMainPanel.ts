@@ -20,6 +20,7 @@ export class PicaNewMainPanel extends PicaBasePanel {
     private isFold: boolean = false;
     private headData: any;
     private sceneData: any;
+    private isSelfRoom: boolean = false;
     constructor(uiManager: UiManager) {
         super(uiManager);
         this.atlasNames = [UIAtlasName.uicommon, UIAtlasName.iconcommon];
@@ -78,11 +79,13 @@ export class PicaNewMainPanel extends PicaBasePanel {
         this.sceneData = { sceneName, isPraise, people, roomType, isself };
         if (!this.mInitialized) return;
         this.headPanel.setSceneData(sceneName, isPraise, people, roomType, isself);
+        this.isSelfRoom = isself;
     }
 
     setSelfRoomInfo(isself: boolean = false) {
         if (!this.mInitialized) return;
         this.headPanel.setSelfRoomInfo(isself);
+        this.isSelfRoom = isself;
     }
 
     updateUIState(active?: any) {
@@ -150,7 +153,7 @@ export class PicaNewMainPanel extends PicaBasePanel {
         } else if (tag === "recharge") {
             this.render.renderEmitter(ModuleName.PICANEWMAIN_NAME + "_showpanel", ModuleName.PICARECHARGE_NAME);
         } else if (tag === "room") {
-            this.render.renderEmitter(ModuleName.PICANEWMAIN_NAME + "_openhousepanel");
+            if (this.isSelfRoom) this.render.renderEmitter(ModuleName.PICANEWMAIN_NAME + "_openhousepanel");
         } else if (tag === "party") {
             // this.render.renderEmitter(ModuleName.PICANEWMAIN_NAME + "_showpanel", ModuleName.PICAOPENPARTY_NAME);
             this.render.renderEmitter(ModuleName.PICANEWMAIN_NAME + "_querydecorate");
