@@ -323,7 +323,7 @@ export class PicaCreateRolePanel extends PicaBasePanel {
         this.dragonbones.load({
             id: 0,
             avatar
-        });
+        }, undefined, false);
         this.dragonbones.startLoad();
     }
 

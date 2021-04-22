@@ -29,13 +29,13 @@ export class DragonbonesDisplay extends BaseDragonbonesDisplay implements IDispl
         this.mHasInteractive = true;
     }
 
-    public load(display: IDragonbonesModel, field?: DisplayField): Promise<any> {
+    public load(display: IDragonbonesModel, field?: DisplayField, useRenderTex= true): Promise<any> {
         field = !field ? DisplayField.STAGE : field;
         if (field !== DisplayField.STAGE) {
             return Promise.reject("field is not STAGE");
         }
 
-        return super.load(display);
+        return super.load(display, field, useRenderTex);
     }
 
     get hasInteractive(): boolean {
@@ -282,10 +282,6 @@ export class DragonbonesDisplay extends BaseDragonbonesDisplay implements IDispl
         return this.mSortY;
     }
 
-    protected refreshAvatar() {
-        super.refreshAvatar();
-    }
-
     protected async fetchProjection() {
         if (!this.id) return;
         this.mProjectionSize = await this.render.mainPeer.fetchProjectionSize(this.id);
@@ -312,15 +308,15 @@ export class DragonbonesDisplay extends BaseDragonbonesDisplay implements IDispl
         this.render.mainPeer.completeDragonBonesAnimationQueue(this.id);
     }
 
-    protected loadDragonBones(pngUrl: string, jsonUrl: string, dbbinUrl: string) {
-        this.mLoadQueue.add([{
-            type: LoadType.DRAGONBONES,
-            key: this.resourceName,
-            textureUrl: pngUrl,
-            jsonUrl,
-            boneUrl: dbbinUrl
-        }]);
-    }
+    // protected loadDragonBones(pngUrl: string, jsonUrl: string, dbbinUrl: string) {
+    //     this.mLoadQueue.add([{
+    //         type: LoadType.DRAGONBONES,
+    //         key: this.resourceName,
+    //         textureUrl: pngUrl,
+    //         jsonUrl,
+    //         boneUrl: dbbinUrl
+    //     }]);
+    // }
 
     // protected generateReplaceTextureKey() {
     //     return super.generateReplaceTextureKey() + (this.uuid || 0);

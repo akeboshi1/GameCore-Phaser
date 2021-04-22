@@ -57,7 +57,7 @@ export class EditorDragonbonesDisplay extends BaseDragonbonesDisplay {
         this.setSprite(sprite);
         const displayInfo = sprite.displayInfo;
         if (displayInfo) {
-            this.load(<IDragonbonesModel> displayInfo);
+            this.load(<IDragonbonesModel> displayInfo, undefined, false);
         }
         const pos = sprite.pos;
         if (pos) {

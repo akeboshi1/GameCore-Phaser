@@ -409,9 +409,9 @@ export class AvatarEditorDragonbone extends Phaser.GameObjects.Container {
         return new Promise<any>((resolve, reject) => {
             const loadData = this.convertPartsToIDragonbonesModel(this.mParts);
 
-            this.mDisplay_default.load(loadData)
+            this.mDisplay_default.load(loadData, undefined, false)
                 .then(() => {
-                    return this.mDisplay_head.load(loadData);
+                    return this.mDisplay_head.load(loadData, undefined, false);
                 })
                 .then(() => {
                     resolve(null);
@@ -543,16 +543,15 @@ export class AvatarEditorDragonbone extends Phaser.GameObjects.Container {
 
 class EditorDragonbonesDisplay extends BaseDragonbonesDisplay {
 
-    private static GenerateCount = 0;
-
-    private uuid = 0;
+    // private static GenerateCount = 0;
+    //
+    // private uuid = 0;
 
     constructor(scene: Phaser.Scene, resName: string, private mWebHomePath: string) {
         super(scene);
 
         this.resourceName = resName;
-        this.isRenderTextureWhenChange = true;
-        this.uuid = EditorDragonbonesDisplay.GenerateCount ++;
+        // this.uuid = EditorDragonbonesDisplay.GenerateCount ++;
     }
 
     // protected generateReplaceTextureKey(): string {
