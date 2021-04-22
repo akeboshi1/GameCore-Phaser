@@ -138,4 +138,5 @@ export class EventType {
     public static RETURN_ELEMENT_PI_DATA = "RETURN_ELEMENT_PI_DATA";
 
     public static RETURN_DRESS_AVATAR_IDS = "RETURN_DRESS_AVATAR_IDS";// 返回当前装备的装扮
+    public static RETURN_UPDATE_RED_SYSTEM = "RETURN_UPDATE_RED_SYSTEM";// 红点系统协议更新
 }

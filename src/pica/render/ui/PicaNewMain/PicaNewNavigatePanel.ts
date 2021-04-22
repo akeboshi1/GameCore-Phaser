@@ -2,7 +2,7 @@ import { Button, ClickEvent } from "apowophaserui";
 import { TweenCompent } from "gamecoreRender";
 import { UIAtlasName } from "../../../res";
 import { Handler, i18n } from "utils";
-
+import { MainUIRedType } from "picaStructure";
 export class PicaNewNavigatePanel extends Phaser.GameObjects.Container {
     public exploreButton: Button;
     public homeButton: Button;
@@ -15,6 +15,7 @@ export class PicaNewNavigatePanel extends Phaser.GameObjects.Container {
     private avatarButton: Button;
     private sendHandler: Handler;
     private buttons: Button[];
+    private redButtonMap: Map<number, Button> = new Map();
     constructor(scene: Phaser.Scene, key: string, dpr: number, scale: number) {
         super(scene);
         this.dpr = dpr;
@@ -36,13 +37,16 @@ export class PicaNewNavigatePanel extends Phaser.GameObjects.Container {
         this.exploreButton = this.createButton("home_explore");
         this.homeButton = this.createButton("home_home");
         this.buttons = [this.bagButton, this.friendButton, this.avatarButton, this.makeButton, this.exploreButton, this.homeButton];
+        this.redButtonMap.set(MainUIRedType.GALLERY, this.makeButton);
         this.add(this.bg);
         this.add(this.buttons);
         this.addListen();
         this.LayoutButton();
         // this.render.emitter.emit(EventType.NAVIGATE_RESIZE, this.width, this.height);
     }
-
+    public get redMap() {
+        return this.redButtonMap;
+    }
     public getIllustredPos() {
         const world = this.makeButton.getWorldTransformMatrix();
         const x = world.tx;

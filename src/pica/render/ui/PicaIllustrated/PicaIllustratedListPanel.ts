@@ -2,11 +2,14 @@ import { ClickEvent } from "apowophaserui";
 import { AlignmentType, AxisType, ButtonEventDispatcher, ConstraintType, GridLayoutGroup } from "gamecoreRender";
 import { UIAtlasName } from "../../../res";
 import { Handler, i18n, UIHelper } from "utils";
+import { UITools } from "../uitool";
+import { MainUIRedType } from "picaStructure";
 export class PicaIllustratedListPanel extends Phaser.GameObjects.Container {
     private dpr: number;
     private zoom: number;
     private send: Handler;
     private gridLayout: GridLayoutGroup;
+    private redMap: Map<number, Phaser.GameObjects.Image> = new Map();
     constructor(scene: Phaser.Scene, width: number, height: number, dpr: number, zoom: number) {
         super(scene);
         this.setSize(width, height);
@@ -45,10 +48,18 @@ export class PicaIllustratedListPanel extends Phaser.GameObjects.Container {
             const item = new IllustratedItem(this.scene, 304 * this.dpr, 96 * this.dpr, this.dpr, this.zoom);
             item.setDisplayData(data);
             this.gridLayout.add(item);
+            if (data.redType) {
+                const img = UITools.creatRedImge(this.scene, item);
+                this.redMap.set(data.redType, img);
+            }
         }
         this.gridLayout.Layout();
     }
-
+    setRedsState(reds: number[]) {
+        this.redMap.forEach((value, key) => {
+            value.visible = reds.indexOf(key) !== -1;
+        });
+    }
     private getListData() {
         const send = new Handler(this, this.onSelectItemHandler);
         const temp1: IllustratedItemData = {
@@ -58,7 +69,9 @@ export class PicaIllustratedListPanel extends Phaser.GameObjects.Container {
             text: i18n.t("illustrate.furin"),
             textColor: "#0C6DA3",
             send,
-            tag: "gallary"
+            tag: "gallary",
+            redType: MainUIRedType.GALLERY,
+
         };
         const temp2: IllustratedItemData = {
             bg: "illustrate_dress_bg",
@@ -87,7 +100,7 @@ export class PicaIllustratedListPanel extends Phaser.GameObjects.Container {
             send,
             tag: "cooking"
         };
-        const datas = [temp1, temp3,temp4];
+        const datas = [temp1, temp3, temp4];
         return datas;
     }
 
@@ -147,4 +160,5 @@ interface IllustratedItemData {
     textColor: string;
     tag: string;
     send: Handler;
+    redType?: number;
 }

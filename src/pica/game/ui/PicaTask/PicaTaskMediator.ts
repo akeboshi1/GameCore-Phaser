@@ -1,8 +1,10 @@
 import { BasicMediator, Game } from "gamecore";
+import { MainUIRedType, RedEventType } from "picaStructure";
 import { op_client, op_pkt_def } from "pixelpai_proto";
 import { ModuleName } from "structure";
 import { ObjectAssign } from "utils";
 import { BaseDataConfigManager } from "../../config";
+import { PicaGame } from "../../pica.game";
 import { PicaMail } from "./PicaTask";
 export class PicaTaskMediator extends BasicMediator {
     protected mModel: PicaMail;
@@ -24,6 +26,7 @@ export class PicaTaskMediator extends BasicMediator {
         this.game.emitter.on(ModuleName.PICATASK_NAME + "_retquestdetail", this.onRetQuestDetail, this);
         this.game.emitter.on(ModuleName.PICATASK_NAME + "_retquestgroup", this.onRetQuestGroup, this);
         this.game.emitter.on(ModuleName.PICATASK_NAME + "_querygo", this.onGoHandler, this);
+        this.game.emitter.off(RedEventType.MAIN_PANEL_RED, this.onRedSystemHandler, this);
     }
 
     hide() {
@@ -38,7 +41,8 @@ export class PicaTaskMediator extends BasicMediator {
         this.game.emitter.off(ModuleName.PICATASK_NAME + "_retquestlist", this.onRetQuestList, this);
         this.game.emitter.off(ModuleName.PICATASK_NAME + "_retquestdetail", this.onRetQuestDetail, this);
         this.game.emitter.off(ModuleName.PICATASK_NAME + "_retquestgroup", this.onRetQuestGroup, this);
-        this.game.emitter.on(ModuleName.PICATASK_NAME + "_querygo", this.onGoHandler, this);
+        this.game.emitter.off(ModuleName.PICATASK_NAME + "_querygo", this.onGoHandler, this);
+        this.game.emitter.off(RedEventType.MAIN_PANEL_RED, this.onRedSystemHandler, this);
     }
     panelInit() {
         super.panelInit();
@@ -46,6 +50,7 @@ export class PicaTaskMediator extends BasicMediator {
             this.onRetQuestGroup(this.taskGroup);
             this.taskGroup = undefined;
         }
+        this.onRedSystemHandler((<PicaGame>this.game).getRedPoints(MainUIRedType.TASK));
     }
     private onHideView() {
         this.hide();
@@ -101,5 +106,8 @@ export class PicaTaskMediator extends BasicMediator {
             this.hide();
             this.game.uiManager.showMed(datas[0], datas[1]);
         }
+    }
+    private onRedSystemHandler(reds: number[]) {
+        if (this.mView) this.mView.setRedsState(reds);
     }
 }

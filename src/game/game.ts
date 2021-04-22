@@ -390,6 +390,7 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
         return this.mHttpLoadManager;
     }
     get emitter(): EventDispatcher {
+        if (!this.mDataManager) return undefined;
         return this.mDataManager.emitter;
     }
 
@@ -663,7 +664,9 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
         this.mSoundManager.addPackListener();
         // this.mPlayerDataManager.addPackListener();
     }
+    protected onClearGame() {
 
+    }
     private initGame() {
         // if (this.mRoomManager) this.mRoomManager.addPackListener();
         // if (this.mUIManager) this.mUIManager.addPackListener();
@@ -786,6 +789,7 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
                 if (this.user) this.user.removePackListener();
                 // this.peer.destroy();
                 this.hasClear = true;
+                this.onClearGame();
                 resolve();
             });
         });
