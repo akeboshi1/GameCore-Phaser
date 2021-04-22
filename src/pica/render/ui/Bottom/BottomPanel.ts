@@ -5,6 +5,7 @@ import { Font, Handler, i18n } from "utils";
 import { UIAtlasName } from "../../../res";
 import { PicaNewNavigatePanel } from "../PicaNewMain/PicaNewNavigatePanel";
 import { PicaBasePanel } from "../pica.base.panel";
+import { UITools } from "../uitool";
 
 export class BottomPanel extends PicaBasePanel {
     private mNavigate: PicaNewNavigatePanel;
@@ -16,6 +17,7 @@ export class BottomPanel extends PicaBasePanel {
     private expanded: boolean;
     private scaleRatio: number;
     private background: Phaser.GameObjects.Graphics;
+    private redMap: Map<number, Phaser.GameObjects.Image> = new Map();
     constructor(uiManager: UiManager) {
         super(uiManager);
         this.scaleRatio = this.scale;
@@ -41,6 +43,7 @@ export class BottomPanel extends PicaBasePanel {
 
         this.updateOutputLayout();
     }
+
     public updateUIState(datas: any) {
         if (this.mInitialized) return;
         this.mNavigate.updateUIState(datas);
@@ -109,13 +112,20 @@ export class BottomPanel extends PicaBasePanel {
         this.mInput.blurInput();
         this.render.displayManager.snapshot();
     }
-
+    public setRedsState(reds: number[]) {
+        this.tempDatas = reds;
+        if (!this.mInitialized) return;
+        this.redMap.forEach((value, key) => {
+            value.visible = reds.indexOf(key) !== -1;
+        });
+    }
     get navigatePanel(): Phaser.GameObjects.Container {
         return this.mNavigate;
     }
 
     protected onShow() {
         super.onShow();
+        if (this.tempDatas) this.setRedsState(this.tempDatas);
     }
 
     protected onHide() {
@@ -131,11 +141,18 @@ export class BottomPanel extends PicaBasePanel {
         this.resizeColtroll = new ResizeControll(this.scene, this.key, this.dpr, this.scaleRatio);
         this.addAt(this.background, 0);
         this.add([this.mOutput, this.mInput, this.mNavigate, this.resizeColtroll]);
+        this.creatRedMap();
         this.resize(this.width, this.mOutput.height + this.mInput.height + this.mNavigate.height);
         super.init();
         this.onToggleSizeHandler(false);
     }
-
+    private creatRedMap() {
+        const navigate = this.mNavigate.redMap;
+        navigate.forEach((value, key) => {
+            const img = UITools.creatRedImge(this.scene, value, { x: -10 * this.dpr, y: 0 });
+            this.redMap.set(key, img);
+        });
+    }
     private checkUpdateActive() {
         // this.render.mainPeer.getCurRoom()
         //     .then((curRoom) => {
@@ -394,7 +411,7 @@ class InputContainer extends Phaser.GameObjects.Container {
     }
 
     public destroy() {
-        if(this.scene) this.scene.input.off("pointerdown", this.onPointerSceneHandler, this);
+        if (this.scene) this.scene.input.off("pointerdown", this.onPointerSceneHandler, this);
         super.destroy();
     }
 

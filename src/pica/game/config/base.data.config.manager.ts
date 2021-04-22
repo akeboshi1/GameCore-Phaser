@@ -20,7 +20,7 @@ import version from "../../../../version";
 import { JobConfig } from "./job.config";
 import { IJob } from "../../structure/ijob";
 import { CardPoolConfig } from "./cardpool.config";
-import { ICraftSkill } from "src/pica/structure/icraftskill";
+import { ICraftSkill } from "../../structure/icraftskill";
 import { SkillConfig } from "./skill.config";
 import { LevelConfig } from "./level.config";
 import { SocialConfig } from "./social.config";
@@ -29,10 +29,10 @@ import { QuestConfig } from "./quest.config";
 import { GuideConfig } from "./guide.config";
 import { FurnitureGroup } from "./furniture.group";
 import { GalleryConfig, GalleryType } from "./gallery.config";
-import { IGalleryCombination, IGalleryLevel } from "src/pica/structure/igallery";
+import { IGalleryCombination, IGalleryLevel } from "../../structure/igallery";
 import { Lite } from "game-capsule";
 import { ElmentPiConfig } from "./element.pi.config";
-import { IElementPi } from "src/pica/structure/ielementpi";
+import { IElementPi } from "../../structure/ielementpi";
 import { EventType } from "structure";
 import { QuestGroupConfig } from "./quest.group.config";
 
@@ -701,6 +701,12 @@ export class BaseDataConfigManager extends BaseConfigManager {
             }
             const config = <ElmentPiConfig>this.dataMap.get(configType);
             config.url = ResUtils.getResRoot(data.serialize);
+            if (config.has(data.sn)) {
+                const elepi = config.get(data.sn);
+                this.mGame.peer.workerEmitter(EventType.RETURN_ELEMENT_PI_DATA + "_" + data.sn, elepi);
+                resolve(elepi);
+                return;
+            }
             this.dynamicLoad(new Map([[configType, config]])).then(() => {
                 const elepi: IElementPi = config.get(data.sn);
                 elepi.itemId = data.itemid;

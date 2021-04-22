@@ -2,6 +2,8 @@ import { BasicMediator, ChatManager, DataMgrType, Game, IElement, UIType } from 
 import { EventType, ModuleName } from "structure";
 import { PicaChat } from "../PicaChat/PicaChat";
 import { ChatCommandInterface, Logger } from "utils";
+import { MainUIRedType, RedEventType } from "picaStructure";
+import { PicaGame } from "../../pica.game";
 
 export class BottomMediator extends BasicMediator {
     private mCacheManager: ChatManager;
@@ -17,6 +19,7 @@ export class BottomMediator extends BasicMediator {
         this.game.emitter.on("chat", this.appendChat, this);
         this.game.emitter.on(ModuleName.BOTTOM + "_showpanel", this.onShowPanelHandler, this);
         this.game.emitter.on(ModuleName.BOTTOM + "_gohome", this.onGoHomeHandler, this);
+        this.game.emitter.on(RedEventType.MAIN_PANEL_RED, this.onRedSystemHandler, this);
         super.show();
     }
 
@@ -24,6 +27,7 @@ export class BottomMediator extends BasicMediator {
         this.game.emitter.off("chat", this.appendChat, this);
         this.game.emitter.off(ModuleName.BOTTOM + "_showpanel", this.onShowPanelHandler, this);
         this.game.emitter.off(ModuleName.BOTTOM + "_gohome", this.onGoHomeHandler, this);
+        this.game.emitter.off(RedEventType.MAIN_PANEL_RED, this.onRedSystemHandler, this);
         super.hide();
     }
 
@@ -55,6 +59,7 @@ export class BottomMediator extends BasicMediator {
                 this.appendChat(msg);
             }
         }
+        this.onRedSystemHandler((<PicaGame>this.game).getRedPoints(MainUIRedType.MAIN));
     }
 
     // "##matterWorld.debugEnable"
@@ -176,5 +181,8 @@ export class BottomMediator extends BasicMediator {
             this.mCacheManager = this.game.getDataMgr<ChatManager>(DataMgrType.ChatMgr);
         }
         return this.mCacheManager;
+    }
+    private onRedSystemHandler(reds: number[]) {
+        if (this.mView) this.mView.setRedsState(reds);
     }
 }

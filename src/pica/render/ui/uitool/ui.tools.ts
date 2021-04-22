@@ -1,4 +1,5 @@
 import { Render } from "gamecoreRender";
+import { UIAtlasName } from "picaRes";
 import { AvatarSuitType, EventType } from "structure";
 import { Url } from "utils";
 
@@ -40,5 +41,19 @@ export class UITools {
             render.emitter.on(evetType, showFun, context);
         }
 
+    }
+    public static creatRedImge(scene: Phaser.Scene, parent: Phaser.GameObjects.Container, offset?: { x: number, y: number }) {
+        const red = scene.make.image({ key: UIAtlasName.uicommon, frame: "home_hint_b" });
+        if (!offset) {
+            offset = { x: 0, y: 0 };
+        } else {
+            offset.x = offset.x || 0;
+            offset.y = offset.y || 0;
+        }
+        red.x = parent.width * 0.5 - red.width * 0.5 + offset.x;
+        red.y = -parent.height * 0.5 + red.height * 0.5 + offset.y;
+        parent.add(red);
+        red.visible = true;
+        return red;
     }
 }
