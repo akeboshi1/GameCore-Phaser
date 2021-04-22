@@ -1,6 +1,8 @@
 import { BasicMediator, DataMgrType, Game, PlayerProperty, SceneDataManager } from "gamecore";
-import { op_client } from "pixelpai_proto";
+import { MainUIRedType, RedEventType } from "picaStructure";
+import { op_client, op_def } from "pixelpai_proto";
 import { EventType, ModuleName } from "structure";
+import { PicaGame } from "../../pica.game";
 import { PicaNewMain } from "./PicaNewMain";
 
 export class PicaNewMainMediator extends BasicMediator {
@@ -19,6 +21,7 @@ export class PicaNewMainMediator extends BasicMediator {
         this.game.emitter.on(EventType.UPDATE_PLAYER_INFO, this.onUpdatePlayerHandler, this);
         this.game.emitter.on(this.key + "_querydecorate", this.queryDecorate, this);
         this.game.emitter.on(EventType.FECTH_FOLD_MAIN_UI, this.onFoldButtonHandler, this);
+        this.game.emitter.on(RedEventType.MAIN_PANEL_RED, this.onRedSystemHandler, this);
     }
 
     hide() {
@@ -30,6 +33,7 @@ export class PicaNewMainMediator extends BasicMediator {
         this.game.emitter.off(EventType.UPDATE_PLAYER_INFO, this.onUpdatePlayerHandler, this);
         this.game.emitter.off(this.key + "_querydecorate", this.queryDecorate, this);
         this.game.emitter.off(EventType.FECTH_FOLD_MAIN_UI, this.onFoldButtonHandler, this);
+        this.game.emitter.off(RedEventType.MAIN_PANEL_RED, this.onRedSystemHandler, this);
     }
 
     destroy() {
@@ -48,6 +52,7 @@ export class PicaNewMainMediator extends BasicMediator {
         if (this.mView) {
             if (this.playerInfo) this.onUpdatePlayerHandler(this.playerInfo);
             if (this.roomInfo) this.onUpdateRoomHandler(this.roomInfo);
+            this.onRedSystemHandler((<PicaGame>this.game).getRedPoints(MainUIRedType.MAIN));
         }
     }
 
@@ -96,6 +101,10 @@ export class PicaNewMainMediator extends BasicMediator {
     }
     private queryDecorate() {
         this.game.roomManager.currentRoom.requestDecorate();
+    }
+
+    private onRedSystemHandler(reds: number[]) {
+        if (this.mView) this.mView.setRedsState(reds);
     }
 
     get playerInfo() {

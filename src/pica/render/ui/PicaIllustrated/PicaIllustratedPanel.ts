@@ -7,7 +7,7 @@ import { PicaIllustratedListPanel } from "./PicaIllustratedListPanel";
 import { op_client } from "pixelpai_proto";
 import { PicaIllustratedDetailPanel } from "./PicaIllustratedDetailPanel";
 import { ClickEvent } from "apowophaserui";
-import { IExtendCountablePackageItem, IGalleryCombination } from "../../../structure";
+import { IExtendCountablePackageItem, IGalleryCombination, MainUIRedType } from "../../../structure";
 import { PicaFuriniDetailPanel } from "./PicaFuriniDetailPanel";
 import { CommonBackground } from "../../ui";
 export class PicaIllustratedPanel extends PicaBasePanel {
@@ -18,6 +18,7 @@ export class PicaIllustratedPanel extends PicaBasePanel {
     private backButton: ButtonEventDispatcher;
     private titleTex: Phaser.GameObjects.Text;
     private furiDetail: PicaFuriniDetailPanel;
+    private redObj: any;
     constructor(uiManager: UiManager) {
         super(uiManager);
         this.key = ModuleName.PICAILLUSTRATED_NAME;
@@ -68,6 +69,7 @@ export class PicaIllustratedPanel extends PicaBasePanel {
 
     onShow() {
         this.openListPanel();
+        if (this.redObj) this.setRedsState(this.redObj);
     }
 
     setGallaryData(content: op_client.OP_CLIENT_REQ_VIRTUAL_WORLD_PKT_UPDATE_GALLERY, combinations: IGalleryCombination[]) {
@@ -83,9 +85,17 @@ export class PicaIllustratedPanel extends PicaBasePanel {
         if (!this.mInitialized) return;
         if (this.detailPanel) this.detailPanel.setDoneMissionList(list);
     }
+    setRedsState(obj: any) {
+        this.redObj = obj;
+        if (!this.mInitialized) return;
+        if (this.listPanel) this.listPanel.setRedsState(this.redObj["redlist"]);
+        if (this.detailPanel) this.detailPanel.setRedsState(this.redObj[MainUIRedType.GALLERY]);
+
+    }
     private openListPanel() {
         this.showListPanel();
         this.listPanel.setListData();
+        if (this.redObj) this.listPanel.setRedsState(this.redObj["redlist"]);
     }
 
     private showListPanel() {
@@ -107,6 +117,7 @@ export class PicaIllustratedPanel extends PicaBasePanel {
             this.detailPanel.setGallaryData(this.tempDatas.gallery, this.tempDatas.combinations);
             if (this.tempDatas.donemission) this.detailPanel.setDoneMissionList(this.tempDatas.donemission);
         }
+        if (this.redObj) this.detailPanel.setRedsState(this.redObj[MainUIRedType.GALLERY]);
     }
 
     private showDetailPanel() {

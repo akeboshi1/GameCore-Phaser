@@ -1,8 +1,8 @@
-import { Game } from "gamecore";
 import { PacketHandler, PBpacket } from "net-socket-packet";
 import { op_client, op_virtual_world } from "pixelpai_proto";
 import * as customProto from "custom_proto";
 import { EventDispatcher, Logger } from "utils";
+import { Game } from "../game";
 
 export class CustomProtoManager extends PacketHandler {
     private emitter: EventDispatcher;
@@ -20,7 +20,7 @@ export class CustomProtoManager extends PacketHandler {
         if (!proto) {
             return Logger.getInstance().error(`${msgName} does not exist`);
         }
-        const obj = proto.fromObject(msg || { });
+        const obj = proto.fromObject(msg || {});
         if (!obj) {
             return Logger.getInstance().error(`parse message ${msg.toString()} failed`);
         }
@@ -33,11 +33,11 @@ export class CustomProtoManager extends PacketHandler {
     }
 
     public on(type: string, listener: Function, caller: any, args: any[] = null) {
-        this.emitter.on(type, caller, listener, args);
+        this.emitter.on(type, listener, caller, args);
     }
 
     public once(type: string, listener: Function, caller: any, args: any[] = null) {
-        this.emitter.once(type, caller, listener, args);
+        this.emitter.once(type, listener, caller, args);
     }
 
     public off(type: string, listener: Function, caller: any, onceOnly: Boolean = false) {

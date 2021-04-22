@@ -1,6 +1,7 @@
 import { Button, ClickEvent } from "apowophaserui";
 import { UIAtlasName } from "../../../res";
 import { Handler } from "utils";
+import { MainUIRedType } from "picaStructure";
 
 export class PicaNewLeftPanel extends Phaser.GameObjects.Container {
     public taskButton: Button;
@@ -8,6 +9,7 @@ export class PicaNewLeftPanel extends Phaser.GameObjects.Container {
     private dpr: number;
     private key: string;
     private sendHandler: Handler;
+    private redButtonMap: Map<number, Button> = new Map();
     constructor(scene: Phaser.Scene, width: number, height: number, key: string, dpr: number) {
         super(scene);
         this.setSize(width, height);
@@ -24,6 +26,7 @@ export class PicaNewLeftPanel extends Phaser.GameObjects.Container {
         this.taskButton.y = this.mapButton.y + this.mapButton.height * 0.5 + 20 * this.dpr + this.taskButton.height * 0.5;
         this.taskButton.on(ClickEvent.Tap, this.onTaskButtonHandler, this);
         this.add([this.mapButton, this.taskButton]);
+        this.redButtonMap.set(MainUIRedType.TASK, this.taskButton);
     }
     public updateUIState(datas: any) {
         for (const data of datas) {
@@ -35,7 +38,9 @@ export class PicaNewLeftPanel extends Phaser.GameObjects.Container {
     public setHandler(send: Handler) {
         this.sendHandler = send;
     }
-
+    public get redMap() {
+        return this.redButtonMap;
+    }
     private onMapButtonHandler() {
         if (this.sendHandler) this.sendHandler.runWith(["maphome"]);
     }

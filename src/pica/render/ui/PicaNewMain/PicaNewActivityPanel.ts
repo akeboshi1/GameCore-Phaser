@@ -2,6 +2,7 @@ import { Button, ClickEvent } from "apowophaserui";
 import { Render } from "gamecoreRender";
 import { UIAtlasName } from "../../../res";
 import { Handler } from "utils";
+import { MainUIRedType } from "picaStructure";
 export class PicaNewActivityPanel extends Phaser.GameObjects.Container {
     public arrowButton: Button;
     private dpr: number;
@@ -16,6 +17,7 @@ export class PicaNewActivityPanel extends Phaser.GameObjects.Container {
     private listBtns2: Button[];
     private listPosY: number[] = [];
     private tempButtons: Button[][] = [];
+    private redButtonMap: Map<number, Button> = new Map();
     private sendHandler: Handler;
     private isFold: boolean = false;
     constructor(private render: Render, scene: Phaser.Scene, width: number, height: number, key: string, dpr: number) {
@@ -27,33 +29,25 @@ export class PicaNewActivityPanel extends Phaser.GameObjects.Container {
     }
     init() {
         this.activityButton = new Button(this.scene, UIAtlasName.iconcommon, "home_activity", "home_activity");
-        // this.activityButton.y = -this.height * 0.5 + this.activityButton.height * 0.5;
         this.activityButton.on(ClickEvent.Tap, this.onActivityHandler, this);
 
         this.indentButton = new Button(this.scene, UIAtlasName.iconcommon, "home_indent", "home_indent");
-        // this.indentButton.y = this.activityButton.y + this.activityButton.height * 0.5 + 15 * this.dpr + this.indentButton.height * 0.5;
         this.indentButton.on(ClickEvent.Tap, this.onIndentHandler, this);
 
         this.rechargeButton = new Button(this.scene, UIAtlasName.iconcommon, "home_recharge", "home_recharge");
-        // this.rechargeButton.y = this.indentButton.y + this.indentButton.height * 0.5 + 15 * this.dpr + this.rechargeButton.height * 0.5;
         this.rechargeButton.on(ClickEvent.Tap, this.onRechargeHandler, this);
 
         this.emailButton = new Button(this.scene, UIAtlasName.iconcommon, "home_email", "home_email");
-        // this.emailButton.y = this.rechargeButton.y + this.rechargeButton.height * 0.5 + 15 * this.dpr + this.emailButton.height * 0.5;
         this.emailButton.on(ClickEvent.Tap, this.onEmailHandler, this);
+        this.redButtonMap.set(MainUIRedType.MAIL, this.emailButton);
 
         this.roamButton = new Button(this.scene, UIAtlasName.iconcommon, "home_roam", "home_roam");
-        // this.roamButton.y = this.activityButton.y;
-        // this.roamButton.x = this.activityButton.x - this.roamButton.width * 0.5 - this.activityButton.width * 0.5 - 15 * this.dpr;
         this.roamButton.on(ClickEvent.Tap, this.onRoamHandler, this);
 
         this.shopButton = new Button(this.scene, UIAtlasName.iconcommon, "home_shop", "home_shop");
-        // this.shopButton.y = this.roamButton.y + this.roamButton.height * 0.5 + 15 * this.dpr + this.shopButton.height * 0.5;
-        // this.shopButton.x = this.roamButton.x;
         this.shopButton.on(ClickEvent.Tap, this.onShopHandler, this);
 
         this.arrowButton = new Button(this.scene, UIAtlasName.uicommon, "home_more_2", "home_more_2");
-        // this.arrowButton.y = this.emailButton.y + this.emailButton.height * 0.5 + 10 * this.dpr + this.arrowButton.height * 0.5;
         this.arrowButton.on(ClickEvent.Tap, this.onArrowHandler, this);
         this.listBtns = [this.activityButton, this.indentButton, this.rechargeButton, this.emailButton];
         this.listBtns2 = [this.roamButton, this.shopButton];
@@ -63,6 +57,7 @@ export class PicaNewActivityPanel extends Phaser.GameObjects.Container {
         this.add(this.arrowButton);
         this.LayoutAllButtons();
     }
+
     public addListen() {
         this.indentButton.on(ClickEvent.Tap, this.onIndentHandler, this);
         this.rechargeButton.on(ClickEvent.Tap, this.onRechargeHandler, this);
@@ -85,6 +80,10 @@ export class PicaNewActivityPanel extends Phaser.GameObjects.Container {
             // if (data.visible) button.enable = data.disable;
         }
         this.LayoutAllButtons();
+    }
+
+    public get redMap() {
+        return this.redButtonMap;
     }
 
     protected LayoutAllButtons() {
