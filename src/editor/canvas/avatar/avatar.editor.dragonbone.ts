@@ -324,7 +324,7 @@ export class AvatarEditorDragonbone extends Phaser.GameObjects.Container {
             // fix dumplicate sets
             const existSetIdx = this.mSets.findIndex((x) => (x.id === newSet.id && JSON.stringify(x.parts) === JSON.stringify(newSet.parts)));
             if (existSetIdx >= 0) continue;
-            temp.push(Object.assign({}, newSet));
+            temp.push(JSON.parse(JSON.stringify(newSet)));
         }
 
         // 解决替换发型，后发分层存在的问题
