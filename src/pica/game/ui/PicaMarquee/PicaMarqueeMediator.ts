@@ -40,7 +40,6 @@ export class PicaMarqueeMediator extends BasicMediator {
 
   private setPriorityMsg(msg: { message: string, priority: number }) {
     if (msg) {
-      msg["count"] = 3;
       if (this.mMapQueue.has(msg.priority)) {
         const arr = this.mMapQueue.get(msg.priority);
         arr.push(msg);

@@ -31,7 +31,7 @@ export class PicaMarqueePanel extends PicaBasePanel {
         if (!this.mInitialized) return;
         const tips = data.tips;
         const content = data.message || "";
-        const count = data.count || 1;
+        const count = data.playtimes || 1;
         this.mContent.text = tips ? `[color=#FFEA00][${tips}][/color]${content}` : content;
         const minitime = 6000, delta = minitime / (267 * this.dpr);
         let moveTime = this.mContent.width * delta;
