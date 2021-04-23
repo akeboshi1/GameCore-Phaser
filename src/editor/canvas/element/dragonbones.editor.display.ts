@@ -5,7 +5,7 @@ import { Logger } from "utils";
 export class DragonbonesEditorDisplay extends BaseDragonbonesDisplay {
     constructor(scene: Phaser.Scene) {
         super(scene);
-        this.load(new DragonbonesModel({ id: 0, avatar: { } }));
+        this.load(new DragonbonesModel({ id: 0, avatar: { } }), undefined, false);
     }
 
     public displayCreated() {

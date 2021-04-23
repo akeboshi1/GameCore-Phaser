@@ -173,7 +173,7 @@ export class PicaPlayerInfoPanel extends PicaBasePanel {
             this.avatar.load({
                 id: 0,
                 avatar: temp.avatar,
-            });
+            }, undefined, false);
         }
         const nickname = data.nickname ? data.nickname : "???";
         const current_title = data.currentTitle ? data.currentTitle : "???";

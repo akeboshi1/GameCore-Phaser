@@ -9,14 +9,16 @@ export class MouseManagerDecorate extends MouseManager {
     private downGameObject: boolean = false;
     private downPointerPos: LogicPos;
     private downDisplayPos: LogicPos;
-    private selectedDisplay: DragonbonesDisplay | FramesDisplay | null = null;
+    private downDisplay: DragonbonesDisplay | FramesDisplay | null = null;
     private roomSize: IPosition45Obj;
 
     constructor(protected render: Render) {
         super(render);
+
     }
 
     destroy() {
+
         this.removeListener();
         super.destroy();
     }
@@ -39,7 +41,7 @@ export class MouseManagerDecorate extends MouseManager {
     protected async onPointerDownHandler(pointer: Phaser.Input.Pointer): Promise<void> {
         if (this.downGameObject) return;
 
-        this.selectedDisplay = null;
+        this.downDisplay = null;
         this.downPointerPos = new LogicPos(pointer.worldX / this.render.scaleRatio, pointer.worldY / this.render.scaleRatio);
         this.scene.input.off("pointermove", this.onPointerMoveHandler, this);
         this.scene.input.on("pointermove", this.onPointerMoveHandler, this);
@@ -48,13 +50,18 @@ export class MouseManagerDecorate extends MouseManager {
     }
 
     protected async onPointerUpHandler(pointer: Phaser.Input.Pointer): Promise<void> {
-        if (this.selectedDisplay) {
+        const selectedID = await this.render.mainPeer.getDecorateSelectedElementID();
+        const selectedDisplay = this.render.displayManager.getDisplay(selectedID);
+        if (selectedDisplay && selectedDisplay === this.downDisplay) {
             const worldPos = new LogicPos(pointer.worldX / this.render.scaleRatio, pointer.worldY / this.render.scaleRatio);
             const freePos = new LogicPos(worldPos.x + this.downDisplayPos.x - this.downPointerPos.x,
                 worldPos.y + this.downDisplayPos.y - this.downPointerPos.y);
             const gridPos = Position45.transformTo90(Position45.transformTo45(freePos, this.roomSize), this.roomSize);
             const gridDelta = new LogicPos(gridPos.x - this.downDisplayPos.x, gridPos.y - this.downDisplayPos.y);
-            this.render.mainPeer.decorateMoveElement(this.selectedDisplay.id, gridDelta);
+            this.render.mainPeer.decorateMoveElement(selectedID, gridDelta);
+        } else if (Math.abs(pointer.downX - pointer.x) < 5 * this.zoom && Math.abs(pointer.downY - pointer.y) < 5 * this.zoom) {
+            // select
+            if (this.downDisplay) this.render.mainPeer.decorateSelectElement(this.downDisplay.id);
         }
 
         this.clearDownData();
@@ -62,15 +69,20 @@ export class MouseManagerDecorate extends MouseManager {
 
     protected async onPointerMoveHandler(pointer: Phaser.Input.Pointer): Promise<void> {
         const worldPos = new LogicPos(pointer.worldX / this.render.scaleRatio, pointer.worldY / this.render.scaleRatio);
-        if (this.selectedDisplay) {
+        const selectedID = await this.render.mainPeer.getDecorateSelectedElementID();
+        const selectedDisplay = this.render.displayManager.getDisplay(selectedID);
+        if (selectedDisplay && selectedDisplay === this.downDisplay) {
             // move game object
             const freePos = new LogicPos(worldPos.x + this.downDisplayPos.x - this.downPointerPos.x,
                 worldPos.y + this.downDisplayPos.y - this.downPointerPos.y);
             const gridPos = Position45.transformTo90(Position45.transformTo45(freePos, this.roomSize), this.roomSize);
-            this.selectedDisplay.setPosition(gridPos.x, gridPos.y);
-            this.render.mainPeer.updateDecorateElementReference(this.selectedDisplay.id, gridPos.x, gridPos.y);
+            selectedDisplay.setPosition(gridPos.x, gridPos.y);
+            this.render.mainPeer.updateDecorateElementReference(selectedID, gridPos.x, gridPos.y);
+        } else if (Math.abs(pointer.downX - pointer.x) < 5 * this.zoom && Math.abs(pointer.downY - pointer.y) < 5 * this.zoom) {
+            // select
         } else {
             // move camera
+            this.downDisplay = null;
             this.render.camerasManager.offsetScroll(
                 pointer.prevPosition.x - pointer.position.x,
                 pointer.prevPosition.y - pointer.position.y
@@ -95,17 +107,16 @@ export class MouseManagerDecorate extends MouseManager {
         if (id) {
             const display = this.render.displayManager.getDisplay(id);
             if (display && display.nodeType === NodeType.ElementNodeType && !await this.render.mainPeer.isElementLocked(id)) {
-                this.selectedDisplay = display;
+                this.downDisplay = display;
                 this.downPointerPos = new LogicPos(pointer.worldX / this.render.scaleRatio, pointer.worldY / this.render.scaleRatio);
                 this.downDisplayPos = new LogicPos(display.x, display.y);
-                this.render.mainPeer.decorateSelectElement(id);
             }
         }
     }
 
     private clearDownData() {
         this.downGameObject = false;
-        this.selectedDisplay = null;
+        this.downDisplay = null;
         this.downPointerPos = new LogicPos();
         this.downDisplayPos = new LogicPos();
         this.scene.input.off("pointermove", this.onPointerMoveHandler, this);
