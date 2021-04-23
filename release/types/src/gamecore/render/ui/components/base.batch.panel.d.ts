@@ -1,0 +1,43 @@
+/// <reference types="tooqinggamephaser" />
+import { Panel } from "apowophaserui";
+import { Render } from "../../render";
+export declare class BaseBatchPanel extends Panel {
+    protected mInitialized: boolean;
+    protected mTweening: boolean;
+    protected mScene: Phaser.Scene;
+    protected mWidth: number;
+    protected mHeight: number;
+    protected mPanelTween: Phaser.Tweens.Tween;
+    protected dpr: number;
+    protected mResources: Map<string, any>;
+    protected mReLoadResources: Map<string, any>;
+    protected mReloadTimes: number;
+    protected render: Render;
+    protected key: string;
+    protected uiLayer: string;
+    protected exported: boolean;
+    protected exportListeners: Function[];
+    protected mSynchronize: boolean;
+    constructor(scene: Phaser.Scene, render: Render);
+    get initialized(): boolean;
+    resize(wid?: number, hei?: number): void;
+    startLoad(): void;
+    show(param?: any): void;
+    hide(): void;
+    destroy(): void;
+    addExportListener(f: Function): void;
+    protected preload(): void;
+    protected init(): void;
+    protected setLinear(key: string): void;
+    protected addResources(key: string, resource: any): void;
+    protected cacheExists(type: string, key: string): boolean;
+    protected get scaleWidth(): number;
+    protected get scaleHeight(): number;
+    protected get cameraWidth(): number;
+    protected get cameraHeight(): number;
+    protected __exportProperty(): void;
+    protected exportComplete(): void;
+    protected onShow(): void;
+    protected onHide(): void;
+    protected onInitialized(): void;
+}

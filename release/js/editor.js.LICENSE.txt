@@ -1,0 +1,3529 @@
+/*! exports provided: AStar */
+
+/*! exports provided: Algorithm */
+
+/*! exports provided: AnimationModel */
+
+/*! exports provided: Animator */
+
+/*! exports provided: Atlas */
+
+/*! exports provided: AvatarEditorCanvas, AvatarEditorScene, AvatarEditorEmitType */
+
+/*! exports provided: AvatarEditorCanvas, AvatarEditorScene, AvatarEditorEmitType, AvatarEditorDragonbone */
+
+/*! exports provided: AvatarEditorCanvas, AvatarEditorScene, AvatarEditorEmitType, AvatarEditorDragonbone, DragonbonesEditorDisplay, LOCAL_HOME_PATH, ElementEditorBrushType, ElementEditorEmitType, ElementEditorCanvas, WEB_HOME_PATH, SPRITE_SHEET_KEY, IMAGE_BLANK_KEY, transitionGrid, DisplayObjectPool, EditorElementDisplay, EditorFramesDisplay, EditorFactory, SceneEditorCanvas, SceneEditor, EditorTopDisplay, EditorPacket, EditorCamerasManager, EditorElementManager, EditorMossManager, EditorSceneManger, EditorSkyboxManager, EditorTerrainManager, EditorWallManager, EditorCanvas */
+
+/*! exports provided: AvatarEditorDragonbone */
+
+/*! exports provided: AvatarSlotNameTemp, AvatarPartNameTemp, BaseDragonbonesDisplay */
+
+/*! exports provided: AvatarSuitType, SuitAlternativeType, BaseAvatar */
+
+/*! exports provided: BaseCamerasManager */
+
+/*! exports provided: BaseCamerasManager, PlayCamera */
+
+/*! exports provided: BaseDisplay */
+
+/*! exports provided: BaseFramesDisplay */
+
+/*! exports provided: BaseLayer */
+
+/*! exports provided: BaseLayer, GroundLayer, SurfaceLayer, LayerManager */
+
+/*! exports provided: BaseSceneManager */
+
+/*! exports provided: BaseSceneManager, BasicScene, SkyBoxScene */
+
+/*! exports provided: BaseScenery */
+
+/*! exports provided: BaseScenery, BlockManager */
+
+/*! exports provided: BasicScene */
+
+/*! exports provided: Bin, MaxRectsBin, MaxRectsPacker, OversizedElementBin, PACKING_LOGIC, Rectangle */
+
+/*! exports provided: BlockManager */
+
+/*! exports provided: ChineseUnit */
+
+/*! exports provided: CoinType, UIHelper, Coin */
+
+/*! exports provided: Color */
+
+/*! exports provided: CopyProtoType */
+
+/*! exports provided: Direction, DirectionChecker */
+
+/*! exports provided: DisplayField, TitleMask */
+
+/*! exports provided: DisplayObjectPool */
+
+/*! exports provided: DragonbonesEditorDisplay */
+
+/*! exports provided: DragonbonesEditorDisplay, LOCAL_HOME_PATH, ElementEditorBrushType, ElementEditorEmitType, ElementEditorCanvas, WEB_HOME_PATH, SPRITE_SHEET_KEY, IMAGE_BLANK_KEY */
+
+/*! exports provided: DragonbonesModel */
+
+/*! exports provided: DynamicImage */
+
+/*! exports provided: EditorCamerasManager */
+
+/*! exports provided: EditorCamerasManager, EditorElementManager, EditorMossManager, EditorSceneManger, EditorSkyboxManager, EditorTerrainManager, EditorWallManager */
+
+/*! exports provided: EditorCanvas */
+
+/*! exports provided: EditorCanvasType, EditorLauncher */
+
+/*! exports provided: EditorCanvasType, EditorLauncher, AvatarEditorCanvas, AvatarEditorScene, AvatarEditorEmitType, AvatarEditorDragonbone, DragonbonesEditorDisplay, LOCAL_HOME_PATH, ElementEditorBrushType, ElementEditorEmitType, ElementEditorCanvas, WEB_HOME_PATH, SPRITE_SHEET_KEY, IMAGE_BLANK_KEY, transitionGrid, DisplayObjectPool, EditorElementDisplay, EditorFramesDisplay, EditorFactory, SceneEditorCanvas, SceneEditor, EditorTopDisplay, EditorPacket, EditorCamerasManager, EditorElementManager, EditorMossManager, EditorSceneManger, EditorSkyboxManager, EditorTerrainManager, EditorWallManager, EditorCanvas */
+
+/*! exports provided: EditorDragonbonesDisplay */
+
+/*! exports provided: EditorElementDisplay */
+
+/*! exports provided: EditorElementManager */
+
+/*! exports provided: EditorFactory */
+
+/*! exports provided: EditorFramesDisplay */
+
+/*! exports provided: EditorMossManager */
+
+/*! exports provided: EditorPacket */
+
+/*! exports provided: EditorSceneManger */
+
+/*! exports provided: EditorSkyboxManager */
+
+/*! exports provided: EditorTerrainManager */
+
+/*! exports provided: EditorTopDisplay */
+
+/*! exports provided: EditorWallManager */
+
+/*! exports provided: ElementEditorBrushType, ElementEditorEmitType, ElementEditorCanvas */
+
+/*! exports provided: ElementStateType */
+
+/*! exports provided: ElementStorage */
+
+/*! exports provided: ElementStorage, Sprite, FramesModel, DragonbonesModel */
+
+/*! exports provided: EventDispatcher */
+
+/*! exports provided: EventType */
+
+/*! exports provided: Fit */
+
+/*! exports provided: Font */
+
+/*! exports provided: FramesModel */
+
+/*! exports provided: FriendRelationEnum, FriendChannel */
+
+/*! exports provided: GameState, ConnectState, SceneState, PlayerState, PhysicalPeerState */
+
+/*! exports provided: GroundLayer */
+
+/*! exports provided: HTTP_REGEX, Url, ResUtils, BlackButton, BlueButton, WhiteButton, CloseButton, Background, Border, TransparentButton */
+
+/*! exports provided: HTTP_REGEX, Url, ResUtils, BlackButton, BlueButton, WhiteButton, CloseButton, Background, Border, TransparentButton, Tool, load, loadArr, Algorithm, CopyProtoType, StringUtils, ObjectAssign, UiUtils, isMobile, HttpLoadManager */
+
+/*! exports provided: Handler */
+
+/*! exports provided: HttpLoadManager */
+
+/*! exports provided: Intersects */
+
+/*! exports provided: LOCAL_HOME_PATH, default */
+
+/*! exports provided: LayerManager */
+
+/*! exports provided: LayerName */
+
+/*! exports provided: LoadState, PlaySceneLoadState */
+
+/*! exports provided: Logger, log, error */
+
+/*! exports provided: LogicPoint */
+
+/*! exports provided: LogicPos */
+
+/*! exports provided: LogicRectangle */
+
+/*! exports provided: LogicRectangle45 */
+
+/*! exports provided: MainWorkerState, RenderState */
+
+/*! exports provided: MessageType */
+
+/*! exports provided: ModuleName */
+
+/*! exports provided: ObjectAssign */
+
+/*! exports provided: PI_EXTENSION_REGEX */
+
+/*! exports provided: PlatFormType */
+
+/*! exports provided: PlayCamera */
+
+/*! exports provided: Pos */
+
+/*! exports provided: Position45 */
+
+/*! exports provided: RENDER_PEER, PICARENDER_PEER, MAIN_WORKER, PHYSICAL_WORKER, MAIN_WORKER_URL, PHYSICAL_WORKER_URL */
+
+/*! exports provided: ReadyState, WSWrapper */
+
+/*! exports provided: ReferenceArea */
+
+/*! exports provided: RoomType */
+
+/*! exports provided: SceneEditorCanvas, SceneEditor */
+
+/*! exports provided: SceneName */
+
+/*! exports provided: Size */
+
+/*! exports provided: SkyBoxScene */
+
+/*! exports provided: SocketConnectionError, SocketConnection */
+
+/*! exports provided: SortRectangle */
+
+/*! exports provided: Sprite */
+
+/*! exports provided: StringUtils */
+
+/*! exports provided: SurfaceLayer */
+
+/*! exports provided: TimerCountDown */
+
+/*! exports provided: Tool */
+
+/*! exports provided: TopDisplay, FollowObject, FollowEnum */
+
+/*! exports provided: UiUtils */
+
+/*! exports provided: ValueResolver */
+
+/*! exports provided: WEB_HOME_PATH, SPRITE_SHEET_KEY, IMAGE_BLANK_KEY, default */
+
+/*! exports provided: default */
+
+/*! exports provided: initLocales, i18n */
+
+/*! exports provided: isMobile */
+
+/*! exports provided: load, loadArr */
+
+/*! exports provided: projectionAngle */
+
+/*! exports provided: transitionGrid */
+
+/*! exports provided: transitionGrid, DisplayObjectPool, EditorElementDisplay, EditorFramesDisplay, EditorFactory, SceneEditorCanvas, SceneEditor, EditorTopDisplay, EditorPacket, EditorCamerasManager, EditorElementManager, EditorMossManager, EditorSceneManger, EditorSkyboxManager, EditorTerrainManager, EditorWallManager */
+
+/*! no exports provided */
+
+/*! no static exports found */
+
+/*!********************!*\
+  !*** ./version.js ***!
+  \********************/
+
+/*!***************************!*\
+  !*** ./src/utils/http.ts ***!
+  \***************************/
+
+/*!***************************!*\
+  !*** ./src/utils/tool.ts ***!
+  \***************************/
+
+/*!****************************!*\
+  !*** ./src/utils/index.ts ***!
+  \****************************/
+
+/*!*****************************!*\
+  !*** ./src/editor/index.ts ***!
+  \*****************************/
+
+/*!*****************************!*\
+  !*** ./src/utils/device.ts ***!
+  \*****************************/
+
+/*!*****************************!*\
+  !*** ./src/utils/uiUtil.ts ***!
+  \*****************************/
+
+/*!******************************!*\
+  !*** ./resources/LOGO_F.png ***!
+  \******************************/
+
+/*!******************************!*\
+  !*** ./src/structure/log.ts ***!
+  \******************************/
+
+/*!******************************!*\
+  !*** ./src/structure/pos.ts ***!
+  \******************************/
+
+/*!******************************!*\
+  !*** ./src/utils/resUtil.ts ***!
+  \******************************/
+
+/*!*******************************!*\
+  !*** ./src/structure/font.ts ***!
+  \*******************************/
+
+/*!*******************************!*\
+  !*** ./src/structure/i18n.ts ***!
+  \*******************************/
+
+/*!*******************************!*\
+  !*** ./src/structure/size.ts ***!
+  \*******************************/
+
+/*!********************************!*\
+  !*** ./src/base/game/index.ts ***!
+  \********************************/
+
+/*!********************************!*\
+  !*** ./src/structure/Color.ts ***!
+  \********************************/
+
+/*!********************************!*\
+  !*** ./src/structure/astar.ts ***!
+  \********************************/
+
+/*!********************************!*\
+  !*** ./src/structure/atlas.ts ***!
+  \********************************/
+
+/*!********************************!*\
+  !*** ./src/structure/index.ts ***!
+  \********************************/
+
+/*!********************************!*\
+  !*** ./src/utils/algorithm.ts ***!
+  \********************************/
+
+/*!*********************************!*\
+  !*** ./resources sync ^\.\/.*$ ***!
+  \*********************************/
+
+/*!*********************************!*\
+  !*** ./resources/fonts/04B.ttf ***!
+  \*********************************/
+
+/*!*********************************!*\
+  !*** ./resources/gamepause.png ***!
+  \*********************************/
+
+/*!*********************************!*\
+  !*** ./resources/testmanor.png ***!
+  \*********************************/
+
+/*!*********************************!*\
+  !*** ./resources/wall/wall.png ***!
+  \*********************************/
+
+/*!*********************************!*\
+  !*** ./src/base/game/sprite.ts ***!
+  \*********************************/
+
+/*!**********************************!*\
+  !*** ./resources/testmanor.json ***!
+  \**********************************/
+
+/*!**********************************!*\
+  !*** ./resources/ui/bag/bag.png ***!
+  \**********************************/
+
+/*!**********************************!*\
+  !*** ./resources/ui/chat/bg.png ***!
+  \**********************************/
+
+/*!**********************************!*\
+  !*** ./resources/wall/wall.json ***!
+  \**********************************/
+
+/*!**********************************!*\
+  !*** ./src/base/render/index.ts ***!
+  \**********************************/
+
+/*!**********************************!*\
+  !*** ./src/structure/Handler.ts ***!
+  \**********************************/
+
+/*!**********************************!*\
+  !*** ./src/structure/display.ts ***!
+  \**********************************/
+
+/*!**********************************!*\
+  !*** ./src/structure/isprite.ts ***!
+  \**********************************/
+
+/*!**********************************!*\
+  !*** ./src/structure/promise.ts ***!
+  \**********************************/
+
+/*!**********************************!*\
+  !*** ./src/structure/scenery.ts ***!
+  \**********************************/
+
+/*!**********************************!*\
+  !*** ./src/utils/stringUtils.ts ***!
+  \**********************************/
+
+/*!***********************************!*\
+  !*** (webpack)/buildin/global.js ***!
+  \***********************************/
+
+/*!***********************************!*\
+  !*** (webpack)/buildin/module.js ***!
+  \***********************************/
+
+/*!***********************************!*\
+  !*** ./resources/locales/en.json ***!
+  \***********************************/
+
+/*!***********************************!*\
+  !*** ./resources/sound/click.mp3 ***!
+  \***********************************/
+
+/*!***********************************!*\
+  !*** ./resources/ui/bag/bag.json ***!
+  \***********************************/
+
+/*!***********************************!*\
+  !*** ./resources/ui/bag/slip.png ***!
+  \***********************************/
+
+/*!***********************************!*\
+  !*** ./src/base/render/render.ts ***!
+  \***********************************/
+
+/*!***********************************!*\
+  !*** ./src/editor/utils/index.ts ***!
+  \***********************************/
+
+/*!***********************************!*\
+  !*** ./src/structure/animator.ts ***!
+  \***********************************/
+
+/*!************************************!*\
+  !*** ./node_modules/heap/index.js ***!
+  \************************************/
+
+/*!************************************!*\
+  !*** ./resources/ui sync ^\.\/.*$ ***!
+  \************************************/
+
+/*!************************************!*\
+  !*** ./resources/ui/bag/slip.json ***!
+  \************************************/
+
+/*!************************************!*\
+  !*** ./resources/ui/market/bg.png ***!
+  \************************************/
+
+/*!************************************!*\
+  !*** ./src/editor/canvas/index.ts ***!
+  \************************************/
+
+/*!************************************!*\
+  !*** ./src/structure/LayerName.ts ***!
+  \************************************/
+
+/*!************************************!*\
+  !*** ./src/structure/constants.ts ***!
+  \************************************/
+
+/*!************************************!*\
+  !*** ./src/structure/direction.ts ***!
+  \************************************/
+
+/*!************************************!*\
+  !*** ./src/structure/logic.pos.ts ***!
+  \************************************/
+
+/*!************************************!*\
+  !*** ./src/structure/net/index.ts ***!
+  \************************************/
+
+/*!************************************!*\
+  !*** ./src/structure/room.type.ts ***!
+  \************************************/
+
+/*!************************************!*\
+  !*** ./src/utils/object.assign.ts ***!
+  \************************************/
+
+/*!*************************************!*\
+  !*** ./resources/guide/guideBg.png ***!
+  \*************************************/
+
+/*!*************************************!*\
+  !*** ./resources/ui/2x/map/map.png ***!
+  \*************************************/
+
+/*!*************************************!*\
+  !*** ./resources/ui/3x/map/map.png ***!
+  \*************************************/
+
+/*!*************************************!*\
+  !*** ./src/base/render/ui/index.ts ***!
+  \*************************************/
+
+/*!*************************************!*\
+  !*** ./src/structure/event.type.ts ***!
+  \*************************************/
+
+/*!*************************************!*\
+  !*** ./src/structure/game.state.ts ***!
+  \*************************************/
+
+/*!*************************************!*\
+  !*** ./src/structure/intersects.ts ***!
+  \*************************************/
+
+/*!*************************************!*\
+  !*** ./src/structure/load.state.ts ***!
+  \*************************************/
+
+/*!*************************************!*\
+  !*** ./src/structure/net/socket.ts ***!
+  \*************************************/
+
+/*!*************************************!*\
+  !*** ./src/structure/position45.ts ***!
+  \*************************************/
+
+/*!*************************************!*\
+  !*** ./src/structure/projection.ts ***!
+  \*************************************/
+
+/*!*************************************!*\
+  !*** ./src/structure/scene.name.ts ***!
+  \*************************************/
+
+/*!*************************************!*\
+  !*** ./src/structure/size.chart.ts ***!
+  \*************************************/
+
+/*!*************************************!*\
+  !*** ./src/utils/copy.prototype.ts ***!
+  \*************************************/
+
+/*!**************************************!*\
+  !*** ./resources/locales/zh-CN.json ***!
+  \**************************************/
+
+/*!**************************************!*\
+  !*** ./resources/ui/2x/map/map.json ***!
+  \**************************************/
+
+/*!**************************************!*\
+  !*** ./resources/ui/3x/map/map.json ***!
+  \**************************************/
+
+/*!**************************************!*\
+  !*** ./resources/ui/bag/bagView.png ***!
+  \**************************************/
+
+/*!**************************************!*\
+  !*** ./resources/ui/login/login.png ***!
+  \**************************************/
+
+/*!**************************************!*\
+  !*** ./resources/ui/market/test.png ***!
+  \**************************************/
+
+/*!**************************************!*\
+  !*** ./src/structure/dragonbones.ts ***!
+  \**************************************/
+
+/*!**************************************!*\
+  !*** ./src/structure/logic.point.ts ***!
+  \**************************************/
+
+/*!**************************************!*\
+  !*** ./src/structure/module.name.ts ***!
+  \**************************************/
+
+/*!**************************************!*\
+  !*** ./src/structure/net/address.ts ***!
+  \**************************************/
+
+/*!**************************************!*\
+  !*** ./src/structure/peer.states.ts ***!
+  \**************************************/
+
+/*!**************************************!*\
+  !*** ./src/structure/worker.name.ts ***!
+  \**************************************/
+
+/*!***************************************!*\
+  !*** ./node_modules/crypto-js/aes.js ***!
+  \***************************************/
+
+/*!***************************************!*\
+  !*** ./node_modules/crypto-js/md5.js ***!
+  \***************************************/
+
+/*!***************************************!*\
+  !*** ./node_modules/crypto-js/rc4.js ***!
+  \***************************************/
+
+/*!***************************************!*\
+  !*** ./node_modules/events/events.js ***!
+  \***************************************/
+
+/*!***************************************!*\
+  !*** ./node_modules/heap/lib/heap.js ***!
+  \***************************************/
+
+/*!***************************************!*\
+  !*** ./node_modules/ieee754/index.js ***!
+  \***************************************/
+
+/*!***************************************!*\
+  !*** ./node_modules/isarray/index.js ***!
+  \***************************************/
+
+/*!***************************************!*\
+  !*** ./node_modules/lodash/lodash.js ***!
+  \***************************************/
+
+/*!***************************************!*\
+  !*** ./resources/butt_red_middle.png ***!
+  \***************************************/
+
+/*!***************************************!*\
+  !*** ./resources/guide/guideMask.png ***!
+  \***************************************/
+
+/*!***************************************!*\
+  !*** ./resources/ui/2x/mail/mail.png ***!
+  \***************************************/
+
+/*!***************************************!*\
+  !*** ./resources/ui/2x/roam/roam.png ***!
+  \***************************************/
+
+/*!***************************************!*\
+  !*** ./resources/ui/2x/task/task.png ***!
+  \***************************************/
+
+/*!***************************************!*\
+  !*** ./resources/ui/2x/work/work.png ***!
+  \***************************************/
+
+/*!***************************************!*\
+  !*** ./resources/ui/3x/mail/mail.png ***!
+  \***************************************/
+
+/*!***************************************!*\
+  !*** ./resources/ui/3x/roam/roam.png ***!
+  \***************************************/
+
+/*!***************************************!*\
+  !*** ./resources/ui/3x/task/task.png ***!
+  \***************************************/
+
+/*!***************************************!*\
+  !*** ./resources/ui/3x/work/work.png ***!
+  \***************************************/
+
+/*!***************************************!*\
+  !*** ./resources/ui/bag/bagView.json ***!
+  \***************************************/
+
+/*!***************************************!*\
+  !*** ./resources/ui/login/login.json ***!
+  \***************************************/
+
+/*!***************************************!*\
+  !*** ./resources/ui/vip/vip_icon.png ***!
+  \***************************************/
+
+/*!***************************************!*\
+  !*** ./src/base/game/frames.model.ts ***!
+  \***************************************/
+
+/*!***************************************!*\
+  !*** ./src/editor/editor.launcher.ts ***!
+  \***************************************/
+
+/*!***************************************!*\
+  !*** ./src/structure/chat.command.ts ***!
+  \***************************************/
+
+/*!***************************************!*\
+  !*** ./src/structure/chinese.unit.ts ***!
+  \***************************************/
+
+/*!***************************************!*\
+  !*** ./src/structure/message.type.ts ***!
+  \***************************************/
+
+/*!****************************************!*\
+  !*** ./node_modules/crypto-js/core.js ***!
+  \****************************************/
+
+/*!****************************************!*\
+  !*** ./node_modules/crypto-js/hmac.js ***!
+  \****************************************/
+
+/*!****************************************!*\
+  !*** ./node_modules/crypto-js/sha1.js ***!
+  \****************************************/
+
+/*!****************************************!*\
+  !*** ./node_modules/crypto-js/sha3.js ***!
+  \****************************************/
+
+/*!****************************************!*\
+  !*** ./node_modules/toposort/index.js ***!
+  \****************************************/
+
+/*!****************************************!*\
+  !*** ./resources/ui/2x/mail/mail.json ***!
+  \****************************************/
+
+/*!****************************************!*\
+  !*** ./resources/ui/2x/roam/roam.json ***!
+  \****************************************/
+
+/*!****************************************!*\
+  !*** ./resources/ui/2x/task/task.json ***!
+  \****************************************/
+
+/*!****************************************!*\
+  !*** ./resources/ui/2x/work/work.json ***!
+  \****************************************/
+
+/*!****************************************!*\
+  !*** ./resources/ui/3x/mail/mail.json ***!
+  \****************************************/
+
+/*!****************************************!*\
+  !*** ./resources/ui/3x/roam/roam.json ***!
+  \****************************************/
+
+/*!****************************************!*\
+  !*** ./resources/ui/3x/task/task.json ***!
+  \****************************************/
+
+/*!****************************************!*\
+  !*** ./resources/ui/3x/work/work.json ***!
+  \****************************************/
+
+/*!****************************************!*\
+  !*** ./resources/ui/bag/itemChose.png ***!
+  \****************************************/
+
+/*!****************************************!*\
+  !*** ./resources/ui/chat/input_bg.png ***!
+  \****************************************/
+
+/*!****************************************!*\
+  !*** ./resources/ui/common/button.png ***!
+  \****************************************/
+
+/*!****************************************!*\
+  !*** ./resources/ui/juqing/juqing.png ***!
+  \****************************************/
+
+/*!****************************************!*\
+  !*** ./resources/ui/market/border.png ***!
+  \****************************************/
+
+/*!****************************************!*\
+  !*** ./resources/ui/market/market.png ***!
+  \****************************************/
+
+/*!****************************************!*\
+  !*** ./resources/ui/market/reduce.png ***!
+  \****************************************/
+
+/*!****************************************!*\
+  !*** ./resources/ui/quickchat/en.json ***!
+  \****************************************/
+
+/*!****************************************!*\
+  !*** ./resources/ui/shop/shopView.png ***!
+  \****************************************/
+
+/*!****************************************!*\
+  !*** ./src/base/render/layer/index.ts ***!
+  \****************************************/
+
+/*!****************************************!*\
+  !*** ./src/base/render/scene/index.ts ***!
+  \****************************************/
+
+/*!****************************************!*\
+  !*** ./src/structure/res.structure.ts ***!
+  \****************************************/
+
+/*!****************************************!*\
+  !*** ./src/utils/http.load.manager.ts ***!
+  \****************************************/
+
+/*!*****************************************!*\
+  !*** ./node_modules/base64-js/index.js ***!
+  \*****************************************/
+
+/*!*****************************************!*\
+  !*** ./node_modules/crypto-js/index.js ***!
+  \*****************************************/
+
+/*!*****************************************!*\
+  !*** ./node_modules/process/browser.js ***!
+  \*****************************************/
+
+/*!*****************************************!*\
+  !*** ./node_modules/treeify/treeify.js ***!
+  \*****************************************/
+
+/*!*****************************************!*\
+  !*** ./resources/fonts/en/tt0173m_.ttf ***!
+  \*****************************************/
+
+/*!*****************************************!*\
+  !*** ./resources/fonts/en/tt0503m_.ttf ***!
+  \*****************************************/
+
+/*!*****************************************!*\
+  !*** ./resources/ui/1x/login/login.png ***!
+  \*****************************************/
+
+/*!*****************************************!*\
+  !*** ./resources/ui/2x/login/login.png ***!
+  \*****************************************/
+
+/*!*****************************************!*\
+  !*** ./resources/ui/2x/manor/manor.png ***!
+  \*****************************************/
+
+/*!*****************************************!*\
+  !*** ./resources/ui/2x/order/order.png ***!
+  \*****************************************/
+
+/*!*****************************************!*\
+  !*** ./resources/ui/2x/party/party.png ***!
+  \*****************************************/
+
+/*!*****************************************!*\
+  !*** ./resources/ui/3x/login/login.png ***!
+  \*****************************************/
+
+/*!*****************************************!*\
+  !*** ./resources/ui/3x/manor/manor.png ***!
+  \*****************************************/
+
+/*!*****************************************!*\
+  !*** ./resources/ui/3x/order/order.png ***!
+  \*****************************************/
+
+/*!*****************************************!*\
+  !*** ./resources/ui/3x/party/party.png ***!
+  \*****************************************/
+
+/*!*****************************************!*\
+  !*** ./resources/ui/bag/itemChose.json ***!
+  \*****************************************/
+
+/*!*****************************************!*\
+  !*** ./resources/ui/juqing/juqing.json ***!
+  \*****************************************/
+
+/*!*****************************************!*\
+  !*** ./resources/ui/market/market.json ***!
+  \*****************************************/
+
+/*!*****************************************!*\
+  !*** ./resources/ui/market/name_bg.png ***!
+  \*****************************************/
+
+/*!*****************************************!*\
+  !*** ./resources/ui/market/tip_red.png ***!
+  \*****************************************/
+
+/*!*****************************************!*\
+  !*** ./resources/ui/shop/shopView.json ***!
+  \*****************************************/
+
+/*!*****************************************!*\
+  !*** ./resources/ui/usermenu/arrow.png ***!
+  \*****************************************/
+
+/*!*****************************************!*\
+  !*** ./src/base/render/layer/ground.ts ***!
+  \*****************************************/
+
+/*!*****************************************!*\
+  !*** ./src/structure/TimerCountDown.ts ***!
+  \*****************************************/
+
+/*!*****************************************!*\
+  !*** ./src/structure/sort.rectangle.ts ***!
+  \*****************************************/
+
+/*!******************************************!*\
+  !*** ./node_modules/crypto-js/evpkdf.js ***!
+  \******************************************/
+
+/*!******************************************!*\
+  !*** ./node_modules/crypto-js/pbkdf2.js ***!
+  \******************************************/
+
+/*!******************************************!*\
+  !*** ./node_modules/crypto-js/rabbit.js ***!
+  \******************************************/
+
+/*!******************************************!*\
+  !*** ./node_modules/crypto-js/sha224.js ***!
+  \******************************************/
+
+/*!******************************************!*\
+  !*** ./node_modules/crypto-js/sha256.js ***!
+  \******************************************/
+
+/*!******************************************!*\
+  !*** ./node_modules/crypto-js/sha384.js ***!
+  \******************************************/
+
+/*!******************************************!*\
+  !*** ./node_modules/crypto-js/sha512.js ***!
+  \******************************************/
+
+/*!******************************************!*\
+  !*** ./node_modules/rusha/dist/rusha.js ***!
+  \******************************************/
+
+/*!******************************************!*\
+  !*** ./resources/config/base/state.json ***!
+  \******************************************/
+
+/*!******************************************!*\
+  !*** ./resources/dragonbones/avatar.png ***!
+  \******************************************/
+
+/*!******************************************!*\
+  !*** ./resources/ui/1x/login/login.json ***!
+  \******************************************/
+
+/*!******************************************!*\
+  !*** ./resources/ui/2x/login/login.json ***!
+  \******************************************/
+
+/*!******************************************!*\
+  !*** ./resources/ui/2x/manor/manor.json ***!
+  \******************************************/
+
+/*!******************************************!*\
+  !*** ./resources/ui/2x/order/order.json ***!
+  \******************************************/
+
+/*!******************************************!*\
+  !*** ./resources/ui/2x/party/party.json ***!
+  \******************************************/
+
+/*!******************************************!*\
+  !*** ./resources/ui/3x/compose/lock.png ***!
+  \******************************************/
+
+/*!******************************************!*\
+  !*** ./resources/ui/3x/login/login.json ***!
+  \******************************************/
+
+/*!******************************************!*\
+  !*** ./resources/ui/3x/manor/manor.json ***!
+  \******************************************/
+
+/*!******************************************!*\
+  !*** ./resources/ui/3x/order/order.json ***!
+  \******************************************/
+
+/*!******************************************!*\
+  !*** ./resources/ui/3x/party/party.json ***!
+  \******************************************/
+
+/*!******************************************!*\
+  !*** ./resources/ui/chat/chat_atlas.png ***!
+  \******************************************/
+
+/*!******************************************!*\
+  !*** ./resources/ui/loading/loading.png ***!
+  \******************************************/
+
+/*!******************************************!*\
+  !*** ./resources/ui/market/increase.png ***!
+  \******************************************/
+
+/*!******************************************!*\
+  !*** ./resources/ui/market/input_bg.png ***!
+  \******************************************/
+
+/*!******************************************!*\
+  !*** ./resources/ui/market/price_bg.png ***!
+  \******************************************/
+
+/*!******************************************!*\
+  !*** ./resources/ui/rank/rank_atlas.png ***!
+  \******************************************/
+
+/*!******************************************!*\
+  !*** ./resources/ui/toolTip/toolTip.png ***!
+  \******************************************/
+
+/*!******************************************!*\
+  !*** ./src/base/render/cameras/index.ts ***!
+  \******************************************/
+
+/*!******************************************!*\
+  !*** ./src/base/render/display/index.ts ***!
+  \******************************************/
+
+/*!******************************************!*\
+  !*** ./src/base/render/layer/surface.ts ***!
+  \******************************************/
+
+/*!******************************************!*\
+  !*** ./src/base/render/sky.box/index.ts ***!
+  \******************************************/
+
+/*!******************************************!*\
+  !*** ./src/editor/canvas/scene/index.ts ***!
+  \******************************************/
+
+/*!******************************************!*\
+  !*** ./src/structure/EventDispatcher.ts ***!
+  \******************************************/
+
+/*!******************************************!*\
+  !*** ./src/structure/animation.model.ts ***!
+  \******************************************/
+
+/*!******************************************!*\
+  !*** ./src/structure/friend.relation.ts ***!
+  \******************************************/
+
+/*!******************************************!*\
+  !*** ./src/structure/lanucher.config.ts ***!
+  \******************************************/
+
+/*!******************************************!*\
+  !*** ./src/structure/logic.rectangle.ts ***!
+  \******************************************/
+
+/*!******************************************!*\
+  !*** ./src/structure/physical.sprite.ts ***!
+  \******************************************/
+
+/*!*******************************************!*\
+  !*** ./node_modules/pathfinding/index.js ***!
+  \*******************************************/
+
+/*!*******************************************!*\
+  !*** ./resources/ui/1x/market/market.png ***!
+  \*******************************************/
+
+/*!*******************************************!*\
+  !*** ./resources/ui/2x/bottom/bottom.png ***!
+  \*******************************************/
+
+/*!*******************************************!*\
+  !*** ./resources/ui/2x/layout/layout.png ***!
+  \*******************************************/
+
+/*!*******************************************!*\
+  !*** ./resources/ui/2x/market/market.png ***!
+  \*******************************************/
+
+/*!*******************************************!*\
+  !*** ./resources/ui/2x/recast/recast.png ***!
+  \*******************************************/
+
+/*!*******************************************!*\
+  !*** ./resources/ui/2x/survey/survey.png ***!
+  \*******************************************/
+
+/*!*******************************************!*\
+  !*** ./resources/ui/3x/bottom/bottom.png ***!
+  \*******************************************/
+
+/*!*******************************************!*\
+  !*** ./resources/ui/3x/layout/layout.png ***!
+  \*******************************************/
+
+/*!*******************************************!*\
+  !*** ./resources/ui/3x/loading/grass.png ***!
+  \*******************************************/
+
+/*!*******************************************!*\
+  !*** ./resources/ui/3x/market/market.png ***!
+  \*******************************************/
+
+/*!*******************************************!*\
+  !*** ./resources/ui/3x/recast/recast.png ***!
+  \*******************************************/
+
+/*!*******************************************!*\
+  !*** ./resources/ui/3x/survey/survey.png ***!
+  \*******************************************/
+
+/*!*******************************************!*\
+  !*** ./resources/ui/chat/chat_atlas.json ***!
+  \*******************************************/
+
+/*!*******************************************!*\
+  !*** ./resources/ui/decorate/arrow_1.png ***!
+  \*******************************************/
+
+/*!*******************************************!*\
+  !*** ./resources/ui/decorate/arrow_3.png ***!
+  \*******************************************/
+
+/*!*******************************************!*\
+  !*** ./resources/ui/decorate/arrow_5.png ***!
+  \*******************************************/
+
+/*!*******************************************!*\
+  !*** ./resources/ui/decorate/arrow_7.png ***!
+  \*******************************************/
+
+/*!*******************************************!*\
+  !*** ./resources/ui/friend/friend_go.png ***!
+  \*******************************************/
+
+/*!*******************************************!*\
+  !*** ./resources/ui/item_pop_card/bg.png ***!
+  \*******************************************/
+
+/*!*******************************************!*\
+  !*** ./resources/ui/loading/loading.json ***!
+  \*******************************************/
+
+/*!*******************************************!*\
+  !*** ./resources/ui/quickchat/zh-CN.json ***!
+  \*******************************************/
+
+/*!*******************************************!*\
+  !*** ./resources/ui/rank/rank_atlas.json ***!
+  \*******************************************/
+
+/*!*******************************************!*\
+  !*** ./resources/ui/toolTip/toolTip.json ***!
+  \*******************************************/
+
+/*!*******************************************!*\
+  !*** ./src/editor/canvas/avatar/index.ts ***!
+  \*******************************************/
+
+/*!*******************************************!*\
+  !*** ./src/structure/avatar.suit.type.ts ***!
+  \*******************************************/
+
+/*!********************************************!*\
+  !*** ./lib/dragonBones/dragonBones.min.js ***!
+  \********************************************/
+
+/*!********************************************!*\
+  !*** ./node_modules/crypto-js/mode-cfb.js ***!
+  \********************************************/
+
+/*!********************************************!*\
+  !*** ./node_modules/crypto-js/mode-ctr.js ***!
+  \********************************************/
+
+/*!********************************************!*\
+  !*** ./node_modules/crypto-js/mode-ecb.js ***!
+  \********************************************/
+
+/*!********************************************!*\
+  !*** ./node_modules/crypto-js/mode-ofb.js ***!
+  \********************************************/
+
+/*!********************************************!*\
+  !*** ./node_modules/crypto-js/x64-core.js ***!
+  \********************************************/
+
+/*!********************************************!*\
+  !*** ./node_modules/protobufjs/minimal.js ***!
+  \********************************************/
+
+/*!********************************************!*\
+  !*** ./node_modules/protobufjs/src/rpc.js ***!
+  \********************************************/
+
+/*!********************************************!*\
+  !*** ./resources/config/itemcategory.json ***!
+  \********************************************/
+
+/*!********************************************!*\
+  !*** ./resources/ui/1x/common/ui_base.png ***!
+  \********************************************/
+
+/*!********************************************!*\
+  !*** ./resources/ui/1x/market/market.json ***!
+  \********************************************/
+
+/*!********************************************!*\
+  !*** ./resources/ui/2x/bottom/bottom.json ***!
+  \********************************************/
+
+/*!********************************************!*\
+  !*** ./resources/ui/2x/layout/layout.json ***!
+  \********************************************/
+
+/*!********************************************!*\
+  !*** ./resources/ui/2x/main_ui/mainui.png ***!
+  \********************************************/
+
+/*!********************************************!*\
+  !*** ./resources/ui/2x/market/market.json ***!
+  \********************************************/
+
+/*!********************************************!*\
+  !*** ./resources/ui/2x/pica_notice/bg.png ***!
+  \********************************************/
+
+/*!********************************************!*\
+  !*** ./resources/ui/2x/recast/recast.json ***!
+  \********************************************/
+
+/*!********************************************!*\
+  !*** ./resources/ui/2x/survey/survey.json ***!
+  \********************************************/
+
+/*!********************************************!*\
+  !*** ./resources/ui/2x/texture/bag_bg.png ***!
+  \********************************************/
+
+/*!********************************************!*\
+  !*** ./resources/ui/3x/bottom/bottom.json ***!
+  \********************************************/
+
+/*!********************************************!*\
+  !*** ./resources/ui/3x/hand_equp/hand.png ***!
+  \********************************************/
+
+/*!********************************************!*\
+  !*** ./resources/ui/3x/layout/layout.json ***!
+  \********************************************/
+
+/*!********************************************!*\
+  !*** ./resources/ui/3x/loading/grass.json ***!
+  \********************************************/
+
+/*!********************************************!*\
+  !*** ./resources/ui/3x/main_ui/mainui.png ***!
+  \********************************************/
+
+/*!********************************************!*\
+  !*** ./resources/ui/3x/market/market.json ***!
+  \********************************************/
+
+/*!********************************************!*\
+  !*** ./resources/ui/3x/pica_notice/bg.png ***!
+  \********************************************/
+
+/*!********************************************!*\
+  !*** ./resources/ui/3x/recast/recast.json ***!
+  \********************************************/
+
+/*!********************************************!*\
+  !*** ./resources/ui/3x/survey/survey.json ***!
+  \********************************************/
+
+/*!********************************************!*\
+  !*** ./resources/ui/3x/texture/bag_bg.png ***!
+  \********************************************/
+
+/*!********************************************!*\
+  !*** ./resources/ui/chat/bubble_arrow.png ***!
+  \********************************************/
+
+/*!********************************************!*\
+  !*** ./resources/ui/common/button_red.png ***!
+  \********************************************/
+
+/*!********************************************!*\
+  !*** ./resources/ui/decorate/turn_btn.png ***!
+  \********************************************/
+
+/*!********************************************!*\
+  !*** ./resources/ui/editor/selectFlag.png ***!
+  \********************************************/
+
+/*!********************************************!*\
+  !*** ./resources/ui/joystick/joystick.png ***!
+  \********************************************/
+
+/*!********************************************!*\
+  !*** ./resources/ui/market/back_arrow.png ***!
+  \********************************************/
+
+/*!********************************************!*\
+  !*** ./src/base/game/dragonbones.model.ts ***!
+  \********************************************/
+
+/*!********************************************!*\
+  !*** ./src/editor/canvas/editor.canvas.ts ***!
+  \********************************************/
+
+/*!********************************************!*\
+  !*** ./src/editor/canvas/element/index.ts ***!
+  \********************************************/
+
+/*!********************************************!*\
+  !*** ./src/editor/canvas/scene/factory.ts ***!
+  \********************************************/
+
+/*!********************************************!*\
+  !*** ./src/structure/logic.rectangle45.ts ***!
+  \********************************************/
+
+/*!*********************************************!*\
+  !*** ./node_modules/crypto-js/enc-utf16.js ***!
+  \*********************************************/
+
+/*!*********************************************!*\
+  !*** ./node_modules/crypto-js/ripemd160.js ***!
+  \*********************************************/
+
+/*!*********************************************!*\
+  !*** ./node_modules/crypto-js/tripledes.js ***!
+  \*********************************************/
+
+/*!*********************************************!*\
+  !*** ./node_modules/simple-sha1/browser.js ***!
+  \*********************************************/
+
+/*!*********************************************!*\
+  !*** ./resources/ui/1x/bubble/bubblebg.png ***!
+  \*********************************************/
+
+/*!*********************************************!*\
+  !*** ./resources/ui/1x/bubble/tipsicon.png ***!
+  \*********************************************/
+
+/*!*********************************************!*\
+  !*** ./resources/ui/1x/common/ui_base.json ***!
+  \*********************************************/
+
+/*!*********************************************!*\
+  !*** ./resources/ui/1x/loading/curtain.png ***!
+  \*********************************************/
+
+/*!*********************************************!*\
+  !*** ./resources/ui/1x/ui_base/ui_base.png ***!
+  \*********************************************/
+
+/*!*********************************************!*\
+  !*** ./resources/ui/2x/bubble/bubblebg.png ***!
+  \*********************************************/
+
+/*!*********************************************!*\
+  !*** ./resources/ui/2x/bubble/tipsicon.png ***!
+  \*********************************************/
+
+/*!*********************************************!*\
+  !*** ./resources/ui/2x/compose/compose.png ***!
+  \*********************************************/
+
+/*!*********************************************!*\
+  !*** ./resources/ui/2x/cooking/cooking.png ***!
+  \*********************************************/
+
+/*!*********************************************!*\
+  !*** ./resources/ui/2x/loading/curtain.png ***!
+  \*********************************************/
+
+/*!*********************************************!*\
+  !*** ./resources/ui/2x/main_ui/mainui.json ***!
+  \*********************************************/
+
+/*!*********************************************!*\
+  !*** ./resources/ui/2x/reaward_tips/bg.png ***!
+  \*********************************************/
+
+/*!*********************************************!*\
+  !*** ./resources/ui/2x/roam/roam_topic.png ***!
+  \*********************************************/
+
+/*!*********************************************!*\
+  !*** ./resources/ui/2x/ui_base/ui_base.png ***!
+  \*********************************************/
+
+/*!*********************************************!*\
+  !*** ./resources/ui/3x/bubble/bubblebg.png ***!
+  \*********************************************/
+
+/*!*********************************************!*\
+  !*** ./resources/ui/3x/bubble/tipsicon.png ***!
+  \*********************************************/
+
+/*!*********************************************!*\
+  !*** ./resources/ui/3x/compose/compose.png ***!
+  \*********************************************/
+
+/*!*********************************************!*\
+  !*** ./resources/ui/3x/compose/main_bg.jpg ***!
+  \*********************************************/
+
+/*!*********************************************!*\
+  !*** ./resources/ui/3x/compose/main_bg.png ***!
+  \*********************************************/
+
+/*!*********************************************!*\
+  !*** ./resources/ui/3x/compose/tag_new.png ***!
+  \*********************************************/
+
+/*!*********************************************!*\
+  !*** ./resources/ui/3x/compose/tips_bg.png ***!
+  \*********************************************/
+
+/*!*********************************************!*\
+  !*** ./resources/ui/3x/cooking/cooking.png ***!
+  \*********************************************/
+
+/*!*********************************************!*\
+  !*** ./resources/ui/3x/loading/curtain.png ***!
+  \*********************************************/
+
+/*!*********************************************!*\
+  !*** ./resources/ui/3x/loading/loading.png ***!
+  \*********************************************/
+
+/*!*********************************************!*\
+  !*** ./resources/ui/3x/main_ui/mainui.json ***!
+  \*********************************************/
+
+/*!*********************************************!*\
+  !*** ./resources/ui/3x/reaward_tips/bg.png ***!
+  \*********************************************/
+
+/*!*********************************************!*\
+  !*** ./resources/ui/3x/roam/roam_topic.png ***!
+  \*********************************************/
+
+/*!*********************************************!*\
+  !*** ./resources/ui/3x/ui_base/ui_base.png ***!
+  \*********************************************/
+
+/*!*********************************************!*\
+  !*** ./resources/ui/common/button_blue.png ***!
+  \*********************************************/
+
+/*!*********************************************!*\
+  !*** ./resources/ui/common/button_red.json ***!
+  \*********************************************/
+
+/*!*********************************************!*\
+  !*** ./resources/ui/fall_effect/forbid.png ***!
+  \*********************************************/
+
+/*!*********************************************!*\
+  !*** ./resources/ui/friend/friend_chat.png ***!
+  \*********************************************/
+
+/*!*********************************************!*\
+  !*** ./resources/ui/joystick/joystick.json ***!
+  \*********************************************/
+
+/*!*********************************************!*\
+  !*** ./resources/ui/market/item_border.png ***!
+  \*********************************************/
+
+/*!*********************************************!*\
+  !*** ./resources/ui/market/tuding_icon.png ***!
+  \*********************************************/
+
+/*!*********************************************!*\
+  !*** ./src/base/render/layer/base.layer.ts ***!
+  \*********************************************/
+
+/*!*********************************************!*\
+  !*** ./src/structure/element.state.data.ts ***!
+  \*********************************************/
+
+/*!**********************************************!*\
+  !*** ./node_modules/crypto-js/enc-base64.js ***!
+  \**********************************************/
+
+/*!**********************************************!*\
+  !*** ./node_modules/crypto-js/format-hex.js ***!
+  \**********************************************/
+
+/*!**********************************************!*\
+  !*** ./node_modules/protobufjs/src/roots.js ***!
+  \**********************************************/
+
+/*!**********************************************!*\
+  !*** ./resources/ui/1x/loading/curtain.json ***!
+  \**********************************************/
+
+/*!**********************************************!*\
+  !*** ./resources/ui/1x/ui_base/ui_base.json ***!
+  \**********************************************/
+
+/*!**********************************************!*\
+  !*** ./resources/ui/2x/compose/compose.json ***!
+  \**********************************************/
+
+/*!**********************************************!*\
+  !*** ./resources/ui/2x/cooking/cooking.json ***!
+  \**********************************************/
+
+/*!**********************************************!*\
+  !*** ./resources/ui/2x/cut_in/cut_in_bg.png ***!
+  \**********************************************/
+
+/*!**********************************************!*\
+  !*** ./resources/ui/2x/loading/curtain.json ***!
+  \**********************************************/
+
+/*!**********************************************!*\
+  !*** ./resources/ui/2x/map/party_icon_1.png ***!
+  \**********************************************/
+
+/*!**********************************************!*\
+  !*** ./resources/ui/2x/roam/roam_stripe.png ***!
+  \**********************************************/
+
+/*!**********************************************!*\
+  !*** ./resources/ui/2x/roam/roam_topic1.png ***!
+  \**********************************************/
+
+/*!**********************************************!*\
+  !*** ./resources/ui/2x/ui_base/ui_base.json ***!
+  \**********************************************/
+
+/*!**********************************************!*\
+  !*** ./resources/ui/3x/compose/compose.json ***!
+  \**********************************************/
+
+/*!**********************************************!*\
+  !*** ./resources/ui/3x/compose/title_bg.png ***!
+  \**********************************************/
+
+/*!**********************************************!*\
+  !*** ./resources/ui/3x/cooking/cooking.json ***!
+  \**********************************************/
+
+/*!**********************************************!*\
+  !*** ./resources/ui/3x/cut_in/cut_in_bg.png ***!
+  \**********************************************/
+
+/*!**********************************************!*\
+  !*** ./resources/ui/3x/equip_upgrade/ok.png ***!
+  \**********************************************/
+
+/*!**********************************************!*\
+  !*** ./resources/ui/3x/item_pop_card/bg.png ***!
+  \**********************************************/
+
+/*!**********************************************!*\
+  !*** ./resources/ui/3x/loading/curtain.json ***!
+  \**********************************************/
+
+/*!**********************************************!*\
+  !*** ./resources/ui/3x/loading/loading.json ***!
+  \**********************************************/
+
+/*!**********************************************!*\
+  !*** ./resources/ui/3x/map/party_icon_1.png ***!
+  \**********************************************/
+
+/*!**********************************************!*\
+  !*** ./resources/ui/3x/roam/roam_stripe.png ***!
+  \**********************************************/
+
+/*!**********************************************!*\
+  !*** ./resources/ui/3x/roam/roam_topic1.png ***!
+  \**********************************************/
+
+/*!**********************************************!*\
+  !*** ./resources/ui/3x/ui_base/ui_base.json ***!
+  \**********************************************/
+
+/*!**********************************************!*\
+  !*** ./resources/ui/common/button_blue.json ***!
+  \**********************************************/
+
+/*!**********************************************!*\
+  !*** ./resources/ui/common/button_blue_.png ***!
+  \**********************************************/
+
+/*!**********************************************!*\
+  !*** ./resources/ui/common/button_white.png ***!
+  \**********************************************/
+
+/*!**********************************************!*\
+  !*** ./resources/ui/common/common_arrow.png ***!
+  \**********************************************/
+
+/*!**********************************************!*\
+  !*** ./resources/ui/common/common_track.png ***!
+  \**********************************************/
+
+/*!**********************************************!*\
+  !*** ./resources/ui/controlf/background.png ***!
+  \**********************************************/
+
+/*!**********************************************!*\
+  !*** ./resources/ui/fall_effect/disable.png ***!
+  \**********************************************/
+
+/*!**********************************************!*\
+  !*** ./resources/ui/item_pop_card/close.png ***!
+  \**********************************************/
+
+/*!**********************************************!*\
+  !*** ./resources/ui/moneyIcon/tuding_18.png ***!
+  \**********************************************/
+
+/*!**********************************************!*\
+  !*** ./resources/ui/moneyIcon/tuding_22.png ***!
+  \**********************************************/
+
+/*!**********************************************!*\
+  !*** ./resources/ui/roam_effect/roamone.mp4 ***!
+  \**********************************************/
+
+/*!**********************************************!*\
+  !*** ./resources/ui/vip/vip_effect_back.png ***!
+  \**********************************************/
+
+/*!**********************************************!*\
+  !*** ./src/base/render/scene/basic.scene.ts ***!
+  \**********************************************/
+
+/*!**********************************************!*\
+  !*** ./src/editor/utils/position45.utils.ts ***!
+  \**********************************************/
+
+/*!**********************************************!*\
+  !*** ./src/structure/net/transport/index.ts ***!
+  \**********************************************/
+
+/*!***********************************************!*\
+  !*** ./node_modules/crypto-js/cipher-core.js ***!
+  \***********************************************/
+
+/*!***********************************************!*\
+  !*** ./node_modules/os-browserify/browser.js ***!
+  \***********************************************/
+
+/*!***********************************************!*\
+  !*** ./node_modules/path-browserify/index.js ***!
+  \***********************************************/
+
+/*!***********************************************!*\
+  !*** ./node_modules/protobufjs/src/reader.js ***!
+  \***********************************************/
+
+/*!***********************************************!*\
+  !*** ./node_modules/protobufjs/src/writer.js ***!
+  \***********************************************/
+
+/*!***********************************************!*\
+  !*** ./resources/ui/2x/activity/activity.png ***!
+  \***********************************************/
+
+/*!***********************************************!*\
+  !*** ./resources/ui/2x/mine_car/mine_car.png ***!
+  \***********************************************/
+
+/*!***********************************************!*\
+  !*** ./resources/ui/2x/recharge/recharge.png ***!
+  \***********************************************/
+
+/*!***********************************************!*\
+  !*** ./resources/ui/2x/treasure/treasure.png ***!
+  \***********************************************/
+
+/*!***********************************************!*\
+  !*** ./resources/ui/2x/ui_base2/ui_base2.png ***!
+  \***********************************************/
+
+/*!***********************************************!*\
+  !*** ./resources/ui/2x/ui_base3/ui_base3.png ***!
+  \***********************************************/
+
+/*!***********************************************!*\
+  !*** ./resources/ui/3x/activity/activity.png ***!
+  \***********************************************/
+
+/*!***********************************************!*\
+  !*** ./resources/ui/3x/compose/separator.png ***!
+  \***********************************************/
+
+/*!***********************************************!*\
+  !*** ./resources/ui/3x/compose/source_bg.png ***!
+  \***********************************************/
+
+/*!***********************************************!*\
+  !*** ./resources/ui/3x/compose/tag_ready.png ***!
+  \***********************************************/
+
+/*!***********************************************!*\
+  !*** ./resources/ui/3x/e_roomupgrade/lv0.png ***!
+  \***********************************************/
+
+/*!***********************************************!*\
+  !*** ./resources/ui/3x/e_roomupgrade/lv1.png ***!
+  \***********************************************/
+
+/*!***********************************************!*\
+  !*** ./resources/ui/3x/e_roomupgrade/lv2.png ***!
+  \***********************************************/
+
+/*!***********************************************!*\
+  !*** ./resources/ui/3x/e_roomupgrade/lv3.png ***!
+  \***********************************************/
+
+/*!***********************************************!*\
+  !*** ./resources/ui/3x/e_roomupgrade/lv4.png ***!
+  \***********************************************/
+
+/*!***********************************************!*\
+  !*** ./resources/ui/3x/equip_upgrade/bg1.png ***!
+  \***********************************************/
+
+/*!***********************************************!*\
+  !*** ./resources/ui/3x/hand_equp/equp_bg.png ***!
+  \***********************************************/
+
+/*!***********************************************!*\
+  !*** ./resources/ui/3x/hand_equp/list_bg.png ***!
+  \***********************************************/
+
+/*!***********************************************!*\
+  !*** ./resources/ui/3x/mine_car/mine_car.png ***!
+  \***********************************************/
+
+/*!***********************************************!*\
+  !*** ./resources/ui/3x/recharge/recharge.png ***!
+  \***********************************************/
+
+/*!***********************************************!*\
+  !*** ./resources/ui/3x/treasure/treasure.png ***!
+  \***********************************************/
+
+/*!***********************************************!*\
+  !*** ./resources/ui/3x/ui_base2/ui_base2.png ***!
+  \***********************************************/
+
+/*!***********************************************!*\
+  !*** ./resources/ui/3x/ui_base3/ui_base3.png ***!
+  \***********************************************/
+
+/*!***********************************************!*\
+  !*** ./resources/ui/common/button_white.json ***!
+  \***********************************************/
+
+/*!***********************************************!*\
+  !*** ./resources/ui/common/button_yellow.png ***!
+  \***********************************************/
+
+/*!***********************************************!*\
+  !*** ./resources/ui/common/common_border.png ***!
+  \***********************************************/
+
+/*!***********************************************!*\
+  !*** ./resources/ui/common/common_clsBtn.png ***!
+  \***********************************************/
+
+/*!***********************************************!*\
+  !*** ./resources/ui/decorate/confirm_btn.png ***!
+  \***********************************************/
+
+/*!***********************************************!*\
+  !*** ./resources/ui/decorate/recycle_btn.png ***!
+  \***********************************************/
+
+/*!***********************************************!*\
+  !*** ./resources/ui/fall_effect/enable01.png ***!
+  \***********************************************/
+
+/*!***********************************************!*\
+  !*** ./resources/ui/fall_effect/enable02.png ***!
+  \***********************************************/
+
+/*!***********************************************!*\
+  !*** ./resources/ui/fall_effect/enable03.png ***!
+  \***********************************************/
+
+/*!***********************************************!*\
+  !*** ./resources/ui/item_pop_card/des_bg.png ***!
+  \***********************************************/
+
+/*!***********************************************!*\
+  !*** ./resources/ui/market/detail_bubble.png ***!
+  \***********************************************/
+
+/*!***********************************************!*\
+  !*** ./resources/ui/roampreview/preview.json ***!
+  \***********************************************/
+
+/*!***********************************************!*\
+  !*** ./resources/ui/vip/vip_effect_back.json ***!
+  \***********************************************/
+
+/*!***********************************************!*\
+  !*** ./resources/ui/vip/vip_effect_front.png ***!
+  \***********************************************/
+
+/*!***********************************************!*\
+  !*** ./src/base/game/elementstorage/index.ts ***!
+  \***********************************************/
+
+/*!************************************************!*\
+  !*** ./node_modules/@protobufjs/pool/index.js ***!
+  \************************************************/
+
+/*!************************************************!*\
+  !*** ./node_modules/@protobufjs/utf8/index.js ***!
+  \************************************************/
+
+/*!************************************************!*\
+  !*** ./node_modules/crypto-js/pad-ansix923.js ***!
+  \************************************************/
+
+/*!************************************************!*\
+  !*** ./node_modules/crypto-js/pad-iso10126.js ***!
+  \************************************************/
+
+/*!************************************************!*\
+  !*** ./node_modules/crypto-js/pad-iso97971.js ***!
+  \************************************************/
+
+/*!************************************************!*\
+  !*** ./resources/ui/2x/activity/activity.json ***!
+  \************************************************/
+
+/*!************************************************!*\
+  !*** ./resources/ui/2x/mine_car/mine_car.json ***!
+  \************************************************/
+
+/*!************************************************!*\
+  !*** ./resources/ui/2x/pica_notice/bg_big.png ***!
+  \************************************************/
+
+/*!************************************************!*\
+  !*** ./resources/ui/2x/recharge/recharge.json ***!
+  \************************************************/
+
+/*!************************************************!*\
+  !*** ./resources/ui/2x/treasure/treasure.json ***!
+  \************************************************/
+
+/*!************************************************!*\
+  !*** ./resources/ui/2x/ui_base2/ui_base2.json ***!
+  \************************************************/
+
+/*!************************************************!*\
+  !*** ./resources/ui/2x/ui_base3/ui_base3.json ***!
+  \************************************************/
+
+/*!************************************************!*\
+  !*** ./resources/ui/3x/activity/activity.json ***!
+  \************************************************/
+
+/*!************************************************!*\
+  !*** ./resources/ui/3x/compose/main_bg_01.png ***!
+  \************************************************/
+
+/*!************************************************!*\
+  !*** ./resources/ui/3x/compose/tag_rank_a.png ***!
+  \************************************************/
+
+/*!************************************************!*\
+  !*** ./resources/ui/3x/compose/tag_rank_b.png ***!
+  \************************************************/
+
+/*!************************************************!*\
+  !*** ./resources/ui/3x/compose/tag_rank_c.png ***!
+  \************************************************/
+
+/*!************************************************!*\
+  !*** ./resources/ui/3x/compose/tips_arrow.png ***!
+  \************************************************/
+
+/*!************************************************!*\
+  !*** ./resources/ui/3x/equip_upgrade/lock.png ***!
+  \************************************************/
+
+/*!************************************************!*\
+  !*** ./resources/ui/3x/hand_equp/button_h.png ***!
+  \************************************************/
+
+/*!************************************************!*\
+  !*** ./resources/ui/3x/hand_equp/button_t.png ***!
+  \************************************************/
+
+/*!************************************************!*\
+  !*** ./resources/ui/3x/hand_equp/click_bg.png ***!
+  \************************************************/
+
+/*!************************************************!*\
+  !*** ./resources/ui/3x/mine_car/mine_car.json ***!
+  \************************************************/
+
+/*!************************************************!*\
+  !*** ./resources/ui/3x/pica_notice/bg_big.png ***!
+  \************************************************/
+
+/*!************************************************!*\
+  !*** ./resources/ui/3x/recharge/recharge.json ***!
+  \************************************************/
+
+/*!************************************************!*\
+  !*** ./resources/ui/3x/treasure/treasure.json ***!
+  \************************************************/
+
+/*!************************************************!*\
+  !*** ./resources/ui/3x/ui_base2/ui_base2.json ***!
+  \************************************************/
+
+/*!************************************************!*\
+  !*** ./resources/ui/3x/ui_base3/ui_base3.json ***!
+  \************************************************/
+
+/*!************************************************!*\
+  !*** ./resources/ui/common/button_yellow.json ***!
+  \************************************************/
+
+/*!************************************************!*\
+  !*** ./resources/ui/common/common_clsBtn.json ***!
+  \************************************************/
+
+/*!************************************************!*\
+  !*** ./resources/ui/common/common_panelBg.png ***!
+  \************************************************/
+
+/*!************************************************!*\
+  !*** ./resources/ui/fall_effect/ellipse01.png ***!
+  \************************************************/
+
+/*!************************************************!*\
+  !*** ./resources/ui/fall_effect/ellipse02.png ***!
+  \************************************************/
+
+/*!************************************************!*\
+  !*** ./resources/ui/fall_effect/ellipse03.png ***!
+  \************************************************/
+
+/*!************************************************!*\
+  !*** ./resources/ui/fall_effect/ellipse04.png ***!
+  \************************************************/
+
+/*!************************************************!*\
+  !*** ./resources/ui/fall_effect/ellipse05.png ***!
+  \************************************************/
+
+/*!************************************************!*\
+  !*** ./resources/ui/fall_effect/ellipse06.png ***!
+  \************************************************/
+
+/*!************************************************!*\
+  !*** ./resources/ui/fall_effect/ellipse07.png ***!
+  \************************************************/
+
+/*!************************************************!*\
+  !*** ./resources/ui/item_pop_card/name_bg.png ***!
+  \************************************************/
+
+/*!************************************************!*\
+  !*** ./resources/ui/vip/vip_effect_front.json ***!
+  \************************************************/
+
+/*!************************************************!*\
+  !*** ./src/base/render/cameras/play.camera.ts ***!
+  \************************************************/
+
+/*!************************************************!*\
+  !*** ./src/base/render/display/sort.object.ts ***!
+  \************************************************/
+
+/*!************************************************!*\
+  !*** ./src/base/render/display/top.display.ts ***!
+  \************************************************/
+
+/*!************************************************!*\
+  !*** ./src/base/render/layer/layer.manager.ts ***!
+  \************************************************/
+
+/*!************************************************!*\
+  !*** ./src/base/render/scene/scene.manager.ts ***!
+  \************************************************/
+
+/*!************************************************!*\
+  !*** ./src/base/render/scene/sky.box.scene.ts ***!
+  \************************************************/
+
+/*!************************************************!*\
+  !*** ./src/base/render/ui/components/index.ts ***!
+  \************************************************/
+
+/*!************************************************!*\
+  !*** ./src/editor/canvas/scene/check.bound.ts ***!
+  \************************************************/
+
+/*!************************************************!*\
+  !*** ./src/editor/canvas/scene/top.display.ts ***!
+  \************************************************/
+
+/*!*************************************************!*\
+  !*** ./node_modules/@protobufjs/float/index.js ***!
+  \*************************************************/
+
+/*!*************************************************!*\
+  !*** ./node_modules/crypto-js/pad-nopadding.js ***!
+  \*************************************************/
+
+/*!*************************************************!*\
+  !*** ./node_modules/crypto-js/rabbit-legacy.js ***!
+  \*************************************************/
+
+/*!*************************************************!*\
+  !*** ./node_modules/game-capsule/dist/index.js ***!
+  \*************************************************/
+
+/*!*************************************************!*\
+  !*** ./resources/config/base/state/repair.json ***!
+  \*************************************************/
+
+/*!*************************************************!*\
+  !*** ./resources/ui/2x/cutInmenu/cutInmenu.png ***!
+  \*************************************************/
+
+/*!*************************************************!*\
+  !*** ./resources/ui/2x/furni_bag/furni_bag.png ***!
+  \*************************************************/
+
+/*!*************************************************!*\
+  !*** ./resources/ui/2x/hand_equp/hand_equp.png ***!
+  \*************************************************/
+
+/*!*************************************************!*\
+  !*** ./resources/ui/2x/map/town_entrance_1.png ***!
+  \*************************************************/
+
+/*!*************************************************!*\
+  !*** ./resources/ui/2x/pica_boot/pica_boot.png ***!
+  \*************************************************/
+
+/*!*************************************************!*\
+  !*** ./resources/ui/2x/pica_chat/pica_chat.png ***!
+  \*************************************************/
+
+/*!*************************************************!*\
+  !*** ./resources/ui/2x/ui_common/ui_common.png ***!
+  \*************************************************/
+
+/*!*************************************************!*\
+  !*** ./resources/ui/3x/compose/bprint_bg_1.png ***!
+  \*************************************************/
+
+/*!*************************************************!*\
+  !*** ./resources/ui/3x/compose/bprint_bg_2.png ***!
+  \*************************************************/
+
+/*!*************************************************!*\
+  !*** ./resources/ui/3x/compose/bprint_mask.png ***!
+  \*************************************************/
+
+/*!*************************************************!*\
+  !*** ./resources/ui/3x/cutInmenu/cutInmenu.png ***!
+  \*************************************************/
+
+/*!*************************************************!*\
+  !*** ./resources/ui/3x/equip_upgrade/topbg.png ***!
+  \*************************************************/
+
+/*!*************************************************!*\
+  !*** ./resources/ui/3x/furni_bag/furni_bag.png ***!
+  \*************************************************/
+
+/*!*************************************************!*\
+  !*** ./resources/ui/3x/hand_equp/hand_equp.png ***!
+  \*************************************************/
+
+/*!*************************************************!*\
+  !*** ./resources/ui/3x/item_pop_card/close.png ***!
+  \*************************************************/
+
+/*!*************************************************!*\
+  !*** ./resources/ui/3x/loading/loading_bg.jpeg ***!
+  \*************************************************/
+
+/*!*************************************************!*\
+  !*** ./resources/ui/3x/map/town_entrance_1.png ***!
+  \*************************************************/
+
+/*!*************************************************!*\
+  !*** ./resources/ui/3x/pica_boot/pica_boot.png ***!
+  \*************************************************/
+
+/*!*************************************************!*\
+  !*** ./resources/ui/3x/pica_chat/pica_chat.png ***!
+  \*************************************************/
+
+/*!*************************************************!*\
+  !*** ./resources/ui/3x/ui_common/ui_common.png ***!
+  \*************************************************/
+
+/*!*************************************************!*\
+  !*** ./resources/ui/baseView/mainui_mobile.png ***!
+  \*************************************************/
+
+/*!*************************************************!*\
+  !*** ./resources/ui/common/prop_background.png ***!
+  \*************************************************/
+
+/*!*************************************************!*\
+  !*** ./resources/ui/fall_effect/falleffect.png ***!
+  \*************************************************/
+
+/*!*************************************************!*\
+  !*** ./resources/ui/market/categories_down.png ***!
+  \*************************************************/
+
+/*!*************************************************!*\
+  !*** ./resources/ui/roam_effect/roambefore.mp4 ***!
+  \*************************************************/
+
+/*!*************************************************!*\
+  !*** ./resources/ui/roam_effect/roamreward.mp4 ***!
+  \*************************************************/
+
+/*!*************************************************!*\
+  !*** ./src/base/render/display/base.display.ts ***!
+  \*************************************************/
+
+/*!*************************************************!*\
+  !*** ./src/base/render/sky.box/base.scenery.ts ***!
+  \*************************************************/
+
+/*!*************************************************!*\
+  !*** ./src/structure/net/connection.service.ts ***!
+  \*************************************************/
+
+/*!**************************************************!*\
+  !*** ./node_modules/@protobufjs/base64/index.js ***!
+  \**************************************************/
+
+/*!**************************************************!*\
+  !*** ./node_modules/i18next/dist/esm/i18next.js ***!
+  \**************************************************/
+
+/*!**************************************************!*\
+  !*** ./node_modules/pixelpai_proto/protocols.js ***!
+  \**************************************************/
+
+/*!**************************************************!*\
+  !*** ./resources/ui/2x/cutInmenu/cutInmenu.json ***!
+  \**************************************************/
+
+/*!**************************************************!*\
+  !*** ./resources/ui/2x/furni_bag/furni_bag.json ***!
+  \**************************************************/
+
+/*!**************************************************!*\
+  !*** ./resources/ui/2x/hand_equp/hand_equp.json ***!
+  \**************************************************/
+
+/*!**************************************************!*\
+  !*** ./resources/ui/2x/pica_boot/pica_boot.json ***!
+  \**************************************************/
+
+/*!**************************************************!*\
+  !*** ./resources/ui/2x/pica_chat/pica_chat.json ***!
+  \**************************************************/
+
+/*!**************************************************!*\
+  !*** ./resources/ui/2x/ui_common/ui_common.json ***!
+  \**************************************************/
+
+/*!**************************************************!*\
+  !*** ./resources/ui/3x/cutInmenu/cutInmenu.json ***!
+  \**************************************************/
+
+/*!**************************************************!*\
+  !*** ./resources/ui/3x/equip_upgrade/topbg1.png ***!
+  \**************************************************/
+
+/*!**************************************************!*\
+  !*** ./resources/ui/3x/furni_bag/furni_bag.json ***!
+  \**************************************************/
+
+/*!**************************************************!*\
+  !*** ./resources/ui/3x/hand_equp/hand_equp.json ***!
+  \**************************************************/
+
+/*!**************************************************!*\
+  !*** ./resources/ui/3x/item_pop_card/des_bg.png ***!
+  \**************************************************/
+
+/*!**************************************************!*\
+  !*** ./resources/ui/3x/pica_boot/pica_boot.json ***!
+  \**************************************************/
+
+/*!**************************************************!*\
+  !*** ./resources/ui/3x/pica_chat/pica_chat.json ***!
+  \**************************************************/
+
+/*!**************************************************!*\
+  !*** ./resources/ui/3x/ui_common/ui_common.json ***!
+  \**************************************************/
+
+/*!**************************************************!*\
+  !*** ./resources/ui/baseView/mainui_mobile.json ***!
+  \**************************************************/
+
+/*!**************************************************!*\
+  !*** ./resources/ui/create_role/create_role.png ***!
+  \**************************************************/
+
+/*!**************************************************!*\
+  !*** ./resources/ui/decorate/decorate_atlas.png ***!
+  \**************************************************/
+
+/*!**************************************************!*\
+  !*** ./resources/ui/fall_effect/falleffect.json ***!
+  \**************************************************/
+
+/*!**************************************************!*\
+  !*** ./src/base/render/sky.box/block.manager.ts ***!
+  \**************************************************/
+
+/*!**************************************************!*\
+  !*** ./src/editor/canvas/scene/manager/index.ts ***!
+  \**************************************************/
+
+/*!**************************************************!*\
+  !*** ./src/structure/net/transport/websocket.ts ***!
+  \**************************************************/
+
+/*!***************************************************!*\
+  !*** ./node_modules/@protobufjs/inquire/index.js ***!
+  \***************************************************/
+
+/*!***************************************************!*\
+  !*** ./node_modules/crypto-js/lib-typedarrays.js ***!
+  \***************************************************/
+
+/*!***************************************************!*\
+  !*** ./node_modules/crypto-js/pad-zeropadding.js ***!
+  \***************************************************/
+
+/*!***************************************************!*\
+  !*** ./node_modules/pathfinding/src/core/Grid.js ***!
+  \***************************************************/
+
+/*!***************************************************!*\
+  !*** ./node_modules/pathfinding/src/core/Node.js ***!
+  \***************************************************/
+
+/*!***************************************************!*\
+  !*** ./node_modules/pathfinding/src/core/Util.js ***!
+  \***************************************************/
+
+/*!***************************************************!*\
+  !*** ./node_modules/sort-display-object/index.js ***!
+  \***************************************************/
+
+/*!***************************************************!*\
+  !*** ./resources/config/base/state/unfrozen.json ***!
+  \***************************************************/
+
+/*!***************************************************!*\
+  !*** ./resources/ui/2x/c_street_1/c_street_1.png ***!
+  \***************************************************/
+
+/*!***************************************************!*\
+  !*** ./resources/ui/2x/c_street_2/c_street_2.png ***!
+  \***************************************************/
+
+/*!***************************************************!*\
+  !*** ./resources/ui/2x/createrole/createrole.png ***!
+  \***************************************************/
+
+/*!***************************************************!*\
+  !*** ./resources/ui/2x/explorelog/explorelog.png ***!
+  \***************************************************/
+
+/*!***************************************************!*\
+  !*** ./resources/ui/2x/gifteffect/gifteffect.png ***!
+  \***************************************************/
+
+/*!***************************************************!*\
+  !*** ./resources/ui/2x/illustrate/illustrate.png ***!
+  \***************************************************/
+
+/*!***************************************************!*\
+  !*** ./resources/ui/2x/loading_ui/loading_ui.png ***!
+  \***************************************************/
+
+/*!***************************************************!*\
+  !*** ./resources/ui/2x/minesettle/settlement.png ***!
+  \***************************************************/
+
+/*!***************************************************!*\
+  !*** ./resources/ui/2x/pica_alert/pica_alert.png ***!
+  \***************************************************/
+
+/*!***************************************************!*\
+  !*** ./resources/ui/2x/pica_login/pica_login.png ***!
+  \***************************************************/
+
+/*!***************************************************!*\
+  !*** ./resources/ui/2x/stareffect/stareffect.png ***!
+  \***************************************************/
+
+/*!***************************************************!*\
+  !*** ./resources/ui/2x/ui_common1/ui_common1.png ***!
+  \***************************************************/
+
+/*!***************************************************!*\
+  !*** ./resources/ui/3x/c_street_1/c_street_1.png ***!
+  \***************************************************/
+
+/*!***************************************************!*\
+  !*** ./resources/ui/3x/c_street_2/c_street_2.png ***!
+  \***************************************************/
+
+/*!***************************************************!*\
+  !*** ./resources/ui/3x/compose/sourcelist_bg.png ***!
+  \***************************************************/
+
+/*!***************************************************!*\
+  !*** ./resources/ui/3x/createrole/createrole.png ***!
+  \***************************************************/
+
+/*!***************************************************!*\
+  !*** ./resources/ui/3x/equip_upgrade/equipbg.png ***!
+  \***************************************************/
+
+/*!***************************************************!*\
+  !*** ./resources/ui/3x/equip_upgrade/titlebg.png ***!
+  \***************************************************/
+
+/*!***************************************************!*\
+  !*** ./resources/ui/3x/explorelog/explorelog.png ***!
+  \***************************************************/
+
+/*!***************************************************!*\
+  !*** ./resources/ui/3x/gifteffect/gifteffect.png ***!
+  \***************************************************/
+
+/*!***************************************************!*\
+  !*** ./resources/ui/3x/illustrate/illustrate.png ***!
+  \***************************************************/
+
+/*!***************************************************!*\
+  !*** ./resources/ui/3x/item_pop_card/name_bg.png ***!
+  \***************************************************/
+
+/*!***************************************************!*\
+  !*** ./resources/ui/3x/loading_ui/loading_ui.png ***!
+  \***************************************************/
+
+/*!***************************************************!*\
+  !*** ./resources/ui/3x/minesettle/settlement.png ***!
+  \***************************************************/
+
+/*!***************************************************!*\
+  !*** ./resources/ui/3x/pica_alert/pica_alert.png ***!
+  \***************************************************/
+
+/*!***************************************************!*\
+  !*** ./resources/ui/3x/pica_login/pica_login.png ***!
+  \***************************************************/
+
+/*!***************************************************!*\
+  !*** ./resources/ui/3x/stareffect/stareffect.png ***!
+  \***************************************************/
+
+/*!***************************************************!*\
+  !*** ./resources/ui/3x/ui_common1/ui_common1.png ***!
+  \***************************************************/
+
+/*!***************************************************!*\
+  !*** ./resources/ui/create_role/create_role.json ***!
+  \***************************************************/
+
+/*!***************************************************!*\
+  !*** ./resources/ui/decorate/decorate_atlas.json ***!
+  \***************************************************/
+
+/*!***************************************************!*\
+  !*** ./resources/ui/market/categories_normal.png ***!
+  \***************************************************/
+
+/*!***************************************************!*\
+  !*** ./src/base/render/display/reference.area.ts ***!
+  \***************************************************/
+
+/*!****************************************************!*\
+  !*** ./node_modules/crypto-js/mode-ctr-gladman.js ***!
+  \****************************************************/
+
+/*!****************************************************!*\
+  !*** ./node_modules/game-capsule/dist/lib/lite.js ***!
+  \****************************************************/
+
+/*!****************************************************!*\
+  !*** ./node_modules/protobufjs/src/rpc/service.js ***!
+  \****************************************************/
+
+/*!****************************************************!*\
+  !*** ./resources/ui/2x/c_street_1/c_street_1.json ***!
+  \****************************************************/
+
+/*!****************************************************!*\
+  !*** ./resources/ui/2x/c_street_2/c_street_2.json ***!
+  \****************************************************/
+
+/*!****************************************************!*\
+  !*** ./resources/ui/2x/createrole/createrole.json ***!
+  \****************************************************/
+
+/*!****************************************************!*\
+  !*** ./resources/ui/2x/explorelog/explorelog.json ***!
+  \****************************************************/
+
+/*!****************************************************!*\
+  !*** ./resources/ui/2x/gifteffect/gifteffect.json ***!
+  \****************************************************/
+
+/*!****************************************************!*\
+  !*** ./resources/ui/2x/illustrate/illustrate.json ***!
+  \****************************************************/
+
+/*!****************************************************!*\
+  !*** ./resources/ui/2x/loading_ui/loading_ui.json ***!
+  \****************************************************/
+
+/*!****************************************************!*\
+  !*** ./resources/ui/2x/minesettle/settlement.json ***!
+  \****************************************************/
+
+/*!****************************************************!*\
+  !*** ./resources/ui/2x/pica_alert/pica_alert.json ***!
+  \****************************************************/
+
+/*!****************************************************!*\
+  !*** ./resources/ui/2x/pica_login/pica_login.json ***!
+  \****************************************************/
+
+/*!****************************************************!*\
+  !*** ./resources/ui/2x/stareffect/stareffect.json ***!
+  \****************************************************/
+
+/*!****************************************************!*\
+  !*** ./resources/ui/2x/texture/Create_role_bg.png ***!
+  \****************************************************/
+
+/*!****************************************************!*\
+  !*** ./resources/ui/2x/texture/Recast_list_bg.png ***!
+  \****************************************************/
+
+/*!****************************************************!*\
+  !*** ./resources/ui/2x/ui_common1/ui_common1.json ***!
+  \****************************************************/
+
+/*!****************************************************!*\
+  !*** ./resources/ui/3x/c_street_1/c_street_1.json ***!
+  \****************************************************/
+
+/*!****************************************************!*\
+  !*** ./resources/ui/3x/c_street_2/c_street_2.json ***!
+  \****************************************************/
+
+/*!****************************************************!*\
+  !*** ./resources/ui/3x/createrole/createrole.json ***!
+  \****************************************************/
+
+/*!****************************************************!*\
+  !*** ./resources/ui/3x/equip_upgrade/bottombg.png ***!
+  \****************************************************/
+
+/*!****************************************************!*\
+  !*** ./resources/ui/3x/equip_upgrade/equipbg1.png ***!
+  \****************************************************/
+
+/*!****************************************************!*\
+  !*** ./resources/ui/3x/equip_upgrade/equipbg2.png ***!
+  \****************************************************/
+
+/*!****************************************************!*\
+  !*** ./resources/ui/3x/explorelog/explorelog.json ***!
+  \****************************************************/
+
+/*!****************************************************!*\
+  !*** ./resources/ui/3x/gifteffect/gifteffect.json ***!
+  \****************************************************/
+
+/*!****************************************************!*\
+  !*** ./resources/ui/3x/hand_equp/empty_handed.png ***!
+  \****************************************************/
+
+/*!****************************************************!*\
+  !*** ./resources/ui/3x/illustrate/illustrate.json ***!
+  \****************************************************/
+
+/*!****************************************************!*\
+  !*** ./resources/ui/3x/loading_ui/loading_ui.json ***!
+  \****************************************************/
+
+/*!****************************************************!*\
+  !*** ./resources/ui/3x/minesettle/settlement.json ***!
+  \****************************************************/
+
+/*!****************************************************!*\
+  !*** ./resources/ui/3x/pica_alert/pica_alert.json ***!
+  \****************************************************/
+
+/*!****************************************************!*\
+  !*** ./resources/ui/3x/pica_login/pica_login.json ***!
+  \****************************************************/
+
+/*!****************************************************!*\
+  !*** ./resources/ui/3x/stareffect/stareffect.json ***!
+  \****************************************************/
+
+/*!****************************************************!*\
+  !*** ./resources/ui/3x/texture/Create_role_bg.png ***!
+  \****************************************************/
+
+/*!****************************************************!*\
+  !*** ./resources/ui/3x/texture/Recast_list_bg.png ***!
+  \****************************************************/
+
+/*!****************************************************!*\
+  !*** ./resources/ui/3x/ui_common1/ui_common1.json ***!
+  \****************************************************/
+
+/*!****************************************************!*\
+  !*** ./resources/ui/common/button_transparent.png ***!
+  \****************************************************/
+
+/*!****************************************************!*\
+  !*** ./resources/ui/market/yellow_button_down.png ***!
+  \****************************************************/
+
+/*!****************************************************!*\
+  !*** ./resources/ui/market/yellow_button_over.png ***!
+  \****************************************************/
+
+/*!****************************************************!*\
+  !*** ./resources/ui/roam_effect/roamtenrepead.mp4 ***!
+  \****************************************************/
+
+/*!****************************************************!*\
+  !*** ./src/base/render/cameras/cameras.manager.ts ***!
+  \****************************************************/
+
+/*!*****************************************************!*\
+  !*** ./node_modules/@protobufjs/aspromise/index.js ***!
+  \*****************************************************/
+
+/*!*****************************************************!*\
+  !*** ./node_modules/pathfinding/src/PathFinding.js ***!
+  \*****************************************************/
+
+/*!*****************************************************!*\
+  !*** ./node_modules/protobufjs/src/util/minimal.js ***!
+  \*****************************************************/
+
+/*!*****************************************************!*\
+  !*** ./resources/dragonbones/bones_human01_tex.png ***!
+  \*****************************************************/
+
+/*!*****************************************************!*\
+  !*** ./resources/scripts/webfont/1.6.26/webfont.js ***!
+  \*****************************************************/
+
+/*!*****************************************************!*\
+  !*** ./resources/ui/1x/create_role/create_role.png ***!
+  \*****************************************************/
+
+/*!*****************************************************!*\
+  !*** ./resources/ui/1x/equip_upgrade/mine_eqpm.png ***!
+  \*****************************************************/
+
+/*!*****************************************************!*\
+  !*** ./resources/ui/2x/equip_upgrade/mine_eqpm.png ***!
+  \*****************************************************/
+
+/*!*****************************************************!*\
+  !*** ./resources/ui/2x/explorelog/explore_mask.png ***!
+  \*****************************************************/
+
+/*!*****************************************************!*\
+  !*** ./resources/ui/2x/friend_list/friend_list.png ***!
+  \*****************************************************/
+
+/*!*****************************************************!*\
+  !*** ./resources/ui/2x/icon_common/icon_common.png ***!
+  \*****************************************************/
+
+/*!*****************************************************!*\
+  !*** ./resources/ui/2x/player_info/player_info.png ***!
+  \*****************************************************/
+
+/*!*****************************************************!*\
+  !*** ./resources/ui/2x/texture/avater_bg_adorn.png ***!
+  \*****************************************************/
+
+/*!*****************************************************!*\
+  !*** ./resources/ui/3x/e_roomupgrade/effect_bg.png ***!
+  \*****************************************************/
+
+/*!*****************************************************!*\
+  !*** ./resources/ui/3x/e_roomupgrade/tittle_bg.png ***!
+  \*****************************************************/
+
+/*!*****************************************************!*\
+  !*** ./resources/ui/3x/equip_upgrade/bottombg1.png ***!
+  \*****************************************************/
+
+/*!*****************************************************!*\
+  !*** ./resources/ui/3x/equip_upgrade/mine_eqpm.png ***!
+  \*****************************************************/
+
+/*!*****************************************************!*\
+  !*** ./resources/ui/3x/explorelog/explore_mask.png ***!
+  \*****************************************************/
+
+/*!*****************************************************!*\
+  !*** ./resources/ui/3x/friend_list/friend_list.png ***!
+  \*****************************************************/
+
+/*!*****************************************************!*\
+  !*** ./resources/ui/3x/hand_equp/superscript_h.png ***!
+  \*****************************************************/
+
+/*!*****************************************************!*\
+  !*** ./resources/ui/3x/icon_common/icon_common.png ***!
+  \*****************************************************/
+
+/*!*****************************************************!*\
+  !*** ./resources/ui/3x/player_info/player_info.png ***!
+  \*****************************************************/
+
+/*!*****************************************************!*\
+  !*** ./resources/ui/3x/texture/avater_bg_adorn.png ***!
+  \*****************************************************/
+
+/*!*****************************************************!*\
+  !*** ./resources/ui/common/button_transparent.json ***!
+  \*****************************************************/
+
+/*!*****************************************************!*\
+  !*** ./src/editor/canvas/scene/connection/index.ts ***!
+  \*****************************************************/
+
+/*!******************************************************!*\
+  !*** ./node_modules/net-socket-packet/dist/index.js ***!
+  \******************************************************/
+
+/*!******************************************************!*\
+  !*** ./node_modules/object-hash/dist/object_hash.js ***!
+  \******************************************************/
+
+/*!******************************************************!*\
+  !*** ./node_modules/protobufjs/src/index-minimal.js ***!
+  \******************************************************/
+
+/*!******************************************************!*\
+  !*** ./node_modules/protobufjs/src/reader_buffer.js ***!
+  \******************************************************/
+
+/*!******************************************************!*\
+  !*** ./node_modules/protobufjs/src/util/longbits.js ***!
+  \******************************************************/
+
+/*!******************************************************!*\
+  !*** ./node_modules/protobufjs/src/writer_buffer.js ***!
+  \******************************************************/
+
+/*!******************************************************!*\
+  !*** ./resources/dragonbones/bones_human01_tex.json ***!
+  \******************************************************/
+
+/*!******************************************************!*\
+  !*** ./resources/ui/1x/create_role/create_role.json ***!
+  \******************************************************/
+
+/*!******************************************************!*\
+  !*** ./resources/ui/1x/equip_upgrade/mine_eqpm.json ***!
+  \******************************************************/
+
+/*!******************************************************!*\
+  !*** ./resources/ui/2x/equip_upgrade/mine_eqpm.json ***!
+  \******************************************************/
+
+/*!******************************************************!*\
+  !*** ./resources/ui/2x/friend_list/friend_list.json ***!
+  \******************************************************/
+
+/*!******************************************************!*\
+  !*** ./resources/ui/2x/icon_common/icon_common.json ***!
+  \******************************************************/
+
+/*!******************************************************!*\
+  !*** ./resources/ui/2x/player_info/player_info.json ***!
+  \******************************************************/
+
+/*!******************************************************!*\
+  !*** ./resources/ui/2x/texture/avater_bg_stripe.png ***!
+  \******************************************************/
+
+/*!******************************************************!*\
+  !*** ./resources/ui/3x/equip_upgrade/mine_eqpm.json ***!
+  \******************************************************/
+
+/*!******************************************************!*\
+  !*** ./resources/ui/3x/equip_upgrade/test_equip.png ***!
+  \******************************************************/
+
+/*!******************************************************!*\
+  !*** ./resources/ui/3x/friend_list/friend_list.json ***!
+  \******************************************************/
+
+/*!******************************************************!*\
+  !*** ./resources/ui/3x/icon_common/icon_common.json ***!
+  \******************************************************/
+
+/*!******************************************************!*\
+  !*** ./resources/ui/3x/player_info/player_info.json ***!
+  \******************************************************/
+
+/*!******************************************************!*\
+  !*** ./resources/ui/3x/texture/avater_bg_stripe.png ***!
+  \******************************************************/
+
+/*!******************************************************!*\
+  !*** ./resources/ui/common/common_channelSelect.png ***!
+  \******************************************************/
+
+/*!******************************************************!*\
+  !*** ./resources/ui/common/common_thumb_texture.png ***!
+  \******************************************************/
+
+/*!******************************************************!*\
+  !*** ./resources/ui/item_pop_card/item_pop_card.png ***!
+  \******************************************************/
+
+/*!******************************************************!*\
+  !*** ./resources/ui/market/yellow_button_normal.png ***!
+  \******************************************************/
+
+/*!*******************************************************!*\
+  !*** ./node_modules/game-capsule/dist/lib/capsule.js ***!
+  \*******************************************************/
+
+/*!*******************************************************!*\
+  !*** ./node_modules/game-capsule/dist/lib/helpers.js ***!
+  \*******************************************************/
+
+/*!*******************************************************!*\
+  !*** ./node_modules/simple-sha1/rusha-worker-sha1.js ***!
+  \*******************************************************/
+
+/*!*******************************************************!*\
+  !*** ./node_modules/tooqinggamephaser/dist/phaser.js ***!
+  \*******************************************************/
+
+/*!*******************************************************!*\
+  !*** ./resources/dragonbones/bones_human01_ske.dbbin ***!
+  \*******************************************************/
+
+/*!*******************************************************!*\
+  !*** ./resources/ui/2x/circleeffect/circleeffect.png ***!
+  \*******************************************************/
+
+/*!*******************************************************!*\
+  !*** ./resources/ui/2x/furni_unlock/furni_unlock.png ***!
+  \*******************************************************/
+
+/*!*******************************************************!*\
+  !*** ./resources/ui/2x/mask_loading/mask_loading.png ***!
+  \*******************************************************/
+
+/*!*******************************************************!*\
+  !*** ./resources/ui/2x/pica_boot/login_notice_bg.png ***!
+  \*******************************************************/
+
+/*!*******************************************************!*\
+  !*** ./resources/ui/2x/texture/Create_bg_texture.png ***!
+  \*******************************************************/
+
+/*!*******************************************************!*\
+  !*** ./resources/ui/2x/texture/Recast_bg_texture.png ***!
+  \*******************************************************/
+
+/*!*******************************************************!*\
+  !*** ./resources/ui/3x/circleeffect/circleeffect.png ***!
+  \*******************************************************/
+
+/*!*******************************************************!*\
+  !*** ./resources/ui/3x/furni_unlock/furni_unlock.png ***!
+  \*******************************************************/
+
+/*!*******************************************************!*\
+  !*** ./resources/ui/3x/mask_loading/mask_loading.png ***!
+  \*******************************************************/
+
+/*!*******************************************************!*\
+  !*** ./resources/ui/3x/pica_boot/login_notice_bg.png ***!
+  \*******************************************************/
+
+/*!*******************************************************!*\
+  !*** ./resources/ui/3x/texture/Create_bg_texture.png ***!
+  \*******************************************************/
+
+/*!*******************************************************!*\
+  !*** ./resources/ui/3x/texture/Recast_bg_texture.png ***!
+  \*******************************************************/
+
+/*!*******************************************************!*\
+  !*** ./resources/ui/item_pop_card/item_pop_card.json ***!
+  \*******************************************************/
+
+/*!********************************************************!*\
+  !*** ./node_modules/@protobufjs/eventemitter/index.js ***!
+  \********************************************************/
+
+/*!********************************************************!*\
+  !*** ./node_modules/pathfinding/src/core/Heuristic.js ***!
+  \********************************************************/
+
+/*!********************************************************!*\
+  !*** ./resources/dragonbones/bones_model_head_tex.png ***!
+  \********************************************************/
+
+/*!********************************************************!*\
+  !*** ./resources/ui/2x/circleeffect/circleeffect.json ***!
+  \********************************************************/
+
+/*!********************************************************!*\
+  !*** ./resources/ui/2x/furni_unlock/furni_unlock.json ***!
+  \********************************************************/
+
+/*!********************************************************!*\
+  !*** ./resources/ui/2x/mask_loading/mask_loading.json ***!
+  \********************************************************/
+
+/*!********************************************************!*\
+  !*** ./resources/ui/3x/circleeffect/circleeffect.json ***!
+  \********************************************************/
+
+/*!********************************************************!*\
+  !*** ./resources/ui/3x/compose/sourcelist_title_1.png ***!
+  \********************************************************/
+
+/*!********************************************************!*\
+  !*** ./resources/ui/3x/furni_unlock/furni_unlock.json ***!
+  \********************************************************/
+
+/*!********************************************************!*\
+  !*** ./resources/ui/3x/mask_loading/mask_loading.json ***!
+  \********************************************************/
+
+/*!********************************************************!*\
+  !*** ./resources/ui/common/common_channelUnSelect.png ***!
+  \********************************************************/
+
+/*!********************************************************!*\
+  !*** ./src/base/render/display/base.frames.display.ts ***!
+  \********************************************************/
+
+/*!********************************************************!*\
+  !*** ./src/base/render/ui/components/dynamic.image.ts ***!
+  \********************************************************/
+
+/*!********************************************************!*\
+  !*** ./src/editor/canvas/scene/display.object.pool.ts ***!
+  \********************************************************/
+
+/*!********************************************************!*\
+  !*** ./src/editor/canvas/scene/scene.editor.canvas.ts ***!
+  \********************************************************/
+
+/*!*********************************************************!*\
+  !*** ./node_modules/game-capsule/dist/lib/constants.js ***!
+  \*********************************************************/
+
+/*!*********************************************************!*\
+  !*** ./resources/dragonbones/bones_model_head_tex.json ***!
+  \*********************************************************/
+
+/*!*********************************************************!*\
+  !*** ./resources/ui/2x/e_roomupgrade/e_roomupgrade.png ***!
+  \*********************************************************/
+
+/*!*********************************************************!*\
+  !*** ./resources/ui/2x/effect_common/effect_common.png ***!
+  \*********************************************************/
+
+/*!*********************************************************!*\
+  !*** ./resources/ui/2x/effectlevelup/effectlevelup.png ***!
+  \*********************************************************/
+
+/*!*********************************************************!*\
+  !*** ./resources/ui/2x/item_pop_card/item_pop_card.png ***!
+  \*********************************************************/
+
+/*!*********************************************************!*\
+  !*** ./resources/ui/2x/people_action/people_action.png ***!
+  \*********************************************************/
+
+/*!*********************************************************!*\
+  !*** ./resources/ui/2x/pica_roomlist/pica_roomlist.png ***!
+  \*********************************************************/
+
+/*!*********************************************************!*\
+  !*** ./resources/ui/2x/room_decorate/room_decorate.png ***!
+  \*********************************************************/
+
+/*!*********************************************************!*\
+  !*** ./resources/ui/2x/texture/Recast_aims_icon_bg.png ***!
+  \*********************************************************/
+
+/*!*********************************************************!*\
+  !*** ./resources/ui/3x/e_roomupgrade/e_roomupgrade.png ***!
+  \*********************************************************/
+
+/*!*********************************************************!*\
+  !*** ./resources/ui/3x/effect_common/effect_common.png ***!
+  \*********************************************************/
+
+/*!*********************************************************!*\
+  !*** ./resources/ui/3x/effectlevelup/effectlevelup.png ***!
+  \*********************************************************/
+
+/*!*********************************************************!*\
+  !*** ./resources/ui/3x/item_pop_card/item_pop_card.png ***!
+  \*********************************************************/
+
+/*!*********************************************************!*\
+  !*** ./resources/ui/3x/people_action/people_action.png ***!
+  \*********************************************************/
+
+/*!*********************************************************!*\
+  !*** ./resources/ui/3x/pica_roomlist/pica_roomlist.png ***!
+  \*********************************************************/
+
+/*!*********************************************************!*\
+  !*** ./resources/ui/3x/room_decorate/room_decorate.png ***!
+  \*********************************************************/
+
+/*!*********************************************************!*\
+  !*** ./resources/ui/3x/texture/Recast_aims_icon_bg.png ***!
+  \*********************************************************/
+
+/*!*********************************************************!*\
+  !*** ./src/base/game/elementstorage/element.storage.ts ***!
+  \*********************************************************/
+
+/*!*********************************************************!*\
+  !*** ./src/editor/canvas/scene/manager/moss.manager.ts ***!
+  \*********************************************************/
+
+/*!*********************************************************!*\
+  !*** ./src/editor/canvas/scene/manager/wall.manager.ts ***!
+  \*********************************************************/
+
+/*!**********************************************************!*\
+  !*** ./resources/dragonbones/bones_model_head_ske.dbbin ***!
+  \**********************************************************/
+
+/*!**********************************************************!*\
+  !*** ./resources/ui/2x/e_roomupgrade/e_roomupgrade.json ***!
+  \**********************************************************/
+
+/*!**********************************************************!*\
+  !*** ./resources/ui/2x/effect_common/effect_common.json ***!
+  \**********************************************************/
+
+/*!**********************************************************!*\
+  !*** ./resources/ui/2x/effectlevelup/effectlevelup.json ***!
+  \**********************************************************/
+
+/*!**********************************************************!*\
+  !*** ./resources/ui/2x/item_pop_card/item_pop_card.json ***!
+  \**********************************************************/
+
+/*!**********************************************************!*\
+  !*** ./resources/ui/2x/people_action/people_action.json ***!
+  \**********************************************************/
+
+/*!**********************************************************!*\
+  !*** ./resources/ui/2x/pica_roomlist/pica_roomlist.json ***!
+  \**********************************************************/
+
+/*!**********************************************************!*\
+  !*** ./resources/ui/2x/room_decorate/room_decorate.json ***!
+  \**********************************************************/
+
+/*!**********************************************************!*\
+  !*** ./resources/ui/3x/e_roomupgrade/e_roomupgrade.json ***!
+  \**********************************************************/
+
+/*!**********************************************************!*\
+  !*** ./resources/ui/3x/effect_common/effect_common.json ***!
+  \**********************************************************/
+
+/*!**********************************************************!*\
+  !*** ./resources/ui/3x/effectlevelup/effectlevelup.json ***!
+  \**********************************************************/
+
+/*!**********************************************************!*\
+  !*** ./resources/ui/3x/item_pop_card/item_pop_card.json ***!
+  \**********************************************************/
+
+/*!**********************************************************!*\
+  !*** ./resources/ui/3x/people_action/people_action.json ***!
+  \**********************************************************/
+
+/*!**********************************************************!*\
+  !*** ./resources/ui/3x/pica_roomlist/pica_roomlist.json ***!
+  \**********************************************************/
+
+/*!**********************************************************!*\
+  !*** ./resources/ui/3x/room_decorate/room_decorate.json ***!
+  \**********************************************************/
+
+/*!**********************************************************!*\
+  !*** ./src/editor/canvas/avatar/avatar.editor.canvas.ts ***!
+  \**********************************************************/
+
+/*!**********************************************************!*\
+  !*** ./src/editor/canvas/scene/editor.frames.display.ts ***!
+  \**********************************************************/
+
+/*!**********************************************************!*\
+  !*** ./src/editor/canvas/scene/manager/scene.manager.ts ***!
+  \**********************************************************/
+
+/*!***********************************************************!*\
+  !*** ./node_modules/@babel/runtime/helpers/esm/typeof.js ***!
+  \***********************************************************/
+
+/*!***********************************************************!*\
+  !*** ./node_modules/net-socket-packet/dist/src/Packet.js ***!
+  \***********************************************************/
+
+/*!***********************************************************!*\
+  !*** ./resources/ui/2x/friend_message/friend_message.png ***!
+  \***********************************************************/
+
+/*!***********************************************************!*\
+  !*** ./resources/ui/3x/friend_message/friend_message.png ***!
+  \***********************************************************/
+
+/*!***********************************************************!*\
+  !*** ./src/editor/canvas/element/element.editor.grids.ts ***!
+  \***********************************************************/
+
+/*!***********************************************************!*\
+  !*** ./src/editor/canvas/scene/editor.element.display.ts ***!
+  \***********************************************************/
+
+/*!***********************************************************!*\
+  !*** ./src/editor/canvas/scene/manager/skybox.manager.ts ***!
+  \***********************************************************/
+
+/*!************************************************************!*\
+  !*** ./resources/ui/2x/friend_message/friend_message.json ***!
+  \************************************************************/
+
+/*!************************************************************!*\
+  !*** ./resources/ui/2x/pica_navigate/pica_navigate_cn.png ***!
+  \************************************************************/
+
+/*!************************************************************!*\
+  !*** ./resources/ui/2x/pica_navigate/pica_navigate_en.png ***!
+  \************************************************************/
+
+/*!************************************************************!*\
+  !*** ./resources/ui/3x/friend_message/friend_message.json ***!
+  \************************************************************/
+
+/*!************************************************************!*\
+  !*** ./resources/ui/3x/pica_navigate/pica_navigate_cn.png ***!
+  \************************************************************/
+
+/*!************************************************************!*\
+  !*** ./resources/ui/3x/pica_navigate/pica_navigate_en.png ***!
+  \************************************************************/
+
+/*!************************************************************!*\
+  !*** ./src/editor/canvas/element/element.editor.canvas.ts ***!
+  \************************************************************/
+
+/*!************************************************************!*\
+  !*** ./src/editor/canvas/scene/manager/cameras.manager.ts ***!
+  \************************************************************/
+
+/*!************************************************************!*\
+  !*** ./src/editor/canvas/scene/manager/element.manager.ts ***!
+  \************************************************************/
+
+/*!************************************************************!*\
+  !*** ./src/editor/canvas/scene/manager/terrain.manager.ts ***!
+  \************************************************************/
+
+/*!*************************************************************!*\
+  !*** ./node_modules/@babel/runtime/helpers/esm/inherits.js ***!
+  \*************************************************************/
+
+/*!*************************************************************!*\
+  !*** ./node_modules/pathfinding/src/finders/AStarFinder.js ***!
+  \*************************************************************/
+
+/*!*************************************************************!*\
+  !*** ./node_modules/typescript-collections/dist/lib/Bag.js ***!
+  \*************************************************************/
+
+/*!*************************************************************!*\
+  !*** ./node_modules/typescript-collections/dist/lib/Set.js ***!
+  \*************************************************************/
+
+/*!*************************************************************!*\
+  !*** ./resources/dragonbones/library/bones_human01_tex.png ***!
+  \*************************************************************/
+
+/*!*************************************************************!*\
+  !*** ./resources/ui/2x/pica_navigate/pica_navigate_cn.json ***!
+  \*************************************************************/
+
+/*!*************************************************************!*\
+  !*** ./resources/ui/2x/pica_navigate/pica_navigate_en.json ***!
+  \*************************************************************/
+
+/*!*************************************************************!*\
+  !*** ./resources/ui/3x/pica_navigate/pica_navigate_cn.json ***!
+  \*************************************************************/
+
+/*!*************************************************************!*\
+  !*** ./resources/ui/3x/pica_navigate/pica_navigate_en.json ***!
+  \*************************************************************/
+
+/*!*************************************************************!*\
+  !*** ./src/base/render/display/base.dragonbones.display.ts ***!
+  \*************************************************************/
+
+/*!*************************************************************!*\
+  !*** ./src/editor/canvas/element/element.frames.display.ts ***!
+  \*************************************************************/
+
+/*!*************************************************************!*\
+  !*** ./src/editor/canvas/scene/connection/editor.packet.ts ***!
+  \*************************************************************/
+
+/*!**************************************************************!*\
+  !*** ./node_modules/game-capsule/dist/lib/children_index.js ***!
+  \**************************************************************/
+
+/*!**************************************************************!*\
+  !*** ./node_modules/typescript-collections/dist/lib/Heap.js ***!
+  \**************************************************************/
+
+/*!**************************************************************!*\
+  !*** ./node_modules/typescript-collections/dist/lib/util.js ***!
+  \**************************************************************/
+
+/*!**************************************************************!*\
+  !*** ./resources/dragonbones/bones_human01scaleup_ske.dbbin ***!
+  \**************************************************************/
+
+/*!**************************************************************!*\
+  !*** ./resources/ui/2x/explorelog/explore_bg_stripe_top.png ***!
+  \**************************************************************/
+
+/*!**************************************************************!*\
+  !*** ./resources/ui/3x/explorelog/explore_bg_stripe_top.png ***!
+  \**************************************************************/
+
+/*!**************************************************************!*\
+  !*** ./src/editor/canvas/avatar/avatar.editor.dragonbone.ts ***!
+  \**************************************************************/
+
+/*!***************************************************************!*\
+  !*** ./node_modules/maxrects-packer/dist/maxrects-packer.mjs ***!
+  \***************************************************************/
+
+/*!***************************************************************!*\
+  !*** ./node_modules/pathfinding/src/core/DiagonalMovement.js ***!
+  \***************************************************************/
+
+/*!***************************************************************!*\
+  !*** ./node_modules/pathfinding/src/finders/BiAStarFinder.js ***!
+  \***************************************************************/
+
+/*!***************************************************************!*\
+  !*** ./node_modules/pathfinding/src/finders/IDAStarFinder.js ***!
+  \***************************************************************/
+
+/*!***************************************************************!*\
+  !*** ./node_modules/tooqinggamephaser/dist/phaser.js-exposed ***!
+  \***************************************************************/
+
+/*!***************************************************************!*\
+  !*** ./node_modules/typescript-collections/dist/lib/Queue.js ***!
+  \***************************************************************/
+
+/*!***************************************************************!*\
+  !*** ./node_modules/typescript-collections/dist/lib/Stack.js ***!
+  \***************************************************************/
+
+/*!***************************************************************!*\
+  !*** ./node_modules/typescript-collections/dist/lib/index.js ***!
+  \***************************************************************/
+
+/*!***************************************************************!*\
+  !*** ./resources/ui/1x/repair_furniture/repair_furniture.png ***!
+  \***************************************************************/
+
+/*!***************************************************************!*\
+  !*** ./resources/ui/2x/pica_message_box/pica_message_box.png ***!
+  \***************************************************************/
+
+/*!***************************************************************!*\
+  !*** ./resources/ui/2x/repair_furniture/repair_furniture.png ***!
+  \***************************************************************/
+
+/*!***************************************************************!*\
+  !*** ./resources/ui/2x/room_information/room_information.png ***!
+  \***************************************************************/
+
+/*!***************************************************************!*\
+  !*** ./resources/ui/3x/pica_message_box/pica_message_box.png ***!
+  \***************************************************************/
+
+/*!***************************************************************!*\
+  !*** ./resources/ui/3x/repair_furniture/repair_furniture.png ***!
+  \***************************************************************/
+
+/*!***************************************************************!*\
+  !*** ./resources/ui/3x/room_information/room_information.png ***!
+  \***************************************************************/
+
+/*!***************************************************************!*\
+  !*** ./src/editor/canvas/scene/editor.dragonbones.display.ts ***!
+  \***************************************************************/
+
+/*!****************************************************************!*\
+  !*** ./node_modules/@babel/runtime/helpers/esm/createClass.js ***!
+  \****************************************************************/
+
+/*!****************************************************************!*\
+  !*** ./node_modules/game-capsule/dist/lib/configobjects/ui.js ***!
+  \****************************************************************/
+
+/*!****************************************************************!*\
+  !*** ./node_modules/pathfinding/src/finders/DijkstraFinder.js ***!
+  \****************************************************************/
+
+/*!****************************************************************!*\
+  !*** ./node_modules/typescript-collections/dist/lib/BSTree.js ***!
+  \****************************************************************/
+
+/*!****************************************************************!*\
+  !*** ./node_modules/typescript-collections/dist/lib/arrays.js ***!
+  \****************************************************************/
+
+/*!****************************************************************!*\
+  !*** ./resources/ui/1x/repair_furniture/repair_furniture.json ***!
+  \****************************************************************/
+
+/*!****************************************************************!*\
+  !*** ./resources/ui/2x/pica_message_box/pica_message_box.json ***!
+  \****************************************************************/
+
+/*!****************************************************************!*\
+  !*** ./resources/ui/2x/repair_furniture/repair_furniture.json ***!
+  \****************************************************************/
+
+/*!****************************************************************!*\
+  !*** ./resources/ui/2x/room_information/room_information.json ***!
+  \****************************************************************/
+
+/*!****************************************************************!*\
+  !*** ./resources/ui/3x/pica_message_box/pica_message_box.json ***!
+  \****************************************************************/
+
+/*!****************************************************************!*\
+  !*** ./resources/ui/3x/repair_furniture/repair_furniture.json ***!
+  \****************************************************************/
+
+/*!****************************************************************!*\
+  !*** ./resources/ui/3x/room_information/room_information.json ***!
+  \****************************************************************/
+
+/*!****************************************************************!*\
+  !*** ./src/editor/canvas/element/element.editor.animations.ts ***!
+  \****************************************************************/
+
+/*!*****************************************************************!*\
+  !*** ./node_modules/@babel/runtime/helpers/esm/objectSpread.js ***!
+  \*****************************************************************/
+
+/*!*****************************************************************!*\
+  !*** ./node_modules/game-capsule/node_modules/chance/chance.js ***!
+  \*****************************************************************/
+
+/*!*****************************************************************!*\
+  !*** ./node_modules/pathfinding/src/finders/BestFirstFinder.js ***!
+  \*****************************************************************/
+
+/*!*****************************************************************!*\
+  !*** ./node_modules/pathfinding/src/finders/JumpPointFinder.js ***!
+  \*****************************************************************/
+
+/*!*****************************************************************!*\
+  !*** ./resources/ui/2x/explorelog/explore_bg_stripe_middle.png ***!
+  \*****************************************************************/
+
+/*!*****************************************************************!*\
+  !*** ./resources/ui/3x/explorelog/explore_bg_stripe_middle.png ***!
+  \*****************************************************************/
+
+/*!*****************************************************************!*\
+  !*** ./src/editor/canvas/element/dragonbones.editor.display.ts ***!
+  \*****************************************************************/
+
+/*!******************************************************************!*\
+  !*** ./node_modules/game-capsule/dist/lib/configobjects/fork.js ***!
+  \******************************************************************/
+
+/*!******************************************************************!*\
+  !*** ./node_modules/game-capsule/dist/lib/configobjects/func.js ***!
+  \******************************************************************/
+
+/*!******************************************************************!*\
+  !*** ./node_modules/game-capsule/dist/lib/configobjects/game.js ***!
+  \******************************************************************/
+
+/*!******************************************************************!*\
+  !*** ./node_modules/game-capsule/dist/lib/configobjects/shop.js ***!
+  \******************************************************************/
+
+/*!******************************************************************!*\
+  !*** ./node_modules/game-capsule/dist/lib/configobjects/wall.js ***!
+  \******************************************************************/
+
+/*!******************************************************************!*\
+  !*** ./node_modules/net-socket-packet/dist/src/PacketHandler.js ***!
+  \******************************************************************/
+
+/*!******************************************************************!*\
+  !*** ./node_modules/pathfinding/src/finders/BiDijkstraFinder.js ***!
+  \******************************************************************/
+
+/*!******************************************************************!*\
+  !*** ./node_modules/typescript-collections/dist/lib/BSTreeKV.js ***!
+  \******************************************************************/
+
+/*!*******************************************************************!*\
+  !*** ./node_modules/@babel/runtime/helpers/esm/classCallCheck.js ***!
+  \*******************************************************************/
+
+/*!*******************************************************************!*\
+  !*** ./node_modules/@babel/runtime/helpers/esm/defineProperty.js ***!
+  \*******************************************************************/
+
+/*!*******************************************************************!*\
+  !*** ./node_modules/@babel/runtime/helpers/esm/getPrototypeOf.js ***!
+  \*******************************************************************/
+
+/*!*******************************************************************!*\
+  !*** ./node_modules/@babel/runtime/helpers/esm/setPrototypeOf.js ***!
+  \*******************************************************************/
+
+/*!*******************************************************************!*\
+  !*** ./node_modules/game-capsule/dist/lib/configobjects/event.js ***!
+  \*******************************************************************/
+
+/*!*******************************************************************!*\
+  !*** ./node_modules/game-capsule/dist/lib/configobjects/index.js ***!
+  \*******************************************************************/
+
+/*!*******************************************************************!*\
+  !*** ./node_modules/game-capsule/dist/lib/configobjects/scene.js ***!
+  \*******************************************************************/
+
+/*!*******************************************************************!*\
+  !*** ./node_modules/game-capsule/dist/lib/configobjects/timer.js ***!
+  \*******************************************************************/
+
+/*!*******************************************************************!*\
+  !*** ./node_modules/pathfinding/src/finders/BiBestFirstFinder.js ***!
+  \*******************************************************************/
+
+/*!********************************************************************!*\
+  !*** ./node_modules/game-capsule/dist/lib/configobjects/access.js ***!
+  \********************************************************************/
+
+/*!********************************************************************!*\
+  !*** ./node_modules/game-capsule/dist/lib/configobjects/avatar.js ***!
+  \********************************************************************/
+
+/*!********************************************************************!*\
+  !*** ./node_modules/pathfinding/src/finders/BreadthFirstFinder.js ***!
+  \********************************************************************/
+
+/*!********************************************************************!*\
+  !*** ./node_modules/typescript-collections/dist/lib/Dictionary.js ***!
+  \********************************************************************/
+
+/*!********************************************************************!*\
+  !*** ./node_modules/typescript-collections/dist/lib/LinkedList.js ***!
+  \********************************************************************/
+
+/*!*********************************************************************!*\
+  !*** ./node_modules/game-capsule/dist/lib/config_object_factory.js ***!
+  \*********************************************************************/
+
+/*!*********************************************************************!*\
+  !*** ./node_modules/game-capsule/dist/lib/configobjects/display.js ***!
+  \*********************************************************************/
+
+/*!*********************************************************************!*\
+  !*** ./node_modules/game-capsule/dist/lib/configobjects/element.js ***!
+  \*********************************************************************/
+
+/*!*********************************************************************!*\
+  !*** ./node_modules/game-capsule/dist/lib/configobjects/movable.js ***!
+  \*********************************************************************/
+
+/*!*********************************************************************!*\
+  !*** ./node_modules/game-capsule/dist/lib/configobjects/package.js ***!
+  \*********************************************************************/
+
+/*!*********************************************************************!*\
+  !*** ./node_modules/game-capsule/dist/lib/configobjects/scenery.js ***!
+  \*********************************************************************/
+
+/*!*********************************************************************!*\
+  !*** ./node_modules/game-capsule/dist/lib/configobjects/terrain.js ***!
+  \*********************************************************************/
+
+/*!*********************************************************************!*\
+  !*** ./node_modules/node-libs-browser/node_modules/buffer/index.js ***!
+  \*********************************************************************/
+
+/*!*********************************************************************!*\
+  !*** ./node_modules/pathfinding/src/finders/JumpPointFinderBase.js ***!
+  \*********************************************************************/
+
+/*!**********************************************************************!*\
+  !*** ./node_modules/game-capsule/dist/lib/configobjects/location.js ***!
+  \**********************************************************************/
+
+/*!**********************************************************************!*\
+  !*** ./node_modules/game-capsule/dist/lib/configobjects/metadata.js ***!
+  \**********************************************************************/
+
+/*!**********************************************************************!*\
+  !*** ./node_modules/pathfinding/src/finders/BiBreadthFirstFinder.js ***!
+  \**********************************************************************/
+
+/*!**********************************************************************!*\
+  !*** ./src/editor/canvas/element/element.editor.resource.manager.ts ***!
+  \**********************************************************************/
+
+/*!***********************************************************************!*\
+  !*** ./node_modules/game-capsule/dist/lib/configobjects/attribute.js ***!
+  \***********************************************************************/
+
+/*!***********************************************************************!*\
+  !*** ./node_modules/game-capsule/dist/lib/configobjects/character.js ***!
+  \***********************************************************************/
+
+/*!***********************************************************************!*\
+  !*** ./node_modules/typescript-collections/dist/lib/MultiRootTree.js ***!
+  \***********************************************************************/
+
+/*!***********************************************************************!*\
+  !*** ./node_modules/typescript-collections/dist/lib/PriorityQueue.js ***!
+  \***********************************************************************/
+
+/*!***********************************************************************!*\
+  !*** ./resources/ui/3x/e_roomupgrade/room_decorate/room_decorate.png ***!
+  \***********************************************************************/
+
+/*!************************************************************************!*\
+  !*** ./node_modules/game-capsule/dist/lib/configobjects/animations.js ***!
+  \************************************************************************/
+
+/*!************************************************************************!*\
+  !*** ./node_modules/game-capsule/dist/lib/configobjects/spawnpoint.js ***!
+  \************************************************************************/
+
+/*!************************************************************************!*\
+  !*** ./node_modules/i18next-xhr-backend/dist/esm/i18nextXHRBackend.js ***!
+  \************************************************************************/
+
+/*!************************************************************************!*\
+  !*** ./node_modules/pathfinding/src/finders/JPFNeverMoveDiagonally.js ***!
+  \************************************************************************/
+
+/*!************************************************************************!*\
+  !*** ./resources/ui/3x/e_roomupgrade/room_decorate/room_decorate.json ***!
+  \************************************************************************/
+
+/*!*************************************************************************!*\
+  !*** ./node_modules/pathfinding/src/finders/JPFAlwaysMoveDiagonally.js ***!
+  \*************************************************************************/
+
+/*!*************************************************************************!*\
+  !*** ./node_modules/typescript-collections/dist/lib/MultiDictionary.js ***!
+  \*************************************************************************/
+
+/*!**************************************************************************!*\
+  !*** ./node_modules/@babel/runtime/helpers/esm/assertThisInitialized.js ***!
+  \**************************************************************************/
+
+/*!**************************************************************************!*\
+  !*** ./node_modules/typescript-collections/dist/lib/LinkedDictionary.js ***!
+  \**************************************************************************/
+
+/*!***************************************************************************!*\
+  !*** ./node_modules/game-capsule/dist/lib/configobjects/config_object.js ***!
+  \***************************************************************************/
+
+/*!***************************************************************************!*\
+  !*** ./node_modules/game-capsule/dist/lib/configobjects/mount_sprites.js ***!
+  \***************************************************************************/
+
+/*!***************************************************************************!*\
+  !*** ./node_modules/typescript-collections/dist/lib/FactoryDictionary.js ***!
+  \***************************************************************************/
+
+/*!******************************************************************************!*\
+  !*** ./node_modules/@babel/runtime/helpers/esm/possibleConstructorReturn.js ***!
+  \******************************************************************************/
+
+/*!********************************************************************************!*\
+  !*** ./node_modules/pathfinding/src/finders/JPFMoveDiagonallyIfNoObstacles.js ***!
+  \********************************************************************************/
+
+/*!**************************************************************************************!*\
+  !*** ./node_modules/pathfinding/src/finders/JPFMoveDiagonallyIfAtMostOneObstacle.js ***!
+  \**************************************************************************************/
+
+/*!**************************************************************************************************!*\
+  !*** ./node_modules/i18next-browser-languagedetector/dist/esm/i18nextBrowserLanguageDetector.js ***!
+  \**************************************************************************************************/
