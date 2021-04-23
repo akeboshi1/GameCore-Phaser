@@ -139,4 +139,8 @@ export class EventType {
 
     public static RETURN_DRESS_AVATAR_IDS = "RETURN_DRESS_AVATAR_IDS";// 返回当前装备的装扮
     public static RETURN_UPDATE_RED_SYSTEM = "RETURN_UPDATE_RED_SYSTEM";// 红点系统协议更新
+    /**
+     * 发送新的Proto对接协议
+     */
+    public static SEND_NEW_PROTO_MESSAGE = "SEND_NEW_PROTO_MESSAGE";
 }

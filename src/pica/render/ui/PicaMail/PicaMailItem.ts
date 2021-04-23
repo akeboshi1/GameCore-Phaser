@@ -121,7 +121,7 @@ export class PicaMailItem extends Phaser.GameObjects.Container {
         return this.mIsExtend;
     }
     private onMailButtonHandler() {
-        if (this.mailData && this.mailData.attachTaken) this.send.runWith(["getrewards", this.mailData.id]);
+        if (this.mailData && !this.mailData.attachTaken) this.send.runWith(["getrewards", this.mailData.id]);
     }
     private openExtend() {
         if (!this.mExtend) {

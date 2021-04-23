@@ -92,4 +92,5 @@ export class ModuleName {
     public static PICASCENENAVIGATION_NAME = "PicaSceneNavigation";
     public static PICAMAIL_NAME = "PicaMail";
     public static PICACOOKING_NAME = "PicaCooking";
+    public static PICAMARQUEE_NAME = "PicaMarquee";
 }

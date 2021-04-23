@@ -1,4 +1,4 @@
-import { UiManager, LabelInput } from "gamecoreRender";
+import { UiManager, LabelInput, ToggleButton, CheckBoxToggle } from "gamecoreRender";
 import { BBCodeText, Button, ClickEvent, TextArea } from "apowophaserui";
 import { EventType, ModuleName } from "structure";
 import { Font, Handler, i18n } from "utils";
@@ -18,6 +18,7 @@ export class BottomPanel extends PicaBasePanel {
     private scaleRatio: number;
     private background: Phaser.GameObjects.Graphics;
     private redMap: Map<number, Phaser.GameObjects.Image> = new Map();
+    private trumpetCount: number = 0;
     constructor(uiManager: UiManager) {
         super(uiManager);
         this.scaleRatio = this.scale;
@@ -43,7 +44,11 @@ export class BottomPanel extends PicaBasePanel {
 
         this.updateOutputLayout();
     }
-
+    public setTrumpetState(count: number) {
+        this.trumpetCount = count;
+        if (!this.mInitialized) return;
+        this.mInput.setTrumpetState(count);
+    }
     public updateUIState(datas: any) {
         if (this.mInitialized) return;
         this.mNavigate.updateUIState(datas);
@@ -52,6 +57,7 @@ export class BottomPanel extends PicaBasePanel {
         this.mInput.addListen();
         this.mInput.on("enter", this.onSendMsgHandler, this);
         this.mInput.on("pointerScene", this.onPointerSceneHandler, this);
+        this.mInput.on("trumpet", this.onTrumpetHandler, this);
         this.resizeColtroll.addListen();
         this.resizeColtroll.on("toggleSize", this.onToggleSizeHandler, this);
     }
@@ -61,6 +67,7 @@ export class BottomPanel extends PicaBasePanel {
         this.mInput.removeListen();
         this.mInput.off("enter", this.onSendMsgHandler, this);
         this.mInput.off("pointerScene", this.onPointerSceneHandler, this);
+        this.mInput.off("trumpet", this.onTrumpetHandler, this);
         this.resizeColtroll.removeListen();
         this.resizeColtroll.off("toggleSize", this.onToggleSizeHandler, this);
     }
@@ -126,6 +133,7 @@ export class BottomPanel extends PicaBasePanel {
     protected onShow() {
         super.onShow();
         if (this.tempDatas) this.setRedsState(this.tempDatas);
+        if (this.trumpetCount !== undefined) this.setTrumpetState(this.trumpetCount);
     }
 
     protected onHide() {
@@ -167,7 +175,7 @@ export class BottomPanel extends PicaBasePanel {
             });
     }
 
-    private sendChat(val: string) {
+    private sendChat(val: string, isTrumpet: boolean) {
         if (!val) {
             return;
         }
@@ -176,8 +184,8 @@ export class BottomPanel extends PicaBasePanel {
         mediator.sendChat(val);
     }
 
-    private onSendMsgHandler(val: string) {
-        this.sendChat(val);
+    private onSendMsgHandler(val: string, isTrumpet: boolean) {
+        this.sendChat(val, isTrumpet);
     }
 
     private onNavigateHandler(tag: string, data: any) {
@@ -217,6 +225,10 @@ export class BottomPanel extends PicaBasePanel {
             }
         }
         this.mInput.blurInput();
+    }
+
+    private onTrumpetHandler(enable: boolean) {
+        this.render.renderEmitter(ModuleName.BOTTOM + "_trumpet", enable);
     }
 
     private updateOutputLayout() {
@@ -350,7 +362,9 @@ class InputContainer extends Phaser.GameObjects.Container {
     private background: Phaser.GameObjects.Graphics;
     private inputText: LabelInput;
     private emoji: Phaser.GameObjects.Image;
+    private trumpet: ToggleButton;
     private mFocusing: boolean = false;
+    private trumpetCount: number = 0;
     constructor(scene: Phaser.Scene, key: string, private dpr: number, scale: number) {
         super(scene);
         this.scale = scale;
@@ -361,6 +375,10 @@ class InputContainer extends Phaser.GameObjects.Container {
             frame: "home_face",
         });
         this.emoji.x = 12.67 * dpr + this.emoji.width * 0.5;
+        this.trumpet = new CheckBoxToggle(scene, 32 * dpr, 32 * dpr, UIAtlasName.iconcommon, "bulletin_horn_close", "bulletin_horn_opn", dpr);
+        this.trumpet.x = this.emoji.x;
+        this.trumpet.on(ClickEvent.Tap, this.onTrumpetHandler, this);
+        this.trumpet.isOn = false;
         const w = this.scene.cameras.main.width;
         this.inputText = new LabelInput(this.scene, {
             width: w - 46 * this.dpr,
@@ -369,7 +387,8 @@ class InputContainer extends Phaser.GameObjects.Container {
             fontSize: 11 * this.dpr + "px",
             color: "#ffffff",
         }).setOrigin(0, 0.5).setAutoBlur(false);
-        this.add([this.background, this.emoji, this.inputText]);
+        this.add([this.background, this.emoji, this.trumpet, this.inputText]);
+        this.emoji.visible = false;
     }
 
     public addListen() {
@@ -392,7 +411,7 @@ class InputContainer extends Phaser.GameObjects.Container {
         this.inputText.setSize(this.inputText.width, this.height);
 
         this.emoji.y = this.height * 0.5;
-
+        this.trumpet.y = this.emoji.y;
         this.background.clear();
         this.background.fillStyle(0x000000, 0.6);
         this.background.fillRect(0, 0, w, this.height);
@@ -402,6 +421,12 @@ class InputContainer extends Phaser.GameObjects.Container {
         this.inputText.setText(text);
     }
 
+    public setTrumpetState(count: number) {
+        this.trumpetCount = count;
+        const enable = count > 0;
+        this.trumpet.isOn = enable;
+        this.trumpet.enable = enable;
+    }
     public blurInput() {
         this.inputText.setBlur();
     }
@@ -416,8 +441,12 @@ class InputContainer extends Phaser.GameObjects.Container {
     }
 
     private onEnterHandler(text: string) {
-        this.emit("enter", text);
+        this.emit("enter", text, this.trumpet.isOn);
         this.inputText.setText("");
+        if (this.trumpet.isOn) {
+            this.trumpetCount--;
+            this.setTrumpetState(this.trumpetCount);
+        }
     }
 
     private onInputBlurHandler() {
@@ -435,6 +464,9 @@ class InputContainer extends Phaser.GameObjects.Container {
         this.emit("pointerScene", currentlyOver);
         this.inputText.setBlur();
         this.mFocusing = false;
+    }
+
+    private onTrumpetHandler() {
     }
 }
 
