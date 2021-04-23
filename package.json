@@ -2,7 +2,7 @@
   "name": "game-core",
   "version": "1.0.631",
   "exports": {
-    "./": "./release/js/index.js",
+    ".": "./release/js/index.js",
     "./renderPeer": "./release/js/renderPeer.js",
     "./mainPeer": "./release/js/mainWorker_worker.js",
     "./physicalPeer": "./release/js/physicalWorker_worker.js",
