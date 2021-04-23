@@ -1,6 +1,5 @@
 /.wing/* 
 /bin-debug/*
-/bin-release/*
 /node_modules/*
 /builds/*
 /dist/*
@@ -20,7 +19,6 @@
 .idea/**/libraries
 .idea/workspace.xml
 cmake-build-debug/
-cmake-build-release/
 .idea/**/mongoSettings.xml
 *.iws
 out/
@@ -221,7 +219,6 @@ coverage
 .grunt
 bower_components
 .lock-wscript
-build/Release
 node_modules/
 jspm_packages/
 .npm
@@ -247,5 +244,4 @@ webpack.config.js
 yargs.d.ts
 .gitignore
 webpack.config.js
-/release/
 *.DS_Store
