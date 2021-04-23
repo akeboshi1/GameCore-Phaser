@@ -118,6 +118,9 @@ export class DisplayObjectPool {
                     this.sceneEditor.mossManager.deleteMosses([ele.id]);
                 } else {
                     this.sceneEditor.elementManager.deleteElements([ele.id]);
+                    if (ele.getMountIds) {
+                        this.tryDeleteMountSprites(ele.getMountIds());
+                    }
                 }
             }
         }
