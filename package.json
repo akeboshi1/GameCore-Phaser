@@ -26,7 +26,7 @@
         "release/types/src/base/render"
       ],
       "baseGame": [
-        "release/types/src/base/model"
+        "release/types/src/base/game"
       ],
       "utils": [
         "release/types/src/utils"
