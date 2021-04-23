@@ -26,6 +26,9 @@
       "gamecore": [
         "src/gamecore/game/index"
       ],
+      "physical": [
+        "src/gamecore/services/index"
+      ],
       "utils": [
         "src/utils/index"
       ],

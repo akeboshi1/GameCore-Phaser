@@ -20,7 +20,7 @@
         "release/types/src/gamecore/render"
       ],
       "physicalPeer": [
-        "release/types/src/services"
+        "release/types/src/gamecore/services"
       ],
       "baseRender": [
         "release/types/src/base/render"
