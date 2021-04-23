@@ -147,6 +147,9 @@ export class HttpService {
         return this.post("update_blob", { file: url });
     }
     uploadDBTexture(key: string, url: string, json: string) {
+        Logger.getInstance().debug("#uploadDBTexture url: ", url);
+        Logger.getInstance().debug("#uploadDBTexture json: ", json);
+
         const path = "user_avatar/texture/";
         const imgFullName = path + key + ".png";
         const jsonFullName = path + key + ".json";
@@ -178,7 +181,7 @@ export class HttpService {
             method: "POST",
             headers,
         };
-        Logger.getInstance().debug("#post ", `${this.api_root}${uri}`, data);
+        // Logger.getInstance().debug("#post ", `${this.api_root}${uri}`, data);
         return fetch(`${this.api_root}${uri}`, data).then((response) => response.json());
     }
 

@@ -347,6 +347,15 @@ export class MainPeer extends RPCPeer {
     }
 
     @Export()
+    public getDecorateSelectedElementID() {
+        if (!this.game.roomManager) return -1;
+        if (!this.game.roomManager.currentRoom) return -1;
+        if (!this.game.roomManager.currentRoom.isDecorating) return -1;
+        if (!this.game.roomManager.currentRoom.decorateManager) return -1;
+        return this.game.roomManager.currentRoom.decorateManager.selectedID;
+    }
+
+    @Export()
     public decorateSelectElement(id: number) {
         if (!this.game.roomManager) return;
         if (!this.game.roomManager.currentRoom) return;

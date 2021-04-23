@@ -315,7 +315,7 @@ export class CharacterInfoPanel extends BasePanel {
             this.avatar.load({
                 id: 0,
                 avatar: temp.avatar,
-            });
+            }, undefined, false);
         }
         this.titleName.setText(this.getRichLabel(i18n.t("player_info.player_title")) + spaceOffset + current_title);
         const likeBtnLabel: string = data.like ? data.like + "" : "???";

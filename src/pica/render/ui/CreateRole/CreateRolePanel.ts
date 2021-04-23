@@ -308,7 +308,7 @@ export class CreateRolePanel extends BasePanel {
     this.dragonbones.load({
       id: 0,
       avatar: this.avatars[this.mCurPageNum]
-    });
+    }, undefined, false);
     this.dragonbones.startLoad();
   }
 

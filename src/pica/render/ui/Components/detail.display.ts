@@ -128,7 +128,7 @@ export class DetailDisplay extends Phaser.GameObjects.Container {
     //   this.mDragonboneDisplay.play({ name: "idle", flip: false });
     // });
     const dbModel = { id: 0, avatar: content.avatar };
-    this.mDragonboneDisplay.load(dbModel);
+    this.mDragonboneDisplay.load(dbModel, undefined, false);
     this.mDragonboneDisplay.scale = scale;
     this.scale = 1;
   }
