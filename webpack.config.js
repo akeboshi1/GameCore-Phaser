@@ -81,13 +81,13 @@ const gameConfig = Object.assign({}, commonConfig, {
         ],
     },
     entry: {
-        index: path.join(__dirname, "./index.ts"),
-        baseGame: path.join(__dirname, "./src/base/game/index.ts"),
-        baseRender: path.join(__dirname, "./src/base/render/index.ts"),
-        editor: path.join(__dirname, "./src/editor/index.ts"),
-        utils: path.join(__dirname, "./src/utils/index.ts"),
-        structure: path.join(__dirname, "./src/structure/index.ts"),
-        renderPeer: path.join(__dirname, "./src/gamecore/render/index.ts"),
+        index: "./src/index.ts",
+        baseGame: "./src/base/game/index.ts",
+        baseRender: "./src/base/render/index.ts",
+        editor: "./src/editor/index.ts",
+        utils: "./src/utils/index.ts",
+        structure: "./src/structure/index.ts",
+        renderPeer: "./src/gamecore/render/index.ts",
     },
     output: {
         // This is required so workers are known where to be loaded from
@@ -143,8 +143,8 @@ const workerConfig = Object.assign({}, commonConfig, {
         ],
     },
     entry: {
-        mainWorker: path.join(__dirname, "./src/gamecore/game/main.peer.ts"),
-        physicalWorker: path.join(__dirname, "./src/gamecore/services/physical.worker.ts")
+        mainWorker: "./src/gamecore/game/main.peer.ts",
+        physicalWorker: "./src/gamecore/services/physical.worker.ts"
     },
     output: {
         // This is required so workers are known where to be loaded from
