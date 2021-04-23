@@ -1,4 +1,4 @@
-import { ConnectionService } from "src/structure/net";
+import { ConnectionService } from "structure";
 import { PacketHandler } from "net-socket-packet";
 import { Game } from "../game";
 

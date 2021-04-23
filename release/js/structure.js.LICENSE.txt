@@ -78,6 +78,8 @@
 
 /*! exports provided: SortRectangle */
 
+/*! exports provided: TimeUtils */
+
 /*! exports provided: TimerCountDown */
 
 /*! exports provided: ValueResolver */
@@ -220,6 +222,10 @@
 
 /*!*************************************!*\
   !*** ./src/structure/size.chart.ts ***!
+  \*************************************/
+
+/*!*************************************!*\
+  !*** ./src/structure/time.utils.ts ***!
   \*************************************/
 
 /*!**************************************!*\

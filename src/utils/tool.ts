@@ -24,7 +24,7 @@ export class Tool {
      * @param fromScene 当前所在scene
      * @param pos 需要转换去scene上的position
      */
-    public static getPosByScenes(fromScene, pos: any): any {
+    public static getPosByScenes(fromScene, pos): any {
         const camera = fromScene.cameras.main;
         const px = pos.x - camera.scrollX;
         const py = pos.y - camera.scrollY;

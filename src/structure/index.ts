@@ -51,3 +51,4 @@ export * from "./LayerName";
 export * from "./atlas";
 export * from "./net";
 export * from "./promise";
+export * from "./time.utils";

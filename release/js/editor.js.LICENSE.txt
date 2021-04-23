@@ -198,6 +198,8 @@
 
 /*! exports provided: SurfaceLayer */
 
+/*! exports provided: TimeUtils */
+
 /*! exports provided: TimerCountDown */
 
 /*! exports provided: Tool */
@@ -510,6 +512,10 @@
 
 /*!*************************************!*\
   !*** ./src/structure/size.chart.ts ***!
+  \*************************************/
+
+/*!*************************************!*\
+  !*** ./src/structure/time.utils.ts ***!
   \*************************************/
 
 /*!*************************************!*\
