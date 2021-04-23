@@ -1,7 +1,10 @@
-var gameCore = {
-    editor: require("./editor.js"),
-    mainWorker: require("./mainWorker_worker.js"),
-    physicalWorker: require("./physicalWorker_worker.js"),
-    render: require("./renderPeer.js"),
+var base = {
+    mainPeer: require("./mainWorker_worker.js"),
+    physicalPeer: require("./physicalWorker_worker.js"),
+    renderPeer: require("./renderPeer.js"),
+    utils: require("./utils.js"),
+    structure: require("./structure.js"),
+    baseRender: require("./baseRender.js"),
+    baseGame: require("./baseGame.js")
 }
-module.exports = gameCore
+module.exports = base;

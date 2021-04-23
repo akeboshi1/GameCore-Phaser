@@ -1,4 +1,5 @@
 /// <reference types="tooqinggamephaser" />
+import "dragonBones";
 import { RPCPeer } from "webworker-rpc";
 import { PBpacket } from "net-socket-packet";
 import { op_client } from "pixelpai_proto";

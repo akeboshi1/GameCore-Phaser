@@ -18,7 +18,7 @@ const commonConfig = {
         alias: {
             phaser: phaser,
             webworkerrpc: webworkerrpc,
-            dragonBones: path.join(__dirname, "./lib/dragonBones/dragonBones.min.js"),
+            dragonBones: path.join(__dirname, "./lib/dragonBones/dragonBones.js"),
             gamecore: path.join(__dirname, "./src/gamecore/game"),
             gamecoreRender: path.join(__dirname, "./src/gamecore/render"),
             physicalWorker: path.join(__dirname, "./src/gamecore/services"),
@@ -81,6 +81,7 @@ const gameConfig = Object.assign({}, commonConfig, {
         ],
     },
     entry: {
+        index: path.join(__dirname, "./index.ts"),
         baseGame: path.join(__dirname, "./src/base/game/index.ts"),
         baseRender: path.join(__dirname, "./src/base/render/index.ts"),
         editor: path.join(__dirname, "./src/editor/index.ts"),
