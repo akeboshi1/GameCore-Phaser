@@ -1,4 +1,4 @@
-import { SkyBoxScene, BaseSceneManager } from "baserender";
+import { SkyBoxScene, BaseSceneManager } from "baseRender";
 import { SceneEditorCanvas } from "../scene.editor.canvas";
 
 export class EditorSceneManger extends BaseSceneManager {

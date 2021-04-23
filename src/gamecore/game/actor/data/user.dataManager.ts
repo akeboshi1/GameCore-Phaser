@@ -1,8 +1,8 @@
-import { ConnectionService } from "src/structure/net";
+import { ConnectionService } from "structure";
 import { PacketHandler, PBpacket } from "net-socket-packet";
 import { op_client, op_virtual_world, op_pkt_def } from "pixelpai_proto";
 import { Game } from "../../game";
-import { EventType, ModuleName } from "structure";
+import { EventType } from "structure";
 import { PlayerBag } from "./player.bag";
 import { PlayerProperty } from "./player.property";
 import { SceneDataManager } from "../../data.manager/scene.data.manager";

@@ -6,11 +6,10 @@ import { User } from "../../actor/user";
 import { IRoomService, Room } from "../room";
 import { PlayerModel } from "./player.model";
 import { AvatarSuitType, EventType, ISprite, MessageType, PlayerState, Logger, LogicPos } from "structure";
-import { ConnectionService } from "../../../../../structure/net";
+import { ConnectionService } from "structure";
 import { IElement } from "../element/element";
-import { Sprite } from "src/base/model";
+import { Sprite } from "baseGame";
 import NodeType = op_def.NodeType;
-import { PlayerElementAction } from "../../game";
 
 export class PlayerManager extends PacketHandler implements IElementManager {
     public hasAddComplete: boolean = false;
@@ -431,8 +430,8 @@ export class PlayerManager extends PacketHandler implements IElementManager {
     private checkPlayerAction(id: number) {
         if (this.has(id) && id !== this.mRoom.game.user.id) {
             const ele = this.get(id);
-            const action = new PlayerElementAction(this.mRoom.game, ele.model);
-            action.executeAction();
+            // const action = new PlayerElementAction(this.mRoom.game, ele.model);
+            // action.executeAction();
         }
     }
 

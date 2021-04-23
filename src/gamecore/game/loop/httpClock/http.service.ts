@@ -1,5 +1,5 @@
 import { Game } from "../../game";
-import {Logger} from "utils";
+import { Logger } from "structure";
 
 export class HttpService {
     private api_root: string;
@@ -152,8 +152,8 @@ export class HttpService {
         const jsonFullName = path + key + ".json";
 
         return this.post("file_upload", { filename: jsonFullName, blob: json, type: "json" })
-            .then( () => {
-                return this.post("file_upload", { filename: imgFullName, blob: url, type: "png"});
+            .then(() => {
+                return this.post("file_upload", { filename: imgFullName, blob: url, type: "png" });
             });
     }
 

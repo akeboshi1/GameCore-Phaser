@@ -13,8 +13,8 @@ import { EditorMossManager } from "./manager/moss.manager";
 import { EditorElementManager } from "./manager/element.manager";
 import { EditorCamerasManager } from "./manager/cameras.manager";
 import { EditorSkyboxManager } from "./manager/skybox.manager";
-import { BaseLayer, GroundLayer, IRender, LayerManager, SurfaceLayer } from "baserender";
-import { ElementStorage, Sprite } from "basemodel";
+import { BaseLayer, GroundLayer, IRender, LayerManager, SurfaceLayer } from "baseRender";
+import { ElementStorage, Sprite } from "baseGame";
 import * as protos from "pixelpai_proto";
 import { PBpacket } from "net-socket-packet";
 import { EditorSceneManger } from "./manager/scene.manager";
@@ -543,7 +543,7 @@ export class SceneEditorCanvas extends EditorCanvas implements IRender {
     }
 
     private addElement(element: ElementNode) {
-        const display = this.factory.createFramesDisplay(element);
+        const display: any = this.factory.createFramesDisplay(element);
         const loc = element.location;
         display.setPosition(loc.x, loc.y);
         display.name = element.name;

@@ -2,7 +2,7 @@ import { op_client } from "pixelpai_proto";
 import { Game } from "../../game";
 import { Helpers } from "game-capsule";
 import { AnimationModel } from "structure";
-import { DragonbonesModel, FramesModel } from "basemodel";
+import { DragonbonesModel, FramesModel } from "baseGame";
 export class Effect {
     /**
      * 同类型显示对象共用一个。用于同步数据

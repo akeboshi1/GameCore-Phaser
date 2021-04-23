@@ -18,15 +18,15 @@ const commonConfig = {
         alias: {
             phaser: phaser,
             webworkerrpc: webworkerrpc,
-            dragonBones: path.join(__dirname, "./lib/dragonBones/dragonBones.js"),
-            gamecore: path.join(__dirname, "./src/game"),
-            gamecoreRender: path.join(__dirname, "./src/render"),
+            dragonBones: path.join(__dirname, "./lib/dragonBones/dragonBones.min.js"),
+            gamecore: path.join(__dirname, "./src/gamecore/game"),
+            gamecoreRender: path.join(__dirname, "./src/gamecore/render"),
             structure: path.join(__dirname, "./src/structure"),
             utils: path.join(__dirname, "./src/utils"),
             editorCanvas: path.join(__dirname, "./src/editor"),
             display: path.join(__dirname, "./src/base/display"),
             baseRender: path.join(__dirname, "./src/base/render"),
-            baseModel: path.join(__dirname, "./src/base/model"),
+            baseGame: path.join(__dirname, "./src/base/game"),
             resources: path.join(__dirname, "./resources")
         },
     },
@@ -80,10 +80,12 @@ const gameConfig = Object.assign({}, commonConfig, {
         ],
     },
     entry: {
+        baseGame: path.join(__dirname, "./src/base/game/index.ts"),
+        baseRender: path.join(__dirname, "./src/base/render/index.ts"),
         editor: path.join(__dirname, "./src/editor/index.ts"),
         utils: path.join(__dirname, "./src/utils/index.ts"),
         structure: path.join(__dirname, "./src/structure/index.ts"),
-        renderPeer: path.join(__dirname, "./src/render/index.ts"),
+        renderPeer: path.join(__dirname, "./src/gamecore/render/index.ts"),
     },
     output: {
         // This is required so workers are known where to be loaded from
@@ -139,8 +141,8 @@ const workerConfig = Object.assign({}, commonConfig, {
         ],
     },
     entry: {
-        mainWorker: path.join(__dirname, "./src/game/main.peer.ts"),
-        physicalWorker: path.join(__dirname, "./src/services/physical.worker.ts")
+        mainWorker: path.join(__dirname, "./src/gamecore/game/main.peer.ts"),
+        physicalWorker: path.join(__dirname, "./src/gamecore/services/physical.worker.ts")
     },
     output: {
         // This is required so workers are known where to be loaded from

@@ -1,5 +1,5 @@
-import { Sprite } from "basemodel";
-import { BaseDragonbonesDisplay, ReferenceArea } from "baserender";
+import { Sprite } from "baseGame";
+import { BaseDragonbonesDisplay, ReferenceArea } from "baseRender";
 import { LayerEnum } from "game-capsule";
 import { IDragonbonesModel } from "structure";
 import { EditorTopDisplay } from "./top.display";

@@ -42,7 +42,7 @@ const config = {
             picaStructure: path.join(__dirname, "./src/pica/structure"),
             editorCanvas: path.join(__dirname, "./src/editor"),
             baseRender: path.join(__dirname, "./src/base/render"),
-            baseModel: path.join(__dirname, "./src/base/model")
+            baseGame: path.join(__dirname, "./src/base/model")
         },
     },
     optimization: {

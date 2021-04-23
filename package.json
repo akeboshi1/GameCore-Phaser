@@ -1,8 +1,41 @@
 {
   "name": "game-core",
   "version": "1.0.631",
-  "main": "js/renderPeer.js",
-  "types": "types/index.d.ts",
+  "exports": {
+    "/render": "./release/js/renderPeer.js",
+    "/game": "./release/js/mainWorker_worker.js",
+    "/physical": "./release/js/physicalWorker_worker.js",
+    "/utils": "./release/js/utils.js",
+    "/structure": "./release/js/structure.js",
+    "/baseRender": "./release/js/baseRender.js",
+    "/baseGame": "./release/js/baseGame.js"
+  },
+  "types": "release/types/index.d.ts",
+  "typesVersions": {
+    "*": {
+      "renderPeer": [
+        "release/types/src/gamecore/game"
+      ],
+      "mainPeer": [
+        "release/types/src/gamecore/render"
+      ],
+      "physicalPeer": [
+        "release/types/src/services"
+      ],
+      "baseRender": [
+        "release/types/src/base/render"
+      ],
+      "baseGame": [
+        "release/types/src/base/model"
+      ],
+      "utils": [
+        "release/types/src/utils"
+      ],
+      "structure": [
+        "release/types/src/structure"
+      ]
+    }
+  },
   "scripts": {
     "dev": "webpack-dev-server --mode development",
     "up": "yarn upgrade game-capsule && yarn upgrade webworker-rpc && yarn upgrade tooqinggamephaser && yarn upgrade tooqingmatter-js && yarn upgrade sort-display-object && yarn upgrade net-socket-packet",

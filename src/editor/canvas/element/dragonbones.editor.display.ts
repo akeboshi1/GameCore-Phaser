@@ -1,5 +1,5 @@
-import { DragonbonesModel } from "basemodel";
-import { BaseDragonbonesDisplay } from "baserender";
+import { DragonbonesModel } from "baseGame";
+import { BaseDragonbonesDisplay } from "baseRender";
 import { Logger } from "structure";
 
 export class DragonbonesEditorDisplay extends BaseDragonbonesDisplay {

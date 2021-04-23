@@ -2,7 +2,7 @@ import { op_client, op_def } from "pixelpai_proto";
 import { IRoomService, Room } from "./room";
 import { PacketHandler, PBpacket } from "net-socket-packet";
 import { Game } from "../game";
-import { ConnectionService } from "../../../../structure/net";
+import { ConnectionService } from "structure";
 import { Lite } from "game-capsule";
 import { EventType, GameState, Logger } from "structure";
 

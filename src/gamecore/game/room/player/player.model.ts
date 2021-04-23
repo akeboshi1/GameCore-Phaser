@@ -1,4 +1,4 @@
-import { Sprite } from "../../../../base/model";
+import { Sprite } from "baseGame";
 import { op_client } from "pixelpai_proto";
 import { LogicPos } from "structure";
 export class PlayerModel extends Sprite {

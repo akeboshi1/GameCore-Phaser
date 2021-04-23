@@ -1,4 +1,4 @@
-import { Sprite } from "basemodel";
+import { Sprite } from "baseGame";
 import { AnimationsNode, ElementNode, TerrainNode } from "game-capsule";
 import { AnimationModel, IFramesModel } from "structure";
 import { EditorFramesDisplay } from "./editor.frames.display";

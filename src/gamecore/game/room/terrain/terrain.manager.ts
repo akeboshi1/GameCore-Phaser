@@ -8,7 +8,7 @@ import { IRoomService, SpriteAddCompletedListener } from "../room";
 import { ISprite, IPos, Logger, LogicPos, IDragonbonesModel, IFramesModel } from "structure";
 import { ConnectionService } from "src/structure/net";
 import { EmptyTerrain } from "./empty.terrain";
-import { IElementStorage, Sprite } from "src/base/model";
+import { IElementStorage, Sprite } from "baseGame";
 export class TerrainManager extends PacketHandler implements IElementManager {
     public hasAddComplete: boolean = false;
     protected mTerrains: Map<number, Terrain> = new Map<number, Terrain>();

@@ -41,7 +41,7 @@ export class SceneDataManager extends BasePacketHandler {
     }
 
     private onReAwardTipsHandler(packet: PBpacket) {
-        const config = <BaseDataConfigManager>this.game.configManager;
+        const config = <any>this.game.configManager;
         if (config.initialize) {
             this.game.showMediator(ModuleName.PICAREWARDTIP_NAME, true, packet.content);
         } else {

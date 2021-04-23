@@ -1,5 +1,5 @@
-import { Sprite } from "basemodel";
-import { BaseDragonbonesDisplay, BaseFramesDisplay, ReferenceArea } from "baserender";
+import { Sprite } from "baseGame";
+import { BaseDragonbonesDisplay, BaseFramesDisplay, ReferenceArea } from "baseRender";
 import { IFramesModel, RunningAnimation, Logger, LogicPoint, Position45 } from "structure";
 import { SceneEditorCanvas } from "./scene.editor.canvas";
 import { EditorTopDisplay } from "./top.display";

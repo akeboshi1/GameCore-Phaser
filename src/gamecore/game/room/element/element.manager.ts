@@ -1,6 +1,6 @@
 import { PacketHandler, PBpacket } from "net-socket-packet";
 import { op_client, op_def, op_virtual_world } from "pixelpai_proto";
-import { ConnectionService } from "../../../../../structure/net";
+import { ConnectionService } from "structure";
 import { EventType, IDragonbonesModel, IFramesModel, ISprite, Logger, LogicPos } from "structure";
 import { IRoomService } from "../room";
 import { Element, IElement, InputEnable } from "./element";
@@ -8,7 +8,7 @@ import { ElementStateManager } from "./element.state.manager";
 import { ElementDataManager } from "../../data.manager/element.dataManager";
 import { DataMgrType } from "../../data.manager";
 import { ElementActionManager } from "../elementaction/element.action.manager";
-import { IElementStorage, Sprite } from "src/base/model";
+import { IElementStorage, Sprite } from "baseGame";
 import NodeType = op_def.NodeType;
 // import { PicaElementActionManager } from "src/gamecore/game";
 
@@ -63,7 +63,7 @@ export class ElementManager extends PacketHandler implements IElementManager {
 
         // 进入房间创建地图后将其拷贝给物理进程
         this.mStateMgr = new ElementStateManager(mRoom);
-        this.mActionMgr = new PicaElementActionManager(mRoom.game);
+        this.mActionMgr = new ElementActionManager(mRoom.game);
         this.addListen();
 
         this.mRoom.onManagerCreated(this.constructor.name);

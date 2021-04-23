@@ -1,10 +1,10 @@
-import { BaseDataManager, DataMgrType } from "../../game";
-import { ConnectionService } from "src/structure/net";
+import { ConnectionService } from "structure";
 import { PacketHandler } from "net-socket-packet";
-import { op_client, op_def, op_pkt_def } from "pixelpai_proto";
+import { op_client, op_pkt_def } from "pixelpai_proto";
 import { ElementStateType, EventType, ISprite } from "structure";
 import { IRoomService } from "../room";
 import { Element, IElement } from "./element";
+import { BaseDataManager, DataMgrType } from "../../data.manager";
 export class ElementStateManager extends PacketHandler {
 
     protected mElements: Map<string, Map<number, Element>> = new Map();

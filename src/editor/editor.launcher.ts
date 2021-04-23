@@ -1,6 +1,6 @@
 import "tooqinggamephaser";
 import "dragonBones";
-import { IEditorCanvasConfig, ElementEditorCanvas, AvatarEditorCanvas, SceneEditorCanvas } from "../src/canvas";
+import { IEditorCanvasConfig, ElementEditorCanvas, AvatarEditorCanvas, SceneEditorCanvas } from "../editor/canvas";
 
 /*
 编辑器画布生成器 用于生成编辑器专用的画布 和游戏用的launcher分开

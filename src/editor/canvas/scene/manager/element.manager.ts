@@ -1,4 +1,4 @@
-import { Sprite } from "basemodel";
+import { Sprite } from "baseGame";
 import { LayerEnum } from "game-capsule";
 import { PacketHandler, PBpacket } from "net-socket-packet";
 import { op_client, op_editor, op_def } from "pixelpai_proto";

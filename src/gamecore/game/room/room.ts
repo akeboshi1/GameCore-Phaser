@@ -2,7 +2,7 @@ import { op_client, op_def, op_virtual_world } from "pixelpai_proto";
 import { PacketHandler, PBpacket } from "net-socket-packet";
 import { Game } from "..";
 import { GameState, IScenery, ISprite, LoadState, Handler, IPos, IPosition45Obj, Logger, LogicPos, Position45, SceneName } from "structure";
-import { Sprite } from "src/base/model";
+import { Sprite } from "baseGame";
 import IActor = op_client.IActor;
 import NodeType = op_def.NodeType;
 import { IBlockObject } from "./block/iblock.object";
