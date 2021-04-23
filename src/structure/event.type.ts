@@ -143,4 +143,8 @@ export class EventType {
      * 发送新的Proto对接协议
      */
     public static SEND_NEW_PROTO_MESSAGE = "SEND_NEW_PROTO_MESSAGE";
+    /**
+     * 背包喇叭数量更新
+     */
+    public static PACKAGE_TRUMPET_COUNT_UPDATE = "PACKAGE_TRUMPET_COUNT_UPDATE";
 }

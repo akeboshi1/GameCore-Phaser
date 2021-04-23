@@ -23,8 +23,9 @@ export class BottomMediator extends BasicMediator {
         this.game.emitter.on(ModuleName.BOTTOM + "_showpanel", this.onShowPanelHandler, this);
         this.game.emitter.on(ModuleName.BOTTOM + "_gohome", this.onGoHomeHandler, this);
         this.game.emitter.on(ModuleName.BOTTOM + "_trumpet", this.onTrumpetHandler, this);
+        this.game.emitter.on(ModuleName.BOTTOM + "_bbcodeEvent", this.onBBCODEEventHandler, this);
         this.game.emitter.on(RedEventType.MAIN_PANEL_RED, this.onRedSystemHandler, this);
-        this.game.emitter.on(CommandMsgType.PicaTrumpetMsg, this.appendTrumpetMsg, this);
+        this.game.emitter.on(EventType.UPDATE_PLAYER_INFO, this.setTrumpetState, this);
         super.show();
     }
 
@@ -33,8 +34,9 @@ export class BottomMediator extends BasicMediator {
         this.game.emitter.off(ModuleName.BOTTOM + "_showpanel", this.onShowPanelHandler, this);
         this.game.emitter.off(ModuleName.BOTTOM + "_gohome", this.onGoHomeHandler, this);
         this.game.emitter.off(ModuleName.BOTTOM + "_trumpet", this.onTrumpetHandler, this);
+        this.game.emitter.off(ModuleName.BOTTOM + "_bbcodeEvent", this.onBBCODEEventHandler, this);
         this.game.emitter.off(RedEventType.MAIN_PANEL_RED, this.onRedSystemHandler, this);
-        this.game.emitter.on(CommandMsgType.PicaTrumpetMsg, this.appendTrumpetMsg, this);
+        this.game.emitter.off(EventType.UPDATE_PLAYER_INFO, this.setTrumpetState, this);
         super.hide();
     }
 
@@ -42,22 +44,23 @@ export class BottomMediator extends BasicMediator {
         return true;
     }
 
-    public sendChat(val: string, isTrumpet: boolean) {
+    public sendChat(data: { val: string, trumpet: boolean }) {
         const model = this.model;
         if (!model) {
             return;
         }
 
         const patt = new RegExp("^##(\\w+)\\s*(.*)");
-        const params = patt.exec(val);
+        const params = patt.exec(data.val);
         if (params && params.length > 0) {
             this.applyChatCommand(params);
             return;
         }
-        if (!isTrumpet) {
-            model.sendMessage(val);
+        if (!data.trumpet) {
+            model.sendMessage(data.val);
         } else {
-            this.game.sendCustomProto("STRING", "sendTrumpetMessage", val);
+            this.game.sendCustomProto("STRING", "sendTrumpetMessage", data.val);
+            this.setTrumpetState();
         }
     }
 
@@ -139,10 +142,6 @@ export class BottomMediator extends BasicMediator {
         }
         this.mView.appendChat(chat);
     }
-    private appendTrumpetMsg(chat: string) {
-        this.setTrumpetState();
-        this.appendChat(chat);
-    }
 
     // private getSpeaker(id: number): IElement {
     //     if (id) {
@@ -185,6 +184,9 @@ export class BottomMediator extends BasicMediator {
 
     private onTrumpetHandler(enable: boolean) {
         this.isTrumpet = enable;
+    }
+    private onBBCODEEventHandler(key: string) {
+
     }
 
     private onTestCommandHandler(tag: string) {

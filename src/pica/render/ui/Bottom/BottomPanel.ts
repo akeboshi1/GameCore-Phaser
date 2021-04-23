@@ -22,7 +22,7 @@ export class BottomPanel extends PicaBasePanel {
     constructor(uiManager: UiManager) {
         super(uiManager);
         this.scaleRatio = this.scale;
-        this.atlasNames = [UIAtlasName.uicommon, UIAtlasName.iconcommon];
+        this.atlasNames = [UIAtlasName.uicommon, UIAtlasName.iconcommon, UIAtlasName.chat];
         this.key = ModuleName.BOTTOM;
         this.scale = 1;
         this.maskLoadingEnable = false;
@@ -151,6 +151,8 @@ export class BottomPanel extends PicaBasePanel {
         this.add([this.mOutput, this.mInput, this.mNavigate, this.resizeColtroll]);
         this.creatRedMap();
         this.resize(this.width, this.mOutput.height + this.mInput.height + this.mNavigate.height);
+        this.mOutput.setBBcodeHandler(new Handler(this, this.onChatPointerHandler));
+        this.setChatImg();
         super.init();
         this.onToggleSizeHandler(false);
     }
@@ -181,7 +183,7 @@ export class BottomPanel extends PicaBasePanel {
         }
         const mediator = this.mediator;
         if (!mediator) return;
-        mediator.sendChat(val);
+        mediator.sendChat({ val, trumpet: isTrumpet });
     }
 
     private onSendMsgHandler(val: string, isTrumpet: boolean) {
@@ -265,6 +267,12 @@ export class BottomPanel extends PicaBasePanel {
     //     this.hideKeyboard();
     // }
 
+    private setChatImg() {
+        this.mOutput.addBBCodeImg("chat_horn", UIAtlasName.chat, "chat_horn");
+    }
+    private onChatPointerHandler(key: string) {
+        this.render.renderEmitter(ModuleName.BOTTOM + "_bbcodeEvent", key);
+    }
     get mediator() {
         return this.render.mainPeer[this.key];
     }
@@ -275,6 +283,7 @@ class OutputContainer extends Phaser.GameObjects.Container {
     private mOutputText: BBCodeText;
     private mTextArea: TextArea;
     private mTextMask: any;
+    private bbcodeSend: Handler;
     constructor(scene: Phaser.Scene, private dpr: number, private scaleRatio: number) {
         super(scene);
         this.background = this.scene.make.graphics(undefined, false);
@@ -299,7 +308,12 @@ class OutputContainer extends Phaser.GameObjects.Container {
                 mode: "char",
                 width: width - 12 * this.dpr * scaleRatio
             }
-        }).setOrigin(0, 0);
+        }).setOrigin(0, 0).setInteractive()
+            .on("areadown", (key) => {
+            })
+            .on("areaup", (key) => {
+                if (this.bbcodeSend) this.bbcodeSend.runWith(key);
+            });
         this.mOutputText.height = 40 * this.dpr * scaleRatio;
 
         this.mTextArea = new TextArea(this.scene, { text: this.mOutputText })
@@ -356,6 +370,14 @@ class OutputContainer extends Phaser.GameObjects.Container {
             if (this.mTextMask) this.mTextMask.y = 4 * this.dpr * this.scaleRatio;
         }
     }
+
+    public addBBCodeImg(keyimg: string, key: string, frame: string) {
+        this.mOutputText.addImage(keyimg, { key, frame, y: 3 * this.dpr, left: 10 * this.dpr, right: 10 * this.dpr });
+    }
+
+    public setBBcodeHandler(send: Handler) {
+        this.bbcodeSend = send;
+    }
 }
 
 class InputContainer extends Phaser.GameObjects.Container {
@@ -365,6 +387,7 @@ class InputContainer extends Phaser.GameObjects.Container {
     private trumpet: ToggleButton;
     private mFocusing: boolean = false;
     private trumpetCount: number = 0;
+    private isTrumpent: boolean = false;
     constructor(scene: Phaser.Scene, key: string, private dpr: number, scale: number) {
         super(scene);
         this.scale = scale;
@@ -424,8 +447,11 @@ class InputContainer extends Phaser.GameObjects.Container {
     public setTrumpetState(count: number) {
         this.trumpetCount = count;
         const enable = count > 0;
-        this.trumpet.isOn = enable;
         this.trumpet.enable = enable;
+        if (!enable || this.isTrumpent) {
+            this.trumpet.isOn = enable;
+        }
+
     }
     public blurInput() {
         this.inputText.setBlur();
@@ -441,7 +467,7 @@ class InputContainer extends Phaser.GameObjects.Container {
     }
 
     private onEnterHandler(text: string) {
-        this.emit("enter", text, this.trumpet.isOn);
+        this.emit("enter", text, this.isTrumpent);
         this.inputText.setText("");
         if (this.trumpet.isOn) {
             this.trumpetCount--;
@@ -467,6 +493,7 @@ class InputContainer extends Phaser.GameObjects.Container {
     }
 
     private onTrumpetHandler() {
+        this.isTrumpent = this.trumpet.isOn;
     }
 }
 

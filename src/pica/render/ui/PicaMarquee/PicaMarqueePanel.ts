@@ -30,9 +30,9 @@ export class PicaMarqueePanel extends PicaBasePanel {
         this.tempDatas = data;
         if (!this.mInitialized) return;
         const tips = data.tips;
-        const content = data.content;
-        const count = data.count;
-        this.mContent.text = `[color=#FFEA00][${tips}][/color]${content}`;
+        const content = data.message || "";
+        const count = data.count || 1;
+        this.mContent.text = tips ? `[color=#FFEA00][${tips}][/color]${content}` : content;
         const minitime = 6000, delta = minitime / (267 * this.dpr);
         let moveTime = this.mContent.width * delta;
         moveTime = moveTime < minitime ? minitime : moveTime;
@@ -55,7 +55,7 @@ export class PicaMarqueePanel extends PicaBasePanel {
         this.maskGraphic.fillRect(-width * 0.5, -height * 0.5, width, height);
         this.content.add([this.mContent]);
         this.add([this.bg, this.lightSprite, this.content]);
-        // this.content.setMask(this.maskGraphic.createGeometryMask());
+        this.content.setMask(this.maskGraphic.createGeometryMask());
         super.init();
         (<MainUIScene>this.mScene).layerManager.addToLayer(MainUIScene.LAYER_TOOLTIPS, this);
         this.resize();
@@ -65,7 +65,7 @@ export class PicaMarqueePanel extends PicaBasePanel {
         const offset = 10 * this.dpr;
         const width = this.content.width;
         const from = width * 0.5 + offset;
-        const to = - width * 0.5 - this.mContent.width - offset;
+        const to = - width * 0.5 - this.mContent.width - offset + 5 * this.dpr;
         UIHelper.playtPosXTween(this.scene, this.mContent, from, to, time, "Linear", 0, Handler.create(this, () => {
             if (count > 0) this.playAni(time, count);
             else {

@@ -144,16 +144,20 @@ export class PicaRoomPanel extends PicaBasePanel {
 
     private onSendHandler(tag: string, data: any) {
         if (tag === "name") {
-            this.render.renderEmitter(ModuleName.PICAROOM_NAME + "_name", data);
+            if (data.length >= 3) {
+                this.render.renderEmitter(ModuleName.PICAROOM_NAME + "_name", data);
+            } else {
+                this.onNoticeHandler(i18n.t("room_info.editornametips"));
+            }
         } else if (tag === "open") {
             // this.render.renderEmitter(ModuleName.PICAROOM_NAME + "_openparty");
-            this.onNoticeHandler();
+            this.onNoticeHandler(i18n.t("noticeTips.staytuned"));
         }
     }
 
-    private onNoticeHandler() {
+    private onNoticeHandler(text: string) {
         const tempdata = {
-            text: [{ text: i18n.t("noticeTips.staytuned"), node: undefined }]
+            text: [{ text, node: undefined }]
         };
         this.render.mainPeer.showMediator(ModuleName.PICANOTICE_NAME, true, tempdata);
         return;
