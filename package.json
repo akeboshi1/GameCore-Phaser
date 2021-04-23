@@ -13,10 +13,10 @@
   "types": "release/types/index.d.ts",
   "typesVersions": {
     "*": {
-      "renderPeer": [
+      "mainPeer": [
         "release/types/src/gamecore/game"
       ],
-      "mainPeer": [
+      "renderPeer": [
         "release/types/src/gamecore/render"
       ],
       "physicalPeer": [
