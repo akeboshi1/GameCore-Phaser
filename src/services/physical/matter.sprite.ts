@@ -10,7 +10,7 @@ export class MatterSprite {
     public direction: number;
     public currentAnimationName: string;
     public currentAnimation: RunningAnimation;
-    public animations: Map<string, MatterAnimationModel>;
+    public animations: Map<string, IMatterAnimationData>;
     public registerAnimation: Map<string, string>;
     public animationQueue: AnimationQueue[];
     public originCollisionPoint: LogicPoint;
@@ -43,6 +43,11 @@ export class MatterSprite {
         if (anis) {
             this.initAnimations(anis);
         }
+        if (obj.displayInfo && obj.displayInfo.avatar) {
+            this.initDragonbonesAnimation();
+            // avatar写死的idle数据
+            this.currentAnimationName = "idle";
+        }
 
         if (!this.interactive) {
             // this.interactive = this.
@@ -71,7 +76,11 @@ export class MatterSprite {
         if (!this.currentCollisionPoint) {
             this.currentCollisionPoint = this.getOriginPoint();
         }
+    }
 
+    public initDragonbonesAnimation() {
+        if (!this.animations) this.animations = new Map();
+        this.animations.set("idle", new MatterAvatarModel());
     }
 
     public setPosition(x: number, y: number) {
@@ -359,6 +368,25 @@ export interface IMatterAnimationData {
     layer: op_gameconfig_01.IAnimationLayer[];
     interactiveArea?: op_def.IPBPoint2i[];
     mountLayer: op_gameconfig_01.IAnimationMountLayer;
+}
+
+export class MatterAvatarModel implements IMatterAnimationData {
+    name: string;
+    frameName: string[];
+    frameRate: number;
+    loop: boolean;
+    baseLoc: LogicPoint;
+    collisionArea?: number[][];
+    walkableArea?: number[][];
+    originPoint: LogicPoint;
+    layer: op_gameconfig_01.IAnimationLayer[];
+    interactiveArea?: op_def.IPBPoint2i[];
+    mountLayer: op_gameconfig_01.IAnimationMountLayer;
+
+    constructor() {
+        this.name = "idle";
+        this.interactiveArea = [{ x: -1, y: -1 }, { x: 0, y: -1 }, { x: 1, y: -1 }, { x: 1, y: 0 }, { x: 1, y: 1 }, { x: 0, y: 1 }, { x: -1, y: 1 }, { x: -1, y: 0 }];
+    }
 }
 
 export class MatterAnimationModel implements IMatterAnimationData {

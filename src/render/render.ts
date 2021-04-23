@@ -1423,8 +1423,8 @@ export class Render extends RPCPeer implements GameMain, IRender {
     }
 
     @Export([webworker_rpc.ParamType.num])
-    public createDragonBones(id: number, displayInfo: IFramesModel | IDragonbonesModel, layer: number) {
-        if (this.mDisplayManager) this.mDisplayManager.addDragonbonesDisplay(id, displayInfo, layer);
+    public createDragonBones(id: number, displayInfo: IFramesModel | IDragonbonesModel, layer: number, nodeType) {
+        if (this.mDisplayManager) this.mDisplayManager.addDragonbonesDisplay(id, displayInfo, layer, nodeType);
     }
 
     @Export()

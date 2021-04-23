@@ -114,7 +114,7 @@ export class DisplayManager {
         }
     }
 
-    public addDragonbonesDisplay(id: number, data: IDragonbonesModel, layer: number) {
+    public addDragonbonesDisplay(id: number, data: IDragonbonesModel, layer: number, nodeType: NodeType) {
         if (!data) {
             return;
         }
@@ -125,7 +125,7 @@ export class DisplayManager {
         }
         let display: DragonbonesDisplay;
         if (!this.displays.has(id)) {
-            display = new DragonbonesDisplay(scene, this.render, id, this.uuid++, NodeType.CharacterNodeType);
+            display = new DragonbonesDisplay(scene, this.render, id, this.uuid++, nodeType);
             this.displays.set(id, display);
             this.preLoadList.push(display);
         } else {

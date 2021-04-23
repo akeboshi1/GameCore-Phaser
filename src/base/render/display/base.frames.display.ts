@@ -107,7 +107,10 @@ export class BaseFramesDisplay extends BaseDisplay {
                     this.mCurAnimation.frameRate, this.mCurAnimation.loop, this.mCurAnimation.frameDuration);
                 const anis = (<Phaser.GameObjects.Sprite>display).anims;
                 anis.play(key);
-                if (typeof times === "number") anis.setRepeat(times);
+                if (typeof times === "number") {
+                    // setRepeat 播放一次后，播放的次数
+                    anis.setRepeat(times - 1);
+                }
             }
             display.scaleX = animation.flip ? -1 : 1;
             this.updateBaseLoc(display, animation.flip, offsetLoc);

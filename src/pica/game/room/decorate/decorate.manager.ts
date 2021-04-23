@@ -146,14 +146,14 @@ export class DecorateManager {
 
     // 返回上一步
     public reverse() {
-        if (this.mSelectedID > 0) {
-            if (this.mSelectedActionQueue.length === 0) return;
+        if (this.mSelectedID > 0 && this.mSelectedActionQueue.length > 0) {
+            // if (this.mSelectedActionQueue.length === 0) return;
             const act = this.mSelectedActionQueue.pop();
             act.reverse(this);
 
-            if (this.mSelectedActionQueue.length === 0) {
-                this.unselect();
-            }
+            // if (this.mSelectedActionQueue.length === 0) {
+            //     this.unselect();
+            // }
         } else {
             if (this.mActionQueue.length === 0) return;
             const act = this.mActionQueue.pop();
