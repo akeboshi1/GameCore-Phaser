@@ -334,10 +334,12 @@ class OutputContainer extends Phaser.GameObjects.Container {
         this.background.clear();
         this.background.fillStyle(0, 0.6);
         this.background.fillRect(0, 0, width, height);
-        this.mTextArea.childrenMap.child.setMinSize((width - 8 * this.dpr * this.scaleRatio), (height - 8 * this.dpr * this.scaleRatio));
+        const areaWidth = (width - 8 * this.dpr * this.scaleRatio), areaHeight = (height - 8 * this.dpr * this.scaleRatio);
+        this.mTextArea.childrenMap.child.setMinSize(areaWidth, areaHeight);
 
         this.mTextArea.layout();
         // this.mOutputText.width = width - 4 * this.dpr * this.scaleRatio;
+        // this.mOutputText.setSize();
         this.mOutputText.setWrapWidth(width - 8 * this.dpr * this.scaleRatio);
         // (<any>this.mTextArea).setChildOY(1 * this.dpr * this.scaleRatio);
         this.updateLayout();

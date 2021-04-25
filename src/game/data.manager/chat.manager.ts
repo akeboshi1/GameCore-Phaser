@@ -46,7 +46,7 @@ export class ChatManager extends BasePacketHandler {
     }
 
     private appendTrumpetMsg(content: any) {
-        const msg = `[img=chat_horn][area=${content.senderId}] [color=#ffffff]${content.senderName}:[/color] [/area][color=#66ffff]${content.message}[/color]\n`;
+        const msg = `[img=chat_horn][/img][color=#ffffff][area=${content.senderId}] ${content.senderName}: [/area][/color][color=#66ffff]${content.message}[/color]\n`;
         this.appendMsg(msg);
     }
 
