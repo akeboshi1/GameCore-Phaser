@@ -45,10 +45,10 @@ export class PicaExploreListMediator extends BasicMediator {
 
     private onQUERY_CHAPTER_RESULT(content: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_QUERY_CHAPTER_RESULT) {
         this.mShowData = content;
-        content["lock"] = this.playerInfo.level.value < content.chapter.requiredPlayerLevel;
         const configManager = <BaseDataConfigManager>this.game.configManager;
         const caphter = configManager.getChapterData(content.chapter.chapterId);
         ObjectAssign.excludeTagAssign(content.chapter, caphter, "exclude");
+        content["lock"] = this.playerInfo.level.value < caphter.requiredPlayerLevel;
         for (const level of content.levels) {
             const templevel = configManager.getExploreLevelData(level.levelId);
             ObjectAssign.excludeTagAssign(level, templevel, "exclude");

@@ -525,7 +525,8 @@ class ChapterLevelLockItem extends ChapterLevelBaseItem {
         this.finishButton.on(ClickEvent.Tap, this.onFinishClickHandler, this);
         this.finishButton.x = this.finishButton.width * 0.5 + 30 * this.dpr;
         this.finishButton.y = this.height * 0.5 - 10 * this.dpr;
-
+        this.finishButton.visible = false;
+        this.goButton.visible = false;
         this.add([this.bg, this.leftLine, this.rightLine, this.nameTex, this.leftbg, this.leftTex, this.rightbg, this.rightTex, this.goButton, this.finishButton]);
     }
 

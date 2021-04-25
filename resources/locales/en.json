@@ -188,7 +188,8 @@
     "friendvisittips": "Invited friends only",
     "passwordtips": "If the password is empty, it defaults to open mode",
     "savesetting": "Save Setting",
-    "inputtips": "Please enter the password"
+    "inputtips": "Please enter the password",
+    "editornametips": "Please enter room name, minimum three words"
   },
   "business_street": {
     "commercial_street": "STORES",

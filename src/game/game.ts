@@ -69,6 +69,8 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
     protected mWorkerLoop: any;
     protected mAvatarType: op_def.AvatarStyle;
     protected mRunning: boolean = true;
+    protected remoteIndex = 0;
+    protected isSyncPackage: boolean = false;
     constructor(peer: MainPeer) {
         super();
         this.mainPeer = peer;
@@ -849,18 +851,18 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
     }
 
     private loadGameConfig(remotePath): Promise<Lite> {
-        if (this.configManager.initialize) {
+        if (!this.isSyncPackage && this.configManager.initialize) {
             this.user.userData.querySYNC_ALL_PACKAGE();
+            this.isSyncPackage = true;
         }
         const configPath = ResUtils.getGameConfig(remotePath);
-        let index = 0;
         return load(configPath, "arraybuffer").then((req: any) => {
             this.peer.state = GameState.LoadGameConfig;
             this.mLoadingManager.start(LoadState.PARSECONFIG);
             Logger.getInstance().debug("start decodeConfig");
             return this.decodeConfigs(req);
         }, (reason) => {
-            if (index > 3) {
+            if (this.remoteIndex > 3) {
                 if (this.mConfig.hasReload) {
                     // app reload
                 } else {
@@ -869,8 +871,8 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
                 }
                 return;
             }
-            index++;
-            Logger.getInstance().error("reload res ====>", reason, "reload count ====>", index);
+            this.remoteIndex++;
+            Logger.getInstance().error("reload res ====>", reason, "reload count ====>", this.remoteIndex);
             return this.loadGameConfig(remotePath);
         });
     }

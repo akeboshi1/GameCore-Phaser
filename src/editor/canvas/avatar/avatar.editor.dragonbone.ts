@@ -324,12 +324,11 @@ export class AvatarEditorDragonbone extends Phaser.GameObjects.Container {
             // fix dumplicate sets
             const existSetIdx = this.mSets.findIndex((x) => (x.id === newSet.id && JSON.stringify(x.parts) === JSON.stringify(newSet.parts)));
             if (existSetIdx >= 0) continue;
-            temp.push(Object.assign({}, newSet));
+            temp.push(JSON.parse(JSON.stringify(newSet)));
         }
-        newSets = temp;
 
         // 解决替换发型，后发分层存在的问题
-        for (const newSet of newSets) {
+        for (const newSet of temp) {
             for (const key in AvatarEditorDragonbone.HAIR_BACK) {
                 if (AvatarEditorDragonbone.HAIR_BACK.hasOwnProperty(key)) {
                     const parts = newSet.parts;
@@ -344,7 +343,7 @@ export class AvatarEditorDragonbone extends Phaser.GameObjects.Container {
             }
         }
 
-        this.mSets = this.mSets.concat(newSets);
+        this.mSets = this.mSets.concat(temp);
 
         // Logger.getInstance().debug("ZW-- this.mSets: ", this.mSets);
 

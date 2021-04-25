@@ -49,7 +49,7 @@ export class PicaRoomInfoPanel extends Phaser.GameObjects.Container {
         const itemWidth = this.width - 10 * this.dpr;
         const space = 20 * this.dpr + itemHeight;
 
-        this.roomName = new RoomNameAttribute(this.scene, itemWidth, itemHeight, this.dpr, this.zoom, "text");
+        this.roomName = new RoomNameAttribute(this.scene, itemWidth, itemHeight, this.dpr, this.zoom, "text", i18n.t("room_info.editornametips"));
         this.roomName.setHandler(new Handler(this, this.onSendHandler));
         this.roomName.y = posy;
         posy += space;

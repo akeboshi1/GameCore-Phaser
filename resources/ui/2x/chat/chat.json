@@ -1,0 +1,41 @@
+{
+	"textures": [
+		{
+			"image": "chat",
+			"format": "RGBA8888",
+			"size": {
+				"w": 28,
+				"h": 27
+			},
+			"scale": 1,
+			"frames": [
+				{
+					"filename": "chat_horn",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 26,
+						"h": 25
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 26,
+						"h": 25
+					},
+					"frame": {
+						"x": 1,
+						"y": 1,
+						"w": 26,
+						"h": 25
+					}
+				}
+			]
+		}
+	],
+	"meta": {
+		"app": "https://www.codeandweb.com/texturepacker",
+		"version": "3.0",
+		"smartupdate": "$TexturePacker:SmartUpdate:3ce488112aa247d5632c179fa526cd73:3f8970939382afe6b04bef54c4a0becb:24463b3d2641407c6373aa9b9911645a$"
+	}
+}

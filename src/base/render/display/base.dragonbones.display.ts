@@ -460,7 +460,7 @@ export class BaseDragonbonesDisplay extends BaseDisplay {
 
     // doc: https://code.apowo.com/PixelPai/game-core/-/issues/239
     protected serializeAvatarData(data: IAvatar): string {
-        const temp = Object.assign({}, data);
+        const temp = JSON.parse(JSON.stringify(data));
         const deleteKeys = [];
         for (const tempKey in temp) {
             if (tempKey === "id" || tempKey === "dirable") {
