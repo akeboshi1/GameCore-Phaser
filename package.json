@@ -4,8 +4,8 @@
   "exports": {
     ".":"./release/js/index.js",
     "./renderPeer": "./release/js/renderPeer.js",
-    "./mainPeer": "./release/js/mainWorker_worker.js",
-    "./physicalWorker": "./release/js/physicalWorker_worker.js",
+    "./mainPeer": "./release/js/mainWorker.js",
+    "./physicalWorker": "./release/js/physicalWorker.js",
     "./utils": "./release/js/utils.js",
     "./structure": "./release/js/structure.js",
     "./baseRender": "./release/js/baseRender.js",
