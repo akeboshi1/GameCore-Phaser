@@ -491,8 +491,11 @@ export class AvatarEditorDragonbone extends Phaser.GameObjects.Container {
                     const gameWidth = this.scene.scale.width;
                     const gameHeight = this.scene.scale.height;
                     Logger.getInstance().debug(`ZW-- start snapshot, gameSize: ${gameWidth}*${gameHeight}, setSize: ${area.width}*${area.height}`);
-                    const rt = this.scene.make.renderTexture({x: 0, y: 0, width: gameWidth, height: gameHeight}, false);
+                    const rt = this.scene.make.renderTexture({x: 0, y: 0, width: gameWidth, height: gameHeight});
                     modelData.armature.scaleY *= -1;
+                    const display = modelData.armature.getDisplay();
+                    if (!display) reject("display does not exist");
+                    display.armature.advanceTime(1000);
                     rt.draw(modelData.armature, modelData.x, modelData.y);
                     rt.snapshotArea(area.x, area.y, area.width, area.height, (img: HTMLImageElement) => {
                         modelData.armature.scaleY *= -1;
@@ -503,7 +506,7 @@ export class AvatarEditorDragonbone extends Phaser.GameObjects.Container {
                                 resolve(img.src);
                                 Logger.getInstance().log("snapshot result: ", img.src);
                             });
-                    });
+                        });
                 })
                 .catch(() => {
                     reject("replaceDisplay error");
