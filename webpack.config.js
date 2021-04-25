@@ -88,8 +88,8 @@ const gameConfig = Object.assign({}, commonConfig, {
         utils: "./src/utils/index.ts",
         structure: "./src/structure/index.ts",
         renderPeer: "./src/gamecore/render/index.ts",
-        mainWorker: "./src/gamecore/game/index.ts",
-        physicalWorker: "./src/gamecore/services/index.ts"
+        mianPeer: "./src/gamecore/game/index.ts",
+        physicalPeer: "./src/gamecore/services/index.ts"
     },
     output: {
         // This is required so workers are known where to be loaded from
@@ -133,32 +133,6 @@ const gameConfig = Object.assign({}, commonConfig, {
     },
 });
 
-
-
-const workerConfig = Object.assign({}, commonConfig, {
-    module: {
-        rules: [
-            { test: /\.ts$/, loader: "ts-loader", options: { allowTsInNodeModules: false }, exclude: "/node_modules/" },
-            { test: /webworkerrpc\.js$/, loader: "expose-loader?webworker-rpc" },
-            { test: /\.(gif|png|dbbin|ttf|jpe?g|svg|mp3|mp4|xml)$/i, loader: "file-loader", options: resourcesOut },
-            { test: /\.json/, type: "javascript/auto", loader: "file-loader", exclude: "/resources/locales/", options: resourcesOut },
-        ],
-    },
-    entry: {
-        index:"./src/gamecore/worker/index.ts",
-        mainWorker: "./src/gamecore/worker/game/main.peer.ts",
-        physicalWorker: "./src/gamecore/worker/services/physical.worker.ts"
-    },
-    output: {
-        // This is required so workers are known where to be loaded from
-        path: path.resolve(__dirname, "dist"),
-        // filename: `js/[name]_v${appVer}.js`,
-        filename: `worker/[name].js`,
-        libraryTarget: "umd",
-        globalObject: "this",
-        library: "[name]",
-    },
-});
 module.exports = [
     gameConfig
 ];

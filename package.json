@@ -4,8 +4,8 @@
   "exports": {
     ".":"./release/js/index.js",
     "./renderPeer": "./release/js/renderPeer.js",
-    "./mainPeer": "./release/js/mainWorker.js",
-    "./physicalWorker": "./release/js/physicalWorker.js",
+    "./mainPeer": "./release/js/mainPeer.js",
+    "./physicalPeer": "./release/js/physicalPeer.js",
     "./utils": "./release/js/utils.js",
     "./structure": "./release/js/structure.js",
     "./baseRender": "./release/js/baseRender.js",
@@ -20,7 +20,7 @@
       "renderPeer": [
         "release/types/src/gamecore/render"
       ],
-      "physicalWorker": [
+      "physicalPeer": [
         "release/types/src/gamecore/services"
       ],
       "baseRender": [
