@@ -26,7 +26,7 @@ export class PicaTaskMediator extends BasicMediator {
         this.game.emitter.on(ModuleName.PICATASK_NAME + "_retquestdetail", this.onRetQuestDetail, this);
         this.game.emitter.on(ModuleName.PICATASK_NAME + "_retquestgroup", this.onRetQuestGroup, this);
         this.game.emitter.on(ModuleName.PICATASK_NAME + "_querygo", this.onGoHandler, this);
-        this.game.emitter.off(RedEventType.MAIN_PANEL_RED, this.onRedSystemHandler, this);
+        this.game.emitter.off(RedEventType.TASK_PANEL_RED, this.onRedSystemHandler, this);
     }
 
     hide() {
@@ -42,7 +42,7 @@ export class PicaTaskMediator extends BasicMediator {
         this.game.emitter.off(ModuleName.PICATASK_NAME + "_retquestdetail", this.onRetQuestDetail, this);
         this.game.emitter.off(ModuleName.PICATASK_NAME + "_retquestgroup", this.onRetQuestGroup, this);
         this.game.emitter.off(ModuleName.PICATASK_NAME + "_querygo", this.onGoHandler, this);
-        this.game.emitter.off(RedEventType.MAIN_PANEL_RED, this.onRedSystemHandler, this);
+        this.game.emitter.off(RedEventType.TASK_PANEL_RED, this.onRedSystemHandler, this);
     }
     panelInit() {
         super.panelInit();
