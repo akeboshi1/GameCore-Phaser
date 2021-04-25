@@ -282,7 +282,11 @@ export class Sprite extends EventDispatcher implements ISprite {
     }
 
     public setAnimationName(name: string, times?: number) {
-        if (!this.currentAnimation || this.currentAnimation.name !== name) {
+        // 注册动画和当前动画可能不一致
+        const baseName = this.getBaseAniName(name);
+        const suffix = name.split("_")[1];
+        const aniName = suffix ? `${baseName}_${suffix}` : baseName;
+        if (!this.currentAnimation || this.currentAnimation.name !== aniName) {
             if (this.displayInfo) {
                 name = this.animator ? this.animator.getAnimationName(name) : name;
                 this.displayInfo.animationName = name;

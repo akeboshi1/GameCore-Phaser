@@ -302,11 +302,15 @@ export class TerrainManager extends PacketHandler implements IElementManager {
         }
         const anis = content.changeAnimation;
         const ids = content.ids;
+        if (anis.length < 1) {
+            return;
+        }
         let terrain: Terrain = null;
         for (const id of ids) {
             terrain = this.get(id);
             if (terrain) {
-                // terrain.play(ani.animationName);
+                terrain.play(anis[0].animationName);
+                // terrain.setQueue(content.changeAnimation);
             }
         }
     }
