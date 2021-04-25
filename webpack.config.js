@@ -88,6 +88,8 @@ const gameConfig = Object.assign({}, commonConfig, {
         utils: "./src/utils/index.ts",
         structure: "./src/structure/index.ts",
         renderPeer: "./src/gamecore/render/index.ts",
+        mainWorker: "./src/gamecore/game/index.ts",
+        physicalWorker: "./src/gamecore/services/index.ts"
     },
     output: {
         // This is required so workers are known where to be loaded from
@@ -158,5 +160,5 @@ const workerConfig = Object.assign({}, commonConfig, {
     },
 });
 module.exports = [
-    gameConfig, workerConfig
+    gameConfig
 ];

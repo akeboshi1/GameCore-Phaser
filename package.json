@@ -3,10 +3,9 @@
   "version": "1.0.631",
   "exports": {
     ".":"./release/js/index.js",
-    "./worker":"./release/worker/index.js",
     "./renderPeer": "./release/js/renderPeer.js",
-    "./mainPeer": "./release/worker/mainWorker.js",
-    "./physicalWorker": "./release/worker/physicalWorker.js",
+    "./mainPeer": "./release/js/mainWorker_worker.js",
+    "./physicalWorker": "./release/js/physicalWorker_worker.js",
     "./utils": "./release/js/utils.js",
     "./structure": "./release/js/structure.js",
     "./baseRender": "./release/js/baseRender.js",
@@ -16,13 +15,13 @@
   "typesVersions": {
     "*": {
       "mainPeer": [
-        "release/types/src/gamecore/worker/game"
+        "release/types/src/gamecore/game"
       ],
       "renderPeer": [
         "release/types/src/gamecore/render"
       ],
       "physicalWorker": [
-        "release/types/src/gamecore/worker/services"
+        "release/types/src/gamecore/services"
       ],
       "baseRender": [
         "release/types/src/base/render"

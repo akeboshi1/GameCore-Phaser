@@ -18,7 +18,7 @@ import { User } from "./actor/user";
 import { DataManager, DataMgrType } from "./data.manager/dataManager";
 import { BaseConfigManager } from "./data.manager";
 import { NetworkManager } from "./command";
-import version from "../../../../version";
+import version from "../../../version";
 import { SoundWorkerManager } from "./sound.manager";
 import { GuideWorkerManager } from "./guide.manager/guide.worker.manager";
 import { ServerAddress } from "structure";

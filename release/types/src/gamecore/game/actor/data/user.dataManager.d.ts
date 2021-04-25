@@ -1,0 +1,34 @@
+import { ConnectionService } from "structure";
+import { PacketHandler, PBpacket } from "net-socket-packet";
+import { Game } from "../../game";
+import { PlayerBag } from "./player.bag";
+import { PlayerProperty } from "./player.property";
+export declare class UserDataManager extends PacketHandler {
+    private game;
+    private readonly mPlayerBag;
+    private readonly mProperty;
+    private mDressAvatarIDs;
+    constructor(game: Game);
+    addPackListener(): void;
+    removePackListener(): void;
+    clear(): void;
+    destroy(): void;
+    get connection(): ConnectionService;
+    get playerBag(): PlayerBag;
+    get playerProperty(): PlayerProperty;
+    get money(): number;
+    get diamond(): number;
+    get level(): number;
+    get energy(): number;
+    get isSelfRoom(): boolean;
+    get curRoomID(): string;
+    get cid(): string;
+    get avatarIDs(): string[];
+    querySYNC_ALL_PACKAGE(): void;
+    querySYNC_PACKAGE(packageType: number): void;
+    onSYNC_PACKAHE(packet: PBpacket): void;
+    onUPDATE_PACKAGE(packet: PBpacket): void;
+    onUPDATE_PLAYER_INFO(packet: PBpacket): void;
+    private syncItemBases;
+    private onRetDressAvatarItemIDS;
+}

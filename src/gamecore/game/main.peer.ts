@@ -6,7 +6,7 @@ import { Game } from "./game";
 import { ServerAddress, IPos, Logger, ILauncherConfig, MAIN_WORKER, RENDER_PEER, ModuleName, EventType, PHYSICAL_WORKER, PHYSICAL_WORKER_URL, GameState } from "structure";
 import { DataMgrType } from "./data.manager/dataManager";
 import { SceneDataManager } from "./data.manager";
-import version from "../../../../version";
+import version from "../../../version";
 
 for (const key in protos) {
     PBpacket.addProtocol(protos[key]);
