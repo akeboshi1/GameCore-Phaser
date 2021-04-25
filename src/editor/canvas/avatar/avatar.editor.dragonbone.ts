@@ -491,7 +491,7 @@ export class AvatarEditorDragonbone extends Phaser.GameObjects.Container {
                     const gameWidth = this.scene.scale.width;
                     const gameHeight = this.scene.scale.height;
                     Logger.getInstance().debug(`ZW-- start snapshot, gameSize: ${gameWidth}*${gameHeight}, setSize: ${area.width}*${area.height}`);
-                    const rt = this.scene.make.renderTexture({x: 0, y: 0, width: gameWidth, height: gameHeight});
+                    const rt = this.scene.make.renderTexture({x: 0, y: 0, width: gameWidth, height: gameHeight}, false);
                     modelData.armature.scaleY *= -1;
                     const display = modelData.armature.getDisplay();
                     if (!display) reject("display does not exist");
