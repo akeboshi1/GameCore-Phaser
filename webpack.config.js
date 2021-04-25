@@ -18,7 +18,7 @@ const commonConfig = {
         alias: {
             phaser: phaser,
             webworkerrpc: webworkerrpc,
-            dragonBones: path.join(__dirname, "./lib/dragonBones/dragonBones.js"),
+            dragonBones: path.join(__dirname, "node_modules/dragonBones/release/dragonBones.js"),
             gamecore: path.join(__dirname, "./src/gamecore/game"),
             gamecoreRender: path.join(__dirname, "./src/gamecore/render"),
             physicalWorker: path.join(__dirname, "./src/gamecore/services"),
@@ -73,13 +73,12 @@ const gameConfig = Object.assign({}, commonConfig, {
     module: {
         rules: [
             { test: /\.ts$/, loader: "ts-loader", options: { allowTsInNodeModules: false }, exclude: "/node_modules/" },
-            { test: /phaser\.js$/, loader: "expose-loader?Phaser" },
-            { test: /dragonBones\.js$/, loader: "expose-loader?dragonBones" },
             { test: /webworkerrpc\.js$/, loader: "expose-loader?webworker-rpc" },
             { test: /\.(gif|png|dbbin|ttf|jpe?g|svg|mp3|mp4|xml)$/i, loader: "file-loader", options: resourcesOut },
             { test: /\.json/, type: "javascript/auto", loader: "file-loader", exclude: "/resources/locales/", options: resourcesOut },
         ],
     },
+    externals: { dragonBones: "dragonBones", tooqinggamephaser: "tooqinggamephaser" },
     entry: {
         index: "./src/index.ts",
         baseGame: "./src/base/game/index.ts",

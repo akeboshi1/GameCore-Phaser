@@ -22,7 +22,6 @@ const config = {
         rules: [
             { test: /\.ts$/, loader: "ts-loader", exclude: "/node_modules/" },
             { test: /phaser\.js$/, loader: "expose-loader?Phaser" },
-            { test: /dragonBones\.js$/, loader: "expose-loader?dragonBones" },
             { test: /phaserui\.js$/, loader: "expose-loader?phaserui" },
         ],
     },
@@ -30,7 +29,6 @@ const config = {
         extensions: [".ts", ".js"],
         alias: {
             phaser: phaser,
-            dragonBones: path.join(__dirname, "./lib/dragonBones/dragonBones.js"),
             phaserui: path.join(__dirname,"/node_modules/apowophaserui/dist/phaserui.js")
         }
     },
