@@ -107,12 +107,9 @@ export class MainPeer extends RPCPeer {
     }
 
     public startBeat() {
-        Logger.getInstance().log("heartBeat start");
         if (this.startDelay) return;
         this.startDelay = setInterval(() => {
-            Logger.getInstance().log("heartBeat request");
             if (this.reConnectCount >= 8) {
-                Logger.getInstance().log("reconnect ====>");
                 this.game.reconnect();
                 return;
             }
@@ -134,7 +131,6 @@ export class MainPeer extends RPCPeer {
 
     @Export()
     public clearBeat() {
-        Logger.getInstance().log("heartBeat get");
         this.reConnectCount = 0;
         // Logger.getInstance().debug("heartBeatWorker clearBeat");
         // this.remote[MAIN_WORKER].MainPeer.clearHeartBeat();
