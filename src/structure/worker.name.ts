@@ -1,6 +1,6 @@
 export const RENDER_PEER = "render";
 export const PICARENDER_PEER = "pica.render";
-export const MAIN_WORKER = "mainWorker";
+export const MAIN_WORKER = "mainPeer";
 // export const HEARTBEAT_WORKER = "heartBeatPeer";
 export const PHYSICAL_WORKER = "physicalPeer";
 // export const HEARTBEAT_WORKER_URL = "js/heartWorker.js";

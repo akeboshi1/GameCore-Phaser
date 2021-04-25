@@ -142,19 +142,6 @@ export class Render extends RPCPeer implements GameMain, IRender {
         // Logger.getInstance().debug("connectfail===>", this.mConnectFailFunc, this.mConfig);
         this.initConfig();
         Logger.getInstance().log("Render version ====>:", `v${version}`);
-        // todo protected createFunc
-        this.linkTo(MAIN_WORKER, MAIN_WORKER_URL).onceReady(() => {
-            this.mMainPeer = this.remote[MAIN_WORKER].MainPeer;
-            this.mMainPeer.updateFps();
-            this.createGame();
-            Logger.getInstance().debug("worker onReady");
-        });
-        this.linkTo(PHYSICAL_WORKER, PHYSICAL_WORKER_URL).onceReady(() => {
-            this.mPhysicalPeer = this.remote[PHYSICAL_WORKER].PhysicalPeer;
-            this.mPhysicalPeer.setScaleRatio(Math.ceil(this.mConfig.devicePixelRatio || UiUtils.baseDpr));
-            this.mPhysicalPeer.start();
-            Logger.getInstance().debug("Physcialworker onReady");
-        });
         // this.linkTo(HEARTBEAT_WORKER, HEARTBEAT_WORKER_URL).onceReady(() => {
         //     this.mHeartPeer = this.remote[HEARTBEAT_WORKER].HeartBeatPeer;
         //     this.mMainPeer.updateFps();
@@ -181,6 +168,30 @@ export class Render extends RPCPeer implements GameMain, IRender {
         // }
 
         // requestAnimationFrame(animate);
+    }
+
+    // public initPeer() {
+    //     this.linkMain();
+    //     this.linkPhysical();
+    // }
+
+    public linkMain(key, url) {
+        // todo protected createFunc
+        this.linkTo(MAIN_WORKER, MAIN_WORKER_URL).onceReady(() => {
+            this.mMainPeer = this.remote[MAIN_WORKER].MainPeer;
+            this.mMainPeer.updateFps();
+            this.createGame();
+            Logger.getInstance().debug("worker onReady");
+        });
+    }
+
+    public linkPhysical(key, url) {
+        this.linkTo(PHYSICAL_WORKER, PHYSICAL_WORKER_URL).onceReady(() => {
+            this.mPhysicalPeer = this.remote[PHYSICAL_WORKER].PhysicalPeer;
+            this.mPhysicalPeer.setScaleRatio(Math.ceil(this.mConfig.devicePixelRatio || UiUtils.baseDpr));
+            this.mPhysicalPeer.start();
+            Logger.getInstance().debug("Physcialworker onReady");
+        });
     }
 
     get physicalPeer(): any {

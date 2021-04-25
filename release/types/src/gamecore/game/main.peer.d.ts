@@ -19,7 +19,7 @@ export declare class MainPeer extends RPCPeer {
     private startDelay;
     private isStartUpdateFps;
     private startUpdateFps;
-    constructor();
+    constructor(workerName: string);
     get render(): any;
     get physicalPeer(): any;
     set state(val: any);

@@ -18,8 +18,8 @@ export class PhysicalPeer extends RPCPeer {
     private matterWorld: MatterWorld;
     private matterObjectMap: Map<number, IMatterObject>;
     private isDestroy: boolean = false;
-    constructor() {
-        super(PHYSICAL_WORKER);
+    constructor(workerName: string) {
+        super(workerName);
         this.matterObjectMap = new Map();
         this.mEmitter = new EventDispatcher();
     }
@@ -452,4 +452,3 @@ export class PhysicalPeer extends RPCPeer {
         super.destroy();
     }
 }
-const context: PhysicalPeer = new PhysicalPeer();

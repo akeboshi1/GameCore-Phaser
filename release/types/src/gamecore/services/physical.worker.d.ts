@@ -10,7 +10,7 @@ export declare class PhysicalPeer extends RPCPeer {
     private matterWorld;
     private matterObjectMap;
     private isDestroy;
-    constructor();
+    constructor(workerName: string);
     get world(): MatterWorld;
     get emitter(): EventDispatcher;
     getMatterObj(id: number): IMatterObject;

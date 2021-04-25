@@ -28,8 +28,8 @@ export class MainPeer extends RPCPeer {
     private isStartUpdateFps: boolean = false;
     private startUpdateFps: any;
     // private isReconnect: boolean = false;
-    constructor() {
-        super(MAIN_WORKER);
+    constructor(workerName: string) {
+        super(workerName);
         Logger.getInstance().log("Game version ====>:", `v${version}`);
         this.game = new Game(this);
         this.stateTime = new Date().getTime();
@@ -696,4 +696,3 @@ export class MainPeer extends RPCPeer {
         return this.mConfig && this.mConfig.platform && this.mConfig.platform === "pc";
     }
 }
-const context: MainPeer = new MainPeer();
