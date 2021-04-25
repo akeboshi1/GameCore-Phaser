@@ -151,7 +151,7 @@ const workerConfig = Object.assign({}, commonConfig, {
         // This is required so workers are known where to be loaded from
         path: path.resolve(__dirname, "dist"),
         // filename: `js/[name]_v${appVer}.js`,
-        filename: `js/worker/[name]_worker.js`,
+        filename: `worker/[name].js`,
         libraryTarget: "umd",
         globalObject: "this",
         library: "[name]",
