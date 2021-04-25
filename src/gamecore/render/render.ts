@@ -175,19 +175,19 @@ export class Render extends RPCPeer implements GameMain, IRender {
     //     this.linkPhysical();
     // }
 
-    public linkMain(key, url) {
+    public linkMain(key, url, peerName) {
         // todo protected createFunc
-        this.linkTo(MAIN_WORKER, MAIN_WORKER_URL).onceReady(() => {
-            this.mMainPeer = this.remote[MAIN_WORKER].MainPeer;
+        this.linkTo(key, url).onceReady(() => {
+            this.mMainPeer = this.remote[key][peerName];
             this.mMainPeer.updateFps();
             this.createGame();
             Logger.getInstance().debug("worker onReady");
         });
     }
 
-    public linkPhysical(key, url) {
-        this.linkTo(PHYSICAL_WORKER, PHYSICAL_WORKER_URL).onceReady(() => {
-            this.mPhysicalPeer = this.remote[PHYSICAL_WORKER].PhysicalPeer;
+    public linkPhysical(key, url, peerName) {
+        this.linkTo(key, url).onceReady(() => {
+            this.mPhysicalPeer = this.remote[key][peerName];
             this.mPhysicalPeer.setScaleRatio(Math.ceil(this.mConfig.devicePixelRatio || UiUtils.baseDpr));
             this.mPhysicalPeer.start();
             Logger.getInstance().debug("Physcialworker onReady");

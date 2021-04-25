@@ -75,8 +75,8 @@ export declare class Render extends RPCPeer implements GameMain, IRender {
     private readonly hiddenDelay;
     private mHiddenTime;
     constructor(config: ILauncherConfig, callBack?: Function);
-    linkMain(key: any, url: any): void;
-    linkPhysical(key: any, url: any): void;
+    linkMain(key: any, url: any, peerName: any): void;
+    linkPhysical(key: any, url: any, peerName: any): void;
     get physicalPeer(): any;
     setKeyBoardHeight(height: number): void;
     get config(): ILauncherConfig;
