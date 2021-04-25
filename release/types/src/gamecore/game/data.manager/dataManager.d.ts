@@ -1,5 +1,6 @@
 import { EventDispatcher } from "structure";
 import { Game } from "../game";
+import { DataMgrType } from "./data.mgr.type";
 export declare class DataManager {
     private mGame;
     private mEvent;
@@ -19,13 +20,4 @@ export declare class DataManager {
     destroy(): void;
     getDataMgr<T>(type: DataMgrType): T;
     getEvent(dataType?: DataMgrType): any;
-}
-export declare enum DataMgrType {
-    None = 0,
-    BaseMgr = 1,
-    CacheMgr = 2,
-    EleMgr = 3,
-    SceneMgr = 4,
-    CommonMgr = 5,
-    ChatMgr = 6
 }

@@ -1,9 +1,9 @@
-import { InputEnable } from "../element/element";
 import { MatterWorkerObject } from "../physical/matter.worker.object";
 import { IRoomService } from "../room";
 import { IBlockObject } from "./iblock.object";
 import { IPos, LogicPos, IProjection,ISprite } from "structure";
 import { op_def } from "pixelpai_proto";
+import { InputEnable } from "../element/input.enable";
 
 export abstract class BlockObject extends MatterWorkerObject implements IBlockObject {
     public isUsed = false;

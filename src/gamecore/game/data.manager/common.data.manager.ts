@@ -4,7 +4,7 @@ import { EventDispatcher } from "structure";
 import { Game } from "../game";
 import { BasePacketHandler } from "./base.packet.handler";
 import { CacheDataManager } from "./cache.dataManager";
-import { DataMgrType } from "./dataManager";
+import { DataMgrType } from "./data.mgr.type";
 export class CommonDataManager extends BasePacketHandler {
     constructor(game: Game, event?: EventDispatcher) {
         super(game, event);

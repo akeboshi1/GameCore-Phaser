@@ -1,8 +1,9 @@
 import { op_def } from "pixelpai_proto";
 import { IElementManager } from "../element/element.manager";
 import { ISprite, PlayerState, IPos, DirectionChecker } from "structure";
-import { Element, IElement, InputEnable } from "../element/element";
+import { Element, IElement } from "../element/element";
 import { LayerEnum } from "game-capsule";
+import { InputEnable } from "../element/input.enable";
 
 export class Player extends Element implements IElement {
     protected nodeType: number = op_def.NodeType.CharacterNodeType;

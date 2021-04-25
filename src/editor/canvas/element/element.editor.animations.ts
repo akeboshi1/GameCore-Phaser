@@ -1,8 +1,6 @@
-import { ElementEditorEmitType } from "./element.editor.canvas";
 import * as path from "path";
 import * as os from "os";
-import { SPRITE_SHEET_KEY, ResourcesChangeListener, IMAGE_BLANK_KEY } from "./element.editor.resource.manager";
-import ElementEditorGrids from "./element.editor.grids";
+import { SPRITE_SHEET_KEY, ResourcesChangeListener, IMAGE_BLANK_KEY, ElementEditorGrids, ElementEditorEmitType } from "./element.editor.resource.manager";
 import version from "../../../../version";
 import { Logger } from "structure";
 

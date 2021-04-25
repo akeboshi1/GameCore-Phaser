@@ -6,7 +6,7 @@ import { EventType } from "structure";
 import { PlayerBag } from "./player.bag";
 import { PlayerProperty } from "./player.property";
 import { SceneDataManager } from "../../data.manager/scene.data.manager";
-import { DataMgrType } from "../../data.manager/dataManager";
+import { DataMgrType } from "../../data.manager/data.mgr.type";
 export class UserDataManager extends PacketHandler {
     private readonly mPlayerBag: PlayerBag;
     private readonly mProperty: PlayerProperty;

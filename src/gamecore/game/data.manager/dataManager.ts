@@ -6,6 +6,7 @@ import { BasePacketHandler } from "./base.packet.handler";
 import { CacheDataManager } from "./cache.dataManager";
 import { ChatManager } from "./chat.manager";
 import { CommonDataManager } from "./common.data.manager";
+import { DataMgrType } from "./data.mgr.type";
 import { ElementDataManager } from "./element.dataManager";
 import { SceneDataManager } from "./scene.data.manager";
 export class DataManager {
@@ -107,13 +108,4 @@ export class DataManager {
         const mEvent = !dataType ? this.mEvent : this.getDataMgr<any>(dataType).Event;
         return mEvent;
     }
-}
-export enum DataMgrType {
-    None,
-    BaseMgr,
-    CacheMgr,
-    EleMgr,
-    SceneMgr,
-    CommonMgr,
-    ChatMgr
 }

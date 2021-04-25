@@ -59,11 +59,6 @@ export interface MoveWorkerPath {
     duration?: number;
     onStartParams?: any;
 }
-export declare enum InputEnable {
-    Diasble = 0,
-    Enable = 1,
-    Interactive = 2
-}
 export declare class Element extends BlockObject implements IElement {
     protected mElementManager: IElementManager;
     get state(): boolean;

@@ -1,5 +1,4 @@
 import { Body, Vector } from "tooqingmatter-js";
-import { PhysicalPeer } from "../physical.worker";
 import { MatterWorld } from "./matter.world";
 import { MoveData, MovePos } from "./matter.player.object";
 import { op_client } from "pixelpai_proto";
@@ -43,7 +42,7 @@ export interface IMatterObject {
     getInteractivePositionList(): IPos[];
 }
 export declare class MatterObject implements IMatterObject {
-    peer: PhysicalPeer;
+    peer: any;
     id: number;
     _tempVec: Vector;
     _offset: Vector;
@@ -66,7 +65,7 @@ export declare class MatterObject implements IMatterObject {
     private mMoveDelayTime;
     private mMoveTime;
     private mMovePoints;
-    constructor(peer: PhysicalPeer, id: number);
+    constructor(peer: any, id: number);
     get matterWorld(): MatterWorld;
     update(time?: number, delta?: number): void;
     _pushMoveData(): void;

@@ -1,7 +1,6 @@
 import { ChatCommandInterface, IPosition45Obj, Logger, LogicPos } from "structure";
 import { Render } from "../../render";
-import { PlayScene } from "../../scenes";
-
+import { RoomScene } from "../../scenes/room.scene";
 export class SortDebugger implements ChatCommandInterface {
     public static getInstance(): SortDebugger {
         if (!SortDebugger._instance) {
@@ -53,7 +52,7 @@ export class SortDebugger implements ChatCommandInterface {
 
         if (!this.isDebug) return;
         const scene = this.render.sceneManager.getMainScene();
-        if (!scene || !(scene instanceof PlayScene)) {
+        if (!scene || !(scene instanceof RoomScene)) {
             return;
         }
         this.render.mainPeer.getCurrentRoomSize()
@@ -69,7 +68,7 @@ export class SortDebugger implements ChatCommandInterface {
         this.clear();
 
         const scene = this.render.sceneManager.getMainScene();
-        if (!scene || !(scene instanceof PlayScene)) {
+        if (!scene || !(scene instanceof RoomScene)) {
             return;
         }
         this.render.mainPeer.getCurrentRoomSize()
@@ -80,7 +79,7 @@ export class SortDebugger implements ChatCommandInterface {
             });
     }
 
-    private drawObj(scene: PlayScene, color: number, rect: Rect, posObj: IPosition45Obj): Phaser.GameObjects.Graphics {
+    private drawObj(scene: RoomScene, color: number, rect: Rect, posObj: IPosition45Obj): Phaser.GameObjects.Graphics {
         Logger.getInstance().debug("#sort drawRect: ", rect);
 
         const pos1 = new LogicPos(rect.x, rect.y);

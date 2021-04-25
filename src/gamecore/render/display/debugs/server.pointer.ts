@@ -1,15 +1,14 @@
+import { SceneName } from "structure";
 import { Render } from "../../render";
-import { PlayScene } from "../../scenes/play.scene";
-
 export class ServerPosition {
     private mGridhics: Phaser.GameObjects.Graphics;
     private dpr: number;
     constructor(render: Render) {
-        const scene = render.sceneManager.getSceneByName(PlayScene.name);
+        const scene = render.sceneManager.getSceneByName(SceneName.PLAY_SCENE);
         this.dpr = render.scaleRatio;
 
         this.mGridhics = scene.make.graphics(undefined, false);
-        (<PlayScene>scene).layerManager.addToLayer("middleLayer", this.mGridhics);
+        (<any>scene).layerManager.addToLayer("middleLayer", this.mGridhics);
     }
 
     public draw(x: number, y: number) {

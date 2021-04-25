@@ -1,7 +1,5 @@
-import { AnimationQueue, Animator, AvatarSuit, IAvatar, ISprite, RunningAnimation, EventDispatcher, IPos, LogicPoint } from "structure";
+import { AnimationModel, IAnimationData, IDisplay, AnimationQueue, Animator, AvatarSuit, IAvatar, ISprite, RunningAnimation, Direction, EventDispatcher, IPos, LogicPoint, IFramesModel, IDragonbonesModel } from "structure";
 import { op_def, op_gameconfig, op_client, op_gameconfig_01 } from "pixelpai_proto";
-import { DragonbonesModel } from "./dragonbones.model";
-import { FramesModel } from "./frames.model";
 export declare class Sprite extends EventDispatcher implements ISprite {
     id: number;
     pos: IPos;
@@ -18,7 +16,7 @@ export declare class Sprite extends EventDispatcher implements ISprite {
     sceneId: number;
     uuid: number;
     platformId: string;
-    displayInfo: FramesModel | DragonbonesModel;
+    displayInfo: IFramesModel | IDragonbonesModel;
     nodeType: op_def.NodeType;
     currentAnimation: RunningAnimation;
     currentCollisionArea: number[][];
@@ -56,14 +54,14 @@ export declare class Sprite extends EventDispatcher implements ISprite {
     setMountSprites(ids: number[]): void;
     setAnimationName(name: string, times?: number): RunningAnimation;
     setDirection(val: number): void;
-    setDisplayInfo(displayInfo: FramesModel | DragonbonesModel): void;
+    setDisplayInfo(displayInfo: IFramesModel | IDragonbonesModel): void;
     get hasInteractive(): boolean;
-    getInteractive(): op_def.IPBPoint2i[];
+    getInteractive(): any;
     setOriginCollisionPoint(value: number[] | null): void;
     setOriginWalkPoint(value: number[] | null): void;
-    getCollisionArea(): number[][];
-    getWalkableArea(): number[][];
-    getOriginPoint(): LogicPoint;
+    getCollisionArea(): any;
+    getWalkableArea(): any;
+    getOriginPoint(): any;
     registerAnimationMap(key: string, value: string): void;
     unregisterAnimationMap(key: string): void;
     private setAnimationData;
@@ -72,4 +70,72 @@ export declare class Sprite extends EventDispatcher implements ISprite {
     private dirable;
     private tryRegisterAnimation;
     private getBaseAniName;
+}
+export declare class DragonbonesModel implements IDragonbonesModel {
+    discriminator: string;
+    id: number;
+    eventName: number[];
+    avatarDir?: number;
+    avatar?: IAvatar;
+    animationName?: string;
+    constructor(data: any);
+    setInfo(val: any): void;
+    destroy(): void;
+    getCollisionArea(aniName: string): number[][];
+    getWalkableArea(): number[][];
+    getOriginPoint(aniName: any): LogicPoint;
+    getInteractiveArea(): op_def.IPBPoint2i[];
+    existAnimation(aniName: string): boolean;
+    findAnimation(baseName: string, dir: Direction): RunningAnimation;
+    checkDirectionAnimation(baseName: string, dir: Direction): string;
+    checkDirectionByExistAnimations(baseAniName: string, dir: number): number;
+}
+export declare class FramesModel implements IFramesModel {
+    static createFromDisplay(display: any, animation: any, id?: number): {
+        animations: Map<any, any>;
+        id: number;
+        gene: any;
+        discriminator: string;
+        animationName: any;
+        display: any;
+    };
+    avatarDir?: number;
+    readonly discriminator: string;
+    id: number;
+    type: string;
+    eventName: number[];
+    display: IDisplay | null;
+    animations: Map<string, AnimationModel>;
+    animationName: string;
+    package: op_gameconfig.IPackage;
+    shops: op_gameconfig.IShop[];
+    gene: string;
+    constructor(data: any);
+    setInfo(val: any): void;
+    getAnimationData(): Map<string, IAnimationData>;
+    existAnimation(aniName: string): boolean;
+    getAnimations(name: string): IAnimationData;
+    destroy(): void;
+    createProtocolObject(): op_gameconfig_01.IAnimationData[];
+    getCollisionArea(aniName: string, flip?: boolean): number[][];
+    getWalkableArea(aniName: string, flip?: boolean): number[][];
+    getInteractiveArea(aniName: string, flip?: boolean): op_def.IPBPoint2i[] | undefined;
+    getOriginPoint(aniName: any, flip?: boolean): LogicPoint;
+    getDirable(): void;
+    createSprite(properties: {
+        nodeType: op_def.NodeType;
+        x: number;
+        y: number;
+        z?: number;
+        id?: number;
+        dir?: number;
+        isMoss?: boolean;
+        layer?: number;
+    }): Sprite;
+    findAnimation(baseName: string, dir: number): RunningAnimation;
+    checkDirectionAnimation(baseAniName: string, dir: Direction): string;
+    checkDirectionByExistAnimations(baseAniName: string, dir: number): number;
+    private setDisplay;
+    private setAnimationData;
+    private getDefaultAnimation;
 }

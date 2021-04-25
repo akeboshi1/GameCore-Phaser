@@ -1,8 +1,9 @@
-import { AnimationModel, AnimationQueue, Animator, AvatarSuit, AvatarSuitType, IAvatar, ISprite, RunningAnimation, Direction, EventDispatcher, IPos, Logger, LogicPoint, LogicPos } from "structure";
+import { AnimationModel,IAnimationData, IDisplay, AnimationQueue, Animator, AvatarSuit, AvatarSuitType, IAvatar, ISprite, RunningAnimation, Direction, EventDispatcher, IPos, Logger, LogicPoint, LogicPos, IFramesModel, IDragonbonesModel } from "structure";
 import { op_def, op_gameconfig, op_client, op_gameconfig_01 } from "pixelpai_proto";
+
 import { Helpers } from "game-capsule";
-import { DragonbonesModel } from "./dragonbones.model";
-import { FramesModel } from "./frames.model";
+import * as sha1 from "simple-sha1";
+
 enum TitleMask {
     TQ_NickName = 0x00010000,
     TQ_Badge = 0x00020000,
@@ -25,7 +26,7 @@ export class Sprite extends EventDispatcher implements ISprite {
     public sceneId: number;
     public uuid: number;
     public platformId: string;
-    public displayInfo: FramesModel | DragonbonesModel;
+    public displayInfo: IFramesModel | IDragonbonesModel;
     public nodeType: op_def.NodeType;
     public currentAnimation: RunningAnimation;
     public currentCollisionArea: number[][];
@@ -123,11 +124,11 @@ export class Sprite extends EventDispatcher implements ISprite {
         const sprite = op_client.Sprite.create();
         sprite.id = this.id;
         sprite.nickname = this.nickname;
-        if (this.displayInfo instanceof FramesModel) {
-            sprite.display = this.displayInfo.display;
+        if (this.displayInfo.discriminator === "FramesModel") {
+            sprite.display = (<any>this.displayInfo).display;
             sprite.currentAnimationName = this.currentAnimationName;
             sprite.animations = (<any>this.displayInfo).createProtocolObject();
-        } else if (this.displayInfo instanceof DragonbonesModel) {
+        } else if (this.displayInfo.discriminator === "DragonbonesModel") {
             if (this.avatar) {
                 const avatar = op_gameconfig.Avatar.create();
                 for (const key in this.avatar) {
@@ -202,7 +203,7 @@ export class Sprite extends EventDispatcher implements ISprite {
 
     public updateAvatar(avatar: op_gameconfig.IAvatar | IAvatar) {
         if (this.displayInfo) {
-            this.displayInfo.destroy();
+            (<any>this.displayInfo).destroy();
         }
         this.avatar = { id: avatar.id };
         this.avatar = Object.assign(this.avatar, avatar);
@@ -211,7 +212,7 @@ export class Sprite extends EventDispatcher implements ISprite {
 
     public setTempAvatar(avatar: IAvatar) {
         if (this.displayInfo) {
-            this.displayInfo.destroy();
+            (<any>this.displayInfo).destroy();
         }
         let tempAvatar = { id: avatar.id };
         tempAvatar = Object.assign(tempAvatar, this.avatar);
@@ -250,7 +251,7 @@ export class Sprite extends EventDispatcher implements ISprite {
             return;
         }
         if (this.displayInfo) {
-            this.displayInfo.destroy();
+            (<any>this.displayInfo).destroy();
         }
         if (display) {
             const anis = [];
@@ -302,19 +303,19 @@ export class Sprite extends EventDispatcher implements ISprite {
             return;
         }
 
-        if (this.currentAnimationName) this.direction = this.displayInfo.checkDirectionByExistAnimations(
+        if (this.currentAnimationName) this.direction = (<any>this.displayInfo).checkDirectionByExistAnimations(
             this.getBaseAniName(this.currentAnimationName), this.direction);
 
         // Logger.getInstance().debug("#dir sprite setDirection:=====", this.id, val);
         this.setAnimationData(this.currentAnimationName, this.direction);
     }
 
-    setDisplayInfo(displayInfo: FramesModel | DragonbonesModel) {
+    setDisplayInfo(displayInfo: IFramesModel | IDragonbonesModel) {
         this.displayInfo = displayInfo;
         this.displayInfo.id = this.id;
         if (this.currentAnimationName) {
             // DragonbonesModel 设置的动画在avatar上
-            if (displayInfo instanceof FramesModel) {
+            if (displayInfo.discriminator === "FrameModel") {
                 this.displayInfo.animationName = this.currentAnimationName;
                 this.setAnimationData(this.currentAnimationName, this.direction);
             } else {
@@ -333,7 +334,7 @@ export class Sprite extends EventDispatcher implements ISprite {
             return false;
         }
         const { name: animationName } = this.currentAnimation;
-        const area = this.displayInfo.getInteractiveArea(animationName);
+        const area = (<any>this.displayInfo).getInteractiveArea(animationName);
         if (area && area.length > 0) {
             return true;
         }
@@ -345,7 +346,7 @@ export class Sprite extends EventDispatcher implements ISprite {
             return;
         }
         const { name: animationName, flip } = this.currentAnimation;
-        return this.displayInfo.getInteractiveArea(animationName, flip);
+        return (<any>this.displayInfo).getInteractiveArea(animationName, flip);
     }
 
     public setOriginCollisionPoint(value: number[] | null): void {
@@ -373,7 +374,7 @@ export class Sprite extends EventDispatcher implements ISprite {
             return;
         }
         const { name: animationName, flip } = this.currentAnimation;
-        return this.displayInfo.getCollisionArea(animationName, flip);
+        return (<any>this.displayInfo).getCollisionArea(animationName, flip);
     }
 
     public getWalkableArea() {
@@ -381,7 +382,7 @@ export class Sprite extends EventDispatcher implements ISprite {
             return;
         }
         const { name: animationName, flip } = this.currentAnimation;
-        return this.displayInfo.getWalkableArea(animationName, flip);
+        return (<any>this.displayInfo).getWalkableArea(animationName, flip);
     }
 
     public getOriginPoint() {
@@ -389,7 +390,7 @@ export class Sprite extends EventDispatcher implements ISprite {
             return;
         }
         const { name: animationName, flip } = this.currentAnimation;
-        return this.displayInfo.getOriginPoint(animationName, flip);
+        return (<any>this.displayInfo).getOriginPoint(animationName, flip);
     }
 
     registerAnimationMap(key: string, value: string) {
@@ -407,10 +408,10 @@ export class Sprite extends EventDispatcher implements ISprite {
             return;
         }
         const baseAniName = this.getBaseAniName(animationName);
-        if (!this.displayInfo.findAnimation) {
+        if (!(<any>this.displayInfo).findAnimation) {
             Logger.getInstance().error("displayInfo no findanimation ====>", this.displayInfo);
         } else {
-            this.currentAnimation = this.displayInfo.findAnimation(baseAniName, direction);
+            this.currentAnimation = (<any>this.displayInfo).findAnimation(baseAniName, direction);
             this.currentAnimation.times = times;
             if (this.animationQueue && this.animationQueue.length > 0) this.currentAnimation.playingQueue = this.animationQueue[0];
             if (this.currentCollisionArea) {
@@ -424,7 +425,7 @@ export class Sprite extends EventDispatcher implements ISprite {
 
     private checkDirectionAnimation(baseAniName: string, dir: Direction) {
         const aniName = `${baseAniName}_${dir}`;
-        if (this.displayInfo.existAnimation(aniName)) {
+        if ((<any>this.displayInfo).existAnimation(aniName)) {
             return aniName;
         }
         return null;
@@ -464,5 +465,364 @@ export class Sprite extends EventDispatcher implements ISprite {
             }
         }
         return baseAniName;
+    }
+}
+export class DragonbonesModel implements IDragonbonesModel {
+    discriminator: string = "DragonbonesModel";
+    id: number;
+    public eventName: number[];
+    avatarDir?: number;
+    avatar?: IAvatar;
+    animationName?: string;
+    constructor(data: any) {
+        // this.id = id;
+        // this.avatar = avatar;
+        if (data) {
+            this.id = data.id;
+            this.avatar = data.avatar;
+            this.eventName = data.eventName;
+            const aniName = data.avatar.defaultAnimation;
+            if (aniName) this.animationName = aniName;
+        }
+    }
+
+    public setInfo(val: any) {
+        for (const key in val) {
+            if (val.hasOwnProperty(key)) {
+                this[key] = val[key];
+            }
+        }
+    }
+
+    public destroy() {
+    }
+
+    public getCollisionArea(aniName: string): number[][] {
+        return [[1]];
+    }
+
+    public getWalkableArea(): number[][] {
+        return [[0]];
+    }
+
+    public getOriginPoint(aniName): LogicPoint {
+        return new LogicPoint(0, 0);
+    }
+
+    public getInteractiveArea(): op_def.IPBPoint2i[] {
+        return undefined;
+    }
+
+    existAnimation(aniName: string) {
+        return true;
+    }
+
+    public findAnimation(baseName: string, dir: Direction): RunningAnimation {
+        let flip = false;
+        switch (dir) {
+            case Direction.south_east:
+            case Direction.east_north:
+                flip = true;
+                break;
+            case Direction.west_south:
+            case Direction.north_west:
+                break;
+        }
+        const aniName = this.checkDirectionAnimation(baseName, dir);
+        return { name: aniName, flip };
+    }
+
+    public checkDirectionAnimation(baseName: string, dir: Direction) {
+        let addName: string = "";
+        if (dir === Direction.north_west || dir === Direction.east_north) addName = "_back";
+        const aniName = `${baseName}${addName}`;
+        if (this.existAnimation(aniName)) {
+            return aniName;
+        }
+        return null;
+    }
+
+    // 方向数据检查
+    public checkDirectionByExistAnimations(baseAniName: string, dir: number): number {
+        return dir;
+    }
+}
+export class FramesModel implements IFramesModel {
+
+    static createFromDisplay(display, animation, id?: number) {
+        const anis = [];
+        const aniName = animation[0].node.name;
+        for (const ani of animation) {
+            anis.push(new AnimationModel(ani));
+        }
+        const animations = new Map();
+        for (const aniData of anis) {
+            animations.set(aniData.name, aniData);
+        }
+        return {
+            animations,
+            id: id || 0,
+            gene: sha1.sync(display.dataPath + display.texturePath),
+            discriminator: "FramesModel",
+            animationName: aniName,
+            display
+        };
+    }
+
+    avatarDir?: number;
+    readonly discriminator: string = "FramesModel";
+    public id: number;
+    public type: string;
+    public eventName: number[];
+    public display: IDisplay | null;
+    public animations: Map<string, AnimationModel>;
+    public animationName: string;
+    public package: op_gameconfig.IPackage;
+    public shops: op_gameconfig.IShop[];
+    public gene: string;
+
+    constructor(data: any) {
+        // TODO 定义IElement接口
+        this.id = data.id || 0;
+        this.type = data.sn || "";
+        this.eventName = data.eventName;
+        const anis = data.animations;
+        if (anis) {
+            this.animationName = anis.defaultAnimationName;
+            this.setDisplay(anis.display);
+            this.setAnimationData(anis.animationData);
+        }
+    }
+
+    public setInfo(val: any) {
+        for (const key in val) {
+            if (val.hasOwnProperty(key)) {
+                this[key] = val[key];
+            }
+        }
+    }
+
+    public getAnimationData(): Map<string, IAnimationData> {
+        return this.animations;
+    }
+
+    public existAnimation(aniName: string): boolean {
+        if (!this.animations) return false;
+        return this.animations.has(aniName);
+    }
+
+    public getAnimations(name: string): IAnimationData {
+        if (!this.animations) return;
+        return this.animations.get(name);
+    }
+
+    public destroy() {
+        if (this.animations) this.animations.clear();
+    }
+
+    public createProtocolObject(): op_gameconfig_01.IAnimationData[] {
+        const anis: op_gameconfig_01.IAnimationData[] = [];
+        this.animations.forEach((ani: AnimationModel) => {
+            anis.push(ani.createProtocolObject());
+        }, this);
+        return anis;
+    }
+
+    public getCollisionArea(aniName: string, flip: boolean = false): number[][] {
+        const ani = this.getAnimations(aniName);
+        if (ani) {
+            if (flip) {
+                return Helpers.flipArray(ani.collisionArea);
+            }
+            return ani.collisionArea;
+        }
+    }
+
+    public getWalkableArea(aniName: string, flip: boolean = false): number[][] {
+        const ani = this.getAnimations(aniName);
+        if (!ani) {
+            return;
+        }
+        if (flip) {
+            return Helpers.flipArray(ani.walkableArea);
+        }
+        return ani.walkableArea;
+    }
+
+    public getInteractiveArea(aniName: string, flip: boolean = false): op_def.IPBPoint2i[] | undefined {
+        const ani = this.getAnimations(aniName);
+        if (ani) {
+            if (flip) {
+                const area = [];
+                const interactiveArea = ani.interactiveArea;
+                for (const interactive of interactiveArea) {
+                    area.push({ x: interactive.y, y: interactive.x });
+                }
+                return area;
+            }
+            return ani.interactiveArea;
+        }
+        return;
+    }
+
+    public getOriginPoint(aniName, flip: boolean = false): LogicPoint {
+        const ani = this.getAnimations(aniName);
+        if (ani) {
+            const originPoint = ani.originPoint;
+            if (flip) {
+                return new LogicPoint(originPoint.y, originPoint.x);
+            }
+            return originPoint;
+        }
+    }
+
+    public getDirable() { }
+
+    public createSprite(properties: {
+        nodeType: op_def.NodeType;
+        x: number;
+        y: number;
+        z?: number;
+        id?: number;
+        dir?: number;
+        isMoss?: boolean;
+        layer?: number;
+    }): Sprite {
+        const { nodeType, x, y, z, id, dir, isMoss, layer } = properties;
+        const spr = op_client.Sprite.create();
+
+        if (id) {
+            spr.id = id;
+        } else {
+            spr.id = Helpers.genId();
+        }
+        spr.layer = layer;
+        spr.display = this.display;
+        spr.currentAnimationName = this.animationName;
+        const point3f = op_def.PBPoint3f.create();
+        point3f.x = x;
+        point3f.y = y;
+        if (z) {
+            point3f.z = z;
+        }
+        spr.point3f = point3f;
+        spr.animations = this.createProtocolObject();
+        if (dir) {
+            spr.direction = dir;
+        }
+
+        if (isMoss !== undefined) {
+            spr.isMoss = isMoss;
+        }
+
+        return new Sprite(spr, nodeType);
+    }
+
+    public findAnimation(baseName: string, dir: number): RunningAnimation {
+        let animationName = this.checkDirectionAnimation(baseName, dir);
+        let flip = false;
+        if (animationName) {
+            return { name: animationName, flip };
+        }
+        switch (dir) {
+            case Direction.west_south:
+            case Direction.east_north:
+                animationName = this.getDefaultAnimation(baseName);
+                break;
+            case Direction.south_east:
+                animationName = this.getDefaultAnimation(baseName);
+                flip = true;
+                break;
+            case Direction.north_west:
+                animationName = this.checkDirectionAnimation(baseName, Direction.east_north);
+                if (animationName === null) {
+                    animationName = this.getDefaultAnimation(baseName);
+                }
+                flip = true;
+                break;
+        }
+        return { name: animationName, flip };
+    }
+
+    public checkDirectionAnimation(baseAniName: string, dir: Direction) {
+        const aniName = `${baseAniName}_${dir}`;
+        if (this.existAnimation(aniName)) {
+            return aniName;
+        }
+        return null;
+    }
+
+    // 方向数据检查
+    public checkDirectionByExistAnimations(baseAniName: string, dir: number): number {
+        let result = dir;
+        switch (dir) {
+            case Direction.west_south:
+                break;
+            case Direction.south_east:
+                break;
+            case Direction.east_north:
+                if (!this.existAnimation(`${baseAniName}_${Direction.east_north}`)) {
+                    result = Direction.west_south;
+                }
+                break;
+            case Direction.north_west:
+                if (!this.existAnimation(`${baseAniName}_${Direction.north_west}`) &&
+                    !this.existAnimation(`${baseAniName}_${Direction.east_north}`)) {
+                    result = Direction.south_east;
+                }
+                break;
+        }
+        return result;
+    }
+
+    private setDisplay(display: op_gameconfig.IDisplay) {
+        if (!display) {
+            Logger.getInstance().error(`${this.type} display does not exist`);
+            return;
+        }
+        this.display = {
+            dataPath: display.dataPath,
+            texturePath: display.texturePath,
+        };
+        this.gene = sha1.sync(display.dataPath + display.texturePath);
+    }
+
+    private setAnimationData(aniDatas: AnimationModel[]) {
+        if (!aniDatas) {
+            Logger.getInstance().error(`${this.id} animationData does not exist`);
+            return;
+        }
+        this.animations = new Map();
+        // let ani: IAnimationData;
+        for (const aniData of aniDatas) {
+            // const baseLoc = aniData.baseLoc;
+            // ani = {
+            //     name: aniData.name,
+            //     frameName: aniData.frameName,
+            //     frameRate: aniData.frameRate,
+            //     loop: aniData.loop,
+            //     baseLoc: new Phaser.Geom.Point(baseLoc.x, baseLoc.y),
+            //     // walkableArea: aniData.walkableArea || [],
+            //     collisionArea: aniData.collisionArea || [],
+            //     originPoint: aniData.originPoint
+            // };
+            this.animations.set(aniData.name, aniData);
+            // this.animations.set(aniData.name + "_7", aniData);
+            // this.animations.set(aniData.name + "_1", aniData);
+            // this.animations.set(aniData.name + "_5", aniData);
+        }
+    }
+
+    private getDefaultAnimation(baseName: string) {
+        let animationName = this.checkDirectionAnimation(baseName, Direction.west_south);
+        if (animationName === null) {
+            if (this.existAnimation(baseName)) {
+                animationName = baseName;
+            } else {
+                Logger.getInstance().warn(`${FramesModel.name}: can't find animation ${baseName}`);
+                animationName = "idle";
+            }
+        }
+        return animationName;
     }
 }

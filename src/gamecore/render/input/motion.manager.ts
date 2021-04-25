@@ -1,7 +1,7 @@
 import { Render } from "../render";
 import { NodeType } from "../managers";
 import { MainUIScene } from "../scenes/main.ui.scene";
-import { Logger, LogicPos, SceneName } from "structure";
+import { LogicPos, SceneName } from "structure";
 export class MotionManager {
     public enable: boolean;
     protected scene: Phaser.Scene;

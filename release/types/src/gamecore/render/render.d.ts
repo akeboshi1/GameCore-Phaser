@@ -18,6 +18,7 @@ import { SortDebugger } from "./display/debugs/sort.debugger";
 import { UiManager } from "./ui";
 import { GuideManager } from "./guide";
 import { SoundManager } from "./managers";
+import { DebugManager } from "./managers/debug.manager";
 export interface GlobalGameConfig {
     Orientation: number;
     PlatForm: number;
@@ -42,6 +43,7 @@ export declare class Render extends RPCPeer implements GameMain, IRender {
     protected mConfig: ILauncherConfig;
     protected mUiManager: UiManager;
     protected mDisplayManager: DisplayManager;
+    protected mDebugManager: DebugManager;
     protected mLocalStorageManager: LocalStorageManager;
     protected mEditorCanvasManager: EditorCanvasManager;
     private mCallBack;
@@ -86,6 +88,7 @@ export declare class Render extends RPCPeer implements GameMain, IRender {
     get guideManager(): GuideManager;
     get camerasManager(): CamerasManager;
     get displayManager(): DisplayManager;
+    get debugManager(): DebugManager;
     get soundManager(): SoundManager;
     get localStorageManager(): LocalStorageManager;
     get editorCanvasManager(): EditorCanvasManager;

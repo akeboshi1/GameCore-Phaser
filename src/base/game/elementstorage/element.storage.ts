@@ -14,8 +14,7 @@ import {
 import { op_def } from "pixelpai_proto";
 import { Url } from "utils";
 import { AnimationModel, IDragonbonesModel, IFramesModel, IScenery, Logger } from "structure";
-import { DragonbonesModel } from "../dragonbones.model";
-import { FramesModel } from "../frames.model";
+import { DragonbonesModel, FramesModel } from "../sprite";
 export interface IAsset {
     type: string;
     key: string;

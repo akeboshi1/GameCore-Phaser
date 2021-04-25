@@ -15,6 +15,7 @@ import { BlockObject } from "../block/block.object";
 import { IRoomService } from "../room";
 import { ElementStateManager } from "../state/element.state.manager";
 import { IElementManager } from "./element.manager";
+import { InputEnable } from "./input.enable";
 
 export interface IElement {
     readonly id: number;
@@ -105,12 +106,6 @@ export interface MoveWorkerPath {
     direction: number;
     duration?: number;
     onStartParams?: any;
-}
-
-export enum InputEnable {
-    Diasble,
-    Enable,
-    Interactive,
 }
 
 export class Element extends BlockObject implements IElement {

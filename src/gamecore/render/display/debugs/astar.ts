@@ -1,6 +1,6 @@
 import { Render } from "../../render";
-import { PlayScene } from "../../scenes/play.scene";
 import { ChatCommandInterface, IPos, IPosition45Obj, LogicPos, Position45 } from "structure";
+import { BasicScene } from "baseRender";
 
 enum PointsShowType {
     None,// 全部不显示
@@ -71,7 +71,7 @@ export class Astar {
         if (this.mPointsShowType === PointsShowType.None) return;
         if (!this.mAstarSize) return;
         const scene = this.render.sceneManager.getMainScene();
-        if (!scene || !(scene instanceof PlayScene)) {
+        if (!scene || !(scene instanceof BasicScene)) {
             return;
         }
         this.clearAll();
@@ -144,7 +144,7 @@ export class Astar {
     private drawPath(start: IPos, tar: IPos, path: IPos[]) {
         if (!this.mAstarSize) return;
         const scene = this.render.sceneManager.getMainScene();
-        if (!scene || !(scene instanceof PlayScene)) {
+        if (!scene || !(scene instanceof BasicScene)) {
             return;
         }
         this.clearPath();

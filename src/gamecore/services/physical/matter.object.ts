@@ -1,11 +1,12 @@
 import { Bodies, Body, Vector, Events } from "tooqingmatter-js";
-import { delayTime, PhysicalPeer } from "../physical.worker";
+// import { delayTime, PhysicalPeer } from "../physical.worker";
 import { MatterWorld } from "./matter.world";
 import { MoveData, MovePos } from "./matter.player.object";
 import { op_client } from "pixelpai_proto";
 import { MatterSprite } from "./matter.sprite";
 import { Tool } from "utils";
 import { IPos, IPosition45Obj, LogicPos, Position45, PlayerState } from "structure";
+import { delayTime } from "./physical.param";
 export interface IMatterObject {
     id: number;
 
@@ -101,11 +102,11 @@ export class MatterObject implements IMatterObject {
     private mMoveDelayTime = 400;
     private mMoveTime: number = 0;
     private mMovePoints: any[];
-    constructor(public peer: PhysicalPeer, public id: number) {
+    constructor(public peer: any, public id: number) {
         this._tempVec = Vector.create(0, 0);
         this._offset = Vector.create(0, 0);
         this._offsetOrigin = Vector.create(0.5, 0.5);
-        this._scale = this.peer.scaleRatio;
+        this._scale = <any>this.peer.scaleRatio;
     }
 
     get matterWorld(): MatterWorld {

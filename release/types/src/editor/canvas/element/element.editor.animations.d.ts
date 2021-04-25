@@ -1,6 +1,5 @@
 /// <reference types="tooqinggamephaser" />
-import { ResourcesChangeListener } from "./element.editor.resource.manager";
-import ElementEditorGrids from "./element.editor.grids";
+import { ResourcesChangeListener, ElementEditorGrids } from "./element.editor.resource.manager";
 export declare const LOCAL_HOME_PATH: string;
 export default class ElementEditorAnimations extends Phaser.GameObjects.Container implements ResourcesChangeListener {
     private readonly MOUNT_ARMATURE_KEY;

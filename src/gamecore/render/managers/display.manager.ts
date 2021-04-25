@@ -9,13 +9,9 @@ import {
     IScenery, LayerName, Handler, IPos, IPosition45Obj, Logger, LogicPos, IFramesModel
 } from "structure";
 import { op_def } from "pixelpai_proto";
-import { MatterBodies } from "../display/debugs/matter";
-import { ServerPosition } from "../display/debugs/server.pointer";
 import { IDisplayObject } from "../display";
-import { Astar } from "../display/debugs/astar";
-import { Grids } from "../display/debugs/grids";
-import { FramesModel } from "baseGame";
 import { BlockManager } from "baseRender";
+import { FramesModel } from "baseGame";
 
 export enum NodeType {
     UnknownNodeType = 0,
@@ -63,10 +59,6 @@ export class DisplayManager {
     private displays: Map<number, DragonbonesDisplay | FramesDisplay>;
     private scenerys: Map<number, BlockManager>;
     private mUser: DragonbonesDisplay;
-    private matterBodies: MatterBodies;
-    private serverPosition: ServerPosition;
-    private mAstarDebug: Astar;
-    private mGridsDebug: Grids;
     private preLoadList: any[];
     private loading: boolean = false;
     private mModelCache: Map<number, any>;
@@ -427,80 +419,6 @@ export class DisplayManager {
         display.showTopDisplay(state);
     }
 
-    public showMatterDebug(bodies) {
-        if (!this.matterBodies) {
-            this.matterBodies = new MatterBodies(this.render);
-        }
-        this.matterBodies.renderWireframes(bodies);
-    }
-
-    public hideMatterDebug() {
-        if (this.matterBodies) {
-            this.matterBodies.destroy();
-            this.matterBodies = undefined;
-        }
-    }
-
-    public showGridsDebug(size: IPosition45Obj) {
-        if (!this.mGridsDebug) {
-            this.mGridsDebug = new Grids(this.render);
-        }
-        this.mGridsDebug.setData(size);
-    }
-
-    public hideGridsDebug() {
-        if (this.mGridsDebug) {
-            this.mGridsDebug.destroy();
-            this.mGridsDebug = null;
-        }
-    }
-
-    public showAstarDebug_init(map: number[][], posObj: IPosition45Obj) {
-        if (!this.mAstarDebug) {
-            this.mAstarDebug = new Astar(this.render);
-        }
-
-        this.mAstarDebug.initData(map, posObj);
-    }
-
-    public showAstarDebug_update(x: number, y: number, val: boolean) {
-        if (!this.mAstarDebug) {
-            // Logger.getInstance().error("AstarDebug not init");
-            return;
-        }
-
-        this.mAstarDebug.updateData(x, y, val);
-    }
-
-    public showAstarDebug_findPath(start: IPos, tar: IPos, path: IPos[]) {
-        if (!this.mAstarDebug) {
-            // Logger.getInstance().error("AstarDebug not init");
-            return;
-        }
-
-        this.mAstarDebug.showPath(start, tar, path);
-    }
-
-    public hideAstarDebug() {
-        if (this.mAstarDebug) {
-            this.mAstarDebug.destroy();
-            this.mAstarDebug = null;
-        }
-    }
-
-    public drawServerPosition(x: number, y: number) {
-        if (!this.serverPosition) {
-            this.serverPosition = new ServerPosition(this.render);
-        }
-        this.serverPosition.draw(x, y);
-    }
-
-    public hideServerPosition() {
-        if (!this.serverPosition) return;
-        this.serverPosition.destroy();
-        this.serverPosition = null;
-    }
-
     public liftItem(id: number, display, animation) {
         const player: any = this.displays.get(id);
         if (!player) {
@@ -579,22 +497,6 @@ export class DisplayManager {
                 if (block) block.destroy();
             });
             this.scenerys.clear();
-        }
-        if (this.matterBodies) {
-            this.matterBodies.destroy();
-            this.matterBodies = null;
-        }
-        if (this.serverPosition) {
-            this.serverPosition.destroy();
-            this.serverPosition = null;
-        }
-        if (this.mAstarDebug) {
-            this.mAstarDebug.destroy();
-            this.mAstarDebug = null;
-        }
-        if (this.mGridsDebug) {
-            this.mGridsDebug.destroy();
-            this.mGridsDebug = null;
         }
     }
 

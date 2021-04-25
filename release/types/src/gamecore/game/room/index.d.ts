@@ -4,6 +4,7 @@ export * from "./camera/cameras.worker.manager";
 export * from "./effect/effect";
 export * from "./effect/effect.manager";
 export * from "./element/element";
+export * from "./element/input.enable";
 export * from "./element/element.manager";
 export * from "./player/player";
 export * from "./player/player.manager";

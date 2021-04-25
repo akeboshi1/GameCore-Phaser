@@ -1,7 +1,7 @@
 import { FramesDisplay } from "../display/frames/frames.display";
 import { DragonbonesDisplay } from "../display/dragonbones/dragonbones.display";
 import { Render } from "../render";
-import { RunningAnimation, IDragonbonesModel, DisplayField, ElementStateType, IScenery, IPos, IPosition45Obj, IFramesModel } from "structure";
+import { RunningAnimation, IDragonbonesModel, DisplayField, ElementStateType, IScenery, IFramesModel } from "structure";
 import { op_def } from "pixelpai_proto";
 export declare enum NodeType {
     UnknownNodeType = 0,
@@ -49,10 +49,6 @@ export declare class DisplayManager {
     private displays;
     private scenerys;
     private mUser;
-    private matterBodies;
-    private serverPosition;
-    private mAstarDebug;
-    private mGridsDebug;
     private preLoadList;
     private loading;
     private mModelCache;
@@ -88,16 +84,6 @@ export declare class DisplayManager {
     displayDoMove(id: number, moveData: any): void;
     showNickname(id: number, name: string): void;
     showTopDisplay(id: number, state?: ElementStateType): void;
-    showMatterDebug(bodies: any): void;
-    hideMatterDebug(): void;
-    showGridsDebug(size: IPosition45Obj): void;
-    hideGridsDebug(): void;
-    showAstarDebug_init(map: number[][], posObj: IPosition45Obj): void;
-    showAstarDebug_update(x: number, y: number, val: boolean): void;
-    showAstarDebug_findPath(start: IPos, tar: IPos, path: IPos[]): void;
-    hideAstarDebug(): void;
-    drawServerPosition(x: number, y: number): void;
-    hideServerPosition(): void;
     liftItem(id: number, display: any, animation: any): void;
     clearMount(id: number): void;
     throwElement(userId: number, targetId: number, display: any, animation: any): void;

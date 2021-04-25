@@ -1,17 +1,17 @@
-import { delayTime, PhysicalPeer } from "../physical.worker";
 import { IMoveTarget, MatterPlayerObject, MovePos } from "./matter.player.object";
 import { op_def } from "pixelpai_proto";
 import { IPoint } from "game-capsule";
 import { Vector, Body } from "tooqingmatter-js";
 import { Tool } from "utils";
 import { DirectionChecker, IPos, Logger, LogicPos } from "structure";
+import { delayTime } from "./physical.param";
 export class MatterUserObject extends MatterPlayerObject {
     public stopBoxMove: boolean = false;
     private mTargetPoint: IMoveTarget;
     private mSyncDirty: boolean = false;
     private mSyncTime: number = 0;
     private mTargetID: number;
-    constructor(public peer: PhysicalPeer, public id: number) {
+    constructor(public peer: any, public id: number) {
         super(peer, id);
         this._offsetOrigin.y = 0;
     }

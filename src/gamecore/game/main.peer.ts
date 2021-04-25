@@ -4,8 +4,7 @@ import { PBpacket, Buffer } from "net-socket-packet";
 import * as protos from "pixelpai_proto";
 import { Game } from "./game";
 import { ServerAddress, IPos, Logger, ILauncherConfig, MAIN_WORKER, RENDER_PEER, ModuleName, EventType, PHYSICAL_WORKER, PHYSICAL_WORKER_URL, GameState } from "structure";
-import { DataMgrType } from "./data.manager/dataManager";
-import { SceneDataManager } from "./data.manager";
+import { DataMgrType, SceneDataManager } from "./data.manager";
 import version from "../../../version";
 
 for (const key in protos) {

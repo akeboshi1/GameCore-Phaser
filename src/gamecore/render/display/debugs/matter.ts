@@ -1,17 +1,17 @@
 import { Render } from "../../render";
-import { Logger } from "structure";
-import { PlayScene } from "../../scenes/play.scene";
+import { Logger, SceneName } from "structure";
+import { BasicScene } from "baseRender";
 
 export class MatterBodies {
     private mGraphics: Phaser.GameObjects.Graphics;
     constructor(private render: Render) {
-        const scene = this.render.sceneManager.getSceneByName(PlayScene.name);
+        const scene = this.render.sceneManager.getSceneByName(SceneName.PLAY_SCENE);
         if (!scene) {
             Logger.getInstance().error("no matter scene");
             return;
         }
         this.mGraphics = scene.make.graphics(undefined, false);
-        (<PlayScene>scene).layerManager.addToLayer("middleLayer", this.mGraphics);
+        (<BasicScene>scene).layerManager.addToLayer("middleLayer", this.mGraphics);
     }
 
     update() {

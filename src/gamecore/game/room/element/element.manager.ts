@@ -3,13 +3,14 @@ import { op_client, op_def, op_virtual_world } from "pixelpai_proto";
 import { ConnectionService } from "structure";
 import { EventType, IDragonbonesModel, IFramesModel, ISprite, Logger, LogicPos } from "structure";
 import { IRoomService } from "../room";
-import { Element, IElement, InputEnable } from "./element";
+import { Element, IElement } from "./element";
 import { ElementStateManager } from "./element.state.manager";
 import { ElementDataManager } from "../../data.manager/element.dataManager";
 import { DataMgrType } from "../../data.manager";
 import { ElementActionManager } from "../elementaction/element.action.manager";
 import { IElementStorage, Sprite } from "baseGame";
 import NodeType = op_def.NodeType;
+import { InputEnable } from "./input.enable";
 // import { PicaElementActionManager } from "src/gamecore/game";
 
 export interface IElementManager {

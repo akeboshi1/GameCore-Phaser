@@ -1,7 +1,6 @@
 import { Lite, PaletteNode, TerrainCollectionNode, MossNode, AssetsNode, WallCollectionNode, MossCollectionNode } from "game-capsule";
 import { IDragonbonesModel, IFramesModel, IScenery } from "structure";
-import { DragonbonesModel } from "../dragonbones.model";
-import { FramesModel } from "../frames.model";
+import { DragonbonesModel, FramesModel } from "../sprite";
 export interface IAsset {
     type: string;
     key: string;

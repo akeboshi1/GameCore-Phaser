@@ -41,6 +41,7 @@ import { UiManager } from "./ui";
 import { GuideManager } from "./guide";
 import { MouseManager } from "./input/mouse.manager";
 import { SoundManager } from "./managers";
+import { DebugManager } from "./managers/debug.manager";
 
 for (const key in protos) {
     PBpacket.addProtocol(protos[key]);
@@ -83,6 +84,7 @@ export class Render extends RPCPeer implements GameMain, IRender {
     protected mConfig: ILauncherConfig;
     protected mUiManager: UiManager;
     protected mDisplayManager: DisplayManager;
+    protected mDebugManager: DebugManager;
     protected mLocalStorageManager: LocalStorageManager;
     protected mEditorCanvasManager: EditorCanvasManager;
     private mCallBack: Function;
@@ -233,6 +235,10 @@ export class Render extends RPCPeer implements GameMain, IRender {
         return this.mDisplayManager;
     }
 
+    get debugManager(): DebugManager {
+        return this.mDebugManager;
+    }
+
     get soundManager(): SoundManager {
         return this.mSoundManager;
     }
@@ -306,6 +312,10 @@ export class Render extends RPCPeer implements GameMain, IRender {
         if (this.mDisplayManager) {
             this.mDisplayManager.destroy();
             this.mDisplayManager = undefined;
+        }
+        if (this.mDebugManager) {
+            this.mDebugManager.destroy();
+            this.mDebugManager = undefined;
         }
         if (this.mEditorCanvasManager) {
             this.mEditorCanvasManager.destroy();
@@ -1353,26 +1363,26 @@ export class Render extends RPCPeer implements GameMain, IRender {
 
     @Export()
     public drawGrids(posObj: IPosition45Obj | undefined) {
-        if (!this.displayManager) return;
-        this.displayManager.showGridsDebug(posObj);
+        if (!this.mDebugManager) return;
+        this.mDebugManager.showGridsDebug(posObj);
     }
 
     @Export()
     public drawAstar_init(map: number[][], posObj: IPosition45Obj) {
-        if (!this.displayManager) return;
-        this.displayManager.showAstarDebug_init(map, posObj);
+        if (!this.mDebugManager) return;
+        this.mDebugManager.showAstarDebug_init(map, posObj);
     }
 
     @Export()
     public drawAstar_update(x: number, y: number, val: boolean) {
-        if (!this.displayManager) return;
-        this.displayManager.showAstarDebug_update(x, y, val);
+        if (!this.mDebugManager) return;
+        this.mDebugManager.showAstarDebug_update(x, y, val);
     }
 
     @Export()
     public drawAstar_findPath(start: IPos, tar: IPos, points: IPos[]) {
-        if (!this.displayManager) return;
-        this.displayManager.showAstarDebug_findPath(start, tar, points);
+        if (!this.mDebugManager) return;
+        this.mDebugManager.showAstarDebug_findPath(start, tar, points);
     }
 
     @Export()
@@ -1458,22 +1468,22 @@ export class Render extends RPCPeer implements GameMain, IRender {
 
     @Export()
     public showMatterDebug(vertices) {
-        if (this.mDisplayManager) this.mDisplayManager.showMatterDebug(vertices);
+        if (this.mDebugManager) this.mDebugManager.showMatterDebug(vertices);
     }
 
     @Export()
     public hideMatterDebug() {
-        if (this.mDisplayManager) this.mDisplayManager.hideMatterDebug();
+        if (this.mDebugManager) this.mDebugManager.hideMatterDebug();
     }
 
     @Export([webworker_rpc.ParamType.num, webworker_rpc.ParamType.num])
     public drawServerPosition(x: number, y: number) {
-        if (this.mDisplayManager) this.mDisplayManager.drawServerPosition(x, y);
+        if (this.mDebugManager) this.mDebugManager.drawServerPosition(x, y);
     }
 
     @Export()
     public hideServerPosition() {
-        if (this.mDisplayManager) this.mDisplayManager.hideServerPosition();
+        if (this.mDebugManager) this.mDebugManager.hideServerPosition();
     }
 
     @Export([webworker_rpc.ParamType.num, webworker_rpc.ParamType.num])

@@ -4,8 +4,7 @@ import { EventType, ModuleName, RoomType, EventDispatcher, Logger } from "struct
 import { CacheDataManager } from ".";
 import { Game } from "../game";
 import { BasePacketHandler } from "./base.packet.handler";
-import { DataMgrType } from "./dataManager";
-
+import { DataMgrType } from "./data.mgr.type";
 export class SceneDataManager extends BasePacketHandler {
     private mCurRoom: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_EDIT_MODE_ROOM_INFO;
     private rewardTipCaches: any[];

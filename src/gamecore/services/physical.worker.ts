@@ -5,12 +5,11 @@ import { MatterWorld } from "./physical/matter.world";
 import decomp from "poly-decomp";
 import { MatterUserObject } from "./physical/matter.user.object";
 import { EventDispatcher, IPos, MAIN_WORKER, PHYSICAL_WORKER, RENDER_PEER } from "structure";
+import { delayTime } from "./physical/physical.param";
 // The World act as the global Phaser.World instance;
 // @ts-ignore
 global.decomp = decomp;
 
-export const physicalFps: number = 45;
-export const delayTime = 1000 / physicalFps;
 export class PhysicalPeer extends RPCPeer {
     public scaleRatio: number;
     protected currentTime: number = 0;

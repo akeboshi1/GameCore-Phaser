@@ -1,8 +1,8 @@
-import { InputEnable } from "../element/element";
 import { MatterWorkerObject } from "../physical/matter.worker.object";
 import { IRoomService } from "../room";
 import { IBlockObject } from "./iblock.object";
 import { IPos, IProjection, ISprite } from "structure";
+import { InputEnable } from "../element/input.enable";
 export declare abstract class BlockObject extends MatterWorkerObject implements IBlockObject {
     protected mRoomService: IRoomService;
     isUsed: boolean;

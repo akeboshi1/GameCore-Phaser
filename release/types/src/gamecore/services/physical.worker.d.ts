@@ -2,8 +2,6 @@ import { RPCPeer } from "webworker-rpc";
 import { IMatterObject } from "./physical/matter.object";
 import { MatterWorld } from "./physical/matter.world";
 import { EventDispatcher, IPos } from "structure";
-export declare const physicalFps: number;
-export declare const delayTime: number;
 export declare class PhysicalPeer extends RPCPeer {
     scaleRatio: number;
     protected currentTime: number;

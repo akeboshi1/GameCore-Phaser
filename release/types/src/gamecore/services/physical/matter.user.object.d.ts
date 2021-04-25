@@ -1,16 +1,15 @@
-import { PhysicalPeer } from "../physical.worker";
 import { MatterPlayerObject, MovePos } from "./matter.player.object";
 import { Body } from "tooqingmatter-js";
 import { IPos } from "structure";
 export declare class MatterUserObject extends MatterPlayerObject {
-    peer: PhysicalPeer;
+    peer: any;
     id: number;
     stopBoxMove: boolean;
     private mTargetPoint;
     private mSyncDirty;
     private mSyncTime;
     private mTargetID;
-    constructor(peer: PhysicalPeer, id: number);
+    constructor(peer: any, id: number);
     update(time?: number, delta?: number): void;
     unmount(targetPos?: IPos): Promise<void>;
     addBody(): void;

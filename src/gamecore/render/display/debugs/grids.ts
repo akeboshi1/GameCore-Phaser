@@ -1,6 +1,6 @@
-import {Render} from "../../render";
-import {ChatCommandInterface, IPosition45Obj, LogicPos, Position45} from "structure";
-import {PlayScene} from "../../scenes/play.scene";
+import { Render } from "../../render";
+import { ChatCommandInterface, IPosition45Obj, LogicPos, Position45 } from "structure";
+import { RoomScene } from "../../scenes/room.scene";
 
 export class Grids {
     private mGraphic: Phaser.GameObjects.Graphics;
@@ -29,7 +29,7 @@ export class Grids {
     public show() {
         if (!this.mRoomSize) return;
         const scene = this.render.sceneManager.getMainScene();
-        if (!scene || !(scene instanceof PlayScene)) {
+        if (!scene || !(scene instanceof RoomScene)) {
             return;
         }
         if (this.mGraphic) this.mGraphic.destroy();

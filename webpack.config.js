@@ -9,6 +9,7 @@ const CopyWebpackPlugin = require("copy-webpack-plugin");
 const { CleanWebpackPlugin } = require("clean-webpack-plugin");
 const TSLintPlugin = require("tslint-webpack-plugin");
 const TerserPlugin = require("terser-webpack-plugin");
+const CircularDependencyPlugin = require("circular-dependency-plugin");
 const appVer = require("./version");
 
 const resourcesOut = { name: "[name]_[hash].[ext]", outputPath: "resources" };
@@ -64,7 +65,7 @@ const commonConfig = {
         new TSLintPlugin({
             config: path.resolve(__dirname, "./tslint.json"),
             files: ["./src/**/*.ts"],
-        }),
+        })
     ]
 };
 
@@ -118,6 +119,19 @@ const gameConfig = Object.assign({}, commonConfig, {
             WEBGL_RENDERER: true, // I did this to make webpack work, but I"m not really sure it should always be true
             CANVAS_RENDERER: true, // I did this to make webpack work, but I"m not really sure it should always be true
         }),
+        new CircularDependencyPlugin({
+            // exclude detection of files based on a RegExp
+            exclude: /a\.js|node_modules/,
+            // include specific files based on a RegExp
+            include: /src/,
+            // add errors to webpack instead of warnings
+            failOnError: true,
+            // allow import cycles that include an asyncronous import,
+            // e.g. via import(/* webpackMode: "weak" */ './file.js')
+            allowAsyncCycles: false,
+            // set the current working directory for displaying module paths
+            cwd: process.cwd(),
+        })
     ],
     devServer: {
         writeToDisk: true,
