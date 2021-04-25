@@ -24,10 +24,10 @@
         "src/gamecore/render/index"
       ],
       "gamecore": [
-        "src/gamecore/game/index"
+        "src/gamecore/worker/game/index"
       ],
       "physical": [
-        "src/gamecore/services/index"
+        "src/gamecore/worker/services/index"
       ],
       "utils": [
         "src/utils/index"

@@ -143,14 +143,15 @@ const workerConfig = Object.assign({}, commonConfig, {
         ],
     },
     entry: {
-        mainWorker: "./src/gamecore/game/main.peer.ts",
-        physicalWorker: "./src/gamecore/services/physical.worker.ts"
+        index:"./src/gamecore/worker/index.ts",
+        mainWorker: "./src/gamecore/worker/game/main.peer.ts",
+        physicalWorker: "./src/gamecore/worker/services/physical.worker.ts"
     },
     output: {
         // This is required so workers are known where to be loaded from
         path: path.resolve(__dirname, "dist"),
         // filename: `js/[name]_v${appVer}.js`,
-        filename: `js/[name]_worker.js`,
+        filename: `js/worker/[name]_worker.js`,
         libraryTarget: "umd",
         globalObject: "this",
         library: "[name]",

@@ -1,3 +1,2 @@
-export * from "./game";
+export * from "./worker";
 export * from "./render";
-export * from "./services";
