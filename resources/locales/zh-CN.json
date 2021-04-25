@@ -274,7 +274,9 @@
     "current": "当前",
     "system": "系统",
     "givegift": "赠送",
-    "placeholder": "随便说点什么..."
+    "placeholder": "随便说点什么...",
+    "turmpttips": "喇叭消息开启，每条消息消耗一个喇叭",
+    "turmptenough":"喇叭数量不足"
   },
   "minecar": {
     "discard": "丢弃",
@@ -305,7 +307,8 @@
     "worktimes": "打工次数",
     "salary": "报酬",
     "attri": "*{{name}}需要大于{{value}}才可以任职这份工作",
-    "worktips": "每次打工会消耗1次打工机会和1点精力，打工机会每天重置"
+    "worktips": "每次打工会消耗1次打工机会和1点精力，打工机会每天重置",
+    "enoughtips": "打工次数不足"
   },
   "party": {
     "partyname": "派对房间",
@@ -337,7 +340,10 @@
     "modifyconfirm": "确定消耗{{count}}个时长卡，修改派对吗？",
     "onlinetime": "在线{{name}}分钟",
     "nopartytips": "暂无派对，快去开启派对吧~",
-    "progresstips": "下次领取: "
+    "progresstips": "下次领取: ",
+    "myroomnametips": "第{{name}}房间",
+    "roomunlocktips:": "需要等级达到{{name}}级解锁",
+    "roomtypetitle": "房型选择"
   },
   "picelevator": {
     "floor": "层"

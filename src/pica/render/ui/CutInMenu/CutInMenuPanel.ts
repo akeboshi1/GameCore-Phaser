@@ -1,5 +1,5 @@
 import { op_client } from "pixelpai_proto";
-import { BasePanel, ButtonEventDispatcher, UiManager } from "gamecoreRender";
+import { BasePanel, ButtonEventDispatcher, Tap, UiManager } from "gamecoreRender";
 import { ModuleName } from "structure";
 import { Handler, i18n, UIHelper } from "utils";
 import { Button, ClickEvent } from "apowophaserui";
@@ -111,7 +111,8 @@ class RightPopContainer extends Phaser.GameObjects.Container {
         this.scaleWidth = width;
         this.minecarbg = this.scene.make.image({ key: this.key, frame: "minebag_bg" });
         this.minecarbg.texture.setFilter(Phaser.Textures.FilterMode.LINEAR);
-        this.minecarbg.on("pointerup", this.onClickHandler, this);
+        const tap = new Tap(this.minecarbg);
+        this.minecarbg.on(ClickEvent.Tap, this.onClickHandler, this);
         this.minecarbg.setInteractive();
         this.setSize(this.minecarbg.width, this.minecarbg.height);
         this.bgSprite = this.scene.make.image({ key: this.key, frame: "minebag_bg_brth" }, false);

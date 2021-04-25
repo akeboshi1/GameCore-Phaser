@@ -37,10 +37,16 @@ export class LabelInput extends Phaser.GameObjects.Container {
     }
 
     setText(val: string) {
-        this.mLabel.setText(this.mPlaceholder ? val ? val : this.mPlaceholder: val);
+        this.mLabel.setText(this.mPlaceholder ? val ? val : this.mPlaceholder : val);
         if (this.mInputText) {
             this.mInputText.text = val;
         }
+        return this;
+    }
+    setPlaceholder(val: string) {
+        this.mPlaceholder = val || this.mPlaceholder;
+        this.mInputConfig.placeholder = this.mPlaceholder;
+        this.mLabel.setText(this.mPlaceholder);
         return this;
     }
 

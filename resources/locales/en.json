@@ -267,7 +267,9 @@
     "current": "Scene",
     "system": "System",
     "givegift": "Gifts",
-    "placeholder": "Say something…"
+    "placeholder": "Say something…",
+    "turmpttips": "A speaker message is enabled. Each message consumes a speaker",
+    "turmptenough":"Insufficient number of speakers"
   },
   "minecar": {
     "discard": "discard",
@@ -294,7 +296,8 @@
     "worktimes": "WORK TIME",
     "salary": "SALARY",
     "attri": "*Requires {{name}}: {{value}}",
-    "worktips": "Every time you join a union, you consume 1 job opportunity and 1 point of energy, and the job opportunity is reset every day"
+    "worktips": "Every time you join a union, you consume 1 job opportunity and 1 point of energy, and the job opportunity is reset every day",
+    "enoughtips": "Insufficient working times"
   },
   "party": {
     "partyname": "NAME",
@@ -326,7 +329,10 @@
     "modifyconfirm": "Are you sure to consume {{count}} time cards to modify the party?",
     "onlinetime": "Online {{name}} minutes",
     "nopartytips": "There is no party yet, let's start the party~",
-    "progresstips": "Next award: "
+    "progresstips": "Next award: ",
+    "myroomnametips": "{{name}} room",
+    "roomunlocktips:": "Requires {{name}} level to unlock",
+    "roomtypetitle": "Room choice"
   },
   "picelevator": {
     "floor": "F"
