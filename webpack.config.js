@@ -88,7 +88,7 @@ const gameConfig = Object.assign({}, commonConfig, {
         utils: "./src/utils/index.ts",
         structure: "./src/structure/index.ts",
         renderPeer: "./src/gamecore/render/index.ts",
-        mianPeer: "./src/gamecore/game/index.ts",
+        mainPeer: "./src/gamecore/game/index.ts",
         physicalPeer: "./src/gamecore/services/index.ts"
     },
     output: {
