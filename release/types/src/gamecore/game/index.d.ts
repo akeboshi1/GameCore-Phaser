@@ -1,6 +1,3 @@
-import "structure";
-import "utils";
-import "baseGame";
 export * from "./game";
 export * from "./main.peer";
 export * from "./world.events";
