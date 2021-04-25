@@ -18,7 +18,7 @@ export class AStar {
         } else {
             this.grid = new Grid(matrix);
             this.finder = new AStarFinder({
-                allowDiagonal: false,
+                allowDiagonal: true,
                 dontCrossCorners: true
             });
         }
