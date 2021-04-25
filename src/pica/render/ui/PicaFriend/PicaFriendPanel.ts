@@ -618,8 +618,12 @@ class MainContainer extends FriendContainer {
         }
         let result = this.showingFriends.slice(0);
         result = result.filter((friend: FriendData) => {
-            if (friend.nickname && friend.nickname.indexOf(text) > -1) {
-                return true;
+            if (friend.nickname) {
+                const lowerNickname = friend.nickname.toLowerCase();
+                const lowerText = text.toLowerCase();
+                if (lowerNickname.indexOf(lowerText) > -1) {
+                    return true;
+                }
             }
             return false;
         });
