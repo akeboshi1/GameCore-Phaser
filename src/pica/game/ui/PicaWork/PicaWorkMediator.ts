@@ -66,7 +66,7 @@ export class PicaWorkMediator extends BasicMediator {
     private onUpdatePlayerInfo(content: PlayerProperty) {
         this.mPlayerInfo = content;
         if (this.mView)
-            this.mView.setWorkChance(content.workChance.value);
+            this.mView.setWorkChance(content.energy.value >= 5);
     }
     private checkCanDoJob(content: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_JOB_LIST) {
         const jobs: IJob[] = [];

@@ -25,7 +25,7 @@ export class BottomMediator extends BasicMediator {
         this.game.emitter.on(ModuleName.BOTTOM + "_trumpet", this.onTrumpetHandler, this);
         this.game.emitter.on(ModuleName.BOTTOM + "_bbcodeEvent", this.onBBCODEEventHandler, this);
         this.game.emitter.on(RedEventType.MAIN_PANEL_RED, this.onRedSystemHandler, this);
-        this.game.emitter.on(EventType.UPDATE_PLAYER_INFO, this.setTrumpetState, this);
+        this.game.emitter.on(EventType.PACKAGE_UPDATE, this.setTrumpetState, this);
         super.show();
     }
 
@@ -36,7 +36,7 @@ export class BottomMediator extends BasicMediator {
         this.game.emitter.off(ModuleName.BOTTOM + "_trumpet", this.onTrumpetHandler, this);
         this.game.emitter.off(ModuleName.BOTTOM + "_bbcodeEvent", this.onBBCODEEventHandler, this);
         this.game.emitter.off(RedEventType.MAIN_PANEL_RED, this.onRedSystemHandler, this);
-        this.game.emitter.off(EventType.UPDATE_PLAYER_INFO, this.setTrumpetState, this);
+        this.game.emitter.off(EventType.PACKAGE_UPDATE, this.setTrumpetState, this);
         super.hide();
     }
 
@@ -166,10 +166,11 @@ export class BottomMediator extends BasicMediator {
     //     });
     // }
     private setTrumpetState() {
-        const id = "IP1310058";
-        const count = this.game.user.userData.playerBag.getItemsCount(op_pkt_def.PKT_PackageType.PropPackage, id);
-        this.mView.setTrumpetState(count);
-
+        if (this.mView) {
+            const id = "IP1310058";
+            const count = this.game.user.userData.playerBag.getItemsCount(op_pkt_def.PKT_PackageType.PropPackage, id);
+            this.mView.setTrumpetState(count);
+        }
     }
     private onShowPanelHandler(panel: string, data?: any) {
         if (!this.mModel || !this.game) {
