@@ -1,4 +1,4 @@
-import { ModuleName, RENDER_PEER } from "structure";
+import { ModuleName } from "structure";
 import { IconBtn } from "../components/icon.btn";
 import { UiManager } from "../ui.manager";
 import { BasicRankPanel } from "./basicRankPanel";
@@ -108,7 +108,7 @@ export class RankPanel extends BasicRankPanel {
     }
 
     private closeHandler() {
-        this.render.renderEmitter(RENDER_PEER + "_" + this.key + "_hide");
+        this.render.renderEmitter(this.render.renderParam.key + "_" + this.key + "_hide");
     }
 
     private onZoomHandler() {

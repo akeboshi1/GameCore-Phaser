@@ -17,15 +17,10 @@ import {
     IFramesModel,
     ILauncherConfig,
     IScenery,
-    MAIN_WORKER,
-    MAIN_WORKER_URL,
     MessageType,
     ModuleName,
-    PHYSICAL_WORKER,
-    PHYSICAL_WORKER_URL,
-    RENDER_PEER,
     SceneName,
-    PlatFormType, i18n, initLocales, IPos, IPosition45Obj, Logger, LogicPos, Pos, Size, ValueResolver
+    PlatFormType, i18n, initLocales, IPos, IPosition45Obj, Logger, LogicPos, Pos, Size, ValueResolver, IWorkerParam
 } from "structure";
 import { DisplayManager } from "./managers/display.manager";
 import { InputManager } from "./input/input.manager";
@@ -87,6 +82,9 @@ export class Render extends RPCPeer implements GameMain, IRender {
     protected mDebugManager: DebugManager;
     protected mLocalStorageManager: LocalStorageManager;
     protected mEditorCanvasManager: EditorCanvasManager;
+    protected mRenderParam: IWorkerParam;
+    protected mMainPeerParam: IWorkerParam;
+    protected mPhysicalParam: IWorkerParam;
     private mCallBack: Function;
     private _moveStyle: number = 0;
     private _curTime: number;
@@ -117,7 +115,7 @@ export class Render extends RPCPeer implements GameMain, IRender {
     private readonly hiddenDelay = 60000;
     private mHiddenTime: any;
     constructor(config: ILauncherConfig, callBack?: Function) {
-        super(RENDER_PEER);
+        super(config.renderPeerName);
         Logger.getInstance().log("config ====>", config);
         this.emitter = new Phaser.Events.EventEmitter();
         this.mConfig = config;
@@ -170,10 +168,17 @@ export class Render extends RPCPeer implements GameMain, IRender {
         // requestAnimationFrame(animate);
     }
 
-    // public initPeer() {
-    //     this.linkMain();
-    //     this.linkPhysical();
-    // }
+    get renderParam() {
+        return this.mRenderParam;
+    }
+
+    get mainPeerParam() {
+        return this.mMainPeerParam;
+    }
+
+    get physicalParam() {
+        return this.mPhysicalParam;
+    }
 
     public linkMain(key, url, peerName) {
         // todo protected createFunc
@@ -274,7 +279,7 @@ export class Render extends RPCPeer implements GameMain, IRender {
     createGame() {
         this.newGame().then(() => {
             this.createManager();
-            this.remote[MAIN_WORKER].MainPeer.createGame(this.mConfig);
+            this.mMainPeer.createGame(this.mConfig);
         });
     }
 
@@ -364,7 +369,7 @@ export class Render extends RPCPeer implements GameMain, IRender {
     }
 
     enterGame() {
-        this.remote[MAIN_WORKER].MainPeer.loginEnterWorld();
+        this.mMainPeer.loginEnterWorld();
         this.mGame.scene.remove(SceneName.LOGIN_SCENE);
     }
 
@@ -496,14 +501,14 @@ export class Render extends RPCPeer implements GameMain, IRender {
             return;
         }
         this.destroy(false).then(() => {
-            this.linkTo(MAIN_WORKER, MAIN_WORKER_URL).onceReady(() => {
-                this.mMainPeer = this.remote[MAIN_WORKER].MainPeer;
+            this.linkTo(this.mMainPeerParam.key, this.mMainPeerParam.url).onceReady(() => {
+                this.mMainPeer = this.mainPeer;
                 this.mMainPeer.updateFps();
                 this.createGame();
                 Logger.getInstance().debug("worker onReady");
             });
-            this.linkTo(PHYSICAL_WORKER, PHYSICAL_WORKER_URL).onceReady(() => {
-                this.mPhysicalPeer = this.remote[PHYSICAL_WORKER].PhysicalPeer;
+            this.linkTo(this.mPhysicalParam.key, this.mPhysicalParam.url).onceReady(() => {
+                this.mPhysicalPeer = this.remote[this.mPhysicalParam.key][this.mPhysicalParam.name];
                 this.mPhysicalPeer.setScaleRatio(Math.ceil(this.mConfig.devicePixelRatio || UiUtils.baseDpr));
                 this.mPhysicalPeer.start();
                 Logger.getInstance().debug("Physcialworker onReady");
@@ -536,17 +541,17 @@ export class Render extends RPCPeer implements GameMain, IRender {
     }
 
     initUI() {
-        this.remote[MAIN_WORKER].MainPeer.initUI();
+        this.mainPeer.initUI();
     }
 
     startRoomPlay() {
         this.sceneCreated = true;
         this.emitter.emit(Render.SCENE_CREATED);
-        this.remote[MAIN_WORKER].MainPeer.startRoomPlay();
+        this.mainPeer.startRoomPlay();
     }
 
     updateRoom(time: number, delta: number) {
-        // this.remote[MAIN_WORKER].MainPeer.updateRoom(time, delta);
+        // this.mainPeer.updateRoom(time, delta);
         this.mInputManager.update(time, delta);
         this.mDisplayManager.update(time, delta);
     }
@@ -576,7 +581,7 @@ export class Render extends RPCPeer implements GameMain, IRender {
         // this.mainPeer.destroy();
         // this.physicalPeer.destroy();
         return new Promise((resolve, reject) => {
-            this.destroyWorker([MAIN_WORKER, PHYSICAL_WORKER]).then(() => {
+            this.destroyWorker([this.mMainPeerParam.key, this.mPhysicalParam.key]).then(() => {
                 if (this.mGame) {
                     this.destroyManager();
                     this.mGame.events.off(Phaser.Core.Events.FOCUS, this.onFocus, this);
@@ -613,11 +618,11 @@ export class Render extends RPCPeer implements GameMain, IRender {
     }
 
     public initGameConfig(config: any) {
-        this.remote[MAIN_WORKER].MainPeer.initGameConfig(JSON.stringify(config));
+        this.mainPeer.initGameConfig(JSON.stringify(config));
     }
 
     // public startConnect(gateway: ServerAddress) {
-    //     this.remote[MAIN_WORKER].MainPeer.startConnect(gateway.host, gateway.port, gateway.secure);
+    //     this.mainPeer.startConnect(gateway.host, gateway.port, gateway.secure);
     // }
 
     public newGame(): Promise<any> {

@@ -6,7 +6,7 @@ import { Account } from "./account";
 import { SceneManager } from "./scenes/scene.manager";
 import { LocalStorageManager } from "./managers/local.storage.manager";
 import { CamerasManager } from "./cameras/cameras.manager";
-import { ElementStateType, GameMain, IDragonbonesModel, IFramesModel, ILauncherConfig, IScenery, IPos, IPosition45Obj, LogicPos, Size } from "structure";
+import { ElementStateType, GameMain, IDragonbonesModel, IFramesModel, ILauncherConfig, IScenery, IPos, IPosition45Obj, LogicPos, Size, IWorkerParam } from "structure";
 import { DisplayManager } from "./managers/display.manager";
 import { InputManager } from "./input/input.manager";
 import { EditorCanvasManager } from "./managers/editor.canvas.manager";
@@ -46,6 +46,9 @@ export declare class Render extends RPCPeer implements GameMain, IRender {
     protected mDebugManager: DebugManager;
     protected mLocalStorageManager: LocalStorageManager;
     protected mEditorCanvasManager: EditorCanvasManager;
+    protected mRenderParam: IWorkerParam;
+    protected mMainPeerParam: IWorkerParam;
+    protected mPhysicalParam: IWorkerParam;
     private mCallBack;
     private _moveStyle;
     private _curTime;
@@ -75,6 +78,9 @@ export declare class Render extends RPCPeer implements GameMain, IRender {
     private readonly hiddenDelay;
     private mHiddenTime;
     constructor(config: ILauncherConfig, callBack?: Function);
+    get renderParam(): IWorkerParam;
+    get mainPeerParam(): IWorkerParam;
+    get physicalParam(): IWorkerParam;
     linkMain(key: any, url: any, peerName: any): void;
     linkPhysical(key: any, url: any, peerName: any): void;
     get physicalPeer(): any;

@@ -4,7 +4,7 @@ import { IMatterObject, MatterObject } from "./physical/matter.object";
 import { MatterWorld } from "./physical/matter.world";
 import decomp from "poly-decomp";
 import { MatterUserObject } from "./physical/matter.user.object";
-import { EventDispatcher, IPos, MAIN_WORKER, PHYSICAL_WORKER, RENDER_PEER } from "structure";
+import { EventDispatcher, IPos, IWorkerParam } from "structure";
 import { delayTime } from "./physical/physical.param";
 // The World act as the global Phaser.World instance;
 // @ts-ignore
@@ -15,6 +15,9 @@ export class PhysicalPeer extends RPCPeer {
     protected currentTime: number = 0;
     protected mWorkerLoop: any;
     protected mEmitter: EventDispatcher;
+    protected mRenderParam: IWorkerParam;
+    protected mMainPeerParam: IWorkerParam;
+    protected mPhysicalPeerParam: IWorkerParam;
     private matterWorld: MatterWorld;
     private matterObjectMap: Map<number, IMatterObject>;
     private isDestroy: boolean = false;
@@ -67,12 +70,24 @@ export class PhysicalPeer extends RPCPeer {
         }
     }
 
+    get physicalPeerParam() {
+        return this.mPhysicalPeerParam;
+    }
+
+    get mainPeerParam() {
+        return this.mMainPeerParam;
+    }
+
+    get renderParam() {
+        return this.mRenderParam;
+    }
+
     get mainPeer() {
-        return this.remote[MAIN_WORKER].MainPeer;
+        return this.remote[this.mMainPeerParam.key][this.mMainPeerParam.name];
     }
 
     get render() {
-        return this.remote[RENDER_PEER].Render;
+        return this.remote[this.mRenderParam.key][this.mRenderParam.name];
     }
 
     @Export()

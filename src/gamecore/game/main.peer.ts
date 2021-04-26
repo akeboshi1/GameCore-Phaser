@@ -3,7 +3,7 @@ import { op_gateway, op_virtual_world, op_client } from "pixelpai_proto";
 import { PBpacket, Buffer } from "net-socket-packet";
 import * as protos from "pixelpai_proto";
 import { Game } from "./game";
-import { ServerAddress, IPos, Logger, ILauncherConfig, MAIN_WORKER, RENDER_PEER, ModuleName, EventType, PHYSICAL_WORKER, PHYSICAL_WORKER_URL, GameState } from "structure";
+import { ServerAddress, IPos, Logger, ILauncherConfig, ModuleName, EventType, GameState, IWorkerParam } from "structure";
 import { DataMgrType, SceneDataManager } from "./data.manager";
 import version from "../../../version";
 
@@ -14,6 +14,9 @@ for (const key in protos) {
 export class MainPeer extends RPCPeer {
     @Export()
     protected game: Game;
+    protected mRenderParam: IWorkerParam;
+    protected mPhysicalParam: IWorkerParam;
+    protected mMainPeerParam: IWorkerParam;
     private gameState;
     private stateTime: number = 0;
     private mConfig: ILauncherConfig;
@@ -27,6 +30,7 @@ export class MainPeer extends RPCPeer {
     private startDelay: any;
     private isStartUpdateFps: boolean = false;
     private startUpdateFps: any;
+
     // private isReconnect: boolean = false;
     constructor(workerName: string) {
         super(workerName);
@@ -35,12 +39,23 @@ export class MainPeer extends RPCPeer {
         this.stateTime = new Date().getTime();
     }
 
+    get renderParam() {
+        return this.mRenderParam;
+    }
+
+    get mainPeerParam() {
+        return this.mMainPeerParam;
+    }
+
+    get physicalParam() {
+        return this.mPhysicalParam;
+    }
     get render() {
-        return this.remote[RENDER_PEER].Render;
+        return this.remote[this.mRenderParam.key][this.mRenderParam.name];
     }
 
     get physicalPeer() {
-        return this.remote[PHYSICAL_WORKER].PhysicalPeer;
+        return this.remote[this.mPhysicalParam.key][this.mPhysicalParam.name];
     }
 
     set state(val) {
@@ -52,7 +67,7 @@ export class MainPeer extends RPCPeer {
     // ============= connection调用主进程
     public onConnected(isAuto: boolean) {
         // 告诉主进程链接成功
-        this.remote[RENDER_PEER].Render.onConnected(isAuto);
+        this.render.onConnected(isAuto);
         this.startBeat();
         // 逻辑层game链接成功
         this.game.onConnected();
@@ -60,7 +75,7 @@ export class MainPeer extends RPCPeer {
 
     public onDisConnected(isAuto) {
         // 告诉主进程断开链接
-        this.remote[RENDER_PEER].Render.onDisConnected();
+        this.render.onDisConnected();
         // 停止心跳
         this.endBeat();
         this.game.onDisConnected(isAuto);
@@ -68,7 +83,7 @@ export class MainPeer extends RPCPeer {
 
     public onConnectError(error: string) {
         // 告诉主进程链接错误
-        this.remote[RENDER_PEER].Render.onConnectError(error);
+        this.render.onConnectError(error);
         // 停止心跳
         this.endBeat();
         this.game.onError();
@@ -88,7 +103,7 @@ export class MainPeer extends RPCPeer {
         if (this.isStartUpdateFps) return;
         this.isStartUpdateFps = true;
         this.startUpdateFps = setInterval(() => {
-            this.remote[RENDER_PEER].Render.updateFPS();
+            this.render.updateFPS();
         }, 100);
     }
 
@@ -99,7 +114,7 @@ export class MainPeer extends RPCPeer {
             this.startUpdateFps = null;
         }
         // Logger.getInstance().debug("heartBeatWorker endBeat");
-        this.remote[RENDER_PEER].Render.endFPS();
+        this.render.endFPS();
     }
 
     public startBeat() {
@@ -125,7 +140,7 @@ export class MainPeer extends RPCPeer {
             this.startDelay = null;
         }
         Logger.getInstance().log("heartBeat end");
-        // this.remote[MAIN_WORKER].MainPeer.endHeartBeat();
+        // this.mainPeer.endHeartBeat();
     }
 
     @Export()
@@ -133,7 +148,7 @@ export class MainPeer extends RPCPeer {
         Logger.getInstance().log("heartBeat get");
         this.reConnectCount = 0;
         // Logger.getInstance().debug("heartBeatWorker clearBeat");
-        // this.remote[MAIN_WORKER].MainPeer.clearHeartBeat();
+        // this.mainPeer.clearHeartBeat();
     }
 
     @Export([webworker_rpc.ParamType.boolean])
@@ -151,8 +166,8 @@ export class MainPeer extends RPCPeer {
         // const url: string = "/js/game" + "_v1.0.398";
         Logger.getInstance().debug("render link onReady");
         this.game.createGame(this.mConfig);
-        this.linkTo(PHYSICAL_WORKER, PHYSICAL_WORKER_URL).onceReady(() => {
-            this.mPhysicalPeer = this.remote[PHYSICAL_WORKER].PhysicalPeer;
+        this.linkTo(this.mPhysicalParam.key, this.mPhysicalParam.url).onceReady(() => {
+            this.mPhysicalPeer = this.remote[this.mPhysicalParam.key][this.mPhysicalParam.name];
             Logger.getInstance().debug("Physcialworker onReady");
             // this.linkTo(HEARTBEAT_WORKER, HEARTBEAT_WORKER_URL).onceReady(() => {
             //     Logger.getInstance().debug("heartBeatworker onReady in mainworker");
@@ -473,7 +488,7 @@ export class MainPeer extends RPCPeer {
     @Export()
     public requestCurTime(): Promise<number> {
         return new Promise<number>((resolve, reject) => {
-            this.remote[RENDER_PEER].Render.getCurTime(this.game.clock.unixTime)
+            this.render.getCurTime(this.game.clock.unixTime)
                 .then((t) => {
                     resolve(t);
                 });

@@ -1,12 +1,15 @@
 import { RPCPeer } from "webworker-rpc";
 import { IMatterObject } from "./physical/matter.object";
 import { MatterWorld } from "./physical/matter.world";
-import { EventDispatcher, IPos } from "structure";
+import { EventDispatcher, IPos, IWorkerParam } from "structure";
 export declare class PhysicalPeer extends RPCPeer {
     scaleRatio: number;
     protected currentTime: number;
     protected mWorkerLoop: any;
     protected mEmitter: EventDispatcher;
+    protected mRenderParam: IWorkerParam;
+    protected mMainPeerParam: IWorkerParam;
+    protected mPhysicalPeerParam: IWorkerParam;
     private matterWorld;
     private matterObjectMap;
     private isDestroy;
@@ -16,6 +19,9 @@ export declare class PhysicalPeer extends RPCPeer {
     getMatterObj(id: number): IMatterObject;
     run(): Promise<any>;
     update(): Promise<void>;
+    get physicalPeerParam(): IWorkerParam;
+    get mainPeerParam(): IWorkerParam;
+    get renderParam(): IWorkerParam;
     get mainPeer(): any;
     get render(): any;
     start(): void;

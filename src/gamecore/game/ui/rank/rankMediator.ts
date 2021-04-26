@@ -1,4 +1,4 @@
-import { ModuleName, RENDER_PEER } from "structure";
+import { ModuleName } from "structure";
 import { BasicMediator, UIType } from "../basic/basic.mediator";
 import { Game } from "../../game";
 
@@ -14,7 +14,7 @@ export class RankMediator extends BasicMediator {
     }
 
     hide(): void {
-        this.game.emitter.off(RENDER_PEER + "_" + this.key + "_hide", this.hide, this);
+        this.game.emitter.off(this.game.peer.renderParam.key + "_" + this.key + "_hide", this.hide, this);
         if (this.mView) {
             this.mView.hide();
             this.mView = null;
@@ -39,7 +39,7 @@ export class RankMediator extends BasicMediator {
 
     show(param?: any): void {
         super.show(param);
-        this.game.emitter.on(RENDER_PEER + "_" + this.key + "_hide", this.hide, this);
+        this.game.emitter.on(this.game.peer.renderParam.key + "_" + this.key + "_hide", this.hide, this);
     }
 
     panelInit() {
