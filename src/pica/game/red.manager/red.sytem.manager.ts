@@ -33,7 +33,8 @@ export class RedSystemMananger {
     }
     protected onRedSystemHandler(content: any) {
         this.redDataMap.clear();
-        const updateTypes = [];
+        const allTypes = this.getRedTypes();
+        const mainTypes = [];
         const list = content.list;
         // const list = [op_def.RedDotTypeEnum.MAIL_REDDOTSTATUS, op_def.RedDotTypeEnum.GALLERY_REDDOTSTATUS, op_def.RedDotTypeEnum.GALLERY_PROGRESSREWARD_REDDOTSTATUS, op_def.RedDotTypeEnum.GALLERY_COLLECTIONREWARD_REDDOTSTATUS,
         // op_def.RedDotTypeEnum.MAIN_QUEST_REDDOTSTATUS];
@@ -47,14 +48,17 @@ export class RedSystemMananger {
                 temps = this.redDataMap.get(redType);
             }
             temps.push(type);
-            updateTypes.push(redType);
+            mainTypes.push(redType);
         }
-        this.redDataMap.set(MainUIRedType.MAIN, updateTypes);
-        for (const temp of updateTypes) {
+        this.redDataMap.set(MainUIRedType.MAIN, mainTypes);
+        for (const temp of allTypes) {
             const eventType = this.getRedEventType(temp);
-            this.game.emitter.emit(eventType, this.redDataMap.get(temp));
+            if (!eventType) continue;
+            let redArr = this.redDataMap.get(temp);
+            redArr = redArr || [];
+            this.game.emitter.emit(eventType, redArr);
         }
-        this.game.emitter.emit(RedEventType.MAIN_PANEL_RED, updateTypes);
+        this.game.emitter.emit(RedEventType.MAIN_PANEL_RED, mainTypes);
     }
 
     protected getRedMapType(type: number) {
@@ -79,6 +83,16 @@ export class RedSystemMananger {
         if (type === MainUIRedType.GALLERY) return RedEventType.GALLERY_PANEL_RED;
         else if (type === MainUIRedType.TASK) return RedEventType.TASK_PANEL_RED;
         return undefined;
+    }
+    protected getRedTypes() {
+        const regPos = /^\d+(\.\d+)?$/;
+        const redTypse = [];
+        for (const key in MainUIRedType) {
+            if (regPos.test(key)) {
+                redTypse.push(Number(key));
+            }
+        }
+        return redTypse;
     }
 
 }

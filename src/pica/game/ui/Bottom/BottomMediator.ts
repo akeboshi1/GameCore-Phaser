@@ -59,7 +59,7 @@ export class BottomMediator extends BasicMediator {
         if (!data.trumpet) {
             model.sendMessage(data.val);
         } else {
-            this.game.sendCustomProto("STRING", "sendTrumpetMessage", data.val);
+            this.game.sendCustomProto("STRING", "sendTrumpetMessage", { id: data.val });
             this.setTrumpetState();
         }
     }

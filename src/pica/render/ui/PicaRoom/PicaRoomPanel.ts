@@ -23,7 +23,7 @@ export class PicaRoomPanel extends PicaBasePanel {
     constructor(uiManager: UiManager) {
         super(uiManager);
         this.key = ModuleName.PICAROOM_NAME;
-        this.atlasNames = [UIAtlasName.uicommon, UIAtlasName.uicommon1, UIAtlasName.room_info];
+        this.atlasNames = [UIAtlasName.uicommon, UIAtlasName.uicommon1, UIAtlasName.room_info, UIAtlasName.multiple_rooms];
     }
 
     public resize(w: number, h: number) {
@@ -92,7 +92,7 @@ export class PicaRoomPanel extends PicaBasePanel {
 
     private showRoomInfoPanel() {
         if (!this.roomInfoPanel) {
-            this.roomInfoPanel = new PicaRoomInfoPanel(this.scene, 0, 0, this.content.width - 40 * this.dpr, this.content.height - 70 * this.dpr, this.dpr);
+            this.roomInfoPanel = new PicaRoomInfoPanel(this.scene, this.uiManager, 0, 0, this.content.width - 40 * this.dpr, this.content.height - 70 * this.dpr, this.dpr);
             this.roomInfoPanel.y = -this.content.height * 0.5 + this.roomInfoPanel.height * 0.5 + 30 * this.dpr;
             this.roomInfoPanel.setHandler(new Handler(this, this.onSendHandler));
             this.content.add(this.roomInfoPanel);
@@ -152,6 +152,8 @@ export class PicaRoomPanel extends PicaBasePanel {
         } else if (tag === "open") {
             // this.render.renderEmitter(ModuleName.PICAROOM_NAME + "_openparty");
             this.onNoticeHandler(i18n.t("noticeTips.staytuned"));
+        } else if (tag === "defaultroom") {
+            this.render.renderEmitter(ModuleName.PICAROOM_NAME + "_defaultroom", this.mRoomInfoData.roomId);
         }
     }
 

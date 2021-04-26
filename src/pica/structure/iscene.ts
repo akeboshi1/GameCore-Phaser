@@ -7,4 +7,5 @@ export interface IScene {
     texturePath: string;
     subcategory: string;
     tag: number;
+    unlockType: number;
 }

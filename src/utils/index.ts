@@ -30,3 +30,4 @@ export * from "./stringUtils";
 export * from "./object.assign";
 export * from "./uiUtil";
 export * from "./http.load.manager";
+export * from "./number.utils";

@@ -92,13 +92,19 @@ export class SceneConfigMap {
             if (map.has(key)) {
                 const datas = map.get(key);
                 for (const temp of value) {
-                    temp.roomName = i18nFun(temp.roomName);
+                    if (!temp["find"]) {
+                        temp.roomName = i18nFun(temp.roomName);
+                        temp["find"] = true;
+                    }
                     datas.push(temp);
                 }
             } else {
                 const datas = [];
                 for (const temp of value) {
-                    temp.roomName = i18nFun(temp.roomName);
+                    if (!temp["find"]) {
+                        temp.roomName = i18nFun(temp.roomName);
+                        temp["find"] = true;
+                    }
                     datas.push(temp);
                 }
                 map.set(key, datas);

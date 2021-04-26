@@ -3,4 +3,5 @@ export interface ILevel {
     stage: string;
     exp: number;
     unlockSystem: string;
+    unlockRoom: number;
 }

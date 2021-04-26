@@ -53,7 +53,7 @@ export class UITools {
         red.x = parent.width * 0.5 - red.width * 0.5 + offset.x;
         red.y = -parent.height * 0.5 + red.height * 0.5 + offset.y;
         parent.add(red);
-        red.visible = true;
+        red.visible = false;
         return red;
     }
 }
