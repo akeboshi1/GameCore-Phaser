@@ -84,7 +84,7 @@ export class Render extends RPCPeer implements GameMain, IRender {
     protected mEditorCanvasManager: EditorCanvasManager;
     protected mRenderParam: IWorkerParam;
     protected mMainPeerParam: IWorkerParam;
-    protected mPhysicalParam: IWorkerParam;
+    protected mPhysicalPeerParam: IWorkerParam;
     private mCallBack: Function;
     private _moveStyle: number = 0;
     private _curTime: number;
@@ -115,7 +115,7 @@ export class Render extends RPCPeer implements GameMain, IRender {
     private readonly hiddenDelay = 60000;
     private mHiddenTime: any;
     constructor(config: ILauncherConfig, callBack?: Function) {
-        super(config.renderPeerName);
+        super(config.renderPeerKey);
         Logger.getInstance().log("config ====>", config);
         this.emitter = new Phaser.Events.EventEmitter();
         this.mConfig = config;
@@ -176,8 +176,8 @@ export class Render extends RPCPeer implements GameMain, IRender {
         return this.mMainPeerParam;
     }
 
-    get physicalParam() {
-        return this.mPhysicalParam;
+    get physicalPeerParam() {
+        return this.mPhysicalPeerParam;
     }
 
     public linkMain(key, url, peerName) {
@@ -507,8 +507,8 @@ export class Render extends RPCPeer implements GameMain, IRender {
                 this.createGame();
                 Logger.getInstance().debug("worker onReady");
             });
-            this.linkTo(this.mPhysicalParam.key, this.mPhysicalParam.url).onceReady(() => {
-                this.mPhysicalPeer = this.remote[this.mPhysicalParam.key][this.mPhysicalParam.name];
+            this.linkTo(this.mPhysicalPeerParam.key, this.mPhysicalPeerParam.url).onceReady(() => {
+                this.mPhysicalPeer = this.remote[this.mPhysicalPeerParam.key][this.mPhysicalPeerParam.name];
                 this.mPhysicalPeer.setScaleRatio(Math.ceil(this.mConfig.devicePixelRatio || UiUtils.baseDpr));
                 this.mPhysicalPeer.start();
                 Logger.getInstance().debug("Physcialworker onReady");
@@ -581,7 +581,7 @@ export class Render extends RPCPeer implements GameMain, IRender {
         // this.mainPeer.destroy();
         // this.physicalPeer.destroy();
         return new Promise((resolve, reject) => {
-            this.destroyWorker([this.mMainPeerParam.key, this.mPhysicalParam.key]).then(() => {
+            this.destroyWorker([this.mMainPeerParam.key, this.mPhysicalPeerParam.key]).then(() => {
                 if (this.mGame) {
                     this.destroyManager();
                     this.mGame.events.off(Phaser.Core.Events.FOCUS, this.onFocus, this);

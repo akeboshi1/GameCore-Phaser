@@ -2,14 +2,14 @@ import { Game } from "../game";
 import { load, loadArr } from "utils";
 import { Logger } from "structure";
 import { BaseConfigData } from "./base.config.data";
-import { base_path, config_path } from "./config";
+import { IConfigPath } from "structure";
 export class BaseConfigManager {
     protected baseDirname: string;
     protected dataMap: Map<string, BaseConfigData> = new Map();
     protected mGame: Game;
     protected mInitialization: boolean = false;
     protected mDispose: boolean = false;
-    constructor(game: Game) {
+    constructor(game: Game, protected config: IConfigPath) {
         this.mGame = game;
     }
 
@@ -163,11 +163,11 @@ export class BaseConfigManager {
     }
     protected getBasePath() {
         return new Promise((resolve, reject) => {
-            const url = config_path;
+            const url = this.config.config_path;
             load(url, "json").then((value: XMLHttpRequest) => {
                 const json = value.response;
                 const version = json.version;
-                const baseUrl = base_path + version + "/";
+                const baseUrl = this.config.base_path + version + "/";
                 resolve(baseUrl);
             }, (reponse) => {
                 Logger.getInstance().error("版本配置加载失败URL: ", url);

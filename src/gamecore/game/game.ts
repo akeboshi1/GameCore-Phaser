@@ -10,7 +10,7 @@ import { Clock, ClockReadyListener } from "./loop/clock/clock";
 import { HttpClock } from "./loop/httpClock/http.clock";
 import { HttpService } from "./loop/httpClock/http.service";
 import { LoadingManager } from "./loading/loading.manager";
-import { GameState, ILauncherConfig, LoadState, ModuleName, Logger, EventDispatcher } from "structure";
+import { GameState, ILauncherConfig, LoadState, ModuleName, Logger, EventDispatcher, ServerAddress, IConfigPath } from "structure";
 import { IRoomService } from "./room";
 import { ElementStorage } from "baseGame";
 import { RoomManager } from "./room/room.manager";
@@ -21,7 +21,6 @@ import { NetworkManager } from "./command";
 import version from "../../../version";
 import { SoundWorkerManager } from "./sound.manager";
 import { GuideWorkerManager } from "./guide.manager/guide.worker.manager";
-import { ServerAddress } from "structure";
 interface ISize {
     width: number;
     height: number;
@@ -65,12 +64,22 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
     protected mWorkerLoop: any;
     protected mAvatarType: op_def.AvatarStyle;
     protected mRunning: boolean = true;
+    protected mConfigPath: IConfigPath;
     constructor(peer: any) {
         super();
         this.mainPeer = peer;
         this.connect = new Connection(peer);
         this.addPacketListener();
         this.update(new Date().getTime());
+    }
+
+    public setConfigPath(path: any) {
+        this.mConfigPath = {
+            cdn_path: path.cdn_path,
+            config_path: path.config_path,
+            base_path: path.base_path,
+            notice_url: path.notice_url
+        };
     }
 
     public addPacketListener() {
@@ -633,7 +642,7 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
         if (!this.mSoundManager) this.mSoundManager = new SoundWorkerManager(this);
         if (!this.mLoadingManager) this.mLoadingManager = new LoadingManager(this);
         if (!this.mDataManager) this.mDataManager = new DataManager(this);
-        if (!this.mConfigManager) this.mConfigManager = new BaseConfigManager(this);
+        if (!this.mConfigManager) this.mConfigManager = new BaseConfigManager(this, this.mConfigPath);
         if (!this.mNetWorkManager) this.mNetWorkManager = new NetworkManager(this);
         if (!this.mHttpLoadManager) this.mHttpLoadManager = new HttpLoadManager();
         // this.mPlayerDataManager = new PlayerDataManager(this);

@@ -8,7 +8,7 @@ import { Clock, ClockReadyListener } from "./loop/clock/clock";
 import { HttpClock } from "./loop/httpClock/http.clock";
 import { HttpService } from "./loop/httpClock/http.service";
 import { LoadingManager } from "./loading/loading.manager";
-import { ILauncherConfig, EventDispatcher } from "structure";
+import { ILauncherConfig, EventDispatcher, IConfigPath } from "structure";
 import { IRoomService } from "./room";
 import { ElementStorage } from "baseGame";
 import { RoomManager } from "./room/room.manager";
@@ -55,7 +55,9 @@ export declare class Game extends PacketHandler implements IConnectListener, Clo
     protected mWorkerLoop: any;
     protected mAvatarType: op_def.AvatarStyle;
     protected mRunning: boolean;
+    protected mConfigPath: IConfigPath;
     constructor(peer: any);
+    setConfigPath(path: any): void;
     addPacketListener(): void;
     removePacketListener(): void;
     get scaleRatio(): number;

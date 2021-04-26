@@ -8,6 +8,5 @@ export * from "./scene.data.manager";
 export * from "./base.config.data";
 export * from "./base.config.manager";
 export * from "./chat.manager";
-export * from "./config";
 export * from "./common.data.manager";
 export * from "./data.mgr.type";

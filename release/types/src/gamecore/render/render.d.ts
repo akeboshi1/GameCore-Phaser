@@ -48,7 +48,7 @@ export declare class Render extends RPCPeer implements GameMain, IRender {
     protected mEditorCanvasManager: EditorCanvasManager;
     protected mRenderParam: IWorkerParam;
     protected mMainPeerParam: IWorkerParam;
-    protected mPhysicalParam: IWorkerParam;
+    protected mPhysicalPeerParam: IWorkerParam;
     private mCallBack;
     private _moveStyle;
     private _curTime;
@@ -80,7 +80,7 @@ export declare class Render extends RPCPeer implements GameMain, IRender {
     constructor(config: ILauncherConfig, callBack?: Function);
     get renderParam(): IWorkerParam;
     get mainPeerParam(): IWorkerParam;
-    get physicalParam(): IWorkerParam;
+    get physicalPeerParam(): IWorkerParam;
     linkMain(key: any, url: any, peerName: any): void;
     linkPhysical(key: any, url: any, peerName: any): void;
     get physicalPeer(): any;

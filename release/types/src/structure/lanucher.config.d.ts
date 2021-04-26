@@ -23,7 +23,6 @@ export interface ILauncherConfig {
     baseWidth: number;
     baseHeight: number;
     renderPeerKey: string;
-    renderPeerName: string;
     locationhref?: string;
     hasConnectFail?: boolean;
     hasCloseGame?: boolean;

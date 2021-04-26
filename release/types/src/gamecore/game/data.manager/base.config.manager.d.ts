@@ -1,12 +1,14 @@
 import { Game } from "../game";
 import { BaseConfigData } from "./base.config.data";
+import { IConfigPath } from "structure";
 export declare class BaseConfigManager {
+    protected config: IConfigPath;
     protected baseDirname: string;
     protected dataMap: Map<string, BaseConfigData>;
     protected mGame: Game;
     protected mInitialization: boolean;
     protected mDispose: boolean;
-    constructor(game: Game);
+    constructor(game: Game, config: IConfigPath);
     getConfig<T extends BaseConfigData>(key: string): T;
     startLoad(basePath: string): Promise<any>;
     dynamicLoad(dataMap: Map<string, BaseConfigData>): Promise<any>;

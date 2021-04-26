@@ -7,7 +7,7 @@ import { IPos, ILauncherConfig, IWorkerParam } from "structure";
 export declare class MainPeer extends RPCPeer {
     protected game: Game;
     protected mRenderParam: IWorkerParam;
-    protected mPhysicalParam: IWorkerParam;
+    protected mPhysicalPeerParam: IWorkerParam;
     protected mMainPeerParam: IWorkerParam;
     private gameState;
     private stateTime;
@@ -25,7 +25,7 @@ export declare class MainPeer extends RPCPeer {
     constructor(workerName: string);
     get renderParam(): IWorkerParam;
     get mainPeerParam(): IWorkerParam;
-    get physicalParam(): IWorkerParam;
+    get physicalPeerParam(): IWorkerParam;
     get render(): any;
     get physicalPeer(): any;
     set state(val: any);
