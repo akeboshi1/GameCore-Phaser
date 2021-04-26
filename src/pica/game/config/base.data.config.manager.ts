@@ -49,6 +49,7 @@ export enum BaseDataType {
     social = "social",
     minescene = "mineScene",
     publicscene = "publicScene",
+    roomscene = "roomScene",
     quest = "quest",
     guide = "guide",
     furnituregroup = "furnituregroup",
@@ -297,19 +298,21 @@ export class BaseDataConfigManager extends BaseConfigManager {
     public getJob(id: string): IJob {
         const data: JobConfig = this.getConfig(BaseDataType.job);
         const temp = data.get(id);
-        temp.name = this.getI18n(temp.name);
-        temp.des = this.getI18n(temp.des);
+        if (!temp["find"]) {
+            temp.name = this.getI18n(temp.name);
+            temp.des = this.getI18n(temp.des);
 
-        const item = { id: "IV0000001", countRange: temp["coinRange"] };
-        temp.rewards = [this.synItemBase(item)];
-
-        temp.requirements = [];
-        if (temp["attrRequirements"]) {
-            const targets = this.convertMapToItem([temp["attrRequirements"]]);
-            this.getBatchItemDatas(targets);
-            temp.requirements = targets;
+            const item = { id: "IV0000001", countRange: temp["coinRange"] };
+            temp.rewards = [this.synItemBase(item)];
+            if (temp["attrRequirements"]) {
+                const targets = this.convertMapToItem([temp["attrRequirements"]]);
+                this.getBatchItemDatas(targets);
+                temp.requirements = targets;
+            } else {
+                temp.requirements = [];
+            }
+            temp["find"] = true;
         }
-
         return temp;
     }
 
@@ -493,6 +496,13 @@ export class BaseDataConfigManager extends BaseConfigManager {
     }
 
     /**
+     *  getLevels
+     */
+    public getLevels(type: string) {
+        const data: LevelConfig = this.getConfig(BaseDataType.level);
+        return data.levels(type);
+    }
+    /**
      * 卡池表
      * @param id
      * @returns
@@ -518,7 +528,7 @@ export class BaseDataConfigManager extends BaseConfigManager {
      * @returns
      */
     public getScene(id: string) {
-        const dataTypes = [BaseDataType.minescene, BaseDataType.publicscene];
+        const dataTypes = [BaseDataType.minescene, BaseDataType.publicscene, BaseDataType.roomscene];
         for (const dataType of dataTypes) {
             const config: SceneConfig = this.getConfig(dataType);
             const data: IScene = config.get(id);
@@ -532,7 +542,7 @@ export class BaseDataConfigManager extends BaseConfigManager {
     public getScenes(type?: string, tag?: number) {
         if (!this.sceneMap) {
             this.sceneMap = new SceneConfigMap();
-            const dataTypes = [BaseDataType.minescene, BaseDataType.publicscene];
+            const dataTypes = [BaseDataType.minescene, BaseDataType.publicscene, BaseDataType.roomscene];
             for (const dataType of dataTypes) {
                 const config: SceneConfig = this.getConfig(dataType);
                 this.sceneMap.setSceneMap(config.sceneMap, this.getI18n.bind(this));
@@ -740,6 +750,7 @@ export class BaseDataConfigManager extends BaseConfigManager {
         this.dataMap.set(BaseDataType.social, new SocialConfig());
         this.dataMap.set(BaseDataType.publicscene, new SceneConfig());
         this.dataMap.set(BaseDataType.minescene, new SceneConfig());
+        this.dataMap.set(BaseDataType.roomscene, new SceneConfig());
         this.dataMap.set(BaseDataType.quest, new QuestConfig());
         this.dataMap.set(BaseDataType.guide, new GuideConfig());
         this.dataMap.set(BaseDataType.furnituregroup, new FurnitureGroup());

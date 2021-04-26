@@ -1,41 +1,40 @@
-import { BBCodeText } from "apowophaserui";
+import { BBCodeText, Button } from "apowophaserui";
 import { DynamicImage } from "gamecoreRender";
-import { UIAtlasName } from "../../../res";
-import { UIHelper } from "utils";
-import { ImageBBCodeValue } from "../../ui";
-export class PicaRoomListItem extends Phaser.GameObjects.Container {
-    public roomData: any;// op_client.IEditModeRoom
-    private key: string;
-    private dpr: number;
-    private bg: Phaser.GameObjects.Image;
-    private roomName: BBCodeText;
-    private imagIcon: DynamicImage;
-    private ownerName: ImageBBCodeValue;
-    private playerCount: ImageBBCodeValue;
-    constructor(scene: Phaser.Scene, key: string, dpr: number) {
+import { UIAtlasName } from "picaRes";
+import { i18n, NumberUtils, UIHelper } from "utils";
+import { ImageBBCodeValue } from "..";
+export class PicaRoomBaseListItem extends Phaser.GameObjects.Container {
+    public roomData: any;
+    protected dpr: number;
+    protected bg: Phaser.GameObjects.Image;
+    protected roomName: BBCodeText;
+    protected playerCount: ImageBBCodeValue;
+    constructor(scene: Phaser.Scene, dpr: number) {
         super(scene);
-        this.key = key;
         this.dpr = dpr;
         this.bg = this.scene.make.image({ key: UIAtlasName.map, frame: "map_party_list_bg" });
-        this.add(this.bg);
         this.setSize(this.bg.width, this.bg.height);
-        this.imagIcon = new DynamicImage(scene, 0, 0);
-        this.imagIcon.setTexture("party_icon_1");
-        this.imagIcon.x = -this.width * 0.5 + this.imagIcon.width * 0.5 + 8 * dpr;
-        this.imagIcon.y = 0;// -this.height * 0.5 + this.imagIcon.height * 0.5 + 5 * dpr;
-        this.add(this.imagIcon);
-        this.imagIcon.visible = false;
-        this.roomName = new BBCodeText(this.scene, -this.width * 0.5 + 25 * dpr, -18 * dpr, "", UIHelper.colorStyle("#FFFFFF", 14 * dpr));
-        this.roomName.setOrigin(0);
-        this.add(this.roomName);
-        this.ownerName = new ImageBBCodeValue(scene, 50 * dpr, 20 * dpr, key, "map_party_homeowners", dpr, UIHelper.colorStyle("#242AC1", 12 * dpr));
-        this.ownerName.x = this.roomName.x + this.ownerName.width * 0.5;
-        this.ownerName.y = 11 * dpr;
-        this.add(this.ownerName);
-        this.playerCount = new ImageBBCodeValue(scene, 30 * dpr, 20 * dpr, key, "map_party_people", dpr, UIHelper.colorStyle("#FFFFFF", 13 * dpr));
-        this.playerCount.x = this.width * 0.5 - 35 * dpr;
-        this.add(this.playerCount);
+        this.roomName = new BBCodeText(this.scene, 0, 0, "", UIHelper.colorStyle("#FFFFFF", 14 * dpr)).setOrigin(0, 0.5);
+        this.playerCount = new ImageBBCodeValue(scene, 30 * dpr, 20 * dpr, UIAtlasName.map, "map_party_people", dpr, UIHelper.colorStyle("#FFFFFF", 13 * dpr));
+        this.add([this.bg, this.roomName, this.playerCount]);
+        this.init();
     }
+    public setRoomData(data: any) {
+        this.roomData = data;
+        this.roomName.text = data.name;
+        this.playerCount.setText(data.playerCount);
+    }
+
+    protected init() {
+
+    }
+    protected layout(...args) {
+
+    }
+}
+export class PicaRoomListItem extends PicaRoomBaseListItem {
+    private imagIcon: DynamicImage;
+    private ownerName: ImageBBCodeValue;
     public setRoomData(data: any) {// op_client.IEditModeRoom
         this.roomData = data;
         // const texturepath = data.topic.display.texturePath;
@@ -50,5 +49,70 @@ export class PicaRoomListItem extends Phaser.GameObjects.Container {
         this.roomName.text = data.name;
         this.ownerName.setText(data.ownerName);
         this.playerCount.setText(data.playerCount);
+    }
+    protected init() {
+        this.imagIcon = new DynamicImage(this.scene, 0, 0);
+        this.imagIcon.setTexture("party_icon_1");
+        this.imagIcon.visible = false;
+        this.ownerName = new ImageBBCodeValue(this.scene, 50 * this.dpr, 20 * this.dpr, UIAtlasName.map, "map_party_homeowners", this.dpr, UIHelper.colorStyle("#242AC1", 12 * this.dpr));
+        this.add([this.imagIcon, this.ownerName]);
+        this.layout();
+    }
+    protected layout() {
+        this.imagIcon.x = -this.width * 0.5 + this.imagIcon.width * 0.5 + 8 * this.dpr;
+        this.imagIcon.y = 0;
+        this.roomName.x = -this.width * 0.5 + 25 * this.dpr;
+        this.roomName.y = -11 * this.dpr;
+        this.ownerName.x = this.roomName.x + this.ownerName.width * 0.5;
+        this.ownerName.y = 11 * this.dpr;
+        this.playerCount.x = this.width * 0.5 - 35 * this.dpr;
+    }
+}
+export class PicaMyRoomListItem extends PicaRoomBaseListItem {
+    private defaultIcon: Phaser.GameObjects.Image;
+    private unlockTips: Phaser.GameObjects.Text;
+    private unlockBtn: Button;
+    public setRoomData(data: any) {
+        this.roomData = data;
+        this.defaultIcon.visible = false;
+        this.unlockTips.visible = false;
+        this.playerCount.visible = false;
+        if (data.created) {
+            this.roomName.text = data.name;
+            this.playerCount.setText(data.playerCount);
+            this.bg.setTexture(UIAtlasName.map, "map_party_homeowners");
+            this.defaultIcon.visible = data.isDefultroom;
+            this.playerCount.visible = true;
+        } else {
+            if (data.unlocked) {
+                this.unlockBtn.setFrameNormal("multiple_rooms_unlock");
+                this.roomName.text = i18n.t("party.myroomtips", { name: NumberUtils.NumberConvertZHCN(data.serial) });
+                this.roomName.y = 0;
+                this.bg.setTexture(UIAtlasName.map, "map_party_homeowners");
+            } else {
+                this.unlockBtn.setFrameNormal("multiple_rooms_lock");
+                this.unlockTips.text = i18n.t("party.roomunlocktips", { name: data.unlocklevel });
+                this.roomName.y = 11 * this.dpr;
+                this.unlockTips.visible = true;
+                this.bg.setTexture(UIAtlasName.multiple_rooms, "multiple_rooms_unlock_bg");
+            }
+        }
+
+    }
+    protected init() {
+        this.defaultIcon = this.scene.make.image({ key: UIAtlasName.multiple_rooms, frame: "multiple_rooms_current" });
+        this.unlockTips = this.scene.make.text({ style: UIHelper.colorStyle("#242AC1", 12 * this.dpr) }).setOrigin(0, 0.5);
+        this.unlockBtn = new Button(this.scene, UIAtlasName.multiple_rooms, "multiple_rooms_lock", "multiple_rooms_lock");
+        this.add([this.defaultIcon, this.unlockTips, this.unlockBtn]);
+    }
+    protected layout() {
+        this.defaultIcon.x = -this.width * 0.5 + this.defaultIcon.width * 0.5 + 8 * this.dpr;
+        this.defaultIcon.y = 0;
+        this.roomName.x = -this.width * 0.5 + 25 * this.dpr;
+        this.roomName.y = -11 * this.dpr;
+        this.playerCount.x = this.width * 0.5 - 35 * this.dpr;
+        this.unlockTips.x = this.roomName.x;
+        this.unlockTips.y = 11 * this.dpr;
+        this.unlockBtn.x = this.width * 0.5 - this.unlockBtn.width * 0.5 - 15 * this.dpr;
     }
 }

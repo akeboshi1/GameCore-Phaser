@@ -3,7 +3,7 @@ import { AlignmentType, AxisType, ConstraintType, GridLayoutGroup } from "gameco
 import { UIAtlasName } from "../../../res";
 import { Handler, i18n, Tool, UIHelper } from "utils";
 import { op_client, op_def } from "pixelpai_proto";
-import { PicaRoomListItem } from "./PicaRoomListItem";
+import { PicaMyRoomListItem, PicaRoomBaseListItem, PicaRoomListItem } from "./PicaRoomListItem";
 import { Render } from "../../pica.render";
 export class PicaMyNavigationPanel extends Phaser.GameObjects.Container {
     public static PICAMYNAVIGATIONPANEL_DATA: string = "PICAMYNAVIGATIONPANEL_DATA";
@@ -131,7 +131,8 @@ export class PicaMyNavigationPanel extends Phaser.GameObjects.Container {
 class NavigationRoomListItem extends Phaser.GameObjects.Container {
     public dpr: number;
     public topCon: Phaser.GameObjects.Container;
-    public townItems: PicaRoomListItem[] = [];
+    public roomItems: PicaMyRoomListItem[] = [];
+    public shopItems: PicaRoomListItem[] = [];
     private titleTex: Phaser.GameObjects.Text;
     private arrow: Phaser.GameObjects.Image;
     private mExtend: GridLayoutGroup;
@@ -168,20 +169,22 @@ class NavigationRoomListItem extends Phaser.GameObjects.Container {
 
     public setGroupData(group: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_SELF_ROOM_LIST) {
         this.titleTex.text = this.getTitleName(group.roomType);
-        this.setListData(group.rooms);
+        this.setListData(group.rooms, group.roomType);
     }
-    public setListData(datas: any) {
-        for (const item of this.townItems) {
-            item.visible = false;
-        }
+    public setListData(datas: any, roomType: number) {
+        const items = this.getItemsArr(roomType);
         for (let i = 0; i < datas.length; i++) {
-            let item: PicaRoomListItem;
-            if (i < this.townItems.length) {
-                item = this.townItems[i];
+            let item: PicaRoomBaseListItem;
+            if (i < items.length) {
+                item = items[i];
             } else {
-                item = new PicaRoomListItem(this.scene, UIAtlasName.map, this.dpr);
+                if (roomType === op_def.RoomTypeEnum.NORMAL_ROOM) {
+                    item = new PicaMyRoomListItem(this.scene, this.dpr);
+                } else {
+                    item = new PicaRoomListItem(this.scene, this.dpr);
+                }
                 this.mExtend.add(item);
-                this.townItems.push(item);
+                items.push(item);
             }
             item.visible = true;
             item.setRoomData(datas[i]);
@@ -200,7 +203,7 @@ class NavigationRoomListItem extends Phaser.GameObjects.Container {
             const list = this.mExtend.list;
             for (const obj of list) {
                 if (Tool.checkPointerContains(obj, pointer)) {
-                    if (this.send) this.send.runWith(["go", (<PicaRoomListItem>obj).roomData]);
+                    if (this.send) this.send.runWith(["go", (<PicaRoomBaseListItem>obj).roomData]);
                 }
             }
         }
@@ -232,6 +235,20 @@ class NavigationRoomListItem extends Phaser.GameObjects.Container {
             return i18n.t("room_list.room");
         } else if (type === op_def.RoomTypeEnum.SHOP) {
             return i18n.t("partynav.store");
+        }
+    }
+
+    getItemsArr(type: number): PicaRoomBaseListItem[] {
+        for (const item of this.roomItems) {
+            item.visible = false;
+        }
+        for (const item of this.shopItems) {
+            item.visible = false;
+        }
+        if (type === op_def.RoomTypeEnum.NORMAL_ROOM) {
+            return this.roomItems;
+        } else if (type === op_def.RoomTypeEnum.SHOP) {
+            return this.shopItems;
         }
     }
 

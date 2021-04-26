@@ -18,6 +18,14 @@ export class LevelConfig extends BaseConfigData {
             return undefined;
         }
     }
+    /**
+     *  通过类型获取所有等级数据
+     */
+    public levels(type: string) {
+        const map = this.getMap(type);
+        const arr = Array.from(this.playerLevel.values());
+        return arr;
+    }
 
     parseJson(json) {
         for (const key in json) {

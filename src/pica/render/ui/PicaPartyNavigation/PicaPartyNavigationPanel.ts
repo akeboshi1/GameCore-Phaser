@@ -9,6 +9,7 @@ import { UIAtlasName } from "../../../res";
 import { op_client } from "pixelpai_proto";
 import { PicaRoomNavigationPanel } from "./PicaRoomNavigationPanel";
 import { CommonBackground } from "../../ui";
+import { PicaRoomTypePanel } from "./PicaRoomTypePanel";
 export class PicaPartyNavigationPanel extends PicaBasePanel {
     public static PicaPartyNavigationPanel_CLOSE: string = "PicaPartyNavigationPanel_CLOSE";
     public static PICASELFROOM_DATA: string = "PICASELFROOM_DATA";
@@ -25,13 +26,14 @@ export class PicaPartyNavigationPanel extends PicaBasePanel {
     private itemtips: ItemInfoTips;
     private townPanel: PicaTownNavigationPanel;
     private roomPanel: PicaRoomNavigationPanel;
+    private roomTypePanel: PicaRoomTypePanel;
     private optionType: number;
     private progressData: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_QUERY_PLAYER_PROGRESS;
     private toggleItems: ToggleColorButton[] = [];
     constructor(uiManager: UiManager) {
         super(uiManager);
         this.key = ModuleName.PICAPARTYNAVIGATION_NAME;
-        this.atlasNames = [UIAtlasName.map];
+        this.atlasNames = [UIAtlasName.map, UIAtlasName.multiple_rooms];
         this.textures = [{ atlasName: "town_entrance_1", folder: UIAtlasName.map }, { atlasName: "party_icon_1", folder: UIAtlasName.map }];
     }
 
@@ -87,6 +89,13 @@ export class PicaPartyNavigationPanel extends PicaBasePanel {
         if (this.myRoomPanel)
             this.myRoomPanel.setRoomDatas(content);
         this.render.emitter.emit(PicaPartyNavigationPanel.PICASELFROOM_DATA);
+    }
+
+    /**
+     *  setRoomTypeDatas
+     */
+    public setRoomTypeDatas(datas: any[]) {
+        if (this.roomTypePanel) this.roomTypePanel.setRoomTypeDatas(datas);
     }
 
     public destroy() {
@@ -231,6 +240,24 @@ export class PicaPartyNavigationPanel extends PicaBasePanel {
             this.roomPanel.visible = false;
         }
     }
+    private openRoomTypePanel() {
+        if (!this.roomTypePanel) {
+            const height = this.scaleHeight * 0.5 - this.toggleCon.y - 30 * this.dpr;
+            this.roomTypePanel = new PicaRoomTypePanel(this.scene, 274 * this.dpr, height, this.dpr, this.scale);
+            this.roomTypePanel.setHandler(new Handler(this, this.onRoomTypeHandler));
+            this.roomTypePanel.y = 0;
+            this.content.add(this.roomTypePanel);
+            this.roomTypePanel.y = -10 * this.dpr;
+        }
+        this.roomTypePanel.visible = true;
+        this.roomTypePanel.refreshMask();
+        this.render.renderEmitter(this.key + "_getRoomTypeList");
+    }
+    private hideRoomTypePanel() {
+        if (this.roomTypePanel) {
+            this.roomTypePanel.visible = false;
+        }
+    }
     private onToggleButtonHandler(pointer: any, toggle: ToggleColorButton) {
         if (this.curToggleItem === toggle) return;
         if (this.curToggleItem) this.curToggleItem.isOn = false;
@@ -286,10 +313,18 @@ export class PicaPartyNavigationPanel extends PicaBasePanel {
             this.onEnterRoomHandler(data);
         } else if (tag === "query") {
             this.render.renderEmitter(this.key + "_getMyRoomList");
+        } else if (tag === "roomtype") {
+            this.hideMyRoomPanel();
+            this.openRoomTypePanel();
         }
     }
     private onEnterRoomHandler(roomID: string) {
         this.render.renderEmitter(this.key + "_queryenter", roomID);
+    }
+    private onRoomTypeHandler(data: any) {
+        this.openMyRoomPanel();
+        this.hideRoomTypePanel();
+        this.render.renderEmitter(this.key + "_createroom", data);
     }
     private showItemTipsState(item: Phaser.GameObjects.Container, offsety: number = 50 * this.dpr) {
         const posx = this.itemtips.x;
