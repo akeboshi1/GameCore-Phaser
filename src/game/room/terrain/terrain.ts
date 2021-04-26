@@ -79,6 +79,7 @@ export class Terrain extends BlockObject implements IElement {
         this.setPosition(this.mModel.pos);
         this.setRenderable(true);
         this.addToWalkableMap();
+        this.mRoomService.game.physicalPeer.changeAnimation(this.id, this.mModel.currentAnimation.name);
         // this.addDisplay();
     }
 
@@ -104,9 +105,13 @@ export class Terrain extends BlockObject implements IElement {
             Logger.getInstance().error(`${Terrain.name}: sprite is empty`);
             return;
         }
-        if (this.mModel.currentAnimationName !== animationName) {
+        if (this.mModel.currentAnimation.name !== animationName) {
+            this.removeFromWalkableMap();
+            this.mModel.setAnimationName(animationName);
+            this.addToWalkableMap();
+            this.mRoomService.game.physicalPeer.changeAnimation(this.id, this.mModel.currentAnimation.name);
             // this.mAnimationName = animationName;
-            this.mModel.currentAnimationName = animationName;
+            // this.mModel.currentAnimationName = animationName;
             this.mRoomService.game.peer.render.playElementAnimation(this.id, this.mModel.currentAnimationName);
             // if (this.mDisplay) {
             //     this.mDisplay.play(this.this.mModel.currentAnimation);
