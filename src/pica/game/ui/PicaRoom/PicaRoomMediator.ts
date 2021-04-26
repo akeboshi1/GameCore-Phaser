@@ -97,6 +97,6 @@ export class PicaRoomMediator extends BasicMediator {
     }
 
     private on_DefaultRoomHandler(id: string) {
-        this.game.sendCustomProto("STRING", "roomFacade.setDefultRoom", { id });
+        this.game.sendCustomProto("STRING", "roomFacade.setDefaultRoom", { id });
     }
 }

@@ -6,6 +6,7 @@ import { BaseDataConfigManager } from "picaWorker";
 import { IScene } from "picaStructure";
 import { Logger } from "utils";
 import { BaseDataType } from "../../config";
+import { CommandMsgType } from "../../command/command.msg.type";
 export class PicaPartyNavigationMediator extends BasicMediator {
     private mPlayerProgress: any;
     private mPartyListData: any;
@@ -23,7 +24,7 @@ export class PicaPartyNavigationMediator extends BasicMediator {
             this.game.emitter.on(this.key + "_roomList", this.onRoomListHandler, this);
             this.game.emitter.on(this.key + "_enterRoomResult", this.onEnterRoomResultHandler, this);
             this.game.emitter.on(this.key + "_newroomlist", this.onNewRoomListHandler, this);
-            this.game.emitter.on(this.key + "_newselfroomlist", this.onNewSelfRoomListHandler, this);
+            //  this.game.emitter.on(this.key + "_newselfroomlist", this.onNewSelfRoomListHandler, this);
         }
     }
 
@@ -41,7 +42,7 @@ export class PicaPartyNavigationMediator extends BasicMediator {
         this.game.emitter.on(this.key + "_getnavigatelist", this.setNavigationData, this);
         this.game.emitter.on(this.key + "_getRoomTypeList", this.onRoomTypeDatasHandler, this);
         this.game.emitter.on(this.key + "_createroom", this.onCreateRoomHandler, this);
-
+        this.game.emitter.on(CommandMsgType.PicaSelfRoomList, this.onNewSelfRoomListHandler, this);
     }
 
     hide() {
@@ -56,7 +57,8 @@ export class PicaPartyNavigationMediator extends BasicMediator {
         this.game.emitter.off(this.key + "_getMyRoomList", this.query_SELF_ROOM_LIST, this);
         this.game.emitter.off(this.key + "_getnavigatelist", this.setNavigationData, this);
         this.game.emitter.off(this.key + "_getRoomTypeList", this.onRoomTypeDatasHandler, this);
-        this.game.emitter.on(this.key + "_createroom", this.onCreateRoomHandler, this);
+        this.game.emitter.off(this.key + "_createroom", this.onCreateRoomHandler, this);
+        this.game.emitter.off(CommandMsgType.PicaSelfRoomList, this.onNewSelfRoomListHandler, this);
         super.hide();
     }
 

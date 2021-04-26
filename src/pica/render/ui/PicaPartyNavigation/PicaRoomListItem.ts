@@ -86,7 +86,7 @@ export class PicaMyRoomListItem extends PicaRoomBaseListItem {
             this.roomName.text = data.name;
             this.playerCount.setText(data.playerCount);
             this.bg.setTexture(UIAtlasName.map, "map_party_list_bg");
-            this.defaultIcon.visible = data.isDefultroom;
+            this.defaultIcon.visible = data.isDefaultroom;
             this.playerCount.visible = true;
             this.roomName.y = 0;
         } else {
@@ -96,12 +96,14 @@ export class PicaMyRoomListItem extends PicaRoomBaseListItem {
                 this.unlockBtn.setFrameNormal("multiple_rooms_unlock");
                 this.roomName.y = 0;
                 this.bg.setTexture(UIAtlasName.map, "map_party_list_bg");
+                this.unlockBtn.setInteractive();
             } else {
                 this.unlockBtn.setFrameNormal("multiple_rooms_lock");
                 this.unlockTips.text = i18n.t("party.roomunlocktips", { name: data.unlocklevel });
                 this.roomName.y = -11 * this.dpr;
                 this.unlockTips.visible = true;
                 this.bg.setTexture(UIAtlasName.multiple_rooms, "multiple_rooms_unlock_bg");
+                this.unlockBtn.disInteractive();
             }
         }
 
@@ -115,11 +117,11 @@ export class PicaMyRoomListItem extends PicaRoomBaseListItem {
         this.layout();
     }
     protected layout() {
-        this.defaultIcon.x = -this.width * 0.5 + this.defaultIcon.width * 0.5 + 8 * this.dpr;
+        this.defaultIcon.x = -this.width * 0.5 + this.defaultIcon.width * 0.5 + 10 * this.dpr;
         this.defaultIcon.y = 0;
-        this.roomName.x = -this.width * 0.5 + 25 * this.dpr;
+        this.roomName.x = -this.width * 0.5 + 32 * this.dpr;
         this.roomName.y = -11 * this.dpr;
-        this.playerCount.x = this.width * 0.5 - 35 * this.dpr;
+        this.playerCount.x = this.width * 0.5 - 32 * this.dpr;
         this.unlockTips.x = this.roomName.x;
         this.unlockTips.y = 11 * this.dpr;
         this.unlockBtn.x = this.width * 0.5 - this.unlockBtn.width * 0.5 - 15 * this.dpr;

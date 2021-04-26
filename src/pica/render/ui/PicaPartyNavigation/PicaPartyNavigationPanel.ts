@@ -328,7 +328,7 @@ export class PicaPartyNavigationPanel extends PicaBasePanel {
     private onRoomTypeHandler(data: any) {
         this.myRoomPanel.visible = true;
         this.hideRoomTypePanel();
-        this.render.renderEmitter(this.key + "_createroom", data);
+        if (data !== "close") this.render.renderEmitter(this.key + "_createroom", data);
     }
     private showItemTipsState(item: Phaser.GameObjects.Container, offsety: number = 50 * this.dpr) {
         const posx = this.itemtips.x;
