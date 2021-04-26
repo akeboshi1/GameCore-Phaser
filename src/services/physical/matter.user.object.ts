@@ -94,7 +94,7 @@ export class MatterUserObject extends MatterPlayerObject {
             this.addFillEffect({ x: firstPos.x, y: firstPos.y }, op_def.PathReachableStatus.PATH_UNREACHABLE_AREA);
             return;
         }
-        this.matterWorld.setSensor(this.body, false);
+        this.matterWorld.setSensor(this.body, true);
         this.mTargetPoint = { path, targetId };
         this.addFillEffect({ x: firstPos.x, y: firstPos.y }, op_def.PathReachableStatus.PATH_REACHABLE_AREA);
         this.startMove();

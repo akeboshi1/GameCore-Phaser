@@ -618,8 +618,12 @@ class MainContainer extends FriendContainer {
         }
         let result = this.showingFriends.slice(0);
         result = result.filter((friend: FriendData) => {
-            if (friend.nickname && friend.nickname.indexOf(text) > -1) {
-                return true;
+            if (friend.nickname) {
+                const lowerNickname = friend.nickname.toLowerCase();
+                const lowerText = text.toLowerCase();
+                if (lowerNickname.indexOf(lowerText) > -1) {
+                    return true;
+                }
             }
             return false;
         });
@@ -845,7 +849,8 @@ class FriendRenderer implements IRenderer {
         this.itemData = data;
         this.nameText.text = data.nickname;
         this.icon.setFrame(data.online ? "head" : "offline_head");
-        const lv = data.lv ? `${i18n.t("friendlist.lv")}：${data.lv}` : i18n.t("friendlist.unregistered_game");
+        // const lv = data.lv ? `${i18n.t("friendlist.lv")}：${data.lv}` : i18n.t("friendlist.unregistered_game");
+        const lv = data.lv ? `${i18n.t("friendlist.lv")}：${data.lv}` : "";
         this.level.setText(lv);
         if (this.curRelation !== data.relation) {
             this.curRelation = data.relation;

@@ -24,6 +24,7 @@ export class PicaWorkPanel extends BasePanel {
     private interTimeerID: any;
     private moneyAniKey: string = "workemoeny";
     private starAniKey: string = "workstar";
+    private canWork: boolean = false;
     constructor(uiManager: UiManager) {
         super(uiManager.scene, uiManager.render);
         this.key = ModuleName.PICAWORK_NAME;
@@ -132,9 +133,10 @@ export class PicaWorkPanel extends BasePanel {
         this.workbutton.setProgressDatas(0, 100);
     }
 
-    public setWorkChance(count: number) {
-        if (count <= 0) this.workbutton.disInteractive();
-        else this.workbutton.setInteractive();
+    public setWorkChance(can: boolean) {
+        // if (count <= 0) this.workbutton.disInteractive();
+        // else this.workbutton.setInteractive();
+        this.canWork = can;
     }
 
     public setJobData(data: IJob) {
@@ -216,6 +218,13 @@ export class PicaWorkPanel extends BasePanel {
         this.render.renderEmitter(this.key + "_hide");
     }
     private onSendHandler(id: string) {
+        if (!this.canWork) {
+            const data = {
+                text: [{ text: i18n.t("work.enoughtips"), node: undefined }]
+            };
+            this.render.mainPeer.showMediator(ModuleName.PICANOTICE_NAME, true, data);
+            return;
+        }
         this.curProgress += 3;
         if (!this.isWorking) this.calculateTimeout();
         this.starSprite.play(this.starAniKey, true);

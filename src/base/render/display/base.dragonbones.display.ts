@@ -238,13 +238,6 @@ export class BaseDragonbonesDisplay extends BaseDisplay {
         });
     }
 
-    public displayCreated() {
-        super.displayCreated();
-        if (this.mAnimation) {
-            this.play(this.mAnimation);
-        }
-    }
-
     public destroy() {
         this.mDisplayInfo = null;
         this.mNeedReplaceTexture = false;
@@ -343,6 +336,10 @@ export class BaseDragonbonesDisplay extends BaseDisplay {
             this.resourceName,
         );
         this.addAt(this.mArmatureDisplay, 0);
+
+        if (this.mAnimation) {
+            this.play(this.mAnimation);
+        }
 
         const bound = this.mArmatureDisplay.armature.getBone("board");
         if (bound) {

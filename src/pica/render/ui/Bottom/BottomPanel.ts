@@ -229,8 +229,16 @@ export class BottomPanel extends PicaBasePanel {
         this.mInput.blurInput();
     }
 
-    private onTrumpetHandler(enable: boolean) {
-        this.render.renderEmitter(ModuleName.BOTTOM + "_trumpet", enable);
+    private onTrumpetHandler(tag: string, data) {
+        this.render.renderEmitter(ModuleName.BOTTOM + "_trumpet", data);
+        if (tag === "trumptcount") {
+            const tempdata = {
+                text: [{ text: i18n.t("chat.turmptenough"), node: undefined }]
+            };
+            this.render.mainPeer.showMediator(ModuleName.PICANOTICE_NAME, true, tempdata);
+        } else if (tag === "trumpet") {
+
+        }
     }
 
     private updateOutputLayout() {
@@ -334,10 +342,12 @@ class OutputContainer extends Phaser.GameObjects.Container {
         this.background.clear();
         this.background.fillStyle(0, 0.6);
         this.background.fillRect(0, 0, width, height);
-        this.mTextArea.childrenMap.child.setMinSize((width - 8 * this.dpr * this.scaleRatio), (height - 8 * this.dpr * this.scaleRatio));
+        const areaWidth = (width - 8 * this.dpr * this.scaleRatio), areaHeight = (height - 8 * this.dpr * this.scaleRatio);
+        this.mTextArea.childrenMap.child.setMinSize(areaWidth, areaHeight);
 
         this.mTextArea.layout();
         // this.mOutputText.width = width - 4 * this.dpr * this.scaleRatio;
+        // this.mOutputText.setSize();
         this.mOutputText.setWrapWidth(width - 8 * this.dpr * this.scaleRatio);
         // (<any>this.mTextArea).setChildOY(1 * this.dpr * this.scaleRatio);
         this.updateLayout();
@@ -447,9 +457,14 @@ class InputContainer extends Phaser.GameObjects.Container {
     public setTrumpetState(count: number) {
         this.trumpetCount = count;
         const enable = count > 0;
-        this.trumpet.enable = enable;
         if (!enable || this.isTrumpent) {
             this.trumpet.isOn = enable;
+            this.isTrumpent = enable;
+        }
+        if (this.isTrumpent) {
+            this.inputText.setPlaceholder(i18n.t("chat.turmpttips"));
+        } else {
+            this.inputText.setPlaceholder(i18n.t("chat.placeholder"));
         }
 
     }
@@ -469,10 +484,6 @@ class InputContainer extends Phaser.GameObjects.Container {
     private onEnterHandler(text: string) {
         this.emit("enter", text, this.isTrumpent);
         this.inputText.setText("");
-        if (this.trumpet.isOn) {
-            this.trumpetCount--;
-            this.setTrumpetState(this.trumpetCount);
-        }
     }
 
     private onInputBlurHandler() {
@@ -493,7 +504,16 @@ class InputContainer extends Phaser.GameObjects.Container {
     }
 
     private onTrumpetHandler() {
+        if (this.trumpetCount <= 0) {
+            this.trumpet.isOn = false;
+            this.emit("trumpet", "trumptcount");
+        }
         this.isTrumpent = this.trumpet.isOn;
+        if (this.isTrumpent) {
+            this.inputText.setPlaceholder(i18n.t("chat.turmpttips"));
+        } else {
+            this.inputText.setPlaceholder(i18n.t("chat.placeholder"));
+        }
     }
 }
 
