@@ -22,7 +22,7 @@ export class AstarDebugger implements ChatCommandInterface {
     private readonly LINE_COLOR_PATH = 0xFFFF00;
 
     // 是否显示所有可行经点。如果打开会非常消耗性能
-    private mPointsShowType: PointsShowType = PointsShowType.OnlyWalkable;
+    private mPointsShowType: PointsShowType = PointsShowType.None;
 
     private mPoints_Walkable: Phaser.GameObjects.Graphics = null;
     private mPoints_NotWalkable: Phaser.GameObjects.Graphics = null;
@@ -160,9 +160,10 @@ export class AstarDebugger implements ChatCommandInterface {
         if (!scene || !(scene instanceof PlayScene)) {
             return;
         }
-        this.clearPath();
-
-        this.mPath = scene.make.graphics(undefined, false);
+        // this.clearPath();
+        if (!this.mPath) {
+            this.mPath = scene.make.graphics(undefined, false);
+        }
         this.mPath.clear();
         this.mPath.fillStyle(this.CIRCLE_COLOR_START_POSITION, 1);
         this.mPath.fillCircle(start.x, start.y, this.CIRCLE_RADIUS_START_POSITION);
