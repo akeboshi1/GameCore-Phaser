@@ -1,4 +1,5 @@
 export enum CommandMsgType {
     PicaTrumpetMsg = "PicaTrumpetMsg",
-    PicaRollingMsg = "PicaRollingMsg"
+    PicaRollingMsg = "PicaRollingMsg",
+    PicaSelfRoomList = "PicaSelfRoomList"
 }
