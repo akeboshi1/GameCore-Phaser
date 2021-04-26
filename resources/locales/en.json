@@ -189,7 +189,10 @@
     "passwordtips": "If the password is empty, it defaults to open mode",
     "savesetting": "Save Setting",
     "inputtips": "Please enter the password",
-    "editornametips": "Please enter room name, minimum three words"
+    "editornametips": "Please enter room name, minimum three words",
+    "defaultroomtips": "Can only set one default room,\n whether to set the current room as the default room",
+    "roomsetting":"SETTING"
+
   },
   "business_street": {
     "commercial_street": "STORES",
@@ -331,7 +334,7 @@
     "nopartytips": "There is no party yet, let's start the party~",
     "progresstips": "Next award: ",
     "myroomnametips": "{{name}} room",
-    "roomunlocktips:": "Requires {{name}} level to unlock",
+    "roomunlocktips": "Requires {{name}} level to unlock",
     "roomtypetitle": "Room choice"
   },
   "picelevator": {

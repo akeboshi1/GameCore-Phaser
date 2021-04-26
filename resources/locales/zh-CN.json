@@ -190,7 +190,9 @@
     "passwordtips": "若密码为空，则默认为开放模式",
     "savesetting": "保存设置",
     "inputtips": "请输入密码",
-    "editornametips": "请输入房间名，最短三个字"
+    "editornametips": "请输入房间名，最短三个字",
+    "defaultroomtips": "只能设置一个默认房间,\n是否设置当前房间为默认房间",
+    "roomsetting":"房间设置"
   },
   "business_street": {
     "commercial_street": "商业街",
@@ -276,7 +278,7 @@
     "givegift": "赠送",
     "placeholder": "随便说点什么...",
     "turmpttips": "喇叭消息开启，每条消息消耗一个喇叭",
-    "turmptenough":"喇叭数量不足"
+    "turmptenough": "喇叭数量不足"
   },
   "minecar": {
     "discard": "丢弃",
@@ -341,8 +343,8 @@
     "onlinetime": "在线{{name}}分钟",
     "nopartytips": "暂无派对，快去开启派对吧~",
     "progresstips": "下次领取: ",
-    "myroomnametips": "第{{name}}房间",
-    "roomunlocktips:": "需要等级达到{{name}}级解锁",
+    "myroomnametips": "第{{name}}个房间",
+    "roomunlocktips": "需要等级达到{{name}}级解锁",
     "roomtypetitle": "房型选择"
   },
   "picelevator": {

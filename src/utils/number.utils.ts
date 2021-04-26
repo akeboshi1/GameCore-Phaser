@@ -7,5 +7,6 @@ export class NumberUtils {
             const temp = map[n];
             convert += temp;
         }
+        return convert;
     }
 }

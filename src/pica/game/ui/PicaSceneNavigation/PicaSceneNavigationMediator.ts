@@ -61,7 +61,7 @@ export class PicaSceneNavigationMediator extends BasicMediator {
 
     private setNavigationData() {
         if (!this.tempData) {
-            const map = <Map<string, IScene[]>>this.config.getScenes(undefined, 1);
+            const map = <Map<string, IScene[]>>this.config.getScenesByCategory(undefined, 1);
             const arr = [];
             map.forEach((value, key) => {
                 if (key !== "undefined") {

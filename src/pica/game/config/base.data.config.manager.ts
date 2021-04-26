@@ -539,7 +539,7 @@ export class BaseDataConfigManager extends BaseConfigManager {
         return undefined;
     }
 
-    public getScenes(type?: string, tag?: number) {
+    public getScenesByCategory(subtype?: string, tag?: number) {
         if (!this.sceneMap) {
             this.sceneMap = new SceneConfigMap();
             const dataTypes = [BaseDataType.minescene, BaseDataType.publicscene, BaseDataType.roomscene];
@@ -549,7 +549,22 @@ export class BaseDataConfigManager extends BaseConfigManager {
             }
             this.sceneMap.sort();
         }
-        return this.sceneMap.getScenes(type, tag);
+        return this.sceneMap.getScenes(subtype, tag);
+    }
+    public getScenes(type: string) {
+        const config: SceneConfig = this.getConfig(type);
+        const tempArr = Array.from(config.sceneMap.values());
+        const arr = [];
+        for (const temps of tempArr) {
+            for (const temp of temps) {
+                if (!temp["find"]) {
+                    temp.roomName = this.getI18n(temp.roomName);
+                    temp["find"] = true;
+                }
+                arr.push(temp);
+            }
+        }
+        return arr;
     }
     public getQuest(id: string) {
         const data: QuestConfig = this.getConfig(BaseDataType.quest);

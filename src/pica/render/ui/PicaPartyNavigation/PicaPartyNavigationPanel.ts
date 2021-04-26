@@ -30,6 +30,7 @@ export class PicaPartyNavigationPanel extends PicaBasePanel {
     private optionType: number;
     private progressData: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_QUERY_PLAYER_PROGRESS;
     private toggleItems: ToggleColorButton[] = [];
+    private myRoomDatas: any[];
     constructor(uiManager: UiManager) {
         super(uiManager);
         this.key = ModuleName.PICAPARTYNAVIGATION_NAME;
@@ -57,7 +58,9 @@ export class PicaPartyNavigationPanel extends PicaBasePanel {
             } else if (this.optionType === 2) {
                 this.setRoomListData(this.tempDatas);
             } else if (this.optionType === 3) {
-                this.setSelfRoomListData(this.tempDatas);
+                for (const temp of this.myRoomDatas) {
+                    this.setSelfRoomListData(temp);
+                }
             }
         }
         if (this.progressData) this.setOnlineProgress(this.progressData);
@@ -85,7 +88,7 @@ export class PicaPartyNavigationPanel extends PicaBasePanel {
     }
 
     public setSelfRoomListData(content: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_SELF_ROOM_LIST) {
-        this.tempDatas = content;
+        this.myRoomDatas.push(content);
         if (this.myRoomPanel)
             this.myRoomPanel.setRoomDatas(content);
         this.render.emitter.emit(PicaPartyNavigationPanel.PICASELFROOM_DATA);
@@ -242,12 +245,12 @@ export class PicaPartyNavigationPanel extends PicaBasePanel {
     }
     private openRoomTypePanel() {
         if (!this.roomTypePanel) {
-            const height = this.scaleHeight * 0.5 - this.toggleCon.y - 30 * this.dpr;
-            this.roomTypePanel = new PicaRoomTypePanel(this.scene, 274 * this.dpr, height, this.dpr, this.scale);
+            const height = this.scaleHeight;
+            this.roomTypePanel = new PicaRoomTypePanel(this.scene, this.scaleWidth, height, this.dpr, this.scale);
             this.roomTypePanel.setHandler(new Handler(this, this.onRoomTypeHandler));
-            this.roomTypePanel.y = 0;
-            this.content.add(this.roomTypePanel);
-            this.roomTypePanel.y = -10 * this.dpr;
+            this.roomTypePanel.y = this.scaleHeight * 0.5;
+            this.roomTypePanel.x = this.scaleWidth * 0.5;
+            this.add(this.roomTypePanel);
         }
         this.roomTypePanel.visible = true;
         this.roomTypePanel.refreshMask();
@@ -275,6 +278,7 @@ export class PicaPartyNavigationPanel extends PicaBasePanel {
             this.openRoomPanel();
             this.render.renderEmitter(this.key + "_getRoomList", { page: 1, perPage: 100 });
         } else {
+            this.myRoomDatas = [];
             this.openMyRoomPanel();
             this.render.renderEmitter(this.key + "_getMyRoomList");
         }
@@ -314,7 +318,7 @@ export class PicaPartyNavigationPanel extends PicaBasePanel {
         } else if (tag === "query") {
             this.render.renderEmitter(this.key + "_getMyRoomList");
         } else if (tag === "roomtype") {
-            this.hideMyRoomPanel();
+            this.myRoomPanel.visible = false;
             this.openRoomTypePanel();
         }
     }
@@ -322,7 +326,7 @@ export class PicaPartyNavigationPanel extends PicaBasePanel {
         this.render.renderEmitter(this.key + "_queryenter", roomID);
     }
     private onRoomTypeHandler(data: any) {
-        this.openMyRoomPanel();
+        this.myRoomPanel.visible = true;
         this.hideRoomTypePanel();
         this.render.renderEmitter(this.key + "_createroom", data);
     }

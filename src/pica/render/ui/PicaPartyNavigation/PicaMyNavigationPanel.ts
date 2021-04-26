@@ -112,7 +112,9 @@ export class PicaMyNavigationPanel extends Phaser.GameObjects.Container {
             const item = data.item;
             this.onExtendsHandler(extend, item);
         } else if (tag === "go") {
-            this.sendHandler.runWith(["enter", data.roomId]);
+            if (data) this.sendHandler.runWith(["enter", data.roomId]);
+        } else if (tag === "roomtype") {
+            this.sendHandler.runWith("roomtype");
         }
     }
 
@@ -180,6 +182,7 @@ class NavigationRoomListItem extends Phaser.GameObjects.Container {
             } else {
                 if (roomType === op_def.RoomTypeEnum.NORMAL_ROOM) {
                     item = new PicaMyRoomListItem(this.scene, this.dpr);
+                    item.setHandler(new Handler(this, this.onRoomItemHandler));
                 } else {
                     item = new PicaRoomListItem(this.scene, this.dpr);
                 }
@@ -203,7 +206,8 @@ class NavigationRoomListItem extends Phaser.GameObjects.Container {
             const list = this.mExtend.list;
             for (const obj of list) {
                 if (Tool.checkPointerContains(obj, pointer)) {
-                    if (this.send) this.send.runWith(["go", (<PicaRoomBaseListItem>obj).roomData]);
+                    const roomData = (<any>obj).roomData;
+                    if (this.send && roomData.created) this.send.runWith(["go", roomData]);
                 }
             }
         }
@@ -226,7 +230,6 @@ class NavigationRoomListItem extends Phaser.GameObjects.Container {
             }
         }
     }
-
     get extend() {
         return this.mIsExtend;
     }
@@ -251,7 +254,10 @@ class NavigationRoomListItem extends Phaser.GameObjects.Container {
             return this.shopItems;
         }
     }
-
+    private onRoomItemHandler() {
+        if (this.send)
+            this.send.runWith(["roomtype"]);
+    }
     private openExtend() {
         this.mExtend.visible = true;
         this.height = this.topCon.height + this.mExtend.height + 0 * this.dpr;

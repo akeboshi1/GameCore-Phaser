@@ -10,6 +10,7 @@ export class PicaPartyNavigationMediator extends BasicMediator {
     private mPlayerProgress: any;
     private mPartyListData: any;
     private tempData: any;
+    private myRooms: any[];
     private chooseType: number = 1;
     constructor(game: Game) {
         super(ModuleName.PICAPARTYNAVIGATION_NAME, game);
@@ -85,7 +86,9 @@ export class PicaPartyNavigationMediator extends BasicMediator {
             } else if (this.chooseType === 2) {
                 this.onNewRoomListHandler(this.tempData);
             } else if (this.chooseType === 3) {
-                this.onNewSelfRoomListHandler(this.tempData);
+                for (const temp of this.myRooms) {
+                    this.onNewSelfRoomListHandler(temp);
+                }
             }
         }
         if (this.mPlayerProgress) {
@@ -139,6 +142,9 @@ export class PicaPartyNavigationMediator extends BasicMediator {
         for (const type of arr) {
             this.model.query_SELF_ROOM_LIST(type);
         }
+        if (this.myRooms) {
+            this.myRooms.length = 0;
+        } else this.myRooms = [];
     }
     private query_ROOM_HISTORY() {
         this.model.query_ROOM_HISTORY();
@@ -156,15 +162,20 @@ export class PicaPartyNavigationMediator extends BasicMediator {
 
     }
     private onNewRoomListHandler(content: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_ROOM_LIST) {
-        this.tempData = content;
+        if (this.tempData)
+            this.tempData = content;
         if (!this.mPanelInit) return;
         this.mView.setRoomListData(content);
     }
 
     private onNewSelfRoomListHandler(content: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_SELF_ROOM_LIST) {
-        this.tempData = this.getMyRoomDatas(content);
+        let temp = content;
+        if (content.roomType === op_def.RoomTypeEnum.NORMAL_ROOM) {
+            temp = this.getMyRoomDatas(temp);
+        }
+        this.myRooms.push(temp);
         if (!this.mPanelInit) return;
-        this.mView.setSelfRoomListData(this.tempData);
+        this.mView.setSelfRoomListData(temp);
     }
 
     private onRoomTypeDatasHandler() {
@@ -172,11 +183,11 @@ export class PicaPartyNavigationMediator extends BasicMediator {
         this.mView.setRoomTypeDatas(typeData);
     }
     private onCreateRoomHandler(id: string) {
-
+        this.game.sendCustomProto("STRING", "roomFacade:createNewRoom", { id });
     }
 
     private setNavigationData() {
-        const map = <Map<string, IScene[]>>this.config.getScenes(undefined, 0);
+        const map = <Map<string, IScene[]>>this.config.getScenesByCategory(undefined, 0);
         const arr = [];
         map.forEach((value, key) => {
             if (key !== "undefined") {
@@ -197,16 +208,18 @@ export class PicaPartyNavigationMediator extends BasicMediator {
         let unlockcount = 0;
         const lockArr = [];
         for (const temp of levels) {
+            if (!temp.unlockRoom) continue;
+            const unlockRoom = temp.unlockRoom + 1;
             if (temp.level <= curLevel) {
-                if (created < temp.unlockRoom) {
-                    unlockcount = temp.unlockRoom - created;
+                if (created < unlockRoom) {
+                    unlockcount = unlockRoom - created;
                 }
             } else {
-                const count = temp.unlockRoom - beforecount;
-                lockArr.push({ level: temp.level, count });
+                const count = unlockRoom - beforecount;
+                if (count > 0) lockArr.push({ level: temp.level, count });
 
             }
-            beforecount = temp.unlockRoom;
+            beforecount = unlockRoom;
         }
         for (const item of content.rooms) {
             item["created"] = true;
