@@ -33,7 +33,7 @@ export class RoomNameAttribute extends RoomBaseAttribute {
     constructor(scene: Phaser.Scene, width: number, height: number, dpr: number, zoom: number, type: string = "text", placeholder = "") {
         super(scene, width, height, dpr, zoom);
         this.title.text = i18n.t("room_info.roomname");
-        const inputWidth = 204 * dpr, inputHeight = 34 * dpr;
+        const inputWidth = 190 * dpr, inputHeight = 34 * dpr;
         const inputX = this.title.x + this.title.width + 13 * dpr;
         this.mNameInput = this.createInput(inputX, 0, inputWidth, inputHeight, 14 * this.dpr, type, placeholder);
         //  this.mNameInput.on("textchange", this.onTextChangeHandler, this);

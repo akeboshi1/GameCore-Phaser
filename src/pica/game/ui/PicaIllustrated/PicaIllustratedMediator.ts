@@ -32,7 +32,7 @@ export class PicaIllustratedMediator extends BasicMediator {
         this.game.emitter.off(this.key + "_close", this.onCloseHandler, this);
         this.game.emitter.off(EventType.GALLERY_UPDATE, this.setGallaryData, this);
         this.game.emitter.off(EventType.DONE_MISSION_LIST, this.setDoneMissionIdListHandler, this);
-        this.game.emitter.on(RedEventType.GALLERY_PANEL_RED, this.onRedSystemHandler, this);
+        this.game.emitter.off(RedEventType.GALLERY_PANEL_RED, this.onRedSystemHandler, this);
         super.hide();
     }
 

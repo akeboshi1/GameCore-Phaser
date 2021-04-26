@@ -1,0 +1,251 @@
+{
+	"textures": [
+		{
+			"image": "multiple_rooms",
+			"format": "RGBA8888",
+			"size": {
+				"w": 916,
+				"h": 592
+			},
+			"scale": 1,
+			"frames": [
+				{
+					"filename": "multiple_rooms_selected",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 40,
+						"h": 40
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 40,
+						"h": 40
+					},
+					"frame": {
+						"x": 1,
+						"y": 1,
+						"w": 40,
+						"h": 40
+					}
+				},
+				{
+					"filename": "multiple_rooms_unselected",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 40,
+						"h": 40
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 40,
+						"h": 40
+					},
+					"frame": {
+						"x": 43,
+						"y": 1,
+						"w": 40,
+						"h": 40
+					}
+				},
+				{
+					"filename": "multiple_rooms_current",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 45,
+						"h": 43
+					},
+					"spriteSourceSize": {
+						"x": 1,
+						"y": 1,
+						"w": 43,
+						"h": 41
+					},
+					"frame": {
+						"x": 85,
+						"y": 1,
+						"w": 43,
+						"h": 41
+					}
+				},
+				{
+					"filename": "multiple_rooms_default_unselected",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 49,
+						"h": 47
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 49,
+						"h": 47
+					},
+					"frame": {
+						"x": 130,
+						"y": 1,
+						"w": 49,
+						"h": 47
+					}
+				},
+				{
+					"filename": "multiple_rooms_default_selected",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 59,
+						"h": 57
+					},
+					"spriteSourceSize": {
+						"x": 1,
+						"y": 1,
+						"w": 57,
+						"h": 55
+					},
+					"frame": {
+						"x": 181,
+						"y": 1,
+						"w": 57,
+						"h": 55
+					}
+				},
+				{
+					"filename": "multiple_rooms_lock",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 87,
+						"h": 80
+					},
+					"spriteSourceSize": {
+						"x": 3,
+						"y": 3,
+						"w": 81,
+						"h": 74
+					},
+					"frame": {
+						"x": 240,
+						"y": 1,
+						"w": 81,
+						"h": 74
+					}
+				},
+				{
+					"filename": "multiple_rooms_unlock",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 87,
+						"h": 80
+					},
+					"spriteSourceSize": {
+						"x": 3,
+						"y": 3,
+						"w": 81,
+						"h": 74
+					},
+					"frame": {
+						"x": 323,
+						"y": 1,
+						"w": 81,
+						"h": 74
+					}
+				},
+				{
+					"filename": "multiple_rooms_select_title",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 462,
+						"h": 85
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 462,
+						"h": 85
+					},
+					"frame": {
+						"x": 406,
+						"y": 1,
+						"w": 462,
+						"h": 85
+					}
+				},
+				{
+					"filename": "multiple_rooms_unlock_bg",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 817,
+						"h": 201
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 817,
+						"h": 201
+					},
+					"frame": {
+						"x": 1,
+						"y": 88,
+						"w": 817,
+						"h": 201
+					}
+				},
+				{
+					"filename": "multiple_rooms_type2",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 408,
+						"h": 276
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 408,
+						"h": 276
+					},
+					"frame": {
+						"x": 1,
+						"y": 291,
+						"w": 408,
+						"h": 276
+					}
+				},
+				{
+					"filename": "multiple_rooms_type1",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 504,
+						"h": 300
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 504,
+						"h": 300
+					},
+					"frame": {
+						"x": 411,
+						"y": 291,
+						"w": 504,
+						"h": 300
+					}
+				}
+			]
+		}
+	],
+	"meta": {
+		"app": "https://www.codeandweb.com/texturepacker",
+		"version": "3.0",
+		"smartupdate": "$TexturePacker:SmartUpdate:8d2141658818df108639978dee426099:213442a1c28de7381b97c3b8046d2ddc:1c63156d954b1102560ee5b18ed36df7$"
+	}
+}

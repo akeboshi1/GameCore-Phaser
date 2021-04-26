@@ -39,7 +39,7 @@ export class PicaRoomNavigationPanel extends Phaser.GameObjects.Container {
                 const scene = cell.scene, index = cell.index,
                     item = cell.item;
                 if (cellContainer === null) {
-                    cellContainer = new PicaRoomListItem(this.scene, UIAtlasName.map, this.dpr);
+                    cellContainer = new PicaRoomListItem(this.scene, this.dpr);
                 }
                 cellContainer.setRoomData(item, index);
                 if (this.isCanQuery(index)) this.queryNextPage();

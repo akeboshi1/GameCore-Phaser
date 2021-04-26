@@ -13,7 +13,6 @@ import { op_def } from "pixelpai_proto";
 import { MatterBodies } from "../display/debugs/matter";
 import { ServerPosition } from "../display/debugs/server.pointer";
 import { IDisplayObject } from "../display";
-import { Grids } from "../display/debugs/grids";
 import { FramesModel } from "baseModel";
 import { LayerEnum } from "game-capsule";
 
@@ -65,7 +64,6 @@ export class DisplayManager {
     private mUser: IDisplayObject;
     private matterBodies: MatterBodies;
     private serverPosition: ServerPosition;
-    private mGridsDebug: Grids;
     private preLoadList: any[];
     private loading: boolean = false;
     private mModelCache: Map<number, any>;
@@ -441,20 +439,6 @@ export class DisplayManager {
         }
     }
 
-    public showGridsDebug(size: IPosition45Obj) {
-        if (!this.mGridsDebug) {
-            this.mGridsDebug = new Grids(this.render);
-        }
-        this.mGridsDebug.setData(size);
-    }
-
-    public hideGridsDebug() {
-        if (this.mGridsDebug) {
-            this.mGridsDebug.destroy();
-            this.mGridsDebug = null;
-        }
-    }
-
     public drawServerPosition(x: number, y: number) {
         if (!this.serverPosition) {
             this.serverPosition = new ServerPosition(this.render);
@@ -590,10 +574,6 @@ export class DisplayManager {
         if (this.serverPosition) {
             this.serverPosition.destroy();
             this.serverPosition = null;
-        }
-        if (this.mGridsDebug) {
-            this.mGridsDebug.destroy();
-            this.mGridsDebug = null;
         }
     }
 

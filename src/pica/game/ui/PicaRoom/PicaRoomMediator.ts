@@ -18,10 +18,10 @@ export class PicaRoomMediator extends BasicMediator {
         this.game.emitter.on(this.key + "_queryrefurbish", this.query_ROOM_REFURBISH, this);
         this.game.emitter.on(this.key + "_name", this.query_EditorRoomName, this);
         this.game.emitter.on(this.key + "_openparty", this.query_Open_Party, this);
-
         this.game.emitter.on(EventType.UPDATE_ROOM_INFO, this.onRoomInfoHandler, this);
         this.game.emitter.on(this.key + "_refurbish", this.on_REFURBISH_REQUIREMENTS, this);
         this.game.emitter.on(this.key + "_themelist", this.on_PARTY_INFO, this);
+        this.game.emitter.on(this.key + "_defaultroom", this.on_DefaultRoomHandler, this);
     }
 
     hide() {
@@ -34,6 +34,7 @@ export class PicaRoomMediator extends BasicMediator {
         this.game.emitter.off(EventType.UPDATE_ROOM_INFO, this.onRoomInfoHandler, this);
         this.game.emitter.off(this.key + "_refurbish", this.on_REFURBISH_REQUIREMENTS, this);
         this.game.emitter.off(this.key + "_themelist", this.on_PARTY_INFO, this);
+        this.game.emitter.on(this.key + "_defaultroom", this.on_DefaultRoomHandler, this);
         super.hide();
     }
 
@@ -93,5 +94,9 @@ export class PicaRoomMediator extends BasicMediator {
 
     private on_PARTY_INFO(content: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_CREATE_PARTY_REQUIREMENTS) {
         this.mView.setPartyInfo(content);
+    }
+
+    private on_DefaultRoomHandler(id: string) {
+        this.game.sendCustomProto("STRING", "roomFacade.setDefultRoom", { id });
     }
 }

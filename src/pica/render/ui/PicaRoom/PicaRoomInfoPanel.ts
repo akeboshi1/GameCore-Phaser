@@ -1,10 +1,11 @@
 import { op_client } from "pixelpai_proto";
-import { ClickEvent, NineSliceButton } from "apowophaserui";
+import { Button, ClickEvent, NineSliceButton } from "apowophaserui";
 import { Handler, i18n, TimeUtils, UIHelper } from "utils";
 import { UIAtlasName } from "picaRes";
 import { ImageValue } from "../Components";
 import { RoomEvaluateAttribute, RoomNameAttribute, RoomStateAttribute } from "./RoomBaseAttribute";
 import { TimerCountDown } from "structure";
+import { AlertView, CheckBoxToggle, UiManager } from "gamecoreRender";
 export class PicaRoomInfoPanel extends Phaser.GameObjects.Container {
     private dpr: number;
     private zoom: number;
@@ -12,10 +13,13 @@ export class PicaRoomInfoPanel extends Phaser.GameObjects.Container {
     private roomState: RoomStateAttribute;
     private roomEvaluate: RoomEvaluateAttribute;
     private partyPanel: RoomPartyInfoPanel;
+    private defaultButton: Button;
     private send: Handler;
-    constructor(scene: Phaser.Scene, x: number, y: number, width: number, height: number, dpr: number) {
+    private uimanager: UiManager;
+    constructor(scene: Phaser.Scene, uimanager: UiManager, x: number, y: number, width: number, height: number, dpr: number) {
         super(scene, x, y);
         this.dpr = dpr;
+        this.uimanager = uimanager;
         this.setSize(width, height);
         this.createAttribute();
 
@@ -24,6 +28,14 @@ export class PicaRoomInfoPanel extends Phaser.GameObjects.Container {
         this.roomName.setAttributeData(data.name);
         this.roomState.setAttributeData(data.openingParty);
         this.roomEvaluate.setAttributeData(data.praise);
+        const isDefault = false;
+        if (!isDefault) {
+            this.defaultButton.setInteractive();
+            this.defaultButton.setFrameNormal("multiple_rooms_default_unselected");
+        } else {
+            this.defaultButton.disInteractive();
+            this.defaultButton.setFrameNormal("multiple_rooms_default_selected");
+        }
     }
 
     public setPartyData(partyData: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_CREATE_PARTY_REQUIREMENTS) {
@@ -52,6 +64,11 @@ export class PicaRoomInfoPanel extends Phaser.GameObjects.Container {
         this.roomName = new RoomNameAttribute(this.scene, itemWidth, itemHeight, this.dpr, this.zoom, "text", i18n.t("room_info.editornametips"));
         this.roomName.setHandler(new Handler(this, this.onSendHandler));
         this.roomName.y = posy;
+        this.defaultButton = new Button(this.scene, UIAtlasName.multiple_rooms, "multiple_rooms_default_unselected", "multiple_rooms_default_unselected");
+        this.defaultButton["setInteractiveSize"](45 * this.dpr, 45 * this.dpr);
+        this.defaultButton.on(ClickEvent.Tap, this.onDefaultButtonHandler, this);
+        this.defaultButton.x = this.width * 0.5 - this.defaultButton.width * 0.5 + 10 * this.dpr;
+        this.defaultButton.y = posy;
         posy += space;
         this.roomState = new RoomStateAttribute(this.scene, itemWidth, itemHeight, this.dpr, this.zoom);
         this.roomState.y = posy;
@@ -61,11 +78,24 @@ export class PicaRoomInfoPanel extends Phaser.GameObjects.Container {
         this.partyPanel = new RoomPartyInfoPanel(this.scene, this.dpr);
         this.partyPanel.y = posy + this.partyPanel.height * 0.5 + space - 15 * this.dpr;
         this.partyPanel.setHandler(new Handler(this, this.onSendHandler));
-        this.add([this.roomName, this.roomState, this.roomEvaluate, this.partyPanel]);
+        this.add([this.roomName, this.defaultButton, this.roomState, this.roomEvaluate, this.partyPanel]);
     }
 
     private onSendHandler(tag: string, data: any) {
         if (this.send) this.send.runWith([tag, data]);
+    }
+
+    private onDefaultButtonHandler() {
+        const alertView = new AlertView(this.scene, this.uimanager);
+        alertView.show({
+            text: i18n.t("room_info.defaultroomtips"),
+            title: i18n.t("room_info.roomsetting"),
+            oy: 302 * this.dpr * this.zoom,
+            callback: () => {
+                if (this.send) this.send.runWith("defaultroom");
+                this.defaultButton.setFrameNormal("multiple_rooms_default_selected");
+            },
+        });
     }
 }
 
