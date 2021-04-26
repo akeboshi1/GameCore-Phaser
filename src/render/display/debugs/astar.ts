@@ -9,7 +9,9 @@ enum PointsShowType {
     OnlyNotWalkable// 只显示不可行走区域（红点）
 }
 
-export class Astar {
+export class AstarDebugger implements ChatCommandInterface {
+    public isDebug: boolean = false;
+
     private readonly CIRCLE_RADIUS_POINTS = 2;
     private readonly CIRCLE_RADIUS_START_POSITION = 4;
     private readonly CIRCLE_RADIUS_TARGET_POSITION = 4;
@@ -20,7 +22,7 @@ export class Astar {
     private readonly LINE_COLOR_PATH = 0xFFFF00;
 
     // 是否显示所有可行经点。如果打开会非常消耗性能
-    private mPointsShowType: PointsShowType = PointsShowType.None;
+    private mPointsShowType: PointsShowType = PointsShowType.OnlyWalkable;
 
     private mPoints_Walkable: Phaser.GameObjects.Graphics = null;
     private mPoints_NotWalkable: Phaser.GameObjects.Graphics = null;
@@ -28,29 +30,40 @@ export class Astar {
     private mAstarSize: IPosition45Obj;
 
     constructor(private render: Render) {
-        AstarDebugger.getInstance().setDebugger(this);
+    }
+
+    public q() {
+        this.isDebug = false;
+        this.clearAll();
+    }
+
+    public v() {
+        if (!this.isDebug) {
+            this.drawPoints();
+        }
+
+        this.isDebug = true;
     }
 
     public destroy() {
         this.clearAll();
         if (this.mAstarSize) this.mAstarSize = null;
-        AstarDebugger.getInstance().setDebugger(null);
     }
 
-    public initData(map: number[][], size: IPosition45Obj) {
+    public init(map: number[][], size: IPosition45Obj) {
         this.mAstarSize = size;
 
-        if (AstarDebugger.getInstance().isDebug) {
+        if (this.isDebug) {
             this.drawPoints();
         } else {
             this.clearAll();
         }
     }
 
-    public updateData(x: number, y: number, val: boolean) {
+    public update(x: number, y: number, val: boolean) {
         if (!this.mAstarSize) return;
 
-        if (AstarDebugger.getInstance().isDebug) {
+        if (this.isDebug) {
             this.drawPoints();
         } else {
             this.clearAll();
@@ -60,7 +73,7 @@ export class Astar {
     public showPath(start: IPos, tar: IPos, path: IPos[]) {
         if (!this.mAstarSize) return;
 
-        if (AstarDebugger.getInstance().isDebug) {
+        if (this.isDebug) {
             this.drawPath(start, tar, path);
         } else {
             this.clearPath();
@@ -173,40 +186,4 @@ export class Astar {
         }
         scene.layerManager.addToLayer("middleLayer", this.mPath);
     }
-}
-
-export class AstarDebugger implements ChatCommandInterface {
-
-    public static getInstance(): AstarDebugger {
-        if (!AstarDebugger._instance) AstarDebugger._instance = new AstarDebugger();
-        return AstarDebugger._instance;
-    }
-
-    private static _instance: AstarDebugger;
-
-    public isDebug: boolean = false;
-    private mAstar: Astar;
-
-    constructor() {
-        this.mAstar = null;
-    }
-
-    public setDebugger(grids: Astar) {
-        this.mAstar = grids;
-    }
-
-    public q() {
-        this.isDebug = false;
-        if (this.mAstar) {
-            this.mAstar.clearAll();
-        }
-    }
-
-    public v() {
-        this.isDebug = true;
-        if (this.mAstar) {
-            this.mAstar.drawPoints();
-        }
-    }
-
 }

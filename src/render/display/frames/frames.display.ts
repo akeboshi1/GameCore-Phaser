@@ -16,6 +16,8 @@ export class FramesDisplay extends BaseFramesDisplay implements IDisplayObject {
     protected mTopDisplay: ElementTopDisplay;
     private mName: string = undefined;
     private mStartFireTween: Phaser.Tweens.Tween;
+    private mDebugPoint: Phaser.GameObjects.Graphics;
+
     constructor(scene: Phaser.Scene, private render: Render, id?: number, type?: number) {
         super(scene, id, type);
         this.mID = id;
@@ -37,6 +39,11 @@ export class FramesDisplay extends BaseFramesDisplay implements IDisplayObject {
         if (this.mStartFireTween) {
             this.mStartFireTween.stop();
             this.mStartFireTween = undefined;
+        }
+
+        if (this.mDebugPoint) {
+            this.mDebugPoint.destroy();
+            this.mDebugPoint = undefined;
         }
         super.destroy();
     }
@@ -105,7 +112,17 @@ export class FramesDisplay extends BaseFramesDisplay implements IDisplayObject {
         this.mTopDisplay.showNickname(name);
 
         // debug
-        // this.mTopDisplay.showNickname(name + "; " + this.mID + "; " + this.x + "; " + this.y);
+        // if (name !== "透明") {
+        //     this.mTopDisplay.showNickname(name + "; " + this.mID + "; " + this.x + "; " + this.y);
+        //     this.setAlpha(0.2);
+        //     if (this.mDebugPoint) this.mDebugPoint.destroy();
+        //     this.mDebugPoint = this.scene.make.graphics(undefined, false);
+        //     this.mDebugPoint.clear();
+        //     this.mDebugPoint.fillStyle(0xFF0000, 1);
+        //     this.mDebugPoint.fillCircle(0, 0, 2);
+        //
+        //     this.add(this.mDebugPoint);
+        // }
     }
 
     public showTopDisplay(data?: ElementStateType) {

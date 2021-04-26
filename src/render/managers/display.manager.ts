@@ -13,8 +13,6 @@ import { op_def } from "pixelpai_proto";
 import { MatterBodies } from "../display/debugs/matter";
 import { ServerPosition } from "../display/debugs/server.pointer";
 import { IDisplayObject } from "../display";
-import { Astar } from "../display/debugs/astar";
-import { Grids } from "../display/debugs/grids";
 import { FramesModel } from "baseModel";
 import { LayerEnum } from "game-capsule";
 
@@ -66,8 +64,6 @@ export class DisplayManager {
     private mUser: IDisplayObject;
     private matterBodies: MatterBodies;
     private serverPosition: ServerPosition;
-    private mAstarDebug: Astar;
-    private mGridsDebug: Grids;
     private preLoadList: any[];
     private loading: boolean = false;
     private mModelCache: Map<number, any>;
@@ -443,53 +439,6 @@ export class DisplayManager {
         }
     }
 
-    public showGridsDebug(size: IPosition45Obj) {
-        if (!this.mGridsDebug) {
-            this.mGridsDebug = new Grids(this.render);
-        }
-        this.mGridsDebug.setData(size);
-    }
-
-    public hideGridsDebug() {
-        if (this.mGridsDebug) {
-            this.mGridsDebug.destroy();
-            this.mGridsDebug = null;
-        }
-    }
-
-    public showAstarDebug_init(map: number[][], posObj: IPosition45Obj) {
-        if (!this.mAstarDebug) {
-            this.mAstarDebug = new Astar(this.render);
-        }
-
-        this.mAstarDebug.initData(map, posObj);
-    }
-
-    public showAstarDebug_update(x: number, y: number, val: boolean) {
-        if (!this.mAstarDebug) {
-            // Logger.getInstance().error("AstarDebug not init");
-            return;
-        }
-
-        this.mAstarDebug.updateData(x, y, val);
-    }
-
-    public showAstarDebug_findPath(start: IPos, tar: IPos, path: IPos[]) {
-        if (!this.mAstarDebug) {
-            // Logger.getInstance().error("AstarDebug not init");
-            return;
-        }
-
-        this.mAstarDebug.showPath(start, tar, path);
-    }
-
-    public hideAstarDebug() {
-        if (this.mAstarDebug) {
-            this.mAstarDebug.destroy();
-            this.mAstarDebug = null;
-        }
-    }
-
     public drawServerPosition(x: number, y: number) {
         if (!this.serverPosition) {
             this.serverPosition = new ServerPosition(this.render);
@@ -625,14 +574,6 @@ export class DisplayManager {
         if (this.serverPosition) {
             this.serverPosition.destroy();
             this.serverPosition = null;
-        }
-        if (this.mAstarDebug) {
-            this.mAstarDebug.destroy();
-            this.mAstarDebug = null;
-        }
-        if (this.mGridsDebug) {
-            this.mGridsDebug.destroy();
-            this.mGridsDebug = null;
         }
     }
 
