@@ -25,6 +25,8 @@ export class PicaRoomTypePanel extends Phaser.GameObjects.Container {
         this.background = this.scene.make.graphics(undefined, false);
         this.background.fillStyle(0x202022, 1);
         this.background.fillRect(-this.width * 0.5, -this.height * 0.5, this.width, this.height);
+        this.background.setInteractive(new Phaser.Geom.Rectangle(-this.width * 0.5, -this.height * 0.5, this.width, this.height), Phaser.Geom.Rectangle.Contains);
+        this.background.on("pointerup", this.onCloseHandler, this);
         this.titlebg = this.scene.make.image({ key: UIAtlasName.multiple_rooms, frame: "multiple_rooms_select_title" });
         this.titleTex = this.scene.make.text({ text: i18n.t("party.roomtypetitle"), style: UIHelper.colorStyle("#986500", 16 * this.dpr) }).setOrigin(0.5);
         this.titlebg.y = -180 * this.dpr;
@@ -93,8 +95,12 @@ export class PicaRoomTypePanel extends Phaser.GameObjects.Container {
     }
 
     private onConfirmHandler() {
-        if (this.sendHandler && this.curItem.typeData) this.sendHandler.runWith(this.curItem.typeData.sceneId);
+        if (this.sendHandler && this.curItem && this.curItem.typeData) this.sendHandler.runWith(this.curItem.typeData.sceneId);
 
+    }
+
+    private onCloseHandler() {
+        if (this.sendHandler) this.sendHandler.runWith("close");
     }
 }
 class RoomTypeItem extends Phaser.GameObjects.Container {
@@ -121,7 +127,7 @@ class RoomTypeItem extends Phaser.GameObjects.Container {
         this.dyimg.visible = true;
         this.selected.visible = true;
         this.typeData = data;
-        const url = Url.getOsdRes(data.texturePath + `_s_${this.dpr}x` + ".png");
+        const url = Url.getOsdRes(data.texturePath + `_${this.dpr}x` + ".png");
         this.dyimg.load(url);
     }
 

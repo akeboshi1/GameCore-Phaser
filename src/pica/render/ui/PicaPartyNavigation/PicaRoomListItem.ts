@@ -96,12 +96,14 @@ export class PicaMyRoomListItem extends PicaRoomBaseListItem {
                 this.unlockBtn.setFrameNormal("multiple_rooms_unlock");
                 this.roomName.y = 0;
                 this.bg.setTexture(UIAtlasName.map, "map_party_list_bg");
+                this.unlockBtn.setInteractive();
             } else {
                 this.unlockBtn.setFrameNormal("multiple_rooms_lock");
                 this.unlockTips.text = i18n.t("party.roomunlocktips", { name: data.unlocklevel });
                 this.roomName.y = -11 * this.dpr;
                 this.unlockTips.visible = true;
                 this.bg.setTexture(UIAtlasName.multiple_rooms, "multiple_rooms_unlock_bg");
+                this.unlockBtn.disInteractive();
             }
         }
 
