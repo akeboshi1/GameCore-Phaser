@@ -6,6 +6,7 @@ export interface IEditorCanvasConfig {
     game_created: () => void;
     LOCAL_HOME_PATH?: string;
     parent?: string;
+    osd?: string;
 }
 
 export class EditorCanvas {

@@ -24,7 +24,7 @@ export default class ElementFramesDisplay extends BaseFramesDisplay implements R
     private mPlaying: boolean = false;
     private mCurMountAnimation: RunningAnimation = {name: "idle", flip: false};
 
-    constructor(scene: Phaser.Scene, node: any, grids: ElementEditorGrids, emitter: Phaser.Events.EventEmitter) {// AnimationDataNode
+    constructor(scene: Phaser.Scene, node: any, grids: ElementEditorGrids, emitter: Phaser.Events.EventEmitter, private mWebHomePath: string) {// AnimationDataNode
         super(scene);
         this.mGrids = grids;
         this.mEmitter = emitter;
@@ -509,8 +509,9 @@ export default class ElementFramesDisplay extends BaseFramesDisplay implements R
         if (!mountlayer || !mountlayer.mountPoint) return;
         for (let i = 0; i < mountlayer.mountPoint.length; i++) {
             if (this.mMountList.get(i)) continue;
-            const arm = new DragonbonesEditorDisplay(this.scene);
+            const arm = new DragonbonesEditorDisplay(this.scene, this.mWebHomePath);
             this.mount(arm, i);
+            arm.load();
             const pos = {x: mountlayer.mountPoint[i].x, y: mountlayer.mountPoint[i].y};
             arm.setPosition(pos.x, pos.y);
             arm.play(this.mCurMountAnimation);
