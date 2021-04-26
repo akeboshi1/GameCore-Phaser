@@ -289,7 +289,7 @@ export class Sprite extends EventDispatcher implements ISprite {
         if (!this.currentAnimation || this.currentAnimation.name !== aniName) {
             if (this.displayInfo) {
                 name = this.animator ? this.animator.getAnimationName(name) : name;
-                this.displayInfo.animationName = name;
+                // this.displayInfo.animationName = name;
             }
             this.currentAnimationName = name;
             const ani = this.setAnimationData(name, this.direction, times);
@@ -319,7 +319,7 @@ export class Sprite extends EventDispatcher implements ISprite {
         if (this.currentAnimationName) {
             // DragonbonesModel 设置的动画在avatar上
             if (displayInfo instanceof FramesModel) {
-                this.displayInfo.animationName = this.currentAnimationName;
+                // this.displayInfo.animationName = this.currentAnimationName;
                 this.setAnimationData(this.currentAnimationName, this.direction);
             } else {
                 if (displayInfo.animationName) this.setAnimationName(displayInfo.animationName);

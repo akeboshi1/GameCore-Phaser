@@ -1,7 +1,7 @@
 import {Room} from "../../../../game/room/room/room";
 import {op_client, op_def, op_pkt_def, op_virtual_world} from "pixelpai_proto";
 import {ISprite, LayerName, MessageType, ModuleName} from "structure";
-import {IPos, Logger, Position45} from "utils";
+import {IPos, Logger, LogicPos, Position45} from "utils";
 import {PBpacket} from "net-socket-packet";
 import {Sprite} from "baseModel";
 import {BaseDataConfigManager} from "../../config";
@@ -187,6 +187,14 @@ export class DecorateManager {
         // 未解锁家具不给选中
         if (locked) return;
 
+        if (this.mSelectedID > 0) {
+            const preCheckData = this.checkSelectedCanPlace();
+            if (!preCheckData.canPlace) {
+                // 当前选中家具不可摆放时，不能选择其他家具
+                return;
+            }
+        }
+
         if (this.mSelectedID !== id) {
             this.reverseSelected();
         }
@@ -352,7 +360,8 @@ export class DecorateManager {
         }
     }
 
-    // 移动选择物 call by motion
+    // 主动动作集合 call by motion
+    // 移动选择物
     public moveSelected(id: number, delta: IPos) {
         if (this.mSelectedID !== id) return;
         if (delta.x === 0 && delta.y === 0) return;
@@ -361,6 +370,11 @@ export class DecorateManager {
         const act = new DecorateAction(element.model, DecorateActionType.Move, new DecorateActionData({moveVec: delta}));
         this.mSelectedActionQueue.push(act);
         act.execute(this);
+
+        const checkData = this.checkSelectedCanPlace();
+        if (checkData.canPlace) {
+            this.ensureSelectedChanges();
+        }
     }
 
     // 旋转选择物
@@ -371,6 +385,11 @@ export class DecorateManager {
         const act = new DecorateAction(element.model, DecorateActionType.Rotate, new DecorateActionData({rotateTimes: 1}));
         this.mSelectedActionQueue.push(act);
         act.execute(this);
+
+        const checkData = this.checkSelectedCanPlace();
+        if (checkData.canPlace) {
+            this.ensureSelectedChanges();
+        }
     }
 
     // 回收选择物至背包
@@ -451,11 +470,12 @@ export class DecorateManager {
             if (!addCount.has(action.target)) {
                 addCount.set(action.target, 0);
             }
-            result.get(action.target).push(action);
             if (action.type === DecorateActionType.Add) {
+                result.get(action.target).push(action);
                 const c = addCount.get(action.target);
                 addCount.set(action.target, c + 1);
             } else if (action.type === DecorateActionType.Remove) {
+                result.get(action.target).push(action);
                 const c = addCount.get(action.target);
                 if (c === 1) {
                     // 添加再删除  清空之前的命令
@@ -463,6 +483,29 @@ export class DecorateManager {
                     result.delete(action.target);
                 }
                 addCount.set(action.target, c - 1);
+            } else if (action.type === DecorateActionType.Move) {
+                const acts = result.get(action.target);
+                const idx = acts.findIndex((val) => {
+                    return val.type === DecorateActionType.Move;
+                });
+                if (idx >= 0) {
+                    const preData = acts[idx].data.moveVec;
+                    acts[idx].data.moveVec = new LogicPos(preData.x + action.data.moveVec.x,
+                        preData.y + action.data.moveVec.y);
+                } else {
+                    acts.push(action);
+                }
+            } else if (action.type === DecorateActionType.Rotate) {
+                const acts = result.get(action.target);
+                const idx = acts.findIndex((val) => {
+                    return val.type === DecorateActionType.Rotate;
+                });
+                if (idx >= 0) {
+                    const preData = acts[idx].data.rotateTimes;
+                    acts[idx].data.rotateTimes = preData + action.data.rotateTimes;
+                } else {
+                    acts.push(action);
+                }
             }
         }
         return result;
@@ -476,6 +519,7 @@ export enum DecorateActionType {
     Rotate// 旋转
 }
 
+// 主动/被动（撤销）动作入口
 class DecorateAction {
     constructor(public target: ISprite, public type: DecorateActionType, public data: DecorateActionData) {
     }
@@ -573,11 +617,11 @@ class DecorateAction {
     }
 
     private setElementPos(mng: DecorateManager, x: number, y: number) {
-        // const freePos = new LogicPos(x, y);
-        // const gridPos = Position45.transformTo90(Position45.transformTo45(freePos, mng.room.miniSize), mng.room.miniSize);
+        const freePos = new LogicPos(x, y);
+        const gridPos = Position45.transformTo90(Position45.transformTo45(freePos, mng.room.miniSize), mng.room.miniSize);
 
         mng.room.removeFromWalkableMap(this.target);
-        this.target.setPosition(x, y);
+        this.target.setPosition(gridPos.x, gridPos.y);
         mng.room.addToWalkableMap(this.target);
         mng.room.game.renderPeer.setPosition(this.target.id, this.target.pos.x, this.target.pos.y);
         mng.room.game.physicalPeer.setPosition(this.target.id, this.target.pos.x, this.target.pos.y);
@@ -589,10 +633,6 @@ class DecorateAction {
             mng.room.game.renderPeer.workerEmitter(MessageType.DECORATE_UPDATE_SELECTED_ELEMENT_POSITION);
             const element = mng.room.elementManager.get(this.target.id);
             if (element) element.showRefernceArea(checkData.conflictMap);
-
-            if (checkData.canPlace) {
-                mng.ensureSelectedChanges();
-            }
         }
     }
 
@@ -609,10 +649,6 @@ class DecorateAction {
             mng.room.game.emitter.emit(MessageType.DECORATE_UPDATE_SELECTED_ELEMENT_CAN_PLACE, checkData.canPlace);
             const element = mng.room.elementManager.get(this.target.id);
             if (element) element.showRefernceArea(checkData.conflictMap);
-
-            if (checkData.canPlace) {
-                mng.ensureSelectedChanges();
-            }
         }
     }
 
