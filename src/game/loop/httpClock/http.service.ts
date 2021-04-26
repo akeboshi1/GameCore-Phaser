@@ -146,10 +146,8 @@ export class HttpService {
     uploadHeadImage(url: string) {
         return this.post("update_blob", { file: url });
     }
-    uploadDBTexture(key: string, url: string, json: string) {
-        Logger.getInstance().debug("#uploadDBTexture url: ", url);
-        Logger.getInstance().debug("#uploadDBTexture json: ", json);
 
+    uploadDBTexture(key: string, url: string, json: string) {
         const path = "user_avatar/texture/";
         const imgFullName = path + key + ".png";
         const jsonFullName = path + key + ".json";
