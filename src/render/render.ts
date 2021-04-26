@@ -128,7 +128,7 @@ export class Render extends RPCPeer implements GameMain, IRender {
         this.mConfig = config;
         this.mCallBack = callBack;
         this.gridsDebugger = GridsDebugger.getInstance();
-        this.astarDebugger = AstarDebugger.getInstance();
+        this.astarDebugger = new AstarDebugger(this);
         this.sortDebugger = new SortDebugger(this);
         this.editorModeDebugger = new EditorModeDebugger(this);
         this.mConnectFailFunc = this.mConfig.connectFail;
@@ -1369,24 +1369,6 @@ export class Render extends RPCPeer implements GameMain, IRender {
     public drawGrids(posObj: IPosition45Obj | undefined) {
         if (!this.displayManager) return;
         this.displayManager.showGridsDebug(posObj);
-    }
-
-    @Export()
-    public drawAstar_init(map: number[][], posObj: IPosition45Obj) {
-        if (!this.displayManager) return;
-        this.displayManager.showAstarDebug_init(map, posObj);
-    }
-
-    @Export()
-    public drawAstar_update(x: number, y: number, val: boolean) {
-        if (!this.displayManager) return;
-        this.displayManager.showAstarDebug_update(x, y, val);
-    }
-
-    @Export()
-    public drawAstar_findPath(start: IPos, tar: IPos, points: IPos[]) {
-        if (!this.displayManager) return;
-        this.displayManager.showAstarDebug_findPath(start, tar, points);
     }
 
     @Export()
