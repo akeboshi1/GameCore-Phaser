@@ -114,3 +114,5 @@ export * from "./room";
 export * from "./ui/PicaMail/PicaMail";
 export * from "./ui/PicaMail/PicaMailMediator";
 export * from "./red.manager";
+export * from "./ui/PicaNewIllustrated/PicaNewIllustrated";
+export * from "./ui/PicaNewIllustrated/PicaNewIllustratedMediator";

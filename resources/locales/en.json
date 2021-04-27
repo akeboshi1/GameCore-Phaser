@@ -467,7 +467,8 @@
     "make": "Click to open the manufacturing panel",
     "furindetail": "Furniture details",
     "surveyfurni": " SURVEY ",
-    "cooking": "Cooking"
+    "cooking": "Cooking",
+    "newdiscovery": "Discovery"
   },
   "mail": {
     "onekey": "All Receive",
