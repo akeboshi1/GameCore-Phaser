@@ -24,11 +24,11 @@ export class PicaRoomInfoPanel extends Phaser.GameObjects.Container {
         this.createAttribute();
 
     }
-    public setAttributeData(data: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_EDIT_MODE_ROOM_INFO) {
+    public setAttributeData(data: any) {
         this.roomName.setAttributeData(data.name);
         this.roomState.setAttributeData(data.openingParty);
         this.roomEvaluate.setAttributeData(data.praise);
-        const isDefault = false;
+        const isDefault = data.isDefaultroom;
         if (!isDefault) {
             this.defaultButton.setInteractive();
             this.defaultButton.setFrameNormal("multiple_rooms_default_unselected");

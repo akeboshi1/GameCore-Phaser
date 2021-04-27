@@ -628,7 +628,6 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
         this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_GOTO_ANOTHER_GAME, this.onGotoAnotherGame);
         // this.addHandlerFun(op_client.OPCODE._OP_GATEWAY_RES_CLIENT_PONG, this.heartBeatCallBack);
         this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_GAME_MODE, this.onAvatarGameModeHandler);
-        this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_CUSTOM_PROTO, this.onCustomHandler);
         this.createManager();
         const gameID = this.mConfig.game_id;
         const worldId = this.mConfig.virtual_world_id;
@@ -916,11 +915,6 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
     private onAvatarGameModeHandler(packet: PBpacket) {
         const content: op_client.IOP_VIRTUAL_WORLD_REQ_CLIENT_GAME_MODE = packet.content;
         this.mAvatarType = content.avatarStyle;
-    }
-
-    private onCustomHandler(packet: PBpacket) {
-        const content: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_CUSTOM_PROTO = packet.content;
-        this.emitter.emit(content.msgName, content);
     }
 
     private _run(current: number, delta: number) {
