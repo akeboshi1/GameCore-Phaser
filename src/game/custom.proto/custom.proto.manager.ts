@@ -18,7 +18,7 @@ export class CustomProtoManager extends PacketHandler {
         // tslint:disable-next-line:new-parens
         const proto = customProto[msgName];
         if (!proto) {
-            return Logger.getInstance().error(`Custom proto ${msgName} does not exist`);
+            return Logger.getInstance().error(`Custom proto ${msgName} does not exist. Please upgrade custom_proto and try again`);
         }
         const obj = proto.fromObject(msg || {});
         if (!obj) {
@@ -55,7 +55,7 @@ export class CustomProtoManager extends PacketHandler {
         const { msgName, cmd, msg } = content;
         const proto = customProto[msgName];
         if (!proto) {
-            return Logger.getInstance().error(`Custom proto ${msgName} does not exist`);
+            return Logger.getInstance().error(`Custom proto ${msgName} does not exist. Please upgrade custom_proto and try again`);
         }
         this.emitter.emit(content.msgName, { cmd, content: proto.decode(msg) });
     }
