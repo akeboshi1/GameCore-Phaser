@@ -1,5 +1,3 @@
-import { Logger } from "structure";
-
 export const HTTP_REGEX = /^(http|https):/i;
 export class Url {
     // cdn资源路径

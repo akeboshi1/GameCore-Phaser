@@ -1,7 +1,6 @@
 import { UIManager } from "./ui/ui.manager";
 import { PBpacket, PacketHandler } from "net-socket-packet";
 import { op_def } from "pixelpai_proto";
-import { IConnectListener } from "structure";
 import { HttpLoadManager } from "utils";
 import { Connection, GameSocket } from "./net/connection";
 import { Clock, ClockReadyListener } from "./loop/clock/clock";
@@ -20,6 +19,7 @@ import { GuideWorkerManager } from "./guide.manager";
 import { ElementStorage } from "baseGame";
 import { SoundWorkerManager } from "./sound.manager";
 import { CustomProtoManager } from "./custom.proto";
+import { IConnectListener } from "src/structure/net";
 interface ISize {
     width: number;
     height: number;
@@ -147,7 +147,6 @@ export declare class Game extends PacketHandler implements IConnectListener, Clo
     private onSelectCharacter;
     private decodeConfigs;
     private onAvatarGameModeHandler;
-    private onCustomHandler;
     private _run;
     private update;
 }

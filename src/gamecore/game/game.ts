@@ -2,7 +2,6 @@ import { UIManager } from "./ui/ui.manager";
 import { PBpacket, PacketHandler } from "net-socket-packet";
 import { op_def, op_client, op_virtual_world, op_gateway } from "pixelpai_proto";
 import { Lite } from "game-capsule";
-import { IConnectListener } from "structure";
 import { ResUtils, Tool, load, HttpLoadManager, Url } from "utils";
 import IOP_CLIENT_REQ_VIRTUAL_WORLD_PLAYER_INIT = op_gateway.IOP_CLIENT_REQ_VIRTUAL_WORLD_PLAYER_INIT;
 import { Connection, GameSocket } from "./net/connection";
@@ -23,6 +22,7 @@ import { GuideWorkerManager } from "./guide.manager";
 import { ElementStorage } from "baseGame";
 import { SoundWorkerManager } from "./sound.manager";
 import { CustomProtoManager } from "./custom.proto";
+import { IConnectListener } from "src/structure/net";
 interface ISize {
     width: number;
     height: number;
@@ -636,7 +636,6 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
         this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_GOTO_ANOTHER_GAME, this.onGotoAnotherGame);
         // this.addHandlerFun(op_client.OPCODE._OP_GATEWAY_RES_CLIENT_PONG, this.heartBeatCallBack);
         this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_GAME_MODE, this.onAvatarGameModeHandler);
-        this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_CUSTOM_PROTO, this.onCustomHandler);
         this.createManager();
         const gameID = this.mConfig.game_id;
         const worldId = this.mConfig.virtual_world_id;
@@ -924,11 +923,6 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
     private onAvatarGameModeHandler(packet: PBpacket) {
         const content: op_client.IOP_VIRTUAL_WORLD_REQ_CLIENT_GAME_MODE = packet.content;
         this.mAvatarType = content.avatarStyle;
-    }
-
-    private onCustomHandler(packet: PBpacket) {
-        const content: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_CUSTOM_PROTO = packet.content;
-        this.emitter.emit(content.msgName, content);
     }
 
     private _run(current: number, delta: number) {
