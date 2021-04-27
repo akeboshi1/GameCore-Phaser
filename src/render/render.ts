@@ -1514,6 +1514,8 @@ export class Render extends RPCPeer implements GameMain, IRender {
         if (target) {
             if (effect === "liner") {
                 const position = target.getPosition();
+                // 取消follow，避免pan结束镜头回到原来target
+                this.mCameraManager.stopFollow();
                 this.mCameraManager.pan(position.x, position.y, 300).then(() => {
                     this.mCameraManager.startFollow(target);
                 });
