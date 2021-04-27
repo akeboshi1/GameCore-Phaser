@@ -642,6 +642,7 @@ export class UIHelper {
     }
 
     public static playtPosYTween(scene: any, obj: any, from: number, to: number, duration: number = 500, ease: string = "Bounce.easeOut", delay?: number, compl?: Handler, update?: Handler) {
+        ease = ease || "Linear";
         const onUpdate = update ? (cope: any, param: any) => {
             if (update) update.runWith(param.value);
         } : undefined;
@@ -665,6 +666,7 @@ export class UIHelper {
     }
 
     public static playtPosXTween(scene: any, obj: any, from: number, to: number, duration: number = 500, ease: string = "Bounce.easeOut", delay?: number, compl?: Handler, update?: Handler) {
+        ease = ease || "Linear";
         const onUpdate = update ? (cope: any, param: any) => {
             if (update) update.runWith(param.value);
         } : undefined;

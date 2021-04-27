@@ -28,7 +28,12 @@ export class PicaIllustredCollectPanel extends Phaser.GameObjects.Container {
         this.mGameGrid.setSize(w, h);
         this.mGameGrid.resetMask();
     }
-
+    show() {
+        this.visible = true;
+    }
+    hide() {
+        this.visible = false;
+    }
     setHandler(send: Handler) {
         this.send = send;
     }

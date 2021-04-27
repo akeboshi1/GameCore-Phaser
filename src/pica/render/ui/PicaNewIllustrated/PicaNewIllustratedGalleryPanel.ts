@@ -26,19 +26,26 @@ export class PicaNewIllustratedGalleryPanel extends Phaser.GameObjects.Container
         this.dpr = dpr;
         this.zoom = zoom;
         this.init();
-        this.on("pointerup", this.onSliderUpHandler, this);
     }
     resize(width?: number, height?: number) {
         const w = width || this.width;
         const h = height || this.height;
         this.setSize(w, h);
         this.gridLayout.setSize(w, h);
+        if (h > 600 * this.dpr) this.pagInterval = 5;
         this.gridLayout.y = -this.height * 0.5 + this.gridLayout.height * 0.5;
         this.bottomPageTex.y = this.height * 0.5 - 40 * this.dpr;
         this.horSlider.y = this.bottomPageTex.y + 20 * this.dpr;
         this.setInteractive();
     }
-
+    show() {
+        this.scene.input.on("pointerup", this.onSliderUpHandler, this);
+        this.visible = true;
+    }
+    hide() {
+        this.scene.input.off("pointerup", this.onSliderUpHandler, this);
+        this.visible = false;
+    }
     setHandler(send: Handler) {
         this.send = send;
     }
@@ -49,6 +56,7 @@ export class PicaNewIllustratedGalleryPanel extends Phaser.GameObjects.Container
         const list = content.list;
         this.maxPage = Math.ceil(list.length / (this.pagInterval * 4));
         this.setItemPages(1);
+        this.pageCountText.text = "01";
 
     }
 
@@ -125,18 +133,35 @@ export class PicaNewIllustratedGalleryPanel extends Phaser.GameObjects.Container
         const temps = this.getItemDataArr(datas);
         this.bottomPageTex.text = `${page}/${this.maxPage}`;
         this.setHorizontalItems(temps);
+        this.slidermoving = false;
     }
 
     private onSelectItemHandler(cell: PicaNewIllustratedItem) {
         // if (this.curSelectItem) this.curSelectItem.select = true;
         //  cell.showTips();
-        if (this.send) this.send.runWith(["furidetail", cell.itemData]);
+        const itemData = cell.itemData;
+        if (itemData) {
+            const status = itemData["status"];
+            let showdetail = false;
+            if (status === 3) {
+                cell.playLightAni(new Handler(this, () => {
+                }));
+            } else if (status === 1) {
+                showdetail = true;
+            } else if (status === 2 || status === 4) {
+                showdetail = true;
+            }
+            if (showdetail)
+                if (this.send) this.send.runWith(["furidetail", cell.itemData]);
+
+        }
     }
 
     private onSliderValueHandler(value: number) {
         this.pageCountText.x = this.thumb.x;
         let page = Math.floor(this.maxPage * value + 1);
-        if (page >= 8) page = 7;
+        if (page > this.maxPage) page = this.maxPage;
+        if (this.pageCount === page) return;
         this.pageCount = page;
         this.pageCountText.text = `${this.pageCount < 10 ? "0" + this.pageCount : this.pageCount}`;
         this.slidermoving = true;
@@ -193,6 +218,6 @@ class IllustratedHorizontalItem extends Phaser.GameObjects.Container {
     }
 
     private onItemHandler(pointer: any, item: PicaNewIllustratedItem) {
-        if (this.send) this.send.runWith(item.itemData);
+        if (this.send) this.send.runWith(item);
     }
 }
