@@ -1,4 +1,4 @@
-import { EventDispatcher } from "structure";
+import { EventDispatcher, Logger } from "structure";
 import { Game } from "../game";
 import { BaseDataManager } from "./base.dataManager";
 import { BaseHandler } from "./base.handler";
@@ -23,6 +23,7 @@ export class DataManager {
         this.initDataMap();
     }
     public initPackMap() {
+        Logger.getInstance().log("init packMap ===>", this.mEvent);
         const baseMgr = new BaseDataManager(this.mGame, this.mEvent);
         const sceneMgr = new SceneDataManager(this.mGame, this.mEvent);
         const commonMgr = new CommonDataManager(this.mGame, this.mEvent);
