@@ -1,0 +1,278 @@
+import { Button, ClickEvent, GameGridTable } from "apowophaserui";
+import { AlignmentType, AxisType, ButtonEventDispatcher, ConstraintType, DynamicImage, GridLayoutGroup, ThreeSliceButton, ToggleColorButton } from "gamecoreRender";
+import { UIAtlasName } from "../../../res";
+import { Handler, i18n, UIHelper, Url } from "utils";
+import { CommonBackground } from "..";
+import { UITools } from "../uitool";
+import { IExtendCountablePackageItem, IGalleryLevel, IGalleryLevelGroup } from "picaStructure";
+import { Data } from "tooqinggamephaser";
+export class PicaNewLevelRewardsPanel extends Phaser.GameObjects.Container {
+    private mBackground: CommonBackground;
+    private backButton: ButtonEventDispatcher;
+    private oneKeyBtn: ThreeSliceButton;
+    private titlebg: Phaser.GameObjects.Image;
+    private titleTex: Phaser.GameObjects.Text;
+    private mLevelGrid: GameGridTable;
+    private rewardsPanel: RightRewardsPanel;
+    private dpr: number;
+    private zoom: number;
+    private send: Handler;
+    private galleryData: any[];
+    private redMap: Map<number, Phaser.GameObjects.Image> = new Map();
+    constructor(scene: Phaser.Scene, width: number, height: number, dpr: number, zoom: number) {
+        super(scene);
+        this.setSize(width, height);
+        this.dpr = dpr;
+        this.zoom = zoom;
+        this.init();
+        this.setInteractive();
+    }
+    resize(width?: number, height?: number) {
+        const w = width || this.width;
+        const h = height || this.height;
+        this.setSize(w, h);
+        this.backButton.x = -this.width * 0.5 + this.backButton.width * 0.5 + 10 * this.dpr;
+        this.backButton.y = -this.height * 0.5 + 45 * this.dpr;
+        this.oneKeyBtn.x = this.width * 0.5 - this.oneKeyBtn.width * 0.5 - 10 * this.dpr;
+        this.oneKeyBtn.y = this.backButton.y;
+        this.titlebg.y = -this.height * 0.5 + 75 * this.dpr;
+        this.titleTex.y = this.titlebg.y;
+    }
+    public refreshMask() {
+        this.mLevelGrid.refresh();
+    }
+    setHandler(send: Handler) {
+        this.send = send;
+    }
+
+    setRewardsData(gallerys: any[]) { // op_client.OP_CLIENT_REQ_VIRTUAL_WORLD_PKT_UPDATE_GALLERY
+        this.galleryData = gallerys;
+    }
+
+    init() {
+        this.mBackground = new CommonBackground(this.scene, 0, 0, this.width, this.height, UIAtlasName.illustrate_new, "illustrate_survey_bg", 0xc3dff4);
+        const bg2 = this.scene.make.image({ key: UIAtlasName.illustrate_new, frame: "illustrate_survey_bg_veins" });
+        bg2.y = -this.height * 0.5 + bg2.height * 0.5;
+        this.mBackground.add(bg2);
+        this.add(this.mBackground);
+        this.backButton = UITools.createBackButton(this.scene, this.dpr, this.onBackHandler, this, i18n.t("illustrate.progressreward"));
+
+        this.oneKeyBtn = new ThreeSliceButton(this.scene, 62 * this.dpr, 25 * this.dpr, UIAtlasName.uicommon, UIHelper.threeYellowSmall, UIHelper.threeYellowSmall, i18n.t("mail.onekey"));
+        this.oneKeyBtn.setTextStyle(UIHelper.brownishStyle(this.dpr));
+        this.oneKeyBtn.setFontStyle("bold");
+
+        this.oneKeyBtn.on(ClickEvent.Tap, this.onAllReceiveHandler, this);
+        this.titlebg = this.scene.make.image({ key: UIAtlasName.illustrate_new, frame: "illustrate_favorites_popup_title" });
+        this.titleTex = this.scene.make.text({ style: UIHelper.colorStyle("#205BBC", 15 * this.dpr) }).setOrigin(0, 0.5);
+        this.createGridTable();
+        this.rewardsPanel = new RightRewardsPanel(this.scene, 266 * this.dpr, 443 * this.dpr, this.dpr, this.zoom);
+        this.rewardsPanel.setHandler(new Handler(this, this.onReceivedHandler));
+        this.rewardsPanel.x = this.width * 0.5 - this.rewardsPanel.width * 0.5 - 16 * this.dpr;
+        this.rewardsPanel.y = -20 * this.dpr;
+        this.add([this.mBackground, this.backButton, this.oneKeyBtn, this.titlebg, this.titleTex, this.mLevelGrid, this.rewardsPanel]);
+        this.resize();
+    }
+    private createGridTable() {
+        const tableHeight = this.height - 110 * this.dpr;
+        const tableWidth = 80 * this.dpr;
+        const cellWidth = 48 * this.dpr;
+        const cellHeight = 85 * this.dpr;
+        const tableConfig = {
+            x: 0,
+            y: 0,
+            table: {
+                width: this.width,
+                height: tableHeight,
+                columns: 4,
+                cellWidth,
+                cellHeight,
+                reuseCellContainer: true,
+                zoom: this.zoom
+            },
+            scrollMode: 0,
+            clamplChildOY: false,
+            createCellContainerCallback: (cell, cellContainer) => {
+                const item = cell.item;
+                if (cellContainer === null) {
+                    cellContainer = new LevelItem(this.scene, cellWidth, cellHeight, this.dpr, this.zoom);
+                }
+                cellContainer.setLevelData(item);
+                return cellContainer;
+            },
+        };
+        this.mLevelGrid = new GameGridTable(this.scene, tableConfig);
+        this.mLevelGrid.layout();
+        this.mLevelGrid.on("cellTap", (cell) => {
+            this.onSelectItemHandler(cell);
+        });
+        this.mLevelGrid.y = 25 * this.dpr;
+        this.mLevelGrid.x = -this.width * 0.5 + this.mLevelGrid.width;
+    }
+    private onSelectItemHandler(cell: LevelItem) {
+        // if (this.send) this.send.runWith(["furidetail", cell.groupData]);
+        const groupData = cell.groupData;
+        this.titleTex.text = i18n.t("illustrate.levelrewardtips", { name: groupData.level });
+        this.rewardsPanel.setRewardsData(groupData);
+    }
+
+    private onReceivedHandler(data: IGalleryLevel) {
+        if (this.send) this.send.runWith(["rewards", data.id]);
+    }
+    private onAllReceiveHandler() {
+        if (this.send) this.send.runWith("allrewards");
+    }
+    private onBackHandler() {
+        if (this.send) this.send.runWith("back");
+    }
+}
+
+class RightRewardsPanel extends Phaser.GameObjects.Container {
+    private rightBg: Phaser.GameObjects.Graphics;
+    private gridLayout: GridLayoutGroup;
+    private rewardsTips: Phaser.GameObjects.Text;
+    private dpr: number;
+    private zoom: number;
+    private gridItems: RewardItem[] = [];
+    private send: Handler;
+    private progress: number = 0;
+    private curItem: RewardItem;
+    constructor(scene: Phaser.Scene, width: number, height: number, dpr: number, zoom: number) {
+        super(scene);
+        this.dpr = dpr;
+        this.zoom = zoom;
+        this.setSize(width, height);
+        this.rightBg = this.scene.make.graphics(undefined, false);
+        this.rightBg.clear();
+        this.rightBg.fillStyle(0x7A9EF8, 1);
+        this.rightBg.fillRoundedRect(-width * 0.5, -height * 0.5, width, height);
+        const cellHeight = 96 * this.dpr;
+        const conWidth = 108 * dpr, conHeight = height;
+        this.gridLayout = new GridLayoutGroup(this.scene, conWidth, conHeight, {
+            cellSize: new Phaser.Math.Vector2(conWidth, cellHeight),
+            space: new Phaser.Math.Vector2(0, 17 * this.dpr),
+            startAxis: AxisType.Horizontal,
+            constraint: ConstraintType.FixedColumnCount,
+            constraintCount: 1,
+            alignmentType: AlignmentType.UpperCenter
+        });
+        this.rewardsTips = this.scene.make.text({ style: UIHelper.colorStyle("#1A1B1B", 11 * dpr) }).setOrigin(0, 0.5);
+        this.rewardsTips.x = -width * 0.5;
+        this.rewardsTips.y = height * 0.5 + 15 * dpr;
+        this.add([this.rightBg, this.gridLayout, this.rewardsTips]);
+    }
+
+    public setRewardsData(group: IGalleryLevelGroup) {
+        this.progress = group.progress;
+        this.setGridItems(group.gallery);
+    }
+    public setHandler(send: Handler) {
+        this.send = send;
+    }
+    private setGridItems(datas: any[]) {
+        for (const item of this.gridItems) {
+            item.visible = false;
+        }
+        const itemWidth = 330 * this.dpr, itemHeight = 96 * this.dpr;
+        for (let i = 0; i < datas.length; i++) {
+            let item: RewardItem;
+            const data = datas[i];
+            if (i < this.gridItems.length) {
+                item = this.gridItems[i];
+            } else {
+                item = new RewardItem(this.scene, itemWidth, itemHeight, this.dpr, this.zoom);
+                item.on(ClickEvent.Tap, this.onSelectHandler, this);
+                item.setHandler(this.send);
+                this.gridLayout.add(item);
+                this.gridItems.push(item);
+            }
+            item.setItemData(datas[i]);
+            item.visible = true;
+        }
+        this.gridLayout.Layout();
+    }
+
+    private onSelectHandler(pointer, obj: RewardItem) {
+        if (this.curItem) this.curItem.select = false;
+        obj.select = true;
+        this.curItem = obj;
+        this.rewardsTips.text = i18n.t("illustrate.meetrewardtips", { name: obj.galleryData.exp });
+    }
+}
+class RewardItem extends ButtonEventDispatcher {
+    public galleryData: IGalleryLevel;
+    private bg: Phaser.GameObjects.Image;
+    private itemIcon: DynamicImage;
+    private rewardBtn: ThreeSliceButton;
+    private send: Handler;
+    constructor(scene: Phaser.Scene, width: number, height: number, dpr: number, zoom: number) {
+        super(scene, 0, 0);
+        this.dpr = dpr;
+        this.zoom = zoom;
+        this.setSize(width, height);
+        this.bg = this.scene.make.image({ key: UIAtlasName.illustrate_new, frame: "illustrate_survey_reward_icon" });
+        this.itemIcon = new DynamicImage(scene, 0, 0);
+        this.itemIcon.y = -20 * dpr;
+        this.rewardBtn = new ThreeSliceButton(this.scene, 62 * this.dpr, 25 * this.dpr, UIAtlasName.uicommon, UIHelper.threeRedSmall, UIHelper.threeRedSmall, i18n.t("common.receivereward"));
+        this.rewardBtn.setTextStyle(UIHelper.brownishStyle(this.dpr));
+        this.rewardBtn.setFontStyle("bold");
+        this.rewardBtn.on(ClickEvent.Tap, this.onRewardHandler, this);
+    }
+    public setItemData(data: IGalleryLevel) {
+        this.galleryData = data;
+        const itemData = data.rewardItems[0];
+        const url = Url.getOsdRes(itemData.texturePath);
+        this.itemIcon.load(url, this, () => {
+            this.itemIcon.visible = true;
+        });
+        this.itemIcon.scale = this.dpr / this.zoom;
+        if (data.received === 1) {
+            this.rewardBtn.setFrameNormal(UIHelper.threeGraySmall);
+            this.rewardBtn.setText("common.receivereward");
+            this.rewardBtn.disInteractive();
+        } else if (data.received === 2) {
+            this.rewardBtn.setFrameNormal(UIHelper.threeRedSmall);
+            this.rewardBtn.setText("common.receivereward");
+            this.rewardBtn.setInteractive();
+        } else if (data.received === 3) {
+            this.rewardBtn.setFrameNormal(UIHelper.threeRedSmall);
+            this.rewardBtn.setText("common.received");
+            this.rewardBtn.disInteractive();
+        }
+    }
+
+    public set select(value: boolean) {
+        this.bg.setFrame(value ? "illustrate_survey_reward_icon1" : "illustrate_survey_reward_icon");
+    }
+    public setHandler(send: Handler) {
+        this.send = send;
+    }
+
+    private onRewardHandler() {
+        if (this.send) this.send.runWith(["recivedreward", this.galleryData]);
+    }
+}
+
+class LevelItem extends ButtonEventDispatcher {
+    public groupData: IGalleryLevelGroup;
+    private bg: Phaser.GameObjects.Image;
+    private linebg: Phaser.GameObjects.Image;
+    private levelTex: Phaser.GameObjects.Text;
+    constructor(scene: Phaser.Scene, width: number, height: number, dpr: number, zoom: number) {
+        super(scene, 0, 0);
+        this.dpr = dpr;
+        this.zoom = zoom;
+        this.setSize(width, height);
+        this.linebg = this.scene.make.image({ key: UIAtlasName.illustrate_new, frame: "illustrate_survey_lv_bg_line" });
+        this.bg = this.scene.make.image({ key: UIAtlasName.illustrate_new, frame: "illustrate_survey_lv_bg" });
+        this.levelTex = this.scene.make.text({ style: UIHelper.whiteStyle(dpr) });
+        this.add([this.linebg, this.bg, this.levelTex]);
+    }
+    public setLevelData(data: IGalleryLevelGroup) {
+        this.groupData = data;
+        this.levelTex.text = data.level < 10 ? `0${data.level}` : `${data.level}`;
+    }
+
+    public set select(value: boolean) {
+        this.bg.setFrame(value ? "illustrate_survey_lv_bg1" : "illustrate_survey_lv_bg");
+    }
+}

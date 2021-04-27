@@ -68,7 +68,9 @@
     "editor": "编辑",
     "survey": "调查",
     "notEnough": "{{}}数量不足",
-    "receive": "领取"
+    "receive": "领取",
+    "receivereward": "领取奖励",
+    "received": "已领取"
   },
   "quantityunit": {
     "k": "千",
@@ -478,7 +480,11 @@
     "furindetail": "家具详情",
     "surveyfurni": "调查家具",
     "cooking": "烹饪",
-    "newdiscovery": "新发现"
+    "newdiscovery": "新发现",
+    "levelrewardtips": "{{name}}级收集奖励",
+    "meetrewardtips": "*当前进度达到{{name}}获得",
+    "collected": "已收藏",
+    "progressreward": "进度奖励"
   },
   "mail": {
     "onekey": "一键领取",
