@@ -2,7 +2,7 @@ import { BaseFramesDisplay, ReferenceArea } from "baseRender";
 import { Render } from "../../render";
 import { DisplayField, ElementStateType, LayerName, RunningAnimation, TitleMask} from "structure";
 import { IDisplayObject } from "../display.object";
-import { IPos, Logger } from "utils";
+import {IPos, Logger, LogicPos, Position45} from "utils";
 import { ElementTopDisplay } from "../element.top.display";
 import { DragonbonesDisplay } from "../dragonbones/dragonbones.display";
 
@@ -17,6 +17,7 @@ export class FramesDisplay extends BaseFramesDisplay implements IDisplayObject {
     private mName: string = undefined;
     private mStartFireTween: Phaser.Tweens.Tween;
     private mDebugPoint: Phaser.GameObjects.Graphics;
+    private mGrids: Phaser.GameObjects.Graphics;
 
     constructor(scene: Phaser.Scene, private render: Render, id?: number, type?: number) {
         super(scene, id, type);
@@ -44,6 +45,10 @@ export class FramesDisplay extends BaseFramesDisplay implements IDisplayObject {
         if (this.mDebugPoint) {
             this.mDebugPoint.destroy();
             this.mDebugPoint = undefined;
+        }
+        if (this.mGrids) {
+            this.mGrids.destroy();
+            this.mGrids = undefined;
         }
         super.destroy();
     }
@@ -93,6 +98,34 @@ export class FramesDisplay extends BaseFramesDisplay implements IDisplayObject {
         if (this.mReferenceArea) {
             this.mReferenceArea.destroy();
             this.mReferenceArea = undefined;
+        }
+    }
+
+    public showGrids() {
+        if (this.mGrids) {
+            this.mGrids.destroy();
+            this.mGrids = undefined;
+        }
+        // const roomSize = this.render.roomSize;
+        //
+        // this.mGrids = this.scene.make.graphics(undefined, false);
+        // this.mGrids.lineStyle(1, 0xffffff, 0.1);
+        // this.mGrids.beginPath();
+        // let point = new LogicPos(startX, endX);
+        // point = Position45.transformTo90(point, roomSize);
+        // this.mGrids.moveTo(point.x, point.y);
+        // point = new LogicPos(startY, endY);
+        // point = Position45.transformTo90(point);
+        // this.mGrids.lineTo(point.x, point.y);
+        // this.mGrids.closePath();
+        // this.mGrids.strokePath();
+        // this.addAt(this.mGrids, 0);
+    }
+
+    public hideGrids() {
+        if (this.mGrids) {
+            this.mGrids.destroy();
+            this.mGrids = undefined;
         }
     }
 
