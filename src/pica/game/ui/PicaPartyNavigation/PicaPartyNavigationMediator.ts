@@ -6,7 +6,7 @@ import { BaseDataConfigManager } from "picaWorker";
 import { IScene } from "picaStructure";
 import { Logger } from "utils";
 import { BaseDataType } from "../../config";
-import { CommandMsgType } from "../../command/command.msg.type";
+import { PicaCommandMsgType } from "../../command/pica.command.msg.type";
 export class PicaPartyNavigationMediator extends BasicMediator {
     private mPlayerProgress: any;
     private mPartyListData: any;
@@ -42,7 +42,7 @@ export class PicaPartyNavigationMediator extends BasicMediator {
         this.game.emitter.on(this.key + "_getnavigatelist", this.setNavigationData, this);
         this.game.emitter.on(this.key + "_getRoomTypeList", this.onRoomTypeDatasHandler, this);
         this.game.emitter.on(this.key + "_createroom", this.onCreateRoomHandler, this);
-        this.game.emitter.on(CommandMsgType.PicaSelfRoomList, this.onNewSelfRoomListHandler, this);
+        this.game.emitter.on(PicaCommandMsgType.PicaSelfRoomList, this.onNewSelfRoomListHandler, this);
     }
 
     hide() {
@@ -58,7 +58,7 @@ export class PicaPartyNavigationMediator extends BasicMediator {
         this.game.emitter.off(this.key + "_getnavigatelist", this.setNavigationData, this);
         this.game.emitter.off(this.key + "_getRoomTypeList", this.onRoomTypeDatasHandler, this);
         this.game.emitter.off(this.key + "_createroom", this.onCreateRoomHandler, this);
-        this.game.emitter.off(CommandMsgType.PicaSelfRoomList, this.onNewSelfRoomListHandler, this);
+        this.game.emitter.off(PicaCommandMsgType.PicaSelfRoomList, this.onNewSelfRoomListHandler, this);
         super.hide();
     }
 

@@ -123,7 +123,6 @@ export class PicaExploreListBottomPanel extends Phaser.GameObjects.Container {
 
 class ChapterItemProgress extends ButtonEventDispatcher {
     public dpr: number;
-    private zoom: number;
     private bg: Phaser.GameObjects.Image;
     private lightbg: Phaser.GameObjects.Image;
     private topbg: Phaser.GameObjects.Image;

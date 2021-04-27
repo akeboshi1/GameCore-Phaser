@@ -118,6 +118,12 @@ export class DragonbonesDisplay extends BaseDragonbonesDisplay implements IDispl
         }
     }
 
+    public showGrids() {
+    }
+
+    public hideGrids() {
+    }
+
     public updateTopDisplay() {
         if (this.mTopDisplay) this.mTopDisplay.update();
     }
