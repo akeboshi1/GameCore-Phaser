@@ -6,11 +6,12 @@ export class Url {
     static RES_PATH: string = "";
     static RESUI_PATH: string = "";
     static RESOURCE_ROOT: string = "";
+    static REQUIRE_CONTEXT;
     static getRes(value: string): string {
         // return Url.RES_PATH + value;
         if (!value) return undefined;
         try {
-            return require(`resources/${value}`).default;
+            return Url.REQUIRE_CONTEXT(`resources/${value}`).default;
         } catch {
             return undefined;
         }
@@ -22,7 +23,7 @@ export class Url {
         // const req = require(Url.RESUI_PATH + `${dpr}x/${value}`);
         // return req;
         try {
-            return require(`resources/ui/${dpr}x/${value}`).default;
+            return Url.REQUIRE_CONTEXT(`resources/ui/${dpr}x/${value}`).default;
         } catch {
             // tslint:disable-next-line:no-console
             console.error(`${value} does not exist`);
@@ -32,7 +33,7 @@ export class Url {
     static getNormalUIRes(value: string) {
         // return Url.RESUI_PATH + value;
         try {
-            return require(`resources/ui/${value}`).default;
+            return Url.REQUIRE_CONTEXT(`resources/ui/${value}`).default;
         } catch {
             // tslint:disable-next-line:no-console
             console.error(`${value} does not exist`);

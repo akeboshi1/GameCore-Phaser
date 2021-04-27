@@ -10,7 +10,6 @@ import { HttpService } from "./loop/httpClock/http.service";
 import { LoadingManager } from "./loading/loading.manager";
 import { ILauncherConfig, EventDispatcher, IConfigPath } from "structure";
 import { IRoomService } from "./room";
-import { ElementStorage } from "baseGame";
 import { RoomManager } from "./room/room.manager";
 import { User } from "./actor/user";
 import { DataManager } from "./data.manager/dataManager";
@@ -18,6 +17,7 @@ import { BaseConfigManager, DataMgrType } from "./data.manager";
 import { NetworkManager } from "./command";
 import { SoundWorkerManager } from "./sound.manager";
 import { GuideWorkerManager } from "./guide.manager/guide.worker.manager";
+import { ElementStorage } from "baseGame";
 interface ISize {
     width: number;
     height: number;

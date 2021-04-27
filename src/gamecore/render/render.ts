@@ -132,6 +132,7 @@ export class Render extends RPCPeer implements GameMain, IRender {
         this.mConfig.hasGameCreated = this.mConfig.game_created ? true : false;
         this.mConfig.hasReload = this.mConfig.reload ? true : false;
         this.mConfig.hasGameLoaded = this.mConfig.gameLoaded ? true : false;
+        Url.REQUIRE_CONTEXT = this.requireContext;
         // rpc不传送方法
         delete this.mConfig.connectFail;
         delete this.mConfig.game_created;
@@ -180,8 +181,13 @@ export class Render extends RPCPeer implements GameMain, IRender {
         return this.mPhysicalPeerParam;
     }
 
+    get requireContext(): any {
+        return require;
+    }
+
     public linkMain(key, url, peerName) {
         // todo protected createFunc
+        Logger.getInstance().log("startLink mainpeer", key, url, peerName);
         this.linkTo(key, url).onceReady(() => {
             this.mMainPeer = this.remote[key][peerName];
             this.mMainPeer.updateFps();

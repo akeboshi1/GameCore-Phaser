@@ -81,6 +81,7 @@ export declare class Render extends RPCPeer implements GameMain, IRender {
     get renderParam(): IWorkerParam;
     get mainPeerParam(): IWorkerParam;
     get physicalPeerParam(): IWorkerParam;
+    get requireContext(): any;
     linkMain(key: any, url: any, peerName: any): void;
     linkPhysical(key: any, url: any, peerName: any): void;
     get physicalPeer(): any;

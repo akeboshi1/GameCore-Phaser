@@ -2,15 +2,15 @@ import { Url } from "utils";
 import { PlayScene } from "../scenes/play.scene";
 import { BubbleContainer } from "./bubble/bubble.container";
 import { ElementStateType, StateConfig, Font } from "structure";
-import { FollowEnum, FollowObject, TopDisplay } from "baseRender";
+import { FollowEnum, FollowObject, TopDisplay } from "display";
 
 /**
  * 人物头顶显示对象
  */
 export class ElementTopDisplay extends TopDisplay {
-    private mBubble: BubbleContainer;
-    private isDispose: boolean = false;
-    constructor(scene: Phaser.Scene, owner: any, dpr: number) {
+    protected mBubble: BubbleContainer;
+    protected isDispose: boolean = false;
+    constructor(protected scene: Phaser.Scene, owner: any, dpr: number) {
         super(scene, owner, dpr);
     }
 
@@ -194,11 +194,11 @@ export class ElementTopDisplay extends TopDisplay {
     //     }
 
     // }
-    private loadAtals(pngurl: string, jsonurl: string, context: any, callback: any) {
+    protected async loadAtals(pngurl: string, jsonurl: string, context: any, callback: any) {
         if (this.scene.textures.exists(pngurl)) {
             if (!this.isDispose && callback) callback.call(context);
         } else {
-            this.scene.load.atlas(pngurl, Url.getUIRes(this.mDpr, pngurl), Url.getUIRes(this.mDpr, jsonurl));
+            this.scene.load.atlas(pngurl, await Url.getUIRes(this.mDpr, pngurl), await Url.getUIRes(this.mDpr, jsonurl));
             this.scene.load.once(Phaser.Loader.Events.COMPLETE, () => {
                 if (!this.isDispose && callback) callback.call(context);
             }, this);

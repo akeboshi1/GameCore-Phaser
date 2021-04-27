@@ -4,7 +4,7 @@ import { IMatterObject, MatterObject } from "./physical/matter.object";
 import { MatterWorld } from "./physical/matter.world";
 import decomp from "poly-decomp";
 import { MatterUserObject } from "./physical/matter.user.object";
-import { EventDispatcher, IPos, IWorkerParam } from "structure";
+import { EventDispatcher, IPos, IWorkerParam, Logger } from "structure";
 import { delayTime } from "./physical/physical.param";
 // The World act as the global Phaser.World instance;
 // @ts-ignore
@@ -23,6 +23,7 @@ export class PhysicalPeer extends RPCPeer {
     private isDestroy: boolean = false;
     constructor(workerName: string) {
         super(workerName);
+        Logger.getInstance().log("physical version ===>");
         this.matterObjectMap = new Map();
         this.mEmitter = new EventDispatcher();
     }
