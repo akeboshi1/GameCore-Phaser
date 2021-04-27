@@ -5,7 +5,7 @@ import { PicaChat } from "../PicaChat/PicaChat";
 import { ChatCommandInterface, Logger } from "utils";
 import { MainUIRedType, RedEventType } from "picaStructure";
 import { PicaGame } from "../../pica.game";
-import { CommandMsgType } from "../../command/command.msg.type";
+import { PicaCommandMsgType } from "../../command/pica.command.msg.type";
 
 export class BottomMediator extends BasicMediator {
     private mCacheManager: ChatManager;

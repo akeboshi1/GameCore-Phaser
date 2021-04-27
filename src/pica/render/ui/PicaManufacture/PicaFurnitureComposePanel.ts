@@ -581,7 +581,6 @@ class FuriComposeItem extends ButtonEventDispatcher {
   private bg: Phaser.GameObjects.Image;
   private lightbg: Phaser.GameObjects.Image;
   private icon: DynamicImage;
-  private zoom: number;
   private alphaTween: Phaser.Tweens.Tween;
   constructor(scene: Phaser.Scene, dpr: number, zoom: number) {
     super(scene, 0, 0);

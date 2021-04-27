@@ -4,7 +4,7 @@ import { UIAtlasName } from "../../../res";
 import { Handler, i18n, UIHelper } from "utils";
 import { UITools } from "../uitool";
 import { MainUIRedType } from "picaStructure";
-export class PicaIllustratedListPanel extends Phaser.GameObjects.Container {
+export class PicaNewIllustratedListPanel extends Phaser.GameObjects.Container {
     private dpr: number;
     private zoom: number;
     private send: Handler;

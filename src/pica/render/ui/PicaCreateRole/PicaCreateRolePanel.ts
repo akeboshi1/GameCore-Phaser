@@ -1,5 +1,5 @@
 import { Button, ClickEvent, NineSliceButton } from "apowophaserui";
-import {Handler, i18n, Logger, UIHelper} from "utils";
+import { Handler, i18n, Logger, UIHelper } from "utils";
 import { AvatarSuit, AvatarSuitType, ModuleName, RunningAnimation } from "structure";
 import { UiManager, UIDragonbonesDisplay, ButtonEventDispatcher, ToggleButton } from "gamecoreRender";
 import { PicaBasePanel } from "../pica.base.panel";
@@ -19,7 +19,7 @@ export class PicaCreateRolePanel extends PicaBasePanel {
 
     private suitCon: Phaser.GameObjects.Container;
     private skinCon: Phaser.GameObjects.Container;
-    private enterButton: NineSliceButton;
+    private enterButton: PlayButton;
     private backButton: Button;
     private selectSkinBg: Phaser.GameObjects.Image;
 
@@ -189,7 +189,7 @@ export class PicaCreateRolePanel extends PicaBasePanel {
             this.suitCon.add(item);
             this.suitItemMap.set(tag, item);
         }
-        this.enterButton = new NineSliceButton(this.scene, 0, posy + 48 * this.dpr, 191 * this.dpr, 55 * this.dpr, UIAtlasName.uicommon, "yellow_btn_normal", i18n.t("creatrole.gointo"), this.dpr, this.scale, UIHelper.button(this.dpr));
+        this.enterButton = new PlayButton(this.scene, 0, posy + 48 * this.dpr, 191 * this.dpr, 55 * this.dpr, UIAtlasName.uicommon, "yellow_btn_normal", i18n.t("creatrole.gointo"), this.dpr, this.scale, UIHelper.button(this.dpr));
         this.enterButton.setTextStyle(UIHelper.brownishStyle(this.dpr, 23));
         this.enterButton.setFontStyle("bold");
         this.enterButton.on(ClickEvent.Tap, this.onSubmitHandler, this);
@@ -197,6 +197,7 @@ export class PicaCreateRolePanel extends PicaBasePanel {
     }
 
     private async onSubmitHandler() {
+        this.enterButton.enabled = false;
         const ids = [];
         const avatarSets = [];
         const suitPart = AvatarSuitType.suitPart;
@@ -417,5 +418,31 @@ class SelectSuitAvatarItem extends Phaser.GameObjects.Container {
         const suitData = this.suitDatas[this.indexed];
         this.nameTex.text = this.text + (this.indexed + 1);
         if (this.send) this.send.runWith([this.tag, suitData]);
+    }
+}
+class PlayButton extends NineSliceButton {
+    constructor(scene: Phaser.Scene, x: number, y: number, width: number, height: number, key: string, frame: string, text?: string, dpr?: number, scale?: number, config?: any, music?: any, data?: any) {
+        super(scene, x, y, width, height, key, frame, text, dpr, scale, config, music, data);
+    }
+
+    set enabled(val) {
+        if (this.mBackground) {
+            this.remove(this.mBackground);
+            this.mBackground.destroy();
+        }
+        if (this.mText) this.remove(this.mText);
+        if (val) {
+            this.mFrame = "yellow_btn_normal";
+            this.createBackground();
+            this.setInteractive();
+        } else {
+            this.mFrame = "butt_gray";
+            this.createBackground();
+            this.removeInteractive();
+        }
+        if (this.mText) {
+            this.add(this.mText);
+            this.mText.setColor(val ? "#995E00" : "#808080");
+        }
     }
 }

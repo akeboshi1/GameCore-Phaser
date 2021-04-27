@@ -44,7 +44,7 @@ export class PicaCompose extends BasicModel {
     public onReqUseFormula(id: string) {
         const packet = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_PKT_CRAFT_ALCHEMY);
         const content: op_virtual_world.OP_CLIENT_REQ_VIRTUAL_WORLD_PKT_CRAFT_ALCHEMY = packet.content;
-        content.id = id;
+        content.id = id + "";
         this.connection.send(packet);
     }
     private onRetFormulaDetial(packge: PBpacket) {

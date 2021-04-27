@@ -18,11 +18,11 @@ export class CustomProtoManager extends PacketHandler {
         // tslint:disable-next-line:new-parens
         const proto = customProto[msgName];
         if (!proto) {
-            return Logger.getInstance().error(`${msgName} does not exist`);
+            return Logger.getInstance().error(`Custom proto ${msgName} does not exist`);
         }
         const obj = proto.fromObject(msg || {});
         if (!obj) {
-            return Logger.getInstance().error(`parse message ${msg.toString()} failed`);
+            return Logger.getInstance().error(`Parse custom proto ${msg.toString()} failed`);
         }
         const packet = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_CUSTOM_PROTO);
         const content: op_virtual_world.IOP_CLIENT_REQ_VIRTUAL_WORLD_CUSTOM_PROTO = packet.content;
@@ -55,7 +55,7 @@ export class CustomProtoManager extends PacketHandler {
         const { msgName, cmd, msg } = content;
         const proto = customProto[msgName];
         if (!proto) {
-            return Logger.getInstance().error(`${msgName} does not exist`);
+            return Logger.getInstance().error(`Custom proto ${msgName} does not exist`);
         }
         this.emitter.emit(content.msgName, { cmd, content: proto.decode(msg) });
     }
