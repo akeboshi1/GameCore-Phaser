@@ -1,3 +1,5 @@
+import { Logger } from "structure";
+
 export const HTTP_REGEX = /^(http|https):/i;
 export class Url {
     // cdn资源路径
@@ -6,38 +8,16 @@ export class Url {
     static RES_PATH: string = "";
     static RESUI_PATH: string = "";
     static RESOURCE_ROOT: string = "";
-    static REQUIRE_CONTEXT;
+    // static REQUIRE_CONTEXT;
     static getRes(value: string): string {
-        // return Url.RES_PATH + value;
-        if (!value) return undefined;
-        try {
-            return Url.REQUIRE_CONTEXT(`resources/${value}`).default;
-        } catch {
-            return undefined;
-        }
+        return Url.RES_PATH + value;
     }
 
     static getUIRes(dpr: number, value: string): string {
-        if (!value) return undefined;
-        // return Url.RESUI_PATH + `${dpr}x/${value}`;
-        // const req = require(Url.RESUI_PATH + `${dpr}x/${value}`);
-        // return req;
-        try {
-            return Url.REQUIRE_CONTEXT(`resources/ui/${dpr}x/${value}`).default;
-        } catch {
-            // tslint:disable-next-line:no-console
-            console.error(`${value} does not exist`);
-        }
+        return Url.RESUI_PATH + `${dpr}x/${value}`;
     }
-
     static getNormalUIRes(value: string) {
-        // return Url.RESUI_PATH + value;
-        try {
-            return Url.REQUIRE_CONTEXT(`resources/ui/${value}`).default;
-        } catch {
-            // tslint:disable-next-line:no-console
-            console.error(`${value} does not exist`);
-        }
+        return Url.RESUI_PATH + value;
     }
 
     static getOsdRes(value: string): string {

@@ -4,10 +4,9 @@ export declare class Url {
     static RES_PATH: string;
     static RESUI_PATH: string;
     static RESOURCE_ROOT: string;
-    static REQUIRE_CONTEXT: any;
     static getRes(value: string): string;
     static getUIRes(dpr: number, value: string): string;
-    static getNormalUIRes(value: string): any;
+    static getNormalUIRes(value: string): string;
     static getOsdRes(value: string): string;
 }
 export declare class ResUtils {

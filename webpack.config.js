@@ -12,7 +12,7 @@ const TerserPlugin = require("terser-webpack-plugin");
 const CircularDependencyPlugin = require("circular-dependency-plugin");
 const appVer = require("./version");
 
-const resourcesOut = { name: "[name]_[hash].[ext]", outputPath: "resources" };
+// const resourcesOut = { name: "[name]_[hash].[ext]", outputPath: "resources" };
 const commonConfig = {
     resolve: {
         extensions: [".ts", ".js"],
@@ -75,8 +75,8 @@ const gameConfig = Object.assign({}, commonConfig, {
         rules: [
             { test: /\.ts$/, loader: "ts-loader", options: { allowTsInNodeModules: false }, exclude: "/node_modules/" },
             { test: /webworkerrpc\.js$/, loader: "expose-loader?webworker-rpc" },
-            { test: /\.(gif|png|dbbin|ttf|jpe?g|svg|mp3|mp4|xml)$/i, loader: "file-loader", options: resourcesOut },
-            { test: /\.json/, type: "javascript/auto", loader: "file-loader", exclude: "/resources/locales/", options: resourcesOut },
+            // { test: /\.(gif|png|dbbin|ttf|jpe?g|svg|mp3|mp4|xml)$/i, loader: "file-loader", options: resourcesOut },
+            // { test: /\.json/, type: "javascript/auto", loader: "file-loader", exclude: "/resources/locales/", options: resourcesOut },
         ],
     },
     externals: { dragonBones: "dragonBones", tooqinggamephaser: "tooqinggamephaser" },
@@ -102,12 +102,8 @@ const gameConfig = Object.assign({}, commonConfig, {
     },
     plugins: [
         new CopyWebpackPlugin([{
-            from: "./resources/locales", to: `resources/locales`, toType: "dir"
-            , force: true
-        },
-        {
-            from: "./resources/scripts", to: `resources/scripts`, toType: "dir"
-            , force: true
+            from: "**/*", to: `resources`, toType: "dir"
+            , force: true, context: "resources"
         }]),
         new HtmlWebpackPlugin({
             inject: "head",

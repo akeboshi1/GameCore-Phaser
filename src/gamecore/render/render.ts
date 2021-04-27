@@ -68,6 +68,9 @@ export class Render extends RPCPeer implements GameMain, IRender {
     @Export()
     public editorModeDebugger: EditorModeDebugger;
 
+    protected mMainPeer: any;
+    protected mPhysicalPeer: any;
+
     protected readonly DEFAULT_WIDTH = 360;
     protected readonly DEFAULT_HEIGHT = 640;
     protected mGuideManager: GuideManager;
@@ -85,6 +88,7 @@ export class Render extends RPCPeer implements GameMain, IRender {
     protected mRenderParam: IWorkerParam;
     protected mMainPeerParam: IWorkerParam;
     protected mPhysicalPeerParam: IWorkerParam;
+    // protected mRequireContext;
     private mCallBack: Function;
     private _moveStyle: number = 0;
     private _curTime: number;
@@ -103,9 +107,6 @@ export class Render extends RPCPeer implements GameMain, IRender {
      * 面板缩放系数
      */
     private mUIScale: number;
-
-    private mMainPeer: any;
-    private mPhysicalPeer: any;
     private isPause: boolean = false;
     private mConnectFailFunc: Function;
     private mGameCreatedFunc: Function;
@@ -132,8 +133,10 @@ export class Render extends RPCPeer implements GameMain, IRender {
         this.mConfig.hasGameCreated = this.mConfig.game_created ? true : false;
         this.mConfig.hasReload = this.mConfig.reload ? true : false;
         this.mConfig.hasGameLoaded = this.mConfig.gameLoaded ? true : false;
-        Url.REQUIRE_CONTEXT = this.requireContext;
+        // this.mRequireContext = config.requireContext;
+        // Url.REQUIRE_CONTEXT = this.mRequireContext;
         // rpc不传送方法
+        // delete this.mConfig.requireContext;
         delete this.mConfig.connectFail;
         delete this.mConfig.game_created;
         delete this.mConfig.closeGame;
@@ -181,9 +184,9 @@ export class Render extends RPCPeer implements GameMain, IRender {
         return this.mPhysicalPeerParam;
     }
 
-    get requireContext(): any {
-        return require;
-    }
+    // get requireContext(): any {
+    //     return this.mRequireContext;
+    // }
 
     public linkMain(key, url, peerName) {
         // todo protected createFunc

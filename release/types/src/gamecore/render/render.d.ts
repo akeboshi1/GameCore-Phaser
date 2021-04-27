@@ -33,6 +33,8 @@ export declare class Render extends RPCPeer implements GameMain, IRender {
     astarDebugger: AstarDebugger;
     sortDebugger: SortDebugger;
     editorModeDebugger: EditorModeDebugger;
+    protected mMainPeer: any;
+    protected mPhysicalPeer: any;
     protected readonly DEFAULT_WIDTH = 360;
     protected readonly DEFAULT_HEIGHT = 640;
     protected mGuideManager: GuideManager;
@@ -67,8 +69,6 @@ export declare class Render extends RPCPeer implements GameMain, IRender {
      * 面板缩放系数
      */
     private mUIScale;
-    private mMainPeer;
-    private mPhysicalPeer;
     private isPause;
     private mConnectFailFunc;
     private mGameCreatedFunc;
@@ -81,7 +81,6 @@ export declare class Render extends RPCPeer implements GameMain, IRender {
     get renderParam(): IWorkerParam;
     get mainPeerParam(): IWorkerParam;
     get physicalPeerParam(): IWorkerParam;
-    get requireContext(): any;
     linkMain(key: any, url: any, peerName: any): void;
     linkPhysical(key: any, url: any, peerName: any): void;
     get physicalPeer(): any;
