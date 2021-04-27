@@ -95,7 +95,7 @@ export class PicaNewIllustratedDetailPanel extends Phaser.GameObjects.Container 
         this.progressTex.setText(`${reward1Progress} / ${reward1Max}`);
         const tempcount = Math.floor((reward1Progress / reward1Max) * 3 + 0.01);
         for (let i = 0; i < this.rewardImgs.length; i++) {
-            if (i <= tempcount) this.rewardImgs[i].setFrame("illustrate_survey_lv_reward");
+            if (i + 1 <= tempcount) this.rewardImgs[i].setFrame("illustrate_survey_lv_reward");
             else this.rewardImgs[i].setFrame("illustrate_survey_lv_reward_1");
         }
     }
@@ -122,8 +122,9 @@ export class PicaNewIllustratedDetailPanel extends Phaser.GameObjects.Container 
         this.acquire.on(ClickEvent.Tap, this.onAcquireRewardsHandler, this);
         this.acquireImg = this.scene.make.image({ key: UIAtlasName.illustrate_new, frame: "illustrate_survey_badge1" });
         this.acquireTex = this.scene.make.text({ style: UIHelper.whiteStyle(this.dpr, 10) }).setOrigin(0.5);
+        this.acquireTex.setFontStyle("bold");
         this.acquireTex.setStroke("#26365A", 2 * this.dpr);
-        this.acquireTex.y = this.acquireImg.y + this.acquireImg.height * 0.5 + 3 * this.dpr;
+        this.acquireTex.y = this.acquireImg.y + this.acquireImg.height * 0.5 - 5 * this.dpr;
         this.acquire.add([this.acquireImg, this.acquireTex]);
         this.acquire.x = this.topCon.width * 0.5 - this.acquire.width * 0.5 - 20 * this.dpr;
         this.acquire.y = -this.topCon.height * 0.5 + this.acquire.height * 0.5 + 15 * this.dpr;
@@ -135,13 +136,13 @@ export class PicaNewIllustratedDetailPanel extends Phaser.GameObjects.Container 
         this.horProgress.y = this.toggleCon.y + this.toggleCon.height * 0.5 + 50 * this.dpr;
         this.horProgress.x = -5 * this.dpr;
         this.createRewardImgs();
-        this.levelButton = new Button(this.scene, UIAtlasName.illustrate_new, "illustrate_survey_lv_icon", "illustrate_survey_lv_icon", "", undefined, this.dpr, this.zoom);
+        this.levelButton = new Button(this.scene, UIAtlasName.illustrate_new, "illustrate_survey_lv_icon", "illustrate_survey_lv_icon", "1", undefined, this.dpr, this.zoom);
         this.levelButton.setFontStyle("bold");
         this.levelButton.setTextStyle(UIHelper.whiteStyle(this.dpr, 15));
         this.levelButton.x = this.horProgress.x - this.horProgress.width * 0.5 - this.levelButton.width * 0.5 - 8 * this.dpr;
         this.levelButton.y = this.horProgress.y;
         this.levelButton.on(ClickEvent.Tap, this.onHorRewardsHandler, this);
-        this.progressTex = this.scene.make.text(UIHelper.whiteStyle(this.dpr)).setOrigin(0, 0.5);
+        this.progressTex = this.scene.make.text({ style: UIHelper.whiteStyle(this.dpr) }).setOrigin(0, 0.5);
         this.progressTex.setFontStyle("bold");
         this.progressTex.x = this.horProgress.x + this.horProgress.width * 0.5 + 5 * this.dpr;
         this.progressTex.y = this.horProgress.y;
@@ -183,12 +184,14 @@ export class PicaNewIllustratedDetailPanel extends Phaser.GameObjects.Container 
         this.selectLine.y = 20 * this.dpr;
     }
     protected createRewardImgs() {
+        this.rewardImgs = [];
         const posy = this.horProgress.y - 15 * this.dpr;
+        const posx = -this.horProgress.width * 0.5 - 4 * this.dpr;
         const interval = 84 * this.dpr;
         for (let i = 0; i < 3; i++) {
             const img = this.scene.make.image({ key: UIAtlasName.illustrate_new, frame: "illustrate_survey_lv_reward_1" });
             img.y = posy;
-            img.x = interval * (i + 1);
+            img.x = posx + interval * (i + 1) + (i === 2 ? -10 * this.dpr : 0);
             this.rewardImgs.push(img);
             this.topCon.add(img);
         }
@@ -211,23 +214,20 @@ export class PicaNewIllustratedDetailPanel extends Phaser.GameObjects.Container 
 
     private layoutOption(type: number) {
         let tableHeight = this.height * 0.5 - this.topCon.y - this.topCon.height * 0.5;
-        let offsetY = 30 * this.dpr;
         if (type === 1) {
             this.topCon.visible = true;
             tableHeight -= 23 * this.dpr;
-            offsetY = 30 * this.dpr;
             this.collectPanel.visible = false;
             this.galleryPanel.visible = true;
-            const posy = this.topCon.y + this.topCon.height * 0.5 + tableHeight * 0.5 + offsetY;
+            const posy = this.topCon.y + this.topCon.height * 0.5 + tableHeight * 0.5 + 20 * this.dpr;
             this.galleryPanel.y = posy;
-            this.galleryPanel.resize(this.width - 20 * this.dpr, tableHeight);
+            this.galleryPanel.resize(this.width, tableHeight);
         } else if (type === 2) {
             this.topCon.visible = false;
             tableHeight += 40 * this.dpr;
-            offsetY = -10 * this.dpr;
             this.galleryPanel.visible = false;
             this.collectPanel.visible = true;
-            const posy = this.topCon.y + this.topCon.height * 0.5 + tableHeight * 0.5 + offsetY;
+            const posy = this.topCon.y + this.topCon.height * 0.5 + tableHeight * 0.5 - 10 * this.dpr;
             this.collectPanel.y = posy;
             this.collectPanel.resize(this.width, tableHeight);
         }

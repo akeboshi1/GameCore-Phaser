@@ -20,12 +20,12 @@ export class PicaNewIllustratedItem extends ButtonEventDispatcher {
         this.surveyImg = this.scene.make.image({ key: UIAtlasName.illustrate_new, frame: "illustrate_survey_icon_base_1" });
         this.surveyImg.y = height * 0.5 - this.surveyImg.height * 0.5 - 7 * dpr;
         this.surveyLight = this.scene.make.image({ key: UIAtlasName.illustrate_new, frame: "illustrate_survey_icon_light" });
-        this.codeTex = this.scene.make.text({ style: UIHelper.whiteStyle(dpr, 10) }).setOrigin(0.5);
-        this.codeTex.y = this.surveyImg.y + 4 * dpr;
-        this.starImg = this.scene.make.image({ key: UIAtlasName.illustrate_new, frame: "illustrate_survey_star1" });
-        this.starImg.y = this.codeTex.y + 15 * dpr;
         this.itemIcon = new DynamicImage(scene, 0, 0);
         this.magnifyingImg = this.scene.make.image({ key: UIAtlasName.illustrate_new, frame: "illustrate_survey_icon_magnifier" });
+        this.starImg = this.scene.make.image({ key: UIAtlasName.illustrate_new, frame: "illustrate_survey_star1" });
+        this.starImg.y = height * 0.5 - 10 * dpr;
+        this.codeTex = this.scene.make.text({ style: UIHelper.whiteStyle(dpr, 10) }).setOrigin(0.5);
+        this.codeTex.y = this.starImg.y + 10 * dpr;
         this.discoveryTips = this.scene.make.text({ text: i18n.t("illustrate.newdiscovery"), style: UIHelper.colorStyle("#FC1111", 7 * dpr) });
         this.discoveryTips.x = width * 0.5;
         this.discoveryTips.y = -height * 0.5;
@@ -37,6 +37,7 @@ export class PicaNewIllustratedItem extends ButtonEventDispatcher {
             const temp = <Phaser.GameObjects.Container>item;
             temp.y -= 10 * dpr;
         }
+        this.enable = true;
     }
 
     setItemData(item: ICountablePackageItem, code: boolean = true) {
@@ -50,13 +51,11 @@ export class PicaNewIllustratedItem extends ButtonEventDispatcher {
             const status = item["status"];
             if (status === 1) {
                 this.surveyImg.setTexture(UIAtlasName.illustrate_new, "illustrate_survey_icon_base_1");
-                this.starImg.setTexture(UIAtlasName.illustrate_new, "illustrate_survey_icon_base_1");
                 this.surveyLight.visible = false;
                 this.magnifyingImg.visible = true;
                 this.itemIcon.alpha = 0.4;
             } else {
                 this.surveyImg.setTexture(UIAtlasName.illustrate_new, "illustrate_survey_icon_base");
-                this.starImg.setTexture(UIAtlasName.uicommon, "illustrate_survey_icon_base_1");
                 this.surveyLight.visible = true;
                 this.magnifyingImg.visible = false;
                 this.itemIcon.alpha = 1;

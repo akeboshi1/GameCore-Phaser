@@ -10,7 +10,7 @@ import { ClickEvent } from "apowophaserui";
 import { IExtendCountablePackageItem, IGalleryCombination, MainUIRedType } from "../../../structure";
 import { PicaNewFuriniDetailPanel } from "./PicaNewFuriniDetailPanel";
 import { CommonBackground } from "..";
-export class PicaNewIllustredCollectPanel extends PicaBasePanel {
+export class PicaNewIllustratedPanel extends PicaBasePanel {
     private mBackground: CommonBackground;
     private content: Phaser.GameObjects.Container;
     private listPanel: PicaNewIllustratedListPanel;
