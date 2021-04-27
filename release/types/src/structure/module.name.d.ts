@@ -76,6 +76,7 @@ export declare class ModuleName {
     static PICAREPAIRCHOOSE_NAME: string;
     static MASK_LOADING_NAME: string;
     static PICAILLUSTRATED_NAME: string;
+    static PICAILLUSTRATED_NEW_NAME: string;
     static PICA_DROP_ELEMENT_NAME: string;
     static PICABAGGUIDE_NAME: string;
     static PICAEXPLOREGUIDE_NAME: string;
@@ -90,4 +91,5 @@ export declare class ModuleName {
     static PICASCENENAVIGATION_NAME: string;
     static PICAMAIL_NAME: string;
     static PICACOOKING_NAME: string;
+    static PICAMARQUEE_NAME: string;
 }

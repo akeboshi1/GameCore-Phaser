@@ -56,4 +56,6 @@ export declare class BasicMediator implements IMediator {
     protected panelInit(): void;
     protected mediatorExport(): void;
     protected __exportProperty(callback?: () => any): any;
+    protected onEnable(): void;
+    protected onDisable(): void;
 }

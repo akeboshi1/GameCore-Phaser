@@ -18,7 +18,6 @@ import { SortDebugger } from "./display/debugs/sort.debugger";
 import { UiManager } from "./ui";
 import { GuideManager } from "./guide";
 import { SoundManager } from "./managers";
-import { DebugManager } from "./managers/debug.manager";
 export interface GlobalGameConfig {
     Orientation: number;
     PlatForm: number;
@@ -45,7 +44,6 @@ export declare class Render extends RPCPeer implements GameMain, IRender {
     protected mConfig: ILauncherConfig;
     protected mUiManager: UiManager;
     protected mDisplayManager: DisplayManager;
-    protected mDebugManager: DebugManager;
     protected mLocalStorageManager: LocalStorageManager;
     protected mEditorCanvasManager: EditorCanvasManager;
     protected mRenderParam: IWorkerParam;
@@ -69,6 +67,11 @@ export declare class Render extends RPCPeer implements GameMain, IRender {
      * 面板缩放系数
      */
     private mUIScale;
+    /**
+     * 房间尺寸
+     */
+    private mRoomSize;
+    private mRoomMiniSize;
     private isPause;
     private mConnectFailFunc;
     private mGameCreatedFunc;
@@ -90,13 +93,14 @@ export declare class Render extends RPCPeer implements GameMain, IRender {
     get devicePixelRatio(): number;
     get uiScale(): number;
     get scaleRatio(): number;
+    get roomSize(): IPosition45Obj;
+    get roomMiniSize(): IPosition45Obj;
     get account(): Account;
     get uiManager(): UiManager;
     get sceneManager(): SceneManager;
     get guideManager(): GuideManager;
     get camerasManager(): CamerasManager;
     get displayManager(): DisplayManager;
-    get debugManager(): DebugManager;
     get soundManager(): SoundManager;
     get localStorageManager(): LocalStorageManager;
     get editorCanvasManager(): EditorCanvasManager;
@@ -234,14 +238,10 @@ export declare class Render extends RPCPeer implements GameMain, IRender {
     removeLocalStorage(key: string): void;
     createPanel(name: string, key: string): Promise<any>;
     roomstartPlay(): void;
-    drawGrids(posObj: IPosition45Obj | undefined): void;
-    drawAstar_init(map: number[][], posObj: IPosition45Obj): void;
-    drawAstar_update(x: number, y: number, val: boolean): void;
-    drawAstar_findPath(start: IPos, tar: IPos, points: IPos[]): void;
     roomReady(): void;
     playAnimation(id: number, animation: any, field?: any, times?: number): void;
     setCameraScroller(actorX: number, actorY: number): void;
-    createDragonBones(id: number, displayInfo: IFramesModel | IDragonbonesModel, layer: number): void;
+    createDragonBones(id: number, displayInfo: IFramesModel | IDragonbonesModel, layer: number, nodeType: any): void;
     createUserDragonBones(displayInfo: IFramesModel | IDragonbonesModel, layer: number): void;
     createFramesDisplay(id: number, displayInfo: IFramesModel, layer: number): void;
     createTerrainDisplay(id: number, displayInfo: IFramesModel, layer: number): void;
@@ -249,10 +249,6 @@ export declare class Render extends RPCPeer implements GameMain, IRender {
     setPlayerModel(sprite: any): void;
     addSkybox(scenery: IScenery): void;
     removeSkybox(id: number): void;
-    showMatterDebug(vertices: any): void;
-    hideMatterDebug(): void;
-    drawServerPosition(x: number, y: number): void;
-    hideServerPosition(): void;
     changeAlpha(id: number, alpha: number): void;
     removeBlockObject(id: number): void;
     setPosition(id: number, x: number, y: number, z?: number): void;
@@ -268,7 +264,7 @@ export declare class Render extends RPCPeer implements GameMain, IRender {
     showNickname(id: number, name: string): void;
     showTopDisplay(id: number, state?: ElementStateType): void;
     SetDisplayVisible(id: number, visible: boolean): void;
-    showRefernceArea(id: number, area: number[][], origin: IPos): void;
+    showRefernceArea(id: number, area: number[][], origin: IPos, conflictMap?: number[][]): void;
     hideRefernceArea(id: number): void;
     displayAnimationChange(data: any): void;
     workerEmitter(eventType: string, data?: any): void;
@@ -283,6 +279,7 @@ export declare class Render extends RPCPeer implements GameMain, IRender {
     clearMount(id: number): void;
     throwElement(userid: number, target: number, display: any, animation: any): void;
     switchDecorateMouseManager(): void;
+    setRoomSize(size: IPosition45Obj, miniSize: IPosition45Obj): void;
     protected onWorkerUnlinked(worker: string): void;
     private onFullScreenChange;
     private gameCreated;

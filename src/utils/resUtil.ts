@@ -212,7 +212,7 @@ export class CloseButton {
         return Url.getRes("ui/common/common_clsBtn.json");
     }
 
-    static getFrameConfig(): any {
+    static getFrameConfig(): Phaser.Types.Loader.FileTypes.ImageFrameConfig {
         return { frameWidth: 16, frameHeight: 16, startFrame: 1, endFrame: 3 };
     }
 }

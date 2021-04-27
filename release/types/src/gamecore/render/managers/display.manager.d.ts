@@ -52,13 +52,14 @@ export declare class DisplayManager {
     private preLoadList;
     private loading;
     private mModelCache;
+    private mGridLayer;
     private uuid;
     constructor(render: Render);
     get user(): DragonbonesDisplay;
     update(time: number, delta: number): void;
     resize(width: number, height: number): void;
     updateModel(id: number, data: IDragonbonesModel): void;
-    addDragonbonesDisplay(id: number, data: IDragonbonesModel, layer: number): void;
+    addDragonbonesDisplay(id: number, data: IDragonbonesModel, layer: number, nodeType: NodeType): void;
     addUserDragonbonesDisplay(data: IDragonbonesModel, isUser: boolean, layer: number): DragonbonesDisplay;
     addTerrainDisplay(id: number, data: IFramesModel, layer: number): FramesDisplay;
     addFramesDisplay(id: number, data: IFramesModel, layer: number, field?: DisplayField): FramesDisplay;
@@ -87,6 +88,7 @@ export declare class DisplayManager {
     liftItem(id: number, display: any, animation: any): void;
     clearMount(id: number): void;
     throwElement(userId: number, targetId: number, display: any, animation: any): void;
+    snapshot(): Promise<void>;
     destroy(): void;
     private loadProgress;
 }

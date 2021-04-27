@@ -87,7 +87,7 @@ export class DisplayObjectPool {
     }
 
     addCache(id: number) {
-        this.caches.set(id, false);
+        if (this.caches) this.caches.set(id, false);
     }
 
     get(id: string) {
@@ -117,6 +117,9 @@ export class DisplayObjectPool {
                     this.sceneEditor.mossManager.deleteMosses([ele.id]);
                 } else {
                     this.sceneEditor.elementManager.deleteElements([ele.id]);
+                    if (ele.getMountIds) {
+                        this.tryDeleteMountSprites(ele.getMountIds());
+                    }
                 }
             }
         }

@@ -8,6 +8,7 @@ export declare class ChatManager extends BasePacketHandler {
     clear(): void;
     getMsgs(): string[];
     private onChatHandler;
+    private appendTrumpetMsg;
     private getChannel;
     private getSpeaker;
     private appendMsg;

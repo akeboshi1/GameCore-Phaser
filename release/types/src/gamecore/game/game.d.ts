@@ -15,9 +15,11 @@ import { User } from "./actor/user";
 import { DataManager } from "./data.manager/dataManager";
 import { BaseConfigManager, DataMgrType } from "./data.manager";
 import { NetworkManager } from "./command";
-import { SoundWorkerManager } from "./sound.manager";
-import { GuideWorkerManager } from "./guide.manager/guide.worker.manager";
+import { MainPeer } from "./main.peer";
+import { GuideWorkerManager } from "./guide.manager";
 import { ElementStorage } from "baseGame";
+import { SoundWorkerManager } from "./sound.manager";
+import { CustomProtoManager } from "./custom.proto";
 interface ISize {
     width: number;
     height: number;
@@ -44,6 +46,7 @@ export declare class Game extends PacketHandler implements IConnectListener, Clo
     protected mConfigManager: BaseConfigManager;
     protected mNetWorkManager: NetworkManager;
     protected mHttpLoadManager: HttpLoadManager;
+    protected mCustomProtoManager: CustomProtoManager;
     protected gameConfigUrls: Map<string, string>;
     protected gameConfigUrl: string;
     protected isPause: boolean;
@@ -56,7 +59,9 @@ export declare class Game extends PacketHandler implements IConnectListener, Clo
     protected mAvatarType: op_def.AvatarStyle;
     protected mRunning: boolean;
     protected mConfigPath: IConfigPath;
-    constructor(peer: any);
+    protected remoteIndex: number;
+    protected isSyncPackage: boolean;
+    constructor(peer: MainPeer);
     setConfigPath(path: any): void;
     addPacketListener(): void;
     removePacketListener(): void;
@@ -110,6 +115,7 @@ export declare class Game extends PacketHandler implements IConnectListener, Clo
     get renderPeer(): any;
     get physicalPeer(): any;
     get avatarType(): op_def.AvatarStyle;
+    get customProto(): CustomProtoManager;
     onFocus(): any;
     onBlur(): void;
     enterVirtualWorld(): Promise<void>;
@@ -127,8 +133,10 @@ export declare class Game extends PacketHandler implements IConnectListener, Clo
      */
     loadJson(): void;
     preloadGameConfig(): Promise<any>;
+    sendCustomProto(msgName: string, cmd: string, msg: any): void;
     protected initWorld(): Promise<void>;
     protected createManager(): void;
+    protected onClearGame(): void;
     private initGame;
     private onGotoAnotherGame;
     private _createAnotherGame;
@@ -139,6 +147,7 @@ export declare class Game extends PacketHandler implements IConnectListener, Clo
     private onSelectCharacter;
     private decodeConfigs;
     private onAvatarGameModeHandler;
+    private onCustomHandler;
     private _run;
     private update;
 }

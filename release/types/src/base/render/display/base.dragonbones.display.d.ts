@@ -1,5 +1,5 @@
 /// <reference types="tooqinggamephaser" />
-import { IAvatar, IDragonbonesModel, RunningAnimation } from "structure";
+import { IAvatar, IDragonbonesModel, RunningAnimation, DisplayField } from "structure";
 import { BaseDisplay } from "./base.display";
 export declare enum AvatarSlotNameTemp {
     BodyCostDres = "body_cost_dres_$",
@@ -76,40 +76,26 @@ export declare class BaseDragonbonesDisplay extends BaseDisplay {
     protected mArmatureDisplay: dragonBones.phaser.display.ArmatureDisplay | undefined;
     protected mFadeTween: Phaser.Tweens.Tween;
     protected mInteractive: boolean;
-    /***
-     * 增量换装时，是否合图 & 单图替换 ** 待废弃 **
-     */
-    protected isRenderTextureWhenChange: boolean;
-    /***
-     * 全量换装时，是否合图 & 单图替换
-     */
-    protected isRenderTextureWhenReload: boolean;
-    protected mPlaceholder: Phaser.GameObjects.Image;
+    protected mLoadingShadow: Phaser.GameObjects.Image;
     protected mMountContainer: Phaser.GameObjects.Container;
     private replaceArr;
-    private mHasLoadMap;
     private mLoadMap;
     private mErrorLoadMap;
     private mNeedReplaceTexture;
     private mBoardPoint;
     private readonly UNPACK_SLOTS;
     private readonly UNCHECK_AVATAR_PROPERTY;
-    private readonly DEFAULT_SETS;
-    private mReplaceTexTimeOutID;
-    /**
-     * 龙骨显示对象包围框
-     */
-    private mClickCon;
     private mPreReplaceTextureKey;
     private mReplaceTextureKey;
+    private mLoadListeners;
+    private mTexturesListeners;
     constructor(scene: Phaser.Scene, id?: number);
     set displayInfo(val: IDragonbonesModel | undefined);
     get displayInfo(): IDragonbonesModel | undefined;
     get spriteWidth(): number;
     get spriteHeight(): number;
     get topPoint(): Phaser.Geom.Point;
-    load(display: IDragonbonesModel): Promise<any>;
-    changeParts(avatar: IAvatar): Promise<any>;
+    load(display: IDragonbonesModel, field?: DisplayField, useRenderTex?: boolean): Promise<any>;
     save(): Promise<{
         key: string;
         url: string;
@@ -119,36 +105,32 @@ export declare class BaseDragonbonesDisplay extends BaseDisplay {
     play(val: RunningAnimation): void;
     fadeIn(callback?: () => void): void;
     fadeOut(callback?: () => void): void;
-    displayCreated(): void;
     destroy(): void;
     setClickInteractive(active: boolean): void;
     set resourceName(val: string);
     get resourceName(): string;
-    protected buildDragbones(): void;
+    protected buildDragbones(): Promise<any>;
     protected get localResourceRoot(): string;
     protected partNameToLoadUrl(partName: string): string;
     protected partNameToLoadKey(partName: string): string;
+    protected partNameToDBFrameName(partName: string): string;
     protected generateReplaceTextureKey(): string;
-    protected createArmatureDisplay(loader?: any, totalComplete?: number, totalFailed?: number): void;
+    protected createArmatureDisplay(): void;
     protected onArmatureLoopComplete(event: dragonBones.EventObject): void;
-    protected clearArmatureSlot(): void;
-    protected loadCompleteHander(): void;
-    protected showPlaceholder(): void;
-    protected closePlaceholder(): void;
-    protected loadDragonBones(pngUrl: string, jsonUrl: string, dbbinUrl: string): void;
-    protected refreshAvatar(): void;
+    protected showLoadingShadow(): void;
+    protected hideLoadingShadow(): void;
+    protected loadDragonBones(pngUrl: string, jsonUrl: string, dbbinUrl: string): Promise<any>;
+    protected refreshAvatar(useRenderTexture: boolean): void;
     protected serializeAvatarData(data: IAvatar): string;
     private generateReplaceTexture;
-    private clearReplaceArmature;
-    private showReplaceArmatrue;
-    private hideUnreplacedParts;
-    private replacePartDisplay;
-    private startLoadPartRes;
-    private onLoadFunc;
+    private prepareReplaceRenderTexture;
+    private prepareReplaceSlotsDisplay;
+    private loadPartsRes;
     private formattingSkin;
     private clearFadeTween;
-    private onSoundEventHandler;
     private checkNeedReplaceTexture;
     private partLoadKeyToSlotName;
-    private getReplaceArr;
+    private setReplaceArrAndLoadMap;
+    private addPhaserListener;
+    private removePhaserListener;
 }

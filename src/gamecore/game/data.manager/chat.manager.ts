@@ -10,12 +10,14 @@ export class ChatManager extends BasePacketHandler {
     constructor(game: Game, event: EventDispatcher) {
         super(game, event);
         this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_CHAT, this.onChatHandler);
+        this.mEvent.on("PicaTrumpetMsg", this.appendTrumpetMsg, this);
         this.addPackListener();
     }
 
     clear() {
         this.chatMsg = [];
         super.clear();
+        this.mEvent.off("PicaTrumpetMsg", this.appendTrumpetMsg, this);
     }
 
     getMsgs() {
@@ -41,6 +43,11 @@ export class ChatManager extends BasePacketHandler {
             const msg = `[color=${color}][${str}]${speaker}: ${content.chatContext}[/color]\n`;
             this.appendMsg(msg);
         });
+    }
+
+    private appendTrumpetMsg(content: any) {
+        const msg = `[img=chat_horn][/img][color=#ffffff][area=${content.senderId}] ${content.senderName}: [/area][/color][color=#66ffff]${content.message}[/color]\n`;
+        this.appendMsg(msg);
     }
 
     private async getChannel(channel: op_def.ChatChannel): Promise<string> {

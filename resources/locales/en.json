@@ -163,10 +163,13 @@
   },
   "room_info": {
     "infobtn": "INFO",
-    "setting": "SETTING",
+    "setting": "PERMISSIONS",
     "editorroom": "Edit",
-    "roomname": "Name",
+    "roomname": "Name:",
     "roomlevel": "Level",
+    "roomstate": "State:",
+    "roomevaluate": "Evaluate:",
+    "openparty": "Open Party",
     "expvalue": "Exp",
     "popvalue": "Popularity",
     "goodvalue": "Likes",
@@ -177,7 +180,19 @@
     "depreciation": "Depreciation",
     "needmaterials": "Materials needed for renovation",
     "renovatetips": "Currently no refurbishment is required",
-    "helptips": "**The depreciation degree will affect the daily income of the store"
+    "helptips": "**The depreciation degree will affect the daily income of the store",
+    "commontips": "common",
+    "partystate": "PartyState",
+    "partycardtips": "Also has a party time card:",
+    "friendtips": "Friends only",
+    "friendvisittips": "Invited friends only",
+    "passwordtips": "If the password is empty, it defaults to open mode",
+    "savesetting": "Save Setting",
+    "inputtips": "Please enter the password",
+    "editornametips": "Please enter room name, minimum three words",
+    "defaultroomtips": "Can only set one default room,\n whether to set the current room as the default room",
+    "roomsetting":"SETTING"
+
   },
   "business_street": {
     "commercial_street": "STORES",
@@ -255,7 +270,9 @@
     "current": "Scene",
     "system": "System",
     "givegift": "Gifts",
-    "placeholder": "Say something…"
+    "placeholder": "Say something…",
+    "turmpttips": "A speaker message is enabled. Each message consumes a speaker",
+    "turmptenough":"Insufficient number of speakers"
   },
   "minecar": {
     "discard": "discard",
@@ -282,7 +299,8 @@
     "worktimes": "WORK TIME",
     "salary": "SALARY",
     "attri": "*Requires {{name}}: {{value}}",
-    "worktips": "Every time you join a union, you consume 1 job opportunity and 1 point of energy, and the job opportunity is reset every day"
+    "worktips": "Every time you join a union, you consume 1 job opportunity and 1 point of energy, and the job opportunity is reset every day",
+    "enoughtips": "Insufficient working times"
   },
   "party": {
     "partyname": "NAME",
@@ -314,7 +332,10 @@
     "modifyconfirm": "Are you sure to consume {{count}} time cards to modify the party?",
     "onlinetime": "Online {{name}} minutes",
     "nopartytips": "There is no party yet, let's start the party~",
-    "progresstips": "Next award: "
+    "progresstips": "Next award: ",
+    "myroomnametips": "{{name}} room",
+    "roomunlocktips": "Requires {{name}} level to unlock",
+    "roomtypetitle": "Room choice"
   },
   "picelevator": {
     "floor": "F"
@@ -446,13 +467,14 @@
     "make": "Click to open the manufacturing panel",
     "furindetail": "Furniture details",
     "surveyfurni": " SURVEY ",
-    "cooking":"Cooking"
+    "cooking": "Cooking",
+    "newdiscovery": "Discovery"
   },
   "mail": {
     "onekey": "All Receive",
     "title": "Mail",
     "sender": "Sender: ",
     "expiration": "It expires after {{time}}",
-    "nomailtip":"No new email for now ~"
+    "nomailtip": "No new email for now ~"
   }
 }

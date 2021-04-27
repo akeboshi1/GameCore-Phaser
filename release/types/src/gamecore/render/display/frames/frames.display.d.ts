@@ -16,6 +16,8 @@ export declare class FramesDisplay extends BaseFramesDisplay implements IDisplay
     protected mTopDisplay: ElementTopDisplay;
     private mName;
     private mStartFireTween;
+    private mDebugPoint;
+    private mGrids;
     constructor(scene: Phaser.Scene, render: Render, id?: number, type?: number);
     startLoad(): Promise<any>;
     destroy(): void;
@@ -25,8 +27,10 @@ export declare class FramesDisplay extends BaseFramesDisplay implements IDisplay
     set hasInteractive(val: boolean);
     update(): void;
     checkCollision(sprite: any): boolean;
-    showRefernceArea(area: number[][], origin: IPos): Promise<void>;
+    showRefernceArea(area: number[][], origin: IPos, conflictMap?: number[][]): Promise<void>;
     hideRefernceArea(): void;
+    showGrids(): void;
+    hideGrids(): void;
     updateTopDisplay(): void;
     showNickname(name?: string): void;
     showTopDisplay(data?: ElementStateType): void;

@@ -18,7 +18,7 @@ export declare class DragonbonesDisplay extends BaseDragonbonesDisplay implement
     private mName;
     private mStartFireTween;
     constructor(scene: Phaser.Scene, render: Render, id?: number, uuid?: number, type?: number);
-    load(display: IDragonbonesModel, field?: DisplayField): Promise<any>;
+    load(display: IDragonbonesModel, field?: DisplayField, useRenderTex?: boolean): Promise<any>;
     get hasInteractive(): boolean;
     set hasInteractive(val: boolean);
     startLoad(): Promise<any>;
@@ -30,6 +30,8 @@ export declare class DragonbonesDisplay extends BaseDragonbonesDisplay implement
     checkCollision(sprite: any): boolean;
     showRefernceArea(area: number[][], origin: IPos): Promise<void>;
     hideRefernceArea(): void;
+    showGrids(): void;
+    hideGrids(): void;
     updateTopDisplay(): void;
     setVisible(value: boolean): this;
     showNickname(name?: string): void;
@@ -48,12 +50,10 @@ export declare class DragonbonesDisplay extends BaseDragonbonesDisplay implement
     unmount(display: FramesDisplay | DragonbonesDisplay): void;
     get sortX(): number;
     get sortY(): number;
-    protected refreshAvatar(): void;
     protected fetchProjection(): Promise<void>;
     protected fileComplete(progress: number, key: string, type: string): void;
     protected fileError(key: string): void;
     protected onArmatureLoopComplete(event: dragonBones.EventObject): void;
-    protected loadDragonBones(pngUrl: string, jsonUrl: string, dbbinUrl: string): void;
     protected checkShowNickname(): boolean;
     get nickname(): string;
 }

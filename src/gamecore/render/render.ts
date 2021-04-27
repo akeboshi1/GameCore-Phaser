@@ -36,7 +36,6 @@ import { UiManager } from "./ui";
 import { GuideManager } from "./guide";
 import { MouseManager } from "./input/mouse.manager";
 import { SoundManager } from "./managers";
-import { DebugManager } from "./managers/debug.manager";
 
 for (const key in protos) {
     PBpacket.addProtocol(protos[key]);
@@ -82,7 +81,6 @@ export class Render extends RPCPeer implements GameMain, IRender {
     protected mConfig: ILauncherConfig;
     protected mUiManager: UiManager;
     protected mDisplayManager: DisplayManager;
-    protected mDebugManager: DebugManager;
     protected mLocalStorageManager: LocalStorageManager;
     protected mEditorCanvasManager: EditorCanvasManager;
     protected mRenderParam: IWorkerParam;
@@ -107,6 +105,12 @@ export class Render extends RPCPeer implements GameMain, IRender {
      * 面板缩放系数
      */
     private mUIScale: number;
+    /**
+     * 房间尺寸
+     */
+    private mRoomSize: IPosition45Obj;
+    private mRoomMiniSize: IPosition45Obj;
+
     private isPause: boolean = false;
     private mConnectFailFunc: Function;
     private mGameCreatedFunc: Function;
@@ -121,8 +125,8 @@ export class Render extends RPCPeer implements GameMain, IRender {
         this.emitter = new Phaser.Events.EventEmitter();
         this.mConfig = config;
         this.mCallBack = callBack;
-        this.gridsDebugger = GridsDebugger.getInstance();
-        this.astarDebugger = AstarDebugger.getInstance();
+        this.gridsDebugger = new GridsDebugger(this);
+        this.astarDebugger = new AstarDebugger(this);
         this.sortDebugger = new SortDebugger(this);
         this.editorModeDebugger = new EditorModeDebugger(this);
         this.mConnectFailFunc = this.mConfig.connectFail;
@@ -236,6 +240,14 @@ export class Render extends RPCPeer implements GameMain, IRender {
         return this.mScaleRatio;
     }
 
+    get roomSize(): IPosition45Obj {
+        return this.mRoomSize;
+    }
+
+    get roomMiniSize(): IPosition45Obj {
+        return this.mRoomMiniSize;
+    }
+
     get account(): Account {
         return this.mAccount;
     }
@@ -258,10 +270,6 @@ export class Render extends RPCPeer implements GameMain, IRender {
 
     get displayManager(): DisplayManager {
         return this.mDisplayManager;
-    }
-
-    get debugManager(): DebugManager {
-        return this.mDebugManager;
     }
 
     get soundManager(): SoundManager {
@@ -337,10 +345,6 @@ export class Render extends RPCPeer implements GameMain, IRender {
         if (this.mDisplayManager) {
             this.mDisplayManager.destroy();
             this.mDisplayManager = undefined;
-        }
-        if (this.mDebugManager) {
-            this.mDebugManager.destroy();
-            this.mDebugManager = undefined;
         }
         if (this.mEditorCanvasManager) {
             this.mEditorCanvasManager.destroy();
@@ -1387,30 +1391,6 @@ export class Render extends RPCPeer implements GameMain, IRender {
     }
 
     @Export()
-    public drawGrids(posObj: IPosition45Obj | undefined) {
-        if (!this.mDebugManager) return;
-        this.mDebugManager.showGridsDebug(posObj);
-    }
-
-    @Export()
-    public drawAstar_init(map: number[][], posObj: IPosition45Obj) {
-        if (!this.mDebugManager) return;
-        this.mDebugManager.showAstarDebug_init(map, posObj);
-    }
-
-    @Export()
-    public drawAstar_update(x: number, y: number, val: boolean) {
-        if (!this.mDebugManager) return;
-        this.mDebugManager.showAstarDebug_update(x, y, val);
-    }
-
-    @Export()
-    public drawAstar_findPath(start: IPos, tar: IPos, points: IPos[]) {
-        if (!this.mDebugManager) return;
-        this.mDebugManager.showAstarDebug_findPath(start, tar, points);
-    }
-
-    @Export()
     public roomReady() {
         if (!this.mSceneManager || !this.mCameraManager) return;
         const scene = this.mSceneManager.getMainScene();
@@ -1444,8 +1424,8 @@ export class Render extends RPCPeer implements GameMain, IRender {
     }
 
     @Export([webworker_rpc.ParamType.num])
-    public createDragonBones(id: number, displayInfo: IFramesModel | IDragonbonesModel, layer: number) {
-        if (this.mDisplayManager) this.mDisplayManager.addDragonbonesDisplay(id, displayInfo, layer);
+    public createDragonBones(id: number, displayInfo: IFramesModel | IDragonbonesModel, layer: number, nodeType) {
+        if (this.mDisplayManager) this.mDisplayManager.addDragonbonesDisplay(id, displayInfo, layer, nodeType);
     }
 
     @Export()
@@ -1489,26 +1469,6 @@ export class Render extends RPCPeer implements GameMain, IRender {
     @Export([webworker_rpc.ParamType.num])
     public removeSkybox(id: number) {
         if (this.mDisplayManager) this.mDisplayManager.removeSkybox(id);
-    }
-
-    @Export()
-    public showMatterDebug(vertices) {
-        if (this.mDebugManager) this.mDebugManager.showMatterDebug(vertices);
-    }
-
-    @Export()
-    public hideMatterDebug() {
-        if (this.mDebugManager) this.mDebugManager.hideMatterDebug();
-    }
-
-    @Export([webworker_rpc.ParamType.num, webworker_rpc.ParamType.num])
-    public drawServerPosition(x: number, y: number) {
-        if (this.mDebugManager) this.mDebugManager.drawServerPosition(x, y);
-    }
-
-    @Export()
-    public hideServerPosition() {
-        if (this.mDebugManager) this.mDebugManager.hideServerPosition();
     }
 
     @Export([webworker_rpc.ParamType.num, webworker_rpc.ParamType.num])
@@ -1559,6 +1519,8 @@ export class Render extends RPCPeer implements GameMain, IRender {
         if (target) {
             if (effect === "liner") {
                 const position = target.getPosition();
+                // 取消follow，避免pan结束镜头回到原来target
+                this.mCameraManager.stopFollow();
                 this.mCameraManager.pan(position.x, position.y, 300).then(() => {
                     this.mCameraManager.startFollow(target);
                 });
@@ -1617,10 +1579,10 @@ export class Render extends RPCPeer implements GameMain, IRender {
     }
 
     @Export()
-    public showRefernceArea(id: number, area: number[][], origin: IPos) {
+    public showRefernceArea(id: number, area: number[][], origin: IPos, conflictMap?: number[][]) {
         const ele = this.mDisplayManager.getDisplay(id);
         if (!ele) return;
-        ele.showRefernceArea(area, origin);
+        ele.showRefernceArea(area, origin, conflictMap);
     }
 
     @Export()
@@ -1705,6 +1667,12 @@ export class Render extends RPCPeer implements GameMain, IRender {
 
     @Export()
     public switchDecorateMouseManager() {
+    }
+
+    @Export()
+    public setRoomSize(size: IPosition45Obj, miniSize: IPosition45Obj) {
+        this.mRoomSize = size;
+        this.mRoomMiniSize = miniSize;
     }
 
     protected onWorkerUnlinked(worker: string) {

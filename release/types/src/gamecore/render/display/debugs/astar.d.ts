@@ -1,7 +1,8 @@
 import { Render } from "../../render";
 import { ChatCommandInterface, IPos, IPosition45Obj } from "structure";
-export declare class Astar {
+export declare class AstarDebugger implements ChatCommandInterface {
     private render;
+    isDebug: boolean;
     private readonly CIRCLE_RADIUS_POINTS;
     private readonly CIRCLE_RADIUS_START_POSITION;
     private readonly CIRCLE_RADIUS_TARGET_POSITION;
@@ -16,22 +17,14 @@ export declare class Astar {
     private mPath;
     private mAstarSize;
     constructor(render: Render);
+    q(): void;
+    v(): void;
     destroy(): void;
-    initData(map: number[][], size: IPosition45Obj): void;
-    updateData(x: number, y: number, val: boolean): void;
+    init(map: number[][], size: IPosition45Obj): void;
+    update(x: number, y: number, val: boolean): void;
     showPath(start: IPos, tar: IPos, path: IPos[]): void;
     drawPoints(): Promise<void>;
     clearAll(): void;
     private clearPath;
     private drawPath;
-}
-export declare class AstarDebugger implements ChatCommandInterface {
-    static getInstance(): AstarDebugger;
-    private static _instance;
-    isDebug: boolean;
-    private mAstar;
-    constructor();
-    setDebugger(grids: Astar): void;
-    q(): void;
-    v(): void;
 }

@@ -3,7 +3,7 @@ import { op_gateway, op_virtual_world, op_client } from "pixelpai_proto";
 import { PBpacket, Buffer } from "net-socket-packet";
 import * as protos from "pixelpai_proto";
 import { Game } from "./game";
-import { ServerAddress, IPos, Logger, ILauncherConfig, ModuleName, EventType, GameState, IWorkerParam } from "structure";
+import { ServerAddress, IPos, Logger, ILauncherConfig, ModuleName, EventType, GameState, IWorkerParam, LogicPos } from "structure";
 import { DataMgrType, SceneDataManager } from "./data.manager";
 import version from "../../../version";
 
@@ -118,12 +118,9 @@ export class MainPeer extends RPCPeer {
     }
 
     public startBeat() {
-        Logger.getInstance().log("heartBeat start");
         if (this.startDelay) return;
         this.startDelay = setInterval(() => {
-            Logger.getInstance().log("heartBeat request");
             if (this.reConnectCount >= 8) {
-                Logger.getInstance().log("reconnect ====>");
                 this.game.reconnect();
                 return;
             }
@@ -145,7 +142,6 @@ export class MainPeer extends RPCPeer {
 
     @Export()
     public clearBeat() {
-        Logger.getInstance().log("heartBeat get");
         this.reConnectCount = 0;
         // Logger.getInstance().debug("heartBeatWorker clearBeat");
         // this.mainPeer.clearHeartBeat();
@@ -365,6 +361,18 @@ export class MainPeer extends RPCPeer {
         const element = this.game.roomManager.currentRoom.elementManager.get(id);
         if (!element) return false;
         return this.game.roomManager.currentRoom.elementManager.isElementLocked(element);
+    }
+
+    // 小屋装扮过程中，更新物件编辑提示区域
+    @Export()
+    public updateDecorateElementReference(id: number, x: number, y: number) {
+        if (!this.game.roomManager) return;
+        if (!this.game.roomManager.currentRoom) return;
+        if (!this.game.roomManager.currentRoom.elementManager) return;
+        const element = this.game.roomManager.currentRoom.elementManager.get(id);
+        if (!element) return;
+        const conflictMap = this.game.roomManager.currentRoom.checkSpriteConflictToWalkableMap(element.model, false, new LogicPos(x, y));
+        element.showRefernceArea(conflictMap);
     }
 
     @Export()

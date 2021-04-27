@@ -73,6 +73,7 @@ export declare class MainPeer extends RPCPeer {
     syncCameraScroll(): void;
     sendMouseEvent(id: number, mouseEvent: any[], point3f: any): void;
     isElementLocked(id: number): boolean;
+    updateDecorateElementReference(id: number, x: number, y: number): void;
     exitUser(): void;
     displayCompleteMove(id: number): void;
     syncPosition(targetPoint: any): void;

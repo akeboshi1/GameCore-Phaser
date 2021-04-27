@@ -115,4 +115,13 @@ export declare class EventType {
      */
     static RETURN_ELEMENT_PI_DATA: string;
     static RETURN_DRESS_AVATAR_IDS: string;
+    static RETURN_UPDATE_RED_SYSTEM: string;
+    /**
+     * 发送新的Proto对接协议
+     */
+    static SEND_NEW_PROTO_MESSAGE: string;
+    /**
+     * 背包喇叭数量更新
+     */
+    static PACKAGE_TRUMPET_COUNT_UPDATE: string;
 }

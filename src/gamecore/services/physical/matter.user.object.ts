@@ -95,7 +95,7 @@ export class MatterUserObject extends MatterPlayerObject {
             this.addFillEffect({ x: firstPos.x, y: firstPos.y }, op_def.PathReachableStatus.PATH_UNREACHABLE_AREA);
             return;
         }
-        this.matterWorld.setSensor(this.body, false);
+        this.matterWorld.setSensor(this.body, true);
         this.mTargetPoint = { path, targetId };
         this.addFillEffect({ x: firstPos.x, y: firstPos.y }, op_def.PathReachableStatus.PATH_REACHABLE_AREA);
         this.startMove();
@@ -210,6 +210,8 @@ export class MatterUserObject extends MatterPlayerObject {
         const _pos = this.body.position;
         const pos = new LogicPos(Math.round(_pos.x / this.peer.scaleRatio), Math.round(_pos.y / this.peer.scaleRatio));
         this.mModel.pos = pos;
+        this._tempVec.x = pos.x;
+        this._tempVec.y = pos.y;
         // 通知render主角移动
         this.peer.render.setPosition(this.id, pos.x, pos.y);
         // 通知mainworker同步主角位置

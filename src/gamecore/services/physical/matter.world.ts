@@ -36,7 +36,7 @@ export class MatterWorld implements ChatCommandInterface, ISizeChart {
 
     public initAstar(map: any) {
         this.mAstar.init(map);
-        this.peer.render.drawAstar_init(map, this.miniSize);
+        this.peer.render.astarDebugger.init(map, this.miniSize);
     }
 
     set size(size: IPosition45Obj) {
@@ -79,7 +79,7 @@ export class MatterWorld implements ChatCommandInterface, ISizeChart {
 
     public getPath(startPos: IPos, targets: IPos[], toReverse: boolean = false): IPos[] {
         const result = this.mAstar.find(startPos, targets, toReverse);
-        this.peer.render.drawAstar_findPath(startPos, targets[0], result);
+        this.peer.render.astarDebugger.showPath(startPos, targets[0], result);
         return result;
     }
 
@@ -219,7 +219,7 @@ export class MatterWorld implements ChatCommandInterface, ISizeChart {
         // } else {
         //     this.mAstar.setWalkableAt(y, x, val);
         // }
-        this.peer.render.drawAstar_update(x, y, val);
+        this.peer.render.astarDebugger.update(x, y, val);
     }
 
     public v() {

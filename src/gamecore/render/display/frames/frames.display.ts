@@ -15,6 +15,9 @@ export class FramesDisplay extends BaseFramesDisplay implements IDisplayObject {
     protected mTopDisplay: ElementTopDisplay;
     private mName: string = undefined;
     private mStartFireTween: Phaser.Tweens.Tween;
+    private mDebugPoint: Phaser.GameObjects.Graphics;
+    private mGrids: Phaser.GameObjects.Graphics;
+
     constructor(scene: Phaser.Scene, private render: Render, id?: number, type?: number) {
         super(scene, id, type);
         this.mID = id;
@@ -36,6 +39,15 @@ export class FramesDisplay extends BaseFramesDisplay implements IDisplayObject {
         if (this.mStartFireTween) {
             this.mStartFireTween.stop();
             this.mStartFireTween = undefined;
+        }
+
+        if (this.mDebugPoint) {
+            this.mDebugPoint.destroy();
+            this.mDebugPoint = undefined;
+        }
+        if (this.mGrids) {
+            this.mGrids.destroy();
+            this.mGrids = undefined;
         }
         super.destroy();
     }
@@ -67,13 +79,17 @@ export class FramesDisplay extends BaseFramesDisplay implements IDisplayObject {
         return false;
     }
 
-    public async showRefernceArea(area: number[][], origin: IPos) {
+    public async showRefernceArea(area: number[][], origin: IPos, conflictMap?: number[][]) {
         if (!area || area.length <= 0 || !origin) return;
-        const roomSize = await this.render.mainPeer.getCurrentRoomSize();
+        const roomSize = this.render.roomSize;
         if (!this.mReferenceArea) {
             this.mReferenceArea = new ReferenceArea(this.scene);
         }
-        this.mReferenceArea.draw(area, origin, roomSize.tileWidth / this.render.scaleRatio, roomSize.tileHeight / this.render.scaleRatio);
+        let drawArea = area;
+        if (conflictMap !== undefined && conflictMap.length > 0) {
+            drawArea = conflictMap;
+        }
+        this.mReferenceArea.draw(drawArea, origin, roomSize.tileWidth / this.render.scaleRatio, roomSize.tileHeight / this.render.scaleRatio);
         this.addAt(this.mReferenceArea, 0);
     }
 
@@ -81,6 +97,34 @@ export class FramesDisplay extends BaseFramesDisplay implements IDisplayObject {
         if (this.mReferenceArea) {
             this.mReferenceArea.destroy();
             this.mReferenceArea = undefined;
+        }
+    }
+
+    public showGrids() {
+        if (this.mGrids) {
+            this.mGrids.destroy();
+            this.mGrids = undefined;
+        }
+        // const roomSize = this.render.roomSize;
+        //
+        // this.mGrids = this.scene.make.graphics(undefined, false);
+        // this.mGrids.lineStyle(1, 0xffffff, 0.1);
+        // this.mGrids.beginPath();
+        // let point = new LogicPos(startX, endX);
+        // point = Position45.transformTo90(point, roomSize);
+        // this.mGrids.moveTo(point.x, point.y);
+        // point = new LogicPos(startY, endY);
+        // point = Position45.transformTo90(point);
+        // this.mGrids.lineTo(point.x, point.y);
+        // this.mGrids.closePath();
+        // this.mGrids.strokePath();
+        // this.addAt(this.mGrids, 0);
+    }
+
+    public hideGrids() {
+        if (this.mGrids) {
+            this.mGrids.destroy();
+            this.mGrids = undefined;
         }
     }
 
@@ -100,7 +144,17 @@ export class FramesDisplay extends BaseFramesDisplay implements IDisplayObject {
         this.mTopDisplay.showNickname(name);
 
         // debug
-        // this.mTopDisplay.showNickname(name + "; " + this.mID + "; " + this.x + "; " + this.y);
+        // if (name !== "透明") {
+        //     this.mTopDisplay.showNickname(name + "; " + this.mID + "; " + this.x + "; " + this.y);
+        //     this.setAlpha(0.2);
+        //     if (this.mDebugPoint) this.mDebugPoint.destroy();
+        //     this.mDebugPoint = this.scene.make.graphics(undefined, false);
+        //     this.mDebugPoint.clear();
+        //     this.mDebugPoint.fillStyle(0xFF0000, 1);
+        //     this.mDebugPoint.fillCircle(0, 0, 2);
+        //
+        //     this.add(this.mDebugPoint);
+        // }
     }
 
     public showTopDisplay(data?: ElementStateType) {

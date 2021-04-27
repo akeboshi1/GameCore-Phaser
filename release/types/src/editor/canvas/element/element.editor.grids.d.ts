@@ -1,0 +1,43 @@
+/// <reference types="tooqinggamephaser" />
+import { ElementEditorBrushType } from "./element.editor.type";
+export default class ElementEditorGrids extends Phaser.GameObjects.Container {
+    private mRows;
+    private mCols;
+    private mAnchor;
+    private readonly gridWidth;
+    private readonly gridHeight;
+    private mPositionManager;
+    private mGridLayer;
+    private mWalkableLayer;
+    private mCollisionLayer;
+    private mInteractiveLayer;
+    private mWalkableArea;
+    private mBasicWalkableArea;
+    private mCollisionArea;
+    private mBasicCollisionArea;
+    private mInteractiveArea;
+    private mBasicInteractiveArea;
+    private mCurToolType;
+    private mAnimationData;
+    constructor(scene: Phaser.Scene, node: any);
+    setAnimationData(animationData: any): void;
+    getAnchor90Point(): Phaser.Geom.Point;
+    getOriginPoint(): Phaser.Geom.Point;
+    clear(): void;
+    changeBrush(val: ElementEditorBrushType): void;
+    private setArea;
+    private drawFromData;
+    private onDownHandler;
+    private onMoveHandler;
+    private onUpHandler;
+    private clickGrid;
+    private dragCamera;
+    private drawWalkable;
+    private eraseWalkable;
+    private drawCollision;
+    private eraseCollision;
+    private drawInteractive;
+    private eraseInteractive;
+    private drawGrid;
+    private drawLine;
+}

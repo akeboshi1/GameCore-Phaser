@@ -8,7 +8,7 @@ export declare class MatterSprite {
     direction: number;
     currentAnimationName: string;
     currentAnimation: RunningAnimation;
-    animations: Map<string, MatterAnimationModel>;
+    animations: Map<string, IMatterAnimationData>;
     registerAnimation: Map<string, string>;
     animationQueue: AnimationQueue[];
     originCollisionPoint: LogicPoint;
@@ -23,6 +23,7 @@ export declare class MatterSprite {
     protected interactive: op_def.IPBPoint2f[];
     constructor(obj: any);
     initAnimations(anis: any): void;
+    initDragonbonesAnimation(): void;
     setPosition(x: number, y: number): void;
     updateAnimations(anis: op_gameconfig_01.IAnimationData[]): void;
     setDirection(val: number): void;
@@ -55,6 +56,20 @@ export interface IMatterAnimationData {
     layer: op_gameconfig_01.IAnimationLayer[];
     interactiveArea?: op_def.IPBPoint2i[];
     mountLayer: op_gameconfig_01.IAnimationMountLayer;
+}
+export declare class MatterAvatarModel implements IMatterAnimationData {
+    name: string;
+    frameName: string[];
+    frameRate: number;
+    loop: boolean;
+    baseLoc: LogicPoint;
+    collisionArea?: number[][];
+    walkableArea?: number[][];
+    originPoint: LogicPoint;
+    layer: op_gameconfig_01.IAnimationLayer[];
+    interactiveArea?: op_def.IPBPoint2i[];
+    mountLayer: op_gameconfig_01.IAnimationMountLayer;
+    constructor();
 }
 export declare class MatterAnimationModel implements IMatterAnimationData {
     id: number;

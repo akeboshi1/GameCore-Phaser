@@ -12,6 +12,7 @@ import { op_def } from "pixelpai_proto";
 import { IDisplayObject } from "../display";
 import { BlockManager } from "baseRender";
 import { FramesModel } from "baseGame";
+import { LayerEnum } from "game-capsule";
 
 export enum NodeType {
     UnknownNodeType = 0,
@@ -62,6 +63,7 @@ export class DisplayManager {
     private preLoadList: any[];
     private loading: boolean = false;
     private mModelCache: Map<number, any>;
+    private mGridLayer: Phaser.GameObjects.Container;
 
     // ====实例id
     private uuid: number = 0;
@@ -104,7 +106,7 @@ export class DisplayManager {
         }
     }
 
-    public addDragonbonesDisplay(id: number, data: IDragonbonesModel, layer: number) {
+    public addDragonbonesDisplay(id: number, data: IDragonbonesModel, layer: number, nodeType: NodeType) {
         if (!data) {
             return;
         }
@@ -115,7 +117,7 @@ export class DisplayManager {
         }
         let display: DragonbonesDisplay;
         if (!this.displays.has(id)) {
-            display = new DragonbonesDisplay(scene, this.render, id, this.uuid++, NodeType.CharacterNodeType);
+            display = new DragonbonesDisplay(scene, this.render, id, this.uuid++, nodeType);
             this.displays.set(id, display);
             this.preLoadList.push(display);
         } else {
@@ -473,6 +475,42 @@ export class DisplayManager {
             }
         });
 
+    }
+
+    public async snapshot() {
+        const scene = <PlayScene>this.sceneManager.getMainScene();
+        if (!scene) return;
+        const layerManager = scene.layerManager;
+        if (!layerManager) return;
+        const floor = layerManager.getLayer(LayerEnum.Floor.toString());
+        const terrain = layerManager.getLayer(LayerEnum.Terrain.toString());
+        const surface = layerManager.getLayer(LayerEnum.Surface.toString());
+
+        const size = await this.render.getCurrentRoomSize();
+        const sceneryScenes: Phaser.GameObjects.Container[] = [floor, terrain, surface];
+        const offsetX = size.rows * (size.tileWidth / 2);
+
+        this.scenerys.forEach((scenery) => {
+            if (scenery.getLayer()) {
+                scenery.updateScale(1);
+                sceneryScenes.unshift(scenery.getLayer());
+            }
+        });
+
+        const rt = scene.make.renderTexture({ x: 0, y: 0, width: size.sceneWidth, height: size.sceneHeight }, false);
+        for (const layer of sceneryScenes) {
+            layer.setScale(1);
+        }
+
+        rt.draw(sceneryScenes, 0, 0);
+        rt.snapshot((img) => {
+            Logger.getInstance().log(img);
+            rt.destroy();
+            for (const layer of sceneryScenes) {
+                layer.setScale(this.render.scaleRatio);
+            }
+            this.scenerys.forEach((scenery) => scenery.updateScale(this.render.scaleRatio));
+        });
     }
 
     public destroy() {

@@ -36,3 +36,4 @@ export * from "./toggle.color.button";
 export * from "./toggle.button";
 export * from "./texture.sprite";
 export * from "./input.field";
+export * from "./checkbox.toggle";

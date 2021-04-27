@@ -12,6 +12,7 @@ export declare class ButtonEventDispatcher extends BaseUI {
     protected tweenScale: number;
     protected mTweenBoo: boolean;
     protected mDuration: number;
+    protected zoom: number;
     constructor(scene: Phaser.Scene, x: number, y: number, tweenBoo?: boolean, music?: ISoundGroup);
     addListen(): void;
     removeListen(): void;

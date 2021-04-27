@@ -18,9 +18,11 @@ import { DataManager } from "./data.manager/dataManager";
 import { BaseConfigManager, DataMgrType } from "./data.manager";
 import { NetworkManager } from "./command";
 import version from "../../../version";
-import { SoundWorkerManager } from "./sound.manager";
-import { GuideWorkerManager } from "./guide.manager/guide.worker.manager";
+import { MainPeer } from "./main.peer";
+import { GuideWorkerManager } from "./guide.manager";
 import { ElementStorage } from "baseGame";
+import { SoundWorkerManager } from "./sound.manager";
+import { CustomProtoManager } from "./custom.proto";
 interface ISize {
     width: number;
     height: number;
@@ -52,6 +54,7 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
     protected mConfigManager: BaseConfigManager;
     protected mNetWorkManager: NetworkManager;
     protected mHttpLoadManager: HttpLoadManager;
+    protected mCustomProtoManager: CustomProtoManager;
 
     protected gameConfigUrls: Map<string, string> = new Map();
     protected gameConfigUrl: string;
@@ -65,7 +68,9 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
     protected mAvatarType: op_def.AvatarStyle;
     protected mRunning: boolean = true;
     protected mConfigPath: IConfigPath;
-    constructor(peer: any) {
+    protected remoteIndex = 0;
+    protected isSyncPackage: boolean = false;
+    constructor(peer: MainPeer) {
         super();
         this.mainPeer = peer;
         this.connect = new Connection(peer);
@@ -395,6 +400,7 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
         return this.mHttpLoadManager;
     }
     get emitter(): EventDispatcher {
+        if (!this.mDataManager) return undefined;
         return this.mDataManager.emitter;
     }
 
@@ -421,6 +427,11 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
     get avatarType() {
         return this.mAvatarType;
     }
+
+    get customProto() {
+        return this.mCustomProtoManager;
+    }
+
     public onFocus() {
         if (this.mWorkerLoop) clearInterval(this.mWorkerLoop);
         this.mRunning = true;
@@ -606,6 +617,13 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
         return undefined;
     }
 
+    public sendCustomProto(msgName: string, cmd: string, msg: any) {
+        if (!this.mCustomProtoManager) {
+            return Logger.getInstance().warn(`send ${msgName} failed`);
+        }
+        this.mCustomProtoManager.send(msgName, cmd, msg);
+    }
+
     // public heartBeatCallBack() {
     //     this.mainPeer.clearBeat();
     // }
@@ -618,6 +636,7 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
         this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_GOTO_ANOTHER_GAME, this.onGotoAnotherGame);
         // this.addHandlerFun(op_client.OPCODE._OP_GATEWAY_RES_CLIENT_PONG, this.heartBeatCallBack);
         this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_GAME_MODE, this.onAvatarGameModeHandler);
+        this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_CUSTOM_PROTO, this.onCustomHandler);
         this.createManager();
         const gameID = this.mConfig.game_id;
         const worldId = this.mConfig.virtual_world_id;
@@ -645,6 +664,7 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
         if (!this.mConfigManager) this.mConfigManager = new BaseConfigManager(this, this.mConfigPath);
         if (!this.mNetWorkManager) this.mNetWorkManager = new NetworkManager(this);
         if (!this.mHttpLoadManager) this.mHttpLoadManager = new HttpLoadManager();
+        if (!this.mCustomProtoManager) this.mCustomProtoManager = new CustomProtoManager(this);
         // this.mPlayerDataManager = new PlayerDataManager(this);
 
         this.mUIManager.addPackListener();
@@ -654,7 +674,9 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
         this.mSoundManager.addPackListener();
         // this.mPlayerDataManager.addPackListener();
     }
+    protected onClearGame() {
 
+    }
     private initGame() {
         // if (this.mRoomManager) this.mRoomManager.addPackListener();
         // if (this.mUIManager) this.mUIManager.addPackListener();
@@ -769,9 +791,15 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
                     this.mSoundManager = null;
                 }
 
+                if (this.mCustomProtoManager) {
+                    this.mCustomProtoManager.destroy();
+                    this.mCustomProtoManager = null;
+                }
+
                 if (this.user) this.user.removePackListener();
                 // this.peer.destroy();
                 this.hasClear = true;
+                this.onClearGame();
                 resolve();
             });
         });
@@ -831,18 +859,18 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
     }
 
     private loadGameConfig(remotePath): Promise<Lite> {
-        if (this.configManager.initialize) {
+        if (!this.isSyncPackage && this.configManager.initialize) {
             this.user.userData.querySYNC_ALL_PACKAGE();
+            this.isSyncPackage = true;
         }
         const configPath = ResUtils.getGameConfig(remotePath);
-        let index = 0;
         return load(configPath, "arraybuffer").then((req: any) => {
             this.peer.state = GameState.LoadGameConfig;
             this.mLoadingManager.start(LoadState.PARSECONFIG);
             Logger.getInstance().debug("start decodeConfig");
             return this.decodeConfigs(req);
         }, (reason) => {
-            if (index > 3) {
+            if (this.remoteIndex > 3) {
                 if (this.mConfig.hasReload) {
                     // app reload
                 } else {
@@ -851,8 +879,8 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
                 }
                 return;
             }
-            index++;
-            Logger.getInstance().error("reload res ====>", reason, "reload count ====>", index);
+            this.remoteIndex++;
+            Logger.getInstance().error("reload res ====>", reason, "reload count ====>", this.remoteIndex);
             return this.loadGameConfig(remotePath);
         });
     }
@@ -896,6 +924,11 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
     private onAvatarGameModeHandler(packet: PBpacket) {
         const content: op_client.IOP_VIRTUAL_WORLD_REQ_CLIENT_GAME_MODE = packet.content;
         this.mAvatarType = content.avatarStyle;
+    }
+
+    private onCustomHandler(packet: PBpacket) {
+        const content: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_CUSTOM_PROTO = packet.content;
+        this.emitter.emit(content.msgName, content);
     }
 
     private _run(current: number, delta: number) {

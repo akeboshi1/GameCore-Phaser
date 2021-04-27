@@ -66,8 +66,7 @@ export class Sprite extends EventDispatcher implements ISprite {
             this.updateAvatarSuits(this.suits);
         this.avatar = this.avatar || obj.avatar;
         if (this.avatar) {
-            // 临时方案。 物件avatar从pi里获取。收到服务器数据不稳定
-            if (nodeType !== op_def.NodeType.ElementNodeType) this.updateAvatar(this.avatar);
+            this.updateAvatar(this.avatar);
         }
         if (obj.display) {
             this.updateDisplay(obj.display, obj.animations, obj.currentAnimationName);
@@ -283,10 +282,14 @@ export class Sprite extends EventDispatcher implements ISprite {
     }
 
     public setAnimationName(name: string, times?: number) {
-        if (!this.currentAnimation || this.currentAnimation.name !== name) {
+        // 注册动画和当前动画可能不一致
+        const baseName = this.getBaseAniName(name);
+        const suffix = name.split("_")[1];
+        const aniName = suffix ? `${baseName}_${suffix}` : baseName;
+        if (!this.currentAnimation || this.currentAnimation.name !== aniName) {
             if (this.displayInfo) {
                 name = this.animator ? this.animator.getAnimationName(name) : name;
-                this.displayInfo.animationName = name;
+                // this.displayInfo.animationName = name;
             }
             this.currentAnimationName = name;
             const ani = this.setAnimationData(name, this.direction, times);

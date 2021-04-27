@@ -2,24 +2,25 @@ import { Render } from "../../render";
 import { ChatCommandInterface, IPosition45Obj, LogicPos, Position45 } from "structure";
 import { RoomScene } from "../../scenes/room.scene";
 
-export class Grids {
+export class GridsDebugger implements ChatCommandInterface {
+    public isDebug: boolean = false;
+
     private mGraphic: Phaser.GameObjects.Graphics;
     private mRoomSize: IPosition45Obj;
 
     constructor(private render: Render) {
-        GridsDebugger.getInstance().setDebugger(this);
+
     }
 
     public destroy() {
         if (this.mGraphic) this.mGraphic.destroy();
         this.mRoomSize = null;
-        GridsDebugger.getInstance().setDebugger(null);
     }
 
     public setData(posObj: IPosition45Obj) {
         this.mRoomSize = posObj;
 
-        if (GridsDebugger.getInstance().isDebug) {
+        if (this.isDebug) {
             this.show();
         } else {
             this.hide();
@@ -52,6 +53,19 @@ export class Grids {
         if (this.mGraphic) this.mGraphic.destroy();
     }
 
+    public q() {
+        this.isDebug = false;
+        this.hide();
+    }
+
+    public v() {
+        if (!this.isDebug) {
+            this.show();
+        }
+
+        this.isDebug = true;
+    }
+
     private drawLine(
         posObj: IPosition45Obj,
         graphics: Phaser.GameObjects.Graphics,
@@ -66,40 +80,6 @@ export class Grids {
         point = new LogicPos(startY, endY);
         point = Position45.transformTo90(point, posObj);
         graphics.lineTo(point.x, point.y);
-    }
-}
-
-export class GridsDebugger implements ChatCommandInterface {
-    public static getInstance(): GridsDebugger {
-        if (!GridsDebugger._instance) GridsDebugger._instance = new GridsDebugger();
-        return GridsDebugger._instance;
-    }
-
-    private static _instance: GridsDebugger;
-
-    public isDebug: boolean = false;
-    private mGrids: Grids;
-
-    constructor() {
-        this.mGrids = null;
-    }
-
-    public setDebugger(grids: Grids) {
-        this.mGrids = grids;
-    }
-
-    public q() {
-        this.isDebug = false;
-        if (this.mGrids) {
-            this.mGrids.hide();
-        }
-    }
-
-    public v() {
-        this.isDebug = true;
-        if (this.mGrids) {
-            this.mGrids.show();
-        }
     }
 
 }

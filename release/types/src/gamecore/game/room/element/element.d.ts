@@ -123,7 +123,7 @@ export declare class Element extends BlockObject implements IElement {
     hideNickname(): void;
     showTopDisplay(data?: ElementStateType): void;
     removeTopDisplay(): void;
-    showRefernceArea(): void;
+    showRefernceArea(conflictMap?: number[][]): void;
     hideRefernceArea(): void;
     getInteractivePositionList(): Promise<IPos[]>;
     get nickname(): string;

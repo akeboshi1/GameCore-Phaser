@@ -10,7 +10,6 @@ export class BackgroundScaleButton extends ButtonEventDispatcher {
     protected mFrame: string;
     protected mDownFrame: string;
     protected mText: Phaser.GameObjects.Text;
-    private zoom: number;
     constructor(scene: Phaser.Scene, width: number, height: number, key: string, frame: string, downFrame: string, text?: string, dpr?: number, scale?: number, tweenBoo?: boolean, music?: ISoundGroup) {
         super(scene, 0, 0);
         this.dpr = dpr || UiUtils.baseDpr;

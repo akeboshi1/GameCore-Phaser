@@ -1,3 +1,4 @@
+/// <reference types="tooqinggamephaser" />
 export declare const HTTP_REGEX: RegExp;
 export declare class Url {
     static OSD_PATH: string;
@@ -73,7 +74,7 @@ export declare class CloseButton {
     static getName(): string;
     static getPNG(): string;
     static getJSON(): string;
-    static getFrameConfig(): any;
+    static getFrameConfig(): Phaser.Types.Loader.FileTypes.ImageFrameConfig;
 }
 export declare class Background {
     static getName(): string;

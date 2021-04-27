@@ -15,6 +15,10 @@ export interface IDisplayObject extends IBaseDisplay {
 
     hideRefernceArea();
 
+    showGrids();
+
+    hideGrids();
+
     updateTopDisplay();
 
     showNickname(name?: string);

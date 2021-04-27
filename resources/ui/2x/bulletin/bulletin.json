@@ -1,0 +1,83 @@
+{
+	"textures": [
+		{
+			"image": "bulletin",
+			"format": "RGBA8888",
+			"size": {
+				"w": 1564,
+				"h": 115
+			},
+			"scale": 1,
+			"frames": [
+				{
+					"filename": "bulletin_light_1",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 534,
+						"h": 115
+					},
+					"spriteSourceSize": {
+						"x": 12,
+						"y": 1,
+						"w": 520,
+						"h": 113
+					},
+					"frame": {
+						"x": 1,
+						"y": 1,
+						"w": 520,
+						"h": 113
+					}
+				},
+				{
+					"filename": "bulletin_light_2",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 534,
+						"h": 115
+					},
+					"spriteSourceSize": {
+						"x": 12,
+						"y": 1,
+						"w": 520,
+						"h": 113
+					},
+					"frame": {
+						"x": 523,
+						"y": 1,
+						"w": 520,
+						"h": 113
+					}
+				},
+				{
+					"filename": "bulletin_bg",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 534,
+						"h": 115
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 1,
+						"w": 518,
+						"h": 100
+					},
+					"frame": {
+						"x": 1045,
+						"y": 1,
+						"w": 518,
+						"h": 100
+					}
+				}
+			]
+		}
+	],
+	"meta": {
+		"app": "https://www.codeandweb.com/texturepacker",
+		"version": "3.0",
+		"smartupdate": "$TexturePacker:SmartUpdate:14b5def3dac7cbd70f00ea4428c7de0e:a69c85f47040b4b1c20a6affbbb7e409:c68162e13519d41c805859b0766b105d$"
+	}
+}

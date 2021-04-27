@@ -10,6 +10,8 @@ export interface IDisplayObject extends IBaseDisplay {
     checkCollision(sprite: any): boolean;
     showRefernceArea(area: number[][], origin: IPos): any;
     hideRefernceArea(): any;
+    showGrids(): any;
+    hideGrids(): any;
     updateTopDisplay(): any;
     showNickname(name?: string): any;
     showTopDisplay(data?: ElementStateType): any;

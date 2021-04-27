@@ -11,6 +11,7 @@ export declare class LabelInput extends Phaser.GameObjects.Container {
     private mAutoBlur;
     constructor(scene: Phaser.Scene, config: any);
     setText(val: string): this;
+    setPlaceholder(val: string): this;
     setOrigin(x?: number, y?: number): this;
     createBackground(padding: number, radius: number): void;
     setSize(w: number, h: number): this;

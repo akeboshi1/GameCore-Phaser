@@ -5,7 +5,7 @@ import { Scene } from "tooqinggamephaser";
  * 尺寸规范链接：https://dej4esdop1.feishu.cn/docs/doccn5QVnqQ9XQz5baCBayOy49f?from=from_copylink
  */
 export declare class AvatarEditorCanvas extends EditorCanvas {
-    mData: AvatarEditorConfigNode;
+    mData: any;
     private readonly SCENEKEY;
     private readonly SCENEKEY_SNAPSHOT;
     private mDragonbone;
@@ -39,9 +39,6 @@ export declare class AvatarEditorScene extends Phaser.Scene {
     create(): void;
     update(): void;
     destroy(): void;
-}
-export interface AvatarEditorConfigNode {
-    WEB_AVATAR_PATH: string;
 }
 export declare enum AvatarEditorEmitType {
     ERROR = "error"

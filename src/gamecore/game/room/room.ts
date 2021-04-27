@@ -94,6 +94,8 @@ export interface IRoomService {
 
     isWalkable(x: number, y: number): boolean;
 
+    checkSpriteConflictToWalkableMap(sprite: ISprite, isTerrain?: boolean, pos?: IPos): number[][];
+
     destroy();
 }
 
@@ -182,6 +184,9 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
             tileWidth: data.tileWidth / 2,
             tileHeight: data.tileHeight / 2,
         };
+
+        this.game.renderPeer.setRoomSize(this.mSize, this.mMiniSize);
+
         this.mWalkableMap = new Array(this.mMiniSize.rows);
         for (let i = 0; i < this.mWalkableMap.length; i++) {
             this.mWalkableMap[i] = new Array(this.mMiniSize.cols).fill(-1);
@@ -375,7 +380,7 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
         const padding = 199 * this.mScaleRatio;
         const offsetX = this.mSize.rows * (this.mSize.tileWidth / 2);
         this.mGame.peer.render.roomstartPlay();
-        this.mGame.peer.render.drawGrids(this.mSize);
+        this.mGame.peer.render.gridsDebugger.setData(this.mSize);
         this.mGame.peer.render.setCamerasBounds(-padding - offsetX * this.mScaleRatio, -padding, this.mSize.sceneWidth * this.mScaleRatio + padding * 2, this.mSize.sceneHeight * this.mScaleRatio + padding * 2);
         //     // init block
         this.mBlocks.int(this.mSize);
@@ -658,28 +663,38 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
         this.cameraService.syncCameraScroll();
     }
 
-    // 检测sprite是否与现有walkableMap有碰撞重叠
-    public checkSpriteConflictToWalkableMap(sprite: ISprite, isTerrain: boolean = false): boolean {
-        const walkableData = this.getSpriteWalkableData(sprite, isTerrain);
-        if (!walkableData) return true;
+    // 检测sprite是否与现有walkableMap有碰撞重叠，有碰撞重叠为0，无碰撞重叠为1
+    public checkSpriteConflictToWalkableMap(sprite: ISprite, isTerrain: boolean = false, pos?: IPos): number[][] {
+        const walkableData = this.getSpriteWalkableData(sprite, isTerrain, pos);
+        if (!walkableData) {
+            Logger.getInstance().error("data error check sprite: ", sprite);
+            return [];
+        }
 
         const { origin, collisionArea, walkableArea, pos45, rows, cols } = walkableData;
 
+        const result = new Array(rows);
+        for (let i = 0; i < rows; i++) {
+            result[i] = new Array(cols).fill(1);
+        }
         let tempY = 0;
         let tempX = 0;
         for (let i = 0; i < rows; i++) {
             tempY = pos45.y + i - origin.y;
             for (let j = 0; j < cols; j++) {
+                result[i][j] = collisionArea[i][j];
                 tempX = pos45.x + j - origin.x;
-                if (collisionArea[i][j] === 0 || walkableArea[i][j] === 1) continue;
+                if (collisionArea[i][j] === 0 || walkableArea[i][j] === 1) {
+                    continue;
+                }
                 const val = this.isWalkable(tempX, tempY);
                 if (!val) {
                     // Logger.getInstance().debug("#place ", val, pos, tempX, tempY);
-                    return true;
+                    result[i][j] = 0;
                 }
             }
         }
-        return false;
+        return result;
     }
 
     //
@@ -920,7 +935,7 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
         }
     }
 
-    private getSpriteWalkableData(sprite: ISprite, isTerrain: boolean): { origin: IPos, collisionArea: number[][], walkableArea: number[][], pos45: IPos, rows: number, cols: number } {
+    private getSpriteWalkableData(sprite: ISprite, isTerrain: boolean, pos?: IPos): { origin: IPos, collisionArea: number[][], walkableArea: number[][], pos45: IPos, rows: number, cols: number } {
         let collisionArea = sprite.getCollisionArea();
         let walkableArea = sprite.getWalkableArea();
         const origin = sprite.getOriginPoint();
@@ -930,8 +945,14 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
         let rows = collisionArea.length;
         let cols = collisionArea[0].length;
         let pos45: IPos;
+        let pos90: IPos;
+        if (pos === undefined) {
+            pos90 = sprite.pos;
+        } else {
+            pos90 = pos;
+        }
         if (isTerrain) {
-            pos45 = this.transformTo45(new LogicPos(sprite.pos.x, sprite.pos.y));
+            pos45 = this.transformTo45(new LogicPos(pos90.x, pos90.y));
             pos45.x *= 2;
             pos45.y *= 2;
             if (rows === 1 && cols === 1) {
@@ -950,7 +971,7 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
                 }
             }
         } else {
-            pos45 = this.transformToMini45(new LogicPos(sprite.pos.x, sprite.pos.y));
+            pos45 = this.transformToMini45(new LogicPos(pos90.x, pos90.y));
         }
         if (!walkableArea || walkableArea.length === 0) {
             walkableArea = new Array(rows);

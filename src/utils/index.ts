@@ -9,3 +9,4 @@ export * from "./uiUtil";
 export * from "./device";
 export * from "./http.load.manager";
 export * from "./helpers";
+export * from "./number.utils";

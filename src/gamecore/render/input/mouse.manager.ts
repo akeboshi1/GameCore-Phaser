@@ -18,12 +18,12 @@ export enum MouseEvent {
 
 export class MouseManager {
     protected running = false;
+    protected zoom: number;
     // ===============================
     protected scene: Phaser.Scene;
     private mGameObject: Phaser.GameObjects.GameObject;
     private mDownDelay: number = 1000;
     private mDownTime: any;
-    private zoom: number;
     private readonly delay = 500;
     private debounce: any;
     private mClickID: number;

@@ -4,7 +4,8 @@ export declare class TimerCountDown {
     private callback;
     private interval;
     constructor(callback: Handler);
-    execute(interval: number): void;
+    executeText(interval: number): void;
+    executeTime(interval: number): void;
     clear(): void;
     private getDataFormat;
     private stringFormat;

@@ -29,6 +29,8 @@ export declare class BlockManager implements IBlockManager {
     update(scenery: IScenery): void;
     setSize(imageW: number, imageH: number, gridW?: number, gridH?: number): void;
     resize(width: number, height: number): void;
+    updateScale(val: number): void;
+    getLayer(): Phaser.GameObjects.Container;
     updatePosition(): Promise<void>;
     destroy(): void;
     setState(state: any): void;

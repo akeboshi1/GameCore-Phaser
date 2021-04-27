@@ -15,4 +15,5 @@ export declare class BasePacketHandler extends PacketHandler {
     emit(event: string, data?: any): void;
     get connection(): ConnectionService;
     get Event(): EventDispatcher;
+    get proto(): import("../custom.proto").CustomProtoManager;
 }

@@ -55,6 +55,7 @@ export interface IRoomService {
     addToWalkableMap(sprite: ISprite, isTerrain?: boolean): any;
     removeFromWalkableMap(sprite: ISprite, isTerrain?: boolean): any;
     isWalkable(x: number, y: number): boolean;
+    checkSpriteConflictToWalkableMap(sprite: ISprite, isTerrain?: boolean, pos?: IPos): number[][];
     destroy(): any;
 }
 export declare class Room extends PacketHandler implements IRoomService, SpriteAddCompletedListener, ClockReadyListener {
@@ -119,7 +120,7 @@ export declare class Room extends PacketHandler implements IRoomService, SpriteA
     onManagerReady(key: string): void;
     onRoomReady(): void;
     cameraFollowHandler(): void;
-    checkSpriteConflictToWalkableMap(sprite: ISprite, isTerrain?: boolean): boolean;
+    checkSpriteConflictToWalkableMap(sprite: ISprite, isTerrain?: boolean, pos?: IPos): number[][];
     protected initSkyBox(): void;
     protected addSkyBox(scenery: IScenery): void;
     get terrainManager(): TerrainManager;

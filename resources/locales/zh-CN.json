@@ -164,10 +164,13 @@
   },
   "room_info": {
     "infobtn": "房间信息",
-    "setting": "房间设置",
+    "setting": "房间权限",
     "editorroom": "编辑房间",
-    "roomname": "房间名",
+    "roomname": "房间名称:",
     "roomlevel": "房间等级",
+    "roomstate": "房间状态:",
+    "roomevaluate": "房间好评:",
+    "openparty": "开启派对",
     "expvalue": "经验值",
     "popvalue": "热度",
     "goodvalue": "点赞",
@@ -178,7 +181,18 @@
     "depreciation": "折旧",
     "needmaterials": "翻新所需材料",
     "renovatetips": "当前无需翻新",
-    "helptips": "折旧度降低会影响店铺的每日收入"
+    "helptips": "折旧度降低会影响店铺的每日收入",
+    "commontips": "普通",
+    "partystate": "派对状态",
+    "partycardtips": "派对时长卡：",
+    "friendtips": "仅限好友进入",
+    "friendvisittips": "仅限好友邀请进入",
+    "passwordtips": "若密码为空，则默认为开放模式",
+    "savesetting": "保存设置",
+    "inputtips": "请输入密码",
+    "editornametips": "请输入房间名，最短三个字",
+    "defaultroomtips": "只能设置一个默认房间,\n是否设置当前房间为默认房间",
+    "roomsetting": "房间设置"
   },
   "business_street": {
     "commercial_street": "商业街",
@@ -262,7 +276,9 @@
     "current": "当前",
     "system": "系统",
     "givegift": "赠送",
-    "placeholder": "随便说点什么..."
+    "placeholder": "随便说点什么...",
+    "turmpttips": "喇叭消息开启，每条消息消耗一个喇叭",
+    "turmptenough": "喇叭数量不足"
   },
   "minecar": {
     "discard": "丢弃",
@@ -293,7 +309,8 @@
     "worktimes": "打工次数",
     "salary": "报酬",
     "attri": "*{{name}}需要大于{{value}}才可以任职这份工作",
-    "worktips": "每次打工会消耗1次打工机会和1点精力，打工机会每天重置"
+    "worktips": "每次打工会消耗1次打工机会和1点精力，打工机会每天重置",
+    "enoughtips": "打工次数不足"
   },
   "party": {
     "partyname": "派对房间",
@@ -325,7 +342,10 @@
     "modifyconfirm": "确定消耗{{count}}个时长卡，修改派对吗？",
     "onlinetime": "在线{{name}}分钟",
     "nopartytips": "暂无派对，快去开启派对吧~",
-    "progresstips": "下次领取: "
+    "progresstips": "下次领取: ",
+    "myroomnametips": "第{{name}}个房间",
+    "roomunlocktips": "需要等级达到{{name}}级解锁",
+    "roomtypetitle": "房型选择"
   },
   "picelevator": {
     "floor": "层"
@@ -457,13 +477,14 @@
     "make": "点击打开制造面板",
     "furindetail": "家具详情",
     "surveyfurni": "调查家具",
-    "cooking":"烹饪"
+    "cooking": "烹饪",
+    "newdiscovery": "新发现"
   },
   "mail": {
     "onekey": "一键领取",
     "title": "邮件",
     "sender": "发件人: ",
     "expiration": "{{time}}后过期",
-    "nomailtip":"暂时没有新邮件~"
+    "nomailtip": "暂时没有新邮件~"
   }
 }

@@ -14,11 +14,11 @@ export declare enum MouseEvent {
 export declare class MouseManager {
     protected render: Render;
     protected running: boolean;
+    protected zoom: number;
     protected scene: Phaser.Scene;
     private mGameObject;
     private mDownDelay;
     private mDownTime;
-    private zoom;
     private readonly delay;
     private debounce;
     private mClickID;
