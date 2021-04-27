@@ -1,5 +1,4 @@
 import { Game } from "../../game";
-import { BasicModel } from "./basic.model";
 export interface IMediator {
     UIType: number;
     isShow(): boolean;
@@ -35,7 +34,7 @@ export declare class BasicMediator implements IMediator {
     protected mHasHide: boolean;
     protected mParam: any;
     protected mUIType: number;
-    protected mModel: BasicModel;
+    protected mModel: any;
     protected mShowData: any;
     protected mView: any;
     constructor(key: string, game: Game);

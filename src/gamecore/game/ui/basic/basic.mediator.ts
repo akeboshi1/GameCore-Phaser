@@ -37,7 +37,7 @@ export class BasicMediator implements IMediator {
     protected mHasHide: boolean = false;
     protected mParam: any;
     protected mUIType: number;
-    protected mModel: BasicModel;
+    protected mModel: any;
     protected mShowData: any;
     protected mView: any;
     constructor(public key: string, protected game: Game) {
