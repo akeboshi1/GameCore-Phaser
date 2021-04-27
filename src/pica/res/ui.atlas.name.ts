@@ -24,6 +24,7 @@ export class UIAtlasName {
     public static recast = "recast";
     public static layout = "layout";
     public static illustrate = "illustrate";
+    public static illustrate_new = "illustrate_new";
     public static survey = "survey";
     public static mail = "mail";
     public static cooking = "cooking";

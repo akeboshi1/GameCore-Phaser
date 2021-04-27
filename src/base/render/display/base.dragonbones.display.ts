@@ -2,7 +2,7 @@ import {Logger, ResUtils, Tool, Url, ValueResolver} from "utils";
 import {IAvatar, IDragonbonesModel, RunningAnimation, SlotSkin, Atlas, IFramesModel, DisplayField} from "structure";
 import {BaseDisplay} from "./base.display";
 
-const hash = require("object-hash");
+import * as hash from "object-hash";
 import ImageFile = Phaser.Loader.FileTypes.ImageFile;
 import {MaxRectsPacker} from "maxrects-packer";
 
@@ -97,6 +97,9 @@ export class BaseDragonbonesDisplay extends BaseDisplay {
 
     private mPreReplaceTextureKey: string = "";
     private mReplaceTextureKey: string = "";
+    // phaer 监听回收
+    private mLoadListeners: Map<string, Function[]> = new Map();
+    private mTexturesListeners: Map<string, Function[]> = new Map();
 
     public constructor(scene: Phaser.Scene, id?: number) {
         super(scene, id);
@@ -259,6 +262,19 @@ export class BaseDragonbonesDisplay extends BaseDisplay {
             this.mFadeTween = null;
         }
 
+        this.mLoadListeners.forEach((val, key) => {
+            for (const func of val) {
+                this.scene.load.off(key, func, this);
+            }
+        });
+        this.mLoadListeners.clear();
+        this.mTexturesListeners.forEach((val, key) => {
+            for (const func of val) {
+                this.scene.textures.off(key, func, this);
+            }
+        });
+        this.mTexturesListeners.clear();
+
         super.destroy();
     }
 
@@ -401,11 +417,11 @@ export class BaseDragonbonesDisplay extends BaseDisplay {
             );
             const onLoad = () => {
                 if (!this.scene.cache.custom.dragonbone.get(this.resourceName)) return;
-                this.scene.load.off(Phaser.Loader.Events.COMPLETE, onLoad, this);
+                this.removePhaserListener(PhaserListenerType.Load, Phaser.Loader.Events.COMPLETE, onLoad);
                 resolve();
             };
-            this.scene.load.off(Phaser.Loader.Events.COMPLETE, onLoad, this);
-            this.scene.load.on(Phaser.Loader.Events.COMPLETE, onLoad, this);
+
+            this.addPhaserListener(PhaserListenerType.Load, Phaser.Loader.Events.COMPLETE, onLoad);
             this.scene.load.start();
         });
     }
@@ -494,11 +510,11 @@ export class BaseDragonbonesDisplay extends BaseDisplay {
                 Logger.getInstance().error("draw texture error, texture not exists, key: ", loadKey);
             } else {
                 const frame = this.scene.game.textures.getFrame(loadKey, "__BASE");
-                packer.add(frame.width, frame.height, { key: loadKey, name: dbFrameName });
+                packer.add(frame.width, frame.height, {key: loadKey, name: dbFrameName});
             }
         }
 
-        const { width, height } = packer.bins[0];
+        const {width, height} = packer.bins[0];
         const canvas = this.scene.textures.createCanvas("canvas_" + this.id + "_" + textureKey, width, height);
 
         packer.bins.forEach((bin) => {
@@ -525,21 +541,19 @@ export class BaseDragonbonesDisplay extends BaseDisplay {
                 this.scene.load.atlas(this.mReplaceTextureKey, loadData.img, loadData.json);
                 const onLoadComplete = (key: string) => {
                     if (this.mReplaceTextureKey !== key) return;
-                    this.scene.textures.off(Phaser.Textures.Events.ADD, onLoadComplete, this);
+                    this.removePhaserListener(PhaserListenerType.Textures, Phaser.Textures.Events.ADD, onLoadComplete);
 
                     resolve(null);
                 };
                 const onLoadError = (imageFile: ImageFile) => {
                     if (this.mReplaceTextureKey !== imageFile.key) return;
-                    this.scene.load.off(Phaser.Loader.Events.FILE_LOAD_ERROR, onLoadError, this);
+                    this.removePhaserListener(PhaserListenerType.Load, Phaser.Loader.Events.FILE_LOAD_ERROR, onLoadError);
 
                     Logger.getInstance().warn("load dragonbones texture error: ", loadData);
                     reject("load dragonbones texture error: " + loadData);
                 };
-                this.scene.textures.off(Phaser.Textures.Events.ADD, onLoadComplete, this);
-                this.scene.textures.on(Phaser.Textures.Events.ADD, onLoadComplete, this);
-                this.scene.load.off(Phaser.Loader.Events.FILE_LOAD_ERROR, onLoadError, this);
-                this.scene.load.on(Phaser.Loader.Events.FILE_LOAD_ERROR, onLoadError, this);
+                this.addPhaserListener(PhaserListenerType.Textures, Phaser.Textures.Events.ADD, onLoadComplete);
+                this.addPhaserListener(PhaserListenerType.Load, Phaser.Loader.Events.FILE_LOAD_ERROR, onLoadError);
                 this.scene.load.start();
             }
         });
@@ -575,11 +589,10 @@ export class BaseDragonbonesDisplay extends BaseDisplay {
 
             const onLoadComplete = (data, totalComplete: integer, totalFailed: integer) => {
                 if (!this.scene) return;
-                this.scene.load.off(Phaser.Loader.Events.COMPLETE, onLoadComplete, this);
+                this.removePhaserListener(PhaserListenerType.Load, Phaser.Loader.Events.COMPLETE, onLoadComplete);
                 resolve(null);
             };
-            this.scene.load.off(Phaser.Loader.Events.COMPLETE, onLoadComplete, this);
-            this.scene.load.on(Phaser.Loader.Events.COMPLETE, onLoadComplete, this);
+            this.addPhaserListener(PhaserListenerType.Load, Phaser.Loader.Events.COMPLETE, onLoadComplete);
 
             const onLoadError = (e: any) => {
                 // ==============为了防止404资源重复请求加载，在加载失败后直接将其索引放置加载失败列表中，并从加载map中删除
@@ -590,8 +603,7 @@ export class BaseDragonbonesDisplay extends BaseDisplay {
                 // this.mLoadMap.delete(sName);
                 this.mErrorLoadMap.set(lKey, e);
             };
-            this.scene.load.off(Phaser.Loader.Events.FILE_LOAD_ERROR, onLoadError, this);
-            this.scene.load.on(Phaser.Loader.Events.FILE_LOAD_ERROR, onLoadError, this);
+            this.addPhaserListener(PhaserListenerType.Load, Phaser.Loader.Events.FILE_LOAD_ERROR, onLoadError);
 
             this.scene.load.image(loadList);
             this.scene.load.start();
@@ -1128,4 +1140,58 @@ export class BaseDragonbonesDisplay extends BaseDisplay {
             setLoadMap(obj.slot, obj.part, obj.dir, obj.skin);
         }
     }
+
+    // issues: https://code.apowo.com/PixelPai/game-core/-/issues/243
+    private addPhaserListener(type: PhaserListenerType, key: string, func: Function) {
+        let loadPlugin;
+        let listenersMap;
+        switch (type) {
+            case PhaserListenerType.Load: {
+                loadPlugin = this.scene.load;
+                listenersMap = this.mLoadListeners;
+                break;
+            }
+            case PhaserListenerType.Textures: {
+                loadPlugin = this.scene.textures;
+                listenersMap = this.mTexturesListeners;
+                break;
+            }
+        }
+        loadPlugin.off(key, func, this);
+        loadPlugin.on(key, func, this);
+        if (!listenersMap.has(key)) {
+            listenersMap.set(key, []);
+        }
+        const listeners = listenersMap.get(key);
+        const idx = listeners.indexOf(func);
+        if (idx >= 0) listeners.splice(idx, 1);
+        listeners.push(func);
+    }
+
+    private removePhaserListener(type: PhaserListenerType, key: string, func: Function) {
+        let loadPlugin;
+        let listenersMap;
+        switch (type) {
+            case PhaserListenerType.Load: {
+                loadPlugin = this.scene.load;
+                listenersMap = this.mLoadListeners;
+                break;
+            }
+            case PhaserListenerType.Textures: {
+                loadPlugin = this.scene.textures;
+                listenersMap = this.mTexturesListeners;
+                break;
+            }
+        }
+        loadPlugin.off(key, func, this);
+        if (!listenersMap.has(key)) return;
+        const listeners = listenersMap.get(key);
+        const idx = listeners.indexOf(func);
+        if (idx >= 0) listeners.splice(idx, 1);
+    }
+}
+
+enum PhaserListenerType {
+    Load = 0,
+    Textures = 1
 }

@@ -192,7 +192,7 @@
     "inputtips": "请输入密码",
     "editornametips": "请输入房间名，最短三个字",
     "defaultroomtips": "只能设置一个默认房间,\n是否设置当前房间为默认房间",
-    "roomsetting":"房间设置"
+    "roomsetting": "房间设置"
   },
   "business_street": {
     "commercial_street": "商业街",
@@ -477,7 +477,8 @@
     "make": "点击打开制造面板",
     "furindetail": "家具详情",
     "surveyfurni": "调查家具",
-    "cooking": "烹饪"
+    "cooking": "烹饪",
+    "newdiscovery": "新发现"
   },
   "mail": {
     "onekey": "一键领取",

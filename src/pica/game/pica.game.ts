@@ -27,6 +27,7 @@ export class PicaGame extends Game {
     }
     protected createManager() {
         // 优先初始化datamanager 因为worker全局emitter在datamananger内部初始化
+        this.mCustomProtoManager = new CustomProtoManager(this);
         this.mDataManager = new DataManager(this);
         this.mRoomManager = new RoomManager(this);
         this.mGuideManager = new PicaGuideManager(this);
@@ -34,7 +35,6 @@ export class PicaGame extends Game {
         this.mElementStorage = new ElementStorage();
         this.mUIManager = new PicaWorkerUiManager(this);
         this.mHttpService = new HttpService(this);
-        this.mCustomProtoManager = new CustomProtoManager(this);
         this.mSoundManager = new SoundManager(this);
         this.mLoadingManager = new LoadingManager(this);
         this.mConfigManager = new BaseDataConfigManager(this);
