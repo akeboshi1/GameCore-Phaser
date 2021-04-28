@@ -217,16 +217,16 @@ export class PicaNewIllustratedDetailPanel extends Phaser.GameObjects.Container 
         if (type === 1) {
             this.topCon.visible = true;
             tableHeight -= 23 * this.dpr;
-            this.collectPanel.visible = false;
-            this.galleryPanel.visible = true;
+            this.collectPanel.hide();
+            this.galleryPanel.show();
             const posy = this.topCon.y + this.topCon.height * 0.5 + tableHeight * 0.5 + 20 * this.dpr;
             this.galleryPanel.y = posy;
             this.galleryPanel.resize(this.width, tableHeight);
         } else if (type === 2) {
             this.topCon.visible = false;
             tableHeight += 40 * this.dpr;
-            this.galleryPanel.visible = false;
-            this.collectPanel.visible = true;
+            this.galleryPanel.hide();
+            this.collectPanel.show();
             const posy = this.topCon.y + this.topCon.height * 0.5 + tableHeight * 0.5 - 10 * this.dpr;
             this.collectPanel.y = posy;
             this.collectPanel.resize(this.width, tableHeight);

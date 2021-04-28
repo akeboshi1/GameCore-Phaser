@@ -74,6 +74,8 @@ export enum AvatarPartNameTemp {
     WeapBarm = "barm_weap_#_$",
 }
 
+const ReplacedTextures: Map<string, number> = new Map<string, number>();
+
 /**
  * 龙骨显示对象
  */
@@ -95,7 +97,8 @@ export class BaseDragonbonesDisplay extends BaseDisplay {
     private readonly UNPACK_SLOTS = [AvatarSlotNameTemp.FarmWeap, AvatarSlotNameTemp.BarmWeap];
     private readonly UNCHECK_AVATAR_PROPERTY = ["id", "dirable", "farmWeapId", "barmWeapId"];
 
-    private mPreReplaceTextureKey: string = "";
+    // 不需要手动释放旧的资源，龙骨中已经做了相关处理
+    // private mPreReplaceTextureKey: string = "";
     private mReplaceTextureKey: string = "";
     // phaer 监听回收
     private mLoadListeners: Map<string, Function[]> = new Map();
@@ -246,14 +249,28 @@ export class BaseDragonbonesDisplay extends BaseDisplay {
         this.mNeedReplaceTexture = false;
         if (this.mArmatureDisplay) {
             // TODO: 两个使用同一合图资源的龙骨对象，一个销毁之后，另一个显示异常
-            const slotList: dragonBones.Slot[] = this.mArmatureDisplay.armature.getSlots();
-            slotList.forEach((slot: dragonBones.Slot) => {
-                if (slot) {
-                    slot.replaceDisplay(null);
-                    // slot.display.visible = false;
+            // const slotList: dragonBones.Slot[] = this.mArmatureDisplay.armature.getSlots();
+            // slotList.forEach((slot: dragonBones.Slot) => {
+            //     if (slot) {
+            //         slot.replaceDisplay(null);
+            //         // slot.display.visible = false;
+            //     }
+            // });
+            const textureAtlasData = this.mArmatureDisplay.armature["_replaceTextureAtlasData"];
+            if (textureAtlasData && textureAtlasData.renderTexture) {
+                if (ReplacedTextures.has(textureAtlasData.renderTexture.key)) {
+                    const count = ReplacedTextures.get(textureAtlasData.renderTexture.key);
+                    if (count > 1) {
+                        ReplacedTextures.set(textureAtlasData.renderTexture.key, count - 1);
+                    } else {
+                        ReplacedTextures.delete(textureAtlasData.renderTexture.key);
+                        textureAtlasData.renderTexture.destroy();
+                    }
+                    textureAtlasData.releaseRenderTexture();
                 }
-            });
-            this.mArmatureDisplay.destroy();
+            }
+
+            this.mArmatureDisplay.dispose(false);
             this.mArmatureDisplay = null;
         }
 
@@ -430,7 +447,15 @@ export class BaseDragonbonesDisplay extends BaseDisplay {
         if (useRenderTexture) {
             if (this.scene.textures.exists(this.mReplaceTextureKey)) {
                 const tex = this.scene.textures.get(this.mReplaceTextureKey);
-                this.mArmatureDisplay.armature.replacedTexture = tex;
+                if (this.mArmatureDisplay.armature.replacedTexture !== tex) {
+                    if (ReplacedTextures.has(this.mReplaceTextureKey)) {
+                        const count = ReplacedTextures.get(this.mReplaceTextureKey);
+                        ReplacedTextures.set(this.mReplaceTextureKey, count + 1);
+                    } else {
+                        ReplacedTextures.set(this.mReplaceTextureKey, 1);
+                    }
+                    this.mArmatureDisplay.armature.replacedTexture = tex;
+                }
             }
         }
 
@@ -532,7 +557,7 @@ export class BaseDragonbonesDisplay extends BaseDisplay {
 
     private prepareReplaceRenderTexture(): Promise<any> {
         return new Promise<any>((resolve, reject) => {
-            this.mPreReplaceTextureKey = this.mReplaceTextureKey;
+            // this.mPreReplaceTextureKey = this.mReplaceTextureKey;
             this.mReplaceTextureKey = this.generateReplaceTextureKey();
             if (this.scene.textures.exists(this.mReplaceTextureKey)) {
                 resolve(null);

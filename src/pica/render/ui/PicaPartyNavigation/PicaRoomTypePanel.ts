@@ -95,7 +95,7 @@ export class PicaRoomTypePanel extends Phaser.GameObjects.Container {
     }
 
     private onConfirmHandler() {
-        if (this.sendHandler && this.curItem && this.curItem.typeData) this.sendHandler.runWith(this.curItem.typeData.sceneId);
+        if (this.sendHandler && this.curItem && this.curItem.typeData) this.sendHandler.runWith(this.curItem.typeData.id);
 
     }
 

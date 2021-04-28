@@ -439,7 +439,9 @@ export class UIHelper {
     public static get threeYellowSmall() {
         return ["butt_yellow_left_s", "butt_yellow_middle_s", "butt_yellow_right_s"];
     }
-
+    public static get threeGraySmall() {
+        return ["butt_gray_left_s", "butt_gray_middle_s", "butt_gray_right_s"];
+    }
     public static get threeGreenBig() {
         return ["butt_green_left_b", "butt_green_middle_b", "butt_green_right_b"];
     }
@@ -450,6 +452,9 @@ export class UIHelper {
 
     public static get threeYellowBig() {
         return ["butt_yellow_left_b", "butt_yellow_middle_b", "butt_yellow_right_b"];
+    }
+    public static get threeGrayBig() {
+        return ["butt_gray_left_b", "butt_gray_middle_b", "butt_gray_right_b"];
     }
 
     public static colorStyle(color: string, fontSize: number) {
@@ -642,6 +647,7 @@ export class UIHelper {
     }
 
     public static playtPosYTween(scene: any, obj: any, from: number, to: number, duration: number = 500, ease: string = "Bounce.easeOut", delay?: number, compl?: Handler, update?: Handler) {
+        ease = ease || "Linear";
         const onUpdate = update ? (cope: any, param: any) => {
             if (update) update.runWith(param.value);
         } : undefined;
@@ -665,6 +671,7 @@ export class UIHelper {
     }
 
     public static playtPosXTween(scene: any, obj: any, from: number, to: number, duration: number = 500, ease: string = "Bounce.easeOut", delay?: number, compl?: Handler, update?: Handler) {
+        ease = ease || "Linear";
         const onUpdate = update ? (cope: any, param: any) => {
             if (update) update.runWith(param.value);
         } : undefined;

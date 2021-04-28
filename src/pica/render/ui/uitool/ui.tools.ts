@@ -1,7 +1,8 @@
-import { Render } from "gamecoreRender";
+import { ClickEvent } from "apowophaserui";
+import { ButtonEventDispatcher, Render } from "gamecoreRender";
 import { UIAtlasName } from "picaRes";
 import { AvatarSuitType, EventType } from "structure";
-import { Url } from "utils";
+import { i18n, UIHelper, Url } from "utils";
 
 export class UITools {
     /**
@@ -55,5 +56,18 @@ export class UITools {
         parent.add(red);
         red.visible = false;
         return red;
+    }
+
+    public static createBackButton(scene: Phaser.Scene, dpr: number, fun: Function, caller: any, title: string = "") {
+        const backButton = new ButtonEventDispatcher(scene, 0, 0);
+        backButton.setSize(80 * dpr, 22 * dpr);
+        backButton.enable = true;
+        backButton.on(ClickEvent.Tap, fun, caller);
+        const closeImg = scene.make.image({ key: UIAtlasName.uicommon, frame: "back_arrow" });
+        closeImg.x = -backButton.width * 0.5 + closeImg.width * 0.5 + 10 * dpr;
+        const titleTex = scene.make.text({ text: title, style: UIHelper.whiteStyle(dpr, 20) }).setOrigin(0, 0.5);
+        titleTex.x = closeImg.x + closeImg.width * 0.5 + 15 * dpr;
+        backButton.add([closeImg, titleTex]);
+        return backButton;
     }
 }

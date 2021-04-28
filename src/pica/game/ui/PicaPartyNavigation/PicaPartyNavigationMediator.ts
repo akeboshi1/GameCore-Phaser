@@ -182,7 +182,11 @@ export class PicaPartyNavigationMediator extends BasicMediator {
 
     private onRoomTypeDatasHandler() {
         const typeData = this.config.getScenes(BaseDataType.roomscene);
-        this.mView.setRoomTypeDatas(typeData);
+        const temps = [];
+        for (const temp of typeData) {
+            if (temp.unlockType === 1) temps.push(temp);
+        }
+        this.mView.setRoomTypeDatas(temps);
     }
     private onCreateRoomHandler(id: string) {
         this.game.sendCustomProto("STRING", "roomFacade:createNewRoom", { id });

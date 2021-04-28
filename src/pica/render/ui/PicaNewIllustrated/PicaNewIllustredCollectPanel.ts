@@ -1,9 +1,8 @@
 import { GameGridTable, Button, ClickEvent } from "apowophaserui";
-import { AlignmentType, AxisType, ConstraintType, GridLayoutGroup, ProgressMaskBar } from "gamecoreRender";
-import { UIAtlasName } from "../../../res";
-import { Handler, Tool, UIHelper, } from "utils";
-import { ICountablePackageItem, IGalleryCombination } from "../../../structure";
-import { PicaNewIllustratedItem } from "./PicaNewIllustratedItem";
+import { Handler, Tool, UIHelper, Url, } from "utils";
+import { IGalleryCombination } from "picaStructure";
+import { UIAtlasName } from "picaRes";
+import { DynamicImage } from "gamecoreRender";
 export class PicaIllustredCollectPanel extends Phaser.GameObjects.Container {
 
     private mGameGrid: GameGridTable;
@@ -28,22 +27,20 @@ export class PicaIllustredCollectPanel extends Phaser.GameObjects.Container {
         this.mGameGrid.setSize(w, h);
         this.mGameGrid.resetMask();
     }
-
+    show() {
+        this.visible = true;
+    }
+    hide() {
+        this.visible = false;
+    }
     setHandler(send: Handler) {
         this.send = send;
     }
 
     setCombinationData(content: IGalleryCombination[]) {
         this.mGameGrid.setItems(content);
-        const arr = this.getCellsHeights(content);
-        for (let i = 0; i < arr.length; i++) {
-            const height = arr[i];
-            const cell = this.mGameGrid.getCell(i);
-            cell.setHeight(arr[cell.index]);
-        }
         this.mGameGrid.layout();
         this.mGameGrid.setT(0);
-        return arr;
     }
     setDoneMissionList(list: number[]) {
         if (list) this.doneMissions = list;
@@ -95,152 +92,87 @@ export class PicaIllustredCollectPanel extends Phaser.GameObjects.Container {
 
     private onSelectItemHandler(cell: IllustratedCollectItem) {
         // if (this.curSelectItem) this.curSelectItem.select = true;
-        cell.checkExtendRect();
-    }
-
-    private getCellsHeights(content: IGalleryCombination[]) {
-        const arr = [];
-        for (const temp of content) {
-            const requirement = temp.requirement;
-            let height = 78 * this.dpr;
-            const row = Math.ceil(requirement.length / 4);
-            height += row * 92 * this.dpr;
-            arr.push(height);
-        }
-        return arr;
     }
 }
 
 class IllustratedCollectItem extends Phaser.GameObjects.Container {
-    public isTooqingContainerLite = true;
-    private background: Phaser.GameObjects.Graphics;
+    private background: Phaser.GameObjects.Image;
     private titleTex: Phaser.GameObjects.Text;
     private desTex: Phaser.GameObjects.Text;
-    private progress: ProgressMaskBar;
     private rewardsBtn: Button;
-    private gridLayout: GridLayoutGroup;
-    private topCon: Phaser.GameObjects.Container;
-    private send: Handler;
+    private itemIcon: DynamicImage;
+    private collectTex: Phaser.GameObjects.Text;
     private dpr: number;
     private zoom: number;
     private combiData: IGalleryCombination;
-    private iscallRewards: boolean = false;
+    private send: Handler;
     constructor(scene: Phaser.Scene, width: number, height: number, dpr: number, zoom: number) {
         super(scene);
         this.setSize(width, height);
         this.dpr = dpr;
         this.zoom = zoom;
-        this.background = this.scene.make.graphics(undefined, false);
-        this.background.clear();
-        this.background.fillStyle(0x5EC6FF, 1);
-        this.background.fillRoundedRect(-width * 0.5, -height * 0.5, width, height, 5 * dpr);
-        this.topCon = this.scene.make.container(undefined, false);
-        this.topCon.setSize(this.width, 58 * this.dpr);
+        this.background = this.scene.make.image({ key: UIAtlasName.illustrate_new, frame: "illustrate_collect_bg_1" });
+        this.itemIcon = new DynamicImage(scene, -width * 0.5 + 36 * dpr, 0);
         this.titleTex = this.scene.make.text({ style: UIHelper.whiteStyle(dpr) }).setOrigin(0, 0.5);
-        this.titleTex.x = -this.topCon.width * 0.5 + 10 * dpr;
-        this.titleTex.y = -this.topCon.height * 0.5 + 20 * dpr;
+        this.titleTex.x = -this.width * 0.5 + 10 * dpr;
+        this.titleTex.y = -this.height * 0.5 + 20 * dpr;
         this.titleTex.setFontStyle("bold");
         this.desTex = this.scene.make.text({ style: UIHelper.colorStyle("#006ED4", 10 * dpr) }).setOrigin(0, 0.5);
         this.desTex.x = this.titleTex.x;
         this.desTex.y = this.titleTex.y + 20 * dpr;
-        this.progress = new ProgressMaskBar(this.scene, UIAtlasName.illustrate, "illustrate_survey_lv_bottom", "illustrate_survey_lv_top", UIHelper.whiteStyle(this.dpr, 8));
-        this.progress.y = this.desTex.y + this.progress.height * 0.5 + 15 * this.dpr;
-        this.progress.x = -20 * this.dpr;
-        this.rewardsBtn = new Button(this.scene, UIAtlasName.illustrate, "illustrate_survey_icon", "illustrate_survey_icon");
-        this.rewardsBtn.x = this.progress.x + this.progress.width * 0.5 + 10 * this.dpr + this.rewardsBtn.width * 0.5;
-        this.rewardsBtn.y = this.progress.y - this.rewardsBtn.height * 0.5;
+        this.collectTex = this.scene.make.text({ style: UIHelper.whiteStyle(dpr, 14) }).setOrigin(1, 0.5);
+        this.collectTex.setFontStyle("bold");
+        this.collectTex.x = width * 0.5 - 42 * dpr;
+        this.rewardsBtn = new Button(this.scene, UIAtlasName.illustrate_new, "illustrate_collect_reward", "illustrate_collect_reward");
+        this.rewardsBtn.x = this.width * 0.5 - 10 * this.dpr - this.rewardsBtn.width * 0.5;
+        this.rewardsBtn.y = 0;
         this.rewardsBtn.on(ClickEvent.Tap, this.onRewardsHandler, this);
-        this.topCon.add([this.titleTex, this.desTex, this.progress, this.rewardsBtn]);
-        const conWidth = 305 * this.dpr, conHeight = this.height - this.topCon.height;
-        this.gridLayout = new GridLayoutGroup(this.scene, conWidth, conHeight, {
-            cellSize: new Phaser.Math.Vector2(87 * this.dpr, 92 * this.dpr),
-            space: new Phaser.Math.Vector2(-10 * dpr, 0 * this.dpr),
-            startAxis: AxisType.Horizontal,
-            constraint: ConstraintType.FixedColumnCount,
-            constraintCount: 4,
-            alignmentType: AlignmentType.UpperCenter
-        });
-        this.add([this.background, this.topCon, this.gridLayout]);
+        this.add([this.background, this.itemIcon, this.titleTex, this.desTex, this.collectTex, this.rewardsBtn]);
     }
-    public refreshMask() {
-        this.progress.refreshMask();
-    }
-    public syncPosition() {
-        this.refreshMask();
-    }
-    public getAllChildren() {
 
-    }
     public setCombinationData(data: IGalleryCombination, rewarded: boolean) {
         this.combiData = data;
         this.titleTex.text = data.name;
         this.desTex.text = data.des;
-        const list = this.gridLayout.list;
-        for (const item of list) {
-            (<any>item).visible = false;
-        }
-        let curprogress = 0;
-        const maxprogress = data.requirement.length;
-        for (let i = 0; i < data.requirement.length; i++) {
-            const temp = data.requirement[i];
-            let item: PicaNewIllustratedItem;
-            if (i < list.length) {
-                item = <any>list[i];
-            } else {
-                item = new PicaNewIllustratedItem(this.scene, 87 * this.dpr, 92 * this.dpr, this.dpr, this.zoom);
-                this.gridLayout.add(item);
-            }
-            item.visible = true;
-            item.setItemData(<ICountablePackageItem>temp);
-            if (temp["status"] === 2) curprogress++;
-        }
-        this.progress.setProgress(curprogress, maxprogress);
-        this.progress.setText(`${curprogress}/${maxprogress}`);
-        this.iscallRewards = curprogress === maxprogress;
-        if (rewarded) {
-            this.iscallRewards = false;
-            this.rewardsBtn.setFrameNormal("illustrate_survey_icon_1", "illustrate_survey_icon_1");
-        } else {
-            if (this.iscallRewards) {
-                this.rewardsBtn.setFrameNormal("illustrate_survey_icon", "illustrate_survey_icon");
-            } else {
-                this.rewardsBtn.setFrameNormal("illustrate_survey_icon_2", "illustrate_survey_icon_2");
-            }
-        }
-        this.gridLayout.Layout();
-        this.layout();
+        const itemData: any = data.requirement[0];
+        const url = Url.getOsdRes(itemData.texturePath);
+        this.itemIcon.load(url);
+        this.itemIcon.scale = this.dpr / this.zoom;
+        const difficults = this.getbgName(data.difficult);
+        const color = difficults[0];
+        this.background.setFrame(difficults[1]);
+        this.collectTex.text = `${data["count"]}/${data.requirement.length}`;
+        this.collectTex.setColor(color);
+        this.desTex.setColor(color);
+
     }
 
     public setHandler(send: Handler) {
         this.send = send;
     }
-    public checkExtendRect() {
-        if (!this.gridLayout.visible) return false;
-        const pointer = this.scene.input.activePointer;
-        const isCheck = Tool.checkPointerContains(this.gridLayout, pointer);
-        if (isCheck) {
-            const list = this.gridLayout.list;
-            for (const obj of list) {
-                if (Tool.checkPointerContains(obj, pointer)) {
-                    // (<IllustratedItem>obj).showTips();
-                    if (this.send) this.send.runWith(["furidetail", (<PicaNewIllustratedItem>obj).itemData]);
-                }
-            }
-        }
-    }
-    private layout() {
-        const offsetY = 20 * this.dpr;
-        const height = this.topCon.height + this.gridLayout.height + offsetY;
 
-        this.setSize(this.width, height);
-        this.background.clear();
-        this.background.fillStyle(0x5EC6FF, 1);
-        const backheight = height - offsetY + 10 * this.dpr;
-        this.background.fillRect(-this.width * 0.5, -height * 0.5, this.width, backheight);
-        this.topCon.y = -this.height * 0.5 + this.topCon.height * 0.5;
-        this.gridLayout.y = this.topCon.y + this.topCon.height * 0.5 + this.gridLayout.height * 0.5 + offsetY - 5 * this.dpr;
-    }
     private onRewardsHandler() {
-        if (this.send && this.iscallRewards) this.send.runWith(["combinations", this.combiData.id]);
+        if (this.send) this.send.runWith(["combrewards", this.combiData]);
+    }
+
+    private getbgName(difficult: number) {
+        let temps;
+        switch (difficult) {
+            case 1:
+                temps = ["#006523", "illustrate_collect_bg_1"];
+                break;
+            case 2:
+                temps = ["#005BAF", "illustrate_collect_bg_2"];
+                break;
+            case 3:
+                temps = ["#692DD6", "illustrate_collect_bg_3"];
+                break;
+            case 4:
+                temps = ["#7C4C00", "illustrate_collect_bg_4"];
+                break;
+            case 5:
+                temps = ["#A50005", "illustrate_collect_bg_5"];
+                break;
+        }
     }
 }
