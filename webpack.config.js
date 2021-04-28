@@ -33,7 +33,7 @@ const commonConfig = {
         },
     },
     optimization: {
-        minimize: true,
+        minimize: false,
         minimizer: [
             new TerserPlugin({
                 sourceMap: true,

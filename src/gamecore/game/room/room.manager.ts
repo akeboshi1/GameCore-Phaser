@@ -22,8 +22,8 @@ export interface IRoomManager {
 
 export class RoomManager extends PacketHandler implements IRoomManager {
     protected mGame: Game;
-    private mRooms: IRoomService[] = [];
-    private mCurRoom: IRoomService;
+    protected mRooms: IRoomService[] = [];
+    protected mCurRoom: IRoomService;
 
     constructor(game: Game) {
         super();
@@ -89,6 +89,26 @@ export class RoomManager extends PacketHandler implements IRoomManager {
         this.removeAllRoom();
     }
 
+    protected onEnterRoom(scene: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_ENTER_SCENE) {
+        Logger.getInstance().debug("enter===room");
+        const id = scene.scene.id;
+        let boo: boolean = false;
+        // tslint:disable-next-line:no-shadowed-variable
+        this.mRooms.forEach((room) => {
+            if (room && room.id === id) {
+                boo = true;
+                return;
+            }
+        });
+        if (boo) return;
+        const room = new Room(this);
+        this.mRooms.push(room);
+        room.addActor(scene.actor);
+        room.enter(scene.scene);
+        this.game.peer.state = GameState.RoomCreate;
+        this.mCurRoom = room;
+    }
+
     private hasRoom(id: number): boolean {
         const idx = this.mRooms.findIndex((room: Room, index: number) => id === room.id);
         return idx >= 0;
@@ -110,26 +130,6 @@ export class RoomManager extends PacketHandler implements IRoomManager {
                 this.onEnterRoom(scene);
             });
         }
-    }
-
-    private onEnterRoom(scene: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_ENTER_SCENE) {
-        Logger.getInstance().debug("enter===room");
-        const id = scene.scene.id;
-        let boo: boolean = false;
-        // tslint:disable-next-line:no-shadowed-variable
-        this.mRooms.forEach((room) => {
-            if (room && room.id === id) {
-                boo = true;
-                return;
-            }
-        });
-        if (boo) return;
-        const room = new Room(this);
-        this.mRooms.push(room);
-        room.addActor(scene.actor);
-        room.enter(scene.scene);
-        this.game.peer.state = GameState.RoomCreate;
-        this.mCurRoom = room;
     }
 
     private onEnterEditor(packet: PBpacket) {

@@ -12,7 +12,7 @@ export class SceneDataManager extends BasePacketHandler {
 
     constructor(game: Game, event?: EventDispatcher) {
         super(game, event);
-        Logger.getInstance().log("init scenedatamanager ===>", event, game);
+        Logger.getInstance().log("init scenedatamanager ===>", this.mEvent, event, game);
         this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_PKT_PARTY_SEND_GIFT, this.on_SEND_GIFT_DATA);
         this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_EDIT_MODE_ROOM_INFO, this.onInitModeRoomInfo);
         // this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_EDIT_MODE_UPDATE_ROOM_INFO, this.onUpdateModeRoomInfo);
