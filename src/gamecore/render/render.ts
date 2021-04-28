@@ -9,7 +9,7 @@ import { SceneManager } from "./scenes/scene.manager";
 import { LocalStorageManager } from "./managers/local.storage.manager";
 import { PlayScene } from "./scenes/play.scene";
 import { CamerasManager } from "./cameras/cameras.manager";
-import * as path from "path";
+
 import {
     ElementStateType,
     GameMain,
@@ -198,6 +198,7 @@ export class Render extends RPCPeer implements GameMain, IRender {
         this.linkTo(key, url).onceReady(() => {
             this.mMainPeer = this.remote[key][peerName];
             this.mMainPeer.updateFps();
+            this.initResUrl();
             this.createGame();
             Logger.getInstance().debug("worker onReady");
         });
@@ -210,6 +211,9 @@ export class Render extends RPCPeer implements GameMain, IRender {
             this.mPhysicalPeer.start();
             Logger.getInstance().debug("Physcialworker onReady");
         });
+    }
+
+    public initResUrl() {
     }
 
     get physicalPeer(): any {
