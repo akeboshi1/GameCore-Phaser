@@ -281,9 +281,9 @@ export declare class Render extends RPCPeer implements GameMain, IRender {
     switchDecorateMouseManager(): void;
     setRoomSize(size: IPosition45Obj, miniSize: IPosition45Obj): void;
     protected onWorkerUnlinked(worker: string): void;
+    protected initConfig(): void;
     private onFullScreenChange;
     private gameCreated;
-    private initConfig;
     private initRatio;
     private resumeScene;
     private pauseScene;

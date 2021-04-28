@@ -1682,6 +1682,25 @@ export class Render extends RPCPeer implements GameMain, IRender {
         this.mWorkerDestroyMap.delete(worker);
     }
 
+    protected initConfig() {
+        if (!this.mConfig.devicePixelRatio) {
+            this.mConfig.devicePixelRatio = window.devicePixelRatio || 2;
+        }
+        if (this.mConfig.width === undefined) {
+            this.mConfig.width = window.innerWidth;
+        }
+        if (this.mConfig.height === undefined) {
+            this.mConfig.height = window.innerHeight;
+        }
+        this.initRatio();
+        Url.OSD_PATH = this.mConfig.osd;
+        Url.RES_PATH = `resources/`;
+        Url.RESUI_PATH = `${Url.RES_PATH}ui/`;
+        initLocales(path.relative(__dirname, `${Url.RES_PATH}/locales/{{lng}}.json`));
+        // const locales = require(`${Url.RES_PATH}locales`);
+        // initLocales(resources);
+    }
+
     // private connectReconnect() {
     //     if (!this.game) return;
     //     this.createGame();
@@ -1713,25 +1732,6 @@ export class Render extends RPCPeer implements GameMain, IRender {
         this.mGame.scale.on("enterfullscreen", this.onFullScreenChange, this);
         this.mGame.scale.on("leavefullscreen", this.onFullScreenChange, this);
         // this.mGame.scale.on("orientationchange", this.onOrientationChange, this);
-    }
-
-    private initConfig() {
-        if (!this.mConfig.devicePixelRatio) {
-            this.mConfig.devicePixelRatio = window.devicePixelRatio || 2;
-        }
-        if (this.mConfig.width === undefined) {
-            this.mConfig.width = window.innerWidth;
-        }
-        if (this.mConfig.height === undefined) {
-            this.mConfig.height = window.innerHeight;
-        }
-        this.initRatio();
-        Url.OSD_PATH = this.mConfig.osd;
-        Url.RES_PATH = `resources/`;
-        Url.RESUI_PATH = `${Url.RES_PATH}ui/`;
-        initLocales(path.relative(__dirname, `${Url.RES_PATH}/locales/{{lng}}.json`));
-        // const locales = require(`${Url.RES_PATH}locales`);
-        // initLocales(resources);
     }
 
     private initRatio() {
