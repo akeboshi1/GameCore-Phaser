@@ -660,8 +660,6 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
     public onManagerReady(key: string) {
         if (!this.mManagersReadyStates.has(key)) return;
 
-        Logger.getInstance().debug("room.onManagerReady ", key);
-
         this.mManagersReadyStates.set(key, true);
         let allReady = true;
         this.mManagersReadyStates.forEach((val) => {
