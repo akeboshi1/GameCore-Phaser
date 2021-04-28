@@ -1147,6 +1147,7 @@ export class Render extends RPCPeer implements GameMain, IRender {
     @Export()
     public hideLoading() {
         if (!this.mSceneManager) {
+            Logger.getInstance().log("====> sceneManager no exist");
             return;
         }
         this.mSceneManager.sleepScene(SceneName.LOADING_SCENE);

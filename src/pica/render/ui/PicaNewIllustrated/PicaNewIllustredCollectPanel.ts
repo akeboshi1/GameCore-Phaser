@@ -155,7 +155,6 @@ class IllustratedCollectItem extends Phaser.GameObjects.Container {
         if (this.send) this.send.runWith(["combrewards", this.combiData]);
     }
 
-
     private getbgName(difficult: number) {
         let temps;
         switch (difficult) {
