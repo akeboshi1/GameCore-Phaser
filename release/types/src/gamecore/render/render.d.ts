@@ -6,7 +6,7 @@ import { Account } from "./account";
 import { SceneManager } from "./scenes/scene.manager";
 import { LocalStorageManager } from "./managers/local.storage.manager";
 import { CamerasManager } from "./cameras/cameras.manager";
-import { ElementStateType, GameMain, IDragonbonesModel, IFramesModel, ILauncherConfig, IScenery, IPos, IPosition45Obj, LogicPos, Size, ValueResolver, IWorkerParam } from "structure";
+import { ElementStateType, GameMain, IDragonbonesModel, IFramesModel, ILauncherConfig, IScenery, IPos, IPosition45Obj, LogicPos, Size, IWorkerParam } from "structure";
 import { DisplayManager } from "./managers/display.manager";
 import { InputManager } from "./input/input.manager";
 import { EditorCanvasManager } from "./managers/editor.canvas.manager";
@@ -49,37 +49,37 @@ export declare class Render extends RPCPeer implements GameMain, IRender {
     protected mRenderParam: IWorkerParam;
     protected mMainPeerParam: IWorkerParam;
     protected mPhysicalPeerParam: IWorkerParam;
-    protected mCallBack: Function;
-    protected _moveStyle: number;
-    protected _curTime: number;
-    protected mGame: Phaser.Game;
-    protected gameConfig: Phaser.Types.Core.GameConfig;
-    protected mAccount: Account;
+    private mCallBack;
+    private _moveStyle;
+    private _curTime;
+    private mGame;
+    private gameConfig;
+    private mAccount;
     /**
      * 场景缩放系数（layermanager，缩放场景中容器大小）
      */
-    protected mScaleRatio: number;
+    private mScaleRatio;
     /**
      * 判断加载几x资源
      */
-    protected mUIRatio: number;
+    private mUIRatio;
     /**
      * 面板缩放系数
      */
-    protected mUIScale: number;
+    private mUIScale;
     /**
      * 房间尺寸
      */
-    protected mRoomSize: IPosition45Obj;
-    protected mRoomMiniSize: IPosition45Obj;
-    protected isPause: boolean;
-    protected mConnectFailFunc: Function;
-    protected mGameCreatedFunc: Function;
-    protected mGameLoadedFunc: Function;
-    protected mWorkerDestroyMap: Map<string, ValueResolver<null>>;
-    protected mCacheTarget: any;
-    protected readonly hiddenDelay = 60000;
-    protected mHiddenTime: any;
+    private mRoomSize;
+    private mRoomMiniSize;
+    private isPause;
+    private mConnectFailFunc;
+    private mGameCreatedFunc;
+    private mGameLoadedFunc;
+    private mWorkerDestroyMap;
+    private mCacheTarget;
+    private readonly hiddenDelay;
+    private mHiddenTime;
     constructor(config: ILauncherConfig, callBack?: Function);
     get renderParam(): IWorkerParam;
     get mainPeerParam(): IWorkerParam;
@@ -282,11 +282,11 @@ export declare class Render extends RPCPeer implements GameMain, IRender {
     setRoomSize(size: IPosition45Obj, miniSize: IPosition45Obj): void;
     protected onWorkerUnlinked(worker: string): void;
     protected initConfig(): void;
-    protected onFullScreenChange(): void;
-    protected gameCreated(keyEvents: any): void;
     protected initRatio(): void;
-    protected resumeScene(): void;
-    protected pauseScene(): void;
-    protected dealTipsScene(sceneName: string, show: boolean): void;
+    private onFullScreenChange;
+    private gameCreated;
+    private resumeScene;
+    private pauseScene;
+    private dealTipsScene;
     get mainPeer(): any;
 }

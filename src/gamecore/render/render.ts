@@ -9,7 +9,7 @@ import { SceneManager } from "./scenes/scene.manager";
 import { LocalStorageManager } from "./managers/local.storage.manager";
 import { PlayScene } from "./scenes/play.scene";
 import { CamerasManager } from "./cameras/cameras.manager";
-
+import * as path from "path";
 import {
     ElementStateType,
     GameMain,
@@ -87,38 +87,38 @@ export class Render extends RPCPeer implements GameMain, IRender {
     protected mMainPeerParam: IWorkerParam;
     protected mPhysicalPeerParam: IWorkerParam;
     // protected mRequireContext;
-    protected mCallBack: Function;
-    protected _moveStyle: number = 0;
-    protected _curTime: number;
-    protected mGame: Phaser.Game;
-    protected gameConfig: Phaser.Types.Core.GameConfig;
-    protected mAccount: Account;
+    private mCallBack: Function;
+    private _moveStyle: number = 0;
+    private _curTime: number;
+    private mGame: Phaser.Game;
+    private gameConfig: Phaser.Types.Core.GameConfig;
+    private mAccount: Account;
     /**
      * 场景缩放系数（layermanager，缩放场景中容器大小）
      */
-    protected mScaleRatio: number;
+    private mScaleRatio: number;
     /**
      * 判断加载几x资源
      */
-    protected mUIRatio: number;
+    private mUIRatio: number;
     /**
      * 面板缩放系数
      */
-    protected mUIScale: number;
+    private mUIScale: number;
     /**
      * 房间尺寸
      */
-    protected mRoomSize: IPosition45Obj;
-    protected mRoomMiniSize: IPosition45Obj;
+    private mRoomSize: IPosition45Obj;
+    private mRoomMiniSize: IPosition45Obj;
 
-    protected isPause: boolean = false;
-    protected mConnectFailFunc: Function;
-    protected mGameCreatedFunc: Function;
-    protected mGameLoadedFunc: Function;
-    protected mWorkerDestroyMap: Map<string, ValueResolver<null>> = new Map();
-    protected mCacheTarget: any;
-    protected readonly hiddenDelay = 60000;
-    protected mHiddenTime: any;
+    private isPause: boolean = false;
+    private mConnectFailFunc: Function;
+    private mGameCreatedFunc: Function;
+    private mGameLoadedFunc: Function;
+    private mWorkerDestroyMap: Map<string, ValueResolver<null>> = new Map();
+    private mCacheTarget: any;
+    private readonly hiddenDelay = 60000;
+    private mHiddenTime: any;
     constructor(config: ILauncherConfig, callBack?: Function) {
         super(config.renderPeerKey);
         Logger.getInstance().log("config ====>", config);
@@ -1692,25 +1692,39 @@ export class Render extends RPCPeer implements GameMain, IRender {
         if (this.mConfig.height === undefined) {
             this.mConfig.height = window.innerHeight;
         }
-        this.initRatio();
-        // Url.OSD_PATH = this.mConfig.osd;
-        // Url.RES_PATH = `resources/`;
-        // Url.RESUI_PATH = `${Url.RES_PATH}ui/`;
+        Url.OSD_PATH = this.mConfig.osd;
+        Url.RES_PATH = `resources/`;
+        Url.RESUI_PATH = `${Url.RES_PATH}ui/`;
+        // this.initRatio();
         // initLocales(path.relative(__dirname, `${Url.RES_PATH}/locales/{{lng}}.json`));
         // const locales = require(`${Url.RES_PATH}locales`);
         // initLocales(resources);
     }
 
-    // protected connectReconnect() {
+    protected initRatio() {
+        this.mScaleRatio = Math.ceil(this.mConfig.devicePixelRatio || UiUtils.baseDpr);
+        this.mConfig.scale_ratio = this.mScaleRatio;
+        this.mUIRatio = Math.round(this.mConfig.devicePixelRatio || UiUtils.baseDpr);
+        if (this.mUIRatio > UiUtils.MaxDpr) {
+            this.mUIRatio = UiUtils.MaxDpr;
+        }
+        const scaleW = (this.mConfig.width / this.DEFAULT_WIDTH) * (this.mConfig.devicePixelRatio / this.mUIRatio);
+        let desktop = false;
+        if (this.game) desktop = this.game.device.os.desktop;
+        this.mUIScale = desktop ? UiUtils.baseScale : scaleW;
+        // this.mUIScale = (this.mConfig.width / this.DEFAULT_WIDTH) * (this.mConfig.devicePixelRatio / this.mUIRatio);
+    }
+
+    // private connectReconnect() {
     //     if (!this.game) return;
     //     this.createGame();
     // }
 
-    protected onFullScreenChange() {
+    private onFullScreenChange() {
         this.resize(this.mGame.scale.gameSize.width, this.mGame.scale.gameSize.height);
     }
 
-    protected gameCreated(keyEvents: any) {
+    private gameCreated(keyEvents: any) {
         if (this.mCallBack) {
             this.mCallBack();
         }
@@ -1734,21 +1748,7 @@ export class Render extends RPCPeer implements GameMain, IRender {
         // this.mGame.scale.on("orientationchange", this.onOrientationChange, this);
     }
 
-    protected initRatio() {
-        this.mScaleRatio = Math.ceil(this.mConfig.devicePixelRatio || UiUtils.baseDpr);
-        this.mConfig.scale_ratio = this.mScaleRatio;
-        this.mUIRatio = Math.round(this.mConfig.devicePixelRatio || UiUtils.baseDpr);
-        if (this.mUIRatio > UiUtils.MaxDpr) {
-            this.mUIRatio = UiUtils.MaxDpr;
-        }
-        const scaleW = (this.mConfig.width / this.DEFAULT_WIDTH) * (this.mConfig.devicePixelRatio / this.mUIRatio);
-        let desktop = false;
-        if (this.game) desktop = this.game.device.os.desktop;
-        this.mUIScale = desktop ? UiUtils.baseScale : scaleW;
-        // this.mUIScale = (this.mConfig.width / this.DEFAULT_WIDTH) * (this.mConfig.devicePixelRatio / this.mUIRatio);
-    }
-
-    protected resumeScene() {
+    private resumeScene() {
         const type = this.mConfig.platform;
         switch (type) {
             case PlatFormType.APP:
@@ -1772,7 +1772,7 @@ export class Render extends RPCPeer implements GameMain, IRender {
         }
     }
 
-    protected pauseScene() {
+    private pauseScene() {
         Logger.getInstance().debug(`#BlackSceneFromBackground; world.pauseScene(); isPause:${this.isPause}; mGame:${this.mGame}`);
         if (this.isPause) {
             return;
@@ -1787,7 +1787,7 @@ export class Render extends RPCPeer implements GameMain, IRender {
         }
     }
 
-    protected dealTipsScene(sceneName: string, show: boolean) {
+    private dealTipsScene(sceneName: string, show: boolean) {
         if (!this.mGame.scene.getScene(sceneName)) {
             const sceneClass = this.sceneManager.getSceneClass(sceneName);
             this.mGame.scene.add(sceneName, sceneClass);
