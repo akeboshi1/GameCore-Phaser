@@ -482,6 +482,7 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
                 this.addWalkableMark(tempX, tempY, sprite.id, isTerrain ? 0 : 1, canWalk);
             }
         }
+        if (isTerrain) this.showDecorateGrid();
     }
 
     public removeFromWalkableMap(sprite: ISprite, isTerrain: boolean = false) {
@@ -727,7 +728,7 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
         this.game.renderPeer.switchDecorateMouseManager();
 
         // show girds
-        this.game.renderPeer.showEditGrids(this.miniSize);
+        this.game.renderPeer.showEditGrids(this.miniSize, this.mWalkableMap);
     }
 
     public cameraFollowHandler() {
@@ -788,7 +789,7 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
         // waite for response: _OP_VIRTUAL_WORLD_RES_CLIENT_EDIT_MODEL_RESULT
     }
 
-    // 检测sprite是否与现有walkableMap有碰撞重叠，有碰撞重叠为0，无碰撞重叠为1
+    // 检测sprite是否与现有walkableMap有碰撞重叠，无碰撞区域为0，无碰撞重叠为1，有碰撞重叠为2
     public checkSpriteConflictToWalkableMap(sprite: ISprite, isTerrain: boolean = false, pos?: IPos): number[][] {
         const walkableData = this.getSpriteWalkableData(sprite, isTerrain, pos);
         if (!walkableData) {
@@ -815,7 +816,7 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
                 const val = this.isWalkable(tempX, tempY);
                 if (!val) {
                     // Logger.getInstance().debug("#place ", val, pos, tempX, tempY);
-                    result[i][j] = 0;
+                    result[i][j] = 2;
                 }
             }
         }
@@ -1013,10 +1014,11 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
         } else if (nodeType === op_def.NodeType.TerrainNodeType) {
             for (const sp of content.sprites) {
                 if (this.mTerrainManager.get(sp.id)) continue;
-                const sprite = new Sprite(sp, nodeType);
-                addList.push(sprite);
+                // const sprite = new Sprite(sp, nodeType);
+                addList.push(sp);
             }
-            this.mTerrainManager.add(addList);
+            // this.mTerrainManager.add(addList);
+            this.mTerrainManager.addSpritesToCache(addList);
         }
     }
 
@@ -1257,5 +1259,11 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
     private setState(state: op_client.IStateGroup) {
         if (!this.mStateManager) this.mStateManager = new RoomStateManager(this);
         this.mStateManager.setState(state);
+    }
+
+    private showDecorateGrid() {
+        if (!this.isDecorating) return;
+        if (!this.mTerrainManager.hasAddComplete) return;
+        this.game.renderPeer.showEditGrids(this.mMiniSize, this.mWalkableMap);
     }
 }

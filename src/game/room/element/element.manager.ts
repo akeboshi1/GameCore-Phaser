@@ -327,7 +327,7 @@ export class ElementManager extends PacketHandler implements IElementManager {
         const element = this.mElements.get(id);
         if (!element) return;
         element.state = true;
-        // 编辑小屋时，更新浮动功能栏
+        // 编辑小屋
         if (this.mRoom.isDecorating) {
             this.mRoom.game.emitter.emit(MessageType.DECORATE_ELEMENT_CREATED, id);
         }

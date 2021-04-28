@@ -39,4 +39,5 @@ export interface ILauncherConfig {
     readonly screenHeight: number;
     readonly connection?: any;
     readonly parent?: string;
+    readonly config_root?: string;
 }

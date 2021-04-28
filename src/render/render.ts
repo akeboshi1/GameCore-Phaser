@@ -1147,7 +1147,7 @@ export class Render extends RPCPeer implements GameMain, IRender {
     @Export()
     public hideLoading() {
         if (!this.mSceneManager) {
-            return;
+            return Logger.getInstance().error(`HideLoading failed. SceneManager does not exist.`);
         }
         this.mSceneManager.sleepScene(SceneName.LOADING_SCENE);
     }
@@ -1588,9 +1588,9 @@ export class Render extends RPCPeer implements GameMain, IRender {
     }
 
     @Export()
-    public showEditGrids(size: IPosition45Obj) {
+    public showEditGrids(size: IPosition45Obj, maps: number[][]) {
         if (this.displayManager) {
-            this.displayManager.showGrids(size);
+            this.displayManager.showGrids(size, maps);
         }
     }
 

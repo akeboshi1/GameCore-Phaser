@@ -1,7 +1,7 @@
 import {Room} from "../../../../game/room/room/room";
 import {op_client, op_def, op_pkt_def, op_virtual_world} from "pixelpai_proto";
 import {ISprite, LayerName, MessageType, ModuleName} from "structure";
-import {IPos, Logger, LogicPos, Position45} from "utils";
+import {IPos, Logger, LogicPos, Position45, ValueResolver} from "utils";
 import {PBpacket} from "net-socket-packet";
 import {Sprite} from "baseModel";
 import {BaseDataConfigManager} from "../../config";
@@ -20,8 +20,10 @@ export class DecorateManager {
     private mActionQueue: DecorateAction[] = [];
     private mSelectedActionQueue: DecorateAction[] = [];
     private mSelectedID: number = -1;
+    private mElementCreatedResolver: Map<number, ValueResolver<any>> = new Map();
 
     constructor(private mRoom: Room, private mEntryData?: { id: number, baseID?: string }) {
+        this.room.game.emitter.on(MessageType.DECORATE_ELEMENT_CREATED, this.elementCreated, this);
     }
 
     public get room(): Room {
@@ -33,6 +35,7 @@ export class DecorateManager {
     }
 
     public destroy() {
+        this.room.game.emitter.off(MessageType.DECORATE_ELEMENT_CREATED, this.elementCreated, this);
         this.mActionQueue.length = 0;
         this.mSelectedActionQueue.length = 0;
         this.mBagDataMap.clear();
@@ -266,7 +269,7 @@ export class DecorateManager {
         const conflictMap = this.mRoom.checkSpriteConflictToWalkableMap(sprite);
         let canPlace = true;
         for (const rows of conflictMap) {
-            if (rows.indexOf(0) >= 0) {
+            if (rows.indexOf(2) >= 0) {
                 canPlace = false;
                 break;
             }
@@ -350,14 +353,15 @@ export class DecorateManager {
         }, op_def.NodeType.ElementNodeType);
 
         const act = new DecorateAction(spriteData, DecorateActionType.Add, new DecorateActionData({pos: spriteData.pos}));
-        act.execute(this);
-        this.select(indexID);
-        this.mSelectedActionQueue.push(act);
+        act.execute(this).then(() => {
+            this.select(indexID);
+            this.mSelectedActionQueue.push(act);
 
-        const checkData = this.checkSelectedCanPlace();
-        if (checkData.canPlace) {
-            this.ensureSelectedChanges();
-        }
+            const checkData = this.checkSelectedCanPlace();
+            if (checkData.canPlace) {
+                this.ensureSelectedChanges();
+            }
+        });
     }
 
     // 主动动作集合 call by motion
@@ -446,6 +450,17 @@ export class DecorateManager {
         }
     }
 
+    public createElementCreatedResolver(id: number) {
+        if (this.mElementCreatedResolver.has(id)) {
+            Logger.getInstance().warn("resolver created multi times, id: ", id);
+            return this.mElementCreatedResolver.get(id);
+        }
+
+        const resolver = new ValueResolver<any>();
+        this.mElementCreatedResolver.set(id, resolver);
+        return resolver;
+    }
+
     private getPIData(baseID: string): Promise<IElementPi> {
         const configMgr = <BaseDataConfigManager> this.room.game.configManager;
         return configMgr.getItemPIDataByID(baseID);
@@ -510,6 +525,13 @@ export class DecorateManager {
         }
         return result;
     }
+
+    private elementCreated(id: number) {
+        if (!this.mElementCreatedResolver.has(id)) return;
+        const resolver = this.mElementCreatedResolver.get(id);
+        resolver.resolve(id);
+        this.mElementCreatedResolver.delete(id);
+    }
 }
 
 export enum DecorateActionType {
@@ -525,131 +547,151 @@ class DecorateAction {
     }
 
     // 执行
-    public execute(mng: DecorateManager) {
+    public execute(mng: DecorateManager): Promise<any> {
         switch (this.type) {
             case DecorateActionType.Add:
-                if (this.data.pos === undefined) return;
-                this.createElement(mng, this.data.pos.x, this.data.pos.y);
+                if (this.data.pos === undefined) return Promise.reject("data.pos === undefined");
+                return this.createElement(mng, this.data.pos.x, this.data.pos.y);
                 break;
             case DecorateActionType.Remove:
-                this.removeElement(mng);
+                return this.removeElement(mng);
                 break;
             case DecorateActionType.Move:
-                if (this.data.moveVec === undefined) return;
-                // Logger.getInstance().debug("#place moveVec: ", this.data.moveVec);
-                this.setElementPos(mng, this.target.pos.x + this.data.moveVec.x, this.target.pos.y + this.data.moveVec.y);
+                if (this.data.moveVec === undefined) return Promise.reject("data.moveVec === undefined");
+                return this.setElementPos(mng, this.target.pos.x + this.data.moveVec.x, this.target.pos.y + this.data.moveVec.y);
                 break;
             case DecorateActionType.Rotate:
-                if (this.data.rotateTimes === undefined) return;
+                if (this.data.rotateTimes === undefined) return Promise.reject("data.rotateTimes === undefined");
                 let tmp = this.data.rotateTimes;
                 let dir = this.target.direction;
                 while (tmp > 0) {
                     tmp--;
                     dir = this.nextDir(dir);
                 }
-                this.setElementDirection(mng, dir);
+                return this.setElementDirection(mng, dir);
                 break;
             default:
+                return Promise.reject("type error");
                 break;
         }
     }
 
     // 撤销
-    public reverse(mng: DecorateManager) {
+    public reverse(mng: DecorateManager): Promise<any> {
         switch (this.type) {
             case DecorateActionType.Add:
-                this.removeElement(mng);
+                return this.removeElement(mng);
                 break;
             case DecorateActionType.Remove:
-                if (this.data.pos === undefined) return;
-                this.createElement(mng, this.data.pos.x, this.data.pos.y);
+                if (this.data.pos === undefined) return Promise.reject("data.pos === undefined");
+                return this.createElement(mng, this.data.pos.x, this.data.pos.y);
                 break;
             case DecorateActionType.Move:
-                if (this.data.moveVec === undefined) return;
-                this.setElementPos(mng, this.target.pos.x - this.data.moveVec.x, this.target.pos.y - this.data.moveVec.y);
+                if (this.data.moveVec === undefined) return Promise.reject("data.moveVec === undefined");
+                return this.setElementPos(mng, this.target.pos.x - this.data.moveVec.x, this.target.pos.y - this.data.moveVec.y);
                 break;
             case DecorateActionType.Rotate:
-                if (this.data.rotateTimes === undefined) return;
+                if (this.data.rotateTimes === undefined) return Promise.reject("data.rotateTimes === undefined");
                 let tmp = this.data.rotateTimes;
                 let dir = this.target.direction;
                 while (tmp > 0) {
                     tmp--;
                     dir = this.preDir(dir);
                 }
-                this.setElementDirection(mng, dir);
+                return this.setElementDirection(mng, dir);
                 break;
             default:
+                return Promise.reject("type error");
                 break;
         }
     }
 
-    private createElement(mng: DecorateManager, x: number, y: number) {
-        this.target.setPosition(x, y);
-        mng.room.elementManager.add([this.target]);
-        const element = mng.room.elementManager.get(this.target.id);
-        if (element && element instanceof BlockObject) {
-            element.setInputEnable(InputEnable.Enable);
-        }
+    private createElement(mng: DecorateManager, x: number, y: number): Promise<any> {
+        return new Promise<any>((resolve) => {
+            const resolver = mng.createElementCreatedResolver(this.target.id);
+            resolver.promise(() => {
+                this.target.setPosition(x, y);
+                mng.room.elementManager.add([this.target]);
+            }).then(() => {
+                const element = mng.room.elementManager.get(this.target.id);
+                if (element && element instanceof BlockObject) {
+                    element.setInputEnable(InputEnable.Enable);
+                }
 
-        const baseID = mng.getBaseIDBySN(this.target.sn);
-        if (baseID === "") {
-            Logger.getInstance().error("can not find data from config : ", this.target);
-            mng.room.game.renderPeer.showAlertView("can not find data from config : " + this.target.nickname);
-            return;
-        }
-        const newCount = mng.setBagCount(baseID, -1);
+                const baseID = mng.getBaseIDBySN(this.target.sn);
+                if (baseID === "") {
+                    Logger.getInstance().error("can not find data from config : ", this.target);
+                    mng.room.game.renderPeer.showAlertView("can not find data from config : " + this.target.nickname);
+                    return;
+                }
+                const newCount = mng.setBagCount(baseID, -1);
 
-        mng.room.game.emitter.emit(MessageType.DECORATE_UPDATE_ELEMENT_COUNT, baseID, newCount);
+                mng.room.game.emitter.emit(MessageType.DECORATE_UPDATE_ELEMENT_COUNT, baseID, newCount);
+                resolve();
+            });
+        });
     }
 
-    private removeElement(mng: DecorateManager) {
-        mng.room.elementManager.remove(this.target.id);
+    private removeElement(mng: DecorateManager): Promise<any> {
+        return new Promise<any>((resolve, reject) => {
+            mng.room.elementManager.remove(this.target.id);
 
-        const baseID = mng.getBaseIDBySN(this.target.sn);
-        if (baseID === "") {
-            Logger.getInstance().error("can not find data from config : ", this.target);
-            mng.room.game.renderPeer.showAlertView("can not find data from config : " + this.target.nickname);
-            return;
-        }
-        const newCount = mng.setBagCount(baseID, 1);
+            const baseID = mng.getBaseIDBySN(this.target.sn);
+            if (baseID === "") {
+                Logger.getInstance().error("can not find data from config : ", this.target);
+                mng.room.game.renderPeer.showAlertView("can not find data from config : " + this.target.nickname);
+                return;
+            }
+            const newCount = mng.setBagCount(baseID, 1);
 
-        mng.room.game.emitter.emit(MessageType.DECORATE_UPDATE_ELEMENT_COUNT, baseID, newCount);
+            mng.room.game.emitter.emit(MessageType.DECORATE_UPDATE_ELEMENT_COUNT, baseID, newCount);
+            resolve(null);
+        });
     }
 
     private setElementPos(mng: DecorateManager, x: number, y: number) {
-        const freePos = new LogicPos(x, y);
-        const gridPos = Position45.transformTo90(Position45.transformTo45(freePos, mng.room.miniSize), mng.room.miniSize);
+        return new Promise<any>((resolve, reject) => {
+            const freePos = new LogicPos(x, y);
+            const gridPos = Position45.transformTo90(Position45.transformTo45(freePos, mng.room.miniSize), mng.room.miniSize);
 
-        mng.room.removeFromWalkableMap(this.target);
-        this.target.setPosition(gridPos.x, gridPos.y);
-        mng.room.addToWalkableMap(this.target);
-        mng.room.game.renderPeer.setPosition(this.target.id, this.target.pos.x, this.target.pos.y);
-        mng.room.game.physicalPeer.setPosition(this.target.id, this.target.pos.x, this.target.pos.y);
-
-        if (mng.selectedID === this.target.id) {
             mng.room.removeFromWalkableMap(this.target);
-            const checkData = mng.checkSelectedCanPlace();
-            mng.room.game.emitter.emit(MessageType.DECORATE_UPDATE_SELECTED_ELEMENT_CAN_PLACE, checkData.canPlace);
-            mng.room.game.renderPeer.workerEmitter(MessageType.DECORATE_UPDATE_SELECTED_ELEMENT_POSITION);
-            const element = mng.room.elementManager.get(this.target.id);
-            if (element) element.showRefernceArea(checkData.conflictMap);
-        }
+            this.target.setPosition(gridPos.x, gridPos.y);
+            mng.room.addToWalkableMap(this.target);
+            mng.room.game.renderPeer.setPosition(this.target.id, this.target.pos.x, this.target.pos.y);
+            mng.room.game.physicalPeer.setPosition(this.target.id, this.target.pos.x, this.target.pos.y);
+
+            if (mng.selectedID === this.target.id) {
+                mng.room.removeFromWalkableMap(this.target);
+                const checkData = mng.checkSelectedCanPlace();
+                mng.room.game.emitter.emit(MessageType.DECORATE_UPDATE_SELECTED_ELEMENT_CAN_PLACE, checkData.canPlace);
+                mng.room.game.renderPeer.workerEmitter(MessageType.DECORATE_UPDATE_SELECTED_ELEMENT_POSITION);
+                const element = mng.room.elementManager.get(this.target.id);
+                if (element) element.showRefernceArea(checkData.conflictMap);
+            }
+            resolve(null);
+        });
     }
 
     private setElementDirection(mng: DecorateManager, dir: number) {
-        mng.room.removeFromWalkableMap(this.target);
-        this.target.setDirection(dir);
-        mng.room.addToWalkableMap(this.target);
-        mng.room.game.physicalPeer.updateModel({id: this.target.id, currentAnimation: this.target.currentAnimation});
-        mng.room.game.physicalPeer.addBody(this.target.id);
-
-        if (mng.selectedID === this.target.id) {
+        return new Promise<any>((resolve, reject) => {
             mng.room.removeFromWalkableMap(this.target);
-            const checkData = mng.checkSelectedCanPlace();
-            mng.room.game.emitter.emit(MessageType.DECORATE_UPDATE_SELECTED_ELEMENT_CAN_PLACE, checkData.canPlace);
-            const element = mng.room.elementManager.get(this.target.id);
-            if (element) element.showRefernceArea(checkData.conflictMap);
-        }
+            this.target.setDirection(dir);
+            mng.room.addToWalkableMap(this.target);
+            mng.room.game.physicalPeer.updateModel({
+                id: this.target.id,
+                currentAnimation: this.target.currentAnimation
+            });
+            mng.room.game.physicalPeer.addBody(this.target.id);
+
+            if (mng.selectedID === this.target.id) {
+                mng.room.removeFromWalkableMap(this.target);
+                const checkData = mng.checkSelectedCanPlace();
+                mng.room.game.emitter.emit(MessageType.DECORATE_UPDATE_SELECTED_ELEMENT_CAN_PLACE, checkData.canPlace);
+                const element = mng.room.elementManager.get(this.target.id);
+                if (element) element.showRefernceArea(checkData.conflictMap);
+            }
+            resolve(null);
+        });
     }
 
     private nextDir(dir: number): number {

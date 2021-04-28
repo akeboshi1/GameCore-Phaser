@@ -10,7 +10,7 @@ export class PicaDecorateControlMediator extends BasicMediator {
         super(ModuleName.PICADECORATECONTROL_NAME, game);
 
         this.game.emitter.on(MessageType.DECORATE_UPDATE_SELECTED_ELEMENT_CAN_PLACE, this.updateCanPlace, this);
-        this.game.emitter.on(MessageType.DECORATE_ELEMENT_CREATED, this.updatePanelPos, this);
+        // this.game.emitter.on(MessageType.DECORATE_ELEMENT_CREATED, this.updatePanelPos, this);
     }
 
     show(param?: any) {
@@ -30,7 +30,7 @@ export class PicaDecorateControlMediator extends BasicMediator {
 
     destroy() {
         this.game.emitter.off(MessageType.DECORATE_UPDATE_SELECTED_ELEMENT_CAN_PLACE, this.updateCanPlace, this);
-        this.game.emitter.off(MessageType.DECORATE_ELEMENT_CREATED, this.updatePanelPos, this);
+        // this.game.emitter.off(MessageType.DECORATE_ELEMENT_CREATED, this.updatePanelPos, this);
         super.destroy();
     }
 
@@ -69,11 +69,11 @@ export class PicaDecorateControlMediator extends BasicMediator {
     private updateCanPlace(canPlace: boolean) {
         if (this.mView) this.mView.updateCanPlace(canPlace);
     }
-    private updatePanelPos(id: number) {
-        if (id !== this.mShowData.id) return;
-
-        if (this.mView) {
-            this.mView.updatePosition();
-        }
-    }
+    // private updatePanelPos(id: number) {
+    //     if (id !== this.mShowData.id) return;
+    //
+    //     if (this.mView) {
+    //         this.mView.updatePosition();
+    //     }
+    // }
 }
