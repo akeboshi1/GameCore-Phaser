@@ -1,5 +1,5 @@
 import { BasicScene } from "baseRender";
-import { IPosition45Obj, Position45, LogicPos } from "utils";
+import { IPosition45Obj, Position45, LogicPos, IPos } from "utils";
 import { Render } from "gamecoreRender";
 import { LayerName } from "structure";
 
@@ -8,11 +8,39 @@ import { LayerName } from "structure";
  */
 export class TerrainGrid {
     private graphics: Phaser.GameObjects.Graphics;
+    private dirty = false;
+    private map: number[][];
+    private deltaTime = 500;
+    private curDelta = 0;
     constructor(private render: Render, private miniSize: IPosition45Obj) {
     }
 
-    drawGrid(map: number[][]) {
-        if (!map) {
+    setMap(map: number[][]) {
+        this.map = map;
+        this.dirty = true;
+    }
+
+    public update(time: number, delta: number) {
+        this.curDelta += delta;
+        if (this.curDelta >= this.deltaTime) {
+            if (this.dirty) {
+                this.dirty = false;
+                this.drawGrid();
+            }
+        }
+    }
+
+    destroy() {
+        if (this.graphics) {
+            this.graphics.destroy();
+            this.graphics = undefined;
+        }
+        this.dirty = false;
+        this.map = null;
+    }
+
+    private drawGrid() {
+        if (!this.map) {
             return;
         }
         if (!this.graphics) {
@@ -25,25 +53,16 @@ export class TerrainGrid {
         }
         this.graphics.clear();
         this.graphics.lineStyle(1, 0xffffff, 0.5);
-        // this.graphics.x = (this.miniSize.rows * (-this.miniSize.tileWidth / 2));
-        const cols = map[0].length;
-        const rows = map.length;
+        const cols = this.map[0].length;
+        const rows = this.map.length;
         for (let i = 0; i < rows; i++) {
             for (let j = 0; j < cols; j++) {
-                if (map[i][j] !== -1) {
+                if (this.map[i][j] !== -1) {
                     this.draw(j, i);
                 }
             }
         }
-        // this.graphics.closePath();
         this.graphics.strokePath();
-    }
-
-    destroy() {
-        if (this.graphics) {
-            this.graphics.destroy();
-            this.graphics = undefined;
-        }
     }
 
     private draw(x: number, y: number) {
