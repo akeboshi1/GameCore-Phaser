@@ -1,7 +1,7 @@
 import { Game } from "gamecore";
 import { load, loadArr, Logger } from "utils";
 import { BaseConfigData } from "./base.config.data";
-import { ConfigPath } from "./config";
+import { ConfigPath, config_path } from "./config";
 export class BaseConfigManager {
     protected baseDirname: string;
     protected dataMap: Map<string, BaseConfigData> = new Map();
@@ -162,11 +162,11 @@ export class BaseConfigManager {
     }
     protected getBasePath() {
         return new Promise((resolve, reject) => {
-            const url = ConfigPath.CONFIG_PATH;
+            const url = ConfigPath.getConfigPath();
             load(url, "json").then((value: XMLHttpRequest) => {
                 const json = value.response;
                 const version = json.version;
-                const baseUrl = ConfigPath.BASE_PATH + version + "/";
+                const baseUrl = ConfigPath.getBasePath() + version + "/";
                 resolve(baseUrl);
             }, (reponse) => {
                 Logger.getInstance().error("版本配置加载失败URL: ", url);
