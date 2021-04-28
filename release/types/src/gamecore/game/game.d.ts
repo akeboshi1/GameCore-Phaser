@@ -137,16 +137,16 @@ export declare class Game extends PacketHandler implements IConnectListener, Clo
     protected initWorld(): Promise<void>;
     protected createManager(): void;
     protected onClearGame(): void;
+    protected onInitVirtualWorldPlayerInit(packet: PBpacket): Promise<void>;
+    protected onSelectCharacter(): void;
+    protected onGotoAnotherGame(packet: PBpacket): void;
+    protected onAvatarGameModeHandler(packet: PBpacket): void;
     private initGame;
-    private onGotoAnotherGame;
     private _createAnotherGame;
     private _onGotoAnotherGame;
     private clearGame;
-    private onInitVirtualWorldPlayerInit;
     private loadGameConfig;
-    private onSelectCharacter;
     private decodeConfigs;
-    private onAvatarGameModeHandler;
     private _run;
     private update;
 }
