@@ -198,7 +198,6 @@ export class Render extends RPCPeer implements GameMain, IRender {
         this.linkTo(key, url).onceReady(() => {
             this.mMainPeer = this.remote[key][peerName];
             this.mMainPeer.updateFps();
-            this.initResUrl();
             this.createGame();
             Logger.getInstance().debug("worker onReady");
         });
@@ -211,9 +210,6 @@ export class Render extends RPCPeer implements GameMain, IRender {
             this.mPhysicalPeer.start();
             Logger.getInstance().debug("Physcialworker onReady");
         });
-    }
-
-    public initResUrl() {
     }
 
     get physicalPeer(): any {

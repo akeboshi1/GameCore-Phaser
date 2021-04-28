@@ -86,7 +86,6 @@ export declare class Render extends RPCPeer implements GameMain, IRender {
     get physicalPeerParam(): IWorkerParam;
     linkMain(key: any, url: any, peerName: any): void;
     linkPhysical(key: any, url: any, peerName: any): void;
-    initResUrl(): void;
     get physicalPeer(): any;
     setKeyBoardHeight(height: number): void;
     get config(): ILauncherConfig;
