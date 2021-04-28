@@ -7,23 +7,25 @@ import { PicaNewIllustratedListPanel } from "./PicaNewIllustratedListPanel";
 import { op_client } from "pixelpai_proto";
 import { PicaNewIllustratedDetailPanel } from "./PicaNewIllustratedDetailPanel";
 import { ClickEvent } from "apowophaserui";
-import { IExtendCountablePackageItem, IGalleryCombination, MainUIRedType } from "../../../structure";
+import { IExtendCountablePackageItem, IGalleryCombination, IGalleryLevelGroup, IUpdateGalleryDatas, MainUIRedType } from "../../../structure";
 import { PicaNewFuriniDetailPanel } from "./PicaNewFuriniDetailPanel";
 import { CommonBackground } from "..";
 import { PicaNewCombinationPanel } from "./PicaNewCombinationPanel";
 import { PicaNewLevelRewardsPanel } from "./PicaNewLevelRewardsPanel";
+import { PicaNewAlreadyCollectedPanel } from "./PicaNewAlreadyCollectedPanel";
 import { PicaNewCollectBadgePanel } from "./PicaNewCollectBadgePanel";
+import { PicaNewCollectRewardsPanel } from "./PicaNewCollectRewardsPanel";
 export class PicaNewIllustratedPanel extends PicaBasePanel {
     private mBackground: CommonBackground;
     private content: Phaser.GameObjects.Container;
     private listPanel: PicaNewIllustratedListPanel;
     private detailPanel: PicaNewIllustratedDetailPanel;
-    private backButton: ButtonEventDispatcher;
-    private titleTex: Phaser.GameObjects.Text;
     private furiDetail: PicaNewFuriniDetailPanel;
     private combinePanel: PicaNewCombinationPanel;
     private levelRewardsPanel: PicaNewLevelRewardsPanel;
+    private alreadyCollectPanel: PicaNewAlreadyCollectedPanel;
     private collectBadgePanel: PicaNewCollectBadgePanel;
+    private collectRewardsPanel: PicaNewCollectRewardsPanel;
     private redObj: any;
     constructor(uiManager: UiManager) {
         super(uiManager);
@@ -53,22 +55,11 @@ export class PicaNewIllustratedPanel extends PicaBasePanel {
         const width = this.scaleWidth, height = this.scaleHeight;
         this.mBackground = new CommonBackground(this.scene, 0, 0, width, height);
         this.add(this.mBackground);
-        this.backButton = new ButtonEventDispatcher(this.scene, 0, 0);
-        this.backButton.setSize(80 * this.dpr, 22 * this.dpr);
-        this.backButton.enable = true;
-        this.backButton.on(ClickEvent.Tap, this.onCloseHandler, this);
-        this.backButton.x = this.backButton.width * 0.5 + 10 * this.dpr;
-        this.backButton.y = 45 * this.dpr;
-        const closeImg = this.scene.make.image({ key: UIAtlasName.uicommon, frame: "back_arrow" });
-        closeImg.x = -this.backButton.width * 0.5 + closeImg.width * 0.5 + 10 * this.dpr;
-        this.titleTex = this.scene.make.text({ text: i18n.t("illustrate.title"), style: UIHelper.whiteStyle(this.dpr, 20) }).setOrigin(0, 0.5);
-        this.titleTex.x = closeImg.x + closeImg.width * 0.5 + 15 * this.dpr;
-        this.backButton.add([closeImg, this.titleTex]);
         const conWdith = 295 * this.dpr;
         const conHeight = 405 * this.dpr;
         this.content = this.scene.make.container(undefined, false);
         this.content.setSize(conWdith, conHeight);
-        this.add([this.content, this.backButton]);
+        this.add([this.content]);
         this.resize();
         super.init();
     }
@@ -78,24 +69,32 @@ export class PicaNewIllustratedPanel extends PicaBasePanel {
         if (this.redObj) this.setRedsState(this.redObj);
     }
 
-    setGallaryData(content: op_client.OP_CLIENT_REQ_VIRTUAL_WORLD_PKT_UPDATE_GALLERY, combinations: IGalleryCombination[]) {
+    setGallaryData(content: IUpdateGalleryDatas) {
         this.tempDatas["gallery"] = content;
-        this.tempDatas["combinations"] = combinations;
         if (!this.mInitialized) return;
         if (this.detailPanel) {
-            this.detailPanel.setGallaryData(content, combinations);
+            this.detailPanel.setGallaryData(content);
         }
     }
-    setDoneMissionList(list: number[]) {
-        this.tempDatas["donemission"] = list;
-        if (!this.mInitialized) return;
-        if (this.detailPanel) this.detailPanel.setDoneMissionList(list);
+    setDisplayCollectDatas(combinations: IGalleryCombination[]) {
+        this.tempDatas["combinations"] = combinations;
+        if (this.mInitialized) return;
+        if (this.detailPanel) this.detailPanel.setDisplayCollectDatas(combinations);
     }
+    setAlreadyCollectDatas(combinations: IGalleryCombination) {
+        this.tempDatas["combinations"] = combinations;
+
+    }
+
+    setLevelGalleryGroups(groups: IGalleryLevelGroup[]) {
+        this.levelRewardsPanel.setRewardsData(groups);
+    }
+
     setRedsState(obj: any) {
         this.redObj = obj;
         if (!this.mInitialized) return;
         if (this.listPanel) this.listPanel.setRedsState(this.redObj["redlist"]);
-        if (this.detailPanel) this.detailPanel.setRedsState(this.redObj[MainUIRedType.GALLERY]);
+        //  if (this.detailPanel) this.detailPanel.setRedsState(this.redObj[MainUIRedType.GALLERY]);
 
     }
     private openListPanel() {
@@ -111,7 +110,6 @@ export class PicaNewIllustratedPanel extends PicaBasePanel {
             this.content.add(this.listPanel);
         }
         this.listPanel.visible = true;
-        this.titleTex.visible = true;
     }
     private hideListPanel() {
         this.listPanel.visible = false;
@@ -120,8 +118,8 @@ export class PicaNewIllustratedPanel extends PicaBasePanel {
     private openDetailPanel() {
         this.showDetailPanel();
         if (this.tempDatas) {
-            this.detailPanel.setGallaryData(this.tempDatas.gallery, this.tempDatas.combinations);
-            if (this.tempDatas.donemission) this.detailPanel.setDoneMissionList(this.tempDatas.donemission);
+            this.detailPanel.setGallaryData(this.tempDatas.gallery);
+            this.detailPanel.setDisplayCollectDatas(this.tempDatas.combinations);
         }
         if (this.redObj) this.detailPanel.setRedsState(this.redObj[MainUIRedType.GALLERY]);
     }
@@ -134,7 +132,6 @@ export class PicaNewIllustratedPanel extends PicaBasePanel {
         }
         this.detailPanel.resize(this.scaleWidth, this.scaleHeight);
         this.detailPanel.visible = true;
-        this.titleTex.visible = false;
     }
 
     private hideDetailPanel() {
@@ -180,6 +177,7 @@ export class PicaNewIllustratedPanel extends PicaBasePanel {
 
     private openLevelRewardsPanel() {
         this.showLevelRewardsPanel();
+        this.render.renderEmitter(this.key + "_getlevelexprewards");
     }
     private showLevelRewardsPanel() {
         if (!this.levelRewardsPanel) {
@@ -196,13 +194,31 @@ export class PicaNewIllustratedPanel extends PicaBasePanel {
         this.levelRewardsPanel.visible = false;
     }
 
+    private openAlreadCollectedPanel() {
+        this.showAlreadCollectedPanel();
+    }
+    private showAlreadCollectedPanel() {
+        if (!this.alreadyCollectPanel) {
+            this.alreadyCollectPanel = new PicaNewAlreadyCollectedPanel(this.scene, this.scaleWidth, this.scaleHeight, this.dpr, this.scale);
+            this.alreadyCollectPanel.setHandler(new Handler(this, this.onAlreadyCollectedHandler));
+        }
+        this.content.add(this.alreadyCollectPanel);
+        this.alreadyCollectPanel.visible = true;
+        this.alreadyCollectPanel.refreshMask();
+    }
+
+    private hideAlreadCollectedPanel() {
+        this.content.remove(this.alreadyCollectPanel);
+        this.alreadyCollectPanel.visible = false;
+    }
+
     private openCollectBadgePanel() {
         this.showCollectBadgePanel();
     }
     private showCollectBadgePanel() {
         if (!this.collectBadgePanel) {
             this.collectBadgePanel = new PicaNewCollectBadgePanel(this.scene, this.scaleWidth, this.scaleHeight, this.dpr, this.scale);
-            this.collectBadgePanel.setHandler(new Handler(this, this.onLevelReceivedHandler));
+            this.collectBadgePanel.setHandler(new Handler(this, this.onCollectBadgeHandler));
         }
         this.content.add(this.collectBadgePanel);
         this.collectBadgePanel.visible = true;
@@ -210,10 +226,26 @@ export class PicaNewIllustratedPanel extends PicaBasePanel {
     }
 
     private hideCollectBadgePanel() {
-        this.content.remove(this.collectBadgePanel);
-        this.collectBadgePanel.visible = false;
+        this.content.remove(this.alreadyCollectPanel);
+        this.alreadyCollectPanel.visible = false;
+    }
+    private openCollectRewardsPanel() {
+        this.showCollectRewardsPanel();
+    }
+    private showCollectRewardsPanel() {
+        if (!this.collectBadgePanel) {
+            this.collectBadgePanel = new PicaNewCollectBadgePanel(this.scene, this.scaleWidth, this.scaleHeight, this.dpr, this.scale);
+            this.collectBadgePanel.setHandler(new Handler(this, this.onCollectRewardsHandler));
+        }
+        this.content.add(this.collectBadgePanel);
+        this.collectBadgePanel.visible = true;
+        this.collectBadgePanel.refreshMask();
     }
 
+    private hideCollectRewardsPanel() {
+        this.content.remove(this.alreadyCollectPanel);
+        this.alreadyCollectPanel.visible = false;
+    }
     private onListHandler(tag: string, data?: any) {
         if (tag === "make") {
             this.render.renderEmitter(this.key + "_openpanel", tag);
@@ -222,6 +254,8 @@ export class PicaNewIllustratedPanel extends PicaBasePanel {
             this.openDetailPanel();
         } else if (tag === "cooking") {
             this.render.renderEmitter(this.key + "_openpanel", tag);
+        } else if (tag === "back") {
+            this.onCloseHandler();
         }
     }
 
@@ -229,18 +263,26 @@ export class PicaNewIllustratedPanel extends PicaBasePanel {
         if (tag === "close") {
             this.hideDetailPanel();
             this.showListPanel();
-        } else if (tag === "rewards") {
-            // this.render.renderEmitter(this.key + "_queryrewards", data);
-            if (data === 1) {
-                this.openLevelRewardsPanel();
-            } else if (data === 2) {
-                this.openCollectBadgePanel();
-            }
         } else if (tag === "combinations") {
-            // this.render.renderEmitter(this.key + "_querycombinations", data);
             this.openCombinationPanel();
         } else if (tag === "furidetail") {
             this.openFuriDetail(data);
+            if (data.status === 1) this.render.renderEmitter(this.key + "_changeGalleryStatus", data.id);
+        } else if (tag === "displaycollect") {
+            this.render.renderEmitter(this.key + "_getdisplatcollectedlist");
+        } else if (tag === "badgerewards") {
+            this.openCollectBadgePanel();
+        } else if (tag === "showlevelrewards") {
+            this.openLevelRewardsPanel();
+            this.hideDetailPanel();
+        } else if (tag === "showcombination") {
+            this.openCombinationPanel();
+        } else if (tag === "combinationrewards") {
+            this.openCollectRewardsPanel();
+        } else if (tag === "showalreadycollected") {
+            this.openAlreadCollectedPanel();
+        } else if (tag === "getlightrewardsd") {
+            this.render.renderEmitter(this.key + "_getgallerylightrewards", data);
         }
     }
 
@@ -255,22 +297,27 @@ export class PicaNewIllustratedPanel extends PicaBasePanel {
             this.hideLevelRewardsPanel();
             this.showDetailPanel();
         } else if (tag === "rewards") {
-            this.render.renderEmitter(this.key + "_querylevelrewards", data);
+            this.render.renderEmitter(this.key + "_getgalleryexprewards", data);
         } else if (tag === "allrewards") {
-            this.render.renderEmitter(this.key + "_queryalllevelrewards", data);
+            this.render.renderEmitter(this.key + "_getallgalleryrewards");
         }
+    }
+
+    private onAlreadyCollectedHandler(tag: string, data: any) {
+
+    }
+
+    private onCollectBadgeHandler(tag: string, data: any) {
+
+    }
+    private onCollectRewardsHandler(tag: string, data: any) {
+
     }
 
     private onFuriDetailHandler() {
         this.hideFuriDetailPanel();
     }
     private onCloseHandler() {
-        if (this.detailPanel && this.detailPanel.visible) {
-            this.hideDetailPanel();
-            // this.openListPanel();
-            this.showListPanel();
-            return;
-        }
         this.render.renderEmitter(this.key + "_close");
     }
 }

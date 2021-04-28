@@ -57,7 +57,6 @@ export class PicaNewIllustratedGalleryPanel extends Phaser.GameObjects.Container
         this.maxPage = Math.ceil(list.length / (this.pagInterval * 4));
         this.setItemPages(1);
         this.pageCountText.text = "01";
-
     }
 
     init() {
@@ -145,6 +144,7 @@ export class PicaNewIllustratedGalleryPanel extends Phaser.GameObjects.Container
             let showdetail = false;
             if (status === 3) {
                 cell.playLightAni(new Handler(this, () => {
+                    if (this.send) this.send.runWith(["getlightrewardsd", itemData.id]);
                 }));
             } else if (status === 1) {
                 showdetail = true;
@@ -152,7 +152,7 @@ export class PicaNewIllustratedGalleryPanel extends Phaser.GameObjects.Container
                 showdetail = true;
             }
             if (showdetail)
-                if (this.send) this.send.runWith(["furidetail", cell.itemData]);
+                if (this.send) this.send.runWith(["furidetail", itemData]);
 
         }
     }

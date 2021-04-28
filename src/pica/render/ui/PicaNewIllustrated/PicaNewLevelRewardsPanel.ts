@@ -14,10 +14,11 @@ export class PicaNewLevelRewardsPanel extends Phaser.GameObjects.Container {
     private titleTex: Phaser.GameObjects.Text;
     private mLevelGrid: GameGridTable;
     private rewardsPanel: RightRewardsPanel;
+    private curLevelItem: LevelItem;
     private dpr: number;
     private zoom: number;
     private send: Handler;
-    private galleryData: any[];
+    private galleryData: IGalleryLevelGroup[];
     private redMap: Map<number, Phaser.GameObjects.Image> = new Map();
     constructor(scene: Phaser.Scene, width: number, height: number, dpr: number, zoom: number) {
         super(scene);
@@ -35,18 +36,25 @@ export class PicaNewLevelRewardsPanel extends Phaser.GameObjects.Container {
         this.backButton.y = -this.height * 0.5 + 45 * this.dpr;
         this.oneKeyBtn.x = this.width * 0.5 - this.oneKeyBtn.width * 0.5 - 10 * this.dpr;
         this.oneKeyBtn.y = this.backButton.y;
-        this.titlebg.y = -this.height * 0.5 + 75 * this.dpr;
+        this.titlebg.x = this.width * 0.5 - 152 * this.dpr;
+        this.titlebg.y = - 260 * this.dpr;
+        this.titleTex.x = this.titlebg.x;
         this.titleTex.y = this.titlebg.y;
+        this.rewardsPanel.x = this.titleTex.x;
+        this.rewardsPanel.y = this.titleTex.y + this.rewardsPanel.height * 0.5 + 35 * this.dpr;
+        this.mLevelGrid.y = 25 * this.dpr;
+        this.mLevelGrid.x = -this.width * 0.5 + this.mLevelGrid.width - 10 * this.dpr;
     }
     public refreshMask() {
-        this.mLevelGrid.refresh();
+        this.mLevelGrid.resetMask();
     }
     setHandler(send: Handler) {
         this.send = send;
     }
 
-    setRewardsData(gallerys: any[]) { // op_client.OP_CLIENT_REQ_VIRTUAL_WORLD_PKT_UPDATE_GALLERY
+    setRewardsData(gallerys: IGalleryLevelGroup[]) {
         this.galleryData = gallerys;
+        this.mLevelGrid.setItems(gallerys);
     }
 
     init() {
@@ -62,28 +70,26 @@ export class PicaNewLevelRewardsPanel extends Phaser.GameObjects.Container {
         this.oneKeyBtn.setFontStyle("bold");
 
         this.oneKeyBtn.on(ClickEvent.Tap, this.onAllReceiveHandler, this);
-        this.titlebg = this.scene.make.image({ key: UIAtlasName.illustrate_new, frame: "illustrate_favorites_popup_title" });
-        this.titleTex = this.scene.make.text({ style: UIHelper.colorStyle("#205BBC", 15 * this.dpr) }).setOrigin(0, 0.5);
+        this.titlebg = this.scene.make.image({ key: UIAtlasName.illustrate_new, frame: "illustrate_survey_title_bg" });
+        this.titleTex = this.scene.make.text({ style: UIHelper.colorStyle("#996600", 15 * this.dpr) }).setOrigin(0.5);
         this.createGridTable();
         this.rewardsPanel = new RightRewardsPanel(this.scene, 266 * this.dpr, 443 * this.dpr, this.dpr, this.zoom);
         this.rewardsPanel.setHandler(new Handler(this, this.onReceivedHandler));
-        this.rewardsPanel.x = this.width * 0.5 - this.rewardsPanel.width * 0.5 - 16 * this.dpr;
-        this.rewardsPanel.y = -20 * this.dpr;
-        this.add([this.mBackground, this.backButton, this.oneKeyBtn, this.titlebg, this.titleTex, this.mLevelGrid, this.rewardsPanel]);
+        this.add([this.mBackground, this.backButton, this.oneKeyBtn, this.titlebg, this.titleTex, this.rewardsPanel, this.mLevelGrid]);
         this.resize();
     }
     private createGridTable() {
         const tableHeight = this.height - 110 * this.dpr;
-        const tableWidth = 80 * this.dpr;
+        const tableWidth = 50 * this.dpr;
         const cellWidth = 48 * this.dpr;
         const cellHeight = 85 * this.dpr;
         const tableConfig = {
             x: 0,
             y: 0,
             table: {
-                width: this.width,
+                width: tableWidth,
                 height: tableHeight,
-                columns: 4,
+                columns: 1,
                 cellWidth,
                 cellHeight,
                 reuseCellContainer: true,
@@ -97,6 +103,7 @@ export class PicaNewLevelRewardsPanel extends Phaser.GameObjects.Container {
                     cellContainer = new LevelItem(this.scene, cellWidth, cellHeight, this.dpr, this.zoom);
                 }
                 cellContainer.setLevelData(item);
+                if (!this.curLevelItem) this.onSelectItemHandler(cellContainer);
                 return cellContainer;
             },
         };
@@ -105,11 +112,12 @@ export class PicaNewLevelRewardsPanel extends Phaser.GameObjects.Container {
         this.mLevelGrid.on("cellTap", (cell) => {
             this.onSelectItemHandler(cell);
         });
-        this.mLevelGrid.y = 25 * this.dpr;
-        this.mLevelGrid.x = -this.width * 0.5 + this.mLevelGrid.width;
     }
     private onSelectItemHandler(cell: LevelItem) {
-        // if (this.send) this.send.runWith(["furidetail", cell.groupData]);
+        if (this.curLevelItem === cell) return;
+        if (this.curLevelItem) this.curLevelItem.select = false;
+        cell.select = true;
+        this.curLevelItem = cell;
         const groupData = cell.groupData;
         this.titleTex.text = i18n.t("illustrate.levelrewardtips", { name: groupData.level });
         this.rewardsPanel.setRewardsData(groupData);
@@ -145,7 +153,7 @@ class RightRewardsPanel extends Phaser.GameObjects.Container {
         this.rightBg.clear();
         this.rightBg.fillStyle(0x7A9EF8, 1);
         this.rightBg.fillRoundedRect(-width * 0.5, -height * 0.5, width, height);
-        const cellHeight = 96 * this.dpr;
+        const cellHeight = 124 * this.dpr;
         const conWidth = 108 * dpr, conHeight = height;
         this.gridLayout = new GridLayoutGroup(this.scene, conWidth, conHeight, {
             cellSize: new Phaser.Math.Vector2(conWidth, cellHeight),
@@ -172,7 +180,7 @@ class RightRewardsPanel extends Phaser.GameObjects.Container {
         for (const item of this.gridItems) {
             item.visible = false;
         }
-        const itemWidth = 330 * this.dpr, itemHeight = 96 * this.dpr;
+        const itemWidth = 108 * this.dpr, itemHeight = 124 * this.dpr;
         for (let i = 0; i < datas.length; i++) {
             let item: RewardItem;
             const data = datas[i];
@@ -187,6 +195,7 @@ class RightRewardsPanel extends Phaser.GameObjects.Container {
             }
             item.setItemData(datas[i]);
             item.visible = true;
+            if (!this.curItem) this.onSelectHandler(undefined, item);
         }
         this.gridLayout.Layout();
     }
@@ -197,6 +206,7 @@ class RightRewardsPanel extends Phaser.GameObjects.Container {
         this.curItem = obj;
         this.rewardsTips.text = i18n.t("illustrate.meetrewardtips", { name: obj.galleryData.exp });
     }
+
 }
 class RewardItem extends ButtonEventDispatcher {
     public galleryData: IGalleryLevel;
@@ -211,15 +221,18 @@ class RewardItem extends ButtonEventDispatcher {
         this.setSize(width, height);
         this.bg = this.scene.make.image({ key: UIAtlasName.illustrate_new, frame: "illustrate_survey_reward_icon" });
         this.itemIcon = new DynamicImage(scene, 0, 0);
-        this.itemIcon.y = -20 * dpr;
+        this.itemIcon.y = -10 * dpr;
         this.rewardBtn = new ThreeSliceButton(this.scene, 62 * this.dpr, 25 * this.dpr, UIAtlasName.uicommon, UIHelper.threeRedSmall, UIHelper.threeRedSmall, i18n.t("common.receivereward"));
-        this.rewardBtn.setTextStyle(UIHelper.brownishStyle(this.dpr));
+        this.rewardBtn.y = 40 * dpr;
+        this.rewardBtn.setTextStyle(UIHelper.whiteStyle(this.dpr));
         this.rewardBtn.setFontStyle("bold");
         this.rewardBtn.on(ClickEvent.Tap, this.onRewardHandler, this);
+        this.add([this.bg, this.itemIcon, this.rewardBtn]);
+        this.enable = true;
     }
     public setItemData(data: IGalleryLevel) {
         this.galleryData = data;
-        const itemData = data.rewardItems[0];
+        const itemData = data.rewardItems;
         const url = Url.getOsdRes(itemData.texturePath);
         this.itemIcon.load(url, this, () => {
             this.itemIcon.visible = true;
@@ -227,15 +240,15 @@ class RewardItem extends ButtonEventDispatcher {
         this.itemIcon.scale = this.dpr / this.zoom;
         if (data.received === 1) {
             this.rewardBtn.setFrameNormal(UIHelper.threeGraySmall);
-            this.rewardBtn.setText("common.receivereward");
+            this.rewardBtn.setText(i18n.t("common.receivereward"));
             this.rewardBtn.disInteractive();
         } else if (data.received === 2) {
             this.rewardBtn.setFrameNormal(UIHelper.threeRedSmall);
-            this.rewardBtn.setText("common.receivereward");
+            this.rewardBtn.setText(i18n.t("common.receivereward"));
             this.rewardBtn.setInteractive();
         } else if (data.received === 3) {
             this.rewardBtn.setFrameNormal(UIHelper.threeRedSmall);
-            this.rewardBtn.setText("common.received");
+            this.rewardBtn.setText(i18n.t("common.received"));
             this.rewardBtn.disInteractive();
         }
     }
@@ -248,7 +261,7 @@ class RewardItem extends ButtonEventDispatcher {
     }
 
     private onRewardHandler() {
-        if (this.send) this.send.runWith(["recivedreward", this.galleryData]);
+        if (this.send) this.send.runWith([this.galleryData]);
     }
 }
 
@@ -256,7 +269,9 @@ class LevelItem extends ButtonEventDispatcher {
     public groupData: IGalleryLevelGroup;
     private bg: Phaser.GameObjects.Image;
     private linebg: Phaser.GameObjects.Image;
+    private iconImg: Phaser.GameObjects.Image;
     private levelTex: Phaser.GameObjects.Text;
+    private redImg: Phaser.GameObjects.Image;
     constructor(scene: Phaser.Scene, width: number, height: number, dpr: number, zoom: number) {
         super(scene, 0, 0);
         this.dpr = dpr;
@@ -264,15 +279,28 @@ class LevelItem extends ButtonEventDispatcher {
         this.setSize(width, height);
         this.linebg = this.scene.make.image({ key: UIAtlasName.illustrate_new, frame: "illustrate_survey_lv_bg_line" });
         this.bg = this.scene.make.image({ key: UIAtlasName.illustrate_new, frame: "illustrate_survey_lv_bg" });
-        this.levelTex = this.scene.make.text({ style: UIHelper.whiteStyle(dpr) });
-        this.add([this.linebg, this.bg, this.levelTex]);
+        this.levelTex = this.scene.make.text({ style: UIHelper.whiteStyle(dpr) }).setOrigin(0.5);
+        this.iconImg = this.scene.make.image({ key: UIAtlasName.illustrate_new, frame: "illustrate_survey_lv_icon_s" });
+        this.redImg = this.scene.make.image({ key: UIAtlasName.illustrate_new, frame: "illustrate_survey_lv_prompt_s" });
+        this.redImg.x = -this.iconImg.width * 0.5;
+        this.redImg.y = -this.iconImg.height * 0.5;
+        this.add([this.linebg, this.bg, this.iconImg, this.levelTex, this.redImg]);
     }
     public setLevelData(data: IGalleryLevelGroup) {
         this.groupData = data;
         this.levelTex.text = data.level < 10 ? `0${data.level}` : `${data.level}`;
+        this.redImg.visible = data.rewards;
     }
 
     public set select(value: boolean) {
-        this.bg.setFrame(value ? "illustrate_survey_lv_bg1" : "illustrate_survey_lv_bg");
+        if (value) {
+            this.bg.setFrame("illustrate_survey_lv_bg1");
+            this.iconImg.setFrame("illustrate_survey_lv_icon");
+            this.redImg.visible = false;
+        } else {
+            this.bg.setFrame("illustrate_survey_lv_bg");
+            this.iconImg.setFrame("illustrate_survey_lv_icon_s");
+            this.redImg.visible = this.groupData.rewards;
+        }
     }
 }

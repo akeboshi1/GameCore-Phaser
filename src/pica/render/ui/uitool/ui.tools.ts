@@ -65,8 +65,9 @@ export class UITools {
         backButton.on(ClickEvent.Tap, fun, caller);
         const closeImg = scene.make.image({ key: UIAtlasName.uicommon, frame: "back_arrow" });
         closeImg.x = -backButton.width * 0.5 + closeImg.width * 0.5 + 10 * dpr;
-        const titleTex = scene.make.text({ text: title, style: UIHelper.whiteStyle(dpr, 20) }).setOrigin(0, 0.5);
+        const titleTex = scene.make.text({ text: title, style: UIHelper.whiteStyle(dpr, 16) }).setOrigin(0, 0.5);
         titleTex.x = closeImg.x + closeImg.width * 0.5 + 15 * dpr;
+        titleTex.setFontStyle("bold");
         backButton.add([closeImg, titleTex]);
         return backButton;
     }
