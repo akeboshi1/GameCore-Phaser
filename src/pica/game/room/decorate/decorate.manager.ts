@@ -269,7 +269,7 @@ export class DecorateManager {
         const conflictMap = this.mRoom.checkSpriteConflictToWalkableMap(sprite);
         let canPlace = true;
         for (const rows of conflictMap) {
-            if (rows.indexOf(0) >= 0) {
+            if (rows.indexOf(2) >= 0) {
                 canPlace = false;
                 break;
             }
