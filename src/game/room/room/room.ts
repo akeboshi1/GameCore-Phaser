@@ -788,7 +788,7 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
         // waite for response: _OP_VIRTUAL_WORLD_RES_CLIENT_EDIT_MODEL_RESULT
     }
 
-    // 检测sprite是否与现有walkableMap有碰撞重叠，有碰撞重叠为0，无碰撞重叠为1
+    // 检测sprite是否与现有walkableMap有碰撞重叠，无碰撞区域为0，无碰撞重叠为1，有碰撞重叠为2
     public checkSpriteConflictToWalkableMap(sprite: ISprite, isTerrain: boolean = false, pos?: IPos): number[][] {
         const walkableData = this.getSpriteWalkableData(sprite, isTerrain, pos);
         if (!walkableData) {
@@ -815,7 +815,7 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
                 const val = this.isWalkable(tempX, tempY);
                 if (!val) {
                     // Logger.getInstance().debug("#place ", val, pos, tempX, tempY);
-                    result[i][j] = 0;
+                    result[i][j] = 2;
                 }
             }
         }
