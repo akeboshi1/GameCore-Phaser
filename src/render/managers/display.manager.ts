@@ -15,6 +15,7 @@ import { ServerPosition } from "../display/debugs/server.pointer";
 import { IDisplayObject } from "../display";
 import { FramesModel } from "baseModel";
 import { LayerEnum } from "game-capsule";
+import { TerrainGrid } from "../display/terrain.grid";
 
 export enum NodeType {
     UnknownNodeType = 0,
@@ -67,7 +68,7 @@ export class DisplayManager {
     private preLoadList: any[];
     private loading: boolean = false;
     private mModelCache: Map<number, any>;
-    private mGridLayer: Phaser.GameObjects.Container;
+    private mGridLayer: TerrainGrid;
 
     // ====实例id
     private uuid: number = 0;
@@ -577,49 +578,35 @@ export class DisplayManager {
         }
     }
 
-    public showGrids(size: IPosition45Obj) {
-        if (this.mGridLayer) {
-            this.mGridLayer.destroy();
-        }
-        const scene = this.sceneManager.getMainScene();
-        this.mGridLayer = scene.make.container(undefined, false);
-        const graphics = scene.make.graphics(undefined, false);
-        graphics.lineStyle(1, 0xffffff, 0.5);
-        graphics.beginPath();
-        for (let i = 0; i <= size.rows; i++) {
-            this.drawLine(graphics, 0, i, size.cols, i, size);
-        }
-        for (let i = 0; i <= size.cols; i++) {
-            this.drawLine(graphics, i, 0, i, size.rows, size);
-        }
-        graphics.closePath();
-        graphics.strokePath();
-        this.mGridLayer.add(graphics);
-        // this.mGridLayer.x += size.tileWidth / 2;
-        // this.mGridLayer.y += size.tileHeight / 2;
-        (<PlayScene>scene).layerManager.addToLayer(LayerName.MIDDLE, this.mGridLayer);
+    public showGrids(size: IPosition45Obj, maps: number[][]) {
+        // if (this.mGridLayer) {
+        //     this.mGridLayer.destroy();
+        // }
+        // const scene = this.sceneManager.getMainScene();
+        // this.mGridLayer = scene.make.container(undefined, false);
+        // const graphics = scene.make.graphics(undefined, false);
+        // graphics.lineStyle(1, 0xffffff, 0.5);
+        // graphics.beginPath();
+        // for (let i = 0; i <= size.rows; i++) {
+        //     this.drawLine(graphics, 0, i, size.cols, i, size);
+        // }
+        // for (let i = 0; i <= size.cols; i++) {
+        //     this.drawLine(graphics, i, 0, i, size.rows, size);
+        // }
+        // graphics.closePath();
+        // graphics.strokePath();
+        // this.mGridLayer.add(graphics);
+        // // this.mGridLayer.x += size.tileWidth / 2;
+        // // this.mGridLayer.y += size.tileHeight / 2;
+        // (<PlayScene>scene).layerManager.addToLayer(LayerName.MIDDLE, this.mGridLayer);
+        this.mGridLayer = new TerrainGrid(this.render, size);
+        this.mGridLayer.drawGrid(maps);
     }
 
     public hideGrids() {
         if (this.mGridLayer) {
             this.mGridLayer.destroy();
         }
-    }
-
-    private drawLine(
-        graphics: Phaser.GameObjects.Graphics,
-        startX: number,
-        endX: number,
-        startY: number,
-        endY: number,
-        size: IPosition45Obj
-    ) {
-        let point = new LogicPos(startX, endX);
-        point = Position45.transformTo90(point, size);
-        graphics.moveTo(point.x, point.y);
-        point = new LogicPos(startY, endY);
-        point = Position45.transformTo90(point, size);
-        graphics.lineTo(point.x, point.y);
     }
 
     private loadProgress() {

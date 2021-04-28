@@ -727,7 +727,7 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
         this.game.renderPeer.switchDecorateMouseManager();
 
         // show girds
-        this.game.renderPeer.showEditGrids(this.miniSize);
+        this.game.renderPeer.showEditGrids(this.miniSize, this.mWalkableMap);
     }
 
     public cameraFollowHandler() {
