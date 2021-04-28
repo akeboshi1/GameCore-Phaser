@@ -74,8 +74,8 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
         super();
         this.mainPeer = peer;
         this.connect = new Connection(peer);
-        this.addPacketListener();
-        this.update(new Date().getTime());
+        // this.addPacketListener();
+        // this.update(new Date().getTime());
     }
 
     public setConfigPath(path: any) {
@@ -751,6 +751,27 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
         this.mAvatarType = content.avatarStyle;
     }
 
+    protected update(current: number, delta: number = 0) {
+        if (this.isDestroy) return;
+        this._run(current, delta);
+
+        const now: number = new Date().getTime();
+        const run_time: number = now - current;
+
+        if (run_time >= interval) {
+            // I am late.
+            Logger.getInstance().info(`Update late.  run_time: ${run_time} `);
+            this.update(now, run_time);
+        } else {
+            // Logger.getInstance().info(`${interval - run_time}`);
+            setTimeout(() => {
+                const when: number = new Date().getTime();
+                this.update(when, when - now);
+
+            }, interval - run_time);
+        }
+    }
+
     private initGame() {
         // if (this.mRoomManager) this.mRoomManager.addPackListener();
         // if (this.mUIManager) this.mUIManager.addPackListener();
@@ -935,26 +956,5 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
         if (this.connect) this.connect.update();
         if (this.mRoomManager) this.mRoomManager.update(current, delta);
         if (this.mHttpLoadManager) this.mHttpLoadManager.update(current, delta);
-    }
-
-    private update(current: number, delta: number = 0) {
-        if (this.isDestroy) return;
-        this._run(current, delta);
-
-        const now: number = new Date().getTime();
-        const run_time: number = now - current;
-
-        if (run_time >= interval) {
-            // I am late.
-            Logger.getInstance().info(`Update late.  run_time: ${run_time} `);
-            this.update(now, run_time);
-        } else {
-            // Logger.getInstance().info(`${interval - run_time}`);
-            setTimeout(() => {
-                const when: number = new Date().getTime();
-                this.update(when, when - now);
-
-            }, interval - run_time);
-        }
     }
 }

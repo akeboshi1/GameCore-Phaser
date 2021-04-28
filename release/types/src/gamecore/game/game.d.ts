@@ -141,6 +141,7 @@ export declare class Game extends PacketHandler implements IConnectListener, Clo
     protected onSelectCharacter(): void;
     protected onGotoAnotherGame(packet: PBpacket): void;
     protected onAvatarGameModeHandler(packet: PBpacket): void;
+    protected update(current: number, delta?: number): void;
     private initGame;
     private _createAnotherGame;
     private _onGotoAnotherGame;
@@ -148,6 +149,5 @@ export declare class Game extends PacketHandler implements IConnectListener, Clo
     private loadGameConfig;
     private decodeConfigs;
     private _run;
-    private update;
 }
 export {};
