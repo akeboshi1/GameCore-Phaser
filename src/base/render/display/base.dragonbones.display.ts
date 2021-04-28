@@ -257,7 +257,7 @@ export class BaseDragonbonesDisplay extends BaseDisplay {
             //     }
             // });
             const textureAtlasData = this.mArmatureDisplay.armature["_replaceTextureAtlasData"];
-            if (textureAtlasData.renderTexture) {
+            if (textureAtlasData && textureAtlasData.renderTexture) {
                 if (ReplacedTextures.has(textureAtlasData.renderTexture.key)) {
                     const count = ReplacedTextures.get(textureAtlasData.renderTexture.key);
                     if (count > 1) {
