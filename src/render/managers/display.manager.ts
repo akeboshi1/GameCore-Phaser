@@ -1,4 +1,4 @@
-import {Handler, IPos, IPosition45Obj, Logger, LogicPos, Position45, Tool} from "utils";
+import {Handler, IPosition45Obj, Logger, LogicPos, Tool} from "utils";
 import { SceneManager } from "../scenes/scene.manager";
 import { FramesDisplay } from "../display/frames/frames.display";
 import { PlayScene } from "../scenes/play.scene";
@@ -90,6 +90,7 @@ export class DisplayManager {
             this.loading = true;
             this.loadProgress();
         }
+        if (this.mGridLayer) this.mGridLayer.update(time, delta);
     }
 
     public resize(width: number, height: number) {
@@ -600,7 +601,7 @@ export class DisplayManager {
         // // this.mGridLayer.y += size.tileHeight / 2;
         // (<PlayScene>scene).layerManager.addToLayer(LayerName.MIDDLE, this.mGridLayer);
         this.mGridLayer = new TerrainGrid(this.render, size);
-        this.mGridLayer.drawGrid(maps);
+        this.mGridLayer.setMap(maps);
     }
 
     public hideGrids() {

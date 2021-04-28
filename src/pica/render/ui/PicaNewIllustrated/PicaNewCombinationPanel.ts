@@ -33,7 +33,7 @@ export class PicaNewCombinationPanel extends Phaser.GameObjects.Container {
         this.setSize(w, h);
     }
     public refreshMask() {
-        this.mGameGrid.refresh();
+        this.mGameGrid.resetMask();
     }
     init() {
         const backWidth = 1.5 * this.width, backheight = 3 * this.height;

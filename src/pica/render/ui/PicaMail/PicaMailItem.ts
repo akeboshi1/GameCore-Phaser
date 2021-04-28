@@ -13,6 +13,7 @@ export class PicaMailItem extends Phaser.GameObjects.Container {
     private extendBg: NineSlicePatch;
     private headbg: Phaser.GameObjects.Image;
     private headIcon: Phaser.GameObjects.Image;
+    private accessoryImg: Phaser.GameObjects.Image;
     private redpoint: Phaser.GameObjects.Image;
     private mailName: Phaser.GameObjects.Text;
     private mailSender: Phaser.GameObjects.Text;
@@ -45,6 +46,9 @@ export class PicaMailItem extends Phaser.GameObjects.Container {
         this.headIcon = this.scene.make.image({ key: UIAtlasName.mail, frame: "mail_unread_mark" });
         this.headIcon.y = this.headbg.y;
         this.headIcon.x = this.headbg.x;
+        this.accessoryImg = this.scene.make.image({ key: UIAtlasName.mail, frame: "mail_annex_icon" });
+        this.accessoryImg.x = this.headIcon.x + this.headIcon.width * 0.5 - 5 * dpr;
+        this.accessoryImg.y = this.headIcon.y + this.headIcon.height * 0.5 + 0 * dpr;
         this.redpoint = this.scene.make.image({ key: UIAtlasName.uicommon, frame: "home_hint_small" });
         this.redpoint.x = this.headIcon.x + this.headIcon.width * 0.5 - 5 * dpr;
         this.redpoint.y = this.headIcon.y - this.headIcon.height * 0.5 + 0 * dpr;
@@ -64,7 +68,7 @@ export class PicaMailItem extends Phaser.GameObjects.Container {
         this.mailButton.on(ClickEvent.Tap, this.onMailButtonHandler, this);
         this.arrow = this.scene.make.image({ key: UIAtlasName.mail, frame: "mail_read_arrow" });
         this.arrow.y = conHeight * 0.5 - this.arrow.height * 0.5 - 5 * dpr;
-        this.content.add([this.bg, this.headbg, this.headIcon, this.redpoint, this.mailName, this.mailSender, this.expirationTime, this.mailButton, this.arrow]);
+        this.content.add([this.bg, this.headbg, this.headIcon, this.accessoryImg, this.redpoint, this.mailName, this.mailSender, this.expirationTime, this.mailButton, this.arrow]);
         this.add([this.extendBg, this.content]);
         this.setSize(conWidth, conHeight);
         this.extendBg.visible = false;
@@ -83,6 +87,7 @@ export class PicaMailItem extends Phaser.GameObjects.Container {
         this.setMailState(data.hasRead);
         this.expirationTime.setTimeData(data.sentTime, data.expireTime, data.hasRead);
         if (this.mIsExtend) this.setExtendMailData(data);
+        this.accessoryImg.visible = !data.attachTaken;
     }
 
     public setMailState(read: boolean) {
@@ -148,6 +153,15 @@ export class PicaMailItem extends Phaser.GameObjects.Container {
         this.mExtend.setItemData(mailData);
         if (!this.mailData.hasRead) this.send.runWith(["readmail", this.mailData.id]);
         this.mailButton.visible = !mailData.attachTaken;
+        if (mailData.attachTaken) {
+            this.mailButton.disInteractive();
+            this.mailButton.setFrameNormal(UIHelper.threeGraySmall);
+            this.mailButton.setText(i18n.t("common.receive"));
+        } else {
+            this.mailButton.setInteractive();
+            this.mailButton.setFrameNormal(UIHelper.threeGreenSmall);
+            this.mailButton.setText(i18n.t("common.received"));
+        }
     }
 
     private closeExtend() {
@@ -234,7 +248,6 @@ class MailItemExtend extends Phaser.GameObjects.Container {
     }
     public setItemData(mailData: op_client.IPKT_MAIL_DATA) {
         let taskPosy = 0;
-        const cellHeight = 67 * this.dpr;
         this.mailTex.text = mailData.content;
         this.sendTex.text = `${i18n.t("mail.sender")}${mailData.senderName}`;
         this.sendTex.y = this.mailTex.y + this.mailTex.height + 15 * this.dpr;
@@ -243,19 +256,28 @@ class MailItemExtend extends Phaser.GameObjects.Container {
         taskPosy = this.expirationTex.y + this.expirationTex.height + 10 * this.dpr;
         this.line.y = taskPosy;
         taskPosy += 5 * this.dpr;
-        this.createMailCells(this.rewardArr, <any>mailData.attachments, false);
+        const scrollHeight = this.setGameScrollData(mailData.attachments, taskPosy);
+        this.height = taskPosy + scrollHeight + 10 * this.dpr;
+        const continueTime = Date.now() / 1000 - mailData["localTime"];
+        const time = mailData.expireTime - mailData.sentTime - continueTime;
+        this.countDown(time * 1000);
+    }
+    public setGameScrollData(datas: any[], taskPosy: number) {
+        if (!datas && datas.length === 0) {
+            this.gameScroll.visible = false;
+            return 0;
+        }
+        this.gameScroll.visible = true;
+        const cellHeight = 67 * this.dpr;
+        this.createMailCells(this.rewardArr, datas, false);
         taskPosy += cellHeight * 0.5;
         this.gameScroll.y = taskPosy;
         this.gameScroll.clearItems(false);
         this.gameScroll.addItems(this.rewardArr);
         this.gameScroll.Sort();
         this.gameScroll.refreshMask();
-        this.height = taskPosy + cellHeight * 0.5 + 10 * this.dpr;
-        const continueTime = Date.now() / 1000 - mailData["localTime"];
-        const time = mailData.expireTime - mailData.sentTime - continueTime;
-        this.countDown(time * 1000);
+        return cellHeight;
     }
-
     public setHandler(send: Handler) {
         this.send = send;
     }

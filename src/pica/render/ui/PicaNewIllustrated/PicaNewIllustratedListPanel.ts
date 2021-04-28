@@ -5,6 +5,7 @@ import { Handler, i18n, UIHelper } from "utils";
 import { UITools } from "../uitool";
 import { MainUIRedType } from "picaStructure";
 export class PicaNewIllustratedListPanel extends Phaser.GameObjects.Container {
+    private backButton: ButtonEventDispatcher;
     private dpr: number;
     private zoom: number;
     private send: Handler;
@@ -21,6 +22,8 @@ export class PicaNewIllustratedListPanel extends Phaser.GameObjects.Container {
         const w = width || this.width;
         const h = height || this.height;
         this.setSize(w, h);
+        this.backButton.x = -this.width * 0.5 + this.backButton.width * 0.5 + 10 * this.dpr;
+        this.backButton.y = -this.height * 0.5 + 45 * this.dpr;
     }
 
     setHandler(send: Handler) {
@@ -28,7 +31,7 @@ export class PicaNewIllustratedListPanel extends Phaser.GameObjects.Container {
     }
 
     init() {
-
+        this.backButton = UITools.createBackButton(this.scene, this.dpr, this.onBackHandler, this, i18n.t("illustrate.title"));
         const conWidth = 305 * this.dpr, conHeight = 330 * this.dpr;
         this.gridLayout = new GridLayoutGroup(this.scene, conWidth, conHeight, {
             cellSize: new Phaser.Math.Vector2(304 * this.dpr, 96 * this.dpr),
@@ -38,7 +41,7 @@ export class PicaNewIllustratedListPanel extends Phaser.GameObjects.Container {
             constraintCount: 1,
             alignmentType: AlignmentType.UpperCenter
         });
-        this.add(this.gridLayout);
+        this.add([this.gridLayout, this.backButton]);
         this.resize();
     }
 
@@ -106,6 +109,9 @@ export class PicaNewIllustratedListPanel extends Phaser.GameObjects.Container {
 
     private onSelectItemHandler(tag: string) {
         if (this.send) this.send.runWith([tag]);
+    }
+    private onBackHandler() {
+        if (this.send) this.send.runWith("back");
     }
 }
 

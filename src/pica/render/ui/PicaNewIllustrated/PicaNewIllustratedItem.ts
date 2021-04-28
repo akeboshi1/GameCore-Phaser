@@ -29,12 +29,12 @@ export class PicaNewIllustratedItem extends ButtonEventDispatcher {
         this.codeTex = this.scene.make.text({ style: UIHelper.whiteStyle(dpr, 10) }).setOrigin(0.5);
         this.codeTex.y = this.starImg.y + 10 * dpr;
         this.discoveryTips = this.scene.make.text({ text: i18n.t("illustrate.newdiscovery"), style: UIHelper.colorStyle("#FC1111", 7 * dpr) });
-        this.discoveryTips.x = width * 0.5;
-        this.discoveryTips.y = -height * 0.5;
+        this.discoveryTips.x = width * 0.5 - 10 * dpr;
+        this.discoveryTips.y = -height * 0.5 + 15 * dpr;
         this.discoveryTips.setStroke("#ffffff", 2 * dpr);
         this.discoveryTips.setFontStyle("bold");
         this.discoveryTips.visible = false;
-        this.add([this.surveyImg, this.surveyLight, this.itemIcon, this.starImg, this.codeTex, this.magnifyingImg]);
+        this.add([this.surveyImg, this.surveyLight, this.itemIcon, this.starImg, this.codeTex, this.magnifyingImg, this.discoveryTips]);
         for (const item of this.list) {
             const temp = <Phaser.GameObjects.Container>item;
             temp.y -= 10 * dpr;
@@ -83,7 +83,6 @@ export class PicaNewIllustratedItem extends ButtonEventDispatcher {
                 this.itemIcon.alpha = 1;
             }
             this.setStarImg(status, item.grade);
-            this.discoveryTips.visible = true;
         }
     }
 

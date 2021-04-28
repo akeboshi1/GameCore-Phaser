@@ -473,7 +473,8 @@
     "levelrewardtips": "The {{name}} level collects rewards",
     "meetrewardtips": "*The current progress reaches {{name}}",
     "collected": "Collected",
-    "progressreward": "Progress rewards"
+    "progressreward": "Progress rewards",
+    "collectbadge": "Collector's badge"
   },
   "mail": {
     "onekey": "All Receive",

@@ -115,6 +115,27 @@
 					}
 				},
 				{
+					"filename": "mail_annex_icon",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 24,
+						"h": 27
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 24,
+						"h": 27
+					},
+					"frame": {
+						"x": 631,
+						"y": 135,
+						"w": 24,
+						"h": 27
+					}
+				},
+				{
 					"filename": "mail_read_time",
 					"rotated": false,
 					"trimmed": false,
@@ -129,7 +150,7 @@
 						"h": 22
 					},
 					"frame": {
-						"x": 631,
+						"x": 657,
 						"y": 135,
 						"w": 22,
 						"h": 22
@@ -150,8 +171,8 @@
 						"h": 22
 					},
 					"frame": {
-						"x": 655,
-						"y": 135,
+						"x": 657,
+						"y": 159,
 						"w": 22,
 						"h": 22
 					}
@@ -330,6 +351,6 @@
 	"meta": {
 		"app": "https://www.codeandweb.com/texturepacker",
 		"version": "3.0",
-		"smartupdate": "$TexturePacker:SmartUpdate:890845337f774d0be1e1abc0aad1c2b8:477f7fa20a1e020aee7d1dd26d6cf4d8:dcdf04b4780ab3bebcf789460296c677$"
+		"smartupdate": "$TexturePacker:SmartUpdate:e805f0f844c197a0d9c08af7099028ae:9121e724e27aef09d591892e016b1bd2:dcdf04b4780ab3bebcf789460296c677$"
 	}
 }

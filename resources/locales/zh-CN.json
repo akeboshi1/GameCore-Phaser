@@ -484,7 +484,8 @@
     "levelrewardtips": "{{name}}级收集奖励",
     "meetrewardtips": "*当前进度达到{{name}}获得",
     "collected": "已收藏",
-    "progressreward": "进度奖励"
+    "progressreward": "进度奖励",
+    "collectbadge": "收藏家徽章"
   },
   "mail": {
     "onekey": "一键领取",

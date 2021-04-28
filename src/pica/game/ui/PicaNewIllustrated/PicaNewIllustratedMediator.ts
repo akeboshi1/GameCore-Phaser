@@ -1,10 +1,12 @@
 import { op_client, op_def } from "pixelpai_proto";
 import { BasicMediator, CacheDataManager, DataMgrType, Game } from "gamecore";
 import { EventType, ModuleName } from "structure";
-import { BaseDataConfigManager, GalleryType } from "../../config";
+import { BaseDataConfigManager, GalleryConfig, GalleryType } from "../../config";
 import { PicaNewIllustrated } from "./PicaNewIllustrated";
-import { IGalleryCombination, IGalleryLevel, MainUIRedType, RedEventType } from "../../../structure";
+import { IGalleryCombination, IGalleryLevel, IGalleryLevelGroup, IShownGalleryReward, IUpdateGalleryDatas, MainUIRedType, RedEventType } from "../../../structure";
 import { PicaGame } from "../../pica.game";
+import { PicaCommandMsgType } from "../../command/pica.command.msg.type";
+import { ObjectAssign } from "utils";
 export class PicaNewIllustratedMediator extends BasicMediator {
     protected mModel: PicaNewIllustrated;
     private mScneType: op_def.SceneTypeEnum;
@@ -14,25 +16,53 @@ export class PicaNewIllustratedMediator extends BasicMediator {
         this.mModel = new PicaNewIllustrated(game, this.mScneType);
     }
 
+    onEnable() {
+        this.proto.on("GALLERY_LEVELREWARD_TAKENLIST", this.onBadgeLevelRewardsHandler, this);
+        this.proto.on("GALLERY_EXPREWARD_TAKENLIST", this.onLevelExpRewardsHandler, this);
+        this.proto.on("GALLERY_COLLECTIONRWARD_TAKENLIST", this.onHasGotCollectRewardsHandler, this);
+        this.proto.on("GALLERY_COLLECTIONREWARD_LISTS", this.onDisplayCollectRewardsHandler, this);
+    }
+
+    onDisable() {
+        this.proto.off("GALLERY_LEVELREWARD_TAKENLIST", this.onBadgeLevelRewardsHandler, this);
+        this.proto.off("GALLERY_EXPREWARD_TAKENLIST", this.onLevelExpRewardsHandler, this);
+        this.proto.off("GALLERY_COLLECTIONRWARD_TAKENLIST", this.onHasGotCollectRewardsHandler, this);
+        this.proto.off("GALLERY_COLLECTIONREWARD_LISTS", this.onDisplayCollectRewardsHandler, this);
+    }
     show(param?: any) {
         super.show(param);
-        this.game.emitter.on(this.key + "_queryrewards", this.onQueryRewardsHandler, this);
-        this.game.emitter.on(this.key + "_querycombinations", this.onQueryCombinationsHandler, this);
+        this.game.emitter.on(this.key + "_getbadgerewards", this.getBadgeLevelReward, this);
+        this.game.emitter.on(this.key + "_getgalleryexprewards", this.getGalleryExpReward, this);
+        this.game.emitter.on(this.key + "_getallgalleryrewards", this.getAllGalleryExpReward, this);
+        this.game.emitter.on(this.key + "_getgatheringrewards", this.takeGalleryGatheringReward, this);
+        this.game.emitter.on(this.key + "_getgallerylightrewards", this.getItemGalleryLightReward, this);
+        this.game.emitter.on(this.key + "_changeGalleryStatus", this.changeGalleryStatus, this);
+        this.game.emitter.on(this.key + "_getbadgerewards", this.sendLevelRewardTakenList, this);
+        this.game.emitter.on(this.key + "_getlevelexprewards", this.sendExpRewardTakenList, this);
+        this.game.emitter.on(this.key + "_getcollectedrewards", this.sendCollectionRewardTakenList, this);
+        this.game.emitter.on(this.key + "_getdisplatcollectedlist", this.sendDisplayCollectionList, this);
         this.game.emitter.on(this.key + "_openpanel", this.onShowPanelHandler, this);
         this.game.emitter.on(this.key + "_close", this.onCloseHandler, this);
-        this.game.emitter.on(EventType.GALLERY_UPDATE, this.setGallaryData, this);
-        this.game.emitter.on(EventType.DONE_MISSION_LIST, this.setDoneMissionIdListHandler, this);
         this.game.emitter.on(RedEventType.GALLERY_PANEL_RED, this.onRedSystemHandler, this);
+        this.game.emitter.on(PicaCommandMsgType.PicaUpdateGalleryDatas, this.onUpdateGalleryDatasHandler, this);
+
     }
 
     hide() {
-        this.game.emitter.off(this.key + "_queryrewards", this.onQueryRewardsHandler, this);
-        this.game.emitter.on(this.key + "_querycombinations", this.onQueryCombinationsHandler, this);
+        this.game.emitter.off(this.key + "_getbadgerewards", this.getBadgeLevelReward, this);
+        this.game.emitter.off(this.key + "_getgalleryexprewards", this.getGalleryExpReward, this);
+        this.game.emitter.off(this.key + "_getallgalleryrewards", this.getAllGalleryExpReward, this);
+        this.game.emitter.off(this.key + "_getgatheringrewards", this.takeGalleryGatheringReward, this);
+        this.game.emitter.off(this.key + "_getgallerylightrewards", this.getItemGalleryLightReward, this);
+        this.game.emitter.off(this.key + "_changeGalleryStatus", this.changeGalleryStatus, this);
+        this.game.emitter.off(this.key + "_getbadgerewards", this.sendLevelRewardTakenList, this);
+        this.game.emitter.off(this.key + "_getlevelexprewards", this.sendExpRewardTakenList, this);
+        this.game.emitter.off(this.key + "_getcollectedrewards", this.sendCollectionRewardTakenList, this);
+        this.game.emitter.off(this.key + "_getdisplatcollectedlist", this.sendDisplayCollectionList, this);
         this.game.emitter.off(this.key + "_openpanel", this.onShowPanelHandler, this);
         this.game.emitter.off(this.key + "_close", this.onCloseHandler, this);
-        this.game.emitter.off(EventType.GALLERY_UPDATE, this.setGallaryData, this);
-        this.game.emitter.off(EventType.DONE_MISSION_LIST, this.setDoneMissionIdListHandler, this);
         this.game.emitter.off(RedEventType.GALLERY_PANEL_RED, this.onRedSystemHandler, this);
+        this.game.emitter.off(PicaCommandMsgType.PicaUpdateGalleryDatas, this.onUpdateGalleryDatasHandler, this);
         super.hide();
     }
 
@@ -42,12 +72,7 @@ export class PicaNewIllustratedMediator extends BasicMediator {
 
     protected panelInit() {
         super.panelInit();
-        if (this.mPanelInit) {
-            if (this.mView) {
-                this.setGallaryData();
-                this.setDoneMissionIdListHandler();
-            }
-        }
+        this.setGallaryData();
         if (this.mView) this.mView.setRedsState(this.getRedSystem());
     }
 
@@ -55,32 +80,139 @@ export class PicaNewIllustratedMediator extends BasicMediator {
         this.hide();
     }
 
-    private onQueryRewardsHandler(type: number) {
-        this.mModel.query_GALLARY_PROGRESS_REWARD(type);
+    /**
+     * 获取徽章奖励
+     * @param id
+     */
+    private getBadgeLevelReward(id: number) {
+        this.game.sendCustomProto("INT", "galleryFacade:getBadgeLevelReward", { count: id });
+    }
+    /**
+     * 获取进度经验奖励
+     * @param id
+     */
+    private getGalleryExpReward(id: number) {
+        this.game.sendCustomProto("INT", "galleryFacade:getGalleryExpReward", { count: id });
     }
 
-    private onQueryCombinationsHandler(id: number) {
-        this.mModel.query_GALLARY_COLLECTION_REWARD(id);
+    private getAllGalleryExpReward(id: number) {
+        this.game.sendCustomProto("INT", "galleryFacade:getAllGalleryRewards", {});
     }
 
+    /**
+     * 获取收集套装奖励
+     * @param id
+     */
+    private takeGalleryGatheringReward(id: number) {
+        this.game.sendCustomProto("INT", "galleryFacade:takeGalleryGatheringReward", { count: id });
+    }
+
+    /**
+     * 获取图鉴点亮奖励
+     * @param id
+     */
+    private getItemGalleryLightReward(id: string) {
+        this.game.sendCustomProto("STRING", "galleryFacade:getItemCollectReward", { id });
+    }
+
+    /**
+     * 切换图鉴状态
+     */
+    private changeGalleryStatus(id: string) {
+        this.game.sendCustomProto("STRING", "galleryFacade:changeGalleryStatus", { id });
+    }
+
+    /**
+     * 获取徽章等级奖励
+     */
+    private sendLevelRewardTakenList() {
+        this.game.sendCustomProto("STRING", "galleryFacade:sendLevelRewardTakenList", {});
+    }
+
+    /**
+     * 获取图鉴经验等级奖励
+     */
+    private sendExpRewardTakenList() {
+        this.game.sendCustomProto("STRING", "galleryFacade:sendExpRewardTakenList", {});
+    }
+
+    /**
+     * 获取已经领取收集套装数据
+     */
+    private sendCollectionRewardTakenList() {
+        this.game.sendCustomProto("STRING", "galleryFacade:sendCollectionRewardTakenList", {});
+    }
+
+    private sendDisplayCollectionList() {
+        this.game.sendCustomProto("STRING", "galleryFacade:sendGalleryCollectionShownList", {});
+    }
+    private onBadgeLevelRewardsHandler(proto: any) {
+        const content = proto.content;
+        const badgeIds = content.levelIds;
+        const badgeMap = this.config.getGalleryMap(GalleryType.galleryLevel);
+        const gallery: IUpdateGalleryDatas = this.gallery;
+        badgeMap.forEach((value, key) => {
+            const temp = <IGalleryLevel>value;
+            if (badgeIds.indexOf(temp.id) !== -1) {
+                temp.received = 3;
+            } else {
+                if (gallery.badgeExp >= temp.exp) {
+                    temp.received = 2;
+                } else {
+                    temp.received = 1;
+                }
+            }
+        });
+    }
+
+    private onLevelExpRewardsHandler(proto: any) {
+        const content = proto.content;
+        const expIds: number[] = content.expIds;
+        const group = this.getLevelGroup();
+        const gallery: IUpdateGalleryDatas = this.gallery;
+        group.forEach((value: IGalleryLevelGroup, key: number) => {
+            if (value.gallery) {
+                value.gallery.forEach((temp) => {
+                    if (expIds.indexOf(temp.id) !== -1) {
+                        temp.received = 3;
+                    } else {
+                        if (gallery.galleryExp >= temp.exp) {
+                            temp.received = 2;
+                            value.rewards = true;
+                        } else {
+                            temp.received = 1;
+                        }
+                    }
+                });
+                value.progress = gallery.galleryExp;
+            }
+        });
+        const groupArr = Array.from(group.values());
+        if (this.mView) this.mView.setLevelGalleryGroups(groupArr);
+    }
+
+    private onHasGotCollectRewardsHandler(proto: any) {
+        const content = proto.content;
+        const ids: number[] = content.collectionIds;
+        const temps = this.getCombinationByIDs(ids);
+
+    }
+
+    private onDisplayCollectRewardsHandler(proto: any) {
+        const content = proto.content;
+        const ids: IShownGalleryReward[] = content.shownRewards;
+        const temps = this.getDisplayCombinations(ids);
+    }
+
+    private onUpdateGalleryDatasHandler(Data: any) {
+        this.setGallaryData();
+    }
     private setGallaryData() {
+        this.mShowData = this.gallery;
         if (!this.mPanelInit) return;
-        const cache: CacheDataManager = this.game.getDataMgr<CacheDataManager>(DataMgrType.CacheMgr);
-        this.mShowData = cache.gallery;
-        this.sortGallery(this.mShowData.list);
-        const dexLevel = <IGalleryLevel>this.config.getGallery(this.mShowData.reward1NextIndex, GalleryType.dexLevel);
-        if (dexLevel === undefined) {
-            this.mShowData.reward1Max = -1;
-        } else {
-            this.mShowData.reward1Max = dexLevel.exp;
-        }
-        const galleryLevel = <IGalleryLevel>this.config.getGallery(this.mShowData.reward2NextIndex, GalleryType.galleryLevel);
-        if (galleryLevel === undefined) {
-            this.mShowData.reward2Max = -1;
-        } else {
-            this.mShowData.reward2Max = galleryLevel.exp || 0;
-        }
-        this.mView.setGallaryData(this.mShowData, this.getCombinations(this.mShowData.list));
+        const tempData: IUpdateGalleryDatas = this.gallery;
+        this.sortGallery(tempData.list);
+        this.mView.setGallaryData(tempData, this.getCombinations(tempData.list));
     }
 
     private onShowPanelHandler(type: string) {
@@ -102,10 +234,20 @@ export class PicaNewIllustratedMediator extends BasicMediator {
         });
     }
 
-    private setDoneMissionIdListHandler() {
-        const cache: CacheDataManager = this.game.getDataMgr<CacheDataManager>(DataMgrType.CacheMgr);
-        const list = cache.doneMissionIdList;
-        if (this.mView) this.mView.setDoneMissionList(list);
+    private getLevelGroup() {
+        const dexMap = this.config.getGalleryMap(GalleryType.dexLevel);
+        const mapGroup = new Map();
+        dexMap.forEach((value, key) => {
+            let group: IGalleryLevelGroup;
+            if (mapGroup.has(value.level)) {
+                group = mapGroup.get(value.level);
+                group.gallery.push(value);
+            } else {
+                group = { level: value.level, progress: 0, rewards: false, gallery: [value] };
+                mapGroup.set(value.level, group);
+            }
+        });
+        return mapGroup;
     }
 
     private getCombinations(list: op_client.IPKT_GALLERY_ITEM[]) {
@@ -133,7 +275,32 @@ export class PicaNewIllustratedMediator extends BasicMediator {
         }
         return combinations;
     }
+    private getCombinationByIDs(ids: number[]) {
+        const map = <any>this.config.getGalleryMap(GalleryType.combination);
+        const temps: IGalleryCombination[] = [];
+        for (const id of ids) {
+            if (map.has(id)) {
+                temps.push(map.get(id));
+            }
+        }
+        return temps;
+    }
 
+    private getDisplayCombinations(datas: IShownGalleryReward[]) {
+        const map = <any>this.config.getGalleryMap(GalleryType.combination);
+        const temps: IGalleryCombination[] = [];
+        for (const temp of datas) {
+            if (map.has(temp.rewardid)) {
+                const combination = map.get(temp.rewardid);
+                ObjectAssign.excludeAllAssign(temp, combination);
+            }
+        }
+        return datas;
+    }
+    get gallery() {
+        const cache: CacheDataManager = this.game.getDataMgr<CacheDataManager>(DataMgrType.CacheMgr);
+        return cache.gallery;
+    }
     private getRedSystem() {
         const game = <PicaGame>this.game;
         const obj = {};

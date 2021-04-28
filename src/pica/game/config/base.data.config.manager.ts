@@ -664,7 +664,7 @@ export class BaseDataConfigManager extends BaseConfigManager {
         } else if (type === GalleryType.dexLevel) {
             if (!temp["find"]) {
                 const dex = <IGalleryLevel>temp;
-                const rewardItems = dex.rewardItems;
+                const rewardItems =[ dex.rewardItems];
                 if (rewardItems) {
                     for (const value of rewardItems) {
                         const coutitem = this.getItemBaseByID(value.id);

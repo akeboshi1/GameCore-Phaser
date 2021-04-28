@@ -17,10 +17,11 @@ export interface IGalleryLevel {
      *  1 不能领取，2 可以领取，3 已经领取
      */
     received: number;
-    rewardItems: ICountablePackageItem[];
+    rewardItems: ICountablePackageItem;
 }
 export interface IGalleryLevelGroup {
     level: number;
     progress: number;
+    rewards: boolean;
     gallery: IGalleryLevel[];
 }

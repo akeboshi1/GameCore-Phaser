@@ -5,7 +5,7 @@ import { Handler, i18n, UIHelper, Url } from "utils";
 import { CommonBackground } from "..";
 import { UITools } from "../uitool";
 import { IExtendCountablePackageItem, IGalleryCombination, IGalleryLevel, IGalleryLevelGroup } from "picaStructure";
-export class PicaNewCollectBadgePanel extends Phaser.GameObjects.Container {
+export class PicaNewAlreadyCollectedPanel extends Phaser.GameObjects.Container {
     private mBackground: CommonBackground;
     private backButton: ButtonEventDispatcher;
     private mGrid: GameGridTable;
@@ -45,7 +45,7 @@ export class PicaNewCollectBadgePanel extends Phaser.GameObjects.Container {
         bg2.y = -this.height * 0.5 + bg2.height * 0.5;
         this.mBackground.add(bg2);
         this.add(this.mBackground);
-        this.backButton = UITools.createBackButton(this.scene, this.dpr, this.onBackHandler, this, i18n.t("illustrate.collectbadge"));
+        this.backButton = UITools.createBackButton(this.scene, this.dpr, this.onBackHandler, this, i18n.t("illustrate.collected"));
         this.createGridTable();
         this.add([this.mBackground, this.backButton, this.mGrid]);
         this.resize();
@@ -61,7 +61,7 @@ export class PicaNewCollectBadgePanel extends Phaser.GameObjects.Container {
             table: {
                 width: tableWidth,
                 height: tableHeight,
-                columns: 3,
+                columns: 4,
                 cellWidth,
                 cellHeight,
                 reuseCellContainer: true,
@@ -72,7 +72,7 @@ export class PicaNewCollectBadgePanel extends Phaser.GameObjects.Container {
             createCellContainerCallback: (cell, cellContainer) => {
                 const item = cell.item;
                 if (cellContainer === null) {
-                    cellContainer = new CollectBadgeItem(this.scene, cellWidth, cellHeight, this.dpr, this.zoom);
+                    cellContainer = new CollectedItem(this.scene, cellWidth, cellHeight, this.dpr, this.zoom);
                 }
                 cellContainer.setCombinationData(item);
                 return cellContainer;
@@ -85,7 +85,7 @@ export class PicaNewCollectBadgePanel extends Phaser.GameObjects.Container {
         });
         this.mGrid.y = -this.height * 0.5 + this.mGrid.height * 0.5;
     }
-    private onSelectItemHandler(cell: CollectBadgeItem) {
+    private onSelectItemHandler(cell: CollectedItem) {
         // if (this.send) this.send.runWith(["furidetail", cell.groupData]);
         const groupData = cell.combinationData;
     }
@@ -95,43 +95,37 @@ export class PicaNewCollectBadgePanel extends Phaser.GameObjects.Container {
     }
 }
 
-class CollectBadgeItem extends ButtonEventDispatcher {
+class CollectedItem extends ButtonEventDispatcher {
     public combinationData: IGalleryCombination;
     private bg: Phaser.GameObjects.Image;
-    private badgeIcon: DynamicImage;
-    private titlebg: Phaser.GameObjects.Image;
+    private itemIcon: DynamicImage;
     private title: Phaser.GameObjects.Text;
+    private line: Phaser.GameObjects.Image;
     private countTex: Phaser.GameObjects.Text;
-    private rewardsBtn: ThreeSliceButton;
     private send: Handler;
     constructor(scene: Phaser.Scene, width: number, height: number, dpr: number, zoom: number) {
         super(scene, 0, 0);
         this.dpr = dpr;
         this.zoom = zoom;
         this.setSize(width, height);
-        this.bg = this.scene.make.image({ key: UIAtlasName.illustrate_new, frame: "illustrate_survey_badge_bg" });
-        this.badgeIcon = new DynamicImage(scene, 0, 0);
-        this.badgeIcon.y = -20 * dpr;
-        this.titlebg = this.scene.make.image({ key: UIAtlasName.illustrate_new, frame: "illustrate_survey_badge_title" });
-        this.titlebg.y = 0;
+        this.bg = this.scene.make.image({ key: UIAtlasName.illustrate_new, frame: "illustrate_favorites_badge_bg" });
+        this.itemIcon = new DynamicImage(scene, 0, 0);
+        this.itemIcon.y = -20 * dpr;
         this.title = this.scene.make.text({ style: UIHelper.colorStyle("#996600", dpr * 11) }).setOrigin(0.5);
         this.title.setFontStyle("bold");
-        this.title.y = this.titlebg.y;
+        this.title.y = 10 * dpr;
+        this.line = this.scene.make.image({ key: UIAtlasName.illustrate_new, frame: "illustrate_favorites_badge_line" });
+        this.line.y = this.title.y + 10 * dpr;
         this.countTex = this.scene.make.text({ style: UIHelper.colorStyle("#000000", dpr * 11) }).setOrigin(0.5);
-        this.countTex.y = 20 * dpr;
-        this.rewardsBtn = new ThreeSliceButton(this.scene, 62 * this.dpr, 25 * this.dpr, UIAtlasName.uicommon, UIHelper.threeRedSmall, UIHelper.threeRedSmall, i18n.t("common.receivereward"));
-        this.rewardsBtn.setTextStyle(UIHelper.brownishStyle(this.dpr));
-        this.rewardsBtn.setFontStyle("bold");
-        this.rewardsBtn.y = this.countTex.y + 20 * dpr;
-        this.rewardsBtn.on(ClickEvent.Tap, this.onRewardsHandler, this);
-        this.add([this.bg, this.badgeIcon, this.title, this.countTex]);
+        this.countTex.y = this.line.y + 10 * dpr;
+        this.add([this.bg, this.itemIcon, this.title, this.line, this.countTex]);
     }
     public setCombinationData(data: IGalleryCombination) {
         this.combinationData = data;
         const itemData: any = data.requirement[0];
         const url = Url.getOsdRes(itemData.texturePath);
-        this.badgeIcon.load(url);
-        this.badgeIcon.scale = this.dpr / this.zoom;
+        this.itemIcon.load(url);
+        this.itemIcon.scale = this.dpr / this.zoom;
         this.title.text = data.name;
         const leng = data.requirement.length;
         this.countTex.text = `${leng}/${leng}`;
@@ -145,7 +139,7 @@ class CollectBadgeItem extends ButtonEventDispatcher {
         this.send = send;
     }
 
-    private onRewardsHandler() {
+    private onRewardHandler() {
         if (this.send) this.send.runWith(["recivedreward", this.combinationData]);
     }
 }
