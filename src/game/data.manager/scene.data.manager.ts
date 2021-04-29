@@ -175,10 +175,10 @@ export class SceneDataManager extends BasePacketHandler {
         }
         this.mEvent.emit(EventType.SCENE_SHOW_MAIN_UI, hideArr);
         // Logger.getInstance().log("hideArr ====>", hideArr);
-        // if (this.mCurRoom.roomType === RoomType.EPISODE)
-        this.mEvent.emit(EventType.SCENE_SHOW_UI, ModuleName.PICAEXPLORELOG_NAME);
-        //     this.isShowMainui = true;
-        // }
+        if (this.mCurRoom.roomType === RoomType.EPISODE || this.mCurRoom.roomType === RoomType.DUNGEON) {
+            this.mEvent.emit(EventType.SCENE_SHOW_UI, ModuleName.PICAEXPLORELOG_NAME);
+            // this.isShowMainui = true;
+        }
         if (this.rewardTipCaches && this.rewardTipCaches.length > 0) {
             for (const tips of this.rewardTipCaches) {
                 this.game.showMediator(ModuleName.PICAREWARDTIP_NAME, true, tips.content);
