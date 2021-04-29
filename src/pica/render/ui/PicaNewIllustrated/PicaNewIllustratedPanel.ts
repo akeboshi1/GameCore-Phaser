@@ -239,7 +239,7 @@ export class PicaNewIllustratedPanel extends PicaBasePanel {
     }
     private showCollectRewardsPanel() {
         if (!this.collectRewardsPanel) {
-            this.collectRewardsPanel = new PicaNewCollectRewardsPanel(this.scene, this.scaleWidth, this.scaleHeight, this.dpr, this.scale);
+            this.collectRewardsPanel = new PicaNewCollectRewardsPanel(this.scene, 334 * this.dpr, 455 * this.dpr, this.dpr, this.scale);
             this.collectRewardsPanel.setHandler(new Handler(this, this.onCollectRewardsHandler));
         }
         this.content.add(this.collectRewardsPanel);
@@ -328,7 +328,7 @@ export class PicaNewIllustratedPanel extends PicaBasePanel {
             this.hideCollectRewardsPanel();
             this.showDetailPanel();
         } else if (tag === "combrewards") {
-            this.render.renderEmitter(this.key + "_getgatheringrewards", { id: data.id, index: data.indexed });
+            this.render.renderEmitter(this.key + "_getgatheringrewards", { id: data.id, indexed: data.indexed });
         }
     }
 

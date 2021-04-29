@@ -13,9 +13,7 @@ export class PicaNewCollectRewardsPanel extends Phaser.GameObjects.Container {
     private dpr: number;
     private zoom: number;
     private send: Handler;
-    private curSelectItem: CollectRewardsItem;
-    private combinations: IGalleryCombination[];
-    private doneMissions: number[] = [];
+    private combinations: IGalleryCombination;
     constructor(scene: Phaser.Scene, width: number, height: number, dpr: number, zoom: number) {
         super(scene);
         this.setSize(width, height);
@@ -28,7 +26,6 @@ export class PicaNewCollectRewardsPanel extends Phaser.GameObjects.Container {
         const w = width || this.width;
         const h = height || this.height;
         this.setSize(w, h);
-        this.mGameGrid.setSize(w, h);
         this.mGameGrid.resetMask();
     }
     refreshMask() {
@@ -45,11 +42,8 @@ export class PicaNewCollectRewardsPanel extends Phaser.GameObjects.Container {
     }
 
     setCombinationData(content: IGalleryCombination) {
-        this.mGameGrid.setItems(content);
-    }
-    setDoneMissionList(list: number[]) {
-        if (list) this.doneMissions = list;
-        this.mGameGrid.resetMask();
+        this.combinations = content;
+        this.mGameGrid.setItems(content.rewardItems);
     }
     init() {
         const backWidth = 1.5 * this.width, backheight = 3 * this.height;
@@ -75,14 +69,15 @@ export class PicaNewCollectRewardsPanel extends Phaser.GameObjects.Container {
             style: UIHelper.colorStyle("#905B06", this.dpr * 16)
         }, false).setOrigin(0.5);
         this.titleName.setFontStyle("bold");
-        const tableHeight = this.height;
-        const cellWidth = 326 * this.dpr;
-        const cellHeight = 100 * this.dpr;
+        const tableHeight = 318 * this.dpr;
+        const tableWidth = 298 * this.dpr;
+        const cellWidth = 298 * this.dpr;
+        const cellHeight = 80 * this.dpr;
         const tableConfig = {
-            x: 15 * this.dpr,
+            x: 0,
             y: 0,
             table: {
-                width: this.width,
+                width: tableWidth,
                 height: tableHeight,
                 columns: 1,
                 cellWidth,
@@ -94,17 +89,13 @@ export class PicaNewCollectRewardsPanel extends Phaser.GameObjects.Container {
             scrollMode: 0,
             clamplChildOY: false,
             createCellContainerCallback: (cell, cellContainer) => {
-                const scene = cell.scene, index = this.mGameGrid.items.length - cell.index,
+                const scene = cell.scene, index = cell.index,
                     item = cell.item;
                 if (cellContainer === null) {
                     cellContainer = new CollectRewardsItem(this.scene, cellWidth, cellHeight, this.dpr, this.zoom);
                     cellContainer.setHandler(this.send);
                 }
-                let reweard = false;
-                if (this.doneMissions.indexOf(item.id) !== -1) {
-                    reweard = true;
-                }
-                cellContainer.setCombinationData(item, index);
+                cellContainer.setCombinationData(this.combinations, index + 1);
                 cell.setHeight(cellContainer.height);
                 return cellContainer;
             },
@@ -114,10 +105,12 @@ export class PicaNewCollectRewardsPanel extends Phaser.GameObjects.Container {
         this.mGameGrid.on("cellTap", (cell) => {
             this.onSelectItemHandler(cell);
         });
-        this.add(this.mGameGrid);
-        this.confirmBtn = new NineSliceButton(this.scene, 0, 70 * this.dpr, 191 * this.dpr, 55 * this.dpr, UIAtlasName.uicommon, "yellow_btn_normal", i18n.t("common.confirm"), this.dpr, this.zoom, UIHelper.button(this.dpr));
+        this.mGameGrid.y = -30 * this.dpr;
+        this.confirmBtn = new NineSliceButton(this.scene, 0, 0, 127 * this.dpr, 37 * this.dpr, UIAtlasName.uicommon, "yellow_btn_normal", i18n.t("common.confirm"), this.dpr, this.zoom, UIHelper.button(this.dpr));
         this.confirmBtn.setTextStyle(UIHelper.brownishStyle(this.dpr, 23));
         this.confirmBtn.on(ClickEvent.Tap, this.onConfirmHandler, this);
+        this.confirmBtn.y = this.height * 0.5 - this.confirmBtn.height * 0.5 - 32 * this.dpr;
+        this.add([this.backgrand, bg, this.closeButton, titlebg, this.titleName, this.mGameGrid, this.confirmBtn]);
         this.resize();
     }
 
@@ -158,15 +151,15 @@ class CollectRewardsItem extends Phaser.GameObjects.Container {
         this.desTex = this.scene.make.text({ style: UIHelper.colorStyle("#006ED4", 10 * dpr) }).setOrigin(0, 0.5);
         this.desTex.x = this.titleTex.x;
         this.desTex.y = 10 * dpr;
-        this.collectTex = this.scene.make.text({ style: UIHelper.colorStyle("#006ED4", 10 * dpr) }).setOrigin(1, 0.5);
+        this.collectTex = this.scene.make.text({ style: UIHelper.colorStyle("#006ED4", 10 * dpr) }).setOrigin(0.5);
         this.collectTex.setFontStyle("bold");
-        this.collectTex.x = width * 0.5 - 20 * dpr;
-        this.collectTex.y = -20 * dpr;
+        this.collectTex.x = width * 0.5 - 38 * dpr;
+        this.collectTex.y = -10 * dpr;
         this.rewardsBtn = new ThreeSliceButton(this.scene, 62 * this.dpr, 25 * this.dpr, UIAtlasName.uicommon, UIHelper.threeRedSmall, UIHelper.threeRedSmall, i18n.t("common.receivereward"));
-        this.rewardsBtn.setTextStyle(UIHelper.brownishStyle(this.dpr));
+        this.rewardsBtn.setTextStyle(UIHelper.whiteStyle(this.dpr));
         this.rewardsBtn.setFontStyle("bold");
-        this.rewardsBtn.x = this.collectTex.x;
-        this.rewardsBtn.y = 20 * dpr;
+        this.rewardsBtn.x = width * 0.5 - this.rewardsBtn.width * 0.5 - 10 * dpr;
+        this.rewardsBtn.y = height * 0.5 - this.rewardsBtn.height * 0.5 - 15 * dpr;
         this.rewardsBtn.on(ClickEvent.Tap, this.onRewardsHandler, this);
         this.add([this.background, this.itemIcon, this.titleTex, this.desTex, this.collectTex, this.rewardsBtn]);
     }
@@ -176,14 +169,15 @@ class CollectRewardsItem extends Phaser.GameObjects.Container {
         this.combiData["indexed"] = indexed;
         this.titleTex.text = data.name;
         this.desTex.text = data.des;
-        const itemData: any = data.requirement[indexed];
+        const itemData: any = data.rewardItems[indexed - 1];
         const url = Url.getOsdRes(itemData.texturePath);
         this.itemIcon.load(url);
         this.itemIcon.scale = this.dpr / this.zoom;
         const difficults = this.getbgName(data.difficult);
         const color = difficults[0];
         this.background.setFrame(difficults[1]);
-        this.collectTex.text = `${data.gotcount}/${data.subsection[indexed]}`;
+        const subsection = data.subsection[indexed - 1];
+        this.collectTex.text = `${data.gotcount}/${subsection}`;
         this.collectTex.setColor(color);
         this.desTex.setColor(color);
         if (data.gotindex.indexOf(indexed) !== -1) {
@@ -191,9 +185,16 @@ class CollectRewardsItem extends Phaser.GameObjects.Container {
             this.rewardsBtn.setText(i18n.t("common.received"));
             this.rewardsBtn.disInteractive();
         } else {
-            this.rewardsBtn.setFrameNormal(UIHelper.threeRedSmall);
-            this.rewardsBtn.setText(i18n.t("common.receivereward"));
-            this.rewardsBtn.setInteractive();
+            if (data.gotcount > subsection) {
+                this.rewardsBtn.setFrameNormal(UIHelper.threeRedSmall);
+                this.rewardsBtn.setText(i18n.t("common.receivereward"));
+                this.rewardsBtn.setInteractive();
+            } else {
+                this.rewardsBtn.setFrameNormal(UIHelper.threeGraySmall);
+                this.rewardsBtn.setText(i18n.t("common.receivereward"));
+                this.rewardsBtn.disInteractive();
+            }
+
         }
 
     }
@@ -203,7 +204,7 @@ class CollectRewardsItem extends Phaser.GameObjects.Container {
     }
 
     private onRewardsHandler() {
-        if (this.send) this.send.runWith(["combrewards",this.combiData]);
+        if (this.send) this.send.runWith(["combrewards", this.combiData]);
     }
 
     private getbgName(difficult: number) {
@@ -225,5 +226,6 @@ class CollectRewardsItem extends Phaser.GameObjects.Container {
                 temps = ["#A50005", "illustrate_collect_popup_bg_5"];
                 break;
         }
+        return temps;
     }
 }

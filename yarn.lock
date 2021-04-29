@@ -159,6 +159,11 @@
   resolved "https://registry.npm.taobao.org/@types/node/download/@types/node-8.0.0.tgz#acaa89247afddc7967e9902fd11761dadea1a555"
   integrity sha1-rKqJJHr93Hln6ZAv0Rdh2t6hpVU=
 
+"@types/node@>=13.7.0":
+  version "15.0.1"
+  resolved "https://registry.yarnpkg.com/@types/node/-/node-15.0.1.tgz#ef34dea0881028d11398be5bf4e856743e3dc35a"
+  integrity sha512-TMkXt0Ck1y0KKsGr9gJtWGjttxlZnnvDtphxUOSd0bfaR6Q1jle+sPvrzNR1urqYTWMinoKvjKfXUGsumaO1PA==
+
 "@types/node@^13.7.0":
   version "13.13.51"
   resolved "https://registry.yarnpkg.com/@types/node/-/node-13.13.51.tgz#a424c5282f99fc1ca41f11b727b6aea80668bcba"
@@ -1407,8 +1412,8 @@ currently-unhandled@^0.4.1:
     array-find-index "^1.0.1"
 
 "custom_proto@git+ssh://git@code.apowo.com:PixelPai/custom_proto.git#typescriptdev":
-  version "1.0.11"
-  resolved "git+ssh://git@code.apowo.com:PixelPai/custom_proto.git#0e11a2b640c219175b254668ef7f49ab920bfcd7"
+  version "1.0.12"
+  resolved "git+ssh://git@code.apowo.com:PixelPai/custom_proto.git#fed7076e8d6d2f09c47e1e30ccab662f1944eb09"
   dependencies:
     protobufjs "^6.8.8"
 
@@ -4409,7 +4414,7 @@ promise-inflight@^1.0.1:
   resolved "https://registry.npm.taobao.org/promise-inflight/download/promise-inflight-1.0.1.tgz#98472870bf228132fcbdd868129bad12c3c029e3"
   integrity sha1-mEcocL8igTL8vdhoEputEsPAKeM=
 
-protobufjs@6.10.2, protobufjs@^6.10.1, protobufjs@^6.8.8:
+protobufjs@6.10.2, protobufjs@^6.10.1:
   version "6.10.2"
   resolved "https://registry.yarnpkg.com/protobufjs/-/protobufjs-6.10.2.tgz#b9cb6bd8ec8f87514592ba3fdfd28e93f33a469b"
   integrity sha512-27yj+04uF6ya9l+qfpH187aqEzfCF4+Uit0I9ZBQVqK09hk/SQzKa2MUqUpXaVa7LOFRg1TSSr3lVxGOk6c0SQ==
@@ -4426,6 +4431,25 @@ protobufjs@6.10.2, protobufjs@^6.10.1, protobufjs@^6.8.8:
     "@protobufjs/utf8" "^1.1.0"
     "@types/long" "^4.0.1"
     "@types/node" "^13.7.0"
+    long "^4.0.0"
+
+protobufjs@^6.8.8:
+  version "6.11.0"
+  resolved "https://registry.yarnpkg.com/protobufjs/-/protobufjs-6.11.0.tgz#b890a2d3f64c62f0395e1e000d39ff91634bafb7"
+  integrity sha512-i4usrGD86mtOLnoTwUsVXphDY7yHM2rDiV3JU4Ix43BOtHi0DHy5rSCciX8MRHSYHaxnoc0TcpwEBlrNUAxvQQ==
+  dependencies:
+    "@protobufjs/aspromise" "^1.1.2"
+    "@protobufjs/base64" "^1.1.2"
+    "@protobufjs/codegen" "^2.0.4"
+    "@protobufjs/eventemitter" "^1.1.0"
+    "@protobufjs/fetch" "^1.1.0"
+    "@protobufjs/float" "^1.0.2"
+    "@protobufjs/inquire" "^1.1.0"
+    "@protobufjs/path" "^1.1.2"
+    "@protobufjs/pool" "^1.1.0"
+    "@protobufjs/utf8" "^1.1.0"
+    "@types/long" "^4.0.1"
+    "@types/node" ">=13.7.0"
     long "^4.0.0"
 
 proxy-addr@~2.0.5:

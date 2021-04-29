@@ -54,8 +54,9 @@ export class PicaNewIllustratedGalleryPanel extends Phaser.GameObjects.Container
         this.galleryData = content;
         const list = content.list;
         this.maxPage = Math.ceil(list.length / (this.pagInterval * 4));
-        this.setItemPages(1);
-        this.pageCountText.text = "01";
+        this.pageCount =  this.pageCount || 1;
+        this.setItemPages(this.pageCount);
+        this.pageCountText.text = `${this.pageCount < 10 ? "0" + this.pageCount : this.pageCount}`;
     }
 
     init() {
