@@ -76,10 +76,10 @@ export declare class Room extends PacketHandler implements IRoomService, SpriteA
     protected mStateManager: RoomStateManager;
     protected mIsLoading: boolean;
     protected mManagersReadyStates: Map<string, boolean>;
+    protected mWalkableMap: number[][];
     private moveStyle;
     private mActorData;
     private mUpdateHandlers;
-    private mWalkableMap;
     private mWalkableMarkMap;
     constructor(manager: IRoomManager);
     addListen(): void;
@@ -149,5 +149,4 @@ export declare class Room extends PacketHandler implements IRoomService, SpriteA
     private setWalkableMap;
     private mapPos2Idx;
     private setState;
-    private showDecorateGrid;
 }

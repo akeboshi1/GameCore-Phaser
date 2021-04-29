@@ -125,11 +125,11 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
     // protected mAstar: AStar;
     protected mIsLoading: boolean = false;
     protected mManagersReadyStates: Map<string, boolean> = new Map();
+     // -1: out of range; 0: not walkable; 1: walkable
+     protected mWalkableMap: number[][];
     private moveStyle: op_def.MoveStyle;
     private mActorData: IActor;
     private mUpdateHandlers: Handler[] = [];
-    // -1: out of range; 0: not walkable; 1: walkable
-    private mWalkableMap: number[][];
     // 地块可行走标记map。每格标记由多个不同优先级（暂时仅地块和物件）标记组成，最终是否可行走由高优先级标记决定
     private mWalkableMarkMap: Map<number, Map<number, { level: number; walkable: boolean }>> =
         new Map<number, Map<number, { level: number; walkable: boolean }>>();
@@ -462,7 +462,6 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
                 this.addWalkableMark(tempX, tempY, sprite.id, isTerrain ? 0 : 1, canWalk);
             }
         }
-        if (isTerrain) this.showDecorateGrid();
     }
 
     public removeFromWalkableMap(sprite: ISprite, isTerrain: boolean = false) {
@@ -1090,11 +1089,5 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
     private setState(state: op_client.IStateGroup) {
         if (!this.mStateManager) this.mStateManager = new RoomStateManager(this);
         this.mStateManager.setState(state);
-    }
-
-    private showDecorateGrid() {
-        // if (!this.isDecorating) return;
-        if (!this.mTerrainManager.hasAddComplete) return;
-        this.game.renderPeer.showEditGrids(this.mMiniSize, this.mWalkableMap);
     }
 }
