@@ -152,15 +152,15 @@ export class PicaMailItem extends Phaser.GameObjects.Container {
     private setExtendMailData(mailData: op_client.PKT_MAIL_DATA) {
         this.mExtend.setItemData(mailData);
         if (!this.mailData.hasRead) this.send.runWith(["readmail", this.mailData.id]);
-        this.mailButton.visible = !mailData.attachTaken;
+        this.mailButton.visible = true;
         if (mailData.attachTaken) {
             this.mailButton.disInteractive();
             this.mailButton.setFrameNormal(UIHelper.threeGraySmall);
-            this.mailButton.setText(i18n.t("common.receive"));
+            this.mailButton.setText(i18n.t("common.received"));
         } else {
             this.mailButton.setInteractive();
             this.mailButton.setFrameNormal(UIHelper.threeGreenSmall);
-            this.mailButton.setText(i18n.t("common.received"));
+            this.mailButton.setText(i18n.t("common.receive"));
         }
     }
 
