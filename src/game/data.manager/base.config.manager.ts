@@ -1,7 +1,7 @@
 import { Game } from "gamecore";
 import { load, loadArr, Logger } from "utils";
 import { BaseConfigData } from "./base.config.data";
-import { ConfigPath, config_path } from "./config";
+import { ConfigPath } from "./config";
 export class BaseConfigManager {
     protected baseDirname: string;
     protected dataMap: Map<string, BaseConfigData> = new Map();
