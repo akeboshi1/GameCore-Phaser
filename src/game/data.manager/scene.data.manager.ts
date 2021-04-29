@@ -174,9 +174,9 @@ export class SceneDataManager extends BasePacketHandler {
             hideArr.push(ModuleName.PICANEWMAIN_NAME);
         }
         this.mEvent.emit(EventType.SCENE_SHOW_MAIN_UI, hideArr);
-        Logger.getInstance().log("hideArr ====>", hideArr);
-        if (this.mCurRoom.roomType === RoomType.EPISODE)
-            this.mEvent.emit(EventType.SCENE_SHOW_UI, ModuleName.PICAEXPLORELOG_NAME);
+        // Logger.getInstance().log("hideArr ====>", hideArr);
+        // if (this.mCurRoom.roomType === RoomType.EPISODE)
+        this.mEvent.emit(EventType.SCENE_SHOW_UI, ModuleName.PICAEXPLORELOG_NAME);
         //     this.isShowMainui = true;
         // }
         if (this.rewardTipCaches && this.rewardTipCaches.length > 0) {
