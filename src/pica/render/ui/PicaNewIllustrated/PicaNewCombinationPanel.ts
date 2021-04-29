@@ -1,7 +1,7 @@
 import { NineSlicePatch, ClickEvent, Button, GameGridTable } from "apowophaserui";
 import { Coin, Font, Handler, i18n, UIHelper } from "utils";
 import { UIAtlasName } from "picaRes";
-import { IExtendCountablePackageItem } from "picaStructure";
+import { IExtendCountablePackageItem, IGalleryCombination } from "picaStructure";
 import { Render } from "gamecoreRender";
 import { UITools } from "picaRender";
 import { PicaIllustratedItemButton } from "./PicaNewIllustratedItem";
@@ -38,7 +38,7 @@ export class PicaNewCombinationPanel extends Phaser.GameObjects.Container {
     init() {
         const backWidth = 1.5 * this.width, backheight = 3 * this.height;
         this.backgrand = this.scene.make.graphics(undefined, false);
-        this.backgrand.fillStyle(0x000000, 0.66);
+        this.backgrand.fillStyle(0x000000, 0.77);
         this.backgrand.fillRect(-backWidth * 0.5, -backheight * 0.5, backWidth, backheight);
         this.backgrand.setInteractive(new Phaser.Geom.Rectangle(-backWidth * 0.5, -backheight * 0.5, backWidth, backheight), Phaser.Geom.Rectangle.Contains);
         const bg = new NineSlicePatch(this.scene, 0, 0, this.width, this.height, UIAtlasName.uicommon1, "bg", {
@@ -61,20 +61,21 @@ export class PicaNewCombinationPanel extends Phaser.GameObjects.Container {
         this.titleName.setFontStyle("bold");
         this.bottomBg = this.scene.make.graphics(undefined, false);
         this.bottomBg.clear();
-        this.bottomBg.fillStyle(0x52D1FF, 0.22);
+        this.bottomBg.fillStyle(0x52D1FF, 1);
         const bottomWidth = 298 * this.dpr, bottomHeight = 390 * this.dpr;
         this.bottomBg.fillRoundedRect(-bottomWidth * 0.5, -bottomHeight * 0.5, bottomWidth, bottomHeight);
         this.bottomBg.y = -this.height * 0.5 + bottomHeight * 0.5 + 45 * this.dpr;
         this.combineNameBg = this.scene.make.image({ key: UIAtlasName.illustrate_new, frame: "illustrate_favorites_popup_title" });
         this.combineNameBg.y = -this.height * 0.5 + 75 * this.dpr;
-        this.combinName = this.scene.make.text({ style: UIHelper.colorStyle("#205BBC", 15 * this.dpr) }).setOrigin(0, 0.5);
+        this.combinName = this.scene.make.text({ style: UIHelper.whiteStyle(this.dpr, 14) }).setOrigin(0.5);
         this.combinName.y = this.combineNameBg.y;
         this.createGridTable();
         this.add([this.backgrand, bg, titlebg, this.titleName, this.closeButton, this.bottomBg, this.combineNameBg, this.combinName, this.mGameGrid]);
         this.resize(0, 0);
     }
-    setGallaryData(datas: IExtendCountablePackageItem[]) { // op_client.OP_CLIENT_REQ_VIRTUAL_WORLD_PKT_UPDATE_GALLERY
-        this.mGameGrid.setItems(datas);
+    setGallaryData(data: IGalleryCombination) {
+        this.combinName.text = data.name;
+        this.mGameGrid.setItems(data.requirement);
         this.mGameGrid.setT(0);
     }
     public setHandler(send: Handler) {
@@ -82,19 +83,19 @@ export class PicaNewCombinationPanel extends Phaser.GameObjects.Container {
     }
 
     private onCloseHandler() {
-        if (this.send) this.send.run();
+        if (this.send) this.send.runWith("close");
     }
 
     private createGridTable() {
-        const tableHeight = 297 * this.dpr;
-        const tableWidth = 298 * this.dpr;
-        const cellWidth = 87 * this.dpr;
+        const tableHeight = 330 * this.dpr;
+        const tableWidth = 285 * this.dpr;
+        const cellWidth = 73 * this.dpr;
         const cellHeight = 92 * this.dpr;
         const tableConfig = {
             x: 0,
             y: 0,
             table: {
-                width: this.width,
+                width: tableWidth,
                 height: tableHeight,
                 columns: 4,
                 cellWidth,
@@ -120,7 +121,7 @@ export class PicaNewCombinationPanel extends Phaser.GameObjects.Container {
         this.mGameGrid.on("cellTap", (cell) => {
             this.onSelectItemHandler(cell);
         });
-        this.mGameGrid.y = this.height * 0.5 - tableHeight * 0.5 - 25 * this.dpr;
+        this.mGameGrid.y = this.height * 0.5 - tableHeight * 0.5 - 15 * this.dpr;
     }
     private onSelectItemHandler(cell: PicaIllustratedItemButton) {
         if (this.send) this.send.runWith(["furidetail", cell.itemData]);

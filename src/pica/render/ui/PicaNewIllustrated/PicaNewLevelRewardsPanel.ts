@@ -103,7 +103,7 @@ export class PicaNewLevelRewardsPanel extends Phaser.GameObjects.Container {
                     cellContainer = new LevelItem(this.scene, cellWidth, cellHeight, this.dpr, this.zoom);
                 }
                 cellContainer.setLevelData(item);
-                if (!this.curLevelItem) this.onSelectItemHandler(cellContainer);
+                this.setDefaultItem(cellContainer, item);
                 return cellContainer;
             },
         };
@@ -123,6 +123,12 @@ export class PicaNewLevelRewardsPanel extends Phaser.GameObjects.Container {
         this.rewardsPanel.setRewardsData(groupData);
     }
 
+    private setDefaultItem(cell: LevelItem, data: IGalleryLevelGroup) {
+        if ((data.rewards && !this.curLevelItem) || (this.curLevelItem && this.curLevelItem.groupData.level === data.level)) {
+            this.curLevelItem = undefined;
+            this.onSelectItemHandler(cell);
+        }
+    }
     private onReceivedHandler(data: IGalleryLevel) {
         if (this.send) this.send.runWith(["rewards", data.id]);
     }
@@ -193,9 +199,9 @@ class RightRewardsPanel extends Phaser.GameObjects.Container {
                 this.gridLayout.add(item);
                 this.gridItems.push(item);
             }
-            item.setItemData(datas[i]);
+            item.setItemData(data);
             item.visible = true;
-            if (!this.curItem) this.onSelectHandler(undefined, item);
+            this.setDefaultItem(item, data);
         }
         this.gridLayout.Layout();
     }
@@ -206,7 +212,12 @@ class RightRewardsPanel extends Phaser.GameObjects.Container {
         this.curItem = obj;
         this.rewardsTips.text = i18n.t("illustrate.meetrewardtips", { name: obj.galleryData.exp });
     }
-
+    private setDefaultItem(cell: RewardItem, data: IGalleryLevel) {
+        if (!this.curItem || this.curItem.galleryData.id === data.id) {
+            this.curItem = undefined;
+            this.onSelectHandler(undefined, cell);
+        }
+    }
 }
 class RewardItem extends ButtonEventDispatcher {
     public galleryData: IGalleryLevel;
@@ -247,7 +258,7 @@ class RewardItem extends ButtonEventDispatcher {
             this.rewardBtn.setText(i18n.t("common.receivereward"));
             this.rewardBtn.setInteractive();
         } else if (data.received === 3) {
-            this.rewardBtn.setFrameNormal(UIHelper.threeRedSmall);
+            this.rewardBtn.setFrameNormal(UIHelper.threeGraySmall);
             this.rewardBtn.setText(i18n.t("common.received"));
             this.rewardBtn.disInteractive();
         }

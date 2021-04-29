@@ -7,6 +7,9 @@ export interface IGalleryCombination {
     difficult: number;
     requirement: string[] | ICountablePackageItem[];
     rewardItems: ICountablePackageItem[];
+    gotcount: number;
+    subsection: number[];
+    gotindex: number[];
 }
 
 export interface IGalleryLevel {

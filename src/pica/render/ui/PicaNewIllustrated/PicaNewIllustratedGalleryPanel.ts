@@ -31,7 +31,6 @@ export class PicaNewIllustratedGalleryPanel extends Phaser.GameObjects.Container
         const w = width || this.width;
         const h = height || this.height;
         this.setSize(w, h);
-        this.gridLayout.setSize(w, h);
         if (h > 600 * this.dpr) this.pagInterval = 5;
         this.gridLayout.y = -this.height * 0.5 + this.gridLayout.height * 0.5;
         this.bottomPageTex.y = this.height * 0.5 - 40 * this.dpr;

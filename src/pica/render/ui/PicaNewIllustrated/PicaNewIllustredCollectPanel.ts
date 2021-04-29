@@ -24,7 +24,8 @@ export class PicaIllustredCollectPanel extends Phaser.GameObjects.Container {
         const w = width || this.width;
         const h = height || this.height;
         this.setSize(w, h);
-        this.mGameGrid.setSize(w, h);
+        this.mGameGrid.setSize(w, h - 30 * this.dpr);
+        this.mGameGrid.y = -15* this.dpr;
         this.mGameGrid.resetMask();
     }
     refresMask() {
@@ -48,7 +49,7 @@ export class PicaIllustredCollectPanel extends Phaser.GameObjects.Container {
     init() {
         const tableHeight = this.height;
         const cellWidth = 326 * this.dpr;
-        const cellHeight = 100 * this.dpr;
+        const cellHeight = 82 * this.dpr;
         const tableConfig = {
             x: 15 * this.dpr,
             y: 0,
@@ -118,12 +119,12 @@ class IllustratedCollectItem extends Phaser.GameObjects.Container {
         this.background = this.scene.make.image({ key: UIAtlasName.illustrate_new, frame: "illustrate_collect_bg_1" });
         this.itemIcon = new DynamicImage(scene, -width * 0.5 + 36 * dpr, 0);
         this.titleTex = this.scene.make.text({ style: UIHelper.whiteStyle(dpr) }).setOrigin(0, 0.5);
-        this.titleTex.x = -this.width * 0.5 + 10 * dpr;
-        this.titleTex.y = -this.height * 0.5 + 20 * dpr;
+        this.titleTex.x = -this.width * 0.5 + 80 * dpr;
+        this.titleTex.y = - 10 * dpr;
         this.titleTex.setFontStyle("bold");
         this.desTex = this.scene.make.text({ style: UIHelper.colorStyle("#006ED4", 10 * dpr) }).setOrigin(0, 0.5);
         this.desTex.x = this.titleTex.x;
-        this.desTex.y = this.titleTex.y + 20 * dpr;
+        this.desTex.y = 10 * dpr;
         this.collectTex = this.scene.make.text({ style: UIHelper.whiteStyle(dpr, 14) }).setOrigin(1, 0.5);
         this.collectTex.setFontStyle("bold");
         this.collectTex.x = width * 0.5 - 42 * dpr;
@@ -138,6 +139,7 @@ class IllustratedCollectItem extends Phaser.GameObjects.Container {
         this.combiData = data;
         this.titleTex.text = data.name;
         this.desTex.text = data.des;
+        data.difficult = Number(data.difficult);
         const itemData: any = data.requirement[0];
         const url = Url.getOsdRes(itemData.texturePath);
         this.itemIcon.load(url);
@@ -145,7 +147,7 @@ class IllustratedCollectItem extends Phaser.GameObjects.Container {
         const difficults = this.getbgName(data.difficult);
         const color = difficults[0];
         this.background.setFrame(difficults[1]);
-        this.collectTex.text = `${data["count"]}/${data.requirement.length}`;
+        this.collectTex.text = `${data.gotcount}/${data.requirement.length}`;
         this.collectTex.setColor(color);
         this.desTex.setColor(color);
 
@@ -178,5 +180,6 @@ class IllustratedCollectItem extends Phaser.GameObjects.Container {
                 temps = ["#A50005", "illustrate_collect_bg_5"];
                 break;
         }
+        return temps;
     }
 }

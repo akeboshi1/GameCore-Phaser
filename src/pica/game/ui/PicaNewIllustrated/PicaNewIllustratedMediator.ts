@@ -3,7 +3,7 @@ import { BasicMediator, CacheDataManager, DataMgrType, Game } from "gamecore";
 import { EventType, ModuleName } from "structure";
 import { BaseDataConfigManager, GalleryConfig, GalleryType } from "../../config";
 import { PicaNewIllustrated } from "./PicaNewIllustrated";
-import { IGalleryCombination, IGalleryLevel, IGalleryLevelGroup, IShownGalleryReward, IUpdateGalleryDatas, MainUIRedType, RedEventType } from "../../../structure";
+import { IGalleryCombination, IGalleryLevel, IGalleryLevelGroup, IGalleryCollection, IUpdateGalleryDatas, MainUIRedType, RedEventType } from "../../../structure";
 import { PicaGame } from "../../pica.game";
 import { PicaCommandMsgType } from "../../command/pica.command.msg.type";
 import { ObjectAssign } from "utils";
@@ -103,8 +103,8 @@ export class PicaNewIllustratedMediator extends BasicMediator {
      * 获取收集套装奖励
      * @param id
      */
-    private takeGalleryGatheringReward(id: number) {
-        this.game.sendCustomProto("INT", "galleryFacade:takeGalleryGatheringReward", { count: id });
+    private takeGalleryGatheringReward(data: { id: number, indexed: number }) {
+        this.game.sendCustomProto("INT_LIST", "galleryFacade:takeGalleryGatheringReward", [data.id, data.indexed]);
     }
 
     /**
@@ -193,15 +193,16 @@ export class PicaNewIllustratedMediator extends BasicMediator {
 
     private onHasGotCollectRewardsHandler(proto: any) {
         const content = proto.content;
-        const ids: number[] = content.collectionIds;
-        const temps = this.getCombinationByIDs(ids);
+        const ids: IGalleryCollection[] = content.collectionIds;
+        const temps = this.getCollectCombinations(ids);
 
     }
 
     private onDisplayCollectRewardsHandler(proto: any) {
         const content = proto.content;
-        const ids: IShownGalleryReward[] = content.shownRewards;
-        const temps = this.getDisplayCombinations(ids);
+        const ids: IGalleryCollection[] = content.shownRewards;
+        const temps = this.getCollectCombinations(ids);
+        if (this.mView) this.mView.setDisplayCollectDatas(temps);
     }
 
     private onUpdateGalleryDatasHandler(Data: any) {
@@ -275,23 +276,12 @@ export class PicaNewIllustratedMediator extends BasicMediator {
         }
         return combinations;
     }
-    private getCombinationByIDs(ids: number[]) {
-        const map = <any>this.config.getGalleryMap(GalleryType.combination);
-        const temps: IGalleryCombination[] = [];
-        for (const id of ids) {
-            if (map.has(id)) {
-                temps.push(map.get(id));
-            }
-        }
-        return temps;
-    }
 
-    private getDisplayCombinations(datas: IShownGalleryReward[]) {
+    private getCollectCombinations(datas: IGalleryCollection[]) {
         const map = <any>this.config.getGalleryMap(GalleryType.combination);
-        const temps: IGalleryCombination[] = [];
         for (const temp of datas) {
-            if (map.has(temp.rewardid)) {
-                const combination = map.get(temp.rewardid);
+            if (map.has(temp.rewardId)) {
+                const combination = map.get(temp.rewardId);
                 ObjectAssign.excludeAllAssign(temp, combination);
             }
         }

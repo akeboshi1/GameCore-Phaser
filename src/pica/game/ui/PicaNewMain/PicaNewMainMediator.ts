@@ -59,7 +59,7 @@ export class PicaNewMainMediator extends BasicMediator {
     private onUpdateRoomHandler(content: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_EDIT_MODE_ROOM_INFO) {
         if (this.mPanelInit) {
             if (this.mView)
-                this.mView.setRoomInfo(content.name, content.hasPraised, content.playerCount, content.roomType, this.isSelfRoom);
+                this.mView.setRoomInfo(content.name, content.praise, content.hasPraised, content.playerCount, content.roomType, this.isSelfRoom);
         }
     }
 

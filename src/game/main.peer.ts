@@ -4,7 +4,7 @@ import { PBpacket, Buffer } from "net-socket-packet";
 import * as protos from "pixelpai_proto";
 import { ServerAddress } from "../../lib/net/address";
 import { Game } from "./game";
-import {IPos, Logger, LogicPos} from "utils";
+import {IPos, Logger, LogicPos, Url} from "utils";
 import { ILauncherConfig, MAIN_WORKER, RENDER_PEER, ModuleName, EventType, PHYSICAL_WORKER, PHYSICAL_WORKER_URL, GameState } from "structure";
 import { PicaGame } from "picaWorker";
 import { DataMgrType } from "./data.manager/dataManager";
@@ -145,6 +145,9 @@ export class MainPeer extends RPCPeer {
     @Export()
     public createGame(config: ILauncherConfig) {
         this.mConfig = config;
+        Url.OSD_PATH = this.mConfig.osd;
+        Url.RES_PATH = `resources/`;
+        Url.RESUI_PATH = `${Url.RES_PATH}ui/`;
         this.state = GameState.LinkWorker;
         // ============
         Logger.getInstance().debug("createGame");

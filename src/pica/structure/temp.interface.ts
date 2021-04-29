@@ -9,7 +9,8 @@ export interface IUpdateGalleryDatas {
     badgeExp: number;
     badgePresentLevelexp: number;
 }
-export interface IShownGalleryReward extends IGalleryCombination {
-    rewardid: number;
+export interface IGalleryCollection extends IGalleryCombination {
+    rewardId: number;
     gotcount: number;
+    gotindex: number[];
 }

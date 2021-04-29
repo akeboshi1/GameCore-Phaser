@@ -1,7 +1,7 @@
 import { Button, ClickEvent, NineSlicePatch } from "apowophaserui";
 import { ButtonEventDispatcher, ProgressMaskBar } from "gamecoreRender";
 import { UIAtlasName } from "../../../res";
-import { Font, Handler } from "utils";
+import { Font, Handler, UIHelper } from "utils";
 import { op_pkt_def } from "pixelpai_proto";
 import { ImageValue } from "../../ui";
 export class PicaNewHeadPanel extends Phaser.GameObjects.Container {
@@ -18,11 +18,11 @@ export class PicaNewHeadPanel extends Phaser.GameObjects.Container {
     private moneyvalue: ImageValue;
     private diamondvalue: ImageValue;
     private moneyAddBtn: Button;
-    private praiseButton: Button;
-    private praiseImg: Phaser.GameObjects.Image;
+    private roomSetBtn: RoomSetButton;
+    private roomPraiseBtn: RoomPraiseButton;
     private sceneTex: Phaser.GameObjects.Text;
     private peoplevalue: ImageValue;
-    private praisebg: NineSlicePatch;
+    private sceneNamebg: Phaser.GameObjects.Image;
     private peoplebg: Phaser.GameObjects.Image;
     private money: number = 0;
     private diamond: number = 0;
@@ -121,28 +121,24 @@ export class PicaNewHeadPanel extends Phaser.GameObjects.Container {
         peopeclickCon.enable = true;
         peopeclickCon.on(ClickEvent.Tap, this.onOpenOnlineHandler, this);
         peopeclickCon.x = this.peoplevalue.x;
-        const praisebg = new NineSlicePatch(this.scene, 0, 0, 50 * this.dpr, 27 * this.dpr, UIAtlasName.uicommon, "home_mapname_bg", {
-            left: 16 * this.dpr,
-            top: 0 * this.dpr,
-            right: 16 * this.dpr,
-            bottom: 0 * this.dpr
-        }, this.dpr, this.scale, 0);
-        praisebg.x = -peoplebg.width - 15 * this.dpr - praisebg.width * 0.5;
+        this.sceneNamebg = this.scene.make.image({ key: UIAtlasName.uicommon, frame: "home_name_bg" }).setOrigin(0.5);
+        this.sceneNamebg.x = -peoplebg.width - 15 * this.dpr - this.sceneNamebg.width * 0.5;
         this.sceneTex = this.scene.make.text({
-            x: praisebg.x - 10 * this.dpr, y: 0, text: "", style: { color: "#FFF449", fontSize: 11 * this.dpr, fontFamily: Font.DEFULT_FONT }
+            x: this.sceneNamebg.x - 10 * this.dpr, y: 0, text: "", style: { color: "#FFF449", fontSize: 11 * this.dpr, fontFamily: Font.DEFULT_FONT }
         }).setOrigin(0.5);
-        this.praisebg = praisebg;
-        this.praiseButton = new Button(this.scene, UIAtlasName.uicommon, "home_praise_bg", "home_praise_bg");
-        this.praiseImg = this.scene.make.image({ x: 0, y: 0, key: UIAtlasName.uicommon, frame: "home_praise" }, false);
-        this.praiseButton.add(this.praiseImg);
-        this.praiseButton.x = -peoplebg.width - 29 * this.dpr;
-        this.praiseButton.y = 0;
-        this.praiseButton.visible = false;
+        this.roomSetBtn = new RoomSetButton(this.scene, 30 * this.dpr, 30 * this.dpr, this.dpr, 1);
+        this.roomSetBtn.on(ClickEvent.Tap, this.onOpenHouseHandler, this);
+        this.roomPraiseBtn = new RoomPraiseButton(this.scene, this.dpr, 1);
+        this.roomSetBtn.x = -peoplebg.width - 29 * this.dpr;
+        this.roomSetBtn.y = 0;
+        this.roomPraiseBtn.on(ClickEvent.Tap, this.onPraiseHandler, this);
+        this.roomPraiseBtn.x = -peoplebg.width - 38 * this.dpr;
+        this.roomPraiseBtn.y = 0;
         this.sceneclickCon = new ButtonEventDispatcher(this.scene, 0, 0);
         this.sceneclickCon.setSize(100 * this.dpr, 30 * this.dpr);
         this.sceneclickCon.on(ClickEvent.Tap, this.onOpenHouseHandler, this);
-        this.sceneclickCon.x = praisebg.x;
-        this.sceneCon.add([peoplebg, this.peoplevalue, peopeclickCon, praisebg, this.sceneTex, this.sceneclickCon, this.praiseButton]);
+        this.sceneclickCon.x = this.sceneNamebg.x;
+        this.sceneCon.add([peoplebg, this.peoplevalue, peopeclickCon, this.sceneNamebg, this.sceneTex, this.sceneclickCon, this.roomSetBtn, this.roomPraiseBtn]);
         this.sceneCon.x = this.width * 0.5 - 10 * this.dpr;
         this.sceneCon.y = -15 * this.dpr;
     }
@@ -178,45 +174,25 @@ export class PicaNewHeadPanel extends Phaser.GameObjects.Container {
         this.diamond = diamond;
     }
 
-    public setSceneData(sceneName: string, isPraise: boolean, people: number, roomType: string, isself: boolean = false) {
+    public setSceneData(sceneName: string, Praise: number, isPraise: boolean, people: number, roomType: string, isself: boolean = false) {
         this.sceneTex.text = sceneName;
         this.praise = isPraise;
         this.isself = isself;
         this.peoplevalue.setText(people + "");
-        this.praiseButton.off(ClickEvent.Tap, this.onPraiseHandler, this);
         if (this.canPraise(roomType)) {
-            this.praiseButton.visible = true;
-            this.praiseButton.on(ClickEvent.Tap, this.onPraiseHandler, this);
-            if (isself) {
-                this.praiseImg.setFrame("home_set");
-            } else {
-                this.praiseImg.setFrame(isPraise ? "home_praise_1" : "home_praise");
+            this.roomSetBtn.visible = isself;
+            this.roomPraiseBtn.visible = !isself;
+            this.roomPraiseBtn.setCount(Praise);
+            this.roomPraiseBtn.setPraise(isPraise);
+            if (!isself) {
+                this.sceneTex.x = this.sceneNamebg.x - 20 * this.dpr;
             }
-            let bgwidth = this.sceneTex.width + 40 * this.dpr;
-            bgwidth = bgwidth < 60 * this.dpr ? 60 * this.dpr : bgwidth;
-            this.praisebg.resize(bgwidth, 27 * this.dpr);
-            this.praisebg.x = -this.peoplebg.width - 15 * this.dpr - this.praisebg.width * 0.5;
-            this.sceneTex.x = this.praisebg.x - 11 * this.dpr;
         } else {
-            let bgwidth = this.sceneTex.width + 20 * this.dpr;
-            bgwidth = bgwidth < 40 * this.dpr ? 40 * this.dpr : bgwidth;
-            this.praisebg.resize(bgwidth, 27 * this.dpr);
-            this.praiseButton.visible = false;
-            this.praisebg.x = -this.peoplebg.width - 15 * this.dpr - this.praisebg.width * 0.5;
-            this.sceneTex.x = this.praisebg.x;
+            this.roomPraiseBtn.visible = false;
+            this.roomSetBtn.visible = false;
+            this.sceneTex.x = this.sceneNamebg.x;
         }
-        this.sceneclickCon.setSize(this.praisebg.width, this.praisebg.height);
-        this.sceneclickCon.x = this.praisebg.x;
         this.sceneclickCon.enable = true;
-    }
-
-    public setSelfRoomInfo(isself: boolean = false) {
-        this.isself = isself;
-        if (isself) {
-            this.praiseImg.setFrame("home_set");
-        } else {
-            this.praiseImg.setFrame(this.praise ? "home_praise_1" : "home_praise");
-        }
     }
 
     public setHandler(send: Handler) {
@@ -303,5 +279,59 @@ export class PicaNewHeadPanel extends Phaser.GameObjects.Container {
             this.moneyTween.remove();
             this.moneyTween = undefined;
         }
+    }
+}
+
+class RoomSetButton extends ButtonEventDispatcher {
+    constructor(scene: Phaser.Scene, width: number, height: number, dpr: number, zoom: number) {
+        super(scene, 0, 0);
+        this.dpr = dpr;
+        this.zoom = zoom;
+        this.setSize(width, height);
+        const bg = this.scene.make.image({ key: UIAtlasName.uicommon, frame: "home_praise_bg" });
+        const img = this.scene.make.image({ key: UIAtlasName.uicommon, frame: "home_set" });
+        this.add([bg, img]);
+        this.enable = true;
+    }
+}
+class RoomPraiseButton extends ButtonEventDispatcher {
+    private countTex: Phaser.GameObjects.Text;
+    private uintImg: Phaser.GameObjects.Image;
+    private textPosx: number;
+    private praiseImg: Phaser.GameObjects.Image;
+    constructor(scene: Phaser.Scene, dpr: number, zoom: number) {
+        super(scene, 0, 0);
+        this.dpr = dpr;
+        this.zoom = zoom;
+        const bg = this.scene.make.image({ key: UIAtlasName.uicommon, frame: "home_likes_bg" });
+        this.setSize(bg.width, bg.height);
+        this.praiseImg = this.scene.make.image({ key: UIAtlasName.uicommon, frame: "home_praise" });
+        this.praiseImg.x = -this.width * 0.5 + this.praiseImg.width * 0.5 + 5 * dpr;
+        this.countTex = this.scene.make.text({ style: UIHelper.whiteStyle(dpr, 11) }).setOrigin(0.5);
+        this.textPosx = this.width * 0.5 - 10 * dpr;
+        this.countTex.x = this.textPosx;
+        this.uintImg = this.scene.make.image({ key: UIAtlasName.uicommon, frame: "home_silver_myriad" }).setOrigin(0, 0.5);
+        this.add([bg, this.praiseImg, this.countTex, this.uintImg]);
+        this.uintImg.visible = false;
+        this.enable = true;
+    }
+
+    public setCount(count: number) {
+        if (count > 9999) {
+            this.countTex.text = Math.floor(count / 10000) + "";
+            this.uintImg.visible = true;
+            const tempWidth = this.uintImg.width + this.countTex.width;
+            this.countTex.x = this.textPosx - tempWidth * 0.5 + this.countTex.width * 0.5;
+            this.uintImg.x = this.countTex.x + this.countTex.width * 0.5 + this.uintImg.width * 0.5;
+        } else {
+            this.countTex.text = count + "";
+            this.uintImg.visible = false;
+            this.countTex.x = this.textPosx;
+        }
+    }
+
+    setPraise(praise: boolean) {
+        this.enable = !praise;
+        // this.praiseImg.setFrame(praise ? "home_praise" : "home_praise_1");
     }
 }

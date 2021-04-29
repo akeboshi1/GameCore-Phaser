@@ -78,16 +78,10 @@ export class PicaNewMainPanel extends PicaBasePanel {
         this.headPanel.setHeadData(level, energy, money, diamond);
     }
 
-    setRoomInfo(sceneName: string, isPraise: boolean, people: number, roomType: string, isself: boolean = false) {
+    setRoomInfo(sceneName: string, Praise: number, isPraise: boolean, people: number, roomType: string, isself: boolean = false) {
         this.sceneData = { sceneName, isPraise, people, roomType, isself };
         if (!this.mInitialized) return;
-        this.headPanel.setSceneData(sceneName, isPraise, people, roomType, isself);
-        this.isSelfRoom = isself;
-    }
-
-    setSelfRoomInfo(isself: boolean = false) {
-        if (!this.mInitialized) return;
-        this.headPanel.setSelfRoomInfo(isself);
+        this.headPanel.setSceneData(sceneName, Praise, isPraise, people, roomType, isself);
         this.isSelfRoom = isself;
     }
 

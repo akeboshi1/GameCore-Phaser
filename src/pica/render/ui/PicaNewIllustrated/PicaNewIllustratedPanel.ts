@@ -78,7 +78,7 @@ export class PicaNewIllustratedPanel extends PicaBasePanel {
     }
     setDisplayCollectDatas(combinations: IGalleryCombination[]) {
         this.tempDatas["combinations"] = combinations;
-        if (this.mInitialized) return;
+        if (!this.mInitialized) return;
         if (this.detailPanel) this.detailPanel.setDisplayCollectDatas(combinations);
     }
     setAlreadyCollectDatas(combinations: IGalleryCombination) {
@@ -118,8 +118,8 @@ export class PicaNewIllustratedPanel extends PicaBasePanel {
     private openDetailPanel() {
         this.showDetailPanel();
         if (this.tempDatas) {
-            this.detailPanel.setGallaryData(this.tempDatas.gallery);
-            this.detailPanel.setDisplayCollectDatas(this.tempDatas.combinations);
+            if (this.tempDatas.gallery) this.detailPanel.setGallaryData(this.tempDatas.gallery);
+            if (this.tempDatas.combinations) this.detailPanel.setDisplayCollectDatas(this.tempDatas.combinations);
         }
         if (this.redObj) this.detailPanel.setRedsState(this.redObj[MainUIRedType.GALLERY]);
     }
@@ -138,14 +138,17 @@ export class PicaNewIllustratedPanel extends PicaBasePanel {
         this.detailPanel.visible = false;
     }
 
-    private openFuriDetail(prop: IExtendCountablePackageItem) {
-        this.showFuriDetailPanel();
+    private openFuriDetail(prop: IExtendCountablePackageItem, compl?: Handler) {
+        this.showFuriDetailPanel(compl);
         this.furiDetail.setProp(prop);
     }
-    private showFuriDetailPanel() {
+    private showFuriDetailPanel(compl?: Handler) {
         if (!this.furiDetail) {
             this.furiDetail = new PicaNewFuriniDetailPanel(this.scene, this.render, 334 * this.dpr, 353 * this.dpr, this.dpr, this.scale);
-            this.furiDetail.setHandler(new Handler(this, this.onFuriDetailHandler));
+            this.furiDetail.setHandler(new Handler(this, () => {
+                this.onFuriDetailHandler();
+                if (compl) compl.run();
+            }));
         }
         this.content.add(this.furiDetail);
         this.furiDetail.visible = true;
@@ -157,8 +160,9 @@ export class PicaNewIllustratedPanel extends PicaBasePanel {
         this.furiDetail.visible = false;
     }
 
-    private openCombinationPanel() {
+    private openCombinationPanel(data: IGalleryCombination) {
         this.showCombinationPanel();
+        this.combinePanel.setGallaryData(data);
     }
     private showCombinationPanel() {
         if (!this.combinePanel) {
@@ -229,22 +233,23 @@ export class PicaNewIllustratedPanel extends PicaBasePanel {
         this.content.remove(this.alreadyCollectPanel);
         this.alreadyCollectPanel.visible = false;
     }
-    private openCollectRewardsPanel() {
+    private openCollectRewardsPanel(data: IGalleryCombination) {
         this.showCollectRewardsPanel();
+        this.collectRewardsPanel.setCombinationData(data);
     }
     private showCollectRewardsPanel() {
-        if (!this.collectBadgePanel) {
-            this.collectBadgePanel = new PicaNewCollectBadgePanel(this.scene, this.scaleWidth, this.scaleHeight, this.dpr, this.scale);
-            this.collectBadgePanel.setHandler(new Handler(this, this.onCollectRewardsHandler));
+        if (!this.collectRewardsPanel) {
+            this.collectRewardsPanel = new PicaNewCollectRewardsPanel(this.scene, this.scaleWidth, this.scaleHeight, this.dpr, this.scale);
+            this.collectRewardsPanel.setHandler(new Handler(this, this.onCollectRewardsHandler));
         }
-        this.content.add(this.collectBadgePanel);
-        this.collectBadgePanel.visible = true;
-        this.collectBadgePanel.refreshMask();
+        this.content.add(this.collectRewardsPanel);
+        this.collectRewardsPanel.show();
+        this.collectRewardsPanel.refreshMask();
     }
 
     private hideCollectRewardsPanel() {
-        this.content.remove(this.alreadyCollectPanel);
-        this.alreadyCollectPanel.visible = false;
+        this.content.remove(this.collectRewardsPanel);
+        this.collectRewardsPanel.hide();
     }
     private onListHandler(tag: string, data?: any) {
         if (tag === "make") {
@@ -264,7 +269,7 @@ export class PicaNewIllustratedPanel extends PicaBasePanel {
             this.hideDetailPanel();
             this.showListPanel();
         } else if (tag === "combinations") {
-            this.openCombinationPanel();
+            this.openCombinationPanel(data);
         } else if (tag === "furidetail") {
             this.openFuriDetail(data);
             if (data.status === 1) this.render.renderEmitter(this.key + "_changeGalleryStatus", data.id);
@@ -276,9 +281,11 @@ export class PicaNewIllustratedPanel extends PicaBasePanel {
             this.openLevelRewardsPanel();
             this.hideDetailPanel();
         } else if (tag === "showcombination") {
-            this.openCombinationPanel();
+            this.openCombinationPanel(data);
+            this.hideDetailPanel();
         } else if (tag === "combinationrewards") {
-            this.openCollectRewardsPanel();
+            this.openCollectRewardsPanel(data);
+            this.hideDetailPanel();
         } else if (tag === "showalreadycollected") {
             this.openAlreadCollectedPanel();
         } else if (tag === "getlightrewardsd") {
@@ -288,7 +295,13 @@ export class PicaNewIllustratedPanel extends PicaBasePanel {
 
     private onCombinationHandler(tag: string, data: any) {
         if (tag === "furidetail") {
-            this.openFuriDetail(data);
+            this.hideCombinationPanel();
+            this.openFuriDetail(data, new Handler(this, () => {
+                this.showCombinationPanel();
+            }));
+        } else if (tag === "close") {
+            this.hideCombinationPanel();
+            this.showDetailPanel();
         }
     }
 
@@ -311,7 +324,12 @@ export class PicaNewIllustratedPanel extends PicaBasePanel {
 
     }
     private onCollectRewardsHandler(tag: string, data: any) {
-
+        if (tag === "close") {
+            this.hideCollectRewardsPanel();
+            this.showDetailPanel();
+        } else if (tag === "combrewards") {
+            this.render.renderEmitter(this.key + "_getgatheringrewards", { id: data.id, index: data.indexed });
+        }
     }
 
     private onFuriDetailHandler() {

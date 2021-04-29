@@ -474,7 +474,8 @@
     "meetrewardtips": "*The current progress reaches {{name}}",
     "collected": "Collected",
     "progressreward": "Progress rewards",
-    "collectbadge": "Collector's badge"
+    "collectbadge": "Collector's badge",
+    "collectrewards": "REWARDS"
   },
   "mail": {
     "onekey": "All Receive",

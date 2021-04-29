@@ -94,7 +94,7 @@ export class ResUtils {
     }
 
     static getResRoot(value: string): string {
-        if (Url.RESOURCE_ROOT) return Url.RESOURCE_ROOT + "/" + value;
+        if (Url.OSD_PATH) return Url.OSD_PATH + "/" + value;
         return value;
     }
 }
