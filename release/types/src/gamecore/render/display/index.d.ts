@@ -7,3 +7,4 @@ export * from "./bubble/bubble.container";
 export * from "./display.object";
 export * from "./debugs";
 export * from "./animation";
+export * from "./terrain.grid";

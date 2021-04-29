@@ -1,6 +1,6 @@
+import { IConfigPath } from "structure";
 import { Game } from "../game";
 import { BaseConfigData } from "./base.config.data";
-import { IConfigPath } from "structure";
 export declare class BaseConfigManager {
     protected config: IConfigPath;
     protected baseDirname: string;

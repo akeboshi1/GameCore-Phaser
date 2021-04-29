@@ -1,4 +1,5 @@
 import { PacketHandler, PBpacket } from "net-socket-packet";
+import { op_client } from "pixelpai_proto";
 import { Terrain } from "./terrain";
 import { IElementManager } from "../element/element.manager";
 import { IElement } from "../element/element";
@@ -22,6 +23,7 @@ export declare class TerrainManager extends PacketHandler implements IElementMan
     init(): void;
     update(time: number, delta: number): void;
     dealEmptyTerrain(): void;
+    addSpritesToCache(sprites: op_client.ISprite[]): void;
     destroy(): void;
     get(id: number): Terrain;
     add(sprites: ISprite[]): void;

@@ -5,7 +5,7 @@ import { BaseHandler } from "./base.handler";
 export class CacheDataManager extends BaseHandler {
     public chapters: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_EXPLORE_CHAPTER_PROGRESS;
     public guidText: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_ROOM_SHOW_GUIDE_TEXT;
-    public gallery: op_client.OP_CLIENT_REQ_VIRTUAL_WORLD_PKT_UPDATE_GALLERY;
+    public gallery: any;
     public doneMissionIdList: number[];
     public isSurveyStatus: boolean = false;
     public queryUnlockFurinture: boolean = false;
@@ -88,13 +88,15 @@ export class CacheDataManager extends BaseHandler {
         return undefined;
     }
 
-    setGallery(content: op_client.OP_CLIENT_REQ_VIRTUAL_WORLD_PKT_UPDATE_GALLERY) {
+    setGallery(content: any) {
         if (!this.gallery) this.gallery = content;
         else {
-            this.gallery.reward1NextIndex = content.reward1NextIndex;
-            this.gallery.reward2NextIndex = content.reward2NextIndex;
-            this.gallery.reward1Progress = content.reward1Progress;
-            this.gallery.reward2Progress = content.reward2Progress;
+            this.gallery.galleryLevel = content.galleryLevel;
+            this.gallery.galleryExp = content.galleryExp;
+            this.gallery.nextLevelExp = content.nextLevelExp;
+            this.gallery.badgeLevel = content.badgeLevel;
+            this.gallery.badgeExp = content.badgeExp;
+            this.gallery.badgePresentLevelexp = content.badgePresentLevelexp;
             for (const item of content.list) {
                 let have = false;
                 for (const temp of this.gallery.list) {

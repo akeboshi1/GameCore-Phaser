@@ -9,7 +9,7 @@ import {
     IScenery, LayerName, Handler, IPos, IPosition45Obj, Logger, LogicPos, IFramesModel
 } from "structure";
 import { op_def } from "pixelpai_proto";
-import { IDisplayObject } from "../display";
+import { IDisplayObject, TerrainGrid } from "../display";
 import { BlockManager } from "baseRender";
 import { FramesModel } from "baseGame";
 import { LayerEnum } from "game-capsule";
@@ -63,7 +63,7 @@ export class DisplayManager {
     private preLoadList: any[];
     private loading: boolean = false;
     private mModelCache: Map<number, any>;
-    private mGridLayer: Phaser.GameObjects.Container;
+    private mGridLayer: TerrainGrid;
 
     // ====实例id
     private uuid: number = 0;
@@ -85,6 +85,7 @@ export class DisplayManager {
             this.loading = true;
             this.loadProgress();
         }
+        if (this.mGridLayer) this.mGridLayer.update(time, delta);
     }
 
     public resize(width: number, height: number) {

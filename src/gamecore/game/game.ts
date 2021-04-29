@@ -14,7 +14,7 @@ import { IRoomService } from "./room";
 import { RoomManager } from "./room/room.manager";
 import { User } from "./actor/user";
 import { DataManager } from "./data.manager/dataManager";
-import { BaseConfigManager, DataMgrType } from "./data.manager";
+import { BaseConfigManager, ConfigPath, DataMgrType } from "./data.manager";
 import { NetworkManager } from "./command";
 import version from "../../../version";
 import { MainPeer } from "./main.peer";
@@ -100,7 +100,7 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
     }
 
     public async createGame(config?: ILauncherConfig) {
-        this.mConfig = config;
+        this.setConfig(config);
         await this.initWorld();
         this.peer.state = GameState.InitWorld;
         this.initGame();
@@ -110,6 +110,9 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
 
     public setConfig(config: ILauncherConfig) {
         this.mConfig = config;
+        if (config.config_root) {
+            ConfigPath.ROOT_PATH = config.config_root;
+        }
     }
 
     public startConnect() {

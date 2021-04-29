@@ -149,4 +149,5 @@ export declare class Room extends PacketHandler implements IRoomService, SpriteA
     private setWalkableMap;
     private mapPos2Idx;
     private setState;
+    private showDecorateGrid;
 }

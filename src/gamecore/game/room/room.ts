@@ -462,6 +462,7 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
                 this.addWalkableMark(tempX, tempY, sprite.id, isTerrain ? 0 : 1, canWalk);
             }
         }
+        if (isTerrain) this.showDecorateGrid();
     }
 
     public removeFromWalkableMap(sprite: ISprite, isTerrain: boolean = false) {
@@ -690,7 +691,7 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
                 const val = this.isWalkable(tempX, tempY);
                 if (!val) {
                     // Logger.getInstance().debug("#place ", val, pos, tempX, tempY);
-                    result[i][j] = 0;
+                    result[i][j] = 2;
                 }
             }
         }
@@ -875,10 +876,11 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
         } else if (nodeType === op_def.NodeType.TerrainNodeType) {
             for (const sp of content.sprites) {
                 if (this.mTerrainManager.get(sp.id)) continue;
-                const sprite = new Sprite(sp, nodeType);
-                addList.push(sprite);
+                // const sprite = new Sprite(sp, nodeType);
+                addList.push(sp);
             }
-            this.mTerrainManager.add(addList);
+            // this.mTerrainManager.add(addList);
+            this.mTerrainManager.addSpritesToCache(addList);
         }
     }
 
@@ -1088,5 +1090,11 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
     private setState(state: op_client.IStateGroup) {
         if (!this.mStateManager) this.mStateManager = new RoomStateManager(this);
         this.mStateManager.setState(state);
+    }
+
+    private showDecorateGrid() {
+        // if (!this.isDecorating) return;
+        if (!this.mTerrainManager.hasAddComplete) return;
+        this.game.renderPeer.showEditGrids(this.mMiniSize, this.mWalkableMap);
     }
 }

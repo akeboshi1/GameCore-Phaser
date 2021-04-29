@@ -19,7 +19,7 @@ export class TerrainManager extends PacketHandler implements IElementManager {
     // ---- by 7
     private mEmptyMap: EmptyTerrain[][];
     private mDirty: boolean = false;
-    private mTerrainCache: any[] = [];
+    private mTerrainCache: any[];
     private mIsDealEmptyTerrain: boolean = false;
     // private mCacheLen: number = 10;
     // private canDealTerrain = false;
@@ -87,6 +87,31 @@ export class TerrainManager extends PacketHandler implements IElementManager {
         });
     }
 
+    public addSpritesToCache(sprites: op_client.ISprite[]) {
+        const ids = [];
+        // sprites 服务端
+        let point: op_def.IPBPoint3f;
+        if (!this.mTerrainCache) this.mTerrainCache = [];
+        this.hasAddComplete = false;
+        for (const sprite of sprites) {
+            point = sprite.point3f;
+
+            this.removeEmpty(new LogicPos(point.x, point.y));
+            if (point) {
+                const s = new Sprite(sprite, op_def.NodeType.TerrainNodeType);
+                if (!s.displayInfo) {
+                    this.checkTerrainDisplay(s);
+                }
+                if (!s.displayInfo) {
+                    ids.push(s.id);
+                }
+                this.mTerrainCache.push(s);
+                // this._add(s);
+            }
+        }
+        this.fetchDisplay(ids);
+    }
+
     public destroy() {
         this.mIsDealEmptyTerrain = false;
         this.roomService.game.emitter.off(ElementManager.ELEMENT_READY, this.dealTerrainCache, this);
@@ -99,7 +124,7 @@ export class TerrainManager extends PacketHandler implements IElementManager {
         }
         if (this.mTerrainCache) {
             this.mTerrainCache.length = 0;
-            this.mTerrainCache = [];
+            this.mTerrainCache = null;
         }
     }
 
@@ -148,31 +173,7 @@ export class TerrainManager extends PacketHandler implements IElementManager {
         if (type !== op_def.NodeType.TerrainNodeType) {
             return;
         }
-        // Logger.getInstance().log("terrain add ====>", sprites);
-        let point: op_def.IPBPoint3f;
-        const ids = [];
-        // sprites 服务端
-        for (const sprite of sprites) {
-            point = sprite.point3f;
-
-            this.removeEmpty(new LogicPos(point.x, point.y));
-            if (point) {
-                const s = new Sprite(sprite, type);
-                if (!s.displayInfo) {
-                    this.checkTerrainDisplay(s);
-                }
-                if (!s.displayInfo) {
-                    ids.push(s.id);
-                }
-                this.mTerrainCache.push(s);
-                // this._add(s);
-            }
-        }
-        this.fetchDisplay(ids);
-
-        if (this.mListener && this.mPacketFrameCount === pf.totalFrame) {
-            this.mListener.onFullPacketReceived(type);
-        }
+        this.addSpritesToCache(sprites);
     }
 
     protected _add(sprite: ISprite): Terrain {
@@ -339,7 +340,8 @@ export class TerrainManager extends PacketHandler implements IElementManager {
                 this._add(sprite);
             });
             this.mTerrainCache.length = 0;
-            this.mTerrainCache = [];
+            this.mTerrainCache = null;
+            this.hasAddComplete = true;
         }
     }
 

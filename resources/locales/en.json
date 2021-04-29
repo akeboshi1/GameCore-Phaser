@@ -67,7 +67,9 @@
     "editor": "Editor",
     "survey": "Survey",
     "notEnough": "Not enough {{name}}",
-    "receive": "Receive"
+    "receive": "Receive",
+    "receivereward": "Receive",
+    "received": "Received"
   },
   "quantityunit": {
     "k": "k",
@@ -191,8 +193,7 @@
     "inputtips": "Please enter the password",
     "editornametips": "Please enter room name, minimum three words",
     "defaultroomtips": "Can only set one default room,\n whether to set the current room as the default room",
-    "roomsetting":"SETTING"
-
+    "roomsetting": "SETTING"
   },
   "business_street": {
     "commercial_street": "STORES",
@@ -272,7 +273,7 @@
     "givegift": "Gifts",
     "placeholder": "Say something…",
     "turmpttips": "A speaker message is enabled. Each message consumes a speaker",
-    "turmptenough":"Insufficient number of speakers"
+    "turmptenough": "Insufficient number of speakers"
   },
   "minecar": {
     "discard": "discard",
@@ -468,7 +469,12 @@
     "furindetail": "Furniture details",
     "surveyfurni": " SURVEY ",
     "cooking": "Cooking",
-    "newdiscovery": "Discovery"
+    "newdiscovery": "Discovery",
+    "levelrewardtips": "The {{name}} level collects rewards",
+    "meetrewardtips": "*The current progress reaches {{name}}",
+    "collected": "Collected",
+    "progressreward": "Progress rewards",
+    "collectbadge": "Collector's badge"
   },
   "mail": {
     "onekey": "All Receive",

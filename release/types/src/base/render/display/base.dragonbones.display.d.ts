@@ -85,7 +85,6 @@ export declare class BaseDragonbonesDisplay extends BaseDisplay {
     private mBoardPoint;
     private readonly UNPACK_SLOTS;
     private readonly UNCHECK_AVATAR_PROPERTY;
-    private mPreReplaceTextureKey;
     private mReplaceTextureKey;
     private mLoadListeners;
     private mTexturesListeners;
@@ -133,4 +132,6 @@ export declare class BaseDragonbonesDisplay extends BaseDisplay {
     private setReplaceArrAndLoadMap;
     private addPhaserListener;
     private removePhaserListener;
+    private recordReplacedTexture;
+    private destroyReplacedTextureManually;
 }

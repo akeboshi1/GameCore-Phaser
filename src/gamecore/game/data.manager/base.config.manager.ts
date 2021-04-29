@@ -1,8 +1,8 @@
-import { Game } from "../game";
+import { IConfigPath, Logger } from "structure";
 import { load, loadArr } from "utils";
-import { Logger } from "structure";
+import { Game } from "../game";
 import { BaseConfigData } from "./base.config.data";
-import { IConfigPath } from "structure";
+import { ConfigPath } from "./config";
 export class BaseConfigManager {
     protected baseDirname: string;
     protected dataMap: Map<string, BaseConfigData> = new Map();

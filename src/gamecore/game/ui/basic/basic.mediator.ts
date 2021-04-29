@@ -118,7 +118,9 @@ export class BasicMediator implements IMediator {
         if (this.mModel) this.mModel.destroy();
         if (this.key.length > 0 && this.game && this.game.peer && this.game.peer.hasOwnProperty(this.key)) delete this.game.peer[this.key];
     }
-
+    get proto() {
+        return this.game.customProto;
+    }
     protected _show() {
     }
 
@@ -137,7 +139,6 @@ export class BasicMediator implements IMediator {
         }
         return this.game.peer.exportProperty(this, this.game.peer, this.key).onceReady(callback);
     }
-
     protected onEnable() {
 
     }

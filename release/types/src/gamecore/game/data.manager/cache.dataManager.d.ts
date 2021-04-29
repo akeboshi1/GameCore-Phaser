@@ -5,7 +5,7 @@ import { BaseHandler } from "./base.handler";
 export declare class CacheDataManager extends BaseHandler {
     chapters: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_EXPLORE_CHAPTER_PROGRESS;
     guidText: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_ROOM_SHOW_GUIDE_TEXT;
-    gallery: op_client.OP_CLIENT_REQ_VIRTUAL_WORLD_PKT_UPDATE_GALLERY;
+    gallery: any;
     doneMissionIdList: number[];
     isSurveyStatus: boolean;
     queryUnlockFurinture: boolean;
@@ -22,5 +22,5 @@ export declare class CacheDataManager extends BaseHandler {
     getRecasteList(subcategory: string, star: number): any[];
     setChapters(datas: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_EXPLORE_CHAPTER_PROGRESS): void;
     getChapter(chapterId: number): any;
-    setGallery(content: op_client.OP_CLIENT_REQ_VIRTUAL_WORLD_PKT_UPDATE_GALLERY): void;
+    setGallery(content: any): void;
 }

@@ -30,6 +30,7 @@ export class ReferenceArea extends Phaser.GameObjects.Graphics {
         this.beginPath();
         for (let y = 0; y < rows; y++) {
             for (let x = 0; x < cols; x++) {
+                if (area[y][x] === 0) continue;// 无碰撞区域
                 this.lineStyle(2, 0);
                 p1 = Position45.transformTo90(new Pos(x, y), this.mSize);
                 p2 = Position45.transformTo90(new Pos(x + 1, y), this.mSize);

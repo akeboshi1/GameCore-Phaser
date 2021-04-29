@@ -160,9 +160,9 @@
   integrity sha1-rKqJJHr93Hln6ZAv0Rdh2t6hpVU=
 
 "@types/node@^13.7.0":
-  version "13.13.50"
-  resolved "https://registry.yarnpkg.com/@types/node/-/node-13.13.50.tgz#bc8ebf70c392a98ffdba7aab9b46989ea96c1c62"
-  integrity sha512-y7kkh+hX/0jZNxMyBR/6asG0QMSaPSzgeVK63dhWHl4QAXCQB8lExXmzLL6SzmOgKHydtawpMnNhlDbv7DXPEA==
+  version "13.13.51"
+  resolved "https://registry.yarnpkg.com/@types/node/-/node-13.13.51.tgz#a424c5282f99fc1ca41f11b727b6aea80668bcba"
+  integrity sha512-66/xg5I5Te4oGi5Jws11PtNmKkZbOPZWyBZZ/l5AOrWj1Dyw+6Ge/JhYTq/2/Yvdqyhrue8RL+DGI298OJ0xcg==
 
 "@types/node@^14.0.13":
   version "14.0.26"
@@ -1412,8 +1412,8 @@ currently-unhandled@^0.4.1:
     array-find-index "^1.0.1"
 
 "custom_proto@git+ssh://git@code.apowo.com:PixelPai/custom_proto.git#typescriptdev":
-  version "1.0.10"
-  resolved "git+ssh://git@code.apowo.com:PixelPai/custom_proto.git#ce7115065b440fb88bae5f0ca2e66a6085966e97"
+  version "1.0.11"
+  resolved "git+ssh://git@code.apowo.com:PixelPai/custom_proto.git#0e11a2b640c219175b254668ef7f49ab920bfcd7"
   dependencies:
     protobufjs "^6.8.8"
 
@@ -4362,8 +4362,8 @@ pinkie@^2.0.0:
   integrity sha1-clVrgM+g1IqXToDnckjoDtT3+HA=
 
 "pixelpai_proto@git+ssh://git@code.apowo.com:PixelPai/pixelpai_proto.git#typescriptdev":
-  version "1.0.515"
-  resolved "git+ssh://git@code.apowo.com:PixelPai/pixelpai_proto.git#1a072eb346374cb706a237b7dfa3d3ce0dde0269"
+  version "1.0.517"
+  resolved "git+ssh://git@code.apowo.com:PixelPai/pixelpai_proto.git#3aea56196b108f6d038fd9358e8f3e1e6900a072"
   dependencies:
     protobufjs "^6.8.8"
 

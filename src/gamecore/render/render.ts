@@ -20,7 +20,7 @@ import {
     MessageType,
     ModuleName,
     SceneName,
-    PlatFormType, i18n, initLocales, IPos, IPosition45Obj, Logger, LogicPos, Pos, Size, ValueResolver, IWorkerParam
+    PlatFormType, i18n, IPos, IPosition45Obj, Logger, LogicPos, Pos, Size, ValueResolver, IWorkerParam
 } from "structure";
 import { DisplayManager } from "./managers/display.manager";
 import { InputManager } from "./input/input.manager";
@@ -1172,7 +1172,7 @@ export class Render extends RPCPeer implements GameMain, IRender {
     @Export()
     public hideLoading() {
         if (!this.mSceneManager) {
-            return;
+            return Logger.getInstance().error(`HideLoading failed. SceneManager does not exist.`);
         }
         this.mSceneManager.sleepScene(SceneName.LOADING_SCENE);
     }
