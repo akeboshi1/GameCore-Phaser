@@ -163,11 +163,11 @@ export class BaseConfigManager {
     }
     protected getBasePath() {
         return new Promise((resolve, reject) => {
-            const url = this.config.config_path;
+            const url = ConfigPath.getConfigPath();
             load(url, "json").then((value: XMLHttpRequest) => {
                 const json = value.response;
                 const version = json.version;
-                const baseUrl = this.config.base_path + version + "/";
+                const baseUrl = ConfigPath.getBasePath() + version + "/";
                 resolve(baseUrl);
             }, (reponse) => {
                 Logger.getInstance().error("版本配置加载失败URL: ", url);
