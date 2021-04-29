@@ -185,7 +185,7 @@ class CollectRewardsItem extends Phaser.GameObjects.Container {
             this.rewardsBtn.setText(i18n.t("common.received"));
             this.rewardsBtn.disInteractive();
         } else {
-            if (data.gotcount > subsection) {
+            if (data.gotcount >= subsection) {
                 this.rewardsBtn.setFrameNormal(UIHelper.threeRedSmall);
                 this.rewardsBtn.setText(i18n.t("common.receivereward"));
                 this.rewardsBtn.setInteractive();
