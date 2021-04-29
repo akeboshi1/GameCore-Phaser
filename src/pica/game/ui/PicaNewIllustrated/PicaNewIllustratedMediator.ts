@@ -104,7 +104,7 @@ export class PicaNewIllustratedMediator extends BasicMediator {
      * @param id
      */
     private takeGalleryGatheringReward(data: { id: number, indexed: number }) {
-        this.game.sendCustomProto("INT_LIST", "galleryFacade:takeGalleryGatheringReward", [data.id, data.indexed]);
+        this.game.sendCustomProto("INT_LIST", "galleryFacade:takeGalleryGatheringReward", { list: [data.id, data.indexed] });
     }
 
     /**
