@@ -553,18 +553,20 @@ export class BaseDragonbonesDisplay extends BaseDisplay {
                 this.scene.load.atlas(this.mReplaceTextureKey, loadData.img, loadData.json);
                 const onLoadComplete = (key: string) => {
                     if (this.mReplaceTextureKey !== key) return;
-                    this.removePhaserListener(PhaserListenerType.Textures, Phaser.Textures.Events.ADD, onLoadComplete);
+                    this.removePhaserListener(PhaserListenerType.Load, Phaser.Loader.Events.FILE_COMPLETE, onLoadComplete);
+                    this.removePhaserListener(PhaserListenerType.Load, Phaser.Loader.Events.FILE_LOAD_ERROR, onLoadError);
 
                     resolve(null);
                 };
                 const onLoadError = (imageFile: ImageFile) => {
                     if (this.mReplaceTextureKey !== imageFile.key) return;
+                    this.removePhaserListener(PhaserListenerType.Load, Phaser.Loader.Events.FILE_COMPLETE, onLoadComplete);
                     this.removePhaserListener(PhaserListenerType.Load, Phaser.Loader.Events.FILE_LOAD_ERROR, onLoadError);
 
                     Logger.getInstance().warn("load dragonbones texture error: ", loadData);
                     reject("load dragonbones texture error: " + loadData);
                 };
-                this.addPhaserListener(PhaserListenerType.Textures, Phaser.Textures.Events.ADD, onLoadComplete);
+                this.addPhaserListener(PhaserListenerType.Load, Phaser.Loader.Events.FILE_COMPLETE, onLoadComplete);
                 this.addPhaserListener(PhaserListenerType.Load, Phaser.Loader.Events.FILE_LOAD_ERROR, onLoadError);
                 this.scene.load.start();
             }
@@ -1220,6 +1222,9 @@ export class BaseDragonbonesDisplay extends BaseDisplay {
             ReplacedTextures.set(textureAtlasData.renderTexture.key, count - 1);
         } else {
             ReplacedTextures.delete(textureAtlasData.renderTexture.key);
+            // this.scene.textures.remove(textureAtlasData.renderTexture.key);
+            // this.scene.textures.removeKey(textureAtlasData.renderTexture.key);
+            this.scene.cache.json.remove(textureAtlasData.renderTexture.key);
             textureAtlasData.renderTexture.destroy();
         }
         textureAtlasData.releaseRenderTexture();
