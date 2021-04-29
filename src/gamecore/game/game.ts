@@ -80,9 +80,6 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
 
     public setConfigPath(path: any) {
         this.mConfigPath = {
-            cdn_path: path.cdn_path,
-            config_path: path.config_path,
-            base_path: path.base_path,
             notice_url: path.notice_url
         };
     }
