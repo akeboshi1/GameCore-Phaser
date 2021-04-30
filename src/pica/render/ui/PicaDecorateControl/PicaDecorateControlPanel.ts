@@ -89,7 +89,7 @@ export class PicaDecorateControlPanel extends PicaBasePanel {
         this.mRotateBtn = new Button(this.scene, ModuleName.PICADECORATE_NAME, "room_decorate_Spin.png");
         this.mRecycleBtn = new Button(this.scene, ModuleName.PICADECORATE_NAME, "room_decorate_put.png");
         // this.mAutoPlaceBtn = new Button(this.scene, ModuleName.PICADECORATE_NAME, "room_decorate_tiled.png");
-        this.mExitBtn = new Button(this.scene, ModuleName.PICADECORATE_NAME, "room_decorate_closed.png");
+        this.mExitBtn = new Button(this.scene, ModuleName.PICADECORATE_NAME, "room_decorate_confirm.png");
 
         this.mBtns = [this.mRotateBtn, this.mRecycleBtn, this.mExitBtn];
         this.add(this.mBtns);
