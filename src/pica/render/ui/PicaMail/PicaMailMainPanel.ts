@@ -70,7 +70,7 @@ export class PicaMailMainPanel extends Phaser.GameObjects.Container {
                 item.x = 0;
             }
         }
-        this.gameScroller.Sort();
+        this.gameScroller.Sort(true);
     }
     syncMailDatas(content: any) {
         if (content.isAll) {
@@ -110,7 +110,7 @@ export class PicaMailMainPanel extends Phaser.GameObjects.Container {
                 item.alpha = 1;
                 item.x = 0;
             }
-            this.gameScroller.Sort();
+            this.gameScroller.Sort(true);
             indexed += length;
             if (indexed >= mails.length) return;
             setTimeout(() => {
