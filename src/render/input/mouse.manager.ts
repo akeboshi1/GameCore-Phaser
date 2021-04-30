@@ -1,8 +1,8 @@
-import { Render } from "../render";
-import { FramesDisplay } from "../display/frames/frames.display";
-import { MessageType } from "structure";
-import { NodeType } from "../managers/display.manager";
-import { UiUtils } from "utils";
+import {Render} from "../render";
+import {FramesDisplay} from "../display/frames/frames.display";
+import {MessageType} from "structure";
+import {NodeType} from "../managers/display.manager";
+import {UiUtils} from "utils";
 
 export enum MouseEvent {
     RightMouseDown = 1,
@@ -27,6 +27,7 @@ export class MouseManager {
     private readonly delay = 500;
     private debounce: any;
     private mClickID: number;
+
     constructor(protected render: Render) {
         this.zoom = this.render.scaleRatio || UiUtils.baseDpr;
     }
@@ -84,25 +85,20 @@ export class MouseManager {
             // TODO 提供个接口
             com = gameobject.parentContainer.parentContainer || gameobject.parentContainer;
         }
-        if (pointer.isDown === false) {
-            const diffX = Math.abs(pointer.downX - pointer.upX);
-            const diffY = Math.abs(pointer.downY - pointer.upY);
-            if (diffX < 10 && diffY < 10) {
-                if (gameobject && gameobject.parentContainer) {
-                    if (com && com instanceof FramesDisplay) {
-                        if (com.nodeType === NodeType.ElementNodeType) {
-                            if (com.hasInteractive) {
-                                com.scaleTween();
-                            }
-                        }
-                    }
-                }
-            }
-        }
-        if (events.length === 0) {
-            return;
-        }
-        this.sendMouseEvent(events, id, { x: pointer.worldX / this.zoom, y: pointer.worldY / this.zoom });
+
+        if (pointer.isDown) return;
+        const diffX = Math.abs(pointer.downX - pointer.upX);
+        const diffY = Math.abs(pointer.downY - pointer.upY);
+        if (diffX > 10 || diffY > 10) return;
+        if (!gameobject || !gameobject.parentContainer) return;
+        if (!com || !(com instanceof FramesDisplay)) return;
+        if (com.nodeType !== NodeType.ElementNodeType) return;
+        if (!com.hasInteractive) return;
+
+        com.scaleTween();
+        if (events.length === 0) return;
+
+        this.sendMouseEvent(events, id, {x: pointer.worldX / this.zoom, y: pointer.worldY / this.zoom});
     }
 
     /**
@@ -189,7 +185,10 @@ export class MouseManager {
             id = gameobject.parentContainer.getData("id");
             // TODO 提供个接口
             com = gameobject.parentContainer.parentContainer || gameobject.parentContainer;
-            this.sendMouseEvent([MouseEvent.LeftMouseHolding], id, { x: pointer.worldX / this.zoom, y: pointer.worldY / this.zoom });
+            this.sendMouseEvent([MouseEvent.LeftMouseHolding], id, {
+                x: pointer.worldX / this.zoom,
+                y: pointer.worldY / this.zoom
+            });
         }
     }
 
