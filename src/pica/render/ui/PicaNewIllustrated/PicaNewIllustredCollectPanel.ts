@@ -1,17 +1,17 @@
 import { GameGridTable, Button, ClickEvent } from "apowophaserui";
-import { Handler, Tool, UIHelper, Url, } from "utils";
+import { Handler, i18n, Tool, UIHelper, Url, } from "utils";
 import { IGalleryCombination } from "picaStructure";
 import { UIAtlasName } from "picaRes";
 import { DynamicImage } from "gamecoreRender";
 export class PicaIllustredCollectPanel extends Phaser.GameObjects.Container {
 
     private mGameGrid: GameGridTable;
+    private noCombinationTip: Phaser.GameObjects.Container;
     private dpr: number;
     private zoom: number;
     private send: Handler;
     private curSelectItem: IllustratedCollectItem;
     private combinations: IGalleryCombination[];
-    private doneMissions: number[] = [];
     constructor(scene: Phaser.Scene, width: number, height: number, dpr: number, zoom: number) {
         super(scene);
         this.setSize(width, height);
@@ -25,7 +25,7 @@ export class PicaIllustredCollectPanel extends Phaser.GameObjects.Container {
         const h = height || this.height;
         this.setSize(w, h);
         this.mGameGrid.setSize(w, h - 30 * this.dpr);
-        this.mGameGrid.y = -15* this.dpr;
+        this.mGameGrid.y = -15 * this.dpr;
         this.mGameGrid.resetMask();
     }
     refresMask() {
@@ -42,6 +42,10 @@ export class PicaIllustredCollectPanel extends Phaser.GameObjects.Container {
     }
 
     setCombinationData(content: IGalleryCombination[]) {
+        if (content.length === 0) {
+            this.noCombinationTip.visible = true;
+            return;
+        } else this.noCombinationTip.visible = false;
         this.mGameGrid.setItems(content);
         this.mGameGrid.layout();
         this.mGameGrid.setT(0);
@@ -71,11 +75,8 @@ export class PicaIllustredCollectPanel extends Phaser.GameObjects.Container {
                     cellContainer = new IllustratedCollectItem(this.scene, cellWidth, cellHeight, this.dpr, this.zoom);
                     cellContainer.setHandler(new Handler(this, this.onItemHandler));
                 }
-                let reweard = false;
-                if (this.doneMissions.indexOf(item.id) !== -1) {
-                    reweard = true;
-                }
-                cellContainer.setCombinationData(item, reweard);
+
+                cellContainer.setCombinationData(item);
                 cell.setHeight(cellContainer.height);
                 return cellContainer;
             },
@@ -85,7 +86,14 @@ export class PicaIllustredCollectPanel extends Phaser.GameObjects.Container {
         this.mGameGrid.on("cellTap", (cell) => {
             this.onSelectItemHandler(cell);
         });
-        this.add(this.mGameGrid);
+        const tipimg = this.scene.make.image({ key: UIAtlasName.uicommon, frame: "task_no" });
+        const tiptext = this.scene.make.text({ text: i18n.t("illustrate.nocomniationtip"), style: UIHelper.whiteStyle(this.dpr) }).setOrigin(0.5);
+        tiptext.y = tipimg.height * 0.5 + 15 * this.dpr;
+        this.noCombinationTip = this.scene.make.container(undefined);
+        this.noCombinationTip.add([tipimg, tiptext]);
+        this.noCombinationTip.y = -this.height * 0.5 + 100 * this.dpr;
+        this.noCombinationTip.visible = false;
+        this.add([this.mGameGrid, this.noCombinationTip]);
         this.resize();
     }
 
@@ -135,7 +143,7 @@ class IllustratedCollectItem extends Phaser.GameObjects.Container {
         this.add([this.background, this.itemIcon, this.titleTex, this.desTex, this.collectTex, this.rewardsBtn]);
     }
 
-    public setCombinationData(data: IGalleryCombination, rewarded: boolean) {
+    public setCombinationData(data: IGalleryCombination) {
         this.combiData = data;
         this.titleTex.text = data.name;
         this.desTex.text = data.des;

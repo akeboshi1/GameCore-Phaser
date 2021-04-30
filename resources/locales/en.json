@@ -475,7 +475,9 @@
     "collected": "Collected",
     "progressreward": "Progress rewards",
     "collectbadge": "Collector's badge",
-    "collectrewards": "REWARDS"
+    "collectrewards": "REWARDS",
+    "badgecollecttips": "{{name} Star Collector}",
+    "nocomniationtip": "No collectible sets yet"
   },
   "mail": {
     "onekey": "All Receive",

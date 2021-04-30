@@ -21,6 +21,7 @@ export interface IGalleryLevel {
      */
     received: number;
     rewardItems: ICountablePackageItem;
+    progress: number;
 }
 export interface IGalleryLevelGroup {
     level: number;
