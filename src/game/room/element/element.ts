@@ -313,6 +313,8 @@ export class Element extends BlockObject implements IElement {
         }
         this.mModel.setAnimationName(animationName, times);
         const nextWalkable = this.mModel.getWalkableArea();
+        const hasInteractive = this.model.hasInteractive;
+        if (this.mInputEnable) this.setInputEnable(this.mInputEnable);
         this.addToWalkableMap();
         if (this.mRoomService) {
             if (!this.mRootMount) {
@@ -323,6 +325,7 @@ export class Element extends BlockObject implements IElement {
                 }
             }
             this.mRoomService.game.renderPeer.playAnimation(this.id, this.mModel.currentAnimation, undefined, times);
+            this.mRoomService.game.renderPeer.setHasInteractive(this.id, hasInteractive);
         }
     }
 
