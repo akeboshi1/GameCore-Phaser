@@ -45,7 +45,7 @@ export class DragonbonesModel implements IDragonbonesModel {
     }
 
     public getInteractiveArea(): op_def.IPBPoint2i[] {
-        return undefined;
+        return [{ x: -1, y: -1 }, { x: 0, y: -1 }, { x: 1, y: -1 }, { x: 1, y: 0 }, { x: 1, y: 1 }, { x: 0, y: 1 }, { x: -1, y: 1 }, { x: -1, y: 0 }];
     }
 
     existAnimation(aniName: string) {
