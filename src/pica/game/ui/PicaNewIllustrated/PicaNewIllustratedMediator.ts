@@ -31,7 +31,6 @@ export class PicaNewIllustratedMediator extends BasicMediator {
         this.proto.off("GALLERY_COLLECTIONREWARD_LISTS", this.onDisplayCollectRewardsHandler, this);
     }
     show(param?: any) {
-        param = "1:2";
         super.show(param);
         this.game.emitter.on(this.key + "_getbadgerewards", this.getBadgeLevelReward, this);
         this.game.emitter.on(this.key + "_getgalleryexprewards", this.getGalleryExpReward, this);
