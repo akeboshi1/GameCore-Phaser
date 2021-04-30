@@ -657,7 +657,7 @@ export class PicaBagPanel extends PicaBasePanel {
       if (categoryType === 1 || categoryType === 5) {// op_pkt_def.PKT_PackageType.FurniturePackage || op_pkt_def.PKT_PackageType.EditFurniturePackage
         this.useBtn.setText(i18n.t("furni_bag.add"));
         if (categoryType === 1) {
-          this.moreButton.visible = true;
+         // this.moreButton.visible = true;
           this.showBtn.visible = true;
         }
       } else {
