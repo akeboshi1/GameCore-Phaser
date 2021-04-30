@@ -566,7 +566,7 @@ export class UIHelper {
     }
 
     static spliceText(maxwidth: number, text: string, fontSize: number, scene: Phaser.Scene) {
-        const mlabel = this.Text(scene);
+        const mlabel = this.Text(scene, fontSize);
         let width = mlabel.setText(text).width;
         if (width <= maxwidth) {
             return text;
@@ -575,7 +575,7 @@ export class UIHelper {
                 const temp = text.slice(0, i);
                 width = mlabel.setText(temp).width;
                 if (width > maxwidth) {
-                    return temp;
+                    return temp+"...";
                 }
             }
         }
@@ -583,9 +583,9 @@ export class UIHelper {
         return text;
     }
 
-    public static Text(scene: Phaser.Scene) {
+    public static Text(scene: Phaser.Scene, fontSize: number) {
         if (!this.mText) {
-            this.mText = scene.make.text(this.whiteStyle, false);
+            this.mText = scene.make.text({ style: this.colorStyle("#ffffff", fontSize) }, false);
         }
         return this.mText;
     }

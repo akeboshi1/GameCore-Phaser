@@ -63,7 +63,7 @@ export class PicaNewIllustratedDetailPanel extends Phaser.GameObjects.Container 
         if (!content) return;
         if (this.optionType === 1) {
             if (content) {
-                this.setHorRewardsStatus(content.galleryExp, content.nextLevelExp);
+                this.setHorRewardsStatus(content.galleryExp, content.nextLevelExp, content.beforeExp);
                 this.badgeTex.text = `${content.badgeExp}/${content.badgePresentLevelexp}`;
                 this.badgeImg.setFrame("illustrate_survey_badge" + content.badgeLevel);
                 this.levelButton.setText(content.galleryLevel + "");
@@ -77,10 +77,11 @@ export class PicaNewIllustratedDetailPanel extends Phaser.GameObjects.Container 
             this.collectPanel.setCombinationData(combinations);
         }
     }
-    setHorRewardsStatus(galleryExp, nextLevelExp) {
-        this.horProgress.setProgress(galleryExp, nextLevelExp);
+    setHorRewardsStatus(galleryExp, nextLevelExp, beforeExp) {
+        const hasExp = galleryExp - beforeExp, maxExp = nextLevelExp - beforeExp;
+        this.horProgress.setProgress(hasExp, maxExp);
         this.progressTex.setText(`${galleryExp} / ${nextLevelExp}`);
-        const tempcount = Math.floor((galleryExp / nextLevelExp) * 3 + 0.01);
+        const tempcount = Math.floor((hasExp / maxExp) * 3 + 0.01);
         for (let i = 0; i < this.rewardImgs.length; i++) {
             if (i + 1 <= tempcount) {
                 this.rewardImgs[i].setFrame("illustrate_survey_lv_reward");

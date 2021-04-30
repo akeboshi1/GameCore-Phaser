@@ -486,7 +486,9 @@
     "collected": "已收藏",
     "progressreward": "进度奖励",
     "collectbadge": "收藏家徽章",
-    "collectrewards": "收藏奖励"
+    "collectrewards": "收藏奖励",
+    "badgecollecttips": "{{name}}星收藏家",
+    "nocomniationtip": "暂无收集的套装"
   },
   "mail": {
     "onekey": "一键领取",

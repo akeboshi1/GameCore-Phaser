@@ -137,6 +137,7 @@ class CollectRewardsItem extends Phaser.GameObjects.Container {
     private zoom: number;
     private combiData: IGalleryCombination;
     private send: Handler;
+    private indexed: number;
     constructor(scene: Phaser.Scene, width: number, height: number, dpr: number, zoom: number) {
         super(scene);
         this.setSize(width, height);
@@ -166,7 +167,7 @@ class CollectRewardsItem extends Phaser.GameObjects.Container {
 
     public setCombinationData(data: IGalleryCombination, indexed: number) {
         this.combiData = data;
-        this.combiData["indexed"] = indexed;
+        this.indexed = indexed;
         this.titleTex.text = data.name;
         this.desTex.text = data.des;
         const itemData: any = data.rewardItems[indexed - 1];
@@ -180,7 +181,7 @@ class CollectRewardsItem extends Phaser.GameObjects.Container {
         this.collectTex.text = `${data.gotcount}/${subsection}`;
         this.collectTex.setColor(color);
         this.desTex.setColor(color);
-        if (data.gotindex.indexOf(indexed) !== -1) {
+        if (data.gotindex && data.gotindex.indexOf(indexed) !== -1) {
             this.rewardsBtn.setFrameNormal(UIHelper.threeGraySmall);
             this.rewardsBtn.setText(i18n.t("common.received"));
             this.rewardsBtn.disInteractive();
@@ -204,7 +205,7 @@ class CollectRewardsItem extends Phaser.GameObjects.Container {
     }
 
     private onRewardsHandler() {
-        if (this.send) this.send.runWith(["combrewards", this.combiData]);
+        if (this.send) this.send.runWith(["combrewards", { id: this.combiData.id, indexed: this.indexed }]);
     }
 
     private getbgName(difficult: number) {

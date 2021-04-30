@@ -7,7 +7,7 @@ import { PicaNewIllustratedListPanel } from "./PicaNewIllustratedListPanel";
 import { op_client } from "pixelpai_proto";
 import { PicaNewIllustratedDetailPanel } from "./PicaNewIllustratedDetailPanel";
 import { ClickEvent } from "apowophaserui";
-import { IExtendCountablePackageItem, IGalleryCombination, IGalleryLevelGroup, IUpdateGalleryDatas, MainUIRedType } from "../../../structure";
+import { IExtendCountablePackageItem, IGalleryCombination, IGalleryLevel, IGalleryLevelGroup, IUpdateGalleryDatas, MainUIRedType } from "../../../structure";
 import { PicaNewFuriniDetailPanel } from "./PicaNewFuriniDetailPanel";
 import { CommonBackground } from "..";
 import { PicaNewCombinationPanel } from "./PicaNewCombinationPanel";
@@ -81,15 +81,17 @@ export class PicaNewIllustratedPanel extends PicaBasePanel {
         if (!this.mInitialized) return;
         if (this.detailPanel) this.detailPanel.setDisplayCollectDatas(combinations);
     }
-    setAlreadyCollectDatas(combinations: IGalleryCombination) {
+    setAlreadyCollectDatas(combinations: IGalleryCombination[]) {
         this.tempDatas["combinations"] = combinations;
-
+        this.alreadyCollectPanel.setCombinationDatas(combinations);
     }
 
     setLevelGalleryGroups(groups: IGalleryLevelGroup[]) {
         this.levelRewardsPanel.setRewardsData(groups);
     }
-
+    setBadgeLevelDatas(datas: IGalleryLevel[]) {
+        this.collectBadgePanel.setBadgeDatas(datas);
+    }
     setRedsState(obj: any) {
         this.redObj = obj;
         if (!this.mInitialized) return;
@@ -160,14 +162,20 @@ export class PicaNewIllustratedPanel extends PicaBasePanel {
         this.furiDetail.visible = false;
     }
 
-    private openCombinationPanel(data: IGalleryCombination) {
-        this.showCombinationPanel();
+    private openCombinationPanel(data: IGalleryCombination, closeHandler: Handler) {
+        this.showCombinationPanel(closeHandler);
         this.combinePanel.setGallaryData(data);
     }
-    private showCombinationPanel() {
+    private showCombinationPanel(closeHandler: Handler) {
         if (!this.combinePanel) {
             this.combinePanel = new PicaNewCombinationPanel(this.scene, this.render, 334 * this.dpr, 452 * this.dpr, this.dpr, this.scale);
-            this.combinePanel.setHandler(new Handler(this, this.onCombinationHandler));
+            this.combinePanel.setHandler(new Handler(this, (tag: string, data) => {
+                if (tag === "close" && closeHandler) {
+                    closeHandler.runWith(data);
+                    return;
+                }
+                this.onCombinationHandler(tag, data);
+            }));
         }
         this.content.add(this.combinePanel);
         this.combinePanel.visible = true;
@@ -200,6 +208,7 @@ export class PicaNewIllustratedPanel extends PicaBasePanel {
 
     private openAlreadCollectedPanel() {
         this.showAlreadCollectedPanel();
+        this.render.renderEmitter(this.key + "_getcollectedrewards");
     }
     private showAlreadCollectedPanel() {
         if (!this.alreadyCollectPanel) {
@@ -218,6 +227,7 @@ export class PicaNewIllustratedPanel extends PicaBasePanel {
 
     private openCollectBadgePanel() {
         this.showCollectBadgePanel();
+        this.render.renderEmitter(this.key + "_getbadgelevelrewards");
     }
     private showCollectBadgePanel() {
         if (!this.collectBadgePanel) {
@@ -230,8 +240,8 @@ export class PicaNewIllustratedPanel extends PicaBasePanel {
     }
 
     private hideCollectBadgePanel() {
-        this.content.remove(this.alreadyCollectPanel);
-        this.alreadyCollectPanel.visible = false;
+        this.content.remove(this.collectBadgePanel);
+        this.collectBadgePanel.visible = false;
     }
     private openCollectRewardsPanel(data: IGalleryCombination) {
         this.showCollectRewardsPanel();
@@ -269,7 +279,7 @@ export class PicaNewIllustratedPanel extends PicaBasePanel {
             this.hideDetailPanel();
             this.showListPanel();
         } else if (tag === "combinations") {
-            this.openCombinationPanel(data);
+            this.openCombinationPanel(data, undefined);
         } else if (tag === "furidetail") {
             this.openFuriDetail(data);
             if (data.status === 1) this.render.renderEmitter(this.key + "_changeGalleryStatus", data.id);
@@ -277,17 +287,19 @@ export class PicaNewIllustratedPanel extends PicaBasePanel {
             this.render.renderEmitter(this.key + "_getdisplatcollectedlist");
         } else if (tag === "badgerewards") {
             this.openCollectBadgePanel();
+            this.hideDetailPanel();
         } else if (tag === "showlevelrewards") {
             this.openLevelRewardsPanel();
             this.hideDetailPanel();
         } else if (tag === "showcombination") {
-            this.openCombinationPanel(data);
+            this.openCombinationPanel(data, undefined);
             this.hideDetailPanel();
         } else if (tag === "combinationrewards") {
             this.openCollectRewardsPanel(data);
             this.hideDetailPanel();
         } else if (tag === "showalreadycollected") {
             this.openAlreadCollectedPanel();
+            this.hideDetailPanel();
         } else if (tag === "getlightrewardsd") {
             this.render.renderEmitter(this.key + "_getgallerylightrewards", data);
         }
@@ -297,7 +309,7 @@ export class PicaNewIllustratedPanel extends PicaBasePanel {
         if (tag === "furidetail") {
             this.hideCombinationPanel();
             this.openFuriDetail(data, new Handler(this, () => {
-                this.showCombinationPanel();
+                this.showCombinationPanel(undefined);
             }));
         } else if (tag === "close") {
             this.hideCombinationPanel();
@@ -317,18 +329,32 @@ export class PicaNewIllustratedPanel extends PicaBasePanel {
     }
 
     private onAlreadyCollectedHandler(tag: string, data: any) {
-
+        if (tag === "close") {
+            this.hideAlreadCollectedPanel();
+            this.showDetailPanel();
+        } else if (tag === "showcombination") {
+            this.openCombinationPanel(data, new Handler(this, () => {
+                this.showAlreadCollectedPanel();
+                this.hideCombinationPanel();
+            }));
+            this.hideAlreadCollectedPanel();
+        }
     }
 
     private onCollectBadgeHandler(tag: string, data: any) {
-
+        if (tag === "close") {
+            this.hideCollectBadgePanel();
+            this.showDetailPanel();
+        } else if (tag === "badgerewards") {
+            this.render.renderEmitter(this.key + "_getbadgerewards", data);
+        }
     }
     private onCollectRewardsHandler(tag: string, data: any) {
         if (tag === "close") {
             this.hideCollectRewardsPanel();
             this.showDetailPanel();
         } else if (tag === "combrewards") {
-            this.render.renderEmitter(this.key + "_getgatheringrewards", { id: data.id, indexed: data.indexed });
+            this.render.renderEmitter(this.key + "_getgatheringrewards", data);
         }
     }
 

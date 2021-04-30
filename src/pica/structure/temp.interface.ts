@@ -5,6 +5,7 @@ export interface IUpdateGalleryDatas {
     galleryLevel: number;
     galleryExp: number;
     nextLevelExp: number;
+    beforeExp: number;
     badgeLevel: number;
     badgeExp: number;
     badgePresentLevelexp: number;

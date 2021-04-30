@@ -12,7 +12,7 @@ export class PicaNewCollectBadgePanel extends Phaser.GameObjects.Container {
     private dpr: number;
     private zoom: number;
     private send: Handler;
-    private collectedData: any[];
+    private badgeData: any[];
     constructor(scene: Phaser.Scene, width: number, height: number, dpr: number, zoom: number) {
         super(scene);
         this.setSize(width, height);
@@ -35,8 +35,9 @@ export class PicaNewCollectBadgePanel extends Phaser.GameObjects.Container {
         this.send = send;
     }
 
-    setRewardsData(datas: any[]) {
-        this.collectedData = datas;
+    setBadgeDatas(datas: any[]) {
+        this.badgeData = datas;
+        this.mGrid.setItems(datas);
     }
 
     init() {
@@ -52,9 +53,9 @@ export class PicaNewCollectBadgePanel extends Phaser.GameObjects.Container {
     }
     private createGridTable() {
         const tableHeight = this.height - 80 * this.dpr;
-        const tableWidth = this.width;
-        const cellWidth = 77 * this.dpr;
-        const cellHeight = 129 * this.dpr;
+        const tableWidth = 323 * this.dpr;
+        const cellWidth = 108 * this.dpr;
+        const cellHeight = 215 * this.dpr;
         const tableConfig = {
             x: 0,
             y: 0,
@@ -74,7 +75,8 @@ export class PicaNewCollectBadgePanel extends Phaser.GameObjects.Container {
                 if (cellContainer === null) {
                     cellContainer = new CollectBadgeItem(this.scene, cellWidth, cellHeight, this.dpr, this.zoom);
                 }
-                cellContainer.setCombinationData(item);
+                cellContainer.setBadgeData(item);
+                cellContainer.setHandler(this.send);
                 return cellContainer;
             },
         };
@@ -83,20 +85,20 @@ export class PicaNewCollectBadgePanel extends Phaser.GameObjects.Container {
         this.mGrid.on("cellTap", (cell) => {
             this.onSelectItemHandler(cell);
         });
-        this.mGrid.y = -this.height * 0.5 + this.mGrid.height * 0.5;
+        this.mGrid.y = -this.height * 0.5 + 68 * this.dpr + this.mGrid.height * 0.5;
     }
     private onSelectItemHandler(cell: CollectBadgeItem) {
         // if (this.send) this.send.runWith(["furidetail", cell.groupData]);
-        const groupData = cell.combinationData;
+        const groupData = cell.badgeData;
     }
 
     private onBackHandler() {
-        if (this.send) this.send.runWith("back");
+        if (this.send) this.send.runWith("close");
     }
 }
 
 class CollectBadgeItem extends ButtonEventDispatcher {
-    public combinationData: IGalleryCombination;
+    public badgeData: IGalleryLevel;
     private bg: Phaser.GameObjects.Image;
     private badgeIcon: DynamicImage;
     private titlebg: Phaser.GameObjects.Image;
@@ -111,31 +113,42 @@ class CollectBadgeItem extends ButtonEventDispatcher {
         this.setSize(width, height);
         this.bg = this.scene.make.image({ key: UIAtlasName.illustrate_new, frame: "illustrate_survey_badge_bg" });
         this.badgeIcon = new DynamicImage(scene, 0, 0);
-        this.badgeIcon.y = -20 * dpr;
+        this.badgeIcon.setTexture(UIAtlasName.illustrate_new, "illustrate_survey_badge1");
+        this.badgeIcon.y = -height * 0.5 + this.badgeIcon.height * 0.5 + 20 * dpr;
         this.titlebg = this.scene.make.image({ key: UIAtlasName.illustrate_new, frame: "illustrate_survey_badge_title" });
-        this.titlebg.y = 0;
-        this.title = this.scene.make.text({ style: UIHelper.colorStyle("#996600", dpr * 11) }).setOrigin(0.5);
+        this.titlebg.y = 5 * dpr;
+        this.title = this.scene.make.text({ style: UIHelper.colorStyle("#ffffff", dpr * 11) }).setOrigin(0.5);
         this.title.setFontStyle("bold");
         this.title.y = this.titlebg.y;
-        this.countTex = this.scene.make.text({ style: UIHelper.colorStyle("#000000", dpr * 11) }).setOrigin(0.5);
-        this.countTex.y = 20 * dpr;
+        this.countTex = this.scene.make.text({ style: UIHelper.colorStyle("#A54A00", dpr * 11) }).setOrigin(0.5);
+        this.countTex.setFontStyle("bold");
+        this.countTex.y = 30 * dpr;
         this.rewardsBtn = new ThreeSliceButton(this.scene, 62 * this.dpr, 25 * this.dpr, UIAtlasName.uicommon, UIHelper.threeRedSmall, UIHelper.threeRedSmall, i18n.t("common.receivereward"));
-        this.rewardsBtn.setTextStyle(UIHelper.brownishStyle(this.dpr));
+        this.rewardsBtn.setTextStyle(UIHelper.whiteStyle(this.dpr));
         this.rewardsBtn.setFontStyle("bold");
-        this.rewardsBtn.y = this.countTex.y + 20 * dpr;
+        this.rewardsBtn.y = this.countTex.y + 28 * dpr;
         this.rewardsBtn.on(ClickEvent.Tap, this.onRewardsHandler, this);
-        this.add([this.bg, this.badgeIcon, this.title, this.countTex]);
+        this.add([this.bg, this.badgeIcon, this.titlebg, this.title, this.countTex, this.rewardsBtn]);
     }
-    public setCombinationData(data: IGalleryCombination) {
-        this.combinationData = data;
-        const itemData: any = data.requirement[0];
-        const url = Url.getOsdRes(itemData.texturePath);
-        this.badgeIcon.load(url);
-        this.badgeIcon.scale = this.dpr / this.zoom;
-        this.title.text = data.name;
-        const leng = data.requirement.length;
-        this.countTex.text = `${leng}/${leng}`;
-
+    public setBadgeData(data: IGalleryLevel) {
+        this.badgeData = data;
+        const frame = "illustrate_survey_badge" + data.id;
+        this.badgeIcon.setFrame(frame);
+        this.title.text = i18n.t("illustrate.badgecollecttips", { name: data.id });
+        this.countTex.text = `${data.progress}/${data.exp}`;
+        if (data.received === 1) {
+            this.rewardsBtn.setFrameNormal(UIHelper.threeGraySmall);
+            this.rewardsBtn.setText(i18n.t("common.receivereward"));
+            this.rewardsBtn.disInteractive();
+        } else if (data.received === 2) {
+            this.rewardsBtn.setFrameNormal(UIHelper.threeRedSmall);
+            this.rewardsBtn.setText(i18n.t("common.receivereward"));
+            this.rewardsBtn.setInteractive();
+        } else if (data.received === 3) {
+            this.rewardsBtn.setFrameNormal(UIHelper.threeGraySmall);
+            this.rewardsBtn.setText(i18n.t("common.received"));
+            this.rewardsBtn.disInteractive();
+        }
     }
 
     public set select(value: boolean) {
@@ -146,31 +159,6 @@ class CollectBadgeItem extends ButtonEventDispatcher {
     }
 
     private onRewardsHandler() {
-        if (this.send) this.send.runWith(["recivedreward", this.combinationData]);
-    }
-}
-
-class LevelItem extends ButtonEventDispatcher {
-    public groupData: IGalleryLevelGroup;
-    private bg: Phaser.GameObjects.Image;
-    private linebg: Phaser.GameObjects.Image;
-    private levelTex: Phaser.GameObjects.Text;
-    constructor(scene: Phaser.Scene, width: number, height: number, dpr: number, zoom: number) {
-        super(scene, 0, 0);
-        this.dpr = dpr;
-        this.zoom = zoom;
-        this.setSize(width, height);
-        this.linebg = this.scene.make.image({ key: UIAtlasName.illustrate_new, frame: "illustrate_survey_lv_bg_line" });
-        this.bg = this.scene.make.image({ key: UIAtlasName.illustrate_new, frame: "illustrate_survey_lv_bg" });
-        this.levelTex = this.scene.make.text({ style: UIHelper.whiteStyle(dpr) });
-        this.add([this.linebg, this.bg, this.levelTex]);
-    }
-    public setLevelData(data: IGalleryLevelGroup) {
-        this.groupData = data;
-        this.levelTex.text = data.level < 10 ? `0${data.level}` : `${data.level}`;
-    }
-
-    public set select(value: boolean) {
-        this.bg.setFrame(value ? "illustrate_survey_lv_bg1" : "illustrate_survey_lv_bg");
+        if (this.send) this.send.runWith(["badgerewards", this.badgeData.id]);
     }
 }

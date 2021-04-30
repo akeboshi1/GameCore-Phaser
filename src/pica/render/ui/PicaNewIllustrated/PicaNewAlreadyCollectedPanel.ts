@@ -8,6 +8,7 @@ import { IExtendCountablePackageItem, IGalleryCombination, IGalleryLevel, IGalle
 export class PicaNewAlreadyCollectedPanel extends Phaser.GameObjects.Container {
     private mBackground: CommonBackground;
     private backButton: ButtonEventDispatcher;
+    private noCombinationTip: Phaser.GameObjects.Container;
     private mGrid: GameGridTable;
     private dpr: number;
     private zoom: number;
@@ -35,8 +36,13 @@ export class PicaNewAlreadyCollectedPanel extends Phaser.GameObjects.Container {
         this.send = send;
     }
 
-    setRewardsData(datas: any[]) {
+    setCombinationDatas(datas: IGalleryCombination[]) {
+        if (datas.length === 0) {
+            this.noCombinationTip.visible = true;
+            return;
+        } else this.noCombinationTip.visible = false;
         this.collectedData = datas;
+        this.mGrid.setItems(datas);
     }
 
     init() {
@@ -47,14 +53,21 @@ export class PicaNewAlreadyCollectedPanel extends Phaser.GameObjects.Container {
         this.add(this.mBackground);
         this.backButton = UITools.createBackButton(this.scene, this.dpr, this.onBackHandler, this, i18n.t("illustrate.collected"));
         this.createGridTable();
-        this.add([this.mBackground, this.backButton, this.mGrid]);
+        const tipimg = this.scene.make.image({ key: UIAtlasName.uicommon, frame: "task_no" });
+        const tiptext = this.scene.make.text({ text: i18n.t("illustrate.nocomniationtip"), style: UIHelper.whiteStyle(this.dpr) }).setOrigin(0.5);
+        tiptext.y = tipimg.height * 0.5 + 15 * this.dpr;
+        this.noCombinationTip = this.scene.make.container(undefined);
+        this.noCombinationTip.add([tipimg, tiptext]);
+        this.noCombinationTip.y = -10 * this.dpr;
+        this.noCombinationTip.visible = false;
+        this.add([this.mBackground, this.backButton, this.mGrid, this.noCombinationTip]);
         this.resize();
     }
     private createGridTable() {
         const tableHeight = this.height - 80 * this.dpr;
-        const tableWidth = this.width;
-        const cellWidth = 77 * this.dpr;
-        const cellHeight = 129 * this.dpr;
+        const tableWidth = this.width - 30 * this.dpr;
+        const cellWidth = 84 * this.dpr;
+        const cellHeight = 138 * this.dpr;
         const tableConfig = {
             x: 0,
             y: 0,
@@ -83,15 +96,16 @@ export class PicaNewAlreadyCollectedPanel extends Phaser.GameObjects.Container {
         this.mGrid.on("cellTap", (cell) => {
             this.onSelectItemHandler(cell);
         });
-        this.mGrid.y = -this.height * 0.5 + this.mGrid.height * 0.5;
+        this.mGrid.y = -this.height * 0.5 + 78 * this.dpr + this.mGrid.height * 0.5;
     }
     private onSelectItemHandler(cell: CollectedItem) {
         // if (this.send) this.send.runWith(["furidetail", cell.groupData]);
         const groupData = cell.combinationData;
+        if (this.send) this.send.runWith(["showcombination", groupData]);
     }
 
     private onBackHandler() {
-        if (this.send) this.send.runWith("back");
+        if (this.send) this.send.runWith("close");
     }
 }
 
@@ -110,14 +124,15 @@ class CollectedItem extends ButtonEventDispatcher {
         this.setSize(width, height);
         this.bg = this.scene.make.image({ key: UIAtlasName.illustrate_new, frame: "illustrate_favorites_badge_bg" });
         this.itemIcon = new DynamicImage(scene, 0, 0);
-        this.itemIcon.y = -20 * dpr;
+        this.itemIcon.y = -30 * dpr;
         this.title = this.scene.make.text({ style: UIHelper.colorStyle("#996600", dpr * 11) }).setOrigin(0.5);
         this.title.setFontStyle("bold");
-        this.title.y = 10 * dpr;
+        this.title.y = 14 * dpr;
         this.line = this.scene.make.image({ key: UIAtlasName.illustrate_new, frame: "illustrate_favorites_badge_line" });
-        this.line.y = this.title.y + 10 * dpr;
+        this.line.y = this.title.y + 13 * dpr;
         this.countTex = this.scene.make.text({ style: UIHelper.colorStyle("#000000", dpr * 11) }).setOrigin(0.5);
-        this.countTex.y = this.line.y + 10 * dpr;
+        this.countTex.setFontStyle("bold");
+        this.countTex.y = this.line.y + 13 * dpr;
         this.add([this.bg, this.itemIcon, this.title, this.line, this.countTex]);
     }
     public setCombinationData(data: IGalleryCombination) {
@@ -127,6 +142,7 @@ class CollectedItem extends ButtonEventDispatcher {
         this.itemIcon.load(url);
         this.itemIcon.scale = this.dpr / this.zoom;
         this.title.text = data.name;
+        this.title.text = UIHelper.spliceText(this.bg.width - 30 * this.dpr, data.name, 11 * this.dpr, this.scene);
         const leng = data.requirement.length;
         this.countTex.text = `${leng}/${leng}`;
 
