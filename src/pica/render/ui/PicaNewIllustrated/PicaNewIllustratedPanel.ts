@@ -67,6 +67,7 @@ export class PicaNewIllustratedPanel extends PicaBasePanel {
     onShow() {
         this.openListPanel();
         if (this.redObj) this.setRedsState(this.redObj);
+        this.autoOpenPanel();
     }
 
     setGallaryData(content: IUpdateGalleryDatas) {
@@ -98,6 +99,19 @@ export class PicaNewIllustratedPanel extends PicaBasePanel {
         if (this.listPanel) this.listPanel.setRedsState(this.redObj["redlist"]);
         //  if (this.detailPanel) this.detailPanel.setRedsState(this.redObj[MainUIRedType.GALLERY]);
 
+    }
+
+    private autoOpenPanel() {
+        const param = this.showData;
+        if (param) {
+            if (typeof param === "string") {
+                const strs = param.split(":");
+                if (strs[0] === "1") {
+                    this.onListHandler("gallary");
+                    this.detailPanel.setAutoOption(Number(strs[1]));
+                }
+            }
+        }
     }
     private openListPanel() {
         this.showListPanel();

@@ -58,9 +58,9 @@ export class PicaNewIllustratedDetailPanel extends Phaser.GameObjects.Container 
     setHandler(send: Handler) {
         this.send = send;
     }
-
     setGallaryData(content: IUpdateGalleryDatas) {
         if (!content) return;
+        this.galleryData = content;
         if (this.optionType === 1) {
             if (content) {
                 this.setHorRewardsStatus(content.galleryExp, content.nextLevelExp, content.beforeExp);
@@ -95,6 +95,13 @@ export class PicaNewIllustratedDetailPanel extends Phaser.GameObjects.Container 
         this.redMap.forEach((value, key) => {
             value.visible = reds.indexOf(key) !== -1;
         });
+    }
+    setAutoOption(option: number) {
+        for (const obj of this.toggleCon.list) {
+            if (obj.getData("item") === option) {
+                this.onToggleButtonHandler(undefined, <any>obj);
+            }
+        }
     }
     init() {
         this.mBackground = new CommonBackground(this.scene, 0, 0, this.width, this.height, UIAtlasName.illustrate_new, "illustrate_survey_bg", 0xc3dff4);

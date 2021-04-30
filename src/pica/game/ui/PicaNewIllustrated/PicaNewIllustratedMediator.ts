@@ -10,6 +10,7 @@ import { ObjectAssign } from "utils";
 export class PicaNewIllustratedMediator extends BasicMediator {
     protected mModel: PicaNewIllustrated;
     private mScneType: op_def.SceneTypeEnum;
+    private tempDatas: any = {};
     constructor(game: Game) {
         super(ModuleName.PICAILLUSTRATED_NEW_NAME, game);
         this.mScneType = op_def.SceneTypeEnum.NORMAL_SCENE_TYPE;
@@ -30,6 +31,7 @@ export class PicaNewIllustratedMediator extends BasicMediator {
         this.proto.off("GALLERY_COLLECTIONREWARD_LISTS", this.onDisplayCollectRewardsHandler, this);
     }
     show(param?: any) {
+        param = "1:2";
         super.show(param);
         this.game.emitter.on(this.key + "_getbadgerewards", this.getBadgeLevelReward, this);
         this.game.emitter.on(this.key + "_getgalleryexprewards", this.getGalleryExpReward, this);
@@ -73,7 +75,11 @@ export class PicaNewIllustratedMediator extends BasicMediator {
     protected panelInit() {
         super.panelInit();
         this.setGallaryData();
-        if (this.mView) this.mView.setRedsState(this.getRedSystem());
+        this.mView.setRedsState(this.getRedSystem());
+        const combinationdatas = this.tempDatas["combinationdatas"];
+        if (combinationdatas) {
+            this.mView.setDisplayCollectDatas(combinationdatas);
+        }
     }
 
     private onCloseHandler() {
@@ -206,6 +212,8 @@ export class PicaNewIllustratedMediator extends BasicMediator {
         const content = proto.content;
         const ids: IGalleryCollection[] = content.shownRewards;
         const temps = this.getCollectCombinations(ids);
+        this.tempDatas["combinationdatas"] = temps;
+        if (!this.mPanelInit) return;
         if (this.mView) this.mView.setDisplayCollectDatas(temps);
     }
 

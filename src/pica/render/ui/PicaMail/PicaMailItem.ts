@@ -85,7 +85,7 @@ export class PicaMailItem extends Phaser.GameObjects.Container {
         this.setTextLimit(this.mailName, data.title);
         this.setTextLimit(this.mailSender, `${i18n.t("mail.sender")}${data.senderName}`);
         this.setMailState(data.hasRead);
-        this.expirationTime.setTimeData(data.sentTime, data.expireTime, data.hasRead);
+        this.expirationTime.setTimeData(data["servicetime"], data.expireTime, data.hasRead);
         if (this.mIsExtend) this.setExtendMailData(data);
         this.accessoryImg.visible = !data.attachTaken;
         if (!data.attachments || data.attachments.length === 0) {
@@ -268,7 +268,7 @@ class MailItemExtend extends Phaser.GameObjects.Container {
         const scrollHeight = this.setGameScrollData(mailData.attachments, taskPosy);
         this.height = taskPosy + scrollHeight + 10 * this.dpr;
         const continueTime = Date.now() / 1000 - mailData["localTime"];
-        const time = mailData.expireTime - mailData.sentTime - continueTime;
+        const time = mailData.expireTime - mailData["servicetime"] - continueTime;
         this.countDown(time * 1000);
     }
     public setGameScrollData(datas: any[], taskPosy: number) {
