@@ -114,7 +114,7 @@ export class PicaNewIllustratedDetailPanel extends Phaser.GameObjects.Container 
         this.topCon.setSize(this.width, 100 * this.dpr);
         this.galleryCon = this.scene.make.container(undefined, false);
         this.badgeButton = new ButtonEventDispatcher(this.scene, 0, 0, true);
-        this.badgeButton.setSize(42 * this.dpr, 38 * this.dpr);
+        this.badgeButton.setSize(60 * this.dpr, 60 * this.dpr);
         this.badgeButton.enable = true;
         this.badgeButton.on(ClickEvent.Tap, this.onBadgeRewardsHandler, this);
         this.badgeImg = this.scene.make.image({ key: UIAtlasName.illustrate_new, frame: "illustrate_survey_badge1" });
@@ -123,8 +123,8 @@ export class PicaNewIllustratedDetailPanel extends Phaser.GameObjects.Container 
         this.badgeTex.setStroke("#26365A", 2 * this.dpr);
         this.badgeTex.y = this.badgeImg.y + this.badgeImg.height * 0.5 - 5 * this.dpr;
         this.badgeButton.add([this.badgeImg, this.badgeTex]);
-        this.badgeButton.x = this.topCon.width * 0.5 - this.badgeButton.width * 0.5 - 20 * this.dpr;
-        this.badgeButton.y = -this.topCon.height * 0.5 + this.badgeButton.height * 0.5 + 15 * this.dpr;
+        this.badgeButton.x = this.topCon.width * 0.5 - this.badgeButton.width * 0.5 - 10 * this.dpr;
+        this.badgeButton.y = -this.topCon.height * 0.5 + this.badgeButton.height * 0.5 + 5 * this.dpr;
         this.redMap.set(RedType.badgeLevel, this.creatRedImge(this.scene, this.badgeButton, false));
         this.toggleCon = this.scene.make.container(undefined, false);
         this.selectLine = this.scene.make.image({ key: UIAtlasName.illustrate_new, frame: "illustrate_nav_select" });
@@ -145,7 +145,12 @@ export class PicaNewIllustratedDetailPanel extends Phaser.GameObjects.Container 
         this.progressTex.setFontStyle("bold");
         this.progressTex.x = this.horProgress.x + this.horProgress.width * 0.5 + 5 * this.dpr;
         this.progressTex.y = this.horProgress.y;
-        this.galleryCon.add([this.badgeButton, this.horProgress, this.levelButton, this.progressTex]);
+        const levelCon = new ButtonEventDispatcher(this.scene, 0, this.levelButton.y);
+        levelCon.y = this.levelButton.y;
+        levelCon.setSize(260 * this.dpr, 30 * this.dpr);
+        levelCon.enable = true;
+        levelCon.on(ClickEvent.Tap, this.onHorRewardsHandler, this);
+        this.galleryCon.add([this.badgeButton, this.horProgress, levelCon, this.levelButton, this.progressTex]);
         this.collectedButton = new Button(this.scene, UIAtlasName.illustrate_new, "illustrate_collect_badge", "illustrate_collect_badge", undefined, this.dpr, this.zoom);
         this.collectedButton.on(ClickEvent.Tap, this.onCollectedHandler, this);
         this.collectedButton.x = this.badgeButton.x;
@@ -280,8 +285,8 @@ export class PicaNewIllustratedDetailPanel extends Phaser.GameObjects.Container 
 }
 
 enum RedType {
-    expLevel = 1,
-    badgeLevel = 2,
-    galley = 3,
-    collect = 4
+    expLevel = 10086,
+    badgeLevel = 10087,
+    galley = 10088,
+    collect = 10089
 }

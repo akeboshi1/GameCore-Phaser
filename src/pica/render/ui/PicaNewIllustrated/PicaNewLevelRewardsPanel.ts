@@ -124,7 +124,7 @@ export class PicaNewLevelRewardsPanel extends Phaser.GameObjects.Container {
     }
 
     private setDefaultItem(cell: LevelItem, data: IGalleryLevelGroup) {
-        if ((data.rewards && !this.curLevelItem) || (this.curLevelItem && this.curLevelItem.groupData.level === data.level)) {
+        if (((data.rewards||!data.allReceived) && !this.curLevelItem) || (this.curLevelItem && this.curLevelItem.groupData.level === data.level)) {
             this.curLevelItem = undefined;
             this.onSelectItemHandler(cell);
         }

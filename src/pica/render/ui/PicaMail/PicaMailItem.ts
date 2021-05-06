@@ -185,7 +185,7 @@ export class PicaMailItem extends Phaser.GameObjects.Container {
         this.mailButton.visible = false;
         this.mExtend.clearTimer();
         const continueTime = Date.now() / 1000 - this.mailData["localTime"];
-        this.expirationTime.setTimeData(this.mailData.sentTime + continueTime, this.mailData.expireTime, true);
+        this.expirationTime.setTimeData(this.mailData["servicetime"] + continueTime, this.mailData.expireTime, true);
     }
 
     private setTextLimit(text: Phaser.GameObjects.Text, content?: string, limit: number = 11) {

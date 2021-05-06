@@ -47,6 +47,8 @@ export class PicaRoamEffectOnePanel extends Phaser.GameObjects.Container {
         this.video.on("complete", () => {
             this.playRewardVideo();
         }, this);
+        this.video.on("pointerup", this.onPointerUpHandler, this);
+        this.video.setInteractive();
     }
 
     private playRewardVideo() {
@@ -63,6 +65,8 @@ export class PicaRoamEffectOnePanel extends Phaser.GameObjects.Container {
         }
         setTimeout(() => {
             this.video.on("complete", this.onCompleteHandler, this);
+            this.video.on("pointerup", this.onPointerUpHandler, this);
+            this.video.setInteractive();
         }, 20);
 
     }
@@ -80,6 +84,12 @@ export class PicaRoamEffectOnePanel extends Phaser.GameObjects.Container {
         this.blackGraphic.visible = true;
         UIHelper.playAlphaTween(this.scene, this.blackGraphic, 0, 1);
 
+    }
+
+    private onPointerUpHandler() {
+        this.isOne = true;
+        this.video.stop();
+        this.onCompleteHandler();
     }
 
     private setVideoSize() {
