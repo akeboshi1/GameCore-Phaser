@@ -1,6 +1,6 @@
 import { Button, ClickEvent, InputText, NineSliceButton } from "apowophaserui";
 import { i18n, UIHelper } from "utils";
-import { AvatarSuit, AvatarSuitType, ModuleName, RunningAnimation } from "structure";
+import { AvatarSuit, AvatarSuitType, IAvatar, ModuleName, RunningAnimation } from "structure";
 import { UiManager, UIDragonbonesDisplay, ButtonEventDispatcher, MainUIScene } from "gamecoreRender";
 import { PicaBasePanel } from "../pica.base.panel";
 import { UIAtlasName } from "../../../res";
@@ -37,7 +37,11 @@ export class PicaRenamePanel extends PicaBasePanel {
     }
 
     public setSuitDatas(datas: AvatarSuit[]) {
-        this.displayAvatar(datas);
+        const avatar = AvatarSuitType.createHasBaseAvatar(datas);
+        this.displayAvatar(avatar);
+    }
+    public setAvatarDatas(avatar: IAvatar) {
+        this.displayAvatar(avatar);
     }
     init() {
         const width = this.scaleWidth;
@@ -140,8 +144,7 @@ export class PicaRenamePanel extends PicaBasePanel {
         this.render.renderEmitter(this.key + "_hide");
     }
 
-    private displayAvatar(datas: AvatarSuit[]) {
-        const avatar = AvatarSuitType.createHasBaseAvatar(datas);
+    private displayAvatar(avatar: IAvatar) {
         this.dragonbones.load({
             id: 0,
             avatar

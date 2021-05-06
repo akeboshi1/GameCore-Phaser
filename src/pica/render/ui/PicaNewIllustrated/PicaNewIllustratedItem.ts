@@ -14,6 +14,7 @@ export class PicaNewIllustratedItem extends ButtonEventDispatcher {
     private magnifyingImg: Phaser.GameObjects.Image;
     private discoveryTips: Phaser.GameObjects.Text;
     private yoyoTween: Phaser.Tweens.Tween;
+    private aniTweens: Phaser.Tweens.Tween[] = [];
     private isplayingLight: boolean = false;
     constructor(scene: Phaser.Scene, width: number, height: number, dpr: number, zoom: number) {
         super(scene, 0, 0, true);
@@ -45,12 +46,16 @@ export class PicaNewIllustratedItem extends ButtonEventDispatcher {
 
     destroy() {
         super.destroy();
-        this.clearTween();
+        this.clearYoyoTween();
     }
     setItemData(item: ICountablePackageItem, code: boolean = true) {
-        if (this.itemData && this.itemData.id === item.id && this.isplayingLight) return;
-        this.clearTween();
+        if (this.itemData && this.itemData.id === item.id) {
+            if (this.isplayingLight) return;
+        }
         this.itemData = item;
+        this.isplayingLight = false;
+        this.clearYoyoTween();
+        this.clearAniTweens();
         const url = Url.getOsdRes(item.texturePath);
         this.itemIcon.load(url, this, () => {
             this.itemIcon.visible = true;
@@ -104,7 +109,7 @@ export class PicaNewIllustratedItem extends ButtonEventDispatcher {
     }
 
     playLightAni(compl: Handler) {
-        this.clearTween();
+        this.clearYoyoTween();
         this.itemIcon.y = 0;
         const surveyAniImg = this.scene.make.image({ key: UIAtlasName.illustrate_new, frame: "illustrate_survey_icon_base" });
         surveyAniImg.y = this.surveyImg.y;
@@ -114,20 +119,25 @@ export class PicaNewIllustratedItem extends ButtonEventDispatcher {
         this.surveyLight.mask = graphicsMask.createGeometryMask();
         this.setStarImg(4, this.itemData.grade);
         this.isplayingLight = true;
-        UIHelper.playAlphaTween(this.scene, surveyAniImg, 0, 1, 500, undefined, 0, new Handler(this, () => {
-            this.surveyLight.visible = true;
+        const tween1 = UIHelper.playAlphaTween(this.scene, surveyAniImg, 0, 1, 500, undefined, 0, new Handler(this, () => {
             const from = this.height * 0.5 + this.surveyLight.height * 0.5;
             const to = -10 * this.dpr;
-            this.surveyLight.y = from;
-            UIHelper.playtPosYTween(this.scene, this.surveyLight, from, to, 300, "Linear", 0, new Handler(this, () => {
-                this.surveyLight.mask = undefined;
+            if (this.isplayingLight) {
+                this.surveyLight.visible = true;
+                this.surveyLight.y = from;
+            }
+            const tween2 = UIHelper.playtPosYTween(this.scene, this.surveyLight, from, to, 300, "Linear", 0, new Handler(this, () => {
                 graphicsMask.destroy();
                 surveyAniImg.destroy();
-                this.surveyImg.setFrame("illustrate_survey_icon_base");
+                if (this.isplayingLight) {
+                    this.surveyImg.setFrame("illustrate_survey_icon_base");
+                    this.surveyLight.mask = undefined;
+                }
                 if (compl) compl.run();
-                this.isplayingLight = false;
             }));
+            // this.aniTweens.push(tween2);
         }));
+        //  this.aniTweens.push(tween1);
     }
     protected createMask() {
         const graphicsMask = this.scene.make.graphics(undefined, false);
@@ -147,12 +157,24 @@ export class PicaNewIllustratedItem extends ButtonEventDispatcher {
         } else this.starImg.visible = false;
     }
 
-    protected clearTween() {
+    protected clearYoyoTween() {
         if (this.yoyoTween) {
             this.yoyoTween.stop();
             this.yoyoTween.remove();
             this.yoyoTween = undefined;
         }
+    }
+    protected clearAniTweens() {
+        // for (const tween of this.aniTweens) {
+        //     tween.stop();
+        //     tween.remove();
+        // }
+        this.aniTweens.length = 0;
+        this.surveyLight.visible = true;
+        const to = -10 * this.dpr;
+        this.surveyLight.y = to;
+        this.surveyLight.mask = undefined;
+
     }
 }
 

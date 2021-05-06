@@ -31,7 +31,8 @@ export class PicaRenameMediator extends BasicMediator {
     if (this.mView) {
       const obj = this.game.peer.getPlayerAvatar();
       if (obj) {
-        this.mView.setSuitDatas(obj.suits);
+        if (obj.suits) this.mView.setSuitDatas(obj.suits);
+        if (obj.avatar) this.mView.setAvatarDatas(obj.avatar);
       }
     }
   }
