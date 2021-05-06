@@ -299,6 +299,7 @@ export class PicaPropFunPanel extends BasePanel {
     private onSliderValueHandler(value: number) {
         this.itemCountText.x = this.thumb.x;
         this.itemCount = this.line ? this.calcuSliderValue(value) : this.lineSliderValue(value);
+        this.itemCount = this.itemCount || 1;
         this.updateData();
     }
 
