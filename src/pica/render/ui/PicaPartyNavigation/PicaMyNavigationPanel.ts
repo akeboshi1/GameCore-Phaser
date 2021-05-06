@@ -22,7 +22,7 @@ export class PicaMyNavigationPanel extends Phaser.GameObjects.Container {
         this.dpr = dpr;
         this.zoom = zoom;
         this.create();
-        this.queryType = [op_def.RoomTypeEnum.NORMAL_ROOM, op_def.RoomTypeEnum.SHOP];
+        this.queryType = [op_def.RoomTypeEnum.NORMAL_ROOM];// , op_def.RoomTypeEnum.SHOP];
     }
     create() {
         this.mGameScroll = new GameScroller(this.scene, {

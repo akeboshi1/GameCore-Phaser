@@ -180,6 +180,7 @@ export class PicaNewIllustratedMediator extends BasicMediator {
         const gallery: IUpdateGalleryDatas = this.gallery;
         group.forEach((value: IGalleryLevelGroup, key: number) => {
             if (value.gallery) {
+                let allReceived = true;
                 value.gallery.forEach((temp) => {
                     if (expIds.indexOf(temp.id) !== -1) {
                         temp.received = 3;
@@ -190,9 +191,11 @@ export class PicaNewIllustratedMediator extends BasicMediator {
                         } else {
                             temp.received = 1;
                         }
+                        allReceived = false;
                     }
                 });
                 value.progress = gallery.galleryExp;
+                value.allReceived = allReceived;
             }
         });
         const groupArr = Array.from(group.values());
@@ -225,6 +228,7 @@ export class PicaNewIllustratedMediator extends BasicMediator {
         const tempData: IUpdateGalleryDatas = this.gallery;
         const group = this.getLevelGroup();
         const galleryLevel = tempData.galleryLevel;
+        tempData.beforeExp = 0;
         if (tempData.galleryLevel > 1) {
             const temp: IGalleryLevelGroup = group.get(galleryLevel - 1);
             tempData.beforeExp = temp.gallery.pop().exp;
@@ -261,7 +265,7 @@ export class PicaNewIllustratedMediator extends BasicMediator {
                 group = mapGroup.get(value.level);
                 group.gallery.push(value);
             } else {
-                group = { level: value.level, progress: 0, rewards: false, gallery: [value] };
+                group = { level: value.level, progress: 0, rewards: false, allReceived: false, gallery: [value] };
                 mapGroup.set(value.level, group);
             }
         });

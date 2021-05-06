@@ -140,7 +140,7 @@ export class PicaPartyNavigationMediator extends BasicMediator {
         this.model.query_ROOM_LIST(op_def.RoomTypeEnum.NORMAL_ROOM, data.page, data.perPage);
     }
     private query_SELF_ROOM_LIST(roomType: number) {
-        const arr = [op_def.RoomTypeEnum.NORMAL_ROOM, op_def.RoomTypeEnum.SHOP];
+        const arr = [op_def.RoomTypeEnum.NORMAL_ROOM];// , op_def.RoomTypeEnum.SHOP];
         for (const type of arr) {
             this.model.query_SELF_ROOM_LIST(type);
         }

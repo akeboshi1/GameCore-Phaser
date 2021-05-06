@@ -14,6 +14,7 @@ export class PicaNewIllustratedItem extends ButtonEventDispatcher {
     private magnifyingImg: Phaser.GameObjects.Image;
     private discoveryTips: Phaser.GameObjects.Text;
     private yoyoTween: Phaser.Tweens.Tween;
+    private isplayingLight: boolean = false;
     constructor(scene: Phaser.Scene, width: number, height: number, dpr: number, zoom: number) {
         super(scene, 0, 0, true);
         this.dpr = dpr;
@@ -47,6 +48,7 @@ export class PicaNewIllustratedItem extends ButtonEventDispatcher {
         this.clearTween();
     }
     setItemData(item: ICountablePackageItem, code: boolean = true) {
+        if (this.itemData && this.itemData.id === item.id && this.isplayingLight) return;
         this.clearTween();
         this.itemData = item;
         const url = Url.getOsdRes(item.texturePath);
@@ -111,6 +113,7 @@ export class PicaNewIllustratedItem extends ButtonEventDispatcher {
         const graphicsMask = this.createMask();
         this.surveyLight.mask = graphicsMask.createGeometryMask();
         this.setStarImg(4, this.itemData.grade);
+        this.isplayingLight = true;
         UIHelper.playAlphaTween(this.scene, surveyAniImg, 0, 1, 500, undefined, 0, new Handler(this, () => {
             this.surveyLight.visible = true;
             const from = this.height * 0.5 + this.surveyLight.height * 0.5;
@@ -122,6 +125,7 @@ export class PicaNewIllustratedItem extends ButtonEventDispatcher {
                 surveyAniImg.destroy();
                 this.surveyImg.setFrame("illustrate_survey_icon_base");
                 if (compl) compl.run();
+                this.isplayingLight = false;
             }));
         }));
     }

@@ -145,7 +145,12 @@ export class PicaNewIllustratedDetailPanel extends Phaser.GameObjects.Container 
         this.progressTex.setFontStyle("bold");
         this.progressTex.x = this.horProgress.x + this.horProgress.width * 0.5 + 5 * this.dpr;
         this.progressTex.y = this.horProgress.y;
-        this.galleryCon.add([this.badgeButton, this.horProgress, this.levelButton, this.progressTex]);
+        const levelCon = new ButtonEventDispatcher(this.scene, 0, this.levelButton.y);
+        levelCon.y = this.levelButton.y;
+        levelCon.setSize(260 * this.dpr, 30 * this.dpr);
+        levelCon.enable = true;
+        levelCon.on(ClickEvent.Tap, this.onHorRewardsHandler, this);
+        this.galleryCon.add([this.badgeButton, this.horProgress, levelCon, this.levelButton, this.progressTex]);
         this.collectedButton = new Button(this.scene, UIAtlasName.illustrate_new, "illustrate_collect_badge", "illustrate_collect_badge", undefined, this.dpr, this.zoom);
         this.collectedButton.on(ClickEvent.Tap, this.onCollectedHandler, this);
         this.collectedButton.x = this.badgeButton.x;

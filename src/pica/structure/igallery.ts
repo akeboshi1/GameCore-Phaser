@@ -27,5 +27,6 @@ export interface IGalleryLevelGroup {
     level: number;
     progress: number;
     rewards: boolean;
+    allReceived: boolean;
     gallery: IGalleryLevel[];
 }

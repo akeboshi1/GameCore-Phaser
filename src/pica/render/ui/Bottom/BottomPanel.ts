@@ -311,6 +311,7 @@ class OutputContainer extends Phaser.GameObjects.Container {
             fontFamily: Font.DEFULT_FONT,
             stroke: "#000000",
             strokeThickness: 1 * this.dpr * scaleRatio,
+            lineSpacing: 5 * dpr,
             shadow: {
                 offsetX: 0,
                 offsetY: 0,
@@ -389,7 +390,7 @@ class OutputContainer extends Phaser.GameObjects.Container {
     }
 
     public addBBCodeImg(keyimg: string, key: string, frame: string) {
-        this.mOutputText.addImage(keyimg, { key, frame, y: 3 * this.dpr, left: 10 * this.dpr, right: 10 * this.dpr });
+        this.mOutputText.addImage(keyimg, { key, frame, y: 1 * this.dpr, left: 8 * this.dpr, right: 8 * this.dpr });
     }
 
     public setBBcodeHandler(send: Handler) {

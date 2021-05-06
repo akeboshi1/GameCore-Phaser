@@ -54,9 +54,10 @@ export class PicaNewIllustratedGalleryPanel extends Phaser.GameObjects.Container
         this.galleryData = content;
         const list = content.list;
         this.maxPage = Math.ceil(list.length / (this.pagInterval * 4));
-        this.pageCount =  this.pageCount || 1;
+        this.pageCount = this.pageCount || 1;
         this.setItemPages(this.pageCount);
-        this.pageCountText.text = `${this.pageCount < 10 ? "0" + this.pageCount : this.pageCount}`;
+        // this.pageCountText.text = `${this.pageCount < 10 ? "0" + this.pageCount : this.pageCount}`;
+        this.horSlider.setValue(this.pageCount / this.maxPage);
     }
 
     init() {
@@ -159,8 +160,9 @@ export class PicaNewIllustratedGalleryPanel extends Phaser.GameObjects.Container
 
     private onSliderValueHandler(value: number) {
         this.pageCountText.x = this.thumb.x;
-        let page = Math.floor(this.maxPage * value + 1);
+        let page = Math.floor(this.maxPage * value + 0.9);
         if (page > this.maxPage) page = this.maxPage;
+        else if (page === 0) page = 1;
         if (this.pageCount === page) return;
         this.pageCount = page;
         this.pageCountText.text = `${this.pageCount < 10 ? "0" + this.pageCount : this.pageCount}`;
@@ -172,6 +174,8 @@ export class PicaNewIllustratedGalleryPanel extends Phaser.GameObjects.Container
             this.setItemPages(this.pageCount);
         }
         this.slidermoving = false;
+        this.horSlider.setValue((this.pageCount) / this.maxPage);
+
     }
 
 }
