@@ -1,4 +1,4 @@
-import { Handler, IProjection, LogicPos, projectionAngle, ValueResolver } from "utils";
+import { Handler, IProjection, LogicPos, ValueResolver } from "utils";
 import { DisplayField, IDragonbonesModel, IFramesModel, RunningAnimation } from "structure";
 import { ISortObject } from "./sort.object";
 
