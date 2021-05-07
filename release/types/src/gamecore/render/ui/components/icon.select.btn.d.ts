@@ -1,3 +1,4 @@
+/// <reference types="tooqinggamephaser" />
 import { Render } from "../../render";
 import { Pos } from "structure";
 /**

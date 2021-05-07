@@ -9,6 +9,7 @@ export enum GameState {
     // =====第1步 初始化game中user，监听，manager
     InitWorld = "InitWorld",
     // =====第3步 尝试链接
+    // todo 尝试链接时间过长
     StartConnect = "StartConnect",
     // =====第4步 请求平台token
     RequestToken = "RequestToken",

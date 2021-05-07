@@ -1,3 +1,4 @@
+/// <reference types="tooqinggamephaser" />
 export declare class GridLayoutGroup extends Phaser.GameObjects.Container {
     static readonly ClassName: string;
     private _padding;

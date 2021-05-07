@@ -1,3 +1,4 @@
+/// <reference types="tooqinggamephaser" />
 import { ClickEvent, ISoundGroup } from "apowophaserui";
 import { ButtonEventDispatcher } from "./button.event.dispatch";
 export declare class BackgroundScaleButton extends ButtonEventDispatcher {

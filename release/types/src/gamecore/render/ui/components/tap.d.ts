@@ -1,3 +1,4 @@
+/// <reference types="tooqinggamephaser" />
 export declare class Tap {
     private gameobject;
     private isDown;
