@@ -191,8 +191,8 @@ var ResUtils = /** @class */ (function () {
         return Url.OSD_PATH + value;
     };
     ResUtils.getResRoot = function (value) {
-        if (Url.RESOURCE_ROOT)
-            return Url.RESOURCE_ROOT + "/" + value;
+        if (Url.OSD_PATH)
+            return Url.OSD_PATH + "/" + value;
         return value;
     };
     return ResUtils;

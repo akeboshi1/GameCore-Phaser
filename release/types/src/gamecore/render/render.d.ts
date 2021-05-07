@@ -240,6 +240,7 @@ export declare class Render extends RPCPeer implements GameMain, IRender {
     roomstartPlay(): void;
     roomReady(): void;
     playAnimation(id: number, animation: any, field?: any, times?: number): void;
+    setHasInteractive(id: number, hasInteractive: boolean): void;
     setCameraScroller(actorX: number, actorY: number): void;
     createDragonBones(id: number, displayInfo: IFramesModel | IDragonbonesModel, layer: number, nodeType: any): void;
     createUserDragonBones(displayInfo: IFramesModel | IDragonbonesModel, layer: number): void;

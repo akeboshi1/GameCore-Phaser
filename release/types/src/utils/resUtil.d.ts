@@ -1,4 +1,3 @@
-/// <reference types="tooqinggamephaser" />
 export declare const HTTP_REGEX: RegExp;
 export declare class Url {
     static OSD_PATH: string;

@@ -1,4 +1,3 @@
-/// <reference types="tooqinggamephaser" />
 export interface IEditorCanvasConfig {
     width: number;
     height: number;

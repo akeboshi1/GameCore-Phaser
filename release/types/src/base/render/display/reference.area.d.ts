@@ -1,4 +1,3 @@
-/// <reference types="tooqinggamephaser" />
 import { IPosition45Obj, IPos } from "structure";
 export declare class ReferenceArea extends Phaser.GameObjects.Graphics {
     private mSize;

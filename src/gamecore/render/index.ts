@@ -1,6 +1,7 @@
 // import "structure";
 // import "utils";
 // import "baseRender";
+import "tooqinggamephaser";
 export * from "./account";
 export * from "./cameras";
 export * from "./display";

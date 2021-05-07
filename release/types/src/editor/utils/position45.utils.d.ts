@@ -1,4 +1,3 @@
-/// <reference types="tooqinggamephaser" />
 declare type Point45 = Phaser.Geom.Point;
 declare type Point90 = Phaser.Geom.Point;
 export default class Position45Utils {

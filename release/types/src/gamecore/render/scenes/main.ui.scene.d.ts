@@ -1,4 +1,3 @@
-/// <reference types="tooqinggamephaser" />
 import { RoomScene } from "./room.scene";
 export declare class MainUIScene extends RoomScene {
     static readonly LAYER_UI = "uiLayer";

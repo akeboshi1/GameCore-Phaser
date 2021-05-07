@@ -1,4 +1,3 @@
-/// <reference types="tooqinggamephaser" />
 import { ProgressMaskBar } from "./progress.mask.bar";
 import { ThreeSlicePath } from "./three.slice.path";
 export declare class ProgressThreeMaskBar extends ProgressMaskBar {

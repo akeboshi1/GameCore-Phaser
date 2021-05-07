@@ -5,8 +5,8 @@ import { PlayerBag } from "./player.bag";
 import { PlayerProperty } from "./player.property";
 export declare class UserDataManager extends PacketHandler {
     private game;
-    private readonly mPlayerBag;
-    private readonly mProperty;
+    private mPlayerBag;
+    private mProperty;
     private mDressAvatarIDs;
     constructor(game: Game);
     addPackListener(): void;

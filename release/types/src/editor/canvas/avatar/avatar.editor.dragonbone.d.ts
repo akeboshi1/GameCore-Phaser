@@ -1,4 +1,3 @@
-/// <reference types="tooqinggamephaser" />
 export declare class AvatarEditorDragonbone extends Phaser.GameObjects.Container {
     private static readonly DRAGONBONE_NAME_DEFAULT;
     private static readonly DRAGONBONE_NAME_HEAD;
