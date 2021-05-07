@@ -1,6 +1,7 @@
 import { LayerEnum } from "game-capsule";
 import { PBpacket } from "net-socket-packet";
 import { op_client, op_def, op_virtual_world } from "pixelpai_proto";
+import { MoveControll } from "../../collsion";
 import {
     AnimationQueue,
     AvatarSuitType,
@@ -10,7 +11,7 @@ import {
     ISprite,
     PlayerState
 } from "structure";
-import { DirectionChecker, IPos, IProjection, Logger, LogicPoint, LogicPos, Tool } from "utils";
+import { DirectionChecker, IPos, IProjection, Logger, LogicPos, Tool } from "utils";
 import { BlockObject } from "../block/block.object";
 import { IRoomService } from "../room/room";
 import { ElementStateManager } from "../state/element.state.manager";
@@ -182,7 +183,7 @@ export class Element extends BlockObject implements IElement {
         if (!sprite) {
             return;
         }
-        this.moveControll = new MoveControll(this);
+        this.moveControll = new MoveControll(this.id, this.mRoomService.collsionManager);
         this.mId = sprite.id;
         this.model = sprite;
     }
@@ -240,13 +241,12 @@ export class Element extends BlockObject implements IElement {
             speed: model.speed,
             displayInfo: model.displayInfo
         };
-        this.mRoomService.game.peer.physicalPeer.setModel(obj1)
-            .then(() => {
-                if (this.mRenderable) {
-                    this.addBody();
-                    // if (model.nodeType !== op_def.NodeType.CharacterNodeType) this.mRoomService.game.physicalPeer.addBody(this.id);
-                }
-            });
+        // this.mRoomService.game.peer.physicalPeer.setModel(obj1)
+        //     .then(() => {
+        //         if (this.mRenderable) {
+        //             this.addBody();
+        //         }
+        //     });
     }
 
     public updateModel(model: op_client.ISprite, avatarType?: op_def.AvatarStyle) {
@@ -319,9 +319,9 @@ export class Element extends BlockObject implements IElement {
         if (this.mRoomService) {
             if (!this.mRootMount) {
                 if (times === undefined) {
-                    this.mRoomService.game.physicalPeer.changeAnimation(this.id, this.mModel.currentAnimation.name);
+                    // this.mRoomService.game.physicalPeer.changeAnimation(this.id, this.mModel.currentAnimation.name);
                 } else {
-                    this.mRoomService.game.physicalPeer.changeAnimation(this.id, this.mModel.currentAnimation.name, times);
+                    // this.mRoomService.game.physicalPeer.changeAnimation(this.id, this.mModel.currentAnimation.name, times);
                 }
             }
             this.mRoomService.game.renderPeer.playAnimation(this.id, this.mModel.currentAnimation, undefined, times);
@@ -521,7 +521,7 @@ export class Element extends BlockObject implements IElement {
         }
         if (p) {
             this.mModel.setPosition(p.x, p.y);
-            if (this.moveControll) this.moveControll.setPosition(p.x, p.y);
+            if (this.moveControll) this.moveControll.setPosition(this.mModel.pos);
         }
     }
 
@@ -539,7 +539,6 @@ export class Element extends BlockObject implements IElement {
 
     public showNickname() {
         if (!this.mModel) return;
-        // Logger.getInstance().debug("showNickName======" + this.mModel.nickname);
         this.mRoomService.game.renderPeer.showNickname(this.id, this.mModel.nickname);
     }
 
@@ -575,9 +574,9 @@ export class Element extends BlockObject implements IElement {
         const pos45 = this.mRoomService.transformToMini45(this.getPosition());
         const result: IPos[] = [];
         for (const interactive of interactives) {
-            if (await this.mRoomService.game.physicalPeer.isWalkableAt(pos45.x + interactive.x, pos45.y + interactive.y)) {
-                result.push(this.mRoomService.transformToMini90(new LogicPos(pos45.x + interactive.x, pos45.y + interactive.y)));
-            }
+            // if (await this.mRoomService.game.physicalPeer.isWalkableAt(pos45.x + interactive.x, pos45.y + interactive.y)) {
+            //     result.push(this.mRoomService.transformToMini90(new LogicPos(pos45.x + interactive.x, pos45.y + interactive.y)));
+            // }
         }
         return result;
     }
@@ -604,7 +603,6 @@ export class Element extends BlockObject implements IElement {
         }
         this.mDirty = true;
         this.removeFromWalkableMap();
-        this.removeBody();
         return this;
     }
 
@@ -884,17 +882,17 @@ export class Element extends BlockObject implements IElement {
     }
 
     protected addBody() {
-        if (this.mRootMount) {
-            return;
-        }
-        super.addBody();
+        // if (this.mRootMount) {
+        //     return;
+        // }
+        // super.addBody();
     }
 
     protected updateBody(model) {
-        if (this.mRootMount) {
-            return;
-        }
-        super.updateBody(model);
+        // if (this.mRootMount) {
+        //     return;
+        // }
+        // super.updateBody(model);
     }
 
     private _startMove(points: any) {
@@ -919,41 +917,41 @@ export class Element extends BlockObject implements IElement {
     }
 }
 
-class MoveControll {
-    private velocity: IPos;
-    private mPosition: IPos;
-    private mPrePosition: IPos;
+// class MoveControll {
+//     private velocity: IPos;
+//     private mPosition: IPos;
+//     private mPrePosition: IPos;
 
-    constructor(private target: BlockObject) {
-        this.mPosition = new LogicPos();
-        this.mPrePosition = new LogicPos();
-        this.velocity = new LogicPoint();
-    }
+//     constructor(private target: BlockObject) {
+//         this.mPosition = new LogicPos();
+//         this.mPrePosition = new LogicPos();
+//         this.velocity = new LogicPoint();
+//     }
 
-    setVelocity(x: number, y: number) {
-        this.velocity.x = x;
-        this.velocity.y = y;
-    }
+//     setVelocity(x: number, y: number) {
+//         this.velocity.x = x;
+//         this.velocity.y = y;
+//     }
 
-    update(time: number, delta: number) {
-        if (this.velocity.x !== 0 && this.velocity.y !== 0) {
-            this.mPrePosition.x = this.mPosition.x;
-            this.mPrePosition.y = this.mPosition.y;
-            this.mPosition.x += this.velocity.x;
-            this.mPosition.y += this.velocity.y;
-        }
-    }
+//     update(time: number, delta: number) {
+//         if (this.velocity.x !== 0 && this.velocity.y !== 0) {
+//             this.mPrePosition.x = this.mPosition.x;
+//             this.mPrePosition.y = this.mPosition.y;
+//             this.mPosition.x += this.velocity.x;
+//             this.mPosition.y += this.velocity.y;
+//         }
+//     }
 
-    setPosition(x: number, y: number) {
-        this.mPosition.x = x;
-        this.mPosition.y = y;
-    }
+//     setPosition(x: number, y: number) {
+//         this.mPosition.x = x;
+//         this.mPosition.y = y;
+//     }
 
-    get position(): IPos {
-        return this.mPosition;
-    }
+//     get position(): IPos {
+//         return this.mPosition;
+//     }
 
-    get prePosition(): IPos {
-        return this.mPrePosition;
-    }
-}
+//     get prePosition(): IPos {
+//         return this.mPrePosition;
+//     }
+// }

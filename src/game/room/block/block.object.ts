@@ -1,12 +1,11 @@
 import { IPos, LogicPos, IProjection, Logger } from "utils";
 import { InputEnable } from "../element/element";
-import { MatterObject } from "../physical/matter.object";
 import { IRoomService } from "../room/room";
 import { IBlockObject } from "./iblock.object";
 import { ISprite } from "structure";
 import { op_def } from "pixelpai_proto";
 
-export abstract class BlockObject extends MatterObject implements IBlockObject {
+export abstract class BlockObject implements IBlockObject {
     public isUsed = false;
     protected mRenderable: boolean = false;
     protected mBlockable: boolean = false;
@@ -14,7 +13,6 @@ export abstract class BlockObject extends MatterObject implements IBlockObject {
     protected mInputEnable: InputEnable;
     protected mCreatedDisplay: boolean;
     constructor(id: number, protected mRoomService: IRoomService) {
-        super(id, mRoomService);
         this.isUsed = true;
     }
 
@@ -150,7 +148,7 @@ export abstract class BlockObject extends MatterObject implements IBlockObject {
         // Logger.getInstance().debug("removeDisplay ====>", this);
         this.mCreatedDisplay = false;
         if (!this.mRoomService) return;
-        this.removeBody();
+        // this.removeBody();
         return this.mRoomService.game.peer.render.removeBlockObject(this.id);
     }
 

@@ -71,7 +71,7 @@ export class Terrain extends BlockObject implements IElement {
             speed: this.mModel.speed,
             displayInfo: this.mModel.displayInfo
         };
-        await this.mRoomService.game.physicalPeer.setModel(obj1);
+        // await this.mRoomService.game.physicalPeer.setModel(obj1);
         this.removeFromWalkableMap();
         this.load(<IFramesModel>this.mModel.displayInfo);
         // this.mDisplayInfo = <IFramesModel> this.mModel.displayInfo;
@@ -79,7 +79,7 @@ export class Terrain extends BlockObject implements IElement {
         this.setPosition(this.mModel.pos);
         this.setRenderable(true);
         this.addToWalkableMap();
-        this.mRoomService.game.physicalPeer.changeAnimation(this.id, this.mModel.currentAnimation.name);
+        // this.mRoomService.game.physicalPeer.changeAnimation(this.id, this.mModel.currentAnimation.name);
         // this.addDisplay();
     }
 
@@ -109,7 +109,7 @@ export class Terrain extends BlockObject implements IElement {
             this.removeFromWalkableMap();
             this.mModel.setAnimationName(animationName);
             this.addToWalkableMap();
-            this.mRoomService.game.physicalPeer.changeAnimation(this.id, this.mModel.currentAnimation.name);
+            // this.mRoomService.game.physicalPeer.changeAnimation(this.id, this.mModel.currentAnimation.name);
             // this.mAnimationName = animationName;
             // this.mModel.currentAnimationName = animationName;
             this.mRoomService.game.peer.render.playElementAnimation(this.id, this.mModel.currentAnimationName);

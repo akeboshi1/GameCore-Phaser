@@ -4,10 +4,11 @@ import { Game } from "../game";
 import { Player } from "../room/player/player";
 import { IRoomService } from "../room/room/room";
 import { PlayerModel } from "../room/player/player.model";
-import { IPos, Logger } from "utils";
+import { IPos, Logger, LogicPos } from "utils";
 import { UserDataManager } from "./data/user.dataManager";
 import { AvatarSuitType, EventType, IDragonbonesModel, IFramesModel, PlayerState, ISprite, ModuleName, SceneName } from "structure";
 import { LayerEnum } from "game-capsule";
+import { interval, MoveControll } from "gamecore";
 // import * as _ from "lodash";
 
 export class User extends Player {
@@ -61,31 +62,27 @@ export class User extends Player {
         this.mId = actor.id;
         this.mRoomService = room;
         this.mElementManager = room.playerManager;
-        this.game.peer.physicalPeer.createMatterUserObject(this.id);
         if (this.game.avatarType === op_def.AvatarStyle.SuitType) {
             if (!AvatarSuitType.hasAvatarSuit(actor["attrs"])) {
                 if (!actor.avatar) actor.avatar = <any>(AvatarSuitType.createBaseAvatar());
             }
         }
+        this.moveControll = new MoveControll(actor.id, this.mRoomService.collsionManager);
         this.model = new PlayerModel(actor);
         this.mRoomService.playerManager.setMe(this);
         // todo render setScroll
         Logger.getInstance().debug("setCameraScroller");
         this.game.renderPeer.setCameraScroller(actor.x, actor.y);
-
-        // const configMgr = <BaseDataConfigManager>this.game.configManager;
-        // const guideConfig = configMgr.findGuide(ModuleName.PICAPARTYNAVIGATION_NAME);
-        // Logger.getInstance().log(guideConfig);
     }
 
-    update() {
+    update(time?: number, delta?: number) {
+        super.update(time, delta);
         const now = new Date().getTime();
         if (!this.mMovePoints || this.mMovePoints.length < 1) {
             this.mMoveTime = now;
             return;
         }
         if (now - this.mMoveTime > this.mMoveDelayTime) {
-            // Logger.getInstance().log("user update ===>", this.mMovePoints);
             const movePath = op_def.MovePath.create();
             movePath.id = this.id;
             movePath.movePos = this.mMovePoints;
@@ -97,9 +94,16 @@ export class User extends Player {
             this.mMovePoints = [];
             this.mMoveTime = now;
         }
+    }
 
-        // debug
-        // Logger.getInstance().debug("#path cur pos : ", this.getPosition45(), "; ", this.getPosition());
+    moveMotion(x: number, y: number) {
+        if (this.mRootMount) {
+            this.mRootMount.removeMount(this);
+        }
+        this.mMoveData = { path: [{ pos: new LogicPos(x, y)}] };
+        this.mSyncDirty = true;
+        // this.body.isSensor = false;
+        this.startMove();
     }
 
     public unmount(targetPos?: IPos): Promise<this> {
@@ -126,8 +130,17 @@ export class User extends Player {
     }
 
     public startMove() {
+        const path = this.mMoveData.path;
+        if (path.length < 1) {
+            return;
+        }
         this.changeState(PlayerState.WALK);
         this.mMoving = true;
+
+        const pos = this.getPosition();
+        const angle = Math.atan2((path[0].pos.y - pos.y), (path[0].pos.x - pos.x));
+        const speed = this.mModel.speed * interval;
+        this.moveControll.setVelocity(Math.cos(angle) * speed, Math.sin(angle) * speed);
     }
 
     public stopMove(stopPos?: IPos) {
@@ -286,7 +299,6 @@ export class User extends Player {
 
     protected addBody() {
         if (this.mRootMount) return;
-        this.game.peer.physicalPeer.addBody(this.id, false);
     }
 
     protected syncCameraPosition() {
@@ -320,7 +332,6 @@ export class User extends Player {
                 speed: val.speed,
                 displayInfo: this.model.displayInfo
             };
-            this.game.physicalPeer.setModel(obj1);
             this.setPosition(this.mModel.pos);
         }
         // todo change display alpha

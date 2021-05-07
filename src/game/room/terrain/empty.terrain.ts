@@ -11,9 +11,9 @@ export class EmptyTerrain extends BlockObject {
 
     public setPosition(pos: IPos) {
         const scaleRatio = 1;
-        this._tempVec2.x = pos.x * scaleRatio;
-        this._tempVec2.y = pos.y * scaleRatio;
-        this.mRoomService.game.peer.physicalPeer.setPosition(this.guid, pos.x, pos.y);
+        // this._tempVec2.x = pos.x * scaleRatio;
+        // this._tempVec2.y = pos.y * scaleRatio;
+        // this.mRoomService.game.peer.physicalPeer.setPosition(this.guid, pos.x, pos.y);
     }
 
     getPosition() {
@@ -26,7 +26,7 @@ export class EmptyTerrain extends BlockObject {
     }
 
     removeDisplay(): Promise<any> {
-        this.mRoomService.game.physicalPeer.removeBody(this.guid);
+        // this.mRoomService.game.physicalPeer.removeBody(this.guid);
         return Promise.resolve();
     }
 
@@ -37,11 +37,11 @@ export class EmptyTerrain extends BlockObject {
         const width = roomSize.tileWidth * dpr;
         const paths = [{ x: 0, y: -height / 2 }, { x: width / 2, y: 0 }, { x: 0, y: height / 2 }, { x: -width / 2, y: 0 }];
         // this.mRoomService.game.physicalPeer.addBody(this.guid);
-        this.mRoomService.game.peer.physicalPeer.createBodyFromVertices(this.guid, this._tempVec2.x * dpr, this._tempVec2.y * dpr + height * 0.5,
-            [paths], true, true, { isStatic: true, inertia: Infinity, inverseInertia: Infinity });
+        // this.mRoomService.game.peer.physicalPeer.createBodyFromVertices(this.guid, this._tempVec2.x * dpr, this._tempVec2.y * dpr + height * 0.5,
+        //     [paths], true, true, { isStatic: true, inertia: Infinity, inverseInertia: Infinity });
     }
 
     public destroy() {
-        this.mRoomService.game.physicalPeer.removeBody(this.guid);
+        // this.mRoomService.game.physicalPeer.removeBody(this.guid);
     }
 }

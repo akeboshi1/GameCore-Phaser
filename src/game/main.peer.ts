@@ -5,7 +5,7 @@ import * as protos from "pixelpai_proto";
 import { ServerAddress } from "../../lib/net/address";
 import { Game } from "./game";
 import {IPos, Logger, LogicPos, Url} from "utils";
-import { ILauncherConfig, MAIN_WORKER, RENDER_PEER, ModuleName, EventType, PHYSICAL_WORKER, PHYSICAL_WORKER_URL, GameState } from "structure";
+import { ILauncherConfig, MAIN_WORKER, RENDER_PEER, ModuleName, EventType, GameState } from "structure";
 import { PicaGame } from "picaWorker";
 import { DataMgrType } from "./data.manager/dataManager";
 import { SceneDataManager } from "./data.manager";
@@ -25,7 +25,6 @@ export class MainPeer extends RPCPeer {
      * 主进程和render之间完全链接成功
      */
     private isReady: boolean = false;
-    private mPhysicalPeer: any;
     private delayTime: number = 15000;
     private reConnectCount: number = 0;
     private startDelay: any;
@@ -44,7 +43,7 @@ export class MainPeer extends RPCPeer {
     }
 
     get physicalPeer() {
-        return this.remote[PHYSICAL_WORKER].PhysicalPeer;
+        throw new Error("physical has been discarded");
     }
 
     set state(val) {
@@ -154,13 +153,6 @@ export class MainPeer extends RPCPeer {
         // const url: string = "/js/game" + "_v1.0.398";
         Logger.getInstance().debug("render link onReady");
         this.game.createGame(this.mConfig);
-        this.linkTo(PHYSICAL_WORKER, PHYSICAL_WORKER_URL).onceReady(() => {
-            this.mPhysicalPeer = this.remote[PHYSICAL_WORKER].PhysicalPeer;
-            Logger.getInstance().debug("Physcialworker onReady");
-            // this.linkTo(HEARTBEAT_WORKER, HEARTBEAT_WORKER_URL).onceReady(() => {
-            //     Logger.getInstance().debug("heartBeatworker onReady in mainworker");
-            // });
-        });
     }
 
     @Export()
@@ -732,6 +724,11 @@ export class MainPeer extends RPCPeer {
     public setConfig(config: ILauncherConfig) {
         this.mConfig = config;
         this.game.setConfig(config);
+    }
+
+    @Export([webworker_rpc.ParamType.num, webworker_rpc.ParamType.num])
+    public moveMotion(x: number, y: number) {
+        this.game.user.moveMotion(x, y);
     }
 
     // ==== todo

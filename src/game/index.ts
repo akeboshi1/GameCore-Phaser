@@ -12,3 +12,4 @@ export * from "./command";
 export * from "./sound.manager";
 export * from "./guide.manager";
 export * from "./custom.proto";
+export * from "./collsion";

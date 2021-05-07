@@ -63,10 +63,10 @@ export class Player extends Element implements IElement {
             speed: model.speed,
         };
         // physic action
-        this.mRoomService.game.peer.physicalPeer.setModel(obj1)
-            .then(() => {
-                this.addBody();
-            });
+        // this.mRoomService.game.peer.physicalPeer.setModel(obj1)
+        //     .then(() => {
+        //         this.addBody();
+        //     });
     }
 
     public changeState(val?: string, times?: number) {
@@ -108,10 +108,6 @@ export class Player extends Element implements IElement {
         // ct.movePath = movePath;
         // this.mElementManager.connection.send(pkt);
         // this.mRoomService.playerManager.actor.stopBoxMove = false;
-    }
-
-    public setPosition(pos: IPos) {
-        super.setPosition(pos);
     }
 
     public completeMove() {

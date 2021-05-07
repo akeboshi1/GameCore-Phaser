@@ -23,6 +23,7 @@ import IActor = op_client.IActor;
 import NodeType = op_def.NodeType;
 import { RoomStateManager } from "../state/room.state.manager";
 import { BlockObject } from "../block/block.object";
+import { CollsionManager } from "../../collsion";
 
 export interface SpriteAddCompletedListener {
     onFullPacketReceived(sprite_t: op_def.NodeType): void;
@@ -38,6 +39,7 @@ export interface IRoomService {
     readonly effectManager: EffectManager;
     readonly decorateManager: DecorateManager;
     readonly skyboxManager: SkyBoxManager;
+    readonly collsionManager: CollsionManager;
     // readonly handlerManager: HandlerManager;
     readonly roomSize: IPosition45Obj;
     readonly miniSize: IPosition45Obj;
@@ -141,6 +143,7 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
     protected mIsLoading: boolean = false;
     protected mManagersReadyStates: Map<string, boolean> = new Map();
     protected mDecorateManager: DecorateManager;
+    protected mCollsionManager: CollsionManager;
     private moveStyle: op_def.MoveStyle;
     private mActorData: IActor;
     private mUpdateHandlers: Handler[] = [];
@@ -390,10 +393,11 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
         // this.mFrameManager = new FrameManager();
         this.mSkyboxManager = new SkyBoxManager(this);
         // mainworker通知physicalWorker创建matterworld
-        this.mGame.peer.physicalPeer.createMatterWorld();
+        // this.mGame.peer.physicalPeer.createMatterWorld();
         // this.mMatterWorld = new MatterWorld(this);
         this.mEffectManager = new EffectManager(this);
         this.mWallMamager = new WallManager(this);
+        this.mCollsionManager = new CollsionManager(this);
         // if (this.scene) {
         //     const camera = this.scene.cameras.main;
         //     this.mCameraService.camera = camera;
@@ -405,8 +409,8 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
         //     // init block
         this.mBlocks.int(this.mSize);
         // 将场景尺寸传递给physical进程
-        this.mGame.physicalPeer.setRoomSize(this.mSize);
-        this.mGame.physicalPeer.setMiniRoomSize(this.miniSize);
+        // this.mGame.physicalPeer.setRoomSize(this.mSize);
+        // this.mGame.physicalPeer.setMiniRoomSize(this.miniSize);
         //     if (this.mWorld.moveStyle !== op_def.MoveStyle.DIRECTION_MOVE_STYLE) {
         //         this.mFallEffectContainer = new FallEffectContainer(this.mScene, this);
         //     }
@@ -446,7 +450,7 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
                 map[i][j] = 1;
             }
         }
-        this.game.physicalPeer.initAstar(map);
+        // this.game.physicalPeer.initAstar(map);
         // this.mAstar.init(map);
 
         // const joystick = new JoystickManager(this.game);
@@ -522,7 +526,6 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
     // }
 
     public clear() {
-        this.mGame.peer.physicalPeer.destroyMatterWorld();
         // if (this.mLayManager) this.mLayManager.destroy();
         if (this.mStateManager) {
             this.mStateManager.destroy();
@@ -544,6 +547,7 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
         if (this.mWallMamager) this.mWallMamager.destroy();
         // if (this.mWallManager) this.mWallManager.destroy();
         if (this.mDecorateManager) this.mDecorateManager.destroy();
+        if (this.mCollsionManager) this.mCollsionManager.destroy();
         if (this.mActorData) this.mActorData = null;
         Logger.getInstance().debug("room clear");
         this.game.renderPeer.clearRoom();
@@ -883,6 +887,10 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
 
     get decorateManager(): DecorateManager {
         return this.mDecorateManager;
+    }
+
+    get collsionManager() {
+        return this.mCollsionManager;
     }
 
     get id(): number {
@@ -1247,7 +1255,7 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
         if (this.mWalkableMap[y][x] === newVal) return;
 
         this.mWalkableMap[y][x] = newVal;
-        this.game.physicalPeer.setWalkableAt(x, y, walkable);
+        // this.game.physicalPeer.setWalkableAt(x, y, walkable);
     }
 
     private mapPos2Idx(x: number, y: number): number {
