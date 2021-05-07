@@ -252,20 +252,24 @@ export class Element extends BlockObject implements IElement {
         if (model.hasOwnProperty("attrs")) {
             this.mModel.updateAttr(model.attrs);
         }
+        let reload = false;
         if (avatarType === op_def.AvatarStyle.SuitType) {
             if (this.mModel.updateSuits) {
                 this.mModel.updateAvatarSuits(this.mModel.suits);
                 if (!this.mModel.avatar) this.mModel.avatar = AvatarSuitType.createBaseAvatar();
                 this.mModel.updateAvatar(this.mModel.avatar);
+                reload = true;
             }
         } else if (avatarType === op_def.AvatarStyle.OriginAvatar) {
             if (model.hasOwnProperty("avatar")) {
                 this.mModel.updateAvatar(model.avatar);
             }
+            reload = true;
         }
 
         if (model.display && model.animations) {
             this.mModel.updateDisplay(model.display, model.animations);
+            reload = true;
         }
         if (model.hasOwnProperty("currentAnimationName")) {
             this.play(model.currentAnimationName);
@@ -280,7 +284,12 @@ export class Element extends BlockObject implements IElement {
             this.mergeMounth(mounts);
             this.updateMounth(mounts);
         }
-        this.load(this.mModel.displayInfo);
+        if (model.hasOwnProperty("speed")) {
+            this.mModel.speed = model.speed;
+            // 速度改变，重新计算
+            if (this.mMoving) this.startMove();
+        }
+        if (reload) this.load(this.mModel.displayInfo);
         // 更新物理进程的物件/人物element
         // this.mRoomService.game.physicalPeer.updateModel(model);
         this.updateBody(model);
@@ -299,6 +308,8 @@ export class Element extends BlockObject implements IElement {
         }
         this.mModel.setAnimationName(animationName, times);
         const nextWalkable = this.mModel.getWalkableArea();
+        const hasInteractive = this.model.hasInteractive;
+        if (this.mInputEnable) this.setInputEnable(this.mInputEnable);
         this.addToWalkableMap();
         if (this.mRoomService) {
             if (!this.mRootMount) {
@@ -309,6 +320,7 @@ export class Element extends BlockObject implements IElement {
                 }
             }
             this.mRoomService.game.renderPeer.playAnimation(this.id, this.mModel.currentAnimation, undefined, times);
+            this.mRoomService.game.renderPeer.setHasInteractive(this.id, hasInteractive);
         }
     }
 

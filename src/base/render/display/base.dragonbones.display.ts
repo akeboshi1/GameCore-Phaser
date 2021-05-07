@@ -509,6 +509,7 @@ export class BaseDragonbonesDisplay extends BaseDisplay {
         const atlas = new Atlas();
         const packer = new MaxRectsPacker();
         packer.padding = 2;
+        packer.options.pot = false;
         for (const rep of this.replaceArr) {
             const slotName: string = rep.slot.replace("$", rep.dir.toString());
             const slot: dragonBones.Slot = this.mArmatureDisplay.armature.getSlot(slotName);

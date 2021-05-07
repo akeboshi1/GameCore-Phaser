@@ -1,7 +1,7 @@
 import { Render } from "../../render";
 import { DisplayField, ElementStateType, IDragonbonesModel, LayerName, RunningAnimation, TitleMask, IPos, Logger, IProjection } from "structure";
 import { IDisplayObject } from "../display.object";
-import { LoadQueue, LoadType } from "../../loadqueue";
+import { LoadQueue } from "../../loadqueue";
 import { ElementTopDisplay } from "../element.top.display";
 import { FramesDisplay } from "../frames/frames.display";
 import { BaseDragonbonesDisplay, ReferenceArea } from "baseRender";

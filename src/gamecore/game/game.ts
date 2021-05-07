@@ -716,6 +716,8 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
         this.mLoadingManager.start(LoadState.DOWNLOADGAMECONFIG);
         // this.connect.loadRes([mainGameConfigUrl]);
         Logger.getInstance().debug("onInitVirtualWorldPlayerInit====loadGameConfig");
+        // 每次加载，重新请求数据
+        this.isSyncPackage = false;
         this.loadGameConfig(mainGameConfigUrl)
             .then((gameConfig: Lite) => {
                 this.peer.state = GameState.CompleteDecodeConfig;

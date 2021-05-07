@@ -6,6 +6,7 @@ import { Game } from "./game";
 import { ServerAddress, IPos, Logger, ILauncherConfig, ModuleName, EventType, GameState, IWorkerParam, LogicPos } from "structure";
 import { DataMgrType, SceneDataManager } from "./data.manager";
 import version from "../../../version";
+import { Url } from "utils";
 
 for (const key in protos) {
     PBpacket.addProtocol(protos[key]);
@@ -156,6 +157,9 @@ export class MainPeer extends RPCPeer {
     @Export()
     public createGame(config: ILauncherConfig) {
         this.mConfig = config;
+        Url.OSD_PATH = this.mConfig.osd;
+        Url.RES_PATH = `resources/`;
+        Url.RESUI_PATH = `${Url.RES_PATH}ui/`;
         this.state = GameState.LinkWorker;
         // ============
         Logger.getInstance().debug("createGame");

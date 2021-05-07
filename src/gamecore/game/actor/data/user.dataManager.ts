@@ -8,8 +8,8 @@ import { PlayerProperty } from "./player.property";
 import { SceneDataManager } from "../../data.manager/scene.data.manager";
 import { DataMgrType } from "../../data.manager/data.mgr.type";
 export class UserDataManager extends PacketHandler {
-    private readonly mPlayerBag: PlayerBag;
-    private readonly mProperty: PlayerProperty;
+    private mPlayerBag: PlayerBag;
+    private mProperty: PlayerProperty;
     private mDressAvatarIDs: string[];
     constructor(private game: Game) {
         super();
@@ -96,6 +96,7 @@ export class UserDataManager extends PacketHandler {
     }
 
     querySYNC_ALL_PACKAGE() {
+        this.mPlayerBag = new PlayerBag();
         this.querySYNC_PACKAGE(op_pkt_def.PKT_PackageType.PropPackage);
         this.querySYNC_PACKAGE(op_pkt_def.PKT_PackageType.AvatarPackage);
         this.querySYNC_PACKAGE(op_pkt_def.PKT_PackageType.FurniturePackage);
