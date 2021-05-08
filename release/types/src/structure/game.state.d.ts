@@ -4,6 +4,7 @@ export declare enum GameState {
     CreateAccount = "CreateAccount",
     InitWorld = "InitWorld",
     StartConnect = "StartConnect",
+    Connected = "Connected",
     RequestToken = "RequestToken",
     GetToken = "GetToken",
     EnterWorld = "EnterWorld",

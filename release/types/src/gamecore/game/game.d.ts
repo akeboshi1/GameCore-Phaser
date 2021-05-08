@@ -16,10 +16,10 @@ import { BaseConfigManager, DataMgrType } from "./data.manager";
 import { NetworkManager } from "./command";
 import { MainPeer } from "./main.peer";
 import { GuideWorkerManager } from "./guide.manager";
-import { ElementStorage } from "baseGame";
 import { SoundWorkerManager } from "./sound.manager";
 import { CustomProtoManager } from "./custom.proto";
 import { IConnectListener } from "src/structure/net";
+import { ElementStorage } from "baseGame";
 interface ISize {
     width: number;
     height: number;

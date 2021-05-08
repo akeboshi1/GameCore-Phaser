@@ -131,9 +131,9 @@ const gameConfig = Object.assign({}, commonConfig, {
     ],
     devServer: {
         writeToDisk: true,
-        watchOptions: {
-            poll: 1000,
-        },
+        // watchOptions: {
+        //     poll: 1000,
+        // },
         contentBase: path.resolve(__dirname, "./dist"),
         publicPath: "/dist",
         host: "0.0.0.0",

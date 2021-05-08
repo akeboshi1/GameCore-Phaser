@@ -70,6 +70,7 @@ export class MainPeer extends RPCPeer {
         // 告诉主进程链接成功
         this.render.onConnected(isAuto);
         this.startBeat();
+        this.state = GameState.Connected;
         // 逻辑层game链接成功
         this.game.onConnected();
     }
@@ -224,6 +225,8 @@ export class MainPeer extends RPCPeer {
     public startConnect(host: string, port: number, secure?: boolean) {
         const addr: ServerAddress = { host, port, secure };
         this.game.connection.startConnect(addr);
+        const now: number = new Date().getTime();
+        this.stateTime = now;
         this.state = GameState.StartConnect;
     }
 

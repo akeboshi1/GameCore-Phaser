@@ -19,10 +19,10 @@ import { NetworkManager } from "./command";
 import version from "../../../version";
 import { MainPeer } from "./main.peer";
 import { GuideWorkerManager } from "./guide.manager";
-import { ElementStorage } from "baseGame";
 import { SoundWorkerManager } from "./sound.manager";
 import { CustomProtoManager } from "./custom.proto";
 import { IConnectListener } from "src/structure/net";
+import { ElementStorage } from "baseGame";
 interface ISize {
     width: number;
     height: number;
