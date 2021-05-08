@@ -1102,7 +1102,7 @@ export class Render extends RPCPeer implements GameMain, IRender {
         return i18n.t(val);
     }
 
-    @Export()
+    @Export([webworker_rpc.ParamType.str, webworker_rpc.ParamType.boolean])
     public showAlert(text: string, ok: boolean) {
         // 告诉render显示警告框
         if (ok === undefined) ok = true;

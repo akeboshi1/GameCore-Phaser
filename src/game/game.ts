@@ -216,6 +216,12 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
         });
     }
 
+    public onShowClientErrorHandler(packet: PBpacket) {
+        const content: op_client.OP_GATEWAY_RES_CLIENT_ERROR = packet.content;
+        const msg = content.msg;
+        this.renderPeer.showAlert(msg, true);
+    }
+
     public onClientErrorHandler(packet: PBpacket): void {
         const content: op_client.IOP_GATEWAY_RES_CLIENT_ERROR = packet.content;
         switch (content.responseStatus) {
@@ -648,6 +654,7 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
         this.addHandlerFun(op_client.OPCODE._OP_GATEWAY_RES_CLIENT_ERROR, this.onClientErrorHandler);
         this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_SELECT_CHARACTER, this.onSelectCharacter);
         this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_GOTO_ANOTHER_GAME, this.onGotoAnotherGame);
+        this.addHandlerFun(op_client.OPCODE._OP_GATEWAY_RES_CLIENT_ERROR, this.onShowClientErrorHandler);
         // this.addHandlerFun(op_client.OPCODE._OP_GATEWAY_RES_CLIENT_PONG, this.heartBeatCallBack);
         this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_GAME_MODE, this.onAvatarGameModeHandler);
         this.createManager();

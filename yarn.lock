@@ -1397,8 +1397,8 @@ currently-unhandled@^0.4.1:
     array-find-index "^1.0.1"
 
 "custom_proto@git+ssh://git@code.apowo.com:PixelPai/custom_proto.git#typescriptdev":
-  version "1.0.13"
-  resolved "git+ssh://git@code.apowo.com:PixelPai/custom_proto.git#b828d0453b48b4711326c74d9448fe8685c8e2e9"
+  version "1.0.14"
+  resolved "git+ssh://git@code.apowo.com:PixelPai/custom_proto.git#7aef7c5476d9e4f0daa049c4da4c049486928493"
   dependencies:
     protobufjs "^6.8.8"
 
@@ -4355,8 +4355,8 @@ pinkie@^2.0.0:
   integrity sha1-clVrgM+g1IqXToDnckjoDtT3+HA=
 
 "pixelpai_proto@git+ssh://git@code.apowo.com:PixelPai/pixelpai_proto.git#typescriptdev":
-  version "1.0.522"
-  resolved "git+ssh://git@code.apowo.com:PixelPai/pixelpai_proto.git#257621e4bab377e419c1efd9b182ae42b25f6278"
+  version "1.0.523"
+  resolved "git+ssh://git@code.apowo.com:PixelPai/pixelpai_proto.git#5b7d60ef43245064f2b14ba48284877c8947a1a1"
   dependencies:
     protobufjs "^6.8.8"
 
