@@ -1,6 +1,6 @@
 import { Game } from "gamecore";
 import { EventType } from "structure";
-import { op_client, op_virtual_world, op_def, op_gameconfig, op_pkt_def } from "pixelpai_proto";
+import { RedDotTypeEnum } from "custom_proto";
 import { MainUIRedType, RedEventType } from "picaStructure";
 export class RedSystemMananger {
     protected redDataMap: Map<number, number[]> = new Map();
@@ -13,13 +13,13 @@ export class RedSystemMananger {
     protected dresss: number[];
     constructor(protected game: Game) {
         this.game.emitter.on(EventType.RETURN_UPDATE_RED_SYSTEM, this.onRedSystemHandler, this);
-        this.mails = [op_def.RedDotTypeEnum.MAIL_REDDOTSTATUS];
-        this.gallerys = [op_def.RedDotTypeEnum.GALLERY_REDDOTSTATUS, op_def.RedDotTypeEnum.GALLERY_PROGRESSREWARD_REDDOTSTATUS, op_def.RedDotTypeEnum.GALLERY_COLLECTIONREWARD_REDDOTSTATUS];
-        this.orders = [op_def.RedDotTypeEnum.ORDER_REDDOTSTATUS];
-        this.packages = [op_def.RedDotTypeEnum.PACKAGE_REDDOTSTATUS];
-        this.tasks = [op_def.RedDotTypeEnum.DAILY_QUEST_REDDOTSTATUS, op_def.RedDotTypeEnum.MAIN_QUEST_REDDOTSTATUS];
-        this.friends = [op_def.RedDotTypeEnum.FRIEND_REDDOTSTATUS];
-        this.dresss = [op_def.RedDotTypeEnum.DRESS_REDDOTSTATUS];
+        this.mails = [RedDotTypeEnum.MAIL_REDDOTSTATUS];
+        this.gallerys = [RedDotTypeEnum.GALLERY_REDDOTSTATUS, RedDotTypeEnum.GALLERY_PROGRESSREWARD_REDDOTSTATUS, RedDotTypeEnum.GALLERY_COLLECTIONREWARD_REDDOTSTATUS, RedDotTypeEnum.GALLERY_BADGEREWARD_REDDOTSTATUS];
+        this.orders = [RedDotTypeEnum.ORDER_REDDOTSTATUS];
+        this.packages = [RedDotTypeEnum.PACKAGE_REDDOTSTATUS];
+        this.tasks = [RedDotTypeEnum.DAILY_QUEST_REDDOTSTATUS, RedDotTypeEnum.MAIN_QUEST_REDDOTSTATUS];
+        this.friends = [RedDotTypeEnum.FRIEND_REDDOTSTATUS];
+        this.dresss = [RedDotTypeEnum.DRESS_REDDOTSTATUS];
     }
     destory() {
         if (this.game.emitter) this.game.emitter.off(EventType.RETURN_UPDATE_RED_SYSTEM, this.onRedSystemHandler, this);
@@ -36,8 +36,6 @@ export class RedSystemMananger {
         const allTypes = this.getRedTypes();
         const mainTypes = [];
         const list = content.list;
-        // const list = [op_def.RedDotTypeEnum.MAIL_REDDOTSTATUS, op_def.RedDotTypeEnum.GALLERY_REDDOTSTATUS, op_def.RedDotTypeEnum.GALLERY_PROGRESSREWARD_REDDOTSTATUS, op_def.RedDotTypeEnum.GALLERY_COLLECTIONREWARD_REDDOTSTATUS,
-        // op_def.RedDotTypeEnum.MAIN_QUEST_REDDOTSTATUS];
         for (const type of list) {
             const redType = this.getRedMapType(type);
             let temps: number[];

@@ -97,7 +97,7 @@ export class PicaNewIllustratedPanel extends PicaBasePanel {
         this.redObj = obj;
         if (!this.mInitialized) return;
         if (this.listPanel) this.listPanel.setRedsState(this.redObj["redlist"]);
-        //  if (this.detailPanel) this.detailPanel.setRedsState(this.redObj[MainUIRedType.GALLERY]);
+        if (this.detailPanel) this.detailPanel.setRedsState(this.redObj[MainUIRedType.GALLERY]);
 
     }
 

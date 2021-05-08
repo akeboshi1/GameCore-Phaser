@@ -9,7 +9,7 @@ export class PicaRoomDecoratePanel extends PicaBasePanel {
     private content: Phaser.GameObjects.Container;
     private mBackGround: Phaser.GameObjects.Graphics;
     private picShopPanel: PicaRoomDecorateShopPanel;
-    private manorInfo: any;// IManorBillboardData
+    private shopInfo: any;// IManorBillboardData
     constructor(uiManager: UiManager) {
         super(uiManager);
         this.key = ModuleName.PICAROOMDECORATE_NAME;
@@ -52,8 +52,8 @@ export class PicaRoomDecoratePanel extends PicaBasePanel {
         super.init();
     }
 
-    public setShopCategories(content: any) {// op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_GET_MARKET_CATEGORIES
-        if (this.picShopPanel) this.picShopPanel.setShopCategories(content);
+    public setShopCategories(categorys: any[]) {// op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_GET_MARKET_CATEGORIES
+        if (this.picShopPanel) this.picShopPanel.setShopCategories(categorys);
     }
 
     public setShopDatas(content: any) {// op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_MARKET_QUERY
@@ -65,7 +65,7 @@ export class PicaRoomDecoratePanel extends PicaBasePanel {
 
     private openManorShop() {
         this.showShopPanel();
-        this.render.renderEmitter(this.key + "_getCategories", this.manorInfo.manorIndex);
+        this.render.renderEmitter(this.key + "_getCategories");
     }
 
     private showShopPanel() {

@@ -1,6 +1,7 @@
 import { BasicMediator, DataMgrType, ElementDataManager, Game } from "gamecore";
 import { op_client, op_pkt_def, op_def } from "pixelpai_proto";
 import { EventType, ModuleName } from "structure";
+import { BaseDataConfigManager } from "../../config";
 import { IManorBillboardData, PicaRoomDecorate } from "./PicaRoomDecorate";
 
 export class PicaRoomDecorateMediator extends BasicMediator {
@@ -12,10 +13,6 @@ export class PicaRoomDecorateMediator extends BasicMediator {
     }
 
     show(param?: any) {
-        const data = this.disposalManorInfo(param);
-        this.addActionLisenter(param[1]);
-        param = data;
-
         super.show(param);
         this.game.emitter.on(this.key + "_hide", this.onHidePanel, this);
         this.game.emitter.on(this.key + "_buyeditor", this.query_BUY_EDITOR_MANOR, this);
@@ -36,9 +33,6 @@ export class PicaRoomDecorateMediator extends BasicMediator {
     }
 
     destroy() {
-        const elemgr = this.eleDataMgr;
-        if (elemgr)
-            elemgr.offAction(undefined, EventType.SCENE_ELEMENT_DATA_UPDATE, this.onUpdateData, this);
         this.game.emitter.off("getMarketCategories", this.onCategoriesHandler, this);
         this.game.emitter.off("queryMarket", this.onQueryResuleHandler, this);
         super.destroy();
@@ -50,14 +44,6 @@ export class PicaRoomDecorateMediator extends BasicMediator {
 
     private query_BUY_EDITOR_MANOR(data: { roomid: string, index: number, type: number, manorName?: string }) {
         this.model.query_BUY_EDITOR_MANOR(data.roomid, data.index, data.type, data.manorName);
-    }
-    private disposalManorInfo(param: any) {
-        if (param && param.length > 0) {
-            const data: IManorBillboardData = param[0];
-            data.myowner = this.game.user.userData.cid === data.ownerId;
-            return data;
-        }
-        return undefined;
     }
 
     private onUpdateData(data) {
@@ -72,16 +58,24 @@ export class PicaRoomDecorateMediator extends BasicMediator {
         return undefined;
     }
 
-    private addActionLisenter(id: number) {
-        const elemgr = this.eleDataMgr;
-        if (elemgr)
-            elemgr.onAction(id, EventType.SCENE_ELEMENT_DATA_UPDATE, this.onUpdateData, this);
+    private onCategoriesHandler() {
+        const config = <BaseDataConfigManager>this.game.configManager;
+        const shopName = this.model.market_name;
+        config.checkDynamicShop(shopName).then(() => {
+            const map = config.getShopSubCategory(shopName);
+            this.setCategories(map);
+        });
     }
-    private onCategoriesHandler(content: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_GET_MARKET_CATEGORIES) {
+    private setCategories(map: Map<any, any>) {
+        const arrValue = [];
+        const obj = { marketName: this.model.market_name, marketCategory: arrValue };
+        map.forEach((value, key) => {
+          arrValue.push({ category: key, subcategory: value });
+        });
         if (this.mView)
-            this.mView.setShopCategories(content);
-    }
-
+          this.mView.setShopCategories(obj);
+        this.mShowData = obj;
+      }
     private onQueryResuleHandler(content: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_MARKET_QUERY) {
         if (this.mView)
             this.mView.setShopDatas(content);
@@ -102,5 +96,9 @@ export class PicaRoomDecorateMediator extends BasicMediator {
     }
     private get model(): PicaRoomDecorate {
         return (<PicaRoomDecorate>this.mModel);
+    }
+
+    private get config(): BaseDataConfigManager {
+        return <BaseDataConfigManager>this.game.configManager;
     }
 }

@@ -16,7 +16,7 @@ export class PicaRoomDecorateShopPanel extends Phaser.GameObjects.Container {
     private imgtitle: ImageValue;
     private secondMenu: SecondaryMenuPanel;
     private corfirmButton: NineSliceButton;
-    private selectedItem: ManorShopItem;
+    private selectedItem: DecorateShopItem;
     private selectedItemData: any;// op_client.IMarketCommodity
     private shopgride: GameGridTable;
     private zoom: number;
@@ -89,9 +89,9 @@ export class PicaRoomDecorateShopPanel extends Phaser.GameObjects.Container {
         this.corfirmButton.y = this.height * 0.5 - this.corfirmButton.height * 0.5 - 15 * this.dpr;
         this.corfirmButton.on(String(ClickEvent.Tap), this.onConfirmButtonHandler, this);
     }
-    public setShopCategories(content: any) {// op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_GET_MARKET_CATEGORIES
+    public setShopCategories(marketCategory: any[]) {// op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_GET_MARKET_CATEGORIES
         const atts = [];
-        for (const category of content.marketCategory) {
+        for (const category of marketCategory) {
             const arr = { text: category.category.value, data: category };
             atts.push(arr);
         }
@@ -162,7 +162,7 @@ export class PicaRoomDecorateShopPanel extends Phaser.GameObjects.Container {
                 const scene = cell.scene,
                     item = cell.item;
                 if (cellContainer === null) {
-                    cellContainer = new ManorShopItem(this.scene, 0, 0, capW, capH, this.key, this.dpr);
+                    cellContainer = new DecorateShopItem(this.scene, 0, 0, capW, capH, this.key, this.dpr);
                     cellContainer.on("buyitem", this.onBuyItemHandler, this);
                     grid.add(cellContainer);
                 }
@@ -198,7 +198,7 @@ export class PicaRoomDecorateShopPanel extends Phaser.GameObjects.Container {
         const prop = { id: data.id, quantity: 1, category: data.category };
         if (this.sendHandler) this.sendHandler.runWith(["buytype", prop]);
     }
-    private onSelectItemHandler(item: ManorShopItem) {
+    private onSelectItemHandler(item: DecorateShopItem) {
         item.select = true;
         if (this.selectedItem) this.selectedItem.select = false;
         this.selectedItem = item;
@@ -213,7 +213,7 @@ export class PicaRoomDecorateShopPanel extends Phaser.GameObjects.Container {
     }
 }
 
-class ManorShopItem extends Phaser.GameObjects.Container {
+class DecorateShopItem extends Phaser.GameObjects.Container {
     public shopData: any;// op_client.IMarketCommodity
     private dpr: number;
     private bg: Phaser.GameObjects.Image;

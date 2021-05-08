@@ -4,7 +4,7 @@ import { BasicModel, Game } from "gamecore";
 import { ConnectionService } from "lib/net/connection.service";
 
 export class PicaRoomDecorate extends BasicModel {
-    private market_name = "manor_shop";
+    public market_name = "roomComponentshop";
     constructor(game: Game) {
         super(game);
         this.register();
