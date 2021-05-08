@@ -38,10 +38,15 @@ export class HotelGuidePanel extends BaseHotelGuidePanel {
     }
 
     protected step5() {
-        this.render.emitter.off(PicaPartyNavigationPanel.PICASELFROOM_DATA, this.step5, this);
-        this.render.emitter.on(PicaPartyNavigationPanel.PicaPartyNavigationPanel_CLOSE, this.end, this);
-        this.render.emitter.on(PicaMyNavigationPanel.PICAMYNAVIGATIONPANEL_DATA, this.step6, this);
         this.mPartyNavigationPanel = this.uiManager.getPanel(ModuleName.PICAPARTYNAVIGATION_NAME) as PicaPartyNavigationPanel;
+        this.render.emitter.on(PicaPartyNavigationPanel.PicaPartyNavigationPanel_CLOSE, this.end, this);
+        this.render.emitter.off(PicaPartyNavigationPanel.PICASELFROOM_DATA, this.step5, this);
+        this.myRoomPanel = this.mPartyNavigationPanel.myRoomPanel;
+        if (this.myRoomPanel) {
+            this.step6();
+            return;
+        }
+        this.render.emitter.on(PicaMyNavigationPanel.PICAMYNAVIGATIONPANEL_DATA, this.step6, this);
     }
     protected step6() {
         this.render.emitter.off(PicaMyNavigationPanel.PICAMYNAVIGATIONPANEL_DATA, this.step6, this);
