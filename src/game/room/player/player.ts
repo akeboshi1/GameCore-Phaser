@@ -145,14 +145,11 @@ export class Player extends Element implements IElement {
         this.setDirection(dir);
     }
 
-    protected async checkDirection() {
+    protected checkDirection() {
         const pos = this.moveControll.position;
         const prePos = this.moveControll.prePosition;
         const dir = DirectionChecker.check(prePos, pos);
         this.setDirection(dir);
-    }
-
-    protected preMoveComplete() {
     }
 
     protected get offsetY(): number {

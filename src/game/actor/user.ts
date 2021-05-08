@@ -298,7 +298,8 @@ export class User extends Player {
     }
 
     protected addBody() {
-        if (this.mRootMount) return;
+        // if (this.mRootMount) return;
+        this.drawBody();
     }
 
     protected syncCameraPosition() {

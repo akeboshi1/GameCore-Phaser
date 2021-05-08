@@ -1,14 +1,14 @@
 import { IRoomService } from "../room";
-import { MoveControll } from "./move.controll";
 import * as SAT from "sat";
 
 export class CollsionManager {
-    private borders: Map<number, MoveControll> = new Map();
+    private debug: boolean = false;
+    private borders: Map<number, SAT.Polygon> = new Map();
 
     constructor(private roomService: IRoomService) {
     }
 
-    add(id: number, boder: MoveControll) {
+    add(id: number, boder: SAT.Polygon) {
         this.borders.set(id, boder);
     }
 
@@ -16,17 +16,31 @@ export class CollsionManager {
         this.borders.delete(id);
     }
 
-    collideObjects(body: MoveControll): SAT.Response[] {
+    collideObjects(body: SAT.Polygon): SAT.Response[] {
         const responses: SAT.Response[] = [];
-        this.borders.forEach((border) => {
+        this.borders.forEach((border, key) => {
             if (border !== body) {
                 const response = new SAT.Response();
-                if (SAT.testPolygonPolygon(<SAT.Polygon>body.bodies, <SAT.Polygon>border.bodies, response)) {
+                if (SAT.testPolygonPolygon(body, border, response)) {
                     responses.push(response);
                 }
             }
         });
         return responses;
+    }
+
+    update(time: number, delta: number) {
+        if (!this.debug) {
+            return;
+        }
+        this.roomService.game.renderPeer.showMatterDebug(Array.from(this.borders.values()));
+    }
+
+    public v() {
+        this.debug = true;
+    }
+    public q() {
+        this.debug = false;
     }
 
     destroy() {

@@ -1,15 +1,14 @@
 import * as SAT from "sat";
-import { IPos, LogicPos } from "utils";
+import { IPos, LogicPos, Logger } from "utils";
 import { CollsionManager } from "./collsion.manager";
 export class MoveControll {
 
-    protected mBodies: SAT.Polygon | SAT.Circle | SAT.Box;
+    protected mBodies: SAT.Polygon;
     private velocity: IPos;
     private mPosition: IPos;
     private mPrePosition: IPos;
 
-    constructor(id: number, private collsion: CollsionManager) {
-        this.collsion.add(id, this);
+    constructor(private id: number, private collsion: CollsionManager) {
         this.mPosition = new LogicPos();
         this.mPrePosition = new LogicPos();
         this.velocity = new LogicPos();
@@ -22,6 +21,9 @@ export class MoveControll {
 
     update(time: number, delta: number) {
         if (this.velocity.x !== 0 && this.velocity.y !== 0) {
+            this.mPrePosition.x = this.mPosition.x;
+            this.mPrePosition.y = this.mPosition.y;
+
             const pos = this.mBodies ? this.mBodies.pos : this.mPosition;
             pos.x = this.mPosition.x + this.velocity.x;
             pos.y = this.mPosition.y + this.velocity.y;
@@ -37,8 +39,7 @@ export class MoveControll {
                 pos.y = this.mPosition.y;
                 return;
             }
-            this.mPrePosition.x = this.mPosition.x;
-            this.mPrePosition.y = this.mPosition.y;
+
             this.mPosition.x = pos.x;
             this.mPosition.y = pos.y;
         }
@@ -57,15 +58,32 @@ export class MoveControll {
         }
     }
 
-    drawPolygon(path: SAT.Vector[]) {
-        this.mBodies = new SAT.Polygon(new SAT.Vector(this.mPosition.x, this.mPosition.y), path);
+    drawPolygon(path: IPos[], offset?: IPos) {
+        if (!path || path.length < 1) {
+            return;
+        }
+        const vectors = [];
+        for (const p of path) {
+            vectors.push(new SAT.Vector(p.x, p.y));
+        }
+        this.mBodies = new SAT.Polygon(new SAT.Vector(this.mPosition.x, this.mPosition.y), vectors);
+        if (offset) this.mBodies.setOffset(new SAT.Vector(-offset.x, -offset.y));
+        this.collsion.add(this.id, this.mBodies);
+    }
+
+    public removePolygon() {
+        if (!this.mBodies) {
+            return;
+        }
+        this.collsion.remove(this.id);
+        this.mBodies = null;
     }
 
     private getCollideResponses() {
         if (!this.mBodies) {
             return [];
         }
-        return this.collsion.collideObjects(this);
+        return this.collsion.collideObjects(this.mBodies);
     }
 
     get position(): IPos {

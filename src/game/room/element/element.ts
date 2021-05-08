@@ -11,7 +11,7 @@ import {
     ISprite,
     PlayerState
 } from "structure";
-import { DirectionChecker, IPos, IProjection, Logger, LogicPos, Tool } from "utils";
+import { DirectionChecker, IPos, IProjection, Logger, LogicPos, Position45, Tool } from "utils";
 import { BlockObject } from "../block/block.object";
 import { IRoomService } from "../room/room";
 import { ElementStateManager } from "../state/element.state.manager";
@@ -183,8 +183,8 @@ export class Element extends BlockObject implements IElement {
         if (!sprite) {
             return;
         }
-        this.moveControll = new MoveControll(this.id, this.mRoomService.collsionManager);
         this.mId = sprite.id;
+        this.moveControll = new MoveControll(this.id, this.mRoomService.collsionManager);
         this.model = sprite;
     }
 
@@ -689,7 +689,7 @@ export class Element extends BlockObject implements IElement {
     protected _doMove(time?: number, delta?: number) {
         this.moveControll.update(time, delta);
         const pos = this.moveControll.position;
-        this.mModel.setPosition(pos.x, pos.y);
+        // this.mModel.setPosition(pos.x, pos.y);
         this.mRoomService.game.renderPeer.setPosition(this.id, pos.x, pos.y);
         if (!this.mMoveData) return;
         const path = this.mMoveData.path;
@@ -882,10 +882,28 @@ export class Element extends BlockObject implements IElement {
     }
 
     protected addBody() {
-        // if (this.mRootMount) {
-        //     return;
-        // }
+        this.drawBody();
+    }
+
+    protected drawBody() {
+        if (!this.moveControll) return;
+        if (this.mRootMount) {
+            this.moveControll.removePolygon();
+            return;
+        }
+        if (!this.mModel) return;
         // super.addBody();
+        const collision = this.mModel.getCollisionArea();
+        if (!collision) {
+            // body = Bodies.circle(this._tempVec.x * this._scale, this._tempVec.y * this._scale, 10);
+            return;
+        }
+        const cols = collision.length;
+        const rows = collision[0].length;
+        const miniSize = this.mRoomService.miniSize;
+        const paths = [Position45.transformTo90(new LogicPos(0, 0), miniSize), Position45.transformTo90(new LogicPos(rows, 0), miniSize), Position45.transformTo90(new LogicPos(rows, cols), miniSize), Position45.transformTo90(new LogicPos(0, cols), miniSize)];
+        const origin = Position45.transformTo90(this.mModel.getOriginPoint(), miniSize);
+        this.moveControll.drawPolygon(paths, origin);
     }
 
     protected updateBody(model) {
