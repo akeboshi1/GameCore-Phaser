@@ -69,7 +69,8 @@
     "notEnough": "Not enough {{name}}",
     "receive": "Receive",
     "receivereward": "Receive",
-    "received": "Received"
+    "received": "Received",
+    "rarity":"Rarity"
   },
   "quantityunit": {
     "k": "k",

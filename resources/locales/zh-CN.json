@@ -70,7 +70,8 @@
     "notEnough": "{{}}数量不足",
     "receive": "领取",
     "receivereward": "领取奖励",
-    "received": "已领取"
+    "received": "已领取",
+    "rarity":"稀有"
   },
   "quantityunit": {
     "k": "千",

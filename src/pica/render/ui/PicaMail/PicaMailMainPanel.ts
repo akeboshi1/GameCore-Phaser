@@ -62,7 +62,7 @@ export class PicaMailMainPanel extends Phaser.GameObjects.Container {
             } else {
                 const item = new PicaMailItem(this.scene, this.dpr, this.zoom);
                 item.setHandler(new Handler(this, this.onMailItemHandler));
-                this.gameScroller.addItem(item);
+                this.gameScroller.addItemAt(item, 0);
                 this.mailItemMap.set(mail.id, item);
                 item.setMailData(mail);
                 item.visible = true;

@@ -10,7 +10,7 @@ export class PicaIllustredCollectPanel extends Phaser.GameObjects.Container {
     private dpr: number;
     private zoom: number;
     private send: Handler;
-    private curSelectItem: IllustratedCollectItem;
+    private curSelectData: IGalleryCombination;
     private combinations: IGalleryCombination[];
     constructor(scene: Phaser.Scene, width: number, height: number, dpr: number, zoom: number) {
         super(scene);
@@ -44,8 +44,10 @@ export class PicaIllustredCollectPanel extends Phaser.GameObjects.Container {
     setCombinationData(content: IGalleryCombination[]) {
         if (content.length === 0) {
             this.noCombinationTip.visible = true;
+            this.mGameGrid.visible = false;
             return;
         } else this.noCombinationTip.visible = false;
+        this.mGameGrid.visible = true;
         this.mGameGrid.setItems(content);
         this.mGameGrid.layout();
         this.mGameGrid.setT(0);
@@ -78,6 +80,7 @@ export class PicaIllustredCollectPanel extends Phaser.GameObjects.Container {
 
                 cellContainer.setCombinationData(item);
                 cell.setHeight(cellContainer.height);
+                this.updateCollectRewards(item);
                 return cellContainer;
             },
         };
@@ -104,7 +107,12 @@ export class PicaIllustredCollectPanel extends Phaser.GameObjects.Container {
     private onItemHandler(tag: string, data: any) {
         if (tag === "combrewards") {
             if (this.send) this.send.runWith(["combinationrewards", data]);
+            this.curSelectData = data;
         }
+    }
+
+    private updateCollectRewards(data: IGalleryCombination) {
+        if (this.send) this.send.runWith(["updatecombination", data]);
     }
 }
 

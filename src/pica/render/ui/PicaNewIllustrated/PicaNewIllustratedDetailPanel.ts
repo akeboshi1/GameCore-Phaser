@@ -132,7 +132,7 @@ export class PicaNewIllustratedDetailPanel extends Phaser.GameObjects.Container 
         this.toggleCon.y = 0;
         this.horProgress = new ProgressMaskBar(this.scene, UIAtlasName.illustrate_new, "illustrate_survey_lv_bottom", "illustrate_survey_lv_top", UIHelper.whiteStyle(this.dpr, 6));
         this.horProgress.y = this.toggleCon.y + this.toggleCon.height * 0.5 + 50 * this.dpr;
-        this.horProgress.x = -5 * this.dpr;
+        this.horProgress.x = 15 * this.dpr;
         this.createRewardImgs();
         this.levelButton = new Button(this.scene, UIAtlasName.illustrate_new, "illustrate_survey_lv_icon", "illustrate_survey_lv_icon", "1", undefined, this.dpr, this.zoom);
         this.levelButton.setFontStyle("bold");
@@ -141,10 +141,10 @@ export class PicaNewIllustratedDetailPanel extends Phaser.GameObjects.Container 
         this.levelButton.y = this.horProgress.y;
         this.redMap.set(RedType.expLevel, this.creatRedImge(this.scene, this.levelButton));
         this.levelButton.on(ClickEvent.Tap, this.onHorRewardsHandler, this);
-        this.progressTex = this.scene.make.text({ style: UIHelper.whiteStyle(this.dpr) }).setOrigin(0, 0.5);
+        this.progressTex = this.scene.make.text({ style: UIHelper.whiteStyle(this.dpr) }).setOrigin(0.5);
         this.progressTex.setFontStyle("bold");
-        this.progressTex.x = this.horProgress.x + this.horProgress.width * 0.5 + 5 * this.dpr;
-        this.progressTex.y = this.horProgress.y;
+        this.progressTex.x = this.horProgress.x;
+        this.progressTex.y = this.horProgress.y + 6 * this.dpr;
         const levelCon = new ButtonEventDispatcher(this.scene, 0, this.levelButton.y);
         levelCon.y = this.levelButton.y;
         levelCon.setSize(260 * this.dpr, 30 * this.dpr);
@@ -196,9 +196,10 @@ export class PicaNewIllustratedDetailPanel extends Phaser.GameObjects.Container 
     }
     protected createRewardImgs() {
         this.rewardImgs = [];
+        const horWidth = this.horProgress.width;
         const posy = this.horProgress.y - 15 * this.dpr;
-        const posx = -this.horProgress.width * 0.5 - 4 * this.dpr;
-        const interval = 84 * this.dpr;
+        const posx = -horWidth * 0.5 + this.horProgress.x;
+        const interval = horWidth / 3;
         for (let i = 0; i < 3; i++) {
             const img = this.scene.make.image({ key: UIAtlasName.illustrate_new, frame: "illustrate_survey_lv_reward_1" });
             img.y = posy;

@@ -117,12 +117,6 @@ export class PicaDecoratePanel extends PicaBasePanel {
         }
         this.add(this.mBtns_QuickSelectFurniture);
     }
-
-    protected preload() {
-        this.addAtlas(this.key, "room_decorate/room_decorate.png", "room_decorate/room_decorate.json");
-        super.preload();
-    }
-
     protected init() {
         const w = this.scene.cameras.main.width / this.scaleX;
         const h = this.scene.cameras.main.height / this.scaleY;

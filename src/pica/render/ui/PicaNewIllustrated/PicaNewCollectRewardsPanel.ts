@@ -40,7 +40,11 @@ export class PicaNewCollectRewardsPanel extends Phaser.GameObjects.Container {
     setHandler(send: Handler) {
         this.send = send;
     }
-
+    updateCombination(content: IGalleryCombination) {
+        if (this.combinations && this.combinations.id === content.id) {
+            this.setCombinationData(content);
+        }
+    }
     setCombinationData(content: IGalleryCombination) {
         this.combinations = content;
         this.mGameGrid.setItems(content.rewardItems);
@@ -132,6 +136,7 @@ class CollectRewardsItem extends Phaser.GameObjects.Container {
     private desTex: Phaser.GameObjects.Text;
     private rewardsBtn: ThreeSliceButton;
     private itemIcon: DynamicImage;
+    private itemCountTex: Phaser.GameObjects.Text;
     private collectTex: Phaser.GameObjects.Text;
     private dpr: number;
     private zoom: number;
@@ -145,6 +150,10 @@ class CollectRewardsItem extends Phaser.GameObjects.Container {
         this.zoom = zoom;
         this.background = this.scene.make.image({ key: UIAtlasName.illustrate_new, frame: "illustrate_collect_popup_bg_1" });
         this.itemIcon = new DynamicImage(scene, -width * 0.5 + 36 * dpr, 0);
+        this.itemCountTex = this.scene.make.text({ style: UIHelper.blackStyle(dpr) }).setOrigin(0.5);
+        this.itemCountTex.x = this.itemIcon.x + 15 * dpr;
+        this.itemCountTex.y = 15 * dpr;
+        this.itemCountTex.setFontStyle("bold");
         this.titleTex = this.scene.make.text({ style: UIHelper.whiteStyle(dpr) }).setOrigin(0, 0.5);
         this.titleTex.x = -this.width * 0.5 + 80 * dpr;
         this.titleTex.y = - 10 * dpr;
@@ -162,7 +171,7 @@ class CollectRewardsItem extends Phaser.GameObjects.Container {
         this.rewardsBtn.x = width * 0.5 - this.rewardsBtn.width * 0.5 - 10 * dpr;
         this.rewardsBtn.y = height * 0.5 - this.rewardsBtn.height * 0.5 - 15 * dpr;
         this.rewardsBtn.on(ClickEvent.Tap, this.onRewardsHandler, this);
-        this.add([this.background, this.itemIcon, this.titleTex, this.desTex, this.collectTex, this.rewardsBtn]);
+        this.add([this.background, this.itemIcon, this.itemCountTex, this.titleTex, this.desTex, this.collectTex, this.rewardsBtn]);
     }
 
     public setCombinationData(data: IGalleryCombination, indexed: number) {
@@ -174,6 +183,14 @@ class CollectRewardsItem extends Phaser.GameObjects.Container {
         const url = Url.getOsdRes(itemData.texturePath);
         this.itemIcon.load(url);
         this.itemIcon.scale = this.dpr / this.zoom;
+        this.itemCountTex.visible = true;
+        this.itemCountTex.text = itemData.count + "";
+        // if (itemData.count > 1) {
+        //     this.itemCountTex.visible = true;
+        //     this.itemCountTex.text = itemData.count + "";
+        // } else {
+        //     this.itemCountTex.visible = false;
+        // }
         const difficults = this.getbgName(data.difficult);
         const color = difficults[0];
         this.background.setFrame(difficults[1]);
@@ -181,22 +198,23 @@ class CollectRewardsItem extends Phaser.GameObjects.Container {
         this.collectTex.text = `${data.gotcount}/${subsection}`;
         this.collectTex.setColor(color);
         this.desTex.setColor(color);
-        if (data.gotindex && data.gotindex.indexOf(indexed) !== -1) {
-            this.rewardsBtn.setFrameNormal(UIHelper.threeGraySmall);
-            this.rewardsBtn.setText(i18n.t("common.received"));
-            this.rewardsBtn.disInteractive();
-        } else {
-            if (data.gotcount >= subsection) {
-                this.rewardsBtn.setFrameNormal(UIHelper.threeRedSmall);
-                this.rewardsBtn.setText(i18n.t("common.receivereward"));
-                this.rewardsBtn.setInteractive();
-            } else {
+        if (data)
+            if (data.gotindex && data.gotindex.indexOf(indexed) !== -1) {
                 this.rewardsBtn.setFrameNormal(UIHelper.threeGraySmall);
-                this.rewardsBtn.setText(i18n.t("common.receivereward"));
+                this.rewardsBtn.setText(i18n.t("common.received"));
                 this.rewardsBtn.disInteractive();
-            }
+            } else {
+                if (data.gotcount >= subsection) {
+                    this.rewardsBtn.setFrameNormal(UIHelper.threeRedSmall);
+                    this.rewardsBtn.setText(i18n.t("common.receivereward"));
+                    this.rewardsBtn.setInteractive();
+                } else {
+                    this.rewardsBtn.setFrameNormal(UIHelper.threeGraySmall);
+                    this.rewardsBtn.setText(i18n.t("common.receivereward"));
+                    this.rewardsBtn.disInteractive();
+                }
 
-        }
+            }
 
     }
 

@@ -14,4 +14,5 @@ export interface IGalleryCollection extends IGalleryCombination {
     rewardId: number;
     gotcount: number;
     gotindex: number[];
+    rewardIndex: number[];
 }

@@ -13,6 +13,7 @@ export class PicaNewIllustratedItem extends ButtonEventDispatcher {
     private itemIcon: DynamicImage;
     private magnifyingImg: Phaser.GameObjects.Image;
     private discoveryTips: Phaser.GameObjects.Text;
+    private rarityTex: Phaser.GameObjects.Text;
     private yoyoTween: Phaser.Tweens.Tween;
     private aniTweens: Phaser.Tweens.Tween[] = [];
     private isplayingLight: boolean = false;
@@ -36,7 +37,13 @@ export class PicaNewIllustratedItem extends ButtonEventDispatcher {
         this.discoveryTips.setStroke("#ffffff", 2 * dpr);
         this.discoveryTips.setFontStyle("bold");
         this.discoveryTips.visible = false;
-        this.add([this.surveyImg, this.surveyLight, this.itemIcon, this.starImg, this.codeTex, this.magnifyingImg, this.discoveryTips]);
+        this.rarityTex = this.scene.make.text({ text: i18n.t("common.rarity"), style: UIHelper.colorStyle("#18FF4E", 7 * dpr) }).setOrigin(0, 0.5);
+        this.rarityTex.x = -width * 0.5;
+        this.rarityTex.y = -height * 0.5 + 15 * dpr;
+        this.rarityTex.setStroke("#000000", 2 * dpr);
+        this.rarityTex.setFontStyle("bold");
+        this.rarityTex.visible = false;
+        this.add([this.surveyImg, this.surveyLight, this.itemIcon, this.starImg, this.codeTex, this.magnifyingImg, this.rarityTex, this.discoveryTips]);
         for (const item of this.list) {
             const temp = <Phaser.GameObjects.Container>item;
             temp.y -= 10 * dpr;
@@ -64,29 +71,30 @@ export class PicaNewIllustratedItem extends ButtonEventDispatcher {
         if (item) {
             this.codeTex.text = code ? item.code : item.name;
             const status = item["status"];
+            this.surveyLight.setFrame("illustrate_survey_icon_light");
+            this.rarityTex.visible = false;
+            this.surveyLight.visible = false;
+            this.magnifyingImg.visible = false;
+            this.discoveryTips.visible = false;
             if (status === 1) {
                 this.surveyImg.setTexture(UIAtlasName.illustrate_new, "illustrate_survey_icon_base_1");
-                this.surveyLight.visible = false;
                 this.magnifyingImg.visible = true;
                 this.discoveryTips.visible = true;
                 this.itemIcon.alpha = 0.4;
             } else if (status === 2) {
                 this.surveyImg.setTexture(UIAtlasName.illustrate_new, "illustrate_survey_icon_base_1");
-                this.surveyLight.visible = false;
-                this.magnifyingImg.visible = false;
-                this.discoveryTips.visible = false;
                 this.itemIcon.alpha = 0.4;
             } else if (status === 3) {
                 this.surveyImg.setTexture(UIAtlasName.illustrate_new, "illustrate_survey_icon_base_1");
-                this.surveyLight.visible = false;
-                this.magnifyingImg.visible = false;
-                this.discoveryTips.visible = false;
                 this.itemIcon.alpha = 1;
                 this.playAni();
             } else if (status === 4) {
+                if (this.itemData.rarity === 5) {
+                    this.surveyLight.setFrame("illustrate_survey_icon_light_1");
+                    this.rarityTex.visible = true;
+                }
                 this.surveyImg.setTexture(UIAtlasName.illustrate_new, "illustrate_survey_icon_base");
                 this.surveyLight.visible = true;
-                this.magnifyingImg.visible = false;
                 this.itemIcon.alpha = 1;
             }
             this.setStarImg(status, item.grade);
@@ -119,6 +127,7 @@ export class PicaNewIllustratedItem extends ButtonEventDispatcher {
         this.surveyLight.mask = graphicsMask.createGeometryMask();
         this.setStarImg(4, this.itemData.grade);
         this.isplayingLight = true;
+        this.surveyLight.setFrame("illustrate_survey_icon_light");
         const tween1 = UIHelper.playAlphaTween(this.scene, surveyAniImg, 0, 1, 500, undefined, 0, new Handler(this, () => {
             const from = this.height * 0.5 + this.surveyLight.height * 0.5;
             const to = -10 * this.dpr;
@@ -132,6 +141,10 @@ export class PicaNewIllustratedItem extends ButtonEventDispatcher {
                 if (this.isplayingLight) {
                     this.surveyImg.setFrame("illustrate_survey_icon_base");
                     this.surveyLight.mask = undefined;
+                    if (this.itemData.rarity === 5) {
+                        this.surveyLight.setFrame("illustrate_survey_icon_light_1");
+                        this.rarityTex.visible = true;
+                    }
                 }
                 if (compl) compl.run();
             }));

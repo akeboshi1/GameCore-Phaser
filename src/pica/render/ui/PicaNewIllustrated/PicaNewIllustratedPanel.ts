@@ -162,7 +162,7 @@ export class PicaNewIllustratedPanel extends PicaBasePanel {
         if (!this.furiDetail) {
             this.furiDetail = new PicaNewFuriniDetailPanel(this.scene, this.render, 334 * this.dpr, 353 * this.dpr, this.dpr, this.scale);
             this.furiDetail.setHandler(new Handler(this, () => {
-                this.onFuriDetailHandler();
+                this.hideFuriDetailPanel();
                 if (compl) compl.run();
             }));
         }
@@ -271,6 +271,12 @@ export class PicaNewIllustratedPanel extends PicaBasePanel {
         this.collectRewardsPanel.refreshMask();
     }
 
+    private updateCollectRewards(data: IGalleryCombination) {
+        if (this.collectRewardsPanel && this.collectRewardsPanel.visible) {
+            this.collectRewardsPanel.updateCombination(data);
+        }
+    }
+
     private hideCollectRewardsPanel() {
         this.content.remove(this.collectRewardsPanel);
         this.collectRewardsPanel.hide();
@@ -311,6 +317,8 @@ export class PicaNewIllustratedPanel extends PicaBasePanel {
         } else if (tag === "combinationrewards") {
             this.openCollectRewardsPanel(data);
             this.hideDetailPanel();
+        } else if (tag === "updatecombination") {
+            this.updateCollectRewards(data);
         } else if (tag === "showalreadycollected") {
             this.openAlreadCollectedPanel();
             this.hideDetailPanel();

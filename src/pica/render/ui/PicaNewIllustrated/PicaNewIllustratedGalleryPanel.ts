@@ -1,4 +1,4 @@
-import { ClickEvent, GameGridTable, GameSlider } from "apowophaserui";
+import { Button, ClickEvent, GameGridTable, GameSlider } from "apowophaserui";
 import { AlignmentType, AxisType, ConstraintType, GridLayoutGroup, ProgressMaskBar } from "gamecoreRender";
 import { UIAtlasName } from "picaRes";
 import { ICountablePackageItem } from "picaStructure";
@@ -10,6 +10,8 @@ export class PicaNewIllustratedGalleryPanel extends Phaser.GameObjects.Container
     private thumb: Phaser.GameObjects.Image;
     private pageCountText: Phaser.GameObjects.Text;
     private bottomPageTex: Phaser.GameObjects.Text;
+    private leftPageBtn: Button;
+    private rightPageBtn: Button;
     private dpr: number;
     private zoom: number;
     private send: Handler;
@@ -35,6 +37,10 @@ export class PicaNewIllustratedGalleryPanel extends Phaser.GameObjects.Container
         this.gridLayout.y = -this.height * 0.5 + this.gridLayout.height * 0.5;
         this.bottomPageTex.y = this.height * 0.5 - 40 * this.dpr;
         this.horSlider.y = this.bottomPageTex.y + 20 * this.dpr;
+        this.leftPageBtn.x = this.horSlider.x - 135 * this.dpr - 25 * this.dpr;
+        this.leftPageBtn.y = this.horSlider.y;
+        this.rightPageBtn.x = this.horSlider.x + 135 * this.dpr + 25 * this.dpr;
+        this.rightPageBtn.y = this.horSlider.y;
         this.setInteractive();
     }
     show() {
@@ -79,7 +85,7 @@ export class PicaNewIllustratedGalleryPanel extends Phaser.GameObjects.Container
         this.thumb = thumb;
         this.pageCountText = this.scene.make.text({ style: UIHelper.colorStyle("#744803", 14 * this.dpr) }).setOrigin(0.5);
         this.horSlider = new GameSlider(this.scene, {
-            x: 0, y: 0, width: 330 * this.dpr, height: 4 * this.dpr, orientation: 1,
+            x: 0, y: 0, width: 269 * this.dpr, height: 4 * this.dpr, orientation: 1,
             background: sliderbg,
             indicator,
             thumb,
@@ -91,7 +97,13 @@ export class PicaNewIllustratedGalleryPanel extends Phaser.GameObjects.Container
         thumb.on("pointerup", this.onSliderUpHandler, this);
         this.horSlider.add(this.pageCountText);
         this.horSlider.setValue(0);
-        this.add([this.gridLayout, this.bottomPageTex, this.horSlider]);
+        this.leftPageBtn = new Button(this.scene, UIAtlasName.illustrate_new, "illustrate_survey_arrow_left");
+        this.leftPageBtn.setInteractiveSize(30 * this.dpr, 30 * this.dpr);
+        this.leftPageBtn.on(ClickEvent.Tap, this.onLeftPageHandler, this);
+        this.rightPageBtn = new Button(this.scene, UIAtlasName.illustrate_new, "illustrate_survey_arrow_right");
+        this.rightPageBtn.on(ClickEvent.Tap, this.onRightPageHandler, this);
+        this.rightPageBtn.setInteractiveSize(30 * this.dpr, 30 * this.dpr);
+        this.add([this.gridLayout, this.bottomPageTex, this.horSlider, this.leftPageBtn, this.rightPageBtn]);
         this.resize();
     }
 
@@ -163,9 +175,9 @@ export class PicaNewIllustratedGalleryPanel extends Phaser.GameObjects.Container
         let page = Math.floor(this.maxPage * value + 0.9);
         if (page > this.maxPage) page = this.maxPage;
         else if (page === 0) page = 1;
+        this.pageCountText.text = `${this.pageCount < 10 ? "0" + this.pageCount : this.pageCount}`;
         if (this.pageCount === page) return;
         this.pageCount = page;
-        this.pageCountText.text = `${this.pageCount < 10 ? "0" + this.pageCount : this.pageCount}`;
         this.slidermoving = true;
     }
 
@@ -176,6 +188,20 @@ export class PicaNewIllustratedGalleryPanel extends Phaser.GameObjects.Container
         this.slidermoving = false;
         this.horSlider.setValue((this.pageCount) / this.maxPage);
 
+    }
+
+    private onLeftPageHandler() {
+        if (this.pageCount === 1) return;
+        this.pageCount--;
+        this.setItemPages(this.pageCount);
+        this.horSlider.setValue((this.pageCount) / this.maxPage);
+    }
+
+    private onRightPageHandler() {
+        if (this.pageCount === this.maxPage) return;
+        this.pageCount++;
+        this.setItemPages(this.pageCount);
+        this.horSlider.setValue((this.pageCount) / this.maxPage);
     }
 
 }

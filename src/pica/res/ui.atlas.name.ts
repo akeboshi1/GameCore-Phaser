@@ -32,6 +32,7 @@ export class UIAtlasName {
     public static bulletin = "bulletin";
     public static chat = "chat";
     public static multiple_rooms = "multiple_rooms";
+    public static decorateshop = "decorateshop";
     public static jsonUrl(name: string) {
         return name + ".json";
     }
