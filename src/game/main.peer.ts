@@ -4,7 +4,7 @@ import { PBpacket, Buffer } from "net-socket-packet";
 import * as protos from "pixelpai_proto";
 import { ServerAddress } from "../../lib/net/address";
 import { Game } from "./game";
-import {IPos, Logger, LogicPos, Url} from "utils";
+import { IPos, Logger, LogicPos, Url } from "utils";
 import { ILauncherConfig, MAIN_WORKER, RENDER_PEER, ModuleName, EventType, PHYSICAL_WORKER, PHYSICAL_WORKER_URL, GameState } from "structure";
 import { PicaGame } from "picaWorker";
 import { DataMgrType } from "./data.manager/dataManager";
@@ -58,6 +58,7 @@ export class MainPeer extends RPCPeer {
         // 告诉主进程链接成功
         this.remote[RENDER_PEER].Render.onConnected(isAuto);
         this.startBeat();
+        this.state = GameState.Connected;
         // 逻辑层game链接成功
         this.game.onConnected();
     }
@@ -212,6 +213,8 @@ export class MainPeer extends RPCPeer {
     public startConnect(host: string, port: number, secure?: boolean) {
         const addr: ServerAddress = { host, port, secure };
         this.game.connection.startConnect(addr);
+        const now: number = new Date().getTime();
+        this.stateTime = now;
         this.state = GameState.StartConnect;
     }
 
