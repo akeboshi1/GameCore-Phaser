@@ -12,7 +12,7 @@ import { Clock, ClockReadyListener } from "./loop/clock/clock";
 import { HttpClock } from "./loop/httpClock/http.clock";
 import { HttpService } from "./loop/httpClock/http.service";
 import { LoadingManager } from "./loading/loading.manager";
-import { GameState, ILauncherConfig, LoadState, MAIN_WORKER, RENDER_PEER, PHYSICAL_WORKER, ModuleName } from "structure";
+import { GameState, ILauncherConfig, LoadState, ModuleName } from "structure";
 import { ServerAddress } from "../../lib/net/address";
 import { IRoomService } from "./room/room/room";
 import { ElementStorage } from "../base/model/elementstorage/element.storage";
