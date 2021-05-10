@@ -1,4 +1,3 @@
-import {BlockObject, InputEnable, Room} from "gamecore";
 import {op_client, op_def, op_pkt_def, op_virtual_world} from "pixelpai_proto";
 import {ISprite, LayerName, MessageType, ModuleName} from "structure";
 import {IPos, Logger, LogicPos, Position45, ValueResolver} from "utils";
@@ -6,8 +5,11 @@ import {PBpacket} from "net-socket-packet";
 import {Sprite} from "baseModel";
 import {BaseDataConfigManager} from "../../config";
 import {IElementPi} from "../../../structure/ielementpi";
-import {LayerEnum} from "game-capsule/index";
 import PKT_PackageType = op_pkt_def.PKT_PackageType;
+import {Room} from "../../../../game/room/room/room";
+import {BlockObject} from "../../../../game/room/block/block.object";
+import {InputEnable} from "../../../../game/room/element/element";
+import {LayerEnum} from "game-capsule";
 
 // 小屋布置管理类，包含所有布置过程中的操作接口
 // 文档：https://dej4esdop1.feishu.cn/docs/doccnEbMKpINEkfBVImFJ0nTJUh#
