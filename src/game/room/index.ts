@@ -22,3 +22,4 @@ export * from "./room.manager";
 export * from "./display/spawn.point";
 export * from "../../pica/game/room/decorate/decorate.manager";
 export * from "./elementaction";
+export * from "./wall/wall";

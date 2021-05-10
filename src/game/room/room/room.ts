@@ -38,6 +38,7 @@ export interface IRoomService {
     readonly effectManager: EffectManager;
     readonly decorateManager: DecorateManager;
     readonly skyboxManager: SkyBoxManager;
+    readonly wallManager: WallManager;
     // readonly handlerManager: HandlerManager;
     readonly roomSize: IPosition45Obj;
     readonly miniSize: IPosition45Obj;
@@ -859,6 +860,10 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
 
     get skyboxManager() {
         return this.mSkyboxManager;
+    }
+
+    get wallManager() {
+        return this.mWallMamager;
     }
 
     // get layerManager(): LayerManager {
