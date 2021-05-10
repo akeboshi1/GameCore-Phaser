@@ -93,15 +93,6 @@ export class PicaPlayerInfoMediator extends BasicMediator {
         }
         if (this.mView) {
             content["isUser"] = false;
-            const itemArr = [], avatarIDs = this.game.user.userData.avatarIDs;
-            if (avatarIDs) {
-                const configMgr = <BaseDataConfigManager>this.game.configManager;
-                for (const id of avatarIDs) {
-                    const item = configMgr.getItemBaseByID(id);
-                    itemArr.push(item);
-                }
-            }
-            content.avatarSuit = itemArr;
             this.setItemBases(content.properties);
             this.setItemBases(content.avatarSuit);
             this.mView.setPlayerData(content);

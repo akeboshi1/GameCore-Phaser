@@ -117,8 +117,9 @@ export class PicaRoomDecorateMediator extends BasicMediator {
         this.mModel.buyMarketCommodities([prop]);
     }
     private onUsingItemHandler(eleid: string) {
-        const roomid = this.game.user.userData.curRoomID;
-        this.game.sendCustomProto("STRING_LIST", "roomFacade:roomComponents", [roomid, eleid]);
+        const extras = this.game.cacheMgr.extraRoomInfo;
+        if (eleid === extras.wallId || eleid === extras.floorId) return;
+        this.game.sendCustomProto("STRING", "roomFacade:applyComponent", { id: eleid });
     }
     private onRoomComponentsHandler(proto: any) {
         this.content = proto.content;

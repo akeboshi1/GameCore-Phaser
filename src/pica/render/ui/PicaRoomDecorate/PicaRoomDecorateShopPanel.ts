@@ -21,6 +21,7 @@ export class PicaRoomDecorateShopPanel extends Phaser.GameObjects.Container {
     private selectedItem: DecorateShopItem;
     private selectedItemData: any;// op_client.IMarketCommodity
     private shopgride: GameGridTable;
+    private curCategory: string;
     private zoom: number;
     constructor(scene: Phaser.Scene, x: number, y: number, width: number, height: number, key: string, dpr: number, zoom: number) {
         super(scene, x, y);
@@ -194,7 +195,12 @@ export class PicaRoomDecorateShopPanel extends Phaser.GameObjects.Container {
     }
 
     private onTabButtonHandler(data: any) {// op_def.IMarketCategory
+        if (this.curCategory === data.key) return;
         this.emit("queryProp", data.key);
+        this.curCategory = data.key;
+        this.selectedItem.select = false;
+        this.selectedItem = undefined;
+        this.selectedItemData = undefined;
     }
     private onConfirmButtonHandler() {
         if (this.selectedItemData && this.selectedItemData.status === 1) {// op_pkt_def.PKT_MANOR_COMMODITY_STATE.PKT_MANOR_Owned
@@ -258,7 +264,7 @@ class DecorateShopItem extends Phaser.GameObjects.Container {
         this.button.setTextStyle(UIHelper.brownishStyle(dpr));
         this.button.y = this.tipsText.y;
         this.button.on(ClickEvent.Tap, this.onButtonHandler, this);
-        this.imgprice.y = this.button.y - this.button.height * 0.5 - this.imgprice.height * 0.5 - 2 * dpr;
+        this.imgprice.y = this.button.y - this.button.height * 0.5 - this.imgprice.height * 0.5;
         this.add([this.bg, this.nameText, this.icon, this.imgprice, this.tipsText, this.button]);
 
     }
