@@ -39,7 +39,8 @@
     "needproper": "需求属性",
     "placetips": "布置自己的小屋的时候才能放置",
     "recaste": "重铸",
-    "show": "展示"
+    "show": "展示",
+    "decoratebtn": "装修"
   },
   "common": {
     "cancel": "取消",
@@ -70,7 +71,8 @@
     "notEnough": "{{}}数量不足",
     "receive": "领取",
     "receivereward": "领取奖励",
-    "received": "已领取"
+    "received": "已领取",
+    "rarity": "稀有"
   },
   "quantityunit": {
     "k": "千",

@@ -159,21 +159,21 @@ export class BaseDragonbonesDisplay extends BaseDisplay {
                         if (useRenderTex && this.mNeedReplaceTexture) {
                             this.prepareReplaceRenderTexture()
                                 .then(() => {
-                                    _resolve();
+                                    _resolve(null);
                                 })
                                 .catch(() => {
                                     // fallback
                                     useRenderTex = false;
                                     this.prepareReplaceSlotsDisplay()
                                         .then(() => {
-                                            _resolve();
+                                            _resolve(null);
                                         });
                                 });
                         } else {
                             useRenderTex = false;
                             this.prepareReplaceSlotsDisplay()
                                 .then(() => {
-                                    _resolve();
+                                    _resolve(null);
                                 });
                         }
                     });
@@ -182,7 +182,7 @@ export class BaseDragonbonesDisplay extends BaseDisplay {
                     this.refreshAvatar(useRenderTex);
                     this.hideLoadingShadow();
                     this.mNeedReplaceTexture = false;
-                    resolve();
+                    resolve(null);
                 });
         });
     }
@@ -423,7 +423,7 @@ export class BaseDragonbonesDisplay extends BaseDisplay {
             const onLoad = () => {
                 if (!this.scene.cache.custom.dragonbone.get(this.resourceName)) return;
                 this.removePhaserListener(PhaserListenerType.Load, Phaser.Loader.Events.COMPLETE, onLoad);
-                resolve();
+                resolve(null);
             };
 
             this.addPhaserListener(PhaserListenerType.Load, Phaser.Loader.Events.COMPLETE, onLoad);
@@ -598,7 +598,7 @@ export class BaseDragonbonesDisplay extends BaseDisplay {
             });
 
             if (loadList.length === 0) {
-                resolve();
+                resolve(null);
                 return;
             }
 

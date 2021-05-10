@@ -1,9 +1,9 @@
-import {BasicMediator, DecorateManager, Game} from "gamecore";
-import {MessageType, ModuleName} from "structure";
-import {Logger} from "utils";
-import {op_pkt_def} from "pixelpai_proto";
+import { BasicMediator, DecorateManager, Game } from "gamecore";
+import { MessageType, ModuleName } from "structure";
+import { Logger } from "utils";
+import { op_pkt_def } from "pixelpai_proto";
 import PKT_PackageType = op_pkt_def.PKT_PackageType;
-import {BaseDataConfigManager} from "../../config/base.data.config.manager";
+import { BaseDataConfigManager } from "../../config/base.data.config.manager";
 
 export class PicaDecorateMediator extends BasicMediator {
 
@@ -65,6 +65,9 @@ export class PicaDecorateMediator extends BasicMediator {
         this.mDecorateManager.openBag();
     }
 
+    public btnHandler_Shop() {
+        this.mDecorateManager.openShop();
+    }
     public onFurnitureClick(baseID: string) {
         this.mDecorateManager.addFromBag(baseID);
     }
@@ -85,7 +88,7 @@ export class PicaDecorateMediator extends BasicMediator {
             bagData.count = count;
             this.mView.setSelectedFurniture(bagData);
         } else {
-            const configMgr = <BaseDataConfigManager> this.game.configManager;
+            const configMgr = <BaseDataConfigManager>this.game.configManager;
             const configItem = configMgr.getItemBaseByID(baseID);
             configItem.count = count;
             this.mView.setSelectedFurniture(configItem);
@@ -100,7 +103,7 @@ export class PicaDecorateMediator extends BasicMediator {
     public updateFurnitureCount(baseID: string, count: number) {
         if (this.mView) this.mView.updateFurnitureCount(baseID, count);
         else {
-            const data = {baseID, count};
+            const data = { baseID, count };
             this.mCacheData_UpdateCount.push(data);
         }
     }

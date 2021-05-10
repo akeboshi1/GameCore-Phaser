@@ -294,6 +294,10 @@ export class Element extends BlockObject implements IElement {
             // 速度改变，重新计算
             if (this.mMoving) this.startMove();
         }
+        if (model.hasOwnProperty("nickname")) {
+            this.mModel.nickname = model.nickname;
+            this.showNickname();
+        }
         if (reload) this.load(this.mModel.displayInfo);
         // 更新物理进程的物件/人物element
         // this.mRoomService.game.physicalPeer.updateModel(model);

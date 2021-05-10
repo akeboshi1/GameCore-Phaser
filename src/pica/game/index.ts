@@ -116,3 +116,5 @@ export * from "./ui/PicaMail/PicaMailMediator";
 export * from "./red.manager";
 export * from "./ui/PicaNewIllustrated/PicaNewIllustrated";
 export * from "./ui/PicaNewIllustrated/PicaNewIllustratedMediator";
+export * from "./ui/PicaRoomDecorate/PicaRoomDecorate";
+export * from "./ui/PicaRoomDecorate/PicaRoomDecorateMediator";

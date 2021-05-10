@@ -83,9 +83,9 @@ export class PicaPartyNavigationMediator extends BasicMediator {
         //     this.mView.setPartyListData(this.mPartyListData, this.game.user.userData.isSelfRoom);
         // }
         if (this.tempData) {
-            if (this.chooseType === 1) {
+            if (this.chooseType === 2) {
                 this.mView.setNavigationListData(this.tempData);
-            } else if (this.chooseType === 2) {
+            } else if (this.chooseType === 1) {
                 this.onNewRoomListHandler(this.tempData);
             } else if (this.chooseType === 3) {
                 for (const temp of this.myRooms) {

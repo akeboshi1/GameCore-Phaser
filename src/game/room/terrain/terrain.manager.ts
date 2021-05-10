@@ -88,6 +88,9 @@ export class TerrainManager extends PacketHandler implements IElementManager {
                 if (emptyTerrain) emptyTerrain.addDisplay();
             });
         });
+
+        // todo 处理完地块后开始加载其他scene的pi
+        this.mRoom.game.loadTotalSceneConfig();
     }
 
     public addSpritesToCache(sprites: op_client.ISprite[]) {

@@ -10,25 +10,27 @@ export enum GameState {
     InitWorld = "InitWorld",
     // =====第3步 尝试链接
     StartConnect = "StartConnect",
-    // =====第4步 请求平台token
+    // =====第4步 尝试链接
+    Connected = "Connected",
+    // =====第5步 请求平台token
     RequestToken = "RequestToken",
-    // =====第5步 获得平台token
+    // =====第6步 获得平台token
     GetToken = "GetToken",
-    // =====第6步 登陆游戏
+    // =====第7步 登陆游戏
     EnterWorld = "EnterWorld", // 发送 _OP_CLIENT_REQ_VIRTUAL_WORLD_PLAYER_INIT
-    // =====第7步 服务器下发 _OP_GATEWAY_RES_CLIENT_VIRTUAL_WORLD_INIT 包含角色,游戏信息
+    // =====第8步 服务器下发 _OP_GATEWAY_RES_CLIENT_VIRTUAL_WORLD_INIT 包含角色,游戏信息
     PlayerInit = "PlayerInit",
-    // =====第8步 成功加载游戏pi
+    // =====第9步 成功加载游戏pi
     LoadGameConfig = "LoadGameConfig",
-    // =====第9步 成功解析pi
+    // =====第10步 成功解析pi
     CompleteDecodeConfig = "CompleteDecodeConfig",
-    // =====第10步 游戏创建成功
+    // =====第11步 游戏创建成功
     GameCreate = "GameCreate", // 发送 _OP_CLIENT_REQ_GATEWAY_GAME_CREATED
-    // =====第11步 服务端下发 _OP_VIRTUAL_WORLD_RES_CLIENT_ENTER_SCENE 进入场景,客户端进行下载/反序列化 场景数据
+    // =====第12步 服务端下发 _OP_VIRTUAL_WORLD_RES_CLIENT_ENTER_SCENE 进入场景,客户端进行下载/反序列化 场景数据
     EnterScene = "EnterScene",
-    // =====第12步 场景创建成功
+    // =====第13步 场景创建成功
     SceneCreate = "SceneCreate",
-    // =====第13步 创建房间
+    // =====第14步 创建房间
     RoomCreate = "RoomCreate",
 
     // ===============进入游戏后状态：

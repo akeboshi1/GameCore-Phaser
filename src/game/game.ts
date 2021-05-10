@@ -12,7 +12,7 @@ import { Clock, ClockReadyListener } from "./loop/clock/clock";
 import { HttpClock } from "./loop/httpClock/http.clock";
 import { HttpService } from "./loop/httpClock/http.service";
 import { LoadingManager } from "./loading/loading.manager";
-import { GameState, ILauncherConfig, LoadState, MAIN_WORKER, RENDER_PEER, PHYSICAL_WORKER, ModuleName } from "structure";
+import { GameState, ILauncherConfig, LoadState, ModuleName } from "structure";
 import { ServerAddress } from "../../lib/net/address";
 import { IRoomService } from "./room/room/room";
 import { ElementStorage } from "../base/model/elementstorage/element.storage";
@@ -60,6 +60,7 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
 
     protected gameConfigUrls: Map<string, string> = new Map();
     protected gameConfigUrl: string;
+    protected gameConfigState: Map<string, boolean> = new Map();
     protected isPause: boolean = false;
     protected isAuto: boolean = true;
     protected mMoveStyle: number;
@@ -226,6 +227,12 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
                     });
                 break;
         }
+        // 显示服务器报错信息
+        const errorLevel = content.errorLevel;
+        if (errorLevel >= op_def.ErrorLevel.SERVICE_GATEWAY_ERROR) {
+            const msg = content.msg;
+            this.renderPeer.showAlert(msg, true);
+        }
         Logger.getInstance().log(`Remote Trace[${content.responseStatus}]: ${content.msg}`);
     }
 
@@ -234,6 +241,24 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
             this.mClock.destroy();
             this.mClock = null;
         }
+    }
+
+    /**
+     * todo
+     * 试验性方法，尝试后台加载场景pi
+     * @returns
+     */
+    public loadTotalSceneConfig() {
+        if (!this.gameConfigUrls) return;
+        this.gameConfigUrls.forEach((remotePath) => {
+            if (!this.gameConfigState.get(remotePath)) {
+                return load(remotePath, "arraybuffer").then((req: any) => {
+                    Logger.getInstance().debug("start decodeConfig");
+                }, (reason) => {
+                    Logger.getInstance().error("reload res ====>", reason, "reload count ====>", this.remoteIndex);
+                });
+            }
+        });
     }
 
     public loadSceneConfig(sceneID: string): Promise<any> {
@@ -245,7 +270,6 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
         } else {
             return result.then((req: any) => {
                 return this.loadGameConfig(remotePath);
-
             }, (reason) => {
                 // return this.loadGameConfig(remotePath);
                 return new Promise((resolve, reject) => {
@@ -310,6 +334,7 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
         for (const url of urls) {
             const sceneId = Tool.baseName(url);
             this.gameConfigUrls.set(sceneId, url);
+            this.gameConfigState.set(url, false);
             if (url.split(sceneId).length === 3) {
                 this.gameConfigUrl = url;
             }
@@ -861,6 +886,7 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
         }
         const configPath = ResUtils.getGameConfig(remotePath);
         return load(configPath, "arraybuffer").then((req: any) => {
+            this.gameConfigState.set(remotePath, true);
             this.peer.state = GameState.LoadGameConfig;
             this.mLoadingManager.start(LoadState.PARSECONFIG);
             Logger.getInstance().debug("start decodeConfig");

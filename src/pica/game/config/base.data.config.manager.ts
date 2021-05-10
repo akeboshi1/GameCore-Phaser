@@ -800,6 +800,7 @@ export class BaseDataConfigManager extends BaseConfigManager {
             } else {
                 const path = serializeString.slice(0, index);
                 item.texturePath = path + "_s.png";
+                item["display"] = { texturePath: item.texturePath };
             }
         }
         item["find"] = true;

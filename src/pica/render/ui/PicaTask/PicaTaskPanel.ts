@@ -1,4 +1,5 @@
 import { op_client, op_pkt_def, op_def } from "pixelpai_proto";
+import { RedDotTypeEnum } from "custom_proto";
 import { ToggleColorButton, UiManager } from "gamecoreRender";
 import { ModuleName } from "structure";
 import { UIAtlasName } from "../../../res";
@@ -102,7 +103,7 @@ export class PicaTaskPanel extends PicaBasePanel {
 
     createOptionButtons() {
         const arr = [{ text: i18n.t("task.main_quest"), type: op_pkt_def.PKT_Quest_Type.QUEST_MAIN_MISSION }, { text: i18n.t("task.daily_quest"), type: op_pkt_def.PKT_Quest_Type.QUEST_DAILY_GOAL }];
-        const redArr = [op_def.RedDotTypeEnum.MAIN_QUEST_REDDOTSTATUS, op_def.RedDotTypeEnum.DAILY_QUEST_REDDOTSTATUS];
+        const redArr = [RedDotTypeEnum.MAIN_QUEST_REDDOTSTATUS, RedDotTypeEnum.DAILY_QUEST_REDDOTSTATUS];
         const allLin = 272 * this.dpr;
         const cellwidth = allLin / arr.length;
         const cellHeight = 20 * this.dpr;
