@@ -705,12 +705,13 @@ export class MainPeer extends RPCPeer {
         return ele.removeMount(target, stopPos);
     }
 
-    @Export([webworker_rpc.ParamType.num])
-    public stopMove(id: number) {
-        const ele = this.game.roomManager.currentRoom.getElement(id);
-        if (ele) {
-            ele.stopMove();
-        }
+    @Export([webworker_rpc.ParamType.num, webworker_rpc.ParamType.num])
+    public stopMove(x: number, y: number) {
+        // const ele = this.game.roomManager.currentRoom.getElement(id);
+        // if (ele) {
+        //     ele.stopMove();
+        // }
+        this.game.user.stopMove(new LogicPos(x, y));
     }
 
     @Export([webworker_rpc.ParamType.str])
