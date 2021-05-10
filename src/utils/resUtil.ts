@@ -396,7 +396,22 @@ export class Coin {
         }
         return res;
     }
-
+    static getNewIcon(coinType: number) {
+        let res = "tuding_icon";
+        const type = <CoinType>coinType;
+        if (type === CoinType.COIN) {
+            res = "home_silver";
+        } else if (type === CoinType.DIAMOND) {
+            res = "home_diamond";
+        } else if (type === CoinType.GOLD_COIN) {
+            // res = "";
+        } else if (type === CoinType.QING_SONG_TANG) {
+            // res = "";
+        } else if (type === CoinType.TU_DING_COIN) {
+            // res = "";
+        }
+        return res;
+    }
     static getName(coinType: number) {
         let res = "银币";
         const type = <CoinType>coinType;

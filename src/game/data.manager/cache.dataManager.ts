@@ -1,4 +1,5 @@
 import { op_client } from "pixelpai_proto";
+import { ExtraRoomInfo } from "custom_proto";
 import { EventType } from "structure";
 import { EventDispatcher } from "utils";
 import { Game } from "../game";
@@ -6,6 +7,7 @@ import { BaseHandler } from "./base.handler";
 export class CacheDataManager extends BaseHandler {
     public chapters: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_EXPLORE_CHAPTER_PROGRESS;
     public guidText: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_ROOM_SHOW_GUIDE_TEXT;
+    public extraRoomInfo: ExtraRoomInfo;
     public gallery: any;
     public doneMissionIdList: number[];
     public isSurveyStatus: boolean = false;

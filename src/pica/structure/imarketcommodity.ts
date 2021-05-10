@@ -1,6 +1,5 @@
 export interface IShopBase {
     id: string;
-
     itemId: string;
 
     name?: string;
@@ -13,31 +12,31 @@ export interface IShopBase {
 
     source?: string;
 
+    des?: string;
+
     currencyId: string;
 
-    price: number;
+    price?: number;
 
     className: string;
 
+    sn?: string;
+
+    suitType?: string;
+
+    tag?: string;
+
+    version?: string;
+
+    slot?: string;
 }
-export interface IMarketCommodity {
+export interface IMarketCommodity extends IShopBase {
 
-    id: string;
-    name?: string;
-    itemId: string;
-    des?: string;
-
-    icon?: string;
-
-    price?: IPrice[];
-
-    category?: string;
+    price?: IPrice[] | any;
 
     remainNumber?: number;
 
     eachPurchaseNumber?: number;
-
-    source?: string;
 
     shortName?: string;
 
@@ -50,16 +49,6 @@ export interface IMarketCommodity {
     remain?: number;
 
     manorState?: number;
-
-    sn?: string;
-
-    suitType?: string;
-
-    tag?: string;
-
-    version?: string;
-
-    slot?: string;
 }
 export interface IPrice {
     price: number;
@@ -72,4 +61,10 @@ export interface ICompareValue {
     key?: string;
     value?: number;
     compareType?: number;
+}
+
+export interface IDecorateShop extends IShopBase {
+    elementId?: string;
+    status: number;
+    price?: IPrice[] | any;
 }

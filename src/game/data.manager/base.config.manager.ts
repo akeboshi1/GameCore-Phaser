@@ -15,6 +15,10 @@ export class BaseConfigManager {
     public getConfig<T extends BaseConfigData>(key: string) {
         return <T>(this.dataMap.get(key));
     }
+
+    public checkConfig(config: string) {
+        return this.dataMap.has(config);
+    }
     public startLoad(basePath: string): Promise<any> {
         if (this.mInitialization) {
             return new Promise((resolve, reject) => {

@@ -304,9 +304,21 @@ export class PicaNewIllustratedMediator extends BasicMediator {
             if (map.has(temp.rewardId)) {
                 const combination = map.get(temp.rewardId);
                 ObjectAssign.excludeAllAssign(temp, combination);
+                temp.hasRewards = this.collectHaveRewards(temp);
             }
         }
         return datas;
+    }
+
+    private collectHaveRewards(data: IGalleryCollection) {
+        const len = data.rewardItems.length;
+        for (let i = 0; i < len; i++) {
+            const needCount = data.subsection[i];
+            if (data.gotcount >= needCount && data.gotindex.indexOf(i) === -1) {
+                return true;
+            }
+        }
+        return false;
     }
     get gallery() {
         const cache: CacheDataManager = this.game.getDataMgr<CacheDataManager>(DataMgrType.CacheMgr);

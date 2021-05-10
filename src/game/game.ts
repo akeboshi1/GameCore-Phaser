@@ -19,7 +19,7 @@ import { ElementStorage } from "../base/model/elementstorage/element.storage";
 import { RoomManager } from "./room/room.manager";
 import { User } from "./actor/user";
 import { DataManager, DataMgrType } from "./data.manager/dataManager";
-import { BaseConfigManager, ConfigPath } from "./data.manager";
+import { BaseConfigManager, CacheDataManager, ConfigPath } from "./data.manager";
 import { NetworkManager } from "./command";
 import version from "../../version";
 import { SoundManager } from "./sound.manager";
@@ -451,7 +451,9 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
     get customProto() {
         return this.mCustomProtoManager;
     }
-
+    get cacheMgr() {
+        return this.getDataMgr<CacheDataManager>(DataMgrType.CacheMgr);
+    }
     public onFocus() {
         if (this.mWorkerLoop) clearInterval(this.mWorkerLoop);
         this.mRunning = true;
