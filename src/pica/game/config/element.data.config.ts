@@ -3,36 +3,6 @@ import { IAnimation, IAnimationData, IElement } from "../../structure";
 import { Logger } from "utils";
 
 export class ElementDataConfig extends BaseConfigData {
-    // parseJson(json) {
-    //     // 默认不做serializeJson处理
-    //     for (const key in json) {
-    //         if (json.hasOwnProperty(key)) {
-    //             const element = json[key];
-    //             this.serializeJson(element);
-    //         }
-    //     }
-    //     super.parseJson(json);
-    // }
-
-    // serializeJson(id: string) {
-    //     try {
-    //         if (this.hasOwnProperty(id)) {
-    //             const element: IElement = this[id];
-    //             const path = element.serializeString;
-    //         }
-    //         let temp = obj["serializeString"];
-    //         if (temp) {
-    //             if (typeof temp === "string")
-    //                 temp = JSON.parse(temp);
-    //             const pi = temp;
-    //             this.game
-    //             Object.assign(obj, temp);
-    //         }
-    //     } catch (error) {
-    //         Logger.getInstance().error(error);
-    //     }
-    // }
-
     getSerialize(id: string): boolean {
         if (this.hasOwnProperty(id)) {
             const element = this[id];
