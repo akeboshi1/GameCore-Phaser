@@ -126,7 +126,6 @@ export class LoadingScene extends BasicScene {
 
   public showErrorMsg(msg: string) {
     const width = this.scale.gameSize.width;
-    const height = this.scale.gameSize.height;
     const len = this.mErrorList.length;
     const dpr = this.render.uiRatio;
     const errorTxt = this.add.text(width - 4 * dpr, 15 * dpr * len, "", {

@@ -234,8 +234,8 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
         if (errorLevel >= op_def.ErrorLevel.SERVICE_GATEWAY_ERROR) {
             this.renderPeer.showAlert(msg, true);
         } else {
-            // todo 右下角显示
-            this.renderPeer.showErrorMsg(msg);
+            // 右上角显示
+            // this.renderPeer.showErrorMsg(msg);
         }
         Logger.getInstance().log(`Remote Trace[${content.responseStatus}]: ${msg}`);
     }
