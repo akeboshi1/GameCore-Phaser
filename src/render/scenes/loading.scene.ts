@@ -134,7 +134,7 @@ export class LoadingScene extends BasicScene {
       fontFamily: Font.DEFULT_FONT
     }).setOrigin(1);
     errorTxt.setText(msg);
-    this.mErrorList.unshift(msg);
+    this.mErrorList.unshift(errorTxt);
   }
 
   public wake(data?: any) {
