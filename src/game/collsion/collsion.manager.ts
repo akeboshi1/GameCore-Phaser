@@ -1,5 +1,6 @@
 import { IRoomService } from "../room";
 import * as SAT from "sat";
+import { LogicPos } from "utils";
 
 export class CollsionManager {
     private debug: boolean = false;
@@ -36,10 +37,36 @@ export class CollsionManager {
         this.roomService.game.renderPeer.showMatterDebug(Array.from(this.borders.values()));
     }
 
-    public v() {
+    addWall() {
+        const size = this.roomService.roomSize;
+        const { rows, cols } = size;
+        const vertexSets = [this.roomService.transformTo90(new LogicPos(0, 0)), this.roomService.transformTo90(new LogicPos(cols, 0)), this.roomService.transformTo90(new LogicPos(cols, rows)), this.roomService.transformTo90(new LogicPos(0, rows))];
+
+        let nextBody = null;
+        let curVertex = null;
+        for (let i = 0; i < vertexSets.length; i++) {
+            curVertex = vertexSets[i];
+            nextBody = vertexSets[i + 1];
+            if (!nextBody) nextBody = vertexSets[0];
+            let offset = 5;
+            if (i === 1 || i === 2) {
+                offset = -5;
+            }
+            const polygon = new SAT.Polygon(new SAT.Vector(curVertex.x - curVertex.x, curVertex.y - curVertex.y), [
+                new SAT.Vector(curVertex.x, curVertex.y),
+                new SAT.Vector(nextBody.x, nextBody.y),
+                new SAT.Vector(nextBody.x, nextBody.y - offset),
+                new SAT.Vector(curVertex.x, curVertex.y - offset)
+            ]);
+            this.add(Math.random(), polygon);
+        }
+    }
+
+    v() {
         this.debug = true;
     }
-    public q() {
+
+    q() {
         this.debug = false;
     }
 

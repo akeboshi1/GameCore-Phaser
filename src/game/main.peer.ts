@@ -412,7 +412,7 @@ export class MainPeer extends RPCPeer {
 
     @Export()
     public syncPosition(targetPoint) {
-        this.game.user.syncPosition(targetPoint);
+        this.game.user.syncPosition();
     }
 
     @Export([webworker_rpc.ParamType.num])
@@ -672,10 +672,10 @@ export class MainPeer extends RPCPeer {
     public tryStopMove(id: number, interactiveBoo: boolean, targetId?: number, stopPos?: any) {
         if (this.game.user) {
             const room = this.game.roomManager.currentRoom;
-            this.game.user.tryStopMove({ targetId, interactiveBoo: false, stopPos });
-            room.elementManager.checkElementAction(targetId);
-            const needBroadcast = room.elementManager.checkActionNeedBroadcast(targetId);
-            if (interactiveBoo) this.game.user.activeSprite(targetId, undefined, needBroadcast);
+            // this.game.user.tryStopMove({ targetId, interactiveBoo: false, stopPos });
+            // room.elementManager.checkElementAction(targetId);
+            // const needBroadcast = room.elementManager.checkActionNeedBroadcast(targetId);
+            // if (interactiveBoo) this.game.user.activeSprite(targetId, undefined, needBroadcast);
         }
     }
 

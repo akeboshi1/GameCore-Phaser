@@ -398,6 +398,7 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
         this.mEffectManager = new EffectManager(this);
         this.mWallMamager = new WallManager(this);
         this.mCollsionManager = new CollsionManager(this);
+        this.mCollsionManager.addWall();
         // if (this.scene) {
         //     const camera = this.scene.cameras.main;
         //     this.mCameraService.camera = camera;

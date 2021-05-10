@@ -26,8 +26,10 @@ export class User extends Player {
     private holdTime: number = 0;
     private holdDelay: number = 80;
     // 移动
-    private mMoveDelayTime: number = 400;
+    private readonly mMoveDelayTime: number = 400;
     private mMoveTime: number = 0;
+    private readonly mMoveSyncDelay = 200;
+    private mMoveSyncTime: number = 0;
     private mMovePoints: any[];
     constructor(private game: Game) {
         super(undefined, undefined);
@@ -78,7 +80,13 @@ export class User extends Player {
 
     update(time?: number, delta?: number) {
         super.update(time, delta);
-        const now = new Date().getTime();
+        if (!this.mMoving) return;
+        const now = Date.now();
+        this.mMoveSyncTime += delta;
+        if (this.mMoveSyncTime >= this.mMoveSyncDelay) {
+            this.mMoveSyncTime = 0;
+            this.syncPosition();
+        }
         if (!this.mMovePoints || this.mMovePoints.length < 1) {
             this.mMoveTime = now;
             return;
@@ -158,7 +166,7 @@ export class User extends Player {
         return Promise.resolve(this);
     }
 
-    public syncPosition(targetPoint: any) {
+    public syncPosition() {
         const userPos = this.getPosition();
         const pos = op_def.PBPoint3f.create();
         pos.x = userPos.x;
@@ -166,7 +174,7 @@ export class User extends Player {
         const movePoint = op_def.MovePoint.create();
         movePoint.pos = pos;
         // 给每个同步点时间戳
-        movePoint.timestamp = new Date().getTime();
+        movePoint.timestamp = Date.now();
         if (!this.mMovePoints) this.mMovePoints = [];
         this.mMovePoints.push(movePoint);
     }
@@ -188,6 +196,7 @@ export class User extends Player {
     public stopMove(stopPos?: IPos) {
         if (!this.mMovePoints) this.mMovePoints = [];
         this.changeState(PlayerState.IDLE);
+        this.moveControll.setVelocity(0, 0);
         this.mMoving = false;
         if (stopPos) {
             const movePoint = op_def.MovePoint.create();
@@ -196,8 +205,7 @@ export class User extends Player {
             pos.y = stopPos.y;
             movePoint.pos = pos;
             // 给每个同步点时间戳
-            movePoint.timestamp = new Date().getTime();
-            this.mMovePoints.push(movePoint);
+            movePoint.timestamp = Date.now();
         }
         // Logger.getInstance().log("user stop list ====>", this.mMovePoints);
         const movePath = op_def.MovePath.create();
@@ -208,6 +216,8 @@ export class User extends Player {
         ct.movePath = movePath;
         this.mElementManager.connection.send(pkt);
         this.mMovePoints = [];
+
+        this.stopActiveSprite();
     }
 
     public move(moveData: any) {
@@ -249,14 +259,14 @@ export class User extends Player {
         this.destroy();
     }
 
-    public tryStopMove(data: { targetId: number, needBroadcast?: boolean, interactiveBoo: boolean, stopPos?: IPos }) {
-        if (data.stopPos) {
-            this.setPosition(data.stopPos);
+    public stopActiveSprite(pos?: IPos) {
+        const targetId = this.mMoveData.targetId;
+        if (!targetId) {
+            return;
         }
-        if (this.mMoving) this.stopMove(data.stopPos);
-        if (data.interactiveBoo) {
-            this.activeSprite(data.targetId, undefined, data.needBroadcast);
-        }
+        this.mRoomService.elementManager.checkElementAction(targetId);
+        const needBroadcast = this.mRoomService.elementManager.checkActionNeedBroadcast(targetId);
+        this.activeSprite(targetId, undefined, needBroadcast);
     }
 
     public tryActiveAction(targetId: number, param?: any, needBroadcast?: boolean) {

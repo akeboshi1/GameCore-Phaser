@@ -627,7 +627,6 @@ export class Element extends BlockObject implements IElement {
         }
         this.mMounts.splice(index, 1);
         await ele.unmount(targetPos);
-        Logger.getInstance().log("removeMount ===>", targetPos);
         if (!this.mMounts) return Promise.resolve();
         this.mRoomService.game.renderPeer.unmount(this.id, ele.id);
         return Promise.resolve();
