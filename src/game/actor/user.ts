@@ -81,6 +81,7 @@ export class User extends Player {
     update(time?: number, delta?: number) {
         super.update(time, delta);
         if (!this.mMoving) return;
+        this.mRoomService.cameraService.syncDirty = true;
         const now = Date.now();
         this.mMoveSyncTime += delta;
         if (this.mMoveSyncTime >= this.mMoveSyncDelay) {
