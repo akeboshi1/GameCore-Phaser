@@ -4,6 +4,7 @@ import { Coin, Color, Font, Handler, i18n, UIHelper, Url } from "utils";
 import { SecondaryMenuPanel } from "../PicaBusinessStreet/SecondaryMenuPanel";
 import { ImageValue } from "..";
 import { UIAtlasName } from "picaRes";
+import { IDecorateShop } from "picaStructure";
 export class PicaRoomDecorateShopPanel extends Phaser.GameObjects.Container {
     private bg: NineSlicePatch;
     private titleText: Phaser.GameObjects.Text;
@@ -16,7 +17,8 @@ export class PicaRoomDecorateShopPanel extends Phaser.GameObjects.Container {
     private imgtitle: ImageValue;
     private secondMenu: SecondaryMenuPanel;
     private corfirmButton: NineSliceButton;
-    private selectedItem: ManorShopItem;
+    private leaveButton: NineSliceButton;
+    private selectedItem: DecorateShopItem;
     private selectedItemData: any;// op_client.IMarketCommodity
     private shopgride: GameGridTable;
     private zoom: number;
@@ -43,12 +45,12 @@ export class PicaRoomDecorateShopPanel extends Phaser.GameObjects.Container {
         this.closeBtn.setPosition(this.width * 0.5 - 8 * this.dpr, posY + this.dpr * 7);
         this.closeBtn.on(String(ClickEvent.Tap), this.onCloseHandler, this);
         this.add(this.closeBtn);
-        this.titlebg = this.scene.make.image({ key: this.key, frame: "tag_single" });
+        this.titlebg = this.scene.make.image({ key: UIAtlasName.decorateshop, frame: "tag_single" });
         this.add(this.titlebg);
         this.titlebg.x = -this.width * 0.5 + this.titlebg.width * 0.5 + 0 * this.dpr;
         this.titlebg.y = -this.height * 0.5 - this.titlebg.height * 0.5 + 14 * this.dpr;
-        this.imgtitle = new ImageValue(this.scene, 135 * this.dpr, 16 * this.dpr, this.key, "house_shop", this.dpr);
-        this.imgtitle.setText(i18n.t("manor.manorshop"));
+        this.imgtitle = new ImageValue(this.scene, 135 * this.dpr, 16 * this.dpr, UIAtlasName.decorateshop, "house_shop", this.dpr);
+        this.imgtitle.setText(i18n.t("furni_bag.decoratebtn"));
         this.imgtitle.setFontStyle("bold");
         this.imgtitle.setTextStyle({ fontSize: 15 * this.dpr });
         this.imgtitle.x = this.titlebg.x - 30 * this.dpr;
@@ -85,20 +87,25 @@ export class PicaRoomDecorateShopPanel extends Phaser.GameObjects.Container {
         const gridHeight = 380 * this.dpr;
         const gridY = 12 * this.dpr;
         this.shopgride = this.createGrideTable(0, gridY, gridWdith, gridHeight, 126 * this.dpr, 158 * this.dpr);
-        this.corfirmButton = this.createNineButton(UIAtlasName.uicommon, "yellow_btn_normal", i18n.t("common.confirm"), "#996600");
+        this.leaveButton = this.createNineButton(UIAtlasName.uicommon, "yellow_btn_normal", i18n.t("common.leave"), "#996600");
+        this.leaveButton.y = this.height * 0.5 - this.leaveButton.height * 0.5 - 15 * this.dpr;
+        this.leaveButton.x = -this.leaveButton.width * 0.5 - 15 * this.dpr;
+        this.leaveButton.on(String(ClickEvent.Tap), this.onCloseHandler, this);
+        this.corfirmButton = this.createNineButton(UIAtlasName.uicommon, "button_g", i18n.t("common.save"), "#000000");
         this.corfirmButton.y = this.height * 0.5 - this.corfirmButton.height * 0.5 - 15 * this.dpr;
+        this.corfirmButton.x = -this.leaveButton.x;
         this.corfirmButton.on(String(ClickEvent.Tap), this.onConfirmButtonHandler, this);
     }
-    public setShopCategories(content: any) {// op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_GET_MARKET_CATEGORIES
+    public setShopCategories(marketCategory: any[]) {// op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_GET_MARKET_CATEGORIES
         const atts = [];
-        for (const category of content.marketCategory) {
-            const arr = { text: category.category.value, data: category };
+        for (const category of marketCategory) {
+            const arr = { text: category.value, data: category };
             atts.push(arr);
         }
         this.secondMenu.setCategories(TabButton, atts, {
             width: 97 * this.dpr,
             height: 29 * this.dpr,
-            key: this.key,
+            key: UIAtlasName.decorateshop,
             normalFrame: "manor_store_uncheck",
             downFrame: "manor_store_check",
             textStyle: {
@@ -111,8 +118,8 @@ export class PicaRoomDecorateShopPanel extends Phaser.GameObjects.Container {
     }
 
     public setShopDatas(content: any) {// op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_MARKET_QUERY
-        if (!content.commodities) return;
-        const arrs = content.commodities.sort((a, b) => {
+        if (!content) return;
+        const arrs = content.sort((a, b) => {
             const aid = a.id.replace(/[^0-9]/ig, "");
             const bid = b.id.replace(/[^0-9]/ig, "");
             if (Number(aid) > Number(bid)) return 1;
@@ -129,7 +136,7 @@ export class PicaRoomDecorateShopPanel extends Phaser.GameObjects.Container {
     }
 
     private createNineButton(key: string, frame: string, text: string, color: string) {
-        const nineButton = new NineSliceButton(this.scene, 0, 0, 182 * this.dpr, 47 * this.dpr, key, frame, text, this.dpr, this.zoom, {
+        const nineButton = new NineSliceButton(this.scene, 0, 0, 123 * this.dpr, 47 * this.dpr, key, frame, text, this.dpr, this.zoom, {
             left: 14 * this.dpr,
             top: 14 * this.dpr,
             right: 14 * this.dpr,
@@ -162,7 +169,7 @@ export class PicaRoomDecorateShopPanel extends Phaser.GameObjects.Container {
                 const scene = cell.scene,
                     item = cell.item;
                 if (cellContainer === null) {
-                    cellContainer = new ManorShopItem(this.scene, 0, 0, capW, capH, this.key, this.dpr);
+                    cellContainer = new DecorateShopItem(this.scene, 0, 0, capW, capH, UIAtlasName.decorateshop, this.dpr);
                     cellContainer.on("buyitem", this.onBuyItemHandler, this);
                     grid.add(cellContainer);
                 }
@@ -187,18 +194,19 @@ export class PicaRoomDecorateShopPanel extends Phaser.GameObjects.Container {
     }
 
     private onTabButtonHandler(data: any) {// op_def.IMarketCategory
-        this.emit("queryProp", 1, data.category.key);
+        this.emit("queryProp", data.key);
     }
     private onConfirmButtonHandler() {
-        if (this.selectedItemData && this.selectedItemData.manorState === 1) {// op_pkt_def.PKT_MANOR_COMMODITY_STATE.PKT_MANOR_Owned
-            if (this.sendHandler) this.sendHandler.runWith(["usetype", this.selectedItemData.id]);
+        if (this.selectedItemData && this.selectedItemData.status === 1) {// op_pkt_def.PKT_MANOR_COMMODITY_STATE.PKT_MANOR_Owned
+            if (this.sendHandler) this.sendHandler.runWith(["usetype", this.selectedItemData.elementId]);
         }
     }
-    private onBuyItemHandler(data: any) {// op_client.IMarketCommodity
-        const prop = { id: data.id, quantity: 1, category: data.category };
+
+    private onBuyItemHandler(data: IDecorateShop) {// op_client.IMarketCommodity
+        const prop = { id: data.id, quantity: 1, category: data.subcategory, price: data.price[0] };
         if (this.sendHandler) this.sendHandler.runWith(["buytype", prop]);
     }
-    private onSelectItemHandler(item: ManorShopItem) {
+    private onSelectItemHandler(item: DecorateShopItem) {
         item.select = true;
         if (this.selectedItem) this.selectedItem.select = false;
         this.selectedItem = item;
@@ -213,7 +221,7 @@ export class PicaRoomDecorateShopPanel extends Phaser.GameObjects.Container {
     }
 }
 
-class ManorShopItem extends Phaser.GameObjects.Container {
+class DecorateShopItem extends Phaser.GameObjects.Container {
     public shopData: any;// op_client.IMarketCommodity
     private dpr: number;
     private bg: Phaser.GameObjects.Image;
@@ -231,32 +239,27 @@ class ManorShopItem extends Phaser.GameObjects.Container {
         this.key = key;
         this.setSize(width, height);
         this.bg = this.scene.make.image({ key, frame: "manor_store_icon_bg" });
-        this.add(this.bg);
         this.nameText = this.scene.make.text({
             x: 0, y: -this.height * 0.5 + 15 * this.dpr, text: " ",
             style: { color: "#2B2B2B", fontSize: 13 * this.dpr, fontFamily: Font.DEFULT_FONT }
         }).setOrigin(0.5);
-        this.add(this.nameText);
         this.icon = new DynamicImage(scene, 0, -20 * dpr, this.key, "floor_01");
-        this.add(this.icon);
         const imgvaluebg = this.scene.make.image({ key: this.key, frame: "manor_store_price_bg" });
-        this.imgprice = new ImageValue(this.scene, 90 * dpr, 17 * dpr, UIAtlasName.uicommon, "iv_coin", this.dpr);
+        this.imgprice = new ImageValue(this.scene, 90 * dpr, 17 * dpr, UIAtlasName.uicommon, "home_silver", this.dpr);
         this.imgprice.setLayout(2);
         this.imgprice.setTextStyle({ color: "#000000" });
         this.imgprice.addAt(imgvaluebg, 0);
-        this.add(this.imgprice);
         this.tipsText = this.scene.make.text({
-            x: 0, y: this.height * 0.5 - 20 * this.dpr, text: i18n.t("manor.owned"),
+            x: 0, y: this.height * 0.5 - 22 * this.dpr, text: i18n.t("manor.owned"),
             style: { color: "#E33922", fontSize: 13 * this.dpr, fontFamily: Font.DEFULT_FONT }
         }).setOrigin(0.5);
         this.tipsText.setFontStyle("bold");
-        this.add(this.tipsText);
-        this.button = new ThreeSliceButton(scene, 73 * dpr, 26 * dpr, UIAtlasName.uicommon, UIHelper.threeRedNormal, UIHelper.threeRedNormal, i18n.t("manor.using"));
+        this.button = new ThreeSliceButton(scene, 73 * dpr, 26 * dpr, UIAtlasName.uicommon, UIHelper.threeRedSmall, UIHelper.threeRedSmall, i18n.t("manor.using"));
         this.button.setTextStyle(UIHelper.brownishStyle(dpr));
         this.button.y = this.tipsText.y;
         this.button.on(ClickEvent.Tap, this.onButtonHandler, this);
-        this.add(this.button);
         this.imgprice.y = this.button.y - this.button.height * 0.5 - this.imgprice.height * 0.5 - 2 * dpr;
+        this.add([this.bg, this.nameText, this.icon, this.imgprice, this.tipsText, this.button]);
 
     }
 
@@ -280,25 +283,25 @@ class ManorShopItem extends Phaser.GameObjects.Container {
     }
 
     private setButtonState(data: any) {// op_client.IMarketCommodity
-        if (data.manorState === 2) {// op_pkt_def.PKT_MANOR_COMMODITY_STATE.PKT_MANOR_InUse
+        if (data.status === 2) {// op_pkt_def.PKT_MANOR_COMMODITY_STATE.PKT_MANOR_InUse
             this.button.visible = true;
             this.button.disInteractive();
-            this.button.setFrameNormal(UIHelper.threeGreenNormal, UIHelper.threeGreenNormal);
+            this.button.setFrameNormal(UIHelper.threeGreenSmall, UIHelper.threeGreenSmall);
             this.button.setText(i18n.t("manor.using"));
             this.button.setTextColor(Color.black);
             this.tipsText.visible = false;
             this.imgprice.visible = false;
-        } else if (data.manorState === 3) {// op_pkt_def.PKT_MANOR_COMMODITY_STATE.PKT_MANOR_NotOwned
+        } else if (data.status === 0) {// op_pkt_def.PKT_MANOR_COMMODITY_STATE.PKT_MANOR_NotOwned
             this.button.visible = true;
             this.button.setInteractive();
-            this.button.setFrameNormal(UIHelper.threeYellowNormal, UIHelper.threeYellowNormal);
+            this.button.setFrameNormal(UIHelper.threeYellowSmall, UIHelper.threeYellowSmall);
             this.button.setText(i18n.t("common.buy"));
             this.button.setTextColor(Color.brownish);
             this.tipsText.visible = false;
             this.imgprice.visible = true;
             const price = data.price[0];
-            this.imgprice.setFrameValue(price.price + "", UIAtlasName.uicommon, Coin.getIcon(price.coinType));
-        } else if (data.manorState === 1) {// op_pkt_def.PKT_MANOR_COMMODITY_STATE.PKT_MANOR_Owned
+            this.imgprice.setFrameValue(price.price + "", UIAtlasName.uicommon, Coin.getNewIcon(price.coinType));
+        } else if (data.status === 1) {// op_pkt_def.PKT_MANOR_COMMODITY_STATE.PKT_MANOR_Owned
             this.button.visible = false;
             this.button.disInteractive();
             this.tipsText.visible = true;

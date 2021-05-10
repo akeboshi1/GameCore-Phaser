@@ -136,3 +136,5 @@ export * from "./PicaMail/PicaMailItem";
 export * from "./PicaMail/PicaMailMainPanel";
 export * from "./PicaMail/PicaMailPanel";
 export * from "./PicaNewIllustrated/PicaNewIllustratedPanel";
+export * from "./PicaRoomDecorate/PicaRoomDecoratePanel";
+export * from "./PicaRoomDecorate/PicaRoomDecorateShopPanel";

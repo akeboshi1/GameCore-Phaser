@@ -131,6 +131,10 @@ export class DecorateManager {
         this.mRoom.game.uiManager.showMed(ModuleName.PICABAG_NAME);
     }
 
+    public openShop() {
+        this.mRoom.game.uiManager.showMed(ModuleName.PICAROOMDECORATE_NAME);
+    }
+
     // 清空房间内所有物件
     public removeAll() {
         this.reverseSelected();
@@ -675,7 +679,7 @@ class DecorateAction {
                 const newCount = mng.setBagCount(baseID, -1);
 
                 mng.room.game.emitter.emit(MessageType.DECORATE_UPDATE_ELEMENT_COUNT, baseID, newCount);
-                resolve();
+                resolve(undefined);
             });
         });
     }

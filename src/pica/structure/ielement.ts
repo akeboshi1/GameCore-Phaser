@@ -6,6 +6,7 @@ export interface IElement {
     nodeType: number;
     rarity: number;
     scale: boolean;
+    className: string;
     serializeString: string;
     texture_path: string;
     type: number;

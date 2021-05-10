@@ -2,7 +2,7 @@ import { AlertView, UiManager } from "gamecoreRender";
 import { ModuleName } from "structure";
 import { UIAtlasName } from "../../../res";
 import { Button, ClickEvent } from "apowophaserui";
-import { Font, i18n, LogicPos } from "utils";
+import { Font, i18n, LogicPos, UIHelper } from "utils";
 import { op_gameconfig } from "pixelpai_proto";
 import { ItemButton } from "../Components/Item.button";
 import { ICountablePackageItem } from "../../../structure";
@@ -17,13 +17,14 @@ export class PicaDecoratePanel extends PicaBasePanel {
     private mBtn_RemoveAll: Button;
     private mBtn_Reverse: Button;
     private mBtn_Bag: Button;
+    private decorateBtn: Button;
     private mBtn_SelectedFurniture: ItemButton;
     private mBtns_QuickSelectFurniture: ItemButton[] = [];
 
     constructor(uiManager: UiManager) {
         super(uiManager);
         this.key = ModuleName.PICADECORATE_NAME;
-        this.atlasNames = [UIAtlasName.uicommon, UIAtlasName.effectcommon];
+        this.atlasNames = [UIAtlasName.uicommon, UIAtlasName.effectcommon, UIAtlasName.room_decorate];
     }
 
     public show(param?: any) {
@@ -36,6 +37,7 @@ export class PicaDecoratePanel extends PicaBasePanel {
         this.mBtn_RemoveAll.on("pointerup", this.btnHandler_RemoveAll, this);
         this.mBtn_Reverse.on("pointerup", this.btnHandler_Reverse, this);
         this.mBtn_Bag.on("pointerup", this.btnHandler_Bag, this);
+        this.decorateBtn.on(ClickEvent.Tap, this.onDecorateShopHandler, this);
     }
 
     public removeListen() {
@@ -44,6 +46,7 @@ export class PicaDecoratePanel extends PicaBasePanel {
         this.mBtn_RemoveAll.off("pointerup", this.btnHandler_RemoveAll, this);
         this.mBtn_Reverse.off("pointerup", this.btnHandler_Reverse, this);
         this.mBtn_Bag.off("pointerup", this.btnHandler_Bag, this);
+        this.decorateBtn.off(ClickEvent.Tap, this.onDecorateShopHandler, this);
     }
 
     public destroy() {
@@ -121,13 +124,13 @@ export class PicaDecoratePanel extends PicaBasePanel {
         const w = this.scene.cameras.main.width / this.scaleX;
         const h = this.scene.cameras.main.height / this.scaleY;
 
-        this.mBtn_Close = new Button(this.scene, this.key, "room_decorate_previous.png", "room_decorate_previous.png");
+        this.mBtn_Close = new Button(this.scene, UIAtlasName.room_decorate, "room_decorate_previous", "room_decorate_previous");
         this.mBtn_Close.x = 20 * this.dpr + this.mBtn_Close.width * 0.5;
         this.mBtn_Close.y = 48 * this.dpr;
 
         this.add(this.mBtn_Close);
 
-        this.mBtn_SaveAndExit = new Button(this.scene, this.key, "room_decorate_save.png", "room_decorate_save.png");
+        this.mBtn_SaveAndExit = new Button(this.scene, UIAtlasName.room_decorate, "room_decorate_save", "room_decorate_save");
         this.mBtn_SaveAndExit.x = w - 20 * this.dpr - this.mBtn_SaveAndExit.width * 0.5;
         this.mBtn_SaveAndExit.y = 48 * this.dpr;
         this.add(this.mBtn_SaveAndExit);
@@ -149,13 +152,13 @@ export class PicaDecoratePanel extends PicaBasePanel {
         bg2.fillRect(0, 0, w * this.scaleX, bg2Height);
         bg2.y = h - bg1Height - 4 * this.dpr - bg2Height;
         this.add(bg2);
-        this.mBtn_RemoveAll = new Button(this.scene, this.key, "room_decorate_delete.png", "room_decorate_delete.png");
+        this.mBtn_RemoveAll = new Button(this.scene, UIAtlasName.room_decorate, "room_decorate_delete", "room_decorate_delete");
         this.mBtn_RemoveAll.x = 10 * this.dpr + this.mBtn_RemoveAll.width * 0.5;
         this.mBtn_RemoveAll.y = bg2.y + bg2Height * 0.5;
-        this.mBtn_Reverse = new Button(this.scene, this.key, "room_decorate_withdraw.png", "room_decorate_withdraw.png");
+        this.mBtn_Reverse = new Button(this.scene, UIAtlasName.room_decorate, "room_decorate_withdraw", "room_decorate_withdraw");
         this.mBtn_Reverse.x = this.mBtn_RemoveAll.x + this.mBtn_RemoveAll.width * 0.5 + 10 * this.dpr + this.mBtn_Reverse.width * 0.5;
         this.mBtn_Reverse.y = bg2.y + bg2Height * 0.5;
-        this.mBtn_Bag = new Button(this.scene, this.key, "room_decorate_Furniture.png", "room_decorate_Furniture.png",
+        this.mBtn_Bag = new Button(this.scene, UIAtlasName.room_decorate, "room_decorate_Furniture", "room_decorate_Furniture",
             i18n.t("furni_bag.furni"));
         this.mBtn_Bag.x = w - this.mBtn_Bag.width * 0.5 - 10 * this.dpr;
         this.mBtn_Bag.y = bg2.y + bg2Height * 0.5;
@@ -165,9 +168,15 @@ export class PicaDecoratePanel extends PicaBasePanel {
             fontSize: 13 * this.dpr
         });
         this.mBtn_Bag.setTextOffset(9 * this.dpr, 0);
-        this.add([this.mBtn_RemoveAll, this.mBtn_Reverse, this.mBtn_Bag]);
+        this.decorateBtn = new Button(this.scene, UIAtlasName.room_decorate, "room_decorate_decoration", "room_decorate_decoration",
+            i18n.t("furni_bag.decoratebtn"));
+        this.decorateBtn.x = this.mBtn_Bag.x - this.mBtn_Bag.width - 16 * this.dpr;
+        this.decorateBtn.y = this.mBtn_Bag.y;
+        this.decorateBtn.setTextStyle(UIHelper.whiteStyle(this.dpr, 13));
+        this.decorateBtn.setTextOffset(9 * this.dpr, 0);
+        this.add([this.mBtn_RemoveAll, this.mBtn_Reverse, this.mBtn_Bag, this.decorateBtn]);
 
-        this.mBtn_SelectedFurniture = new ItemButton(this.scene, this.key, "room_decorate_icon_default.png", this.dpr, this.scale, false);
+        this.mBtn_SelectedFurniture = new ItemButton(this.scene, UIAtlasName.room_decorate, "room_decorate_icon_default", this.dpr, this.scale, false);
         this.mBtn_SelectedFurniture.countTextColor = "#ffffff";
         this.mBtn_SelectedFurniture.countTextOffset = new LogicPos(this.mBtn_SelectedFurniture.width * 0.5 - 12 * this.dpr, this.mBtn_SelectedFurniture.height * 0.5 - 10 * this.dpr);
         this.mBtn_SelectedFurniture.BGVisible = true;
@@ -211,6 +220,10 @@ export class PicaDecoratePanel extends PicaBasePanel {
 
     private onFurnitureClick(baseID: string) {
         this.mediator.onFurnitureClick(baseID);
+    }
+
+    private onDecorateShopHandler() {
+        this.mediator.btnHandler_Shop();
     }
 }
 

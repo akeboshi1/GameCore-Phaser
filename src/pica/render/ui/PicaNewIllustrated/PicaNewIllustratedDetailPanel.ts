@@ -190,7 +190,7 @@ export class PicaNewIllustratedDetailPanel extends Phaser.GameObjects.Container 
                 this.onToggleButtonHandler(undefined, item);
             }
             const redType = i === 0 ? RedType.galley : RedType.collect;
-            this.redMap.set(redType, this.creatRedImge(this.scene, item));
+            this.redMap.set(redType, this.creatRedImge(this.scene, item, false));
         }
         this.selectLine.y = 20 * this.dpr;
     }
@@ -286,8 +286,8 @@ export class PicaNewIllustratedDetailPanel extends Phaser.GameObjects.Container 
 }
 
 enum RedType {
-    expLevel = 10086,
-    badgeLevel = 10087,
-    galley = 10088,
-    collect = 10089
+    expLevel = 9,
+    badgeLevel = 11,
+    galley = 2,
+    collect = 10
 }

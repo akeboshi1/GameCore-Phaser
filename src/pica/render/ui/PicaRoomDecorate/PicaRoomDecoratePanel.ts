@@ -2,14 +2,18 @@
 import { PicaRoomDecorateShopPanel } from "./PicaRoomDecorateShopPanel";
 import { BasePanel, UiManager } from "gamecoreRender";
 import { ModuleName, RENDER_PEER } from "structure";
-import { Handler, i18n } from "utils";
+import { CoinType, Handler, i18n } from "utils";
 import { PicaBasePanel } from "../pica.base.panel";
 import { UIAtlasName } from "picaRes";
+import { MoneyCompent } from "..";
 export class PicaRoomDecoratePanel extends PicaBasePanel {
     private content: Phaser.GameObjects.Container;
     private mBackGround: Phaser.GameObjects.Graphics;
+    private moneycomp: MoneyCompent;
+    private moneyValue: number;
+    private diamondValue: number;
     private picShopPanel: PicaRoomDecorateShopPanel;
-    private manorInfo: any;// IManorBillboardData
+    private shopInfo: any;// IManorBillboardData
     constructor(uiManager: UiManager) {
         super(uiManager);
         this.key = ModuleName.PICAROOMDECORATE_NAME;
@@ -21,10 +25,12 @@ export class PicaRoomDecoratePanel extends PicaBasePanel {
         super.resize(width, height);
         this.setSize(w, h);
         this.mBackGround.clear();
-        this.mBackGround.fillStyle(0x000000, 0.66);
+        this.mBackGround.fillStyle(0x000000, 0.88);
         this.mBackGround.fillRect(0, 0, w, h);
         this.content.x = w * 0.5;
         this.content.y = h * 0.5;
+        this.moneycomp.x = w - 20 * this.dpr;
+        this.moneycomp.y = this.moneycomp.height * 0.5 + 50 * this.dpr;
     }
 
     public addListen() {
@@ -47,13 +53,23 @@ export class PicaRoomDecoratePanel extends PicaBasePanel {
         this.add(this.mBackGround);
         this.content = this.scene.make.container(undefined, false);
         this.add(this.content);
+        this.moneycomp = new MoneyCompent(this.scene, 190 * this.dpr, 28 * this.dpr, this.dpr, this.scale);
+        this.add(this.moneycomp);
         this.resize(wid, hei);
         this.openManorShop();
         super.init();
     }
-
-    public setShopCategories(content: any) {// op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_GET_MARKET_CATEGORIES
-        if (this.picShopPanel) this.picShopPanel.setShopCategories(content);
+    onShow() {
+        this.setMoneyData(this.moneyValue, this.diamondValue);
+    }
+    public setMoneyData(money: number, diamond: number) {
+        this.moneyValue = money;
+        this.diamondValue = diamond;
+        if (!this.mInitialized) return;
+        this.moneycomp.setMoneyData(money, diamond);
+    }
+    public setShopCategories(categorys: any[]) {// op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_GET_MARKET_CATEGORIES
+        if (this.picShopPanel) this.picShopPanel.setShopCategories(categorys);
     }
 
     public setShopDatas(content: any) {// op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_MARKET_QUERY
@@ -65,7 +81,7 @@ export class PicaRoomDecoratePanel extends PicaBasePanel {
 
     private openManorShop() {
         this.showShopPanel();
-        this.render.renderEmitter(this.key + "_getCategories", this.manorInfo.manorIndex);
+        this.render.renderEmitter(this.key + "_getCategories");
     }
 
     private showShopPanel() {
@@ -77,13 +93,21 @@ export class PicaRoomDecoratePanel extends PicaBasePanel {
                 if (type === "usetype") {
                     this.render.renderEmitter(this.key + "_usingitem", data);
                 } else if (type === "buytype") {
-                    this.render.renderEmitter(this.key + "_buyItem", data);
+                    const haveValue = data.price.coinType === CoinType.DIAMOND ? this.diamondValue : this.moneyValue;
+                    if (data.price.price > haveValue) {
+                        const tempdata = {
+                            text: [{ text: i18n.t("market.moneyless"), node: undefined }]
+                        };
+                        this.render.mainPeer.showMediator(ModuleName.PICANOTICE_NAME, true, tempdata);
+                    } else {
+                        this.render.renderEmitter(this.key + "_buyItem", data);
+                    }
                 }
             }), new Handler(this, () => {
                 this.hideShopPanel();
             }));
-            this.picShopPanel.on("queryProp", (page: number, category: string, subCategory: string) => {
-                this.render.renderEmitter(this.key + "_queryProp", { page, category, subCategory });
+            this.picShopPanel.on("queryProp", (subCategory: string) => {
+                this.render.renderEmitter(this.key + "_queryMarket", subCategory);
             }, this);
         }
         this.content.add(this.picShopPanel);
@@ -91,10 +115,10 @@ export class PicaRoomDecoratePanel extends PicaBasePanel {
     }
 
     private hideShopPanel() {
-        this.content.remove(this.picShopPanel);
+        this.onCloseHandler();
     }
 
-    private OnCloseHandler() {
+    private onCloseHandler() {
         this.render.renderEmitter(this.key + "_hide");
     }
 }

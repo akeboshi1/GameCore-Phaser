@@ -8,7 +8,7 @@ import {
     IFurnitureGroup,
     IScene
 } from "picaStructure";
-import { IMarketCommodity, IShopBase } from "../../structure/imarketcommodity";
+import { IDecorateShop, IMarketCommodity, IShopBase } from "../../structure/imarketcommodity";
 import { Logger, ObjectAssign, ResUtils, StringUtils } from "utils";
 import { ElementDataConfig } from "./element.data.config";
 import { ExploreDataConfig } from "./explore.data.config";
@@ -35,6 +35,7 @@ import { ElmentPiConfig } from "./element.pi.config";
 import { IElementPi } from "../../structure/ielementpi";
 import { EventType } from "structure";
 import { QuestGroupConfig } from "./quest.group.config";
+import { Element2Config } from "./element2.config";
 
 export enum BaseDataType {
     i18n_zh = "i18n_zh",
@@ -56,6 +57,7 @@ export enum BaseDataType {
     gallery = "gallery",
     questGroup = "questGroup",
     dailyQuestGroup = "dailyQuestGroup",
+    element2 = "element2",
     elementpi = "elementpi" // 不作为文件名加载文件，只作为类型区分
     // itemcategory = "itemcategory"
 }
@@ -484,6 +486,45 @@ export class BaseDataConfigManager extends BaseConfigManager {
         }
     }
 
+    public getDecorateShopItems(sub: string, shopName: string = "roomComponentshop") {
+        const data: ShopConfig = this.getConfig(shopName);
+        const map = data.propMap.get("commoncategory");
+        const extend = "extendfind";
+        const tempArr = map.get(sub);
+        if (tempArr[extend]) {
+            return tempArr;
+        } else {
+            for (const shopitem of tempArr) {
+                const ele2: Element2Config = this.getConfig(BaseDataType.element2);
+                const tempItem: IDecorateShop = <any>shopitem;
+                if (!tempItem["find"]) {
+                    const item = ele2.get(tempItem.elementId);
+                    tempItem.source = this.getI18n("PKT_MARKET_TAG_SOURCE_" + tempItem.source);
+                    tempItem["price"] = [{
+                        price: shopitem.price,
+                        coinType: this.getCoinType(shopitem.currencyId),
+                        displayPrecision: 0
+                    }];
+                    if (item == null) {
+                        Logger.getInstance().error("Element2中有不存在的ID: " + item);
+                        continue;
+                    }
+                    tempItem.name = this.getI18n(item.name);
+                    tempItem.icon = this.getSerializePng(item.serializeString);
+                    shopitem["find"] = true;
+                    shopitem["item"] = item;
+                }
+            }
+            tempArr[extend] = true;
+            return tempArr;
+        }
+    }
+    public getCoinType(id: string) {
+        if (id === "IV0000001")
+            return 3;
+        else if (id === "IV0000002")
+            return 4;
+    }
     /**
      * 等级表 各种
      * @param type
@@ -656,7 +697,7 @@ export class BaseDataConfigManager extends BaseConfigManager {
                 if (rewardItems) {
                     for (const value of rewardItems) {
                         const coutitem = this.getItemBaseByID(value.id);
-                        ObjectAssign.excludeAssign(value, coutitem);
+                        ObjectAssign.excludeTagAssign(value, coutitem);
                     }
                 }
                 temp["find"] = true;
@@ -664,7 +705,7 @@ export class BaseDataConfigManager extends BaseConfigManager {
         } else if (type === GalleryType.dexLevel) {
             if (!temp["find"]) {
                 const dex = <IGalleryLevel>temp;
-                const rewardItems =[ dex.rewardItems];
+                const rewardItems = [dex.rewardItems];
                 if (rewardItems) {
                     for (const value of rewardItems) {
                         const coutitem = this.getItemBaseByID(value.id);
@@ -794,18 +835,23 @@ export class BaseDataConfigManager extends BaseConfigManager {
         if (item.texturePath) item["display"] = { texturePath: item.texturePath };
         const serializeString = item.serializeString;
         if (serializeString) {
-            const index = serializeString.lastIndexOf(".");
-            if (index === -1) {
-                item.texturePath = serializeString + "_s";
-            } else {
-                const path = serializeString.slice(0, index);
-                item.texturePath = path + "_s.png";
-                item["display"] = { texturePath: item.texturePath };
-            }
+            item.texturePath = this.getSerializePng(serializeString);
+            item["display"] = { texturePath: item.texturePath };
         }
         item["find"] = true;
     }
 
+    private getSerializePng(serializeString: string) {
+        const index = serializeString.lastIndexOf(".");
+        let texturePath;
+        if (index === -1) {
+            texturePath = serializeString + "_s";
+        } else {
+            const path = serializeString.slice(0, index);
+            texturePath = path + "_s.png";
+        }
+        return texturePath;
+    }
     // private async checkItemData(item: ICountablePackageItem): Promise<ICountablePackageItem> {
     //     return new Promise<ICountablePackageItem>((reslove, reject) => {
     //         if (!item) {

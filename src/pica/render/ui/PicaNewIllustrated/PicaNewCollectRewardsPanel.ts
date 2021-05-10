@@ -37,6 +37,9 @@ export class PicaNewCollectRewardsPanel extends Phaser.GameObjects.Container {
     hide() {
         this.visible = false;
     }
+    close() {
+        this.onCloseHandler();
+    }
     setHandler(send: Handler) {
         this.send = send;
     }
@@ -44,6 +47,9 @@ export class PicaNewCollectRewardsPanel extends Phaser.GameObjects.Container {
         if (this.combinations && this.combinations.id === content.id) {
             this.setCombinationData(content);
         }
+    }
+    checkHasCombination(content: IGalleryCombination) {
+        return this.combinations && this.combinations.id === content.id;
     }
     setCombinationData(content: IGalleryCombination) {
         this.combinations = content;
@@ -99,7 +105,7 @@ export class PicaNewCollectRewardsPanel extends Phaser.GameObjects.Container {
                     cellContainer = new CollectRewardsItem(this.scene, cellWidth, cellHeight, this.dpr, this.zoom);
                     cellContainer.setHandler(this.send);
                 }
-                cellContainer.setCombinationData(this.combinations, index + 1);
+                cellContainer.setCombinationData(this.combinations, index);
                 cell.setHeight(cellContainer.height);
                 return cellContainer;
             },
@@ -176,10 +182,10 @@ class CollectRewardsItem extends Phaser.GameObjects.Container {
 
     public setCombinationData(data: IGalleryCombination, indexed: number) {
         this.combiData = data;
-        this.indexed = indexed;
+        this.indexed = indexed + 1;
         this.titleTex.text = data.name;
         this.desTex.text = data.des;
-        const itemData: any = data.rewardItems[indexed - 1];
+        const itemData: any = data.rewardItems[indexed];
         const url = Url.getOsdRes(itemData.texturePath);
         this.itemIcon.load(url);
         this.itemIcon.scale = this.dpr / this.zoom;
@@ -194,7 +200,7 @@ class CollectRewardsItem extends Phaser.GameObjects.Container {
         const difficults = this.getbgName(data.difficult);
         const color = difficults[0];
         this.background.setFrame(difficults[1]);
-        const subsection = data.subsection[indexed - 1];
+        const subsection = data.subsection[indexed];
         this.collectTex.text = `${data.gotcount}/${subsection}`;
         this.collectTex.setColor(color);
         this.desTex.setColor(color);

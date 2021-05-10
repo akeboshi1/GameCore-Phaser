@@ -30,3 +30,20 @@ export interface IGalleryLevelGroup {
     allReceived: boolean;
     gallery: IGalleryLevel[];
 }
+export interface IUpdateGalleryDatas {
+    list: Array<{ id: string, status: number }>;
+    galleryLevel: number;
+    galleryExp: number;
+    nextLevelExp: number;
+    beforeExp: number;
+    badgeLevel: number;
+    badgeExp: number;
+    badgePresentLevelexp: number;
+}
+export interface IGalleryCollection extends IGalleryCombination {
+    rewardId: number;
+    gotcount: number;
+    gotindex: number[];
+    rewardIndex: number[];
+    hasRewards: boolean;
+}

@@ -10,8 +10,12 @@ export class LoadingManager {
         this.mResources = [];
     }
 
-    start(state?: number, data?: any) {
-        this.mGame.peer.render.showLoading({ "dpr": this.mGame.getGameConfig().scale_ratio, state, data });
+    start(state?: number, data?: any): Promise<any> {
+        return new Promise<any>((resolve, reject) => {
+            this.mGame.peer.render.showLoading({ "dpr": this.mGame.getGameConfig().scale_ratio, state, data }).then(() => {
+                resolve(null);
+            });
+        });
     }
 
     sceneCallback() {
