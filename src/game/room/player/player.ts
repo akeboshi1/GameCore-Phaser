@@ -2,7 +2,7 @@ import {op_def, op_virtual_world} from "pixelpai_proto";
 import {IElementManager} from "../element/element.manager";
 import {ISprite, PlayerState} from "structure";
 import {IPos} from "../../../utils/logic.pos";
-import {Element, IElement, InputEnable, MovePath} from "../element/element";
+import {Element, IElement, InputEnable} from "../element/element";
 import {DirectionChecker, Logger} from "utils";
 import {LayerEnum} from "game-capsule";
 import {PBpacket} from "net-socket-packet";

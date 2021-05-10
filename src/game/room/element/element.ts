@@ -79,7 +79,7 @@ export interface IElement {
 
     removeMount(ele: IElement, targetPos?: IPos): Promise<void>;
 
-    getInteractivePositionList(): Promise<IPos[]>;
+    getInteractivePositionList(): IPos[];
 
     getProjectionSize(): IProjection;
 
@@ -92,20 +92,7 @@ export interface MoveData {
     step?: number;
     path?: op_def.IMovePoint[];
     arrivalTime?: number;
-}
-
-export interface MovePos {
-    x: number;
-    y: number;
-    stopDir?: number;
-}
-
-export interface MovePath {
-    x: number;
-    y: number;
-    direction: number;
-    duration?: number;
-    onStartParams?: any;
+    targetId?: number;
 }
 
 export enum InputEnable {
@@ -570,7 +557,7 @@ export class Element extends BlockObject implements IElement {
         this.mRoomService.game.renderPeer.hideRefernceArea(this.id);
     }
 
-    public async getInteractivePositionList(): Promise<IPos[]> {
+    public getInteractivePositionList(): IPos[] {
         const interactives = this.mModel.getInteractive();
         if (!interactives || interactives.length < 1) {
             return;
@@ -578,9 +565,9 @@ export class Element extends BlockObject implements IElement {
         const pos45 = this.mRoomService.transformToMini45(this.getPosition());
         const result: IPos[] = [];
         for (const interactive of interactives) {
-            // if (await this.mRoomService.game.physicalPeer.isWalkableAt(pos45.x + interactive.x, pos45.y + interactive.y)) {
-            //     result.push(this.mRoomService.transformToMini90(new LogicPos(pos45.x + interactive.x, pos45.y + interactive.y)));
-            // }
+            if (this.mRoomService.isWalkable(pos45.x + interactive.x, pos45.y + interactive.y)) {
+                result.push(this.mRoomService.transformToMini90(new LogicPos(pos45.x + interactive.x, pos45.y + interactive.y)));
+            }
         }
         return result;
     }

@@ -188,7 +188,7 @@ export class Terrain extends BlockObject implements IElement {
         return Promise.resolve();
     }
 
-    public async getInteractivePositionList() {
+    public getInteractivePositionList() {
         return [];
     }
 

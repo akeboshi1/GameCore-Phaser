@@ -1,6 +1,6 @@
 import { op_client, op_def, op_virtual_world } from "pixelpai_proto";
 import { PacketHandler, PBpacket } from "net-socket-packet";
-import { Handler, IPos, IPosition45Obj, Logger, LogicPos, Position45 } from "utils";
+import { AStar, Handler, IPos, IPosition45Obj, Logger, LogicPos, Position45 } from "utils";
 import { Game } from "../../game";
 import { IBlockObject } from "../block/iblock.object";
 import { ClockReadyListener } from "../../loop/clock/clock";
@@ -20,7 +20,6 @@ import { DecorateManager } from "../../../pica/game/room/decorate/decorate.manag
 import { WallManager } from "../element/wall.manager";
 import { Sprite } from "baseModel";
 import IActor = op_client.IActor;
-import NodeType = op_def.NodeType;
 import { RoomStateManager } from "../state/room.state.manager";
 import { BlockObject } from "../block/block.object";
 import { CollsionManager } from "../../collsion";
@@ -89,7 +88,7 @@ export interface IRoomService {
 
     initUI(): void;
 
-    // findPath(start: IPos, targetPosList: IPos[], toReverse: boolean): Promise<IPos[]>;
+    findPath(start: IPos, targetPosList: IPos[], toReverse: boolean): LogicPos[];
 
     onManagerCreated(key: string);
 
@@ -139,7 +138,7 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
     protected mScaleRatio: number;
     protected mStateManager: RoomStateManager;
     // protected mMatterWorld: MatterWorld;
-    // protected mAstar: AStar;
+    protected mAstar: AStar;
     protected mIsLoading: boolean = false;
     protected mManagersReadyStates: Map<string, boolean> = new Map();
     protected mDecorateManager: DecorateManager;
@@ -409,21 +408,7 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
         this.mGame.peer.render.setCamerasBounds(-padding - offsetX * this.mScaleRatio, -padding, this.mSize.sceneWidth * this.mScaleRatio + padding * 2, this.mSize.sceneHeight * this.mScaleRatio + padding * 2);
         //     // init block
         this.mBlocks.int(this.mSize);
-        // 将场景尺寸传递给physical进程
-        // this.mGame.physicalPeer.setRoomSize(this.mSize);
-        // this.mGame.physicalPeer.setMiniRoomSize(this.miniSize);
-        //     if (this.mWorld.moveStyle !== op_def.MoveStyle.DIRECTION_MOVE_STYLE) {
-        //         this.mFallEffectContainer = new FallEffectContainer(this.mScene, this);
-        //     }
-        // }
-        // // this.mPlayerManager.createActor(new PlayerModel(this.mActorData));
-        // // this.mPlayerManager.createActor(this.mActorData);
         this.mGame.user.enterScene(this, this.mActorData);
-        // const loadingScene: LoadingScene = this.mWorld.game.scene.getScene(LoadingScene.name) as LoadingScene;
-        // this.world.emitter.on(MessageType.PRESS_ELEMENT, this.onPressElementHandler, this);
-        // // if (loadingScene) loadingScene.sleep();
-        // this.world.changeRoom(this);
-        // // if (this.world.uiManager) this.world.uiManager.showMainUI();
 
         if (this.connection) {
             await this.cameraService.syncCamera();
@@ -431,19 +416,11 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
             this.connection.send(new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_SCENE_CREATED));
         }
 
-        // this.scene.input.on("pointerdown", this.onPointerDownHandler, this);
-        // this.scene.input.on("pointerup", this.onPointerUpHandler, this);
-        // this.world.emitter.on(ClickEvent.Tap, this.onTapHandler, this);
-
-        // this.mLoadState = [];
-        // this.mWorld.showLoading(LoadingTips.loadingResources());
-        // this.scene.load.on(Phaser.Loader.Events.COMPLETE, this.onLoadCompleteHandler, this);
-
         this.initSkyBox();
         this.mTerrainManager.init();
         this.mWallMamager.init();
 
-        // this.mAstar = new AStar(this);
+        this.mAstar = new AStar(this);
         const map = [];
         for (let i = 0; i < this.miniSize.rows; i++) {
             map[i] = [];
@@ -451,10 +428,7 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
                 map[i][j] = 1;
             }
         }
-        // this.game.physicalPeer.initAstar(map);
-        // this.mAstar.init(map);
-
-        // const joystick = new JoystickManager(this.game);
+        this.mAstar.init(map);
     }
 
     public initUI() {
@@ -518,13 +492,12 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
             return false;
         }
 
-        // Logger.getInstance().log("#place walkableMap: ", x, y, this.mWalkableMap[y][x] === 1, this.mWalkableMap);
         return this.mWalkableMap[y][x] === 1;
     }
 
-    // public async findPath(startPos: IPos, targetPosList: IPos[], toReverse: boolean) {
-    //     return await this.game.physicalPeer.getPath(startPos, targetPosList, toReverse);
-    // }
+    public findPath(startPos: IPos, targetPosList: IPos[], toReverse: boolean) {
+        return this.mAstar.find(startPos, targetPosList, toReverse);
+    }
 
     public clear() {
         // if (this.mLayManager) this.mLayManager.destroy();
@@ -825,8 +798,6 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
         }
         return result;
     }
-
-    //
 
     protected initSkyBox() {
         const scenerys = this.game.elementStorage.getScenerys();
@@ -1256,7 +1227,7 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
         if (this.mWalkableMap[y][x] === newVal) return;
 
         this.mWalkableMap[y][x] = newVal;
-        // this.game.physicalPeer.setWalkableAt(x, y, walkable);
+        this.mAstar.setWalkableAt(x, y, walkable);
     }
 
     private mapPos2Idx(x: number, y: number): number {

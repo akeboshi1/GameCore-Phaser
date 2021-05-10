@@ -514,6 +514,20 @@ export class MainPeer extends RPCPeer {
         if (this.game.user) this.game.user.startFireMove(pointer);
     }
 
+    @Export()
+    public findPath(targets: [], targetId?: number, toReverse: boolean = false) {
+        if (this.game.user) this.game.user.findPath(targets, targetId, toReverse);
+    }
+
+    @Export([webworker_rpc.ParamType.num])
+    public getInteractivePosition(id: number) {
+        const room = this.game.roomManager.currentRoom;
+        if (!room) return;
+        const ele = room.getElement(id);
+        if (!ele) return;
+        return ele.getInteractivePositionList();
+    }
+
     @Export([webworker_rpc.ParamType.num])
     public syncClock(times: number) {
         this.game.syncClock(times);

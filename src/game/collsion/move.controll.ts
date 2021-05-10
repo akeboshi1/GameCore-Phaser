@@ -4,6 +4,7 @@ import { CollsionManager } from "./collsion.manager";
 export class MoveControll {
 
     protected mBodies: SAT.Polygon;
+    private ignoreCollsion: boolean = false;
     private velocity: IPos;
     private mPosition: IPos;
     private mPrePosition: IPos;
@@ -79,8 +80,12 @@ export class MoveControll {
         this.mBodies = null;
     }
 
+    public setIgnoreCollsion(val: boolean) {
+        this.ignoreCollsion = val;
+    }
+
     private getCollideResponses() {
-        if (!this.mBodies) {
+        if (!this.mBodies || this.ignoreCollsion) {
             return [];
         }
         return this.collsion.collideObjects(this.mBodies);

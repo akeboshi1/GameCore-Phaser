@@ -9,6 +9,7 @@ import { UserDataManager } from "./data/user.dataManager";
 import { AvatarSuitType, EventType, IDragonbonesModel, IFramesModel, PlayerState, ISprite, ModuleName, SceneName } from "structure";
 import { LayerEnum } from "game-capsule";
 import { interval, MoveControll } from "gamecore";
+import { Tool } from "utils";
 // import * as _ from "lodash";
 
 export class User extends Player {
@@ -96,6 +97,46 @@ export class User extends Player {
         }
     }
 
+    public async findPath(targets: IPos[], targetId?: number, toReverse: boolean = false) {
+        if (!targets) {
+            return;
+        }
+        if (this.mRootMount) {
+            await this.mRootMount.removeMount(this, targets[0]);
+        }
+
+        const pos = this.mModel.pos;
+        const miniSize = this.roomService.miniSize;
+        for (const target of targets) {
+            // findPath坐标转换后存在误差
+            if (Tool.twoPointDistance(target, pos) <= miniSize.tileWidth / 2) {
+                this.mMoveData = { targetId };
+                // this.tryStopMove({ stopPos: pos });
+                this.stopMove();
+                return;
+            }
+        }
+        const findResult = this.roomService.findPath(pos, targets, toReverse);
+        if (!findResult) {
+            return;
+        }
+        const firstPos = targets[0];
+        if (findResult.length < 1) {
+            this.addFillEffect({ x: firstPos.x, y: firstPos.y }, op_def.PathReachableStatus.PATH_UNREACHABLE_AREA);
+            return;
+        }
+        // this.matterWorld.setSensor(this.body, true);
+        const path = [];
+        for (const p of findResult) {
+            path.push({ pos: p });
+        }
+        this.mMoveData = { path, targetId };
+        this.addFillEffect({ x: firstPos.x, y: firstPos.y }, op_def.PathReachableStatus.PATH_REACHABLE_AREA);
+        this.moveControll.setIgnoreCollsion(true);
+        this.startMove();
+        this.checkDirection();
+    }
+
     moveMotion(x: number, y: number) {
         if (this.mRootMount) {
             this.mRootMount.removeMount(this);
@@ -103,6 +144,7 @@ export class User extends Player {
         this.mMoveData = { path: [{ pos: new LogicPos(x, y)}] };
         this.mSyncDirty = true;
         // this.body.isSensor = false;
+        this.moveControll.setIgnoreCollsion(false);
         this.startMove();
     }
 
@@ -360,5 +402,10 @@ export class User extends Player {
 
     get moveStyle() {
         return this.mMoveStyle;
+    }
+
+    private addFillEffect(pos: IPos, status: op_def.PathReachableStatus) {
+        const scaleRatio = this.roomService.game.scaleRatio;
+        this.roomService.game.renderPeer.addFillEffect(pos.x * scaleRatio, pos.y * scaleRatio, status);
     }
 }
