@@ -229,11 +229,15 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
         }
         // 显示服务器报错信息
         const errorLevel = content.errorLevel;
+        const msg = content.msg;
+        // 游戏phaser创建完成后才能在phaser内显示ui弹窗等ui
         if (errorLevel >= op_def.ErrorLevel.SERVICE_GATEWAY_ERROR) {
-            const msg = content.msg;
             this.renderPeer.showAlert(msg, true);
+        } else {
+            // 右上角显示
+            // this.renderPeer.showErrorMsg(msg);
         }
-        Logger.getInstance().log(`Remote Trace[${content.responseStatus}]: ${content.msg}`);
+        Logger.getInstance().log(`Remote Trace[${content.responseStatus}]: ${msg}`);
     }
 
     public destroyClock() {
@@ -559,8 +563,9 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
 
     public async loginEnterWorld() {
         Logger.getInstance().debug("loginEnterWorld");
-        this.mLoadingManager.start(LoadState.ENTERWORLD, { render: "构建现实世界" + `_v${version}`, main: "构建魔法世界" + `_v${version}`, physical: "构建物理世界" + `_v${version}` });
-        this.renderPeer.hideLogin();
+        this.mLoadingManager
+            .start(LoadState.ENTERWORLD, { render: "构建现实世界" + `_v${version}`, main: "构建魔法世界" + `_v${version}`, physical: "构建物理世界" + `_v${version}` })
+            .then(this.renderPeer.hideLogin());
         const pkt: PBpacket = new PBpacket(op_gateway.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_PLAYER_INIT);
         const content: IOP_CLIENT_REQ_VIRTUAL_WORLD_PLAYER_INIT = pkt.content;
         Logger.getInstance().debug(`VW_id: ${this.mConfig.virtual_world_id}`);

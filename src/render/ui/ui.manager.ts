@@ -69,6 +69,15 @@ export class UiManager {
         this.mPanelMap = null;
     }
 
+    public showErrorMsg(msg: string) {
+        if (!this.mScene || this.mScene.scene.key !== SceneName.LOADING_SCENE) {
+            return;
+        }
+        let str: string = msg;
+        if (msg.length > 100) str = msg.slice(0, 99);
+        (<any>this.mScene).showErrorMsg(str);
+    }
+
     public showAlertView(text: string, ok: boolean, cancel: boolean = false, callBack?: Function) {
         if (!this.mScene) {
             return;
