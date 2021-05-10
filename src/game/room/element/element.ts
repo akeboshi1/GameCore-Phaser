@@ -599,6 +599,7 @@ export class Element extends BlockObject implements IElement {
     }
 
     public setAlpha(val: number) {
+        this.roomService.game.renderPeer.changeAlpha(this.id, val);
     }
 
     public mount(root: IElement) {
