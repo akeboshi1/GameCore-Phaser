@@ -1,7 +1,5 @@
 import { BasicMediator, Game } from "gamecore";
 import { ModuleName } from "structure";
-import { Logger } from "utils";
-
 export class PicaLoginMediator extends BasicMediator {
     constructor(game: Game) {
         super(ModuleName.PICA_LOGIN_NAME, game);

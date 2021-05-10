@@ -22,6 +22,10 @@ export class PicaRenderUiManager extends UiManager {
         super.showAlertView(text, ok, cancel, callBack);
     }
 
+    public showErrorMsg(msg: string) {
+        super.showErrorMsg(msg);
+    }
+
     public destroy() {
         super.destroy();
         this.mRender.emitter.off(Render.SCENE_CREATED, this.sceneCreated);

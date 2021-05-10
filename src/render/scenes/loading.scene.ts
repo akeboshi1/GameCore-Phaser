@@ -17,6 +17,7 @@ export class LoadingScene extends BasicScene {
   private progressData: any;
   private mRequestCom: boolean;
   private mTxtList: any[] = [];
+  private mErrorList: any[] = [];
   constructor() {
     super({ key: SceneName.LOADING_SCENE });
   }
@@ -123,6 +124,19 @@ export class LoadingScene extends BasicScene {
     this.mTxtList.unshift(mainTxt);
   }
 
+  public showErrorMsg(msg: string) {
+    const width = this.scale.gameSize.width;
+    const height = this.scale.gameSize.height;
+    const len = this.mErrorList.length;
+    const dpr = this.render.uiRatio;
+    const errorTxt = this.add.text(width - 4 * dpr, 15 * dpr * len, "", {
+      fontSize: 12 * dpr,
+      fontFamily: Font.DEFULT_FONT
+    }).setOrigin(1);
+    errorTxt.setText(msg);
+    this.mErrorList.unshift(msg);
+  }
+
   public wake(data?: any) {
     if (!this.scene || !this.scene.settings) {
       return;
@@ -154,6 +168,11 @@ export class LoadingScene extends BasicScene {
     this.mTxtList.forEach((text) => {
       text.destroy();
     });
+    this.mErrorList.forEach((text) => {
+      text.destroy();
+    });
+    this.mErrorList.length = 0;
+    this.mErrorList = [];
     this.mTxtList.length = 0;
     this.mTxtList = [];
     if (this.progressText) {
