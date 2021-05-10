@@ -5,7 +5,7 @@ export declare class LoadingManager {
     private mResources;
     private mLoading;
     constructor(game: Game);
-    start(state?: number, data?: any): void;
+    start(state?: number, data?: any): Promise<any>;
     sceneCallback(): void;
     addAssets(assets: IAsset[]): void;
     startup(): void;

@@ -11,6 +11,7 @@ export declare class LoadingScene extends BasicScene {
     private progressData;
     private mRequestCom;
     private mTxtList;
+    private mErrorList;
     constructor();
     preload(): void;
     init(data: any): void;
@@ -18,6 +19,7 @@ export declare class LoadingScene extends BasicScene {
     getProgress(): string;
     updateProgress(text: any): void;
     loadProgress(text: any): void;
+    showErrorMsg(msg: string): void;
     wake(data?: any): void;
     sleep(): void;
     appendProgress(text: string): void;

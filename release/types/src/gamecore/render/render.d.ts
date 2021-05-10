@@ -119,6 +119,7 @@ export declare class Render extends RPCPeer implements GameMain, IRender {
     keyboardDidShow(keyboardHeight: number): void;
     keyboardDidHide(): void;
     visibilitychange(state: string): void;
+    showErrorMsg(msg: string): void;
     hidden(): void;
     startFullscreen(): void;
     stopFullscreen(): void;
@@ -208,7 +209,7 @@ export declare class Render extends RPCPeer implements GameMain, IRender {
     i18nString(val: string): string;
     showAlert(text: string, ok: boolean): Promise<unknown>;
     showAlertReconnect(text: string): void;
-    showLoading(data?: any): void;
+    showLoading(data?: any): Promise<any>;
     updateProgress(progress: number): void;
     hideLoading(): void;
     loadStart(str: string, scene: any): void;

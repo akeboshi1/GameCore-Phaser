@@ -124,7 +124,7 @@ export class DisplayManager {
         } else {
             display = this.displays.get(id) as DragonbonesDisplay;
         }
-        display.load(data);
+        display.load(data, undefined, false);
         const sprite = this.mModelCache.get(id);
         if (sprite) {
             display.titleMask = sprite.titleMask;
@@ -151,7 +151,7 @@ export class DisplayManager {
             display = this.displays.get(data.id) as DragonbonesDisplay;
         }
         // 主角龙骨无视其余资源优先加载
-        display.load(data);
+        display.load(data, undefined, false);
         display.startLoad();
         if (isUser) this.mUser = display;
         const id = data.id;

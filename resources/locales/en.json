@@ -38,7 +38,8 @@
     "needproper": "Requirement",
     "placetips": "Put down when editing room",
     "recaste": "Recaste",
-    "show": "Show"
+    "show": "Show",
+    "decoratebtn": "Decorate"
   },
   "common": {
     "cancel": "Cancel",
@@ -69,7 +70,8 @@
     "notEnough": "Not enough {{name}}",
     "receive": "Receive",
     "receivereward": "Receive",
-    "received": "Received"
+    "received": "Received",
+    "rarity":"Rarity"
   },
   "quantityunit": {
     "k": "k",

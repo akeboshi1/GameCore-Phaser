@@ -507,6 +507,11 @@ export class Render extends RPCPeer implements GameMain, IRender {
         }
     }
 
+    @Export([webworker_rpc.ParamType.str])
+    public showErrorMsg(msg: string) {
+        this.uiManager.showErrorMsg(msg);
+    }
+
     @Export()
     hidden() {
         const loginScene = this.sceneManager.getSceneByName(SceneName.LOGIN_SCENE);
@@ -1127,7 +1132,7 @@ export class Render extends RPCPeer implements GameMain, IRender {
         return i18n.t(val);
     }
 
-    @Export()
+    @Export([webworker_rpc.ParamType.str, webworker_rpc.ParamType.boolean])
     public showAlert(text: string, ok: boolean) {
         // 告诉render显示警告框
         if (ok === undefined) ok = true;
@@ -1150,7 +1155,7 @@ export class Render extends RPCPeer implements GameMain, IRender {
     }
 
     @Export()
-    public showLoading(data?: any) {
+    public showLoading(data?: any): Promise<any> {
         if (!this.mSceneManager) {
             return;
         }
@@ -1159,6 +1164,9 @@ export class Render extends RPCPeer implements GameMain, IRender {
         }
         data.callBack = () => {
             if (data.sceneName) this.mSceneManager.startScene(data.sceneName);
+            return new Promise<any>((resolve, reject) => {
+                resolve(null);
+            });
         };
         data.dpr = this.uiRatio;
         this.mSceneManager.startScene(SceneName.LOADING_SCENE, data);

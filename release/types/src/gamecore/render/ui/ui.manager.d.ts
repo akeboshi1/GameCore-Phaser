@@ -22,6 +22,7 @@ export declare class UiManager {
     setPanel(value: string, panel: BasePanel): void;
     getPanel(type: string): BasePanel | undefined;
     clearPanel(): void;
+    showErrorMsg(msg: string): void;
     showAlertView(text: string, ok: boolean, cancel?: boolean, callBack?: Function): void;
     /**
      * 创建批量显示面板

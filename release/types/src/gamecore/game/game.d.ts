@@ -49,6 +49,7 @@ export declare class Game extends PacketHandler implements IConnectListener, Clo
     protected mCustomProtoManager: CustomProtoManager;
     protected gameConfigUrls: Map<string, string>;
     protected gameConfigUrl: string;
+    protected gameConfigState: Map<string, boolean>;
     protected isPause: boolean;
     protected isAuto: boolean;
     protected mMoveStyle: number;
@@ -78,6 +79,12 @@ export declare class Game extends PacketHandler implements IConnectListener, Clo
     exitUser(): void;
     onClientErrorHandler(packet: PBpacket): void;
     destroyClock(): void;
+    /**
+     * todo
+     * 试验性方法，尝试后台加载场景pi
+     * @returns
+     */
+    loadTotalSceneConfig(): void;
     loadSceneConfig(sceneID: string): Promise<any>;
     clearGameComplete(): void;
     setSize(width: any, height: any): void;
