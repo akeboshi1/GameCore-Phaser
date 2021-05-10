@@ -16,7 +16,7 @@ export class PicaDecorateControlPanel extends PicaBasePanel {
     constructor(uiManager: UiManager) {
         super(uiManager);
         this.key = ModuleName.PICADECORATECONTROL_NAME;
-        this.atlasNames = [UIAtlasName.uicommon, UIAtlasName.effectcommon];
+        this.atlasNames = [UIAtlasName.uicommon, UIAtlasName.effectcommon, UIAtlasName.room_decorate];
     }
 
     public addListen() {
@@ -60,11 +60,6 @@ export class PicaDecorateControlPanel extends PicaBasePanel {
         this.changePosFollowTarget(display.getPosition());
     }
 
-    protected preload() {
-        this.addAtlas(this.key, "room_decorate/room_decorate.png", "room_decorate/room_decorate.json");
-        super.preload();
-    }
-
     // public updatePosition() {
     //     const {id, pos, canPlace} = this.mShowData;
     //     const display = this.render.displayManager.getDisplay(id);
@@ -85,11 +80,11 @@ export class PicaDecorateControlPanel extends PicaBasePanel {
         const h = this.scene.cameras.main.height;
 
         this.mBtns = [];
-        // this.mSaveBtn = new Button(this.scene, ModuleName.PICADECORATE_NAME, "room_decorate_confirm.png");
-        this.mRotateBtn = new Button(this.scene, ModuleName.PICADECORATE_NAME, "room_decorate_Spin.png");
-        this.mRecycleBtn = new Button(this.scene, ModuleName.PICADECORATE_NAME, "room_decorate_put.png");
-        // this.mAutoPlaceBtn = new Button(this.scene, ModuleName.PICADECORATE_NAME, "room_decorate_tiled.png");
-        this.mExitBtn = new Button(this.scene, ModuleName.PICADECORATE_NAME, "room_decorate_confirm.png");
+        // this.mSaveBtn = new Button(this.scene, UIAtlasName.room_decorate, "room_decorate_confirm", "room_decorate_confirm");
+        this.mRotateBtn = new Button(this.scene, UIAtlasName.room_decorate, "room_decorate_Spin", "room_decorate_Spin");
+        this.mRecycleBtn = new Button(this.scene, UIAtlasName.room_decorate, "room_decorate_put", "room_decorate_put");
+        // this.mAutoPlaceBtn = new Button(this.scene, UIAtlasName.room_decorate, "room_decorate_tiled", "room_decorate_tiled");
+        this.mExitBtn = new Button(this.scene, UIAtlasName.room_decorate, "room_decorate_confirm", "room_decorate_confirm");
 
         this.mBtns = [this.mRotateBtn, this.mRecycleBtn, this.mExitBtn];
         this.add(this.mBtns);

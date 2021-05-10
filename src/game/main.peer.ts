@@ -1,15 +1,25 @@
-import { RPCPeer, Export, webworker_rpc } from "webworker-rpc";
-import { op_gateway, op_virtual_world, op_client } from "pixelpai_proto";
-import { PBpacket, Buffer } from "net-socket-packet";
+import {RPCPeer, Export, webworker_rpc} from "webworker-rpc";
+import {op_gateway, op_virtual_world, op_client} from "pixelpai_proto";
+import {PBpacket, Buffer} from "net-socket-packet";
 import * as protos from "pixelpai_proto";
-import { ServerAddress } from "../../lib/net/address";
-import { Game } from "./game";
-import { IPos, Logger, LogicPos, Url } from "utils";
-import { ILauncherConfig, MAIN_WORKER, RENDER_PEER, ModuleName, EventType, PHYSICAL_WORKER, PHYSICAL_WORKER_URL, GameState } from "structure";
-import { PicaGame } from "picaWorker";
-import { DataMgrType } from "./data.manager/dataManager";
-import { SceneDataManager } from "./data.manager";
+import {ServerAddress} from "../../lib/net/address";
+import {Game} from "./game";
+import {IPos, Logger, LogicPos, Position45, Url} from "utils";
+import {
+    ILauncherConfig,
+    MAIN_WORKER,
+    RENDER_PEER,
+    ModuleName,
+    EventType,
+    PHYSICAL_WORKER,
+    PHYSICAL_WORKER_URL,
+    GameState
+} from "structure";
+import {PicaGame} from "picaWorker";
+import {DataMgrType} from "./data.manager/dataManager";
+import {SceneDataManager} from "./data.manager";
 import version from "../../version";
+import {LayerEnum} from "game-capsule";
 
 for (const key in protos) {
     PBpacket.addProtocol(protos[key]);
@@ -31,6 +41,7 @@ export class MainPeer extends RPCPeer {
     private startDelay: any;
     private isStartUpdateFps: boolean = false;
     private startUpdateFps: any;
+
     // private isReconnect: boolean = false;
     constructor() {
         super(MAIN_WORKER);
@@ -53,6 +64,7 @@ export class MainPeer extends RPCPeer {
         this.gameState = val;
         this.stateTime = now;
     }
+
     // ============= connection调用主进程
     public onConnected(isAuto: boolean) {
         // 告诉主进程链接成功
@@ -211,7 +223,7 @@ export class MainPeer extends RPCPeer {
 
     // @Export([webworker_rpc.ParamType.str, webworker_rpc.ParamType.num, webworker_rpc.ParamType.boolean])
     public startConnect(host: string, port: number, secure?: boolean) {
-        const addr: ServerAddress = { host, port, secure };
+        const addr: ServerAddress = {host, port, secure};
         this.game.connection.startConnect(addr);
         const now: number = new Date().getTime();
         this.stateTime = now;
@@ -320,7 +332,7 @@ export class MainPeer extends RPCPeer {
         if (this.game.roomManager && this.game.roomManager.currentRoom && this.game.roomManager.currentRoom.playerManager && this.game.roomManager.currentRoom.playerManager.actor) {
             const avatar = this.game.roomManager.currentRoom.playerManager.actor.model.avatar;
             const suits = this.game.roomManager.currentRoom.playerManager.actor.model.suits;
-            return { avatar, suits };
+            return {avatar, suits};
         }
         return null;
     }
@@ -394,16 +406,32 @@ export class MainPeer extends RPCPeer {
         return this.game.roomManager.currentRoom.elementManager.isElementLocked(element);
     }
 
-    // 小屋装扮过程中，更新物件编辑提示区域
+    // 小屋装扮中，输入位置根据element种类，转换为有效位置
+    // 墙饰：距离最近的墙面区域位置
+    // 立地靠墙家具：距离最近的墙的地面网格坐标
+    // 普通家具：自由坐标转换为吸附网格坐标
     @Export()
-    public updateDecorateElementReference(id: number, x: number, y: number) {
+    public decoratePointerPosToElementPos(id: number, pos: IPos): IPos {
+        if (!this.game.roomManager) return null;
+        if (!this.game.roomManager.currentRoom) return null;
+        if (!this.game.roomManager.currentRoom.isDecorating) return null;
+        if (!this.game.roomManager.currentRoom.decorateManager) return null;
+        return this.game.roomManager.currentRoom.decorateManager.limitPointerPosition(id, pos);
+    }
+
+    // 小屋装扮过程中，更新物件编辑可否放置提示（透明度&碰撞提示区域）
+    @Export()
+    public updateDecorateElementCanPlaceShow(id: number, x: number, y: number) {
         if (!this.game.roomManager) return;
         if (!this.game.roomManager.currentRoom) return;
+        if (!this.game.roomManager.currentRoom.isDecorating) return;
+        if (!this.game.roomManager.currentRoom.decorateManager) return;
         if (!this.game.roomManager.currentRoom.elementManager) return;
         const element = this.game.roomManager.currentRoom.elementManager.get(id);
         if (!element) return;
-        const conflictMap = this.game.roomManager.currentRoom.checkSpriteConflictToWalkableMap(element.model, false, new LogicPos(x, y));
-        element.showRefernceArea(conflictMap);
+        const checkData = this.game.roomManager.currentRoom.decorateManager.checkCanPlace(id, new LogicPos(x, y));
+        element.setAlpha(checkData.canPlace ? 1 : 0.5);
+        element.showRefernceArea(checkData.conflictMap);
     }
 
     @Export()
@@ -550,7 +578,7 @@ export class MainPeer extends RPCPeer {
     @Export([webworker_rpc.ParamType.str])
     public showNoticeHandler(text: string) {
         const data = new op_client.OP_VIRTUAL_WORLD_RES_CLIENT_SHOW_UI();
-        data.text = [{ text, node: undefined }];
+        data.text = [{text, node: undefined}];
         this.game.showByName(ModuleName.PICANOTICE_NAME, data);
     }
 
@@ -643,7 +671,7 @@ export class MainPeer extends RPCPeer {
     public setPosition(id: number, updateBoo: boolean, x: number, y: number, z?: number) {
         const ele = this.game.roomManager.currentRoom.getElement(id);
         if (ele) {
-            ele.setPosition({ x, y, z }, updateBoo);
+            ele.setPosition({x, y, z}, updateBoo);
         }
     }
 
@@ -666,7 +694,7 @@ export class MainPeer extends RPCPeer {
     public tryStopMove(id: number, interactiveBoo: boolean, targetId?: number, stopPos?: any) {
         if (this.game.user) {
             const room = this.game.roomManager.currentRoom;
-            this.game.user.tryStopMove({ targetId, interactiveBoo: false, stopPos });
+            this.game.user.tryStopMove({targetId, interactiveBoo: false, stopPos});
             room.elementManager.checkElementAction(targetId);
             const needBroadcast = room.elementManager.checkActionNeedBroadcast(targetId);
             if (interactiveBoo) this.game.user.activeSprite(targetId, undefined, needBroadcast);
@@ -758,4 +786,5 @@ export class MainPeer extends RPCPeer {
         return this.mConfig && this.mConfig.platform && this.mConfig.platform === "pc";
     }
 }
+
 const context: MainPeer = new MainPeer();

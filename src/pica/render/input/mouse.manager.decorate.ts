@@ -56,7 +56,7 @@ export class MouseManagerDecorate extends MouseManager {
             const worldPos = new LogicPos(pointer.worldX / this.render.scaleRatio, pointer.worldY / this.render.scaleRatio);
             const freePos = new LogicPos(worldPos.x + this.downDisplayPos.x - this.downPointerPos.x,
                 worldPos.y + this.downDisplayPos.y - this.downPointerPos.y);
-            const gridPos = Position45.transformTo90(Position45.transformTo45(freePos, this.roomSize), this.roomSize);
+            const gridPos = await this.render.mainPeer.decoratePointerPosToElementPos(selectedID, freePos);
             const gridDelta = new LogicPos(gridPos.x - this.downDisplayPos.x, gridPos.y - this.downDisplayPos.y);
             this.render.mainPeer.decorateMoveElement(selectedID, gridDelta);
         } else if (Math.abs(pointer.downX - pointer.x) < 5 * this.zoom && Math.abs(pointer.downY - pointer.y) < 5 * this.zoom) {
@@ -75,9 +75,9 @@ export class MouseManagerDecorate extends MouseManager {
             // move game object
             const freePos = new LogicPos(worldPos.x + this.downDisplayPos.x - this.downPointerPos.x,
                 worldPos.y + this.downDisplayPos.y - this.downPointerPos.y);
-            const gridPos = Position45.transformTo90(Position45.transformTo45(freePos, this.roomSize), this.roomSize);
+            const gridPos = await this.render.mainPeer.decoratePointerPosToElementPos(selectedID, freePos);
             selectedDisplay.setPosition(gridPos.x, gridPos.y);
-            this.render.mainPeer.updateDecorateElementReference(selectedID, gridPos.x, gridPos.y);
+            this.render.mainPeer.updateDecorateElementCanPlaceShow(selectedID, gridPos.x, gridPos.y);
         } else if (Math.abs(pointer.downX - pointer.x) < 5 * this.zoom && Math.abs(pointer.downY - pointer.y) < 5 * this.zoom) {
             // select
         } else {
