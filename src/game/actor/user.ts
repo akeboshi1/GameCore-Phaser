@@ -268,6 +268,7 @@ export class User extends Player {
         this.mRoomService.elementManager.checkElementAction(targetId);
         const needBroadcast = this.mRoomService.elementManager.checkActionNeedBroadcast(targetId);
         this.activeSprite(targetId, undefined, needBroadcast);
+        delete this.mMoveData.targetId;
     }
 
     public tryActiveAction(targetId: number, param?: any, needBroadcast?: boolean) {
