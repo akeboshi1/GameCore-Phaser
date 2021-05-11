@@ -712,7 +712,7 @@ class DecorateAction {
             this.target.setPosition(gridPos.x, gridPos.y);
             mng.room.addToWalkableMap(this.target);
             mng.room.game.renderPeer.setPosition(this.target.id, this.target.pos.x, this.target.pos.y);
-            mng.room.game.physicalPeer.setPosition(this.target.id, this.target.pos.x, this.target.pos.y);
+            // mng.room.game.physicalPeer.setPosition(this.target.id, this.target.pos.x, this.target.pos.y);
 
             if (mng.selectedID === this.target.id) {
                 mng.room.removeFromWalkableMap(this.target);
@@ -734,11 +734,11 @@ class DecorateAction {
             mng.room.removeFromWalkableMap(this.target);
             this.target.setDirection(dir);
             mng.room.addToWalkableMap(this.target);
-            mng.room.game.physicalPeer.updateModel({
-                id: this.target.id,
-                currentAnimation: this.target.currentAnimation
-            });
-            mng.room.game.physicalPeer.addBody(this.target.id);
+            // mng.room.game.physicalPeer.updateModel({
+            //     id: this.target.id,
+            //     currentAnimation: this.target.currentAnimation
+            // });
+            // mng.room.game.physicalPeer.addBody(this.target.id);
 
             if (mng.selectedID === this.target.id) {
                 mng.room.removeFromWalkableMap(this.target);

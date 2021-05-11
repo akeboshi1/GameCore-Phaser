@@ -2,7 +2,7 @@ import {op_def, op_virtual_world} from "pixelpai_proto";
 import {IElementManager} from "../element/element.manager";
 import {ISprite, PlayerState} from "structure";
 import {IPos} from "../../../utils/logic.pos";
-import {Element, IElement, InputEnable, MovePath} from "../element/element";
+import {Element, IElement, InputEnable} from "../element/element";
 import {DirectionChecker, Logger} from "utils";
 import {LayerEnum} from "game-capsule";
 import {PBpacket} from "net-socket-packet";
@@ -63,10 +63,10 @@ export class Player extends Element implements IElement {
             speed: model.speed,
         };
         // physic action
-        this.mRoomService.game.peer.physicalPeer.setModel(obj1)
-            .then(() => {
-                this.addBody();
-            });
+        // this.mRoomService.game.peer.physicalPeer.setModel(obj1)
+        //     .then(() => {
+        //         this.addBody();
+        //     });
     }
 
     public changeState(val?: string, times?: number) {
@@ -110,10 +110,6 @@ export class Player extends Element implements IElement {
         // this.mRoomService.playerManager.actor.stopBoxMove = false;
     }
 
-    public setPosition(pos: IPos) {
-        super.setPosition(pos);
-    }
-
     public completeMove() {
     }
 
@@ -149,14 +145,11 @@ export class Player extends Element implements IElement {
         this.setDirection(dir);
     }
 
-    protected async checkDirection() {
+    protected checkDirection() {
         const pos = this.moveControll.position;
         const prePos = this.moveControll.prePosition;
         const dir = DirectionChecker.check(prePos, pos);
         this.setDirection(dir);
-    }
-
-    protected preMoveComplete() {
     }
 
     protected get offsetY(): number {
@@ -170,6 +163,12 @@ export class Player extends Element implements IElement {
     }
 
     protected addBody() {
+    }
+
+    protected drawBody() {
+        super.drawBody();
+        const size = this.mRoomService.miniSize;
+        this.moveControll.setBodiesOffset({ x: 0, y: -size.tileHeight * 0.5 });
     }
 
     private mCheckStateHandle(val: string): boolean {

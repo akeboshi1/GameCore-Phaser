@@ -1,21 +1,22 @@
-import { IPos, LogicPos, IProjection, Logger } from "utils";
+import { IPos, LogicPos, IProjection, Logger, Position45, IPosition45Obj } from "utils";
 import { InputEnable } from "../element/element";
-import { MatterObject } from "../physical/matter.object";
 import { IRoomService } from "../room/room";
 import { IBlockObject } from "./iblock.object";
 import { ISprite } from "structure";
 import { op_def } from "pixelpai_proto";
+import { MoveControll } from "../../collsion";
 
-export abstract class BlockObject extends MatterObject implements IBlockObject {
+export abstract class BlockObject implements IBlockObject {
     public isUsed = false;
     protected mRenderable: boolean = false;
     protected mBlockable: boolean = false;
     protected mModel: ISprite;
     protected mInputEnable: InputEnable;
     protected mCreatedDisplay: boolean;
+    protected moveControll: MoveControll;
     constructor(id: number, protected mRoomService: IRoomService) {
-        super(id, mRoomService);
         this.isUsed = true;
+        if (id && this.mRoomService) this.moveControll = new MoveControll(id, this.mRoomService.collsionManager);
     }
 
     public async setRenderable(isRenderable: boolean, delay: number = 0): Promise<any> {
@@ -150,7 +151,7 @@ export abstract class BlockObject extends MatterObject implements IBlockObject {
         // Logger.getInstance().debug("removeDisplay ====>", this);
         this.mCreatedDisplay = false;
         if (!this.mRoomService) return;
-        this.removeBody();
+        // this.removeBody();
         return this.mRoomService.game.peer.render.removeBlockObject(this.id);
     }
 
@@ -179,6 +180,96 @@ export abstract class BlockObject extends MatterObject implements IBlockObject {
         if (this.mBlockable) {
             this.mRoomService.updateBlockObject(this);
         }
+    }
+
+    protected addBody() {
+        this.drawBody();
+    }
+
+    protected removeBody() {
+        if (!this.moveControll) return;
+        this.moveControll.removePolygon();
+    }
+
+    protected drawBody() {
+        if (!this.moveControll) return;
+        if (!this.mModel) return;
+        // super.addBody();
+        const collision = this.mModel.getCollisionArea();
+        if (!collision) {
+            // body = Bodies.circle(this._tempVec.x * this._scale, this._tempVec.y * this._scale, 10);
+            return;
+        }
+
+        const collisionArea = [...collision];
+        let walkableArea = this.mModel.getWalkableArea();
+        if (!walkableArea) {
+            walkableArea = [];
+        }
+
+        const cols = collisionArea.length;
+        const rows = collisionArea[0].length;
+        for (let i = 0; i < cols; i++) {
+            for (let j = 0; j < rows; j++) {
+                if (walkableArea[i] && walkableArea[i][j] === 1) {
+                    collisionArea[i][j] = 0;
+                }
+            }
+        }
+
+        const walkable = (val: number) => val === 0;
+        const resule = collisionArea.some((val: number[]) => val.some(walkable));
+        let paths = [];
+        const miniSize = this.mRoomService.miniSize;
+
+        if (resule) {
+            paths[0] = this.calcBodyPath(collisionArea, miniSize);
+        } else {
+            paths = [Position45.transformTo90(new LogicPos(0, 0), miniSize), Position45.transformTo90(new LogicPos(rows, 0), miniSize), Position45.transformTo90(new LogicPos(rows, cols), miniSize), Position45.transformTo90(new LogicPos(0, cols), miniSize)];
+        }
+        const origin = Position45.transformTo90(this.mModel.getOriginPoint(), miniSize);
+        this.moveControll.drawPolygon(paths, { x: -origin.x, y: -origin.y });
+    }
+
+    protected updateBody(model) {
+        // if (this.mRootMount) {
+        //     return;
+        // }
+        // super.updateBody(model);
+    }
+
+    private calcBodyPath(collisionArea: number[][], miniSize) {
+        const allpoints = this.prepareVertices(collisionArea).reduce((acc, p) => acc.concat(this.transformBodyPath(p[1], p[0], miniSize)), []);
+        const convexHull = require("monotone-convex-hull-2d");
+        const resultIndices = convexHull(allpoints);
+        return resultIndices.map((i) => ({ x: allpoints[i][0], y: allpoints[i][1] }));
+    }
+
+    private prepareVertices(collisionArea: number[][]): any[] {
+        const allpoints = [];
+        for (let i = 0; i < collisionArea.length; i++) {
+            let leftMost, rightMost;
+            for (let j = 0; j < collisionArea[i].length; j++) {
+                if (collisionArea[i][j] === 1) {
+                    if (!leftMost) {
+                        leftMost = [i, j];
+                        allpoints.push(leftMost);
+                    } else {
+                        rightMost = [i, j];
+                    }
+                }
+            }
+            if (rightMost) {
+                allpoints.push(rightMost);
+            }
+        }
+        return allpoints;
+    }
+
+    private transformBodyPath(x: number, y: number, miniSize: IPosition45Obj) {
+        const pos = Position45.transformTo90(new LogicPos(x, y), miniSize);
+        const result = [[pos.x, -miniSize.tileHeight * 0.5 + pos.y], [pos.x + miniSize.tileWidth * 0.5, pos.y], [pos.x, pos.y + miniSize.tileHeight * 0.5], [pos.x - miniSize.tileWidth * 0.5, pos.y]];
+        return result;
     }
 
     get id(): number {

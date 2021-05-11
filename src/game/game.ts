@@ -441,11 +441,11 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
     }
 
     get physicalPeer() {
-        const physicalPeer = this.peer.physicalPeer;
-        if (!physicalPeer) {
-            throw new Error("can't find physicalPeer");
-        }
-        return physicalPeer;
+        // const physicalPeer = this.peer.physicalPeer;
+        // if (!physicalPeer) {
+        //     throw new Error("can't find physicalPeer");
+        // }
+        throw new Error("physical has been discarded");
     }
 
     get avatarType() {
