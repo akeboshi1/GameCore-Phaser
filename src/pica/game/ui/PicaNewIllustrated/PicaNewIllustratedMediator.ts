@@ -314,7 +314,7 @@ export class PicaNewIllustratedMediator extends BasicMediator {
         const len = data.rewardItems.length;
         for (let i = 0; i < len; i++) {
             const needCount = data.subsection[i];
-            if (data.gotcount >= needCount && data.gotindex.indexOf(i) === -1) {
+            if (data.gotcount >= needCount && data.gotindex.indexOf(i+1) === -1) {
                 return true;
             }
         }

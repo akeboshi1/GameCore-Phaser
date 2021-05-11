@@ -283,6 +283,7 @@ export class PicaNewIllustratedPanel extends PicaBasePanel {
             let finish = false;
             for (const temp of combinations) {
                 finish = this.collectRewardsPanel.checkHasCombination(temp);
+                if (finish) break;
             }
             if (!finish) this.collectRewardsPanel.close();
         }
