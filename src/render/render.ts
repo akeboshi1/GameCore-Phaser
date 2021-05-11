@@ -562,7 +562,7 @@ export class Render extends RPCPeer implements GameMain, IRender {
         // this.mainPeer.destroy();
         // this.physicalPeer.destroy();
         return new Promise((resolve, reject) => {
-            this.destroyWorker([MAIN_WORKER, PHYSICAL_WORKER]).then(() => {
+            this.destroyWorker([MAIN_WORKER]).then(() => {
                 if (this.mGame) {
                     this.destroyManager();
                     this.mGame.events.off(Phaser.Core.Events.FOCUS, this.onFocus, this);
