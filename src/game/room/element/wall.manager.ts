@@ -1,8 +1,13 @@
-import {Helpers, IPos, Position45, Tool} from "utils";
+import {Helpers, IPos, Logger, Position45, Tool} from "utils";
 import {IRoomService} from "..";
 import {Wall} from "../wall/wall";
 import {Sprite} from "baseModel";
 import {LayerEnum} from "game-capsule";
+import {BaseDataConfigManager} from "picaWorker";
+import {AnimationModel, IDisplay} from "structure";
+import {SPRITE_SHEET_KEY} from "../../../editor/canvas/element/element.editor.resource.manager";
+import {IExtendCountablePackageItem} from "picaStructure";
+import * as sha1 from "simple-sha1";
 
 export class WallManager {
     private walls: Wall[];
@@ -41,7 +46,7 @@ export class WallManager {
     }
 
     // 在墙面上
-    isInWallRect(pos: IPos): boolean {
+    public isInWallRect(pos: IPos): boolean {
         for (const wall of this.walls) {
             const minX = wall.model.pos.x - this.roomService.roomSize.tileWidth * 0.5;
             const maxX = wall.model.pos.x + this.roomService.roomSize.tileWidth * 0.5;
@@ -55,7 +60,7 @@ export class WallManager {
     }
 
     // 靠墙
-    isAgainstWall(pos: IPos): boolean {
+    public isAgainstWall(pos: IPos): boolean {
         const pos45 = Position45.transformTo45(pos, this.roomService.roomSize);
         for (const wall of this.walls) {
             const wallPos45 = Position45.transformTo45(wall.model.pos, this.roomService.roomSize);
@@ -68,5 +73,32 @@ export class WallManager {
         }
 
         return false;
+    }
+
+    // 替换全部资源
+    public async changeAll(id: string) {
+        const configMgr = <BaseDataConfigManager> this.roomService.game.configManager;
+        const itemBase = await <IExtendCountablePackageItem> configMgr.getItemBaseByID(id);
+        if (!itemBase) {
+            Logger.getInstance().error("no config data, id: ", id);
+            return;
+        }
+        const anis = new Map();
+        for (const animation of itemBase.animations) {
+            anis.set(animation.aniName, animation);
+        }
+        for (const wall of this.walls) {
+            wall.load({
+                discriminator: "FramesModel",
+                id: wall.id,
+                gene: sha1.sync(itemBase.display.dataPath + itemBase.display.texturePath),
+                animations: anis,
+                animationName: "idle",
+                display: {
+                    texturePath: itemBase.display.texturePath,
+                    dataPath: itemBase.display.dataPath
+                }
+            });
+        }
     }
 }

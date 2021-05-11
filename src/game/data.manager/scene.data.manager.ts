@@ -163,6 +163,7 @@ export class SceneDataManager extends BasePacketHandler {
     private onExtraRoomInfoHandler(packge: PBpacket) {
         const content: ExtraRoomInfo = packge.content;
         this.cacheMgr.extraRoomInfo = content;
+        this.game.emitter.emit(EventType.UPDATE_EXTRA_ROOM_INFO, content);
     }
 
     get curRoomID() {

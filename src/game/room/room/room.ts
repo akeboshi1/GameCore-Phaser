@@ -1,6 +1,6 @@
 import { op_client, op_def, op_virtual_world } from "pixelpai_proto";
 import { PacketHandler, PBpacket } from "net-socket-packet";
-import { Handler, IPos, IPosition45Obj, Logger, LogicPos, Position45 } from "utils";
+import {EventDispatcher, Handler, IPos, IPosition45Obj, Logger, LogicPos, Position45} from "utils";
 import { Game } from "../../game";
 import { IBlockObject } from "../block/iblock.object";
 import { ClockReadyListener } from "../../loop/clock/clock";
@@ -14,7 +14,7 @@ import { IElement, InputEnable } from "../element/element";
 import { IViewBlockManager } from "../viewblock/iviewblock.manager";
 import { TerrainManager } from "../terrain/terrain.manager";
 import { SkyBoxManager } from "../sky.box/sky.box.manager";
-import { GameState, IScenery, ISprite, LoadState, ModuleName, SceneName } from "structure";
+import {EventType, GameState, IScenery, ISprite, LoadState, ModuleName, SceneName} from "structure";
 import { EffectManager } from "../effect/effect.manager";
 import { DecorateManager } from "../../../pica/game/room/decorate/decorate.manager";
 import { WallManager } from "../element/wall.manager";
@@ -23,6 +23,8 @@ import IActor = op_client.IActor;
 import NodeType = op_def.NodeType;
 import { RoomStateManager } from "../state/room.state.manager";
 import { BlockObject } from "../block/block.object";
+import {BasePacketHandler} from "../../data.manager";
+import {ExtraRoomInfo} from "custom_proto";
 
 export interface SpriteAddCompletedListener {
     onFullPacketReceived(sprite_t: op_def.NodeType): void;
@@ -173,12 +175,14 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
     }
 
     public addListen() {
+        this.mGame.emitter.on(EventType.UPDATE_EXTRA_ROOM_INFO, this.onExtraRoomInfoHandler, this);
         if (this.connection) {
             this.connection.addPacketListener(this);
         }
     }
 
     public removeListen() {
+        this.mGame.emitter.off(EventType.UPDATE_EXTRA_ROOM_INFO, this.onExtraRoomInfoHandler, this);
         if (this.connection) {
             this.connection.removePacketListener(this);
         }
@@ -1106,6 +1110,15 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
                     this.setState(state);
                     break;
             }
+        }
+    }
+
+    private onExtraRoomInfoHandler(content: ExtraRoomInfo) {
+        if (this.wallManager) {
+            this.wallManager.changeAll(content.wallId);
+        }
+        if (this.terrainManager) {
+            this.terrainManager.changeAll(content.floorId);
         }
     }
 

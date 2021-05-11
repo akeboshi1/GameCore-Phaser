@@ -4,6 +4,7 @@ export class EventType {
     public static PACKAGE_UPDATE = "PACKAGE_UPDATE"; // 背包更新
     public static UPDATE_PLAYER_INFO = "UPDATE_PLAYER_INFO"; // 更新玩家数据
     public static UPDATE_ROOM_INFO = "UPDATE_ROOM_INFO"; // 更新房间信息
+    public static UPDATE_EXTRA_ROOM_INFO = "UPDATE_EXTRA_ROOM_INFO"; // 更新额外房间信息
     public static UPDATE_PARTY_STATE = "UPDATE_PARTY_STATE"; // 刷新派对状态
     public static SEND_FURNITURE_REQUIREMENTS = "SEND_FURNITURE_REQUIREMENTS"; // 家具冻结修复材料
     public static SCENE_ELEMENT_DATA_UPDATE = "SCENE_ELEMENT_DATA_UPDATE";// 场景元素数据刷新

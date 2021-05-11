@@ -12,6 +12,10 @@ import { IDragonbonesModel } from "structure";
 import { EmptyTerrain } from "./empty.terrain";
 import { IPos, Logger, LogicPos } from "utils";
 import { IElementStorage, Sprite } from "baseModel";
+import {BaseDataConfigManager} from "picaWorker";
+import {IExtendCountablePackageItem} from "picaStructure";
+import * as sha1 from "simple-sha1";
+
 export class TerrainManager extends PacketHandler implements IElementManager {
     public hasAddComplete: boolean = false;
     protected mTerrains: Map<number, Terrain> = new Map<number, Terrain>();
@@ -165,6 +169,33 @@ export class TerrainManager extends PacketHandler implements IElementManager {
     public onDisplayCreated(id: number) {
     }
     public onDisplayRemoved(id: number) {
+    }
+
+    // 替换全部资源
+    public async changeAll(id: string) {
+        const configMgr = <BaseDataConfigManager> this.roomService.game.configManager;
+        const itemBase = await <IExtendCountablePackageItem> configMgr.getItemBaseByID(id);
+        if (!itemBase) {
+            Logger.getInstance().error("no config data, id: ", id);
+            return;
+        }
+        const anis = new Map();
+        for (const animation of itemBase.animations) {
+            anis.set(animation.aniName, animation);
+        }
+        this.mTerrains.forEach((terrain) => {
+            terrain.load({
+                discriminator: "FramesModel",
+                id: terrain.id,
+                gene: sha1.sync(itemBase.display.dataPath + itemBase.display.texturePath),
+                animations: anis,
+                animationName: "idle",
+                display: {
+                    texturePath: itemBase.display.texturePath,
+                    dataPath: itemBase.display.dataPath
+                }
+            });
+        });
     }
 
     protected onAdd(packet: PBpacket) {
