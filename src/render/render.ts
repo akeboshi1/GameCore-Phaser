@@ -112,7 +112,6 @@ export class Render extends RPCPeer implements GameMain, IRender {
     private mRoomMiniSize: IPosition45Obj;
 
     private mMainPeer: any;
-    private mPhysicalPeer: any;
     private isPause: boolean = false;
     private mConnectFailFunc: Function;
     private mGameCreatedFunc: Function;
@@ -153,17 +152,6 @@ export class Render extends RPCPeer implements GameMain, IRender {
             this.createGame();
             Logger.getInstance().debug("worker onReady");
         });
-        this.linkTo(PHYSICAL_WORKER, PHYSICAL_WORKER_URL).onceReady(() => {
-            this.mPhysicalPeer = this.remote[PHYSICAL_WORKER].PhysicalPeer;
-            this.mPhysicalPeer.setScaleRatio(Math.ceil(this.mConfig.devicePixelRatio || UiUtils.baseDpr));
-            this.mPhysicalPeer.start();
-            Logger.getInstance().debug("Physcialworker onReady");
-        });
-        // this.linkTo(HEARTBEAT_WORKER, HEARTBEAT_WORKER_URL).onceReady(() => {
-        //     this.mHeartPeer = this.remote[HEARTBEAT_WORKER].HeartBeatPeer;
-        //     this.mMainPeer.updateFps();
-        //     Logger.getInstance().debug("heartBeatworker onReady in Render");
-        // });
         // const len = 3;
         // const statList = [];
         // for (let i = 0; i < len; i++) {
@@ -188,7 +176,7 @@ export class Render extends RPCPeer implements GameMain, IRender {
     }
 
     get physicalPeer(): any {
-        return this.mPhysicalPeer;
+        throw new Error("physical has been discarded");
     }
 
     setKeyBoardHeight(height: number) {
@@ -500,12 +488,12 @@ export class Render extends RPCPeer implements GameMain, IRender {
                 this.createGame();
                 Logger.getInstance().debug("worker onReady");
             });
-            this.linkTo(PHYSICAL_WORKER, PHYSICAL_WORKER_URL).onceReady(() => {
-                this.mPhysicalPeer = this.remote[PHYSICAL_WORKER].PhysicalPeer;
-                this.mPhysicalPeer.setScaleRatio(Math.ceil(this.mConfig.devicePixelRatio || UiUtils.baseDpr));
-                this.mPhysicalPeer.start();
-                Logger.getInstance().debug("Physcialworker onReady");
-            });
+            // this.linkTo(PHYSICAL_WORKER, PHYSICAL_WORKER_URL).onceReady(() => {
+            //     this.mPhysicalPeer = this.remote[PHYSICAL_WORKER].PhysicalPeer;
+            //     this.mPhysicalPeer.setScaleRatio(Math.ceil(this.mConfig.devicePixelRatio || UiUtils.baseDpr));
+            //     this.mPhysicalPeer.start();
+            //     Logger.getInstance().debug("Physcialworker onReady");
+            // });
         });
     }
 
@@ -574,7 +562,7 @@ export class Render extends RPCPeer implements GameMain, IRender {
         // this.mainPeer.destroy();
         // this.physicalPeer.destroy();
         return new Promise((resolve, reject) => {
-            this.destroyWorker([MAIN_WORKER, PHYSICAL_WORKER]).then(() => {
+            this.destroyWorker([MAIN_WORKER]).then(() => {
                 if (this.mGame) {
                     this.destroyManager();
                     this.mGame.events.off(Phaser.Core.Events.FOCUS, this.onFocus, this);
@@ -841,12 +829,20 @@ export class Render extends RPCPeer implements GameMain, IRender {
     }
 
     @Export()
-    public changeLayer(id: number, layerName: string) {
+    public getIndexInLayer(id: number) {
+        if (!this.displayManager) return -1;
+        const display = this.displayManager.getDisplay(id);
+        if (!display) return -1;
+        return display.parentContainer.getIndex(display);
+    }
+
+    @Export()
+    public changeLayer(id: number, layerName: string, index?: number) {
         if (!this.displayManager) return;
         const display = this.displayManager.getDisplay(id);
         if (!display) return;
         display.parentContainer.remove(display);
-        this.displayManager.addToLayer(layerName, display);
+        this.displayManager.addToLayer(layerName, display, index);
     }
 
     @Export()

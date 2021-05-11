@@ -1,5 +1,5 @@
+import { IRoomService } from "gamecore";
 import {Grid, AStarFinder} from "pathfinding";
-import {ISizeChart} from "structure";
 import {Logger} from "./log";
 import {IPos, LogicPos} from "./logic.pos";
 import {Position45} from "./position45";
@@ -9,7 +9,7 @@ export class AStar {
     private finder: AStarFinder;
     private gridBackup: Grid;
 
-    constructor(private sizeChart: ISizeChart) {
+    constructor(private sizeChart: IRoomService) {
     }
 
     init(matrix: number[][]) {

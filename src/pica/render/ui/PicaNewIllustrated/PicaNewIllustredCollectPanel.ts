@@ -1,8 +1,9 @@
 import { GameGridTable, Button, ClickEvent } from "apowophaserui";
 import { Handler, i18n, Tool, UIHelper, Url, } from "utils";
-import { IGalleryCombination } from "picaStructure";
+import { IGalleryCollection, IGalleryCombination } from "picaStructure";
 import { UIAtlasName } from "picaRes";
 import { DynamicImage } from "gamecoreRender";
+import { UITools } from "../uitool";
 export class PicaIllustredCollectPanel extends Phaser.GameObjects.Container {
 
     private mGameGrid: GameGridTable;
@@ -124,6 +125,7 @@ class IllustratedCollectItem extends Phaser.GameObjects.Container {
     private rewardsBtn: Button;
     private itemIcon: DynamicImage;
     private collectTex: Phaser.GameObjects.Text;
+    private rewardRed: Phaser.GameObjects.Image;
     private dpr: number;
     private zoom: number;
     private send: Handler;
@@ -148,10 +150,11 @@ class IllustratedCollectItem extends Phaser.GameObjects.Container {
         this.rewardsBtn.x = this.width * 0.5 - 10 * this.dpr - this.rewardsBtn.width * 0.5;
         this.rewardsBtn.y = 0;
         this.rewardsBtn.on(ClickEvent.Tap, this.onRewardsHandler, this);
+        this.rewardRed = this.creatRedImge(scene, this.rewardsBtn, false);
         this.add([this.background, this.itemIcon, this.titleTex, this.desTex, this.collectTex, this.rewardsBtn]);
     }
 
-    public setCombinationData(data: IGalleryCombination) {
+    public setCombinationData(data: IGalleryCollection) {
         this.combiData = data;
         this.titleTex.text = data.name;
         this.desTex.text = data.des;
@@ -166,6 +169,7 @@ class IllustratedCollectItem extends Phaser.GameObjects.Container {
         this.collectTex.text = `${data.gotcount}/${data.requirement.length}`;
         this.collectTex.setColor(color);
         this.desTex.setColor(color);
+        this.rewardRed.visible = data.hasRewards;
 
     }
 
@@ -197,5 +201,13 @@ class IllustratedCollectItem extends Phaser.GameObjects.Container {
                 break;
         }
         return temps;
+    }
+    private creatRedImge(scene: Phaser.Scene, parent: Phaser.GameObjects.Container, left: boolean = true) {
+        const red = scene.make.image({ key: UIAtlasName.illustrate_new, frame: "illustrate_survey_lv_prompt_s" });
+        red.x = left ? -parent.width * 0.5 + red.width * 0.5 : parent.width * 0.5 - red.width * 0.5;
+        red.y = -parent.height * 0.5 + red.height * 0.5;
+        parent.add(red);
+        red.visible = false;
+        return red;
     }
 }

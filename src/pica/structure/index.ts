@@ -14,4 +14,3 @@ export * from "./icraftskill";
 export * from "./ilevel";
 export * from "./iquestgroup";
 export * from "./red.system.type";
-export * from "./temp.interface";

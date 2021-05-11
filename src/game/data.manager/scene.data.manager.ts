@@ -1,6 +1,7 @@
 import { PBpacket } from "net-socket-packet";
 import { BaseDataConfigManager } from "picaWorker";
 import { op_client } from "pixelpai_proto";
+import { ExtraRoomInfo } from "custom_proto";
 import { EventType, ModuleName, RoomType } from "structure";
 import { EventDispatcher, Logger } from "utils";
 import { CacheDataManager } from ".";
@@ -30,6 +31,7 @@ export class SceneDataManager extends BasePacketHandler {
         this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_UNLOCK_DONE, this.onUnlockDoneHandler);
         this.mEvent.on(EventType.SCENE_CHANGE, this.onSceneChangeHandler, this);
         this.proto.on("UPDATE_ROOM_INFO", this.onUpdateModeRoomInfo, this);
+        this.proto.on("ExtraRoomInfo", this.onExtraRoomInfoHandler, this);
         this.addPackListener();
     }
 
@@ -96,6 +98,7 @@ export class SceneDataManager extends BasePacketHandler {
         if (this.mCurRoom.ownerId !== this.game.user.userData.cid && this.mCurRoom.roomType === RoomType.ROOM) {
             this.mEvent.emit(EventType.SCENE_SHOW_UI, ModuleName.CUTINMENU_NAME, { button: [{ text: "survey" }] });
         }
+       // this.mEvent.emit(EventType.SCENE_SHOW_UI, ModuleName.CUTINMENU_NAME, { button: [{ text: "minecar" }] });
         this.showMainUI();
         this.mRoomID = room.roomId;
     }
@@ -158,6 +161,11 @@ export class SceneDataManager extends BasePacketHandler {
             this.game.emitter.emit(EventType.SCENE_SHOW_UI, ModuleName.PICAREPAIRCHOOSE_NAME, { id: content.eid, group });
     }
 
+    private onExtraRoomInfoHandler(packge: PBpacket) {
+        const content: ExtraRoomInfo = packge.content;
+        this.cacheMgr.extraRoomInfo = content;
+    }
+
     get curRoomID() {
         if (this.mCurRoom) return this.mCurRoom.roomId;
         return undefined;
@@ -175,7 +183,7 @@ export class SceneDataManager extends BasePacketHandler {
         }
         this.mEvent.emit(EventType.SCENE_SHOW_MAIN_UI, hideArr);
         // Logger.getInstance().log("hideArr ====>", hideArr);
-        if (this.mCurRoom.roomType === RoomType.EPISODE || this.mCurRoom.roomType === RoomType.DUNGEON) {
+        if (this.mCurRoom.roomType === RoomType.EPISODE) {
             this.mEvent.emit(EventType.SCENE_SHOW_UI, ModuleName.PICAEXPLORELOG_NAME);
             // this.isShowMainui = true;
         }
@@ -196,5 +204,9 @@ export class SceneDataManager extends BasePacketHandler {
         for (const item of items) {
             config.synItemBase(item);
         }
+    }
+
+    get cacheMgr() {
+        return this.game.getDataMgr<CacheDataManager>(DataMgrType.CacheMgr);
     }
 }

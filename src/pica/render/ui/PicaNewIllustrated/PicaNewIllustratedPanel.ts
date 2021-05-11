@@ -81,10 +81,11 @@ export class PicaNewIllustratedPanel extends PicaBasePanel {
         this.tempDatas["combinations"] = combinations;
         if (!this.mInitialized) return;
         if (this.detailPanel) this.detailPanel.setDisplayCollectDatas(combinations);
+        this.checkCollectRewards(combinations);
     }
     setAlreadyCollectDatas(combinations: IGalleryCombination[]) {
-        this.tempDatas["combinations"] = combinations;
-        this.alreadyCollectPanel.setCombinationDatas(combinations);
+        this.tempDatas["alreadycombinations"] = combinations;
+        if (this.alreadyCollectPanel) this.alreadyCollectPanel.setCombinationDatas(combinations);
     }
 
     setLevelGalleryGroups(groups: IGalleryLevelGroup[]) {
@@ -274,6 +275,17 @@ export class PicaNewIllustratedPanel extends PicaBasePanel {
     private updateCollectRewards(data: IGalleryCombination) {
         if (this.collectRewardsPanel && this.collectRewardsPanel.visible) {
             this.collectRewardsPanel.updateCombination(data);
+        }
+    }
+
+    private checkCollectRewards(combinations: IGalleryCombination[]) {
+        if (this.collectRewardsPanel && this.collectRewardsPanel.visible) {
+            let finish = false;
+            for (const temp of combinations) {
+                finish = this.collectRewardsPanel.checkHasCombination(temp);
+                if (finish) break;
+            }
+            if (!finish) this.collectRewardsPanel.close();
         }
     }
 
