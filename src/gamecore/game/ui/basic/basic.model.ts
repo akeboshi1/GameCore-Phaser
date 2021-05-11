@@ -7,7 +7,7 @@ export class BasicModel extends PacketHandler {
     protected event: EventDispatcher;
     constructor(protected game: Game) {
         super();
-        this.event = game.dataManager.emitter;
+        this.event = game.dataControlManager.emitter;
     }
 
     get connection(): Connection {

@@ -21,8 +21,8 @@ import { SoundWorkerManager } from "./sound.manager";
 import { CustomProtoManager } from "./custom.proto";
 import { IConnectListener } from "src/structure/net";
 import { ElementStorage } from "baseGame";
-import { ConfigPath } from "./config/config";
-import { DataManager, DataMgrType } from "./config";
+import { ConfigPath } from "./config/config/config";
+import { BaseDataControlManager, DataMgrType } from "./config";
 interface ISize {
     width: number;
     height: number;
@@ -40,7 +40,7 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
     protected mHttpClock: HttpClock;
     protected mHttpService: HttpService;
     protected mConfig: ILauncherConfig;
-    protected mDataManager: DataManager;
+    protected mDataControlManager: BaseDataControlManager;
     protected mGuideWorkerManager: GuideWorkerManager;
     protected mRoomManager: RoomManager;
     protected mElementStorage: ElementStorage;
@@ -313,7 +313,7 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
         return this.mConfig;
     }
     public getDataMgr<T>(type: DataMgrType) {
-        return this.dataManager.getDataMgr<T>(type);
+        return this.dataControlManager.getDataMgr<T>(type);
     }
     public clearClock() {
         if (this.mClock) {
@@ -415,8 +415,8 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
         return this.mLoadingManager;
     }
 
-    get dataManager(): DataManager {
-        return this.mDataManager;
+    get dataControlManager(): BaseDataControlManager {
+        return this.mDataControlManager;
     }
     // get configManager() {
     //     return this.mConfigManager;
@@ -425,8 +425,8 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
         return this.mHttpLoadManager;
     }
     get emitter(): EventDispatcher {
-        if (!this.mDataManager) return undefined;
-        return this.mDataManager.emitter;
+        if (!this.mDataControlManager) return undefined;
+        return this.mDataControlManager.emitter;
     }
 
     get user() {
@@ -685,7 +685,7 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
         if (!this.mHttpService) this.mHttpService = new HttpService(this);
         if (!this.mSoundManager) this.mSoundManager = new SoundWorkerManager(this);
         if (!this.mLoadingManager) this.mLoadingManager = new LoadingManager(this);
-        if (!this.mDataManager) this.mDataManager = new DataManager(this);
+        if (!this.mDataControlManager) this.mDataControlManager = new BaseDataControlManager(this);
         // if (!this.mConfigManager) this.mConfigManager = new BaseConfigManager(this, this.mConfigPath);
         if (!this.mNetWorkManager) this.mNetWorkManager = new NetworkManager(this);
         if (!this.mHttpLoadManager) this.mHttpLoadManager = new HttpLoadManager();
@@ -920,9 +920,9 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
                     this.mHttpLoadManager.destroy();
                     this.mHttpLoadManager = null;
                 }
-                if (this.mDataManager) {
-                    this.mDataManager.clear();
-                    this.mDataManager = null;
+                if (this.mDataControlManager) {
+                    this.mDataControlManager.clear();
+                    this.mDataControlManager = null;
                 }
                 if (this.mSoundManager) {
                     this.mSoundManager.destroy();

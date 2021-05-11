@@ -19,7 +19,7 @@ import { SoundWorkerManager } from "./sound.manager";
 import { CustomProtoManager } from "./custom.proto";
 import { IConnectListener } from "src/structure/net";
 import { ElementStorage } from "baseGame";
-import { DataManager, DataMgrType } from "./config";
+import { BaseDataControlManager, DataMgrType } from "./config";
 interface ISize {
     width: number;
     height: number;
@@ -36,7 +36,7 @@ export declare class Game extends PacketHandler implements IConnectListener, Clo
     protected mHttpClock: HttpClock;
     protected mHttpService: HttpService;
     protected mConfig: ILauncherConfig;
-    protected mDataManager: DataManager;
+    protected mDataControlManager: BaseDataControlManager;
     protected mGuideWorkerManager: GuideWorkerManager;
     protected mRoomManager: RoomManager;
     protected mElementStorage: ElementStorage;
@@ -113,7 +113,7 @@ export declare class Game extends PacketHandler implements IConnectListener, Clo
     get roomManager(): RoomManager;
     get guideWorkerManager(): GuideWorkerManager;
     get loadingManager(): LoadingManager;
-    get dataManager(): DataManager;
+    get dataControlManager(): BaseDataControlManager;
     get httpLoaderManager(): HttpLoadManager;
     get emitter(): EventDispatcher;
     get user(): User;
