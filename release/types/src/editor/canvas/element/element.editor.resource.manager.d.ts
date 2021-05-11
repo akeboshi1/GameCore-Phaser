@@ -1,3 +1,4 @@
+/// <reference types="tooqinggamephaser" />
 export declare const WEB_HOME_PATH: string;
 export declare const SPRITE_SHEET_KEY: string;
 export declare const IMAGE_BLANK_KEY: string;

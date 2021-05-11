@@ -1,3 +1,4 @@
+/// <reference types="tooqinggamephaser" />
 import { PropItem } from "./prop.item";
 export declare class MaterialItem extends PropItem {
     private mselect;

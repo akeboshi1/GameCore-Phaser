@@ -1,3 +1,4 @@
+/// <reference types="tooqinggamephaser" />
 export declare class TopDisplay {
     protected scene: Phaser.Scene;
     protected mFollows: Map<FollowEnum, FollowObject>;

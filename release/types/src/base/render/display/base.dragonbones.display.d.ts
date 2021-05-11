@@ -1,3 +1,4 @@
+/// <reference types="tooqinggamephaser" />
 import { IAvatar, IDragonbonesModel, RunningAnimation, DisplayField } from "structure";
 import { BaseDisplay } from "./base.display";
 export declare enum AvatarSlotNameTemp {

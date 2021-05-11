@@ -1,3 +1,4 @@
+/// <reference types="tooqinggamephaser" />
 import { BaseUI, ISoundGroup } from "apowophaserui";
 export declare class SoundButton extends BaseUI {
     protected soundGroup: any;

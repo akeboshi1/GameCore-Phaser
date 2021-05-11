@@ -1,3 +1,4 @@
+/// <reference types="tooqinggamephaser" />
 import { Render } from "../render";
 export declare class MotionManager {
     protected render: Render;
