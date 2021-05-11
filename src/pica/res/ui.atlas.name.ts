@@ -34,6 +34,7 @@ export class UIAtlasName {
     public static multiple_rooms = "multiple_rooms";
     public static decorateshop = "decorateshop";
     public static room_decorate = "room_decorate";
+    public static mine_new = "mine_new";
     public static jsonUrl(name: string) {
         return name + ".json";
     }

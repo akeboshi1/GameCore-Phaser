@@ -20,13 +20,14 @@ export class MatterWorld implements ChatCommandInterface, ISizeChart {
     // private elements: Map<number, MatterObject>;
 
     constructor(public peer: PhysicalPeer) {
+        throw new Error("matter world is deprecated");
         this.engine = Engine.create(undefined, { positionIterations: 8, velocityIterations: 10 });
         this.localWorld = this.engine.world;
         this.localWorld.gravity.x = 0;
         this.localWorld.gravity.y = 0;
         this.localWorld.scale = 0;
         this.ignoreSensors = new Map();
-        this.mAstar = new AStar(this);
+        // this.mAstar = new AStar(this);
         this.drawWall();
     }
 

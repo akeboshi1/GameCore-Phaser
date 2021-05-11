@@ -485,7 +485,7 @@ export class ElementManager extends PacketHandler implements IElementManager {
                 if (displayInfo) {
                     sprite.setDisplayInfo(displayInfo);
                     // 更新物理进程的物件/人物element
-                    this.mRoom.game.physicalPeer.updateAnimations(sprite);
+                    // this.mRoom.game.physicalPeer.updateAnimations(sprite);
                     return displayInfo;
                 }
             }
@@ -523,7 +523,7 @@ export class ElementManager extends PacketHandler implements IElementManager {
         const ele: Element = this.get(id);
         if (ele) ele.setPosition(new LogicPos(content.position.x, content.position.y, content.position.z));
 
-        this.mRoom.game.physicalPeer.setPosition(id, content.position.x, content.position.y, content.position.z);
+        // this.mRoom.game.physicalPeer.setPosition(id, content.position.x, content.position.y, content.position.z);
     }
 
     protected onRemove(packet: PBpacket) {
@@ -592,7 +592,8 @@ export class ElementManager extends PacketHandler implements IElementManager {
         const veloctiy = content.velocity;
         const len = content.length;
         this.mRoom.playerManager.actor.stopBoxMove = true;
-        this.mRoom.game.physicalPeer.setBaseVelocity(id, veloctiy.x, veloctiy.y);
+        throw new Error("todo");
+        // this.mRoom.game.physicalPeer.setBaseVelocity(id, veloctiy.x, veloctiy.y);
     }
 
     private onShowBubble(packet: PBpacket) {

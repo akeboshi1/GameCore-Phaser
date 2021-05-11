@@ -104,7 +104,7 @@ export class MotionManager {
                     this.clearGameObject();
                     return;
                 }
-                let targets = await this.render.physicalPeer.getInteractivePosition(id);
+                let targets = await this.render.mainPeer.getInteractivePosition(id);
                 if (!targets || targets.length === 0) {
                     const { x, y } = ele;
                     targets = [{ x, y }];
@@ -168,7 +168,7 @@ export class MotionManager {
             this.clearGameObject();
             return;
         }
-        let targets = await this.render.physicalPeer.getInteractivePosition(this.getMountId(id));
+        let targets = await this.render.mainPeer.getInteractivePosition(this.getMountId(id));
         if (!targets || targets.length === 0) {
             const { x, y } = ele;
             targets = [{ x, y }];
@@ -213,16 +213,16 @@ export class MotionManager {
     }
 
     private start(worldX: number, worldY: number, id?: number) {
-        this.render.physicalPeer.moveMotion(worldX, worldY, id);
+        this.render.mainPeer.moveMotion(worldX, worldY, id);
     }
 
     private movePath(x: number, y: number, z: number, targets: {}, id?: number) {
-        this.render.mainPeer.startFireMove({ x, y });
-        this.render.physicalPeer.findPath(targets, id);
+        this.render.mainPeer.findPath(targets, id);
+        // this.render.physicalPeer.findPath(targets, id);
     }
 
     private stop(pos: any) {
-        this.render.physicalPeer.stopMove(pos.x, pos.y);
+        this.render.mainPeer.stopMove(pos.x, pos.y);
     }
 
     private getPreUserPos(pointer): Phaser.Math.Vector2 {

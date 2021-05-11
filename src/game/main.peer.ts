@@ -2,24 +2,14 @@ import {RPCPeer, Export, webworker_rpc} from "webworker-rpc";
 import {op_gateway, op_virtual_world, op_client} from "pixelpai_proto";
 import {PBpacket, Buffer} from "net-socket-packet";
 import * as protos from "pixelpai_proto";
-import {ServerAddress} from "../../lib/net/address";
-import {Game} from "./game";
-import {IPos, Logger, LogicPos, Position45, Url} from "utils";
-import {
-    ILauncherConfig,
-    MAIN_WORKER,
-    RENDER_PEER,
-    ModuleName,
-    EventType,
-    PHYSICAL_WORKER,
-    PHYSICAL_WORKER_URL,
-    GameState
-} from "structure";
-import {PicaGame} from "picaWorker";
-import {DataMgrType} from "./data.manager/dataManager";
-import {SceneDataManager} from "./data.manager";
+import { ServerAddress } from "../../lib/net/address";
+import { Game } from "./game";
+import { IPos, Logger, LogicPos, Url } from "utils";
+import { ILauncherConfig, MAIN_WORKER, RENDER_PEER, ModuleName, EventType, GameState } from "structure";
+import { PicaGame } from "picaWorker";
+import { DataMgrType } from "./data.manager/dataManager";
+import { SceneDataManager } from "./data.manager";
 import version from "../../version";
-import {LayerEnum} from "game-capsule";
 
 for (const key in protos) {
     PBpacket.addProtocol(protos[key]);
@@ -35,7 +25,6 @@ export class MainPeer extends RPCPeer {
      * 主进程和render之间完全链接成功
      */
     private isReady: boolean = false;
-    private mPhysicalPeer: any;
     private delayTime: number = 15000;
     private reConnectCount: number = 0;
     private startDelay: any;
@@ -55,7 +44,7 @@ export class MainPeer extends RPCPeer {
     }
 
     get physicalPeer() {
-        return this.remote[PHYSICAL_WORKER].PhysicalPeer;
+        throw new Error("physical has been discarded");
     }
 
     set state(val) {
@@ -167,13 +156,6 @@ export class MainPeer extends RPCPeer {
         // const url: string = "/js/game" + "_v1.0.398";
         Logger.getInstance().debug("render link onReady");
         this.game.createGame(this.mConfig);
-        this.linkTo(PHYSICAL_WORKER, PHYSICAL_WORKER_URL).onceReady(() => {
-            this.mPhysicalPeer = this.remote[PHYSICAL_WORKER].PhysicalPeer;
-            Logger.getInstance().debug("Physcialworker onReady");
-            // this.linkTo(HEARTBEAT_WORKER, HEARTBEAT_WORKER_URL).onceReady(() => {
-            //     Logger.getInstance().debug("heartBeatworker onReady in mainworker");
-            // });
-        });
     }
 
     @Export()
@@ -448,7 +430,7 @@ export class MainPeer extends RPCPeer {
 
     @Export()
     public syncPosition(targetPoint) {
-        this.game.user.syncPosition(targetPoint);
+        this.game.user.syncPosition();
     }
 
     @Export([webworker_rpc.ParamType.num])
@@ -548,6 +530,20 @@ export class MainPeer extends RPCPeer {
     @Export()
     public startFireMove(pointer: any) {
         if (this.game.user) this.game.user.startFireMove(pointer);
+    }
+
+    @Export()
+    public findPath(targets: [], targetId?: number, toReverse: boolean = false) {
+        if (this.game.user) this.game.user.findPath(targets, targetId, toReverse);
+    }
+
+    @Export([webworker_rpc.ParamType.num])
+    public getInteractivePosition(id: number) {
+        const room = this.game.roomManager.currentRoom;
+        if (!room) return;
+        const ele = room.getElement(id);
+        if (!ele) return;
+        return ele.getInteractivePositionList();
     }
 
     @Export([webworker_rpc.ParamType.num])
@@ -693,11 +689,11 @@ export class MainPeer extends RPCPeer {
     @Export([webworker_rpc.ParamType.num, webworker_rpc.ParamType.boolean])
     public tryStopMove(id: number, interactiveBoo: boolean, targetId?: number, stopPos?: any) {
         if (this.game.user) {
-            const room = this.game.roomManager.currentRoom;
-            this.game.user.tryStopMove({targetId, interactiveBoo: false, stopPos});
-            room.elementManager.checkElementAction(targetId);
-            const needBroadcast = room.elementManager.checkActionNeedBroadcast(targetId);
-            if (interactiveBoo) this.game.user.activeSprite(targetId, undefined, needBroadcast);
+            // const room = this.game.roomManager.currentRoom;
+            // this.game.user.tryStopMove({ targetId, interactiveBoo: false, stopPos });
+            // room.elementManager.checkElementAction(targetId);
+            // const needBroadcast = room.elementManager.checkActionNeedBroadcast(targetId);
+            // if (interactiveBoo) this.game.user.activeSprite(targetId, undefined, needBroadcast);
         }
     }
 
@@ -727,12 +723,13 @@ export class MainPeer extends RPCPeer {
         return ele.removeMount(target, stopPos);
     }
 
-    @Export([webworker_rpc.ParamType.num])
-    public stopMove(id: number) {
-        const ele = this.game.roomManager.currentRoom.getElement(id);
-        if (ele) {
-            ele.stopMove();
-        }
+    @Export([webworker_rpc.ParamType.num, webworker_rpc.ParamType.num])
+    public stopMove(x: number, y: number) {
+        // const ele = this.game.roomManager.currentRoom.getElement(id);
+        // if (ele) {
+        //     ele.stopMove();
+        // }
+        this.game.user.stopMove(new LogicPos(x, y));
     }
 
     @Export([webworker_rpc.ParamType.str])
@@ -763,6 +760,11 @@ export class MainPeer extends RPCPeer {
     public setConfig(config: ILauncherConfig) {
         this.mConfig = config;
         this.game.setConfig(config);
+    }
+
+    @Export([webworker_rpc.ParamType.num, webworker_rpc.ParamType.num])
+    public moveMotion(x: number, y: number) {
+        this.game.user.moveMotion(x, y);
     }
 
     // ==== todo

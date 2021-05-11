@@ -73,7 +73,7 @@
     "receivereward": "领取奖励",
     "received": "已领取",
     "rarity": "稀有",
-    "leave":"离开"
+    "leave": "离开"
   },
   "quantityunit": {
     "k": "千",
@@ -129,9 +129,11 @@
     "synthesis": "合成",
     "confirmation": "确认要合成{{name}}吗？"
   },
-  "minesettle": {
+  "mine": {
     "settle": "获得物品",
-    "savebag": "存入背包"
+    "savebag": "存入背包",
+    "integraltips": "本次积分:",
+    "proptips": "道具栏"
   },
   "equipupgrade": {
     "title": "装备"
