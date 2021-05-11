@@ -118,3 +118,5 @@ export * from "./ui/PicaNewIllustrated/PicaNewIllustrated";
 export * from "./ui/PicaNewIllustrated/PicaNewIllustratedMediator";
 export * from "./ui/PicaRoomDecorate/PicaRoomDecorate";
 export * from "./ui/PicaRoomDecorate/PicaRoomDecorateMediator";
+export * from "./ui/PicaNewMine/PicaNewMine";
+export * from "./ui/PicaNewMine/PicaNewMineMediator";

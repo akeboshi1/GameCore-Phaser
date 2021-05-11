@@ -67,7 +67,7 @@ export class SceneDataManager extends BasePacketHandler {
             list.push(sk);
         });
 
-        this.mEvent.emit(EventType.SCENE_SHOW_UI, ModuleName.PICACOMPOSE_NAME, { skills: list });
+       // this.mEvent.emit(EventType.SCENE_SHOW_UI, ModuleName.PICACOMPOSE_NAME, { skills: list });
     }
 
     private on_SEND_GIFT_DATA(packet: PBpacket) {
@@ -98,6 +98,7 @@ export class SceneDataManager extends BasePacketHandler {
         if (this.mCurRoom.ownerId !== this.game.user.userData.cid && this.mCurRoom.roomType === RoomType.ROOM) {
             this.mEvent.emit(EventType.SCENE_SHOW_UI, ModuleName.CUTINMENU_NAME, { button: [{ text: "survey" }] });
         }
+        this.mEvent.emit(EventType.SCENE_SHOW_UI, ModuleName.CUTINMENU_NAME, { button: [{ text: "minecar" }] });
         this.showMainUI();
         this.mRoomID = room.roomId;
     }
@@ -183,7 +184,7 @@ export class SceneDataManager extends BasePacketHandler {
         }
         this.mEvent.emit(EventType.SCENE_SHOW_MAIN_UI, hideArr);
         // Logger.getInstance().log("hideArr ====>", hideArr);
-        if (this.mCurRoom.roomType === RoomType.EPISODE || this.mCurRoom.roomType === RoomType.DUNGEON) {
+        if (this.mCurRoom.roomType === RoomType.EPISODE) {
             this.mEvent.emit(EventType.SCENE_SHOW_UI, ModuleName.PICAEXPLORELOG_NAME);
             // this.isShowMainui = true;
         }
