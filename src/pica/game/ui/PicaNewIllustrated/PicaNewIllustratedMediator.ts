@@ -307,6 +307,10 @@ export class PicaNewIllustratedMediator extends BasicMediator {
                 temp.hasRewards = this.collectHaveRewards(temp);
             }
         }
+        datas.sort((a, b) => {
+            if (a.hasRewards) return -1;
+            else return 1;
+        });
         return datas;
     }
 
@@ -314,7 +318,7 @@ export class PicaNewIllustratedMediator extends BasicMediator {
         const len = data.rewardItems.length;
         for (let i = 0; i < len; i++) {
             const needCount = data.subsection[i];
-            if (data.gotcount >= needCount && data.gotindex.indexOf(i+1) === -1) {
+            if (data.gotcount >= needCount && data.gotindex.indexOf(i + 1) === -1) {
                 return true;
             }
         }

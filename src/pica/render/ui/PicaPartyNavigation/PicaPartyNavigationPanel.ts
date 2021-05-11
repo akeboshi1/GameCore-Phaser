@@ -540,3 +540,30 @@ class SignProgressItem extends Phaser.GameObjects.Container {
         if (this.receiveHandler) this.receiveHandler.runWith([this.index, this]);
     }
 }
+class TooQingChangeOption extends Phaser.GameObjects.Container {
+    protected leftBtn: Button;
+    protected rightBtn: Button;
+    protected send: Handler;
+    constructor(scene: Phaser.Scene, dpr: number) {
+        super(scene);
+        this.leftBtn = new Button(scene, UIAtlasName.map, "map_nav_picktown", "map_nav_picktown", i18n.t("partynav.pica"), undefined, dpr);
+        this.rightBtn = new Button(scene, UIAtlasName.map, "map_nav_tooqing", "map_nav_picktown", i18n.t("partynav.tooqing"), undefined, dpr);
+        const width = this.leftBtn.width + this.rightBtn.width - 14 * dpr;
+        this.leftBtn.x = -this.leftBtn.width * 0.5 + 7 * dpr;
+        this.rightBtn.x = this.rightBtn.width * 0.5 - 7 * dpr;
+        this.leftBtn.on(ClickEvent.Tap, this.onLeftHandler, this);
+        this.rightBtn.on(ClickEvent.Tap, this.onRightHandler, this);
+        this.setSize(width, this.leftBtn.height);
+        this.add([this.leftBtn, this.rightBtn]);
+    }
+
+    setOptionDatas(left: any, right: any) {
+
+    }
+    private onLeftHandler() {
+
+    }
+    private onRightHandler() {
+
+    }
+}
