@@ -67,7 +67,7 @@ export class SceneDataManager extends BasePacketHandler {
             list.push(sk);
         });
 
-        this.mEvent.emit(EventType.SCENE_SHOW_UI, ModuleName.PICACOMPOSE_NAME, { skills: list });
+       // this.mEvent.emit(EventType.SCENE_SHOW_UI, ModuleName.PICACOMPOSE_NAME, { skills: list });
     }
 
     private on_SEND_GIFT_DATA(packet: PBpacket) {
