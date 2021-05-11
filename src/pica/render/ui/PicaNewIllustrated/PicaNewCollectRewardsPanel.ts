@@ -105,7 +105,7 @@ export class PicaNewCollectRewardsPanel extends Phaser.GameObjects.Container {
                     cellContainer = new CollectRewardsItem(this.scene, cellWidth, cellHeight, this.dpr, this.zoom);
                     cellContainer.setHandler(this.send);
                 }
-                cellContainer.setCombinationData(this.combinations, index);
+                cellContainer.setCombinationData(this.combinations, index+1);
                 cell.setHeight(cellContainer.height);
                 return cellContainer;
             },
@@ -182,10 +182,10 @@ class CollectRewardsItem extends Phaser.GameObjects.Container {
 
     public setCombinationData(data: IGalleryCombination, indexed: number) {
         this.combiData = data;
-        this.indexed = indexed + 1;
+        this.indexed = indexed;
         this.titleTex.text = data.name;
         this.desTex.text = data.des;
-        const itemData: any = data.rewardItems[indexed];
+        const itemData: any = data.rewardItems[indexed-1];
         const url = Url.getOsdRes(itemData.texturePath);
         this.itemIcon.load(url);
         this.itemIcon.scale = this.dpr / this.zoom;
@@ -200,7 +200,7 @@ class CollectRewardsItem extends Phaser.GameObjects.Container {
         const difficults = this.getbgName(data.difficult);
         const color = difficults[0];
         this.background.setFrame(difficults[1]);
-        const subsection = data.subsection[indexed];
+        const subsection = data.subsection[indexed-1];
         this.collectTex.text = `${data.gotcount}/${subsection}`;
         this.collectTex.setColor(color);
         this.desTex.setColor(color);
