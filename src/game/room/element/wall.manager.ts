@@ -1,4 +1,4 @@
-import {Helpers, IPos, Logger, Position45, Tool} from "utils";
+import {Helpers, IPos, Logger, LogicPos, Position45, Tool} from "utils";
 import {IRoomService} from "..";
 import {Wall} from "../wall/wall";
 import {Sprite} from "baseModel";
@@ -61,8 +61,9 @@ export class WallManager {
     }
 
     // 靠墙
-    public isAgainstWall(pos: IPos): boolean {
-        const pos45 = Position45.transformTo45(pos, this.roomService.roomSize);
+    public isAgainstWall(pos: IPos, originPoint: IPos): boolean {
+        const origin90 = Position45.transformTo90(originPoint, this.roomService.miniSize);
+        const pos45 = Position45.transformTo45(new LogicPos(pos.x - origin90.x, pos.y - origin90.y), this.roomService.roomSize);
         for (const wall of this.walls) {
             const wallPos45 = wall.model.pos;
             if (wallPos45.x === pos45.x + 1 ||
