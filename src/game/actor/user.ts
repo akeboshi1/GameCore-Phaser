@@ -163,6 +163,7 @@ export class User extends Player {
         if (!targetPos) {
             return Promise.resolve(this);
         }
+        this.addBody();
         this.unmountSprite(mountID, targetPos);
         return Promise.resolve(this);
     }
