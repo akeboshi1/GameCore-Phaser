@@ -304,7 +304,7 @@ export class DecorateManager {
             return val.key !== undefined && val.key === "againstWall";
         }) >= 0) {
             // 立地靠墙家具
-            if (!this.room.wallManager.isAgainstWall(tempPos)) {
+            if (!this.room.wallManager.isAgainstWall(tempPos, element.model.getOriginPoint())) {
                 canPlace = false;
             }
         } else {
