@@ -68,8 +68,13 @@ export class MoveControll {
             vectors.push(new SAT.Vector(p.x, p.y));
         }
         this.mBodies = new SAT.Polygon(new SAT.Vector(this.mPosition.x, this.mPosition.y), vectors);
-        if (offset) this.mBodies.setOffset(new SAT.Vector(-offset.x, -offset.y));
+        if (offset) this.setBodiesOffset(offset);
         this.collsion.add(this.id, this.mBodies);
+    }
+
+    setBodiesOffset(offset: IPos) {
+        if (!this.mBodies) return;
+        this.mBodies.setOffset(new SAT.Vector(offset.x, offset.y));
     }
 
     public removePolygon() {

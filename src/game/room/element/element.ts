@@ -157,7 +157,6 @@ export class Element extends BlockObject implements IElement {
     protected mDirty: boolean = false;
     protected mCreatedDisplay: boolean = false;
     protected isUser: boolean = false;
-    protected moveControll: MoveControll;
     protected mStateManager: ElementStateManager;
     protected mTopDisplay: any;
     protected mTarget;
@@ -171,7 +170,6 @@ export class Element extends BlockObject implements IElement {
             return;
         }
         this.mId = sprite.id;
-        this.moveControll = new MoveControll(this.id, this.mRoomService.collsionManager);
         this.model = sprite;
     }
 
@@ -594,6 +592,7 @@ export class Element extends BlockObject implements IElement {
         }
         this.mDirty = true;
         this.removeFromWalkableMap();
+        this.removeBody();
         return this;
     }
 
@@ -871,93 +870,12 @@ export class Element extends BlockObject implements IElement {
         this.mElementManager.roomService.game.renderPeer.displayAnimationChange(data);
     }
 
-    protected addBody() {
-        this.drawBody();
-    }
-
     protected drawBody() {
-        if (!this.moveControll) return;
         if (this.mRootMount) {
             this.moveControll.removePolygon();
             return;
         }
-        if (!this.mModel) return;
-        // super.addBody();
-        const collision = this.mModel.getCollisionArea();
-        if (!collision) {
-            // body = Bodies.circle(this._tempVec.x * this._scale, this._tempVec.y * this._scale, 10);
-            return;
-        }
-
-        const collisionArea = [...collision];
-        let walkableArea = this.mModel.getWalkableArea();
-        if (!walkableArea) {
-            walkableArea = [];
-        }
-
-        const cols = collisionArea.length;
-        const rows = collisionArea[0].length;
-        for (let i = 0; i < cols; i++) {
-            for (let j = 0; j < rows; j++) {
-                if (walkableArea[i] && walkableArea[i][j] === 1) {
-                    collisionArea[i][j] = 0;
-                }
-            }
-        }
-
-        const walkable = (val: number) => val === 0;
-        const resule = collisionArea.some((val: number[]) => val.some(walkable));
-        let paths = [];
-        const miniSize = this.mRoomService.miniSize;
-
-        if (resule) {
-            paths[0] = this.calcBodyPath(collisionArea, miniSize);
-        } else {
-            paths = [Position45.transformTo90(new LogicPos(0, 0), miniSize), Position45.transformTo90(new LogicPos(rows, 0), miniSize), Position45.transformTo90(new LogicPos(rows, cols), miniSize), Position45.transformTo90(new LogicPos(0, cols), miniSize)];
-        }
-        const origin = Position45.transformTo90(this.mModel.getOriginPoint(), miniSize);
-        this.moveControll.drawPolygon(paths, origin);
-    }
-
-    protected updateBody(model) {
-        // if (this.mRootMount) {
-        //     return;
-        // }
-        // super.updateBody(model);
-    }
-
-    private calcBodyPath(collisionArea: number[][], miniSize) {
-        const allpoints = this.prepareVertices(collisionArea).reduce((acc, p) => acc.concat(this.transformBodyPath(p[1], p[0], miniSize)), []);
-        const convexHull = require("monotone-convex-hull-2d");
-        const resultIndices = convexHull(allpoints);
-        return resultIndices.map((i) => ({ x: allpoints[i][0], y: allpoints[i][1] }));
-    }
-
-    private prepareVertices(collisionArea: number[][]): any[] {
-        const allpoints = [];
-        for (let i = 0; i < collisionArea.length; i++) {
-            let leftMost, rightMost;
-            for (let j = 0; j < collisionArea[i].length; j++) {
-                if (collisionArea[i][j] === 1) {
-                    if (!leftMost) {
-                        leftMost = [i, j];
-                        allpoints.push(leftMost);
-                    } else {
-                        rightMost = [i, j];
-                    }
-                }
-            }
-            if (rightMost) {
-                allpoints.push(rightMost);
-            }
-        }
-        return allpoints;
-    }
-
-    private transformBodyPath(x: number, y: number, miniSize: IPosition45Obj) {
-        const pos = Position45.transformTo90(new LogicPos(x, y), miniSize);
-        const result = [[pos.x, -miniSize.tileHeight * 0.5 + pos.y], [pos.x + miniSize.tileWidth * 0.5, pos.y], [pos.x, pos.y + miniSize.tileHeight * 0.5], [pos.x - miniSize.tileWidth * 0.5, pos.y]];
-        return result;
+        super.drawBody();
     }
 
     private _startMove(points: any) {

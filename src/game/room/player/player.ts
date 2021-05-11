@@ -165,6 +165,12 @@ export class Player extends Element implements IElement {
     protected addBody() {
     }
 
+    protected drawBody() {
+        super.drawBody();
+        const size = this.mRoomService.miniSize;
+        this.moveControll.setBodiesOffset({ x: 0, y: -size.tileHeight * 0.5 });
+    }
+
     private mCheckStateHandle(val: string): boolean {
         return true;
     }
