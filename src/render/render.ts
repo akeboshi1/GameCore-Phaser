@@ -841,12 +841,20 @@ export class Render extends RPCPeer implements GameMain, IRender {
     }
 
     @Export()
-    public changeLayer(id: number, layerName: string) {
+    public getIndexInLayer(id: number) {
+        if (!this.displayManager) return -1;
+        const display = this.displayManager.getDisplay(id);
+        if (!display) return -1;
+        return display.parentContainer.getIndex(display);
+    }
+
+    @Export()
+    public changeLayer(id: number, layerName: string, index?: number) {
         if (!this.displayManager) return;
         const display = this.displayManager.getDisplay(id);
         if (!display) return;
         display.parentContainer.remove(display);
-        this.displayManager.addToLayer(layerName, display);
+        this.displayManager.addToLayer(layerName, display, index);
     }
 
     @Export()

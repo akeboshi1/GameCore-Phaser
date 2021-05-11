@@ -21,6 +21,7 @@ export class DecorateManager {
     private mActionQueue: DecorateAction[] = [];
     private mSelectedActionQueue: DecorateAction[] = [];
     private mSelectedID: number = -1;
+    private mSelectedSortIndex: number = -1;
     private mElementCreatedResolver: Map<number, ValueResolver<any>> = new Map();
 
     constructor(private mRoom: Room, private mEntryData?: { id: number, baseID?: string }) {
@@ -78,7 +79,7 @@ export class DecorateManager {
             const baseID = this.getBaseIDBySN(sprite.sn);
             if (baseID === "") {
                 Logger.getInstance().error("can not find data from config : ", sprite);
-                this.room.game.renderPeer.showAlertView("can not find data from config : " + sprite.nickname);
+                // this.room.game.renderPeer.showAlertView("can not find data from config : " + sprite.nickname);
                 return;
             }
             for (const act of acts) {
@@ -184,7 +185,7 @@ export class DecorateManager {
     }
 
     // 选择某一物件 call by motion
-    public select(id: number) {
+    public async select(id: number) {
         if (id < 0) {
             this.reverseSelected();
             return;
@@ -213,6 +214,7 @@ export class DecorateManager {
         this.mRoom.removeFromWalkableMap(element.model);
 
         // 排序
+        this.mSelectedSortIndex = await this.mRoom.game.renderPeer.getIndexInLayer(id);
         this.mRoom.game.renderPeer.changeLayer(id, LayerName.DECORATE);
 
         const checkData = this.checkCanPlace(this.selectedID);
@@ -235,7 +237,7 @@ export class DecorateManager {
         const baseID = this.getBaseIDBySN(element.model.sn);
         if (baseID === "") {
             Logger.getInstance().error("can not find data from config : ", element.model);
-            this.room.game.renderPeer.showAlertView("can not find data from config : " + element.model.nickname);
+            // this.room.game.renderPeer.showAlertView("can not find data from config : " + element.model.nickname);
             return;
         }
         this.mRoom.game.emitter.emit(MessageType.DECORATE_SELECTE_ELEMENT, baseID);
@@ -250,7 +252,8 @@ export class DecorateManager {
             this.mRoom.addToWalkableMap(element.model);
 
             // 排序
-            this.mRoom.game.renderPeer.changeLayer(element.model.id, element.model.layer.toString());
+            this.mRoom.game.renderPeer.changeLayer(element.model.id, element.model.layer.toString(), this.mSelectedSortIndex);
+            this.mSelectedSortIndex = -1;
 
             // set alpha
             element.setAlpha(1);
@@ -298,7 +301,7 @@ export class DecorateManager {
             // 墙饰
             canPlace = this.room.wallManager.isInWallRect(tempPos);
         } else if (element.model.attrs.findIndex((val) => {
-            return val.key !== undefined && val.key === "besideWall";
+            return val.key !== undefined && val.key === "againstWall";
         }) >= 0) {
             // 立地靠墙家具
             if (!this.room.wallManager.isAgainstWall(tempPos)) {
@@ -318,7 +321,7 @@ export class DecorateManager {
     public limitPointerPosition(id: number, pos: IPos) {
         const element = this.mRoom.elementManager.get(id);
         if (!element) return null;
-        const roomSize = this.mRoom.roomSize;
+        const roomSize = this.mRoom.miniSize;
 
         if (element.model.layer === LayerEnum.Unknown) {
             // todo: change to new enum
@@ -386,7 +389,7 @@ export class DecorateManager {
         const typeData = await <any> this.getPIData(baseID);
         if (!typeData) {
             Logger.getInstance().error("no config data, id: ", baseID);
-            this.room.game.renderPeer.showAlertView("no config data, id: " + baseID);
+            // this.room.game.renderPeer.showAlertView("no config data, id: " + baseID);
             return;
         }
         // TODO: 此随机方式有重复id的可能
@@ -494,12 +497,8 @@ export class DecorateManager {
         const temp = configMgr.getItemBaseBySN(sn);
         if (temp) return temp.id;
         else {
-            // Logger.getInstance().error("cannot find data of sn: ", sn);
-            // const tempdata = {
-            //     text: [{text: "cannot find data of sn: " + sn, node: undefined}]
-            // };
-            // this.room.game.showMediator(ModuleName.PICANOTICE_NAME, true, tempdata);
-            this.room.game.renderPeer.showAlertView("cannot find data of sn: " + sn);
+            Logger.getInstance().error("cannot find data of sn: ", sn);
+            // this.room.game.renderPeer.showAlertView("cannot find data of sn: " + sn);
             return "";
         }
     }
@@ -675,7 +674,7 @@ class DecorateAction {
                 const baseID = mng.getBaseIDBySN(this.target.sn);
                 if (baseID === "") {
                     Logger.getInstance().error("can not find data from config : ", this.target);
-                    mng.room.game.renderPeer.showAlertView("can not find data from config : " + this.target.nickname);
+                    // mng.room.game.renderPeer.showAlertView("can not find data from config : " + this.target.nickname);
                     return;
                 }
                 const newCount = mng.setBagCount(baseID, -1);
@@ -693,7 +692,7 @@ class DecorateAction {
             const baseID = mng.getBaseIDBySN(this.target.sn);
             if (baseID === "") {
                 Logger.getInstance().error("can not find data from config : ", this.target);
-                mng.room.game.renderPeer.showAlertView("can not find data from config : " + this.target.nickname);
+                // mng.room.game.renderPeer.showAlertView("can not find data from config : " + this.target.nickname);
                 return;
             }
             const newCount = mng.setBagCount(baseID, 1);
@@ -706,10 +705,10 @@ class DecorateAction {
     private setElementPos(mng: DecorateManager, x: number, y: number) {
         return new Promise<any>((resolve, reject) => {
             const freePos = new LogicPos(x, y);
-            const gridPos = Position45.transformTo90(Position45.transformTo45(freePos, mng.room.miniSize), mng.room.miniSize);
+            // const gridPos = Position45.transformTo90(Position45.transformTo45(freePos, mng.room.miniSize), mng.room.miniSize);
 
             mng.room.removeFromWalkableMap(this.target);
-            this.target.setPosition(gridPos.x, gridPos.y);
+            this.target.setPosition(freePos.x, freePos.y);
             mng.room.addToWalkableMap(this.target);
             mng.room.game.renderPeer.setPosition(this.target.id, this.target.pos.x, this.target.pos.y);
             mng.room.game.physicalPeer.setPosition(this.target.id, this.target.pos.x, this.target.pos.y);

@@ -225,13 +225,13 @@ export class DisplayManager {
         return display;
     }
 
-    public addToLayer(layerName: string, display: FramesDisplay | DragonbonesDisplay) {
+    public addToLayer(layerName: string, display: FramesDisplay | DragonbonesDisplay, index?: number) {
         const scene: PlayScene = <PlayScene>this.sceneManager.getMainScene();
         if (!scene) {
             Logger.getInstance().fatal(`scene does not exist`);
             return;
         }
-        scene.layerManager.addToLayer(layerName, display);
+        scene.layerManager.addToLayer(layerName, display, index);
     }
 
     public removeDisplay(displayID: number): void {
