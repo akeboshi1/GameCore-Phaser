@@ -1,6 +1,7 @@
 import { UIManager } from "./ui/ui.manager";
 import { PBpacket, PacketHandler } from "net-socket-packet";
 import { op_def } from "pixelpai_proto";
+import { Lite } from "game-capsule";
 import { HttpLoadManager } from "utils";
 import { Connection, GameSocket } from "./net/connection";
 import { Clock, ClockReadyListener } from "./loop/clock/clock";
@@ -11,8 +12,6 @@ import { ILauncherConfig, EventDispatcher, IConfigPath } from "structure";
 import { IRoomService } from "./room";
 import { RoomManager } from "./room/room.manager";
 import { User } from "./actor/user";
-import { DataManager } from "./data.manager/dataManager";
-import { BaseConfigManager, DataMgrType } from "./data.manager";
 import { NetworkManager } from "./command";
 import { MainPeer } from "./main.peer";
 import { GuideWorkerManager } from "./guide.manager";
@@ -20,6 +19,7 @@ import { SoundWorkerManager } from "./sound.manager";
 import { CustomProtoManager } from "./custom.proto";
 import { IConnectListener } from "src/structure/net";
 import { ElementStorage } from "baseGame";
+import { DataManager, DataMgrType } from "./config";
 interface ISize {
     width: number;
     height: number;
@@ -43,7 +43,6 @@ export declare class Game extends PacketHandler implements IConnectListener, Clo
     protected mUIManager: UIManager;
     protected mSoundManager: SoundWorkerManager;
     protected mLoadingManager: LoadingManager;
-    protected mConfigManager: BaseConfigManager;
     protected mNetWorkManager: NetworkManager;
     protected mHttpLoadManager: HttpLoadManager;
     protected mCustomProtoManager: CustomProtoManager;
@@ -115,7 +114,6 @@ export declare class Game extends PacketHandler implements IConnectListener, Clo
     get guideWorkerManager(): GuideWorkerManager;
     get loadingManager(): LoadingManager;
     get dataManager(): DataManager;
-    get configManager(): BaseConfigManager;
     get httpLoaderManager(): HttpLoadManager;
     get emitter(): EventDispatcher;
     get user(): User;
@@ -149,11 +147,11 @@ export declare class Game extends PacketHandler implements IConnectListener, Clo
     protected onGotoAnotherGame(packet: PBpacket): void;
     protected onAvatarGameModeHandler(packet: PBpacket): void;
     protected update(current: number, delta?: number): void;
+    protected loadGameConfig(remotePath: any): Promise<Lite>;
     private initGame;
     private _createAnotherGame;
     private _onGotoAnotherGame;
     private clearGame;
-    private loadGameConfig;
     private decodeConfigs;
     private _run;
 }

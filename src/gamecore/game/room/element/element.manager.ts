@@ -4,15 +4,9 @@ import { ConnectionService } from "structure";
 import { EventType, IDragonbonesModel, IFramesModel, ISprite, Logger, LogicPos } from "structure";
 import { IRoomService } from "../room";
 import { Element, IElement } from "./element";
-import { ElementStateManager } from "./element.state.manager";
-import { ElementDataManager } from "../../data.manager/element.dataManager";
-import { DataMgrType } from "../../data.manager";
-import { ElementActionManager } from "../elementaction/element.action.manager";
 import { IElementStorage, Sprite } from "baseGame";
 import NodeType = op_def.NodeType;
 import { InputEnable } from "./input.enable";
-// import { PicaElementActionManager } from "src/gamecore/game";
-
 export interface IElementManager {
     hasAddComplete: boolean;
     readonly connection: ConnectionService | undefined;
@@ -47,14 +41,14 @@ export class ElementManager extends PacketHandler implements IElementManager {
      * 移除缓存list
      */
     protected mCacheRemoveList: any[] = [];
-    private mDealAddList: any[] = [];
-    private mRequestSyncIdList: number[] = [];
-    private mDealSyncMap: Map<number, boolean> = new Map();
-    private mGameConfig: IElementStorage;
-    private mStateMgr: ElementStateManager;
-    private mActionMgr: ElementActionManager;
-    private mLoadLen: number = 0;
-    private mCurIndex: number = 0;
+    protected mDealAddList: any[] = [];
+    protected mRequestSyncIdList: number[] = [];
+    protected mDealSyncMap: Map<number, boolean> = new Map();
+    protected mGameConfig: IElementStorage;
+    // protected mStateMgr: ElementStateManager;
+    // protected mActionMgr: ElementActionManager;
+    protected mLoadLen: number = 0;
+    protected mCurIndex: number = 0;
 
     constructor(protected mRoom: IRoomService) {
         super();
@@ -63,8 +57,8 @@ export class ElementManager extends PacketHandler implements IElementManager {
         }
 
         // 进入房间创建地图后将其拷贝给物理进程
-        this.mStateMgr = new ElementStateManager(mRoom);
-        this.mActionMgr = new ElementActionManager(mRoom.game);
+        // this.mStateMgr = new ElementStateManager(mRoom);
+        // this.mActionMgr = new ElementActionManager(mRoom.game);
         this.addListen();
 
         this.mRoom.onManagerCreated(this.constructor.name);
@@ -83,12 +77,11 @@ export class ElementManager extends PacketHandler implements IElementManager {
             this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_ONLY_BUBBLE_CLEAN, this.onClearBubbleHandler);
             this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_CHANGE_SPRITE_ANIMATION, this.onChangeAnimation);
             this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_SET_SPRITE_POSITION, this.onSetPosition);
-            this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_ACTIVE_SPRITE, this.onActiveSpriteHandler);
             this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_TRIGGER_MOVE_SPRITE, this.onTiggerMove);
         }
-        if (this.eleDataMgr) this.eleDataMgr.on(EventType.SCENE_ELEMENT_FIND, this.onQueryElementHandler, this);
-        this.mRoom.game.emitter.on(EventType.SCENE_INTERACTION_ELEMENT, this.checkElementAction, this);
-        this.mRoom.game.emitter.on("FurnitureEvent", this.checkFurnitureSurvey, this);
+        // if (this.eleDataMgr) this.eleDataMgr.on(EventType.SCENE_ELEMENT_FIND, this.onQueryElementHandler, this);
+        // this.mRoom.game.emitter.on(EventType.SCENE_INTERACTION_ELEMENT, this.checkElementAction, this);
+        // this.mRoom.game.emitter.on("FurnitureEvent", this.checkFurnitureSurvey, this);
     }
 
     public removeListen() {
@@ -96,9 +89,9 @@ export class ElementManager extends PacketHandler implements IElementManager {
             Logger.getInstance().debug("elementmanager ---- removepacklistener");
             this.connection.removePacketListener(this);
         }
-        this.mRoom.game.emitter.off(EventType.SCENE_INTERACTION_ELEMENT, this.checkElementAction, this);
-        this.mRoom.game.emitter.off("FurnitureEvent", this.checkFurnitureSurvey, this);
-        if (this.eleDataMgr) this.eleDataMgr.off(EventType.SCENE_ELEMENT_FIND, this.onQueryElementHandler, this);
+        // this.mRoom.game.emitter.off(EventType.SCENE_INTERACTION_ELEMENT, this.checkElementAction, this);
+        // this.mRoom.game.emitter.off("FurnitureEvent", this.checkFurnitureSurvey, this);
+        // if (this.eleDataMgr) this.eleDataMgr.off(EventType.SCENE_ELEMENT_FIND, this.onQueryElementHandler, this);
     }
     public init() {
         // this.destroy();
@@ -136,33 +129,32 @@ export class ElementManager extends PacketHandler implements IElementManager {
         }
     }
 
-    public checkElementAction(id: number, userid?: number): boolean {
-        const ele = this.get(id);
-        if (!ele) return false;
-        if (ele.model.nodeType !== NodeType.ElementNodeType) return false;
-        if (this.mActionMgr.checkAllAction(ele.model).length > 0) {
-            this.mActionMgr.executeElementActions(ele.model, userid);
-            return true;
-        }
-        return false;
-    }
-    public checkActionNeedBroadcast(id: number, userid?: number) {
-        const ele = this.get(id);
-        if (!ele) return false;
-        if (ele.model.nodeType !== NodeType.ElementNodeType) return false;
-        return this.mActionMgr.checkActionNeedBroadcast(ele.model);
-    }
-    public checkFurnitureSurvey(id: number, userid?: number) {
-        const ele = this.get(id);
-        if (!ele) return false;
-        if (ele.model.nodeType !== NodeType.ElementNodeType) return false;
-        this.mActionMgr.executeFeatureActions("FurniSurvey", ele.model);
-    }
-
-    public isElementLocked(element: IElement) {
-        if (!this.mStateMgr) return false;
-        return this.mStateMgr.isLocked(element);
-    }
+    // public checkElementAction(id: number, userid?: number): boolean {
+    //     const ele = this.get(id);
+    //     if (!ele) return false;
+    //     if (ele.model.nodeType !== NodeType.ElementNodeType) return false;
+    //     if (this.mActionMgr.checkAllAction(ele.model).length > 0) {
+    //         this.mActionMgr.executeElementActions(ele.model, userid);
+    //         return true;
+    //     }
+    //     return false;
+    // }
+    // public checkActionNeedBroadcast(id: number, userid?: number) {
+    //     const ele = this.get(id);
+    //     if (!ele) return false;
+    //     if (ele.model.nodeType !== NodeType.ElementNodeType) return false;
+    //     return this.mActionMgr.checkActionNeedBroadcast(ele.model);
+    // }
+    // public checkFurnitureSurvey(id: number, userid?: number) {
+    //     const ele = this.get(id);
+    //     if (!ele) return false;
+    //     if (ele.model.nodeType !== NodeType.ElementNodeType) return false;
+    //     this.mActionMgr.executeFeatureActions("FurniSurvey", ele.model);
+    // }
+    // public isElementLocked(element: IElement) {
+    //     if (!this.mStateMgr) return false;
+    //     return this.mStateMgr.isLocked(element);
+    // }
 
     public setState(state: op_client.IStateGroup) {
         const ele = this.get(state.owner.id);
@@ -175,8 +167,8 @@ export class ElementManager extends PacketHandler implements IElementManager {
         if (this.mElements) {
             this.mElements.forEach((element) => this.remove(element.id));
             this.mElements.clear();
-            this.mStateMgr.destroy();
-            this.mActionMgr.destroy();
+            // this.mStateMgr.destroy();
+            // this.mActionMgr.destroy();
         }
         if (this.mDealAddList) this.mDealAddList.length = 0;
         if (this.mRequestSyncIdList) this.mRequestSyncIdList.length = 0;
@@ -258,8 +250,6 @@ export class ElementManager extends PacketHandler implements IElementManager {
             }
         }
         this.fetchDisplay(ids);
-        this.mStateMgr.add(eles);
-        this.checkElementDataAction(eles);
     }
 
     /**
@@ -312,8 +302,6 @@ export class ElementManager extends PacketHandler implements IElementManager {
                 }
             }
             this.dealAddList(true);
-            this.mStateMgr.syncElement(ele);
-            this.checkElementDataAction(ele);
         }
     }
 
@@ -499,14 +487,6 @@ export class ElementManager extends PacketHandler implements IElementManager {
         return this.mRoom;
     }
 
-    get eleDataMgr() {
-        if (this.mRoom) {
-            const game = this.mRoom.game;
-            return game.getDataMgr<ElementDataManager>(DataMgrType.EleMgr);
-        }
-        return undefined;
-    }
-
     protected onSetPosition(packet: PBpacket) {
         const content: op_client.IOP_VIRTUAL_WORLD_REQ_CLIENT_SET_SPRITE_POSITION = packet.content;
         const type: number = content.nodeType;
@@ -540,8 +520,6 @@ export class ElementManager extends PacketHandler implements IElementManager {
                 continue;
             }
             this.remove(id);
-            this.mStateMgr.remove(id);
-            this.eleDataMgr.offAction(id, EventType.SCENE_ELEMENT_DATA_UPDATE, undefined, undefined);
         }
         this.mCacheRemoveList = tmpList;
     }
@@ -618,25 +596,5 @@ export class ElementManager extends PacketHandler implements IElementManager {
                 ele.setQueue(content.changeAnimation);
             }
         }
-    }
-
-    private checkElementDataAction(eles: Element[]) {
-        const eleDataMgr = this.eleDataMgr;
-        if (!eleDataMgr) return;
-        for (const ele of eles) {
-            if (eleDataMgr.hasAction(ele.id, EventType.SCENE_ELEMENT_DATA_UPDATE)) {
-                eleDataMgr.actionEmitter(ele.id, EventType.SCENE_ELEMENT_DATA_UPDATE, this.mActionMgr.getActionData(ele.model, "TQ_PKT_Action").data);
-            }
-        }
-    }
-
-    private onQueryElementHandler(id: number) {
-        const ele = this.get(id);
-        this.eleDataMgr.emit(EventType.SCENE_RETURN_FIND_ELEMENT, ele);
-    }
-
-    private onActiveSpriteHandler(packet: PBpacket) {
-        const content: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_ACTIVE_SPRITE = packet.content;
-        this.checkElementAction(content.targetId, content.spriteId);
     }
 }

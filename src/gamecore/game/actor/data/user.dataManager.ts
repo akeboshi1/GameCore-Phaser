@@ -5,13 +5,11 @@ import { Game } from "../../game";
 import { EventType } from "structure";
 import { PlayerBag } from "./player.bag";
 import { PlayerProperty } from "./player.property";
-import { SceneDataManager } from "../../data.manager/scene.data.manager";
-import { DataMgrType } from "../../data.manager/data.mgr.type";
 export class UserDataManager extends PacketHandler {
-    private mPlayerBag: PlayerBag;
-    private mProperty: PlayerProperty;
-    private mDressAvatarIDs: string[];
-    constructor(private game: Game) {
+    protected mPlayerBag: PlayerBag;
+    protected mProperty: PlayerProperty;
+    protected mDressAvatarIDs: string[];
+    constructor(protected game: Game) {
         super();
         this.mPlayerBag = new PlayerBag();
         this.mProperty = new PlayerProperty();
@@ -78,16 +76,6 @@ export class UserDataManager extends PacketHandler {
         if (this.mProperty && this.mProperty.energy) return this.mProperty.energy.value;
         return 0;
     }
-    get isSelfRoom() {
-        const dataMgr = this.game.getDataMgr<SceneDataManager>(DataMgrType.SceneMgr);
-        if (dataMgr.curRoom && dataMgr.curRoom.ownerId === this.cid) return true;
-        return false;
-    }
-
-    get curRoomID() {
-        const dataMgr = this.game.getDataMgr<SceneDataManager>(DataMgrType.SceneMgr);
-        return dataMgr.curRoomID;
-    }
     get cid() {
         return this.playerProperty.cid;
     }
@@ -130,12 +118,12 @@ export class UserDataManager extends PacketHandler {
         this.game.peer.workerEmitter(EventType.UPDATE_PLAYER_INFO, this.playerProperty);
     }
 
-    private syncItemBases(items: op_client.ICountablePackageItem[]) {
-        const config = <any>this.game.configManager;
-        for (const item of items) {
-            if (item.id !== "-1")
-                config.synItemBase(item);
-        }
+    public syncItemBases(items: op_client.ICountablePackageItem[]) {
+        // const config = <any>this.game.configManager;
+        // for (const item of items) {
+        //     if (item.id !== "-1")
+        //         config.synItemBase(item);
+        // }
     }
     private onRetDressAvatarItemIDS(packet: PBpacket) {
         const content: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_CURRENT_DRESS_AVATAR_ITEM_ID = packet.content;

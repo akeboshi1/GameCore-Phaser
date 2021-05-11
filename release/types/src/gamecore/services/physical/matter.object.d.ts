@@ -1,6 +1,6 @@
 import { Body, Vector } from "tooqingmatter-js";
 import { MatterWorld } from "./matter.world";
-import { MoveData, MovePos } from "./matter.player.object";
+import { PhysicalMoveData, PhysicalMovePos } from "./matter.player.object";
 import { op_client } from "pixelpai_proto";
 import { MatterSprite } from "./matter.sprite";
 import { IPos, IPosition45Obj } from "structure";
@@ -33,7 +33,7 @@ export interface IMatterObject {
     removeBody(): any;
     setVertices(vertexSets: any): any;
     _doMove(time?: number, delta?: number): any;
-    move(moveData: MovePos[]): any;
+    move(moveData: PhysicalMovePos[]): any;
     moveMotion(x: number, y: number): any;
     mount(ele: IMatterObject): this;
     unmount(targetPos?: IPos): Promise<void> | undefined;
@@ -49,7 +49,7 @@ export declare class MatterObject implements IMatterObject {
     _sensor: boolean;
     body: Body;
     protected mModel: MatterSprite;
-    protected mMoveData: MoveData;
+    protected mMoveData: PhysicalMoveData;
     protected mCurState: string;
     protected mMoving: boolean;
     protected mOffsetY: number;
@@ -105,7 +105,7 @@ export declare class MatterObject implements IMatterObject {
     getSensor(): boolean;
     changeState(state: any, number?: number): void;
     moveMotion(x: number, y: number): void;
-    move(path: MovePos[]): void;
+    move(path: PhysicalMovePos[]): void;
     getInteractivePositionList(): IPos[];
     drawBody(): Promise<void>;
     protected calcBodyPath(collisionArea: number[][], miniSize: IPosition45Obj): any;

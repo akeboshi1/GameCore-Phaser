@@ -10,9 +10,9 @@ export declare class MatterPlayerObject extends MatterObject {
     changeState(val?: string, times?: number): void;
     protected get offsetY(): number;
 }
-export interface MoveData {
+export interface PhysicalMoveData {
     destPos?: LogicPos;
-    posPath?: MovePath[];
+    posPath?: PhysicalMovePath[];
     arrivalTime?: number;
     tweenAnim?: any;
     tweenLineAnim?: any;
@@ -21,18 +21,18 @@ export interface MoveData {
     step?: number;
     path?: any[];
 }
-export interface MovePos {
+export interface PhysicalMovePos {
     x: number;
     y: number;
     stopDir?: number;
 }
-export interface MovePath {
+export interface PhysicalMovePath {
     x: number;
     y: number;
     direction: number;
     duration?: number;
     onStartParams?: any;
 }
-export interface IMoveTarget extends MoveData {
+export interface IMoveTarget extends PhysicalMoveData {
     targetId?: number;
 }

@@ -1,6 +1,6 @@
 import { PacketHandler, PBpacket } from "net-socket-packet";
 import { Game } from "../game";
-import { op_client, op_virtual_world } from "pixelpai_proto";
+import { op_client } from "pixelpai_proto";
 
 export class GuideWorkerManager extends PacketHandler {
     constructor(protected game: Game) {
@@ -25,26 +25,26 @@ export class GuideWorkerManager extends PacketHandler {
     }
 
     public stopGuide(id: string) {
-        const configMgr = <any>this.game.configManager;
-        if (!configMgr) return;
-        configMgr.updateGuideState(id, true);
-        const packet = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_PKT_FINISH_GUIDE);
-        const content: op_virtual_world.OP_CLIENT_REQ_VIRTUAL_WORLD_PKT_FINISH_GUIDE = packet.content;
-        content.index = Number(id);
-        this.game.connection.send(packet);
+        // const configMgr = <any>this.game.configManager;
+        // if (!configMgr) return;
+        // configMgr.updateGuideState(id, true);
+        // const packet = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_PKT_FINISH_GUIDE);
+        // const content: op_virtual_world.OP_CLIENT_REQ_VIRTUAL_WORLD_PKT_FINISH_GUIDE = packet.content;
+        // content.index = Number(id);
+        // this.game.connection.send(packet);
+    }
+
+    public onUPDATE_PLAYER_GUIDE(packet: PBpacket) {
+        // const content: op_client.IOP_VIRTUAL_WORLD_REQ_CLIENT_PKT_GUIDE_DATA = packet.content;
+        // const ids = content.finishedGuide;
+        // if (!ids || ids.length < 1) return;
+        // const configMgr = <any>this.game.configManager;
+        // ids.forEach((id) => {
+        //     configMgr.updateGuideState(String(id), true);
+        // });
     }
 
     public destroy() {
         this.removePackListener();
-    }
-
-    private onUPDATE_PLAYER_GUIDE(packet: PBpacket) {
-        const content: op_client.IOP_VIRTUAL_WORLD_REQ_CLIENT_PKT_GUIDE_DATA = packet.content;
-        const ids = content.finishedGuide;
-        if (!ids || ids.length < 1) return;
-        const configMgr = <any>this.game.configManager;
-        ids.forEach((id) => {
-            configMgr.updateGuideState(String(id), true);
-        });
     }
 }

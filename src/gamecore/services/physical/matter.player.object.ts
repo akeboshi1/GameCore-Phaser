@@ -41,9 +41,9 @@ export class MatterPlayerObject extends MatterObject {
     }
 }
 
-export interface MoveData {
+export interface PhysicalMoveData {
     destPos?: LogicPos;
-    posPath?: MovePath[];
+    posPath?: PhysicalMovePath[];
     arrivalTime?: number;
     tweenAnim?: any;
     tweenLineAnim?: any;
@@ -54,13 +54,13 @@ export interface MoveData {
     path?: any[];
 }
 
-export interface MovePos {
+export interface PhysicalMovePos {
     x: number;
     y: number;
     stopDir?: number;
 }
 
-export interface MovePath {
+export interface PhysicalMovePath {
     x: number;
     y: number;
     direction: number;
@@ -69,6 +69,6 @@ export interface MovePath {
     // onStart?: Function;
     // onComplete?: Function;
 }
-export interface IMoveTarget extends MoveData {
+export interface IMoveTarget extends PhysicalMoveData {
     targetId?: number;
 }

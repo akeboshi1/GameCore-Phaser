@@ -1,13 +1,14 @@
 import { ConnectionService } from "structure";
 import { PacketHandler, PBpacket } from "net-socket-packet";
+import { op_client } from "pixelpai_proto";
 import { Game } from "../../game";
 import { PlayerBag } from "./player.bag";
 import { PlayerProperty } from "./player.property";
 export declare class UserDataManager extends PacketHandler {
-    private game;
-    private mPlayerBag;
-    private mProperty;
-    private mDressAvatarIDs;
+    protected game: Game;
+    protected mPlayerBag: PlayerBag;
+    protected mProperty: PlayerProperty;
+    protected mDressAvatarIDs: string[];
     constructor(game: Game);
     addPackListener(): void;
     removePackListener(): void;
@@ -20,8 +21,6 @@ export declare class UserDataManager extends PacketHandler {
     get diamond(): number;
     get level(): number;
     get energy(): number;
-    get isSelfRoom(): boolean;
-    get curRoomID(): string;
     get cid(): string;
     get avatarIDs(): string[];
     querySYNC_ALL_PACKAGE(): void;
@@ -29,6 +28,6 @@ export declare class UserDataManager extends PacketHandler {
     onSYNC_PACKAHE(packet: PBpacket): void;
     onUPDATE_PACKAGE(packet: PBpacket): void;
     onUPDATE_PLAYER_INFO(packet: PBpacket): void;
-    private syncItemBases;
+    syncItemBases(items: op_client.ICountablePackageItem[]): void;
     private onRetDressAvatarItemIDS;
 }

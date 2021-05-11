@@ -1,4 +1,4 @@
-import { IMoveTarget, MatterPlayerObject, MovePos } from "./matter.player.object";
+import { IMoveTarget, MatterPlayerObject, PhysicalMovePos } from "./matter.player.object";
 import { op_def } from "pixelpai_proto";
 import { IPoint } from "game-capsule";
 import { Vector, Body } from "tooqingmatter-js";
@@ -193,7 +193,7 @@ export class MatterUserObject extends MatterPlayerObject {
         }
     }
 
-    public move(moveData: MovePos[]) {
+    public move(moveData: PhysicalMovePos[]) {
         this.peer.render.drawServerPosition(moveData[0].x, moveData[0].y);
     }
 

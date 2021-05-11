@@ -1,4 +1,3 @@
-/// <reference types="tooqinggamephaser" />
 import { Handler } from "structure";
 export declare class TextureSprite extends Phaser.GameObjects.Container {
     private compl;

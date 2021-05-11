@@ -8,8 +8,9 @@ import {
     IDragonbonesModel,
     IFramesModel,
     ISprite,
-    PlayerState, DirectionChecker, IPos, IProjection, Logger, LogicPoint, LogicPos
+    PlayerState
 } from "structure";
+import { DirectionChecker, IPos, IProjection, Logger, LogicPoint, LogicPos } from "structure";
 import { Tool } from "utils";
 import { BlockObject } from "../block/block.object";
 import { IRoomService } from "../room";
@@ -23,7 +24,7 @@ export interface IElement {
     readonly roomService: IRoomService;
     readonly created: boolean;
 
-    readonly moveData: MoveWorkerData;
+    readonly moveData: MoveData;
 
     state: boolean;
 
@@ -88,26 +89,25 @@ export interface IElement {
     removeFromWalkableMap();
 }
 
-export interface MoveWorkerData {
+export interface MoveData {
     step?: number;
     path?: op_def.IMovePoint[];
     arrivalTime?: number;
 }
 
-export interface MoveWorkerPos {
+export interface MovePos {
     x: number;
     y: number;
     stopDir?: number;
 }
 
-export interface MoveWorkerPath {
+export interface MovePath {
     x: number;
     y: number;
     direction: number;
     duration?: number;
     onStartParams?: any;
 }
-
 export class Element extends BlockObject implements IElement {
     get state(): boolean {
         return this.mState;
@@ -137,7 +137,7 @@ export class Element extends BlockObject implements IElement {
         this.setModel(val);
     }
 
-    get moveData(): MoveWorkerData {
+    get moveData(): MoveData {
         return this.mMoveData;
     }
 
@@ -154,7 +154,7 @@ export class Element extends BlockObject implements IElement {
     protected mId: number;
     protected mDisplayInfo: IFramesModel | IDragonbonesModel;
     protected mAnimationName: string = "";
-    protected mMoveData: MoveWorkerData = {};
+    protected mMoveData: MoveData = {};
     protected mCurState: string = PlayerState.IDLE;
     protected mOffsetY: number = undefined;
     protected mQueueAnimations: AnimationQueue[];
@@ -594,6 +594,7 @@ export class Element extends BlockObject implements IElement {
     }
 
     public setAlpha(val: number) {
+        this.roomService.game.renderPeer.changeAlpha(this.id, val);
     }
 
     public mount(root: IElement) {

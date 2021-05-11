@@ -13,8 +13,6 @@ import { GameState, ILauncherConfig, LoadState, ModuleName, Logger, EventDispatc
 import { IRoomService } from "./room";
 import { RoomManager } from "./room/room.manager";
 import { User } from "./actor/user";
-import { DataManager } from "./data.manager/dataManager";
-import { BaseConfigManager, ConfigPath, DataMgrType } from "./data.manager";
 import { NetworkManager } from "./command";
 import version from "../../../version";
 import { MainPeer } from "./main.peer";
@@ -23,6 +21,8 @@ import { SoundWorkerManager } from "./sound.manager";
 import { CustomProtoManager } from "./custom.proto";
 import { IConnectListener } from "src/structure/net";
 import { ElementStorage } from "baseGame";
+import { ConfigPath } from "./config/config";
+import { DataManager, DataMgrType } from "./config";
 interface ISize {
     width: number;
     height: number;
@@ -35,8 +35,6 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
     protected mainPeer: any;
     protected connect: Connection;
     protected mUser: User;
-    // protected mUiManager: UiManager;
-    // protected mMoveStyle: number = -1;
     protected mSize: ISize;
     protected mClock: Clock;
     protected mHttpClock: HttpClock;
@@ -44,14 +42,12 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
     protected mConfig: ILauncherConfig;
     protected mDataManager: DataManager;
     protected mGuideWorkerManager: GuideWorkerManager;
-    // protected mAccount: Account;
     protected mRoomManager: RoomManager;
     protected mElementStorage: ElementStorage;
-    // protected mPlayerDataManager: PlayerDataManager;
     protected mUIManager: UIManager;
     protected mSoundManager: SoundWorkerManager;
     protected mLoadingManager: LoadingManager;
-    protected mConfigManager: BaseConfigManager;
+    // protected mConfigManager: BaseConfigManager;
     protected mNetWorkManager: NetworkManager;
     protected mHttpLoadManager: HttpLoadManager;
     protected mCustomProtoManager: CustomProtoManager;
@@ -422,9 +418,9 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
     get dataManager(): DataManager {
         return this.mDataManager;
     }
-    get configManager() {
-        return this.mConfigManager;
-    }
+    // get configManager() {
+    //     return this.mConfigManager;
+    // }
     get httpLoaderManager() {
         return this.mHttpLoadManager;
     }
@@ -690,7 +686,7 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
         if (!this.mSoundManager) this.mSoundManager = new SoundWorkerManager(this);
         if (!this.mLoadingManager) this.mLoadingManager = new LoadingManager(this);
         if (!this.mDataManager) this.mDataManager = new DataManager(this);
-        if (!this.mConfigManager) this.mConfigManager = new BaseConfigManager(this, this.mConfigPath);
+        // if (!this.mConfigManager) this.mConfigManager = new BaseConfigManager(this, this.mConfigPath);
         if (!this.mNetWorkManager) this.mNetWorkManager = new NetworkManager(this);
         if (!this.mHttpLoadManager) this.mHttpLoadManager = new HttpLoadManager();
         if (!this.mCustomProtoManager) this.mCustomProtoManager = new CustomProtoManager(this);
@@ -804,6 +800,30 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
         }
     }
 
+    protected loadGameConfig(remotePath): Promise<Lite> {
+        const configPath = ResUtils.getGameConfig(remotePath);
+        return load(configPath, "arraybuffer").then((req: any) => {
+            this.gameConfigState.set(remotePath, true);
+            this.peer.state = GameState.LoadGameConfig;
+            this.mLoadingManager.start(LoadState.PARSECONFIG);
+            Logger.getInstance().debug("start decodeConfig");
+            return this.decodeConfigs(req);
+        }, (reason) => {
+            if (this.remoteIndex > 3) {
+                if (this.mConfig.hasReload) {
+                    // app reload
+                } else {
+                    Logger.getInstance().log(reason);
+                    this.renderPeer.reload();
+                }
+                return;
+            }
+            this.remoteIndex++;
+            Logger.getInstance().error("reload res ====>", reason, "reload count ====>", this.remoteIndex);
+            return this.loadGameConfig(remotePath);
+        });
+    }
+
     private initGame() {
         // if (this.mRoomManager) this.mRoomManager.addPackListener();
         // if (this.mUIManager) this.mUIManager.addPackListener();
@@ -900,10 +920,10 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
                     this.mHttpLoadManager.destroy();
                     this.mHttpLoadManager = null;
                 }
-                if (this.mConfigManager) {
-                    this.mConfigManager.destory();
-                    this.mConfigManager = null;
-                }
+                // if (this.mConfigManager) {
+                //     this.mConfigManager.destory();
+                //     this.mConfigManager = null;
+                // }
                 if (this.mDataManager) {
                     this.mDataManager.clear();
                     this.mDataManager = null;
@@ -924,34 +944,6 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
                 this.onClearGame();
                 resolve();
             });
-        });
-    }
-
-    private loadGameConfig(remotePath): Promise<Lite> {
-        if (!this.isSyncPackage && this.configManager.initialize) {
-            this.user.userData.querySYNC_ALL_PACKAGE();
-            this.isSyncPackage = true;
-        }
-        const configPath = ResUtils.getGameConfig(remotePath);
-        return load(configPath, "arraybuffer").then((req: any) => {
-            this.gameConfigState.set(remotePath, true);
-            this.peer.state = GameState.LoadGameConfig;
-            this.mLoadingManager.start(LoadState.PARSECONFIG);
-            Logger.getInstance().debug("start decodeConfig");
-            return this.decodeConfigs(req);
-        }, (reason) => {
-            if (this.remoteIndex > 3) {
-                if (this.mConfig.hasReload) {
-                    // app reload
-                } else {
-                    Logger.getInstance().log(reason);
-                    this.renderPeer.reload();
-                }
-                return;
-            }
-            this.remoteIndex++;
-            Logger.getInstance().error("reload res ====>", reason, "reload count ====>", this.remoteIndex);
-            return this.loadGameConfig(remotePath);
         });
     }
 

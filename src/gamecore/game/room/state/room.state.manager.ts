@@ -1,7 +1,6 @@
 import { IRoomService } from "..";
 import { State } from "./state.group";
-import { BaseStateHandler, BaseStateManager } from "./state.manager";
-
+import { BaseHandler , BaseStateManager } from "./state.manager";
 export class RoomStateManager extends BaseStateManager {
     constructor(room: IRoomService) {
         super(room);
@@ -13,7 +12,7 @@ export class RoomStateManager extends BaseStateManager {
     }
 }
 
-class AddHandler extends BaseStateHandler {
+class AddHandler extends BaseHandler {
     constructor(room: IRoomService) {
         super(room);
     }
@@ -59,7 +58,7 @@ class AddHandler extends BaseStateHandler {
     }
 }
 
-class DeleteHandler extends BaseStateHandler {
+class DeleteHandler extends BaseHandler {
     constructor(room: IRoomService) {
         super(room);
     }

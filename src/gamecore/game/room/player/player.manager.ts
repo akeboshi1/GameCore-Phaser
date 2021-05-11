@@ -13,10 +13,10 @@ import NodeType = op_def.NodeType;
 
 export class PlayerManager extends PacketHandler implements IElementManager {
     public hasAddComplete: boolean = false;
-    private mActor: User;
-    private mPlayerMap: Map<number, Player> = new Map();
+    protected mActor: User;
+    protected mPlayerMap: Map<number, Player> = new Map();
 
-    constructor(private mRoom: Room) {
+    constructor(protected mRoom: Room) {
         super();
         if (this.connection) {
             this.connection.addPacketListener(this);
@@ -220,6 +220,29 @@ export class PlayerManager extends PacketHandler implements IElementManager {
         if (ele) ele.setState(state);
     }
 
+    protected onAdjust(packet: PBpacket) {
+        const content: op_client.IOP_VIRTUAL_WORLD_REQ_CLIENT_ADJUST_POSITION = packet.content;
+        const positions = content.spritePositions;
+        const type = content.nodeType;
+        if (type !== op_def.NodeType.CharacterNodeType) {
+            return;
+        }
+        if (this.mActor) {
+            let player: Player;
+            let point: op_def.IPBPoint3f;
+            for (const position of positions) {
+                player = this.mPlayerMap.get(position.id);
+                if (player) {
+                    point = position.point3f;
+                    player.setPosition(new LogicPos(point.x || 0, point.y || 0, point.z || 0));
+                }
+            }
+        }
+    }
+
+    protected _loadSprite(sprite: op_client.ISprite) {
+    }
+
     private onSync(packet: PBpacket) {
         const content: op_client.IOP_VIRTUAL_WORLD_REQ_CLIENT_SYNC_SPRITE = packet.content;
         if (content.nodeType !== op_def.NodeType.CharacterNodeType) {
@@ -238,51 +261,6 @@ export class PlayerManager extends PacketHandler implements IElementManager {
                     player.model = new Sprite(sprite, content.nodeType);
                 } else if (command === op_def.OpCommand.OP_COMMAND_PATCH) {
                     player.updateModel(sprite, this.mRoom.game.avatarType);
-                }
-            }
-        }
-    }
-
-    private _loadSprite(sprite: op_client.ISprite) {
-        const configMgr = <any>this.mRoom.game.configManager;
-        sprite.attrs.forEach((attr) => {
-            const valueObj = JSON.parse(attr.value);
-            const len = Object.keys(valueObj).length;
-            if (len > 0) {
-                const newAttrs = [];
-                valueObj.forEach((v) => {
-                    if (v.id) {
-                        const config = configMgr.getItemBaseByID(v.id);
-                        newAttrs.push({
-                            suit_type: config.suitType,
-                            sn: config.sn,
-                            version: config.version,
-                            slot: config.slot,
-                            tag: config.tag,
-                            id: config.id
-                        });
-                    }
-                });
-                attr.value = JSON.stringify(newAttrs);
-            }
-        });
-    }
-
-    private onAdjust(packet: PBpacket) {
-        const content: op_client.IOP_VIRTUAL_WORLD_REQ_CLIENT_ADJUST_POSITION = packet.content;
-        const positions = content.spritePositions;
-        const type = content.nodeType;
-        if (type !== op_def.NodeType.CharacterNodeType) {
-            return;
-        }
-        if (this.mActor) {
-            let player: Player;
-            let point: op_def.IPBPoint3f;
-            for (const position of positions) {
-                player = this.mPlayerMap.get(position.id);
-                if (player) {
-                    point = position.point3f;
-                    player.setPosition(new LogicPos(point.x || 0, point.y || 0, point.z || 0));
                 }
             }
         }

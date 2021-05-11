@@ -1,5 +1,6 @@
 import { op_client, op_def } from "pixelpai_proto";
-import { AnimationQueue, ElementStateType, IDragonbonesModel, IFramesModel, ISprite, IPos, IProjection } from "structure";
+import { AnimationQueue, ElementStateType, IDragonbonesModel, IFramesModel, ISprite } from "structure";
+import { IPos, IProjection } from "structure";
 import { BlockObject } from "../block/block.object";
 import { IRoomService } from "../room";
 import { ElementStateManager } from "../state/element.state.manager";
@@ -9,7 +10,7 @@ export interface IElement {
     readonly dir: number;
     readonly roomService: IRoomService;
     readonly created: boolean;
-    readonly moveData: MoveWorkerData;
+    readonly moveData: MoveData;
     state: boolean;
     model: ISprite;
     update(time?: number, delta?: number): any;
@@ -42,17 +43,17 @@ export interface IElement {
     addToWalkableMap(): any;
     removeFromWalkableMap(): any;
 }
-export interface MoveWorkerData {
+export interface MoveData {
     step?: number;
     path?: op_def.IMovePoint[];
     arrivalTime?: number;
 }
-export interface MoveWorkerPos {
+export interface MovePos {
     x: number;
     y: number;
     stopDir?: number;
 }
-export interface MoveWorkerPath {
+export interface MovePath {
     x: number;
     y: number;
     direction: number;
@@ -68,13 +69,13 @@ export declare class Element extends BlockObject implements IElement {
     get id(): number;
     get model(): ISprite;
     set model(val: ISprite);
-    get moveData(): MoveWorkerData;
+    get moveData(): MoveData;
     get created(): boolean;
     get eleMgr(): IElementManager;
     protected mId: number;
     protected mDisplayInfo: IFramesModel | IDragonbonesModel;
     protected mAnimationName: string;
-    protected mMoveData: MoveWorkerData;
+    protected mMoveData: MoveData;
     protected mCurState: string;
     protected mOffsetY: number;
     protected mQueueAnimations: AnimationQueue[];

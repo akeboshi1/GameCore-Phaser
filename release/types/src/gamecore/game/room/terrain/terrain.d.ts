@@ -1,5 +1,5 @@
 import { BlockObject } from "../block/block.object";
-import { IElement, MoveWorkerData } from "../element/element";
+import { IElement, MoveData } from "../element/element";
 import { IElementManager } from "../element/element.manager";
 import { op_client } from "pixelpai_proto";
 import { IRoomService } from "../room";
@@ -15,7 +15,7 @@ export declare class Terrain extends BlockObject implements IElement {
     constructor(sprite: ISprite, mElementManager: IElementManager);
     get state(): boolean;
     set state(val: boolean);
-    get moveData(): MoveWorkerData;
+    get moveData(): MoveData;
     startMove(): void;
     stopMove(): void;
     startFireMove(pos: IPos): void;

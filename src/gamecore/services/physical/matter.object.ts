@@ -1,7 +1,7 @@
 import { Bodies, Body, Vector, Events } from "tooqingmatter-js";
 // import { delayTime, PhysicalPeer } from "../physical.worker";
 import { MatterWorld } from "./matter.world";
-import { MoveData, MovePos } from "./matter.player.object";
+import { PhysicalMoveData, PhysicalMovePos } from "./matter.player.object";
 import { op_client } from "pixelpai_proto";
 import { MatterSprite } from "./matter.sprite";
 import { Tool } from "utils";
@@ -66,7 +66,7 @@ export interface IMatterObject {
 
     _doMove(time?: number, delta?: number);
 
-    move(moveData: MovePos[]);
+    move(moveData: PhysicalMovePos[]);
 
     moveMotion(x: number, y: number);
 
@@ -86,7 +86,7 @@ export class MatterObject implements IMatterObject {
     public _sensor: boolean = false;
     public body: Body;
     protected mModel: MatterSprite;
-    protected mMoveData: MoveData = {};
+    protected mMoveData: PhysicalMoveData = {};
     protected mCurState: string = PlayerState.IDLE;
     protected mMoving: boolean = false;
     protected mOffsetY: number = undefined;
@@ -533,7 +533,7 @@ export class MatterObject implements IMatterObject {
     public moveMotion(x: number, y: number) {
     }
 
-    public move(path: MovePos[]) {
+    public move(path: PhysicalMovePos[]) {
         this.mMoveData.path = path;
         this.startMove();
     }

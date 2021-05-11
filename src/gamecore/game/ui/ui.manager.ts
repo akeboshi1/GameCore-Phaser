@@ -53,9 +53,9 @@ export class UIManager extends PacketHandler {
         this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_CLOSE_UI, this.handleCloseUI);
         // TODO 这2条协议合并到SHOW_UI和CLOS_UI
         // this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_SHOW_CREATE_ROLE_UI, this.onHandleShowCreateRoleUI);
-        this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_PKT_SHOW_CREATE_ROLE_UI, this.onHandleShowCreateRoleUI);
-        this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_PKT_CLOSE_CREATE_ROLE_UI, this.onHandleCloseCreateRoleUI);
-        this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_PKT_REFRESH_ACTIVE_UI, this.onUIStateHandler);
+        // this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_PKT_SHOW_CREATE_ROLE_UI, this.onHandleShowCreateRoleUI);
+        // this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_PKT_CLOSE_CREATE_ROLE_UI, this.onHandleCloseCreateRoleUI);
+        // this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_PKT_REFRESH_ACTIVE_UI, this.onUIStateHandler);
         this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_FORCE_OFFLINE, this.onForceOfflineHandler);
         this.game.emitter.on(EventType.SCENE_SHOW_UI, this.onOpenUIMediator, this);
         this.game.emitter.on(EventType.SCENE_SHOW_MAIN_UI, this.showMainUI, this);
@@ -277,13 +277,6 @@ export class UIManager extends PacketHandler {
         return require(`./${type}/${className}`);
     }
 
-    protected onUIStateHandler(packge: PBpacket) {
-        this.mUIStateData = packge.content;
-        if (this.mUIStateData && this.mMedMap) {
-            this.updateUIState(this.mUIStateData);
-        }
-    }
-
     protected handleShowUI(packet: PBpacket): void {
         const ui: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_SHOW_UI = packet.content;
         // TODO 根据远程scene状态缓存命令
@@ -315,29 +308,6 @@ export class UIManager extends PacketHandler {
         }
     }
 
-    protected onHandleShowCreateRoleUI(packet: PBpacket) {
-        //  this.showMed(ModuleName.CREATEROLE_NAME, packet.content);
-        this.game.preloadGameConfig().then(() => {
-            const configMgr = <any>this.game.configManager;
-            if (!configMgr.initialize) return;
-            const content: op_client.OP_VIRTUAL_WORLD_REQ_CLIENT_PKT_SHOW_CREATE_ROLE_UI = packet.content;
-            configMgr.getBatchItemDatas(content.avatars);
-            this.showMed(ModuleName.PICACREATEROLE_NAME, content);
-        }, (response) => {
-            this.game.renderPeer.showAlert("配置加载错误，请重新登陆: " + response)
-                .then(() => {
-                    this.game.renderPeer.hidden();
-                });
-        });
-        // const content: op_client.OP_VIRTUAL_WORLD_REQ_CLIENT_PKT_SHOW_CREATE_ROLE_UI = packet.content;
-        // this.showMed(ModuleName.PICACREATEROLE_NAME, content);
-    }
-
-    protected onHandleCloseCreateRoleUI() {
-        this.hideMed(ModuleName.PICACREATEROLE_NAME);
-        // this.game.peer.render.hideCreateRole();
-    }
-
     protected getPanelNameByAlias(alias: string) {
         switch (alias) {
             case "MessageBox":
@@ -352,7 +322,7 @@ export class UIManager extends PacketHandler {
         this.isshowMainui = false;
     }
 
-    private onOpenUIMediator() {
+    protected onOpenUIMediator() {
         if (arguments) {
             const uiName = arguments[0];
             const data = arguments[1];

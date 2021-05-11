@@ -1,5 +1,4 @@
 import { RPCPeer } from "webworker-rpc";
-import { op_client } from "pixelpai_proto";
 import { Buffer } from "net-socket-packet";
 import * as protos from "pixelpai_proto";
 import { Game } from "./game";
@@ -72,7 +71,6 @@ export declare class MainPeer extends RPCPeer {
     resetGameraSize(width: number, height: number): void;
     syncCameraScroll(): void;
     sendMouseEvent(id: number, mouseEvent: any[], point3f: any): void;
-    isElementLocked(id: number): boolean;
     updateDecorateElementReference(id: number, x: number, y: number): void;
     exitUser(): void;
     displayCompleteMove(id: number): void;
@@ -104,8 +102,6 @@ export declare class MainPeer extends RPCPeer {
     renderEmitter(eventType: string, data: any): void;
     fetchProjectionSize(id: number): import("../../structure").IProjection;
     getUserData_PlayerProperty(): any;
-    getUserData_CurRoomID(): string;
-    getCurRoom(): op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_EDIT_MODE_ROOM_INFO;
     getRoomUserName(): string;
     getClockNow(): number;
     setPosition(id: number, updateBoo: boolean, x: number, y: number, z?: number): void;

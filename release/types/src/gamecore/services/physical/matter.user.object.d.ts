@@ -1,4 +1,4 @@
-import { MatterPlayerObject, MovePos } from "./matter.player.object";
+import { MatterPlayerObject, PhysicalMovePos } from "./matter.player.object";
 import { Body } from "tooqingmatter-js";
 import { IPos } from "structure";
 export declare class MatterUserObject extends MatterPlayerObject {
@@ -19,7 +19,7 @@ export declare class MatterUserObject extends MatterPlayerObject {
     startMove(): void;
     stopMove(): void;
     tryStopMove(pos?: IPos): void;
-    move(moveData: MovePos[]): void;
+    move(moveData: PhysicalMovePos[]): void;
     syncPosition(): void;
     _doMove(time?: number, delta?: number): void;
     checkDirection(): void;

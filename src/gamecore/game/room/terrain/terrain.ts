@@ -1,5 +1,5 @@
 import { BlockObject } from "../block/block.object";
-import { IElement, MoveWorkerData } from "../element/element";
+import { IElement, MoveData } from "../element/element";
 import { IElementManager } from "../element/element.manager";
 import { op_client } from "pixelpai_proto";
 import { IRoomService } from "../room";
@@ -11,7 +11,7 @@ export class Terrain extends BlockObject implements IElement {
     protected mDisplayInfo: IFramesModel;
     protected mModel: ISprite;
     protected mCreatedDisplay: boolean = false;
-    private mMoveData: MoveWorkerData;
+    private mMoveData: MoveData;
     private mState: boolean = false;
 
     constructor(sprite: ISprite, protected mElementManager: IElementManager) {
@@ -28,7 +28,7 @@ export class Terrain extends BlockObject implements IElement {
         this.mState = val;
     }
 
-    get moveData(): MoveWorkerData {
+    get moveData(): MoveData {
         return this.mMoveData;
     }
 

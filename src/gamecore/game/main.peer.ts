@@ -4,7 +4,6 @@ import { PBpacket, Buffer } from "net-socket-packet";
 import * as protos from "pixelpai_proto";
 import { Game } from "./game";
 import { ServerAddress, IPos, Logger, ILauncherConfig, ModuleName, EventType, GameState, IWorkerParam, LogicPos } from "structure";
-import { DataMgrType, SceneDataManager } from "./data.manager";
 import version from "../../../version";
 import { Url } from "utils";
 
@@ -360,16 +359,6 @@ export class MainPeer extends RPCPeer {
         this.game.connection.send(pkt);
     }
 
-    @Export()
-    public isElementLocked(id: number) {
-        if (!this.game.roomManager) return false;
-        if (!this.game.roomManager.currentRoom) return false;
-        if (!this.game.roomManager.currentRoom.elementManager) return false;
-        const element = this.game.roomManager.currentRoom.elementManager.get(id);
-        if (!element) return false;
-        return this.game.roomManager.currentRoom.elementManager.isElementLocked(element);
-    }
-
     // 小屋装扮过程中，更新物件编辑提示区域
     @Export()
     public updateDecorateElementReference(id: number, x: number, y: number) {
@@ -583,21 +572,6 @@ export class MainPeer extends RPCPeer {
     }
 
     @Export()
-    public getUserData_CurRoomID(): string {
-        if (this.game.user && this.game.user.userData) {
-            return this.game.user.userData.curRoomID;
-        }
-
-        return null;
-    }
-
-    @Export()
-    public getCurRoom() {
-        const mgr = this.game.dataManager.getDataMgr<SceneDataManager>(DataMgrType.SceneMgr);
-        return mgr ? mgr.curRoom : null;
-    }
-
-    @Export()
     public getRoomUserName() {
         return this.game.user.userData.playerProperty.nickname;
     }
@@ -635,9 +609,6 @@ export class MainPeer extends RPCPeer {
         if (this.game.user) {
             const room = this.game.roomManager.currentRoom;
             this.game.user.tryStopMove({ targetId, interactiveBoo: false, stopPos });
-            room.elementManager.checkElementAction(targetId);
-            const needBroadcast = room.elementManager.checkActionNeedBroadcast(targetId);
-            if (interactiveBoo) this.game.user.activeSprite(targetId, undefined, needBroadcast);
         }
     }
 

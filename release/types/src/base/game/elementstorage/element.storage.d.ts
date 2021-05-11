@@ -30,16 +30,19 @@ interface IDisplayRef {
     displayModel?: FramesModel | DragonbonesModel;
 }
 export declare class ElementStorage implements IElementStorage {
-    private mModels;
-    private mElementRef;
-    private terrainPalette;
-    private terrainPaletteWithBindId;
-    private mossPalette;
-    private _terrainCollection;
-    private _mossCollection;
-    private _wallCollection;
-    private _scenerys;
-    private _assets;
+    protected mModels: Map<number, DragonbonesModel | FramesModel>;
+    protected mElementRef: Map<number, IDisplayRef>;
+    protected terrainPalette: Map<number, FramesModel>;
+    protected terrainPaletteWithBindId: Map<number, FramesModel>;
+    protected mossPalette: Map<number, {
+        layer: number;
+        frameModel: FramesModel;
+    }>;
+    protected _terrainCollection: TerrainCollectionNode;
+    protected _mossCollection: MossCollectionNode;
+    protected _wallCollection: WallCollectionNode;
+    protected _scenerys: IScenery[];
+    protected _assets: IAsset[];
     constructor();
     setGameConfig(config: Lite): void;
     updatePalette(palette: PaletteNode): void;

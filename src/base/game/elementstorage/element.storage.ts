@@ -47,16 +47,16 @@ interface IDisplayRef {
 }
 
 export class ElementStorage implements IElementStorage {
-    private mModels = new Map<number, FramesModel | DragonbonesModel>();
-    private mElementRef = new Map<number, IDisplayRef>();
-    private terrainPalette = new Map<number, FramesModel>();
-    private terrainPaletteWithBindId = new Map<number, FramesModel>();
-    private mossPalette = new Map<number, { layer: number, frameModel: FramesModel }>();
-    private _terrainCollection: TerrainCollectionNode;
-    private _mossCollection: MossCollectionNode;
-    private _wallCollection: WallCollectionNode;
-    private _scenerys: IScenery[];
-    private _assets: IAsset[];
+    protected mModels = new Map<number, FramesModel | DragonbonesModel>();
+    protected mElementRef = new Map<number, IDisplayRef>();
+    protected terrainPalette = new Map<number, FramesModel>();
+    protected terrainPaletteWithBindId = new Map<number, FramesModel>();
+    protected mossPalette = new Map<number, { layer: number, frameModel: FramesModel }>();
+    protected _terrainCollection: TerrainCollectionNode;
+    protected _mossCollection: MossCollectionNode;
+    protected _wallCollection: WallCollectionNode;
+    protected _scenerys: IScenery[];
+    protected _assets: IAsset[];
 
     // private event: Phaser.Events.EventEmitter;
 

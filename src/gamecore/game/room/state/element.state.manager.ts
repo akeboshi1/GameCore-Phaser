@@ -2,7 +2,8 @@ import { ElementStateType, ModuleName } from "structure";
 import { IRoomService } from "..";
 import { Element, IElement } from "../element/element";
 import { State } from "./state.group";
-import { BaseStateHandler, BaseStateManager } from "./state.manager";
+import { BaseStateManager, BaseHandler } from "./state.manager";
+
 export class ElementStateManager extends BaseStateManager {
     constructor(private element: IElement, room: IRoomService) {
         super(room);
@@ -20,7 +21,7 @@ export class ElementStateManager extends BaseStateManager {
     }
 }
 
-class ElementHandler extends BaseStateHandler {
+class ElementHandler extends BaseHandler {
     public element: IElement;
     constructor(room: IRoomService) {
         super(room);
@@ -55,27 +56,6 @@ class AddHandler extends ElementHandler {
                 (<Element>ele).showTopDisplay(ElementStateType.REPAIR);
             }
         }
-    }
-
-    private async ShowOff(state: State) {
-        const buf = Buffer.from(state.packet);
-        const id = buf.toString("utf-8", 4, buf.readIntBE(0, 4) + 4);
-        const configManager = <any>this.room.game.configManager;
-        const item = <any>configManager.getItemBaseByID(id);
-        if (!item) return;
-        const element = await configManager.checkDynamicElementPI({ sn: item.sn, itemid: id, serialize: item.serializeString });
-        if (this.element) {
-            const model = this.element.model;
-            if (model) {
-                model.registerAnimationMap("idle", "lift");
-                model.registerAnimationMap("walk", "liftwalk");
-                this.element.play(model.currentAnimationName);
-            }
-        }
-        if (element) {
-            this.room.game.renderPeer.liftItem(state.owner.id, element.animationDisplay, element.animations);
-        }
-        if (this.element === this.room.playerManager.actor) this.room.game.uiManager.showMed(ModuleName.PICA_DROP_ELEMENT_NAME, { texturePath: item.texturePath });
     }
 }
 

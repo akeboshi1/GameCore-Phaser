@@ -21,8 +21,6 @@ export * from "./viewblock/viewblock.manager";
 export * from "./room.manager";
 export * from "./room";
 export * from "./display/spawn.point";
-export * from "./elementaction";
-export * from "./element/element.state.manager";
 export * from "./element/wall.manager";
 export * from "./physical/matter.worker.object";
 export * from "./wall/wall";

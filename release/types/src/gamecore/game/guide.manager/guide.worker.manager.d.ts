@@ -1,4 +1,4 @@
-import { PacketHandler } from "net-socket-packet";
+import { PacketHandler, PBpacket } from "net-socket-packet";
 import { Game } from "../game";
 export declare class GuideWorkerManager extends PacketHandler {
     protected game: Game;
@@ -6,6 +6,6 @@ export declare class GuideWorkerManager extends PacketHandler {
     addPackListener(): void;
     removePackListener(): void;
     stopGuide(id: string): void;
+    onUPDATE_PLAYER_GUIDE(packet: PBpacket): void;
     destroy(): void;
-    private onUPDATE_PLAYER_GUIDE;
 }

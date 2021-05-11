@@ -1,10 +1,10 @@
 import { op_client } from "pixelpai_proto";
-import { IRoomService } from "../room";
+import { IRoomService } from "..";
 import { State } from "./state.group";
 export declare class BaseStateManager {
     protected room: IRoomService;
-    protected add: BaseStateHandler;
-    protected delete: BaseStateHandler;
+    protected add: BaseHandler;
+    protected delete: BaseHandler;
     protected stateMap: Map<string, State>;
     constructor(room: IRoomService);
     setState(stateGroup: op_client.IStateGroup): void;
@@ -13,7 +13,7 @@ export declare class BaseStateManager {
     protected handleState(state: State): void;
     protected init(): void;
 }
-export declare class BaseStateHandler {
+export declare class BaseHandler {
     protected room: IRoomService;
     constructor(room: IRoomService);
     handler(state: State): void;

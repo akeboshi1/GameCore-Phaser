@@ -1,4 +1,3 @@
-/// <reference types="tooqinggamephaser" />
 import { Sprite } from "baseGame";
 import { BaseDragonbonesDisplay, ReferenceArea } from "baseRender";
 import { EditorTopDisplay } from "./top.display";

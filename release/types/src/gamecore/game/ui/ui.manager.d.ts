@@ -34,15 +34,12 @@ export declare class UIManager extends PacketHandler {
     protected onForceOfflineHandler(packet: PBpacket): Promise<void>;
     protected updateUIState(data: op_client.OP_VIRTUAL_WORLD_REQ_CLIENT_PKT_REFRESH_ACTIVE_UI): void;
     protected getMediatorClass(type: string): any;
-    protected onUIStateHandler(packge: PBpacket): void;
     protected handleShowUI(packet: PBpacket): void;
     protected handleUpdateUI(packet: PBpacket): void;
     protected handleCloseUI(packet: PBpacket): void;
-    protected onHandleShowCreateRoleUI(packet: PBpacket): void;
-    protected onHandleCloseCreateRoleUI(): void;
     protected getPanelNameByAlias(alias: string): string;
     protected clearMediator(): void;
-    private onOpenUIMediator;
+    protected onOpenUIMediator(): void;
     private checkSceneUImap;
     private checkNormalUITween;
     private checkBaseUImap;

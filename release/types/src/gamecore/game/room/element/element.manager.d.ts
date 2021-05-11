@@ -4,7 +4,7 @@ import { ConnectionService } from "structure";
 import { IDragonbonesModel, IFramesModel, ISprite } from "structure";
 import { IRoomService } from "../room";
 import { Element, IElement } from "./element";
-import { ElementDataManager } from "../../data.manager/element.dataManager";
+import { IElementStorage } from "baseGame";
 export interface IElementManager {
     hasAddComplete: boolean;
     readonly connection: ConnectionService | undefined;
@@ -35,14 +35,12 @@ export declare class ElementManager extends PacketHandler implements IElementMan
      * 移除缓存list
      */
     protected mCacheRemoveList: any[];
-    private mDealAddList;
-    private mRequestSyncIdList;
-    private mDealSyncMap;
-    private mGameConfig;
-    private mStateMgr;
-    private mActionMgr;
-    private mLoadLen;
-    private mCurIndex;
+    protected mDealAddList: any[];
+    protected mRequestSyncIdList: number[];
+    protected mDealSyncMap: Map<number, boolean>;
+    protected mGameConfig: IElementStorage;
+    protected mLoadLen: number;
+    protected mCurIndex: number;
     constructor(mRoom: IRoomService);
     addListen(): void;
     removeListen(): void;
@@ -52,10 +50,6 @@ export declare class ElementManager extends PacketHandler implements IElementMan
     remove(id: number): IElement;
     getElements(): IElement[];
     add(sprites: ISprite[], addMap?: boolean): void;
-    checkElementAction(id: number, userid?: number): boolean;
-    checkActionNeedBroadcast(id: number, userid?: number): boolean;
-    checkFurnitureSurvey(id: number, userid?: number): boolean;
-    isElementLocked(element: IElement): boolean;
     setState(state: op_client.IStateGroup): void;
     destroy(): void;
     update(time: number, delta: number): void;
@@ -83,7 +77,6 @@ export declare class ElementManager extends PacketHandler implements IElementMan
     protected checkDisplay(sprite: ISprite): IFramesModel | IDragonbonesModel;
     protected fetchDisplay(ids: number[]): void;
     get roomService(): IRoomService;
-    get eleDataMgr(): ElementDataManager;
     protected onSetPosition(packet: PBpacket): void;
     protected onRemove(packet: PBpacket): void;
     protected dealRemoveList(list: number[]): void;
@@ -93,7 +86,4 @@ export declare class ElementManager extends PacketHandler implements IElementMan
     private onShowBubble;
     private onClearBubbleHandler;
     private onChangeAnimation;
-    private checkElementDataAction;
-    private onQueryElementHandler;
-    private onActiveSpriteHandler;
 }

@@ -1,4 +1,4 @@
-import { PacketHandler } from "net-socket-packet";
+import { PacketHandler, PBpacket } from "net-socket-packet";
 import { op_client, op_gameconfig } from "pixelpai_proto";
 import { Player } from "./player";
 import { IElementManager } from "../element/element.manager";
@@ -8,10 +8,10 @@ import { ISprite } from "structure";
 import { ConnectionService } from "structure";
 import { IElement } from "../element/element";
 export declare class PlayerManager extends PacketHandler implements IElementManager {
-    private mRoom;
+    protected mRoom: Room;
     hasAddComplete: boolean;
-    private mActor;
-    private mPlayerMap;
+    protected mActor: User;
+    protected mPlayerMap: Map<number, Player>;
     constructor(mRoom: Room);
     addLisenter(): void;
     removeLisenter(): void;
@@ -39,9 +39,9 @@ export declare class PlayerManager extends PacketHandler implements IElementMana
     hideAll(): void;
     showAll(): void;
     setState(state: op_client.IStateGroup): void;
+    protected onAdjust(packet: PBpacket): void;
+    protected _loadSprite(sprite: op_client.ISprite): void;
     private onSync;
-    private _loadSprite;
-    private onAdjust;
     private onAdd;
     private _add;
     private checkSuitAvatarSprite;

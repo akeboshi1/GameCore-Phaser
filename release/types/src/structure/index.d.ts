@@ -54,3 +54,4 @@ export * from "./time.utils";
 export * from "./iworker.param";
 export * from "./iconfig.path";
 export * from "./command.msg.type";
+export * from "./net";
