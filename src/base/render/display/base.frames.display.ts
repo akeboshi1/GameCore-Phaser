@@ -62,7 +62,9 @@ export class BaseFramesDisplay extends BaseDisplay {
                     }
                 };
                 const onLoadError = (imageFile: ImageFile) => {
-                    Logger.getInstance().debug("update frame loadError");
+                    const key = imageFile.multiFile ? imageFile.multiFile.key : imageFile.key;
+                    if (key !== this.framesInfo.gene) return;
+                    Logger.getInstance().debug(`update frame loadError ${imageFile.url}`);
                     this.displayCreated();
                 };
                 this.scene.load.on(Phaser.Loader.Events.FILE_LOAD_ERROR, onLoadError, this);

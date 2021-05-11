@@ -169,6 +169,11 @@
   resolved "https://registry.yarnpkg.com/@types/node/-/node-14.14.44.tgz#df7503e6002847b834371c004b372529f3f85215"
   integrity sha512-+gaugz6Oce6ZInfI/tK4Pq5wIIkJMEJUu92RB3Eu93mtj4wjjjz9EB5mLp5s1pSsLXdC/CPut/xF20ZzAQJbTA==
 
+"@types/sat@^0.0.31":
+  version "0.0.31"
+  resolved "https://registry.yarnpkg.com/@types/sat/-/sat-0.0.31.tgz#6f0bb95f333649fb8d77ae8909e5ed104fe477bb"
+  integrity sha512-P4SVw79XheP1p92useDVpLYYOUQ6lpw2L7IdQz4dD23DZ8DiC1STgPOh72hjR5IZJBPQbzlICAbmjCKbwyYuxg==
+
 "@types/source-list-map@*":
   version "0.1.2"
   resolved "https://registry.npmjs.org/@types/source-list-map/-/source-list-map-0.1.2.tgz#0078836063ffaf17412349bba364087e0ac02ec9"
@@ -4909,6 +4914,11 @@ safe-regex@^1.1.0:
   version "2.1.2"
   resolved "https://registry.npmjs.org/safer-buffer/-/safer-buffer-2.1.2.tgz#44fa161b0187b9549dd84bb91802f9bd8385cd6a"
   integrity sha512-YZo3K82SD7Riyi0E1EQPojLz7kpepnSQI9IyPbHHg1XXXevb5dJI7tpyN2ADxGcQbHG7vcyRHk0cbwqcQriUtg==
+
+sat@^0.9.0:
+  version "0.9.0"
+  resolved "https://registry.yarnpkg.com/sat/-/sat-0.9.0.tgz#02091260513c8f2482da7db9377ddfeca80f5982"
+  integrity sha512-mxdv5RZJO4tdMnUURGU3gAMcnDUEwcNJwE+lPO0/V+rBeDvFLH3wEZEOR0fH7cTN0zQaNxBEbHnyQL9DzupwQQ==
 
 schema-utils@^0.4.5:
   version "0.4.7"

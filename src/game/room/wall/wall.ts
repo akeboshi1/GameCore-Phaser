@@ -172,7 +172,7 @@ export class Wall extends BlockObject {
     }
 
     get id(): number {
-        return this.guid;
+        return this.id;
     }
 
     get dir(): number {

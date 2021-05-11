@@ -36,11 +36,13 @@ export class ChatMediator extends BasicMediator {
         }
 
         if (val === "##show matter") {
-            return this.game.peer.physicalPeer.debugEnable();
+            throw new Error("todo");
+            // return this.game.peer.physicalPeer.debugEnable();
         }
 
         if (val === "##hide matter") {
-            return this.game.peer.physicalPeer.debugDisable();
+            throw new Error("todo");
+            // return this.game.peer.physicalPeer.debugDisable();
         }
         model.sendMessage(val);
     }
