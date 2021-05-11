@@ -27,7 +27,7 @@ export class CutInMenuPanel extends BasePanel {
         const height = this.scaleHeight;
         const buttonType = this.buttonType;
         if (buttonType === "work") {
-           // this.rightPopButton = new WorkPopContainer(this.scene, width, this.key, "work_icon", i18n.t("work.title"), this.dpr);
+            // this.rightPopButton = new WorkPopContainer(this.scene, width, this.key, "work_icon", i18n.t("work.title"), this.dpr);
         } else if (buttonType === "minecar") {
             this.rightPopButton = new MinePopContainer(this.scene, width, this.key, this.dpr);
         } else if (buttonType === "editor") {
@@ -74,7 +74,7 @@ export class CutInMenuPanel extends BasePanel {
         if (type === "work") {
             this.render.renderEmitter(ModuleName.CUTINMENU_NAME + "_openmed", ModuleName.PICAWORK_NAME);
         } else if (type === "minecar") {
-            this.render.renderEmitter(ModuleName.CUTINMENU_NAME + "_openmed", ModuleName.PICAMINECAR_NAME);
+            this.render.renderEmitter(ModuleName.CUTINMENU_NAME + "_openmed", ModuleName.PICANEWMINE_NAME);
         } else if (type === "editor") {
             this.render.renderEmitter(ModuleName.CUTINMENU_NAME + "_editor");
         } else if (type === "survey") {
@@ -210,11 +210,15 @@ class RightPopContainer extends Phaser.GameObjects.Container {
 class MinePopContainer extends RightPopContainer {
     constructor(scene: Phaser.Scene, width: number, key: string, dpr: number) {
         super(scene, width, key, dpr);
-
+        this.text.setText(i18n.t("mine.proptips"));
+        this.setIconFrame("mine_pickaxe");
+        this.imgIcon.y = -12 * dpr;
+        this.imgIcon.x -= 3 * dpr;
+        this.text.x = this.imgIcon.x;
     }
 }
 
-class WorkPopContainer extends MinePopContainer {
+class WorkPopContainer extends RightPopContainer {
     protected countTex: Phaser.GameObjects.Text;
     constructor(scene: Phaser.Scene, width: number, key: string, frame: string, title: string, dpr: number) {
         super(scene, width, key, dpr);

@@ -123,10 +123,10 @@ export class PicaMineSettlePanel extends BasePanel {
         this.titleimage = this.scene.make.image({ x: 0, y: -this.bg.displayWidth * 0.5 - 10 * this.dpr, key: this.key, frame: "title" }, false);
         this.titleimage.texture.setFilter(Phaser.Textures.FilterMode.LINEAR);
         this.titleName = this.scene.make.text({
-            x: 0, y: this.titleimage.y + 32 * this.dpr, text: i18n.t("minesettle.settle"),
+            x: 0, y: this.titleimage.y + 32 * this.dpr, text: i18n.t("mine.settle"),
             style: { fontSize: 15 * this.dpr, fontFamily: Font.DEFULT_FONT }
         }).setOrigin(0.5, 0.5);
-        this.confirmBtn = new NineSliceButton(this.scene, 0, 100 * this.dpr, 90 * this.dpr, 40 * this.dpr, UIAtlasKey.commonKey, "yellow_btn", i18n.t("minesettle.savebag"), this.dpr, this.scale, {
+        this.confirmBtn = new NineSliceButton(this.scene, 0, 100 * this.dpr, 90 * this.dpr, 40 * this.dpr, UIAtlasKey.commonKey, "yellow_btn", i18n.t("mine.savebag"), this.dpr, this.scale, {
             left: 10 * this.dpr,
             top: 10 * this.dpr,
             right: 10 * this.dpr,

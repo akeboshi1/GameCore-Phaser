@@ -4,30 +4,51 @@
 			"image": "cutInmenu",
 			"format": "RGBA8888",
 			"size": {
-				"w": 502,
-				"h": 526
+				"w": 1094,
+				"h": 246
 			},
 			"scale": 1,
 			"frames": [
 				{
-					"filename": "minebag_bg_brth",
+					"filename": "work",
 					"rotated": false,
-					"trimmed": false,
+					"trimmed": true,
 					"sourceSize": {
-						"w": 424,
-						"h": 175
+						"w": 166,
+						"h": 188
 					},
 					"spriteSourceSize": {
-						"x": 0,
-						"y": 0,
-						"w": 424,
-						"h": 175
+						"x": 1,
+						"y": 1,
+						"w": 164,
+						"h": 186
 					},
 					"frame": {
 						"x": 1,
 						"y": 1,
-						"w": 424,
-						"h": 175
+						"w": 164,
+						"h": 186
+					}
+				},
+				{
+					"filename": "text_minebag",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 82,
+						"h": 45
+					},
+					"spriteSourceSize": {
+						"x": 1,
+						"y": 1,
+						"w": 80,
+						"h": 43
+					},
+					"frame": {
+						"x": 1,
+						"y": 189,
+						"w": 80,
+						"h": 43
 					}
 				},
 				{
@@ -45,8 +66,8 @@
 						"h": 40
 					},
 					"frame": {
-						"x": 427,
-						"y": 1,
+						"x": 83,
+						"y": 189,
 						"w": 66,
 						"h": 40
 					}
@@ -66,31 +87,31 @@
 						"h": 30
 					},
 					"frame": {
-						"x": 427,
-						"y": 43,
+						"x": 151,
+						"y": 189,
 						"w": 17,
 						"h": 30
 					}
 				},
 				{
-					"filename": "minebag_bg",
+					"filename": "minebag_bg_brth",
 					"rotated": false,
-					"trimmed": true,
+					"trimmed": false,
 					"sourceSize": {
-						"w": 368,
-						"h": 118
+						"w": 424,
+						"h": 175
 					},
 					"spriteSourceSize": {
-						"x": 3,
-						"y": 3,
-						"w": 362,
-						"h": 111
+						"x": 0,
+						"y": 0,
+						"w": 424,
+						"h": 175
 					},
 					"frame": {
-						"x": 1,
-						"y": 178,
-						"w": 362,
-						"h": 111
+						"x": 167,
+						"y": 1,
+						"w": 424,
+						"h": 175
 					}
 				},
 				{
@@ -108,52 +129,31 @@
 						"h": 134
 					},
 					"frame": {
-						"x": 365,
-						"y": 178,
+						"x": 593,
+						"y": 1,
 						"w": 136,
 						"h": 134
 					}
 				},
 				{
-					"filename": "work",
+					"filename": "minebag_bg",
 					"rotated": false,
 					"trimmed": true,
 					"sourceSize": {
-						"w": 166,
-						"h": 188
+						"w": 368,
+						"h": 118
 					},
 					"spriteSourceSize": {
-						"x": 1,
+						"x": 3,
+						"y": 3,
+						"w": 362,
+						"h": 111
+					},
+					"frame": {
+						"x": 731,
 						"y": 1,
-						"w": 164,
-						"h": 186
-					},
-					"frame": {
-						"x": 1,
-						"y": 314,
-						"w": 164,
-						"h": 186
-					}
-				},
-				{
-					"filename": "survey_magnifier",
-					"rotated": false,
-					"trimmed": false,
-					"sourceSize": {
-						"w": 132,
-						"h": 124
-					},
-					"spriteSourceSize": {
-						"x": 0,
-						"y": 0,
-						"w": 132,
-						"h": 124
-					},
-					"frame": {
-						"x": 167,
-						"y": 291,
-						"w": 132,
-						"h": 124
+						"w": 362,
+						"h": 111
 					}
 				},
 				{
@@ -171,31 +171,52 @@
 						"h": 108
 					},
 					"frame": {
-						"x": 167,
-						"y": 417,
+						"x": 593,
+						"y": 137,
 						"w": 123,
 						"h": 108
 					}
 				},
 				{
-					"filename": "text_minebag",
+					"filename": "mine_pickaxe",
 					"rotated": false,
-					"trimmed": true,
+					"trimmed": false,
 					"sourceSize": {
-						"w": 82,
-						"h": 45
+						"w": 102,
+						"h": 105
 					},
 					"spriteSourceSize": {
-						"x": 1,
-						"y": 1,
-						"w": 80,
-						"h": 43
+						"x": 0,
+						"y": 0,
+						"w": 102,
+						"h": 105
 					},
 					"frame": {
-						"x": 292,
-						"y": 417,
-						"w": 80,
-						"h": 43
+						"x": 718,
+						"y": 137,
+						"w": 102,
+						"h": 105
+					}
+				},
+				{
+					"filename": "survey_magnifier",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 132,
+						"h": 124
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 132,
+						"h": 124
+					},
+					"frame": {
+						"x": 822,
+						"y": 114,
+						"w": 132,
+						"h": 124
 					}
 				},
 				{
@@ -213,8 +234,8 @@
 						"h": 119
 					},
 					"frame": {
-						"x": 374,
-						"y": 314,
+						"x": 956,
+						"y": 114,
 						"w": 127,
 						"h": 119
 					}
@@ -225,6 +246,6 @@
 	"meta": {
 		"app": "https://www.codeandweb.com/texturepacker",
 		"version": "3.0",
-		"smartupdate": "$TexturePacker:SmartUpdate:53e69766ddc241792c21825e8387b0b0:ac01f598173175722a61f8b65c231912:62d6b26235e61156d1d541f9630a287a$"
+		"smartupdate": "$TexturePacker:SmartUpdate:463c14da48e542ed9d7c46ec7d572448:fdde296f7d5d3e667dbb27332f3bea7e:62d6b26235e61156d1d541f9630a287a$"
 	}
 }
