@@ -81,6 +81,8 @@ export class PicaManufactureMediator extends BasicMediator {
 
     private onCloseHandler() {
         this.hide();
+        const uimgr = this.game.uiManager;
+        uimgr.showMed(ModuleName.PICAILLUSTRATED_NEW_NAME);
     }
 
     private addLisenter() {

@@ -141,9 +141,12 @@ export class PicaAvatarMediator extends BasicMediator {
                 configMgr.getBatchItemDatas(items);
                 let tempitem: op_client.ICountablePackageItem;
                 for (let i = items.length - 1; i >= 0; i--) {
-                    const tag = items[i].tag;
+                    const temp = items[i];
+                    const tag = temp.tag;
                     if (tag !== undefined && tag !== "" && JSON.parse(tag).type === "remove") {
                         tempitem = items[i];
+                        items.splice(i, 1);
+                    } else if (temp.suitType === "base") {
                         items.splice(i, 1);
                     }
                 }
@@ -161,7 +164,7 @@ export class PicaAvatarMediator extends BasicMediator {
 
     private onQuerySaveAvatar(avatarids: string[]) {
         if (avatarids.length === 0) return;
-       // if (this.skinID) avatarids.push(this.skinID);
+        // if (this.skinID) avatarids.push(this.skinID);
         this.model.querySaveAvatar(avatarids);
     }
 
