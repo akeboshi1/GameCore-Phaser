@@ -9,6 +9,7 @@ import { PicaBasePanel } from "../pica.base.panel";
 import { ICountablePackageItem, IExtendCountablePackageItem, ISocial } from "../../../structure";
 import { ImageValue } from "..";
 import { ItemButton } from "../Components";
+import { IMineShowPackage } from "src/pica/structure/imine.show.package";
 export class PicaNewMinePanel extends PicaBasePanel {
     private blackGraphic: Phaser.GameObjects.Graphics;
     private content: Phaser.GameObjects.Container;
@@ -24,6 +25,7 @@ export class PicaNewMinePanel extends PicaBasePanel {
     private curItem: ItemButton;
     private itemDatas: ICountablePackageItem[];
     private itemButtons: ItemButton[] = [];
+    private mineData: IMineShowPackage;
     constructor(uiManager: UiManager) {
         super(uiManager);
         this.key = ModuleName.PICANEWMINE_NAME;
@@ -50,7 +52,8 @@ export class PicaNewMinePanel extends PicaBasePanel {
 
     public onShow() {
         this.render.renderEmitter(this.key + "_initialized");
-        this.setMineData(this.itemDatas);
+        this.setMineData(this.mineData);
+        this.setPropDatas(this.itemDatas);
     }
 
     public addListen() {
@@ -114,9 +117,17 @@ export class PicaNewMinePanel extends PicaBasePanel {
         super.init();
     }
 
-    public setMineData(datas: ICountablePackageItem[]) {
+    public setMineData(content: IMineShowPackage) {
+        this.mineData = content;
+        if (!this.mInitialized || !content) return;
+        this.nameText.text = `[b]${content.name}[color=#0075D0]${content.lv}[/color][color=#0075D0][size=${8 * this.dpr}]${i18n.t("级")}[/size][/color][/b]`;
+        this.scoreText.text = `[color=#0075D0]${i18n.t("mine.integraltips")}[b]${content.score}[/b][/color]`;
+        this.durabilityText.text = `${content.durability}/${content.maxDurability}`;
+    }
+
+    public setPropDatas(datas: ICountablePackageItem[]) {
         this.itemDatas = datas;
-        if (!this.mInitialized) return;
+        if (!this.mInitialized || !datas) return;
         for (const temp of this.itemButtons) {
             temp.visible = false;
         }
@@ -132,13 +143,6 @@ export class PicaNewMinePanel extends PicaBasePanel {
             temp.setItemData(undefined);
         }
         this.gameScroll.Sort();
-        this.setSelectItemData();
-    }
-
-    setSelectItemData() {
-        this.nameText.text = `[b]${"酷炫的稿子"}[color=#0075D0]${"7"}[/color][color=#0075D0][size=${8 * this.dpr}]${i18n.t("级")}[/size][/color][/b]`;
-        this.scoreText.text = `[color=#0075D0]${i18n.t("mine.integraltips")}[b]${35}[/b][/color]`;
-        this.durabilityText.text = `${71}/${100}`;
     }
 
     private playMove(from: number, to: number) {

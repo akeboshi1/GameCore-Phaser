@@ -192,7 +192,12 @@ export class PicaPartyNavigationMediator extends BasicMediator {
         this.game.sendCustomProto("STRING", "roomFacade:createNewRoom", { id });
     }
 
-    private setNavigationData() {
+    private setNavigationData(type: number) {
+        if (type === 1) this.setPicaNavigationData();
+        else this.setTooqingNavigationData();
+    }
+
+    private setPicaNavigationData() {
         const map = <Map<string, IScene[]>>this.config.getScenesByCategory(undefined, 0);
         const arr = [];
         map.forEach((value, key) => {
@@ -202,6 +207,19 @@ export class PicaPartyNavigationMediator extends BasicMediator {
             }
         });
         this.tempData = arr;
+        if (!this.mPanelInit) return;
+        this.mView.setNavigationListData(arr);
+    }
+
+    private setTooqingNavigationData() {
+        const map = <Map<string, IScene[]>>this.config.getScenesByCategory(undefined, 1);
+        const arr = [];
+        map.forEach((value, key) => {
+            if (key !== "undefined") {
+                const obj = { type: key, name: this.config.getI18n(key), datas: value };
+                arr.push(obj);
+            }
+        });
         if (!this.mPanelInit) return;
         this.mView.setNavigationListData(arr);
     }
