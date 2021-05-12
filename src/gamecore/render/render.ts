@@ -1712,7 +1712,7 @@ export class Render extends RPCPeer implements GameMain, IRender {
         Url.OSD_PATH = this.mConfig.osd;
         Url.RES_PATH = `resources/`;
         Url.RESUI_PATH = `${Url.RES_PATH}ui/`;
-        // this.initRatio();
+        this.initRatio();
         // initLocales(path.relative(__dirname, `${Url.RES_PATH}/locales/{{lng}}.json`));
         // const locales = require(`${Url.RES_PATH}locales`);
         // initLocales(resources);
