@@ -45,6 +45,7 @@ export class WallManager {
         this.walls.length = 0;
     }
 
+    // todo: move to pica
     // 在墙面上
     public isInWallRect(pos: IPos): boolean {
         for (const wall of this.walls) {
@@ -60,6 +61,7 @@ export class WallManager {
         return false;
     }
 
+    // todo: move to pica
     // 靠墙
     public isAgainstWall(pos: IPos, originPoint: IPos): boolean {
         const origin90 = Position45.transformTo90(originPoint, this.roomService.miniSize);
@@ -77,30 +79,15 @@ export class WallManager {
         return false;
     }
 
+    // todo: move to pica
     // 替换全部资源
-    public async changeAll(id: string) {
+    public changeAllDisplayData(id: string) {
         const configMgr = <BaseDataConfigManager> this.roomService.game.configManager;
-        const itemBase = await <IExtendCountablePackageItem> configMgr.getItemBaseByID(id);
-        if (!itemBase) {
+        const configData = configMgr.getElement2Data(id);
+        if (!configData) {
             Logger.getInstance().error("no config data, id: ", id);
             return;
         }
-        const anis = new Map();
-        for (const animation of itemBase.animations) {
-            anis.set(animation.aniName, animation);
-        }
-        for (const wall of this.walls) {
-            wall.load({
-                discriminator: "FramesModel",
-                id: wall.id,
-                gene: sha1.sync(itemBase.display.dataPath + itemBase.display.texturePath),
-                animations: anis,
-                animationName: "idle",
-                display: {
-                    texturePath: itemBase.display.texturePath,
-                    dataPath: itemBase.display.dataPath
-                }
-            });
-        }
+        // todo: change display data
     }
 }

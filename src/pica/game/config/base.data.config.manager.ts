@@ -788,6 +788,24 @@ export class BaseDataConfigManager extends BaseConfigManager {
         });
     }
 
+    /**
+     * 通过ID获取element2 数据
+     * @param id
+     * @returns
+     */
+    public getElement2Data(id: string): IElement {
+        const data: Element2Config = this.getConfig(BaseDataType.element2);
+        const element = data.get(id);
+        if (!element["find"]) {
+            const serializeString = element.serializeString;
+            if (serializeString) {
+                element.texture_path = this.getSerializePng(serializeString);
+            }
+            element["find"] = true;
+        }
+        return element;
+    }
+
     public destory() {
         super.destory();
         this.mGame.emitter.off(EventType.QUEST_ELEMENT_PI_DATA, this.checkDynamicElementPI, this);

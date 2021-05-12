@@ -1096,10 +1096,10 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
 
     private onExtraRoomInfoHandler(content: ExtraRoomInfo) {
         if (this.wallManager) {
-            this.wallManager.changeAll(content.wallId);
+            this.wallManager.changeAllDisplayData(content.wallId);
         }
         if (this.terrainManager) {
-            this.terrainManager.changeAll(content.floorId);
+            this.terrainManager.changeAllDisplayData(content.floorId);
         }
     }
 

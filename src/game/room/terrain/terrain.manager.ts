@@ -28,6 +28,8 @@ export class TerrainManager extends PacketHandler implements IElementManager {
     private mDirty: boolean = false;
     private mTerrainCache: any[];
     private mIsDealEmptyTerrain: boolean = false;
+    // todo: move to pica
+    private mExtraDisplayInfo_TexturePath: string = "";
     // private mCacheLen: number = 10;
     // private canDealTerrain = false;
     constructor(protected mRoom: IRoomService, listener?: SpriteAddCompletedListener) {
@@ -109,9 +111,7 @@ export class TerrainManager extends PacketHandler implements IElementManager {
             this.removeEmpty(new LogicPos(point.x, point.y));
             if (point) {
                 const s = new Sprite(sprite, op_def.NodeType.TerrainNodeType);
-                if (!s.displayInfo) {
-                    this.checkTerrainDisplay(s);
-                }
+                this.checkTerrainDisplay(s);
                 if (!s.displayInfo) {
                     ids.push(s.id);
                 }
@@ -124,6 +124,8 @@ export class TerrainManager extends PacketHandler implements IElementManager {
 
     public destroy() {
         this.mIsDealEmptyTerrain = false;
+        // todo: move to pica
+        this.mExtraDisplayInfo_TexturePath = "";
         this.roomService.game.emitter.off(ElementManager.ELEMENT_READY, this.dealTerrainCache, this);
         if (this.connection) {
             this.connection.removePacketListener(this);
@@ -171,31 +173,20 @@ export class TerrainManager extends PacketHandler implements IElementManager {
     public onDisplayRemoved(id: number) {
     }
 
+    // todo: move to pica
     // 替换全部资源
-    public async changeAll(id: string) {
+    public changeAllDisplayData(id: string) {
         const configMgr = <BaseDataConfigManager> this.roomService.game.configManager;
-        const itemBase = await <IExtendCountablePackageItem> configMgr.getItemBaseByID(id);
-        if (!itemBase) {
+        const configData = configMgr.getElement2Data(id);
+        if (!configData) {
             Logger.getInstance().error("no config data, id: ", id);
             return;
         }
-        const anis = new Map();
-        for (const animation of itemBase.animations) {
-            anis.set(animation.aniName, animation);
-        }
         this.mTerrains.forEach((terrain) => {
-            terrain.load({
-                discriminator: "FramesModel",
-                id: terrain.id,
-                gene: sha1.sync(itemBase.display.dataPath + itemBase.display.texturePath),
-                animations: anis,
-                animationName: "idle",
-                display: {
-                    texturePath: itemBase.display.texturePath,
-                    dataPath: itemBase.display.dataPath
-                }
-            });
+            terrain.changeDisplayData(configData.texture_path);
         });
+        // 存储资源
+        this.mExtraDisplayInfo_TexturePath = configData.texture_path;
     }
 
     protected onAdd(packet: PBpacket) {
@@ -280,6 +271,10 @@ export class TerrainManager extends PacketHandler implements IElementManager {
             if (palette) {
                 sprite.setDisplayInfo(palette);
             }
+        }
+        // 使用ExtraRoomInfo中的floorId替换显示资源
+        if (this.mExtraDisplayInfo_TexturePath.length > 0) {
+            (<IFramesModel>sprite.displayInfo).display.texturePath = this.mExtraDisplayInfo_TexturePath;
         }
     }
 
