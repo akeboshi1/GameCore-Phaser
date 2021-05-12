@@ -312,6 +312,7 @@ export class Element extends BlockObject implements IElement {
                 } else {
                     // this.mRoomService.game.physicalPeer.changeAnimation(this.id, this.mModel.currentAnimation.name, times);
                 }
+                this.addBody();
             }
             this.mRoomService.game.renderPeer.playAnimation(this.id, this.mModel.currentAnimation, undefined, times);
             this.mRoomService.game.renderPeer.setHasInteractive(this.id, hasInteractive);
