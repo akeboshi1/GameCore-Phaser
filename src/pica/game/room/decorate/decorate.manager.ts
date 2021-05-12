@@ -296,7 +296,7 @@ export class DecorateManager {
         if (pos === undefined) {
             tempPos = element.model.pos;
         }
-        if (element.model.layer === LayerEnum.Unknown) {
+        if (element.model.layer === LayerEnum.Hanging) {
             // todo: change to new enum
             // 墙饰
             canPlace = this.room.wallManager.isInWallRect(tempPos);
@@ -323,7 +323,7 @@ export class DecorateManager {
         if (!element) return null;
         const roomSize = this.mRoom.miniSize;
 
-        if (element.model.layer === LayerEnum.Unknown) {
+        if (element.model.layer === LayerEnum.Hanging) {
             // todo: change to new enum
             // 墙饰
             return pos;
