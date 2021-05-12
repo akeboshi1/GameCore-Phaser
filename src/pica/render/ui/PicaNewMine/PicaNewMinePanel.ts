@@ -44,7 +44,7 @@ export class PicaNewMinePanel extends PicaBasePanel {
         this.setInteractive(new Phaser.Geom.Rectangle(0, 0, w * 2, h * 2), Phaser.Geom.Rectangle.Contains);
 
         const fromy = this.scaleHeight + this.content.height * 0.5 + 10 * this.dpr;
-        const toy = this.scaleHeight - this.content.height * 0.5;
+        const toy = this.scaleHeight - this.content.height * 0.5 - 8 * this.dpr;
         this.playMove(fromy, toy);
     }
 
@@ -74,16 +74,16 @@ export class PicaNewMinePanel extends PicaBasePanel {
         this.bottombg = this.scene.make.image({ key: UIAtlasName.mine_new, frame: "mine_props_list_bg" });
         this.bottombg.y = this.bottombg.height * 0.5;
         const conWdith = this.bg.width;
-        const conHeight = this.bg.height;
+        const conHeight = 142 * this.dpr;
         this.content.setSize(conWdith, conHeight);
         this.iconBg = this.scene.make.image({ key: UIAtlasName.mine_new, frame: "mine_icon_bg" });
         this.iconBg.x = -conWdith * 0.5 + this.iconBg.width * 0.5 + 8 * this.dpr;
-        this.iconBg.y = -conHeight * 0.5 + this.iconBg.height * 0.5 + 9 * this.dpr;
+        this.iconBg.y = -conHeight * 0.5 + this.iconBg.height * 0.5 + 11 * this.dpr;
         this.itemIcon = new DynamicImage(this.scene, this.iconBg.x, this.iconBg.y);
-        this.durabilityText = this.scene.make.text({ style: UIHelper.colorNumberStyle("#0075D0", 12 * this.dpr) });
+        this.durabilityText = this.scene.make.text({ style: UIHelper.colorNumberStyle("#0075D0", 12 * this.dpr) }).setOrigin(0.5);
         this.durabilityText.setStroke("#FFFFFF", 2 * this.dpr);
         this.durabilityText.x = this.itemIcon.x;
-        this.durabilityText.y = this.iconBg.y + this.iconBg.height * 0.5 + 15 * this.dpr;
+        this.durabilityText.y = this.iconBg.y + this.iconBg.height * 0.5 + 0 * this.dpr;
         this.nameText = new BBCodeText(this.scene, 0, 0, "", UIHelper.whiteStyle(this.dpr, 12)).setOrigin(0, 0.5);
         this.nameText.y = -conHeight * 0.5 + 25 * this.dpr;
         this.nameText.x = this.iconBg.x + this.iconBg.width * 0.5 + 20 * this.dpr;
@@ -98,12 +98,12 @@ export class PicaNewMinePanel extends PicaBasePanel {
         this.gameScroll = new GameScroller(this.scene, {
             x: 0,
             y: this.bottombg.y,
-            width: conWdith,
+            width: conWdith - 4 * this.dpr,
             height: 80 * this.dpr,
             zoom: this.scale,
             orientation: 1,
             dpr: this.dpr,
-            space: 8 * this.dpr,
+            space: 6 * this.dpr,
             selfevent: true,
             cellupCallBack: (gameobject) => {
                 this.onGameScrollHandler(gameobject);
@@ -136,7 +136,7 @@ export class PicaNewMinePanel extends PicaBasePanel {
     }
 
     setSelectItemData() {
-        this.nameText.text = `[b]${"酷炫的稿子"}[color=#0075D0]${"T"}[/color][/b][color=#0075D0][size=${8 * this.dpr}]${i18n.t("级")}[/size][/color]`;
+        this.nameText.text = `[b]${"酷炫的稿子"}[color=#0075D0]${"7"}[/color][color=#0075D0][size=${8 * this.dpr}]${i18n.t("级")}[/size][/color][/b]`;
         this.scoreText.text = `[color=#0075D0]${i18n.t("mine.integraltips")}[b]${35}[/b][/color]`;
         this.durabilityText.text = `${71}/${100}`;
     }

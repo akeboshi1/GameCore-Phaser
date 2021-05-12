@@ -464,7 +464,9 @@
     "newworld": "新世界",
     "picahotel": "皮卡堂大酒店",
     "store": "商铺",
-    "onlinetips": "在线奖励"
+    "onlinetips": "在线奖励",
+    "pica": "皮卡堂",
+    "tooqing": "图轻"
   },
   "commontips": {
     "configerror": "配置未成功加载，请刷新游戏"

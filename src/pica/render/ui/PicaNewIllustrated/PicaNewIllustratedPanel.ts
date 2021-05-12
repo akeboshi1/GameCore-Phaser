@@ -272,17 +272,12 @@ export class PicaNewIllustratedPanel extends PicaBasePanel {
         this.collectRewardsPanel.refreshMask();
     }
 
-    private updateCollectRewards(data: IGalleryCombination) {
-        if (this.collectRewardsPanel && this.collectRewardsPanel.visible) {
-            this.collectRewardsPanel.updateCombination(data);
-        }
-    }
-
     private checkCollectRewards(combinations: IGalleryCombination[]) {
         if (this.collectRewardsPanel && this.collectRewardsPanel.visible) {
             let finish = false;
             for (const temp of combinations) {
                 finish = this.collectRewardsPanel.checkHasCombination(temp);
+                if (finish) break;
             }
             if (!finish) this.collectRewardsPanel.close();
         }
@@ -328,8 +323,6 @@ export class PicaNewIllustratedPanel extends PicaBasePanel {
         } else if (tag === "combinationrewards") {
             this.openCollectRewardsPanel(data);
             this.hideDetailPanel();
-        } else if (tag === "updatecombination") {
-            this.updateCollectRewards(data);
         } else if (tag === "showalreadycollected") {
             this.openAlreadCollectedPanel();
             this.hideDetailPanel();
