@@ -6,4 +6,5 @@ export interface IMineShowPackage {
     score: number;
     minePick: string;
     subcategory: string;
+    icon: string;
 }

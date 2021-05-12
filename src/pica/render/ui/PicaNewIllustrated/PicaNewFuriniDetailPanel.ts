@@ -59,6 +59,7 @@ export class PicaNewFuriniDetailPanel extends Phaser.GameObjects.Container {
             right: 30 * this.dpr,
             bottom: 40 * this.dpr
         });
+        bg.setInteractive();
         this.closeButton = new Button(this.scene, UIAtlasName.uicommon, "close");
         this.closeButton.x = this.width * 0.5 - this.closeButton.width * 0.5 + 10 * this.dpr;
         this.closeButton.y = -this.height * 0.5 + this.closeButton.height * 0.5 - 10 * this.dpr;
@@ -97,6 +98,7 @@ export class PicaNewFuriniDetailPanel extends Phaser.GameObjects.Container {
         this.furiDes.y = this.furinName.y + 25 * this.dpr;
         this.add([this.backgrand, bg, titlebg, this.titleName, this.closeButton, this.codeName, this.mDetailDisplay, this.starImg, this.bottomBg, this.furinName, this.furiDes]);
         this.resize(0, 0);
+        this.backgrand.on("pointerup", this.onCloseHandler, this);
     }
 
     destroy() {

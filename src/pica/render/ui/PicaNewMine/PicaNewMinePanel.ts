@@ -88,11 +88,11 @@ export class PicaNewMinePanel extends PicaBasePanel {
         this.durabilityText.x = this.itemIcon.x;
         this.durabilityText.y = this.iconBg.y + this.iconBg.height * 0.5 + 0 * this.dpr;
         this.nameText = new BBCodeText(this.scene, 0, 0, "", UIHelper.whiteStyle(this.dpr, 12)).setOrigin(0, 0.5);
-        this.nameText.y = -conHeight * 0.5 + 25 * this.dpr;
-        this.nameText.x = this.iconBg.x + this.iconBg.width * 0.5 + 20 * this.dpr;
+        this.nameText.y = -conHeight * 0.5 + 28 * this.dpr;
+        this.nameText.x = this.iconBg.x + this.iconBg.width * 0.5 + 15 * this.dpr;
         this.scoreText = new BBCodeText(this.scene, 0, 0, "", UIHelper.colorStyle("#0075D0", 11 * this.dpr)).setOrigin(0, 0.5);
         this.scoreText.x = this.nameText.x;
-        this.scoreText.y = this.nameText.y + 15 * this.dpr;
+        this.scoreText.y = this.nameText.y + 20 * this.dpr;
         this.useButton = new NineSliceButton(this.scene, 0, 0, 97 * this.dpr, 38 * this.dpr, UIAtlasName.uicommon, "yellow_btn_normal", i18n.t("common.use"), this.dpr, this.scale, UIHelper.button(this.dpr));
         this.useButton.setTextStyle(UIHelper.brownishStyle(this.dpr, 17));
         this.useButton.setFontStyle("bold");
@@ -120,18 +120,20 @@ export class PicaNewMinePanel extends PicaBasePanel {
     public setMineData(content: IMineShowPackage) {
         this.mineData = content;
         if (!this.mInitialized || !content) return;
-        this.nameText.text = `[b]${content.name}[color=#0075D0]${content.lv}[/color][color=#0075D0][size=${8 * this.dpr}]${i18n.t("级")}[/size][/color][/b]`;
-        this.scoreText.text = `[color=#0075D0]${i18n.t("mine.integraltips")}[b]${content.score}[/b][/color]`;
+        this.nameText.text = `[b]${content.name} [color=#0075D0]${content.lv}[/color][color=#0075D0][size=${8 * this.dpr}]${i18n.t("级")}[/size][/color][/b]`;
+        this.scoreText.text = `[color=#0075D0]${i18n.t("mine.integraltips")} [b]${content.score}[/b][/color]`;
         this.durabilityText.text = `${content.durability}/${content.maxDurability}`;
     }
 
     public setPropDatas(datas: ICountablePackageItem[]) {
+        datas = datas || [];
+        if (datas.length < 6) datas = datas.concat(new Array(6 - datas.length));
         this.itemDatas = datas;
         if (!this.mInitialized || !datas) return;
         for (const temp of this.itemButtons) {
             temp.visible = false;
         }
-        for (let i = 0; i < 10; i++) {
+        for (let i = 0; i < datas.length; i++) {
             let temp: ItemButton;
             if (i < this.itemButtons.length) {
                 temp = this.itemButtons[i];
@@ -140,7 +142,8 @@ export class PicaNewMinePanel extends PicaBasePanel {
                 this.gameScroll.addItem(temp);
                 this.itemButtons.push(temp);
             }
-            temp.setItemData(undefined);
+            temp.setItemData(datas[i]);
+            temp.visible = true;
         }
         this.gameScroll.Sort();
     }
@@ -168,6 +171,7 @@ export class PicaNewMinePanel extends PicaBasePanel {
     }
 
     private onGameScrollHandler(obj: ItemButton) {
+        if (!obj.itemData) return;
         if (this.curItem) this.curItem.select = false;
         obj.select = true;
         this.curItem = obj;

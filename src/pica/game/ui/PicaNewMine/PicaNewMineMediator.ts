@@ -47,6 +47,8 @@ export class PicaNewMineMediator extends BasicMediator {
     }
     private onMineShowPackageHandler(packt: any) {
         const content: IMineShowPackage = packt.content;
+        const item = this.config.getItemBaseByID(content.minePick);
+        content.icon = item.texturePath;
         if (this.mView) this.mView.setMineData(content);
         if (!this.subType) {
             this.setMineProps(content.subcategory);

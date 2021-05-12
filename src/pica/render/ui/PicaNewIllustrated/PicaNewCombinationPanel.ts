@@ -121,7 +121,7 @@ export class PicaNewCombinationPanel extends Phaser.GameObjects.Container {
         this.mGameGrid.on("cellTap", (cell) => {
             this.onSelectItemHandler(cell);
         });
-        this.mGameGrid.y = this.height * 0.5 - tableHeight * 0.5 - 15 * this.dpr;
+        this.mGameGrid.y = this.height * 0.5 - tableHeight * 0.5 - 20 * this.dpr;
     }
     private onSelectItemHandler(cell: PicaIllustratedItemButton) {
         if (this.send) this.send.runWith(["furidetail", cell.itemData]);

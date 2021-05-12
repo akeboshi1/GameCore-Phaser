@@ -305,7 +305,10 @@ export class PicaPartyNavigationPanel extends PicaBasePanel {
             item.setText(temp.text);
             item.visible = true;
         }
-        this.curToggleItem = undefined;
+        if (this.curToggleItem) {
+            this.curToggleItem.isOn = false;
+            this.curToggleItem = undefined;
+        }
         this.onToggleButtonHandler(undefined, this.toggleItems[0]);
     }
 
