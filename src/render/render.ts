@@ -146,12 +146,7 @@ export class Render extends RPCPeer implements GameMain, IRender {
         // Logger.getInstance().debug("connectfail===>", this.mConnectFailFunc, this.mConfig);
         this.initConfig();
         Logger.getInstance().log("Render version ====>:", `v${version}`);
-        this.linkTo(MAIN_WORKER, MAIN_WORKER_URL).onceReady(() => {
-            this.mMainPeer = this.remote[MAIN_WORKER].MainPeer;
-            this.mMainPeer.updateFps();
-            this.createGame();
-            Logger.getInstance().debug("worker onReady");
-        });
+        this.initWorker();
         // const len = 3;
         // const statList = [];
         // for (let i = 0; i < len; i++) {
@@ -482,18 +477,7 @@ export class Render extends RPCPeer implements GameMain, IRender {
             return;
         }
         this.destroy(false).then(() => {
-            this.linkTo(MAIN_WORKER, MAIN_WORKER_URL).onceReady(() => {
-                this.mMainPeer = this.remote[MAIN_WORKER].MainPeer;
-                this.mMainPeer.updateFps();
-                this.createGame();
-                Logger.getInstance().debug("worker onReady");
-            });
-            // this.linkTo(PHYSICAL_WORKER, PHYSICAL_WORKER_URL).onceReady(() => {
-            //     this.mPhysicalPeer = this.remote[PHYSICAL_WORKER].PhysicalPeer;
-            //     this.mPhysicalPeer.setScaleRatio(Math.ceil(this.mConfig.devicePixelRatio || UiUtils.baseDpr));
-            //     this.mPhysicalPeer.start();
-            //     Logger.getInstance().debug("Physcialworker onReady");
-            // });
+            this.initWorker();
         });
     }
 
@@ -1841,6 +1825,15 @@ export class Render extends RPCPeer implements GameMain, IRender {
             }
             if (loginScene && loginScene.scene.isActive()) loginScene.scene.setVisible(true);
         }
+    }
+
+    private initWorker() {
+        this.linkTo(MAIN_WORKER, MAIN_WORKER_URL, true).onceReady(() => {
+            this.mMainPeer = this.remote[MAIN_WORKER].MainPeer;
+            this.mMainPeer.updateFps();
+            this.createGame();
+            Logger.getInstance().debug("worker onReady");
+        });
     }
 
     get mainPeer() {
