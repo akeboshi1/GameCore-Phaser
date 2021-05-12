@@ -14,7 +14,7 @@ export class UiManager {
      */
     protected mCache: any[] = [];
     protected mRemoteCache: Map<string, { resolver: ValueResolver<BasePanel>, param?: any }> = new Map();
-
+    protected alertViewCache: any[] = [];
     constructor(protected mRender: Render) {
     }
 
@@ -26,6 +26,12 @@ export class UiManager {
                     this.showPanel(tmp.name, tmp.param);
                 }
                 this.mCache.length = 0;
+            }
+            if (this.alertViewCache) {
+                this.alertViewCache.forEach((data) => {
+                    this.showAlertView(data.text, data.ok, data.cancel, data.callBack);
+                });
+                this.alertViewCache.length = 0;
             }
 
             if (this.mRemoteCache.size > 0) {
@@ -79,7 +85,8 @@ export class UiManager {
     }
 
     public showAlertView(text: string, ok: boolean, cancel: boolean = false, callBack?: Function) {
-        if (!this.mScene) {
+        if (!this.mScene || this.mScene.sceneDestroy() || !this.mScene.sceneInitialize() || this.mScene.sceneChange) {
+            this.alertViewCache.push({ text, ok, cancel, callBack });
             return;
         }
         // let scene = this.mRender.game.scene.getScene(SceneName.MAINUI_SCENE);
