@@ -97,7 +97,6 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
         this.setConfig(config);
         await this.initWorld();
         this.peer.state = GameState.InitWorld;
-        this.initGame();
         this.hasClear = false;
         this.login();
     }
@@ -822,17 +821,6 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
             Logger.getInstance().error("reload res ====>", reason, "reload count ====>", this.remoteIndex);
             return this.loadGameConfig(remotePath);
         });
-    }
-
-    private initGame() {
-        // if (this.mRoomManager) this.mRoomManager.addPackListener();
-        // if (this.mUIManager) this.mUIManager.addPackListener();
-        // if (this.mCreateRoleManager) this.mCreateRoleManager.register();
-        // if (this.mSoundManager) this.mSoundManager.addPackListener();
-        // if (this.mPlayerDataManager) this.mPlayerDataManager.addPackListener();
-        // if (this.mElementStorage) {
-        //     this.mElementStorage.on("SCENE_PI_LOAD_COMPELETE", this.loadSceneConfig);
-        // }
     }
 
     private _createAnotherGame(gameId, virtualworldId, sceneId, loc, spawnPointId?, worldId?) {

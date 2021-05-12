@@ -148,7 +148,6 @@ export declare class Game extends PacketHandler implements IConnectListener, Clo
     protected onAvatarGameModeHandler(packet: PBpacket): void;
     protected update(current: number, delta?: number): void;
     protected loadGameConfig(remotePath: any): Promise<Lite>;
-    private initGame;
     private _createAnotherGame;
     private _onGotoAnotherGame;
     private clearGame;
