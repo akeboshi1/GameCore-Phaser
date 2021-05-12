@@ -1,7 +1,7 @@
 import { LayerEnum } from "game-capsule";
 import { PacketHandler, PBpacket } from "net-socket-packet";
 import { op_editor, op_def, op_client } from "pixelpai_proto";
-import { IPos } from "utils";
+import { Direction, IPos } from "utils";
 import { SceneEditorCanvas } from "../scene.editor.canvas";
 
 export class EditorWallManager extends PacketHandler {
@@ -46,6 +46,9 @@ export class EditorWallManager extends PacketHandler {
                 });
             }
             placeLocs.push(placeLoc);
+            if (loc.dir === Direction.concave) {
+                this.removeDuplicate(loc.x, loc.y);
+            }
         }
 
         this.reqEditorAddTerrainsData(placeLocs);
@@ -183,6 +186,20 @@ export class EditorWallManager extends PacketHandler {
         }
 
         return true;
+    }
+
+    private removeDuplicate(x: number, y: number) {
+        // 放置17转角时，检查两边重复墙壁。删除3和5方向
+        const locs = [{ x: x + 1, y }, { x, y: y + 1 }];
+        const removes = [];
+        for (const loc of locs) {
+            const l = this.genLocId(loc.x, loc.y);
+            const wall = this.walls.get(l);
+            if (wall) {
+                if (wall.dir === Direction.west_south || wall.dir === Direction.south_east) removes.push(loc);
+            }
+        }
+        if (removes.length > 0) this.removeWalls(removes);
     }
 
     private genLocId(x: number, y: number) {
