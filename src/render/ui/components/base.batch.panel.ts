@@ -2,6 +2,7 @@ import { Panel } from "apowophaserui";
 import { MainUIScene } from "../../scenes/main.ui.scene";
 import { Logger, UiUtils, Url } from "utils";
 import { Render } from "../../render";
+import { BasicScene } from "baseRender";
 
 export class BaseBatchPanel extends Panel {
     protected mInitialized: boolean;
@@ -113,7 +114,7 @@ export class BaseBatchPanel extends Panel {
     protected init() {
         // 异步过程中存在某些ui在销毁之前初始化完成
         if (this.mScene && this.mScene.sys && this.mScene.sys.displayList) {
-            (<MainUIScene>this.mScene).layerManager.addToLayer(this.uiLayer, this);
+            (<BasicScene>this.mScene).layerManager.addToLayer(this.uiLayer, this);
             super.init();
             this.setLinear(this.key);
             Logger.getInstance().debug("init========", this.key);

@@ -7,7 +7,7 @@ import { MainUIScene } from "./main.ui.scene";
 
 export class LoadingScene extends BasicScene {
   private bg: Phaser.GameObjects.Sprite;
-  private mask: Phaser.GameObjects.Graphics;
+  // private mask: Phaser.GameObjects.Graphics;
   private debug: Phaser.GameObjects.Text;
   private mCallback: Function;
   private curtain: Curtain;
@@ -44,9 +44,6 @@ export class LoadingScene extends BasicScene {
   }
 
   public create() {
-    super.create();
-    const uimanager: UiManager = this.render.uiManager;
-    uimanager.setScene(this);
     try {
       WebFont.load({
         custom: {
@@ -71,10 +68,10 @@ export class LoadingScene extends BasicScene {
 
     this.curtain = new Curtain(this, this.dpr);
 
-    this.mask = this.add.graphics({ x: 0, y: 0 });
-    this.mask.fillStyle(0);
+    // this.mask = this.add.graphics({ x: 0, y: 0 });
+    // this.mask.fillStyle(0, 0);
 
-    this.mask.fillRect(0, 0, width, height);
+    // this.mask.fillRect(0, 0, width, height);
 
     const dpr = this.render.uiRatio;
     this.bg = this.add.sprite(width * 0.5, height * 0.5, "loading").setScale(this.render.uiScale * dpr * 2);
@@ -98,6 +95,9 @@ export class LoadingScene extends BasicScene {
     for (const tmpData in this.progressData) {
       this.loadProgress(this.progressData[tmpData]);
     }
+    super.create();
+    const uimanager: UiManager = this.render.uiManager;
+    uimanager.setScene(this);
   }
 
   getProgress(): string {
@@ -237,7 +237,7 @@ export class LoadingScene extends BasicScene {
     if (this.bg) {
       this.bg.visible = val;
       this.debug.visible = val;
-      this.mask.visible = val;
+      // this.mask.visible = val;
     }
   }
 

@@ -22,6 +22,12 @@ export class Terrain extends BlockObject implements IElement {
         this.model = sprite;
     }
 
+    changeDisplayData(texturePath: string, dataPath?: string) {
+        this.mDisplayInfo.display.texturePath = texturePath;
+        if (dataPath) this.mDisplayInfo.display.dataPath = dataPath;
+        this.changeDisplay(this.mDisplayInfo);
+    }
+
     get state(): boolean {
         return this.mState;
     }

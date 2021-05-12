@@ -455,7 +455,8 @@
     "store": "Store",
     "onlinetips": "Online rewards",
     "pica": "PICA",
-    "tooqing": "TOOQING"
+    "tooqing": "TOOQING",
+    "hot": "HOT"
   },
   "commontips": {
     "configerror": "The configuration did not load successfully, please refresh the game"

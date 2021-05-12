@@ -218,7 +218,7 @@ export class PicaIllustratedItemButton extends ItemButton {
         if (item) {
             this.codeTex.text = code ? item.code : item.name;
             const status = item["status"];
-            if (status === 1) {
+            if (status !== 4) {
                 this.bg.setTexture(UIAtlasName.illustrate, "illustrate_survey_nohave");
                 this.itemIcon.alpha = 0.4;
                 this.star.alpha = 0.4;

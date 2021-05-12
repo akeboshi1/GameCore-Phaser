@@ -19,6 +19,7 @@ export class PicaPartyNavigationPanel extends PicaBasePanel {
     private bg: CommonBackground;
     private tilteName: Phaser.GameObjects.Text;
     private signProgressPanel: SignProgressPanel;
+    private tooqingoption: TooQingChangeOption;
     private toggleCon: Phaser.GameObjects.Container;
     private optionLine: Phaser.GameObjects.Image;
     private selectLine: Phaser.GameObjects.Image;
@@ -53,7 +54,7 @@ export class PicaPartyNavigationPanel extends PicaBasePanel {
         const index = this.mShowData || 1;
         this.onToggleButtonHandler(undefined, this.toggleItems[index - 1]);
         if (this.tempDatas) {
-            if (this.optionType === 1) {
+            if (this.optionType === 1 || this.optionType === 4) {
                 this.setNavigationListData(this.tempDatas);
             } else if (this.optionType === 2) {
                 this.setRoomListData(this.tempDatas);
@@ -130,8 +131,12 @@ export class PicaPartyNavigationPanel extends PicaBasePanel {
         this.signProgressPanel = new SignProgressPanel(this.scene, bgwidth, 45 * this.dpr, UIAtlasName.map, this.dpr);
         this.signProgressPanel.y = this.tilteName.y + this.signProgressPanel.height * 0.5 + 13 * this.dpr;
         this.signProgressPanel.setHandler(new Handler(this, this.onProgressHandler));
+        this.tooqingoption = new TooQingChangeOption(this.scene, this.dpr);
+        this.tooqingoption.setOptionDatas({ text: i18n.t("partynav.pica"), type: 1 }, { text: i18n.t("partynav.tooqing"), type: 2 });
+        this.tooqingoption.setHandler(new Handler(this, this.onTooqingOptionHandler));
+        this.tooqingoption.y = this.signProgressPanel.y + this.signProgressPanel.height * 0.5 + this.tooqingoption.height * 0.5 + 10 * this.dpr;
         this.toggleCon = this.scene.make.container(undefined, false);
-        this.toggleCon.y = this.signProgressPanel.y + this.signProgressPanel.height * 0.5 + 20 * this.dpr;
+        this.toggleCon.y = this.tooqingoption.y + this.tooqingoption.height * 0.5 + 20 * this.dpr;
         this.add(this.toggleCon);
         this.optionLine = this.scene.make.image({ key: UIAtlasName.map, frame: "map_nav_line" });
         this.optionLine.displayHeight = 2 * this.dpr;
@@ -139,7 +144,7 @@ export class PicaPartyNavigationPanel extends PicaBasePanel {
         this.toggleCon.add([this.optionLine, this.selectLine]);
         this.itemtips = new ItemInfoTips(this.scene, 121 * this.dpr, 46 * this.dpr, UIAtlasName.uicommon, "tips_bg", this.dpr);
         this.itemtips.setVisible(false);
-        this.content.add([this.bg, this.tilteName, this.signProgressPanel, this.toggleCon]);
+        this.content.add([this.bg, this.tilteName, this.signProgressPanel, this.tooqingoption, this.toggleCon]);
         this.createOptionButtons();
         this.add([this.content, this.itemtips]);
         this.resize(0, 0);
@@ -192,10 +197,10 @@ export class PicaPartyNavigationPanel extends PicaBasePanel {
 
     private openTownNavigationPanel() {
         if (!this.townPanel) {
-            const height = this.scaleHeight * 0.5 - this.toggleCon.y - 30 * this.dpr;
+            const height = this.scaleHeight * 0.5 - this.toggleCon.y - 22 * this.dpr;
             this.townPanel = new PicaTownNavigationPanel(this.scene, 274 * this.dpr, height, this.dpr, this.scale);
             this.townPanel.setHandler(new Handler(this, this.onTownHandler));
-            this.townPanel.y = this.scaleHeight - height - 75 * this.dpr;
+            this.townPanel.y = this.toggleCon.y + height * 0.5 + 25 * this.dpr;
             this.content.add(this.townPanel);
         }
         this.townPanel.show();
@@ -208,9 +213,9 @@ export class PicaPartyNavigationPanel extends PicaBasePanel {
     }
     private openMyRoomPanel() {
         if (!this.myRoomPanel) {
-            const height = this.scaleHeight * 0.5 - this.toggleCon.y - 30 * this.dpr;
+            const height = this.scaleHeight * 0.5 - this.toggleCon.y - 22 * this.dpr;
             this.myRoomPanel = new PicaMyNavigationPanel(this.render, this.scene, 274 * this.dpr, height, this.dpr, this.scale);
-            this.myRoomPanel.y = this.scaleHeight - height - 75 * this.dpr;
+            this.myRoomPanel.y = this.toggleCon.y + height * 0.5 + 25 * this.dpr;
             this.myRoomPanel.setHandler(new Handler(this, this.onMyRoomHandler));
             this.content.add(this.myRoomPanel);
         }
@@ -226,12 +231,11 @@ export class PicaPartyNavigationPanel extends PicaBasePanel {
     }
     private openRoomPanel() {
         if (!this.roomPanel) {
-            const height = this.scaleHeight * 0.5 - this.toggleCon.y - 30 * this.dpr;
+            const height = this.scaleHeight * 0.5 - this.toggleCon.y - 18 * this.dpr;
             this.roomPanel = new PicaRoomNavigationPanel(this.scene, 274 * this.dpr, height, this.dpr, this.scale);
             this.roomPanel.setHandler(new Handler(this, this.onRoomHandler));
-            this.roomPanel.y = this.scaleHeight - height - 75 * this.dpr;
+            this.roomPanel.y = this.toggleCon.y + height * 0.5 - 60 * this.dpr;
             this.content.add(this.roomPanel);
-            this.roomPanel.y = -10 * this.dpr;
         }
         this.roomPanel.visible = true;
         this.roomPanel.refreshMask();
@@ -271,17 +275,41 @@ export class PicaPartyNavigationPanel extends PicaBasePanel {
         this.hideTownNavigationPanel();
         this.hideRoomPanel();
         this.hideMyRoomPanel();
-        if (this.optionType === 1) {
+        if (this.optionType === 1 || this.optionType === 4) {
             this.openTownNavigationPanel();
-            this.render.renderEmitter(this.key + "_getnavigatelist");
+            this.render.renderEmitter(this.key + "_getnavigatelist", this.optionType);
         } else if (this.optionType === 2) {
             this.openRoomPanel();
             this.render.renderEmitter(this.key + "_getRoomList", { page: 1, perPage: 100 });
-        } else {
+        } else if (this.optionType === 3) {
             this.myRoomDatas = [];
             this.openMyRoomPanel();
             this.render.renderEmitter(this.key + "_getMyRoomList");
         }
+    }
+
+    private onTooqingOptionHandler(type: number) {
+        let temps: any[];
+        if (type === 1) {
+            temps = [{ text: i18n.t("player_info.room"), type: 2 }, { text: i18n.t("partynav.town"), type: 1 }, { text: i18n.t("party.mine"), type: 3 }];
+        } else {
+            temps = [{ text: i18n.t("partynav.hot"), type: 4 }];
+        }
+        for (const item of this.toggleItems) {
+            item.visible = false;
+        }
+        for (let i = 0; i < temps.length; i++) {
+            const temp = temps[i];
+            const item = this.toggleItems[i];
+            item.setData("item", temp.type);
+            item.setText(temp.text);
+            item.visible = true;
+        }
+        if (this.curToggleItem) {
+            this.curToggleItem.isOn = false;
+            this.curToggleItem = undefined;
+        }
+        this.onToggleButtonHandler(undefined, this.toggleItems[0]);
     }
 
     private onTownHandler(tag: string, data: any) {// op_client.IEditModeRoom
@@ -544,10 +572,17 @@ class TooQingChangeOption extends Phaser.GameObjects.Container {
     protected leftBtn: Button;
     protected rightBtn: Button;
     protected send: Handler;
+    protected curButton: Button;
     constructor(scene: Phaser.Scene, dpr: number) {
         super(scene);
         this.leftBtn = new Button(scene, UIAtlasName.map, "map_nav_picktown", "map_nav_picktown", i18n.t("partynav.pica"), undefined, dpr);
-        this.rightBtn = new Button(scene, UIAtlasName.map, "map_nav_tooqing", "map_nav_picktown", i18n.t("partynav.tooqing"), undefined, dpr);
+        this.leftBtn.tweenEnable = false;
+        this.leftBtn.setTextStyle(UIHelper.colorStyle("#9D6000", 14 * dpr));
+        this.leftBtn.setFontStyle("bold");
+        this.rightBtn = new Button(scene, UIAtlasName.map, "map_nav_tooqing", "map_nav_tooqing", i18n.t("partynav.tooqing"), undefined, dpr);
+        this.rightBtn.tweenEnable = false;
+        this.rightBtn.setTextStyle(UIHelper.colorStyle("#B0A9FF", 14 * dpr));
+        this.rightBtn.setFontStyle("bold");
         const width = this.leftBtn.width + this.rightBtn.width - 14 * dpr;
         this.leftBtn.x = -this.leftBtn.width * 0.5 + 7 * dpr;
         this.rightBtn.x = this.rightBtn.width * 0.5 - 7 * dpr;
@@ -557,13 +592,31 @@ class TooQingChangeOption extends Phaser.GameObjects.Container {
         this.add([this.leftBtn, this.rightBtn]);
     }
 
-    setOptionDatas(left: any, right: any) {
-
+    setHandler(send: Handler) {
+        this.send = send;
+    }
+    setOptionDatas(left: { text: string, type: number }, right: { text: string, type: number }) {
+        this.leftBtn.setText(left.text);
+        this.leftBtn.setData("optiontype", left.type);
+        this.rightBtn.setText(right.text);
+        this.rightBtn.setData("optiontype", right.type);
     }
     private onLeftHandler() {
-
+        if (this.curButton === this.leftBtn) return;
+        this.leftBtn.setFrameNormal("map_nav_picktown");
+        this.rightBtn.setFrameNormal("map_nav_tooqing");
+        if (this.send) this.send.runWith(this.leftBtn.getData("optiontype"));
+        this.curButton = this.leftBtn;
+        this.leftBtn.setTextColor("#9D6000");
+        this.rightBtn.setTextColor("#B0A9FF");
     }
     private onRightHandler() {
-
+        if (this.curButton === this.rightBtn) return;
+        this.leftBtn.setFrameNormal("map_nav_picktown_1");
+        this.rightBtn.setFrameNormal("map_nav_tooqing_1");
+        if (this.send) this.send.runWith(this.rightBtn.getData("optiontype"));
+        this.curButton = this.rightBtn;
+        this.rightBtn.setTextColor("#9D6000");
+        this.leftBtn.setTextColor("#B0A9FF");
     }
 }

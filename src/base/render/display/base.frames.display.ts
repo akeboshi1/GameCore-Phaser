@@ -311,6 +311,7 @@ export class BaseFramesDisplay extends BaseDisplay {
 
     protected createDisplays(key: string, ani: any) {
         // const ani = data.getAnimations(animationName);
+        // 清楚上一个显示对象的贴图数据
         this.clearDisplay();
 
         let container: Phaser.GameObjects.Container = <Phaser.GameObjects.Container>this.mSprites.get(DisplayField.STAGE);
