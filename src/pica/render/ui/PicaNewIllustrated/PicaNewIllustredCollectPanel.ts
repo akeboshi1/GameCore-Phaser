@@ -81,7 +81,6 @@ export class PicaIllustredCollectPanel extends Phaser.GameObjects.Container {
 
                 cellContainer.setCombinationData(item);
                 cell.setHeight(cellContainer.height);
-                this.updateCollectRewards(item);
                 return cellContainer;
             },
         };
@@ -110,10 +109,6 @@ export class PicaIllustredCollectPanel extends Phaser.GameObjects.Container {
             if (this.send) this.send.runWith(["combinationrewards", data]);
             this.curSelectData = data;
         }
-    }
-
-    private updateCollectRewards(data: IGalleryCombination) {
-        if (this.send) this.send.runWith(["updatecombination", data]);
     }
 }
 

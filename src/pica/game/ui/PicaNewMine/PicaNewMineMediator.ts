@@ -5,9 +5,10 @@ import { ModuleName } from "structure";
 import { BaseDataConfigManager } from "../../config";
 import { Logger } from "utils";
 import { ISocial } from "../../../structure";
+import { IMineShowPackage } from "src/pica/structure/imine.show.package";
 export class PicaNewMineMediator extends BasicMediator {
     protected mModel: PicaNewMine;
-    private uid: string;
+    private subType: string;
     constructor(game: Game) {
         super(ModuleName.PICANEWMINE_NAME, game);
         this.mModel = new PicaNewMine(game);
@@ -27,22 +28,37 @@ export class PicaNewMineMediator extends BasicMediator {
         this.game.emitter.off(this.key + "_initialized", this.onViewInitComplete, this);
         this.game.emitter.off(this.key + "_useprop", this.onUsePropHandler, this);
     }
-
-    destroy() {
-        super.destroy();
+    onEnable() {
+        this.proto.on("MINE_SHOW_PACKAGE", this.onMineShowPackageHandler, this);
+    }
+    onDisable() {
+        this.proto.off("MINE_SHOW_PACKAGE", this.onMineShowPackageHandler, this);
     }
     panelInit() {
         super.panelInit();
-        this.uid = this.mShowData;
+        this.queryMineData();
     }
 
-    private onUsePropHandler(roleData: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_ANOTHER_PLAYER_INFO) {
-        const uimanager = this.game.uiManager;
-        uimanager.showMed(ModuleName.PICAPLAYERINFO_NAME, this.mShowData);
+    private queryMineData() {
+        this.game.sendCustomProto("STRING", "minerData:openMinePackage", {});
     }
-
-    private onHideView() {
-        this.hide();
+    private onUsePropHandler(id: string) {
+        this.game.sendCustomProto("STRING", "minerData:useMineItems", { id });
+    }
+    private onMineShowPackageHandler(packt: any) {
+        const content: IMineShowPackage = packt.content;
+        const item = this.config.getItemBaseByID(content.minePick);
+        content.icon = item.texturePath;
+        if (this.mView) this.mView.setMineData(content);
+        if (!this.subType) {
+            this.setMineProps(content.subcategory);
+            this.subType = content.subcategory;
+        }
+    }
+    private setMineProps(subType: string) {
+        const playerBag = this.game.user.userData.playerBag;
+        const datas = playerBag.getItemsByCategory(op_pkt_def.PKT_PackageType.PropPackage, subType);
+        if (this.mView) this.mView.setPropDatas(datas);
     }
     private onViewInitComplete() {
     }

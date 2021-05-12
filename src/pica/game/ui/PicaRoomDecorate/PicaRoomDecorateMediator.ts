@@ -58,13 +58,9 @@ export class PicaRoomDecorateMediator extends BasicMediator {
     private onCategoriesHandler() {
         const config = this.config;
         const shopName = "roomComponentshop";
-        const element2 = "element2";
         const configs = [];
         if (!this.config.checkConfig(shopName)) {
             configs.push([shopName, new DecorateShopConfig()]);
-        }
-        if (!this.config.checkConfig(element2)) {
-            configs.push([element2, new Element2Config()]);
         }
         if (configs.length > 0) {
             const maps = new Map(configs);

@@ -813,6 +813,7 @@ export class BaseDataConfigManager extends BaseConfigManager {
         this.dataMap.set(BaseDataType.gallery, new GalleryConfig());
         this.dataMap.set(BaseDataType.questGroup, new QuestGroupConfig());
         this.dataMap.set(BaseDataType.dailyQuestGroup, new QuestGroupConfig());
+        this.dataMap.set(BaseDataType.element2, new Element2Config());
     }
 
     protected configUrl(reName: string, tempurl?: string) {

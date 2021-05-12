@@ -71,8 +71,8 @@
     "receive": "Receive",
     "receivereward": "Receive",
     "received": "Received",
-    "rarity":"Rarity",
-    "leave":"Leave"
+    "rarity": "Rarity",
+    "leave": "Leave"
   },
   "quantityunit": {
     "k": "k",
@@ -453,7 +453,10 @@
     "newworld": "New World",
     "picahotel": "Pica Hotel",
     "store": "Store",
-    "onlinetips": "Online rewards"
+    "onlinetips": "Online rewards",
+    "pica": "PICA",
+    "tooqing": "TOOQING",
+    "hot": "HOT"
   },
   "commontips": {
     "configerror": "The configuration did not load successfully, please refresh the game"

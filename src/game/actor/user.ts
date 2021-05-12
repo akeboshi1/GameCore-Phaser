@@ -262,6 +262,7 @@ export class User extends Player {
     }
 
     public stopActiveSprite(pos?: IPos) {
+        if (!this.mMoveData) return;
         const targetId = this.mMoveData.targetId;
         if (!targetId) {
             return;
