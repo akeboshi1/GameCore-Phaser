@@ -2,7 +2,7 @@ import { IPos, LogicPos, IProjection, Logger, Position45, IPosition45Obj } from 
 import { InputEnable } from "../element/element";
 import { IRoomService } from "../room/room";
 import { IBlockObject } from "./iblock.object";
-import { ISprite } from "structure";
+import { IFramesModel, ISprite } from "structure";
 import { op_def } from "pixelpai_proto";
 import { MoveControll } from "../../collsion";
 
@@ -137,6 +137,10 @@ export abstract class BlockObject implements IBlockObject {
         return { offset, width, height };
     }
 
+    public load(displayInfo) {
+        this.addDisplay();
+    }
+
     protected addDisplay(): Promise<any> {
         if (this.mCreatedDisplay) return;
         return this.createDisplay();
@@ -153,6 +157,11 @@ export abstract class BlockObject implements IBlockObject {
         if (!this.mRoomService) return;
         // this.removeBody();
         return this.mRoomService.game.peer.render.removeBlockObject(this.id);
+    }
+
+    protected changeDisplay(displayInfo: IFramesModel) {
+        this.mCreatedDisplay = false;
+        this.load(displayInfo);
     }
 
     protected addToBlock(): Promise<any> {
