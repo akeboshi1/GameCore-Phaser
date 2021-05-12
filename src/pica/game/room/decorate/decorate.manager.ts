@@ -300,7 +300,7 @@ export class DecorateManager {
             // todo: change to new enum
             // 墙饰
             canPlace = this.room.wallManager.isInWallRect(tempPos);
-        } else if (element.model.attrs.findIndex((val) => {
+        } else if (element.model.attrs !== undefined && element.model.attrs.findIndex((val) => {
             return val.key !== undefined && val.key === "againstWall";
         }) >= 0) {
             // 立地靠墙家具
