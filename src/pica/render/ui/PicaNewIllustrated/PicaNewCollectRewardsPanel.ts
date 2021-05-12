@@ -116,8 +116,9 @@ export class PicaNewCollectRewardsPanel extends Phaser.GameObjects.Container {
             this.onSelectItemHandler(cell);
         });
         this.mGameGrid.y = -30 * this.dpr;
-        this.confirmBtn = new NineSliceButton(this.scene, 0, 0, 127 * this.dpr, 37 * this.dpr, UIAtlasName.uicommon, "yellow_btn_normal", i18n.t("common.confirm"), this.dpr, this.zoom, UIHelper.button(this.dpr));
-        this.confirmBtn.setTextStyle(UIHelper.brownishStyle(this.dpr, 23));
+        this.confirmBtn = new NineSliceButton(this.scene, 0, 0, 127 * this.dpr, 40 * this.dpr, UIAtlasName.uicommon, "yellow_btn_normal", i18n.t("common.affirm"), this.dpr, this.zoom, UIHelper.button(this.dpr));
+        this.confirmBtn.setFontStyle("bold");
+        this.confirmBtn.setTextStyle(UIHelper.brownishStyle(this.dpr, 20));
         this.confirmBtn.on(ClickEvent.Tap, this.onConfirmHandler, this);
         this.confirmBtn.y = this.height * 0.5 - this.confirmBtn.height * 0.5 - 32 * this.dpr;
         this.add([this.backgrand, bg, this.closeButton, titlebg, this.titleName, this.mGameGrid, this.confirmBtn]);

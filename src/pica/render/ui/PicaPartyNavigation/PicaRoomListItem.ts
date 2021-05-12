@@ -56,8 +56,7 @@ export class PicaRoomListItem extends PicaRoomBaseListItem {
     }
     protected init() {
         this.imagIcon = new DynamicImage(this.scene, 0, 0);
-        this.imagIcon.setTexture("party_icon_1");
-        this.imagIcon.visible = false;
+        this.imagIcon.setTexture("map_room_icon");
         this.ownerName = new ImageBBCodeValue(this.scene, 50 * this.dpr, 20 * this.dpr, UIAtlasName.map, "map_party_homeowners", this.dpr, UIHelper.colorStyle("#242AC1", 12 * this.dpr));
         this.add([this.imagIcon, this.ownerName]);
         this.layout();
@@ -65,11 +64,11 @@ export class PicaRoomListItem extends PicaRoomBaseListItem {
     protected layout() {
         this.imagIcon.x = -this.width * 0.5 + this.imagIcon.width * 0.5 + 8 * this.dpr;
         this.imagIcon.y = 0;
-        this.roomName.x = -this.width * 0.5 + 25 * this.dpr;
+        this.roomName.x = this.imagIcon.x + this.imagIcon.width * 0.5 + 10 * this.dpr;// -this.width * 0.5 + 25 * this.dpr;
         this.roomName.y = -11 * this.dpr;
         this.ownerName.x = this.roomName.x + this.ownerName.width * 0.5;
         this.ownerName.y = 11 * this.dpr;
-        this.playerCount.x = this.width * 0.5 - 35 * this.dpr;
+        this.playerCount.x =  this.width * 0.5 - 35 * this.dpr;
     }
 }
 export class PicaMyRoomListItem extends PicaRoomBaseListItem {

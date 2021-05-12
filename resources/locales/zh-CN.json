@@ -73,7 +73,8 @@
     "receivereward": "领取奖励",
     "received": "已领取",
     "rarity": "稀有",
-    "leave": "离开"
+    "leave": "离开",
+    "affirm":"确认"
   },
   "quantityunit": {
     "k": "千",

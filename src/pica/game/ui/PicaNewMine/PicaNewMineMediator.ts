@@ -43,12 +43,14 @@ export class PicaNewMineMediator extends BasicMediator {
         this.game.sendCustomProto("STRING", "minerData:openMinePackage", {});
     }
     private onUsePropHandler(id: string) {
-        this.game.sendCustomProto("STRING", "minerData:useMineItems", { id });
+        //  this.game.sendCustomProto("STRING", "minerData:useMineItems", { id });
+        this.mModel.useProps(id, 1);
     }
     private onMineShowPackageHandler(packt: any) {
         const content: IMineShowPackage = packt.content;
         const item = this.config.getItemBaseByID(content.minePick);
         content.icon = item.texturePath;
+        content.subcategory = item.subcategory;
         if (this.mView) this.mView.setMineData(content);
         if (!this.subType) {
             this.setMineProps(content.subcategory);
