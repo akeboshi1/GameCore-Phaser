@@ -4,7 +4,7 @@ import { BBCodeText, Button, ClickEvent, GameScroller, NineSliceButton, UIType }
 import { DynamicImage, ThreeSliceButton, ThreeSlicePath, TweenCompent, UIDragonbonesDisplay, UiManager } from "gamecoreRender";
 import { AvatarSuitType, ModuleName } from "structure";
 import { UIAtlasName } from "../../../res";
-import { Handler, i18n, UIHelper } from "utils";
+import { Handler, i18n, UIHelper, Url } from "utils";
 import { PicaBasePanel } from "../pica.base.panel";
 import { ICountablePackageItem, IExtendCountablePackageItem, ISocial } from "../../../structure";
 import { ImageValue } from "..";
@@ -123,6 +123,9 @@ export class PicaNewMinePanel extends PicaBasePanel {
         this.nameText.text = `[b]${content.name} [color=#0075D0]${content.lv}[/color][color=#0075D0][size=${8 * this.dpr}]${i18n.t("级")}[/size][/color][/b]`;
         this.scoreText.text = `[color=#0075D0]${i18n.t("mine.integraltips")} [b]${content.score}[/b][/color]`;
         this.durabilityText.text = `${content.durability}/${content.maxDurability}`;
+        const url = Url.getOsdRes(content.icon);
+        this.itemIcon.load(url);
+        this.itemIcon.scale = this.dpr / this.scale;
     }
 
     public setPropDatas(datas: ICountablePackageItem[]) {
