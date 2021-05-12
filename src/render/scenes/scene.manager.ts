@@ -124,6 +124,10 @@ export class SceneManager extends BaseSceneManager {
                     break;
             }
         }
+        // 切换场景时，将之前场景状态变为正在切换（并没有被销毁，销毁是一个异步过程）
+        if (this.mCurSceneName && this.mCurSceneName !== name && this.currentScene) {
+            this.currentScene.sceneChange = true;
+        }
         const scene = sceneManager.getScene(name) as BasicScene;
         if (scene) {
             const isActive = scene.scene.isActive(name);

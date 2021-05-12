@@ -129,7 +129,7 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
     }
 
     public onConnected(isAuto?: boolean) {
-        this.isAuto = isAuto;
+        this.isAuto = isAuto || false;
         if (!this.mClock) this.mClock = new Clock(this.connect, this.mainPeer, this);
         if (!this.mHttpClock) this.mHttpClock = new HttpClock(this);
         this.hideMediator(ModuleName.PICA_BOOT_NAME);
@@ -196,6 +196,10 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
     public async reconnect() {
         if (!this.isAuto) return;
         // if (this.hasClear || this.isPause) return;
+        this.manualReconnect();
+    }
+
+    public async manualReconnect() {
         Logger.getInstance().debug("game reconnect");
         if (this.mConfig.hasConnectFail) return this.mainPeer.render.connectFail();
         let gameID: string = this.mConfig.game_id;
@@ -232,7 +236,9 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
         const msg = content.msg;
         // 游戏phaser创建完成后才能在phaser内显示ui弹窗等ui
         if (errorLevel >= op_def.ErrorLevel.SERVICE_GATEWAY_ERROR) {
-            this.renderPeer.showAlert(msg, true);
+            this.renderPeer.showAlert(msg, true).then(() => {
+                this.manualReconnect();
+            });
         } else {
             // 右上角显示
             // this.renderPeer.showErrorMsg(msg);

@@ -89,7 +89,6 @@ export class Launcher {
             this.mConfig.baseWidth = this.mConfig.width;
             this.mConfig.baseHeight = this.mConfig.height;
         }
-
         this.intervalId = setInterval(() => {
             // const xhr = new XMLHttpRequest(); // TODO
             // xhr.open("GET", "./package.json", true);

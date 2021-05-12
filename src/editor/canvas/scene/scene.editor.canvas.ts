@@ -1,7 +1,7 @@
 import { Capsule, ElementNode, LayerEnum, MossNode, PaletteNode, SceneNode, TerrainNode } from "game-capsule";
 import { op_def, op_client } from "pixelpai_proto";
 import { IFramesModel, ISprite } from "structure";
-import { IPos, IPosition45Obj, load, Logger, LogicPos, Position45, Url } from "utils";
+import { Direction, IPos, IPosition45Obj, load, Logger, LogicPos, Position45, Url } from "utils";
 import { EditorCanvas, IEditorCanvasConfig } from "../editor.canvas";
 import { EditorFramesDisplay } from "./editor.frames.display";
 import { EditorFactory } from "./factory";
@@ -256,14 +256,27 @@ export class SceneEditorCanvas extends EditorCanvas implements IRender {
         }
     }
 
-    public calcWallFlip(x: number, y: number) {
+    public calcWallDirection(x: number, y: number) {
         const pos = Position45.transformTo45(new LogicPos(x, y), this.mRoomSize);
-        if (this.mTerrainManager.existTerrain(pos.x, pos.y)) {
-            if (!this.mTerrainManager.existTerrain(pos.x - 1, pos.y)) return true;
-            if (!this.mTerrainManager.existTerrain(pos.x, pos.y - 1)) return false;
+        const existTerrain = this.mTerrainManager.existTerrain.bind(this.mTerrainManager);
+        if (existTerrain(pos.x, pos.y)) {
+            if (!existTerrain(pos.x -1, pos.y - 1)) {
+                if (!existTerrain(pos.x, pos.y - 1) && !existTerrain(pos.x - 1, pos.y)) {
+                    return Direction.concave;
+                }
+                if (!existTerrain(pos.x, pos.y + 1) && !existTerrain(pos.x + 1, pos.y)) {
+                    return Direction.convex;
+                }
+            }
+            if (!existTerrain(pos.x - 1, pos.y)) return Direction.south_east;
+            if (!existTerrain(pos.x, pos.y - 1)) return Direction.west_south;
         } else {
-            if (this.mTerrainManager.existTerrain(pos.x, pos.y + 1)) return false;
-            if (this.mTerrainManager.existTerrain(pos.x + 1, pos.y)) return true;
+            if (!existTerrain(pos.x, pos.y + 1) && !existTerrain(pos.x + 1, pos.y)) {
+                if (existTerrain(pos.x + 1, pos.y + 1)) return Direction.concave;
+            }
+            if (existTerrain(pos.x + 1, pos.y) && existTerrain(pos.x, pos.y + 1)) return Direction.convex;
+            if (existTerrain(pos.x, pos.y + 1)) return Direction.west_south;
+            if (existTerrain(pos.x + 1, pos.y)) return Direction.south_east;
         }
     }
 
@@ -821,7 +834,7 @@ class MouseFollow {
             pos = this.getPosition(display.x, display.y);
             locs.push({
                 ...pos,
-                dir: display.runningAnimation.flip ? 5 : 3
+                dir: display.direction
             });
         }
         return { locs, key: this.key };
@@ -1049,12 +1062,8 @@ class MouseDisplayContainer extends Phaser.GameObjects.Container {
         this.setPosition(x + this.mOffset.x, y + this.mOffset.y, z, w);
         if (this.mNodeType === op_def.NodeType.WallNodeType) {
             for (const display of this.mDisplays) {
-                const flip = this.sceneEditor.calcWallFlip(x, y);
-                const ani = display.runningAnimation;
-                if (flip !== undefined &&flip !== ani.flip) {
-                    ani.flip = flip;
-                    display.play(ani);
-                }
+                const direction = this.sceneEditor.calcWallDirection(x, y);
+                if (direction) display.setDirection(direction);
             }
         }
     }
