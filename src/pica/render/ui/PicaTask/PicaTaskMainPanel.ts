@@ -538,7 +538,13 @@ class MainDailyTaskItem extends MainTaskBaseItem {
         this.taskDes.x = 0;
         this.add([this.progress, this.taskDes, this.rewardbg, this.rewardRotateImg, this.rewardsImg, this.rewardButton]);
     }
-
+    protected onReceiveAwardHandler() {
+        if (this.isFinish && !this.mainData.rewardsReceived && this.isCanRecievd) {
+            if (this.send) this.send.runWith([this.mainData.id]);
+        } else {
+            PicaItemTipsPanel.Inst.showTips(this.rewardsImg, <any>this.mainData.reward);
+        }
+    }
     private setProgressImg(value: number) {
         for (let i = 0; i < 5; i++) {
             const img = this.progressImgs[i];
