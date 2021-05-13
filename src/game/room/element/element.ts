@@ -180,6 +180,7 @@ export class Element extends BlockObject implements IElement {
     public async load(displayInfo: IFramesModel | IDragonbonesModel, isUser: boolean = false): Promise<any> {
         this.mDisplayInfo = displayInfo;
         this.isUser = isUser;
+        if (!displayInfo) return Promise.reject(`element ${this.mModel.nickname} ${this.id} display does not exist`);
         await this.loadDisplayInfo();
         return this.addToBlock();
     }
@@ -434,6 +435,7 @@ export class Element extends BlockObject implements IElement {
             return;
         }
         this.mMoveData.path = path;
+        Logger.getInstance().log("============>>>>> move: ", this.mModel.nickname, this.mModel.pos.x, this.mModel.pos.y);
         // this.mRoomService.game.physicalPeer.move(this.id, this.mMoveData.path);
         this.startMove();
     }
@@ -468,26 +470,28 @@ export class Element extends BlockObject implements IElement {
         this.moveControll.setVelocity(0, 0);
         this.changeState(PlayerState.IDLE);
         if (!this.mRoomService.playerManager.actor.stopBoxMove) return;
-        const mMovePoints = [];
-        if (points) {
-            points.forEach((pos) => {
-                const movePoint = op_def.MovePoint.create();
-                const tmpPos = op_def.PBPoint3f.create();
-                tmpPos.x = pos.x;
-                tmpPos.y = pos.y;
-                movePoint.pos = tmpPos;
-                // 给每个同步点时间戳
-                movePoint.timestamp = new Date().getTime();
-                mMovePoints.push(tmpPos);
-            });
-        }
-        const movePath = op_def.MovePath.create();
-        movePath.id = this.id;
-        movePath.movePos = mMovePoints;
-        const pkt: PBpacket = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_STOP_SPRITE);
-        const ct: op_virtual_world.IOP_CLIENT_REQ_VIRTUAL_WORLD_STOP_SPRITE = pkt.content;
-        ct.movePath = movePath;
-        this.mElementManager.connection.send(pkt);
+        // const mMovePoints = [];
+        // if (points) {
+        //     points.forEach((pos) => {
+        //         const movePoint = op_def.MovePoint.create();
+        //         const tmpPos = op_def.PBPoint3f.create();
+        //         tmpPos.x = pos.x;
+        //         tmpPos.y = pos.y;
+        //         movePoint.pos = tmpPos;
+        //         // 给每个同步点时间戳
+        //         movePoint.timestamp = new Date().getTime();
+        //         mMovePoints.push(tmpPos);
+        //     });
+        // }
+
+        Logger.getInstance().log("============>>>>> element stop: ", this.mModel.nickname, this.mModel.pos.x, this.mModel.pos.y);
+        // const movePath = op_def.MovePath.create();
+        // movePath.id = this.id;
+        // movePath.movePos = mMovePoints;
+        // const pkt: PBpacket = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_STOP_SPRITE);
+        // const ct: op_virtual_world.IOP_CLIENT_REQ_VIRTUAL_WORLD_STOP_SPRITE = pkt.content;
+        // ct.movePath = movePath;
+        // this.mElementManager.connection.send(pkt);
         this.mRoomService.playerManager.actor.stopBoxMove = false;
     }
 
