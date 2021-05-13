@@ -62,17 +62,22 @@ export class WallManager {
     }
 
     // todo: move to pica
-    // 靠墙
+    // 靠墙，按照miniSize坐标系
     public isAgainstWall(pos: IPos, originPoint: IPos): boolean {
-        const origin90 = Position45.transformTo90(originPoint, this.roomService.miniSize);
-        const pos45 = Position45.transformTo45(new LogicPos(pos.x - origin90.x, pos.y - origin90.y), this.roomService.roomSize);
+        const pos45 = Position45.transformTo45(pos, this.roomService.miniSize);
+        const checkPos45 = new LogicPos(pos45.x - originPoint.x, pos45.y - originPoint.y);
         for (const wall of this.walls) {
-            const wallPos45 = wall.model.pos;
-            if (wallPos45.x === pos45.x + 1 ||
-            wallPos45.x === pos45.x - 1 ||
-            wallPos45.y === pos45.y + 1 ||
-            wallPos45.y === pos45.y - 1) {
-                return true;
+            const roomSizePos = wall.model.pos;
+            const miniSizePoses = [
+                new LogicPos(roomSizePos.x * 2 - 2, roomSizePos.y * 2 - 2),
+                new LogicPos(roomSizePos.x * 2 - 2, roomSizePos.y * 2 - 1),
+                new LogicPos(roomSizePos.x * 2 - 1, roomSizePos.y * 2 - 2),
+                new LogicPos(roomSizePos.x * 2 - 1, roomSizePos.y * 2 - 1)];
+            for (const miniSizePose of miniSizePoses) {
+                if ((miniSizePose.y === checkPos45.y && (miniSizePose.x === checkPos45.x + 1 || miniSizePose.x === checkPos45.x - 1)) ||
+                    (miniSizePose.x === checkPos45.x && (miniSizePose.y === checkPos45.y + 1 || miniSizePose.y === checkPos45.y - 1))) {
+                    return true;
+                }
             }
         }
 
