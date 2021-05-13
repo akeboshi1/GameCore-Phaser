@@ -796,7 +796,7 @@ export class BaseDataConfigManager extends BaseConfigManager {
     public getElement2Data(id: string): IElement {
         const data: Element2Config = this.getConfig(BaseDataType.element2);
         const element = data.get(id);
-        if (!element["find"]) {
+        if (element && !element["find"]) {
             const serializeString = element.serializeString;
             if (serializeString) {
                 element.texture_path = this.getSerializePng(serializeString);

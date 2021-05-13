@@ -27,6 +27,7 @@ export class PicaNewMineMediator extends BasicMediator {
         this.game.emitter.off(this.key + "_hide", this.hide, this);
         this.game.emitter.off(this.key + "_initialized", this.onViewInitComplete, this);
         this.game.emitter.off(this.key + "_useprop", this.onUsePropHandler, this);
+        this.subType = undefined;
     }
     onEnable() {
         this.proto.on("MINE_SHOW_PACKAGE", this.onMineShowPackageHandler, this);

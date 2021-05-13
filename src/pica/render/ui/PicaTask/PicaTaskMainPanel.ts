@@ -1,5 +1,5 @@
 import { ClickEvent, GameScroller, NineSlicePatch } from "apowophaserui";
-import { ButtonEventDispatcher, DynamicImage, ItemInfoTips, ProgressThreeBar, Render } from "gamecoreRender";
+import { ButtonEventDispatcher, DynamicImage, ItemInfoTips, ProgressMaskBar, ProgressThreeBar, Render } from "gamecoreRender";
 import { UIAtlasName } from "../../../res";
 import { Font, Handler, i18n, UIHelper, Url } from "utils";
 import { op_client, op_pkt_def } from "pixelpai_proto";
@@ -218,26 +218,21 @@ export class PicaTaskMainPanel extends Phaser.GameObjects.Container {
         PicaItemTipsPanel.Inst.showTips(gameobj, gameobj.itemData);
     }
 }
-
-class MainTaskItem extends Phaser.GameObjects.Container {
-    private dpr: number;
-    private zoom: number;
-    private titleCon: Phaser.GameObjects.Container;
-    private titleTex: Phaser.GameObjects.Text;
-    private taskDes: Phaser.GameObjects.Text;
-    private progress: ProgressThreeBar;
-    private progressTex: Phaser.GameObjects.Text;
-    private rewardsImg: DynamicImage;
-    private rewardRotateImg: Phaser.GameObjects.Image;
-    private bg: NineSlicePatch;
-    private mainData: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_QUERY_QUEST_GROUP;
-    private isFinish: boolean = false;
-    private questType: op_pkt_def.PKT_Quest_Type;
-    private send: Handler;
-    private intervalTimer: any;
-    private previousProgress: number;
-    private isCanRecievd: boolean = true;
-    private tween: Phaser.Tweens.Tween;
+class MainTaskBaseItem extends Phaser.GameObjects.Container {
+    protected dpr: number;
+    protected zoom: number;
+    protected bg: NineSlicePatch;
+    protected titleCon: Phaser.GameObjects.Container;
+    protected titleTex: Phaser.GameObjects.Text;
+    protected taskDes: Phaser.GameObjects.Text;
+    protected rewardsImg: DynamicImage;
+    protected rewardRotateImg: Phaser.GameObjects.Image;
+    protected mainData: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_QUERY_QUEST_GROUP;
+    protected isFinish: boolean = false;
+    protected questType: op_pkt_def.PKT_Quest_Type;
+    protected send: Handler;
+    protected intervalTimer: any;
+    protected isCanRecievd: boolean = true;
     constructor(scene: Phaser.Scene, width: number, height: number, dpr: number, zoom: number) {
         super(scene);
         this.dpr = dpr;
@@ -246,56 +241,13 @@ class MainTaskItem extends Phaser.GameObjects.Container {
         this.init();
     }
     refreshMask() {
-        // this.progress.refreshMask();
     }
     public setMainTaskData(content: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_QUERY_QUEST_GROUP, questType: op_pkt_def.PKT_Quest_Type) {
-        this.titleTex.text = content.name;
-        this.taskDes.text = content.des;
-        const max = 100;
-        const fvalue = this.getFinishProgress(content);
-        this.rewardRotateImg.visible = false;
-        this.clearTweens();
-        if (this.questType !== questType) {
-            this.progress.setProgress(fvalue, max);
-            if (fvalue === max) {
-                this.playRotateTween();
-            }
-        } else {
-            const from = this.previousProgress;
-            const allTime = 2000;
-            const duration = allTime * fvalue / max;
-            this.playProgressTween(from, fvalue, max, duration);
-        }
-        this.progressTex.text = fvalue + "%";
-        this.isFinish = fvalue === max;
-        this.previousProgress = fvalue;
         this.mainData = content;
-
-        const url = Url.getOsdRes((<any>content.reward).texturePath);
-        this.rewardsImg.load(url, this, () => {
-
-        });
         this.questType = questType;
     }
-
     public setHandler(send: Handler) {
         this.send = send;
-    }
-
-    destroy() {
-        super.destroy();
-        this.clearTweens();
-    }
-    protected clearTweens() {
-        if (this.tween) {
-            this.tween.stop();
-            this.tween.remove();
-            this.tween = undefined;
-        }
-        if (this.intervalTimer) {
-            clearInterval(this.intervalTimer);
-            this.intervalTimer = undefined;
-        }
     }
     protected init() {
         this.bg = new NineSlicePatch(this.scene, 0, 0, this.width, this.height, UIAtlasName.uicommon, "task_chapter_bg", {
@@ -346,6 +298,90 @@ class MainTaskItem extends Phaser.GameObjects.Container {
         this.rewardsImg.x = rewardbg.x;
         this.rewardsImg.y = rewardbg.y;
         this.rewardsImg.scale = this.dpr / this.zoom;
+        this.add([this.bg, this.titleCon, this.taskDes, rewardbg, this.rewardRotateImg, this.rewardsImg, rewardButton]);
+    }
+    protected onReceiveAwardHandler() {
+        if (this.isFinish && !this.mainData.rewardsReceived && this.isCanRecievd) {
+            if (this.send) this.send.runWith([this.mainData.id]);
+        } else {
+            PicaItemTipsPanel.Inst.showTips(this.rewardsImg, <any>this.mainData.reward);
+        }
+    }
+    protected playRotateTween() {
+        if (!this.scene) return;
+        if (this.intervalTimer) clearInterval(this.intervalTimer);
+        this.rewardRotateImg.visible = true;
+        this.isCanRecievd = true;
+        this.intervalTimer = setInterval(() => {
+            if (!this.scene) {
+                if (this.intervalTimer) clearInterval(this.intervalTimer);
+                return;
+            }
+            this.rewardRotateImg.rotation += 0.1;
+        }, 30);
+    }
+}
+class MainTaskItem extends MainTaskBaseItem {
+
+    private progress: ProgressThreeBar;
+    private progressTex: Phaser.GameObjects.Text;
+    private previousProgress: number;
+    private tween: Phaser.Tweens.Tween;
+    constructor(scene: Phaser.Scene, width: number, height: number, dpr: number, zoom: number) {
+        super(scene, width, height, dpr, zoom);
+    }
+
+    public setMainTaskData(content: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_QUERY_QUEST_GROUP, questType: op_pkt_def.PKT_Quest_Type) {
+        this.titleTex.text = content.name;
+        this.taskDes.text = content.des;
+        const max = 100;
+        const fvalue = this.getFinishProgress(content);
+        this.rewardRotateImg.visible = false;
+        this.clearTweens();
+        if (this.questType !== questType) {
+            this.progress.setProgress(fvalue, max);
+            if (fvalue === max) {
+                this.playRotateTween();
+            }
+        } else {
+            const from = this.previousProgress;
+            const allTime = 2000;
+            const duration = allTime * fvalue / max;
+            this.playProgressTween(from, fvalue, max, duration);
+        }
+        this.progressTex.text = fvalue + "%";
+        this.isFinish = fvalue === max;
+        this.previousProgress = fvalue;
+        this.mainData = content;
+
+        const url = Url.getOsdRes((<any>content.reward).texturePath);
+        this.rewardsImg.load(url, this, () => {
+
+        });
+        this.questType = questType;
+    }
+
+    public setHandler(send: Handler) {
+        this.send = send;
+    }
+
+    destroy() {
+        super.destroy();
+        this.clearTweens();
+    }
+    protected clearTweens() {
+        if (this.tween) {
+            this.tween.stop();
+            this.tween.remove();
+            this.tween = undefined;
+        }
+        if (this.intervalTimer) {
+            clearInterval(this.intervalTimer);
+            this.intervalTimer = undefined;
+        }
+    }
+    protected init() {
+        super.init();
         const config = { width: 153 * this.dpr, height: 11 * this.dpr, correct: 0 };
         const barbgs = ["task_chapter_progress_bott_left", "task_chapter_progress_bott_middle", "task_chapter_progress_bott_right"];
         const bars = ["task_chapter_progress_top_left", "task_chapter_progress_top_middle", "task_chapter_progress_top_right"];
@@ -362,16 +398,9 @@ class MainTaskItem extends Phaser.GameObjects.Container {
             }
         }).setOrigin(0.5);
 
-        this.add([this.bg, this.titleCon, this.taskDes, this.progress, this.progressTex, rewardbg, this.rewardRotateImg, this.rewardsImg, rewardButton]);
+        this.add([this.progress, this.progressTex]);
     }
 
-    private onReceiveAwardHandler() {
-        if (this.isFinish && !this.mainData.rewardsReceived && this.isCanRecievd) {
-            if (this.send) this.send.runWith([this.mainData.id]);
-        } else {
-            PicaItemTipsPanel.Inst.showTips(this.rewardsImg, <any>this.mainData.reward);
-        }
-    }
     private getFinishProgress(content: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_QUERY_QUEST_GROUP) {
         const progress = content.progress < 0 ? 0 : content.progress;
         return progress;
@@ -404,20 +433,112 @@ class MainTaskItem extends Phaser.GameObjects.Container {
         });
         this.tween = tween;
     }
-    private playRotateTween() {
-        if (!this.scene) return;
-        if (this.intervalTimer) clearInterval(this.intervalTimer);
-        this.rewardRotateImg.visible = true;
-        this.isCanRecievd = true;
-        this.intervalTimer = setInterval(() => {
-            if (!this.scene) {
-                if (this.intervalTimer) clearInterval(this.intervalTimer);
-                return;
-            }
-            this.rewardRotateImg.rotation += 0.1;
-        }, 30);
+}
+
+class MainDailyTaskItem extends MainTaskBaseItem {
+    private progress: ProgressMaskBar;
+    private tween: Phaser.Tweens.Tween;
+    private progressImgs: Phaser.GameObjects.Image[];
+    constructor(scene: Phaser.Scene, width: number, height: number, dpr: number, zoom: number) {
+        super(scene, width, height, dpr, zoom);
     }
 
+    public setMainTaskData(content: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_QUERY_QUEST_GROUP, questType: op_pkt_def.PKT_Quest_Type) {
+    //     this.titleTex.text = content.name;
+    //     this.taskDes.text = content.des;
+    //     const max = 100;
+    //     const fvalue = this.getFinishProgress(content);
+    //     this.rewardRotateImg.visible = false;
+    //     this.clearTweens();
+    //     if (this.questType !== questType) {
+    //         this.progress.setProgress(fvalue, max);
+    //         if (fvalue === max) {
+    //             this.playRotateTween();
+    //         }
+    //     } else {
+    //        // const from = this.previousProgress;
+    //         const allTime = 2000;
+    //         const duration = allTime * fvalue / max;
+    //         this.playProgressTween(from, fvalue, max, duration);
+    //     }
+    //     //this.progressTex.text = fvalue + "%";
+    //     this.isFinish = fvalue === max;
+    //   //  this.previousProgress = fvalue;
+    //     this.mainData = content;
+
+    //     const url = Url.getOsdRes((<any>content.reward).texturePath);
+    //     this.rewardsImg.load(url, this, () => {
+
+    //     });
+    //     this.questType = questType;
+    }
+
+    public setHandler(send: Handler) {
+        this.send = send;
+    }
+
+    destroy() {
+        super.destroy();
+        this.clearTweens();
+    }
+    protected clearTweens() {
+        if (this.tween) {
+            this.tween.stop();
+            this.tween.remove();
+            this.tween = undefined;
+        }
+        if (this.intervalTimer) {
+            clearInterval(this.intervalTimer);
+            this.intervalTimer = undefined;
+        }
+    }
+    protected init() {
+        super.init();
+        this.progress = new ProgressMaskBar(this.scene, UIAtlasName.task_daily, "daily_card_undone_line", "daily_card_done_line");
+        this.progress.x = -this.width * 0.5 + this.progress.width * 0.5 + 15 * this.dpr;
+        this.progress.y = 34 * this.dpr;
+
+        this.add([this.progress]);
+    }
+
+    private createProgressImgs() {
+        const width = this.progress.width;
+        const height = this.progress.height;
+        let posx = -this.progress.width * 0.5;
+        for (let i = 0; i < 5; i++) {
+            const img = this.scene.make.image({ key: UIAtlasName.task_daily, frame: "daily_card_undone_set" });
+            img.x = posx + img.width * 0.5;
+            img.y =
+                posx += img.width + 8 * this.dpr;
+        }
+    }
+    private playProgressTween(from: number, to: number, max: number, duration: number) {
+        if (!this.scene) return;
+        this.isCanRecievd = false;
+        const tween = this.scene.tweens.addCounter({
+            from,
+            to,
+            ease: "Linear",
+            duration,
+            onUpdate: (cope: any, param: any) => {
+                if (!this.scene) {
+                    tween.stop();
+                    tween.remove();
+                    return;
+                }
+                const value = param.value;
+                this.progress.setProgress(value, max);
+               // this.progressTex.text = Math.floor((value * 1000 / max)) / 10 + "%";
+            },
+            onComplete: () => {
+                tween.stop();
+                if (to === max) {
+                    this.playRotateTween();
+                }
+            },
+        });
+        this.tween = tween;
+    }
 }
 
 class MainTaskAnimation {

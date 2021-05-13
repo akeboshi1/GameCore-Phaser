@@ -107,6 +107,7 @@ export abstract class BlockObject implements IBlockObject {
 
     public destroy() {
         // this.mRoomService.game.peer.render.displayDestroy(this.id, this.type);
+        if (this.moveControll) this.moveControll.removePolygon();
     }
 
     public clear() {
