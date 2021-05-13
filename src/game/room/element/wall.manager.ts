@@ -1,4 +1,4 @@
-import {Helpers, IPos, Logger, LogicPos, Position45, Tool} from "utils";
+import {Direction, Helpers, IPos, Logger, LogicPos, Position45, Tool} from "utils";
 import {IRoomService} from "..";
 import {Wall} from "../wall/wall";
 import {Sprite} from "baseModel";
@@ -69,10 +69,23 @@ export class WallManager {
         for (const wall of this.walls) {
             const roomSizePos = wall.model.pos;
             const miniSizePoses = [
-                new LogicPos(roomSizePos.x * 2 - 2, roomSizePos.y * 2 - 2),
-                new LogicPos(roomSizePos.x * 2 - 2, roomSizePos.y * 2 - 1),
-                new LogicPos(roomSizePos.x * 2 - 1, roomSizePos.y * 2 - 2),
-                new LogicPos(roomSizePos.x * 2 - 1, roomSizePos.y * 2 - 1)];
+                new LogicPos(roomSizePos.x * 2, roomSizePos.y * 2),
+                new LogicPos(roomSizePos.x * 2, roomSizePos.y * 2 + 1),
+                new LogicPos(roomSizePos.x * 2 + 1, roomSizePos.y * 2),
+                new LogicPos(roomSizePos.x * 2 + 1, roomSizePos.y * 2 + 1)];
+            if (wall.model.direction === Direction.concave) {
+                // 凹角的墙会删除相邻阴面阳面的墙，所以这里需要额外判断两块墙体的位置
+                const yinPos = new LogicPos(roomSizePos.x, roomSizePos.y + 1);
+                miniSizePoses.push(new LogicPos(yinPos.x * 2, yinPos.y * 2));
+                miniSizePoses.push(new LogicPos(yinPos.x * 2, yinPos.y * 2 + 1));
+                miniSizePoses.push(new LogicPos(yinPos.x * 2 + 1, yinPos.y * 2));
+                miniSizePoses.push(new LogicPos(yinPos.x * 2 + 1, yinPos.y * 2 + 1));
+                const yangPos = new LogicPos(roomSizePos.x + 1, roomSizePos.y);
+                miniSizePoses.push(new LogicPos(yangPos.x * 2, yangPos.y * 2));
+                miniSizePoses.push(new LogicPos(yangPos.x * 2, yangPos.y * 2 + 1));
+                miniSizePoses.push(new LogicPos(yangPos.x * 2 + 1, yangPos.y * 2));
+                miniSizePoses.push(new LogicPos(yangPos.x * 2 + 1, yangPos.y * 2 + 1));
+            }
             for (const miniSizePose of miniSizePoses) {
                 if ((miniSizePose.y === checkPos45.y && (miniSizePose.x === checkPos45.x + 1 || miniSizePose.x === checkPos45.x - 1)) ||
                     (miniSizePose.x === checkPos45.x && (miniSizePose.y === checkPos45.y + 1 || miniSizePose.y === checkPos45.y - 1))) {

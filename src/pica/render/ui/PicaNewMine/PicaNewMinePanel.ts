@@ -169,7 +169,7 @@ export class PicaNewMinePanel extends PicaBasePanel {
     }
     private onUseItemHandler() {
         if (!this.curItem) return;
-        this.render.renderEmitter(ModuleName.PICANEWROLE_NAME + "_useprop", this.curItem.itemData);
+        this.render.renderEmitter(ModuleName.PICANEWMINE_NAME + "_useprop", this.curItem.itemData.id);
         this.OnCloseHandler();
     }
 
