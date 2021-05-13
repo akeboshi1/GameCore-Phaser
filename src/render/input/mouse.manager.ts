@@ -96,8 +96,8 @@ export class MouseManager {
             if (!com.hasInteractive) return;
 
             com.scaleTween();
-            if (events.length === 0) return;
         }
+        if (events.length === 0) return;
 
         this.sendMouseEvent(events, id, {x: pointer.worldX / this.zoom, y: pointer.worldY / this.zoom});
     }
