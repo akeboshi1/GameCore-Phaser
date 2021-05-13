@@ -159,6 +159,7 @@ export declare class Render extends RPCPeer implements GameMain, IRender {
     checkContains(id: number, x: number, y: number): Promise<boolean>;
     showCreateRolePanel(data?: any): Promise<boolean>;
     updateModel(id: number, displayInfo: any): void;
+    getIndexInLayer(id: number): number;
     changeLayer(id: number, layerName: string): void;
     showCreateRole(params?: any): void;
     hideCreateRole(): void;
@@ -201,7 +202,7 @@ export declare class Render extends RPCPeer implements GameMain, IRender {
     getWorldView(): Promise<any>;
     onClockReady(): void;
     i18nString(val: string): string;
-    showAlert(text: string, ok: boolean): Promise<unknown>;
+    showAlert(text: string, ok?: boolean): Promise<unknown>;
     showAlertReconnect(text: string): void;
     showLoading(data?: any): Promise<any>;
     updateProgress(progress: number): void;
@@ -243,6 +244,8 @@ export declare class Render extends RPCPeer implements GameMain, IRender {
     createTerrainDisplay(id: number, displayInfo: IFramesModel, layer: number): void;
     setModel(sprite: any): void;
     setPlayerModel(sprite: any): void;
+    drawServerPosition(x: number, y: number): void;
+    hideServerPosition(): void;
     addSkybox(scenery: IScenery): void;
     removeSkybox(id: number): void;
     changeAlpha(id: number, alpha: number): void;
@@ -264,7 +267,6 @@ export declare class Render extends RPCPeer implements GameMain, IRender {
     hideRefernceArea(id: number): void;
     displayAnimationChange(data: any): void;
     workerEmitter(eventType: string, data?: any): void;
-    physicalEmitter(eventType: string, data?: any): void;
     mount(id: number, targetID: number, targetIndex: number): void;
     unmount(id: number, targetID: number): void;
     updateInput(val: number): void;

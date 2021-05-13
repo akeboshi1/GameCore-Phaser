@@ -1,14 +1,17 @@
 import { op_def, op_client, op_gameconfig, op_virtual_world } from "pixelpai_proto";
-import { Game } from "../game";
+// import { Game, interval } from "../game";
 import { Player } from "../room/player/player";
 import { IRoomService } from "../room/room";
 import { PlayerModel } from "../room/player/player.model";
 import { UserDataManager } from "./data/user.dataManager";
-import { AvatarSuitType, EventType, IDragonbonesModel, IFramesModel, PlayerState, ISprite, ModuleName, IPos, Logger } from "structure";
+import { AvatarSuitType, EventType, IDragonbonesModel, IFramesModel, PlayerState, ISprite, ModuleName, IPos, Logger, LogicPos } from "structure";
 import { LayerEnum } from "game-capsule";
 import { PBpacket } from "net-socket-packet";
+import { MoveControll } from "../collsion";
+import { Tool } from "utils";
 // import * as _ from "lodash";
-
+const wokerfps: number = 45;
+const interval = wokerfps > 0 ? 1000 / wokerfps : 1000 / 30;
 export class User extends Player {
     public stopBoxMove: boolean = false;
     private mDebugPoint: boolean = false;
@@ -23,10 +26,12 @@ export class User extends Player {
     private holdTime: number = 0;
     private holdDelay: number = 80;
     // 移动
-    private mMoveDelayTime: number = 400;
+    private readonly mMoveDelayTime: number = 400;
     private mMoveTime: number = 0;
+    private readonly mMoveSyncDelay = 200;
+    private mMoveSyncTime: number = 0;
     private mMovePoints: any[];
-    constructor(private game: Game) {
+    constructor(protected game: any) {
         super(undefined, undefined);
         this.mBlockable = false;
         this.mUserData = new UserDataManager(game);
@@ -60,31 +65,34 @@ export class User extends Player {
         this.mId = actor.id;
         this.mRoomService = room;
         this.mElementManager = room.playerManager;
-        this.game.peer.physicalPeer.createMatterUserObject(this.id);
         if (this.game.avatarType === op_def.AvatarStyle.SuitType) {
             if (!AvatarSuitType.hasAvatarSuit(actor["attrs"])) {
                 if (!actor.avatar) actor.avatar = <any>(AvatarSuitType.createBaseAvatar());
             }
         }
+        this.moveControll = new MoveControll(actor.id, this.mRoomService.collsionManager);
         this.model = new PlayerModel(actor);
         this.mRoomService.playerManager.setMe(this);
         // todo render setScroll
         Logger.getInstance().debug("setCameraScroller");
         this.game.renderPeer.setCameraScroller(actor.x, actor.y);
-
-        // const configMgr = <BaseDataConfigManager>this.game.configManager;
-        // const guideConfig = configMgr.findGuide(ModuleName.PICAPARTYNAVIGATION_NAME);
-        // Logger.getInstance().log(guideConfig);
     }
 
-    update() {
-        const now = new Date().getTime();
+    update(time?: number, delta?: number) {
+        super.update(time, delta);
+        if (!this.mMoving) return;
+        this.mRoomService.cameraService.syncDirty = true;
+        const now = Date.now();
+        this.mMoveSyncTime += delta;
+        if (this.mMoveSyncTime >= this.mMoveSyncDelay) {
+            this.mMoveSyncTime = 0;
+            this.syncPosition();
+        }
         if (!this.mMovePoints || this.mMovePoints.length < 1) {
             this.mMoveTime = now;
             return;
         }
         if (now - this.mMoveTime > this.mMoveDelayTime) {
-            // Logger.getInstance().log("user update ===>", this.mMovePoints);
             const movePath = op_def.MovePath.create();
             movePath.id = this.id;
             movePath.movePos = this.mMovePoints;
@@ -96,9 +104,56 @@ export class User extends Player {
             this.mMovePoints = [];
             this.mMoveTime = now;
         }
+    }
 
-        // debug
-        // Logger.getInstance().debug("#path cur pos : ", this.getPosition45(), "; ", this.getPosition());
+    public async findPath(targets: IPos[], targetId?: number, toReverse: boolean = false) {
+        if (!targets) {
+            return;
+        }
+        if (this.mRootMount) {
+            await this.mRootMount.removeMount(this, targets[0]);
+        }
+
+        const pos = this.mModel.pos;
+        const miniSize = this.roomService.miniSize;
+        for (const target of targets) {
+            // findPath坐标转换后存在误差
+            if (Tool.twoPointDistance(target, pos) <= miniSize.tileWidth / 2) {
+                this.mMoveData = { targetId };
+                this.stopMove();
+                return;
+            }
+        }
+        const findResult = this.roomService.findPath(pos, targets, toReverse);
+        if (!findResult) {
+            return;
+        }
+        const firstPos = targets[0];
+        if (findResult.length < 1) {
+            this.addFillEffect({ x: firstPos.x, y: firstPos.y }, op_def.PathReachableStatus.PATH_UNREACHABLE_AREA);
+            return;
+        }
+        // this.matterWorld.setSensor(this.body, true);
+        const path = [];
+        for (const p of findResult) {
+            path.push({ pos: p });
+        }
+        this.mMoveData = { path, targetId };
+        this.addFillEffect({ x: firstPos.x, y: firstPos.y }, op_def.PathReachableStatus.PATH_REACHABLE_AREA);
+        this.moveControll.setIgnoreCollsion(true);
+        this.startMove();
+        this.checkDirection();
+    }
+
+    moveMotion(x: number, y: number) {
+        if (this.mRootMount) {
+            this.mRootMount.removeMount(this);
+        }
+        this.mMoveData = { path: [{ pos: new LogicPos(x, y) }] };
+        this.mSyncDirty = true;
+        // this.body.isSensor = false;
+        this.moveControll.setIgnoreCollsion(false);
+        this.startMove();
     }
 
     public unmount(targetPos?: IPos): Promise<this> {
@@ -107,11 +162,12 @@ export class User extends Player {
         if (!targetPos) {
             return Promise.resolve(this);
         }
+        this.addBody();
         this.unmountSprite(mountID, targetPos);
         return Promise.resolve(this);
     }
 
-    public syncPosition(targetPoint: any) {
+    public syncPosition() {
         const userPos = this.getPosition();
         const pos = op_def.PBPoint3f.create();
         pos.x = userPos.x;
@@ -119,39 +175,56 @@ export class User extends Player {
         const movePoint = op_def.MovePoint.create();
         movePoint.pos = pos;
         // 给每个同步点时间戳
-        movePoint.timestamp = new Date().getTime();
+        movePoint.timestamp = Date.now();
         if (!this.mMovePoints) this.mMovePoints = [];
         this.mMovePoints.push(movePoint);
     }
 
     public startMove() {
+        const path = this.mMoveData.path;
+        if (path.length < 1) {
+            return;
+        }
         this.changeState(PlayerState.WALK);
         this.mMoving = true;
+
+        const pos = this.getPosition();
+        const angle = Math.atan2((path[0].pos.y - pos.y), (path[0].pos.x - pos.x));
+        const speed = this.mModel.speed * interval;
+        this.moveControll.setVelocity(Math.cos(angle) * speed, Math.sin(angle) * speed);
     }
 
     public stopMove(stopPos?: IPos) {
         if (!this.mMovePoints) this.mMovePoints = [];
         this.changeState(PlayerState.IDLE);
+        this.moveControll.setVelocity(0, 0);
         this.mMoving = false;
-        if (stopPos) {
-            const movePoint = op_def.MovePoint.create();
-            const pos = op_def.PBPoint3f.create();
-            pos.x = stopPos.x;
-            pos.y = stopPos.y;
-            movePoint.pos = pos;
-            // 给每个同步点时间戳
-            movePoint.timestamp = new Date().getTime();
-            this.mMovePoints.push(movePoint);
-        }
-        // Logger.getInstance().log("user stop list ====>", this.mMovePoints);
+        // if (stopPos) {
+        //     const movePoint = op_def.MovePoint.create();
+        //     const pos = op_def.PBPoint3f.create();
+        //     pos.x = stopPos.x;
+        //     pos.y = stopPos.y;
+        //     movePoint.pos = pos;
+        //     // 给每个同步点时间戳
+        //     movePoint.timestamp = Date.now();
+        // }
+        const pos = stopPos ? stopPos : this.mModel.pos;
         const movePath = op_def.MovePath.create();
         movePath.id = this.id;
         movePath.movePos = this.mMovePoints;
-        const pkt: PBpacket = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_STOP_SPRITE);
-        const ct: op_virtual_world.IOP_CLIENT_REQ_VIRTUAL_WORLD_STOP_SPRITE = pkt.content;
-        ct.movePath = movePath;
+        const position = op_def.PBPoint3f.create();
+        position.x = pos.x;
+        position.y = pos.y;
+        const pkt: PBpacket = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_STOP_SELF);
+        const ct: op_virtual_world.IOP_CLIENT_REQ_VIRTUAL_WORLD_STOP_SELF = pkt.content;
+        ct.position = pos;
+        // ct.movePath = movePath;
         this.mElementManager.connection.send(pkt);
         this.mMovePoints = [];
+
+        Logger.getInstance().log("============>>>>> stop: ", this.mModel.nickname, this.mModel.pos.x, this.mModel.pos.y);
+
+        this.stopActiveSprite();
     }
 
     public move(moveData: any) {
@@ -193,14 +266,16 @@ export class User extends Player {
         this.destroy();
     }
 
-    public tryStopMove(data: { targetId: number, needBroadcast?: boolean, interactiveBoo: boolean, stopPos?: IPos }) {
-        if (data.stopPos) {
-            this.setPosition(data.stopPos);
+    public stopActiveSprite(pos?: IPos) {
+        if (!this.mMoveData) return;
+        const targetId = this.mMoveData.targetId;
+        if (!targetId) {
+            return;
         }
-        if (this.mMoving) this.stopMove(data.stopPos);
-        if (data.interactiveBoo) {
-            this.activeSprite(data.targetId, undefined, data.needBroadcast);
-        }
+        // this.mRoomService.elementManager.checkElementAction(targetId);
+        // const needBroadcast = this.mRoomService.elementManager.checkActionNeedBroadcast(targetId);
+        this.activeSprite(targetId, undefined, false);
+        delete this.mMoveData.targetId;
     }
 
     public tryActiveAction(targetId: number, param?: any, needBroadcast?: boolean) {
@@ -284,8 +359,8 @@ export class User extends Player {
     }
 
     protected addBody() {
-        if (this.mRootMount) return;
-        this.game.peer.physicalPeer.addBody(this.id, false);
+        // if (this.mRootMount) return;
+        this.drawBody();
     }
 
     protected syncCameraPosition() {
@@ -319,7 +394,6 @@ export class User extends Player {
                 speed: val.speed,
                 displayInfo: this.model.displayInfo
             };
-            this.game.physicalPeer.setModel(obj1);
             this.setPosition(this.mModel.pos);
         }
         // todo change display alpha
@@ -347,5 +421,10 @@ export class User extends Player {
 
     get moveStyle() {
         return this.mMoveStyle;
+    }
+
+    private addFillEffect(pos: IPos, status: op_def.PathReachableStatus) {
+        const scaleRatio = this.roomService.game.scaleRatio;
+        this.roomService.game.renderPeer.addFillEffect(pos.x * scaleRatio, pos.y * scaleRatio, status);
     }
 }

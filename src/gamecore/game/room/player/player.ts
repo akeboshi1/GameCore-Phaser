@@ -18,8 +18,8 @@ export class Player extends Element implements IElement {
         if (!model) {
             return;
         }
-        (<any>model).off("Animation_Change", this.animationChanged, this);
-        (<any>model).on("Animation_Change", this.animationChanged, this);
+        (<any> model).off("Animation_Change", this.animationChanged, this);
+        (<any> model).on("Animation_Change", this.animationChanged, this);
         if (!model.layer) {
             model.layer = LayerEnum.Surface;
         }
@@ -113,7 +113,7 @@ export class Player extends Element implements IElement {
 
     public setWeapon(weaponid: string) {
         if (!this.mModel || !this.mModel.avatar) return;
-        const avatar: any = { barmWeapId: { sn: weaponid, slot: "NDE5NDMwNA==", suit_type: "weapon" } };
+        const avatar: any = {barmWeapId: {sn: weaponid, slot: "NDE5NDMwNA==", suit_type: "weapon"}};
         this.model.setTempAvatar(avatar);
         this.load(this.mModel.displayInfo);
     }

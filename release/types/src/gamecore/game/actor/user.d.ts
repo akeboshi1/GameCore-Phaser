@@ -1,11 +1,10 @@
 import { op_client, op_gameconfig } from "pixelpai_proto";
-import { Game } from "../game";
 import { Player } from "../room/player/player";
 import { IRoomService } from "../room/room";
 import { UserDataManager } from "./data/user.dataManager";
 import { IDragonbonesModel, IFramesModel, ISprite, IPos } from "structure";
 export declare class User extends Player {
-    private game;
+    protected game: any;
     stopBoxMove: boolean;
     private mDebugPoint;
     private mUserData;
@@ -17,19 +16,23 @@ export declare class User extends Player {
     private mPreTargetID;
     private holdTime;
     private holdDelay;
-    private mMoveDelayTime;
+    private readonly mMoveDelayTime;
     private mMoveTime;
+    private readonly mMoveSyncDelay;
+    private mMoveSyncTime;
     private mMovePoints;
-    constructor(game: Game);
+    constructor(game: any);
     set debugPoint(val: boolean);
     get debugPoint(): boolean;
     load(displayInfo: IFramesModel | IDragonbonesModel, isUser?: boolean): Promise<any>;
     addPackListener(): void;
     removePackListener(): void;
     enterScene(room: IRoomService, actor: op_client.IActor): void;
-    update(): void;
+    update(time?: number, delta?: number): void;
+    findPath(targets: IPos[], targetId?: number, toReverse?: boolean): Promise<void>;
+    moveMotion(x: number, y: number): void;
     unmount(targetPos?: IPos): Promise<this>;
-    syncPosition(targetPoint: any): void;
+    syncPosition(): void;
     startMove(): void;
     stopMove(stopPos?: IPos): void;
     move(moveData: any): void;
@@ -37,12 +40,7 @@ export declare class User extends Player {
     requestPushBox(targetId: number): void;
     setRenderable(isRenderable: boolean): Promise<any>;
     clear(): void;
-    tryStopMove(data: {
-        targetId: number;
-        needBroadcast?: boolean;
-        interactiveBoo: boolean;
-        stopPos?: IPos;
-    }): void;
+    stopActiveSprite(pos?: IPos): void;
     tryActiveAction(targetId: number, param?: any, needBroadcast?: boolean): void;
     updateModel(model: op_client.IActor): void;
     destroy(): void;
@@ -59,4 +57,5 @@ export declare class User extends Player {
     get userData(): UserDataManager;
     set moveStyle(val: number);
     get moveStyle(): number;
+    private addFillEffect;
 }

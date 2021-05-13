@@ -1,4 +1,4 @@
-import { IBaseCameraService } from "./cameras/base.cameras.manager";
+import { IBaseCameraService } from "./cameras";
 import { BaseSceneManager } from "./scene/scene.manager";
 
 export interface IRender {

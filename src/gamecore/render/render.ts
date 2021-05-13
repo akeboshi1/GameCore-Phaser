@@ -867,6 +867,14 @@ export class Render extends RPCPeer implements GameMain, IRender {
     }
 
     @Export()
+    public getIndexInLayer(id: number) {
+        if (!this.displayManager) return -1;
+        const display = this.displayManager.getDisplay(id);
+        if (!display) return -1;
+        return display.parentContainer.getIndex(display);
+    }
+
+    @Export()
     public changeLayer(id: number, layerName: string) {
         if (!this.displayManager) return;
         const display = this.displayManager.getDisplay(id);
@@ -1133,12 +1141,16 @@ export class Render extends RPCPeer implements GameMain, IRender {
         return i18n.t(val);
     }
 
-    @Export([webworker_rpc.ParamType.str, webworker_rpc.ParamType.boolean])
-    public showAlert(text: string, ok: boolean) {
+    @Export([webworker_rpc.ParamType.str])
+    public showAlert(text: string, ok?: boolean) {
         // 告诉render显示警告框
         if (ok === undefined) ok = true;
         return new Promise((resolve, reject) => {
-            if (this.uiManager) this.uiManager.showAlertView(text, ok, undefined, resolve);
+            if (this.uiManager) {
+                this.uiManager.showAlertView(text, ok, undefined, () => {
+                    resolve(null);
+                });
+            }
         });
     }
 
@@ -1479,6 +1491,16 @@ export class Render extends RPCPeer implements GameMain, IRender {
     //     }
     // }
 
+    @Export([webworker_rpc.ParamType.num, webworker_rpc.ParamType.num])
+    public drawServerPosition(x: number, y: number) {
+        if (this.mDisplayManager) this.mDisplayManager.drawServerPosition(x, y);
+    }
+
+    @Export()
+    public hideServerPosition() {
+        if (this.mDisplayManager) this.mDisplayManager.hideServerPosition();
+    }
+
     @Export()
     public addSkybox(scenery: IScenery) {
         if (this.mDisplayManager) this.mDisplayManager.addSkybox(scenery);
@@ -1626,10 +1648,10 @@ export class Render extends RPCPeer implements GameMain, IRender {
         this.emitter.emit(eventType, data);
     }
 
-    @Export([webworker_rpc.ParamType.str])
-    public physicalEmitter(eventType: string, data?: any) {
-        this.emitter.emit(eventType, data);
-    }
+    // @Export([webworker_rpc.ParamType.str])
+    // public physicalEmitter(eventType: string, data?: any) {
+    //     this.emitter.emit(eventType, data);
+    // }
 
     @Export([webworker_rpc.ParamType.num, webworker_rpc.ParamType.num, webworker_rpc.ParamType.num])
     public mount(id: number, targetID: number, targetIndex: number) {

@@ -67,7 +67,6 @@ export declare class MainPeer extends RPCPeer {
     resetGameraSize(width: number, height: number): void;
     syncCameraScroll(): void;
     sendMouseEvent(id: number, mouseEvent: any[], point3f: any): void;
-    updateDecorateElementReference(id: number, x: number, y: number): void;
     exitUser(): void;
     displayCompleteMove(id: number): void;
     syncPosition(targetPoint: any): void;
@@ -83,7 +82,9 @@ export declare class MainPeer extends RPCPeer {
     onTapHandler(obj: any): void;
     getCurrentRoomType(): protos.op_def.SceneTypeEnum;
     activePlayer(id: number): void;
+    getInteractivePosition(id: number): IPos[];
     stopGuide(id: string): void;
+    findPath(targets: [], targetId?: number, toReverse?: boolean): void;
     startFireMove(pointer: any): void;
     syncClock(times: number): void;
     clearClock(): void;
@@ -106,12 +107,13 @@ export declare class MainPeer extends RPCPeer {
     tryStopElementMove(id: number, points?: any): void;
     requestPushBox(id: number): void;
     removeMount(id: number, mountID: number, stopPos: IPos): Promise<void>;
-    stopMove(id: number): void;
+    stopMove(x: number, y: number): void;
     uploadHeadImage(url: string): void;
     uploadDBTexture(key: string, url: string, json: string): Promise<any>;
     completeDragonBonesAnimationQueue(id: number): void;
     completeFrameAnimationQueue(id: number): void;
     setConfig(config: ILauncherConfig): void;
+    moveMotion(x: number, y: number): void;
     terminate(): void;
     /**
      * 慎用，super.destroy()会使worker.terminator,致使整个游戏进程关闭

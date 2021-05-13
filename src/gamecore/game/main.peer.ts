@@ -343,18 +343,6 @@ export class MainPeer extends RPCPeer {
         this.game.connection.send(pkt);
     }
 
-    // 小屋装扮过程中，更新物件编辑提示区域
-    @Export()
-    public updateDecorateElementReference(id: number, x: number, y: number) {
-        if (!this.game.roomManager) return;
-        if (!this.game.roomManager.currentRoom) return;
-        if (!this.game.roomManager.currentRoom.elementManager) return;
-        const element = this.game.roomManager.currentRoom.elementManager.get(id);
-        if (!element) return;
-        const conflictMap = this.game.roomManager.currentRoom.checkSpriteConflictToWalkableMap(element.model, false, new LogicPos(x, y));
-        element.showRefernceArea(conflictMap);
-    }
-
     @Export()
     public exitUser() {
         this.game.exitUser();
@@ -369,7 +357,7 @@ export class MainPeer extends RPCPeer {
 
     @Export()
     public syncPosition(targetPoint) {
-        this.game.user.syncPosition(targetPoint);
+        this.game.user.syncPosition();
     }
 
     @Export([webworker_rpc.ParamType.num])
@@ -453,9 +441,23 @@ export class MainPeer extends RPCPeer {
         }
     }
 
+    @Export([webworker_rpc.ParamType.num])
+    public getInteractivePosition(id: number) {
+        const room = this.game.roomManager.currentRoom;
+        if (!room) return;
+        const ele = room.getElement(id);
+        if (!ele) return;
+        return ele.getInteractivePositionList();
+    }
+
     @Export([webworker_rpc.ParamType.str])
     public stopGuide(id: string) {
         if (this.game.guideWorkerManager) this.game.guideWorkerManager.stopGuide(id);
+    }
+
+    @Export()
+    public findPath(targets: [], targetId?: number, toReverse: boolean = false) {
+        if (this.game.user) this.game.user.findPath(targets, targetId, toReverse);
     }
 
     @Export()
@@ -591,8 +593,11 @@ export class MainPeer extends RPCPeer {
     @Export([webworker_rpc.ParamType.num, webworker_rpc.ParamType.boolean])
     public tryStopMove(id: number, interactiveBoo: boolean, targetId?: number, stopPos?: any) {
         if (this.game.user) {
-            const room = this.game.roomManager.currentRoom;
-            this.game.user.tryStopMove({ targetId, interactiveBoo, stopPos });
+            // const room = this.game.roomManager.currentRoom;
+            // this.game.user.tryStopMove({ targetId, interactiveBoo: false, stopPos });
+            // room.elementManager.checkElementAction(targetId);
+            // const needBroadcast = room.elementManager.checkActionNeedBroadcast(targetId);
+            // if (interactiveBoo) this.game.user.activeSprite(targetId, undefined, needBroadcast);
         }
     }
 
@@ -622,12 +627,9 @@ export class MainPeer extends RPCPeer {
         return ele.removeMount(target, stopPos);
     }
 
-    @Export([webworker_rpc.ParamType.num])
-    public stopMove(id: number) {
-        const ele = this.game.roomManager.currentRoom.getElement(id);
-        if (ele) {
-            ele.stopMove();
-        }
+    @Export([webworker_rpc.ParamType.num, webworker_rpc.ParamType.num])
+    public stopMove(x: number, y: number) {
+        this.game.user.stopMove(new LogicPos(x, y));
     }
 
     @Export([webworker_rpc.ParamType.str])
@@ -658,6 +660,11 @@ export class MainPeer extends RPCPeer {
     public setConfig(config: ILauncherConfig) {
         this.mConfig = config;
         this.game.setConfig(config);
+    }
+
+    @Export([webworker_rpc.ParamType.num, webworker_rpc.ParamType.num])
+    public moveMotion(x: number, y: number) {
+        this.game.user.moveMotion(x, y);
     }
 
     // ==== todo
