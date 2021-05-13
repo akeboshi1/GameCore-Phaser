@@ -608,7 +608,7 @@ export class MainPeer extends RPCPeer {
     public tryStopMove(id: number, interactiveBoo: boolean, targetId?: number, stopPos?: any) {
         if (this.game.user) {
             const room = this.game.roomManager.currentRoom;
-            this.game.user.tryStopMove({ targetId, interactiveBoo: false, stopPos });
+            this.game.user.tryStopMove({ targetId, interactiveBoo, stopPos });
         }
     }
 
