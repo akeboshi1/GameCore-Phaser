@@ -1,0 +1,16 @@
+{
+  "type": "sprite",
+  "image": {
+    "img": "frame",
+    "animation": {
+      "anikey": "frame_wrench",
+      "frame": [1,2,3,4],
+      "duration": 1200,
+      "repeat": -1
+    },
+    "display": {
+      "texturepath": "repair_furniture/repair_furniture.png",
+      "datapath": "repair_furniture/repair_furniture.json"
+    }
+  }
+}

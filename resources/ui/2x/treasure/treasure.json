@@ -1,0 +1,188 @@
+{
+	"textures": [
+		{
+			"image": "treasure",
+			"format": "RGBA8888",
+			"size": {
+				"w": 593,
+				"h": 1004
+			},
+			"scale": 1,
+			"frames": [
+				{
+					"filename": "treasure_bg",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 586,
+						"h": 277
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 586,
+						"h": 277
+					},
+					"frame": {
+						"x": 1,
+						"y": 1,
+						"w": 586,
+						"h": 277
+					}
+				},
+				{
+					"filename": "treasure_result_bg",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 582,
+						"h": 568
+					},
+					"spriteSourceSize": {
+						"x": 7,
+						"y": 7,
+						"w": 575,
+						"h": 557
+					},
+					"frame": {
+						"x": 1,
+						"y": 280,
+						"w": 575,
+						"h": 557
+					}
+				},
+				{
+					"filename": "treasure_decorate_left",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 14,
+						"h": 18
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 14,
+						"h": 18
+					},
+					"frame": {
+						"x": 578,
+						"y": 280,
+						"w": 14,
+						"h": 18
+					}
+				},
+				{
+					"filename": "treasure_decorate_right",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 13,
+						"h": 17
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 13,
+						"h": 17
+					},
+					"frame": {
+						"x": 578,
+						"y": 300,
+						"w": 13,
+						"h": 17
+					}
+				},
+				{
+					"filename": "treasure_title_bg",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 558,
+						"h": 6
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 558,
+						"h": 6
+					},
+					"frame": {
+						"x": 1,
+						"y": 839,
+						"w": 558,
+						"h": 6
+					}
+				},
+				{
+					"filename": "butt",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 368,
+						"h": 100
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 368,
+						"h": 100
+					},
+					"frame": {
+						"x": 1,
+						"y": 847,
+						"w": 368,
+						"h": 100
+					}
+				},
+				{
+					"filename": "treasure_title",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 282,
+						"h": 58
+					},
+					"spriteSourceSize": {
+						"x": 2,
+						"y": 2,
+						"w": 278,
+						"h": 54
+					},
+					"frame": {
+						"x": 1,
+						"y": 949,
+						"w": 278,
+						"h": 54
+					}
+				},
+				{
+					"filename": "treasure_title_cn",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 140,
+						"h": 55
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 140,
+						"h": 55
+					},
+					"frame": {
+						"x": 371,
+						"y": 847,
+						"w": 140,
+						"h": 55
+					}
+				}
+			]
+		}
+	],
+	"meta": {
+		"app": "https://www.codeandweb.com/texturepacker",
+		"version": "3.0",
+		"smartupdate": "$TexturePacker:SmartUpdate:7f60908a14ef0ab75dcd3c97985f1b51:21f3ddc522b6499ccbfc4fe61116e490:f5102e10802bf57b1ffb114ab12e46ca$"
+	}
+}

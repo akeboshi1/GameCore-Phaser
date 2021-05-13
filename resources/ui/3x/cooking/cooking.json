@@ -1,0 +1,167 @@
+{
+	"textures": [
+		{
+			"image": "cooking",
+			"format": "RGBA8888",
+			"size": {
+				"w": 1339,
+				"h": 621
+			},
+			"scale": 1,
+			"frames": [
+				{
+					"filename": "cooking_material_panel",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 1080,
+						"h": 321
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 1080,
+						"h": 321
+					},
+					"frame": {
+						"x": 1,
+						"y": 1,
+						"w": 1080,
+						"h": 321
+					}
+				},
+				{
+					"filename": "cooking_cook_panel",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 1080,
+						"h": 296
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 1080,
+						"h": 296
+					},
+					"frame": {
+						"x": 1,
+						"y": 324,
+						"w": 1080,
+						"h": 296
+					}
+				},
+				{
+					"filename": "cooking_nav_unselected",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 229,
+						"h": 103
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 229,
+						"h": 103
+					},
+					"frame": {
+						"x": 1083,
+						"y": 1,
+						"w": 229,
+						"h": 103
+					}
+				},
+				{
+					"filename": "cooking_nav_selected",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 226,
+						"h": 113
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 226,
+						"h": 113
+					},
+					"frame": {
+						"x": 1083,
+						"y": 106,
+						"w": 226,
+						"h": 113
+					}
+				},
+				{
+					"filename": "cooking_material_icon_bg",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 200,
+						"h": 200
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 200,
+						"h": 200
+					},
+					"frame": {
+						"x": 1083,
+						"y": 221,
+						"w": 200,
+						"h": 200
+					}
+				},
+				{
+					"filename": "cooking_cook_icon_bg",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 176,
+						"h": 176
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 176,
+						"h": 176
+					},
+					"frame": {
+						"x": 1083,
+						"y": 423,
+						"w": 176,
+						"h": 176
+					}
+				},
+				{
+					"filename": "cooking_cook_icon_add",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 77,
+						"h": 77
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 77,
+						"h": 77
+					},
+					"frame": {
+						"x": 1261,
+						"y": 423,
+						"w": 77,
+						"h": 77
+					}
+				}
+			]
+		}
+	],
+	"meta": {
+		"app": "https://www.codeandweb.com/texturepacker",
+		"version": "3.0",
+		"smartupdate": "$TexturePacker:SmartUpdate:4f2f5382d70682fdedb26a91d5184c1a:2add2601a042ddac53a51c285b71859a:a08910dbc60befe6e895838376b2f4b6$"
+	}
+}

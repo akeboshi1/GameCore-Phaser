@@ -71,7 +71,8 @@
     "receive": "Receive",
     "receivereward": "Receive",
     "received": "Received",
-    "rarity":"Rarity"
+    "rarity": "Rarity",
+    "leave": "Leave"
   },
   "quantityunit": {
     "k": "k",
@@ -127,9 +128,11 @@
     "synthesis": "Produce",
     "confirmation": "Are you sure to synthesize {{name}} ？"
   },
-  "minesettle": {
+  "mine": {
     "settle": "Summary",
-    "savebag": "OK"
+    "savebag": "OK",
+    "integraltips": "The Integral:",
+    "proptips": "Prop"
   },
   "equipupgrade": {
     "title": "Equipment"
@@ -450,7 +453,10 @@
     "newworld": "New World",
     "picahotel": "Pica Hotel",
     "store": "Store",
-    "onlinetips": "Online rewards"
+    "onlinetips": "Online rewards",
+    "pica": "PICA",
+    "tooqing": "TOOQING",
+    "hot": "HOT"
   },
   "commontips": {
     "configerror": "The configuration did not load successfully, please refresh the game"

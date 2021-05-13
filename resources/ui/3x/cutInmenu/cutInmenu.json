@@ -1,0 +1,251 @@
+{
+	"textures": [
+		{
+			"image": "cutInmenu",
+			"format": "RGBA8888",
+			"size": {
+				"w": 1094,
+				"h": 246
+			},
+			"scale": 1,
+			"frames": [
+				{
+					"filename": "work",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 166,
+						"h": 188
+					},
+					"spriteSourceSize": {
+						"x": 1,
+						"y": 1,
+						"w": 164,
+						"h": 186
+					},
+					"frame": {
+						"x": 1,
+						"y": 1,
+						"w": 164,
+						"h": 186
+					}
+				},
+				{
+					"filename": "text_minebag",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 82,
+						"h": 45
+					},
+					"spriteSourceSize": {
+						"x": 1,
+						"y": 1,
+						"w": 80,
+						"h": 43
+					},
+					"frame": {
+						"x": 1,
+						"y": 189,
+						"w": 80,
+						"h": 43
+					}
+				},
+				{
+					"filename": "time",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 66,
+						"h": 40
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 66,
+						"h": 40
+					},
+					"frame": {
+						"x": 83,
+						"y": 189,
+						"w": 66,
+						"h": 40
+					}
+				},
+				{
+					"filename": "arow",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 17,
+						"h": 30
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 17,
+						"h": 30
+					},
+					"frame": {
+						"x": 151,
+						"y": 189,
+						"w": 17,
+						"h": 30
+					}
+				},
+				{
+					"filename": "minebag_bg_brth",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 424,
+						"h": 175
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 424,
+						"h": 175
+					},
+					"frame": {
+						"x": 167,
+						"y": 1,
+						"w": 424,
+						"h": 175
+					}
+				},
+				{
+					"filename": "minecar",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 138,
+						"h": 136
+					},
+					"spriteSourceSize": {
+						"x": 1,
+						"y": 1,
+						"w": 136,
+						"h": 134
+					},
+					"frame": {
+						"x": 593,
+						"y": 1,
+						"w": 136,
+						"h": 134
+					}
+				},
+				{
+					"filename": "minebag_bg",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 368,
+						"h": 118
+					},
+					"spriteSourceSize": {
+						"x": 3,
+						"y": 3,
+						"w": 362,
+						"h": 111
+					},
+					"frame": {
+						"x": 731,
+						"y": 1,
+						"w": 362,
+						"h": 111
+					}
+				},
+				{
+					"filename": "work_icon",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 123,
+						"h": 108
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 123,
+						"h": 108
+					},
+					"frame": {
+						"x": 593,
+						"y": 137,
+						"w": 123,
+						"h": 108
+					}
+				},
+				{
+					"filename": "mine_pickaxe",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 102,
+						"h": 105
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 102,
+						"h": 105
+					},
+					"frame": {
+						"x": 718,
+						"y": 137,
+						"w": 102,
+						"h": 105
+					}
+				},
+				{
+					"filename": "survey_magnifier",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 132,
+						"h": 124
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 132,
+						"h": 124
+					},
+					"frame": {
+						"x": 822,
+						"y": 114,
+						"w": 132,
+						"h": 124
+					}
+				},
+				{
+					"filename": "edit_icon",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 129,
+						"h": 121
+					},
+					"spriteSourceSize": {
+						"x": 1,
+						"y": 1,
+						"w": 127,
+						"h": 119
+					},
+					"frame": {
+						"x": 956,
+						"y": 114,
+						"w": 127,
+						"h": 119
+					}
+				}
+			]
+		}
+	],
+	"meta": {
+		"app": "https://www.codeandweb.com/texturepacker",
+		"version": "3.0",
+		"smartupdate": "$TexturePacker:SmartUpdate:463c14da48e542ed9d7c46ec7d572448:fdde296f7d5d3e667dbb27332f3bea7e:62d6b26235e61156d1d541f9630a287a$"
+	}
+}
