@@ -236,7 +236,9 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
         const msg = content.msg;
         // 游戏phaser创建完成后才能在phaser内显示ui弹窗等ui
         if (errorLevel >= op_def.ErrorLevel.SERVICE_GATEWAY_ERROR) {
-            this.renderPeer.showAlert(msg, true).then(() => {
+            let str: string = msg;
+            if (msg.length > 100) str = msg.slice(0, 99);
+            this.renderPeer.showAlert(str, true).then(() => {
                 this.manualReconnect();
             });
         } else {
