@@ -251,7 +251,9 @@ export class PlayerManager extends PacketHandler implements IElementManager {
 
     private _loadSprite(sprite: op_client.ISprite) {
         const configMgr = <any>this.mRoom.game.configManager;
-        sprite.attrs.forEach((attr) => {
+        const attrs = sprite.attrs;
+        for (const attr of attrs) {
+            if (!attr.value) continue;
             const valueObj = JSON.parse(attr.value);
             const len = Object.keys(valueObj).length;
             if (len > 0) {
@@ -271,7 +273,7 @@ export class PlayerManager extends PacketHandler implements IElementManager {
                 });
                 attr.value = JSON.stringify(newAttrs);
             }
-        });
+        }
     }
 
     private onAdjust(packet: PBpacket) {

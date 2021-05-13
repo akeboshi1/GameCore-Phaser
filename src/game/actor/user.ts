@@ -120,7 +120,6 @@ export class User extends Player {
             // findPath坐标转换后存在误差
             if (Tool.twoPointDistance(target, pos) <= miniSize.tileWidth / 2) {
                 this.mMoveData = { targetId };
-                // this.tryStopMove({ stopPos: pos });
                 this.stopMove();
                 return;
             }
@@ -209,7 +208,6 @@ export class User extends Player {
             // 给每个同步点时间戳
             movePoint.timestamp = Date.now();
         }
-        // Logger.getInstance().log("user stop list ====>", this.mMovePoints);
         const movePath = op_def.MovePath.create();
         movePath.id = this.id;
         movePath.movePos = this.mMovePoints;
