@@ -86,17 +86,18 @@ export class MouseManager {
             com = gameobject.parentContainer.parentContainer || gameobject.parentContainer;
         }
 
-        if (pointer.isDown) return;
-        const diffX = Math.abs(pointer.downX - pointer.upX);
-        const diffY = Math.abs(pointer.downY - pointer.upY);
-        if (diffX > 10 || diffY > 10) return;
-        if (!gameobject || !gameobject.parentContainer) return;
-        if (!com || !(com instanceof FramesDisplay)) return;
-        if (com.nodeType !== NodeType.ElementNodeType) return;
-        if (!com.hasInteractive) return;
+        if (!pointer.isDown) {
+            const diffX = Math.abs(pointer.downX - pointer.upX);
+            const diffY = Math.abs(pointer.downY - pointer.upY);
+            if (diffX > 10 || diffY > 10) return;
+            if (!gameobject || !gameobject.parentContainer) return;
+            if (!com || !(com instanceof FramesDisplay)) return;
+            if (com.nodeType !== NodeType.ElementNodeType) return;
+            if (!com.hasInteractive) return;
 
-        com.scaleTween();
-        if (events.length === 0) return;
+            com.scaleTween();
+            if (events.length === 0) return;
+        }
 
         this.sendMouseEvent(events, id, {x: pointer.worldX / this.zoom, y: pointer.worldY / this.zoom});
     }
