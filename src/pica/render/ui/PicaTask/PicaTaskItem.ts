@@ -4,11 +4,15 @@ import { UIAtlasName } from "../../../res";
 import { ICountablePackageItem } from "../../../structure";
 import { op_client, op_pkt_def } from "pixelpai_proto";
 import { Handler, i18n, UIHelper, Url } from "utils";
-import { ItemButton } from "../Components";
+import { DynamicImageValue, ImageValue, ItemButton } from "../Components";
+import { PKT_Quest } from "custom_proto";
+import { TimerCountDown } from "structure";
 export class PicaTaskItem extends Phaser.GameObjects.Container {
     public taskButton: ThreeSliceButton;
-    public questData: op_client.IPKT_Quest;
+    public questData: PKT_Quest;
     private content: Phaser.GameObjects.Container;
+    private norCon: Phaser.GameObjects.Container;
+    private acceleCon: TaskAcceleratedItem;
     private bg: NineSlicePatch;
     private headIcon: DynamicImage;
     private taskName: Phaser.GameObjects.Text;
@@ -19,6 +23,7 @@ export class PicaTaskItem extends Phaser.GameObjects.Container {
     private send: Handler;
     private mIsExtend: boolean = false;
     private zoom: number = 1;
+    private canExtend: boolean = true;
     constructor(scene: Phaser.Scene, dpr: number, zoom: number) {
         super(scene);
         this.dpr = dpr;
@@ -28,6 +33,7 @@ export class PicaTaskItem extends Phaser.GameObjects.Container {
         this.setSize(conWidth, conHeight);
         this.content = scene.make.container(undefined, false);
         this.content.setSize(conWidth, conHeight);
+        this.norCon = this.scene.make.container(undefined, false);
         this.bg = new NineSlicePatch(this.scene, 0, 0, conWidth, conHeight, UIAtlasName.uicommon, "task_list_bg", {
             left: 6 * dpr,
             top: 6 * dpr,
@@ -52,12 +58,30 @@ export class PicaTaskItem extends Phaser.GameObjects.Container {
         this.taskButton.on(ClickEvent.Tap, this.onTaskButtonHandler, this);
         this.arrow = this.scene.make.image({ key: UIAtlasName.uicommon, frame: "task_list_arrow" });
         this.arrow.y = conHeight * 0.5 - this.arrow.height * 0.5;
-        this.content.add([headbg, this.headIcon, this.taskName, this.taskDes, this.taskButton, this.arrow]);
+        this.norCon.add([headbg, this.headIcon, this.taskName, this.taskDes, this.taskButton, this.arrow]);
+        this.acceleCon = new TaskAcceleratedItem(scene, dpr, zoom);
+        this.acceleCon.visible = false;
+        this.content.add([this.norCon, this.acceleCon]);
         this.add([this.bg, this.content]);
         this.setSize(conWidth, conHeight);
     }
 
-    public setTaskData(data: op_client.IPKT_Quest) {
+    public setTaskData(data: PKT_Quest) {
+        this.questData = data;
+        if (data.freshTime > 0) {
+            this.acceleCon.setTaskData(data);
+            this.acceleCon.visible = true;
+            this.norCon.visible = false;
+            this.canExtend = false;
+        } else {
+            this.setNorTaskData(data);
+            this.acceleCon.visible = false;
+            this.norCon.visible = true;
+            this.canExtend = true;
+        }
+    }
+
+    public setNorTaskData(data: PKT_Quest) {
         this.questData = data;
         this.taskName.text = data.name + this.getProgressStr(data);
         this.setTextLimit(this.taskName, this.taskName.text, 16);
@@ -78,16 +102,17 @@ export class PicaTaskItem extends Phaser.GameObjects.Container {
         }
     }
 
-    public setTaskDetail(data: op_client.PKT_Quest) {
+    public setTaskDetail(data: PKT_Quest) {
         if (this.mExtend) this.mExtend.setItemData(data);
     }
 
     public setHandler(send: Handler) {
         this.send = send;
+        this.acceleCon.setHandler(send);
     }
 
     public setExtend(isExtend: boolean, haveCallBack: boolean = true) {
-        if (isExtend) {
+        if (isExtend && this.canExtend) {
             this.openExtend();
             if (haveCallBack)
                 if (this.send) this.send.runWith(["extend", { extend: true, item: this }]);
@@ -104,7 +129,7 @@ export class PicaTaskItem extends Phaser.GameObjects.Container {
         return this.mIsExtend;
     }
 
-    private getProgressStr(data: op_client.IPKT_Quest) {
+    private getProgressStr(data: PKT_Quest) {
         if (data.targets) {
             for (const target of data.targets) {
                 if (target.neededCount) {
@@ -202,7 +227,7 @@ class TaskItemExtend extends Phaser.GameObjects.Container {
         this.setSize(width, height);
     }
 
-    public setItemData(questData: op_client.IPKT_Quest) {
+    public setItemData(questData: PKT_Quest) {
         let taskPosy = 0;
         const cellHeight = 67 * this.dpr;
         this.taskTex.text = this.getTaskTargetText(questData);
@@ -267,19 +292,19 @@ class TaskItemExtend extends Phaser.GameObjects.Container {
         return arr;
     }
 
-    private hasTargetWithDisplay(questData: op_client.IPKT_Quest) {
+    private hasTargetWithDisplay(questData: PKT_Quest) {
         for (const target of questData.targets) {
             if ((<any>target).texturePath) return true;
         }
     }
 
-    private getTaskTargetText(questData: op_client.IPKT_Quest) {
+    private getTaskTargetText(questData: PKT_Quest) {
         const targets = questData.targets;
         const text: string = (questData["des"]) + this.getProgressStr(questData);
         return text;
     }
 
-    private getProgressStr(data: op_client.IPKT_Quest) {
+    private getProgressStr(data: PKT_Quest) {
         if (data.targets) {
             for (const target of data.targets) {
                 if (target.neededCount) {
@@ -292,5 +317,70 @@ class TaskItemExtend extends Phaser.GameObjects.Container {
 
     private onTaskCellHandler(pointer, gameobject) {
         if (this.send) this.send.runWith(["item", gameobject]);
+    }
+}
+
+class TaskAcceleratedItem extends Phaser.GameObjects.Container {
+    protected dpr: number;
+    protected zoom: number;
+    private bg: Phaser.GameObjects.Image;
+    private titleTex: Phaser.GameObjects.Text;
+    private countDownTex: Phaser.GameObjects.Text;
+    private countDown: TimerCountDown;
+    private spendImg: DynamicImageValue;
+    private accButton: ThreeSliceButton;
+    private send: Handler;
+    private taskData: PKT_Quest;
+    constructor(scene: Phaser.Scene, dpr: number, zoom: number) {
+        super(scene);
+        this.dpr = dpr;
+        this.zoom = zoom;
+        const conWidth = 272 * dpr;
+        const conHeight = 70 * dpr;
+        this.setSize(conWidth, conHeight);
+        this.bg = this.scene.make.image({ key: UIAtlasName.task_daily, frame: "daily_task_refresh_bg" });
+        this.titleTex = this.scene.make.text({ style: UIHelper.whiteStyle(dpr, 12) }).setOrigin(0.5);
+        this.titleTex.y = -conHeight * 0.5 + 10 * dpr;
+        this.countDownTex = this.scene.make.text({ style: UIHelper.colorStyle("#FFF449", 11 * dpr) }).setOrigin(1, 0.5);
+        this.countDownTex.x = conWidth * 0.5 - 10 * dpr;
+        this.countDownTex.y = -conHeight * 0.5 + 10 * dpr;
+        this.spendImg = new DynamicImageValue(scene, 50 * dpr, 15 * dpr, UIAtlasName.uicommon, "daily_task_refresh_diamond_s", dpr);
+        this.spendImg.setLayout(2);
+        this.spendImg.y = -10 * dpr;
+        this.accButton = new ThreeSliceButton(this.scene, 75 * dpr, 28 * dpr, UIAtlasName.uicommon, UIHelper.threeYellowSmall, UIHelper.threeYellowSmall, i18n.t("order.accele"));
+        this.accButton.setTextStyle(UIHelper.brownishStyle(dpr));
+        this.accButton.setFontStyle("bold");
+        this.accButton.y = conHeight * 0.5 - this.accButton.height * 0.5 - 3 * dpr;
+        this.accButton.on(ClickEvent.Tap, this.onAccButtonHandler, this);
+        this.add([this.bg, this.titleTex, this.countDownTex, this.spendImg, this.accButton]);
+    }
+
+    destroy() {
+        super.destroy();
+        if (this.countDown) this.countDown.clear();
+    }
+    public setHandler(send: Handler) {
+        this.send = send;
+    }
+    public setTaskData(data: PKT_Quest) {
+        this.taskData = data;
+        this.titleTex.text = data["acceletips"];
+        this.spendImg.setText(data.itemToCost.count);
+        const url = Url.getOsdRes(data.itemToCost.texturePath);
+        this.spendImg.load(url);
+        if (data.freshTime > 0) {
+            const serverTime = data["servertime"] / 1000;
+            const time = data.freshTime - serverTime;
+            if (!this.countDown) {
+                this.countDown = new TimerCountDown(new Handler(this, (value: number, text: string) => {
+                    this.countDownTex.text = text;
+                    if (value === 0) if (this.send) this.send.runWith("accele");
+                }));
+            }
+            this.countDown.executeText(time);
+        }
+    }
+    private onAccButtonHandler() {
+        if (this.send) this.send.runWith(["queryaccele", this.taskData]);
     }
 }

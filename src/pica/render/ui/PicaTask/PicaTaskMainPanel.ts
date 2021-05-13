@@ -3,6 +3,7 @@ import { ButtonEventDispatcher, DynamicImage, ItemInfoTips, ProgressMaskBar, Pro
 import { UIAtlasName } from "../../../res";
 import { Font, Handler, i18n, UIHelper, Url } from "utils";
 import { op_client, op_pkt_def } from "pixelpai_proto";
+import { PKT_Quest, QUERY_QUEST_GROUP } from "custom_proto";
 import { PicaTaskItem } from "./PicaTaskItem";
 import { PicaItemTipsPanel } from "../SinglePanel/PicaItemTipsPanel";
 import { PicaTaskPanel } from "./PicaTaskPanel";
@@ -12,6 +13,8 @@ export class PicaTaskMainPanel extends Phaser.GameObjects.Container {
     private gameScroller: GameScroller;
     private curTaskItem: PicaTaskItem;
     private mainItem: MainTaskItem;
+    private dailyItem: MainDailyTaskItem;
+    private groupItem: MainTaskBaseItem;
     private mainTaskAnimation: MainTaskAnimation;
     private itemTips: ItemInfoTips;
     private notaskTip: Phaser.GameObjects.Container;
@@ -21,7 +24,7 @@ export class PicaTaskMainPanel extends Phaser.GameObjects.Container {
     private isMoveFinish = false;
     private questType: op_pkt_def.PKT_Quest_Type;
     private isFinishGroup: boolean = false;
-    private taskGroupData: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_QUERY_QUEST_GROUP;
+    private taskGroupData: QUERY_QUEST_GROUP;
     constructor(scene: Phaser.Scene, width: number, height: number, dpr: number, zoom: number, private render: Render) {
         super(scene);
         this.setSize(width, height);
@@ -35,9 +38,9 @@ export class PicaTaskMainPanel extends Phaser.GameObjects.Container {
     }
     refreshMask() {
         this.gameScroller.refreshMask();
-        if (this.mainItem) this.mainItem.refreshMask();
+        if (this.groupItem) this.groupItem.refreshMask();
     }
-    setTaskDatas(content: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_QUERY_QUEST_GROUP, questType: op_pkt_def.PKT_Quest_Type) {
+    setTaskDatas(content: QUERY_QUEST_GROUP, questType: op_pkt_def.PKT_Quest_Type) {
         this.gameScroller.clearItems(false);
         if (this.mainTaskAnimation) this.mainTaskAnimation.dispose();
         if (!content.id) {
@@ -48,13 +51,17 @@ export class PicaTaskMainPanel extends Phaser.GameObjects.Container {
         this.notaskTip.visible = false;
         this.gameScroller.visible = true;
         if (this.curTaskItem) this.curTaskItem.setExtend(false);
-        if (!this.mainItem) {
-            this.mainItem = new MainTaskItem(this.scene, 272 * this.dpr, 126 * this.dpr, this.dpr, this.zoom);
-            this.mainItem.setHandler(new Handler(this, this.onRewardHandler));
+        if (questType === op_pkt_def.PKT_Quest_Type.QUEST_MAIN_MISSION) {
+            if (!this.mainItem) this.mainItem = new MainTaskItem(this.scene, 272 * this.dpr, 126 * this.dpr, this.dpr, this.zoom);
+            this.groupItem = this.mainItem;
+        } else if (questType === op_pkt_def.PKT_Quest_Type.QUEST_DAILY_GOAL) {
+            if (!this.dailyItem) this.dailyItem = new MainDailyTaskItem(this.scene, 272 * this.dpr, 126 * this.dpr, this.dpr, this.zoom);
+            this.groupItem = this.dailyItem;
         }
-        this.mainItem.setMainTaskData(content, questType);
-        this.mainItem.x = 0;
-        this.gameScroller.addItem(this.mainItem);
+        this.groupItem.refreshMask();
+        this.groupItem.setMainTaskData(content, questType);
+        this.groupItem.x = 0;
+        this.gameScroller.addItem(this.groupItem);
         if (this.questType !== questType) {
             const tempArr = this.getTaskQuests(content.quests, undefined);
             this.setTaskItems(tempArr);
@@ -71,7 +78,7 @@ export class PicaTaskMainPanel extends Phaser.GameObjects.Container {
                 if (item.visible) tempitems.push(item);
             }
             if (this.isFinishGroup) {
-                this.mainTaskAnimation = new MainTaskAnimation(this.scene, this.mainItem, tempitems, this.width, this.dpr);
+                this.mainTaskAnimation = new MainTaskAnimation(this.scene, this.groupItem, tempitems, this.width, this.dpr);
                 if (this.isMoveFinish) this.mainTaskAnimation.playIntoAnimation();
                 this.isFinishGroup = false;
             } else {
@@ -84,7 +91,7 @@ export class PicaTaskMainPanel extends Phaser.GameObjects.Container {
         this.render.emitter.emit(PicaTaskPanel.PICATASK_DATA);
     }
 
-    setTaskDetail(quest: op_client.PKT_Quest) {
+    setTaskDetail(quest: PKT_Quest) {
         if (this.curTaskItem && quest) {
             if (this.curTaskItem.questData.id === quest.id) {
                 this.curTaskItem.setTaskDetail(quest);
@@ -92,7 +99,7 @@ export class PicaTaskMainPanel extends Phaser.GameObjects.Container {
         }
     }
 
-    setTaskItems(quests: op_client.IPKT_Quest[]) {
+    setTaskItems(quests: PKT_Quest[]) {
         for (const item of this.taskItems) {
             const task = <PicaTaskItem>item;
             task.visible = false;
@@ -115,7 +122,7 @@ export class PicaTaskMainPanel extends Phaser.GameObjects.Container {
         this.gameScroller.Sort();
     }
 
-    getTaskQuests(quests: op_client.IPKT_Quest[], before: op_client.IPKT_Quest[]) {
+    getTaskQuests(quests: PKT_Quest[], before: PKT_Quest[]) {
         const tempArr = [];
         for (const quest of quests) {
             if (quest.stage === op_pkt_def.PKT_Quest_Stage.PKT_QUEST_STAGE_PROCESSING || quest.stage === op_pkt_def.PKT_Quest_Stage.PKT_QUEST_STAGE_FINISHED) {
@@ -161,7 +168,10 @@ export class PicaTaskMainPanel extends Phaser.GameObjects.Container {
             selfevent: true,
             cellupCallBack: (gameobject) => {
                 this.onPointerUpHandler(gameobject);
-            }
+            },
+            valuechangeCallback: (value) => {
+                if (this.groupItem) this.groupItem.refreshMask();
+            },
         });
         this.itemTips = new ItemInfoTips(this.scene, 121 * this.dpr, 46 * this.dpr, UIAtlasName.uicommon, "tips_bg", this.dpr);
         this.itemTips.setVisible(false);
@@ -193,6 +203,10 @@ export class PicaTaskMainPanel extends Phaser.GameObjects.Container {
             this.send.runWith(["finish", data]);
         } else if (tag === "item") {
             this.onMaterialItemHandler(data);
+        } else if (tag === "queryaccele") {
+            this.send.runWith(["queryaccele", data]);
+        } else if (tag === "accele") {
+            this.send.runWith(["accele"]);
         }
     }
     private onRewardHandler(id: string) {
@@ -225,9 +239,7 @@ class MainTaskBaseItem extends Phaser.GameObjects.Container {
     protected titleCon: Phaser.GameObjects.Container;
     protected titleTex: Phaser.GameObjects.Text;
     protected taskDes: Phaser.GameObjects.Text;
-    protected rewardsImg: DynamicImage;
-    protected rewardRotateImg: Phaser.GameObjects.Image;
-    protected mainData: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_QUERY_QUEST_GROUP;
+    protected mainData: QUERY_QUEST_GROUP;
     protected isFinish: boolean = false;
     protected questType: op_pkt_def.PKT_Quest_Type;
     protected send: Handler;
@@ -242,7 +254,7 @@ class MainTaskBaseItem extends Phaser.GameObjects.Container {
     }
     refreshMask() {
     }
-    public setMainTaskData(content: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_QUERY_QUEST_GROUP, questType: op_pkt_def.PKT_Quest_Type) {
+    public setMainTaskData(content: QUERY_QUEST_GROUP, questType: op_pkt_def.PKT_Quest_Type) {
         this.mainData = content;
         this.questType = questType;
     }
@@ -281,57 +293,29 @@ class MainTaskBaseItem extends Phaser.GameObjects.Container {
             }
         }).setOrigin(0, 0.5);
         this.taskDes.setWordWrapWidth(160 * this.dpr, true);
-        const rewardbg = this.scene.make.image({ key: UIAtlasName.uicommon, frame: "task_chapter_gift_bg" });
-        rewardbg.x = this.width * 0.5 - 10 * this.dpr - rewardbg.width * 0.5;
-        rewardbg.y = 10 * this.dpr;
-        const rewardButton = new ButtonEventDispatcher(this.scene, 0, 0);
-        rewardButton.setSize(rewardbg.width, rewardbg.height);
-        rewardButton.enable = true;
-        rewardButton.on(ClickEvent.Tap, this.onReceiveAwardHandler, this);
-        rewardButton.x = rewardbg.x;
-        rewardButton.y = rewardbg.y;
-        this.rewardRotateImg = this.scene.make.image({ key: UIAtlasName.uicommon, frame: "task_chapter_gift_bg1" });
-        this.rewardRotateImg.x = rewardbg.x;
-        this.rewardRotateImg.y = rewardbg.y;
-        this.rewardRotateImg.visible = false;
-        this.rewardsImg = new DynamicImage(this.scene, 0, 0);
-        this.rewardsImg.x = rewardbg.x;
-        this.rewardsImg.y = rewardbg.y;
-        this.rewardsImg.scale = this.dpr / this.zoom;
-        this.add([this.bg, this.titleCon, this.taskDes, rewardbg, this.rewardRotateImg, this.rewardsImg, rewardButton]);
+
+        this.add([this.bg, this.titleCon]);
     }
     protected onReceiveAwardHandler() {
-        if (this.isFinish && !this.mainData.rewardsReceived && this.isCanRecievd) {
-            if (this.send) this.send.runWith([this.mainData.id]);
-        } else {
-            PicaItemTipsPanel.Inst.showTips(this.rewardsImg, <any>this.mainData.reward);
-        }
     }
     protected playRotateTween() {
-        if (!this.scene) return;
-        if (this.intervalTimer) clearInterval(this.intervalTimer);
-        this.rewardRotateImg.visible = true;
-        this.isCanRecievd = true;
-        this.intervalTimer = setInterval(() => {
-            if (!this.scene) {
-                if (this.intervalTimer) clearInterval(this.intervalTimer);
-                return;
-            }
-            this.rewardRotateImg.rotation += 0.1;
-        }, 30);
     }
 }
 class MainTaskItem extends MainTaskBaseItem {
-
+    protected rewardbg: Phaser.GameObjects.Image;
+    protected rewardsImg: DynamicImage;
+    protected rewardRotateImg: Phaser.GameObjects.Image;
+    protected rewardButton: ButtonEventDispatcher;
     private progress: ProgressThreeBar;
     private progressTex: Phaser.GameObjects.Text;
+
     private previousProgress: number;
     private tween: Phaser.Tweens.Tween;
     constructor(scene: Phaser.Scene, width: number, height: number, dpr: number, zoom: number) {
         super(scene, width, height, dpr, zoom);
     }
 
-    public setMainTaskData(content: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_QUERY_QUEST_GROUP, questType: op_pkt_def.PKT_Quest_Type) {
+    public setMainTaskData(content: QUERY_QUEST_GROUP, questType: op_pkt_def.PKT_Quest_Type) {
         this.titleTex.text = content.name;
         this.taskDes.text = content.des;
         const max = 100;
@@ -397,11 +381,46 @@ class MainTaskItem extends MainTaskBaseItem {
                 color: "#794400"
             }
         }).setOrigin(0.5);
-
-        this.add([this.progress, this.progressTex]);
+        this.rewardbg = this.scene.make.image({ key: UIAtlasName.uicommon, frame: "task_chapter_gift_bg" });
+        this.rewardbg.x = this.width * 0.5 - 10 * this.dpr - this.rewardbg.width * 0.5;
+        this.rewardbg.y = 10 * this.dpr;
+        this.rewardButton = new ButtonEventDispatcher(this.scene, 0, 0);
+        this.rewardButton.setSize(this.rewardbg.width, this.rewardbg.height);
+        this.rewardButton.enable = true;
+        this.rewardButton.on(ClickEvent.Tap, this.onReceiveAwardHandler, this);
+        this.rewardButton.x = this.rewardbg.x;
+        this.rewardButton.y = this.rewardbg.y;
+        this.rewardRotateImg = this.scene.make.image({ key: UIAtlasName.uicommon, frame: "task_chapter_gift_bg1" });
+        this.rewardRotateImg.x = this.rewardbg.x;
+        this.rewardRotateImg.y = this.rewardbg.y;
+        this.rewardRotateImg.visible = false;
+        this.rewardsImg = new DynamicImage(this.scene, 0, 0);
+        this.rewardsImg.x = this.rewardbg.x;
+        this.rewardsImg.y = this.rewardbg.y;
+        this.rewardsImg.scale = this.dpr / this.zoom;
+        this.add([this.progress, this.progressTex, this.taskDes, this.rewardbg, this.rewardRotateImg, this.rewardsImg, this.rewardButton]);
     }
-
-    private getFinishProgress(content: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_QUERY_QUEST_GROUP) {
+    protected onReceiveAwardHandler() {
+        if (this.isFinish && !this.mainData.rewardsReceived && this.isCanRecievd) {
+            if (this.send) this.send.runWith([this.mainData.id]);
+        } else {
+            PicaItemTipsPanel.Inst.showTips(this.rewardsImg, <any>this.mainData.reward);
+        }
+    }
+    protected playRotateTween() {
+        if (!this.scene) return;
+        if (this.intervalTimer) clearInterval(this.intervalTimer);
+        this.rewardRotateImg.visible = true;
+        this.isCanRecievd = true;
+        this.intervalTimer = setInterval(() => {
+            if (!this.scene) {
+                if (this.intervalTimer) clearInterval(this.intervalTimer);
+                return;
+            }
+            this.rewardRotateImg.rotation += 0.1;
+        }, 30);
+    }
+    private getFinishProgress(content: QUERY_QUEST_GROUP) {
         const progress = content.progress < 0 ? 0 : content.progress;
         return progress;
     }
@@ -433,44 +452,41 @@ class MainTaskItem extends MainTaskBaseItem {
         });
         this.tween = tween;
     }
+
 }
 
 class MainDailyTaskItem extends MainTaskBaseItem {
-    private progress: ProgressMaskBar;
+    protected progress: ProgressMaskBar;
+    protected rewardbg: Phaser.GameObjects.Image;
+    protected rewardsImg: DynamicImage;
+    protected rewardRotateImg: Phaser.GameObjects.Image;
+    protected rewardButton: ButtonEventDispatcher;
     private tween: Phaser.Tweens.Tween;
     private progressImgs: Phaser.GameObjects.Image[];
     constructor(scene: Phaser.Scene, width: number, height: number, dpr: number, zoom: number) {
         super(scene, width, height, dpr, zoom);
     }
 
-    public setMainTaskData(content: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_QUERY_QUEST_GROUP, questType: op_pkt_def.PKT_Quest_Type) {
-    //     this.titleTex.text = content.name;
-    //     this.taskDes.text = content.des;
-    //     const max = 100;
-    //     const fvalue = this.getFinishProgress(content);
-    //     this.rewardRotateImg.visible = false;
-    //     this.clearTweens();
-    //     if (this.questType !== questType) {
-    //         this.progress.setProgress(fvalue, max);
-    //         if (fvalue === max) {
-    //             this.playRotateTween();
-    //         }
-    //     } else {
-    //        // const from = this.previousProgress;
-    //         const allTime = 2000;
-    //         const duration = allTime * fvalue / max;
-    //         this.playProgressTween(from, fvalue, max, duration);
-    //     }
-    //     //this.progressTex.text = fvalue + "%";
-    //     this.isFinish = fvalue === max;
-    //   //  this.previousProgress = fvalue;
-    //     this.mainData = content;
-
-    //     const url = Url.getOsdRes((<any>content.reward).texturePath);
-    //     this.rewardsImg.load(url, this, () => {
-
-    //     });
-    //     this.questType = questType;
+    refreshMask() {
+        this.progress.refreshMask();
+    }
+    public setMainTaskData(content: QUERY_QUEST_GROUP, questType: op_pkt_def.PKT_Quest_Type) {
+        this.titleTex.text = content.name;
+        this.taskDes.text = content.des;
+        this.clearTweens();
+        const max = 100;
+        const fvalue = this.getProgressValue(content.progress);
+        this.rewardRotateImg.visible = false;
+        this.progress.setProgress(fvalue, max);
+        this.setProgressImg(content.progress);
+        if (fvalue === max) {
+            this.playRotateTween();
+        }
+        this.isFinish = fvalue === max;
+        this.mainData = content;
+        const url = Url.getOsdRes((<any>content.reward).texturePath);
+        this.rewardsImg.load(url);
+        this.questType = questType;
     }
 
     public setHandler(send: Handler) {
@@ -494,55 +510,94 @@ class MainDailyTaskItem extends MainTaskBaseItem {
     }
     protected init() {
         super.init();
+        this.progressImgs = [];
         this.progress = new ProgressMaskBar(this.scene, UIAtlasName.task_daily, "daily_card_undone_line", "daily_card_done_line");
         this.progress.x = -this.width * 0.5 + this.progress.width * 0.5 + 15 * this.dpr;
-        this.progress.y = 34 * this.dpr;
-
-        this.add([this.progress]);
+        this.progress.y = 4 * this.dpr;
+        this.createProgressImgs();
+        this.rewardbg = this.scene.make.image({ key: UIAtlasName.task_daily, frame: "daily_card_undone_set1" });
+        this.rewardbg.x = this.progress.width * 0.5 - this.rewardbg.width * 0.5;
+        this.rewardbg.y = this.progress.y + this.progress.height * 0.5 - this.rewardbg.height * 0.5;
+        this.progressImgs.push(this.rewardbg);
+        this.rewardButton = new ButtonEventDispatcher(this.scene, 0, 0);
+        this.rewardButton.setSize(this.rewardbg.width, this.rewardbg.height);
+        this.rewardButton.enable = true;
+        this.rewardButton.on(ClickEvent.Tap, this.onReceiveAwardHandler, this);
+        this.rewardButton.x = this.rewardbg.x;
+        this.rewardButton.y = this.rewardbg.y;
+        this.rewardRotateImg = this.scene.make.image({ key: UIAtlasName.uicommon, frame: "task_chapter_gift_bg1" });
+        this.rewardRotateImg.x = this.rewardbg.x;
+        this.rewardRotateImg.y = this.rewardbg.y;
+        this.rewardRotateImg.visible = false;
+        this.rewardsImg = new DynamicImage(this.scene, 0, 0);
+        this.rewardsImg.x = this.rewardbg.x;
+        this.rewardsImg.y = this.rewardbg.y;
+        this.rewardsImg.scale = this.dpr / this.zoom;
+        this.taskDes.setOrigin(0.5);
+        this.taskDes.y = this.height * 0.5 - 13 * this.dpr;
+        this.taskDes.x = 0;
+        this.add([this.progress, this.taskDes, this.rewardbg, this.rewardRotateImg, this.rewardsImg, this.rewardButton]);
     }
 
+    private setProgressImg(value: number) {
+        for (let i = 0; i < 5; i++) {
+            const img = this.progressImgs[i];
+            img.setFrame(i + 1 <= value ? "daily_card_done_set_1" : "daily_card_undone_set");
+        }
+        if (value >= 6) this.rewardbg.setFrame("daily_card_done_set1_1");
+        else this.rewardbg.setFrame("daily_card_undone_set1");
+    }
     private createProgressImgs() {
         const width = this.progress.width;
         const height = this.progress.height;
-        let posx = -this.progress.width * 0.5;
+        let posx = -width * 0.5;
         for (let i = 0; i < 5; i++) {
             const img = this.scene.make.image({ key: UIAtlasName.task_daily, frame: "daily_card_undone_set" });
-            img.x = posx + img.width * 0.5;
-            img.y =
-                posx += img.width + 8 * this.dpr;
+            const imgWidth = img.width;
+            const imgHeight = img.height;
+            img.x = posx + imgWidth * 0.5;
+            img.y = i % 2 === 0 ? -height * 0.5 + imgHeight * 0.5 : height * 0.5 - imgHeight * 0.5;
+            posx += imgWidth + 8 * this.dpr;
+            this.progressImgs.push(img);
         }
+        this.progress.add(this.progressImgs);
+
     }
-    private playProgressTween(from: number, to: number, max: number, duration: number) {
-        if (!this.scene) return;
-        this.isCanRecievd = false;
-        const tween = this.scene.tweens.addCounter({
-            from,
-            to,
-            ease: "Linear",
-            duration,
-            onUpdate: (cope: any, param: any) => {
-                if (!this.scene) {
-                    tween.stop();
-                    tween.remove();
-                    return;
-                }
-                const value = param.value;
-                this.progress.setProgress(value, max);
-               // this.progressTex.text = Math.floor((value * 1000 / max)) / 10 + "%";
-            },
-            onComplete: () => {
-                tween.stop();
-                if (to === max) {
-                    this.playRotateTween();
-                }
-            },
-        });
-        this.tween = tween;
+
+    private getProgressValue(temp: number) {
+        let value: number = 0;
+        switch (temp) {
+            case 0:
+                value = 0;
+                break;
+            case 1:
+                value = 6;
+                break;
+            case 2:
+                value = 22;
+                break;
+            case 3:
+                value = 39.7;
+                break;
+            case 4:
+                value = 53.8;
+                break;
+            case 5:
+                value = 71.1;
+                break;
+            case 6:
+                value = 100;
+                break;
+            default:
+                value = 100;
+
+        }
+        return value;
     }
 }
 
 class MainTaskAnimation {
-    private mainItem: MainTaskItem;
+    private mainItem: MainTaskBaseItem;
     private taskItems: PicaTaskItem[];
     private listPosY = [];
     private tempItems = [];
@@ -552,7 +607,7 @@ class MainTaskAnimation {
     private isDispose: boolean = false;
     private scene: Phaser.Scene;
     private indexed: number = -1;
-    constructor(scene: Phaser.Scene, mainItem: MainTaskItem, taskItems: PicaTaskItem[], width: number, dpr: number) {
+    constructor(scene: Phaser.Scene, mainItem: MainTaskBaseItem, taskItems: PicaTaskItem[], width: number, dpr: number) {
         this.scene = scene;
         this.mainItem = mainItem;
         this.taskItems = taskItems;

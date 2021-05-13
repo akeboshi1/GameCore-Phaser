@@ -1,13 +1,14 @@
 import { op_client, op_pkt_def, op_def } from "pixelpai_proto";
+import { PKT_Quest, QUERY_QUEST_GROUP } from "custom_proto";
 import { RedDotTypeEnum } from "custom_proto";
-import { ToggleColorButton, UiManager } from "gamecoreRender";
+import { AlertView, ToggleColorButton, UiManager } from "gamecoreRender";
 import { ModuleName } from "structure";
 import { UIAtlasName } from "../../../res";
 import { Handler, i18n, UIHelper } from "utils";
 import { PicaBasePanel } from "../pica.base.panel";
 import { PicaTaskMainPanel } from "./PicaTaskMainPanel";
 import { ClickEvent } from "apowophaserui";
-import { MainUIRedType } from "picaStructure";
+import { ICountablePackageItem, MainUIRedType } from "picaStructure";
 import { UITools } from "../uitool";
 export class PicaTaskPanel extends PicaBasePanel {
     public static PICATASK_CLOSE: string = "PICATASK_CLOSE";
@@ -132,12 +133,12 @@ export class PicaTaskPanel extends PicaBasePanel {
         }
     }
 
-    setTaskDatas(content: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_QUERY_QUEST_GROUP) {
+    setTaskDatas(content: QUERY_QUEST_GROUP) {
         if (content.questType !== this.questType) return;
         this.mainPanel.setTaskDatas(content, content.questType);
     }
 
-    setTaskDetail(quest: op_client.PKT_Quest) {
+    setTaskDetail(quest: PKT_Quest) {
 
     }
     setRedsState(reds: number[]) {
@@ -168,6 +169,19 @@ export class PicaTaskPanel extends PicaBasePanel {
             // this.render.renderEmitter(ModuleName.PICATASK_NAME + "_questdetail", { id: data, type: this.questType });
         } else if (tag === "reward") {
             this.render.renderEmitter(ModuleName.PICATASK_NAME + "_queryreward", this.questType);
+        } else if (tag === "queryaccele") {
+            const item: ICountablePackageItem = data.itemToCost;
+            const alertView = new AlertView(this.scene, this.uiManager);
+            alertView.show({
+                title: i18n.t("task.adtitle"),
+                text: i18n.t("task.adtips", { count: item.count, name: item.name }),
+                oy: 302 * this.dpr * this.render.uiScale,
+                callback: () => {
+                    this.render.renderEmitter(ModuleName.PICATASK_NAME + "_queryaccele", data.id);
+                },
+            });
+        } else if (tag === "accele") {
+            this.render.renderEmitter(ModuleName.PICATASK_NAME + "_questlist", this.questType);
         }
     }
     private OnClosePanel() {

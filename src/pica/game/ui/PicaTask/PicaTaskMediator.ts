@@ -1,3 +1,4 @@
+import { PKT_Quest, QUERY_QUEST_GROUP } from "custom_proto";
 import { BasicMediator, Game } from "gamecore";
 import { MainUIRedType, RedEventType } from "picaStructure";
 import { op_client, op_pkt_def } from "pixelpai_proto";
@@ -26,6 +27,7 @@ export class PicaTaskMediator extends BasicMediator {
         this.game.emitter.on(ModuleName.PICATASK_NAME + "_retquestdetail", this.onRetQuestDetail, this);
         this.game.emitter.on(ModuleName.PICATASK_NAME + "_retquestgroup", this.onRetQuestGroup, this);
         this.game.emitter.on(ModuleName.PICATASK_NAME + "_querygo", this.onGoHandler, this);
+        this.game.emitter.on(ModuleName.PICATASK_NAME + "_queryaccele", this.queryAcceleTask, this);
         this.game.emitter.on(RedEventType.TASK_PANEL_RED, this.onRedSystemHandler, this);
     }
 
@@ -42,8 +44,17 @@ export class PicaTaskMediator extends BasicMediator {
         this.game.emitter.off(ModuleName.PICATASK_NAME + "_retquestdetail", this.onRetQuestDetail, this);
         this.game.emitter.off(ModuleName.PICATASK_NAME + "_retquestgroup", this.onRetQuestGroup, this);
         this.game.emitter.off(ModuleName.PICATASK_NAME + "_querygo", this.onGoHandler, this);
+        this.game.emitter.off(ModuleName.PICATASK_NAME + "_queryaccele", this.queryAcceleTask, this);
         this.game.emitter.off(RedEventType.TASK_PANEL_RED, this.onRedSystemHandler, this);
     }
+
+    onEnable() {
+        this.proto.on("QUERY_QUEST_GROUP", this.onRetQuestGroup, this);
+    }
+    onDisable() {
+        this.proto.off("QUERY_QUEST_GROUP", this.onRetQuestGroup, this);
+    }
+
     panelInit() {
         super.panelInit();
         if (this.taskGroup) {
@@ -56,9 +67,9 @@ export class PicaTaskMediator extends BasicMediator {
         this.hide();
     }
 
-    // private onQueryQuestList() {
-    //     this.mModel.queryQuestList();
-    // }
+    private queryAcceleTask(id: number) {
+        this.game.sendCustomProto("STRING", "questFacade:clockUpDailyQuest", { id });
+    }
     private onQueryQuestDetail(id: string) {
         this.mModel.queryQuestDetail(id);
     }
@@ -71,21 +82,19 @@ export class PicaTaskMediator extends BasicMediator {
     private onQuerySubmitQuest(id: string) {
         this.mModel.querySubmitQuest(id);
     }
-    private onRetQuestList(quests: op_client.PKT_Quest[]) {
+    private onRetQuestList(quests: PKT_Quest[]) {
         if (this.mView) this.mView.setTaskDatas(quests);
     }
 
-    private onRetQuestDetail(quest: op_client.PKT_Quest) {
+    private onRetQuestDetail(quest: PKT_Quest) {
         if (this.mView) this.mView.setTaskDetail(quest);
     }
-    private onRetQuestGroup(content: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_QUERY_QUEST_GROUP) {
+    private onRetQuestGroup(packet: any) {
+        const content: QUERY_QUEST_GROUP = packet.content;
         if (content.id) {
             const configMgr = <BaseDataConfigManager>this.game.configManager;
-            //    configMgr.synItemBase(content.reward);
             const tempgroup = configMgr.getQuestGroupMap(content.id);
             ObjectAssign.excludeAssign(content, tempgroup);
-            // content.name = configMgr.getI18n(content.name);
-            // content.des = configMgr.getI18n(content.des);
             if (content.quests) {
                 for (const quest of content.quests) {
                     configMgr.getBatchItemDatas(quest.targets);
@@ -93,6 +102,9 @@ export class PicaTaskMediator extends BasicMediator {
                     const temp = configMgr.getQuest(quest.id);
                     ObjectAssign.excludeAllAssign(quest, temp);
                     quest.display = { texturePath: "pkth5/npc/task_head_npc_1" };
+                    configMgr.synItemBase(quest.itemToCost);
+                    quest["acceletips"] = configMgr.getI18n("PKT_SYS0000040");
+                    quest["servertime"] = this.game.clock.unixTime;
                 }
             }
         }
