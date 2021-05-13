@@ -199,19 +199,7 @@ export class User extends Player {
         this.changeState(PlayerState.IDLE);
         this.moveControll.setVelocity(0, 0);
         this.mMoving = false;
-        // if (stopPos) {
-        //     const movePoint = op_def.MovePoint.create();
-        //     const pos = op_def.PBPoint3f.create();
-        //     pos.x = stopPos.x;
-        //     pos.y = stopPos.y;
-        //     movePoint.pos = pos;
-        //     // 给每个同步点时间戳
-        //     movePoint.timestamp = Date.now();
-        // }
         const pos = stopPos ? stopPos : this.mModel.pos;
-        const movePath = op_def.MovePath.create();
-        movePath.id = this.id;
-        movePath.movePos = this.mMovePoints;
         const position = op_def.PBPoint3f.create();
         position.x = pos.x;
         position.y = pos.y;
@@ -221,8 +209,6 @@ export class User extends Player {
         // ct.movePath = movePath;
         this.mElementManager.connection.send(pkt);
         this.mMovePoints = [];
-
-        Logger.getInstance().log("============>>>>> stop: ", this.mModel.nickname, this.mModel.pos.x, this.mModel.pos.y);
 
         this.stopActiveSprite();
     }
