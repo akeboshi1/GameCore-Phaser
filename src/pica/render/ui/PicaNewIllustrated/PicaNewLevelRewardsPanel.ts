@@ -6,6 +6,7 @@ import { CommonBackground } from "..";
 import { UITools } from "../uitool";
 import { IExtendCountablePackageItem, IGalleryLevel, IGalleryLevelGroup } from "picaStructure";
 import { Data } from "tooqinggamephaser";
+import { PicaItemTipsPanel } from "../SinglePanel/PicaItemTipsPanel";
 export class PicaNewLevelRewardsPanel extends Phaser.GameObjects.Container {
     private mBackground: CommonBackground;
     private backButton: ButtonEventDispatcher;
@@ -124,7 +125,7 @@ export class PicaNewLevelRewardsPanel extends Phaser.GameObjects.Container {
     }
 
     private setDefaultItem(cell: LevelItem, data: IGalleryLevelGroup) {
-        if (((data.rewards||!data.allReceived) && !this.curLevelItem) || (this.curLevelItem && this.curLevelItem.groupData.level === data.level)) {
+        if (((data.rewards || !data.allReceived) && !this.curLevelItem) || (this.curLevelItem && this.curLevelItem.groupData.level === data.level)) {
             this.curLevelItem = undefined;
             this.onSelectItemHandler(cell);
         }
@@ -211,6 +212,7 @@ class RightRewardsPanel extends Phaser.GameObjects.Container {
         obj.select = true;
         this.curItem = obj;
         this.rewardsTips.text = i18n.t("illustrate.meetrewardtips", { name: obj.galleryData.exp });
+        PicaItemTipsPanel.Inst.showTips(obj, obj.galleryData.rewardItems);
     }
     private setDefaultItem(cell: RewardItem, data: IGalleryLevel) {
         if (!this.curItem || this.curItem.galleryData.id === data.id) {
