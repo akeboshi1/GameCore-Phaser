@@ -1,25 +1,27 @@
 import { op_client, op_def, op_virtual_world } from "pixelpai_proto";
 import { PacketHandler, PBpacket } from "net-socket-packet";
-import { Game } from "..";
-import { GameState, IScenery, ISprite, LoadState, Handler, IPos, IPosition45Obj, Logger, LogicPos, Position45, SceneName } from "structure";
-import { Sprite } from "baseGame";
+import { AStar, ConnectionService, Handler, IPos, IPosition45Obj, Logger, LogicPos, Position45 } from "structure";
+import { Game } from "../../game";
+import {EventType, GameState, IScenery, ISprite, LoadState, ModuleName, SceneName} from "structure";
 import IActor = op_client.IActor;
-import NodeType = op_def.NodeType;
-import { IBlockObject } from "./block/iblock.object";
+import {ExtraRoomInfo} from "custom_proto";
 import { TerrainManager } from "./terrain/terrain.manager";
-import { PlayerManager } from "./player/player.manager";
 import { ElementManager } from "./element/element.manager";
-import { CamerasWorkerManager, ICameraService } from "./camera/cameras.worker.manager";
+import { PlayerManager } from "./player/player.manager";
+import { CamerasManager, ICameraService } from "./camera/cameras.worker.manager";
 import { EffectManager } from "./effect/effect.manager";
 import { SkyBoxManager } from "./sky.box/sky.box.manager";
+import { WallManager } from "./element/wall.manager";
+import { CollsionManager } from "../collsion";
+import { IBlockObject } from "./block/iblock.object";
 import { IElement } from "./element/element";
 import { ClockReadyListener } from "../loop";
 import { IViewBlockManager } from "./viewblock/iviewblock.manager";
-import { WallManager } from "./element/wall.manager";
-import { RoomStateManager } from "./state/room.state.manager";
+import { RoomStateManager } from "./state";
 import { IRoomManager } from "./room.manager";
 import { ViewblockManager } from "./viewblock/viewblock.manager";
-import { ConnectionService } from "src/structure/net";
+import { Sprite } from "baseGame";
+
 export interface SpriteAddCompletedListener {
     onFullPacketReceived(sprite_t: op_def.NodeType): void;
 }
@@ -33,14 +35,18 @@ export interface IRoomService {
     // readonly layerManager: LayerManager;
     readonly effectManager: EffectManager;
     readonly skyboxManager: SkyBoxManager;
+    readonly wallManager: WallManager;
+    readonly collsionManager: CollsionManager;
     // readonly handlerManager: HandlerManager;
     readonly roomSize: IPosition45Obj;
     readonly miniSize: IPosition45Obj;
     readonly game: Game;
+    // readonly enableDecorate: boolean;
     readonly sceneType: op_def.SceneTypeEnum;
     // readonly matterWorld: MatterWorld;
 
     readonly isLoading: boolean;
+    // readonly isDecorating: boolean;
 
     now(): number;
 
@@ -68,25 +74,25 @@ export interface IRoomService {
 
     cameraFollowHandler();
 
-    // addToGround(element: ElementDisplay | ElementDisplay[], index?: number);
-
-    // addToSurface(element: ElementDisplay | ElementDisplay[]);
-
-    // addToSceneUI(element: Phaser.GameObjects.GameObject | Phaser.GameObjects.GameObject[]);
-
     getElement(id: number): IElement;
 
     update(time: number, delta: number): void;
 
     initUI(): void;
 
-    // findPath(start: IPos, targetPosList: IPos[], toReverse: boolean): Promise<IPos[]>;
+    findPath(start: IPos, targetPosList: IPos[], toReverse: boolean): LogicPos[];
 
     onManagerCreated(key: string);
 
     onManagerReady(key: string);
 
     onRoomReady();
+
+    // requestDecorate(id?: number, baseID?: string);
+
+    // startDecorating();
+
+    // stopDecorating();
 
     addToWalkableMap(sprite: ISprite, isTerrain?: boolean);
 
@@ -122,17 +128,20 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
     protected mScaleRatio: number;
     protected mStateManager: RoomStateManager;
     // protected mMatterWorld: MatterWorld;
-    // protected mAstar: AStar;
+    protected mAstar: AStar;
     protected mIsLoading: boolean = false;
     protected mManagersReadyStates: Map<string, boolean> = new Map();
-     // -1: out of range; 0: not walkable; 1: walkable
-     protected mWalkableMap: number[][];
+    protected mCollsionManager: CollsionManager;
     private moveStyle: op_def.MoveStyle;
     private mActorData: IActor;
     private mUpdateHandlers: Handler[] = [];
+    // private mDecorateEntryData = null;
+    // -1: out of range; 0: not walkable; 1: walkable
+    private mWalkableMap: number[][];
     // 地块可行走标记map。每格标记由多个不同优先级（暂时仅地块和物件）标记组成，最终是否可行走由高优先级标记决定
     private mWalkableMarkMap: Map<number, Map<number, { level: number; walkable: boolean }>> =
         new Map<number, Map<number, { level: number; walkable: boolean }>>();
+    // private mIsWaitingForDecorateResponse: boolean = false;
     constructor(protected manager: IRoomManager) {
         super();
         this.mGame = this.manager.game;
@@ -140,9 +149,7 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
         this.mScaleRatio = this.mGame.scaleRatio;
         if (this.mGame) {
             this.addListen();
-            // this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_ENABLE_EDIT_MODE, this.onEnableEditModeHandler);
             this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_UNWALKABLE_BIT_MAP, this.onShowMapTitle);
-            // this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_MOVE_SPRITE_BY_PATH, this.onMovePathHandler);
             this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_SET_CAMERA_FOLLOW, this.onCameraFollowHandler);
             this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_RESET_CAMERA_SIZE, this.onCameraResetSizeHandler);
             this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_SYNC_STATE, this.onSyncStateHandler);
@@ -152,12 +159,14 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
     }
 
     public addListen() {
+        this.mGame.emitter.on(EventType.UPDATE_EXTRA_ROOM_INFO, this.onExtraRoomInfoHandler, this);
         if (this.connection) {
             this.connection.addPacketListener(this);
         }
     }
 
     public removeListen() {
+        this.mGame.emitter.off(EventType.UPDATE_EXTRA_ROOM_INFO, this.onExtraRoomInfoHandler, this);
         if (this.connection) {
             this.connection.removePacketListener(this);
         }
@@ -316,6 +325,7 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
         // if (this.mHandlerManager) this.handlerManager.update(time, delta);
         if (this.mGame.httpClock) this.mGame.httpClock.update(time, delta);
         if (this.mCameraService) this.mCameraService.update(time, delta);
+        if (this.mCollsionManager) this.mCollsionManager.update(time, delta);
         for (const oneHandler of this.mUpdateHandlers) {
             oneHandler.runWith([time, delta]);
         }
@@ -358,7 +368,7 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
         Logger.getInstance().debug("room startplay =====");
         this.game.renderPeer.showPlay();
         // Logger.getInstance().debug("roomstartPlay");
-        this.mCameraService = new CamerasWorkerManager(this.mGame, this);
+        this.mCameraService = new CamerasManager(this.mGame, this);
         // this.mScene = this.world.game.scene.getScene(PlayScene.name);
         this.mTerrainManager = new TerrainManager(this, this);
         this.mElementManager = new ElementManager(this);
@@ -370,10 +380,12 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
         // this.mFrameManager = new FrameManager();
         this.mSkyboxManager = new SkyBoxManager(this);
         // mainworker通知physicalWorker创建matterworld
-        this.mGame.peer.physicalPeer.createMatterWorld();
+        // this.mGame.peer.physicalPeer.createMatterWorld();
         // this.mMatterWorld = new MatterWorld(this);
         this.mEffectManager = new EffectManager(this);
         this.mWallMamager = new WallManager(this);
+        this.mCollsionManager = new CollsionManager(this);
+        this.mCollsionManager.addWall();
         // if (this.scene) {
         //     const camera = this.scene.cameras.main;
         //     this.mCameraService.camera = camera;
@@ -384,21 +396,7 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
         this.mGame.peer.render.setCamerasBounds(-padding - offsetX * this.mScaleRatio, -padding, this.mSize.sceneWidth * this.mScaleRatio + padding * 2, this.mSize.sceneHeight * this.mScaleRatio + padding * 2);
         //     // init block
         this.mBlocks.int(this.mSize);
-        // 将场景尺寸传递给physical进程
-        this.mGame.physicalPeer.setRoomSize(this.mSize);
-        this.mGame.physicalPeer.setMiniRoomSize(this.miniSize);
-        //     if (this.mWorld.moveStyle !== op_def.MoveStyle.DIRECTION_MOVE_STYLE) {
-        //         this.mFallEffectContainer = new FallEffectContainer(this.mScene, this);
-        //     }
-        // }
-        // // this.mPlayerManager.createActor(new PlayerModel(this.mActorData));
-        // // this.mPlayerManager.createActor(this.mActorData);
         this.mGame.user.enterScene(this, this.mActorData);
-        // const loadingScene: LoadingScene = this.mWorld.game.scene.getScene(LoadingScene.name) as LoadingScene;
-        // this.world.emitter.on(MessageType.PRESS_ELEMENT, this.onPressElementHandler, this);
-        // // if (loadingScene) loadingScene.sleep();
-        // this.world.changeRoom(this);
-        // // if (this.world.uiManager) this.world.uiManager.showMainUI();
 
         if (this.connection) {
             await this.cameraService.syncCamera();
@@ -406,19 +404,11 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
             this.connection.send(new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_SCENE_CREATED));
         }
 
-        // this.scene.input.on("pointerdown", this.onPointerDownHandler, this);
-        // this.scene.input.on("pointerup", this.onPointerUpHandler, this);
-        // this.world.emitter.on(ClickEvent.Tap, this.onTapHandler, this);
-
-        // this.mLoadState = [];
-        // this.mWorld.showLoading(LoadingTips.loadingResources());
-        // this.scene.load.on(Phaser.Loader.Events.COMPLETE, this.onLoadCompleteHandler, this);
-
         this.initSkyBox();
         this.mTerrainManager.init();
         this.mWallMamager.init();
 
-        // this.mAstar = new AStar(this);
+        this.mAstar = new AStar(this);
         const map = [];
         for (let i = 0; i < this.miniSize.rows; i++) {
             map[i] = [];
@@ -426,10 +416,7 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
                 map[i][j] = 1;
             }
         }
-        this.game.physicalPeer.initAstar(map);
-        // this.mAstar.init(map);
-
-        // const joystick = new JoystickManager(this.game);
+        this.mAstar.init(map);
     }
 
     public initUI() {
@@ -462,6 +449,7 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
                 this.addWalkableMark(tempX, tempY, sprite.id, isTerrain ? 0 : 1, canWalk);
             }
         }
+        // if (isTerrain) this.showDecorateGrid();
     }
 
     public removeFromWalkableMap(sprite: ISprite, isTerrain: boolean = false) {
@@ -492,16 +480,14 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
             return false;
         }
 
-        // Logger.getInstance().log("#place walkableMap: ", x, y, this.mWalkableMap[y][x] === 1, this.mWalkableMap);
         return this.mWalkableMap[y][x] === 1;
     }
 
-    // public async findPath(startPos: IPos, targetPosList: IPos[], toReverse: boolean) {
-    //     return await this.game.physicalPeer.getPath(startPos, targetPosList, toReverse);
-    // }
+    public findPath(startPos: IPos, targetPosList: IPos[], toReverse: boolean) {
+        return this.mAstar.find(startPos, targetPosList, toReverse);
+    }
 
     public clear() {
-        this.mGame.peer.physicalPeer.destroyMatterWorld();
         // if (this.mLayManager) this.mLayManager.destroy();
         if (this.mStateManager) {
             this.mStateManager.destroy();
@@ -522,6 +508,8 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
         if (this.mSkyboxManager) this.mSkyboxManager.destroy();
         if (this.mWallMamager) this.mWallMamager.destroy();
         // if (this.mWallManager) this.mWallManager.destroy();
+        // if (this.mDecorateManager) this.mDecorateManager.destroy();
+        if (this.mCollsionManager) this.mCollsionManager.destroy();
         if (this.mActorData) this.mActorData = null;
         Logger.getInstance().debug("room clear");
         this.game.renderPeer.clearRoom();
@@ -656,12 +644,116 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
         }
     }
 
+    // public requestDecorate(id?: number, baseID?: string) {
+    //     if (id !== undefined) {
+    //         const element = this.elementManager.get(id);
+    //         if (!element) return;
+    //         const locked = this.elementManager.isElementLocked(element);
+    //         // 未解锁家具不给选中
+    //         if (locked) return;
+    //     }
+
+    //     if (this.mIsWaitingForDecorateResponse) return;
+    //     this.mIsWaitingForDecorateResponse = true;
+
+    //     this.mDecorateEntryData = { id, baseID };
+
+    //     this.connection.send(new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_START_EDIT_MODEL));
+
+    //     // waite for <OP_VIRTUAL_WORLD_RES_CLIENT_START_EDIT_MODEL>
+    // }
+
+    // public startDecorating() {
+    //     if (this.mIsDecorating) return;
+    //     this.mIsDecorating = true;
+
+    //     this.cameraService.stopFollow();
+
+    //     // hide players (with animations)
+    //     this.playerManager.hideAll();
+
+    //     // set all element interactive
+    //     const elements = this.elementManager.getElements();
+    //     for (const element of elements) {
+    //         if (!(element instanceof BlockObject)) continue;
+    //         element.setInputEnable(InputEnable.Enable);
+    //     }
+
+    //     // new decorate manager
+    //     // this.mDecorateManager = new DecorateManager(this, this.mDecorateEntryData);
+
+    //     // switch ui
+    //     this.game.uiManager.hideMed(ModuleName.PICANEWMAIN_NAME);
+    //     this.game.uiManager.hideMed(ModuleName.BOTTOM);
+    //     this.game.uiManager.showMed(ModuleName.PICADECORATE_NAME,
+    //         { closeAlertText: (<any>this.game.configManager).getI18n("PKT_SYS0000021") });
+    //     this.game.uiManager.hideMed(ModuleName.CUTINMENU_NAME);
+    //     // switch mouse manager
+    //     this.game.renderPeer.switchDecorateMouseManager();
+
+    //     // show girds
+    //     this.game.renderPeer.showEditGrids(this.miniSize, this.mWalkableMap);
+    // }
+
     public cameraFollowHandler() {
         if (!this.cameraService.initialize) return;
         this.cameraService.syncCameraScroll();
     }
 
-    // 检测sprite是否与现有walkableMap有碰撞重叠，有碰撞重叠为0，无碰撞重叠为1
+    // public stopDecorating() {
+    //     if (this.mIsWaitingForDecorateResponse) return;
+    //     if (!this.mIsDecorating) return;
+    //     this.mIsDecorating = false;
+
+    //     // camera follow
+    //     this.cameraService.startFollow(this.playerManager.actor.id);
+
+    //     // set user pos
+    //     // const entrePos = new LogicPos(this.mActorData.x, this.mActorData.y);
+    //     // this.playerManager.actor.setPosition(entrePos);
+    //     // this.game.renderPeer.setPosition(this.playerManager.actor.id, entrePos.x, entrePos.y);
+
+    //     // show players
+    //     this.playerManager.showAll();
+
+    //     // set all element interactive
+    //     const elements = this.elementManager.getElements();
+    //     for (const element of elements) {
+    //         if (!(element instanceof BlockObject)) continue;
+    //         element.setInputEnable(InputEnable.Interactive);
+    //     }
+
+    //     // switch ui
+    //     this.game.uiManager.hideMed(ModuleName.PICADECORATE_NAME);
+    //     this.game.uiManager.showMed(ModuleName.PICANEWMAIN_NAME);
+    //     this.game.uiManager.showMed(ModuleName.BOTTOM);
+    //     this.game.uiManager.showMed(ModuleName.CUTINMENU_NAME, { button: [{ text: "editor" }] });
+    //     // switch mouse manager
+    //     this.game.renderPeer.switchBaseMouseManager();
+
+    //     // destroy decorate manager
+    //     // this.mDecorateManager.destroy();
+    //     // this.mDecorateManager = null;
+
+    //     // cleat entry data
+    //     this.mDecorateEntryData = null;
+
+    //     // hide girds
+    //     this.game.renderPeer.hideEditGrids();
+
+    //     this.mIsWaitingForDecorateResponse = false;
+    // }
+
+    // public requestSaveDecorating(pkt: PBpacket) {
+    //     if (this.mIsWaitingForDecorateResponse) return;
+    //     this.mIsWaitingForDecorateResponse = true;
+
+    //     this.connection.send(pkt);
+
+    //     // waite for response: _OP_VIRTUAL_WORLD_RES_CLIENT_EDIT_MODEL_RESULT
+    // }
+
+    // 检测sprite是否与现有walkableMap有碰撞重叠，无碰撞区域为0，无碰撞重叠为1，有碰撞重叠为2
     public checkSpriteConflictToWalkableMap(sprite: ISprite, isTerrain: boolean = false, pos?: IPos): number[][] {
         const walkableData = this.getSpriteWalkableData(sprite, isTerrain, pos);
         if (!walkableData) {
@@ -694,8 +786,6 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
         }
         return result;
     }
-
-    //
 
     protected initSkyBox() {
         const scenerys = this.game.elementStorage.getScenerys();
@@ -735,6 +825,10 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
         return this.mSkyboxManager;
     }
 
+    get wallManager() {
+        return this.mWallMamager;
+    }
+
     // get layerManager(): LayerManager {
     //     return this.mLayManager || undefined;
     // }
@@ -759,6 +853,10 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
     //     return this.mDecorateManager;
     // }
 
+    get collsionManager() {
+        return this.mCollsionManager;
+    }
+
     get id(): number {
         return this.mID;
     }
@@ -779,6 +877,14 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
         return this.mGame;
     }
 
+    // get enableDecorate() {
+    //     return this.mEnableDecorate;
+    // }
+
+    // get isDecorating(): boolean {
+    //     return this.mIsDecorating;
+    // }
+
     get connection(): ConnectionService | undefined {
         if (this.manager) {
             return this.manager.connection;
@@ -788,6 +894,11 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
     get sceneType(): op_def.SceneTypeEnum {
         return op_def.SceneTypeEnum.NORMAL_SCENE_TYPE;
     }
+
+    // private onEnableEditModeHandler(packet: PBpacket) {
+    //     this.mEnableDecorate = true;
+    //     this.game.uiManager.showMed(ModuleName.CUTINMENU_NAME, { button: [{ text: "editor" }] });
+    // }
 
     private onShowMapTitle(packet: PBpacket) {
         // if (!this.scene) {
@@ -881,6 +992,37 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
         }
     }
 
+    // private async onStartDecorate(packet: PBpacket) {
+    //     this.mIsWaitingForDecorateResponse = false;
+    //     const content: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_START_EDIT_MODEL = packet.content;
+    //     if (!content.status) {
+    //         this.game.renderPeer.showAlert(content.msg, true);
+    //         // Logger.getInstance().warn("enter decorate error: ", content.msg);
+    //         return;
+    //     }
+
+    //     if (this.isDecorating) {
+    //         Logger.getInstance().error("current room is decorating");
+    //         return;
+    //     }
+
+    //     this.startDecorating();
+    // }
+
+    // private onDecorateResult(packet: PBpacket) {
+    //     this.mIsWaitingForDecorateResponse = false;
+    //     const content: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_EDIT_MODEL_RESULT = packet.content;
+    //     if (!content.status) {
+    //         this.game.renderPeer.showAlert(content.msg, true);
+    //         // Logger.getInstance().warn("enter decorate error: ", content.msg);
+    //         return;
+    //     }
+
+    //     this.stopDecorating();
+
+    //     // waite for OP_VIRTUAL_WORLD_REQ_CLIENT_NOTICE_RELOAD_SCENE
+    // }
+
     private onReloadScene(packet: PBpacket) {
         const content: op_client.IOP_VIRTUAL_WORLD_REQ_CLIENT_NOTICE_RELOAD_SCENE = packet.content;
         const sprites: op_client.ISprite[] | undefined = content.sprites;
@@ -931,6 +1073,15 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
                     this.setState(state);
                     break;
             }
+        }
+    }
+
+    private onExtraRoomInfoHandler(content: ExtraRoomInfo) {
+        if (this.wallManager) {
+            this.wallManager.changeAllDisplayData(content.wallId);
+        }
+        if (this.terrainManager) {
+            this.terrainManager.changeAllDisplayData(content.floorId);
         }
     }
 
@@ -1077,7 +1228,7 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
         if (this.mWalkableMap[y][x] === newVal) return;
 
         this.mWalkableMap[y][x] = newVal;
-        this.game.physicalPeer.setWalkableAt(x, y, walkable);
+        this.mAstar.setWalkableAt(x, y, walkable);
     }
 
     private mapPos2Idx(x: number, y: number): number {
@@ -1088,4 +1239,10 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
         if (!this.mStateManager) this.mStateManager = new RoomStateManager(this);
         this.mStateManager.setState(state);
     }
+
+    // private showDecorateGrid() {
+    //     if (!this.isDecorating) return;
+    //     if (!this.mTerrainManager.hasAddComplete) return;
+    //     this.game.renderPeer.showEditGrids(this.mMiniSize, this.mWalkableMap);
+    // }
 }

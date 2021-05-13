@@ -1,5 +1,5 @@
 /// <reference types="tooqinggamephaser" />
-import { IBaseCameraService } from "./cameras/cameras.manager";
+import { IBaseCameraService } from "./cameras/base.cameras.manager";
 import { BaseSceneManager } from "./scene/scene.manager";
 export interface IRender {
     readonly camerasManager: IBaseCameraService;

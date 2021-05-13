@@ -1,8 +1,13 @@
-import { IRoomService } from "../room";
+import { IPos } from "structure";
+import { IRoomService } from "..";
+import { Wall } from "../wall/wall";
 export declare class WallManager {
-    private roomService;
-    private walls;
+    protected roomService: IRoomService;
+    protected walls: Wall[];
     constructor(roomService: IRoomService);
     init(): void;
     destroy(): void;
+    isInWallRect(pos: IPos): boolean;
+    isAgainstWall(pos: IPos, originPoint: IPos): boolean;
+    changeAllDisplayData(id: string): void;
 }

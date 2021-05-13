@@ -1,7 +1,9 @@
-import { IFramesModel, ISprite,IPos, Logger, LogicPos } from "structure";
-import { op_client } from "pixelpai_proto";
+import { IFramesModel, ISprite } from "structure";
+import { op_def, op_client } from "pixelpai_proto";
 import { IRoomService } from "..";
 import { BlockObject } from "../block/block.object";
+import { IPos, Logger, LogicPos } from "structure";
+
 export class Wall extends BlockObject {
     protected mModel: ISprite;
     protected mDisplayInfo: IFramesModel;
@@ -170,7 +172,7 @@ export class Wall extends BlockObject {
     }
 
     get id(): number {
-        return this.guid;
+        return this.id;
     }
 
     get dir(): number {

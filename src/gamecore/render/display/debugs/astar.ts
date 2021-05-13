@@ -93,7 +93,9 @@ export class AstarDebugger implements ChatCommandInterface {
         const notWalkablePoses: IPos[] = [];
         for (let y = 0; y < this.mAstarSize.rows; y++) {
             for (let x = 0; x < this.mAstarSize.cols; x++) {
-                const walkable = await this.render.physicalPeer.isWalkableAt(x, y);
+                // todo 删除物理进程
+                throw new Error("删除物理进程");
+                const walkable = true; // await this.render.physicalPeer.isWalkableAt(x, y);
                 if (this.mPointsShowType === PointsShowType.OnlyWalkable && !walkable) continue;
                 if (this.mPointsShowType === PointsShowType.OnlyNotWalkable && walkable) continue;
 

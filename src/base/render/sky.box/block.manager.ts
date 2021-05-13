@@ -1,6 +1,6 @@
 import { Url } from "utils";
 import { Logger, Fit, IScenery } from "structure";
-import { IBaseCameraService } from "../cameras/cameras.manager";
+import { IBaseCameraService } from "../cameras/base.cameras.manager";
 import { IRender } from "../render";
 import { DynamicImage } from "../ui/components/dynamic.image";
 export interface IBlockManager {

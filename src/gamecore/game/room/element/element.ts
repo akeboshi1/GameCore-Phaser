@@ -10,13 +10,12 @@ import {
     ISprite,
     PlayerState
 } from "structure";
-import { DirectionChecker, IPos, IProjection, Logger, LogicPoint, LogicPos } from "structure";
+import { DirectionChecker, IPos, IProjection, Logger, LogicPos } from "structure";
 import { Tool } from "utils";
 import { BlockObject } from "../block/block.object";
 import { IRoomService } from "../room";
 import { ElementStateManager } from "../state/element.state.manager";
 import { IElementManager } from "./element.manager";
-import { InputEnable } from "./input.enable";
 
 export interface IElement {
     readonly id: number;
@@ -80,7 +79,7 @@ export interface IElement {
 
     removeMount(ele: IElement, targetPos?: IPos): Promise<void>;
 
-    getInteractivePositionList(): Promise<IPos[]>;
+    getInteractivePositionList(): IPos[];
 
     getProjectionSize(): IProjection;
 
@@ -93,21 +92,15 @@ export interface MoveData {
     step?: number;
     path?: op_def.IMovePoint[];
     arrivalTime?: number;
+    targetId?: number;
 }
 
-export interface MovePos {
-    x: number;
-    y: number;
-    stopDir?: number;
+export enum InputEnable {
+    Diasble,
+    Enable,
+    Interactive,
 }
 
-export interface MovePath {
-    x: number;
-    y: number;
-    direction: number;
-    duration?: number;
-    onStartParams?: any;
-}
 export class Element extends BlockObject implements IElement {
     get state(): boolean {
         return this.mState;
@@ -164,7 +157,6 @@ export class Element extends BlockObject implements IElement {
     protected mDirty: boolean = false;
     protected mCreatedDisplay: boolean = false;
     protected isUser: boolean = false;
-    protected moveControll: MoveControll;
     protected mStateManager: ElementStateManager;
     protected mTopDisplay: any;
     protected mTarget;
@@ -177,7 +169,6 @@ export class Element extends BlockObject implements IElement {
         if (!sprite) {
             return;
         }
-        this.moveControll = new MoveControll(this);
         this.mId = sprite.id;
         this.model = sprite;
     }
@@ -189,6 +180,7 @@ export class Element extends BlockObject implements IElement {
     public async load(displayInfo: IFramesModel | IDragonbonesModel, isUser: boolean = false): Promise<any> {
         this.mDisplayInfo = displayInfo;
         this.isUser = isUser;
+        if (!displayInfo) return Promise.reject(`element ${this.mModel.nickname} ${this.id} display does not exist`);
         await this.loadDisplayInfo();
         return this.addToBlock();
     }
@@ -209,6 +201,7 @@ export class Element extends BlockObject implements IElement {
         if (this.mModel.pos) {
             this.setPosition(this.mModel.pos);
         }
+        this.addToWalkableMap();
         const area = model.getCollisionArea();
         const obj = { id: model.id, pos: model.pos, nickname: model.nickname, alpha: model.alpha, titleMask: model.titleMask | 0x00020000, hasInteractive: model.hasInteractive };
         // render action
@@ -222,7 +215,6 @@ export class Element extends BlockObject implements IElement {
                 if (model.mountSprites && model.mountSprites.length > 0) {
                     this.updateMounth(model.mountSprites);
                 }
-                this.addToWalkableMap();
                 return this.setRenderable(true);
             });
         // physic action
@@ -235,13 +227,12 @@ export class Element extends BlockObject implements IElement {
             speed: model.speed,
             displayInfo: model.displayInfo
         };
-        this.mRoomService.game.peer.physicalPeer.setModel(obj1)
-            .then(() => {
-                if (this.mRenderable) {
-                    this.addBody();
-                    // if (model.nodeType !== op_def.NodeType.CharacterNodeType) this.mRoomService.game.physicalPeer.addBody(this.id);
-                }
-            });
+        // this.mRoomService.game.peer.physicalPeer.setModel(obj1)
+        //     .then(() => {
+        //         if (this.mRenderable) {
+        //             this.addBody();
+        //         }
+        //     });
     }
 
     public updateModel(model: op_client.ISprite, avatarType?: op_def.AvatarStyle) {
@@ -318,10 +309,11 @@ export class Element extends BlockObject implements IElement {
         if (this.mRoomService) {
             if (!this.mRootMount) {
                 if (times === undefined) {
-                    this.mRoomService.game.physicalPeer.changeAnimation(this.id, this.mModel.currentAnimation.name);
+                    // this.mRoomService.game.physicalPeer.changeAnimation(this.id, this.mModel.currentAnimation.name);
                 } else {
-                    this.mRoomService.game.physicalPeer.changeAnimation(this.id, this.mModel.currentAnimation.name, times);
+                    // this.mRoomService.game.physicalPeer.changeAnimation(this.id, this.mModel.currentAnimation.name, times);
                 }
+                this.addBody();
             }
             this.mRoomService.game.renderPeer.playAnimation(this.id, this.mModel.currentAnimation, undefined, times);
             this.mRoomService.game.renderPeer.setHasInteractive(this.id, hasInteractive);
@@ -443,6 +435,7 @@ export class Element extends BlockObject implements IElement {
             return;
         }
         this.mMoveData.path = path;
+        Logger.getInstance().log("============>>>>> move: ", this.mModel.nickname, this.mModel.pos.x, this.mModel.pos.y);
         // this.mRoomService.game.physicalPeer.move(this.id, this.mMoveData.path);
         this.startMove();
     }
@@ -477,26 +470,28 @@ export class Element extends BlockObject implements IElement {
         this.moveControll.setVelocity(0, 0);
         this.changeState(PlayerState.IDLE);
         if (!this.mRoomService.playerManager.actor.stopBoxMove) return;
-        const mMovePoints = [];
-        if (points) {
-            points.forEach((pos) => {
-                const movePoint = op_def.MovePoint.create();
-                const tmpPos = op_def.PBPoint3f.create();
-                tmpPos.x = pos.x;
-                tmpPos.y = pos.y;
-                movePoint.pos = tmpPos;
-                // 给每个同步点时间戳
-                movePoint.timestamp = new Date().getTime();
-                mMovePoints.push(tmpPos);
-            });
-        }
-        const movePath = op_def.MovePath.create();
-        movePath.id = this.id;
-        movePath.movePos = mMovePoints;
-        const pkt: PBpacket = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_STOP_SPRITE);
-        const ct: op_virtual_world.IOP_CLIENT_REQ_VIRTUAL_WORLD_STOP_SPRITE = pkt.content;
-        ct.movePath = movePath;
-        this.mElementManager.connection.send(pkt);
+        // const mMovePoints = [];
+        // if (points) {
+        //     points.forEach((pos) => {
+        //         const movePoint = op_def.MovePoint.create();
+        //         const tmpPos = op_def.PBPoint3f.create();
+        //         tmpPos.x = pos.x;
+        //         tmpPos.y = pos.y;
+        //         movePoint.pos = tmpPos;
+        //         // 给每个同步点时间戳
+        //         movePoint.timestamp = new Date().getTime();
+        //         mMovePoints.push(tmpPos);
+        //     });
+        // }
+
+        Logger.getInstance().log("============>>>>> element stop: ", this.mModel.nickname, this.mModel.pos.x, this.mModel.pos.y);
+        // const movePath = op_def.MovePath.create();
+        // movePath.id = this.id;
+        // movePath.movePos = mMovePoints;
+        // const pkt: PBpacket = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_STOP_SPRITE);
+        // const ct: op_virtual_world.IOP_CLIENT_REQ_VIRTUAL_WORLD_STOP_SPRITE = pkt.content;
+        // ct.movePath = movePath;
+        // this.mElementManager.connection.send(pkt);
         this.mRoomService.playerManager.actor.stopBoxMove = false;
     }
 
@@ -520,7 +515,7 @@ export class Element extends BlockObject implements IElement {
         }
         if (p) {
             this.mModel.setPosition(p.x, p.y);
-            if (this.moveControll) this.moveControll.setPosition(p.x, p.y);
+            if (this.moveControll) this.moveControll.setPosition(this.mModel.pos);
         }
     }
 
@@ -538,7 +533,6 @@ export class Element extends BlockObject implements IElement {
 
     public showNickname() {
         if (!this.mModel) return;
-        // Logger.getInstance().debug("showNickName======" + this.mModel.nickname);
         this.mRoomService.game.renderPeer.showNickname(this.id, this.mModel.nickname);
     }
 
@@ -566,7 +560,7 @@ export class Element extends BlockObject implements IElement {
         this.mRoomService.game.renderPeer.hideRefernceArea(this.id);
     }
 
-    public async getInteractivePositionList(): Promise<IPos[]> {
+    public getInteractivePositionList(): IPos[] {
         const interactives = this.mModel.getInteractive();
         if (!interactives || interactives.length < 1) {
             return;
@@ -574,7 +568,7 @@ export class Element extends BlockObject implements IElement {
         const pos45 = this.mRoomService.transformToMini45(this.getPosition());
         const result: IPos[] = [];
         for (const interactive of interactives) {
-            if (await this.mRoomService.game.physicalPeer.isWalkableAt(pos45.x + interactive.x, pos45.y + interactive.y)) {
+            if (this.mRoomService.isWalkable(pos45.x + interactive.x, pos45.y + interactive.y)) {
                 result.push(this.mRoomService.transformToMini90(new LogicPos(pos45.x + interactive.x, pos45.y + interactive.y)));
             }
         }
@@ -638,7 +632,6 @@ export class Element extends BlockObject implements IElement {
         }
         this.mMounts.splice(index, 1);
         await ele.unmount(targetPos);
-        Logger.getInstance().log("removeMount ===>", targetPos);
         if (!this.mMounts) return Promise.resolve();
         this.mRoomService.game.renderPeer.unmount(this.id, ele.id);
         return Promise.resolve();
@@ -691,7 +684,7 @@ export class Element extends BlockObject implements IElement {
     protected _doMove(time?: number, delta?: number) {
         this.moveControll.update(time, delta);
         const pos = this.moveControll.position;
-        this.mModel.setPosition(pos.x, pos.y);
+        // this.mModel.setPosition(pos.x, pos.y);
         this.mRoomService.game.renderPeer.setPosition(this.id, pos.x, pos.y);
         if (!this.mMoveData) return;
         const path = this.mMoveData.path;
@@ -883,18 +876,12 @@ export class Element extends BlockObject implements IElement {
         this.mElementManager.roomService.game.renderPeer.displayAnimationChange(data);
     }
 
-    protected addBody() {
+    protected drawBody() {
         if (this.mRootMount) {
+            this.moveControll.removePolygon();
             return;
         }
-        super.addBody();
-    }
-
-    protected updateBody(model) {
-        if (this.mRootMount) {
-            return;
-        }
-        super.updateBody(model);
+        super.drawBody();
     }
 
     private _startMove(points: any) {
@@ -919,41 +906,41 @@ export class Element extends BlockObject implements IElement {
     }
 }
 
-class MoveControll {
-    private velocity: IPos;
-    private mPosition: IPos;
-    private mPrePosition: IPos;
+// class MoveControll {
+//     private velocity: IPos;
+//     private mPosition: IPos;
+//     private mPrePosition: IPos;
 
-    constructor(private target: BlockObject) {
-        this.mPosition = new LogicPos();
-        this.mPrePosition = new LogicPos();
-        this.velocity = new LogicPoint();
-    }
+//     constructor(private target: BlockObject) {
+//         this.mPosition = new LogicPos();
+//         this.mPrePosition = new LogicPos();
+//         this.velocity = new LogicPoint();
+//     }
 
-    setVelocity(x: number, y: number) {
-        this.velocity.x = x;
-        this.velocity.y = y;
-    }
+//     setVelocity(x: number, y: number) {
+//         this.velocity.x = x;
+//         this.velocity.y = y;
+//     }
 
-    update(time: number, delta: number) {
-        if (this.velocity.x !== 0 && this.velocity.y !== 0) {
-            this.mPrePosition.x = this.mPosition.x;
-            this.mPrePosition.y = this.mPosition.y;
-            this.mPosition.x += this.velocity.x;
-            this.mPosition.y += this.velocity.y;
-        }
-    }
+//     update(time: number, delta: number) {
+//         if (this.velocity.x !== 0 && this.velocity.y !== 0) {
+//             this.mPrePosition.x = this.mPosition.x;
+//             this.mPrePosition.y = this.mPosition.y;
+//             this.mPosition.x += this.velocity.x;
+//             this.mPosition.y += this.velocity.y;
+//         }
+//     }
 
-    setPosition(x: number, y: number) {
-        this.mPosition.x = x;
-        this.mPosition.y = y;
-    }
+//     setPosition(x: number, y: number) {
+//         this.mPosition.x = x;
+//         this.mPosition.y = y;
+//     }
 
-    get position(): IPos {
-        return this.mPosition;
-    }
+//     get position(): IPos {
+//         return this.mPosition;
+//     }
 
-    get prePosition(): IPos {
-        return this.mPrePosition;
-    }
-}
+//     get prePosition(): IPos {
+//         return this.mPrePosition;
+//     }
+// }

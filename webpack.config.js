@@ -22,7 +22,6 @@ const commonConfig = {
             "dragonbones-runtime": path.join(__dirname, "node_modules/dragonbones-runtime/Phaser/3.x/out/dragonBones.js"),
             gamecore: path.join(__dirname, "./src/gamecore/game"),
             gamecoreRender: path.join(__dirname, "./src/gamecore/render"),
-            physicalWorker: path.join(__dirname, "./src/gamecore/services"),
             structure: path.join(__dirname, "./src/structure"),
             utils: path.join(__dirname, "./src/utils"),
             editorCanvas: path.join(__dirname, "./src/editor"),
@@ -89,7 +88,6 @@ const gameConfig = Object.assign({}, commonConfig, {
         structure: "./src/structure/index.ts",
         renderPeer: "./src/gamecore/render/index.ts",
         mainPeer: "./src/gamecore/game/index.ts",
-        physicalPeer: "./src/gamecore/services/index.ts"
     },
     output: {
         // This is required so workers are known where to be loaded from

@@ -21,7 +21,3 @@ export declare class EditorMossManager extends PacketHandler {
     protected handleUpdateMosses(packet: PBpacket): void;
     private batchActionSprites;
 }
-export interface Task {
-    action: string;
-    loc: Partial<op_def.IMossMetaData>;
-}

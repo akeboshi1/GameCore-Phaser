@@ -9,6 +9,6 @@ export declare class EmptyTerrain extends BlockObject {
     getPosition(): IPos;
     addDisplay(): Promise<any>;
     removeDisplay(): Promise<any>;
-    drawBody(): void;
     destroy(): void;
+    protected drawBody(): void;
 }

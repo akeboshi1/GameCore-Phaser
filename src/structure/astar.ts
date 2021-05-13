@@ -1,15 +1,15 @@
-import { Grid, AStarFinder } from "pathfinding";
-import { ISizeChart } from "./size.chart";
-import { Logger } from "./log";
-import { IPos, LogicPos } from "./logic.pos";
-import { Position45 } from "./position45";
+import { IRoomService } from "gamecore";
+import {Grid, AStarFinder} from "pathfinding";
+import {Logger} from "./log";
+import {IPos, LogicPos} from "./logic.pos";
+import {Position45} from "./position45";
 
 export class AStar {
     private grid: Grid;
     private finder: AStarFinder;
     private gridBackup: Grid;
 
-    constructor(private sizeChart: ISizeChart) {
+    constructor(private sizeChart: IRoomService) {
     }
 
     init(matrix: number[][]) {
@@ -55,7 +55,7 @@ export class AStar {
 
         const result = [];
         const miniSize = this.sizeChart.miniSize;
-        const { rows, cols } = miniSize;
+        const {rows, cols} = miniSize;
 
         const start45 = Position45.transformTo45(startPos, miniSize);
         if (this._invalidPoint(start45, cols, rows)) return result;

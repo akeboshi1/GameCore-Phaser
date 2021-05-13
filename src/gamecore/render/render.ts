@@ -8,7 +8,7 @@ import { Account } from "./account";
 import { SceneManager } from "./scenes/scene.manager";
 import { LocalStorageManager } from "./managers/local.storage.manager";
 import { PlayScene } from "./scenes/play.scene";
-import { CamerasManager } from "./cameras/cameras.manager";
+import { CamerasRenderManager } from "./cameras/cameras.render.manager";
 
 import {
     ElementStateType,
@@ -68,13 +68,13 @@ export class Render extends RPCPeer implements GameMain, IRender {
     public editorModeDebugger: EditorModeDebugger;
 
     protected mMainPeer: any;
-    protected mPhysicalPeer: any;
+    // protected mPhysicalPeer: any;
 
     protected readonly DEFAULT_WIDTH = 360;
     protected readonly DEFAULT_HEIGHT = 640;
     protected mGuideManager: GuideManager;
     protected mSceneManager: SceneManager;
-    protected mCameraManager: CamerasManager;
+    protected mCameraManager: CamerasRenderManager;
     protected mInputManager: InputManager;
     protected mSoundManager: SoundManager;
     // protected mInputManager: InputManager;
@@ -85,7 +85,7 @@ export class Render extends RPCPeer implements GameMain, IRender {
     protected mEditorCanvasManager: EditorCanvasManager;
     protected mRenderParam: IWorkerParam;
     protected mMainPeerParam: IWorkerParam;
-    protected mPhysicalPeerParam: IWorkerParam;
+    // protected mPhysicalPeerParam: IWorkerParam;
     // protected mRequireContext;
     private mCallBack: Function;
     private _moveStyle: number = 0;
@@ -184,9 +184,9 @@ export class Render extends RPCPeer implements GameMain, IRender {
         return this.mMainPeerParam;
     }
 
-    get physicalPeerParam() {
-        return this.mPhysicalPeerParam;
-    }
+    // get physicalPeerParam() {
+    //     return this.mPhysicalPeerParam;
+    // }
 
     // get requireContext(): any {
     //     return this.mRequireContext;
@@ -203,18 +203,18 @@ export class Render extends RPCPeer implements GameMain, IRender {
         });
     }
 
-    public linkPhysical(key, url, peerName) {
-        this.linkTo(key, url).onceReady(() => {
-            this.mPhysicalPeer = this.remote[key][peerName];
-            this.mPhysicalPeer.setScaleRatio(Math.ceil(this.mConfig.devicePixelRatio || UiUtils.baseDpr));
-            this.mPhysicalPeer.start();
-            Logger.getInstance().debug("Physcialworker onReady");
-        });
-    }
+    // public linkPhysical(key, url, peerName) {
+    //     this.linkTo(key, url).onceReady(() => {
+    //         this.mPhysicalPeer = this.remote[key][peerName];
+    //         this.mPhysicalPeer.setScaleRatio(Math.ceil(this.mConfig.devicePixelRatio || UiUtils.baseDpr));
+    //         this.mPhysicalPeer.start();
+    //         Logger.getInstance().debug("Physcialworker onReady");
+    //     });
+    // }
 
-    get physicalPeer(): any {
-        return this.mPhysicalPeer;
-    }
+    // get physicalPeer(): any {
+    //     return this.mPhysicalPeer;
+    // }
 
     setKeyBoardHeight(height: number) {
         throw new Error("Method not implemented.");
@@ -264,7 +264,7 @@ export class Render extends RPCPeer implements GameMain, IRender {
         return this.mGuideManager;
     }
 
-    get camerasManager(): CamerasManager {
+    get camerasManager(): CamerasRenderManager {
         return this.mCameraManager;
     }
 
@@ -302,7 +302,7 @@ export class Render extends RPCPeer implements GameMain, IRender {
 
     createManager() {
         if (!this.mUiManager) this.mUiManager = new UiManager(this);
-        if (!this.mCameraManager) this.mCameraManager = new CamerasManager(this);
+        if (!this.mCameraManager) this.mCameraManager = new CamerasRenderManager(this);
         if (!this.mLocalStorageManager) this.mLocalStorageManager = new LocalStorageManager();
         if (!this.mSceneManager) this.mSceneManager = new SceneManager(this);
         if (!this.mGuideManager) this.mGuideManager = new GuideManager(this);
@@ -525,12 +525,12 @@ export class Render extends RPCPeer implements GameMain, IRender {
                 this.createGame();
                 Logger.getInstance().debug("worker onReady");
             });
-            this.linkTo(this.mPhysicalPeerParam.key, this.mPhysicalPeerParam.url).onceReady(() => {
-                this.mPhysicalPeer = this.remote[this.mPhysicalPeerParam.key][this.mPhysicalPeerParam.name];
-                this.mPhysicalPeer.setScaleRatio(Math.ceil(this.mConfig.devicePixelRatio || UiUtils.baseDpr));
-                this.mPhysicalPeer.start();
-                Logger.getInstance().debug("Physcialworker onReady");
-            });
+            // this.linkTo(this.mPhysicalPeerParam.key, this.mPhysicalPeerParam.url).onceReady(() => {
+            //     this.mPhysicalPeer = this.remote[this.mPhysicalPeerParam.key][this.mPhysicalPeerParam.name];
+            //     this.mPhysicalPeer.setScaleRatio(Math.ceil(this.mConfig.devicePixelRatio || UiUtils.baseDpr));
+            //     this.mPhysicalPeer.start();
+            //     Logger.getInstance().debug("Physcialworker onReady");
+            // });
         });
     }
 
@@ -599,7 +599,7 @@ export class Render extends RPCPeer implements GameMain, IRender {
         // this.mainPeer.destroy();
         // this.physicalPeer.destroy();
         return new Promise((resolve, reject) => {
-            this.destroyWorker([this.mMainPeerParam.key, this.mPhysicalPeerParam.key]).then(() => {
+            this.destroyWorker([this.mMainPeerParam.key]).then(() => {
                 if (this.mGame) {
                     this.destroyManager();
                     this.mGame.events.off(Phaser.Core.Events.FOCUS, this.onFocus, this);
@@ -770,9 +770,9 @@ export class Render extends RPCPeer implements GameMain, IRender {
         if (this.mMainPeer) this.mMainPeer.renderEmitter(eventType, data);
     }
 
-    public renderToPhysicalEmitter(eventType: string, data?: any) {
-        if (this.physicalPeer) this.physicalPeer.renderEmitter(eventType, data);
-    }
+    // public renderToPhysicalEmitter(eventType: string, data?: any) {
+    //     if (this.physicalPeer) this.physicalPeer.renderEmitter(eventType, data);
+    // }
 
     public showMediator(name: string, isShow: boolean) {
         if (this.mMainPeer) this.mMainPeer.showMediator(name, isShow);

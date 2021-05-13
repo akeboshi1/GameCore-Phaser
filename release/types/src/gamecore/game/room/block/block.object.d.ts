@@ -1,9 +1,10 @@
-import { MatterWorkerObject } from "../physical/matter.worker.object";
-import { IRoomService } from "../room";
+import { IPos, IProjection } from "structure";
 import { IBlockObject } from "./iblock.object";
-import { IPos, IProjection, ISprite } from "structure";
+import { IFramesModel, ISprite } from "structure";
+import { MoveControll } from "../../collsion";
 import { InputEnable } from "../element/input.enable";
-export declare abstract class BlockObject extends MatterWorkerObject implements IBlockObject {
+import { IRoomService } from "../room";
+export declare abstract class BlockObject implements IBlockObject {
     protected mRoomService: IRoomService;
     isUsed: boolean;
     protected mRenderable: boolean;
@@ -11,6 +12,7 @@ export declare abstract class BlockObject extends MatterWorkerObject implements 
     protected mModel: ISprite;
     protected mInputEnable: InputEnable;
     protected mCreatedDisplay: boolean;
+    protected moveControll: MoveControll;
     constructor(id: number, mRoomService: IRoomService);
     setRenderable(isRenderable: boolean, delay?: number): Promise<any>;
     getPosition(): IPos;
@@ -26,12 +28,21 @@ export declare abstract class BlockObject extends MatterWorkerObject implements 
     disableBlock(): void;
     enableBlock(): void;
     getProjectionSize(): IProjection;
+    load(displayInfo: any): void;
     protected addDisplay(): Promise<any>;
     protected createDisplay(): Promise<any>;
     protected removeDisplay(): Promise<any>;
+    protected changeDisplay(displayInfo: IFramesModel): void;
     protected addToBlock(): Promise<any>;
     protected removeFromBlock(remove?: boolean): void;
     protected updateBlock(): void;
+    protected addBody(): void;
+    protected removeBody(): void;
+    protected drawBody(): void;
+    protected updateBody(model: any): void;
+    private calcBodyPath;
+    private prepareVertices;
+    private transformBodyPath;
     get id(): number;
     get type(): number;
 }

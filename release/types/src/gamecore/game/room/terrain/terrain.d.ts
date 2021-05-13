@@ -1,9 +1,10 @@
 import { BlockObject } from "../block/block.object";
+import { ISprite } from "structure";
 import { IElement, MoveData } from "../element/element";
 import { IElementManager } from "../element/element.manager";
 import { op_client } from "pixelpai_proto";
+import { IPos, IFramesModel } from "structure";
 import { IRoomService } from "../room";
-import { IFramesModel, IPos, ISprite } from "structure";
 export declare class Terrain extends BlockObject implements IElement {
     protected mElementManager: IElementManager;
     protected mId: number;
@@ -13,6 +14,7 @@ export declare class Terrain extends BlockObject implements IElement {
     private mMoveData;
     private mState;
     constructor(sprite: ISprite, mElementManager: IElementManager);
+    changeDisplayData(texturePath: string, dataPath?: string): void;
     get state(): boolean;
     set state(val: boolean);
     get moveData(): MoveData;
@@ -43,7 +45,7 @@ export declare class Terrain extends BlockObject implements IElement {
     unmount(): Promise<this>;
     addMount(): this;
     removeMount(): Promise<void>;
-    getInteractivePositionList(): Promise<any[]>;
+    getInteractivePositionList(): any[];
     destroy(): void;
     protected createDisplay(): Promise<any>;
     protected addDisplay(): Promise<any>;

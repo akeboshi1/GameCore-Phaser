@@ -1,22 +1,23 @@
 import { op_client, op_def } from "pixelpai_proto";
 import { PacketHandler } from "net-socket-packet";
-import { Game } from "..";
-import { IScenery, ISprite, IPos, IPosition45Obj, LogicPos } from "structure";
+import { AStar, ConnectionService, IPos, IPosition45Obj, LogicPos } from "structure";
+import { Game } from "../../game";
+import { IScenery, ISprite } from "structure";
 import IActor = op_client.IActor;
-import { IBlockObject } from "./block/iblock.object";
 import { TerrainManager } from "./terrain/terrain.manager";
-import { PlayerManager } from "./player/player.manager";
 import { ElementManager } from "./element/element.manager";
+import { PlayerManager } from "./player/player.manager";
 import { ICameraService } from "./camera/cameras.worker.manager";
 import { EffectManager } from "./effect/effect.manager";
 import { SkyBoxManager } from "./sky.box/sky.box.manager";
+import { WallManager } from "./element/wall.manager";
+import { CollsionManager } from "../collsion";
+import { IBlockObject } from "./block/iblock.object";
 import { IElement } from "./element/element";
 import { ClockReadyListener } from "../loop";
 import { IViewBlockManager } from "./viewblock/iviewblock.manager";
-import { WallManager } from "./element/wall.manager";
-import { RoomStateManager } from "./state/room.state.manager";
+import { RoomStateManager } from "./state";
 import { IRoomManager } from "./room.manager";
-import { ConnectionService } from "src/structure/net";
 export interface SpriteAddCompletedListener {
     onFullPacketReceived(sprite_t: op_def.NodeType): void;
 }
@@ -28,6 +29,8 @@ export interface IRoomService {
     readonly cameraService: ICameraService;
     readonly effectManager: EffectManager;
     readonly skyboxManager: SkyBoxManager;
+    readonly wallManager: WallManager;
+    readonly collsionManager: CollsionManager;
     readonly roomSize: IPosition45Obj;
     readonly miniSize: IPosition45Obj;
     readonly game: Game;
@@ -49,6 +52,7 @@ export interface IRoomService {
     getElement(id: number): IElement;
     update(time: number, delta: number): void;
     initUI(): void;
+    findPath(start: IPos, targetPosList: IPos[], toReverse: boolean): LogicPos[];
     onManagerCreated(key: string): any;
     onManagerReady(key: string): any;
     onRoomReady(): any;
@@ -74,12 +78,14 @@ export declare class Room extends PacketHandler implements IRoomService, SpriteA
     protected mWallMamager: WallManager;
     protected mScaleRatio: number;
     protected mStateManager: RoomStateManager;
+    protected mAstar: AStar;
     protected mIsLoading: boolean;
     protected mManagersReadyStates: Map<string, boolean>;
-    protected mWalkableMap: number[][];
+    protected mCollsionManager: CollsionManager;
     private moveStyle;
     private mActorData;
     private mUpdateHandlers;
+    private mWalkableMap;
     private mWalkableMarkMap;
     constructor(manager: IRoomManager);
     addListen(): void;
@@ -110,6 +116,7 @@ export declare class Room extends PacketHandler implements IRoomService, SpriteA
     addToWalkableMap(sprite: ISprite, isTerrain?: boolean): void;
     removeFromWalkableMap(sprite: ISprite, isTerrain?: boolean): void;
     isWalkable(x: number, y: number): boolean;
+    findPath(startPos: IPos, targetPosList: IPos[], toReverse: boolean): LogicPos[];
     clear(): void;
     destroy(): void;
     addUpdateHandler(caller: any, method: Function): void;
@@ -127,8 +134,10 @@ export declare class Room extends PacketHandler implements IRoomService, SpriteA
     get elementManager(): ElementManager;
     get playerManager(): PlayerManager;
     get skyboxManager(): SkyBoxManager;
+    get wallManager(): WallManager;
     get cameraService(): ICameraService;
     get effectManager(): EffectManager;
+    get collsionManager(): CollsionManager;
     get id(): number;
     get roomSize(): IPosition45Obj | undefined;
     get miniSize(): IPosition45Obj | undefined;
@@ -142,6 +151,7 @@ export declare class Room extends PacketHandler implements IRoomService, SpriteA
     private onAllSpriteReceived;
     private onReloadScene;
     private onSyncStateHandler;
+    private onExtraRoomInfoHandler;
     private getSpriteWalkableData;
     private addWalkableMark;
     private removeWalkableMark;

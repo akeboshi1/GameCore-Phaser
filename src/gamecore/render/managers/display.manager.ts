@@ -9,11 +9,10 @@ import {
     IScenery, LayerName, Handler, IPos, IPosition45Obj, Logger, LogicPos, IFramesModel
 } from "structure";
 import { op_def } from "pixelpai_proto";
-import { IDisplayObject, TerrainGrid } from "../display";
+import { IDisplayObject, ServerPosition, TerrainGrid } from "../display";
 import { BlockManager } from "baseRender";
 import { FramesModel } from "baseGame";
 import { LayerEnum } from "game-capsule";
-
 export enum NodeType {
     UnknownNodeType = 0,
     GameNodeType = 1,
@@ -59,7 +58,9 @@ export class DisplayManager {
     private sceneManager: SceneManager;
     private displays: Map<number, DragonbonesDisplay | FramesDisplay>;
     private scenerys: Map<number, BlockManager>;
-    private mUser: DragonbonesDisplay;
+    private mUser: IDisplayObject;
+    // private matterBodies: MatterBodies;
+    private serverPosition: ServerPosition;
     private preLoadList: any[];
     private loading: boolean = false;
     private mModelCache: Map<number, any>;
@@ -76,7 +77,7 @@ export class DisplayManager {
         this.preLoadList = [];
     }
 
-    get user(): DragonbonesDisplay {
+    get user(): IDisplayObject {
         return this.mUser;
     }
 
@@ -100,7 +101,7 @@ export class DisplayManager {
             Logger.getInstance().fatal(`scene does not exist`);
             return;
         }
-        const display: any = this.displays.get(id);
+        const display: IDisplayObject = this.displays.get(id);
         if (display) {
             display.load(data);
             this.render.mainPeer.elementDisplaySyncReady(id);
@@ -220,13 +221,13 @@ export class DisplayManager {
         return display;
     }
 
-    public addToLayer(layerName: string, display: FramesDisplay | DragonbonesDisplay) {
+    public addToLayer(layerName: string, display: FramesDisplay | DragonbonesDisplay, index?: number) {
         const scene: PlayScene = <PlayScene>this.sceneManager.getMainScene();
         if (!scene) {
             Logger.getInstance().fatal(`scene does not exist`);
             return;
         }
-        scene.layerManager.addToLayer(layerName, display);
+        scene.layerManager.addToLayer(layerName, display, index);
     }
 
     public removeDisplay(displayID: number): void {
@@ -256,7 +257,7 @@ export class DisplayManager {
             Logger.getInstance().error("BaseDisplay not found: ", displayID);
             return;
         }
-        const display: any = this.displays.get(displayID);
+        const display = this.displays.get(displayID);
         display.changeAlpha(val);
     }
 
@@ -265,7 +266,7 @@ export class DisplayManager {
             Logger.getInstance().error("BaseDisplay not found: ", displayID);
             return;
         }
-        const display: any = this.displays.get(displayID);
+        const display = this.displays.get(displayID);
         display.fadeIn();
     }
 
@@ -274,7 +275,7 @@ export class DisplayManager {
             Logger.getInstance().error("BaseDisplay not found: ", displayID);
             return;
         }
-        const display: any = this.displays.get(displayID);
+        const display = this.displays.get(displayID);
         display.fadeOut();
     }
 
@@ -293,7 +294,7 @@ export class DisplayManager {
             Logger.getInstance().error("BaseDisplay not found: ", displayID);
             return;
         }
-        const target: any = this.displays.get(targetID);
+        const target = this.displays.get(targetID);
         if (!target) {
             Logger.getInstance().error("BaseDisplay not found: ", targetID);
             return;
@@ -303,13 +304,13 @@ export class DisplayManager {
     }
 
     public unmount(displayID: number, targetID: number) {
-        const display: any = this.displays.get(displayID);
+        const display = this.displays.get(displayID);
         if (!display) {
             Logger.getInstance().error("BaseDisplay not found: ", displayID);
             return;
         }
 
-        const target: any = this.displays.get(targetID);
+        const target = this.displays.get(targetID);
         if (!target) {
             Logger.getInstance().error("BaseDisplay not found: ", targetID);
             return;
@@ -320,7 +321,7 @@ export class DisplayManager {
 
     public addEffect(targetID: number, effectID: number, display: IFramesModel) {
         const target = this.getDisplay(targetID);
-        let effect: any = this.getDisplay(effectID);
+        let effect = this.getDisplay(effectID);
         if (!effect) effect = this.addFramesDisplay(effectID, display, parseInt(LayerName.SURFACE, 10), DisplayField.Effect);
         if (!target || !effect) {
             return;
@@ -336,7 +337,7 @@ export class DisplayManager {
     }
 
     public removeEffect(targetID: number, displayID: number) {
-        const display: any = this.displays.get(displayID);
+        const display = this.displays.get(displayID);
         if (!display) {
             Logger.getInstance().error("BaseDisplay not found: ", displayID);
             return;
@@ -364,9 +365,9 @@ export class DisplayManager {
         }
         if (!sprite.pos) sprite.pos = new LogicPos(0, 0, 0);
         display.titleMask = sprite.titleMask;
-        (<any>display).setPosition(sprite.pos.x, sprite.pos.y, sprite.pos.z);
+        display.setPosition(sprite.pos.x, sprite.pos.y, sprite.pos.z);
         display.checkCollision(sprite);
-        (<any>display).changeAlpha(sprite.alpha);
+        display.changeAlpha(sprite.alpha);
         display.hasInteractive = sprite.hasInteractive;
         if (sprite.nickname) display.showNickname(sprite.nickname);
     }
@@ -422,8 +423,35 @@ export class DisplayManager {
         display.showTopDisplay(state);
     }
 
+    // public showMatterDebug(bodies) {
+    //     if (!this.matterBodies) {
+    //         this.matterBodies = new MatterBodies(this.render);
+    //     }
+    //     this.matterBodies.renderWireframes(bodies);
+    // }
+
+    // public hideMatterDebug() {
+    //     if (this.matterBodies) {
+    //         this.matterBodies.destroy();
+    //         this.matterBodies = undefined;
+    //     }
+    // }
+
+    public drawServerPosition(x: number, y: number) {
+        if (!this.serverPosition) {
+            this.serverPosition = new ServerPosition(this.render);
+        }
+        this.serverPosition.draw(x, y);
+    }
+
+    public hideServerPosition() {
+        if (!this.serverPosition) return;
+        this.serverPosition.destroy();
+        this.serverPosition = null;
+    }
+
     public liftItem(id: number, display, animation) {
-        const player: any = this.displays.get(id);
+        const player = this.displays.get(id);
         if (!player) {
             return;
         }
@@ -441,18 +469,18 @@ export class DisplayManager {
     }
 
     public clearMount(id: number) {
-        const player: any = this.displays.get(id);
+        const player = this.displays.get(id);
         if (player) {
             player.destroyMount();
         }
     }
 
     public throwElement(userId: number, targetId: number, display, animation) {
-        const player: any = this.getDisplay(userId);
+        const player = this.getDisplay(userId);
         if (!player) {
             return;
         }
-        const target: any = this.getDisplay(targetId);
+        const target = this.getDisplay(targetId);
         if (!target) {
             return;
         }
@@ -536,6 +564,45 @@ export class DisplayManager {
                 if (block) block.destroy();
             });
             this.scenerys.clear();
+        }
+        // if (this.matterBodies) {
+        //     this.matterBodies.destroy();
+        //     this.matterBodies = null;
+        // }
+        if (this.serverPosition) {
+            this.serverPosition.destroy();
+            this.serverPosition = null;
+        }
+    }
+
+    public showGrids(size: IPosition45Obj, maps: number[][]) {
+        // if (this.mGridLayer) {
+        //     this.mGridLayer.destroy();
+        // }
+        // const scene = this.sceneManager.getMainScene();
+        // this.mGridLayer = scene.make.container(undefined, false);
+        // const graphics = scene.make.graphics(undefined, false);
+        // graphics.lineStyle(1, 0xffffff, 0.5);
+        // graphics.beginPath();
+        // for (let i = 0; i <= size.rows; i++) {
+        //     this.drawLine(graphics, 0, i, size.cols, i, size);
+        // }
+        // for (let i = 0; i <= size.cols; i++) {
+        //     this.drawLine(graphics, i, 0, i, size.rows, size);
+        // }
+        // graphics.closePath();
+        // graphics.strokePath();
+        // this.mGridLayer.add(graphics);
+        // // this.mGridLayer.x += size.tileWidth / 2;
+        // // this.mGridLayer.y += size.tileHeight / 2;
+        // (<PlayScene>scene).layerManager.addToLayer(LayerName.MIDDLE, this.mGridLayer);
+        this.mGridLayer = new TerrainGrid(this.render, size);
+        this.mGridLayer.setMap(maps);
+    }
+
+    public hideGrids() {
+        if (this.mGridLayer) {
+            this.mGridLayer.destroy();
         }
     }
 

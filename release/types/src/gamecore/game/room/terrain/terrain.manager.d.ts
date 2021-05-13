@@ -3,10 +3,12 @@ import { op_client } from "pixelpai_proto";
 import { Terrain } from "./terrain";
 import { IElementManager } from "../element/element.manager";
 import { IElement } from "../element/element";
-import { IRoomService, SpriteAddCompletedListener } from "../room";
-import { ISprite, IPos, IDragonbonesModel, IFramesModel } from "structure";
-import { ConnectionService } from "src/structure/net";
+import { ConnectionService, ISprite } from "structure";
+import { IFramesModel } from "structure";
+import { IDragonbonesModel } from "structure";
+import { IPos } from "structure";
 import { IElementStorage } from "baseGame";
+import { IRoomService, SpriteAddCompletedListener } from "../room";
 export declare class TerrainManager extends PacketHandler implements IElementManager {
     protected mRoom: IRoomService;
     hasAddComplete: boolean;
@@ -18,6 +20,7 @@ export declare class TerrainManager extends PacketHandler implements IElementMan
     private mDirty;
     private mTerrainCache;
     private mIsDealEmptyTerrain;
+    private mExtraDisplayInfo_TexturePath;
     constructor(mRoom: IRoomService, listener?: SpriteAddCompletedListener);
     get isDealEmptyTerrain(): boolean;
     init(): void;
@@ -31,6 +34,7 @@ export declare class TerrainManager extends PacketHandler implements IElementMan
     getElements(): IElement[];
     onDisplayCreated(id: number): void;
     onDisplayRemoved(id: number): void;
+    changeAllDisplayData(id: string): void;
     protected onAdd(packet: PBpacket): void;
     protected _add(sprite: ISprite): Terrain;
     protected addComplete(packet: PBpacket): void;

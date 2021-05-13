@@ -5,7 +5,7 @@ import { op_client } from "pixelpai_proto";
 import { Account } from "./account";
 import { SceneManager } from "./scenes/scene.manager";
 import { LocalStorageManager } from "./managers/local.storage.manager";
-import { CamerasManager } from "./cameras/cameras.manager";
+import { CamerasRenderManager } from "./cameras/cameras.render.manager";
 import { ElementStateType, GameMain, IDragonbonesModel, IFramesModel, ILauncherConfig, IScenery, IPos, IPosition45Obj, LogicPos, Size, IWorkerParam } from "structure";
 import { DisplayManager } from "./managers/display.manager";
 import { InputManager } from "./input/input.manager";
@@ -33,12 +33,11 @@ export declare class Render extends RPCPeer implements GameMain, IRender {
     sortDebugger: SortDebugger;
     editorModeDebugger: EditorModeDebugger;
     protected mMainPeer: any;
-    protected mPhysicalPeer: any;
     protected readonly DEFAULT_WIDTH = 360;
     protected readonly DEFAULT_HEIGHT = 640;
     protected mGuideManager: GuideManager;
     protected mSceneManager: SceneManager;
-    protected mCameraManager: CamerasManager;
+    protected mCameraManager: CamerasRenderManager;
     protected mInputManager: InputManager;
     protected mSoundManager: SoundManager;
     protected mConfig: ILauncherConfig;
@@ -48,7 +47,6 @@ export declare class Render extends RPCPeer implements GameMain, IRender {
     protected mEditorCanvasManager: EditorCanvasManager;
     protected mRenderParam: IWorkerParam;
     protected mMainPeerParam: IWorkerParam;
-    protected mPhysicalPeerParam: IWorkerParam;
     private mCallBack;
     private _moveStyle;
     private _curTime;
@@ -83,10 +81,7 @@ export declare class Render extends RPCPeer implements GameMain, IRender {
     constructor(config: ILauncherConfig, callBack?: Function);
     get renderParam(): IWorkerParam;
     get mainPeerParam(): IWorkerParam;
-    get physicalPeerParam(): IWorkerParam;
     linkMain(key: any, url: any, peerName: any): void;
-    linkPhysical(key: any, url: any, peerName: any): void;
-    get physicalPeer(): any;
     setKeyBoardHeight(height: number): void;
     get config(): ILauncherConfig;
     get uiRatio(): number;
@@ -99,7 +94,7 @@ export declare class Render extends RPCPeer implements GameMain, IRender {
     get uiManager(): UiManager;
     get sceneManager(): SceneManager;
     get guideManager(): GuideManager;
-    get camerasManager(): CamerasManager;
+    get camerasManager(): CamerasRenderManager;
     get displayManager(): DisplayManager;
     get soundManager(): SoundManager;
     get localStorageManager(): LocalStorageManager;
@@ -154,7 +149,6 @@ export declare class Render extends RPCPeer implements GameMain, IRender {
     getCurrentRoomMiniSize(): any;
     syncCameraScroll(): void;
     renderEmitter(eventType: string, data?: any): void;
-    renderToPhysicalEmitter(eventType: string, data?: any): void;
     showMediator(name: string, isShow: boolean): void;
     getMainScene(): Phaser.Scene;
     updateGateway(): void;

@@ -4,11 +4,15 @@ import { Terrain } from "./terrain";
 import { ElementManager, IElementManager } from "../element/element.manager";
 import { IElement } from "../element/element";
 import NodeType = op_def.NodeType;
-import { IRoomService, SpriteAddCompletedListener } from "../room";
-import { ISprite, IPos, Logger, LogicPos, IDragonbonesModel, IFramesModel } from "structure";
-import { ConnectionService } from "src/structure/net";
+import { ConnectionService, ISprite } from "structure";
+import { IFramesModel } from "structure";
+import { IDragonbonesModel } from "structure";
 import { EmptyTerrain } from "./empty.terrain";
+import { IPos, Logger, LogicPos } from "structure";
 import { IElementStorage, Sprite } from "baseGame";
+import * as sha1 from "simple-sha1";
+import { IRoomService, SpriteAddCompletedListener } from "../room";
+
 export class TerrainManager extends PacketHandler implements IElementManager {
     public hasAddComplete: boolean = false;
     protected mTerrains: Map<number, Terrain> = new Map<number, Terrain>();
@@ -21,6 +25,8 @@ export class TerrainManager extends PacketHandler implements IElementManager {
     private mDirty: boolean = false;
     private mTerrainCache: any[];
     private mIsDealEmptyTerrain: boolean = false;
+    // todo: move to pica
+    private mExtraDisplayInfo_TexturePath: string = "";
     // private mCacheLen: number = 10;
     // private canDealTerrain = false;
     constructor(protected mRoom: IRoomService, listener?: SpriteAddCompletedListener) {
@@ -102,9 +108,7 @@ export class TerrainManager extends PacketHandler implements IElementManager {
             this.removeEmpty(new LogicPos(point.x, point.y));
             if (point) {
                 const s = new Sprite(sprite, op_def.NodeType.TerrainNodeType);
-                if (!s.displayInfo) {
-                    this.checkTerrainDisplay(s);
-                }
+                this.checkTerrainDisplay(s);
                 if (!s.displayInfo) {
                     ids.push(s.id);
                 }
@@ -117,6 +121,8 @@ export class TerrainManager extends PacketHandler implements IElementManager {
 
     public destroy() {
         this.mIsDealEmptyTerrain = false;
+        // todo: move to pica
+        this.mExtraDisplayInfo_TexturePath = "";
         this.roomService.game.emitter.off(ElementManager.ELEMENT_READY, this.dealTerrainCache, this);
         if (this.connection) {
             this.connection.removePacketListener(this);
@@ -162,6 +168,23 @@ export class TerrainManager extends PacketHandler implements IElementManager {
     public onDisplayCreated(id: number) {
     }
     public onDisplayRemoved(id: number) {
+    }
+
+    // todo: move to pica
+    // 替换全部资源
+    public changeAllDisplayData(id: string) {
+        // todo: 会影响非小屋，待定
+        // const configMgr = <BaseDataConfigManager> this.roomService.game.configManager;
+        // const configData = configMgr.getElement2Data(id);
+        // if (!configData) {
+        //     Logger.getInstance().error("no config data, id: ", id);
+        //     return;
+        // }
+        // this.mTerrains.forEach((terrain) => {
+        //     terrain.changeDisplayData(configData.texture_path);
+        // });
+        // // 存储资源
+        // this.mExtraDisplayInfo_TexturePath = configData.texture_path;
     }
 
     protected onAdd(packet: PBpacket) {
@@ -246,6 +269,10 @@ export class TerrainManager extends PacketHandler implements IElementManager {
             if (palette) {
                 sprite.setDisplayInfo(palette);
             }
+        }
+        // 使用ExtraRoomInfo中的floorId替换显示资源
+        if (this.mExtraDisplayInfo_TexturePath.length > 0) {
+            (<IFramesModel>sprite.displayInfo).display.texturePath = this.mExtraDisplayInfo_TexturePath;
         }
     }
 

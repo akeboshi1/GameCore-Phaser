@@ -1,7 +1,8 @@
-import { IFramesModel, ISprite, IPos } from "structure";
+import { IFramesModel, ISprite } from "structure";
 import { op_client } from "pixelpai_proto";
 import { IRoomService } from "..";
 import { BlockObject } from "../block/block.object";
+import { IPos } from "structure";
 export declare class Wall extends BlockObject {
     protected mModel: ISprite;
     protected mDisplayInfo: IFramesModel;

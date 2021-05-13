@@ -1,6 +1,5 @@
 import { PacketHandler } from "net-socket-packet";
-import { ConnectionService } from "structure";
-import { LogicRectangle, LogicRectangle45 } from "structure";
+import { ConnectionService, LogicRectangle, LogicRectangle45 } from "structure";
 import { Game } from "../../game";
 import { IRoomService } from "../room";
 export interface ICameraService {
@@ -19,7 +18,7 @@ export interface ICameraService {
     update(time?: number, delta?: number): void;
     destroy(): void;
 }
-export declare class CamerasWorkerManager extends PacketHandler implements ICameraService {
+export declare class CamerasManager extends PacketHandler implements ICameraService {
     protected mGame: Game;
     private mRoomService;
     syncDirty: boolean;

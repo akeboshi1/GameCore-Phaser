@@ -2,9 +2,9 @@ import { PacketHandler, PBpacket } from "net-socket-packet";
 import { op_client } from "pixelpai_proto";
 import { ConnectionService } from "structure";
 import { IDragonbonesModel, IFramesModel, ISprite } from "structure";
-import { IRoomService } from "../room";
 import { Element, IElement } from "./element";
 import { IElementStorage } from "baseGame";
+import { IRoomService } from "../room";
 export interface IElementManager {
     hasAddComplete: boolean;
     readonly connection: ConnectionService | undefined;

@@ -15,7 +15,6 @@ export class MainPeer extends RPCPeer {
     @Export()
     protected game: Game;
     protected mRenderParam: IWorkerParam;
-    protected mPhysicalPeerParam: IWorkerParam;
     protected mMainPeerParam: IWorkerParam;
     private gameState;
     private stateTime: number = 0;
@@ -24,7 +23,6 @@ export class MainPeer extends RPCPeer {
      * 主进程和render之间完全链接成功
      */
     private isReady: boolean = false;
-    private mPhysicalPeer: any;
     private delayTime: number = 15000;
     private reConnectCount: number = 0;
     private startDelay: any;
@@ -47,15 +45,8 @@ export class MainPeer extends RPCPeer {
         return this.mMainPeerParam;
     }
 
-    get physicalPeerParam() {
-        return this.mPhysicalPeerParam;
-    }
     get render() {
         return this.remote[this.mRenderParam.key][this.mRenderParam.name];
-    }
-
-    get physicalPeer() {
-        return this.remote[this.mPhysicalPeerParam.key][this.mPhysicalPeerParam.name];
     }
 
     set state(val) {
@@ -166,13 +157,6 @@ export class MainPeer extends RPCPeer {
         // const url: string = "/js/game" + "_v1.0.398";
         Logger.getInstance().debug("render link onReady");
         this.game.createGame(this.mConfig);
-        this.linkTo(this.mPhysicalPeerParam.key, this.mPhysicalPeerParam.url).onceReady(() => {
-            this.mPhysicalPeer = this.remote[this.mPhysicalPeerParam.key][this.mPhysicalPeerParam.name];
-            Logger.getInstance().debug("Physcialworker onReady");
-            // this.linkTo(HEARTBEAT_WORKER, HEARTBEAT_WORKER_URL).onceReady(() => {
-            //     Logger.getInstance().debug("heartBeatworker onReady in mainworker");
-            // });
-        });
     }
 
     @Export()

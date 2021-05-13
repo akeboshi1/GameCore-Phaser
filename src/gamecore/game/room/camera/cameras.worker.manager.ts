@@ -1,8 +1,7 @@
 import { PacketHandler, PBpacket } from "net-socket-packet";
-import { op_editor, op_virtual_world } from "pixelpai_proto";
-import { ConnectionService } from "structure";
+import { op_editor, op_virtual_world, op_def } from "pixelpai_proto";
+import { ConnectionService, Logger, LogicPos, LogicRectangle, LogicRectangle45 } from "structure";
 import { Tool } from "utils";
-import { Logger, LogicPos, LogicRectangle, LogicRectangle45 } from "structure";
 import { Game } from "../../game";
 import { IRoomService } from "../room";
 
@@ -23,7 +22,7 @@ export interface ICameraService {
     destroy(): void;
 }
 
-export class CamerasWorkerManager extends PacketHandler implements ICameraService {
+export class CamerasManager extends PacketHandler implements ICameraService {
     public syncDirty: boolean = false;
     readonly m_blockWidth = 300; // 暂定
     readonly m_blockHeight = 150; // 暂定

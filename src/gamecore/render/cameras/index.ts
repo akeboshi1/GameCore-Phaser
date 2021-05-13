@@ -1,1 +1,1 @@
-export * from "./cameras.manager";
+export * from "./cameras.render.manager";

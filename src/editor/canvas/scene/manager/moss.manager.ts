@@ -1,6 +1,7 @@
 import { Helpers } from "game-capsule";
 import { PacketHandler, PBpacket } from "net-socket-packet";
 import { op_editor, op_def, op_client } from "pixelpai_proto";
+import { Task } from "structure";
 import { SceneEditorCanvas } from "../scene.editor.canvas";
 
 export class EditorMossManager extends PacketHandler {
@@ -198,9 +199,4 @@ export class EditorMossManager extends PacketHandler {
             }
         }
     }
-}
-
-export interface Task {
-    action: string;
-    loc: Partial<op_def.IMossMetaData>;
 }

@@ -38,7 +38,7 @@ export interface IElement {
     unmount(targetPos?: IPos): Promise<this>;
     addMount(ele: IElement, index?: number): this;
     removeMount(ele: IElement, targetPos?: IPos): Promise<void>;
-    getInteractivePositionList(): Promise<IPos[]>;
+    getInteractivePositionList(): IPos[];
     getProjectionSize(): IProjection;
     addToWalkableMap(): any;
     removeFromWalkableMap(): any;
@@ -47,18 +47,12 @@ export interface MoveData {
     step?: number;
     path?: op_def.IMovePoint[];
     arrivalTime?: number;
+    targetId?: number;
 }
-export interface MovePos {
-    x: number;
-    y: number;
-    stopDir?: number;
-}
-export interface MovePath {
-    x: number;
-    y: number;
-    direction: number;
-    duration?: number;
-    onStartParams?: any;
+export declare enum InputEnable {
+    Diasble = 0,
+    Enable = 1,
+    Interactive = 2
 }
 export declare class Element extends BlockObject implements IElement {
     protected mElementManager: IElementManager;
@@ -85,7 +79,6 @@ export declare class Element extends BlockObject implements IElement {
     protected mDirty: boolean;
     protected mCreatedDisplay: boolean;
     protected isUser: boolean;
-    protected moveControll: MoveControll;
     protected mStateManager: ElementStateManager;
     protected mTopDisplay: any;
     protected mTarget: any;
@@ -126,7 +119,7 @@ export declare class Element extends BlockObject implements IElement {
     removeTopDisplay(): void;
     showRefernceArea(conflictMap?: number[][]): void;
     hideRefernceArea(): void;
-    getInteractivePositionList(): Promise<IPos[]>;
+    getInteractivePositionList(): IPos[];
     get nickname(): string;
     turn(): void;
     setAlpha(val: number): void;
@@ -154,20 +147,6 @@ export declare class Element extends BlockObject implements IElement {
     protected mergeMounth(mounts: number[]): void;
     protected updateMounth(mounts: number[]): void;
     protected animationChanged(data: any): void;
-    protected addBody(): void;
-    protected updateBody(model: any): void;
+    protected drawBody(): void;
     private _startMove;
 }
-declare class MoveControll {
-    private target;
-    private velocity;
-    private mPosition;
-    private mPrePosition;
-    constructor(target: BlockObject);
-    setVelocity(x: number, y: number): void;
-    update(time: number, delta: number): void;
-    setPosition(x: number, y: number): void;
-    get position(): IPos;
-    get prePosition(): IPos;
-}
-export {};

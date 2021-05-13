@@ -5,7 +5,6 @@
     ".": "./release/js/index.js",
     "./renderPeer": "./release/js/renderPeer.js",
     "./mainPeer": "./release/js/mainPeer.js",
-    "./physicalPeer": "./release/js/physicalPeer.js",
     "./utils": "./release/js/utils.js",
     "./structure": "./release/js/structure.js",
     "./baseRender": "./release/js/baseRender.js",
@@ -19,9 +18,6 @@
       ],
       "renderPeer": [
         "release/types/src/gamecore/render"
-      ],
-      "physicalPeer": [
-        "release/types/src/gamecore/services"
       ],
       "baseRender": [
         "release/types/src/base/render"

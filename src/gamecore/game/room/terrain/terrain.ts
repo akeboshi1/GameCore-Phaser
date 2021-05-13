@@ -1,10 +1,11 @@
 import { BlockObject } from "../block/block.object";
+import { ISprite } from "structure";
 import { IElement, MoveData } from "../element/element";
 import { IElementManager } from "../element/element.manager";
 import { op_client } from "pixelpai_proto";
-import { IRoomService } from "../room";
-import { IFramesModel, IPos, Logger, ISprite } from "structure";
+import { IPos, Logger, IFramesModel } from "structure";
 import { LayerEnum } from "game-capsule";
+import { IRoomService } from "../room";
 
 export class Terrain extends BlockObject implements IElement {
     protected mId: number;
@@ -18,6 +19,12 @@ export class Terrain extends BlockObject implements IElement {
         super(sprite.id, mElementManager.roomService);
         this.mId = sprite.id;
         this.model = sprite;
+    }
+
+    changeDisplayData(texturePath: string, dataPath?: string) {
+        this.mDisplayInfo.display.texturePath = texturePath;
+        if (dataPath) this.mDisplayInfo.display.dataPath = dataPath;
+        this.changeDisplay(this.mDisplayInfo);
     }
 
     get state(): boolean {
@@ -69,7 +76,7 @@ export class Terrain extends BlockObject implements IElement {
             speed: this.mModel.speed,
             displayInfo: this.mModel.displayInfo
         };
-        await this.mRoomService.game.physicalPeer.setModel(obj1);
+        // await this.mRoomService.game.physicalPeer.setModel(obj1);
         this.removeFromWalkableMap();
         this.load(<IFramesModel>this.mModel.displayInfo);
         // this.mDisplayInfo = <IFramesModel> this.mModel.displayInfo;
@@ -77,7 +84,7 @@ export class Terrain extends BlockObject implements IElement {
         this.setPosition(this.mModel.pos);
         this.setRenderable(true);
         this.addToWalkableMap();
-        this.mRoomService.game.physicalPeer.changeAnimation(this.id, this.mModel.currentAnimation.name);
+        // this.mRoomService.game.physicalPeer.changeAnimation(this.id, this.mModel.currentAnimation.name);
         // this.addDisplay();
     }
 
@@ -107,7 +114,7 @@ export class Terrain extends BlockObject implements IElement {
             this.removeFromWalkableMap();
             this.mModel.setAnimationName(animationName);
             this.addToWalkableMap();
-            this.mRoomService.game.physicalPeer.changeAnimation(this.id, this.mModel.currentAnimation.name);
+            // this.mRoomService.game.physicalPeer.changeAnimation(this.id, this.mModel.currentAnimation.name);
             // this.mAnimationName = animationName;
             // this.mModel.currentAnimationName = animationName;
             this.mRoomService.game.peer.render.playElementAnimation(this.id, this.mModel.currentAnimationName);
@@ -186,7 +193,7 @@ export class Terrain extends BlockObject implements IElement {
         return Promise.resolve();
     }
 
-    public async getInteractivePositionList() {
+    public getInteractivePositionList() {
         return [];
     }
 

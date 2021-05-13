@@ -1,8 +1,9 @@
 import { FramesDisplay } from "../display/frames/frames.display";
 import { DragonbonesDisplay } from "../display/dragonbones/dragonbones.display";
 import { Render } from "../render";
-import { RunningAnimation, IDragonbonesModel, DisplayField, ElementStateType, IScenery, IFramesModel } from "structure";
+import { RunningAnimation, IDragonbonesModel, DisplayField, ElementStateType, IScenery, IPosition45Obj, IFramesModel } from "structure";
 import { op_def } from "pixelpai_proto";
+import { IDisplayObject } from "../display";
 export declare enum NodeType {
     UnknownNodeType = 0,
     GameNodeType = 1,
@@ -49,13 +50,14 @@ export declare class DisplayManager {
     private displays;
     private scenerys;
     private mUser;
+    private serverPosition;
     private preLoadList;
     private loading;
     private mModelCache;
     private mGridLayer;
     private uuid;
     constructor(render: Render);
-    get user(): DragonbonesDisplay;
+    get user(): IDisplayObject;
     update(time: number, delta: number): void;
     resize(width: number, height: number): void;
     updateModel(id: number, data: IDragonbonesModel): void;
@@ -63,7 +65,7 @@ export declare class DisplayManager {
     addUserDragonbonesDisplay(data: IDragonbonesModel, isUser: boolean, layer: number): DragonbonesDisplay;
     addTerrainDisplay(id: number, data: IFramesModel, layer: number): FramesDisplay;
     addFramesDisplay(id: number, data: IFramesModel, layer: number, field?: DisplayField): FramesDisplay;
-    addToLayer(layerName: string, display: FramesDisplay | DragonbonesDisplay): void;
+    addToLayer(layerName: string, display: FramesDisplay | DragonbonesDisplay, index?: number): void;
     removeDisplay(displayID: number): void;
     addFillEffect(x: number, y: number, status: op_def.PathReachableStatus): void;
     load(displayID: number, data: any, field?: DisplayField): void;
@@ -85,10 +87,14 @@ export declare class DisplayManager {
     displayDoMove(id: number, moveData: any): void;
     showNickname(id: number, name: string): void;
     showTopDisplay(id: number, state?: ElementStateType): void;
+    drawServerPosition(x: number, y: number): void;
+    hideServerPosition(): void;
     liftItem(id: number, display: any, animation: any): void;
     clearMount(id: number): void;
     throwElement(userId: number, targetId: number, display: any, animation: any): void;
     snapshot(): Promise<void>;
     destroy(): void;
+    showGrids(size: IPosition45Obj, maps: number[][]): void;
+    hideGrids(): void;
     private loadProgress;
 }

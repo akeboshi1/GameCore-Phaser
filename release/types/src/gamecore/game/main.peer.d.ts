@@ -6,7 +6,6 @@ import { IPos, ILauncherConfig, IWorkerParam } from "structure";
 export declare class MainPeer extends RPCPeer {
     protected game: Game;
     protected mRenderParam: IWorkerParam;
-    protected mPhysicalPeerParam: IWorkerParam;
     protected mMainPeerParam: IWorkerParam;
     private gameState;
     private stateTime;
@@ -15,7 +14,6 @@ export declare class MainPeer extends RPCPeer {
      * 主进程和render之间完全链接成功
      */
     private isReady;
-    private mPhysicalPeer;
     private delayTime;
     private reConnectCount;
     private startDelay;
@@ -24,9 +22,7 @@ export declare class MainPeer extends RPCPeer {
     constructor(workerName: string);
     get renderParam(): IWorkerParam;
     get mainPeerParam(): IWorkerParam;
-    get physicalPeerParam(): IWorkerParam;
     get render(): any;
-    get physicalPeer(): any;
     set state(val: any);
     onConnected(isAuto: boolean): void;
     onDisConnected(isAuto: any): void;
