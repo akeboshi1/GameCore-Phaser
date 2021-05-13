@@ -133,8 +133,7 @@ export class MotionManager {
 
         if (this.render.guideManager.canInteractive()) return;
         if (Math.abs(pointer.downX - pointer.upX) >= 5 * this.render.scaleRatio && Math.abs(pointer.downY - pointer.upY) >= 5 * this.render.scaleRatio || pointer.upTime - pointer.downTime > this.holdDelay) {
-            const position = this.getPreUserPos(pointer);
-            this.stop({ x: position.x / this.scaleRatio, y: position.y / this.scaleRatio });
+            this.stop();
         } else {
             if (this.gameObject) {
                 const id = this.gameObject.getData("id");
@@ -186,9 +185,9 @@ export class MotionManager {
         if (this.render.guideManager.canInteractive()) return;
         this.isHolding = false;
         this.scene.input.off("pointermove", this.onPointerMoveHandler, this);
-        const position = this.getPreUserPos(pointer);
-        if (!position) return;
-        this.stop({ x: position.x / this.scaleRatio, y: position.y / this.scaleRatio });
+        // const position = this.getPreUserPos(pointer);
+        // if (!position) return;
+        this.stop();
         clearTimeout(this.holdTime);
     }
 
@@ -221,8 +220,8 @@ export class MotionManager {
         // this.render.physicalPeer.findPath(targets, id);
     }
 
-    private stop(pos: any) {
-        this.render.mainPeer.stopMove(pos.x, pos.y);
+    private stop() {
+        this.render.mainPeer.stopSelfMove();
     }
 
     private getPreUserPos(pointer): Phaser.Math.Vector2 {

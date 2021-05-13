@@ -435,7 +435,6 @@ export class Element extends BlockObject implements IElement {
             return;
         }
         this.mMoveData.path = path;
-        Logger.getInstance().log("============>>>>> move: ", this.mModel.nickname, this.mModel.pos.x, this.mModel.pos.y);
         // this.mRoomService.game.physicalPeer.move(this.id, this.mMoveData.path);
         this.startMove();
     }
