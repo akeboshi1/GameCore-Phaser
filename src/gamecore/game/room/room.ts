@@ -132,14 +132,14 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
     protected mIsLoading: boolean = false;
     protected mManagersReadyStates: Map<string, boolean> = new Map();
     protected mCollsionManager: CollsionManager;
-    private moveStyle: op_def.MoveStyle;
-    private mActorData: IActor;
-    private mUpdateHandlers: Handler[] = [];
+    protected moveStyle: op_def.MoveStyle;
+    protected mActorData: IActor;
+    protected mUpdateHandlers: Handler[] = [];
     // private mDecorateEntryData = null;
     // -1: out of range; 0: not walkable; 1: walkable
-    private mWalkableMap: number[][];
+    protected mWalkableMap: number[][];
     // 地块可行走标记map。每格标记由多个不同优先级（暂时仅地块和物件）标记组成，最终是否可行走由高优先级标记决定
-    private mWalkableMarkMap: Map<number, Map<number, { level: number; walkable: boolean }>> =
+    protected mWalkableMarkMap: Map<number, Map<number, { level: number; walkable: boolean }>> =
         new Map<number, Map<number, { level: number; walkable: boolean }>>();
     // private mIsWaitingForDecorateResponse: boolean = false;
     constructor(protected manager: IRoomManager) {

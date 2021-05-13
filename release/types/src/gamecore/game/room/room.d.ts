@@ -1,6 +1,6 @@
 import { op_client, op_def } from "pixelpai_proto";
 import { PacketHandler } from "net-socket-packet";
-import { AStar, ConnectionService, IPos, IPosition45Obj, LogicPos } from "structure";
+import { AStar, ConnectionService, Handler, IPos, IPosition45Obj, LogicPos } from "structure";
 import { Game } from "../../game";
 import { IScenery, ISprite } from "structure";
 import IActor = op_client.IActor;
@@ -82,11 +82,14 @@ export declare class Room extends PacketHandler implements IRoomService, SpriteA
     protected mIsLoading: boolean;
     protected mManagersReadyStates: Map<string, boolean>;
     protected mCollsionManager: CollsionManager;
-    private moveStyle;
-    private mActorData;
-    private mUpdateHandlers;
-    private mWalkableMap;
-    private mWalkableMarkMap;
+    protected moveStyle: op_def.MoveStyle;
+    protected mActorData: IActor;
+    protected mUpdateHandlers: Handler[];
+    protected mWalkableMap: number[][];
+    protected mWalkableMarkMap: Map<number, Map<number, {
+        level: number;
+        walkable: boolean;
+    }>>;
     constructor(manager: IRoomManager);
     addListen(): void;
     removeListen(): void;
