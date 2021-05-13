@@ -27,7 +27,7 @@ export class MotionManager {
         this.scene.input.on("pointerdown", this.onPointerDownHandler, this);
         this.scene.input.on("gameobjectdown", this.onGameObjectDownHandler, this);
         this.scene.input.on("gameobjectup", this.onGameObjectUpHandler, this);
-        if (this.uiScene) this.uiScene.input.on("pointerup", this.onPointeroutHandler, this);
+        if (this.uiScene) this.uiScene.input.on("gameobjectdown", this.onPointeroutHandler, this);
     }
 
     removeListener() {
@@ -39,7 +39,7 @@ export class MotionManager {
         this.scene.input.off("pointermove", this.onPointerMoveHandler, this);
         this.scene.input.off("gameobjectdown", this.onGameObjectDownHandler, this);
         this.scene.input.off("gameobjectup", this.onGameObjectUpHandler, this);
-        if (this.uiScene) this.uiScene.input.off("pointerup", this.onPointeroutHandler, this);
+        if (this.uiScene) this.uiScene.input.off("gameobjectdown", this.onPointeroutHandler, this);
     }
 
     resize(width: number, height: number) {
