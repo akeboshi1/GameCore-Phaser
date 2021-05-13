@@ -1,7 +1,7 @@
 import { Capsule, ElementNode, LayerEnum, MossNode, PaletteNode, SceneNode, TerrainNode } from "game-capsule";
 import { op_def, op_client } from "pixelpai_proto";
-import { IFramesModel, ISprite, Logger, LogicPos, Position45, IPos, IPosition45Obj } from "structure";
-import { load, Url } from "utils";
+import { IFramesModel, ISprite } from "structure";
+import { Direction, IPos, IPosition45Obj, Logger, LogicPos, Position45 } from "structure";
 import { EditorCanvas, IEditorCanvasConfig } from "../editor.canvas";
 import { EditorFramesDisplay } from "./editor.frames.display";
 import { EditorFactory } from "./factory";
@@ -20,6 +20,7 @@ import { PBpacket } from "net-socket-packet";
 import { EditorSceneManger } from "./manager/scene.manager";
 import { EditorWallManager } from "./manager/wall.manager";
 import { EditorDragonbonesDisplay } from "./editor.dragonbones.display";
+import { load, Url } from "utils";
 for (const key in protos) {
     PBpacket.addProtocol(protos[key]);
 }
@@ -256,14 +257,27 @@ export class SceneEditorCanvas extends EditorCanvas implements IRender {
         }
     }
 
-    public calcWallFlip(x: number, y: number) {
+    public calcWallDirection(x: number, y: number) {
         const pos = Position45.transformTo45(new LogicPos(x, y), this.mRoomSize);
-        if (this.mTerrainManager.existTerrain(pos.x, pos.y)) {
-            if (!this.mTerrainManager.existTerrain(pos.x - 1, pos.y)) return true;
-            if (!this.mTerrainManager.existTerrain(pos.x, pos.y - 1)) return false;
+        const existTerrain = this.mTerrainManager.existTerrain.bind(this.mTerrainManager);
+        if (existTerrain(pos.x, pos.y)) {
+            if (!existTerrain(pos.x -1, pos.y - 1)) {
+                if (!existTerrain(pos.x, pos.y - 1) && !existTerrain(pos.x - 1, pos.y)) {
+                    return Direction.concave;
+                }
+                if (!existTerrain(pos.x, pos.y + 1) && !existTerrain(pos.x + 1, pos.y)) {
+                    return Direction.convex;
+                }
+            }
+            if (!existTerrain(pos.x - 1, pos.y)) return Direction.south_east;
+            if (!existTerrain(pos.x, pos.y - 1)) return Direction.west_south;
         } else {
-            if (this.mTerrainManager.existTerrain(pos.x, pos.y + 1)) return false;
-            if (this.mTerrainManager.existTerrain(pos.x + 1, pos.y)) return true;
+            if (!existTerrain(pos.x, pos.y + 1) && !existTerrain(pos.x + 1, pos.y)) {
+                if (existTerrain(pos.x + 1, pos.y + 1)) return Direction.concave;
+            }
+            if (existTerrain(pos.x + 1, pos.y) && existTerrain(pos.x, pos.y + 1)) return Direction.convex;
+            if (existTerrain(pos.x, pos.y + 1)) return Direction.west_south;
+            if (existTerrain(pos.x + 1, pos.y)) return Direction.south_east;
         }
     }
 
@@ -308,7 +322,7 @@ export class SceneEditorCanvas extends EditorCanvas implements IRender {
         //     const displayObj = pool.get(id.toString());
         //     if (displayObj) {
         this.selectElement(ids[0], false);
-        // this.selectedElement(displayObj.getDisplay());
+                // this.selectedElement(displayObj.getDisplay());
         //     }
         // }
     }
@@ -529,7 +543,7 @@ export class SceneEditorCanvas extends EditorCanvas implements IRender {
     }
 
     private onWheelHandler(pointer: Phaser.Input.Pointer) {
-        switch (this.mBrush) {
+        switch(this.mBrush) {
             case BrushEnum.Move:
             case BrushEnum.Select:
                 // 缩放地图
@@ -543,7 +557,7 @@ export class SceneEditorCanvas extends EditorCanvas implements IRender {
     }
 
     private addElement(element: ElementNode) {
-        const display: any = this.factory.createFramesDisplay(element);
+        const display = this.factory.createFramesDisplay(element);
         const loc = element.location;
         display.setPosition(loc.x, loc.y);
         display.name = element.name;
@@ -821,7 +835,7 @@ class MouseFollow {
             pos = this.getPosition(display.x, display.y);
             locs.push({
                 ...pos,
-                dir: display.runningAnimation.flip ? 5 : 3
+                dir: display.direction
             });
         }
         return { locs, key: this.key };
@@ -1049,12 +1063,8 @@ class MouseDisplayContainer extends Phaser.GameObjects.Container {
         this.setPosition(x + this.mOffset.x, y + this.mOffset.y, z, w);
         if (this.mNodeType === op_def.NodeType.WallNodeType) {
             for (const display of this.mDisplays) {
-                const flip = this.sceneEditor.calcWallFlip(x, y);
-                const ani = display.runningAnimation;
-                if (flip !== undefined && flip !== ani.flip) {
-                    ani.flip = flip;
-                    display.play(ani);
-                }
+                const direction = this.sceneEditor.calcWallDirection(x, y);
+                if (direction) display.setDirection(direction);
             }
         }
     }
@@ -1134,7 +1144,7 @@ class SelectedElementManager {
     selectElements(elements: EditorFramesDisplay[], selecting: boolean = true) {
         this.unselectedElements();
         this.mSelecedElement = elements;
-        if (elements.length < 1) {
+        if (elements.length < 1 ) {
             return;
         }
         for (const ele of elements) {
@@ -1270,7 +1280,7 @@ class SelectedElementManager {
     }
 
     private onGameobjectOutHandler(pointer: Phaser.Input.Pointer, gameobject: Phaser.GameObjects.GameObject) {
-        this.clearOverElement();
+       this.clearOverElement();
     }
 
     private clearOverElement() {

@@ -56,7 +56,7 @@
   "license": "MIT",
   "devDependencies": {
     "@types/chance": "^1.0.7",
-    "@types/matter-js": "^0.14.7",
+    "@types/sat": "^0.0.31",
     "circular-dependency-plugin": "^5.2.2",
     "clean-webpack-plugin": "^3.0.0",
     "copy-webpack-plugin": "^5.1.2",
@@ -93,6 +93,7 @@
     "object-hash": "^2.1.1",
     "pathfinding": "git+ssh://git@code.apowo.com/opensource/PathFinding-js",
     "poly-decomp": "^0.3.0",
+    "sat": "^0.9.0",
     "simple-sha1": "^3.0.1",
     "sort-display-object": "git+ssh://git@code.apowo.com:PixelPai/sort-display-object.git",
     "tooqinggamephaser": "^0.2.8",

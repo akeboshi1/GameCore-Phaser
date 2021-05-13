@@ -62,7 +62,9 @@ export class BaseFramesDisplay extends BaseDisplay {
                     }
                 };
                 const onLoadError = (imageFile: ImageFile) => {
-                    Logger.getInstance().debug("update frame loadError");
+                    const key = imageFile.multiFile ? imageFile.multiFile.key : imageFile.key;
+                    if (key !== this.framesInfo.gene) return;
+                    Logger.getInstance().debug(`update frame loadError ${imageFile.url}`);
                     this.displayCreated();
                 };
                 this.scene.load.on(Phaser.Loader.Events.FILE_LOAD_ERROR, onLoadError, this);
@@ -309,6 +311,7 @@ export class BaseFramesDisplay extends BaseDisplay {
 
     protected createDisplays(key: string, ani: any) {
         // const ani = data.getAnimations(animationName);
+        // 清楚上一个显示对象的贴图数据
         this.clearDisplay();
 
         let container: Phaser.GameObjects.Container = <Phaser.GameObjects.Container>this.mSprites.get(DisplayField.STAGE);

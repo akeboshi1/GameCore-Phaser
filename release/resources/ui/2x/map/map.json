@@ -4,7 +4,7 @@
 			"image": "map",
 			"format": "RGBA8888",
 			"size": {
-				"w": 963,
+				"w": 996,
 				"h": 244
 			},
 			"scale": 1,
@@ -94,27 +94,6 @@
 					}
 				},
 				{
-					"filename": "map_nav_picktown",
-					"rotated": false,
-					"trimmed": false,
-					"sourceSize": {
-						"w": 290,
-						"h": 93
-					},
-					"spriteSourceSize": {
-						"x": 0,
-						"y": 0,
-						"w": 290,
-						"h": 93
-					},
-					"frame": {
-						"x": 548,
-						"y": 1,
-						"w": 290,
-						"h": 93
-					}
-				},
-				{
 					"filename": "map_nav_picktown_1",
 					"rotated": false,
 					"trimmed": false,
@@ -154,6 +133,27 @@
 						"y": 156,
 						"w": 284,
 						"h": 87
+					}
+				},
+				{
+					"filename": "map_nav_picktown",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 290,
+						"h": 93
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 290,
+						"h": 93
+					},
+					"frame": {
+						"x": 548,
+						"y": 1,
+						"w": 290,
+						"h": 93
 					}
 				},
 				{
@@ -199,6 +199,27 @@
 					}
 				},
 				{
+					"filename": "map_online_mask",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 74,
+						"h": 74
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 74,
+						"h": 74
+					},
+					"frame": {
+						"x": 921,
+						"y": 1,
+						"w": 74,
+						"h": 74
+					}
+				},
+				{
 					"filename": "map_list_entrance_name",
 					"rotated": false,
 					"trimmed": false,
@@ -241,6 +262,27 @@
 					}
 				},
 				{
+					"filename": "map_room_icon",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 78,
+						"h": 72
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 78,
+						"h": 72
+					},
+					"frame": {
+						"x": 865,
+						"y": 163,
+						"w": 78,
+						"h": 72
+					}
+				},
+				{
 					"filename": "map_nav_select",
 					"rotated": false,
 					"trimmed": false,
@@ -262,27 +304,6 @@
 					}
 				},
 				{
-					"filename": "map_online_mask",
-					"rotated": false,
-					"trimmed": false,
-					"sourceSize": {
-						"w": 74,
-						"h": 74
-					},
-					"spriteSourceSize": {
-						"x": 0,
-						"y": 0,
-						"w": 74,
-						"h": 74
-					},
-					"frame": {
-						"x": 865,
-						"y": 163,
-						"w": 74,
-						"h": 74
-					}
-				},
-				{
 					"filename": "map_town_list_bg",
 					"rotated": false,
 					"trimmed": false,
@@ -297,52 +318,10 @@
 						"h": 80
 					},
 					"frame": {
-						"x": 941,
-						"y": 163,
+						"x": 946,
+						"y": 77,
 						"w": 21,
 						"h": 80
-					}
-				},
-				{
-					"filename": "party_icon_1",
-					"rotated": false,
-					"trimmed": false,
-					"sourceSize": {
-						"w": 46,
-						"h": 42
-					},
-					"spriteSourceSize": {
-						"x": 0,
-						"y": 0,
-						"w": 46,
-						"h": 42
-					},
-					"frame": {
-						"x": 694,
-						"y": 190,
-						"w": 46,
-						"h": 42
-					}
-				},
-				{
-					"filename": "map_online_Check",
-					"rotated": false,
-					"trimmed": false,
-					"sourceSize": {
-						"w": 44,
-						"h": 33
-					},
-					"spriteSourceSize": {
-						"x": 0,
-						"y": 0,
-						"w": 44,
-						"h": 33
-					},
-					"frame": {
-						"x": 742,
-						"y": 190,
-						"w": 44,
-						"h": 33
 					}
 				},
 				{
@@ -360,10 +339,31 @@
 						"h": 41
 					},
 					"frame": {
-						"x": 921,
-						"y": 1,
+						"x": 969,
+						"y": 77,
 						"w": 26,
 						"h": 41
+					}
+				},
+				{
+					"filename": "map_online_Check",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 44,
+						"h": 33
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 44,
+						"h": 33
+					},
+					"frame": {
+						"x": 694,
+						"y": 190,
+						"w": 44,
+						"h": 33
 					}
 				},
 				{
@@ -402,8 +402,8 @@
 						"h": 21
 					},
 					"frame": {
-						"x": 788,
-						"y": 190,
+						"x": 969,
+						"y": 120,
 						"w": 14,
 						"h": 21
 					}
@@ -435,6 +435,6 @@
 	"meta": {
 		"app": "https://www.codeandweb.com/texturepacker",
 		"version": "3.0",
-		"smartupdate": "$TexturePacker:SmartUpdate:b028fdbf5abd6b9f950c8a795b151aee:770434425441d15377da6942789de931:68463c66230aaeb26021edb8ea8cd9b6$"
+		"smartupdate": "$TexturePacker:SmartUpdate:5af96ed0b28405be0bf3ed37240a7f32:0fc004c677bc8568ff45a12e43309a3a:68463c66230aaeb26021edb8ea8cd9b6$"
 	}
 }

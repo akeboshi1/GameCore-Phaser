@@ -72,7 +72,8 @@
     "receivereward": "Receive",
     "received": "Received",
     "rarity": "Rarity",
-    "leave": "Leave"
+    "leave": "Leave",
+    "affirm":"Affirm"
   },
   "quantityunit": {
     "k": "k",

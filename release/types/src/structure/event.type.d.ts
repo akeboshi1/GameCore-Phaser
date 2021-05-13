@@ -3,6 +3,7 @@ export declare class EventType {
     static PACKAGE_UPDATE: string;
     static UPDATE_PLAYER_INFO: string;
     static UPDATE_ROOM_INFO: string;
+    static UPDATE_EXTRA_ROOM_INFO: string;
     static UPDATE_PARTY_STATE: string;
     static SEND_FURNITURE_REQUIREMENTS: string;
     static SCENE_ELEMENT_DATA_UPDATE: string;

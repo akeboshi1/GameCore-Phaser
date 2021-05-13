@@ -24,6 +24,7 @@ export declare class EditorFramesDisplay extends BaseFramesDisplay {
     setPosition(x?: number, y?: number, z?: number, w?: number): this;
     updateSprite(sprite: Sprite): void;
     setSprite(sprite: Sprite): void;
+    setDirection(dir: number): void;
     /**
      * TODO sprite仅用于和编辑器通信，后期会删除
      * @deprecated

@@ -17,6 +17,7 @@ export class EditorFramesDisplay extends BaseFramesDisplay {
 
     constructor(protected sceneEditor: SceneEditorCanvas, sprite: Sprite) {
         super(sceneEditor.scene, sprite.id, sprite.nodeType);
+        this.sprite = sprite;
         this.mLayer = sprite.layer;
     }
 
@@ -111,6 +112,16 @@ export class EditorFramesDisplay extends BaseFramesDisplay {
     setSprite(sprite: Sprite) {
         this.sprite = sprite;
         this.defaultLayer();
+    }
+
+    setDirection(dir: number) {
+        if (dir === this.direction) return;
+        // this.mDisplayInfo.avatarDir = dir;
+        this.direction = dir;
+        if (this.sprite) {
+            this.sprite.setDirection(dir);
+            this.play(this.sprite.currentAnimation);
+        }
     }
 
     /**

@@ -1,9 +1,10 @@
 import { StringUtils } from "utils";
 import { LayerManager } from "../layer";
-
 export class BasicScene extends Phaser.Scene {
     public layerManager: LayerManager;
     protected initialize: boolean = false;
+    protected hasChangeScene: boolean = false;
+    protected hasDestroy: boolean = false;
     protected render: any;
     constructor(config: string | Phaser.Types.Scenes.SettingsConfig) {
         super(config);
@@ -34,10 +35,30 @@ export class BasicScene extends Phaser.Scene {
     public create() {
         this.initialize = true;
         this.render.emitter.emit("sceneCreated");
+        this.events.on("shutdown", this.destroy, this);
+    }
+
+    public destroy() {
+        this.events.off("shutdown", this.destroy, this);
+        this.hasDestroy = true;
+        this.initialize = false;
+        this.hasChangeScene = false;
     }
 
     public sceneInitialize(): boolean {
         return this.initialize;
+    }
+
+    public sceneDestroy(): boolean {
+        return this.hasDestroy;
+    }
+
+    public get sceneChange(): boolean {
+        return this.hasChangeScene;
+    }
+
+    public set sceneChange(boo: boolean) {
+        this.hasChangeScene = boo;
     }
 
     public setViewPort(x: number, y: number, width: number, height: number) {

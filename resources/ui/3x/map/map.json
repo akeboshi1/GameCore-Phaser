@@ -4,8 +4,8 @@
 			"image": "map",
 			"format": "RGBA8888",
 			"size": {
-				"w": 1016,
-				"h": 499
+				"w": 1020,
+				"h": 509
 			},
 			"scale": 1,
 			"frames": [
@@ -115,27 +115,6 @@
 					}
 				},
 				{
-					"filename": "map_nav_picktown_1",
-					"rotated": false,
-					"trimmed": false,
-					"sourceSize": {
-						"w": 429,
-						"h": 130
-					},
-					"spriteSourceSize": {
-						"x": 0,
-						"y": 0,
-						"w": 429,
-						"h": 130
-					},
-					"frame": {
-						"x": 1,
-						"y": 368,
-						"w": 429,
-						"h": 130
-					}
-				},
-				{
 					"filename": "map_nav_tooqing_1",
 					"rotated": false,
 					"trimmed": false,
@@ -150,10 +129,31 @@
 						"h": 138
 					},
 					"frame": {
-						"x": 438,
-						"y": 227,
+						"x": 1,
+						"y": 368,
 						"w": 432,
 						"h": 138
+					}
+				},
+				{
+					"filename": "map_nav_picktown_1",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 429,
+						"h": 130
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 429,
+						"h": 130
+					},
+					"frame": {
+						"x": 438,
+						"y": 227,
+						"w": 429,
+						"h": 130
 					}
 				},
 				{
@@ -172,7 +172,7 @@
 					},
 					"frame": {
 						"x": 438,
-						"y": 367,
+						"y": 359,
 						"w": 425,
 						"h": 130
 					}
@@ -234,10 +234,31 @@
 						"h": 118
 					},
 					"frame": {
-						"x": 872,
+						"x": 869,
 						"y": 168,
 						"w": 118,
 						"h": 118
+					}
+				},
+				{
+					"filename": "map_room_icon",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 117,
+						"h": 108
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 117,
+						"h": 108
+					},
+					"frame": {
+						"x": 869,
+						"y": 288,
+						"w": 117,
+						"h": 108
 					}
 				},
 				{
@@ -255,31 +276,10 @@
 						"h": 110
 					},
 					"frame": {
-						"x": 872,
-						"y": 288,
+						"x": 865,
+						"y": 398,
 						"w": 110,
 						"h": 110
-					}
-				},
-				{
-					"filename": "party_icon_1",
-					"rotated": false,
-					"trimmed": false,
-					"sourceSize": {
-						"w": 68,
-						"h": 63
-					},
-					"spriteSourceSize": {
-						"x": 0,
-						"y": 0,
-						"w": 68,
-						"h": 63
-					},
-					"frame": {
-						"x": 940,
-						"y": 1,
-						"w": 68,
-						"h": 63
 					}
 				},
 				{
@@ -297,10 +297,31 @@
 						"h": 120
 					},
 					"frame": {
-						"x": 984,
+						"x": 988,
 						"y": 288,
 						"w": 31,
 						"h": 120
+					}
+				},
+				{
+					"filename": "map_nav_select",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 146,
+						"h": 4
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 146,
+						"h": 4
+					},
+					"frame": {
+						"x": 435,
+						"y": 491,
+						"w": 146,
+						"h": 4
 					}
 				},
 				{
@@ -319,7 +340,7 @@
 					},
 					"frame": {
 						"x": 940,
-						"y": 66,
+						"y": 1,
 						"w": 65,
 						"h": 49
 					}
@@ -339,8 +360,8 @@
 						"h": 61
 					},
 					"frame": {
-						"x": 865,
-						"y": 400,
+						"x": 940,
+						"y": 52,
 						"w": 39,
 						"h": 61
 					}
@@ -360,8 +381,8 @@
 						"h": 35
 					},
 					"frame": {
-						"x": 906,
-						"y": 400,
+						"x": 989,
+						"y": 168,
 						"w": 30,
 						"h": 35
 					}
@@ -402,31 +423,10 @@
 						"h": 21
 					},
 					"frame": {
-						"x": 865,
-						"y": 463,
+						"x": 981,
+						"y": 52,
 						"w": 31,
 						"h": 21
-					}
-				},
-				{
-					"filename": "map_nav_select",
-					"rotated": false,
-					"trimmed": false,
-					"sourceSize": {
-						"w": 146,
-						"h": 4
-					},
-					"spriteSourceSize": {
-						"x": 0,
-						"y": 0,
-						"w": 146,
-						"h": 4
-					},
-					"frame": {
-						"x": 865,
-						"y": 486,
-						"w": 146,
-						"h": 4
 					}
 				}
 			]
@@ -435,6 +435,6 @@
 	"meta": {
 		"app": "https://www.codeandweb.com/texturepacker",
 		"version": "3.0",
-		"smartupdate": "$TexturePacker:SmartUpdate:929f41e6823625edc777e8cb8f27e380:807f989edf921655da1917e25dc2e627:68463c66230aaeb26021edb8ea8cd9b6$"
+		"smartupdate": "$TexturePacker:SmartUpdate:b7099c18acc4b92469c6747ea039dfb8:bbeab602e1e008af50715468de4673cf:68463c66230aaeb26021edb8ea8cd9b6$"
 	}
 }

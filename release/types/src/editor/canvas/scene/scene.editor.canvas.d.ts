@@ -1,7 +1,7 @@
 /// <reference types="tooqinggamephaser" />
 import { Capsule, ElementNode, LayerEnum, MossNode, PaletteNode, SceneNode, TerrainNode } from "game-capsule";
 import { op_def, op_client } from "pixelpai_proto";
-import { IPos, IPosition45Obj } from "structure";
+import { Direction, IPos, IPosition45Obj } from "structure";
 import { EditorCanvas, IEditorCanvasConfig } from "../editor.canvas";
 import { EditorFactory } from "./factory";
 import { DisplayObjectPool } from "./display.object.pool";
@@ -60,7 +60,7 @@ export declare class SceneEditorCanvas extends EditorCanvas implements IRender {
     showGrid(): void;
     lookatLElement(): void;
     createElement(): void;
-    calcWallFlip(x: number, y: number): boolean;
+    calcWallDirection(x: number, y: number): Direction.west_south | Direction.south_east | Direction.concave | Direction.convex;
     /**
      * @deprecated
      */

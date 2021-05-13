@@ -93,4 +93,5 @@ export declare class ModuleName {
     static PICACOOKING_NAME: string;
     static PICAMARQUEE_NAME: string;
     static PICAROOMDECORATE_NAME: string;
+    static PICANEWMINE_NAME: string;
 }

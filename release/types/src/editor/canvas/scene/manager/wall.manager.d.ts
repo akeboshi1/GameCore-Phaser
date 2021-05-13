@@ -15,5 +15,6 @@ export declare class EditorWallManager extends PacketHandler {
     private reqEditorAddTerrainsData;
     private reqEditorDeleteTerrainsData;
     private exist;
+    private removeDuplicate;
     private genLocId;
 }
