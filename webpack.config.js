@@ -19,7 +19,7 @@ const commonConfig = {
         alias: {
             phaser: phaser,
             webworkerrpc: webworkerrpc,
-            dragonBones: path.join(__dirname, "node_modules/dragonBones/release/dragonBones.js"),
+            dragonBones: path.join(__dirname, "node_modules/dragonbones-runtime/Phaser/3.x/out/dragonBones.js"),
             gamecore: path.join(__dirname, "./src/gamecore/game"),
             gamecoreRender: path.join(__dirname, "./src/gamecore/render"),
             physicalWorker: path.join(__dirname, "./src/gamecore/services"),
