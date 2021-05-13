@@ -1,3 +1,5 @@
+import { ICountablePackageItem } from "./icountablepackageitem";
+
 export interface IMineShowPackage {
     name: string;
     lv: number;
@@ -7,4 +9,5 @@ export interface IMineShowPackage {
     minePick: string;
     subcategory: string;
     icon: string;
+    item: ICountablePackageItem;
 }

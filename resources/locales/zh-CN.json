@@ -74,7 +74,7 @@
     "received": "已领取",
     "rarity": "稀有",
     "leave": "离开",
-    "affirm":"确认"
+    "affirm": "确认"
   },
   "quantityunit": {
     "k": "千",
@@ -133,7 +133,7 @@
   "mine": {
     "settle": "获得物品",
     "savebag": "存入背包",
-    "integraltips": "本次积分:",
+    "integraltips": "矿工积分:",
     "proptips": "道具栏"
   },
   "equipupgrade": {
@@ -156,7 +156,9 @@
     "daily": "【每日】",
     "receive": "领取",
     "go": "前往",
-    "notasktip": "暂时没有新任务~"
+    "notasktip": "暂时没有新任务~",
+    "adtitle": "加速冷却",
+    "adtips": "是否使用{{count}}个{{name}}加速冷却？"
   },
   "furni_unlock": {
     "unlock": "修 复",

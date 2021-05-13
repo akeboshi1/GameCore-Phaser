@@ -73,7 +73,7 @@
     "received": "Received",
     "rarity": "Rarity",
     "leave": "Leave",
-    "affirm":"Affirm"
+    "affirm": "Affirm"
   },
   "quantityunit": {
     "k": "k",
@@ -155,7 +155,9 @@
     "daily": "[daily]",
     "receive": "Receive",
     "go": "Go",
-    "notasktip": "There are no new missions for now"
+    "notasktip": "There are no new missions for now",
+    "adtitle": "accelerated",
+    "adtips": "Whether to use {{count}} {{name}} to accelerate cooling？"
   },
   "furni_unlock": {
     "unlock": "REPAIR",
