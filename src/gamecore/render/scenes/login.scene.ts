@@ -2,14 +2,17 @@ import { ModuleName, SceneName } from "structure";
 import { UiManager } from "../ui";
 import { BaseLayer, BasicScene } from "baseRender";
 import { MainUIScene } from "./main.ui.scene";
+import { Url } from "utils";
 
 // 编辑器用 Phaser.Scene
 export class LoginScene extends BasicScene {
+    private dpr: number;
     constructor() {
         super({ key: SceneName.LOGIN_SCENE });
     }
 
     preload() {
+        this.load.atlas(ModuleName.MASK_LOADING_NAME, Url.getUIRes(this.dpr, "mask_loading/mask_loading.png"), Url.getUIRes(this.dpr, "mask_loading/mask_loading.json"));
     }
 
     public create() {
@@ -30,7 +33,7 @@ export class LoginScene extends BasicScene {
     public init(data?: any) {
         super.init(data);
         if (data) {
-            this.render = data;
+            this.dpr = data.dpr;
         }
     }
 

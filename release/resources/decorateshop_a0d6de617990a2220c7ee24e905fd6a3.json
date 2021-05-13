@@ -1,0 +1,209 @@
+{
+	"textures": [
+		{
+			"image": "decorateshop",
+			"format": "RGBA8888",
+			"size": {
+				"w": 490,
+				"h": 462
+			},
+			"scale": 1,
+			"frames": [
+				{
+					"filename": "manor_store_icon_bg",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 243,
+						"h": 307
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 243,
+						"h": 307
+					},
+					"frame": {
+						"x": 1,
+						"y": 1,
+						"w": 243,
+						"h": 307
+					}
+				},
+				{
+					"filename": "store_icon_check",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 243,
+						"h": 307
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 243,
+						"h": 307
+					},
+					"frame": {
+						"x": 246,
+						"y": 1,
+						"w": 243,
+						"h": 307
+					}
+				},
+				{
+					"filename": "tag_single",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 270,
+						"h": 92
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 270,
+						"h": 92
+					},
+					"frame": {
+						"x": 1,
+						"y": 310,
+						"w": 270,
+						"h": 92
+					}
+				},
+				{
+					"filename": "manor_store_check",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 194,
+						"h": 57
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 194,
+						"h": 57
+					},
+					"frame": {
+						"x": 1,
+						"y": 404,
+						"w": 194,
+						"h": 57
+					}
+				},
+				{
+					"filename": "manor_store_uncheck",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 194,
+						"h": 57
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 194,
+						"h": 57
+					},
+					"frame": {
+						"x": 197,
+						"y": 404,
+						"w": 194,
+						"h": 57
+					}
+				},
+				{
+					"filename": "floor_01",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 66,
+						"h": 40
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 66,
+						"h": 40
+					},
+					"frame": {
+						"x": 393,
+						"y": 310,
+						"w": 66,
+						"h": 40
+					}
+				},
+				{
+					"filename": "manor_store_price_bg",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 179,
+						"h": 34
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 179,
+						"h": 34
+					},
+					"frame": {
+						"x": 273,
+						"y": 352,
+						"w": 179,
+						"h": 34
+					}
+				},
+				{
+					"filename": "floor_black",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 66,
+						"h": 39
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 66,
+						"h": 39
+					},
+					"frame": {
+						"x": 273,
+						"y": 310,
+						"w": 66,
+						"h": 39
+					}
+				},
+				{
+					"filename": "house_shop",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 42,
+						"h": 30
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 42,
+						"h": 30
+					},
+					"frame": {
+						"x": 341,
+						"y": 310,
+						"w": 42,
+						"h": 30
+					}
+				}
+			]
+		}
+	],
+	"meta": {
+		"app": "https://www.codeandweb.com/texturepacker",
+		"version": "3.0",
+		"smartupdate": "$TexturePacker:SmartUpdate:c8b135c8de96c0a1cf01c157643e16d3:d3489020e5bf038cabf5686069fd7438:7d07a9abb099b05f58e613f091979d8d$"
+	}
+}

@@ -818,7 +818,8 @@ export class Render extends RPCPeer implements GameMain, IRender {
 
     @Export()
     public showLogin() {
-        if (this.sceneManager) this.mSceneManager.startScene(SceneName.LOGIN_SCENE, this);
+        const data = { dpr: this.uiRatio, render: this };
+        if (this.sceneManager) this.mSceneManager.startScene(SceneName.LOGIN_SCENE, data);
     }
 
     @Export()
