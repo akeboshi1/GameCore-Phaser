@@ -13,7 +13,6 @@ import { GameState, ILauncherConfig, LoadState, ModuleName, Logger, EventDispatc
 import { IRoomService } from "./room/room";
 import { User } from "./actor/user";
 import { NetworkManager } from "./command";
-import version from "../../../version";
 import { MainPeer } from "./main.peer";
 import { GuideWorkerManager } from "./guide.manager";
 import { SoundWorkerManager } from "./sound.manager";
@@ -560,6 +559,7 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
 
     public async loginEnterWorld() {
         Logger.getInstance().debug("loginEnterWorld");
+        const version = this.mConfig.version;
         this.mLoadingManager
             .start(LoadState.ENTERWORLD, { render: "构建现实世界" + `_v${version}`, main: "构建魔法世界" + `_v${version}` })
             .then(this.renderPeer.hideLogin());

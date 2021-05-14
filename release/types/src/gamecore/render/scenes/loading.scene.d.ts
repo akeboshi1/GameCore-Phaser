@@ -12,6 +12,7 @@ export declare class LoadingScene extends BasicScene {
     private mRequestCom;
     private mTxtList;
     private mErrorList;
+    private mGameVersion;
     constructor();
     preload(): void;
     init(data: any): void;

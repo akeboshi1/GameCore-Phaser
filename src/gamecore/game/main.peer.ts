@@ -4,7 +4,6 @@ import { PBpacket, Buffer } from "net-socket-packet";
 import * as protos from "pixelpai_proto";
 import { Game } from "./game";
 import { ServerAddress, IPos, Logger, ILauncherConfig, ModuleName, EventType, GameState, IWorkerParam, LogicPos } from "structure";
-import version from "../../../version";
 import { Url } from "utils";
 
 for (const key in protos) {
@@ -32,6 +31,7 @@ export class MainPeer extends RPCPeer {
     // private isReconnect: boolean = false;
     constructor(workerName: string) {
         super(workerName);
+        const version = this.mConfig.version;
         Logger.getInstance().log("Game version ====>:", `v${version}`);
         this.game = new Game(this);
         this.stateTime = new Date().getTime();

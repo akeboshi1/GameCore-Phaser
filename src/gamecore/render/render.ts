@@ -26,7 +26,6 @@ import { DisplayManager } from "./managers/display.manager";
 import { InputManager } from "./input/input.manager";
 import { MainUIScene } from "./scenes/main.ui.scene";
 import { EditorCanvasManager } from "./managers/editor.canvas.manager";
-import version from "../../../version";
 import { BasicScene, IRender } from "baseRender";
 import { AstarDebugger } from "./display/debugs/astar";
 import { EditorModeDebugger } from "./display/debugs/editor.mode.debugger";
@@ -147,7 +146,7 @@ export class Render extends RPCPeer implements GameMain, IRender {
         delete this.mConfig.gameLoaded;
         // Logger.getInstance().debug("connectfail===>", this.mConnectFailFunc, this.mConfig);
         this.initConfig();
-        Logger.getInstance().log("Render version ====>:", `v${version}`);
+        Logger.getInstance().log("Render version ====>:", `v${this.mConfig.version}`);
         // this.linkTo(HEARTBEAT_WORKER, HEARTBEAT_WORKER_URL).onceReady(() => {
         //     this.mHeartPeer = this.remote[HEARTBEAT_WORKER].HeartBeatPeer;
         //     this.mMainPeer.updateFps();
@@ -1182,6 +1181,7 @@ export class Render extends RPCPeer implements GameMain, IRender {
             });
         };
         data.dpr = this.uiRatio;
+        data.version = this.mConfig.version;
         this.mSceneManager.startScene(SceneName.LOADING_SCENE, data);
     }
 

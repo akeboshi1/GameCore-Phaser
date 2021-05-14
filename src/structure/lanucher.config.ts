@@ -24,6 +24,7 @@ export interface ILauncherConfig {
     baseWidth: number;
     baseHeight: number;
     renderPeerKey: string;
+    version: string;
     // requireContext: any;
     locationhref?: string;
     hasConnectFail?: boolean;

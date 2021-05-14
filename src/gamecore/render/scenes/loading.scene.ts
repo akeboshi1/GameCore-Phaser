@@ -18,6 +18,7 @@ export class LoadingScene extends BasicScene {
   private mRequestCom: boolean;
   private mTxtList: any[] = [];
   private mErrorList: any[] = [];
+  private mGameVersion: string;
   constructor() {
     super({ key: SceneName.LOADING_SCENE });
   }
@@ -40,6 +41,7 @@ export class LoadingScene extends BasicScene {
     this.mRequestCom = false;
     this.progressData = data.data;
     this.mCallback = data.callBack;
+    this.mGameVersion = data.version || "beta";
     this.tipsText = data.text || "";
   }
 
@@ -86,7 +88,7 @@ export class LoadingScene extends BasicScene {
     }
     ).setOrigin(0.5);
 
-    this.debug = this.add.text(width - 4 * dpr, height - 4 * dpr, `v${version} ${this.getDebug()}`, {
+    this.debug = this.add.text(width - 4 * dpr, height - 4 * dpr, `v${this.mGameVersion} ${this.getDebug()}`, {
       fontSize: 12 * dpr,
       fontFamily: Font.DEFULT_FONT
     }).setOrigin(1);
