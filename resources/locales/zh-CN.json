@@ -470,7 +470,10 @@
     "onlinetips": "在线奖励",
     "pica": "皮卡堂",
     "tooqing": "图轻",
-    "hot": "热门"
+    "hot": "热门",
+    "new": "最新",
+    "collect": "收藏",
+    "tooqingtips": "[color=#FEDF36]图轻实验室[/color]是一个让大家轻松制作游戏的平台，在不久的将来你也可以创作[color=#FEDF36]属于自己的[/color]游戏"
   },
   "commontips": {
     "configerror": "配置未成功加载，请刷新游戏"

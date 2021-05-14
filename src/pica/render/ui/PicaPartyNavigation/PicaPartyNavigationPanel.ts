@@ -10,6 +10,7 @@ import { op_client } from "pixelpai_proto";
 import { PicaRoomNavigationPanel } from "./PicaRoomNavigationPanel";
 import { CommonBackground } from "../../ui";
 import { PicaRoomTypePanel } from "./PicaRoomTypePanel";
+import { PicaTownNoNavigationPanel } from "./PicaTownNoNavigationPanel";
 export class PicaPartyNavigationPanel extends PicaBasePanel {
     public static PicaPartyNavigationPanel_CLOSE: string = "PicaPartyNavigationPanel_CLOSE";
     public static PICASELFROOM_DATA: string = "PICASELFROOM_DATA";
@@ -28,15 +29,17 @@ export class PicaPartyNavigationPanel extends PicaBasePanel {
     private townPanel: PicaTownNavigationPanel;
     private roomPanel: PicaRoomNavigationPanel;
     private roomTypePanel: PicaRoomTypePanel;
+    private noItemPanel: PicaTownNoNavigationPanel;
     private optionType: number;
     private progressData: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_QUERY_PLAYER_PROGRESS;
     private toggleItems: ToggleColorButton[] = [];
     private myRoomDatas: any[];
+    private tooqingOptionType: number;
     constructor(uiManager: UiManager) {
         super(uiManager);
         this.key = ModuleName.PICAPARTYNAVIGATION_NAME;
         this.atlasNames = [UIAtlasName.map, UIAtlasName.multiple_rooms];
-        this.textures = [{ atlasName: "town_entrance_1", folder: UIAtlasName.map }, { atlasName: "map_room_icon", folder: UIAtlasName.map }];
+        this.textures = [{ atlasName: "town_entrance_1", folder: UIAtlasName.map }, { atlasName: "map_room_icon", folder: UIAtlasName.map }, { atlasName: "map_tooqing_stay_tuned", folder: UIAtlasName.map }];
     }
 
     public resize(w: number, h: number) {
@@ -54,7 +57,7 @@ export class PicaPartyNavigationPanel extends PicaBasePanel {
         const index = this.mShowData || 1;
         this.onToggleButtonHandler(undefined, this.toggleItems[index - 1]);
         if (this.tempDatas) {
-            if (this.optionType === 1 || this.optionType === 4) {
+            if (this.optionType !== 2 && this.optionType !== 3) {
                 this.setNavigationListData(this.tempDatas);
             } else if (this.optionType === 2) {
                 this.setRoomListData(this.tempDatas);
@@ -73,8 +76,16 @@ export class PicaPartyNavigationPanel extends PicaBasePanel {
     }
     public setNavigationListData(content: any[]) {
         this.tempDatas = content;
-        if (this.townPanel)
-            this.townPanel.setTownDatas(content);
+        if (!this.mInitialized) return;
+        if (content && content.length > 0) {
+            this.openTownNavigationPanel();
+            this.hideNoItemPanel();
+            this.townPanel.setTownDatas(content, this.tooqingOptionType);
+        } else {
+            this.openNoItemePanel();
+            this.hideTownNavigationPanel();
+        }
+
     }
     public setOnlineProgress(content: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_QUERY_PLAYER_PROGRESS) {
         this.progressData = content;
@@ -265,6 +276,20 @@ export class PicaPartyNavigationPanel extends PicaBasePanel {
             this.roomTypePanel.visible = false;
         }
     }
+    private openNoItemePanel() {
+        if (!this.noItemPanel) {
+            const height = this.scaleHeight * 0.5 - this.toggleCon.y - 22 * this.dpr;
+            this.noItemPanel = new PicaTownNoNavigationPanel(this.scene, 274 * this.dpr, height, this.dpr, this.scale);
+            this.noItemPanel.y = this.toggleCon.y + height * 0.5 + 25 * this.dpr;
+            this.content.add(this.noItemPanel);
+        }
+        this.noItemPanel.visible = true;
+    }
+    private hideNoItemPanel() {
+        if (this.noItemPanel) {
+            this.noItemPanel.visible = false;
+        }
+    }
     private onToggleButtonHandler(pointer: any, toggle: ToggleColorButton) {
         if (this.curToggleItem === toggle) return;
         if (this.curToggleItem) this.curToggleItem.isOn = false;
@@ -275,7 +300,8 @@ export class PicaPartyNavigationPanel extends PicaBasePanel {
         this.hideTownNavigationPanel();
         this.hideRoomPanel();
         this.hideMyRoomPanel();
-        if (this.optionType === 1 || this.optionType === 4) {
+        this.hideNoItemPanel();
+        if (this.optionType !== 2 && this.optionType !== 3) {
             this.openTownNavigationPanel();
             this.render.renderEmitter(this.key + "_getnavigatelist", this.optionType);
         } else if (this.optionType === 2) {
@@ -293,7 +319,7 @@ export class PicaPartyNavigationPanel extends PicaBasePanel {
         if (type === 1) {
             temps = [{ text: i18n.t("player_info.room"), type: 2 }, { text: i18n.t("partynav.town"), type: 1 }, { text: i18n.t("party.mine"), type: 3 }];
         } else {
-            temps = [{ text: i18n.t("partynav.hot"), type: 4 }];
+            temps = [{ text: i18n.t("partynav.new"), type: 4 }, { text: i18n.t("partynav.hot"), type: 5 }, { text: i18n.t("partynav.collect"), type: 6 }];
         }
         for (const item of this.toggleItems) {
             item.visible = false;
@@ -309,7 +335,9 @@ export class PicaPartyNavigationPanel extends PicaBasePanel {
             this.curToggleItem.isOn = false;
             this.curToggleItem = undefined;
         }
-        this.onToggleButtonHandler(undefined, this.toggleItems[0]);
+        const index = type === 1 ? 0 : 1;
+        this.onToggleButtonHandler(undefined, this.toggleItems[index]);
+        this.tooqingOptionType = type;
     }
 
     private onTownHandler(tag: string, data: any) {// op_client.IEditModeRoom

@@ -198,7 +198,7 @@ export class PicaRoomDecorateShopPanel extends Phaser.GameObjects.Container {
         if (this.curCategory === data.key) return;
         this.emit("queryProp", data.key);
         this.curCategory = data.key;
-        this.selectedItem.select = false;
+        if (this.selectedItem) this.selectedItem.select = false;
         this.selectedItem = undefined;
         this.selectedItemData = undefined;
     }

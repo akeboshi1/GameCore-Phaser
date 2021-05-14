@@ -134,6 +134,7 @@ export class PicaNewCollectRewardsPanel extends Phaser.GameObjects.Container {
     }
     private onCloseHandler() {
         if (this.send) this.send.runWith("close");
+        this.mGameGrid.setT(0);
     }
 }
 
