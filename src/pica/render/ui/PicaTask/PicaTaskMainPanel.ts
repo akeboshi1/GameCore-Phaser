@@ -58,7 +58,6 @@ export class PicaTaskMainPanel extends Phaser.GameObjects.Container {
             if (!this.dailyItem) this.dailyItem = new MainDailyTaskItem(this.scene, 272 * this.dpr, 126 * this.dpr, this.dpr, this.zoom);
             this.groupItem = this.dailyItem;
         }
-        this.groupItem.refreshMask();
         this.groupItem.setMainTaskData(content, questType);
         this.groupItem.x = 0;
         this.gameScroller.addItem(this.groupItem);
@@ -89,6 +88,7 @@ export class PicaTaskMainPanel extends Phaser.GameObjects.Container {
         this.taskGroupData = content;
         this.questType = questType;
         this.render.emitter.emit(PicaTaskPanel.PICATASK_DATA);
+        this.groupItem.refreshMask();
     }
 
     setTaskDetail(quest: PKT_Quest) {
@@ -186,7 +186,7 @@ export class PicaTaskMainPanel extends Phaser.GameObjects.Container {
     }
 
     private onPointerUpHandler(gameobject) {
-        if (!(gameobject instanceof MainTaskItem)) {
+        if (!(gameobject instanceof MainTaskBaseItem)) {
             const extend = gameobject.extend ? false : true;
             gameobject.setExtend(extend, true);
         }
