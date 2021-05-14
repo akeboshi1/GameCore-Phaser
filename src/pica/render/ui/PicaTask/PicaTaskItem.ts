@@ -338,7 +338,7 @@ class TaskAcceleratedItem extends Phaser.GameObjects.Container {
         const conWidth = 272 * dpr;
         const conHeight = 70 * dpr;
         this.setSize(conWidth, conHeight);
-        this.bg = this.scene.make.image({ key: UIAtlasName.task_daily, frame: "daily_task_refresh_bg" });
+        this.bg = this.scene.make.image({ key: UIAtlasName.uicommon, frame: "task_list_bg" });
         this.titleTex = this.scene.make.text({ style: UIHelper.whiteStyle(dpr, 12) }).setOrigin(0.5);
         this.titleTex.y = -conHeight * 0.5 + 13 * dpr;
         this.countDownTex = this.scene.make.text({ style: UIHelper.colorStyle("#FFF449", 11 * dpr) }).setOrigin(1, 0.5);

@@ -475,6 +475,7 @@ class MainDailyTaskItem extends MainTaskBaseItem {
     public setMainTaskData(content: QUERY_QUEST_GROUP, questType: op_pkt_def.PKT_Quest_Type) {
         this.titleTex.text = content.name;
         this.taskDes.text = content.des;
+        content.progress = content.progress < 0 ? 0 : content.progress;
         this.clearTweens();
         const max = 100;
         const fvalue = this.getProgressValue(content.progress);
