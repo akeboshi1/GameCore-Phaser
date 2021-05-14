@@ -59,6 +59,10 @@ export class User extends Player {
 
     enterScene(room: IRoomService, actor: op_client.IActor) {
         Logger.getInstance().debug("enterScene");
+        if (this.moveControll) {
+            this.moveControll.destroy();
+            this.moveControll = null;
+        }
         if (!room || !actor) {
             return;
         }

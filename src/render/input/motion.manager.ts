@@ -193,7 +193,8 @@ export class MotionManager {
 
     protected onGameObjectDownHandler(pointer, gameObject) {
         if (!this.isRunning) return;
-        if (this.render.guideManager.canInteractive()) return;
+        const id = gameObject?gameObject.getData("id"):undefined;
+        if (this.render.guideManager.canInteractive(id)) return;
         this.gameObject = gameObject;
     }
 
@@ -225,7 +226,7 @@ export class MotionManager {
     }
 
     private getPreUserPos(pointer): Phaser.Math.Vector2 {
-        if (!this.scene||!this.scene.cameras || !this.scene.cameras.main) return null;
+        if (!this.scene || !this.scene.cameras || !this.scene.cameras.main) return null;
         const { x, y } = this.render.displayManager.user;
         const tmpX = pointer.worldX / this.scaleRatio - x;
         const tmpY = pointer.worldY / this.scaleRatio - y;
