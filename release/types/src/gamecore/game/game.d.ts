@@ -73,7 +73,8 @@ export declare class Game extends PacketHandler implements IConnectListener, Clo
     onDisConnected(isAuto?: boolean): any;
     onRefreshConnect(isAuto?: boolean): void;
     onError(): void;
-    reconnect(): Promise<any>;
+    reconnect(): Promise<void>;
+    manualReconnect(): Promise<any>;
     exitUser(): void;
     onClientErrorHandler(packet: PBpacket): void;
     destroyClock(): void;
