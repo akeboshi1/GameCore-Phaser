@@ -1,0 +1,440 @@
+{
+	"textures": [
+		{
+			"image": "order_new",
+			"format": "RGBA8888",
+			"size": {
+				"w": 837,
+				"h": 792
+			},
+			"scale": 1,
+			"frames": [
+				{
+					"filename": "order_head_bg",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 835,
+						"h": 240
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 835,
+						"h": 240
+					},
+					"frame": {
+						"x": 1,
+						"y": 1,
+						"w": 835,
+						"h": 240
+					}
+				},
+				{
+					"filename": "order_ordinary_list_bg",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 835,
+						"h": 240
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 835,
+						"h": 240
+					},
+					"frame": {
+						"x": 1,
+						"y": 1,
+						"w": 835,
+						"h": 240
+					}
+				},
+				{
+					"filename": "order_precious_list_bg",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 835,
+						"h": 240
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 835,
+						"h": 240
+					},
+					"frame": {
+						"x": 1,
+						"y": 243,
+						"w": 835,
+						"h": 240
+					}
+				},
+				{
+					"filename": "order_progress_bottom",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 811,
+						"h": 31
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 811,
+						"h": 31
+					},
+					"frame": {
+						"x": 1,
+						"y": 485,
+						"w": 811,
+						"h": 31
+					}
+				},
+				{
+					"filename": "order_progress_top",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 811,
+						"h": 31
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 811,
+						"h": 31
+					},
+					"frame": {
+						"x": 1,
+						"y": 518,
+						"w": 811,
+						"h": 31
+					}
+				},
+				{
+					"filename": "order_transport_car",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 469,
+						"h": 240
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 469,
+						"h": 240
+					},
+					"frame": {
+						"x": 1,
+						"y": 551,
+						"w": 469,
+						"h": 240
+					}
+				},
+				{
+					"filename": "order_precious_title",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 35,
+						"h": 143
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 35,
+						"h": 143
+					},
+					"frame": {
+						"x": 472,
+						"y": 551,
+						"w": 35,
+						"h": 143
+					}
+				},
+				{
+					"filename": "order_progress_ok",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 65,
+						"h": 49
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 65,
+						"h": 49
+					},
+					"frame": {
+						"x": 472,
+						"y": 696,
+						"w": 65,
+						"h": 49
+					}
+				},
+				{
+					"filename": "order_ordinary_title",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 31,
+						"h": 139
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 31,
+						"h": 139
+					},
+					"frame": {
+						"x": 509,
+						"y": 551,
+						"w": 31,
+						"h": 139
+					}
+				},
+				{
+					"filename": "order_progress_shade",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 97,
+						"h": 97
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 97,
+						"h": 97
+					},
+					"frame": {
+						"x": 539,
+						"y": 692,
+						"w": 97,
+						"h": 97
+					}
+				},
+				{
+					"filename": "order_time_icon",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 37,
+						"h": 37
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 37,
+						"h": 37
+					},
+					"frame": {
+						"x": 472,
+						"y": 747,
+						"w": 37,
+						"h": 37
+					}
+				},
+				{
+					"filename": "order_head_unknown",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 91,
+						"h": 122
+					},
+					"spriteSourceSize": {
+						"x": 1,
+						"y": 1,
+						"w": 89,
+						"h": 120
+					},
+					"frame": {
+						"x": 542,
+						"y": 551,
+						"w": 89,
+						"h": 120
+					}
+				},
+				{
+					"filename": "order_progress_finished",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 105,
+						"h": 105
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 105,
+						"h": 105
+					},
+					"frame": {
+						"x": 633,
+						"y": 551,
+						"w": 105,
+						"h": 105
+					}
+				},
+				{
+					"filename": "order_reward_diamond",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 46,
+						"h": 41
+					},
+					"spriteSourceSize": {
+						"x": 5,
+						"y": 6,
+						"w": 37,
+						"h": 32
+					},
+					"frame": {
+						"x": 633,
+						"y": 658,
+						"w": 37,
+						"h": 32
+					}
+				},
+				{
+					"filename": "order_progress_unfinished",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 105,
+						"h": 105
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 105,
+						"h": 105
+					},
+					"frame": {
+						"x": 672,
+						"y": 658,
+						"w": 105,
+						"h": 105
+					}
+				},
+				{
+					"filename": "order_reward_heart",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 46,
+						"h": 41
+					},
+					"spriteSourceSize": {
+						"x": 8,
+						"y": 9,
+						"w": 30,
+						"h": 28
+					},
+					"frame": {
+						"x": 638,
+						"y": 692,
+						"w": 30,
+						"h": 28
+					}
+				},
+				{
+					"filename": "order_delete",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 46,
+						"h": 46
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 46,
+						"h": 46
+					},
+					"frame": {
+						"x": 779,
+						"y": 551,
+						"w": 46,
+						"h": 46
+					}
+				},
+				{
+					"filename": "order_transport_perfection",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 37,
+						"h": 37
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 37,
+						"h": 37
+					},
+					"frame": {
+						"x": 740,
+						"y": 551,
+						"w": 37,
+						"h": 37
+					}
+				},
+				{
+					"filename": "order_precious_icon",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 67,
+						"h": 48
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 67,
+						"h": 48
+					},
+					"frame": {
+						"x": 740,
+						"y": 599,
+						"w": 67,
+						"h": 48
+					}
+				},
+				{
+					"filename": "order_reward_box",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 46,
+						"h": 41
+					},
+					"spriteSourceSize": {
+						"x": 2,
+						"y": 6,
+						"w": 41,
+						"h": 34
+					},
+					"frame": {
+						"x": 779,
+						"y": 649,
+						"w": 41,
+						"h": 34
+					}
+				}
+			]
+		}
+	],
+	"meta": {
+		"app": "https://www.codeandweb.com/texturepacker",
+		"version": "3.0",
+		"smartupdate": "$TexturePacker:SmartUpdate:313e1ee45d7fc0e8b41fecadd78e2562:a1687fa4ffe7a549e346de41caf2813e:8b4a94956876f8795d446477c4e1c2f1$"
+	}
+}

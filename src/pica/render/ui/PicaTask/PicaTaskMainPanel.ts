@@ -52,10 +52,16 @@ export class PicaTaskMainPanel extends Phaser.GameObjects.Container {
         this.gameScroller.visible = true;
         if (this.curTaskItem) this.curTaskItem.setExtend(false);
         if (questType === op_pkt_def.PKT_Quest_Type.QUEST_MAIN_MISSION) {
-            if (!this.mainItem) this.mainItem = new MainTaskItem(this.scene, 272 * this.dpr, 126 * this.dpr, this.dpr, this.zoom);
+            if (!this.mainItem) {
+                this.mainItem = new MainTaskItem(this.scene, 272 * this.dpr, 126 * this.dpr, this.dpr, this.zoom);
+                this.mainItem.setHandler(new Handler(this, this.onRewardHandler));
+            }
             this.groupItem = this.mainItem;
         } else if (questType === op_pkt_def.PKT_Quest_Type.QUEST_DAILY_GOAL) {
-            if (!this.dailyItem) this.dailyItem = new MainDailyTaskItem(this.scene, 272 * this.dpr, 126 * this.dpr, this.dpr, this.zoom);
+            if (!this.dailyItem) {
+                this.dailyItem = new MainDailyTaskItem(this.scene, 272 * this.dpr, 126 * this.dpr, this.dpr, this.zoom);
+                this.dailyItem.setHandler(new Handler(this, this.onRewardHandler));
+            }
             this.groupItem = this.dailyItem;
         }
         this.groupItem.setMainTaskData(content, questType);
@@ -345,10 +351,6 @@ class MainTaskItem extends MainTaskBaseItem {
         this.questType = questType;
     }
 
-    public setHandler(send: Handler) {
-        this.send = send;
-    }
-
     destroy() {
         super.destroy();
         this.clearTweens();
@@ -488,11 +490,6 @@ class MainDailyTaskItem extends MainTaskBaseItem {
         this.rewardsImg.load(url);
         this.questType = questType;
     }
-
-    public setHandler(send: Handler) {
-        this.send = send;
-    }
-
     destroy() {
         super.destroy();
         this.clearTweens();
