@@ -77,7 +77,7 @@ export class MoveControll {
         this.mBodies.setOffset(new SAT.Vector(offset.x, offset.y));
     }
 
-    public removePolygon() {
+    removePolygon() {
         if (!this.mBodies) {
             return;
         }
@@ -85,8 +85,15 @@ export class MoveControll {
         this.mBodies = null;
     }
 
-    public setIgnoreCollsion(val: boolean) {
+    setIgnoreCollsion(val: boolean) {
         this.ignoreCollsion = val;
+    }
+
+    destroy() {
+        this.removePolygon();
+        this.setVelocity(0, 0);
+        this.mPosition = null;
+        this.mPrePosition = null;
     }
 
     private getCollideResponses() {

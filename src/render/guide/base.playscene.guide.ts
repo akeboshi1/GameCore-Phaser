@@ -31,7 +31,10 @@ export class BasePlaySceneGuide extends BaseGuide {
     public hide() {
         this.mPlayScene.input.off("gameobjectup", this.gameObjectUpHandler, this);
         // this.scene.sys.events.off("update", this.updateGuidePos, this);
-        if (this.mPointer) (<any>this.mPlayScene).motionMgr.onGuideOnPointUpHandler(this.mPointer, this.mElementID);
+        if (this.mPointer) {
+            (<any>this.mPlayScene).motionMgr.onGuideOnPointUpHandler(this.mPointer, this.mElementID);
+            this.mPointer = null;
+        }
         super.hide();
     }
 

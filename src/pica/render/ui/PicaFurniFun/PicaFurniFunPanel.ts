@@ -23,6 +23,7 @@ export class PicaFurniFunPanel extends BasePanel {
     private selectMaterial: MaterialItem;
     private itemName: Phaser.GameObjects.Text;
     private itemtips: ItemInfoTips;
+    private displayMask: Phaser.GameObjects.Graphics;
     private materials: ICountablePackageItem[];
     constructor(uiManager: UiManager) {
         super(uiManager.scene, uiManager.render);
@@ -40,6 +41,9 @@ export class PicaFurniFunPanel extends BasePanel {
         this.content.y = Math.floor(height / 2);
         this.setSize(width * this.scale, height * this.scale);
         this.materialGameScroll.refreshMask();
+        const world = this.mDetailDisplay.getWorldTransformMatrix();
+        this.displayMask.x = world.tx;
+        this.displayMask.y = world.ty;
     }
 
     show(param?: any) {
@@ -125,6 +129,11 @@ export class PicaFurniFunPanel extends BasePanel {
         this.mDetailDisplay.setFixedScale(this.dpr / this.scale);
         this.mDetailDisplay.setSize(72 * this.dpr, 72 * this.dpr);
         this.content.add(this.mDetailDisplay);
+        this.displayMask = this.scene.make.graphics(undefined, false);
+        this.displayMask.clear();
+        this.displayMask.fillStyle(0, 1);
+        this.displayMask.fillRect(-180 * this.dpr, -150 * this.dpr, 360 * this.dpr, 300 * this.dpr);
+        this.mDetailDisplay.setMask(this.displayMask.createGeometryMask());
         const materialConWdith = 360 * this.dpr, materialConHeight = 92 * this.dpr;
         this.materialCon = this.scene.make.container(undefined, false).setSize(materialConWdith, materialConHeight);
         this.content.add(this.materialCon);

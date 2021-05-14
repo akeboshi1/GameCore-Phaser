@@ -340,13 +340,13 @@ class TaskAcceleratedItem extends Phaser.GameObjects.Container {
         this.setSize(conWidth, conHeight);
         this.bg = this.scene.make.image({ key: UIAtlasName.task_daily, frame: "daily_task_refresh_bg" });
         this.titleTex = this.scene.make.text({ style: UIHelper.whiteStyle(dpr, 12) }).setOrigin(0.5);
-        this.titleTex.y = -conHeight * 0.5 + 10 * dpr;
+        this.titleTex.y = -conHeight * 0.5 + 13 * dpr;
         this.countDownTex = this.scene.make.text({ style: UIHelper.colorStyle("#FFF449", 11 * dpr) }).setOrigin(1, 0.5);
         this.countDownTex.x = conWidth * 0.5 - 10 * dpr;
-        this.countDownTex.y = -conHeight * 0.5 + 10 * dpr;
+        this.countDownTex.y = -conHeight * 0.5 + 13 * dpr;
         this.spendImg = new DynamicImageValue(scene, 50 * dpr, 15 * dpr, UIAtlasName.uicommon, "daily_task_refresh_diamond_s", dpr);
         this.spendImg.setLayout(2);
-        this.spendImg.y = -10 * dpr;
+        this.spendImg.y = -5 * dpr;
         this.accButton = new ThreeSliceButton(this.scene, 75 * dpr, 28 * dpr, UIAtlasName.uicommon, UIHelper.threeYellowSmall, UIHelper.threeYellowSmall, i18n.t("order.accele"));
         this.accButton.setTextStyle(UIHelper.brownishStyle(dpr));
         this.accButton.setFontStyle("bold");
