@@ -1,7 +1,7 @@
-import { GameScroller } from "apowophaserui";
+import { BBCodeText, GameScroller } from "apowophaserui";
 import { AlignmentType, AxisType, ConstraintType, DynamicImage, GridLayoutGroup } from "gamecoreRender";
 import { UIAtlasName } from "../../../res";
-import { Handler, Tool, UIHelper, Url } from "utils";
+import { Font, Handler, i18n, Tool, UIHelper, Url } from "utils";
 import { IScene } from "../../../structure";
 export class PicaTownNavigationPanel extends Phaser.GameObjects.Container {
     private dpr: number;
@@ -33,7 +33,7 @@ export class PicaTownNavigationPanel extends Phaser.GameObjects.Container {
                 this.onPointerUpHandler(gameobject);
             }
         });
-        this.add(this.mGameScroll);
+        this.add([this.mGameScroll]);
 
     }
 
@@ -56,10 +56,17 @@ export class PicaTownNavigationPanel extends Phaser.GameObjects.Container {
     public setHandler(handler: Handler) {
         this.sendHandler = handler;
     }
-    public setTownDatas(datas: any[]) {
+    public setTownDatas(datas: any[], optionType: number) {
         let firstItem: NavigationTownListItem;
         for (let i = 0; i < datas.length; i++) {
             let item: NavigationTownListItem;
+            const temp = datas[i];
+            if (optionType === 2) {
+                temp.tooqing = true;
+                temp.name = i18n.t("partynav.tooqingtips");
+            } else {
+                temp.tooqing = false;
+            }
             if (i < this.townItems.length) {
                 item = this.townItems[i];
             } else {
@@ -69,7 +76,7 @@ export class PicaTownNavigationPanel extends Phaser.GameObjects.Container {
                 this.townItems.push(item);
             }
             item.visible = true;
-            item.setGroupData(datas[i]);
+            item.setGroupData(temp);
             firstItem = firstItem || item;
             this.onPointerUpHandler(item);
         }
@@ -106,24 +113,25 @@ export class PicaTownNavigationPanel extends Phaser.GameObjects.Container {
         this.mGameScroll.Sort(true);
     }
 }
-
 class NavigationTownListItem extends Phaser.GameObjects.Container {
     public dpr: number;
     public topCon: Phaser.GameObjects.Container;
+    private topHeight: number;
+    private contentTex: BBCodeText;
     private titleTex: Phaser.GameObjects.Text;
     private arrow: Phaser.GameObjects.Image;
     private mExtend: GridLayoutGroup;
     private send: Handler;
     private mIsExtend: boolean;
     private townItems: TownMapItem[] = [];
+    private extendStatus: number = 0;// 0:无状态，1：一直关闭，2：一直展开
     constructor(scene: Phaser.Scene, dpr: number, title: string) {
         super(scene);
         this.dpr = dpr;
-        this.setSize(274 * dpr, 40 * dpr);
+        this.topHeight = 40 * dpr;
+        this.setSize(274 * dpr, this.topHeight);
         this.topCon = this.scene.make.container(undefined, false);
-        this.topCon.setSize(274 * dpr, 40 * dpr);
-        // const bg = this.scene.make.image({ key: UIAtlasName.map, frame: "map_town_list_bg" });
-        // bg.displayWidth = this.width;
+        this.topCon.setSize(274 * dpr, this.topHeight);
         const background = this.scene.make.graphics(undefined, false);
         background.clear();
         background.fillStyle(0xffffff, 0.4);
@@ -133,6 +141,17 @@ class NavigationTownListItem extends Phaser.GameObjects.Container {
         this.arrow = this.scene.make.image({ key: UIAtlasName.map, frame: "map_list_arrow_fold" });
         this.arrow.x = this.width * 0.5 - 15 * dpr;
         this.topCon.add([background, this.titleTex, this.arrow]);
+        this.contentTex = new BBCodeText(scene, 0, 0, "", {
+            fontSize: 14 * this.dpr,
+            fontFamily: Font.DEFULT_FONT,
+            color: "#ffffff",
+            lineSpacing: 5 * dpr,
+            wrap: {
+                mode: "char",
+                width: 271 * dpr
+            }
+        }).setOrigin(0.5);
+        this.contentTex["visible"] = false;
         this.mExtend = new GridLayoutGroup(this.scene, this.width, 0, {
             cellSize: new Phaser.Math.Vector2(135 * dpr, 57 * this.dpr),
             space: new Phaser.Math.Vector2(5 * this.dpr, 5 * this.dpr),
@@ -141,12 +160,24 @@ class NavigationTownListItem extends Phaser.GameObjects.Container {
             constraintCount: 2,
             alignmentType: AlignmentType.UpperLeft
         });
-        this.add(this.topCon);
+        this.add([this.topCon, this.contentTex]);
         this.add(this.mExtend);
     }
 
     public setGroupData(obj: any) {
-        this.titleTex.text = obj.name;
+        if (obj.tooqing) {
+            this.contentTex["visible"] = true;
+            this.topCon.visible = false;
+            this.contentTex.text = obj.name;
+            this.topCon.setSize(this.width, this.contentTex.height);
+            this.extendStatus = 2;
+        } else {
+            this.contentTex["visible"] = false;
+            this.topCon.visible = true;
+            this.titleTex.text = obj.name;
+            this.topCon.setSize(this.width, this.topHeight);
+            this.extendStatus = 0;
+        }
         const datas: any[] = obj.datas;
         this.setListData(datas);
     }
@@ -193,7 +224,7 @@ class NavigationTownListItem extends Phaser.GameObjects.Container {
             this.openExtend();
             if (haveCallBack)
                 if (this.send) this.send.runWith(["extend", { extend: true, item: this }]);
-        } else {
+        } else if (this.extendStatus !== 2) {
             this.closeExtend();
             if (haveCallBack) {
                 if (this.send)
@@ -214,6 +245,7 @@ class NavigationTownListItem extends Phaser.GameObjects.Container {
         this.mIsExtend = true;
         this.arrow.setFrame("map_list_arrow_unfold");
         this.titleTex.setColor("#FFF449");
+        this.contentTex.y = this.topCon.y;
     }
 
     private closeExtend() {
@@ -225,7 +257,6 @@ class NavigationTownListItem extends Phaser.GameObjects.Container {
         this.titleTex.setColor("#ffffff");
     }
 }
-
 class TownMapItem extends Phaser.GameObjects.Container {
     public roomData: IScene;
     private dpr: number;

@@ -459,7 +459,10 @@
     "onlinetips": "Online rewards",
     "pica": "PICA",
     "tooqing": "TOOQING",
-    "hot": "HOT"
+    "hot": "HOT",
+    "new": "NEW",
+    "collect": "COLLECT",
+    "tooqingtips": "[color=#FEDF36] Light Lab [/color] is a platform where you can easily create your own [/color] games in the near future"
   },
   "commontips": {
     "configerror": "The configuration did not load successfully, please refresh the game"

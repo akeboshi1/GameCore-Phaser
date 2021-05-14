@@ -79,7 +79,7 @@ export class PicaNewCollectRewardsPanel extends Phaser.GameObjects.Container {
             style: UIHelper.colorStyle("#905B06", this.dpr * 16)
         }, false).setOrigin(0.5);
         this.titleName.setFontStyle("bold");
-        const tableHeight = 318 * this.dpr;
+        const tableHeight = 340 * this.dpr;
         const tableWidth = 298 * this.dpr;
         const cellWidth = 298 * this.dpr;
         const cellHeight = 80 * this.dpr;
@@ -115,12 +115,12 @@ export class PicaNewCollectRewardsPanel extends Phaser.GameObjects.Container {
         this.mGameGrid.on("cellTap", (cell) => {
             this.onSelectItemHandler(cell);
         });
-        this.mGameGrid.y = -30 * this.dpr;
+        this.mGameGrid.y = -20 * this.dpr;
         this.confirmBtn = new NineSliceButton(this.scene, 0, 0, 127 * this.dpr, 40 * this.dpr, UIAtlasName.uicommon, "yellow_btn_normal", i18n.t("common.affirm"), this.dpr, this.zoom, UIHelper.button(this.dpr));
         this.confirmBtn.setFontStyle("bold");
         this.confirmBtn.setTextStyle(UIHelper.brownishStyle(this.dpr, 20));
         this.confirmBtn.on(ClickEvent.Tap, this.onConfirmHandler, this);
-        this.confirmBtn.y = this.height * 0.5 - this.confirmBtn.height * 0.5 - 32 * this.dpr;
+        this.confirmBtn.y = this.height * 0.5 - this.confirmBtn.height * 0.5 - 22 * this.dpr;
         this.add([this.backgrand, bg, this.closeButton, titlebg, this.titleName, this.mGameGrid, this.confirmBtn]);
         this.resize();
     }
@@ -134,6 +134,7 @@ export class PicaNewCollectRewardsPanel extends Phaser.GameObjects.Container {
     }
     private onCloseHandler() {
         if (this.send) this.send.runWith("close");
+        this.mGameGrid.setT(0);
     }
 }
 
@@ -185,7 +186,7 @@ class CollectRewardsItem extends Phaser.GameObjects.Container {
         this.combiData = data;
         this.indexed = indexed;
         this.titleTex.text = data.name;
-        this.desTex.text = data.des;
+        this.desTex.text = UIHelper.spliceText(120 * this.dpr, data.des, 10 * this.dpr, this.scene);
         const itemData: any = data.rewardItems[indexed - 1];
         const url = Url.getOsdRes(itemData.texturePath);
         this.itemIcon.load(url);
