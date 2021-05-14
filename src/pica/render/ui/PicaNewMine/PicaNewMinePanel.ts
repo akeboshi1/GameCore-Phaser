@@ -186,6 +186,7 @@ export class PicaNewMinePanel extends PicaBasePanel {
         if (this.curItem) this.curItem.select = false;
         obj.select = true;
         this.curItem = obj;
+        PicaItemTipsPanel.Inst.showTips(obj, obj.itemData);
     }
 
     private OnCloseHandler() {
