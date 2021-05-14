@@ -57,6 +57,7 @@ export class PicaTaskMediator extends BasicMediator {
 
     panelInit() {
         super.panelInit();
+        this.mView.setMoneyData(this.game.user.userData.diamond);
         if (this.taskGroup) {
             this.onRetQuestGroup(this.taskGroup);
             this.taskGroup = undefined;

@@ -24,6 +24,7 @@ export class PicaTaskPanel extends PicaBasePanel {
     private toggleItems: ToggleColorButton[] = [];
     private questType: op_pkt_def.PKT_Quest_Type;
     private redMap: Map<number, Phaser.GameObjects.Image> = new Map();
+    private diamond: number;
     constructor(uiManager: UiManager) {
         super(uiManager);
         this.key = ModuleName.PICATASK_NAME;
@@ -133,6 +134,9 @@ export class PicaTaskPanel extends PicaBasePanel {
         }
     }
 
+    setMoneyData(diamond: number) {
+        this.diamond = diamond;
+    }
     setTaskDatas(content: QUERY_QUEST_GROUP) {
         if (content.questType !== this.questType) return;
         this.mainPanel.setTaskDatas(content, content.questType);
@@ -171,6 +175,13 @@ export class PicaTaskPanel extends PicaBasePanel {
             this.render.renderEmitter(ModuleName.PICATASK_NAME + "_queryreward", this.questType);
         } else if (tag === "queryaccele") {
             const item: ICountablePackageItem = data.itemToCost;
+            if (this.diamond < item.count) {
+                const tempdata = {
+                    text: [{ text: i18n.t("noticeTips.staytuned"), node: undefined }]
+                };
+                this.render.mainPeer.showMediator(ModuleName.PICANOTICE_NAME, true, tempdata);
+                return;
+            }
             const alertView = new AlertView(this.scene, this.uiManager);
             alertView.show({
                 title: i18n.t("task.adtitle"),
