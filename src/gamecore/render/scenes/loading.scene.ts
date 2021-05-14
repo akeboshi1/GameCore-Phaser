@@ -3,7 +3,6 @@ import { BaseLayer, BasicScene } from "baseRender";
 import { UiManager } from "../ui";
 import { MainUIScene } from "./main.ui.scene";
 import { Font, Logger, ModuleName, SceneName } from "structure";
-import { version } from "../../../../version";
 
 export class LoadingScene extends BasicScene {
   private bg: Phaser.GameObjects.Sprite;
@@ -46,9 +45,6 @@ export class LoadingScene extends BasicScene {
   }
 
   public create() {
-    super.create();
-    const uimanager: UiManager = this.render.uiManager;
-    uimanager.setScene(this);
     try {
       WebFont.load({
         custom: {
@@ -100,6 +96,9 @@ export class LoadingScene extends BasicScene {
     for (const tmpData in this.progressData) {
       this.loadProgress(this.progressData[tmpData]);
     }
+    super.create();
+    const uimanager: UiManager = this.render.uiManager;
+    uimanager.setScene(this);
   }
 
   getProgress(): string {
