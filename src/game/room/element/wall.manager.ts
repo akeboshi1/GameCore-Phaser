@@ -1,7 +1,7 @@
 import {Direction, Helpers, IPos, Logger, LogicPos, Position45, Tool} from "utils";
 import {IRoomService} from "..";
 import {Wall} from "../wall/wall";
-import {Sprite} from "baseModel";
+import {FramesModel, Sprite} from "baseModel";
 import {LayerEnum} from "game-capsule";
 import {BaseDataConfigManager} from "picaWorker";
 import {AnimationModel, IDisplay} from "structure";
@@ -106,6 +106,16 @@ export class WallManager {
             Logger.getInstance().error("no config data, id: ", id);
             return;
         }
+        configMgr.checkDynamicElementPI({ sn: configData.sn, itemid: id, serialize: configData.serializeString }).then((wallConfig) => {
+            if (!wallConfig) return;
+            for (const wall of this.walls) {
+                const sprite = wall.model;
+                // @ts-ignore
+                sprite.updateDisplay(wallConfig.animationDisplay, wallConfig.animations);
+                wall.load(<FramesModel>sprite.displayInfo);
+            }
+            // Logger.getInstance().log("========>>> config data", wall);
+        });
         // todo: change display data
     }
 }

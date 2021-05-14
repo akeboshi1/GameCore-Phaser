@@ -11,7 +11,7 @@ import { IFramesModel } from "structure";
 import { IDragonbonesModel } from "structure";
 import { EmptyTerrain } from "./empty.terrain";
 import { IPos, Logger, LogicPos } from "utils";
-import { IElementStorage, Sprite } from "baseModel";
+import { FramesModel, IElementStorage, Sprite } from "baseModel";
 import {BaseDataConfigManager} from "picaWorker";
 import {IExtendCountablePackageItem} from "picaStructure";
 import * as sha1 from "simple-sha1";
@@ -188,6 +188,29 @@ export class TerrainManager extends PacketHandler implements IElementManager {
         // });
         // // 存储资源
         // this.mExtraDisplayInfo_TexturePath = configData.texture_path;
+
+        const configMgr = <BaseDataConfigManager> this.roomService.game.configManager;
+        const configData = configMgr.getElement2Data(id);
+        if (!configData) {
+            Logger.getInstance().error("no config data, id: ", id);
+            return;
+        }
+        configMgr.checkDynamicElementPI({ sn: configData.sn, itemid: id, serialize: configData.serializeString }).then((wallConfig) => {
+            if (!wallConfig) return;
+            this.mTerrains.forEach((terrain) => {
+                const sprite = terrain.model;
+                // @ts-ignore
+                sprite.updateDisplay(wallConfig.animationDisplay, wallConfig.animations);
+                terrain.load(<FramesModel>sprite.displayInfo);
+            });
+            // for (const wall of this.walls) {
+            //     const sprite = wall.model;
+            //     // @ts-ignore
+            //     sprite.updateDisplay(wallConfig.animationDisplay, wallConfig.animations);
+            //     wall.load(<FramesModel>sprite.displayInfo);
+            // }
+            // Logger.getInstance().log("========>>> config data", wall);
+        });
     }
 
     protected onAdd(packet: PBpacket) {
