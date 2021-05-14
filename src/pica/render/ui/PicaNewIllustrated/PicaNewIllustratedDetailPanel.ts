@@ -65,7 +65,8 @@ export class PicaNewIllustratedDetailPanel extends Phaser.GameObjects.Container 
             if (content) {
                 this.setHorRewardsStatus(content.galleryExp, content.nextLevelExp, content.beforeExp);
                 this.badgeTex.text = `${content.badgeExp}/${content.badgePresentLevelexp}`;
-                this.badgeImg.setFrame("illustrate_survey_badge" + content.badgeLevel);
+                const badgeInex = content.badgeLevel < 5 ? content.badgeLevel : 4;
+                this.badgeImg.setFrame("illustrate_survey_badge" + badgeInex);
                 this.levelButton.setText(content.galleryLevel + "");
                 this.galleryPanel.setGallaryData(content);
             }

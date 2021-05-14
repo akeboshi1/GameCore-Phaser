@@ -96,4 +96,5 @@ export class ModuleName {
     public static PICAMARQUEE_NAME = "PicaMarquee";
     public static PICAROOMDECORATE_NAME = "PicaRoomDecorate";
     public static PICANEWMINE_NAME = "PicaNewMine";
+    public static PICANEWORDER_NAME: string = "PicaNewOrder";
 }
