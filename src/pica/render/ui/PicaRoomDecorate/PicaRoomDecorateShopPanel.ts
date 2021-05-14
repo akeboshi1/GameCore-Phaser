@@ -198,7 +198,7 @@ export class PicaRoomDecorateShopPanel extends Phaser.GameObjects.Container {
         if (this.curCategory === data.key) return;
         this.emit("queryProp", data.key);
         this.curCategory = data.key;
-        this.selectedItem.select = false;
+        if (this.selectedItem) this.selectedItem.select = false;
         this.selectedItem = undefined;
         this.selectedItemData = undefined;
     }
@@ -262,9 +262,9 @@ class DecorateShopItem extends Phaser.GameObjects.Container {
         this.tipsText.setFontStyle("bold");
         this.button = new ThreeSliceButton(scene, 73 * dpr, 26 * dpr, UIAtlasName.uicommon, UIHelper.threeRedSmall, UIHelper.threeRedSmall, i18n.t("manor.using"));
         this.button.setTextStyle(UIHelper.brownishStyle(dpr));
-        this.button.y = this.tipsText.y;
+        this.button.y = this.tipsText.y + 2 * dpr;
         this.button.on(ClickEvent.Tap, this.onButtonHandler, this);
-        this.imgprice.y = this.button.y - this.button.height * 0.5 - this.imgprice.height * 0.5;
+        this.imgprice.y = this.button.y - this.button.height * 0.5 - this.imgprice.height * 0.5 - 5 * dpr;
         this.add([this.bg, this.nameText, this.icon, this.imgprice, this.tipsText, this.button]);
 
     }

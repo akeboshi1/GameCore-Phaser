@@ -39,4 +39,12 @@ export class Render extends BaseRender {
             (<any>playScene).disableCameraMove();
         }
     }
+
+    /**
+     * 是否是审核版本
+     */
+     public isAudit() {
+        // @ts-ignore
+        return window.appVersionState && window.appVersionState === "audit";
+    }
 }

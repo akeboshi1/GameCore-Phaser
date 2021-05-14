@@ -192,9 +192,9 @@ export class PicaPartyNavigationMediator extends BasicMediator {
         this.game.sendCustomProto("STRING", "roomFacade:createNewRoom", { id });
     }
 
-    private setNavigationData(type: number) {
-        if (type === 1) this.setPicaNavigationData();
-        else this.setTooqingNavigationData();
+    private setNavigationData(optionType: number) {
+        if (optionType === 1) this.setPicaNavigationData();
+        else this.setTooqingNavigationData(optionType);
     }
 
     private setPicaNavigationData() {
@@ -211,17 +211,22 @@ export class PicaPartyNavigationMediator extends BasicMediator {
         this.mView.setNavigationListData(arr);
     }
 
-    private setTooqingNavigationData() {
-        const map = <Map<string, IScene[]>>this.config.getScenesByCategory(undefined, 1);
-        const arr = [];
-        map.forEach((value, key) => {
-            if (key !== "undefined") {
-                const obj = { type: key, name: this.config.getI18n(key), datas: value };
-                arr.push(obj);
-            }
-        });
+    private setTooqingNavigationData(optionType: number) {
+        const sceneType = optionType === 5 ? 1 : -1;
+        let tempArr;
+        const map = <Map<string, IScene[]>>this.config.getScenesByCategory(undefined, sceneType);
+        if (map) {
+            tempArr = [];
+            map.forEach((value, key) => {
+                if (key !== "undefined") {
+                    const obj = { type: key, name: this.config.getI18n(key), datas: value };
+                    tempArr.push(obj);
+                }
+            });
+        }
+        this.tempData = tempArr;
         if (!this.mPanelInit) return;
-        this.mView.setNavigationListData(arr);
+        this.mView.setNavigationListData(tempArr);
     }
 
     private getMyRoomDatas(content: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_SELF_ROOM_LIST) {

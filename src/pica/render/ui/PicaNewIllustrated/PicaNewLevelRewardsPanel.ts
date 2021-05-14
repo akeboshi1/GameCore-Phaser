@@ -6,6 +6,7 @@ import { CommonBackground } from "..";
 import { UITools } from "../uitool";
 import { IExtendCountablePackageItem, IGalleryLevel, IGalleryLevelGroup } from "picaStructure";
 import { Data } from "tooqinggamephaser";
+import { PicaItemTipsPanel } from "../SinglePanel/PicaItemTipsPanel";
 export class PicaNewLevelRewardsPanel extends Phaser.GameObjects.Container {
     private mBackground: CommonBackground;
     private backButton: ButtonEventDispatcher;
@@ -55,6 +56,18 @@ export class PicaNewLevelRewardsPanel extends Phaser.GameObjects.Container {
     setRewardsData(gallerys: IGalleryLevelGroup[]) {
         this.galleryData = gallerys;
         this.mLevelGrid.setItems(gallerys);
+        for (let i = 0; i < gallerys.length; i++) {
+            const data = gallerys[i];
+            if ((data.rewards || !data.allReceived)) {
+                this.mLevelGrid.setT(i / gallerys.length);
+            }
+        }
+        if (!this.curLevelItem) {
+            this.mLevelGrid.setT(1);
+            const cell = this.mLevelGrid.getCell(gallerys.length - 1);
+            const container = cell ? cell.container : undefined;
+            if (container) this.onSelectItemHandler(container);
+        }
     }
 
     init() {
@@ -124,7 +137,7 @@ export class PicaNewLevelRewardsPanel extends Phaser.GameObjects.Container {
     }
 
     private setDefaultItem(cell: LevelItem, data: IGalleryLevelGroup) {
-        if (((data.rewards||!data.allReceived) && !this.curLevelItem) || (this.curLevelItem && this.curLevelItem.groupData.level === data.level)) {
+        if (((data.rewards || !data.allReceived) && !this.curLevelItem) || (this.curLevelItem && this.curLevelItem.groupData.level === data.level)) {
             this.curLevelItem = undefined;
             this.onSelectItemHandler(cell);
         }
@@ -206,16 +219,17 @@ class RightRewardsPanel extends Phaser.GameObjects.Container {
         this.gridLayout.Layout();
     }
 
-    private onSelectHandler(pointer, obj: RewardItem) {
+    private onSelectHandler(pointer, obj: RewardItem, showtips: boolean = true) {
         if (this.curItem) this.curItem.select = false;
         obj.select = true;
         this.curItem = obj;
         this.rewardsTips.text = i18n.t("illustrate.meetrewardtips", { name: obj.galleryData.exp });
+        if (showtips) PicaItemTipsPanel.Inst.showTips(obj, obj.galleryData.rewardItems);
     }
     private setDefaultItem(cell: RewardItem, data: IGalleryLevel) {
         if (!this.curItem || this.curItem.galleryData.id === data.id) {
             this.curItem = undefined;
-            this.onSelectHandler(undefined, cell);
+            this.onSelectHandler(undefined, cell, false);
         }
     }
 }

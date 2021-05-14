@@ -27,6 +27,7 @@ export class PicaNewMineMediator extends BasicMediator {
         this.game.emitter.off(this.key + "_hide", this.hide, this);
         this.game.emitter.off(this.key + "_initialized", this.onViewInitComplete, this);
         this.game.emitter.off(this.key + "_useprop", this.onUsePropHandler, this);
+        this.subType = undefined;
     }
     onEnable() {
         this.proto.on("MINE_SHOW_PACKAGE", this.onMineShowPackageHandler, this);
@@ -49,7 +50,8 @@ export class PicaNewMineMediator extends BasicMediator {
     private onMineShowPackageHandler(packt: any) {
         const content: IMineShowPackage = packt.content;
         const item = this.config.getItemBaseByID(content.minePick);
-        content.icon = item.texturePath;
+        content.item = item;
+        content.icon = item ? item.texturePath : undefined;
         content.subcategory = item.subcategory;
         if (this.mView) this.mView.setMineData(content);
         if (!this.subType) {

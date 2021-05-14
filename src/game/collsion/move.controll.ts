@@ -21,7 +21,7 @@ export class MoveControll {
     }
 
     update(time: number, delta: number) {
-        if (this.velocity.x !== 0 && this.velocity.y !== 0) {
+        if (this.velocity.x !== 0 || this.velocity.y !== 0) {
             this.mPrePosition.x = this.mPosition.x;
             this.mPrePosition.y = this.mPosition.y;
 

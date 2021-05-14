@@ -1,7 +1,7 @@
 
 import { op_client } from "pixelpai_proto";
 import { BBCodeText, Button, ClickEvent, GameScroller, NineSliceButton, UIType } from "apowophaserui";
-import { DynamicImage, ThreeSliceButton, ThreeSlicePath, TweenCompent, UIDragonbonesDisplay, UiManager } from "gamecoreRender";
+import { ButtonEventDispatcher, DynamicImage, ThreeSliceButton, ThreeSlicePath, TweenCompent, UIDragonbonesDisplay, UiManager } from "gamecoreRender";
 import { AvatarSuitType, ModuleName } from "structure";
 import { UIAtlasName } from "../../../res";
 import { Handler, i18n, UIHelper, Url } from "utils";
@@ -10,6 +10,7 @@ import { ICountablePackageItem, IExtendCountablePackageItem, ISocial } from "../
 import { ImageValue } from "..";
 import { ItemButton } from "../Components";
 import { IMineShowPackage } from "src/pica/structure/imine.show.package";
+import { PicaItemTipsPanel } from "../SinglePanel/PicaItemTipsPanel";
 export class PicaNewMinePanel extends PicaBasePanel {
     private blackGraphic: Phaser.GameObjects.Graphics;
     private content: Phaser.GameObjects.Container;
@@ -26,6 +27,7 @@ export class PicaNewMinePanel extends PicaBasePanel {
     private itemDatas: ICountablePackageItem[];
     private itemButtons: ItemButton[] = [];
     private mineData: IMineShowPackage;
+    private curItemButton: ButtonEventDispatcher;
     constructor(uiManager: UiManager) {
         super(uiManager);
         this.key = ModuleName.PICANEWMINE_NAME;
@@ -87,6 +89,12 @@ export class PicaNewMinePanel extends PicaBasePanel {
         this.durabilityText.setStroke("#FFFFFF", 2 * this.dpr);
         this.durabilityText.x = this.itemIcon.x;
         this.durabilityText.y = this.iconBg.y + this.iconBg.height * 0.5 + 0 * this.dpr;
+        this.curItemButton = new ButtonEventDispatcher(this.scene, 0, 0);
+        this.curItemButton.setSize(40 * this.dpr, 40 * this.dpr);
+        this.curItemButton.enable = true;
+        this.curItemButton.on(ClickEvent.Tap, this.onItemTipsHandler, this);
+        this.curItemButton.x = this.itemIcon.x;
+        this.curItemButton.y = this.itemIcon.y;
         this.nameText = new BBCodeText(this.scene, 0, 0, "", UIHelper.whiteStyle(this.dpr, 12)).setOrigin(0, 0.5);
         this.nameText.y = -conHeight * 0.5 + 28 * this.dpr;
         this.nameText.x = this.iconBg.x + this.iconBg.width * 0.5 + 15 * this.dpr;
@@ -112,7 +120,7 @@ export class PicaNewMinePanel extends PicaBasePanel {
                 this.onGameScrollHandler(gameobject);
             }
         });
-        this.content.add([this.bg, this.bottombg, this.iconBg, this.itemIcon, this.nameText, this.scoreText, this.useButton, this.durabilityText, this.gameScroll]);
+        this.content.add([this.bg, this.bottombg, this.iconBg, this.itemIcon, this.curItemButton, this.nameText, this.scoreText, this.useButton, this.durabilityText, this.gameScroll]);
         this.resize();
         super.init();
     }
@@ -169,7 +177,7 @@ export class PicaNewMinePanel extends PicaBasePanel {
     }
     private onUseItemHandler() {
         if (!this.curItem) return;
-        this.render.renderEmitter(ModuleName.PICANEWROLE_NAME + "_useprop", this.curItem.itemData);
+        this.render.renderEmitter(ModuleName.PICANEWMINE_NAME + "_useprop", this.curItem.itemData.id);
         this.OnCloseHandler();
     }
 
@@ -182,5 +190,8 @@ export class PicaNewMinePanel extends PicaBasePanel {
 
     private OnCloseHandler() {
         this.render.renderEmitter(this.key + "_hide");
+    }
+    private onItemTipsHandler() {
+        if (this.mineData.item) PicaItemTipsPanel.Inst.showTips(this.curItemButton, this.mineData.item);
     }
 }

@@ -74,7 +74,7 @@
     "received": "已领取",
     "rarity": "稀有",
     "leave": "离开",
-    "affirm":"确认"
+    "affirm": "确认"
   },
   "quantityunit": {
     "k": "千",
@@ -133,7 +133,7 @@
   "mine": {
     "settle": "获得物品",
     "savebag": "存入背包",
-    "integraltips": "本次积分:",
+    "integraltips": "矿工积分:",
     "proptips": "道具栏"
   },
   "equipupgrade": {
@@ -156,7 +156,9 @@
     "daily": "【每日】",
     "receive": "领取",
     "go": "前往",
-    "notasktip": "暂时没有新任务~"
+    "notasktip": "暂时没有新任务~",
+    "adtitle": "加速冷却",
+    "adtips": "是否使用{{count}}个{{name}}加速冷却？"
   },
   "furni_unlock": {
     "unlock": "修 复",
@@ -468,7 +470,10 @@
     "onlinetips": "在线奖励",
     "pica": "皮卡堂",
     "tooqing": "图轻",
-    "hot": "热门"
+    "hot": "热门",
+    "new": "最新",
+    "collect": "收藏",
+    "tooqingtips": "[color=#FEDF36]图轻实验室[/color]是一个让大家轻松制作游戏的平台，在不久的将来你也可以创作[color=#FEDF36]属于自己的[/color]游戏"
   },
   "commontips": {
     "configerror": "配置未成功加载，请刷新游戏"

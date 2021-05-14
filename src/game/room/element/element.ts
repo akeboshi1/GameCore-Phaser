@@ -180,6 +180,7 @@ export class Element extends BlockObject implements IElement {
     public async load(displayInfo: IFramesModel | IDragonbonesModel, isUser: boolean = false): Promise<any> {
         this.mDisplayInfo = displayInfo;
         this.isUser = isUser;
+        if (!displayInfo) return Promise.reject(`element ${this.mModel.nickname} ${this.id} display does not exist`);
         await this.loadDisplayInfo();
         return this.addToBlock();
     }
@@ -200,6 +201,7 @@ export class Element extends BlockObject implements IElement {
         if (this.mModel.pos) {
             this.setPosition(this.mModel.pos);
         }
+        this.addToWalkableMap();
         const area = model.getCollisionArea();
         const obj = { id: model.id, pos: model.pos, nickname: model.nickname, alpha: model.alpha, titleMask: model.titleMask | 0x00020000, hasInteractive: model.hasInteractive };
         // render action
@@ -213,7 +215,6 @@ export class Element extends BlockObject implements IElement {
                 if (model.mountSprites && model.mountSprites.length > 0) {
                     this.updateMounth(model.mountSprites);
                 }
-                this.addToWalkableMap();
                 return this.setRenderable(true);
             });
         // physic action
@@ -468,26 +469,28 @@ export class Element extends BlockObject implements IElement {
         this.moveControll.setVelocity(0, 0);
         this.changeState(PlayerState.IDLE);
         if (!this.mRoomService.playerManager.actor.stopBoxMove) return;
-        const mMovePoints = [];
-        if (points) {
-            points.forEach((pos) => {
-                const movePoint = op_def.MovePoint.create();
-                const tmpPos = op_def.PBPoint3f.create();
-                tmpPos.x = pos.x;
-                tmpPos.y = pos.y;
-                movePoint.pos = tmpPos;
-                // 给每个同步点时间戳
-                movePoint.timestamp = new Date().getTime();
-                mMovePoints.push(tmpPos);
-            });
-        }
-        const movePath = op_def.MovePath.create();
-        movePath.id = this.id;
-        movePath.movePos = mMovePoints;
-        const pkt: PBpacket = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_STOP_SPRITE);
-        const ct: op_virtual_world.IOP_CLIENT_REQ_VIRTUAL_WORLD_STOP_SPRITE = pkt.content;
-        ct.movePath = movePath;
-        this.mElementManager.connection.send(pkt);
+        // const mMovePoints = [];
+        // if (points) {
+        //     points.forEach((pos) => {
+        //         const movePoint = op_def.MovePoint.create();
+        //         const tmpPos = op_def.PBPoint3f.create();
+        //         tmpPos.x = pos.x;
+        //         tmpPos.y = pos.y;
+        //         movePoint.pos = tmpPos;
+        //         // 给每个同步点时间戳
+        //         movePoint.timestamp = new Date().getTime();
+        //         mMovePoints.push(tmpPos);
+        //     });
+        // }
+
+        Logger.getInstance().log("============>>>>> element stop: ", this.mModel.nickname, this.mModel.pos.x, this.mModel.pos.y);
+        // const movePath = op_def.MovePath.create();
+        // movePath.id = this.id;
+        // movePath.movePos = mMovePoints;
+        // const pkt: PBpacket = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_STOP_SPRITE);
+        // const ct: op_virtual_world.IOP_CLIENT_REQ_VIRTUAL_WORLD_STOP_SPRITE = pkt.content;
+        // ct.movePath = movePath;
+        // this.mElementManager.connection.send(pkt);
         this.mRoomService.playerManager.actor.stopBoxMove = false;
     }
 

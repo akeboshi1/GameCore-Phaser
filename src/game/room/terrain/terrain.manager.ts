@@ -176,17 +176,18 @@ export class TerrainManager extends PacketHandler implements IElementManager {
     // todo: move to pica
     // 替换全部资源
     public changeAllDisplayData(id: string) {
-        const configMgr = <BaseDataConfigManager> this.roomService.game.configManager;
-        const configData = configMgr.getElement2Data(id);
-        if (!configData) {
-            Logger.getInstance().error("no config data, id: ", id);
-            return;
-        }
-        this.mTerrains.forEach((terrain) => {
-            terrain.changeDisplayData(configData.texture_path);
-        });
-        // 存储资源
-        this.mExtraDisplayInfo_TexturePath = configData.texture_path;
+        // todo: 会影响非小屋，待定
+        // const configMgr = <BaseDataConfigManager> this.roomService.game.configManager;
+        // const configData = configMgr.getElement2Data(id);
+        // if (!configData) {
+        //     Logger.getInstance().error("no config data, id: ", id);
+        //     return;
+        // }
+        // this.mTerrains.forEach((terrain) => {
+        //     terrain.changeDisplayData(configData.texture_path);
+        // });
+        // // 存储资源
+        // this.mExtraDisplayInfo_TexturePath = configData.texture_path;
     }
 
     protected onAdd(packet: PBpacket) {
