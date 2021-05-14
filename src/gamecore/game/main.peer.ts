@@ -31,8 +31,6 @@ export class MainPeer extends RPCPeer {
     // private isReconnect: boolean = false;
     constructor(workerName: string) {
         super(workerName);
-        const version = this.mConfig.version;
-        Logger.getInstance().log("Game version ====>:", `v${version}`);
         this.game = new Game(this);
         this.stateTime = new Date().getTime();
     }
@@ -149,6 +147,8 @@ export class MainPeer extends RPCPeer {
     public createGame(config: ILauncherConfig) {
         this.mConfig = config;
         Url.OSD_PATH = this.mConfig.osd;
+        const version = this.mConfig.version;
+        Logger.getInstance().log("Game version ====>:", `v${version}`);
         Url.RES_PATH = `resources/`;
         Url.RESUI_PATH = `${Url.RES_PATH}ui/`;
         this.state = GameState.LinkWorker;
