@@ -4,6 +4,7 @@ import { UiManager } from "gamecoreRender";
 import { ModuleName } from "structure";
 import { Font, i18n, Logger } from "utils";
 import { PicaBasePanel } from "../pica.base.panel";
+import { Render } from "../../pica.render";
 export class PicaBootPanel extends PicaBasePanel {
     private playBtn: PlayBtn;
     private navigate: Navigate;
@@ -112,7 +113,7 @@ export class PicaBootPanel extends PicaBasePanel {
         });
         this.playBtn.setFontStyle("bold");
 
-        this.navigate = new Navigate(this.scene, this.key, this.dpr);
+        this.navigate = new Navigate(this.scene, this.key, this.dpr, <Render>this.render);
         this.navigate.x = scaleW * 0.5 - 38 * this.dpr;
         this.navigate.y = -scaleH * 0.5 + 41 * this.dpr;
 
@@ -151,6 +152,9 @@ export class PicaBootPanel extends PicaBasePanel {
     }
 
     public showNotice() {
+        if ((<Render>this.render).isAudit()) {
+            return;
+        }
         if (!this.notice) {
             this.notice = new PicaNotice(this.scene, this.dpr, this.mShowData.notice_url, this.scale);
             this.notice.on("close", this.closeNotice, this);
@@ -236,12 +240,17 @@ export class PicaBootPanel extends PicaBasePanel {
 
 class Navigate extends Phaser.GameObjects.Container {
     private btns: Button[];
-    constructor(scene: Phaser.Scene, private key: string, dpr: number) {
+    constructor(scene: Phaser.Scene, private key: string, dpr: number, render: Render) {
         super(scene);
 
         this.btns = [];
         // const frames = ["login_notice", "login_user", "login_repair", "login_feedback"];
-        const frames = ["login_notice", "login_user"];
+
+        // const frames = ["login_notice", "login_user"];
+        const frames = ["login_user"];
+        if (!render.isAudit()) {
+            frames.unshift("login_notice");
+        }
         for (let i = 0; i < frames.length; i++) {
             const btn = new Button(this.scene, this.key, frames[i]);
             btn.y = i * 58 * dpr;

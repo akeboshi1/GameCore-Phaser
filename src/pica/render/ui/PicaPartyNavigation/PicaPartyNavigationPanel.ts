@@ -10,6 +10,7 @@ import { op_client } from "pixelpai_proto";
 import { PicaRoomNavigationPanel } from "./PicaRoomNavigationPanel";
 import { CommonBackground } from "../../ui";
 import { PicaRoomTypePanel } from "./PicaRoomTypePanel";
+import { Render } from "../../pica.render";
 export class PicaPartyNavigationPanel extends PicaBasePanel {
     public static PicaPartyNavigationPanel_CLOSE: string = "PicaPartyNavigationPanel_CLOSE";
     public static PICASELFROOM_DATA: string = "PICASELFROOM_DATA";
@@ -214,7 +215,7 @@ export class PicaPartyNavigationPanel extends PicaBasePanel {
     private openMyRoomPanel() {
         if (!this.myRoomPanel) {
             const height = this.scaleHeight * 0.5 - this.toggleCon.y - 22 * this.dpr;
-            this.myRoomPanel = new PicaMyNavigationPanel(this.render, this.scene, 274 * this.dpr, height, this.dpr, this.scale);
+            this.myRoomPanel = new PicaMyNavigationPanel(<Render>this.render, this.scene, 274 * this.dpr, height, this.dpr, this.scale);
             this.myRoomPanel.y = this.toggleCon.y + height * 0.5 + 25 * this.dpr;
             this.myRoomPanel.setHandler(new Handler(this, this.onMyRoomHandler));
             this.content.add(this.myRoomPanel);
