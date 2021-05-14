@@ -93,6 +93,7 @@ export class Terrain extends BlockObject implements IElement {
     }
 
     public load(displayInfo: IFramesModel) {
+        this.mCreatedDisplay = false;
         this.mDisplayInfo = displayInfo;
         if (!this.mDisplayInfo) {
             return;

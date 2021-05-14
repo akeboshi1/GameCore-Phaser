@@ -7,8 +7,10 @@ import { IPos, Logger, LogicPos } from "utils";
 export class Wall extends BlockObject {
     protected mModel: ISprite;
     protected mDisplayInfo: IFramesModel;
+    protected mId: number;
     constructor(sprite: ISprite, roomService: IRoomService) {
         super(sprite.id, roomService);
+        this.mId = sprite.id;
         this.setModel(sprite);
     }
 
@@ -34,6 +36,7 @@ export class Wall extends BlockObject {
     }
 
     public load(displayInfo: IFramesModel) {
+        this.mCreatedDisplay = false;
         this.mDisplayInfo = displayInfo;
         if (!this.mDisplayInfo) {
             return;
@@ -156,7 +159,7 @@ export class Wall extends BlockObject {
     }
 
     protected async addDisplay(): Promise<any> {
-        await super.addDisplay();
+        super.addDisplay();
         const pos = this.mModel.pos;
         return this.setPosition(pos);
         // return this.mRoomService.game.peer.render.setPosition(this.id, pos.x, pos.y, pos.z);
@@ -172,7 +175,7 @@ export class Wall extends BlockObject {
     }
 
     get id(): number {
-        return this.id;
+        return this.mId;
     }
 
     get dir(): number {
