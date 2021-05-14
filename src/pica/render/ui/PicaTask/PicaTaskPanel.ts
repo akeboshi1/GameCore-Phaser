@@ -175,9 +175,10 @@ export class PicaTaskPanel extends PicaBasePanel {
             this.render.renderEmitter(ModuleName.PICATASK_NAME + "_queryreward", this.questType);
         } else if (tag === "queryaccele") {
             const item: ICountablePackageItem = data.itemToCost;
-            if (this.diamond < item.count) {
+            const spendValue = data["spendValue"];
+            if (this.diamond < spendValue) {
                 const tempdata = {
-                    text: [{ text: i18n.t("noticeTips.staytuned"), node: undefined }]
+                    text: [{ text: i18n.t("common.notEnough", { name: i18n.t("coin.diamond") }), node: undefined }]
                 };
                 this.render.mainPeer.showMediator(ModuleName.PICANOTICE_NAME, true, tempdata);
                 return;
@@ -185,7 +186,7 @@ export class PicaTaskPanel extends PicaBasePanel {
             const alertView = new AlertView(this.scene, this.uiManager);
             alertView.show({
                 title: i18n.t("task.adtitle"),
-                text: i18n.t("task.adtips", { count: item.count, name: item.name }),
+                text: i18n.t("task.adtips", { count: spendValue, name: item.name }),
                 oy: 302 * this.dpr * this.render.uiScale,
                 callback: () => {
                     this.render.renderEmitter(ModuleName.PICATASK_NAME + "_queryaccele", data.id);

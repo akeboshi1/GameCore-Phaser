@@ -331,6 +331,7 @@ class TaskAcceleratedItem extends Phaser.GameObjects.Container {
     private accButton: ThreeSliceButton;
     private send: Handler;
     private taskData: PKT_Quest;
+    private spendValue: number = 0;
     constructor(scene: Phaser.Scene, dpr: number, zoom: number) {
         super(scene);
         this.dpr = dpr;
@@ -347,6 +348,7 @@ class TaskAcceleratedItem extends Phaser.GameObjects.Container {
         this.spendImg = new DynamicImageValue(scene, 50 * dpr, 15 * dpr, UIAtlasName.uicommon, "daily_task_refresh_diamond_s", dpr);
         this.spendImg.setLayout(2);
         this.spendImg.y = -5 * dpr;
+        this.spendImg.x = -dpr;
         this.accButton = new ThreeSliceButton(this.scene, 75 * dpr, 28 * dpr, UIAtlasName.uicommon, UIHelper.threeYellowSmall, UIHelper.threeYellowSmall, i18n.t("order.accele"));
         this.accButton.setTextStyle(UIHelper.brownishStyle(dpr));
         this.accButton.setFontStyle("bold");
@@ -374,6 +376,8 @@ class TaskAcceleratedItem extends Phaser.GameObjects.Container {
             if (!this.countDown) {
                 this.countDown = new TimerCountDown(new Handler(this, (value: number, text: string) => {
                     this.countDownTex.text = text;
+                    this.spendValue = Math.floor(value / 600);
+                    this.spendImg.setText(this.spendValue + "");
                     if (value === 0) if (this.send) this.send.runWith("accele");
                 }));
             }
@@ -381,6 +385,7 @@ class TaskAcceleratedItem extends Phaser.GameObjects.Container {
         }
     }
     private onAccButtonHandler() {
+        this.taskData["spendValue"] = this.spendValue;
         if (this.send) this.send.runWith(["queryaccele", this.taskData]);
     }
 }
