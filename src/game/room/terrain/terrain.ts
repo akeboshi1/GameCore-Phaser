@@ -50,10 +50,12 @@ export class Terrain extends BlockObject implements IElement {
     }
 
     public addToWalkableMap() {
+        this.addBody();
         if (this.model && this.mElementManager) this.mElementManager.roomService.addToWalkableMap(this.model, true);
     }
 
     public removeFromWalkableMap() {
+        this.removeBody();
         if (this.model && this.mElementManager) this.mElementManager.roomService.removeFromWalkableMap(this.model, true);
     }
 
@@ -135,6 +137,8 @@ export class Terrain extends BlockObject implements IElement {
     }
 
     public setPosition(p: IPos) {
+        this.mModel.setPosition(p.x, p.y);
+        if (this.moveControll) this.moveControll.setPosition(this.mModel.pos);
         this.mRoomService.game.peer.render.setPosition(this.id, p.x, p.y, p.z);
         // if (this.mDisplay) {
         //     this.mDisplay.setPosition(p.x, p.y, p.z);
