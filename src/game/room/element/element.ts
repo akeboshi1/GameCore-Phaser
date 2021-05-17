@@ -43,7 +43,7 @@ export interface IElement {
 
     play(animationName: string): void;
 
-    setPosition(p: IPos, update: boolean): void;
+    setPosition(p: IPos, syncPos?: boolean): void;
 
     getPosition(): IPos;
 
@@ -508,7 +508,7 @@ export class Element extends BlockObject implements IElement {
         return pos;
     }
 
-    public setPosition(p: IPos, update: boolean = false) {
+    public setPosition(p: IPos, syncPos: boolean = false) {
         if (!this.mElementManager) {
             return;
         }

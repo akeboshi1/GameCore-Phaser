@@ -283,12 +283,26 @@ export class User extends Player {
         super.destroy();
     }
 
-    public setPosition(pos: IPos) {
+    public setPosition(pos: IPos, syncPos: boolean = false) {
         super.setPosition(pos);
         const now = new Date().getTime();
         if (now - this.mSetPostionTime > 1000) {
             this.mSetPostionTime = now;
             this.syncCameraPosition();
+        }
+        // 向服务器同步位置
+        if (syncPos) {
+            this.syncPosition();
+            const movePath = op_def.MovePath.create();
+            movePath.id = this.id;
+            movePath.movePos = this.mMovePoints;
+            const packet = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_MOVE_SPRITE);
+            const content: op_virtual_world.IOP_CLIENT_REQ_VIRTUAL_WORLD_MOVE_SPRITE = packet.content;
+            content.movePath = movePath;
+            this.game.connection.send(packet);
+            this.mMovePoints.length = 0;
+            this.mMovePoints = [];
+            this.mMoveTime = now;
         }
     }
 
