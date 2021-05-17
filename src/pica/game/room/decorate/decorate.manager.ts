@@ -662,24 +662,24 @@ class DecorateAction {
     private createElement(mng: DecorateManager, x: number, y: number): Promise<any> {
         return new Promise<any>((resolve) => {
             const resolver = mng.createElementCreatedResolver(this.target.id);
+            const baseID = mng.getBaseIDBySN(this.target.sn);
             resolver.promise(() => {
                 this.target.setPosition(x, y);
                 mng.room.elementManager.add([this.target]);
+                const newCount = mng.setBagCount(baseID, -1);
+                mng.room.game.emitter.emit(MessageType.DECORATE_UPDATE_ELEMENT_COUNT, baseID, newCount);
             }).then(() => {
                 const element = mng.room.elementManager.get(this.target.id);
                 if (element && element instanceof BlockObject) {
                     element.setInputEnable(InputEnable.Enable);
                 }
 
-                const baseID = mng.getBaseIDBySN(this.target.sn);
                 if (baseID === "") {
                     Logger.getInstance().error("can not find data from config : ", this.target);
                     // mng.room.game.renderPeer.showAlertView("can not find data from config : " + this.target.nickname);
                     return;
                 }
-                const newCount = mng.setBagCount(baseID, -1);
 
-                mng.room.game.emitter.emit(MessageType.DECORATE_UPDATE_ELEMENT_COUNT, baseID, newCount);
                 resolve(undefined);
             });
         });

@@ -139,3 +139,4 @@ export * from "./PicaNewIllustrated/PicaNewIllustratedPanel";
 export * from "./PicaRoomDecorate/PicaRoomDecoratePanel";
 export * from "./PicaRoomDecorate/PicaRoomDecorateShopPanel";
 export * from "./PicaNewMine/PicaNewMinePanel";
+export * from "./PicaNewOrder/PicaNewOrderPanel";

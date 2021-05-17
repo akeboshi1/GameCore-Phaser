@@ -13,8 +13,8 @@ export class PicaNewOrderMediator extends BasicMediator {
     constructor(game: PicaGame) {
         super(ModuleName.PICANEWORDER_NAME, game);
         this.mModel = new PicaNewOrder(game);
-        this.game.emitter.on(ModuleName.PICAORDER_NAME + "_modelQuestlist", this.on_ORDER_LIST, this);
-        this.game.emitter.on(ModuleName.PICAORDER_NAME + "_modelProgresslist", this.on_PLAYER_PROGRESS, this);
+        this.game.emitter.on(this.key + "_modelQuestlist", this.on_ORDER_LIST, this);
+        this.game.emitter.on(this.key + "_modelProgresslist", this.on_PLAYER_PROGRESS, this);
     }
 
     isSceneUI() {
@@ -23,25 +23,25 @@ export class PicaNewOrderMediator extends BasicMediator {
 
     show(param?: any) {
         super.show(param);
-        this.game.emitter.on(ModuleName.PICAORDER_NAME + "_questlist", this.query_ORDER_LIST, this);
-        this.game.emitter.on(ModuleName.PICAORDER_NAME + "_changeorder", this.query_CHANGE_ORDER_STAGE, this);
-        this.game.emitter.on(ModuleName.PICAORDER_NAME + "_questprogress", this.query_PLAYER_PROGRESS, this);
-        this.game.emitter.on(ModuleName.PICAORDER_NAME + "_questreward", this.query_PLAYER_PROGRESS_REWARD, this);
-        this.game.emitter.on(ModuleName.PICAORDER_NAME + "_hide", this.onHideView, this);
+        this.game.emitter.on(this.key + "_questlist", this.query_ORDER_LIST, this);
+        this.game.emitter.on(this.key + "_changeorder", this.query_CHANGE_ORDER_STAGE, this);
+        this.game.emitter.on(this.key + "_questprogress", this.query_PLAYER_PROGRESS, this);
+        this.game.emitter.on(this.key + "_questreward", this.query_PLAYER_PROGRESS_REWARD, this);
+        this.game.emitter.on(this.key + "_hide", this.onHideView, this);
     }
 
     hide() {
-        this.game.emitter.off(ModuleName.PICAORDER_NAME + "_questlist", this.query_ORDER_LIST, this);
-        this.game.emitter.off(ModuleName.PICAORDER_NAME + "_changeorder", this.query_CHANGE_ORDER_STAGE, this);
-        this.game.emitter.off(ModuleName.PICAORDER_NAME + "_questprogress", this.query_PLAYER_PROGRESS, this);
-        this.game.emitter.off(ModuleName.PICAORDER_NAME + "_questreward", this.query_PLAYER_PROGRESS_REWARD, this);
-        this.game.emitter.off(ModuleName.PICAORDER_NAME + "_hide", this.onHideView, this);
+        this.game.emitter.off(this.key + "_questlist", this.query_ORDER_LIST, this);
+        this.game.emitter.off(this.key + "_changeorder", this.query_CHANGE_ORDER_STAGE, this);
+        this.game.emitter.off(this.key + "_questprogress", this.query_PLAYER_PROGRESS, this);
+        this.game.emitter.off(this.key + "_questreward", this.query_PLAYER_PROGRESS_REWARD, this);
+        this.game.emitter.off(this.key + "_hide", this.onHideView, this);
         super.hide();
     }
 
     destroy() {
-        this.game.emitter.off(ModuleName.PICAORDER_NAME + "_modelQuestlist", this.on_ORDER_LIST, this);
-        this.game.emitter.off(ModuleName.PICAORDER_NAME + "_modelProgresslist", this.on_PLAYER_PROGRESS, this);
+        this.game.emitter.off(this.key + "_modelQuestlist", this.on_ORDER_LIST, this);
+        this.game.emitter.off(this.key + "_modelProgresslist", this.on_PLAYER_PROGRESS, this);
         super.destroy();
     }
 
@@ -85,6 +85,7 @@ export class PicaNewOrderMediator extends BasicMediator {
             const temp = configMgr.getQuest(order.id);
             ObjectAssign.excludeAllAssign(order, temp);
             order.display = { texturePath: "pkth5/npc/task_head_npc_1" };
+            order["servertime"] = this.game.clock.unixTime / 1000;
             const materials = order.targets;
             configMgr.getBatchItemDatas(materials);
             configMgr.getBatchItemDatas(order.rewards);
@@ -100,7 +101,7 @@ export class PicaNewOrderMediator extends BasicMediator {
             return;
         }
         if (this.mView && content) {
-            this.mView.setOrderDataList(content);
+            this.mView.setOrderDatas(content);
         }
     }
 

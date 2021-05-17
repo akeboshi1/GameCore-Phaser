@@ -300,7 +300,10 @@
     "refreshtips": "Are you sure to withdraw the order",
     "refreshtitle": "ORDER WITHDRAW",
     "progresstitle": "PROGRESS REWARD",
-    "rewardtitle": "Progress reward"
+    "rewardtitle": "Progress reward",
+    "finishtips":"Send Finish",
+    "accelecontent": "Accelerated orders will consume {{name}} diamonds",
+    "acceletitle": "orderSpend"
   },
   "work": {
     "title": "WORK",
