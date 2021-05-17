@@ -406,7 +406,9 @@ export class DecorateManager {
             nickname: typeData.name,
             animations: typeData.animations,
             display: typeData.animationDisplay,
-            sn: typeData.sn
+            sn: typeData.sn,
+            layer: typeData.layer,
+            attrs: typeData.Attributes
         }, op_def.NodeType.ElementNodeType);
 
         const act = new DecorateAction(spriteData, DecorateActionType.Add, new DecorateActionData({pos: spriteData.pos}));
