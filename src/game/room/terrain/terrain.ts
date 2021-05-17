@@ -50,12 +50,12 @@ export class Terrain extends BlockObject implements IElement {
     }
 
     public addToWalkableMap() {
-        this.addBody();
+        // this.addBody();
         if (this.model && this.mElementManager) this.mElementManager.roomService.addToWalkableMap(this.model, true);
     }
 
     public removeFromWalkableMap() {
-        this.removeBody();
+        // this.removeBody();
         if (this.model && this.mElementManager) this.mElementManager.roomService.removeFromWalkableMap(this.model, true);
     }
 

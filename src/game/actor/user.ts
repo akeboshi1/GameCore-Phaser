@@ -25,14 +25,8 @@ export class User extends Player {
     private mPreTargetID: number = 0;
     private holdTime: number = 0;
     private holdDelay: number = 80;
-    // 移动
-    private readonly mMoveDelayTime: number = 400;
-    private mMoveTime: number = 0;
-    private readonly mMoveSyncDelay = 200;
-    private mMoveSyncTime: number = 0;
-    private mMovePoints: any[];
-    constructor(private game: Game) {
-        super(undefined, undefined);
+    constructor(game: Game) {
+        super(game, undefined, undefined);
         this.mBlockable = false;
         this.mUserData = new UserDataManager(game);
     }
@@ -83,8 +77,9 @@ export class User extends Player {
     }
 
     update(time?: number, delta?: number) {
-        super.update(time, delta);
-        if (!this.mMoving) return;
+        if (this.mMoving === false) return;
+        this._doMove(time, delta);
+        this.mDirty = false;
         this.mRoomService.cameraService.syncDirty = true;
         const now = Date.now();
         this.mMoveSyncTime += delta;
@@ -153,7 +148,7 @@ export class User extends Player {
         if (this.mRootMount) {
             this.mRootMount.removeMount(this, { x, y });
         }
-        this.mMoveData = { path: [{ pos: new LogicPos(x, y)}] };
+        this.mMoveData = { path: [{ pos: new LogicPos(x, y) }] };
         this.mSyncDirty = true;
         // this.body.isSensor = false;
         this.moveControll.setIgnoreCollsion(false);
@@ -307,20 +302,21 @@ export class User extends Player {
     }
 
     public async activeSprite(targetId: number, param?: any, needBroadcast?: boolean) {
-        // const ele = this.mRoomService.getElement(targetId);
-        // if (ele) {
-        //     this.mTarget = ele;
-        //     this.addMount(ele, 0);
-        // }
         if (!targetId) {
             this.mPreTargetID = 0;
             return;
         }
-        // // 有element交互事件的发送推箱子协议
-        // if (ele.model && ele.model.displayInfo && ele.model.displayInfo.eventName) {
-        //     this.requestPushBox(targetId);
-        //     return;
+        // ====== 推箱子
+        const ele = this.mRoomService.getElement(targetId);
+        // if (ele) {
+        //     this.mTarget = ele;
+        //     this.addMount(ele, 0);
         // }
+        // 有element交互事件的发送推箱子协议
+        if (ele.model && ele.model.displayInfo && ele.model.displayInfo.eventName) {
+            this.requestPushBox(targetId);
+            return;
+        }
         const now = new Date().getTime();
         // 防止由于网络波动导致多次点击传送点后无法收到房间信息，场景ui无法显示
         if (this.mPreTargetID === targetId) {

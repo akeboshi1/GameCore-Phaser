@@ -1,18 +1,18 @@
-import {op_def, op_virtual_world} from "pixelpai_proto";
-import {IElementManager} from "../element/element.manager";
-import {ISprite, PlayerState} from "structure";
-import {IPos} from "../../../utils/logic.pos";
-import {Element, IElement, InputEnable} from "../element/element";
-import {DirectionChecker, Logger} from "utils";
-import {LayerEnum} from "game-capsule";
-import {PBpacket} from "net-socket-packet";
+import { op_def, op_virtual_world } from "pixelpai_proto";
+import { IElementManager } from "../element/element.manager";
+import { ISprite, PlayerState } from "structure";
+import { IPos } from "../../../utils/logic.pos";
+import { Element, IElement, InputEnable } from "../element/element";
+import { DirectionChecker, Logger } from "utils";
+import { LayerEnum } from "game-capsule";
+import { PBpacket } from "net-socket-packet";
 
 export class Player extends Element implements IElement {
     protected nodeType: number = op_def.NodeType.CharacterNodeType;
     protected mOffsetY: number = undefined;
 
-    constructor(sprite: ISprite, protected mElementManager: IElementManager) {
-        super(sprite, mElementManager);
+    constructor(game, sprite: ISprite, mElementManager: IElementManager) {
+        super(game, sprite, mElementManager);
         this.setInputEnable(InputEnable.Enable);
     }
 
@@ -20,8 +20,8 @@ export class Player extends Element implements IElement {
         if (!model) {
             return;
         }
-        (<any> model).off("Animation_Change", this.animationChanged, this);
-        (<any> model).on("Animation_Change", this.animationChanged, this);
+        (<any>model).off("Animation_Change", this.animationChanged, this);
+        (<any>model).on("Animation_Change", this.animationChanged, this);
         if (!model.layer) {
             model.layer = LayerEnum.Surface;
         }
@@ -86,28 +86,6 @@ export class Player extends Element implements IElement {
         this.mMoving = false;
         this.moveControll.setVelocity(0, 0);
         this.changeState(PlayerState.IDLE);
-        // if (!this.mRoomService.playerManager.actor.stopBoxMove) return;
-        // const mMovePoints = [];
-        // if (points) {
-        //     points.forEach((pos) => {
-        //         const movePoint = op_def.MovePoint.create();
-        //         const tmpPos = op_def.PBPoint3f.create();
-        //         tmpPos.x = pos.x;
-        //         tmpPos.y = pos.y;
-        //         movePoint.pos = tmpPos;
-        //         // 给每个同步点时间戳
-        //         movePoint.timestamp = new Date().getTime();
-        //         mMovePoints.push(tmpPos);
-        //     });
-        // }
-        // const movePath = op_def.MovePath.create();
-        // movePath.id = this.id;
-        // movePath.movePos = mMovePoints;
-        // const pkt: PBpacket = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_STOP_SPRITE);
-        // const ct: op_virtual_world.IOP_CLIENT_REQ_VIRTUAL_WORLD_STOP_SPRITE = pkt.content;
-        // ct.movePath = movePath;
-        // this.mElementManager.connection.send(pkt);
-        // this.mRoomService.playerManager.actor.stopBoxMove = false;
     }
 
     public completeMove() {
@@ -115,7 +93,7 @@ export class Player extends Element implements IElement {
 
     public setWeapon(weaponid: string) {
         if (!this.mModel || !this.mModel.avatar) return;
-        const avatar: any = {barmWeapId: {sn: weaponid, slot: "NDE5NDMwNA==", suit_type: "weapon"}};
+        const avatar: any = { barmWeapId: { sn: weaponid, slot: "NDE5NDMwNA==", suit_type: "weapon" } };
         this.model.setTempAvatar(avatar);
         this.load(this.mModel.displayInfo);
     }

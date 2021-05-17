@@ -316,7 +316,7 @@ export class PlayerManager extends PacketHandler implements IElementManager {
     private _add(sprite: ISprite) {
         if (!this.mPlayerMap) this.mPlayerMap = new Map();
         if (!this.mPlayerMap.has(sprite.id)) {
-            const player = new Player(sprite as Sprite, this);
+            const player = new Player(this.mRoom.game, sprite as Sprite, this);
             this.mPlayerMap.set(player.id || 0, player);
         }
     }
