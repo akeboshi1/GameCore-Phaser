@@ -696,8 +696,7 @@ export class BaseDataConfigManager extends BaseConfigManager {
                 const rewardItems = combine.rewardItems;
                 if (rewardItems) {
                     for (const value of rewardItems) {
-                        const coutitem = this.getItemBaseByID(value.id);
-                        ObjectAssign.excludeTagAssign(value, coutitem);
+                        this.synItemBase(value);
                     }
                 }
                 temp["find"] = true;
@@ -708,8 +707,7 @@ export class BaseDataConfigManager extends BaseConfigManager {
                 const rewardItems = [dex.rewardItems];
                 if (rewardItems) {
                     for (const value of rewardItems) {
-                        const coutitem = this.getItemBaseByID(value.id);
-                        ObjectAssign.excludeAssign(value, coutitem);
+                        this.synItemBase(value);
                     }
                 }
                 temp["find"] = true;
