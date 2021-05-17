@@ -1,4 +1,4 @@
-import { BasicMediator, CacheDataManager, DataMgrType, ElementDataManager, Game } from "gamecore";
+import { BasicMediator, CacheDataManager, DataMgrType, ElementDataManager, Game, PlayerProperty } from "gamecore";
 import { op_client, op_pkt_def, op_def } from "pixelpai_proto";
 import { RoomComponents, ExtraRoomInfo } from "custom_proto";
 import { EventType, ModuleName } from "structure";
@@ -25,6 +25,7 @@ export class PicaRoomDecorateMediator extends BasicMediator {
         this.game.emitter.on(this.key + "_queryMarket", this.onQueryResuleHandler, this);
         this.game.emitter.on(this.key + "_buyItem", this.onBuyItemHandler, this);
         this.game.emitter.on(this.key + "_usingitem", this.onUsingItemHandler, this);
+        this.game.emitter.on(EventType.UPDATE_PLAYER_INFO, this.onUpdatePlayerHandler, this);
     }
 
     hide() {
@@ -33,6 +34,7 @@ export class PicaRoomDecorateMediator extends BasicMediator {
         this.game.emitter.off(this.key + "_queryMarket", this.onQueryResuleHandler, this);
         this.game.emitter.off(this.key + "_buyItem", this.onBuyItemHandler, this);
         this.game.emitter.off(this.key + "_usingitem", this.onUsingItemHandler, this);
+        this.game.emitter.off(EventType.UPDATE_PLAYER_INFO, this.onUpdatePlayerHandler, this);
         super.hide();
     }
     onEnable() {
@@ -48,7 +50,8 @@ export class PicaRoomDecorateMediator extends BasicMediator {
         super.panelInit();
         this.queryRoomComponpents();
         if (this.categoryMaps) this.setCategories(this.categoryMaps);
-        this.mView.setMoneyData(this.game.user.userData.money, this.game.user.userData.diamond);
+        const userData = this.game.user.userData;
+        this.mView.setMoneyData(userData.money, userData.diamond);
     }
     private queryRoomComponpents() {
         const id = this.game.user.userData.curRoomID;
@@ -116,6 +119,14 @@ export class PicaRoomDecorateMediator extends BasicMediator {
         const extras = this.game.cacheMgr.extraRoomInfo;
         if (eleid === extras.wallId || eleid === extras.floorId) return;
         this.game.sendCustomProto("STRING", "roomFacade:applyComponent", { id: eleid });
+    }
+    private onUpdatePlayerHandler(content: PlayerProperty) {
+        if (this.mPanelInit) {
+            if (this.mView) {
+                const userData = this.game.user.userData;
+                this.mView.setMoneyData(userData.money, userData.diamond);
+            }
+        }
     }
     private onRoomComponentsHandler(proto: any) {
         this.content = proto.content;
