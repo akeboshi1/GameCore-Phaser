@@ -665,12 +665,11 @@ class DecorateAction {
         return new Promise<any>((resolve) => {
             const resolver = mng.createElementCreatedResolver(this.target.id);
             const baseID = mng.getBaseIDBySN(this.target.sn);
-            resolver.promise(() => {
-                this.target.setPosition(x, y);
-                mng.room.elementManager.add([this.target]);
-                const newCount = mng.setBagCount(baseID, -1);
-                mng.room.game.emitter.emit(MessageType.DECORATE_UPDATE_ELEMENT_COUNT, baseID, newCount);
-            }).then(() => {
+            this.target.setPosition(x, y);
+            mng.room.elementManager.add([this.target]);
+            const newCount = mng.setBagCount(baseID, -1);
+            mng.room.game.emitter.emit(MessageType.DECORATE_UPDATE_ELEMENT_COUNT, baseID, newCount);
+            resolver.promise().then(() => {
                 const element = mng.room.elementManager.get(this.target.id);
                 if (element && element instanceof BlockObject) {
                     element.setInputEnable(InputEnable.Enable);

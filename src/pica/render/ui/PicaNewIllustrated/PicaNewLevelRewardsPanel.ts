@@ -237,6 +237,7 @@ class RewardItem extends ButtonEventDispatcher {
     public galleryData: IGalleryLevel;
     private bg: Phaser.GameObjects.Image;
     private itemIcon: DynamicImage;
+    private itemCount: Phaser.GameObjects.Text;
     private rewardBtn: ThreeSliceButton;
     private send: Handler;
     constructor(scene: Phaser.Scene, width: number, height: number, dpr: number, zoom: number) {
@@ -247,12 +248,15 @@ class RewardItem extends ButtonEventDispatcher {
         this.bg = this.scene.make.image({ key: UIAtlasName.illustrate_new, frame: "illustrate_survey_reward_icon" });
         this.itemIcon = new DynamicImage(scene, 0, 0);
         this.itemIcon.y = -10 * dpr;
+        this.itemCount = this.scene.make.text({ style: UIHelper.whiteStyle(dpr) }).setOrigin(0.5);
+        this.itemCount.x = 0 * dpr;
+        this.itemCount.y = 17* dpr;
         this.rewardBtn = new ThreeSliceButton(this.scene, 62 * this.dpr, 25 * this.dpr, UIAtlasName.uicommon, UIHelper.threeRedSmall, UIHelper.threeRedSmall, i18n.t("common.receivereward"));
         this.rewardBtn.y = 40 * dpr;
         this.rewardBtn.setTextStyle(UIHelper.whiteStyle(this.dpr));
         this.rewardBtn.setFontStyle("bold");
         this.rewardBtn.on(ClickEvent.Tap, this.onRewardHandler, this);
-        this.add([this.bg, this.itemIcon, this.rewardBtn]);
+        this.add([this.bg, this.itemIcon, this.itemCount, this.rewardBtn]);
         this.enable = true;
     }
     public setItemData(data: IGalleryLevel) {
@@ -263,6 +267,7 @@ class RewardItem extends ButtonEventDispatcher {
             this.itemIcon.visible = true;
         });
         this.itemIcon.scale = this.dpr / this.zoom;
+        this.itemCount.text = "x" + itemData.count;
         if (data.received === 1) {
             this.rewardBtn.setFrameNormal(UIHelper.threeGraySmall);
             this.rewardBtn.setText(i18n.t("common.receivereward"));

@@ -555,6 +555,11 @@ class OtherButtonItem extends ButtonEventDispatcher {
 
     public setTag(tag: string) {
         this.tag = tag;
+        if (tag === "track") {
+            this.image.visible = false;
+            this.text.visible = false;
+            this.enable = false;
+        }
     }
 }
 

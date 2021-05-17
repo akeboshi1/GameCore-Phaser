@@ -374,7 +374,7 @@ export class PlayerManager extends PacketHandler implements IElementManager {
         const role: Player = this.get(id);
         if (role) {
             role.stopMove();
-            role.setPosition(new LogicPos(content.position.x, content.position.y, content.position.z));
+            role.setPosition(new LogicPos(content.position.x, content.position.y, content.position.z), id === this.mActor.id);
             this.mRoom.game.renderPeer.setPosition(id, content.position.x, content.position.y, content.position.z);
         }
     }

@@ -476,7 +476,7 @@ export class BaseDataConfigManager extends BaseConfigManager {
             tempItem.source = item.source;
             tempItem["des"] = item ? item.des : "";
             tempItem["price"] = [{
-                price: shopitem.price,
+                price: shopitem.price || 0,
                 coinType: itemconfig.getCoinType(shopitem.currencyId),
                 displayPrecision: 0
             }];
@@ -501,7 +501,7 @@ export class BaseDataConfigManager extends BaseConfigManager {
                     const item = ele2.get(tempItem.elementId);
                     tempItem.source = this.getI18n("PKT_MARKET_TAG_SOURCE_" + tempItem.source);
                     tempItem["price"] = [{
-                        price: shopitem.price,
+                        price: shopitem.price || 0,
                         coinType: this.getCoinType(shopitem.currencyId),
                         displayPrecision: 0
                     }];
@@ -696,8 +696,7 @@ export class BaseDataConfigManager extends BaseConfigManager {
                 const rewardItems = combine.rewardItems;
                 if (rewardItems) {
                     for (const value of rewardItems) {
-                        const coutitem = this.getItemBaseByID(value.id);
-                        ObjectAssign.excludeTagAssign(value, coutitem);
+                        this.synItemBase(value);
                     }
                 }
                 temp["find"] = true;
@@ -708,8 +707,7 @@ export class BaseDataConfigManager extends BaseConfigManager {
                 const rewardItems = [dex.rewardItems];
                 if (rewardItems) {
                     for (const value of rewardItems) {
-                        const coutitem = this.getItemBaseByID(value.id);
-                        ObjectAssign.excludeAssign(value, coutitem);
+                        this.synItemBase(value);
                     }
                 }
                 temp["find"] = true;
