@@ -1,4 +1,4 @@
-import {Handler, IPosition45Obj, Logger, LogicPos, Tool} from "utils";
+import {Handler, IPos, IPosition45Obj, Logger, LogicPos, Tool} from "utils";
 import { SceneManager } from "../scenes/scene.manager";
 import { FramesDisplay } from "../display/frames/frames.display";
 import { PlayScene } from "../scenes/play.scene";
@@ -307,7 +307,7 @@ export class DisplayManager {
         display.mount(target, targetIndex);
     }
 
-    public unmount(displayID: number, targetID: number) {
+    public unmount(displayID: number, targetID: number, pos?: IPos) {
         const display = this.displays.get(displayID);
         if (!display) {
             Logger.getInstance().error("BaseDisplay not found: ", displayID);
@@ -321,6 +321,7 @@ export class DisplayManager {
         }
         target.setRootMount(null);
         display.unmount(target);
+        if (pos) target.setPosition(pos.x, pos.y, pos.z);
     }
 
     public addEffect(targetID: number, effectID: number, display: IFramesModel) {
