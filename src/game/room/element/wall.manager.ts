@@ -48,13 +48,15 @@ export class WallManager {
     // todo: move to pica
     // 在墙面上
     public isInWallRect(pos: IPos): boolean {
+        const pos45 = Position45.transformTo45(pos, this.roomService.roomSize);
+        // 4的由来：
+        // 墙高：6倍地块高度，其中有1倍被藏在地块下，所以可放置区域只有5倍地块高的区域，所以xy范围为[-4, 0]
         for (const wall of this.walls) {
-            const wallPos90 = Position45.transformTo90(wall.model.pos, this.roomService.roomSize);
-            const minX = wallPos90.x - this.roomService.roomSize.tileWidth * 0.5;
-            const maxX = wallPos90.x + this.roomService.roomSize.tileWidth * 0.5;
-            const minY = wallPos90.y - this.roomService.roomSize.tileHeight * 5;// todo: add 'wallHeight' to model
-            const maxY = wallPos90.y;
-            if (pos.x >= minX && pos.x <= maxX && pos.y >= minY && pos.y <= maxY) {
+            const minX = wall.model.pos.x - 4;
+            const maxX = wall.model.pos.x;
+            const minY = wall.model.pos.y - 4;
+            const maxY = wall.model.pos.y;
+            if (pos45.x >= minX && pos45.x <= maxX && pos45.y >= minY && pos45.y <= maxY) {
                 return true;
             }
         }
