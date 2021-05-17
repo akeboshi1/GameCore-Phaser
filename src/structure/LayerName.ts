@@ -9,6 +9,7 @@ export class LayerName {
     public static SURFACE = LayerEnum.Surface.toString();
     public static DECORATE = "decorateLayer";
     public static WALL = LayerEnum.Wall.toString();
+    public static HANGING = LayerEnum.Hanging.toString();
     public static ATMOSPHERE = "atmosphere";
     public static SCENEUI = "sceneUILayer";
 }

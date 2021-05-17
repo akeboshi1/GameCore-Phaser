@@ -127,6 +127,7 @@ export class PicaRoomDecorateShopPanel extends Phaser.GameObjects.Container {
             else return -1;
         });
         this.shopgride.setItems(arrs);
+        this.shopgride.setT(0);
     }
     public setTitleText(text: string) {
         this.titleText.text = text;
