@@ -1,7 +1,7 @@
 import { op_client } from "pixelpai_proto";
 import { BasePanel, ButtonEventDispatcher, Tap, UiManager } from "gamecoreRender";
 import { ModuleName } from "structure";
-import { Handler, i18n, UIHelper } from "utils";
+import { Handler, i18n, UIHelper, Url } from "utils";
 import { Button, ClickEvent } from "apowophaserui";
 export class CutInMenuPanel extends BasePanel {
     private rightPopButton: RightPopContainer;
@@ -34,6 +34,9 @@ export class CutInMenuPanel extends BasePanel {
             this.rightPopButton = new EditorPopContainer(this.scene, width, this.key, this.dpr);
         } else if (buttonType === "survey") {
             this.rightPopButton = new WorkPopContainer(this.scene, width, this.key, "survey_magnifier", i18n.t("common.survey"), this.dpr);
+        } else if (buttonType === "dropElement") {
+            const texturePath = this.mShowData.display[0].texturePath;
+            this.rightPopButton = new DropElementContainer(this.scene, width, this.key, this.dpr, texturePath);
         } else
             this.rightPopButton = new RightPopContainer(this.scene, width, this.key, this.dpr);
         if (this.rightPopButton) {
@@ -46,9 +49,17 @@ export class CutInMenuPanel extends BasePanel {
         super.init();
         this.opneButton();
     }
+
+    changePop(param) {
+        if (this.rightPopButton) this.rightPopButton.destroy();
+        this.mShowData = param;
+        this.init();
+    }
+
     onShow() {
         this.setPopData(this.popData);
     }
+
     setPopData(data: any) {
         this.popData = data;
         if (!this.mInitialized || !this.rightPopButton) return;
@@ -79,6 +90,8 @@ export class CutInMenuPanel extends BasePanel {
             this.render.renderEmitter(ModuleName.CUTINMENU_NAME + "_editor");
         } else if (type === "survey") {
             this.render.renderEmitter(ModuleName.CUTINMENU_NAME + "_openmedsurvey");
+        } else if (type === "dropElement") {
+            this.render.renderEmitter(ModuleName.CUTINMENU_NAME + "_dropElement");
         }
     }
 
@@ -283,5 +296,38 @@ class EditorPopContainer extends RightPopContainer {
         this.imgIcon.y = -12 * dpr;
         this.imgIcon.x -= 3 * dpr;
         this.text.x = this.imgIcon.x;
+    }
+}
+
+class DropElementContainer extends RightPopContainer {
+    private texturePath: string;
+    constructor(scene: Phaser.Scene, width: number, key: string, dpr: number, texture: string) {
+        super(scene, width, key, dpr);
+        this.text.setText(i18n.t("dropElement.tips"));
+        this.imgIcon.y = -12 * dpr;
+        this.imgIcon.x -= 3 * dpr;
+        this.text.x = this.imgIcon.x;
+
+        this.texturePath = Url.getOsdRes(texture);
+        this.imgIcon.scale = dpr;
+
+        if (this.scene.textures.exists(this.texturePath)) {
+            this.updateTexture();
+        } else {
+            this.scene.load.image(this.texturePath, this.texturePath);
+            this.scene.load.on(Phaser.Loader.Events.FILE_COMPLETE, this.onFileHandler, this);
+            this.scene.load.start();
+        }
+    }
+
+    private onFileHandler(file?: string) {
+        if (this.texturePath === file) {
+            this.scene.load.off(Phaser.Loader.Events.FILE_COMPLETE, this.onFileHandler, this);
+            this.updateTexture();
+        }
+    }
+
+    private updateTexture() {
+        this.imgIcon.setTexture(this.texturePath);
     }
 }

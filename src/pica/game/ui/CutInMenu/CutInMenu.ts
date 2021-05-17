@@ -37,6 +37,11 @@ export class CutInMenu extends BasicModel {
         this.connection.send(packet);
     }
 
+    dropElement() {
+        const packet = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_PKT_HIDE_SHOW_OFF_ITEM);
+        this.connection.send(packet);
+    }
+
     get connection(): ConnectionService {
         if (this.game) {
             return this.game.connection;

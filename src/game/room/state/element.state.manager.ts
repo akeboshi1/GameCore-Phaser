@@ -78,7 +78,9 @@ class AddHandler extends ElementHandler {
         if (element) {
             this.room.game.renderPeer.liftItem(state.owner.id, element.animationDisplay, element.animations);
         }
-        if (this.element === this.room.playerManager.actor) this.room.game.uiManager.showMed(ModuleName.PICA_DROP_ELEMENT_NAME, { texturePath: item.texturePath });
+        if (this.element === this.room.playerManager.actor) {
+            this.room.game.uiManager.showMed(ModuleName.CUTINMENU_NAME, { display: [{ texturePath: item.texturePath }], button: [{ text: "dropElement" }] });
+        }
     }
 }
 
@@ -97,7 +99,12 @@ class DeleteHandler extends ElementHandler {
                 this.element.play(model.currentAnimationName);
             }
         }
-        if (this.element === this.room.playerManager.actor) this.room.game.uiManager.hideMed(ModuleName.PICA_DROP_ELEMENT_NAME);
+        if (this.element === this.room.playerManager.actor) {
+            const med = <any>this.room.game.uiManager.getMed(ModuleName.CUTINMENU_NAME);
+            if (med) {
+                med.closePop("dropElement");
+            }
+        }
         this.room.game.renderPeer.clearMount(state.owner.id);
     }
 }
