@@ -151,7 +151,7 @@ export class User extends Player {
 
     moveMotion(x: number, y: number) {
         if (this.mRootMount) {
-            this.mRootMount.removeMount(this);
+            this.mRootMount.removeMount(this, { x, y });
         }
         this.mMoveData = { path: [{ pos: new LogicPos(x, y)}] };
         this.mSyncDirty = true;
@@ -163,9 +163,6 @@ export class User extends Player {
     public unmount(targetPos?: IPos): Promise<this> {
         const mountID = this.mRootMount.id;
         this.mRootMount = null;
-        if (!targetPos) {
-            return Promise.resolve(this);
-        }
         this.addBody();
         this.unmountSprite(mountID, targetPos);
         return Promise.resolve(this);
@@ -335,6 +332,7 @@ export class User extends Player {
     protected unmountSprite(id: number, pos: IPos) {
         const packet: PBpacket = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_UMOUNT_SPRITE);
         const content: op_virtual_world.IOP_CLIENT_REQ_VIRTUAL_WORLD_UMOUNT_SPRITE = packet.content;
+        if (!pos) pos = this.getPosition();
         const pos3f = op_def.PBPoint3f.create();
         pos3f.x = pos.x;
         pos3f.y = pos.y;
