@@ -64,13 +64,14 @@ export class PlayScene extends RoomScene {
 
         // ==========舞台层
         this.layerManager.addLayer(this, GroundLayer, LayerName.WALL, 2).setScale(this.render.scaleRatio);
-        this.layerManager.addLayer(this, GroundLayer, LayerName.GROUND, 3).setScale(this.render.scaleRatio);
-        this.layerManager.addLayer(this, BaseLayer, LayerName.MIDDLE, 4).setScale(this.render.scaleRatio);
-        this.layerManager.addLayer(this, GroundLayer, LayerName.FLOOR, 4).setScale(this.render.scaleRatio);
-        this.layerManager.addLayer(this, SurfaceLayer, LayerName.SURFACE, 5).setScale(this.render.scaleRatio);
-        this.layerManager.addLayer(this, SurfaceLayer, LayerName.DECORATE, 6).setScale(this.render.scaleRatio);
-        this.layerManager.addLayer(this, BaseLayer, LayerName.ATMOSPHERE, 6);
-        this.layerManager.addLayer(this, BaseLayer, LayerName.SCENEUI, 7);
+        this.layerManager.addLayer(this, GroundLayer, LayerName.HANGING, 3).setScale(this.render.scaleRatio);
+        this.layerManager.addLayer(this, GroundLayer, LayerName.GROUND, 4).setScale(this.render.scaleRatio);
+        this.layerManager.addLayer(this, BaseLayer, LayerName.MIDDLE, 5).setScale(this.render.scaleRatio);
+        this.layerManager.addLayer(this, GroundLayer, LayerName.FLOOR, 5).setScale(this.render.scaleRatio);
+        this.layerManager.addLayer(this, SurfaceLayer, LayerName.SURFACE, 6).setScale(this.render.scaleRatio);
+        this.layerManager.addLayer(this, SurfaceLayer, LayerName.DECORATE, 7).setScale(this.render.scaleRatio);
+        this.layerManager.addLayer(this, BaseLayer, LayerName.ATMOSPHERE, 7);
+        this.layerManager.addLayer(this, BaseLayer, LayerName.SCENEUI, 8);
 
         // ======= mainworker startPlay
         this.render.startRoomPlay();
