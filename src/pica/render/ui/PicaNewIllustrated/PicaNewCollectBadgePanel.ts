@@ -45,7 +45,6 @@ export class PicaNewCollectBadgePanel extends Phaser.GameObjects.Container {
         const bg2 = this.scene.make.image({ key: UIAtlasName.illustrate_new, frame: "illustrate_survey_bg_veins" });
         bg2.y = -this.height * 0.5 + bg2.height * 0.5;
         this.mBackground.add(bg2);
-        this.add(this.mBackground);
         this.backButton = UITools.createBackButton(this.scene, this.dpr, this.onBackHandler, this, i18n.t("illustrate.collectbadge"));
         this.createGridTable();
         this.add([this.mBackground, this.backButton, this.mGrid]);

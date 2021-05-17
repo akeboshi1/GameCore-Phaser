@@ -88,9 +88,7 @@ export class PicaTaskItem extends Phaser.GameObjects.Container {
         this.setTextLimit(this.taskDes, data["des"]);
         const texturePath = data.display.texturePath + `_${this.dpr}x.png`;
         const url = Url.getOsdRes(texturePath);
-        this.headIcon.load(url, this, () => {
-
-        });
+        this.headIcon.load(url);
         if (data.stage === op_pkt_def.PKT_Quest_Stage.PKT_QUEST_STAGE_PROCESSING) {
             this.taskButton.setFrameNormal(UIHelper.threeGreenSmall);
             this.taskButton.setText(i18n.t("task.go"));
@@ -378,7 +376,7 @@ class TaskAcceleratedItem extends Phaser.GameObjects.Container {
                     this.countDownTex.text = text;
                     this.spendValue = Math.floor(value / 600);
                     this.spendImg.setText(this.spendValue + "");
-                    if (value === 0) if (this.send) this.send.runWith("accele");
+                    if (value <= 0) if (this.send) this.send.runWith("accele");
                 }));
             }
             this.countDown.executeText(time);

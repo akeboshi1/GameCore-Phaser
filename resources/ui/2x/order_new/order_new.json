@@ -4,13 +4,13 @@
 			"image": "order_new",
 			"format": "RGBA8888",
 			"size": {
-				"w": 874,
-				"h": 370
+				"w": 1475,
+				"h": 245
 			},
 			"scale": 1,
 			"frames": [
 				{
-					"filename": "order_head_bg",
+					"filename": "order_ordinary_list_bg",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
@@ -31,7 +31,301 @@
 					}
 				},
 				{
-					"filename": "order_ordinary_list_bg",
+					"filename": "illustrate_favorites_popup_title",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 345,
+						"h": 56
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 345,
+						"h": 56
+					},
+					"frame": {
+						"x": 1,
+						"y": 163,
+						"w": 345,
+						"h": 56
+					}
+				},
+				{
+					"filename": "order_progress_bottom",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 541,
+						"h": 21
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 541,
+						"h": 21
+					},
+					"frame": {
+						"x": 1,
+						"y": 221,
+						"w": 541,
+						"h": 21
+					}
+				},
+				{
+					"filename": "order_progress_top",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 541,
+						"h": 21
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 541,
+						"h": 21
+					},
+					"frame": {
+						"x": 348,
+						"y": 163,
+						"w": 541,
+						"h": 21
+					}
+				},
+				{
+					"filename": "order_progress_ok",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 44,
+						"h": 33
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 44,
+						"h": 33
+					},
+					"frame": {
+						"x": 348,
+						"y": 186,
+						"w": 44,
+						"h": 33
+					}
+				},
+				{
+					"filename": "order_precious_icon",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 45,
+						"h": 32
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 45,
+						"h": 32
+					},
+					"frame": {
+						"x": 394,
+						"y": 186,
+						"w": 45,
+						"h": 32
+					}
+				},
+				{
+					"filename": "order_delete",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 31,
+						"h": 31
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 31,
+						"h": 31
+					},
+					"frame": {
+						"x": 441,
+						"y": 186,
+						"w": 31,
+						"h": 31
+					}
+				},
+				{
+					"filename": "order_reward_box",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 31,
+						"h": 27
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 3,
+						"w": 30,
+						"h": 24
+					},
+					"frame": {
+						"x": 474,
+						"y": 186,
+						"w": 30,
+						"h": 24
+					}
+				},
+				{
+					"filename": "order_time_icon",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 25,
+						"h": 25
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 25,
+						"h": 25
+					},
+					"frame": {
+						"x": 506,
+						"y": 186,
+						"w": 25,
+						"h": 25
+					}
+				},
+				{
+					"filename": "order_transport_perfection",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 25,
+						"h": 25
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 25,
+						"h": 25
+					},
+					"frame": {
+						"x": 533,
+						"y": 186,
+						"w": 25,
+						"h": 25
+					}
+				},
+				{
+					"filename": "order_reward_diamond",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 31,
+						"h": 27
+					},
+					"spriteSourceSize": {
+						"x": 2,
+						"y": 3,
+						"w": 27,
+						"h": 23
+					},
+					"frame": {
+						"x": 544,
+						"y": 213,
+						"w": 27,
+						"h": 23
+					}
+				},
+				{
+					"filename": "order_reward_heart",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 31,
+						"h": 27
+					},
+					"spriteSourceSize": {
+						"x": 4,
+						"y": 5,
+						"w": 23,
+						"h": 20
+					},
+					"frame": {
+						"x": 560,
+						"y": 186,
+						"w": 23,
+						"h": 20
+					}
+				},
+				{
+					"filename": "order_red_butt",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 136,
+						"h": 47
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 136,
+						"h": 47
+					},
+					"frame": {
+						"x": 585,
+						"y": 186,
+						"w": 136,
+						"h": 47
+					}
+				},
+				{
+					"filename": "order_gray_butt",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 84,
+						"h": 43
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 84,
+						"h": 43
+					},
+					"frame": {
+						"x": 723,
+						"y": 186,
+						"w": 84,
+						"h": 43
+					}
+				},
+				{
+					"filename": "order_green_butt",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 84,
+						"h": 43
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 84,
+						"h": 43
+					},
+					"frame": {
+						"x": 809,
+						"y": 186,
+						"w": 84,
+						"h": 43
+					}
+				},
+				{
+					"filename": "order_precious_list_bg",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
@@ -45,7 +339,7 @@
 						"h": 160
 					},
 					"frame": {
-						"x": 1,
+						"x": 891,
 						"y": 1,
 						"w": 557,
 						"h": 160
@@ -73,234 +367,87 @@
 					}
 				},
 				{
-					"filename": "order_precious_list_bg",
+					"filename": "order_precious_title",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
-						"w": 557,
-						"h": 160
+						"w": 24,
+						"h": 96
 					},
 					"spriteSourceSize": {
 						"x": 0,
 						"y": 0,
-						"w": 557,
-						"h": 160
+						"w": 24,
+						"h": 96
 					},
 					"frame": {
-						"x": 1,
+						"x": 1450,
+						"y": 1,
+						"w": 24,
+						"h": 96
+					}
+				},
+				{
+					"filename": "order_ordinary_title",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 21,
+						"h": 92
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 21,
+						"h": 92
+					},
+					"frame": {
+						"x": 1450,
+						"y": 99,
+						"w": 21,
+						"h": 92
+					}
+				},
+				{
+					"filename": "order_yellow_butt",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 84,
+						"h": 43
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 84,
+						"h": 43
+					},
+					"frame": {
+						"x": 895,
+						"y": 193,
+						"w": 84,
+						"h": 43
+					}
+				},
+				{
+					"filename": "order_head_bg",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 73,
+						"h": 73
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 73,
+						"h": 73
+					},
+					"frame": {
+						"x": 981,
 						"y": 163,
-						"w": 557,
-						"h": 160
-					}
-				},
-				{
-					"filename": "order_progress_ok",
-					"rotated": false,
-					"trimmed": false,
-					"sourceSize": {
-						"w": 44,
-						"h": 33
-					},
-					"spriteSourceSize": {
-						"x": 0,
-						"y": 0,
-						"w": 44,
-						"h": 33
-					},
-					"frame": {
-						"x": 1,
-						"y": 325,
-						"w": 44,
-						"h": 33
-					}
-				},
-				{
-					"filename": "order_precious_icon",
-					"rotated": false,
-					"trimmed": false,
-					"sourceSize": {
-						"w": 45,
-						"h": 32
-					},
-					"spriteSourceSize": {
-						"x": 0,
-						"y": 0,
-						"w": 45,
-						"h": 32
-					},
-					"frame": {
-						"x": 47,
-						"y": 325,
-						"w": 45,
-						"h": 32
-					}
-				},
-				{
-					"filename": "order_delete",
-					"rotated": false,
-					"trimmed": false,
-					"sourceSize": {
-						"w": 31,
-						"h": 31
-					},
-					"spriteSourceSize": {
-						"x": 0,
-						"y": 0,
-						"w": 31,
-						"h": 31
-					},
-					"frame": {
-						"x": 94,
-						"y": 325,
-						"w": 31,
-						"h": 31
-					}
-				},
-				{
-					"filename": "order_time_icon",
-					"rotated": false,
-					"trimmed": false,
-					"sourceSize": {
-						"w": 25,
-						"h": 25
-					},
-					"spriteSourceSize": {
-						"x": 0,
-						"y": 0,
-						"w": 25,
-						"h": 25
-					},
-					"frame": {
-						"x": 127,
-						"y": 325,
-						"w": 25,
-						"h": 25
-					}
-				},
-				{
-					"filename": "order_transport_perfection",
-					"rotated": false,
-					"trimmed": false,
-					"sourceSize": {
-						"w": 25,
-						"h": 25
-					},
-					"spriteSourceSize": {
-						"x": 0,
-						"y": 0,
-						"w": 25,
-						"h": 25
-					},
-					"frame": {
-						"x": 154,
-						"y": 325,
-						"w": 25,
-						"h": 25
-					}
-				},
-				{
-					"filename": "order_reward_box",
-					"rotated": false,
-					"trimmed": true,
-					"sourceSize": {
-						"w": 31,
-						"h": 27
-					},
-					"spriteSourceSize": {
-						"x": 0,
-						"y": 3,
-						"w": 30,
-						"h": 24
-					},
-					"frame": {
-						"x": 181,
-						"y": 325,
-						"w": 30,
-						"h": 24
-					}
-				},
-				{
-					"filename": "order_reward_diamond",
-					"rotated": false,
-					"trimmed": true,
-					"sourceSize": {
-						"w": 31,
-						"h": 27
-					},
-					"spriteSourceSize": {
-						"x": 2,
-						"y": 3,
-						"w": 27,
-						"h": 23
-					},
-					"frame": {
-						"x": 213,
-						"y": 325,
-						"w": 27,
-						"h": 23
-					}
-				},
-				{
-					"filename": "order_progress_bottom",
-					"rotated": false,
-					"trimmed": false,
-					"sourceSize": {
-						"w": 541,
-						"h": 21
-					},
-					"spriteSourceSize": {
-						"x": 0,
-						"y": 0,
-						"w": 541,
-						"h": 21
-					},
-					"frame": {
-						"x": 242,
-						"y": 325,
-						"w": 541,
-						"h": 21
-					}
-				},
-				{
-					"filename": "order_progress_top",
-					"rotated": false,
-					"trimmed": false,
-					"sourceSize": {
-						"w": 541,
-						"h": 21
-					},
-					"spriteSourceSize": {
-						"x": 0,
-						"y": 0,
-						"w": 541,
-						"h": 21
-					},
-					"frame": {
-						"x": 242,
-						"y": 348,
-						"w": 541,
-						"h": 21
-					}
-				},
-				{
-					"filename": "order_progress_finished",
-					"rotated": false,
-					"trimmed": false,
-					"sourceSize": {
-						"w": 70,
-						"h": 70
-					},
-					"spriteSourceSize": {
-						"x": 0,
-						"y": 0,
-						"w": 70,
-						"h": 70
-					},
-					"frame": {
-						"x": 785,
-						"y": 163,
-						"w": 70,
-						"h": 70
+						"w": 73,
+						"h": 73
 					}
 				},
 				{
@@ -318,10 +465,31 @@
 						"h": 81
 					},
 					"frame": {
-						"x": 560,
-						"y": 235,
+						"x": 1056,
+						"y": 163,
 						"w": 61,
 						"h": 81
+					}
+				},
+				{
+					"filename": "order_progress_finished",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 70,
+						"h": 70
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 70,
+						"h": 70
+					},
+					"frame": {
+						"x": 1119,
+						"y": 163,
+						"w": 70,
+						"h": 70
 					}
 				},
 				{
@@ -339,7 +507,7 @@
 						"h": 70
 					},
 					"frame": {
-						"x": 560,
+						"x": 1191,
 						"y": 163,
 						"w": 70,
 						"h": 70
@@ -360,73 +528,10 @@
 						"h": 65
 					},
 					"frame": {
-						"x": 623,
-						"y": 235,
+						"x": 1263,
+						"y": 163,
 						"w": 65,
 						"h": 65
-					}
-				},
-				{
-					"filename": "order_reward_heart",
-					"rotated": false,
-					"trimmed": true,
-					"sourceSize": {
-						"w": 31,
-						"h": 27
-					},
-					"spriteSourceSize": {
-						"x": 4,
-						"y": 5,
-						"w": 23,
-						"h": 20
-					},
-					"frame": {
-						"x": 623,
-						"y": 302,
-						"w": 23,
-						"h": 20
-					}
-				},
-				{
-					"filename": "order_precious_title",
-					"rotated": false,
-					"trimmed": false,
-					"sourceSize": {
-						"w": 24,
-						"h": 96
-					},
-					"spriteSourceSize": {
-						"x": 0,
-						"y": 0,
-						"w": 24,
-						"h": 96
-					},
-					"frame": {
-						"x": 785,
-						"y": 235,
-						"w": 24,
-						"h": 96
-					}
-				},
-				{
-					"filename": "order_ordinary_title",
-					"rotated": false,
-					"trimmed": false,
-					"sourceSize": {
-						"w": 21,
-						"h": 92
-					},
-					"spriteSourceSize": {
-						"x": 0,
-						"y": 0,
-						"w": 21,
-						"h": 92
-					},
-					"frame": {
-						"x": 811,
-						"y": 235,
-						"w": 21,
-						"h": 92
 					}
 				}
 			]
@@ -435,6 +540,6 @@
 	"meta": {
 		"app": "https://www.codeandweb.com/texturepacker",
 		"version": "3.0",
-		"smartupdate": "$TexturePacker:SmartUpdate:ead56d5ed007815a8d6580df939bfb25:54fb952acb6eb1c6f253e8d59d0b1426:8b4a94956876f8795d446477c4e1c2f1$"
+		"smartupdate": "$TexturePacker:SmartUpdate:e6d688d2d4fa9524e26357086dd37948:4f67115c4f2c3bb7c92cf689972a6584:8b4a94956876f8795d446477c4e1c2f1$"
 	}
 }

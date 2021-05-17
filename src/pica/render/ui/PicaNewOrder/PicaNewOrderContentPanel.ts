@@ -1,10 +1,7 @@
-import { NineSlicePatch, GameGridTable, Button, ClickEvent, BBCodeText, ProgressBar } from "apowophaserui";
-import { AlertView, DynamicImage, ItemInfoTips, Render, UiManager } from "gamecoreRender";
-import { ModuleName } from "structure";
-import { UIAtlasKey, UIAtlasName } from "../../../res";
-import { Font, Handler, i18n, Logger, Url } from "utils";
-import { ICountablePackageItem } from "../../../structure";
-import { DynamicImageValue, ImageValue } from "..";
+import { GameGridTable, Button, ClickEvent, ProgressBar } from "apowophaserui";
+import { DynamicImage } from "gamecoreRender";
+import { UIAtlasName } from "../../../res";
+import { Font, Handler, i18n, Url } from "utils";
 import { PicaNewOrderItem } from "./PicaNewOrderItem";
 import { PicaItemTipsPanel } from "../SinglePanel/PicaItemTipsPanel";
 export class PicaNewOrderContentPanel extends Phaser.GameObjects.Container {
@@ -19,6 +16,7 @@ export class PicaNewOrderContentPanel extends Phaser.GameObjects.Container {
         this.setSize(width, height);
         this.dpr = dpr;
         this.zoom = zoom;
+        this.init();
     }
 
     resize(width: number, height: number) {
@@ -35,15 +33,16 @@ export class PicaNewOrderContentPanel extends Phaser.GameObjects.Container {
         const conWdith = 278 * this.dpr;
         const tableConfig = {
             x: 0,
-            y: 15 * this.dpr,
+            y: 50 * this.dpr,
             table: {
-                width: conWdith,
-                height: this.height - 110 * this.dpr,
+                width: this.width,
+                height: this.height - 60 * this.dpr,
                 columns: 1,
-                cellWidth: conWdith - 40 * this.dpr,
-                cellHeight: 86 * this.dpr,
+                cellWidth: conWdith,
+                cellHeight: 96 * this.dpr,
                 reuseCellContainer: true,
-                zoom: this.scale
+                zoom: this.zoom,
+                tableOX: 11 * this.dpr
             },
             scrollMode: 0,
             clamplChildOY: false,
@@ -51,9 +50,9 @@ export class PicaNewOrderContentPanel extends Phaser.GameObjects.Container {
                 const scene = cell.scene, index = cell.index,
                     item = cell.item;
                 if (cellContainer === null) {
-                    cellContainer = new PicaNewOrderItem(scene, this.dpr);
+                    cellContainer = new PicaNewOrderItem(scene, this.dpr, this.zoom);
                     cellContainer.setHandler(new Handler(this, this.onNewOrderItemHandler));
-                    cellContainer.on("pointerdown", this.onClickDownHandler, this);
+                    // cellContainer.on("pointerdown", this.onClickDownHandler, this);
                 }
                 cellContainer.setOrderData(item, index);
                 return cellContainer;
@@ -61,14 +60,13 @@ export class PicaNewOrderContentPanel extends Phaser.GameObjects.Container {
         };
         this.mGameGrid = new GameGridTable(this.scene, tableConfig);
         this.mGameGrid.layout();
-        this.orderProgressPanel.visible = false;
+        // this.orderProgressPanel.visible = false;
         this.add([this.orderProgressPanel, this.mGameGrid]);
     }
 
     public setOrderDataList(content: any) {// op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_ORDER_LIST
         this.orderProgressPanel.visible = true;
-        const orders = content.orders;
-        this.mGameGrid.setItems(orders);
+        this.mGameGrid.setItems(content);
     }
 
     public setOrderProgress(content: any) {// op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_QUERY_PLAYER_PROGRESS
@@ -85,7 +83,7 @@ export class PicaNewOrderContentPanel extends Phaser.GameObjects.Container {
         const data = item.progressData;
         if (!data.received) {
             if (data.targetValue <= this.progressData.currentProgressValue) {
-                // this.render.renderEmitter(ModuleName.PICAORDER_NAME + "_questreward", index);
+                if (this.send) this.send.runWith(["progressreward", index]);
             } else {
                 PicaItemTipsPanel.Inst.showTips(item, data.rewards[0]);
             }
@@ -93,7 +91,7 @@ export class PicaNewOrderContentPanel extends Phaser.GameObjects.Container {
     }
 
     private onNewOrderItemHandler(tag: string, data) {
-
+        if (this.send) this.send.runWith([tag, data]);
     }
     private onClickDownHandler() {
     }
@@ -157,6 +155,7 @@ class OrderProgressPanel extends Phaser.GameObjects.Container {
         const len = content.steps.length;
         const maxvalue = 100, interval = maxvalue / len;
         let beforevalue = 0, progress = 0, lastunfinish = false;
+        const posx = -this.width * 0.5 - 32 * this.dpr;
         for (let i = 0; i < len; i++) {
             const data = content.steps[i];
             let item: OrderProgressItem;
@@ -168,7 +167,7 @@ class OrderProgressPanel extends Phaser.GameObjects.Container {
                 this.progressItems.push(item);
                 item.setHandler(this.receiveHandler);
             }
-            item.x = -this.width * 0.5 + this.width * (i + 1) / len - 16 * this.dpr;
+            item.x = posx + this.width * (i + 1) / len;
             item.y = 15 * this.dpr;
             item.setItemData(data, i, content.currentProgressValue);
             if (content.currentProgressValue >= data.targetValue) {
