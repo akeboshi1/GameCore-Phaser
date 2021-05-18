@@ -307,16 +307,16 @@ export class User extends Player {
             return;
         }
         // ====== 推箱子
-        const ele = this.mRoomService.getElement(targetId);
+        // const ele = this.mRoomService.getElement(targetId);
         // if (ele) {
         //     this.mTarget = ele;
         //     this.addMount(ele, 0);
         // }
         // 有element交互事件的发送推箱子协议
-        if (ele.model && ele.model.displayInfo && ele.model.displayInfo.eventName) {
-            this.requestPushBox(targetId);
-            return;
-        }
+        // if (ele.model && ele.model.displayInfo && ele.model.displayInfo.eventName) {
+        //     this.requestPushBox(targetId);
+        //     return;
+        // }
         const now = new Date().getTime();
         // 防止由于网络波动导致多次点击传送点后无法收到房间信息，场景ui无法显示
         if (this.mPreTargetID === targetId) {
