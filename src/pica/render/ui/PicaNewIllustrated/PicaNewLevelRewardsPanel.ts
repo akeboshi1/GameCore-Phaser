@@ -33,7 +33,7 @@ export class PicaNewLevelRewardsPanel extends Phaser.GameObjects.Container {
         const w = width || this.width;
         const h = height || this.height;
         this.setSize(w, h);
-        this.backButton.x = -this.width * 0.5 + this.backButton.width * 0.5 -5 * this.dpr;
+        this.backButton.x = -this.width * 0.5 + this.backButton.width * 0.5 - 5 * this.dpr;
         this.backButton.y = -this.height * 0.5 + 45 * this.dpr;
         this.oneKeyBtn.x = this.width * 0.5 - this.oneKeyBtn.width * 0.5 - 10 * this.dpr;
         this.oneKeyBtn.y = this.backButton.y;
@@ -60,6 +60,7 @@ export class PicaNewLevelRewardsPanel extends Phaser.GameObjects.Container {
             const data = gallerys[i];
             if ((data.rewards || !data.allReceived)) {
                 this.mLevelGrid.setT(i / gallerys.length);
+                break;
             }
         }
         if (!this.curLevelItem) {
@@ -250,7 +251,7 @@ class RewardItem extends ButtonEventDispatcher {
         this.itemIcon.y = -10 * dpr;
         this.itemCount = this.scene.make.text({ style: UIHelper.whiteStyle(dpr) }).setOrigin(0.5);
         this.itemCount.x = 0 * dpr;
-        this.itemCount.y = 17* dpr;
+        this.itemCount.y = 17 * dpr;
         this.rewardBtn = new ThreeSliceButton(this.scene, 62 * this.dpr, 25 * this.dpr, UIAtlasName.uicommon, UIHelper.threeRedSmall, UIHelper.threeRedSmall, i18n.t("common.receivereward"));
         this.rewardBtn.y = 40 * dpr;
         this.rewardBtn.setTextStyle(UIHelper.whiteStyle(this.dpr));

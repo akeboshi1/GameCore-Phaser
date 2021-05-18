@@ -1,8 +1,8 @@
-import {Render} from "../render";
-import {FramesDisplay} from "../display/frames/frames.display";
-import {MessageType} from "structure";
-import {NodeType} from "../managers/display.manager";
-import {UiUtils} from "utils";
+import { Render } from "../render";
+import { FramesDisplay } from "../display/frames/frames.display";
+import { MessageType } from "structure";
+import { NodeType } from "../managers/display.manager";
+import { UiUtils } from "utils";
 
 export enum MouseEvent {
     RightMouseDown = 1,
@@ -99,7 +99,7 @@ export class MouseManager {
         }
         if (events.length === 0) return;
 
-        this.sendMouseEvent(events, id, {x: pointer.worldX / this.zoom, y: pointer.worldY / this.zoom});
+        this.sendMouseEvent(events, id, { x: pointer.worldX / this.zoom, y: pointer.worldY / this.zoom });
     }
 
     /**
@@ -132,13 +132,19 @@ export class MouseManager {
     }
 
     protected onGameObjectDownHandler(pointer, gameObject) {
-        this.render.soundManager.playSound({
-            soundKey: "sound/click.mp3",
-        });
         const id = gameObject.getData("id");
+        const display = this.render.displayManager.getDisplay(id);
+        const soundKey = "sound/click.mp3";
+        // todo 后续音效逻辑
+        if (display.displayInfo && display.displayInfo.sound) {
+            // soundKey = "sound/mine.mp3";
+        } else {
+            this.render.soundManager.playSound({
+                soundKey
+            });
+        }
         if (this.render.guideManager.canInteractive(id)) return;
         this.mGameObject = gameObject;
-        const display = this.render.displayManager.getDisplay(id);
         if (display.nodeType === NodeType.ElementNodeType) this.render.renderEmitter("FurnitureEvent", id);
         // 重置hold时间
         clearTimeout(this.mDownTime);

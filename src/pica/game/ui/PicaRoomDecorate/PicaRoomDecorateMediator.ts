@@ -107,7 +107,7 @@ export class PicaRoomDecorateMediator extends BasicMediator {
                     temp.status = 0;
                 }
             }
-            this.mView.setShopDatas(items);
+            this.mView.setShopDatas(items,this.curCategory);
         }
     }
 

@@ -19,6 +19,7 @@ export class PlayScene extends RoomScene {
 
     public preload() {
         this.load.audio("click", Url.getRes("sound/click.mp3"));
+        this.load.audio("mine", Url.getRes("sound/mine.mp3"));
         super.preload();
     }
 
