@@ -241,6 +241,10 @@ export abstract class BlockObject implements IBlockObject {
         } else {
             paths = [Position45.transformTo90(new LogicPos(0, 0), miniSize), Position45.transformTo90(new LogicPos(rows, 0), miniSize), Position45.transformTo90(new LogicPos(rows, cols), miniSize), Position45.transformTo90(new LogicPos(0, cols), miniSize)];
         }
+        if (paths.length < 1) {
+            this.removeBody();
+            return;
+        }
         const origin = Position45.transformTo90(this.mModel.getOriginPoint(), miniSize);
         this.moveControll.drawPolygon(paths, { x: -origin.x, y: -origin.y });
     }

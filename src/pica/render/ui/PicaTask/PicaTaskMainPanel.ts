@@ -447,7 +447,7 @@ class MainTaskItem extends MainTaskBaseItem {
             },
             onComplete: () => {
                 tween.stop();
-                if (to === max) {
+                if (to >= max) {
                     this.playRotateTween();
                 }
             },
