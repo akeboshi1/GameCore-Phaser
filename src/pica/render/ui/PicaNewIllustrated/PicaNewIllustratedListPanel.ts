@@ -22,7 +22,7 @@ export class PicaNewIllustratedListPanel extends Phaser.GameObjects.Container {
         const w = width || this.width;
         const h = height || this.height;
         this.setSize(w, h);
-        this.backButton.x = -this.width * 0.5 + this.backButton.width * 0.5 + 10 * this.dpr;
+        this.backButton.x = -this.width * 0.5 + this.backButton.width * 0.5 -5 * this.dpr;
         this.backButton.y = -this.height * 0.5 + 45 * this.dpr;
     }
 
