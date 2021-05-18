@@ -110,6 +110,10 @@ export abstract class BlockObject implements IBlockObject {
         if (this.moveControll) this.moveControll.removePolygon();
     }
 
+    public moveBasePos(): IPos {
+        return this.moveControll ? this.moveControll.position : undefined;
+    }
+
     public clear() {
         this.isUsed = false;
     }

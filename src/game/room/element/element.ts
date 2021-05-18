@@ -1,7 +1,7 @@
 import { LayerEnum } from "game-capsule";
 import { PBpacket } from "net-socket-packet";
 import { op_client, op_def, op_virtual_world } from "pixelpai_proto";
-import { MoveControll } from "../../collsion";
+import { Game } from "../../game";
 import {
     AnimationQueue,
     AvatarSuitType,
@@ -159,12 +159,18 @@ export class Element extends BlockObject implements IElement {
     protected isUser: boolean = false;
     protected mStateManager: ElementStateManager;
     protected mTopDisplay: any;
+    // 移动
+    protected readonly mMoveDelayTime: number = 400;
+    protected mMoveTime: number = 0;
+    protected readonly mMoveSyncDelay = 200;
+    protected mMoveSyncTime: number = 0;
+    protected mMovePoints: any[];
     protected mTarget;
 
     private delayTime = 1000 / 45;
     private mState: boolean = false;
 
-    constructor(sprite: ISprite, protected mElementManager: IElementManager) {
+    constructor(protected game: Game, sprite: ISprite, protected mElementManager: IElementManager) {
         super(sprite ? sprite.id : -1, mElementManager ? mElementManager.roomService : undefined);
         if (!sprite) {
             return;
@@ -176,6 +182,25 @@ export class Element extends BlockObject implements IElement {
     showEffected(displayInfo: any) {
         throw new Error("Method not implemented.");
     }
+
+    moveMotion(x: number, y: number) {
+        if (this.mRootMount) {
+            this.mRootMount.removeMount(this, { x, y });
+        }
+        this.mMoveData = { path: [{ pos: new LogicPos(x, y) }] };
+        this.moveControll.setIgnoreCollsion(false);
+        this.startMove();
+    }
+
+    // setVelocity(x, y) {
+    //     this.mMoving = true;
+    //     const pos1 = { x: 0, y: 0 };
+    //     const pos2 = { x, y };
+    //     const dir = DirectionChecker.check(pos1, pos2);
+    //     this.moveControll.setVelocity(x, y);
+    //     this.setDirection(dir);
+    //     this.changeState(PlayerState.WALK);
+    // }
 
     public async load(displayInfo: IFramesModel | IDragonbonesModel, isUser: boolean = false): Promise<any> {
         this.mDisplayInfo = displayInfo;
@@ -396,12 +421,47 @@ export class Element extends BlockObject implements IElement {
         return this.mRenderable;
     }
 
+    public syncPosition() {
+        const userPos = this.getPosition();
+        const pos = op_def.PBPoint3f.create();
+        pos.x = userPos.x;
+        pos.y = userPos.y;
+        const movePoint = op_def.MovePoint.create();
+        movePoint.pos = pos;
+        // 给每个同步点时间戳
+        movePoint.timestamp = Date.now();
+        if (!this.mMovePoints) this.mMovePoints = [];
+        this.mMovePoints.push(movePoint);
+    }
+
     public update(time?: number, delta?: number) {
-        if (this.mMoving === false) {
-            return;
-        }
+        if (this.mMoving === false) return;
         this._doMove(time, delta);
         this.mDirty = false;
+        // 如果主角没有在推箱子，直接跳过
+        if (!this.mRoomService.playerManager.actor.stopBoxMove) return;
+        const now = Date.now();
+        this.mMoveSyncTime += delta;
+        if (this.mMoveSyncTime >= this.mMoveSyncDelay) {
+            this.mMoveSyncTime = 0;
+            this.syncPosition();
+        }
+        if (!this.mMovePoints || this.mMovePoints.length < 1) {
+            this.mMoveTime = now;
+            return;
+        }
+        if (now - this.mMoveTime > this.mMoveDelayTime) {
+            const movePath = op_def.MovePath.create();
+            movePath.id = this.id;
+            movePath.movePos = this.mMovePoints;
+            const packet = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_MOVE_SPRITE);
+            const content: op_virtual_world.IOP_CLIENT_REQ_VIRTUAL_WORLD_MOVE_SPRITE = packet.content;
+            content.movePath = movePath;
+            this.game.connection.send(packet);
+            this.mMovePoints.length = 0;
+            this.mMovePoints = [];
+            this.mMoveTime = now;
+        }
     }
 
     /**
@@ -464,33 +524,15 @@ export class Element extends BlockObject implements IElement {
         this.changeState(PlayerState.WALK);
     }
 
-    public stopMove(points?: any) {
+    public stopMove(stopPos?: any) {
+        if (!this.mMovePoints) this.mMovePoints = [];
         this.mMoving = false;
         this.moveControll.setVelocity(0, 0);
         this.changeState(PlayerState.IDLE);
+        // 如果主角没有在推箱子，直接跳过
         if (!this.mRoomService.playerManager.actor.stopBoxMove) return;
-        // const mMovePoints = [];
-        // if (points) {
-        //     points.forEach((pos) => {
-        //         const movePoint = op_def.MovePoint.create();
-        //         const tmpPos = op_def.PBPoint3f.create();
-        //         tmpPos.x = pos.x;
-        //         tmpPos.y = pos.y;
-        //         movePoint.pos = tmpPos;
-        //         // 给每个同步点时间戳
-        //         movePoint.timestamp = new Date().getTime();
-        //         mMovePoints.push(tmpPos);
-        //     });
-        // }
-
         Logger.getInstance().log("============>>>>> element stop: ", this.mModel.nickname, this.mModel.pos.x, this.mModel.pos.y);
-        // const movePath = op_def.MovePath.create();
-        // movePath.id = this.id;
-        // movePath.movePos = mMovePoints;
-        // const pkt: PBpacket = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_STOP_SPRITE);
-        // const ct: op_virtual_world.IOP_CLIENT_REQ_VIRTUAL_WORLD_STOP_SPRITE = pkt.content;
-        // ct.movePath = movePath;
-        // this.mElementManager.connection.send(pkt);
+        this.mMovePoints = [];
         this.mRoomService.playerManager.actor.stopBoxMove = false;
     }
 

@@ -61,7 +61,7 @@ export class ElementManager extends PacketHandler implements IElementManager {
     private mActionMgr: ElementActionManager;
     private mLoadLen: number = 0;
     private mCurIndex: number = 0;
-
+    private delayTime = 1000 / 45;
     constructor(protected mRoom: IRoomService) {
         super();
         if (this.mRoom && this.mRoom.game) {
@@ -440,7 +440,7 @@ export class ElementManager extends PacketHandler implements IElementManager {
         if (ele) {
             ele.model = sprite;
         } else {
-            ele = new Element(sprite, this);
+            ele = new Element(this.mRoom.game, sprite, this);
             // 有小屋装扮权限时，设置全部家具可互动
             // if (this.roomService.enableDecorate) {
             //     ele.setInputEnable(InputEnable.Enable);
@@ -592,7 +592,12 @@ export class ElementManager extends PacketHandler implements IElementManager {
         const veloctiy = content.velocity;
         const len = content.length;
         this.mRoom.playerManager.actor.stopBoxMove = true;
-        throw new Error("todo");
+        const ele = this.get(id);
+        if (ele) {
+            const pos = ele.moveBasePos();
+            if (pos) ele.moveMotion(veloctiy.x * 400 + pos.x, veloctiy.y * 400 + pos.y);
+        }
+        // throw new Error("todo");
         // this.mRoom.game.physicalPeer.setBaseVelocity(id, veloctiy.x, veloctiy.y);
     }
 
