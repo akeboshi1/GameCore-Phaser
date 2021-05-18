@@ -936,6 +936,11 @@ export class Render extends RPCPeer implements GameMain, IRender {
 
     }
 
+    @Export([webworker_rpc.ParamType.str])
+    public playSoundByKey(key: string) {
+        if (this.mSoundManager) this.mSoundManager.playSound({ soundKey: key });
+    }
+
     @Export()
     public playOsdSound(content: any) {
         if (this.mSoundManager) this.mSoundManager.playOsdSound(content);

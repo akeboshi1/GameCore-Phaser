@@ -1,11 +1,3 @@
-/*
- * @Author: your name
- * @Date: 2021-05-17 21:40:12
- * @LastEditTime: 2021-05-18 10:13:45
- * @LastEditors: Please set LastEditors
- * @Description: In User Settings Edit
- * @FilePath: /game-core/src/game/collsion/collsion.manager.ts
- */
 import { IRoomService } from "../room";
 import * as SAT from "sat";
 import { LogicPos } from "utils";

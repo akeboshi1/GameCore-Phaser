@@ -228,7 +228,7 @@ export class Element extends BlockObject implements IElement {
         }
         this.addToWalkableMap();
         const area = model.getCollisionArea();
-        const obj = { id: model.id, pos: model.pos, nickname: model.nickname, alpha: model.alpha, titleMask: model.titleMask | 0x00020000, hasInteractive: model.hasInteractive };
+        const obj = { id: model.id, pos: model.pos, nickname: model.nickname, sound: model.sound, alpha: model.alpha, titleMask: model.titleMask | 0x00020000, hasInteractive: model.hasInteractive };
         // render action
         this.load(this.mModel.displayInfo)
             .then(() => this.mElementManager.roomService.game.peer.render.setModel(obj))
@@ -795,6 +795,7 @@ export class Element extends BlockObject implements IElement {
         const eventName = this.mDisplayInfo.eventName || this.mModel.displayInfo.eventName;
         const avatarDir = this.mDisplayInfo.avatarDir || this.mModel.displayInfo.avatarDir;
         const animationName = this.mDisplayInfo.animationName || this.mModel.displayInfo.animationName;
+        const sound = this.mDisplayInfo.sound || undefined;
         const obj = {
             discriminator,
             id,
@@ -804,6 +805,7 @@ export class Element extends BlockObject implements IElement {
             avatar: undefined,
             gene: undefined,
             type: "",
+            sound,
             display: null,
             animations: undefined,
         };
