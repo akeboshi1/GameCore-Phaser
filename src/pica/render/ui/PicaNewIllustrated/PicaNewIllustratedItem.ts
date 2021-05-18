@@ -3,6 +3,7 @@ import { ButtonEventDispatcher, DynamicImage } from "gamecoreRender";
 import { UIAtlasName } from "picaRes";
 import { ICountablePackageItem } from "picaStructure";
 import { ItemButton } from "..";
+import { UITools } from "../uitool";
 
 export class PicaNewIllustratedItem extends ButtonEventDispatcher {
     public itemData: ICountablePackageItem;
@@ -17,6 +18,7 @@ export class PicaNewIllustratedItem extends ButtonEventDispatcher {
     private yoyoTween: Phaser.Tweens.Tween;
     private aniTweens: Phaser.Tweens.Tween[] = [];
     private isplayingLight: boolean = false;
+    private redImg: Phaser.GameObjects.Image;
     constructor(scene: Phaser.Scene, width: number, height: number, dpr: number, zoom: number) {
         super(scene, 0, 0, true);
         this.dpr = dpr;
@@ -43,7 +45,8 @@ export class PicaNewIllustratedItem extends ButtonEventDispatcher {
         this.rarityTex.setStroke("#000000", 2 * dpr);
         this.rarityTex.setFontStyle("bold");
         this.rarityTex.visible = false;
-        this.add([this.surveyImg, this.surveyLight, this.itemIcon, this.starImg, this.codeTex, this.magnifyingImg, this.rarityTex, this.discoveryTips]);
+        this.redImg = UITools.creatRedImge(scene, this, { x: 0, y: 30 * dpr }, UIAtlasName.illustrate_new, "illustrate_survey_lv_prompt_s");
+        this.add([this.surveyImg, this.surveyLight, this.itemIcon, this.starImg, this.codeTex, this.magnifyingImg, this.rarityTex, this.discoveryTips, this.redImg]);
         for (const item of this.list) {
             const temp = <Phaser.GameObjects.Container>item;
             temp.y -= 10 * dpr;
@@ -63,6 +66,7 @@ export class PicaNewIllustratedItem extends ButtonEventDispatcher {
         this.isplayingLight = false;
         this.clearYoyoTween();
         this.clearAniTweens();
+        this.redImg.visible = false;
         const url = Url.getOsdRes(item.texturePath);
         this.itemIcon.load(url, this, () => {
             this.itemIcon.visible = true;
@@ -88,6 +92,7 @@ export class PicaNewIllustratedItem extends ButtonEventDispatcher {
                 this.surveyImg.setTexture(UIAtlasName.illustrate_new, "illustrate_survey_icon_base_1");
                 this.itemIcon.alpha = 1;
                 this.playAni();
+                this.redImg.visible = true;
             } else if (status === 4) {
                 if (this.itemData.rarity === 5) {
                     this.surveyLight.setFrame("illustrate_survey_icon_light_1");
@@ -127,6 +132,7 @@ export class PicaNewIllustratedItem extends ButtonEventDispatcher {
         this.surveyLight.mask = graphicsMask.createGeometryMask();
         this.setStarImg(4, this.itemData.grade);
         this.isplayingLight = true;
+        this.redImg.visible = false;
         this.surveyLight.setFrame("illustrate_survey_icon_light");
         const tween1 = UIHelper.playAlphaTween(this.scene, surveyAniImg, 0, 1, 500, undefined, 0, new Handler(this, () => {
             const from = this.height * 0.5 + this.surveyLight.height * 0.5;

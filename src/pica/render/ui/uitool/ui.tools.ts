@@ -43,8 +43,10 @@ export class UITools {
         }
 
     }
-    public static creatRedImge(scene: Phaser.Scene, parent: Phaser.GameObjects.Container, offset?: { x: number, y: number }) {
-        const red = scene.make.image({ key: UIAtlasName.uicommon, frame: "home_hint_b" });
+    public static creatRedImge(scene: Phaser.Scene, parent: Phaser.GameObjects.Container, offset?: { x: number, y: number }, key?: string, frame?: string) {
+        key = key || UIAtlasName.uicommon;
+        frame = frame || "home_hint_b";
+        const red = scene.make.image({ key, frame });
         if (!offset) {
             offset = { x: 0, y: 0 };
         } else {
@@ -64,7 +66,7 @@ export class UITools {
         backButton.enable = true;
         backButton.on(ClickEvent.Tap, fun, caller);
         const closeImg = scene.make.image({ key: UIAtlasName.uicommon, frame: "back_arrow" });
-        closeImg.x = -backButton.width * 0.5 + closeImg.width * 0.5 + 10 * dpr;
+        closeImg.x = -backButton.width * 0.5 + closeImg.width * 0.5 + 25 * dpr;
         const titleTex = scene.make.text({ text: title, style: UIHelper.whiteStyle(dpr, 16) }).setOrigin(0, 0.5);
         titleTex.x = closeImg.x + closeImg.width * 0.5 + 15 * dpr;
         titleTex.setFontStyle("bold");
