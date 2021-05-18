@@ -250,7 +250,7 @@ export class Sprite extends EventDispatcher implements ISprite {
             return;
         }
         if (this.displayInfo) {
-            this.displayInfo.destroy();
+            this.displayInfo = null;
         }
         if (display) {
             const anis = [];
@@ -268,7 +268,7 @@ export class Sprite extends EventDispatcher implements ISprite {
                 id: this.id
             });
             if (defAnimation) {
-                this.currentAnimationName = defAnimation;
+                this.setAnimationData(defAnimation, this.direction);
             }
         }
     }
