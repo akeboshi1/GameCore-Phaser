@@ -229,13 +229,17 @@ export abstract class BlockObject implements IBlockObject {
 
         const walkable = (val: number) => val === 0;
         const resule = collisionArea.some((val: number[]) => val.some(walkable));
-        let paths = [];
+        let paths;
         const miniSize = this.mRoomService.miniSize;
 
         if (resule) {
             paths[0] = this.calcBodyPath(collisionArea, miniSize);
         } else {
             paths = [Position45.transformTo90(new LogicPos(0, 0), miniSize), Position45.transformTo90(new LogicPos(rows, 0), miniSize), Position45.transformTo90(new LogicPos(rows, cols), miniSize), Position45.transformTo90(new LogicPos(0, cols), miniSize)];
+        }
+        if (!paths) {
+            this.removeBody();
+            return;
         }
         const origin = Position45.transformTo90(this.mModel.getOriginPoint(), miniSize);
         this.moveControll.drawPolygon(paths, { x: -origin.x, y: -origin.y });
