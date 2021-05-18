@@ -51,6 +51,7 @@ export class Sprite extends EventDispatcher implements ISprite {
     public animator?: Animator;
     public updateSuits: boolean = false;
     public layer: number;
+    public sound: string;
 
     constructor(obj: op_client.ISprite, nodeType?: op_def.NodeType) {
         super();
@@ -233,12 +234,20 @@ export class Sprite extends EventDispatcher implements ISprite {
 
     public updateAttr(attrs: op_def.IStrPair[]) {
         this.attrs = attrs;
-        const suits = this.getAvatarSuits(attrs);
-        if (suits && suits.length > 0) {
-            this.suits = suits;
-            this.updateSuits = true;
-            if (!this.animator) this.animator = new Animator(this.suits);
-            else this.animator.setSuits(this.suits);
+        if (!attrs) return;
+        let suits: AvatarSuit[];
+        for (const attr of attrs) {
+            if (attr.key === "PKT_AVATAR_SUITS") {
+                suits = JSON.parse(attr.value);
+                if (suits && suits.length > 0) {
+                    this.suits = suits;
+                    this.updateSuits = true;
+                    if (!this.animator) this.animator = new Animator(this.suits);
+                    else this.animator.setSuits(this.suits);
+                }
+            } else if (attr.key === "touchSound") {
+                this.sound = attr.value;
+            }
         }
     }
 
@@ -265,7 +274,8 @@ export class Sprite extends EventDispatcher implements ISprite {
                     display,
                     animationData: anis,
                 },
-                id: this.id
+                id: this.id,
+                sound: this.sound
             });
             if (defAnimation) {
                 this.currentAnimationName = defAnimation;
@@ -397,7 +407,7 @@ export class Sprite extends EventDispatcher implements ISprite {
     }
 
     registerAnimationMap(key: string, value: string) {
-        if(!this.registerAnimation) this.registerAnimation = new Map();
+        if (!this.registerAnimation) this.registerAnimation = new Map();
         this.registerAnimation.set(key, value);
     }
 

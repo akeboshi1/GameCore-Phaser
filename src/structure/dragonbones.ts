@@ -1,6 +1,7 @@
 export interface IDragonbonesModel {
     readonly discriminator?: string;
     id: number;
+    sound?: string;
     eventName?: number[];
     avatarDir?: number;
     avatar?: IAvatar;

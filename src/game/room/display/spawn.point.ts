@@ -27,6 +27,7 @@ export class SpawnPoint implements ISprite {
     animationQueue: AnimationQueue[];
     suits: AvatarSuit[];
     titleMask: number;
+    sound: string;
 
     constructor() {
         this.id = 100;
