@@ -22,6 +22,7 @@ export class PicaRoomDecorateShopPanel extends Phaser.GameObjects.Container {
     private selectedItemData: any;// op_client.IMarketCommodity
     private shopgride: GameGridTable;
     private curCategory: string;
+    private beforeCategory: string;
     private zoom: number;
     constructor(scene: Phaser.Scene, x: number, y: number, width: number, height: number, key: string, dpr: number, zoom: number) {
         super(scene, x, y);
@@ -118,7 +119,7 @@ export class PicaRoomDecorateShopPanel extends Phaser.GameObjects.Container {
         });
     }
 
-    public setShopDatas(content: any) {// op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_MARKET_QUERY
+    public setShopDatas(content: any, category) {// op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_MARKET_QUERY
         if (!content) return;
         const arrs = content.sort((a, b) => {
             const aid = a.id.replace(/[^0-9]/ig, "");
@@ -127,7 +128,8 @@ export class PicaRoomDecorateShopPanel extends Phaser.GameObjects.Container {
             else return -1;
         });
         this.shopgride.setItems(arrs);
-        this.shopgride.setT(0);
+        if (this.beforeCategory !== category) this.shopgride.setT(0);
+        this.beforeCategory = category;
     }
     public setTitleText(text: string) {
         this.titleText.text = text;

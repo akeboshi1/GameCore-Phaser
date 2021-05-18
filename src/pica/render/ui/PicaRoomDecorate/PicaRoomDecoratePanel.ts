@@ -72,8 +72,8 @@ export class PicaRoomDecoratePanel extends PicaBasePanel {
         if (this.picShopPanel) this.picShopPanel.setShopCategories(categorys);
     }
 
-    public setShopDatas(content: any) {// op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_MARKET_QUERY
-        if (this.picShopPanel) this.picShopPanel.setShopDatas(content);
+    public setShopDatas(content: any,category) {// op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_MARKET_QUERY
+        if (this.picShopPanel) this.picShopPanel.setShopDatas(content,category);
     }
     public destroy() {
         super.destroy();
