@@ -444,7 +444,7 @@ export class BaseFramesDisplay extends BaseDisplay {
                 frames.push({ key: gen, frame, visible });
             }
         }
-        const repeat = loop ? -1 : 1;
+        const repeat = loop ? -1 : 0;
         const config: Phaser.Types.Animations.Animation = {
             key,
             frames,
