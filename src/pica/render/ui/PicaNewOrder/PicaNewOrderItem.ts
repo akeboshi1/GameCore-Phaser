@@ -20,7 +20,7 @@ export class PicaNewOrderItem extends Phaser.GameObjects.Container {
     private acceleSpend: ImageValue;
     private calcuTime: ImageValue;
     private materialItems: MaterialItem[] = [];
-    private imageValues: DynamicImageValue[] = [];
+    private imageValues: OrderRewardItem[] = [];
     private orderfinish: OrderFinishTips;
     private deliverybg: Phaser.GameObjects.Image;
     private sendHandler: Handler;
@@ -259,23 +259,22 @@ export class PicaNewOrderItem extends Phaser.GameObjects.Container {
     }
 
     private setOrderRewards(data: any) {
-        let offsetpos = -this.width * 0.5 + 40 * this.dpr;
+        let offsetpos = -this.width * 0.5 + 35 * this.dpr;
         for (let i = 0; i < data.rewards.length; i++) {
             const reward = data.rewards[i];
-            let item: DynamicImageValue;
+            let item: OrderRewardItem;
             if (i < this.imageValues.length) {
                 item = this.imageValues[i];
             } else {
-                item = new DynamicImageValue(this.scene, 20 * this.dpr, 18 * this.dpr, UIAtlasName.order_new, "order_reward_diamond", this.dpr);
+                item = new OrderRewardItem(this.scene, this.dpr, 20 * this.dpr, 18 * this.dpr);
                 this.add(item);
+                item.on(ClickEvent.Tap, this.onRewardsHandler, this);
                 this.imageValues.push(item);
                 // item.setOffset(0, 0 * this.dpr);
             }
             // item.setFrameValue(`${reward.count}`, this.key, this.getIconName(reward.display.texturePath) + "_s");
-            item.setText(`${reward.count}`);
-            item.load(Url.getOsdRes(reward.texturePath));
-            item.setTextStyle(UIHelper.whiteStyle(this.dpr, 11));
-            const imageWidth = item.textWidth + 20 * this.dpr;
+            item.setItemData(reward);
+            const imageWidth = item.width;
             item.x = offsetpos + imageWidth * 0.5;
             offsetpos += imageWidth + 15 * this.dpr;
             item.y = this.height * 0.5 - item.height * 0.5 + 1 * this.dpr;
@@ -283,6 +282,9 @@ export class PicaNewOrderItem extends Phaser.GameObjects.Container {
         }
     }
     private onMaterialHandler(pointer, obj: MaterialItem) {
+        PicaItemTipsPanel.Inst.showTips(obj, obj.itemData);
+    }
+    private onRewardsHandler(pointer, obj: OrderRewardItem) {
         PicaItemTipsPanel.Inst.showTips(obj, obj.itemData);
     }
     private hideAllElement() {
@@ -298,7 +300,6 @@ export class PicaNewOrderItem extends Phaser.GameObjects.Container {
         this.deliverybg.visible = false;
         for (const item of this.materialItems) {
             item.visible = false;
-            item.removeListen();
         }
         for (const item of this.imageValues) {
             item.visible = false;
@@ -338,45 +339,6 @@ class MaterialItem extends ButtonEventDispatcher {
     }
 }
 
-class OrderRewardItem extends Phaser.GameObjects.Container {
-    private key: string;
-    private dpr: number;
-    private bg: Phaser.GameObjects.Image;
-    private icon: DynamicImage;
-    private imageValue: DynamicImageValue;
-    constructor(scene: Phaser.Scene, key: string, dpr: number) {
-        super(scene);
-        this.key = key;
-        this.dpr = dpr;
-        this.bg = scene.make.image({ key, frame: "order_reward" });
-        this.setSize(this.bg.width, this.bg.height);
-        this.icon = new DynamicImage(this.scene, 0, 0);// scene.make.image({ key, frame: "order_silver_middle" });
-        this.icon.scale = dpr * 0.8;
-        this.add([this.bg, this.icon]);
-    }
-
-    public setItemData(data: ICountablePackageItem) {// op_client.ICountablePackageItem
-        this.imageValue = new DynamicImageValue(this.scene, 30 * this.dpr, 20 * this.dpr, this.key, undefined, this.dpr);
-        this.imageValue.setText(`${data.count}`);
-        this.imageValue.load(Url.getOsdRes(data.texturePath));
-        // this.imageValue.setFrameValue(`${data.count}`, this.key, this.getIconName(data.texturePath) + "_s");
-        this.imageValue.x = 3 * this.dpr;
-        this.imageValue.y = this.height - this.imageValue.height * 0.5 + 6 * this.dpr;
-        this.imageValue.setOffset(0, this.dpr);
-        this.imageValue.setTextStyle({ color: "#2154BD" });
-        this.add([this.imageValue]);
-        // this.icon.setFrame(this.getIconName(data.texturePath));
-        this.icon.load(Url.getOsdRes(data.texturePath));
-    }
-
-    private getIconName(url: string) {
-        const texturepath = url;
-        const lastindex = texturepath.lastIndexOf("/");
-        const lastindex2 = texturepath.lastIndexOf(".");
-        const frame = texturepath.slice(lastindex + 1, lastindex2);
-        return frame;
-    }
-}
 class OrderFinishTips extends Phaser.GameObjects.Container {
     private tipsImg: ImageValue;
     private bg: Phaser.GameObjects.Image;
@@ -388,5 +350,35 @@ class OrderFinishTips extends Phaser.GameObjects.Container {
         this.tipsImg.setLayout(2);
         this.tipsImg.setText(i18n.t("order.finishtips"));
         this.add([this.bg, this.tipsImg]);
+    }
+}
+class OrderRewardItem extends ButtonEventDispatcher {
+    public itemData: ICountablePackageItem;
+    private imageValue: DynamicImageValue;
+    constructor(scene: Phaser.Scene, dpr: number, width: number, height: number) {
+        super(scene, 0, 0);
+        this.dpr = dpr;
+        this.setSize(width, height);
+        this.imageValue = new DynamicImageValue(this.scene, width, height, UIAtlasName.order_new, "order_reward_diamond", this.dpr);
+        this.add(this.imageValue);
+    }
+
+    public setItemData(data: ICountablePackageItem) {// op_client.ICountablePackageItem
+        this.itemData = data;
+        this.imageValue.setText(`${data.count}`);
+        this.imageValue.load(Url.getOsdRes(data.texturePath), new Handler(this, () => {
+            this.imageValue.x = 0;
+        }));
+        this.imageValue.setTextStyle(UIHelper.whiteStyle(this.dpr, 11));
+        this.imageValue.x = 0;
+        this.setSize(this.textWidth + 20 * this.dpr, this.height);
+        this.enable = false;
+        setTimeout(() => {
+            if (this.scene) this.enable = true;
+        }, 20);
+    }
+
+    get textWidth() {
+        return this.imageValue.textWidth;
     }
 }
