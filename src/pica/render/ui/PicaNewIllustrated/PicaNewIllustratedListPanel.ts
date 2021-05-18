@@ -103,7 +103,7 @@ export class PicaNewIllustratedListPanel extends Phaser.GameObjects.Container {
             send,
             tag: "cooking"
         };
-        const datas = [temp1, temp3, temp4];
+        const datas = [temp1, temp3];
         return datas;
     }
 
