@@ -69,7 +69,7 @@ export class PicaExploreListMediator extends BasicMediator {
         if (mgr) {
             const chapters = mgr.chapters;
             if (this.mView && chapters) {
-                this.mView.setExploreChapters(chapters);
+                this.mView.setExploreChapters(chapters, this.mShowData);
                 this.mView.setEnergyData(this.playerInfo.energy.value, this.playerInfo.energy.max);
             }
         }

@@ -42,6 +42,10 @@ export class Url {
         }
     }
 
+    static getSound(key: string): string {
+        return "sound/" + key + ".mp3";
+    }
+
     static getNormalUIRes(value: string) {
         // return Url.RESUI_PATH + value;
         try {
@@ -590,7 +594,7 @@ export class UIHelper {
                 const temp = text.slice(0, i);
                 width = mlabel.setText(temp).width;
                 if (width > maxwidth) {
-                    return temp+"...";
+                    return temp + "...";
                 }
             }
         }

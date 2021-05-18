@@ -4,7 +4,7 @@ import { Game } from "../game";
 import { Player } from "../room/player/player";
 import { IRoomService } from "../room/room/room";
 import { PlayerModel } from "../room/player/player.model";
-import { IPos, Logger, LogicPos } from "utils";
+import { IPos, Logger, LogicPos, ResUtils, Url } from "utils";
 import { UserDataManager } from "./data/user.dataManager";
 import { AvatarSuitType, EventType, IDragonbonesModel, IFramesModel, PlayerState, ISprite, ModuleName, SceneName } from "structure";
 import { LayerEnum } from "game-capsule";
@@ -307,11 +307,15 @@ export class User extends Player {
             return;
         }
         // ====== 推箱子
-        // const ele = this.mRoomService.getElement(targetId);
-        // if (ele) {
-        //     this.mTarget = ele;
-        //     this.addMount(ele, 0);
-        // }
+        const ele = this.mRoomService.getElement(targetId);
+        if (ele) {
+            if (ele.model && ele.model.sound) {
+                const key = Url.getSound(ele.model.sound);
+                this.mRoomService.game.renderPeer.playSoundByKey(key);
+            }
+            // this.mTarget = ele;
+            // this.addMount(ele, 0);
+        }
         // 有element交互事件的发送推箱子协议
         // if (ele.model && ele.model.displayInfo && ele.model.displayInfo.eventName) {
         //     this.requestPushBox(targetId);

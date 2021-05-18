@@ -21,6 +21,7 @@ export class PicaExploreListPanel extends PicaBasePanel {
     private midbg: Phaser.GameObjects.Image;
     private mBackBtn: BackTextButton;
     private energyProgress: EnergyProgressBar;
+    private energyDatas: any;
     constructor(uiManager: UiManager) {
         super(uiManager);
         this.atlasNames = [UIAtlasName.explorelog, UIAtlasName.uicommon1, UIAtlasName.uicommon];
@@ -89,24 +90,24 @@ export class PicaExploreListPanel extends PicaBasePanel {
     }
 
     onShow() {
-        if (this.mShowData)
-            this.setExploreChapters(this.mShowData);
         if (this.tempDatas)
-            this.setEnergyData(this.tempDatas.value, this.tempDatas.max);
+            this.setExploreChapters(this.tempDatas, this.mShowData);
+        if (this.energyDatas)
+            this.setEnergyData(this.energyDatas.value, this.energyDatas.max);
     }
     setExploreChapterResult(content: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_QUERY_CHAPTER_RESULT) {
-        const nextLevelID = this.mShowData.nextLevelId;
+        const nextLevelID = this.tempDatas.nextLevelId;
         this.levelPanel.setCaptoreResult(content, nextLevelID);
         this.render.emitter.emit(PicaExploreListPanel.PICAEXPLORELIST_DATA, this.levelPanel.addHei);
     }
-    setExploreChapters(data: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_EXPLORE_CHAPTER_PROGRESS) {
-        this.mShowData = data;
+    setExploreChapters(data: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_EXPLORE_CHAPTER_PROGRESS, chapterId?: number) {
+        this.tempDatas = data;
         if (!this.mInitialized) return;
-        this.bottomPanel.setChapterDatas(data);
+        this.bottomPanel.setChapterDatas(data, chapterId);
     }
 
     setEnergyData(value: number, max: number) {
-        this.tempDatas = { value, max };
+        this.energyDatas = { value, max };
         if (!this.mInitialized) return;
         this.energyProgress.setEnergyData(value, max);
         this.levelPanel.setPowerValue(value);
@@ -149,7 +150,7 @@ export class PicaExploreListPanel extends PicaBasePanel {
             this.openDetialPanel();
             this.detialPanel.setCaptoreResultData(data);
         } else if (tag === "roomid") {
-            if (this.tempDatas.value < data.costEnergy) {
+            if (this.energyDatas.value < data.costEnergy) {
                 const noticedata = {
                     text: [{ text: i18n.t("explore.energytips"), node: undefined }]
                 };
