@@ -1,6 +1,6 @@
 import { BBCodeText } from "apowophaserui";
 import { UIAtlasName } from "../../../res";
-import { Font, UIHelper } from "utils";
+import { Font, Handler, UIHelper } from "utils";
 import { DynamicImage } from "gamecoreRender";
 
 export class ImageValue extends Phaser.GameObjects.Container {
@@ -146,13 +146,14 @@ export class DynamicImageValue extends ImageValue {
     constructor(scene: Phaser.Scene, width: number, height: number, key: string, frame: string, dpr: number, style?: any) {
         super(scene, width, height, key, frame, dpr, style);
     }
-    public load(url: string) {
+    public load(url: string, compl?: Handler) {
         this.icon.load(url, this, () => {
             this.icon.scale = 1;
             this.icon.displayHeight = this.height - 4 * this.dpr;
             this.icon.scaleX = this.icon.scaleY;
             this.icon.texture.setFilter(Phaser.Textures.FilterMode.LINEAR);
             this.resetSize();
+            if (compl) compl.run();
         });
     }
     protected create(key: string, frame: string, style: any) {
