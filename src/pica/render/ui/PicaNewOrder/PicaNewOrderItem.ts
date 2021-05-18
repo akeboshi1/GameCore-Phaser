@@ -234,7 +234,7 @@ export class PicaNewOrderItem extends Phaser.GameObjects.Container {
     }
 
     private setOrderMaterials(data) {
-        let offsetpos = -this.width * 0.5 + 58 * this.dpr;
+        let offsetpos = -this.width * 0.5 + 35 * this.dpr;
         let isenough = true;
         for (let i = 0; i < data.targets.length; i++) {
             const itemData = data.targets[i];
