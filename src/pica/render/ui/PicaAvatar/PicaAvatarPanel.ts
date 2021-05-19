@@ -497,7 +497,10 @@ export class PicaAvatarPanel extends PicaBasePanel {
         this.uiManager.showPanel(ModuleName.MASK_LOADING_NAME);
         this.mDetailDisplay.saveAvatar()
             .then((saveData) => {
-                this.render.mainPeer.uploadDBTexture(saveData.key, saveData.url, saveData.json);
+                this.render.mainPeer.uploadDBTexture(saveData.key, saveData.url, saveData.json)
+                    .catch((reason) => {
+                        Logger.getInstance().error("uploadDBTexture error: " + reason);
+                    });
                 return this.render.editorCanvasManager.createHeadIcon(result);
             })
             .then((str) => {

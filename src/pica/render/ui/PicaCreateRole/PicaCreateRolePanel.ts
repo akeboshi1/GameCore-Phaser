@@ -211,7 +211,10 @@ export class PicaCreateRolePanel extends PicaBasePanel {
         this.uiManager.showPanel(ModuleName.MASK_LOADING_NAME);
         this.dragonbones.save()
             .then((saveData) => {
-                this.render.mainPeer.uploadDBTexture(saveData.key, saveData.url, saveData.json);
+                this.render.mainPeer.uploadDBTexture(saveData.key, saveData.url, saveData.json)
+                    .catch((reason) => {
+                        Logger.getInstance().error("uploadDBTexture error: " + reason);
+                    });
                 return this.render.editorCanvasManager.createHeadIcon(avatarSets);
             })
             .then((str) => {
