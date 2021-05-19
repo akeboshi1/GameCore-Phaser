@@ -108,7 +108,7 @@ export class AvatarSuitType {
         return false;
     }
 
-    static checkSlotValue(suitType: string, slotbit: string, humpName: boolean = true) {
+    static checkSlotValue(suitType: string, slotbit: string, useHumpName: boolean = true) {
         if (!this.slotBitMap) {
             this.slotBitMap = new Map();
             const avatarSlot: any = op_def.AvatarSlot;
@@ -140,7 +140,7 @@ export class AvatarSuitType {
                 slotArr.push(slot);
             }
         }
-        if  (humpName) {
+        if  (useHumpName) {
             return slotArr;
         } else {
             return this.toSlotNames(slotArr);
@@ -161,7 +161,7 @@ export class AvatarSuitType {
             let s = "";
             for (let i = 0; i < arr.length; i++) {
                 if (i !== 0) {
-                    s += "_"
+                    s += "_";
                 }
                 s += arr[i].toLowerCase();
             }
