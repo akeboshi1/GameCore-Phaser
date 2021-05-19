@@ -239,7 +239,8 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
             let str: string = msg;
             if (msg.length > 100) str = msg.slice(0, 99);
             this.renderPeer.showAlert(str, true).then(() => {
-                this.manualReconnect();
+                // 暂时去除重连
+                // this.manualReconnect();
             });
         } else {
             // 右上角显示
