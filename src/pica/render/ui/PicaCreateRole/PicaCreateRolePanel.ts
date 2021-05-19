@@ -347,7 +347,8 @@ export class PicaCreateRolePanel extends PicaBasePanel {
                 suit_type: item.suitType,
                 slot: item.slot,
                 tag: item.tag,
-                sn: item.sn
+                sn: item.sn,
+                version: item.version
             };
             suits.push(suit);
         }
