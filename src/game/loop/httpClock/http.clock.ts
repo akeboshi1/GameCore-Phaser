@@ -49,6 +49,9 @@ export class HttpClock {
     }
 
     sync() {
+        if (!this.game.connection || !this.game.connection.connect) {
+            return;
+        }
         this.fetch().then((response: any) => {
             if (this.mEnable === false) {
                 return;
