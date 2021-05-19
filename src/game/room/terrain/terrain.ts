@@ -217,11 +217,13 @@ export class Terrain extends BlockObject implements IElement {
             // Logger.getInstance().error("displayinfo does not exist, Create display failed");
             return;
         }
-        await this.mRoomService.game.peer.render.createTerrainDisplay(this.id, this.mDisplayInfo, this.mModel.layer);
-        const currentAnimation = this.mModel.currentAnimation;
-        if (currentAnimation) {
-            await this.mElementManager.roomService.game.renderPeer.playAnimation(this.id, this.mModel.currentAnimation);
-        }
+        // const currentAnimation = this.mModel.currentAnimation;
+        const frameModel = Object.assign({}, this.mDisplayInfo);
+        frameModel.animationName = this.mModel.currentAnimation.name;
+        await this.mRoomService.game.peer.render.createTerrainDisplay(this.id, frameModel, this.mModel.layer);
+        // if (currentAnimation) {
+        //     await this.mElementManager.roomService.game.renderPeer.playAnimation(this.id, this.mModel.currentAnimation);
+        // }
 
         // debug
         // this.mRoomService.game.renderPeer.showNickname(this.id, this.mModel.nickname);
