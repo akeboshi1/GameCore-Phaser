@@ -108,7 +108,7 @@ export class AvatarSuitType {
         return false;
     }
 
-    static checkSlotValue(suitType: string, slotbit: string) {
+    static checkSlotValue(suitType: string, slotbit: string, humpName: boolean = true) {
         if (!this.slotBitMap) {
             this.slotBitMap = new Map();
             const avatarSlot: any = op_def.AvatarSlot;
@@ -140,13 +140,34 @@ export class AvatarSuitType {
                 slotArr.push(slot);
             }
         }
-        return slotArr;
+        if  (humpName) {
+            return slotArr;
+        } else {
+            return this.toSlotNames(slotArr);
+        }
     }
 
     static toHumpName(str: string) {
         return str.replace(/([^_])(?:_+([^_]))/g, ($0, $1, $2) => {
             return $1 + $2.toUpperCase();
         });
+    }
+
+    // 'bodyCostDresId' => 'body_cost_dres'
+    static toSlotNames(strs: string[]): string[] {
+        const result = [];
+        for (const str of strs) {
+            const arr = str.slice(0, -2).split(/(?=[A-Z])/);
+            let s = "";
+            for (let i = 0; i < arr.length; i++) {
+                if (i !== 0) {
+                    s += "_"
+                }
+                s += arr[i].toLowerCase();
+            }
+            result.push(s);
+        }
+        return result;
     }
 
     static getSuitsFromItem(avatarSuits: op_client.ICountablePackageItem[]) {
