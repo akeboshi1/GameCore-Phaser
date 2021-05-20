@@ -192,7 +192,8 @@ export class AvatarSuitType {
     public tail = ["bodyTailId"];
     public wing = ["bodyWingId"];
     public helmet = ["headSpecId"];
-    public shell = ["bodySpecId", "farmSpecId", "barmSpecId", "flegSpecId", "blegSpecId"];
+    // 已和金老板确认，头部特型也加入shell，即装备shell后，会覆盖helmet
+    public shell = ["headSpecId", "bodySpecId", "farmSpecId", "barmSpecId", "flegSpecId", "blegSpecId"];
     public baseSuitType = `[{"count":1,"id":"10001","sn":"5cd28238fb073710972a73c2","suit_type":"costume"},{"count":1,"id":"10002","sn":"5cd28238fb073710972a73c2","suit_type":"eye"},{"count":1,"id":"1003","sn":"5cd28238fb073710972a73c2","suit_type":"hair"},{"count":1,"id":"10004","sn":"5cd28238fb073710972a73c2","suit_type":"mouse"}]`;
     public base = ["headBaseId", "bodyBaseId", "farmBaseId", "barmBaseId", "flegBaseId", "blegBaseId"];
 }
