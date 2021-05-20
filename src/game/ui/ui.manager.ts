@@ -159,7 +159,6 @@ export class UIManager extends PacketHandler {
             // Logger.getInstance().error(`error ${type} no panel can show!!!`);
             return;
         }
-        if (!mediator.isShow()) return;
         mediator.hide();
     }
 
@@ -184,6 +183,17 @@ export class UIManager extends PacketHandler {
             }
         }
         return arr;
+    }
+
+    /**
+     * 根据面板Key更新UI状态
+     * @param panel Panel key
+     */
+    public refrehActiveUIState(panel: string) {
+        const states = this.getUIStateData(panel);
+        for (const state of states) {
+            this.updateUI(state);
+        }
     }
 
     public checkUIState(medName: string, show: boolean) {
@@ -253,21 +263,25 @@ export class UIManager extends PacketHandler {
 
     protected updateUIState(data: op_client.OP_VIRTUAL_WORLD_REQ_CLIENT_PKT_REFRESH_ACTIVE_UI) {
         for (const ui of data.ui) {
-            const tag = ui.name;
-            const paneltags = tag.split(".");
-            const panelName = this.getPanelNameByAlias(paneltags[0]);
-            if (panelName) {
-                const mediator: BasicMediator = this.mMedMap.get(panelName);
-                if (mediator) {
-                    if (paneltags.length === 1) {
-                        if (ui.visible || ui.visible === undefined) {
-                            if (mediator.isSceneUI()) this.showMed(panelName);
-                        } else {
-                            this.hideMed(panelName);
-                        }
+            this.updateUI(ui);
+        }
+    }
+
+    protected updateUI(ui: op_pkt_def.IPKT_UI) {
+        const tag = ui.name;
+        const paneltags = tag.split(".");
+        const panelName = this.getPanelNameByAlias(paneltags[0]);
+        if (panelName) {
+            const mediator: BasicMediator = this.mMedMap.get(panelName);
+            if (mediator) {
+                if (paneltags.length === 1) {
+                    if (ui.visible || ui.visible === undefined) {
+                        if (mediator.isSceneUI()) this.showMed(panelName);
                     } else {
-                        this.game.peer.render.updateUIState(panelName, ui);
+                        this.hideMed(panelName);
                     }
+                } else {
+                    this.game.peer.render.updateUIState(panelName, ui);
                 }
             }
         }
