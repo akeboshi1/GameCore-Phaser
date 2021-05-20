@@ -23,8 +23,6 @@ import {
     MAIN_WORKER_URL,
     MessageType,
     ModuleName,
-    PHYSICAL_WORKER,
-    PHYSICAL_WORKER_URL,
     RENDER_PEER,
     SceneName,
     PlatFormType
