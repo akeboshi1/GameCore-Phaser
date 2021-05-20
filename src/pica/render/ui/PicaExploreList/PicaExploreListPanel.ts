@@ -170,7 +170,11 @@ export class PicaExploreListPanel extends PicaBasePanel {
     }
     private onBottomPanelHandler(tag: string, data: any) {
         if (tag === "chapterdata") {
-            this.render.renderEmitter(ModuleName.PICAEXPLORELIST_NAME + "_queyexplorechapter", data);
+            var chapterId = data
+            if (data.chapter) {
+                chapterId = data.chapter.chapterId;    
+            }
+            this.render.renderEmitter(ModuleName.PICAEXPLORELIST_NAME + "_queyexplorechapter", chapterId);
         }
     }
 
