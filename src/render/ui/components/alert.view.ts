@@ -119,7 +119,7 @@ export class AlertView extends BaseBatchPanel {
         this.mCancelBtn.on(ClickEvent.Tap, this.onCancelHandler, this);
         this.add([bg, title, this.mTitleLabel, this.mTitleLabel, this.mContent, this.mOkBtn, this.mCancelBtn]);
         super.init();
-        (<BasicScene>this.mScene).layerManager.addToLayer(this.uiLayer, this);
+        (<BasicScene>this.mScene).layerManager.addToLayer(MainUIScene.LAYER_TOOLTIPS, this);
     }
 
     private onOkHandler() {
