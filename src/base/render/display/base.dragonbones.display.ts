@@ -2,7 +2,8 @@ import {Logger, ResUtils, Tool, Url, ValueResolver} from "utils";
 import {IAvatar, IDragonbonesModel, RunningAnimation, SlotSkin, Atlas, IFramesModel, DisplayField} from "structure";
 import {BaseDisplay} from "./base.display";
 
-import * as hash from "object-hash";
+import * as sha1 from "simple-sha1";
+// import * as hash from "object-hash";
 import ImageFile = Phaser.Loader.FileTypes.ImageFile;
 import {MaxRectsPacker} from "maxrects-packer";
 
@@ -73,6 +74,41 @@ export enum AvatarPartNameTemp {
     ShldBarm = "barm_shld_#_$",
     WeapBarm = "barm_weap_#_$",
 }
+
+const SERIALIZE_QUEUE = [
+    "headBaseId",
+    "headHairId",
+    "headEyesId",
+    "headHairBackId",
+    "headMousId",
+    "headHatsId",
+    "headMaskId",
+    "headSpecId",
+    "headFaceId",
+    "bodyBaseId",
+    "bodyCostId",
+    "bodyCostDresId",
+    "bodyTailId",
+    "bodyWingId",
+    "bodySpecId",
+    "farmBaseId",
+    "farmCostId",
+    "farmShldId",
+    "farmWeapId",
+    "farmSpecId",
+    "barmBaseId",
+    "barmCostId",
+    "barmShldId",
+    "barmWeapId",
+    "barmSpecId",
+    "flegBaseId",
+    "flegCostId",
+    "flegSpecId",
+    "blegBaseId",
+    "blegCostId",
+    "blegSpecId",
+    "stalkerId",
+];
 
 const ReplacedTextures: Map<string, number> = new Map<string, number>();
 
@@ -485,24 +521,44 @@ export class BaseDragonbonesDisplay extends BaseDisplay {
 
     // doc: https://code.apowo.com/PixelPai/game-core/-/issues/239
     protected serializeAvatarData(data: IAvatar): string {
-        const temp = JSON.parse(JSON.stringify(data));
-        const deleteKeys = [];
-        for (const tempKey in temp) {
-            if (tempKey === "id" || tempKey === "dirable") {
-                deleteKeys.push(tempKey);
-                continue;
+        // const temp = JSON.parse(JSON.stringify(data));
+        // const deleteKeys = [];
+        // for (const tempKey in temp) {
+        //     if (tempKey === "id" || tempKey === "dirable") {
+        //         deleteKeys.push(tempKey);
+        //         continue;
+        //     }
+        //     const val = temp[tempKey];
+        //     if (val === null) {
+        //         deleteKeys.push(tempKey);
+        //     } else if (typeof val === "string" && val.length === 0) {
+        //         deleteKeys.push(tempKey);
+        //     }
+        // }
+        // for (const deleteKey of deleteKeys) {
+        //     delete temp[deleteKey];
+        // }
+        //
+        // const result = hash(temp);
+
+        let serializeStr = "";
+        for (const key of SERIALIZE_QUEUE) {
+            if (data[key] !== undefined && data[key] !== null) {
+                if (typeof data[key] === "string") {
+                    serializeStr += data[key];
+                } else {
+                    serializeStr += data[key].sn;
+                    if (data[key].version !== undefined) {
+                        serializeStr += "V" + data[key].version;
+                    }
+                }
             }
-            const val = temp[tempKey];
-            if (val === null) {
-                deleteKeys.push(tempKey);
-            } else if (typeof val === "string" && val.length === 0) {
-                deleteKeys.push(tempKey);
-            }
+            serializeStr += "_";
         }
-        for (const deleteKey of deleteKeys) {
-            delete temp[deleteKey];
-        }
-        return hash(temp);
+
+        const result = sha1.sync(serializeStr);
+        Logger.getInstance().error("serialize avatar data: ", result, data);
+        return result;
     }
 
     private generateReplaceTexture(textureKey: string): { url: string, json: string } {

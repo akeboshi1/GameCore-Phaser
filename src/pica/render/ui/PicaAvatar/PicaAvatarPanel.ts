@@ -490,7 +490,7 @@ export class PicaAvatarPanel extends PicaBasePanel {
         const suitPart = AvatarSuitType.suitPart;
         for (const item of this.mSelectedItemData) {
             idsArr.push(item.id);
-            result.push({"parts": suitPart[item.suitType], id: item.sn});
+            result.push({"parts": AvatarSuitType.checkSlotValue(item.suitType, item.slot, false), id: item.sn});
         }
 
         this.render.renderEmitter(this.key + "_querySaveAvatar", idsArr);

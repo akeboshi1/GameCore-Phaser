@@ -205,7 +205,7 @@ export class PicaCreateRolePanel extends PicaBasePanel {
         this.curSuitMap.forEach((value, key) => {
             ids.push(value.id);
 
-            avatarSets.push({"parts": suitPart[value.suitType], id: value.sn});
+            avatarSets.push({"parts": AvatarSuitType.checkSlotValue(value.suitType, value.slot, false), id: value.sn});
         });
 
         this.uiManager.showPanel(ModuleName.MASK_LOADING_NAME);
@@ -347,7 +347,8 @@ export class PicaCreateRolePanel extends PicaBasePanel {
                 suit_type: item.suitType,
                 slot: item.slot,
                 tag: item.tag,
-                sn: item.sn
+                sn: item.sn,
+                version: item.version
             };
             suits.push(suit);
         }
