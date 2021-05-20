@@ -32,8 +32,11 @@ export class PicaMessageBoxPanel extends BasePanel {
       }
       if (data.title) {
         this.mTitleLabel.setText(data.title.text);
+      } else if (data.text && data.text[1]) {
+        this.mTitleLabel.setText(data.text[1].text);
       }
     }
+
     const buttons: any[] = data.button.sort((a, b) => {
       if (a.param > b.param) return 1;
       else return -1;
@@ -118,13 +121,13 @@ export class PicaMessageBoxPanel extends BasePanel {
     });
     title.texture.setFilter(Phaser.Textures.FilterMode.LINEAR);
     this.mTitleLabel = this.scene.make.text({
-      y: title.y - 6 * this.dpr,
+      y: title.y,
       style: {
         fontFamily: Font.DEFULT_FONT,
         fontSize: 16 * this.dpr,
         color: "#3366cc"
       }
-    }, false).setOrigin(0.5);
+    }, false).setOrigin(0.5).setFontStyle("bold");
 
     this.mText = new BBCodeText(this.mScene, 0, 0, "", {
       fontSize: `${14 * this.dpr}px`,
