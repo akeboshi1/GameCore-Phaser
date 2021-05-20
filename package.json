@@ -42,7 +42,6 @@
     "copy-text-to-clipboard": "^2.1.1",
     "custom_proto": "git+ssh://git@code.apowo.com:PixelPai/custom_proto.git#typescriptdev",
     "game-capsule": "git+ssh://git@code.apowo.com:PixelPai/game-capsule.git#dev",
-    "git": "^0.1.5",
     "html-webpack-plugin": "^4.3.0",
     "i18next": "^19.0.3",
     "i18next-browser-languagedetector": "^4.0.1",
