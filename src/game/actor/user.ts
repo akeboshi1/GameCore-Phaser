@@ -177,10 +177,9 @@ export class User extends Player {
     }
 
     public startMove() {
+        if (!this.mMoveData) return;
         const path = this.mMoveData.path;
-        if (path.length < 1) {
-            return;
-        }
+        if (path.length < 1) return;
         this.changeState(PlayerState.WALK);
         this.mMoving = true;
 
