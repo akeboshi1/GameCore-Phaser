@@ -278,6 +278,11 @@ export class MainPeer extends RPCPeer {
         return this.game.uiManager.getUIStateData(str);
     }
 
+    @Export([webworker_rpc.ParamType.str])
+    public refrehActiveUIState(panel: string) {
+        return this.game.uiManager.refrehActiveUIState(panel);
+    }
+
     @Export()
     public startRoomPlay() {
         Logger.getInstance().debug("peer startroom");
