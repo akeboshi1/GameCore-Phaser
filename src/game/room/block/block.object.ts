@@ -237,7 +237,7 @@ export abstract class BlockObject implements IBlockObject {
         const miniSize = this.mRoomService.miniSize;
 
         if (resule) {
-            paths[0] = this.calcBodyPath(collisionArea, miniSize);
+            paths = this.calcBodyPath(collisionArea, miniSize);
         } else {
             paths = [Position45.transformTo90(new LogicPos(0, 0), miniSize), Position45.transformTo90(new LogicPos(rows, 0), miniSize), Position45.transformTo90(new LogicPos(rows, cols), miniSize), Position45.transformTo90(new LogicPos(0, cols), miniSize)];
         }

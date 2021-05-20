@@ -227,6 +227,7 @@ export class Element extends BlockObject implements IElement {
             this.setPosition(this.mModel.pos);
         }
         this.addToWalkableMap();
+        // 必须执行一遍下面的方法，否则无法获取碰撞区域
         const area = model.getCollisionArea();
         const obj = { id: model.id, pos: model.pos, nickname: model.nickname, sound: model.sound, alpha: model.alpha, titleMask: model.titleMask | 0x00020000, hasInteractive: model.hasInteractive };
         // render action
@@ -243,15 +244,15 @@ export class Element extends BlockObject implements IElement {
                 return this.setRenderable(true);
             });
         // physic action
-        const obj1 = {
-            id: model.id,
-            point3f: model.pos,
-            currentAnimationName: model.currentAnimationName,
-            direction: model.direction,
-            mountSprites: model.mountSprites,
-            speed: model.speed,
-            displayInfo: model.displayInfo
-        };
+        // const obj1 = {
+        //     id: model.id,
+        //     point3f: model.pos,
+        //     currentAnimationName: model.currentAnimationName,
+        //     direction: model.direction,
+        //     mountSprites: model.mountSprites,
+        //     speed: model.speed,
+        //     displayInfo: model.displayInfo
+        // };
         // this.mRoomService.game.peer.physicalPeer.setModel(obj1)
         //     .then(() => {
         //         if (this.mRenderable) {

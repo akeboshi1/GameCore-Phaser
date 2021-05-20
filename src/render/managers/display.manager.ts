@@ -129,7 +129,7 @@ export class DisplayManager {
         } else {
             display = this.displays.get(id) as DragonbonesDisplay;
         }
-        display.load(data, undefined, false);
+        display.load(data);
         const sprite = this.mModelCache.get(id);
         if (sprite) {
             display.titleMask = sprite.titleMask;

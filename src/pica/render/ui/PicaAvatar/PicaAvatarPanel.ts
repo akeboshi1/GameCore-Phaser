@@ -490,14 +490,17 @@ export class PicaAvatarPanel extends PicaBasePanel {
         const suitPart = AvatarSuitType.suitPart;
         for (const item of this.mSelectedItemData) {
             idsArr.push(item.id);
-            result.push({"parts": suitPart[item.suitType], id: item.sn});
+            result.push({"parts": AvatarSuitType.checkSlotValue(item.suitType, item.slot, false), id: item.sn});
         }
 
         this.render.renderEmitter(this.key + "_querySaveAvatar", idsArr);
         this.uiManager.showPanel(ModuleName.MASK_LOADING_NAME);
         this.mDetailDisplay.saveAvatar()
             .then((saveData) => {
-                this.render.mainPeer.uploadDBTexture(saveData.key, saveData.url, saveData.json);
+                this.render.mainPeer.uploadDBTexture(saveData.key, saveData.url, saveData.json)
+                    .catch((reason) => {
+                        Logger.getInstance().error("uploadDBTexture error: " + reason);
+                    });
                 return this.render.editorCanvasManager.createHeadIcon(result);
             })
             .then((str) => {

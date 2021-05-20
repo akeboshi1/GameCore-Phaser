@@ -550,6 +550,7 @@ export class SceneEditorCanvas extends EditorCanvas implements IRender {
             case BrushEnum.Eraser:
             case BrushEnum.BRUSH:
             case BrushEnum.Fill:
+            case BrushEnum.EraserWall:
                 this.mStamp.wheel(pointer);
                 break;
         }
@@ -650,6 +651,7 @@ export class SceneEditor extends Phaser.Scene {
     public static LAYER_FLOOR = LayerEnum.Floor;
     public static LAYER_SURFACE = LayerEnum.Surface;
     public static LAYER_WALL = LayerEnum.Wall;
+    public static LAYER_HANGING = LayerEnum.Hanging;
     public static LAYER_ATMOSPHERE = "atmosphere";
     public static SCENE_UI = "sceneUILayer";
     public layerManager: LayerManager;
@@ -672,13 +674,14 @@ export class SceneEditor extends Phaser.Scene {
         this.sceneEditor.sceneManager.setMainScene(this);
 
         this.layerManager.addLayer(this, GroundLayer, SceneEditor.LAYER_WALL.toString(), 0);
-        this.layerManager.addLayer(this, GroundLayer, SceneEditor.LAYER_GROUND.toString(), 1);
+        this.layerManager.addLayer(this, GroundLayer, SceneEditor.LAYER_HANGING.toString(), 1);
+        this.layerManager.addLayer(this, GroundLayer, SceneEditor.LAYER_GROUND.toString(), 2);
         this.gridLayer = new GridLayer(this);
         this.sys.displayList.add(this.gridLayer);
-        this.layerManager.addLayer(this, BaseLayer, SceneEditor.LAYER_MIDDLE, 3);
-        this.layerManager.addLayer(this, GroundLayer, SceneEditor.LAYER_FLOOR.toString(), 4);
-        this.layerManager.addLayer(this, SurfaceLayer, SceneEditor.LAYER_SURFACE.toString(), 4);
-        this.layerManager.addLayer(this, BaseLayer, SceneEditor.SCENE_UI, 5);
+        this.layerManager.addLayer(this, BaseLayer, SceneEditor.LAYER_MIDDLE, 4);
+        this.layerManager.addLayer(this, GroundLayer, SceneEditor.LAYER_FLOOR.toString(), 5);
+        this.layerManager.addLayer(this, SurfaceLayer, SceneEditor.LAYER_SURFACE.toString(), 6);
+        this.layerManager.addLayer(this, BaseLayer, SceneEditor.SCENE_UI, 7);
 
         this.sceneEditor.create(this);
     }

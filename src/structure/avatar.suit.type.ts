@@ -108,7 +108,7 @@ export class AvatarSuitType {
         return false;
     }
 
-    static checkSlotValue(suitType: string, slotbit: string) {
+    static checkSlotValue(suitType: string, slotbit: string, useHumpName: boolean = true) {
         if (!this.slotBitMap) {
             this.slotBitMap = new Map();
             const avatarSlot: any = op_def.AvatarSlot;
@@ -140,13 +140,34 @@ export class AvatarSuitType {
                 slotArr.push(slot);
             }
         }
-        return slotArr;
+        if  (useHumpName) {
+            return slotArr;
+        } else {
+            return this.toSlotNames(slotArr);
+        }
     }
 
     static toHumpName(str: string) {
         return str.replace(/([^_])(?:_+([^_]))/g, ($0, $1, $2) => {
             return $1 + $2.toUpperCase();
         });
+    }
+
+    // 'bodyCostDresId' => 'body_cost_dres'
+    static toSlotNames(strs: string[]): string[] {
+        const result = [];
+        for (const str of strs) {
+            const arr = str.slice(0, -2).split(/(?=[A-Z])/);
+            let s = "";
+            for (let i = 0; i < arr.length; i++) {
+                if (i !== 0) {
+                    s += "_";
+                }
+                s += arr[i].toLowerCase();
+            }
+            result.push(s);
+        }
+        return result;
     }
 
     static getSuitsFromItem(avatarSuits: op_client.ICountablePackageItem[]) {
@@ -171,7 +192,8 @@ export class AvatarSuitType {
     public tail = ["bodyTailId"];
     public wing = ["bodyWingId"];
     public helmet = ["headSpecId"];
-    public shell = ["bodySpecId", "farmSpecId", "barmSpecId", "flegSpecId", "blegSpecId"];
+    // 已和金老板确认，头部特型也加入shell，即装备shell后，会覆盖helmet
+    public shell = ["headSpecId", "bodySpecId", "farmSpecId", "barmSpecId", "flegSpecId", "blegSpecId"];
     public baseSuitType = `[{"count":1,"id":"10001","sn":"5cd28238fb073710972a73c2","suit_type":"costume"},{"count":1,"id":"10002","sn":"5cd28238fb073710972a73c2","suit_type":"eye"},{"count":1,"id":"1003","sn":"5cd28238fb073710972a73c2","suit_type":"hair"},{"count":1,"id":"10004","sn":"5cd28238fb073710972a73c2","suit_type":"mouse"}]`;
     public base = ["headBaseId", "bodyBaseId", "farmBaseId", "barmBaseId", "flegBaseId", "blegBaseId"];
 }
