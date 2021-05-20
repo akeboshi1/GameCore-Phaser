@@ -76,7 +76,7 @@ export class BasicMediator implements IMediator {
     }
 
     isShow(): boolean {
-        return this.mShow;
+        return this.mShow || this.mState === State.Showing;
     }
 
     resize(width?: number, height?: number) {
