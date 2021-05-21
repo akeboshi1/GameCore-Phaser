@@ -232,7 +232,7 @@ export class Element extends BlockObject implements IElement {
         const obj = { id: model.id, pos: model.pos, nickname: model.nickname, sound: model.sound, alpha: model.alpha, titleMask: model.titleMask | 0x00020000, hasInteractive: model.hasInteractive };
         // render action
         this.load(this.mModel.displayInfo)
-            .then(() => this.mElementManager.roomService.game.peer.render.setModel(obj))
+            .then(() => this.mElementManager.roomService.game.peer.render.setModel(obj)).catch(() => { this.mRoomService.elementManager.onDisplayReady(this.mModel.id); })
             .then(() => {
                 this.setDirection(this.mModel.direction);
                 if (this.mInputEnable === InputEnable.Interactive) {
