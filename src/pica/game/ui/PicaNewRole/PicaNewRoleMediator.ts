@@ -97,21 +97,20 @@ export class PicaNewRoleMediator extends BasicMediator {
     }
 
     private onPeopleActionHandler(action: ISocial) {
-        Logger.getInstance().log(action);
         this.mModel.queryAction(op_def.FrontEndUniqueUIEnum.PicaNewRole, this.uid, action.id);
         const tempdata = { animation: action.tag.type, times: action.tag.repeat, action: action.tag.action, id: action.tag.bulletId };
         let activeEnable = true;
         if (action.tag.propUseId) {
             const count = this.game.user.userData.playerBag.getItemsCount(op_pkt_def.PKT_PackageType.PropPackage, action.tag.propUseId);
             activeEnable = count > 0;
-            if (!activeEnable) {
-                const item = (<any>this.game.configManager).getItemBaseByID(action.tag.propUseId);
-                if (item) {
+            // if (!activeEnable) {
+            //     const item = (<any>this.game.configManager).getItemBaseByID(action.tag.propUseId);
+            //     if (item) {
                     // TODO i18n.t("common.notEnough");
-                    this.game.renderPeer.showAlert(`${item.name}数量不足`);
-                    return;
-                }
-            }
+                    // this.game.renderPeer.showAlert(`${item.name}数量不足`, true, false);
+            //         return;
+            //     }
+            // }
         }
         if (activeEnable) {
             this.game.user.tryActiveAction(this.mShowData.id, tempdata, true);

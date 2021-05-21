@@ -2,7 +2,8 @@ import { Font, Url } from "utils";
 import { PlayScene } from "../scenes/play.scene";
 import { BubbleContainer } from "./bubble/bubble.container";
 import { ElementStateType, StateConfig } from "structure";
-import { FollowEnum, FollowObject, TopDisplay } from "baseRender";
+import { FollowEnum, FollowObject, IRender, TopDisplay } from "baseRender";
+import { Render } from "../render";
 
 /**
  * 人物头顶显示对象
@@ -10,8 +11,10 @@ import { FollowEnum, FollowObject, TopDisplay } from "baseRender";
 export class ElementTopDisplay extends TopDisplay {
     private mBubble: BubbleContainer;
     private isDispose: boolean = false;
-    constructor(scene: Phaser.Scene, owner: any, dpr: number) {
-        super(scene, owner, dpr);
+    private uiScale: number;
+    constructor(scene: Phaser.Scene, owner: any, render: Render) {
+        super(scene, owner, render.scaleRatio, render.uiRatio);
+        this.uiScale = render.uiScale || 1;
     }
 
     public showNickname(name: string) {
@@ -25,11 +28,11 @@ export class ElementTopDisplay extends TopDisplay {
         } else {
             nickname = this.scene.make.text({
                 style: {
-                    fontSize: 12 * this.mDpr,
+                    fontSize: 12 * this.mSceneScale,
                     fontFamily: Font.DEFULT_FONT
                 }
-            }).setOrigin(0.5).setStroke("#000000", 2 * this.mDpr);
-            follow = new FollowObject(nickname, this.mOwner, this.mDpr);
+            }).setOrigin(0.5).setStroke("#000000", 2 * this.mSceneScale);
+            follow = new FollowObject(nickname, this.mOwner, this.mSceneScale);
             this.mFollows.set(FollowEnum.Nickname, follow);
         }
         nickname.text = name;
@@ -47,7 +50,7 @@ export class ElementTopDisplay extends TopDisplay {
             return;
         }
         if (!this.mBubble) {
-            this.mBubble = new BubbleContainer(scene, this.mDpr);
+            this.mBubble = new BubbleContainer(scene, this.mSceneScale);
         }
         this.mBubble.addBubble(text, setting);
         this.mBubble.follow(this.mOwner);
@@ -92,7 +95,7 @@ export class ElementTopDisplay extends TopDisplay {
                         sprite = follow.object;
                     } else {
                         sprite = this.scene.make.sprite({ key: pngurl, frame: frame + "_1" });
-                        follow = new FollowObject(sprite, this.mOwner, this.mDpr);
+                        follow = new FollowObject(sprite, this.mOwner, this.mSceneScale);
                         this.mFollows.set(FollowEnum.Sprite, follow);
                     }
                     sprite.play(animation.anikey);
@@ -103,10 +106,11 @@ export class ElementTopDisplay extends TopDisplay {
                         sprite.setTexture(pngurl, frame);
                     } else {
                         sprite = this.scene.make.image({ key: pngurl, frame });
-                        follow = new FollowObject(sprite, this.mOwner, this.mDpr);
+                        follow = new FollowObject(sprite, this.mOwner, this.mSceneScale);
                         this.mFollows.set(FollowEnum.Sprite, follow);
                     }
                 }
+                sprite.setScale(this.uiScale);
                 const point = this.getYOffset();
                 follow.setOffset(0, point.y);
                 this.addToSceneUI(sprite);
@@ -198,7 +202,7 @@ export class ElementTopDisplay extends TopDisplay {
         if (this.scene.textures.exists(pngurl)) {
             if (!this.isDispose && callback) callback.call(context);
         } else {
-            this.scene.load.atlas(pngurl, Url.getUIRes(this.mDpr, pngurl), Url.getUIRes(this.mDpr, jsonurl));
+            this.scene.load.atlas(pngurl, Url.getUIRes(this.mUIRatio, pngurl), Url.getUIRes(this.mUIRatio, jsonurl));
             this.scene.load.once(Phaser.Loader.Events.COMPLETE, () => {
                 if (!this.isDispose && callback) callback.call(context);
             }, this);

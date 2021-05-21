@@ -2,7 +2,7 @@ import { TopDisplay } from "baseRender";
 
 export class EditorTopDisplay extends TopDisplay {
     constructor(scene: Phaser.Scene, owner: any, dpr: number) {
-        super(scene, owner, dpr);
+        super(scene, owner, dpr, 1);
     }
 
     protected addToSceneUI(obj: any) {

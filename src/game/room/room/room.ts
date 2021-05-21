@@ -1014,7 +1014,7 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
         this.mIsWaitingForDecorateResponse = false;
         const content: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_START_EDIT_MODEL = packet.content;
         if (!content.status) {
-            this.game.renderPeer.showAlert(content.msg, true);
+            this.game.renderPeer.showAlert(content.msg, true, false);
             // Logger.getInstance().warn("enter decorate error: ", content.msg);
             return;
         }
@@ -1031,7 +1031,7 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
         this.mIsWaitingForDecorateResponse = false;
         const content: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_EDIT_MODEL_RESULT = packet.content;
         if (!content.status) {
-            this.game.renderPeer.showAlert(content.msg, true);
+            this.game.renderPeer.showAlert(content.msg, true, false);
             // Logger.getInstance().warn("enter decorate error: ", content.msg);
             return;
         }

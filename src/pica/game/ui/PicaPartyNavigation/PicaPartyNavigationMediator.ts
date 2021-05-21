@@ -130,13 +130,10 @@ export class PicaPartyNavigationMediator extends BasicMediator {
             this.config.getBatchItemDatas(step.rewards);
         }
         this.mPlayerProgress = content;
-        // content.currentProgressValue = 200;
         this.mView.setOnlineProgress(content);
-        Logger.getInstance().error(content.currentProgressValue);
     }
 
     private query_GET_ROOM_LIST(data: { page: number, perPage: number }) {
-        // this.model.query_GET_ROOM_LIST(1, 30);
         this.model.query_ROOM_LIST(op_def.RoomTypeEnum.NORMAL_ROOM, data.page, data.perPage);
     }
     private query_SELF_ROOM_LIST(roomType: number) {
