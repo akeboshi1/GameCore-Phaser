@@ -139,7 +139,7 @@ export class FramesDisplay extends BaseFramesDisplay implements IDisplayObject {
         }
         this.mName = name;
         if (!this.mTopDisplay) {
-            this.mTopDisplay = new ElementTopDisplay(this.scene, this, this.render.scaleRatio);
+            this.mTopDisplay = new ElementTopDisplay(this.scene, this, this.render);
         }
         if (!this.checkShowNickname()) return;
         this.mTopDisplay.showNickname(name);
@@ -165,13 +165,13 @@ export class FramesDisplay extends BaseFramesDisplay implements IDisplayObject {
             this.mTopDisplay = undefined;
             return;
         }
-        if (!this.mTopDisplay) this.mTopDisplay = new ElementTopDisplay(this.scene, this, this.render.scaleRatio);
+        if (!this.mTopDisplay) this.mTopDisplay = new ElementTopDisplay(this.scene, this, this.render);
         this.mTopDisplay.loadState(data);
     }
 
     public showBubble(text: string, setting: any) {// op_client.IChat_Setting
         if (!this.mTopDisplay) {
-            this.mTopDisplay = new ElementTopDisplay(this.scene, this, this.render.scaleRatio);
+            this.mTopDisplay = new ElementTopDisplay(this.scene, this, this.render);
         }
         this.mTopDisplay.showBubble(text, setting);
     }
