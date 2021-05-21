@@ -1,5 +1,5 @@
 import { AnimationModel, DragonbonesDisplay, FrameAnimation, FramesDisplay, Render, UIDragonbonesDisplay } from "gamecoreRender";
-import { IFramesModel, RunningAnimation } from "structure";
+import {IAvatar, IFramesModel, RunningAnimation} from "structure";
 import { Handler, Url } from "utils";
 import * as sha1 from "simple-sha1";
 
@@ -132,13 +132,6 @@ export class DetailDisplay extends Phaser.GameObjects.Container {
     this.mDragonboneDisplay.scale = scale;
     this.scale = 1;
   }
-  saveAvatar(): Promise<{key: string, url: string, json: string }> {
-    if (!this.mDragonboneDisplay) {
-      return Promise.reject("not display");
-    }
-
-    return this.mDragonboneDisplay.save();
-  }
 
   loadUrl(url: string, data?: string) {
     this.mUrl = url;
@@ -235,6 +228,9 @@ export class DetailDisplay extends Phaser.GameObjects.Container {
   }
   get display(): any {// op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_MARKET_QUERY_COMMODITY_RESOURCE
     return this.mDisplay;
+  }
+  get dragonbonesDisplay(): UIDragonbonesDisplay {
+    return this.mDragonboneDisplay;
   }
 
   private onCompleteHandler() {

@@ -200,30 +200,14 @@ export class PicaCreateRolePanel extends PicaBasePanel {
     private async onSubmitHandler() {
         this.enterButton.enabled = false;
         const ids = [];
-        const avatarSets = [];
-        const suitPart = AvatarSuitType.suitPart;
         this.curSuitMap.forEach((value, key) => {
             ids.push(value.id);
-
-            avatarSets.push({"parts": AvatarSuitType.checkSlotValue(value.suitType, value.slot, false), id: value.sn});
         });
 
-        this.uiManager.showPanel(ModuleName.MASK_LOADING_NAME);
-        this.dragonbones.save()
-            .then((saveData) => {
-                this.render.mainPeer.uploadDBTexture(saveData.key, saveData.url, saveData.json)
-                    .catch((reason) => {
-                        Logger.getInstance().error("uploadDBTexture error: " + reason);
-                    });
-                return this.render.editorCanvasManager.createHeadIcon(avatarSets);
-            })
-            .then((str) => {
-                this.render.mainPeer.uploadHeadImage(str);
-                this.uiManager.hidePanel(ModuleName.MASK_LOADING_NAME);
+        this.render.editorCanvasManager.saveAvatar(this.dragonbones)
+            .then(() => {
+                // save complete
                 this.mediator.submit(this.mgender, ids);
-            })
-            .catch((reason) => {
-                Logger.getInstance().error("save avatar error: " + reason);
             });
     }
 
