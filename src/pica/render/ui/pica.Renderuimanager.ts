@@ -18,14 +18,6 @@ export class PicaRenderUiManager extends UiManager {
         return this.mAtalsManager.getUrlDatas(atlas, loadType);
     }
 
-    public showAlertView(text: string, ok: boolean, cancel: boolean = false, callBack?: Function) {
-        super.showAlertView(text, ok, cancel, callBack);
-    }
-
-    public showErrorMsg(msg: string) {
-        super.showErrorMsg(msg);
-    }
-
     public destroy() {
         super.destroy();
         this.mRender.emitter.off(Render.SCENE_CREATED, this.sceneCreated);

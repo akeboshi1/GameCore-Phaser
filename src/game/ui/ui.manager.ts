@@ -255,8 +255,7 @@ export class UIManager extends PacketHandler {
     }
 
     protected async onForceOfflineHandler(packet: PBpacket) {
-        const txt = await this.game.renderPeer.i18nString("common.offline");
-        this.game.peer.render.showAlert(txt, true).then(() => {
+        this.game.peer.render.showAlert("common.offline", true).then(() => {
             this.game.peer.render.hidden();
         });
     }
@@ -339,7 +338,7 @@ export class UIManager extends PacketHandler {
             configMgr.getBatchItemDatas(content.avatars);
             this.showMed(ModuleName.PICACREATEROLE_NAME, content);
         }, (response) => {
-            this.game.renderPeer.showAlert("配置加载错误，请重新登陆: " + response)
+            this.game.renderPeer.showAlert("配置加载错误，请重新登陆: " + response, true, false)
                 .then(() => {
                     this.game.renderPeer.hidden();
                 });
