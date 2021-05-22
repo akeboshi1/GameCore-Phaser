@@ -38,8 +38,8 @@ export class PicaAttributePanel extends Phaser.GameObjects.Container {
                 this.add(item);
                 this.attriItems.push(item);
             }
-            const x = (width - width / scaleRadio) * 0.5 * (i < 4 ? -1 : 1) + 20 * this.dpr * (scaleRadio === 2 ? 1 : 0);
-            const y = posy + cheight * 0.5 + (cheight + this.mspace) * (i % 4);
+            const x = (width - width / scaleRadio) * 0.5 * (i % 2 === 0 ? -1 : 1) + 20 * this.dpr * (scaleRadio === 2 ? 1 : 0);
+            const y = posy + cheight * 0.5 + (cheight + this.mspace) * Math.floor(i / 2);
             item.setPosition(x, y);
             item.setInfo(datas[i]);
             item.visible = true;
