@@ -66,7 +66,7 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
     /**
      * 自动重连开关
      */
-    protected canReconnect: boolean = false;
+    protected canReconnect: boolean = true;
     protected mMoveStyle: number;
     protected mReconnect: number = 0;
     protected hasClear: boolean = false;
@@ -198,13 +198,13 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
     }
 
     public async reconnect() {
-        if (!this.canReconnect) return;
         if (!this.isAuto) return;
         // if (this.hasClear || this.isPause) return;
         this.manualReconnect();
     }
 
     public async manualReconnect() {
+        if (!this.canReconnect) return;
         Logger.getInstance().debug("game reconnect");
         if (this.mConfig.hasConnectFail) return this.mainPeer.render.connectFail();
         let gameID: string = this.mConfig.game_id;
