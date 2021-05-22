@@ -63,6 +63,10 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
     protected gameConfigState: Map<string, boolean> = new Map();
     protected isPause: boolean = false;
     protected isAuto: boolean = true;
+    /**
+     * 自动重连开关
+     */
+    protected canReconnect: boolean = false;
     protected mMoveStyle: number;
     protected mReconnect: number = 0;
     protected hasClear: boolean = false;
@@ -194,6 +198,7 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
     }
 
     public async reconnect() {
+        if (!this.canReconnect) return;
         if (!this.isAuto) return;
         // if (this.hasClear || this.isPause) return;
         this.manualReconnect();
