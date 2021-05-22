@@ -175,7 +175,8 @@ export class FramesModel implements IFramesModel {
         if (isMoss !== undefined) {
             spr.isMoss = isMoss;
         }
-
+        const sprite = new Sprite(spr);
+        sprite.init(spr);
         return new Sprite(spr, nodeType);
     }
 

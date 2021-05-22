@@ -227,6 +227,7 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
     }
 
     public onClientErrorHandler(packet: PBpacket): void {
+        if (!this.debugReconnect) return;
         const content: op_client.IOP_GATEWAY_RES_CLIENT_ERROR = packet.content;
         switch (content.responseStatus) {
             case op_def.ResponseStatus.REQUEST_UNAUTHORIZED:
@@ -294,6 +295,7 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
                 return new Promise((resolve, reject) => {
                     this.renderPeer.showAlert("配置加载错误，请重新登陆" + reason, true, false)
                         .then(() => {
+                            if (!this.debugReconnect) return;
                             this.renderPeer.hidden();
                         });
                     reject();
