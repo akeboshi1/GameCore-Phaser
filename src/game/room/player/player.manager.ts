@@ -241,7 +241,9 @@ export class PlayerManager extends PacketHandler implements IElementManager {
                 this._loadSprite(sprite);
                 if (command === op_def.OpCommand.OP_COMMAND_UPDATE) {
                     this.checkSuitAvatarSprite(sprite);
-                    player.model = new Sprite(sprite, content.nodeType);
+                    const _sprite = new Sprite(sprite, content.nodeType);
+                    _sprite.init(sprite);
+                    player.model = _sprite;
                 } else if (command === op_def.OpCommand.OP_COMMAND_PATCH) {
                     player.updateModel(sprite, this.mRoom.game.avatarType);
                 }
@@ -309,7 +311,9 @@ export class PlayerManager extends PacketHandler implements IElementManager {
         for (const sprite of sprites) {
             this._loadSprite(sprite);
             this.checkSuitAvatarSprite(sprite);
-            this._add(new Sprite(sprite, content.nodeType));
+            const _sprite = new Sprite(sprite, content.nodeType);
+            _sprite.init(sprite);
+            this._add(_sprite);
         }
     }
 

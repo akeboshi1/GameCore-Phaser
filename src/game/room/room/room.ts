@@ -1051,8 +1051,9 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
         const nodeType = content.nodeType;
         const addList = [];
         for (const sp of content.sprites) {
-            const sprite = new Sprite(sp, nodeType);
-            addList.push(sprite);
+            const _sprite = new Sprite(sp, nodeType);
+            _sprite.init(sp);
+            addList.push(_sprite);
         }
 
         if (nodeType === op_def.NodeType.ElementNodeType || nodeType === op_def.NodeType.SpawnPointType) {

@@ -251,6 +251,7 @@ export class ElementManager extends PacketHandler implements IElementManager {
             point = obj.point3f;
             if (point) {
                 sprite = new Sprite(obj, 3);
+                (<Sprite>sprite).init(obj);
                 if (!this.checkDisplay(sprite)) {
                     ids.push(sprite.id);
                 } else {
@@ -302,6 +303,7 @@ export class ElementManager extends PacketHandler implements IElementManager {
                 }
                 // 更新elementstorage中显示对象的数据信息
                 const data = new Sprite(sprite, 3);
+                (<Sprite>data).init(sprite);
                 this.mRoom.game.elementStorage.add(<any>data);
                 element = this.get(sprite.id);
                 if (element) {
@@ -384,7 +386,9 @@ export class ElementManager extends PacketHandler implements IElementManager {
                 continue;
             }
             this.mAddCache.push(obj.id);
-            if (this.checkDisplay(new Sprite(obj, 3))) {
+            const sprite = new Sprite(obj,3);
+            // sprite.init(obj);
+            if (this.checkDisplay(sprite)) {
                 this.mCacheAddList.push(obj);
             } else {
                 this.mRequestSyncIdList.push(obj.id);
