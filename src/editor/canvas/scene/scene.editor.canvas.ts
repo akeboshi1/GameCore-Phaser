@@ -260,7 +260,7 @@ export class SceneEditorCanvas extends EditorCanvas implements IRender {
         const pos = Position45.transformTo45(new LogicPos(x, y), this.mRoomSize);
         const existTerrain = this.mTerrainManager.existTerrain.bind(this.mTerrainManager);
         if (existTerrain(pos.x, pos.y)) {
-            if (!existTerrain(pos.x -1, pos.y - 1)) {
+            if (!existTerrain(pos.x - 1, pos.y - 1)) {
                 if (!existTerrain(pos.x, pos.y - 1) && !existTerrain(pos.x - 1, pos.y)) {
                     return Direction.concave;
                 }
@@ -321,7 +321,7 @@ export class SceneEditorCanvas extends EditorCanvas implements IRender {
         //     const displayObj = pool.get(id.toString());
         //     if (displayObj) {
         this.selectElement(ids[0], false);
-                // this.selectedElement(displayObj.getDisplay());
+        // this.selectedElement(displayObj.getDisplay());
         //     }
         // }
     }
@@ -542,7 +542,7 @@ export class SceneEditorCanvas extends EditorCanvas implements IRender {
     }
 
     private onWheelHandler(pointer: Phaser.Input.Pointer) {
-        switch(this.mBrush) {
+        switch (this.mBrush) {
             case BrushEnum.Move:
             case BrushEnum.Select:
                 // 缩放地图
@@ -775,6 +775,7 @@ class MouseFollow {
         this.mKey = content.key;
         this.isTerrain = this.mNodeType === op_def.NodeType.TerrainNodeType || this.mNodeType === op_def.NodeType.WallNodeType;
         this.mSprite = new Sprite(content.sprite, content.nodeType);
+        this.mSprite.init(content.sprite);
         this.mDisplay = new MouseDisplayContainer(this.sceneEditor);
         const size = this.mNodeType === op_def.NodeType.TerrainNodeType ? this.mSize : 1;
         this.mDisplay.setDisplay(this.mSprite, size);
@@ -1146,7 +1147,7 @@ class SelectedElementManager {
     selectElements(elements: EditorFramesDisplay[], selecting: boolean = true) {
         this.unselectedElements();
         this.mSelecedElement = elements;
-        if (elements.length < 1 ) {
+        if (elements.length < 1) {
             return;
         }
         for (const ele of elements) {
@@ -1282,7 +1283,7 @@ class SelectedElementManager {
     }
 
     private onGameobjectOutHandler(pointer: Phaser.Input.Pointer, gameobject: Phaser.GameObjects.GameObject) {
-       this.clearOverElement();
+        this.clearOverElement();
     }
 
     private clearOverElement() {

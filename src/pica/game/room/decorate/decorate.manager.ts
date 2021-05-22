@@ -1,15 +1,15 @@
-import {op_client, op_def, op_pkt_def, op_virtual_world} from "pixelpai_proto";
-import {ISprite, LayerName, MessageType, ModuleName} from "structure";
-import {IPos, Logger, LogicPos, Position45, ValueResolver} from "utils";
-import {PBpacket} from "net-socket-packet";
-import {Sprite} from "baseModel";
-import {BaseDataConfigManager} from "../../config";
-import {IElementPi} from "../../../structure/ielementpi";
+import { op_client, op_def, op_pkt_def, op_virtual_world } from "pixelpai_proto";
+import { ISprite, LayerName, MessageType, ModuleName } from "structure";
+import { IPos, Logger, LogicPos, Position45, ValueResolver } from "utils";
+import { PBpacket } from "net-socket-packet";
+import { Sprite } from "baseModel";
+import { BaseDataConfigManager } from "../../config";
+import { IElementPi } from "../../../structure/ielementpi";
 import PKT_PackageType = op_pkt_def.PKT_PackageType;
-import {Room} from "../../../../game/room/room/room";
-import {BlockObject} from "../../../../game/room/block/block.object";
-import {InputEnable} from "../../../../game/room/element/element";
-import {LayerEnum} from "game-capsule";
+import { Room } from "../../../../game/room/room/room";
+import { BlockObject } from "../../../../game/room/block/block.object";
+import { InputEnable } from "../../../../game/room/element/element";
+import { LayerEnum } from "game-capsule";
 
 // 小屋布置管理类，包含所有布置过程中的操作接口
 // 文档：https://dej4esdop1.feishu.cn/docs/doccnEbMKpINEkfBVImFJ0nTJUh#
@@ -149,7 +149,7 @@ export class DecorateManager {
             // 未解锁家具不移除
             if (this.mRoom.elementManager.isElementLocked(element)) continue;
 
-            const act = new DecorateAction(element.model, DecorateActionType.Remove, new DecorateActionData({pos: element.model.pos}));
+            const act = new DecorateAction(element.model, DecorateActionType.Remove, new DecorateActionData({ pos: element.model.pos }));
             this.mActionQueue.push(act);
             act.execute(this);
         }
@@ -276,12 +276,12 @@ export class DecorateManager {
     // 立地靠墙家具：距离最近的墙的地面，并不和其他家具碰撞冲突
     // 普通家具：不和其他家具碰撞冲突
     public checkCanPlace(id: number, pos?: IPos): { canPlace: boolean, conflictMap: number[][] } {
-        if (id < 0) return {canPlace: false, conflictMap: []};
+        if (id < 0) return { canPlace: false, conflictMap: [] };
 
         const element = this.mRoom.elementManager.get(id);
         if (!element) {
             // Logger.getInstance().debug("#place, no element: ", this.mSelectedID);
-            return {canPlace: false, conflictMap: []};
+            return { canPlace: false, conflictMap: [] };
         }
         const sprite = element.model;
 
@@ -313,7 +313,7 @@ export class DecorateManager {
             // 普通家具
 
         }
-        return {canPlace, conflictMap};
+        return { canPlace, conflictMap };
     }
 
     // 在输入操作时，限制位置。
@@ -390,7 +390,7 @@ export class DecorateManager {
 
         const bagCount = this.getBagCount(baseID);
         if (bagCount <= 0) return;
-        const typeData = await <any> this.getPIData(baseID);
+        const typeData = await <any>this.getPIData(baseID);
         if (!typeData) {
             Logger.getInstance().error("no config data, id: ", baseID);
             // this.room.game.renderPeer.showAlertView("no config data, id: " + baseID);
@@ -402,9 +402,9 @@ export class DecorateManager {
         const indexID = Math.floor(Math.random() * (max - min) + min);
         const pos = await this.room.game.renderPeer.getCameraMidPos();
         const gridPos = Position45.transformTo90(Position45.transformTo45(pos, this.room.miniSize), this.room.miniSize);
-        const spriteData = new Sprite({
+        const obj = {
             id: indexID,
-            point3f: {x: gridPos.x, y: gridPos.y, z: 0},
+            point3f: { x: gridPos.x, y: gridPos.y, z: 0 },
             currentAnimationName: "idle",
             direction: 3,
             nickname: typeData.name,
@@ -413,9 +413,11 @@ export class DecorateManager {
             sn: typeData.sn,
             layer: typeData.layer,
             attrs: typeData.Attributes
-        }, op_def.NodeType.ElementNodeType);
+        };
+        const spriteData = new Sprite(obj, op_def.NodeType.ElementNodeType);
+        spriteData.init(obj);
 
-        const act = new DecorateAction(spriteData, DecorateActionType.Add, new DecorateActionData({pos: spriteData.pos}));
+        const act = new DecorateAction(spriteData, DecorateActionType.Add, new DecorateActionData({ pos: spriteData.pos }));
         act.execute(this).then(() => {
             this.select(indexID);
             this.mSelectedActionQueue.push(act);
@@ -436,7 +438,7 @@ export class DecorateManager {
         if (delta.x === 0 && delta.y === 0) return;
         const element = this.mRoom.elementManager.get(this.mSelectedID);
         if (!element) return;
-        const act = new DecorateAction(element.model, DecorateActionType.Move, new DecorateActionData({moveVec: delta}));
+        const act = new DecorateAction(element.model, DecorateActionType.Move, new DecorateActionData({ moveVec: delta }));
         this.mSelectedActionQueue.push(act);
         act.execute(this);
 
@@ -451,7 +453,7 @@ export class DecorateManager {
         if (this.mSelectedID < 0) return;
         const element = this.mRoom.elementManager.get(this.mSelectedID);
         if (!element) return;
-        const act = new DecorateAction(element.model, DecorateActionType.Rotate, new DecorateActionData({rotateTimes: 1}));
+        const act = new DecorateAction(element.model, DecorateActionType.Rotate, new DecorateActionData({ rotateTimes: 1 }));
         this.mSelectedActionQueue.push(act);
         act.execute(this);
 
@@ -467,7 +469,7 @@ export class DecorateManager {
         const element = this.mRoom.elementManager.get(this.mSelectedID);
         if (!element) return;
         if (this.mRoom.elementManager.isElementLocked(element)) return;
-        const act = new DecorateAction(element.model, DecorateActionType.Remove, new DecorateActionData({pos: element.model.pos}));
+        const act = new DecorateAction(element.model, DecorateActionType.Remove, new DecorateActionData({ pos: element.model.pos }));
         this.mSelectedActionQueue.push(act);
         act.execute(this);
 
@@ -501,7 +503,7 @@ export class DecorateManager {
     }
 
     public getBaseIDBySN(sn: string): string {
-        const configMgr = <BaseDataConfigManager> this.room.game.configManager;
+        const configMgr = <BaseDataConfigManager>this.room.game.configManager;
         const temp = configMgr.getItemBaseBySN(sn);
         if (temp) return temp.id;
         else {
@@ -523,7 +525,7 @@ export class DecorateManager {
     }
 
     private getPIData(baseID: string): Promise<IElementPi> {
-        const configMgr = <BaseDataConfigManager> this.room.game.configManager;
+        const configMgr = <BaseDataConfigManager>this.room.game.configManager;
         return configMgr.getItemPIDataByID(baseID);
     }
 

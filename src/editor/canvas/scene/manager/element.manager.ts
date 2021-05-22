@@ -144,9 +144,11 @@ export class EditorElementManager extends PacketHandler {
 
         for (const sprite of sprites) {
             this.sceneEditor.displayObjectPool.addCache(sprite.id);
+            const _sprite = new Sprite(sprite, content.nodeType);
+            _sprite.init(sprite);
             this.taskQueue.set(sprite.id, {
                 action: "ADD",
-                sprite: new Sprite(sprite,content.nodeType),
+                sprite: _sprite,
             });
         }
 
@@ -195,9 +197,11 @@ export class EditorElementManager extends PacketHandler {
         }
         for (const sprite of sprites) {
             // this.trySync(sprite);
+            const _sprite = new Sprite(sprite);
+            _sprite.init(sprite);
             this.taskQueue.set(sprite.id, {
                 action: "UPDATE",
-                sprite: new Sprite(sprite),
+                sprite: _sprite,
             });
         }
     }

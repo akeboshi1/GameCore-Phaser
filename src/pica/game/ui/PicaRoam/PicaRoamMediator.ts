@@ -147,7 +147,7 @@ export class PicaRoamMediator extends BasicMediator {
     }
 
     private updatePoolsData() {
-        if (this.poolsData) this.onRetRoamListResult(this.poolsData);
+        if (this.poolsData && this.poolsData.length > 0) this.onRetRoamListResult(this.poolsData);
     }
 
     private updateTokenData(data: { tokenId: string, alterId: string }) {

@@ -63,6 +63,10 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
     protected gameConfigState: Map<string, boolean> = new Map();
     protected isPause: boolean = false;
     protected isAuto: boolean = true;
+    /**
+     * 自动重连开关
+     */
+    protected debugReconnect: boolean = true;
     protected mMoveStyle: number;
     protected mReconnect: number = 0;
     protected hasClear: boolean = false;
@@ -142,6 +146,7 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
     }
 
     public onDisConnected(isAuto?: boolean) {
+        if (!this.debugReconnect) return;
         Logger.getInstance().debug("app connectFail=====");
         this.isAuto = isAuto;
         if (!this.isAuto) return;
@@ -200,6 +205,7 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
     }
 
     public async manualReconnect() {
+        if (!this.debugReconnect) return;
         Logger.getInstance().debug("game reconnect");
         if (this.mConfig.hasConnectFail) return this.mainPeer.render.connectFail();
         let gameID: string = this.mConfig.game_id;
@@ -221,6 +227,7 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
     }
 
     public onClientErrorHandler(packet: PBpacket): void {
+        if (!this.debugReconnect) return;
         const content: op_client.IOP_GATEWAY_RES_CLIENT_ERROR = packet.content;
         switch (content.responseStatus) {
             case op_def.ResponseStatus.REQUEST_UNAUTHORIZED:
@@ -288,6 +295,7 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
                 return new Promise((resolve, reject) => {
                     this.renderPeer.showAlert("配置加载错误，请重新登陆" + reason, true, false)
                         .then(() => {
+                            if (!this.debugReconnect) return;
                             this.renderPeer.hidden();
                         });
                     reject();

@@ -246,22 +246,6 @@ export class Element extends BlockObject implements IElement {
                 }
                 return this.setRenderable(true);
             });
-        // physic action
-        // const obj1 = {
-        //     id: model.id,
-        //     point3f: model.pos,
-        //     currentAnimationName: model.currentAnimationName,
-        //     direction: model.direction,
-        //     mountSprites: model.mountSprites,
-        //     speed: model.speed,
-        //     displayInfo: model.displayInfo
-        // };
-        // this.mRoomService.game.peer.physicalPeer.setModel(obj1)
-        //     .then(() => {
-        //         if (this.mRenderable) {
-        //             this.addBody();
-        //         }
-        //     });
     }
 
     public updateModel(model: op_client.ISprite, avatarType?: op_def.AvatarStyle) {

@@ -1,12 +1,12 @@
-import {Direction, Helpers, IPos, Logger, LogicPos, Position45, Tool} from "utils";
-import {IRoomService} from "..";
-import {Wall} from "../wall/wall";
-import {FramesModel, Sprite} from "baseModel";
-import {LayerEnum} from "game-capsule";
-import {BaseDataConfigManager} from "picaWorker";
-import {AnimationModel, IDisplay} from "structure";
-import {SPRITE_SHEET_KEY} from "../../../editor/canvas/element/element.editor.resource.manager";
-import {IExtendCountablePackageItem} from "picaStructure";
+import { Direction, Helpers, IPos, Logger, LogicPos, Position45, Tool } from "utils";
+import { IRoomService } from "..";
+import { Wall } from "../wall/wall";
+import { FramesModel, Sprite } from "baseModel";
+import { LayerEnum } from "game-capsule";
+import { BaseDataConfigManager } from "picaWorker";
+import { AnimationModel, IDisplay } from "structure";
+import { SPRITE_SHEET_KEY } from "../../../editor/canvas/element/element.editor.resource.manager";
+import { IExtendCountablePackageItem } from "picaStructure";
 import * as sha1 from "simple-sha1";
 
 export class WallManager {
@@ -23,7 +23,7 @@ export class WallManager {
         }
         const walls = Array.from(wallCollection.dataMap.values());
         for (const palette of walls) {
-            const sprite = new Sprite({
+            const obj = {
                 id: Helpers.genId(),
                 point3f: {
                     x: palette.x,
@@ -31,7 +31,9 @@ export class WallManager {
                 },
                 layer: LayerEnum.Wall,
                 direction: palette.dir,
-            });
+            };
+            const sprite = new Sprite(obj);
+            sprite.init(obj);
             sprite.setDisplayInfo(elementStorage.getMossPalette(palette.key).frameModel);
             const w = new Wall(sprite, this.roomService);
             this.walls.push(w);
@@ -102,7 +104,7 @@ export class WallManager {
     // todo: move to pica
     // 替换全部资源
     public changeAllDisplayData(id: string) {
-        const configMgr = <BaseDataConfigManager> this.roomService.game.configManager;
+        const configMgr = <BaseDataConfigManager>this.roomService.game.configManager;
         const configData = configMgr.getElement2Data(id);
         if (!configData) {
             Logger.getInstance().error("no config data, id: ", id);
