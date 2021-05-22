@@ -479,7 +479,11 @@
     "tooqingtips": "[color=#FEDF36]图轻实验室[/color]是一个让大家轻松制作游戏的平台，在不久的将来你也可以创作[color=#FEDF36]属于自己的[/color]游戏"
   },
   "commontips": {
-    "configerror": "配置未成功加载，请刷新游戏"
+    "configerror": "配置未成功加载，请刷新游戏",
+    "room_dose_not_exists": "该房间被卷入异空间了，暂时无法找到",
+    "room_password_failure": "口令对不上！",
+    "room_need_password": "需要口令，才能芝麻开门",
+    "room_full": "房间被塞满了，等等再来吧"
   },
   "boot": {
     "play": "开始游戏",

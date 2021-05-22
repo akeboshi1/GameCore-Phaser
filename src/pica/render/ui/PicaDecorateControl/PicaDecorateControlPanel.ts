@@ -1,9 +1,9 @@
-import { Button, ClickEvent } from "apowophaserui";
-import { UiManager } from "gamecoreRender";
-import { MessageType, ModuleName } from "structure";
-import { IPos, LogicPos } from "utils";
-import { UIAtlasName } from "../../../res";
-import { PicaBasePanel } from "../pica.base.panel";
+import {Button, ClickEvent} from "apowophaserui";
+import {UiManager} from "gamecoreRender";
+import {MessageType, ModuleName} from "structure";
+import {IPos, LogicPos} from "utils";
+import {UIAtlasName} from "../../../res";
+import {PicaBasePanel} from "../pica.base.panel";
 
 export class PicaDecorateControlPanel extends PicaBasePanel {
     // private mSaveBtn: Button;
@@ -47,11 +47,13 @@ export class PicaDecorateControlPanel extends PicaBasePanel {
     }
 
     public updateCanPlace(canPlace: boolean) {
-        // if (this.mSaveBtn) this.mSaveBtn.enable = canPlace;
+        if (!this.mExitBtn) return;
+        const frameName = canPlace ? "room_decorate_confirm" : "room_decorate_closed";
+        this.mExitBtn.setFrameNormal(frameName, frameName);
     }
 
     public updatePosition() {
-        const { id, pos, canPlace } = this.mShowData;
+        const {id, pos, canPlace} = this.mShowData;
         const display = this.render.displayManager.getDisplay(id);
         if (!display) {
             return;
@@ -103,7 +105,7 @@ export class PicaDecorateControlPanel extends PicaBasePanel {
         this.resize(w, h);
         super.init();
 
-        const { id, pos, canPlace, locked } = this.mShowData;
+        const {id, pos, canPlace, locked} = this.mShowData;
         this.updateCanPlace(canPlace);
         this.changePosFollowTarget(pos);
         this.mRecycleBtn.enable = !locked;

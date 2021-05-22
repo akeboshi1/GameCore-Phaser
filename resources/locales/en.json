@@ -468,7 +468,11 @@
     "tooqingtips": "[color=#FEDF36] Light Lab [/color] is a platform where you can easily create your own [/color] games in the near future"
   },
   "commontips": {
-    "configerror": "The configuration did not load successfully, please refresh the game"
+    "configerror": "The configuration did not load successfully, please refresh the game",
+    "room_dose_not_exists": "This room has vanished into the void. Cannot find it temporaily.",
+    "room_password_failure": "Password is incorrect.",
+    "room_need_password": "Password needed to access.",
+    "room_full": "Sorry, the room is full."
   },
   "boot": {
     "play": "Play",

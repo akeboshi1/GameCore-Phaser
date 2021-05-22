@@ -23,6 +23,7 @@ export class DecorateManager {
     private mSelectedID: number = -1;
     private mSelectedSortIndex: number = -1;
     private mElementCreatedResolver: Map<number, ValueResolver<any>> = new Map();
+    private mIsAddingFromBag: boolean = false;
 
     constructor(private mRoom: Room, private mEntryData?: { id: number, baseID?: string }) {
         this.room.game.emitter.on(MessageType.DECORATE_ELEMENT_CREATED, this.elementCreated, this);
@@ -41,6 +42,7 @@ export class DecorateManager {
         this.mActionQueue.length = 0;
         this.mSelectedActionQueue.length = 0;
         this.mBagDataMap.clear();
+        this.mIsAddingFromBag = false;
     }
 
     // 固定功能栏
@@ -382,6 +384,8 @@ export class DecorateManager {
     }
 
     public async addFromBag(baseID: string) {
+        if (this.mIsAddingFromBag) return;
+        this.mIsAddingFromBag = true;
         this.reverseSelected();
 
         const bagCount = this.getBagCount(baseID);
@@ -420,6 +424,8 @@ export class DecorateManager {
             if (checkData.canPlace) {
                 this.ensureSelectedChanges();
             }
+
+            this.mIsAddingFromBag = false;
         });
     }
 

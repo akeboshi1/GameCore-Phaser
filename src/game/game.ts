@@ -111,7 +111,7 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
     public startConnect() {
         const gateway: ServerAddress = this.mConfig.server_addr;
         if (!gateway || !gateway.host || !gateway.port) {
-            this.renderPeer.showAlert("登录失败，请重新登录或稍后再试")
+            this.renderPeer.showAlert("登录失败，请重新登录或稍后再试", true, false)
                 .then(async () => {
                     await this.renderPeer.clearAccount();
                     this.login();
@@ -148,7 +148,7 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
         if (this.mConfig.hasConnectFail) {
             return this.mainPeer.render.connectFail();
         } else {
-            this.renderPeer.showAlert("网络连接失败，请稍后再试").then(() => {
+            this.renderPeer.showAlert("网络连接失败，请稍后再试", true, false).then(() => {
                 const mediator = this.uiManager.getMed(ModuleName.PICA_BOOT_NAME);
                 if (mediator && mediator.isShow()) {
                     mediator.show();
@@ -225,7 +225,7 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
         switch (content.responseStatus) {
             case op_def.ResponseStatus.REQUEST_UNAUTHORIZED:
                 // 校验没成功
-                this.renderPeer.showAlert("登陆过期，请重新登陆")
+                this.renderPeer.showAlert("登陆过期，请重新登陆", true, false)
                     .then(() => {
                         this.renderPeer.hidden();
                     });
@@ -238,8 +238,9 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
         if (errorLevel >= op_def.ErrorLevel.SERVICE_GATEWAY_ERROR) {
             let str: string = msg;
             if (msg.length > 100) str = msg.slice(0, 99);
-            this.renderPeer.showAlert(str, true).then(() => {
-                this.manualReconnect();
+            this.renderPeer.showAlert(str, true, false).then(() => {
+                // 暂时去除重连
+                // this.manualReconnect();
             });
         } else {
             // 右上角显示
@@ -285,7 +286,7 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
             }, (reason) => {
                 // return this.loadGameConfig(remotePath);
                 return new Promise((resolve, reject) => {
-                    this.renderPeer.showAlert("配置加载错误，请重新登陆" + reason)
+                    this.renderPeer.showAlert("配置加载错误，请重新登陆" + reason, true, false)
                         .then(() => {
                             this.renderPeer.hidden();
                         });

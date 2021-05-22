@@ -40,11 +40,13 @@ export class BasicMediator implements IMediator {
     protected mModel: BasicModel;
     protected mShowData: any;
     protected mView: any;
+    protected mState: any;
     constructor(public key: string, protected game: Game) {
         if (!key || key.length === 0) {
             Logger.getInstance().error("invalid key");
             return;
         }
+        this.mState = State.Null;
     }
 
     public get UIType(): number {
@@ -63,6 +65,7 @@ export class BasicMediator implements IMediator {
     hide(): void {
         this.onDisable();
         if (this.mView && this.mShow !== false) this.mView.hide();
+        this.mState = State.Destroyed;
         this.mView = undefined;
         this.mPanelInit = false;
         this.mShow = false;
@@ -73,7 +76,7 @@ export class BasicMediator implements IMediator {
     }
 
     isShow(): boolean {
-        return this.mShow;
+        return this.mShow || this.mState === State.Showing;
     }
 
     resize(width?: number, height?: number) {
@@ -81,16 +84,25 @@ export class BasicMediator implements IMediator {
 
     show(param?: any): void {
         if (param) this.mShowData = param;
+        if (this.mState === State.Showing) {
+            return;
+        }
         if (this.mPanelInit && this.mShow) {
             this._show();
             return;
         }
         if (!this.mShow) this.onEnable();
-        this.mShow = true;
+        this.mState = State.Showing;
         this.__exportProperty(() => {
             this.game.peer.render.showPanel(this.key, param).then(() => {
                 this.mView = this.game.peer.render[this.key];
+                this.mShow = true;
+                if (this.mState === State.Destroyed) {
+                    this.hide();
+                    return;
+                }
                 this.panelInit();
+
             });
             this.mediatorExport();
         });
@@ -126,6 +138,7 @@ export class BasicMediator implements IMediator {
 
     protected panelInit() {
         this.mPanelInit = true;
+        this.mState = State.Inited;
     }
 
     protected mediatorExport() {
@@ -146,4 +159,11 @@ export class BasicMediator implements IMediator {
     protected onDisable() {
 
     }
+}
+
+enum State {
+    Null,
+    Showing,
+    Inited,
+    Destroyed
 }

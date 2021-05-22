@@ -12,6 +12,11 @@ export class RoomGuidePanel extends BasePlaySceneGuide {
     }
 
     protected getGuidePosition() {
+        if (!this.mElement) {
+            this.mPlayScene.input.off("gameobjectup", this.gameObjectUpHandler, this);
+            this.end();
+            return;
+        }
         const dpr = this.render.config.scale_ratio;
         const pos: IPos = Tool.getPosByScenes(this.mPlayScene, { x: this.mElement.x, y: this.mElement.y });
         const tmpPos = { x: pos.x - dpr * 5, y: pos.y + 95 * dpr };

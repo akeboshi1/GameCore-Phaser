@@ -314,21 +314,13 @@ export class BaseFramesDisplay extends BaseDisplay {
         // 清楚上一个显示对象的贴图数据
         this.clearDisplay();
 
-        let container: Phaser.GameObjects.Container = <Phaser.GameObjects.Container>this.mSprites.get(DisplayField.STAGE);
-        if (!container) {
-            container = this.scene.make.container(undefined, false);
-            container.setData("id", this.mID);
-            this.addAt(container, DisplayField.STAGE);
-            this.mSprites.set(DisplayField.STAGE, container);
-        }
-
         const layer = ani.layer;
         let display: any;
         for (let i = 0; i < layer.length; i++) {
             display = this.createDisplay(key, layer[i]);
             if (display) {
                 this.mDisplays.set(layer[i].id || i, display);
-                container.add(display);
+                this.addToStageContainer(display);
             }
         }
         this.mIsInteracitve ? this.setInteractive() : this.disableInteractive();
@@ -444,7 +436,7 @@ export class BaseFramesDisplay extends BaseDisplay {
                 frames.push({ key: gen, frame, visible });
             }
         }
-        const repeat = loop ? -1 : 1;
+        const repeat = loop ? -1 : 0;
         const config: Phaser.Types.Animations.Animation = {
             key,
             frames,
@@ -479,6 +471,20 @@ export class BaseFramesDisplay extends BaseDisplay {
             // this.emit("animationComplete");
             this.completeFrameAnimationQueue();
         }
+    }
+
+    protected addToStageContainer(display) {
+        if (!display) {
+            return;
+        }
+        let container: Phaser.GameObjects.Container = <Phaser.GameObjects.Container>this.mSprites.get(DisplayField.STAGE);
+        if (!container) {
+            container = this.scene.make.container(undefined, false);
+            container.setData("id", this.mID);
+            this.addAt(container, DisplayField.STAGE);
+            this.mSprites.set(DisplayField.STAGE, container);
+        }
+        container.add(display);
     }
 
     protected get framesInfo(): IFramesModel {

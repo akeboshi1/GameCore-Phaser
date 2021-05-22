@@ -95,7 +95,10 @@ export class Connection implements ConnectionService {
     }
 
     get connect(): boolean {
-        return this.isConnect;
+        if (!this.mSocket) {
+            return false;
+        }
+        return this.mSocket.isConnect;
     }
 
     set connect(val) {

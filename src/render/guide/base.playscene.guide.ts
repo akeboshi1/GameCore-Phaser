@@ -63,6 +63,11 @@ export class BasePlaySceneGuide extends BaseGuide {
     }
 
     protected getGuidePosition() {
+        if (!this.mElement) {
+            this.mPlayScene.input.off("gameobjectup", this.gameObjectUpHandler, this);
+            this.end();
+            return;
+        }
         const pos: IPos = Tool.getPosByScenes(this.mPlayScene, { x: this.mElement.x, y: this.mElement.y });
         const tmpPos = { x: pos.x, y: pos.y };
         return tmpPos;

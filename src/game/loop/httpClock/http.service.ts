@@ -152,10 +152,8 @@ export class HttpService {
         const imgFullName = path + key + ".png";
         const jsonFullName = path + key + ".json";
 
-        return this.post("file_upload", { filename: jsonFullName, blob: json, type: "json" })
-            .then( () => {
-                return this.post("file_upload", { filename: imgFullName, blob: url, type: "png"});
-            });
+        return Promise.all([this.post("file_upload", { filename: jsonFullName, blob: json, type: "json" }),
+            this.post("file_upload", { filename: imgFullName, blob: url, type: "png"})]);
     }
 
     userHeadsImage(uids: string[]) {

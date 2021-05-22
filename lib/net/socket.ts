@@ -27,7 +27,7 @@ export class SocketConnection {
     protected mConnectListener?: IConnectListener;
     // true是外部断网，false是手动断网
     protected isAuto: boolean = true;
-    private isConnect: boolean = false;
+    private mIsConnect: boolean = false;
     private closeConnectResolver: ValueResolver<any> = null;
     constructor($listener: IConnectListener) {
         this.mTransport = new WSWrapper();
@@ -40,13 +40,13 @@ export class SocketConnection {
                 Logger.getInstance().info(`SocketConnection ready.[${this.mServerAddr.host}:${this.mServerAddr.port}]`);
                 listener.onConnected(this.isAuto);
                 this.onConnected();
-                this.isConnect = true;
+                this.mIsConnect = true;
                 this.isAuto = true;
             });
             this.mTransport.on("close", () => {
                 Logger.getInstance().info(`SocketConnection close.`);
+                this.mIsConnect = false;
                 listener.onDisConnected(this.isAuto);
-                this.isConnect = false;
                 if (this.closeConnectResolver) {
                     this.closeConnectResolver.resolve(null);
                     this.closeConnectResolver = null;
@@ -54,13 +54,17 @@ export class SocketConnection {
             });
             this.mTransport.on("error", (reason: SocketConnectionError) => {
                 Logger.getInstance().info(`SocketConnection error.`);
-                if (this.isConnect) listener.onError(reason);
+                if (this.mIsConnect) listener.onError(reason);
             });
         }
     }
 
     set state(val: boolean) {
         this.isAuto = val;
+    }
+
+    get isConnect() {
+        return this.mIsConnect;
     }
 
     startConnect(addr: ServerAddress): void {

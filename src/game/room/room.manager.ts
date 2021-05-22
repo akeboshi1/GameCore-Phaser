@@ -32,6 +32,7 @@ export class RoomManager extends PacketHandler implements IRoomManager {
         this.mGame = game;
         this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_ENTER_SCENE, this.onEnterSceneHandler);
         this.addHandlerFun(op_client.OPCODE._OP_EDITOR_REQ_CLIENT_CHANGE_TO_EDITOR_MODE, this.onEnterEditor);
+        this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_EDIT_MODE_ENTER_ROOM, this.onEnterResult);
         // this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_EDIT_MODE_READY, this.onEnterDecorate);
     }
 
@@ -140,6 +141,16 @@ export class RoomManager extends PacketHandler implements IRoomManager {
         // room.enter(content.scene);
         // this.mCurRoom = room;
         // this.mRooms.push(room);
+    }
+
+    private onEnterResult(packet: PBpacket) {
+        const content: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_EDIT_MODE_ENTER_ROOM = packet.content;
+        if (!content.result) {
+            return;
+        }
+        const tips = [undefined, "commontips.room_full", "commontips.room_need_password", "commontips.room_password_failure", "commontips.room_dose_not_exists"];
+        const tip = tips[content.result - 1];
+        if (tip) this.game.renderPeer.showAlert(tip);
     }
 
     private async leaveRoom(room: IRoomService) {

@@ -23,8 +23,6 @@ import {
     MAIN_WORKER_URL,
     MessageType,
     ModuleName,
-    PHYSICAL_WORKER,
-    PHYSICAL_WORKER_URL,
     RENDER_PEER,
     SceneName,
     PlatFormType
@@ -1070,10 +1068,10 @@ export class Render extends RPCPeer implements GameMain, IRender {
                 const blockHeight = 150;
                 const { x, y } = rect;
                 const obj = {
-                    x,
-                    y,
-                    width: camera.width,
-                    height: camera.height,
+                    x: x - blockWidth * 1.5,
+                    y: y - blockHeight * 1.5,
+                    width: camera.width + blockWidth * 3,
+                    height: camera.height + blockHeight * 3,
                     zoom: camera.zoom,
                     scrollX: camera.scrollX,
                     scrollY: camera.scrollY
@@ -1094,11 +1092,13 @@ export class Render extends RPCPeer implements GameMain, IRender {
     }
 
     @Export([webworker_rpc.ParamType.str])
-    public showAlert(text: string, ok?: boolean) {
+    public showAlert(text: string, ok?: boolean, needI18n?: boolean) {
         // 告诉render显示警告框
         if (ok === undefined) ok = true;
+        if (needI18n === undefined) needI18n = true;
         return new Promise((resolve, reject) => {
             if (this.uiManager) {
+                if (needI18n) text = i18n.t(text);
                 this.uiManager.showAlertView(text, ok, undefined, () => {
                     resolve(null);
                 });

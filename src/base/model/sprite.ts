@@ -261,25 +261,23 @@ export class Sprite extends EventDispatcher implements ISprite {
         if (this.displayInfo) {
             this.displayInfo = null;
         }
-        if (display) {
-            const anis = [];
-            const objAnis = animations;
-            for (const ani of objAnis) {
-                anis.push(new AnimationModel(ani));
-            }
-            defAnimation = defAnimation || this.currentAnimationName || "";
-            this.displayInfo = new FramesModel({
-                animations: {
-                    defaultAnimationName: defAnimation,
-                    display,
-                    animationData: anis,
-                },
-                id: this.id,
-                sound: this.sound
-            });
-            if (defAnimation) {
-                this.setAnimationData(defAnimation, this.direction);
-            }
+        const anis = [];
+        const objAnis = animations;
+        for (const ani of objAnis) {
+            anis.push(new AnimationModel(ani));
+        }
+        defAnimation = defAnimation || this.currentAnimationName || "";
+        this.displayInfo = new FramesModel({
+            animations: {
+                defaultAnimationName: defAnimation,
+                display,
+                animationData: anis,
+            },
+            id: this.id,
+            sound: this.sound
+        });
+        if (defAnimation) {
+            this.setAnimationData(defAnimation, this.direction);
         }
     }
 

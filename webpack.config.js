@@ -142,7 +142,6 @@ const workerConfig = Object.assign({}, commonConfig, {
     },
     entry: {
         mainWorker: path.join(__dirname, "./src/game/main.peer.ts"),
-        physicalWorker: path.join(__dirname, "./src/services/physical.worker.ts")
     },
     output: {
         // This is required so workers are known where to be loaded from

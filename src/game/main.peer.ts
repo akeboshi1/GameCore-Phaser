@@ -25,7 +25,7 @@ export class MainPeer extends RPCPeer {
      * 主进程和render之间完全链接成功
      */
     private isReady: boolean = false;
-    private delayTime: number = 15000;
+    private delayTime: number = 2000;
     private reConnectCount: number = 0;
     private startDelay: any;
     private isStartUpdateFps: boolean = false;
@@ -276,6 +276,11 @@ export class MainPeer extends RPCPeer {
     @Export([webworker_rpc.ParamType.str])
     public getActiveUIData(str: string): any {
         return this.game.uiManager.getUIStateData(str);
+    }
+
+    @Export([webworker_rpc.ParamType.str])
+    public refrehActiveUIState(panel: string) {
+        return this.game.uiManager.refrehActiveUIState(panel);
     }
 
     @Export()

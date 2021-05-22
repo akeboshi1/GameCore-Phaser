@@ -227,12 +227,13 @@ export class PicaNewMainPanel extends PicaBasePanel {
         //         if (curRoom)
         //             this.setGiftButtonState(curRoom.openingParty);
         //     });
-        this.render.mainPeer.getActiveUIData(ModuleName.PICANEWMAIN_NAME)
-            .then((arr) => {
-                if (arr) {
-                    this.updateUIState(arr);
-                }
-            });
+        // this.render.mainPeer.getActiveUIData(ModuleName.PICANEWMAIN_NAME)
+        //     .then((arr) => {
+        //         if (arr) {
+        //             this.updateUIState(arr);
+        //         }
+        //     });
+        this.render.mainPeer.refrehActiveUIState(ModuleName.PICANEWMAIN_NAME);
     }
 
     private onNoticeHandler() {
