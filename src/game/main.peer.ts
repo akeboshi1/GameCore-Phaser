@@ -25,7 +25,7 @@ export class MainPeer extends RPCPeer {
      * 主进程和render之间完全链接成功
      */
     private isReady: boolean = false;
-    private delayTime: number = 15000;
+    private delayTime: number = 2000;
     private reConnectCount: number = 0;
     private startDelay: any;
     private isStartUpdateFps: boolean = false;
