@@ -1,4 +1,4 @@
-/// <reference types="tooqinggamephaser" />
+/// <reference types="phaser" />
 import { RoomScene } from "./room.scene";
 import { PlaySceneLoadState } from "structure";
 import { MotionManager } from "../input/motion.manager";

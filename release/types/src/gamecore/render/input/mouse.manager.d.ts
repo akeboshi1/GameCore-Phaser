@@ -1,4 +1,4 @@
-/// <reference types="tooqinggamephaser" />
+/// <reference types="phaser" />
 import { Render } from "../render";
 export declare enum MouseEvent {
     RightMouseDown = 1,

@@ -1,5 +1,5 @@
 import { EditorCanvas, IEditorCanvasConfig } from "../editor.canvas";
-import { Scene } from "tooqinggamephaser";
+import { Scene } from "phaser";
 /**
  * api:https://dej4esdop1.feishu.cn/docs/doccn2zhhTyXaB3HYm69a0sIYhh
  * 尺寸规范链接：https://dej4esdop1.feishu.cn/docs/doccn5QVnqQ9XQz5baCBayOy49f?from=from_copylink

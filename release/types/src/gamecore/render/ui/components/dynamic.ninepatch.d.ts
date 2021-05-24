@@ -1,4 +1,4 @@
-/// <reference types="tooqinggamephaser" />
+/// <reference types="phaser" />
 import { NineSlicePatch } from "apowophaserui";
 export declare class DynamicNinepatch {
     private mScene;

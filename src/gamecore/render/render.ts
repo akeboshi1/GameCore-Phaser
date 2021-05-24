@@ -1,4 +1,4 @@
-import { Game } from "tooqinggamephaser";
+import { Game } from "phaser";
 import { Export, RPCPeer, webworker_rpc } from "webworker-rpc";
 import { UiUtils, Url } from "utils";
 import { PBpacket } from "net-socket-packet";
@@ -657,7 +657,7 @@ export class Render extends RPCPeer implements GameMain, IRender {
                 disableContextMenu: true,
                 transparent: false,
                 backgroundColor: 0x0,
-                resolution: 1,
+                // resolution: 1,
                 fps: {
                     target: 45,
                     forceSetTimeOut: true
@@ -687,7 +687,7 @@ export class Render extends RPCPeer implements GameMain, IRender {
             };
             Object.assign(this.gameConfig, this.mConfig);
             this.mGame = new Game(this.gameConfig);
-            this.mGame.input.mouse.capture = true;
+            // this.mGame.input.mouse.capture = true;
             if (this.mGame.device.os.desktop) {
                 this.mUIScale = 1;
                 this.mConfig.platform = PlatFormType.PC;

@@ -1,4 +1,4 @@
-/// <reference types="tooqinggamephaser" />
+/// <reference types="phaser" />
 import { Render } from "../../render";
 import { Pos } from "structure";
 export interface IBtnData {

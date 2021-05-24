@@ -1,4 +1,4 @@
-/// <reference types="tooqinggamephaser" />
+/// <reference types="phaser" />
 import { IDisplayObject } from "../display.object";
 export declare class BubbleContainer extends Phaser.GameObjects.Container {
     private mBubbles;

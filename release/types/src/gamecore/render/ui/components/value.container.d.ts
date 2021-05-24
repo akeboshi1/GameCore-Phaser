@@ -1,4 +1,4 @@
-/// <reference types="tooqinggamephaser" />
+/// <reference types="phaser" />
 import { Button } from "apowophaserui";
 import { Handler } from "structure";
 export declare class ValueContainer extends Phaser.GameObjects.Container {

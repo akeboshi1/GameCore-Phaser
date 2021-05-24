@@ -1,4 +1,4 @@
-/// <reference types="tooqinggamephaser" />
+/// <reference types="phaser" />
 import { BaseAnimation } from "./base.animation";
 export declare class BubbleAnimation extends BaseAnimation {
     private frameAnim;

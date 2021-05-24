@@ -1,4 +1,4 @@
-/// <reference types="tooqinggamephaser" />
+/// <reference types="phaser" />
 import { BaseFramesDisplay, ReferenceArea } from "baseRender";
 import { Render } from "../../render";
 import { ElementStateType, RunningAnimation, IPos } from "structure";

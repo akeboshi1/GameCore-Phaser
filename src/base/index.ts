@@ -1,5 +1,3 @@
-// import "structure";
-// import "utils";
-import "tooqinggamephaser";
+import "phaser";
 export * from "./game";
 export * from "./render";

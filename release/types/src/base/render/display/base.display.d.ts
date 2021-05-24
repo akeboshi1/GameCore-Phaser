@@ -1,4 +1,4 @@
-/// <reference types="tooqinggamephaser" />
+/// <reference types="phaser" />
 import { ValueResolver, DisplayField, IDragonbonesModel, IFramesModel, RunningAnimation, Handler, IProjection, LogicPos } from "structure";
 import { ISortObject } from "./sort.object";
 export interface IBaseDisplay {
@@ -62,7 +62,7 @@ export declare abstract class BaseDisplay extends Phaser.GameObjects.Container i
     destroyMount(): void;
     fadeIn(callback?: () => void): void;
     fadeOut(callback?: () => void): void;
-    getSprite(key: DisplayField): Phaser.GameObjects.Container | Phaser.GameObjects.Image | Phaser.GameObjects.Sprite;
+    getSprite(key: DisplayField): Phaser.GameObjects.Container | Phaser.GameObjects.Sprite | Phaser.GameObjects.Image;
     protected updateSort(): void;
     get runningAnimation(): RunningAnimation;
     get rootMount(): BaseDisplay;

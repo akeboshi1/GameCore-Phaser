@@ -1,4 +1,4 @@
-/// <reference types="tooqinggamephaser" />
+/// <reference types="phaser" />
 import { IPos } from "structure";
 export interface IGuideRes {
     key: string;

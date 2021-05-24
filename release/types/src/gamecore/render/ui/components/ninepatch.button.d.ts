@@ -1,4 +1,4 @@
-/// <reference types="tooqinggamephaser" />
+/// <reference types="phaser" />
 import { NineSlicePatch, IPatchesConfig } from "apowophaserui";
 export declare class NinePatchButton extends Phaser.GameObjects.Container {
     protected mLabel: Phaser.GameObjects.Text;

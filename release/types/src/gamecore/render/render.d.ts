@@ -1,4 +1,4 @@
-/// <reference types="tooqinggamephaser" />
+/// <reference types="phaser" />
 import { RPCPeer } from "webworker-rpc";
 import { PBpacket } from "net-socket-packet";
 import { op_client } from "pixelpai_proto";

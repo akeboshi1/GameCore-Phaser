@@ -1,4 +1,4 @@
-/// <reference types="tooqinggamephaser" />
+/// <reference types="phaser" />
 import { BaseUI, NineSlicePatch } from "apowophaserui";
 export declare class ProgressMaskBar extends BaseUI {
     value: number;

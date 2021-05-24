@@ -1,4 +1,4 @@
-/// <reference types="tooqinggamephaser" />
+/// <reference types="phaser" />
 import { BaseUI } from "apowophaserui";
 export declare class ThreeSlicePath extends BaseUI {
     protected imgs: Phaser.GameObjects.Image[];

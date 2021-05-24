@@ -1,4 +1,4 @@
-/// <reference types="tooqinggamephaser" />
+/// <reference types="phaser" />
 export declare class TextButton extends Phaser.GameObjects.Container {
     private mText;
     private normalColor;

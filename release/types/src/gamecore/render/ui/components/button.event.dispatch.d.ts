@@ -1,4 +1,4 @@
-/// <reference types="tooqinggamephaser" />
+/// <reference types="phaser" />
 import { BaseUI, ClickEvent, ISoundGroup } from "apowophaserui";
 export declare class ButtonEventDispatcher extends BaseUI {
     protected soundGroup: any;

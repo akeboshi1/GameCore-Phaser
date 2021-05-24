@@ -1,4 +1,4 @@
-/// <reference types="tooqinggamephaser" />
+/// <reference types="phaser" />
 import { Panel } from "apowophaserui";
 import { Render } from "../../render";
 export declare class BaseBatchPanel extends Panel {

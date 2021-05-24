@@ -1,4 +1,4 @@
-/// <reference types="tooqinggamephaser" />
+/// <reference types="phaser" />
 import { IDragable } from "./idragable";
 export interface IDropable {
     dragDrop(dragable: IDragable): void;

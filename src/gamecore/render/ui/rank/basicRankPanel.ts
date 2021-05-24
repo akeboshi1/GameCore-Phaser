@@ -74,10 +74,10 @@ export class BasicRankPanel extends BasePanel {
         for (let i: number = 0; i < len; i++) {
             let text: Phaser.GameObjects.Text = this.mTexts[i];
             if (!text) continue;
-            text.destroy(true);
+            text.destroy();
             text = null;
         }
-        if (this.mTitleLabel) this.mTitleLabel.destroy(true);
+        if (this.mTitleLabel) this.mTitleLabel.destroy();
         this.mTexts = [];
         this.mBackground = null;
         this.mTitleLabel = null;

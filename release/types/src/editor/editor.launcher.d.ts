@@ -1,4 +1,4 @@
-import "tooqinggamephaser";
+import "phaser";
 import "dragonbones-runtime";
 import { IEditorCanvasConfig, ElementEditorCanvas, AvatarEditorCanvas, SceneEditorCanvas } from "../editor/canvas";
 export declare enum EditorCanvasType {

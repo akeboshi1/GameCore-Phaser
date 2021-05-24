@@ -1,4 +1,4 @@
-/// <reference types="tooqinggamephaser" />
+/// <reference types="phaser" />
 export declare class CheckboxGroup extends Phaser.Events.EventEmitter {
     private mList;
     private mSelectedButton;

@@ -1,4 +1,4 @@
-/// <reference types="tooqinggamephaser" />
+/// <reference types="phaser" />
 import { BaseUI } from "apowophaserui";
 import { ThreeSlicePath } from "./three.slice.path";
 export declare class ProgressThreeBar extends BaseUI {

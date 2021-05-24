@@ -1,3 +1,3 @@
-import "tooqinggamephaser";
+import "phaser";
 export * from "./game";
 export * from "./render";
