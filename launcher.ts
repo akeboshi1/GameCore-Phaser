@@ -75,6 +75,7 @@ export class Launcher {
         reload: null,
         game_created: null,
         platform: "nopc",
+        debugReconnect: true,
     };
 
     constructor(config?) {
