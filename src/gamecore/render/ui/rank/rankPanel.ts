@@ -67,7 +67,7 @@ export class RankPanel extends BasicRankPanel {
     }
 
     public destroy() {
-        if (this.mZoonInBtn) this.mZoonInBtn.destroy(true);
+        if (this.mZoonInBtn) this.mZoonInBtn.destroy();
         this.mZoonInBtn = null;
         this.mCurrentIndex = 0;
         super.destroy();

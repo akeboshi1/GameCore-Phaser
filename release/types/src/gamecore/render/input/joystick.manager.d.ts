@@ -1,4 +1,3 @@
-/// <reference types="phaser" />
 import { PacketHandler } from "net-socket-packet";
 import { Render } from "../render";
 export declare class JoystickManager extends PacketHandler {

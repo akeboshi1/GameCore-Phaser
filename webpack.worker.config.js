@@ -1,7 +1,7 @@
 const path = require("path");
 const webpack = require("webpack");
-const pathToPhaser = path.join(__dirname, "/node_modules/tooqinggamephaser");
-const phaser = path.join(pathToPhaser, "dist/phaser.js");
+const pathToPhaser = path.join(__dirname, "/node_modules/@PixelPai/tooqingphaser");
+const phaser = path.join(pathToPhaser, "dist/phaser.min.js");
 const pathToRPC = path.join(__dirname, "/node_modules/webworker-rpc");
 const webworkerrpc = path.join(pathToRPC, "release/rpcpeer.js")
 const HtmlWebpackPlugin = require("html-webpack-plugin");

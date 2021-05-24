@@ -1,4 +1,3 @@
-/// <reference types="phaser" />
 import { EditorCanvas, IEditorCanvasConfig } from "../editor.canvas";
 import { ElementEditorBrushType, ElementEditorEmitType } from "./element.editor.type";
 /**
@@ -14,7 +13,7 @@ export declare class ElementEditorCanvas extends EditorCanvas {
     private mAnimations;
     constructor(config: IEditorCanvasConfig);
     destroy(): void;
-    getScene(): Phaser.Scene;
+    getScene(): any;
     onSceneCreated(): void;
     onSceneDestroy(): void;
     on(event: ElementEditorEmitType, fn: Function, context?: any): void;

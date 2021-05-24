@@ -1,4 +1,3 @@
-/// <reference types="phaser" />
 export declare class TopDisplay {
     protected scene: Phaser.Scene;
     protected mFollows: Map<FollowEnum, FollowObject>;

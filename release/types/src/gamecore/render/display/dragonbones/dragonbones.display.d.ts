@@ -1,4 +1,3 @@
-/// <reference types="phaser" />
 import { Render } from "../../render";
 import { DisplayField, ElementStateType, IDragonbonesModel, RunningAnimation, IPos, IProjection } from "structure";
 import { IDisplayObject } from "../display.object";

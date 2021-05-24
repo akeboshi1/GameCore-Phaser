@@ -1,4 +1,3 @@
-/// <reference types="phaser" />
 import { IListItemComponent } from "../bag/IListItemRender";
 import { op_gameconfig } from "pixelpai_proto";
 import { DragDropIcon } from "./dragDropIcon";

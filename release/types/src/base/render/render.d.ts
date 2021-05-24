@@ -1,4 +1,3 @@
-/// <reference types="phaser" />
 import { IBaseCameraService } from "./cameras";
 import { BaseSceneManager } from "./scene/scene.manager";
 export interface IRender {

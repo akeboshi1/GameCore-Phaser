@@ -1,5 +1,5 @@
 import { AvatarEditorDragonbone, AvatarEditorScene } from "editorCanvas";
-import { Scene } from "tooqinggamephaser";
+import { Scene } from "phaser";
 import { Render } from "../render";
 
 export class EditorCanvasManager {

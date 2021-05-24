@@ -1,4 +1,3 @@
-/// <reference types="phaser" />
 import { IScenery } from "structure";
 import { IRender } from "../render";
 export interface IBlockManager {
@@ -30,7 +29,7 @@ export declare class BlockManager implements IBlockManager {
     setSize(imageW: number, imageH: number, gridW?: number, gridH?: number): void;
     resize(width: number, height: number): void;
     updateScale(val: number): void;
-    getLayer(): Phaser.GameObjects.Container;
+    getLayer(): any;
     updatePosition(): Promise<void>;
     destroy(): void;
     setState(state: any): void;

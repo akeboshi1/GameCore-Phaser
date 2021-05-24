@@ -1,4 +1,3 @@
-/// <reference types="phaser" />
 export declare class TweenCompent {
     private mTweening;
     private mScale;

@@ -1,4 +1,3 @@
-/// <reference types="phaser" />
 import { Render } from "../render";
 import { MouseManager } from "./mouse.manager";
 export declare class InputManager {

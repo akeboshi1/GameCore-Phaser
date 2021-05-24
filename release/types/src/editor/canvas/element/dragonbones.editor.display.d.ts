@@ -1,4 +1,3 @@
-/// <reference types="phaser" />
 import { BaseDragonbonesDisplay } from "baseRender";
 export declare class DragonbonesEditorDisplay extends BaseDragonbonesDisplay {
     private mWebHomePath;

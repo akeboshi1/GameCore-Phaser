@@ -1,4 +1,3 @@
-/// <reference types="phaser" />
 import { Handler } from "structure";
 import { BaseAnimation } from "./base.animation";
 export declare class FrameAnimation extends BaseAnimation {

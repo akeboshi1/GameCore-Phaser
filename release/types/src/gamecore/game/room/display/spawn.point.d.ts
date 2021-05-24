@@ -1,4 +1,3 @@
-/// <reference types="phaser" />
 import { op_client, op_gameconfig, op_gameconfig_01, op_def } from "pixelpai_proto";
 import { AnimationQueue, AvatarSuit, ISprite, RunningAnimation, IAvatar, IDragonbonesModel, IFramesModel } from "structure";
 import { LogicPos } from "structure";
@@ -53,7 +52,7 @@ export declare class SpawnPoint implements ISprite {
     unregisterAnimationMap(key: string): void;
     get currentCollisionArea(): number[][];
     get currentWalkableArea(): number[][];
-    get currentCollisionPoint(): Phaser.Geom.Point;
+    get currentCollisionPoint(): any;
     get hasInteractive(): boolean;
     get interactive(): any[];
     get speed(): number;

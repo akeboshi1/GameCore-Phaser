@@ -1,7 +1,7 @@
 const path = require("path");
 const webpack = require("webpack");
-const pathToPhaser = path.join(__dirname, "/node_modules/tooqinggamephaser");
-const phaser = path.join(pathToPhaser, "dist/phaser.js");
+const pathToPhaser = path.join(__dirname, "/node_modules/@PixelPai/tooqingphaser");
+const phaser = path.join(pathToPhaser, "dist/phaser.min.js");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const CopyWebpackPlugin = require("copy-webpack-plugin");
 const { CleanWebpackPlugin } = require("clean-webpack-plugin");

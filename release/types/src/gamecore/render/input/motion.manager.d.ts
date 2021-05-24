@@ -1,4 +1,3 @@
-/// <reference types="phaser" />
 import { Render } from "../render";
 export declare class MotionManager {
     protected render: Render;

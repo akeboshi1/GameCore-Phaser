@@ -1,4 +1,3 @@
-/// <reference types="phaser" />
 import { BaseDisplay } from "./base.display";
 import { DisplayField, IFramesModel, RunningAnimation } from "structure";
 import { BaseDragonbonesDisplay } from "./base.dragonbones.display";
@@ -31,7 +30,7 @@ export declare class BaseFramesDisplay extends BaseDisplay {
     unmount(display: BaseFramesDisplay | BaseDragonbonesDisplay): void;
     destroy(): void;
     protected createDisplays(key: string, ani: any): void;
-    protected createDisplay(key: string, layer: any): Phaser.GameObjects.Image | Phaser.GameObjects.Sprite;
+    protected createDisplay(key: string, layer: any): any;
     protected clearFadeTween(): void;
     protected completeFrameAnimationQueue(): void;
     protected clearDisplay(): void;
@@ -44,6 +43,6 @@ export declare class BaseFramesDisplay extends BaseDisplay {
     protected get framesInfo(): IFramesModel;
     get spriteWidth(): number;
     get spriteHeight(): number;
-    get topPoint(): Phaser.Geom.Point;
+    get topPoint(): any;
     get nodeType(): number;
 }

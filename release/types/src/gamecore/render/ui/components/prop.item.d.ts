@@ -1,4 +1,3 @@
-/// <reference types="phaser" />
 import { BBCodeText } from "apowophaserui";
 import { SoundButton } from "./soundButton";
 import { Handler } from "structure";
