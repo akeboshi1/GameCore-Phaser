@@ -1,5 +1,14 @@
 import {Logger, ResUtils, Tool, Url, ValueResolver} from "utils";
-import {IAvatar, IDragonbonesModel, RunningAnimation, SlotSkin, Atlas, IFramesModel, DisplayField} from "structure";
+import {
+    IAvatar,
+    IDragonbonesModel,
+    RunningAnimation,
+    SlotSkin,
+    Atlas,
+    IFramesModel,
+    DisplayField,
+    AvatarSuitType
+} from "structure";
 import {BaseDisplay} from "./base.display";
 
 import * as sha1 from "simple-sha1";
@@ -93,13 +102,13 @@ const SERIALIZE_QUEUE = [
     "bodySpecId",
     "farmBaseId",
     "farmCostId",
-    "farmShldId",
-    "farmWeapId",
+    // "farmShldId",
+    // "farmWeapId",
     "farmSpecId",
     "barmBaseId",
     "barmCostId",
-    "barmShldId",
-    "barmWeapId",
+    // "barmShldId",
+    // "barmWeapId",
     "barmSpecId",
     "flegBaseId",
     "flegCostId",
@@ -131,7 +140,7 @@ export class BaseDragonbonesDisplay extends BaseDisplay {
     private mNeedReplaceTexture: boolean = false;
     private mBoardPoint: Phaser.Geom.Point;
     private readonly UNPACK_SLOTS = [AvatarSlotNameTemp.FarmWeap, AvatarSlotNameTemp.BarmWeap];
-    private readonly UNCHECK_AVATAR_PROPERTY = ["id", "dirable", "farmWeapId", "barmWeapId"];
+    private readonly UNCHECK_AVATAR_PROPERTY = ["id", "dirable", "farmWeapId", "farmShldId", "barmWeapId", "barmShldId"];
 
     // 不需要手动释放旧的资源，龙骨中已经做了相关处理
     // private mPreReplaceTextureKey: string = "";
@@ -543,6 +552,7 @@ export class BaseDragonbonesDisplay extends BaseDisplay {
 
         let serializeStr = "";
         for (const key of SERIALIZE_QUEUE) {
+            if (this.UNCHECK_AVATAR_PROPERTY.indexOf(key) >= 0) continue;
             if (data[key] !== undefined && data[key] !== null) {
                 if (typeof data[key] === "string") {
                     serializeStr += data[key];
@@ -568,6 +578,8 @@ export class BaseDragonbonesDisplay extends BaseDisplay {
         packer.options.pot = false;
         for (const rep of this.replaceArr) {
             const slotName: string = rep.slot.replace("$", rep.dir.toString());
+            const propertyName = this.slotNameToPropertyName(slotName);
+            if (this.UNCHECK_AVATAR_PROPERTY.indexOf(propertyName) >= 0) continue;
             const slot: dragonBones.Slot = this.mArmatureDisplay.armature.getSlot(slotName);
             if (!slot) continue;
             const skin = this.formattingSkin(rep.skin);
@@ -601,32 +613,43 @@ export class BaseDragonbonesDisplay extends BaseDisplay {
 
     private prepareReplaceRenderTexture(): Promise<any> {
         return new Promise<any>((resolve, reject) => {
-            // this.mPreReplaceTextureKey = this.mReplaceTextureKey;
-            this.mReplaceTextureKey = this.generateReplaceTextureKey();
-            if (this.scene.textures.exists(this.mReplaceTextureKey)) {
-                resolve(null);
-            } else {
-                const loadData = ResUtils.getUsrAvatarTextureUrls(this.mReplaceTextureKey);
-                this.scene.load.atlas(this.mReplaceTextureKey, loadData.img, loadData.json);
-                const onLoadComplete = (key: string) => {
-                    if (this.mReplaceTextureKey !== key) return;
-                    this.removePhaserListener(PhaserListenerType.Load, Phaser.Loader.Events.FILE_COMPLETE, onLoadComplete);
-                    this.removePhaserListener(PhaserListenerType.Load, Phaser.Loader.Events.FILE_LOAD_ERROR, onLoadError);
+            // load unpack parts
+            this.loadPartsRes((slotName) => {
+                const propertyName = this.slotNameToPropertyName(slotName);
+                return this.UNCHECK_AVATAR_PROPERTY.indexOf(propertyName) >= 0;
+            })
+                .then(() => {
+                    // load replaced texture
+                    // this.mPreReplaceTextureKey = this.mReplaceTextureKey;
+                    this.mReplaceTextureKey = this.generateReplaceTextureKey();
+                    if (this.scene.textures.exists(this.mReplaceTextureKey)) {
+                        resolve(null);
+                    } else {
+                        const loadData = ResUtils.getUsrAvatarTextureUrls(this.mReplaceTextureKey);
+                        this.scene.load.atlas(this.mReplaceTextureKey, loadData.img, loadData.json);
+                        const onLoadComplete = (key: string) => {
+                            if (this.mReplaceTextureKey !== key) return;
+                            this.removePhaserListener(PhaserListenerType.Load, Phaser.Loader.Events.FILE_COMPLETE, onLoadComplete);
+                            this.removePhaserListener(PhaserListenerType.Load, Phaser.Loader.Events.FILE_LOAD_ERROR, onLoadError);
 
-                    resolve(null);
-                };
-                const onLoadError = (imageFile: ImageFile) => {
-                    if (this.mReplaceTextureKey !== imageFile.key) return;
-                    this.removePhaserListener(PhaserListenerType.Load, Phaser.Loader.Events.FILE_COMPLETE, onLoadComplete);
-                    this.removePhaserListener(PhaserListenerType.Load, Phaser.Loader.Events.FILE_LOAD_ERROR, onLoadError);
+                            resolve(null);
+                        };
+                        const onLoadError = (imageFile: ImageFile) => {
+                            if (this.mReplaceTextureKey !== imageFile.key) return;
+                            this.removePhaserListener(PhaserListenerType.Load, Phaser.Loader.Events.FILE_COMPLETE, onLoadComplete);
+                            this.removePhaserListener(PhaserListenerType.Load, Phaser.Loader.Events.FILE_LOAD_ERROR, onLoadError);
 
-                    Logger.getInstance().warn("load dragonbones texture error: ", loadData);
-                    reject("load dragonbones texture error: " + loadData);
-                };
-                this.addPhaserListener(PhaserListenerType.Load, Phaser.Loader.Events.FILE_COMPLETE, onLoadComplete);
-                this.addPhaserListener(PhaserListenerType.Load, Phaser.Loader.Events.FILE_LOAD_ERROR, onLoadError);
-                this.scene.load.start();
-            }
+                            Logger.getInstance().warn("load dragonbones texture error: ", loadData);
+                            reject("load dragonbones texture error: " + loadData);
+                        };
+                        this.addPhaserListener(PhaserListenerType.Load, Phaser.Loader.Events.FILE_COMPLETE, onLoadComplete);
+                        this.addPhaserListener(PhaserListenerType.Load, Phaser.Loader.Events.FILE_LOAD_ERROR, onLoadError);
+                        this.scene.load.start();
+                    }
+                })
+                .catch((reason) => {
+                    reject(reason);
+                });
         });
     }
 
@@ -643,10 +666,13 @@ export class BaseDragonbonesDisplay extends BaseDisplay {
         });
     }
 
-    private loadPartsRes(): Promise<any> {
+    private loadPartsRes(filter?: (slotName: string) => boolean): Promise<any> {
         return new Promise<any>((resolve, reject) => {
             const loadList: Phaser.Types.Loader.FileTypes.ImageFileConfig[] = [];
             this.mLoadMap.forEach((pName, sName) => {
+                if (filter !== undefined) {
+                    if (!filter(sName)) return;
+                }
                 const loadUrl: string = this.partNameToLoadUrl(pName);
                 const loadKey: string = this.partNameToLoadKey(pName);
                 if (!this.scene.textures.exists(loadKey))
@@ -736,6 +762,15 @@ export class BaseDragonbonesDisplay extends BaseDisplay {
         } else {
             return arr[0] + "_" + arr[1] + "_" + arr[2] + "_" + arr[4];
         }
+    }
+
+    // head_base_3 => headBaseId
+    private slotNameToPropertyName(slotName: string): string {
+        const sliced = slotName.slice(0, -2);
+        const humpName = sliced.replace(/([^_])(?:_+([^_]))/g, ($0, $1, $2) => {
+            return $1 + $2.toUpperCase();
+        })
+        return humpName + "Id";
     }
 
     // TODO: 待优化
