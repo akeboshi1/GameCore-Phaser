@@ -192,16 +192,6 @@ export class Element extends BlockObject implements IElement {
         this.startMove();
     }
 
-    // setVelocity(x, y) {
-    //     this.mMoving = true;
-    //     const pos1 = { x: 0, y: 0 };
-    //     const pos2 = { x, y };
-    //     const dir = DirectionChecker.check(pos1, pos2);
-    //     this.moveControll.setVelocity(x, y);
-    //     this.setDirection(dir);
-    //     this.changeState(PlayerState.WALK);
-    // }
-
     public async load(displayInfo: IFramesModel | IDragonbonesModel, isUser: boolean = false): Promise<any> {
         this.mDisplayInfo = displayInfo;
         this.isUser = isUser;
@@ -232,10 +222,7 @@ export class Element extends BlockObject implements IElement {
         const obj = { id: model.id, pos: model.pos, nickname: model.nickname, sound: model.sound, alpha: model.alpha, titleMask: model.titleMask | 0x00020000, hasInteractive: model.hasInteractive };
         // render action
         this.load(this.mModel.displayInfo)
-            .then(() => this.mElementManager.roomService.game.peer.render.setModel(obj)).catch((error) => {
-                Logger.getInstance().error(error);
-                this.mRoomService.elementManager.onDisplayReady(this.mModel.id);
-            })
+            .then(() => this.mElementManager.roomService.game.peer.render.setModel(obj))
             .then(() => {
                 this.setDirection(this.mModel.direction);
                 if (this.mInputEnable === InputEnable.Interactive) {
@@ -245,6 +232,10 @@ export class Element extends BlockObject implements IElement {
                     this.updateMounth(model.mountSprites);
                 }
                 return this.setRenderable(true);
+            })
+            .catch((error) => {
+                Logger.getInstance().error(error);
+                this.mRoomService.elementManager.onDisplayReady(this.mModel.id);
             });
     }
 

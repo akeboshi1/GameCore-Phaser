@@ -309,7 +309,9 @@ export class PlayerManager extends PacketHandler implements IElementManager {
             return;
         }
         for (const sprite of sprites) {
+            // create sprite.attrs数据
             this._loadSprite(sprite);
+            // create sprite.avatar数据
             this.checkSuitAvatarSprite(sprite);
             const _sprite = new Sprite(sprite, content.nodeType);
             _sprite.init(sprite);

@@ -1,12 +1,10 @@
-import { op_def, op_virtual_world } from "pixelpai_proto";
+import { op_def } from "pixelpai_proto";
 import { IElementManager } from "../element/element.manager";
-import { ISprite, PlayerState } from "structure";
+import { IDragonbonesModel, ISprite, PlayerState } from "structure";
 import { IPos } from "../../../utils/logic.pos";
 import { Element, IElement, InputEnable } from "../element/element";
-import { DirectionChecker, Logger } from "utils";
+import { DirectionChecker } from "utils";
 import { LayerEnum } from "game-capsule";
-import { PBpacket } from "net-socket-packet";
-
 export class Player extends Element implements IElement {
     protected nodeType: number = op_def.NodeType.CharacterNodeType;
     protected mOffsetY: number = undefined;
@@ -54,19 +52,14 @@ export class Player extends Element implements IElement {
                 this.addToWalkableMap();
                 return this.setRenderable(true);
             });
-        const obj1 = {
-            id: model.id,
-            point3f: model.pos,
-            currentAnimationName: model.currentAnimationName,
-            direction: model.direction,
-            mountSprites: model.mountSprites,
-            speed: model.speed,
-        };
-        // physic action
-        // this.mRoomService.game.peer.physicalPeer.setModel(obj1)
-        //     .then(() => {
-        //         this.addBody();
-        //     });
+    }
+
+    public async load(displayInfo: IDragonbonesModel, isUser: boolean = false): Promise<any> {
+        this.mDisplayInfo = displayInfo;
+        this.isUser = isUser;
+        if (!displayInfo) return Promise.reject(`element ${this.mModel.nickname} ${this.id} display does not exist`);
+        await this.loadDisplayInfo();
+        return this.addToBlock();
     }
 
     public changeState(val?: string, times?: number) {
