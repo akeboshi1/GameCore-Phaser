@@ -10,8 +10,10 @@ import { PicaRenderUiManager } from "./ui";
 import { PicaDisplayManager } from "./manager/pica.display.manager";
 import { MouseManagerDecorate } from "./input";
 import { Export } from "webworker-rpc";
+import { DisplayActionManager } from "picaRender";
 
 export class Render extends BaseRender {
+    protected mDisplayActionManager: DisplayActionManager;
     constructor(config: ILauncherConfig, callBack?: Function) {
         super(config, callBack);
     }
@@ -26,6 +28,7 @@ export class Render extends BaseRender {
         if (!this.mInputManager) this.mInputManager = new InputManager(this);
         if (!this.mDisplayManager) this.mDisplayManager = new PicaDisplayManager(this);
         if (!this.mEditorCanvasManager) this.mEditorCanvasManager = new EditorCanvasManager(this);
+        if (!this.mDisplayActionManager) this.mDisplayActionManager = new DisplayActionManager(this);
     }
 
     @Export()
@@ -43,8 +46,15 @@ export class Render extends BaseRender {
     /**
      * 是否是审核版本
      */
-     public isAudit() {
+    public isAudit() {
         // @ts-ignore
         return window.appVersionState && window.appVersionState === "audit";
+    }
+    get displayActionManager(): DisplayActionManager {
+        return this.mDisplayActionManager;
+    }
+    @Export()
+    public displayAction(action: string, data: any) {
+        this.mDisplayActionManager.executeElementActions(action, data);
     }
 }

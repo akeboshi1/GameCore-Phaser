@@ -148,4 +148,8 @@ export class EventType {
      * 背包喇叭数量更新
      */
     public static PACKAGE_TRUMPET_COUNT_UPDATE = "PACKAGE_TRUMPET_COUNT_UPDATE";
+    /**
+     * 请求回到玩家房间
+     */
+    public static REQUEST_GO_PLAYER_HOME = "REQUEST_GO_PLAYER_HOME";
 }

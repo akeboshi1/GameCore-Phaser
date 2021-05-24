@@ -41,7 +41,6 @@ import { UiManager } from "./ui";
 import { GuideManager } from "./guide";
 import { MouseManager } from "./input/mouse.manager";
 import { SoundManager } from "./managers";
-
 for (const key in protos) {
     PBpacket.addProtocol(protos[key]);
 }
@@ -239,7 +238,6 @@ export class Render extends RPCPeer implements GameMain, IRender {
     get editorCanvasManager(): EditorCanvasManager {
         return this.mEditorCanvasManager;
     }
-
     get game(): Phaser.Game {
         return this.mGame;
     }
@@ -1690,7 +1688,6 @@ export class Render extends RPCPeer implements GameMain, IRender {
         this.mRoomSize = size;
         this.mRoomMiniSize = miniSize;
     }
-
     protected onWorkerUnlinked(worker: string) {
         if (!this.mWorkerDestroyMap.has(worker)) return;
 
