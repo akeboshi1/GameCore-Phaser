@@ -1,6 +1,6 @@
-import {RPCPeer, Export, webworker_rpc} from "webworker-rpc";
-import {op_gateway, op_virtual_world, op_client} from "pixelpai_proto";
-import {PBpacket, Buffer} from "net-socket-packet";
+import { RPCPeer, Export, webworker_rpc } from "webworker-rpc";
+import { op_gateway, op_virtual_world, op_client } from "pixelpai_proto";
+import { PBpacket, Buffer } from "net-socket-packet";
 import * as protos from "pixelpai_proto";
 import { ServerAddress } from "../../lib/net/address";
 import { Game } from "./game";
@@ -31,6 +31,7 @@ export class MainPeer extends RPCPeer {
     private isStartUpdateFps: boolean = false;
     private startUpdateFps: any;
 
+    private mTmpTime: number = 0;
     // private isReconnect: boolean = false;
     constructor() {
         super(MAIN_WORKER);
@@ -118,6 +119,9 @@ export class MainPeer extends RPCPeer {
             this.reConnectCount++;
             const pkt: PBpacket = new PBpacket(op_gateway.OPCODE._OP_CLIENT_REQ_GATEWAY_PING);
             this.game.socket.send(pkt.Serialization());
+            const now: number = new Date().getTime();
+            Logger.getInstance().log("beatTime:=====>", now - this.mTmpTime);
+            this.mTmpTime = now;
         }, this.delayTime);
     }
 
@@ -205,7 +209,7 @@ export class MainPeer extends RPCPeer {
 
     // @Export([webworker_rpc.ParamType.str, webworker_rpc.ParamType.num, webworker_rpc.ParamType.boolean])
     public startConnect(host: string, port: number, secure?: boolean) {
-        const addr: ServerAddress = {host, port, secure};
+        const addr: ServerAddress = { host, port, secure };
         this.game.connection.startConnect(addr);
         const now: number = new Date().getTime();
         this.stateTime = now;
@@ -319,7 +323,7 @@ export class MainPeer extends RPCPeer {
         if (this.game.roomManager && this.game.roomManager.currentRoom && this.game.roomManager.currentRoom.playerManager && this.game.roomManager.currentRoom.playerManager.actor) {
             const avatar = this.game.roomManager.currentRoom.playerManager.actor.model.avatar;
             const suits = this.game.roomManager.currentRoom.playerManager.actor.model.suits;
-            return {avatar, suits};
+            return { avatar, suits };
         }
         return null;
     }
@@ -579,7 +583,7 @@ export class MainPeer extends RPCPeer {
     @Export([webworker_rpc.ParamType.str])
     public showNoticeHandler(text: string) {
         const data = new op_client.OP_VIRTUAL_WORLD_RES_CLIENT_SHOW_UI();
-        data.text = [{text, node: undefined}];
+        data.text = [{ text, node: undefined }];
         this.game.showByName(ModuleName.PICANOTICE_NAME, data);
     }
 
@@ -672,7 +676,7 @@ export class MainPeer extends RPCPeer {
     public setPosition(id: number, updateBoo: boolean, x: number, y: number, z?: number) {
         const ele = this.game.roomManager.currentRoom.getElement(id);
         if (ele) {
-            ele.setPosition({x, y, z}, updateBoo);
+            ele.setPosition({ x, y, z }, updateBoo);
         }
     }
 
