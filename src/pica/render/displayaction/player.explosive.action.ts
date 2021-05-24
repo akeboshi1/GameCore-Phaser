@@ -1,6 +1,6 @@
 
-import { DragonbonesDisplay } from "gamecoreRender";
-import { EventType } from "structure";
+import { DragonbonesDisplay, PlayScene } from "gamecoreRender";
+import { EventType, LayerName, SceneName } from "structure";
 import { Handler } from "utils";
 import { DisplayBaseAction } from "./display.base.action";
 export class PlayerExplosiveAction extends DisplayBaseAction {
@@ -9,6 +9,8 @@ export class PlayerExplosiveAction extends DisplayBaseAction {
     private timerID: any;
     public executeAction() {
         this.render.stopFollow();
+        const playScene: any = this.render.sceneManager.getSceneByName(SceneName.PLAY_SCENE);
+        playScene.layerManager.addToLayer(LayerName.DECORATE, this.display);
         const sprite = this.display.getDisplay();
         sprite.y -= this.display.topPoint.y * 0.5;
         this.playPosition(new Handler(this, () => {
