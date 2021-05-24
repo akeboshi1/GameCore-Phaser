@@ -321,7 +321,7 @@ export class DecorateManager {
         }) >= 0) {
             // 立地靠墙家具
             const isAgainstWall = this.room.wallManager.isAgainstWall(tempPos, element.model.getOriginPoint());
-            canPlace = !isAgainstWall ? CheckPlaceResult.NotAgainstWall : hasConflict ?  CheckPlaceResult.HasConflict : CheckPlaceResult.CanPlace;
+            canPlace = !isAgainstWall ? CheckPlaceResult.NotAgainstWall : hasConflict ? CheckPlaceResult.HasConflict : CheckPlaceResult.CanPlace;
         } else {
             // 普通家具
             canPlace = hasConflict ? CheckPlaceResult.HasConflict : CheckPlaceResult.CanPlace;
@@ -541,7 +541,7 @@ export class DecorateManager {
         return resolver;
     }
 
-    public showCannotPlaceNotice(resultType : CheckPlaceResult) {
+    public showCannotPlaceNotice(resultType: CheckPlaceResult) {
         let text = "";
         const configMng = <BaseDataConfigManager> this.room.game.configManager;
         switch (resultType) {
