@@ -21,6 +21,7 @@ export interface ILauncherConfig {
     keyboardHeight: number;
     width: number;
     height: number;
+    debugReconnect: boolean;
     baseWidth: number;
     baseHeight: number;
     locationhref?: string;

@@ -116,6 +116,7 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
         this.mConfig = config;
         if (config.config_root) {
             ConfigPath.ROOT_PATH = config.config_root;
+            this.debugReconnect = config.debugReconnect;
         }
     }
 
