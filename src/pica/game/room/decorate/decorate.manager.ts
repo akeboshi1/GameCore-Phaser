@@ -1,15 +1,22 @@
-import { op_client, op_def, op_pkt_def, op_virtual_world } from "pixelpai_proto";
-import { ISprite, LayerName, MessageType, ModuleName } from "structure";
-import { IPos, Logger, LogicPos, Position45, ValueResolver } from "utils";
-import { PBpacket } from "net-socket-packet";
-import { Sprite } from "baseModel";
-import { BaseDataConfigManager } from "../../config";
-import { IElementPi } from "../../../structure/ielementpi";
+import {op_client, op_def, op_pkt_def, op_virtual_world} from "pixelpai_proto";
+import {ISprite, LayerName, MessageType, ModuleName} from "structure";
+import {i18n, IPos, Logger, LogicPos, Position45, ValueResolver} from "utils";
+import {PBpacket} from "net-socket-packet";
+import {Sprite} from "baseModel";
+import {BaseDataConfigManager} from "../../config";
+import {IElementPi} from "../../../structure/ielementpi";
 import PKT_PackageType = op_pkt_def.PKT_PackageType;
-import { Room } from "../../../../game/room/room/room";
-import { BlockObject } from "../../../../game/room/block/block.object";
-import { InputEnable } from "../../../../game/room/element/element";
-import { LayerEnum } from "game-capsule";
+import {Room} from "../../../../game/room/room/room";
+import {BlockObject} from "../../../../game/room/block/block.object";
+import {InputEnable} from "../../../../game/room/element/element";
+import {LayerEnum} from "game-capsule";
+
+export enum CheckPlaceResult {
+    CanPlace,
+    HasConflict,
+    NotAgainstWall,
+    NotInWallRect
+}
 
 // 小屋布置管理类，包含所有布置过程中的操作接口
 // 文档：https://dej4esdop1.feishu.cn/docs/doccnEbMKpINEkfBVImFJ0nTJUh#
@@ -149,7 +156,7 @@ export class DecorateManager {
             // 未解锁家具不移除
             if (this.mRoom.elementManager.isElementLocked(element)) continue;
 
-            const act = new DecorateAction(element.model, DecorateActionType.Remove, new DecorateActionData({ pos: element.model.pos }));
+            const act = new DecorateAction(element.model, DecorateActionType.Remove, new DecorateActionData({pos: element.model.pos}));
             this.mActionQueue.push(act);
             act.execute(this);
         }
@@ -157,7 +164,7 @@ export class DecorateManager {
 
     // 返回上一步
     public reverse() {
-        if (this.mSelectedID > 0 && this.mSelectedActionQueue.length > 0) {
+        if (this.selectedID > 0 && this.mSelectedActionQueue.length > 0) {
             // if (this.mSelectedActionQueue.length === 0) return;
             const act = this.mSelectedActionQueue.pop();
             act.reverse(this);
@@ -165,6 +172,11 @@ export class DecorateManager {
             // if (this.mSelectedActionQueue.length === 0) {
             //     this.unselect();
             // }
+
+            const checkData = this.checkCanPlace(this.selectedID);
+            if (checkData.canPlace !== CheckPlaceResult.CanPlace) {
+                this.showCannotPlaceNotice(checkData.canPlace);
+            }
         } else {
             if (this.mActionQueue.length === 0) return;
             const act = this.mActionQueue.pop();
@@ -200,8 +212,9 @@ export class DecorateManager {
 
         if (this.mSelectedID > 0) {
             const preCheckData = this.checkCanPlace(this.selectedID);
-            if (!preCheckData.canPlace) {
+            if (preCheckData.canPlace !== CheckPlaceResult.CanPlace) {
                 // 当前选中家具不可摆放时，不能选择其他家具
+                this.showCannotPlaceNotice(preCheckData.canPlace);
                 return;
             }
         }
@@ -222,7 +235,7 @@ export class DecorateManager {
         const checkData = this.checkCanPlace(this.selectedID);
 
         // set alpha
-        element.setAlpha(checkData.canPlace ? 1 : 0.5);
+        element.setAlpha(checkData.canPlace === CheckPlaceResult.CanPlace ? 1 : 0.5);
 
         // show reference
         element.showRefernceArea(checkData.conflictMap);
@@ -231,7 +244,7 @@ export class DecorateManager {
         this.mRoom.game.uiManager.showMed(ModuleName.PICADECORATECONTROL_NAME, {
             id,
             pos: element.model.pos,
-            canPlace: checkData.canPlace,
+            canPlace: checkData.canPlace === CheckPlaceResult.CanPlace,
             locked
         });
 
@@ -275,13 +288,13 @@ export class DecorateManager {
     // 墙饰：在墙体范围内
     // 立地靠墙家具：距离最近的墙的地面，并不和其他家具碰撞冲突
     // 普通家具：不和其他家具碰撞冲突
-    public checkCanPlace(id: number, pos?: IPos): { canPlace: boolean, conflictMap: number[][] } {
-        if (id < 0) return { canPlace: false, conflictMap: [] };
+    public checkCanPlace(id: number, pos?: IPos): { canPlace: CheckPlaceResult, conflictMap: number[][] } {
+        if (id < 0) return {canPlace: CheckPlaceResult.HasConflict, conflictMap: []};
 
         const element = this.mRoom.elementManager.get(id);
         if (!element) {
             // Logger.getInstance().debug("#place, no element: ", this.mSelectedID);
-            return { canPlace: false, conflictMap: [] };
+            return {canPlace: CheckPlaceResult.HasConflict, conflictMap: []};
         }
         const sprite = element.model;
 
@@ -293,7 +306,7 @@ export class DecorateManager {
                 break;
             }
         }
-        let canPlace = !hasConflict;
+        let canPlace = CheckPlaceResult.CanPlace;
         let tempPos = pos;
         if (pos === undefined) {
             tempPos = element.model.pos;
@@ -301,19 +314,19 @@ export class DecorateManager {
         if (element.model.layer === LayerEnum.Hanging) {
             // todo: change to new enum
             // 墙饰
-            canPlace = this.room.wallManager.isInWallRect(tempPos);
+            const isInWallRect = this.room.wallManager.isInWallRect(tempPos);
+            canPlace = isInWallRect ? CheckPlaceResult.CanPlace : CheckPlaceResult.NotInWallRect;
         } else if (element.model.attrs !== undefined && element.model.attrs.findIndex((val) => {
             return val.key !== undefined && val.key === "againstWall";
         }) >= 0) {
             // 立地靠墙家具
-            if (!this.room.wallManager.isAgainstWall(tempPos, element.model.getOriginPoint())) {
-                canPlace = false;
-            }
+            const isAgainstWall = this.room.wallManager.isAgainstWall(tempPos, element.model.getOriginPoint());
+            canPlace = !isAgainstWall ? CheckPlaceResult.NotAgainstWall : hasConflict ? CheckPlaceResult.HasConflict : CheckPlaceResult.CanPlace;
         } else {
             // 普通家具
-
+            canPlace = hasConflict ? CheckPlaceResult.HasConflict : CheckPlaceResult.CanPlace;
         }
-        return { canPlace, conflictMap };
+        return {canPlace, conflictMap};
     }
 
     // 在输入操作时，限制位置。
@@ -390,7 +403,7 @@ export class DecorateManager {
 
         const bagCount = this.getBagCount(baseID);
         if (bagCount <= 0) return;
-        const typeData = await <any>this.getPIData(baseID);
+        const typeData = await <any> this.getPIData(baseID);
         if (!typeData) {
             Logger.getInstance().error("no config data, id: ", baseID);
             // this.room.game.renderPeer.showAlertView("no config data, id: " + baseID);
@@ -404,7 +417,7 @@ export class DecorateManager {
         const gridPos = Position45.transformTo90(Position45.transformTo45(pos, this.room.miniSize), this.room.miniSize);
         const obj = {
             id: indexID,
-            point3f: { x: gridPos.x, y: gridPos.y, z: 0 },
+            point3f: {x: gridPos.x, y: gridPos.y, z: 0},
             currentAnimationName: "idle",
             direction: 3,
             nickname: typeData.name,
@@ -417,13 +430,13 @@ export class DecorateManager {
         const spriteData = new Sprite(obj, op_def.NodeType.ElementNodeType);
         spriteData.init(obj);
 
-        const act = new DecorateAction(spriteData, DecorateActionType.Add, new DecorateActionData({ pos: spriteData.pos }));
+        const act = new DecorateAction(spriteData, DecorateActionType.Add, new DecorateActionData({pos: spriteData.pos}));
         act.execute(this).then(() => {
             this.select(indexID);
             this.mSelectedActionQueue.push(act);
 
             const checkData = this.checkCanPlace(this.selectedID);
-            if (checkData.canPlace) {
+            if (checkData.canPlace === CheckPlaceResult.CanPlace) {
                 this.ensureSelectedChanges();
             }
 
@@ -438,13 +451,15 @@ export class DecorateManager {
         if (delta.x === 0 && delta.y === 0) return;
         const element = this.mRoom.elementManager.get(this.mSelectedID);
         if (!element) return;
-        const act = new DecorateAction(element.model, DecorateActionType.Move, new DecorateActionData({ moveVec: delta }));
+        const act = new DecorateAction(element.model, DecorateActionType.Move, new DecorateActionData({moveVec: delta}));
         this.mSelectedActionQueue.push(act);
         act.execute(this);
 
         const checkData = this.checkCanPlace(this.selectedID);
-        if (checkData.canPlace) {
+        if (checkData.canPlace === CheckPlaceResult.CanPlace) {
             this.ensureSelectedChanges();
+        } else {
+            this.showCannotPlaceNotice(checkData.canPlace);
         }
     }
 
@@ -453,13 +468,15 @@ export class DecorateManager {
         if (this.mSelectedID < 0) return;
         const element = this.mRoom.elementManager.get(this.mSelectedID);
         if (!element) return;
-        const act = new DecorateAction(element.model, DecorateActionType.Rotate, new DecorateActionData({ rotateTimes: 1 }));
+        const act = new DecorateAction(element.model, DecorateActionType.Rotate, new DecorateActionData({rotateTimes: 1}));
         this.mSelectedActionQueue.push(act);
         act.execute(this);
 
         const checkData = this.checkCanPlace(this.selectedID);
-        if (checkData.canPlace) {
+        if (checkData.canPlace === CheckPlaceResult.CanPlace) {
             this.ensureSelectedChanges();
+        } else {
+            this.showCannotPlaceNotice(checkData.canPlace);
         }
     }
 
@@ -469,7 +486,7 @@ export class DecorateManager {
         const element = this.mRoom.elementManager.get(this.mSelectedID);
         if (!element) return;
         if (this.mRoom.elementManager.isElementLocked(element)) return;
-        const act = new DecorateAction(element.model, DecorateActionType.Remove, new DecorateActionData({ pos: element.model.pos }));
+        const act = new DecorateAction(element.model, DecorateActionType.Remove, new DecorateActionData({pos: element.model.pos}));
         this.mSelectedActionQueue.push(act);
         act.execute(this);
 
@@ -503,7 +520,7 @@ export class DecorateManager {
     }
 
     public getBaseIDBySN(sn: string): string {
-        const configMgr = <BaseDataConfigManager>this.room.game.configManager;
+        const configMgr = <BaseDataConfigManager> this.room.game.configManager;
         const temp = configMgr.getItemBaseBySN(sn);
         if (temp) return temp.id;
         else {
@@ -524,8 +541,30 @@ export class DecorateManager {
         return resolver;
     }
 
+    public showCannotPlaceNotice(resultType: CheckPlaceResult) {
+        let text = "";
+        const configMng = <BaseDataConfigManager> this.room.game.configManager;
+        switch (resultType) {
+            case CheckPlaceResult.CanPlace:
+                return;
+            case CheckPlaceResult.HasConflict:
+                text = configMng.getI18n("PKT_SYS0000041");
+                break;
+            case CheckPlaceResult.NotAgainstWall:
+                text = configMng.getI18n("PKT_SYS0000042");
+                break;
+            case CheckPlaceResult.NotInWallRect:
+                text = configMng.getI18n("PKT_SYS0000043");
+                break;
+        }
+        const noticedata = {
+            text: [{text, node: undefined}]
+        };
+        this.room.game.peer.showMediator(ModuleName.PICANOTICE_NAME, true, noticedata);
+    }
+
     private getPIData(baseID: string): Promise<IElementPi> {
-        const configMgr = <BaseDataConfigManager>this.room.game.configManager;
+        const configMgr = <BaseDataConfigManager> this.room.game.configManager;
         return configMgr.getItemPIDataByID(baseID);
     }
 
@@ -725,11 +764,11 @@ class DecorateAction {
             if (mng.selectedID === this.target.id) {
                 mng.room.removeFromWalkableMap(this.target);
                 const checkData = mng.checkCanPlace(mng.selectedID);
-                mng.room.game.emitter.emit(MessageType.DECORATE_UPDATE_SELECTED_ELEMENT_CAN_PLACE, checkData.canPlace);
+                mng.room.game.emitter.emit(MessageType.DECORATE_UPDATE_SELECTED_ELEMENT_CAN_PLACE, checkData.canPlace === CheckPlaceResult.CanPlace);
                 mng.room.game.renderPeer.workerEmitter(MessageType.DECORATE_UPDATE_SELECTED_ELEMENT_POSITION);
                 const element = mng.room.elementManager.get(this.target.id);
                 if (element) {
-                    element.setAlpha(checkData.canPlace ? 1 : 0.5);
+                    element.setAlpha(checkData.canPlace === CheckPlaceResult.CanPlace ? 1 : 0.5);
                     element.showRefernceArea(checkData.conflictMap);
                 }
             }
@@ -751,10 +790,10 @@ class DecorateAction {
             if (mng.selectedID === this.target.id) {
                 mng.room.removeFromWalkableMap(this.target);
                 const checkData = mng.checkCanPlace(mng.selectedID);
-                mng.room.game.emitter.emit(MessageType.DECORATE_UPDATE_SELECTED_ELEMENT_CAN_PLACE, checkData.canPlace);
+                mng.room.game.emitter.emit(MessageType.DECORATE_UPDATE_SELECTED_ELEMENT_CAN_PLACE, checkData.canPlace === CheckPlaceResult.CanPlace);
                 const element = mng.room.elementManager.get(this.target.id);
                 if (element) {
-                    element.setAlpha(checkData.canPlace ? 1 : 0.5);
+                    element.setAlpha(checkData.canPlace === CheckPlaceResult.CanPlace ? 1 : 0.5);
                     element.showRefernceArea(checkData.conflictMap);
                 }
             }

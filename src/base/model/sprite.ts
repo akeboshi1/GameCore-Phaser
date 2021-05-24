@@ -60,6 +60,10 @@ export class Sprite extends EventDispatcher implements ISprite {
         this.bindID = obj.bindId;
         this.nodeType = nodeType;
         this.nickname = obj.nickname;
+        // ==========> 优先处理attr信息，后续avatar才能赋值
+        // init attrs
+        this.updateAttr(obj.attrs);
+        if (this.updateSuits) this.updateAvatarSuits(this.suits);
         // init displayInfo
         this.avatar = this.avatar || obj.avatar;
         if (this.avatar) {
@@ -68,9 +72,6 @@ export class Sprite extends EventDispatcher implements ISprite {
         if (obj.display) {
             this.updateDisplay(obj.display, obj.animations, obj.currentAnimationName);
         }
-    }
-
-    init(obj: op_client.ISprite) {
         if (obj.point3f) {
             const point = obj.point3f;
             this.pos = new LogicPos(point.x, point.y, point.z);
@@ -95,9 +96,6 @@ export class Sprite extends EventDispatcher implements ISprite {
             this.isMoss = obj.isMoss;
         }
 
-        this.updateAttr(obj.attrs);
-        if (this.updateSuits) this.updateAvatarSuits(this.suits);
-
         this.tryRegisterAnimation(obj.animationRegistrationMap);
         this.currentAnimationName = obj.currentAnimationName;
 
@@ -119,6 +117,10 @@ export class Sprite extends EventDispatcher implements ISprite {
 
         this.mountSprites = obj.mountSprites;
         this.speed = obj.speed;
+    }
+
+    init(obj: op_client.ISprite) {
+
     }
 
     clear() {

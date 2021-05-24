@@ -1,14 +1,14 @@
-import { RPCPeer, Export, webworker_rpc } from "webworker-rpc";
-import { op_gateway, op_virtual_world, op_client } from "pixelpai_proto";
-import { PBpacket, Buffer } from "net-socket-packet";
+import {Export, RPCPeer, webworker_rpc} from "webworker-rpc";
 import * as protos from "pixelpai_proto";
-import { ServerAddress } from "../../lib/net/address";
-import { Game } from "./game";
-import { IPos, Logger, LogicPos, Url } from "utils";
-import { ILauncherConfig, MAIN_WORKER, RENDER_PEER, ModuleName, EventType, GameState } from "structure";
-import { PicaGame } from "picaWorker";
-import { DataMgrType } from "./data.manager/dataManager";
-import { SceneDataManager } from "./data.manager";
+import {op_client, op_gateway, op_virtual_world} from "pixelpai_proto";
+import {Buffer, PBpacket} from "net-socket-packet";
+import {ServerAddress} from "../../lib/net/address";
+import {Game} from "./game";
+import {IPos, Logger, LogicPos, Url} from "utils";
+import {EventType, GameState, ILauncherConfig, MAIN_WORKER, ModuleName, RENDER_PEER} from "structure";
+import {CheckPlaceResult, PicaGame} from "picaWorker";
+import {DataMgrType} from "./data.manager/dataManager";
+import {SceneDataManager} from "./data.manager";
 import version from "../../version";
 
 for (const key in protos) {
@@ -421,7 +421,7 @@ export class MainPeer extends RPCPeer {
         const element = this.game.roomManager.currentRoom.elementManager.get(id);
         if (!element) return;
         const checkData = this.game.roomManager.currentRoom.decorateManager.checkCanPlace(id, new LogicPos(x, y));
-        element.setAlpha(checkData.canPlace ? 1 : 0.5);
+        element.setAlpha(checkData.canPlace === CheckPlaceResult.CanPlace ? 1 : 0.5);
         element.showRefernceArea(checkData.conflictMap);
     }
 
