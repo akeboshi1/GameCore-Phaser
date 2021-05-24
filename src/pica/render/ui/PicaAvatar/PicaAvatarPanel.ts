@@ -486,29 +486,15 @@ export class PicaAvatarPanel extends PicaBasePanel {
     }
 
     private async onSaveBtnHandler() {
-        const idsArr = [], result = [];
-        const suitPart = AvatarSuitType.suitPart;
+        const idsArr = [];
         for (const item of this.mSelectedItemData) {
             idsArr.push(item.id);
-            result.push({"parts": AvatarSuitType.checkSlotValue(item.suitType, item.slot, false), id: item.sn});
         }
 
         this.render.renderEmitter(this.key + "_querySaveAvatar", idsArr);
-        this.uiManager.showPanel(ModuleName.MASK_LOADING_NAME);
-        this.mDetailDisplay.saveAvatar()
-            .then((saveData) => {
-                this.render.mainPeer.uploadDBTexture(saveData.key, saveData.url, saveData.json)
-                    .catch((reason) => {
-                        Logger.getInstance().error("uploadDBTexture error: " + reason);
-                    });
-                return this.render.editorCanvasManager.createHeadIcon(result);
-            })
-            .then((str) => {
-                this.render.mainPeer.uploadHeadImage(str);
-                this.uiManager.hidePanel(ModuleName.MASK_LOADING_NAME);
-            })
-            .catch((reason) => {
-                Logger.getInstance().error("save avatar error: " + reason);
+        this.render.editorCanvasManager.saveAvatar(this.mDetailDisplay.dragonbonesDisplay)
+            .then(() => {
+                // save complete
             });
     }
 

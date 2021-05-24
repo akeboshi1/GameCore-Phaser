@@ -55,16 +55,12 @@ export class Sprite extends EventDispatcher implements ISprite {
 
     constructor(obj: op_client.ISprite, nodeType?: op_def.NodeType) {
         super();
+        // 必要数据
         this.id = obj.id;
-        if (obj.point3f) {
-            const point = obj.point3f;
-            this.pos = new LogicPos(point.x, point.y, point.z);
-        } else {
-            this.pos = new LogicPos(0, 0);
-        }
-        this.updateAttr(obj.attrs);
-        if (this.updateSuits)
-            this.updateAvatarSuits(this.suits);
+        this.bindID = obj.bindId;
+        this.nodeType = nodeType;
+        this.nickname = obj.nickname;
+        // init displayInfo
         this.avatar = this.avatar || obj.avatar;
         if (this.avatar) {
             this.updateAvatar(this.avatar);
@@ -72,30 +68,38 @@ export class Sprite extends EventDispatcher implements ISprite {
         if (obj.display) {
             this.updateDisplay(obj.display, obj.animations, obj.currentAnimationName);
         }
+    }
+
+    init(obj: op_client.ISprite) {
+        if (obj.point3f) {
+            const point = obj.point3f;
+            this.pos = new LogicPos(point.x, point.y, point.z);
+        } else {
+            this.pos = new LogicPos(0, 0);
+        }
         if (obj.sn) {
             this.sn = obj.sn;
         }
-        this.tryRegisterAnimation(obj.animationRegistrationMap);
-        this.currentAnimationName = obj.currentAnimationName;
-        // this.direction = obj.direction || 3;
         this.titleMask = obj.titleMask;
         this.setDirection(obj.direction || 3);
-        this.nickname = obj.nickname;
-        this.bindID = obj.bindId;
+
         this.alpha = obj.opacity === undefined ? 1 : obj.opacity / 100;
         this.displayBadgeCards = obj.displayBadgeCards;
-        this.nodeType = nodeType;
         if (obj.layer) {
             this.layer = obj.layer;
         }
-
         if (obj.version) {
             this.version = obj.version;
         }
-
         if (obj.isMoss !== undefined) {
             this.isMoss = obj.isMoss;
         }
+
+        this.updateAttr(obj.attrs);
+        if (this.updateSuits) this.updateAvatarSuits(this.suits);
+
+        this.tryRegisterAnimation(obj.animationRegistrationMap);
+        this.currentAnimationName = obj.currentAnimationName;
 
         if (!this.currentCollisionArea) {
             this.currentCollisionArea = this.getCollisionArea();

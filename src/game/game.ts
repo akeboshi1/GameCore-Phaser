@@ -5,7 +5,7 @@ import { op_def, op_client, op_virtual_world, op_gateway } from "pixelpai_proto"
 import { Lite } from "game-capsule";
 import { ConnectionService } from "../../lib/net/connection.service";
 import { IConnectListener } from "../../lib/net/socket";
-import { Logger, ResUtils, Tool, load, EventDispatcher, HttpLoadManager, Url } from "utils";
+import { Logger, ResUtils, Tool, load, EventDispatcher, HttpLoadManager, Url, ChatCommandInterface } from "utils";
 import IOP_CLIENT_REQ_VIRTUAL_WORLD_PLAYER_INIT = op_gateway.IOP_CLIENT_REQ_VIRTUAL_WORLD_PLAYER_INIT;
 import { Connection, GameSocket } from "./net/connection";
 import { Clock, ClockReadyListener } from "./loop/clock/clock";
@@ -32,7 +32,7 @@ interface ISize {
 
 export const fps: number = 45;
 export const interval = fps > 0 ? 1000 / fps : 1000 / 30;
-export class Game extends PacketHandler implements IConnectListener, ClockReadyListener {
+export class Game extends PacketHandler implements IConnectListener, ClockReadyListener, ChatCommandInterface {
     public isDestroy: boolean = false;
     protected mainPeer: MainPeer;
     protected connect: ConnectionService;
@@ -63,6 +63,10 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
     protected gameConfigState: Map<string, boolean> = new Map();
     protected isPause: boolean = false;
     protected isAuto: boolean = true;
+    /**
+     * 自动重连开关
+     */
+    protected debugReconnect: boolean = true;
     protected mMoveStyle: number;
     protected mReconnect: number = 0;
     protected hasClear: boolean = false;
@@ -78,6 +82,13 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
         this.connect = new Connection(peer);
         this.addPacketListener();
         this.update(new Date().getTime());
+    }
+
+    v() {
+        this.debugReconnect = true;
+    }
+    q() {
+        this.debugReconnect = false;
     }
 
     public addPacketListener() {
@@ -142,6 +153,7 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
     }
 
     public onDisConnected(isAuto?: boolean) {
+        if (!this.debugReconnect) return;
         Logger.getInstance().debug("app connectFail=====");
         this.isAuto = isAuto;
         if (!this.isAuto) return;
@@ -200,6 +212,7 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
     }
 
     public async manualReconnect() {
+        if (!this.debugReconnect) return;
         Logger.getInstance().debug("game reconnect");
         if (this.mConfig.hasConnectFail) return this.mainPeer.render.connectFail();
         let gameID: string = this.mConfig.game_id;
@@ -221,6 +234,7 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
     }
 
     public onClientErrorHandler(packet: PBpacket): void {
+        if (!this.debugReconnect) return;
         const content: op_client.IOP_GATEWAY_RES_CLIENT_ERROR = packet.content;
         switch (content.responseStatus) {
             case op_def.ResponseStatus.REQUEST_UNAUTHORIZED:
@@ -288,6 +302,7 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
                 return new Promise((resolve, reject) => {
                     this.renderPeer.showAlert("配置加载错误，请重新登陆" + reason, true, false)
                         .then(() => {
+                            if (!this.debugReconnect) return;
                             this.renderPeer.hidden();
                         });
                     reject();

@@ -12,10 +12,10 @@ import { IDragonbonesModel } from "structure";
 import { EmptyTerrain } from "./empty.terrain";
 import { IPos, Logger, LogicPos } from "utils";
 import { FramesModel, IElementStorage, Sprite } from "baseModel";
-import {BaseDataConfigManager} from "picaWorker";
-import {IExtendCountablePackageItem} from "picaStructure";
+import { BaseDataConfigManager } from "picaWorker";
+import { IExtendCountablePackageItem } from "picaStructure";
 import * as sha1 from "simple-sha1";
-import {IElementPi} from "picaStructure";
+import { IElementPi } from "picaStructure";
 
 export class TerrainManager extends PacketHandler implements IElementManager {
     public hasAddComplete: boolean = false;
@@ -111,6 +111,7 @@ export class TerrainManager extends PacketHandler implements IElementManager {
             this.removeEmpty(new LogicPos(point.x, point.y));
             if (point) {
                 const s = new Sprite(sprite, op_def.NodeType.TerrainNodeType);
+                s.init(sprite);
                 this.checkTerrainDisplay(s);
                 if (!s.displayInfo) {
                     ids.push(s.id);
@@ -174,7 +175,7 @@ export class TerrainManager extends PacketHandler implements IElementManager {
     // todo: move to pica
     // 替换全部资源
     public changeAllDisplayData(id: string) {
-        const configMgr = <BaseDataConfigManager> this.roomService.game.configManager;
+        const configMgr = <BaseDataConfigManager>this.roomService.game.configManager;
         const configData = configMgr.getElement2Data(id);
         if (!configData) {
             Logger.getInstance().error("no config data, id: ", id);
@@ -261,6 +262,7 @@ export class TerrainManager extends PacketHandler implements IElementManager {
             terrain = this.get(sprite.id);
             if (terrain) {
                 const sp = new Sprite(sprite, content.nodeType);
+                sp.init(sprite);
                 terrain.model = sp;
                 // this.addMap(sp);
                 // terrain.setRenderable(true);
