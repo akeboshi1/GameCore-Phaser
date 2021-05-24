@@ -1,6 +1,6 @@
 import { PBpacket } from "net-socket-packet";
 import { BaseDataConfigManager } from "picaWorker";
-import { op_client } from "pixelpai_proto";
+import { op_client, op_virtual_world } from "pixelpai_proto";
 import { ExtraRoomInfo } from "custom_proto";
 import { EventType, ModuleName, RoomType } from "structure";
 import { EventDispatcher, Logger } from "utils";
@@ -32,6 +32,7 @@ export class SceneDataManager extends BasePacketHandler {
         this.mEvent.on(EventType.SCENE_CHANGE, this.onSceneChangeHandler, this);
         this.proto.on("UPDATE_ROOM_INFO", this.onUpdateModeRoomInfo, this);
         this.proto.on("ExtraRoomInfo", this.onExtraRoomInfoHandler, this);
+        this.mEvent.on(EventType.REQUEST_GO_PLAYER_HOME, this.onRequestGoHomeHandler, this);
         this.addPackListener();
     }
 
@@ -98,7 +99,7 @@ export class SceneDataManager extends BasePacketHandler {
         if (this.mCurRoom.ownerId !== this.game.user.userData.cid && this.mCurRoom.roomType === RoomType.ROOM) {
             this.mEvent.emit(EventType.SCENE_SHOW_UI, ModuleName.CUTINMENU_NAME, { button: [{ text: "survey" }] });
         }
-       // this.mEvent.emit(EventType.SCENE_SHOW_UI, ModuleName.CUTINMENU_NAME, { button: [{ text: "minecar" }] });
+        // this.mEvent.emit(EventType.SCENE_SHOW_UI, ModuleName.CUTINMENU_NAME, { button: [{ text: "minecar" }] });
         this.showMainUI();
         this.mRoomID = room.roomId;
     }
@@ -166,7 +167,10 @@ export class SceneDataManager extends BasePacketHandler {
         this.cacheMgr.extraRoomInfo = content;
         this.game.emitter.emit(EventType.UPDATE_EXTRA_ROOM_INFO, content);
     }
-
+    private onRequestGoHomeHandler() {
+        const packet = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_PKT_GO_HOME);
+        this.connection.send(packet);
+    }
     get curRoomID() {
         if (this.mCurRoom) return this.mCurRoom.roomId;
         return undefined;

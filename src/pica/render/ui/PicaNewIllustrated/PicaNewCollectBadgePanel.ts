@@ -25,7 +25,7 @@ export class PicaNewCollectBadgePanel extends Phaser.GameObjects.Container {
         const w = width || this.width;
         const h = height || this.height;
         this.setSize(w, h);
-        this.backButton.x = -this.width * 0.5 + this.backButton.width * 0.5 -5 * this.dpr;
+        this.backButton.x = -this.width * 0.5 + this.backButton.width * 0.5 - 5 * this.dpr;
         this.backButton.y = -this.height * 0.5 + 45 * this.dpr;
     }
     public refreshMask() {
@@ -131,8 +131,12 @@ class CollectBadgeItem extends ButtonEventDispatcher {
     }
     public setBadgeData(data: IGalleryLevel) {
         this.badgeData = data;
-        const frame = "illustrate_survey_badge" + data.id;
-        this.badgeIcon.setFrame(frame);
+        if (!data.galePath) {
+            this.badgeIcon.setFrame("illustrate_survey_badge" + data.id);
+        } else {
+            const url = Url.getOsdRes(data.galePath) + `_${this.dpr}x.png`;
+            this.badgeIcon.load(url);
+        }
         this.title.text = i18n.t("illustrate.badgecollecttips", { name: data.id });
         this.countTex.text = `${data.progress}/${data.exp}`;
         if (data.received === 1) {

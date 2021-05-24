@@ -144,7 +144,7 @@
   resolved "https://registry.npmjs.org/@types/mkdirp/-/mkdirp-0.3.29.tgz#7f2ad7ec55f914482fc9b1ec4bb1ae6028d46066"
   integrity sha1-fyrX7FX5FEgvybHsS7GuYCjUYGY=
 
-"@types/node@*", "@types/node@>=13.7.0":
+"@types/node@*":
   version "15.3.1"
   resolved "https://registry.npmjs.org/@types/node/-/node-15.3.1.tgz#23a06b87eedb524016616e886b116b8fdcb180af"
   integrity sha512-weaeiP4UF4XgF++3rpQhpIJWsCTS4QJw5gvBhQu6cFIxTwyxWIe3xbnrY/o2lTCQ0lsdb8YIUDUvLR4Vuz5rbw==
@@ -153,6 +153,11 @@
   version "8.0.0"
   resolved "https://registry.npmjs.org/@types/node/-/node-8.0.0.tgz#acaa89247afddc7967e9902fd11761dadea1a555"
   integrity sha512-j2tekvJCO7j22cs+LO6i0kRPhmQ9MXaPZ55TzOc1lzkN5b6BWqq4AFjl04s1oRRQ1v5rSe+KEvnLUSTonuls/A==
+
+"@types/node@>=13.7.0":
+  version "15.6.0"
+  resolved "https://registry.npmjs.org/@types/node/-/node-15.6.0.tgz#f0ddca5a61e52627c9dcb771a6039d44694597bc"
+  integrity sha512-gCYSfQpy+LYhOFTKAeE8BkyGqaxmlFxe+n4DKM6DR0wzw/HISUE/hAmkC/KT8Sw5PCJblqg062b3z9gucv3k0A==
 
 "@types/node@^13.7.0":
   version "13.13.52"
@@ -4350,8 +4355,8 @@ pinkie@^2.0.0:
   integrity sha1-clVrgM+g1IqXToDnckjoDtT3+HA=
 
 "pixelpai_proto@git+ssh://git@code.apowo.com:PixelPai/pixelpai_proto.git#typescriptdev":
-  version "1.0.525"
-  resolved "git+ssh://git@code.apowo.com:PixelPai/pixelpai_proto.git#bced68a0b47c2267d86ad20812b202e0cf16b207"
+  version "1.0.527"
+  resolved "git+ssh://git@code.apowo.com:PixelPai/pixelpai_proto.git#c897da93029d8faa791c201c21a472b5ec42fda9"
   dependencies:
     protobufjs "^6.8.8"
 

@@ -185,6 +185,9 @@ export abstract class BaseDisplay extends Phaser.GameObjects.Container implement
     public getSprite(key: DisplayField) {
         return this.mSprites.get(key);
     }
+    public getScene() {
+        return this.scene;
+    }
 
     protected updateSort() {
         if (this.mRootMount) return;

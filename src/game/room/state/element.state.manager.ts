@@ -82,6 +82,10 @@ class AddHandler extends ElementHandler {
             this.room.game.uiManager.showMed(ModuleName.CUTINMENU_NAME, { display: [{ texturePath: item.texturePath }], button: [{ text: "dropElement" }] });
         }
     }
+    private playerExplosive(state: State) {
+        const game = this.room.game;
+        game.renderPeer.displayAction("mineexplosive", { id: game.user.id });
+    }
 }
 
 class DeleteHandler extends ElementHandler {

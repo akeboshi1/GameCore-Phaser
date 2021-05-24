@@ -126,9 +126,10 @@ export class PicaRepairChoosePanel extends PicaBasePanel {
     private onConfirmHandler() {
         if (this.curSelectItem && this.curSelectItem.itemData) {
             const data = this.curSelectItem.itemData;
-            if (this.tempDatas.id === data.id) this.render.renderEmitter(ModuleName.PICAREPAIRCHOOSE_NAME + "_close");
-            else
-                this.render.renderEmitter(ModuleName.PICAREPAIRCHOOSE_NAME + "_querychange", { element_id: this.tempDatas.id, target_type: data.id });
+            // if (this.tempDatas.id === data.id) this.render.renderEmitter(ModuleName.PICAREPAIRCHOOSE_NAME + "_close");
+            // else
+            //     this.render.renderEmitter(ModuleName.PICAREPAIRCHOOSE_NAME + "_querychange", { element_id: this.tempDatas.id, target_type: data.id });
+            this.render.renderEmitter(ModuleName.PICAREPAIRCHOOSE_NAME + "_querychange", { element_id: this.tempDatas.id, target_type: data.id });
         }
     }
 }
