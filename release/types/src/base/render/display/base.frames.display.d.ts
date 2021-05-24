@@ -31,7 +31,7 @@ export declare class BaseFramesDisplay extends BaseDisplay {
     unmount(display: BaseFramesDisplay | BaseDragonbonesDisplay): void;
     destroy(): void;
     protected createDisplays(key: string, ani: any): void;
-    protected createDisplay(key: string, layer: any): Phaser.GameObjects.Sprite | Phaser.GameObjects.Image;
+    protected createDisplay(key: string, layer: any): Phaser.GameObjects.Image | Phaser.GameObjects.Sprite;
     protected clearFadeTween(): void;
     protected completeFrameAnimationQueue(): void;
     protected clearDisplay(): void;
