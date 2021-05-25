@@ -167,7 +167,20 @@ export class PicaBagMediator extends BasicMediator {
             const items = this.bagData.getItemsByCategory(data.packType, "alltype");
             const configMgr = <BaseDataConfigManager>this.game.configManager;
             configMgr.getBatchItemDatas(items);
-            this.mView.setProp(items, data.isupdate);
+            if (this.isDecorating && op_pkt_def.PKT_PackageType.FurniturePackage === data.packType) {
+                const temps = [];
+                for (const item of items) {
+                    const count = this.game.roomManager.currentRoom.decorateManager.getBagCount(item.id);
+                    if (count > 0) {
+                        const obj: any = {};
+                        ObjectAssign.excludeAllAssign(obj, item);
+                        obj.count = count;
+                        temps.push(obj);
+                    }
+                }
+                this.mView.setProp(temps, data.isupdate);
+            } else
+                this.mView.setProp(items, data.isupdate);
         }
     }
 
@@ -184,7 +197,7 @@ export class PicaBagMediator extends BasicMediator {
         if (enable) {
             // enter decorate locally
             // this.model.enterEditAndSelectedSprite(id);
-            if (this.game.roomManager.currentRoom.isDecorating && this.game.roomManager.currentRoom.decorateManager) {
+            if (this.isDecorating) {
                 this.game.roomManager.currentRoom.decorateManager.addFromBag(id);
             } else {
                 this.game.roomManager.currentRoom.requestDecorate(undefined, id);
@@ -221,5 +234,14 @@ export class PicaBagMediator extends BasicMediator {
     private get cacheMgr(): CacheDataManager {
         const mgr = this.game.getDataMgr<CacheDataManager>(DataMgrType.CacheMgr);
         return mgr;
+    }
+
+    private get isDecorating() {
+        if (!this.game.roomManager || !this.game.roomManager.currentRoom) return false;
+        const currentRoom = this.game.roomManager.currentRoom;
+        if (currentRoom.isDecorating && currentRoom.decorateManager) {
+            return true;
+        }
+        return false;
     }
 }
