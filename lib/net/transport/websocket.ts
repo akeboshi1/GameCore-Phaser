@@ -136,8 +136,10 @@ export class WSWrapper extends EventEmitter {
             this._force_close = true;
             if (this._readyState < ReadyState.CLOSED) {
                 this._connection.close();
+                this._readyState = ReadyState.CLOSING;
+            } else if (this._readyState >= ReadyState.CLOSED) {
+                this._readyState = ReadyState.CLOSED;
             }
-            this._readyState = ReadyState.CLOSING;
             this.emit(`closing`);
         }
     }
