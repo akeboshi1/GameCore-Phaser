@@ -49,9 +49,7 @@ export class WSWrapper extends EventEmitter {
     }
 
     public Close() {
-        if (ReadyState.OPEN === this._readyState || ReadyState.CONNECTING === this._readyState) {
-            this.doClose();
-        }
+        this.doClose();
     }
     public Send(packet: Buffer) {
         if (ReadyState.OPEN === this._readyState) {
@@ -136,7 +134,9 @@ export class WSWrapper extends EventEmitter {
     private doClose() {
         if (typeof this._connection !== "undefined") {
             this._force_close = true;
-            this._connection.close();
+            if (this._readyState < ReadyState.CLOSED) {
+                this._connection.close();
+            }
             this._readyState = ReadyState.CLOSING;
             this.emit(`closing`);
         }
