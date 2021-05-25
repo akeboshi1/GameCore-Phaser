@@ -68,13 +68,14 @@ export class PicaRoomListItem extends PicaRoomBaseListItem {
         this.roomName.y = -11 * this.dpr;
         this.ownerName.x = this.roomName.x + this.ownerName.width * 0.5;
         this.ownerName.y = 11 * this.dpr;
-        this.playerCount.x =  this.width * 0.5 - 35 * this.dpr;
+        this.playerCount.x = this.width * 0.5 - 35 * this.dpr;
     }
 }
 export class PicaMyRoomListItem extends PicaRoomBaseListItem {
     private defaultIcon: Phaser.GameObjects.Image;
     private unlockTips: Phaser.GameObjects.Text;
     private unlockBtn: Button;
+    private mIsUnlock: boolean = false;
     public setRoomData(data: any) {
         this.roomData = data;
         this.defaultIcon.visible = false;
@@ -96,6 +97,7 @@ export class PicaMyRoomListItem extends PicaRoomBaseListItem {
                 this.roomName.y = 0;
                 this.bg.setTexture(UIAtlasName.map, "map_party_list_bg");
                 this.unlockBtn.setInteractive();
+                this.mIsUnlock = true;
             } else {
                 this.unlockBtn.setFrameNormal("multiple_rooms_lock");
                 this.unlockTips.text = i18n.t("party.roomunlocktips", { name: data.unlocklevel });
@@ -127,5 +129,9 @@ export class PicaMyRoomListItem extends PicaRoomBaseListItem {
     }
     protected onUnlockBtnHandler() {
         if (this.send) this.send.run();
+    }
+
+    get isUnlock() {
+        return this.mIsUnlock;
     }
 }
