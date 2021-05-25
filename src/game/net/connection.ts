@@ -131,15 +131,19 @@ export class Connection implements ConnectionService {
         if (this.mSocket) {
             this.mSocket.state = false;
             if (this.mSocket.isConnect) {
-                this.mSocket.stopConnect();
+                this.mSocket.stopConnect(this.closeBack());
             } else {
-                this.isCloseing = false;
-                this.mSocket.destroy();
-                this.mSocket = null;
-                if (this.gateway) this.startConnect(this.gateway.addr, this.gateway.keepalive);
+                this.closeBack();
             }
         }
         this.clearPacketListeners();
+    }
+
+    closeBack() {
+        this.isCloseing = false;
+        this.mSocket.destroy();
+        this.mSocket = null;
+        if (this.gateway) this.startConnect(this.gateway.addr, this.gateway.keepalive);
     }
 
     setClock(clock: Clock) {
