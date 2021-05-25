@@ -116,9 +116,11 @@ export class Connection implements ConnectionService {
         }
         if (this.isConnect) this.closeConnect();
         this.mCachedServerAddress = addr;
-        if (!this.mSocket) {
-            this.mSocket = new GameSocket(this.mPeer, new ConnListener(this.mPeer));
+        // 存在socket，等待销毁并重新创建
+        if (this.mSocket) {
+            return;
         }
+        this.mSocket = new GameSocket(this.mPeer, new ConnListener(this.mPeer));
         this.mSocket.startConnect(this.mCachedServerAddress);
     }
 

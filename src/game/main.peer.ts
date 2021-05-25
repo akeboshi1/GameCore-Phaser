@@ -69,7 +69,7 @@ export class MainPeer extends RPCPeer {
         // 告诉主进程断开链接
         this.remote[RENDER_PEER].Render.onDisConnected();
         // 停止心跳
-        this.endBeat();
+        // this.endBeat();
         this.game.onDisConnected(isAuto);
     }
 
@@ -77,7 +77,7 @@ export class MainPeer extends RPCPeer {
         // 告诉主进程链接错误
         this.remote[RENDER_PEER].Render.onConnectError(error);
         // 停止心跳
-        this.endBeat();
+        // this.endBeat();
         this.game.onError();
     }
 
