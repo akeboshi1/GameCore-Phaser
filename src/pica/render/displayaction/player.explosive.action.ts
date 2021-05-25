@@ -39,6 +39,10 @@ export class PlayerExplosiveAction extends DisplayBaseAction {
         if (speed < 0) posX = baseX + 100;
         let vy = 350 + 150 * Math.random();
         this.timerID = setInterval(() => {
+            if (!this.display.getScene()) {
+                clearInterval(this.timerID);
+                return;
+            }
             this.display.x += speed * frame;
             this.display.y -= vy * frame;
             vy -= accele * frame;
