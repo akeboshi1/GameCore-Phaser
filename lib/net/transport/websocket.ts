@@ -49,9 +49,7 @@ export class WSWrapper extends EventEmitter {
     }
 
     public Close() {
-        if (ReadyState.OPEN === this._readyState || ReadyState.CONNECTING === this._readyState) {
-            this.doClose();
-        }
+        this.doClose();
     }
     public Send(packet: Buffer) {
         if (ReadyState.OPEN === this._readyState) {
