@@ -16,6 +16,7 @@ import { IDisplayObject } from "../display";
 import { FramesModel } from "baseModel";
 import { LayerEnum } from "game-capsule";
 import { TerrainGrid } from "../display/terrain.grid";
+import * as copy from "copy-text-to-clipboard";
 
 export enum NodeType {
     UnknownNodeType = 0,
@@ -512,38 +513,54 @@ export class DisplayManager {
     }
 
     public async snapshot() {
+        this.scenerys.forEach((s) => s.snapshot());
+        return;
         const scene = <PlayScene>this.sceneManager.getMainScene();
         if (!scene) return;
         const layerManager = scene.layerManager;
         if (!layerManager) return;
         const floor = layerManager.getLayer(LayerEnum.Floor.toString());
+        const wall = layerManager.getLayer(LayerEnum.Wall.toString());
+        const hang = layerManager.getLayer(LayerEnum.Hanging.toString());
         const terrain = layerManager.getLayer(LayerEnum.Terrain.toString());
         const surface = layerManager.getLayer(LayerEnum.Surface.toString());
 
         const size = await this.render.getCurrentRoomSize();
-        const sceneryScenes: Phaser.GameObjects.Container[] = [floor, terrain, surface];
+        // const sceneryScenes: Phaser.GameObjects.Container[] = [wall, hang, floor, terrain, surface];
+        const sceneryScenes: Phaser.GameObjects.Container[] = [];
         const offsetX = size.rows * (size.tileWidth / 2);
 
+        let maxWidth = size.sceneWidth;
+        let maxHeight = size.sceneHeight;
         this.scenerys.forEach((scenery) => {
             if (scenery.getLayer()) {
                 scenery.updateScale(1);
                 sceneryScenes.unshift(scenery.getLayer());
+                const s = scenery.scenery;
+                if (s.width > maxWidth) maxWidth = s.width;
+                if (s.height > maxHeight) maxHeight = s.height;
             }
         });
 
-        const rt = scene.make.renderTexture({ x: 0, y: 0, width: size.sceneWidth, height: size.sceneHeight }, false);
+        const rt = scene.make.renderTexture({ x: 0, y: 0, width: maxWidth, height: maxHeight });
         for (const layer of sceneryScenes) {
-            layer.setScale(1);
+            // layer.setScale(1);
+            // const camera: Phaser.Cameras.Scene2D.Camera = (<any>layer).scene.cameras.main;
+            // const bounds = camera.getBounds();
+            // Logger.getInstance().log(bounds.x / this.render.scaleRatio, bounds.y / this.render.scaleRatio);
+            Logger.getInstance().log("=============", layer.scale);
+            rt.draw(layer, 0, 0);
+            // layer.setScale(this.render.scaleRatio);
         }
 
-        rt.draw(sceneryScenes, 0, 0);
-        rt.snapshot((img) => {
-            Logger.getInstance().log(img);
+        // rt.draw(sceneryScenes, 0, 0);
+        (<Phaser.Renderer.WebGL.WebGLRenderer>rt.renderer).snapshotFramebuffer(rt.framebuffer, rt.width, rt.height, (img: any) => {
+            copy(img.src);
             rt.destroy();
             for (const layer of sceneryScenes) {
                 layer.setScale(this.render.scaleRatio);
             }
-            this.scenerys.forEach((scenery) => scenery.updateScale(this.render.scaleRatio));
+            // this.scenerys.forEach((scenery) => scenery.updateScale(this.render.scaleRatio));
         });
     }
 

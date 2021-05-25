@@ -3,9 +3,11 @@ import { Fit, IScenery } from "structure";
 import { DynamicImage } from "../../../render/ui/components/dynamic.image";
 import { ICameraService } from "../cameras/cameras.manager";
 import { IRender } from "../render";
+import * as copy from "copy-text-to-clipboard";
 export interface IBlockManager {
   startPlay(scene: Phaser.Scene);
   check(time?: number, delta?: number);
+  snapshot();
 }
 
 export class BlockManager implements IBlockManager {
@@ -122,6 +124,16 @@ export class BlockManager implements IBlockManager {
 
   getLayer() {
     return this.mContainer;
+  }
+
+  snapshot() {
+    const rt = this.scene.make.renderTexture({ x: 0, y: 0, width: this.scenery.width, height: this.scenery.height });
+    this.updateScale(1);
+    rt.draw(this.getLayer());
+    this.updateScale(this.render.scaleRatio);
+    rt.snapshot((img: any) => {
+      copy(img.src);
+    });
   }
 
   async updatePosition() {
