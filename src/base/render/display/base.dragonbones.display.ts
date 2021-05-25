@@ -769,7 +769,7 @@ export class BaseDragonbonesDisplay extends BaseDisplay {
         const sliced = slotName.slice(0, -2);
         const humpName = sliced.replace(/([^_])(?:_+([^_]))/g, ($0, $1, $2) => {
             return $1 + $2.toUpperCase();
-        })
+        });
         return humpName + "Id";
     }
 
