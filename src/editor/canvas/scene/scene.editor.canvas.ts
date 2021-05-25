@@ -50,7 +50,7 @@ export class SceneEditorCanvas extends EditorCanvas implements IRender {
     private mScene: Phaser.Scene;
     constructor(config: IEditorCanvasConfig) {
         super(config);
-        Url.OSD_PATH = "https://osd-alpha.tooqing.com/";
+        Url.OSD_PATH = config.osd || "https://osd-alpha.tooqing.com/";
         this.mElements = new Map();
         this.mFactory = new EditorFactory(this);
         this.mSelecedElement = new SelectedElementManager(this);
