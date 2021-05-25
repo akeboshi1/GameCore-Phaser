@@ -116,9 +116,11 @@ export class Connection implements ConnectionService {
         }
         if (this.isConnect) this.closeConnect();
         this.mCachedServerAddress = addr;
-        if (!this.mSocket) {
-            this.mSocket = new GameSocket(this.mPeer, new ConnListener(this.mPeer));
+        // 存在socket，等待销毁并重新创建
+        if (this.mSocket) {
+            return;
         }
+        this.mSocket = new GameSocket(this.mPeer, new ConnListener(this.mPeer));
         this.mSocket.startConnect(this.mCachedServerAddress);
     }
 
@@ -128,12 +130,14 @@ export class Connection implements ConnectionService {
         this.mCachedServerAddress = undefined;
         if (this.mSocket) {
             this.mSocket.state = false;
-            this.mSocket.stopConnect().then(() => {
+            if (this.mSocket.isConnect) {
+                this.mSocket.stopConnect();
+            } else {
                 this.isCloseing = false;
                 this.mSocket.destroy();
                 this.mSocket = null;
                 if (this.gateway) this.startConnect(this.gateway.addr, this.gateway.keepalive);
-            });
+            }
         }
         this.clearPacketListeners();
     }

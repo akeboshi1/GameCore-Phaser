@@ -155,9 +155,9 @@
   integrity sha512-j2tekvJCO7j22cs+LO6i0kRPhmQ9MXaPZ55TzOc1lzkN5b6BWqq4AFjl04s1oRRQ1v5rSe+KEvnLUSTonuls/A==
 
 "@types/node@>=13.7.0":
-  version "15.6.0"
-  resolved "https://registry.npmjs.org/@types/node/-/node-15.6.0.tgz#f0ddca5a61e52627c9dcb771a6039d44694597bc"
-  integrity sha512-gCYSfQpy+LYhOFTKAeE8BkyGqaxmlFxe+n4DKM6DR0wzw/HISUE/hAmkC/KT8Sw5PCJblqg062b3z9gucv3k0A==
+  version "15.6.1"
+  resolved "https://registry.npmjs.org/@types/node/-/node-15.6.1.tgz#32d43390d5c62c5b6ec486a9bc9c59544de39a08"
+  integrity sha512-7EIraBEyRHEe7CH+Fm1XvgqU6uwZN8Q7jppJGcqjROMT29qhAuuOxYB1uEY5UMYQKEmA5D+5tBnhdaPXSsLONA==
 
 "@types/node@^13.7.0":
   version "13.13.52"
@@ -2285,13 +2285,12 @@ function-bind@^1.1.1:
   integrity sha512-yIovAzMX49sF8Yl58fSCWJ5svSLuaibPxXQJFLmBObTuCr0Mf1KiPopGM9NiFjiYBCbfaa2Fh6breQ6ANVTI0A==
 
 "game-capsule@git+ssh://git@code.apowo.com:PixelPai/game-capsule.git#dev":
-  version "1.2.205"
-  resolved "git+ssh://git@code.apowo.com:PixelPai/game-capsule.git#b6001477a715b1eed76f6adbe27fdc4d4ce45611"
+  version "1.2.206"
+  resolved "git+ssh://git@code.apowo.com:PixelPai/game-capsule.git#203d224729d9f62149431a25ddf2fe99ca665279"
   dependencies:
     chance "^1.0.18"
     crypto-js "^3.1.9-1"
     lodash "^4.17.19"
-    phaser "^3.23.0"
     pixelpai_proto "git+ssh://git@code.apowo.com:PixelPai/pixelpai_proto.git#typescriptdev"
     protobufjs "6.10.2"
     treeify "^1.1.0"
@@ -4309,7 +4308,7 @@ performance-now@^2.1.0:
   resolved "https://registry.yarnpkg.com/performance-now/-/performance-now-2.1.0.tgz#6309f4e0e5fa913ec1c69307ae364b4b377c9e7b"
   integrity sha1-Ywn04OX6kT7BxpMHrjZLSzd8nns=
 
-phaser@^3.23.0, phaser@^3.24.1:
+phaser@^3.24.1:
   version "3.54.0"
   resolved "https://registry.npmjs.org/phaser/-/phaser-3.54.0.tgz#46b191e46059aab2a9a57f78525c60b595767eee"
   integrity sha512-/1XVI6J2siS0OGwJez7vLbRjars1zb//EvJdYMVyd3wNTUf5DHrvYUj1f6TsEISr4vjnbrNtS66QIuPbGU8x6A==
@@ -4355,8 +4354,8 @@ pinkie@^2.0.0:
   integrity sha1-clVrgM+g1IqXToDnckjoDtT3+HA=
 
 "pixelpai_proto@git+ssh://git@code.apowo.com:PixelPai/pixelpai_proto.git#typescriptdev":
-  version "1.0.527"
-  resolved "git+ssh://git@code.apowo.com:PixelPai/pixelpai_proto.git#c897da93029d8faa791c201c21a472b5ec42fda9"
+  version "1.0.531"
+  resolved "git+ssh://git@code.apowo.com:PixelPai/pixelpai_proto.git#d8038ebdcdad76d98489555e6543ab7670b1b3e2"
   dependencies:
     protobufjs "^6.8.8"
 
