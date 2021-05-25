@@ -443,9 +443,9 @@ class MiddleContainer extends Phaser.GameObjects.Container {
             if (isowner) {
                 const data = datas[i];
                 if (data) {
-                    item.setAttributeData(data.value, data.max);
+                    item.setAttributeData(data);
                 } else {
-                    item.setAttributeData(0, undefined);
+                    item.setAttributeData(undefined);
                 }
             }
         }
@@ -463,6 +463,7 @@ class MiddleContainer extends Phaser.GameObjects.Container {
             const bar = bars[i];
             const item = new AttributeProgressItem(this.scene, icon, bar, this.dpr);
             item.visible = false;
+            item.on(ClickEvent.Tap, this.onOwnerClickHandler, this);
             this.ownerArr.push(item);
         }
         const oicons = ["friend_invite_icon", "friend_room_icon", "friend_transaction_icon"];
@@ -475,7 +476,7 @@ class MiddleContainer extends Phaser.GameObjects.Container {
             const item = new OtherButtonItem(this.scene, icon, text, this.dpr);
             item.setTag(tag);
             item.visible = false;
-            item.on(ClickEvent.Tap, this.onClickHandler, this);
+            item.on(ClickEvent.Tap, this.onOtherClickHandler, this);
             this.otherArr.push(item);
         }
         this.add(this.ownerArr);
@@ -495,18 +496,19 @@ class MiddleContainer extends Phaser.GameObjects.Container {
         }
     }
 
-    private onClickHandler(pointer, button: OtherButtonItem) {
+    private onOwnerClickHandler(pointer, button: AttributeProgressItem) {
+    }
+    private onOtherClickHandler(pointer, button: OtherButtonItem) {
         if (this.sendHandler) this.sendHandler.runWith(button.tag);
     }
 }
 
-class AttributeProgressItem extends Phaser.GameObjects.Container {
+class AttributeProgressItem extends ButtonEventDispatcher {
     private bg: Phaser.GameObjects.Image;
     private textImg: ImageValue;
-    private dpr: number;
     private progress: ProgressMaskBar;
     constructor(scene: Phaser.Scene, frame: string, bar: string, dpr: number) {
-        super(scene, 0, 0,);
+        super(scene, 0, 0, false);
         this.dpr = dpr;
         this.bg = this.scene.make.image({ key: UIAtlasName.friend_message, frame: "friend_physical_bg" });
         this.setSize(this.bg.width, this.bg.height);
@@ -516,12 +518,18 @@ class AttributeProgressItem extends Phaser.GameObjects.Container {
         this.progress = new ProgressMaskBar(scene, UIAtlasName.friend_message, "friend_physical_schedule_bottom", bar);
         this.progress.y = this.textImg.y + this.textImg.height * 0.5 + this.progress.height * 0.5 + 7 * dpr;
         this.add([this.bg, this.textImg, this.progress]);
+        this.enable = true;
     }
 
     public refreshMask() {
         this.progress.refreshMask();
     }
-    public setAttributeData(value: number, max: number) {
+    public setAttributeData(data: any) {
+        let value: number = 0, max: number;
+        if (data) {
+            value = data.value;
+            max = data.max;
+        }
         if (max === undefined) {
             this.textImg.visible = false;
             this.progress.visible = false;

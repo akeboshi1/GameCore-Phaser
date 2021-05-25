@@ -12,6 +12,7 @@ export class PicaFriendBaseListItem extends Phaser.GameObjects.Container {
     public itemData: any;
     protected dpr: number;
     protected line: Phaser.GameObjects.Graphics;
+    protected send: Handler;
     constructor(scene: Phaser.Scene, width: number, height: number, dpr: number) {
         super(scene);
         this.dpr = dpr;
@@ -26,6 +27,9 @@ export class PicaFriendBaseListItem extends Phaser.GameObjects.Container {
     public setItemData(data: any) {
         this.itemType = data.itemType || 1;
         this.itemData = data;
+    }
+    public setHandler(send: Handler) {
+        this.send = send;
     }
     protected init() {
 
@@ -45,6 +49,14 @@ export class PicaFriendListItem extends PicaFriendBaseListItem {
     protected send: Handler;
     public setItemData(data: any) {
         super.setItemData(data);
+        const optionType = data.optionType || 1;
+        this.followBtn.visible = false;
+        this.moreBtn.visible = false;
+        if (optionType === 2) {
+            this.followBtn.visible = true;
+        } else if (optionType === 3) {
+            this.moreBtn.visible = true;
+        }
     }
     protected init() {
         this.imagIcon = new DynamicImage(this.scene, 0, 0);
@@ -55,7 +67,9 @@ export class PicaFriendListItem extends PicaFriendBaseListItem {
         this.vipImage.setLayout(1);
         this.vipImage.setFontStyle("bold");
         this.followBtn = new Button(this.scene, UIAtlasName.friend_new, "friend_list_follow");
+        this.followBtn.on(ClickEvent.Tap, this.onFollowHandler, this);
         this.moreBtn = new Button(this.scene, UIAtlasName.friend_new, "friend_list_more");
+        this.moreBtn.setInteractiveSize(20 * this.dpr, 20 * this.dpr);
         this.add([this.nickImge, this.lvImage, this.vipImage, this.followBtn, this.moreBtn]);
         this.followBtn.visible = false;
         this.moreBtn.visible = false;
@@ -71,6 +85,12 @@ export class PicaFriendListItem extends PicaFriendBaseListItem {
         this.followBtn.x = this.width * 0.5 - this.followBtn.width * 0.5 - 20 * this.dpr;
         this.moreBtn.x = this.followBtn.x;
     }
+    protected onFollowHandler() {
+        if (this.send) this.send.runWith(["follow", this.itemData]);
+    }
+    protected onMoreHandler() {
+        if (this.send) this.send.runWith(["more", this.itemData]);
+    }
 }
 
 export class PicaFriendFunctionItem extends PicaFriendBaseListItem {
@@ -78,16 +98,35 @@ export class PicaFriendFunctionItem extends PicaFriendBaseListItem {
     protected contentTex: Phaser.GameObjects.Text;
     protected redImg: Phaser.GameObjects.Image;
     protected countTex: Phaser.GameObjects.Text;
+    protected arrow: Phaser.GameObjects.Image;
     public setItemData(data: any) {
         super.setItemData(data);
-        // if()
+        if (this.itemType === 2) {
+            this.funImg.setFrame("friend_list_notice_icon");
+            this.contentTex.text = i18n.t("friendlist.follow_notice");
+            this.countTex.text = data.count;
+            this.redImg.visible = true;
+            this.countTex.visible = true;
+        } else if (this.itemType === 3) {
+            this.funImg.setFrame("friend_list_add_icon");
+            this.contentTex.text = i18n.t("friendlist.addfriend");
+            this.arrow.visible = true;
+        } else if (this.itemType === 4) {
+            this.funImg.setFrame("friend_list_blacklist_icon");
+            this.contentTex.text = i18n.t("friendlist.blacklist");
+            this.arrow.visible = true;
+        }
     }
     protected init() {
         this.funImg = this.scene.make.image({ key: UIAtlasName.friend_new, frame: "friend_list_notice_icon" });
         this.contentTex = this.scene.make.text({ style: UIHelper.whiteStyle(this.dpr) }).setOrigin(0, 0.5);
         this.redImg = this.scene.make.image({ key: UIAtlasName.friend_new, frame: "friend_list_notice_number" });
-        this.countTex = this.scene.make.text({ style: UIHelper.whiteStyle(this.dpr) });
-        this.add([this.funImg, this.contentTex, this.redImg, this.countTex]);
+        this.countTex = this.scene.make.text({ style: UIHelper.whiteStyle(this.dpr) }).setOrigin(0.5);
+        this.arrow = this.scene.make.image({ key: UIAtlasName.friend_new, frame: "friend_list_add_arrow" });
+        this.redImg.visible = false;
+        this.countTex.visible = false;
+        this.arrow.visible = false;
+        this.add([this.funImg, this.contentTex, this.redImg, this.countTex, this.arrow]);
         this.layout();
     }
     protected layout() {
@@ -95,6 +134,6 @@ export class PicaFriendFunctionItem extends PicaFriendBaseListItem {
         this.contentTex.x = this.funImg.x + this.funImg.width * 0.5 + 8 * this.dpr;
         this.redImg.x = this.width * 0.5 - this.redImg.width * 0.5 - 10 * this.dpr;
         this.countTex.x = this.redImg.x;
-
+        this.arrow.x = this.countTex.x;
     }
 }
