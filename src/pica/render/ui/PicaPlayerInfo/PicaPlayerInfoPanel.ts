@@ -499,7 +499,7 @@ class MiddleContainer extends Phaser.GameObjects.Container {
     }
 
     private onOwnerClickHandler(pointer, button: AttributeProgressItem) {
-        PicaItemTipsPanel.Inst.showTips(button, button.itemData);
+        if (button.itemData) PicaItemTipsPanel.Inst.showTips(button, button.itemData);
     }
     private onOtherClickHandler(pointer, button: OtherButtonItem) {
         if (this.sendHandler) this.sendHandler.runWith(button.tag);
