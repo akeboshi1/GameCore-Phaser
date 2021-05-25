@@ -110,19 +110,6 @@ export class MainPeer extends RPCPeer {
     }
 
     public startBeat() {
-        if (this.startDelay) return;
-        this.startDelay = setInterval(() => {
-            if (this.reConnectCount >= 8) {
-                this.game.reconnect();
-                return;
-            }
-            this.reConnectCount++;
-            const pkt: PBpacket = new PBpacket(op_gateway.OPCODE._OP_CLIENT_REQ_GATEWAY_PING);
-            this.game.socket.send(pkt.Serialization());
-            const now: number = new Date().getTime();
-            Logger.getInstance().log("beatTime:=====>", now - this.mTmpTime);
-            this.mTmpTime = now;
-        }, this.delayTime);
     }
 
     public endBeat() {

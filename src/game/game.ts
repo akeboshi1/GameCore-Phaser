@@ -235,7 +235,6 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
     }
 
     public onClientErrorHandler(packet: PBpacket): void {
-        if (!this.debugReconnect) return;
         const content: op_client.IOP_GATEWAY_RES_CLIENT_ERROR = packet.content;
         switch (content.responseStatus) {
             case op_def.ResponseStatus.REQUEST_UNAUTHORIZED:
@@ -250,7 +249,7 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
         const errorLevel = content.errorLevel;
         const msg = content.msg;
         // 游戏phaser创建完成后才能在phaser内显示ui弹窗等ui
-        if (errorLevel >= op_def.ErrorLevel.SERVICE_GATEWAY_ERROR) {
+        if (errorLevel >= op_def.ErrorLevel.SERVICE_GATEWAY_ERROR && this.debugReconnect) {
             let str: string = msg;
             if (msg.length > 100) str = msg.slice(0, 99);
             this.renderPeer.showAlert(str, true, false).then(() => {
@@ -677,16 +676,13 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
         this.mCustomProtoManager.send(msgName, cmd, msg);
     }
 
-    // public heartBeatCallBack() {
-    //     this.mainPeer.clearBeat();
-    // }
-
     protected async initWorld() {
         this.mUser = new User(this);
         this.addHandlerFun(op_client.OPCODE._OP_GATEWAY_RES_CLIENT_VIRTUAL_WORLD_INIT, this.onInitVirtualWorldPlayerInit);
         this.addHandlerFun(op_client.OPCODE._OP_GATEWAY_RES_CLIENT_ERROR, this.onClientErrorHandler);
         this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_SELECT_CHARACTER, this.onSelectCharacter);
         this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_GOTO_ANOTHER_GAME, this.onGotoAnotherGame);
+        this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_PING, this.onClientPingHandler);
         // this.addHandlerFun(op_client.OPCODE._OP_GATEWAY_RES_CLIENT_PONG, this.heartBeatCallBack);
         this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_GAME_MODE, this.onAvatarGameModeHandler);
         this.createManager();
@@ -979,6 +975,10 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
     private onAvatarGameModeHandler(packet: PBpacket) {
         const content: op_client.IOP_VIRTUAL_WORLD_REQ_CLIENT_GAME_MODE = packet.content;
         this.mAvatarType = content.avatarStyle;
+    }
+
+    private onClientPingHandler(packet: PBpacket) {
+        this.connection.send(new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_RES_VIRTUAL_WORLD_PONG));
     }
 
     private _run(current: number, delta: number) {
