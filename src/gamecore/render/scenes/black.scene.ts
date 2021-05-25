@@ -32,7 +32,7 @@ export class BlackScene extends BasicScene {
         bg.fillRect(0, 0, width, height);
 
         const tipTxt = this.add.text(width / 2, height / 2, i18n.t("blackScene.tips"), {
-            fontSize: 12 * dpr,
+            fontSize: 12 * dpr + "px",
             fontFamily: Font.DEFULT_FONT
         }
         ).setOrigin(0.5);

@@ -1,3 +1,4 @@
+/// <reference types="tooqingphaser" />
 import { BasePanel } from "../components/base.panel";
 import { NinePatch } from "../components/nine.patch";
 import { UiManager } from "../ui.manager";

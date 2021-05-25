@@ -22,7 +22,7 @@ export class TopDisplay {
         } else {
             nickname = this.scene.make.text({
                 style: {
-                    fontSize: 12 * this.mDpr,
+                    fontSize: 12 * this.mDpr + "px",
                     fontFamily: Font.DEFULT_FONT
                 }
             }).setOrigin(0.5).setStroke("#000000", 2 * this.mDpr);

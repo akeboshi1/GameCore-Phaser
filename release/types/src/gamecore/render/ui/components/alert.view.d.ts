@@ -1,3 +1,4 @@
+/// <reference types="tooqingphaser" />
 import { BaseBatchPanel } from "./base.batch.panel";
 import { UiManager } from "../ui.manager";
 export declare class AlertView extends BaseBatchPanel {

@@ -1,4 +1,4 @@
-/// <reference types="phaser" />
+/// <reference types="tooqingphaser" />
 import { IAnimationBase, AnimationUrlData } from "./ianimationbase";
 export declare class BaseAnimation extends Phaser.GameObjects.Container implements IAnimationBase {
     resName: string;

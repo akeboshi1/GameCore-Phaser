@@ -79,13 +79,13 @@ export class LoadingScene extends BasicScene {
     this.bg.play("loading_anis");
 
     this.progressText = this.add.text(this.bg.x, this.bg.y + this.bg.displayHeight * 0.5, this.tipsText, {
-      fontSize: 12 * dpr,
+      fontSize: 12 * dpr + "px",
       fontFamily: Font.DEFULT_FONT
     }
     ).setOrigin(0.5);
 
     this.debug = this.add.text(width - 4 * dpr, height - 4 * dpr, `v${this.mGameVersion} ${this.getDebug()}`, {
-      fontSize: 12 * dpr,
+      fontSize: 12 * dpr + "px",
       fontFamily: Font.DEFULT_FONT
     }).setOrigin(1);
 
@@ -118,7 +118,7 @@ export class LoadingScene extends BasicScene {
     const len = this.mTxtList.length;
     const dpr = this.render.uiRatio;
     const mainTxt = this.add.text(this.bg.x - this.scale.gameSize.width / 2, this.scale.gameSize.height - 10 * dpr * (len + 1), "", {
-      fontSize: 12 * dpr,
+      fontSize: 12 * dpr + "px",
       fontFamily: Font.DEFULT_FONT
     }).setOrigin(0, .5);
     mainTxt.setText(text);
@@ -130,7 +130,7 @@ export class LoadingScene extends BasicScene {
     const len = this.mErrorList.length;
     const dpr = this.render.uiRatio;
     const errorTxt = this.add.text(width - 4 * dpr, 15 * dpr * len, "", {
-      fontSize: 12 * dpr,
+      fontSize: 12 * dpr + "px",
       fontFamily: Font.DEFULT_FONT
     }).setOrigin(1);
     errorTxt.setText(msg);

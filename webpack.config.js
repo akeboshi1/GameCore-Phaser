@@ -1,7 +1,7 @@
 const path = require("path");
 const webpack = require("webpack");
-const pathToPhaser = path.join(__dirname, "/node_modules/@PixelPai/tooqingphaser");
-const phaser = path.join(pathToPhaser, "dist/phase.min.js");
+const pathToPhaser = path.join(__dirname, "/node_modules/tooqingphaser");
+const phaser = path.join(pathToPhaser, "dist/phaser.min.js");
 const pathToRPC = path.join(__dirname, "/node_modules/webworker-rpc");
 const webworkerrpc = path.join(pathToRPC, "release/rpcpeer.js")
 const HtmlWebpackPlugin = require("html-webpack-plugin");
@@ -17,7 +17,7 @@ const commonConfig = {
     resolve: {
         extensions: [".ts", ".js"],
         alias: {
-            phaser: phaser,
+            tooqingphaser:phaser,
             webworkerrpc: webworkerrpc,
             "dragonbones-runtime": path.join(__dirname, "node_modules/dragonbones-runtime/Phaser/3.x/out/dragonBones.js"),
             gamecore: path.join(__dirname, "./src/gamecore/game"),
@@ -74,7 +74,7 @@ const gameConfig = Object.assign({}, commonConfig, {
         rules: [
             { test: /\.ts$/, loader: "ts-loader", options: { allowTsInNodeModules: false }, exclude: "/node_modules/" },
             { test: /webworkerrpc\.js$/, loader: "expose-loader?webworker-rpc" },
-            { test: /phaser\.js$/, loader: "expose-loader?Phaser" },
+            // { test: /phaser\.js$/, loader: "expose-loader?Phaser" },
             // { test: /\.(gif|png|dbbin|ttf|jpe?g|svg|mp3|mp4|xml)$/i, loader: "file-loader", options: resourcesOut },
             // { test: /\.json/, type: "javascript/auto", loader: "file-loader", exclude: "/resources/locales/", options: resourcesOut },
         ],

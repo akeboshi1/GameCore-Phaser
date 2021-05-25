@@ -1,4 +1,4 @@
-/// <reference types="phaser" />
+/// <reference types="tooqingphaser" />
 export declare class GridLayoutGroup extends Phaser.GameObjects.Container {
     static readonly ClassName: string;
     private _padding;

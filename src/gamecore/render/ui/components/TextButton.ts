@@ -9,7 +9,7 @@ export class TextButton extends Phaser.GameObjects.Container {
     this.mText = this.scene.make.text({
       text,
       style: {
-        fontSize: 15 * dpr,
+        fontSize: 15 * dpr + "px",
         fontFamily: Font.DEFULT_FONT
       }
     }, false).setOrigin(0.5, 0.5);

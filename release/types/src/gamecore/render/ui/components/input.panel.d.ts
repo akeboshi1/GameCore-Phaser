@@ -1,4 +1,4 @@
-/// <reference types="phaser" />
+/// <reference types="tooqingphaser" />
 import { Render } from "../../render";
 export declare class InputPanel extends Phaser.Events.EventEmitter {
     private render;

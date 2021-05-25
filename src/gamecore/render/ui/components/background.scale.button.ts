@@ -30,7 +30,7 @@ export class BackgroundScaleButton extends ButtonEventDispatcher {
         this.setSize(width, height);
         this.createBackground();
         if (text) {
-            this.mText = this.scene.make.text({ color: "#ffffff", fontSize: 16 * dpr }, false)
+            this.mText = this.scene.make.text({ style: { color: "#ffffff", fontSize: 16 * dpr + "px" } }, false)
                 .setOrigin(0.5, 0.5)
                 .setText(text);
             if (this.mBackground) {

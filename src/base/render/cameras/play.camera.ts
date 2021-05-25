@@ -52,14 +52,14 @@ export class PlayCamera extends Phaser.Cameras.Scene2D.Camera {
         return this;
     }
 
-    preRender(resolution: number) {
+    protected preRender() {
         const width = this.width;
         const height = this.height;
 
         const halfWidth = width * 0.5;
         const halfHeight = height * 0.5;
 
-        const zoom = this.zoom * resolution;
+        const zoom = this.zoom;
         const matrix = this.matrix;
 
         let originX = width * this.originX;

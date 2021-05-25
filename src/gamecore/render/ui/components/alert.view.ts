@@ -83,7 +83,7 @@ export class AlertView extends BaseBatchPanel {
             text: i18n.t("common.tips"),
             style: {
                 fontFamily: Font.DEFULT_FONT,
-                fontSize: 12 * this.dpr * zoom,
+                fontSize: 12 * this.dpr * zoom + "px",
                 color: "#905B06"
             }
         }, false).setOrigin(0.5);

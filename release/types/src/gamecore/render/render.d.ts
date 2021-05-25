@@ -1,3 +1,4 @@
+/// <reference types="tooqingphaser" />
 import { RPCPeer } from "webworker-rpc";
 import { PBpacket } from "net-socket-packet";
 import { op_client } from "pixelpai_proto";
@@ -149,7 +150,7 @@ export declare class Render extends RPCPeer implements GameMain, IRender {
     syncCameraScroll(): void;
     renderEmitter(eventType: string, data?: any): void;
     showMediator(name: string, isShow: boolean): void;
-    getMainScene(): any;
+    getMainScene(): Phaser.Scene;
     updateGateway(): void;
     destroyAccount(): Promise<void>;
     reconnect(): void;
@@ -158,7 +159,7 @@ export declare class Render extends RPCPeer implements GameMain, IRender {
     checkContains(id: number, x: number, y: number): Promise<boolean>;
     showCreateRolePanel(data?: any): Promise<boolean>;
     updateModel(id: number, displayInfo: any): void;
-    getIndexInLayer(id: number): any;
+    getIndexInLayer(id: number): number;
     changeLayer(id: number, layerName: string): void;
     showCreateRole(params?: any): void;
     hideCreateRole(): void;

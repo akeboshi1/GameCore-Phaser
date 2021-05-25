@@ -1,3 +1,4 @@
+/// <reference types="tooqingphaser" />
 import { BaseUI, NineSlicePatch } from "apowophaserui";
 export declare class ProgressMaskBar extends BaseUI {
     value: number;
@@ -12,7 +13,7 @@ export declare class ProgressMaskBar extends BaseUI {
     setText(val: any): void;
     refreshMask(): void;
     destroy(): void;
-    get text(): any;
-    get bar(): any;
+    get text(): Phaser.GameObjects.Text;
+    get bar(): Phaser.GameObjects.Image | NineSlicePatch;
     protected createBackgroundBar(key: string, background: string, bar: string, style?: any, barconfig?: any, bgconfig?: any): void;
 }

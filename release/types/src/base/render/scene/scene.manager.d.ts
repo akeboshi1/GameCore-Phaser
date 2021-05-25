@@ -1,3 +1,4 @@
+/// <reference types="tooqingphaser" />
 import { IRender } from "../render";
 export declare class BaseSceneManager {
     protected render: IRender;
@@ -7,6 +8,6 @@ export declare class BaseSceneManager {
     getSceneClass(name: string): any;
     launchScene(startScene: Phaser.Scene, LaunchName: string, sceneName: string, data?: any): void;
     setMainScene(scene: Phaser.Scene): void;
-    getMainScene(): any;
+    getMainScene(): Phaser.Scene;
     protected initScene(): void;
 }

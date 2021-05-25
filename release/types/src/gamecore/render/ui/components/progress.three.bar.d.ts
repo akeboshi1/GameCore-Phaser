@@ -1,3 +1,4 @@
+/// <reference types="tooqingphaser" />
 import { BaseUI } from "apowophaserui";
 import { ThreeSlicePath } from "./three.slice.path";
 export declare class ProgressThreeBar extends BaseUI {
@@ -10,7 +11,7 @@ export declare class ProgressThreeBar extends BaseUI {
     constructor(scene: Phaser.Scene, key: string, background: string[], bar: string[], style?: any, barconfig?: any, bgconfig?: any);
     setProgress(curVal: any, maxVal: any): void;
     setText(val: any): void;
-    get text(): any;
+    get text(): Phaser.GameObjects.Text;
     get bar(): any;
     protected createBackgroundBar(key: string, background: any, bar: any, style?: any, barconfig?: any, bgconfig?: any): void;
 }

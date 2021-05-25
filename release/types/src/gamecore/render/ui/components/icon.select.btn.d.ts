@@ -1,4 +1,4 @@
-/// <reference types="phaser" />
+/// <reference types="tooqingphaser" />
 import { Render } from "../../render";
 import { Pos } from "structure";
 /**

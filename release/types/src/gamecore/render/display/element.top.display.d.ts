@@ -1,3 +1,4 @@
+/// <reference types="tooqingphaser" />
 import { BubbleContainer } from "./bubble/bubble.container";
 import { ElementStateType, StateConfig } from "structure";
 import { TopDisplay } from "display";
@@ -16,7 +17,7 @@ export declare class ElementTopDisplay extends TopDisplay {
     loadState(state: ElementStateType): void;
     showUIState(state: StateConfig): void;
     updateOffset(): void;
-    getYOffset(): any;
+    getYOffset(): Phaser.Geom.Point;
     addDisplay(): void;
     removeDisplay(): void;
     hasTopPoint(): boolean;

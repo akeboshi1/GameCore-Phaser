@@ -4,8 +4,8 @@ export class TextureSprite extends Phaser.GameObjects.Container {
     private compl: Handler;
     private error: Handler;
     private mUrls: string[];
-    private loadUrls: string[];
-    private errorUrls: string[];
+    private loadUrls: any[];
+    private errorUrls: any[];
     private dpr: number;
     private auto: boolean;
     private times: number;

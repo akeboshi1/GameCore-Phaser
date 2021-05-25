@@ -30,11 +30,11 @@ export class ValueContainer extends Phaser.GameObjects.Container {
         this.mLeft.texture.setFilter(Phaser.Textures.FilterMode.LINEAR);
         this.mText = this.scene.make.text({
             text: "0",
-            width: bg.width,
-            height: bg.height,
             style: {
-                fontSize: 14 * dpr,
-                fontFamily: Font.NUMBER
+                fontSize: 14 * dpr + "px",
+                fontFamily: Font.NUMBER,
+                fixedWidth: bg.width,
+                fixedHeight: bg.height
             }
         }, false).setOrigin(0.5);
         this.mText.setStroke("#000000", 1 * dpr);

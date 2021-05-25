@@ -1,3 +1,4 @@
+/// <reference types="tooqingphaser" />
 import { Panel } from "apowophaserui";
 import { Render } from "../../render";
 export declare class BaseBatchPanel extends Panel {
@@ -29,11 +30,11 @@ export declare class BaseBatchPanel extends Panel {
     protected init(): void;
     protected setLinear(key: string): void;
     protected addResources(key: string, resource: any): void;
-    protected cacheExists(type: string, key: string): any;
+    protected cacheExists(type: string, key: string): boolean;
     protected get scaleWidth(): number;
     protected get scaleHeight(): number;
-    protected get cameraWidth(): any;
-    protected get cameraHeight(): any;
+    protected get cameraWidth(): number;
+    protected get cameraHeight(): number;
     protected __exportProperty(): void;
     protected exportComplete(): void;
     protected onShow(): void;
