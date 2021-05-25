@@ -4,9 +4,11 @@ import { NineSliceButton, GameGridTable, ClickEvent, ProgressBar } from "apowoph
 import { UIAtlasName } from "../../../res";
 import { Font, Handler, i18n, UIHelper, Url } from "utils";
 import { AvatarSuitType, FriendRelationEnum, ModuleName } from "structure";
-import { DynamicImage, UiManager, UIDragonbonesDisplay, ButtonEventDispatcher, ProgressMaskBar, ToggleColorButton } from "gamecoreRender";
+import { DynamicImage, UiManager, UIDragonbonesDisplay, ButtonEventDispatcher, ProgressMaskBar, ToggleColorButton, ItemInfoTips } from "gamecoreRender";
 import { PicaBasePanel } from "../pica.base.panel";
 import { CommonBackground, ImageValue } from "../../ui";
+import { PicaItemTipsPanel } from "../SinglePanel/PicaItemTipsPanel";
+import { ICountablePackageItem } from "picaStructure";
 export class PicaPlayerInfoPanel extends PicaBasePanel {
     private mBlackBG: Phaser.GameObjects.Graphics;
     private background: CommonBackground;
@@ -497,6 +499,7 @@ class MiddleContainer extends Phaser.GameObjects.Container {
     }
 
     private onOwnerClickHandler(pointer, button: AttributeProgressItem) {
+        PicaItemTipsPanel.Inst.showTips(button, button.itemData);
     }
     private onOtherClickHandler(pointer, button: OtherButtonItem) {
         if (this.sendHandler) this.sendHandler.runWith(button.tag);
@@ -504,6 +507,7 @@ class MiddleContainer extends Phaser.GameObjects.Container {
 }
 
 class AttributeProgressItem extends ButtonEventDispatcher {
+    public itemData: ICountablePackageItem;
     private bg: Phaser.GameObjects.Image;
     private textImg: ImageValue;
     private progress: ProgressMaskBar;
@@ -525,6 +529,7 @@ class AttributeProgressItem extends ButtonEventDispatcher {
         this.progress.refreshMask();
     }
     public setAttributeData(data: any) {
+        this.itemData = data;
         let value: number = 0, max: number;
         if (data) {
             value = data.value;
