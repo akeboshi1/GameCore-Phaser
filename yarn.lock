@@ -6249,8 +6249,8 @@ tooqingmatter-js@0.1.1:
   integrity sha512-D1G4nJHNB+JThhXoWa9MVzcsKsFCaLbciTgmJKemxZP9lJx4VPa646m4g/DQplTtER4kNXLjMdtfN2woPJRd3w==
 
 "tooqingphaser@git+ssh://git@code.apowo.com:opensource/phaser.git#master":
-  version "0.3.3"
-  resolved "git+ssh://git@code.apowo.com:opensource/phaser.git#81504648e0d5acadb2b6b5ea36eb0545c7ca1209"
+  version "0.3.4"
+  resolved "git+ssh://git@code.apowo.com:opensource/phaser.git#5942f7b77e78f871be92c1bf7fffcc17d3a3025d"
   dependencies:
     eventemitter3 "^4.0.7"
     exports-loader "^1.1.1"
