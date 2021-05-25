@@ -79,7 +79,7 @@ export class SocketConnection {
         }
         this.closeConnectResolver = ValueResolver.create<any>();
         return this.closeConnectResolver.promise(() => {
-            if (this.mTransport && this.mTransport.readyState() === ReadyState.OPEN) this.mTransport.Close();
+            if (this.mTransport) this.mTransport.Close();
         });
     }
 
