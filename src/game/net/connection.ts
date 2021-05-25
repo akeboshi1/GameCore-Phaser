@@ -130,16 +130,17 @@ export class Connection implements ConnectionService {
         this.mCachedServerAddress = undefined;
         if (this.mSocket) {
             this.mSocket.state = false;
-            if (this.mSocket.isConnect) {
-                this.mSocket.stopConnect();
-            } else {
-                this.isCloseing = false;
-                this.mSocket.destroy();
-                this.mSocket = null;
-                if (this.gateway) this.startConnect(this.gateway.addr, this.gateway.keepalive);
-            }
+            // socket.isConnect判断socket是否关闭===》客户端先关闭socket,则走socket关闭逻辑；服务端关闭socket，则直接closeBack逻辑
+            this.mSocket.isConnect ? this.mSocket.stopConnect(this.closeBack()) : this.closeBack();
         }
         this.clearPacketListeners();
+    }
+
+    closeBack() {
+        this.isCloseing = false;
+        this.mSocket.destroy();
+        this.mSocket = null;
+        if (this.gateway) this.startConnect(this.gateway.addr, this.gateway.keepalive);
     }
 
     setClock(clock: Clock) {

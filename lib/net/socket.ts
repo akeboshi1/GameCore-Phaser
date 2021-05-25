@@ -28,6 +28,7 @@ export class SocketConnection {
     // true是外部断网，false是手动断网
     protected isAuto: boolean = true;
     private mIsConnect: boolean = false;
+    private mCloseBack: any;
     constructor($listener: IConnectListener) {
         this.mTransport = new WSWrapper();
         this.mConnectListener = $listener;
@@ -46,6 +47,9 @@ export class SocketConnection {
                 Logger.getInstance().info(`SocketConnection close.`);
                 this.mIsConnect = false;
                 listener.onDisConnected(this.isAuto);
+                if (this.mCloseBack) {
+                    this.mCloseBack();
+                }
             });
             this.mTransport.on("error", (reason: SocketConnectionError) => {
                 Logger.getInstance().info(`SocketConnection error.`);
@@ -67,7 +71,8 @@ export class SocketConnection {
         this.doConnect();
     }
 
-    stopConnect() {
+    stopConnect(closeBack?: any) {
+        if (closeBack) this.mCloseBack = closeBack;
         if (this.mTransport) this.mTransport.Close();
     }
 
