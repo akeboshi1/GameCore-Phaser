@@ -130,12 +130,14 @@ export class Connection implements ConnectionService {
         this.mCachedServerAddress = undefined;
         if (this.mSocket) {
             this.mSocket.state = false;
-            this.mSocket.stopConnect().then(() => {
+            if (this.mSocket.isConnect) {
+                this.mSocket.stopConnect();
+            } else {
                 this.isCloseing = false;
                 this.mSocket.destroy();
                 this.mSocket = null;
                 if (this.gateway) this.startConnect(this.gateway.addr, this.gateway.keepalive);
-            });
+            }
         }
         this.clearPacketListeners();
     }
