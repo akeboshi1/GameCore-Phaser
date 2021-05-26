@@ -1,12 +1,12 @@
 import { BBCodeText, Button, ClickEvent } from "apowophaserui";
-import { DynamicImage } from "gamecoreRender";
+import { DynamicImage, InputField } from "gamecoreRender";
 import { UIAtlasName } from "picaRes";
 import { Handler, i18n, NumberUtils, UIHelper } from "utils";
 import { ImageBBCodeValue } from "..";
 import { ImageValue } from "../Components";
 export class PicaFriendBaseListItem extends Phaser.GameObjects.Container {
     /**
-     * 1 玩家，2 关注通知，3 添加好友， 4 黑名单
+     * 1 玩家，2 关注通知，3 添加好友， 4 黑名单,5 搜索
      */
     public itemType: number;
     public itemData: any;
@@ -135,5 +135,100 @@ export class PicaFriendFunctionItem extends PicaFriendBaseListItem {
         this.redImg.x = this.width * 0.5 - this.redImg.width * 0.5 - 10 * this.dpr;
         this.countTex.x = this.redImg.x;
         this.arrow.x = this.countTex.x;
+    }
+}
+export class PicaFriendSearchItem extends PicaFriendBaseListItem {
+    private bg: Phaser.GameObjects.Image;
+    private checkBg: Phaser.GameObjects.Image;
+    private checkImg: Phaser.GameObjects.Image;
+    private contentTex: Phaser.GameObjects.Text;
+    private inputLabel: PicaFriendSearchInput;
+    private searchBtn: Button;
+    private addBtn: Button;
+    public setItemData(data: any) {
+        super.setItemData(data);
+
+    }
+    protected init() {
+        this.bg = this.scene.make.image({ key: UIAtlasName.friend_new, frame: "friend_list_online_bg" });
+        this.checkBg = this.scene.make.image({ key: UIAtlasName.friend_new, frame: "friend_list_notice_icon" });
+        this.checkImg = this.scene.make.image({ key: UIAtlasName.friend_new, frame: "friend_list_notice_number" });
+        this.contentTex = this.scene.make.text({ text: i18n.t("friendlist.olinetitle"), style: UIHelper.whiteStyle(this.dpr) }).setOrigin(0, 0.5);
+        this.inputLabel = new PicaFriendSearchInput(this.scene, 146 * this.dpr, 26 * this.dpr, UIAtlasName.friend_new, "friend_add_search_bg", this.dpr, {
+            type: "text",
+            placeholder: i18n.t("friendlist.friendplaceholder"),
+            color: "#000000",
+            fontSize: 10 * this.dpr + "px",
+            style: {}
+        });
+        this.searchBtn = new Button(this.scene, UIAtlasName.friend_new, "friend_list_search");
+        this.searchBtn.on(ClickEvent.Tap, this.onSearchHandler, this);
+        this.searchBtn.setInteractiveSize(20 * this.dpr, 20 * this.dpr);
+        this.addBtn = new Button(this.scene, UIAtlasName.friend_new, "friend_list_add");
+        this.addBtn.on(ClickEvent.Tap,this.onAddHandler,this);
+        this.add([this.bg, this.checkBg, this.checkImg, this.contentTex, this.inputLabel, this.searchBtn, this.addBtn]);
+        this.layout();
+    }
+    protected layout() {
+        this.checkBg.x = -this.width * 0.5 + this.checkBg.width * 0.5 + 18 * this.dpr;
+        this.checkImg.x = this.checkBg.x;
+        this.contentTex.x = this.checkBg.x + this.checkBg.width * 0.5 + 4 * this.dpr;
+        this.inputLabel.x = 20 * this.dpr;
+        this.addBtn.x = this.width * 0.5 - this.addBtn.width * 0.5 - 21 * this.dpr;
+        this.searchBtn.x = this.addBtn.x - 21 * this.dpr;
+    }
+
+    private onSearchHandler() {
+
+    }
+
+    private onAddHandler() {
+
+    }
+}
+export class PicaFriendSearchInput extends Phaser.GameObjects.Container {
+    protected background: Phaser.GameObjects.Image;
+    protected inputTex: InputField;
+    protected dpr: number;
+    constructor(scene: Phaser.Scene, width: number, height: number, key: string, bg: string, dpr: number, config: any) {
+        super(scene);
+        this.dpr = dpr;
+        this.setSize(width, height);
+        this.background = this.scene.make.image({ key, frame: bg });
+        this.inputTex = new InputField(this.scene, 0, 0, width, height, config);
+        this.inputTex.on("textchange", this.onTextChangeHandler, this);
+        this.inputTex.on("blur", this.onTextBlurHandler, this);
+        this.inputTex.on("focus", this.onTextFocusHandler, this);
+        this.add([this.background, this.inputTex]);
+    }
+    public hide() {
+        this.visible = false;
+        this.changeInputState(false);
+    }
+
+    public show() {
+        this.visible = true;
+        this.changeInputState(true);
+    }
+
+    private onTextChangeHandler(input, event) {
+        this.emit("textchange");
+    }
+
+    private onTextBlurHandler() {
+        this.emit("blur");
+    }
+
+    private onTextFocusHandler(e) {
+        this.emit("focus");
+    }
+    private changeInputState(visible: boolean) {
+        this.inputTex.visible = visible;
+        (<HTMLTextAreaElement>(this.inputTex.node)).style.display = visible ? "true" : "none";
+        this.inputTex.visible = visible;
+        (<HTMLTextAreaElement>(this.inputTex.node)).style.display = visible ? "true" : "none";
+    }
+    get text() {
+        return this.inputTex.text;
     }
 }

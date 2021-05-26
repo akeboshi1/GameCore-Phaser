@@ -41,6 +41,7 @@ export class PicaBagPanel extends PicaBasePanel {
   private isDecorating: boolean = false;
   private categoryType: any;
   private mSelectedItemData;
+  private mSelectedIndex: number = 0;
   private mSelectedItem: ItemButton;
   private mAttributes: DynamicImageValue[] = [];
   private moneyData: any;
@@ -143,7 +144,6 @@ export class PicaBagPanel extends PicaBasePanel {
       if (!this.mSelectedItemData) isupdate = false;
       if (!sameid) isupdate = false;
     }
-
     const len = subProps.length;
     if (len < 18) {
       subProps = subProps.concat(new Array(18 - len));

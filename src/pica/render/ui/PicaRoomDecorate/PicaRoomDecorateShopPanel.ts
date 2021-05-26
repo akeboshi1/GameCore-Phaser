@@ -178,10 +178,7 @@ export class PicaRoomDecorateShopPanel extends Phaser.GameObjects.Container {
                     grid.add(cellContainer);
                 }
                 cellContainer.setItemData(item);
-                if (this.selectedItemData && this.selectedItemData.id === item.id) {
-                    this.selectedItemData = item;
-                    this.selectedItem = cellContainer;
-                }
+                this.updateSelectItemState(item, cellContainer);
                 return cellContainer;
             },
         };
@@ -197,6 +194,21 @@ export class PicaRoomDecorateShopPanel extends Phaser.GameObjects.Container {
         return grid;
     }
 
+    private updateSelectItemState(data: any, obj: DecorateShopItem) {
+        if (this.selectedItemData) {
+            if (this.selectedItemData.id === data.id) {
+                this.selectedItemData = data;
+                if (this.selectedItem) this.selectedItem.select = false;
+                this.selectedItem = obj;
+                this.selectedItem.select = true;
+            } else if (this.selectedItem === obj) {
+                this.selectedItem.select = false;
+            }
+        } else if (this.selectedItem) {
+            this.selectedItem.select = false;
+            this.selectedItem = undefined;
+        }
+    }
     private onTabButtonHandler(data: any) {// op_def.IMarketCategory
         if (this.curCategory === data.key) return;
         this.emit("queryProp", data.key);
@@ -220,10 +232,6 @@ export class PicaRoomDecorateShopPanel extends Phaser.GameObjects.Container {
         if (this.selectedItem) this.selectedItem.select = false;
         this.selectedItem = item;
         this.selectedItemData = item.shopData;
-        if (!this.selectedItem.select) {
-            this.selectedItem = undefined;
-            this.selectedItemData = undefined;
-        }
     }
     private onCloseHandler() {
         if (this.closeHandler) this.closeHandler.run();

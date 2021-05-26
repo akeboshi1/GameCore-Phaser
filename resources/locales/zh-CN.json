@@ -250,7 +250,8 @@
     "notice": "通知",
     "followed_you": "关注了你",
     "follow_notice": "关注通知",
-    "addfriend": "添加好友"
+    "addfriend": "添加好友",
+    "friendplaceholder": "搜索好友昵称或备注"
   },
   "friend_invite": {
     "refused": "拒绝",
