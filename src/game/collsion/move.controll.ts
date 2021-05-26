@@ -1,5 +1,6 @@
 import * as SAT from "sat";
 import { IPos, LogicPos, Logger } from "utils";
+import { IRoomService } from "../room";
 import { CollsionManager } from "./collsion.manager";
 export class MoveControll {
 
@@ -8,11 +9,13 @@ export class MoveControll {
     private velocity: IPos;
     private mPosition: IPos;
     private mPrePosition: IPos;
+    private collsion: CollsionManager;
 
-    constructor(private id: number, private collsion: CollsionManager) {
+    constructor(private id: number, private room: IRoomService) {
         this.mPosition = new LogicPos();
         this.mPrePosition = new LogicPos();
         this.velocity = new LogicPos();
+        this.collsion = room.collsionManager;
     }
 
     setVelocity(x: number, y: number) {
@@ -38,6 +41,16 @@ export class MoveControll {
             } else if (collideCount > 1) {
                 pos.x = this.mPosition.x;
                 pos.y = this.mPosition.y;
+                return;
+                const transformToMini45 = this.room.transformToMini45.bind(this.room);
+                for (const response of collideResponses) {
+                    const responseA = response.a;
+                    const responseB = response.b;
+                    const posA = transformToMini45(new LogicPos(responseA.pos.x + responseA.offset.x, responseA.pos.y + responseA.offset.y));
+                    const posB = transformToMini45(new LogicPos(responseB.pos.x + responseB.offset.x, responseB.pos.y + responseB.offset.y));
+                    Logger.getInstance().log("bottom point", this.getBottomPoint(responseB.points));
+                    Logger.getInstance().log("pos: ", posA, posB);
+                }
                 return;
             }
 
@@ -101,6 +114,15 @@ export class MoveControll {
             return [];
         }
         return this.collsion.collideObjects(this.mBodies);
+    }
+
+    private getBottomPoint(points: SAT.Vector[]) {
+        // 目前仅支持规则图形，填充按顺时针绘制。第三个为最下面的点
+        if (!points || !points[2]) {
+            return Logger.getInstance().error("Irregular collisions are not currently supported");
+        }
+        const bottomPoint = points[2];
+        return this.room.transformToMini45(new LogicPos(bottomPoint.x, bottomPoint.y));
     }
 
     get position(): IPos {
