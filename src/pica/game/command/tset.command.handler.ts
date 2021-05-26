@@ -17,7 +17,7 @@ export class TestCommandHandler extends MessageHandler {
     }
     protected onTestHandler(tag: string) {
         if (tag === "mine") {
-            this.game.renderPeer.displayAction("mineexplosive", { id: this.game.user.id });
+            this.game.renderPeer.displayAction("mineexplosive", { id: this.game.user.id, isSelf: true });
         } else {
             Logger.getInstance().log("*****************     " + tag);
             this.game.showMediator(ModuleName.PICAMARQUEE_NAME, true, { tips: "请注意", content: "这是一段很长的测试文字，那个小青蛙手动阀手动阀撒大噶山豆根", count: 3 });

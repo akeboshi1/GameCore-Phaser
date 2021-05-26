@@ -84,7 +84,8 @@ class AddHandler extends ElementHandler {
     }
     private playerExplosive(state: State) {
         const game = this.room.game;
-        game.renderPeer.displayAction("mineexplosive", { id: game.user.id });
+        const isSelf = game.user.id === state.owner.id;
+        game.renderPeer.displayAction("mineexplosive", { id: state.owner.id, isSelf });
     }
 }
 

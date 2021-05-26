@@ -2,25 +2,29 @@
 import { DragonbonesDisplay, PlayScene } from "gamecoreRender";
 import { EventType, LayerName, SceneName } from "structure";
 import { Handler } from "utils";
+import { DisplayActionTag } from ".";
 import { DisplayBaseAction } from "./display.base.action";
 export class PlayerExplosiveAction extends DisplayBaseAction {
-    public actionTag: string = "mineexplosive";
+    public actionTag: string = DisplayActionTag.mineexplosive;
     public display: DragonbonesDisplay;
     private timerID: any;
     public executeAction() {
-        this.render.stopFollow();
+        if (this.data.isSelf) this.render.stopFollow();
         const playScene: any = this.render.sceneManager.getSceneByName(SceneName.PLAY_SCENE);
         playScene.layerManager.addToLayer(LayerName.DECORATE, this.display);
         const sprite = this.display.getDisplay();
         sprite.y -= this.display.topPoint.y * 0.5;
         this.playPosition(new Handler(this, () => {
-            this.render.renderEmitter(EventType.REQUEST_GO_PLAYER_HOME);
+            if (this.data.isSelf) this.render.renderEmitter(EventType.REQUEST_GO_PLAYER_HOME);
+            if (this.compl) this.compl.runWith(this);
             this.destroy();
         }));
     }
     destroy() {
         super.destroy();
+        if (this.display) this.display.destroy();
         this.display = undefined;
+        this.compl = undefined;
     }
     playPosition(compl: Handler) {
         if (this.timerID) clearInterval(this.timerID);
