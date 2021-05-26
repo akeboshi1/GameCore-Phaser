@@ -25,7 +25,7 @@ export class BagGuidePanel extends BaseGuide {
         const navigatePanel = bottom.navigatePanel;
         this.bagBtn = (<any>navigatePanel).bagButton;
         const worldMatrix = this.bagBtn.getWorldTransformMatrix();
-        this.guideEffect.createGuideEffect({ x: worldMatrix.tx, y: worldMatrix.ty });
+        this.guideEffect.createGuideEffect({ x: worldMatrix.tx, y: worldMatrix.ty },this.mData.guideText[0]);
         this.bagBtn.on(ClickEvent.Tap, this.step2, this);
     }
 
@@ -40,7 +40,7 @@ export class BagGuidePanel extends BaseGuide {
         const bagPanel: PicaBagPanel = this.uiManager.getPanel(ModuleName.PICABAG_NAME) as PicaBagPanel;
         this.clsBtn = bagPanel.closeBtn;
         const worldMatrix = this.clsBtn.getWorldTransformMatrix();
-        this.guideEffect.createGuideEffect({ x: worldMatrix.tx, y: worldMatrix.ty });
+        this.guideEffect.createGuideEffect({ x: worldMatrix.tx, y: worldMatrix.ty },this.mData.guideText[2]);
         this.clsBtn.on(ClickEvent.Tap, this.end, this);
     }
 

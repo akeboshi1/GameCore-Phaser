@@ -6,7 +6,7 @@ export class RoomGuidePanel extends BasePlaySceneGuide {
     }
 
     protected step1(pos: IPos) {
-        this.guideEffect.createGuideEffect(this.getGuidePosition());
+        this.guideEffect.createGuideEffect(this.getGuidePosition(),this.mData.guideText[0]);
         this.mPlayScene.input.on("gameobjectup", this.gameObjectUpHandler, this);
         // this.scene.sys.events.on("update", this.updateGuidePos, this);
     }

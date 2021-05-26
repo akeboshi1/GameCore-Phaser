@@ -45,7 +45,7 @@ export class BasePlaySceneGuide extends BaseGuide {
 
     protected step1(pos: IPos) {
         const tmpPos = { x: pos.x, y: pos.y };
-        this.guideEffect.createGuideEffect(tmpPos);
+        this.guideEffect.createGuideEffect(tmpPos,this.mData.guideText[0]);
         this.mPlayScene.input.on("gameobjectup", this.gameObjectUpHandler, this);
     }
 
@@ -59,7 +59,7 @@ export class BasePlaySceneGuide extends BaseGuide {
     }
 
     protected updateGuidePos() {
-        this.guideEffect.createGuideEffect(this.getGuidePosition());
+        this.guideEffect.createGuideEffect(this.getGuidePosition(),this.mData.guideText[0]);
     }
 
     protected getGuidePosition() {

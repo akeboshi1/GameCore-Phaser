@@ -68,7 +68,7 @@ export class User extends Player {
                 if (!actor.avatar) actor.avatar = <any>(AvatarSuitType.createBaseAvatar());
             }
         }
-        this.moveControll = new MoveControll(actor.id, this.mRoomService.collsionManager);
+        this.moveControll = new MoveControll(actor.id, this.mRoomService);
         this.model = new PlayerModel(actor);
         this.mRoomService.playerManager.setMe(this);
         // todo render setScroll

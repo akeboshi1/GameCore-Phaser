@@ -26,7 +26,7 @@ export class BaseHotelGuidePanel extends BaseGuide {
         const leftPanel = main.leftPanel;
         this.taskButton = leftPanel.taskButton;
         const worldMatrix = (<any>this.taskButton).getWorldTransformMatrix();
-        this.guideEffect.createGuideEffect({ x: worldMatrix.tx, y: worldMatrix.ty });
+        this.guideEffect.createGuideEffect({ x: worldMatrix.tx, y: worldMatrix.ty },this.mData.guideText[0]);
         this.taskButton.on(ClickEvent.Tap, this.step2, this);
     }
 
@@ -46,7 +46,7 @@ export class BaseHotelGuidePanel extends BaseGuide {
         if (!item) this.end();
         this.itemTaskBtn = item.taskButton;
         const worldMatrix = this.itemTaskBtn.getWorldTransformMatrix();
-        this.guideEffect.createGuideEffect({ x: item.width, y: worldMatrix.ty });
+        this.guideEffect.createGuideEffect({ x: item.width, y: worldMatrix.ty },this.mData.guideText[2]);
         this.itemTaskBtn.on(ClickEvent.Tap, this.step4, this);
     }
 

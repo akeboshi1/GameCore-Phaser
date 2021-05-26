@@ -18,7 +18,7 @@ export class FurnitureGuidePanel extends BasePlaySceneGuide {
                 const picaFurniFunPanel: PicaFurniFunPanel = this.uiManager.getPanel(ModuleName.PICAFURNIFUN_NAME) as PicaFurniFunPanel;
                 const btn = picaFurniFunPanel.confirmBtn;
                 const worldMatrix = btn.getWorldTransformMatrix();
-                this.guideEffect.createGuideEffect({ x: worldMatrix.tx, y: worldMatrix.ty });
+                this.guideEffect.createGuideEffect({ x: worldMatrix.tx, y: worldMatrix.ty },this.mData.guideText[0]);
                 btn.on(ClickEvent.Tap, () => {
                     this.end();
                 }, this);

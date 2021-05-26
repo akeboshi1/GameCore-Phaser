@@ -3,4 +3,5 @@ export interface IGuide {
     state: boolean;
     uiName?: string;
     uiGuide?: string;
+    guideText?: string[];
 }
