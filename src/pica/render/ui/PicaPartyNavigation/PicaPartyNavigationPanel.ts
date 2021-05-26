@@ -15,6 +15,9 @@ import { Render } from "../../pica.render";
 export class PicaPartyNavigationPanel extends PicaBasePanel {
     public static PicaPartyNavigationPanel_CLOSE: string = "PicaPartyNavigationPanel_CLOSE";
     public static PICASELFROOM_DATA: string = "PICASELFROOM_DATA";
+    public static PICATOWN_DATA: string = "PICATOWN_DATA";
+    public static PICANAVIGATIONINIT_DATA: string = "PICANAVIGATIONINIT_DATA";
+    public static PICAENTERROOM_DATA: string = "PICAENTERROOM_DATA";
     public myRoomPanel: PicaMyNavigationPanel;
     private content: Phaser.GameObjects.Container;
     private blackBg: Phaser.GameObjects.Graphics;
@@ -69,8 +72,11 @@ export class PicaPartyNavigationPanel extends PicaBasePanel {
             }
         }
         if (this.progressData) this.setOnlineProgress(this.progressData);
+        this.render.emitter.emit(PicaPartyNavigationPanel.PICANAVIGATIONINIT_DATA);
     }
-
+    public getToggleButton(index: number) {
+        return this.toggleItems[index];
+    }
     public setPartyListData(content: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_PARTY_LIST, isSelf: boolean = true) {
         this.tempDatas = content;
         //  this.partyNavigationPanel.setPartyDataList(content);
@@ -82,6 +88,7 @@ export class PicaPartyNavigationPanel extends PicaBasePanel {
             this.openTownNavigationPanel();
             this.hideNoItemPanel();
             this.townPanel.setTownDatas(content, this.tooqingOptionType);
+            this.render.emitter.emit(PicaPartyNavigationPanel.PICATOWN_DATA);
         } else {
             this.openNoItemePanel();
             this.hideTownNavigationPanel();
@@ -113,7 +120,12 @@ export class PicaPartyNavigationPanel extends PicaBasePanel {
     public setRoomTypeDatas(datas: any[]) {
         if (this.roomTypePanel) this.roomTypePanel.setRoomTypeDatas(datas);
     }
-
+    public get mineMapItem() {
+        return this.townPanel.mineMapItem;
+    }
+    public get farmMapItem() {
+        return this.townPanel.farmMapItem;
+    }
     public destroy() {
         super.destroy();
     }
@@ -344,6 +356,7 @@ export class PicaPartyNavigationPanel extends PicaBasePanel {
     private onTownHandler(tag: string, data: any) {// op_client.IEditModeRoom
         if (tag === "enter") {
             this.render.renderEmitter(this.key + "_queryenter", data);
+            if (data === "S1200010" || data === "S0021002") this.render.renderEmitter(PicaPartyNavigationPanel.PICAENTERROOM_DATA);
         } else if (tag === "progress") {
 
         }

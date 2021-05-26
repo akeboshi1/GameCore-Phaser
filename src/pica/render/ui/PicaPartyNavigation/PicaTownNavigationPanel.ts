@@ -4,6 +4,8 @@ import { UIAtlasName } from "../../../res";
 import { Font, Handler, i18n, Tool, UIHelper, Url } from "utils";
 import { IScene } from "../../../structure";
 export class PicaTownNavigationPanel extends Phaser.GameObjects.Container {
+    public mineMapItem: TownMapItem;
+    public farmMapItem: TownMapItem;
     private dpr: number;
     private zoom: number;
     private sendHandler: Handler;
@@ -57,6 +59,8 @@ export class PicaTownNavigationPanel extends Phaser.GameObjects.Container {
         this.sendHandler = handler;
     }
     public setTownDatas(datas: any[], optionType: number) {
+        this.mineMapItem = undefined;
+        this.farmMapItem = undefined;
         let firstItem: NavigationTownListItem;
         for (let i = 0; i < datas.length; i++) {
             let item: NavigationTownListItem;
@@ -77,6 +81,8 @@ export class PicaTownNavigationPanel extends Phaser.GameObjects.Container {
             }
             item.visible = true;
             item.setGroupData(temp);
+            if (!this.mineMapItem) this.mineMapItem = item.getMapItem("S1200010");
+            if (!this.farmMapItem) this.farmMapItem = item.getMapItem("S0021002");
             firstItem = firstItem || item;
             this.onPointerUpHandler(item);
         }
@@ -232,7 +238,12 @@ class NavigationTownListItem extends Phaser.GameObjects.Container {
             }
         }
     }
-
+    public getMapItem(id: string) {
+        for (const temp of this.townItems) {
+            if (temp.roomData && temp.roomData.id === id) return temp;
+        }
+        return undefined;
+    }
     get extend() {
         return this.mIsExtend;
     }

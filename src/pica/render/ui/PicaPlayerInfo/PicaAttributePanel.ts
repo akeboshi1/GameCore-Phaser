@@ -20,7 +20,6 @@ export class PicaAttributePanel extends Phaser.GameObjects.Container {
     }
     setAttributeData(datas: op_pkt_def.IPKT_Property[]) {
         const len = datas.length;
-        const scaleRadio = (len > 4 ? 2 : 1);
         const width = this.width;
         const height = this.height;
         const cheight = 20 * this.dpr;
@@ -38,7 +37,7 @@ export class PicaAttributePanel extends Phaser.GameObjects.Container {
                 this.add(item);
                 this.attriItems.push(item);
             }
-            const x = (width - width / scaleRadio) * 0.5 * (i % 2 === 0 ? -1 : 1) + 20 * this.dpr * (scaleRadio === 2 ? 1 : 0);
+            const x = cwidth * 0.5 * (i % 2 === 0 ? -1 : 1) + 20 * this.dpr;
             const y = posy + cheight * 0.5 + (cheight + this.mspace) * Math.floor(i / 2);
             item.setPosition(x, y);
             item.setInfo(datas[i]);
