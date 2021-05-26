@@ -72,7 +72,7 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
     protected hasClear: boolean = false;
     protected currentTime: number = 0;
     protected mHeartBeat: any;
-    protected mHeartBeatDelay: number = 100;
+    protected mHeartBeatDelay: number = 1000;
     protected mAvatarType: op_def.AvatarStyle;
     protected mRunning: boolean = true;
     protected remoteIndex = 0;
@@ -156,6 +156,7 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
 
     public onDisConnected(isAuto?: boolean) {
         if (!this.debugReconnect) return;
+        // 由于socket逻辑于跨场景和踢下线逻辑冲突，所以游戏状态在此两个逻辑时，不做断线弹窗
         if (this.peer.state === GameState.ChangeGame || this.peer.state === GameState.OffLine) return;
         Logger.getInstance().debug("app connectFail=====");
         this.isAuto = isAuto;

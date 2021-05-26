@@ -150,7 +150,9 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
     private mActorData: IActor;
     private mUpdateHandlers: Handler[] = [];
     private mDecorateEntryData = null;
-    // -1: out of range; 0: not walkable; 1: walkable
+    // 地块区域记录 -1: out of range; 0: not walkable terrain; 1: walkable terrain
+    private mTerrainMap: number[][];
+    // 可行走区域最终记录值 -1: out of range; 0: not walkable; 1: walkable
     private mWalkableMap: number[][];
     // 地块可行走标记map。每格标记由多个不同优先级（暂时仅地块和物件）标记组成，最终是否可行走由高优先级标记决定
     private mWalkableMarkMap: Map<number, Map<number, { level: number; walkable: boolean }>> =
@@ -217,6 +219,10 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
         this.mWalkableMap = new Array(this.mMiniSize.rows);
         for (let i = 0; i < this.mWalkableMap.length; i++) {
             this.mWalkableMap[i] = new Array(this.mMiniSize.cols).fill(-1);
+        }
+        this.mTerrainMap = new Array(this.mMiniSize.rows);
+        for (let i = 0; i < this.mTerrainMap.length; i++) {
+            this.mTerrainMap[i] = new Array(this.mMiniSize.cols).fill(-1);
         }
 
         // create render scene
@@ -465,6 +471,7 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
 
                 const canWalk = collisionArea[i][j] === 0 || walkableArea[i][j] === 1;
                 this.addWalkableMark(tempX, tempY, sprite.id, isTerrain ? 0 : 1, canWalk);
+                if (isTerrain) this.setTerrainMap(tempX, tempY, canWalk);
             }
         }
         if (isTerrain) this.showDecorateGrid();
@@ -532,6 +539,7 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
         Logger.getInstance().debug("room clear");
         this.game.renderPeer.clearRoom();
         this.game.uiManager.recover();
+        this.mTerrainMap = [];
         this.mWalkableMap = [];
         this.mWalkableMarkMap.clear();
     }
@@ -710,7 +718,7 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
         this.game.renderPeer.switchDecorateMouseManager();
 
         // show girds
-        this.game.renderPeer.showEditGrids(this.miniSize, this.mWalkableMap);
+        this.game.renderPeer.showEditGrids(this.miniSize, this.mTerrainMap);
     }
 
     public cameraFollowHandler() {
@@ -1250,6 +1258,16 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
         this.mAstar.setWalkableAt(x, y, walkable);
     }
 
+    private setTerrainMap(x: number, y: number, walkable: boolean) {
+        if (y < 0 || y >= this.mTerrainMap.length || x < 0 || x >= this.mTerrainMap[y].length) {
+            return;
+        }
+        const newVal = walkable ? 1 : 0;
+        if (this.mTerrainMap[y][x] === newVal) return;
+
+        this.mTerrainMap[y][x] = newVal;
+    }
+
     private mapPos2Idx(x: number, y: number): number {
         return x + y * this.mMiniSize.cols;
     }
@@ -1262,6 +1280,6 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
     private showDecorateGrid() {
         if (!this.isDecorating) return;
         if (!this.mTerrainManager.hasAddComplete) return;
-        this.game.renderPeer.showEditGrids(this.mMiniSize, this.mWalkableMap);
+        this.game.renderPeer.showEditGrids(this.mMiniSize, this.mTerrainMap);
     }
 }
