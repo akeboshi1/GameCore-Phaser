@@ -13,6 +13,7 @@ export class PicaBootMediator extends BasicMediator {
     }
 
     enterGame() {
+        this.game.peer.state = GameState.EnterGame;
         this.game.startConnect();
     }
 
@@ -101,8 +102,8 @@ export class PicaBootMediator extends BasicMediator {
                 const data = response.data;
                 this.loginSuc(response.data);
             }
-                // localStorage.setItem("accountphone", JSON.stringify({ account: phone }));
-                // const verifiedEnable = CONFIG["verified_enable"];
+            // localStorage.setItem("accountphone", JSON.stringify({ account: phone }));
+            // const verifiedEnable = CONFIG["verified_enable"];
             //     if (this.verifiedEnable !== undefined && this.verifiedEnable === false) {
             //         this.enterWorld(!this.verifiedEnable);
             //         return;
