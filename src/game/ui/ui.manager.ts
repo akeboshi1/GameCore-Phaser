@@ -1,6 +1,6 @@
 import { PacketHandler, PBpacket } from "net-socket-packet";
 import { op_client, op_pkt_def } from "pixelpai_proto";
-import { EventType, ModuleName } from "structure";
+import { EventType, GameState, ModuleName } from "structure";
 import { Size } from "utils";
 import { Game } from "../game";
 import { BasicMediator, UIType } from "./basic/basic.mediator";
@@ -255,6 +255,8 @@ export class UIManager extends PacketHandler {
     }
 
     protected async onForceOfflineHandler(packet: PBpacket) {
+        if (this.game.peer.state === GameState.ChangeGame) return;
+        this.game.peer.state = GameState.OffLine;
         this.game.peer.render.showAlert("common.offline", true).then(() => {
             this.game.peer.render.hidden();
         });

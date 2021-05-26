@@ -71,7 +71,8 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
     protected mReconnect: number = 0;
     protected hasClear: boolean = false;
     protected currentTime: number = 0;
-    protected mWorkerLoop: any;
+    protected mHeartBeat: any;
+    protected mHeartBeatDelay: number = 100;
     protected mAvatarType: op_def.AvatarStyle;
     protected mRunning: boolean = true;
     protected remoteIndex = 0;
@@ -155,7 +156,7 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
 
     public onDisConnected(isAuto?: boolean) {
         if (!this.debugReconnect) return;
-        if (this.peer.state === GameState.ChangeGame) return;
+        if (this.peer.state === GameState.ChangeGame || this.peer.state === GameState.OffLine) return;
         Logger.getInstance().debug("app connectFail=====");
         this.isAuto = isAuto;
         if (!this.isAuto) return;
@@ -243,7 +244,7 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
                 this.renderPeer.showAlert("登陆过期，请重新登陆", true, false)
                     .then(() => {
                         this.renderPeer.hidden();
-                    });
+                });
                 break;
         }
         // 显示服务器报错信息
@@ -484,7 +485,7 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
         return this.getDataMgr<CacheDataManager>(DataMgrType.CacheMgr);
     }
     public onFocus() {
-        if (this.mWorkerLoop) clearInterval(this.mWorkerLoop);
+        // if (this.mHeartBeat) clearInterval(this.mHeartBeat);
         this.mRunning = true;
         this.connect.onFocus();
         if (this.connection) {
@@ -509,7 +510,7 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
 
     public onBlur() {
         this.currentTime = 0;
-        // if (this.mWorkerLoop) clearInterval(this.mWorkerLoop);
+        // if (this.mHeartBeat) clearInterval(this.mHeartBeat);
         this.mRunning = false;
         this.connect.onBlur();
         Logger.getInstance().debug("#BlackSceneFromBackground; world.onBlur()");

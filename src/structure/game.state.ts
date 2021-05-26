@@ -41,7 +41,9 @@ export enum GameState {
     Hidden = "Hidden",
 
     // 跨游戏状态
-    ChangeGame = "ChangeGame"
+    ChangeGame = "ChangeGame",
+    // 顶账号状态
+    OffLine = "OffLine"
 }
 
 export enum ConnectState {
