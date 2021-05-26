@@ -79,6 +79,7 @@ export class PicaPlayerInfoMediator extends BasicMediator {
             const pros = [property.energy, property.getProperty("IV0000014")];
             content["pros"] = pros;
             content["isUser"] = true;
+            this.setItemBases(pros);
             this.setItemBases(content.properties);
             this.setItemBases(content.avatarSuit);
             this.mView.setPlayerData(content);

@@ -1,14 +1,14 @@
-import {Export, RPCPeer, webworker_rpc} from "webworker-rpc";
+import { Export, RPCPeer, webworker_rpc } from "webworker-rpc";
 import * as protos from "pixelpai_proto";
-import {op_client, op_gateway, op_virtual_world} from "pixelpai_proto";
-import {Buffer, PBpacket} from "net-socket-packet";
-import {ServerAddress} from "../../lib/net/address";
-import {Game} from "./game";
-import {IPos, Logger, LogicPos, Url} from "utils";
-import {EventType, GameState, ILauncherConfig, MAIN_WORKER, ModuleName, RENDER_PEER} from "structure";
-import {CheckPlaceResult, PicaGame} from "picaWorker";
-import {DataMgrType} from "./data.manager/dataManager";
-import {SceneDataManager} from "./data.manager";
+import { op_client, op_gateway, op_virtual_world } from "pixelpai_proto";
+import { Buffer, PBpacket } from "net-socket-packet";
+import { ServerAddress } from "../../lib/net/address";
+import { Game } from "./game";
+import { IPos, Logger, LogicPos, Url } from "utils";
+import { EventType, GameState, ILauncherConfig, MAIN_WORKER, ModuleName, RENDER_PEER } from "structure";
+import { CheckPlaceResult, PicaGame } from "picaWorker";
+import { DataMgrType } from "./data.manager/dataManager";
+import { SceneDataManager } from "./data.manager";
 import version from "../../version";
 
 for (const key in protos) {
@@ -46,6 +46,10 @@ export class MainPeer extends RPCPeer {
 
     get physicalPeer() {
         throw new Error("physical has been discarded");
+    }
+
+    get state(): string {
+        return this.gameState;
     }
 
     set state(val) {

@@ -39,6 +39,9 @@ export enum GameState {
 
     // 窗口最小化或被隐藏
     Hidden = "Hidden",
+
+    // 跨游戏状态
+    ChangeGame = "ChangeGame"
 }
 
 export enum ConnectState {

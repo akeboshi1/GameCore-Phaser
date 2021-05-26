@@ -1,6 +1,10 @@
 {
   "name": "@PixelPai/game-core",
+<<<<<<< HEAD
   "version": "1.0.699",
+=======
+  "version": "1.0.700",
+>>>>>>> 31f89403bb1cf82d586b9a3f8b6078b31e7f2683
   "main": "release/js/editor.js",
   "scripts": {
     "dev": "webpack-dev-server --mode development",

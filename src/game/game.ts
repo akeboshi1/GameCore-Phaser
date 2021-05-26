@@ -155,6 +155,7 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
 
     public onDisConnected(isAuto?: boolean) {
         if (!this.debugReconnect) return;
+        if (this.peer.state === GameState.ChangeGame) return;
         Logger.getInstance().debug("app connectFail=====");
         this.isAuto = isAuto;
         if (!this.isAuto) return;
@@ -742,6 +743,7 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
     }
 
     private _createAnotherGame(gameId, virtualworldId, sceneId, loc, spawnPointId?, worldId?) {
+        this.peer.state = GameState.ChangeGame;
         this.clearGame(true).then(() => {
             this.isPause = false;
             if (this.mUser) {
@@ -770,6 +772,7 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
     }
 
     private _onGotoAnotherGame(gameId, virtualworldId, sceneId, loc, spawnPointId?, worldId?) {
+        this.peer.state = GameState.ChangeGame;
         this.clearGame(true).then(() => {
             this.isPause = false;
             if (this.connect) {
