@@ -1,5 +1,5 @@
 import { BasicMediator, Game } from "gamecore";
-import { ModuleName } from "structure";
+import { GameState, ModuleName } from "structure";
 export class PicaLoginMediator extends BasicMediator {
     constructor(game: Game) {
         super(ModuleName.PICA_LOGIN_NAME, game);
@@ -17,8 +17,8 @@ export class PicaLoginMediator extends BasicMediator {
             } else if (response.code >= 400) {
                 if (this.mView) this.mView.showError(response);
             }
-                // localStorage.setItem("accountphone", JSON.stringify({ account: phone }));
-                // const verifiedEnable = CONFIG["verified_enable"];
+            // localStorage.setItem("accountphone", JSON.stringify({ account: phone }));
+            // const verifiedEnable = CONFIG["verified_enable"];
             //     if (this.verifiedEnable !== undefined && this.verifiedEnable === false) {
             //         this.enterWorld(!this.verifiedEnable);
             //         return;
@@ -51,7 +51,7 @@ export class PicaLoginMediator extends BasicMediator {
             }
             bootMeditor.setState("ready");
         }
-
+        this.game.peer.state = GameState.LoginSuc;
         this.game.renderPeer.setAccount(data);
     }
 }
