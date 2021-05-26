@@ -481,7 +481,14 @@ export class BaseDataConfigManager extends BaseConfigManager {
                 displayPrecision: 0
             }];
             shopitem["find"] = true;
-            shopitem.icon = shopitem.icon || item.texturePath;
+            shopitem.icon = shopitem.icon === undefined || shopitem.icon === null || shopitem.icon.length === 0?
+                item.texturePath : shopitem.icon;
+
+            // 临时处理 下次平台更新可删除 20210526
+            if (shopitem.category === "PKT_MARKET_CATEGORY_3") {
+                shopitem.icon = item.texturePath;
+            }
+
             shopitem["item"] = item;
         }
     }
