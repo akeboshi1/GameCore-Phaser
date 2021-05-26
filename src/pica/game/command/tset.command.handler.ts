@@ -1,4 +1,4 @@
-import { MessageHandler } from "gamecore";
+import { InputEnable, MessageHandler } from "gamecore";
 import { PBpacket } from "net-socket-packet/dist/src/Packet";
 import { EventType, ModuleName } from "structure";
 import { Logger } from "utils";
@@ -17,6 +17,8 @@ export class TestCommandHandler extends MessageHandler {
     }
     protected onTestHandler(tag: string) {
         if (tag === "mine") {
+            this.game.user.stopMove();
+            this.game.user.setInputEnable(InputEnable.Diasble);
             this.game.renderPeer.displayAction("mineexplosive", { id: this.game.user.id, isSelf: true });
         } else {
             Logger.getInstance().log("*****************     " + tag);

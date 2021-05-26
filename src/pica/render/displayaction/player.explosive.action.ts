@@ -9,9 +9,15 @@ export class PlayerExplosiveAction extends DisplayBaseAction {
     public display: DragonbonesDisplay;
     private timerID: any;
     public executeAction() {
-        if (this.data.isSelf) this.render.stopFollow();
         const playScene: any = this.render.sceneManager.getSceneByName(SceneName.PLAY_SCENE);
         playScene.layerManager.addToLayer(LayerName.DECORATE, this.display);
+        if (this.data.isSelf) {
+            if (playScene) {
+                (<any>playScene).pauseMotion();
+                (<any>playScene).disableCameraMove();
+            }
+            this.render.stopFollow();
+        }
         const sprite = this.display.getDisplay();
         sprite.y -= this.display.topPoint.y * 0.5;
         this.playPosition(new Handler(this, () => {
@@ -19,6 +25,7 @@ export class PlayerExplosiveAction extends DisplayBaseAction {
             if (this.compl) this.compl.runWith(this);
             this.destroy();
         }));
+
     }
     destroy() {
         super.destroy();

@@ -50,7 +50,7 @@ export class DisplayActionManager {
             const values = this.onlyActions.get(actionName);
             const index = values.indexOf(id);
             if (index !== -1) {
-                values.splice(index, 1)
+                values.splice(index, 1);
             }
         }
     }
