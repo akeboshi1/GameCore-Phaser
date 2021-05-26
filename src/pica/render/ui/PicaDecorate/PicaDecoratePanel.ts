@@ -65,6 +65,7 @@ export class PicaDecoratePanel extends PicaBasePanel {
         this.mBtn_SelectedFurniture.off("pointerup");
         this.mBtn_SelectedFurniture.on("pointerup", onClick, this);
         data.grade = 0;
+        data.rarity = 1;
         this.mBtn_SelectedFurniture.setItemData(data, true);
         this.mBtn_SelectedFurniture.enable = data.count > 0;
     }
