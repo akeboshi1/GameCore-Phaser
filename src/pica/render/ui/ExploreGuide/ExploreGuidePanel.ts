@@ -19,7 +19,7 @@ export class ExploreGuidePanel extends BaseGuide {
         const navigatePanel = bottom.navigatePanel;
         const button: Button = (<any>navigatePanel).exploreButton;
         const worldMatrix = button.getWorldTransformMatrix();
-        this.guideEffect.createGuideEffect({ x: worldMatrix.tx, y: worldMatrix.ty });
+        this.guideEffect.createGuideEffect({ x: worldMatrix.tx, y: worldMatrix.ty },this.mData.guideText[0]);
         button.on(ClickEvent.Tap, () => {
             this.step2();
         }, this);
@@ -33,7 +33,7 @@ export class ExploreGuidePanel extends BaseGuide {
             const list: any[] = picaExploreListLevelPanel.levelItems;
             const item = list[0];
             const worldMatrix = item.openButton.getWorldTransformMatrix();
-            this.guideEffect.createGuideEffect({ x: worldMatrix.tx, y: worldMatrix.ty + addHei });
+            this.guideEffect.createGuideEffect({ x: worldMatrix.tx, y: worldMatrix.ty + addHei },this.mData.guideText[1]);
             item.on(ClickEvent.Tap, () => {
                 this.end();
             }, this);

@@ -18,7 +18,7 @@ export class ActivityGuidePanel extends BaseGuide {
         const activityPanel = mainPanel.activityPanel;
         const btn = activityPanel.arrowButton;
         const worldMatrix = btn.getWorldTransformMatrix();
-        this.guideEffect.createGuideEffect({ x: worldMatrix.tx, y: worldMatrix.ty });
+        this.guideEffect.createGuideEffect({ x: worldMatrix.tx, y: worldMatrix.ty },this.mData.guideText[0]);
         btn.once(ClickEvent.Tap, this.end, this);
     }
 }

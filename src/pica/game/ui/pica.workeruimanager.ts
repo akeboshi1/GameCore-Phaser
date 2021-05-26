@@ -70,6 +70,7 @@ export class PicaWorkerUiManager extends UIManager {
                 const guideConfig = (<BaseDataConfigManager>this.game.configManager).findGuide(id);
                 if (guideConfig && !guideConfig.state) {
                     param.guideID = guideConfig.id;
+                    param.guideText = guideConfig.guideText;
                     this.game.peer.render.showPanel(name, param);
                 }
                 break;

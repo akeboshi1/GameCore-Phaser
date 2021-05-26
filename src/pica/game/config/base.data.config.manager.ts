@@ -481,7 +481,7 @@ export class BaseDataConfigManager extends BaseConfigManager {
                 displayPrecision: 0
             }];
             shopitem["find"] = true;
-            shopitem.icon = shopitem.icon === undefined || shopitem.icon === null || shopitem.icon.length === 0?
+            shopitem.icon = shopitem.icon === undefined || shopitem.icon === null || shopitem.icon.length === 0 ?
                 item.texturePath : shopitem.icon;
 
             // 临时处理 下次平台更新可删除 20210526
@@ -627,7 +627,14 @@ export class BaseDataConfigManager extends BaseConfigManager {
 
     public findGuide(id: string) {
         const data: GuideConfig = this.getConfig(BaseDataType.guide);
-        return data.findGuide(id);
+        const guide = data.findGuide(id);
+        const guideText = guide.guideText;
+        if (guideText) {
+            for (let i = 0; i < guideText.length; i++) {
+                guideText[i] = this.getI18n(guideText[i]);
+            }
+        } else guide.guideText = [];
+        return guide;
     }
 
     public updateGuideState(id: string, val: boolean = false) {
