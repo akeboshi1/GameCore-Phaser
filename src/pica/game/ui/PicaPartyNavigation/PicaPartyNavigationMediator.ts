@@ -225,17 +225,23 @@ export class PicaPartyNavigationMediator extends BasicMediator {
             tag = 1;
         }
         const tempArr = [];
+        let tempDatas = [];
+        let obj: any;
         for (const type of subTypes) {
             const sceneType = "PKT_SCENE_CATEGORY" + type;
             const map = <Map<string, IScene[]>>this.config.getScenesByCategory(sceneType, tag);
             if (map) {
                 map.forEach((value, key) => {
                     if (key !== "undefined") {
-                        const obj = { type: key, name: this.config.getI18n(key), datas: value };
-                        tempArr.push(obj);
+                        tempDatas = tempDatas.concat(value);
                     }
                 });
             }
+            if (!obj) {
+                obj = { type: sceneType, name: this.config.getI18n(sceneType), datas: tempDatas };
+                tempArr.push(obj);
+            }
+            obj.datas = tempDatas;
         }
         return tempArr;
     }
