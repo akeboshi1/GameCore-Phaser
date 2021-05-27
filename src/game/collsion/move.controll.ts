@@ -33,10 +33,17 @@ export class MoveControll {
             pos.y = this.mPosition.y + this.velocity.y;
 
             const collideResponses = this.getCollideResponses();
+            if (collideResponses.length > 2) {
+                // TODO 计算两者中心点x y。水平或垂直时停止移动
+                pos.x = this.mPosition.x;
+                pos.y = this.mPosition.y;
+                return;
+            }
             for (const response of collideResponses) {
                 pos.x -= response.overlapV.x;
                 pos.y -= response.overlapV.y;
             }
+
             this.mPosition.x = pos.x;
             this.mPosition.y = pos.y;
         }
