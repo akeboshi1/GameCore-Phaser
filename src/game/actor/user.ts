@@ -149,6 +149,10 @@ export class User extends Player {
         if (this.mRootMount) {
             this.mRootMount.removeMount(this, { x, y });
         }
+        const pos45 = this.roomService.transformToMini45(this.mModel.pos);
+        if (!this.mRoomService.isWalkable(pos45.x, pos45.y)) {
+            return;
+        }
         this.mMoveData = { path: [{ pos: new LogicPos(x, y) }] };
         this.mSyncDirty = true;
         // this.body.isSensor = false;
