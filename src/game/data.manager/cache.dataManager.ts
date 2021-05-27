@@ -13,11 +13,13 @@ export class CacheDataManager extends BaseHandler {
     public isSurveyStatus: boolean = false;
     public queryUnlockFurinture: boolean = false;
     public roomUpgradeState: any;
+    public mTaskOption: number;
     private mBagCategory: Map<number, any> = new Map();
     private furiRecasteMap: Map<string, any> = new Map();
     private mChaptersMap: Map<number, any> = new Map();
     constructor(game: Game, event?: EventDispatcher) {
         super(game, event);
+        this.initCacheData();
     }
     clear() {
         super.clear();
@@ -113,4 +115,17 @@ export class CacheDataManager extends BaseHandler {
         }
         this.game.emitter.emit(EventType.GALLERY_UPDATE, this.gallery);
     }
+
+    public get taskOption() {
+        return this.mTaskOption;
+    }
+    public set taskOption(value) {
+        this.mTaskOption = value;
+        this.game.peer.render.setLocalStorage("taskoption", value);
+    }
+
+    protected async initCacheData() {
+        this.mTaskOption = await this.game.peer.render.getLocalStorage("taskoption");
+    }
+
 }
