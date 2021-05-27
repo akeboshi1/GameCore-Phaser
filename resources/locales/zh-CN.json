@@ -479,7 +479,7 @@
     "hot": "热门",
     "new": "最新",
     "collect": "收藏",
-    "tooqingtips": "[color=#FEDF36]图轻实验室[/color]是一个让大家轻松制作游戏的平台，在不久的将来你也可以创作[color=#FEDF36]属于自己的[/color]游戏"
+    "tooqingtips": "[color=#FEDF36]图轻[/color]是一套简单好用的工具软件，大家可以用皮卡堂的素材和角色创作[color=#FEDF36]属于自己的[/color]游戏或动画短剧。图轻即将开放给用户们试用，尽请期待！做个游戏，图个轻松~"
   },
   "commontips": {
     "configerror": "配置未成功加载，请刷新游戏",
@@ -520,5 +520,10 @@
     "sender": "发件人: ",
     "expiration": "{{time}}后过期",
     "nomailtip": "暂时没有新邮件~"
+  },
+  "roomdecorate": {
+    "usetips": "你尚未购买该{{name}}",
+    "usering": "该{{name}}已经使用中",
+    "savetips": "{{type}}: {{name}}保存成功"
   }
 }

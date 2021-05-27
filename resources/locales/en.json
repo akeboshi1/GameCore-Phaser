@@ -301,7 +301,7 @@
     "refreshtitle": "ORDER WITHDRAW",
     "progresstitle": "PROGRESS REWARD",
     "rewardtitle": "Progress reward",
-    "finishtips":"Send Finish",
+    "finishtips": "Send Finish",
     "accelecontent": "Accelerated orders will consume {{name}} diamonds",
     "acceletitle": "orderSpend"
   },
@@ -506,5 +506,8 @@
     "sender": "Sender: ",
     "expiration": "It expires after {{time}}",
     "nomailtip": "No new email for now ~"
+  },
+  "roomdecorate": {
+    "usetips": "你尚未购买该{{name}}"
   }
 }

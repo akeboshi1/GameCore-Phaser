@@ -21,7 +21,7 @@ export class PicaRoomDecorateShopPanel extends Phaser.GameObjects.Container {
     private selectedItem: DecorateShopItem;
     private selectedItemData: any;// op_client.IMarketCommodity
     private shopgride: GameGridTable;
-    private curCategory: string;
+    private curCategory: any;
     private beforeCategory: string;
     private zoom: number;
     constructor(scene: Phaser.Scene, x: number, y: number, width: number, height: number, key: string, dpr: number, zoom: number) {
@@ -93,10 +93,11 @@ export class PicaRoomDecorateShopPanel extends Phaser.GameObjects.Container {
         this.leaveButton.y = this.height * 0.5 - this.leaveButton.height * 0.5 - 15 * this.dpr;
         this.leaveButton.x = -this.leaveButton.width * 0.5 - 15 * this.dpr;
         this.leaveButton.on(String(ClickEvent.Tap), this.onCloseHandler, this);
-        this.corfirmButton = this.createNineButton(UIAtlasName.uicommon, "button_g", i18n.t("common.save"), "#000000");
+        this.corfirmButton = this.createNineButton(UIAtlasName.uicommon, "butt_gray", i18n.t("common.save"), "#000000");
         this.corfirmButton.y = this.height * 0.5 - this.corfirmButton.height * 0.5 - 15 * this.dpr;
         this.corfirmButton.x = -this.leaveButton.x;
         this.corfirmButton.on(String(ClickEvent.Tap), this.onConfirmButtonHandler, this);
+        this.corfirmButton.disInteractive();
     }
     public setShopCategories(marketCategory: any[]) {// op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_GET_MARKET_CATEGORIES
         const atts = [];
@@ -210,17 +211,17 @@ export class PicaRoomDecorateShopPanel extends Phaser.GameObjects.Container {
         }
     }
     private onTabButtonHandler(data: any) {// op_def.IMarketCategory
-        if (this.curCategory === data.key) return;
+        if (this.curCategory && this.curCategory.key === data.key) return;
         this.emit("queryProp", data.key);
-        this.curCategory = data.key;
+        this.curCategory = data;
         if (this.selectedItem) this.selectedItem.select = false;
         this.selectedItem = undefined;
         this.selectedItemData = undefined;
     }
     private onConfirmButtonHandler() {
-        if (this.selectedItemData && this.selectedItemData.status === 1) {// op_pkt_def.PKT_MANOR_COMMODITY_STATE.PKT_MANOR_Owned
-            if (this.sendHandler) this.sendHandler.runWith(["usetype", this.selectedItemData.elementId]);
-        }
+        const itemData = this.selectedItemData;
+        const data = { id: itemData.elementId, status: itemData.status, name: itemData.name, type: this.curCategory.value };
+        if (this.sendHandler) this.sendHandler.runWith(["usetype", data]);
     }
 
     private onBuyItemHandler(data: IDecorateShop) {// op_client.IMarketCommodity
@@ -229,9 +230,14 @@ export class PicaRoomDecorateShopPanel extends Phaser.GameObjects.Container {
     }
     private onSelectItemHandler(item: DecorateShopItem) {
         item.select = true;
+        if (!this.selectedItemData) {
+            this.corfirmButton.setFrameNormal("button_g");
+            this.corfirmButton.setInteractive();
+        }
         if (this.selectedItem) this.selectedItem.select = false;
         this.selectedItem = item;
         this.selectedItemData = item.shopData;
+
     }
     private onCloseHandler() {
         if (this.closeHandler) this.closeHandler.run();
