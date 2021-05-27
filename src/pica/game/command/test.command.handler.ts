@@ -21,14 +21,14 @@ export class TestCommandHandler extends MessageHandler {
             this.game.user.setInputEnable(InputEnable.Diasble);
             this.game.renderPeer.displayAction("mineexplosive", { id: this.game.user.id, isSelf: true });
         } else if (tag === "guide") {
-            this.game.showMediator(ModuleName.PICAMARQUEE_NAME, true, {
+            this.game.showMediator(ModuleName.PICAHOTELMINEGUIDE_NAME, true, {
                 guideID: "1",
                 guideText: ["这是一段无人可知的故事，故事曲折坎坷，婉转凄美，每个人都有一段故事，想要听吗"],
                 id: 571973460,
                 inputText: [],
                 kvps: [],
                 menuItem: [],
-                name: "PlaneGuide_1",
+                name: "HotelMineGuide_10",
                 text: [],
                 time: []
             });
