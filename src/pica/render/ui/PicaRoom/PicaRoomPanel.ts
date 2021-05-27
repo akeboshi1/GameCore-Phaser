@@ -80,6 +80,7 @@ export class PicaRoomPanel extends PicaBasePanel {
         this.roomSettingBtn = this.createTabButton(i18n.t("room_info.setting"), "small_setting", 2);
         this.roomInfoBtn.setPosition(-this.roomInfoBtn.width * 0.5 - 2 * this.dpr, -this.content.height * 0.5 - this.roomInfoBtn.height * 0.5 + 3 * this.dpr);
         this.roomSettingBtn.setPosition(this.roomSettingBtn.width * 0.5 + 2 * this.dpr, this.roomInfoBtn.y);
+        this.roomSettingBtn.visible = false;
         this.topCheckBox = new CheckboxGroup();
         this.topCheckBox.appendItemAll([this.roomInfoBtn, this.roomSettingBtn]);
         this.topCheckBox.on("selected", this.onTabBtnHandler, this);
