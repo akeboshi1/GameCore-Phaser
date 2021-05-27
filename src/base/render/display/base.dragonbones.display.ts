@@ -567,7 +567,7 @@ export class BaseDragonbonesDisplay extends BaseDisplay {
         }
 
         const result = sha1.sync(serializeStr);
-        Logger.getInstance().error("serialize avatar data: ", result, data);
+        Logger.getInstance().debug("serialize avatar data: ", result, data);
         return result;
     }
 
