@@ -22,11 +22,12 @@ export class BaseHotelFarmGuidePanel extends BaseGuide {
     }
 
     protected step1() {
+        this.render.emitter.on(PicaPartyNavigationPanel.PicaPartyNavigationPanel_CLOSE, this.end, this);
         const main: PicaNewMainPanel = this.uiManager.getPanel(ModuleName.PICANEWMAIN_NAME) as PicaNewMainPanel;
         const leftPanel = main.leftPanel;
         this.mapButton = leftPanel.mapButton;
         const worldMatrix = (<any>this.mapButton).getWorldTransformMatrix();
-        this.guideEffect.createGuideEffect({ x: worldMatrix.tx, y: worldMatrix.ty });
+        this.guideEffect.createGuideEffect({ x: worldMatrix.tx, y: worldMatrix.ty },this.mData.guideText[0]);
         this.mapButton.on(ClickEvent.Tap, this.step2, this);
     }
 
@@ -42,7 +43,7 @@ export class BaseHotelFarmGuidePanel extends BaseGuide {
         const navPanel: PicaPartyNavigationPanel = this.uiManager.getPanel(ModuleName.PICAPARTYNAVIGATION_NAME) as PicaPartyNavigationPanel;
         this.townToggle = navPanel.getToggleButton(1);
         const worldMatrix = this.townToggle.getWorldTransformMatrix();
-        this.guideEffect.createGuideEffect({ x: this.townToggle.width, y: worldMatrix.ty });
+        this.guideEffect.createGuideEffect({ x: worldMatrix.tx, y: worldMatrix.ty },this.mData.guideText[2]);
     }
 
     protected step4() {

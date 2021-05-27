@@ -1,4 +1,4 @@
-import { IPos, Url } from "utils";
+import { IPos, UIHelper, Url } from "utils";
 import { MainUIScene } from "../scenes";
 
 export interface IGuideRes {
@@ -11,11 +11,13 @@ export class GuideEffect extends Phaser.GameObjects.Container {
     protected mInitialized: boolean = false;
     private mGuideEffect: Phaser.GameObjects.Image;
     private mMask: Phaser.GameObjects.Graphics;
+    private guideText: Phaser.GameObjects.Text;
     private mScaleTween;
     private mScale: number = 1;
     private mResources: Map<string, IGuideRes> = new Map();
     private mCachePos: IPos;
     private mHandDisplay: HandDisplay;
+    private mCacheText: string;
     constructor(scene: Phaser.Scene, private tmpScale = 1) {
         super(scene);
         this.mScale *= this.tmpScale;
@@ -48,9 +50,10 @@ export class GuideEffect extends Phaser.GameObjects.Container {
         }
     }
 
-    public createGuideEffect(pos: IPos) {
+    public createGuideEffect(pos: IPos, text?: string) {
         if (!this.mInitialized) {
             this.mCachePos = pos;
+            this.mCacheText = text;
             return;
         }
         const width = this.scene.cameras.main.width;
@@ -64,14 +67,19 @@ export class GuideEffect extends Phaser.GameObjects.Container {
             this.mGuideEffect.setPosition(0, 0);
             this.mHandDisplay = new HandDisplay(this.scene, "handEffect");
             this.mHandDisplay.scale = this.tmpScale;
+            this.guideText = this.scene.make.text({ style: UIHelper.whiteStyle(this.tmpScale, 18) }).setOrigin(0.5);
             (<any>this.scene).layerManager.addToLayer(MainUIScene.LAYER_MASK, this.mGuideEffect);
             (<any>this.scene).layerManager.addToLayer(MainUIScene.LAYER_MASK, this.mHandDisplay);
+            (<any>this.scene).layerManager.addToLayer(MainUIScene.LAYER_MASK, this.guideText);
         }
+        this.setGuideText(text);
         this.updatePos(pos);
         // this.setInteractive(new Phaser.Geom.Rectangle(width >> 1, height >> 1, width, height), Phaser.Geom.Rectangle.Contains);
         this.start();
     }
-
+    public setGuideText(text: string) {
+        this.guideText.text = text;
+    }
     public updatePos(pos: IPos) {
         if (!this.mMask) {
             this.mMask = this.scene.make.graphics(undefined);
@@ -94,6 +102,14 @@ export class GuideEffect extends Phaser.GameObjects.Container {
             // });
         }
         if (this.mHandDisplay) this.mHandDisplay.setPosition(pos.x, pos.y);
+        if (this.guideText) {
+            const textWidth = this.guideText.width;
+            this.guideText.setPosition(pos.x, pos.y + 70 * this.tmpScale);
+            const leftx = pos.x - textWidth * 0.5;
+            const rightx = pos.x + textWidth * 0.5;
+            if (leftx < 0) this.guideText.x = pos.x + textWidth * 0.5;
+            if (rightx > this.width) this.guideText.x = pos.x - textWidth * 0.5;
+        }
     }
 
     public start() {
@@ -141,6 +157,10 @@ export class GuideEffect extends Phaser.GameObjects.Container {
             this.mHandDisplay.destroy();
             this.mHandDisplay = null;
         }
+        if (this.guideText) {
+            this.guideText.destroy();
+            this.guideText = null;
+        }
         if (this.mMask) {
             this.mMask.clear();
             this.mMask.destroy();
@@ -153,7 +173,7 @@ export class GuideEffect extends Phaser.GameObjects.Container {
 
     public setInitialize(val: boolean) {
         this.mInitialized = val;
-        if (val && this.mCachePos) this.createGuideEffect(this.mCachePos);
+        if (val && this.mCachePos) this.createGuideEffect(this.mCachePos, this.mCacheText);
     }
 
     private addListen() {

@@ -19,7 +19,7 @@ export class HotelMineGuidePanel extends BaseHotelMineGuidePanel {
         const navPanel: PicaPartyNavigationPanel = this.uiManager.getPanel(ModuleName.PICAPARTYNAVIGATION_NAME) as PicaPartyNavigationPanel;
         const mapItem = navPanel.mineMapItem;
         const worldMatrix = mapItem.getWorldTransformMatrix();
-        this.guideEffect.createGuideEffect({ x: mapItem.width, y: worldMatrix.ty });
+        this.guideEffect.createGuideEffect({ x: worldMatrix.tx, y: worldMatrix.ty },this.mData.guideText[3]);
         this.render.emitter.on(PicaPartyNavigationPanel.PICAENTERROOM_DATA, this.end, this);
     }
 }

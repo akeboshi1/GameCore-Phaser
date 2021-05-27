@@ -72,7 +72,6 @@ export class PicaPartyNavigationPanel extends PicaBasePanel {
             }
         }
         if (this.progressData) this.setOnlineProgress(this.progressData);
-        this.render.emitter.emit(PicaPartyNavigationPanel.PICANAVIGATIONINIT_DATA);
     }
     public getToggleButton(index: number) {
         return this.toggleItems[index];
@@ -185,6 +184,7 @@ export class PicaPartyNavigationPanel extends PicaBasePanel {
             if (this.roomPanel) {
                 this.roomPanel.refreshMask();
             }
+            this.render.emitter.emit(PicaPartyNavigationPanel.PICANAVIGATIONINIT_DATA);
         }), new Handler(this, () => {
             if (this.townPanel) this.townPanel.refreshMask();
             if (this.myRoomPanel) {
@@ -431,7 +431,7 @@ export class PicaPartyNavigationPanel extends PicaBasePanel {
     private onCloseHandler() {
         this.render.renderEmitter(this.key + "_close");
     }
-    private playMove(handler: Handler, update: Handler) {
+    private playMove(compl: Handler, update: Handler) {
         const from = -this.content.width * 0.5 - 10 * this.dpr;
         const to = this.content.width * 0.5;
         const tween = this.scene.tweens.add({
@@ -445,7 +445,7 @@ export class PicaPartyNavigationPanel extends PicaBasePanel {
             onComplete: () => {
                 tween.stop();
                 tween.remove();
-                if (handler) handler.run();
+                if (compl) compl.run();
             },
             onUpdate: () => {
                 if (update) update.run();

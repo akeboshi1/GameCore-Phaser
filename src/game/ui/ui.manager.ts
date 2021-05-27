@@ -108,6 +108,8 @@ export class UIManager extends PacketHandler {
             case ModuleName.PICAHOMEGUIDE_NAME:
             case ModuleName.PICAHOTELGUIDE_NAME:
             case ModuleName.PICAPLANEGUIDE_NAME:
+            case ModuleName.PICAHOTELMINEGUIDE_NAME:
+            case ModuleName.PICAHOTELFARMGUIDE_NAME:
                 this.game.peer.render.showPanel(type, param);
                 break;
             default:

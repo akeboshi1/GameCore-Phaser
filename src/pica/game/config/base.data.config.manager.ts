@@ -481,7 +481,7 @@ export class BaseDataConfigManager extends BaseConfigManager {
                 displayPrecision: 0
             }];
             shopitem["find"] = true;
-            shopitem.icon = shopitem.icon === undefined || shopitem.icon === null || shopitem.icon.length === 0?
+            shopitem.icon = shopitem.icon === undefined || shopitem.icon === null || shopitem.icon.length === 0 ?
                 item.texturePath : shopitem.icon;
 
             // 临时处理 下次平台更新可删除 20210526
@@ -627,7 +627,14 @@ export class BaseDataConfigManager extends BaseConfigManager {
 
     public findGuide(id: string) {
         const data: GuideConfig = this.getConfig(BaseDataType.guide);
-        return data.findGuide(id);
+        const guide = data.findGuide(id);
+        const guideText = guide.guideText;
+        if (guideText) {
+            for (let i = 0; i < guideText.length; i++) {
+                guideText[i] = this.getI18n(guideText[i]);
+            }
+        } else guide.guideText = [];
+        return guide;
     }
 
     public updateGuideState(id: string, val: boolean = false) {
@@ -851,7 +858,7 @@ export class BaseDataConfigManager extends BaseConfigManager {
         const config: ItemBaseDataConfig = this.getConfig(BaseDataType.item);
         item.name = this.getI18n(item.name, { id: item.id, name: item.name });
         item.source = item.source ? "PKT_MARKET_TAG_SOURCE_" + item.source : "";
-        item.source = this.getI18n(item.source, { id: item.id, source: item.source });
+        item.source = item.source && item.source.length > 0 ? this.getI18n(item.source, { id: item.id, source: item.source }) : "";
         item.des = this.getI18n(item.des, { id: item.id, des: item.source });
         item.category = "PKT_PACKAGE_CATEGORY_" + item.category;
         item.subcategory = "PKT_MARKET_TAG_" + item.subcategory;
