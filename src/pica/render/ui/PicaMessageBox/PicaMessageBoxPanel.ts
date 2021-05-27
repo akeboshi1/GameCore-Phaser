@@ -136,7 +136,7 @@ export class PicaMessageBoxPanel extends BasePanel {
       origin: { x: 0.5, y: 0.5 },
       wrap: {
         mode: "char",
-        width: this.width
+        width: this.width - 30 * this.dpr
       },
       align: "center"
     });

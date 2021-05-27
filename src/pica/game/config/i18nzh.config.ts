@@ -6,7 +6,7 @@ export class I18nZHDataConfig extends BaseConfigData {
         if (!StringUtils.isNullOrUndefined(id) && this.hasOwnProperty(id))
             return this[id];
         else {
-            if (!StringUtils.isNullOrUndefined(id)) Logger.getInstance().error((!tips ? "" : tips), `语言表未配置ID为:${id}的数据`);
+            if (!StringUtils.isNullOrUndefined(id) && id !== "") Logger.getInstance().error((!tips ? "" : tips), `语言表未配置ID为:${id}的数据`);
             return id;
         }
     }

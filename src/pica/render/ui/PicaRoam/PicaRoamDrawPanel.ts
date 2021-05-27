@@ -119,7 +119,7 @@ export class PicaRoamDrawPanel extends Phaser.GameObjects.Container {
         for (const data of datas) {
             if (data.drawTime === 1) {
                 this.oneRoamItem.setRoamData(data);
-                this.bottomtips.text = i18n.t("roam.bottomtips", { name: data.picaStarName, count: data.picaStarCount });
+                this.bottomtips.text = i18n.t("roam.bottomtips", { name: data.picaStarName = "皮卡星", count: data.picaStarCount });
             } else {
                 this.tenRoamItem.setRoamData(data);
                 if (!data["diamond"]) {
