@@ -46,11 +46,15 @@ export class SceneConfigMap {
         if (tag !== undefined) {
             if (type) {
                 const tempArr = this.sceneMap.get(type);
-                const gvalue: IScene[] = [];
-                for (const value of tempArr) {
-                    if (value.tag === tag) gvalue.push(value);
+                const map = new Map();
+                if (tempArr) {
+                    const gvalue: IScene[] = [];
+                    for (const value of tempArr) {
+                        if (value.tag === tag) gvalue.push(value);
+                    }
+                    map.set(type, gvalue);
                 }
-                return gvalue;
+                return map;
             } else {
                 const map = new Map();
                 this.sceneMap.forEach((tempValue, key) => {
@@ -66,7 +70,10 @@ export class SceneConfigMap {
                 return map;
             }
         } else if (type !== undefined) {
-            return this.sceneMap.get(type);
+            const map = new Map();
+            const values = this.sceneMap.get(type);
+            map.set(type, values);
+            return map;
         } else return this.sceneMap;
     }
     public sort() {
