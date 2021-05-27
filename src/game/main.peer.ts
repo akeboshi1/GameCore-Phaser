@@ -1,6 +1,6 @@
 import { Export, RPCPeer, webworker_rpc } from "webworker-rpc";
 import * as protos from "pixelpai_proto";
-import { op_client, op_gateway, op_virtual_world } from "pixelpai_proto";
+import { op_client, op_virtual_world } from "pixelpai_proto";
 import { Buffer, PBpacket } from "net-socket-packet";
 import { ServerAddress } from "../../lib/net/address";
 import { Game } from "./game";

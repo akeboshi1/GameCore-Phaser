@@ -1,55 +1,15 @@
 export enum GameState {
-    // ===============登陆游戏时状态:
-    // =====第0步 launcher调用render.createGame 创建游戏
-    LinkWorker = "LinkWorker",
-    // =====第1步 linkWorker之后初始化game中user，监听，manager
-    CreateManager = "CreateManager",
-    // =====第2步 创建远程render account
-    CreateAccount = "CreateAccount",
-    // =====第1步 初始化game中user，监听，manager
-    InitWorld = "InitWorld",
-    // ===== 请求账号登陆成功，等待玩家请求进入游戏
-    LoginSuc = "LoginSuc",
+    // ===============游戏状态
+    // ===== 游戏初始化
+    Init = "Init",
+    // ===== 登陆账号
+    Login = "Login",
+    // ===== 网络链接
+    Connecting = "Connecting",
     // ===== 进入游戏
-    EnterGame = "EnterGame",
-    // =====第3步 尝试链接
-    StartConnect = "StartConnect",
-    // =====第4步 尝试链接
-    Connected = "Connected",
-    // 链接断开
-    DisConnect = "DisConnect",
-    // =====第5步 请求平台token
-    RequestToken = "RequestToken",
-    // =====第6步 获得平台token
-    GetToken = "GetToken",
-    // =====第7步 登陆游戏
-    EnterWorld = "EnterWorld", // 发送 _OP_CLIENT_REQ_VIRTUAL_WORLD_PLAYER_INIT
-    // =====第8步 服务器下发 _OP_GATEWAY_RES_CLIENT_VIRTUAL_WORLD_INIT 包含角色,游戏信息
-    PlayerInit = "PlayerInit",
-    // =====第9步 成功加载游戏pi
-    LoadGameConfig = "LoadGameConfig",
-    // =====第10步 成功解析pi
-    CompleteDecodeConfig = "CompleteDecodeConfig",
-    // =====第11步 游戏创建成功
-    GameCreate = "GameCreate", // 发送 _OP_CLIENT_REQ_GATEWAY_GAME_CREATED
-    // =====第12步 服务端下发 _OP_VIRTUAL_WORLD_RES_CLIENT_ENTER_SCENE 进入场景,客户端进行下载/反序列化 场景数据
-    EnterScene = "EnterScene",
-    // =====第13步 场景创建成功
-    SceneCreate = "SceneCreate",
-    // =====第14步 创建房间
-    RoomCreate = "RoomCreate",
-
-    // ===============进入游戏后状态：
-    // =====第0步 收到房间信息，展示不同ui
-    RoomInfo = "RoomInfo",
-
-    // 窗口最小化或被隐藏
-    Hidden = "Hidden",
-
-    // 跨游戏状态
-    ChangeGame = "ChangeGame",
-    // 退游戏状态
-    OffLine = "OffLine"
+    EnterWorld = "EnterWorld",
+    // ===== 游戏运行
+    GameRunning = "GameRunning",
 }
 
 export enum ConnectState {
