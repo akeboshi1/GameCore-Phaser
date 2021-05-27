@@ -173,7 +173,7 @@ export class PicaRoomDecorateShopPanel extends Phaser.GameObjects.Container {
                 const scene = cell.scene,
                     item = cell.item;
                 if (cellContainer === null) {
-                    cellContainer = new DecorateShopItem(this.scene, 0, 0, capW, capH, UIAtlasName.decorateshop, this.dpr);
+                    cellContainer = new DecorateShopItem(this.scene, 0, 0, capW, capH, UIAtlasName.decorateshop, this.dpr, this.zoom);
                     cellContainer.on("buyitem", this.onBuyItemHandler, this);
                     grid.add(cellContainer);
                 }
@@ -241,6 +241,7 @@ export class PicaRoomDecorateShopPanel extends Phaser.GameObjects.Container {
 class DecorateShopItem extends Phaser.GameObjects.Container {
     public shopData: any;// op_client.IMarketCommodity
     private dpr: number;
+    private zoom: number;
     private bg: Phaser.GameObjects.Image;
     private nameText: Phaser.GameObjects.Text;
     private icon: DynamicImage;
@@ -250,9 +251,10 @@ class DecorateShopItem extends Phaser.GameObjects.Container {
     private imgprice: ImageValue;
     private key: string;
     private mselect: boolean = false;
-    constructor(scene: Phaser.Scene, x: number, y: number, width: number, height: number, key: string, dpr: number) {
+    constructor(scene: Phaser.Scene, x: number, y: number, width: number, height: number, key: string, dpr: number, zoom: number) {
         super(scene, x, y);
         this.dpr = dpr;
+        this.zoom = zoom;
         this.key = key;
         this.setSize(width, height);
         this.bg = this.scene.make.image({ key, frame: "manor_store_icon_bg" });
@@ -276,7 +278,7 @@ class DecorateShopItem extends Phaser.GameObjects.Container {
         this.button.y = this.tipsText.y + 2 * dpr;
         this.button.on(ClickEvent.Tap, this.onButtonHandler, this);
         this.imgprice.y = this.button.y - this.button.height * 0.5 - this.imgprice.height * 0.5 - 5 * dpr;
-        this.add([this.bg, this.nameText, this.icon, this.imgprice, this.tipsText, this.button]);
+        this.add([this.bg, this.icon, this.nameText, this.imgprice, this.tipsText, this.button]);
 
     }
 
@@ -285,9 +287,8 @@ class DecorateShopItem extends Phaser.GameObjects.Container {
         this.setButtonState(data);
         this.nameText.text = data.name || data.shortName;
         const url = Url.getOsdRes(data.icon);
-        this.icon.load(url, this, () => {
-            this.icon.scale = this.dpr;
-        });
+        this.icon.load(url);
+        this.icon.scale = this.dpr / this.zoom;
     }
 
     public set select(value) {
