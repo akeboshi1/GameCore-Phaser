@@ -5,11 +5,13 @@ import { EventDispatcher } from "utils";
 import { Game } from "../game";
 import { BasePacketHandler } from "./base.packet.handler";
 import { CacheDataManager } from "./cache.dataManager";
+import { ConfigPath } from "./config";
 import { DataMgrType } from "./dataManager";
 export class CommonDataManager extends BasePacketHandler {
     constructor(game: Game, event?: EventDispatcher) {
         super(game, event);
         this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_PKT_EXPLORE_CHAPTER_PROGRESS, this.on_ALL_CHAPTER_PROGRESS);
+        this.proto.on("ConfigVersion", this.onGameConfigVersionHandler, this);
         this.addPackListener();
     }
     clear() {
@@ -25,5 +27,8 @@ export class CommonDataManager extends BasePacketHandler {
         const mgr = this.game.getDataMgr<CacheDataManager>(DataMgrType.CacheMgr);
         mgr.setChapters(content);
     }
-
+    private onGameConfigVersionHandler(packge: PBpacket) {
+        const content: any = packge.content;
+        ConfigPath.version = content.ver;
+    }
 }

@@ -356,7 +356,7 @@ export class PicaPartyNavigationPanel extends PicaBasePanel {
     private onTownHandler(tag: string, data: any) {// op_client.IEditModeRoom
         if (tag === "enter") {
             this.render.renderEmitter(this.key + "_queryenter", data);
-            if (data === "S1200010" || data === "S0021002") this.render.renderEmitter(PicaPartyNavigationPanel.PICAENTERROOM_DATA);
+            if (data === "S1200010" || data === "S0021002") this.render.emitter.emit(PicaPartyNavigationPanel.PICAENTERROOM_DATA);
         } else if (tag === "progress") {
 
         }

@@ -209,21 +209,35 @@ export class PicaPartyNavigationMediator extends BasicMediator {
     }
 
     private setTooqingNavigationData(optionType: number) {
-        const sceneType = optionType === 5 ? 1 : -1;
-        let tempArr;
-        const map = <Map<string, IScene[]>>this.config.getScenesByCategory(undefined, sceneType);
-        if (map) {
-            tempArr = [];
-            map.forEach((value, key) => {
-                if (key !== "undefined") {
-                    const obj = { type: key, name: this.config.getI18n(key), datas: value };
-                    tempArr.push(obj);
-                }
-            });
-        }
+        const tempArr = this.getMapNavigationData(optionType);
         this.tempData = tempArr;
         if (!this.mPanelInit) return;
         this.mView.setNavigationListData(tempArr);
+    }
+
+    private getMapNavigationData(optionType: number) {
+        let subTypes: number[], tag: number = -1;
+        if (optionType === 4) {
+            subTypes = [4];
+            tag = 1;
+        } else if (optionType === 5) {
+            subTypes = [3, 4];
+            tag = 1;
+        }
+        const tempArr = [];
+        for (const type of subTypes) {
+            const sceneType = "PKT_SCENE_CATEGORY" + type;
+            const map = <Map<string, IScene[]>>this.config.getScenesByCategory(sceneType, tag);
+            if (map) {
+                map.forEach((value, key) => {
+                    if (key !== "undefined") {
+                        const obj = { type: key, name: this.config.getI18n(key), datas: value };
+                        tempArr.push(obj);
+                    }
+                });
+            }
+        }
+        return tempArr;
     }
 
     private getMyRoomDatas(content: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_SELF_ROOM_LIST) {

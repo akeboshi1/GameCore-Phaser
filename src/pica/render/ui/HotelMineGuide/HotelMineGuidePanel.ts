@@ -11,6 +11,7 @@ export class HotelMineGuidePanel extends BaseHotelMineGuidePanel {
 
     public end() {
         this.render.emitter.off(PicaPartyNavigationPanel.PICAENTERROOM_DATA, this.end, this);
+        this.render.emitter.off(PicaPartyNavigationPanel.PicaPartyNavigationPanel_CLOSE, this.end, this);
         super.end();
     }
 

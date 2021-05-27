@@ -629,10 +629,11 @@ export class BaseDataConfigManager extends BaseConfigManager {
         const data: GuideConfig = this.getConfig(BaseDataType.guide);
         const guide = data.findGuide(id);
         const guideText = guide.guideText;
-        if (guideText) {
+        if (guideText && !guideText["extends"]) {
             for (let i = 0; i < guideText.length; i++) {
                 guideText[i] = this.getI18n(guideText[i]);
             }
+            guideText["extends"] = true;
         } else guide.guideText = [];
         return guide;
     }
