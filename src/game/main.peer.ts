@@ -16,8 +16,6 @@ for (const key in protos) {
 }
 
 export class MainPeer extends RPCPeer {
-    private gameState;
-    private stateTime: number = 0;
     @Export()
     private game: Game;
     private mConfig: ILauncherConfig;
@@ -37,7 +35,6 @@ export class MainPeer extends RPCPeer {
         super(MAIN_WORKER);
         Logger.getInstance().log("Game version ====>:", `v${version}`);
         this.game = new PicaGame(this);
-        this.stateTime = new Date().getTime();
     }
 
     get render() {
@@ -48,8 +45,8 @@ export class MainPeer extends RPCPeer {
         throw new Error("physical has been discarded");
     }
 
-    get state(): string {
-        return this.gameState;
+    get state(): BaseState {
+        return this.curState;
     }
 
     set state(val) {

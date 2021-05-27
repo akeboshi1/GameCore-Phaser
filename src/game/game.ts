@@ -25,6 +25,7 @@ import version from "../../version";
 import { SoundManager } from "./sound.manager";
 import { GuideManager } from "./guide.manager/guide.manager";
 import { CustomProtoManager } from "./custom.proto/custom.proto.manager";
+import { GameStateManager } from "./state/game.state.manager";
 interface ISize {
     width: number;
     height: number;
@@ -57,6 +58,8 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
     protected mNetWorkManager: NetworkManager;
     protected mHttpLoadManager: HttpLoadManager;
     protected mCustomProtoManager: CustomProtoManager;
+    // 游戏状态管理器
+    protected mGameStateManager: GameStateManager;
 
     protected gameConfigUrls: Map<string, string> = new Map();
     protected gameConfigUrl: string;
@@ -245,7 +248,7 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
                 this.renderPeer.showAlert("登陆过期，请重新登陆", true, false)
                     .then(() => {
                         this.renderPeer.hidden();
-                });
+                    });
                 break;
         }
         // 显示服务器报错信息
@@ -431,6 +434,10 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
 
     get roomManager(): RoomManager {
         return this.mRoomManager;
+    }
+
+    get gameStateManager(): GameStateManager {
+        return this.mGameStateManager;
     }
 
     get guideManager(): GuideManager {
@@ -703,6 +710,7 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
     }
 
     protected createManager() {
+        if (!this.mGameStateManager) this.mGameStateManager = new GameStateManager(this.peer);
         if (!this.mRoomManager) this.mRoomManager = new RoomManager(this);
         if (!this.mGuideManager) this.mGuideManager = new GuideManager(this);
         // this.mUiManager = new UiManager(this);
