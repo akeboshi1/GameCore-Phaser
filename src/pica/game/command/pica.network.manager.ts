@@ -1,7 +1,7 @@
 import { NetworkManager } from "gamecore";
 import { PicaCommonHandler } from "./pica.common.handler";
 import { PicaNewCommonHandler } from "./pica.new.common.handler";
-import { TestCommandHandler } from "./tset.command.handler";
+import {TestCommandHandler} from "./test.command.handler";
 
 export class PicaNetworkManager extends NetworkManager {
     protected testCommand: TestCommandHandler;
