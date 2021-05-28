@@ -2,7 +2,7 @@ import { Logger, ValueResolver } from "utils";
 import { Render } from "../render";
 import { BasePanel } from "./components/base.panel";
 import { BasicScene } from "baseRender";
-import { SceneName } from "structure";
+import { ModuleName, SceneName } from "structure";
 import { AlertView, Buttons } from "./components";
 import { Panel } from "apowophaserui";
 export class UiManager {
@@ -101,6 +101,10 @@ export class UiManager {
             btns: Buttons.Ok
         });
         this.mBatchPanelList.push(alert);
+    }
+
+    public showTipsAlert(data) {
+        this.render.mainPeer.showMediator(ModuleName.PICANOTICE_NAME, true, data);
     }
 
     /**

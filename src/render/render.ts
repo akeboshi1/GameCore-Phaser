@@ -804,6 +804,11 @@ export class Render extends RPCPeer implements GameMain, IRender {
         });
     }
 
+    @Export([webworker_rpc.ParamType.str])
+    showTipsAlert(str) {
+        this.mUiManager.showTipsAlert({ text: [{ text: str, node: undefined }] });
+    }
+
     @Export([webworker_rpc.ParamType.num])
     public updateModel(id: number, displayInfo: any) {
         if (this.displayManager) this.displayManager.updateModel(id, displayInfo);
