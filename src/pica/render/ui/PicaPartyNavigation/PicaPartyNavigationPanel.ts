@@ -12,6 +12,7 @@ import { CommonBackground } from "../../ui";
 import { PicaRoomTypePanel } from "./PicaRoomTypePanel";
 import { PicaTownNoNavigationPanel } from "./PicaTownNoNavigationPanel";
 import { Render } from "../../pica.render";
+import { UITools } from "../uitool";
 export class PicaPartyNavigationPanel extends PicaBasePanel {
     public static PicaPartyNavigationPanel_CLOSE: string = "PicaPartyNavigationPanel_CLOSE";
     public static PICASELFROOM_DATA: string = "PICASELFROOM_DATA";
@@ -554,6 +555,7 @@ class SignProgressItem extends Phaser.GameObjects.Container {
     private receiveHandler: Handler;
     private finishIcon: Phaser.GameObjects.Image;
     private balckgraphic: Phaser.GameObjects.Graphics;
+    private redImg: Phaser.GameObjects.Image;
     constructor(scene: Phaser.Scene, x: number, y: number, key: string, dpr: number) {
         super(scene, x, y);
         this.dpr = dpr;
@@ -567,6 +569,7 @@ class SignProgressItem extends Phaser.GameObjects.Container {
         this.balckgraphic.fillCircle(0, 0, 16 * dpr);
         this.add([this.bg, this.icon, this.balckgraphic, this.finishIcon]);
         this.finishIcon.visible = false;
+        this.redImg = UITools.creatRedImge(scene, this.bg, undefined, undefined, "home_hint_small");
     }
 
     public setItemData(data: any, index: number, curvalue: number) {// op_client.IPKT_Progress
@@ -582,11 +585,14 @@ class SignProgressItem extends Phaser.GameObjects.Container {
         }
         this.finishIcon.visible = false;
         this.balckgraphic.visible = false;
+        this.redImg.visible = false;
         if (data.targetValue <= curvalue) {
             this.bg.setFrameNormal("map_online_receive_frame", "map_online_receive_frame");
             if (data.received) {
                 this.finishIcon.visible = true;
                 this.balckgraphic.visible = true;
+            } else {
+                this.redImg.visible = true;
             }
             this.icon.clearTint();
         } else {
