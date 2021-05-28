@@ -18,7 +18,6 @@ for (const key in protos) {
 export class MainPeer extends RPCPeer {
     private gameState;
     private stateTime: number = 0;
-    @Export()
     private game: Game;
     private mConfig: ILauncherConfig;
     /**
@@ -777,7 +776,6 @@ export class MainPeer extends RPCPeer {
     /**
      * 慎用，super.destroy()会使worker.terminator,致使整个游戏进程关闭
      */
-    @Export()
     public destroy() {
         if (this.game) this.game.isDestroy = true;
         super.destroy();
