@@ -165,9 +165,10 @@ export class PicaFriendSearchItem extends PicaFriendBaseListItem {
         this.searchBtn.on(ClickEvent.Tap, this.onSearchHandler, this);
         this.searchBtn.setInteractiveSize(20 * this.dpr, 20 * this.dpr);
         this.addBtn = new Button(this.scene, UIAtlasName.friend_new, "friend_list_add");
-        this.addBtn.on(ClickEvent.Tap,this.onAddHandler,this);
+        this.addBtn.on(ClickEvent.Tap, this.onAddHandler, this);
         this.add([this.bg, this.checkBg, this.checkImg, this.contentTex, this.inputLabel, this.searchBtn, this.addBtn]);
         this.layout();
+        this.inputLabel.visible = false;
     }
     protected layout() {
         this.checkBg.x = -this.width * 0.5 + this.checkBg.width * 0.5 + 18 * this.dpr;
@@ -179,7 +180,11 @@ export class PicaFriendSearchItem extends PicaFriendBaseListItem {
     }
 
     private onSearchHandler() {
-
+        const visible = this.inputLabel.visible;
+        this.inputLabel.visible = !visible;
+        if (visible) {
+            const text = this.inputLabel.text;
+        }
     }
 
     private onAddHandler() {

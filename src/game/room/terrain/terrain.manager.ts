@@ -212,6 +212,7 @@ export class TerrainManager extends PacketHandler implements IElementManager {
         if (type !== op_def.NodeType.TerrainNodeType) {
             return;
         }
+        Logger.getInstance().log("add Terrain ====>");
         this.addSpritesToCache(sprites);
     }
 
