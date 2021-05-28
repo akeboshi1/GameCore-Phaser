@@ -160,7 +160,7 @@ export class MouseManager {
     protected checkClickTime(): boolean {
         const now = new Date().getTime();
         if (now - this.mClickTime < this.mClickDelay) {
-            this.render.showTipsAlert(i18n.t("noticeTips.quickclick"));
+           // this.render.showTipsAlert(i18n.t("noticeTips.quickclick"));
             return false;
         }
         this.mClickTime = now;
