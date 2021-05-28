@@ -491,6 +491,9 @@ export class Element extends BlockObject implements IElement {
             return;
         }
         this.mMoving = true;
+        if (!this.moveControll) {
+            return;
+        }
         const pos = this.moveControll.position;
         const pathData = path[0];
         const pathPos = pathData.pos;
