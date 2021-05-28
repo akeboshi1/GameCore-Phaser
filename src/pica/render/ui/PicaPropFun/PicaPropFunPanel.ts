@@ -249,7 +249,7 @@ export class PicaPropFunPanel extends BasePanel {
             }
         }
         this.slider.visible = slider;
-        this.slider.setValue(0);
+        this.slider.setValue(1);
     }
     setResource(content: any) {// op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_MARKET_QUERY_COMMODITY_RESOURCE
         if (content) {

@@ -64,7 +64,7 @@ export class PicaNewOrderItem extends Phaser.GameObjects.Container {
         this.calcuTime = new ImageValue(this.scene, 30 * dpr, 10 * dpr, UIAtlasName.order_new, "order_time_icon", dpr);
         this.calcuTime.setTextStyle(UIHelper.colorStyle("#144B99", 12 * dpr));
         this.calcuTime.setFontStyle("bold");
-        this.calcuTime.setLayout(1);
+        this.calcuTime.setLayout(2);
         this.calcuTime.x = -this.width * 0.5 + 68 * dpr;
         this.calcuTime.y = -8 * dpr;
         this.orderfinish = new OrderFinishTips(scene, dpr, zoom);
@@ -159,7 +159,6 @@ export class PicaNewOrderItem extends Phaser.GameObjects.Container {
         this.calcuTime.visible = true;
         this.calcuTime.x = -this.width * 0.5 + 68 * this.dpr;
         this.calcuTime.y = -8 * this.dpr;
-        this.calcuTime.setLayout(1);
         if (this.timeID) {
             clearTimeout(this.timeID);
             this.timeID = undefined;
@@ -367,10 +366,10 @@ class OrderRewardItem extends ButtonEventDispatcher {
         this.itemData = data;
         this.imageValue.setText(`${data.count}`);
         this.imageValue.load(Url.getOsdRes(data.texturePath), new Handler(this, () => {
-            this.imageValue.x = 0;
+            // this.imageValue.x = 0;
         }));
         this.imageValue.setTextStyle(UIHelper.whiteStyle(this.dpr, 11));
-        this.imageValue.x = 0;
+        // this.imageValue.x = 0;
         this.setSize(this.textWidth + 20 * this.dpr, this.height);
         this.enable = false;
         setTimeout(() => {

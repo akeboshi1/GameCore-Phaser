@@ -22,6 +22,7 @@ export class PicaTaskMainPanel extends Phaser.GameObjects.Container {
     private zoom: number;
     private send: Handler;
     private isMoveFinish = false;
+    private canPointTaskItem: boolean = false;
     private questType: op_pkt_def.PKT_Quest_Type;
     private isFinishGroup: boolean = false;
     private taskGroupData: QUERY_QUEST_GROUP;
@@ -50,6 +51,7 @@ export class PicaTaskMainPanel extends Phaser.GameObjects.Container {
         }
         this.notaskTip.visible = false;
         this.gameScroller.visible = true;
+        this.canPointTaskItem = true;
         if (this.curTaskItem) this.curTaskItem.setExtend(false);
         if (questType === op_pkt_def.PKT_Quest_Type.QUEST_MAIN_MISSION) {
             if (!this.mainItem) {
@@ -83,7 +85,11 @@ export class PicaTaskMainPanel extends Phaser.GameObjects.Container {
                 if (item.visible) tempitems.push(item);
             }
             if (this.isFinishGroup) {
+                this.canPointTaskItem = false;
                 this.mainTaskAnimation = new MainTaskAnimation(this.scene, this.groupItem, tempitems, this.width, this.dpr);
+                this.mainTaskAnimation.setHandler(Handler.create(this, () => {
+                    this.canPointTaskItem = true;
+                }));
                 if (this.isMoveFinish) this.mainTaskAnimation.playIntoAnimation();
                 this.isFinishGroup = false;
             } else {
@@ -192,6 +198,7 @@ export class PicaTaskMainPanel extends Phaser.GameObjects.Container {
     }
 
     private onPointerUpHandler(gameobject) {
+        if (!this.canPointTaskItem) return;
         if (!(gameobject instanceof MainTaskBaseItem)) {
             const extend = gameobject.extend ? false : true;
             gameobject.setExtend(extend, true);
@@ -611,6 +618,7 @@ class MainTaskAnimation {
     private isDispose: boolean = false;
     private scene: Phaser.Scene;
     private indexed: number = -1;
+    private compl: Handler;
     constructor(scene: Phaser.Scene, mainItem: MainTaskBaseItem, taskItems: PicaTaskItem[], width: number, dpr: number) {
         this.scene = scene;
         this.mainItem = mainItem;
@@ -634,6 +642,7 @@ class MainTaskAnimation {
             tween.stop();
             tween.remove();
         }
+        if (this.compl) this.compl.run();
         this.tempItems.length = 0;
         this.taskItems.length = 0;
         this.itemTweens.length = 0;
@@ -641,6 +650,11 @@ class MainTaskAnimation {
         this.taskItems = undefined;
         this.tempItems = undefined;
         this.isDispose = true;
+        this.compl = undefined;
+    }
+
+    public setHandler(compl: Handler) {
+        this.compl = compl;
     }
     private setItemLayout() {
         this.mainItem.x = -this.width - 10 * this.dpr;

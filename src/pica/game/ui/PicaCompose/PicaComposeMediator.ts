@@ -104,7 +104,14 @@ export class PicaComposeMediator extends BasicMediator {
             if (materials) {
                 configMgr.getBatchItemDatas(materials);
                 for (const data of materials) {
-                    const count = this.playerBag.getItemsCount(op_pkt_def.PKT_PackageType.PropPackage, data.id, data.subcategory);
+                    let count = 0;
+                    if (data.id === "IV0000001") {
+                        count = this.game.user.userData.money;
+                    } else if (data.id === "IV0000002") {
+                        count = this.game.user.userData.diamond;
+                    } else {
+                        count = this.playerBag.getItemsCount(op_pkt_def.PKT_PackageType.PropPackage, data.id, data.subcategory);
+                    }
                     data.count = count;
                     if (count < data.neededCount) {
                         qualified = false;
