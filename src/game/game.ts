@@ -245,7 +245,7 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
                 this.renderPeer.showAlert("登陆过期，请重新登陆", true, false)
                     .then(() => {
                         this.renderPeer.hidden();
-                });
+                    });
                 break;
         }
         // 显示服务器报错信息
@@ -996,7 +996,7 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
         if (this.mHttpLoadManager) this.mHttpLoadManager.update(current, delta);
     }
 
-    private update(current: number, delta: number = 0) {
+    private update(current: number = 0, delta: number = 0) {
         if (this.isDestroy) return;
         this._run(current, delta);
 
