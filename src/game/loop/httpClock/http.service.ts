@@ -167,8 +167,13 @@ export class HttpService {
                     if (exit404) {
                         Promise.all([this.post("file_upload", { filename: jsonFullName, blob: json, type: "json" }),
                             this.post("file_upload", { filename: imgFullName, blob: url, type: "png"})])
-                            .then(() => {
+                            .then((responses) => {
                                 resolve(null);
+                                for (const respons of responses) {
+                                    if (respons.status === 404) {
+                                        Logger.getInstance().error("file_upload error: ", respons);
+                                    }
+                                }
                             })
                             .catch((reason) => {
                                 reject(reason);
