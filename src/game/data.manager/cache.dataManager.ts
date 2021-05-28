@@ -123,7 +123,9 @@ export class CacheDataManager extends BaseHandler {
         this.mTaskOption = value;
         this.game.peer.render.setLocalStorage("taskoption", value);
     }
-
+    public clearCache() {
+        this.game.peer.render.removeLocalStorage("taskoption");
+    }
     protected async initCacheData() {
         this.mTaskOption = await this.game.peer.render.getLocalStorage("taskoption");
     }
