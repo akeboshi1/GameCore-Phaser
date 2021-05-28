@@ -50,7 +50,7 @@ export class TerrainManager extends PacketHandler implements IElementManager {
         if (this.mRoom) {
             this.mGameConfig = this.mRoom.game.elementStorage;
         }
-        this.roomService.game.emitter.on(ElementManager.ELEMENT_READY, this.dealTerrainCache, this);
+        // this.roomService.game.emitter.on(ElementManager.ELEMENT_READY, this.dealTerrainCache, this);
     }
 
     public get isDealEmptyTerrain(): boolean {
@@ -125,7 +125,7 @@ export class TerrainManager extends PacketHandler implements IElementManager {
 
     public destroy() {
         this.mIsDealEmptyTerrain = false;
-        this.roomService.game.emitter.off(ElementManager.ELEMENT_READY, this.dealTerrainCache, this);
+       //  this.roomService.game.emitter.off(ElementManager.ELEMENT_READY, this.dealTerrainCache, this);
         if (this.connection) {
             this.connection.removePacketListener(this);
         }
@@ -212,7 +212,6 @@ export class TerrainManager extends PacketHandler implements IElementManager {
         if (type !== op_def.NodeType.TerrainNodeType) {
             return;
         }
-        Logger.getInstance().log("add Terrain ====>");
         this.addSpritesToCache(sprites);
     }
 
@@ -233,6 +232,7 @@ export class TerrainManager extends PacketHandler implements IElementManager {
 
     protected addComplete(packet: PBpacket) {
         this.hasAddComplete = true;
+        this.dealTerrainCache();
         // this.dealEmptyTerrain();
     }
 
