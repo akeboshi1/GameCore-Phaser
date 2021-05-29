@@ -200,17 +200,19 @@ export class User extends Player {
         this.changeState(PlayerState.IDLE);
         this.moveControll.setVelocity(0, 0);
         this.moveStyle = MoveStyleEnum.Null;
-        this.mMoving = false;
-        const pos = stopPos ? stopPos : this.mModel.pos;
-        const position = op_def.PBPoint3f.create();
-        position.x = pos.x;
-        position.y = pos.y;
-        const pkt: PBpacket = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_STOP_SELF);
-        const ct: op_virtual_world.IOP_CLIENT_REQ_VIRTUAL_WORLD_STOP_SELF = pkt.content;
-        ct.position = pos;
-        // ct.movePath = movePath;
-        this.mElementManager.connection.send(pkt);
+        if (this.mMoving) {
+            const pos = stopPos ? stopPos : this.mModel.pos;
+            const position = op_def.PBPoint3f.create();
+            position.x = pos.x;
+            position.y = pos.y;
+            const pkt: PBpacket = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_STOP_SELF);
+            const ct: op_virtual_world.IOP_CLIENT_REQ_VIRTUAL_WORLD_STOP_SELF = pkt.content;
+            ct.position = pos;
+            // ct.movePath = movePath;
+            this.mElementManager.connection.send(pkt);
+        }
         this.mMovePoints = [];
+        this.mMoving = false;
 
         this.stopActiveSprite();
     }
