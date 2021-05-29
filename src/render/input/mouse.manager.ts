@@ -62,7 +62,7 @@ export class MouseManager {
     }
 
     public onUpdate(pointer: Phaser.Input.Pointer, gameobject: Phaser.GameObjects.GameObject): void {
-        const now = new Date().getTime();
+        const now = Date.now();
         this.mClickTime = now;
         if (this.running === false || pointer === undefined) {
             return;
@@ -158,9 +158,9 @@ export class MouseManager {
     }
 
     protected checkClickTime(): boolean {
-        const now = new Date().getTime();
+        const now = Date.now();
         if (now - this.mClickTime < this.mClickDelay) {
-           // this.render.showTipsAlert(i18n.t("noticeTips.quickclick"));
+            // this.render.showTipsAlert(i18n.t("noticeTips.quickclick"));
             return false;
         }
         this.mClickTime = now;
