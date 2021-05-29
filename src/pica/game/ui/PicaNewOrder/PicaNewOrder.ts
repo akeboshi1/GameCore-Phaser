@@ -3,7 +3,6 @@ import { ConnectionService } from "lib/net/connection.service";
 import { PBpacket } from "net-socket-packet";
 import { op_client, op_virtual_world, op_pkt_def } from "pixelpai_proto";
 import { ModuleName } from "structure";
-import { Logger } from "utils";
 
 export class PicaNewOrder extends BasicModel {
     constructor(game: Game) {
@@ -16,7 +15,6 @@ export class PicaNewOrder extends BasicModel {
             this.connection.addPacketListener(this);
             this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_PKT_ORDER_LIST, this.on_ORDER_LIST);
             this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_PKT_QUERY_PLAYER_PROGRESS, this.on_PLAYER_PROGRESS);
-            this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_TEST, this.on_CLIENT_TEST);
         }
     }
 
@@ -37,15 +35,11 @@ export class PicaNewOrder extends BasicModel {
         }
     }
 
-    public query_WORLD_TEST() {
-        const packet = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_TEST);
-        this.connection.send(packet);
-    }
     public query_ORDER_LIST() {
         const packet = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_PKT_QUERY_ORDER_LIST);
         this.connection.send(packet);
-        this.query_WORLD_TEST();
     }
+
     public query_CHANGE_ORDER_STAGE(index: number, state: op_pkt_def.PKT_Order_Operator) {
         const packet = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_PKT_CHANGE_ORDER_STAGE);
         const content: op_virtual_world.IOP_CLIENT_REQ_VIRTUAL_WORLD_PKT_CHANGE_ORDER_STAGE = packet.content;
@@ -74,10 +68,5 @@ export class PicaNewOrder extends BasicModel {
         const content: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_QUERY_PLAYER_PROGRESS = packet.content;
         if (content.name === "order")
             this.event.emit(ModuleName.PICANEWORDER_NAME + "_modelProgresslist", content);
-    }
-
-    private on_CLIENT_TEST(packet: PBpacket) {
-        const content: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_TEST = packet.content;
-        Logger.getInstance().debug("++++++++++++++++++++    ", content);
     }
 }
