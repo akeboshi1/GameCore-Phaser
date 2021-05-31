@@ -90,9 +90,10 @@ export class BaseFramesDisplay extends BaseDisplay {
         this.mCurAnimation = aniDatas.get(animation.name);
         if (!this.mCurAnimation) return;
         const layer = this.mCurAnimation.layer;
-        if (!this.mPreAnimation || this.mPreAnimation.name !== animation.name) {
-            this.createDisplays(data.gene, this.mCurAnimation);
-        }
+        // if (!this.someLayer(aniDatas, this.mPreAnimation ? this.mPreAnimation.name : undefined, animation.name)) {
+        //     this.createDisplays(data.gene, this.mCurAnimation);
+        // }
+        this.tryCreateDisplay(data.gene, aniDatas, this.mCurAnimation);
 
         let display = null;
         for (let i = 0; i < layer.length; i++) {
@@ -111,8 +112,10 @@ export class BaseFramesDisplay extends BaseDisplay {
                 anis.play(key);
                 if (typeof times === "number") {
                     // setRepeat 播放一次后，播放的次数
-                    anis.setRepeat(times - 1);
+                    anis.setRepeat(times > 0 ? times - 1 : times);
                 }
+            } else {
+                display.setFrame(frameName[0]);
             }
             display.scaleX = animation.flip ? -1 : 1;
             this.updateBaseLoc(display, animation.flip, offsetLoc);
@@ -353,6 +356,43 @@ export class BaseFramesDisplay extends BaseDisplay {
 
     protected completeFrameAnimationQueue() {
 
+    }
+
+    protected tryCreateDisplay(key: string, animations: any, newAni: any) {
+        if (!this.mPreAnimation) {
+            this.createDisplays(key, newAni);
+            return;
+        }
+        if (this.mPreAnimation.name === newAni.name) {
+            return;
+        }
+        const oldAni = animations.get(this.mPreAnimation.name);
+        if (!oldAni) {
+            return;
+        }
+        const oldLayer = oldAni.layer;
+        const newLayer = newAni.layer;
+        if (oldLayer.length !== newLayer.length) {
+            this.createDisplays(key, newAni);
+            return;
+        }
+        for (let i = 0; i < oldLayer.length; i++) {
+            const oldFrames = oldLayer[i].frameName;
+            const newFrames = newLayer[i].frameName;
+            if (oldFrames.length !== newFrames.length) {
+                this.createDisplays(key, newAni);
+                return;
+            } else {
+                const oldId = oldLayer[i].id;
+                const newId = newLayer[i].id;
+                if (oldId === newId) continue;
+                const oldDisplay = this.mDisplays.get(oldId);
+                if (oldDisplay) {
+                    this.mDisplays.set(newId, oldDisplay);
+                    this.mDisplays.delete(oldId);
+                }
+            }
+        }
     }
 
     protected clearDisplay() {
