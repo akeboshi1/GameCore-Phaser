@@ -32,7 +32,7 @@ export class SceneDataManager extends BasePacketHandler {
         this.mEvent.on(EventType.SCENE_CHANGE, this.onSceneChangeHandler, this);
         this.proto.on("UPDATE_ROOM_INFO", this.onUpdateModeRoomInfo, this);
         this.proto.on("ExtraRoomInfo", this.onExtraRoomInfoHandler, this);
-        this.mEvent.on(EventType.REQUEST_GO_PLAYER_HOME, this.onRequestGoHomeHandler, this);
+        this.mEvent.on(EventType.REQUEST_GO_MINE_READY, this.onRequestGoMineReadyHandler, this);
         this.addPackListener();
     }
 
@@ -167,8 +167,11 @@ export class SceneDataManager extends BasePacketHandler {
         this.cacheMgr.extraRoomInfo = content;
         this.game.emitter.emit(EventType.UPDATE_EXTRA_ROOM_INFO, content);
     }
-    private onRequestGoHomeHandler() {
-        const packet = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_PKT_GO_HOME);
+    private onRequestGoMineReadyHandler() {
+        const packet = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_EDIT_MODE_ENTER_ROOM);
+        const content: op_virtual_world.IOP_CLIENT_REQ_VIRTUAL_WORLD_EDIT_MODE_ENTER_ROOM = packet.content;
+        content.roomId = "S1200010";
+        content.password = undefined;
         this.connection.send(packet);
     }
     get curRoomID() {

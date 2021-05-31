@@ -152,4 +152,12 @@ export class EventType {
      * 请求回到玩家房间
      */
     public static REQUEST_GO_PLAYER_HOME = "REQUEST_GO_PLAYER_HOME";
+    /**
+     * 请求去某个房间或场景
+     */
+    public static REQUEST_GO_ROOM_SCENE = "REQUEST_GO_ROOM_SCENE";
+    /**
+     * 请求返回矿洞准备层
+     */
+    public static REQUEST_GO_MINE_READY = "REQUEST_GO_MINE_READY";
 }
