@@ -715,7 +715,8 @@ export class Element extends BlockObject implements IElement {
         const pathData = path[0];
         if (!pathData) return;
         const pathPos = pathData.pos;
-        const speed = this.mModel.speed * delta;
+        // 允许1.5误差。delta存在波动避免停不下来
+        const speed = this.mModel.speed * delta * 1.5;
         if (Tool.twoPointDistance(pos, pathPos) <= speed) {
             if (path.length > 1) {
                 path.shift();
