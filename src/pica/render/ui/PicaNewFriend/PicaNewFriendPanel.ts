@@ -1,11 +1,12 @@
-import { ButtonEventDispatcher, DynamicImage, ToggleColorButton, UiManager } from "gamecoreRender";
-import { UIAtlasName } from "../../../res";
+import { ToggleColorButton, UiManager } from "gamecoreRender";
 import { ModuleName } from "structure";
 import { Handler, i18n, UIHelper, Url } from "utils";
 import { op_pkt_def } from "pixelpai_proto";
 import { PicaBasePanel } from "../pica.base.panel";
 import { Button, ClickEvent, GameGridTable } from "apowophaserui";
 import { ImageValue } from "..";
+import { PicaFriendListPanel } from "./PicaFriendListPanel";
+import { UIAtlasName } from "picaRes";
 export class PicaNewFriendPanel extends PicaBasePanel {
     private content: Phaser.GameObjects.Container;
     private mBlack: Phaser.GameObjects.Graphics;
@@ -18,12 +19,14 @@ export class PicaNewFriendPanel extends PicaBasePanel {
     private selectLine: Phaser.GameObjects.Image;
     private curToggleItem: ToggleColorButton;
     private toggleItems: ToggleColorButton[] = [];
+    private friendListPanel: PicaFriendListPanel;
     private people: number;
     private optionType: number;
     constructor(uiManager: UiManager) {
         super(uiManager);
         this.key = ModuleName.PICAONLINE_NAME;
-        this.atlasNames = [UIAtlasName.uicommon];
+        this.atlasNames = [UIAtlasName.uicommon, UIAtlasName.friend_new, UIAtlasName.friend_message];
+        this.textures = [{ atlasName: "friend_message_bg", folder: "friend_new" }, { atlasName: "Create_role_bg", folder: "texture" }];
     }
 
     public resize(w: number, h: number) {
@@ -79,6 +82,7 @@ export class PicaNewFriendPanel extends PicaBasePanel {
         this.optionLine = this.scene.make.image({ key: UIAtlasName.map, frame: "map_nav_line" });
         this.optionLine.displayHeight = 2 * this.dpr;
         this.selectLine = this.scene.make.image({ key: UIAtlasName.map, frame: "map_nav_select" });
+        this.createOptionButtons();
         this.toggleCon.add([this.optionLine, this.selectLine]);
         this.content.add([this.mBackground, this.bg, this.titleTex, this.peopleImg]);
         this.add(this.content);

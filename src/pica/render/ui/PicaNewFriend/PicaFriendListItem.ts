@@ -191,6 +191,7 @@ export class PicaFriendSearchItem extends PicaFriendBaseListItem {
 
     }
 }
+
 export class PicaFriendSearchInput extends Phaser.GameObjects.Container {
     protected background: Phaser.GameObjects.Image;
     protected inputTex: InputField;
@@ -235,5 +236,40 @@ export class PicaFriendSearchInput extends Phaser.GameObjects.Container {
     }
     get text() {
         return this.inputTex.text;
+    }
+}
+export class PicaFriendCommonItem extends Phaser.GameObjects.Container {
+    public itemData: any;
+    protected dpr: number;
+    protected zoom: number;
+    protected baseItem: PicaFriendBaseListItem;
+    protected itemType: number;
+    constructor(scene: Phaser.Scene, width: number, height: number, dpr: number, zoom: number) {
+        super(scene);
+        this.dpr = dpr;
+        this.zoom = zoom;
+        this.setSize(width, height);
+    }
+
+    setItemData(data: any) {
+        if (this.itemType !== data.itemType) {
+            if (this.baseItem) this.baseItem.destroy();
+            this.baseItem = this.getBaseItem(data.itemType);
+            this.add(this.baseItem);
+            this.setSize(this.baseItem.width, this.baseItem.height);
+        }
+        this.baseItem.setItemData(data);
+    }
+
+    protected getBaseItem(itemType) {
+        let item: PicaFriendBaseListItem;
+        if (itemType === 1) {
+            item = new PicaFriendListItem(this.scene, this.width, 48 * this.dpr, this.dpr);
+        } else if (itemType === 2 || itemType === 3 || itemType === 4) {
+            item = new PicaFriendFunctionItem(this.scene, this.width, 42 * this.dpr, this.dpr);
+        } else if (itemType === 5) {
+            item = new PicaFriendSearchItem(this.scene, this.width, 37 * this.dpr, this.dpr);
+        }
+        return item;
     }
 }
