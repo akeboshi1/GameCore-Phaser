@@ -21,7 +21,7 @@ export class PlayerExplosiveAction extends DisplayBaseAction {
         const sprite = this.display.getDisplay();
         sprite.y -= this.display.topPoint.y * 0.5;
         this.playPosition(new Handler(this, () => {
-            if (this.data.isSelf) this.render.renderEmitter(EventType.REQUEST_GO_PLAYER_HOME);
+            if (this.data.isSelf) this.render.renderEmitter(EventType.REQUEST_GO_MINE_READY);
             if (this.compl) this.compl.runWith(this);
             this.destroy();
         }));
