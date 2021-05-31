@@ -310,8 +310,10 @@ export class ElementManager extends PacketHandler implements IElementManager {
                     this.mDealSyncMap.set(sprite.id, false);
                     const command = (<any>sprite).command;
                     if (command === op_def.OpCommand.OP_COMMAND_UPDATE) { //  全部
+                        // 初始化数据
                         element.model = data;
                     } else if (command === op_def.OpCommand.OP_COMMAND_PATCH) { //  增量
+                        // 更新数据
                         element.updateModel(sprite);
                     }
                     ele.push(element);
