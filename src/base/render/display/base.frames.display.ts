@@ -110,7 +110,8 @@ export class BaseFramesDisplay extends BaseDisplay {
                     this.mCurAnimation.frameRate, this.mCurAnimation.loop, this.mCurAnimation.frameDuration);
                 const anis = (<Phaser.GameObjects.Sprite>display).anims;
                 anis.play(key);
-                if (typeof times === "number") {
+                // times为0为默认行为。按undefined处理
+                if (typeof times === "number" && times !== 0) {
                     // setRepeat 播放一次后，播放的次数
                     anis.setRepeat(times > 0 ? times - 1 : times);
                 }
