@@ -44,7 +44,7 @@ export class PicaExploreListMediator extends BasicMediator {
     }
 
     private onQUERY_CHAPTER_RESULT(content: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_QUERY_CHAPTER_RESULT) {
-        this.mShowData = content;
+        this.mShowData = content.chapter.chapterId;
         const configManager = <BaseDataConfigManager>this.game.configManager;
         const caphter = configManager.getChapterData(content.chapter.chapterId);
         ObjectAssign.excludeTagAssign(content.chapter, caphter, "exclude");
