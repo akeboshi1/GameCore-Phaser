@@ -38,6 +38,9 @@ export class GameStateManager {
     startRun(data?: any) {
         if (this.mCurState) this.mCurState.run(data);
     }
+    update(data?: any) {
+        if (this.mCurState) this.mCurState.update(data);
+    }
     destroy() {
         if (this.mStateMap) {
             this.mStateMap.clear();

@@ -60,8 +60,6 @@ export class MainPeer extends RPCPeer {
 
     // ============= connection调用主进程
     public onConnected(isAuto: boolean) {
-        // 告诉主进程链接成功
-        this.remote[RENDER_PEER].Render.onConnected(isAuto);
         // 逻辑层game链接成功
         this.game.onConnected(isAuto);
     }
@@ -183,12 +181,6 @@ export class MainPeer extends RPCPeer {
     public setDragonBonesQueue(id: number, animation: any) {
         const dragonbones = this.game.roomManager.currentRoom.playerManager.get(id);
         if (dragonbones) dragonbones.setQueue(animation);
-    }
-
-    @Export()
-    public loginEnterWorld() {
-        Logger.getInstance().debug("game======loginEnterWorld");
-        this.game.loginEnterWorld();
     }
 
     @Export([webworker_rpc.ParamType.boolean])

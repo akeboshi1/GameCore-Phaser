@@ -1,4 +1,7 @@
 import { ServerAddress } from "lib/net/address";
+import { ModuleName } from "structure";
+import { Logger } from "utils";
+import { Clock, HttpClock } from "../loop";
 import { MainPeer } from "../main.peer";
 import { BaseState } from "./base.state";
 
@@ -24,7 +27,20 @@ export class ConnectingState extends BaseState {
             game.connection.startConnect(addr);
         }
     }
-    update(){
-        
+    update(data?: any) {
+        const game = this.mMain.game;
+        // 告诉主进程链接成功
+        game.renderPeer.onConnected(data);
+        game.isAuto = data || false;
+        if (!game.clock) game.clock = new Clock(game.connection, game.peer, game);
+        if (!game.httpClock) game.httpClock = new HttpClock(game);
+        game.hideMediator(ModuleName.PICA_BOOT_NAME);
+        Logger.getInstance().info(`enterVirtualWorld`);
+        game.connection.connect = true;
+        this.next();
+    }
+    next() {
+        const game = this.mMain.game;
+        game.loginEnterWorld();
     }
 }

@@ -337,11 +337,6 @@ export class Render extends RPCPeer implements GameMain, IRender {
         //     this.mEditorCanvasManager.destroy();
     }
 
-    enterGame() {
-        this.remote[MAIN_WORKER].MainPeer.loginEnterWorld();
-        this.mGame.scene.remove(SceneName.LOGIN_SCENE);
-    }
-
     resize(width: number, height: number) {
         if (width * .65 > height) {
             this.dealTipsScene(SceneName.BLACK_SCENE, true);
