@@ -584,10 +584,6 @@ export class Render extends RPCPeer implements GameMain, IRender {
         this.remote[MAIN_WORKER].MainPeer.initGameConfig(JSON.stringify(config));
     }
 
-    // public startConnect(gateway: ServerAddress) {
-    //     this.remote[MAIN_WORKER].MainPeer.startConnect(gateway.host, gateway.port, gateway.secure);
-    // }
-
     public newGame(): Promise<any> {
         return new Promise<any>((resolve, reject) => {
             if (this.mGame) {

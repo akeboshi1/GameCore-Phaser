@@ -13,7 +13,6 @@ export class PicaBootMediator extends BasicMediator {
     }
 
     enterGame() {
-        this.game.peer.state = GameState.EnterGame;
         this.game.startConnect();
     }
 

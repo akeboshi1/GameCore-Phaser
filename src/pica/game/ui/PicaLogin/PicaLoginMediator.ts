@@ -51,7 +51,7 @@ export class PicaLoginMediator extends BasicMediator {
             }
             bootMeditor.setState("ready");
         }
-        this.game.peer.state = GameState.LoginSuc;
+        // this.game.peer.state = GameState.LoginSuc;
         this.game.renderPeer.setAccount(data);
     }
 }

@@ -18,7 +18,7 @@ for (const key in protos) {
 
 export class MainPeer extends RPCPeer {
     @Export()
-    private game: Game;
+    private mGame: Game;
     private mConfig: ILauncherConfig;
     /**
      * 主进程和render之间完全链接成功
@@ -35,7 +35,15 @@ export class MainPeer extends RPCPeer {
     constructor() {
         super(MAIN_WORKER);
         Logger.getInstance().log("Game version ====>:", `v${version}`);
-        this.game = new PicaGame(this);
+        this.mGame = new PicaGame(this);
+    }
+
+    get config(): ILauncherConfig {
+        return this.mConfig;
+    }
+
+    get game(): Game {
+        return this.mGame;
     }
 
     get render() {
@@ -47,31 +55,21 @@ export class MainPeer extends RPCPeer {
     }
 
     get state(): BaseState {
-        return this.curState;
-    }
-
-    set state(val) {
-        const now: number = new Date().getTime();
-        Logger.getInstance().log("gameState: ====>", val, "delayTime:=====>", now - this.stateTime);
-        this.gameState = val;
-        this.stateTime = now;
+        return this.game.gameStateManager.curState;
     }
 
     // ============= connection调用主进程
     public onConnected(isAuto: boolean) {
         // 告诉主进程链接成功
         this.remote[RENDER_PEER].Render.onConnected(isAuto);
-        this.startBeat();
-        this.state = GameState.Connected;
         // 逻辑层game链接成功
-        this.game.onConnected();
+        this.game.onConnected(isAuto);
     }
 
     public onDisConnected(isAuto) {
         // 告诉主进程断开链接
         this.remote[RENDER_PEER].Render.onDisConnected();
-        // 停止心跳
-        // this.endBeat();
+        // 逻辑层game关闭链接
         this.game.onDisConnected(isAuto);
     }
 
@@ -140,15 +138,12 @@ export class MainPeer extends RPCPeer {
     @Export()
     public createGame(config: ILauncherConfig) {
         this.mConfig = config;
-        Url.OSD_PATH = this.mConfig.osd;
-        Url.RES_PATH = `resources/`;
-        Url.RESUI_PATH = `${Url.RES_PATH}ui/`;
-        this.state = GameState.LinkWorker;
-        // ============
-        Logger.getInstance().debug("createGame");
-        // const url: string = "/js/game" + "_v1.0.398";
-        Logger.getInstance().debug("render link onReady");
-        this.game.createGame(this.mConfig);
+        this.game.init(config);
+        // // ============
+        // Logger.getInstance().debug("createGame");
+        // // const url: string = "/js/game" + "_v1.0.398";
+        // Logger.getInstance().debug("render link onReady");
+        // this.game.createGame(this.mConfig);
     }
 
     @Export()
@@ -194,15 +189,6 @@ export class MainPeer extends RPCPeer {
     public loginEnterWorld() {
         Logger.getInstance().debug("game======loginEnterWorld");
         this.game.loginEnterWorld();
-    }
-
-    // @Export([webworker_rpc.ParamType.str, webworker_rpc.ParamType.num, webworker_rpc.ParamType.boolean])
-    public startConnect(host: string, port: number, secure?: boolean) {
-        const addr: ServerAddress = { host, port, secure };
-        this.game.connection.startConnect(addr);
-        const now: number = new Date().getTime();
-        this.stateTime = now;
-        this.state = GameState.StartConnect;
     }
 
     @Export([webworker_rpc.ParamType.boolean])

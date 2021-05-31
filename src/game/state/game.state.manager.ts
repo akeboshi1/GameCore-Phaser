@@ -19,6 +19,9 @@ export class GameStateManager {
         this.stateTime = new Date().getTime();
         this.init();
     }
+    get curState(): BaseState {
+        return this.mCurState;
+    }
     set state(key: string) {
         if (!this.mStateMap) return;
         const state = this.mStateMap.get(key);
@@ -29,8 +32,11 @@ export class GameStateManager {
         Logger.getInstance().log("gameState: ====>", key, "delayTime:=====>", now - this.stateTime);
         this.stateTime = now;
         this.mCurState = state;
-        // =====>设置完当前状态后直接启动
-        this.mCurState.run();
+        // // =====>设置完当前状态后直接启动
+        // this.mCurState.run();
+    }
+    startRun(data?: any) {
+        if (this.mCurState) this.mCurState.run(data);
     }
     destroy() {
         if (this.mStateMap) {
@@ -38,10 +44,10 @@ export class GameStateManager {
         }
     }
     protected init() {
-        this.mStateMap[GameState.Init] = new InitState(this.mMain);
-        this.mStateMap[GameState.Connecting] = new ConnectingState(this.mMain);
-        this.mStateMap[GameState.EnterWorld] = new EnterWorldState(this.mMain);
-        this.mStateMap[GameState.Login] = new LoginState(this.mMain);
-        this.mStateMap[GameState.GameRunning] = new GameRunningState(this.mMain);
+        this.mStateMap[GameState.Init] = new InitState(this.mMain, GameState.Init);
+        this.mStateMap[GameState.Connecting] = new ConnectingState(this.mMain, GameState.Connecting);
+        this.mStateMap[GameState.EnterWorld] = new EnterWorldState(this.mMain, GameState.EnterWorld);
+        this.mStateMap[GameState.Login] = new LoginState(this.mMain, GameState.Login);
+        this.mStateMap[GameState.GameRunning] = new GameRunningState(this.mMain, GameState.GameRunning);
     }
 }

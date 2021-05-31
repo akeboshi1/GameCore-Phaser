@@ -1,5 +1,5 @@
 export interface IState {
-    run();
+    run(data?: any);
     update();
     next();
 }
