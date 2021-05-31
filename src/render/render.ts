@@ -41,6 +41,8 @@ import { UiManager } from "./ui";
 import { GuideManager } from "./guide";
 import { MouseManager } from "./input/mouse.manager";
 import { SoundManager } from "./managers";
+import Stats from "../../Stat";
+
 for (const key in protos) {
     PBpacket.addProtocol(protos[key]);
 }
@@ -144,27 +146,27 @@ export class Render extends RPCPeer implements GameMain, IRender {
         this.initConfig();
         Logger.getInstance().log("Render version ====>:", `v${version}`);
         this.initWorker();
-        // const len = 3;
-        // const statList = [];
-        // for (let i = 0; i < len; i++) {
-        //     const stats = new Stats();
-        //     // stats.dom.style.position = 'relative';
-        //     stats.dom.style.left = 80 * i + "px";
-        //     stats.showPanel(i); // 0: fps, 1: ms, 2: mb, 3+: custom
-        //     document.body.appendChild(stats.dom);
-        //     statList.push(stats);
-        // }
+        const len = 3;
+        const statList = [];
+        for (let i = 0; i < len; i++) {
+            const stats = new Stats();
+            // stats.dom.style.position = 'relative';
+            stats.dom.style.left = 80 * i + "px";
+            stats.showPanel(i); // 0: fps, 1: ms, 2: mb, 3+: custom
+            document.body.appendChild(stats.dom);
+            statList.push(stats);
+        }
 
-        // function animate() {
-        //     for (let i = 0, tmpLen = statList.length; i < tmpLen; i++) {
-        //         const stats = statList[i];
-        //         stats.begin();
-        //         stats.end();
-        //     }
-        //     requestAnimationFrame(animate);
-        // }
+        function animate() {
+            for (let i = 0, tmpLen = statList.length; i < tmpLen; i++) {
+                const stats = statList[i];
+                stats.begin();
+                stats.end();
+            }
+            requestAnimationFrame(animate);
+        }
 
-        // requestAnimationFrame(animate);
+        requestAnimationFrame(animate);
     }
 
     get physicalPeer(): any {

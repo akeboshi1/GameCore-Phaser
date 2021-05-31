@@ -10,6 +10,7 @@ import { CheckPlaceResult, PicaGame } from "picaWorker";
 import { DataMgrType } from "./data.manager/dataManager";
 import { SceneDataManager } from "./data.manager";
 import version from "../../version";
+import { BaseState } from "./state/base.state";
 
 for (const key in protos) {
     PBpacket.addProtocol(protos[key]);
