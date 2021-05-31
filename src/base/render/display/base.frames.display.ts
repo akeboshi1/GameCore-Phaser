@@ -32,7 +32,7 @@ export class BaseFramesDisplay extends BaseDisplay {
         field = !field ? DisplayField.STAGE : field;
         this.mField = field;
         this.mDisplayInfo = displayInfo;
-        if (!this.framesInfo || !this.framesInfo.gene || !this.mDisplayInfo) {
+        if (!this.framesInfo || !this.framesInfo.gene) {
             return Promise.reject("framesInfo error" + displayInfo.id);
         }
         const currentDisplay = this.mDisplayDatas.get(field);
