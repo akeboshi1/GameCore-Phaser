@@ -248,12 +248,7 @@ export class ElementStorage implements IElementStorage {
     }
 
     public getDisplayModel(id: number): FramesModel | DragonbonesModel {
-        const ele = this.mElementRef.get(id);
-        if (ele) {
-            return ele.displayModel;
-        }
-        Logger.getInstance().debugError(`can't find element ${id}`);
-        return;
+        return this.mModels.get(id);
     }
 
     public getTerrainCollection() {

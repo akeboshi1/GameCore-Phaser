@@ -19,30 +19,11 @@ export class Effect {
         this.mId = Helpers.genId();
     }
 
-    syncSprite(sprite: op_client.ISprite) {
-        if (this.mDisplayInfo) {
-            this.mDisplayInfo.destroy();
-        }
-        const { display, animations } = sprite;
-        if (display && animations) {
-            const anis = [];
-            for (const ani of animations) {
-                anis.push(new AnimationModel(ani));
-            }
-            this.displayInfo = new FramesModel({
-                animations: {
-                    defaultAnimationName: sprite.currentAnimationName,
-                    display,
-                    animationData: anis,
-                },
-            });
-        }
+    updateDisplayInfo(frameModel: FramesModel) {
+        this.displayInfo = frameModel;
     }
 
     destroy() {
-        if (this.mDisplayInfo) {
-            this.mDisplayInfo.destroy();
-        }
         this.game.renderPeer.removeEffect(this.mOwnerID, this.mId);
     }
 
