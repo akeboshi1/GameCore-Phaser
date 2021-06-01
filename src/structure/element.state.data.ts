@@ -22,3 +22,16 @@ export enum ElementStateType {
     UNFROZEN = "unfrozen",// 未解锁 材料不够
     REPAIR = "repair"// 未解锁 材料够
 }
+
+export enum ElementState {
+    NONE = 0,
+    INIT = 1,
+    PRELOAD = 2,
+    LOADING = 3,
+    LOADCOMPLETE = 4,
+    LOADERROR = 5,
+    PREUPDATE = 6,
+    UPDATE = 7,
+    PREDESTROY = 8,
+    DESTROYED = 9
+}

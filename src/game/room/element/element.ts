@@ -11,11 +11,12 @@ import {
     ISprite,
     PlayerState
 } from "structure";
-import { DirectionChecker, IPos, IPosition45Obj, IProjection, Logger, LogicPos, Position45, Tool } from "utils";
+import { DirectionChecker, IPos, IProjection, Logger, LogicPos, Tool } from "utils";
 import { BlockObject } from "../block/block.object";
 import { IRoomService } from "../room/room";
 import { ElementStateManager } from "../state/element.state.manager";
 import { IElementManager } from "./element.manager";
+import { ElementState } from "structure";
 
 export interface IElement {
     readonly id: number;
@@ -25,7 +26,7 @@ export interface IElement {
 
     readonly moveData: MoveData;
 
-    state: boolean;
+    state: ElementState;
 
     model: ISprite;
 
@@ -102,11 +103,11 @@ export enum InputEnable {
 }
 
 export class Element extends BlockObject implements IElement {
-    get state(): boolean {
+    get state(): ElementState {
         return this.mState;
     }
 
-    set state(val: boolean) {
+    set state(val) {
         this.mState = val;
     }
 
@@ -168,7 +169,7 @@ export class Element extends BlockObject implements IElement {
     protected mTarget;
 
     private delayTime = 1000 / 45;
-    private mState: boolean = false;
+    private mState: ElementState = ElementState.NONE;
 
     constructor(protected game: Game, sprite: ISprite, protected mElementManager: IElementManager) {
         super(sprite ? sprite.id : -1, mElementManager ? mElementManager.roomService : undefined);
@@ -177,6 +178,7 @@ export class Element extends BlockObject implements IElement {
         }
         this.mId = sprite.id;
         this.model = sprite;
+        this.mState = ElementState.INIT;
     }
 
     showEffected(displayInfo: any) {
@@ -196,6 +198,7 @@ export class Element extends BlockObject implements IElement {
         this.mDisplayInfo = displayInfo;
         this.isUser = isUser;
         if (!displayInfo) return Promise.reject(`element ${this.mModel.nickname} ${this.id} display does not exist`);
+        this.mState = ElementState.LOADING;
         await this.loadDisplayInfo();
         return this.addToBlock();
     }
@@ -220,6 +223,7 @@ export class Element extends BlockObject implements IElement {
         // 必须执行一遍下面的方法，否则无法获取碰撞区域
         const area = model.getCollisionArea();
         const obj = { id: model.id, pos: model.pos, nickname: model.nickname, sound: model.sound, alpha: model.alpha, titleMask: model.titleMask | 0x00020000, hasInteractive: model.hasInteractive };
+        this.state = ElementState.PRELOAD;
         // render action
         this.load(this.mModel.displayInfo)
             .then(() => this.mElementManager.roomService.game.peer.render.setModel(obj))

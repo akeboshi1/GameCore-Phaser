@@ -16,7 +16,7 @@ export { FriendRelation, FriendRelationEnum, FriendData, FriendChannel, MenuData
 export { ChineseUnit } from "./chinese.unit";
 export { TimerCountDown } from "./TimerCountDown";
 export { AvatarSuitType, SuitAlternativeType, AvatarSuit, BaseAvatar } from "./avatar.suit.type";
-export { StateConfig, ElementStateType } from "./element.state.data";
+export * from "./element.state.data";
 export * from "./message.type";
 export * from "./load.state";
 export * from "./game.state";

@@ -2,7 +2,7 @@ import { PacketHandler, PBpacket } from "net-socket-packet";
 import { op_client, op_def, op_virtual_world } from "pixelpai_proto";
 import { ConnectionService } from "../../../../lib/net/connection.service";
 import { Logger, LogicPos } from "utils";
-import { EventType, IDragonbonesModel, IFramesModel, ISprite, MessageType } from "structure";
+import { ElementState, EventType, IDragonbonesModel, IFramesModel, ISprite, MessageType } from "structure";
 import { IRoomService } from "../room/room";
 import { Element, IElement, InputEnable } from "./element";
 import { ElementStateManager } from "./element.state.manager";
@@ -218,10 +218,10 @@ export class ElementManager extends PacketHandler implements IElementManager {
         let loadAll: boolean = true;
         for (let i: number = 0, len = this.mDealAddList.length; i < len; i++) {
             const ele = this.mDealAddList[i];
-            if (ele.id === id) {
-                ele.state = true;
-            }
-            if (!ele.state) {
+            // if (ele.id === id) {
+            //     ele.state = ElementState.LOADCOMPLETE;
+            // }
+            if (ele.state < ElementState.LOADCOMPLETE) {
                 loadAll = false;
             }
         }
@@ -255,7 +255,6 @@ export class ElementManager extends PacketHandler implements IElementManager {
                 if (!this.checkDisplay(sprite)) {
                     ids.push(sprite.id);
                 } else {
-                    obj.state = true;
                     if (this.mDealAddList.indexOf(obj) === -1) {
                         this.mDealAddList.push(obj);
                     }
@@ -330,7 +329,7 @@ export class ElementManager extends PacketHandler implements IElementManager {
     public onDisplayReady(id: number) {
         const element = this.mElements.get(id);
         if (!element) return;
-        element.state = true;
+        element.state = ElementState.LOADCOMPLETE;
         // 编辑小屋
         if (this.mRoom.isDecorating) {
             this.mRoom.game.emitter.emit(MessageType.DECORATE_ELEMENT_CREATED, id);
@@ -342,7 +341,7 @@ export class ElementManager extends PacketHandler implements IElementManager {
         // Logger.getInstance().debug("#loading onDisplayReady ", id);
         const notReadyElements = [];
         this.mElements.forEach((ele, key) => {
-            if (ele.state === false) {
+            if (ele.state < ElementState.LOADCOMPLETE) {
                 // todo 遍历优化
                 notReadyElements.push(ele);
             }
@@ -388,7 +387,7 @@ export class ElementManager extends PacketHandler implements IElementManager {
                 continue;
             }
             this.mAddCache.push(obj.id);
-            const sprite = new Sprite(obj,3);
+            const sprite = new Sprite(obj, 3);
             // sprite.init(obj);
             if (this.checkDisplay(sprite)) {
                 this.mCacheAddList.push(obj);
@@ -547,7 +546,7 @@ export class ElementManager extends PacketHandler implements IElementManager {
         for (const id of list) {
             const ele = this.get(id);
             if (!ele) continue;
-            if (!ele.state) {
+            if (ele.state < ElementState.LOADCOMPLETE) {
                 tmpList.push(ele);
                 continue;
             }
