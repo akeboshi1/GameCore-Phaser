@@ -25,6 +25,9 @@ export interface FriendData {
     menuData?: MenuData;
     createAt?: number;
     relation?: FriendRelationEnum;
+    avatar?: string;
+    genger?: number;
+
 }
 
 export enum FriendChannel {

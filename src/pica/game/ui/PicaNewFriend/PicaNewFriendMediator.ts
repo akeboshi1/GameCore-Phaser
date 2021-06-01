@@ -1,14 +1,14 @@
 import { op_client } from "pixelpai_proto";
 import { PicaNewFriend } from "./PicaNewFriend";
 import { PicaNewFriendRelation } from "./PicaNewFriendRelation";
-import { ModuleName, FriendChannel, EventType, RENDER_PEER } from "structure";
+import { ModuleName, FriendChannel, EventType, RENDER_PEER, FriendData, FriendRelationEnum } from "structure";
 import { BasicMediator, Game } from "gamecore";
 
 export class PicaNewFriendMediator extends BasicMediator {
     protected mView;
     private PicaFriend: PicaNewFriend;
     constructor(game: Game) {
-        super(ModuleName.PICAFRIEND_NAME, game);
+        super(ModuleName.PICANEWFRIEND_NAME, game);
         this.PicaFriend = new PicaNewFriend(game);
         this.game.emitter.on(EventType.PLAYER_LIST, this.onPlayerListHandler, this);
         this.game.emitter.on(EventType.SEARCH_RESULT, this.onSearchResultHandler, this);
@@ -16,7 +16,7 @@ export class PicaNewFriendMediator extends BasicMediator {
 
     show(param?: any) {
         super.show(param);
-        this.game.emitter.on(RENDER_PEER + this.key + "_hide", this.hide, this);
+        this.game.emitter.on(this.key + "_hide", this.hide, this);
         this.game.emitter.on(EventType.FETCH_FRIEND, this.onFetchFriendHandler, this);
         this.game.emitter.on(EventType.UNFOLLOW, this.onUnfollowHandler, this);
         this.game.emitter.on(EventType.FOLLOW, this.onFollowHandler, this);
@@ -31,7 +31,7 @@ export class PicaNewFriendMediator extends BasicMediator {
     }
 
     hide() {
-        this.game.emitter.off(RENDER_PEER + this.key + "_hide", this.hide, this);
+        this.game.emitter.off(this.key + "_hide", this.hide, this);
         this.game.emitter.off(EventType.FETCH_FRIEND, this.onFetchFriendHandler, this);
         this.game.emitter.off(EventType.UNFOLLOW, this.onUnfollowHandler, this);
         this.game.emitter.off(EventType.FOLLOW, this.onFollowHandler, this);
