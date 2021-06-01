@@ -20,42 +20,13 @@ export class MainPeer extends RPCPeer {
     @Export()
     private mGame: Game;
     private mConfig: ILauncherConfig;
-    /**
-     * 主进程和render之间完全链接成功
-     */
-    private isReady: boolean = false;
-    private delayTime: number = 2000;
-    private reConnectCount: number = 0;
     private startDelay: any;
     private isStartUpdateFps: boolean = false;
     private startUpdateFps: any;
-
-    private mTmpTime: number = 0;
-    // private isReconnect: boolean = false;
     constructor() {
         super(MAIN_WORKER);
         Logger.getInstance().log("Game version ====>:", `v${version}`);
         this.mGame = new PicaGame(this);
-    }
-
-    get config(): ILauncherConfig {
-        return this.mConfig;
-    }
-
-    get game(): Game {
-        return this.mGame;
-    }
-
-    get render() {
-        return this.remote[RENDER_PEER].Render;
-    }
-
-    get physicalPeer() {
-        throw new Error("physical has been discarded");
-    }
-
-    get state(): BaseState {
-        return this.game.gameStateManager.curState;
     }
 
     // ============= connection调用主进程
@@ -111,7 +82,6 @@ export class MainPeer extends RPCPeer {
     }
 
     public endBeat() {
-        this.reConnectCount = 0;
         if (this.startDelay) {
             clearInterval(this.startDelay);
             this.startDelay = null;
@@ -122,9 +92,6 @@ export class MainPeer extends RPCPeer {
 
     @Export()
     public clearBeat() {
-        this.reConnectCount = 0;
-        // Logger.getInstance().debug("heartBeatWorker clearBeat");
-        // this.remote[MAIN_WORKER].MainPeer.clearHeartBeat();
     }
 
     @Export([webworker_rpc.ParamType.boolean])
@@ -547,18 +514,6 @@ export class MainPeer extends RPCPeer {
         this.game.httpClock.enable = enable;
     }
 
-    @Export([webworker_rpc.ParamType.str])
-    public showNoticeHandler(text: string) {
-        const data = new op_client.OP_VIRTUAL_WORLD_RES_CLIENT_SHOW_UI();
-        data.text = [{ text, node: undefined }];
-        this.game.showByName(ModuleName.PICANOTICE_NAME, data);
-    }
-
-    @Export([webworker_rpc.ParamType.str])
-    public showPanelHandler(name: string, data?: any) {
-        this.game.showByName(name, data);
-    }
-
     @Export([webworker_rpc.ParamType.num])
     public closePanelHandler(id: number) {
         const packet = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_CLOSE_UI);
@@ -762,6 +717,22 @@ export class MainPeer extends RPCPeer {
     // ==== config
     public isPlatform_PC() {
         return this.mConfig && this.mConfig.platform && this.mConfig.platform === "pc";
+    }
+
+    get config(): ILauncherConfig {
+        return this.mConfig;
+    }
+
+    get game(): Game {
+        return this.mGame;
+    }
+
+    get render() {
+        return this.remote[RENDER_PEER].Render;
+    }
+
+    get state(): BaseState {
+        return this.game.gameStateManager.curState;
     }
 }
 

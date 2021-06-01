@@ -1,5 +1,7 @@
 export enum GameState {
     // ===============游戏状态
+    // ===== 没有状态
+    NoState = "NoState",
     // ===== 游戏初始化
     Init = "Init",
     // ===== 登陆账号
@@ -10,6 +12,8 @@ export enum GameState {
     EnterWorld = "EnterWorld",
     // ===== 游戏运行
     GameRunning = "GameRunning",
+    // ===== 下线
+    OffLine = "OffLine",
 }
 
 export enum ConnectState {

@@ -6,5 +6,7 @@ export class LoginState extends BaseState {
         super(main, key);
     }
     run() {
+        super.run();
+        this.mGame.renderPeer.showLogin();
     }
 }

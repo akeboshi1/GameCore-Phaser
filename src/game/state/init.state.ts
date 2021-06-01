@@ -6,6 +6,7 @@ export class InitState extends BaseState {
         super(main, key);
     }
     run(data) {
+        super.run(data);
         const config = data;
         Url.OSD_PATH = config.osd;
         Url.RES_PATH = `resources/`;
@@ -13,13 +14,11 @@ export class InitState extends BaseState {
         // ============
         Logger.getInstance().debug("createGame");
         Logger.getInstance().debug("render link onReady");
-        const game = this.mMain.game;
-        game.createGame(config).then(() => {
+        this.mGame.createGame(config).then(() => {
             this.next();
         });
     }
     next() {
-        const game = this.mMain.game;
-        game.login();
+        this.mGame.login();
     }
 }

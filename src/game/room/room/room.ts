@@ -146,7 +146,6 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
     protected mManagersReadyStates: Map<string, boolean> = new Map();
     protected mDecorateManager: DecorateManager;
     protected mCollsionManager: CollsionManager;
-    private moveStyle: op_def.MoveStyle;
     private mActorData: IActor;
     private mUpdateHandlers: Handler[] = [];
     private mDecorateEntryData = null;
@@ -161,7 +160,6 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
     constructor(protected manager: IRoomManager) {
         super();
         this.mGame = this.manager.game;
-        this.moveStyle = this.mGame.moveStyle;
         this.mScaleRatio = this.mGame.scaleRatio;
         if (this.mGame) {
             this.addListen();
@@ -231,7 +229,6 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
             "sceneName": "PlayScene",
             "state": LoadState.CREATESCENE
         });
-        this.mGame.peer.state = GameState.SceneCreate;
         this.mIsLoading = true;
     }
 

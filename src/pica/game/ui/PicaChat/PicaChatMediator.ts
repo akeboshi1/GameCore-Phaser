@@ -123,7 +123,6 @@ export class PicaChatMediator extends BasicMediator {
 
         const contextStr = params[1];
         const contextMap = {
-            "box": this.game.peer.physicalPeer["matterWorld"],
             "log": Logger.getInstance()
         };
         const context: ChatCommandInterface = contextMap[contextStr];

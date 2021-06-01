@@ -22,8 +22,15 @@ export class GameStateManager {
     get curState(): BaseState {
         return this.mCurState;
     }
+    get state(): string {
+        if (!this.mCurState) return GameState.NoState;
+        return this.mCurState.key;
+    }
     set state(key: string) {
         if (!this.mStateMap) return;
+        if (this.mCurState) {
+            this.mCurState.removePacketListener();
+        }
         const state = this.mStateMap.get(key);
         if (!state) {
             Logger.getInstance().error(`state key :"${key}",not exsit`);
@@ -34,6 +41,10 @@ export class GameStateManager {
         this.mCurState = state;
         // // =====>设置完当前状态后直接启动
         // this.mCurState.run();
+    }
+    refreshStateTime() {
+        const now: number = new Date().getTime();
+        this.stateTime = now;
     }
     startRun(data?: any) {
         if (this.mCurState) this.mCurState.run(data);
@@ -47,10 +58,11 @@ export class GameStateManager {
         }
     }
     protected init() {
-        this.mStateMap[GameState.Init] = new InitState(this.mMain, GameState.Init);
-        this.mStateMap[GameState.Connecting] = new ConnectingState(this.mMain, GameState.Connecting);
-        this.mStateMap[GameState.EnterWorld] = new EnterWorldState(this.mMain, GameState.EnterWorld);
-        this.mStateMap[GameState.Login] = new LoginState(this.mMain, GameState.Login);
-        this.mStateMap[GameState.GameRunning] = new GameRunningState(this.mMain, GameState.GameRunning);
+        this.mStateMap.set(GameState.Init, new InitState(this.mMain, GameState.Init));
+        this.mStateMap.set(GameState.Connecting, new ConnectingState(this.mMain, GameState.Connecting));
+        this.mStateMap.set(GameState.EnterWorld, new EnterWorldState(this.mMain, GameState.EnterWorld));
+        this.mStateMap.set(GameState.Login, new LoginState(this.mMain, GameState.Login));
+        this.mStateMap.set(GameState.GameRunning, new GameRunningState(this.mMain, GameState.GameRunning));
+        this.mStateMap.set(GameState.OffLine, new BaseState(this.mMain, GameState.OffLine));
     }
 }

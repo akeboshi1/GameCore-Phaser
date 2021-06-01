@@ -51,12 +51,10 @@ export class PicaBootMediator extends BasicMediator {
             this.showLogin();
             return;
         }
-        this.game.peer.state = GameState.RequestToken;
         this.setState("referToken");
         // this.peer.render[ModuleName.].then((account) => {
         this.game.httpService.refreshToekn(account.refreshToken, account.accessToken)
             .then((response: any) => {
-                this.game.peer.state = GameState.GetToken;
                 if (response.code === 200) {
                     this.game.peer.render.refreshAccount(response);
                     this.showNotice();
@@ -67,7 +65,6 @@ export class PicaBootMediator extends BasicMediator {
                     this.showLogin();
                 }
             }).catch((error) => {
-                this.game.peer.state = GameState.GetToken;
                 Logger.getInstance().error("refreshToken:", error);
                 this.game.login();
             });
