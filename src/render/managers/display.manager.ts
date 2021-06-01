@@ -157,7 +157,7 @@ export class DisplayManager {
         }
         // 主角龙骨无视其余资源优先加载
         display.load(data, undefined, false);
-        display.startLoad();
+        // display.startLoad();
         if (isUser) this.mUser = display;
         const id = data.id;
         const sprite = this.mModelCache.get(id);
@@ -199,7 +199,7 @@ export class DisplayManager {
 
     public addFramesDisplay(id: number, data: IFramesModel, layer: number, field?: DisplayField) {
         if (!data) {
-            Logger.getInstance().debug("addFramesDisplay ====>", id);
+            Logger.getInstance().debug("no data addFramesDisplay ====>", id);
             return;
         }
         const scene = this.sceneManager.getMainScene();

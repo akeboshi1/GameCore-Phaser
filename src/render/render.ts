@@ -1071,8 +1071,8 @@ export class Render extends RPCPeer implements GameMain, IRender {
                 const blockHeight = 150;
                 const { x, y } = rect;
                 const obj = {
-                    x: x - blockWidth * 1.5,
-                    y: y - blockHeight * 1.5,
+                    x: x - blockWidth * 1.3,
+                    y: y - blockHeight * 1.3,
                     width: camera.width + blockWidth * 3,
                     height: camera.height + blockHeight * 3,
                     zoom: camera.zoom,
