@@ -108,6 +108,8 @@ export class UIManager extends PacketHandler {
             case ModuleName.PICAHOMEGUIDE_NAME:
             case ModuleName.PICAHOTELGUIDE_NAME:
             case ModuleName.PICAPLANEGUIDE_NAME:
+            case ModuleName.PICAHOTELMINEGUIDE_NAME:
+            case ModuleName.PICAHOTELFARMGUIDE_NAME:
                 this.game.peer.render.showPanel(type, param);
                 break;
             default:
@@ -340,6 +342,7 @@ export class UIManager extends PacketHandler {
             const content: op_client.OP_VIRTUAL_WORLD_REQ_CLIENT_PKT_SHOW_CREATE_ROLE_UI = packet.content;
             configMgr.getBatchItemDatas(content.avatars);
             this.showMed(ModuleName.PICACREATEROLE_NAME, content);
+            this.game.cacheMgr.clearCache();
         }, (response) => {
             this.game.renderPeer.showAlert("配置加载错误，请重新登陆: " + response, true, false)
                 .then(() => {

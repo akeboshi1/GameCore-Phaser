@@ -1,6 +1,6 @@
-import {BaseConfigData} from "gamecore";
-import {ICountablePackageItem} from "picaStructure";
-import {Logger} from "utils";
+import { BaseConfigData } from "gamecore";
+import { ICountablePackageItem } from "picaStructure";
+import { Logger } from "utils";
 
 export class ItemBaseDataConfig extends BaseConfigData {
     public excludes = ["count"];
@@ -17,7 +17,7 @@ export class ItemBaseDataConfig extends BaseConfigData {
         if (this.hasOwnProperty(id)) {
             return this[id];
         } else {
-            Logger.getInstance().error(`道具表未配置ID为:${id}的道具数据`);
+            if (id !== "DISPLAY0000000") Logger.getInstance().error(`道具表未配置ID为:${id}的道具数据`);
             return undefined;
         }
     }

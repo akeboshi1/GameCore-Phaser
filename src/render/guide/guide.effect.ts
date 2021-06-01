@@ -157,6 +157,10 @@ export class GuideEffect extends Phaser.GameObjects.Container {
             this.mHandDisplay.destroy();
             this.mHandDisplay = null;
         }
+        if (this.guideText) {
+            this.guideText.destroy();
+            this.guideText = null;
+        }
         if (this.mMask) {
             this.mMask.clear();
             this.mMask.destroy();

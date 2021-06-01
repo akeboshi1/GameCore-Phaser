@@ -11,6 +11,7 @@ export class HotelMineGuidePanel extends BaseHotelMineGuidePanel {
 
     public end() {
         this.render.emitter.off(PicaPartyNavigationPanel.PICAENTERROOM_DATA, this.end, this);
+        this.render.emitter.off(PicaPartyNavigationPanel.PicaPartyNavigationPanel_CLOSE, this.end, this);
         super.end();
     }
 
@@ -19,7 +20,7 @@ export class HotelMineGuidePanel extends BaseHotelMineGuidePanel {
         const navPanel: PicaPartyNavigationPanel = this.uiManager.getPanel(ModuleName.PICAPARTYNAVIGATION_NAME) as PicaPartyNavigationPanel;
         const mapItem = navPanel.mineMapItem;
         const worldMatrix = mapItem.getWorldTransformMatrix();
-        this.guideEffect.createGuideEffect({ x: mapItem.width, y: worldMatrix.ty },this.mData.guideText[3]);
+        this.guideEffect.createGuideEffect({ x: worldMatrix.tx, y: worldMatrix.ty },this.mData.guideText[3]);
         this.render.emitter.on(PicaPartyNavigationPanel.PICAENTERROOM_DATA, this.end, this);
     }
 }

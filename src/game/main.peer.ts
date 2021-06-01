@@ -1,11 +1,10 @@
 import { Export, RPCPeer, webworker_rpc } from "webworker-rpc";
 import * as protos from "pixelpai_proto";
-import { op_client, op_virtual_world } from "pixelpai_proto";
+import { op_virtual_world } from "pixelpai_proto";
 import { Buffer, PBpacket } from "net-socket-packet";
-import { ServerAddress } from "../../lib/net/address";
 import { Game } from "./game";
-import { IPos, Logger, LogicPos, Url } from "utils";
-import { EventType, GameState, ILauncherConfig, MAIN_WORKER, ModuleName, RENDER_PEER } from "structure";
+import { IPos, Logger, LogicPos } from "utils";
+import { EventType, ILauncherConfig, MAIN_WORKER, RENDER_PEER } from "structure";
 import { CheckPlaceResult, PicaGame } from "picaWorker";
 import { DataMgrType } from "./data.manager/dataManager";
 import { SceneDataManager } from "./data.manager";
@@ -17,7 +16,6 @@ for (const key in protos) {
 }
 
 export class MainPeer extends RPCPeer {
-    @Export()
     private mGame: Game;
     private mConfig: ILauncherConfig;
     private startDelay: any;
@@ -708,7 +706,6 @@ export class MainPeer extends RPCPeer {
     /**
      * 慎用，super.destroy()会使worker.terminator,致使整个游戏进程关闭
      */
-    @Export()
     public destroy() {
         if (this.game) this.game.isDestroy = true;
         super.destroy();

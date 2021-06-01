@@ -1,7 +1,7 @@
 import { NineSlicePatch, Button, ClickEvent, BBCodeText, NineSliceButton } from "apowophaserui";
 import { BackgroundScaleButton, DynamicImage } from "gamecoreRender";
 import { UIAtlasName } from "../../../res";
-import { Font, Handler, i18n, TimeUtils, UIHelper, Url } from "utils";
+import { Font, Handler, i18n, Logger, TimeUtils, UIHelper, Url } from "utils";
 import { op_client } from "pixelpai_proto";
 import { IDrawPoolStatus, IProgress } from "../../../structure";
 import { CommonBackground, ImageValue } from "../../ui";
@@ -119,19 +119,24 @@ export class PicaRoamDrawPanel extends Phaser.GameObjects.Container {
         for (const data of datas) {
             if (data.drawTime === 1) {
                 this.oneRoamItem.setRoamData(data);
-                this.bottomtips.text = i18n.t("roam.bottomtips", { name: data.picaStarName, count: data.picaStarCount });
+                this.bottomtips.text = i18n.t("roam.bottomtips", { name: data.picaStarName = "皮卡星", count: data.picaStarCount });
             } else {
                 this.tenRoamItem.setRoamData(data);
                 if (!data["diamond"]) {
                     this.drawProgress.visible = true;
-                    for (let i = 0; i < data.progressAward.length; i++) {
-                        const reward = data.progressAward[i];
-                        if (!reward.received) {
-                            const intervalTime = data.progressExpireTime * 1000 - data["unixTime"];
-                            this.drawProgress.setRoadLvData(data.progress, intervalTime, i + 1, reward);
-                            break;
+                    try {
+                        for (let i = 0; i < data.progressAward.length; i++) {
+                            const reward = data.progressAward[i];
+                            if (!reward.received) {
+                                const intervalTime = data.progressExpireTime * 1000 - data["unixTime"];
+                                this.drawProgress.setRoadLvData(data.progress, intervalTime, i + 1, reward);
+                                break;
+                            }
                         }
+                    } catch (error) {
+                        Logger.getInstance().error(error);
                     }
+
                     this.topbg.setTexture("roam_topic");
                     this.stripebg.visible = true;
                 } else {

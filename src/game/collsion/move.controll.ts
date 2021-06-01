@@ -33,25 +33,15 @@ export class MoveControll {
             pos.y = this.mPosition.y + this.velocity.y;
 
             const collideResponses = this.getCollideResponses();
-            const collideCount = collideResponses.length;
-            // 碰到多个分离后，可能会和其他相交
-            if (collideCount === 1) {
-                pos.x -= collideResponses[0].overlapV.x;
-                pos.y -= collideResponses[0].overlapV.y;
-            } else if (collideCount > 1) {
+            if (collideResponses.length > 2) {
+                // TODO 计算两者中心点x y。水平或垂直时停止移动
                 pos.x = this.mPosition.x;
                 pos.y = this.mPosition.y;
                 return;
-                const transformToMini45 = this.room.transformToMini45.bind(this.room);
-                for (const response of collideResponses) {
-                    const responseA = response.a;
-                    const responseB = response.b;
-                    const posA = transformToMini45(new LogicPos(responseA.pos.x + responseA.offset.x, responseA.pos.y + responseA.offset.y));
-                    const posB = transformToMini45(new LogicPos(responseB.pos.x + responseB.offset.x, responseB.pos.y + responseB.offset.y));
-                    Logger.getInstance().log("bottom point", this.getBottomPoint(responseB.points));
-                    Logger.getInstance().log("pos: ", posA, posB);
-                }
-                return;
+            }
+            for (const response of collideResponses) {
+                pos.x -= response.overlapV.x;
+                pos.y -= response.overlapV.y;
             }
 
             this.mPosition.x = pos.x;

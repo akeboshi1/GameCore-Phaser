@@ -6,7 +6,8 @@ export enum MainUIRedType {
     TASK = 5,
     FRIEND = 6,
     DRESS = 7,
-    MAIN = 8
+    MAIN = 8,
+    MAP = 12
 }
 export class RedEventType {
     /**

@@ -8,7 +8,6 @@ export class PicaBootMediator extends BasicMediator {
     }
 
     showLogin() {
-        this.setState("login");
         this.game.showMediator(ModuleName.PICA_LOGIN_NAME, true);
     }
 

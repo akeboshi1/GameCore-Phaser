@@ -13,7 +13,6 @@ export class PicaBootPanel extends PicaBasePanel {
     private mMediator: any;
     /**
      * init
-     * login
      * referToken
      * ready
      */

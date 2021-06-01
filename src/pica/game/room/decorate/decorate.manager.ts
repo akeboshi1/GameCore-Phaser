@@ -415,6 +415,10 @@ export class DecorateManager {
         const indexID = Math.floor(Math.random() * (max - min) + min);
         const pos = await this.room.game.renderPeer.getCameraMidPos();
         const gridPos = Position45.transformTo90(Position45.transformTo45(pos, this.room.miniSize), this.room.miniSize);
+        const attrs: op_def.IStrPair[] = [];
+        for (const oneAtt of typeData.Attributes) {
+            attrs.push({key: oneAtt.attrkey, value: oneAtt.attrStr});
+        }
         const obj = {
             id: indexID,
             point3f: {x: gridPos.x, y: gridPos.y, z: 0},
@@ -425,7 +429,7 @@ export class DecorateManager {
             display: typeData.animationDisplay,
             sn: typeData.sn,
             layer: typeData.layer,
-            attrs: typeData.Attributes
+            attrs
         };
         const spriteData = new Sprite(obj, op_def.NodeType.ElementNodeType);
         spriteData.init(obj);

@@ -2,7 +2,7 @@ import { Render } from "../render";
 import { FramesDisplay } from "../display/frames/frames.display";
 import { MessageType } from "structure";
 import { NodeType } from "../managers/display.manager";
-import { UiUtils } from "utils";
+import { i18n, UiUtils } from "utils";
 
 export enum MouseEvent {
     RightMouseDown = 1,
@@ -27,6 +27,9 @@ export class MouseManager {
     private readonly delay = 500;
     private debounce: any;
     private mClickID: number;
+    // 500ms之内无法快速点击
+    private mClickDelay: number = 500;
+    private mClickTime: number = 0;
 
     constructor(protected render: Render) {
         this.zoom = this.render.scaleRatio || UiUtils.baseDpr;
@@ -59,6 +62,8 @@ export class MouseManager {
     }
 
     public onUpdate(pointer: Phaser.Input.Pointer, gameobject: Phaser.GameObjects.GameObject): void {
+        const now = Date.now();
+        this.mClickTime = now;
         if (this.running === false || pointer === undefined) {
             return;
         }
@@ -132,6 +137,7 @@ export class MouseManager {
     }
 
     protected onGameObjectDownHandler(pointer, gameObject) {
+        if (!this.checkClickTime()) return;
         const id = gameObject.getData("id");
         const display = this.render.displayManager.getDisplay(id);
         const soundKey = "sound/click.mp3";
@@ -151,11 +157,22 @@ export class MouseManager {
         this.mDownTime = setTimeout(this.holdHandler.bind(this), this.mDownDelay, pointer, gameObject);
     }
 
+    protected checkClickTime(): boolean {
+        const now = Date.now();
+        if (now - this.mClickTime < this.mClickDelay) {
+            // this.render.showTipsAlert(i18n.t("noticeTips.quickclick"));
+            return false;
+        }
+        this.mClickTime = now;
+        return true;
+    }
+
     protected onGameObjectUpHandler(pointer, gameObject) {
         this.onUpdate(pointer, gameObject);
     }
 
     protected onPointerDownHandler(pointer, gameobject) {
+        if (!this.checkClickTime()) return;
         if (this.render.guideManager.canInteractive()) return;
         if (this.debounce) {
             this.mGameObject = null;

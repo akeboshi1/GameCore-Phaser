@@ -4,6 +4,7 @@ import { ModuleName } from "structure";
 import { Coin, Font, Logger, Url } from "utils";
 
 export class MarketItem extends Phaser.GameObjects.Container {
+  private mSelectBg: Phaser.GameObjects.Image;
   private mBackground: Phaser.GameObjects.Image;
   private mBorder: Phaser.GameObjects.Image;
   private mPropImage: DynamicImage;
@@ -20,6 +21,7 @@ export class MarketItem extends Phaser.GameObjects.Container {
     super(scene, x, y);
     this.dpr = dpr;
     this.zoom = zoom;
+    this.mSelectBg = this.scene.make.image({ key: ModuleName.PICAMARKET_NAME, frame: "shop_list_select_bg" }).setOrigin(0);
     this.mBackground = this.scene.make.image({
       key: ModuleName.PICAMARKET_NAME,
       frame: "border"
@@ -51,7 +53,7 @@ export class MarketItem extends Phaser.GameObjects.Container {
       key: ModuleName.PICAMARKET_NAME,
     }, false).setOrigin(0);
     this.starImg = this.scene.make.image({ key: UIAtlasName.uicommon, frame: "bag_star_small_1" }).setOrigin(1, 0);
-    this.starImg.x = this.mBorder.x + this.mBorder.displayWidth - 2 * dpr  ;
+    this.starImg.x = this.mBorder.x + this.mBorder.displayWidth - 2 * dpr;
     this.starImg.y = this.mBorder.y + 2 * dpr;
     this.starImg.visible = false;
     const priceBg = this.scene.make.image({
@@ -78,9 +80,9 @@ export class MarketItem extends Phaser.GameObjects.Container {
       y: -34 * this.dpr
     }, false).setOrigin(0);
 
-    this.add([this.mBackground, this.mBorder, this.mPropImage, this.starImg, this.mNickName, priceBg, this.mCoinIcon, this.mPriceText]);
+    this.add([this.mSelectBg, this.mBackground, this.mBorder, this.mPropImage, this.starImg, this.mNickName, priceBg, this.mCoinIcon, this.mPriceText]);
     this.setSize(this.mBackground.displayWidth, this.mBackground.displayHeight);
-
+    this.mSelectBg.visible = false;
   }
 
   setProp(content: any) {// op_client.IMarketCommodity
@@ -130,5 +132,8 @@ export class MarketItem extends Phaser.GameObjects.Container {
 
   private onPointerUpHandler() {
     this.emit("select", this.mProp);
+  }
+  set select(value) {
+    this.mSelectBg.visible = value;
   }
 }

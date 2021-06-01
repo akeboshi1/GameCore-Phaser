@@ -4,7 +4,7 @@ import { Game } from "../game";
 import { Player } from "../room/player/player";
 import { IRoomService } from "../room/room/room";
 import { PlayerModel } from "../room/player/player.model";
-import { IPos, Logger, LogicPos, ResUtils, Url } from "utils";
+import { DirectionChecker, IPos, Logger, LogicPos, ResUtils, Url } from "utils";
 import { UserDataManager } from "./data/user.dataManager";
 import { AvatarSuitType, EventType, IDragonbonesModel, IFramesModel, PlayerState, ISprite, ModuleName, SceneName } from "structure";
 import { LayerEnum } from "game-capsule";
@@ -16,7 +16,7 @@ export class User extends Player {
     public stopBoxMove: boolean = false;
     private mDebugPoint: boolean = false;
     private mUserData: UserDataManager;
-    private mMoveStyle: number;
+    private mMoveStyle: MoveStyleEnum = MoveStyleEnum.Null;
     // private mTargetPoint: IMoveTarget;
     private mSyncTime: number = 0;
     private mSyncDirty: boolean = false;
@@ -137,6 +137,7 @@ export class User extends Player {
         for (const p of findResult) {
             path.push({ pos: p });
         }
+        this.moveStyle = MoveStyleEnum.Astar;
         this.mMoveData = { path, targetId };
         this.addFillEffect({ x: firstPos.x, y: firstPos.y }, op_def.PathReachableStatus.PATH_REACHABLE_AREA);
         this.moveControll.setIgnoreCollsion(true);
@@ -148,10 +149,15 @@ export class User extends Player {
         if (this.mRootMount) {
             this.mRootMount.removeMount(this, { x, y });
         }
+        const pos45 = this.roomService.transformToMini45(this.mModel.pos);
+        if (!this.mRoomService.isWalkable(pos45.x, pos45.y)) {
+            return;
+        }
         this.mMoveData = { path: [{ pos: new LogicPos(x, y) }] };
         this.mSyncDirty = true;
         // this.body.isSensor = false;
         this.moveControll.setIgnoreCollsion(false);
+        this.moveStyle = MoveStyleEnum.Motion;
         this.startMove();
     }
 
@@ -193,17 +199,20 @@ export class User extends Player {
         if (!this.mMovePoints) this.mMovePoints = [];
         this.changeState(PlayerState.IDLE);
         this.moveControll.setVelocity(0, 0);
-        this.mMoving = false;
-        const pos = stopPos ? stopPos : this.mModel.pos;
-        const position = op_def.PBPoint3f.create();
-        position.x = pos.x;
-        position.y = pos.y;
-        const pkt: PBpacket = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_STOP_SELF);
-        const ct: op_virtual_world.IOP_CLIENT_REQ_VIRTUAL_WORLD_STOP_SELF = pkt.content;
-        ct.position = pos;
-        // ct.movePath = movePath;
-        this.mElementManager.connection.send(pkt);
+        this.moveStyle = MoveStyleEnum.Null;
+        if (this.mMoving) {
+            const pos = stopPos ? stopPos : this.mModel.pos;
+            const position = op_def.PBPoint3f.create();
+            position.x = pos.x;
+            position.y = pos.y;
+            const pkt: PBpacket = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_STOP_SELF);
+            const ct: op_virtual_world.IOP_CLIENT_REQ_VIRTUAL_WORLD_STOP_SELF = pkt.content;
+            ct.position = pos;
+            // ct.movePath = movePath;
+            this.mElementManager.connection.send(pkt);
+        }
         this.mMovePoints = [];
+        this.mMoving = false;
 
         this.stopActiveSprite();
     }
@@ -368,6 +377,23 @@ export class User extends Player {
         this.roomService.cameraFollowHandler();
     }
 
+    protected checkDirection() {
+        let posA = null;
+        let posB = null;
+        if (this.moveStyle === MoveStyleEnum.Motion) {
+            if (!this.moveData || !this.moveData.path) {
+                return;
+            }
+            posB = this.moveData.path[0].pos;
+            posA = this.moveControll.position;
+        } else {
+            posB = this.moveControll.position;
+            posA = this.moveControll.prePosition;
+        }
+        const dir = DirectionChecker.check(posA, posB);
+        this.setDirection(dir);
+    }
+
     set model(val: ISprite) {
         if (!val) {
             return;
@@ -428,4 +454,10 @@ export class User extends Player {
         const scaleRatio = this.roomService.game.scaleRatio;
         this.roomService.game.renderPeer.addFillEffect(pos.x * scaleRatio, pos.y * scaleRatio, status);
     }
+}
+
+enum MoveStyleEnum {
+    Null,
+    Astar,
+    Motion,
 }

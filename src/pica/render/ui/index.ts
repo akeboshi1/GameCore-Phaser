@@ -140,3 +140,7 @@ export * from "./PicaRoomDecorate/PicaRoomDecoratePanel";
 export * from "./PicaRoomDecorate/PicaRoomDecorateShopPanel";
 export * from "./PicaNewMine/PicaNewMinePanel";
 export * from "./PicaNewOrder/PicaNewOrderPanel";
+export * from "./HotelFarmGuide/BaseHotelFarmGuidePanel";
+export * from "./HotelFarmGuide/HotelFarmGuidePanel";
+export * from "./HotelMineGuide/BaseHotelMineGuidePanel";
+export * from "./HotelMineGuide/HotelMineGuidePanel";

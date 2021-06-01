@@ -258,8 +258,8 @@ export class Element extends BlockObject implements IElement {
         } else if (avatarType === op_def.AvatarStyle.OriginAvatar) {
             if (model.hasOwnProperty("avatar")) {
                 this.mModel.updateAvatar(model.avatar);
+                reload = true;
             }
-            reload = true;
         }
 
         if (model.display && model.animations) {
@@ -291,7 +291,7 @@ export class Element extends BlockObject implements IElement {
         if (reload) this.load(this.mModel.displayInfo);
         // 更新物理进程的物件/人物element
         // this.mRoomService.game.physicalPeer.updateModel(model);
-        this.updateBody(model);
+        // this.updateBody(model);
         this.addToWalkableMap();
     }
 
@@ -491,6 +491,9 @@ export class Element extends BlockObject implements IElement {
             return;
         }
         this.mMoving = true;
+        if (!this.moveControll) {
+            return;
+        }
         const pos = this.moveControll.position;
         const pathData = path[0];
         const pathPos = pathData.pos;
@@ -712,7 +715,8 @@ export class Element extends BlockObject implements IElement {
         const pathData = path[0];
         if (!pathData) return;
         const pathPos = pathData.pos;
-        const speed = this.mModel.speed * delta;
+        // 允许1.5误差。delta存在波动避免停不下来
+        const speed = this.mModel.speed * delta * 1.5;
         if (Tool.twoPointDistance(pos, pathPos) <= speed) {
             if (path.length > 1) {
                 path.shift();

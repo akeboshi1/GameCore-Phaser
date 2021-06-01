@@ -31,9 +31,9 @@ export class BaseFramesDisplay extends BaseDisplay {
     public load(displayInfo: IFramesModel, field?: DisplayField): Promise<any> {
         field = !field ? DisplayField.STAGE : field;
         this.mField = field;
-        this.displayInfo = displayInfo;
+        this.mDisplayInfo = displayInfo;
         if (!this.framesInfo || !this.framesInfo.gene) {
-            return Promise.reject("framesInfo error");
+            return Promise.reject("framesInfo error" + displayInfo.id);
         }
         const currentDisplay = this.mDisplayDatas.get(field);
         if (!currentDisplay || currentDisplay.gene !== displayInfo.gene) {

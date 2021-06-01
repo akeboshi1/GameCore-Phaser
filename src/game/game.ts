@@ -618,7 +618,7 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
         if (this.mHttpLoadManager) this.mHttpLoadManager.update(current, delta);
     }
 
-    private update(current: number, delta: number = 0) {
+    private update(current: number = 0, delta: number = 0) {
         if (this.isDestroy) return;
         this._run(current, delta);
 
