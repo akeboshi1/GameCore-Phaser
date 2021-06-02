@@ -25,13 +25,18 @@ export enum ElementStateType {
 
 export enum ElementState {
     NONE = 0,
+    // 创建element
     INIT = 1,
-    PRELOAD = 2,
-    LOADING = 3,
-    LOADCOMPLETE = 4,
-    LOADERROR = 5,
-    PREUPDATE = 6,
-    UPDATE = 7,
-    PREDESTROY = 8,
-    DESTROYED = 9
+    // 数据初始化
+    DATAINIT =2,
+    // 数据准备更新
+    DATAUPDATE = 3,
+    // 数据更新中
+    DATAPROGRESS = 4,
+    // 数据更新完毕
+    DATACOMPLETE = 5,
+    // 预销毁
+    PREDESTROY = 6,
+    // 完成销毁
+    DESTROYED = 7
 }

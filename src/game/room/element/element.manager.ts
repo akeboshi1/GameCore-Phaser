@@ -204,6 +204,7 @@ export class ElementManager extends PacketHandler implements IElementManager {
         if (!this.hasAddComplete) return;
         if (this.mCacheAddList && this.mCacheAddList.length < 1 && this.mCacheSyncList && this.mCacheSyncList.length < 1
             && this.mDealAddList && this.mDealAddList.length < 1) {
+            // 所有的场景物件全部加载完成
             this.roomService.game.emitter.emit(ElementManager.ELEMENT_READY);
         }
         this.mElements.forEach((ele) => ele.update(time, delta));
@@ -240,7 +241,7 @@ export class ElementManager extends PacketHandler implements IElementManager {
     public dealAddList(spliceBoo: boolean = false) {
         const len = 30;
         let point: op_def.IPBPoint3f;
-        let sprite: ISprite = null;
+        // let sprite: ISprite = null;
         const ids = [];
         const eles = [];
         const tmpLen = !spliceBoo ? (this.mCacheAddList.length > len ? len : this.mCacheAddList.length) : this.mDealAddList.length;
@@ -250,16 +251,15 @@ export class ElementManager extends PacketHandler implements IElementManager {
             if (!obj) continue;
             point = obj.point3f;
             if (point) {
-                sprite = new Sprite(obj, 3);
-                (<Sprite>sprite).init(obj);
-                if (!this.checkDisplay(sprite)) {
-                    ids.push(sprite.id);
+                // sprite = new Sprite(obj, 3);
+                if (!this.checkDisplay(obj)) {
+                    ids.push(obj.id);
                 } else {
                     if (this.mDealAddList.indexOf(obj) === -1) {
                         this.mDealAddList.push(obj);
                     }
                 }
-                const ele = this._add(sprite);
+                const ele = this._add(obj);
                 eles.push(ele);
             }
         }
@@ -329,7 +329,7 @@ export class ElementManager extends PacketHandler implements IElementManager {
     public onDisplayReady(id: number) {
         const element = this.mElements.get(id);
         if (!element) return;
-        element.state = ElementState.LOADCOMPLETE;
+        element.state = ElementState.DATACOMPLETE;
         // 编辑小屋
         if (this.mRoom.isDecorating) {
             this.mRoom.game.emitter.emit(MessageType.DECORATE_ELEMENT_CREATED, id);
@@ -341,7 +341,7 @@ export class ElementManager extends PacketHandler implements IElementManager {
         // Logger.getInstance().debug("#loading onDisplayReady ", id);
         const notReadyElements = [];
         this.mElements.forEach((ele, key) => {
-            if (ele.state < ElementState.LOADCOMPLETE) {
+            if (ele.state < ElementState.DATACOMPLETE) {
                 // todo 遍历优化
                 notReadyElements.push(ele);
             }
@@ -387,9 +387,8 @@ export class ElementManager extends PacketHandler implements IElementManager {
                 continue;
             }
             this.mAddCache.push(obj.id);
-            const sprite = new Sprite(obj, 3);
-            // sprite.init(obj);
-            if (this.checkDisplay(sprite)) {
+            // const sprite = new Sprite(obj, 3);
+            if (this.checkDisplay(obj)) {
                 this.mCacheAddList.push(obj);
             } else {
                 this.mRequestSyncIdList.push(obj.id);
@@ -439,11 +438,11 @@ export class ElementManager extends PacketHandler implements IElementManager {
         this.addSpritesToCache(objs);
     }
 
-    protected _add(sprite: ISprite, addMap: boolean = false): Element {
+    protected _add(sprite: op_client.ISprite, addMap: boolean = false): Element {
         if (addMap === undefined) addMap = true;
         let ele = this.mElements.get(sprite.id);
         if (ele) {
-            ele.model = sprite;
+            ele.setModel(sprite);
         } else {
             ele = new Element(this.mRoom.game, sprite, this);
             // 有小屋装扮权限时，设置全部家具可互动
@@ -480,22 +479,22 @@ export class ElementManager extends PacketHandler implements IElementManager {
         }
     }
 
-    protected checkDisplay(sprite: ISprite): IFramesModel | IDragonbonesModel {
-        if (!sprite.displayInfo) {
-            const elementRef = this.roomService.game.elementStorage.getElementRef(sprite.bindID || sprite.id);
+    protected checkDisplay(sprite: op_client.ISprite): boolean {
+        if (!sprite.avatar && !sprite.display) {
+            const elementRef = this.roomService.game.elementStorage.getElementRef(sprite.bindId || sprite.id);
             if (elementRef) {
                 // 名字以服务器发送为主。没有从pi中读取
                 if (!sprite.nickname) sprite.nickname = elementRef.name;
                 const displayInfo = elementRef.displayModel;
                 if (displayInfo) {
-                    sprite.setDisplayInfo(displayInfo);
-                    // 更新物理进程的物件/人物element
-                    // this.mRoom.game.physicalPeer.updateAnimations(sprite);
-                    return displayInfo;
+                    // todo update pi
+                    // sprite.setDisplayInfo(displayInfo);
+                    return true;
                 }
             }
+            return false;
         }
-        return sprite.displayInfo;
+        return true;
     }
 
     protected fetchDisplay(ids: number[]) {

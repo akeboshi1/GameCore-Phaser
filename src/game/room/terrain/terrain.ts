@@ -1,5 +1,5 @@
 import { BlockObject } from "../block/block.object";
-import { ISprite } from "structure";
+import { ElementState, ISprite } from "structure";
 import { IElement, MoveData } from "../element/element";
 import { IElementManager } from "../element/element.manager";
 import { op_client } from "pixelpai_proto";
@@ -7,6 +7,7 @@ import { IPos, Logger } from "utils";
 import { IRoomService } from "../room/room";
 import { IFramesModel } from "structure";
 import { LayerEnum } from "game-capsule";
+import { BaseState } from "src/game/state/base.state";
 
 export class Terrain extends BlockObject implements IElement {
     protected mId: number;
@@ -14,8 +15,7 @@ export class Terrain extends BlockObject implements IElement {
     protected mModel: ISprite;
     protected mCreatedDisplay: boolean = false;
     private mMoveData: MoveData;
-    private mState: boolean = false;
-
+    private mState: ElementState = ElementState.NONE;
     constructor(sprite: ISprite, protected mElementManager: IElementManager) {
         super(sprite.id, mElementManager.roomService);
         this.mId = sprite.id;
@@ -28,16 +28,16 @@ export class Terrain extends BlockObject implements IElement {
         this.changeDisplay(this.mDisplayInfo);
     }
 
-    get state(): boolean {
+    get moveData(): MoveData {
+        return this.mMoveData;
+    }
+
+    get state(): ElementState {
         return this.mState;
     }
 
-    set state(val: boolean) {
+    set state(val) {
         this.mState = val;
-    }
-
-    get moveData(): MoveData {
-        return this.mMoveData;
     }
 
     public startMove() {

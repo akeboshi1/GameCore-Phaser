@@ -3,14 +3,21 @@ import { InputEnable } from "../element/element";
 import { IRoomService } from "../room/room";
 import { IBlockObject } from "./iblock.object";
 import { IFramesModel, ISprite } from "structure";
-import { op_def } from "pixelpai_proto";
+import { op_def, op_client } from "pixelpai_proto";
 import { MoveControll } from "../../collsion";
 
 export abstract class BlockObject implements IBlockObject {
     public isUsed = false;
     protected mRenderable: boolean = false;
     protected mBlockable: boolean = false;
+    /**
+     * model缓存具柄
+     */
     protected mModel: ISprite;
+    /**
+     * 显示对象更新的原始数据具柄
+     */
+    protected mTmpSprite: op_client.ISprite;
     protected mInputEnable: InputEnable;
     protected mCreatedDisplay: boolean;
     protected moveControll: MoveControll;
