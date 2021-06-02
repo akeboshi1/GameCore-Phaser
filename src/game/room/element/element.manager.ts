@@ -304,7 +304,7 @@ export class ElementManager extends PacketHandler implements IElementManager {
                 // 更新elementstorage中显示对象的数据信息
                 const data = new Sprite(sprite, 3);
                 (<Sprite>data).init(sprite);
-                this.mRoom.game.elementStorage.add(<any>data);
+                if (data.displayInfo) this.mRoom.game.elementStorage.add(data.displayInfo);
                 element = this.get(sprite.id);
                 if (element) {
                     this.mDealSyncMap.set(sprite.id, false);

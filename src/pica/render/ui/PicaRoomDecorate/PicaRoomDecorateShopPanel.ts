@@ -40,7 +40,7 @@ export class PicaRoomDecorateShopPanel extends Phaser.GameObjects.Container {
         const width = this.width;
         const height = this.height;
         const posY = -height * 0.5;
-        this.bg = new NineSlicePatch(this.scene, 0, 0, width, height, UIAtlasName.uicommon1, "bg1", UIHelper.background_w(this.dpr));
+        this.bg = new NineSlicePatch(this.scene, 0, 0, width, height, UIAtlasName.uicommon1, "bg", UIHelper.background_w(this.dpr));
         this.add(this.bg);
         this.closeBtn = new Button(this.scene, UIAtlasName.uicommon, "close");
         this.closeBtn.setDisplaySize(28 * this.dpr, 28 * this.dpr);
@@ -78,7 +78,7 @@ export class PicaRoomDecorateShopPanel extends Phaser.GameObjects.Container {
             tab.setTextColor("#ffffff");
         }));
         this.add(this.secondMenu);
-        const graW = 302 * this.dpr, graH = 324 * this.dpr, grax = -graW * 0.5, gray = -graH * 0.5 - 20 * this.dpr;
+        const graW = 302 * this.dpr, graH = 388 * this.dpr, grax = -graW * 0.5, gray = -graH * 0.5 + 12 * this.dpr;
         const graphicbg = this.scene.make.graphics(undefined, false);
         graphicbg.fillStyle(0xFE8737, 1);
         graphicbg.fillRoundedRect(grax, gray, graW, graH, {
@@ -86,15 +86,15 @@ export class PicaRoomDecorateShopPanel extends Phaser.GameObjects.Container {
         });
         this.add(graphicbg);
         const gridWdith = graW - 16 * this.dpr;
-        const gridHeight = 380 * this.dpr;
-        const gridY = 12 * this.dpr;
-        this.shopgride = this.createGrideTable(0, gridY, gridWdith, gridHeight, 126 * this.dpr, 158 * this.dpr);
+        const gridHeight = 444 * this.dpr;
+        const gridY = 44 * this.dpr;
+        this.shopgride = this.createGrideTable(0, gridY, gridWdith, gridHeight, 126 * this.dpr, 188 * this.dpr);
         this.leaveButton = this.createNineButton(UIAtlasName.uicommon, "yellow_btn_normal", i18n.t("common.leave"), "#996600");
-        this.leaveButton.y = this.height * 0.5 - this.leaveButton.height * 0.5 - 15 * this.dpr;
+        this.leaveButton.y = this.height * 0.5 + this.leaveButton.height * 0.5 + 15 * this.dpr;
         this.leaveButton.x = -this.leaveButton.width * 0.5 - 15 * this.dpr;
         this.leaveButton.on(String(ClickEvent.Tap), this.onCloseHandler, this);
         this.corfirmButton = this.createNineButton(UIAtlasName.uicommon, "butt_gray", i18n.t("common.save"), "#000000");
-        this.corfirmButton.y = this.height * 0.5 - this.corfirmButton.height * 0.5 - 15 * this.dpr;
+        this.corfirmButton.y = this.height * 0.5 + this.corfirmButton.height * 0.5 + 15 * this.dpr;
         this.corfirmButton.x = -this.leaveButton.x;
         this.corfirmButton.on(String(ClickEvent.Tap), this.onConfirmButtonHandler, this);
         this.corfirmButton.disInteractive();
@@ -281,7 +281,7 @@ class DecorateShopItem extends Phaser.GameObjects.Container {
         this.tipsText.setFontStyle("bold");
         this.button = new ThreeSliceButton(scene, 73 * dpr, 26 * dpr, UIAtlasName.uicommon, UIHelper.threeRedSmall, UIHelper.threeRedSmall, i18n.t("manor.using"));
         this.button.setTextStyle(UIHelper.brownishStyle(dpr));
-        this.button.y = this.tipsText.y + 2 * dpr;
+        this.button.y = this.tipsText.y -3 * dpr;
         this.button.on(ClickEvent.Tap, this.onButtonHandler, this);
         this.imgprice.y = this.button.y - this.button.height * 0.5 - this.imgprice.height * 0.5 - 5 * dpr;
         this.add([this.bg, this.icon, this.nameText, this.imgprice, this.tipsText, this.button]);
