@@ -4,7 +4,9 @@ import { op_client } from "pixelpai_proto";
 import { PicaFriendBaseListItem, PicaFriendCommonItem, PicaFriendListItem } from "./PicaFriendListItem";
 import { ButtonEventDispatcher } from "gamecoreRender";
 import { UITools } from "picaRender";
+import { CommonBackground } from "../Components";
 export class PicaFriendBasePanel extends Phaser.GameObjects.Container {
+    protected mBackground: CommonBackground;
     protected mGameGrid: GameGridTable;
     protected backButton: ButtonEventDispatcher;
     protected dpr: number;
@@ -18,8 +20,9 @@ export class PicaFriendBasePanel extends Phaser.GameObjects.Container {
         this.create();
     }
     create() {
+        this.mBackground = new CommonBackground(this.scene, 0, 0, this.width, this.height);
         this.backButton = UITools.createBackButton(this.scene, this.dpr, this.onBackHandler, this, i18n.t("friendlist.addfriend"));
-        this.backButton.x = -this.width * 0.5 + this.backButton.width * 0.5 + 15 * this.dpr;
+        this.backButton.x = -this.width * 0.5 + this.backButton.width * 0.5 + 5 * this.dpr;
         this.backButton.y = -this.height * 0.5 + this.backButton.height * 0.5 + 30 * this.dpr;
         const tableConfig = {
             x: 0,
@@ -36,19 +39,13 @@ export class PicaFriendBasePanel extends Phaser.GameObjects.Container {
             scrollMode: 0,
             clamplChildOY: false,
             createCellContainerCallback: (cell, cellContainer) => {
-                const scene = cell.scene, index = cell.index,
-                    item = cell.item;
-                if (cellContainer === null) {
-                    cellContainer = new PicaFriendCommonItem(this.scene, 300 * this.dpr, 48 * this.dpr, this.dpr, this.zoom);
-                }
-                cellContainer.setItemData(item, index);
-                return cellContainer;
+                return this.createCellItem(cell, cellContainer);
             },
         };
         this.mGameGrid = new GameGridTable(this.scene, tableConfig);
         this.mGameGrid.layout();
         this.mGameGrid.on("cellTap", this.onGridTableHandler, this);
-        this.add(this.mGameGrid);
+        this.add([this.mBackground, this.backButton, this.mGameGrid]);
     }
 
     public refreshMask() {
@@ -61,10 +58,19 @@ export class PicaFriendBasePanel extends Phaser.GameObjects.Container {
         this.mGameGrid.setItems(content);
     }
 
+    protected createCellItem(cell, cellContainer) {
+        const scene = cell.scene, index = cell.index,
+            item = cell.item;
+        if (cellContainer === null) {
+            cellContainer = new PicaFriendCommonItem(this.scene, 300 * this.dpr, 48 * this.dpr, this.dpr, this.zoom);
+        }
+        cellContainer.setItemData(item, index);
+        return cellContainer;
+    }
     protected onGridTableHandler(item: PicaFriendBaseListItem) {
         if (this.sendHandler) this.sendHandler.runWith(["enter", item]);
     }
     protected onBackHandler() {
-
+        if (this.sendHandler) this.sendHandler.runWith(["back"]);
     }
 }

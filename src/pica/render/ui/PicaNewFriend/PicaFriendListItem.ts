@@ -1,5 +1,5 @@
 import { BBCodeText, Button, CheckBox, ClickEvent } from "apowophaserui";
-import { DynamicImage, InputField } from "gamecoreRender";
+import { DynamicImage, InputField, InputLabel } from "gamecoreRender";
 import { UIAtlasName } from "picaRes";
 import { Handler, i18n, NumberUtils, UIHelper, Url } from "utils";
 import { ImageBBCodeValue } from "..";
@@ -31,6 +31,14 @@ export class PicaFriendBaseListItem extends Phaser.GameObjects.Container {
     }
     public setHandler(send: Handler) {
         this.send = send;
+    }
+
+    public show() {
+
+    }
+
+    public hide() {
+
     }
     protected init() {
 
@@ -156,24 +164,51 @@ export class PicaFriendSearchItem extends PicaFriendBaseListItem {
     private inputLabel: PicaFriendSearchInput;
     private searchBtn: Button;
     private addBtn: Button;
+    private inputVisible: boolean
     public setItemData(data: any) {
         super.setItemData(data);
+        this.checkBox.selected = data.selected || false;
+        this.inputLabel.setText(data.input || "");
+        this.setInputState(data.inputvisible || false);
 
     }
+
+    public hide() {
+        this.inputLabel.hide();
+        this.visible = false;
+    }
+    public show() {
+        this.inputLabel.show();
+        this.visible = true;
+    }
+    public setInputState(visible: boolean) {
+        if (this.inputVisible === visible) return;
+        if (visible) {
+            this.inputLabel.show();
+        } else {
+            this.inputLabel.hide();
+        }
+        this.itemData.inputvisible = visible;
+        this.inputVisible = visible;
+    }
+
     protected init() {
         this.bg = this.scene.make.image({ key: UIAtlasName.friend_new, frame: "friend_list_online_bg" });
         this.checkBox = new CheckBox(this.scene, UIAtlasName.friend_new, "friend_list_online_unselected", "friend_list_online_selected");
         this.checkBox.setInteractiveSize(20 * this.dpr, 20 * this.dpr);
+        this.checkBox.on(ClickEvent.Tap, this.onCheckBoxHandler, this);
         this.contentTex = this.scene.make.text({ text: i18n.t("friendlist.olinetitle"), style: UIHelper.whiteStyle(this.dpr) }).setOrigin(0, 0.5);
         this.inputLabel = new PicaFriendSearchInput(this.scene, 146 * this.dpr, 26 * this.dpr, UIAtlasName.friend_new, "friend_add_search_bg", this.dpr, {
             type: "text",
             placeholder: i18n.t("friendlist.friendplaceholder"),
-            placeholderSize: 11 * this.dpr + "px",
-            placeholderColor: "#ffffff",
             color: "#ffffff",
             text: "",
-            fontSize: 13 * this.dpr + "px"
+            fontSize: 13 * this.dpr + "px",
+            width: 110 * this.dpr,
+            height: 26 * this.dpr,
+            maxLength: 10,
         });
+        this.inputLabel.on("textchange", this.onTextChangeHandler, this)
         this.searchBtn = new Button(this.scene, UIAtlasName.friend_new, "friend_list_search");
         this.searchBtn.on(ClickEvent.Tap, this.onSearchHandler, this);
         this.searchBtn.setInteractiveSize(20 * this.dpr, 20 * this.dpr);
@@ -192,100 +227,81 @@ export class PicaFriendSearchItem extends PicaFriendBaseListItem {
         this.searchBtn.x = this.addBtn.x - 33 * this.dpr;
     }
 
+    private onTextChangeHandler() {
+        const text = this.inputLabel.text;
+        this.itemData.input = text;
+        this.send.runWith(["searchfriend", text]);
+    }
     private onSearchHandler() {
         const visible = this.inputLabel.visible;
-        if (visible) {
-            this.inputLabel.hide();
-        } else {
-            this.inputLabel.show();
-        }
-        if (visible) {
-            const text = this.inputLabel.text;
-        }
+        this.setInputState(!visible);
+        this.checkBox.selected = false;
+    }
+
+    private onCheckBoxHandler() {
+        const select = this.checkBox.selected;
+        this.itemData.selected = select;
+        if (this.send) this.send.runWith(["online", select]);
+        this.setInputState(false);
     }
 
     private onAddHandler() {
-
+        if (this.send) this.send.runWith(["addfriendpanel"]);
     }
 }
 
 export class PicaFriendSearchInput extends Phaser.GameObjects.Container {
     protected background: Phaser.GameObjects.Image;
-    protected inputTex: InputField;
+    protected inputText: InputLabel;
     protected dpr: number;
-    protected placeholder: string;
-    protected contentText: string = "";
     protected blur: boolean = false;
-    protected config: any
     constructor(scene: Phaser.Scene, width: number, height: number, key: string, bg: string, dpr: number, config: any) {
         super(scene);
         this.dpr = dpr;
         this.setSize(width, height);
-        this.config = config;
         this.background = this.scene.make.image({ key, frame: bg });
-        this.placeholder = config.placeholder;
-        config.placeholder = "";
-        this.inputTex = new InputField(this.scene, -10 * dpr, 0, width - 40 * dpr, height, config);
-        this.inputTex.text = this.placeholder;
-        this.setInputPlaceholder(true);
-        this.inputTex.on("textchange", this.onTextChangeHandler, this);
-        this.inputTex.on("blur", this.onTextBlurHandler, this);
-        this.inputTex.on("focus", this.onTextFocusHandler, this);
-        this.add([this.background, this.inputTex]);
+        this.inputText = new InputLabel(this.scene, config).setOrigin(0, 0.5);
+        this.inputText.x = -width * 0.5 + 5 * dpr;
+        this.inputText.on("textchange", this.onTextChangeHandler, this);
+        this.inputText.on("blur", this.onTextBlurHandler, this);
+        this.inputText.on("focus", this.onTextFocusHandler, this);
+        this.add([this.background, this.inputText]);
     }
     public hide() {
         this.visible = false;
-        this.changeInputState(false);
     }
 
     public show() {
         this.visible = true;
-        this.changeInputState(true);
+    }
+
+    public setText(text) {
+        this.inputText.setText(text);
     }
 
     private onTextChangeHandler(input, event) {
         this.emit("textchange");
-        if (!this.blur) this.contentText = this.inputTex.text;
     }
 
     private onTextBlurHandler() {
         this.emit("blur");
-        this.setInputPlaceholder(true);
     }
 
     private onTextFocusHandler(e) {
         this.emit("focus");
-        this.setInputPlaceholder(false);
     }
 
-    private setInputPlaceholder(blur: boolean) {
-        this.blur = blur;
-        if (!this.blur || this.contentText !== "") {
-            this.inputTex.text = this.contentText;
-            this.inputTex.setStyle("font-size", this.config.fontSize);
-            this.inputTex.alpha = 1;
-        } else {
-            this.inputTex.text = this.placeholder;
-            this.inputTex.setStyle("font-size", this.config.placeholderSize);
-            this.inputTex.alpha = 0.6;
-        }
-    }
-    private changeInputState(visible: boolean) {
-        this.inputTex.visible = visible;
-        (<HTMLTextAreaElement>(this.inputTex.node)).style.display = visible ? "true" : "none";
-        this.inputTex.visible = visible;
-        (<HTMLTextAreaElement>(this.inputTex.node)).style.display = visible ? "true" : "none";
-    }
+
     get text() {
-        return this.inputTex.text;
+        return this.inputText.text;
     }
 }
 export class PicaFriendCommonItem extends Phaser.GameObjects.Container {
     public itemData: any;
+    public itemType: number;
     protected dpr: number;
     protected zoom: number;
     protected baseItem: PicaFriendBaseListItem;
-    protected itemType: number;
     protected send: Handler;
     constructor(scene: Phaser.Scene, width: number, height: number, dpr: number, zoom: number) {
         super(scene);
@@ -295,6 +311,7 @@ export class PicaFriendCommonItem extends Phaser.GameObjects.Container {
     }
 
     setItemData(data: any) {
+        this.itemData = data;
         data.itemType = data.itemType || 1;
         if (!this.itemType || this.itemType !== data.itemType) {
             if (this.baseItem) this.baseItem.destroy();
@@ -303,10 +320,23 @@ export class PicaFriendCommonItem extends Phaser.GameObjects.Container {
             this.add(this.baseItem);
             this.setSize(this.baseItem.width, this.baseItem.height);
         }
+        this.itemType = data.itemType;
         this.baseItem.setItemData(data);
     }
     setHandler(send: Handler) {
         this.send = send;
+    }
+    public updateItemState(value?: any) {
+        if (this.itemType === 5) {
+            (<any>this.baseItem).setInputState(false);
+        }
+    }
+    public hide() {
+        if (this.baseItem) this.baseItem.hide();
+    }
+
+    public show() {
+        if (this.baseItem) this.baseItem.show();
     }
     protected getBaseItem(itemType) {
         let item: PicaFriendBaseListItem;

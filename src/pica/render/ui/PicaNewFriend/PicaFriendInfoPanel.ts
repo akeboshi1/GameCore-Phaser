@@ -32,6 +32,7 @@ export class PicaFriendInfoPanel extends Phaser.GameObjects.Container {
     private dpr: number;
     private zoom: number;
     private render: Render;
+    private send: Handler;
     private key: string;
     constructor(scene: Phaser.Scene, render: Render, width: number, height: number, dpr: number, zoom: number) {
         super(scene);
@@ -40,6 +41,7 @@ export class PicaFriendInfoPanel extends Phaser.GameObjects.Container {
         this.dpr = dpr;
         this.zoom = zoom;
         this.key = ModuleName.PICANEWFRIEND_NAME;
+        this.init();
     }
     resize(w: number, h: number) {
         w = w || this.width;
@@ -152,8 +154,8 @@ export class PicaFriendInfoPanel extends Phaser.GameObjects.Container {
         this.resize(wid, hei);
     }
 
-    reqPlayerInfo() {
-        this.render.renderEmitter(this.key + + "_queryOwnerInfo");
+    public setHandler(send: Handler) {
+        this.send = send;
     }
     public setPlayerData(data: any) {
         this.mPlayerData = data;
@@ -323,7 +325,7 @@ export class PicaFriendInfoPanel extends Phaser.GameObjects.Container {
         this.render.renderEmitter(this.key + "_gohome", this.mPlayerData.cid);
     }
     private onCloseHandler() {
-        this.render.renderEmitter(this.key + "_hide");
+        if (this.send) this.send.runWith(["close"]);
     }
 }
 

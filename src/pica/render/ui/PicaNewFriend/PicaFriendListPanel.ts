@@ -1,7 +1,7 @@
 import { GameGridTable } from "apowophaserui";
 import { Handler, i18n } from "utils";
 import { op_client } from "pixelpai_proto";
-import { PicaFriendBaseListItem, PicaFriendCommonItem, PicaFriendListItem } from "./PicaFriendListItem";
+import { PicaFriendBaseListItem, PicaFriendCommonItem, PicaFriendListItem, PicaFriendSearchItem } from "./PicaFriendListItem";
 import { FriendChannel, FriendData, FriendRelation, FriendRelationEnum } from "structure";
 export class PicaFriendListPanel extends Phaser.GameObjects.Container {
     private mGameGrid: GameGridTable;
@@ -10,6 +10,10 @@ export class PicaFriendListPanel extends Phaser.GameObjects.Container {
     private sendHandler: Handler;
     private optionType: FriendChannel;
     private friendDatas: FriendData[];
+    private funDatasMap: Map<FriendChannel, any[]> = new Map();
+    private searchItem: PicaFriendCommonItem;
+    private gridConHeight: number = 0;
+    private gridTopPosY: number = 0;
     constructor(scene: Phaser.Scene, width: number, height: number, dpr: number, zoom: number) {
         super(scene);
         this.setSize(width, height);
@@ -41,8 +45,11 @@ export class PicaFriendListPanel extends Phaser.GameObjects.Container {
                 }
                 item.optionType = this.optionType;
                 cellContainer.setItemData(item, index);
+                if (item.itemType === 5) {
+                    this.searchItem = cellContainer;
+                }
                 return cellContainer;
-            },
+            }
         };
         this.mGameGrid = new GameGridTable(this.scene, tableConfig);
         this.mGameGrid.layout();
@@ -52,11 +59,14 @@ export class PicaFriendListPanel extends Phaser.GameObjects.Container {
 
     public refreshMask() {
         this.mGameGrid.resetMask();
+        const world = this.mGameGrid.getWorldTransformMatrix();
+        this.gridTopPosY = world.ty - this.height / this.zoom * 0.5 - 15 * this.dpr;
     }
     public setHandler(handler: Handler) {
         this.sendHandler = handler;
     }
     public setFriendDatas(type: FriendChannel, content: any) {
+        this.funDatasMap.clear();
         this.optionType = type;
         this.friendDatas = this.getFriendsDatas(type, content);
         this.setGridItemDatas(type, this.friendDatas);
@@ -88,39 +98,66 @@ export class PicaFriendListPanel extends Phaser.GameObjects.Container {
         this.setGridCellHeight(content);
     }
     private onGridTableHandler(item: PicaFriendBaseListItem) {
-        if (this.sendHandler) this.sendHandler.runWith(["enter", item]);
+        if (this.sendHandler) this.sendHandler.runWith(["frienditem", item.itemData]);
     }
 
     private onItemHandler(tag: string, data?: any) {
         if (tag === "online") {
-            this.sortByOnlien(this.friendDatas);
-            const onlines = [];
-            this.friendDatas.forEach((value) => {
-                if (value.online) onlines.push(value);
-            })
+            let onlines;
+            if (data) {
+                onlines = [];
+                this.sortByOnlien(this.friendDatas);
+                this.friendDatas.forEach((value) => {
+                    if (value.online) onlines.push(value);
+                })
+            } else {
+                onlines = this.friendDatas;
+            }
+            this.setGridItemDatas(this.optionType, onlines);
+        } else if (tag === "searchfriend") {
+            let temps: FriendData[];
+            if (data !== "" && data !== undefined) {
+                temps = [];
+                this.friendDatas.forEach((value) => {
+                    if (value.nickname && value.nickname.indexOf(data) !== -1) {
+                        temps.push(value);
+                    }
+                })
+            } else {
+                temps = this.friendDatas;
+            }
+
+            this.setGridItemDatas(this.optionType, temps);
         } else {
             if (this.sendHandler) this.sendHandler.runWith([tag, data]);
         }
     }
     private setGridCellHeight(datas: any[]) {
+        this.gridConHeight = 0;
         for (let i = 0; i < datas.length; i++) {
             const temp = datas[i];
             const height = temp.cellHeight || 52 * this.dpr;
             const cell = this.mGameGrid.getCell(i);
             cell.setHeight(height);
+            this.gridConHeight += height;
         }
         this.mGameGrid.layout();
         this.mGameGrid.setT(0);
     }
     private getItemDatas(type: FriendChannel, content: any[]) {
-        let temps = [];
-        if (type === FriendChannel.Friends) {
-            temps = [{ itemType: 5 }, { itemType: 2, cellHeight: 42 * this.dpr }, { itemType: 3, cellHeight: 42 * this.dpr }, { itemType: 4, cellHeight: 42 * this.dpr }]
-        } else if (type === FriendChannel.Fans) {
-            temps = [{ itemType: 5 }]
-        } else if (type === FriendChannel.Followes) {
-            temps = [{ itemType: 5 }]
+        let temps;
+        if (this.funDatasMap.has(type)) temps = this.funDatasMap.get(type);
+        else {
+            if (type === FriendChannel.Friends) {
+                temps = [{ itemType: 5 }, { itemType: 2, cellHeight: 42 * this.dpr }, { itemType: 3, cellHeight: 42 * this.dpr }, { itemType: 4, cellHeight: 42 * this.dpr }]
+            } else if (type === FriendChannel.Fans) {
+                temps = [{ itemType: 5 }]
+            } else if (type === FriendChannel.Followes) {
+                temps = [{ itemType: 5 }]
+            }
+            this.funDatasMap.set(type, temps);
         }
+
         content = temps.concat(content);
         return content;
     }

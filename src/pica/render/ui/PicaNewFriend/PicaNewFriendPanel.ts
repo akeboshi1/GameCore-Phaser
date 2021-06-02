@@ -7,11 +7,17 @@ import { Button, ClickEvent, GameGridTable } from "apowophaserui";
 import { ImageValue } from "..";
 import { PicaFriendListPanel } from "./PicaFriendListPanel";
 import { UIAtlasName } from "picaRes";
+import { PicaFriendAddPanel } from "./PicaFriendAddPanel";
+import { PicaFollowNoticePanel } from "./PicaFollowNoticePanel";
+import { PicaFriendBlackPanel } from "./PicaFriendBlackPanel";
+import { PicaFriendInfoPanel } from "./PicaFriendInfoPanel";
+import { PicaFriendBottomPanel } from "./PicaFriendBottomPanel";
+import { CommonBackground } from "../Components";
 export class PicaNewFriendPanel extends PicaBasePanel {
     private content: Phaser.GameObjects.Container;
+    private mainCon: Phaser.GameObjects.Container;
     private mBlack: Phaser.GameObjects.Graphics;
-    private mBackground: Phaser.GameObjects.Graphics;
-    private bg: Phaser.GameObjects.Image;
+    private mBackground: CommonBackground;
     private titleTex: Phaser.GameObjects.Text;
     private peopleImg: ImageValue;
     private toggleCon: Phaser.GameObjects.Container;
@@ -20,6 +26,11 @@ export class PicaNewFriendPanel extends PicaBasePanel {
     private curToggleItem: ToggleColorButton;
     private toggleItems: ToggleColorButton[] = [];
     private friendListPanel: PicaFriendListPanel;
+    private addPanel: PicaFriendAddPanel;
+    private noticePanel: PicaFollowNoticePanel;
+    private blackPanel: PicaFriendBlackPanel;
+    private playerPanel: PicaFriendInfoPanel;
+    private bottomPanel: PicaFriendBottomPanel;
     private people: number;
     private optionType: number;
     constructor(uiManager: UiManager) {
@@ -33,11 +44,6 @@ export class PicaNewFriendPanel extends PicaBasePanel {
         const scale = this.scale;
         const width = this.scaleWidth;
         const height = this.scaleHeight;
-        this.mBackground.clear();
-        this.mBackground.fillStyle(0x01CDFF, 1);
-        this.mBackground.fillRect(0, 0, this.content.width, height);
-        this.mBackground.x = -this.content.width * 0.5;
-        this.mBackground.y = -height * 0.5;
         this.content.x = width + this.content.width * 0.5 + 10 * this.dpr;
         this.content.y = height * 0.5;
         this.setSize(width, height);
@@ -75,14 +81,12 @@ export class PicaNewFriendPanel extends PicaBasePanel {
         this.mBlack.setInteractive(new Phaser.Geom.Rectangle(0, 0, w, h), Phaser.Geom.Rectangle.Contains);
         this.mBlack.on("pointerup", this.onCloseHandler, this);
         this.add(this.mBlack);
-        this.mBackground = this.scene.make.graphics(undefined, false);
         this.content = this.scene.make.container(undefined, false);
+        this.mainCon = this.scene.make.container(undefined, false);
         const bgwidth = 300 * this.dpr;
         this.content.setSize(bgwidth, h);
         this.content.setInteractive();
-        this.bg = this.scene.make.image({ key: UIAtlasName.uicommon, frame: "online_bg" });
-        this.bg.displayWidth = bgwidth;
-        this.bg.y = -h * 0.5 + this.bg.height * 0.5;
+        this.mBackground = new CommonBackground(this.scene, 0, 0, bgwidth, h);
         this.titleTex = this.scene.make.text({ x: 0, y: 0, text: i18n.t("friendlist.title"), style: UIHelper.whiteStyle(this.dpr, 18) }).setOrigin(0, 0.5);
         this.titleTex.setFontStyle("bold");
         this.titleTex.x = -this.content.width * 0.5 + 10 * this.dpr;
@@ -101,7 +105,8 @@ export class PicaNewFriendPanel extends PicaBasePanel {
         this.selectLine = this.scene.make.image({ key: UIAtlasName.uicommon, frame: "map_nav_select" });
         this.createOptionButtons();
         this.toggleCon.add([this.optionLine, this.selectLine]);
-        this.content.add([this.mBackground, this.bg, this.titleTex, this.peopleImg, this.toggleCon]);
+        this.mainCon.add([this.mBackground, this.titleTex, this.peopleImg, this.toggleCon]);
+        this.content.add(this.mainCon);
         this.add(this.content);
         this.resize(0, 0);
         super.init();
@@ -202,7 +207,7 @@ export class PicaNewFriendPanel extends PicaBasePanel {
             const height = this.scaleHeight - 100 * this.dpr;
             this.friendListPanel = new PicaFriendListPanel(this.scene, 300 * this.dpr, height, this.dpr, this.scale);
             this.friendListPanel.setHandler(new Handler(this, this.onFriendListPanelHandler));
-            this.content.add(this.friendListPanel);
+            this.mainCon.add(this.friendListPanel);
         }
         this.friendListPanel.visible = true;
     }
@@ -211,13 +216,137 @@ export class PicaNewFriendPanel extends PicaBasePanel {
         this.friendListPanel.visible = false;
     }
 
+    private openFriendAddPanel() {
+        this.showFriendAddPanel();
+    }
+    private showFriendAddPanel() {
+        if (!this.addPanel) {
+            const height = this.scaleHeight;
+            this.addPanel = new PicaFriendAddPanel(this.scene, 300 * this.dpr, height, this.dpr, this.scale);
+            this.addPanel.setHandler(new Handler(this, this.onFriendAddPanelHandler));
+            this.content.add(this.addPanel);
+        }
+        this.addPanel.visible = true;
+    }
+
+    private hideFriendAddPanel() {
+        this.addPanel.visible = false;
+    }
+    private openFriendNoticePanel() {
+        this.showFriendNoticePanel();
+    }
+    private showFriendNoticePanel() {
+        if (!this.noticePanel) {
+            const height = this.scaleHeight;
+            this.noticePanel = new PicaFollowNoticePanel(this.scene, 300 * this.dpr, height, this.dpr, this.scale);
+            this.noticePanel.setHandler(new Handler(this, this.onFriendNoticePanelHandler));
+            this.content.add(this.noticePanel);
+        }
+        this.noticePanel.visible = true;
+    }
+
+    private hideFriendNoticePanel() {
+        this.noticePanel.visible = false;
+    }
+
+    private openFriendBlackPanel() {
+        this.showFriendBlackPanel();
+    }
+    private showFriendBlackPanel() {
+        if (!this.blackPanel) {
+            const height = this.scaleHeight;
+            this.blackPanel = new PicaFriendBlackPanel(this.scene, 300 * this.dpr, height, this.dpr, this.scale);
+            this.blackPanel.setHandler(new Handler(this, this.onBlackPanelHandler));
+            this.content.add(this.blackPanel);
+        }
+        this.blackPanel.visible = true;
+    }
+
+    private hideFriendBlackPanel() {
+        this.blackPanel.visible = false;
+    }
+
+    private openFriendInfoPanel() {
+        this.showFriendInfoPanel();
+    }
+    private showFriendInfoPanel() {
+        if (!this.playerPanel) {
+            this.playerPanel = new PicaFriendInfoPanel(this.scene, this.render, this.scaleWidth, this.scaleHeight, this.dpr, this.scale);
+            this.playerPanel.setHandler(new Handler(this, this.onFriendInfoPanelHandler));
+            this.add(this.playerPanel);
+        }
+        this.playerPanel.visible = true;
+    }
+
+    private hideFriendInfoPanel() {
+        this.playerPanel.visible = false;
+    }
+
+    private showContentPanel() {
+        this.mainCon.visible = true;
+    }
+    private hideContentPanel() {
+        this.mainCon.visible = false;
+    }
+    private openBottomPanel(data: any, black: boolean) {
+        this.showFriendBottomPanel();
+        this.bottomPanel.setRoleData(data, black);
+    }
+    private showFriendBottomPanel() {
+        if (!this.bottomPanel) {
+            this.bottomPanel = new PicaFriendBottomPanel(this.scene, this.scaleWidth, this.scaleHeight, UIAtlasName.uicommon, this.dpr);
+            this.bottomPanel.setHandler(new Handler(this, this.onBottomPanelHandler));
+            this.add(this.bottomPanel);
+        }
+        this.bottomPanel.visible = true;
+    }
+    private hideFriendBottomPanel() {
+        this.bottomPanel.visible = false;
+    }
     private onFriendListPanelHandler(tag: string, data?: any) {
-        if (tag === "follow") {
+        if (tag === "frienditem") {
+            this.excuteFuntionItem(data);
+        } else if (tag === "follow") {
 
         } else if (tag === "more") {
-
+            this.openBottomPanel(data, false);
         } else if (tag === "REQ_PLAYER_LIST") {
             this.render.renderEmitter(EventType.REQ_PLAYER_LIST, data);
+        } else if (tag === "addfriendpanel") {
+            this.showFriendAddPanel();
+            this.hideFriendListPanel();
         }
+    }
+
+    private excuteFuntionItem(data) {
+        if (data.itemType === 1) {
+            this.openFriendInfoPanel();
+        } else if (data.itemType === 2) {
+            this.openFriendNoticePanel();
+        } else if (data.itemType === 3) {
+            this.openFriendAddPanel();
+        } else if (data.itemType === 4) {
+            this.openFriendBlackPanel();
+        }
+        this.hideContentPanel();
+    }
+
+    private onFriendNoticePanelHandler(tag: string, data?: any) {
+
+    }
+    private onFriendAddPanelHandler(tag: string, data?: any) {
+
+    }
+    private onBottomPanelHandler(tag: string, data?: any) {
+
+    }
+    private onFriendInfoPanelHandler(tag: string, data?: any) {
+        if (tag === "close") {
+            this.showContentPanel();
+            this.hideFriendInfoPanel();
+        }
+    }
+    private onBlackPanelHandler(tag: string, data?: any) {
+
     }
 }
