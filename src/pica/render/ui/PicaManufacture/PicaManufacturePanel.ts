@@ -18,6 +18,7 @@ export class PicaManufacturePanel extends PicaBasePanel {
     private composePanel: PicaFurnitureComposePanel;
     private recastPanel: PicaRecastePanel;
     private starCount: number;
+    private gradeStars: any;
     private optionType: number;
     constructor(uiManager: UiManager) {
         super(uiManager);
@@ -44,7 +45,7 @@ export class PicaManufacturePanel extends PicaBasePanel {
         const index = this.mShowData ? 2 : 1;
         this.onToggleButtonHandler(undefined, <any>this.toggleCon.getAt(index));
         if (this.optionType === 2) {
-            this.recastPanel.setStarData(this.starCount);
+            this.recastPanel.setStarData(this.starCount, this.gradeStars);
             this.recastPanel.setRecasteItemData(this.mShowData, true);
             if (this.tempDatas && this.tempDatas.subcategory) this.recastPanel.setCategories(this.tempDatas.subcategory);
             const bagPanel = this.render.uiManager.getPanel(ModuleName.PICABAG_NAME);
@@ -82,14 +83,14 @@ export class PicaManufacturePanel extends PicaBasePanel {
         this.composePanel.updateGridProp(props);
     }
 
-    public setStarData(value: number) {
+    public setStarData(value: number, gradeStars: any) {
         this.starCount = value;
+        this.gradeStars = gradeStars;
         if (!this.mInitialized) return;
         this.composePanel.setStarData(this.starCount);
-        this.recastPanel.setStarData(this.starCount);
+        this.recastPanel.setStarData(this.starCount, gradeStars);
         this.starvalue.setText(value + "");
     }
-
     public setComposeResult(reward: op_client.ICountablePackageItem) {
 
     }
@@ -101,7 +102,7 @@ export class PicaManufacturePanel extends PicaBasePanel {
     protected onInitialized() {
         if (this.starCount) {
             this.composePanel.setStarData(this.starCount);
-            this.recastPanel.setStarData(this.starCount);
+            this.recastPanel.setStarData(this.starCount, this.gradeStars);
             this.starvalue.setText(this.starCount + "");
         }
     }

@@ -36,6 +36,7 @@ import { IElementPi } from "../../structure/ielementpi";
 import { EventType } from "structure";
 import { QuestGroupConfig } from "./quest.group.config";
 import { Element2Config } from "./element2.config";
+import { FurnitureGradeConfig } from "./furniture.grade.config";
 
 export enum BaseDataType {
     i18n_zh = "i18n_zh",
@@ -58,7 +59,8 @@ export enum BaseDataType {
     questGroup = "questGroup",
     dailyQuestGroup = "dailyQuestGroup",
     element2 = "element2",
-    elementpi = "elementpi" // 不作为文件名加载文件，只作为类型区分
+    elementpi = "elementpi", // 不作为文件名加载文件，只作为类型区分
+    furnitureGrade = "furnitureGrade"
     // itemcategory = "itemcategory"
 }
 
@@ -819,6 +821,20 @@ export class BaseDataConfigManager extends BaseConfigManager {
         return element;
     }
 
+    public getFurnitureGrade(grade: number) {
+        const data: FurnitureGradeConfig = this.getConfig(BaseDataType.furnitureGrade);
+        const temp = data.get(grade);
+        return temp;
+    }
+    public getFurnitureGradeMap() {
+        const data: FurnitureGradeConfig = this.getConfig(BaseDataType.furnitureGrade);
+        const temp = data.gradeMap;
+        const obj: any = {};
+        temp.forEach((value) => {
+            obj[value.grade] = value;
+        });
+        return obj;
+    }
     public destory() {
         super.destory();
         this.mGame.emitter.off(EventType.QUEST_ELEMENT_PI_DATA, this.checkDynamicElementPI, this);
@@ -845,6 +861,7 @@ export class BaseDataConfigManager extends BaseConfigManager {
         this.dataMap.set(BaseDataType.questGroup, new QuestGroupConfig());
         this.dataMap.set(BaseDataType.dailyQuestGroup, new QuestGroupConfig());
         this.dataMap.set(BaseDataType.element2, new Element2Config());
+        this.dataMap.set(BaseDataType.furnitureGrade, new FurnitureGradeConfig());
     }
 
     protected configUrl(reName: string, tempurl?: string) {
