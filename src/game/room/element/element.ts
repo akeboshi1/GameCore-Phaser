@@ -22,6 +22,7 @@ export interface IElement {
     readonly dir: number;
     readonly roomService: IRoomService;
     readonly created: boolean;
+    readonly moving: boolean;
 
     readonly moveData: MoveData;
 
@@ -142,6 +143,10 @@ export class Element extends BlockObject implements IElement {
         if (this.mElementManager) {
             return this.mElementManager;
         }
+    }
+
+    get moving() {
+        return this.mMoving;
     }
 
     protected mId: number;
@@ -342,6 +347,7 @@ export class Element extends BlockObject implements IElement {
     public completeAnimationQueue() {
         const anis = this.model.animationQueue;
         if (!anis || anis.length < 1) return;
+        anis.shift();
         let aniName: string = PlayerState.IDLE;
         let playTiems;
         if (anis.length > 0) {
@@ -349,7 +355,6 @@ export class Element extends BlockObject implements IElement {
             playTiems = anis[0].playTimes;
         }
         this.play(aniName, playTiems);
-        anis.shift();
     }
 
     public setDirection(val: number) {
@@ -518,14 +523,15 @@ export class Element extends BlockObject implements IElement {
     public getPosition(): IPos {
         let pos: IPos;
         const p = super.getPosition();
-        if (this.mRootMount) {
-            pos = this.mRootMount.getPosition();
-            pos.x += p.x;
-            pos.y += p.y;
-            pos.z += p.z;
-        } else {
-            pos = new LogicPos(p.x, p.y, p.z);
-        }
+        // if (this.mRootMount) {
+        // mount后未更新Position。加上RootMount会偏移
+        //     pos = this.mRootMount.getPosition();
+        //     pos.x += p.x;
+        //     pos.y += p.y;
+        //     pos.z += p.z;
+        // } else {
+        pos = new LogicPos(p.x, p.y, p.z);
+        // }
         return pos;
     }
 
