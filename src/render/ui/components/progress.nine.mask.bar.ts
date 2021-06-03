@@ -3,8 +3,8 @@ import { BaseUI, NineSlicePatch } from "apowophaserui";
 export class ProgressNineMaskBar extends BaseUI {
     public value: number = 0;
     public max: number = 1;
-    protected mBackground: NineSlicePatch;
-    protected mBar: NineSlicePatch;
+    protected mBackground: any;
+    protected mBar: any;
     protected maskGraphics: Phaser.GameObjects.Graphics;
     protected mText: Phaser.GameObjects.Text;
     protected zoom: number = 1;
@@ -64,15 +64,23 @@ export class ProgressNineMaskBar extends BaseUI {
 
     protected createBackgroundBar(key: string, background: string, bar: string, style?: any, barconfig?: any, bgconfig?: any) {
         if (background) {
-            const bgW = bgconfig.width || this.width;
-            const bgH = bgconfig.height || this.height;
-            this.mBackground = new NineSlicePatch(this.scene, 0, -2 * this.dpr, bgW, bgH, key, background, bgconfig);
-            this.setSize(bgW, bgH);
+            if (bgconfig) {
+                const bgW = bgconfig.width || this.width;
+                const bgH = bgconfig.height || this.height;
+                this.mBackground = new NineSlicePatch(this.scene, 0, -2 * this.dpr, bgW, bgH, key, background, bgconfig);
+                this.setSize(bgW, bgH);
+            } else {
+                this.mBackground = this.scene.make.image({ key, frame: background });
+                this.setSize(this.mBackground.width, this.mBackground.height);
+            }
         }
         if (barconfig) {
             const barW = barconfig.width || this.width;
             const barH = barconfig.height || this.height;
             this.mBar = new NineSlicePatch(this.scene, 0, -2 * this.dpr, barW, barH, key, bar, barconfig);
+        } else {
+            this.mBar = this.scene.make.image({ key, frame: bar });
+            this.mBar.isCropped = true;
         }
         if (style) {
             this.mText = this.scene.make.text({
