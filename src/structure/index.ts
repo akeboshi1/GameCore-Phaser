@@ -12,7 +12,7 @@ export { IScenery, Fit } from "./scenery";
 export { RENDER_PEER, MAIN_WORKER, MAIN_WORKER_URL, PHYSICAL_WORKER, PHYSICAL_WORKER_URL } from "./worker.name";
 export { EventType } from "./event.type";
 export { ModuleName } from "./module.name";
-export { FriendRelation, FriendRelationEnum, FriendData, FriendChannel, MenuData } from "./friend.relation";
+export * from "./friend.relation";
 export { ChineseUnit } from "./chinese.unit";
 export { TimerCountDown } from "./TimerCountDown";
 export { AvatarSuitType, SuitAlternativeType, AvatarSuit, BaseAvatar } from "./avatar.suit.type";

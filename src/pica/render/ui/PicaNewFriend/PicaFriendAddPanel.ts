@@ -1,10 +1,14 @@
-import { FriendChannel, FriendData, FriendRelation } from "structure";
+import { FriendChannel, FriendData, FriendRelation, FriendRelationAction, FriendRelationEnum } from "structure";
 import { Handler, i18n } from "utils";
 import { PicaFriendBasePanel } from "./PicaFriendBasePanel";
 import { PicaFriendFunctionCommonItem } from "./PicaFriendListItem";
 
 export class PicaFriendAddPanel extends PicaFriendBasePanel {
 
+    public setFriendDatas(type: FriendChannel, content: any) {
+        super.setFriendDatas(type, content);
+        if (content.length === 0) this.mGameGrid.setT(0);
+    }
     public updateFriendDatas(content: any) {
         const friends = this.friendDatas;
         if (!friends) {
@@ -26,7 +30,33 @@ export class PicaFriendAddPanel extends PicaFriendBasePanel {
         }
         this.mGameGrid.refresh();
     }
+    public filterById(id: string, relation?: FriendRelationAction) {
+        if (!this.friendDatas || this.friendDatas.length < 1) {
+            return;
+        }
+        if (this.friendDatas) {
+            const temp = this.friendDatas.find((value) => {
+                if (value.id === id) return true;
+            });
+            if (temp) {
+                if (temp.relation === FriendRelationEnum.Blacklist) {
+                    temp.relation = FriendRelationEnum.Null;
+                } else if (temp.relation === FriendRelationEnum.Fans) {
+                    temp.relation = FriendRelationEnum.Friend;
+                } else if (temp.relation === FriendRelationEnum.Null) {
+                    temp.relation = FriendRelationEnum.Followed;
+                } else if (temp.relation === FriendRelationEnum.Followed) {
+                    if (relation === FriendRelationAction.BAN) {
+                        temp.relation = FriendRelationEnum.Blacklist;
+                    } else if (relation === FriendRelationAction.UNFOLLOW) {
+                        temp.relation = FriendRelationEnum.Null;
+                    }
 
+                }
+                this.mGameGrid.refresh();
+            }
+        }
+    }
     public show() {
         super.show();
         this.funDatasMap.clear();
@@ -63,5 +93,16 @@ export class PicaFriendAddPanel extends PicaFriendBasePanel {
         item.optionType = this.optionType;
         cellContainer.setItemData(item, index);
         return cellContainer;
+    }
+    protected getItemDatas(type: FriendChannel, content: any[]) {
+        let temps;
+        if (this.funDatasMap.has(type)) temps = this.funDatasMap.get(type);
+        else {
+            temps = [{ itemType: 5 }];
+            this.funDatasMap.set(type, temps);
+        }
+        content = temps.concat(content);
+        return content;
+
     }
 }

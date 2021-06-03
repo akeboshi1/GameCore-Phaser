@@ -29,9 +29,9 @@ export class PicaExploreListBottomPanel extends Phaser.GameObjects.Container {
         this.rightButton.x = this.width * 0.5 - 48 * this.dpr;
     }
     refreshMask() {
-        for (const item of this.chapterItems) {
-            item.refreshMask();
-        }
+        // for (const item of this.chapterItems) {
+        //     item.refreshMask();
+        // }
     }
 
     setChapterDatas(data: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_EXPLORE_CHAPTER_PROGRESS, chapterId?: number) {
@@ -128,7 +128,7 @@ class ChapterItemProgress extends ButtonEventDispatcher {
     private lightbg: Phaser.GameObjects.Image;
     private topbg: Phaser.GameObjects.Image;
     private levelTex: Phaser.GameObjects.Text;
-    private barmask: Phaser.GameObjects.Graphics;
+    // private barmask: Phaser.GameObjects.Graphics;
     private finishImg: Phaser.GameObjects.Image;
     private lockImg: Phaser.GameObjects.Image;
     private chapterProData: op_client.IPKT_EXPLORE_CHAPTER_PROGRESS;
@@ -179,21 +179,21 @@ class ChapterItemProgress extends ButtonEventDispatcher {
     public setProgress(value: number) {
         const startAngle = -90;
         const endAngle = 360 * value - 90;
-        this.barmask.clear();
-        this.barmask.fillStyle(0xffffff);
-        this.barmask.slice(0, 0, 43 * this.dpr / this.zoom, Phaser.Math.DegToRad(startAngle), Phaser.Math.DegToRad(endAngle), false);
-        this.barmask.fillPath();
+        // this.barmask.clear();
+        // this.barmask.fillStyle(0xffffff);
+        // this.barmask.slice(0, 0, 43 * this.dpr / this.zoom, Phaser.Math.DegToRad(startAngle), Phaser.Math.DegToRad(endAngle), false);
+        // this.barmask.fillPath();
         this.proValue = value;
     }
 
-    refreshMask() {
-        const world = this.getWorldTransformMatrix();
-        this.barmask.setPosition(world.tx, world.ty);
-    }
+    // refreshMask() {
+    //     const world = this.getWorldTransformMatrix();
+    //     this.barmask.setPosition(world.tx, world.ty);
+    // }
 
     destroy() {
         super.destroy();
-        this.barmask.destroy();
+        // this.barmask.destroy();
     }
 
     setZoom(zoom: boolean) {
@@ -228,8 +228,8 @@ class ChapterItemProgress extends ButtonEventDispatcher {
         this.finishImg = this.scene.make.image({ key: UIAtlasName.explorelog, frame: "explore_sequence_uncheck_small" });
         this.lockImg = this.scene.make.image({ key: UIAtlasName.explorelog, frame: "explore_switch_lock" });
         this.finishImg.y = this.height * 0.5;
-        this.barmask = this.scene.make.graphics(undefined, false);
-        this.lightbg.mask = this.barmask.createGeometryMask();
+        // this.barmask = this.scene.make.graphics(undefined, false);
+        // this.lightbg.mask = this.barmask.createGeometryMask();
         this.add([this.bg, this.lightbg, this.topbg, this.levelTex, this.finishImg, this.lockImg]);
         this.setSize(this.bg.width, this.bg.height);
         this.on(ClickEvent.Tap, this.onClickHandler, this);

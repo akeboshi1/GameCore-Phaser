@@ -10,7 +10,12 @@ export enum FriendRelationEnum {
     Followed = "followed",
     Blacklist = "blacklist",
 }
-
+export enum FriendRelationAction {
+    FOLLOW = "FOLLOW",
+    UNFOLLOW = "UNFOLLOW",
+    BAN = "BAN",
+    UNBAN = "UNBAN"
+}
 export interface MenuData {
     type: FriendChannel;
 }

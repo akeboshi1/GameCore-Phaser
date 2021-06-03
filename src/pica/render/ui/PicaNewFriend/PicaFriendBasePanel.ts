@@ -5,7 +5,7 @@ import { PicaFriendBaseListItem, PicaFriendCommonItem, PicaFriendListItem } from
 import { ButtonEventDispatcher } from "gamecoreRender";
 import { UITools } from "picaRender";
 import { CommonBackground } from "../Components";
-import { FriendChannel, FriendData, FriendRelation, FriendRelationEnum } from "structure";
+import { FriendChannel, FriendData, FriendRelation, FriendRelationAction, FriendRelationEnum } from "structure";
 export class PicaFriendBasePanel extends Phaser.GameObjects.Container {
     // protected mBackground: CommonBackground;
     protected mGameGrid: GameGridTable;
@@ -62,7 +62,7 @@ export class PicaFriendBasePanel extends Phaser.GameObjects.Container {
 
     }
 
-    public filterById(id: string) {
+    public filterById(id: string, relation?: FriendRelationAction) {
         if (!this.friendDatas || this.friendDatas.length < 1) {
             return;
         }
@@ -73,7 +73,6 @@ export class PicaFriendBasePanel extends Phaser.GameObjects.Container {
     }
     protected create(title?: string) {
         title = title || i18n.t("friendlist.addfriend");
-        // this.mBackground = new CommonBackground(this.scene, 0, 0, this.width, this.height);
         this.backButton = UITools.createBackButton(this.scene, this.dpr, this.onBackHandler, this, title);
         this.backButton.x = -this.width * 0.5 + this.backButton.width * 0.5 + 5 * this.dpr;
         this.backButton.y = -this.height * 0.5 + this.backButton.height * 0.5 + 30 * this.dpr;
@@ -149,20 +148,11 @@ export class PicaFriendBasePanel extends Phaser.GameObjects.Container {
             cell.setHeight(height);
         }
         this.mGameGrid.layout();
-        this.mGameGrid.setT(0);
+        this.mGameGrid.refresh();
     }
     protected getItemDatas(type: FriendChannel, content: any[]) {
-        let temps;
-        if (this.funDatasMap.has(type)) temps = this.funDatasMap.get(type);
-        else {
-            temps = [{ itemType: 5 }];
-            this.funDatasMap.set(type, temps);
-        }
-        content = temps.concat(content);
         return content;
-
     }
-
     protected getFriendsDatas(type: FriendChannel, data: any[]) {
         const result: FriendData[] = [];
         let target = null;

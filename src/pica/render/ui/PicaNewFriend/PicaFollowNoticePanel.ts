@@ -19,9 +19,6 @@ export class PicaFollowNoticePanel extends PicaFriendBasePanel {
         cellContainer.setNoticeData(item, index);
         return cellContainer;
     }
-    protected getItemDatas(type: FriendChannel, content: any[]) {
-        return content;
-    }
 }
 export class PicaFollowNoticeItem extends Phaser.GameObjects.Container {
     protected bg: Phaser.GameObjects.Image;

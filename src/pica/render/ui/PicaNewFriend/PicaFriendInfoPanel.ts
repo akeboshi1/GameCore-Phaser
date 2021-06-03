@@ -2,7 +2,7 @@
 import { NineSliceButton, GameGridTable, ClickEvent, ProgressBar, BBCodeText, Button } from "apowophaserui";
 import { op_pkt_def } from "pixelpai_proto";
 import { Font, Handler, i18n, UIHelper, Url } from "utils";
-import { AvatarSuitType, EventType, FriendRelationEnum, ModuleName } from "structure";
+import { AvatarSuitType, EventType, FriendData, FriendRelationEnum, ModuleName } from "structure";
 import { DynamicImage, UiManager, UIDragonbonesDisplay, ButtonEventDispatcher, ProgressMaskBar, ToggleColorButton, ItemInfoTips, Render } from "gamecoreRender";
 import { PicaBasePanel } from "../pica.base.panel";
 import { CommonBackground, ImageValue } from "../../ui";
@@ -152,6 +152,36 @@ export class PicaFriendInfoPanel extends Phaser.GameObjects.Container {
     public setHandler(send: Handler) {
         this.send = send;
     }
+    public setFriendRelation(relation: FriendRelationEnum) {
+        this.mRelation = relation;
+        this.followBtn.visible = true;
+        if (relation === FriendRelationEnum.Followed || relation === FriendRelationEnum.Friend) {
+            this.followBtn.setText(i18n.t("friendlist.unfollow"));
+        } else if (relation === FriendRelationEnum.Null || relation === FriendRelationEnum.Fans) {
+            this.followBtn.setText(i18n.t("friendlist.follow"));
+        } else if (relation === FriendRelationEnum.Blacklist) {
+            this.followBtn.visible = false;
+        }
+    }
+
+    public updateFriendRelation(id: string) {
+        if (this.mPlayerData.cid === id) {
+            let raltion = this.mRelation;
+            let notice = "";
+            if (raltion === FriendRelationEnum.Followed || raltion === FriendRelationEnum.Friend) {
+                raltion = FriendRelationEnum.Null;
+                notice = i18n.t("friendlist.unfollowed");
+            } else {
+                raltion = FriendRelationEnum.Followed;
+                notice = i18n.t("friendlist.followed");
+            }
+            this.setFriendRelation(raltion);
+            const tempdata = {
+                text: [{ text: notice, node: undefined }]
+            };
+            this.render.mainPeer.showMediator(ModuleName.PICANOTICE_NAME, true, tempdata);
+        }
+    }
     public setPlayerData(data: any) {
         this.mPlayerData = data;
         this.content.visible = true;
@@ -175,12 +205,10 @@ export class PicaFriendInfoPanel extends Phaser.GameObjects.Container {
         this.dataMaps.set(CharacterOptionType.Skill, lifeSkills);
         this.dataMaps.set(CharacterOptionType.Attribute, data.properties ? data.properties : []);
         this.dataMaps.set(CharacterOptionType.Badge, data.badges ? data.badges : []);
-        this.followBtn.visible = true;
         this.tradingBtn.visible = true;
         this.middleCon.setPlayerDatas(data.pros);
         const datas = this.dataMaps.get(CharacterOptionType.Attribute);
         if (datas) this.mAttrPanel.setAttributeData(datas);
-        this.setFriendRelation(FriendRelationEnum.Null);
     }
     private createOptionButtons() {
         const wid = 208 * this.dpr, hei = 23 * this.dpr;
@@ -244,14 +272,7 @@ export class PicaFriendInfoPanel extends Phaser.GameObjects.Container {
         }
         return btn;
     }
-    private setFriendRelation(relation: FriendRelationEnum) {
-        this.mRelation = relation;
-        if (relation === FriendRelationEnum.Followed || relation === FriendRelationEnum.Friend) {
-            this.followBtn.setText(i18n.t("friendlist.unfollow"));
-        } else {
-            this.followBtn.setText(i18n.t("friendlist.follow"));
-        }
-    }
+
     private onToggleButtonHandler(pointer, obj: ToggleColorButton) {
         if (this.curToggleItem === obj) return;
         if (this.curToggleItem) {
@@ -275,12 +296,11 @@ export class PicaFriendInfoPanel extends Phaser.GameObjects.Container {
         switch (this.mRelation) {
             case FriendRelationEnum.Friend:
             case FriendRelationEnum.Followed:
-                this.render.renderEmitter(EventType.UNFOLLOW, this.mPlayerData.cid);
-
+                if (this.send) this.send.runWith([EventType.UNFOLLOW, this.mPlayerData.cid]);
                 break;
             case FriendRelationEnum.Fans:
             case FriendRelationEnum.Null:
-                this.render.renderEmitter(EventType.FOLLOW, this.mPlayerData.cid);
+                if (this.send) this.send.runWith([EventType.FOLLOW, this.mPlayerData.cid]);
                 break;
         }
     }
