@@ -603,7 +603,7 @@ export class Render extends RPCPeer implements GameMain, IRender {
                 backgroundColor: 0x0,
                 resolution: 1,
                 fps: {
-                    target: 45,
+                    target: 30,
                     forceSetTimeOut: true
                 },
                 dom: {

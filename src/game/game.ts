@@ -30,7 +30,7 @@ interface ISize {
     height: number;
 }
 
-export const fps: number = 45;
+export const fps: number = 30;
 export const interval = fps > 0 ? 1000 / fps : 1000 / 30;
 export class Game extends PacketHandler implements IConnectListener, ClockReadyListener, ChatCommandInterface {
     public isDestroy: boolean = false;
