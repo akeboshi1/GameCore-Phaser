@@ -19,7 +19,7 @@ export class PicaNewRoleMediator extends BasicMediator {
         this.game.emitter.on(ModuleName.PICANEWROLE_NAME + "_queryanotherinfo", this.query_Another_Info, this);
         this.game.emitter.on(ModuleName.PICANEWROLE_NAME + "_hide", this.onHideView, this);
         this.game.emitter.on(ModuleName.PICANEWROLE_NAME + "_initialized", this.onViewInitComplete, this);
-        this.game.emitter.on(ModuleName.PICANEWROLE_NAME + "_anotherinfo", this.on_Another_Info, this);
+        // this.game.emitter.on(ModuleName.PICANEWROLE_NAME + "_anotherinfo", this.on_Another_Info, this);
         this.game.emitter.on(ModuleName.PICANEWROLE_NAME + "_openingcharacter", this.onOpeningCharacterHandler, this);
         this.game.emitter.on(ModuleName.PICANEWROLE_NAME + "_followcharacter", this.onFollowHandler, this);
         this.game.emitter.on(ModuleName.PICANEWROLE_NAME + "_tradingcharacter", this.onTradingHandler, this);
@@ -31,7 +31,7 @@ export class PicaNewRoleMediator extends BasicMediator {
         this.game.emitter.off(ModuleName.PICANEWROLE_NAME + "_queryanotherinfo", this.query_Another_Info, this);
         this.game.emitter.off(ModuleName.PICANEWROLE_NAME + "_hide", this.onHideView, this);
         this.game.emitter.off(ModuleName.PICANEWROLE_NAME + "_initialized", this.onViewInitComplete, this);
-        this.game.emitter.off(ModuleName.PICANEWROLE_NAME + "_anotherinfo", this.on_Another_Info, this);
+        // this.game.emitter.off(ModuleName.PICANEWROLE_NAME + "_anotherinfo", this.on_Another_Info, this);
         this.game.emitter.off(ModuleName.PICANEWROLE_NAME + "_openingcharacter", this.onOpeningCharacterHandler, this);
         this.game.emitter.off(ModuleName.PICANEWROLE_NAME + "_followcharacter", this.onFollowHandler, this);
         this.game.emitter.off(ModuleName.PICANEWROLE_NAME + "_tradingcharacter", this.onTradingHandler, this);
@@ -47,13 +47,19 @@ export class PicaNewRoleMediator extends BasicMediator {
         this.query_Another_Info(this.uid);
         this.checkFollowState(this.uid);
     }
-
+    protected onEnable() {
+        this.proto.on("ANOTHER_PLAYER_INFO", this.on_Another_Info, this);
+    }
+    protected onDisable() {
+        this.proto.off("ANOTHER_PLAYER_INFO", this.on_Another_Info, this);
+    }
     private query_Another_Info(id: string) {
         this.mModel.fetchAnotherInfo(id);
     }
 
-    private on_Another_Info(content: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_ANOTHER_PLAYER_INFO) {
-        if (this.panelInit) {
+    private on_Another_Info(proto: any) {
+        const content = proto.content;
+        if (this.mPanelInit) {
             this.mShowData = content;
             this.config.getBatchItemDatas(content.avatarSuit);
             if (this.mView) {
@@ -106,8 +112,8 @@ export class PicaNewRoleMediator extends BasicMediator {
             // if (!activeEnable) {
             //     const item = (<any>this.game.configManager).getItemBaseByID(action.tag.propUseId);
             //     if (item) {
-                    // TODO i18n.t("common.notEnough");
-                    // this.game.renderPeer.showAlert(`${item.name}数量不足`, true, false);
+            // TODO i18n.t("common.notEnough");
+            // this.game.renderPeer.showAlert(`${item.name}数量不足`, true, false);
             //         return;
             //     }
             // }

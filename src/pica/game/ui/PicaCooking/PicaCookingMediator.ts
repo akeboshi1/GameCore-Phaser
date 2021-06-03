@@ -37,7 +37,12 @@ export class PicaCookingMediator extends BasicMediator {
         super.panelInit();
         this.setCookingCategory();
     }
-
+    protected onEnable() {
+        this.proto.on("ANOTHER_PLAYER_INFO", this.onCookingIDsHandler, this);
+    }
+    protected onDisable() {
+        this.proto.off("ANOTHER_PLAYER_INFO", this.onCookingIDsHandler, this);
+    }
     private setCookingCategory() {
         if (this.mView) {
             const datas = [{ type: "CATEGORY_1", name: "肉类" }, { type: "CATEGORY_2", name: "海鲜" }, { type: "CATEGORY_3", name: "蔬菜" }, { type: "CATEGORY_4", name: "蛋奶" }];
@@ -55,8 +60,8 @@ export class PicaCookingMediator extends BasicMediator {
         }
         this.mView.setCookingDatas(temps);
     }
-    private onCookingIDsHandler(roleData: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_ANOTHER_PLAYER_INFO) {
-
+    private onCookingIDsHandler(proto: any) {
+        const content = proto.content;
     }
 
     private onHideView() {

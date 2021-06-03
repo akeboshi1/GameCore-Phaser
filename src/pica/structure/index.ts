@@ -16,3 +16,4 @@ export * from "./ilevel";
 export * from "./iquestgroup";
 export * from "./red.system.type";
 export * from "./ifurniture.grade";
+export * from "./iplayer.info";

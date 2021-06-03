@@ -11,9 +11,9 @@ export class PicaNewFriendMediator extends BasicMediator {
     constructor(game: Game) {
         super(ModuleName.PICANEWFRIEND_NAME, game);
         this.mModel = new PicaNewFriend(game);
-        this.game.emitter.on(EventType.PLAYER_LIST, this.onPlayerListHandler, this);
-        this.game.emitter.on(EventType.SEARCH_RESULT, this.onSearchResultHandler, this);
-        this.game.emitter.on(this.key + "_other", this.onOtherPlayerInfoHandler, this);
+        // this.game.emitter.on(EventType.PLAYER_LIST, this.onPlayerListHandler, this);
+        // this.game.emitter.on(EventType.SEARCH_RESULT, this.onSearchResultHandler, this);
+        // this.game.emitter.on(this.key + "_other", this.onAnotherPlayerInfoHandler, this);
     }
 
     show(param?: any) {
@@ -33,6 +33,7 @@ export class PicaNewFriendMediator extends BasicMediator {
         this.game.emitter.on(ModuleName.PICANEWFRIEND_NAME + "_track", this.onTrackHandler, this);
         this.game.emitter.on(ModuleName.PICANEWFRIEND_NAME + "_invite", this.onInviteHandler, this);
         this.game.emitter.on(ModuleName.PICANEWFRIEND_NAME + "_gohome", this.onGoOtherHome, this);
+        this.game.emitter.on(EventType.SEARCH_RESULT, this.onSearchResultHandler, this);
     }
 
     hide() {
@@ -51,6 +52,7 @@ export class PicaNewFriendMediator extends BasicMediator {
         this.game.emitter.off(ModuleName.PICANEWFRIEND_NAME + "_track", this.onTrackHandler, this);
         this.game.emitter.off(ModuleName.PICANEWFRIEND_NAME + "_invite", this.onInviteHandler, this);
         this.game.emitter.off(ModuleName.PICANEWFRIEND_NAME + "_gohome", this.onGoOtherHome, this);
+        this.game.emitter.off(EventType.SEARCH_RESULT, this.onSearchResultHandler, this);
         super.hide();
     }
 
@@ -59,7 +61,14 @@ export class PicaNewFriendMediator extends BasicMediator {
             this.mView.fetchCurrentFriend();
         }
     }
-
+    protected onEnable() {
+        this.proto.on("PLAYER_LIST", this.onPlayerListHandler, this);
+        this.proto.on("ANOTHER_PLAYER_INFO", this.onAnotherPlayerInfoHandler, this);
+    }
+    protected onDisable() {
+        this.proto.off("PLAYER_LIST", this.onPlayerListHandler, this);
+        this.proto.off("ANOTHER_PLAYER_INFO", this.onAnotherPlayerInfoHandler, this);
+    }
     protected panelInit() {
         super.panelInit();
         if (this.mView && this.mShowData)
@@ -169,7 +178,7 @@ export class PicaNewFriendMediator extends BasicMediator {
         if (!id || id === "") return;
         this.game.httpService.removeBanUser(id).then((response: any) => {
             if (response.code === 201) {
-                this.mView.filterById(id,FriendRelationAction.UNBAN);
+                this.mView.filterById(id, FriendRelationAction.UNBAN);
             }
         });
     }
@@ -185,7 +194,7 @@ export class PicaNewFriendMediator extends BasicMediator {
         this.game.httpService.banUser(id).then((response: any) => {
             const { code, temp } = response;
             if (code === 200 || code === 201) {
-                this.mView.filterById(id,FriendRelationAction.BAN);
+                this.mView.filterById(id, FriendRelationAction.BAN);
             }
         });
 
@@ -196,7 +205,11 @@ export class PicaNewFriendMediator extends BasicMediator {
         this.mModel.fetchFriendList(ids);
     }
 
-    private onPlayerListHandler(content: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_PKT_PLAYER_LIST) {
+    // private onPlayerListHandler(content: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_PKT_PLAYER_LIST) {
+    //     this.mView.updateFriend(content);
+    // }
+    private onPlayerListHandler(proto: any) {
+        const content = proto.content;
         this.mView.updateFriend(content);
     }
 
@@ -231,7 +244,13 @@ export class PicaNewFriendMediator extends BasicMediator {
         this.mModel.fetchFriendList(ids);
     }
 
-    private onOtherPlayerInfoHandler(content) {
+    // private onOtherPlayerInfoHandler(content) {
+    //     this.setItemBases(content.properties);
+    //     this.setItemBases(content.avatarSuit);
+    //     this.mView.setPlayerInfo(content);
+    // }
+    private onAnotherPlayerInfoHandler(proto: any) {
+        const content = proto.content;
         this.setItemBases(content.properties);
         this.setItemBases(content.avatarSuit);
         this.mView.setPlayerInfo(content);

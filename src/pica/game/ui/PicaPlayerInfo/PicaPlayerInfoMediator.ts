@@ -1,18 +1,14 @@
 import { op_client } from "pixelpai_proto";
 import { PicaPlayerInfo } from "./PicaPlayerInfo";
 import { ModuleName } from "structure";
-import { PicaFriendRelation } from "../PicaFriend/PicaFriendRelation";
-import { PicaFriendMediator } from "../PicaFriend/PicaFriendMediator";
 import { BasicMediator, Game } from "gamecore";
 import { BaseDataConfigManager } from "../../config";
-
+import { PicaPlayerFriendRelation } from "./PicaPlayerFriendRelation";
 export class PicaPlayerInfoMediator extends BasicMediator {
     protected mModel: PicaPlayerInfo;
     constructor(game: Game) {
         super(ModuleName.PICAPLAYERINFO_NAME, game);
         this.mModel = new PicaPlayerInfo(this.game);
-        this.game.emitter.on(ModuleName.PICAPLAYERINFO_NAME + "_ownerInfo", this.onOwnerCharacterInfo, this);
-        this.game.emitter.on(ModuleName.PICAPLAYERINFO_NAME + "_otherInfo", this.onOtherCharacterInfo, this);
     }
 
     show(param?: any) {
@@ -45,12 +41,14 @@ export class PicaPlayerInfoMediator extends BasicMediator {
         return false;
     }
 
-    destroy() {
-        this.game.emitter.off(ModuleName.PICAPLAYERINFO_NAME + "_ownerInfo", this.onOwnerCharacterInfo, this);
-        this.game.emitter.off(ModuleName.PICAPLAYERINFO_NAME + "_otherInfo", this.onOtherCharacterInfo, this);
-        super.destroy();
+    protected onEnable() {
+        this.proto.on("SELF_PLAYER_INFO", this.onOwnerCharacterInfo, this);
+        this.proto.on("ANOTHER_PLAYER_INFO", this.onOtherCharacterInfo, this);
     }
-
+    protected onDisable() {
+        this.proto.off("SELF_PLAYER_INFO", this.onOwnerCharacterInfo, this);
+        this.proto.off("ANOTHER_PLAYER_INFO", this.onOtherCharacterInfo, this);
+    }
     protected panelInit() {
         super.panelInit();
         if (this.mShowData) {
@@ -68,7 +66,8 @@ export class PicaPlayerInfoMediator extends BasicMediator {
         this.hide();
     }
 
-    private onOwnerCharacterInfo(content: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_SELF_PLAYER_INFO) {
+    private onOwnerCharacterInfo(proto: any) {
+        const content = proto.content;
         if (!this.mPanelInit) {
             this.mShowData = content;
             this.mShowData.isUser = true;
@@ -86,7 +85,8 @@ export class PicaPlayerInfoMediator extends BasicMediator {
         }
     }
 
-    private onOtherCharacterInfo(content: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_ANOTHER_PLAYER_INFO) {
+    private onOtherCharacterInfo(proto: any) {
+        const content = proto.content;
         if (!this.mPanelInit) {
             this.mShowData = content;
             this.mShowData.isUser = false;
@@ -112,7 +112,6 @@ export class PicaPlayerInfoMediator extends BasicMediator {
             if (code === 200 || code === 201) {
                 if (this.mView) {
                     this.checkRelation(id);
-                    this.updateFrind();
                 }
             }
         });
@@ -123,7 +122,6 @@ export class PicaPlayerInfoMediator extends BasicMediator {
             const { code, data } = response;
             if (code === 200 || code === 201) {
                 this.checkRelation(id);
-                this.updateFrind();
             }
         });
     }
@@ -140,7 +138,7 @@ export class PicaPlayerInfoMediator extends BasicMediator {
             if (code === 200) {
                 for (const key in data) {
                     const ids = key.split("_");
-                    this.mView.setFriendRelation(PicaFriendRelation.check(ids[0], ids[1], data[key]).relation);
+                    this.mView.setFriendRelation(PicaPlayerFriendRelation.check(ids[0], ids[1], data[key]).relation);
                 }
             }
         });
@@ -178,13 +176,5 @@ export class PicaPlayerInfoMediator extends BasicMediator {
 
     private onGoOtherHome(id: string) {
         this.mModel.goOtherHome(id);
-    }
-
-    private updateFrind() {
-        const uimanager = this.game.uiManager;
-        const PicaFriend: PicaFriendMediator = <PicaFriendMediator>uimanager.getMed(ModuleName.PICAFRIEND_NAME);
-        if (PicaFriend) {
-            PicaFriend.fetchCurrentFriend();
-        }
     }
 }

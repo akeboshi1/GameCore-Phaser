@@ -75,4 +75,9 @@ export class UITools {
         titleTex.x = closeImg.x + closeImg.width * 0.5 + 15 * dpr;
         return backButton;
     }
+
+    public static getGenderFrame(gender: string) {
+        const nameFrame = gender === "Female" ? "people_woman" : "people_man";
+        return nameFrame;
+    }
 }

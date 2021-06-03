@@ -24,11 +24,9 @@ export class PicaNewFriend extends BasicModel {
         const connection = this.connection;
         if (connection) {
             this.connection.addPacketListener(this);
-            this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_PKT_PLAYER_LIST, this.onPlayerListHandler);
+            // this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_PKT_PLAYER_LIST, this.onPlayerListHandler);
             this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_PKT_SEARCH_PLAYER, this.onSearchHandler);
-            this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_PKT_ANOTHER_PLAYER_INFO, this.onOtherCharacterInfo);
-
-            // this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_PKT_SELF_PLAYER_INFO, this.onOwnerCharacterInfo);
+            // this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_PKT_ANOTHER_PLAYER_INFO, this.onOtherCharacterInfo);
         }
     }
 
@@ -134,9 +132,4 @@ export class PicaNewFriend extends BasicModel {
     private onSearchHandler(packet: PBpacket) {
         this.event.emit(EventType.SEARCH_RESULT, packet.content);
     }
-
-    // public queryPlayerInfo() {
-    //     const packet = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_PKT_SELF_PLAYER_INFO);
-    //     this.connection.send(packet);
-    // }
 }

@@ -13,7 +13,7 @@ export class PicaOnlineMediator extends BasicMediator {
 
     show(param?: any) {
         super.show(param);
-        this.game.emitter.on(ModuleName.PICAONLINE_NAME + "_retOnlineInfo", this.onOnlineHandler, this);
+        //  this.game.emitter.on(ModuleName.PICAONLINE_NAME + "_retOnlineInfo", this.onOnlineHandler, this);
         this.game.emitter.on(ModuleName.PICAONLINE_NAME + "_anotherinfo", this.on_Another_Info, this);
         this.game.emitter.on(ModuleName.PICAONLINE_NAME + "_openingcharacter", this.onOpeningCharacterHandler, this);
         this.game.emitter.on(ModuleName.PICAONLINE_NAME + "_block", this.onBlockUserHandler, this);
@@ -21,15 +21,31 @@ export class PicaOnlineMediator extends BasicMediator {
     }
 
     hide() {
-        this.game.emitter.off(ModuleName.PICAONLINE_NAME + "_retOnlineInfo", this.onOnlineHandler, this);
+        //  this.game.emitter.off(ModuleName.PICAONLINE_NAME + "_retOnlineInfo", this.onOnlineHandler, this);
         this.game.emitter.off(ModuleName.PICAONLINE_NAME + "_anotherinfo", this.on_Another_Info, this);
         this.game.emitter.off(ModuleName.PICAONLINE_NAME + "_openingcharacter", this.onOpeningCharacterHandler, this);
         this.game.emitter.off(ModuleName.PICAONLINE_NAME + "_block", this.onBlockUserHandler, this);
         this.game.emitter.off(ModuleName.PICAONLINE_NAME + "_close", this.onCloseHandler, this);
         super.hide();
     }
+    destroy() {
+        if (this.mModel) {
+            this.mModel.destroy();
+            this.mModel = undefined;
+        }
+        super.destroy();
+    }
 
-    panelInit() {
+    protected onEnable() {
+        this.proto.on("CURRENT_ROOM_PLAYER_LIST", this.onOnlineHandler, this);
+        this.proto.on("ANOTHER_PLAYER_INFO", this.on_Another_Info, this);
+    }
+    protected onDisable() {
+        this.proto.off("CURRENT_ROOM_PLAYER_LIST", this.onOnlineHandler, this);
+        this.proto.off("ANOTHER_PLAYER_INFO", this.on_Another_Info, this);
+    }
+
+    protected panelInit() {
         if (this.panelInit) {
             this.mModel.fetchOnlineInfo();
             this.blacklist.length = 0;
@@ -47,14 +63,6 @@ export class PicaOnlineMediator extends BasicMediator {
         }
     }
 
-    destroy() {
-        if (this.mModel) {
-            this.mModel.destroy();
-            this.mModel = undefined;
-        }
-        super.destroy();
-    }
-
     private onCloseHandler() {
         if (!this.game) {
             return;
@@ -62,7 +70,8 @@ export class PicaOnlineMediator extends BasicMediator {
         this.hide();
     }
 
-    private async onOnlineHandler(content: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_CURRENT_ROOM_PLAYER_LIST) {
+    private async onOnlineHandler(proto: any) {
+        const content = proto.content;
         const uids = [];
         const infos = [];
         for (const data of content.playerInfos) {
@@ -83,8 +92,9 @@ export class PicaOnlineMediator extends BasicMediator {
         if (mgr.curRoom)
             this.mView.setOnlineDatas(infos, mgr.curRoom.playerCount, this.game.user.userData.cid);
     }
-    private on_Another_Info(content: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_ANOTHER_PLAYER_INFO) {
-        if (this.panelInit) {
+    private on_Another_Info(proto: any) {
+        const content = proto.content;
+        if (this.mPanelInit) {
             const uimanager = this.game.uiManager;
             uimanager.showMed(ModuleName.PICAPLAYERINFO_NAME, content);
             this.hide();

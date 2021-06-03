@@ -5,6 +5,7 @@ import { FriendChannel, FriendRelationEnum } from "structure";
 import { Font, Handler, i18n, NumberUtils, UIHelper, Url } from "utils";
 import { ImageBBCodeValue } from "..";
 import { ImageValue } from "../Components";
+import { UITools } from "../uitool";
 export class PicaFriendBaseListItem extends Phaser.GameObjects.Container {
     /**
      * 1 玩家，2 关注通知，3 添加好友， 4 黑名单,5 搜索
@@ -78,7 +79,8 @@ export class PicaFriendListItem extends PicaFriendBaseListItem {
             const url = Url.getOsdRes(avatar);
             this.imagIcon.load(url);
         }
-        this.nickImge.setText(data.nickname);
+        const gender = UITools.getGenderFrame(data.gender);
+        this.nickImge.setFrameValue(data.nickname, UIAtlasName.uicommon, gender);
         this.lvImage.setText(`lv ${data.lv}`);
         this.vipImage.setText("???");
         this.layout();

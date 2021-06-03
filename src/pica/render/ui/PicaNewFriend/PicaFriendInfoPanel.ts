@@ -5,7 +5,7 @@ import { Font, Handler, i18n, UIHelper, Url } from "utils";
 import { AvatarSuitType, EventType, FriendData, FriendRelationEnum, ModuleName } from "structure";
 import { DynamicImage, UiManager, UIDragonbonesDisplay, ButtonEventDispatcher, ProgressMaskBar, ToggleColorButton, ItemInfoTips, Render } from "gamecoreRender";
 import { PicaBasePanel } from "../pica.base.panel";
-import { CommonBackground, ImageValue } from "../../ui";
+import { CommonBackground, ImageValue, UITools } from "../../ui";
 import { UIAtlasName } from "picaRes";
 export class PicaFriendInfoPanel extends Phaser.GameObjects.Container {
     private mBlackBG: Phaser.GameObjects.Graphics;
@@ -196,7 +196,8 @@ export class PicaFriendInfoPanel extends Phaser.GameObjects.Container {
         const nickname = data.nickname ? data.nickname : "???";
         const current_title = data.currentTitle ? data.currentTitle : "???";
         const level = data.level && data.level.level ? data.level.level : 0;
-        this.nickImge.setText(nickname);
+        const gender = UITools.getGenderFrame(data.gender);
+        this.nickImge.setFrameValue(nickname, UIAtlasName.uicommon, gender);
         this.lvImage.setText(level + "");
         this.nickName.setText(i18n.t("player_info.player_title") + ": " + current_title);
         this.vipImage.x = this.lvImage.x + this.lvImage.width * 0.5 + this.vipImage.width * 0.5 + 10 * this.dpr;
