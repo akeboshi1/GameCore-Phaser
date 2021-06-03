@@ -603,7 +603,7 @@ export class Render extends RPCPeer implements GameMain, IRender {
                 backgroundColor: 0x0,
                 resolution: 1,
                 fps: {
-                    target: 45,
+                    target: 30,
                     forceSetTimeOut: true
                 },
                 dom: {
@@ -802,6 +802,11 @@ export class Render extends RPCPeer implements GameMain, IRender {
                 });
             }
         });
+    }
+
+    @Export([webworker_rpc.ParamType.str])
+    showTipsAlert(str) {
+        this.mUiManager.showTipsAlert({ text: [{ text: str, node: undefined }] });
     }
 
     @Export([webworker_rpc.ParamType.num])
@@ -1066,8 +1071,8 @@ export class Render extends RPCPeer implements GameMain, IRender {
                 const blockHeight = 150;
                 const { x, y } = rect;
                 const obj = {
-                    x: x - blockWidth * 1.5,
-                    y: y - blockHeight * 1.5,
+                    x: x - blockWidth * 1.3,
+                    y: y - blockHeight * 1.3,
                     width: camera.width + blockWidth * 3,
                     height: camera.height + blockHeight * 3,
                     zoom: camera.zoom,

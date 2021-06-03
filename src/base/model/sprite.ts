@@ -72,6 +72,7 @@ export class Sprite extends EventDispatcher implements ISprite {
         if (obj.display) {
             this.updateDisplay(obj.display, obj.animations, obj.currentAnimationName);
         }
+        // ==========> update pos
         if (obj.point3f) {
             const point = obj.point3f;
             this.pos = new LogicPos(point.x, point.y, point.z);
@@ -82,7 +83,6 @@ export class Sprite extends EventDispatcher implements ISprite {
             this.sn = obj.sn;
         }
         this.titleMask = obj.titleMask;
-        this.setDirection(obj.direction || 3);
 
         this.alpha = obj.opacity === undefined ? 1 : obj.opacity / 100;
         this.displayBadgeCards = obj.displayBadgeCards;
@@ -98,6 +98,8 @@ export class Sprite extends EventDispatcher implements ISprite {
 
         this.tryRegisterAnimation(obj.animationRegistrationMap);
         this.currentAnimationName = obj.currentAnimationName;
+        // setDirection 必须在currentAnimationName赋值之后
+        this.setDirection(obj.direction || 3);
 
         if (!this.currentCollisionArea) {
             this.currentCollisionArea = this.getCollisionArea();

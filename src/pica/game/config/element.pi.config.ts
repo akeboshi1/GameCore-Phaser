@@ -1,4 +1,4 @@
-import { AnimationsNode, AttributeNode, ElementNode, EventNode, FunctionNode, LayerEnum, Lite } from "game-capsule";
+import { AnimationsNode, AttributeNode, Capsule, ElementNode, EventNode, FunctionNode, LayerEnum, Lite } from "game-capsule";
 import { BaseConfigData } from "gamecore";
 import { IAnimation, IAnimationData } from "picaStructure";
 import { IElementPi } from "src/pica/structure/ielementpi";
@@ -66,7 +66,7 @@ export class ElmentPiConfig extends BaseConfigData {
         const arraybuffer = response;
         if (arraybuffer) {
             try {
-                const item = new Lite();
+                const item = new Capsule();
                 item.deserialize(new Uint8Array(arraybuffer));
                 Logger.getInstance().debug("Decode: ItemPi -> lite", item);
                 return item;

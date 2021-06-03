@@ -1,6 +1,6 @@
 import { PacketHandler, PBpacket } from "net-socket-packet";
 import { op_client, op_pkt_def } from "pixelpai_proto";
-import { EventType, ModuleName } from "structure";
+import { EventType, GameState, ModuleName } from "structure";
 import { Size } from "utils";
 import { Game } from "../game";
 import { BasicMediator, UIType } from "./basic/basic.mediator";
@@ -108,6 +108,8 @@ export class UIManager extends PacketHandler {
             case ModuleName.PICAHOMEGUIDE_NAME:
             case ModuleName.PICAHOTELGUIDE_NAME:
             case ModuleName.PICAPLANEGUIDE_NAME:
+            case ModuleName.PICAHOTELMINEGUIDE_NAME:
+            case ModuleName.PICAHOTELFARMGUIDE_NAME:
                 this.game.peer.render.showPanel(type, param);
                 break;
             default:
@@ -255,6 +257,8 @@ export class UIManager extends PacketHandler {
     }
 
     protected async onForceOfflineHandler(packet: PBpacket) {
+        if (this.game.peer.state === GameState.ChangeGame) return;
+        this.game.peer.state = GameState.OffLine;
         this.game.peer.render.showAlert("common.offline", true).then(() => {
             this.game.peer.render.hidden();
         });
@@ -337,6 +341,7 @@ export class UIManager extends PacketHandler {
             const content: op_client.OP_VIRTUAL_WORLD_REQ_CLIENT_PKT_SHOW_CREATE_ROLE_UI = packet.content;
             configMgr.getBatchItemDatas(content.avatars);
             this.showMed(ModuleName.PICACREATEROLE_NAME, content);
+            this.game.cacheMgr.clearCache();
         }, (response) => {
             this.game.renderPeer.showAlert("配置加载错误，请重新登陆: " + response, true, false)
                 .then(() => {

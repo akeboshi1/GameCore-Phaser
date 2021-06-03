@@ -21,7 +21,7 @@ export class PicaRoomDecorateShopPanel extends Phaser.GameObjects.Container {
     private selectedItem: DecorateShopItem;
     private selectedItemData: any;// op_client.IMarketCommodity
     private shopgride: GameGridTable;
-    private curCategory: string;
+    private curCategory: any;
     private beforeCategory: string;
     private zoom: number;
     constructor(scene: Phaser.Scene, x: number, y: number, width: number, height: number, key: string, dpr: number, zoom: number) {
@@ -40,7 +40,7 @@ export class PicaRoomDecorateShopPanel extends Phaser.GameObjects.Container {
         const width = this.width;
         const height = this.height;
         const posY = -height * 0.5;
-        this.bg = new NineSlicePatch(this.scene, 0, 0, width, height, UIAtlasName.uicommon1, "bg1", UIHelper.background_w(this.dpr));
+        this.bg = new NineSlicePatch(this.scene, 0, 0, width, height, UIAtlasName.uicommon1, "bg", UIHelper.background_w(this.dpr));
         this.add(this.bg);
         this.closeBtn = new Button(this.scene, UIAtlasName.uicommon, "close");
         this.closeBtn.setDisplaySize(28 * this.dpr, 28 * this.dpr);
@@ -78,7 +78,7 @@ export class PicaRoomDecorateShopPanel extends Phaser.GameObjects.Container {
             tab.setTextColor("#ffffff");
         }));
         this.add(this.secondMenu);
-        const graW = 302 * this.dpr, graH = 324 * this.dpr, grax = -graW * 0.5, gray = -graH * 0.5 - 20 * this.dpr;
+        const graW = 302 * this.dpr, graH = 388 * this.dpr, grax = -graW * 0.5, gray = -graH * 0.5 + 12 * this.dpr;
         const graphicbg = this.scene.make.graphics(undefined, false);
         graphicbg.fillStyle(0xFE8737, 1);
         graphicbg.fillRoundedRect(grax, gray, graW, graH, {
@@ -86,17 +86,18 @@ export class PicaRoomDecorateShopPanel extends Phaser.GameObjects.Container {
         });
         this.add(graphicbg);
         const gridWdith = graW - 16 * this.dpr;
-        const gridHeight = 380 * this.dpr;
-        const gridY = 12 * this.dpr;
-        this.shopgride = this.createGrideTable(0, gridY, gridWdith, gridHeight, 126 * this.dpr, 158 * this.dpr);
+        const gridHeight = 444 * this.dpr;
+        const gridY = 44 * this.dpr;
+        this.shopgride = this.createGrideTable(0, gridY, gridWdith, gridHeight, 126 * this.dpr, 188 * this.dpr);
         this.leaveButton = this.createNineButton(UIAtlasName.uicommon, "yellow_btn_normal", i18n.t("common.leave"), "#996600");
-        this.leaveButton.y = this.height * 0.5 - this.leaveButton.height * 0.5 - 15 * this.dpr;
+        this.leaveButton.y = this.height * 0.5 + this.leaveButton.height * 0.5 + 15 * this.dpr;
         this.leaveButton.x = -this.leaveButton.width * 0.5 - 15 * this.dpr;
         this.leaveButton.on(String(ClickEvent.Tap), this.onCloseHandler, this);
-        this.corfirmButton = this.createNineButton(UIAtlasName.uicommon, "button_g", i18n.t("common.save"), "#000000");
-        this.corfirmButton.y = this.height * 0.5 - this.corfirmButton.height * 0.5 - 15 * this.dpr;
+        this.corfirmButton = this.createNineButton(UIAtlasName.uicommon, "butt_gray", i18n.t("common.save"), "#000000");
+        this.corfirmButton.y = this.height * 0.5 + this.corfirmButton.height * 0.5 + 15 * this.dpr;
         this.corfirmButton.x = -this.leaveButton.x;
         this.corfirmButton.on(String(ClickEvent.Tap), this.onConfirmButtonHandler, this);
+        this.corfirmButton.disInteractive();
     }
     public setShopCategories(marketCategory: any[]) {// op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_GET_MARKET_CATEGORIES
         const atts = [];
@@ -173,15 +174,12 @@ export class PicaRoomDecorateShopPanel extends Phaser.GameObjects.Container {
                 const scene = cell.scene,
                     item = cell.item;
                 if (cellContainer === null) {
-                    cellContainer = new DecorateShopItem(this.scene, 0, 0, capW, capH, UIAtlasName.decorateshop, this.dpr);
+                    cellContainer = new DecorateShopItem(this.scene, 0, 0, capW, capH, UIAtlasName.decorateshop, this.dpr, this.zoom);
                     cellContainer.on("buyitem", this.onBuyItemHandler, this);
                     grid.add(cellContainer);
                 }
                 cellContainer.setItemData(item);
-                if (this.selectedItemData && this.selectedItemData.id === item.id) {
-                    this.selectedItemData = item;
-                    this.selectedItem = cellContainer;
-                }
+                this.updateSelectItemState(item, cellContainer);
                 return cellContainer;
             },
         };
@@ -197,18 +195,33 @@ export class PicaRoomDecorateShopPanel extends Phaser.GameObjects.Container {
         return grid;
     }
 
+    private updateSelectItemState(data: any, obj: DecorateShopItem) {
+        if (this.selectedItemData) {
+            if (this.selectedItemData.id === data.id) {
+                this.selectedItemData = data;
+                if (this.selectedItem) this.selectedItem.select = false;
+                this.selectedItem = obj;
+                this.selectedItem.select = true;
+            } else if (this.selectedItem === obj) {
+                this.selectedItem.select = false;
+            }
+        } else if (this.selectedItem) {
+            this.selectedItem.select = false;
+            this.selectedItem = undefined;
+        }
+    }
     private onTabButtonHandler(data: any) {// op_def.IMarketCategory
-        if (this.curCategory === data.key) return;
+        if (this.curCategory && this.curCategory.key === data.key) return;
         this.emit("queryProp", data.key);
-        this.curCategory = data.key;
+        this.curCategory = data;
         if (this.selectedItem) this.selectedItem.select = false;
         this.selectedItem = undefined;
         this.selectedItemData = undefined;
     }
     private onConfirmButtonHandler() {
-        if (this.selectedItemData && this.selectedItemData.status === 1) {// op_pkt_def.PKT_MANOR_COMMODITY_STATE.PKT_MANOR_Owned
-            if (this.sendHandler) this.sendHandler.runWith(["usetype", this.selectedItemData.elementId]);
-        }
+        const itemData = this.selectedItemData;
+        const data = { id: itemData.elementId, status: itemData.status, name: itemData.name, type: this.curCategory.value };
+        if (this.sendHandler) this.sendHandler.runWith(["usetype", data]);
     }
 
     private onBuyItemHandler(data: IDecorateShop) {// op_client.IMarketCommodity
@@ -217,13 +230,14 @@ export class PicaRoomDecorateShopPanel extends Phaser.GameObjects.Container {
     }
     private onSelectItemHandler(item: DecorateShopItem) {
         item.select = true;
+        if (!this.selectedItemData) {
+            this.corfirmButton.setFrameNormal("button_g");
+            this.corfirmButton.setInteractive();
+        }
         if (this.selectedItem) this.selectedItem.select = false;
         this.selectedItem = item;
         this.selectedItemData = item.shopData;
-        if (!this.selectedItem.select) {
-            this.selectedItem = undefined;
-            this.selectedItemData = undefined;
-        }
+
     }
     private onCloseHandler() {
         if (this.closeHandler) this.closeHandler.run();
@@ -233,6 +247,7 @@ export class PicaRoomDecorateShopPanel extends Phaser.GameObjects.Container {
 class DecorateShopItem extends Phaser.GameObjects.Container {
     public shopData: any;// op_client.IMarketCommodity
     private dpr: number;
+    private zoom: number;
     private bg: Phaser.GameObjects.Image;
     private nameText: Phaser.GameObjects.Text;
     private icon: DynamicImage;
@@ -242,9 +257,10 @@ class DecorateShopItem extends Phaser.GameObjects.Container {
     private imgprice: ImageValue;
     private key: string;
     private mselect: boolean = false;
-    constructor(scene: Phaser.Scene, x: number, y: number, width: number, height: number, key: string, dpr: number) {
+    constructor(scene: Phaser.Scene, x: number, y: number, width: number, height: number, key: string, dpr: number, zoom: number) {
         super(scene, x, y);
         this.dpr = dpr;
+        this.zoom = zoom;
         this.key = key;
         this.setSize(width, height);
         this.bg = this.scene.make.image({ key, frame: "manor_store_icon_bg" });
@@ -265,10 +281,10 @@ class DecorateShopItem extends Phaser.GameObjects.Container {
         this.tipsText.setFontStyle("bold");
         this.button = new ThreeSliceButton(scene, 73 * dpr, 26 * dpr, UIAtlasName.uicommon, UIHelper.threeRedSmall, UIHelper.threeRedSmall, i18n.t("manor.using"));
         this.button.setTextStyle(UIHelper.brownishStyle(dpr));
-        this.button.y = this.tipsText.y + 2 * dpr;
+        this.button.y = this.tipsText.y -3 * dpr;
         this.button.on(ClickEvent.Tap, this.onButtonHandler, this);
         this.imgprice.y = this.button.y - this.button.height * 0.5 - this.imgprice.height * 0.5 - 5 * dpr;
-        this.add([this.bg, this.nameText, this.icon, this.imgprice, this.tipsText, this.button]);
+        this.add([this.bg, this.icon, this.nameText, this.imgprice, this.tipsText, this.button]);
 
     }
 
@@ -277,9 +293,8 @@ class DecorateShopItem extends Phaser.GameObjects.Container {
         this.setButtonState(data);
         this.nameText.text = data.name || data.shortName;
         const url = Url.getOsdRes(data.icon);
-        this.icon.load(url, this, () => {
-            this.icon.scale = this.dpr;
-        });
+        this.icon.load(url);
+        this.icon.scale = this.dpr / this.zoom;
     }
 
     public set select(value) {

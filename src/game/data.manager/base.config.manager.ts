@@ -26,16 +26,23 @@ export class BaseConfigManager {
                 resolve(true);
             });
         } else {
-            return this.getBasePath().then((value: string) => {
-                if (this.mDispose) return;
-                this.dirname(value);
-                // 开始加载时先清空配置
-                this.dataMap.clear();
-                // 再添加对应的配置
-                this.add();
-                this.mGame.loadJson();
-                return this.executeLoad(this.dataMap);
-            });
+            // return this.getBasePath().then((value: string) => {
+            //     if (this.mDispose) return;
+            //     this.dirname(value);
+            //     // 开始加载时先清空配置
+            //     this.dataMap.clear();
+            //     // 再添加对应的配置
+            //     this.add();
+            //     this.mGame.loadJson();
+            //     return this.executeLoad(this.dataMap);
+            // });
+            this.dirname(this.getBasePath());
+            // 开始加载时先清空配置
+            this.dataMap.clear();
+            // 再添加对应的配置
+            this.add();
+            this.mGame.loadJson();
+            return this.executeLoad(this.dataMap);
         }
     }
 
@@ -165,17 +172,20 @@ export class BaseConfigManager {
         // this.mGame.peer.render.setLocalStorage(key, JSON.stringify(temp));
     }
     protected getBasePath() {
-        return new Promise((resolve, reject) => {
-            const url = ConfigPath.getConfigPath();
-            load(url, "json").then((value: XMLHttpRequest) => {
-                const json = value.response;
-                const version = json.version;
-                const baseUrl = ConfigPath.getBasePath() + version + "/";
-                resolve(baseUrl);
-            }, (reponse) => {
-                Logger.getInstance().error("版本配置加载失败URL: ", url);
-            });
-        });
+        // return new Promise((resolve, reject) => {
+        //     const url = ConfigPath.getConfigPath();
+        //     load(url, "json").then((value: XMLHttpRequest) => {
+        //         const json = value.response;
+        //         const version = json.version;
+        //         const baseUrl = ConfigPath.getBasePath() + version + "/";
+        //         resolve(baseUrl);
+        //     }, (reponse) => {
+        //         Logger.getInstance().error("版本配置加载失败URL: ", url);
+        //     });
+        // });
+        const version = ConfigPath.version;
+        const baseUrl = ConfigPath.getBasePath() + version + "/";
+        return baseUrl;
     }
     get initialize() {
         return this.mInitialization;

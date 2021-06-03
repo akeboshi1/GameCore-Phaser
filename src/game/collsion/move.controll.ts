@@ -1,5 +1,6 @@
 import * as SAT from "sat";
 import { IPos, LogicPos, Logger } from "utils";
+import { IRoomService } from "../room";
 import { CollsionManager } from "./collsion.manager";
 export class MoveControll {
 
@@ -8,11 +9,13 @@ export class MoveControll {
     private velocity: IPos;
     private mPosition: IPos;
     private mPrePosition: IPos;
+    private collsion: CollsionManager;
 
-    constructor(private id: number, private collsion: CollsionManager) {
+    constructor(private id: number, private room: IRoomService) {
         this.mPosition = new LogicPos();
         this.mPrePosition = new LogicPos();
         this.velocity = new LogicPos();
+        this.collsion = room.collsionManager;
     }
 
     setVelocity(x: number, y: number) {
@@ -30,15 +33,15 @@ export class MoveControll {
             pos.y = this.mPosition.y + this.velocity.y;
 
             const collideResponses = this.getCollideResponses();
-            const collideCount = collideResponses.length;
-            // 碰到多个分离后，可能会和其他相交
-            if (collideCount === 1) {
-                pos.x -= collideResponses[0].overlapV.x;
-                pos.y -= collideResponses[0].overlapV.y;
-            } else if (collideCount > 1) {
+            if (collideResponses.length > 2) {
+                // TODO 计算两者中心点x y。水平或垂直时停止移动
                 pos.x = this.mPosition.x;
                 pos.y = this.mPosition.y;
                 return;
+            }
+            for (const response of collideResponses) {
+                pos.x -= response.overlapV.x;
+                pos.y -= response.overlapV.y;
             }
 
             this.mPosition.x = pos.x;
@@ -101,6 +104,15 @@ export class MoveControll {
             return [];
         }
         return this.collsion.collideObjects(this.mBodies);
+    }
+
+    private getBottomPoint(points: SAT.Vector[]) {
+        // 目前仅支持规则图形，填充按顺时针绘制。第三个为最下面的点
+        if (!points || !points[2]) {
+            return Logger.getInstance().error("Irregular collisions are not currently supported");
+        }
+        const bottomPoint = points[2];
+        return this.room.transformToMini45(new LogicPos(bottomPoint.x, bottomPoint.y));
     }
 
     get position(): IPos {

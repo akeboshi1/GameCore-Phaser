@@ -1,5 +1,5 @@
 import { PKT_Quest, QUERY_QUEST_GROUP } from "custom_proto";
-import { BasicMediator, Game } from "gamecore";
+import { BasicMediator, CacheDataManager, DataMgrType, Game } from "gamecore";
 import { MainUIRedType, RedEventType } from "picaStructure";
 import { op_client, op_pkt_def } from "pixelpai_proto";
 import { ModuleName } from "structure";
@@ -16,6 +16,7 @@ export class PicaTaskMediator extends BasicMediator {
     }
 
     show(param?: any) {
+        param = param || this.cacheMgr.taskOption;
         super.show(param);
         this.game.emitter.on(ModuleName.PICATASK_NAME + "_hide", this.onHideView, this);
         this.game.emitter.on(ModuleName.PICATASK_NAME + "_questlist", this.onQueryQuestGroup, this);
@@ -75,6 +76,8 @@ export class PicaTaskMediator extends BasicMediator {
         this.mModel.queryQuestDetail(id);
     }
     private onQueryQuestGroup(type: number) {
+        if (type === op_pkt_def.PKT_Quest_Type.QUEST_MAIN_MISSION) this.cacheMgr.taskOption = 1;
+        else if (type === op_pkt_def.PKT_Quest_Type.QUEST_DAILY_GOAL) this.cacheMgr.taskOption = 2;
         this.mModel.queryQuestGroup(type);
     }
     private onQueryQuestReward(type: number) {
@@ -122,5 +125,9 @@ export class PicaTaskMediator extends BasicMediator {
     }
     private onRedSystemHandler(reds: number[]) {
         if (this.mView) this.mView.setRedsState(reds);
+    }
+
+    private get cacheMgr() {
+        return this.game.getDataMgr<CacheDataManager>(DataMgrType.CacheMgr);
     }
 }

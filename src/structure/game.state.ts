@@ -2,16 +2,22 @@ export enum GameState {
     // ===============登陆游戏时状态:
     // =====第0步 launcher调用render.createGame 创建游戏
     LinkWorker = "LinkWorker",
-    // =====第1步 初始化game中user，监听，manager
+    // =====第1步 linkWorker之后初始化game中user，监听，manager
     CreateManager = "CreateManager",
     // =====第2步 创建远程render account
     CreateAccount = "CreateAccount",
     // =====第1步 初始化game中user，监听，manager
     InitWorld = "InitWorld",
+    // ===== 请求账号登陆成功，等待玩家请求进入游戏
+    LoginSuc = "LoginSuc",
+    // ===== 进入游戏
+    EnterGame = "EnterGame",
     // =====第3步 尝试链接
     StartConnect = "StartConnect",
     // =====第4步 尝试链接
     Connected = "Connected",
+    // 链接断开
+    DisConnect = "DisConnect",
     // =====第5步 请求平台token
     RequestToken = "RequestToken",
     // =====第6步 获得平台token
@@ -39,6 +45,11 @@ export enum GameState {
 
     // 窗口最小化或被隐藏
     Hidden = "Hidden",
+
+    // 跨游戏状态
+    ChangeGame = "ChangeGame",
+    // 退游戏状态
+    OffLine = "OffLine"
 }
 
 export enum ConnectState {

@@ -87,7 +87,7 @@ export class PicaRoamPanel extends PicaBasePanel {
         this.tempDatas = pools;
         if (!this.mInitialized) return;
         this.roamListPanel.setRoamDataList(pools);
-        if (this.roamDrawPanel) {
+        if (this.roamDrawPanel && this.roamDrawPanel.visible) {
             const datas = this.roamListPanel.getRoamTokenDatas();
             this.roamDrawPanel.setRoamDatas(datas);
         }

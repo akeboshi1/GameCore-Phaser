@@ -102,13 +102,9 @@ const SERIALIZE_QUEUE = [
     "bodySpecId",
     "farmBaseId",
     "farmCostId",
-    // "farmShldId",
-    // "farmWeapId",
     "farmSpecId",
     "barmBaseId",
     "barmCostId",
-    // "barmShldId",
-    // "barmWeapId",
     "barmSpecId",
     "flegBaseId",
     "flegCostId",
@@ -120,6 +116,8 @@ const SERIALIZE_QUEUE = [
 ];
 
 const ReplacedTextures: Map<string, number> = new Map<string, number>();
+// 解决低版本和高版本共用同一张合图的问题，低版本未做"不重复上传"的处理
+const ReplacedTextureVersion: string = "v1";
 
 /**
  * 龙骨显示对象
@@ -389,7 +387,7 @@ export class BaseDragonbonesDisplay extends BaseDisplay {
     }
 
     protected generateReplaceTextureKey() {
-        return this.serializeAvatarData(this.displayInfo.avatar);
+        return this.serializeAvatarData(this.displayInfo.avatar) + ReplacedTextureVersion;
     }
 
     protected createArmatureDisplay() {
@@ -530,26 +528,6 @@ export class BaseDragonbonesDisplay extends BaseDisplay {
 
     // doc: https://code.apowo.com/PixelPai/game-core/-/issues/239
     protected serializeAvatarData(data: IAvatar): string {
-        // const temp = JSON.parse(JSON.stringify(data));
-        // const deleteKeys = [];
-        // for (const tempKey in temp) {
-        //     if (tempKey === "id" || tempKey === "dirable") {
-        //         deleteKeys.push(tempKey);
-        //         continue;
-        //     }
-        //     const val = temp[tempKey];
-        //     if (val === null) {
-        //         deleteKeys.push(tempKey);
-        //     } else if (typeof val === "string" && val.length === 0) {
-        //         deleteKeys.push(tempKey);
-        //     }
-        // }
-        // for (const deleteKey of deleteKeys) {
-        //     delete temp[deleteKey];
-        // }
-        //
-        // const result = hash(temp);
-
         let serializeStr = "";
         for (const key of SERIALIZE_QUEUE) {
             if (this.UNCHECK_AVATAR_PROPERTY.indexOf(key) >= 0) continue;
@@ -567,7 +545,7 @@ export class BaseDragonbonesDisplay extends BaseDisplay {
         }
 
         const result = sha1.sync(serializeStr);
-        Logger.getInstance().error("serialize avatar data: ", result, data);
+        Logger.getInstance().debug("serialize avatar data: ", result, data);
         return result;
     }
 

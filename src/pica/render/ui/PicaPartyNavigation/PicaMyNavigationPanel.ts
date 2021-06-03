@@ -206,8 +206,14 @@ class NavigationRoomListItem extends Phaser.GameObjects.Container {
             const list = this.mExtend.list;
             for (const obj of list) {
                 if (Tool.checkPointerContains(obj, pointer)) {
-                    const roomData = (<any>obj).roomData;
-                    if (this.send && roomData.created) this.send.runWith(["go", roomData]);
+                    const temp = <any>obj;
+                    const roomData = temp.roomData;
+                    if (this.send) {
+                        if (roomData.created) this.send.runWith(["go", roomData]);
+                        else if (temp.isUnlock) {
+                            this.send.runWith(["roomtype"]);
+                        }
+                    }
                 }
             }
         }

@@ -1,12 +1,12 @@
 import { NineSliceButton, GameGridTable, GameScroller, Button, NineSlicePatch, ClickEvent } from "apowophaserui";
-import { ButtonEventDispatcher,Render, TextButton, UiManager } from "gamecoreRender";
+import { ButtonEventDispatcher, Render, TextButton, UiManager } from "gamecoreRender";
 import { CommonBackground, DetailBubble, DetailDisplay, ImageValue, ItemButton, PicaItemTipsPanel, UITools } from "picaRender";
 import { UIAtlasName } from "picaRes";
 import { ModuleName } from "structure";
 import { Font, Handler, i18n, UIHelper, Url } from "utils";
 import { op_client, op_def, op_pkt_def } from "pixelpai_proto";
 import { PicaBasePanel } from "../pica.base.panel";
-import { ICountablePackageItem } from "picaStructure";
+import { ICountablePackageItem, IFurnitureGrade } from "picaStructure";
 export class PicaRecastePanel extends Phaser.GameObjects.Container {
   private mBackground: CommonBackground;
   private mCategoriesBar: Phaser.GameObjects.Graphics;
@@ -31,6 +31,7 @@ export class PicaRecastePanel extends Phaser.GameObjects.Container {
   private recastData: any;
   private key: string;
   private isBag: boolean = true;
+  private gradeStars: any;
   constructor(scene: Phaser.Scene, protected render: Render, width: number, height: number, dpr: number, zoom: number) {
     super(scene);
     this.setSize(width, height);
@@ -83,7 +84,8 @@ export class PicaRecastePanel extends Phaser.GameObjects.Container {
   setRecasteResult(data: op_client.CountablePackageItem) {
     if (data) {
       this.mRecasteItemData.count--;
-      this.displayPanel.setRecasteItemData(this.mRecasteItemData);
+      const grade = this.getSpendGrade(this.mRecasteItemData.grade);
+      this.displayPanel.setRecasteItemData(this.mRecasteItemData, grade);
     }
   }
   setCategories(subcategorys: any[]) {// op_def.IStrPair
@@ -126,19 +128,21 @@ export class PicaRecastePanel extends Phaser.GameObjects.Container {
     this.mPropGrid.setItems(props);
   }
 
-  public setStarData(value: number) {
+  public setStarData(value: number, gradeDatas: any) {
     this.starCount = value;
+    this.gradeStars = gradeDatas;
   }
 
   public setRecasteItemData(data: op_client.ICountablePackageItem, blueprint: boolean) {
     if (data && typeof data === "object") {
       this.mRecasteItemData = data;
-      this.displayPanel.setRecasteItemData(data);
+      const grade = this.getSpendGrade(data.grade);
+      this.displayPanel.setRecasteItemData(data, grade);
       this.mDetailBubble.setProp(data, 0, undefined);
       if (blueprint) this.onDisplayPanelHandler("blueprint", true);
     } else {
       this.onDisplayPanelHandler("itembutton");
-      this.displayPanel.setRecasteItemData(undefined);
+      this.displayPanel.setRecasteItemData(undefined, undefined);
     }
   }
 
@@ -292,7 +296,8 @@ export class PicaRecastePanel extends Phaser.GameObjects.Container {
     if (item && this.mSelectedItemData === item || !item) return;
     this.mSelectedItemData = item;
     if (this.isBag) {
-      this.displayPanel.setRecasteItemData(item);
+      const grade = this.getSpendGrade(item.grade);
+      this.displayPanel.setRecasteItemData(item, grade);
       this.mRecasteItemData = item;
     } else this.displayPanel.setRecasteTargetData(item);
     if (this.mSelectedItem) this.mSelectedItem.select = false;
@@ -301,7 +306,9 @@ export class PicaRecastePanel extends Phaser.GameObjects.Container {
     this.mDetailBubble.setProp(item, 0, undefined);
     this.mDetailBubble.y = this.labelTipTex.y + 20 * this.dpr - this.mDetailBubble.height;
   }
-
+  private getSpendGrade(grade) {
+    return this.gradeStars[grade];
+  }
   private clearRecastData() {
     this.mDetailBubble.setProp(undefined, 0, undefined);
     this.mDetailBubble.setTipsText("");
@@ -395,13 +402,13 @@ class RecasteDisplayPanel extends Phaser.GameObjects.Container {
   public setHandler(send: Handler) {
     this.send = send;
   }
-  public setRecasteItemData(data: op_client.ICountablePackageItem) {
+  public setRecasteItemData(data: op_client.ICountablePackageItem, spend?: IFurnitureGrade) {
     if (!data) {
       this.clearDisplay();
       return;
     }
     this.recasteItem.setItemData(data, true);
-    this.starvalue.setText(data.grade + "");
+    this.starvalue.setText(spend.forgeCost + "");
     this.haveRecastData = true;
   }
 

@@ -172,7 +172,7 @@ export class PicaAvatarPanel extends PicaBasePanel {
         }
         const offset = new Phaser.Geom.Point(0, 50 * this.dpr);
         this.mDetailDisplay.loadAvatar(content, 2 * this.dpr, offset);
-        Logger.getInstance().error("测试调用+++++装扮重置问题", this.mSelectedItemData);
+        Logger.getInstance().debug("测试调用+++++装扮重置问题", this.mSelectedItemData);
     }
 
     public setSelectedResource(content: any) {// op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_MARKET_QUERY_PACKAGE_ITEM_RESOURCE
@@ -376,7 +376,7 @@ export class PicaAvatarPanel extends PicaBasePanel {
     private setSelectAvatarSuitItem(data: IExtendCountablePackageItem, cell: Item) {
         const suit_type = data.suitType;
         if (!suit_type) {
-            Logger.getInstance().error("CountablePackageItem avatar does not exist", data);
+            Logger.getInstance().debug("CountablePackageItem avatar does not exist", data);
             return;
         }
         for (const temp of this.mSelectedItems) {

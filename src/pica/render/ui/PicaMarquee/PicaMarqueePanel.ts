@@ -48,7 +48,7 @@ export class PicaMarqueePanel extends PicaBasePanel {
         this.bg = this.scene.make.image({ key: UIAtlasName.bulletin, frame: "bulletin_bg" }, false);
         this.content.setSize(this.bg.width, this.bg.height);
         this.lightSprite = this.createSprite(UIAtlasName.bulletin, "bulletinlight", "bulletin_light_", [1, 2], 10, -1);
-        this.mContent = new BBCodeText(this.mScene, 0, 0, "", UIHelper.colorStyle("#68FAFF", 11 * this.dpr)).setOrigin(0, 0.5);
+        this.mContent = new BBCodeText(this.mScene, 0, 0, "", UIHelper.colorStyle("#68FAFF", 12 * this.dpr)).setOrigin(0, 0.5);
         this.maskGraphic = this.scene.make.graphics(undefined, false);
         const width = this.bg.width / this.scale - 20 * this.dpr, height = this.bg.height / this.scale;
         this.maskGraphic.fillStyle(0x000000, 1);

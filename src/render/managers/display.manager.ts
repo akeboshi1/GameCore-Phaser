@@ -158,7 +158,7 @@ export class DisplayManager {
         }
         // 主角龙骨无视其余资源优先加载
         display.load(data, undefined, false);
-        display.startLoad();
+        // display.startLoad();
         if (isUser) this.mUser = display;
         const id = data.id;
         const sprite = this.mModelCache.get(id);
@@ -200,7 +200,7 @@ export class DisplayManager {
 
     public addFramesDisplay(id: number, data: IFramesModel, layer: number, field?: DisplayField) {
         if (!data) {
-            Logger.getInstance().debug("addFramesDisplay ====>", id);
+            Logger.getInstance().debug("no data addFramesDisplay ====>", id);
             return;
         }
         const scene = this.sceneManager.getMainScene();
@@ -237,7 +237,7 @@ export class DisplayManager {
 
     public removeDisplay(displayID: number): void {
         if (!this.displays.has(displayID)) {
-            // Logger.getInstance().error("BaseDisplay not found: ", displayID);
+            // Logger.getInstance().warn("BaseDisplay not found: ", displayID);
             return;
         }
         const display = this.displays.get(displayID);
@@ -250,7 +250,7 @@ export class DisplayManager {
 
     public load(displayID: number, data: any, field?: DisplayField) {
         if (!this.displays.has(displayID)) {
-            Logger.getInstance().error("BaseDisplay not found: ", displayID);
+            Logger.getInstance().warn("BaseDisplay not found: ", displayID);
             return;
         }
         const display = this.displays.get(displayID);
@@ -259,7 +259,7 @@ export class DisplayManager {
 
     public changeAlpha(displayID: number, val?: number) {
         if (!this.displays.has(displayID)) {
-            Logger.getInstance().error("BaseDisplay not found: ", displayID);
+            Logger.getInstance().warn("BaseDisplay not found: ", displayID);
             return;
         }
         const display = this.displays.get(displayID);
@@ -268,7 +268,7 @@ export class DisplayManager {
 
     public fadeIn(displayID: number) {
         if (!this.displays.has(displayID)) {
-            Logger.getInstance().error("BaseDisplay not found: ", displayID);
+            Logger.getInstance().warn("BaseDisplay not found: ", displayID);
             return;
         }
         const display = this.displays.get(displayID);
@@ -277,7 +277,7 @@ export class DisplayManager {
 
     public fadeOut(displayID: number) {
         if (!this.displays.has(displayID)) {
-            Logger.getInstance().error("BaseDisplay not found: ", displayID);
+            Logger.getInstance().warn("BaseDisplay not found: ", displayID);
             return;
         }
         const display = this.displays.get(displayID);
@@ -286,7 +286,7 @@ export class DisplayManager {
 
     public play(displayID: number, animation: RunningAnimation, field?: DisplayField, times?: number) {
         if (!this.displays.has(displayID)) {
-            Logger.getInstance().error("BaseDisplay not found: ", displayID);
+            Logger.getInstance().warn("BaseDisplay not found: ", displayID);
             return;
         }
         const display = this.displays.get(displayID);
@@ -296,12 +296,12 @@ export class DisplayManager {
     public mount(displayID: number, targetID: number, targetIndex?: number) {
         const display = this.displays.get(displayID);
         if (!display) {
-            Logger.getInstance().error("BaseDisplay not found: ", displayID);
+            Logger.getInstance().warn("BaseDisplay not found: ", displayID);
             return;
         }
         const target = this.displays.get(targetID);
         if (!target) {
-            Logger.getInstance().error("BaseDisplay not found: ", targetID);
+            Logger.getInstance().warn("BaseDisplay not found: ", targetID);
             return;
         }
         target.setRootMount(display);
@@ -311,13 +311,13 @@ export class DisplayManager {
     public unmount(displayID: number, targetID: number, pos?: IPos) {
         const display = this.displays.get(displayID);
         if (!display) {
-            Logger.getInstance().error("BaseDisplay not found: ", displayID);
+            Logger.getInstance().warn("BaseDisplay not found: ", displayID);
             return;
         }
 
         const target = this.displays.get(targetID);
         if (!target) {
-            Logger.getInstance().error("BaseDisplay not found: ", targetID);
+            Logger.getInstance().warn("BaseDisplay not found: ", targetID);
             return;
         }
         target.setRootMount(null);
@@ -345,7 +345,7 @@ export class DisplayManager {
     public removeEffect(targetID: number, displayID: number) {
         const display = this.displays.get(displayID);
         if (!display) {
-            Logger.getInstance().error("BaseDisplay not found: ", displayID);
+            Logger.getInstance().warn("BaseDisplay not found: ", displayID);
             return;
         }
         const target = this.displays.get(targetID);
@@ -356,7 +356,7 @@ export class DisplayManager {
 
     public showEffect(displayID: number) {
         if (!this.displays.has(displayID)) {
-            Logger.getInstance().error("BaseDisplay not found: ", displayID);
+            Logger.getInstance().warn("BaseDisplay not found: ", displayID);
             return;
         }
         const display = this.displays.get(displayID);

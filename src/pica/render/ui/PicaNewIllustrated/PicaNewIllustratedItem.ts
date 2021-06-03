@@ -59,10 +59,11 @@ export class PicaNewIllustratedItem extends ButtonEventDispatcher {
         this.clearYoyoTween();
     }
     setItemData(item: ICountablePackageItem, code: boolean = true) {
-        if (this.itemData && this.itemData.id === item.id) {
+        const before = this.itemData;
+        this.itemData = item;
+        if (before && before.id === item.id) {
             if (this.isplayingLight) return;
         }
-        this.itemData = item;
         this.isplayingLight = false;
         this.clearYoyoTween();
         this.clearAniTweens();
@@ -122,6 +123,7 @@ export class PicaNewIllustratedItem extends ButtonEventDispatcher {
     }
 
     playLightAni(compl: Handler) {
+        if (this.isplayingLight) return;
         this.clearYoyoTween();
         this.itemIcon.y = 0;
         const surveyAniImg = this.scene.make.image({ key: UIAtlasName.illustrate_new, frame: "illustrate_survey_icon_base" });

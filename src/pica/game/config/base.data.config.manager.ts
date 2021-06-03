@@ -36,6 +36,7 @@ import { IElementPi } from "../../structure/ielementpi";
 import { EventType } from "structure";
 import { QuestGroupConfig } from "./quest.group.config";
 import { Element2Config } from "./element2.config";
+import { FurnitureGradeConfig } from "./furniture.grade.config";
 
 export enum BaseDataType {
     i18n_zh = "i18n_zh",
@@ -58,7 +59,8 @@ export enum BaseDataType {
     questGroup = "questGroup",
     dailyQuestGroup = "dailyQuestGroup",
     element2 = "element2",
-    elementpi = "elementpi" // 不作为文件名加载文件，只作为类型区分
+    elementpi = "elementpi", // 不作为文件名加载文件，只作为类型区分
+    furnitureGrade = "furnitureGrade"
     // itemcategory = "itemcategory"
 }
 
@@ -481,7 +483,14 @@ export class BaseDataConfigManager extends BaseConfigManager {
                 displayPrecision: 0
             }];
             shopitem["find"] = true;
-            shopitem.icon = shopitem.icon || item.texturePath;
+            shopitem.icon = shopitem.icon === undefined || shopitem.icon === null || shopitem.icon.length === 0 ?
+                item.texturePath : shopitem.icon;
+
+            // 临时处理 下次平台更新可删除 20210526
+            if (shopitem.category === "PKT_MARKET_CATEGORY_3") {
+                shopitem.icon = item.texturePath;
+            }
+
             shopitem["item"] = item;
         }
     }
@@ -620,7 +629,15 @@ export class BaseDataConfigManager extends BaseConfigManager {
 
     public findGuide(id: string) {
         const data: GuideConfig = this.getConfig(BaseDataType.guide);
-        return data.findGuide(id);
+        const guide = data.findGuide(id);
+        const guideText = guide.guideText;
+        if (guideText && !guideText["extends"]) {
+            for (let i = 0; i < guideText.length; i++) {
+                guideText[i] = this.getI18n(guideText[i]);
+            }
+            guideText["extends"] = true;
+        } else guide.guideText = [];
+        return guide;
     }
 
     public updateGuideState(id: string, val: boolean = false) {
@@ -804,6 +821,20 @@ export class BaseDataConfigManager extends BaseConfigManager {
         return element;
     }
 
+    public getFurnitureGrade(grade: number) {
+        const data: FurnitureGradeConfig = this.getConfig(BaseDataType.furnitureGrade);
+        const temp = data.get(grade);
+        return temp;
+    }
+    public getFurnitureGradeMap() {
+        const data: FurnitureGradeConfig = this.getConfig(BaseDataType.furnitureGrade);
+        const temp = data.gradeMap;
+        const obj: any = {};
+        temp.forEach((value) => {
+            obj[value.grade] = value;
+        });
+        return obj;
+    }
     public destory() {
         super.destory();
         this.mGame.emitter.off(EventType.QUEST_ELEMENT_PI_DATA, this.checkDynamicElementPI, this);
@@ -830,6 +861,7 @@ export class BaseDataConfigManager extends BaseConfigManager {
         this.dataMap.set(BaseDataType.questGroup, new QuestGroupConfig());
         this.dataMap.set(BaseDataType.dailyQuestGroup, new QuestGroupConfig());
         this.dataMap.set(BaseDataType.element2, new Element2Config());
+        this.dataMap.set(BaseDataType.furnitureGrade, new FurnitureGradeConfig());
     }
 
     protected configUrl(reName: string, tempurl?: string) {
@@ -844,7 +876,7 @@ export class BaseDataConfigManager extends BaseConfigManager {
         const config: ItemBaseDataConfig = this.getConfig(BaseDataType.item);
         item.name = this.getI18n(item.name, { id: item.id, name: item.name });
         item.source = item.source ? "PKT_MARKET_TAG_SOURCE_" + item.source : "";
-        item.source = this.getI18n(item.source, { id: item.id, source: item.source });
+        item.source = item.source && item.source.length > 0 ? this.getI18n(item.source, { id: item.id, source: item.source }) : "";
         item.des = this.getI18n(item.des, { id: item.id, des: item.source });
         item.category = "PKT_PACKAGE_CATEGORY_" + item.category;
         item.subcategory = "PKT_MARKET_TAG_" + item.subcategory;

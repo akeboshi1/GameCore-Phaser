@@ -304,14 +304,16 @@ export class ElementManager extends PacketHandler implements IElementManager {
                 // 更新elementstorage中显示对象的数据信息
                 const data = new Sprite(sprite, 3);
                 (<Sprite>data).init(sprite);
-                this.mRoom.game.elementStorage.add(<any>data);
+                if (data.displayInfo) this.mRoom.game.elementStorage.add(data.displayInfo);
                 element = this.get(sprite.id);
                 if (element) {
                     this.mDealSyncMap.set(sprite.id, false);
                     const command = (<any>sprite).command;
                     if (command === op_def.OpCommand.OP_COMMAND_UPDATE) { //  全部
+                        // 初始化数据
                         element.model = data;
                     } else if (command === op_def.OpCommand.OP_COMMAND_PATCH) { //  增量
+                        // 更新数据
                         element.updateModel(sprite);
                     }
                     ele.push(element);

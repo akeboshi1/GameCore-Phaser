@@ -1,14 +1,14 @@
-import {Export, RPCPeer, webworker_rpc} from "webworker-rpc";
+import { Export, RPCPeer, webworker_rpc } from "webworker-rpc";
 import * as protos from "pixelpai_proto";
-import {op_client, op_gateway, op_virtual_world} from "pixelpai_proto";
-import {Buffer, PBpacket} from "net-socket-packet";
-import {ServerAddress} from "../../lib/net/address";
-import {Game} from "./game";
-import {IPos, Logger, LogicPos, Url} from "utils";
-import {EventType, GameState, ILauncherConfig, MAIN_WORKER, ModuleName, RENDER_PEER} from "structure";
-import {CheckPlaceResult, PicaGame} from "picaWorker";
-import {DataMgrType} from "./data.manager/dataManager";
-import {SceneDataManager} from "./data.manager";
+import { op_client, op_gateway, op_virtual_world } from "pixelpai_proto";
+import { Buffer, PBpacket } from "net-socket-packet";
+import { ServerAddress } from "../../lib/net/address";
+import { Game } from "./game";
+import { IPos, Logger, LogicPos, Url } from "utils";
+import { EventType, GameState, ILauncherConfig, MAIN_WORKER, ModuleName, RENDER_PEER } from "structure";
+import { CheckPlaceResult, PicaGame } from "picaWorker";
+import { DataMgrType } from "./data.manager/dataManager";
+import { SceneDataManager } from "./data.manager";
 import version from "../../version";
 
 for (const key in protos) {
@@ -18,7 +18,6 @@ for (const key in protos) {
 export class MainPeer extends RPCPeer {
     private gameState;
     private stateTime: number = 0;
-    @Export()
     private game: Game;
     private mConfig: ILauncherConfig;
     /**
@@ -48,6 +47,10 @@ export class MainPeer extends RPCPeer {
         throw new Error("physical has been discarded");
     }
 
+    get state(): string {
+        return this.gameState;
+    }
+
     set state(val) {
         const now: number = new Date().getTime();
         Logger.getInstance().log("gameState: ====>", val, "delayTime:=====>", now - this.stateTime);
@@ -69,7 +72,7 @@ export class MainPeer extends RPCPeer {
         // 告诉主进程断开链接
         this.remote[RENDER_PEER].Render.onDisConnected();
         // 停止心跳
-        this.endBeat();
+        // this.endBeat();
         this.game.onDisConnected(isAuto);
     }
 
@@ -77,7 +80,7 @@ export class MainPeer extends RPCPeer {
         // 告诉主进程链接错误
         this.remote[RENDER_PEER].Render.onConnectError(error);
         // 停止心跳
-        this.endBeat();
+        // this.endBeat();
         this.game.onError();
     }
 
@@ -110,19 +113,6 @@ export class MainPeer extends RPCPeer {
     }
 
     public startBeat() {
-        if (this.startDelay) return;
-        this.startDelay = setInterval(() => {
-            if (this.reConnectCount >= 8) {
-                this.game.reconnect();
-                return;
-            }
-            this.reConnectCount++;
-            const pkt: PBpacket = new PBpacket(op_gateway.OPCODE._OP_CLIENT_REQ_GATEWAY_PING);
-            this.game.socket.send(pkt.Serialization());
-            const now: number = new Date().getTime();
-            Logger.getInstance().log("beatTime:=====>", now - this.mTmpTime);
-            this.mTmpTime = now;
-        }, this.delayTime);
     }
 
     public endBeat() {
@@ -786,7 +776,6 @@ export class MainPeer extends RPCPeer {
     /**
      * 慎用，super.destroy()会使worker.terminator,致使整个游戏进程关闭
      */
-    @Export()
     public destroy() {
         if (this.game) this.game.isDestroy = true;
         super.destroy();

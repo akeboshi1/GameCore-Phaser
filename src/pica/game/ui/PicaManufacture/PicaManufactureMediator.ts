@@ -109,7 +109,8 @@ export class PicaManufactureMediator extends BasicMediator {
     private onUpdatePlayerInfoHandler() {
         if (this.mView) {
             const value = this.userData.playerProperty.picaStar ? this.userData.playerProperty.picaStar.value : 0;
-            this.mView.setStarData(value);
+            const grade = this.config.getFurnitureGradeMap();
+            this.mView.setStarData(value, grade);
         }
     }
 
@@ -218,5 +219,9 @@ export class PicaManufactureMediator extends BasicMediator {
     private get cacheMgr() {
         const mgr = this.game.getDataMgr<CacheDataManager>(DataMgrType.CacheMgr);
         return mgr;
+    }
+    private get config() {
+        const configMgr = <BaseDataConfigManager>this.game.configManager;
+        return configMgr;
     }
 }

@@ -107,7 +107,7 @@ export class PicaRoomDecorateMediator extends BasicMediator {
                     temp.status = 0;
                 }
             }
-            this.mView.setShopDatas(items,this.curCategory);
+            this.mView.setShopDatas(items, this.curCategory);
         }
     }
 
@@ -115,10 +115,10 @@ export class PicaRoomDecorateMediator extends BasicMediator {
         prop.quantity = 1;
         this.mModel.buyMarketCommodities([prop]);
     }
-    private onUsingItemHandler(eleid: string) {
+    private onUsingItemHandler(eleid: any) {
         const extras = this.game.cacheMgr.extraRoomInfo;
         if (eleid === extras.wallId || eleid === extras.floorId) return;
-        this.game.sendCustomProto("STRING", "roomFacade:applyComponent", { id: eleid });
+        this.game.sendCustomProto("STRING", "roomFacade:applyComponent", { id: eleid.id });
     }
     private onUpdatePlayerHandler(content: PlayerProperty) {
         if (this.mPanelInit) {

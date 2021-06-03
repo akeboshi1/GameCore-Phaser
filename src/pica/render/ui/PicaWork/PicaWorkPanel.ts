@@ -225,7 +225,7 @@ export class PicaWorkPanel extends BasePanel {
             this.render.mainPeer.showMediator(ModuleName.PICANOTICE_NAME, true, data);
             return;
         }
-        this.curProgress += 3;
+        this.curProgress += 6;
         if (!this.isWorking) this.calculateTimeout();
         this.starSprite.play(this.starAniKey, true);
     }

@@ -29,7 +29,7 @@ export class HotelGuidePanel extends BaseHotelGuidePanel {
         const worldMatrix = this.itemTaskBtn.getWorldTransformMatrix();
         const scalx = worldMatrix.scaleX;
         const posx = (item.width - this.itemTaskBtn.width * 0.5) * scalx;
-        this.guideEffect.createGuideEffect({ x: posx, y: worldMatrix.ty });
+        this.guideEffect.createGuideEffect({ x: posx, y: worldMatrix.ty },this.mData.guideText[2]);
         this.itemTaskBtn.on(ClickEvent.Tap, this.step4, this);
     }
 
@@ -73,7 +73,7 @@ export class HotelGuidePanel extends BaseHotelGuidePanel {
         }
         const worldMatrix = this.room.getWorldTransformMatrix();
         const x = this.mPartyNavigationPanel.width * 0.5 / worldMatrix.scaleX;
-        this.guideEffect.createGuideEffect({ x, y: worldMatrix.ty });
+        this.guideEffect.createGuideEffect({ x, y: worldMatrix.ty },this.mData.guideText[5]);
         this.room.on("pointerdown", this.end, this);
     }
 }

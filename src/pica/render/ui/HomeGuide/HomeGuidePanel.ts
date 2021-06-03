@@ -24,7 +24,7 @@ export class HomeGuidePanel extends BaseGuide {
         const navigatePanel = bottom.navigatePanel;
         this.homeBtn = (<any>navigatePanel).homeButton;
         const worldMatrix = this.homeBtn.getWorldTransformMatrix();
-        this.guideEffect.createGuideEffect({ x: worldMatrix.tx, y: worldMatrix.ty });
+        this.guideEffect.createGuideEffect({ x: worldMatrix.tx, y: worldMatrix.ty },this.mData.guideText[0]);
         this.homeBtn.on(ClickEvent.Tap, this.end, this);
     }
 }

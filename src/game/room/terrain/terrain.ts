@@ -40,6 +40,10 @@ export class Terrain extends BlockObject implements IElement {
         return this.mMoveData;
     }
 
+    get moving() {
+        return false;
+    }
+
     public startMove() {
     }
 

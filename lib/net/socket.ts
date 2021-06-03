@@ -1,4 +1,4 @@
-import { Logger, ValueResolver } from "utils";
+import { Logger } from "utils";
 import { ServerAddress } from "./address";
 import { WSWrapper, ReadyState } from "./transport/websocket";
 export interface IConnectListener {
@@ -28,7 +28,7 @@ export class SocketConnection {
     // true是外部断网，false是手动断网
     protected isAuto: boolean = true;
     private mIsConnect: boolean = false;
-    private closeConnectResolver: ValueResolver<any> = null;
+    private mCloseBack: any;
     constructor($listener: IConnectListener) {
         this.mTransport = new WSWrapper();
         this.mConnectListener = $listener;
@@ -47,9 +47,8 @@ export class SocketConnection {
                 Logger.getInstance().info(`SocketConnection close.`);
                 this.mIsConnect = false;
                 listener.onDisConnected(this.isAuto);
-                if (this.closeConnectResolver) {
-                    this.closeConnectResolver.resolve(null);
-                    this.closeConnectResolver = null;
+                if (this.mCloseBack) {
+                    this.mCloseBack();
                 }
             });
             this.mTransport.on("error", (reason: SocketConnectionError) => {
@@ -72,15 +71,9 @@ export class SocketConnection {
         this.doConnect();
     }
 
-    stopConnect(): Promise<any> {
-        if (this.closeConnectResolver) {
-            this.closeConnectResolver.reject("called <stopConnect> again");
-            this.closeConnectResolver = null;
-        }
-        this.closeConnectResolver = ValueResolver.create<any>();
-        return this.closeConnectResolver.promise(() => {
-            if (this.mTransport && this.mTransport.readyState() === ReadyState.OPEN) this.mTransport.Close();
-        });
+    stopConnect(closeBack?: any) {
+        if (closeBack) this.mCloseBack = closeBack;
+        if (this.mTransport) this.mTransport.Close();
     }
 
     send(data: any): void {

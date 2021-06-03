@@ -41,6 +41,7 @@ export class PicaBagPanel extends PicaBasePanel {
   private isDecorating: boolean = false;
   private categoryType: any;
   private mSelectedItemData;
+  private mSelectedIndex: number = 0;
   private mSelectedItem: ItemButton;
   private mAttributes: DynamicImageValue[] = [];
   private moneyData: any;
@@ -124,6 +125,11 @@ export class PicaBagPanel extends PicaBasePanel {
     this.updateCategeoriesLoc(false);
   }
 
+  /**
+   *
+   * @param props 显示当前分类的道具数据
+   * @param isupdate 分类不变， 是否只是数据刷新
+   */
   public setProp(props: IExtendCountablePackageItem[], isupdate: boolean = false) {// op_client.ICountablePackageItem
     props = !props ? [] : props;
     let subProps = [];
@@ -141,9 +147,12 @@ export class PicaBagPanel extends PicaBasePanel {
     }
     if (isupdate) {
       if (!this.mSelectedItemData) isupdate = false;
-      if (!sameid) isupdate = false;
+      if (!sameid) {
+        this.mSelectedIndex--;
+        if (this.mSelectedIndex < 0) this.mSelectedIndex = 0;
+        // isupdate = false;
+      }
     }
-
     const len = subProps.length;
     if (len < 18) {
       subProps = subProps.concat(new Array(18 - len));
@@ -153,10 +162,11 @@ export class PicaBagPanel extends PicaBasePanel {
     if (!isupdate) {
       this.mSelectedItemData = undefined;
       this.mPropGrid.setT(0);
-      const cell = this.mPropGrid.getCell(0);
-      if (cell.container)
-        this.onSelectItemHandler(cell.container);
+      this.mSelectedIndex = 0;
     }
+    const cell = this.mPropGrid.getCell(this.mSelectedIndex);
+    if (cell.container)
+      this.onSelectItemHandler(cell.container);
   }
 
   public setMoneyData(money: number, diamond: number) {
@@ -373,7 +383,7 @@ export class PicaBagPanel extends PicaBasePanel {
         if (cellContainer === null) {
           cellContainer = new ItemButton(scene, UIAtlasName.uicommon, "bag_icon_common_bg", this.dpr, this.scale, false);
         }
-        cellContainer.setData({ item });
+        cellContainer.setData({ item, indexed: cell.index });
         cellContainer.setItemData(item);
         if (item && this.isSelectedItemData(item)) {
           cellContainer.select = true;
@@ -526,6 +536,7 @@ export class PicaBagPanel extends PicaBasePanel {
 
   private onSelectItemHandler(cell: ItemButton) {
     const item: any = cell.getData("item");// op_client.ICountablePackageItem
+    this.mSelectedIndex = cell.getData("indexed");
     if (item && this.mSelectedItemData === item || this.mSelectedItemData && !item) return;
     this.mDetailBubble.visible = true;
     let property = null;
@@ -547,7 +558,7 @@ export class PicaBagPanel extends PicaBasePanel {
         } else this.useBtn.visible = true;
       } else {
         this.useBtn.visible = true;
-        this.showBtn.visible = this.isDecorating;
+        this.showBtn.visible = !this.isDecorating;
       }
       this.setSelectedItem(item, cell);
     } else {
@@ -658,7 +669,7 @@ export class PicaBagPanel extends PicaBasePanel {
         this.useBtn.setText(i18n.t("furni_bag.add"));
         if (categoryType === 1) {
           // this.moreButton.visible = true;
-          this.showBtn.visible = true;
+          this.showBtn.visible = false;
         }
       } else {
         this.useBtn.setText(i18n.t("common.use"));

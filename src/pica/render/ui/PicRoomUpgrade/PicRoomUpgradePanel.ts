@@ -1,4 +1,5 @@
-import { BasePanel, UiManager } from "gamecoreRender";
+import { BasicScene } from "baseRender";
+import { BasePanel, MainUIScene, UiManager } from "gamecoreRender";
 import { ModuleName } from "structure";
 import { Font, i18n } from "utils";
 export class PicRoomUpgradePanel extends BasePanel {
@@ -108,6 +109,7 @@ export class PicRoomUpgradePanel extends BasePanel {
         this.createAnimations();
         this.resize(0, 0);
         super.init();
+        (<BasicScene>this.mScene).layerManager.addToLayer(MainUIScene.LAYER_MASK, this);
     }
     private onClickHandler() {
         if (this.mPlayedTimes < this.MAX_TIMES) {

@@ -11,6 +11,7 @@ export class RedSystemMananger {
     protected tasks: number[];
     protected friends: number[];
     protected dresss: number[];
+    protected maps: number[];
     constructor(protected game: Game) {
         this.game.emitter.on(EventType.RETURN_UPDATE_RED_SYSTEM, this.onRedSystemHandler, this);
         this.mails = [RedDotTypeEnum.MAIL_REDDOTSTATUS];
@@ -20,6 +21,7 @@ export class RedSystemMananger {
         this.tasks = [RedDotTypeEnum.DAILY_QUEST_REDDOTSTATUS, RedDotTypeEnum.MAIN_QUEST_REDDOTSTATUS];
         this.friends = [RedDotTypeEnum.FRIEND_REDDOTSTATUS];
         this.dresss = [RedDotTypeEnum.DRESS_REDDOTSTATUS];
+        this.maps = [RedDotTypeEnum.ONLINE_REWARD];
     }
     destory() {
         if (this.game.emitter) this.game.emitter.off(EventType.RETURN_UPDATE_RED_SYSTEM, this.onRedSystemHandler, this);
@@ -74,6 +76,8 @@ export class RedSystemMananger {
             return MainUIRedType.FRIEND;
         } else if (this.dresss.indexOf(type) !== -1) {
             return MainUIRedType.DRESS;
+        } else if (this.maps.indexOf(type) !== -1) {
+            return MainUIRedType.MAP;
         }
     }
 

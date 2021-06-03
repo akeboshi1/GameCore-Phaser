@@ -173,7 +173,7 @@ export class PicaRoamMediator extends BasicMediator {
         let tempData;
         for (const data of this.poolsData) {
             if (data.tokenId === tokenId && data.drawTime !== 1) {
-                data.progressAward = <any>content.steps;
+                if (content.steps) data.progressAward = <any>content.steps;
                 data.progress = content.currentProgressValue;
                 tempData = data;
             }

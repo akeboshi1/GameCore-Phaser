@@ -162,11 +162,11 @@ export class PicaNewIllustratedPanel extends PicaBasePanel {
     private showFuriDetailPanel(compl?: Handler) {
         if (!this.furiDetail) {
             this.furiDetail = new PicaNewFuriniDetailPanel(this.scene, this.render, 334 * this.dpr, 353 * this.dpr, this.dpr, this.scale);
-            this.furiDetail.setHandler(new Handler(this, () => {
-                this.hideFuriDetailPanel();
-                if (compl) compl.run();
-            }));
         }
+        this.furiDetail.setHandler(Handler.create(this, () => {
+            this.hideFuriDetailPanel();
+            if (compl) compl.run();
+        }));
         this.content.add(this.furiDetail);
         this.furiDetail.visible = true;
         this.furiDetail.refreshMask();
@@ -184,14 +184,14 @@ export class PicaNewIllustratedPanel extends PicaBasePanel {
     private showCombinationPanel(closeHandler: Handler) {
         if (!this.combinePanel) {
             this.combinePanel = new PicaNewCombinationPanel(this.scene, this.render, 334 * this.dpr, 452 * this.dpr, this.dpr, this.scale);
-            this.combinePanel.setHandler(new Handler(this, (tag: string, data) => {
-                if (tag === "close" && closeHandler) {
-                    closeHandler.runWith(data);
-                    return;
-                }
-                this.onCombinationHandler(tag, data);
-            }));
         }
+        this.combinePanel.setHandler(Handler.create(this, (tag: string, data) => {
+            if (tag === "close" && closeHandler) {
+                closeHandler.runWith(data);
+                return;
+            }
+            this.onCombinationHandler(tag, data);
+        }));
         this.content.add(this.combinePanel);
         this.combinePanel.visible = true;
         this.combinePanel.refreshMask();

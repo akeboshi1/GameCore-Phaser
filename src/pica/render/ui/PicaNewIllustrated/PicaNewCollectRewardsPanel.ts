@@ -2,7 +2,8 @@ import { GameGridTable, Button, ClickEvent, NineSliceButton, NineSlicePatch } fr
 import { Handler, i18n, Tool, UIHelper, Url, } from "utils";
 import { IGalleryCombination } from "picaStructure";
 import { UIAtlasName } from "picaRes";
-import { DynamicImage, ThreeSliceButton } from "gamecoreRender";
+import { ButtonEventDispatcher, DynamicImage, ThreeSliceButton } from "gamecoreRender";
+import { PicaItemTipsPanel } from "../SinglePanel/PicaItemTipsPanel";
 export class PicaNewCollectRewardsPanel extends Phaser.GameObjects.Container {
 
     private mGameGrid: GameGridTable;
@@ -144,6 +145,7 @@ class CollectRewardsItem extends Phaser.GameObjects.Container {
     private desTex: Phaser.GameObjects.Text;
     private rewardsBtn: ThreeSliceButton;
     private itemIcon: DynamicImage;
+    private itemButton: ButtonEventDispatcher;
     private itemCountTex: Phaser.GameObjects.Text;
     private collectTex: Phaser.GameObjects.Text;
     private dpr: number;
@@ -158,6 +160,11 @@ class CollectRewardsItem extends Phaser.GameObjects.Container {
         this.zoom = zoom;
         this.background = this.scene.make.image({ key: UIAtlasName.illustrate_new, frame: "illustrate_collect_popup_bg_1" });
         this.itemIcon = new DynamicImage(scene, -width * 0.5 + 36 * dpr, 0);
+        this.itemButton = new ButtonEventDispatcher(scene, 0, 0, false);
+        this.itemButton.x = this.itemIcon.x;
+        this.itemButton.setSize(46 * dpr, 46 * dpr);
+        this.itemButton.enable = true;
+        this.itemButton.on(ClickEvent.Tap, this.onItemButtonHandler, this);
         this.itemCountTex = this.scene.make.text({ style: UIHelper.blackStyle(dpr) }).setOrigin(0.5);
         this.itemCountTex.x = this.itemIcon.x + 15 * dpr;
         this.itemCountTex.y = 15 * dpr;
@@ -179,7 +186,7 @@ class CollectRewardsItem extends Phaser.GameObjects.Container {
         this.rewardsBtn.x = width * 0.5 - this.rewardsBtn.width * 0.5 - 10 * dpr;
         this.rewardsBtn.y = height * 0.5 - this.rewardsBtn.height * 0.5 - 15 * dpr;
         this.rewardsBtn.on(ClickEvent.Tap, this.onRewardsHandler, this);
-        this.add([this.background, this.itemIcon, this.itemCountTex, this.titleTex, this.desTex, this.collectTex, this.rewardsBtn]);
+        this.add([this.background, this.itemIcon, this.itemButton, this.itemCountTex, this.titleTex, this.desTex, this.collectTex, this.rewardsBtn]);
     }
 
     public setCombinationData(data: IGalleryCombination, indexed: number) {
@@ -233,7 +240,9 @@ class CollectRewardsItem extends Phaser.GameObjects.Container {
     private onRewardsHandler() {
         if (this.send) this.send.runWith(["combrewards", { id: this.combiData.id, indexed: this.indexed }]);
     }
-
+    private onItemButtonHandler() {
+        PicaItemTipsPanel.Inst.showTips(this.itemButton, this.combiData.rewardItems[this.indexed - 1]);
+    }
     private getbgName(difficult: number) {
         let temps;
         switch (difficult) {

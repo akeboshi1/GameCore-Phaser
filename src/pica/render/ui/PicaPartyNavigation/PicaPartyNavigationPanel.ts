@@ -12,9 +12,13 @@ import { CommonBackground } from "../../ui";
 import { PicaRoomTypePanel } from "./PicaRoomTypePanel";
 import { PicaTownNoNavigationPanel } from "./PicaTownNoNavigationPanel";
 import { Render } from "../../pica.render";
+import { UITools } from "../uitool";
 export class PicaPartyNavigationPanel extends PicaBasePanel {
     public static PicaPartyNavigationPanel_CLOSE: string = "PicaPartyNavigationPanel_CLOSE";
     public static PICASELFROOM_DATA: string = "PICASELFROOM_DATA";
+    public static PICATOWN_DATA: string = "PICATOWN_DATA";
+    public static PICANAVIGATIONINIT_DATA: string = "PICANAVIGATIONINIT_DATA";
+    public static PICAENTERROOM_DATA: string = "PICAENTERROOM_DATA";
     public myRoomPanel: PicaMyNavigationPanel;
     private content: Phaser.GameObjects.Container;
     private blackBg: Phaser.GameObjects.Graphics;
@@ -70,7 +74,9 @@ export class PicaPartyNavigationPanel extends PicaBasePanel {
         }
         if (this.progressData) this.setOnlineProgress(this.progressData);
     }
-
+    public getToggleButton(index: number) {
+        return this.toggleItems[index];
+    }
     public setPartyListData(content: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_PARTY_LIST, isSelf: boolean = true) {
         this.tempDatas = content;
         //  this.partyNavigationPanel.setPartyDataList(content);
@@ -82,6 +88,7 @@ export class PicaPartyNavigationPanel extends PicaBasePanel {
             this.openTownNavigationPanel();
             this.hideNoItemPanel();
             this.townPanel.setTownDatas(content, this.tooqingOptionType);
+            this.render.emitter.emit(PicaPartyNavigationPanel.PICATOWN_DATA);
         } else {
             this.openNoItemePanel();
             this.hideTownNavigationPanel();
@@ -113,7 +120,12 @@ export class PicaPartyNavigationPanel extends PicaBasePanel {
     public setRoomTypeDatas(datas: any[]) {
         if (this.roomTypePanel) this.roomTypePanel.setRoomTypeDatas(datas);
     }
-
+    public get mineMapItem() {
+        return this.townPanel.mineMapItem;
+    }
+    public get farmMapItem() {
+        return this.townPanel.farmMapItem;
+    }
     public destroy() {
         super.destroy();
     }
@@ -173,6 +185,7 @@ export class PicaPartyNavigationPanel extends PicaBasePanel {
             if (this.roomPanel) {
                 this.roomPanel.refreshMask();
             }
+            this.render.emitter.emit(PicaPartyNavigationPanel.PICANAVIGATIONINIT_DATA);
         }), new Handler(this, () => {
             if (this.townPanel) this.townPanel.refreshMask();
             if (this.myRoomPanel) {
@@ -344,6 +357,7 @@ export class PicaPartyNavigationPanel extends PicaBasePanel {
     private onTownHandler(tag: string, data: any) {// op_client.IEditModeRoom
         if (tag === "enter") {
             this.render.renderEmitter(this.key + "_queryenter", data);
+            if (data === "S1200010" || data === "S0021002") this.render.emitter.emit(PicaPartyNavigationPanel.PICAENTERROOM_DATA);
         } else if (tag === "progress") {
 
         }
@@ -418,7 +432,7 @@ export class PicaPartyNavigationPanel extends PicaBasePanel {
     private onCloseHandler() {
         this.render.renderEmitter(this.key + "_close");
     }
-    private playMove(handler: Handler, update: Handler) {
+    private playMove(compl: Handler, update: Handler) {
         const from = -this.content.width * 0.5 - 10 * this.dpr;
         const to = this.content.width * 0.5;
         const tween = this.scene.tweens.add({
@@ -432,7 +446,7 @@ export class PicaPartyNavigationPanel extends PicaBasePanel {
             onComplete: () => {
                 tween.stop();
                 tween.remove();
-                if (handler) handler.run();
+                if (compl) compl.run();
             },
             onUpdate: () => {
                 if (update) update.run();
@@ -541,6 +555,7 @@ class SignProgressItem extends Phaser.GameObjects.Container {
     private receiveHandler: Handler;
     private finishIcon: Phaser.GameObjects.Image;
     private balckgraphic: Phaser.GameObjects.Graphics;
+    private redImg: Phaser.GameObjects.Image;
     constructor(scene: Phaser.Scene, x: number, y: number, key: string, dpr: number) {
         super(scene, x, y);
         this.dpr = dpr;
@@ -554,6 +569,7 @@ class SignProgressItem extends Phaser.GameObjects.Container {
         this.balckgraphic.fillCircle(0, 0, 16 * dpr);
         this.add([this.bg, this.icon, this.balckgraphic, this.finishIcon]);
         this.finishIcon.visible = false;
+        this.redImg = UITools.creatRedImge(scene, this.bg, undefined, undefined, "home_hint_small");
     }
 
     public setItemData(data: any, index: number, curvalue: number) {// op_client.IPKT_Progress
@@ -569,11 +585,14 @@ class SignProgressItem extends Phaser.GameObjects.Container {
         }
         this.finishIcon.visible = false;
         this.balckgraphic.visible = false;
+        this.redImg.visible = false;
         if (data.targetValue <= curvalue) {
             this.bg.setFrameNormal("map_online_receive_frame", "map_online_receive_frame");
             if (data.received) {
                 this.finishIcon.visible = true;
                 this.balckgraphic.visible = true;
+            } else {
+                this.redImg.visible = true;
             }
             this.icon.clearTint();
         } else {

@@ -1,7 +1,7 @@
 import { BaseDataConfigManager } from "picaWorker";
 import { ElementStateType, ModuleName } from "structure";
 import { Logger } from "utils";
-import { IRoomService } from "..";
+import { InputEnable, IRoomService } from "..";
 import { Element, IElement } from "../element/element";
 import { State } from "./state.group";
 import { BaseHandler, BaseStateManager } from "./state.manager";
@@ -84,7 +84,12 @@ class AddHandler extends ElementHandler {
     }
     private playerExplosive(state: State) {
         const game = this.room.game;
-        game.renderPeer.displayAction("mineexplosive", { id: game.user.id });
+        const isSelf = game.user.id === state.owner.id;
+        if (isSelf) {
+            game.user.stopMove();
+            game.user.setInputEnable(InputEnable.Diasble);
+        }
+        game.renderPeer.displayAction("mineexplosive", { id: state.owner.id, isSelf });
     }
 }
 

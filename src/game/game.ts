@@ -30,7 +30,7 @@ interface ISize {
     height: number;
 }
 
-export const fps: number = 45;
+export const fps: number = 30;
 export const interval = fps > 0 ? 1000 / fps : 1000 / 30;
 export class Game extends PacketHandler implements IConnectListener, ClockReadyListener, ChatCommandInterface {
     public isDestroy: boolean = false;
@@ -71,7 +71,8 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
     protected mReconnect: number = 0;
     protected hasClear: boolean = false;
     protected currentTime: number = 0;
-    protected mWorkerLoop: any;
+    protected mHeartBeat: any;
+    protected mHeartBeatDelay: number = 1000;
     protected mAvatarType: op_def.AvatarStyle;
     protected mRunning: boolean = true;
     protected remoteIndex = 0;
@@ -155,6 +156,8 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
 
     public onDisConnected(isAuto?: boolean) {
         if (!this.debugReconnect) return;
+        // 由于socket逻辑于跨场景和踢下线逻辑冲突，所以游戏状态在此两个逻辑时，不做断线弹窗
+        if (this.peer.state === GameState.ChangeGame || this.peer.state === GameState.OffLine) return;
         Logger.getInstance().debug("app connectFail=====");
         this.isAuto = isAuto;
         if (!this.isAuto) return;
@@ -235,7 +238,6 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
     }
 
     public onClientErrorHandler(packet: PBpacket): void {
-        if (!this.debugReconnect) return;
         const content: op_client.IOP_GATEWAY_RES_CLIENT_ERROR = packet.content;
         switch (content.responseStatus) {
             case op_def.ResponseStatus.REQUEST_UNAUTHORIZED:
@@ -250,7 +252,7 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
         const errorLevel = content.errorLevel;
         const msg = content.msg;
         // 游戏phaser创建完成后才能在phaser内显示ui弹窗等ui
-        if (errorLevel >= op_def.ErrorLevel.SERVICE_GATEWAY_ERROR) {
+        if (errorLevel >= op_def.ErrorLevel.SERVICE_GATEWAY_ERROR && this.debugReconnect) {
             let str: string = msg;
             if (msg.length > 100) str = msg.slice(0, 99);
             this.renderPeer.showAlert(str, true, false).then(() => {
@@ -484,7 +486,7 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
         return this.getDataMgr<CacheDataManager>(DataMgrType.CacheMgr);
     }
     public onFocus() {
-        if (this.mWorkerLoop) clearInterval(this.mWorkerLoop);
+        // if (this.mHeartBeat) clearInterval(this.mHeartBeat);
         this.mRunning = true;
         this.connect.onFocus();
         if (this.connection) {
@@ -509,7 +511,7 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
 
     public onBlur() {
         this.currentTime = 0;
-        // if (this.mWorkerLoop) clearInterval(this.mWorkerLoop);
+        // if (this.mHeartBeat) clearInterval(this.mHeartBeat);
         this.mRunning = false;
         this.connect.onBlur();
         Logger.getInstance().debug("#BlackSceneFromBackground; world.onBlur()");
@@ -677,16 +679,13 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
         this.mCustomProtoManager.send(msgName, cmd, msg);
     }
 
-    // public heartBeatCallBack() {
-    //     this.mainPeer.clearBeat();
-    // }
-
     protected async initWorld() {
         this.mUser = new User(this);
         this.addHandlerFun(op_client.OPCODE._OP_GATEWAY_RES_CLIENT_VIRTUAL_WORLD_INIT, this.onInitVirtualWorldPlayerInit);
         this.addHandlerFun(op_client.OPCODE._OP_GATEWAY_RES_CLIENT_ERROR, this.onClientErrorHandler);
         this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_SELECT_CHARACTER, this.onSelectCharacter);
         this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_GOTO_ANOTHER_GAME, this.onGotoAnotherGame);
+        this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_PING, this.onClientPingHandler);
         // this.addHandlerFun(op_client.OPCODE._OP_GATEWAY_RES_CLIENT_PONG, this.heartBeatCallBack);
         this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_GAME_MODE, this.onAvatarGameModeHandler);
         this.createManager();
@@ -746,6 +745,7 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
     }
 
     private _createAnotherGame(gameId, virtualworldId, sceneId, loc, spawnPointId?, worldId?) {
+        this.peer.state = GameState.ChangeGame;
         this.clearGame(true).then(() => {
             this.isPause = false;
             if (this.mUser) {
@@ -774,6 +774,7 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
     }
 
     private _onGotoAnotherGame(gameId, virtualworldId, sceneId, loc, spawnPointId?, worldId?) {
+        this.peer.state = GameState.ChangeGame;
         this.clearGame(true).then(() => {
             this.isPause = false;
             if (this.connect) {
@@ -981,6 +982,10 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
         this.mAvatarType = content.avatarStyle;
     }
 
+    private onClientPingHandler(packet: PBpacket) {
+        this.connection.send(new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_RES_VIRTUAL_WORLD_PONG));
+    }
+
     private _run(current: number, delta: number) {
         if (!this.mRunning) return;
         // Logger.getInstance.log(`_run at ${current} + delta: ${delta}`);
@@ -991,7 +996,7 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
         if (this.mHttpLoadManager) this.mHttpLoadManager.update(current, delta);
     }
 
-    private update(current: number, delta: number = 0) {
+    private update(current: number = 0, delta: number = 0) {
         if (this.isDestroy) return;
         this._run(current, delta);
 
