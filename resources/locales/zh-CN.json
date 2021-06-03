@@ -248,7 +248,7 @@
     "remove": "移除",
     "unregistered_game": "未注册游戏",
     "notice": "通知",
-    "followed_you": "关注了你",
+    "followed_you": "{{name}} 关注了你",
     "follow_notice": "关注通知",
     "addfriend": "添加好友",
     "friendplaceholder": "搜索好友昵称或备注"

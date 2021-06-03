@@ -1,7 +1,8 @@
 import { BBCodeText, Button, CheckBox, ClickEvent } from "apowophaserui";
 import { DynamicImage, InputField, InputLabel } from "gamecoreRender";
 import { UIAtlasName } from "picaRes";
-import { Handler, i18n, NumberUtils, UIHelper, Url } from "utils";
+import { FriendChannel, FriendRelationEnum } from "structure";
+import { Font, Handler, i18n, NumberUtils, UIHelper, Url } from "utils";
 import { ImageBBCodeValue } from "..";
 import { ImageValue } from "../Components";
 export class PicaFriendBaseListItem extends Phaser.GameObjects.Container {
@@ -58,13 +59,19 @@ export class PicaFriendListItem extends PicaFriendBaseListItem {
     protected send: Handler;
     public setItemData(data: any) {
         super.setItemData(data);
-        const optionType = data.optionType || 1;
+        const optionType = data.optionType || 0;
         this.followBtn.visible = false;
         this.moreBtn.visible = false;
-        if (optionType === 1) {
+        if (optionType === FriendChannel.Fans) {
             this.followBtn.visible = true;
-        } else if (optionType === 2) {
+        } else if (optionType === FriendChannel.Followes || optionType === FriendChannel.Blacklist) {
             this.moreBtn.visible = true;
+        } else if (optionType === FriendChannel.Search) {
+            if (data.relation === FriendRelationEnum.Fans || data.relation === FriendRelationEnum.Null) {
+                this.followBtn.visible = true;
+            } else if (data.relation === FriendRelationEnum.Followed || data.relation === FriendRelationEnum.Friend || data.relation === FriendRelationEnum.Blacklist) {
+                this.moreBtn.visible = true;
+            }
         }
         const avatar = data.avatar;
         const url = Url.getOsdRes(avatar);
@@ -86,6 +93,7 @@ export class PicaFriendListItem extends PicaFriendBaseListItem {
         this.followBtn = new Button(this.scene, UIAtlasName.friend_new, "friend_list_follow");
         this.followBtn.on(ClickEvent.Tap, this.onFollowHandler, this);
         this.moreBtn = new Button(this.scene, UIAtlasName.friend_new, "friend_list_more");
+        this.moreBtn.on(ClickEvent.Tap, this.onMoreHandler, this);
         this.moreBtn.setInteractiveSize(20 * this.dpr, 20 * this.dpr);
         this.add([this.imagIcon, this.nickImge, this.lvImage, this.vipImage, this.followBtn, this.moreBtn]);
         this.followBtn.visible = false;
@@ -105,7 +113,7 @@ export class PicaFriendListItem extends PicaFriendBaseListItem {
         this.moreBtn.x = this.followBtn.x;
     }
     protected onFollowHandler() {
-        if (this.send) this.send.runWith(["follow", this.itemData]);
+        if (this.send) this.send.runWith(["follow", this.itemData.id]);
     }
     protected onMoreHandler() {
         if (this.send) this.send.runWith(["more", this.itemData]);
@@ -158,13 +166,13 @@ export class PicaFriendFunctionItem extends PicaFriendBaseListItem {
     }
 }
 export class PicaFriendSearchItem extends PicaFriendBaseListItem {
-    private bg: Phaser.GameObjects.Image;
-    private checkBox: CheckBox;
-    private contentTex: Phaser.GameObjects.Text;
-    private inputLabel: PicaFriendSearchInput;
-    private searchBtn: Button;
-    private addBtn: Button;
-    private inputVisible: boolean
+    protected bg: Phaser.GameObjects.Image;
+    protected checkBox: CheckBox;
+    protected contentTex: Phaser.GameObjects.Text;
+    protected inputLabel: PicaFriendSearchInput;
+    protected searchBtn: Button;
+    protected addBtn: Button;
+    protected inputVisible: boolean
     public setItemData(data: any) {
         super.setItemData(data);
         this.checkBox.selected = data.selected || false;
@@ -206,7 +214,7 @@ export class PicaFriendSearchItem extends PicaFriendBaseListItem {
             fontSize: 13 * this.dpr + "px",
             width: 110 * this.dpr,
             height: 26 * this.dpr,
-            maxLength: 10,
+            maxLength: 10
         });
         this.inputLabel.on("textchange", this.onTextChangeHandler, this)
         this.searchBtn = new Button(this.scene, UIAtlasName.friend_new, "friend_list_search");
@@ -227,25 +235,25 @@ export class PicaFriendSearchItem extends PicaFriendBaseListItem {
         this.searchBtn.x = this.addBtn.x - 33 * this.dpr;
     }
 
-    private onTextChangeHandler() {
+    protected onTextChangeHandler() {
         const text = this.inputLabel.text;
         this.itemData.input = text;
         this.send.runWith(["searchfriend", text]);
     }
-    private onSearchHandler() {
+    protected onSearchHandler() {
         const visible = this.inputLabel.visible;
         this.setInputState(!visible);
         this.checkBox.selected = false;
     }
 
-    private onCheckBoxHandler() {
+    protected onCheckBoxHandler() {
         const select = this.checkBox.selected;
         this.itemData.selected = select;
         if (this.send) this.send.runWith(["online", select]);
         this.setInputState(false);
     }
 
-    private onAddHandler() {
+    protected onAddHandler() {
         if (this.send) this.send.runWith(["addfriendpanel"]);
     }
 }
@@ -346,6 +354,64 @@ export class PicaFriendCommonItem extends Phaser.GameObjects.Container {
             item = new PicaFriendFunctionItem(this.scene, this.width, 42 * this.dpr, this.dpr);
         } else if (itemType === 5) {
             item = new PicaFriendSearchItem(this.scene, this.width, 37 * this.dpr, this.dpr);
+        }
+        return item;
+    }
+}
+
+export class PicaFriendFunctionSearchItem extends PicaFriendSearchItem {
+    public setItemData(data: any) {
+        this.itemType = data.itemType || 1;
+        this.itemData = data;
+        this.inputLabel.setText(data.input || "");
+
+    }
+    protected onTextChangeHandler() {
+        const text = this.inputLabel.text;
+        this.itemData.input = text;
+    }
+    protected onSearchHandler() {
+        const text = this.inputLabel.text;
+        this.send.runWith(["searchfriend", text]);
+
+    }
+
+    protected init() {
+        this.bg = this.scene.make.image({ key: UIAtlasName.friend_new, frame: "friend_list_online_bg" });
+        this.inputLabel = new PicaFriendSearchInput(this.scene, 146 * this.dpr, 26 * this.dpr, UIAtlasName.friend_new, "friend_add_search_bg", this.dpr, {
+            type: "text",
+            placeholder: i18n.t("friendlist.friendplaceholder"),
+            color: "#ffffff",
+            text: "",
+            fontSize: 13 * this.dpr + "px",
+            width: 110 * this.dpr,
+            height: 26 * this.dpr,
+            maxLength: 10
+        });
+        this.inputLabel.on("textchange", this.onTextChangeHandler, this)
+        this.searchBtn = new Button(this.scene, UIAtlasName.friend_new, "friend_list_search");
+        this.searchBtn.on(ClickEvent.Tap, this.onSearchHandler, this);
+        this.searchBtn.setInteractiveSize(20 * this.dpr, 20 * this.dpr);
+        this.add([this.bg, this.inputLabel, this.searchBtn]);
+        this.layout();
+        this.inputLabel.show();
+        this.line.visible = false;
+    }
+    protected layout() {
+        this.inputLabel.x = 30 * this.dpr;
+        this.searchBtn.x = this.inputLabel.x + this.inputLabel.width * 0.5 - 13 * this.dpr;
+    }
+}
+
+export class PicaFriendFunctionCommonItem extends PicaFriendCommonItem {
+    protected getBaseItem(itemType) {
+        let item: PicaFriendBaseListItem;
+        if (itemType === 1) {
+            item = new PicaFriendListItem(this.scene, this.width, 52 * this.dpr, this.dpr);
+        } else if (itemType === 2 || itemType === 3 || itemType === 4) {
+            item = new PicaFriendFunctionItem(this.scene, this.width, 42 * this.dpr, this.dpr);
+        } else if (itemType === 5) {
+            item = new PicaFriendFunctionSearchItem(this.scene, this.width, 37 * this.dpr, this.dpr);
         }
         return item;
     }

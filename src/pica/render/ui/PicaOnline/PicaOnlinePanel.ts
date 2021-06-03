@@ -191,7 +191,6 @@ export class PicaOnlinePanel extends PicaBasePanel {
         if (data.platformId === this.userid) {
             this.render.renderEmitter(this.key + "_openingcharacter", data.platformId);
         } else {
-            this.add(this.bottomPanel);
             this.bottomPanel.show();
             const black = this.blackList.indexOf(data.platformId) !== -1;
             this.bottomPanel.setRoleData(data, black);
@@ -218,7 +217,6 @@ export class PicaOnlinePanel extends PicaBasePanel {
 
     private closeBottomPanel() {
         this.bottomPanel.hide();
-        this.remove(this.bottomPanel);
     }
 
 }

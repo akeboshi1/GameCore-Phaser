@@ -135,15 +135,14 @@ export class PicaFriendBottomPanel extends Phaser.GameObjects.Container {
     }
 
     private onReportHandler() {
-        if (this.sendHandler) this.sendHandler.runWith(["report"]);
+        if (this.sendHandler) this.sendHandler.runWith(["report", this.roleData.id]);
     }
 
     private onBlockHandler() {
-        if (this.sendHandler) this.sendHandler.runWith(["block", { uid: this.roleData.platformId, black: !this.isblack }]);
+        if (this.sendHandler) this.sendHandler.runWith(["block", { uid: this.roleData.id, black: !this.isblack }]);
     }
 
     private onCloseHandler() {
-        this.hide();
         if (this.sendHandler) this.sendHandler.runWith(["close"]);
     }
 }

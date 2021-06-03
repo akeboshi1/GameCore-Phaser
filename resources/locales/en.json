@@ -247,7 +247,7 @@
     "remove": "Remove",
     "unregistered_game": "Not in Game",
     "notice": "Notice",
-    "followed_you": "followed you"
+    "followed_you": "{{name}} followed you"
   },
   "friend_invite": {
     "refused": "refused",

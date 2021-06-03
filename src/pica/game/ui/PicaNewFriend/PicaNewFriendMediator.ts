@@ -3,15 +3,17 @@ import { PicaNewFriend } from "./PicaNewFriend";
 import { PicaNewFriendRelation } from "./PicaNewFriendRelation";
 import { ModuleName, FriendChannel, EventType, RENDER_PEER, FriendData, FriendRelationEnum } from "structure";
 import { BasicMediator, Game } from "gamecore";
+import { BaseDataConfigManager } from "picaWorker";
 
 export class PicaNewFriendMediator extends BasicMediator {
     protected mView;
-    private PicaFriend: PicaNewFriend;
+    protected mModel: PicaNewFriend;
     constructor(game: Game) {
         super(ModuleName.PICANEWFRIEND_NAME, game);
-        this.PicaFriend = new PicaNewFriend(game);
+        this.mModel = new PicaNewFriend(game);
         this.game.emitter.on(EventType.PLAYER_LIST, this.onPlayerListHandler, this);
         this.game.emitter.on(EventType.SEARCH_RESULT, this.onSearchResultHandler, this);
+        this.game.emitter.on(this.key + "_other", this.onOtherPlayerInfoHandler, this);
     }
 
     show(param?: any) {
@@ -28,6 +30,10 @@ export class PicaNewFriendMediator extends BasicMediator {
         this.game.emitter.on(EventType.REQ_PLAYER_LIST, this.onReqPlayerListHanlder, this);
         this.game.emitter.on(EventType.REQ_RELATION, this.onReRelationHandler, this);
         this.game.emitter.on(EventType.REQ_NEW_FANS, this.onReqNewHandler, this);
+        this.game.emitter.on(this.key + "_block", this.onBlockUserHandler, this);
+        this.game.emitter.on(ModuleName.PICANEWFRIEND_NAME + "_track", this.onTrackHandler, this);
+        this.game.emitter.on(ModuleName.PICANEWFRIEND_NAME + "_invite", this.onInviteHandler, this);
+        this.game.emitter.on(ModuleName.PICANEWFRIEND_NAME + "_gohome", this.onGoOtherHome, this);
     }
 
     hide() {
@@ -43,6 +49,10 @@ export class PicaNewFriendMediator extends BasicMediator {
         this.game.emitter.off(EventType.REQ_PLAYER_LIST, this.onReqPlayerListHanlder, this);
         this.game.emitter.off(EventType.REQ_RELATION, this.onReRelationHandler, this);
         this.game.emitter.off(EventType.REQ_NEW_FANS, this.onReqNewHandler, this);
+        this.game.emitter.off(this.key + "_block", this.onBlockUserHandler, this);
+        this.game.emitter.off(ModuleName.PICANEWFRIEND_NAME + "_track", this.onTrackHandler, this);
+        this.game.emitter.off(ModuleName.PICANEWFRIEND_NAME + "_invite", this.onInviteHandler, this);
+        this.game.emitter.off(ModuleName.PICANEWFRIEND_NAME + "_gohome", this.onGoOtherHome, this);
         super.hide();
     }
 
@@ -82,7 +92,7 @@ export class PicaNewFriendMediator extends BasicMediator {
     }
 
     private onReqNewHandler() {
-        this.PicaFriend.getFans().then((response) => {
+        this.mModel.getFans().then((response) => {
             const data = response.data;
             if (!data) {
                 return;
@@ -106,7 +116,7 @@ export class PicaNewFriendMediator extends BasicMediator {
     }
 
     private getFriends() {
-        this.PicaFriend.getFriends().then((response) => {
+        this.mModel.getFriends().then((response) => {
             if (!this.mPanelInit) {
                 this.mShowData = response.data;
                 return;
@@ -116,7 +126,7 @@ export class PicaNewFriendMediator extends BasicMediator {
     }
 
     private getFans() {
-        this.PicaFriend.getFans().then((response) => {
+        this.mModel.getFans().then((response) => {
             const data = response.data;
             if (!data) {
                 return;
@@ -130,7 +140,7 @@ export class PicaNewFriendMediator extends BasicMediator {
     }
 
     private getFolloweds() {
-        this.PicaFriend.getFolloweds().then((response) => {
+        this.mModel.getFolloweds().then((response) => {
             const data = response.data;
             if (!data) {
                 return;
@@ -143,52 +153,55 @@ export class PicaNewFriendMediator extends BasicMediator {
         });
     }
 
-    private onFollowHandler(args: string) {
-        if (!args || args.length < 0) return;
-        const id = args[0];
+    private onFollowHandler(id: string) {
+        if (!id || id === "") return;
         this.game.httpService.follow(id).then((response) => {
             this.mView.filterById(id);
         });
     }
 
-    private onUnfollowHandler(args: string) {
-        if (!args || args.length < 0) return;
-        const id = args[0];
+    private onUnfollowHandler(id: string) {
+        if (!id || id === "") return;
         this.game.httpService.unfollow(id).then((response) => {
             this.mView.filterById(id);
         });
     }
 
-    private onRemoveBanUserHandler(args) {
-        if (!args || args.length < 1) {
-            return;
-        }
-        this.game.httpService.removeBanUser(args[0]).then((response: any) => {
+    private onRemoveBanUserHandler(id) {
+        if (!id || id === "") return;
+        this.game.httpService.removeBanUser(id).then((response: any) => {
             if (response.code === 201) {
-                this.mView.filterById(args[0]);
+                this.mView.filterById(id);
             }
         });
     }
 
     private onReqBlacklistHandler() {
-        this.PicaFriend.getBanlist().then((response) => {
+        this.mModel.getBanlist().then((response) => {
             this.mView.setFriend(FriendChannel.Blacklist, response.data);
         });
     }
 
-    private onRemoveFromBlacklistHandler(args) {
-        if (!args || args.length < 1) {
-            return;
-        }
-        this.game.httpService.removeBanUser(args[0]).then((response) => {
-            this.mView.filterById(args[0]);
+    private onRemoveFromBlacklistHandler(id) {
+        if (!id || id === "") return;
+        this.game.httpService.removeBanUser(id).then((response) => {
+            this.mView.filterById(id);
         });
     }
+    private onBlockUserHandler(id) {
+        if (!id || id === "") return;
+        this.game.httpService.banUser(id).then((response: any) => {
+            const { code, temp } = response;
+            if (code === 200 || code === 201) {
+                this.mView.filterById(id);
+            }
+        });
 
+    }
     private fetchPlayerList(data) {
         if (!data) return;
         const ids = data.map((friend: any) => friend.id);
-        this.PicaFriend.fetchFriendList(ids);
+        this.mModel.fetchFriendList(ids);
     }
 
     private onPlayerListHandler(content: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_PKT_PLAYER_LIST) {
@@ -196,21 +209,55 @@ export class PicaNewFriendMediator extends BasicMediator {
     }
 
     private onReqFriendAttributesHandler(id: string) {
-        const uimanager = this.game.uiManager;
-        uimanager.showMed(ModuleName.PICAPLAYERINFO_NAME);
-        this.PicaFriend.fetchFriendInfo(id);
+        this.mModel.fetchFriendInfo(id);
     }
 
     private onSearchHandler(text) {
-        if (text && text.length > 0) this.PicaFriend.searchFriend(text[0]);
+        if (text && text.length > 0) this.mModel.searchFriend(text);
     }
 
     private onSearchResultHandler(content: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_PKT_SEARCH_PLAYER) {
         // this.mView.setFriend(FriendChannel.Search, content.playerInfos);
         this.mView.setFriend(FriendChannel.Search, content.playerInfos);
+        const uids = [];
+        for (const data of content.playerInfos) {
+            uids.push(data.platformId);
+        }
+        const avatars = [];
+        this.mModel.getHeadImgList(uids).then((response) => {
+            if (response.code === 200) {
+                const datas: any[] = response.data;
+                for (const data of datas) {
+                    avatars.push(data);
+                }
+                this.mView.updateFriend(avatars);
+            }
+        });
     }
 
     private onReqPlayerListHanlder(ids) {
-        this.PicaFriend.fetchFriendList(ids);
+        this.mModel.fetchFriendList(ids);
     }
+
+    private onOtherPlayerInfoHandler(content) {
+        this.setItemBases(content.properties);
+        this.setItemBases(content.avatarSuit);
+        this.mView.setPlayerInfo(content);
+    }
+    private setItemBases(datas: any[]) {
+        const configMgr = <BaseDataConfigManager>this.game.configManager;
+        configMgr.getBatchItemDatas(datas);
+    }
+    private onTrackHandler(id: string) {
+        this.mModel.track(id);
+    }
+
+    private onInviteHandler(id: string) {
+        this.mModel.invite(id);
+    }
+
+    private onGoOtherHome(id: string) {
+        this.mModel.goOtherHome(id);
+    }
+
 }

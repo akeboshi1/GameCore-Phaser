@@ -1,15 +1,15 @@
 
-import { NineSliceButton, GameGridTable, ClickEvent, ProgressBar, BBCodeText } from "apowophaserui";
+import { NineSliceButton, GameGridTable, ClickEvent, ProgressBar, BBCodeText, Button } from "apowophaserui";
 import { op_pkt_def } from "pixelpai_proto";
 import { Font, Handler, i18n, UIHelper, Url } from "utils";
-import { AvatarSuitType, FriendRelationEnum, ModuleName } from "structure";
+import { AvatarSuitType, EventType, FriendRelationEnum, ModuleName } from "structure";
 import { DynamicImage, UiManager, UIDragonbonesDisplay, ButtonEventDispatcher, ProgressMaskBar, ToggleColorButton, ItemInfoTips, Render } from "gamecoreRender";
 import { PicaBasePanel } from "../pica.base.panel";
 import { CommonBackground, ImageValue } from "../../ui";
 import { UIAtlasName } from "picaRes";
 export class PicaFriendInfoPanel extends Phaser.GameObjects.Container {
     private mBlackBG: Phaser.GameObjects.Graphics;
-    private background: CommonBackground;
+    private background: Phaser.GameObjects.Image;
     private bgImge: Phaser.GameObjects.Image;
     private topCon: Phaser.GameObjects.Container;
     private nickImge: ImageValue;
@@ -26,6 +26,7 @@ export class PicaFriendInfoPanel extends Phaser.GameObjects.Container {
     private followBtn: NineSliceButton;
     private tradingBtn: NineSliceButton;
     private curToggleItem: ToggleColorButton;
+    private closeButton: Button;
     private mPlayerData: any;
     private dataMaps: Map<CharacterOptionType, any[]> = new Map();
     private mRelation: FriendRelationEnum;
@@ -49,32 +50,20 @@ export class PicaFriendInfoPanel extends Phaser.GameObjects.Container {
         this.setSize(w, h);
         this.mBlackBG.clear();
         this.mBlackBG.fillStyle(0, 0.66);
-        this.mBlackBG.fillRect(0, 0, w, h);
-        this.topCon.y = -h * 0.5 + 30 * this.dpr + this.topCon.height * 0.5;
-        this.content.height = h;
-        this.content.x = -this.content.width * 0.5 - 10 * this.dpr;
-        this.content.y = h * 0.5;
+        this.mBlackBG.fillRect(-w * 0.5, -h * 0.5, w, h);
+        const conHeight = this.content.height;
+        this.topCon.y = -conHeight * 0.5 + 10 * this.dpr + this.topCon.height * 0.5;
         this.content.setInteractive();
-        this.bottomCon.y = h * 0.5 - this.bottomCon.height * 0.5;
-        const midHeight = h - this.topCon.height - this.bottomCon.height;
+        this.bottomCon.y = conHeight * 0.5 - this.bottomCon.height * 0.5;
+        const midHeight = conHeight - this.topCon.height - this.bottomCon.height;
         this.bgImge.y = this.topCon.y + this.topCon.height * 0.5 + midHeight * 0.5 - 30 * this.dpr;
         this.avatar.y = this.bgImge.y + 60 * this.dpr;
-
+        this.mBlackBG.on("pointerdown", this.onCloseHandler, this);
     }
-
     public hide() {
         this.visible = false;
     }
 
-    public addListen() {
-        this.mBlackBG.on("pointerup", this.onCloseHandler, this);
-        this.followBtn.on(ClickEvent.Tap, this.onFollowHandler, this);
-    }
-
-    public removeListen() {
-        this.mBlackBG.off("pointerup", this.onCloseHandler, this);
-        this.followBtn.off(ClickEvent.Tap, this.onFollowHandler, this);
-    }
     init() {
         const wid: number = this.width;
         const hei: number = this.height;
@@ -82,13 +71,18 @@ export class PicaFriendInfoPanel extends Phaser.GameObjects.Container {
         this.mBlackBG.clear();
         this.mBlackBG.fillStyle(0x6AE2FF, 0);
         this.mBlackBG.fillRect(0, 0, wid, hei);
-        this.mBlackBG.setInteractive(new Phaser.Geom.Rectangle(0, 0, wid, hei), Phaser.Geom.Rectangle.Contains);
+        this.mBlackBG.setInteractive(new Phaser.Geom.Rectangle(-wid * 0.5, -hei * 0.5, wid, hei), Phaser.Geom.Rectangle.Contains);
         this.add(this.mBlackBG);
         const conWidth = 300 * this.dpr;
         this.content = this.scene.make.container(undefined, false);
         this.content.setSize(conWidth, hei);
         this.add(this.content);
-        this.background = new CommonBackground(this.scene, 0, 0, conWidth, hei);
+        this.background = this.scene.make.image({ key: "friend_message_bg" });
+        this.content.height = this.background.height;
+        this.closeButton = new Button(this.scene, UIAtlasName.uicommon, "close");
+        this.closeButton.on(ClickEvent.Tap, this.onCloseHandler, this);
+        this.closeButton.x = this.background.width * 0.5;
+        this.closeButton.y = -this.background.height * 0.5;
         this.bgImge = this.scene.make.image({ key: "Create_role_bg" });
         this.bgImge.alpha = 0.8;
         this.topCon = this.scene.make.container(undefined, false);
@@ -122,7 +116,7 @@ export class PicaFriendInfoPanel extends Phaser.GameObjects.Container {
         });
 
         const bottomWidth = 274 * this.dpr;
-        const bottomHeight = 310 * this.dpr;
+        const bottomHeight = 295 * this.dpr;
         this.bottomCon = this.scene.make.container(undefined, false);
         this.bottomCon.setSize(bottomWidth, bottomHeight);
         this.middleCon = new MiddleContainer(this.scene, conWidth, 50 * this.dpr, this.dpr);
@@ -141,15 +135,16 @@ export class PicaFriendInfoPanel extends Phaser.GameObjects.Container {
 
         this.followBtn = this.createNineButton(0, 0, 118 * this.dpr, 42 * this.dpr, UIAtlasName.uicommon, "yellow_btn", i18n.t("player_info.follow"), "#996600");
         this.followBtn.setTextStyle(UIHelper.brownishStyle(this.dpr, 14));
-        this.followBtn.y = bottomHeight * 0.5 - this.followBtn.height * 0.5 - 15 * this.dpr;
+        this.followBtn.on(ClickEvent.Tap, this.onFollowHandler, this);
+        this.followBtn.y = bottomHeight * 0.5 - this.followBtn.height * 0.5 - 10 * this.dpr;
         this.followBtn.x = 0;// -this.followBtn.width * 0.5 - 20 * this.dpr;
         this.tradingBtn = this.createNineButton(0, 0, 118 * this.dpr, 42 * this.dpr, UIAtlasName.uicommon, "yellow_btn", i18n.t("player_info.trading"), "#996600");
         this.tradingBtn.setTextStyle(UIHelper.brownishStyle(this.dpr, 14));
         this.tradingBtn.y = this.followBtn.y;
         this.tradingBtn.x = -this.followBtn.x;
         this.tradingBtn.visible = false;
-        this.bottomCon.add([this.middleCon, this.bottombg, optioncon, this.mAttrPanel, this.followBtn]);
-        this.content.add([this.background, this.bgImge, this.topCon, this.avatar, this.bottomCon]);
+        this.bottomCon.add([this.bottombg, optioncon, this.mAttrPanel, this.followBtn, this.middleCon]);
+        this.content.add([this.background, this.bgImge, this.topCon, this.avatar, this.bottomCon, this.closeButton]);
         this.content.visible = true;
         this.resize(wid, hei);
     }
@@ -280,11 +275,12 @@ export class PicaFriendInfoPanel extends Phaser.GameObjects.Container {
         switch (this.mRelation) {
             case FriendRelationEnum.Friend:
             case FriendRelationEnum.Followed:
-                this.render.renderEmitter(this.key + "_unfollow", this.mPlayerData.cid);
+                this.render.renderEmitter(EventType.UNFOLLOW, this.mPlayerData.cid);
+
                 break;
             case FriendRelationEnum.Fans:
             case FriendRelationEnum.Null:
-                this.render.renderEmitter(this.key + "_follow", this.mPlayerData.cid);
+                this.render.renderEmitter(EventType.FOLLOW, this.mPlayerData.cid);
                 break;
         }
     }
@@ -366,7 +362,6 @@ class MiddleContainer extends Phaser.GameObjects.Container {
             const tag = tags[i];
             const item = new OtherButtonItem(this.scene, icon, text, this.dpr);
             item.setTag(tag);
-            item.visible = false;
             item.on(ClickEvent.Tap, this.onOtherClickHandler, this);
             this.otherArr.push(item);
         }
