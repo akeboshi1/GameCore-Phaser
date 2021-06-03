@@ -76,6 +76,7 @@ export class Sprite implements ISprite {
         // init attrs
         this.updateAttr(obj.attrs);
         if (this.updateSuits) this.updateAvatarSuits(this.suits);
+
         // init displayInfo
         this.avatar = this.avatar || obj.avatar;
         if (this.avatar) {
@@ -85,12 +86,16 @@ export class Sprite implements ISprite {
             this.updateDisplay(obj.display, obj.animations, obj.currentAnimationName);
         }
         // ==========> update pos
+        let point;
         if (obj.point3f) {
-            const point = obj.point3f;
-            this.pos = new LogicPos(point.x, point.y, point.z);
+            point = obj.point3f;
+            // this.pos = new LogicPos(point.x, point.y, point.z);
         } else {
-            this.pos = new LogicPos(0, 0);
+            // this.pos = new LogicPos(0, 0);
+            point = { x: 0, y: 0 };
         }
+        this.setPosition(point.x, point.y);
+
         if (obj.sn) {
             this.sn = obj.sn;
         }
@@ -113,18 +118,22 @@ export class Sprite implements ISprite {
         // setDirection 必须在currentAnimationName赋值之后
         this.setDirection(obj.direction || 3);
 
+        // ============ 碰撞区域 =============
         if (!this.currentCollisionArea) {
             this.currentCollisionArea = this.getCollisionArea();
         }
 
+        // ============ 可行走区域 =============
         if (!this.currentWalkableArea) {
             this.currentWalkableArea = this.getWalkableArea();
         }
 
+        // ============ 注册点 ==============
         if (!this.currentCollisionPoint) {
             this.currentCollisionPoint = this.getOriginPoint();
         }
 
+        // =========== 点击区域 ============
         if (!this.interactive) {
             // this.interactive = this.
         }
