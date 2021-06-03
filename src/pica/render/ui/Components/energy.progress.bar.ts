@@ -1,11 +1,11 @@
-import { ProgressMaskBar } from "gamecoreRender";
+import { ProgressNineMaskBar } from "gamecoreRender";
 import { UIAtlasName } from "../../../res";
 import { ImageValue } from "./image.value";
 import { UIHelper } from "utils";
 
 export class EnergyProgressBar extends Phaser.GameObjects.Container {
     private powerTex: ImageValue;
-    private powerPro: ProgressMaskBar;
+    private powerPro: ProgressNineMaskBar;
     private dpr: number;
     constructor(scene: Phaser.Scene, dpr: number) {
         super(scene);
@@ -24,7 +24,7 @@ export class EnergyProgressBar extends Phaser.GameObjects.Container {
         const config = {
             width, height, left: 9 * this.dpr, right: 9 * this.dpr, top: 0, bottom: 0
         };
-        this.powerPro = new ProgressMaskBar(this.scene, UIAtlasName.uicommon, "explore_physical_bottom", "explore_physical_top", undefined, config, config);
+        this.powerPro = new ProgressNineMaskBar(this.scene, UIAtlasName.uicommon, "explore_physical_bottom", "explore_physical_top", undefined, config, config);
         this.powerPro.x = 0;
         this.powerTex = new ImageValue(this.scene, 43 * this.dpr, 15 * this.dpr, UIAtlasName.uicommon, "explore_physical_icon", this.dpr, UIHelper.colorNumberStyle("#ffffff", 11 * this.dpr));
         this.powerTex.x = -width * 0.5 + 13 * this.dpr;

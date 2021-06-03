@@ -74,8 +74,10 @@ export class PicaFriendListItem extends PicaFriendBaseListItem {
             }
         }
         const avatar = data.avatar;
-        const url = Url.getOsdRes(avatar);
-        this.imagIcon.load(url);
+        if (avatar && avatar !== "") {
+            const url = Url.getOsdRes(avatar);
+            this.imagIcon.load(url);
+        }
         this.nickImge.setText(data.nickname);
         this.lvImage.setText(`lv ${data.lv}`);
         this.vipImage.setText("???");
@@ -94,7 +96,7 @@ export class PicaFriendListItem extends PicaFriendBaseListItem {
         this.followBtn.on(ClickEvent.Tap, this.onFollowHandler, this);
         this.moreBtn = new Button(this.scene, UIAtlasName.friend_new, "friend_list_more");
         this.moreBtn.on(ClickEvent.Tap, this.onMoreHandler, this);
-        this.moreBtn.setInteractiveSize(20 * this.dpr, 20 * this.dpr);
+        this.moreBtn.setInteractiveSize(30 * this.dpr, 40 * this.dpr);
         this.add([this.imagIcon, this.nickImge, this.lvImage, this.vipImage, this.followBtn, this.moreBtn]);
         this.followBtn.visible = false;
         this.moreBtn.visible = false;
@@ -219,8 +221,9 @@ export class PicaFriendSearchItem extends PicaFriendBaseListItem {
         this.inputLabel.on("textchange", this.onTextChangeHandler, this);
         this.searchBtn = new Button(this.scene, UIAtlasName.friend_new, "friend_list_search");
         this.searchBtn.on(ClickEvent.Tap, this.onSearchHandler, this);
-        this.searchBtn.setInteractiveSize(20 * this.dpr, 20 * this.dpr);
+        this.searchBtn.setInteractiveSize(20 * this.dpr, 40 * this.dpr);
         this.addBtn = new Button(this.scene, UIAtlasName.friend_new, "friend_list_add");
+        this.addBtn.setInteractiveSize(25 * this.dpr, 40 * this.dpr);
         this.addBtn.on(ClickEvent.Tap, this.onAddHandler, this);
         this.add([this.bg, this.checkBox, this.contentTex, this.inputLabel, this.searchBtn, this.addBtn]);
         this.layout();

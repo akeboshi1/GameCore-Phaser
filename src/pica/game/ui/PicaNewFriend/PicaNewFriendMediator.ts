@@ -1,7 +1,7 @@
 import { op_client } from "pixelpai_proto";
 import { PicaNewFriend } from "./PicaNewFriend";
 import { PicaNewFriendRelation } from "./PicaNewFriendRelation";
-import { ModuleName, FriendChannel, EventType, RENDER_PEER, FriendData, FriendRelationEnum } from "structure";
+import { ModuleName, FriendChannel, EventType, RENDER_PEER, FriendData, FriendRelationEnum, FriendRelationAction } from "structure";
 import { BasicMediator, Game } from "gamecore";
 import { BaseDataConfigManager } from "picaWorker";
 
@@ -25,7 +25,6 @@ export class PicaNewFriendMediator extends BasicMediator {
         this.game.emitter.on(EventType.REMOVE_FROM_BLACKLIST, this.onRemoveBanUserHandler, this);
         this.game.emitter.on(EventType.REQ_FRIEND_ATTRIBUTES, this.onReqFriendAttributesHandler, this);
         this.game.emitter.on(EventType.REQ_BLACKLIST, this.onReqBlacklistHandler, this);
-        this.game.emitter.on(EventType.REMOVE_FROM_BLACKLIST, this.onRemoveFromBlacklistHandler, this);
         this.game.emitter.on(EventType.SEARCH_FRIEND, this.onSearchHandler, this);
         this.game.emitter.on(EventType.REQ_PLAYER_LIST, this.onReqPlayerListHanlder, this);
         this.game.emitter.on(EventType.REQ_RELATION, this.onReRelationHandler, this);
@@ -44,7 +43,6 @@ export class PicaNewFriendMediator extends BasicMediator {
         this.game.emitter.off(EventType.REMOVE_FROM_BLACKLIST, this.onRemoveBanUserHandler, this);
         this.game.emitter.off(EventType.REQ_FRIEND_ATTRIBUTES, this.onReqFriendAttributesHandler, this);
         this.game.emitter.off(EventType.REQ_BLACKLIST, this.onReqBlacklistHandler, this);
-        this.game.emitter.off(EventType.REMOVE_FROM_BLACKLIST, this.onRemoveFromBlacklistHandler, this);
         this.game.emitter.off(EventType.SEARCH_FRIEND, this.onSearchHandler, this);
         this.game.emitter.off(EventType.REQ_PLAYER_LIST, this.onReqPlayerListHanlder, this);
         this.game.emitter.off(EventType.REQ_RELATION, this.onReRelationHandler, this);
@@ -156,14 +154,14 @@ export class PicaNewFriendMediator extends BasicMediator {
     private onFollowHandler(id: string) {
         if (!id || id === "") return;
         this.game.httpService.follow(id).then((response) => {
-            this.mView.filterById(id);
+            this.mView.filterById(id, FriendRelationAction.FOLLOW);
         });
     }
 
     private onUnfollowHandler(id: string) {
         if (!id || id === "") return;
         this.game.httpService.unfollow(id).then((response) => {
-            this.mView.filterById(id);
+            this.mView.filterById(id, FriendRelationAction.UNFOLLOW);
         });
     }
 
@@ -171,7 +169,7 @@ export class PicaNewFriendMediator extends BasicMediator {
         if (!id || id === "") return;
         this.game.httpService.removeBanUser(id).then((response: any) => {
             if (response.code === 201) {
-                this.mView.filterById(id);
+                this.mView.filterById(id,FriendRelationAction.UNBAN);
             }
         });
     }
@@ -182,18 +180,12 @@ export class PicaNewFriendMediator extends BasicMediator {
         });
     }
 
-    private onRemoveFromBlacklistHandler(id) {
-        if (!id || id === "") return;
-        this.game.httpService.removeBanUser(id).then((response) => {
-            this.mView.filterById(id);
-        });
-    }
     private onBlockUserHandler(id) {
         if (!id || id === "") return;
         this.game.httpService.banUser(id).then((response: any) => {
             const { code, temp } = response;
             if (code === 200 || code === 201) {
-                this.mView.filterById(id);
+                this.mView.filterById(id,FriendRelationAction.BAN);
             }
         });
 

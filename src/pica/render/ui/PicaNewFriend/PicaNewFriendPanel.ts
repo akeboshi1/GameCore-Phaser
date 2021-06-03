@@ -1,5 +1,5 @@
 import { ToggleColorButton, UiManager } from "gamecoreRender";
-import { EventType, FriendChannel, FriendData, FriendRelation, FriendRelationEnum, ModuleName } from "structure";
+import { EventType, FriendChannel, FriendData, FriendRelation, FriendRelationAction, FriendRelationEnum, ModuleName } from "structure";
 import { Handler, i18n, UIHelper, Url } from "utils";
 import { op_pkt_def } from "pixelpai_proto";
 import { PicaBasePanel } from "../pica.base.panel";
@@ -68,11 +68,17 @@ export class PicaNewFriendPanel extends PicaBasePanel {
         const panel = this.basePanelMap.get(this.optionType);
         panel.updateRelation(relations);
     }
-    public filterById(id: string) {
+    public filterById(id: string, relation?: FriendRelationAction) {
         const panel = this.basePanelMap.get(this.optionType);
-        panel.filterById(id);
+        panel.filterById(id, relation);
+        this.updatePlayerRelation(id);
     }
+    public updatePlayerRelation(id: string) {
+        if (this.playerPanel && this.playerPanel.visible) {
+            this.playerPanel.updateFriendRelation(id);
+        }
 
+    }
     public setPlayerInfo(data) {
         if (this.playerPanel) this.playerPanel.setPlayerData(data);
     }
@@ -185,30 +191,6 @@ export class PicaNewFriendPanel extends PicaBasePanel {
         this.render.renderEmitter(EventType.FETCH_FRIEND, index);
     }
 
-    private onReqFriendAttributesHandler(id: string) {
-        this.render.renderEmitter(EventType.REQ_FRIEND_ATTRIBUTES, id);
-    }
-
-    private onReqFriendListHandler(ids: number[]) {
-        this.render.renderEmitter(EventType.REQ_PLAYER_LIST, ids);
-    }
-
-    private onRendererEventHandler(event: string, args) {
-        if (event) this.render.renderEmitter(event, args);
-    }
-
-    private onReqFriendRelationHandler(friends: FriendData[]) {
-        if (!friends) {
-            return;
-        }
-        const ids = friends.map((friend) => friend.id);
-        if (ids.length > 0) this.render.renderEmitter(EventType.REQ_RELATION, ids);
-        // for (const friend of friends) {
-        //     friend.relation = this.friendContainer.checkRelation(friend);
-        // }
-        // this.mShowingSubContainer.updateFriends(friends);
-    }
-
     private openFriendListPanel() {
         this.showFriendListPanel();
     }
@@ -306,8 +288,9 @@ export class PicaNewFriendPanel extends PicaBasePanel {
         panel.visible = false;
     }
 
-    private openFriendInfoPanel(data: any) {
+    private openFriendInfoPanel(data: FriendData) {
         this.showFriendInfoPanel();
+        this.playerPanel.setFriendRelation(data.relation);
         this.render.renderEmitter(EventType.REQ_FRIEND_ATTRIBUTES, data.id);
     }
     private showFriendInfoPanel() {
@@ -428,6 +411,19 @@ export class PicaNewFriendPanel extends PicaBasePanel {
         if (tag === "close") {
             this.showContentPanel();
             this.hideFriendInfoPanel();
+        } else {
+            this.render.renderEmitter(tag, data);
+
+            if (this.optionType === FriendChannel.Friends || this.optionType === FriendChannel.Followes) {
+                if (tag === EventType.FOLLOW) {
+                    this.render.renderEmitter(EventType.FETCH_FRIEND, this.optionType);
+                }
+            } else if (this.optionType === FriendChannel.Fans) {
+                if (tag === EventType.UNFOLLOW) {
+                    this.render.renderEmitter(EventType.FETCH_FRIEND, this.optionType);
+                }
+            }
+
         }
     }
     private onBlackPanelHandler(tag: string, data?: any) {
