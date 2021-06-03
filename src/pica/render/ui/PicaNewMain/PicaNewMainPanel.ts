@@ -189,10 +189,10 @@ export class PicaNewMainPanel extends PicaBasePanel {
     }
 
     private onActivityHandler(tag: string, data: any) {
-        // if (tag === "recharge" || tag === "activity") {
-        //     this.onNoticeHandler();
-        //     return;
-        // }                                                                                                                                                                                                                                                                                         
+        if (tag === "recharge" || tag === "activity") {
+            this.onNoticeHandler();
+            return;
+        }
         if (tag === "activity") {
             this.render.renderEmitter(ModuleName.PICANEWMAIN_NAME + "_showpanel", ModuleName.PICAORDER_NAME);
         } else if (tag === "indent") {

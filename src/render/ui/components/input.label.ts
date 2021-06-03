@@ -19,7 +19,7 @@ export class InputLabel extends Phaser.GameObjects.Container {
         let labelConfig = config.label;
         if (!labelConfig) {
             labelConfig = { fontFamily: Font.DEFULT_FONT };
-            Object.assign(labelConfig, config)
+            Object.assign(labelConfig, config);
         }
         const clickW = config.width || 100;
         const clickH = config.height || 100;
@@ -98,7 +98,7 @@ export class InputLabel extends Phaser.GameObjects.Container {
         if (this.mInputText) {
             return;
         }
-        const obj:any = {};
+        const obj: any = {};
         Object.assign(obj, this.mInputConfig);
         obj.placeholder = "";
         this.mInputText = new InputField(this.scene, obj).setOrigin(this.mOriginX, this.mOriginY);

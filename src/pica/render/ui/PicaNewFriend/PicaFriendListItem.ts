@@ -172,7 +172,7 @@ export class PicaFriendSearchItem extends PicaFriendBaseListItem {
     protected inputLabel: PicaFriendSearchInput;
     protected searchBtn: Button;
     protected addBtn: Button;
-    protected inputVisible: boolean
+    protected inputVisible: boolean;
     public setItemData(data: any) {
         super.setItemData(data);
         this.checkBox.selected = data.selected || false;
@@ -216,7 +216,7 @@ export class PicaFriendSearchItem extends PicaFriendBaseListItem {
             height: 26 * this.dpr,
             maxLength: 10
         });
-        this.inputLabel.on("textchange", this.onTextChangeHandler, this)
+        this.inputLabel.on("textchange", this.onTextChangeHandler, this);
         this.searchBtn = new Button(this.scene, UIAtlasName.friend_new, "friend_list_search");
         this.searchBtn.on(ClickEvent.Tap, this.onSearchHandler, this);
         this.searchBtn.setInteractiveSize(20 * this.dpr, 20 * this.dpr);
@@ -298,7 +298,6 @@ export class PicaFriendSearchInput extends Phaser.GameObjects.Container {
     private onTextFocusHandler(e) {
         this.emit("focus");
     }
-
 
     get text() {
         return this.inputText.text;
@@ -388,7 +387,7 @@ export class PicaFriendFunctionSearchItem extends PicaFriendSearchItem {
             height: 26 * this.dpr,
             maxLength: 10
         });
-        this.inputLabel.on("textchange", this.onTextChangeHandler, this)
+        this.inputLabel.on("textchange", this.onTextChangeHandler, this);
         this.searchBtn = new Button(this.scene, UIAtlasName.friend_new, "friend_list_search");
         this.searchBtn.on(ClickEvent.Tap, this.onSearchHandler, this);
         this.searchBtn.setInteractiveSize(20 * this.dpr, 20 * this.dpr);

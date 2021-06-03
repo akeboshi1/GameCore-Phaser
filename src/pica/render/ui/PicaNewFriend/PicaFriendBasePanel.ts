@@ -30,38 +30,6 @@ export class PicaFriendBasePanel extends Phaser.GameObjects.Container {
     public hide() {
         this.visible = false;
     }
-    protected create(title?: string) {
-        title = title || i18n.t("friendlist.addfriend");
-        // this.mBackground = new CommonBackground(this.scene, 0, 0, this.width, this.height);
-        this.backButton = UITools.createBackButton(this.scene, this.dpr, this.onBackHandler, this, title);
-        this.backButton.x = -this.width * 0.5 + this.backButton.width * 0.5 + 5 * this.dpr;
-        this.backButton.y = -this.height * 0.5 + this.backButton.height * 0.5 + 30 * this.dpr;
-        const gridHeight = this.height - 70 * this.dpr;
-        const gridY = this.backButton.y + this.backButton.height * 0.5 + 17 * this.dpr + gridHeight * 0.5;
-        const tableConfig = {
-            x: 0,
-            y: gridY,
-            table: {
-                width: this.width,
-                height: gridHeight,
-                columns: 1,
-                cellWidth: this.width,
-                cellHeight: 75 * this.dpr,
-                reuseCellContainer: true,
-                zoom: this.zoom
-            },
-            scrollMode: 0,
-            clamplChildOY: false,
-            createCellContainerCallback: (cell, cellContainer) => {
-                return this.createCellItem(cell, cellContainer);
-            },
-        };
-        this.mGameGrid = new GameGridTable(this.scene, tableConfig);
-        this.mGameGrid.layout();
-        this.mGameGrid.on("cellTap", this.onGridTableHandler, this);
-        this.add([this.backButton, this.mGameGrid]);
-    }
-
     public refreshMask() {
         this.mGameGrid.resetMask();
     }
@@ -103,6 +71,38 @@ export class PicaFriendBasePanel extends Phaser.GameObjects.Container {
         }
         this.setGridItemDatas(this.optionType, this.friendDatas);
     }
+    protected create(title?: string) {
+        title = title || i18n.t("friendlist.addfriend");
+        // this.mBackground = new CommonBackground(this.scene, 0, 0, this.width, this.height);
+        this.backButton = UITools.createBackButton(this.scene, this.dpr, this.onBackHandler, this, title);
+        this.backButton.x = -this.width * 0.5 + this.backButton.width * 0.5 + 5 * this.dpr;
+        this.backButton.y = -this.height * 0.5 + this.backButton.height * 0.5 + 30 * this.dpr;
+        const gridHeight = this.height - 70 * this.dpr;
+        const gridY = this.backButton.y + this.backButton.height * 0.5 + 17 * this.dpr + gridHeight * 0.5;
+        const tableConfig = {
+            x: 0,
+            y: gridY,
+            table: {
+                width: this.width,
+                height: gridHeight,
+                columns: 1,
+                cellWidth: this.width,
+                cellHeight: 75 * this.dpr,
+                reuseCellContainer: true,
+                zoom: this.zoom
+            },
+            scrollMode: 0,
+            clamplChildOY: false,
+            createCellContainerCallback: (cell, cellContainer) => {
+                return this.createCellItem(cell, cellContainer);
+            },
+        };
+        this.mGameGrid = new GameGridTable(this.scene, tableConfig);
+        this.mGameGrid.layout();
+        this.mGameGrid.on("cellTap", this.onGridTableHandler, this);
+        this.add([this.backButton, this.mGameGrid]);
+    }
+
     protected createCellItem(cell, cellContainer) {
         const scene = cell.scene, index = cell.index,
             item = cell.item;
@@ -132,7 +132,7 @@ export class PicaFriendBasePanel extends Phaser.GameObjects.Container {
                     if (value.nickname && value.nickname.indexOf(data) !== -1) {
                         temps.push(value);
                     }
-                })
+                });
             } else {
                 temps = this.friendDatas;
             }
@@ -155,7 +155,7 @@ export class PicaFriendBasePanel extends Phaser.GameObjects.Container {
         let temps;
         if (this.funDatasMap.has(type)) temps = this.funDatasMap.get(type);
         else {
-            temps = [{ itemType: 5 }]
+            temps = [{ itemType: 5 }];
             this.funDatasMap.set(type, temps);
         }
         content = temps.concat(content);

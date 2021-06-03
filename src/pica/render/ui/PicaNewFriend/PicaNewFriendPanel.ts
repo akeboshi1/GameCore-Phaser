@@ -5,15 +5,15 @@ import { op_pkt_def } from "pixelpai_proto";
 import { PicaBasePanel } from "../pica.base.panel";
 import { Button, ClickEvent, GameGridTable } from "apowophaserui";
 import { ImageValue } from "..";
-import { PicaFriendListPanel } from "./PicaFriendListPanel";
 import { UIAtlasName } from "picaRes";
+import { CommonBackground } from "../Components";
+import { PicaFriendBasePanel } from "./PicaFriendBasePanel";
+import { PicaFriendInfoPanel } from "./PicaFriendInfoPanel";
+import { PicaFriendBottomPanel } from "./PicaFriendBottomPanel";
+import { PicaFriendListPanel } from "./PicaFriendListPanel";
 import { PicaFriendAddPanel } from "./PicaFriendAddPanel";
 import { PicaFollowNoticePanel } from "./PicaFollowNoticePanel";
 import { PicaFriendBlackPanel } from "./PicaFriendBlackPanel";
-import { PicaFriendInfoPanel } from "./PicaFriendInfoPanel";
-import { PicaFriendBottomPanel } from "./PicaFriendBottomPanel";
-import { CommonBackground } from "../Components";
-import { PicaFriendBasePanel } from "./PicaFriendBasePanel";
 export class PicaNewFriendPanel extends PicaBasePanel {
     private content: Phaser.GameObjects.Container;
     private mainCon: Phaser.GameObjects.Container;
@@ -54,6 +54,9 @@ export class PicaNewFriendPanel extends PicaBasePanel {
     public setFriend(type: FriendChannel, friends: any[]) {
         const panel = this.basePanelMap.get(this.optionType);
         panel.setFriendDatas(type, friends);
+        if (type === FriendChannel.Friends || type === FriendChannel.Fans || type === FriendChannel.Followes) {
+            this.peopleImg.setText(friends.length + "");
+        }
     }
 
     public updateFriend(content: any) {
@@ -267,7 +270,7 @@ export class PicaNewFriendPanel extends PicaBasePanel {
             panel = new PicaFollowNoticePanel(this.scene, 300 * this.dpr, height, this.dpr, this.scale);
             panel.setHandler(new Handler(this, this.onFriendNoticePanelHandler));
             this.content.add(panel);
-            this.basePanelMap.set(FriendChannel.Notice, panel)
+            this.basePanelMap.set(FriendChannel.Notice, panel);
         }
         panel = this.basePanelMap.get(FriendChannel.Notice);
         panel.visible = true;
@@ -291,7 +294,7 @@ export class PicaNewFriendPanel extends PicaBasePanel {
             panel = new PicaFriendBlackPanel(this.scene, 300 * this.dpr, height, this.dpr, this.scale);
             panel.setHandler(new Handler(this, this.onBlackPanelHandler));
             this.content.add(panel);
-            this.basePanelMap.set(FriendChannel.Blacklist, panel)
+            this.basePanelMap.set(FriendChannel.Blacklist, panel);
         }
         panel = this.basePanelMap.get(FriendChannel.Blacklist);
         panel.visible = true;
@@ -401,7 +404,7 @@ export class PicaNewFriendPanel extends PicaBasePanel {
             this.render.renderEmitter(EventType.FOLLOW, data);
         } else if (tag === "more") {
             this.openBottomPanel(data, data.relation === FriendRelationEnum.Blacklist);
-        } if (tag === "frienditem") {
+        } else if (tag === "frienditem") {
             this.excuteFuntionItem(data);
         }
     }
@@ -435,7 +438,7 @@ export class PicaNewFriendPanel extends PicaBasePanel {
             this.REQ_PLAYER_LIST(data);
         } else if (tag === "more") {
             this.openBottomPanel(data, true);
-        } if (tag === "frienditem") {
+        } else if (tag === "frienditem") {
             this.excuteFuntionItem(data);
         }
     }

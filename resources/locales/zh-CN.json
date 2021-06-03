@@ -235,8 +235,8 @@
     "rankreward": "奖励"
   },
   "friendlist": {
-    "title": "我的好友",
-    "olinetitle": "显示在线",
+    "title": "好友列表",
+    "olinetitle": "仅显示在线好友",
     "friends": "好友",
     "fans": "粉丝",
     "follow": "关注",

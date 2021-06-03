@@ -5,6 +5,9 @@ import { PicaFriendBaseListItem, PicaFriendCommonItem, PicaFriendListItem, PicaF
 import { FriendChannel, FriendData, FriendRelation, FriendRelationEnum } from "structure";
 import { PicaFriendBasePanel } from "./PicaFriendBasePanel";
 export class PicaFriendListPanel extends PicaFriendBasePanel {
+    public updateRelation(relations: FriendRelation[]) {
+
+    }
     protected create() {
         const tableConfig = {
             x: 0,
@@ -37,10 +40,6 @@ export class PicaFriendListPanel extends PicaFriendBasePanel {
         this.mGameGrid.on("cellTap", this.onGridTableHandler, this);
         this.add(this.mGameGrid);
     }
-
-    public updateRelation(relations: FriendRelation[]) {
-
-    }
     protected onItemHandler(tag: string, data?: any) {
         if (tag === "online") {
             let onlines;
@@ -49,7 +48,7 @@ export class PicaFriendListPanel extends PicaFriendBasePanel {
                 this.sortByOnlien(this.friendDatas);
                 this.friendDatas.forEach((value) => {
                     if (value.online) onlines.push(value);
-                })
+                });
             } else {
                 onlines = this.friendDatas;
             }
@@ -62,7 +61,7 @@ export class PicaFriendListPanel extends PicaFriendBasePanel {
                     if (value.nickname && value.nickname.indexOf(data) !== -1) {
                         temps.push(value);
                     }
-                })
+                });
             } else {
                 temps = this.friendDatas;
             }
@@ -78,11 +77,11 @@ export class PicaFriendListPanel extends PicaFriendBasePanel {
         if (this.funDatasMap.has(type)) temps = this.funDatasMap.get(type);
         else {
             if (type === FriendChannel.Friends) {
-                temps = [{ itemType: 5 }, { itemType: 2, cellHeight: 42 * this.dpr }, { itemType: 3, cellHeight: 42 * this.dpr }, { itemType: 4, cellHeight: 42 * this.dpr }]
+                temps = [{ itemType: 5 }, { itemType: 2, cellHeight: 42 * this.dpr }, { itemType: 3, cellHeight: 42 * this.dpr }, { itemType: 4, cellHeight: 42 * this.dpr }];
             } else if (type === FriendChannel.Fans) {
-                temps = [{ itemType: 5 }]
+                temps = [{ itemType: 5 }];
             } else if (type === FriendChannel.Followes) {
-                temps = [{ itemType: 5 }]
+                temps = [{ itemType: 5 }];
             }
             this.funDatasMap.set(type, temps);
         }

@@ -203,7 +203,7 @@ export class BottomPanel extends PicaBasePanel {
         if (tag === "bag") {
             this.render.renderEmitter(ModuleName.BOTTOM + "_showpanel", ModuleName.PICABAG_NAME);
         } else if (tag === "friend") {
-            this.render.renderEmitter(ModuleName.BOTTOM + "_showpanel", ModuleName.PICAFRIEND_NAME);
+            this.render.renderEmitter(ModuleName.BOTTOM + "_showpanel", ModuleName.PICANEWFRIEND_NAME);
         } else if (tag === "avatar") {
             this.render.renderEmitter(ModuleName.BOTTOM + "_showpanel", ModuleName.PICAAVATAR_NAME);
         } else if (tag === "make") {

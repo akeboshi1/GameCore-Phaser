@@ -36,7 +36,7 @@ export class BaseConfigManager {
             //     this.mGame.loadJson();
             //     return this.executeLoad(this.dataMap);
             // });
-            this.dirname(this.getBasePath());
+            this.dirname(basePath);
             // 开始加载时先清空配置
             this.dataMap.clear();
             // 再添加对应的配置
