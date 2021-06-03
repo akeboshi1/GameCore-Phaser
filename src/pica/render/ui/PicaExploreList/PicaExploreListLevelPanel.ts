@@ -201,9 +201,9 @@ export class PicaExploreListLevelPanel extends Phaser.GameObjects.Container {
             this.send.runWith(["move", false]);
             this.topbg.visible = false;
         }
-        for (const item of this.levelItems) {
-            item.refreshMask();
-        }
+        // for (const item of this.levelItems) {
+        //     item.refreshMask();
+        // }
     }
 
     private onForewordClickHandler() {
@@ -301,10 +301,10 @@ class ChapterLevelItem extends ChapterLevelBaseItem {
     constructor(scene: Phaser.Scene, dpr: number) {
         super(scene, dpr);
     }
-    refreshMask() {
-        this.starProgress.refreshMask();
+    // refreshMask() {
+    //     this.starProgress.refreshMask();
 
-    }
+    // }
     public setLevelData(data: IExploreLevelData, lock: boolean) {
         super.setLevelData(data, lock);
         for (const item of this.clueItms) {
