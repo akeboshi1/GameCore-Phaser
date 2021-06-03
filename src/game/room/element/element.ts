@@ -172,14 +172,10 @@ export class Element extends BlockObject implements IElement {
 
     private delayTime = 1000 / 45;
     private mState: ElementState = ElementState.NONE;
+    private mUpdateAvatarType;
 
-    constructor(protected game: Game, sprite: ISprite, protected mElementManager: IElementManager) {
-        super(sprite ? sprite.id : -1, mElementManager ? mElementManager.roomService : undefined);
-        if (!sprite) {
-            return;
-        }
-        this.mId = sprite.id;
-        this.model = sprite;
+    constructor(protected game: Game, protected mElementManager: IElementManager) {
+        super(mElementManager ? mElementManager.roomService : undefined);
         this.mState = ElementState.INIT;
     }
 
@@ -200,12 +196,12 @@ export class Element extends BlockObject implements IElement {
         this.mDisplayInfo = displayInfo;
         this.isUser = isUser;
         if (!displayInfo) return Promise.reject(`element ${this.mModel.nickname} ${this.id} display does not exist`);
-        this.mState = ElementState.DATAPROGRESS;
+        this.mState = ElementState.DATADEALING;
         await this.loadDisplayInfo();
         return this.addToBlock();
     }
 
-    public async setModel(baseSprite: op_client.ISprite) {
+    public setModel(baseSprite: op_client.ISprite) {
         if (!baseSprite) {
             return;
         }
@@ -217,110 +213,15 @@ export class Element extends BlockObject implements IElement {
         this.mTmpSprite = baseSprite;
         this.state = ElementState.DATAINIT;
         // ============> 下一帧处理逻辑
-
-        this.removeFromWalkableMap();
-        this.mModel = new Sprite(baseSprite);
-        (<any>this.mModel).off("Animation_Change", this.animationChanged, this);
-        (<any>this.mModel).on("Animation_Change", this.animationChanged, this);
-
-        this.mQueueAnimations = undefined;
-        if (this.mModel.pos) {
-            this.setPosition(this.mModel.pos);
-        }
-        this.addToWalkableMap();
-        // 必须执行一遍下面的方法，否则无法获取碰撞区域
-        const area = model.getCollisionArea();
-        const obj = { id: model.id, pos: model.pos, nickname: model.nickname, sound: model.sound, alpha: model.alpha, titleMask: model.titleMask | 0x00020000, hasInteractive: model.hasInteractive };
-        // render action
-        this.load(this.mModel.displayInfo)
-            .then(() => this.mElementManager.roomService.game.peer.render.setModel(obj))
-            .then(() => {
-                this.setDirection(this.mModel.direction);
-                if (this.mInputEnable === InputEnable.Interactive) {
-                    this.setInputEnable(this.mInputEnable);
-                }
-                if (model.mountSprites && model.mountSprites.length > 0) {
-                    this.updateMounth(model.mountSprites);
-                }
-                return this.setRenderable(true);
-            })
-            .catch((error) => {
-                Logger.getInstance().error(error);
-                this.mRoomService.elementManager.onDisplayReady(this.mModel.id);
-            });
     }
 
     public updateModel(model: op_client.ISprite, avatarType?: op_def.AvatarStyle) {
         if (this.mModel.id !== model.id) {
             return;
         }
+        this.mUpdateAvatarType = avatarType;
         this.mState = ElementState.DATAUPDATE;
         // ============> 下一帧处理逻辑
-        this.removeFromWalkableMap();
-        // 序列化数据
-        if (model.hasOwnProperty("attrs")) {
-            this.mModel.updateAttr(model.attrs);
-        }
-        let reload = false;
-        let update = false;
-        // 龙骨
-        if (avatarType === op_def.AvatarStyle.SuitType) {
-            if (this.mModel.updateSuits) {
-                // 处理套装suits数据
-                this.mModel.updateAvatarSuits(this.mModel.suits);
-                if (!this.mModel.avatar) this.mModel.avatar = AvatarSuitType.createBaseAvatar();
-                // 处理op_gameconfig.IAvatar数据
-                this.mModel.updateAvatar(this.mModel.avatar);
-                reload = true;
-            }
-        } else if (avatarType === op_def.AvatarStyle.OriginAvatar) {
-            if (model.hasOwnProperty("avatar")) {
-                this.mModel.updateAvatar(model.avatar);
-                reload = true;
-            }
-        }
-        // 序列图
-        if (model.display && model.animations) {
-            this.mModel.updateDisplay(model.display, model.animations);
-            reload = true;
-        }
-
-        if (model.hasOwnProperty("currentAnimationName")) {
-            this.play(model.currentAnimationName);
-            this.setInputEnable(this.mInputEnable);
-            this.mModel.setAnimationQueue(undefined);
-            update = true;
-        }
-
-        if (model.hasOwnProperty("direction")) {
-            this.setDirection(model.direction);
-            update = true;
-        }
-        // 上下物件
-        if (model.hasOwnProperty("mountSprites")) {
-            const mounts = model.mountSprites;
-            this.mergeMounth(mounts);
-            this.updateMounth(mounts);
-            update = true;
-        }
-        if (model.hasOwnProperty("speed")) {
-            this.mModel.speed = model.speed;
-            // 速度改变，重新计算
-            if (this.mMoving) {
-                update = true;
-                this.startMove();
-            }
-        }
-        if (model.hasOwnProperty("nickname")) {
-            this.mModel.nickname = model.nickname;
-            this.showNickname();
-            update = true;
-        }
-        if (reload) {
-            this.load(this.mModel.displayInfo);
-        }
-        this.mState = ElementState.DATAUPDATE;
-        this.addToWalkableMap();
     }
 
     public play(animationName: string, times?: number): void {
@@ -437,10 +338,29 @@ export class Element extends BlockObject implements IElement {
     }
 
     public update(time?: number, delta?: number) {
+        switch (this.mState) {
+            case ElementState.INIT:
+                break;
+            case ElementState.DATAINIT:
+                this._dataInit();
+                break;
+            case ElementState.DATAUPDATE:
+                this._dataUpdate();
+                break;
+            case ElementState.DATACOMPLETE:
+                break;
+            case ElementState.PREDESTROY:
+                this.destroy();
+                break;
+            case ElementState.DESTROYED:
+                break;
+        }
+        if (this.mState !== ElementState.DATACOMPLETE) return;
+        // ============================= 分割线 =============================
         if (this.mMoving === false) return;
         this._doMove(time, delta);
         this.mDirty = false;
-        this.mState = preload, this.load();
+        // 同步移动逻辑
         // 如果主角没有在推箱子，直接跳过
         if (!this.mRoomService.playerManager.actor.stopBoxMove) return;
         const now = Date.now();
@@ -713,7 +633,12 @@ export class Element extends BlockObject implements IElement {
         this.mStateManager.setState(stateGroup);
     }
 
+    public preDestroy() {
+        this.mState = ElementState.PREDESTROY;
+    }
+
     public destroy() {
+        this.mState = ElementState.DESTROYED;
         this.mCreatedDisplay = false;
         if (this.mMoveData && this.mMoveData.path) {
             this.mMoveData.path.length = 0;
@@ -724,6 +649,7 @@ export class Element extends BlockObject implements IElement {
             this.mStateManager.destroy();
             this.mStateManager = null;
         }
+        this.removeFromWalkableMap();
         this.removeDisplay();
         super.destroy();
     }
@@ -932,6 +858,112 @@ export class Element extends BlockObject implements IElement {
             return;
         }
         super.drawBody();
+    }
+
+    /**
+     * 下一帧处理setModel
+     */
+    private _dataInit() {
+        this.removeFromWalkableMap();
+        this.mId = this.mTmpSprite.id;
+        const model = this.mModel = new Sprite(this.mTmpSprite);
+        (<any>this.mModel).off("Animation_Change", this.animationChanged, this);
+        (<any>this.mModel).on("Animation_Change", this.animationChanged, this);
+
+        this.mQueueAnimations = undefined;
+        if (this.mModel.pos) {
+            this.setPosition(this.mModel.pos);
+        }
+        this.addToWalkableMap();
+        // 必须执行一遍下面的方法，否则无法获取碰撞区域
+        const area = model.getCollisionArea();
+        const obj = { id: model.id, pos: model.pos, nickname: model.nickname, sound: model.sound, alpha: model.alpha, titleMask: model.titleMask | 0x00020000, hasInteractive: model.hasInteractive };
+        // render action
+        this.load(this.mModel.displayInfo)
+            .then(() => this.mElementManager.roomService.game.peer.render.setModel(obj))
+            .then(() => {
+                this.setDirection(this.mModel.direction);
+                if (this.mInputEnable === InputEnable.Interactive) {
+                    this.setInputEnable(this.mInputEnable);
+                }
+                if (model.mountSprites && model.mountSprites.length > 0) {
+                    this.updateMounth(model.mountSprites);
+                }
+                return this.setRenderable(true);
+            })
+            .catch((error) => {
+                Logger.getInstance().error(error);
+                this.mRoomService.elementManager.onDisplayReady(this.mModel.id);
+            });
+    }
+
+    private _dataUpdate() {
+        const model = this.mModel.toSprite();
+        this.removeFromWalkableMap();
+        // 序列化数据
+        if (model.hasOwnProperty("attrs")) {
+            this.mModel.updateAttr(model.attrs);
+        }
+        let reload = false;
+        let update = false;
+        // 龙骨
+        if (this.mUpdateAvatarType === op_def.AvatarStyle.SuitType) {
+            if (this.mModel.updateSuits) {
+                // 处理套装suits数据
+                this.mModel.updateAvatarSuits(this.mModel.suits);
+                if (!this.mModel.avatar) this.mModel.avatar = AvatarSuitType.createBaseAvatar();
+                // 处理op_gameconfig.IAvatar数据
+                this.mModel.updateAvatar(this.mModel.avatar);
+                reload = true;
+            }
+        } else if (this.mUpdateAvatarType === op_def.AvatarStyle.OriginAvatar) {
+            if (model.hasOwnProperty("avatar")) {
+                this.mModel.updateAvatar(model.avatar);
+                reload = true;
+            }
+        }
+        // 序列图
+        if (model.display && model.animations) {
+            this.mModel.updateDisplay(model.display, model.animations);
+            reload = true;
+        }
+
+        if (model.hasOwnProperty("currentAnimationName")) {
+            this.play(model.currentAnimationName);
+            this.setInputEnable(this.mInputEnable);
+            this.mModel.setAnimationQueue(undefined);
+            update = true;
+        }
+
+        if (model.hasOwnProperty("direction")) {
+            this.setDirection(model.direction);
+            update = true;
+        }
+        // 上下物件
+        if (model.hasOwnProperty("mountSprites")) {
+            const mounts = model.mountSprites;
+            this.mergeMounth(mounts);
+            this.updateMounth(mounts);
+            update = true;
+        }
+        if (model.hasOwnProperty("speed")) {
+            this.mModel.speed = model.speed;
+            // 速度改变，重新计算
+            if (this.mMoving) {
+                update = true;
+                this.startMove();
+            }
+        }
+        if (model.hasOwnProperty("nickname")) {
+            this.mModel.nickname = model.nickname;
+            this.showNickname();
+            update = true;
+        }
+        if (reload) {
+            this.load(this.mModel.displayInfo);
+        }
+        this.mState = ElementState.DATAUPDATE;
+        this.addToWalkableMap();
     }
 
     private _startMove(points: any) {

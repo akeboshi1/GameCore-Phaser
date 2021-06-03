@@ -21,7 +21,7 @@ export abstract class BlockObject implements IBlockObject {
     protected mInputEnable: InputEnable;
     protected mCreatedDisplay: boolean;
     protected moveControll: MoveControll;
-    constructor(id: number, protected mRoomService: IRoomService) {
+    constructor(protected mRoomService: IRoomService) {
         this.isUsed = true;
         if (id && this.mRoomService) this.moveControll = new MoveControll(id, this.mRoomService);
     }

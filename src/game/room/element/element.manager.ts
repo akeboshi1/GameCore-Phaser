@@ -125,9 +125,8 @@ export class ElementManager extends PacketHandler implements IElementManager {
     public remove(id: number): IElement {
         const element = this.mElements.get(id);
         if (element) {
+            element.preDestroy();
             this.mElements.delete(id);
-            element.destroy();
-            element.removeFromWalkableMap();
         }
         return element;
     }
@@ -444,7 +443,8 @@ export class ElementManager extends PacketHandler implements IElementManager {
         if (ele) {
             ele.setModel(sprite);
         } else {
-            ele = new Element(this.mRoom.game, sprite, this);
+            ele = new Element(this.mRoom.game, this);
+            ele.setModel(sprite);
             // 有小屋装扮权限时，设置全部家具可互动
             // if (this.roomService.enableDecorate) {
             //     ele.setInputEnable(InputEnable.Enable);
@@ -545,7 +545,7 @@ export class ElementManager extends PacketHandler implements IElementManager {
         for (const id of list) {
             const ele = this.get(id);
             if (!ele) continue;
-            if (ele.state < ElementState.LOADCOMPLETE) {
+            if (ele.state < ElementState.DATACOMPLETE) {
                 tmpList.push(ele);
                 continue;
             }

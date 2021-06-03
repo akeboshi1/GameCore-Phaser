@@ -66,7 +66,9 @@ export class Sprite implements ISprite {
     public layer: number;
     public sound: string;
     public curState: number = 0;
+    public baseSprite: op_client.ISprite;
     constructor(obj: op_client.ISprite, nodeType?: op_def.NodeType) {
+        this.baseSprite = obj;
         // 必要数据
         this.id = obj.id;
         this.bindID = obj.bindId;
