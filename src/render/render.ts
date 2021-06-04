@@ -1693,6 +1693,13 @@ export class Render extends RPCPeer implements GameMain, IRender {
         this.mRoomSize = size;
         this.mRoomMiniSize = miniSize;
     }
+
+    @Export()
+    public isCordove() {
+        const pktGlobal = window["pktGlobal"];
+        return (pktGlobal && pktGlobal.envPlatform === "Cordova");
+    }
+
     protected onWorkerUnlinked(worker: string) {
         if (!this.mWorkerDestroyMap.has(worker)) return;
 
