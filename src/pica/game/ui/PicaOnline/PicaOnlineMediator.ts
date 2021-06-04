@@ -46,21 +46,20 @@ export class PicaOnlineMediator extends BasicMediator {
     }
 
     protected panelInit() {
-        if (this.panelInit) {
-            this.mModel.fetchOnlineInfo();
-            this.blacklist.length = 0;
-            this.mModel.getBanlist().then((response) => {
-                if (response.code === 200) {
-                    const arrs = response.data;
-                    for (const item of arrs) {
-                        if (item.ban && item.ban_user) {
-                            this.blacklist.push(item.ban_user._id);
-                        }
+        super.panelInit();
+        this.mModel.fetchOnlineInfo();
+        this.blacklist.length = 0;
+        this.mModel.getBanlist().then((response) => {
+            if (response.code === 200) {
+                const arrs = response.data;
+                for (const item of arrs) {
+                    if (item.ban && item.ban_user) {
+                        this.blacklist.push(item.ban_user._id);
                     }
-                    this.mView.setBlackList(this.blacklist);
                 }
-            });
-        }
+                this.mView.setBlackList(this.blacklist);
+            }
+        });
     }
 
     private onCloseHandler() {
@@ -93,10 +92,9 @@ export class PicaOnlineMediator extends BasicMediator {
             this.mView.setOnlineDatas(infos, mgr.curRoom.playerCount, this.game.user.userData.cid);
     }
     private on_Another_Info(proto: any) {
-        const content = proto.content;
         if (this.mPanelInit) {
             const uimanager = this.game.uiManager;
-            uimanager.showMed(ModuleName.PICAPLAYERINFO_NAME, content);
+            uimanager.showMed(ModuleName.PICAPLAYERINFO_NAME, proto);
             this.hide();
         }
     }
