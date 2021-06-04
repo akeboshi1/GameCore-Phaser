@@ -189,7 +189,7 @@ export class PicaNewMainPanel extends PicaBasePanel {
     }
 
     private onActivityHandler(tag: string, data: any) {
-        if (tag === "recharge" || tag === "activity") {
+        if (tag === "activity") {
             this.onNoticeHandler();
             return;
         }
@@ -198,7 +198,7 @@ export class PicaNewMainPanel extends PicaBasePanel {
         } else if (tag === "indent") {
             this.render.renderEmitter(ModuleName.PICANEWMAIN_NAME + "_showpanel", ModuleName.PICANEWORDER_NAME);
         } else if (tag === "recharge") {
-            this.render.renderEmitter(ModuleName.PICANEWMAIN_NAME + "_showpanel", ModuleName.PICANEWFRIEND_NAME);
+            this.render.renderEmitter(ModuleName.PICANEWMAIN_NAME + "_showpanel", ModuleName.PICARECHARGE_NAME);
         } else if (tag === "email") {
             this.render.renderEmitter(ModuleName.PICANEWMAIN_NAME + "_showpanel", ModuleName.PICAMAIL_NAME);
         } else if (tag === "roam") {
