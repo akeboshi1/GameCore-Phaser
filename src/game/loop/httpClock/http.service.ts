@@ -143,8 +143,16 @@ export class HttpService {
      * 上传人物头像
      * @param url
      */
-    uploadHeadImage(url: string) {
-        return this.post("update_blob", { file: url });
+    async uploadHeadImage(url: string) {
+        const account = await this.game.peer.render.getAccount();
+        if (!account) {
+            return Promise.reject("account does not exist");
+        }
+        const accountData = account.accountData;
+        if (!accountData || !accountData.id) {
+            return Promise.reject("accountData does not exist");
+        }
+        return this.post("file_upload_mq", { filename: `${accountData.id}/avatar/${Math.ceil(Math.random() * 1e5)}.png`, blob: url, type: "avatar"});
     }
 
     uploadDBTexture(key: string, url: string, json: string): Promise<any> {
@@ -165,13 +173,13 @@ export class HttpService {
                         }
                     }
                     if (exit404) {
-                        Promise.all([this.post("file_upload", { filename: jsonFullName, blob: json, type: "json" }),
-                            this.post("file_upload", { filename: imgFullName, blob: url, type: "png"})])
+                        Promise.all([this.post("file_upload_mq", { filename: jsonFullName, blob: json, type: "json" }),
+                            this.post("file_upload_mq", { filename: imgFullName, blob: url, type: "png"})])
                             .then((responses) => {
                                 resolve(null);
                                 for (const respons of responses) {
                                     if (respons.status === 404) {
-                                        Logger.getInstance().error("file_upload error: ", respons);
+                                        Logger.getInstance().error("file_upload_mq error: ", respons);
                                     }
                                 }
                             })
