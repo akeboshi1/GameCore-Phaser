@@ -223,6 +223,9 @@ export class PicaPartyNavigationMediator extends BasicMediator {
         } else if (optionType === 5) {
             subTypes = [3, 4];
             tag = 1;
+        } else {
+            tag = 1;
+            subTypes = [];
         }
         const tempArr = [];
         let tempDatas = [];
