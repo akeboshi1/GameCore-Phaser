@@ -44,7 +44,8 @@
                 config_root: "http://172.18.0.100/",
                 virtual_world_id: "0",
                 world_id: "63559",
-                locationhref: window.location.href
+                locationhref: window.location.href,
+                isApp: true
             }
             const app = launcher.start(option);
             app.registerReload(window.reload);
