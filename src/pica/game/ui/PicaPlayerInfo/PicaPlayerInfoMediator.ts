@@ -69,7 +69,7 @@ export class PicaPlayerInfoMediator extends BasicMediator {
     private onOwnerCharacterInfo(proto: any) {
         const content = proto.content;
         if (!this.mPanelInit) {
-            this.mShowData = content;
+            this.mShowData = proto;
             this.mShowData.isUser = true;
             return;
         }
@@ -88,7 +88,7 @@ export class PicaPlayerInfoMediator extends BasicMediator {
     private onOtherCharacterInfo(proto: any) {
         const content = proto.content;
         if (!this.mPanelInit) {
-            this.mShowData = content;
+            this.mShowData = proto;
             this.mShowData.isUser = false;
             return;
         }

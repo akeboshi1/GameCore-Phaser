@@ -53,7 +53,7 @@ export class PicaFriendBasePanel extends Phaser.GameObjects.Container {
             if (tempFriend) {
                 tempFriend.nickname = player.nickname;
                 if (player.level) tempFriend.lv = player.level.level;
-                tempFriend.genger = player.gender;
+                tempFriend.gender = player.gender;
             }
         }
         this.mGameGrid.refresh();

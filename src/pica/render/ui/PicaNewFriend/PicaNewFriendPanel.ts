@@ -341,7 +341,8 @@ export class PicaNewFriendPanel extends PicaBasePanel {
         if (tag === "frienditem") {
             this.excuteFuntionItem(data);
         } else if (tag === "follow") {
-            this.render.renderEmitter(EventType.FOLLOW, data);
+            this.render.renderEmitter(EventType.FOLLOW, data.id);
+            this.updateFriendRelation(FriendRelationAction.FRIEND);
         } else if (tag === "more") {
             this.openBottomPanel(data, false);
         } else if (tag === "REQ_PLAYER_LIST") {
@@ -384,7 +385,12 @@ export class PicaNewFriendPanel extends PicaBasePanel {
         } else if (tag === "searchfriend") {
             this.render.renderEmitter(EventType.SEARCH_FRIEND, data);
         } else if (tag === "follow") {
-            this.render.renderEmitter(EventType.FOLLOW, data);
+            this.render.renderEmitter(EventType.FOLLOW, data.id);
+            if (data.relation === FriendRelationEnum.Fans) {
+                this.updateFriendRelation(FriendRelationAction.FOLLOW);
+            } else {
+                this.updateFriendRelation(FriendRelationAction.FRIEND);
+            }
         } else if (tag === "more") {
             this.openBottomPanel(data, data.relation === FriendRelationEnum.Blacklist);
         } else if (tag === "frienditem") {
@@ -401,8 +407,10 @@ export class PicaNewFriendPanel extends PicaBasePanel {
             const black = data.black;
             if (black) {
                 this.render.renderEmitter(this.key + "_block", uid);
+                this.updateFriendRelation(FriendRelationAction.BAN);
             } else {
                 this.render.renderEmitter(EventType.REMOVE_FROM_BLACKLIST, uid);
+                this.updateFriendRelation(FriendRelationAction.UNBAN);
             }
             this.hideFriendBottomPanel();
         }
@@ -442,4 +450,23 @@ export class PicaNewFriendPanel extends PicaBasePanel {
     private REQ_PLAYER_LIST(data: any) {
         this.render.renderEmitter(EventType.REQ_PLAYER_LIST, data);
     }
+    private updateFriendRelation(raltion: FriendRelationAction) {
+        let notice = "";
+        if (raltion === FriendRelationAction.FRIEND) {
+            notice = i18n.t("friendlist.addfriended");
+        } else if (raltion === FriendRelationAction.FOLLOW) {
+            notice = i18n.t("friendlist.followed");
+        } else if (raltion === FriendRelationAction.BAN) {
+            notice = i18n.t("friendlist.blacklisted");
+        } else if (raltion === FriendRelationAction.UNBAN) {
+            notice = i18n.t("friendlist.removed");
+        }
+        if (notice !== "") {
+            const tempdata = {
+                text: [{ text: notice, node: undefined }]
+            };
+            this.render.mainPeer.showMediator(ModuleName.PICANOTICE_NAME, true, tempdata);
+        }
+    }
+
 }

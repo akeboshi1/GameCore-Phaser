@@ -102,6 +102,7 @@ export class PicaFriendListItem extends PicaFriendBaseListItem {
         this.add([this.imagIcon, this.nickImge, this.lvImage, this.vipImage, this.followBtn, this.moreBtn]);
         this.followBtn.visible = false;
         this.moreBtn.visible = false;
+        this.vipImage.visible = false;
         this.layout();
     }
     protected layout() {
@@ -117,7 +118,7 @@ export class PicaFriendListItem extends PicaFriendBaseListItem {
         this.moreBtn.x = this.followBtn.x;
     }
     protected onFollowHandler() {
-        if (this.send) this.send.runWith(["follow", this.itemData.id]);
+        if (this.send) this.send.runWith(["follow", this.itemData]);
     }
     protected onMoreHandler() {
         if (this.send) this.send.runWith(["more", this.itemData]);

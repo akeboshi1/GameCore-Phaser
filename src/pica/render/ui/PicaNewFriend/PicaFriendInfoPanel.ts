@@ -175,11 +175,11 @@ export class PicaFriendInfoPanel extends Phaser.GameObjects.Container {
                 raltion = FriendRelationEnum.Followed;
                 notice = i18n.t("friendlist.followed");
             }
-            this.setFriendRelation(raltion);
             const tempdata = {
                 text: [{ text: notice, node: undefined }]
             };
             this.render.mainPeer.showMediator(ModuleName.PICANOTICE_NAME, true, tempdata);
+            this.setFriendRelation(raltion);
         }
     }
     public setPlayerData(data: any) {

@@ -240,14 +240,19 @@
     "fans": "Fans",
     "follow": "Follow",
     "blacklist": "BLACKLIST",
+    "blacklisted": "已添加黑名单",
     "search": "Search",
     "search_friends_notes": "Search",
     "unfollow": "Following",
+    "unfollowed": "已取消关注",
     "lv": "Lv",
     "remove": "Remove",
+    "removed": "已移除黑名单",
     "unregistered_game": "Not in Game",
     "notice": "Notice",
-    "followed_you": "{{name}} followed you"
+    "followed_you": "{{name}} followed you",
+    "addfriended": "已成功添加好友",
+    "friendplaceholder": "搜索好友昵称或备注"
   },
   "friend_invite": {
     "refused": "refused",

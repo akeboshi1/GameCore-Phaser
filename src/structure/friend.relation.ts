@@ -11,6 +11,7 @@ export enum FriendRelationEnum {
     Blacklist = "blacklist",
 }
 export enum FriendRelationAction {
+    FRIEND = "FRIEND",
     FOLLOW = "FOLLOW",
     UNFOLLOW = "UNFOLLOW",
     BAN = "BAN",
@@ -31,7 +32,7 @@ export interface FriendData {
     createAt?: number;
     relation?: FriendRelationEnum;
     avatar?: string;
-    genger?: number;
+    gender?: number;
 
 }
 
