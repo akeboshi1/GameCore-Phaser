@@ -8,6 +8,7 @@ import { ISocial } from "../../../structure";
 export class PicaNewRoleMediator extends BasicMediator {
     protected mModel: PicaNewRole;
     private uid: string;
+    private anotherInfo: any;
     constructor(game: Game) {
         super(ModuleName.PICANEWROLE_NAME, game);
         this.mModel = new PicaNewRole(game);
@@ -59,8 +60,9 @@ export class PicaNewRoleMediator extends BasicMediator {
 
     private on_Another_Info(proto: any) {
         const content = proto.content;
+        this.mShowData = content;
+        this.anotherInfo = proto;
         if (this.mPanelInit) {
-            this.mShowData = content;
             this.config.getBatchItemDatas(content.avatarSuit);
             if (this.mView) {
                 const socails = this.config.getSocails();
@@ -71,7 +73,7 @@ export class PicaNewRoleMediator extends BasicMediator {
     }
     private onOpeningCharacterHandler(roleData: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_ANOTHER_PLAYER_INFO) {
         const uimanager = this.game.uiManager;
-        uimanager.showMed(ModuleName.PICAPLAYERINFO_NAME, this.mShowData);
+        uimanager.showMed(ModuleName.PICAPLAYERINFO_NAME, this.anotherInfo);
     }
 
     private onFollowHandler(data: { uid: string, follow: boolean }) {
