@@ -26,7 +26,7 @@ export class User extends Player {
     private holdTime: number = 0;
     private holdDelay: number = 80;
     constructor(game: Game) {
-        super(game, undefined, undefined);
+        super(game, undefined);
         this.mBlockable = false;
         this.mUserData = new UserDataManager(game);
     }
@@ -141,7 +141,7 @@ export class User extends Player {
         this.mMoveData = { path, targetId };
         this.addFillEffect({ x: firstPos.x, y: firstPos.y }, op_def.PathReachableStatus.PATH_REACHABLE_AREA);
         this.moveControll.setIgnoreCollsion(true);
-        this.startMove();
+        this.updateMoveData();
         this.checkDirection();
     }
 
@@ -158,7 +158,7 @@ export class User extends Player {
         // this.body.isSensor = false;
         this.moveControll.setIgnoreCollsion(false);
         this.moveStyle = MoveStyleEnum.Motion;
-        this.startMove();
+        this.updateMoveData();
     }
 
     public unmount(targetPos?: IPos): Promise<this> {
@@ -180,19 +180,6 @@ export class User extends Player {
         movePoint.timestamp = Date.now();
         if (!this.mMovePoints) this.mMovePoints = [];
         this.mMovePoints.push(movePoint);
-    }
-
-    public startMove() {
-        if (!this.mMoveData) return;
-        const path = this.mMoveData.path;
-        if (path.length < 1) return;
-        this.changeState(PlayerState.WALK);
-        this.mMoving = true;
-
-        const pos = this.getPosition();
-        const angle = Math.atan2((path[0].pos.y - pos.y), (path[0].pos.x - pos.x));
-        const speed = this.mModel.speed * interval;
-        this.moveControll.setVelocity(Math.cos(angle) * speed, Math.sin(angle) * speed);
     }
 
     public stopMove(stopPos?: IPos) {
@@ -351,6 +338,25 @@ export class User extends Player {
         this.game.connection.send(packet);
     }
 
+    public startPush(points: any) {
+        if (points && this.mRoomService.playerManager.actor.stopBoxMove) {
+            this.requestMoveSprite(points);
+        }
+    }
+
+    protected updateMoveData(points?: any) {
+        // =====> 更新移动数据
+        if (!this.mMoveData) return;
+        const path = this.mMoveData.path;
+        if (path.length < 1) return;
+        this.changeState(PlayerState.WALK);
+        this.mMoving = true;
+        const pos = this.getPosition();
+        const angle = Math.atan2((path[0].pos.y - pos.y), (path[0].pos.x - pos.x));
+        const speed = this.mModel.speed * interval;
+        this.moveControll.setVelocity(Math.cos(angle) * speed, Math.sin(angle) * speed);
+    }
+
     protected unmountSprite(id: number, pos: IPos) {
         const packet: PBpacket = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_UMOUNT_SPRITE);
         const content: op_virtual_world.IOP_CLIENT_REQ_VIRTUAL_WORLD_UMOUNT_SPRITE = packet.content;
@@ -394,6 +400,36 @@ export class User extends Player {
         this.setDirection(dir);
     }
 
+    private requestMoveSprite(points: any) {
+        const _points = [];
+        points.forEach((pos) => {
+            const movePoint = op_def.MovePoint.create();
+            const tmpPos = op_def.PBPoint3f.create();
+            tmpPos.x = pos.x;
+            tmpPos.y = pos.y;
+            movePoint.pos = tmpPos;
+            // 给每个同步点时间戳
+            movePoint.timestamp = new Date().getTime();
+            _points.push(movePoint);
+        });
+        const movePath = op_def.MovePath.create();
+        movePath.id = this.id;
+        movePath.movePos = _points;
+        const packet = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_MOVE_SPRITE);
+        const content: op_virtual_world.IOP_CLIENT_REQ_VIRTUAL_WORLD_MOVE_SPRITE = packet.content;
+        content.movePath = movePath;
+        this.mRoomService.game.connection.send(packet);
+    }
+
+    private addFillEffect(pos: IPos, status: op_def.PathReachableStatus) {
+        const scaleRatio = this.roomService.game.scaleRatio;
+        this.roomService.game.renderPeer.addFillEffect(pos.x * scaleRatio, pos.y * scaleRatio, status);
+    }
+
+    get model(): ISprite {
+        return this.mModel;
+    }
+
     set model(val: ISprite) {
         if (!val) {
             return;
@@ -412,23 +448,10 @@ export class User extends Player {
         if (this.mModel.pos) {
             const obj = { id: val.id, pos: val.pos, nickname: this.model.nickname, alpha: val.alpha, titleMask: val.titleMask | 0x00010000, hasInteractive: true };
             this.game.renderPeer.setModel(obj);
-            const obj1 = {
-                id: val.id,
-                point3f: val.pos,
-                currentAnimationName: val.currentAnimationName,
-                direction: val.direction,
-                mountSprites: val.mountSprites,
-                speed: val.speed,
-                displayInfo: this.model.displayInfo
-            };
             this.setPosition(this.mModel.pos);
         }
         // todo change display alpha
         this.setDirection(this.mModel.direction);
-    }
-
-    get model(): ISprite {
-        return this.mModel;
     }
 
     get package(): op_gameconfig.IPackage {
@@ -448,11 +471,6 @@ export class User extends Player {
 
     get moveStyle() {
         return this.mMoveStyle;
-    }
-
-    private addFillEffect(pos: IPos, status: op_def.PathReachableStatus) {
-        const scaleRatio = this.roomService.game.scaleRatio;
-        this.roomService.game.renderPeer.addFillEffect(pos.x * scaleRatio, pos.y * scaleRatio, status);
     }
 }
 

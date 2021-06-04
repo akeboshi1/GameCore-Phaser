@@ -1,5 +1,5 @@
 import { PacketHandler } from "net-socket-packet";
-import { LogicPoint, Tool } from "utils";
+import { LogicPoint } from "utils";
 import { User } from "../actor/user";
 import { Game } from "../game";
 
@@ -20,7 +20,7 @@ export class JoystickManager extends PacketHandler {
     }
 
     start() {
-        this.user.startMove();
+       //  this.user.updateMoveData();
     }
 
     stop() {

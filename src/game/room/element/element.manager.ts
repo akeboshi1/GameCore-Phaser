@@ -2,7 +2,7 @@ import { PacketHandler, PBpacket } from "net-socket-packet";
 import { op_client, op_def, op_virtual_world } from "pixelpai_proto";
 import { ConnectionService } from "../../../../lib/net/connection.service";
 import { Logger, LogicPos } from "utils";
-import { ElementState, EventType, IDragonbonesModel, IFramesModel, ISprite, MessageType } from "structure";
+import { ElementState, EventType, ISprite, MessageType } from "structure";
 import { IRoomService } from "../room/room";
 import { Element, IElement, InputEnable } from "./element";
 import { ElementStateManager } from "./element.state.manager";
@@ -18,7 +18,7 @@ export interface IElementManager {
     readonly connection: ConnectionService | undefined;
     readonly roomService: IRoomService;
 
-    add(sprite: ISprite[]);
+    add(sprite: op_client.ISprite[]);
 
     remove(id: number): IElement;
 
@@ -135,7 +135,7 @@ export class ElementManager extends PacketHandler implements IElementManager {
         return Array.from(this.mElements.values());
     }
 
-    public add(sprites: ISprite[], addMap?: boolean) {
+    public add(sprites: op_client.ISprite[], addMap?: boolean) {
         for (const sprite of sprites) {
             this._add(sprite, addMap);
         }
@@ -221,7 +221,7 @@ export class ElementManager extends PacketHandler implements IElementManager {
             // if (ele.id === id) {
             //     ele.state = ElementState.LOADCOMPLETE;
             // }
-            if (ele.state < ElementState.LOADCOMPLETE) {
+            if (ele.state < ElementState.DATACOMPLETE) {
                 loadAll = false;
             }
         }
@@ -301,7 +301,6 @@ export class ElementManager extends PacketHandler implements IElementManager {
                 }
                 // 更新elementstorage中显示对象的数据信息
                 const data = new Sprite(sprite, 3);
-                (<Sprite>data).init(sprite);
                 this.mRoom.game.elementStorage.add(<any>data);
                 element = this.get(sprite.id);
                 if (element) {
@@ -487,7 +486,7 @@ export class ElementManager extends PacketHandler implements IElementManager {
                 if (!sprite.nickname) sprite.nickname = elementRef.name;
                 const displayInfo = elementRef.displayModel;
                 if (displayInfo) {
-                    // todo update pi
+                    // todo update pi 更新 new Sprite(sprite)
                     // sprite.setDisplayInfo(displayInfo);
                     return true;
                 }

@@ -1,5 +1,5 @@
 import { AnimationModel, AnimationQueue, Animator, AvatarSuit, AvatarSuitType, IAvatar, ISprite, RunningAnimation } from "structure";
-import { Direction, EventDispatcher, IPos, Logger, LogicPoint, LogicPos } from "utils";
+import { Direction, IPos, Logger, LogicPoint, LogicPos } from "utils";
 import { op_def, op_gameconfig, op_client, op_gameconfig_01 } from "pixelpai_proto";
 import { Helpers } from "game-capsule";
 import { DragonbonesModel } from "./dragonbones.model";
@@ -66,9 +66,7 @@ export class Sprite implements ISprite {
     public layer: number;
     public sound: string;
     public curState: number = 0;
-    public baseSprite: op_client.ISprite;
     constructor(obj: op_client.ISprite, nodeType?: op_def.NodeType) {
-        this.baseSprite = obj;
         // 必要数据
         this.id = obj.id;
         this.bindID = obj.bindId;
@@ -249,6 +247,7 @@ export class Sprite implements ISprite {
                         case Flag.Pos.toString():
                             break;
                         case Flag.AnimationName.toString():
+                            this.emit("Animation_Change", { id: this.id, direction: this.direction, animation: this.currentAnimation, playTimes: times });
                             break;
                         case Flag.Direction.toString():
                             break;
@@ -498,19 +497,20 @@ export class Sprite implements ISprite {
             return;
         }
         const baseAniName = this.getBaseAniName(animationName);
-        if (!this.displayInfo.findAnimation) {
-            Logger.getInstance().error("displayInfo no findanimation ====>", this.displayInfo);
-        } else {
-            this.currentAnimation = this.displayInfo.findAnimation(baseAniName, direction);
-            this.currentAnimation.times = times;
-            if (this.animationQueue && this.animationQueue.length > 0) this.currentAnimation.playingQueue = this.animationQueue[0];
-            if (this.currentCollisionArea) {
-                this.setArea();
-            }
-            this.updateState(Flag.AnimationName);
-            // Logger.getInstance().debug("#dir ", direction, this.direction);
-            this.emit("Animation_Change", { id: this.id, direction: this.direction, animation: this.currentAnimation, playTimes: times });
+        if (!baseAniName) return;
+        const currentAnimation = this.displayInfo.findAnimation(baseAniName, direction);
+        if (currentAnimation) {
+            Logger.getInstance().error(`${this.nickname} can't find animation ${animationName}`);
+            // 否则return void导致引用处报错
+            return null;
         }
+        this.currentAnimation = currentAnimation;
+        this.currentAnimation.times = times;
+        if (this.animationQueue && this.animationQueue.length > 0) this.currentAnimation.playingQueue = this.animationQueue[0];
+        if (this.currentCollisionArea) {
+            this.setArea();
+        }
+        this.updateState(Flag.AnimationName);
         return this.currentAnimation;
     }
 
@@ -548,7 +548,8 @@ export class Sprite implements ISprite {
         }
     }
 
-    private getBaseAniName(animationName: string): string {
+    private getBaseAniName(animationName: string): string | undefined {
+        if (!animationName) return undefined;
         let baseAniName = animationName.split(`_`)[0];
         if (this.registerAnimation) {
             if (this.registerAnimation.has(baseAniName)) {

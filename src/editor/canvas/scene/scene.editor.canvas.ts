@@ -775,7 +775,6 @@ class MouseFollow {
         this.mKey = content.key;
         this.isTerrain = this.mNodeType === op_def.NodeType.TerrainNodeType || this.mNodeType === op_def.NodeType.WallNodeType;
         this.mSprite = new Sprite(content.sprite, content.nodeType);
-        this.mSprite.init(content.sprite);
         this.mDisplay = new MouseDisplayContainer(this.sceneEditor);
         const size = this.mNodeType === op_def.NodeType.TerrainNodeType ? this.mSize : 1;
         this.mDisplay.setDisplay(this.mSprite, size);

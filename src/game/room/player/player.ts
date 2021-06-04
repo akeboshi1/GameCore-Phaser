@@ -1,65 +1,30 @@
-import { op_def } from "pixelpai_proto";
+import { op_def, op_client } from "pixelpai_proto";
 import { IElementManager } from "../element/element.manager";
-import { IDragonbonesModel, ISprite, PlayerState } from "structure";
+import { ElementState, IDragonbonesModel, ISprite, PlayerState } from "structure";
 import { IPos } from "../../../utils/logic.pos";
 import { Element, IElement, InputEnable } from "../element/element";
 import { DirectionChecker } from "utils";
 import { LayerEnum } from "game-capsule";
+import { Sprite } from "baseModel";
 export class Player extends Element implements IElement {
     protected nodeType: number = op_def.NodeType.CharacterNodeType;
     protected mOffsetY: number = undefined;
 
-    constructor(game, sprite: ISprite, mElementManager: IElementManager) {
-        super(game, sprite, mElementManager);
+    constructor(game, mElementManager: IElementManager) {
+        super(game, mElementManager);
         this.setInputEnable(InputEnable.Enable);
     }
 
-    async setModel(model: ISprite): Promise<any> {
-        if (!model) {
+    setModel(baseSprite: op_client.ISprite): Promise<any> {
+        if (!baseSprite) {
             return;
         }
-        (<any>model).off("Animation_Change", this.animationChanged, this);
-        (<any>model).on("Animation_Change", this.animationChanged, this);
-        if (!model.layer) {
-            model.layer = LayerEnum.Surface;
+        if (!baseSprite.layer) {
+            baseSprite.layer = LayerEnum.Surface;
         }
-        this.removeFromWalkableMap();
-        this.mModel = model;
-        this.mQueueAnimations = undefined;
-        if (this.mModel.pos) {
-            this.setPosition(this.mModel.pos);
-        }
-        const area = model.getCollisionArea();
-        const obj = {
-            id: model.id,
-            pos: model.pos,
-            alpha: model.alpha,
-            nickname: model.nickname,
-            titleMask: model.titleMask | 0x00010000,
-            hasInteractive: true
-        };
-        // render action
-        this.load(this.mModel.displayInfo)
-            .then(() => this.mElementManager.roomService.game.renderPeer.setPlayerModel(obj))
-            .then(() => {
-                this.setDirection(this.mModel.direction);
-                if (this.mInputEnable === InputEnable.Interactive) {
-                    this.setInputEnable(this.mInputEnable);
-                }
-                if (model.mountSprites && model.mountSprites.length > 0) {
-                    this.updateMounth(model.mountSprites);
-                }
-                this.addToWalkableMap();
-                return this.setRenderable(true);
-            });
-    }
-
-    public async load(displayInfo: IDragonbonesModel, isUser: boolean = false): Promise<any> {
-        this.mDisplayInfo = displayInfo;
-        this.isUser = isUser;
-        if (!displayInfo) return Promise.reject(`element ${this.mModel.nickname} ${this.id} display does not exist`);
-        await this.loadDisplayInfo();
-        return this.addToBlock();
+        this.mTmpSprite = baseSprite;
+        this.state = ElementState.DATAINIT;
+        // ================> 下一帧处理
     }
 
     public changeState(val?: string, times?: number) {
@@ -79,9 +44,6 @@ export class Player extends Element implements IElement {
         this.mMoving = false;
         this.moveControll.setVelocity(0, 0);
         this.changeState(PlayerState.IDLE);
-    }
-
-    public completeMove() {
     }
 
     public setWeapon(weaponid: string) {
@@ -114,6 +76,42 @@ export class Player extends Element implements IElement {
     public calcDirection(pos: IPos, target: IPos) {
         const dir = DirectionChecker.check(pos, target);
         this.setDirection(dir);
+    }
+
+    /**
+     * 下一帧处理setModel
+     */
+    protected _dataInit() {
+        this.removeFromWalkableMap();
+        const model = this.mModel = new Sprite(this.mTmpSprite);
+        (<any>model).off("Animation_Change", this.animationChanged, this);
+        (<any>model).on("Animation_Change", this.animationChanged, this);
+        this.mQueueAnimations = undefined;
+        if (this.mModel.pos) {
+            this.setPosition(this.mModel.pos);
+        }
+        const area = model.getCollisionArea();
+        const obj = {
+            id: model.id,
+            pos: model.pos,
+            alpha: model.alpha,
+            nickname: model.nickname,
+            titleMask: model.titleMask | 0x00010000,
+            hasInteractive: true
+        };
+        // render action
+        this.load(this.mModel.displayInfo)
+            .then(() => this.mElementManager.roomService.game.renderPeer.setPlayerModel(obj))
+            .then(() => {
+                this.setDirection(this.mModel.direction);
+                if (this.mInputEnable === InputEnable.Interactive) {
+                    this.setInputEnable(this.mInputEnable);
+                }
+                if (model.mountSprites && model.mountSprites.length > 0) {
+                    this.updateMounth(model.mountSprites);
+                }
+                return this.setRenderable(true);
+            });
     }
 
     protected checkDirection() {

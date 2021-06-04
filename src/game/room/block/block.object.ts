@@ -1,5 +1,5 @@
-import { IPos, LogicPos, IProjection, Logger, Position45, IPosition45Obj } from "utils";
-import { InputEnable } from "../element/element";
+import { IPos, LogicPos, IProjection, Position45, IPosition45Obj } from "utils";
+import { InputEnable, MoveData } from "../element/element";
 import { IRoomService } from "../room/room";
 import { IBlockObject } from "./iblock.object";
 import { IFramesModel, ISprite } from "structure";
@@ -23,7 +23,6 @@ export abstract class BlockObject implements IBlockObject {
     protected moveControll: MoveControll;
     constructor(protected mRoomService: IRoomService) {
         this.isUsed = true;
-        if (id && this.mRoomService) this.moveControll = new MoveControll(id, this.mRoomService);
     }
 
     public async setRenderable(isRenderable: boolean, delay: number = 0): Promise<any> {
@@ -151,6 +150,11 @@ export abstract class BlockObject implements IBlockObject {
 
     public load(displayInfo) {
         this.addDisplay();
+    }
+
+    protected _dataInit() {
+        // 初始化 movecontroll
+        if (this.id && this.mRoomService) this.moveControll = new MoveControll(this.id, this.mRoomService);
     }
 
     protected addDisplay(): Promise<any> {

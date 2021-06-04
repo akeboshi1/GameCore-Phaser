@@ -1,16 +1,16 @@
 import { IFramesModel, ISprite } from "structure";
-import { op_def, op_client } from "pixelpai_proto";
+import { op_client } from "pixelpai_proto";
 import { IRoomService } from "..";
 import { BlockObject } from "../block/block.object";
 import { IPos, Logger, LogicPos } from "utils";
+import { Sprite } from "baseModel";
 
 export class Wall extends BlockObject {
     protected mModel: ISprite;
     protected mDisplayInfo: IFramesModel;
     protected mId: number;
-    constructor(sprite: ISprite, roomService: IRoomService) {
-        super(sprite.id, roomService);
-        this.mId = sprite.id;
+    constructor(sprite: op_client.ISprite, roomService: IRoomService) {
+        super(roomService);
         this.setModel(sprite);
     }
 
@@ -18,18 +18,12 @@ export class Wall extends BlockObject {
 
     public stopMove() { }
 
-    async setModel(val: ISprite) {
-        this.mModel = val;
+    async setModel(val: op_client.ISprite) {
         if (!val) {
             return;
         }
-        await this.mRoomService.game.peer.render.setModel(val);
-        this.load(<IFramesModel>this.mModel.displayInfo);
-        // this.mDisplayInfo = <IFramesModel> this.mModel.displayInfo;
-        // this.createDisplay();
-        this.setPosition(this.mModel.pos);
-        this.setRenderable(true);
-        // this.addDisplay();
+        this.mTmpSprite = val;
+        // =========> 下一帧处理
     }
 
     updateModel(val: op_client.ISprite) {
@@ -42,12 +36,6 @@ export class Wall extends BlockObject {
             return;
         }
         this.addDisplay();
-        // if (!this.mDisplay) {
-        //     this.createDisplay();
-        // }
-        // this.mDisplayInfo = displayInfo;
-        // this.mDisplay.once("initialized", this.onInitializedHandler, this);
-        // this.mDisplay.load(this.mDisplayInfo);
     }
 
     public play(animationName: string): void {
@@ -56,12 +44,8 @@ export class Wall extends BlockObject {
             return;
         }
         if (this.mModel.currentAnimationName !== animationName) {
-            // this.mAnimationName = animationName;
             this.mModel.currentAnimationName = animationName;
             this.mRoomService.game.peer.render.playElementAnimation(this.id, this.mModel.currentAnimationName);
-            // if (this.mDisplay) {
-            //     this.mDisplay.play(this.model.currentAnimation);
-            // }
         }
     }
 
@@ -77,9 +61,6 @@ export class Wall extends BlockObject {
     public setPosition(p: IPos) {
         const pos = this.mRoomService.transformTo90(new LogicPos(p.x, p.y, p.z));
         this.mRoomService.game.peer.render.setPosition(this.id, pos.x, pos.y, pos.z);
-        // if (this.mDisplay) {
-        //     this.mDisplay.setPosition(p.x, p.y, p.z);
-        // }
         this.setDepth();
     }
 
@@ -135,6 +116,15 @@ export class Wall extends BlockObject {
         super.destroy();
     }
 
+    protected async _dataInit() {
+        this.mId = this.mTmpSprite.id;
+        this.mModel = new Sprite(this.mTmpSprite);
+        await this.mRoomService.game.peer.render.setModel(this.mModel);
+        this.load(<IFramesModel>this.mModel.displayInfo);
+        this.setPosition(this.mModel.pos);
+        this.setRenderable(true);
+    }
+
     protected async createDisplay(): Promise<any> {
         if (this.mCreatedDisplay) return;
         super.createDisplay();
@@ -148,13 +138,6 @@ export class Wall extends BlockObject {
         if (currentAnimation) {
             await this.mRoomService.game.renderPeer.playAnimation(this.id, this.mModel.currentAnimation);
         }
-        // const scene = this.mElementManager.scene;
-        // if (scene) {
-        //     this.mDisplay = new TerrainDisplay(scene, this.mElementManager.roomService, this);
-        //     this.setPosition45(this.model.pos);
-        //     this.addToBlock();
-        //     // this.mDisplay.load(this.mDisplayInfo);
-        // }
         return this.addToBlock();
     }
 
@@ -162,7 +145,6 @@ export class Wall extends BlockObject {
         super.addDisplay();
         const pos = this.mModel.pos;
         return this.setPosition(pos);
-        // return this.mRoomService.game.peer.render.setPosition(this.id, pos.x, pos.y, pos.z);
     }
 
     protected removeDisplay(): Promise<any> {
@@ -187,7 +169,7 @@ export class Wall extends BlockObject {
     }
 
     set model(val: ISprite) {
-        this.setModel(val);
+        this.mModel = val;
     }
 
     get currentAnimationName() {

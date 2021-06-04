@@ -1,12 +1,9 @@
-import { Direction, Helpers, IPos, Logger, LogicPos, Position45, Tool } from "utils";
+import { Direction, Helpers, IPos, Logger, LogicPos, Position45 } from "utils";
 import { IRoomService } from "..";
 import { Wall } from "../wall/wall";
 import { FramesModel, Sprite } from "baseModel";
 import { LayerEnum } from "game-capsule";
 import { BaseDataConfigManager } from "picaWorker";
-import { AnimationModel, IDisplay } from "structure";
-import { SPRITE_SHEET_KEY } from "../../../editor/canvas/element/element.editor.resource.manager";
-import { IExtendCountablePackageItem } from "picaStructure";
 import * as sha1 from "simple-sha1";
 
 export class WallManager {
@@ -33,9 +30,8 @@ export class WallManager {
                 direction: palette.dir,
             };
             const sprite = new Sprite(obj);
-            sprite.init(obj);
             sprite.setDisplayInfo(elementStorage.getMossPalette(palette.key).frameModel);
-            const w = new Wall(sprite, this.roomService);
+            const w = new Wall(obj, this.roomService);
             this.walls.push(w);
         }
     }

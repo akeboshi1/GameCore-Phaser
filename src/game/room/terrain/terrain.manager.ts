@@ -1,19 +1,16 @@
 import { PacketHandler, PBpacket } from "net-socket-packet";
 import { op_client, op_def, op_virtual_world } from "pixelpai_proto";
 import { Terrain } from "./terrain";
-import { ElementManager, IElementManager } from "../element/element.manager";
+import { IElementManager } from "../element/element.manager";
 import { IElement } from "../element/element";
 import NodeType = op_def.NodeType;
 import { IRoomService, SpriteAddCompletedListener } from "../room/room";
 import { ISprite } from "structure";
 import { ConnectionService } from "lib/net/connection.service";
-import { IFramesModel } from "structure";
-import { IDragonbonesModel } from "structure";
 import { EmptyTerrain } from "./empty.terrain";
 import { IPos, Logger, LogicPos } from "utils";
 import { FramesModel, IElementStorage, Sprite } from "baseModel";
 import { BaseDataConfigManager } from "picaWorker";
-import { IExtendCountablePackageItem } from "picaStructure";
 import * as sha1 from "simple-sha1";
 import { IElementPi } from "picaStructure";
 
@@ -29,8 +26,6 @@ export class TerrainManager extends PacketHandler implements IElementManager {
     private mDirty: boolean = false;
     private mTerrainCache: any[];
     private mIsDealEmptyTerrain: boolean = false;
-    // private mCacheLen: number = 10;
-    // private canDealTerrain = false;
     private mExtraRoomInfo: IElementPi = null;
     constructor(protected mRoom: IRoomService, listener?: SpriteAddCompletedListener) {
         super();
@@ -42,10 +37,7 @@ export class TerrainManager extends PacketHandler implements IElementManager {
             this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_ADD_SPRITE_END, this.addComplete);
             this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_DELETE_SPRITE, this.onRemove);
             this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_SYNC_SPRITE, this.onSyncSprite);
-            this.addHandlerFun(
-                op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_CHANGE_SPRITE_ANIMATION,
-                this.onChangeAnimation
-            );
+            this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_CHANGE_SPRITE_ANIMATION, this.onChangeAnimation);
         }
         if (this.mRoom) {
             this.mGameConfig = this.mRoom.game.elementStorage;
@@ -111,8 +103,7 @@ export class TerrainManager extends PacketHandler implements IElementManager {
             this.removeEmpty(new LogicPos(point.x, point.y));
             if (point) {
                 const s = new Sprite(sprite, op_def.NodeType.TerrainNodeType);
-                s.init(sprite);
-                this.checkTerrainDisplay(s);
+                this.checkDisplay(s);
                 if (!s.displayInfo) {
                     ids.push(s.id);
                 }
@@ -147,7 +138,7 @@ export class TerrainManager extends PacketHandler implements IElementManager {
         return terrain;
     }
 
-    public add(sprites: ISprite[]) {
+    public add(sprites: op_client.ISprite[]) {
         for (const sprite of sprites) {
             this._add(sprite);
         }
@@ -190,13 +181,6 @@ export class TerrainManager extends PacketHandler implements IElementManager {
                 sprite.updateDisplay(wallConfig.animationDisplay, wallConfig.animations);
                 terrain.load(<FramesModel>sprite.displayInfo);
             });
-            // for (const wall of this.walls) {
-            //     const sprite = wall.model;
-            //     // @ts-ignore
-            //     sprite.updateDisplay(wallConfig.animationDisplay, wallConfig.animations);
-            //     wall.load(<FramesModel>sprite.displayInfo);
-            // }
-            // Logger.getInstance().log("========>>> config data", wall);
         });
     }
 
@@ -215,17 +199,12 @@ export class TerrainManager extends PacketHandler implements IElementManager {
         this.addSpritesToCache(sprites);
     }
 
-    protected _add(sprite: ISprite): Terrain {
-        if (this.mExtraRoomInfo) {
-            sprite.updateDisplay(this.mExtraRoomInfo.animationDisplay, <any>this.mExtraRoomInfo.animations);
-        }
+    protected _add(sprite: op_client.ISprite): Terrain {
         let terrain = this.mTerrains.get(sprite.id);
         if (!terrain) {
-            terrain = new Terrain(sprite, this);
-        } else {
-            terrain.model = sprite;
+            terrain = new Terrain(this);
         }
-        // this.addMap(sprite);
+        terrain.setModel(sprite, this.mExtraRoomInfo);
         this.mTerrains.set(terrain.id || 0, terrain);
         return terrain;
     }
@@ -233,7 +212,6 @@ export class TerrainManager extends PacketHandler implements IElementManager {
     protected addComplete(packet: PBpacket) {
         this.hasAddComplete = true;
         this.dealTerrainCache();
-        // this.dealEmptyTerrain();
     }
 
     protected onRemove(packet: PBpacket) {
@@ -263,25 +241,12 @@ export class TerrainManager extends PacketHandler implements IElementManager {
             terrain = this.get(sprite.id);
             if (terrain) {
                 const sp = new Sprite(sprite, content.nodeType);
-                sp.init(sprite);
                 terrain.model = sp;
-                // this.addMap(sp);
-                // terrain.setRenderable(true);
             }
         }
     }
 
-    protected checkDisplay(sprite: ISprite): IFramesModel | IDragonbonesModel {
-        if (!sprite.displayInfo) {
-            const displayInfo = this.roomService.game.elementStorage.getDisplayModel(sprite.bindID || sprite.id);
-            if (displayInfo) {
-                sprite.setDisplayInfo(displayInfo);
-                return displayInfo;
-            }
-        }
-    }
-
-    protected checkTerrainDisplay(sprite: ISprite) {
+    protected checkDisplay(sprite: ISprite) {
         if (!sprite.displayInfo) {
             const palette = this.roomService.game.elementStorage.getTerrainPaletteByBindId(sprite.bindID);
             if (palette) {
@@ -300,43 +265,6 @@ export class TerrainManager extends PacketHandler implements IElementManager {
         this.connection.send(packet);
     }
 
-    protected removeMap(sprite: ISprite) {
-        this.setMap(sprite, 1);
-    }
-
-    protected addMap(sprite: ISprite) {
-        this.setMap(sprite, 0);
-    }
-
-    protected setMap(sprite: ISprite, type: number) {
-        const displayInfo = sprite.displayInfo;
-        if (!displayInfo) {
-            return;
-        }
-        const curAni = sprite.currentAnimation;
-        // const aniName = curAni.name;
-        // const flip = false;
-        // const collisionArea = displayInfo.getCollisionArea(aniName, flip);
-        // const walkArea = displayInfo.getWalkableArea(aniName, flip);
-        // const origin = displayInfo.getOriginPoint(aniName, flip);
-        // let rows = collisionArea.length;
-        // let cols = collisionArea[0].length;
-        // let hasCollisionArea = true;
-        // if (rows === 1 && cols === 1) {
-        //     rows = 2;
-        //     cols = 2;
-        //     hasCollisionArea = false;
-        // }
-        // const pos = sprite.pos;
-        // for (let i = 0; i < rows; i++) {
-        //     for (let j = 0; j < cols; j++) {
-        //         // if ((!hasCollisionArea) || collisionArea[i][j] === 1 && walkArea[i][j] === 1) {
-        //         // this.mMap[pos.x + i - origin.x][pos.y + j - origin.y] = type;
-        //         // }
-        //     }
-        // }
-    }
-
     protected onChangeAnimation(packet: PBpacket) {
         const content: op_client.IOP_VIRTUAL_WORLD_REQ_CLIENT_CHANGE_SPRITE_ANIMATION = packet.content;
         if (content.nodeType !== NodeType.TerrainNodeType) {
@@ -352,7 +280,6 @@ export class TerrainManager extends PacketHandler implements IElementManager {
             terrain = this.get(id);
             if (terrain) {
                 terrain.play(anis[0].animationName);
-                // terrain.setQueue(content.changeAnimation);
             }
         }
     }
@@ -393,7 +320,6 @@ export class TerrainManager extends PacketHandler implements IElementManager {
         if (this.mRoom) {
             return this.mRoom.game.connection;
         }
-        // Logger.getInstance().error("room manager is undefined");
     }
 
     get roomService(): IRoomService {

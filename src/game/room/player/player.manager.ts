@@ -105,7 +105,7 @@ export class PlayerManager extends PacketHandler implements IElementManager {
         return this.mPlayerMap.has(id);
     }
 
-    add(sprite: ISprite[]) {
+    add(sprite: op_client.ISprite[]) {
     }
 
     public remove(id: number): IElement {
@@ -242,7 +242,6 @@ export class PlayerManager extends PacketHandler implements IElementManager {
                 if (command === op_def.OpCommand.OP_COMMAND_UPDATE) {
                     this.checkSuitAvatarSprite(sprite);
                     const _sprite = new Sprite(sprite, content.nodeType);
-                    _sprite.init(sprite);
                     player.model = _sprite;
                 } else if (command === op_def.OpCommand.OP_COMMAND_PATCH) {
                     player.updateModel(sprite, this.mRoom.game.avatarType);
@@ -314,7 +313,6 @@ export class PlayerManager extends PacketHandler implements IElementManager {
             // create sprite.avatar数据
             this.checkSuitAvatarSprite(sprite);
             const _sprite = new Sprite(sprite, content.nodeType);
-            _sprite.init(sprite);
             this._add(_sprite);
         }
     }
@@ -322,7 +320,7 @@ export class PlayerManager extends PacketHandler implements IElementManager {
     private _add(sprite: ISprite) {
         if (!this.mPlayerMap) this.mPlayerMap = new Map();
         if (!this.mPlayerMap.has(sprite.id)) {
-            const player = new Player(this.mRoom.game, sprite as Sprite, this);
+            const player = new Player(this.mRoom.game, this);
             this.mPlayerMap.set(player.id || 0, player);
         }
     }

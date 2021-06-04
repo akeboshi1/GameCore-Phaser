@@ -362,13 +362,6 @@ export class MainPeer extends RPCPeer {
         this.game.exitUser();
     }
 
-    @Export([webworker_rpc.ParamType.num])
-    public displayCompleteMove(id: number) {
-        if (!this.game.roomManager.currentRoom) return;
-        const element = this.game.roomManager.currentRoom.playerManager.get(id);
-        if (element) element.completeMove();
-    }
-
     @Export()
     public syncPosition(targetPoint) {
         this.game.user.syncPosition();
@@ -433,7 +426,7 @@ export class MainPeer extends RPCPeer {
         const elementManager = this.game.roomManager.currentRoom.elementManager;
         if (elementManager) {
             const ele = elementManager.get(id);
-            if (ele) ele.startMove(points);
+            if (ele) ele.startPush(points);
         }
     }
 
@@ -606,14 +599,6 @@ export class MainPeer extends RPCPeer {
     //     if (!ele) return;
     //     ele.removePartMount(targets, paths);
     // }
-
-    @Export()
-    public selfStartMove() {
-        const user = this.game.user;
-        if (user) {
-            user.startMove();
-        }
-    }
 
     @Export([webworker_rpc.ParamType.num, webworker_rpc.ParamType.boolean])
     public tryStopMove(id: number, interactiveBoo: boolean, targetId?: number, stopPos?: any) {

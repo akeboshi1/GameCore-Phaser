@@ -432,8 +432,6 @@ export class DecorateManager {
             attrs
         };
         const spriteData = new Sprite(obj, op_def.NodeType.ElementNodeType);
-        spriteData.init(obj);
-
         const act = new DecorateAction(spriteData, DecorateActionType.Add, new DecorateActionData({pos: spriteData.pos}));
         act.execute(this).then(() => {
             this.select(indexID);
@@ -717,7 +715,7 @@ class DecorateAction {
             const resolver = mng.createElementCreatedResolver(this.target.id);
             const baseID = mng.getBaseIDBySN(this.target.sn);
             this.target.setPosition(x, y);
-            mng.room.elementManager.add([this.target]);
+            mng.room.elementManager.add([this.target.toSprite()]);
             const newCount = mng.setBagCount(baseID, -1);
             mng.room.game.emitter.emit(MessageType.DECORATE_UPDATE_ELEMENT_COUNT, baseID, newCount);
             resolver.promise().then(() => {

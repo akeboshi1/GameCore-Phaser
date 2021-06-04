@@ -35,9 +35,11 @@ export interface IElement {
 
     startFireMove(pos: IPos);
 
-    startMove();
+    move(path: op_def.IMovePoint[]);
 
     stopMove();
+
+    startPush(point?: any);
 
     setModel(model: op_client.ISprite);
 
@@ -129,8 +131,7 @@ export class Element extends BlockObject implements IElement {
     }
 
     set model(val: ISprite) {
-        const baseSprite = val.toSprite();
-        this.setModel(baseSprite);
+        this.mModel = val;
     }
 
     get moveData(): MoveData {
@@ -189,7 +190,7 @@ export class Element extends BlockObject implements IElement {
         }
         this.mMoveData = { path: [{ pos: new LogicPos(x, y) }] };
         this.moveControll.setIgnoreCollsion(false);
-        this.startMove();
+        this.updateMoveData();
     }
 
     public async load(displayInfo: IFramesModel | IDragonbonesModel, isUser: boolean = false): Promise<any> {
@@ -357,6 +358,7 @@ export class Element extends BlockObject implements IElement {
         }
         if (this.mState !== ElementState.DATACOMPLETE) return;
         // ============================= 分割线 =============================
+        // 状态判断之后，满足要求走以前move逻辑
         if (this.mMoving === false) return;
         this._doMove(time, delta);
         this.mDirty = false;
@@ -418,36 +420,7 @@ export class Element extends BlockObject implements IElement {
             return;
         }
         this.mMoveData.path = path;
-        // this.mRoomService.game.physicalPeer.move(this.id, this.mMoveData.path);
-        this.startMove();
-    }
-
-    public startMove(points?: any) {
-        if (points && this.mRoomService.playerManager.actor.stopBoxMove) {
-            this._startMove(points);
-            return;
-        }
-        if (!this.mMoveData) {
-            return;
-        }
-        const path = this.mMoveData.path;
-        if (!path || path.length < 1) {
-            return;
-        }
-        this.mMoving = true;
-        if (!this.moveControll) {
-            return;
-        }
-        const pos = this.moveControll.position;
-        const pathData = path[0];
-        const pathPos = pathData.pos;
-        const angle = Math.atan2(pathPos.y - pos.y, pathPos.x - pos.x);
-        const speed = this.mModel.speed * this.delayTime;
-        this.moveControll.setVelocity(Math.cos(angle) * speed, Math.sin(angle) * speed);
-        const dir = DirectionChecker.check(pos, pathPos);
-
-        this.setDirection(dir);
-        this.changeState(PlayerState.WALK);
+        this.updateMoveData();
     }
 
     public stopMove(stopPos?: any) {
@@ -460,6 +433,9 @@ export class Element extends BlockObject implements IElement {
         Logger.getInstance().log("============>>>>> element stop: ", this.mModel.nickname, this.mModel.pos.x, this.mModel.pos.y);
         this.mMovePoints = [];
         this.mRoomService.playerManager.actor.stopBoxMove = false;
+    }
+
+    public startPush(point: any) {
     }
 
     public getPosition(): IPos {
@@ -655,6 +631,7 @@ export class Element extends BlockObject implements IElement {
     }
 
     protected _doMove(time?: number, delta?: number) {
+        // 真正移动逻辑
         this.moveControll.update(time, delta);
         const pos = this.moveControll.position;
         // this.mModel.setPosition(pos.x, pos.y);
@@ -670,7 +647,7 @@ export class Element extends BlockObject implements IElement {
         if (Tool.twoPointDistance(pos, pathPos) <= speed) {
             if (path.length > 1) {
                 path.shift();
-                this.startMove();
+                this.updateMoveData();
             } else {
                 this.stopMove();
             }
@@ -863,7 +840,7 @@ export class Element extends BlockObject implements IElement {
     /**
      * 下一帧处理setModel
      */
-    private _dataInit() {
+    protected _dataInit() {
         this.removeFromWalkableMap();
         this.mId = this.mTmpSprite.id;
         const model = this.mModel = new Sprite(this.mTmpSprite);
@@ -897,7 +874,7 @@ export class Element extends BlockObject implements IElement {
             });
     }
 
-    private _dataUpdate() {
+    protected _dataUpdate() {
         const model = this.mModel.toSprite();
         this.removeFromWalkableMap();
         // 序列化数据
@@ -951,7 +928,7 @@ export class Element extends BlockObject implements IElement {
             // 速度改变，重新计算
             if (this.mMoving) {
                 update = true;
-                this.startMove();
+                this.updateMoveData();
             }
         }
         if (model.hasOwnProperty("nickname")) {
@@ -966,24 +943,30 @@ export class Element extends BlockObject implements IElement {
         this.addToWalkableMap();
     }
 
-    private _startMove(points: any) {
-        const _points = [];
-        points.forEach((pos) => {
-            const movePoint = op_def.MovePoint.create();
-            const tmpPos = op_def.PBPoint3f.create();
-            tmpPos.x = pos.x;
-            tmpPos.y = pos.y;
-            movePoint.pos = tmpPos;
-            // 给每个同步点时间戳
-            movePoint.timestamp = new Date().getTime();
-            _points.push(movePoint);
-        });
-        const movePath = op_def.MovePath.create();
-        movePath.id = this.id;
-        movePath.movePos = _points;
-        const packet = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_MOVE_SPRITE);
-        const content: op_virtual_world.IOP_CLIENT_REQ_VIRTUAL_WORLD_MOVE_SPRITE = packet.content;
-        content.movePath = movePath;
-        this.mRoomService.game.connection.send(packet);
+    protected _move() {
+        this.updateMoveData();
+    }
+
+    protected updateMoveData(points?: any) {
+        if (!this.mMoveData) {
+            return;
+        }
+        const path = this.mMoveData.path;
+        if (!path || path.length < 1) {
+            return;
+        }
+        this.mMoving = true;
+        if (!this.moveControll) {
+            return;
+        }
+        const pos = this.moveControll.position;
+        const pathData = path[0];
+        const pathPos = pathData.pos;
+        const angle = Math.atan2(pathPos.y - pos.y, pathPos.x - pos.x);
+        const speed = this.mModel.speed * this.delayTime;
+        this.moveControll.setVelocity(Math.cos(angle) * speed, Math.sin(angle) * speed);
+        const dir = DirectionChecker.check(pos, pathPos);
+        this.setDirection(dir);
+        this.changeState(PlayerState.WALK);
     }
 }

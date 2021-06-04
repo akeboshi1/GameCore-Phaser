@@ -7,7 +7,8 @@ import { IPos, Logger } from "utils";
 import { IRoomService } from "../room/room";
 import { IFramesModel } from "structure";
 import { LayerEnum } from "game-capsule";
-import { BaseState } from "src/game/state/base.state";
+import { Sprite } from "baseModel";
+import { IElementPi } from "picaStructure";
 
 export class Terrain extends BlockObject implements IElement {
     protected mId: number;
@@ -16,10 +17,9 @@ export class Terrain extends BlockObject implements IElement {
     protected mCreatedDisplay: boolean = false;
     private mMoveData: MoveData;
     private mState: ElementState = ElementState.NONE;
-    constructor(sprite: ISprite, protected mElementManager: IElementManager) {
-        super(sprite.id, mElementManager.roomService);
-        this.mId = sprite.id;
-        this.model = sprite;
+    private mExtraRoomInfo: IElementPi;
+    constructor(protected mElementManager: IElementManager) {
+        super(mElementManager.roomService);
     }
 
     changeDisplayData(texturePath: string, dataPath?: string) {
@@ -59,36 +59,19 @@ export class Terrain extends BlockObject implements IElement {
         if (this.model && this.mElementManager) this.mElementManager.roomService.removeFromWalkableMap(this.model, true);
     }
 
-    async setModel(val: ISprite) {
-        this.mModel = val;
+    setModel(val: op_client.ISprite, extraRoomInfo?: IElementPi) {
         if (!val) {
             return;
         }
-        if (!this.mModel.layer) {
-            this.mModel.layer = LayerEnum.Terrain;
+        this.mExtraRoomInfo = extraRoomInfo;
+        this.mId = val.id;
+        if (!val.layer) {
+            val.layer = LayerEnum.Surface;
+            Logger.getInstance().warn(`${Element.name}: sprite layer is empty`);
         }
-        const area = this.mModel.getCollisionArea();
-        const obj = { id: this.mModel.id, pos: this.mModel.pos, nickname: this.mModel.nickname, alpha: this.mModel.alpha, titleMask: this.mModel.titleMask | 0x00020000 };
-        await this.mElementManager.roomService.game.renderPeer.setModel(obj);
-        const obj1 = {
-            id: this.mModel.id,
-            point3f: this.mModel.pos,
-            currentAnimationName: this.mModel.currentAnimationName,
-            direction: this.mModel.direction,
-            mountSprites: this.mModel.mountSprites,
-            speed: this.mModel.speed,
-            displayInfo: this.mModel.displayInfo
-        };
-        // await this.mRoomService.game.physicalPeer.setModel(obj1);
-        this.removeFromWalkableMap();
-        this.load(<IFramesModel>this.mModel.displayInfo);
-        // this.mDisplayInfo = <IFramesModel> this.mModel.displayInfo;
-        // this.createDisplay();
-        this.setPosition(this.mModel.pos);
-        this.setRenderable(true);
-        this.addToWalkableMap();
-        // this.mRoomService.game.physicalPeer.changeAnimation(this.id, this.mModel.currentAnimation.name);
-        // this.addDisplay();
+        this.mTmpSprite = val;
+        this.state = ElementState.DATAINIT;
+        // ============> 下一帧处理逻辑
     }
 
     updateModel(val: op_client.ISprite) {
@@ -101,12 +84,6 @@ export class Terrain extends BlockObject implements IElement {
             return;
         }
         this.addDisplay();
-        // if (!this.mDisplay) {
-        //     this.createDisplay();
-        // }
-        // this.mDisplayInfo = displayInfo;
-        // this.mDisplay.once("initialized", this.onInitializedHandler, this);
-        // this.mDisplay.load(this.mDisplayInfo);
     }
 
     public play(animationName: string): void {
@@ -118,13 +95,7 @@ export class Terrain extends BlockObject implements IElement {
             this.removeFromWalkableMap();
             this.mModel.setAnimationName(animationName);
             this.addToWalkableMap();
-            // this.mRoomService.game.physicalPeer.changeAnimation(this.id, this.mModel.currentAnimation.name);
-            // this.mAnimationName = animationName;
-            // this.mModel.currentAnimationName = animationName;
             this.mRoomService.game.peer.render.playElementAnimation(this.id, this.mModel.currentAnimationName);
-            // if (this.mDisplay) {
-            //     this.mDisplay.play(this.this.mModel.currentAnimation);
-            // }
         }
     }
 
@@ -146,9 +117,11 @@ export class Terrain extends BlockObject implements IElement {
         this.setDepth();
     }
 
-    // public getDisplay(): BaseDisplay {
-    //     return this.mDisplay;
-    // }
+    public move() {
+    }
+
+    public startPush() {
+    }
 
     public showNickname() {
     }
@@ -209,6 +182,24 @@ export class Terrain extends BlockObject implements IElement {
         super.destroy();
     }
 
+    protected async _dataInit() {
+        this.mModel = new Sprite(this.mTmpSprite);
+        if (this.mExtraRoomInfo) {
+            this.mModel.updateDisplay(this.mExtraRoomInfo.animationDisplay, <any>this.mExtraRoomInfo.animations);
+        }
+        if (!this.mModel.layer) {
+            this.mModel.layer = LayerEnum.Terrain;
+        }
+        const area = this.mModel.getCollisionArea();
+        const obj = { id: this.mModel.id, pos: this.mModel.pos, nickname: this.mModel.nickname, alpha: this.mModel.alpha, titleMask: this.mModel.titleMask | 0x00020000 };
+        await this.mElementManager.roomService.game.renderPeer.setModel(obj);
+        this.removeFromWalkableMap();
+        this.load(<IFramesModel>this.mModel.displayInfo);
+        this.setPosition(this.mModel.pos);
+        this.setRenderable(true);
+        this.addToWalkableMap();
+    }
+
     protected async createDisplay(): Promise<any> {
         if (this.mCreatedDisplay) return;
         super.createDisplay();
@@ -242,43 +233,10 @@ export class Terrain extends BlockObject implements IElement {
         await super.addDisplay();
         const pos = this.mModel.pos;
         return this.mRoomService.game.peer.render.setPosition(this.id, pos.x, pos.y, pos.z);
-        // if (!this.mDisplay) {
-        //     // Logger.getInstance().error("display does not exist");
-        //     return;
-        // }
-        // if (!this.mElementManager) {
-        //     Logger.getInstance().error("element manager does not exist");
-        //     return;
-        // }
-        // const room = this.mElementManager.roomService;
-        // if (!room) {
-        //     Logger.getInstance().error("roomService does not exist");
-        //     return;
-        // }
-        // room.addToGround(this.mDisplay);
-        // this.setDepth();
     }
 
     protected setDepth() {
-        // if (this.mDisplay) {
-        //     this.mDisplay.setDepth(this.mDisplay.y);
-        //     if (!this.roomService) {
-        //         throw new Error("roomService is undefined");
-        //     }
-        //     const layerManager = this.roomService.layerManager;
-        //     if (!layerManager) {
-        //         throw new Error("layerManager is undefined");
-        //     }
-        //     layerManager.depthGroundDirty = true;
-        // }
     }
-
-    // protected onInitializedHandler() {
-    //     if (this.mDisplay) {
-    //         // this.mDisplay.setInteractive();
-    //         this.mDisplay.play(this.model.currentAnimation);
-    //     }
-    // }
 
     private setPosition45(pos: IPos) {
         if (!this.roomService) {
@@ -310,7 +268,7 @@ export class Terrain extends BlockObject implements IElement {
     }
 
     set model(val: ISprite) {
-        this.setModel(val);
+        this.mModel = val;
     }
 
     get currentAnimationName() {
