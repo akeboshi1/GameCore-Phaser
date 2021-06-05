@@ -448,7 +448,7 @@ export class ElementManager extends PacketHandler implements IElementManager {
             // if (this.roomService.enableDecorate) {
             //     ele.setInputEnable(InputEnable.Enable);
             // } else {
-            ele.setInputEnable(InputEnable.Interactive);
+            // ele.setInputEnable(InputEnable.Interactive);
             // }
         }
         if (addMap) ele.addToWalkableMap();
@@ -478,7 +478,7 @@ export class ElementManager extends PacketHandler implements IElementManager {
         }
     }
 
-    protected checkDisplay(sprite: op_client.ISprite): boolean {
+    protected checkDisplay(sprite: op_client.ISprite): any {
         if (!sprite.avatar && !sprite.display) {
             const elementRef = this.roomService.game.elementStorage.getElementRef(sprite.bindId || sprite.id);
             if (elementRef) {
@@ -488,10 +488,10 @@ export class ElementManager extends PacketHandler implements IElementManager {
                 if (displayInfo) {
                     // todo update pi 更新 new Sprite(sprite)
                     // sprite.setDisplayInfo(displayInfo);
-                    return true;
+                    return displayInfo;
                 }
             }
-            return false;
+            return null;
         }
         return true;
     }

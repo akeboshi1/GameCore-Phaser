@@ -102,12 +102,11 @@ export class TerrainManager extends PacketHandler implements IElementManager {
             point = sprite.point3f;
             this.removeEmpty(new LogicPos(point.x, point.y));
             if (point) {
-                const s = new Sprite(sprite, op_def.NodeType.TerrainNodeType);
-                this.checkDisplay(s);
-                if (!s.displayInfo) {
-                    ids.push(s.id);
+                // const s = new Sprite(sprite, op_def.NodeType.TerrainNodeType);
+                if (!this.checkDisplay(sprite)) {
+                    ids.push(sprite.id);
                 }
-                this.mTerrainCache.push(s);
+                this.mTerrainCache.push(sprite);
                 // this._add(s);
             }
         }
@@ -246,13 +245,22 @@ export class TerrainManager extends PacketHandler implements IElementManager {
         }
     }
 
-    protected checkDisplay(sprite: ISprite) {
-        if (!sprite.displayInfo) {
-            const palette = this.roomService.game.elementStorage.getTerrainPaletteByBindId(sprite.bindID);
+    protected checkDisplay(sprite: op_client.ISprite) {
+        if (!sprite.display) {
+            const palette = this.roomService.game.elementStorage.getElementRef(sprite.bindId || sprite.id);
             if (palette) {
-                sprite.setDisplayInfo(palette);
+                // 名字以服务器发送为主。没有从pi中读取
+                if (!sprite.nickname) sprite.nickname = palette.name;
+                const displayInfo = palette.displayModel;
+                if (displayInfo) {
+                    // todo update pi 更新 new Sprite(sprite)
+                    // sprite.setDisplayInfo(displayInfo);
+                    return true;
+                }
             }
+            return null;
         }
+        return true;
     }
 
     protected fetchDisplay(ids: number[]) {

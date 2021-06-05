@@ -312,16 +312,17 @@ export class PlayerManager extends PacketHandler implements IElementManager {
             this._loadSprite(sprite);
             // create sprite.avatar数据
             this.checkSuitAvatarSprite(sprite);
-            const _sprite = new Sprite(sprite, content.nodeType);
-            this._add(_sprite);
+            // const _sprite = new Sprite(sprite, content.nodeType);
+            this._add(sprite);
         }
     }
 
-    private _add(sprite: ISprite) {
+    private _add(sprite: op_client.ISprite) {
         if (!this.mPlayerMap) this.mPlayerMap = new Map();
         if (!this.mPlayerMap.has(sprite.id)) {
             const player = new Player(this.mRoom.game, this);
-            this.mPlayerMap.set(player.id || 0, player);
+            player.setModel(sprite);
+            this.mPlayerMap.set(sprite.id || 0, player);
         }
     }
 

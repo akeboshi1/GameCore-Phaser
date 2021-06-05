@@ -12,7 +12,6 @@ export class Player extends Element implements IElement {
 
     constructor(game, mElementManager: IElementManager) {
         super(game, mElementManager);
-        this.setInputEnable(InputEnable.Enable);
     }
 
     setModel(baseSprite: op_client.ISprite): Promise<any> {
@@ -23,8 +22,10 @@ export class Player extends Element implements IElement {
             baseSprite.layer = LayerEnum.Surface;
         }
         this.mTmpSprite = baseSprite;
+        this.mId = this.mTmpSprite.id;
         this.state = ElementState.DATAINIT;
         // ================> 下一帧处理
+        this._dataInit();
     }
 
     public changeState(val?: string, times?: number) {

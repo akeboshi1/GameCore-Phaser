@@ -1,5 +1,5 @@
 import { AnimationModel, AnimationQueue, Animator, AvatarSuit, AvatarSuitType, IAvatar, ISprite, RunningAnimation } from "structure";
-import { Direction, IPos, Logger, LogicPoint, LogicPos } from "utils";
+import { Direction, EventDispatcher, IPos, Logger, LogicPoint, LogicPos } from "utils";
 import { op_def, op_gameconfig, op_client, op_gameconfig_01 } from "pixelpai_proto";
 import { Helpers } from "game-capsule";
 import { DragonbonesModel } from "./dragonbones.model";
@@ -22,7 +22,7 @@ export enum Flag {
 }
 
 // pos animationName dirction mount nickname alpha speed avatar display
-export class Sprite implements ISprite {
+export class Sprite extends EventDispatcher implements ISprite {
     public id: number;
     public pos: IPos;
     public titleMask: number;
@@ -67,6 +67,7 @@ export class Sprite implements ISprite {
     public sound: string;
     public curState: number = 0;
     constructor(obj: op_client.ISprite, nodeType?: op_def.NodeType) {
+        super();
         // 必要数据
         this.id = obj.id;
         this.bindID = obj.bindId;
@@ -147,6 +148,7 @@ export class Sprite implements ISprite {
     public updateState(state: Flag) {
         const _state = Number(state);
         this.curState = this.curState | (1 << _state);
+        // this.dealSprite();
     }
 
     public showNickName(): boolean {
@@ -247,7 +249,6 @@ export class Sprite implements ISprite {
                         case Flag.Pos.toString():
                             break;
                         case Flag.AnimationName.toString():
-                            this.emit("Animation_Change", { id: this.id, direction: this.direction, animation: this.currentAnimation, playTimes: times });
                             break;
                         case Flag.Direction.toString():
                             break;
@@ -499,7 +500,7 @@ export class Sprite implements ISprite {
         const baseAniName = this.getBaseAniName(animationName);
         if (!baseAniName) return;
         const currentAnimation = this.displayInfo.findAnimation(baseAniName, direction);
-        if (currentAnimation) {
+        if (!currentAnimation) {
             Logger.getInstance().error(`${this.nickname} can't find animation ${animationName}`);
             // 否则return void导致引用处报错
             return null;
@@ -511,6 +512,7 @@ export class Sprite implements ISprite {
             this.setArea();
         }
         this.updateState(Flag.AnimationName);
+        this.emit("Animation_Change", { id: this.id, direction: this.direction, animation: this.currentAnimation, playTimes: times });
         return this.currentAnimation;
     }
 

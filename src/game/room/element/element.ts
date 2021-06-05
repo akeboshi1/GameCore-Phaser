@@ -212,8 +212,10 @@ export class Element extends BlockObject implements IElement {
             Logger.getInstance().warn(`${Element.name}: sprite layer is empty`);
         }
         this.mTmpSprite = baseSprite;
+        this.mId = this.mTmpSprite.id;
         this.state = ElementState.DATAINIT;
         // ============> 下一帧处理逻辑
+        this._dataInit();
     }
 
     public updateModel(model: op_client.ISprite, avatarType?: op_def.AvatarStyle) {
@@ -223,6 +225,7 @@ export class Element extends BlockObject implements IElement {
         this.mUpdateAvatarType = avatarType;
         this.mState = ElementState.DATAUPDATE;
         // ============> 下一帧处理逻辑
+        this._dataUpdate();
     }
 
     public play(animationName: string, times?: number): void {
@@ -339,23 +342,23 @@ export class Element extends BlockObject implements IElement {
     }
 
     public update(time?: number, delta?: number) {
-        switch (this.mState) {
-            case ElementState.INIT:
-                break;
-            case ElementState.DATAINIT:
-                this._dataInit();
-                break;
-            case ElementState.DATAUPDATE:
-                this._dataUpdate();
-                break;
-            case ElementState.DATACOMPLETE:
-                break;
-            case ElementState.PREDESTROY:
-                this.destroy();
-                break;
-            case ElementState.DESTROYED:
-                break;
-        }
+        // switch (this.mState) {
+        //     case ElementState.INIT:
+        //         break;
+        //     case ElementState.DATAINIT:
+        //         this._dataInit();
+        //         break;
+        //     case ElementState.DATAUPDATE:
+        //         this._dataUpdate();
+        //         break;
+        //     case ElementState.DATACOMPLETE:
+        //         break;
+        //     case ElementState.PREDESTROY:
+        //         this.destroy();
+        //         break;
+        //     case ElementState.DESTROYED:
+        //         break;
+        // }
         if (this.mState !== ElementState.DATACOMPLETE) return;
         // ============================= 分割线 =============================
         // 状态判断之后，满足要求走以前move逻辑
@@ -611,6 +614,7 @@ export class Element extends BlockObject implements IElement {
 
     public preDestroy() {
         this.mState = ElementState.PREDESTROY;
+        this.destroy();
     }
 
     public destroy() {
@@ -727,7 +731,7 @@ export class Element extends BlockObject implements IElement {
             obj.display = (<any>this.mDisplayInfo).display || (<any>this.mModel.displayInfo).avatar;
             obj.animations = (<any>this.mDisplayInfo).animations || (<any>this.mModel.displayInfo).animations;
         }
-        return this.mRoomService.game.renderPeer.updateModel(this.id, obj);
+        return this.mRoomService.game.renderPeer.updateModel(obj.id, obj);
     }
 
     protected onDisplayReady() {
@@ -842,7 +846,6 @@ export class Element extends BlockObject implements IElement {
      */
     protected _dataInit() {
         this.removeFromWalkableMap();
-        this.mId = this.mTmpSprite.id;
         const model = this.mModel = new Sprite(this.mTmpSprite);
         (<any>this.mModel).off("Animation_Change", this.animationChanged, this);
         (<any>this.mModel).on("Animation_Change", this.animationChanged, this);
@@ -939,7 +942,6 @@ export class Element extends BlockObject implements IElement {
         if (reload) {
             this.load(this.mModel.displayInfo);
         }
-        this.mState = ElementState.DATAUPDATE;
         this.addToWalkableMap();
     }
 

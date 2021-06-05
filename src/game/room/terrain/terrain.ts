@@ -72,6 +72,7 @@ export class Terrain extends BlockObject implements IElement {
         this.mTmpSprite = val;
         this.state = ElementState.DATAINIT;
         // ============> 下一帧处理逻辑
+        this._dataInit();
     }
 
     updateModel(val: op_client.ISprite) {

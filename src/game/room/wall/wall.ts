@@ -23,7 +23,9 @@ export class Wall extends BlockObject {
             return;
         }
         this.mTmpSprite = val;
+        this.mId = this.mTmpSprite.id;
         // =========> 下一帧处理
+        this._dataInit();
     }
 
     updateModel(val: op_client.ISprite) {
@@ -117,7 +119,6 @@ export class Wall extends BlockObject {
     }
 
     protected async _dataInit() {
-        this.mId = this.mTmpSprite.id;
         this.mModel = new Sprite(this.mTmpSprite);
         await this.mRoomService.game.peer.render.setModel(this.mModel);
         this.load(<IFramesModel>this.mModel.displayInfo);

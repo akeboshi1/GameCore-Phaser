@@ -1,4 +1,4 @@
-import { MoveControll } from "src/game/collsion";
+import { MoveControll } from "../../collsion";
 import { IPos } from "utils";
 import { BlockObject } from "../block/block.object";
 import { IRoomService } from "../room/room";
@@ -9,6 +9,7 @@ export class EmptyTerrain extends BlockObject {
     constructor(private room: IRoomService, public pos: IPos, private i, private j) {
         super(room);
         this.mId= this.i * this.room.roomSize.rows + this.j + 10000;
+        if (this.id && this.mRoomService) this.moveControll = new MoveControll(this.id, this.mRoomService);
         this.setPosition(pos);
     }
 
