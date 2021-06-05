@@ -251,9 +251,11 @@ export class ElementManager extends PacketHandler implements IElementManager {
             point = obj.point3f;
             if (point) {
                 // sprite = new Sprite(obj, 3);
-                if (!this.checkDisplay(obj)) {
+                const pi = this.checkDisplay(obj);
+                if (!obj.display && !obj.avatar && !pi) {
                     ids.push(obj.id);
                 } else {
+                    if (pi && !obj.nickname) obj.nickname = pi.name;
                     if (this.mDealAddList.indexOf(obj) === -1) {
                         this.mDealAddList.push(obj);
                     }
@@ -386,7 +388,9 @@ export class ElementManager extends PacketHandler implements IElementManager {
             }
             this.mAddCache.push(obj.id);
             // const sprite = new Sprite(obj, 3);
-            if (this.checkDisplay(obj)) {
+            const pi = this.checkDisplay(obj);
+            if (!obj.display && !obj.avatar && pi) {
+                if (!obj.nickname) obj.nickname = pi.name;
                 this.mCacheAddList.push(obj);
             } else {
                 this.mRequestSyncIdList.push(obj.id);
@@ -479,21 +483,25 @@ export class ElementManager extends PacketHandler implements IElementManager {
     }
 
     protected checkDisplay(sprite: op_client.ISprite): any {
-        if (!sprite.avatar && !sprite.display) {
-            const elementRef = this.roomService.game.elementStorage.getElementRef(sprite.bindId || sprite.id);
-            if (elementRef) {
-                // 名字以服务器发送为主。没有从pi中读取
-                if (!sprite.nickname) sprite.nickname = elementRef.name;
-                const displayInfo = elementRef.displayModel;
-                if (displayInfo) {
-                    // todo update pi 更新 new Sprite(sprite)
-                    // sprite.setDisplayInfo(displayInfo);
-                    return displayInfo;
-                }
-            }
-            return null;
-        }
-        return true;
+        const elementRef = this.roomService.game.elementStorage.getElementRef(sprite.bindId || sprite.id);
+        if (elementRef) return elementRef;
+        return null;
+        // if (!sprite.avatar && !sprite.display) {
+        //     const elementRef = this.roomService.game.elementStorage.getElementRef(sprite.bindId || sprite.id);
+        //     if (elementRef) {
+        //         // 名字以服务器发送为主。没有从pi中读取
+        //         if (!sprite.nickname) sprite.nickname = elementRef.name;
+        //         const displayInfo = elementRef.displayModel;
+        //         if (displayInfo) {
+        //             // todo update pi 更新 new Sprite(sprite)
+        //             // sprite.setDisplayInfo(displayInfo);
+        //             return displayInfo;
+        //         }
+        //         return elementRef;
+        //     }
+        //     return null;
+        // }
+        // return true;
     }
 
     protected fetchDisplay(ids: number[]) {

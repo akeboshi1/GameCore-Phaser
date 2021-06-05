@@ -847,6 +847,8 @@ export class Element extends BlockObject implements IElement {
     protected _dataInit() {
         this.removeFromWalkableMap();
         const model = this.mModel = new Sprite(this.mTmpSprite);
+        const elementRef = this.roomService.game.elementStorage.getElementRef(this.mTmpSprite.bindId || this.mTmpSprite.id);
+        if (elementRef && elementRef.displayModel && !this.mTmpSprite.avatar && !this.mTmpSprite.display) this.mModel.setDisplayInfo(elementRef.displayModel);
         (<any>this.mModel).off("Animation_Change", this.animationChanged, this);
         (<any>this.mModel).on("Animation_Change", this.animationChanged, this);
 

@@ -2,7 +2,7 @@ import { BlockObject } from "../block/block.object";
 import { ElementState, ISprite } from "structure";
 import { IElement, MoveData } from "../element/element";
 import { IElementManager } from "../element/element.manager";
-import { op_client } from "pixelpai_proto";
+import { op_def, op_client } from "pixelpai_proto";
 import { IPos, Logger } from "utils";
 import { IRoomService } from "../room/room";
 import { IFramesModel } from "structure";
@@ -184,7 +184,9 @@ export class Terrain extends BlockObject implements IElement {
     }
 
     protected async _dataInit() {
-        this.mModel = new Sprite(this.mTmpSprite);
+        this.mModel = new Sprite(this.mTmpSprite, op_def.NodeType.TerrainNodeType);
+        // const elementRef = this.roomService.game.elementStorage.getElementRef(this.mTmpSprite.bindId || this.mTmpSprite.id);
+        // if (elementRef && elementRef.displayModel && !this.mTmpSprite.display) this.mModel.setDisplayInfo(elementRef.displayModel);
         if (this.mExtraRoomInfo) {
             this.mModel.updateDisplay(this.mExtraRoomInfo.animationDisplay, <any>this.mExtraRoomInfo.animations);
         }
