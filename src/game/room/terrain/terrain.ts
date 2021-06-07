@@ -53,6 +53,24 @@ export class Terrain extends BlockObject implements IElement {
     public startFireMove(pos: IPos) {
     }
 
+    public addToMap() {
+        this.addToWalkableMap();
+        this.addToInteractiveMap();
+    }
+
+    public removeFromMap() {
+        this.removeFromWalkableMap();
+        this.removeFromInteractiveMap();
+    }
+
+    public addToInteractiveMap() {
+
+    }
+
+    public removeFromInteractiveMap() {
+
+    }
+
     public addToWalkableMap() {
         this.addBody();
         if (this.model && this.mElementManager) this.mElementManager.roomService.addToWalkableMap(this.model, true);
@@ -83,16 +101,11 @@ export class Terrain extends BlockObject implements IElement {
             speed: this.mModel.speed,
             displayInfo: this.mModel.displayInfo
         };
-        // await this.mRoomService.game.physicalPeer.setModel(obj1);
         this.removeFromWalkableMap();
         this.load(<IFramesModel>this.mModel.displayInfo);
-        // this.mDisplayInfo = <IFramesModel> this.mModel.displayInfo;
-        // this.createDisplay();
         this.setPosition(this.mModel.pos);
         this.setRenderable(true);
         this.addToWalkableMap();
-        // this.mRoomService.game.physicalPeer.changeAnimation(this.id, this.mModel.currentAnimation.name);
-        // this.addDisplay();
     }
 
     updateModel(val: op_client.ISprite) {
@@ -105,12 +118,6 @@ export class Terrain extends BlockObject implements IElement {
             return;
         }
         this.addDisplay();
-        // if (!this.mDisplay) {
-        //     this.createDisplay();
-        // }
-        // this.mDisplayInfo = displayInfo;
-        // this.mDisplay.once("initialized", this.onInitializedHandler, this);
-        // this.mDisplay.load(this.mDisplayInfo);
     }
 
     public play(animationName: string): void {
@@ -122,13 +129,7 @@ export class Terrain extends BlockObject implements IElement {
             this.removeFromWalkableMap();
             this.mModel.setAnimationName(animationName);
             this.addToWalkableMap();
-            // this.mRoomService.game.physicalPeer.changeAnimation(this.id, this.mModel.currentAnimation.name);
-            // this.mAnimationName = animationName;
-            // this.mModel.currentAnimationName = animationName;
             this.mRoomService.game.peer.render.playElementAnimation(this.id, this.mModel.currentAnimationName);
-            // if (this.mDisplay) {
-            //     this.mDisplay.play(this.this.mModel.currentAnimation);
-            // }
         }
     }
 
@@ -144,15 +145,8 @@ export class Terrain extends BlockObject implements IElement {
         this.mModel.setPosition(p.x, p.y);
         if (this.moveControll) this.moveControll.setPosition(this.mModel.pos);
         this.mRoomService.game.peer.render.setPosition(this.id, p.x, p.y, p.z);
-        // if (this.mDisplay) {
-        //     this.mDisplay.setPosition(p.x, p.y, p.z);
-        // }
         this.setDepth();
     }
-
-    // public getDisplay(): BaseDisplay {
-    //     return this.mDisplay;
-    // }
 
     public showNickname() {
     }
@@ -209,7 +203,6 @@ export class Terrain extends BlockObject implements IElement {
 
     public destroy() {
         this.removeDisplay();
-        // this.mElementManager.removeFromMap(this.mModel);
         super.destroy();
     }
 
@@ -221,24 +214,9 @@ export class Terrain extends BlockObject implements IElement {
             // Logger.getInstance().error("displayinfo does not exist, Create display failed");
             return;
         }
-        // const currentAnimation = this.mModel.currentAnimation;
         const frameModel = Object.assign({}, this.mDisplayInfo);
         frameModel.animationName = this.mModel.currentAnimation.name;
         await this.mRoomService.game.peer.render.createTerrainDisplay(this.id, frameModel, this.mModel.layer);
-        // if (currentAnimation) {
-        //     await this.mElementManager.roomService.game.renderPeer.playAnimation(this.id, this.mModel.currentAnimation);
-        // }
-
-        // debug
-        // this.mRoomService.game.renderPeer.showNickname(this.id, this.mModel.nickname);
-
-        // const scene = this.mElementManager.scene;
-        // if (scene) {
-        //     this.mDisplay = new TerrainDisplay(scene, this.mElementManager.roomService, this);
-        //     this.setPosition45(this.model.pos);
-        //     this.addToBlock();
-        //     // this.mDisplay.load(this.mDisplayInfo);
-        // }
         return this.addToBlock();
     }
 
@@ -246,21 +224,6 @@ export class Terrain extends BlockObject implements IElement {
         await super.addDisplay();
         const pos = this.mModel.pos;
         return this.mRoomService.game.peer.render.setPosition(this.id, pos.x, pos.y, pos.z);
-        // if (!this.mDisplay) {
-        //     // Logger.getInstance().error("display does not exist");
-        //     return;
-        // }
-        // if (!this.mElementManager) {
-        //     Logger.getInstance().error("element manager does not exist");
-        //     return;
-        // }
-        // const room = this.mElementManager.roomService;
-        // if (!room) {
-        //     Logger.getInstance().error("roomService does not exist");
-        //     return;
-        // }
-        // room.addToGround(this.mDisplay);
-        // this.setDepth();
     }
 
     protected setDepth() {
@@ -276,13 +239,6 @@ export class Terrain extends BlockObject implements IElement {
         //     layerManager.depthGroundDirty = true;
         // }
     }
-
-    // protected onInitializedHandler() {
-    //     if (this.mDisplay) {
-    //         // this.mDisplay.setInteractive();
-    //         this.mDisplay.play(this.model.currentAnimation);
-    //     }
-    // }
 
     private setPosition45(pos: IPos) {
         if (!this.roomService) {
