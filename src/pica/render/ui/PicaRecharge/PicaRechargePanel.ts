@@ -2,9 +2,10 @@ import { op_client } from "pixelpai_proto";
 import { BBCodeText, Button, ClickEvent, GameScroller, TabButton } from "apowophaserui";
 import { BasePanel, CheckboxGroup, DynamicImage, GridLayoutGroup, ItemInfoTips, PropItem, SoundButton, ThreeSliceButton, UiManager, ValueContainer, AxisType, ConstraintType, AlignmentType } from "gamecoreRender";
 import { ModuleName } from "structure";
-import { UIAtlasKey, UIAtlasName } from "../../../res";
+import { UIAtlasName } from "../../../res";
 import { Font, Handler, i18n, UIHelper } from "utils";
-export class PicaRechargePanel extends BasePanel {
+import { PicaBasePanel } from "../pica.base.panel";
+export class PicaRechargePanel extends PicaBasePanel {
     private mBackground: Phaser.GameObjects.Graphics;
     private bg: Phaser.GameObjects.Image;
     private topbg: Phaser.GameObjects.Image;
@@ -20,11 +21,11 @@ export class PicaRechargePanel extends BasePanel {
     private bottombg: Phaser.GameObjects.Image;
     private bottom: Phaser.GameObjects.Container;
     private checkBox: CheckboxGroup;
-    private itemtips: ItemInfoTips;
     private banner: RechargeBanner;
     constructor(uiManager: UiManager) {
-        super(uiManager.scene, uiManager.render);
+        super(uiManager);
         this.key = ModuleName.PICARECHARGE_NAME;
+        this.atlasNames = [UIAtlasName.uicommon, UIAtlasName.recharge];
     }
     resize(width?: number, height?: number) {
         const w: number = this.scaleWidth;
@@ -34,10 +35,10 @@ export class PicaRechargePanel extends BasePanel {
         this.mBackground.clear();
         this.mBackground.fillGradientStyle(0x6f75ff, 0x6f75ff, 0x04cbff, 0x04cbff);
         this.mBackground.fillRect(0, 0, w, h);
+        this.mBackground.setInteractive(new Phaser.Geom.Rectangle(0, 0, w, h), Phaser.Geom.Rectangle.Contains);
         this.content.setSize(w, h);
         this.content.x = w * 0.5;
         this.content.y = h * 0.5;
-        this.mBackground.setInteractive(new Phaser.Geom.Rectangle(0, 0, w, h), Phaser.Geom.Rectangle.Contains);
         this.top.y = -h * 0.5 + this.top.height * 0.5;
 
         this.bottom.y = h * 0.5 - this.bottom.height * 0.5;
@@ -55,41 +56,6 @@ export class PicaRechargePanel extends BasePanel {
         }
     }
 
-    public show(param?: any) {
-        this.mShowData = param;
-        if (this.mPreLoad) return;
-        if (!this.mInitialized) {
-            this.preload();
-            return;
-        }
-        if (this.mShow) return;
-        if (this.soundGroup && this.soundGroup.open) this.playSound(this.soundGroup.open);
-        if (!this.mTweening && this.mTweenBoo) {
-            this.showTween(true);
-        } else {
-            this.mShow = true;
-        }
-        this.setInteractive();
-        this.addListen();
-    }
-
-    public addListen() {
-        if (!this.mInitialized) return;
-        this.closeBtn.on("pointerup", this.OnClosePanel, this);
-    }
-
-    public removeListen() {
-        if (!this.mInitialized) return;
-        this.closeBtn.off("pointerup", this.OnClosePanel, this);
-    }
-
-    preload() {
-        this.addAtlas(this.key, "recharge/recharge.png", "recharge/recharge.json");
-        this.addAtlas(UIAtlasKey.commonKey, UIAtlasName.textureUrl(UIAtlasName.commonUrl), UIAtlasName.jsonUrl(UIAtlasName.commonUrl));
-        this.addAtlas(UIAtlasKey.common2Key, UIAtlasName.textureUrl(UIAtlasName.common2Url), UIAtlasName.jsonUrl(UIAtlasName.common2Url));
-        this.addAtlas(UIAtlasKey.common3Key, UIAtlasName.textureUrl(UIAtlasName.common3Url), UIAtlasName.jsonUrl(UIAtlasName.common3Url));
-        super.preload();
-    }
     init() {
         this.mBackground = this.scene.make.graphics(undefined, false);
         this.add(this.mBackground);
@@ -117,18 +83,16 @@ export class PicaRechargePanel extends BasePanel {
         this.tilteName = this.scene.make.text({ x: 0, y: this.titlebg.y + 2 * this.dpr, text: i18n.t("recharge.title"), style: UIHelper.titleYellowStyle_m(this.dpr) }).setOrigin(0.5);
         this.tilteName.setFontStyle("bold");
         this.tilteName.setResolution(this.dpr);
-        this.closeBtn = new Button(this.scene, UIAtlasKey.commonKey, "back_arrow", "back_arrow");
+        this.closeBtn = new Button(this.scene, UIAtlasName.uicommon, "back_arrow", "back_arrow");
+        this.closeBtn.on(ClickEvent.Tap, this.OnClosePanel, this);
         this.closeBtn.x = -width * 0.5 + this.closeBtn.width * 0.5 + this.dpr * 15;
         this.closeBtn.y = posY + this.closeBtn.height * 0.5 + 10 * this.dpr;
-        this.diamondvalue = new ValueContainer(this.scene, UIAtlasKey.common3Key, "diamond", this.dpr);
+        this.diamondvalue = new ValueContainer(this.scene, UIAtlasName.uicommon, "home_diamond", this.dpr);
         this.diamondvalue.x = width * 0.5 - 46 * this.dpr;
         this.diamondvalue.y = this.closeBtn.y;
         this.top.add([this.topbg, this.titlebg, this.tilteName, this.closeBtn, this.diamondvalue]);
         this.createMiddle(width, height);
         this.createBottom(width, 50 * this.dpr);
-        this.itemtips = new ItemInfoTips(this.scene, 150 * this.dpr, 46 * this.dpr, UIAtlasKey.common2Key, "tips_bg", this.dpr);
-        this.itemtips.setVisible(false);
-        this.content.add(this.itemtips);
         this.resize();
         super.init();
         // this.emit("questlist");
@@ -216,8 +180,8 @@ export class PicaRechargePanel extends BasePanel {
         const offsetx = 15 * this.dpr;
         const topStyle = UIHelper.blueStyle(this.dpr, 15);
         this.checkBox = new CheckboxGroup();
-        const topCategorys = [TabButtonType.GIFT, TabButtonType.PRIVILEGE, TabButtonType.DIAMONO];
-        const topBtnTexts = [i18n.t("recharge.gift"), i18n.t("recharge.privilege"), i18n.t("recharge.diamond")];
+        const topCategorys = [TabButtonType.GIFT, TabButtonType.DIAMONO];
+        const topBtnTexts = [i18n.t("recharge.gift"), i18n.t("recharge.diamond")];
         let bottomPosX = -(tabCapW * topCategorys.length + offsetx * (topCategorys.length - 1)) * 0.5;
         for (let i = 0; i < topCategorys.length; i++) {
             const category = topCategorys[i];
@@ -273,13 +237,6 @@ export class PicaRechargePanel extends BasePanel {
     }
     private onSendHandler(id: string) {
         this.render.renderEmitter(ModuleName.PICARECHARGE_NAME + "_questwork", id);
-    }
-
-    private onItemInfoTips(data: op_client.ICountablePackageItem, isdown: boolean, pos: Phaser.Geom.Point) {
-        this.itemtips.visible = isdown;
-        this.itemtips.x = pos.x * this.scale - this.content.x;
-        this.itemtips.y = pos.y * this.scale - this.content.y - 30 * this.dpr;
-        this.itemtips.setText(this.getDesText(data));
     }
     private getDesText(data: op_client.ICountablePackageItem) {
         if (!data) data = <any>{ "sellingPrice": true, tradable: false };
@@ -337,7 +294,7 @@ class RechargeItem extends Phaser.GameObjects.Container {
         // this.tipstext.y = this.tipsvalue.y + 24 * dpr;
         this.tipstext.x = this.width * 0.5 - 3 * dpr;
         this.tipstext.y = this.tipsbg.y - 3 * dpr;
-        this.purchaseBtn = new ThreeSliceButton(scene, 63 * dpr, 22 * dpr, UIAtlasKey.common3Key, UIHelper.threeYellowNormal, UIHelper.threeYellowNormal, "$ 1.99");
+        this.purchaseBtn = new ThreeSliceButton(scene, 63 * dpr, 22 * dpr, UIAtlasName.uicommon, UIHelper.threeYellowSmall, UIHelper.threeYellowSmall, "￥1.99");
         this.purchaseBtn.setTextStyle(UIHelper.brownishStyle(dpr));
         this.purchaseBtn.setFontStyle("bold");
         this.add(this.purchaseBtn);
