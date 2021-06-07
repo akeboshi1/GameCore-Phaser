@@ -399,9 +399,10 @@
   },
   "recharge": {
     "title": "充值",
-    "gift": "礼包",
+    "gift": "特别礼包",
     "privilege": "月卡",
-    "diamond": "钻石"
+    "diamond": "钻石充值",
+    "firstcharge": "首充双倍"
   },
   "treasure": {
     "tipslabel": "打开宝箱将随机获得以下一项物品",

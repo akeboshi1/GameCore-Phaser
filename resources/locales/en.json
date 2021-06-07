@@ -387,7 +387,8 @@
     "title": "RECHARGE",
     "gift": "GIFT",
     "privilege": "PRIVILEGE",
-    "diamond": "DIAMOND  "
+    "diamond": "DIAMOND",
+    "firstcharge": "First Charge Double"
   },
   "treasure": {
     "tipslabel": "will give you one of the following items at random",

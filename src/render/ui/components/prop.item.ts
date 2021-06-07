@@ -36,9 +36,7 @@ export class PropItem extends SoundButton {
         const url = Url.getOsdRes(data.texturePath);
         const zoom = this.getWorldTransformMatrix().scaleX;
         this.itemIcon.scale = this.dpr / zoom;
-        this.itemIcon.load(url, this, () => {
-            this.itemIcon.setPosition(0, 0);
-        });
+        this.itemIcon.load(url);
     }
 
     public setTextPosition(x: number, y: number) {

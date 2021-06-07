@@ -5,7 +5,9 @@ export interface IRecharge {
     nameid: string;
     price: number;
     img: string;
-    double: boolean;
-    items: ICountablePackageItem[];
-    firstPurchaseItems: ICountablePackageItem[];
+    double?: boolean;
+    items?: ICountablePackageItem[];
+    firstPurchaseItems?: ICountablePackageItem[];
+    des?: string;
+    type?: number;
 }
