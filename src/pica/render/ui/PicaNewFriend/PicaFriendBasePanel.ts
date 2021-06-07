@@ -40,6 +40,7 @@ export class PicaFriendBasePanel extends Phaser.GameObjects.Container {
         this.optionType = type;
         this.friendDatas = this.getFriendsDatas(type, content);
         this.setGridItemDatas(type, this.friendDatas);
+        this.mGameGrid.setT(0);
     }
     public updateFriendDatas(content: any) {
         const playerInfos = content.playerInfos;
