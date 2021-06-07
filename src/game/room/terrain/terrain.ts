@@ -112,9 +112,6 @@ export class Terrain extends BlockObject implements IElement {
         this.mModel.setPosition(p.x, p.y);
         if (this.moveControll) this.moveControll.setPosition(this.mModel.pos);
         this.mRoomService.game.peer.render.setPosition(this.id, p.x, p.y, p.z);
-        // if (this.mDisplay) {
-        //     this.mDisplay.setPosition(p.x, p.y, p.z);
-        // }
         this.setDepth();
     }
 
@@ -185,8 +182,8 @@ export class Terrain extends BlockObject implements IElement {
 
     protected async _dataInit() {
         this.mModel = new Sprite(this.mTmpSprite, op_def.NodeType.TerrainNodeType);
-        // const elementRef = this.roomService.game.elementStorage.getElementRef(this.mTmpSprite.bindId || this.mTmpSprite.id);
-        // if (elementRef && elementRef.displayModel && !this.mTmpSprite.display) this.mModel.setDisplayInfo(elementRef.displayModel);
+        const elementRef = this.roomService.game.elementStorage.getElementRef(this.mTmpSprite.bindId || this.mTmpSprite.id);
+        if (elementRef && elementRef.displayModel && !this.mTmpSprite.display) this.mModel.setDisplayInfo(elementRef.displayModel);
         if (this.mExtraRoomInfo) {
             this.mModel.updateDisplay(this.mExtraRoomInfo.animationDisplay, <any>this.mExtraRoomInfo.animations);
         }
@@ -211,24 +208,9 @@ export class Terrain extends BlockObject implements IElement {
             // Logger.getInstance().error("displayinfo does not exist, Create display failed");
             return;
         }
-        // const currentAnimation = this.mModel.currentAnimation;
         const frameModel = Object.assign({}, this.mDisplayInfo);
         frameModel.animationName = this.mModel.currentAnimation.name;
         await this.mRoomService.game.peer.render.createTerrainDisplay(this.id, frameModel, this.mModel.layer);
-        // if (currentAnimation) {
-        //     await this.mElementManager.roomService.game.renderPeer.playAnimation(this.id, this.mModel.currentAnimation);
-        // }
-
-        // debug
-        // this.mRoomService.game.renderPeer.showNickname(this.id, this.mModel.nickname);
-
-        // const scene = this.mElementManager.scene;
-        // if (scene) {
-        //     this.mDisplay = new TerrainDisplay(scene, this.mElementManager.roomService, this);
-        //     this.setPosition45(this.model.pos);
-        //     this.addToBlock();
-        //     // this.mDisplay.load(this.mDisplayInfo);
-        // }
         return this.addToBlock();
     }
 
