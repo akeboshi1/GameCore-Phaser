@@ -32,6 +32,10 @@ export class LevelConfig extends BaseConfigData {
             if (Object.prototype.hasOwnProperty.call(json, key)) {
                 const arr = json[key];
                 const map = this.getMap(key);
+                if (!map) {
+                    Logger.getInstance().log(`${key} does not exist!`);
+                    continue;
+                }
                 for (const data of arr) {
                     map.set(data.level, data);
                 }
