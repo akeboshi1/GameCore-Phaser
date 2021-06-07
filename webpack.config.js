@@ -39,6 +39,7 @@ const commonConfig = {
         minimizer: [
             new TerserPlugin({
                 sourceMap: true,
+                parallel: true,
                 terserOptions: {
                     ecma: undefined,
                     warnings: false,

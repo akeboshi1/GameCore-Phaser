@@ -387,8 +387,7 @@ export class ElementManager extends PacketHandler implements IElementManager {
                 continue;
             }
             this.mAddCache.push(obj.id);
-            const sprite = new Sprite(obj,3);
-            // sprite.init(obj);
+            const sprite = new Sprite(obj, 3);
             if (this.checkDisplay(sprite)) {
                 this.mCacheAddList.push(obj);
             } else {

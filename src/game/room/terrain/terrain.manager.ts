@@ -13,7 +13,6 @@ import { EmptyTerrain } from "./empty.terrain";
 import { IPos, Logger, LogicPos } from "utils";
 import { FramesModel, IElementStorage, Sprite } from "baseModel";
 import { BaseDataConfigManager } from "picaWorker";
-import { IExtendCountablePackageItem } from "picaStructure";
 import * as sha1 from "simple-sha1";
 import { IElementPi } from "picaStructure";
 
@@ -29,8 +28,6 @@ export class TerrainManager extends PacketHandler implements IElementManager {
     private mDirty: boolean = false;
     private mTerrainCache: any[];
     private mIsDealEmptyTerrain: boolean = false;
-    // private mCacheLen: number = 10;
-    // private canDealTerrain = false;
     private mExtraRoomInfo: IElementPi = null;
     constructor(protected mRoom: IRoomService, listener?: SpriteAddCompletedListener) {
         super();
@@ -191,13 +188,6 @@ export class TerrainManager extends PacketHandler implements IElementManager {
                 sprite.updateDisplay(wallConfig.animationDisplay, wallConfig.animations);
                 terrain.load(<FramesModel>sprite.displayInfo);
             });
-            // for (const wall of this.walls) {
-            //     const sprite = wall.model;
-            //     // @ts-ignore
-            //     sprite.updateDisplay(wallConfig.animationDisplay, wallConfig.animations);
-            //     wall.load(<FramesModel>sprite.displayInfo);
-            // }
-            // Logger.getInstance().log("========>>> config data", wall);
         });
     }
 
@@ -209,7 +199,6 @@ export class TerrainManager extends PacketHandler implements IElementManager {
         const content: op_client.IOP_VIRTUAL_WORLD_REQ_CLIENT_ADD_SPRITE = packet.content;
         const sprites = content.sprites;
         const type = content.nodeType;
-        const pf: op_def.IPacket = content.packet;
         if (type !== op_def.NodeType.TerrainNodeType) {
             return;
         }

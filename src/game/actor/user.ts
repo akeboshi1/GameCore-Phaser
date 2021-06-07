@@ -288,6 +288,9 @@ export class User extends Player {
 
     public setPosition(pos: IPos, syncPos: boolean = false) {
         super.setPosition(pos);
+        // 检测周边可交互物件
+        this.checkNearEle(pos);
+        // ====================
         const now = new Date().getTime();
         if (now - this.mSetPostionTime > 1000) {
             this.mSetPostionTime = now;
@@ -307,6 +310,17 @@ export class User extends Player {
             this.mMovePoints = [];
             this.mMoveTime = now;
         }
+    }
+
+    /**
+     * 检测角色当前位置附近的可交互element
+     * @param pos
+     */
+    public checkNearEle(pos: IPos) {
+        const x = pos.x;
+        const y = pos.y;
+        const ids = this.mRoomService.getInteractiveEles(x, y);
+        if (!ids) return;
     }
 
     public async activeSprite(targetId: number, param?: any, needBroadcast?: boolean) {
@@ -412,15 +426,6 @@ export class User extends Player {
         if (this.mModel.pos) {
             const obj = { id: val.id, pos: val.pos, nickname: this.model.nickname, alpha: val.alpha, titleMask: val.titleMask | 0x00010000, hasInteractive: true };
             this.game.renderPeer.setModel(obj);
-            const obj1 = {
-                id: val.id,
-                point3f: val.pos,
-                currentAnimationName: val.currentAnimationName,
-                direction: val.direction,
-                mountSprites: val.mountSprites,
-                speed: val.speed,
-                displayInfo: this.model.displayInfo
-            };
             this.setPosition(this.mModel.pos);
         }
         // todo change display alpha
