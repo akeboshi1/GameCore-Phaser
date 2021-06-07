@@ -2,14 +2,9 @@ import { BaseConfigData } from "gamecore";
 import { ILevel } from "../../structure";
 import { Logger } from "utils";
 export class LevelConfig extends BaseConfigData {
-    miningLevel: Map<number, ILevel> = new Map();
-    playerLevel: Map<number, ILevel> = new Map();
-    cabinLevel: Map<number, ILevel> = new Map();
-    storeLevel: Map<number, ILevel> = new Map();
-    loggingLevel: Map<number, ILevel> = new Map();
-    farmingLevel: Map<number, ILevel> = new Map();
+    poolsMap: Map<string, Map<number, ILevel>> = new Map();
     public get(type: string, level: number): ILevel {
-        const map = this.getMap(type);
+        const map = this.poolsMap.get(type);
         if (map.has(level)) {
 
             return map.get(level);
@@ -22,8 +17,8 @@ export class LevelConfig extends BaseConfigData {
      *  通过类型获取所有等级数据
      */
     public levels(type: string) {
-        const map = this.getMap(type);
-        const arr = Array.from(this.playerLevel.values());
+        const map = this.poolsMap.get(type);
+        const arr = Array.from(map.values());
         return arr;
     }
 
@@ -31,32 +26,17 @@ export class LevelConfig extends BaseConfigData {
         for (const key in json) {
             if (Object.prototype.hasOwnProperty.call(json, key)) {
                 const arr = json[key];
-                const map = this.getMap(key);
-                if (!map) {
-                    Logger.getInstance().log(`${key} does not exist!`);
-                    continue;
+                let map: Map<number, ILevel>;
+                if (this.poolsMap.has(key)) {
+                    map = this.poolsMap.get(key);
+                } else {
+                    map = new Map();
+                    this.poolsMap.set(key, map);
                 }
                 for (const data of arr) {
                     map.set(data.level, data);
                 }
             }
-        }
-    }
-
-    protected getMap(tag: string) {
-        switch (tag) {
-            case "miningLevel":
-                return this.miningLevel;
-            case "playerLevel":
-                return this.playerLevel;
-            case "cabinLevel":
-                return this.cabinLevel;
-            case "storeLevel":
-                return this.storeLevel;
-            case "loggingLevel":
-                return this.loggingLevel;
-            case "farmingLevel":
-                return this.farmingLevel;
         }
     }
 }
