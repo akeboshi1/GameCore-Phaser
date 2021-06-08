@@ -73,7 +73,8 @@
     "received": "Received",
     "rarity": "Rarity",
     "leave": "Leave",
-    "affirm": "Affirm"
+    "affirm": "Affirm",
+    "reselect":"Reselect"
   },
   "quantityunit": {
     "k": "k",
