@@ -1,6 +1,6 @@
 import { BasicMediator, DataMgrType, Game, PlayerProperty, SceneDataManager } from "gamecore";
 import { MainUIRedType, RedEventType } from "picaStructure";
-import { op_client, op_def } from "pixelpai_proto";
+import { op_client } from "pixelpai_proto";
 import { EventType, ModuleName } from "structure";
 import { PicaGame } from "../../pica.game";
 import { PicaNewMain } from "./PicaNewMain";

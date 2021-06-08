@@ -241,6 +241,7 @@ export class PicaNewMainPanel extends PicaBasePanel {
             text: [{ text: i18n.t("noticeTips.staytuned"), node: undefined }]
         };
         this.render.mainPeer.showMediator(ModuleName.PICANOTICE_NAME, true, tempdata);
+        this.render.mainPeer.findNearEle();
         return;
     }
 }

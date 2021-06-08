@@ -26,10 +26,15 @@ export class User extends Player {
     private mPreTargetID: number = 0;
     private holdTime: number = 0;
     private holdDelay: number = 80;
+    private mNearEle: IElement;
     constructor(game: Game) {
         super(game, undefined, undefined);
         this.mBlockable = false;
         this.mUserData = new UserDataManager(game);
+    }
+
+    get nearEle(): IElement {
+        return this.mNearEle;
     }
 
     public set debugPoint(val: boolean) {
@@ -177,6 +182,9 @@ export class User extends Player {
         pos.y = userPos.y;
         const movePoint = op_def.MovePoint.create();
         movePoint.pos = pos;
+        // ==================== 检测周边可交互物件
+        this.mNearEle = this.checkNearEle(pos);
+        // ====================
         // 给每个同步点时间戳
         movePoint.timestamp = Date.now();
         if (!this.mMovePoints) this.mMovePoints = [];
@@ -289,9 +297,9 @@ export class User extends Player {
 
     public setPosition(pos: IPos, syncPos: boolean = false) {
         super.setPosition(pos);
-        // ==================== 检测周边可交互物件
+        // // ==================== 检测周边可交互物件
         // this.checkNearEle(pos);
-        // ====================
+        // // ====================
         const now = new Date().getTime();
         if (now - this.mSetPostionTime > 1000) {
             this.mSetPostionTime = now;
@@ -324,8 +332,8 @@ export class User extends Player {
         if (!ids) return;
         const len = ids.length;
         const elementManager = this.mRoomService.elementManager;
-        let dis: number = 0;
-        let nearEle: IElement;
+        let dis: number = Number.MAX_VALUE;
+        let mNearEle: IElement;
         const basePos = this.getPosition();
         for (let i: number = 0; i < len; i++) {
             const tmpIds = ids[i];
@@ -333,16 +341,24 @@ export class User extends Player {
             for (let j: number = 0; j < tmpLen; j++) {
                 const id = tmpIds[j];
                 const ele = elementManager.get(id);
+                // tslint:disable-next-line:no-console
+                // console.log("id ===>", id, 0);
                 if (!ele) continue;
                 const elePos = ele.getPosition();
                 const tmpDis = Tool.twoPointDistance(elePos, basePos);
+                // tslint:disable-next-line:no-console
+                // console.log("id ===>", id, 1, elePos, basePos, tmpDis);
                 if (dis > tmpDis) {
                     dis = tmpDis;
-                    nearEle = ele;
+                    // tslint:disable-next-line:no-console
+                    // console.log("id ===>", id, 2);
+                    mNearEle = ele;
                 }
             }
         }
-        return nearEle;
+        // tslint:disable-next-line:no-console
+        // console.log("mNearEle ===>", mNearEle);
+        return mNearEle;
     }
 
     public async activeSprite(targetId: number, param?: any, needBroadcast?: boolean) {
