@@ -130,7 +130,7 @@ export class PicaManufactureMediator extends BasicMediator {
     }
 
     private queryFuriPackageByStar(obj: { type: number, update: boolean }) {
-        const furibag = this.bag.furniBag;
+        const furibag = this.bag.getPackage(op_pkt_def.PKT_PackageType.FurniturePackage);
         const list = furibag.list;
         const configMgr = <BaseDataConfigManager>this.game.configManager;
         configMgr.getBatchItemDatas(list);
