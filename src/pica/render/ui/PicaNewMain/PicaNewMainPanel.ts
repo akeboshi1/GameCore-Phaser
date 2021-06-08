@@ -193,6 +193,10 @@ export class PicaNewMainPanel extends PicaBasePanel {
             this.onNoticeHandler();
             return;
         }
+        if (tag === "interactive") {
+            this.render.mainPeer.findNearEle();
+            return;
+        }
         if (tag === "activity") {
             this.render.renderEmitter(ModuleName.PICANEWMAIN_NAME + "_showpanel", ModuleName.PICAORDER_NAME);
         } else if (tag === "indent") {
@@ -241,7 +245,6 @@ export class PicaNewMainPanel extends PicaBasePanel {
             text: [{ text: i18n.t("noticeTips.staytuned"), node: undefined }]
         };
         this.render.mainPeer.showMediator(ModuleName.PICANOTICE_NAME, true, tempdata);
-        this.render.mainPeer.findNearEle();
         return;
     }
 }

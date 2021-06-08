@@ -572,7 +572,8 @@ export class MainPeer extends RPCPeer {
 
     @Export()
     public findNearEle() {
-        const ele = this.game.user.nearEle;
+        const userPos = this.game.user.getPosition();
+        const ele = this.game.user.checkNearEle(userPos);
         if (!ele) {
             const tempdata = {
                 text: [{ text: "附近没有可交互对象", node: undefined }]

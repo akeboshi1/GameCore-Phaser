@@ -182,8 +182,9 @@ export class User extends Player {
         pos.y = userPos.y;
         const movePoint = op_def.MovePoint.create();
         movePoint.pos = pos;
+        // todo pos发生变化就开始check
         // ==================== 检测周边可交互物件
-        this.mNearEle = this.checkNearEle(pos);
+        // this.mNearEle = this.checkNearEle(pos);
         // ====================
         // 给每个同步点时间戳
         movePoint.timestamp = Date.now();
