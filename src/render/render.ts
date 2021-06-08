@@ -1833,7 +1833,7 @@ export class Render extends RPCPeer implements GameMain, IRender {
     }
 
     private initWorker() {
-        this.linkTo(MAIN_WORKER, MAIN_WORKER_URL, true).onceReady(() => {
+        this.attach(MAIN_WORKER, MAIN_WORKER_URL, true).onceReady(() => {
             this.mMainPeer = this.remote[MAIN_WORKER].MainPeer;
             this.mMainPeer.updateFps();
             this.createGame();
