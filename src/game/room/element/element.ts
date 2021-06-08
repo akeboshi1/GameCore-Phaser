@@ -591,6 +591,9 @@ export class Element extends BlockObject implements IElement {
         this.mRoomService.game.renderPeer.hideRefernceArea(this.id);
     }
 
+    /**
+     * 获取元素交互点列表
+     */
     public getInteractivePositionList(): IPos[] {
         const interactives = this.mModel.getInteractive();
         if (!interactives || interactives.length < 1) {

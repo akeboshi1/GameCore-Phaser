@@ -570,6 +570,10 @@ export class MainPeer extends RPCPeer {
         this.game.httpClock.enable = enable;
     }
 
+    /**
+     * 寻找角色身边最近的ele
+     * @returns
+     */
     @Export()
     public findNearEle() {
         const userPos = this.game.user.getPosition();
@@ -588,7 +592,6 @@ export class MainPeer extends RPCPeer {
             targets = [{ x: pos.x, y: pos.y }];
         }
         this.findPath(targets, id);
-        // this.game.user.findPath([pos], this.game.user.nearEle.id);
     }
 
     @Export([webworker_rpc.ParamType.str])
