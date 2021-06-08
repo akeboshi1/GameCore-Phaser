@@ -310,10 +310,10 @@ export class Element extends BlockObject implements IElement {
             Logger.getInstance().error(`${Element.name}: sprite is empty`);
             return;
         }
-        const preWalkable = this.mModel.getWalkableArea();
+        // const preWalkable = this.mModel.getWalkableArea();
         this.removeFromMap();
         this.mModel.setAnimationName(animationName, times);
-        const nextWalkable = this.mModel.getWalkableArea();
+        // const nextWalkable = this.mModel.getWalkableArea();
         const hasInteractive = this.model.hasInteractive;
         if (this.mInputEnable) this.setInputEnable(this.mInputEnable);
         this.addToMap();
