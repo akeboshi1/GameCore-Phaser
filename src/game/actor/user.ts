@@ -10,6 +10,7 @@ import { AvatarSuitType, EventType, IDragonbonesModel, IFramesModel, PlayerState
 import { LayerEnum } from "game-capsule";
 import { interval, MoveControll } from "gamecore";
 import { Tool } from "utils";
+import { IElement } from "../room";
 // import * as _ from "lodash";
 
 export class User extends Player {
@@ -288,8 +289,8 @@ export class User extends Player {
 
     public setPosition(pos: IPos, syncPos: boolean = false) {
         super.setPosition(pos);
-        // 检测周边可交互物件
-        this.checkNearEle(pos);
+        // ==================== 检测周边可交互物件
+        // this.checkNearEle(pos);
         // ====================
         const now = new Date().getTime();
         if (now - this.mSetPostionTime > 1000) {
@@ -316,11 +317,32 @@ export class User extends Player {
      * 检测角色当前位置附近的可交互element
      * @param pos
      */
-    public checkNearEle(pos: IPos) {
+    public checkNearEle(pos: IPos): IElement {
         const x = pos.x;
         const y = pos.y;
         const ids = this.mRoomService.getInteractiveEles(x, y);
         if (!ids) return;
+        const len = ids.length;
+        const elementManager = this.mRoomService.elementManager;
+        let dis: number = 0;
+        let nearEle: IElement;
+        const basePos = this.getPosition();
+        for (let i: number = 0; i < len; i++) {
+            const tmpIds = ids[i];
+            const tmpLen = tmpIds.length;
+            for (let j: number = 0; j < tmpLen; j++) {
+                const id = tmpIds[j];
+                const ele = elementManager.get(id);
+                if (!ele) continue;
+                const elePos = ele.getPosition();
+                const tmpDis = Tool.twoPointDistance(elePos, basePos);
+                if (dis > tmpDis) {
+                    dis = tmpDis;
+                    nearEle = ele;
+                }
+            }
+        }
+        return nearEle;
     }
 
     public async activeSprite(targetId: number, param?: any, needBroadcast?: boolean) {

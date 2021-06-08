@@ -101,7 +101,7 @@ export interface IRoomService {
 
     removeFromWalkableMap(sprite: ISprite, isTerrain?: boolean);
 
-    getInteractiveEles(x: number, y: number): number[];
+    getInteractiveEles(x: number, y: number): number[][];
 
     isWalkable(x: number, y: number): boolean;
 
@@ -412,8 +412,9 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
         if (!this.mInteractiveList) this.mInteractiveList = [];
         for (let i: number = 0; i < len; i++) {
             const pos = interactiveList[i];
-            const x = pos.x;
-            const y = pos.y;
+            const tmpPos = this.transformTo45(pos);
+            const x = tmpPos.x;
+            const y = tmpPos.y;
             if (!this.mInteractiveList[y]) this.mInteractiveList[y] = [];
             if (!this.mInteractiveList[y][x]) this.mInteractiveList[y][x] = [];
             if (this.mInteractiveList[y][x].indexOf(id) === -1) this.mInteractiveList[y][x].push(id);
@@ -486,18 +487,27 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
         }
     }
 
-    public getInteractiveEles(x: number, y: number): number[] {
+    public getInteractiveEles(x: number, y: number): number[][] {
         if (!this.mInteractiveList) return null;
-        // 前后3个格子直接可交互物件
+        // 前后3个格子直接可交互物件,正负gridlen格子
         const gridLen = 3;
-        for (let i: number = 0; i < gridLen; i++) {
-            if (i > this.mInteractiveList.length) continue;
+        const list = [];
+        const pos = this.transformTo45(new LogicPos(x, y));
+        const baseX = pos.x;
+        const baseY = pos.y;
+        const len = this.mInteractiveList.length;
+        for (let i: number = -gridLen; i <= gridLen; i++) {
+            if (baseY + i < 0 || baseY + i >= len) continue;
             for (let j: number = 0; j < gridLen; j++) {
-                if (j > this.mInteractiveList[i].length) continue;
+                if (baseX + j < 0 || baseX + j >= len) continue;
+                const idPos = { x: baseX + j, y: baseY + i };
+                const ids = this.mInteractiveList[idPos.y][idPos.x];
+                if (ids && ids.length > 0) {
+                    list.push(ids);
+                }
             }
         }
-        const list = [{ x },];
-        return this.mInteractiveList[y][x];
+        return list;
     }
 
     public isWalkable(x: number, y: number): boolean {
@@ -1011,10 +1021,6 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
         if (this.terrainManager) {
             this.terrainManager.changeAllDisplayData(content.floorId);
         }
-    }
-
-    private getSpriteInteractiveData() {
-
     }
 
     private getSpriteWalkableData(sprite: ISprite, isTerrain: boolean, pos?: IPos): { origin: IPos, collisionArea: number[][], walkableArea: number[][], pos45: IPos, rows: number, cols: number } {
