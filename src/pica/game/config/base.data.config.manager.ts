@@ -37,6 +37,7 @@ import { EventType } from "structure";
 import { QuestGroupConfig } from "./quest.group.config";
 import { Element2Config } from "./element2.config";
 import { FurnitureGradeConfig } from "./furniture.grade.config";
+import { RechargeConfig } from "./recharge.config";
 
 export enum BaseDataType {
     i18n_zh = "i18n_zh",
@@ -60,7 +61,8 @@ export enum BaseDataType {
     dailyQuestGroup = "dailyQuestGroup",
     element2 = "element2",
     elementpi = "elementpi", // 不作为文件名加载文件，只作为类型区分
-    furnitureGrade = "furnitureGrade"
+    furnitureGrade = "furnitureGrade",
+    charge = "charge"
     // itemcategory = "itemcategory"
 }
 
@@ -381,10 +383,16 @@ export class BaseDataConfigManager extends BaseConfigManager {
      * @param shopName
      * @returns
      */
-    public checkDynamicShop(shopName): Promise<any> {
+    public checkDynamicShop(shopNames: string[]): Promise<any> {
         return new Promise((resolve, reject) => {
-            if (!this.dataMap.has(shopName)) {
-                this.dynamicLoad(new Map([[shopName, new ShopConfig()]])).then(() => {
+            const tempMaps = new Map();
+            for (const name of shopNames) {
+                if (!this.dataMap.has(name)) {
+                    tempMaps.set(name, new ShopConfig());
+                }
+            }
+            if (tempMaps.size > 0) {
+                this.dynamicLoad(tempMaps).then(() => {
                     resolve(true);
                 }, (reponse) => {
                     Logger.getInstance().error("未成功加载配置:" + reponse);
@@ -835,6 +843,19 @@ export class BaseDataConfigManager extends BaseConfigManager {
         });
         return obj;
     }
+    public getRecharges(type: number, id?: string) {
+        const data: RechargeConfig = this.getConfig(BaseDataType.charge);
+        const tempArr = data.get(type, id);
+        for (const temp of tempArr) {
+            if (!temp["find"]) {
+                temp.name = temp.nameId = this.getI18n(temp.nameId);
+                this.getBatchItemDatas(temp.items);
+                this.getBatchItemDatas(temp.firstPurchaseItems);
+                temp["find"] = true;
+            }
+        }
+        return tempArr;
+    }
     public destory() {
         super.destory();
         this.mGame.emitter.off(EventType.QUEST_ELEMENT_PI_DATA, this.checkDynamicElementPI, this);
@@ -862,6 +883,7 @@ export class BaseDataConfigManager extends BaseConfigManager {
         this.dataMap.set(BaseDataType.dailyQuestGroup, new QuestGroupConfig());
         this.dataMap.set(BaseDataType.element2, new Element2Config());
         this.dataMap.set(BaseDataType.furnitureGrade, new FurnitureGradeConfig());
+        this.dataMap.set(BaseDataType.charge, new RechargeConfig());
     }
 
     protected configUrl(reName: string, tempurl?: string) {

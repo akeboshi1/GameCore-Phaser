@@ -26,40 +26,43 @@ export class PicaRechargeMediator extends BasicMediator {
     }
 
     onDisable() {
-        this.proto.on("BOUGHT_GIFTPACK_IDS", this.onBOUGHT_GIFTPACK_IDS, this);
+        this.proto.off("BOUGHT_GIFTPACK_IDS", this.onBOUGHT_GIFTPACK_IDS, this);
     }
 
     onEnable() {
-        this.proto.off("BOUGHT_GIFTPACK_IDS", this.onBOUGHT_GIFTPACK_IDS, this);
+        this.proto.on("BOUGHT_GIFTPACK_IDS", this.onBOUGHT_GIFTPACK_IDS, this);
     }
     protected panelInit() {
         super.panelInit();
         this.sendGetGiftPackBoughtStatus();
-        this.onBOUGHT_GIFTPACK_IDS(undefined);
+        this.onUpdatePlayerInfoHandler();
     }
     private onUpdatePlayerInfoHandler() {
         const userData = this.game.user.userData;
-        this.mView.setMoneyData(userData.money, userData.diamond);
+        if (this.mView) this.mView.setMoneyData(userData.money, userData.diamond);
     }
     private sendBuyGiftPackDeBug(obj: { str: string, count: number }) {
         this.game.sendCustomProto("STRING_INT", "giftPackFacade:buyGiftPackDeBug", obj);
     }
 
     private sendGetGiftPackBoughtStatus() {
-        this.game.sendCustomProto("STRING_INT", "giftPackFacade:buyGiftPackDeBug", {});
+        this.game.sendCustomProto("STRING_INT", "giftPackFacade:getGiftPackBoughtStatus", {});
     }
 
     private onBOUGHT_GIFTPACK_IDS(packet: any) {
-        // const content = packet.content;
-        const diamondData = this.getDiamondTestDatas();
-        const giftData = this.getGiftTestDatas();
+        const content = packet.content;
+        const ids = content.ids;
+        const diamondData = this.config.getRecharges(1);
+        const giftData = this.config.getRecharges(4);
         for (const temp of diamondData) {
-            this.config.getBatchItemDatas(temp.items);
-            this.config.getBatchItemDatas(temp.firstPurchaseItems);
+            if (ids.indexOf(temp.id) === -1) {
+                temp.double = true;
+            }
         }
         for (const temp of giftData) {
-            this.config.getBatchItemDatas(temp.items);
-            this.config.getBatchItemDatas(temp.firstPurchaseItems);
+            if (ids.indexOf(temp.id) === -1) {
+                temp.double = true;
+            }
         }
         this.mView.setDataList([diamondData, giftData]);
     }
@@ -69,40 +72,5 @@ export class PicaRechargeMediator extends BasicMediator {
     }
     get config() {
         return <BaseDataConfigManager>this.game.configManager;
-    }
-    private getDiamondTestDatas() {
-        const datas = [];
-        for (let i = 0; i < 6; i++) {
-            const temps: IRecharge = {
-                id: `${i + 1}`,
-                nameid: "这是个礼包",
-                price: 50,
-                img: "recharge_diamond_9.99",
-                double: false,
-                items: [<any>{ id: "IA0000019", count: 30 }, <any>{ id: "IF0000018", count: 30 }, <any>{ id: "IF0000013", count: 30 }],
-                firstPurchaseItems: [<any>{ id: "IA0000019", count: 30 }, <any>{ id: "IF0000018", count: 30 }],
-                des: "这是一对礼包的描述巴拉巴开始不断拉大拉克丝豆瓣"
-            };
-            datas.push(temps);
-        }
-        return datas;
-    }
-
-    private getGiftTestDatas() {
-        const datas = [];
-        for (let i = 0; i < 6; i++) {
-            const temps: IRecharge = {
-                id: `${i + 1}`,
-                nameid: "这是个礼包",
-                price: 50,
-                img: "recharge_diamond_bg",
-                double: false,
-                items: [<any>{ id: "IA0000019", count: 30 }, <any>{ id: "IF0000018", count: 30 }, <any>{ id: "IF0000013", count: 30 }],
-                firstPurchaseItems: undefined,
-                des: "这是一对礼包的描述巴拉巴开始不断拉大拉克丝豆瓣"
-            };
-            datas.push(temps);
-        }
-        return datas;
     }
 }

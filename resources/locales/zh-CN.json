@@ -74,7 +74,8 @@
     "received": "已领取",
     "rarity": "稀有",
     "leave": "离开",
-    "affirm": "确认"
+    "affirm": "确认",
+    "count": "数量"
   },
   "quantityunit": {
     "k": "千",

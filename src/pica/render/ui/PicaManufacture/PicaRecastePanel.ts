@@ -86,6 +86,7 @@ export class PicaRecastePanel extends Phaser.GameObjects.Container {
       this.mRecasteItemData.count--;
       const grade = this.getSpendGrade(this.mRecasteItemData.grade);
       this.displayPanel.setRecasteItemData(this.mRecasteItemData, grade);
+      this.queryRecasteList();
     }
   }
   setCategories(subcategorys: any[]) {// op_def.IStrPair

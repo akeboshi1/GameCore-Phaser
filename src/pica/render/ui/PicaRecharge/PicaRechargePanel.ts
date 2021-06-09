@@ -53,9 +53,10 @@ export class PicaRechargePanel extends PicaBasePanel {
         this.mBackground.fillRect(0, 0, 338 * this.dpr, h - fixedHeight + offsetHeight);
         this.mBackground.y = this.top.y + this.top.height * 0.5 - offsetHeight;
         this.mBackground.x = -w * 0.5 + 12 * this.dpr;
-        this.middle.y = this.top.y + this.top.height * 0.5 + this.middle.height * 0.5 + 5 * this.dpr;
+        this.setMiddleConSize(w, h);
         if (this.gamescroll) {
             this.gamescroll.refreshMask();
+            this.banner.refreshMask();
         }
     }
 
@@ -103,18 +104,11 @@ export class PicaRechargePanel extends PicaBasePanel {
     protected createMiddle(width: number, height: number) {
         this.middle = this.scene.make.container(undefined, false);
         this.content.add(this.middle);
-        this.banner = new RechargeBanner(this.scene, 0, 0, 308 * this.dpr, 96 * this.dpr, UIAtlasName.recharge, "recharge_banner", this.scale);
-        const fixedHeight = this.top.height + this.bottom.height;
-        const mHeight = height - fixedHeight;
-        this.middle.setSize(width, mHeight);
-        this.middle.y = this.top.y + this.top.height + this.middle.height * 0.5;
-        this.banner.y = -this.middle.height * 0.5 + this.banner.height * 0.5;
-        const topline = this.scene.make.image({ key: UIAtlasName.recharge, frame: "recharge_division" });
-        topline.y = this.banner.y + this.banner.height * 0.5 + topline.height * 0.5;
-        const scrollHeight = mHeight - 112 * this.dpr;
-        const scrolly = scrollHeight * 0.5 + topline.y + topline.height * 0.5 + this.dpr;
-        this.gamescroll = this.createGameScroll(0, scrolly, width, scrollHeight);
-        this.middle.add([this.banner, topline, this.gamescroll]);
+        this.banner = new RechargeBanner(this.scene, 0, 0, 338 * this.dpr, 108 * this.dpr, this.dpr, this.scale);
+        this.gamescroll = this.createGameScroll(0, 0, width, height);
+        this.middle.add([this.banner, this.gamescroll]);
+        this.setMiddleConSize(width, height);
+
     }
 
     protected createBottom(width: number, height: number) {
@@ -148,7 +142,17 @@ export class PicaRechargePanel extends PicaBasePanel {
         this.checkBox.on("selected", this.onTabButtonHandler, this);
         this.checkBox.selectIndex(0);
     }
-
+    protected setMiddleConSize(width: number, height: number) {
+        const fixedHeight = this.top.height + this.bottom.height + 5 * this.dpr;
+        const mHeight = height - fixedHeight;
+        this.middle.setSize(width, mHeight);
+        this.middle.y = this.top.y + this.top.height * 0.5 + this.middle.height * 0.5 + 6 * this.dpr;
+        this.banner.y = -this.middle.height * 0.5 + this.banner.height * 0.5;
+        const scrollHeight = mHeight - this.banner.height - 6 * this.dpr;
+        const scrolly = this.banner.y + this.banner.height * 0.5 + scrollHeight * 0.5 + 6 * this.dpr;
+        this.gamescroll.resetSize(width, scrollHeight);
+        this.gamescroll.y = scrolly;
+    }
     protected setDiamonDatas(datas: any[]) {
         for (const item of this.rechargeTwoItems) {
             item.visible = false;
@@ -192,7 +196,7 @@ export class PicaRechargePanel extends PicaBasePanel {
         return gamescroll;
     }
 
-    private buy(productId, productName) {
+    private buy(productId, productName, price: number) {
         if (this.render.isCordove()) {
             if ((window as any).IAP) {
                 (window as any).IAP.buy(productId, () => {
@@ -203,7 +207,7 @@ export class PicaRechargePanel extends PicaBasePanel {
                 });
             }
         } else {
-            this.render.renderEmitter(ModuleName.PICARECHARGE_NAME + "_questbuy", productId);
+            this.render.renderEmitter(ModuleName.PICARECHARGE_NAME + "_questbuy", { str: productId, count: price });
         }
     }
 
@@ -229,7 +233,7 @@ export class PicaRechargePanel extends PicaBasePanel {
         if (tag === "pointer") {
             PicaItemTipsPanel.Inst.showTips(obj, data);
         } else if (tag === "buy") {
-            this.buy(data.id, data.nameid);
+            this.buy(data.id, data.nameId, data.price);
         }
     }
 }
@@ -239,14 +243,14 @@ class RechargeItem extends Phaser.GameObjects.Container {
     private key: string;
     private dpr: number;
     private bg: Phaser.GameObjects.Image;
-    private imgicon: Phaser.GameObjects.Image;
+    private imgicon: DynamicImage;
     private title: BBCodeText;
     private tipsCon: Phaser.GameObjects.Container;
     private tipsbg: Phaser.GameObjects.Image;
     private tipstext: Phaser.GameObjects.Text;
     private purchaseBtn: ThreeSliceButton;
     private sendHandler: Handler;
-    private giftbags: PropItem[] = [];
+    private giftbags: RewardItem[] = [];
     private zoom: number;
     constructor(scene: Phaser.Scene, dpr: number, zoom: number) {
         super(scene);
@@ -265,18 +269,18 @@ class RechargeItem extends Phaser.GameObjects.Container {
         }).setOrigin(0.5);
         this.title.x = 0;
         this.title.y = -height * 0.5 + 10 * dpr;
-        this.imgicon = this.scene.make.image({ key: this.key, frame: "recharge_diamond_1.99" });
+        this.imgicon = new DynamicImage(scene, 0, 0);
         this.imgicon.x = -this.width * 0.5 + 41 * dpr;
         this.imgicon.y = 7 * dpr;
         this.tipsCon = this.scene.make.container(undefined, false);
         this.tipsCon.x = this.width * 0.5 - 33 * dpr;
-        this.tipsCon.y = -this.height * 0.5 + 38 * dpr;
+        this.tipsCon.y = -this.height * 0.5 + 35 * dpr;
         this.tipsbg = this.scene.make.image({ key: this.key, frame: "recharge_first_purchase" });
         this.tipsbg.x = 0;
         this.tipsbg.y = 0;
         this.tipstext = this.scene.make.text({ text: i18n.t("recharge.firstcharge"), style: UIHelper.whiteStyle(dpr, 11) });
         this.tipstext.setFontStyle("bold");
-        this.tipstext.setOrigin(1, 0.5);
+        this.tipstext.setOrigin(0.5);
         this.tipstext.x = 0;
         this.tipstext.y = - 5 * dpr;
         this.tipsCon.add([this.tipsbg, this.tipstext]);
@@ -284,7 +288,7 @@ class RechargeItem extends Phaser.GameObjects.Container {
         this.purchaseBtn.setTextStyle(UIHelper.brownishStyle(dpr));
         this.purchaseBtn.setFontStyle("bold");
         this.purchaseBtn.x = this.width * 0.5 - this.purchaseBtn.width * 0.5 - 10 * dpr;
-        this.purchaseBtn.y = this.height * 0.5 - this.purchaseBtn.height * 0.5 - 9 * dpr;
+        this.purchaseBtn.y = this.height * 0.5 - this.purchaseBtn.height * 0.5 - 6 * dpr;
         this.purchaseBtn.on(String(ClickEvent.Tap), this.onSendHandler, this);
         this.add([this.bg, this.title, this.imgicon, this.tipsCon, this.purchaseBtn]);
     }
@@ -294,7 +298,8 @@ class RechargeItem extends Phaser.GameObjects.Container {
     }
     public setRechargeData(data: IRecharge) {
         this.rechargeData = data;
-        this.title.text = `[b][stroke=#521BDB][color=#FFE400]${data.price}[/color] ${i18n.t("coin.diamond")}[/stroke][/b]`;
+        const reward = data.items[0];
+        this.title.text = `[b][stroke=#521BDB][color=#FFE400]${reward.count}[/color] ${i18n.t("coin.diamond")}[/stroke][/b]`;
         if (data.double) {
             this.tipsCon.visible = true;
             this.setPropItems(data.firstPurchaseItems);
@@ -304,6 +309,8 @@ class RechargeItem extends Phaser.GameObjects.Container {
                 item.visible = false;
             }
         }
+        const url = Url.getOsdRes(data.texturePath + `_${this.dpr}x.png`);
+        this.imgicon.load(url);
         this.purchaseBtn.setText(`￥${data.price}`);
     }
 
@@ -311,27 +318,32 @@ class RechargeItem extends Phaser.GameObjects.Container {
         for (const item of this.giftbags) {
             item.visible = false;
         }
-        let posx = 0;
-        for (let i = 0; i < datas.length; i++) {
-            let item: PropItem;
+        const cellWidth = 28 * this.dpr, len = datas.length, space = 2 * this.dpr;
+        let posx = this.width * 0.5 - 40 * this.dpr - ((cellWidth + space) * (len - 1)) * 0.5;
+        for (let i = 0; i < len; i++) {
+            let item: RewardItem;
             const tempdata = datas[i];
             if (i < this.giftbags.length) {
                 item = this.giftbags[i];
             } else {
-                item = new PropItem(this.scene, this.key, "recharge_diamond_gift", this.dpr, this.zoom);
-                item.enable = true;
+                item = new RewardItem(this.scene, cellWidth, cellWidth, this.dpr, this.zoom);
+                item.on(ClickEvent.Tap, this.onItemHandler, this);
                 this.giftbags.push(item);
                 this.add(item);
             }
             item.setItemData(tempdata);
             item.visible = true;
-            item.x = posx + item.width * 0.5;
-            item.y = 0;
-            posx += item.width + 20 * this.dpr;
+            item.x = posx;
+            item.y = 3 * this.dpr;
+            posx += item.width + space;
         }
     }
     private onSendHandler() {
         if (this.sendHandler) this.sendHandler.runWith(["buy", this]);
+    }
+
+    private onItemHandler(pointer, obj: RewardItem) {
+        PicaItemTipsPanel.Inst.showTips(obj, obj.itemData);
     }
 }
 class RechargeGiftItem extends Phaser.GameObjects.Container {
@@ -362,22 +374,22 @@ class RechargeGiftItem extends Phaser.GameObjects.Container {
     }
     public setRechargeData(data: IRecharge) {
         this.rechargeData = data;
-        if (data.type === 1) {
+        if (data.type === 2 || data.type === 3) {
             this.purchaseBtn.x = this.width * 0.5 - this.purchaseBtn.width * 0.5 - 10 * this.dpr;
             this.purchaseBtn.y = this.height * 0.5 - this.purchaseBtn.height * 0.5 - 9 * this.dpr;
         } else {
             this.purchaseBtn.x = 0;
-            this.purchaseBtn.y = this.height * 0.5 - this.purchaseBtn.height * 0.5;
+            this.purchaseBtn.y = this.height * 0.5 - this.purchaseBtn.height * 0.5 + 2 * this.dpr;
         }
         this.purchaseBtn.setText(`￥${data.price}`);
-        // const url = Url.getOsdRes(data.img + `_${this.dpr}x.png`);
-        // this.bg.load(url);
-        this.bg.setFrame(data.img);
+        const url = Url.getOsdRes(data.texturePath + `_${this.dpr}x.png`);
+        this.bg.load(url);
     }
     private onSendHandler() {
         if (this.sendHandler) this.sendHandler.runWith(["buy", this]);
     }
 }
+
 class TwoRechargeItem extends Phaser.GameObjects.Container {
     private dpr: number;
     private zoom: number;
@@ -392,7 +404,7 @@ class TwoRechargeItem extends Phaser.GameObjects.Container {
         this.bottombg = this.scene.make.image({ key: UIAtlasName.recharge, frame: "recharge_division" });
         this.setSize(width, height);
         this.add(this.bottombg);
-        this.bottombg.y = this.height * 0.5 + this.bottombg.height * 0.5 - 1 * dpr;
+        this.bottombg.y = this.height * 0.5 + this.bottombg.height * 0.5;
     }
 
     public setHandler(send: Handler) {
@@ -442,84 +454,190 @@ class TwoRechargeItem extends Phaser.GameObjects.Container {
     }
 }
 
-class RechargeBanner extends SoundButton {
-    private key: string;
-    private frame: string;
-    private banners: DynamicImage[];
-    constructor(scene: Phaser.Scene, x: number, y: number, width: number, height: number, key: string, frame: string, zoom: number) {
+class RechargeBanner extends Phaser.GameObjects.Container {
+    private gameScroll: GameScroller;
+    private line: Phaser.GameObjects.Image;
+    private mTween: Phaser.Tweens.Tween;
+    private zoom: number;
+    private dpr: number;
+    private banners: BannerItem[] = [];
+    private mBound: number[];
+    private cellWidth: number;
+    private cellHeight: number;
+    private cellspace: number;
+    private cellPading: { left: number, right: number };
+    constructor(scene: Phaser.Scene, x: number, y: number, width: number, height: number, dpr: number, zoom: number) {
         super(scene, x, y);
-        this.key = key;
-        this.frame = frame;
-        this.banners = [];
         this.setSize(width, height);
-        this.setBannerData();
-        this.enable = true;
+        this.zoom = zoom;
+        this.dpr = dpr;
+        this.cellWidth = 308 * dpr;
+        this.cellHeight = 96 * dpr;
+        this.cellspace = 20 * dpr;
+        this.cellPading = { left: 15 * dpr, right: 15 * dpr };
+        this.gameScroll = this.createGameScroll(0, 0, width, this.cellHeight);
+        this.gameScroll.y = -height * 0.5 + this.cellHeight * 0.5 + 3 * dpr;
+        this.line = this.scene.make.image({ key: UIAtlasName.recharge, frame: "recharge_division" });
+        this.line.y = height * 0.5 - this.line.height * 0.5;
+        this.add([this.gameScroll, this.line]);
+        this.setBannerData(undefined);
     }
 
-    public setBannerData() {
-        let x = 0;
+    public refreshMask() {
+        this.gameScroll.refreshMask();
+    }
+    public setBannerData(datas: any[]) {
+        for (const temp of this.banners) {
+            temp.visible = false;
+        }
         for (let i = 0; i < 6; i++) {
-            const img = new DynamicImage(this.scene, 0, 0, this.key, this.frame);
-            this.banners.push(img);
-            img.x = x;
-            x += img.width + 10 * this.dpr;
+            let item: BannerItem;
+            if (i < this.banners.length) {
+                item = this.banners[i];
+            } else {
+                item = new BannerItem(this.scene, this.cellWidth, this.cellHeight, this.dpr, this.zoom);
+                this.banners.push(item);
+                this.gameScroll.addItem(item);
+            }
+            item.visible = true;
         }
-        this.add(this.banners);
+        this.gameScroll.Sort();
+        this.mBound = this.gameScroll.bounds;
     }
 
-    protected onPointerMoveHandler(pointer: Phaser.Input.Pointer) {
-        super.onPointerMoveHandler(pointer);
-        if (this.banners.length > 1) {
-            this.moveBanner(pointer.deltaX);
-        }
+    protected createGameScroll(x: number, y: number, width: number, height: number) {
+        const gamescroll = new GameScroller(this.scene, {
+            x,
+            y,
+            width,
+            height,
+            zoom: this.zoom,
+            align: 2,
+            orientation: 1,
+            dpr: this.dpr,
+            space: this.cellspace,
+            selfevent: true,
+            padding: this.cellPading,
+            slidingDeceleration: false,
+            backDeceleration: false,
+            cellupCallBack: (gameobject) => {
+                this.onPointerClickHandler(gameobject);
+            },
+            celldownCallBack: () => {
+
+            }
+        });
+        // gamescroll.on("pointerup", this.onPointerUpHandler, this);
+        gamescroll.on("pointerout", this.onPointerUpHandler, this);
+        return gamescroll;
     }
 
     protected onPointerUpHandler(pointer: Phaser.Input.Pointer) {
-        if (!this.interactiveBoo) {
-            if (this.soundGroup && this.soundGroup.disabled)
-                this.playSound(this.soundGroup.disabled);
-            return;
+        const value = this.gameScroll.getValue();
+        const left = this.mBound[0];
+        const right = this.mBound[1];
+        const tempWidth = this.cellWidth + this.cellspace;
+        const velocity = pointer.velocity;
+        const index = Math.floor((value - left) / tempWidth);
+        const remainder = (value - left) % tempWidth;
+        let vsValue = velocity.x > 0 ? 0.2 : 0.8;
+        if (Math.abs(velocity.x) > 50) {
+            if (vsValue === 0.2) vsValue = 0.01;
+            else vsValue = 0.99;
         }
-        if (this.mTweenBoo) {
-            this.tween(false, this.pointerUp.bind(this, pointer));
+        if (remainder < tempWidth * vsValue) {
+            const to = index * tempWidth + left;
+            this.tween(value, to);
         } else {
-            this.pointerUp(pointer);
+            const to = (index + 1) * tempWidth + left;
+            this.tween(value, to);
         }
     }
-
-    protected moveBanner(detla: number) {
-        for (const img of this.banners) {
-            img.x += detla;
-        }
+    protected onPointerDownHandler(pointer: Phaser.Input.Pointer) {
+        this.clearTween();
     }
 
-    protected tween(left: boolean, callback?: any) {
-        this.mTweening = true;
-        if (this.mTween) {
-            this.mTween.stop();
-            this.mTween.remove();
-            this.mTween = undefined;
-        }
-        this.mTween = this.scene.tweens.add({
-            targets: this.list,
-            duration: 45,
+    protected onPointerClickHandler(obj) {
+
+    }
+    protected tween(from: number, to: number) {
+        this.clearTween();
+        this.mTween = this.scene.tweens.addCounter({
+            duration: 300,
+            from,
+            to,
             ease: "Linear",
-            x: 0,
             onComplete: () => {
                 this.tweenComplete();
-                if (callback) callback();
             },
-            onCompleteParams: [this]
+            onUpdate: (cope: any, param: any) => {
+                this.gameScroll.setValue(param.value);
+            },
         });
     }
 
     protected tweenComplete() {
-        this.mTweening = false;
+        this.clearTween();
+    }
+    protected clearTween() {
         if (this.mTween) {
             this.mTween.stop();
             this.mTween.remove();
             this.mTween = undefined;
         }
+    }
+}
+
+class ItemBase extends ButtonEventDispatcher {
+    public itemData: any;
+    protected img: DynamicImage;
+    constructor(scene, width: number, height: number, dpr: number, zoom: number) {
+        super(scene, 0, 0);
+        this.dpr = dpr;
+        this.zoom = zoom;
+        this.setSize(width, height);
+        this.img = new DynamicImage(scene, 0, 0, UIAtlasName.recharge, "recharge_diamond_bg");
+        this.add(this.img);
+    }
+
+    public setItemData(data: any) {
+        this.itemData = data;
+    }
+}
+class BannerItem extends ItemBase {
+    constructor(scene, width: number, height: number, dpr: number, zoom: number) {
+        super(scene, width, height, dpr, zoom);
+        this.img.setFrame("recharge_banner");
+    }
+}
+
+class RewardItem extends ItemBase {
+    protected bg: Phaser.GameObjects.Image;
+    protected countTex: Phaser.GameObjects.Text;
+    constructor(scene, width: number, height: number, dpr: number, zoom: number) {
+        super(scene, width, height, dpr, zoom);
+        this.bg = this.scene.make.image({ key: UIAtlasName.recharge, frame: "recharge_diamond_gift" });
+        this.countTex = this.scene.make.text({ style: UIHelper.brownishStyle(dpr, 10) }).setFontStyle("bold").setOrigin(0.5);
+        this.countTex.x = 0;
+        this.countTex.y = height * 0.5 + 2 * dpr;
+        this.countTex.visible = false;
+        this.addAt(this.bg, 0);
+        this.add(this.countTex);
+        this.enable = true;
+        this.img.visible = false;
+    }
+
+    setItemData(data: any) {
+        super.setItemData(data);
+        const url = Url.getOsdRes(data.texturePath);
+        const zoom = this.getWorldTransformMatrix().scaleX;
+        this.img.load(url, this, () => {
+            this.img.scale = 1;
+            const scaleX = 13 * this.dpr / this.img.displayWidth;
+            this.img.scale = scaleX;
+            this.img.visible = true;
+        });
+        this.countTex.text = `x${data.count}`;
     }
 }
 

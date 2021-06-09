@@ -2,9 +2,10 @@ import { ICountablePackageItem } from "./icountablepackageitem";
 
 export interface IRecharge {
     id: string;
-    nameid: string;
+    nameId: string;
+    name?: string;
     price: number;
-    img: string;
+    texturePath: string;
     double?: boolean;
     items?: ICountablePackageItem[];
     firstPurchaseItems?: ICountablePackageItem[];

@@ -2,23 +2,31 @@ import { BaseConfigData } from "gamecore";
 import { IRecharge } from "src/pica/structure/irecharge";
 
 export class RechargeConfig extends BaseConfigData {
-  static rechargeData = {
-    "1": { img: "recharge_diamond_1.99" },
-    "2": { img: "recharge_diamond_2.99" },
-    "3": { img: "recharge_diamond_9.99" },
-    "4": { img: "recharge_diamond_29.99" },
-    "5": { img: "recharge_diamond_49.99" },
-    "6": { img: "recharge_diamond_99.99" },
-    "7": { img: "recharge_banner" },
-  };
 
-  public poolDatas: Map<string, IRecharge>;
+  public poolDatas: Map<number, Map<string, IRecharge>> = new Map();
   parseJson(json: any) {
-    if (this.resName === "") {
-
+    const sheet1 = json["Sheet1"];
+    for (const temp of sheet1) {
+      let type = temp.type;
+      if (type !== 1) type = 4;
+      if (this.poolDatas.has(type)) {
+        const map = this.poolDatas.get(type);
+        map.set(temp.id, temp);
+      } else {
+        const map = new Map();
+        map.set(temp.id, temp);
+        this.poolDatas.set(type, map);
+      }
     }
   }
-  get() {
-
+  get(type: number, id?: string) {
+    if (!this.poolDatas.has(type)) return undefined;
+    const map = this.poolDatas.get(type);
+    if (id !== undefined) {
+      return [map.get(id)];
+    } else {
+      const arr = Array.from(map.values());
+      return arr;
+    }
   }
 }
