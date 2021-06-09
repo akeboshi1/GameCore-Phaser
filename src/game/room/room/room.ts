@@ -406,7 +406,10 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
         }
         // op_def.IPBPoint2i[]
         const interactiveList = sprite.getInteractive();
-        if (!interactiveList) return;
+        if (!interactiveList) {
+            this.removeFromInteractiveMap(sprite);
+            return;
+        }
         const id = sprite.id;
         const addPos = sprite.getOriginPoint();
         const pos = sprite.pos;
@@ -428,24 +431,28 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
     }
 
     public removeFromInteractiveMap(sprite: ISprite) {
-        const displayInfo = sprite.displayInfo;
-        if (!displayInfo) {
-            return;
-        }
-        const interactiveList = sprite.getInteractive();
-        if (!interactiveList) return;
+        // const displayInfo = sprite.displayInfo;
+        // if (!displayInfo) {
+        //     return;
+        // }
+        // const interactiveList = sprite.getInteractive();
+        // if (!interactiveList) return;
         const id = sprite.id;
         if (!this.mInteractiveList) return;
-        const len = interactiveList.length;
+        const len = this.mInteractiveList.length;
         for (let i: number = 0; i < len; i++) {
-            const pos = interactiveList[i];
-            const x = pos.x;
-            const y = pos.y;
-            if (!this.mInteractiveList[y]) continue;
-            if (!this.mInteractiveList[y][x]) continue;
-            const index = this.mInteractiveList[y][x].indexOf(id);
-            if (index === -1) continue;
-            this.mInteractiveList[y][x].splice(index, 1);
+            const tmpLen = this.mInteractiveList[i].length;
+            for (let j: number = 0; j < tmpLen; j++) {
+                const ids = this.mInteractiveList[i][j];
+                if (!ids || ids.length < 1) continue;
+                const tmpLen1 = ids.length;
+                for (let k: number = 0; k < tmpLen1; k++) {
+                    const tmpId = ids[k];
+                    if (id === tmpId) {
+                        this.mInteractiveList[i][j].splice(k, 1);
+                    }
+                }
+            }
         }
     }
 
@@ -456,6 +463,8 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
         }
         const walkableData = this.getSpriteWalkableData(sprite, isTerrain);
         if (!walkableData) return;
+        // tslint:disable-next-line:no-console
+        console.log("addWalk ===>", sprite);
         const { origin, collisionArea, walkableArea, pos45, rows, cols } = walkableData;
         let tempY = 0;
         let tempX = 0;
@@ -479,6 +488,8 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
         if (!sprite) return;
         const walkableData = this.getSpriteWalkableData(sprite, isTerrain);
         if (!walkableData) return;
+        // tslint:disable-next-line:no-console
+        console.log("removeWalk ===>", sprite);
         const { origin, collisionArea, walkableArea, pos45, rows, cols } = walkableData;
         let tempY = 0;
         let tempX = 0;
@@ -497,7 +508,7 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
     public getInteractiveEles(x: number, y: number): number[][] {
         if (!this.mInteractiveList) return null;
         // 前后10个格子直接可交互物件,正负gridlen格子
-        const gridLen = 20;
+        const gridLen = 80;
         const list = [];
         const pos = this.transformToMini45(new LogicPos(x, y));
         const baseX = pos.x;
@@ -506,7 +517,7 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
         const cols = this.miniSize.cols;
         for (let i: number = -gridLen; i <= gridLen; i++) {
             if (baseY + i < 0 || baseY + i >= rows) continue;
-            for (let j: number = 0; j < gridLen; j++) {
+            for (let j: number = -gridLen; j < gridLen; j++) {
                 if (baseX + j < 0 || baseX + j >= cols) continue;
                 const idPos = { x: baseX + j, y: baseY + i };
                 const ids = this.mInteractiveList[idPos.y][idPos.x];
