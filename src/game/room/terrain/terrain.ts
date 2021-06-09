@@ -40,6 +40,10 @@ export class Terrain extends BlockObject implements IElement {
         this.mState = val;
     }
 
+    get moving() {
+        return false;
+    }
+
     public startMove() {
     }
 
@@ -47,6 +51,24 @@ export class Terrain extends BlockObject implements IElement {
     }
 
     public startFireMove(pos: IPos) {
+    }
+
+    public addToMap() {
+        this.addToWalkableMap();
+        this.addToInteractiveMap();
+    }
+
+    public removeFromMap() {
+        this.removeFromWalkableMap();
+        this.removeFromInteractiveMap();
+    }
+
+    public addToInteractiveMap() {
+
+    }
+
+    public removeFromInteractiveMap() {
+
     }
 
     public addToWalkableMap() {
@@ -176,7 +198,6 @@ export class Terrain extends BlockObject implements IElement {
 
     public destroy() {
         this.removeDisplay();
-        // this.mElementManager.removeFromMap(this.mModel);
         super.destroy();
     }
 

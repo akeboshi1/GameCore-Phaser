@@ -8,6 +8,7 @@ TODO List
 - [ ] 游戏镜头优化，减少渲染区域
 - [ ] 修复游戏bug todo
 - [ ] 游戏渲染帧数
+- [ ] pkt更新为node_module,新增pkt ci
 
 
 ### 移动端适配

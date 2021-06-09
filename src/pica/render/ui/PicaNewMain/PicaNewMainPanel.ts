@@ -193,12 +193,16 @@ export class PicaNewMainPanel extends PicaBasePanel {
             this.onNoticeHandler();
             return;
         }
+        if (tag === "interactive") {
+            this.render.mainPeer.findNearEle();
+            return;
+        }
         if (tag === "activity") {
             this.render.renderEmitter(ModuleName.PICANEWMAIN_NAME + "_showpanel", ModuleName.PICAORDER_NAME);
         } else if (tag === "indent") {
             this.render.renderEmitter(ModuleName.PICANEWMAIN_NAME + "_showpanel", ModuleName.PICANEWORDER_NAME);
         } else if (tag === "recharge") {
-            this.render.renderEmitter(ModuleName.PICANEWMAIN_NAME + "_showpanel", ModuleName.PICAFURNITURECOMPOSE_NAME);
+            this.render.renderEmitter(ModuleName.PICANEWMAIN_NAME + "_showpanel", ModuleName.PICANEWFRIEND_NAME);
         } else if (tag === "email") {
             this.render.renderEmitter(ModuleName.PICANEWMAIN_NAME + "_showpanel", ModuleName.PICAMAIL_NAME);
         } else if (tag === "roam") {

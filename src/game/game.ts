@@ -22,12 +22,13 @@ import { SoundManager } from "./sound.manager";
 import { GuideManager } from "./guide.manager/guide.manager";
 import { CustomProtoManager } from "./custom.proto/custom.proto.manager";
 import { GameStateManager } from "./state/game.state.manager";
+import { IRoomService } from "./room";
 interface ISize {
     width: number;
     height: number;
 }
 
-export const fps: number = 45;
+export const fps: number = 30;
 export const interval = fps > 0 ? 1000 / fps : 1000 / 30;
 export class Game extends PacketHandler implements IConnectListener, ClockReadyListener, ChatCommandInterface {
     public isDestroy: boolean = false;
@@ -403,6 +404,14 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
                 Logger.getInstance().error("refreshToken:", error);
                 this.login();
             });
+    }
+
+    public leaveRoom(room: IRoomService) {
+
+    }
+
+    public showByName(name: string, data?: any) {
+
     }
 
     showMediator(name: string, isShow: boolean, param?: any) {

@@ -1,10 +1,10 @@
 import { Export, RPCPeer, webworker_rpc } from "webworker-rpc";
 import * as protos from "pixelpai_proto";
-import { op_virtual_world } from "pixelpai_proto";
+import { op_virtual_world, op_client } from "pixelpai_proto";
 import { Buffer, PBpacket } from "net-socket-packet";
 import { Game } from "./game";
 import { IPos, Logger, LogicPos } from "utils";
-import { EventType, ILauncherConfig, MAIN_WORKER, RENDER_PEER } from "structure";
+import { EventType, ILauncherConfig, MAIN_WORKER, ModuleName, RENDER_PEER } from "structure";
 import { CheckPlaceResult, PicaGame } from "picaWorker";
 import { DataMgrType } from "./data.manager/dataManager";
 import { SceneDataManager } from "./data.manager";
@@ -467,7 +467,7 @@ export class MainPeer extends RPCPeer {
     }
 
     @Export()
-    public findPath(targets: [], targetId?: number, toReverse: boolean = false) {
+    public findPath(targets: any[], targetId?: number, toReverse: boolean = false) {
         if (this.game.user) this.game.user.findPath(targets, targetId, toReverse);
     }
 
@@ -503,6 +503,42 @@ export class MainPeer extends RPCPeer {
     @Export([webworker_rpc.ParamType.boolean])
     public httpClockEnable(enable: boolean) {
         this.game.httpClock.enable = enable;
+    }
+
+    /**
+     * 寻找角色身边最近的ele
+     * @returns
+     */
+    @Export()
+    public findNearEle() {
+        const userPos = this.game.user.getPosition();
+        const ele = this.game.user.checkNearEle(userPos);
+        if (!ele) {
+            const tempdata = {
+                text: [{ text: "附近没有可交互对象", node: undefined }]
+            };
+            this.showMediator(ModuleName.PICANOTICE_NAME, true, tempdata);
+            return;
+        }
+        const id = ele.id;
+        let targets = this.getInteractivePosition(id);
+        if (!targets || targets.length === 0) {
+            const pos = ele.getPosition();
+            targets = [{ x: pos.x, y: pos.y }];
+        }
+        this.findPath(targets, id);
+    }
+
+    @Export([webworker_rpc.ParamType.str])
+    public showNoticeHandler(text: string) {
+        const data = new op_client.OP_VIRTUAL_WORLD_RES_CLIENT_SHOW_UI();
+        data.text = [{ text, node: undefined }];
+        this.game.showByName(ModuleName.PICANOTICE_NAME, data);
+    }
+
+    @Export([webworker_rpc.ParamType.str])
+    public showPanelHandler(name: string, data?: any) {
+        this.game.showByName(name, data);
     }
 
     @Export([webworker_rpc.ParamType.num])

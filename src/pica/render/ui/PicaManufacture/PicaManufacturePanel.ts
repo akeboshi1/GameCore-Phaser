@@ -18,6 +18,7 @@ export class PicaManufacturePanel extends PicaBasePanel {
     private composePanel: PicaFurnitureComposePanel;
     private recastPanel: PicaRecastePanel;
     private starCount: number;
+    private gradeStars: any;
     private optionType: number;
     constructor(uiManager: UiManager) {
         super(uiManager);
@@ -31,8 +32,8 @@ export class PicaManufacturePanel extends PicaBasePanel {
         const height = this.scaleHeight;
         this.mCloseBtn.x = this.mCloseBtn.width * 0.5 + 0 * this.dpr;
         this.mCloseBtn.y = 45 * this.dpr;
-        this.starCountCon.y = this.mCloseBtn.y;
-        this.starCountCon.x = width - 15 * this.dpr;
+        this.starCountCon.y = this.height*0.5+this.starCountCon.height*0.5;
+        this.starCountCon.x = 20*this.dpr+this.starCountCon.width;
         this.toggleCon.x = width * 0.5;
         this.toggleCon.y = this.toggleCon.height * 0.5 + 40 * this.dpr;
         this.composePanel.resize(width, height);
@@ -44,7 +45,7 @@ export class PicaManufacturePanel extends PicaBasePanel {
         const index = this.mShowData ? 2 : 1;
         this.onToggleButtonHandler(undefined, <any>this.toggleCon.getAt(index));
         if (this.optionType === 2) {
-            this.recastPanel.setStarData(this.starCount);
+            this.recastPanel.setStarData(this.starCount, this.gradeStars);
             this.recastPanel.setRecasteItemData(this.mShowData, true);
             if (this.tempDatas && this.tempDatas.subcategory) this.recastPanel.setCategories(this.tempDatas.subcategory);
             const bagPanel = this.render.uiManager.getPanel(ModuleName.PICABAG_NAME);
@@ -82,14 +83,14 @@ export class PicaManufacturePanel extends PicaBasePanel {
         this.composePanel.updateGridProp(props);
     }
 
-    public setStarData(value: number) {
+    public setStarData(value: number, gradeStars: any) {
         this.starCount = value;
+        this.gradeStars = gradeStars;
         if (!this.mInitialized) return;
         this.composePanel.setStarData(this.starCount);
-        this.recastPanel.setStarData(this.starCount);
+        this.recastPanel.setStarData(this.starCount, gradeStars);
         this.starvalue.setText(value + "");
     }
-
     public setComposeResult(reward: op_client.ICountablePackageItem) {
 
     }
@@ -101,7 +102,7 @@ export class PicaManufacturePanel extends PicaBasePanel {
     protected onInitialized() {
         if (this.starCount) {
             this.composePanel.setStarData(this.starCount);
-            this.recastPanel.setStarData(this.starCount);
+            this.recastPanel.setStarData(this.starCount, this.gradeStars);
             this.starvalue.setText(this.starCount + "");
         }
     }
@@ -135,8 +136,8 @@ export class PicaManufacturePanel extends PicaBasePanel {
         this.starCountCon = this.scene.make.container(undefined, false);
         this.starCountCon.setSize(starbg.width, starbg.height);
         this.starCountCon.add([starbg, this.starvalue]);
-        this.starCountCon.x = width - 20 * this.dpr;
-        this.starCountCon.y = -this.height * 0.5 + 20 * this.dpr;
+        this.starCountCon.x = this.starCountCon.width+20 * this.dpr;
+        this.starCountCon.y = this.starCountCon.height*0.5;
         this.toggleCon = this.scene.make.container(undefined, false);
         this.toggleCon.y = 20 * this.dpr;
         this.selectLine = this.scene.make.image({ key: UIAtlasName.recast, frame: "Recast_bookmark_select" });

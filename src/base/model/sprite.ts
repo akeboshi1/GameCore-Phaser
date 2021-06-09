@@ -136,7 +136,7 @@ export class Sprite extends EventDispatcher implements ISprite {
 
         // =========== 点击区域 ============
         if (!this.interactive) {
-            // this.interactive = this.
+            this.interactive = this.getInteractive();
         }
 
         this.mountSprites = obj.mountSprites;

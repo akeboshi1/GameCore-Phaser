@@ -74,7 +74,8 @@
     "received": "已领取",
     "rarity": "稀有",
     "leave": "离开",
-    "affirm": "确认"
+    "affirm": "确认",
+    "reselect":"重选"
   },
   "quantityunit": {
     "k": "千",
@@ -235,22 +236,27 @@
     "rankreward": "奖励"
   },
   "friendlist": {
-    "title": "我的好友",
-    "olinetitle": "显示在线",
+    "title": "好友列表",
+    "olinetitle": "仅显示在线好友",
     "friends": "好友",
     "fans": "粉丝",
     "follow": "关注",
+    "followed": "已关注",
     "blacklist": "黑名单",
+    "blacklisted": "已添加黑名单",
     "search_friends_notes": "搜索",
     "unfollow": "取消关注",
+    "unfollowed": "已取消关注",
     "search": "搜索",
     "lv": "等级",
     "remove": "移除",
+    "removed": "已移除黑名单",
     "unregistered_game": "未注册游戏",
     "notice": "通知",
-    "followed_you": "关注了你",
+    "followed_you": "{{name}} 关注了你",
     "follow_notice": "关注通知",
     "addfriend": "添加好友",
+    "addfriended": "已成功添加好友",
     "friendplaceholder": "搜索好友昵称或备注"
   },
   "friend_invite": {

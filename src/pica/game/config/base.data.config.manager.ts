@@ -36,6 +36,7 @@ import { IElementPi } from "../../structure/ielementpi";
 import { EventType } from "structure";
 import { QuestGroupConfig } from "./quest.group.config";
 import { Element2Config } from "./element2.config";
+import { FurnitureGradeConfig } from "./furniture.grade.config";
 
 export enum BaseDataType {
     i18n_zh = "i18n_zh",
@@ -58,7 +59,8 @@ export enum BaseDataType {
     questGroup = "questGroup",
     dailyQuestGroup = "dailyQuestGroup",
     element2 = "element2",
-    elementpi = "elementpi" // 不作为文件名加载文件，只作为类型区分
+    elementpi = "elementpi", // 不作为文件名加载文件，只作为类型区分
+    furnitureGrade = "furnitureGrade"
     // itemcategory = "itemcategory"
 }
 
@@ -819,6 +821,20 @@ export class BaseDataConfigManager extends BaseConfigManager {
         return element;
     }
 
+    public getFurnitureGrade(grade: number) {
+        const data: FurnitureGradeConfig = this.getConfig(BaseDataType.furnitureGrade);
+        const temp = data.get(grade);
+        return temp;
+    }
+    public getFurnitureGradeMap() {
+        const data: FurnitureGradeConfig = this.getConfig(BaseDataType.furnitureGrade);
+        const temp = data.gradeMap;
+        const obj: any = {};
+        temp.forEach((value) => {
+            obj[value.grade] = value;
+        });
+        return obj;
+    }
     public destory() {
         super.destory();
         this.mGame.emitter.off(EventType.QUEST_ELEMENT_PI_DATA, this.checkDynamicElementPI, this);
@@ -845,6 +861,7 @@ export class BaseDataConfigManager extends BaseConfigManager {
         this.dataMap.set(BaseDataType.questGroup, new QuestGroupConfig());
         this.dataMap.set(BaseDataType.dailyQuestGroup, new QuestGroupConfig());
         this.dataMap.set(BaseDataType.element2, new Element2Config());
+        this.dataMap.set(BaseDataType.furnitureGrade, new FurnitureGradeConfig());
     }
 
     protected configUrl(reName: string, tempurl?: string) {
@@ -883,79 +900,5 @@ export class BaseDataConfigManager extends BaseConfigManager {
             texturePath = path + "_s.png";
         }
         return texturePath;
-    }
-    // private async checkItemData(item: ICountablePackageItem): Promise<ICountablePackageItem> {
-    //     return new Promise<ICountablePackageItem>((reslove, reject) => {
-    //         if (!item) {
-    //             return;
-    //         }
-    //         if (item["find"]) reslove(item);
-    //         const config: ItemBaseDataConfig = this.getConfig(BaseDataType.item);
-    //         item.name = this.getI18n(item.name, { id: item.id, name: "name" });
-    //         item.source = this.getI18n(item.source, { id: item.id, source: "source" });
-    //         item.des = this.getI18n(item.des, { id: item.id, des: "des" });
-    //         item["exclude"] = config.excludes;
-    //         if (item.texturePath) item["display"] = { texturePath: item.texturePath };
-    //         if (item.serializeString && item.serializeString !== "") {
-    //             const path = ResUtils.getResRoot(item.serializeString);
-    //             if (path && path.length > 0) {
-    //                 const responseType = "arraybuffer";
-    //                 this.mGame.httpLoaderManager.startSingleLoader({ path, responseType }).then((req: any) => {
-    //                     item["find"] = true;
-    //                     // 保存到elementstorage中
-    //                     this.decodeItem(req).then((lite) => {
-    //                         this.mGame.elementStorage.setGameConfig(lite);
-    //                         reslove(item);
-    //                     });
-    //                 }).catch(() => {
-    //                     reject(item);
-    //                 });
-    //             } else {
-    //                 item["find"] = true;
-    //                 // todo
-    //                 reslove(item);
-    //             }
-    //         }
-    //     });
-
-    //     // const element = await this.getElementData(item.elementId);
-    //     // if (element) {
-    //     //     const texture_path = element.texture_path;
-    //     //     item["animations"] = element["AnimationData"];
-    //     //     if (texture_path) {
-    //     //         item["animationDisplay"] = { dataPath: element.data_path, texturePath: texture_path };
-    //     //         const index = texture_path.lastIndexOf(".");
-    //     //         if (index === -1) {
-    //     //             item.texturePath = element.texture_path + "_s";
-    //     //         } else {
-    //     //             const extensions = texture_path.slice(index, texture_path.length);
-    //     //             const path = texture_path.slice(0, index);
-    //     //             item.texturePath = path + "_s" + extensions;
-    //     //         }
-    //     //         item["display"] = { texturePath: item.texturePath };
-    //     //     }
-    //     // }
-    //     // item["find"] = true;
-    //     // });
-    // }
-
-    private decodeItem(req): Promise<Lite> {
-        return new Promise((resolve, reject) => {
-            const arraybuffer = req.response;
-            if (arraybuffer) {
-                try {
-                    const item = new Lite();
-                    item.deserialize(new Uint8Array(arraybuffer));
-                    Logger.getInstance().debug("Decode: ItemPi -> lite", item);
-                    resolve(item);
-                } catch (error) {
-                    Logger.getInstance().error("catch error", error);
-                    reject(error);
-                }
-            } else {
-                Logger.getInstance().error("reject error");
-                reject("error");
-            }
-        });
     }
 }

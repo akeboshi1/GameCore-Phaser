@@ -156,7 +156,17 @@ export class PlayerManager extends PacketHandler implements IElementManager {
                     element.calcDirection(element.getPosition(), target.getPosition());
                 }
                 if (data.animation) {
-                    element.play(data.animation, data.times);
+                    const times = data.times;
+                    const queue = [{ animationName: data.animation, times }];
+                    if (times && times > 0) {
+                        if (element.moving) {
+                            queue.push({ animationName: PlayerState.IDLE, times: undefined });
+                        } else {
+                            queue.push({ animationName: element.model.currentAnimation.name, times: element.model.currentAnimation.times });
+                        }
+                    }
+                    element.setQueue(queue);
+                    // element.play(data.animation, data.times);
                 }
                 this.mActionMgr.executeElementActions(data.action, { targetId, id: data.id }, id);
             }

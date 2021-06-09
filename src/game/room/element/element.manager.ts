@@ -303,7 +303,7 @@ export class ElementManager extends PacketHandler implements IElementManager {
                 }
                 // 更新elementstorage中显示对象的数据信息
                 const data = new Sprite(sprite, 3);
-                this.mRoom.game.elementStorage.add(<any>data);
+                if (data.displayInfo) this.mRoom.game.elementStorage.add(data.displayInfo);
                 element = this.get(sprite.id);
                 if (element) {
                     this.mDealSyncMap.set(sprite.id, false);
@@ -353,7 +353,6 @@ export class ElementManager extends PacketHandler implements IElementManager {
         if (notReadyElements.length < 1) {
             Logger.getInstance().debug("#loading onManagerReady ", this.constructor.name);
             this.mRoom.onManagerReady(this.constructor.name);
-            this.mRoom.onRoomReady();
             if (this.mRequestSyncIdList && this.mRequestSyncIdList.length > 0) {
                 this.fetchDisplay(this.mRequestSyncIdList);
                 this.mRequestSyncIdList.length = 0;
@@ -387,7 +386,6 @@ export class ElementManager extends PacketHandler implements IElementManager {
                 continue;
             }
             this.mAddCache.push(obj.id);
-            // const sprite = new Sprite(obj, 3);
             const pi = this.checkDisplay(obj);
             if (!obj.display && !obj.avatar && pi) {
                 if (!obj.nickname) obj.nickname = pi.name;

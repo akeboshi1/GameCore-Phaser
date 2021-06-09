@@ -210,7 +210,7 @@ export class AvatarSuitType {
         return s;
     }
 
-    static getSuitsFromItem(avatarSuits: op_client.ICountablePackageItem[]) {
+    static getSuitsFromItem(avatarSuits: any[]) {
         const suits: AvatarSuit[] = [];
         for (const item of avatarSuits) {
             const suit: AvatarSuit = {

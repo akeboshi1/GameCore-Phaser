@@ -24,6 +24,7 @@ export interface IElement {
     readonly dir: number;
     readonly roomService: IRoomService;
     readonly created: boolean;
+    readonly moving: boolean;
 
     readonly moveData: MoveData;
 
@@ -87,9 +88,17 @@ export interface IElement {
 
     getProjectionSize(): IProjection;
 
+    addToMap();
+
+    removeFromMap();
+
     addToWalkableMap();
 
     removeFromWalkableMap();
+
+    addToInteractiveMap();
+
+    removeFromInteractiveMap();
 }
 
 export interface MoveData {
@@ -146,6 +155,10 @@ export class Element extends BlockObject implements IElement {
         if (this.mElementManager) {
             return this.mElementManager;
         }
+    }
+
+    get moving() {
+        return this.mMoving;
     }
 
     protected mId: number;
@@ -233,16 +246,13 @@ export class Element extends BlockObject implements IElement {
             Logger.getInstance().error(`${Element.name}: sprite is empty`);
             return;
         }
-        const preWalkable = this.mModel.getWalkableArea();
-        this.removeFromWalkableMap();
-        if (times !== undefined) {
-            times = times > 0 ? times : -1;
-        }
+        // const preWalkable = this.mModel.getWalkableArea();
+        this.removeFromMap();
         this.mModel.setAnimationName(animationName, times);
-        const nextWalkable = this.mModel.getWalkableArea();
+        // const nextWalkable = this.mModel.getWalkableArea();
         const hasInteractive = this.model.hasInteractive;
         if (this.mInputEnable) this.setInputEnable(this.mInputEnable);
-        this.addToWalkableMap();
+        this.addToMap();
         if (this.mRoomService) {
             if (!this.mRootMount) {
                 this.addBody();
@@ -273,6 +283,7 @@ export class Element extends BlockObject implements IElement {
     public completeAnimationQueue() {
         const anis = this.model.animationQueue;
         if (!anis || anis.length < 1) return;
+        anis.shift();
         let aniName: string = PlayerState.IDLE;
         let playTiems;
         if (anis.length > 0) {
@@ -280,7 +291,6 @@ export class Element extends BlockObject implements IElement {
             playTiems = anis[0].playTimes;
         }
         this.play(aniName, playTiems);
-        anis.shift();
     }
 
     public setDirection(val: number) {
@@ -444,14 +454,15 @@ export class Element extends BlockObject implements IElement {
     public getPosition(): IPos {
         let pos: IPos;
         const p = super.getPosition();
-        if (this.mRootMount) {
-            pos = this.mRootMount.getPosition();
-            pos.x += p.x;
-            pos.y += p.y;
-            pos.z += p.z;
-        } else {
-            pos = new LogicPos(p.x, p.y, p.z);
-        }
+        // if (this.mRootMount) {
+        // mount后未更新Position。加上RootMount会偏移
+        //     pos = this.mRootMount.getPosition();
+        //     pos.x += p.x;
+        //     pos.y += p.y;
+        //     pos.z += p.z;
+        // } else {
+        pos = new LogicPos(p.x, p.y, p.z);
+        // }
         return pos;
     }
 
@@ -506,6 +517,9 @@ export class Element extends BlockObject implements IElement {
         this.mRoomService.game.renderPeer.hideRefernceArea(this.id);
     }
 
+    /**
+     * 获取元素交互点列表
+     */
     public getInteractivePositionList(): IPos[] {
         const interactives = this.mModel.getInteractive();
         if (!interactives || interactives.length < 1) {
@@ -543,7 +557,7 @@ export class Element extends BlockObject implements IElement {
             this.stopMove();
         }
         this.mDirty = true;
-        this.removeFromWalkableMap();
+        this.removeFromMap();
         this.removeBody();
         return this;
     }
@@ -553,7 +567,7 @@ export class Element extends BlockObject implements IElement {
             const pos = this.mRootMount.getPosition();
             this.mRootMount = null;
             this.setPosition(pos, true);
-            this.addToWalkableMap();
+            this.addToMap();
             this.addBody();
             await this.mRoomService.game.renderPeer.setPosition(this.id, pos.x, pos.y);
             this.mDirty = true;
@@ -598,6 +612,16 @@ export class Element extends BlockObject implements IElement {
         }
     }
 
+    public addToMap() {
+        this.addToWalkableMap();
+        this.addToInteractiveMap();
+    }
+
+    public removeFromMap() {
+        this.removeFromWalkableMap();
+        this.removeFromInteractiveMap();
+    }
+
     public addToWalkableMap() {
         if (this.mRootMount) return;
         if (this.model && this.mElementManager) this.mElementManager.roomService.addToWalkableMap(this.model);
@@ -605,6 +629,16 @@ export class Element extends BlockObject implements IElement {
 
     public removeFromWalkableMap() {
         if (this.model && this.mElementManager) this.mElementManager.roomService.removeFromWalkableMap(this.model);
+    }
+
+    public addToInteractiveMap() {
+        // 有叠加物件时，不做添加处理
+        if (this.mRootMount) return;
+        if (this.model && this.mElementManager) this.mElementManager.roomService.addToInteractiveMap(this.model);
+    }
+
+    public removeFromInteractiveMap() {
+        if (this.model && this.mElementManager) this.mElementManager.roomService.removeFromInteractiveMap(this.model);
     }
 
     public setState(stateGroup: op_client.IStateGroup) {
@@ -848,7 +882,11 @@ export class Element extends BlockObject implements IElement {
         this.removeFromWalkableMap();
         const model = this.mModel = new Sprite(this.mTmpSprite);
         const elementRef = this.roomService.game.elementStorage.getElementRef(this.mTmpSprite.bindId || this.mTmpSprite.id);
-        if (elementRef && elementRef.displayModel && !this.mTmpSprite.avatar && !this.mTmpSprite.display) this.mModel.setDisplayInfo(elementRef.displayModel);
+        if (elementRef && elementRef.displayModel && !this.mTmpSprite.avatar && !this.mTmpSprite.display) {
+            // tslint:disable-next-line:no-console
+            console.log("element ===>",elementRef.displayModel);
+            this.mModel.setDisplayInfo(elementRef.displayModel);
+        }
         (<any>this.mModel).off("Animation_Change", this.animationChanged, this);
         (<any>this.mModel).on("Animation_Change", this.animationChanged, this);
 

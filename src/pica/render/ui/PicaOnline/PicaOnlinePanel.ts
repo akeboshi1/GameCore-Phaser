@@ -7,6 +7,7 @@ import { PicaBasePanel } from "../pica.base.panel";
 import { Button, ClickEvent, GameGridTable } from "apowophaserui";
 import { PicaOnlineBottomPanel } from "./PicaOnlineBottomPanel";
 import { ImageValue } from "../../ui";
+import { UITools } from "../uitool";
 export class PicaOnlinePanel extends PicaBasePanel {
     private content: Phaser.GameObjects.Container;
     private mBlack: Phaser.GameObjects.Graphics;
@@ -191,7 +192,6 @@ export class PicaOnlinePanel extends PicaBasePanel {
         if (data.platformId === this.userid) {
             this.render.renderEmitter(this.key + "_openingcharacter", data.platformId);
         } else {
-            this.add(this.bottomPanel);
             this.bottomPanel.show();
             const black = this.blackList.indexOf(data.platformId) !== -1;
             this.bottomPanel.setRoleData(data, black);
@@ -218,7 +218,6 @@ export class PicaOnlinePanel extends PicaBasePanel {
 
     private closeBottomPanel() {
         this.bottomPanel.hide();
-        this.remove(this.bottomPanel);
     }
 
 }
@@ -276,9 +275,10 @@ class OnlineItem extends ButtonEventDispatcher {
         // this.simpleButton["setInteractiveSize"](60 * this.dpr, 20 * this.dpr);
         this.add(this.simpleButton);
     }
-    public setPlayerInfo(data: op_pkt_def.PKT_PlayerInfo) {
+    public setPlayerInfo(data: any) {
         this.playerData = data;
-        this.nameImage.setText(data.nickname);
+        const gender = UITools.getGenderFrame(data.gender);
+        this.nameImage.setFrameValue(data.nickname, UIAtlasName.uicommon, gender);
         this.levelLabel.text = `${i18n.t("common.lv")} ${data.level.level}`;
         this.headicon.visible = false;
         if (data["avatar"]) {

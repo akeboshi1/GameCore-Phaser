@@ -203,7 +203,7 @@ export class BottomPanel extends PicaBasePanel {
         if (tag === "bag") {
             this.render.renderEmitter(ModuleName.BOTTOM + "_showpanel", ModuleName.PICABAG_NAME);
         } else if (tag === "friend") {
-            this.render.renderEmitter(ModuleName.BOTTOM + "_showpanel", ModuleName.PICAFRIEND_NAME);
+            this.render.renderEmitter(ModuleName.BOTTOM + "_showpanel", ModuleName.PICANEWFRIEND_NAME);
         } else if (tag === "avatar") {
             this.render.renderEmitter(ModuleName.BOTTOM + "_showpanel", ModuleName.PICAAVATAR_NAME);
         } else if (tag === "make") {
@@ -352,7 +352,7 @@ class OutputContainer extends Phaser.GameObjects.Container {
         this.background.clear();
         this.background.fillStyle(0, 0.6);
         this.background.fillRect(0, 0, width, height);
-        const areaWidth = (width - 8 * this.dpr * this.scaleRatio), areaHeight = (height - 8 * this.dpr * this.scaleRatio);
+        const areaWidth = (width - 8 * this.dpr * this.scaleRatio), areaHeight = (height - 4 * this.dpr * this.scaleRatio);
         this.mTextArea.childrenMap.child.setMinSize(areaWidth, areaHeight);
 
         this.mTextArea.layout();
@@ -372,7 +372,7 @@ class OutputContainer extends Phaser.GameObjects.Container {
     }
 
     public collapse() {
-        this.resize(296 * this.dpr * this.scaleRatio, 40 * this.dpr * this.scaleRatio);
+        this.resize(296 * this.dpr * this.scaleRatio, 42 * this.dpr * this.scaleRatio);
         this.mTextArea.setScrollerEnable(false);
     }
 

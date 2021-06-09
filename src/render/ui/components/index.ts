@@ -38,3 +38,5 @@ export * from "./toggle.button";
 export * from "./texture.sprite";
 export * from "./input.field";
 export * from "./checkbox.toggle";
+export * from "./input.label";
+export * from "./progress.nine.mask.bar";

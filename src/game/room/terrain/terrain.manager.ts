@@ -193,7 +193,6 @@ export class TerrainManager extends PacketHandler implements IElementManager {
         const content: op_client.IOP_VIRTUAL_WORLD_REQ_CLIENT_ADD_SPRITE = packet.content;
         const sprites = content.sprites;
         const type = content.nodeType;
-        const pf: op_def.IPacket = content.packet;
         if (type !== op_def.NodeType.TerrainNodeType) {
             return;
         }

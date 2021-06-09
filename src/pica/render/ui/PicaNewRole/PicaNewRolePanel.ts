@@ -6,8 +6,9 @@ import { AvatarSuitType, ModuleName } from "structure";
 import { UIAtlasName } from "../../../res";
 import { Handler, i18n, UIHelper } from "utils";
 import { PicaBasePanel } from "../pica.base.panel";
-import { ISocial } from "../../../structure";
+import { IANOTHER_PLAYER_INFO, ISocial } from "../../../structure";
 import { ImageValue } from "../../ui";
+import { UITools } from "../uitool";
 export class PicaNewRolePanel extends PicaBasePanel {
     private blackGraphic: Phaser.GameObjects.Graphics;
     private bg: ThreeSlicePath;
@@ -133,7 +134,7 @@ export class PicaNewRolePanel extends PicaBasePanel {
         super.init();
     }
 
-    public setRoleData(content: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_ANOTHER_PLAYER_INFO) {
+    public setRoleData(content: IANOTHER_PLAYER_INFO) {
         this.roleData = content;
         if (!this.mInitialized || !this.roleData) return;
         const temp = AvatarSuitType.getSuitsFromItem(content.avatarSuit);
@@ -142,7 +143,8 @@ export class PicaNewRolePanel extends PicaBasePanel {
         this.headAvatar.setSuits(temp.suits);
         this.headAvatar.visible = true;
         this.headAvatar.load(dbModel, undefined, false);
-        this.nameImage.setFrameValue(content.nickname, UIAtlasName.people_action, "people_man");
+        const nameFrame = UITools.getGenderFrame(content.gender);
+        this.nameImage.setFrameValue(content.nickname, UIAtlasName.people_action, nameFrame);
         this.levelLabel.text = `${i18n.t("common.lv")} ${content.level.level}`;
         const tnormals = ["butt_gray_left_s", "butt_gray_middle_s", "butt_gray_right_s"];
         this.tradingBtn.setFrameNormal(tnormals, tnormals);

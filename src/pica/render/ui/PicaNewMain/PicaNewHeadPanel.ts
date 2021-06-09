@@ -1,5 +1,5 @@
 import { Button, ClickEvent, NineSlicePatch } from "apowophaserui";
-import { ButtonEventDispatcher, ProgressMaskBar } from "gamecoreRender";
+import { ButtonEventDispatcher, ProgressMaskBar, ProgressNineMaskBar } from "gamecoreRender";
 import { UIAtlasName } from "../../../res";
 import { Font, Handler, UIHelper } from "utils";
 import { op_pkt_def } from "pixelpai_proto";
@@ -13,7 +13,7 @@ export class PicaNewHeadPanel extends Phaser.GameObjects.Container {
     private sceneclickCon: ButtonEventDispatcher;
     private levelTex: Phaser.GameObjects.Text;
     private powerTex: ImageValue;
-    private powerPro: ProgressMaskBar;
+    private powerPro: ProgressNineMaskBar;
     private powerAddBtn: Button;
     private moneyvalue: ImageValue;
     private diamondvalue: ImageValue;
@@ -52,7 +52,7 @@ export class PicaNewHeadPanel extends Phaser.GameObjects.Container {
         this.levelTex = this.scene.make.text({
             x: 0, y: 0, text: "", style: { color: "#0089D3", fontSize: 14 * this.dpr, fontFamily: Font.NUMBER }
         }).setStroke("#ffffff", 2 * this.dpr).setFontStyle("bold").setOrigin(0.5);
-        this.powerPro = new ProgressMaskBar(this.scene, UIAtlasName.uicommon, "home_progress_bottom", "strength_progress", undefined, {
+        this.powerPro = new ProgressNineMaskBar(this.scene, UIAtlasName.uicommon, "home_progress_bottom", "strength_progress", undefined, {
             width: 41 * this.dpr, height: 11 * this.dpr, left: 4 * this.dpr, right: 4 * this.dpr, top: 0, bottom: 0
         });
         this.powerPro.x = 0;
