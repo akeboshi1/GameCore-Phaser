@@ -223,7 +223,6 @@ export class Element extends BlockObject implements IElement {
             model.layer = LayerEnum.Surface;
             Logger.getInstance().warn(`${Element.name}: sprite layer is empty`);
         }
-        this.addToMap();
         this.mModel = model;
         this.mQueueAnimations = undefined;
         if (this.mModel.pos) {
@@ -233,6 +232,7 @@ export class Element extends BlockObject implements IElement {
         // 必须执行一遍下面的方法，否则无法获取碰撞区域
         const area = model.getCollisionArea();
         const obj = { id: model.id, pos: model.pos, nickname: model.nickname, sound: model.sound, alpha: model.alpha, titleMask: model.titleMask | 0x00020000, hasInteractive: model.hasInteractive };
+        this.addToMap();
         // render action
         this.load(this.mModel.displayInfo)
             .then(() => this.mElementManager.roomService.game.peer.render.setModel(obj))
@@ -310,10 +310,10 @@ export class Element extends BlockObject implements IElement {
             Logger.getInstance().error(`${Element.name}: sprite is empty`);
             return;
         }
-        const preWalkable = this.mModel.getWalkableArea();
+        // const preWalkable = this.mModel.getWalkableArea();
         this.removeFromMap();
         this.mModel.setAnimationName(animationName, times);
-        const nextWalkable = this.mModel.getWalkableArea();
+        // const nextWalkable = this.mModel.getWalkableArea();
         const hasInteractive = this.model.hasInteractive;
         if (this.mInputEnable) this.setInputEnable(this.mInputEnable);
         this.addToMap();
@@ -591,6 +591,9 @@ export class Element extends BlockObject implements IElement {
         this.mRoomService.game.renderPeer.hideRefernceArea(this.id);
     }
 
+    /**
+     * 获取元素交互点列表
+     */
     public getInteractivePositionList(): IPos[] {
         const interactives = this.mModel.getInteractive();
         if (!interactives || interactives.length < 1) {

@@ -406,15 +406,24 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
         }
         // op_def.IPBPoint2i[]
         const interactiveList = sprite.getInteractive();
-        if (!interactiveList) return;
+        if (!interactiveList) {
+            this.removeFromInteractiveMap(sprite);
+            return;
+        }
         const id = sprite.id;
+        const addPos = sprite.getOriginPoint();
+        const pos = sprite.pos;
+        const index45 = this.transformToMini45(new LogicPos(pos.x, pos.y));
+        // const rows = interactiveList.length;
+        // const cols = interactiveList[0].length;
         const len = interactiveList.length;
         if (!this.mInteractiveList) this.mInteractiveList = [];
         for (let i: number = 0; i < len; i++) {
-            const pos = interactiveList[i];
-            const tmpPos = this.transformTo45(pos);
-            const x = tmpPos.x;
-            const y = tmpPos.y;
+            const interactivePos = interactiveList[i];
+            const x = interactivePos.x + index45.x - addPos.x;
+            const y = interactivePos.y + index45.y - addPos.y;
+            // tslint:disable-next-line:no-console
+            // console.log("interactive ===>", x, y, id, len, interactiveList);
             if (!this.mInteractiveList[y]) this.mInteractiveList[y] = [];
             if (!this.mInteractiveList[y][x]) this.mInteractiveList[y][x] = [];
             if (this.mInteractiveList[y][x].indexOf(id) === -1) this.mInteractiveList[y][x].push(id);
@@ -422,24 +431,28 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
     }
 
     public removeFromInteractiveMap(sprite: ISprite) {
-        const displayInfo = sprite.displayInfo;
-        if (!displayInfo) {
-            return;
-        }
-        const interactiveList = sprite.getInteractive();
-        if (!interactiveList) return;
+        // const displayInfo = sprite.displayInfo;
+        // if (!displayInfo) {
+        //     return;
+        // }
+        // const interactiveList = sprite.getInteractive();
+        // if (!interactiveList) return;
         const id = sprite.id;
         if (!this.mInteractiveList) return;
-        const len = interactiveList.length;
+        const len = this.mInteractiveList.length;
         for (let i: number = 0; i < len; i++) {
-            const pos = interactiveList[i];
-            const x = pos.x;
-            const y = pos.y;
-            if (!this.mInteractiveList[y]) continue;
-            if (!this.mInteractiveList[y][x]) continue;
-            const index = this.mInteractiveList[y][x].indexOf(id);
-            if (index === -1) continue;
-            this.mInteractiveList[y][x].splice(index, 1);
+            const tmpLen = this.mInteractiveList[i].length;
+            for (let j: number = 0; j < tmpLen; j++) {
+                const ids = this.mInteractiveList[i][j];
+                if (!ids || ids.length < 1) continue;
+                const tmpLen1 = ids.length;
+                for (let k: number = 0; k < tmpLen1; k++) {
+                    const tmpId = ids[k];
+                    if (id === tmpId) {
+                        this.mInteractiveList[i][j].splice(k, 1);
+                    }
+                }
+            }
         }
     }
 
@@ -450,10 +463,13 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
         }
         const walkableData = this.getSpriteWalkableData(sprite, isTerrain);
         if (!walkableData) return;
+        // tslint:disable-next-line:no-console
+        console.log("addWalk ===>", sprite);
         const { origin, collisionArea, walkableArea, pos45, rows, cols } = walkableData;
         let tempY = 0;
         let tempX = 0;
         for (let i = 0; i < rows; i++) {
+            // pos45 sprite在45度坐标系中的索引，pad(origin) sprite, i(y), j(x)
             tempY = pos45.y + i - origin.y;
             for (let j = 0; j < cols; j++) {
                 tempX = pos45.x + j - origin.x;
@@ -472,6 +488,8 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
         if (!sprite) return;
         const walkableData = this.getSpriteWalkableData(sprite, isTerrain);
         if (!walkableData) return;
+        // tslint:disable-next-line:no-console
+        console.log("removeWalk ===>", sprite);
         const { origin, collisionArea, walkableArea, pos45, rows, cols } = walkableData;
         let tempY = 0;
         let tempX = 0;
@@ -489,17 +507,18 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
 
     public getInteractiveEles(x: number, y: number): number[][] {
         if (!this.mInteractiveList) return null;
-        // 前后3个格子直接可交互物件,正负gridlen格子
-        const gridLen = 3;
+        // 前后10个格子直接可交互物件,正负gridlen格子
+        const gridLen = 20;
         const list = [];
-        const pos = this.transformTo45(new LogicPos(x, y));
+        const pos = this.transformToMini45(new LogicPos(x, y));
         const baseX = pos.x;
         const baseY = pos.y;
-        const len = this.mInteractiveList.length;
+        const rows = this.miniSize.rows;
+        const cols = this.miniSize.cols;
         for (let i: number = -gridLen; i <= gridLen; i++) {
-            if (baseY + i < 0 || baseY + i >= len) continue;
-            for (let j: number = 0; j < gridLen; j++) {
-                if (baseX + j < 0 || baseX + j >= len) continue;
+            if (baseY + i < 0 || baseY + i >= rows) continue;
+            for (let j: number = -gridLen; j < gridLen; j++) {
+                if (baseX + j < 0 || baseX + j >= cols) continue;
                 const idPos = { x: baseX + j, y: baseY + i };
                 const ids = this.mInteractiveList[idPos.y][idPos.x];
                 if (ids && ids.length > 0) {
@@ -507,6 +526,8 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
                 }
             }
         }
+        // tslint:disable-next-line:no-console
+        // console.log(list);
         return list;
     }
 
