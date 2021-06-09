@@ -74,7 +74,8 @@
     "rarity": "Rarity",
     "leave": "Leave",
     "affirm": "Affirm",
-    "count": "Count"
+    "count": "Count",
+    "reselect":"Reselect"
   },
   "quantityunit": {
     "k": "k",

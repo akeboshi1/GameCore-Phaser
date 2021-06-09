@@ -10,6 +10,8 @@ export class PicaNewActivityPanel extends Phaser.GameObjects.Container {
     private activityButton: Button;
     private indentButton: Button;
     private rechargeButton: Button;
+    // 移动交互按钮
+    private interactiveButton: Button;
     private emailButton: Button;
     private roamButton: Button;
     private shopButton: Button;
@@ -37,6 +39,9 @@ export class PicaNewActivityPanel extends Phaser.GameObjects.Container {
         this.rechargeButton = new Button(this.scene, UIAtlasName.iconcommon, "home_recharge", "home_recharge");
         this.rechargeButton.on(ClickEvent.Tap, this.onRechargeHandler, this);
 
+        this.interactiveButton = new Button(this.scene, UIAtlasName.iconcommon, "home_recharge", "home_recharge");
+        this.interactiveButton.on(ClickEvent.Tap, this.onInteractiveHandler, this);
+
         this.emailButton = new Button(this.scene, UIAtlasName.iconcommon, "home_email", "home_email");
         this.emailButton.on(ClickEvent.Tap, this.onEmailHandler, this);
         this.redButtonMap.set(MainUIRedType.MAIL, this.emailButton);
@@ -50,7 +55,7 @@ export class PicaNewActivityPanel extends Phaser.GameObjects.Container {
         this.arrowButton = new Button(this.scene, UIAtlasName.uicommon, "home_more_2", "home_more_2");
         this.arrowButton.on(ClickEvent.Tap, this.onArrowHandler, this);
         this.listBtns = [this.activityButton, this.indentButton, this.rechargeButton, this.emailButton];
-        this.listBtns2 = [this.roamButton, this.shopButton];
+        this.listBtns2 = [this.roamButton, this.shopButton, this.interactiveButton];
         this.listPosY = [this.activityButton.y, this.indentButton.y, this.rechargeButton.y, this.emailButton.y];
         this.add(this.listBtns);
         this.add(this.listBtns2);
@@ -130,6 +135,10 @@ export class PicaNewActivityPanel extends Phaser.GameObjects.Container {
     }
     private onRechargeHandler() {
         if (this.sendHandler) this.sendHandler.runWith(["recharge"]);
+    }
+
+    private onInteractiveHandler() {
+        if (this.sendHandler) this.sendHandler.runWith(["interactive"]);
     }
 
     private onEmailHandler() {

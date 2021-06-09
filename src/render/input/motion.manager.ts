@@ -193,7 +193,7 @@ export class MotionManager {
 
     protected onGameObjectDownHandler(pointer, gameObject) {
         if (!this.isRunning) return;
-        const id = gameObject?gameObject.getData("id"):undefined;
+        const id = gameObject ? gameObject.getData("id") : undefined;
         if (this.render.guideManager.canInteractive(id)) return;
         this.gameObject = gameObject;
     }

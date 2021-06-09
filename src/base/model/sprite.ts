@@ -114,7 +114,7 @@ export class Sprite extends EventDispatcher implements ISprite {
         }
 
         if (!this.interactive) {
-            // this.interactive = this.
+            this.interactive = this.getInteractive();
         }
 
         this.mountSprites = obj.mountSprites;

@@ -75,7 +75,8 @@
     "rarity": "稀有",
     "leave": "离开",
     "affirm": "确认",
-    "count": "数量"
+    "count": "数量",
+    "reselect":"重选"
   },
   "quantityunit": {
     "k": "千",
