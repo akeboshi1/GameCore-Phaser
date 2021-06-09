@@ -303,8 +303,25 @@ export class DisplayManager {
             Logger.getInstance().warn("BaseDisplay not found: ", targetID);
             return;
         }
+        const camerasManager = this.render.camerasManager;
+        const followed = camerasManager.targetFollow === target;
+        if (followed) {
+            camerasManager.stopFollow();
+        }
         target.setRootMount(display);
         display.mount(target, targetIndex);
+        if (followed) {
+            let pos = target.getPosition();
+            const scaleRatio = this.render.scaleRatio;
+            camerasManager.pan(pos.x, pos.y, 500, "Sine.easeInOut", true, (cam, progress) => {
+                pos = target.getPosition();
+                cam.panEffect.destination.x = pos.x * scaleRatio;
+                cam.panEffect.destination.y = pos.y * scaleRatio;
+            })
+            .then(() => {
+                camerasManager.startFollow(target);
+            });
+        }
     }
 
     public unmount(displayID: number, targetID: number, pos?: IPos) {
@@ -319,9 +336,25 @@ export class DisplayManager {
             Logger.getInstance().warn("BaseDisplay not found: ", targetID);
             return;
         }
+        const camerasManager = this.render.camerasManager;
+        const followed = camerasManager.targetFollow === target;
+        if (followed) {
+            camerasManager.stopFollow();
+        }
         target.setRootMount(null);
         display.unmount(target);
         if (pos) target.setPosition(pos.x, pos.y, pos.z);
+        if (followed) {
+            let targetPos = target.getPosition();
+            const scaleRatio = this.render.scaleRatio;
+            camerasManager.pan(targetPos.x, targetPos.y, 500, "Sine.easeInOut", true, (cam, progress) => {
+                targetPos = target.getPosition();
+                cam.panEffect.destination.x = targetPos.x * scaleRatio;
+                cam.panEffect.destination.y = targetPos.y * scaleRatio;
+            }).then(() => {
+                camerasManager.startFollow(target);
+            });
+        }
     }
 
     public addEffect(targetID: number, effectID: number, display: IFramesModel) {

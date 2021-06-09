@@ -87,11 +87,11 @@ export class BaseCamerasManager implements ICameraService {
         this.moving = true;
     }
 
-    public startFollow(target: any) {
+    public startFollow(target: any, roundPixels?: boolean, lerpX?: number, lerpY?: number, offsetX?: number, offsetY?: number) {
         this.mTarget = target;
         if (this.mMain && target) {
             for (const camera of this.mCameras) {
-                camera.startFollow(target);
+                camera.startFollow(target, roundPixels, lerpX, lerpY, offsetX, offsetY);
             }
         }
     }
