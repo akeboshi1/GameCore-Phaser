@@ -238,7 +238,7 @@ export class Element extends BlockObject implements IElement {
         this.mUpdateAvatarType = avatarType;
         this.mState = ElementState.DATAUPDATE;
         // ============> 下一帧处理逻辑
-        this._dataUpdate();
+        this._dataUpdate(model);
     }
 
     public play(animationName: string, times?: number): void {
@@ -246,10 +246,8 @@ export class Element extends BlockObject implements IElement {
             Logger.getInstance().error(`${Element.name}: sprite is empty`);
             return;
         }
-        // const preWalkable = this.mModel.getWalkableArea();
         this.removeFromMap();
         this.mModel.setAnimationName(animationName, times);
-        // const nextWalkable = this.mModel.getWalkableArea();
         const hasInteractive = this.model.hasInteractive;
         if (this.mInputEnable) this.setInputEnable(this.mInputEnable);
         this.addToMap();
@@ -663,7 +661,7 @@ export class Element extends BlockObject implements IElement {
             this.mStateManager.destroy();
             this.mStateManager = null;
         }
-        this.removeFromWalkableMap();
+        this.removeFromMap();
         this.removeDisplay();
         super.destroy();
     }
@@ -720,15 +718,14 @@ export class Element extends BlockObject implements IElement {
             .then((isDebug) => {
                 if (isDebug) this.showRefernceArea();
             });
-
+        const currentAnimation = this.mModel.currentAnimation;
         createPromise.then(() => {
             const pos = this.mModel.pos;
             this.mElementManager.roomService.game.peer.render.setPosition(this.id, pos.x, pos.y);
-            if (currentAnimation) this.mElementManager.roomService.game.renderPeer.playAnimation(this.id, this.mModel.currentAnimation);
+            if (currentAnimation) this.mElementManager.roomService.game.renderPeer.playAnimation(this.id, currentAnimation);
         }).catch((error) => {
             Logger.getInstance().error("promise error ====>", error);
         });
-        const currentAnimation = this.mModel.currentAnimation;
         if (this.mInputEnable) this.setInputEnable(this.mInputEnable);
         if (this.mTopDisplay) this.showTopDisplay(this.mTopDisplay);
         this.addBody();
@@ -879,12 +876,14 @@ export class Element extends BlockObject implements IElement {
      * 下一帧处理setModel
      */
     protected _dataInit() {
-        this.removeFromWalkableMap();
+        // 添加移动控制器
+        this.addMoveControll();
+        this.removeFromMap();
         const model = this.mModel = new Sprite(this.mTmpSprite);
         const elementRef = this.roomService.game.elementStorage.getElementRef(this.mTmpSprite.bindId || this.mTmpSprite.id);
         if (elementRef && elementRef.displayModel && !this.mTmpSprite.avatar && !this.mTmpSprite.display) {
             // tslint:disable-next-line:no-console
-            console.log("element ===>",elementRef.displayModel);
+            // console.log("element ===>", elementRef.displayModel);
             this.mModel.setDisplayInfo(elementRef.displayModel);
         }
         (<any>this.mModel).off("Animation_Change", this.animationChanged, this);
@@ -894,9 +893,9 @@ export class Element extends BlockObject implements IElement {
         if (this.mModel.pos) {
             this.setPosition(this.mModel.pos);
         }
-        this.addToWalkableMap();
         // 必须执行一遍下面的方法，否则无法获取碰撞区域
         const area = model.getCollisionArea();
+        this.addToMap();
         const obj = { id: model.id, pos: model.pos, nickname: model.nickname, sound: model.sound, alpha: model.alpha, titleMask: model.titleMask | 0x00020000, hasInteractive: model.hasInteractive };
         // render action
         this.load(this.mModel.displayInfo)
@@ -917,9 +916,8 @@ export class Element extends BlockObject implements IElement {
             });
     }
 
-    protected _dataUpdate() {
-        const model = this.mModel.toSprite();
-        this.removeFromWalkableMap();
+    protected _dataUpdate(model: op_client.ISprite) {
+        this.removeFromMap();
         // 序列化数据
         if (model.hasOwnProperty("attrs")) {
             this.mModel.updateAttr(model.attrs);
@@ -982,7 +980,7 @@ export class Element extends BlockObject implements IElement {
         if (reload) {
             this.load(this.mModel.displayInfo);
         }
-        this.addToWalkableMap();
+        this.addToMap();
     }
 
     protected _move() {

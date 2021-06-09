@@ -29,9 +29,7 @@ export class WallManager {
                 layer: LayerEnum.Wall,
                 direction: palette.dir,
             };
-            const sprite = new Sprite(obj);
-            sprite.setDisplayInfo(elementStorage.getMossPalette(palette.key).frameModel);
-            const w = new Wall(obj, this.roomService);
+            const w = new Wall(obj, this.roomService, palette.key);
             this.walls.push(w);
         }
     }

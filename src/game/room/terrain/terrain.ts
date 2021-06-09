@@ -3,7 +3,7 @@ import { ElementState, ISprite } from "structure";
 import { IElement, MoveData } from "../element/element";
 import { IElementManager } from "../element/element.manager";
 import { op_def, op_client } from "pixelpai_proto";
-import { IPos, Logger } from "utils";
+import { IPos, Logger, ObjectAssign } from "utils";
 import { IRoomService } from "../room/room";
 import { IFramesModel } from "structure";
 import { LayerEnum } from "game-capsule";
@@ -97,7 +97,11 @@ export class Terrain extends BlockObject implements IElement {
         this._dataInit();
     }
 
-    updateModel(val: op_client.ISprite) {
+    updateModel(model: op_client.ISprite) {
+        if (this.mModel.id !== model.id) {
+            return;
+        }
+        this._dataUpdate(model);
     }
 
     public load(displayInfo: IFramesModel) {
@@ -109,16 +113,21 @@ export class Terrain extends BlockObject implements IElement {
         this.addDisplay();
     }
 
-    public play(animationName: string): void {
+    public play(animationName: string, times?: number): void {
         if (!this.mModel) {
             Logger.getInstance().error(`${Terrain.name}: sprite is empty`);
             return;
         }
-        if (this.mModel.currentAnimation.name !== animationName) {
-            this.removeFromWalkableMap();
+        if (!this.mModel.currentAnimation || this.mModel.currentAnimation.name !== animationName) {
+            this.removeFromMap();
             this.mModel.setAnimationName(animationName);
-            this.addToWalkableMap();
-            this.mRoomService.game.peer.render.playElementAnimation(this.id, this.mModel.currentAnimationName);
+            const hasInteractive = this.model.hasInteractive;
+            if (this.mInputEnable) this.setInputEnable(this.mInputEnable);
+            this.addToMap();
+            if (this.mRoomService) {
+                this.mRoomService.game.renderPeer.playAnimation(this.id, this.mModel.currentAnimation, undefined, times);
+                this.mRoomService.game.renderPeer.setHasInteractive(this.id, hasInteractive);
+            }
         }
     }
 
@@ -206,19 +215,58 @@ export class Terrain extends BlockObject implements IElement {
         const elementRef = this.roomService.game.elementStorage.getElementRef(this.mTmpSprite.bindId || this.mTmpSprite.id);
         if (elementRef && elementRef.displayModel && !this.mTmpSprite.display) this.mModel.setDisplayInfo(elementRef.displayModel);
         if (this.mExtraRoomInfo) {
-            this.mModel.updateDisplay(this.mExtraRoomInfo.animationDisplay, <any>this.mExtraRoomInfo.animations);
+            this.mModel.updateDisplay(this.mExtraRoomInfo.animationDisplay, <any>this.mExtraRoomInfo.animations, this.mExtraRoomInfo.animation_name);
         }
         if (!this.mModel.layer) {
             this.mModel.layer = LayerEnum.Terrain;
         }
+        this.removeFromMap();
         const area = this.mModel.getCollisionArea();
         const obj = { id: this.mModel.id, pos: this.mModel.pos, nickname: this.mModel.nickname, alpha: this.mModel.alpha, titleMask: this.mModel.titleMask | 0x00020000 };
         await this.mElementManager.roomService.game.renderPeer.setModel(obj);
-        this.removeFromWalkableMap();
+        // 首次设置可能显示数据没有返回，则不做显示逻辑处理
+        if (!this.mModel.displayInfo) return;
         this.load(<IFramesModel>this.mModel.displayInfo);
         this.setPosition(this.mModel.pos);
         this.setRenderable(true);
-        this.addToWalkableMap();
+        this.addToMap();
+    }
+
+    protected _dataUpdate(model: op_client.ISprite) {
+        this.removeFromMap();
+        // 序列化数据
+        if (model.hasOwnProperty("attrs")) {
+            this.mModel.updateAttr(model.attrs);
+        }
+        let reload = false;
+        let update = false;
+
+        // 序列图
+        if (model.display && model.animations) {
+            this.mModel.updateDisplay(model.display, model.animations);
+            reload = true;
+        }
+
+        if (model.hasOwnProperty("currentAnimationName")) {
+            this.play(model.currentAnimationName);
+            this.setInputEnable(this.mInputEnable);
+            this.mModel.setAnimationQueue(undefined);
+            update = true;
+        }
+
+        if (model.hasOwnProperty("direction")) {
+            this.setDirection(model.direction);
+            update = true;
+        }
+        if (model.hasOwnProperty("nickname")) {
+            this.mModel.nickname = model.nickname;
+            this.showNickname();
+            update = true;
+        }
+        if (reload) {
+            this.load(<IFramesModel>this.mModel.displayInfo);
+        }
+        this.addToMap();
     }
 
     protected async createDisplay(): Promise<any> {

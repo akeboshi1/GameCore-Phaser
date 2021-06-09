@@ -473,7 +473,7 @@ export class BaseDragonbonesDisplay extends BaseDisplay {
             const onFileLoadError = () => {
                 this.removePhaserListener(PhaserListenerType.Load, Phaser.Loader.Events.FILE_LOAD_ERROR, onFileLoadError);
                 // tslint:disable-next-line:no-console
-                console.log("fileloaderror ===>", pngUrl);
+                // console.log("fileloaderror ===>", pngUrl);
                 reject(null);
             };
 

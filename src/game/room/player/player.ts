@@ -83,6 +83,8 @@ export class Player extends Element implements IElement {
      * 下一帧处理setModel
      */
     protected _dataInit() {
+        // 添加移动控制器
+        this.addMoveControll();
         this.removeFromWalkableMap();
         const model = this.mModel = new Sprite(this.mTmpSprite);
         (<any>model).off("Animation_Change", this.animationChanged, this);

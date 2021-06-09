@@ -1,4 +1,4 @@
-import { IPos, LogicPos, IProjection, Position45, IPosition45Obj } from "utils";
+import { IPos, LogicPos, IProjection, Position45, IPosition45Obj, Logger } from "utils";
 import { InputEnable, MoveData } from "../element/element";
 import { IRoomService } from "../room/room";
 import { IBlockObject } from "./iblock.object";
@@ -153,8 +153,13 @@ export abstract class BlockObject implements IBlockObject {
     }
 
     protected _dataInit() {
+    }
+
+    protected addMoveControll() {
         // 初始化 movecontroll
-        if (this.id && this.mRoomService) this.moveControll = new MoveControll(this.id, this.mRoomService);
+        if (this.id && this.mRoomService) {
+            this.moveControll = new MoveControll(this.id, this.mRoomService);
+        }
     }
 
     protected addDisplay(): Promise<any> {

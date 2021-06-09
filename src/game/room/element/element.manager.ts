@@ -2,7 +2,7 @@ import { PacketHandler, PBpacket } from "net-socket-packet";
 import { op_client, op_def, op_virtual_world } from "pixelpai_proto";
 import { ConnectionService } from "../../../../lib/net/connection.service";
 import { Logger, LogicPos } from "utils";
-import { ElementState, EventType, ISprite, MessageType } from "structure";
+import { ElementState, EventType, MessageType } from "structure";
 import { IRoomService } from "../room/room";
 import { Element, IElement, InputEnable } from "./element";
 import { ElementStateManager } from "./element.state.manager";
@@ -310,7 +310,7 @@ export class ElementManager extends PacketHandler implements IElementManager {
                     const command = (<any>sprite).command;
                     if (command === op_def.OpCommand.OP_COMMAND_UPDATE) { //  全部
                         // 初始化数据
-                        element.model = data;
+                        element.setModel(sprite);
                     } else if (command === op_def.OpCommand.OP_COMMAND_PATCH) { //  增量
                         // 更新数据
                         element.updateModel(sprite);
@@ -450,7 +450,7 @@ export class ElementManager extends PacketHandler implements IElementManager {
             // if (this.roomService.enableDecorate) {
             //     ele.setInputEnable(InputEnable.Enable);
             // } else {
-            // ele.setInputEnable(InputEnable.Interactive);
+            ele.setInputEnable(InputEnable.Interactive);
             // }
         }
         if (addMap) ele.addToWalkableMap();

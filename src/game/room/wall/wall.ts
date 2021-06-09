@@ -9,8 +9,10 @@ export class Wall extends BlockObject {
     protected mModel: ISprite;
     protected mDisplayInfo: IFramesModel;
     protected mId: number;
-    constructor(sprite: op_client.ISprite, roomService: IRoomService) {
+    private mKey: number;
+    constructor(sprite: op_client.ISprite, roomService: IRoomService, key: number) {
         super(roomService);
+        this.mKey = key;
         this.setModel(sprite);
     }
 
@@ -119,7 +121,9 @@ export class Wall extends BlockObject {
     }
 
     protected async _dataInit() {
+        const elementStorage = this.mRoomService.game.elementStorage;
         this.mModel = new Sprite(this.mTmpSprite);
+        this.mModel.setDisplayInfo(elementStorage.getMossPalette(this.mKey).frameModel);
         await this.mRoomService.game.peer.render.setModel(this.mModel);
         this.load(<IFramesModel>this.mModel.displayInfo);
         this.setPosition(this.mModel.pos);
