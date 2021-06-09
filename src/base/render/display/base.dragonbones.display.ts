@@ -1215,14 +1215,12 @@ export class BaseDragonbonesDisplay extends BaseDisplay {
                 slot: AvatarSlotNameTemp.HeadChin,
                 part: AvatarPartNameTemp.HeadChin,
                 dir: 3,
-    
                 skin: avater.headChinId,
             });
             this.replaceArr.push({
                 slot: AvatarSlotNameTemp.HeadChin,
                 part: AvatarPartNameTemp.HeadChin,
                 dir: 1,
-    
                 skin: avater.headChinId,
             });
         }
@@ -1232,14 +1230,12 @@ export class BaseDragonbonesDisplay extends BaseDisplay {
                 slot: AvatarSlotNameTemp.BodyScar,
                 part: AvatarPartNameTemp.BodyScar,
                 dir: 3,
-    
                 skin: avater.bodyScarId,
             });
             this.replaceArr.push({
                 slot: AvatarSlotNameTemp.BodyScar,
                 part: AvatarPartNameTemp.BodyScar,
                 dir: 1,
-    
                 skin: avater.bodyScarId,
             });
         }
@@ -1249,14 +1245,12 @@ export class BaseDragonbonesDisplay extends BaseDisplay {
                 slot: AvatarSlotNameTemp.BodyCloa,
                 part: AvatarPartNameTemp.BodyCloa,
                 dir: 3,
-    
                 skin: avater.bodyCloaId,
             });
             this.replaceArr.push({
                 slot: AvatarSlotNameTemp.BodyCloa,
                 part: AvatarPartNameTemp.BodyCloa,
                 dir: 1,
-    
                 skin: avater.bodyCloaId,
             });
         }
