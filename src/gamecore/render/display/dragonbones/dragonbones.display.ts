@@ -1,10 +1,10 @@
+import { BaseDragonbonesDisplay, ReferenceArea } from "baseRender";
 import { Render } from "../../render";
-import { DisplayField, ElementStateType, IDragonbonesModel, LayerName, RunningAnimation, TitleMask, IPos, Logger, IProjection } from "structure";
+import { IPos, Logger, IProjection, DisplayField, ElementStateType, IDragonbonesModel, LayerName, RunningAnimation, TitleMask } from "structure";
 import { IDisplayObject } from "../display.object";
 import { LoadQueue } from "../../loadqueue";
 import { ElementTopDisplay } from "../element.top.display";
 import { FramesDisplay } from "../frames/frames.display";
-import { BaseDragonbonesDisplay, ReferenceArea } from "baseRender";
 
 export class DragonbonesDisplay extends BaseDragonbonesDisplay implements IDisplayObject {
     protected mTitleMask: number;
@@ -28,7 +28,7 @@ export class DragonbonesDisplay extends BaseDragonbonesDisplay implements IDispl
         this.mHasInteractive = true;
     }
 
-    public load(display: IDragonbonesModel, field?: DisplayField, useRenderTex= true): Promise<any> {
+    public load(display: IDragonbonesModel, field?: DisplayField, useRenderTex = true): Promise<any> {
         field = !field ? DisplayField.STAGE : field;
         if (field !== DisplayField.STAGE) {
             return Promise.reject("field is not STAGE");
@@ -142,7 +142,7 @@ export class DragonbonesDisplay extends BaseDragonbonesDisplay implements IDispl
         this.mName = name;
         if (!this.checkShowNickname()) return;
         if (!this.mTopDisplay) {
-            this.mTopDisplay = new ElementTopDisplay(this.scene, this, this.render.scaleRatio);
+            this.mTopDisplay = new ElementTopDisplay(this.scene, this, this.render);
         }
         this.mTopDisplay.showNickname(name);
     }
@@ -154,13 +154,13 @@ export class DragonbonesDisplay extends BaseDragonbonesDisplay implements IDispl
             this.mTopDisplay = undefined;
             return;
         }
-        if (!this.mTopDisplay) this.mTopDisplay = new ElementTopDisplay(this.scene, this, this.render.scaleRatio);
+        if (!this.mTopDisplay) this.mTopDisplay = new ElementTopDisplay(this.scene, this, this.render);
         this.mTopDisplay.loadState(data);
     }
 
     public showBubble(text: string, setting: any) {// op_client.IChat_Setting
         if (!this.mTopDisplay) {
-            this.mTopDisplay = new ElementTopDisplay(this.scene, this, this.render.scaleRatio);
+            this.mTopDisplay = new ElementTopDisplay(this.scene, this, this.render);
         }
         this.mTopDisplay.showBubble(text, setting);
     }

@@ -303,7 +303,6 @@ export class Border {
         };
     }
 }
-
 export class TransparentButton {
     static getName() {
         return "button_transparent";

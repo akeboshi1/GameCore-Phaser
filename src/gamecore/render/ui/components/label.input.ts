@@ -3,7 +3,7 @@ import { Font, Logger } from "structure";
 import { Tap } from "./tap";
 
 export class LabelInput extends Phaser.GameObjects.Container {
-    private mBackground: Phaser.GameObjects.Graphics;
+    protected background: Phaser.GameObjects.Graphics | any;
     private mLabel: Phaser.GameObjects.Text;
     private mInputText: InputText;
     private mInputConfig: any;
@@ -61,13 +61,13 @@ export class LabelInput extends Phaser.GameObjects.Container {
     }
 
     createBackground(padding: number, radius: number) {
-        if (!this.mBackground) {
-            this.mBackground = this.scene.make.graphics(undefined, false);
+        if (!this.background) {
+            this.background = this.scene.make.graphics(undefined, false);
         }
-        this.mBackground.clear();
-        this.mBackground.fillStyle(0xFFFFFF);
-        this.mBackground.fillRoundedRect(-padding + this.width * this.mLabel.originX, -padding + this.height * this.mLabel.originY, this.width + padding * 2, this.height + padding * 2, radius);
-        this.addAt(this.mBackground, 0);
+        this.background.clear();
+        this.background.fillStyle(0xFFFFFF);
+        this.background.fillRoundedRect(-padding + this.width * this.mLabel.originX, -padding + this.height * this.mLabel.originY, this.width + padding * 2, this.height + padding * 2, radius);
+        this.addAt(this.background, 0);
     }
 
     setSize(w: number, h: number) {

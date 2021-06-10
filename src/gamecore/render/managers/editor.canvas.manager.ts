@@ -1,6 +1,8 @@
-import { AvatarEditorDragonbone, AvatarEditorScene } from "editorCanvas";
-import { Scene } from "tooqingphaser";
+import { Scene } from "tooqinggamephaser";
 import { Render } from "../render";
+import { AvatarSuitType, ModuleName, Logger } from "structure";
+import { DragonbonesDisplay } from "../display/dragonbones/dragonbones.display";
+import { AvatarEditorDragonbone, AvatarEditorScene } from "editorCanvas";
 
 export class EditorCanvasManager {
     public readonly AVATAR_CANVAS_TEST_DATA = [{ id: "5facff1a67d3b140e835e1d0", parts: ["head_hair"] }];
@@ -17,6 +19,36 @@ export class EditorCanvasManager {
             this.render.game.scene.stop(this.SCENEKEY_SNAPSHOT);
             this.render.game.scene.remove(this.SCENEKEY_SNAPSHOT);
         }
+    }
+
+    // 生成合图；上传合图（png+json）；生成头像；上传头像
+    // dbDisplay: 已经装扮完成（数据正确）的龙骨显示对象
+    public saveAvatar(dbDisplay: DragonbonesDisplay): Promise<any> {
+        if (!dbDisplay || !dbDisplay.displayInfo || !dbDisplay.displayInfo.avatar) {
+            return Promise.reject("display info error");
+        }
+
+        return new Promise<any>((resolve, reject) => {
+            const avatarSets = AvatarSuitType.toIAvatarSets(dbDisplay.displayInfo.avatar);
+            this.render.uiManager.showPanel(ModuleName.MASK_LOADING_NAME);
+            dbDisplay.save()
+                .then((saveData) => {
+                    this.render.mainPeer.uploadDBTexture(saveData.key, saveData.url, saveData.json)
+                        .catch((reason) => {
+                            Logger.getInstance().error("uploadDBTexture error: " + reason);
+                        });
+                    return this.createHeadIcon(avatarSets);
+                })
+                .then((str) => {
+                    this.render.mainPeer.uploadHeadImage(str);
+                    this.render.uiManager.hidePanel(ModuleName.MASK_LOADING_NAME);
+                    resolve(null);
+                })
+                .catch((reason) => {
+                    Logger.getInstance().error("save avatar error: " + reason);
+                    reject(reason);
+                });
+        });
     }
 
     public createHeadIcon(sets: any[]): Promise<string> {// IAvatarSet

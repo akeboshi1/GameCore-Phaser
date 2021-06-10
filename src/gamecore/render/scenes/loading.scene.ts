@@ -73,6 +73,7 @@ export class LoadingScene extends BasicScene {
     this.mask.fillStyle(0);
 
     this.mask.fillRect(0, 0, width, height);
+    this.mask.setInteractive(new Phaser.Geom.Rectangle(0, 0, width, height), Phaser.Geom.Rectangle.Contains);
 
     const dpr = this.render.uiRatio;
     this.bg = this.add.sprite(width * 0.5, height * 0.5, "loading").setScale(this.render.uiScale * dpr * 2);

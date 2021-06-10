@@ -23,7 +23,6 @@ export class AlertView extends BaseBatchPanel {
         this.mShowData = config;
         super.show(config);
         if (this.mInitialized) {
-            // this.render.uiManager.getUILayerManager().addToDialogLayer(this);
             const { ox, oy } = config;
             this.x = (ox || this.scene.cameras.main.width / 2);
             this.y = (oy || this.scene.cameras.main.height / 2);
@@ -46,7 +45,7 @@ export class AlertView extends BaseBatchPanel {
                 this.remove(this.mCancelBtn);
                 this.mOkBtn.x = 0;
             }
-
+            // this.render.uiManager.getUILayerManager().addToDialogLayer(this);
         }
     }
 
@@ -83,7 +82,7 @@ export class AlertView extends BaseBatchPanel {
             text: i18n.t("common.tips"),
             style: {
                 fontFamily: Font.DEFULT_FONT,
-                fontSize: 12 * this.dpr * zoom + "px",
+                fontSize: 12 * this.dpr * zoom,
                 color: "#905B06"
             }
         }, false).setOrigin(0.5);
@@ -120,7 +119,7 @@ export class AlertView extends BaseBatchPanel {
         this.mCancelBtn.on(ClickEvent.Tap, this.onCancelHandler, this);
         this.add([bg, title, this.mTitleLabel, this.mTitleLabel, this.mContent, this.mOkBtn, this.mCancelBtn]);
         super.init();
-        (<BasicScene>this.mScene).layerManager.addToLayer(MainUIScene.LAYER_DIALOG, this);
+        (<BasicScene>this.mScene).layerManager.addToLayer(MainUIScene.LAYER_TOOLTIPS, this);
     }
 
     private onOkHandler() {

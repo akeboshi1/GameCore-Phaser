@@ -31,7 +31,10 @@ export class BasePlaySceneGuide extends BaseGuide {
     public hide() {
         this.mPlayScene.input.off("gameobjectup", this.gameObjectUpHandler, this);
         // this.scene.sys.events.off("update", this.updateGuidePos, this);
-        if (this.mPointer) (<any>this.mPlayScene).motionMgr.onGuideOnPointUpHandler(this.mPointer, this.mElementID);
+        if (this.mPointer) {
+            (<any>this.mPlayScene).motionMgr.onGuideOnPointUpHandler(this.mPointer, this.mElementID);
+            this.mPointer = null;
+        }
         super.hide();
     }
 
@@ -42,7 +45,7 @@ export class BasePlaySceneGuide extends BaseGuide {
 
     protected step1(pos: IPos) {
         const tmpPos = { x: pos.x, y: pos.y };
-        this.guideEffect.createGuideEffect(tmpPos);
+        this.guideEffect.createGuideEffect(tmpPos,this.mData.guideText[0]);
         this.mPlayScene.input.on("gameobjectup", this.gameObjectUpHandler, this);
     }
 
@@ -56,10 +59,15 @@ export class BasePlaySceneGuide extends BaseGuide {
     }
 
     protected updateGuidePos() {
-        this.guideEffect.createGuideEffect(this.getGuidePosition());
+        this.guideEffect.createGuideEffect(this.getGuidePosition(),this.mData.guideText[0]);
     }
 
     protected getGuidePosition() {
+        if (!this.mElement) {
+            this.mPlayScene.input.off("gameobjectup", this.gameObjectUpHandler, this);
+            this.end();
+            return;
+        }
         const pos: IPos = Tool.getPosByScenes(this.mPlayScene, { x: this.mElement.x, y: this.mElement.y });
         const tmpPos = { x: pos.x, y: pos.y };
         return tmpPos;

@@ -27,12 +27,13 @@ export class MainUIScene extends RoomScene {
 
   public create() {
     const width = this.cameras.main.width;
-    this.fps = this.add.text(width * 0.5, 10, "", { color: "#64DD17" });
-    this.fps.setStroke("0x0", 1);
+    this.fps = this.add.text(width - 6 * this.render.devicePixelRatio, 10, "", { color: "#00FF00", });
+    this.fps.setStroke("#000000", 1);
     this.fps.setFontFamily(Font.DEFULT_FONT);
-    this.fps.setFontSize(20 * this.render.devicePixelRatio);
+    this.fps.setFontSize(13 * this.render.devicePixelRatio);
     this.fps.setDepth(1000);
-    this.sizeTF = this.add.text(10, 50, "", { color: "#64dd17", wordWrap: { width: 800, useAdvancedWrap: true } });
+    this.fps.setOrigin(1, 0);
+    this.sizeTF = this.add.text(10, 50, "", { style: { color: "#64dd17" }, wordWrap: { width: 800, useAdvancedWrap: true } });
     this.sizeTF.setFontSize(20 * this.render.devicePixelRatio);
     this.sizeTF.setFontFamily(Font.DEFULT_FONT);
     this.sizeTF.setStroke("#0", 3);

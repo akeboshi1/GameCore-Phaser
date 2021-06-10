@@ -1,11 +1,11 @@
 import { ClickEvent, InputText } from "apowophaserui";
-import { Font, Logger } from "utils";
+import { Font, Logger } from "structure";
+import { InputField } from "./input.field";
 import { Tap } from "./tap";
-
-export class LabelInput extends Phaser.GameObjects.Container {
+export class InputLabel extends Phaser.GameObjects.Container {
     protected background: Phaser.GameObjects.Graphics | any;
     private mLabel: Phaser.GameObjects.Text;
-    private mInputText: InputText;
+    private mInputText: InputField;
     private mInputConfig: any;
     private mOriginX: number;
     private mOriginY: number;
@@ -15,15 +15,17 @@ export class LabelInput extends Phaser.GameObjects.Container {
     constructor(scene: Phaser.Scene, config: any) {
         super(scene);
 
-        const labelConfig = {
-            fontFamily: Font.DEFULT_FONT
-        };
+        let labelConfig = config.label;
+        if (!labelConfig) {
+            labelConfig = { fontFamily: Font.DEFULT_FONT };
+            Object.assign(labelConfig, config);
+        }
         const clickW = config.width || 100;
         const clickH = config.height || 100;
         this.mPlaceholder = config.placeholder;
         this.mLabel = this.scene.make.text({
             text: this.mPlaceholder,
-            style: Object.assign(labelConfig, config)
+            style: labelConfig
         }, false).setInteractive(new Phaser.Geom.Rectangle(-clickW * 0.5, -clickH * 0.5, clickW, clickH), Phaser.Geom.Rectangle.Contains);
         this.mOriginX = this.mLabel.originX;
         this.mOriginY = this.mLabel.originY;
@@ -95,10 +97,14 @@ export class LabelInput extends Phaser.GameObjects.Container {
         if (this.mInputText) {
             return;
         }
-        this.mInputText = new InputText(this.scene, Object.assign({}, this.mInputConfig)).setOrigin(this.mOriginX, this.mOriginY);
+        const obj: any = {};
+        Object.assign(obj, this.mInputConfig);
+        obj.placeholder = "";
+        this.mInputText = new InputField(this.scene, obj).setOrigin(this.mOriginX, this.mOriginY);
         this.mInputText.on("textchange", this.onTextChangeHandler, this);
         this.mInputText.on("blur", this.onTextBlurHandler, this);
         this.mInputText.on("focus", this.onTextFocusHandler, this);
+        this.add(this.mInputText);
         this.mInputText.x = this.mLabel.x;
         this.mInputText.y = this.mLabel.y;
         this.mInputText.node.addEventListener("keypress", (e) => {
@@ -112,9 +118,7 @@ export class LabelInput extends Phaser.GameObjects.Container {
 
     private onShowInputHandler() {
         this.createInputText();
-
-        this.remove(this.mLabel);
-        this.add(this.mInputText);
+        this.mLabel.visible = false;
         if (this.mInputConfig.placeholder !== this.mLabel.text)
             this.mInputText.setText(this.mLabel.text);
         this.mInputText.setFocus();
@@ -132,7 +136,7 @@ export class LabelInput extends Phaser.GameObjects.Container {
             }
             this.destroyInput();
         }
-        this.add(this.mLabel);
+        this.mLabel.visible = true;
     }
 
     private destroyInput() {
@@ -151,6 +155,7 @@ export class LabelInput extends Phaser.GameObjects.Container {
 
     private onTextBlurHandler() {
         this.emit("blur");
+        this.onShowLabel();
     }
 
     private onTextFocusHandler(e) {

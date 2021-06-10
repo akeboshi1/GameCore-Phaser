@@ -4,6 +4,7 @@ import { MainUIScene } from "./main.ui.scene";
 import { RoomScene } from "./room.scene";
 import { Logger, LayerName, PlaySceneLoadState, SceneName } from "structure";
 import { MotionManager } from "../input/motion.manager";
+
 // 游戏正式运行用 Phaser.Scene
 export class PlayScene extends RoomScene {
     protected motion: MotionManager;
@@ -17,6 +18,7 @@ export class PlayScene extends RoomScene {
 
     public preload() {
         this.load.audio("click", Url.getRes("sound/click.mp3"));
+        this.load.audio("mine", Url.getRes("sound/mine.mp3"));
         super.preload();
     }
 
@@ -62,13 +64,14 @@ export class PlayScene extends RoomScene {
 
         // ==========舞台层
         this.layerManager.addLayer(this, GroundLayer, LayerName.WALL, 2).setScale(this.render.scaleRatio);
-        this.layerManager.addLayer(this, GroundLayer, LayerName.GROUND, 3).setScale(this.render.scaleRatio);
-        this.layerManager.addLayer(this, BaseLayer, LayerName.MIDDLE, 4).setScale(this.render.scaleRatio);
-        this.layerManager.addLayer(this, GroundLayer, LayerName.FLOOR, 4).setScale(this.render.scaleRatio);
-        this.layerManager.addLayer(this, SurfaceLayer, LayerName.SURFACE, 5).setScale(this.render.scaleRatio);
-        this.layerManager.addLayer(this, SurfaceLayer, LayerName.DECORATE, 6).setScale(this.render.scaleRatio);
-        this.layerManager.addLayer(this, BaseLayer, LayerName.ATMOSPHERE, 6);
-        this.layerManager.addLayer(this, BaseLayer, LayerName.SCENEUI, 7);
+        this.layerManager.addLayer(this, GroundLayer, LayerName.HANGING, 3).setScale(this.render.scaleRatio);
+        this.layerManager.addLayer(this, GroundLayer, LayerName.GROUND, 4).setScale(this.render.scaleRatio);
+        this.layerManager.addLayer(this, BaseLayer, LayerName.MIDDLE, 5).setScale(this.render.scaleRatio);
+        this.layerManager.addLayer(this, GroundLayer, LayerName.FLOOR, 5).setScale(this.render.scaleRatio);
+        this.layerManager.addLayer(this, SurfaceLayer, LayerName.SURFACE, 6).setScale(this.render.scaleRatio);
+        this.layerManager.addLayer(this, SurfaceLayer, LayerName.DECORATE, 7).setScale(this.render.scaleRatio);
+        this.layerManager.addLayer(this, BaseLayer, LayerName.ATMOSPHERE, 7);
+        this.layerManager.addLayer(this, BaseLayer, LayerName.SCENEUI, 8);
 
         // ======= mainworker startPlay
         this.render.startRoomPlay();
@@ -89,18 +92,18 @@ export class PlayScene extends RoomScene {
     async snapshot() {
         // tets snapshot
         // const size = await this.render.getCurrentRoomSize();
-    //     const sceneryScenes = [];
-    //     const offsetX = size.rows * (size.tileWidth / 2);
-    //     for (const scene of this.game.scene.getScenes()) {
-    //         if (scene instanceof SkyBoxScene) {
-    //             const object = scene.children.list[0];
-    //             // @ts-ignore
-    //             object.setScale(1);
-    //             sceneryScenes.push(object);
-    //         }
-    //     }
+        //     const sceneryScenes = [];
+        //     const offsetX = size.rows * (size.tileWidth / 2);
+        //     for (const scene of this.game.scene.getScenes()) {
+        //         if (scene instanceof SkyBoxScene) {
+        //             const object = scene.children.list[0];
+        //             // @ts-ignore
+        //             object.setScale(1);
+        //             sceneryScenes.push(object);
+        //         }
+        //     }
 
-    //     const rt = this.make.renderTexture({x: 0, y: 0, width: size.sceneWidth, height: size.sceneHeight});
+        //     const rt = this.make.renderTexture({x: 0, y: 0, width: size.sceneWidth, height: size.sceneHeight});
         // this.game.scale.resize(size.sceneWidth, size.sceneHeight);
         // const camera: any = this.cameras.main;
         // if (camera && camera.setPixelRatio) camera.setPixelRatio(1);
@@ -109,15 +112,15 @@ export class PlayScene extends RoomScene {
         // this.game.renderer.snapshot((image) => {
         //     Logger.getInstance().log(image);
         // });
-    //     this.layerManager.getLayer(LayerEnum.Surface.toString()).setScale(1);
-    //     this.layerManager.getLayer(LayerEnum.Terrain.toString()).setScale(1);
-    //     sceneryScenes.push(this.layerManager.getLayer(LayerEnum.Terrain.toString()));
-    //     sceneryScenes.push(this.layerManager.getLayer(LayerEnum.Surface.toString()));
-    //     rt.draw(sceneryScenes, offsetX, 0);
-    //     rt.snapshot((image) => {
-    //         Logger.getInstance().log(image);
-    //         this.layerManager.getLayer(LayerEnum.Surface.toString()).setScale(this.render.scaleRatio);
-    //     });
+        //     this.layerManager.getLayer(LayerEnum.Surface.toString()).setScale(1);
+        //     this.layerManager.getLayer(LayerEnum.Terrain.toString()).setScale(1);
+        //     sceneryScenes.push(this.layerManager.getLayer(LayerEnum.Terrain.toString()));
+        //     sceneryScenes.push(this.layerManager.getLayer(LayerEnum.Surface.toString()));
+        //     rt.draw(sceneryScenes, offsetX, 0);
+        //     rt.snapshot((image) => {
+        //         Logger.getInstance().log(image);
+        //         this.layerManager.getLayer(LayerEnum.Surface.toString()).setScale(this.render.scaleRatio);
+        //     });
     }
 
     get loadState(): PlaySceneLoadState {

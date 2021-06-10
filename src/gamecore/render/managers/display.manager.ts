@@ -1,18 +1,19 @@
-import { Tool } from "utils";
+import { DisplayField, ElementStateType, IScenery, LayerName, Handler, IPos, IPosition45Obj, Logger, LogicPos, IFramesModel, IDragonbonesModel, RunningAnimation } from "structure";
 import { SceneManager } from "../scenes/scene.manager";
 import { FramesDisplay } from "../display/frames/frames.display";
 import { PlayScene } from "../scenes/play.scene";
 import { DragonbonesDisplay } from "../display/dragonbones/dragonbones.display";
 import { Render } from "../render";
-import {
-    RunningAnimation, IDragonbonesModel, DisplayField, ElementStateType,
-    IScenery, LayerName, Handler, IPos, IPosition45Obj, Logger, LogicPos, IFramesModel
-} from "structure";
 import { op_def } from "pixelpai_proto";
-import { IDisplayObject, ServerPosition, TerrainGrid } from "../display";
+import { MatterBodies } from "../display/debugs/matter";
+import { ServerPosition } from "../display/debugs/server.pointer";
+import { IDisplayObject } from "../display";
+import { LayerEnum } from "game-capsule";
+import { TerrainGrid } from "../display/terrain.grid";
 import { BlockManager } from "baseRender";
 import { FramesModel } from "baseGame";
-import { LayerEnum } from "game-capsule";
+import { Tool } from "utils";
+
 export enum NodeType {
     UnknownNodeType = 0,
     GameNodeType = 1,
@@ -59,7 +60,7 @@ export class DisplayManager {
     private displays: Map<number, DragonbonesDisplay | FramesDisplay>;
     private scenerys: Map<number, BlockManager>;
     private mUser: IDisplayObject;
-    // private matterBodies: MatterBodies;
+    private matterBodies: MatterBodies;
     private serverPosition: ServerPosition;
     private preLoadList: any[];
     private loading: boolean = false;
@@ -125,7 +126,7 @@ export class DisplayManager {
         } else {
             display = this.displays.get(id) as DragonbonesDisplay;
         }
-        display.load(data, undefined, false);
+        display.load(data);
         const sprite = this.mModelCache.get(id);
         if (sprite) {
             display.titleMask = sprite.titleMask;
@@ -153,7 +154,7 @@ export class DisplayManager {
         }
         // 主角龙骨无视其余资源优先加载
         display.load(data, undefined, false);
-        display.startLoad();
+        // display.startLoad();
         if (isUser) this.mUser = display;
         const id = data.id;
         const sprite = this.mModelCache.get(id);
@@ -195,7 +196,7 @@ export class DisplayManager {
 
     public addFramesDisplay(id: number, data: IFramesModel, layer: number, field?: DisplayField) {
         if (!data) {
-            Logger.getInstance().debug("addFramesDisplay ====>", id);
+            Logger.getInstance().debug("no data addFramesDisplay ====>", id);
             return;
         }
         const scene = this.sceneManager.getMainScene();
@@ -232,7 +233,7 @@ export class DisplayManager {
 
     public removeDisplay(displayID: number): void {
         if (!this.displays.has(displayID)) {
-            // Logger.getInstance().error("BaseDisplay not found: ", displayID);
+            // Logger.getInstance().warn("BaseDisplay not found: ", displayID);
             return;
         }
         const display = this.displays.get(displayID);
@@ -245,7 +246,7 @@ export class DisplayManager {
 
     public load(displayID: number, data: any, field?: DisplayField) {
         if (!this.displays.has(displayID)) {
-            Logger.getInstance().error("BaseDisplay not found: ", displayID);
+            Logger.getInstance().warn("BaseDisplay not found: ", displayID);
             return;
         }
         const display = this.displays.get(displayID);
@@ -254,7 +255,7 @@ export class DisplayManager {
 
     public changeAlpha(displayID: number, val?: number) {
         if (!this.displays.has(displayID)) {
-            Logger.getInstance().error("BaseDisplay not found: ", displayID);
+            Logger.getInstance().warn("BaseDisplay not found: ", displayID);
             return;
         }
         const display = this.displays.get(displayID);
@@ -263,7 +264,7 @@ export class DisplayManager {
 
     public fadeIn(displayID: number) {
         if (!this.displays.has(displayID)) {
-            Logger.getInstance().error("BaseDisplay not found: ", displayID);
+            Logger.getInstance().warn("BaseDisplay not found: ", displayID);
             return;
         }
         const display = this.displays.get(displayID);
@@ -272,7 +273,7 @@ export class DisplayManager {
 
     public fadeOut(displayID: number) {
         if (!this.displays.has(displayID)) {
-            Logger.getInstance().error("BaseDisplay not found: ", displayID);
+            Logger.getInstance().warn("BaseDisplay not found: ", displayID);
             return;
         }
         const display = this.displays.get(displayID);
@@ -281,7 +282,7 @@ export class DisplayManager {
 
     public play(displayID: number, animation: RunningAnimation, field?: DisplayField, times?: number) {
         if (!this.displays.has(displayID)) {
-            Logger.getInstance().error("BaseDisplay not found: ", displayID);
+            Logger.getInstance().warn("BaseDisplay not found: ", displayID);
             return;
         }
         const display = this.displays.get(displayID);
@@ -291,32 +292,33 @@ export class DisplayManager {
     public mount(displayID: number, targetID: number, targetIndex?: number) {
         const display = this.displays.get(displayID);
         if (!display) {
-            Logger.getInstance().error("BaseDisplay not found: ", displayID);
+            Logger.getInstance().warn("BaseDisplay not found: ", displayID);
             return;
         }
         const target = this.displays.get(targetID);
         if (!target) {
-            Logger.getInstance().error("BaseDisplay not found: ", targetID);
+            Logger.getInstance().warn("BaseDisplay not found: ", targetID);
             return;
         }
         target.setRootMount(display);
         display.mount(target, targetIndex);
     }
 
-    public unmount(displayID: number, targetID: number) {
+    public unmount(displayID: number, targetID: number, pos?: IPos) {
         const display = this.displays.get(displayID);
         if (!display) {
-            Logger.getInstance().error("BaseDisplay not found: ", displayID);
+            Logger.getInstance().warn("BaseDisplay not found: ", displayID);
             return;
         }
 
         const target = this.displays.get(targetID);
         if (!target) {
-            Logger.getInstance().error("BaseDisplay not found: ", targetID);
+            Logger.getInstance().warn("BaseDisplay not found: ", targetID);
             return;
         }
         target.setRootMount(null);
         display.unmount(target);
+        if (pos) target.setPosition(pos.x, pos.y, pos.z);
     }
 
     public addEffect(targetID: number, effectID: number, display: IFramesModel) {
@@ -339,7 +341,7 @@ export class DisplayManager {
     public removeEffect(targetID: number, displayID: number) {
         const display = this.displays.get(displayID);
         if (!display) {
-            Logger.getInstance().error("BaseDisplay not found: ", displayID);
+            Logger.getInstance().warn("BaseDisplay not found: ", displayID);
             return;
         }
         const target = this.displays.get(targetID);
@@ -350,7 +352,7 @@ export class DisplayManager {
 
     public showEffect(displayID: number) {
         if (!this.displays.has(displayID)) {
-            Logger.getInstance().error("BaseDisplay not found: ", displayID);
+            Logger.getInstance().warn("BaseDisplay not found: ", displayID);
             return;
         }
         const display = this.displays.get(displayID);
@@ -423,19 +425,19 @@ export class DisplayManager {
         display.showTopDisplay(state);
     }
 
-    // public showMatterDebug(bodies) {
-    //     if (!this.matterBodies) {
-    //         this.matterBodies = new MatterBodies(this.render);
-    //     }
-    //     this.matterBodies.renderWireframes(bodies);
-    // }
+    public showMatterDebug(bodies) {
+        if (!this.matterBodies) {
+            this.matterBodies = new MatterBodies(this.render);
+        }
+        this.matterBodies.renderWireframes(bodies);
+    }
 
-    // public hideMatterDebug() {
-    //     if (this.matterBodies) {
-    //         this.matterBodies.destroy();
-    //         this.matterBodies = undefined;
-    //     }
-    // }
+    public hideMatterDebug() {
+        if (this.matterBodies) {
+            this.matterBodies.destroy();
+            this.matterBodies = undefined;
+        }
+    }
 
     public drawServerPosition(x: number, y: number) {
         if (!this.serverPosition) {
@@ -565,10 +567,10 @@ export class DisplayManager {
             });
             this.scenerys.clear();
         }
-        // if (this.matterBodies) {
-        //     this.matterBodies.destroy();
-        //     this.matterBodies = null;
-        // }
+        if (this.matterBodies) {
+            this.matterBodies.destroy();
+            this.matterBodies = null;
+        }
         if (this.serverPosition) {
             this.serverPosition.destroy();
             this.serverPosition = null;

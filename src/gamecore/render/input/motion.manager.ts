@@ -26,7 +26,7 @@ export class MotionManager {
         this.scene.input.on("pointerdown", this.onPointerDownHandler, this);
         this.scene.input.on("gameobjectdown", this.onGameObjectDownHandler, this);
         this.scene.input.on("gameobjectup", this.onGameObjectUpHandler, this);
-        if (this.uiScene) this.uiScene.input.on("gameobjectdown", this.onPointeroutHandler, this);
+        if (this.uiScene) this.uiScene.input.on("gameobjectdown", this.onUiGameObjectDownHandler, this);
     }
 
     removeListener() {
@@ -38,7 +38,7 @@ export class MotionManager {
         this.scene.input.off("pointermove", this.onPointerMoveHandler, this);
         this.scene.input.off("gameobjectdown", this.onGameObjectDownHandler, this);
         this.scene.input.off("gameobjectup", this.onGameObjectUpHandler, this);
-        if (this.uiScene) this.uiScene.input.off("gameobjectdown", this.onPointeroutHandler, this);
+        if (this.uiScene) this.uiScene.input.off("gameobjectdown", this.onUiGameObjectDownHandler, this);
     }
 
     resize(width: number, height: number) {
@@ -132,8 +132,7 @@ export class MotionManager {
 
         if (this.render.guideManager.canInteractive()) return;
         if (Math.abs(pointer.downX - pointer.upX) >= 5 * this.render.scaleRatio && Math.abs(pointer.downY - pointer.upY) >= 5 * this.render.scaleRatio || pointer.upTime - pointer.downTime > this.holdDelay) {
-            const position = this.getPreUserPos(pointer);
-            this.stop({ x: position.x / this.scaleRatio, y: position.y / this.scaleRatio });
+            this.stop();
         } else {
             if (this.gameObject) {
                 const id = this.gameObject.getData("id");
@@ -180,20 +179,21 @@ export class MotionManager {
         this.isHolding = true;
     }
 
-    protected onPointeroutHandler(pointer) {
+    protected onUiGameObjectDownHandler(pointer) {
         if (!this.isRunning) return;
         if (this.render.guideManager.canInteractive()) return;
         this.isHolding = false;
         this.scene.input.off("pointermove", this.onPointerMoveHandler, this);
-        const position = this.getPreUserPos(pointer);
-        if (!position) return;
-        this.stop({ x: position.x / this.scaleRatio, y: position.y / this.scaleRatio });
+        // const position = this.getPreUserPos(pointer);
+        // if (!position) return;
+        this.stop();
         clearTimeout(this.holdTime);
     }
 
     protected onGameObjectDownHandler(pointer, gameObject) {
         if (!this.isRunning) return;
-        if (this.render.guideManager.canInteractive()) return;
+        const id = gameObject ? gameObject.getData("id") : undefined;
+        if (this.render.guideManager.canInteractive(id)) return;
         this.gameObject = gameObject;
     }
 
@@ -220,8 +220,8 @@ export class MotionManager {
         // this.render.physicalPeer.findPath(targets, id);
     }
 
-    private stop(pos: any) {
-        this.render.mainPeer.stopMove(pos.x, pos.y);
+    private stop() {
+        this.render.mainPeer.stopSelfMove();
     }
 
     private getPreUserPos(pointer): Phaser.Math.Vector2 {
