@@ -18,6 +18,7 @@ export interface IAvatar {
     headMousId?: (SlotSkin | string | null);
     headHatsId?: (SlotSkin | string | null);
     headMaskId?: (SlotSkin | string | null);
+    headChinId?: (SlotSkin | string | null);
     headSpecId?: (SlotSkin | string | null);
     headFaceId?: (SlotSkin | string | null);
     bodyBaseId?: (SlotSkin | string | null);
@@ -26,6 +27,8 @@ export interface IAvatar {
     bodyTailId?: (SlotSkin | string | null);
     bodyWingId?: (SlotSkin | string | null);
     bodySpecId?: (SlotSkin | string | null);
+    bodyScarId?: (SlotSkin | string | null);
+    bodyCloaId?: (SlotSkin | string | null);
     farmBaseId?: (SlotSkin | string | null);
     farmCostId?: (SlotSkin | string | null);
     farmShldId?: (SlotSkin | string | null);
