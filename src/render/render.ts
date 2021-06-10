@@ -1854,7 +1854,8 @@ export class Render extends RPCPeer implements GameMain, IRender {
 
     get mainPeer() {
         if (!this.mMainPeer) {
-            throw new Error("can't find main worker");
+            return null;
+            // throw new Error("can't find main worker");
         }
         return this.mMainPeer;
     }
