@@ -21,7 +21,7 @@ export class PicaBootPanel extends PicaBasePanel {
         super(uimanager);
         this.maskLoadingEnable = false;
         this.key = ModuleName.PICA_BOOT_NAME;
-        this.atlasNames = [UIAtlasName.uicommon1, UIAtlasName.uicommon];
+        this.loadAtlas = [UIAtlasName.uicommon1, UIAtlasName.uicommon];
         this.mMediator = this.render.mainPeer[ModuleName.PICA_BOOT_NAME];
         // const game = uimanager.render.game;
         // (<Phaser.Renderer.WebGL.WebGLRenderer>game.renderer).addPipeline("Grayscale", new GrayScalePipeline(game));

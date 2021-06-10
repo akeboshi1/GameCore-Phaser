@@ -17,7 +17,7 @@ export class PicaRoomDecoratePanel extends PicaBasePanel {
     constructor(uiManager: UiManager) {
         super(uiManager);
         this.key = ModuleName.PICAROOMDECORATE_NAME;
-        this.atlasNames = [UIAtlasName.uicommon, UIAtlasName.uicommon1, UIAtlasName.decorateshop];
+        this.loadAtlas = [UIAtlasName.uicommon, UIAtlasName.uicommon1, UIAtlasName.decorateshop];
     }
     resize(width: number, height: number) {
         const w: number = this.scaleWidth;

@@ -12,8 +12,10 @@ export class ButtonEventDispatcher extends BaseUI {
     protected mTweenBoo = true;
     protected mDuration = 45;
     protected zoom: number = 1;
-    constructor(scene: Phaser.Scene, x: number, y: number, tweenBoo?: boolean, music?: ISoundGroup) {
-        super(scene, x, y);
+    constructor(scene: Phaser.Scene, dpr?: number, zoom?: number, tweenBoo?: boolean, music?: ISoundGroup) {
+        super(scene);
+        this.dpr = dpr || this.dpr;
+        this.zoom = zoom || this.zoom;
         this.soundGroup = {
             up: {
                 key: "click",
@@ -47,7 +49,10 @@ export class ButtonEventDispatcher extends BaseUI {
             this.removeInteractive();
         }
     }
-
+    public resize(width: number, height: number) {
+        this.setSize(width, height);
+        if (this.input && this.input.hitArea) this.input.hitArea.setSize(width, height);
+    }
     protected onPointerMoveHandler(pointer: Phaser.Input.Pointer) {
         if (this.soundGroup && this.soundGroup.move)
             this.playSound(this.soundGroup.move);

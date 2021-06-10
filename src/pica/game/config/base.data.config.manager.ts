@@ -441,10 +441,10 @@ export class BaseDataConfigManager extends BaseConfigManager {
         if (!data.categoryMap["find"]) {
             const extendMap: Map<{ key: string, value: string }, Array<{ key: string, value: string }>> = new Map();
             data.categoryMap.forEach((value, key) => {
-                const subCategorys: Array<{ key: string, value: string }> = [];
+                const subCategorys: Array<{ key: string, value: string, shopName: string }> = [];
                 for (const temp of value) {
                     const tvalue = this.getI18n(temp);
-                    subCategorys.push({ key: temp, value: tvalue });
+                    subCategorys.push({ key: temp, value: tvalue, shopName });
                 }
                 const category = { key, value: this.getI18n(key) };
                 extendMap.set(category, subCategorys);

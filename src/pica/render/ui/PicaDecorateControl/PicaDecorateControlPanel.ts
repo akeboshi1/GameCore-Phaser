@@ -16,7 +16,7 @@ export class PicaDecorateControlPanel extends PicaBasePanel {
     constructor(uiManager: UiManager) {
         super(uiManager);
         this.key = ModuleName.PICADECORATECONTROL_NAME;
-        this.atlasNames = [UIAtlasName.uicommon, UIAtlasName.effectcommon, UIAtlasName.room_decorate];
+        this.loadAtlas = [UIAtlasName.uicommon, UIAtlasName.effectcommon, UIAtlasName.room_decorate];
     }
 
     public addListen() {

@@ -13,7 +13,7 @@ import { UIAtlasName } from "../../../res"; export class PicaSceneNavigationPane
     constructor(uiManager: UiManager) {
         super(uiManager);
         this.key = ModuleName.PICASCENENAVIGATION_NAME;
-        this.atlasNames = [UIAtlasName.map];
+        this.loadAtlas = [UIAtlasName.map];
     }
 
     public resize(w: number, h: number) {

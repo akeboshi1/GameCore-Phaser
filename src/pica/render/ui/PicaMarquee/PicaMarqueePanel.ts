@@ -13,7 +13,7 @@ export class PicaMarqueePanel extends PicaBasePanel {
     private content: Phaser.GameObjects.Container;
     constructor(uiManager: UiManager) {
         super(uiManager);
-        this.atlasNames = [UIAtlasName.bulletin];
+        this.loadAtlas = [UIAtlasName.bulletin];
         this.key = ModuleName.PICAMARQUEE_NAME;
     }
 

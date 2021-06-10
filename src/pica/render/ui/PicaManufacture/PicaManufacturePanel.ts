@@ -22,7 +22,7 @@ export class PicaManufacturePanel extends PicaBasePanel {
     private optionType: number;
     constructor(uiManager: UiManager) {
         super(uiManager);
-        this.atlasNames = [UIAtlasName.uicommon, UIAtlasName.effectcommon, UIAtlasName.recast];
+        this.loadAtlas = [UIAtlasName.uicommon, UIAtlasName.effectcommon, UIAtlasName.recast];
         this.textures = [{ atlasName: "Recast_aims_icon_bg", folder: "texture" }, { atlasName: "Recast_bg_texture", folder: "texture" }];
         this.key = ModuleName.PICAMANUFACTURE_NAME;
     }

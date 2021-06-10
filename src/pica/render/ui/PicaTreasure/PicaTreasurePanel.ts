@@ -15,7 +15,7 @@ export class PicaTreasurePanel extends PicaBasePanel {
     private trasureData: any;
     constructor(uiManager: UiManager) {
         super(uiManager);
-        this.atlasNames = [UIAtlasName.treasure, UIAtlasName.uicommon1, UIAtlasName.uicommon,
+        this.loadAtlas = [UIAtlasName.treasure, UIAtlasName.uicommon1, UIAtlasName.uicommon,
         UIAtlasName.circleeffect, UIAtlasName.stareffect];
         this.key = ModuleName.PICATREASURE_NAME;
     }

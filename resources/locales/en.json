@@ -4,7 +4,8 @@
     "payment": "Buy",
     "refreshtime": "Refresh at ",
     "refresh": "Refresh",
-    "moneyless": "There is not enough money to buy"
+    "moneyless": "There is not enough money to buy",
+    "unlock": "解锁"
   },
   "item": {
     "copy_suc": "{{name}} copied",
@@ -75,7 +76,7 @@
     "leave": "Leave",
     "affirm": "Affirm",
     "count": "Count",
-    "reselect":"Reselect"
+    "reselect": "Reselect"
   },
   "quantityunit": {
     "k": "k",

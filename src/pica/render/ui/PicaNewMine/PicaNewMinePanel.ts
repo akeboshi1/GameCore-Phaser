@@ -31,7 +31,7 @@ export class PicaNewMinePanel extends PicaBasePanel {
     constructor(uiManager: UiManager) {
         super(uiManager);
         this.key = ModuleName.PICANEWMINE_NAME;
-        this.atlasNames = [UIAtlasName.uicommon, UIAtlasName.mine_new];
+        this.loadAtlas = [UIAtlasName.uicommon, UIAtlasName.mine_new];
         this.UIType = UIType.Scene;
     }
     resize(width?: number, height?: number) {

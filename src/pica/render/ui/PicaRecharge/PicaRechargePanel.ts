@@ -31,7 +31,7 @@ export class PicaRechargePanel extends PicaBasePanel {
     constructor(uiManager: UiManager) {
         super(uiManager);
         this.key = ModuleName.PICARECHARGE_NAME;
-        this.atlasNames = [UIAtlasName.uicommon, UIAtlasName.recharge];
+        this.loadAtlas = [UIAtlasName.uicommon, UIAtlasName.recharge];
     }
     resize(width?: number, height?: number) {
         const w: number = this.scaleWidth;

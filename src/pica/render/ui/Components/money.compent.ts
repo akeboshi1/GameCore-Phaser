@@ -42,6 +42,10 @@ export class MoneyCompent extends Phaser.GameObjects.Container {
         this.money = money;
         this.diamond = diamond;
     }
+    public setMoneyImgs(left: string, right: string) {
+        if (left) this.moneyvalue.setFrame(left);
+        if (right) this.diamondvalue.setFrame(right);
+    }
     protected create() {
         const moneybg = new NineSlicePatch(this.scene, 0, -this.dpr, this.width, this.height, UIAtlasName.uicommon, "home_assets_bg", {
             left: 17 * this.dpr,

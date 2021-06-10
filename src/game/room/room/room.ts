@@ -464,7 +464,7 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
         const walkableData = this.getSpriteWalkableData(sprite, isTerrain);
         if (!walkableData) return;
         // tslint:disable-next-line:no-console
-        console.log("addWalk ===>", sprite);
+        // console.log("addWalk ===>", sprite);
         const { origin, collisionArea, walkableArea, pos45, rows, cols } = walkableData;
         let tempY = 0;
         let tempX = 0;
@@ -489,7 +489,7 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
         const walkableData = this.getSpriteWalkableData(sprite, isTerrain);
         if (!walkableData) return;
         // tslint:disable-next-line:no-console
-        console.log("removeWalk ===>", sprite);
+        // console.log("removeWalk ===>", sprite);
         const { origin, collisionArea, walkableArea, pos45, rows, cols } = walkableData;
         let tempY = 0;
         let tempX = 0;

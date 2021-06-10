@@ -24,7 +24,7 @@ export class PicaOnlinePanel extends PicaBasePanel {
     constructor(uiManager: UiManager) {
         super(uiManager);
         this.key = ModuleName.PICAONLINE_NAME;
-        this.atlasNames = [UIAtlasName.uicommon];
+        this.loadAtlas = [UIAtlasName.uicommon];
     }
 
     public resize(w: number, h: number) {

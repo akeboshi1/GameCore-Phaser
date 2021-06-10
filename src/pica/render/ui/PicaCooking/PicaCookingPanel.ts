@@ -21,7 +21,7 @@ export class PicaCookingPanel extends PicaBasePanel {
     constructor(uiManager: UiManager) {
         super(uiManager);
         this.key = ModuleName.PICACOOKING_NAME;
-        this.atlasNames = [UIAtlasName.uicommon, UIAtlasName.cooking];
+        this.loadAtlas = [UIAtlasName.uicommon, UIAtlasName.cooking];
         this.UIType = UIType.Scene;
     }
     resize(width?: number, height?: number) {

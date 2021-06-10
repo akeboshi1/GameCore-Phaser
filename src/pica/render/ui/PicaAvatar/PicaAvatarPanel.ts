@@ -44,7 +44,7 @@ export class PicaAvatarPanel extends PicaBasePanel {
         super(uiManager);
         this.key = ModuleName.PICAAVATAR_NAME;
         this.mSceneType = sceneType;
-        this.atlasNames = [UIAtlasName.uicommon];
+        this.loadAtlas = [UIAtlasName.uicommon];
         this.textures = [{atlasName: "avater_bg_adorn", folder: "texture"}, {
             atlasName: "avater_bg_stripe",
             folder: "texture"

@@ -15,7 +15,7 @@ export class PicaEffectMgrPanel extends PicaBasePanel {
     constructor(uiManager: UiManager) {
         super(uiManager);
         this.key = ModuleName.PICAEFFECTMGR_NAME;
-        this.atlasNames = [UIAtlasName.effectcommon, UIAtlasName.effectlevelup];
+        this.loadAtlas = [UIAtlasName.effectcommon, UIAtlasName.effectlevelup];
     }
 
     resize(w: number, h: number) {

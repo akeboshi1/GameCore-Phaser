@@ -252,8 +252,8 @@ class DetailBubble extends Phaser.GameObjects.Container {
       fontFamily: Font.DEFULT_FONT,
     }).setOrigin(0);
     this.add([this.tipsbg, this.tipsText, this.mExpires]);
-    this.tipsText.addImage("iv_coin", { key: UIAtlasKey.commonKey, frame: "iv_coin" });
-    this.tipsText.addImage("iv_diamond", { key: UIAtlasKey.commonKey, frame: "iv_diamond" });
+    this.tipsText.addImage("iv_coin", { key: UIAtlasName.uicommon, frame: "home_silver" });
+    this.tipsText.addImage("iv_diamond", { key: UIAtlasName.uicommon, frame: "home_diamond" });
   }
 
   setProp(prop: any, servertime: number, property: any): this {// op_client.IMarketCommodity, PlayerProperty

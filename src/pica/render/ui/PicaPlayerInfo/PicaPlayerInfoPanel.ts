@@ -36,7 +36,7 @@ export class PicaPlayerInfoPanel extends PicaBasePanel {
     constructor(uiManager: UiManager) {
         super(uiManager);
         this.key = ModuleName.PICAPLAYERINFO_NAME;
-        this.atlasNames = [UIAtlasName.uicommon, UIAtlasName.friend_message];
+        this.loadAtlas = [UIAtlasName.uicommon, UIAtlasName.friend_message];
         this.textures = [{ atlasName: "Create_role_bg", folder: "texture" }];
     }
     resize(width: number, height: number) {

@@ -4,18 +4,28 @@ import { ModuleName } from "structure";
 import { Url } from "utils";
 import { PicaRenderUiManager } from "./pica.Renderuimanager";
 export class PicaBasePanel extends BasePanel {
-    protected atlasNames: Array<string | AtlasData>;
+    /**
+     * 要加载的图集
+     */
+    protected loadAtlas: Array<string | AtlasData>;
+    /**
+     * 要加载的图片
+     */
     protected textures: Array<string | AtlasData>;
     protected maskLoadingEnable = true;
     protected tempDatas: any;
+    /**
+     * 本面板独有的图集名称
+     */
+    protected atlas: string;
     constructor(protected uiManager: UiManager) {
         super(uiManager.scene, uiManager.render);
     }
     protected initResource() {
         let datas;
-        if (this.atlasNames) {
+        if (this.loadAtlas) {
             const uimanager: PicaRenderUiManager = <PicaRenderUiManager>(this.uiManager);
-            datas = uimanager.getUrlDatas(this.atlasNames);
+            datas = uimanager.getUrlDatas(this.loadAtlas);
 
         }
         if (this.textures) {
@@ -53,8 +63,8 @@ export class PicaBasePanel extends BasePanel {
 
     protected setLinear(key: string) {
         super.setLinear(key);
-        if (this.atlasNames) {
-            for (const atlas of this.atlasNames) {
+        if (this.loadAtlas) {
+            for (const atlas of this.loadAtlas) {
                 if (typeof atlas === "string") {
                     super.setLinear(atlas);
                 } else {

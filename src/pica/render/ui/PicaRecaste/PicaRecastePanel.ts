@@ -31,7 +31,7 @@ export class PicaRecastePanel extends PicaBasePanel {
   private tempData: any = {};
   constructor(uiManager: UiManager) {
     super(uiManager);
-    this.atlasNames = [UIAtlasName.uicommon, UIAtlasName.recast];
+    this.loadAtlas = [UIAtlasName.uicommon, UIAtlasName.recast];
     this.textures = [{ atlasName: "Recast_aims_icon_bg", folder: "texture" }, { atlasName: "Recast_bg_texture", folder: "texture" }];
     this.key = ModuleName.PICARECASTE_NAME;
   }

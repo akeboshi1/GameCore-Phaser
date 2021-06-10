@@ -28,7 +28,7 @@ export class PicaTaskPanel extends PicaBasePanel {
     constructor(uiManager: UiManager) {
         super(uiManager);
         this.key = ModuleName.PICATASK_NAME;
-        this.atlasNames = [UIAtlasName.uicommon, UIAtlasName.task_daily];
+        this.loadAtlas = [UIAtlasName.uicommon, UIAtlasName.task_daily];
     }
     public hide() {
         this.render.emitter.emit(PicaTaskPanel.PICATASK_CLOSE);

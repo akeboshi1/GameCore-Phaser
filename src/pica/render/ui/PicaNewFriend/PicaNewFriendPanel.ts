@@ -34,7 +34,7 @@ export class PicaNewFriendPanel extends PicaBasePanel {
     constructor(uiManager: UiManager) {
         super(uiManager);
         this.key = ModuleName.PICANEWFRIEND_NAME;
-        this.atlasNames = [UIAtlasName.uicommon, UIAtlasName.friend_new, UIAtlasName.friend_message];
+        this.loadAtlas = [UIAtlasName.uicommon, UIAtlasName.friend_new, UIAtlasName.friend_message];
         this.textures = [{ atlasName: "friend_message_bg", folder: "friend_new" }, { atlasName: "Create_role_bg", folder: "texture" }];
     }
 

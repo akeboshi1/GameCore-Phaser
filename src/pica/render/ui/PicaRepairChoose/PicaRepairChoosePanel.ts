@@ -17,7 +17,7 @@ export class PicaRepairChoosePanel extends PicaBasePanel {
     constructor(uiManager: UiManager) {
         super(uiManager);
         this.key = ModuleName.PICAREPAIRCHOOSE_NAME;
-        this.atlasNames = [UIAtlasName.layout];
+        this.loadAtlas = [UIAtlasName.layout];
         this.UIType = UIType.Scene;
     }
     resize(width?: number, height?: number) {

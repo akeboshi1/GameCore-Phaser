@@ -3,7 +3,8 @@
     "title": "商城",
     "payment": "付费",
     "refreshtime": "下一次刷新时间：",
-    "moneyless": "钱币不足，无法购买"
+    "moneyless": "钱币不足，无法购买",
+    "unlock": "解锁"
   },
   "item": {
     "copy_suc": "复制{{name}}成功",
@@ -76,7 +77,7 @@
     "leave": "离开",
     "affirm": "确认",
     "count": "数量",
-    "reselect":"重选"
+    "reselect": "重选"
   },
   "quantityunit": {
     "k": "千",

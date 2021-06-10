@@ -58,8 +58,7 @@ export class PicaMarketMediator extends BasicMediator {
     if (this.mShowData && this.mView) {
       // this.mView.setCategories(this.mShowData);
       this.onGetCategoriesHandler();
-      const userData = this.game.user.userData;
-      this.mView.setMoneyData(userData.money, userData.diamond);
+      this.onUpdatePlayerInfoHandler();
     }
   }
 
@@ -73,7 +72,7 @@ export class PicaMarketMediator extends BasicMediator {
   }
   private onUpdatePlayerInfoHandler() {
     const userData = this.game.user.userData;
-    this.mView.setMoneyData(userData.money, userData.diamond);
+    this.mView.setMoneyData(userData.money, userData.diamond, userData.level);
   }
   private onCategoriesHandler(content: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_GET_MARKET_CATEGORIES) {
     if (this.mView) {
@@ -91,8 +90,16 @@ export class PicaMarketMediator extends BasicMediator {
     const config = <BaseDataConfigManager>this.game.configManager;
     const shopName = this.model.market_name;
     if (shopName === "shop") {
-      config.checkDynamicShop([shopName]).then(() => {
-        const map = config.getShopSubCategory(shopName);
+      const names = ["shop", "crownshop", "gradeshop"];
+      config.checkDynamicShop(names).then(() => {
+        const map = new Map();
+        for (const name of names) {
+          const temp = config.getShopSubCategory(name);
+          temp.forEach((value, key) => {
+            key.shopName = name;
+            map.set(key, value);
+          });
+        }
         this.setCategories(map);
       }, () => {
         Logger.getInstance().error("配置文件" + shopName + "未能成功加载");
@@ -123,9 +130,9 @@ export class PicaMarketMediator extends BasicMediator {
     return result;
   }
 
-  private onQueryPropHandler(data: { page: number, category: string, subCategory: string }) {
+  private onQueryPropHandler(data: { page: number, category: string, subCategory: string, shopName: string }) {
     // this.model.queryMarket(data.page, data.category, data.subCategory);
-    this.setMarketProp(data.category, data.subCategory);
+    this.setMarketProp(data.category, data.subCategory, data.shopName);
   }
 
   private onBuyItemHandler(prop: op_def.IOrderCommodities) {
@@ -161,7 +168,7 @@ export class PicaMarketMediator extends BasicMediator {
 
   private setCategories(map: Map<any, any>) {
     const arrValue = [];
-    const obj = { marketName: this.model.market_name, marketCategory: arrValue };
+    const obj = { marketCategory: arrValue };
     map.forEach((value, key) => {
       arrValue.push({ category: key, subcategory: value });
     });
@@ -170,16 +177,17 @@ export class PicaMarketMediator extends BasicMediator {
     this.mShowData = obj;
   }
 
-  private setMarketProp(category: string, subCategory: string) {
+  private setMarketProp(category: string, subCategory: string, shopName?: string) {
     let att;
-    if (this.model.market_name === "shop") {
+    shopName = shopName || this.model.market_name;
+    if (shopName === "shop" || shopName === "crownshop" || shopName === "gradeshop") {
       const config = <BaseDataConfigManager>this.game.configManager;
-      att = config.getShopItems(category, subCategory, this.model.market_name);
+      att = config.getShopItems(category, subCategory, shopName);
     } else {
       att = this.model.market_data;
     }
 
-    const obj = { category, subCategory, commodities: att, marketName: this.model.market_name };
+    const obj = { category, subCategory, commodities: att, marketName: shopName };
     if (this.mView)
       this.mView.setProp(obj);
   }

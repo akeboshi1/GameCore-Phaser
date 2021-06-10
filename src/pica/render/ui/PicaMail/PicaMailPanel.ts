@@ -18,7 +18,7 @@ export class PicaMailPanel extends PicaBasePanel {
     constructor(uiManager: UiManager) {
         super(uiManager);
         this.key = ModuleName.PICAMAIL_NAME;
-        this.atlasNames = [UIAtlasName.uicommon, UIAtlasName.mail];
+        this.loadAtlas = [UIAtlasName.uicommon, UIAtlasName.mail];
     }
     public hide() {
         this.render.emitter.emit(PicaMailPanel.PICAMAIL_CLOSE);

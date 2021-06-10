@@ -19,7 +19,7 @@ export class PicaExploreLogPanel extends PicaBasePanel {
     private timer: any;
     constructor(uiManager: UiManager) {
         super(uiManager);
-        this.atlasNames = [UIAtlasName.explorelog, UIAtlasName.uicommon1];
+        this.loadAtlas = [UIAtlasName.explorelog, UIAtlasName.uicommon1];
         this.key = ModuleName.PICAEXPLORELOG_NAME;
     }
     resize(width: number, height: number) {

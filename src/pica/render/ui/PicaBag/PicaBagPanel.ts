@@ -47,7 +47,7 @@ export class PicaBagPanel extends PicaBasePanel {
   private moneyData: any;
   constructor(uiManager: UiManager) {
     super(uiManager);
-    this.atlasNames = [UIAtlasName.uicommon];
+    this.loadAtlas = [UIAtlasName.uicommon];
     this.textures = [{ atlasName: "bag_bg", folder: "texture" }];
     this.key = ModuleName.PICABAG_NAME;
   }

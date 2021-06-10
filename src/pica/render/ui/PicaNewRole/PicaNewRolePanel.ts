@@ -27,7 +27,7 @@ export class PicaNewRolePanel extends PicaBasePanel {
     constructor(uiManager: UiManager) {
         super(uiManager);
         this.key = ModuleName.PICANEWROLE_NAME;
-        this.atlasNames = [UIAtlasName.uicommon, UIAtlasName.people_action];
+        this.loadAtlas = [UIAtlasName.uicommon, UIAtlasName.people_action];
         this.UIType = UIType.Scene;
     }
     resize(width?: number, height?: number) {

@@ -20,7 +20,7 @@ export class PicaRenamePanel extends PicaBasePanel {
         this.setTween(false);
         const container = this.scene.add.container(0, 0);
         container.add(this);
-        this.atlasNames = [UIAtlasName.uicommon, UIAtlasName.createrole];
+        this.loadAtlas = [UIAtlasName.uicommon, UIAtlasName.createrole];
         this.textures = [{ atlasName: "Create_bg_texture", folder: "texture" }, {
             atlasName: "Create_role_bg",
             folder: "texture"

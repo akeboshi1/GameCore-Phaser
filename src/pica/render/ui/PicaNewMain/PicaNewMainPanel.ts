@@ -25,7 +25,7 @@ export class PicaNewMainPanel extends PicaBasePanel {
     private redMap: Map<number, Phaser.GameObjects.Image> = new Map();
     constructor(uiManager: UiManager) {
         super(uiManager);
-        this.atlasNames = [UIAtlasName.uicommon, UIAtlasName.iconcommon];
+        this.loadAtlas = [UIAtlasName.uicommon, UIAtlasName.iconcommon];
         this.key = ModuleName.PICANEWMAIN_NAME;
         this.maskLoadingEnable = false;
     }
