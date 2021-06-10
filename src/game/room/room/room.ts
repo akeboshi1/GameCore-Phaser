@@ -508,7 +508,7 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
     public getInteractiveEles(x: number, y: number): number[][] {
         if (!this.mInteractiveList) return null;
         // 前后10个格子直接可交互物件,正负gridlen格子
-        const gridLen = 20;
+        const gridLen = 80;
         const list = [];
         const pos = this.transformToMini45(new LogicPos(x, y));
         const baseX = pos.x;
