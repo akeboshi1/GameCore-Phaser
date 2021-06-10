@@ -7,6 +7,7 @@ export declare class LayerName {
     static SURFACE: string;
     static DECORATE: string;
     static WALL: string;
+    static HANGING: string;
     static ATMOSPHERE: string;
     static SCENEUI: string;
 }

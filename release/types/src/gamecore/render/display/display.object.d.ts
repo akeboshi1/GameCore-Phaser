@@ -1,4 +1,4 @@
-/// <reference types="tooqingphaser" />
+/// <reference types="tooqinggamephaser" />
 import { ElementStateType, IPos, IProjection } from "structure";
 import { IBaseDisplay } from "display";
 export interface IDisplayObject extends IBaseDisplay {

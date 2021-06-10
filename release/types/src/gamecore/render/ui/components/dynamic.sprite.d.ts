@@ -1,4 +1,4 @@
-/// <reference types="tooqingphaser" />
+/// <reference types="tooqinggamephaser" />
 export declare class DynamicSprite extends Phaser.GameObjects.Sprite {
     private mLoadCompleteCallbak;
     private mLoadContext;

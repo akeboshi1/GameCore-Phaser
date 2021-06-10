@@ -1,7 +1,7 @@
-/// <reference types="tooqingphaser" />
-import { ProgressMaskBar } from "./progress.mask.bar";
+/// <reference types="tooqinggamephaser" />
+import { ProgressNineMaskBar } from "./progress.nine.mask.bar";
 import { ThreeSlicePath } from "./three.slice.path";
-export declare class ProgressThreeMaskBar extends ProgressMaskBar {
+export declare class ProgressThreeMaskBar extends ProgressNineMaskBar {
     protected mBackground: Phaser.GameObjects.Image | ThreeSlicePath | any;
     protected mBar: Phaser.GameObjects.Image | ThreeSlicePath | any;
     protected maskGraphics: Phaser.GameObjects.Graphics;

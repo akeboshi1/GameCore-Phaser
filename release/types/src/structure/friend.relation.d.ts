@@ -9,6 +9,13 @@ export declare enum FriendRelationEnum {
     Followed = "followed",
     Blacklist = "blacklist"
 }
+export declare enum FriendRelationAction {
+    FRIEND = "FRIEND",
+    FOLLOW = "FOLLOW",
+    UNFOLLOW = "UNFOLLOW",
+    BAN = "BAN",
+    UNBAN = "UNBAN"
+}
 export interface MenuData {
     type: FriendChannel;
 }
@@ -22,6 +29,8 @@ export interface FriendData {
     menuData?: MenuData;
     createAt?: number;
     relation?: FriendRelationEnum;
+    avatar?: string;
+    gender?: number;
 }
 export declare enum FriendChannel {
     Friends = 0,

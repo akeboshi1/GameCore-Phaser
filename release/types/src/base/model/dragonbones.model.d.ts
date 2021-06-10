@@ -4,6 +4,7 @@ export declare class DragonbonesModel implements IDragonbonesModel {
     discriminator: string;
     id: number;
     eventName: number[];
+    sound: string;
     avatarDir?: number;
     avatar?: IAvatar;
     animationName?: string;

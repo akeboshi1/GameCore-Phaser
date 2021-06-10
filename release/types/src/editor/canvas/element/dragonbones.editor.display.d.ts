@@ -1,4 +1,4 @@
-/// <reference types="tooqingphaser" />
+/// <reference types="tooqinggamephaser" />
 import { BaseDragonbonesDisplay } from "baseRender";
 export declare class DragonbonesEditorDisplay extends BaseDragonbonesDisplay {
     private mWebHomePath;

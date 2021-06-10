@@ -1,10 +1,11 @@
-/// <reference types="tooqingphaser" />
+/// <reference types="tooqinggamephaser" />
 export declare class TopDisplay {
     protected scene: Phaser.Scene;
     protected mFollows: Map<FollowEnum, FollowObject>;
     protected mOwner: any;
-    protected mDpr: number;
-    constructor(scene: Phaser.Scene, owner: any, dpr: number);
+    protected mSceneScale: number;
+    protected mUIRatio: number;
+    constructor(scene: Phaser.Scene, owner: any, sceneScale: number, uiRatio: number);
     showNickname(name: string): void;
     hideNickname(): void;
     update(): void;

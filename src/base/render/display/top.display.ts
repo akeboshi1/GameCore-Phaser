@@ -3,12 +3,14 @@ import { Font } from "structure";
 export class TopDisplay {
     protected mFollows: Map<FollowEnum, FollowObject>;
     protected mOwner: any;
-    protected mDpr: number;
+    protected mSceneScale: number;
+    protected mUIRatio: number;
 
-    constructor(protected scene: Phaser.Scene, owner: any, dpr: number) {
+    constructor(protected scene: Phaser.Scene, owner: any, sceneScale: number, uiRatio: number) {
         this.mFollows = new Map();
         this.mOwner = owner;
-        this.mDpr = dpr;
+        this.mSceneScale = sceneScale;
+        this.mUIRatio = uiRatio;
     }
 
     public showNickname(name: string) {
@@ -22,11 +24,11 @@ export class TopDisplay {
         } else {
             nickname = this.scene.make.text({
                 style: {
-                    fontSize: 12 * this.mDpr + "px",
+                    fontSize: 12 * this.mSceneScale,
                     fontFamily: Font.DEFULT_FONT
                 }
-            }).setOrigin(0.5).setStroke("#000000", 2 * this.mDpr);
-            follow = new FollowObject(nickname, this.mOwner, this.mDpr);
+            }).setOrigin(0.5).setStroke("#000000", 2 * this.mSceneScale);
+            follow = new FollowObject(nickname, this.mOwner, this.mSceneScale);
             this.mFollows.set(FollowEnum.Nickname, follow);
         }
         nickname.text = name;

@@ -1,4 +1,3 @@
-import { op_client } from "pixelpai_proto";
 import { IAvatar } from "./dragonbones";
 export declare class AvatarSuitType {
     static avatarSuit: AvatarSuitType;
@@ -18,19 +17,35 @@ export declare class AvatarSuitType {
         shell: string[];
         base: string[];
     };
+    static specHideParts: {
+        headSpecId: string[];
+        bodySpecId: string[];
+        farmSpecId: string[];
+        barmSpecId: string[];
+        flegSpecId: string[];
+        blegSpecId: string[];
+    };
     static slotBitMap: Map<string, number>;
-    static createAvatar(suits: AvatarSuit[], avatar?: any): any;
-    static createAvatarBySn(suit_type: string, sn: string, slot: string, tag: string, version?: string, avatar?: any): any;
+    static createAvatar(suits: AvatarSuit[], avatar?: any): IAvatar;
+    static createAvatarBySn(suit_type: string, sn: string, slot: string, tag: string, version?: string, avatar?: any): IAvatar;
     static createHasBaseAvatar(suits: AvatarSuit[]): IAvatar;
     static createHasBaseAvatarBySn(suit_type: string, sn: string, slot: string, tag: string, version?: string): IAvatar;
     static createBaseAvatar(): IAvatar;
     static hasAvatarSuit(attrs: any): boolean;
-    static checkSlotValue(suitType: string, slotbit: string): any[];
+    static checkSlotValue(suitType: string, slotbit: string, resultType?: boolean): any[];
     static toHumpName(str: string): string;
-    static getSuitsFromItem(avatarSuits: op_client.ICountablePackageItem[]): {
+    static toSlotNames(strs: string[]): string[];
+    static toSlotName(str: string): string;
+    static getSuitsFromItem(avatarSuits: any[]): {
         avatar: IAvatar;
         suits: AvatarSuit[];
     };
+    static checkSpecHideParts(avatar: IAvatar): IAvatar;
+    static toIAvatarSets(avatar: IAvatar): Array<{
+        id: string;
+        parts: string[];
+        version?: string;
+    }>;
     costume: string[];
     hair: string[];
     eye: string[];

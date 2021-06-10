@@ -14,6 +14,7 @@ export interface ISprite {
     nickname: string;
     alpha: number;
     displayBadgeCards: op_def.IBadgeCard[];
+    sound: string;
 
     platformId: string;
     sceneId: number;

@@ -1,4 +1,4 @@
-/// <reference types="tooqingphaser" />
+/// <reference types="tooqinggamephaser" />
 export declare const HTTP_REGEX: RegExp;
 export declare class Url {
     static OSD_PATH: string;
@@ -7,6 +7,7 @@ export declare class Url {
     static RESOURCE_ROOT: string;
     static getRes(value: string): string;
     static getUIRes(dpr: number, value: string): string;
+    static getSound(key: string): string;
     static getNormalUIRes(value: string): string;
     static getOsdRes(value: string): string;
 }

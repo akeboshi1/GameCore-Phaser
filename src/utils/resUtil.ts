@@ -14,6 +14,11 @@ export class Url {
     static getUIRes(dpr: number, value: string): string {
         return Url.RESUI_PATH + `${dpr}x/${value}`;
     }
+
+    static getSound(key: string): string {
+        return "sound/" + key + ".mp3";
+    }
+
     static getNormalUIRes(value: string) {
         return Url.RESUI_PATH + value;
     }

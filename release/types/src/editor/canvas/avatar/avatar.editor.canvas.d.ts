@@ -1,5 +1,5 @@
+/// <reference types="tooqinggamephaser" />
 import { EditorCanvas, IEditorCanvasConfig } from "../editor.canvas";
-import { Scene } from "tooqingphaser";
 /**
  * api:https://dej4esdop1.feishu.cn/docs/doccn2zhhTyXaB3HYm69a0sIYhh
  * 尺寸规范链接：https://dej4esdop1.feishu.cn/docs/doccn5QVnqQ9XQz5baCBayOy49f?from=from_copylink
@@ -11,7 +11,7 @@ export declare class AvatarEditorCanvas extends EditorCanvas {
     private mDragonbone;
     constructor(config: IEditorCanvasConfig);
     destroy(): void;
-    getScene(): Scene;
+    getScene(): Phaser.Scene;
     onSceneCreated(scene: Phaser.Scene): void;
     update(): void;
     onSceneDestroy(): void;

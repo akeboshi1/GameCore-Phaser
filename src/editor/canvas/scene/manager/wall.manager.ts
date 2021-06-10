@@ -27,6 +27,7 @@ export class EditorWallManager extends PacketHandler {
         const drawLocs = locs.filter((loc) => this.exist(loc, key));
         const placeLocs = [];
         for (const loc of drawLocs) {
+            if (!this.canPut(loc)) continue;
             const locId = this.genLocId(loc.x, loc.y);
             const placeLoc = {
                 ...loc,
@@ -200,6 +201,20 @@ export class EditorWallManager extends PacketHandler {
             }
         }
         if (removes.length > 0) this.removeWalls(removes);
+    }
+
+    private canPut(loc) {
+        const { x, y, dir } = loc;
+        let key = null;
+        if (dir === Direction.west_south) {
+            key = this.genLocId(x - 1, y );
+        } else if (dir === Direction.south_east) {
+            key = this.genLocId(x, y - 1);
+        }
+        if (!key) return true;
+        const wall = this.walls.get(key);
+        if (!wall) return true;
+        return wall.dir !== Direction.concave;
     }
 
     private genLocId(x: number, y: number) {

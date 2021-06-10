@@ -1,4 +1,4 @@
-/// <reference types="tooqingphaser" />
+/// <reference types="tooqinggamephaser" />
 import { BaseAnimation } from "./base.animation";
 export declare class DragonbonesAnimation extends BaseAnimation {
     private armatureDisplay;

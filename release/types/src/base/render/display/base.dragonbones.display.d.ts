@@ -1,4 +1,4 @@
-/// <reference types="tooqingphaser" />
+/// <reference types="tooqinggamephaser" />
 import { IAvatar, IDragonbonesModel, RunningAnimation, DisplayField } from "structure";
 import { BaseDisplay } from "./base.display";
 export declare enum AvatarSlotNameTemp {
@@ -88,6 +88,7 @@ export declare class BaseDragonbonesDisplay extends BaseDisplay {
     private mReplaceTextureKey;
     private mLoadListeners;
     private mTexturesListeners;
+    private loadError;
     constructor(scene: Phaser.Scene, id?: number);
     set displayInfo(val: IDragonbonesModel | undefined);
     get displayInfo(): IDragonbonesModel | undefined;
@@ -129,6 +130,7 @@ export declare class BaseDragonbonesDisplay extends BaseDisplay {
     private clearFadeTween;
     private checkNeedReplaceTexture;
     private partLoadKeyToSlotName;
+    private slotNameToPropertyName;
     private setReplaceArrAndLoadMap;
     private addPhaserListener;
     private removePhaserListener;

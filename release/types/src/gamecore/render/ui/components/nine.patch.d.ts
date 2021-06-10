@@ -1,4 +1,4 @@
-/// <reference types="tooqingphaser" />
+/// <reference types="tooqinggamephaser" />
 import { IPatchesConfig } from "./patches.config";
 export declare class NinePatch extends Phaser.GameObjects.Container {
     private static readonly __BASE;

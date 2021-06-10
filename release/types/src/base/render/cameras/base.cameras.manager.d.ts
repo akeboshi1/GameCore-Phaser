@@ -1,4 +1,4 @@
-/// <reference types="tooqingphaser" />
+/// <reference types="tooqinggamephaser" />
 import { IPos } from "structure";
 export interface IBaseCameraService {
     camera: Phaser.Cameras.Scene2D.Camera | undefined;

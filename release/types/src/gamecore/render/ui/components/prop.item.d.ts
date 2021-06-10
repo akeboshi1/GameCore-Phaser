@@ -1,4 +1,4 @@
-/// <reference types="tooqingphaser" />
+/// <reference types="tooqinggamephaser" />
 import { BBCodeText } from "apowophaserui";
 import { SoundButton } from "./soundButton";
 import { Handler } from "structure";

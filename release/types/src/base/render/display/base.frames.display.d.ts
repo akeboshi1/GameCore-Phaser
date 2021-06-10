@@ -1,4 +1,4 @@
-/// <reference types="tooqingphaser" />
+/// <reference types="tooqinggamephaser" />
 import { BaseDisplay } from "./base.display";
 import { DisplayField, IFramesModel, RunningAnimation } from "structure";
 import { BaseDragonbonesDisplay } from "./base.dragonbones.display";
@@ -31,9 +31,10 @@ export declare class BaseFramesDisplay extends BaseDisplay {
     unmount(display: BaseFramesDisplay | BaseDragonbonesDisplay): void;
     destroy(): void;
     protected createDisplays(key: string, ani: any): void;
-    protected createDisplay(key: string, layer: any): Phaser.GameObjects.Sprite | Phaser.GameObjects.Image;
+    protected createDisplay(key: string, layer: any): Phaser.GameObjects.Image | Phaser.GameObjects.Sprite;
     protected clearFadeTween(): void;
     protected completeFrameAnimationQueue(): void;
+    protected tryCreateDisplay(key: string, animations: any, newAni: any): void;
     protected clearDisplay(): void;
     protected onAddTextureHandler(key: string, field?: DisplayField, cb?: (key: string) => void): void;
     protected mAllLoadCompleted(): void;
@@ -41,6 +42,7 @@ export declare class BaseFramesDisplay extends BaseDisplay {
     protected makeAnimation(gen: string, key: string, frameName: string[], frameVisible: boolean[], frameRate: number, loop: boolean, frameDuration?: number[]): void;
     protected updateBaseLoc(display: Phaser.GameObjects.Sprite | Phaser.GameObjects.Image, flip: boolean, offsetLoc: any): void;
     protected onAnimationRepeatHander(): void;
+    protected addToStageContainer(display: any): void;
     protected get framesInfo(): IFramesModel;
     get spriteWidth(): number;
     get spriteHeight(): number;

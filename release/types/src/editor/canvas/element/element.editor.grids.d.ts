@@ -1,4 +1,4 @@
-/// <reference types="tooqingphaser" />
+/// <reference types="tooqinggamephaser" />
 import { ElementEditorBrushType } from "./element.editor.type";
 export default class ElementEditorGrids extends Phaser.GameObjects.Container {
     private mRows;

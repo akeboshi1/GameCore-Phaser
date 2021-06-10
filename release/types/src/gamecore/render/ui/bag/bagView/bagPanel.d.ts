@@ -1,4 +1,4 @@
-/// <reference types="tooqingphaser" />
+/// <reference types="tooqinggamephaser" />
 import { ItemSlot } from "../../components/item.slot";
 import { BasePanel } from "../../components";
 import { UiManager } from "../../ui.manager";

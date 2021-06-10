@@ -31,9 +31,9 @@ export class BaseFramesDisplay extends BaseDisplay {
     public load(displayInfo: IFramesModel, field?: DisplayField): Promise<any> {
         field = !field ? DisplayField.STAGE : field;
         this.mField = field;
-        this.displayInfo = displayInfo;
+        this.mDisplayInfo = displayInfo;
         if (!this.framesInfo || !this.framesInfo.gene) {
-            return Promise.reject("framesInfo error");
+            return Promise.reject("framesInfo error" + displayInfo.id);
         }
         const currentDisplay = this.mDisplayDatas.get(field);
         if (!currentDisplay || currentDisplay.gene !== displayInfo.gene) {
@@ -90,9 +90,10 @@ export class BaseFramesDisplay extends BaseDisplay {
         this.mCurAnimation = aniDatas.get(animation.name);
         if (!this.mCurAnimation) return;
         const layer = this.mCurAnimation.layer;
-        if (!this.mPreAnimation || this.mPreAnimation.name !== animation.name) {
-            this.createDisplays(data.gene, this.mCurAnimation);
-        }
+        // if (!this.someLayer(aniDatas, this.mPreAnimation ? this.mPreAnimation.name : undefined, animation.name)) {
+        //     this.createDisplays(data.gene, this.mCurAnimation);
+        // }
+        this.tryCreateDisplay(data.gene, aniDatas, this.mCurAnimation);
 
         let display = null;
         for (let i = 0; i < layer.length; i++) {
@@ -109,10 +110,13 @@ export class BaseFramesDisplay extends BaseDisplay {
                     this.mCurAnimation.frameRate, this.mCurAnimation.loop, this.mCurAnimation.frameDuration);
                 const anis = (<Phaser.GameObjects.Sprite>display).anims;
                 anis.play(key);
-                if (typeof times === "number") {
+                // times为0为默认行为。按undefined处理
+                if (typeof times === "number" && times !== 0) {
                     // setRepeat 播放一次后，播放的次数
-                    anis.setRepeat(times - 1);
+                    anis.setRepeat(times > 0 ? times - 1 : times);
                 }
+            } else {
+                display.setFrame(frameName[0]);
             }
             display.scaleX = animation.flip ? -1 : 1;
             this.updateBaseLoc(display, animation.flip, offsetLoc);
@@ -314,21 +318,13 @@ export class BaseFramesDisplay extends BaseDisplay {
         // 清楚上一个显示对象的贴图数据
         this.clearDisplay();
 
-        let container: Phaser.GameObjects.Container = <Phaser.GameObjects.Container>this.mSprites.get(DisplayField.STAGE);
-        if (!container) {
-            container = this.scene.make.container(undefined, false);
-            container.setData("id", this.mID);
-            this.addAt(container, DisplayField.STAGE);
-            this.mSprites.set(DisplayField.STAGE, container);
-        }
-
         const layer = ani.layer;
         let display: any;
         for (let i = 0; i < layer.length; i++) {
             display = this.createDisplay(key, layer[i]);
             if (display) {
                 this.mDisplays.set(layer[i].id || i, display);
-                container.add(display);
+                this.addToStageContainer(display);
             }
         }
         this.mIsInteracitve ? this.setInteractive() : this.disableInteractive();
@@ -361,6 +357,43 @@ export class BaseFramesDisplay extends BaseDisplay {
 
     protected completeFrameAnimationQueue() {
 
+    }
+
+    protected tryCreateDisplay(key: string, animations: any, newAni: any) {
+        if (!this.mPreAnimation) {
+            this.createDisplays(key, newAni);
+            return;
+        }
+        if (this.mPreAnimation.name === newAni.name) {
+            return;
+        }
+        const oldAni = animations.get(this.mPreAnimation.name);
+        if (!oldAni) {
+            return;
+        }
+        const oldLayer = oldAni.layer;
+        const newLayer = newAni.layer;
+        if (oldLayer.length !== newLayer.length) {
+            this.createDisplays(key, newAni);
+            return;
+        }
+        for (let i = 0; i < oldLayer.length; i++) {
+            const oldFrames = oldLayer[i].frameName;
+            const newFrames = newLayer[i].frameName;
+            if (oldFrames.length !== newFrames.length) {
+                this.createDisplays(key, newAni);
+                return;
+            } else {
+                const oldId = oldLayer[i].id;
+                const newId = newLayer[i].id;
+                if (oldId === newId) continue;
+                const oldDisplay = this.mDisplays.get(oldId);
+                if (oldDisplay) {
+                    this.mDisplays.set(newId, oldDisplay);
+                    this.mDisplays.delete(oldId);
+                }
+            }
+        }
     }
 
     protected clearDisplay() {
@@ -444,7 +477,7 @@ export class BaseFramesDisplay extends BaseDisplay {
                 frames.push({ key: gen, frame, visible });
             }
         }
-        const repeat = loop ? -1 : 1;
+        const repeat = loop ? -1 : 0;
         const config: Phaser.Types.Animations.Animation = {
             key,
             frames,
@@ -479,6 +512,20 @@ export class BaseFramesDisplay extends BaseDisplay {
             // this.emit("animationComplete");
             this.completeFrameAnimationQueue();
         }
+    }
+
+    protected addToStageContainer(display) {
+        if (!display) {
+            return;
+        }
+        let container: Phaser.GameObjects.Container = <Phaser.GameObjects.Container>this.mSprites.get(DisplayField.STAGE);
+        if (!container) {
+            container = this.scene.make.container(undefined, false);
+            container.setData("id", this.mID);
+            this.addAt(container, DisplayField.STAGE);
+            this.mSprites.set(DisplayField.STAGE, container);
+        }
+        container.add(display);
     }
 
     protected get framesInfo(): IFramesModel {

@@ -1,4 +1,4 @@
-/// <reference types="tooqingphaser" />
+/// <reference types="tooqinggamephaser" />
 import { Render } from "../render";
 export declare enum MouseEvent {
     RightMouseDown = 1,
@@ -22,6 +22,8 @@ export declare class MouseManager {
     private readonly delay;
     private debounce;
     private mClickID;
+    private mClickDelay;
+    private mClickTime;
     constructor(render: Render);
     get clickID(): number;
     changeScene(scene: Phaser.Scene): void;
@@ -36,6 +38,7 @@ export declare class MouseManager {
     get enable(): boolean;
     destroy(): void;
     protected onGameObjectDownHandler(pointer: any, gameObject: any): void;
+    protected checkClickTime(): boolean;
     protected onGameObjectUpHandler(pointer: any, gameObject: any): void;
     protected onPointerDownHandler(pointer: any, gameobject: any): void;
     protected onPointerUp(pointer: any): void;

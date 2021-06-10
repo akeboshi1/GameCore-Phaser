@@ -1,4 +1,4 @@
-/// <reference types="tooqingphaser" />
+/// <reference types="tooqinggamephaser" />
 import { BasicScene } from "baseRender";
 export declare class RoomScene extends BasicScene {
     protected mRoomID: any;

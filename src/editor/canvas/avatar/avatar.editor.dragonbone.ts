@@ -406,10 +406,8 @@ export class AvatarEditorDragonbone extends Phaser.GameObjects.Container {
         return new Promise<any>((resolve, reject) => {
             const loadData = this.convertPartsToIDragonbonesModel(this.mParts);
 
-            this.mDisplay_default.load(loadData, undefined, false)
-                .then(() => {
-                    return this.mDisplay_head.load(loadData, undefined, false);
-                })
+            Promise.all([this.mDisplay_default.load(loadData, undefined, false),
+                this.mDisplay_head.load(loadData, undefined, false)])
                 .then(() => {
                     resolve(null);
                     if (this.mOnReadyForSnapshot) {
@@ -504,7 +502,7 @@ export class AvatarEditorDragonbone extends Phaser.GameObjects.Container {
                                 resolve(img.src);
                                 Logger.getInstance().log("snapshot result: ", img.src);
                             });
-                        });
+                    });
                 })
                 .catch(() => {
                     reject("replaceDisplay error");

@@ -9,8 +9,8 @@ export enum Direction {
     south_east, // 5
     east, // 6
     east_north, // 7
-    concave = 17, // 凹角
-    convex = 35 // 凸角
+    concave = 35, // 凹角
+    convex = 17 // 凸角
 }
 
 export class DirectionChecker {

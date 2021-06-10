@@ -68,13 +68,14 @@
     "make": "制作",
     "editor": "编辑",
     "survey": "调查",
-    "notEnough": "{{}}数量不足",
+    "notEnough": "{{name}}数量不足",
     "receive": "领取",
     "receivereward": "领取奖励",
     "received": "已领取",
     "rarity": "稀有",
     "leave": "离开",
-    "affirm":"确认"
+    "affirm": "确认",
+    "reselect":"重选"
   },
   "quantityunit": {
     "k": "千",
@@ -133,7 +134,7 @@
   "mine": {
     "settle": "获得物品",
     "savebag": "存入背包",
-    "integraltips": "本次积分:",
+    "integraltips": "矿工积分:",
     "proptips": "道具栏"
   },
   "equipupgrade": {
@@ -156,7 +157,9 @@
     "daily": "【每日】",
     "receive": "领取",
     "go": "前往",
-    "notasktip": "暂时没有新任务~"
+    "notasktip": "暂时没有新任务~",
+    "adtitle": "加速冷却",
+    "adtips": "是否使用{{count}}个{{name}}加速冷却？"
   },
   "furni_unlock": {
     "unlock": "修 复",
@@ -233,20 +236,28 @@
     "rankreward": "奖励"
   },
   "friendlist": {
-    "title": "我的好友",
-    "olinetitle": "显示在线",
+    "title": "好友列表",
+    "olinetitle": "仅显示在线好友",
     "friends": "好友",
     "fans": "粉丝",
     "follow": "关注",
+    "followed": "已关注",
     "blacklist": "黑名单",
+    "blacklisted": "已添加黑名单",
     "search_friends_notes": "搜索",
     "unfollow": "取消关注",
+    "unfollowed": "已取消关注",
     "search": "搜索",
     "lv": "等级",
     "remove": "移除",
+    "removed": "已移除黑名单",
     "unregistered_game": "未注册游戏",
     "notice": "通知",
-    "followed_you": "关注了你"
+    "followed_you": "{{name}} 关注了你",
+    "follow_notice": "关注通知",
+    "addfriend": "添加好友",
+    "addfriended": "已成功添加好友",
+    "friendplaceholder": "搜索好友昵称或备注"
   },
   "friend_invite": {
     "refused": "拒绝",
@@ -305,11 +316,14 @@
     "send": "送货",
     "accele": "加速",
     "receive": "领取",
-    "deliverying": "送货中...",
+    "deliverying": "送货中",
     "refreshtips": "确定刷新订单吗？",
     "refreshtitle": "订单刷新",
     "progresstitle": "进度奖励",
-    "rewardtitle": "完成进度奖励"
+    "rewardtitle": "完成进度奖励",
+    "finishtips": "送货完成",
+    "accelecontent": "加速订单将消耗{{name}}个钻石",
+    "acceletitle": "加速订单"
   },
   "work": {
     "title": "打工",
@@ -467,11 +481,18 @@
     "store": "商铺",
     "onlinetips": "在线奖励",
     "pica": "皮卡堂",
-    "tooqing": "图轻",
-    "hot": "热门"
+    "tooqing": "图轻小游戏",
+    "hot": "热门",
+    "new": "最新",
+    "collect": "收藏",
+    "tooqingtips": "[color=#FEDF36]图轻[/color]是一套简单好用的工具软件，大家可以用皮卡堂的素材和角色创作[color=#FEDF36]属于自己的[/color]游戏或动画短剧。图轻即将开放给用户们试用，尽请期待！做个游戏，图个轻松~"
   },
   "commontips": {
-    "configerror": "配置未成功加载，请刷新游戏"
+    "configerror": "配置未成功加载，请刷新游戏",
+    "room_dose_not_exists": "该房间被卷入异空间了，暂时无法找到",
+    "room_password_failure": "口令对不上！",
+    "room_need_password": "需要口令，才能芝麻开门",
+    "room_full": "房间被塞满了，等等再来吧"
   },
   "boot": {
     "play": "开始游戏",
@@ -505,5 +526,10 @@
     "sender": "发件人: ",
     "expiration": "{{time}}后过期",
     "nomailtip": "暂时没有新邮件~"
+  },
+  "roomdecorate": {
+    "usetips": "你尚未购买该{{name}}",
+    "usering": "该{{name}}已经使用中",
+    "savetips": "{{type}}: {{name}}保存成功"
   }
 }

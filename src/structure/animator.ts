@@ -11,6 +11,7 @@ export class Animator {
 
     public setSuits(suits: AvatarSuit[]) {
         if (suits) {
+            this.AniAction = null;
             for (const suit of suits) {
                 if (suit.suit_type === "weapon") {
                     if (suit.tag) {

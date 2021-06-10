@@ -5,6 +5,7 @@ export class DragonbonesModel implements IDragonbonesModel {
     discriminator: string = "DragonbonesModel";
     id: number;
     public eventName: number[];
+    public sound: string;
     avatarDir?: number;
     avatar?: IAvatar;
     animationName?: string;
@@ -15,6 +16,7 @@ export class DragonbonesModel implements IDragonbonesModel {
             this.id = data.id;
             this.avatar = data.avatar;
             this.eventName = data.eventName;
+            this.sound = data.sound;
             const aniName = data.avatar.defaultAnimation;
             if (aniName) this.animationName = aniName;
         }

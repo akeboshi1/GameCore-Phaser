@@ -8,8 +8,7 @@ export class ObjectAssign {
      */
     public static excludeTagAssign(source: object, target: object, tag: string = "exclude") {
         if (!source || !target) {
-            // tslint:disable-next-line:no-console
-            console.error("source", source, "target", target);
+           // Logger.getInstance().error("source", source, "target", target);
             return;
         }
         const excludes = source[tag] || target[tag];

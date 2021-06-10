@@ -21,3 +21,13 @@ export declare enum ElementStateType {
     UNFROZEN = "unfrozen",
     REPAIR = "repair"
 }
+export declare enum ElementState {
+    NONE = 0,
+    INIT = 1,
+    DATAINIT = 2,
+    DATAUPDATE = 3,
+    DATADEALING = 4,
+    DATACOMPLETE = 5,
+    PREDESTROY = 5,
+    DESTROYED = 6
+}

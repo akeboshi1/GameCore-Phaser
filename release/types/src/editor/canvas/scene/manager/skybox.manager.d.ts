@@ -1,4 +1,4 @@
-/// <reference types="tooqingphaser" />
+/// <reference types="tooqinggamephaser" />
 import { PacketHandler } from "net-socket-packet";
 import { SceneEditorCanvas } from "../scene.editor.canvas";
 import { IScenery } from "structure";

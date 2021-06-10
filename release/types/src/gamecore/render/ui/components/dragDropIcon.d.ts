@@ -1,4 +1,4 @@
-/// <reference types="tooqingphaser" />
+/// <reference types="tooqinggamephaser" />
 import { IDragable } from "./idragable";
 import { IDropable } from "./idropable";
 export declare class DragDropIcon extends Phaser.GameObjects.Container implements IDragable, IDropable {

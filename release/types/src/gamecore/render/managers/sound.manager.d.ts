@@ -1,4 +1,4 @@
-/// <reference types="tooqingphaser" />
+/// <reference types="tooqinggamephaser" />
 import { SoundField } from "apowophaserui";
 import { Render } from "../render";
 export declare class SoundManager {

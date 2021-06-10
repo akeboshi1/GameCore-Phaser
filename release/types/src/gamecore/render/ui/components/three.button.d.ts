@@ -1,4 +1,4 @@
-/// <reference types="tooqingphaser" />
+/// <reference types="tooqinggamephaser" />
 import { BaseUI, ISoundGroup } from "apowophaserui";
 import { ThreeSlicePath } from "./three.slice.path";
 export declare enum ButtonState {

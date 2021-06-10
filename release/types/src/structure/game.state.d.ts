@@ -1,22 +1,11 @@
 export declare enum GameState {
-    LinkWorker = "LinkWorker",
-    CreateManager = "CreateManager",
-    CreateAccount = "CreateAccount",
-    InitWorld = "InitWorld",
-    StartConnect = "StartConnect",
-    Connected = "Connected",
-    RequestToken = "RequestToken",
-    GetToken = "GetToken",
+    NoState = "NoState",
+    Init = "Init",
+    Login = "Login",
+    Connecting = "Connecting",
     EnterWorld = "EnterWorld",
-    PlayerInit = "PlayerInit",
-    LoadGameConfig = "LoadGameConfig",
-    CompleteDecodeConfig = "CompleteDecodeConfig",
-    GameCreate = "GameCreate",
-    EnterScene = "EnterScene",
-    SceneCreate = "SceneCreate",
-    RoomCreate = "RoomCreate",
-    RoomInfo = "RoomInfo",
-    Hidden = "Hidden"
+    GameRunning = "GameRunning",
+    OffLine = "OffLine"
 }
 export declare enum ConnectState {
     StartConnect = 0,

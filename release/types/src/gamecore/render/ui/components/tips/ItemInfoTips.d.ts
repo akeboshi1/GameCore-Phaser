@@ -1,4 +1,4 @@
-/// <reference types="tooqingphaser" />
+/// <reference types="tooqinggamephaser" />
 import { IPatchesConfig } from "apowophaserui";
 import { Handler } from "structure";
 export declare class ItemInfoTips extends Phaser.GameObjects.Container {

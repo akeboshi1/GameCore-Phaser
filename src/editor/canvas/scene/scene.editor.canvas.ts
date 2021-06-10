@@ -51,7 +51,7 @@ export class SceneEditorCanvas extends EditorCanvas implements IRender {
     private mScene: Phaser.Scene;
     constructor(config: IEditorCanvasConfig) {
         super(config);
-        Url.OSD_PATH = "https://osd-alpha.tooqing.com/";
+        Url.OSD_PATH = config.osd || "https://osd-alpha.tooqing.com/";
         this.mElements = new Map();
         this.mFactory = new EditorFactory(this);
         this.mSelecedElement = new SelectedElementManager(this);
@@ -261,7 +261,7 @@ export class SceneEditorCanvas extends EditorCanvas implements IRender {
         const pos = Position45.transformTo45(new LogicPos(x, y), this.mRoomSize);
         const existTerrain = this.mTerrainManager.existTerrain.bind(this.mTerrainManager);
         if (existTerrain(pos.x, pos.y)) {
-            if (!existTerrain(pos.x -1, pos.y - 1)) {
+            if (!existTerrain(pos.x - 1, pos.y - 1)) {
                 if (!existTerrain(pos.x, pos.y - 1) && !existTerrain(pos.x - 1, pos.y)) {
                     return Direction.concave;
                 }
@@ -322,7 +322,7 @@ export class SceneEditorCanvas extends EditorCanvas implements IRender {
         //     const displayObj = pool.get(id.toString());
         //     if (displayObj) {
         this.selectElement(ids[0], false);
-                // this.selectedElement(displayObj.getDisplay());
+        // this.selectedElement(displayObj.getDisplay());
         //     }
         // }
     }
@@ -543,7 +543,7 @@ export class SceneEditorCanvas extends EditorCanvas implements IRender {
     }
 
     private onWheelHandler(pointer: Phaser.Input.Pointer) {
-        switch(this.mBrush) {
+        switch (this.mBrush) {
             case BrushEnum.Move:
             case BrushEnum.Select:
                 // 缩放地图
@@ -551,6 +551,7 @@ export class SceneEditorCanvas extends EditorCanvas implements IRender {
             case BrushEnum.Eraser:
             case BrushEnum.BRUSH:
             case BrushEnum.Fill:
+            case BrushEnum.EraserWall:
                 this.mStamp.wheel(pointer);
                 break;
         }
@@ -651,6 +652,7 @@ export class SceneEditor extends Phaser.Scene {
     public static LAYER_FLOOR = LayerEnum.Floor;
     public static LAYER_SURFACE = LayerEnum.Surface;
     public static LAYER_WALL = LayerEnum.Wall;
+    public static LAYER_HANGING = LayerEnum.Hanging;
     public static LAYER_ATMOSPHERE = "atmosphere";
     public static SCENE_UI = "sceneUILayer";
     public layerManager: LayerManager;
@@ -673,13 +675,14 @@ export class SceneEditor extends Phaser.Scene {
         this.sceneEditor.sceneManager.setMainScene(this);
 
         this.layerManager.addLayer(this, GroundLayer, SceneEditor.LAYER_WALL.toString(), 0);
-        this.layerManager.addLayer(this, GroundLayer, SceneEditor.LAYER_GROUND.toString(), 1);
+        this.layerManager.addLayer(this, GroundLayer, SceneEditor.LAYER_HANGING.toString(), 1);
+        this.layerManager.addLayer(this, GroundLayer, SceneEditor.LAYER_GROUND.toString(), 2);
         this.gridLayer = new GridLayer(this);
         this.sys.displayList.add(this.gridLayer);
-        this.layerManager.addLayer(this, BaseLayer, SceneEditor.LAYER_MIDDLE, 3);
-        this.layerManager.addLayer(this, GroundLayer, SceneEditor.LAYER_FLOOR.toString(), 4);
-        this.layerManager.addLayer(this, SurfaceLayer, SceneEditor.LAYER_SURFACE.toString(), 4);
-        this.layerManager.addLayer(this, BaseLayer, SceneEditor.SCENE_UI, 5);
+        this.layerManager.addLayer(this, BaseLayer, SceneEditor.LAYER_MIDDLE, 4);
+        this.layerManager.addLayer(this, GroundLayer, SceneEditor.LAYER_FLOOR.toString(), 5);
+        this.layerManager.addLayer(this, SurfaceLayer, SceneEditor.LAYER_SURFACE.toString(), 6);
+        this.layerManager.addLayer(this, BaseLayer, SceneEditor.SCENE_UI, 7);
 
         this.sceneEditor.create(this);
     }
@@ -1144,7 +1147,7 @@ class SelectedElementManager {
     selectElements(elements: EditorFramesDisplay[], selecting: boolean = true) {
         this.unselectedElements();
         this.mSelecedElement = elements;
-        if (elements.length < 1 ) {
+        if (elements.length < 1) {
             return;
         }
         for (const ele of elements) {
@@ -1280,7 +1283,7 @@ class SelectedElementManager {
     }
 
     private onGameobjectOutHandler(pointer: Phaser.Input.Pointer, gameobject: Phaser.GameObjects.GameObject) {
-       this.clearOverElement();
+        this.clearOverElement();
     }
 
     private clearOverElement() {

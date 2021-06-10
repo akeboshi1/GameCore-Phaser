@@ -1,4 +1,4 @@
-/// <reference types="tooqingphaser" />
+/// <reference types="tooqinggamephaser" />
 export declare class DynamicImage extends Phaser.GameObjects.Image {
     private mLoadCompleteCallbak;
     private mLoadContext;

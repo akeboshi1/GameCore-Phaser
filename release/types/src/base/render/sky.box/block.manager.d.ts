@@ -1,4 +1,4 @@
-/// <reference types="tooqingphaser" />
+/// <reference types="tooqinggamephaser" />
 import { IScenery } from "structure";
 import { IRender } from "../render";
 export interface IBlockManager {

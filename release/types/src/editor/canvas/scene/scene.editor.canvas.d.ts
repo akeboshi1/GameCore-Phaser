@@ -1,4 +1,4 @@
-/// <reference types="tooqingphaser" />
+/// <reference types="tooqinggamephaser" />
 import { Capsule, ElementNode, LayerEnum, MossNode, PaletteNode, SceneNode, TerrainNode } from "game-capsule";
 import { op_def, op_client } from "pixelpai_proto";
 import { Direction, IPos, IPosition45Obj } from "structure";
@@ -112,6 +112,7 @@ export declare class SceneEditor extends Phaser.Scene {
     static LAYER_FLOOR: LayerEnum;
     static LAYER_SURFACE: LayerEnum;
     static LAYER_WALL: LayerEnum;
+    static LAYER_HANGING: LayerEnum;
     static LAYER_ATMOSPHERE: string;
     static SCENE_UI: string;
     layerManager: LayerManager;

@@ -1,4 +1,4 @@
-/// <reference types="tooqingphaser" />
+/// <reference types="tooqinggamephaser" />
 import { EditorCanvas, IEditorCanvasConfig } from "../editor.canvas";
 import { ElementEditorBrushType, ElementEditorEmitType } from "./element.editor.type";
 /**

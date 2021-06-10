@@ -125,4 +125,16 @@ export declare class EventType {
      * 背包喇叭数量更新
      */
     static PACKAGE_TRUMPET_COUNT_UPDATE: string;
+    /**
+     * 请求回到玩家房间
+     */
+    static REQUEST_GO_PLAYER_HOME: string;
+    /**
+     * 请求去某个房间或场景
+     */
+    static REQUEST_GO_ROOM_SCENE: string;
+    /**
+     * 请求返回矿洞准备层
+     */
+    static REQUEST_GO_MINE_READY: string;
 }

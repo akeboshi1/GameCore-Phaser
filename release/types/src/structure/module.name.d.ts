@@ -82,6 +82,8 @@ export declare class ModuleName {
     static PICAEXPLOREGUIDE_NAME: string;
     static PICAHOMEGUIDE_NAME: string;
     static PICAHOTELGUIDE_NAME: string;
+    static PICAHOTELMINEGUIDE_NAME: string;
+    static PICAHOTELFARMGUIDE_NAME: string;
     static PICAPLANEGUIDE_NAME: string;
     static PICAROOMGUIDE_NAME: string;
     static PICASOFA_NAME: string;
@@ -94,4 +96,6 @@ export declare class ModuleName {
     static PICAMARQUEE_NAME: string;
     static PICAROOMDECORATE_NAME: string;
     static PICANEWMINE_NAME: string;
+    static PICANEWORDER_NAME: string;
+    static PICANEWFRIEND_NAME: string;
 }
