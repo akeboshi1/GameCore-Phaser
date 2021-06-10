@@ -4,7 +4,9 @@
     "payment": "付费",
     "refreshtime": "下一次刷新时间：",
     "moneyless": "钱币不足，无法购买",
-    "unlock": "解锁"
+    "unlock": "解锁",
+    "daylimit": "每天限购",
+    "weeklimit": "每周限购"
   },
   "item": {
     "copy_suc": "复制{{name}}成功",
@@ -284,7 +286,8 @@
     "diamond": "钻石",
     "gold_coin": "金币",
     "silver": "银",
-    "gold": "金"
+    "gold": "金",
+    "prestige": "声望币"
   },
   "create_role": {
     "enter_nick": "请输入昵称",

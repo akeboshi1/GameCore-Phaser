@@ -46,6 +46,10 @@ export interface IMarketCommodity extends IShopBase {
 
     limit?: number;
 
+    limitType?: number;
+
+    limitCount?: number;
+
     remain?: number;
 
     manorState?: number;

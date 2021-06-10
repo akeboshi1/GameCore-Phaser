@@ -36,15 +36,25 @@ export class ItemBaseDataConfig extends BaseConfigData {
             return 3;
         else if (id === "IV0000002")
             return 4;
+        else if (id === "IV0000023")
+            return 5;
     }
 
     parseJson(json) {
         super.parseJson(json);
-        // this.consoleCategoryJson();
-        // this.consoleClassNameJson();
+        const regPos = /^\d+(\.\d+)?$/; // 非负浮点数
         if (!this.snMap) this.snMap = new Map<string, ICountablePackageItem>();
         for (const jsonKey in json) {
             const data = json[jsonKey];
+            if (regPos.test(data.source)) {
+                data.source = "PKT_MARKET_TAG_SOURCE_" + data.source;
+            }
+            if (regPos.test(data.category)) {
+                data.category = "PKT_PACKAGE_CATEGORY_" + data.category;
+            }
+            if (regPos.test(data.subcategory)) {
+                data.subcategory = "PKT_MARKET_TAG_" + data.subcategory;
+            }
             this.snMap.set(data.sn, data);
         }
 

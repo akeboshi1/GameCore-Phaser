@@ -301,7 +301,7 @@ export class PicaMarketPanel extends PicaBasePanel {
     });
     this.randomRefreshBtn.setFontStyle("bold");
 
-    this.refreshIcon = this.scene.make.image({ key: UIAtlasName.uicommon, frame: "home_silver" }).setScale(0.8);
+    this.refreshIcon = this.scene.make.image({ key: UIAtlasName.uicommon, frame: "iv_coin" }).setScale(0.8);
     this.refreshIcon.texture.setFilter(Phaser.Textures.FilterMode.LINEAR);
     this.refreshIcon.setPosition(-10 * this.dpr, -8 * this.dpr);
     this.refreshNeedCount = this.scene.make.text({
@@ -383,11 +383,11 @@ export class PicaMarketPanel extends PicaBasePanel {
     if (category.shopName === "crownshop" || category.shopName === "gradeshop") {
       this.tileBg.visible = false;
       this.imgBg.visible = true;
-      this.moneycomp.setMoneyImgs("prestige_assets_icon", "prestige_assets_currency_icon");
+      this.moneycomp.setMoneyImgs("prestige_assets_icon", "iv_prestige");
     } else {
       this.tileBg.visible = true;
       this.imgBg.visible = false;
-      this.moneycomp.setMoneyImgs("home_silver", "home_diamond");
+      this.moneycomp.setMoneyImgs("iv_coin", "iv_diamond");
     }
     this.mSelectedCategories = gameobject;
     if (subcategory) {

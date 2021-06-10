@@ -2,11 +2,12 @@ import { DetailDisplay } from "../Components/detail.display";
 import { NineSliceButton, GameSlider, NineSlicePatch, ClickEvent } from "apowophaserui";
 import { BasePanel, UiManager } from "gamecoreRender";
 import { ModuleName, RENDER_PEER } from "structure";
-import { Coin, Font, i18n } from "utils";
+import { Coin, Font, i18n, UIHelper } from "utils";
 import { UIAtlasKey, UIAtlasName } from "picaRes";
 import { ICountablePackageItem } from "picaStructure";
 import { UITools } from "picaRender";
-export class PicaPropFunPanel extends BasePanel {
+import { PicaBasePanel } from "../pica.base.panel";
+export class PicaPropFunPanel extends PicaBasePanel {
     public itemCount: number = 1;
     private itemName: Phaser.GameObjects.Text;
     private titleName: Phaser.GameObjects.Text;
@@ -27,9 +28,10 @@ export class PicaPropFunPanel extends BasePanel {
     private thumb: Phaser.GameObjects.Image;
     private line: boolean = false;
     private prop;
-    constructor(private uiManager: UiManager) {
-        super(uiManager.scene, uiManager.render);
+    constructor(uiManager: UiManager) {
+        super(uiManager);
         this.key = ModuleName.PICAPROPFUN_NAME;
+        this.loadAtlas = [UIAtlasName.uicommon, UIAtlasName.uicommon1];
     }
 
     resize(w: number, h: number) {
@@ -44,23 +46,8 @@ export class PicaPropFunPanel extends BasePanel {
         this.setSize(width * this.scale, height * this.scale);
     }
 
-    show(param?: any) {
-        this.mShowData = param;
-        if (this.mPreLoad) return;
-        if (!this.mInitialized) {
-            this.preload();
-            return;
-        }
-        if (this.mShow) return;
-        if (this.soundGroup && this.soundGroup.open) this.playSound(this.soundGroup.open);
-        if (!this.mTweening && this.mTweenBoo) {
-            this.showTween(true);
-        } else {
-            this.mShow = true;
-        }
-        this.setInteractive();
-        this.addListen();
-        const config = this.mShowData;// PicPropFunConfig
+    onShow() {
+        const config = this.mShowData;
         this.setProp(config);
         this.updateData();
     }
@@ -78,12 +65,6 @@ export class PicaPropFunPanel extends BasePanel {
         this.confirmBtn.off(ClickEvent.Tap, this.onConfirmBtnHandler, this);
     }
 
-    preload() {
-        this.addAtlas(UIAtlasKey.commonKey, UIAtlasName.commonUrl + ".png", UIAtlasName.commonUrl + ".json");
-        this.addAtlas(UIAtlasKey.common2Key, UIAtlasName.common2Url + ".png", UIAtlasName.common2Url + ".json");
-        super.preload();
-    }
-
     init() {
         const width = this.scaleWidth;
         const height = this.scaleHeight;
@@ -95,7 +76,7 @@ export class PicaPropFunPanel extends BasePanel {
         const bgwidth = 299 * this.dpr, bgheight = 305 * this.dpr;
         this.content.setSize(bgwidth, bgheight);
         this.add(this.content);
-        const bg = new NineSlicePatch(this.scene, 0, 0, bgwidth, bgheight, UIAtlasKey.common2Key, "bg", {
+        const bg = new NineSlicePatch(this.scene, 0, 0, bgwidth, bgheight, UIAtlasName.uicommon1, "bg", {
             left: 20 * this.dpr,
             top: 20 * this.dpr,
             right: 30 * this.dpr,
@@ -103,7 +84,7 @@ export class PicaPropFunPanel extends BasePanel {
         });
         bg.setInteractive(new Phaser.Geom.Rectangle(0, 0, width, height), Phaser.Geom.Rectangle.Contains);
         const posY = -bg.height * 0.5 + 3 * dpr;
-        const titlebg = this.scene.make.image({ x: 0, y: posY, key: UIAtlasKey.common2Key, frame: "title" });
+        const titlebg = this.scene.make.image({ x: 0, y: posY, key: UIAtlasName.uicommon1, frame: "title" });
         titlebg.texture.setFilter(Phaser.Textures.FilterMode.LINEAR);
         this.titleName = this.scene.make.text({
             x: 0, y: posY + 3 * dpr, text: "售出",
@@ -127,7 +108,7 @@ export class PicaPropFunPanel extends BasePanel {
         this.mDetailDisplay.setFixedScale(this.dpr / this.scale);
         this.mDetailDisplay.y = iconOffset;
         const priceOffset: number = 30 * dpr;
-        this.priceBg = this.scene.make.image({ x: 0, y: priceOffset, key: UIAtlasKey.common2Key, frame: "price_bg" });
+        this.priceBg = this.scene.make.image({ x: 0, y: priceOffset, key: UIAtlasName.uicommon, frame: "price_bg" });
         this.priceBg.texture.setFilter(Phaser.Textures.FilterMode.LINEAR);
         this.pricText = this.scene.make.text({
             x: 0, y: priceOffset,
@@ -137,21 +118,21 @@ export class PicaPropFunPanel extends BasePanel {
                 fontFamily: Font.DEFULT_FONT
             }
         }, false).setOrigin(0.5);
-        this.mCoinIcon = this.scene.make.image({ x: -45 * this.dpr, y: priceOffset, key: UIAtlasKey.commonKey, frame: "iv_coin" }, false).setOrigin(0.5);
+        this.mCoinIcon = this.scene.make.image({ x: -45 * this.dpr, y: priceOffset, key: UIAtlasName.uicommon, frame: "iv_coin" }, false).setOrigin(0.5);
         this.mCoinIcon.texture.setFilter(Phaser.Textures.FilterMode.LINEAR);
-        const sliderbg = new NineSlicePatch(this.scene, 0, 0, 8, 7 * dpr, UIAtlasKey.common2Key, "slider_bg", {
+        const sliderbg = new NineSlicePatch(this.scene, 0, 0, 8, 7 * dpr, UIAtlasName.uicommon, "slider_bg", {
             left: 3,
             top: 1,
             right: 3,
             bottom: 1
         });
-        const indicator = new NineSlicePatch(this.scene, 0, 0, 8, 7 * dpr, UIAtlasKey.common2Key, "slider_rate", {
+        const indicator = new NineSlicePatch(this.scene, 0, 0, 8, 7 * dpr, UIAtlasName.uicommon, "slider_rate", {
             left: 3,
             top: 1,
             right: 3,
             bottom: 1
         });
-        const thumb = this.scene.make.image({ key: UIAtlasKey.common2Key, frame: "block" });
+        const thumb = this.scene.make.image({ key: UIAtlasName.uicommon, frame: "block" });
         this.thumb = thumb;
         this.itemCountText = this.scene.make.text({
             x: 0, y: 0,
@@ -174,22 +155,24 @@ export class PicaPropFunPanel extends BasePanel {
 
         this.slider.add(this.itemCountText);
         this.slider.setValue(0);
-        const bottomOffsetY = bg.height * 0.5 - 30 * dpr;
+        const bottomOffsetY = bg.height * 0.5 - 45 * dpr;
         const bottomOffsetX = -66 * dpr;
-        this.cancelBtn = new NineSliceButton(this.scene, bottomOffsetX, bottomOffsetY, 112 * dpr, 36 * dpr, UIAtlasKey.commonKey, "red_btn", i18n.t("common.cancel"), dpr, this.scale, {
+        this.cancelBtn = new NineSliceButton(this.scene, bottomOffsetX, bottomOffsetY, 112 * dpr, 36 * dpr, UIAtlasName.uicommon, "red_btn", i18n.t("common.cancel"), dpr, this.scale, {
             left: 12 * dpr,
             top: 12 * dpr,
             right: 12 * dpr,
             bottom: 12 * dpr
         });
-        this.confirmBtn = new NineSliceButton(this.scene, -bottomOffsetX, bottomOffsetY, 112 * dpr, 36 * dpr, UIAtlasKey.commonKey, "yellow_btn", i18n.t("common.confirm"), dpr, this.scale, {
+        this.confirmBtn = new NineSliceButton(this.scene, -bottomOffsetX, bottomOffsetY, 112 * dpr, 36 * dpr, UIAtlasName.uicommon, "yellow_btn", i18n.t("common.confirm"), dpr, this.scale, {
             left: 12 * dpr,
             top: 12 * dpr,
             right: 12 * dpr,
             bottom: 12 * dpr
         });
-        this.cancelBtn.setTextStyle({ color: "#FFFFFF", fontSize: 16 * dpr, fontFamily: Font.DEFULT_FONT });
-        this.confirmBtn.setTextStyle({ color: "#976400", fontSize: 16 * dpr, fontFamily: Font.DEFULT_FONT });
+        this.cancelBtn.setTextStyle(UIHelper.whiteStyle(dpr, 16));
+        this.cancelBtn.setFontStyle("bold");
+        this.confirmBtn.setTextStyle(UIHelper.brownishStyle(dpr, 16));
+        this.confirmBtn.setFontStyle("bold");
         this.content.add([bg, titlebg, this.titleName, this.itemName, this.mDetailDisplay, this.priceBg, this.mCoinIcon, this.pricText, this.slider, this.cancelBtn, this.confirmBtn]);
         this.resize(0, 0);
         super.init();

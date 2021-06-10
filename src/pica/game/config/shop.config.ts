@@ -28,15 +28,15 @@ export class ShopConfig extends BaseConfigData {
         const regPos = /^\d+(\.\d+)?$/; // 非负浮点数
         let category = temp.category;
         if (regPos.test(category)) {
-            category = "PKT_MARKET_CATEGORY_" + category;
+            temp.category = category = "PKT_MARKET_CATEGORY_" + category;
         }
         let subcategory = temp.subcategory;
         if (regPos.test(subcategory)) {
-            subcategory = "PKT_MARKET_TAG_" + subcategory;
+            temp.subcategory = subcategory = "PKT_MARKET_TAG_" + subcategory;
         }
         let source = temp.source;
         if (regPos.test(source)) {
-            source = "PKT_MARKET_TAG_SOURCE_" + source;
+            temp.source = source = "PKT_MARKET_TAG_SOURCE_" + source;
         }
         if (this.categoryMap.has(category)) {
             const arr = this.categoryMap.get(category);

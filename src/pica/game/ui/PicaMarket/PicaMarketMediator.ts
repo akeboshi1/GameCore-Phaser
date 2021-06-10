@@ -58,8 +58,8 @@ export class PicaMarketMediator extends BasicMediator {
     if (this.mShowData && this.mView) {
       // this.mView.setCategories(this.mShowData);
       this.onGetCategoriesHandler();
-      this.onUpdatePlayerInfoHandler();
     }
+    this.onUpdatePlayerInfoHandler();
   }
 
   destroy() {

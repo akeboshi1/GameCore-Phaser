@@ -36,7 +36,7 @@ export class MarketItem extends Phaser.GameObjects.Container {
     this.limitText.y = -2 * dpr;
     this.limitText.x = -5 * dpr;
     this.mNickName = this.scene.make.text({ x: -5 * this.dpr, y: -23 * this.dpr, style: UIHelper.colorStyle("#3399cc", 13 * dpr) }, false);
-    this.mCoinIcon = this.scene.make.image({ x: -17 * this.dpr, y: 15 * this.dpr, key: this.atals, frame: "iv_coin" }, false);
+    this.mCoinIcon = this.scene.make.image({ x: -17 * this.dpr, y: 15 * this.dpr, key: UIAtlasName.uicommon, frame: "iv_coin" }, false);
     this.starImg = this.scene.make.image({ key: UIAtlasName.uicommon, frame: "bag_star_small_1" }).setOrigin(1, 0);
     this.starImg.x = - 12 * dpr;
     this.starImg.y = -this.height * 0.5 + 8 * dpr;
@@ -49,34 +49,46 @@ export class MarketItem extends Phaser.GameObjects.Container {
     this.mSelectBg.visible = false;
   }
 
-  setProp(content: IMarketCommodity, level: number) {
+  setProp(data: IMarketCommodity, level: number) {
     this.playerLev = level;
-    this.mProp = content;
-    const item = content["item"];
-    if (content.icon) {
-      const url = Url.getOsdRes(content.icon);
+    this.mProp = data;
+    const item = data["item"];
+    if (data.icon) {
+      const url = Url.getOsdRes(data.icon);
       this.mPropImage.load(url, this, this.onPropLoadComplete);
     } else {
-      Logger.getInstance().error(`${content.name} : ${content.id} icon value is empty`);
+      Logger.getInstance().error(`${data.name} : ${data.id} icon value is empty`);
     }
-    let nickname = content.shortName || content.name;
+    let nickname = data.shortName || data.name;
     nickname = this.getNickNameText(nickname);
     this.mNickName.setText(nickname);
-    this.mPriceText.setText(content.price[0].price.toString());
-    const coinIcon = Coin.getIcon(content.price[0].coinType);
+    this.mPriceText.setText(data.price[0].price.toString());
+    const coinIcon = Coin.getIcon(data.price[0].coinType);
     this.mCoinIcon.setFrame(coinIcon);
     if (item.grade > 0) {
       this.starImg.visible = true;
       const starFrame = "bag_star_small_" + item.grade;
       this.starImg.setFrame(starFrame);
     } else this.starImg.visible = false;
-    const limit = content.limit || 0;
-    if (level > limit) {
-      this.limitText.visible = false;
-    } else {
+    const limit = data.limit || 0;
+    if (data.category === "PKT_MARKET_CATEGORY_3" || data.category === "PKT_MARKET_CATEGORY_1") {
+      if (level > limit) {
+        this.limitText.visible = false;
+      } else {
+        this.limitText.visible = true;
+        this.limitText.text = `lv${limit}` + i18n.t("market.unlock");
+      }
+    } else if (data.category === "PKT_MARKET_CATEGORY_8" || data.category === "PKT_MARKET_CATEGORY_9") {
       this.limitText.visible = true;
-      this.limitText.text = `lv${limit}` + i18n.t("market.unlock");
+      if (data.limitType === 1) {
+        this.limitText.text = `${i18n.t("market.daylimit")}:${data.limitCount}`;
+      } else if (data.limitType === 2) {
+        this.limitText.text = `${i18n.t("market.weeklimit")}:${data.limitCount}`;
+      } else {
+        this.limitText.visible = false;
+      }
     }
+
   }
 
   private onPropLoadComplete() {

@@ -7,14 +7,14 @@ import {
     NineSlicePatch,
     ClickEvent
 } from "apowophaserui";
-import {DynamicImage, Render, TextButton, UiManager} from "gamecoreRender";
-import {DetailDisplay} from "../../ui";
-import {UIAtlasName} from "../../../res";
-import {AvatarSuit, AvatarSuitType, ModuleName, RunningAnimation, SuitAlternativeType} from "structure";
-import {Font, Handler, i18n, Logger, UIHelper, Url} from "utils";
-import {op_client, op_pkt_def} from "pixelpai_proto";
-import {PicaBasePanel} from "../pica.base.panel";
-import {ICountablePackageItem, IExtendCountablePackageItem} from "picaStructure";
+import { DynamicImage, Render, TextButton, UiManager } from "gamecoreRender";
+import { DetailDisplay } from "../../ui";
+import { UIAtlasName } from "../../../res";
+import { AvatarSuit, AvatarSuitType, ModuleName, RunningAnimation, SuitAlternativeType } from "structure";
+import { Font, Handler, i18n, Logger, UIHelper, Url } from "utils";
+import { op_client, op_pkt_def } from "pixelpai_proto";
+import { PicaBasePanel } from "../pica.base.panel";
+import { ICountablePackageItem, IExtendCountablePackageItem } from "picaStructure";
 
 export class PicaAvatarPanel extends PicaBasePanel {
     private mCloseBtn: Button;
@@ -45,7 +45,7 @@ export class PicaAvatarPanel extends PicaBasePanel {
         this.key = ModuleName.PICAAVATAR_NAME;
         this.mSceneType = sceneType;
         this.loadAtlas = [UIAtlasName.uicommon];
-        this.textures = [{atlasName: "avater_bg_adorn", folder: "texture"}, {
+        this.textures = [{ atlasName: "avater_bg_adorn", folder: "texture" }, {
             atlasName: "avater_bg_stripe",
             folder: "texture"
         }];
@@ -87,8 +87,8 @@ export class PicaAvatarPanel extends PicaBasePanel {
         const capW = 60 * this.dpr;
         const capH = 41 * this.dpr;
         const items = [];
-        (<any> this.mCategoryScroll).clearItems();
-        const allCategory = {value: "", key: ""};// op_def.StrPair
+        (<any>this.mCategoryScroll).clearItems();
+        const allCategory = { value: "", key: "" };// op_def.StrPair
         allCategory.value = i18n.t("common.all");
         allCategory.key = "alltype";
         subcategorys.unshift(allCategory);
@@ -146,7 +146,7 @@ export class PicaAvatarPanel extends PicaBasePanel {
 
     public displayAvatar(content?: any) {
         if (!content) {
-            content = {avatar: {}};
+            content = { avatar: {} };
         }
         const suitArr: AvatarSuit[] = [];
         for (const item of this.mSelectedItemData) {
@@ -184,7 +184,7 @@ export class PicaAvatarPanel extends PicaBasePanel {
     }
 
     public resetAvatar(avatar: any) {// op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_PKT_RESET_AVATAR
-        const content = {avatar: null};// op_client.OP_VIRTUAL_WORLD_RES_CLIENT_MARKET_QUERY_COMMODITY_RESOURCE
+        const content = { avatar: null };// op_client.OP_VIRTUAL_WORLD_RES_CLIENT_MARKET_QUERY_COMMODITY_RESOURCE
         content.avatar = avatar.avatar;
         const offset = new Phaser.Geom.Point(0, 50 * this.dpr);
         this.mDetailDisplay.loadAvatar(content, 2 * this.dpr, offset);
@@ -229,7 +229,7 @@ export class PicaAvatarPanel extends PicaBasePanel {
         const width = this.scaleWidth;
         const height = this.scaleHeight;
         this.mBackground = this.scene.make.graphics(undefined, false);
-        const background = this.scene.make.image({key: UIAtlasName.uicommon, frame: "avater_bg"});
+        const background = this.scene.make.image({ key: UIAtlasName.uicommon, frame: "avater_bg" });
         background.displayWidth = width;
         background.x = width * 0.5;
         this.mBg = this.scene.make.image({
@@ -239,7 +239,7 @@ export class PicaAvatarPanel extends PicaBasePanel {
         this.mShelfContainer = this.scene.make.container(undefined, false);
         this.mShelfContainer.setSize(width, 295 * this.dpr);
         this.mShelfContainer.y = height - this.mShelfContainer.height;
-        const categoryBg = this.scene.make.image({key: UIAtlasName.uicommon, frame: "avater_nav"});
+        const categoryBg = this.scene.make.image({ key: UIAtlasName.uicommon, frame: "avater_nav" });
         categoryBg.displayWidth = width;
         categoryBg.x = width * 0.5;
         categoryBg.y = categoryBg.height * 0.5;
@@ -248,7 +248,7 @@ export class PicaAvatarPanel extends PicaBasePanel {
         this.mCloseBtn = new Button(this.scene, UIAtlasName.uicommon, "back_arrow", "back_arrow");
         this.mCloseBtn.setPosition(21 * this.dpr, 50 * this.dpr);
         this.mCloseBtn.setInteractive(new Phaser.Geom.Rectangle(-28 * this.dpr, -20 * this.dpr, 56 * this.dpr, 40 * this.dpr), Phaser.Geom.Rectangle.Contains);
-        const nameBg = this.scene.make.image({key: UIAtlasName.uicommon, frame: "avater_name_bg"});
+        const nameBg = this.scene.make.image({ key: UIAtlasName.uicommon, frame: "avater_name_bg" });
         nameBg.x = width * 0.5;
         nameBg.y = this.mCloseBtn.y;
         this.nameText = this.scene.make.text({
@@ -257,11 +257,11 @@ export class PicaAvatarPanel extends PicaBasePanel {
             text: "",
             style: UIHelper.whiteStyle(this.dpr, 14)
         }).setOrigin(0.5);
-        const leftbg = this.scene.make.image({key: "avater_bg_adorn"});
+        const leftbg = this.scene.make.image({ key: "avater_bg_adorn" });
         leftbg.x = leftbg.width * 0.5;
         leftbg.y = leftbg.height * 0.5;
         leftbg.scaleX = -1;
-        const rightbg = this.scene.make.image({key: "avater_bg_adorn"});
+        const rightbg = this.scene.make.image({ key: "avater_bg_adorn" });
         rightbg.x = width - leftbg.width * 0.5;
         rightbg.y = leftbg.height * 0.5;
         const btnwidth = 90 * this.dpr;
@@ -327,12 +327,14 @@ export class PicaAvatarPanel extends PicaBasePanel {
                 if (cellContainer === null) {
                     cellContainer = new Item(scene, 0, 0, UIAtlasName.uicommon, this.dpr, this.scale);
                 }
-                cellContainer.setData({item});
+                cellContainer.setData({ item });
                 cellContainer.setProp(item);
                 if (item && this.isSelectedItemData(item)) {
                     const endData = this.mSelectedItemData[this.mSelectedItemData.length - 1];
                     if (endData.indexId === item.indexId) {
                         cellContainer.isSelect = true;
+                        // this.onSelectItemHandler(cellContainer);
+                        this.showDetailBubble(item);
                     }
                     this.mSelectedItems.push(cellContainer);
                 } else {
@@ -452,33 +454,27 @@ export class PicaAvatarPanel extends PicaBasePanel {
     }
 
     private onSelectItemHandler(cell: Item) {
-        const item: any = cell.getData("item");// op_client.ICountablePackageItem
+        const item: any = cell.getData("item");
         if (!item) return;
+        this.showDetailBubble(item);
         for (const temp of this.mSelectedItems) {
             temp.isSelect = false;
         }
         if (this.isSelectedItemData(item)) {
             cell.isSelect = true;
-            return;
+           // return;
         }
-        this.mDetailBubble.visible = true;
-        let property = null;
-        this.render.mainPeer.getUserData_PlayerProperty()
-            .then((val) => {
-                property = val;
-                return this.serviceTimestamp;
-            })
-            .then((t) => {
-                this.mDetailBubble.setProp(item, Math.floor(t / 1000), property);
-                this.mDetailBubble.y = this.mShelfContainer.y - 10 * this.dpr - this.mDetailBubble.height;
-            });
         if (item) {
             this.avatarDirection = 0;
             this.setSelectAvatarSuitItem(item, cell);
             this.nameText.text = item.name;
         }
     }
-
+    private showDetailBubble(data: any) {
+        this.mDetailBubble.visible = true;
+        this.mDetailBubble.setProp(data, 0, {});
+        this.mDetailBubble.y = this.mShelfContainer.y - 10 * this.dpr - this.mDetailBubble.height;
+    }
     private onSelectedCategory(categoryType: number) {
         this.categoryType = categoryType;
         this.render.renderEmitter(this.key + "_queryDressAvatarIDS");
@@ -569,9 +565,9 @@ export class PicaAvatarPanel extends PicaBasePanel {
         const w = this.mScene.cameras.main.width;
         let tmpW: number = offset;
         for (let i = 0; i < list.length; i++) {
-            const item: Phaser.GameObjects.Container = <Phaser.GameObjects.Container> list[i];
+            const item: Phaser.GameObjects.Container = <Phaser.GameObjects.Container>list[i];
             if (i > 0) {
-                preBtn = <Phaser.GameObjects.Container> list[i - 1];
+                preBtn = <Phaser.GameObjects.Container>list[i - 1];
                 item.x = preBtn.x + preBtn.width; // - item.width * item.originX;
             } else {
                 item.x = tmpW;
@@ -631,8 +627,8 @@ class DetailBubble extends Phaser.GameObjects.Container {
             fontFamily: Font.DEFULT_FONT,
         }).setOrigin(0);
         this.add([this.tipsbg, this.tipsText, this.mExpires]);
-        this.tipsText.addImage("iv_coin", {key: UIAtlasName.uicommon, frame: "home_silver", y: -3 * this.dpr});
-        this.tipsText.addImage("iv_diamond", {key: UIAtlasName.uicommon, frame: "home_diamond", y: -3 * this.dpr});
+        this.tipsText.addImage("iv_coin", { key: UIAtlasName.uicommon, frame: "iv_coin", y: -3 * this.dpr });
+        this.tipsText.addImage("iv_diamond", { key: UIAtlasName.uicommon, frame: "iv_diamond", y: -3 * this.dpr });
     }
 
     setProp(prop: any, servertime: number, property: any): this {// op_client.ICountablePackageItem, PlayerProperty
@@ -725,7 +721,7 @@ class DetailBubble extends Phaser.GameObjects.Container {
                 }
                 let interval = prop.expiredTime - servertime;
                 const timeout = () => {
-                    (<any> this.mExpires).visible = true;
+                    (<any>this.mExpires).visible = true;
                     this.mExpires.text = this.getDataFormat(interval * 1000);
                     if (interval > 0) {
                         this.timeID = setTimeout(() => {
@@ -738,7 +734,7 @@ class DetailBubble extends Phaser.GameObjects.Container {
                 };
                 timeout();
             } else {
-                (<any> this.mExpires).visible = false;
+                (<any>this.mExpires).visible = false;
                 if (this.timeID) clearTimeout(this.timeID);
             }
             this.resize();
@@ -749,7 +745,7 @@ class DetailBubble extends Phaser.GameObjects.Container {
     private resize(w?: number, h?: number) {
         const mixheight: number = 96 * this.dpr;
         let height = this.tipsText.height;
-        if ((<any> this.mExpires).visible) height += this.mExpires.height + 3 * this.dpr;
+        if ((<any>this.mExpires).visible) height += this.mExpires.height + 3 * this.dpr;
         height += 14 * this.dpr;
         height = height < mixheight ? mixheight : height;
         this.setSize(this.width, height);

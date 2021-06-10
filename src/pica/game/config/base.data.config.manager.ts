@@ -516,7 +516,7 @@ export class BaseDataConfigManager extends BaseConfigManager {
                 const tempItem: IDecorateShop = <any>shopitem;
                 if (!tempItem["find"]) {
                     const item = ele2.get(tempItem.elementId);
-                    tempItem.source = this.getI18n("PKT_MARKET_TAG_SOURCE_" + tempItem.source);
+                    tempItem.source = this.getI18n(tempItem.source);
                     tempItem["price"] = [{
                         price: shopitem.price || 0,
                         coinType: this.getCoinType(shopitem.currencyId),
@@ -897,11 +897,8 @@ export class BaseDataConfigManager extends BaseConfigManager {
         if (!item || item["find"]) return;
         const config: ItemBaseDataConfig = this.getConfig(BaseDataType.item);
         item.name = this.getI18n(item.name, { id: item.id, name: item.name });
-        item.source = item.source ? "PKT_MARKET_TAG_SOURCE_" + item.source : "";
         item.source = item.source && item.source.length > 0 ? this.getI18n(item.source, { id: item.id, source: item.source }) : "";
         item.des = this.getI18n(item.des, { id: item.id, des: item.source });
-        item.category = "PKT_PACKAGE_CATEGORY_" + item.category;
-        item.subcategory = "PKT_MARKET_TAG_" + item.subcategory;
         item["exclude"] = config.excludes;
         if (item.texturePath) item["display"] = { texturePath: item.texturePath };
         const serializeString = item.serializeString;
