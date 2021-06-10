@@ -1,8 +1,8 @@
-import { load, Logger, ResUtils, Tool, Url } from "utils";
+import { load, ResUtils, Tool, Url } from "utils";
 import { MainPeer } from "../main.peer";
 import { BaseState } from "./base.state";
-import version from "../../../version";
-import { EventType, GameState, LoadState } from "structure";
+import version from "../../../../version";
+import { EventType, GameState, Logger, LoadState } from "structure";
 import { PBpacket } from "net-socket-packet";
 import { op_gateway, op_client, op_virtual_world, op_def } from "pixelpai_proto";
 import IOP_CLIENT_REQ_VIRTUAL_WORLD_PLAYER_INIT = op_gateway.IOP_CLIENT_REQ_VIRTUAL_WORLD_PLAYER_INIT;

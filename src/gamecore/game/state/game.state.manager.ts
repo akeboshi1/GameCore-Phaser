@@ -1,5 +1,4 @@
-import { GameState } from "structure";
-import { Logger } from "utils";
+import { GameState, Logger } from "structure";
 import { MainPeer } from "../main.peer";
 import { BaseState } from "./base.state";
 import { ConnectingState } from "./connecting.state";
