@@ -3,7 +3,7 @@ import { MarketItem } from "./item";
 import { NinePatchTabButton, GameGridTable, NineSliceButton, Button, ClickEvent } from "apowophaserui";
 import { CheckboxGroup, TextButton, UiManager } from "gamecoreRender";
 import { AvatarSuitType, ModuleName } from "structure";
-import { CoinType, Font, i18n, UIHelper } from "utils";
+import { CoinType, Font, Handler, i18n, UIHelper } from "utils";
 import { UIAtlasKey, UIAtlasName } from "picaRes";
 import { op_client } from "pixelpai_proto";
 import { IExtendCountablePackageItem, IMarketCommodity, IPrice } from "picaStructure";
@@ -41,6 +41,10 @@ export class PicaMarketPanel extends PicaBasePanel {
   private moneyValue: number;
   private diamondValue: number;
   private playerLv: number;
+  private reputation: number;
+  private reputationCoin: number;
+  private propDatas: IMarketCommodity[];
+  private buyedProps: any[];
   constructor(uiManager: UiManager) {
     super(uiManager);
     this.key = ModuleName.PICAMARKET_NAME;
@@ -89,7 +93,9 @@ export class PicaMarketPanel extends PicaBasePanel {
     this.mSubCategeoriesContainer.setSize(width, 43 * this.dpr);
     this.layoutCategories();
   }
-
+  public onShow() {
+    this.updateMoneyData();
+  }
   public setCategories(content: any) {// op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_GET_MARKET_CATEGORIES
     if (!this.mCategoriesContainer) {
       return;
@@ -142,17 +148,38 @@ export class PicaMarketPanel extends PicaBasePanel {
     group.selectIndex(0);
   }
 
-  public setMoneyData(money: number, diamond: number, playerLv: number) {
+  public setMoneyData(money: number, diamond: number, playerLv: number, reputation: number, reputationCoin: number) {
     this.moneyValue = money;
     this.diamondValue = diamond;
     this.playerLv = playerLv;
-    this.moneycomp.setMoneyData(money, diamond);
+    this.reputationCoin = reputationCoin;
+    this.reputation = reputation;
+    if (!this.mInitialized) return;
+    // this.moneycomp.setMoneyData(money, diamond);
+    this.updateMoneyData();
   }
-
+  public updateBuyedProps(buyedDatas: any[]) {
+    if (!this.buyedProps) return;
+    this.buyedProps = buyedDatas;
+    if (this.propDatas) {
+      for (const temp of buyedDatas) {
+        this.propDatas.find((value) => {
+          if (value.id === temp.id) {
+            value.buyedCount = temp.boughtCount;
+            return true;
+          }
+        });
+      }
+    }
+    if (this.mInitialized) return;
+    this.mPropGrid.refresh();
+  }
   public setProp(content: any) {
     this.clearCategories(this.mItems);
     this.mItems = [];
     const commodities = content.commodities;
+    this.propDatas = commodities;
+    this.updateBuyedProps(this.buyedProps);
     this.mPropGrid.setItems(commodities);
     this.mPropGrid.layout();
     this.mPropGrid.setT(0);
@@ -216,6 +243,7 @@ export class PicaMarketPanel extends PicaBasePanel {
     this.mCloseBtn.setPosition(this.mCloseBtn.width * 0.5 + 5 * this.dpr, 45 * this.dpr);
     this.mCloseBtn.on(ClickEvent.Tap, this.onCloseHandler, this);
     this.moneycomp = new MoneyCompent(this.scene, 190 * this.dpr, 28 * this.dpr, this.dpr, this.scale);
+    this.moneycomp.setHandler(new Handler(this, this.onConvertHandler));
     this.moneycomp.x = w - 20 * this.dpr;
     this.moneycomp.y = this.mCloseBtn.y;
 
@@ -380,14 +408,12 @@ export class PicaMarketPanel extends PicaBasePanel {
     this.clearCategories(this.mSubTabs);
     const subcategory: any = gameobject.getData("category");// op_def.IMarketCategory
     const category = subcategory.category;
-    if (category.shopName === "crownshop" || category.shopName === "gradeshop") {
+    if (category.shopName === "gradeshop") {
       this.tileBg.visible = false;
       this.imgBg.visible = true;
-      this.moneycomp.setMoneyImgs("prestige_assets_icon", "iv_prestige");
     } else {
       this.tileBg.visible = true;
       this.imgBg.visible = false;
-      this.moneycomp.setMoneyImgs("iv_coin", "iv_diamond");
     }
     this.mSelectedCategories = gameobject;
     if (subcategory) {
@@ -399,8 +425,23 @@ export class PicaMarketPanel extends PicaBasePanel {
         this.onSelectSubCategoryHandler(cell.container);
       }
     }
+    this.updateMoneyData();
   }
 
+  private updateMoneyData() {
+    let category;
+    if (this.mSelectedCategories) {
+      const subcategory: any = this.mSelectedCategories.getData("category");// op_def.IMarketCategory
+      category = subcategory.category;
+    }
+    if (category && category.shopName === "gradeshop") {
+      this.moneycomp.setMoneyImgs("prestige_assets_icon", "iv_prestige");
+      this.moneycomp.setMoneyData(this.reputationCoin, this.reputation);
+    } else {
+      this.moneycomp.setMoneyImgs("iv_coin", "iv_diamond");
+      this.moneycomp.setMoneyData(this.moneyValue, this.diamondValue);
+    }
+  }
   private onSelectSubCategoryHandler(gameobject: TextButton) {
     if (!this.mSelectedCategories) {
       return;
@@ -452,7 +493,15 @@ export class PicaMarketPanel extends PicaBasePanel {
     const itemdata = this.getBuyPackageData();
     itemdata.count = prop.quantity;
     const allPrice = prop.quantity * itemdata.sellingPrice.price;
-    const haveValue = itemdata.sellingPrice.coinType === CoinType.DIAMOND ? this.diamondValue : this.moneyValue;
+    let haveValue = 0;
+    const coinType = itemdata.sellingPrice.coinType;
+    if (coinType === CoinType.DIAMOND) {
+      haveValue = this.diamondValue;
+    } else if (coinType === CoinType.COIN) {
+      haveValue = this.moneyValue;
+    } else if (coinType === CoinType.PRESTIGE) {
+      haveValue = this.reputationCoin;
+    }
     if (allPrice > haveValue) {
       const tempdata = {
         text: [{ text: i18n.t("market.moneyless"), node: undefined }]
@@ -493,5 +542,8 @@ export class PicaMarketPanel extends PicaBasePanel {
     content.avatar = AvatarSuitType.createAvatarBySn(data.suitType, data.sn, data.slot, data.tag, data.version);
     content.suits = [{ suit_type: data.suitType, sn: data.sn, tag: data.tag, version: data.version }];
     return content;
+  }
+  private onConvertHandler() {
+    this.render.mainPeer.showMediator(ModuleName.PICAPRESTIGECONVERT_NAME, true);
   }
 }

@@ -2,13 +2,13 @@ import { BasicMediator, Game, PlayerProperty } from "gamecore";
 import { IRecharge } from "src/pica/structure/irecharge";
 import { EventType, ModuleName } from "structure";
 import { BaseDataConfigManager } from "../../config";
-import { PicaRecharge } from "./PicaPrestigeConvert";
-export class PicaRechargeMediator extends BasicMediator {
-    protected mModel: PicaRecharge;
+import { PicaPrestigeConvert } from "./PicaPrestigeConvert";
+export class PicaPrestigeConvertMediator extends BasicMediator {
+    protected mModel: PicaPrestigeConvert;
     private mPlayerInfo: PlayerProperty;
     constructor(game: Game) {
         super(ModuleName.PICAPRESTIGECONVERT_NAME, game);
-        this.mModel = new PicaRecharge(game);
+        this.mModel = new PicaPrestigeConvert(game);
     }
 
     show(param?: any) {
@@ -26,40 +26,32 @@ export class PicaRechargeMediator extends BasicMediator {
     }
 
     onDisable() {
-        this.proto.off("BOUGHT_GIFTPACK_IDS", this.onBOUGHT_GIFTPACK_IDS, this);
+        this.proto.off("EXCHANGED_POPULARITY_COIN", this.onEXCHANGED_POPULARITY_COIN, this);
     }
 
     onEnable() {
-        this.proto.on("BOUGHT_GIFTPACK_IDS", this.onBOUGHT_GIFTPACK_IDS, this);
+        this.proto.on("EXCHANGED_POPULARITY_COIN", this.onEXCHANGED_POPULARITY_COIN, this);
     }
     protected panelInit() {
         super.panelInit();
         this.onUpdatePlayerInfoHandler();
+        this.postExchangedPopularityCoin();
     }
     private onUpdatePlayerInfoHandler() {
         const userData = this.game.user.userData;
-        if (this.mView) this.mView.setMoneyData(userData.money, userData.diamond);
+        const radio = this.config.getReputationCoin();
+        const limit = this.config.getFrameLevel(userData.reputationLevel || 1);
+        if (this.mView) this.mView.setExchangedEnergy(userData.energy, radio.count, limit.exchangeLimit);
     }
     private exchangeEnergyToReputationCoins(count: number) {
-        this.game.sendCustomProto("INT", "exchangeEnergyToReputationCoins", { count });
+        this.game.sendCustomProto("INT", "reputationFacade:exchangeEnergyToReputationCoins", { count });
     }
-
-    private onBOUGHT_GIFTPACK_IDS(packet: any) {
-        const content = packet.content;
-        const ids = content.ids;
-        const diamondData = this.config.getRecharges(1);
-        const giftData = this.config.getRecharges(4);
-        for (const temp of diamondData) {
-            if (ids.indexOf(temp.id) === -1) {
-                temp.double = true;
-            }
-        }
-        for (const temp of giftData) {
-            if (ids.indexOf(temp.id) === -1) {
-                temp.double = true;
-            }
-        }
-        this.mView.setDataList([diamondData, giftData]);
+    private postExchangedPopularityCoin() {
+        this.game.sendCustomProto("INT", "reputationFacade:postExchangedPopularityCoin", {});
+    }
+    private onEXCHANGED_POPULARITY_COIN(packat) {
+        const content = packat.content;
+        this.mView.setExchangedPopularityCoin(content.exchangedValue);
     }
     get playerInfo() {
         if (!this.mPlayerInfo) this.mPlayerInfo = this.game.user.userData.playerProperty;

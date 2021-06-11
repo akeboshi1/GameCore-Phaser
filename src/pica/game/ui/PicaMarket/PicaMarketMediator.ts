@@ -59,6 +59,7 @@ export class PicaMarketMediator extends BasicMediator {
       // this.mView.setCategories(this.mShowData);
       this.onGetCategoriesHandler();
     }
+    this.sendGetGiftPackBoughtStatus();
     this.onUpdatePlayerInfoHandler();
   }
 
@@ -68,11 +69,19 @@ export class PicaMarketMediator extends BasicMediator {
     super.destroy();
   }
 
-  protected mediatorExport() {
+  onDisable() {
+    this.proto.off("BOUGHT_GIFTPACK_IDS", this.onBOUGHT_GIFTPACK_IDS, this);
+  }
+
+  onEnable() {
+    this.proto.on("BOUGHT_GIFTPACK_IDS", this.onBOUGHT_GIFTPACK_IDS, this);
+  }
+  private sendGetGiftPackBoughtStatus() {
+    this.game.sendCustomProto("STRING_INT", "giftPackFacade:getGiftPackBoughtStatus", {});
   }
   private onUpdatePlayerInfoHandler() {
     const userData = this.game.user.userData;
-    this.mView.setMoneyData(userData.money, userData.diamond, userData.level);
+    this.mView.setMoneyData(userData.money, userData.diamond, userData.level, userData.reputation, userData.popularityCoin);
   }
   private onCategoriesHandler(content: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_GET_MARKET_CATEGORIES) {
     if (this.mView) {
@@ -142,7 +151,10 @@ export class PicaMarketMediator extends BasicMediator {
   private onQueryPropresouceHandler(prop: op_client.IMarketCommodity) {
     this.model.queryCommodityResource(prop.id, prop.category);
   }
-
+  private onBOUGHT_GIFTPACK_IDS(packet: any) {
+    const status = packet.content.status;
+    this.mView.updateBuyedProps(status);
+  }
   private onShowOpenPanel(content: any) {
     this.setParam([content]);
     this.show(content);

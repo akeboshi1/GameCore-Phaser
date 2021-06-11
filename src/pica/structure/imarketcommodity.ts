@@ -53,6 +53,8 @@ export interface IMarketCommodity extends IShopBase {
     remain?: number;
 
     manorState?: number;
+
+    buyedCount?: number;
 }
 export interface IPrice {
     price: number;

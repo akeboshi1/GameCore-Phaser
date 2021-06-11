@@ -1,11 +1,11 @@
 import { NineSlicePatch, Button, ClickEvent, NineSliceButton, GameSlider } from "apowophaserui";
-import { UIAtlasKey, UIAtlasName } from "../../../res";
 import { Font, Handler, i18n, UIHelper } from "utils";
 import { PicaBasePanel } from "../pica.base.panel";
 import { UiManager } from "gamecoreRender";
 import { ModuleName } from "structure";
+import { UIAtlasName } from "picaRes";
 
-export class PicaManorBasePanel extends PicaBasePanel {
+export class PicaPrestigeConvertPanel extends PicaBasePanel {
     public prestigeCount: number = 1;
     protected mBackGround: Phaser.GameObjects.Graphics;
     protected content: Phaser.GameObjects.Container;
@@ -23,7 +23,10 @@ export class PicaManorBasePanel extends PicaBasePanel {
     private itemCountText: Phaser.GameObjects.Text;
     private line: boolean = false;
     private radio: number = 1;
+    private limitMax: number = 0;
     private powerValue: number = 0;
+    private exchangeValue: number = 0;
+    private residueValue: number = 0;
     constructor(uiManager: UiManager) {
         super(uiManager);
         this.key = ModuleName.PICAPRESTIGECONVERT_NAME;
@@ -40,33 +43,45 @@ export class PicaManorBasePanel extends PicaBasePanel {
         this.content.x = w * 0.5;
         this.content.y = h * 0.5;
     }
+
+    public setExchangedEnergy(enery: number, riado: number, max: number) {
+        this.powerValue = enery;
+        this.radio = riado;
+        this.limitMax = max;
+        this.slider.setValue(1);
+    }
+    public setExchangedPopularityCoin(exchange: number) {
+        this.exchangeValue = exchange;
+        if (!this.mInitialized) return;
+        this.updateData();
+    }
     protected init() {
         const width = this.scaleWidth;
         const height = this.scaleHeight;
         this.mBackGround = this.scene.make.graphics(undefined, false);
         this.mBackGround.setInteractive(new Phaser.Geom.Rectangle(0, 0, width, height), Phaser.Geom.Rectangle.Contains);
         this.mBackGround.on("pointerup", this.onCloseHandler, this);
+        const conWidth = 312 * this.dpr, conHeight = 240 * this.dpr;
         this.content = this.scene.make.container(undefined, false);
+        this.content.setSize(conWidth, conHeight);
         this.add([this.mBackGround, this.content]);
-        this.bg = new NineSlicePatch(this.scene, 0, 0, width, height, UIAtlasKey.commonKey, "bg_universal_box", {
+        this.bg = new NineSlicePatch(this.scene, 0, 0, conWidth, conHeight, UIAtlasName.uicommon1, "bg_universal_box", {
             left: 70 * this.dpr,
             top: 30 * this.dpr,
             right: 30 * this.dpr,
             bottom: 70 * this.dpr
         });
-        const posY = -height * 0.5;
-        this.titlebg = this.scene.make.image({ x: 0, y: 0, key: UIAtlasKey.common2Key, frame: "title" });
-        this.titlebg.texture.setFilter(Phaser.Textures.FilterMode.LINEAR);
+        this.bg.setInteractive();
+        const posY = -conHeight * 0.5;
+        this.titlebg = this.scene.make.image({ x: 0, y: 0, key: UIAtlasName.uicommon1, frame: "title" });
         this.titlebg.y = posY + 5 * this.dpr;
-        this.titleText = this.scene.make.text({ x: 0, y: this.titlebg.y + 2 * this.dpr, text: i18n.t("market.prestigetitle"), style: UIHelper.colorStyle("#905C06", 21 * this.dpr) }).setOrigin(0.5);
+        this.titleText = this.scene.make.text({ x: 0, y: this.titlebg.y + 2 * this.dpr, text: i18n.t("market.prestigetitle"), style: UIHelper.colorStyle("#905C06", 18 * this.dpr) }).setOrigin(0.5);
         this.titleText.setFontStyle("bold");
-        this.titleText.setResolution(this.dpr);
-        this.closeBtn = new Button(this.scene, UIAtlasKey.commonKey, "close");
-        this.closeBtn.setDisplaySize(28 * this.dpr, 28 * this.dpr);
-        this.closeBtn.setPosition(this.width * 0.5 - 8 * this.dpr, posY + this.dpr * 7);
+        this.closeBtn = new Button(this.scene, UIAtlasName.uicommon, "close");
+        this.closeBtn.setPosition(conWidth * 0.5 - 7 * this.dpr, posY + this.dpr * 7);
         this.closeBtn.on(String(ClickEvent.Tap), this.onCloseHandler, this);
-        this.labelTips = this.scene.make.text({ text: i18n.t("market.converttips"), style: UIHelper.blackStyle(this.dpr, 16) });
-        this.labelTips.y = -height * 0.5 + 55 * this.dpr;
+        this.labelTips = this.scene.make.text({ text: i18n.t("market.converttips"), style: UIHelper.blackStyle(this.dpr, 16) }).setOrigin(0.5);
+        this.labelTips.y = -conHeight * 0.5 + 55 * this.dpr;
         const sliderbg = this.scene.make.image({ key: UIAtlasName.market, frame: "prestige_schedule_bottom" });
         const indicator = this.scene.make.image({ key: UIAtlasName.market, frame: "prestige_schedule_top" });
         const thumb = this.scene.make.image({ key: UIAtlasName.uicommon, frame: "block" });
@@ -91,19 +106,18 @@ export class PicaManorBasePanel extends PicaBasePanel {
         });
 
         this.slider.add(this.itemCountText);
-        this.slider.setValue(0);
-        const acquireTips = this.scene.make.text({ text: i18n.t("common.acquire"), style: UIHelper.blackStyle(this.dpr, 14) }).setFontStyle("bold");
-        acquireTips.x = -20 * this.dpr;
+        const acquireTips = this.scene.make.text({ text: i18n.t("common.acquire"), style: UIHelper.blackStyle(this.dpr, 14) }).setFontStyle("bold").setOrigin(0, 0.5);
+        acquireTips.x = -43 * this.dpr;
         acquireTips.y = this.slider.y + 30 * this.dpr;
         this.mCoinIcon = this.scene.make.image({ key: UIAtlasName.uicommon, frame: "iv_prestige" }, false).setOrigin(0.5);
-        this.mCoinIcon.x = acquireTips.x + this.mCoinIcon.width * 0.5 + 5 * this.dpr;
+        this.mCoinIcon.x = acquireTips.x + acquireTips.width + this.mCoinIcon.width * 0.5 + 5 * this.dpr;
         this.mCoinIcon.y = acquireTips.y;
         this.prestigeText = this.scene.make.text({ style: UIHelper.blackStyle(this.dpr, 14) }).setOrigin(0, 0.5).setFontStyle("bold");
         this.prestigeText.x = this.mCoinIcon.x + this.mCoinIcon.width * 0.5 + 5 * this.dpr;
         this.prestigeText.y = this.mCoinIcon.y;
         const convertvaluetips = this.scene.make.text({ text: i18n.t("market.convertvaluetips"), style: UIHelper.colorStyle("#111111", 12 * this.dpr) }).setAlpha(0.6).setOrigin(0.5);
         convertvaluetips.y = acquireTips.y + 30 * this.dpr;
-        const bottomOffsetY = height * 0.5 - 45 * this.dpr;
+        const bottomOffsetY = conHeight * 0.5 - 45 * this.dpr;
         const bottomOffsetX = -66 * this.dpr;
         this.cancelBtn = new NineSliceButton(this.scene, bottomOffsetX, bottomOffsetY, 107 * this.dpr, 40 * this.dpr, UIAtlasName.uicommon, "red_btn", i18n.t("common.cancel"), this.dpr, this.scale, {
             left: 12 * this.dpr,
@@ -124,33 +138,46 @@ export class PicaManorBasePanel extends PicaBasePanel {
         this.confirmBtn.setTextStyle(UIHelper.brownishStyle(this.dpr, 16));
         this.confirmBtn.setFontStyle("bold");
         this.confirmBtn.on(ClickEvent.Tap, this.onConfirmBtnHandler, this);
-        this.content.add([this.bg, this.titlebg, this.titleText, this.closeBtn, this.slider, acquireTips, this.mCoinIcon, this.prestigeText, convertvaluetips, this.cancelBtn, this.confirmBtn]);
+        this.content.add([this.bg, this.titlebg, this.titleText, this.closeBtn, this.labelTips, this.slider, acquireTips, this.mCoinIcon, this.prestigeText, convertvaluetips, this.cancelBtn, this.confirmBtn]);
         this.resize(0, 0);
         super.init();
+        this.slider.setValue(0);
     }
     private onSliderValueHandler(value: number) {
         this.itemCountText.x = this.thumb.x;
         this.prestigeCount = this.lineSliderValue(value);
-        this.prestigeCount = this.prestigeCount || 1;
         this.updateData();
     }
     private updateData() {
-        this.itemCountText.text = this.prestigeCount + "";
-        this.prestigeText.text = this.prestigeCount + "";
+        this.residueValue = this.limitMax - this.exchangeValue;
+        if (this.prestigeCount > this.residueValue) this.prestigeCount = this.residueValue;
+        if (this.prestigeCount === 0 && this.powerValue >= this.radio) {
+            this.prestigeCount = 1;
+        }
+        if (this.itemCountText) this.itemCountText.text = this.prestigeCount + "";
+        if (this.prestigeText) this.prestigeText.text = this.prestigeCount + "";
     }
     private onCancelBtnHandler() {
         this.onCloseHandler();
     }
 
     private onConfirmBtnHandler() {
+        let text = "";
         if (this.prestigeCount > 0) {
-            this.render.renderEmitter(this.key + "_convert");
+            this.render.renderEmitter(this.key + "_convert", this.prestigeCount);
+            text = i18n.t("market.convertsuccess");
         } else {
-            const noticedata = {
-                text: [{ text: i18n.t("market.powertips"), node: undefined }]
-            };
-            this.render.mainPeer.showMediator(ModuleName.PICANOTICE_NAME, true, noticedata);
+            if (this.powerValue < this.radio) {
+                text = i18n.t("market.powertips");
+            } else {
+                text = i18n.t("market.counttisp");
+            }
         }
+        const noticedata = {
+            text: [{ text, node: undefined }]
+        };
+        this.render.mainPeer.showMediator(ModuleName.PICANOTICE_NAME, true, noticedata);
+        this.onCloseHandler();
     }
     private calcuSliderValue(value) {
         const allcount = this.powerValue;

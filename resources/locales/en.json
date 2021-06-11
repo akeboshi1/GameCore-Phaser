@@ -11,7 +11,9 @@
     "prestigetitle": "Exchange prestige coin",
     "converttips": "Select the health value you want to redeem",
     "convertvaluetips": "Maximum exchange value of daily prestige coin: {{name}}",
-    "powertips": "Lack of physical strength to exchange"
+    "powertips": "Lack of physical strength to exchange",
+    "counttisp": "Please choose the quantity to exchange",
+    "convertsuccess":"convertSuccess"
   },
   "item": {
     "copy_suc": "{{name}} copied",

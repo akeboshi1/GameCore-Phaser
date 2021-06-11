@@ -3,7 +3,7 @@ import { op_client, op_virtual_world } from "pixelpai_proto";
 import { BasicModel, Game } from "gamecore";
 import { ConnectionService } from "lib/net/connection.service";
 
-export class PicaRecharge extends BasicModel {
+export class PicaPrestigeConvert extends BasicModel {
     constructor(game: Game) {
         super(game);
         this.register();

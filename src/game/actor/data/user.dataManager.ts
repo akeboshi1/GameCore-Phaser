@@ -88,6 +88,10 @@ export class UserDataManager extends PacketHandler {
         if (this.mProperty && this.mProperty.popularityCoin) return this.mProperty.popularityCoin.value;
         return 0;
     }
+    get reputation(): number {
+        if (this.mProperty && this.mProperty.reputation) return this.mProperty.reputation.value;
+        return 0;
+    }
     get isSelfRoom() {
         const dataMgr = this.game.getDataMgr<SceneDataManager>(DataMgrType.SceneMgr);
         if (dataMgr.curRoom && dataMgr.curRoom.ownerId === this.cid) return true;

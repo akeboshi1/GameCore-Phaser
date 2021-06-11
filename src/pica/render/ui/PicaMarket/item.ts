@@ -3,6 +3,7 @@ import { UIAtlasName } from "../../../res";
 import { ModuleName } from "structure";
 import { Coin, Font, i18n, Logger, UIHelper, Url } from "utils";
 import { IMarketCommodity } from "picaStructure";
+import { BBCodeText } from "apowophaserui";
 
 export class MarketItem extends Phaser.GameObjects.Container {
   private mSelectBg: Phaser.GameObjects.Image;
@@ -32,7 +33,8 @@ export class MarketItem extends Phaser.GameObjects.Container {
     this.mPropImage.x = -this.width * 0.5 + 28 * dpr;
     this.mPropImage.y = 0;
     this.mPropImage.scale = this.dpr / this.zoom;
-    this.limitText = this.scene.make.text({ style: UIHelper.colorStyle("#FF3366", dpr * 11) }).setOrigin(0, 0.5);
+    // this.limitText = this.scene.make.text({ style: UIHelper.colorStyle("#FF3366", dpr * 11) }).setOrigin(0, 0.5);
+    this.limitText = new BBCodeText(this.scene, 0, 0, "", UIHelper.colorStyle("#ff3366", dpr * 11)).setOrigin(0, 0.5).setInteractive();
     this.limitText.y = -2 * dpr;
     this.limitText.x = -5 * dpr;
     this.mNickName = this.scene.make.text({ x: -5 * this.dpr, y: -23 * this.dpr, style: UIHelper.colorStyle("#3399cc", 13 * dpr) }, false);
@@ -80,10 +82,13 @@ export class MarketItem extends Phaser.GameObjects.Container {
       }
     } else if (data.category === "PKT_MARKET_CATEGORY_8" || data.category === "PKT_MARKET_CATEGORY_9") {
       this.limitText.visible = true;
+      data.buyedCount = data.buyedCount || 0;
       if (data.limitType === 1) {
-        this.limitText.text = `${i18n.t("market.daylimit")}:${data.limitCount}`;
+        const color = data.buyedCount === data.limitCount ? "#ff3366" : "#000000";
+        this.limitText.text = `${i18n.t("market.daylimit")}: [color=${color}]${data.limitCount - data.buyedCount}/${data.limitCount}[/color]`;
       } else if (data.limitType === 2) {
-        this.limitText.text = `${i18n.t("market.weeklimit")}:${data.limitCount}`;
+        const color = data.buyedCount === data.limitCount ? "#ff3366" : "#000000";
+        this.limitText.text = `${i18n.t("market.weeklimit")}: [color=${color}]${data.limitCount - data.buyedCount}/${data.limitCount}[/color]`;
       } else {
         this.limitText.visible = false;
       }

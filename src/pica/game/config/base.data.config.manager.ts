@@ -38,6 +38,8 @@ import { QuestGroupConfig } from "./quest.group.config";
 import { Element2Config } from "./element2.config";
 import { FurnitureGradeConfig } from "./furniture.grade.config";
 import { RechargeConfig } from "./recharge.config";
+import { Setting2Config } from "./settings2.config";
+import { FrameLevelConfig as FameLevelConfig } from "./fame.level.config";
 
 export enum BaseDataType {
     i18n_zh = "i18n_zh",
@@ -62,7 +64,9 @@ export enum BaseDataType {
     element2 = "element2",
     elementpi = "elementpi", // 不作为文件名加载文件，只作为类型区分
     furnitureGrade = "furnitureGrade",
-    charge = "charge"
+    charge = "charge",
+    settings2 = "settings2",
+    famelevel = "famelevel"
     // itemcategory = "itemcategory"
 }
 
@@ -856,6 +860,14 @@ export class BaseDataConfigManager extends BaseConfigManager {
         }
         return tempArr;
     }
+    public getReputationCoin() {
+        const data: Setting2Config = this.getConfig(BaseDataType.settings2);
+        return data.getReputationCoin();
+    }
+    public getFrameLevel(level: number) {
+        const data: FameLevelConfig = this.getConfig(BaseDataType.famelevel);
+        return data.get(level);
+    }
     public destory() {
         super.destory();
         this.mGame.emitter.off(EventType.QUEST_ELEMENT_PI_DATA, this.checkDynamicElementPI, this);
@@ -884,6 +896,8 @@ export class BaseDataConfigManager extends BaseConfigManager {
         this.dataMap.set(BaseDataType.element2, new Element2Config());
         this.dataMap.set(BaseDataType.furnitureGrade, new FurnitureGradeConfig());
         this.dataMap.set(BaseDataType.charge, new RechargeConfig());
+        this.dataMap.set(BaseDataType.settings2, new Setting2Config());
+        this.dataMap.set(BaseDataType.famelevel, new FameLevelConfig());
     }
 
     protected configUrl(reName: string, tempurl?: string) {

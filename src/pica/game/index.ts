@@ -111,3 +111,5 @@ export * from "./ui/PicaRoomDecorate/PicaRoomDecorateMediator";
 export * from "./ui/PicaNewMine/PicaNewMine";
 export * from "./ui/PicaNewMine/PicaNewMineMediator";
 export * from "./ui/PicaNewOrder/PicaNewOrderMediator";
+export * from "./ui/PicaPrestigeConvert/PicaPrestigeConvert";
+export * from "./ui/PicaPrestigeConvert/PicaPrestigeConvertMediator";
