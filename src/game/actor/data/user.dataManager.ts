@@ -19,6 +19,7 @@ export class UserDataManager extends PacketHandler {
         this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_PKT_UPDATE_PACKAGE, this.onUPDATE_PACKAGE);
         this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_PKT_PLAYER_INFO, this.onUPDATE_PLAYER_INFO);
         this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_PKT_CURRENT_DRESS_AVATAR_ITEM_ID, this.onRetDressAvatarItemIDS);
+        this.proto.on("PKT_PLAYER_INFO", this.onUPDATE_PLAYER_INFO, this);
     }
 
     public addPackListener() {
@@ -31,6 +32,7 @@ export class UserDataManager extends PacketHandler {
         if (this.connection) {
             this.connection.removePacketListener(this);
         }
+        this.proto.off("PKT_PLAYER_INFO", this.onUPDATE_PLAYER_INFO, this);
     }
 
     clear() {
@@ -76,6 +78,14 @@ export class UserDataManager extends PacketHandler {
     }
     get energy(): number {
         if (this.mProperty && this.mProperty.energy) return this.mProperty.energy.value;
+        return 0;
+    }
+    get reputationLevel(): number {
+        if (this.mProperty && this.mProperty.reputationLevel) return this.mProperty.reputationLevel.value;
+        return 0;
+    }
+    get popularityCoin(): number {
+        if (this.mProperty && this.mProperty.popularityCoin) return this.mProperty.popularityCoin.value;
         return 0;
     }
     get isSelfRoom() {
@@ -141,5 +151,8 @@ export class UserDataManager extends PacketHandler {
         const content: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_CURRENT_DRESS_AVATAR_ITEM_ID = packet.content;
         this.mDressAvatarIDs = content.avatarItemIds;
         this.game.emitter.emit(EventType.RETURN_DRESS_AVATAR_IDS, content.avatarItemIds);
+    }
+    get proto() {
+        return this.game.customProto;
     }
 }

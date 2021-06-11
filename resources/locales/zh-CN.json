@@ -6,7 +6,11 @@
     "moneyless": "钱币不足，无法购买",
     "unlock": "解锁",
     "daylimit": "每天限购",
-    "weeklimit": "每周限购"
+    "weeklimit": "每周限购",
+    "prestigetitle": "兑换声望币",
+    "converttips": "选择需要兑换的体力值",
+    "convertvaluetips": "每日声望币最大兑换值：{{name}}",
+    "powertips": "体力不足无法兑换"
   },
   "item": {
     "copy_suc": "复制{{name}}成功",
@@ -79,7 +83,8 @@
     "leave": "离开",
     "affirm": "确认",
     "count": "数量",
-    "reselect": "重选"
+    "reselect": "重选",
+    "acquire": "获得"
   },
   "quantityunit": {
     "k": "千",

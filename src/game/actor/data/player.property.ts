@@ -12,6 +12,8 @@ export class PlayerProperty {
     public energy: op_pkt_def.IPKT_Property;
     public experience: op_pkt_def.IPKT_Property;
     public workChance: op_pkt_def.IPKT_Property;
+    public reputationLevel: op_pkt_def.IPKT_Property;
+    public popularityCoin: op_pkt_def.IPKT_Property;
     public rooms: op_client.IEditModeRoom[];
     public handheld: op_client.ICountablePackageItem;
     public command: op_def.OpCommand;
@@ -139,6 +141,10 @@ export class PlayerProperty {
                 this.picaStar = proper;
             } else if (proper.id === "IV0000022") {
                 this.survey = proper;
+            } else if (proper.id === "IV0000022") {
+                this.reputationLevel = proper;
+            } else if (proper.id === "IV0000022") {
+                this.popularityCoin = proper;
             }
         }
     }
