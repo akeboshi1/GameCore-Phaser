@@ -1,6 +1,6 @@
 import { op_client, op_def } from "pixelpai_proto";
-import { PacketHandler } from "net-socket-packet";
-import { AStar, ConnectionService, Handler, IPos, IPosition45Obj, LogicPos } from "structure";
+import { PacketHandler, PBpacket } from "net-socket-packet";
+import { AStar, ConnectionService, IPos, IPosition45Obj, LogicPos } from "structure";
 import { Game } from "../../game";
 import { IScenery, ISprite } from "structure";
 import IActor = op_client.IActor;
@@ -34,8 +34,10 @@ export interface IRoomService {
     readonly roomSize: IPosition45Obj;
     readonly miniSize: IPosition45Obj;
     readonly game: Game;
+    readonly enableDecorate: boolean;
     readonly sceneType: op_def.SceneTypeEnum;
     readonly isLoading: boolean;
+    readonly isDecorating: boolean;
     now(): number;
     enter(room: op_client.IScene): void;
     startPlay(): void;
@@ -56,8 +58,11 @@ export interface IRoomService {
     onManagerCreated(key: string): any;
     onManagerReady(key: string): any;
     onRoomReady(): any;
+    addToInteractiveMap(sprite: ISprite): any;
+    removeFromInteractiveMap(sprite: ISprite): any;
     addToWalkableMap(sprite: ISprite, isTerrain?: boolean): any;
     removeFromWalkableMap(sprite: ISprite, isTerrain?: boolean): any;
+    getInteractiveEles(x: number, y: number): number[][];
     isWalkable(x: number, y: number): boolean;
     checkSpriteConflictToWalkableMap(sprite: ISprite, isTerrain?: boolean, pos?: IPos): number[][];
     destroy(): any;
@@ -75,6 +80,8 @@ export declare class Room extends PacketHandler implements IRoomService, SpriteA
     protected mMiniSize: IPosition45Obj;
     protected mCameraService: ICameraService;
     protected mBlocks: IViewBlockManager;
+    protected mEnableDecorate: boolean;
+    protected mIsDecorating: boolean;
     protected mWallMamager: WallManager;
     protected mScaleRatio: number;
     protected mStateManager: RoomStateManager;
@@ -82,14 +89,14 @@ export declare class Room extends PacketHandler implements IRoomService, SpriteA
     protected mIsLoading: boolean;
     protected mManagersReadyStates: Map<string, boolean>;
     protected mCollsionManager: CollsionManager;
-    protected moveStyle: op_def.MoveStyle;
-    protected mActorData: IActor;
-    protected mUpdateHandlers: Handler[];
-    protected mWalkableMap: number[][];
-    protected mWalkableMarkMap: Map<number, Map<number, {
-        level: number;
-        walkable: boolean;
-    }>>;
+    private mActorData;
+    private mUpdateHandlers;
+    private mDecorateEntryData;
+    private mTerrainMap;
+    private mWalkableMap;
+    private mWalkableMarkMap;
+    private mInteractiveList;
+    private mIsWaitingForDecorateResponse;
     constructor(manager: IRoomManager);
     addListen(): void;
     removeListen(): void;
@@ -116,8 +123,11 @@ export declare class Room extends PacketHandler implements IRoomService, SpriteA
     };
     startPlay(): Promise<void>;
     initUI(): void;
+    addToInteractiveMap(sprite: ISprite): void;
+    removeFromInteractiveMap(sprite: ISprite): void;
     addToWalkableMap(sprite: ISprite, isTerrain?: boolean): void;
     removeFromWalkableMap(sprite: ISprite, isTerrain?: boolean): void;
+    getInteractiveEles(x: number, y: number): number[][];
     isWalkable(x: number, y: number): boolean;
     findPath(startPos: IPos, targetPosList: IPos[], toReverse: boolean): LogicPos[];
     clear(): void;
@@ -130,6 +140,7 @@ export declare class Room extends PacketHandler implements IRoomService, SpriteA
     onManagerReady(key: string): void;
     onRoomReady(): void;
     cameraFollowHandler(): void;
+    requestSaveDecorating(pkt: PBpacket): void;
     checkSpriteConflictToWalkableMap(sprite: ISprite, isTerrain?: boolean, pos?: IPos): number[][];
     protected initSkyBox(): void;
     protected addSkyBox(scenery: IScenery): void;
@@ -146,8 +157,11 @@ export declare class Room extends PacketHandler implements IRoomService, SpriteA
     get miniSize(): IPosition45Obj | undefined;
     get blocks(): IViewBlockManager;
     get game(): Game | undefined;
+    get enableDecorate(): boolean;
+    get isDecorating(): boolean;
     get connection(): ConnectionService | undefined;
     get sceneType(): op_def.SceneTypeEnum;
+    private onEnableEditModeHandler;
     private onShowMapTitle;
     private onCameraResetSizeHandler;
     private onCameraFollowHandler;
@@ -160,6 +174,8 @@ export declare class Room extends PacketHandler implements IRoomService, SpriteA
     private removeWalkableMark;
     private caculateWalkableMark;
     private setWalkableMap;
+    private setTerrainMap;
     private mapPos2Idx;
     private setState;
+    private showDecorateGrid;
 }

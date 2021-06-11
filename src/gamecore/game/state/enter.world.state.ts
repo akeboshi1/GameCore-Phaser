@@ -66,6 +66,7 @@ export class EnterWorldState extends BaseState {
         this.mGame.gameStateManager.state = GameState.GameRunning;
         this.mGame.gameStateManager.startRun();
     }
+
     // =============> EnterWorldState 内部逻辑
     // ========> 加载pi解析pi流程
     /**
@@ -134,10 +135,6 @@ export class EnterWorldState extends BaseState {
     private loadGameConfig(remotePath): Promise<Lite> {
         const game = this.mMain.game;
         const config = game.getGameConfig();
-        if (!this.mIsSyncPackage && game.configManager.initialize) {
-            game.user.userData.querySYNC_ALL_PACKAGE();
-            this.mIsSyncPackage = true;
-        }
         const configPath = ResUtils.getGameConfig(remotePath);
         return load(configPath, "arraybuffer").then((req: any) => {
             this.mGame.gameConfigState.set(remotePath, true);

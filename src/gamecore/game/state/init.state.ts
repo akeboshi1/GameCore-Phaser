@@ -1,4 +1,5 @@
-import { Logger, Url } from "utils";
+import { Logger } from "structure";
+import { Url } from "utils";
 import { MainPeer } from "../main.peer";
 import { BaseState } from "./base.state";
 export class InitState extends BaseState {

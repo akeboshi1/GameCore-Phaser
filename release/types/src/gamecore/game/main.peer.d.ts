@@ -3,8 +3,9 @@ import { Buffer } from "net-socket-packet";
 import * as protos from "pixelpai_proto";
 import { Game } from "./game";
 import { IPos, ILauncherConfig, IWorkerParam } from "structure";
+import { BaseState } from "./state";
 export declare class MainPeer extends RPCPeer {
-    protected game: Game;
+    protected mGame: Game;
     protected mRenderParam: IWorkerParam;
     protected mMainPeerParam: IWorkerParam;
     private gameState;
@@ -23,7 +24,10 @@ export declare class MainPeer extends RPCPeer {
     get renderParam(): IWorkerParam;
     get mainPeerParam(): IWorkerParam;
     get render(): any;
-    set state(val: any);
+    get config(): ILauncherConfig;
+    get game(): Game;
+    get state(): BaseState;
+    set state(val: BaseState);
     onConnected(isAuto: boolean): void;
     onDisConnected(isAuto: any): void;
     onConnectError(error: string): void;
@@ -44,7 +48,6 @@ export declare class MainPeer extends RPCPeer {
     changePlayerState(id: number, state: string, times?: number): void;
     setDragonBonesQueue(id: number, animation: any): void;
     loginEnterWorld(): void;
-    startConnect(host: string, port: number, secure?: boolean): void;
     closeConnect(boo: boolean): void;
     reconnect(isAuto: boolean): void;
     refreshConnect(): void;

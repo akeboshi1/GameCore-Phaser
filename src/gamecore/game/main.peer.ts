@@ -5,6 +5,7 @@ import * as protos from "pixelpai_proto";
 import { Game } from "./game";
 import { ServerAddress, IPos, Logger, ILauncherConfig, ModuleName, EventType, GameState, IWorkerParam, LogicPos } from "structure";
 import { Url } from "utils";
+import { BaseState } from "./state";
 
 for (const key in protos) {
     PBpacket.addProtocol(protos[key]);
@@ -12,7 +13,7 @@ for (const key in protos) {
 
 export class MainPeer extends RPCPeer {
     @Export()
-    protected game: Game;
+    protected mGame: Game;
     protected mRenderParam: IWorkerParam;
     protected mMainPeerParam: IWorkerParam;
     private gameState;
@@ -31,7 +32,7 @@ export class MainPeer extends RPCPeer {
     // private isReconnect: boolean = false;
     constructor(workerName: string) {
         super(workerName);
-        this.game = new Game(this);
+        this.mGame = new Game(this);
         this.stateTime = new Date().getTime();
     }
 
@@ -47,6 +48,18 @@ export class MainPeer extends RPCPeer {
         return this.remote[this.mRenderParam.key][this.mRenderParam.name];
     }
 
+    get config(): ILauncherConfig {
+        return this.mConfig;
+    }
+
+    get game(): Game {
+        return this.mGame;
+    }
+
+    get state(): BaseState {
+        return this.game.gameStateManager.curState;
+    }
+
     set state(val) {
         const now: number = new Date().getTime();
         Logger.getInstance().log("gameState: ====>", val, "delayTime:=====>", now - this.stateTime);
@@ -55,12 +68,8 @@ export class MainPeer extends RPCPeer {
     }
     // ============= connection调用主进程
     public onConnected(isAuto: boolean) {
-        // 告诉主进程链接成功
-        this.render.onConnected(isAuto);
-        this.startBeat();
-        this.state = GameState.Connected;
         // 逻辑层game链接成功
-        this.game.onConnected();
+        this.game.onConnected(isAuto);
     }
 
     public onDisConnected(isAuto) {
@@ -146,17 +155,7 @@ export class MainPeer extends RPCPeer {
     @Export()
     public createGame(config: ILauncherConfig) {
         this.mConfig = config;
-        Url.OSD_PATH = this.mConfig.osd;
-        const version = this.mConfig.version;
-        Logger.getInstance().log("Game version ====>:", `v${version}`);
-        Url.RES_PATH = `resources/`;
-        Url.RESUI_PATH = `${Url.RES_PATH}ui/`;
-        this.state = GameState.LinkWorker;
-        // ============
-        Logger.getInstance().debug("createGame");
-        // const url: string = "/js/game" + "_v1.0.398";
-        Logger.getInstance().debug("render link onReady");
-        this.game.createGame(this.mConfig);
+        this.game.init(config);
     }
 
     @Export()
@@ -202,15 +201,6 @@ export class MainPeer extends RPCPeer {
     public loginEnterWorld() {
         Logger.getInstance().debug("game======loginEnterWorld");
         this.game.loginEnterWorld();
-    }
-
-    // @Export([webworker_rpc.ParamType.str, webworker_rpc.ParamType.num, webworker_rpc.ParamType.boolean])
-    public startConnect(host: string, port: number, secure?: boolean) {
-        const addr: ServerAddress = { host, port, secure };
-        this.game.connection.startConnect(addr);
-        const now: number = new Date().getTime();
-        this.stateTime = now;
-        this.state = GameState.StartConnect;
     }
 
     @Export([webworker_rpc.ParamType.boolean])

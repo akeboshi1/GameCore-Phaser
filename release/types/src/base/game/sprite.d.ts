@@ -1,5 +1,16 @@
-import { AnimationModel, IAnimationData, IDisplay, AnimationQueue, Animator, AvatarSuit, IAvatar, ISprite, RunningAnimation, Direction, EventDispatcher, IPos, LogicPoint, IFramesModel, IDragonbonesModel } from "structure";
+import { Direction, EventDispatcher, IPos, LogicPoint, AnimationModel, AnimationQueue, Animator, AvatarSuit, IAvatar, ISprite, RunningAnimation, IFramesModel, IDragonbonesModel, IAnimationData, IDisplay } from "structure";
 import { op_def, op_gameconfig, op_client, op_gameconfig_01 } from "pixelpai_proto";
+export declare enum Flag {
+    Pos = 0,
+    AnimationName = 1,
+    Direction = 2,
+    Mount = 3,
+    NickName = 4,
+    Alpha = 5,
+    Speed = 6,
+    Avatar = 7,
+    Display = 8
+}
 export declare class Sprite extends EventDispatcher implements ISprite {
     id: number;
     pos: IPos;
@@ -16,7 +27,7 @@ export declare class Sprite extends EventDispatcher implements ISprite {
     sceneId: number;
     uuid: number;
     platformId: string;
-    displayInfo: IFramesModel | IDragonbonesModel;
+    displayInfo: FramesModel | DragonbonesModel;
     nodeType: op_def.NodeType;
     currentAnimation: RunningAnimation;
     currentCollisionArea: number[][];
@@ -36,32 +47,43 @@ export declare class Sprite extends EventDispatcher implements ISprite {
     animator?: Animator;
     updateSuits: boolean;
     layer: number;
+    sound: string;
+    curState: number;
     constructor(obj: op_client.ISprite, nodeType?: op_def.NodeType);
-    clear(): void;
-    toSprite(): op_client.ISprite;
+    updateState(state: Flag): void;
     showNickName(): boolean;
-    showBadge(): boolean;
-    newID(): void;
     setPosition(x: number, y: number): void;
-    turn(): any;
-    updateAvatarSuits(suits: AvatarSuit[]): boolean;
+    /**
+     * 更新显示对象数据，需要做load处理
+     * @param avatar
+     */
     updateAvatar(avatar: op_gameconfig.IAvatar | IAvatar): void;
     setTempAvatar(avatar: IAvatar): void;
+    updateDisplay(display: op_gameconfig.IDisplay, animations: op_gameconfig_01.IAnimationData[], defAnimation?: string): void;
+    setDirection(val: number): void;
+    dealSprite(): void;
+    toSprite(): op_client.ISprite;
+    showBadge(): boolean;
+    newID(): void;
+    turn(): any;
+    /**
+     * 处理 pkt 龙骨套装数据，转换成可接受的op_gameconfig.IAvatar数据
+     * @param suits
+     * @returns
+     */
+    updateAvatarSuits(suits: AvatarSuit[]): boolean;
     getAvatarSuits(attrs: op_def.IStrPair[]): AvatarSuit[];
     updateAttr(attrs: op_def.IStrPair[]): void;
-    updateDisplay(display: op_gameconfig.IDisplay, animations: op_gameconfig_01.IAnimationData[], defAnimation?: string): void;
     setAnimationQueue(queue: AnimationQueue[]): void;
-    setMountSprites(ids: number[]): void;
     setAnimationName(name: string, times?: number): RunningAnimation;
-    setDirection(val: number): void;
-    setDisplayInfo(displayInfo: IFramesModel | IDragonbonesModel): void;
+    setDisplayInfo(displayInfo: FramesModel | DragonbonesModel): void;
     get hasInteractive(): boolean;
-    getInteractive(): any;
+    getInteractive(): op_def.IPBPoint2i[];
     setOriginCollisionPoint(value: number[] | null): void;
     setOriginWalkPoint(value: number[] | null): void;
-    getCollisionArea(): any;
-    getWalkableArea(): any;
-    getOriginPoint(): any;
+    getCollisionArea(): number[][];
+    getWalkableArea(): number[][];
+    getOriginPoint(): LogicPoint;
     registerAnimationMap(key: string, value: string): void;
     unregisterAnimationMap(key: string): void;
     private setAnimationData;
@@ -71,25 +93,6 @@ export declare class Sprite extends EventDispatcher implements ISprite {
     private tryRegisterAnimation;
     private getBaseAniName;
 }
-export declare class DragonbonesModel implements IDragonbonesModel {
-    discriminator: string;
-    id: number;
-    eventName: number[];
-    avatarDir?: number;
-    avatar?: IAvatar;
-    animationName?: string;
-    constructor(data: any);
-    setInfo(val: any): void;
-    destroy(): void;
-    getCollisionArea(aniName: string): number[][];
-    getWalkableArea(): number[][];
-    getOriginPoint(aniName: any): LogicPoint;
-    getInteractiveArea(): op_def.IPBPoint2i[];
-    existAnimation(aniName: string): boolean;
-    findAnimation(baseName: string, dir: Direction): RunningAnimation;
-    checkDirectionAnimation(baseName: string, dir: Direction): string;
-    checkDirectionByExistAnimations(baseAniName: string, dir: number): number;
-}
 export declare class FramesModel implements IFramesModel {
     static createFromDisplay(display: any, animation: any, id?: number): {
         animations: Map<any, any>;
@@ -98,6 +101,7 @@ export declare class FramesModel implements IFramesModel {
         discriminator: string;
         animationName: any;
         display: any;
+        sound: string;
     };
     avatarDir?: number;
     readonly discriminator: string;
@@ -105,6 +109,7 @@ export declare class FramesModel implements IFramesModel {
     type: string;
     eventName: number[];
     display: IDisplay | null;
+    sound: string;
     animations: Map<string, AnimationModel>;
     animationName: string;
     package: op_gameconfig.IPackage;
@@ -138,4 +143,24 @@ export declare class FramesModel implements IFramesModel {
     private setDisplay;
     private setAnimationData;
     private getDefaultAnimation;
+}
+export declare class DragonbonesModel implements IDragonbonesModel {
+    discriminator: string;
+    id: number;
+    eventName: number[];
+    sound: string;
+    avatarDir?: number;
+    avatar?: IAvatar;
+    animationName?: string;
+    constructor(data: any);
+    setInfo(val: any): void;
+    destroy(): void;
+    getCollisionArea(aniName: string): number[][];
+    getWalkableArea(): number[][];
+    getOriginPoint(aniName: any): LogicPoint;
+    getInteractiveArea(): op_def.IPBPoint2i[];
+    existAnimation(aniName: string): boolean;
+    findAnimation(baseName: string, dir: Direction): RunningAnimation;
+    checkDirectionAnimation(baseName: string, dir: Direction): string;
+    checkDirectionByExistAnimations(baseAniName: string, dir: number): number;
 }

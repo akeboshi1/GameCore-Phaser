@@ -81,7 +81,6 @@ export declare class Render extends RPCPeer implements GameMain, IRender {
     constructor(config: ILauncherConfig, callBack?: Function);
     get renderParam(): IWorkerParam;
     get mainPeerParam(): IWorkerParam;
-    linkMain(key: any, url: any, peerName: any): void;
     setKeyBoardHeight(height: number): void;
     get config(): ILauncherConfig;
     get uiRatio(): number;
@@ -158,6 +157,7 @@ export declare class Render extends RPCPeer implements GameMain, IRender {
     hideLogin(): void;
     checkContains(id: number, x: number, y: number): Promise<boolean>;
     showCreateRolePanel(data?: any): Promise<boolean>;
+    showTipsAlert(str: any): void;
     updateModel(id: number, displayInfo: any): void;
     getIndexInLayer(id: number): number;
     changeLayer(id: number, layerName: string): void;
@@ -179,6 +179,7 @@ export declare class Render extends RPCPeer implements GameMain, IRender {
     updateCharacterPackage(): void;
     displayReady(id: number, animation: any): void;
     soundChangeRoom(roomID: number): void;
+    playSoundByKey(key: string): void;
     playOsdSound(content: any): void;
     playSound(content: any): void;
     stopAllSound(): void;
@@ -202,7 +203,7 @@ export declare class Render extends RPCPeer implements GameMain, IRender {
     getWorldView(): Promise<any>;
     onClockReady(): void;
     i18nString(val: string): string;
-    showAlert(text: string, ok?: boolean): Promise<unknown>;
+    showAlert(text: string, ok?: boolean, needI18n?: boolean): Promise<unknown>;
     showAlertReconnect(text: string): void;
     showLoading(data?: any): Promise<any>;
     updateProgress(progress: number): void;
@@ -244,10 +245,12 @@ export declare class Render extends RPCPeer implements GameMain, IRender {
     createTerrainDisplay(id: number, displayInfo: IFramesModel, layer: number): void;
     setModel(sprite: any): void;
     setPlayerModel(sprite: any): void;
-    drawServerPosition(x: number, y: number): void;
-    hideServerPosition(): void;
     addSkybox(scenery: IScenery): void;
     removeSkybox(id: number): void;
+    showMatterDebug(vertices: any): void;
+    hideMatterDebug(): void;
+    drawServerPosition(x: number, y: number): void;
+    hideServerPosition(): void;
     changeAlpha(id: number, alpha: number): void;
     removeBlockObject(id: number): void;
     setPosition(id: number, x: number, y: number, z?: number): void;
@@ -281,6 +284,7 @@ export declare class Render extends RPCPeer implements GameMain, IRender {
     protected onWorkerUnlinked(worker: string): void;
     protected initConfig(): void;
     protected initRatio(): void;
+    protected initWorker(): void;
     private onFullScreenChange;
     private gameCreated;
     private resumeScene;

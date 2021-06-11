@@ -1,6 +1,5 @@
-import { ConnectionService } from "lib/net/connection.service";
 import { PacketHandler } from "net-socket-packet";
-import { IState } from "structure";
+import { ConnectionService, IState } from "structure";
 import { Game } from "../game";
 import { MainPeer } from "../main.peer";
 export declare class BaseState extends PacketHandler implements IState {

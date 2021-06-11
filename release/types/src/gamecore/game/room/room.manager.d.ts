@@ -1,7 +1,7 @@
 import { op_client } from "pixelpai_proto";
-import { IRoomService } from "./room";
 import { PacketHandler } from "net-socket-packet";
 import { Game } from "../game";
+import { IRoomService } from "./room";
 import { ConnectionService } from "structure";
 export interface IRoomManager {
     readonly game: Game | undefined;
@@ -24,13 +24,12 @@ export declare class RoomManager extends PacketHandler implements IRoomManager {
     onBlur(): void;
     stop(): void;
     removeAllRoom(): void;
+    hasRoom(id: number): boolean;
+    leaveRoom(room: IRoomService): Promise<void>;
+    onEnterRoom(scene: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_ENTER_SCENE): void;
     destroy(): void;
-    protected onEnterRoom(scene: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_ENTER_SCENE): void;
-    private hasRoom;
-    private onEnterScene;
     private onEnterEditor;
-    private leaveRoom;
-    private onEnterSceneHandler;
+    private onEnterResult;
     get game(): Game;
     get currentRoom(): IRoomService;
     get connection(): ConnectionService;

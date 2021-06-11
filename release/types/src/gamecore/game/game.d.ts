@@ -1,34 +1,35 @@
 import { UIManager } from "./ui/ui.manager";
 import { PBpacket, PacketHandler } from "net-socket-packet";
+import { MainPeer } from "./main.peer";
 import { op_def } from "pixelpai_proto";
-import { Lite } from "game-capsule";
 import { HttpLoadManager } from "utils";
-import { Connection, GameSocket } from "./net/connection";
+import { GameSocket } from "./net/connection";
 import { Clock, ClockReadyListener } from "./loop/clock/clock";
 import { HttpClock } from "./loop/httpClock/http.clock";
 import { HttpService } from "./loop/httpClock/http.service";
 import { LoadingManager } from "./loading/loading.manager";
-import { ILauncherConfig, EventDispatcher, IConfigPath, IConnectListener } from "structure";
-import { IRoomService } from "./room/room";
+import { ChatCommandInterface, ConnectionService, EventDispatcher, IConnectListener, ILauncherConfig } from "structure";
+import { RoomManager } from "./room/room.manager";
 import { User } from "./actor/user";
 import { NetworkManager } from "./command";
-import { MainPeer } from "./main.peer";
-import { GuideWorkerManager } from "./guide.manager";
-import { SoundWorkerManager } from "./sound.manager";
-import { CustomProtoManager } from "./custom.proto";
+import { CustomProtoManager } from "./custom.proto/custom.proto.manager";
 import { ElementStorage } from "baseGame";
 import { BaseDataControlManager, DataMgrType } from "./config";
-import { RoomManager } from "./room/room.manager";
+import { GuideWorkerManager } from "./guide.manager";
+import { SoundWorkerManager } from "./sound.manager";
+import { IRoomService } from "./room";
+import { GameStateManager } from "./state/game.state.manager";
 interface ISize {
     width: number;
     height: number;
 }
-export declare const wokerfps: number;
+export declare const fps: number;
 export declare const interval: number;
-export declare class Game extends PacketHandler implements IConnectListener, ClockReadyListener {
+export declare class Game extends PacketHandler implements IConnectListener, ClockReadyListener, ChatCommandInterface {
     isDestroy: boolean;
-    protected mainPeer: any;
-    protected connect: Connection;
+    isAuto: boolean;
+    protected mainPeer: MainPeer;
+    protected connect: ConnectionService;
     protected mUser: User;
     protected mSize: ISize;
     protected mClock: Clock;
@@ -45,31 +46,55 @@ export declare class Game extends PacketHandler implements IConnectListener, Clo
     protected mNetWorkManager: NetworkManager;
     protected mHttpLoadManager: HttpLoadManager;
     protected mCustomProtoManager: CustomProtoManager;
-    protected gameConfigUrls: Map<string, string>;
-    protected gameConfigUrl: string;
-    protected gameConfigState: Map<string, boolean>;
+    protected mGameStateManager: GameStateManager;
+    protected mGameConfigUrls: Map<string, string>;
+    protected mGameConfigUrl: string;
+    protected mGameConfigState: Map<string, boolean>;
     protected isPause: boolean;
-    protected isAuto: boolean;
+    /**
+     * 自动重连开关
+     */
+    protected mDebugReconnect: boolean;
     protected mMoveStyle: number;
     protected mReconnect: number;
     protected hasClear: boolean;
     protected currentTime: number;
-    protected mWorkerLoop: any;
+    protected mHeartBeat: any;
+    protected mHeartBeatDelay: number;
     protected mAvatarType: op_def.AvatarStyle;
     protected mRunning: boolean;
-    protected mConfigPath: IConfigPath;
     protected remoteIndex: number;
     protected isSyncPackage: boolean;
     constructor(peer: MainPeer);
-    setConfigPath(path: any): void;
+    /**
+     * 初始化
+     * @param config
+     */
+    init(config: ILauncherConfig): void;
+    /**
+     * 登陆
+     */
+    login(): void;
+    /**
+     * 开始链接
+     */
+    startConnect(): void;
+    /**
+     * 链接成功
+     * @param isAuto
+     */
+    onConnected(isAuto?: boolean): void;
+    /**
+     * 登陆游戏返回
+     */
+    loginEnterWorld(): Promise<void>;
+    v(): void;
+    q(): void;
     addPacketListener(): void;
     removePacketListener(): void;
-    get scaleRatio(): number;
     createGame(config?: ILauncherConfig): Promise<void>;
     setConfig(config: ILauncherConfig): void;
-    startConnect(): void;
     showLoading(data?: any): void;
-    onConnected(isAuto?: boolean): void;
     onDisConnected(isAuto?: boolean): any;
     onRefreshConnect(isAuto?: boolean): void;
     onError(): void;
@@ -84,7 +109,6 @@ export declare class Game extends PacketHandler implements IConnectListener, Clo
      * @returns
      */
     loadTotalSceneConfig(): void;
-    loadSceneConfig(sceneID: string): Promise<any>;
     clearGameComplete(): void;
     setSize(width: any, height: any): void;
     getSize(): ISize;
@@ -95,43 +119,47 @@ export declare class Game extends PacketHandler implements IConnectListener, Clo
     roomResume(roomID: number): void;
     roomPause(roomID: number): void;
     setCamerasBounds(x: number, y: number, width: number, height: number): void;
-    initgameConfigUrls(urls: string[]): void;
     getConfigUrl(sceneId: string): string;
     onClockReady(): void;
     syncClock(times?: number): void;
     set moveStyle(moveStyle: number);
     get moveStyle(): number;
+    get scaleRatio(): number;
+    get debugReconnect(): boolean;
+    set debugReconnect(val: boolean);
     get httpService(): HttpService;
-    get peer(): any;
-    get connection(): Connection;
+    get peer(): MainPeer;
+    get connection(): ConnectionService;
     get socket(): GameSocket;
     get uiManager(): UIManager;
-    get SoundWorkerManager(): SoundWorkerManager;
+    get soundManager(): SoundWorkerManager;
     get clock(): Clock;
+    set clock(val: Clock);
     get httpClock(): HttpClock;
+    set httpClock(val: HttpClock);
     get elementStorage(): ElementStorage;
     get roomManager(): RoomManager;
     get guideWorkerManager(): GuideWorkerManager;
     get loadingManager(): LoadingManager;
     get dataControlManager(): BaseDataControlManager;
+    get gameConfigUrl(): string;
+    set gameConfigUrl(val: string);
+    get gameConfigUrls(): Map<string, string>;
+    get gameConfigState(): Map<string, boolean>;
     get httpLoaderManager(): HttpLoadManager;
     get emitter(): EventDispatcher;
     get user(): User;
     get renderPeer(): any;
-    get physicalPeer(): any;
+    get gameStateManager(): GameStateManager;
     get avatarType(): op_def.AvatarStyle;
     get customProto(): CustomProtoManager;
     onFocus(): any;
     onBlur(): void;
-    enterVirtualWorld(): Promise<void>;
-    login(): void;
     refreshToken(): Promise<void>;
-    loginEnterWorld(): Promise<void>;
     leaveRoom(room: IRoomService): void;
     showByName(name: string, data?: any): void;
     showMediator(name: string, isShow: boolean, param?: any): void;
     hideMediator(name: any): void;
-    gameCreated(): void;
     /**
      * 加载前端json文件
      * @param name
@@ -142,16 +170,15 @@ export declare class Game extends PacketHandler implements IConnectListener, Clo
     protected initWorld(): Promise<void>;
     protected createManager(): void;
     protected onClearGame(): void;
-    protected onInitVirtualWorldPlayerInit(packet: PBpacket): Promise<void>;
     protected onSelectCharacter(): void;
     protected onGotoAnotherGame(packet: PBpacket): void;
     protected onAvatarGameModeHandler(packet: PBpacket): void;
-    protected update(current: number, delta?: number): void;
-    protected loadGameConfig(remotePath: any): Promise<Lite>;
+    protected update(current?: number, delta?: number): void;
     private _createAnotherGame;
     private _onGotoAnotherGame;
     private clearGame;
     private decodeConfigs;
+    private onClientPingHandler;
     private _run;
 }
 export {};

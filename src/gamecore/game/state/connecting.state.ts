@@ -1,6 +1,4 @@
-import { ServerAddress } from "lib/net/address";
-import { ModuleName } from "structure";
-import { Logger } from "utils";
+import { ModuleName, Logger, ServerAddress } from "structure";
 import { Clock, HttpClock } from "../loop";
 import { MainPeer } from "../main.peer";
 import { BaseState } from "./base.state";
@@ -8,6 +6,7 @@ export class ConnectingState extends BaseState {
     constructor(main: MainPeer, key: string) {
         super(main, key);
     }
+
     run() {
         super.run();
         const config = this.mMain.config;
@@ -26,6 +25,7 @@ export class ConnectingState extends BaseState {
             this.mGame.connection.startConnect(addr);
         }
     }
+
     update(data?: any) {
         // 告诉主进程链接成功
         this.mGame.renderPeer.onConnected(data);

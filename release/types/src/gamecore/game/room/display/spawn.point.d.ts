@@ -1,7 +1,6 @@
 /// <reference types="tooqinggamephaser" />
 import { op_client, op_gameconfig, op_gameconfig_01, op_def } from "pixelpai_proto";
-import { AnimationQueue, AvatarSuit, ISprite, RunningAnimation, IAvatar, IDragonbonesModel, IFramesModel } from "structure";
-import { LogicPos } from "structure";
+import { LogicPos, AnimationQueue, AvatarSuit, ISprite, RunningAnimation, IAvatar, IDragonbonesModel, IFramesModel } from "structure";
 export declare class SpawnPoint implements ISprite {
     id: number;
     avatar: IAvatar;
@@ -26,6 +25,7 @@ export declare class SpawnPoint implements ISprite {
     animationQueue: AnimationQueue[];
     suits: AvatarSuit[];
     titleMask: number;
+    sound: string;
     constructor();
     newID(): void;
     setPosition(x: number, y: number): void;

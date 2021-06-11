@@ -1,8 +1,6 @@
 import { op_client, op_gameconfig, op_gameconfig_01, op_def } from "pixelpai_proto";
-import { AnimationModel, AnimationQueue, AvatarSuit, ISprite, RunningAnimation, IAvatar, IDragonbonesModel, IFramesModel } from "structure";
-import { LogicPos } from "structure";
 import { FramesModel } from "baseGame";
-
+import { LogicPos, AnimationModel, AnimationQueue, AvatarSuit, ISprite, RunningAnimation, IAvatar, IDragonbonesModel, IFramesModel } from "structure";
 export class SpawnPoint implements ISprite {
     id: number;
     avatar: IAvatar;
@@ -27,7 +25,7 @@ export class SpawnPoint implements ISprite {
     animationQueue: AnimationQueue[];
     suits: AvatarSuit[];
     titleMask: number;
-
+    sound: string;
     constructor() {
         this.id = 100;
         this.nodeType = op_def.NodeType.SpawnPointType;

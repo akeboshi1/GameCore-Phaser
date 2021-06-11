@@ -13,7 +13,9 @@ export declare class Clock extends PacketHandler {
     private mIntervalId;
     private mListener;
     private mainPeer;
+    private mStartCheckBoo;
     constructor(con: ConnectionService, mainPeer: MainPeer, listener?: ClockReadyListener);
+    startCheckTime(): void;
     sync(times?: number): void;
     clearTime(): void;
     destroy(): void;

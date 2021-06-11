@@ -1,7 +1,15 @@
+/*
+ * @Author: your name
+ * @Date: 2021-06-11 09:26:50
+ * @LastEditTime: 2021-06-11 17:47:30
+ * @LastEditors: your name
+ * @Description: In User Settings Edit
+ * @FilePath: /game-core/src/gamecore/render/index.ts
+ */
 // import "structure";
 // import "utils";
 // import "baseRender";
-import "tooqingphaser";
+import "tooqinggamephaser";
 export * from "./account";
 export * from "./cameras";
 export * from "./display";

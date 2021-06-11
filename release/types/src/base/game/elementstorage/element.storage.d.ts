@@ -30,7 +30,7 @@ interface IDisplayRef {
     displayModel?: FramesModel | DragonbonesModel;
 }
 export declare class ElementStorage implements IElementStorage {
-    protected mModels: Map<number, DragonbonesModel | FramesModel>;
+    protected mModels: Map<number, FramesModel | DragonbonesModel>;
     protected mElementRef: Map<number, IDisplayRef>;
     protected terrainPalette: Map<number, FramesModel>;
     protected terrainPaletteWithBindId: Map<number, FramesModel>;

@@ -1,10 +1,8 @@
-import { op_client, op_def } from "pixelpai_proto";
-import { IRoomService, Room } from "./room";
+import { op_client } from "pixelpai_proto";
 import { PacketHandler, PBpacket } from "net-socket-packet";
 import { Game } from "../game";
-import { ConnectionService } from "structure";
-import { Lite } from "game-capsule";
-import { EventType, GameState, Logger } from "structure";
+import { IRoomService, Room } from "./room";
+import { ConnectionService, Logger } from "structure";
 
 export interface IRoomManager {
     readonly game: Game | undefined;
@@ -28,8 +26,8 @@ export class RoomManager extends PacketHandler implements IRoomManager {
     constructor(game: Game) {
         super();
         this.mGame = game;
-        this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_ENTER_SCENE, this.onEnterSceneHandler);
         this.addHandlerFun(op_client.OPCODE._OP_EDITOR_REQ_CLIENT_CHANGE_TO_EDITOR_MODE, this.onEnterEditor);
+        this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_EDIT_MODE_ENTER_ROOM, this.onEnterResult);
         // this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_EDIT_MODE_READY, this.onEnterDecorate);
     }
 
@@ -84,12 +82,18 @@ export class RoomManager extends PacketHandler implements IRoomManager {
         this.mCurRoom = null;
     }
 
-    public destroy() {
-        this.removePackListener();
-        this.removeAllRoom();
+    public hasRoom(id: number): boolean {
+        const idx = this.mRooms.findIndex((room: Room, index: number) => id === room.id);
+        return idx >= 0;
     }
 
-    protected onEnterRoom(scene: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_ENTER_SCENE) {
+    public async leaveRoom(room: IRoomService) {
+        if (!room) return;
+        this.mRooms = this.mRooms.filter((r: IRoomService) => r.id !== room.id);
+        room.destroy();
+    }
+
+    public onEnterRoom(scene: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_ENTER_SCENE) {
         Logger.getInstance().debug("enter===room");
         const id = scene.scene.id;
         let boo: boolean = false;
@@ -105,31 +109,12 @@ export class RoomManager extends PacketHandler implements IRoomManager {
         this.mRooms.push(room);
         room.addActor(scene.actor);
         room.enter(scene.scene);
-        this.game.peer.state = GameState.RoomCreate;
         this.mCurRoom = room;
     }
 
-    private hasRoom(id: number): boolean {
-        const idx = this.mRooms.findIndex((room: Room, index: number) => id === room.id);
-        return idx >= 0;
-    }
-
-    private async onEnterScene(scene: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_ENTER_SCENE) {
-        // this.destroy();
-        const vw = scene;
-        if (this.mCurRoom) {
-            // 客户端会接受到多次进入场景消息，这边客户端自己处理下，防止一个房间多次创建
-            if (this.mCurRoom.id === vw.scene.id) return;
-            await this.leaveRoom(this.mCurRoom);
-        }
-        if (this.hasRoom(vw.scene.id)) {
-            this.onEnterRoom(scene);
-        } else {
-            this.mGame.loadSceneConfig(vw.scene.id.toString()).then(async (config: Lite) => {
-                this.game.elementStorage.setSceneConfig(config);
-                this.onEnterRoom(scene);
-            });
-        }
+    public destroy() {
+        this.removePackListener();
+        this.removeAllRoom();
     }
 
     private onEnterEditor(packet: PBpacket) {
@@ -140,38 +125,14 @@ export class RoomManager extends PacketHandler implements IRoomManager {
         // this.mRooms.push(room);
     }
 
-    private async leaveRoom(room: IRoomService) {
-        if (!room) return;
-        this.mRooms = this.mRooms.filter((r: IRoomService) => r.id !== room.id);
-        room.destroy();
-        // await
-        // this.mGame.leaveRoom(room);
-        // Logger.getInstance().debug("===========leaveRoom");
-        // return new Promise((resolve, reject) => {
-        //     const loading: LoadingScene = <LoadingScene>this.mWorld.game.scene.getScene(LoadingScene.name);
-        //     if (loading) {
-        //         loading.show().then(() => {
-        //             this.mRooms = this.mRooms.filter((r: IRoomService) => r.id !== room.id);
-        //             room.destroy();
-        //             resolve();
-        //         });
-        //     }
-        // });
-    }
-
-    private onEnterSceneHandler(packet: PBpacket) {
-        const content: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_ENTER_SCENE = packet.content;
-        const scene = content.scene;
-        switch (scene.sceneType) {
-            case op_def.SceneTypeEnum.NORMAL_SCENE_TYPE:
-                this.onEnterScene(content);
-                break;
-            case op_def.SceneTypeEnum.EDIT_SCENE_TYPE:
-                Logger.getInstance().error("error message: scene.sceneType === EDIT_SCENE_TYPE");
-                break;
+    private onEnterResult(packet: PBpacket) {
+        const content: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_EDIT_MODE_ENTER_ROOM = packet.content;
+        if (!content.result) {
+            return;
         }
-        this.game.peer.state = GameState.EnterScene;
-        this.game.emitter.emit(EventType.SCENE_CHANGE);
+        const tips = [undefined, "commontips.room_full", "commontips.room_need_password", "commontips.room_password_failure", "commontips.room_dose_not_exists"];
+        const tip = tips[content.result - 1];
+        if (tip) this.game.renderPeer.showAlert(tip);
     }
 
     get game(): Game {
