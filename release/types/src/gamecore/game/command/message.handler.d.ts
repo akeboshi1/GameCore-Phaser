@@ -12,5 +12,5 @@ export declare class MessageHandler extends PacketHandler {
     protected onAddListener(): void;
     protected onRemoveListener(): void;
     get connection(): ConnectionService;
-    get emitter(): import("../../../structure").EventDispatcher;
+    get emitter(): any;
 }

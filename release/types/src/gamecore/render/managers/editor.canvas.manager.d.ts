@@ -1,4 +1,5 @@
 import { Render } from "../render";
+import { DragonbonesDisplay } from "../display/dragonbones/dragonbones.display";
 export declare class EditorCanvasManager {
     private render;
     readonly AVATAR_CANVAS_TEST_DATA: {
@@ -10,5 +11,6 @@ export declare class EditorCanvasManager {
     private readonly SCENEKEY_SNAPSHOT;
     constructor(render: Render);
     destroy(): void;
+    saveAvatar(dbDisplay: DragonbonesDisplay): Promise<any>;
     createHeadIcon(sets: any[]): Promise<string>;
 }

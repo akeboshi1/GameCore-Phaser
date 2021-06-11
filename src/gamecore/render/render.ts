@@ -1,4 +1,4 @@
-import { Game } from "tooqingphaser";
+import { Game } from "tooqinggamephaser";
 import { Export, RPCPeer, webworker_rpc } from "webworker-rpc";
 import { UiUtils, Url } from "utils";
 import { PBpacket } from "net-socket-packet";
@@ -84,8 +84,6 @@ export class Render extends RPCPeer implements GameMain, IRender {
     protected mEditorCanvasManager: EditorCanvasManager;
     protected mRenderParam: IWorkerParam;
     protected mMainPeerParam: IWorkerParam;
-    // protected mPhysicalPeerParam: IWorkerParam;
-    // protected mRequireContext;
     private mCallBack: Function;
     private _moveStyle: number = 0;
     private _curTime: number;
@@ -136,10 +134,7 @@ export class Render extends RPCPeer implements GameMain, IRender {
         this.mConfig.hasGameCreated = this.mConfig.game_created ? true : false;
         this.mConfig.hasReload = this.mConfig.reload ? true : false;
         this.mConfig.hasGameLoaded = this.mConfig.gameLoaded ? true : false;
-        // this.mRequireContext = config.requireContext;
-        // Url.REQUIRE_CONTEXT = this.mRequireContext;
         // rpc不传送方法
-        // delete this.mConfig.requireContext;
         delete this.mConfig.connectFail;
         delete this.mConfig.game_created;
         delete this.mConfig.closeGame;
@@ -147,11 +142,6 @@ export class Render extends RPCPeer implements GameMain, IRender {
         // Logger.getInstance().debug("connectfail===>", this.mConnectFailFunc, this.mConfig);
         this.initConfig();
         Logger.getInstance().log("Render version ====>:", `v${this.mConfig.version}`);
-        // this.linkTo(HEARTBEAT_WORKER, HEARTBEAT_WORKER_URL).onceReady(() => {
-        //     this.mHeartPeer = this.remote[HEARTBEAT_WORKER].HeartBeatPeer;
-        //     this.mMainPeer.updateFps();
-        //     Logger.getInstance().debug("heartBeatworker onReady in Render");
-        // });
         // const len = 3;
         // const statList = [];
         // for (let i = 0; i < len; i++) {
@@ -182,38 +172,6 @@ export class Render extends RPCPeer implements GameMain, IRender {
     get mainPeerParam() {
         return this.mMainPeerParam;
     }
-
-    // get physicalPeerParam() {
-    //     return this.mPhysicalPeerParam;
-    // }
-
-    // get requireContext(): any {
-    //     return this.mRequireContext;
-    // }
-
-    public linkMain(key, url, peerName) {
-        // todo protected createFunc
-        Logger.getInstance().log("startLink mainpeer", key, url, peerName);
-        this.linkTo(key, url).onceReady(() => {
-            this.mMainPeer = this.remote[key][peerName];
-            this.mMainPeer.updateFps();
-            this.createGame();
-            Logger.getInstance().debug("worker onReady");
-        });
-    }
-
-    // public linkPhysical(key, url, peerName) {
-    //     this.linkTo(key, url).onceReady(() => {
-    //         this.mPhysicalPeer = this.remote[key][peerName];
-    //         this.mPhysicalPeer.setScaleRatio(Math.ceil(this.mConfig.devicePixelRatio || UiUtils.baseDpr));
-    //         this.mPhysicalPeer.start();
-    //         Logger.getInstance().debug("Physcialworker onReady");
-    //     });
-    // }
-
-    // get physicalPeer(): any {
-    //     return this.mPhysicalPeer;
-    // }
 
     setKeyBoardHeight(height: number) {
         throw new Error("Method not implemented.");
@@ -398,14 +356,6 @@ export class Render extends RPCPeer implements GameMain, IRender {
         if (panel) {
             const inputs = this.game.domContainer.getElementsByTagName("input");
             if (inputs && inputs.length > 0) {
-                // tslint:disable-next-line:prefer-for-of
-                // for (let i = 0; i < inputs.length; i++) {
-                //     if (window.document.activeElement === inputs[i]) {
-                //         panel.showKeyboard(width * this.mConfig.devicePixelRatio, height * this.mConfig.devicePixelRatio);
-                //         return;
-                //     }
-                // }
-                // panel.hideKeyboard();
                 if (panel.getInputFocusing()) {
                     panel.showKeyboard(width * this.mConfig.devicePixelRatio, height * this.mConfig.devicePixelRatio);
                     return;
@@ -422,14 +372,6 @@ export class Render extends RPCPeer implements GameMain, IRender {
         const w = width * this.mConfig.devicePixelRatio;
         const h = height * this.mConfig.devicePixelRatio;
         this.initRatio();
-        // this.mScaleRatio = Math.ceil(this.mConfig.devicePixelRatio || UiUtils.baseDpr);
-        // this.mConfig.scale_ratio = this.mScaleRatio;
-        // this.mUIRatio = Math.round(this.mConfig.devicePixelRatio || UiUtils.baseDpr);
-        // if (this.mUIRatio > 3) {
-        //     this.mUIRatio = 3;
-        // }
-        // const scaleW = (width / this.DEFAULT_WIDTH) * (this.mConfig.devicePixelRatio / this.mUIRatio);
-        // this.mUIScale = this.game.device.os.desktop ? UiUtils.baseScale : scaleW;
         if (this.mGame) {
             this.mGame.scale.zoom = 1 / this.mConfig.devicePixelRatio;
             this.mGame.scale.resize(w, h);
@@ -453,7 +395,6 @@ export class Render extends RPCPeer implements GameMain, IRender {
         if (this.mCameraManager) {
             this.mCameraManager.resize(width, height);
         }
-        // if (this.mSceneManager) this.mSceneManager.resize(width, height);
     }
 
     onOrientationChange(oriation: number, newWidth: number, newHeight: number) {
@@ -518,18 +459,7 @@ export class Render extends RPCPeer implements GameMain, IRender {
             return;
         }
         this.destroy(false).then(() => {
-            this.linkTo(this.mMainPeerParam.key, this.mMainPeerParam.url).onceReady(() => {
-                this.mMainPeer = this.mainPeer;
-                this.mMainPeer.updateFps();
-                this.createGame();
-                Logger.getInstance().debug("worker onReady");
-            });
-            // this.linkTo(this.mPhysicalPeerParam.key, this.mPhysicalPeerParam.url).onceReady(() => {
-            //     this.mPhysicalPeer = this.remote[this.mPhysicalPeerParam.key][this.mPhysicalPeerParam.name];
-            //     this.mPhysicalPeer.setScaleRatio(Math.ceil(this.mConfig.devicePixelRatio || UiUtils.baseDpr));
-            //     this.mPhysicalPeer.start();
-            //     Logger.getInstance().debug("Physcialworker onReady");
-            // });
+            this.initWorker();
         });
     }
 
@@ -594,9 +524,6 @@ export class Render extends RPCPeer implements GameMain, IRender {
     }
 
     destroy(destroyPeer: boolean = true): Promise<void> {
-
-        // this.mainPeer.destroy();
-        // this.physicalPeer.destroy();
         return new Promise((resolve, reject) => {
             this.destroyWorker([this.mMainPeerParam.key]).then(() => {
                 if (this.mGame) {
@@ -657,7 +584,7 @@ export class Render extends RPCPeer implements GameMain, IRender {
                 disableContextMenu: true,
                 transparent: false,
                 backgroundColor: 0x0,
-                // resolution: 1,
+                resolution: 1,
                 fps: {
                     target: 45,
                     forceSetTimeOut: true
@@ -687,7 +614,6 @@ export class Render extends RPCPeer implements GameMain, IRender {
             };
             Object.assign(this.gameConfig, this.mConfig);
             this.mGame = new Game(this.gameConfig);
-            // this.mGame.input.mouse.capture = true;
             if (this.mGame.device.os.desktop) {
                 this.mUIScale = 1;
                 this.mConfig.platform = PlatFormType.PC;
@@ -768,10 +694,6 @@ export class Render extends RPCPeer implements GameMain, IRender {
     public renderEmitter(eventType: string, data?: any) {
         if (this.mMainPeer) this.mMainPeer.renderEmitter(eventType, data);
     }
-
-    // public renderToPhysicalEmitter(eventType: string, data?: any) {
-    //     if (this.physicalPeer) this.physicalPeer.renderEmitter(eventType, data);
-    // }
 
     public showMediator(name: string, isShow: boolean) {
         if (this.mMainPeer) this.mMainPeer.showMediator(name, isShow);
@@ -858,6 +780,11 @@ export class Render extends RPCPeer implements GameMain, IRender {
                 });
             }
         });
+    }
+
+    @Export([webworker_rpc.ParamType.str])
+    showTipsAlert(str) {
+        this.mUiManager.showTipsAlert({ text: [{ text: str, node: undefined }] });
     }
 
     @Export([webworker_rpc.ParamType.num])
@@ -988,6 +915,11 @@ export class Render extends RPCPeer implements GameMain, IRender {
 
     }
 
+    @Export([webworker_rpc.ParamType.str])
+    public playSoundByKey(key: string) {
+        if (this.mSoundManager) this.mSoundManager.playSound({ soundKey: key });
+    }
+
     @Export()
     public playOsdSound(content: any) {
         if (this.mSoundManager) this.mSoundManager.playOsdSound(content);
@@ -1080,7 +1012,6 @@ export class Render extends RPCPeer implements GameMain, IRender {
                 resolve(true);
             });
         });
-        // if (this.mainPeer) this.mainPeer.createAccount(gameID, worldID, sceneID, loc);
     }
 
     @Export()
@@ -1141,11 +1072,13 @@ export class Render extends RPCPeer implements GameMain, IRender {
     }
 
     @Export([webworker_rpc.ParamType.str])
-    public showAlert(text: string, ok?: boolean) {
+    public showAlert(text: string, ok?: boolean, needI18n?: boolean) {
         // 告诉render显示警告框
         if (ok === undefined) ok = true;
+        if (needI18n === undefined) needI18n = true;
         return new Promise((resolve, reject) => {
             if (this.uiManager) {
+                if (needI18n) text = i18n.t(text);
                 this.uiManager.showAlertView(text, ok, undefined, () => {
                     resolve(null);
                 });
@@ -1303,19 +1236,6 @@ export class Render extends RPCPeer implements GameMain, IRender {
         this.mGame.events.on(Phaser.Core.Events.FOCUS, this.onFocus, this);
         this.mGame.events.on(Phaser.Core.Events.BLUR, this.onBlur, this);
         this.resize(this.mConfig.width, this.mConfig.height);
-        // if (window.screen.width > window.screen.height) {
-        //     if (this.mConfig.width > this.mConfig.height) {
-        //         this.resize(this.mConfig.width, this.mConfig.height);
-        //     } else {
-        //         this.resize(this.mConfig.height, this.mConfig.width);
-        //     }
-        // } else {
-        //     if (this.mConfig.width < this.mConfig.height) {
-        //         this.resize(this.mConfig.width, this.mConfig.height);
-        //     } else {
-        //         this.resize(this.mConfig.height, this.mConfig.width);
-        //     }
-        // }
         if (this.mGameCreatedFunc) {
             Logger.getInstance().log("render game_created");
             this.mGameCreatedFunc.call(this);
@@ -1483,23 +1403,6 @@ export class Render extends RPCPeer implements GameMain, IRender {
     public setPlayerModel(sprite: any) {
         if (this.mDisplayManager) this.mDisplayManager.setModel(sprite);
     }
-    // @Export([webworker_rpc.ParamType.num, webworker_rpc.ParamType.num])
-    // public updateDirection(id: number, dir: number) {
-    //     if (this.mDisplayManager) {
-    //         const display = this.mDisplayManager.getDisplay(id);
-    //         display.setDirection(dir);
-    //     }
-    // }
-
-    @Export([webworker_rpc.ParamType.num, webworker_rpc.ParamType.num])
-    public drawServerPosition(x: number, y: number) {
-        if (this.mDisplayManager) this.mDisplayManager.drawServerPosition(x, y);
-    }
-
-    @Export()
-    public hideServerPosition() {
-        if (this.mDisplayManager) this.mDisplayManager.hideServerPosition();
-    }
 
     @Export()
     public addSkybox(scenery: IScenery) {
@@ -1509,6 +1412,26 @@ export class Render extends RPCPeer implements GameMain, IRender {
     @Export([webworker_rpc.ParamType.num])
     public removeSkybox(id: number) {
         if (this.mDisplayManager) this.mDisplayManager.removeSkybox(id);
+    }
+
+    @Export()
+    public showMatterDebug(vertices) {
+        if (this.mDisplayManager) this.mDisplayManager.showMatterDebug(vertices);
+    }
+
+    @Export()
+    public hideMatterDebug() {
+        if (this.mDisplayManager) this.mDisplayManager.hideMatterDebug();
+    }
+
+    @Export([webworker_rpc.ParamType.num, webworker_rpc.ParamType.num])
+    public drawServerPosition(x: number, y: number) {
+        if (this.mDisplayManager) this.mDisplayManager.drawServerPosition(x, y);
+    }
+
+    @Export()
+    public hideServerPosition() {
+        if (this.mDisplayManager) this.mDisplayManager.hideServerPosition();
     }
 
     @Export([webworker_rpc.ParamType.num, webworker_rpc.ParamType.num])
@@ -1648,11 +1571,6 @@ export class Render extends RPCPeer implements GameMain, IRender {
         this.emitter.emit(eventType, data);
     }
 
-    // @Export([webworker_rpc.ParamType.str])
-    // public physicalEmitter(eventType: string, data?: any) {
-    //     this.emitter.emit(eventType, data);
-    // }
-
     @Export([webworker_rpc.ParamType.num, webworker_rpc.ParamType.num, webworker_rpc.ParamType.num])
     public mount(id: number, targetID: number, targetIndex: number) {
         if (this.mDisplayManager) this.mDisplayManager.mount(id, targetID, targetIndex);
@@ -1736,9 +1654,6 @@ export class Render extends RPCPeer implements GameMain, IRender {
         Url.RES_PATH = `resources/`;
         Url.RESUI_PATH = `${Url.RES_PATH}ui/`;
         this.initRatio();
-        // initLocales(path.relative(__dirname, `${Url.RES_PATH}/locales/{{lng}}.json`));
-        // const locales = require(`${Url.RES_PATH}locales`);
-        // initLocales(resources);
     }
 
     protected initRatio() {
@@ -1752,13 +1667,17 @@ export class Render extends RPCPeer implements GameMain, IRender {
         let desktop = false;
         if (this.game) desktop = this.game.device.os.desktop;
         this.mUIScale = desktop ? UiUtils.baseScale : scaleW;
-        // this.mUIScale = (this.mConfig.width / this.DEFAULT_WIDTH) * (this.mConfig.devicePixelRatio / this.mUIRatio);
     }
 
-    // private connectReconnect() {
-    //     if (!this.game) return;
-    //     this.createGame();
-    // }
+    protected initWorker() {
+        Logger.getInstance().log("startLink mainpeer", this.mMainPeerParam.key, this.mMainPeerParam.url);
+        this.attach(this.mMainPeerParam.key, this.mMainPeerParam.url).onceReady(() => {
+            this.mMainPeer = this.mainPeer;
+            this.mMainPeer.updateFps();
+            this.createGame();
+            Logger.getInstance().debug("worker onReady");
+        });
+    }
 
     private onFullScreenChange() {
         this.resize(this.mGame.scale.gameSize.width, this.mGame.scale.gameSize.height);
@@ -1771,21 +1690,8 @@ export class Render extends RPCPeer implements GameMain, IRender {
         if (this.mConfig.game_created) {
             this.mConfig.game_created();
         }
-        // if (this.moveStyle === MoveStyle.DIRECTION_MOVE_STYLE || this.moveStyle === 1) {
-        //     if (this.mGame.device.os.desktop) {
-        //         this.mInputManager = new KeyBoardManager(this, keyEvents);
-        //     } else {
-        //         this.mInputManager = new JoyStickManager(this, keyEvents);
-        //     }
-        // } else {
-        //     if (this.mGame.device.os.desktop) {
-        //         this.mInputManager = new KeyBoardManager(this, keyEvents);
-        //     }
-        // }
-        // if (this.mInputManager) this.mInputManager.enable = false;
         this.mGame.scale.on("enterfullscreen", this.onFullScreenChange, this);
         this.mGame.scale.on("leavefullscreen", this.onFullScreenChange, this);
-        // this.mGame.scale.on("orientationchange", this.onOrientationChange, this);
     }
 
     private resumeScene() {

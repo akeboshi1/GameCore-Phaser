@@ -13,5 +13,5 @@ export declare class EffectManager extends PacketHandler {
     protected updateDisplay(effect: Effect): void;
     protected fetchDisplay(ids: number[]): void;
     private onSyncSprite;
-    get connection(): import("../..").Connection;
+    get connection(): import("../../../..").ConnectionService;
 }

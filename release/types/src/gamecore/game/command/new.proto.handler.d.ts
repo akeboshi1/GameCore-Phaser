@@ -9,6 +9,6 @@ export declare class NewProtoHandler {
     protected removePackListener(): void;
     protected onAddListener(): void;
     protected onRemoveListener(): void;
-    get emitter(): import("../../..").EventDispatcher;
+    get emitter(): any;
     get proto(): import("..").CustomProtoManager;
 }

@@ -1,6 +1,6 @@
 import { PacketHandler, PBpacket } from "net-socket-packet";
 import { op_virtual_world, op_client } from "pixelpai_proto";
-import { ConnectionService } from "structure";
+import { ConnectionService, Logger } from "structure";
 import { MainPeer } from "../../main.peer";
 import IOP_CLIENT_REQ_VIRTUAL_WORLD_SYNC_TIME = op_virtual_world.IOP_CLIENT_REQ_VIRTUAL_WORLD_SYNC_TIME;
 import IOP_VIRTUAL_WORLD_RES_CLIENT_SYNC_TIME = op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_SYNC_TIME;
@@ -27,6 +27,7 @@ export class Clock extends PacketHandler {
     private mIntervalId: any;
     private mListener: ClockReadyListener;
     private mainPeer: MainPeer;
+    private mStartCheckBoo: boolean = false;
     constructor(con: ConnectionService, mainPeer: MainPeer, listener?: ClockReadyListener) {
         super();
         this.mConn = con;
@@ -34,11 +35,20 @@ export class Clock extends PacketHandler {
         this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_SYNC_TIME, this.proof);
         this.mListener = listener;
         this.mainPeer = mainPeer;
-        this._check();
         con.setClock(this);
     }
 
+    public startCheckTime() {
+        if (this.mStartCheckBoo) return;
+        this.mStartCheckBoo = true;
+        this._check();
+    }
+
     public sync(times: number = 1): void {
+        if (!this.mStartCheckBoo) {
+            Logger.getInstance().log("clock no start ====>");
+            return;
+        }
         if (!this.mConn) return;
         if (times < 0) {
             times = 1;
@@ -52,6 +62,7 @@ export class Clock extends PacketHandler {
     }
 
     public clearTime() {
+        this.mStartCheckBoo = false;
         this.mClockSync = false;
         if (this.mIntervalId) {
             clearInterval(this.mIntervalId);

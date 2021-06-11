@@ -34,3 +34,4 @@ export * from "./progress.three.mask.bar";
 export * from "./progress.three.bar";
 export * from "./texture.sprite";
 export * from "./input.field";
+export * from "./progress.nine.mask.bar";

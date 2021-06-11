@@ -1,10 +1,10 @@
 /// <reference types="tooqinggamephaser" />
+import { BaseDragonbonesDisplay, ReferenceArea } from "baseRender";
 import { Render } from "../../render";
-import { DisplayField, ElementStateType, IDragonbonesModel, RunningAnimation, IPos, IProjection } from "structure";
+import { IPos, IProjection, DisplayField, ElementStateType, IDragonbonesModel, RunningAnimation } from "structure";
 import { IDisplayObject } from "../display.object";
 import { ElementTopDisplay } from "../element.top.display";
 import { FramesDisplay } from "../frames/frames.display";
-import { BaseDragonbonesDisplay, ReferenceArea } from "baseRender";
 export declare class DragonbonesDisplay extends BaseDragonbonesDisplay implements IDisplayObject {
     private render;
     private uuid?;

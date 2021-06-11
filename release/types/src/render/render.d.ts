@@ -158,7 +158,7 @@ export declare class Render extends RPCPeer implements GameMain, IRender {
     showCreateRolePanel(data?: any): Promise<boolean>;
     showTipsAlert(str: any): void;
     updateModel(id: number, displayInfo: any): void;
-    getIndexInLayer(id: number): number;
+    getIndexInLayer(id: number): any;
     changeLayer(id: number, layerName: string, index?: number): void;
     showCreateRole(params?: any): void;
     hideCreateRole(): void;

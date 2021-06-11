@@ -11,14 +11,17 @@ export declare class GuideEffect extends Phaser.GameObjects.Container {
     protected mInitialized: boolean;
     private mGuideEffect;
     private mMask;
+    private guideText;
     private mScaleTween;
     private mScale;
     private mResources;
     private mCachePos;
     private mHandDisplay;
+    private mCacheText;
     constructor(scene: Phaser.Scene, tmpScale?: number);
     preload(): void;
-    createGuideEffect(pos: IPos): void;
+    createGuideEffect(pos: IPos, text?: string): void;
+    setGuideText(text: string): void;
     updatePos(pos: IPos): void;
     start(): void;
     stop(): void;

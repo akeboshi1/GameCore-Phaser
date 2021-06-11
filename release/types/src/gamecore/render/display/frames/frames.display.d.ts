@@ -1,7 +1,7 @@
 /// <reference types="tooqinggamephaser" />
 import { BaseFramesDisplay, ReferenceArea } from "baseRender";
 import { Render } from "../../render";
-import { ElementStateType, RunningAnimation, IPos } from "structure";
+import { IPos, ElementStateType, RunningAnimation } from "structure";
 import { IDisplayObject } from "../display.object";
 import { ElementTopDisplay } from "../element.top.display";
 import { DragonbonesDisplay } from "../dragonbones/dragonbones.display";

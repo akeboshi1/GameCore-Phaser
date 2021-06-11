@@ -1,7 +1,7 @@
+import { DisplayField, ElementStateType, IScenery, IPos, IPosition45Obj, IFramesModel, IDragonbonesModel, RunningAnimation } from "structure";
 import { FramesDisplay } from "../display/frames/frames.display";
 import { DragonbonesDisplay } from "../display/dragonbones/dragonbones.display";
 import { Render } from "../render";
-import { RunningAnimation, IDragonbonesModel, DisplayField, ElementStateType, IScenery, IPosition45Obj, IFramesModel } from "structure";
 import { op_def } from "pixelpai_proto";
 import { IDisplayObject } from "../display";
 export declare enum NodeType {
@@ -50,6 +50,7 @@ export declare class DisplayManager {
     private displays;
     private scenerys;
     private mUser;
+    private matterBodies;
     private serverPosition;
     private preLoadList;
     private loading;
@@ -74,7 +75,7 @@ export declare class DisplayManager {
     fadeOut(displayID: number): void;
     play(displayID: number, animation: RunningAnimation, field?: DisplayField, times?: number): void;
     mount(displayID: number, targetID: number, targetIndex?: number): void;
-    unmount(displayID: number, targetID: number): void;
+    unmount(displayID: number, targetID: number, pos?: IPos): void;
     addEffect(targetID: number, effectID: number, display: IFramesModel): void;
     removeEffect(targetID: number, displayID: number): void;
     showEffect(displayID: number): void;
@@ -87,6 +88,8 @@ export declare class DisplayManager {
     displayDoMove(id: number, moveData: any): void;
     showNickname(id: number, name: string): void;
     showTopDisplay(id: number, state?: ElementStateType): void;
+    showMatterDebug(bodies: any): void;
+    hideMatterDebug(): void;
     drawServerPosition(x: number, y: number): void;
     hideServerPosition(): void;
     liftItem(id: number, display: any, animation: any): void;

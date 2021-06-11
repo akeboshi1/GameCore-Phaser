@@ -1,15 +1,15 @@
 /// <reference types="tooqinggamephaser" />
-import { BubbleContainer } from "./bubble/bubble.container";
 import { ElementStateType, StateConfig } from "structure";
-import { TopDisplay } from "display";
+import { TopDisplay } from "baseRender";
+import { Render } from "../render";
 /**
  * 人物头顶显示对象
  */
 export declare class ElementTopDisplay extends TopDisplay {
-    protected scene: Phaser.Scene;
-    protected mBubble: BubbleContainer;
-    protected isDispose: boolean;
-    constructor(scene: Phaser.Scene, owner: any, dpr: number);
+    private mBubble;
+    private isDispose;
+    private uiScale;
+    constructor(scene: Phaser.Scene, owner: any, render: Render);
     showNickname(name: string): void;
     hideNickname(): void;
     showBubble(text: string, setting: any): void;
@@ -25,6 +25,6 @@ export declare class ElementTopDisplay extends TopDisplay {
     destroy(): void;
     update(): void;
     protected addToSceneUI(obj: any): void;
-    protected loadAtals(pngurl: string, jsonurl: string, context: any, callback: any): Promise<void>;
+    private loadAtals;
     private showStateHandler;
 }

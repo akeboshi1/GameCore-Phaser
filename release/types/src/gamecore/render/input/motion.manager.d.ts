@@ -26,7 +26,7 @@ export declare class MotionManager {
     protected onPointerUpHandler(pointer: Phaser.Input.Pointer): Promise<void>;
     protected getEleMovePath(id: any, pointer: any): Promise<void>;
     protected onPointerMoveHandler(pointer: Phaser.Input.Pointer): Promise<void>;
-    protected onPointeroutHandler(pointer: any): void;
+    protected onUiGameObjectDownHandler(pointer: any): void;
     protected onGameObjectDownHandler(pointer: any, gameObject: any): void;
     protected onGameObjectUpHandler(pointer: any, gameObject: any): void;
     protected getMountId(id: number): any;

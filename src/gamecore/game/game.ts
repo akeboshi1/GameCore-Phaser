@@ -10,14 +10,18 @@ import { Clock, ClockReadyListener } from "./loop/clock/clock";
 import { HttpClock } from "./loop/httpClock/http.clock";
 import { HttpService } from "./loop/httpClock/http.service";
 import { LoadingManager } from "./loading/loading.manager";
-import { ChatCommandInterface, ConnectionService, GameState, IConnectListener, ILauncherConfig, LoadState, Logger, ModuleName } from "structure";
+import { ChatCommandInterface, ConnectionService, EventDispatcher, GameState, IConnectListener, ILauncherConfig, LoadState, Logger, ModuleName, ServerAddress } from "structure";
 import { RoomManager } from "./room/room.manager";
 import { User } from "./actor/user";
 import { NetworkManager } from "./command";
+import { ConfigPath } from "./config/config/config";
 import { CustomProtoManager } from "./custom.proto/custom.proto.manager";
 import { ElementStorage } from "baseGame";
-import { BaseDataControlManager } from "./config";
+import { BaseDataControlManager, DataMgrType } from "./config";
 import { GuideWorkerManager } from "./guide.manager";
+import { SoundWorkerManager } from "./sound.manager";
+import { IRoomService } from "./room";
+import { GameStateManager } from "./state/game.state.manager";
 interface ISize {
     width: number;
     height: number;
@@ -35,17 +39,19 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
     protected mHttpClock: HttpClock;
     protected mHttpService: HttpService;
     protected mConfig: ILauncherConfig;
-    protected mDataManager: BaseDataControlManager;
-    protected mGuideManager: GuideWorkerManager;
+    protected mDataControlManager: BaseDataControlManager;
+    protected mGuideWorkerManager: GuideWorkerManager;
     protected mRoomManager: RoomManager;
     protected mElementStorage: ElementStorage;
     protected mUIManager: UIManager;
-    protected mSoundManager: SoundManager;
+    protected mSoundManager: SoundWorkerManager;
     protected mLoadingManager: LoadingManager;
-    protected mConfigManager: BaseConfigManager;
+    // protected mConfigManager: BaseConfigManager;
     protected mNetWorkManager: NetworkManager;
     protected mHttpLoadManager: HttpLoadManager;
     protected mCustomProtoManager: CustomProtoManager;
+     // 游戏状态管理器
+     protected mGameStateManager: GameStateManager;
 
     protected gameConfigUrls: Map<string, string> = new Map();
     protected gameConfigUrl: string;
@@ -71,6 +77,7 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
         this.mainPeer = peer;
         this.connect = new Connection(peer);
         this.addPacketListener();
+        if (!this.mGameStateManager) this.mGameStateManager = new GameStateManager(this.peer);
         this.update(new Date().getTime());
     }
 
@@ -97,7 +104,6 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
         this.setConfig(config);
         await this.initWorld();
         this.peer.state = GameState.InitWorld;
-        this.initGame();
         this.hasClear = false;
         this.login();
     }
@@ -328,7 +334,7 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
         return this.mConfig;
     }
     public getDataMgr<T>(type: DataMgrType) {
-        return this.dataManager.getDataMgr<T>(type);
+        return this.dataControlManager.getDataMgr<T>(type);
     }
     public clearClock() {
         if (this.mClock) {
@@ -402,7 +408,7 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
         return this.mUIManager;
     }
 
-    get soundManager(): SoundManager {
+    get soundManager(): SoundWorkerManager {
         return this.mSoundManager;
     }
 
@@ -422,26 +428,26 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
         return this.mRoomManager;
     }
 
-    get guideManager(): GuideManager {
-        return this.mGuideManager;
+    get guideWorkerManager(): GuideWorkerManager {
+        return this.mGuideWorkerManager;
     }
 
     get loadingManager(): LoadingManager {
         return this.mLoadingManager;
     }
 
-    get dataManager(): DataManager {
-        return this.mDataManager;
+    get dataControlManager(): BaseDataControlManager {
+        return this.mDataControlManager;
     }
-    get configManager() {
-        return this.mConfigManager;
-    }
+    // get configManager() {
+    //     return this.mConfigManager;
+    // }
     get httpLoaderManager() {
         return this.mHttpLoadManager;
     }
     get emitter(): EventDispatcher {
-        if (!this.mDataManager) return undefined;
-        return this.mDataManager.emitter;
+        if (!this.mDataControlManager) return undefined;
+        return this.mDataControlManager.emitter;
     }
 
     get user() {
@@ -471,9 +477,9 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
     get customProto() {
         return this.mCustomProtoManager;
     }
-    get cacheMgr() {
-        return this.getDataMgr<CacheDataManager>(DataMgrType.CacheMgr);
-    }
+    // get cacheMgr() {
+    //     return this.getDataMgr<CacheDataManager>(DataMgrType.CacheMgr);
+    // }
     public onFocus() {
         // if (this.mHeartBeat) clearInterval(this.mHeartBeat);
         this.mRunning = true;
@@ -579,6 +585,7 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
 
     public async loginEnterWorld() {
         Logger.getInstance().debug("loginEnterWorld");
+        const version = this.mConfig.version;
         this.mLoadingManager
             .start(LoadState.ENTERWORLD, { render: "构建现实世界" + `_v${version}`, main: "构建魔法世界" + `_v${version}`, physical: "构建物理世界" + `_v${version}` })
             .then(this.renderPeer.hideLogin());
@@ -693,15 +700,15 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
 
     protected createManager() {
         if (!this.mRoomManager) this.mRoomManager = new RoomManager(this);
-        if (!this.mGuideManager) this.mGuideManager = new GuideWorkerManager(this);
+        if (!this.mGuideWorkerManager) this.mGuideWorkerManager = new GuideWorkerManager(this);
         // this.mUiManager = new UiManager(this);
         if (!this.mElementStorage) this.mElementStorage = new ElementStorage();
         if (!this.mUIManager) this.mUIManager = new UIManager(this);
         if (!this.mHttpService) this.mHttpService = new HttpService(this);
-        if (!this.mSoundManager) this.mSoundManager = new SoundManager(this);
+        if (!this.mSoundManager) this.mSoundManager = new SoundWorkerManager(this);
         if (!this.mLoadingManager) this.mLoadingManager = new LoadingManager(this);
-        if (!this.mDataManager) this.mDataManager = new DataManager(this);
-        if (!this.mConfigManager) this.mConfigManager = new BaseConfigManager(this);
+        if (!this.mDataControlManager) this.mDataControlManager = new BaseDataControlManager(this);
+        // if (!this.mConfigManager) this.mConfigManager = new BaseConfigManager(this);
         if (!this.mNetWorkManager) this.mNetWorkManager = new NetworkManager(this);
         if (!this.mHttpLoadManager) this.mHttpLoadManager = new HttpLoadManager();
         if (!this.mCustomProtoManager) this.mCustomProtoManager = new CustomProtoManager(this);
@@ -709,7 +716,7 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
 
         this.mUIManager.addPackListener();
         this.mRoomManager.addPackListener();
-        this.mGuideManager.addPackListener();
+        this.mGuideWorkerManager.addPackListener();
         this.user.addPackListener();
         this.mSoundManager.addPackListener();
         // this.mPlayerDataManager.addPackListener();
@@ -717,20 +724,115 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
     protected onClearGame() {
 
     }
-    private initGame() {
-        // if (this.mRoomManager) this.mRoomManager.addPackListener();
-        // if (this.mUIManager) this.mUIManager.addPackListener();
-        // if (this.mCreateRoleManager) this.mCreateRoleManager.register();
-        // if (this.mSoundManager) this.mSoundManager.addPackListener();
-        // if (this.mPlayerDataManager) this.mPlayerDataManager.addPackListener();
-        // if (this.mElementStorage) {
-        //     this.mElementStorage.on("SCENE_PI_LOAD_COMPELETE", this.loadSceneConfig);
-        // }
-    }
+    protected async onInitVirtualWorldPlayerInit(packet: PBpacket) {
+        this.peer.state = GameState.PlayerInit;
+        Logger.getInstance().debug("onInitVirtualWorldPlayerInit");
+        // if (this.mClock) this.mClock.sync(); // Manual sync remote time.
+        // TODO 进游戏前预加载资源
+        const content: op_client.IOP_GATEWAY_RES_CLIENT_VIRTUAL_WORLD_INIT = packet.content;
+        const configUrls = content.configUrls;
+        this.moveStyle = content.moveStyle;
+        if (content.resourceRoot) Url.RESOURCE_ROOT = content.resourceRoot[0];
+        this.mClock.sync(-1);
 
-    private onGotoAnotherGame(packet: PBpacket) {
+        this.initgameConfigUrls(configUrls);
+        const account = await this.peer.render.getAccount();
+        if (!configUrls || configUrls.length <= 0) {
+            Logger.getInstance().error(`configUrls error: , ${configUrls}, gameId: ${account.gameID}`);
+            this.mainPeer.render.createGameCallBack(content.keyEvents);
+            this.gameCreated();
+            return;
+        }
+        Logger.getInstance().debug(`mMoveStyle:${content.moveStyle}`);
+        let game_id = account.gameId;
+        if (game_id === undefined) {
+            Logger.getInstance().log("!game_ID");
+            this.mainPeer.render.createGameCallBack(content.keyEvents);
+            this.gameCreated();
+            return;
+        }
+        Logger.getInstance().debug("WorldPlayerInit");
+        if (game_id.indexOf(".") > -1) {
+            game_id = game_id.split(".")[1];
+        }
+        const mainGameConfigUrl = this.gameConfigUrl;
+        this.mLoadingManager.start(LoadState.DOWNLOADGAMECONFIG);
+        Logger.getInstance().debug("onInitVirtualWorldPlayerInit====loadGameConfig");
+        // 每次加载，重新请求数据
+        this.isSyncPackage = false;
+        this.loadGameConfig(mainGameConfigUrl)
+            .then((gameConfig: Lite) => {
+                this.peer.state = GameState.CompleteDecodeConfig;
+                this.mElementStorage.setGameConfig(gameConfig);
+                this.mainPeer.render.createGameCallBack(content.keyEvents);
+                this.gameCreated();
+                Logger.getInstance().log("created game suc");
+            })
+            .catch((err: any) => {
+                Logger.getInstance().error(err);
+            });
+    }
+    protected onSelectCharacter() {
+        const pkt = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_GATEWAY_CHARACTER_CREATED);
+        this.mainPeer.send(pkt.Serialization());
+        const i18Packet = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_SET_LOCALE);
+        const content: op_virtual_world.IOP_CLIENT_REQ_VIRTUAL_WORLD_SET_LOCALE = i18Packet.content;
+        content.localeCode = "zh-CN";
+        this.mainPeer.send(i18Packet.Serialization());
+    }
+    protected onGotoAnotherGame(packet: PBpacket) {
         const content: op_client.IOP_VIRTUAL_WORLD_REQ_CLIENT_GOTO_ANOTHER_GAME = packet.content;
         this._onGotoAnotherGame(content.gameId, content.virtualWorldId, content.sceneId, content.loc, content.spawnPointId, content.worldId);
+    }
+
+    protected onAvatarGameModeHandler(packet: PBpacket) {
+        const content: op_client.IOP_VIRTUAL_WORLD_REQ_CLIENT_GAME_MODE = packet.content;
+        this.mAvatarType = content.avatarStyle;
+    }
+
+    protected update(current: number = 0, delta: number = 0) {
+        if (this.isDestroy) return;
+        this._run(current, delta);
+
+        const now: number = new Date().getTime();
+        const run_time: number = now - current;
+
+        if (run_time >= interval) {
+            // I am late.
+            Logger.getInstance().info(`Update late.  run_time: ${run_time} `);
+            this.update(now, run_time);
+        } else {
+            // Logger.getInstance().info(`${interval - run_time}`);
+            setTimeout(() => {
+                const when: number = new Date().getTime();
+                this.update(when, when - now);
+
+            }, interval - run_time);
+        }
+    }
+
+    protected loadGameConfig(remotePath): Promise<Lite> {
+        const configPath = ResUtils.getGameConfig(remotePath);
+        return load(configPath, "arraybuffer").then((req: any) => {
+            this.gameConfigState.set(remotePath, true);
+            this.peer.state = GameState.LoadGameConfig;
+            this.mLoadingManager.start(LoadState.PARSECONFIG);
+            Logger.getInstance().debug("start decodeConfig");
+            return this.decodeConfigs(req);
+        }, (reason) => {
+            if (this.remoteIndex > 3) {
+                if (this.mConfig.hasReload) {
+                    // app reload
+                } else {
+                    Logger.getInstance().log(reason);
+                    this.renderPeer.reload();
+                }
+                return;
+            }
+            this.remoteIndex++;
+            Logger.getInstance().error("reload res ====>", reason, "reload count ====>", this.remoteIndex);
+            return this.loadGameConfig(remotePath);
+        });
     }
 
     private _createAnotherGame(gameId, virtualworldId, sceneId, loc, spawnPointId?, worldId?) {
@@ -749,8 +851,6 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
                 this.mClock = null;
             }
             this.mainPeer.render.createAccount(gameId, virtualworldId, sceneId, loc, spawnPointId);
-            // this.mConfig.game_id = gameId;
-            // this.mConfig.virtual_world_id = virtualworldId;
             this.createManager();
             this.addPacketListener();
             this.startConnect();
@@ -796,9 +896,9 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
                     this.mRoomManager.destroy();
                     this.mRoomManager = null;
                 }
-                if (this.mGuideManager) {
-                    this.mGuideManager.destroy();
-                    this.mGuideManager = null;
+                if (this.mGuideWorkerManager) {
+                    this.mGuideWorkerManager.destroy();
+                    this.mGuideWorkerManager = null;
                 }
                 if (this.mUIManager) {
                     this.mUIManager.destroy();
@@ -820,24 +920,18 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
                     this.mHttpLoadManager.destroy();
                     this.mHttpLoadManager = null;
                 }
-                if (this.mConfigManager) {
-                    this.mConfigManager.destory();
-                    this.mConfigManager = null;
-                }
-                if (this.mDataManager) {
-                    this.mDataManager.clear();
-                    this.mDataManager = null;
+                if (this.mDataControlManager) {
+                    this.mDataControlManager.clear();
+                    this.mDataControlManager = null;
                 }
                 if (this.mSoundManager) {
                     this.mSoundManager.destroy();
                     this.mSoundManager = null;
                 }
-
                 if (this.mCustomProtoManager) {
                     this.mCustomProtoManager.destroy();
                     this.mCustomProtoManager = null;
                 }
-
                 if (this.user) this.user.removePackListener();
                 // this.peer.destroy();
                 this.hasClear = true;
@@ -845,100 +939,6 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
                 resolve();
             });
         });
-    }
-
-    private async onInitVirtualWorldPlayerInit(packet: PBpacket) {
-        this.peer.state = GameState.PlayerInit;
-        Logger.getInstance().debug("onInitVirtualWorldPlayerInit");
-        // if (this.mClock) this.mClock.sync(); // Manual sync remote time.
-        // TODO 进游戏前预加载资源
-        const content: op_client.IOP_GATEWAY_RES_CLIENT_VIRTUAL_WORLD_INIT = packet.content;
-        const configUrls = content.configUrls;
-        this.moveStyle = content.moveStyle;
-        if (content.resourceRoot) Url.RESOURCE_ROOT = content.resourceRoot[0];
-        this.mClock.sync(-1);
-
-        this.initgameConfigUrls(configUrls);
-        const account = await this.peer.render.getAccount();
-        // const keyBoardPacket: PBpacket = new PBpacket();
-        // keyBoardPacket.Deserialization(new Buffer(content.keyEvents));
-        if (!configUrls || configUrls.length <= 0) {
-            Logger.getInstance().error(`configUrls error: , ${configUrls}, gameId: ${account.gameID}`);
-            this.mainPeer.render.createGameCallBack(content.keyEvents);
-            // if (!this.mainPeer.physicalPeer) return;
-            this.gameCreated();
-            return;
-        }
-        Logger.getInstance().debug(`mMoveStyle:${content.moveStyle}`);
-        let game_id = account.gameId;
-        if (game_id === undefined) {
-            Logger.getInstance().log("!game_ID");
-            this.mainPeer.render.createGameCallBack(content.keyEvents);
-            // if (!this.mainPeer.physicalPeer) return;
-            this.gameCreated();
-            return;
-        }
-        Logger.getInstance().debug("WorldPlayerInit");
-        if (game_id.indexOf(".") > -1) {
-            game_id = game_id.split(".")[1];
-        }
-        const mainGameConfigUrl = this.gameConfigUrl;
-        this.mLoadingManager.start(LoadState.DOWNLOADGAMECONFIG);
-        // this.connect.loadRes([mainGameConfigUrl]);
-        Logger.getInstance().debug("onInitVirtualWorldPlayerInit====loadGameConfig");
-        // 每次加载，重新请求数据
-        this.isSyncPackage = false;
-        this.loadGameConfig(mainGameConfigUrl)
-            .then((gameConfig: Lite) => {
-                this.peer.state = GameState.CompleteDecodeConfig;
-                this.mElementStorage.setGameConfig(gameConfig);
-                this.mainPeer.render.createGameCallBack(content.keyEvents);
-                // if (!this.mainPeer.physicalPeer) return;
-                this.gameCreated();
-                Logger.getInstance().log("created game suc");
-            })
-            .catch((err: any) => {
-                Logger.getInstance().error(err);
-            });
-    }
-
-    private loadGameConfig(remotePath): Promise<Lite> {
-        if (!this.isSyncPackage && this.configManager.initialize) {
-            this.user.userData.querySYNC_ALL_PACKAGE();
-            this.isSyncPackage = true;
-        }
-        const configPath = ResUtils.getGameConfig(remotePath);
-        return load(configPath, "arraybuffer").then((req: any) => {
-            this.gameConfigState.set(remotePath, true);
-            this.peer.state = GameState.LoadGameConfig;
-            this.mLoadingManager.start(LoadState.PARSECONFIG);
-            Logger.getInstance().debug("start decodeConfig");
-            return this.decodeConfigs(req);
-        }, (reason) => {
-            if (this.remoteIndex > 3) {
-                if (this.mConfig.hasReload) {
-                    // app reload
-                } else {
-                    Logger.getInstance().log(reason);
-                    this.renderPeer.reload();
-                }
-                return;
-            }
-            this.remoteIndex++;
-            Logger.getInstance().error("reload res ====>", reason, "reload count ====>", this.remoteIndex);
-            return this.loadGameConfig(remotePath);
-        });
-    }
-
-    private onSelectCharacter() {
-        const pkt = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_GATEWAY_CHARACTER_CREATED);
-        this.mainPeer.send(pkt.Serialization());
-        const i18Packet = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_SET_LOCALE);
-        const content: op_virtual_world.IOP_CLIENT_REQ_VIRTUAL_WORLD_SET_LOCALE = i18Packet.content;
-        // content.localeCode = i18n.language;
-        content.localeCode = "zh-CN";
-        this.mainPeer.send(i18Packet.Serialization());
-        //  this.user.userData.querySYNC_ALL_PACKAGE();
     }
 
     private decodeConfigs(req): Promise<Lite> {
@@ -966,10 +966,6 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
             }
         });
     }
-    private onAvatarGameModeHandler(packet: PBpacket) {
-        const content: op_client.IOP_VIRTUAL_WORLD_REQ_CLIENT_GAME_MODE = packet.content;
-        this.mAvatarType = content.avatarStyle;
-    }
 
     private onClientPingHandler(packet: PBpacket) {
         this.connection.send(new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_RES_VIRTUAL_WORLD_PONG));
@@ -983,26 +979,5 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
         if (this.connect) this.connect.update();
         if (this.mRoomManager) this.mRoomManager.update(current, delta);
         if (this.mHttpLoadManager) this.mHttpLoadManager.update(current, delta);
-    }
-
-    private update(current: number = 0, delta: number = 0) {
-        if (this.isDestroy) return;
-        this._run(current, delta);
-
-        const now: number = new Date().getTime();
-        const run_time: number = now - current;
-
-        if (run_time >= interval) {
-            // I am late.
-            Logger.getInstance().info(`Update late.  run_time: ${run_time} `);
-            this.update(now, run_time);
-        } else {
-            // Logger.getInstance().info(`${interval - run_time}`);
-            setTimeout(() => {
-                const when: number = new Date().getTime();
-                this.update(when, when - now);
-
-            }, interval - run_time);
-        }
     }
 }

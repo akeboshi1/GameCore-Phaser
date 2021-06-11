@@ -16,6 +16,7 @@ export declare class UiManager {
         resolver: ValueResolver<BasePanel>;
         param?: any;
     }>;
+    protected alertViewCache: any[];
     constructor(mRender: Render);
     setScene(scene: BasicScene): void;
     resize(width: number, height: number): void;
@@ -24,6 +25,7 @@ export declare class UiManager {
     clearPanel(): void;
     showErrorMsg(msg: string): void;
     showAlertView(text: string, ok: boolean, cancel?: boolean, callBack?: Function): void;
+    showTipsAlert(data: any): void;
     /**
      * 创建批量显示面板
      * @param type
