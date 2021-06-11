@@ -36,7 +36,7 @@ export class PicaRoamPanel extends PicaBasePanel {
         this.setSize(w, h);
         this.mBackground.clear();
         this.mBackground.fillStyle(0, 0.5);
-        this.mBackground.fillRoundedRect(-this.x, -this.y, w, h);
+        this.mBackground.fillRect(-this.x, -this.y, w, h);
         this.content.x = w * 0.5;
         this.content.y = h * 0.5;
         this.mBackground.setInteractive(new Phaser.Geom.Rectangle(0, 0, w, h), Phaser.Geom.Rectangle.Contains);
