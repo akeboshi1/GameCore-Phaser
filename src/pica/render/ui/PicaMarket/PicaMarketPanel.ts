@@ -526,12 +526,13 @@ export class PicaMarketPanel extends PicaBasePanel {
     }
   }
   private getBuyPackageData() {
-    const propdata: any = this.mSelectItem.getData("propdata");// op_client.IMarketCommodity
-    const itemdata = { id: null, sellingPrice: null, name: null, shortName: null, count: 1 };// op_client.CountablePackageItem.create()
+    const propdata: IMarketCommodity = this.mSelectItem.getData("propdata");// op_client.IMarketCommodity
+    const itemdata = { id: null, sellingPrice: null, name: null, shortName: null, count: 1, marketName: undefined };// op_client.CountablePackageItem.create()
     itemdata.id = propdata.id;
     itemdata.sellingPrice = propdata.price[0];
     itemdata.name = propdata.name;
     itemdata.shortName = propdata.shortName;
+    itemdata.marketName = propdata.marketName;
     return itemdata;
   }
   private showPropFun(config: any) {// PicPropFunConfig

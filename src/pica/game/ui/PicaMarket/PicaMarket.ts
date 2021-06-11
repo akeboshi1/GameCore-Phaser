@@ -56,11 +56,11 @@ export class PicaMarket extends BasicModel {
     this.connection.send(packet);
   }
 
-  buyMarketCommodities(commodities: op_def.IOrderCommodities[]) {
+  buyMarketCommodities(commodities: op_def.IOrderCommodities[], marketName?: string) {
     const packet = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_MARKET_BUY_ORDER_COMMODITIES);
     const content: op_virtual_world.IOP_CLIENT_REQ_VIRTUAL_WORLD_MARKET_BUY_ORDER_COMMODITIES = packet.content;
     content.orderCommodities = commodities;
-    content.marketName = this.market_name;
+    content.marketName = marketName || this.market_name;
     this.connection.send(packet);
   }
 

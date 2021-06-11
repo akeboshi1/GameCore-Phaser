@@ -4,6 +4,7 @@ import { BasicMediator, Game } from "gamecore";
 import { EventType, MessageType, ModuleName, RENDER_PEER } from "structure";
 import { BaseDataConfigManager } from "../../config";
 import { Logger } from "utils";
+import { IMarketCommodity } from "picaStructure";
 
 export class PicaMarketMediator extends BasicMediator {
   constructor(game: Game) {
@@ -144,8 +145,8 @@ export class PicaMarketMediator extends BasicMediator {
     this.setMarketProp(data.category, data.subCategory, data.shopName);
   }
 
-  private onBuyItemHandler(prop: op_def.IOrderCommodities) {
-    this.model.buyMarketCommodities([prop]);
+  private onBuyItemHandler(prop: any) {
+    this.model.buyMarketCommodities([prop], prop.marketName);
   }
 
   private onQueryPropresouceHandler(prop: op_client.IMarketCommodity) {

@@ -18,6 +18,7 @@ export class ShopConfig extends BaseConfigData {
         json = json["Sheet1"] || json["grade_shop"] || json;
         for (const temp of json) {
             this[temp.id] = temp;
+            temp.marketName = this.resName;
             this.updateCtegoryMap(temp);
         }
 

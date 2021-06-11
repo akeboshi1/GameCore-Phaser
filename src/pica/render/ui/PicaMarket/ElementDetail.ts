@@ -192,10 +192,11 @@ export class ElementDetail extends Phaser.GameObjects.Container {
     if (!this.mSelectedProp) {
       return;
     }
-    const prop = { id: null, quantity: null, category: null };// op_def.OrderCommodities.create()
+    const prop = { id: null, quantity: null, category: null, marketName: undefined };// op_def.OrderCommodities.create()
     prop.id = this.mSelectedProp.id;
     prop.quantity = this.mCounter.number;
     prop.category = this.mSelectedProp.category;
+    prop.marketName = this.mSelectedProp.marketName;
     this.emit("buyItem", prop);
   }
 
