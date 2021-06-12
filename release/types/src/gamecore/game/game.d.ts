@@ -8,7 +8,7 @@ import { Clock, ClockReadyListener } from "./loop/clock/clock";
 import { HttpClock } from "./loop/httpClock/http.clock";
 import { HttpService } from "./loop/httpClock/http.service";
 import { LoadingManager } from "./loading/loading.manager";
-import { ChatCommandInterface, ConnectionService, EventDispatcher, IConnectListener, ILauncherConfig } from "structure";
+import { ChatCommandInterface, ConnectionService, EventDispatcher, IConfigPath, IConnectListener, ILauncherConfig } from "structure";
 import { RoomManager } from "./room/room.manager";
 import { User } from "./actor/user";
 import { NetworkManager } from "./command";
@@ -65,7 +65,9 @@ export declare class Game extends PacketHandler implements IConnectListener, Clo
     protected mRunning: boolean;
     protected remoteIndex: number;
     protected isSyncPackage: boolean;
+    protected mConfigPath: IConfigPath;
     constructor(peer: MainPeer);
+    setConfigPath(path: any): void;
     /**
      * 初始化
      * @param config
