@@ -10,7 +10,7 @@ import { Clock, ClockReadyListener } from "./loop/clock/clock";
 import { HttpClock } from "./loop/httpClock/http.clock";
 import { HttpService } from "./loop/httpClock/http.service";
 import { LoadingManager } from "./loading/loading.manager";
-import { ChatCommandInterface, ConnectionService, EventDispatcher, GameState, IConnectListener, ILauncherConfig, LoadState, Logger, ModuleName, ServerAddress } from "structure";
+import { ChatCommandInterface, ConnectionService, EventDispatcher, GameState, IConfigPath, IConnectListener, ILauncherConfig, LoadState, Logger, ModuleName, ServerAddress } from "structure";
 import { RoomManager } from "./room/room.manager";
 import { User } from "./actor/user";
 import { NetworkManager } from "./command";
@@ -72,6 +72,7 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
     protected mRunning: boolean = true;
     protected remoteIndex = 0;
     protected isSyncPackage: boolean = false;
+    protected mConfigPath: IConfigPath;
     constructor(peer: MainPeer) {
         super();
         this.mainPeer = peer;
@@ -79,6 +80,12 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
         this.addPacketListener();
         if (!this.mGameStateManager) this.mGameStateManager = new GameStateManager(this.peer);
         this.update(new Date().getTime());
+    }
+
+    public setConfigPath(path: any) {
+        this.mConfigPath = {
+            notice_url: path.notice_url
+        };
     }
 
     /**

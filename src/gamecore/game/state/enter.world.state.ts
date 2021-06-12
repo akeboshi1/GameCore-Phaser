@@ -1,7 +1,6 @@
 import { load, ResUtils, Tool, Url } from "utils";
 import { MainPeer } from "../main.peer";
 import { BaseState } from "./base.state";
-import version from "../../../../version";
 import { EventType, GameState, Logger, LoadState } from "structure";
 import { PBpacket } from "net-socket-packet";
 import { op_gateway, op_client, op_virtual_world, op_def } from "pixelpai_proto";
@@ -20,6 +19,7 @@ export class EnterWorldState extends BaseState {
         this.addHandlerFun(op_client.OPCODE._OP_GATEWAY_RES_CLIENT_VIRTUAL_WORLD_INIT, this.onInitVirtualWorldPlayerInit);
         this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_ENTER_SCENE, this.onEnterSceneHandler);
         Logger.getInstance().debug("loginEnterWorld");
+        const version = this.mMain.config.version;
         this.mGame.loadingManager
             .start(LoadState.ENTERWORLD, { render: "构建现实世界" + `_v${version}`, main: "构建魔法世界" + `_v${version}`, physical: "构建物理世界" + `_v${version}` })
             .then(this.mGame.renderPeer.hideLogin());
