@@ -192,7 +192,7 @@ export class UiManager {
     }
 
     public closePanel(id: number) {
-        this.render.mainPeer.closePanelHandler(id);
+        if (this.render.mainPeer) this.render.mainPeer.closePanelHandler(id);
     }
 
     public updateUIState(type: string, ui: any) {

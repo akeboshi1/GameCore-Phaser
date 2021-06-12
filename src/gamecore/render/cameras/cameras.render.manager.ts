@@ -17,11 +17,11 @@ export class CamerasRenderManager extends BaseCamerasManager {
         this.mMain = scene.cameras.main;
     }
 
-    public pan(x: number, y: number, duration: number): Promise<any> {
+    public pan(x: number, y: number, duration: number, ease?: string | Function, force?: boolean, callback?: Phaser.Types.Cameras.Scene2D.CameraPanCallback, context?: any): Promise<any> {
         x *= this.zoom;
         y *= this.zoom;
         for (const cam of this.mCameras) {
-            cam.pan(x, y, duration);
+            cam.pan(x, y, duration, ease, force, callback, context);
         }
         return new Promise<void>((resolve, reject) => {
             this.mMain.once(Phaser.Cameras.Scene2D.Events.PAN_COMPLETE, () => {

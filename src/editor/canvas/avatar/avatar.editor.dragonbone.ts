@@ -22,6 +22,8 @@ export class AvatarEditorDragonbone extends Phaser.GameObjects.Container {
         "body_spec",
         "body_tail",
         "body_wing",
+        "body_scar",
+        "body_cloa",
         "farm_cost",
         "farm_spec",
         "fleg_cost",
@@ -34,6 +36,7 @@ export class AvatarEditorDragonbone extends Phaser.GameObjects.Container {
         "head_mask",
         "head_spec",
         "head_face",
+        "head_chin",
         "barm_shld",
         "farm_shld",
         "barm_weap",
@@ -57,7 +60,8 @@ export class AvatarEditorDragonbone extends Phaser.GameObjects.Container {
         "farm_spec",
         "barm_spec",
         "fleg_spec",
-        "bleg_spec"
+        "bleg_spec",
+        "body_cloa"
     ];
 
     private static readonly HAIR_BACK = {
