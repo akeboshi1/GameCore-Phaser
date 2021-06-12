@@ -125,19 +125,19 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
     protected mIsLoading: boolean = false;
     protected mManagersReadyStates: Map<string, boolean> = new Map();
     protected mCollsionManager: CollsionManager;
-    private mActorData: IActor;
-    private mUpdateHandlers: Handler[] = [];
-    private mDecorateEntryData = null;
+    protected mActorData: IActor;
+    protected mUpdateHandlers: Handler[] = [];
+    protected mDecorateEntryData = null;
     // 地块区域记录 -1: out of range; 0: not walkable terrain; 1: walkable terrain
-    private mTerrainMap: number[][];
+    protected mTerrainMap: number[][];
     // 可行走区域最终记录值 -1: out of range; 0: not walkable; 1: walkable
-    private mWalkableMap: number[][];
+    protected mWalkableMap: number[][];
     // 地块可行走标记map。每格标记由多个不同优先级（暂时仅地块和物件）标记组成，最终是否可行走由高优先级标记决定
-    private mWalkableMarkMap: Map<number, Map<number, { level: number; walkable: boolean }>> =
+    protected mWalkableMarkMap: Map<number, Map<number, { level: number; walkable: boolean }>> =
         new Map<number, Map<number, { level: number; walkable: boolean }>>();
     // 地图每个坐标点可交互id 列表
-    private mInteractiveList: number[][][];
-    private mIsWaitingForDecorateResponse: boolean = false;
+    protected mInteractiveList: number[][][];
+    protected mIsWaitingForDecorateResponse: boolean = false;
     constructor(protected manager: IRoomManager) {
         super();
         this.mGame = this.manager.game;
