@@ -32,7 +32,7 @@ export class MainPeer extends RPCPeer {
     // private isReconnect: boolean = false;
     constructor(workerName: string) {
         super(workerName);
-        this.mGame = new Game(this);
+        this.game = new Game(this);
         this.stateTime = new Date().getTime();
     }
 
@@ -54,6 +54,10 @@ export class MainPeer extends RPCPeer {
 
     get game(): Game {
         return this.mGame;
+    }
+
+    set game(val) {
+        this.mGame = val;
     }
 
     get state(): BaseState {

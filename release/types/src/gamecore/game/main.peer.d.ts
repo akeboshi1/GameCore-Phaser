@@ -26,6 +26,7 @@ export declare class MainPeer extends RPCPeer {
     get render(): any;
     get config(): ILauncherConfig;
     get game(): Game;
+    set game(val: Game);
     get state(): BaseState;
     set state(val: BaseState);
     onConnected(isAuto: boolean): void;
