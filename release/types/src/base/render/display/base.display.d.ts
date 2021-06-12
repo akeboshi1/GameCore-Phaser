@@ -1,4 +1,3 @@
-/// <reference types="tooqinggamephaser" />
 import { ValueResolver, DisplayField, IDragonbonesModel, IFramesModel, RunningAnimation, Handler, IProjection, LogicPos } from "structure";
 import { ISortObject } from "./sort.object";
 export interface IBaseDisplay {

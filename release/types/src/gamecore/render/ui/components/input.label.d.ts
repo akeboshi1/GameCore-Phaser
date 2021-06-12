@@ -1,4 +1,3 @@
-/// <reference types="tooqinggamephaser" />
 import { InputText } from "apowophaserui";
 export declare class InputLabel extends Phaser.GameObjects.Container {
     protected background: Phaser.GameObjects.Graphics | any;

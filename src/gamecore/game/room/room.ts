@@ -766,12 +766,12 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
         return op_def.SceneTypeEnum.NORMAL_SCENE_TYPE;
     }
 
-    private onEnableEditModeHandler(packet: PBpacket) {
+    protected onEnableEditModeHandler(packet: PBpacket) {
         this.mEnableDecorate = true;
         this.game.uiManager.showMed(ModuleName.CUTINMENU_NAME, { button: [{ text: "editor" }] });
     }
 
-    private onShowMapTitle(packet: PBpacket) {
+    protected onShowMapTitle(packet: PBpacket) {
         // if (!this.scene) {
         //     return;
         // }
@@ -794,12 +794,12 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
         // }
     }
 
-    private onCameraResetSizeHandler() {
+    protected onCameraResetSizeHandler() {
         this.cameraService.initialize = true;
         // this.cameraService.syncCameraScroll();
     }
 
-    private onCameraFollowHandler(packet: PBpacket) {
+    protected onCameraFollowHandler(packet: PBpacket) {
         if (!this.cameraService.initialize) return;
         const content: op_client.IOP_VIRTUAL_WORLD_REQ_CLIENT_SET_CAMERA_FOLLOW = packet.content;
         if (content.hasOwnProperty("id")) {
@@ -814,7 +814,7 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
         }
     }
 
-    private onAllSpriteReceived(packet: PBpacket) {
+    protected onAllSpriteReceived(packet: PBpacket) {
         const content: op_client.IOP_VIRTUAL_WORLD_REQ_CLIENT_CURRENT_SCENE_ALL_SPRITE = packet.content;
         const sprites: op_client.ISprite[] | undefined = content.sprites;
         if (!sprites) {
@@ -839,7 +839,7 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
         }
     }
 
-    private onReloadScene(packet: PBpacket) {
+    protected onReloadScene(packet: PBpacket) {
         const content: op_client.IOP_VIRTUAL_WORLD_REQ_CLIENT_NOTICE_RELOAD_SCENE = packet.content;
         const sprites: op_client.ISprite[] | undefined = content.sprites;
         if (!sprites) {
@@ -874,7 +874,7 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
         }
     }
 
-    private onSyncStateHandler(packet: PBpacket) {
+    protected onSyncStateHandler(packet: PBpacket) {
         const content: op_client.IOP_VIRTUAL_WORLD_REQ_CLIENT_SYNC_STATE = packet.content;
         const states = content.stateGroup;
         for (const state of states) {
@@ -892,7 +892,7 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
         }
     }
 
-    private onExtraRoomInfoHandler(content: ExtraRoomInfo) {
+    protected onExtraRoomInfoHandler(content: ExtraRoomInfo) {
         if (this.wallManager) {
             this.wallManager.changeAllDisplayData(content.wallId);
         }
@@ -901,7 +901,7 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
         }
     }
 
-    private getSpriteWalkableData(sprite: ISprite, isTerrain: boolean, pos?: IPos): { origin: IPos, collisionArea: number[][], walkableArea: number[][], pos45: IPos, rows: number, cols: number } {
+    protected getSpriteWalkableData(sprite: ISprite, isTerrain: boolean, pos?: IPos): { origin: IPos, collisionArea: number[][], walkableArea: number[][], pos45: IPos, rows: number, cols: number } {
         let collisionArea = sprite.getCollisionArea();
         let walkableArea = sprite.getWalkableArea();
         const origin = sprite.getOriginPoint();
@@ -971,7 +971,7 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
         return { origin, collisionArea, walkableArea, pos45, rows, cols };
     }
 
-    private addWalkableMark(x: number, y: number, id: number, level: number, walkable: boolean) {
+    protected addWalkableMark(x: number, y: number, id: number, level: number, walkable: boolean) {
         const idx = this.mapPos2Idx(x, y);
 
         if (!this.mWalkableMarkMap.has(idx)) {
@@ -987,7 +987,7 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
         this.caculateWalkableMark(x, y);
     }
 
-    private removeWalkableMark(x: number, y: number, id: number) {
+    protected removeWalkableMark(x: number, y: number, id: number) {
         const idx = this.mapPos2Idx(x, y);
 
         if (!this.mWalkableMarkMap.has(idx)) {
@@ -1001,7 +1001,7 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
         this.caculateWalkableMark(x, y);
     }
 
-    private caculateWalkableMark(x: number, y: number) {
+    protected caculateWalkableMark(x: number, y: number) {
         const idx = this.mapPos2Idx(x, y);
         if (!this.mWalkableMarkMap.has(idx)) {
             this.setWalkableMap(x, y, false);
@@ -1035,7 +1035,7 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
         this.setWalkableMap(x, y, result);
     }
 
-    private setWalkableMap(x: number, y: number, walkable: boolean) {
+    protected setWalkableMap(x: number, y: number, walkable: boolean) {
         if (y < 0 || y >= this.mWalkableMap.length || x < 0 || x >= this.mWalkableMap[y].length) {
             return;
         }
@@ -1046,7 +1046,7 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
         this.mAstar.setWalkableAt(x, y, walkable);
     }
 
-    private setTerrainMap(x: number, y: number, walkable: boolean) {
+    protected setTerrainMap(x: number, y: number, walkable: boolean) {
         if (y < 0 || y >= this.mTerrainMap.length || x < 0 || x >= this.mTerrainMap[y].length) {
             return;
         }
@@ -1056,16 +1056,16 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
         this.mTerrainMap[y][x] = newVal;
     }
 
-    private mapPos2Idx(x: number, y: number): number {
+    protected mapPos2Idx(x: number, y: number): number {
         return x + y * this.mMiniSize.cols;
     }
 
-    private setState(state: op_client.IStateGroup) {
+    protected setState(state: op_client.IStateGroup) {
         if (!this.mStateManager) this.mStateManager = new RoomStateManager(this);
         this.mStateManager.setState(state);
     }
 
-    private showDecorateGrid() {
+    protected showDecorateGrid() {
         if (!this.isDecorating) return;
         if (!this.mTerrainManager.hasAddComplete) return;
         this.game.renderPeer.showEditGrids(this.mMiniSize, this.mTerrainMap);

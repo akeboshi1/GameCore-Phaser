@@ -1,4 +1,3 @@
-/// <reference types="tooqinggamephaser" />
 import { Handler } from "./Handler";
 export declare class UIHelper {
     static get threeGreenNormal(): string[];

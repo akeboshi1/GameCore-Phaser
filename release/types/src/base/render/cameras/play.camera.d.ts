@@ -1,4 +1,3 @@
-/// <reference types="tooqinggamephaser" />
 export declare class PlayCamera extends Phaser.Cameras.Scene2D.Camera {
     private _follow;
     private matrix;

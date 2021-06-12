@@ -1,4 +1,3 @@
-/// <reference types="tooqinggamephaser" />
 import { Render } from "../render";
 import { UiManager } from "../ui";
 import { GuideEffect } from "./guide.effect";

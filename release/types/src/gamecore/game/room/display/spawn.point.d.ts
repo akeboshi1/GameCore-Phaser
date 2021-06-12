@@ -1,4 +1,3 @@
-/// <reference types="tooqinggamephaser" />
 import { op_client, op_gameconfig, op_gameconfig_01, op_def } from "pixelpai_proto";
 import { LogicPos, AnimationQueue, AvatarSuit, ISprite, RunningAnimation, IAvatar, IDragonbonesModel, IFramesModel } from "structure";
 export declare class SpawnPoint implements ISprite {

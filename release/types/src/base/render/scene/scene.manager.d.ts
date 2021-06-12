@@ -1,4 +1,3 @@
-/// <reference types="tooqinggamephaser" />
 import { IRender } from "../render";
 export declare class BaseSceneManager {
     protected render: IRender;

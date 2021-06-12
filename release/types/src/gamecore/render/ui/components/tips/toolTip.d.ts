@@ -1,4 +1,3 @@
-/// <reference types="tooqinggamephaser" />
 import { IToolTip } from "./itoolTip";
 export declare class ToolTip extends Phaser.GameObjects.Container implements IToolTip {
     private mScene;
