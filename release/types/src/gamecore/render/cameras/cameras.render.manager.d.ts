@@ -9,7 +9,7 @@ export declare class CamerasRenderManager extends BaseCamerasManager {
     protected miniViewPort: Phaser.Geom.Rectangle;
     constructor(render: Render);
     startRoomPlay(scene: Phaser.Scene): void;
-    pan(x: number, y: number, duration: number): Promise<any>;
+    pan(x: number, y: number, duration: number, ease?: string | Function, force?: boolean, callback?: Phaser.Types.Cameras.Scene2D.CameraPanCallback, context?: any): Promise<any>;
     set camera(camera: Phaser.Cameras.Scene2D.Camera | undefined);
     get camera(): Phaser.Cameras.Scene2D.Camera | undefined;
     resize(width: number, height: number): void;

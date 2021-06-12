@@ -73,7 +73,8 @@
     "received": "Received",
     "rarity": "Rarity",
     "leave": "Leave",
-    "affirm":"Affirm"
+    "affirm": "Affirm",
+    "reselect":"Reselect"
   },
   "quantityunit": {
     "k": "k",
@@ -155,7 +156,9 @@
     "daily": "[daily]",
     "receive": "Receive",
     "go": "Go",
-    "notasktip": "There are no new missions for now"
+    "notasktip": "There are no new missions for now",
+    "adtitle": "accelerated",
+    "adtips": "Whether to use {{count}} {{name}} to accelerate cooling？"
   },
   "furni_unlock": {
     "unlock": "REPAIR",
@@ -238,14 +241,19 @@
     "fans": "Fans",
     "follow": "Follow",
     "blacklist": "BLACKLIST",
+    "blacklisted": "已添加黑名单",
     "search": "Search",
     "search_friends_notes": "Search",
     "unfollow": "Following",
+    "unfollowed": "已取消关注",
     "lv": "Lv",
     "remove": "Remove",
+    "removed": "已移除黑名单",
     "unregistered_game": "Not in Game",
     "notice": "Notice",
-    "followed_you": "followed you"
+    "followed_you": "{{name}} followed you",
+    "addfriended": "已成功添加好友",
+    "friendplaceholder": "搜索好友昵称或备注"
   },
   "friend_invite": {
     "refused": "refused",
@@ -298,7 +306,10 @@
     "refreshtips": "Are you sure to withdraw the order",
     "refreshtitle": "ORDER WITHDRAW",
     "progresstitle": "PROGRESS REWARD",
-    "rewardtitle": "Progress reward"
+    "rewardtitle": "Progress reward",
+    "finishtips": "Send Finish",
+    "accelecontent": "Accelerated orders will consume {{name}} diamonds",
+    "acceletitle": "orderSpend"
   },
   "work": {
     "title": "WORK",
@@ -457,10 +468,17 @@
     "onlinetips": "Online rewards",
     "pica": "PICA",
     "tooqing": "TOOQING",
-    "hot": "HOT"
+    "hot": "HOT",
+    "new": "NEW",
+    "collect": "COLLECT",
+    "tooqingtips": "[color=#FEDF36] Light Lab [/color] is a platform where you can easily create your own [/color] games in the near future"
   },
   "commontips": {
-    "configerror": "The configuration did not load successfully, please refresh the game"
+    "configerror": "The configuration did not load successfully, please refresh the game",
+    "room_dose_not_exists": "This room has vanished into the void. Cannot find it temporaily.",
+    "room_password_failure": "Password is incorrect.",
+    "room_need_password": "Password needed to access.",
+    "room_full": "Sorry, the room is full."
   },
   "boot": {
     "play": "Play",
@@ -494,5 +512,8 @@
     "sender": "Sender: ",
     "expiration": "It expires after {{time}}",
     "nomailtip": "No new email for now ~"
+  },
+  "roomdecorate": {
+    "usetips": "你尚未购买该{{name}}"
   }
 }

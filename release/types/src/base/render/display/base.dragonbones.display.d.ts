@@ -8,6 +8,8 @@ export declare enum AvatarSlotNameTemp {
     BodyWing = "body_wing_$",
     BodyBase = "body_base_$",
     BodySpec = "body_spec_$",
+    BodyScar = "body_scar_$",
+    BodyCloa = "body_cloa_$",
     FlegSpec = "fleg_spec_$",
     FlegBase = "fleg_base_$",
     FlegCost = "fleg_cost_$",
@@ -32,7 +34,8 @@ export declare enum AvatarSlotNameTemp {
     HeadMous = "head_mous_$",
     HeadHair = "head_hair_$",
     HeadHats = "head_hats_$",
-    HeadFace = "head_face_$"
+    HeadFace = "head_face_$",
+    HeadChin = "head_chin_$"
 }
 export declare enum AvatarPartNameTemp {
     BarmBase = "barm_base_#_$",
@@ -47,6 +50,8 @@ export declare enum AvatarPartNameTemp {
     BodySpec = "body_spec_#_$",
     BodyTail = "body_tail_#_$",
     BodyWing = "body_wing_#_$",
+    BodyScar = "body_scar_#_$",
+    BodyCloa = "body_cloa_#_$",
     FarmBase = "farm_base_#_$",
     FarmCost = "farm_cost_#_$",
     FarmSpec = "farm_spec_#_$",
@@ -62,6 +67,7 @@ export declare enum AvatarPartNameTemp {
     HeadMask = "head_mask_#_$",
     HeadMous = "head_mous_#_$",
     HeadSpec = "head_spec_#_$",
+    HeadChin = "head_chin_#_$",
     ShldFarm = "farm_shld_#_$",
     WeapFarm = "farm_weap_#_$",
     ShldBarm = "barm_shld_#_$",
