@@ -547,5 +547,12 @@
     "usetips": "你尚未购买该{{name}}",
     "usering": "该{{name}}已经使用中",
     "savetips": "{{type}}: {{name}}保存成功"
+  },
+  "battlepass": {
+    "title": "小镇挑战赛",
+    "commontips": "普通奖励",
+    "tickettips": "入场券奖励",
+    "nowunlock": "立即解锁",
+    "buyticket": "购买入场券"
   }
 }
