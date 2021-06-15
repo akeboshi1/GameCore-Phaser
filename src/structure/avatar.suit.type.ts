@@ -17,7 +17,10 @@ export class AvatarSuitType {
         "wing": ["body_wing"],
         "helmet": ["head_spec"],
         "shell": ["body_spec", "farm_spec", "barm_spec", "fleg_spec", "bleg_spec"],
-        "base": ["head_base", "body_base", "farm_base", "barm_base", "fleg_base", "bleg_base"]
+        "base": ["head_base", "body_base", "farm_base", "barm_base", "fleg_base", "bleg_base"],
+        "scar": ["body_scar"],
+        "cloa": ["body_cloa"],
+        "chin": ["head_chin"]
     };
     static specHideParts = {
         headSpecId: ["headEyesId", "headHairId", "headMousId", "headHairBackId", "headHatsId", "headMaskId", "headFaceId", "headBaseId"],
@@ -284,6 +287,9 @@ export class AvatarSuitType {
     public shell = ["headSpecId", "bodySpecId", "farmSpecId", "barmSpecId", "flegSpecId", "blegSpecId"];
     public baseSuitType = `[{"count":1,"id":"10001","sn":"5cd28238fb073710972a73c2","suit_type":"costume"},{"count":1,"id":"10002","sn":"5cd28238fb073710972a73c2","suit_type":"eye"},{"count":1,"id":"1003","sn":"5cd28238fb073710972a73c2","suit_type":"hair"},{"count":1,"id":"10004","sn":"5cd28238fb073710972a73c2","suit_type":"mouse"}]`;
     public base = ["headBaseId", "bodyBaseId", "farmBaseId", "barmBaseId", "flegBaseId", "blegBaseId"];
+    public scar = ["bodyScarId"];
+    public cloa = ["bodyCloaId"];
+    public chin = ["headChinId"];
 }
 
 export class SuitAlternativeType {
