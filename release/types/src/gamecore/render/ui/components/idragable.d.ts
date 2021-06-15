@@ -1,3 +1,4 @@
+/// <reference types="tooqingphaser" />
 import { IDropable } from "./idropable";
 export interface IDragable {
     dragStart(): void;

@@ -13,7 +13,7 @@ export class MainUIScene extends RoomScene {
   private timeOutCallerList = [];
   private timeOutTimeMap = {};
   private fps: Phaser.GameObjects.Text;
-  private sizeTF: Phaser.GameObjects.Text;
+  // private sizeTF: Phaser.GameObjects.Text;
   constructor() {
     super({ key: SceneName.MAINUI_SCENE });
   }
@@ -33,10 +33,10 @@ export class MainUIScene extends RoomScene {
     this.fps.setFontSize(13 * this.render.devicePixelRatio);
     this.fps.setDepth(1000);
     this.fps.setOrigin(1, 0);
-    this.sizeTF = this.add.text(10, 50, "", { style: { color: "#64dd17" }, wordWrap: { width: 800, useAdvancedWrap: true } });
-    this.sizeTF.setFontSize(20 * this.render.devicePixelRatio);
-    this.sizeTF.setFontFamily(Font.DEFULT_FONT);
-    this.sizeTF.setStroke("#0", 3);
+    // this.sizeTF = this.add.text(10, 50, "", { style: { color: "#64dd17" }, wordWrap: { width: 800, useAdvancedWrap: true } });
+    // this.sizeTF.setFontSize(20 * this.render.devicePixelRatio);
+    // this.sizeTF.setFontFamily(Font.DEFULT_FONT);
+    // this.sizeTF.setStroke("#0", 3);
     // if (world.game.device.os.desktop) {
     // } else {
     //   if (world.inputManager) {

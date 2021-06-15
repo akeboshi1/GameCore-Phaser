@@ -1,3 +1,4 @@
+/// <reference types="tooqingphaser" />
 import { BaseFramesDisplay, ReferenceArea } from "baseRender";
 import { Render } from "../../render";
 import { IPos, ElementStateType, RunningAnimation } from "structure";

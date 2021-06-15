@@ -1,4 +1,4 @@
-import "tooqinggamephaser";
+import "tooqingphaser";
 export * from "./account";
 export * from "./cameras";
 export * from "./display";

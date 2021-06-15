@@ -1,4 +1,4 @@
-import { Game } from "tooqinggamephaser";
+import { Game } from "tooqingphaser";
 import { Export, RPCPeer, webworker_rpc } from "webworker-rpc";
 import { UiUtils, Url } from "utils";
 import { PBpacket } from "net-socket-packet";
@@ -26,7 +26,7 @@ import { DisplayManager } from "./managers/display.manager";
 import { InputManager } from "./input/input.manager";
 import { MainUIScene } from "./scenes/main.ui.scene";
 import { EditorCanvasManager } from "./managers/editor.canvas.manager";
-import { BasicScene, IRender } from "baseRender";
+import { BasicScene, IRender, PlayCamera } from "baseRender";
 import { AstarDebugger } from "./display/debugs/astar";
 import { EditorModeDebugger } from "./display/debugs/editor.mode.debugger";
 import { GridsDebugger } from "./display/debugs/grids";
@@ -377,7 +377,8 @@ export class Render extends RPCPeer implements GameMain, IRender {
             this.mGame.scale.resize(w, h);
             const scenes = this.mGame.scene.scenes;
             for (const scene of scenes) {
-                const camera = scene.cameras.main;
+                // 自定义相机
+                const camera: PlayCamera = scene.cameras.main as PlayCamera;
                 if (camera && camera.setPixelRatio) camera.setPixelRatio(this.mScaleRatio);
                 // scene.setViewPort(camera.x, camera.y, w, h);
                 // scene.cameras.main.setViewport(0, 0, w, h);
@@ -584,7 +585,6 @@ export class Render extends RPCPeer implements GameMain, IRender {
                 disableContextMenu: true,
                 transparent: false,
                 backgroundColor: 0x0,
-                resolution: 1,
                 fps: {
                     target: 45,
                     forceSetTimeOut: true

@@ -1,9 +1,6 @@
 const path = require("path");
 const webpack = require("webpack");
-const pathToPhaser = path.join(__dirname, "/node_modules/tooqingphaser");
-const phaser = path.join(pathToPhaser, "dist/phaser.min.js");
-const pathToRPC = path.join(__dirname, "/node_modules/webworker-rpc");
-const webworkerrpc = path.join(pathToRPC, "release/rpcpeer.js")
+const dragonBonesPath = path.join(__dirname, "/src/base/render/dragonBones/dragonBones.min.js");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const CopyWebpackPlugin = require("copy-webpack-plugin");
 const { CleanWebpackPlugin } = require("clean-webpack-plugin");
@@ -17,9 +14,7 @@ const commonConfig = {
     resolve: {
         extensions: [".ts", ".js"],
         alias: {
-            tooqingphaser:phaser,
-            webworkerrpc: webworkerrpc,
-            "dragonbones-runtime": path.join(__dirname, "node_modules/dragonbones-runtime/Phaser/3.x/out/dragonBones.js"),
+            dragonBones: dragonBonesPath,
             gamecore: path.join(__dirname, "./src/gamecore/game"),
             gamecoreRender: path.join(__dirname, "./src/gamecore/render"),
             structure: path.join(__dirname, "./src/structure"),
@@ -74,13 +69,9 @@ const gameConfig = Object.assign({}, commonConfig, {
     module: {
         rules: [
             { test: /\.ts$/, loader: "ts-loader", options: { allowTsInNodeModules: false }, exclude: "/node_modules/" },
-            { test: /webworkerrpc\.js$/, loader: "expose-loader?webworker-rpc" },
-            // { test: /phaser\.js$/, loader: "expose-loader?Phaser" },
-            // { test: /\.(gif|png|dbbin|ttf|jpe?g|svg|mp3|mp4|xml)$/i, loader: "file-loader", options: resourcesOut },
-            // { test: /\.json/, type: "javascript/auto", loader: "file-loader", exclude: "/resources/locales/", options: resourcesOut },
+            { test: /dragonBones\.js$/, loader: "expose-loader?dragonBones" },
         ],
     },
-    externals: { "dragonbones-runtime": "dragonbones-runtime"},
     entry: {
         index: "./src/index.ts",
         baseGame: "./src/base/game/index.ts",

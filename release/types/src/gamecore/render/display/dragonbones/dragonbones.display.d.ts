@@ -1,3 +1,4 @@
+/// <reference types="tooqingphaser" />
 import { BaseDragonbonesDisplay, ReferenceArea } from "baseRender";
 import { Render } from "../../render";
 import { IPos, IProjection, DisplayField, ElementStateType, IDragonbonesModel, RunningAnimation } from "structure";

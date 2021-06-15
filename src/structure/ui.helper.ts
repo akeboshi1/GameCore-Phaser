@@ -47,7 +47,7 @@ export class UIHelper {
 
     public static colorStyle(color: string, fontSize: number) {
         return {
-            fontSize,
+            fontSize: fontSize + "px",
             fontFamily: Font.DEFULT_FONT,
             color
         };
@@ -79,7 +79,7 @@ export class UIHelper {
 
     public static whiteStyle(dpr, size: number = 12) {
         return {
-            fontSize: size * dpr,
+            fontSize: size * dpr + "px",
             fontFamily: Font.DEFULT_FONT,
             color: "#ffffff"
         };

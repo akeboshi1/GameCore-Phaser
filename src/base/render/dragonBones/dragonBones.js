@@ -15191,6 +15191,12 @@ var dragonBones;
     (function (phaser) {
         var util;
         (function (util) {
+            /**
+             * Methods for handling "skew" or "shear", used in deformation.
+             *
+             * Necessary because default phaser pipeline doesn't respect it; they explicitly reconstruct transformation matrices.
+             * This is worrisome;
+             */
             util.Skew = {
                 getSkewX: function () {
                     return this._skewX || 0;
@@ -15208,7 +15214,34 @@ var dragonBones;
                     sy = sy === void 0 ? sx : sy;
                     this._skewX = sx;
                     this._skewY = sy;
-                }
+                },
+                getLocalTransformMatrix: function (tempMatrix) {
+                    if (tempMatrix === undefined) {
+                        tempMatrix = new util.TransformMatrix();
+                    }
+                    // THIS IS THE PURPOSE OF THE OVERRIDE: applyITRSC vs applyITRS.
+                    return util.TransformMatrix.applyITRSC(tempMatrix, this.x, this.y, this._rotation, this._scaleX, this._scaleY, this.skewX, this.skewY);
+                },
+                getWorldTransformMatrix: function (tempMatrix, parentMatrix) {
+                    if (tempMatrix === undefined) {
+                        tempMatrix = new util.TransformMatrix();
+                    }
+                    if (parentMatrix === undefined) {
+                        parentMatrix = new util.TransformMatrix();
+                    }
+                    var parent = this.parentContainer;
+                    if (!parent) {
+                        return this.getLocalTransformMatrix(tempMatrix);
+                    }
+                    // THIS IS THE PURPOSE OF THE OVERRIDE: applyITRSC vs applyITRS & using getLocalTransformMatrix to dodge incompatibilities between those two methods (since we don't know if our parents are smart enough to know how to skew).
+                    tempMatrix = this.getLocalTransformMatrix(tempMatrix);
+                    while (parent) {
+                        parentMatrix = parent.getLocalTransformMatrix(parentMatrix);
+                        parentMatrix.multiply(tempMatrix, tempMatrix);
+                        parent = parent.parentContainer;
+                    }
+                    return tempMatrix;
+                },
             };
             util.extendSkew = function (clazz) {
                 Object.defineProperty(clazz.prototype, "skewX", {
@@ -15224,6 +15257,8 @@ var dragonBones;
                     configurable: true
                 });
                 clazz.prototype.setSkew = util.Skew.setSkew;
+                clazz.prototype.getLocalTransformMatrix = util.Skew.getLocalTransformMatrix;
+                clazz.prototype.getWorldTransformMatrix = util.Skew.getWorldTransformMatrix;
             };
         })(util = phaser.util || (phaser.util = {}));
     })(phaser = dragonBones.phaser || (dragonBones.phaser = {}));
@@ -15238,38 +15273,27 @@ var dragonBones;
                 __extends(TransformMatrix, _super);
                 function TransformMatrix(a, b, c, d, tx, ty) {
                     var _this = _super.call(this, a, b, c, d, tx, ty) || this;
-                    _this.decomposedMatrix.skewX = 0;
-                    _this.decomposedMatrix.skewY = 0;
+                    _this.decomposedMatrix.skewX = _this.skewX;
+                    _this.decomposedMatrix.skewY = _this.skewY;
                     return _this;
                 }
+                // Override phaser's decomposition to also track skew.
                 TransformMatrix.prototype.decomposeMatrix = function () {
-                    // sort out rotation / skew..
-                    var a = this.a;
-                    var b = this.b;
-                    var c = this.c;
-                    var d = this.d;
-                    var skewX = -Math.atan2(-c, d);
-                    var skewY = Math.atan2(b, a);
-                    var delta = Math.abs(skewX + skewY);
-                    if (delta < 0.00001 || Math.abs(Phaser.Math.PI2 - delta) < 0.00001) {
-                        this.decomposedMatrix.rotation = skewY;
-                        if (a < 0 && d >= 0)
-                            this.decomposedMatrix.rotation += (this.decomposedMatrix.rotation <= 0) ? Math.PI : -Math.PI;
-                        this.decomposedMatrix.skewX = this.decomposedMatrix.skewY = 0;
-                    }
-                    else {
-                        this.decomposedMatrix.rotation = 0;
-                        this.decomposedMatrix.skewX = skewX;
-                        this.decomposedMatrix.skewY = skewY;
-                    }
-                    // next set scale
-                    this.decomposedMatrix.scaleX = Math.sqrt((a * a) + (b * b));
-                    this.decomposedMatrix.scaleY = Math.sqrt((c * c) + (d * d));
-                    // next set position
-                    this.decomposedMatrix.translateX = this.tx;
-                    this.decomposedMatrix.translateY = this.ty;
-                    return this.decomposedMatrix;
+                    var decomposedMatrix = this.decomposeMatrix();
+                    decomposedMatrix.skewX = this.skewX;
+                    decomposedMatrix.skewY = this.skewY;
+                    return decomposedMatrix;
                 };
+                TransformMatrix.applyITRSC = function (tempMatrix, x, y, rotation, scaleX, scaleY, skewX, skewY) {
+                    tempMatrix.a = Math.cos(rotation - skewY) * scaleX;
+                    tempMatrix.b = Math.sin(rotation - skewY) * scaleX;
+                    tempMatrix.c = -Math.sin(rotation + skewX) * scaleY;
+                    tempMatrix.d = Math.cos(rotation + skewX) * scaleY;
+                    tempMatrix.tx = x;
+                    tempMatrix.ty = y;
+                    return tempMatrix;
+                };
+                // Provide additional parameters for skew to phaser's applyITRS (as new call, due to changed signature).
                 TransformMatrix.prototype.applyITRSC = function (x, y, rotation, scaleX, scaleY, skewX, skewY) {
                     this.a = Math.cos(rotation - skewY) * scaleX;
                     this.b = Math.sin(rotation - skewY) * scaleX;
@@ -15280,6 +15304,7 @@ var dragonBones;
                     return this;
                 };
                 Object.defineProperty(TransformMatrix.prototype, "skewX", {
+                    // Read the skew parameter out.
                     get: function () {
                         return -Math.atan2(-this.c, this.d);
                     },
@@ -15287,12 +15312,18 @@ var dragonBones;
                     configurable: true
                 });
                 Object.defineProperty(TransformMatrix.prototype, "skewY", {
+                    // Read the skew parameter out.
                     get: function () {
                         return Math.atan2(this.b, this.a);
                     },
                     enumerable: true,
                     configurable: true
                 });
+                // Set the skew parameters (by analogy with `rotate`, etc).
+                TransformMatrix.prototype.skew = function (sx, sy) {
+                    this.applyITRSC(this.tx, this.ty, this.rotation, this.scaleX, this.scaleY, sx, sy);
+                    return this;
+                };
                 return TransformMatrix;
             }(Phaser.GameObjects.Components.TransformMatrix));
             util.TransformMatrix = TransformMatrix;
@@ -15327,35 +15358,10 @@ var dragonBones;
                     tempMatrix.transformPoint(source.x, source.y, output);
                     return output;
                 };
-                Object.defineProperty(DisplayContainer.prototype, "skewX", {
-                    get: function () {
-                        return this._skewX;
-                    },
-                    set: function (v) {
-                        this._skewX = v;
-                    },
-                    enumerable: true,
-                    configurable: true
-                });
-                Object.defineProperty(DisplayContainer.prototype, "skewY", {
-                    get: function () {
-                        return this._skewY;
-                    },
-                    set: function (v) {
-                        this._skewY = v;
-                    },
-                    enumerable: true,
-                    configurable: true
-                });
-                DisplayContainer.prototype.setSkew = function (sx, sy) {
-                    sy = sy === void 0 ? sx : sy;
-                    this.skewX = sx;
-                    this.skewY = sy;
-                    return this;
-                };
                 return DisplayContainer;
             }(Phaser.GameObjects.Container));
             display.DisplayContainer = DisplayContainer;
+            phaser.util.extendSkew(DisplayContainer); // skew mixin
         })(display = phaser.display || (phaser.display = {}));
     })(phaser = dragonBones.phaser || (dragonBones.phaser = {}));
 })(dragonBones || (dragonBones = {}));
@@ -15501,7 +15507,7 @@ var dragonBones;
                 __extends(SlotImage, _super);
                 function SlotImage(scene, x, y, texture, frame) {
                     var _this = _super.call(this, scene, x, y, texture, frame) || this;
-                    _this.setPipeline("PhaserTextureTintPipeline"); // use customized pipeline
+                    _this.setPipeline("SkewPipeline"); // use customized pipeline
                     return _this;
                 }
                 return SlotImage;
@@ -15521,7 +15527,7 @@ var dragonBones;
                 __extends(SlotSprite, _super);
                 function SlotSprite(scene, x, y, texture, frame) {
                     var _this = _super.call(this, scene, x, y, texture, frame) || this;
-                    _this.setPipeline("PhaserTextureTintPipeline"); // use customized pipeline
+                    _this.setPipeline("SkewPipeline"); // use customized pipeline
                     return _this;
                 }
                 return SlotSprite;
@@ -15540,35 +15546,20 @@ var dragonBones;
             var SlotMesh = /** @class */ (function (_super) {
                 __extends(SlotMesh, _super);
                 function SlotMesh(scene, x, y, vertices, uv, colors, alphas, texture, frame) {
-                    var _this = _super.call(this, scene, x, y, vertices, uv, colors, alphas, texture, frame) || this;
-                    _this.setPipeline("PhaserTextureTintPipeline"); // use customized pipeline
+                    var _this = this;
+                    var containsZ = null;
+                    var normals = null;
+                    _this = _super.call(this, scene, x, y, texture, frame, vertices, uv, containsZ, normals, colors, alphas) || this;
+                    _this.setPipeline("SkewPipeline"); // use customized pipeline
+                    _this.hideCCW = false;
+                    _this.setOrtho(_this.width, _this.height);
                     return _this;
                 }
                 SlotMesh.prototype.setTint = function (topLeft, topRight, bottomLeft, bottomRight) {
                     // NOTHING
                 };
                 SlotMesh.prototype.updateVertices = function () {
-                    var fakeIndices = this.fakeIndices;
-                    var fakeVertices = this.fakeVertices;
-                    var fakeUvs = this.fakeUvs;
-                    this.vertices = new Float32Array(fakeIndices.length * 2);
-                    this.uv = new Float32Array(fakeIndices.length * 2);
-                    this.alphas = new Uint32Array(fakeIndices.length);
-                    this.colors = new Uint32Array(fakeIndices.length);
-                    for (var i = 0; i < fakeIndices.length; i++) {
-                        this.vertices[i * 2] = fakeVertices[fakeIndices[i] * 2];
-                        this.vertices[i * 2 + 1] = fakeVertices[fakeIndices[i] * 2 + 1];
-                        this.uv[i * 2] = fakeUvs[fakeIndices[i] * 2];
-                        this.uv[i * 2 + 1] = fakeUvs[fakeIndices[i] * 2 + 1];
-                        this.alphas[i] = 1.0;
-                        this.colors[i] = 0xFFFFFF;
-                    }
-                    // this.tintFill = true;
-                    // for (let i = 0; i < fakeIndices.length / 3; i++) {
-                    //     this.colors[i * 3] = 0xFF0000;
-                    //     this.colors[i * 3 + 1] = 0x00FF00;
-                    //     this.colors[i * 3 + 2] = 0x0000FF;
-                    // }
+                    // NOTHING. But maybe something? We're killing the fakeFoos and just using raw vertices "soon".
                 };
                 return SlotMesh;
             }(Phaser.GameObjects.Mesh));
@@ -15613,7 +15604,7 @@ var dragonBones;
                 };
                 Slot.prototype._replaceDisplay = function (prevDisplay) {
                     if (!this._renderDisplay["setSkew"]) {
-                        console.warn("please call dragonBones.phaser.util.extendSkew to mix skew component into your display object,\n                                and set its pipeline to 'PhaserTextureTintPipeline' by calling 'setPiepline' method, more detail please refer to the 'ReplaceSlotDisplay.ts' example");
+                        console.warn("please call dragonBones.phaser.util.extendSkew to mix skew component into your display object,\n                                and set its pipeline to 'SkewPipeline' by calling 'setPipeline' method, more detail please refer to the 'ReplaceSlotDisplay.ts' example");
                         return;
                     }
                     this.armature.display.replace(prevDisplay, this._renderDisplay);
@@ -15711,33 +15702,40 @@ var dragonBones;
                                 var triangleCount = intArray[this._geometryData.offset + 1 /* GeometryTriangleCount */];
                                 var vertexOffset = intArray[this._geometryData.offset + 2 /* GeometryFloatOffset */];
                                 if (vertexOffset < 0) {
-                                    vertexOffset += 65536; // Fixed out of bouds bug.
+                                    vertexOffset += 65536; // Fixed out of bounds bug.
                                 }
                                 var uvOffset = vertexOffset + vertexCount * 2;
                                 var scale = this._armature._armatureData.scale;
                                 var meshDisplay = this._renderDisplay;
                                 var region = currentTextureData.region;
-                                meshDisplay.fakeVertices = new Float32Array(vertexCount * 2);
-                                meshDisplay.fakeUvs = new Float32Array(vertexCount * 2);
-                                meshDisplay.fakeIndices = new Uint16Array(triangleCount * 3);
+                                var fakeVertices = []; // new Float32Array(vertexCount * 2) as any;
+                                var fakeUvs = []; // new Float32Array(vertexCount * 2) as any;
+                                var fakeIndices = []; // new Uint16Array(triangleCount * 3);
                                 for (var i = 0, l = vertexCount * 2; i < l; ++i) {
-                                    meshDisplay.fakeVertices[i] = floatArray[vertexOffset + i] * scale;
+                                    fakeVertices[i] = floatArray[vertexOffset + i] * scale;
+                                    console.assert(fakeVertices[i] != undefined);
                                 }
                                 for (var i = 0; i < triangleCount * 3; ++i) {
-                                    meshDisplay.fakeIndices[i] = intArray[this._geometryData.offset + 4 /* GeometryVertexIndices */ + i];
+                                    fakeIndices[i] = intArray[this._geometryData.offset + 4 /* GeometryVertexIndices */ + i];
                                 }
                                 for (var i = 0, l = vertexCount * 2; i < l; i += 2) {
                                     var u = floatArray[uvOffset + i];
                                     var v = floatArray[uvOffset + i + 1];
                                     if (currentTextureData.rotated) {
-                                        meshDisplay.fakeUvs[i] = (region.x + (1.0 - v) * region.width) / currentTextureAtlasData.width;
-                                        meshDisplay.fakeUvs[i + 1] = (region.y + u * region.height) / currentTextureAtlasData.height;
+                                        fakeUvs[i] = (region.x + (1.0 - v) * region.width) / currentTextureAtlasData.width;
+                                        fakeUvs[i + 1] = (region.y + u * region.height) / currentTextureAtlasData.height;
                                     }
                                     else {
-                                        meshDisplay.fakeUvs[i] = (region.x + u * region.width) / currentTextureAtlasData.width;
-                                        meshDisplay.fakeUvs[i + 1] = (region.y + v * region.height) / currentTextureAtlasData.height;
+                                        fakeUvs[i] = (region.x + u * region.width) / currentTextureAtlasData.width;
+                                        fakeUvs[i + 1] = (region.y + v * region.height) / currentTextureAtlasData.height;
                                     }
                                 }
+                                meshDisplay.clear();
+                                console.assert(fakeVertices.length % 2 == 0);
+                                console.assert(fakeVertices.length > 1 || fakeVertices[0] != undefined);
+                                meshDisplay.addVertices(fakeVertices, fakeUvs, fakeIndices);
+                                console.assert(meshDisplay.vertices.length > 0);
+                                console.assert(meshDisplay.vertices[0] != undefined);
                                 this._textureScale = 1.0;
                                 meshDisplay.texture = frame.texture;
                                 meshDisplay.frame = frame;
@@ -15749,20 +15747,24 @@ var dragonBones;
                                 }
                             }
                             else { // normal texture.
-                                this._renderDisplay.texture = frame.texture;
-                                this._renderDisplay.frame = frame;
-                                this._renderDisplay.setDisplayOrigin(this._pivotX, this._pivotY);
+                                var renderDisplay = this._renderDisplay; // SlotImage | SlotSprite;
+                                renderDisplay.texture = frame.texture;
+                                renderDisplay.frame = frame;
+                                renderDisplay.setDisplayOrigin(this._pivotX, this._pivotY);
                                 this._textureScale = currentTextureData.parent.scale * this.armature.armatureData.scale;
-                                this._renderDisplay.setScale(this._textureScale);
+                                renderDisplay.setScale(this._textureScale);
                             }
                             this._visibleDirty = true;
                             return;
                         }
                     }
-                    else {
-                        this._renderDisplay.x = 0.0;
-                        this._renderDisplay.y = 0.0;
-                        this._renderDisplay.setTexture(undefined);
+                    else { // nothing to show.
+                        var renderDisplay = this._renderDisplay; // SlotImage | SlotSprite;
+                        renderDisplay.x = 0.0;
+                        renderDisplay.y = 0.0;
+                        if (renderDisplay.setTexture) {
+                            renderDisplay.setTexture(undefined);
+                        }
                     }
                 };
                 Slot.prototype._updateMesh = function () {
@@ -15801,8 +15803,11 @@ var dragonBones;
                                     yG += (matrix.b * xL + matrix.d * yL + matrix.ty) * weight;
                                 }
                             }
-                            meshDisplay.fakeVertices[iD++] = xG;
-                            meshDisplay.fakeVertices[iD++] = yG;
+                            console.assert(iD < meshDisplay.vertices.length);
+                            console.assert(meshDisplay.vertices[iD] != undefined);
+                            meshDisplay.vertices[iD].x = xG;
+                            meshDisplay.vertices[iD].y = yG;
+                            iD += 1;
                         }
                     }
                     else {
@@ -15815,21 +15820,25 @@ var dragonBones;
                         if (vertexOffset < 0) {
                             vertexOffset += 65536; // Fixed out of bouds bug.
                         }
-                        for (var i = 0, l = vertexCount * 2; i < l; i += 2) {
-                            var x = floatArray[vertexOffset + i] * scale;
-                            var y = floatArray[vertexOffset + i + 1] * scale;
+                        for (var i = 0; i < vertexCount; ++i) {
+                            var x = floatArray[vertexOffset + 2 * i] * scale;
+                            var y = floatArray[vertexOffset + 2 * i + 1] * scale;
                             if (hasDeform) {
-                                x += deformVertices[i];
-                                y += deformVertices[i + 1];
+                                x += deformVertices[2 * i];
+                                y += deformVertices[2 * i + 1];
                             }
                             if (isSurface) {
                                 var matrix = this._parent._getGlobalTransformMatrix(x, y);
-                                meshDisplay.fakeVertices[i] = matrix.a * x + matrix.c * y + matrix.tx;
-                                meshDisplay.fakeVertices[i + 1] = matrix.b * x + matrix.d * y + matrix.ty;
+                                console.assert(i < meshDisplay.vertices.length);
+                                console.assert(meshDisplay.vertices[i] != undefined);
+                                meshDisplay.vertices[i].x = matrix.a * x + matrix.c * y + matrix.tx;
+                                meshDisplay.vertices[i].y = matrix.b * x + matrix.d * y + matrix.ty;
                             }
                             else {
-                                meshDisplay.fakeVertices[i] = x;
-                                meshDisplay.fakeVertices[i + 1] = y;
+                                console.assert(i < meshDisplay.vertices.length);
+                                console.assert(meshDisplay.vertices[i] != undefined);
+                                meshDisplay.vertices[i].x = x;
+                                meshDisplay.vertices[i].y = y;
                             }
                         }
                     }
@@ -15849,7 +15858,8 @@ var dragonBones;
                     this._renderDisplay.setRotation();
                     this._textureScale = 1.0;
                     this._renderDisplay.setScale(this._textureScale);
-                    this._renderDisplay["setSkew"](0);
+                    // TS note: Since this was added as a mixin, it's likely missing from TS.
+                    this._renderDisplay.setSkew(0);
                 };
                 return Slot;
             }(dragonBones.Slot));
@@ -15941,17 +15951,17 @@ var dragonBones;
     (function (phaser) {
         var pipeline;
         (function (pipeline) {
-            var TextureTintPipeline = /** @class */ (function (_super) {
-                __extends(TextureTintPipeline, _super);
-                function TextureTintPipeline(config) {
+            var SkewPipeline = /** @class */ (function (_super) {
+                __extends(SkewPipeline, _super);
+                function SkewPipeline(config) {
                     var _this = _super.call(this, config) || this;
                     _this._tempMatrix1 = new phaser.util.TransformMatrix();
                     _this._tempMatrix2 = new phaser.util.TransformMatrix();
                     _this._tempMatrix3 = new phaser.util.TransformMatrix();
                     return _this;
                 }
-                TextureTintPipeline.prototype.batchSprite = function (sprite, camera, parentTransformMatrix) {
-                    this.renderer.setPipeline(this);
+                SkewPipeline.prototype.batchSprite = function (sprite, camera, parentTransformMatrix) {
+                    this.manager.set(this, sprite);
                     var camMatrix = this._tempMatrix1;
                     var spriteMatrix = this._tempMatrix2;
                     var calcMatrix = this._tempMatrix3;
@@ -15965,6 +15975,9 @@ var dragonBones;
                     var frameY = frame.y;
                     var frameWidth = frame.width;
                     var frameHeight = frame.height;
+                    var customPivot = frame.customPivot;
+                    var displayOriginX = sprite.displayOriginX;
+                    var displayOriginY = sprite.displayOriginY;
                     var x = -sprite.displayOriginX + frameX;
                     var y = -sprite.displayOriginY + frameY;
                     if (sprite.isCropped) {
@@ -15982,33 +15995,46 @@ var dragonBones;
                         x = -sprite.displayOriginX + frameX;
                         y = -sprite.displayOriginY + frameY;
                     }
+                    var flipX = 1;
+                    var flipY = 1;
                     if (sprite.flipX) {
+                        if (!customPivot) {
+                            x += (-frame.realWidth + (displayOriginX * 2));
+                        }
+                        flipX = -1;
                         x += frameWidth;
                         frameWidth *= -1;
                     }
-                    if (sprite.flipY) {
-                        y += frameHeight;
-                        frameHeight *= -1;
+                    // Auto-invert the flipY if this is coming from a GLTexture
+                    // TS note: WebGLTexture is a real standard object, with no fixed fields.
+                    // I guess TextureManager (?) imprints the flipY property onto it?
+                    // Anyway, this confuses TS.
+                    if (sprite.flipY || (frame.source.isGLTexture && texture.flipY)) {
+                        if (!customPivot) {
+                            y += (-frame.realHeight + (displayOriginY * 2));
+                        }
+                        flipY = -1;
                     }
-                    var xw = x + frameWidth;
-                    var yh = y + frameHeight;
-                    spriteMatrix.applyITRSC(sprite.x, sprite.y, sprite.rotation, sprite.scaleX, sprite.scaleY, sprite["skewX"] || 0, sprite["skewY"] || 0);
-                    camMatrix.copyFrom(camera["matrix"]);
+                    // This override exists only for this line: in the original, this call doesn't respect skew; this one should.
+                    spriteMatrix.applyITRSC(sprite.x, sprite.y, sprite.rotation, sprite.scaleX * flipX, sprite.scaleY * flipY, sprite["skewX"] || 0, sprite["skewY"] || 0);
+                    // TS note: Matrix is a private field -- not protected etc -- so this needs casting to extract.
+                    camMatrix.copyFrom(camera.matrix);
                     if (parentTransformMatrix) {
                         //  Multiply the camera by the parent matrix
                         camMatrix.multiplyWithOffset(parentTransformMatrix, -camera.scrollX * sprite.scrollFactorX, -camera.scrollY * sprite.scrollFactorY);
                         //  Undo the camera scroll
                         spriteMatrix.e = sprite.x;
                         spriteMatrix.f = sprite.y;
-                        //  Multiply by the Sprite matrix, store result in calcMatrix
-                        camMatrix.multiply(spriteMatrix, calcMatrix);
                     }
                     else {
                         spriteMatrix.e -= camera.scrollX * sprite.scrollFactorX;
                         spriteMatrix.f -= camera.scrollY * sprite.scrollFactorY;
-                        //  Multiply by the Sprite matrix, store result in calcMatrix
-                        camMatrix.multiply(spriteMatrix, calcMatrix);
                     }
+                    //  Multiply by the Sprite matrix, store result in calcMatrix
+                    camMatrix.multiply(spriteMatrix, calcMatrix);
+                    var xw = x + frameWidth;
+                    var yh = y + frameHeight;
+                    var roundPixels = camera.roundPixels;
                     var tx0 = calcMatrix.getX(x, y);
                     var ty0 = calcMatrix.getY(x, y);
                     var tx1 = calcMatrix.getX(x, yh);
@@ -16017,27 +16043,25 @@ var dragonBones;
                     var ty2 = calcMatrix.getY(xw, yh);
                     var tx3 = calcMatrix.getX(xw, y);
                     var ty3 = calcMatrix.getY(xw, y);
-                    var tintTL = Phaser.Renderer.WebGL.Utils.getTintAppendFloatAlpha(sprite["_tintTL"], camera.alpha * sprite["_alphaTL"]);
-                    var tintTR = Phaser.Renderer.WebGL.Utils.getTintAppendFloatAlpha(sprite["_tintTR"], camera.alpha * sprite["_alphaTR"]);
-                    var tintBL = Phaser.Renderer.WebGL.Utils.getTintAppendFloatAlpha(sprite["_tintBL"], camera.alpha * sprite["_alphaBL"]);
-                    var tintBR = Phaser.Renderer.WebGL.Utils.getTintAppendFloatAlpha(sprite["_tintBR"], camera.alpha * sprite["_alphaBR"]);
-                    if (camera.roundPixels) {
-                        tx0 |= 0;
-                        ty0 |= 0;
-                        tx1 |= 0;
-                        ty1 |= 0;
-                        tx2 |= 0;
-                        ty2 |= 0;
-                        tx3 |= 0;
-                        ty3 |= 0;
+                    var getTint = Phaser.Renderer.WebGL.Utils.getTintAppendFloatAlpha;
+                    var cameraAlpha = camera.alpha;
+                    // TS Note: _alphaTL etc are private on the Alpha component, so TS gets confused about their use here.
+                    var spriteAlpha = sprite;
+                    var tintTL = getTint(sprite.tintTopLeft, camera.alpha * spriteAlpha._alphaTL);
+                    var tintTR = getTint(sprite.tintTopRight, camera.alpha * spriteAlpha._alphaTR);
+                    var tintBL = getTint(sprite.tintBottomLeft, camera.alpha * spriteAlpha._alphaBL);
+                    var tintBR = getTint(sprite.tintBottomRight, camera.alpha * spriteAlpha._alphaBR);
+                    if (this.shouldFlush(6)) {
+                        this.flush();
                     }
-                    this.setTexture2D(texture, 0);
-                    var tintEffect = (sprite["_isTinted"] && sprite.tintFill);
-                    this.batchQuad(tx0, ty0, tx1, ty1, tx2, ty2, tx3, ty3, u0, v0, u1, v1, tintTL, tintTR, tintBL, tintBR, tintEffect);
+                    var unit = this.setGameObject(sprite, frame);
+                    this.manager.preBatch(sprite);
+                    this.batchQuad(sprite, tx0, ty0, tx1, ty1, tx2, ty2, tx3, ty3, u0, v0, u1, v1, tintTL, tintTR, tintBL, tintBR, sprite.tintFill, texture, unit);
+                    this.manager.postBatch(sprite);
                 };
-                return TextureTintPipeline;
-            }(Phaser.Renderer.WebGL.Pipelines.TextureTintPipeline));
-            pipeline.TextureTintPipeline = TextureTintPipeline;
+                return SkewPipeline;
+            }(Phaser.Renderer.WebGL.Pipelines.MultiPipeline));
+            pipeline.SkewPipeline = SkewPipeline;
         })(pipeline = phaser.pipeline || (phaser.pipeline = {}));
     })(phaser = dragonBones.phaser || (dragonBones.phaser = {}));
 })(dragonBones || (dragonBones = {}));
@@ -16074,7 +16098,9 @@ var dragonBones;
         (function (plugin) {
             var DragonBonesFile = /** @class */ (function (_super) {
                 __extends(DragonBonesFile, _super);
-                function DragonBonesFile(loader, key, textureURL, atlasURL, boneURL, textureXhrSettings, atlasXhrSettings, boneXhrSettings) {
+                function DragonBonesFile(loader, key, textureURL, atlasURL, boneURL, textureXhrSettings, // XHRSettingsObject,
+                atlasXhrSettings, // XHRSettingsObject,
+                boneXhrSettings) {
                     var _this = this;
                     var image;
                     var data;
@@ -16083,7 +16109,7 @@ var dragonBones;
                     var binFileType = plugin.FileTypes.getType(plugin.FileTypes.BINARY);
                     var jsonFileType = plugin.FileTypes.getType(plugin.FileTypes.JSON);
                     var imageFileType = plugin.FileTypes.getType(plugin.FileTypes.IMAGE);
-                    var createBoneFileByType = function (loader, key, boneURL, boneXhrSettings) {
+                    var createBoneFileByType = function (loader, key, boneURL, boneXhrSettings /*XHRSettingsObject*/) {
                         var type = "json";
                         if (boneXhrSettings && boneXhrSettings.responseType) {
                             switch (boneXhrSettings.responseType) {
@@ -16161,14 +16187,25 @@ var dragonBones;
                     game.cache.addCustom("dragonbone");
                     if (_this.game.config.renderType === Phaser.WEBGL) {
                         var renderer = _this.game.renderer;
-                        if (!renderer.hasPipeline('PhaserTextureTintPipeline'))
-                            renderer.addPipeline('PhaserTextureTintPipeline', new phaser.pipeline.TextureTintPipeline({ game: game, renderer: renderer }));
+                        if (!renderer.pipelines.has('SkewPipeline')) {
+                            renderer.pipelines.add('SkewPipeline', new phaser.pipeline.SkewPipeline({ game: game }));
+                        }
                     }
                     // Add dragonBones only
                     pluginManager.registerGameObject("dragonBones", CreateDragonBonesRegisterHandler);
                     // Add armature, this will add dragonBones when not exist
                     pluginManager.registerGameObject("armature", CreateArmatureRegisterHandler);
                     pluginManager.registerFileType("dragonbone", DragonBoneFileRegisterHandler, scene);
+                    // Just for testing slotImage, slotMesh, and (ugh) slotSprite.
+                    pluginManager.registerGameObject("dbSlotImage", function (x, y, texture, frame) {
+                        return this.displayList.add(new phaser.display.SlotImage(this.scene, x, y, texture, frame));
+                    });
+                    pluginManager.registerGameObject("dbSlotSprite", function (x, y, texture, frame) {
+                        return this.displayList.add(new phaser.display.SlotSprite(this.scene, x, y, texture, frame));
+                    });
+                    pluginManager.registerGameObject("dbSlotMesh", function (x, y, vertices, uv, colors, alphas, texture, frame) {
+                        return this.displayList.add(new phaser.display.SlotMesh(this.scene, x, y, vertices, uv, colors, alphas, texture, frame));
+                    });
                     return _this;
                 }
                 DragonBonesScenePlugin.prototype.createArmature = function (armature, dragonBones, skinName, atlasTextureName, textureScale) {
@@ -16240,7 +16277,9 @@ var dragonBones;
             var CreateArmatureRegisterHandler = function (armature, dragonBones, skinName, atlasTextureName) {
                 return this.scene.dragonbone.createArmature(armature, dragonBones, skinName, atlasTextureName);
             };
-            var DragonBoneFileRegisterHandler = function (dragonbonesName, textureURL, atlasURL, boneURL, textureXhrSettings, atlasXhrSettings, boneXhrSettings) {
+            var DragonBoneFileRegisterHandler = function (dragonbonesName, textureURL, atlasURL, boneURL, textureXhrSettings, // XHRSettingsObject,
+            atlasXhrSettings, // XHRSettingsObject,
+            boneXhrSettings) {
                 var multifile = new plugin.DragonBonesFile(this, dragonbonesName, textureURL, atlasURL, boneURL, textureXhrSettings, atlasXhrSettings, boneXhrSettings);
                 this.addFile(multifile.files);
                 return this;

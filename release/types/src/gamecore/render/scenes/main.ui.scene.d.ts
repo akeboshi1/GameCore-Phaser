@@ -1,3 +1,4 @@
+/// <reference types="tooqingphaser" />
 import { RoomScene } from "./room.scene";
 export declare class MainUIScene extends RoomScene {
     static readonly LAYER_UI = "uiLayer";
@@ -9,7 +10,6 @@ export declare class MainUIScene extends RoomScene {
     private timeOutCallerList;
     private timeOutTimeMap;
     private fps;
-    private sizeTF;
     constructor();
     init(data: any): void;
     create(): void;

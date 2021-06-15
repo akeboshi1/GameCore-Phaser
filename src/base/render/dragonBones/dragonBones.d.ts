@@ -6248,22 +6248,33 @@ declare namespace dragonBones.phaser.util {
     }
 }
 declare namespace dragonBones.phaser.util {
+    /**
+     * Methods for handling "skew" or "shear", used in deformation.
+     *
+     * Necessary because default phaser pipeline doesn't respect it; they explicitly reconstruct transformation matrices.
+     * This is worrisome;
+     */
     const Skew: {
         getSkewX(): number;
         setSkewX(v: number): void;
         getSkewY(): number;
         setSkewY(v: number): void;
         setSkew(sx: number, sy?: number): void;
+        getLocalTransformMatrix(tempMatrix: any): Phaser.GameObjects.Components.TransformMatrix;
+        getWorldTransformMatrix(tempMatrix: any, parentMatrix: any): any;
     };
     const extendSkew: (clazz: any) => void;
 }
 declare namespace dragonBones.phaser.util {
     class TransformMatrix extends Phaser.GameObjects.Components.TransformMatrix {
+        decomposedMatrix: any;
         constructor(a?: number, b?: number, c?: number, d?: number, tx?: number, ty?: number);
         decomposeMatrix(): any;
+        static applyITRSC(tempMatrix: Phaser.GameObjects.Components.TransformMatrix, x: number, y: number, rotation: number, scaleX: number, scaleY: number, skewX: number, skewY: number): Phaser.GameObjects.Components.TransformMatrix;
         applyITRSC(x: number, y: number, rotation: number, scaleX: number, scaleY: number, skewX: number, skewY: number): this;
         readonly skewX: number;
         readonly skewY: number;
+        skew(sx: number, sy: number): this;
     }
 }
 declare namespace dragonBones.phaser.display {
@@ -6282,9 +6293,6 @@ declare namespace dragonBones.phaser.display {
             x?: number;
             y?: number;
         };
-        skewX: number;
-        skewY: number;
-        setSkew(sx: number, sy?: number): this;
     }
 }
 declare namespace dragonBones.phaser.display {
@@ -6352,12 +6360,11 @@ declare namespace dragonBones.phaser.display {
 declare namespace dragonBones.phaser.display {
     class TextureAtlasData extends dragonBones.TextureAtlasData {
         static toString(): string;
-        static _replacedTextures: Map<string, number>;
-        static readonly replacedTextures: Map<string, number>;
         private _renderTexture;
         protected _onClear(): void;
         createTexture(): TextureData;
         renderTexture: Phaser.Textures.Texture;
+        releaseRenderTexture(): void;
     }
     class TextureData extends dragonBones.TextureData {
         static toString(): string;
@@ -6366,7 +6373,7 @@ declare namespace dragonBones.phaser.display {
     }
 }
 declare namespace dragonBones.phaser.pipeline {
-    class TextureTintPipeline extends Phaser.Renderer.WebGL.Pipelines.TextureTintPipeline {
+    class SkewPipeline extends Phaser.Renderer.WebGL.Pipelines.MultiPipeline {
         private _tempMatrix1;
         private _tempMatrix2;
         private _tempMatrix3;
@@ -6392,9 +6399,10 @@ declare namespace dragonBones.phaser.plugin {
     };
 }
 declare namespace dragonBones.phaser.plugin {
-    import XHRSettingsObject = Phaser.Types.Loader.XHRSettingsObject;
     class DragonBonesFile extends Phaser.Loader.MultiFile {
-        constructor(loader: Phaser.Loader.LoaderPlugin, key: string | object, textureURL?: string, atlasURL?: string, boneURL?: string, textureXhrSettings?: XHRSettingsObject, atlasXhrSettings?: XHRSettingsObject, boneXhrSettings?: XHRSettingsObject);
+        constructor(loader: Phaser.Loader.LoaderPlugin, key: string | object, textureURL?: string, atlasURL?: string, boneURL?: string, textureXhrSettings?: any, // XHRSettingsObject,
+        atlasXhrSettings?: any, // XHRSettingsObject,
+        boneXhrSettings?: any);
         addToCache(): void;
     }
 }

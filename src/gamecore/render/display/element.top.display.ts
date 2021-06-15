@@ -28,7 +28,7 @@ export class ElementTopDisplay extends TopDisplay {
         } else {
             nickname = this.scene.make.text({
                 style: {
-                    fontSize: 12 * this.mSceneScale,
+                    fontSize: 12 * this.mSceneScale + "px",
                     fontFamily: Font.DEFULT_FONT
                 }
             }).setOrigin(0.5).setStroke("#000000", 2 * this.mSceneScale);

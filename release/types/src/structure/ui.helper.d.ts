@@ -1,3 +1,4 @@
+/// <reference types="tooqingphaser" />
 import { Handler } from "./Handler";
 export declare class UIHelper {
     static get threeGreenNormal(): string[];
@@ -12,7 +13,7 @@ export declare class UIHelper {
     static get threeYellowBig(): string[];
     static get threeGrayBig(): string[];
     static colorStyle(color: string, fontSize: number): {
-        fontSize: number;
+        fontSize: string;
         fontFamily: string;
         color: string;
     };
@@ -32,7 +33,7 @@ export declare class UIHelper {
         color: string;
     };
     static whiteStyle(dpr: any, size?: number): {
-        fontSize: number;
+        fontSize: string;
         fontFamily: string;
         color: string;
     };

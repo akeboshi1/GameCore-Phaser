@@ -1,5 +1,5 @@
-import "tooqinggamephaser";
-import "dragonbones-runtime";
+import "tooqingphaser";
+import "dragonBones";
 import { IEditorCanvasConfig, ElementEditorCanvas, AvatarEditorCanvas, SceneEditorCanvas } from "../editor/canvas";
 
 /*

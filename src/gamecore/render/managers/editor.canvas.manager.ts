@@ -1,4 +1,4 @@
-import { Scene } from "tooqinggamephaser";
+import { Scene } from "tooqingphaser";
 import { Render } from "../render";
 import { AvatarSuitType, ModuleName, Logger } from "structure";
 import { DragonbonesDisplay } from "../display/dragonbones/dragonbones.display";
