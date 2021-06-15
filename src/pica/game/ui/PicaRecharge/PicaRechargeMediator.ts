@@ -1,5 +1,4 @@
 import { BasicMediator, Game, PlayerProperty } from "gamecore";
-import { IRecharge } from "src/pica/structure/irecharge";
 import { EventType, ModuleName } from "structure";
 import { BaseDataConfigManager } from "../../config";
 import { PicaRecharge } from "./PicaRecharge";
@@ -51,7 +50,8 @@ export class PicaRechargeMediator extends BasicMediator {
 
     private onBOUGHT_GIFTPACK_IDS(packet: any) {
         const content = packet.content;
-        const ids = content.ids;
+        const ids = content.status;
+        if (!ids) return;
         const diamondData = this.config.getRecharges(1);
         const giftData = this.config.getRecharges(4);
         for (const temp of diamondData) {
