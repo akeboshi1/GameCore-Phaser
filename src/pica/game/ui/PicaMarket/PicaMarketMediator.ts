@@ -71,11 +71,11 @@ export class PicaMarketMediator extends BasicMediator {
   }
 
   onDisable() {
-    this.proto.off("BOUGHT_REPUTATIONITEMS ", this.onBOUGHT_REPUTATIONITEMS, this);
+    this.proto.off("BOUGHT_REPUTATIONITEMS", this.onBOUGHT_REPUTATIONITEMS, this);
   }
 
   onEnable() {
-    this.proto.on("BOUGHT_REPUTATIONITEMS ", this.onBOUGHT_REPUTATIONITEMS, this);
+    this.proto.on("BOUGHT_REPUTATIONITEMS", this.onBOUGHT_REPUTATIONITEMS, this);
   }
   private sendGetGiftPackBoughtStatus() {
     this.game.sendCustomProto("STRING_INT", "reputationFacade:postAllBoughtPopularityItems", {});

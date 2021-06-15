@@ -163,19 +163,18 @@ export class PicaMarketPanel extends PicaBasePanel {
     this.updateMoneyData();
   }
   public updateBuyedProps(buyedDatas: any[]) {
-    if (!this.buyedProps) return;
+    if (!buyedDatas) return;
     this.buyedProps = buyedDatas;
     if (this.propDatas) {
       for (const temp of buyedDatas) {
         this.propDatas.find((value) => {
           if (value.id === temp.id) {
             value.buyedCount = temp.boughtCount;
-            return true;
           }
         });
       }
     }
-    if (this.mInitialized) return;
+    if (!this.mInitialized) return;
     this.mPropGrid.refresh();
   }
   public setProp(content: any) {

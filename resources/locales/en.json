@@ -530,5 +530,12 @@
   },
   "roomdecorate": {
     "usetips": "你尚未购买该{{name}}"
+  },
+  "battlepass": {
+    "title": "Town challenge",
+    "commontips": "Average reward",
+    "tickettips": "Admission ticket reward",
+    "nowunlock": "Unlock",
+    "buyticket": "Tickets"
   }
 }

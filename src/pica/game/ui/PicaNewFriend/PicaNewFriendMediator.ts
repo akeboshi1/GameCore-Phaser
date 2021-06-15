@@ -64,10 +64,12 @@ export class PicaNewFriendMediator extends BasicMediator {
     protected onEnable() {
         this.proto.on("PLAYER_LIST", this.onPlayerListHandler, this);
         this.proto.on("ANOTHER_PLAYER_INFO", this.onAnotherPlayerInfoHandler, this);
+        this.proto.on("RES_PKT_SEARCH", this.onSearchResultHandler, this);
     }
     protected onDisable() {
         this.proto.off("PLAYER_LIST", this.onPlayerListHandler, this);
         this.proto.off("ANOTHER_PLAYER_INFO", this.onAnotherPlayerInfoHandler, this);
+        this.proto.on("RES_PKT_SEARCH", this.onSearchResultHandler, this);
     }
     protected panelInit() {
         super.panelInit();
@@ -221,8 +223,9 @@ export class PicaNewFriendMediator extends BasicMediator {
         if (text && text.length > 0) this.mModel.searchFriend(text);
     }
 
-    private onSearchResultHandler(content: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_PKT_SEARCH_PLAYER) {
+    private onSearchResultHandler(packet: any) {
         // this.mView.setFriend(FriendChannel.Search, content.playerInfos);
+        const content = packet.content;
         this.mView.setFriend(FriendChannel.Search, content.playerInfos);
         const uids = [];
         for (const data of content.playerInfos) {
