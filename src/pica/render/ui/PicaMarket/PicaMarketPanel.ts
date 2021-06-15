@@ -6,7 +6,7 @@ import { AvatarSuitType, ModuleName } from "structure";
 import { CoinType, Font, Handler, i18n, UIHelper } from "utils";
 import { UIAtlasKey, UIAtlasName } from "picaRes";
 import { op_client } from "pixelpai_proto";
-import { IExtendCountablePackageItem, IMarketCommodity, IPrice } from "picaStructure";
+import { ICurrencyLevel, IExtendCountablePackageItem, IMarketCommodity, IPrice } from "picaStructure";
 import { MoneyCompent } from "picaRender";
 import { PicaBasePanel } from "../pica.base.panel";
 import { ImageValueButton } from "../Components/image.value.button";
@@ -42,7 +42,9 @@ export class PicaMarketPanel extends PicaBasePanel {
   private diamondValue: number;
   private playerLv: number;
   private reputation: number;
+  private reputationLv: number;
   private reputationCoin: number;
+  private currencyData: ICurrencyLevel;
   private propDatas: IMarketCommodity[];
   private buyedProps: any[];
   constructor(uiManager: UiManager) {
@@ -148,12 +150,14 @@ export class PicaMarketPanel extends PicaBasePanel {
     group.selectIndex(0);
   }
 
-  public setMoneyData(money: number, diamond: number, playerLv: number, reputation: number, reputationCoin: number) {
-    this.moneyValue = money;
-    this.diamondValue = diamond;
-    this.playerLv = playerLv;
-    this.reputationCoin = reputationCoin;
-    this.reputation = reputation;
+  public setMoneyData(data: ICurrencyLevel) {
+    this.moneyValue = data.money;
+    this.diamondValue = data.diamond;
+    this.playerLv = data.level;
+    this.reputationCoin = data.reputationCoin;
+    this.reputationLv = data.reputationLv;
+    this.reputation = data.reputation;
+    this.currencyData = data;
     if (!this.mInitialized) return;
     // this.moneycomp.setMoneyData(money, diamond);
     this.updateMoneyData();
@@ -366,7 +370,7 @@ export class PicaMarketPanel extends PicaBasePanel {
           cellContainer = new MarketItem(scene, 0, 0, this.dpr, this.scale);
         }
         cellContainer.setData({ item });
-        cellContainer.setProp(item, this.playerLv);
+        cellContainer.setProp(item, this.currencyData);
         cellContainer.select = false;
         if (this.mCurItemData && this.mCurItemData.id === item.id) {
           this.mCurItem = cellContainer;
@@ -436,7 +440,7 @@ export class PicaMarketPanel extends PicaBasePanel {
     }
     if (category && category.shopName === "gradeshop") {
       this.moneycomp.setMoneyImgs("prestige_assets_icon", "iv_prestige");
-      this.moneycomp.setMoneyData(this.reputationCoin, this.reputation);
+      this.moneycomp.setMoneyData(this.reputation, this.reputationCoin);
     } else {
       this.moneycomp.setMoneyImgs("iv_coin", "iv_diamond");
       this.moneycomp.setMoneyData(this.moneyValue, this.diamondValue);
@@ -480,6 +484,7 @@ export class PicaMarketPanel extends PicaBasePanel {
     this.mCurItem = obj;
     this.mSelectItem.setProp(data);
     this.mSelectItem.setData("propdata", data);
+    this.mSelectItem.setData("currency", this.currencyData);
     const item = data["item"];
     if (!item.suitType || item.suitType === "") {
       this.setCommodityResource(item);
@@ -502,9 +507,20 @@ export class PicaMarketPanel extends PicaBasePanel {
     } else if (coinType === CoinType.PRESTIGE) {
       haveValue = this.reputationCoin;
     }
+    let notice;
+    if (prop.level === false && prop.reputationLv === false) {
+      notice = i18n.t("market.unlocktobuy");
+    }
     if (allPrice > haveValue) {
+      if (coinType === CoinType.PRESTIGE) {
+        notice = i18n.t("market.reputationless");
+      } else {
+        notice = i18n.t("market.moneyless");
+      }
+    }
+    if (notice) {
       const tempdata = {
-        text: [{ text: i18n.t("market.moneyless"), node: undefined }]
+        text: [{ text: notice, node: undefined }]
       };
       this.render.mainPeer.showMediator(ModuleName.PICANOTICE_NAME, true, tempdata);
       return;
@@ -527,12 +543,18 @@ export class PicaMarketPanel extends PicaBasePanel {
   }
   private getBuyPackageData() {
     const propdata: IMarketCommodity = this.mSelectItem.getData("propdata");// op_client.IMarketCommodity
-    const itemdata = { id: null, sellingPrice: null, name: null, shortName: null, count: 1, marketName: undefined };// op_client.CountablePackageItem.create()
+    const currency: ICurrencyLevel = this.mSelectItem.getData("currency");
+    const itemdata = { id: null, sellingPrice: null, name: null, shortName: null, count: 1, marketName: undefined, level: undefined, reputationLv: undefined };// op_client.CountablePackageItem.create()
     itemdata.id = propdata.id;
     itemdata.sellingPrice = propdata.price[0];
     itemdata.name = propdata.name;
     itemdata.shortName = propdata.shortName;
     itemdata.marketName = propdata.marketName;
+    if (propdata.marketName === "shop") {
+      itemdata.level = currency.level >= propdata.limit ? true : false;
+    } else if (propdata.marketName === "gradeshop") {
+      itemdata.reputationLv = currency.reputationLv >= propdata.limit ? true : false;
+    }
     return itemdata;
   }
   private showPropFun(config: any) {// PicPropFunConfig

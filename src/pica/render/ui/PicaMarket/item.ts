@@ -2,7 +2,7 @@ import { DynamicImage } from "gamecoreRender";
 import { UIAtlasName } from "../../../res";
 import { ModuleName } from "structure";
 import { Coin, Font, i18n, Logger, UIHelper, Url } from "utils";
-import { IMarketCommodity } from "picaStructure";
+import { ICurrencyLevel, IMarketCommodity } from "picaStructure";
 import { BBCodeText } from "apowophaserui";
 
 export class MarketItem extends Phaser.GameObjects.Container {
@@ -19,7 +19,7 @@ export class MarketItem extends Phaser.GameObjects.Container {
   private zoom: number = 1;
   private readonly dpr: number;
   private atals: string;
-  private playerLev: number;
+  private currency: ICurrencyLevel;
 
   constructor(scene: Phaser.Scene, x, y, dpr, zoom) {
     super(scene, x, y);
@@ -34,7 +34,7 @@ export class MarketItem extends Phaser.GameObjects.Container {
     this.mPropImage.y = 0;
     this.mPropImage.scale = this.dpr / this.zoom;
     // this.limitText = this.scene.make.text({ style: UIHelper.colorStyle("#FF3366", dpr * 11) }).setOrigin(0, 0.5);
-    this.limitText = new BBCodeText(this.scene, 0, 0, "", UIHelper.colorStyle("#ff3366", dpr * 11)).setOrigin(0, 0.5).setInteractive();
+    this.limitText = new BBCodeText(this.scene, 0, 0, "", UIHelper.colorStyle("#ff3366", dpr * 11)).setOrigin(0, 0.5);
     this.limitText.y = -2 * dpr;
     this.limitText.x = -5 * dpr;
     this.mNickName = this.scene.make.text({ x: -5 * this.dpr, y: -23 * this.dpr, style: UIHelper.colorStyle("#3399cc", 13 * dpr) }, false);
@@ -51,8 +51,8 @@ export class MarketItem extends Phaser.GameObjects.Container {
     this.mSelectBg.visible = false;
   }
 
-  setProp(data: IMarketCommodity, level: number) {
-    this.playerLev = level;
+  setProp(data: IMarketCommodity, currency: ICurrencyLevel) {
+    this.currency = currency;
     this.mProp = data;
     const item = data["item"];
     if (data.icon) {
@@ -73,15 +73,19 @@ export class MarketItem extends Phaser.GameObjects.Container {
       this.starImg.setFrame(starFrame);
     } else this.starImg.visible = false;
     const limit = data.limit || 0;
-    if (data.category === "PKT_MARKET_CATEGORY_3" || data.category === "PKT_MARKET_CATEGORY_1") {
-      if (level > limit) {
+    if (data.marketName === "shop") {
+      if (currency.level >= limit) {
         this.limitText.visible = false;
       } else {
         this.limitText.visible = true;
         this.limitText.text = `lv${limit}` + i18n.t("market.unlock");
       }
-    } else if (data.category === "PKT_MARKET_CATEGORY_8" || data.category === "PKT_MARKET_CATEGORY_9") {
+    } else if (data.marketName === "gradeshop") {
       this.limitText.visible = true;
+      if (currency.reputationLv < limit) {
+        this.limitText.text = `${i18n.t("common.reputation")}:${limit}` + i18n.t("market.unlock");
+        return;
+      }
       data.buyedCount = data.buyedCount || 0;
       if (data.limitType === 1) {
         const color = data.buyedCount === data.limitCount ? "#ff3366" : "#000000";
@@ -92,6 +96,8 @@ export class MarketItem extends Phaser.GameObjects.Container {
       } else {
         this.limitText.visible = false;
       }
+    } else {
+      this.limitText.visible = false;
     }
 
   }

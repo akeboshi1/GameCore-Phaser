@@ -109,6 +109,9 @@ export class UserDataManager extends PacketHandler {
         return this.mDressAvatarIDs;
     }
 
+    getProperty(id: string) {
+        return this.playerProperty.getProperty(id);
+    }
     querySYNC_ALL_PACKAGE() {
         this.mPlayerBag = new PlayerBag();
         this.querySYNC_PACKAGE(op_pkt_def.PKT_PackageType.PropPackage);

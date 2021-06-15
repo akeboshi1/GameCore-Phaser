@@ -26,7 +26,6 @@ export class PicaGame extends Game {
                     .then(() => {
                         this.renderPeer.hidden();
                     });
-                reject(false);
             });
         }
         return this.mConfigManager.startLoad(basePath);

@@ -145,7 +145,7 @@ export class PlayerProperty {
                 this.picaStar = proper;
             } else if (proper.id === "IV0000022") {
                 this.survey = proper;
-            } else if (proper.id === "PKT_IV1000002") {
+            } else if (proper.id === "IV1000002") {
                 this.reputationLevel = proper;
             } else if (proper.id === "IV0000023") {
                 this.popularityCoin = proper;

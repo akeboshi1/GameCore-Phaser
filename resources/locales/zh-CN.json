@@ -12,7 +12,9 @@
     "convertvaluetips": "每日声望币最大兑换值：{{name}}",
     "powertips": "体力不足无法兑换",
     "counttisp": "请选择兑换数量",
-    "convertsuccess": "兑换成功"
+    "convertsuccess": "兑换成功",
+    "reputationless": "声望币不足，无法购买",
+    "unlocktobuy": "请解锁后购买"
   },
   "item": {
     "copy_suc": "复制{{name}}成功",
@@ -86,7 +88,8 @@
     "affirm": "确认",
     "count": "数量",
     "reselect": "重选",
-    "acquire": "获得"
+    "acquire": "获得",
+    "reputation": "声望"
   },
   "quantityunit": {
     "k": "千",

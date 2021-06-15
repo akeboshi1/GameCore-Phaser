@@ -4,7 +4,7 @@ import { BasicMediator, Game } from "gamecore";
 import { EventType, MessageType, ModuleName, RENDER_PEER } from "structure";
 import { BaseDataConfigManager } from "../../config";
 import { Logger } from "utils";
-import { IMarketCommodity } from "picaStructure";
+import { ICurrencyLevel, IMarketCommodity } from "picaStructure";
 
 export class PicaMarketMediator extends BasicMediator {
   constructor(game: Game) {
@@ -82,7 +82,11 @@ export class PicaMarketMediator extends BasicMediator {
   }
   private onUpdatePlayerInfoHandler() {
     const userData = this.game.user.userData;
-    this.mView.setMoneyData(userData.money, userData.diamond, userData.level, userData.reputation, userData.popularityCoin);
+    const data: ICurrencyLevel = {
+      money: userData.money, diamond: userData.diamond, level: userData.level, reputation: userData.reputation,
+      reputationCoin: userData.popularityCoin, reputationLv: userData.reputationLevel
+    };
+    this.mView.setMoneyData(data);
   }
   private onCategoriesHandler(content: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_GET_MARKET_CATEGORIES) {
     if (this.mView) {

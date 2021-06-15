@@ -74,13 +74,27 @@ export class PicaPlayerInfoMediator extends BasicMediator {
             return;
         }
         if (this.mView) {
-            const property = this.game.user.userData.playerProperty;
+            const userData = this.game.user.userData;
+            const property = userData.playerProperty;
             const pros = [property.energy, property.getProperty("IV0000014")];
             content["pros"] = pros;
             content["isUser"] = true;
             this.setItemBases(pros);
             this.setItemBases(content.properties);
             this.setItemBases(content.avatarSuit);
+            let reputation;
+            for (const propr of content.properties) {
+                if (propr.id === "IV0000007") {
+                    reputation = propr;
+                }
+            }
+            if (!reputation) {
+                reputation = userData.getProperty("IV0000007");
+                this.setItemBases([reputation]);
+                content.properties.unshift(reputation);
+            }
+            reputation.value = reputation.value + `/lv:${userData.reputationLevel}`;
+
             this.mView.setPlayerData(content);
         }
     }
