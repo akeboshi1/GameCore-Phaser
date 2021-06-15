@@ -2,6 +2,7 @@
 // import "utils";
 // import "baseRender";
 import "tooqingphaser";
+import "dragonBones";
 export * from "./account";
 export * from "./cameras";
 export * from "./display";
