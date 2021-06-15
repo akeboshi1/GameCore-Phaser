@@ -79,10 +79,6 @@ export class DragonbonesDisplay extends BaseDragonbonesDisplay implements IDispl
         super.destroy();
     }
 
-    public get id() {
-        return this.mID;
-    }
-
     public get nodeType() {
         return this.mNodeType;
     }
@@ -311,22 +307,12 @@ export class DragonbonesDisplay extends BaseDragonbonesDisplay implements IDispl
         if (!this.mArmatureDisplay || !this.mAnimation) {
             return;
         }
-        this.render.mainPeer.completeDragonBonesAnimationQueue(this.id);
+        const queue = this.mAnimation.playingQueue;
+        const times = queue.playTimes === undefined ? -1 : queue.playTimes;
+        if (queue.playedTimes >= times && times > 0) {
+            this.render.mainPeer.completeDragonBonesAnimationQueue(this.id);
+        }
     }
-
-    // protected loadDragonBones(pngUrl: string, jsonUrl: string, dbbinUrl: string) {
-    //     this.mLoadQueue.add([{
-    //         type: LoadType.DRAGONBONES,
-    //         key: this.resourceName,
-    //         textureUrl: pngUrl,
-    //         jsonUrl,
-    //         boneUrl: dbbinUrl
-    //     }]);
-    // }
-
-    // protected generateReplaceTextureKey() {
-    //     return super.generateReplaceTextureKey() + (this.uuid || 0);
-    // }
 
     protected checkShowNickname(): boolean {
         return (this.mTitleMask & TitleMask.TQ_NickName) > 0;
