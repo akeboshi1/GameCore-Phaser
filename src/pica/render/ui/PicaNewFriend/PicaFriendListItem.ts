@@ -198,8 +198,12 @@ export class PicaFriendSearchItem extends PicaFriendBaseListItem {
         if (this.inputVisible === visible) return;
         if (visible) {
             this.inputLabel.show();
+            this.checkBox.visible = false;
+            this.contentTex.visible = false;
         } else {
             this.inputLabel.hide();
+            this.checkBox.visible = true;
+            this.contentTex.visible = true;
         }
         this.itemData.inputvisible = visible;
         this.inputVisible = visible;
