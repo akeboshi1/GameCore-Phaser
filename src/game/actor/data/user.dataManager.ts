@@ -32,7 +32,7 @@ export class UserDataManager extends PacketHandler {
         if (this.connection) {
             this.connection.removePacketListener(this);
         }
-        this.proto.off("PKT_PLAYER_INFO", this.onUPDATE_PLAYER_INFO, this);
+        if (this.proto) this.proto.off("PKT_PLAYER_INFO", this.onUPDATE_PLAYER_INFO, this);
     }
 
     clear() {

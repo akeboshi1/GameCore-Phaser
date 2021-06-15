@@ -50,7 +50,7 @@ export class PicaRechargeMediator extends BasicMediator {
 
     private onBOUGHT_GIFTPACK_IDS(packet: any) {
         const content = packet.content;
-        const ids = content.status;
+        const ids = content.ids;
         if (!ids) return;
         const diamondData = this.config.getRecharges(1);
         const giftData = this.config.getRecharges(4);

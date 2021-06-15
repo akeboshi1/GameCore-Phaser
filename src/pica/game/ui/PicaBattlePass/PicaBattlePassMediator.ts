@@ -1,4 +1,4 @@
-import { PicaMarket } from "./PicaMarket";
+import { PicaBattlePass } from "./PicaBattlePass";
 import { op_client, op_def } from "pixelpai_proto";
 import { BasicMediator, Game } from "gamecore";
 import { EventType, MessageType, ModuleName, RENDER_PEER } from "structure";
@@ -6,11 +6,11 @@ import { BaseDataConfigManager } from "../../config";
 import { Logger } from "utils";
 import { ICurrencyLevel, IMarketCommodity } from "picaStructure";
 
-export class PicaMarketMediator extends BasicMediator {
+export class PicaBattlePassMediator extends BasicMediator {
   constructor(game: Game) {
-    super(ModuleName.PICAMARKET_NAME, game);
+    super(ModuleName.PICABATTLEPASS_NAME, game);
     if (!this.mModel) {
-      this.mModel = new PicaMarket(game);
+      this.mModel = new PicaBattlePass(game);
     }
   }
 
@@ -213,7 +213,7 @@ export class PicaMarketMediator extends BasicMediator {
     this.hide();
   }
 
-  private get model(): PicaMarket {
-    return (<PicaMarket>this.mModel);
+  private get model(): PicaBattlePass {
+    return (<PicaBattlePass>this.mModel);
   }
 }
