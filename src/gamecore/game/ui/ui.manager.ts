@@ -227,6 +227,17 @@ export class UIManager extends PacketHandler {
         if (map) map.set(medName, mediator);
     }
 
+    /**
+     * 根据面板Key更新UI状态
+     * @param panel Panel key
+     */
+    public refrehActiveUIState(panel: string) {
+        const states = this.getUIStateData(panel);
+        for (const state of states) {
+            this.updateUI(state);
+        }
+    }
+
     public destroy() {
         this.removePackListener();
         if (this.mMedMap) {
@@ -267,6 +278,26 @@ export class UIManager extends PacketHandler {
                     } else {
                         this.game.peer.render.updateUIState(panelName, ui);
                     }
+                }
+            }
+        }
+    }
+
+    protected updateUI(ui: op_pkt_def.IPKT_UI) {
+        const tag = ui.name;
+        const paneltags = tag.split(".");
+        const panelName = this.getPanelNameByAlias(paneltags[0]);
+        if (panelName) {
+            const mediator: BasicMediator = this.mMedMap.get(panelName);
+            if (mediator) {
+                if (paneltags.length === 1) {
+                    if (ui.visible || ui.visible === undefined) {
+                        if (mediator.isSceneUI()) this.showMed(panelName);
+                    } else {
+                        this.hideMed(panelName);
+                    }
+                } else {
+                    this.game.peer.render.updateUIState(panelName, ui);
                 }
             }
         }

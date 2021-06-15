@@ -150,6 +150,11 @@ export class MainPeer extends RPCPeer {
         // this.mainPeer.clearHeartBeat();
     }
 
+    @Export([webworker_rpc.ParamType.str])
+    public refrehActiveUIState(panel: string) {
+        return this.game.uiManager.refrehActiveUIState(panel);
+    }
+
     @Export([webworker_rpc.ParamType.boolean])
     public showMovePoint(val: boolean) {
         if (this.game && this.game.user) this.game.user.debugPoint = val;

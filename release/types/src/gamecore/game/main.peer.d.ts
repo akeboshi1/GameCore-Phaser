@@ -39,6 +39,7 @@ export declare class MainPeer extends RPCPeer {
     startBeat(): void;
     endBeat(): void;
     clearBeat(): void;
+    refrehActiveUIState(panel: string): void;
     showMovePoint(val: boolean): void;
     createGame(config: ILauncherConfig): void;
     getScaleRatio(): number;

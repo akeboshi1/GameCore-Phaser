@@ -1,5 +1,5 @@
 import { PacketHandler, PBpacket } from "net-socket-packet";
-import { op_client } from "pixelpai_proto";
+import { op_client, op_pkt_def } from "pixelpai_proto";
 import { Game } from "../game";
 import { BasicMediator } from "./basic/basic.mediator";
 import { UIMediatorType } from "./ui.mediator.type";
@@ -30,9 +30,15 @@ export declare class UIManager extends PacketHandler {
     showExistMed(type: string, extendName?: string): void;
     getUIStateData(name: string): any[];
     checkUIState(medName: string, show: boolean): void;
+    /**
+     * 根据面板Key更新UI状态
+     * @param panel Panel key
+     */
+    refrehActiveUIState(panel: string): void;
     destroy(): void;
     protected onForceOfflineHandler(packet: PBpacket): Promise<void>;
     protected updateUIState(data: op_client.OP_VIRTUAL_WORLD_REQ_CLIENT_PKT_REFRESH_ACTIVE_UI): void;
+    protected updateUI(ui: op_pkt_def.IPKT_UI): void;
     protected getMediatorClass(type: string): any;
     protected handleShowUI(packet: PBpacket): void;
     protected handleUpdateUI(packet: PBpacket): void;
