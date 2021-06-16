@@ -1,3 +1,4 @@
+/// <reference types="tooqingphaser" />
 export declare class Bubble extends Phaser.GameObjects.Container {
     private mChatContent;
     private mBubbleBg;

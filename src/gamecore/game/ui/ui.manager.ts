@@ -263,23 +263,7 @@ export class UIManager extends PacketHandler {
 
     protected updateUIState(data: op_client.OP_VIRTUAL_WORLD_REQ_CLIENT_PKT_REFRESH_ACTIVE_UI) {
         for (const ui of data.ui) {
-            const tag = ui.name;
-            const paneltags = tag.split(".");
-            const panelName = this.getPanelNameByAlias(paneltags[0]);
-            if (panelName) {
-                const mediator: BasicMediator = this.mMedMap.get(panelName);
-                if (mediator) {
-                    if (paneltags.length === 1) {
-                        if (ui.visible || ui.visible === undefined) {
-                            if (mediator.isSceneUI()) this.showMed(panelName);
-                        } else {
-                            this.hideMed(panelName);
-                        }
-                    } else {
-                        this.game.peer.render.updateUIState(panelName, ui);
-                    }
-                }
-            }
+            this.updateUI(ui);
         }
     }
 
