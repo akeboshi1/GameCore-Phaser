@@ -100,4 +100,6 @@ export class ModuleName {
     public static PICANEWMINE_NAME = "PicaNewMine";
     public static PICANEWORDER_NAME: string = "PicaNewOrder";
     public static PICANEWFRIEND_NAME: string = "PicaNewFriend";
+    public static PICAPRESTIGECONVERT_NAME: string = "PicaPrestigeConvert";
+    public static PICABATTLEPASS_NAME: string = "PicaBattlePass";
 }

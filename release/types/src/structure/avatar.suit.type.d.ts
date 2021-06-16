@@ -16,6 +16,9 @@ export declare class AvatarSuitType {
         helmet: string[];
         shell: string[];
         base: string[];
+        scar: string[];
+        cloa: string[];
+        chin: string[];
     };
     static specHideParts: {
         headSpecId: string[];
@@ -61,6 +64,9 @@ export declare class AvatarSuitType {
     shell: string[];
     baseSuitType: string;
     base: string[];
+    scar: string[];
+    cloa: string[];
+    chin: string[];
 }
 export declare class SuitAlternativeType {
     static suitAlternative: SuitAlternativeType;

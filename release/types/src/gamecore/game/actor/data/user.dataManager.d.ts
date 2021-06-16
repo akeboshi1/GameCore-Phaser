@@ -1,6 +1,6 @@
 import { ConnectionService } from "structure";
 import { PacketHandler, PBpacket } from "net-socket-packet";
-import { op_client } from "pixelpai_proto";
+import { op_client, op_pkt_def } from "pixelpai_proto";
 import { Game } from "../../game";
 import { PlayerBag } from "./player.bag";
 import { PlayerProperty } from "./player.property";
@@ -21,8 +21,12 @@ export declare class UserDataManager extends PacketHandler {
     get diamond(): number;
     get level(): number;
     get energy(): number;
+    get reputationLevel(): number;
+    get popularityCoin(): number;
+    get reputation(): number;
     get cid(): string;
     get avatarIDs(): string[];
+    getProperty(id: string): op_pkt_def.IPKT_Property;
     querySYNC_ALL_PACKAGE(): void;
     querySYNC_PACKAGE(packageType: number): void;
     onSYNC_PACKAHE(packet: PBpacket): void;
@@ -30,4 +34,5 @@ export declare class UserDataManager extends PacketHandler {
     onUPDATE_PLAYER_INFO(packet: PBpacket): void;
     syncItemBases(items: op_client.ICountablePackageItem[]): void;
     private onRetDressAvatarItemIDS;
+    get proto(): import("../..").CustomProtoManager;
 }

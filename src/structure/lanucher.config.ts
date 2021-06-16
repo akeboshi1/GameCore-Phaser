@@ -39,6 +39,7 @@ export interface ILauncherConfig {
     game_created?: Function;
     gameLoaded?: Function;
     reload?: Function;
+    isApp?: boolean;
     readonly screenWidth: number;
     readonly screenHeight: number;
     readonly connection?: any;

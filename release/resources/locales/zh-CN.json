@@ -3,7 +3,18 @@
     "title": "商城",
     "payment": "付费",
     "refreshtime": "下一次刷新时间：",
-    "moneyless": "钱币不足，无法购买"
+    "moneyless": "钱币不足，无法购买",
+    "unlock": "解锁",
+    "daylimit": "每天",
+    "weeklimit": "每周",
+    "prestigetitle": "兑换声望币",
+    "converttips": "选择需要兑换的体力值",
+    "convertvaluetips": "每日声望币最大兑换值：{{name}}",
+    "powertips": "体力不足无法兑换",
+    "counttisp": "请选择兑换数量",
+    "convertsuccess": "兑换成功",
+    "reputationless": "声望币不足，无法购买",
+    "unlocktobuy": "请解锁后购买"
   },
   "item": {
     "copy_suc": "复制{{name}}成功",
@@ -75,7 +86,10 @@
     "rarity": "稀有",
     "leave": "离开",
     "affirm": "确认",
-    "reselect":"重选"
+    "count": "数量",
+    "reselect": "重选",
+    "acquire": "获得",
+    "reputation": "声望"
   },
   "quantityunit": {
     "k": "千",
@@ -282,7 +296,8 @@
     "diamond": "钻石",
     "gold_coin": "金币",
     "silver": "银",
-    "gold": "金"
+    "gold": "金",
+    "prestige": "声望币"
   },
   "create_role": {
     "enter_nick": "请输入昵称",
@@ -400,9 +415,10 @@
   },
   "recharge": {
     "title": "充值",
-    "gift": "礼包",
+    "gift": "特别礼包",
     "privilege": "月卡",
-    "diamond": "钻石"
+    "diamond": "钻石充值",
+    "firstcharge": "首充双倍"
   },
   "treasure": {
     "tipslabel": "打开宝箱将随机获得以下一项物品",
@@ -531,5 +547,12 @@
     "usetips": "你尚未购买该{{name}}",
     "usering": "该{{name}}已经使用中",
     "savetips": "{{type}}: {{name}}保存成功"
+  },
+  "battlepass": {
+    "title": "小镇挑战赛",
+    "commontips": "普通奖励",
+    "tickettips": "入场券奖励",
+    "nowunlock": "立即解锁",
+    "buyticket": "购买入场券"
   }
 }

@@ -23,7 +23,6 @@ export declare class DragonbonesDisplay extends BaseDragonbonesDisplay implement
     set hasInteractive(val: boolean);
     startLoad(): Promise<any>;
     destroy(): void;
-    get id(): number;
     get nodeType(): number;
     set titleMask(val: number);
     get titleMask(): number;

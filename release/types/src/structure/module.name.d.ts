@@ -98,4 +98,6 @@ export declare class ModuleName {
     static PICANEWMINE_NAME: string;
     static PICANEWORDER_NAME: string;
     static PICANEWFRIEND_NAME: string;
+    static PICAPRESTIGECONVERT_NAME: string;
+    static PICABATTLEPASS_NAME: string;
 }

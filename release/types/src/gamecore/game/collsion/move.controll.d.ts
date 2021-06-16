@@ -1,15 +1,18 @@
 import * as SAT from "sat";
 import { IPos } from "structure";
-import { CollsionManager } from "./collsion.manager";
+import { IRoomService } from "../room";
 export declare class MoveControll {
     private id;
-    private collsion;
+    private room;
     protected mBodies: SAT.Polygon;
     private ignoreCollsion;
     private velocity;
     private mPosition;
     private mPrePosition;
-    constructor(id: number, collsion: CollsionManager);
+    private collsion;
+    private maxWidth;
+    private maxHeight;
+    constructor(id: number, room: IRoomService);
     setVelocity(x: number, y: number): void;
     update(time: number, delta: number): void;
     setPosition(pos: IPos): void;

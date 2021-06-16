@@ -70,7 +70,7 @@ export class User extends Player {
                 if (!actor.avatar) actor.avatar = <any>(AvatarSuitType.createBaseAvatar());
             }
         }
-        this.moveControll = new MoveControll(actor.id, this.mRoomService.collsionManager);
+        this.moveControll = new MoveControll(actor.id, this.mRoomService);
         this.model = new PlayerModel(actor);
         this.mRoomService.playerManager.setMe(this);
         // todo render setScroll
@@ -147,7 +147,7 @@ export class User extends Player {
 
     moveMotion(x: number, y: number) {
         if (this.mRootMount) {
-            this.mRootMount.removeMount(this);
+            this.mRootMount.removeMount(this, { x, y });
         }
         this.mMoveData = { path: [{ pos: new LogicPos(x, y) }] };
         this.mSyncDirty = true;

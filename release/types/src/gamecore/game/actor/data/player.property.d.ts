@@ -11,6 +11,9 @@ export declare class PlayerProperty {
     energy: op_pkt_def.IPKT_Property;
     experience: op_pkt_def.IPKT_Property;
     workChance: op_pkt_def.IPKT_Property;
+    reputationLevel: op_pkt_def.IPKT_Property;
+    popularityCoin: op_pkt_def.IPKT_Property;
+    reputation: op_pkt_def.IPKT_Property;
     rooms: op_client.IEditModeRoom[];
     handheld: op_client.ICountablePackageItem;
     command: op_def.OpCommand;

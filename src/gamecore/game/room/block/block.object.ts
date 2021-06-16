@@ -16,7 +16,7 @@ export abstract class BlockObject implements IBlockObject {
     protected moveControll: MoveControll;
     constructor(id: number, protected mRoomService: IRoomService) {
         this.isUsed = true;
-        if (id && this.mRoomService) this.moveControll = new MoveControll(id, this.mRoomService.collsionManager);
+        if (id && this.mRoomService) this.moveControll = new MoveControll(id, this.mRoomService);
     }
 
     public async setRenderable(isRenderable: boolean, delay: number = 0): Promise<any> {
