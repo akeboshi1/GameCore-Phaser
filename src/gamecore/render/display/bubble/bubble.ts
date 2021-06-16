@@ -89,10 +89,10 @@ export class Bubble extends Phaser.GameObjects.Container {
     }
 
     public destroy() {
-        if (this.mChatContent) {
-            this.mChatContent.destroy(true);
-        }
-        this.mChatContent = null;
+        // if (this.mChatContent) {
+        //     this.mChatContent.destroy(true);
+        // }
+        // this.mChatContent = null;
         this.mMinWidth = 0;
         this.mMinHeight = 0;
         this.mToY = 0;
