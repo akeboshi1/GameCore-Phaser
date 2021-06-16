@@ -449,6 +449,11 @@ export class MainPeer extends RPCPeer {
         return ele.getInteractivePositionList();
     }
 
+    @Export([])
+    public stopSelfMove() {
+        this.game.user.stopMove();
+    }
+
     @Export([webworker_rpc.ParamType.str])
     public stopGuide(id: string) {
         if (this.game.guideWorkerManager) this.game.guideWorkerManager.stopGuide(id);

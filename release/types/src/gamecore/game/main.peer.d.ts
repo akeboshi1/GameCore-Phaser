@@ -88,6 +88,7 @@ export declare class MainPeer extends RPCPeer {
     getCurrentRoomType(): protos.op_def.SceneTypeEnum;
     activePlayer(id: number): void;
     getInteractivePosition(id: number): IPos[];
+    stopSelfMove(): void;
     stopGuide(id: string): void;
     findPath(targets: [], targetId?: number, toReverse?: boolean): void;
     startFireMove(pointer: any): void;
