@@ -500,6 +500,7 @@ export class BaseFramesDisplay extends BaseDisplay {
 
     protected onAnimationRepeatHander() {
         const queue = this.mAnimation.playingQueue;
+        if (!queue) return;
         if (queue.playedTimes === undefined) {
             queue.playedTimes = 1;
         } else {

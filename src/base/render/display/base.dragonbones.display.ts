@@ -427,6 +427,7 @@ export class BaseDragonbonesDisplay extends BaseDisplay {
             return;
         }
         const queue = this.mAnimation.playingQueue;
+        if (!queue) return;
         if (queue.playedTimes === undefined) {
             queue.playedTimes = 1;
         } else {
