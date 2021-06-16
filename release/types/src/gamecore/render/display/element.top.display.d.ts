@@ -1,4 +1,3 @@
-/// <reference types="tooqingphaser" />
 import { ElementStateType, StateConfig } from "structure";
 import { TopDisplay } from "baseRender";
 import { Render } from "../render";

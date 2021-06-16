@@ -1,4 +1,3 @@
-/// <reference types="tooqingphaser" />
 import { BaseDisplay } from "./base.display";
 import { DisplayField, IFramesModel, RunningAnimation } from "structure";
 import { BaseDragonbonesDisplay } from "./base.dragonbones.display";
