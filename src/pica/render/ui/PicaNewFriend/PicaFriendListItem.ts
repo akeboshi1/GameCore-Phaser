@@ -77,7 +77,9 @@ export class PicaFriendListItem extends PicaFriendBaseListItem {
         const avatar = data.avatar;
         if (avatar && avatar !== "") {
             const url = Url.getOsdRes(avatar);
-            this.imagIcon.load(url);
+            this.imagIcon.load(url, this, () => {
+                if (!data.online) UITools.setImgGray(this.scene, this.imagIcon);
+            });
         }
         const gender = UITools.getGenderFrame(data.gender);
         this.nickImge.setFrameValue(data.nickname, UIAtlasName.uicommon, gender);

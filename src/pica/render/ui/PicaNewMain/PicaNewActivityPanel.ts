@@ -78,12 +78,9 @@ export class PicaNewActivityPanel extends Phaser.GameObjects.Container {
         this.sendHandler = send;
     }
 
-    public updateUIState(datas: any[]) {
-        for (const data of datas) {
-            const button = this.getButton(data.name);
-            if (button) button.visible = data.visible;
-            // if (data.visible) button.enable = data.disable;
-        }
+    public updateUIState(data: any) {
+        const button = this.getButton(data.name);
+        if (button) button.visible = data.visible;
         this.LayoutAllButtons();
     }
 

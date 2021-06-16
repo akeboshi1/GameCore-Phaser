@@ -49,9 +49,9 @@ export class BottomPanel extends PicaBasePanel {
         if (!this.mInitialized) return;
         this.mInput.setTrumpetState(count);
     }
-    public updateUIState(datas: any) {
+    public updateUIState(data: any) {
         if (!this.mInitialized) return;
-        this.mNavigate.updateUIState(datas);
+        this.mNavigate.updateUIState(data);
     }
     addListen() {
         this.mInput.addListen();
@@ -164,19 +164,7 @@ export class BottomPanel extends PicaBasePanel {
         });
     }
     private checkUpdateActive() {
-        // this.render.mainPeer.getCurRoom()
-        //     .then((curRoom) => {
-        //         if (curRoom)
-        //             this.setGiftButtonState(curRoom.openingParty);
-        //     });
-        // this.render.mainPeer.getActiveUIData(ModuleName.PICACHAT_NAME)
-        //     .then((arr) => {
-        //         if (arr) {
-        //             this.updateUIState(arr);
-        //         }
-        //     });
         this.render.mainPeer.refrehActiveUIState(ModuleName.PICACHAT_NAME);
-
     }
 
     private sendChat(val: string, isTrumpet: boolean) {

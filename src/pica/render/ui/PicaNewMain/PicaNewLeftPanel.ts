@@ -29,12 +29,9 @@ export class PicaNewLeftPanel extends Phaser.GameObjects.Container {
         this.redButtonMap.set(MainUIRedType.TASK, this.taskButton);
         this.redButtonMap.set(MainUIRedType.MAP, this.mapButton);
     }
-    public updateUIState(datas: any) {
-        for (const data of datas) {
-            const button = this.getButton(data.name);
-            if (button) button.visible = data.visible;
-            // if (data.visible) button.enable = data.disable;
-        }
+    public updateUIState(data: any) {
+        const button = this.getButton(data.name);
+        if (button) button.visible = data.visible;
     }
     public setHandler(send: Handler) {
         this.sendHandler = send;

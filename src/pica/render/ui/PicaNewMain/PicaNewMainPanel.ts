@@ -226,17 +226,6 @@ export class PicaNewMainPanel extends PicaBasePanel {
         }
     }
     private checkUpdateActive() {
-        // this.render.mainPeer.getCurRoom()
-        //     .then((curRoom) => {
-        //         if (curRoom)
-        //             this.setGiftButtonState(curRoom.openingParty);
-        //     });
-        // this.render.mainPeer.getActiveUIData(ModuleName.PICANEWMAIN_NAME)
-        //     .then((arr) => {
-        //         if (arr) {
-        //             this.updateUIState(arr);
-        //         }
-        //     });
         this.render.mainPeer.refrehActiveUIState(ModuleName.PICANEWMAIN_NAME);
     }
 

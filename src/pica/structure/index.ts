@@ -18,3 +18,4 @@ export * from "./red.system.type";
 export * from "./ifurniture.grade";
 export * from "./iplayer.info";
 export * from "./icurrency.level";
+export * from "./ibattle.pass";
