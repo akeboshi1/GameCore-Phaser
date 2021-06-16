@@ -449,7 +449,7 @@ export class MainPeer extends RPCPeer {
         return ele.getInteractivePositionList();
     }
 
-    @Export([])
+    @Export()
     public stopSelfMove() {
         this.game.user.stopMove();
     }
