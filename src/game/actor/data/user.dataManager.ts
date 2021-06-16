@@ -19,13 +19,13 @@ export class UserDataManager extends PacketHandler {
         this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_PKT_UPDATE_PACKAGE, this.onUPDATE_PACKAGE);
         this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_PKT_PLAYER_INFO, this.onUPDATE_PLAYER_INFO);
         this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_PKT_CURRENT_DRESS_AVATAR_ITEM_ID, this.onRetDressAvatarItemIDS);
-        this.proto.on("PKT_PLAYER_INFO", this.onUPDATE_PLAYER_INFO, this);
     }
 
     public addPackListener() {
         if (this.connection) {
             this.connection.addPacketListener(this);
         }
+        if (this.proto) this.proto.on("PKT_PLAYER_INFO", this.onUPDATE_PLAYER_INFO, this);
     }
 
     public removePackListener() {
