@@ -4,7 +4,6 @@ export { PicaChatMediator } from "./ui/PicaChat/PicaChatMediator";
 export { PicaHandheld } from "./ui/PicaHandheld/PicaHandheld";
 export { PicaHandheldMediator } from "./ui/PicaHandheld/PicaHandheldMediator";
 export { PicaWorkerUiManager } from "./ui/pica.workeruimanager";
-export { ActivityMediator } from "./ui/Activity/ActivityMediator";
 export * from "./ui/CutIn";
 export * from "./ui/Dialog";
 export * from "./ui/UserMenu";

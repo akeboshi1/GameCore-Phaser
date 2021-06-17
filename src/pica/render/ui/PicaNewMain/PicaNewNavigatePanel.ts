@@ -79,13 +79,9 @@ export class PicaNewNavigatePanel extends Phaser.GameObjects.Container {
         this.homeButton.off(ClickEvent.Tap, this.onHomeHandler, this);
     }
 
-    public updateUIState(datas: any) {
-        if (datas.length)
-            for (const data of datas) {
-                const button = this.getButton(data.name);
-                if (button) button.visible = data.visible;
-                // if (data.visible) button.enable = data.disable;
-            }
+    public updateUIState(data: any) {
+        const button = this.getButton(data.name);
+        if (button) button.visible = data.visible;
         this.LayoutButton();
     }
     public setHandler(send: Handler) {

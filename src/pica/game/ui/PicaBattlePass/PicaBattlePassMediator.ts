@@ -4,7 +4,7 @@ import { BasicMediator, Game } from "gamecore";
 import { EventType, MessageType, ModuleName, RENDER_PEER } from "structure";
 import { BaseDataConfigManager } from "../../config";
 import { Logger } from "utils";
-import { ICurrencyLevel, IMarketCommodity } from "picaStructure";
+import { IBattlePass, ICurrencyLevel, IMarketCommodity } from "picaStructure";
 
 export class PicaBattlePassMediator extends BasicMediator {
   constructor(game: Game) {
@@ -16,19 +16,25 @@ export class PicaBattlePassMediator extends BasicMediator {
 
   show(param?: any) {
     super.show(param);
-
     this.game.emitter.on(this.key + "_close", this.onCloseHandler, this);
-    this.game.emitter.on(this.key + "_popItemCard", this.onPopItemCardHandler, this);
+    this.game.emitter.on(this.key + "_takerewards", this.takeBattlePassReward, this);
+    this.game.emitter.on(this.key + "_buyDeluxe", this.buyDeluxeBattlePassDeBug, this);
+    this.game.emitter.on(this.key + "_buylevel", this.buyForceLevelUp, this);
+    this.game.emitter.on(this.key + "_takemaxrewards", this.getMaxLevelReward, this);
   }
 
   hide() {
     this.game.emitter.off(this.key + "_close", this.onCloseHandler, this);
-    this.game.emitter.off(this.key + "_popItemCard", this.onPopItemCardHandler, this);
+    this.game.emitter.on(this.key + "_takerewards", this.takeBattlePassReward, this);
+    this.game.emitter.on(this.key + "_buyDeluxe", this.buyDeluxeBattlePassDeBug, this);
+    this.game.emitter.on(this.key + "_buylevel", this.buyForceLevelUp, this);
+    this.game.emitter.on(this.key + "_takemaxrewards", this.getMaxLevelReward, this);
     super.hide();
   }
 
   panelInit() {
     super.panelInit();
+    this.postBattlePassSituation();
   }
 
   destroy() {
@@ -38,45 +44,36 @@ export class PicaBattlePassMediator extends BasicMediator {
   }
 
   onDisable() {
-    this.proto.off("BOUGHT_REPUTATIONITEMS ", this.onBOUGHT_REPUTATIONITEMS, this);
+    this.proto.off("BATTLE_PASS_SITUATION ", this.onBATTLE_PASS_SITUATION, this);
   }
 
   onEnable() {
-    this.proto.on("BOUGHT_REPUTATIONITEMS ", this.onBOUGHT_REPUTATIONITEMS, this);
+    this.proto.on("BATTLE_PASS_SITUATION ", this.onBATTLE_PASS_SITUATION, this);
   }
-  private sendGetGiftPackBoughtStatus() {
-    this.game.sendCustomProto("STRING_INT", "reputationFacade:postAllBoughtPopularityItems", {});
+  private postBattlePassSituation() {
+    this.game.sendCustomProto("", "battlePassFacade:postBattlePassSituation", {});
   }
-  private onUpdatePlayerInfoHandler() {
-    const userData = this.game.user.userData;
-    const data: ICurrencyLevel = {
-      money: userData.money, diamond: userData.diamond, level: userData.level, reputation: userData.reputation,
-      reputationCoin: userData.popularityCoin, reputationLv: userData.reputationLevel
-    };
-    this.mView.setMoneyData(data);
+  private takeBattlePassReward(level: number) {
+    this.game.sendCustomProto("INT", "battlePassFacade:takeBattlePassReward", { count: level });
   }
-
-  private onBOUGHT_REPUTATIONITEMS(packet: any) {
-    const status = packet.content.status;
-    this.mView.updateBuyedProps(status);
+  private buyDeluxeBattlePassDeBug(price: number) {
+    this.game.sendCustomProto("INT", "battlePassFacade:takeBattlePassReward", { count: price });
   }
-  private onShowOpenPanel(content: any) {
-    this.setParam([content]);
-    this.show(content);
+  private buyForceLevelUp() {
+    this.game.sendCustomProto("", "battlePassFacade:forceLevelUp", {});
+  }
+  private getMaxLevelReward() {
+    this.game.sendCustomProto("", "battlePassFacadegetMaxLevelReward", {});
   }
 
-  private onPopItemCardHandler(data: { prop, display }) {
-    const packet = {
-      content: {
-        name: "ItemPopCard",
-        prop: data.prop,
-        display: data.display
-      }
-    };
-    this.game.peer.workerEmitter(MessageType.SHOW_UI, packet);
+  private onBATTLE_PASS_SITUATION(packet: any) {
+    const content: IBattlePass = packet.content;
   }
 
   private onCloseHandler() {
     this.hide();
+  }
+  private get config() {
+    return <BaseDataConfigManager>this.game.configManager;
   }
 }

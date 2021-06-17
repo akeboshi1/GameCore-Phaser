@@ -1,6 +1,5 @@
 export * from "./Components";
 export * from "./uitool";
-export * from "./Activity/ActivityPanel";
 export * from "./PicaHandheld/PicaHandheldPanel";
 export * from "./PicaChat/PicaChatInputPanel";
 export * from "./PicaChat/PicaGiftPanel";
