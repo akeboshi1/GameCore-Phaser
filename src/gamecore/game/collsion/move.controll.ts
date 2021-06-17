@@ -13,10 +13,11 @@ export class MoveControll {
     private maxWidth: number = 0;
     private maxHeight: number = 0;
 
-    constructor(private id: number,private room: IRoomService) {
+    constructor(private id: number, private room: IRoomService) {
         this.mPosition = new LogicPos();
         this.mPrePosition = new LogicPos();
         this.velocity = new LogicPos();
+        this.collsion = room.collsionManager;
     }
 
     setVelocity(x: number, y: number) {
