@@ -19,6 +19,7 @@ export * from "./viewblock/view.block";
 export * from "./viewblock/viewblock.manager";
 export * from "./room.manager";
 export * from "./room";
+export * from "./element/input.enable";
 export * from "./display/spawn.point";
 export * from "./element/wall.manager";
 export * from "./wall/wall";
