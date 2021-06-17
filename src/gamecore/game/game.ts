@@ -15,7 +15,6 @@ import { RoomManager } from "./room/room.manager";
 import { User } from "./actor/user";
 import { NetworkManager } from "./command";
 import { ConfigPath } from "./config/config/config";
-import { CustomProtoManager } from "./custom.proto/custom.proto.manager";
 import { ElementStorage } from "baseGame";
 import { BaseDataControlManager, DataMgrType } from "./config";
 import { GuideWorkerManager } from "./guide.manager";
@@ -50,7 +49,6 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
     // protected mConfigManager: BaseConfigManager;
     protected mNetWorkManager: NetworkManager;
     protected mHttpLoadManager: HttpLoadManager;
-    protected mCustomProtoManager: CustomProtoManager;
     // 游戏状态管理器
     protected mGameStateManager: GameStateManager;
 
@@ -478,10 +476,6 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
         return this.mAvatarType;
     }
 
-    get customProto() {
-        return this.mCustomProtoManager;
-    }
-
     public onFocus() {
         // if (this.mHeartBeat) clearInterval(this.mHeartBeat);
         this.mRunning = true;
@@ -576,15 +570,7 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
         return undefined;
     }
 
-    public sendCustomProto(msgName: string, cmd: string, msg: any) {
-        if (!this.mCustomProtoManager) {
-            return Logger.getInstance().warn(`send ${msgName} failed`);
-        }
-        this.mCustomProtoManager.send(msgName, cmd, msg);
-    }
-
     protected async initWorld() {
-        if (!this.mCustomProtoManager) this.mCustomProtoManager = new CustomProtoManager(this);
         this.mUser = new User(this);
         this.addHandlerFun(op_client.OPCODE._OP_GATEWAY_RES_CLIENT_ERROR, this.onClientErrorHandler);
         this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_SELECT_CHARACTER, this.onSelectCharacter);
@@ -617,7 +603,6 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
         // if (!this.mConfigManager) this.mConfigManager = new BaseConfigManager(this);
         if (!this.mNetWorkManager) this.mNetWorkManager = new NetworkManager(this);
         if (!this.mHttpLoadManager) this.mHttpLoadManager = new HttpLoadManager();
-        if (!this.mCustomProtoManager) this.mCustomProtoManager = new CustomProtoManager(this);
         // this.mPlayerDataManager = new PlayerDataManager(this);
 
         this.mUIManager.addPackListener();
@@ -759,10 +744,6 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
                 if (this.mSoundManager) {
                     this.mSoundManager.destroy();
                     this.mSoundManager = null;
-                }
-                if (this.mCustomProtoManager) {
-                    this.mCustomProtoManager.destroy();
-                    this.mCustomProtoManager = null;
                 }
                 if (this.user) this.user.removePackListener();
                 // this.peer.destroy();

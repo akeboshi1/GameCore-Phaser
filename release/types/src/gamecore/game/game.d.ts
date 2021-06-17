@@ -12,7 +12,6 @@ import { ChatCommandInterface, ConnectionService, EventDispatcher, IConfigPath, 
 import { RoomManager } from "./room/room.manager";
 import { User } from "./actor/user";
 import { NetworkManager } from "./command";
-import { CustomProtoManager } from "./custom.proto/custom.proto.manager";
 import { ElementStorage } from "baseGame";
 import { BaseDataControlManager, DataMgrType } from "./config";
 import { GuideWorkerManager } from "./guide.manager";
@@ -45,7 +44,6 @@ export declare class Game extends PacketHandler implements IConnectListener, Clo
     protected mLoadingManager: LoadingManager;
     protected mNetWorkManager: NetworkManager;
     protected mHttpLoadManager: HttpLoadManager;
-    protected mCustomProtoManager: CustomProtoManager;
     protected mGameStateManager: GameStateManager;
     protected mGameConfigUrls: Map<string, string>;
     protected mGameConfigUrl: string;
@@ -154,7 +152,6 @@ export declare class Game extends PacketHandler implements IConnectListener, Clo
     get renderPeer(): any;
     get gameStateManager(): GameStateManager;
     get avatarType(): op_def.AvatarStyle;
-    get customProto(): CustomProtoManager;
     onFocus(): any;
     onBlur(): void;
     refreshToken(): Promise<void>;
@@ -168,7 +165,6 @@ export declare class Game extends PacketHandler implements IConnectListener, Clo
      */
     loadJson(): void;
     preloadGameConfig(): Promise<any>;
-    sendCustomProto(msgName: string, cmd: string, msg: any): void;
     protected initWorld(): Promise<void>;
     protected createManager(): void;
     protected onClearGame(): void;

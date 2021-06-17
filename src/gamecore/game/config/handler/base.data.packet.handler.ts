@@ -48,7 +48,4 @@ export class BaseDataPacketHandler extends PacketHandler {
     get Event() {
         return this.mEvent;
     }
-    get proto() {
-        return this.game.customProto;
-    }
 }

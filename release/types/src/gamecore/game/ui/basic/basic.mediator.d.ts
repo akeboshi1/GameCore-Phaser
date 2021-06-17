@@ -51,7 +51,6 @@ export declare class BasicMediator implements IMediator {
     setParam(param: any): void;
     getParam(): any;
     destroy(): void;
-    get proto(): import("../..").CustomProtoManager;
     protected _show(): void;
     protected panelInit(): void;
     protected mediatorExport(): void;
