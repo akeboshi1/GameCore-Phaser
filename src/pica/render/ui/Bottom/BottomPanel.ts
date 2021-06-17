@@ -1,7 +1,7 @@
 import { UiManager, LabelInput, ToggleButton, CheckBoxToggle } from "gamecoreRender";
 import { BBCodeText, Button, ClickEvent, TextArea } from "apowophaserui";
 import { EventType, ModuleName } from "structure";
-import { Font, Handler, i18n } from "utils";
+import { Font, Handler, i18n, IPos } from "utils";
 import { UIAtlasName } from "../../../res";
 import { PicaNewNavigatePanel } from "../PicaNewMain/PicaNewNavigatePanel";
 import { PicaBasePanel } from "../pica.base.panel";
@@ -126,6 +126,11 @@ export class BottomPanel extends PicaBasePanel {
             value.visible = reds.indexOf(key) !== -1;
         });
     }
+
+    getComponent(ui: string) {
+        if (this.mNavigate) return this.mNavigate.getButton(ui);
+    }
+
     get navigatePanel(): Phaser.GameObjects.Container {
         return this.mNavigate;
     }
@@ -143,7 +148,7 @@ export class BottomPanel extends PicaBasePanel {
     protected init() {
         this.mOutput = new OutputContainer(this.scene, this.dpr, this.scaleRatio);
         this.mInput = new InputContainer(this.scene, this.key, this.dpr, this.scaleRatio);
-        this.mNavigate = new PicaNewNavigatePanel(this.scene, this.key, this.dpr, this.scaleRatio);
+        this.mNavigate = new PicaNewNavigatePanel(this.uiManager, this.key, this.dpr, this.scaleRatio);
         this.mNavigate.setHandler(new Handler(this, this.onNavigateHandler));
         this.background = this.scene.make.graphics(undefined);
         this.resizeColtroll = new ResizeControll(this.scene, this.key, this.dpr, this.scaleRatio);

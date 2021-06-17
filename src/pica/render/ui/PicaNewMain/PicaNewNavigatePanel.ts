@@ -1,7 +1,7 @@
 import { Button, ClickEvent } from "apowophaserui";
-import { TweenCompent } from "gamecoreRender";
+import { DynamicImage, TweenCompent, UiManager } from "gamecoreRender";
 import { UIAtlasName } from "../../../res";
-import { Handler, i18n } from "utils";
+import { Handler, i18n, IPos, Logger, Tool, Url } from "utils";
 import { MainUIRedType } from "picaStructure";
 export class PicaNewNavigatePanel extends Phaser.GameObjects.Container {
     public exploreButton: Button;
@@ -16,8 +16,8 @@ export class PicaNewNavigatePanel extends Phaser.GameObjects.Container {
     private sendHandler: Handler;
     private buttons: Button[];
     private redButtonMap: Map<number, Button> = new Map();
-    constructor(scene: Phaser.Scene, key: string, dpr: number, scale: number) {
-        super(scene);
+    constructor(private uiManager: UiManager, key: string, dpr: number, scale: number) {
+        super(uiManager.scene);
         this.dpr = dpr;
         this.key = key;
         this.scale = scale;
@@ -92,6 +92,22 @@ export class PicaNewNavigatePanel extends Phaser.GameObjects.Container {
         this.sendHandler = send;
     }
 
+    public getButton(name: string) {
+        if (name === "bottom.bag") {
+            return this.bagButton;
+        } else if (name === "bottom.friend") {
+            return this.friendButton;
+        } else if (name === "bottom.avatar") {
+            return this.avatarButton;
+        } else if (name === "bottom.make") {
+            return this.makeButton;
+        } else if (name === "bottom.explore") {
+            return this.exploreButton;
+        } else if (name === "bottom.home") {
+            return this.homeButton;
+        }
+    }
+
     protected LayoutButton() {
         let posx = -this.width * 0.5 + this.dpr;
         let before: Button;
@@ -133,20 +149,5 @@ export class PicaNewNavigatePanel extends Phaser.GameObjects.Container {
             return false;
         }
         return true;
-    }
-    private getButton(name: string) {
-        if (name === "bottom.bag") {
-            return this.bagButton;
-        } else if (name === "bottom.friend") {
-            return this.friendButton;
-        } else if (name === "bottom.avatar") {
-            return this.avatarButton;
-        } else if (name === "bottom.make") {
-            return this.makeButton;
-        } else if (name === "bottom.explore") {
-            return this.exploreButton;
-        } else if (name === "bottom.home") {
-            return this.homeButton;
-        }
     }
 }

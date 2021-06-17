@@ -240,6 +240,14 @@ export class UIManager extends PacketHandler {
         if (map) map.set(medName, mediator);
     }
 
+    public getPanelNameByAlias(alias: string) {
+        switch (alias) {
+            case "MessageBox":
+                return "PicaMessageBox";
+        }
+        return alias;
+    }
+
     public destroy() {
         this.removePackListener();
         if (this.mMedMap) {
@@ -355,14 +363,6 @@ export class UIManager extends PacketHandler {
     protected onHandleCloseCreateRoleUI() {
         this.hideMed(ModuleName.PICACREATEROLE_NAME);
         // this.game.peer.render.hideCreateRole();
-    }
-
-    protected getPanelNameByAlias(alias: string) {
-        switch (alias) {
-            case "MessageBox":
-                return "PicaMessageBox";
-        }
-        return alias;
     }
 
     protected clearMediator() {
