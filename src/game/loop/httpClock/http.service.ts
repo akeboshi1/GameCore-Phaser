@@ -155,6 +155,18 @@ export class HttpService {
         return this.post("file_upload_mq", { filename: `${accountData.id}/avatar/${Math.ceil(Math.random() * 1e5)}.png`, blob: url, type: "avatar"});
     }
 
+    async uploadSnapshot(url: string) {
+        const account = await this.game.peer.render.getAccount();
+        if (!account) {
+            return Promise.reject("account does not exist");
+        }
+        const accountData = account.accountData;
+        if (!accountData || !accountData.id) {
+            return Promise.reject("accountData does not exist");
+        }
+        return this.post("file_upload_mq", { filename: `${accountData.id}/snapshot/${Math.ceil(Math.random() * 1e5)}.png`, blob: url, type: "png"});
+    }
+
     uploadDBTexture(key: string, url: string, json: string): Promise<any> {
         return new Promise<any>((resolve, reject) => {
             const path = "user_avatar/texture/";

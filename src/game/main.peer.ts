@@ -767,6 +767,11 @@ export class MainPeer extends RPCPeer {
         return this.game.httpService.uploadDBTexture(key, url, json);
     }
 
+    @Export([webworker_rpc.ParamType.str])
+    public uploadSnapshot(url: string) {
+        return this.game.httpService.uploadSnapshot(url);
+    }
+
     @Export([webworker_rpc.ParamType.num])
     public completeDragonBonesAnimationQueue(id: number) {
         const dragonbones = this.game.roomManager.currentRoom.playerManager.get(id);
