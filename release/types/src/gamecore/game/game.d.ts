@@ -172,9 +172,9 @@ export declare class Game extends PacketHandler implements IConnectListener, Clo
     protected onGotoAnotherGame(packet: PBpacket): void;
     protected onAvatarGameModeHandler(packet: PBpacket): void;
     protected update(current?: number, delta?: number): void;
+    protected clearGame(bool?: boolean): Promise<void>;
     private _createAnotherGame;
     private _onGotoAnotherGame;
-    private clearGame;
     private decodeConfigs;
     private onClientPingHandler;
     private _run;
