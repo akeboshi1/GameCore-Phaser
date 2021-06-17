@@ -1,6 +1,5 @@
 import { ClickEvent } from "apowophaserui";
 import { ToggleButton } from "./toggle.button";
-
 export class CheckBoxToggle extends ToggleButton {
     protected EventStateChange(state: ClickEvent) {
         switch (state) {

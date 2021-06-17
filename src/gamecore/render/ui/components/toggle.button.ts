@@ -1,6 +1,6 @@
 import { ClickEvent } from "apowophaserui";
-import { UIHelper } from "structure";
-import { ButtonEventDispatcher } from ".";
+import { Font } from "structure";
+import { ButtonEventDispatcher } from "./button.event.dispatch";
 
 export class ToggleButton extends ButtonEventDispatcher {
     private mText: Phaser.GameObjects.Text;
@@ -16,7 +16,11 @@ export class ToggleButton extends ButtonEventDispatcher {
         this.mBackground = this.scene.make.image({ key, frame });
         this.mText = this.scene.make.text({
             text,
-            style: UIHelper.whiteStyle(dpr, 15)
+            style: {
+                fontSize: 15 * dpr + "px",
+                fontFamily: Font.DEFULT_FONT,
+                color: "#ffffff"
+            }
         }, false).setOrigin(0.5, 0.5);
         this.add([this.mBackground, this.mText]);
         this.mNormal = frame;

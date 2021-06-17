@@ -1,6 +1,6 @@
 import { ClickEvent } from "apowophaserui";
-import { UIHelper } from "structure";
-import { ButtonEventDispatcher } from ".";
+import { Font } from "structure";
+import { ButtonEventDispatcher } from "./button.event.dispatch";
 export class ToggleColorButton extends ButtonEventDispatcher {
     private mText: Phaser.GameObjects.Text;
     private normalColor: string = "#FFFFFF";
@@ -9,7 +9,11 @@ export class ToggleColorButton extends ButtonEventDispatcher {
     constructor(scene: Phaser.Scene, width: number, height: number, dpr: number, text?: string, style?: any) {
         super(scene, dpr);
         this.setSize(width, height);
-        style = style || UIHelper.whiteStyle(dpr, 15);
+        style = style ||  {
+            fontSize: 15 * dpr + "px",
+            fontFamily: Font.DEFULT_FONT,
+            color: "#ffffff"
+        };
         this.mText = this.scene.make.text({
             text,
             style
