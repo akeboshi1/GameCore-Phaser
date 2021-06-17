@@ -1,5 +1,5 @@
 import * as SAT from "sat";
-import { IPos, LogicPos } from "structure";
+import { IPos, LogicPos, Logger } from "structure";
 import { IRoomService } from "../room";
 import { CollsionManager } from "./collsion.manager";
 export class MoveControll {
@@ -26,7 +26,7 @@ export class MoveControll {
     }
 
     update(time: number, delta: number) {
-        if (this.velocity.x !== 0 && this.velocity.y !== 0) {
+        if (this.velocity.x !== 0 || this.velocity.y !== 0) {
             this.mPrePosition.x = this.mPosition.x;
             this.mPrePosition.y = this.mPosition.y;
 
@@ -94,7 +94,7 @@ export class MoveControll {
         this.mBodies.setOffset(new SAT.Vector(offset.x, offset.y));
     }
 
-    public removePolygon() {
+    removePolygon() {
         if (!this.mBodies) {
             return;
         }
@@ -102,8 +102,15 @@ export class MoveControll {
         this.mBodies = null;
     }
 
-    public setIgnoreCollsion(val: boolean) {
+    setIgnoreCollsion(val: boolean) {
         this.ignoreCollsion = val;
+    }
+
+    destroy() {
+        this.removePolygon();
+        this.setVelocity(0, 0);
+        this.mPosition = null;
+        this.mPrePosition = null;
     }
 
     private getCollideResponses() {
@@ -111,6 +118,15 @@ export class MoveControll {
             return [];
         }
         return this.collsion.collideObjects(this.mBodies);
+    }
+
+    private getBottomPoint(points: SAT.Vector[]) {
+        // 目前仅支持规则图形，填充按顺时针绘制。第三个为最下面的点
+        if (!points || !points[2]) {
+            return Logger.getInstance().error("Irregular collisions are not currently supported");
+        }
+        const bottomPoint = points[2];
+        return this.room.transformToMini45(new LogicPos(bottomPoint.x, bottomPoint.y));
     }
 
     get position(): IPos {

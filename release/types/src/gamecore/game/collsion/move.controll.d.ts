@@ -20,7 +20,9 @@ export declare class MoveControll {
     setBodiesOffset(offset: IPos): void;
     removePolygon(): void;
     setIgnoreCollsion(val: boolean): void;
+    destroy(): void;
     private getCollideResponses;
+    private getBottomPoint;
     get position(): IPos;
     get prePosition(): IPos;
     get bodies(): SAT.Polygon;

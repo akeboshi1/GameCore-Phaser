@@ -1,10 +1,8 @@
 import { op_client, op_gameconfig } from "pixelpai_proto";
 import { Player } from "../room/player/player";
-import { IRoomService } from "../room/room";
-import { IDragonbonesModel, IFramesModel, ISprite } from "structure";
-import { IPos } from "structure";
+import { IDragonbonesModel, IFramesModel, ISprite, IPos } from "structure";
+import { IElement, IRoomService } from "../room";
 export declare class User extends Player {
-    protected game: any;
     stopBoxMove: boolean;
     private mDebugPoint;
     private mMoveStyle;
@@ -15,12 +13,9 @@ export declare class User extends Player {
     private mPreTargetID;
     private holdTime;
     private holdDelay;
-    private readonly mMoveDelayTime;
-    private mMoveTime;
-    private readonly mMoveSyncDelay;
-    private mMoveSyncTime;
-    private mMovePoints;
-    constructor(game: any);
+    private mNearEle;
+    constructor();
+    get nearEle(): IElement;
     set debugPoint(val: boolean);
     get debugPoint(): boolean;
     load(displayInfo: IFramesModel | IDragonbonesModel, isUser?: boolean): Promise<any>;
@@ -43,12 +38,18 @@ export declare class User extends Player {
     tryActiveAction(targetId: number, param?: any, needBroadcast?: boolean): void;
     updateModel(model: op_client.IActor): void;
     destroy(): void;
-    setPosition(pos: IPos): void;
+    setPosition(pos: IPos, syncPos?: boolean): void;
+    /**
+     * 检测角色当前位置附近的可交互element
+     * @param pos
+     */
+    checkNearEle(pos: IPos): IElement;
     activeSprite(targetId: number, param?: any, needBroadcast?: boolean): Promise<void>;
     protected unmountSprite(id: number, pos: IPos): void;
     protected addToBlock(): Promise<any>;
     protected addBody(): void;
     protected syncCameraPosition(): void;
+    protected checkDirection(): void;
     set model(val: ISprite);
     get model(): ISprite;
     get package(): op_gameconfig.IPackage;

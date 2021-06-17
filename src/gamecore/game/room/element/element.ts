@@ -7,21 +7,23 @@ import {
     ElementStateType,
     IDragonbonesModel,
     IFramesModel,
+    IProjection,
     ISprite,
-    PlayerState
+    PlayerState, DirectionChecker, IPos, Logger, LogicPos
 } from "structure";
-import { DirectionChecker, IPos, IProjection, Logger, LogicPos } from "structure";
 import { Tool } from "utils";
 import { BlockObject } from "../block/block.object";
-import { IRoomService } from "../room";
-import { ElementStateManager } from "../state/element.state.manager";
 import { IElementManager } from "./element.manager";
+import { BaseStateManager } from "../state";
+import { IRoomService } from "../../room/room";
+import { InputEnable } from "./input.enable";
 
 export interface IElement {
     readonly id: number;
     readonly dir: number;
     readonly roomService: IRoomService;
     readonly created: boolean;
+    readonly moving: boolean;
 
     readonly moveData: MoveData;
 
@@ -43,7 +45,7 @@ export interface IElement {
 
     play(animationName: string): void;
 
-    setPosition(p: IPos, update: boolean): void;
+    setPosition(p: IPos, syncPos?: boolean): void;
 
     getPosition(): IPos;
 
@@ -83,9 +85,17 @@ export interface IElement {
 
     getProjectionSize(): IProjection;
 
+    addToMap();
+
+    removeFromMap();
+
     addToWalkableMap();
 
     removeFromWalkableMap();
+
+    addToInteractiveMap();
+
+    removeFromInteractiveMap();
 }
 
 export interface MoveData {
@@ -94,13 +104,6 @@ export interface MoveData {
     arrivalTime?: number;
     targetId?: number;
 }
-
-export enum InputEnable {
-    Diasble,
-    Enable,
-    Interactive,
-}
-
 export class Element extends BlockObject implements IElement {
     get state(): boolean {
         return this.mState;
@@ -144,6 +147,10 @@ export class Element extends BlockObject implements IElement {
         }
     }
 
+    get moving() {
+        return this.mMoving;
+    }
+
     protected mId: number;
     protected mDisplayInfo: IFramesModel | IDragonbonesModel;
     protected mAnimationName: string = "";
@@ -157,8 +164,14 @@ export class Element extends BlockObject implements IElement {
     protected mDirty: boolean = false;
     protected mCreatedDisplay: boolean = false;
     protected isUser: boolean = false;
-    protected mStateManager: ElementStateManager;
+    protected mStateManager: BaseStateManager;
     protected mTopDisplay: any;
+    // 移动
+    protected readonly mMoveDelayTime: number = 400;
+    protected mMoveTime: number = 0;
+    protected readonly mMoveSyncDelay = 200;
+    protected mMoveSyncTime: number = 0;
+    protected mMovePoints: any[];
     protected mTarget;
 
     private delayTime = 1000 / 45;
@@ -175,6 +188,15 @@ export class Element extends BlockObject implements IElement {
 
     showEffected(displayInfo: any) {
         throw new Error("Method not implemented.");
+    }
+
+    moveMotion(x: number, y: number) {
+        if (this.mRootMount) {
+            this.mRootMount.removeMount(this, { x, y });
+        }
+        this.mMoveData = { path: [{ pos: new LogicPos(x, y) }] };
+        this.moveControll.setIgnoreCollsion(false);
+        this.startMove();
     }
 
     public async load(displayInfo: IFramesModel | IDragonbonesModel, isUser: boolean = false): Promise<any> {
@@ -195,15 +217,16 @@ export class Element extends BlockObject implements IElement {
             model.layer = LayerEnum.Surface;
             Logger.getInstance().warn(`${Element.name}: sprite layer is empty`);
         }
-        this.removeFromWalkableMap();
         this.mModel = model;
         this.mQueueAnimations = undefined;
         if (this.mModel.pos) {
             this.setPosition(this.mModel.pos);
         }
-        this.addToWalkableMap();
+        this.removeFromMap();
+        // 必须执行一遍下面的方法，否则无法获取碰撞区域
         const area = model.getCollisionArea();
-        const obj = { id: model.id, pos: model.pos, nickname: model.nickname, alpha: model.alpha, titleMask: model.titleMask | 0x00020000, hasInteractive: model.hasInteractive };
+        const obj = { id: model.id, pos: model.pos, nickname: model.nickname, sound: model.sound, alpha: model.alpha, titleMask: model.titleMask | 0x00020000, hasInteractive: model.hasInteractive };
+        this.addToMap();
         // render action
         this.load(this.mModel.displayInfo)
             .then(() => this.mElementManager.roomService.game.peer.render.setModel(obj))
@@ -216,30 +239,18 @@ export class Element extends BlockObject implements IElement {
                     this.updateMounth(model.mountSprites);
                 }
                 return this.setRenderable(true);
+            })
+            .catch((error) => {
+                Logger.getInstance().error(error);
+                this.mRoomService.elementManager.onDisplayReady(this.mModel.id);
             });
-        // physic action
-        const obj1 = {
-            id: model.id,
-            point3f: model.pos,
-            currentAnimationName: model.currentAnimationName,
-            direction: model.direction,
-            mountSprites: model.mountSprites,
-            speed: model.speed,
-            displayInfo: model.displayInfo
-        };
-        // this.mRoomService.game.peer.physicalPeer.setModel(obj1)
-        //     .then(() => {
-        //         if (this.mRenderable) {
-        //             this.addBody();
-        //         }
-        //     });
     }
 
     public updateModel(model: op_client.ISprite, avatarType?: op_def.AvatarStyle) {
         if (this.mModel.id !== model.id) {
             return;
         }
-        this.removeFromWalkableMap();
+        this.removeFromMap();
         if (model.hasOwnProperty("attrs")) {
             this.mModel.updateAttr(model.attrs);
         }
@@ -254,8 +265,8 @@ export class Element extends BlockObject implements IElement {
         } else if (avatarType === op_def.AvatarStyle.OriginAvatar) {
             if (model.hasOwnProperty("avatar")) {
                 this.mModel.updateAvatar(model.avatar);
+                reload = true;
             }
-            reload = true;
         }
 
         if (model.display && model.animations) {
@@ -285,10 +296,7 @@ export class Element extends BlockObject implements IElement {
             this.showNickname();
         }
         if (reload) this.load(this.mModel.displayInfo);
-        // 更新物理进程的物件/人物element
-        // this.mRoomService.game.physicalPeer.updateModel(model);
-        this.updateBody(model);
-        this.addToWalkableMap();
+        this.addToMap();
     }
 
     public play(animationName: string, times?: number): void {
@@ -296,16 +304,13 @@ export class Element extends BlockObject implements IElement {
             Logger.getInstance().error(`${Element.name}: sprite is empty`);
             return;
         }
-        const preWalkable = this.mModel.getWalkableArea();
-        this.removeFromWalkableMap();
-        if (times !== undefined) {
-            times = times > 0 ? times : -1;
-        }
+        // const preWalkable = this.mModel.getWalkableArea();
+        this.removeFromMap();
         this.mModel.setAnimationName(animationName, times);
-        const nextWalkable = this.mModel.getWalkableArea();
+        // const nextWalkable = this.mModel.getWalkableArea();
         const hasInteractive = this.model.hasInteractive;
         if (this.mInputEnable) this.setInputEnable(this.mInputEnable);
-        this.addToWalkableMap();
+        this.addToMap();
         if (this.mRoomService) {
             if (!this.mRootMount) {
                 if (times === undefined) {
@@ -341,6 +346,7 @@ export class Element extends BlockObject implements IElement {
     public completeAnimationQueue() {
         const anis = this.model.animationQueue;
         if (!anis || anis.length < 1) return;
+        anis.shift();
         let aniName: string = PlayerState.IDLE;
         let playTiems;
         if (anis.length > 0) {
@@ -348,7 +354,6 @@ export class Element extends BlockObject implements IElement {
             playTiems = anis[0].playTimes;
         }
         this.play(aniName, playTiems);
-        anis.shift();
     }
 
     public setDirection(val: number) {
@@ -396,12 +401,47 @@ export class Element extends BlockObject implements IElement {
         return this.mRenderable;
     }
 
+    public syncPosition() {
+        const userPos = this.getPosition();
+        const pos = op_def.PBPoint3f.create();
+        pos.x = userPos.x;
+        pos.y = userPos.y;
+        const movePoint = op_def.MovePoint.create();
+        movePoint.pos = pos;
+        // 给每个同步点时间戳
+        movePoint.timestamp = Date.now();
+        if (!this.mMovePoints) this.mMovePoints = [];
+        this.mMovePoints.push(movePoint);
+    }
+
     public update(time?: number, delta?: number) {
-        if (this.mMoving === false) {
-            return;
-        }
+        if (this.mMoving === false) return;
         this._doMove(time, delta);
         this.mDirty = false;
+        // 如果主角没有在推箱子，直接跳过
+        if (!this.mRoomService.playerManager.actor.stopBoxMove) return;
+        const now = Date.now();
+        this.mMoveSyncTime += delta;
+        if (this.mMoveSyncTime >= this.mMoveSyncDelay) {
+            this.mMoveSyncTime = 0;
+            this.syncPosition();
+        }
+        if (!this.mMovePoints || this.mMovePoints.length < 1) {
+            this.mMoveTime = now;
+            return;
+        }
+        if (now - this.mMoveTime > this.mMoveDelayTime) {
+            const movePath = op_def.MovePath.create();
+            movePath.id = this.id;
+            movePath.movePos = this.mMovePoints;
+            const packet = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_MOVE_SPRITE);
+            const content: op_virtual_world.IOP_CLIENT_REQ_VIRTUAL_WORLD_MOVE_SPRITE = packet.content;
+            content.movePath = movePath;
+            this.mRoomService.game.connection.send(packet);
+            this.mMovePoints.length = 0;
+            this.mMovePoints = [];
+            this.mMoveTime = now;
+        }
     }
 
     /**
@@ -435,7 +475,6 @@ export class Element extends BlockObject implements IElement {
             return;
         }
         this.mMoveData.path = path;
-        Logger.getInstance().log("============>>>>> move: ", this.mModel.nickname, this.mModel.pos.x, this.mModel.pos.y);
         // this.mRoomService.game.physicalPeer.move(this.id, this.mMoveData.path);
         this.startMove();
     }
@@ -453,6 +492,9 @@ export class Element extends BlockObject implements IElement {
             return;
         }
         this.mMoving = true;
+        if (!this.moveControll) {
+            return;
+        }
         const pos = this.moveControll.position;
         const pathData = path[0];
         const pathPos = pathData.pos;
@@ -465,51 +507,34 @@ export class Element extends BlockObject implements IElement {
         this.changeState(PlayerState.WALK);
     }
 
-    public stopMove(points?: any) {
+    public stopMove(stopPos?: any) {
+        if (!this.mMovePoints) this.mMovePoints = [];
         this.mMoving = false;
         this.moveControll.setVelocity(0, 0);
         this.changeState(PlayerState.IDLE);
+        // 如果主角没有在推箱子，直接跳过
         if (!this.mRoomService.playerManager.actor.stopBoxMove) return;
-        // const mMovePoints = [];
-        // if (points) {
-        //     points.forEach((pos) => {
-        //         const movePoint = op_def.MovePoint.create();
-        //         const tmpPos = op_def.PBPoint3f.create();
-        //         tmpPos.x = pos.x;
-        //         tmpPos.y = pos.y;
-        //         movePoint.pos = tmpPos;
-        //         // 给每个同步点时间戳
-        //         movePoint.timestamp = new Date().getTime();
-        //         mMovePoints.push(tmpPos);
-        //     });
-        // }
-
         Logger.getInstance().log("============>>>>> element stop: ", this.mModel.nickname, this.mModel.pos.x, this.mModel.pos.y);
-        // const movePath = op_def.MovePath.create();
-        // movePath.id = this.id;
-        // movePath.movePos = mMovePoints;
-        // const pkt: PBpacket = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_STOP_SPRITE);
-        // const ct: op_virtual_world.IOP_CLIENT_REQ_VIRTUAL_WORLD_STOP_SPRITE = pkt.content;
-        // ct.movePath = movePath;
-        // this.mElementManager.connection.send(pkt);
+        this.mMovePoints = [];
         this.mRoomService.playerManager.actor.stopBoxMove = false;
     }
 
     public getPosition(): IPos {
         let pos: IPos;
         const p = super.getPosition();
-        if (this.mRootMount) {
-            pos = this.mRootMount.getPosition();
-            pos.x += p.x;
-            pos.y += p.y;
-            pos.z += p.z;
-        } else {
-            pos = new LogicPos(p.x, p.y, p.z);
-        }
+        // if (this.mRootMount) {
+        // mount后未更新Position。加上RootMount会偏移
+        //     pos = this.mRootMount.getPosition();
+        //     pos.x += p.x;
+        //     pos.y += p.y;
+        //     pos.z += p.z;
+        // } else {
+        pos = new LogicPos(p.x, p.y, p.z);
+        // }
         return pos;
     }
 
-    public setPosition(p: IPos, update: boolean = false) {
+    public setPosition(p: IPos, syncPos: boolean = false) {
         if (!this.mElementManager) {
             return;
         }
@@ -560,6 +585,9 @@ export class Element extends BlockObject implements IElement {
         this.mRoomService.game.renderPeer.hideRefernceArea(this.id);
     }
 
+    /**
+     * 获取元素交互点列表
+     */
     public getInteractivePositionList(): IPos[] {
         const interactives = this.mModel.getInteractive();
         if (!interactives || interactives.length < 1) {
@@ -597,7 +625,7 @@ export class Element extends BlockObject implements IElement {
             this.stopMove();
         }
         this.mDirty = true;
-        this.removeFromWalkableMap();
+        this.removeFromMap();
         this.removeBody();
         return this;
     }
@@ -607,7 +635,7 @@ export class Element extends BlockObject implements IElement {
             const pos = this.mRootMount.getPosition();
             this.mRootMount = null;
             this.setPosition(pos, true);
-            this.addToWalkableMap();
+            this.addToMap();
             this.addBody();
             await this.mRoomService.game.renderPeer.setPosition(this.id, pos.x, pos.y);
             this.mDirty = true;
@@ -633,7 +661,7 @@ export class Element extends BlockObject implements IElement {
         this.mMounts.splice(index, 1);
         await ele.unmount(targetPos);
         if (!this.mMounts) return Promise.resolve();
-        this.mRoomService.game.renderPeer.unmount(this.id, ele.id);
+        this.mRoomService.game.renderPeer.unmount(this.id, ele.id, ele.getPosition());
         return Promise.resolve();
     }
 
@@ -652,6 +680,16 @@ export class Element extends BlockObject implements IElement {
         }
     }
 
+    public addToMap() {
+        this.addToWalkableMap();
+        this.addToInteractiveMap();
+    }
+
+    public removeFromMap() {
+        this.removeFromWalkableMap();
+        this.removeFromInteractiveMap();
+    }
+
     public addToWalkableMap() {
         if (this.mRootMount) return;
         if (this.model && this.mElementManager) this.mElementManager.roomService.addToWalkableMap(this.model);
@@ -661,8 +699,18 @@ export class Element extends BlockObject implements IElement {
         if (this.model && this.mElementManager) this.mElementManager.roomService.removeFromWalkableMap(this.model);
     }
 
+    public addToInteractiveMap() {
+        // 有叠加物件时，不做添加处理
+        if (this.mRootMount) return;
+        if (this.model && this.mElementManager) this.mElementManager.roomService.addToInteractiveMap(this.model);
+    }
+
+    public removeFromInteractiveMap() {
+        if (this.model && this.mElementManager) this.mElementManager.roomService.removeFromInteractiveMap(this.model);
+    }
+
     public setState(stateGroup: op_client.IStateGroup) {
-        if (!this.mStateManager) this.mStateManager = new ElementStateManager(this, this.mRoomService);
+        if (!this.mStateManager) this.mStateManager = new BaseStateManager(this.mRoomService);
         this.mStateManager.setState(stateGroup);
     }
 
@@ -692,7 +740,8 @@ export class Element extends BlockObject implements IElement {
         const pathData = path[0];
         if (!pathData) return;
         const pathPos = pathData.pos;
-        const speed = this.mModel.speed * delta;
+        // 允许1.5误差。delta存在波动避免停不下来
+        const speed = this.mModel.speed * delta * 1.5;
         if (Tool.twoPointDistance(pos, pathPos) <= speed) {
             if (path.length > 1) {
                 path.shift();
@@ -754,6 +803,7 @@ export class Element extends BlockObject implements IElement {
         const eventName = this.mDisplayInfo.eventName || this.mModel.displayInfo.eventName;
         const avatarDir = this.mDisplayInfo.avatarDir || this.mModel.displayInfo.avatarDir;
         const animationName = this.mDisplayInfo.animationName || this.mModel.displayInfo.animationName;
+        const sound = this.mDisplayInfo.sound || undefined;
         const obj = {
             discriminator,
             id,
@@ -763,6 +813,7 @@ export class Element extends BlockObject implements IElement {
             avatar: undefined,
             gene: undefined,
             type: "",
+            sound,
             display: null,
             animations: undefined,
         };
@@ -793,9 +844,9 @@ export class Element extends BlockObject implements IElement {
         if (this.model && this.model.pos) {
             depth = this.model.pos.depth ? this.model.pos.depth : 0;
         }
-        if (this.mStateManager) {
-            this.mStateManager.execAllState();
-        }
+        // if (this.mStateManager) {
+        //     this.mStateManager.execAllState();
+        // }
         return Promise.resolve();
     }
 
@@ -905,42 +956,3 @@ export class Element extends BlockObject implements IElement {
         this.mRoomService.game.connection.send(packet);
     }
 }
-
-// class MoveControll {
-//     private velocity: IPos;
-//     private mPosition: IPos;
-//     private mPrePosition: IPos;
-
-//     constructor(private target: BlockObject) {
-//         this.mPosition = new LogicPos();
-//         this.mPrePosition = new LogicPos();
-//         this.velocity = new LogicPoint();
-//     }
-
-//     setVelocity(x: number, y: number) {
-//         this.velocity.x = x;
-//         this.velocity.y = y;
-//     }
-
-//     update(time: number, delta: number) {
-//         if (this.velocity.x !== 0 && this.velocity.y !== 0) {
-//             this.mPrePosition.x = this.mPosition.x;
-//             this.mPrePosition.y = this.mPosition.y;
-//             this.mPosition.x += this.velocity.x;
-//             this.mPosition.y += this.velocity.y;
-//         }
-//     }
-
-//     setPosition(x: number, y: number) {
-//         this.mPosition.x = x;
-//         this.mPosition.y = y;
-//     }
-
-//     get position(): IPos {
-//         return this.mPosition;
-//     }
-
-//     get prePosition(): IPos {
-//         return this.mPrePosition;
-//     }
-// }

@@ -1,15 +1,14 @@
 import { op_def } from "pixelpai_proto";
 import { IElementManager } from "../element/element.manager";
-import { DirectionChecker, IPos, ISprite, PlayerState } from "structure";
-import { LayerEnum } from "game-capsule";
+import { IDragonbonesModel, IPos, ISprite, PlayerState, DirectionChecker } from "structure";
 import { Element, IElement } from "../element/element";
+import { LayerEnum } from "game-capsule";
 import { InputEnable } from "../element/input.enable";
-
 export class Player extends Element implements IElement {
     protected nodeType: number = op_def.NodeType.CharacterNodeType;
     protected mOffsetY: number = undefined;
 
-    constructor(sprite: ISprite, protected mElementManager: IElementManager) {
+    constructor(sprite: ISprite, mElementManager: IElementManager) {
         super(sprite, mElementManager);
         this.setInputEnable(InputEnable.Enable);
     }
@@ -18,8 +17,8 @@ export class Player extends Element implements IElement {
         if (!model) {
             return;
         }
-        (<any> model).off("Animation_Change", this.animationChanged, this);
-        (<any> model).on("Animation_Change", this.animationChanged, this);
+        (<any>model).off("Animation_Change", this.animationChanged, this);
+        (<any>model).on("Animation_Change", this.animationChanged, this);
         if (!model.layer) {
             model.layer = LayerEnum.Surface;
         }
@@ -52,19 +51,14 @@ export class Player extends Element implements IElement {
                 this.addToWalkableMap();
                 return this.setRenderable(true);
             });
-        const obj1 = {
-            id: model.id,
-            point3f: model.pos,
-            currentAnimationName: model.currentAnimationName,
-            direction: model.direction,
-            mountSprites: model.mountSprites,
-            speed: model.speed,
-        };
-        // physic action
-        // this.mRoomService.game.peer.physicalPeer.setModel(obj1)
-        //     .then(() => {
-        //         this.addBody();
-        //     });
+    }
+
+    public async load(displayInfo: IDragonbonesModel, isUser: boolean = false): Promise<any> {
+        this.mDisplayInfo = displayInfo;
+        this.isUser = isUser;
+        if (!displayInfo) return Promise.reject(`element ${this.mModel.nickname} ${this.id} display does not exist`);
+        await this.loadDisplayInfo();
+        return this.addToBlock();
     }
 
     public changeState(val?: string, times?: number) {
@@ -84,28 +78,6 @@ export class Player extends Element implements IElement {
         this.mMoving = false;
         this.moveControll.setVelocity(0, 0);
         this.changeState(PlayerState.IDLE);
-        // if (!this.mRoomService.playerManager.actor.stopBoxMove) return;
-        // const mMovePoints = [];
-        // if (points) {
-        //     points.forEach((pos) => {
-        //         const movePoint = op_def.MovePoint.create();
-        //         const tmpPos = op_def.PBPoint3f.create();
-        //         tmpPos.x = pos.x;
-        //         tmpPos.y = pos.y;
-        //         movePoint.pos = tmpPos;
-        //         // 给每个同步点时间戳
-        //         movePoint.timestamp = new Date().getTime();
-        //         mMovePoints.push(tmpPos);
-        //     });
-        // }
-        // const movePath = op_def.MovePath.create();
-        // movePath.id = this.id;
-        // movePath.movePos = mMovePoints;
-        // const pkt: PBpacket = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_STOP_SPRITE);
-        // const ct: op_virtual_world.IOP_CLIENT_REQ_VIRTUAL_WORLD_STOP_SPRITE = pkt.content;
-        // ct.movePath = movePath;
-        // this.mElementManager.connection.send(pkt);
-        // this.mRoomService.playerManager.actor.stopBoxMove = false;
     }
 
     public completeMove() {
@@ -113,7 +85,7 @@ export class Player extends Element implements IElement {
 
     public setWeapon(weaponid: string) {
         if (!this.mModel || !this.mModel.avatar) return;
-        const avatar: any = {barmWeapId: {sn: weaponid, slot: "NDE5NDMwNA==", suit_type: "weapon"}};
+        const avatar: any = { barmWeapId: { sn: weaponid, slot: "NDE5NDMwNA==", suit_type: "weapon" } };
         this.model.setTempAvatar(avatar);
         this.load(this.mModel.displayInfo);
     }

@@ -5,10 +5,9 @@ import { IElementManager } from "../element/element.manager";
 import { IElement } from "../element/element";
 import { ConnectionService, ISprite } from "structure";
 import { IFramesModel } from "structure";
-import { IDragonbonesModel } from "structure";
-import { IPos } from "structure";
+import { IDragonbonesModel, IPos } from "structure";
 import { IElementStorage } from "baseGame";
-import { IRoomService, SpriteAddCompletedListener } from "../room";
+import { IRoomService, SpriteAddCompletedListener } from "../../room/room";
 export declare class TerrainManager extends PacketHandler implements IElementManager {
     protected mRoom: IRoomService;
     hasAddComplete: boolean;
@@ -20,7 +19,6 @@ export declare class TerrainManager extends PacketHandler implements IElementMan
     private mDirty;
     private mTerrainCache;
     private mIsDealEmptyTerrain;
-    private mExtraDisplayInfo_TexturePath;
     constructor(mRoom: IRoomService, listener?: SpriteAddCompletedListener);
     get isDealEmptyTerrain(): boolean;
     init(): void;

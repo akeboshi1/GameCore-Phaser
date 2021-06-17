@@ -5,6 +5,7 @@ import { IDragonbonesModel, IFramesModel, ISprite } from "structure";
 import { Element, IElement } from "./element";
 import { IElementStorage } from "baseGame";
 import { IRoomService } from "../room";
+import { BaseStateManager } from "../state";
 export interface IElementManager {
     hasAddComplete: boolean;
     readonly connection: ConnectionService | undefined;
@@ -39,6 +40,7 @@ export declare class ElementManager extends PacketHandler implements IElementMan
     protected mRequestSyncIdList: number[];
     protected mDealSyncMap: Map<number, boolean>;
     protected mGameConfig: IElementStorage;
+    protected mStateMgr: BaseStateManager;
     protected mLoadLen: number;
     protected mCurIndex: number;
     constructor(mRoom: IRoomService);

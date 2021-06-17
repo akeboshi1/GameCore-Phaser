@@ -1,9 +1,8 @@
-import { IPos, IProjection } from "structure";
-import { IBlockObject } from "./iblock.object";
-import { IFramesModel, ISprite } from "structure";
-import { MoveControll } from "../../collsion";
 import { InputEnable } from "../element/input.enable";
-import { IRoomService } from "../room";
+import { IBlockObject } from "./iblock.object";
+import { IPos, IFramesModel, IProjection, ISprite } from "structure";
+import { MoveControll } from "../../collsion";
+import { IRoomService } from "../../room/room";
 export declare abstract class BlockObject implements IBlockObject {
     protected mRoomService: IRoomService;
     isUsed: boolean;
@@ -24,6 +23,7 @@ export declare abstract class BlockObject implements IBlockObject {
     setInputEnable(val: InputEnable): void;
     setBlockable(val: boolean): this;
     destroy(): void;
+    moveBasePos(): IPos;
     clear(): void;
     disableBlock(): void;
     enableBlock(): void;

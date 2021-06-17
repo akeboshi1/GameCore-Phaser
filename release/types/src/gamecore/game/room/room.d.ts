@@ -125,6 +125,7 @@ export declare class Room extends PacketHandler implements IRoomService, SpriteA
         width: number;
         height: number;
     };
+    createManager(): void;
     startPlay(): Promise<void>;
     initUI(): void;
     addToInteractiveMap(sprite: ISprite): void;

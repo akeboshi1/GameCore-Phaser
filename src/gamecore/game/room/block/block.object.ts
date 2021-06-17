@@ -1,10 +1,9 @@
-import { IPos, LogicPos, IProjection, Position45, IPosition45Obj } from "structure";
+import { InputEnable } from "../element/input.enable";
 import { IBlockObject } from "./iblock.object";
-import { IFramesModel, ISprite } from "structure";
+import { IPos, LogicPos, Position45, IPosition45Obj, IFramesModel, IProjection, ISprite } from "structure";
 import { op_def } from "pixelpai_proto";
 import { MoveControll } from "../../collsion";
-import { InputEnable } from "../element/input.enable";
-import { IRoomService } from "../room";
+import { IRoomService } from "../../room/room";
 
 export abstract class BlockObject implements IBlockObject {
     public isUsed = false;
@@ -108,6 +107,10 @@ export abstract class BlockObject implements IBlockObject {
     public destroy() {
         // this.mRoomService.game.peer.render.displayDestroy(this.id, this.type);
         if (this.moveControll) this.moveControll.removePolygon();
+    }
+
+    public moveBasePos(): IPos {
+        return this.moveControll ? this.moveControll.position : undefined;
     }
 
     public clear() {
@@ -233,9 +236,13 @@ export abstract class BlockObject implements IBlockObject {
         const miniSize = this.mRoomService.miniSize;
 
         if (resule) {
-            paths[0] = this.calcBodyPath(collisionArea, miniSize);
+            paths = this.calcBodyPath(collisionArea, miniSize);
         } else {
             paths = [Position45.transformTo90(new LogicPos(0, 0), miniSize), Position45.transformTo90(new LogicPos(rows, 0), miniSize), Position45.transformTo90(new LogicPos(rows, cols), miniSize), Position45.transformTo90(new LogicPos(0, cols), miniSize)];
+        }
+        if (paths.length < 1) {
+            this.removeBody();
+            return;
         }
         const origin = Position45.transformTo90(this.mModel.getOriginPoint(), miniSize);
         this.moveControll.drawPolygon(paths, { x: -origin.x, y: -origin.y });

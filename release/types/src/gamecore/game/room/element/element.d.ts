@@ -1,15 +1,15 @@
 import { op_client, op_def } from "pixelpai_proto";
-import { AnimationQueue, ElementStateType, IDragonbonesModel, IFramesModel, ISprite } from "structure";
-import { IPos, IProjection } from "structure";
+import { AnimationQueue, ElementStateType, IDragonbonesModel, IFramesModel, IProjection, ISprite, IPos } from "structure";
 import { BlockObject } from "../block/block.object";
-import { IRoomService } from "../room";
-import { ElementStateManager } from "../state/element.state.manager";
 import { IElementManager } from "./element.manager";
+import { BaseStateManager } from "../state";
+import { IRoomService } from "../../room/room";
 export interface IElement {
     readonly id: number;
     readonly dir: number;
     readonly roomService: IRoomService;
     readonly created: boolean;
+    readonly moving: boolean;
     readonly moveData: MoveData;
     state: boolean;
     model: ISprite;
@@ -20,7 +20,7 @@ export interface IElement {
     setModel(model: ISprite): any;
     updateModel(model: op_client.ISprite): any;
     play(animationName: string): void;
-    setPosition(p: IPos, update: boolean): void;
+    setPosition(p: IPos, syncPos?: boolean): void;
     getPosition(): IPos;
     getPosition45(): IPos;
     setDirection(val: number): void;
@@ -40,19 +40,18 @@ export interface IElement {
     removeMount(ele: IElement, targetPos?: IPos): Promise<void>;
     getInteractivePositionList(): IPos[];
     getProjectionSize(): IProjection;
+    addToMap(): any;
+    removeFromMap(): any;
     addToWalkableMap(): any;
     removeFromWalkableMap(): any;
+    addToInteractiveMap(): any;
+    removeFromInteractiveMap(): any;
 }
 export interface MoveData {
     step?: number;
     path?: op_def.IMovePoint[];
     arrivalTime?: number;
     targetId?: number;
-}
-export declare enum InputEnable {
-    Diasble = 0,
-    Enable = 1,
-    Interactive = 2
 }
 export declare class Element extends BlockObject implements IElement {
     protected mElementManager: IElementManager;
@@ -66,6 +65,7 @@ export declare class Element extends BlockObject implements IElement {
     get moveData(): MoveData;
     get created(): boolean;
     get eleMgr(): IElementManager;
+    get moving(): boolean;
     protected mId: number;
     protected mDisplayInfo: IFramesModel | IDragonbonesModel;
     protected mAnimationName: string;
@@ -79,13 +79,19 @@ export declare class Element extends BlockObject implements IElement {
     protected mDirty: boolean;
     protected mCreatedDisplay: boolean;
     protected isUser: boolean;
-    protected mStateManager: ElementStateManager;
+    protected mStateManager: BaseStateManager;
     protected mTopDisplay: any;
+    protected readonly mMoveDelayTime: number;
+    protected mMoveTime: number;
+    protected readonly mMoveSyncDelay = 200;
+    protected mMoveSyncTime: number;
+    protected mMovePoints: any[];
     protected mTarget: any;
     private delayTime;
     private mState;
     constructor(sprite: ISprite, mElementManager: IElementManager);
     showEffected(displayInfo: any): void;
+    moveMotion(x: number, y: number): void;
     load(displayInfo: IFramesModel | IDragonbonesModel, isUser?: boolean): Promise<any>;
     setModel(model: ISprite): Promise<void>;
     updateModel(model: op_client.ISprite, avatarType?: op_def.AvatarStyle): void;
@@ -97,6 +103,7 @@ export declare class Element extends BlockObject implements IElement {
     changeState(val?: string): void;
     getState(): string;
     getRenderable(): boolean;
+    syncPosition(): void;
     update(time?: number, delta?: number): void;
     /**
      * 发射
@@ -107,9 +114,9 @@ export declare class Element extends BlockObject implements IElement {
     startFireMove(pos: IPos): Promise<void>;
     move(path: op_def.IMovePoint[]): void;
     startMove(points?: any): void;
-    stopMove(points?: any): void;
+    stopMove(stopPos?: any): void;
     getPosition(): IPos;
-    setPosition(p: IPos, update?: boolean): void;
+    setPosition(p: IPos, syncPos?: boolean): void;
     getRootPosition(): IPos;
     showBubble(text: string, setting: op_client.IChat_Setting): void;
     clearBubble(): void;
@@ -119,6 +126,9 @@ export declare class Element extends BlockObject implements IElement {
     removeTopDisplay(): void;
     showRefernceArea(conflictMap?: number[][]): void;
     hideRefernceArea(): void;
+    /**
+     * 获取元素交互点列表
+     */
     getInteractivePositionList(): IPos[];
     get nickname(): string;
     turn(): void;
@@ -129,8 +139,12 @@ export declare class Element extends BlockObject implements IElement {
     removeMount(ele: IElement, targetPos?: IPos): Promise<void>;
     getDepth(): number;
     asociate(): void;
+    addToMap(): void;
+    removeFromMap(): void;
     addToWalkableMap(): void;
     removeFromWalkableMap(): void;
+    addToInteractiveMap(): void;
+    removeFromInteractiveMap(): void;
     setState(stateGroup: op_client.IStateGroup): void;
     destroy(): void;
     protected _doMove(time?: number, delta?: number): void;

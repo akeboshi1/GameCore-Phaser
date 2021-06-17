@@ -2,9 +2,9 @@ import { op_client, op_def, op_virtual_world } from "pixelpai_proto";
 import { PacketHandler, PBpacket } from "net-socket-packet";
 import { AStar, ConnectionService, Handler, IPos, IPosition45Obj, Logger, LogicPos, Position45 } from "structure";
 import { Game } from "../../game";
-import {EventType, IScenery, ISprite, LoadState, ModuleName, SceneName} from "structure";
+import { EventType, IScenery, ISprite, LoadState, ModuleName, SceneName } from "structure";
 import IActor = op_client.IActor;
-import {ExtraRoomInfo} from "custom_proto";
+import { ExtraRoomInfo } from "custom_proto";
 import { TerrainManager } from "./terrain/terrain.manager";
 import { ElementManager } from "./element/element.manager";
 import { PlayerManager } from "./player/player.manager";
@@ -14,14 +14,13 @@ import { SkyBoxManager } from "./sky.box/sky.box.manager";
 import { WallManager } from "./element/wall.manager";
 import { CollsionManager } from "../collsion";
 import { IBlockObject } from "./block/iblock.object";
-import { IElement, InputEnable } from "./element/element";
+import { IElement } from "./element/element";
 import { ClockReadyListener } from "../loop";
 import { IViewBlockManager } from "./viewblock/iviewblock.manager";
 import { RoomStateManager } from "./state";
 import { IRoomManager } from "./room.manager";
 import { ViewblockManager } from "./viewblock/viewblock.manager";
 import { Sprite } from "baseGame";
-import { BlockObject } from ".";
 export interface SpriteAddCompletedListener {
     onFullPacketReceived(sprite_t: op_def.NodeType): void;
 }
@@ -336,9 +335,7 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
         return { width: w, height: h };
     }
 
-    public async startPlay() {
-        Logger.getInstance().debug("room startplay =====");
-        this.game.renderPeer.showPlay();
+    public createManager() {
         this.mCameraService = new CamerasManager(this.mGame, this);
         this.mTerrainManager = new TerrainManager(this, this);
         this.mElementManager = new ElementManager(this);
@@ -349,6 +346,12 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
         this.mWallMamager = new WallManager(this);
         this.mCollsionManager = new CollsionManager(this);
         this.mCollsionManager.addWall();
+    }
+
+    public async startPlay() {
+        Logger.getInstance().debug("room startplay =====");
+        this.game.renderPeer.showPlay();
+        this.createManager();
         const padding = 199 * this.mScaleRatio;
         const offsetX = this.mSize.rows * (this.mSize.tileWidth / 2);
         this.mGame.peer.render.roomstartPlay();

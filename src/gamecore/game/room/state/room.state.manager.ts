@@ -1,6 +1,6 @@
 import { IRoomService } from "..";
 import { State } from "./state.group";
-import { BaseHandler , BaseStateManager } from "./state.manager";
+import { BaseHandler , BaseStateManager } from "./base.state.manager";
 export class RoomStateManager extends BaseStateManager {
     constructor(room: IRoomService) {
         super(room);

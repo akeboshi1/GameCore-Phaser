@@ -55,7 +55,7 @@ export class PlayerManager extends PacketHandler implements IElementManager {
 
     public createActor(actor: op_client.IActor) {
         const playModel = new PlayerModel(actor);
-        this.mActor = new User(this.mRoom.game);
+        this.mActor = new User();
     }
 
     get actor(): User {

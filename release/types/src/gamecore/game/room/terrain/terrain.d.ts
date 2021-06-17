@@ -1,10 +1,9 @@
 import { BlockObject } from "../block/block.object";
-import { ISprite } from "structure";
 import { IElement, MoveData } from "../element/element";
 import { IElementManager } from "../element/element.manager";
 import { op_client } from "pixelpai_proto";
-import { IPos, IFramesModel } from "structure";
-import { IRoomService } from "../room";
+import { ISprite, IPos, IFramesModel } from "structure";
+import { IRoomService } from "../../room/room";
 export declare class Terrain extends BlockObject implements IElement {
     protected mElementManager: IElementManager;
     protected mId: number;
@@ -18,9 +17,14 @@ export declare class Terrain extends BlockObject implements IElement {
     get state(): boolean;
     set state(val: boolean);
     get moveData(): MoveData;
+    get moving(): boolean;
     startMove(): void;
     stopMove(): void;
     startFireMove(pos: IPos): void;
+    addToMap(): void;
+    removeFromMap(): void;
+    addToInteractiveMap(): void;
+    removeFromInteractiveMap(): void;
     addToWalkableMap(): void;
     removeFromWalkableMap(): void;
     setModel(val: ISprite): Promise<void>;
