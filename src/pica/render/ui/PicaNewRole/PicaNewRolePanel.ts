@@ -142,7 +142,7 @@ export class PicaNewRolePanel extends PicaBasePanel {
         this.headAvatar.visible = false;
         this.headAvatar.setSuits(temp.suits);
         this.headAvatar.visible = true;
-        this.headAvatar.load(dbModel, undefined, false);
+        this.headAvatar.load(dbModel);
         const nameFrame = UITools.getGenderFrame(content.gender);
         this.nameImage.setFrameValue(content.nickname, UIAtlasName.people_action, nameFrame);
         this.levelLabel.text = `${i18n.t("common.lv")} ${content.level.level}`;
