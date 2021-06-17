@@ -22,7 +22,7 @@ export class PicaIllustratedPanel extends PicaBasePanel {
     constructor(uiManager: UiManager) {
         super(uiManager);
         this.key = ModuleName.PICAILLUSTRATED_NAME;
-        this.atlasNames = [UIAtlasName.uicommon, UIAtlasName.uicommon1, UIAtlasName.illustrate];
+        this.loadAtlas = [UIAtlasName.uicommon, UIAtlasName.uicommon1, UIAtlasName.illustrate];
         this.tempDatas = {};
     }
     resize(width?: number, height?: number) {

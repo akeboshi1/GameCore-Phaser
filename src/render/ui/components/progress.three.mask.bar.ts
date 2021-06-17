@@ -1,7 +1,7 @@
 
-import { ProgressMaskBar } from "./progress.mask.bar";
+import { ProgressNineMaskBar } from "./progress.nine.mask.bar";
 import { ThreeSlicePath } from "./three.slice.path";
-export class ProgressThreeMaskBar extends ProgressMaskBar {
+export class ProgressThreeMaskBar extends ProgressNineMaskBar {
     protected mBackground: Phaser.GameObjects.Image | ThreeSlicePath | any;
     protected mBar: Phaser.GameObjects.Image | ThreeSlicePath | any;
     protected maskGraphics: Phaser.GameObjects.Graphics;

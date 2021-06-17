@@ -1,5 +1,5 @@
 import { Button, ClickEvent, NineSlicePatch } from "apowophaserui";
-import { ButtonEventDispatcher, ProgressMaskBar } from "gamecoreRender";
+import { ButtonEventDispatcher, ProgressMaskBar, ProgressNineMaskBar } from "gamecoreRender";
 import { UIAtlasName } from "../../../res";
 import { Font, Handler, UIHelper } from "utils";
 import { op_pkt_def } from "pixelpai_proto";
@@ -13,7 +13,7 @@ export class PicaNewHeadPanel extends Phaser.GameObjects.Container {
     private sceneclickCon: ButtonEventDispatcher;
     private levelTex: Phaser.GameObjects.Text;
     private powerTex: ImageValue;
-    private powerPro: ProgressMaskBar;
+    private powerPro: ProgressNineMaskBar;
     private powerAddBtn: Button;
     private moneyvalue: ImageValue;
     private diamondvalue: ImageValue;
@@ -52,7 +52,7 @@ export class PicaNewHeadPanel extends Phaser.GameObjects.Container {
         this.levelTex = this.scene.make.text({
             x: 0, y: 0, text: "", style: { color: "#0089D3", fontSize: 14 * this.dpr, fontFamily: Font.NUMBER }
         }).setStroke("#ffffff", 2 * this.dpr).setFontStyle("bold").setOrigin(0.5);
-        this.powerPro = new ProgressMaskBar(this.scene, UIAtlasName.uicommon, "home_progress_bottom", "strength_progress", undefined, {
+        this.powerPro = new ProgressNineMaskBar(this.scene, UIAtlasName.uicommon, "home_progress_bottom", "strength_progress", undefined, {
             width: 41 * this.dpr, height: 11 * this.dpr, left: 4 * this.dpr, right: 4 * this.dpr, top: 0, bottom: 0
         });
         this.powerPro.x = 0;
@@ -86,13 +86,13 @@ export class PicaNewHeadPanel extends Phaser.GameObjects.Container {
         });
         moneybg.x = -moneybg.width * 0.5;
         const moneyline = this.scene.make.image({ x: moneybg.x, y: 0, key: UIAtlasName.uicommon, frame: "home_assets_division" }, false);
-        this.moneyvalue = new ImageValue(this.scene, 60 * this.dpr, 26 * this.dpr, UIAtlasName.uicommon, "home_silver", this.dpr, {
+        this.moneyvalue = new ImageValue(this.scene, 60 * this.dpr, 26 * this.dpr, UIAtlasName.uicommon, "iv_coin", this.dpr, {
             color: "#ffffff", fontSize: 15 * this.dpr, fontFamily: Font.NUMBER
         });
         this.moneyvalue.setLayout(1);
         // this.moneyvalue.setUintText({ style: UIHelper.whiteStyle(this.dpr, 15) });
         this.moneyvalue.x = moneybg.x - moneybg.width * 0.5 + 22 * this.dpr;
-        this.diamondvalue = new ImageValue(this.scene, 60 * this.dpr, 26 * this.dpr, UIAtlasName.uicommon, "home_diamond", this.dpr, {
+        this.diamondvalue = new ImageValue(this.scene, 60 * this.dpr, 26 * this.dpr, UIAtlasName.uicommon, "iv_diamond", this.dpr, {
             color: "#ffffff", fontSize: 15 * this.dpr, fontFamily: Font.NUMBER
         });
         this.diamondvalue.setLayout(1);

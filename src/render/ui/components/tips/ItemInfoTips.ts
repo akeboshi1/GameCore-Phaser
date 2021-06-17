@@ -124,8 +124,9 @@ export class ItemInfoTips extends Phaser.GameObjects.Container {
     private getDesText(data: any) {
         if (!data) data = <any>{ "sellingPrice": true, tradable: false };
         let text: string = `[stroke=#2640CA][color=#2640CA][b]${data.name}[/b][/color][/stroke]` + "\n";
-        text += (data.source ?? "") + "\n";
-        text += (data.des ?? "");
+        text += (data.source ? data.source + "\n" : "");
+        text += (data.des ? data.des + "\n" : "");
+        text += (data.count > 0 ? `[color=#2640CA][b]x${data.count}[/b][/color]` : "");
         return text;
     }
 

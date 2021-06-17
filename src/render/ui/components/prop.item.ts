@@ -20,8 +20,7 @@ export class PropItem extends SoundButton {
         this.itemIcon = new DynamicImage(scene, 0, 0);
         this.itemIcon.setTexture(key, bgframe);
         style = style || { color: "#000000", fontSize: 12 * dpr, fontFamily: Font.DEFULT_FONT };
-        this.itemCount = new BBCodeText(this.scene, 0, 15 * dpr, "", style)
-            .setOrigin(0.5);
+        this.itemCount = new BBCodeText(this.scene, 0, 15 * dpr, "", style).setOrigin(0.5);
         this.add([this.bg, this.itemIcon, this.itemCount]);
         this.setSize(this.bg.width, this.bg.height);
         this.itemCount.y = this.height * 0.5 + 8 * dpr;
@@ -36,9 +35,7 @@ export class PropItem extends SoundButton {
         const url = Url.getOsdRes(data.texturePath);
         const zoom = this.getWorldTransformMatrix().scaleX;
         this.itemIcon.scale = this.dpr / zoom;
-        this.itemIcon.load(url, this, () => {
-            this.itemIcon.setPosition(0, 0);
-        });
+        this.itemIcon.load(url);
     }
 
     public setTextPosition(x: number, y: number) {

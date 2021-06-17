@@ -5,11 +5,9 @@ import { i18n } from "./i18n";
 import { Logger } from "./log";
 
 export enum CoinType {
-    TU_DING_COIN = 0,
-    QING_SONG_TANG = 1,
-    GOLD_COIN = 2,
     COIN = 3,
-    DIAMOND = 4
+    DIAMOND = 4,
+    PRESTIGE = 5
 }
 
 export class Url {
@@ -391,31 +389,12 @@ export class Coin {
             res = "iv_coin";
         } else if (type === CoinType.DIAMOND) {
             res = "iv_diamond";
-        } else if (type === CoinType.GOLD_COIN) {
-            // res = "";
-        } else if (type === CoinType.QING_SONG_TANG) {
-            // res = "";
-        } else if (type === CoinType.TU_DING_COIN) {
-            // res = "";
+        } else if (type === CoinType.PRESTIGE) {
+            res = "iv_prestige";
         }
         return res;
     }
-    static getNewIcon(coinType: number) {
-        let res = "tuding_icon";
-        const type = <CoinType>coinType;
-        if (type === CoinType.COIN) {
-            res = "home_silver";
-        } else if (type === CoinType.DIAMOND) {
-            res = "home_diamond";
-        } else if (type === CoinType.GOLD_COIN) {
-            // res = "";
-        } else if (type === CoinType.QING_SONG_TANG) {
-            // res = "";
-        } else if (type === CoinType.TU_DING_COIN) {
-            // res = "";
-        }
-        return res;
-    }
+
     static getName(coinType: number) {
         let res = "银币";
         const type = <CoinType>coinType;
@@ -423,12 +402,8 @@ export class Coin {
             res = i18n.t("coin.coin");
         } else if (type === CoinType.DIAMOND) {
             res = i18n.t("coin.diamond");
-        } else if (type === CoinType.GOLD_COIN) {
-            res = i18n.t("coin.gold_coin");
-        } else if (type === CoinType.QING_SONG_TANG) {
-            // res = "";
-        } else if (type === CoinType.TU_DING_COIN) {
-            // res = "";
+        } else if (type === CoinType.PRESTIGE) {
+            res = i18n.t("coin.prestige");
         }
         return res;
     }

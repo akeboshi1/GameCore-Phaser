@@ -135,6 +135,10 @@ export class Render extends RPCPeer implements GameMain, IRender {
         this.mConfig.hasGameCreated = this.mConfig.game_created ? true : false;
         this.mConfig.hasReload = this.mConfig.reload ? true : false;
         this.mConfig.hasGameLoaded = this.mConfig.gameLoaded ? true : false;
+
+        if (this.mConfig.devicePixelRatio) this.mConfig.devicePixelRatio = Math.floor(this.mConfig.devicePixelRatio);
+        if (this.mConfig.width) this.mConfig.width = Math.floor(this.mConfig.width);
+        if (this.mConfig.height) this.mConfig.height = Math.floor(this.mConfig.height);
         // rpc不传送方法
         delete this.mConfig.connectFail;
         delete this.mConfig.game_created;
@@ -1693,6 +1697,13 @@ export class Render extends RPCPeer implements GameMain, IRender {
         this.mRoomSize = size;
         this.mRoomMiniSize = miniSize;
     }
+
+    @Export()
+    public isCordove() {
+        const pktGlobal = window["pktGlobal"];
+        return (pktGlobal && pktGlobal.envPlatform === "Cordova");
+    }
+
     protected onWorkerUnlinked(worker: string) {
         if (!this.mWorkerDestroyMap.has(worker)) return;
 
@@ -1840,7 +1851,7 @@ export class Render extends RPCPeer implements GameMain, IRender {
     }
 
     private initWorker() {
-        this.linkTo(MAIN_WORKER, MAIN_WORKER_URL, true).onceReady(() => {
+        this.attach(MAIN_WORKER, MAIN_WORKER_URL, true).onceReady(() => {
             this.mMainPeer = this.remote[MAIN_WORKER].MainPeer;
             this.mMainPeer.updateFps();
             this.createGame();
@@ -1850,7 +1861,8 @@ export class Render extends RPCPeer implements GameMain, IRender {
 
     get mainPeer() {
         if (!this.mMainPeer) {
-            throw new Error("can't find main worker");
+            return null;
+            // throw new Error("can't find main worker");
         }
         return this.mMainPeer;
     }

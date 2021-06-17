@@ -1,7 +1,7 @@
 import { UiManager, LabelInput, ToggleButton, CheckBoxToggle } from "gamecoreRender";
 import { BBCodeText, Button, ClickEvent, TextArea } from "apowophaserui";
 import { EventType, ModuleName } from "structure";
-import { Font, Handler, i18n } from "utils";
+import { Font, Handler, i18n, IPos } from "utils";
 import { UIAtlasName } from "../../../res";
 import { PicaNewNavigatePanel } from "../PicaNewMain/PicaNewNavigatePanel";
 import { PicaBasePanel } from "../pica.base.panel";
@@ -22,7 +22,7 @@ export class BottomPanel extends PicaBasePanel {
     constructor(uiManager: UiManager) {
         super(uiManager);
         this.scaleRatio = this.scale;
-        this.atlasNames = [UIAtlasName.uicommon, UIAtlasName.iconcommon, UIAtlasName.chat];
+        this.loadAtlas = [UIAtlasName.uicommon, UIAtlasName.iconcommon, UIAtlasName.chat];
         this.key = ModuleName.BOTTOM;
         this.scale = 1;
         this.maskLoadingEnable = false;
@@ -49,9 +49,9 @@ export class BottomPanel extends PicaBasePanel {
         if (!this.mInitialized) return;
         this.mInput.setTrumpetState(count);
     }
-    public updateUIState(datas: any) {
+    public updateUIState(data: any) {
         if (!this.mInitialized) return;
-        this.mNavigate.updateUIState(datas);
+        this.mNavigate.updateUIState(data);
     }
     addListen() {
         this.mInput.addListen();
@@ -126,6 +126,11 @@ export class BottomPanel extends PicaBasePanel {
             value.visible = reds.indexOf(key) !== -1;
         });
     }
+
+    getComponent(ui: string) {
+        if (this.mNavigate) return this.mNavigate.getButton(ui);
+    }
+
     get navigatePanel(): Phaser.GameObjects.Container {
         return this.mNavigate;
     }
@@ -143,7 +148,7 @@ export class BottomPanel extends PicaBasePanel {
     protected init() {
         this.mOutput = new OutputContainer(this.scene, this.dpr, this.scaleRatio);
         this.mInput = new InputContainer(this.scene, this.key, this.dpr, this.scaleRatio);
-        this.mNavigate = new PicaNewNavigatePanel(this.scene, this.key, this.dpr, this.scaleRatio);
+        this.mNavigate = new PicaNewNavigatePanel(this.uiManager, this.key, this.dpr, this.scaleRatio);
         this.mNavigate.setHandler(new Handler(this, this.onNavigateHandler));
         this.background = this.scene.make.graphics(undefined);
         this.resizeColtroll = new ResizeControll(this.scene, this.key, this.dpr, this.scaleRatio);
@@ -164,19 +169,7 @@ export class BottomPanel extends PicaBasePanel {
         });
     }
     private checkUpdateActive() {
-        // this.render.mainPeer.getCurRoom()
-        //     .then((curRoom) => {
-        //         if (curRoom)
-        //             this.setGiftButtonState(curRoom.openingParty);
-        //     });
-        // this.render.mainPeer.getActiveUIData(ModuleName.PICACHAT_NAME)
-        //     .then((arr) => {
-        //         if (arr) {
-        //             this.updateUIState(arr);
-        //         }
-        //     });
         this.render.mainPeer.refrehActiveUIState(ModuleName.PICACHAT_NAME);
-
     }
 
     private sendChat(val: string, isTrumpet: boolean) {
@@ -203,7 +196,7 @@ export class BottomPanel extends PicaBasePanel {
         if (tag === "bag") {
             this.render.renderEmitter(ModuleName.BOTTOM + "_showpanel", ModuleName.PICABAG_NAME);
         } else if (tag === "friend") {
-            this.render.renderEmitter(ModuleName.BOTTOM + "_showpanel", ModuleName.PICAFRIEND_NAME);
+            this.render.renderEmitter(ModuleName.BOTTOM + "_showpanel", ModuleName.PICANEWFRIEND_NAME);
         } else if (tag === "avatar") {
             this.render.renderEmitter(ModuleName.BOTTOM + "_showpanel", ModuleName.PICAAVATAR_NAME);
         } else if (tag === "make") {

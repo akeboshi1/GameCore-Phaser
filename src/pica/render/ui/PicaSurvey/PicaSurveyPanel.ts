@@ -13,7 +13,7 @@ export class PicaSurveyPanel extends PicaBasePanel {
     private moveTween: Phaser.Tweens.Tween;
     constructor(uiManager: UiManager) {
         super(uiManager);
-        this.atlasNames = [UIAtlasName.uicommon, UIAtlasName.survey];
+        this.loadAtlas = [UIAtlasName.uicommon, UIAtlasName.survey];
         this.key = ModuleName.PICASURVEY_NAME;
     }
     resize(width?: number, height?: number) {

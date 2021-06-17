@@ -23,7 +23,7 @@ export class PicaRoomPanel extends PicaBasePanel {
     constructor(uiManager: UiManager) {
         super(uiManager);
         this.key = ModuleName.PICAROOM_NAME;
-        this.atlasNames = [UIAtlasName.uicommon, UIAtlasName.uicommon1, UIAtlasName.room_info, UIAtlasName.multiple_rooms];
+        this.loadAtlas = [UIAtlasName.uicommon, UIAtlasName.uicommon1, UIAtlasName.room_info, UIAtlasName.multiple_rooms];
     }
 
     public resize(w: number, h: number) {

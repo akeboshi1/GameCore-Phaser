@@ -1,6 +1,7 @@
 import { Render } from "gamecoreRender";
 import { Handler } from "utils";
 import { DisplayBaseAction } from "./display.base.action";
+import { ItemIntoPanel } from "./item.into.panel";
 import { PlayerExplosiveAction } from "./player.explosive.action";
 
 export class DisplayActionManager {
@@ -30,6 +31,9 @@ export class DisplayActionManager {
                     this.removeOnlyAction(actionName, data.id);
                 }));
                 this.addOnlyAction(actionName, data.id);
+                break;
+            case DisplayActionTag.itemIntoPanel:
+                eleaction = new ItemIntoPanel(this.render, display, data);
                 break;
         }
         return eleaction;
@@ -66,5 +70,6 @@ export class DisplayActionManager {
 }
 
 export enum DisplayActionTag {
-    mineexplosive = "mineexplosive"
+    mineexplosive = "mineexplosive",
+    itemIntoPanel = "itemIntoPanel"
 }

@@ -10,6 +10,7 @@ import { AvatarSuitType, EventType, IDragonbonesModel, IFramesModel, PlayerState
 import { LayerEnum } from "game-capsule";
 import { interval, MoveControll } from "gamecore";
 import { Tool } from "utils";
+import { IElement } from "../room";
 // import * as _ from "lodash";
 
 export class User extends Player {
@@ -25,10 +26,15 @@ export class User extends Player {
     private mPreTargetID: number = 0;
     private holdTime: number = 0;
     private holdDelay: number = 80;
+    private mNearEle: IElement;
     constructor(game: Game) {
         super(game, undefined, undefined);
         this.mBlockable = false;
         this.mUserData = new UserDataManager(game);
+    }
+
+    get nearEle(): IElement {
+        return this.mNearEle;
     }
 
     public set debugPoint(val: boolean) {
@@ -149,10 +155,6 @@ export class User extends Player {
         if (this.mRootMount) {
             this.mRootMount.removeMount(this, { x, y });
         }
-        const pos45 = this.roomService.transformToMini45(this.mModel.pos);
-        if (!this.mRoomService.isWalkable(pos45.x, pos45.y)) {
-            return;
-        }
         this.mMoveData = { path: [{ pos: new LogicPos(x, y) }] };
         this.mSyncDirty = true;
         // this.body.isSensor = false;
@@ -176,6 +178,10 @@ export class User extends Player {
         pos.y = userPos.y;
         const movePoint = op_def.MovePoint.create();
         movePoint.pos = pos;
+        // todo pos发生变化就开始check
+        // ==================== 检测周边可交互物件
+        // this.mNearEle = this.checkNearEle(pos);
+        // ====================
         // 给每个同步点时间戳
         movePoint.timestamp = Date.now();
         if (!this.mMovePoints) this.mMovePoints = [];
@@ -288,6 +294,9 @@ export class User extends Player {
 
     public setPosition(pos: IPos, syncPos: boolean = false) {
         super.setPosition(pos);
+        // // ==================== 检测周边可交互物件
+        // this.checkNearEle(pos);
+        // // ====================
         const now = new Date().getTime();
         if (now - this.mSetPostionTime > 1000) {
             this.mSetPostionTime = now;
@@ -307,6 +316,46 @@ export class User extends Player {
             this.mMovePoints = [];
             this.mMoveTime = now;
         }
+    }
+
+    /**
+     * 检测角色当前位置附近的可交互element
+     * @param pos
+     */
+    public checkNearEle(pos: IPos): IElement {
+        const x = pos.x;
+        const y = pos.y;
+        const ids = this.mRoomService.getInteractiveEles(x, y);
+        if (!ids) return;
+        const len = ids.length;
+        const elementManager = this.mRoomService.elementManager;
+        let dis: number = Number.MAX_VALUE;
+        let mNearEle: IElement;
+        const basePos = this.getPosition();
+        for (let i: number = 0; i < len; i++) {
+            const tmpIds = ids[i];
+            const tmpLen = tmpIds.length;
+            for (let j: number = 0; j < tmpLen; j++) {
+                const id = tmpIds[j];
+                const ele = elementManager.get(id);
+                // tslint:disable-next-line:no-console
+                // console.log("id ===>", id, 0);
+                if (!ele) continue;
+                const elePos = ele.getPosition();
+                const tmpDis = Tool.twoPointDistance(elePos, basePos);
+                // tslint:disable-next-line:no-console
+                // console.log("id ===>", id, 1, elePos, basePos, tmpDis);
+                if (dis > tmpDis) {
+                    dis = tmpDis;
+                    // tslint:disable-next-line:no-console
+                    // console.log("id ===>", id, 2);
+                    mNearEle = ele;
+                }
+            }
+        }
+        // tslint:disable-next-line:no-console
+        // console.log("mNearEle ===>", mNearEle);
+        return mNearEle;
     }
 
     public async activeSprite(targetId: number, param?: any, needBroadcast?: boolean) {
@@ -412,15 +461,6 @@ export class User extends Player {
         if (this.mModel.pos) {
             const obj = { id: val.id, pos: val.pos, nickname: this.model.nickname, alpha: val.alpha, titleMask: val.titleMask | 0x00010000, hasInteractive: true };
             this.game.renderPeer.setModel(obj);
-            const obj1 = {
-                id: val.id,
-                point3f: val.pos,
-                currentAnimationName: val.currentAnimationName,
-                direction: val.direction,
-                mountSprites: val.mountSprites,
-                speed: val.speed,
-                displayInfo: this.model.displayInfo
-            };
             this.setPosition(this.mModel.pos);
         }
         // todo change display alpha

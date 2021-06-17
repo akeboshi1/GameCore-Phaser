@@ -42,6 +42,10 @@ export class MoneyCompent extends Phaser.GameObjects.Container {
         this.money = money;
         this.diamond = diamond;
     }
+    public setMoneyImgs(left: string, right: string) {
+        if (left) this.moneyvalue.setFrame(left);
+        if (right) this.diamondvalue.setFrame(right);
+    }
     protected create() {
         const moneybg = new NineSlicePatch(this.scene, 0, -this.dpr, this.width, this.height, UIAtlasName.uicommon, "home_assets_bg", {
             left: 17 * this.dpr,
@@ -51,13 +55,13 @@ export class MoneyCompent extends Phaser.GameObjects.Container {
         });
         moneybg.x = -moneybg.width * 0.5;
         const moneyline = this.scene.make.image({ x: moneybg.x, y: 0, key: UIAtlasName.uicommon, frame: "home_assets_division" }, false);
-        this.moneyvalue = new ImageValue(this.scene, 60 * this.dpr, 26 * this.dpr, UIAtlasName.uicommon, "home_silver", this.dpr, {
+        this.moneyvalue = new ImageValue(this.scene, 60 * this.dpr, 26 * this.dpr, UIAtlasName.uicommon, "iv_coin", this.dpr, {
             color: "#ffffff", fontSize: 15 * this.dpr, fontFamily: Font.NUMBER
         });
         this.moneyvalue.setLayout(1);
         // this.moneyvalue.setUintText({ style: UIHelper.whiteStyle(this.dpr, 15) });
         this.moneyvalue.x = moneybg.x - moneybg.width * 0.5 + 22 * this.dpr;
-        this.diamondvalue = new ImageValue(this.scene, 60 * this.dpr, 26 * this.dpr, UIAtlasName.uicommon, "home_diamond", this.dpr, {
+        this.diamondvalue = new ImageValue(this.scene, 60 * this.dpr, 26 * this.dpr, UIAtlasName.uicommon, "iv_diamond", this.dpr, {
             color: "#ffffff", fontSize: 15 * this.dpr, fontFamily: Font.NUMBER
         });
         this.diamondvalue.setLayout(1);

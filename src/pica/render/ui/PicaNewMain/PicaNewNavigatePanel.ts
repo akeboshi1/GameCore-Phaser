@@ -1,7 +1,7 @@
 import { Button, ClickEvent } from "apowophaserui";
-import { TweenCompent } from "gamecoreRender";
+import { DynamicImage, TweenCompent, UiManager } from "gamecoreRender";
 import { UIAtlasName } from "../../../res";
-import { Handler, i18n } from "utils";
+import { Handler, i18n, IPos, Logger, Tool, Url } from "utils";
 import { MainUIRedType } from "picaStructure";
 export class PicaNewNavigatePanel extends Phaser.GameObjects.Container {
     public exploreButton: Button;
@@ -16,8 +16,8 @@ export class PicaNewNavigatePanel extends Phaser.GameObjects.Container {
     private sendHandler: Handler;
     private buttons: Button[];
     private redButtonMap: Map<number, Button> = new Map();
-    constructor(scene: Phaser.Scene, key: string, dpr: number, scale: number) {
-        super(scene);
+    constructor(private uiManager: UiManager, key: string, dpr: number, scale: number) {
+        super(uiManager.scene);
         this.dpr = dpr;
         this.key = key;
         this.scale = scale;
@@ -79,17 +79,29 @@ export class PicaNewNavigatePanel extends Phaser.GameObjects.Container {
         this.homeButton.off(ClickEvent.Tap, this.onHomeHandler, this);
     }
 
-    public updateUIState(datas: any) {
-        if (datas.length)
-            for (const data of datas) {
-                const button = this.getButton(data.name);
-                if (button) button.visible = data.visible;
-                // if (data.visible) button.enable = data.disable;
-            }
+    public updateUIState(data: any) {
+        const button = this.getButton(data.name);
+        if (button) button.visible = data.visible;
         this.LayoutButton();
     }
     public setHandler(send: Handler) {
         this.sendHandler = send;
+    }
+
+    public getButton(name: string) {
+        if (name === "bottom.bag") {
+            return this.bagButton;
+        } else if (name === "bottom.friend") {
+            return this.friendButton;
+        } else if (name === "bottom.avatar") {
+            return this.avatarButton;
+        } else if (name === "bottom.make") {
+            return this.makeButton;
+        } else if (name === "bottom.explore") {
+            return this.exploreButton;
+        } else if (name === "bottom.home") {
+            return this.homeButton;
+        }
     }
 
     protected LayoutButton() {
@@ -133,20 +145,5 @@ export class PicaNewNavigatePanel extends Phaser.GameObjects.Container {
             return false;
         }
         return true;
-    }
-    private getButton(name: string) {
-        if (name === "bottom.bag") {
-            return this.bagButton;
-        } else if (name === "bottom.friend") {
-            return this.friendButton;
-        } else if (name === "bottom.avatar") {
-            return this.avatarButton;
-        } else if (name === "bottom.make") {
-            return this.makeButton;
-        } else if (name === "bottom.explore") {
-            return this.exploreButton;
-        } else if (name === "bottom.home") {
-            return this.homeButton;
-        }
     }
 }

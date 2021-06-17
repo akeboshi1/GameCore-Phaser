@@ -270,7 +270,7 @@ class DecorateShopItem extends Phaser.GameObjects.Container {
         }).setOrigin(0.5);
         this.icon = new DynamicImage(scene, 0, -20 * dpr, this.key, "floor_01");
         const imgvaluebg = this.scene.make.image({ key: this.key, frame: "manor_store_price_bg" });
-        this.imgprice = new ImageValue(this.scene, 90 * dpr, 17 * dpr, UIAtlasName.uicommon, "home_silver", this.dpr);
+        this.imgprice = new ImageValue(this.scene, 90 * dpr, 17 * dpr, UIAtlasName.uicommon, "iv_coin", this.dpr);
         this.imgprice.setLayout(2);
         this.imgprice.setTextStyle({ color: "#000000" });
         this.imgprice.addAt(imgvaluebg, 0);
@@ -324,7 +324,7 @@ class DecorateShopItem extends Phaser.GameObjects.Container {
             this.tipsText.visible = false;
             this.imgprice.visible = true;
             const price = data.price[0];
-            this.imgprice.setFrameValue(price.price + "", UIAtlasName.uicommon, Coin.getNewIcon(price.coinType));
+            this.imgprice.setFrameValue(price.price + "", UIAtlasName.uicommon, Coin.getIcon(price.coinType));
         } else if (data.status === 1) {// op_pkt_def.PKT_MANOR_COMMODITY_STATE.PKT_MANOR_Owned
             this.button.visible = false;
             this.button.disInteractive();

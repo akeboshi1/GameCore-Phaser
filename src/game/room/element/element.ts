@@ -84,9 +84,17 @@ export interface IElement {
 
     getProjectionSize(): IProjection;
 
+    addToMap();
+
+    removeFromMap();
+
     addToWalkableMap();
 
     removeFromWalkableMap();
+
+    addToInteractiveMap();
+
+    removeFromInteractiveMap();
 }
 
 export interface MoveData {
@@ -215,16 +223,16 @@ export class Element extends BlockObject implements IElement {
             model.layer = LayerEnum.Surface;
             Logger.getInstance().warn(`${Element.name}: sprite layer is empty`);
         }
-        this.removeFromWalkableMap();
         this.mModel = model;
         this.mQueueAnimations = undefined;
         if (this.mModel.pos) {
             this.setPosition(this.mModel.pos);
         }
-        this.addToWalkableMap();
+        this.removeFromMap();
         // 必须执行一遍下面的方法，否则无法获取碰撞区域
         const area = model.getCollisionArea();
         const obj = { id: model.id, pos: model.pos, nickname: model.nickname, sound: model.sound, alpha: model.alpha, titleMask: model.titleMask | 0x00020000, hasInteractive: model.hasInteractive };
+        this.addToMap();
         // render action
         this.load(this.mModel.displayInfo)
             .then(() => this.mElementManager.roomService.game.peer.render.setModel(obj))
@@ -248,7 +256,7 @@ export class Element extends BlockObject implements IElement {
         if (this.mModel.id !== model.id) {
             return;
         }
-        this.removeFromWalkableMap();
+        this.removeFromMap();
         if (model.hasOwnProperty("attrs")) {
             this.mModel.updateAttr(model.attrs);
         }
@@ -294,10 +302,7 @@ export class Element extends BlockObject implements IElement {
             this.showNickname();
         }
         if (reload) this.load(this.mModel.displayInfo);
-        // 更新物理进程的物件/人物element
-        // this.mRoomService.game.physicalPeer.updateModel(model);
-        // this.updateBody(model);
-        this.addToWalkableMap();
+        this.addToMap();
     }
 
     public play(animationName: string, times?: number): void {
@@ -305,13 +310,13 @@ export class Element extends BlockObject implements IElement {
             Logger.getInstance().error(`${Element.name}: sprite is empty`);
             return;
         }
-        const preWalkable = this.mModel.getWalkableArea();
-        this.removeFromWalkableMap();
+        // const preWalkable = this.mModel.getWalkableArea();
+        this.removeFromMap();
         this.mModel.setAnimationName(animationName, times);
-        const nextWalkable = this.mModel.getWalkableArea();
+        // const nextWalkable = this.mModel.getWalkableArea();
         const hasInteractive = this.model.hasInteractive;
         if (this.mInputEnable) this.setInputEnable(this.mInputEnable);
-        this.addToWalkableMap();
+        this.addToMap();
         if (this.mRoomService) {
             if (!this.mRootMount) {
                 if (times === undefined) {
@@ -586,6 +591,9 @@ export class Element extends BlockObject implements IElement {
         this.mRoomService.game.renderPeer.hideRefernceArea(this.id);
     }
 
+    /**
+     * 获取元素交互点列表
+     */
     public getInteractivePositionList(): IPos[] {
         const interactives = this.mModel.getInteractive();
         if (!interactives || interactives.length < 1) {
@@ -623,7 +631,7 @@ export class Element extends BlockObject implements IElement {
             this.stopMove();
         }
         this.mDirty = true;
-        this.removeFromWalkableMap();
+        this.removeFromMap();
         this.removeBody();
         return this;
     }
@@ -633,7 +641,7 @@ export class Element extends BlockObject implements IElement {
             const pos = this.mRootMount.getPosition();
             this.mRootMount = null;
             this.setPosition(pos, true);
-            this.addToWalkableMap();
+            this.addToMap();
             this.addBody();
             await this.mRoomService.game.renderPeer.setPosition(this.id, pos.x, pos.y);
             this.mDirty = true;
@@ -678,6 +686,16 @@ export class Element extends BlockObject implements IElement {
         }
     }
 
+    public addToMap() {
+        this.addToWalkableMap();
+        this.addToInteractiveMap();
+    }
+
+    public removeFromMap() {
+        this.removeFromWalkableMap();
+        this.removeFromInteractiveMap();
+    }
+
     public addToWalkableMap() {
         if (this.mRootMount) return;
         if (this.model && this.mElementManager) this.mElementManager.roomService.addToWalkableMap(this.model);
@@ -685,6 +703,16 @@ export class Element extends BlockObject implements IElement {
 
     public removeFromWalkableMap() {
         if (this.model && this.mElementManager) this.mElementManager.roomService.removeFromWalkableMap(this.model);
+    }
+
+    public addToInteractiveMap() {
+        // 有叠加物件时，不做添加处理
+        if (this.mRootMount) return;
+        if (this.model && this.mElementManager) this.mElementManager.roomService.addToInteractiveMap(this.model);
+    }
+
+    public removeFromInteractiveMap() {
+        if (this.model && this.mElementManager) this.mElementManager.roomService.removeFromInteractiveMap(this.model);
     }
 
     public setState(stateGroup: op_client.IStateGroup) {
@@ -934,42 +962,3 @@ export class Element extends BlockObject implements IElement {
         this.mRoomService.game.connection.send(packet);
     }
 }
-
-// class MoveControll {
-//     private velocity: IPos;
-//     private mPosition: IPos;
-//     private mPrePosition: IPos;
-
-//     constructor(private target: BlockObject) {
-//         this.mPosition = new LogicPos();
-//         this.mPrePosition = new LogicPos();
-//         this.velocity = new LogicPoint();
-//     }
-
-//     setVelocity(x: number, y: number) {
-//         this.velocity.x = x;
-//         this.velocity.y = y;
-//     }
-
-//     update(time: number, delta: number) {
-//         if (this.velocity.x !== 0 && this.velocity.y !== 0) {
-//             this.mPrePosition.x = this.mPosition.x;
-//             this.mPrePosition.y = this.mPosition.y;
-//             this.mPosition.x += this.velocity.x;
-//             this.mPosition.y += this.velocity.y;
-//         }
-//     }
-
-//     setPosition(x: number, y: number) {
-//         this.mPosition.x = x;
-//         this.mPosition.y = y;
-//     }
-
-//     get position(): IPos {
-//         return this.mPosition;
-//     }
-
-//     get prePosition(): IPos {
-//         return this.mPrePosition;
-//     }
-// }

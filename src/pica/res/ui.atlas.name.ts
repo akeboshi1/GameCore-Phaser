@@ -38,6 +38,9 @@ export class UIAtlasName {
     public static task_daily = "task_daily";
     public static order_new = "order_new";
     public static friend_new = "friend_new";
+    public static recharge = "recharge";
+    public static market = "market";
+    public static battlepass = "battlepass";
     public static jsonUrl(name: string) {
         return name + ".json";
     }

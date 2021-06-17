@@ -1,61 +1,76 @@
 import { BasicMediator, Game, PlayerProperty } from "gamecore";
-import { ModuleName } from "structure";
+import { EventType, ModuleName } from "structure";
+import { BaseDataConfigManager } from "../../config";
 import { PicaRecharge } from "./PicaRecharge";
 export class PicaRechargeMediator extends BasicMediator {
-    private picaRecharge: PicaRecharge;
+    protected mModel: PicaRecharge;
     private mPlayerInfo: PlayerProperty;
     constructor(game: Game) {
         super(ModuleName.PICARECHARGE_NAME, game);
-        this.picaRecharge = new PicaRecharge(game);
+        this.mModel = new PicaRecharge(game);
     }
 
     show(param?: any) {
         super.show(param);
-        this.game.emitter.on(ModuleName.PICARECHARGE_NAME + "_questlist", this.query_ORDER_LIST, this);
-        this.game.emitter.on(ModuleName.PICARECHARGE_NAME + "_questwork", this.query_WORK_ON_JOB, this);
-        this.game.emitter.on(ModuleName.PICARECHARGE_NAME + "_hide", this.onHideView, this);
-        this.game.emitter.on("questlist", this.on_ORDER_LIST, this);
+        this.game.emitter.on(ModuleName.PICARECHARGE_NAME + "_questbuy", this.sendBuyGiftPackDeBug, this);
+        this.game.emitter.on(ModuleName.PICARECHARGE_NAME + "_hide", this.hide, this);
+        this.game.emitter.on(EventType.UPDATE_PLAYER_INFO, this.onUpdatePlayerInfoHandler, this);
     }
 
     hide() {
         super.hide();
-        this.game.emitter.off(ModuleName.PICARECHARGE_NAME + "_questlist", this.query_ORDER_LIST, this);
-        this.game.emitter.off(ModuleName.PICARECHARGE_NAME + "_questwork", this.query_WORK_ON_JOB, this);
-        this.game.emitter.off(ModuleName.PICARECHARGE_NAME + "_hide", this.onHideView, this);
-        this.game.emitter.off("questlist", this.on_ORDER_LIST, this);
+        this.game.emitter.off(ModuleName.PICARECHARGE_NAME + "_questbuy", this.sendBuyGiftPackDeBug, this);
+        this.game.emitter.off(ModuleName.PICARECHARGE_NAME + "_hide", this.hide, this);
+        this.game.emitter.on(EventType.UPDATE_PLAYER_INFO, this.onUpdatePlayerInfoHandler, this);
     }
 
-    isSceneUI() {
-        return true;
+    onDisable() {
+        this.proto.off("BOUGHT_GIFTPACK_IDS", this.onBOUGHT_GIFTPACK_IDS, this);
     }
 
-    destroy() {
-        if (this.picaRecharge) {
-            this.picaRecharge.destroy();
-            this.picaRecharge = undefined;
+    onEnable() {
+        this.proto.on("BOUGHT_GIFTPACK_IDS", this.onBOUGHT_GIFTPACK_IDS, this);
+    }
+    protected panelInit() {
+        super.panelInit();
+        this.sendGetGiftPackBoughtStatus();
+        this.onUpdatePlayerInfoHandler();
+    }
+    private onUpdatePlayerInfoHandler() {
+        const userData = this.game.user.userData;
+        if (this.mView) this.mView.setMoneyData(userData.money, userData.diamond);
+    }
+    private sendBuyGiftPackDeBug(obj: { str: string, count: number }) {
+        this.game.sendCustomProto("STRING_INT", "giftPackFacade:buyGiftPackDeBug", obj);
+    }
+
+    private sendGetGiftPackBoughtStatus() {
+        this.game.sendCustomProto("STRING_INT", "giftPackFacade:getGiftPackBoughtStatus", {});
+    }
+
+    private onBOUGHT_GIFTPACK_IDS(packet: any) {
+        const content = packet.content;
+        const ids = content.ids;
+        if (!ids) return;
+        const diamondData = this.config.getRecharges(1);
+        const giftData = this.config.getRecharges(4);
+        for (const temp of diamondData) {
+            if (ids.indexOf(temp.id) === -1) {
+                temp.double = true;
+            }
         }
-        if (this.mView) {
-            this.mView.hide();
-            this.mView = undefined;
+        for (const temp of giftData) {
+            if (ids.indexOf(temp.id) === -1) {
+                temp.double = true;
+            }
         }
-        this.mPlayerInfo = undefined;
+        this.mView.setDataList([diamondData, giftData]);
     }
     get playerInfo() {
         if (!this.mPlayerInfo) this.mPlayerInfo = this.game.user.userData.playerProperty;
         return this.mPlayerInfo;
     }
-    private query_ORDER_LIST() {
-        this.picaRecharge.query_JOB_LIST();
-    }
-
-    private query_WORK_ON_JOB(id: string) {
-        this.picaRecharge.query_WORK_ON_JOB(id);
-    }
-
-    private on_ORDER_LIST() {
-        this.mView.setDataList();
-    }
-    private onHideView() {
-        this.hide();
+    get config() {
+        return <BaseDataConfigManager>this.game.configManager;
     }
 }

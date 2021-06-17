@@ -64,7 +64,7 @@ export class PicaRoamDrawPanel extends Phaser.GameObjects.Container {
         });
         moneybg.x = -moneybg.width * 0.5;
         const moneyline = this.scene.make.image({ x: moneybg.x, y: 0, key: UIAtlasName.uicommon, frame: "home_assets_division" }, false);
-        this.moneyvalue = new ImageValue(this.scene, 60 * this.dpr, 26 * this.dpr, UIAtlasName.uicommon, "home_silver", this.dpr, {
+        this.moneyvalue = new ImageValue(this.scene, 60 * this.dpr, 26 * this.dpr, UIAtlasName.uicommon, "iv_coin", this.dpr, {
             color: "#ffffff", fontSize: 15 * this.dpr, fontFamily: Font.NUMBER
         });
         this.moneyvalue.setLayout(1);
@@ -154,10 +154,10 @@ export class PicaRoamDrawPanel extends Phaser.GameObjects.Container {
     }
 
     public setMoneyData(money: number, token: number, tokenId: string) {
-        let moneyframe = "home_silver";
+        let moneyframe = "iv_coin";
         let tokenframe = "roam_ordinary_icon";
         if (tokenId === "IV0000002") {
-            moneyframe = "home_diamond";
+            moneyframe = "iv_diamond";
             tokenframe = "roam_advanced_icon";
         }
         if (money > 99999) {

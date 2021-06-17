@@ -8,6 +8,7 @@ import { ISocial } from "../../../structure";
 export class PicaNewRoleMediator extends BasicMediator {
     protected mModel: PicaNewRole;
     private uid: string;
+    private anotherInfo: any;
     constructor(game: Game) {
         super(ModuleName.PICANEWROLE_NAME, game);
         this.mModel = new PicaNewRole(game);
@@ -19,7 +20,7 @@ export class PicaNewRoleMediator extends BasicMediator {
         this.game.emitter.on(ModuleName.PICANEWROLE_NAME + "_queryanotherinfo", this.query_Another_Info, this);
         this.game.emitter.on(ModuleName.PICANEWROLE_NAME + "_hide", this.onHideView, this);
         this.game.emitter.on(ModuleName.PICANEWROLE_NAME + "_initialized", this.onViewInitComplete, this);
-        this.game.emitter.on(ModuleName.PICANEWROLE_NAME + "_anotherinfo", this.on_Another_Info, this);
+        // this.game.emitter.on(ModuleName.PICANEWROLE_NAME + "_anotherinfo", this.on_Another_Info, this);
         this.game.emitter.on(ModuleName.PICANEWROLE_NAME + "_openingcharacter", this.onOpeningCharacterHandler, this);
         this.game.emitter.on(ModuleName.PICANEWROLE_NAME + "_followcharacter", this.onFollowHandler, this);
         this.game.emitter.on(ModuleName.PICANEWROLE_NAME + "_tradingcharacter", this.onTradingHandler, this);
@@ -31,7 +32,7 @@ export class PicaNewRoleMediator extends BasicMediator {
         this.game.emitter.off(ModuleName.PICANEWROLE_NAME + "_queryanotherinfo", this.query_Another_Info, this);
         this.game.emitter.off(ModuleName.PICANEWROLE_NAME + "_hide", this.onHideView, this);
         this.game.emitter.off(ModuleName.PICANEWROLE_NAME + "_initialized", this.onViewInitComplete, this);
-        this.game.emitter.off(ModuleName.PICANEWROLE_NAME + "_anotherinfo", this.on_Another_Info, this);
+        // this.game.emitter.off(ModuleName.PICANEWROLE_NAME + "_anotherinfo", this.on_Another_Info, this);
         this.game.emitter.off(ModuleName.PICANEWROLE_NAME + "_openingcharacter", this.onOpeningCharacterHandler, this);
         this.game.emitter.off(ModuleName.PICANEWROLE_NAME + "_followcharacter", this.onFollowHandler, this);
         this.game.emitter.off(ModuleName.PICANEWROLE_NAME + "_tradingcharacter", this.onTradingHandler, this);
@@ -47,14 +48,21 @@ export class PicaNewRoleMediator extends BasicMediator {
         this.query_Another_Info(this.uid);
         this.checkFollowState(this.uid);
     }
-
+    protected onEnable() {
+        this.proto.on("ANOTHER_PLAYER_INFO", this.on_Another_Info, this);
+    }
+    protected onDisable() {
+        this.proto.off("ANOTHER_PLAYER_INFO", this.on_Another_Info, this);
+    }
     private query_Another_Info(id: string) {
         this.mModel.fetchAnotherInfo(id);
     }
 
-    private on_Another_Info(content: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_ANOTHER_PLAYER_INFO) {
-        if (this.panelInit) {
-            this.mShowData = content;
+    private on_Another_Info(proto: any) {
+        const content = proto.content;
+        this.mShowData = content;
+        this.anotherInfo = proto;
+        if (this.mPanelInit) {
             this.config.getBatchItemDatas(content.avatarSuit);
             if (this.mView) {
                 const socails = this.config.getSocails();
@@ -65,7 +73,7 @@ export class PicaNewRoleMediator extends BasicMediator {
     }
     private onOpeningCharacterHandler(roleData: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_ANOTHER_PLAYER_INFO) {
         const uimanager = this.game.uiManager;
-        uimanager.showMed(ModuleName.PICAPLAYERINFO_NAME, this.mShowData);
+        uimanager.showMed(ModuleName.PICAPLAYERINFO_NAME, this.anotherInfo);
     }
 
     private onFollowHandler(data: { uid: string, follow: boolean }) {
@@ -106,8 +114,8 @@ export class PicaNewRoleMediator extends BasicMediator {
             // if (!activeEnable) {
             //     const item = (<any>this.game.configManager).getItemBaseByID(action.tag.propUseId);
             //     if (item) {
-                    // TODO i18n.t("common.notEnough");
-                    // this.game.renderPeer.showAlert(`${item.name}数量不足`, true, false);
+            // TODO i18n.t("common.notEnough");
+            // this.game.renderPeer.showAlert(`${item.name}数量不足`, true, false);
             //         return;
             //     }
             // }

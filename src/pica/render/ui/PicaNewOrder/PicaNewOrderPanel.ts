@@ -19,7 +19,7 @@ export class PicaNewOrderPanel extends PicaBasePanel {
     constructor(uiManager: UiManager) {
         super(uiManager);
         this.key = ModuleName.PICANEWORDER_NAME;
-        this.atlasNames = [UIAtlasName.uicommon, UIAtlasName.order_new];
+        this.loadAtlas = [UIAtlasName.uicommon, UIAtlasName.order_new];
     }
     public hide() {
         this.render.emitter.emit(PicaNewOrderPanel.PICAMAIL_CLOSE);

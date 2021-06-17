@@ -24,7 +24,7 @@ export class PicaExploreListPanel extends PicaBasePanel {
     private energyDatas: any;
     constructor(uiManager: UiManager) {
         super(uiManager);
-        this.atlasNames = [UIAtlasName.explorelog, UIAtlasName.uicommon1, UIAtlasName.uicommon];
+        this.loadAtlas = [UIAtlasName.explorelog, UIAtlasName.uicommon1, UIAtlasName.uicommon];
         this.textures = [{ atlasName: "explore_bg_stripe_top", folder: UIAtlasName.explorelog }, { atlasName: "explore_bg_stripe_middle", folder: UIAtlasName.explorelog },
         { atlasName: "explore_mask", folder: UIAtlasName.explorelog }];
         this.key = ModuleName.PICAEXPLORELIST_NAME;

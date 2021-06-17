@@ -53,6 +53,7 @@ export class Render extends BaseRender {
     get displayActionManager(): DisplayActionManager {
         return this.mDisplayActionManager;
     }
+
     @Export()
     public displayAction(action: string, data: any) {
         this.mDisplayActionManager.executeElementActions(action, data);

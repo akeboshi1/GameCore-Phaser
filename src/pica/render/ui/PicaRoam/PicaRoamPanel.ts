@@ -22,7 +22,7 @@ export class PicaRoamPanel extends PicaBasePanel {
     constructor(uiManager: UiManager) {
         super(uiManager);
         this.key = ModuleName.PICAROAM_NAME;
-        this.atlasNames = [UIAtlasName.uicommon, UIAtlasName.uicommon1, UIAtlasName.roam];
+        this.loadAtlas = [UIAtlasName.uicommon, UIAtlasName.uicommon1, UIAtlasName.roam];
         this.textures = [{ atlasName: "roam_stripe", folder: "roam" }, { atlasName: "roam_topic", folder: "roam" }, { atlasName: "roam_topic1", folder: "roam" },
         { atlasName: "roamone", folder: "roam_effect", foldType: FolderType.NORMAL, uiType: UILoadType.video },
         { atlasName: "roamtenrepead", folder: "roam_effect", foldType: FolderType.NORMAL, uiType: UILoadType.video },
@@ -36,7 +36,7 @@ export class PicaRoamPanel extends PicaBasePanel {
         this.setSize(w, h);
         this.mBackground.clear();
         this.mBackground.fillStyle(0, 0.5);
-        this.mBackground.fillRoundedRect(-this.x, -this.y, w, h);
+        this.mBackground.fillRect(-this.x, -this.y, w, h);
         this.content.x = w * 0.5;
         this.content.y = h * 0.5;
         this.mBackground.setInteractive(new Phaser.Geom.Rectangle(0, 0, w, h), Phaser.Geom.Rectangle.Contains);

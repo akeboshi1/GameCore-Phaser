@@ -354,7 +354,6 @@ export class ElementManager extends PacketHandler implements IElementManager {
         if (notReadyElements.length < 1) {
             Logger.getInstance().debug("#loading onManagerReady ", this.constructor.name);
             this.mRoom.onManagerReady(this.constructor.name);
-            this.mRoom.onRoomReady();
             if (this.mRequestSyncIdList && this.mRequestSyncIdList.length > 0) {
                 this.fetchDisplay(this.mRequestSyncIdList);
                 this.mRequestSyncIdList.length = 0;
@@ -388,8 +387,7 @@ export class ElementManager extends PacketHandler implements IElementManager {
                 continue;
             }
             this.mAddCache.push(obj.id);
-            const sprite = new Sprite(obj,3);
-            // sprite.init(obj);
+            const sprite = new Sprite(obj, 3);
             if (this.checkDisplay(sprite)) {
                 this.mCacheAddList.push(obj);
             } else {

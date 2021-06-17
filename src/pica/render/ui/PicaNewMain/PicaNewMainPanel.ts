@@ -25,7 +25,7 @@ export class PicaNewMainPanel extends PicaBasePanel {
     private redMap: Map<number, Phaser.GameObjects.Image> = new Map();
     constructor(uiManager: UiManager) {
         super(uiManager);
-        this.atlasNames = [UIAtlasName.uicommon, UIAtlasName.iconcommon];
+        this.loadAtlas = [UIAtlasName.uicommon, UIAtlasName.iconcommon];
         this.key = ModuleName.PICANEWMAIN_NAME;
         this.maskLoadingEnable = false;
     }
@@ -189,8 +189,12 @@ export class PicaNewMainPanel extends PicaBasePanel {
     }
 
     private onActivityHandler(tag: string, data: any) {
-        if (tag === "recharge" || tag === "activity") {
+        if (tag === "activity") {
             this.onNoticeHandler();
+            return;
+        }
+        if (tag === "interactive") {
+            this.render.mainPeer.findNearEle();
             return;
         }
         if (tag === "activity") {
@@ -198,7 +202,7 @@ export class PicaNewMainPanel extends PicaBasePanel {
         } else if (tag === "indent") {
             this.render.renderEmitter(ModuleName.PICANEWMAIN_NAME + "_showpanel", ModuleName.PICANEWORDER_NAME);
         } else if (tag === "recharge") {
-            this.render.renderEmitter(ModuleName.PICANEWMAIN_NAME + "_showpanel", ModuleName.PICAFURNITURECOMPOSE_NAME);
+            this.render.renderEmitter(ModuleName.PICANEWMAIN_NAME + "_showpanel", ModuleName.PICARECHARGE_NAME);
         } else if (tag === "email") {
             this.render.renderEmitter(ModuleName.PICANEWMAIN_NAME + "_showpanel", ModuleName.PICAMAIL_NAME);
         } else if (tag === "roam") {
@@ -222,17 +226,6 @@ export class PicaNewMainPanel extends PicaBasePanel {
         }
     }
     private checkUpdateActive() {
-        // this.render.mainPeer.getCurRoom()
-        //     .then((curRoom) => {
-        //         if (curRoom)
-        //             this.setGiftButtonState(curRoom.openingParty);
-        //     });
-        // this.render.mainPeer.getActiveUIData(ModuleName.PICANEWMAIN_NAME)
-        //     .then((arr) => {
-        //         if (arr) {
-        //             this.updateUIState(arr);
-        //         }
-        //     });
         this.render.mainPeer.refrehActiveUIState(ModuleName.PICANEWMAIN_NAME);
     }
 

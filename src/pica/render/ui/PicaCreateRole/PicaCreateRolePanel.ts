@@ -40,7 +40,7 @@ export class PicaCreateRolePanel extends PicaBasePanel {
         const container = this.scene.add.container(0, 0);
         container.add(this);
         this.scene.scale.on("resize", this.onResize, this);
-        this.atlasNames = [UIAtlasName.uicommon, UIAtlasName.createrole];
+        this.loadAtlas = [UIAtlasName.uicommon, UIAtlasName.createrole];
         this.textures = [{atlasName: "Create_bg_texture", folder: "texture"}, {
             atlasName: "Create_role_bg",
             folder: "texture"

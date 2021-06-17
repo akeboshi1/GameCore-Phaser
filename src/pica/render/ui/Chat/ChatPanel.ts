@@ -117,19 +117,7 @@ export class ChatPanel extends BasePanel {
     }
 
     private checkUpdateActive() {
-        // this.render.mainPeer.getCurRoom()
-        //     .then((curRoom) => {
-        //         if (curRoom)
-        //             this.setGiftButtonState(curRoom.openingParty);
-        //     });
-        this.render.mainPeer.getActiveUIData(ModuleName.PICACHAT_NAME)
-            .then((arr) => {
-                if (arr) {
-                    for (const data of arr) {
-                        this.updateUIState(data);
-                    }
-                }
-            });
+        this.render.mainPeer.refrehActiveUIState(ModuleName.PICACHAT_NAME);
     }
 
     private sendChat(val: string) {

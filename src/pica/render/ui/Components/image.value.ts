@@ -11,9 +11,11 @@ export class ImageValue extends Phaser.GameObjects.Container {
     protected offset: Phaser.Geom.Point;
     protected layoutType: number = 1;
     protected uintImg: boolean = false;
+    protected key: string;
     constructor(scene: Phaser.Scene, width: number, height: number, key: string, frame: string, dpr: number, style?: any) {
         super(scene);
         this.dpr = dpr;
+        this.key = key;
         this.setSize(width, height);
         this.offset = new Phaser.Geom.Point(0, 0);
         this.create(key, frame, style);
@@ -48,8 +50,13 @@ export class ImageValue extends Phaser.GameObjects.Container {
         if (this.uintText) this.uintText.visible = visible;
     }
     public setFrameValue(text: string, key: string, frame: string) {
-        this.icon.setTexture(key, frame);
+        this.setFrame(frame, key);
         this.value.text = text;
+        this.resetSize();
+    }
+    public setFrame(frame: string, key?: string,) {
+        key = key || this.key;
+        this.icon.setTexture(key, frame);
         this.resetSize();
     }
     public setText(tex: string) {

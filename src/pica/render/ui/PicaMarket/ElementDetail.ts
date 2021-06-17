@@ -49,7 +49,7 @@ export class ElementDetail extends Phaser.GameObjects.Container {
     this.mPriceContainer = this.scene.make.container(undefined, false);
     this.mPriceIcon = this.scene.make.image({
       x: -78,
-      key: this.key,
+      key: UIAtlasName.uicommon,
       frame: "iv_coin"
     }, false);
     this.mPriceIcon.texture.setFilter(Phaser.Textures.FilterMode.LINEAR);
@@ -129,7 +129,7 @@ export class ElementDetail extends Phaser.GameObjects.Container {
     this.mSelectedProp = prop;
     const item = prop["item"];
     if (prop.price && prop.price.length > 0) {
-      this.mPriceIcon.setTexture(this.key, Coin.getIcon(prop.price[0].coinType));
+      this.mPriceIcon.setTexture(UIAtlasName.uicommon, Coin.getIcon(prop.price[0].coinType));
       this.updatePrice(prop.price[0].price.toString());
     } else {
       this.mPriceText.setText("");
@@ -192,10 +192,11 @@ export class ElementDetail extends Phaser.GameObjects.Container {
     if (!this.mSelectedProp) {
       return;
     }
-    const prop = { id: null, quantity: null, category: null };// op_def.OrderCommodities.create()
+    const prop = { id: null, quantity: null, category: null, marketName: undefined };// op_def.OrderCommodities.create()
     prop.id = this.mSelectedProp.id;
     prop.quantity = this.mCounter.number;
     prop.category = this.mSelectedProp.category;
+    prop.marketName = this.mSelectedProp.marketName;
     this.emit("buyItem", prop);
   }
 
@@ -252,8 +253,8 @@ class DetailBubble extends Phaser.GameObjects.Container {
       fontFamily: Font.DEFULT_FONT,
     }).setOrigin(0);
     this.add([this.tipsbg, this.tipsText, this.mExpires]);
-    this.tipsText.addImage("iv_coin", { key: UIAtlasKey.commonKey, frame: "iv_coin" });
-    this.tipsText.addImage("iv_diamond", { key: UIAtlasKey.commonKey, frame: "iv_diamond" });
+    this.tipsText.addImage("iv_coin", { key: UIAtlasName.uicommon, frame: "iv_coin" });
+    this.tipsText.addImage("iv_diamond", { key: UIAtlasName.uicommon, frame: "iv_diamond" });
   }
 
   setProp(prop: any, servertime: number, property: any): this {// op_client.IMarketCommodity, PlayerProperty

@@ -10,7 +10,6 @@ export class ModuleName {
     public static PICA_LOGIN_NAME: string = "PicaLogin";
     public static PICA_BOOT_NAME: string = "PicaBoot";
     public static CUTIN_NAME: string = "CutIn";
-    public static ACTIVITY_NAME: string = "Activity";
     public static CREATEROLE_NAME: string = "CreateRole";
     public static VERIFIED_NAME: string = "Verfied";
     public static PICANAVIGATE_NAME: string = "PicaNavigate";
@@ -99,4 +98,7 @@ export class ModuleName {
     public static PICAROOMDECORATE_NAME = "PicaRoomDecorate";
     public static PICANEWMINE_NAME = "PicaNewMine";
     public static PICANEWORDER_NAME: string = "PicaNewOrder";
+    public static PICANEWFRIEND_NAME: string = "PicaNewFriend";
+    public static PICAPRESTIGECONVERT_NAME: string = "PicaPrestigeConvert";
+    public static PICABATTLEPASS_NAME: string = "PicaBattlePass";
 }

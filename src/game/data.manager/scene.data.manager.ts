@@ -32,10 +32,17 @@ export class SceneDataManager extends BasePacketHandler {
         this.mEvent.on(EventType.SCENE_CHANGE, this.onSceneChangeHandler, this);
         this.proto.on("UPDATE_ROOM_INFO", this.onUpdateModeRoomInfo, this);
         this.proto.on("ExtraRoomInfo", this.onExtraRoomInfoHandler, this);
+        this.proto.on("PKT_LEVEL_UP", this.onShowLevelUpPanel, this);
         this.mEvent.on(EventType.REQUEST_GO_MINE_READY, this.onRequestGoMineReadyHandler, this);
         this.addPackListener();
     }
 
+    public removePackListener() {
+        super.removePackListener();
+        this.proto.off("UPDATE_ROOM_INFO", this.onUpdateModeRoomInfo, this);
+        this.proto.off("ExtraRoomInfo", this.onExtraRoomInfoHandler, this);
+        this.proto.off("PKT_LEVEL_UP", this.onShowLevelUpPanel, this);
+    }
     clear() {
         super.clear();
         this.mCurRoom = undefined;

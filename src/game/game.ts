@@ -680,6 +680,7 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
     }
 
     protected async initWorld() {
+        if (!this.mCustomProtoManager) this.mCustomProtoManager = new CustomProtoManager(this);
         this.mUser = new User(this);
         this.addHandlerFun(op_client.OPCODE._OP_GATEWAY_RES_CLIENT_VIRTUAL_WORLD_INIT, this.onInitVirtualWorldPlayerInit);
         this.addHandlerFun(op_client.OPCODE._OP_GATEWAY_RES_CLIENT_ERROR, this.onClientErrorHandler);

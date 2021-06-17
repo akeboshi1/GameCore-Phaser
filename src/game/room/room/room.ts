@@ -14,7 +14,7 @@ import { IElement, InputEnable } from "../element/element";
 import { IViewBlockManager } from "../viewblock/iviewblock.manager";
 import { TerrainManager } from "../terrain/terrain.manager";
 import { SkyBoxManager } from "../sky.box/sky.box.manager";
-import {EventType, GameState, IScenery, ISprite, LoadState, ModuleName, SceneName} from "structure";
+import { EventType, GameState, IScenery, ISprite, LoadState, ModuleName, SceneName } from "structure";
 import { EffectManager } from "../effect/effect.manager";
 import { DecorateManager } from "../../../pica/game/room/decorate/decorate.manager";
 import { WallManager } from "../element/wall.manager";
@@ -22,10 +22,8 @@ import { Sprite } from "baseModel";
 import IActor = op_client.IActor;
 import { RoomStateManager } from "../state/room.state.manager";
 import { BlockObject } from "../block/block.object";
-import {BasePacketHandler} from "../../data.manager";
-import {ExtraRoomInfo} from "custom_proto";
+import { ExtraRoomInfo } from "custom_proto";
 import { CollsionManager } from "../../collsion";
-
 export interface SpriteAddCompletedListener {
     onFullPacketReceived(sprite_t: op_def.NodeType): void;
 }
@@ -36,20 +34,16 @@ export interface IRoomService {
     readonly elementManager: ElementManager;
     readonly playerManager: PlayerManager;
     readonly cameraService: ICameraService;
-    // readonly layerManager: LayerManager;
     readonly effectManager: EffectManager;
     readonly decorateManager: DecorateManager;
     readonly skyboxManager: SkyBoxManager;
     readonly wallManager: WallManager;
     readonly collsionManager: CollsionManager;
-    // readonly handlerManager: HandlerManager;
     readonly roomSize: IPosition45Obj;
     readonly miniSize: IPosition45Obj;
     readonly game: Game;
     readonly enableDecorate: boolean;
     readonly sceneType: op_def.SceneTypeEnum;
-    // readonly matterWorld: MatterWorld;
-
     readonly isLoading: boolean;
     readonly isDecorating: boolean;
 
@@ -79,12 +73,6 @@ export interface IRoomService {
 
     cameraFollowHandler();
 
-    // addToGround(element: ElementDisplay | ElementDisplay[], index?: number);
-
-    // addToSurface(element: ElementDisplay | ElementDisplay[]);
-
-    // addToSceneUI(element: Phaser.GameObjects.GameObject | Phaser.GameObjects.GameObject[]);
-
     getElement(id: number): IElement;
 
     update(time: number, delta: number): void;
@@ -105,9 +93,15 @@ export interface IRoomService {
 
     stopDecorating();
 
+    addToInteractiveMap(sprite: ISprite);
+
+    removeFromInteractiveMap(sprite: ISprite);
+
     addToWalkableMap(sprite: ISprite, isTerrain?: boolean);
 
     removeFromWalkableMap(sprite: ISprite, isTerrain?: boolean);
+
+    getInteractiveEles(x: number, y: number): number[][];
 
     isWalkable(x: number, y: number): boolean;
 
@@ -120,15 +114,10 @@ export interface IRoomService {
 // 消息处理让上层[RoomManager]处理
 export class Room extends PacketHandler implements IRoomService, SpriteAddCompletedListener, ClockReadyListener {
     protected mGame: Game;
-    // protected mMap: Map;
     protected mID: number;
     protected mTerrainManager: TerrainManager;
     protected mElementManager: ElementManager;
     protected mPlayerManager: PlayerManager;
-    // protected mWallManager: WallManager;
-    // protected mLayManager: LayerManager;
-    // protected mGroupManager: GroupManager;
-    // protected mHandlerManager: HandlerManager;
     protected mSkyboxManager: SkyBoxManager;
     protected mEffectManager: EffectManager;
     protected mSize: IPosition45Obj;
@@ -157,6 +146,8 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
     // 地块可行走标记map。每格标记由多个不同优先级（暂时仅地块和物件）标记组成，最终是否可行走由高优先级标记决定
     private mWalkableMarkMap: Map<number, Map<number, { level: number; walkable: boolean }>> =
         new Map<number, Map<number, { level: number; walkable: boolean }>>();
+    // 地图每个坐标点可交互id 列表
+    private mInteractiveList: number[][][];
     private mIsWaitingForDecorateResponse: boolean = false;
     constructor(protected manager: IRoomManager) {
         super();
@@ -167,7 +158,6 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
             this.addListen();
             this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_ENABLE_EDIT_MODE, this.onEnableEditModeHandler);
             this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_UNWALKABLE_BIT_MAP, this.onShowMapTitle);
-            // this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_MOVE_SPRITE_BY_PATH, this.onMovePathHandler);
             this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_SET_CAMERA_FOLLOW, this.onCameraFollowHandler);
             this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_RESET_CAMERA_SIZE, this.onCameraResetSizeHandler);
             this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_SYNC_STATE, this.onSyncStateHandler);
@@ -225,6 +215,11 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
             this.mTerrainMap[i] = new Array(this.mMiniSize.cols).fill(-1);
         }
 
+        this.mInteractiveList = new Array(this.mMiniSize.rows);
+        for (let i = 0; i < this.mInteractiveList.length; i++) {
+            this.mInteractiveList[i] = new Array(this.mMiniSize.cols);
+        }
+
         // create render scene
         this.mGame.showLoading({
             "dpr": this.mScaleRatio,
@@ -234,18 +229,6 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
         this.mGame.peer.state = GameState.SceneCreate;
         this.mIsLoading = true;
     }
-
-    // public completeLoad() {
-    //     this.mGame.peer.render.
-    //         if(this.mGame.scene.getScene(PlayScene.name)) {
-    //         // const loadingScene: LoadingScene = this.mWorld.game.scene.getScene(LoadingScene.name) as LoadingScene;
-    //         // if (loadingScene) loadingScene.sleep();
-    //         return;
-    //     }
-    //     this.mGame.scene.add(PlayScene.name, PlayScene, true, {
-    //         room: this,
-    //     });
-    // }
 
     public onFullPacketReceived(sprite_t: op_def.NodeType): void {
         if (sprite_t !== op_def.NodeType.TerrainNodeType) {
@@ -338,15 +321,10 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
     }
 
     public update(time: number, delta: number) {
-        // if (this.matterWorld) this.matterWorld.update();
         this.updateClock(time, delta);
-        // if (this.mBlocks) this.mBlocks.update(time, delta);
-        // this.mViewBlockManager.update(time, delta);
-        // if (this.layerManager) this.layerManager.update(time, delta);
         if (this.mElementManager) this.mElementManager.update(time, delta);
         if (this.mPlayerManager) this.mPlayerManager.update(time, delta);
         if (this.terrainManager) this.terrainManager.update(time, delta);
-        // if (this.mHandlerManager) this.handlerManager.update(time, delta);
         if (this.mGame.httpClock) this.mGame.httpClock.update(time, delta);
         if (this.mCameraService) this.mCameraService.update(time, delta);
         if (this.mCollsionManager) this.mCollsionManager.update(time, delta);
@@ -370,49 +348,22 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
         }
         const w = this.mSize.sceneWidth;
         const h = this.mSize.sceneHeight;
-        // const blocks = this.mSkyboxManager.scenery;
-        // for (const block of blocks) {
-        //     if (block.scenery) {
-        //         if (block.scenery.width > w) {
-        //             w = block.scenery.width;
-        //         }
-        //         if (block.scenery.height > h) {
-        //             h = block.scenery.height;
-        //         }
-        //     }
-        // }
         return { width: w, height: h };
     }
 
     public async startPlay() {
-        // if (this.mLayManager) {
-
-        //     this.layerManager.destroy();
-        // }
         Logger.getInstance().debug("room startplay =====");
         this.game.renderPeer.showPlay();
-        // Logger.getInstance().debug("roomstartPlay");
         this.mCameraService = new CamerasManager(this.mGame, this);
-        // this.mScene = this.world.game.scene.getScene(PlayScene.name);
         this.mTerrainManager = new TerrainManager(this, this);
         this.mElementManager = new ElementManager(this);
         this.mPlayerManager = new PlayerManager(this);
-        // this.mWallManager = new WallManager(this);
         this.mBlocks = new ViewblockManager(this.mCameraService);
-        // this.mLayManager = new LayerManager(this);
-        // this.mGroupManager = new GroupManager(this);
-        // this.mFrameManager = new FrameManager();
         this.mSkyboxManager = new SkyBoxManager(this);
-        // mainworker通知physicalWorker创建matterworld
-        // this.mGame.peer.physicalPeer.createMatterWorld();
-        // this.mMatterWorld = new MatterWorld(this);
         this.mEffectManager = new EffectManager(this);
         this.mWallMamager = new WallManager(this);
         this.mCollsionManager = new CollsionManager(this);
         this.mCollsionManager.addWall();
-        // if (this.scene) {
-        //     const camera = this.scene.cameras.main;
-        //     this.mCameraService.camera = camera;
         const padding = 199 * this.mScaleRatio;
         const offsetX = this.mSize.rows * (this.mSize.tileWidth / 2);
         this.mGame.peer.render.roomstartPlay();
@@ -448,27 +399,81 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
         this.mIsLoading = false;
     }
 
+    public addToInteractiveMap(sprite: ISprite) {
+        const displayInfo = sprite.displayInfo;
+        if (!displayInfo) {
+            return;
+        }
+        // op_def.IPBPoint2i[]
+        const interactiveList = sprite.getInteractive();
+        if (!interactiveList) {
+            this.removeFromInteractiveMap(sprite);
+            return;
+        }
+        const id = sprite.id;
+        const addPos = sprite.getOriginPoint();
+        const pos = sprite.pos;
+        const index45 = this.transformToMini45(new LogicPos(pos.x, pos.y));
+        // const rows = interactiveList.length;
+        // const cols = interactiveList[0].length;
+        const len = interactiveList.length;
+        if (!this.mInteractiveList) this.mInteractiveList = [];
+        for (let i: number = 0; i < len; i++) {
+            const interactivePos = interactiveList[i];
+            const x = interactivePos.x + index45.x - addPos.x;
+            const y = interactivePos.y + index45.y - addPos.y;
+            // tslint:disable-next-line:no-console
+            // console.log("interactive ===>", x, y, id, len, interactiveList);
+            if (!this.mInteractiveList[y]) this.mInteractiveList[y] = [];
+            if (!this.mInteractiveList[y][x]) this.mInteractiveList[y][x] = [];
+            if (this.mInteractiveList[y][x].indexOf(id) === -1) this.mInteractiveList[y][x].push(id);
+        }
+    }
+
+    public removeFromInteractiveMap(sprite: ISprite) {
+        // const displayInfo = sprite.displayInfo;
+        // if (!displayInfo) {
+        //     return;
+        // }
+        // const interactiveList = sprite.getInteractive();
+        // if (!interactiveList) return;
+        const id = sprite.id;
+        if (!this.mInteractiveList) return;
+        const len = this.mInteractiveList.length;
+        for (let i: number = 0; i < len; i++) {
+            const tmpLen = this.mInteractiveList[i].length;
+            for (let j: number = 0; j < tmpLen; j++) {
+                const ids = this.mInteractiveList[i][j];
+                if (!ids || ids.length < 1) continue;
+                const tmpLen1 = ids.length;
+                for (let k: number = 0; k < tmpLen1; k++) {
+                    const tmpId = ids[k];
+                    if (id === tmpId) {
+                        this.mInteractiveList[i][j].splice(k, 1);
+                    }
+                }
+            }
+        }
+    }
+
     public addToWalkableMap(sprite: ISprite, isTerrain: boolean = false) {
         const displayInfo = sprite.displayInfo;
         if (!displayInfo) {
             return;
         }
-
         const walkableData = this.getSpriteWalkableData(sprite, isTerrain);
         if (!walkableData) return;
-
         const { origin, collisionArea, walkableArea, pos45, rows, cols } = walkableData;
-
         let tempY = 0;
         let tempX = 0;
         for (let i = 0; i < rows; i++) {
+            // pos45 sprite在45度坐标系中的索引，pad(origin) sprite, i(y), j(x)
             tempY = pos45.y + i - origin.y;
             for (let j = 0; j < cols; j++) {
                 tempX = pos45.x + j - origin.x;
                 if (tempY < 0 || tempY >= this.mWalkableMap.length || tempX < 0 || tempX >= this.mWalkableMap[tempY].length) {
                     continue;
                 }
-
                 const canWalk = collisionArea[i][j] === 0 || walkableArea[i][j] === 1;
                 this.addWalkableMark(tempX, tempY, sprite.id, isTerrain ? 0 : 1, canWalk);
                 if (isTerrain) this.setTerrainMap(tempX, tempY, canWalk);
@@ -479,12 +484,9 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
 
     public removeFromWalkableMap(sprite: ISprite, isTerrain: boolean = false) {
         if (!sprite) return;
-
         const walkableData = this.getSpriteWalkableData(sprite, isTerrain);
         if (!walkableData) return;
-
         const { origin, collisionArea, walkableArea, pos45, rows, cols } = walkableData;
-
         let tempY = 0;
         let tempX = 0;
         for (let i = 0; i < rows; i++) {
@@ -494,17 +496,41 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
                 if (tempY < 0 || tempY >= this.mWalkableMap.length || tempX < 0 || tempX >= this.mWalkableMap[tempY].length) {
                     continue;
                 }
-
                 this.removeWalkableMark(tempX, tempY, sprite.id);
             }
         }
+    }
+
+    public getInteractiveEles(x: number, y: number): number[][] {
+        if (!this.mInteractiveList) return null;
+        // 前后10个格子直接可交互物件,正负gridlen格子
+        const gridLen = 80;
+        const list = [];
+        const pos = this.transformToMini45(new LogicPos(x, y));
+        const baseX = pos.x;
+        const baseY = pos.y;
+        const rows = this.miniSize.rows;
+        const cols = this.miniSize.cols;
+        for (let i: number = -gridLen; i <= gridLen; i++) {
+            if (baseY + i < 0 || baseY + i >= rows) continue;
+            for (let j: number = -gridLen; j < gridLen; j++) {
+                if (baseX + j < 0 || baseX + j >= cols) continue;
+                const idPos = { x: baseX + j, y: baseY + i };
+                const ids = this.mInteractiveList[idPos.y][idPos.x];
+                if (ids && ids.length > 0) {
+                    list.push(ids);
+                }
+            }
+        }
+        // tslint:disable-next-line:no-console
+        // console.log(list);
+        return list;
     }
 
     public isWalkable(x: number, y: number): boolean {
         if (y < 0 || y >= this.mWalkableMap.length || x < 0 || x >= this.mWalkableMap[y].length) {
             return false;
         }
-
         return this.mWalkableMap[y][x] === 1;
     }
 
@@ -541,31 +567,9 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
         this.game.uiManager.recover();
         this.mTerrainMap = [];
         this.mWalkableMap = [];
+        this.mInteractiveList = [];
         this.mWalkableMarkMap.clear();
     }
-
-    // public move(id: number, x: number, y: number, nodeType: NodeType) {
-    //     if (this.moveStyle !== op_def.MoveStyle.PATH_MOVE_STYLE) {
-    //         return;
-    //     }
-    //     if (!this.mPlayerManager) {
-    //         return;
-    //     }
-    //     const actor = this.mPlayerManager.actor;
-    //     if (!actor) {
-    //         return;
-    //     }
-    //     const pkt: PBpacket = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_MOVE_TO_TARGET_BY_PATH);
-    //     const content: op_virtual_world.IOP_CLIENT_REQ_VIRTUAL_WORLD_MOVE_TO_TARGET_BY_PATH = pkt.content;
-    //     if (id) content.id = id;
-    //     if (nodeType) content.nodeType = nodeType;
-
-    //     content.point3f = {x, y};
-    //     this.connection.send(pkt);
-
-    //     this.tryMove();
-
-    // }
 
     public destroy() {
         this.removeListen();
@@ -606,42 +610,6 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
         return this.mIsLoading;
     }
 
-    // public tryMove() {
-    //     const player = this.mPlayerManager.actor;
-    //     if (!player) {
-    //         return;
-    //     }
-    //     const moveData = player.moveData;
-    //     const pos = moveData.path;
-    //     if (!pos || pos.length < 0) {
-    //         return;
-    //     }
-
-    //     const step = moveData.step || 0;
-    //     if (step >= pos.length) {
-    //         return;
-    //     }
-
-    //     const playerPosition = player.getPosition();
-    //     const position = op_def.PBPoint3f.create();
-    //     position.x = playerPosition.x;
-    //     position.y = playerPosition.y;
-
-    //     if (pos[step] === undefined) {
-    //         // Logger.getInstance().debug("move error", pos, step);
-    //     }
-    //     const nextPosition = op_def.PBPoint3f.create();
-    //     nextPosition.x = pos[step].x;
-    //     nextPosition.y = pos[step].y;
-
-    //     const packet = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_CHECK_MOVE_PATH_NEXT_POINT);
-    //     const conten: op_virtual_world.IOP_CLIENT_REQ_VIRTUAL_WORLD_CHECK_MOVE_PATH_NEXT_POINT = packet.content;
-    //     conten.timestemp = this.now();
-    //     conten.position = position;
-    //     conten.nextPoint = nextPosition;
-    //     this.connection.send(packet);
-    // }
-
     // room创建状态管理
     public onManagerCreated(key: string) {
         if (this.mManagersReadyStates.has(key)) return;
@@ -661,6 +629,7 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
         });
         if (allReady) {
             this.game.renderPeer.roomReady();
+            this.onRoomReady();
         }
     }
 
@@ -733,11 +702,6 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
 
         // camera follow
         this.cameraService.startFollow(this.playerManager.actor.id);
-
-        // set user pos
-        // const entrePos = new LogicPos(this.mActorData.x, this.mActorData.y);
-        // this.playerManager.actor.setPosition(entrePos);
-        // this.game.renderPeer.setPosition(this.playerManager.actor.id, entrePos.x, entrePos.y);
 
         // show players
         this.playerManager.showAll();
@@ -855,18 +819,6 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
         return this.mWallMamager;
     }
 
-    // get layerManager(): LayerManager {
-    //     return this.mLayManager || undefined;
-    // }
-
-    // get groupManager(): GroupManager {
-    //     return this.mGroupManager || undefined;
-    // }
-
-    // get handlerManager(): HandlerManager {
-    //     return this.mHandlerManager || undefined;
-    // }
-
     get cameraService(): ICameraService {
         return this.mCameraService || undefined;
     }
@@ -949,28 +901,6 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
         // }
     }
 
-    // private addFillEffect(pos: IPoint, status: op_def.PathReachableStatus) {
-    //     // if (!this.scene) {
-    //     //     Logger.getInstance().debug("Room scene  does not exist");
-    //     //     return;
-    //     // }
-    //     // const fall = new FallEffect(this.scene, this.mScaleRatio);
-    //     // fall.show(status);
-    //     // fall.setPosition(pos.x * this.mScaleRatio, pos.y * this.mScaleRatio);
-    //     // this.addToSceneUI(fall);
-    //     this.mGame.addFillEffect(pos, status);
-    // }
-
-    // private onMovePathHandler(packet: PBpacket) {
-    //     const content: op_client.IOP_VIRTUAL_WORLD_REQ_CLIENT_MOVE_SPRITE_BY_PATH = packet.content;
-    //     const status = content.pathStatus;
-    //     if (!status) {
-    //         return;
-    //     }
-    //     const pos = content.targetPos;
-    //     // this.addFillEffect({ x: pos.x, y: pos.y }, status);
-    // }
-
     private onCameraResetSizeHandler() {
         this.cameraService.initialize = true;
         // this.cameraService.syncCameraScroll();
@@ -1010,10 +940,8 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
         } else if (nodeType === op_def.NodeType.TerrainNodeType) {
             for (const sp of content.sprites) {
                 if (this.mTerrainManager.get(sp.id)) continue;
-                // const sprite = new Sprite(sp, nodeType);
                 addList.push(sp);
             }
-            // this.mTerrainManager.add(addList);
             this.mTerrainManager.addSpritesToCache(addList);
         }
     }
@@ -1175,7 +1103,6 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
                     }
                 }
                 walkableArea = temp;
-
                 // Logger.getInstance().debug("#walkable after ", walkableArea);
             }
         }

@@ -1,5 +1,5 @@
 import { ElementStorage } from "baseModel";
-import { SoundManager, BaseConfigData, DataManager, Game, HttpService, LoadingManager, MainPeer, RoomManager, CustomProtoManager } from "gamecore";
+import { SoundManager, BaseConfigData, DataManager, Game, HttpService, LoadingManager, MainPeer, RoomManager, CustomProtoManager, ConfigPath } from "gamecore";
 import { RedEventType } from "picaStructure";
 import { HttpLoadManager } from "utils";
 import { PicaNetworkManager } from "./command/pica.network.manager";
@@ -19,7 +19,16 @@ export class PicaGame extends Game {
         return data;
     }
     public preloadGameConfig(): Promise<any> {
-        return this.mConfigManager.startLoad(this.gameConfigUrl);
+        const basePath = ConfigPath.getBaseVersionPath();
+        if (basePath === undefined) {
+            return new Promise((resolve, reject) => {
+                this.renderPeer.showAlert("配置加载错误", true, false)
+                    .then(() => {
+                        this.renderPeer.hidden();
+                    });
+            });
+        }
+        return this.mConfigManager.startLoad(basePath);
     }
     public getRedPoints(type: RedEventType) {
         if (this.redManager) return this.redManager.getRedPoints(type);

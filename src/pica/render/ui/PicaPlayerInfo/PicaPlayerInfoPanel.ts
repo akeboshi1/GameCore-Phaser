@@ -6,9 +6,9 @@ import { Font, Handler, i18n, UIHelper, Url } from "utils";
 import { AvatarSuitType, FriendRelationEnum, ModuleName } from "structure";
 import { DynamicImage, UiManager, UIDragonbonesDisplay, ButtonEventDispatcher, ProgressMaskBar, ToggleColorButton, ItemInfoTips } from "gamecoreRender";
 import { PicaBasePanel } from "../pica.base.panel";
-import { CommonBackground, ImageValue } from "../../ui";
+import { CommonBackground, ImageValue, UITools } from "../../ui";
 import { PicaItemTipsPanel } from "../SinglePanel/PicaItemTipsPanel";
-import { ICountablePackageItem } from "picaStructure";
+import { ICountablePackageItem, ISELF_PLAYER_INFO } from "picaStructure";
 export class PicaPlayerInfoPanel extends PicaBasePanel {
     private mBlackBG: Phaser.GameObjects.Graphics;
     private background: CommonBackground;
@@ -36,7 +36,7 @@ export class PicaPlayerInfoPanel extends PicaBasePanel {
     constructor(uiManager: UiManager) {
         super(uiManager);
         this.key = ModuleName.PICAPLAYERINFO_NAME;
-        this.atlasNames = [UIAtlasName.uicommon, UIAtlasName.friend_message];
+        this.loadAtlas = [UIAtlasName.uicommon, UIAtlasName.friend_message];
         this.textures = [{ atlasName: "Create_role_bg", folder: "texture" }];
     }
     resize(width: number, height: number) {
@@ -175,12 +175,13 @@ export class PicaPlayerInfoPanel extends PicaBasePanel {
             this.avatar.load({
                 id: 0,
                 avatar: temp.avatar,
-            }, undefined, false);
+            });
         }
         const nickname = data.nickname ? data.nickname : "???";
         const current_title = data.currentTitle ? data.currentTitle : "???";
         const level = data.level && data.level.level ? data.level.level : 0;
-        this.nickImge.setText(nickname);
+        const nameFrame = UITools.getGenderFrame(data.gender);
+        this.nickImge.setFrameValue(nickname, UIAtlasName.uicommon, nameFrame);
         this.lvImage.setText(level + "");
         this.nickName.setText(i18n.t("player_info.player_title") + ": " + current_title);
         this.vipImage.x = this.lvImage.x + this.lvImage.width * 0.5 + this.vipImage.width * 0.5 + 10 * this.dpr;
@@ -568,11 +569,11 @@ class OtherButtonItem extends ButtonEventDispatcher {
 
     public setTag(tag: string) {
         this.tag = tag;
-        if (tag === "track") {
-            this.image.visible = false;
-            this.text.visible = false;
-            this.enable = false;
-        }
+        // if (tag === "track") {
+        //     this.image.visible = false;
+        //     this.text.visible = false;
+        //     this.enable = false;
+        // }
     }
 }
 

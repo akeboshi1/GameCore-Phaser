@@ -62,15 +62,59 @@ export class UITools {
 
     public static createBackButton(scene: Phaser.Scene, dpr: number, fun: Function, caller: any, title: string = "") {
         const backButton = new ButtonEventDispatcher(scene, 0, 0);
-        backButton.setSize(80 * dpr, 22 * dpr);
-        backButton.enable = true;
         backButton.on(ClickEvent.Tap, fun, caller);
         const closeImg = scene.make.image({ key: UIAtlasName.uicommon, frame: "back_arrow" });
-        closeImg.x = -backButton.width * 0.5 + closeImg.width * 0.5 + 25 * dpr;
         const titleTex = scene.make.text({ text: title, style: UIHelper.whiteStyle(dpr, 16) }).setOrigin(0, 0.5);
-        titleTex.x = closeImg.x + closeImg.width * 0.5 + 15 * dpr;
         titleTex.setFontStyle("bold");
         backButton.add([closeImg, titleTex]);
+        let width = closeImg.width + titleTex.width + 30 * dpr;
+        width = width < 80 * dpr ? 80 * dpr : width;
+        backButton.setSize(width, 22 * dpr);
+        backButton.enable = true;
+        closeImg.x = -backButton.width * 0.5 + closeImg.width * 0.5 + 15 * dpr;
+        titleTex.x = closeImg.x + closeImg.width * 0.5 + 15 * dpr;
         return backButton;
+    }
+
+    public static getGenderFrame(gender: string) {
+        const nameFrame = gender === "Female" ? "people_woman" : "people_man";
+        return nameFrame;
+    }
+
+    public static setImgGray(scene: Phaser.Scene, img: Phaser.GameObjects.Image) {
+        const originKey = img.texture.key;
+        const key = originKey + "_grady";
+        const frame = img.frame.name;
+        const width = img.width, height = img.height;
+        if (!scene.textures.exists(key)) {
+            this.createCanvasTexture(scene, img.texture, width, height, key, frame);
+            const canvastexture = <Phaser.Textures.CanvasTexture>scene.textures.get(key);
+            const context = canvastexture.context;
+            const pixels = context.getImageData(0, 0, width, height);
+            const data = pixels.data;
+            for (let i = 0; i < data.length / 4; i++) {
+                const index = i * 4;
+                const r = data[index];
+                const g = data[index + 1];
+                const b = data[index + 2];
+                const gr = r * 0.3 + g * 0.59 + b * 0.11;// (color.red + color.green + color.blue) / 3;
+                data[index] = gr;
+                data[index + 1] = gr;
+                data[index + 2] = gr;
+            }
+            context.putImageData(pixels, 0, 0);
+            canvastexture.refresh();
+        }
+        setTimeout(() => {
+            img.setTexture(key);
+        }, 20);
+        img.setTexture(key);
+    }
+
+    public static createCanvasTexture(scene: Phaser.Scene, texture: Phaser.Textures.Texture, width: number, height: number, key: string, frame?: string) {
+        const sourceImage: any = texture.getSourceImage(frame);
+        const canvasTexture = scene.textures.createCanvas(key, width, height);
+        canvasTexture.context.drawImage(sourceImage, 0, 0);
+        return canvasTexture;
     }
 }

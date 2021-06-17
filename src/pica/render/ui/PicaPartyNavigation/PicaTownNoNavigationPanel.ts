@@ -19,7 +19,7 @@ export class PicaTownNoNavigationPanel extends Phaser.GameObjects.Container {
                 width: 271 * dpr
             }
         }).setOrigin(0.5, 1);
-        this.contentTex.y = -height * 0.5 + 50 * dpr;
+        this.contentTex.y = -height * 0.5 + 65 * dpr;
         this.contentTex.text = i18n.t("partynav.tooqingtips");
         this.noItemImg = this.scene.make.image({ key: "map_tooqing_stay_tuned" });
         this.noItemImg.y = this.contentTex.y + this.contentTex.height + this.noItemImg.height * 0.5 + 50 * dpr;

@@ -4,4 +4,5 @@ export interface ILevel {
     exp: number;
     unlockSystem: string;
     unlockRoom: number;
+    exchangeLimit: number;
 }

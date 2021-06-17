@@ -28,7 +28,7 @@ export class PicaFurnitureComposePanel extends PicaBasePanel {
   private subCategoryType: number = 1;
   constructor(uiManager: UiManager) {
     super(uiManager);
-    this.atlasNames = [UIAtlasName.uicommon, UIAtlasName.effectcommon];
+    this.loadAtlas = [UIAtlasName.uicommon, UIAtlasName.effectcommon];
     this.key = ModuleName.PICAFURNITURECOMPOSE_NAME;
   }
 

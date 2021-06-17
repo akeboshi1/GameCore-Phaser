@@ -25,12 +25,14 @@ export class UserDataManager extends PacketHandler {
         if (this.connection) {
             this.connection.addPacketListener(this);
         }
+        if (this.proto) this.proto.on("PKT_PLAYER_INFO", this.onUPDATE_PLAYER_INFO, this);
     }
 
     public removePackListener() {
         if (this.connection) {
             this.connection.removePacketListener(this);
         }
+        if (this.proto) this.proto.off("PKT_PLAYER_INFO", this.onUPDATE_PLAYER_INFO, this);
     }
 
     clear() {
@@ -78,6 +80,18 @@ export class UserDataManager extends PacketHandler {
         if (this.mProperty && this.mProperty.energy) return this.mProperty.energy.value;
         return 0;
     }
+    get reputationLevel(): number {
+        if (this.mProperty && this.mProperty.reputationLevel) return this.mProperty.reputationLevel.value;
+        return 0;
+    }
+    get popularityCoin(): number {
+        if (this.mProperty && this.mProperty.popularityCoin) return this.mProperty.popularityCoin.value;
+        return 0;
+    }
+    get reputation(): number {
+        if (this.mProperty && this.mProperty.reputation) return this.mProperty.reputation.value;
+        return 0;
+    }
     get isSelfRoom() {
         const dataMgr = this.game.getDataMgr<SceneDataManager>(DataMgrType.SceneMgr);
         if (dataMgr.curRoom && dataMgr.curRoom.ownerId === this.cid) return true;
@@ -95,6 +109,9 @@ export class UserDataManager extends PacketHandler {
         return this.mDressAvatarIDs;
     }
 
+    getProperty(id: string) {
+        return this.playerProperty.getProperty(id);
+    }
     querySYNC_ALL_PACKAGE() {
         this.mPlayerBag = new PlayerBag();
         this.querySYNC_PACKAGE(op_pkt_def.PKT_PackageType.PropPackage);
@@ -141,5 +158,8 @@ export class UserDataManager extends PacketHandler {
         const content: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_PKT_CURRENT_DRESS_AVATAR_ITEM_ID = packet.content;
         this.mDressAvatarIDs = content.avatarItemIds;
         this.game.emitter.emit(EventType.RETURN_DRESS_AVATAR_IDS, content.avatarItemIds);
+    }
+    get proto() {
+        return this.game.customProto;
     }
 }

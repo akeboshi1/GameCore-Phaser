@@ -101,7 +101,7 @@ export class PicaWorkerUiManager extends UIManager {
                 break;
         }
     }
-    protected getPanelNameByAlias(tag: string) {
+    public getPanelNameByAlias(tag: string) {
         switch (tag) {
             case "mainui":
                 return ModuleName.PICANEWMAIN_NAME;

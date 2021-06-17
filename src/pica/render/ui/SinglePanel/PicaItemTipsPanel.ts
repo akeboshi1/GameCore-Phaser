@@ -15,7 +15,7 @@ export class PicaItemTipsPanel extends PicaBasePanel {
     private itemTips: ItemInfoTips;
     constructor(uimgr: UiManager) {
         super(uimgr);
-        this.atlasNames = [UIAtlasName.uicommon];
+        this.loadAtlas = [UIAtlasName.uicommon];
         this.key = ModuleName.PICAITEMTIPSPANEL_NAME;
         this.uiLayer = MainUIScene.LAYER_TOOLTIPS;
     }

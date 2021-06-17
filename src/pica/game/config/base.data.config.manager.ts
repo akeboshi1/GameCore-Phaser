@@ -37,6 +37,9 @@ import { EventType } from "structure";
 import { QuestGroupConfig } from "./quest.group.config";
 import { Element2Config } from "./element2.config";
 import { FurnitureGradeConfig } from "./furniture.grade.config";
+import { RechargeConfig } from "./recharge.config";
+import { Setting2Config } from "./settings2.config";
+import { FrameLevelConfig as FameLevelConfig } from "./fame.level.config";
 
 export enum BaseDataType {
     i18n_zh = "i18n_zh",
@@ -60,7 +63,10 @@ export enum BaseDataType {
     dailyQuestGroup = "dailyQuestGroup",
     element2 = "element2",
     elementpi = "elementpi", // 不作为文件名加载文件，只作为类型区分
-    furnitureGrade = "furnitureGrade"
+    furnitureGrade = "furnitureGrade",
+    charge = "charge",
+    settings2 = "settings2",
+    famelevel = "famelevel"
     // itemcategory = "itemcategory"
 }
 
@@ -381,10 +387,16 @@ export class BaseDataConfigManager extends BaseConfigManager {
      * @param shopName
      * @returns
      */
-    public checkDynamicShop(shopName): Promise<any> {
+    public checkDynamicShop(shopNames: string[]): Promise<any> {
         return new Promise((resolve, reject) => {
-            if (!this.dataMap.has(shopName)) {
-                this.dynamicLoad(new Map([[shopName, new ShopConfig()]])).then(() => {
+            const tempMaps = new Map();
+            for (const name of shopNames) {
+                if (!this.dataMap.has(name)) {
+                    tempMaps.set(name, new ShopConfig());
+                }
+            }
+            if (tempMaps.size > 0) {
+                this.dynamicLoad(tempMaps).then(() => {
                     resolve(true);
                 }, (reponse) => {
                     Logger.getInstance().error("未成功加载配置:" + reponse);
@@ -433,10 +445,10 @@ export class BaseDataConfigManager extends BaseConfigManager {
         if (!data.categoryMap["find"]) {
             const extendMap: Map<{ key: string, value: string }, Array<{ key: string, value: string }>> = new Map();
             data.categoryMap.forEach((value, key) => {
-                const subCategorys: Array<{ key: string, value: string }> = [];
+                const subCategorys: Array<{ key: string, value: string, shopName: string }> = [];
                 for (const temp of value) {
                     const tvalue = this.getI18n(temp);
-                    subCategorys.push({ key: temp, value: tvalue });
+                    subCategorys.push({ key: temp, value: tvalue, shopName });
                 }
                 const category = { key, value: this.getI18n(key) };
                 extendMap.set(category, subCategorys);
@@ -508,7 +520,7 @@ export class BaseDataConfigManager extends BaseConfigManager {
                 const tempItem: IDecorateShop = <any>shopitem;
                 if (!tempItem["find"]) {
                     const item = ele2.get(tempItem.elementId);
-                    tempItem.source = this.getI18n("PKT_MARKET_TAG_SOURCE_" + tempItem.source);
+                    tempItem.source = this.getI18n(tempItem.source);
                     tempItem["price"] = [{
                         price: shopitem.price || 0,
                         coinType: this.getCoinType(shopitem.currencyId),
@@ -835,6 +847,27 @@ export class BaseDataConfigManager extends BaseConfigManager {
         });
         return obj;
     }
+    public getRecharges(type: number, id?: string) {
+        const data: RechargeConfig = this.getConfig(BaseDataType.charge);
+        const tempArr = data.get(type, id);
+        for (const temp of tempArr) {
+            if (!temp["find"]) {
+                temp.name = temp.nameId = this.getI18n(temp.nameId);
+                this.getBatchItemDatas(temp.items);
+                this.getBatchItemDatas(temp.firstPurchaseItems);
+                temp["find"] = true;
+            }
+        }
+        return tempArr;
+    }
+    public getReputationCoin() {
+        const data: Setting2Config = this.getConfig(BaseDataType.settings2);
+        return data.getReputationCoin();
+    }
+    public getFrameLevel(level: number) {
+        const data: FameLevelConfig = this.getConfig(BaseDataType.famelevel);
+        return data.get(level);
+    }
     public destory() {
         super.destory();
         this.mGame.emitter.off(EventType.QUEST_ELEMENT_PI_DATA, this.checkDynamicElementPI, this);
@@ -862,6 +895,9 @@ export class BaseDataConfigManager extends BaseConfigManager {
         this.dataMap.set(BaseDataType.dailyQuestGroup, new QuestGroupConfig());
         this.dataMap.set(BaseDataType.element2, new Element2Config());
         this.dataMap.set(BaseDataType.furnitureGrade, new FurnitureGradeConfig());
+        this.dataMap.set(BaseDataType.charge, new RechargeConfig());
+        this.dataMap.set(BaseDataType.settings2, new Setting2Config());
+        this.dataMap.set(BaseDataType.famelevel, new FameLevelConfig());
     }
 
     protected configUrl(reName: string, tempurl?: string) {
@@ -875,11 +911,8 @@ export class BaseDataConfigManager extends BaseConfigManager {
         if (!item || item["find"]) return;
         const config: ItemBaseDataConfig = this.getConfig(BaseDataType.item);
         item.name = this.getI18n(item.name, { id: item.id, name: item.name });
-        item.source = item.source ? "PKT_MARKET_TAG_SOURCE_" + item.source : "";
         item.source = item.source && item.source.length > 0 ? this.getI18n(item.source, { id: item.id, source: item.source }) : "";
         item.des = this.getI18n(item.des, { id: item.id, des: item.source });
-        item.category = "PKT_PACKAGE_CATEGORY_" + item.category;
-        item.subcategory = "PKT_MARKET_TAG_" + item.subcategory;
         item["exclude"] = config.excludes;
         if (item.texturePath) item["display"] = { texturePath: item.texturePath };
         const serializeString = item.serializeString;
@@ -900,79 +933,5 @@ export class BaseDataConfigManager extends BaseConfigManager {
             texturePath = path + "_s.png";
         }
         return texturePath;
-    }
-    // private async checkItemData(item: ICountablePackageItem): Promise<ICountablePackageItem> {
-    //     return new Promise<ICountablePackageItem>((reslove, reject) => {
-    //         if (!item) {
-    //             return;
-    //         }
-    //         if (item["find"]) reslove(item);
-    //         const config: ItemBaseDataConfig = this.getConfig(BaseDataType.item);
-    //         item.name = this.getI18n(item.name, { id: item.id, name: "name" });
-    //         item.source = this.getI18n(item.source, { id: item.id, source: "source" });
-    //         item.des = this.getI18n(item.des, { id: item.id, des: "des" });
-    //         item["exclude"] = config.excludes;
-    //         if (item.texturePath) item["display"] = { texturePath: item.texturePath };
-    //         if (item.serializeString && item.serializeString !== "") {
-    //             const path = ResUtils.getResRoot(item.serializeString);
-    //             if (path && path.length > 0) {
-    //                 const responseType = "arraybuffer";
-    //                 this.mGame.httpLoaderManager.startSingleLoader({ path, responseType }).then((req: any) => {
-    //                     item["find"] = true;
-    //                     // 保存到elementstorage中
-    //                     this.decodeItem(req).then((lite) => {
-    //                         this.mGame.elementStorage.setGameConfig(lite);
-    //                         reslove(item);
-    //                     });
-    //                 }).catch(() => {
-    //                     reject(item);
-    //                 });
-    //             } else {
-    //                 item["find"] = true;
-    //                 // todo
-    //                 reslove(item);
-    //             }
-    //         }
-    //     });
-
-    //     // const element = await this.getElementData(item.elementId);
-    //     // if (element) {
-    //     //     const texture_path = element.texture_path;
-    //     //     item["animations"] = element["AnimationData"];
-    //     //     if (texture_path) {
-    //     //         item["animationDisplay"] = { dataPath: element.data_path, texturePath: texture_path };
-    //     //         const index = texture_path.lastIndexOf(".");
-    //     //         if (index === -1) {
-    //     //             item.texturePath = element.texture_path + "_s";
-    //     //         } else {
-    //     //             const extensions = texture_path.slice(index, texture_path.length);
-    //     //             const path = texture_path.slice(0, index);
-    //     //             item.texturePath = path + "_s" + extensions;
-    //     //         }
-    //     //         item["display"] = { texturePath: item.texturePath };
-    //     //     }
-    //     // }
-    //     // item["find"] = true;
-    //     // });
-    // }
-
-    private decodeItem(req): Promise<Lite> {
-        return new Promise((resolve, reject) => {
-            const arraybuffer = req.response;
-            if (arraybuffer) {
-                try {
-                    const item = new Lite();
-                    item.deserialize(new Uint8Array(arraybuffer));
-                    Logger.getInstance().debug("Decode: ItemPi -> lite", item);
-                    resolve(item);
-                } catch (error) {
-                    Logger.getInstance().error("catch error", error);
-                    reject(error);
-                }
-            } else {
-                Logger.getInstance().error("reject error");
-                reject("error");
-            }
-        });
     }
 }

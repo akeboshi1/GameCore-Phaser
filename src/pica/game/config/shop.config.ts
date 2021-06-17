@@ -15,8 +15,10 @@ export class ShopConfig extends BaseConfigData {
         }
     }
     public parseJson(json) {
+        json = json["Sheet1"] || json["grade_shop"] || json;
         for (const temp of json) {
             this[temp.id] = temp;
+            temp.marketName = this.resName;
             this.updateCtegoryMap(temp);
         }
 
@@ -24,8 +26,19 @@ export class ShopConfig extends BaseConfigData {
 
     protected updateCtegoryMap(temp) {
         temp.category = temp.category || "commoncategory";
-        const category = temp.category;
-        const subcategory = temp.subcategory;
+        const regPos = /^\d+(\.\d+)?$/; // 非负浮点数
+        let category = temp.category;
+        if (regPos.test(category)) {
+            temp.category = category = "PKT_MARKET_CATEGORY_" + category;
+        }
+        let subcategory = temp.subcategory;
+        if (regPos.test(subcategory)) {
+            temp.subcategory = subcategory = "PKT_MARKET_TAG_" + subcategory;
+        }
+        let source = temp.source;
+        if (regPos.test(source)) {
+            temp.source = source = "PKT_MARKET_TAG_SOURCE_" + source;
+        }
         if (this.categoryMap.has(category)) {
             const arr = this.categoryMap.get(category);
             if (arr.indexOf(subcategory) === -1)

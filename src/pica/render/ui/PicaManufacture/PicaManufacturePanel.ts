@@ -22,7 +22,7 @@ export class PicaManufacturePanel extends PicaBasePanel {
     private optionType: number;
     constructor(uiManager: UiManager) {
         super(uiManager);
-        this.atlasNames = [UIAtlasName.uicommon, UIAtlasName.effectcommon, UIAtlasName.recast];
+        this.loadAtlas = [UIAtlasName.uicommon, UIAtlasName.effectcommon, UIAtlasName.recast];
         this.textures = [{ atlasName: "Recast_aims_icon_bg", folder: "texture" }, { atlasName: "Recast_bg_texture", folder: "texture" }];
         this.key = ModuleName.PICAMANUFACTURE_NAME;
     }
@@ -32,8 +32,8 @@ export class PicaManufacturePanel extends PicaBasePanel {
         const height = this.scaleHeight;
         this.mCloseBtn.x = this.mCloseBtn.width * 0.5 + 0 * this.dpr;
         this.mCloseBtn.y = 45 * this.dpr;
-        this.starCountCon.y = this.mCloseBtn.y;
-        this.starCountCon.x = width - 15 * this.dpr;
+        this.starCountCon.y = this.height*0.5+this.starCountCon.height*0.5;
+        this.starCountCon.x = 20*this.dpr+this.starCountCon.width;
         this.toggleCon.x = width * 0.5;
         this.toggleCon.y = this.toggleCon.height * 0.5 + 40 * this.dpr;
         this.composePanel.resize(width, height);
@@ -136,8 +136,8 @@ export class PicaManufacturePanel extends PicaBasePanel {
         this.starCountCon = this.scene.make.container(undefined, false);
         this.starCountCon.setSize(starbg.width, starbg.height);
         this.starCountCon.add([starbg, this.starvalue]);
-        this.starCountCon.x = width - 20 * this.dpr;
-        this.starCountCon.y = -this.height * 0.5 + 20 * this.dpr;
+        this.starCountCon.x = this.starCountCon.width+20 * this.dpr;
+        this.starCountCon.y = this.starCountCon.height*0.5;
         this.toggleCon = this.scene.make.container(undefined, false);
         this.toggleCon.y = 20 * this.dpr;
         this.selectLine = this.scene.make.image({ key: UIAtlasName.recast, frame: "Recast_bookmark_select" });

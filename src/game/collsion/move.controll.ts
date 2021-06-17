@@ -10,6 +10,8 @@ export class MoveControll {
     private mPosition: IPos;
     private mPrePosition: IPos;
     private collsion: CollsionManager;
+    private maxWidth: number = 0;
+    private maxHeight: number = 0;
 
     constructor(private id: number, private room: IRoomService) {
         this.mPosition = new LogicPos();
@@ -29,17 +31,25 @@ export class MoveControll {
             this.mPrePosition.y = this.mPosition.y;
 
             const pos = this.mBodies ? this.mBodies.pos : this.mPosition;
-            pos.x = this.mPosition.x + this.velocity.x;
-            pos.y = this.mPosition.y + this.velocity.y;
+            pos.x = pos.x + this.velocity.x;
+            pos.y = pos.y + this.velocity.y;
 
             const collideResponses = this.getCollideResponses();
             if (collideResponses.length > 2) {
+                // 帧数不高，碰到水平或垂直会抖动
                 // TODO 计算两者中心点x y。水平或垂直时停止移动
                 pos.x = this.mPosition.x;
                 pos.y = this.mPosition.y;
                 return;
             }
             for (const response of collideResponses) {
+                // 人物被卡住，停下来
+                if (response.aInB || response.bInA || response.overlap > this.maxWidth * 0.5 || response.overlap > this.maxHeight * 0.5) {
+                    this.setVelocity(0, 0);
+                    pos.x = this.mPosition.x;
+                    pos.y = this.mPosition.y;
+                    return;
+                }
                 pos.x -= response.overlapV.x;
                 pos.y -= response.overlapV.y;
             }
@@ -68,7 +78,11 @@ export class MoveControll {
         }
         const vectors = [];
         for (const p of path) {
+            const absX = Math.abs(p.x);
+            const absY = Math.abs(p.y);
             vectors.push(new SAT.Vector(p.x, p.y));
+            if (absX > this.maxWidth) this.maxWidth = absX;
+            if (absY > this.maxHeight) this.maxHeight = absY;
         }
         this.mBodies = new SAT.Polygon(new SAT.Vector(this.mPosition.x, this.mPosition.y), vectors);
         if (offset) this.setBodiesOffset(offset);

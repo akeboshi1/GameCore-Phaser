@@ -43,7 +43,7 @@ export class PicaPartyNavigationPanel extends PicaBasePanel {
     constructor(uiManager: UiManager) {
         super(uiManager);
         this.key = ModuleName.PICAPARTYNAVIGATION_NAME;
-        this.atlasNames = [UIAtlasName.map, UIAtlasName.multiple_rooms];
+        this.loadAtlas = [UIAtlasName.map, UIAtlasName.multiple_rooms];
         this.textures = [{ atlasName: "town_entrance_1", folder: UIAtlasName.map }, { atlasName: "map_room_icon", folder: UIAtlasName.map }, { atlasName: "map_tooqing_stay_tuned", folder: UIAtlasName.map }];
     }
 

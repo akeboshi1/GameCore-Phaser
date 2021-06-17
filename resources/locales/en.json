@@ -4,7 +4,18 @@
     "payment": "Buy",
     "refreshtime": "Refresh at ",
     "refresh": "Refresh",
-    "moneyless": "There is not enough money to buy"
+    "moneyless": "There is not enough money to buy",
+    "unlock": "解锁",
+    "daylimit": "每天限购",
+    "weeklimit": "每周限购",
+    "prestigetitle": "Exchange prestige coin",
+    "converttips": "Select the health value you want to redeem",
+    "convertvaluetips": "Maximum exchange value of daily prestige coin: {{name}}",
+    "powertips": "Lack of physical strength to exchange",
+    "counttisp": "Please choose the quantity to exchange",
+    "convertsuccess": "convertSuccess",
+    "unlocktobuy": "unlock to buy",
+    "reputationless": "ReputationLess"
   },
   "item": {
     "copy_suc": "{{name}} copied",
@@ -73,7 +84,11 @@
     "received": "Received",
     "rarity": "Rarity",
     "leave": "Leave",
-    "affirm": "Affirm"
+    "affirm": "Affirm",
+    "count": "Count",
+    "reselect": "Reselect",
+    "acquire": "Acquire",
+    "reputation": "Reputation"
   },
   "quantityunit": {
     "k": "k",
@@ -240,14 +255,19 @@
     "fans": "Fans",
     "follow": "Follow",
     "blacklist": "BLACKLIST",
+    "blacklisted": "已添加黑名单",
     "search": "Search",
     "search_friends_notes": "Search",
     "unfollow": "Following",
+    "unfollowed": "已取消关注",
     "lv": "Lv",
     "remove": "Remove",
+    "removed": "已移除黑名单",
     "unregistered_game": "Not in Game",
     "notice": "Notice",
-    "followed_you": "followed you"
+    "followed_you": "{{name}} followed you",
+    "addfriended": "已成功添加好友",
+    "friendplaceholder": "搜索好友昵称或备注"
   },
   "friend_invite": {
     "refused": "refused",
@@ -382,7 +402,8 @@
     "title": "RECHARGE",
     "gift": "GIFT",
     "privilege": "PRIVILEGE",
-    "diamond": "DIAMOND  "
+    "diamond": "DIAMOND",
+    "firstcharge": "First Charge Double"
   },
   "treasure": {
     "tipslabel": "will give you one of the following items at random",
@@ -509,5 +530,12 @@
   },
   "roomdecorate": {
     "usetips": "你尚未购买该{{name}}"
+  },
+  "battlepass": {
+    "title": "Town challenge",
+    "commontips": "Average reward",
+    "tickettips": "Admission ticket reward",
+    "nowunlock": "Unlock",
+    "buyticket": "Tickets"
   }
 }

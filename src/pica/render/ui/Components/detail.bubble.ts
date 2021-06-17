@@ -45,8 +45,8 @@ export class DetailBubble extends Phaser.GameObjects.Container {
             fontFamily: Font.DEFULT_FONT,
         }).setOrigin(0);
         this.add([this.tipsbg, this.tipsText, this.mExpires]);
-        this.tipsText.addImage("iv_coin", { key: this.key, frame: "home_silver", y: -3 * this.dpr });
-        this.tipsText.addImage("iv_diamond", { key: this.key, frame: "home_diamond", y: -3 * this.dpr });
+        this.tipsText.addImage("iv_coin", { key: this.key, frame: "iv_coin", y: -3 * this.dpr });
+        this.tipsText.addImage("iv_diamond", { key: this.key, frame: "iv_diamond", y: -3 * this.dpr });
     }
 
     setTipsText(text: string) {

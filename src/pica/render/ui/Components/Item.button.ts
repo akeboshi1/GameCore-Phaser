@@ -113,8 +113,15 @@ export class ItemButton extends ButtonEventDispatcher {
     public showTips() {
         this.onTabClickHandler();
     }
+
+    public onlyIcon() {
+        this.remove(this.starImg);
+        this.remove(this.countTex);
+    }
+
     protected onTabClickHandler() {
         if (!this.itemData || !this.isShowTips) return;
         PicaItemTipsPanel.Inst.showTips(this, this.itemData);
     }
+
 }

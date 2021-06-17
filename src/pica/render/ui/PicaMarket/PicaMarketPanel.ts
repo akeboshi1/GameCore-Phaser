@@ -1,27 +1,29 @@
 import { ElementDetail } from "./ElementDetail";
 import { MarketItem } from "./item";
 import { NinePatchTabButton, GameGridTable, NineSliceButton, Button, ClickEvent } from "apowophaserui";
-import { BasePanel, CheckboxGroup, TextButton, UiManager } from "gamecoreRender";
+import { CheckboxGroup, TextButton, UiManager } from "gamecoreRender";
 import { AvatarSuitType, ModuleName } from "structure";
-import { CoinType, Font, i18n } from "utils";
+import { CoinType, Font, Handler, i18n, UIHelper } from "utils";
 import { UIAtlasKey, UIAtlasName } from "picaRes";
 import { op_client } from "pixelpai_proto";
-import { IExtendCountablePackageItem, IPrice } from "picaStructure";
+import { ICurrencyLevel, IExtendCountablePackageItem, IMarketCommodity, IPrice } from "picaStructure";
 import { MoneyCompent } from "picaRender";
-export class PicaMarketPanel extends BasePanel {
+import { PicaBasePanel } from "../pica.base.panel";
+import { ImageValueButton } from "../Components/image.value.button";
+export class PicaMarketPanel extends PicaBasePanel {
   private mSelectItem: ElementDetail;
-  private mCloseBtn: Button;
-  private mTIle: Phaser.GameObjects.Text;
+  private mCloseBtn: ImageValueButton;
   private mTabs: NinePatchTabButton[];
   private mSubTabs: TextButton[];
   private mSelectedCategories: Phaser.GameObjects.GameObject;
-  private mSelectedSubCategories: Phaser.GameObjects.GameObject;
   private mPropContainer: Phaser.GameObjects.Container;
   private mCategoriesBar: Phaser.GameObjects.Graphics;
   private mCategoriesContainer: Phaser.GameObjects.Container;
   private mSubCategeoriesContainer: Phaser.GameObjects.Container;
   private mShelfContainer: Phaser.GameObjects.Container;
   private mBackgroundColor: Phaser.GameObjects.Graphics;
+  private tileBg: Phaser.GameObjects.TileSprite;
+  private imgBg: Phaser.GameObjects.Image;
   private mShelfBackground: Phaser.GameObjects.Graphics;
   private mSubCategorisScroll: GameGridTable;
   private mItems: MarketItem[];
@@ -34,11 +36,23 @@ export class PicaMarketPanel extends BasePanel {
   private refreshIcon: Phaser.GameObjects.Image;
   private refreshNeedCount: Phaser.GameObjects.Text;
   private moneycomp: MoneyCompent;
+  private mCurItem: MarketItem;
+  private mCurItemData: IMarketCommodity;
   private moneyValue: number;
   private diamondValue: number;
+  private playerLv: number;
+  private reputation: number;
+  private reputationLv: number;
+  private reputationCoin: number;
+  private currencyData: ICurrencyLevel;
+  private propDatas: IMarketCommodity[];
+  private buyedProps: any[];
   constructor(uiManager: UiManager) {
-    super(uiManager.scene, uiManager.render);
+    super(uiManager);
     this.key = ModuleName.PICAMARKET_NAME;
+    this.atlas = UIAtlasName.market;
+    this.loadAtlas = [UIAtlasName.uicommon, UIAtlasName.market];
+    this.textures = [{ atlasName: "prestige_bg_texture", folder: UIAtlasName.market }];
     this.mSubTabs = [];
     this.mTabs = [];
   }
@@ -53,7 +67,6 @@ export class PicaMarketPanel extends BasePanel {
     if (!this.mInitialized) return;
     this.mSelectItem.off("buyItem", this.onBuyItemHandler, this);
     this.mSelectItem.off("popItemCard", this.onPopItemCardHandler, this);
-    //  this.mCloseBtn.off(ClickEvent.Tap, this.onCloseHandler, this);
   }
 
   public resize(w: number, h: number) {
@@ -82,7 +95,9 @@ export class PicaMarketPanel extends BasePanel {
     this.mSubCategeoriesContainer.setSize(width, 43 * this.dpr);
     this.layoutCategories();
   }
-
+  public onShow() {
+    this.updateMoneyData();
+  }
   public setCategories(content: any) {// op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_GET_MARKET_CATEGORIES
     if (!this.mCategoriesContainer) {
       return;
@@ -90,7 +105,7 @@ export class PicaMarketPanel extends BasePanel {
     this.mCategoriesContainer.removeAll(true);
     const categorys = content.marketCategory;
     this.mTabs = [];
-    const frame = this.scene.textures.getFrame(this.key, "categories_normal");
+    const frame = this.scene.textures.getFrame(this.atlas, "categories_normal");
     let w = 60;
     let h = 65;
     if (frame) {
@@ -107,17 +122,25 @@ export class PicaMarketPanel extends BasePanel {
     const capW = 77 * this.dpr;
     const capH = 38 * this.dpr;
     for (let i = 0; i < categorys.length; i++) {
-      const btn = new NinePatchTabButton(this.scene, capW, capH, this.key, "categories_normal", "categories_down", categorys[i].category.value, [config0], 1, 1);
-      // btn.removeAllListeners();
-      btn.setTextStyle({
-        fontSize: 18 * this.dpr,
-        fontFamily: Font.DEFULT_FONT,
-      });
+      const category = categorys[i];
+      const btn = new NinePatchTabButton(this.scene, capW, capH, this.atlas, "categories_normal", "categories_down", category.category.value, [config0], 1, 1);
+      btn.setTextStyle(UIHelper.whiteStyle(this.dpr, 18));
       this.mTabs[i] = btn;
-      btn.setData("category", categorys[i]);
+      btn.setData("category", category);
       btn.x = i * 80 * this.dpr + capW / 2;
       btn.y = capH / 2;
-      // this.add(btn);
+      let img: Phaser.GameObjects.Image;
+      if (category.category.shopName === "crownshop") {
+        img = this.scene.make.image({ key: UIAtlasName.market, frame: "prestige_nav_icon" });
+        btn.setTextColor("#FFF36E");
+      } else if (category.category.shopName === "gradeshop") {
+        img = this.scene.make.image({ key: UIAtlasName.market, frame: "prestige_nav_icon" });
+      }
+      if (img) {
+        img.x = -capW * 0.5 + img.width * 0.5 + 8 * this.dpr;
+        btn.add(img);
+        btn.setTextOffset(10 * this.dpr, 0);
+      }
     }
     this.mCategoriesContainer.setSize(this.mTabs.length * capW, capH);
     this.mShelfContainer.add(this.mTabs);
@@ -127,23 +150,49 @@ export class PicaMarketPanel extends BasePanel {
     group.selectIndex(0);
   }
 
-  public setMoneyData(money: number, diamond: number) {
-    this.moneyValue = money;
-    this.diamondValue = diamond;
-    this.moneycomp.setMoneyData(money, diamond);
+  public setMoneyData(data: ICurrencyLevel) {
+    this.moneyValue = data.money;
+    this.diamondValue = data.diamond;
+    this.playerLv = data.level;
+    this.reputationCoin = data.reputationCoin;
+    this.reputationLv = data.reputationLv;
+    this.reputation = data.reputation;
+    this.currencyData = data;
+    if (!this.mInitialized) return;
+    // this.moneycomp.setMoneyData(money, diamond);
+    this.updateMoneyData();
   }
-
-  public setProp(content: any) {// op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_MARKET_QUERY
+  public updateBuyedProps(buyedDatas: any[]) {
+    if (!buyedDatas) return;
+    this.buyedProps = buyedDatas;
+    if (this.propDatas) {
+      for (const temp of buyedDatas) {
+        this.propDatas.find((value) => {
+          if (value.id === temp.id) {
+            value.buyedCount = temp.boughtCount;
+          }
+        });
+      }
+    }
+    if (!this.mInitialized) return;
+    this.mPropGrid.refresh();
+  }
+  public setProp(content: any) {
     this.clearCategories(this.mItems);
     this.mItems = [];
     const commodities = content.commodities;
+    this.propDatas = commodities;
+    this.updateBuyedProps(this.buyedProps);
     this.mPropGrid.setItems(commodities);
     this.mPropGrid.layout();
     this.mPropGrid.setT(0);
-    if (commodities.length > 0) this.onSelectItemHandler(commodities[0]);
+    if (commodities.length > 0) {
+      const cell = this.mPropGrid.getCell(0);
+      this.onSelectItemHandler(cell.container);
+    }
   }
 
-  public setCommodityResource(content: any) {// op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_MARKET_QUERY_COMMODITY_RESOURCE
+  public setCommodityResource(content: any) {
     if (this.mSelectItem) {
       this.mSelectItem.setResource(content);
       this.mSelectItem.setData("display", content);
@@ -160,7 +209,7 @@ export class PicaMarketPanel extends BasePanel {
     super.destroy();
   }
 
-  public onPropConfirmHandler(prop: any, count: number) {// op_client.CountablePackageItem
+  public onPropConfirmHandler(prop: any, count: number) {
     this.render.renderEmitter(this.key + "_buyItem", prop);
   }
 
@@ -178,72 +227,39 @@ export class PicaMarketPanel extends BasePanel {
     this.mPropGrid.resetMask();
   }
 
-  protected preload() {
-    // this.scene.load.atlas(this.key, Url.getUIRes(this.dpr, "market/market"), Url.getUIRes(this.dpr, "market/market.json"));
-    this.addAtlas(this.key, "market/market.png", "market/market.json");
-    this.addAtlas(UIAtlasKey.commonKey, UIAtlasName.commonUrl + ".png", UIAtlasName.commonUrl + ".json");
-    super.preload();
-  }
-
   protected init() {
-    if (this.mInitialized) return;
     const w = this.scaleWidth;
     const h = this.scaleHeight;
     this.mBackgroundColor = this.scene.make.graphics(undefined, false);
     this.mBackgroundColor.fillGradientStyle(0x6f75ff, 0x6f75ff, 0x04cbff, 0x04cbff);
-    // this.mBackgroundColor.fillStyle(0x6f75ff);
     this.mBackgroundColor.fillRect(0, 0, w, h);
     this.add(this.mBackgroundColor);
 
-    this.mShelfContainer = this.scene.make.container({
-      x: (w / 2),
-      y: h
-    }, false).setSize(w, 290 * this.dpr);
-
-    const frame = this.scene.textures.getFrame(this.key, "bg");
-    const countW = Math.ceil(w / (frame.width));
-    const countH = Math.ceil((h - this.mShelfContainer.height + frame.height) / (frame.height));
-    for (let i = 0; i < countW; i++) {
-      for (let j = 0; j < countH; j++) {
-        const bg = this.scene.make.image({
-          x: i * frame.width,
-          y: j * frame.height,
-          key: this.key,
-          frame: "bg"
-        }, false);
-        bg.texture.setFilter(Phaser.Textures.FilterMode.LINEAR);
-        this.add(bg);
-      }
-    }
-
+    const bottomHeight = 290 * this.dpr;
+    this.imgBg = this.scene.make.image({ key: "prestige_bg_texture" }).setOrigin(0);
+    this.imgBg.visible = false;
+    this.tileBg = this.scene.make.tileSprite({ x: 0, y: 0, width: w, height: h - bottomHeight, key: this.atlas, frame: "bg" }).setOrigin(0);
     this.mShelfBackground = this.scene.make.graphics(undefined, false);
-    this.mCloseBtn = new Button(this.scene, UIAtlasName.uicommon, "back_arrow", "back_arrow");
-    this.mCloseBtn.setPosition(21 * this.dpr, 45 * this.dpr);
-    this.mCloseBtn.setInteractive(new Phaser.Geom.Rectangle(-28 * this.dpr, -20 * this.dpr, 56 * this.dpr, 40 * this.dpr), Phaser.Geom.Rectangle.Contains);
+    this.mCloseBtn = new ImageValueButton(this.scene, 60 * this.dpr, 23 * this.dpr, UIAtlasName.uicommon, "back_arrow", i18n.t("market.title"), this.dpr, UIHelper.whiteStyle(this.dpr, 20));
+    this.mCloseBtn.setFontStyle("bold");
+    this.mCloseBtn.enable = true;
+    this.mCloseBtn.setPosition(this.mCloseBtn.width * 0.5 + 5 * this.dpr, 45 * this.dpr);
     this.mCloseBtn.on(ClickEvent.Tap, this.onCloseHandler, this);
     this.moneycomp = new MoneyCompent(this.scene, 190 * this.dpr, 28 * this.dpr, this.dpr, this.scale);
+    this.moneycomp.setHandler(new Handler(this, this.onConvertHandler));
     this.moneycomp.x = w - 20 * this.dpr;
     this.moneycomp.y = this.mCloseBtn.y;
+
+    this.mShelfContainer = this.scene.make.container({ x: (w / 2), y: h }, false).setSize(w, bottomHeight);
     this.mPropContainer = this.scene.make.container(undefined, false);
     this.mCategoriesContainer = this.scene.make.container(undefined, false);
     this.mSubCategeoriesContainer = this.scene.make.container(undefined, false);
     this.mShelfContainer.add([this.mShelfBackground, this.mCategoriesContainer, this.mPropContainer]);
     this.add([this.mShelfContainer, this.mSubCategeoriesContainer]);
 
-    this.mSelectItem = new ElementDetail(this.scene, this.render, this.key, this.dpr, this.scale);
+    this.mSelectItem = new ElementDetail(this.scene, this.render, this.atlas, this.dpr, this.scale);
     this.mSelectItem.setSize(w, h - this.mShelfContainer.height);
-
-    this.mTIle = this.scene.make.text({
-      text: i18n.t("market.title"),
-      y: 30 * this.dpr,
-      style: {
-        fontSize: 23 * this.dpr,
-        fontFamily: Font.DEFULT_FONT
-      }
-    }).setOrigin(0, 0.5);
-    this.mTIle.y = this.mCloseBtn.y;
-    this.mTIle.x = this.mCloseBtn.x + this.mCloseBtn.width * 0.5 + 10 * this.dpr;
-    this.add([this.mTIle, this.mSelectItem, this.mCloseBtn, this.moneycomp]);
+    this.add([this.imgBg, this.tileBg, this.mSelectItem, this.mCloseBtn, this.moneycomp]);
     super.init();
 
     this.mCategoriesBar = this.scene.make.graphics(undefined, false);
@@ -301,7 +317,7 @@ export class PicaMarketPanel extends BasePanel {
       }
     }).setOrigin(0, 0.5);
     const btnWidth = 80 * this.dpr, btnHeight = 30 * this.dpr;
-    this.randomRefreshBtn = new NineSliceButton(this.scene, w * 0.5, this.randomRefeshTime.y, btnWidth, btnHeight, UIAtlasKey.commonKey, "button_g", i18n.t("market.refresh"), this.dpr, this.scale, {
+    this.randomRefreshBtn = new NineSliceButton(this.scene, w * 0.5, this.randomRefeshTime.y, btnWidth, btnHeight, UIAtlasName.uicommon, "button_g", i18n.t("market.refresh"), this.dpr, this.scale, {
       left: 15 * this.dpr,
       top: 15 * this.dpr,
       right: 15 * this.dpr,
@@ -316,7 +332,7 @@ export class PicaMarketPanel extends BasePanel {
     });
     this.randomRefreshBtn.setFontStyle("bold");
 
-    this.refreshIcon = this.scene.make.image({ key: UIAtlasKey.commonKey, frame: "iv_coin" }).setScale(0.8);
+    this.refreshIcon = this.scene.make.image({ key: UIAtlasName.uicommon, frame: "iv_coin" }).setScale(0.8);
     this.refreshIcon.texture.setFilter(Phaser.Textures.FilterMode.LINEAR);
     this.refreshIcon.setPosition(-10 * this.dpr, -8 * this.dpr);
     this.refreshNeedCount = this.scene.make.text({
@@ -329,11 +345,10 @@ export class PicaMarketPanel extends BasePanel {
     }).setOrigin(0, 0.5);
     this.randomRefreshBtn.add([this.refreshIcon, this.refreshNeedCount]);
     this.randomCon.add([this.randomRefeshTime, this.randomRefreshBtn]);
-    const propFrame = this.scene.textures.getFrame(this.key, "border");
-    const cellWidth = propFrame.width + 6 * this.dpr;
-    const cellHeight = propFrame.height + 10 * this.dpr;
+    const cellWidth = 130 * this.dpr;
+    const cellHeight = 68 * this.dpr;
     const propGridConfig = {
-      x: w / 2 + 4 * this.dpr,
+      x: w / 2,
       y: 0,
       table: {
         width: w,
@@ -342,14 +357,8 @@ export class PicaMarketPanel extends BasePanel {
         cellWidth,
         cellHeight,
         reuseCellContainer: true,
-        cellOriginX: 0,
-        cellOriginY: 0,
         zoom: this.scale,
         mask: false
-      },
-      scroller: {
-        backDeceleration: false,
-        slidingDeceleration: false
       },
       scrollMode: 1,
       clamplChildOY: false,
@@ -360,17 +369,20 @@ export class PicaMarketPanel extends BasePanel {
           cellContainer = new MarketItem(scene, 0, 0, this.dpr, this.scale);
         }
         cellContainer.setData({ item });
-        cellContainer.setProp(item);
+        cellContainer.setProp(item, this.currencyData);
+        cellContainer.select = false;
+        if (this.mCurItemData && this.mCurItemData.id === item.id) {
+          this.mCurItem = cellContainer;
+          this.mCurItemData = item;
+          cellContainer.select = true;
+        }
         return cellContainer;
       },
     };
     this.mPropGrid = new GameGridTable(this.scene, propGridConfig);
     this.mPropGrid.layout();
     this.mPropGrid.on("cellTap", (cell) => {
-      const data = cell.getData("item");
-      if (data) {
-        this.onSelectItemHandler(data);
-      }
+      this.onSelectItemHandler(cell);
     });
     this.add(this.mPropGrid);
     this.resize(0, 0);
@@ -398,6 +410,14 @@ export class PicaMarketPanel extends BasePanel {
     this.mPreSubCategoris = null;
     this.clearCategories(this.mSubTabs);
     const subcategory: any = gameobject.getData("category");// op_def.IMarketCategory
+    const category = subcategory.category;
+    if (category.shopName === "gradeshop") {
+      this.tileBg.visible = false;
+      this.imgBg.visible = true;
+    } else {
+      this.tileBg.visible = true;
+      this.imgBg.visible = false;
+    }
     this.mSelectedCategories = gameobject;
     if (subcategory) {
       const subcategorys = subcategory.subcategory;
@@ -408,8 +428,23 @@ export class PicaMarketPanel extends BasePanel {
         this.onSelectSubCategoryHandler(cell.container);
       }
     }
+    this.updateMoneyData();
   }
 
+  private updateMoneyData() {
+    let category;
+    if (this.mSelectedCategories) {
+      const subcategory: any = this.mSelectedCategories.getData("category");// op_def.IMarketCategory
+      category = subcategory.category;
+    }
+    if (category && category.shopName === "gradeshop") {
+      this.moneycomp.setMoneyImgs("prestige_assets_icon", "iv_prestige");
+      this.moneycomp.setMoneyData(this.reputation, this.reputationCoin);
+    } else {
+      this.moneycomp.setMoneyImgs("iv_coin", "iv_diamond");
+      this.moneycomp.setMoneyData(this.moneyValue, this.diamondValue);
+    }
+  }
   private onSelectSubCategoryHandler(gameobject: TextButton) {
     if (!this.mSelectedCategories) {
       return;
@@ -425,7 +460,7 @@ export class PicaMarketPanel extends BasePanel {
     if (!subCategories) {
       return;
     }
-    this.queryProp(categories.category.key, subCategories.key);
+    this.queryProp(categories.category.key, subCategories.key, subCategories.shopName);
     this.mPreSubCategoris = subCategories;
     if (this.mPreSubCategorisItem) this.mPreSubCategorisItem.changeNormal();
     gameobject.changeDown();
@@ -433,14 +468,23 @@ export class PicaMarketPanel extends BasePanel {
 
   }
 
-  private queryProp(category: string, subCategory: string) {
-    this.render.renderEmitter(this.key + "_queryProp", { page: 1, category, subCategory });
+  private queryProp(category: string, subCategory: string, shopName: string) {
+    this.render.renderEmitter(this.key + "_queryProp", { page: 1, category, subCategory, shopName });
   }
 
-  private onSelectItemHandler(prop: any) {// op_client.IMarketCommodity
-    this.mSelectItem.setProp(prop);
-    this.mSelectItem.setData("propdata", prop);
-    const item = prop["item"];
+  private onSelectItemHandler(obj: any) {// op_client.IMarketCommodity
+    const data = obj.getData("item");
+    if (!data) return;
+    if (this.mCurItem) {
+      this.mCurItem.select = false;
+    }
+    this.mCurItemData = data;
+    obj.select = true;
+    this.mCurItem = obj;
+    this.mSelectItem.setProp(data);
+    this.mSelectItem.setData("propdata", data);
+    this.mSelectItem.setData("currency", this.currencyData);
+    const item = data["item"];
     if (!item.suitType || item.suitType === "") {
       this.setCommodityResource(item);
     } else {
@@ -453,10 +497,29 @@ export class PicaMarketPanel extends BasePanel {
     const itemdata = this.getBuyPackageData();
     itemdata.count = prop.quantity;
     const allPrice = prop.quantity * itemdata.sellingPrice.price;
-    const haveValue = itemdata.sellingPrice.coinType === CoinType.DIAMOND ? this.diamondValue : this.moneyValue;
+    let haveValue = 0;
+    const coinType = itemdata.sellingPrice.coinType;
+    if (coinType === CoinType.DIAMOND) {
+      haveValue = this.diamondValue;
+    } else if (coinType === CoinType.COIN) {
+      haveValue = this.moneyValue;
+    } else if (coinType === CoinType.PRESTIGE) {
+      haveValue = this.reputationCoin;
+    }
+    let notice;
+    if (prop.level === false && prop.reputationLv === false) {
+      notice = i18n.t("market.unlocktobuy");
+    }
     if (allPrice > haveValue) {
+      if (coinType === CoinType.PRESTIGE) {
+        notice = i18n.t("market.reputationless");
+      } else {
+        notice = i18n.t("market.moneyless");
+      }
+    }
+    if (notice) {
       const tempdata = {
-        text: [{ text: i18n.t("market.moneyless"), node: undefined }]
+        text: [{ text: notice, node: undefined }]
       };
       this.render.mainPeer.showMediator(ModuleName.PICANOTICE_NAME, true, tempdata);
       return;
@@ -478,12 +541,19 @@ export class PicaMarketPanel extends BasePanel {
     }
   }
   private getBuyPackageData() {
-    const propdata: any = this.mSelectItem.getData("propdata");// op_client.IMarketCommodity
-    const itemdata = { id: null, sellingPrice: null, name: null, shortName: null, count: 1 };// op_client.CountablePackageItem.create()
+    const propdata: IMarketCommodity = this.mSelectItem.getData("propdata");// op_client.IMarketCommodity
+    const currency: ICurrencyLevel = this.mSelectItem.getData("currency");
+    const itemdata = { id: null, sellingPrice: null, name: null, shortName: null, count: 1, marketName: undefined, level: undefined, reputationLv: undefined };// op_client.CountablePackageItem.create()
     itemdata.id = propdata.id;
     itemdata.sellingPrice = propdata.price[0];
     itemdata.name = propdata.name;
     itemdata.shortName = propdata.shortName;
+    itemdata.marketName = propdata.marketName;
+    if (propdata.marketName === "shop") {
+      itemdata.level = currency.level >= propdata.limit ? true : false;
+    } else if (propdata.marketName === "gradeshop") {
+      itemdata.reputationLv = currency.reputationLv >= propdata.limit ? true : false;
+    }
     return itemdata;
   }
   private showPropFun(config: any) {// PicPropFunConfig
@@ -494,5 +564,8 @@ export class PicaMarketPanel extends BasePanel {
     content.avatar = AvatarSuitType.createAvatarBySn(data.suitType, data.sn, data.slot, data.tag, data.version);
     content.suits = [{ suit_type: data.suitType, sn: data.sn, tag: data.tag, version: data.version }];
     return content;
+  }
+  private onConvertHandler() {
+    this.render.mainPeer.showMediator(ModuleName.PICAPRESTIGECONVERT_NAME, true);
   }
 }

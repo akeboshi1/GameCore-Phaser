@@ -46,6 +46,42 @@ class AddHandler extends ElementHandler {
         this.room.effectManager.add(this.element.id, id);
     }
 
+    private itemIntoPanel(state: State) {
+        if (!state) return;
+        const buf = Buffer.from(state.packet);
+        const len = buf.readUInt32BE(0);
+        const content = buf.slice(4);
+        if (len !== content.length) {
+            return;
+        }
+        const flyItem = (data: { item: string, panel: string }) => {
+            if (!data || !data.item) return;
+            const game = this.room.game;
+            const configManager = <BaseDataConfigManager>game.configManager;
+            const item = configManager.getItemBaseByID(data.item);
+            if (!item) {
+                return Logger.getInstance().log(`item ${data.item} does not exist!`);
+            }
+            if (!item.texturePath) {
+                return Logger.getInstance().log(`item ${data.item} texturePath  does not exist!`);
+            }
+            let ui = data.panel;
+            if (ui) ui = "bottom.bag";
+            const panel = ui.split(".");
+            const panelName = game.uiManager.getPanelNameByAlias(panel[0]);
+
+            game.renderPeer.displayAction("itemIntoPanel", { texturePath: item.texturePath, id: this.element.id, panelName, ui });
+            // game.renderPeer.itemIntoPanel(item.texturePath, this.element.getPosition(), panelName, ui);
+        };
+        const items = JSON.parse(content.toString());
+        if (!items || items.length < 1) return;
+        for (let i = 0; i < items.length; i++) {
+            setTimeout(() => {
+                flyItem(items[i]);
+            }, i * 200);
+        }
+    }
+
     private Task(state: State) {
         const buf = Buffer.from(state.packet);
         const type = buf.readDoubleBE(0);
