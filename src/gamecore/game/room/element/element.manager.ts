@@ -47,7 +47,7 @@ export class ElementManager extends PacketHandler implements IElementManager {
     protected mRequestSyncIdList: number[] = [];
     protected mDealSyncMap: Map<number, boolean> = new Map();
     protected mGameConfig: IElementStorage;
-    protected mStateMgr: BaseStateManager;
+    // protected mStateMgr: PacketHandler;
     // private mActionMgr: ElementActionManager;
     protected mLoadLen: number = 0;
     protected mCurIndex: number = 0;
@@ -57,7 +57,7 @@ export class ElementManager extends PacketHandler implements IElementManager {
             this.mGameConfig = this.mRoom.game.elementStorage;
         }
         // 进入房间创建地图后将其拷贝给物理进程
-        this.mStateMgr = new BaseStateManager(mRoom);
+        // this.mStateMgr = new BaseStateManager(mRoom);
         // this.mActionMgr = new PicaElementActionManager(mRoom.game);
         this.addListen();
         this.mRoom.onManagerCreated(this.constructor.name);
@@ -139,7 +139,7 @@ export class ElementManager extends PacketHandler implements IElementManager {
         if (this.mElements) {
             this.mElements.forEach((element) => this.remove(element.id));
             this.mElements.clear();
-            this.mStateMgr.destroy();
+            // this.mStateMgr.destroy();
             // this.mActionMgr.destroy();
         }
         if (this.mDealAddList) this.mDealAddList.length = 0;
