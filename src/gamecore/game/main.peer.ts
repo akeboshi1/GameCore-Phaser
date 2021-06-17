@@ -553,20 +553,6 @@ export class MainPeer extends RPCPeer {
     }
 
     @Export()
-    public getUserData_PlayerProperty(): any {
-        if (this.game.user && this.game.user.userData) {
-            return this.game.user.userData.playerProperty;
-        }
-
-        return null;
-    }
-
-    @Export()
-    public getRoomUserName() {
-        return this.game.user.userData.playerProperty.nickname;
-    }
-
-    @Export()
     public getClockNow() {
         return this.game.clock.unixTime;
     }

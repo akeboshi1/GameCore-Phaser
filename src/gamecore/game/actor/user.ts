@@ -3,19 +3,18 @@ import { op_def, op_client, op_gameconfig, op_virtual_world } from "pixelpai_pro
 import { Player } from "../room/player/player";
 import { IRoomService } from "../room/room";
 import { PlayerModel } from "../room/player/player.model";
-import { UserDataManager } from "./data/user.dataManager";
-import { AvatarSuitType, EventType, IDragonbonesModel, IFramesModel, PlayerState, ISprite, ModuleName, IPos, Logger, LogicPos } from "structure";
+import { AvatarSuitType, EventType, IDragonbonesModel, IFramesModel, PlayerState, ISprite, ModuleName, Logger } from "structure";
 import { LayerEnum } from "game-capsule";
 import { PBpacket } from "net-socket-packet";
 import { MoveControll } from "../collsion";
 import { Tool } from "utils";
+import { IPos, LogicPos } from "structure";
 // import * as _ from "lodash";
 const wokerfps: number = 45;
 const interval = wokerfps > 0 ? 1000 / wokerfps : 1000 / 30;
 export class User extends Player {
     public stopBoxMove: boolean = false;
     private mDebugPoint: boolean = false;
-    private mUserData: UserDataManager;
     private mMoveStyle: number;
     // private mTargetPoint: IMoveTarget;
     private mSyncTime: number = 0;
@@ -34,7 +33,6 @@ export class User extends Player {
     constructor(protected game: any) {
         super(undefined, undefined);
         this.mBlockable = false;
-        this.mUserData = new UserDataManager(game);
     }
 
     public set debugPoint(val: boolean) {
@@ -50,11 +48,9 @@ export class User extends Player {
     }
 
     addPackListener() {
-        this.mUserData.addPackListener();
     }
 
     removePackListener() {
-        this.mUserData.removePackListener();
     }
 
     enterScene(room: IRoomService, actor: op_client.IActor) {
@@ -262,7 +258,6 @@ export class User extends Player {
         this.holdTime = 0;
         this.removePackListener();
         super.clear();
-        if (this.mUserData) this.userData.destroy();
         this.destroy();
     }
 
@@ -409,10 +404,6 @@ export class User extends Player {
     }
 
     set package(value: op_gameconfig.IPackage) {
-    }
-
-    get userData() {
-        return this.mUserData;
     }
 
     set moveStyle(val: number) {

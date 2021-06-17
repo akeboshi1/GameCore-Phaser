@@ -104,8 +104,6 @@ export declare class MainPeer extends RPCPeer {
     hideMediator(name: string): void;
     renderEmitter(eventType: string, data: any): void;
     fetchProjectionSize(id: number): import("../../structure").IProjection;
-    getUserData_PlayerProperty(): any;
-    getRoomUserName(): string;
     getClockNow(): number;
     setPosition(id: number, updateBoo: boolean, x: number, y: number, z?: number): void;
     selfStartMove(): void;

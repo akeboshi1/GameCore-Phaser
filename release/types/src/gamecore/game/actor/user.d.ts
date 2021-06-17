@@ -1,13 +1,12 @@
 import { op_client, op_gameconfig } from "pixelpai_proto";
 import { Player } from "../room/player/player";
 import { IRoomService } from "../room/room";
-import { UserDataManager } from "./data/user.dataManager";
-import { IDragonbonesModel, IFramesModel, ISprite, IPos } from "structure";
+import { IDragonbonesModel, IFramesModel, ISprite } from "structure";
+import { IPos } from "structure";
 export declare class User extends Player {
     protected game: any;
     stopBoxMove: boolean;
     private mDebugPoint;
-    private mUserData;
     private mMoveStyle;
     private mSyncTime;
     private mSyncDirty;
@@ -54,7 +53,6 @@ export declare class User extends Player {
     get model(): ISprite;
     get package(): op_gameconfig.IPackage;
     set package(value: op_gameconfig.IPackage);
-    get userData(): UserDataManager;
     set moveStyle(val: number);
     get moveStyle(): number;
     private addFillEffect;
