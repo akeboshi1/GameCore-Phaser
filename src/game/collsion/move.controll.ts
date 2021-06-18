@@ -106,6 +106,32 @@ export class MoveControll {
         this.ignoreCollsion = val;
     }
 
+    checkDestination(target: IPos) {
+        // TODO 根据velocity判断是否达到目标点。改动比较大，等模块化拆完再继续
+        if (this.velocity.x > 0) {
+            if (this.mPosition.x >= target.x) {
+                this.velocity.x = 0;
+                // this.mPosition.x = target.x;
+            }
+        } else {
+            if (this.mPosition.x <= target.x) {
+                this.velocity.x = 0;
+                this.mPosition.x = target.x;
+            }
+        }
+        if (this.velocity.y > 0) {
+            if (this.mPosition.y >= target.y) {
+                this.velocity.y = 0;
+                // this.mPosition.y = target.y;
+            }
+        } else {
+            if (this.mPosition.y <= target.y) {
+                this.velocity.y = 0;
+                // this.mPosition.y = target.y;
+            }
+        }
+    }
+
     destroy() {
         this.removePolygon();
         this.setVelocity(0, 0);
@@ -139,5 +165,10 @@ export class MoveControll {
 
     get bodies() {
         return this.mBodies;
+    }
+
+    get isMoving() {
+        const result = this.velocity.x !== 0 || this.velocity.y !== 0;
+        return result;
     }
 }
