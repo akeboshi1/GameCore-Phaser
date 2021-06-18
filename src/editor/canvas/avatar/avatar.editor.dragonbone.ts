@@ -71,7 +71,7 @@ export class AvatarEditorDragonbone extends Phaser.GameObjects.Container {
         ["body_cost"]: ["body_cost", "body_cost_dres"]
     };
     private static readonly DEFAULT_SETS = [
-        {id: "0001", parts: AvatarEditorDragonbone.BASE_PARTS},
+        {id: "60c8626bdd14da5f64b49341", parts: AvatarEditorDragonbone.BASE_PARTS},
         {id: "5cd28238fb073710972a73c2", parts: ["head_hair", "head_eyes", "head_mous", "body_cost"]},
     ];
     private static readonly SPECIAL_SETS = {
