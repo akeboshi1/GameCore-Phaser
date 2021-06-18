@@ -845,6 +845,7 @@ export class Element extends BlockObject implements IElement {
     }
 
     protected async addDisplay(): Promise<any> {
+        if (this.mCreatedDisplay) return;
         super.addDisplay();
         let depth = 0;
         if (this.model && this.model.pos) {
