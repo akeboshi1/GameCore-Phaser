@@ -47,12 +47,12 @@ export declare class Render extends RPCPeer implements GameMain, IRender {
     protected mEditorCanvasManager: EditorCanvasManager;
     protected mRenderParam: IWorkerParam;
     protected mMainPeerParam: IWorkerParam;
+    protected mAccount: Account;
+    protected mGame: Phaser.Game;
     private mCallBack;
     private _moveStyle;
     private _curTime;
-    private mGame;
     private gameConfig;
-    private mAccount;
     /**
      * 场景缩放系数（layermanager，缩放场景中容器大小）
      */
@@ -286,10 +286,10 @@ export declare class Render extends RPCPeer implements GameMain, IRender {
     protected initConfig(): void;
     protected initRatio(): void;
     protected initWorker(): void;
+    protected dealTipsScene(sceneName: string, show: boolean): void;
     private onFullScreenChange;
     private gameCreated;
     private resumeScene;
     private pauseScene;
-    private dealTipsScene;
     get mainPeer(): any;
 }

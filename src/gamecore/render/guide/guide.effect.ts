@@ -1,4 +1,4 @@
-import { IPos, UIHelper } from "structure";
+import { Font, IPos } from "structure";
 import { Url } from "utils";
 import { MainUIScene } from "../scenes";
 
@@ -68,7 +68,13 @@ export class GuideEffect extends Phaser.GameObjects.Container {
             this.mGuideEffect.setPosition(0, 0);
             this.mHandDisplay = new HandDisplay(this.scene, "handEffect");
             this.mHandDisplay.scale = this.tmpScale;
-            this.guideText = this.scene.make.text({ style: UIHelper.whiteStyle(this.tmpScale, 18) }).setOrigin(0.5);
+            this.guideText = this.scene.make.text({
+                style: {
+                    fontSize: 18 * this.tmpScale + "px",
+                    fontFamily: Font.DEFULT_FONT,
+                    color: "#ffffff"
+                }
+            }).setOrigin(0.5);
             (<any>this.scene).layerManager.addToLayer(MainUIScene.LAYER_MASK, this.mGuideEffect);
             (<any>this.scene).layerManager.addToLayer(MainUIScene.LAYER_MASK, this.mHandDisplay);
             (<any>this.scene).layerManager.addToLayer(MainUIScene.LAYER_MASK, this.guideText);

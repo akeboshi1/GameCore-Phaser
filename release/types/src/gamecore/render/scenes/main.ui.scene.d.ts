@@ -18,6 +18,6 @@ export declare class MainUIScene extends RoomScene {
     updateFPS(): void;
     getKey(): string;
     protected onPointerDownHandler(pointer: Phaser.Input.Pointer, currentlyOver: Phaser.GameObjects.GameObject[]): void;
+    protected loadVideos(): void;
     private checkSize;
-    private loadRaomVideos;
 }

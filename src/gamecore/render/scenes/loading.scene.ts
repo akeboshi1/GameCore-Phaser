@@ -2,7 +2,7 @@ import { UiUtils, Url } from "utils";
 import { BaseLayer, BasicScene } from "baseRender";
 import { UiManager } from "../ui";
 import { MainUIScene } from "./main.ui.scene";
-import { Font, Logger, ModuleName, SceneName } from "structure";
+import { Font, Logger, SceneName } from "structure";
 
 export class LoadingScene extends BasicScene {
   private bg: Phaser.GameObjects.Sprite;
@@ -24,13 +24,13 @@ export class LoadingScene extends BasicScene {
 
   public preload() {
     // atlas可以用于webgl渲染，和canvas渲染，spritesheet只能用于canvas
-    this.load.image("avatar_placeholder", Url.getRes("dragonbones/avatar.png"));
-    this.load.atlas("curtain", Url.getUIRes(this.dpr, "loading/curtain.png"), Url.getUIRes(this.dpr, "loading/curtain.json"));
-    this.load.atlas("loading", Url.getRes("ui/loading/loading.png"), Url.getRes("ui/loading/loading.json"));
-    // this.load.script("webfont", Url.getRes("scripts/webfont/1.6.26/webfont.js"));
-    this.load.script("webfont", `${Url.RES_PATH}scripts/webfont/1.6.26/webfont.js`);
-    this.load.atlas(ModuleName.MASK_LOADING_NAME, Url.getUIRes(this.dpr, "mask_loading/mask_loading.png"), Url.getUIRes(this.dpr, "mask_loading/mask_loading.json"));
-    this.load.atlas(ModuleName.ALERTVIEW_NAME, Url.getUIRes(this.dpr, "pica_alert/pica_alert.png"), Url.getUIRes(this.dpr, "pica_alert/pica_alert.json"));
+    // this.load.image("avatar_placeholder", Url.getRes("dragonbones/avatar.png"));
+    // this.load.atlas("curtain", Url.getUIRes(this.dpr, "loading/curtain.png"), Url.getUIRes(this.dpr, "loading/curtain.json"));
+    // this.load.atlas("loading", Url.getRes("ui/loading/loading.png"), Url.getRes("ui/loading/loading.json"));
+    // // this.load.script("webfont", Url.getRes("scripts/webfont/1.6.26/webfont.js"));
+    // this.load.script("webfont", `${Url.RES_PATH}scripts/webfont/1.6.26/webfont.js`);
+    // this.load.atlas(ModuleName.MASK_LOADING_NAME, Url.getUIRes(this.dpr, "mask_loading/mask_loading.png"), Url.getUIRes(this.dpr, "mask_loading/mask_loading.json"));
+    // this.load.atlas(ModuleName.ALERTVIEW_NAME, Url.getUIRes(this.dpr, "pica_alert/pica_alert.png"), Url.getUIRes(this.dpr, "pica_alert/pica_alert.json"));
   }
 
   public init(data: any) {

@@ -1,10 +1,9 @@
 /// <reference types="tooqingphaser" />
-import { IListItemComponent } from "../bag/IListItemRender";
 import { op_gameconfig } from "pixelpai_proto";
 import { DragDropIcon } from "./dragDropIcon";
 import { IToolTip } from "./tips/itoolTip";
 import { Render } from "../../render";
-export declare class ItemSlot implements IListItemComponent {
+export declare class ItemSlot {
     toolTipCon: Phaser.GameObjects.Container;
     index: number;
     protected toolTip: IToolTip;

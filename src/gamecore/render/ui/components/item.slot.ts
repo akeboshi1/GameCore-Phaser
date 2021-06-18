@@ -1,4 +1,3 @@
-import { IListItemComponent } from "../bag/IListItemRender";
 import { op_gameconfig } from "pixelpai_proto";
 import { DragDropIcon } from "./dragDropIcon";
 import { IToolTip } from "./tips/itoolTip";
@@ -8,7 +7,7 @@ import { EventType } from "structure";
 import { Render } from "../../render";
 import { MainUIScene } from "../../scenes/main.ui.scene";
 
-export class ItemSlot implements IListItemComponent {
+export class ItemSlot {
     public toolTipCon: Phaser.GameObjects.Container;
     public index: number;
     protected toolTip: IToolTip;

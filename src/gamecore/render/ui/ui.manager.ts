@@ -1,4 +1,4 @@
-import { Logger, ValueResolver, ModuleName, SceneName } from "structure";
+import { Logger, ValueResolver, SceneName } from "structure";
 import { Render } from "../render";
 import { BasePanel } from "./components/base.panel";
 import { BasicScene } from "baseRender";
@@ -103,7 +103,7 @@ export class UiManager {
     }
 
     public showTipsAlert(data) {
-        this.render.mainPeer.showMediator(ModuleName.PICANOTICE_NAME, true, data);
+        // this.render.mainPeer.showMediator(ModuleName.PICANOTICE_NAME, true, data);
     }
 
     /**

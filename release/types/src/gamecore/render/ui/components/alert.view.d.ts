@@ -3,6 +3,7 @@ import { BaseBatchPanel } from "./base.batch.panel";
 import { UiManager } from "../ui.manager";
 export declare class AlertView extends BaseBatchPanel {
     private uiManager;
+    protected skinName: string;
     private mOkBtn;
     private mCancelBtn;
     private mContent;

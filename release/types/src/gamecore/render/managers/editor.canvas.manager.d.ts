@@ -1,7 +1,7 @@
 import { Render } from "../render";
 import { DragonbonesDisplay } from "../display/dragonbones/dragonbones.display";
 export declare class EditorCanvasManager {
-    private render;
+    protected render: Render;
     readonly AVATAR_CANVAS_TEST_DATA: {
         id: string;
         parts: string[];

@@ -2,6 +2,9 @@ import { BasicScene } from "baseRender";
 
 export class RoomScene extends BasicScene {
     protected mRoomID: any;
+    constructor(config: string | Phaser.Types.Scenes.SettingsConfig) {
+        super(config);
+    }
     public init(data: any) {
         super.init(data);
         if (data) {

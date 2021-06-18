@@ -14,10 +14,10 @@ export class DragonbonesDisplay extends BaseDragonbonesDisplay implements IDispl
     protected mSortX: number = 0;
     protected mSortY: number = 0;
 
-    private mLoadQueue: LoadQueue;
-    private mName: string = undefined;
-    private mStartFireTween: Phaser.Tweens.Tween;
-    constructor(scene: Phaser.Scene, private render: Render, id?: number, private uuid?: number, type?: number) {
+    protected mLoadQueue: LoadQueue;
+    protected mName: string = undefined;
+    protected mStartFireTween: Phaser.Tweens.Tween;
+    constructor(scene: Phaser.Scene, protected render: Render, id?: number, protected uuid?: number, type?: number) {
         super(scene, id);
 
         this.mNodeType = type;

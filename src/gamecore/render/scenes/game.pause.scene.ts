@@ -3,14 +3,14 @@ import { BasicScene } from "baseRender";
 import { Size, SceneName } from "structure";
 
 export class GamePauseScene extends BasicScene {
-    private bg: Phaser.GameObjects.Graphics;
-    private pauseImg: Phaser.GameObjects.Image;
-    private tipTF: Phaser.GameObjects.Text;
+    protected bg: Phaser.GameObjects.Graphics;
+    // private pauseImg: Phaser.GameObjects.Image;
+    protected tipTF: Phaser.GameObjects.Text;
     constructor() {
         super({ key: SceneName.GAMEPAUSE_SCENE });
     }
     public preload() {
-        this.load.image("gamepause.png", Url.getRes("gamepause.png"));
+       // this.load.image("gamepause.png", Url.getRes("gamepause.png"));
     }
 
     public create() {
@@ -20,7 +20,7 @@ export class GamePauseScene extends BasicScene {
         this.bg = this.add.graphics();
         this.bg.fillStyle(0, .8);
         this.bg.fillRect(0, 0, width, height);
-        this.pauseImg = this.add.image(width >> 1, height >> 1, "gamepause.png");
+        // this.pauseImg = this.add.image(width >> 1, height >> 1, "gamepause.png");
         this.tipTF = this.add.text(width - 240 >> 1, height - 50, "点击任意位置开始游戏", { font: "30px Tahoma" });
         this.scale.on("resize", this.checkSize, this);
         this.checkSize(new Size(width, height));
@@ -53,9 +53,9 @@ export class GamePauseScene extends BasicScene {
         this.bg.clear();
         this.bg.fillStyle(0, .8);
         this.bg.fillRect(0, 0, width, height);
-        this.pauseImg.scaleX = this.pauseImg.scaleY = this.render.uiScale * .7;
-        this.pauseImg.x = width >> 1;
-        this.pauseImg.y = height >> 1;
+        // this.pauseImg.scaleX = this.pauseImg.scaleY = this.render.uiScale * .7;
+        // this.pauseImg.x = width >> 1;
+        // this.pauseImg.y = height >> 1;
         this.tipTF.scaleX = this.tipTF.scaleY = this.render.uiScale;
         this.tipTF.x = width - 280 * this.render.uiScale >> 1;
         this.tipTF.y = height - 50 * this.render.uiScale;

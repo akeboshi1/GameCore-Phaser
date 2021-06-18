@@ -3,7 +3,7 @@ import { PBpacket } from "net-socket-packet";
 import { Player } from "../room/player/player";
 import { PlayerModel } from "../room/player/player.model";
 import { Url } from "utils";
-import { AvatarSuitType, EventType, IDragonbonesModel, IFramesModel, PlayerState, ISprite, ModuleName, DirectionChecker, IPos, Logger, LogicPos } from "structure";
+import { AvatarSuitType, EventType, IDragonbonesModel, IFramesModel, PlayerState, ISprite, DirectionChecker, IPos, Logger, LogicPos } from "structure";
 import { LayerEnum } from "game-capsule";
 import { Tool } from "utils";
 import { IElement, IRoomService } from "../room";
@@ -13,16 +13,16 @@ const wokerfps: number = 45;
 const interval = wokerfps > 0 ? 1000 / wokerfps : 1000 / 30;
 export class User extends Player {
     public stopBoxMove: boolean = false;
-    private mDebugPoint: boolean = false;
-    private mMoveStyle: MoveStyleEnum = MoveStyleEnum.Null;
-    private mSyncTime: number = 0;
-    private mSyncDirty: boolean = false;
-    private mInputMask: number;
-    private mSetPostionTime: number = 0;
-    private mPreTargetID: number = 0;
-    private holdTime: number = 0;
-    private holdDelay: number = 80;
-    private mNearEle: IElement;
+    protected mDebugPoint: boolean = false;
+    protected mMoveStyle: MoveStyleEnum = MoveStyleEnum.Null;
+    protected mSyncTime: number = 0;
+    protected mSyncDirty: boolean = false;
+    protected mInputMask: number;
+    protected mSetPostionTime: number = 0;
+    protected mPreTargetID: number = 0;
+    protected holdTime: number = 0;
+    protected holdDelay: number = 80;
+    protected mNearEle: IElement;
     constructor() {
         super(undefined, undefined);
         this.mBlockable = false;
@@ -379,7 +379,7 @@ export class User extends Player {
                 const tempdata = {
                     text: [{ text: txt, node: undefined }]
                 };
-                this.mRoomService.game.peer.showMediator(ModuleName.PICANOTICE_NAME, true, tempdata);
+                // this.mRoomService.game.peer.showMediator(ModuleName.PICANOTICE_NAME, true, tempdata);
                 return;
             }
         }

@@ -1,6 +1,6 @@
 import { PacketHandler, PBpacket } from "net-socket-packet";
 import { op_client, op_pkt_def } from "pixelpai_proto";
-import { EventType, ModuleName, Size } from "structure";
+import { EventType, Size } from "structure";
 import { Game } from "../game";
 import { BasicMediator, UIType } from "./basic/basic.mediator";
 import { UILayoutType, UIMediatorType } from "./ui.mediator.type";
@@ -10,17 +10,17 @@ export class UIManager extends PacketHandler {
     protected isshowMainui: boolean = false;
 
     // ==== about checkUIState
-    private mNoneUIMap: Map<string, any> = new Map();
-    private mSceneUIMap: Map<string, any> = new Map();
-    private mNormalUIMap: Map<string, any> = new Map();
-    private mPopUIMap: Map<string, any> = new Map();
-    private mTipUIMap: Map<string, any> = new Map();
-    private mMonopolyUIMap: Map<string, any> = new Map();
-    private mActivityUIMap: Map<string, any> = new Map();
-    private mUILayoutMap: Map<string, UILayoutType> = new Map();
+    protected mNoneUIMap: Map<string, any> = new Map();
+    protected mSceneUIMap: Map<string, any> = new Map();
+    protected mNormalUIMap: Map<string, any> = new Map();
+    protected mPopUIMap: Map<string, any> = new Map();
+    protected mTipUIMap: Map<string, any> = new Map();
+    protected mMonopolyUIMap: Map<string, any> = new Map();
+    protected mActivityUIMap: Map<string, any> = new Map();
+    protected mUILayoutMap: Map<string, UILayoutType> = new Map();
     // 用于记录功能ui打开的顺序,最多2个
-    private mShowuiList: any[] = [];
-    private mLoadingCache: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_SHOW_UI[] = [];
+    protected mShowuiList: any[] = [];
+    protected mLoadingCache: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_SHOW_UI[] = [];
 
     constructor(protected game: Game) {
         super();
@@ -101,36 +101,25 @@ export class UIManager extends PacketHandler {
             this.mMedMap = new Map();
         }
         type = this.getPanelNameByAlias(type);
-        switch (type) {
-            case ModuleName.PICABAGGUIDE_NAME:
-            case ModuleName.PICAEXPLOREGUIDE_NAME:
-            case ModuleName.PICAHOMEGUIDE_NAME:
-            case ModuleName.PICAHOTELGUIDE_NAME:
-            case ModuleName.PICAPLANEGUIDE_NAME:
+        const className: string = type + "Mediator";
+        let mediator: BasicMediator = this.mMedMap.get(type);
+        if (!mediator) {
+            // const path: string = `./${type}/${type}Mediator`;
+            const ns: any = require(`./${type}/${className}`);
+            mediator = new ns[className](this.game);
+            if (!mediator) {
+                // todo 处理引导
                 this.game.peer.render.showPanel(type, param);
-                break;
-            default:
-                const className: string = type + "Mediator";
-                let mediator: BasicMediator = this.mMedMap.get(type);
-                if (!mediator) {
-                    // const path: string = `./${type}/${type}Mediator`;
-                    const ns: any = require(`./${type}/${className}`);
-                    mediator = new ns[className](this.game);
-                    if (!mediator) {
-                        // todo 处理引导
-                        this.game.peer.render.showPanel(type, param);
-                        // Logger.getInstance().error(`error ${type} no panel can show!!!`);
-                        return;
-                    }
-                    this.mMedMap.set(type, mediator);
-                    // mediator.setName(type);
-                }
-                // if (mediator.showing) return;
-                if (param) mediator.setParam(param);
-                if (mediator.isShow()) return;
-                mediator.show(param);
-                break;
+                // Logger.getInstance().error(`error ${type} no panel can show!!!`);
+                return;
+            }
+            this.mMedMap.set(type, mediator);
+            // mediator.setName(type);
         }
+        // if (mediator.showing) return;
+        if (param) mediator.setParam(param);
+        if (mediator.isShow()) return;
+        mediator.show(param);
     }
 
     public updateMed(type: string, param?: any) {
@@ -346,6 +335,9 @@ export class UIManager extends PacketHandler {
 
     }
 
+    protected initUILayoutType() {
+    }
+
     // ==== about checkUIState
     private checkSceneUImap(show: boolean, medName: string) {
         const layoutType = this.mUILayoutMap.get(medName);
@@ -423,13 +415,5 @@ export class UIManager extends PacketHandler {
             }
         });
         if (!show) this.mNormalUIMap.clear();
-    }
-
-    private initUILayoutType() {
-        this.mUILayoutMap.set(ModuleName.PICACHAT_NAME, UILayoutType.Bottom);
-        this.mUILayoutMap.set(ModuleName.PICANAVIGATE_NAME, UILayoutType.Bottom);
-        this.mUILayoutMap.set(ModuleName.PICAWORK_NAME, UILayoutType.Bottom);
-        this.mUILayoutMap.set(ModuleName.PICANEWROLE_NAME, UILayoutType.Bottom);
-        this.mUILayoutMap.set(ModuleName.PICAREPAIRCHOOSE_NAME, UILayoutType.Bottom);
     }
 }

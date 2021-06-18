@@ -48,7 +48,7 @@ export declare abstract class BaseDisplay extends Phaser.GameObjects.Container i
     get created(): boolean;
     set direction(dir: number);
     get direction(): number;
-    get displayInfo(): IDragonbonesModel | IFramesModel;
+    get displayInfo(): IDragonbonesModel | IFramesModel | undefined;
     set displayInfo(data: IDragonbonesModel | IFramesModel);
     play(animation: RunningAnimation): void;
     changeAlpha(val: number): void;
@@ -62,7 +62,7 @@ export declare abstract class BaseDisplay extends Phaser.GameObjects.Container i
     destroyMount(): void;
     fadeIn(callback?: () => void): void;
     fadeOut(callback?: () => void): void;
-    getSprite(key: DisplayField): Phaser.GameObjects.Sprite | Phaser.GameObjects.Container | Phaser.GameObjects.Image;
+    getSprite(key: DisplayField): Phaser.GameObjects.Container | Phaser.GameObjects.Sprite | Phaser.GameObjects.Image;
     getScene(): Phaser.Scene;
     protected updateSort(): void;
     get runningAnimation(): RunningAnimation;

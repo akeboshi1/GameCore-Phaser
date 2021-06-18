@@ -1,4 +1,4 @@
-import { ModuleName, SceneName } from "structure";
+import { SceneName } from "structure";
 import { UiManager } from "../ui";
 import { BaseLayer, BasicScene } from "baseRender";
 import { MainUIScene } from "./main.ui.scene";
@@ -12,15 +12,15 @@ export class LoginScene extends BasicScene {
     }
 
     preload() {
-        this.load.atlas(ModuleName.MASK_LOADING_NAME, Url.getUIRes(this.dpr, "mask_loading/mask_loading.png"), Url.getUIRes(this.dpr, "mask_loading/mask_loading.json"));
+        //  this.load.atlas(ModuleName.MASK_LOADING_NAME, Url.getUIRes(this.dpr, "mask_loading/mask_loading.png"), Url.getUIRes(this.dpr, "mask_loading/mask_loading.json"));
     }
 
     public create() {
         super.create();
         if (this.render) {
-            const uimanager: UiManager = this.render.uiManager;
-            uimanager.setScene(this);
-            this.render.showMediator(ModuleName.PICA_BOOT_NAME, true);
+            // const uimanager: UiManager = this.render.uiManager;
+            // uimanager.setScene(this);
+            // this.render.showMediator(ModuleName.PICA_BOOT_NAME, true);
             this.render.gameLoadedCallBack();
             this.render.hideLoading();
 
@@ -38,15 +38,15 @@ export class LoginScene extends BasicScene {
     }
 
     public stop() {
-        if (this.render) {
-            this.render.showMediator("Login", false);
-        }
+        // if (this.render) {
+        //     this.render.showMediator("Login", false);
+        // }
         super.stop();
     }
 
     public sleep() {
-        if (this.render) {
-            this.render.showMediator("Login", false);
-        }
+        // if (this.render) {
+        //     this.render.showMediator("Login", false);
+        // }
     }
 }

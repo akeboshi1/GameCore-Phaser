@@ -1,4 +1,4 @@
-import { Logger, LoadState, ModuleName, SceneName } from "structure";
+import { Logger, LoadState, SceneName } from "structure";
 import { StringUtils } from "utils";
 import { LoadingTips } from "../loadqueue";
 import { Render } from "../render";
@@ -14,12 +14,12 @@ import { RoomScene } from "./room.scene";
 import { SelectRoleScene } from "./select.role.scene";
 import { BlackScene } from "./black.scene";
 export class SceneManager extends BaseSceneManager {
-
-    private mCurSceneName: string;
+    protected sceneManagerName: string;
+    protected mCurSceneName: string;
     constructor(render: Render) {
         super(render);
-
-        (<Render>this.render).exportProperty(this, this.render, ModuleName.SCENEMANAGER_NAME)
+        this.sceneManagerName = "SceneManager";
+        (<Render>this.render).exportProperty(this, this.render, this.sceneManagerName)
             .onceReady(() => {
             });
     }
@@ -86,44 +86,6 @@ export class SceneManager extends BaseSceneManager {
             return;// Promise.reject("className error: " + name);
         }
         data.render = this.render;
-        if (data.state !== undefined) {
-            const state = data.state;
-            switch (state) {
-                case LoadState.ENTERWORLD:
-                    data.text = LoadingTips.enterWorld();
-                    break;
-                case LoadState.DOWNLOADGAMECONFIG:
-                    data.loadProgress = "异世界发现中..."; // "正在加载游戏pi";
-                    data.text = LoadingTips.downloadGameConfig();
-                    break;
-                case LoadState.DOWNLOADSCENECONFIG:
-                    data.loadProgress = "构建次元空间...";// "正在加载场景pi";
-                    data.text = LoadingTips.downloadSceneConfig();
-                    break;
-                case LoadState.LOADINGRESOURCES:
-                    data.text = LoadingTips.loadingResources();
-                    break;
-                case LoadState.LOGINGAME:
-                    data.loadProgress = "勇者，正在穿越异世界...";// "正在请求登陆游戏";
-                    data.text = LoadingTips.loginGame();
-                    break;
-                case LoadState.PARSECONFIG:
-                    data.loadProgress = "大贤者迪塔装载中...";// "正在解析一大波游戏数据";
-                    data.text = LoadingTips.parseConfig();
-                    break;
-                case LoadState.LOADJSON:
-                    data.loadProgress = "大贤者杰森装载中...";// "正在加载前端json配置"; // StringUtils.format("正在加载资源 {0}", [data.data.resName]);
-                    data.text = LoadingTips.downloadSceneConfig();
-                    break;
-                case LoadState.WAITENTERROOM:
-                    data.loadProgress = "大魔术咏唱:真理之门...";// "正在等待进入房间";
-                    data.text = LoadingTips.waitEnterRoom();
-                    break;
-                case LoadState.CREATESCENE:
-                    data.text = LoadingTips.createScene();
-                    break;
-            }
-        }
         const scene = sceneManager.getScene(name) as BasicScene;
         if (scene) {
             const isActive = scene.scene.isActive(name);
@@ -238,7 +200,7 @@ export class SceneManager extends BaseSceneManager {
 
     public destroy() {
         if (this.mCurSceneName) this.mCurSceneName = undefined;
-        if (this.render && this.render.hasOwnProperty(ModuleName.SCENEMANAGER_NAME)) delete this.render[ModuleName.SCENEMANAGER_NAME];
+        if (this.render && this.render.hasOwnProperty(this.sceneManagerName)) delete this.render[this.sceneManagerName];
         this.mMainScene = undefined;
     }
 
@@ -270,10 +232,6 @@ export class SceneManager extends BaseSceneManager {
             "SkyBoxScene": SkyBoxScene,
             "BlackScene": BlackScene,
         };
-    }
-
-    private sceneCallback(scene: Phaser.Scene) {
-        return Promise.resolve();
     }
 }
 

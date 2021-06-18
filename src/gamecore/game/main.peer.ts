@@ -3,8 +3,7 @@ import { op_gateway, op_virtual_world, op_client } from "pixelpai_proto";
 import { PBpacket, Buffer } from "net-socket-packet";
 import * as protos from "pixelpai_proto";
 import { Game } from "./game";
-import { ServerAddress, IPos, Logger, ILauncherConfig, ModuleName, EventType, GameState, IWorkerParam, LogicPos } from "structure";
-import { Url } from "utils";
+import { IPos, Logger, ILauncherConfig, EventType, IWorkerParam, LogicPos } from "structure";
 import { BaseState } from "./state";
 
 for (const key in protos) {
@@ -496,9 +495,9 @@ export class MainPeer extends RPCPeer {
 
     @Export([webworker_rpc.ParamType.str])
     public showNoticeHandler(text: string) {
-        const data = new op_client.OP_VIRTUAL_WORLD_RES_CLIENT_SHOW_UI();
-        data.text = [{ text, node: undefined }];
-        this.game.showByName(ModuleName.PICANOTICE_NAME, data);
+        // const data = new op_client.OP_VIRTUAL_WORLD_RES_CLIENT_SHOW_UI();
+        // data.text = [{ text, node: undefined }];
+        // this.game.showByName(ModuleName.PICANOTICE_NAME, data);
     }
 
     @Export([webworker_rpc.ParamType.str])

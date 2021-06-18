@@ -107,7 +107,7 @@ export abstract class BaseDisplay extends Phaser.GameObjects.Container implement
         return this.mDirection;
     }
 
-    public get displayInfo() {
+    public get displayInfo(): IDragonbonesModel | IFramesModel | undefined {
         return this.mDisplayInfo;
     }
 

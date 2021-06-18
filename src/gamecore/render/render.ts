@@ -18,7 +18,6 @@ import {
     ILauncherConfig,
     IScenery,
     MessageType,
-    ModuleName,
     SceneName,
     PlatFormType, i18n, IPos, IPosition45Obj, Logger, LogicPos, Pos, Size, ValueResolver, IWorkerParam
 } from "structure";
@@ -84,12 +83,12 @@ export class Render extends RPCPeer implements GameMain, IRender {
     protected mEditorCanvasManager: EditorCanvasManager;
     protected mRenderParam: IWorkerParam;
     protected mMainPeerParam: IWorkerParam;
+    protected mAccount: Account;
+    protected mGame: Phaser.Game;
     private mCallBack: Function;
     private _moveStyle: number = 0;
     private _curTime: number;
-    private mGame: Phaser.Game;
     private gameConfig: Phaser.Types.Core.GameConfig;
-    private mAccount: Account;
     /**
      * 场景缩放系数（layermanager，缩放场景中容器大小）
      */
@@ -352,18 +351,6 @@ export class Render extends RPCPeer implements GameMain, IRender {
                 this.dealTipsScene(SceneName.BLACK_SCENE, false);
             }
         }
-        const panel: any = this.uiManager.getPanel(ModuleName.BOTTOM);
-        if (panel) {
-            const inputs = this.game.domContainer.getElementsByTagName("input");
-            if (inputs && inputs.length > 0) {
-                if (panel.getInputFocusing()) {
-                    panel.showKeyboard(width * this.mConfig.devicePixelRatio, height * this.mConfig.devicePixelRatio);
-                    return;
-                }
-                panel.hideKeyboard();
-                return;
-            }
-        }
         // Logger.getInstance().debug("input: ", input);
         if (this.mConfig) {
             this.mConfig.width = width;
@@ -422,19 +409,9 @@ export class Render extends RPCPeer implements GameMain, IRender {
     }
 
     keyboardDidShow(keyboardHeight: number) {
-        const bottom: any = this.uiManager.getPanel(ModuleName.BOTTOM);
-        const width = this.mConfig.width;
-        const height = this.mConfig.height - keyboardHeight;
-        if (bottom) {
-            bottom.showKeyboard(width * this.mConfig.devicePixelRatio, height * this.mConfig.devicePixelRatio);
-        }
     }
 
     keyboardDidHide() {
-        const bottom: any = this.uiManager.getPanel(ModuleName.BOTTOM);
-        if (bottom) {
-            bottom.hideKeyboard();
-        }
     }
 
     visibilitychange(state: string) {
@@ -759,23 +736,25 @@ export class Render extends RPCPeer implements GameMain, IRender {
     @Export()
     public showCreateRolePanel(data?: any): Promise<boolean> {
         return new Promise<boolean>((resolve, reject) => {
-            const createPanel = () => {
-                this.mUiManager.showPanel(ModuleName.PICACREATEROLE_NAME, data).then((panel) => {
-                    if (!panel) {
-                        reject(false);
-                        return;
-                    }
-                    panel.addExportListener(() => {
-                        resolve(true);
-                    });
-                });
-            };
+            // const createPanel = () => {
+            //     this.mUiManager.showPanel(ModuleName.PICACREATEROLE_NAME, data).then((panel) => {
+            //         if (!panel) {
+            //             reject(false);
+            //             return;
+            //         }
+            //         panel.addExportListener(() => {
+            //             resolve(true);
+            //         });
+            //     });
+            // };
             if (this.mUiManager.scene && this.mUiManager.scene.scene.key === SceneName.CREATE_ROLE_SCENE) {
-                createPanel();
+                // createPanel();
+                resolve(true);
             } else {
                 this.mSceneManager.startScene(SceneName.CREATE_ROLE_SCENE, {
                     callBack: () => {
-                        createPanel();
+                        resolve(true);
+                        // createPanel();
                     }
                 });
             }
@@ -1004,13 +983,7 @@ export class Render extends RPCPeer implements GameMain, IRender {
             if (!this.mAccount) {
                 this.mAccount = new Account();
             }
-            const now = new Date().getTime();
-            Logger.getInstance().debug("createAccount ====>", now);
-            this.exportProperty(this.mAccount, this, ModuleName.ACCOUNT_NAME).onceReady(() => {
-                Logger.getInstance().debug("createAccountExport ====>", new Date().getTime() - now);
-                this.mAccount.enterGame(gameID, worldID, sceneID, loc, spawnPointId);
-                resolve(true);
-            });
+            resolve(true);
         });
     }
 
@@ -1090,12 +1063,7 @@ export class Render extends RPCPeer implements GameMain, IRender {
     public showAlertReconnect(text: string) {
         // 告诉render显示警告框
         if (this.uiManager) this.uiManager.showAlertView(text, true, false, () => {
-            const bootPanel = this.uiManager.getPanel(ModuleName.PICA_BOOT_NAME);
-            if (bootPanel && bootPanel.isShow()) {
-                bootPanel.show();
-            } else {
-                this.mainPeer.reconnect();
-            }
+            this.mainPeer.reconnect();
         });
     }
 
@@ -1687,6 +1655,40 @@ export class Render extends RPCPeer implements GameMain, IRender {
         });
     }
 
+    protected dealTipsScene(sceneName: string, show: boolean) {
+        if (!this.mGame.scene.getScene(sceneName)) {
+            const sceneClass = this.sceneManager.getSceneClass(sceneName);
+            this.mGame.scene.add(sceneName, sceneClass);
+        }
+        const pauseScene = this.mGame.scene.getScene(SceneName.GAMEPAUSE_SCENE);
+        const playScene = this.mGame.scene.getScene(SceneName.PLAY_SCENE);
+        const uiScene = this.mGame.scene.getScene(SceneName.MAINUI_SCENE);
+        const loginScene = this.mGame.scene.getScene(SceneName.LOGIN_SCENE);
+        if (show) {
+            this.mGame.scene.start(sceneName, { render: this });
+            if (sceneName !== SceneName.GAMEPAUSE_SCENE) {
+                if (pauseScene) pauseScene.scene.pause();
+            }
+            if (playScene) playScene.scene.pause();
+            if (uiScene) {
+                uiScene.scene.pause();
+                uiScene.scene.setVisible(false);
+            }
+            if (loginScene && loginScene.scene.isActive()) loginScene.scene.setVisible(false);
+        } else {
+            this.mGame.scene.stop(sceneName);
+            if (sceneName !== SceneName.GAMEPAUSE_SCENE) {
+                if (pauseScene) pauseScene.scene.resume();
+            }
+            if (playScene) playScene.scene.resume();
+            if (uiScene) {
+                uiScene.scene.resume();
+                uiScene.scene.setVisible(true);
+            }
+            if (loginScene && loginScene.scene.isActive()) loginScene.scene.setVisible(true);
+        }
+    }
+
     private onFullScreenChange() {
         this.resize(this.mGame.scale.gameSize.width, this.mGame.scale.gameSize.height);
     }
@@ -1738,40 +1740,6 @@ export class Render extends RPCPeer implements GameMain, IRender {
             // this.mConnection.onBlur();
             // this.mRoomMamager.onBlur();
             this.dealTipsScene(SceneName.GAMEPAUSE_SCENE, true);
-        }
-    }
-
-    private dealTipsScene(sceneName: string, show: boolean) {
-        if (!this.mGame.scene.getScene(sceneName)) {
-            const sceneClass = this.sceneManager.getSceneClass(sceneName);
-            this.mGame.scene.add(sceneName, sceneClass);
-        }
-        const pauseScene = this.mGame.scene.getScene(SceneName.GAMEPAUSE_SCENE);
-        const playScene = this.mGame.scene.getScene(SceneName.PLAY_SCENE);
-        const uiScene = this.mGame.scene.getScene(SceneName.MAINUI_SCENE);
-        const loginScene = this.mGame.scene.getScene(SceneName.LOGIN_SCENE);
-        if (show) {
-            this.mGame.scene.start(sceneName, { render: this });
-            if (sceneName !== SceneName.GAMEPAUSE_SCENE) {
-                if (pauseScene) pauseScene.scene.pause();
-            }
-            if (playScene) playScene.scene.pause();
-            if (uiScene) {
-                uiScene.scene.pause();
-                uiScene.scene.setVisible(false);
-            }
-            if (loginScene && loginScene.scene.isActive()) loginScene.scene.setVisible(false);
-        } else {
-            this.mGame.scene.stop(sceneName);
-            if (sceneName !== SceneName.GAMEPAUSE_SCENE) {
-                if (pauseScene) pauseScene.scene.resume();
-            }
-            if (playScene) playScene.scene.resume();
-            if (uiScene) {
-                uiScene.scene.resume();
-                uiScene.scene.setVisible(true);
-            }
-            if (loginScene && loginScene.scene.isActive()) loginScene.scene.setVisible(true);
         }
     }
 

@@ -4,7 +4,9 @@ import { IRender } from "../render";
 export class BaseSceneManager {
     protected sceneClass: any = {};
     protected mMainScene: Phaser.Scene;
-    constructor(protected render: IRender) {
+    protected render: IRender;
+    constructor(render: IRender) {
+        this.render = render;
         this.initScene();
     }
 

@@ -1,6 +1,6 @@
 import { Scene } from "tooqingphaser";
 import { Render } from "../render";
-import { AvatarSuitType, ModuleName, Logger } from "structure";
+import { AvatarSuitType, Logger } from "structure";
 import { DragonbonesDisplay } from "../display/dragonbones/dragonbones.display";
 import { AvatarEditorDragonbone, AvatarEditorScene } from "editorCanvas";
 
@@ -11,7 +11,7 @@ export class EditorCanvasManager {
     private readonly AVATAR_CANVAS_PARENT = "avatarCanvas";
     private readonly SCENEKEY_SNAPSHOT: string = "AvatarEditorSnapshotScene";
 
-    constructor(private render: Render) {
+    constructor(protected render: Render) {
     }
 
     public destroy() {
@@ -30,7 +30,7 @@ export class EditorCanvasManager {
 
         return new Promise<any>((resolve, reject) => {
             const avatarSets = AvatarSuitType.toIAvatarSets(dbDisplay.displayInfo.avatar);
-            this.render.uiManager.showPanel(ModuleName.MASK_LOADING_NAME);
+            // this.render.uiManager.showPanel(ModuleName.MASK_LOADING_NAME);
             dbDisplay.save()
                 .then((saveData) => {
                     this.render.mainPeer.uploadDBTexture(saveData.key, saveData.url, saveData.json)
@@ -41,7 +41,7 @@ export class EditorCanvasManager {
                 })
                 .then((str) => {
                     this.render.mainPeer.uploadHeadImage(str);
-                    this.render.uiManager.hidePanel(ModuleName.MASK_LOADING_NAME);
+                    // this.render.uiManager.hidePanel(ModuleName.MASK_LOADING_NAME);
                     resolve(null);
                 })
                 .catch((reason) => {

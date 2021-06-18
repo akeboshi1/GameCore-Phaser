@@ -90,6 +90,15 @@ export class MainUIScene extends RoomScene {
     this.render.emitter.emit("pointerScene", SceneName.MAINUI_SCENE, currentlyOver);
   }
 
+  protected loadVideos() {
+    // const folder = "roam_effect";
+    // const video = ["roamone", "roamtenrepead", "roamreward", "roambefore"];
+    // for (const res of video) {
+    //   const url = Url.getNormalUIRes(`${folder}/${res}.mp4`);
+    //   this.load.video(res, url, undefined, true, true);
+    // }
+  }
+
   // private checkOriention(orientation) {
   //   this.sizeTF.text = "width:" + this.mRoom.world.getSize().width + "\n" + "height:" + this.mRoom.world.getSize().height + "\n" + "orientation:" + orientation + "\n" + "orientationChange:" + orientation;
   // }
@@ -106,14 +115,5 @@ export class MainUIScene extends RoomScene {
     // ui scale: ${world.uiScale.toFixed(5)}
     // `;
     //  this.sizeTF.text = "width:" + size.width + ";height:" + size.height;
-  }
-
-  private loadRaomVideos() {
-    const folder = "roam_effect";
-    const video = ["roamone", "roamtenrepead", "roamreward", "roambefore"];
-    for (const res of video) {
-      const url = Url.getNormalUIRes(`${folder}/${res}.mp4`);
-      this.load.video(res, url, undefined, true, true);
-    }
   }
 }

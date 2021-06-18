@@ -1,4 +1,4 @@
-import { ModuleName, Logger, ServerAddress } from "structure";
+import { Logger, ServerAddress } from "structure";
 import { Clock, HttpClock } from "../loop";
 import { MainPeer } from "../main.peer";
 import { BaseState } from "./base.state";
@@ -32,7 +32,6 @@ export class ConnectingState extends BaseState {
         this.mGame.isAuto = data || false;
         if (!this.mGame.clock) this.mGame.clock = new Clock(this.mGame.connection, this.mGame.peer, this.mGame);
         if (!this.mGame.httpClock) this.mGame.httpClock = new HttpClock(this.mGame);
-        this.mGame.hideMediator(ModuleName.PICA_BOOT_NAME);
         Logger.getInstance().info(`enterVirtualWorld`);
         this.mGame.connection.connect = true;
         this.next();

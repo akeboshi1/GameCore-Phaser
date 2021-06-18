@@ -2,7 +2,8 @@
 import { Render } from "../render";
 import { BasicScene, BaseSceneManager } from "baseRender";
 export declare class SceneManager extends BaseSceneManager {
-    private mCurSceneName;
+    protected sceneManagerName: string;
+    protected mCurSceneName: string;
     constructor(render: Render);
     get currentScene(): BasicScene;
     resize(width: any, height: any): any;
@@ -21,7 +22,6 @@ export declare class SceneManager extends BaseSceneManager {
     destroy(): void;
     updateInput(val: SceneInputEnum): void;
     protected initScene(): void;
-    private sceneCallback;
 }
 declare enum SceneInputEnum {
     Disable = 0,

@@ -4,16 +4,16 @@ import { IDragonbonesModel, IFramesModel, ISprite, IPos } from "structure";
 import { IElement, IRoomService } from "../room";
 export declare class User extends Player {
     stopBoxMove: boolean;
-    private mDebugPoint;
-    private mMoveStyle;
-    private mSyncTime;
-    private mSyncDirty;
-    private mInputMask;
-    private mSetPostionTime;
-    private mPreTargetID;
-    private holdTime;
-    private holdDelay;
-    private mNearEle;
+    protected mDebugPoint: boolean;
+    protected mMoveStyle: MoveStyleEnum;
+    protected mSyncTime: number;
+    protected mSyncDirty: boolean;
+    protected mInputMask: number;
+    protected mSetPostionTime: number;
+    protected mPreTargetID: number;
+    protected holdTime: number;
+    protected holdDelay: number;
+    protected mNearEle: IElement;
     constructor();
     get nearEle(): IElement;
     set debugPoint(val: boolean);
@@ -58,3 +58,9 @@ export declare class User extends Player {
     get moveStyle(): number;
     private addFillEffect;
 }
+declare enum MoveStyleEnum {
+    Null = 0,
+    Astar = 1,
+    Motion = 2
+}
+export {};

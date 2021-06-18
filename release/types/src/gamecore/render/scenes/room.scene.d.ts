@@ -2,6 +2,7 @@
 import { BasicScene } from "baseRender";
 export declare class RoomScene extends BasicScene {
     protected mRoomID: any;
+    constructor(config: string | Phaser.Types.Scenes.SettingsConfig);
     init(data: any): void;
     create(): void;
     protected initListener(): void;

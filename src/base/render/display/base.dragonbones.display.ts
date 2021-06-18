@@ -138,23 +138,22 @@ export class BaseDragonbonesDisplay extends BaseDisplay {
     protected mInteractive: boolean = true;
     protected mLoadingShadow: Phaser.GameObjects.Image;
     protected mMountContainer: Phaser.GameObjects.Container;
-    private replaceArr = [];
+    protected replaceArr = [];
     // key: slotName; val: partName
-    private mLoadMap: Map<string, string> = new Map();
+    protected mLoadMap: Map<string, string> = new Map();
     // key: loadKey; val: err
-    private mErrorLoadMap: Map<string, any> = new Map();
-    private mNeedReplaceTexture: boolean = false;
-    private mBoardPoint: Phaser.Geom.Point;
-    private readonly UNPACK_SLOTS = [AvatarSlotNameTemp.FarmWeap, AvatarSlotNameTemp.BarmWeap];
-    private readonly UNCHECK_AVATAR_PROPERTY = ["id", "dirable", "farmWeapId", "farmShldId", "barmWeapId", "barmShldId"];
-
+    protected mErrorLoadMap: Map<string, any> = new Map();
+    protected mNeedReplaceTexture: boolean = false;
+    protected mBoardPoint: Phaser.Geom.Point;
     // 不需要手动释放旧的资源，龙骨中已经做了相关处理
     // private mPreReplaceTextureKey: string = "";
-    private mReplaceTextureKey: string = "";
+    protected mReplaceTextureKey: string = "";
     // phaer 监听回收
-    private mLoadListeners: Map<string, Function[]> = new Map();
-    private mTexturesListeners: Map<string, Function[]> = new Map();
-    private loadError: boolean = false;
+    protected mLoadListeners: Map<string, Function[]> = new Map();
+    protected mTexturesListeners: Map<string, Function[]> = new Map();
+    protected loadError: boolean = false;
+    private readonly UNPACK_SLOTS = [AvatarSlotNameTemp.FarmWeap, AvatarSlotNameTemp.BarmWeap];
+    private readonly UNCHECK_AVATAR_PROPERTY = ["id", "dirable", "farmWeapId", "farmShldId", "barmWeapId", "barmShldId"];
 
     public constructor(scene: Phaser.Scene, id?: number) {
         super(scene, id);

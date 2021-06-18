@@ -10,7 +10,7 @@ import { Clock, ClockReadyListener } from "./loop/clock/clock";
 import { HttpClock } from "./loop/httpClock/http.clock";
 import { HttpService } from "./loop/httpClock/http.service";
 import { LoadingManager } from "./loading/loading.manager";
-import { ChatCommandInterface, ConnectionService, EventDispatcher, GameState, IConfigPath, IConnectListener, ILauncherConfig, LoadState, Logger, ModuleName, ServerAddress } from "structure";
+import { ChatCommandInterface, ConnectionService, EventDispatcher, GameState, IConfigPath, IConnectListener, ILauncherConfig, LoadState, Logger } from "structure";
 import { RoomManager } from "./room/room.manager";
 import { User } from "./actor/user";
 import { NetworkManager } from "./command";
@@ -172,12 +172,12 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
             return this.mainPeer.render.connectFail();
         } else {
             this.renderPeer.showAlert("网络连接失败，请稍后再试", true, false).then(() => {
-                const mediator = this.uiManager.getMed(ModuleName.PICA_BOOT_NAME);
-                if (mediator && mediator.isShow()) {
-                    mediator.show();
-                } else {
-                    this.renderPeer.hidden();
-                }
+                // const mediator = this.uiManager.getMed(ModuleName.PICA_BOOT_NAME);
+                // if (mediator && mediator.isShow()) {
+                //     mediator.show();
+                // } else {
+                this.renderPeer.hidden();
+                // }
             });
         }
     }

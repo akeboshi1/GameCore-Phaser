@@ -1,5 +1,5 @@
 import { Button, BBCodeText, ClickEvent } from "apowophaserui";
-import { Font, i18n, ModuleName } from "structure";
+import { Font, i18n } from "structure";
 import { UiUtils } from "utils";
 import { MainUIScene } from "../../scenes/main.ui.scene";
 import { BaseBatchPanel } from "./base.batch.panel";
@@ -7,6 +7,7 @@ import { UiManager } from "../ui.manager";
 import { BasicScene } from "baseRender";
 
 export class AlertView extends BaseBatchPanel {
+    protected skinName: string = "AlertView";
     private mOkBtn: Button;
     private mCancelBtn: Button;
     private mContent: BBCodeText;
@@ -15,7 +16,7 @@ export class AlertView extends BaseBatchPanel {
     private mBackGround: Phaser.GameObjects.Graphics;
     constructor(scene: Phaser.Scene, private uiManager: UiManager) {
         super(scene, uiManager.render);
-        this.key = ModuleName.ALERTVIEW_NAME;
+        this.key = this.skinName;
         this.disInteractive();
     }
 

@@ -2,7 +2,7 @@ import { op_client, op_def, op_virtual_world } from "pixelpai_proto";
 import { PacketHandler, PBpacket } from "net-socket-packet";
 import { AStar, ConnectionService, Handler, IPos, IPosition45Obj, Logger, LogicPos, Position45 } from "structure";
 import { Game } from "../../game";
-import { EventType, IScenery, ISprite, LoadState, ModuleName, SceneName } from "structure";
+import { EventType, IScenery, ISprite, LoadState, SceneName } from "structure";
 import IActor = op_client.IActor;
 import { ExtraRoomInfo } from "custom_proto";
 import { TerrainManager } from "./terrain/terrain.manager";
@@ -771,7 +771,7 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
 
     protected onEnableEditModeHandler(packet: PBpacket) {
         this.mEnableDecorate = true;
-        this.game.uiManager.showMed(ModuleName.CUTINMENU_NAME, { button: [{ text: "editor" }] });
+        // this.game.uiManager.showMed(ModuleName.CUTINMENU_NAME, { button: [{ text: "editor" }] });
     }
 
     protected onShowMapTitle(packet: PBpacket) {
