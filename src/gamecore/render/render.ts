@@ -25,7 +25,7 @@ import { DisplayManager } from "./managers/display.manager";
 import { InputManager } from "./input/input.manager";
 import { MainUIScene } from "./scenes/main.ui.scene";
 import { EditorCanvasManager } from "./managers/editor.canvas.manager";
-import { BasicScene, IRender, PlayCamera } from "baseRender";
+import { BaseSceneManager, BasicScene, IRender, PlayCamera } from "baseRender";
 import { AstarDebugger } from "./display/debugs/astar";
 import { EditorModeDebugger } from "./display/debugs/editor.mode.debugger";
 import { GridsDebugger } from "./display/debugs/grids";
@@ -71,7 +71,7 @@ export class Render extends RPCPeer implements GameMain, IRender {
     protected readonly DEFAULT_WIDTH = 360;
     protected readonly DEFAULT_HEIGHT = 640;
     protected mGuideManager: GuideManager;
-    protected mSceneManager: SceneManager;
+    protected mSceneManager: BaseSceneManager;
     protected mCameraManager: CamerasRenderManager;
     protected mInputManager: InputManager;
     protected mSoundManager: SoundManager;
@@ -85,14 +85,14 @@ export class Render extends RPCPeer implements GameMain, IRender {
     protected mMainPeerParam: IWorkerParam;
     protected mAccount: Account;
     protected mGame: Phaser.Game;
+    /**
+     * 场景缩放系数（layermanager，缩放场景中容器大小）
+     */
+     protected mScaleRatio: number;
     private mCallBack: Function;
     private _moveStyle: number = 0;
     private _curTime: number;
     private gameConfig: Phaser.Types.Core.GameConfig;
-    /**
-     * 场景缩放系数（layermanager，缩放场景中容器大小）
-     */
-    private mScaleRatio: number;
     /**
      * 判断加载几x资源
      */
@@ -212,7 +212,7 @@ export class Render extends RPCPeer implements GameMain, IRender {
         return this.mUiManager;
     }
 
-    get sceneManager(): SceneManager {
+    get sceneManager(): BaseSceneManager {
         return this.mSceneManager;
     }
 

@@ -1,6 +1,7 @@
 /// <reference types="tooqingphaser" />
 import { Render } from "../render";
 import { BasicScene, BaseSceneManager } from "baseRender";
+import { SceneInputEnum } from "baseRender";
 export declare class SceneManager extends BaseSceneManager {
     protected sceneManagerName: string;
     protected mCurSceneName: string;
@@ -23,10 +24,3 @@ export declare class SceneManager extends BaseSceneManager {
     updateInput(val: SceneInputEnum): void;
     protected initScene(): void;
 }
-declare enum SceneInputEnum {
-    Disable = 0,
-    Mouse = 1,
-    Keyboard = 2,
-    All = 3
-}
-export {};

@@ -3,14 +3,13 @@ import { RPCPeer } from "webworker-rpc";
 import { PBpacket } from "net-socket-packet";
 import { op_client } from "pixelpai_proto";
 import { Account } from "./account";
-import { SceneManager } from "./scenes/scene.manager";
 import { LocalStorageManager } from "./managers/local.storage.manager";
 import { CamerasRenderManager } from "./cameras/cameras.render.manager";
 import { ElementStateType, GameMain, IDragonbonesModel, IFramesModel, ILauncherConfig, IScenery, IPos, IPosition45Obj, LogicPos, Size, IWorkerParam } from "structure";
 import { DisplayManager } from "./managers/display.manager";
 import { InputManager } from "./input/input.manager";
 import { EditorCanvasManager } from "./managers/editor.canvas.manager";
-import { IRender } from "baseRender";
+import { BaseSceneManager, IRender } from "baseRender";
 import { AstarDebugger } from "./display/debugs/astar";
 import { EditorModeDebugger } from "./display/debugs/editor.mode.debugger";
 import { GridsDebugger } from "./display/debugs/grids";
@@ -36,7 +35,7 @@ export declare class Render extends RPCPeer implements GameMain, IRender {
     protected readonly DEFAULT_WIDTH = 360;
     protected readonly DEFAULT_HEIGHT = 640;
     protected mGuideManager: GuideManager;
-    protected mSceneManager: SceneManager;
+    protected mSceneManager: BaseSceneManager;
     protected mCameraManager: CamerasRenderManager;
     protected mInputManager: InputManager;
     protected mSoundManager: SoundManager;
@@ -49,14 +48,14 @@ export declare class Render extends RPCPeer implements GameMain, IRender {
     protected mMainPeerParam: IWorkerParam;
     protected mAccount: Account;
     protected mGame: Phaser.Game;
+    /**
+     * 场景缩放系数（layermanager，缩放场景中容器大小）
+     */
+    protected mScaleRatio: number;
     private mCallBack;
     private _moveStyle;
     private _curTime;
     private gameConfig;
-    /**
-     * 场景缩放系数（layermanager，缩放场景中容器大小）
-     */
-    private mScaleRatio;
     /**
      * 判断加载几x资源
      */
@@ -91,7 +90,7 @@ export declare class Render extends RPCPeer implements GameMain, IRender {
     get roomMiniSize(): IPosition45Obj;
     get account(): Account;
     get uiManager(): UiManager;
-    get sceneManager(): SceneManager;
+    get sceneManager(): BaseSceneManager;
     get guideManager(): GuideManager;
     get camerasManager(): CamerasRenderManager;
     get displayManager(): DisplayManager;

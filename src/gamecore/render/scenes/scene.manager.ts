@@ -12,6 +12,7 @@ import { PlayScene } from "./play.scene";
 import { RoomScene } from "./room.scene";
 import { SelectRoleScene } from "./select.role.scene";
 import { BlackScene } from "./black.scene";
+import { SceneInputEnum } from "baseRender";
 export class SceneManager extends BaseSceneManager {
     protected sceneManagerName: string;
     protected mCurSceneName: string;
@@ -232,11 +233,4 @@ export class SceneManager extends BaseSceneManager {
             "BlackScene": BlackScene,
         };
     }
-}
-
-enum SceneInputEnum {
-    Disable = 0,
-    Mouse,
-    Keyboard,
-    All
 }

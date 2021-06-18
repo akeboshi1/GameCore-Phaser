@@ -43,6 +43,61 @@ export class BaseSceneManager {
         return this.mMainScene;
     }
 
+    get currentScene(): BasicScene {
+        return null;
+    }
+
+    public resize(width, height) {
+    }
+
+    public getSceneByName(sceneName: string): Phaser.Scene {
+        return null;
+    }
+
+    public showProgress(progress: number) {
+    }
+
+    public bringToTop(sceneName: string) {
+    }
+
+    public startScene(name: string, data?: any) {
+    }
+
+    public stopScene(name: string) {
+    }
+
+    public wakeScene(name: string, data?: any) {
+    }
+
+    public sleepScene(name: string) {
+    }
+
+    public pauseScene(name: string) {
+    }
+
+    public resumeScene(name: string) {
+    }
+
+    public remove(key: string) {
+    }
+
+    public isActive(name: string): boolean {
+        return false;
+    }
+
+    public destroy() {
+    }
+
+    public updateInput(val: SceneInputEnum) {
+    }
+
     protected initScene() {
     }
+}
+
+export enum SceneInputEnum {
+    Disable = 0,
+    Mouse,
+    Keyboard,
+    All
 }

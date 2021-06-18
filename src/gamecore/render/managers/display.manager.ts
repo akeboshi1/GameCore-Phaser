@@ -1,5 +1,4 @@
 import { DisplayField, ElementStateType, IScenery, LayerName, Handler, IPos, IPosition45Obj, Logger, LogicPos, IFramesModel, IDragonbonesModel, RunningAnimation } from "structure";
-import { SceneManager } from "../scenes/scene.manager";
 import { FramesDisplay } from "../display/frames/frames.display";
 import { PlayScene } from "../scenes/play.scene";
 import { DragonbonesDisplay } from "../display/dragonbones/dragonbones.display";
@@ -10,7 +9,7 @@ import { ServerPosition } from "../display/debugs/server.pointer";
 import { IDisplayObject } from "../display";
 import { LayerEnum } from "game-capsule";
 import { TerrainGrid } from "../display/terrain.grid";
-import { BlockManager } from "baseRender";
+import { BaseSceneManager, BlockManager } from "baseRender";
 import { FramesModel } from "baseGame";
 import { Tool } from "utils";
 
@@ -56,7 +55,7 @@ export enum NodeType {
 }
 
 export class DisplayManager {
-    private sceneManager: SceneManager;
+    private sceneManager: BaseSceneManager;
     private displays: Map<number, DragonbonesDisplay | FramesDisplay>;
     private scenerys: Map<number, BlockManager>;
     private mUser: IDisplayObject;
