@@ -1,6 +1,5 @@
-import { Logger, LoadState, SceneName } from "structure";
+import { Logger, SceneName } from "structure";
 import { StringUtils } from "utils";
-import { LoadingTips } from "../loadqueue";
 import { Render } from "../render";
 import { BasicScene, SkyBoxScene, BaseSceneManager } from "baseRender";
 import { CreateRoleScene } from "./create.role.scene";

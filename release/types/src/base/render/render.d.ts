@@ -1,6 +1,6 @@
 /// <reference types="tooqingphaser" />
 import { IBaseCameraService } from "./cameras";
-import { BaseSceneManager } from "./scene/scene.manager";
+import { BaseSceneManager } from "./scene/base.scene.manager";
 export interface IRender {
     readonly camerasManager: IBaseCameraService;
     readonly scaleRatio: number;
