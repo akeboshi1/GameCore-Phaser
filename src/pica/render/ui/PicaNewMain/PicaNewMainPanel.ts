@@ -127,6 +127,11 @@ export class PicaNewMainPanel extends PicaBasePanel {
         this.isFold = !fold;
         this.onFoldButtonHandler();
     }
+    public getComponent(name: string) {
+        let component = null;
+        component = this.headPanel.getComponent(name);
+        return component;
+    }
     protected onInitialized() {
         if (this.headData) this.headPanel.setHeadData(this.headData.level, this.headData.energy, this.headData.money, this.headData.diamond);
         if (this.sceneData) this.headPanel.setSceneData(this.sceneData.sceneName, this.sceneData.isPraise, this.sceneData.people, this.sceneData.roomType, this.sceneData.isself);

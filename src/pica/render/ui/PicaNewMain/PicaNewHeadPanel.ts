@@ -199,6 +199,10 @@ export class PicaNewHeadPanel extends Phaser.GameObjects.Container {
         this.sendHandler = send;
     }
 
+    public getComponent(name: string) {
+        if (name === "mainui.head") return this.headCon;
+    }
+
     private onHeadHandler() {
         if (this.sendHandler) this.sendHandler.runWith(["head"]);
     }
