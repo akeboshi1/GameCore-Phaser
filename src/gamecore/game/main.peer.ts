@@ -400,6 +400,11 @@ export class MainPeer extends RPCPeer {
         if (element) element.setDirection(direction);
     }
 
+    @Export([webworker_rpc.ParamType.str])
+    public getMed(name: string) {
+        return this.game.uiManager.getMed(name);
+    }
+
     @Export()
     public elementsShowReferenceArea() {
         const elementManager = this.game.roomManager.currentRoom.elementManager;

@@ -81,6 +81,7 @@ export declare class MainPeer extends RPCPeer {
     elementDisplaySyncReady(id: number): void;
     now(): number;
     setDirection(id: number, direction: number): void;
+    getMed(name: string): import("./ui").BasicMediator;
     elementsShowReferenceArea(): void;
     elementsHideReferenceArea(): void;
     pushMovePoints(id: number, points: any): void;

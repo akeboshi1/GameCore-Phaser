@@ -1,9 +1,6 @@
 import { SceneName } from "structure";
-import { UiManager } from "../ui";
 import { BaseLayer, BasicScene } from "baseRender";
 import { MainUIScene } from "./main.ui.scene";
-import { Url } from "utils";
-
 // 编辑器用 Phaser.Scene
 export class LoginScene extends BasicScene {
     private dpr: number;
