@@ -531,6 +531,23 @@
   "roomdecorate": {
     "usetips": "你尚未购买该{{name}}"
   },
+  "leaderboard": {
+    "title": "LeaderBoard",
+    "cook": "cook leaderBoard",
+    "fuben": "fuben leaderBoard",
+    "guanqia": "guanqia leaderBoard",
+    "activity": "activity leaderboard",
+    "cookleaderboard": "ranks by cook",
+    "fubenleaderboard": "ranks by copy",
+    "guanqialeaderboard": "ranks by checkpoint",
+    "activityleaderboard": "ranks by activity",
+    "ruledescription": "rule description",
+    "rewardshow": "rewardshow",
+    "rule": "rules---------------------------------------------------------------------------------------------------------------------",
+    "rank": "ranking",
+    "name": "player",
+    "score": "score"
+  },
   "battlepass": {
     "title": "Town challenge",
     "commontips": "Average reward",

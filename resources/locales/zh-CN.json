@@ -548,6 +548,23 @@
     "usering": "该{{name}}已经使用中",
     "savetips": "{{type}}: {{name}}保存成功"
   },
+  "leaderboard": {
+    "title": "排行榜",
+    "cook": "烹饪排行榜",
+    "fuben": "副本排行榜",
+    "guanqia": "关卡排行榜",
+    "activity": "活跃排行榜",
+    "cookleaderboard": "根据#烹饪#进行排名",
+    "fubenleaderboard": "根据#副本#进行排名",
+    "guanqialeaderboard": "根据#关卡#进行排名",
+    "activityleaderboard": "根据#活跃#进行排名",
+    "ruledescription": "规则说明",
+    "rewardshow": "奖励展示",
+    "rule": "具体规则文本---------------------------------------------------------------------------------------------------------------------",
+    "rank": "排名",
+    "name": "玩家",
+    "score": "积分"
+  },
   "battlepass": {
     "title": "小镇挑战赛",
     "commontips": "普通奖励",

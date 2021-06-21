@@ -38,6 +38,7 @@ export class UIAtlasName {
     public static task_daily = "task_daily";
     public static order_new = "order_new";
     public static friend_new = "friend_new";
+    public static leader_board = "leader_board";
     public static recharge = "recharge";
     public static market = "market";
     public static battlepass = "battlepass";
