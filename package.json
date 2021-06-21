@@ -90,6 +90,7 @@
     "simple-sha1": "^3.0.1",
     "sort-display-object": "git+ssh://git@code.apowo.com:PixelPai/sort-display-object.git",
     "tooqingphaser": "git+ssh://git@code.apowo.com:opensource/phaser.git",
+    "webworker-rpc": "git+ssh://git@code.apowo.com/opensource/webworker-rpc",
     "worker-loader": "^3.0.2"
   }
 }
