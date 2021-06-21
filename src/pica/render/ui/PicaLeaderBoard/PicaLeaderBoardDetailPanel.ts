@@ -112,15 +112,15 @@ export class PicaLeaderBoardDetailPanel extends Phaser.GameObjects.Container {
         this.mBackground = this.scene.make.graphics(undefined, false);
         this.mBackground.clear();
         this.mBackground.fillStyle(0xA1A1A1, 1);
-        this.mBackground.fillRect(-this.width * 0.5 + 27 * this.dpr, -this.height * 0.5 + 139 * this.dpr, this.width - 27 * 2 * this.dpr, this.height - 139 * this.dpr);
+        this.mBackground.fillRect(-this.myRanking.width * 0.5 + 8 * this.dpr, -this.height * 0.5 + 139 * this.dpr, this.myRanking.width - 8 * 2 * this.dpr, this.height - 139 * this.dpr);
         // this.myRanking2 = new LeaderBoardCell(this.scene, 306 * this.dpr, 66 * this.dpr, this.dpr, this.zoom, 1);
         // this.myRanking2.x = 0;
         // this.myRanking2.y = -this.height * 0.5 + this.myRanking.height * 0.5 + 175 * this.dpr;
         this.topBg = this.scene.make.graphics(undefined, false);
         this.topBg.clear();
         this.topBg.fillStyle(0xFFFFFF, 1);
-        this.topBg.fillRect(-this.width * 0.5 + 27 * this.dpr, -this.height * 0.5 + 139 * this.dpr, this.width - 27 * 2 * this.dpr, 36 * this.dpr);
-        this.rankText = this.scene.make.text({ x: -this.width * 0.5 + 40 * this.dpr, y: -this.height * 0.5 + 162 * this.dpr, text: i18n.t("leaderboard.rank"), style: UIHelper.blackStyle(this.dpr, 14) }).setOrigin(0, 0.5);
+        this.topBg.fillRect(-this.myRanking.width * 0.5 + 8 * this.dpr, -this.height * 0.5 + 139 * this.dpr, this.myRanking.width - 8 * 2 * this.dpr, 36 * this.dpr);
+        this.rankText = this.scene.make.text({ x: -this.myRanking.width * 0.5 + 25 * this.dpr, y: -this.height * 0.5 + 162 * this.dpr, text: i18n.t("leaderboard.rank"), style: UIHelper.blackStyle(this.dpr, 14) }).setOrigin(0, 0.5);
         this.playerText = this.scene.make.text({ x: this.rankText.x + 96 * this.dpr, y: this.rankText.y, text: i18n.t("leaderboard.name"), style: UIHelper.blackStyle(this.dpr, 14) }).setOrigin(0, 0.5);
         this.scoreText = this.scene.make.text({ x: this.playerText.x + 135 * this.dpr, y: this.rankText.y, text: i18n.t("leaderboard.score"), style: UIHelper.blackStyle(this.dpr, 14) }).setOrigin(0, 0.5);
         this.add([this.myRanking, this.mBackground, this.topBg, this.rankText, this.playerText, this.scoreText]);
