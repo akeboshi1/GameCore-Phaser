@@ -768,7 +768,7 @@ export class MainPeer extends RPCPeer {
     }
 
     @Export([webworker_rpc.ParamType.str])
-    public uploadSnapshot(url: string) {
+    public uploadSnapshot(url: string): Promise<string> {
         return this.game.httpService.uploadSnapshot(url);
     }
 
