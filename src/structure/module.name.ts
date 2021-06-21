@@ -12,7 +12,6 @@ export class ModuleName {
     public static CUTIN_NAME: string = "CutIn";
     public static CREATEROLE_NAME: string = "CreateRole";
     public static VERIFIED_NAME: string = "Verfied";
-    public static PICANAVIGATE_NAME: string = "PicaNavigate";
     public static CHARACTERINFO_NAME: string = "CharacterInfo";
     public static PICAPLAYERINFO_NAME: string = "PicaPlayerInfo";
     public static PICAFRIEND_NAME: string = "PicaFriend";
@@ -24,7 +23,6 @@ export class ModuleName {
     public static PICAMARKET_NAME: string = "PicaMarket";
     public static PICAORDER_NAME: string = "PicaOrder";
     public static PICAPROPFUN_NAME: string = "PicaPropFun";
-    public static PICAPARTYLIST_NAME: string = "PicaPartyList";
     public static PICANOTICE_NAME: string = "PicaNotice";
     public static ALERTVIEW_NAME: string = "AlertView";
     public static PICAOPENPARTY_NAME: string = "PicaOpenParty";
@@ -38,7 +36,6 @@ export class ModuleName {
     public static PICADECORATE_NAME: string = "PicaDecorate";
     public static PICAROOMUPGRADE_NAME: string = "PicRoomUpgrade";// TODO: rename
     public static PICAEQUIPUPGRADE_NAME: string = "PicaEquipUpgrade";
-    public static PICAROOMLIST_NAME: string = "PicaRoomList";
     public static PICAWORK_NAME: string = "PicaWork";
     public static PICAMINECAR_NAME: string = "PicaMineCar";
     public static PICAROOM_NAME: string = "PicaRoom";

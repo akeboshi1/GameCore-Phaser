@@ -180,7 +180,6 @@ export class PicaRoamMediator extends BasicMediator {
         }
         if (tempData) {
             this.updateServiceTime([tempData]);
-            if (this.mView) this.mView.setRoamDrawResult(tempData);
             this.onRetDrawHandler(tempData);
         }
 

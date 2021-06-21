@@ -56,11 +56,6 @@ export class PicaNewFriendMediator extends BasicMediator {
         super.hide();
     }
 
-    fetchCurrentFriend() {
-        if (this.mView) {
-            this.mView.fetchCurrentFriend();
-        }
-    }
     protected onEnable() {
         this.proto.on("PLAYER_LIST", this.onPlayerListHandler, this);
         this.proto.on("ANOTHER_PLAYER_INFO", this.onAnotherPlayerInfoHandler, this);

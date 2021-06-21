@@ -79,9 +79,7 @@ export class PicaPartyNavigationMediator extends BasicMediator {
 
     protected panelInit() {
         super.panelInit();
-        // if (this.mPartyListData) {
-        //     this.mView.setPartyListData(this.mPartyListData, this.game.user.userData.isSelfRoom);
-        // }
+
         if (this.tempData) {
             if (this.chooseType === 2) {
                 this.mView.setNavigationListData(this.tempData);

@@ -57,11 +57,15 @@ export class PicaRechargeMediator extends BasicMediator {
         for (const temp of diamondData) {
             if (ids.indexOf(temp.id) === -1) {
                 temp.double = true;
+            } else {
+                temp.double = false;
             }
         }
         for (const temp of giftData) {
             if (ids.indexOf(temp.id) === -1) {
                 temp.double = true;
+            } else {
+                temp.double = false;
             }
         }
         this.mView.setDataList([diamondData, giftData]);

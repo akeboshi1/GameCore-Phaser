@@ -60,7 +60,6 @@ export class PicaChatMediator extends BasicMediator {
         if (this.mView && this.mView.isShowChatPanel()) {
             uiManager.showMed(ModuleName.PICAHANDHELD_NAME);
         }
-        uiManager.hideMed(ModuleName.PICANAVIGATE_NAME);
     }
 
     private onShowNavigateHandler() {
@@ -68,7 +67,6 @@ export class PicaChatMediator extends BasicMediator {
             return;
         }
         const uiManager = this.game.uiManager;
-        uiManager.showMed(ModuleName.PICANAVIGATE_NAME);
         uiManager.hideMed(ModuleName.PICAHANDHELD_NAME);
         this.hide();
     }

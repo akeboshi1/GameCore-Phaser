@@ -22,11 +22,6 @@ export class PicaTreasureMediator extends BasicMediator {
         this.game.emitter.off(this.key + "_close", this.onHidePanel, this);
     }
 
-    // panelInit() {
-    //     super.panelInit();
-    //     if (this.mView) this.mView.setTreasureData(this.mShowData);
-    // }
-
     private onHidePanel() {
         this.hide();
         if (this.complEvent) this.game.emitter.emit(this.complEvent);

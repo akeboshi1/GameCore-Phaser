@@ -461,7 +461,6 @@ export class UIManager extends PacketHandler {
 
     private initUILayoutType() {
         this.mUILayoutMap.set(ModuleName.PICACHAT_NAME, UILayoutType.Bottom);
-        this.mUILayoutMap.set(ModuleName.PICANAVIGATE_NAME, UILayoutType.Bottom);
         this.mUILayoutMap.set(ModuleName.PICAWORK_NAME, UILayoutType.Bottom);
         this.mUILayoutMap.set(ModuleName.PICANEWROLE_NAME, UILayoutType.Bottom);
         this.mUILayoutMap.set(ModuleName.PICAREPAIRCHOOSE_NAME, UILayoutType.Bottom);
