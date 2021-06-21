@@ -558,6 +558,16 @@ export class DisplayManager {
 
         const sceneryScenes: Phaser.GameObjects.Container[] = [wall, hang, floor, terrain, surface];
 
+        const characters = [];
+        for (const character of surface.list) {
+            if (character instanceof DragonbonesDisplay) {
+                if (character.nodeType === 5) {
+                    characters.push({ display: character, visible: character.visible });
+                    character.visible = false;
+                }
+            }
+        }
+
         const cameraBound = scene.cameras.main.getBounds();
         const maxWidth = cameraBound.width / this.render.scaleRatio;
         const maxHeight = cameraBound.height / this.render.scaleRatio;
@@ -581,10 +591,14 @@ export class DisplayManager {
             layer.setScale(this.render.scaleRatio);
         }
 
+        for (const character of characters) {
+            const { display, visible } = character;
+            if (display) display.visible = visible;
+        }
+
         (<Phaser.Renderer.WebGL.WebGLRenderer>rt.renderer).snapshotFramebuffer(rt.framebuffer, rt.width, rt.height, (img: any) => {
-            copy(img.src);
             rt.destroy();
-            // (this.render).mainPeer.uploadSnapshot(img.src);
+            (this.render).mainPeer.uploadSnapshot(img.src).then((url) => copy(url));
         });
     }
 

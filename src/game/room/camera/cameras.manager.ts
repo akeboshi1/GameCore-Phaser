@@ -180,7 +180,43 @@ export class CamerasManager extends PacketHandler implements ICameraService {
             this.connection.send(pkt);
             this.preCamerasList = blockIndex;
         }
+    }
 
+    public feachAllElement() {
+        const size = this.mGame.roomManager.currentRoom.roomSize;
+        const tileWidth = size.tileWidth;
+        const tileHeight = size.tileHeight;
+        const blockWidth = this.m_blockWidth;
+        const blockHeight = this.m_blockHeight;
+        const cols = size.cols;
+        const rows = size.rows;
+        const widLen = Math.ceil(size.sceneWidth / blockWidth);
+        const heiLen = Math.ceil(size.sceneHeight / blockHeight);
+        const max_h = Math.ceil((cols + rows) * (tileHeight / 2) / blockHeight);
+
+        const pointerList = [];
+        const offset = rows * (tileWidth / 2);
+        for (let i = 0; i < widLen + 1; i++) {
+            for (let j = 0; j < heiLen + 1; j++) {
+                pointerList.push({ x: i * blockWidth - offset, y: j * blockHeight });
+            }
+        }
+
+        // 检查4个定点
+        const len = pointerList.length;
+        const blockIndex = [];
+        for (let i: number = 0; i < len; i++) {
+            const pos = pointerList[i];
+            const h = Math.floor(pos.y / blockHeight);
+            const w = Math.floor((pos.x + rows * tileWidth / 2) / blockWidth);
+            const index = h + w * max_h;
+            blockIndex.push(index);
+        }
+
+        const pkt = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_UPDATE_HOT_BLOCK);
+        const content: op_virtual_world.IOP_CLIENT_REQ_VIRTUAL_WORLD_UPDATE_HOT_BLOCK = pkt.content;
+        content.blockIndex = blockIndex;
+        this.connection.send(pkt);
     }
 
     public resetCameraSize(width: number, height: number) {

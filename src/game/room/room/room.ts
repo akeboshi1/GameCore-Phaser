@@ -777,6 +777,10 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
         return result;
     }
 
+    public v() {
+        (<CamerasManager>this.mCameraService).feachAllElement();
+    }
+
     protected initSkyBox() {
         const scenerys = this.game.elementStorage.getScenerys();
         if (scenerys) {

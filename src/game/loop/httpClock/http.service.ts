@@ -155,7 +155,7 @@ export class HttpService {
         return this.post("file_upload_mq", { filename: `${accountData.id}/avatar/${Math.ceil(Math.random() * 1e5)}.png`, blob: url, type: "avatar"});
     }
 
-    async uploadSnapshot(url: string) {
+    async uploadSnapshot(url: string): Promise<string> {
         const account = await this.game.peer.render.getAccount();
         if (!account) {
             return Promise.reject("account does not exist");
@@ -164,7 +164,16 @@ export class HttpService {
         if (!accountData || !accountData.id) {
             return Promise.reject("accountData does not exist");
         }
-        return this.post("file_upload_mq", { filename: `${accountData.id}/snapshot/${Math.ceil(Math.random() * 1e5)}.png`, blob: url, type: "png"});
+        return new Promise((resolve, reject) => {
+            const filename = `${accountData.id}/snapshot/${Math.ceil(Math.random() * 1e5)}.png`;
+            this.post("file_upload_mq", { filename, blob: url, type: "png"}).then((response) => {
+                if (response.code === 200) {
+                    return resolve(this.game.getGameConfig().osd + `${filename}`);
+                } else {
+                    reject(response.msg);
+                }
+            });
+        });
     }
 
     uploadDBTexture(key: string, url: string, json: string): Promise<any> {
