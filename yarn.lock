@@ -6013,8 +6013,8 @@ websocket-extensions@>=0.1.1:
   integrity sha512-OqedPIGOfsDlo31UNwYbCFMSaO9m9G/0faIHj5/dZFDMFqPTcx6UwqyOy3COEaEOg/9VsGIpdqn62W5KhoKSpg==
 
 "webworker-rpc@git+ssh://git@code.apowo.com/opensource/webworker-rpc":
-  version "0.0.79"
-  resolved "git+ssh://git@code.apowo.com/opensource/webworker-rpc#83f531a1ab94c046acf6261da3e3bf22b1f4e2db"
+  version "0.0.80"
+  resolved "git+ssh://git@code.apowo.com/opensource/webworker-rpc#1e2a6867a5288370b4e0a25ad1fc4560e8a1cda0"
   dependencies:
     clean-webpack-plugin "^3.0.0"
     copy-webpack-plugin "^5.0.4"
