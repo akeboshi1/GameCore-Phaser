@@ -24,9 +24,9 @@
     js-tokens "^4.0.0"
 
 "@babel/parser@^7.9.4":
-  version "7.14.6"
-  resolved "https://registry.npmjs.org/@babel/parser/-/parser-7.14.6.tgz#d85cc68ca3cac84eae384c06f032921f5227f4b2"
-  integrity sha512-oG0ej7efjEXxb4UgE+klVx+3j4MVo+A2vCzm7OUN4CLo6WhQ+vSOD2yJ8m7B+DghObxtLxt3EfgMWpq+AsWehQ==
+  version "7.14.7"
+  resolved "https://registry.npmjs.org/@babel/parser/-/parser-7.14.7.tgz#6099720c8839ca865a2637e6c85852ead0bdb595"
+  integrity sha512-X67Z5y+VBJuHB/RjwECp8kSl5uYi0BvRbNeWqkaJCVh+LiTPl19WBUfG627psSgp9rSf6ojuXghQM3ha6qHHdA==
 
 "@babel/runtime@^7.10.1", "@babel/runtime@^7.5.5":
   version "7.10.3"
@@ -3393,9 +3393,9 @@ markdown-it@^10.0.0:
     uc.micro "^1.0.5"
 
 marked@^2.0.3:
-  version "2.1.0"
-  resolved "https://registry.npmjs.org/marked/-/marked-2.1.0.tgz#289924c0613f1505a6c2b20b41cd75db96a50efe"
-  integrity sha512-KSdOTs1I/+hrQrFB+e7O/r+AorwdD4XzAi9caoRrbbkRLUS6txr1MZCZQhimm1N5Pg7A/WazC9VrYgqnwGiXMg==
+  version "2.1.1"
+  resolved "https://registry.npmjs.org/marked/-/marked-2.1.1.tgz#b7c27f520fc4de0ddd049d9b4be3b04e06314923"
+  integrity sha512-5XFS69o9CzDpQDSpUYC+AN2xvq8yl1EGa5SG/GI1hP78/uTeo3PDfiDNmsUyiahpyhToDDJhQk7fNtJsga+KVw==
 
 maxrects-packer@^2.6.0:
   version "2.6.0"
