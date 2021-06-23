@@ -1,3 +1,4 @@
+import { Export } from "webworker-rpc";
 import { Render } from "../../render";
 import { BaseBatchPanel } from "./base.batch.panel";
 export class BasePanel extends BaseBatchPanel {
@@ -5,6 +6,7 @@ export class BasePanel extends BaseBatchPanel {
         super(scene, render);
     }
 
+    @Export()
     public hide(boo: boolean = false) {
         this.onHide();
         if (!boo) this.render.uiManager.hideBasePanel(this.key);
@@ -17,6 +19,7 @@ export class BasePanel extends BaseBatchPanel {
         }
     }
 
+    @Export()
     protected onHide() {
     }
 }
