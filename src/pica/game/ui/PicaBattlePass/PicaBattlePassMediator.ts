@@ -65,7 +65,7 @@ export class PicaBattlePassMediator extends BasicMediator {
     this.game.sendCustomProto("INT", "battlePassFacade:forceLevelUp", {});
   }
   private getMaxLevelReward() {
-    this.game.sendCustomProto("INT", "battlePassFacadegetMaxLevelReward", {});
+    this.game.sendCustomProto("INT", "battlePassFacade:getMaxLevelReward", {});
   }
   private getOneKeyReward() {
     this.game.sendCustomProto("INT", "battlePassFacade:takeAllBattlePassRewards", {});
