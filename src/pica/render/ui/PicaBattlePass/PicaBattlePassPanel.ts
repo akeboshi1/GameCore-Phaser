@@ -177,7 +177,7 @@ export class PicaBattlePassPanel extends PicaBasePanel {
         this.progressTex.text = `${battleState.battlePassExp} / ${curLevel.exp}`;
         this.horProgress.setProgress(battleState.battlePassExp, curLevel.exp);
         if (!battleState.gotMaxLevelReward) {
-            if (battleState.battlePassLevel === lastLevel.level && battleState.battlePassExp === lastLevel.exp) {
+            if (battleState.battlePassLevel === lastLevel.level) {
                 battleState.deluxeCanReceive = true;
             }
             this.finalItem.setRewards(lastLevel.level, this.battleData.maxLevelReward);
@@ -210,7 +210,7 @@ export class PicaBattlePassPanel extends PicaBasePanel {
             }
             item.setPassData(data, this.battleState);
         }
-        this.gamescroll.Sort();
+        this.gamescroll.Sort(true);
     }
     private createGameScroll(x: number, y: number, width: number, height: number) {
         const gamescroll = new GameScroller(this.scene, {

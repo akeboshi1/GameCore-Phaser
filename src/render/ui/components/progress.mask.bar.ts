@@ -18,7 +18,8 @@ export class ProgressMaskBar extends BaseUI {
 
     setProgress(curVal, maxVal) {
         let value = curVal / maxVal;
-        if (value > 1) value = 1;
+        // tslint:disable-next-line: use-isnan
+        if (value > 1 || isNaN(value)) value = 1;
         else if (value < 0) value = 0;
         this.value = value;
         this.max = 1;
