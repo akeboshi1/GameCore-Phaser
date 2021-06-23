@@ -1,4 +1,4 @@
-export declare const CoreExport: () => (target: any, name?: any, descriptor?: any) => void;
+export declare const CoreExport: (params?: number[]) => (target: any, name?: any, descriptor?: any) => void;
 export declare enum CoreParamType {
     str = 1,
     boolean = 2,

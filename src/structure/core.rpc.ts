@@ -1,7 +1,7 @@
 import { Export } from "webworker-rpc";
 
-export const CoreExport = () => {
-    return Export();
+export const CoreExport = (params?: number[]) => {
+    return Export(params);
 };
 
 export enum CoreParamType {
