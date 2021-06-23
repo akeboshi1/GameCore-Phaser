@@ -570,6 +570,10 @@
     "commontips": "普通奖励",
     "tickettips": "入场券奖励",
     "nowunlock": "立即解锁",
-    "buyticket": "购买入场券"
+    "buyticket": "购买入场券",
+    "unlocknext": "解锁下阶段",
+    "ultimatetitle": "终极奖励",
+    "ultimatetips": "等级达到{{name}}级时可以获得以下奖励",
+    "unlocknexttips": "是否使用{{count}}个{{name}}立即解锁等级"
   }
 }

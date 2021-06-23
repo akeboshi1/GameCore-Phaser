@@ -1,12 +1,11 @@
 import { PicaBattlePass } from "./PicaBattlePass";
-import { op_client, op_def } from "pixelpai_proto";
 import { BasicMediator, Game } from "gamecore";
-import { EventType, MessageType, ModuleName, RENDER_PEER } from "structure";
+import { ModuleName } from "structure";
 import { BaseDataConfigManager } from "../../config";
-import { Logger } from "utils";
-import { IBattlePass, ICurrencyLevel, IMarketCommodity } from "picaStructure";
+import { IBattlePassState } from "picaStructure";
 
 export class PicaBattlePassMediator extends BasicMediator {
+  private mInitData: boolean = false;
   constructor(game: Game) {
     super(ModuleName.PICABATTLEPASS_NAME, game);
     if (!this.mModel) {
@@ -21,6 +20,7 @@ export class PicaBattlePassMediator extends BasicMediator {
     this.game.emitter.on(this.key + "_buyDeluxe", this.buyDeluxeBattlePassDeBug, this);
     this.game.emitter.on(this.key + "_buylevel", this.buyForceLevelUp, this);
     this.game.emitter.on(this.key + "_takemaxrewards", this.getMaxLevelReward, this);
+    this.game.emitter.on(this.key + "_onekey", this.getOneKeyReward, this);
   }
 
   hide() {
@@ -29,7 +29,9 @@ export class PicaBattlePassMediator extends BasicMediator {
     this.game.emitter.on(this.key + "_buyDeluxe", this.buyDeluxeBattlePassDeBug, this);
     this.game.emitter.on(this.key + "_buylevel", this.buyForceLevelUp, this);
     this.game.emitter.on(this.key + "_takemaxrewards", this.getMaxLevelReward, this);
+    this.game.emitter.on(this.key + "_onekey", this.getOneKeyReward, this);
     super.hide();
+    this.mInitData = false;
   }
 
   panelInit() {
@@ -44,32 +46,43 @@ export class PicaBattlePassMediator extends BasicMediator {
   }
 
   onDisable() {
-    this.proto.off("BATTLE_PASS_SITUATION ", this.onBATTLE_PASS_SITUATION, this);
+    this.proto.off("BATTLE_PASS_SITUATION", this.onBATTLE_PASS_SITUATION, this);
   }
 
   onEnable() {
-    this.proto.on("BATTLE_PASS_SITUATION ", this.onBATTLE_PASS_SITUATION, this);
+    this.proto.on("BATTLE_PASS_SITUATION", this.onBATTLE_PASS_SITUATION, this);
   }
   private postBattlePassSituation() {
-    this.game.sendCustomProto("", "battlePassFacade:postBattlePassSituation", {});
+    this.game.sendCustomProto("INT", "battlePassFacade:postBattlePassSituation", {});
   }
   private takeBattlePassReward(level: number) {
     this.game.sendCustomProto("INT", "battlePassFacade:takeBattlePassReward", { count: level });
   }
   private buyDeluxeBattlePassDeBug(price: number) {
-    this.game.sendCustomProto("INT", "battlePassFacade:takeBattlePassReward", { count: price });
+    this.game.sendCustomProto("INT", "battlePassFacade:buyDeluxeBattlePassDeBug", { count: price });
   }
   private buyForceLevelUp() {
-    this.game.sendCustomProto("", "battlePassFacade:forceLevelUp", {});
+    this.game.sendCustomProto("INT", "battlePassFacade:forceLevelUp", {});
   }
   private getMaxLevelReward() {
-    this.game.sendCustomProto("", "battlePassFacadegetMaxLevelReward", {});
+    this.game.sendCustomProto("INT", "battlePassFacadegetMaxLevelReward", {});
   }
-
+  private getOneKeyReward() {
+    this.game.sendCustomProto("INT", "battlePassFacade:takeAllBattlePassRewards", {});
+  }
   private onBATTLE_PASS_SITUATION(packet: any) {
-    const content: IBattlePass = packet.content;
+    const content: IBattlePassState = packet.content;
+    this.mView.setBattleState(content);
+    if (!this.mInitData) {
+      this.setBattlDatas(content.battlePassId);
+      this.mInitData = true;
+    }
   }
-
+  private setBattlDatas(id: string) {
+    const battleData = this.config.getBattlePass(id);
+    const battleLevels = this.config.getBattleLevels();
+    this.mView.setBattleData(battleData, battleLevels);
+  }
   private onCloseHandler() {
     this.hide();
   }
