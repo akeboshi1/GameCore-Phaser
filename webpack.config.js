@@ -26,6 +26,9 @@ const commonConfig = {
             resources: path.join(__dirname, "./resources")
         },
     },
+    externals: {
+        "webworker-rpc": 'webworker-rpc',
+    },
     optimization: {
         minimize: false,
         minimizer: [
