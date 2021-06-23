@@ -44,12 +44,10 @@ enum MoveStyle {
     FOLLOW_MOUSE_MOVE_STYLE = 2,
     PATH_MOVE_STYLE = 3
 }
-
 export interface GlobalGameConfig {
     Orientation: number;
     PlatForm: number;
 }
-
 export class Render extends RPCPeer implements GameMain, IRender {
     public static SCENE_CREATED: string = "SCENE_CREATED";
     public static SCENE_DESTROY: string = "SCENE_DESTROY";
@@ -88,7 +86,7 @@ export class Render extends RPCPeer implements GameMain, IRender {
     /**
      * 场景缩放系数（layermanager，缩放场景中容器大小）
      */
-     protected mScaleRatio: number;
+    protected mScaleRatio: number;
     private mCallBack: Function;
     private _moveStyle: number = 0;
     private _curTime: number;

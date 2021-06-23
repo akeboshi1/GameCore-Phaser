@@ -1,5 +1,5 @@
 import { RPCPeer, Export, webworker_rpc } from "webworker-rpc";
-import { op_gateway, op_virtual_world, op_client } from "pixelpai_proto";
+import { op_gateway, op_virtual_world } from "pixelpai_proto";
 import { PBpacket, Buffer } from "net-socket-packet";
 import * as protos from "pixelpai_proto";
 import { Game } from "./game";
@@ -9,7 +9,6 @@ import { BaseState } from "./state";
 for (const key in protos) {
     PBpacket.addProtocol(protos[key]);
 }
-
 export class MainPeer extends RPCPeer {
     @Export()
     protected mGame: Game;
