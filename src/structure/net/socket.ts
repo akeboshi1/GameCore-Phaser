@@ -63,6 +63,10 @@ export class SocketConnection {
         }
     }
 
+    get connectState(): boolean {
+        return this.isConnect;
+    }
+
     set state(val: boolean) {
         this.isAuto = val;
     }

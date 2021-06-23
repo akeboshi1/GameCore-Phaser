@@ -18,6 +18,7 @@ export declare class SocketConnection {
     private isConnect;
     private closeConnectResolver;
     constructor($listener: IConnectListener);
+    get connectState(): boolean;
     set state(val: boolean);
     startConnect(addr: ServerAddress): void;
     stopConnect(): Promise<any>;
