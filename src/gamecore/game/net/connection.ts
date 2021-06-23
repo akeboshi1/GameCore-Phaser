@@ -106,7 +106,10 @@ export class Connection implements ConnectionService {
     startConnect(addr: ServerAddress, keepalive?: boolean): void {
         if (this.isCloseing) {
             this.gateway = { addr, keepalive };
-            if (!this.mSocket.connectState) this.startConnect(this.gateway.addr, this.gateway.keepalive);
+            if (!this.mSocket.connectState) {
+                this.isCloseing = false;
+                this.startConnect(this.gateway.addr, this.gateway.keepalive);
+            }
             return;
         }
         if (this.isConnect) this.closeConnect();
