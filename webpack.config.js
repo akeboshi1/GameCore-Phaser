@@ -28,9 +28,12 @@ const commonConfig = {
     },
     externals: {
         "webworker-rpc": 'webworker-rpc',
+        "game-capsule": "game-capsule",
+        "custom_proto": "custom_proto",
+        "net-socket-packet": "net-socket-packet",
     },
     optimization: {
-        minimize: false,
+        minimize: true,
         minimizer: [
             new TerserPlugin({
                 sourceMap: false,

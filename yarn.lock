@@ -2319,13 +2319,6 @@ getpass@^0.1.1:
   dependencies:
     assert-plus "^1.0.0"
 
-git@^0.1.5:
-  version "0.1.5"
-  resolved "https://registry.npmjs.org/git/-/git-0.1.5.tgz#9ef62df93f851c27542143bf52d1c68b1017ca15"
-  integrity sha1-nvYt+T+FHCdUIUO/UtHGixAXyhU=
-  dependencies:
-    mime "1.2.9"
-
 glob-parent@^3.1.0:
   version "3.1.0"
   resolved "https://registry.npmjs.org/glob-parent/-/glob-parent-3.1.0.tgz#9e6af6299d8d3bd2bd40430832bd113df906c5ae"
@@ -3534,11 +3527,6 @@ mime-types@~2.1.17, mime-types@~2.1.24:
   dependencies:
     mime-db "1.44.0"
 
-mime@1.2.9:
-  version "1.2.9"
-  resolved "https://registry.npmjs.org/mime/-/mime-1.2.9.tgz#009cd40867bd35de521b3b966f04e2f8d4d13d09"
-  integrity sha1-AJzUCGe9Nd5SGzuWbwTi+NTRPQk=
-
 mime@1.6.0:
   version "1.6.0"
   resolved "https://registry.npmjs.org/mime/-/mime-1.6.0.tgz#32cd9e5c64553bd58d19a568af452acff04981b1"
@@ -4300,8 +4288,8 @@ pinkie@^2.0.0:
   integrity sha1-clVrgM+g1IqXToDnckjoDtT3+HA=
 
 "pixelpai_proto@git+ssh://git@code.apowo.com:PixelPai/pixelpai_proto.git#typescriptdev":
-  version "1.0.531"
-  resolved "git+ssh://git@code.apowo.com:PixelPai/pixelpai_proto.git#d8038ebdcdad76d98489555e6543ab7670b1b3e2"
+  version "1.0.546"
+  resolved "git+ssh://git@code.apowo.com:PixelPai/pixelpai_proto.git#f01ec92e5444ad6821bb79c214ad060ea44f3349"
   dependencies:
     protobufjs "^6.8.8"
 
