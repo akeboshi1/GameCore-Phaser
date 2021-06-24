@@ -106,6 +106,7 @@ export class Connection implements ConnectionService {
     startConnect(addr: ServerAddress, keepalive?: boolean): void {
         if (this.isCloseing) {
             this.gateway = { addr, keepalive };
+            // 可能此时socket已经断开了，但回调没有监听到
             if (!this.mSocket.connectState) {
                 this.isCloseing = false;
                 this.startConnect(this.gateway.addr, this.gateway.keepalive);
