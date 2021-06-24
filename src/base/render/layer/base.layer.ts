@@ -4,6 +4,14 @@ export class BaseLayer extends Phaser.GameObjects.Container {
         this.setDepth(depth);
     }
 
+    public destroy() {
+        const list = this.list;
+        list.forEach((gameobject) => {
+            this.remove(gameobject, true);
+        });
+        super.destroy();
+    }
+
     public sortLayer() {
 
     }

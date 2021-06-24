@@ -322,15 +322,13 @@ export class Render extends RPCPeer implements GameMain, IRender {
         if (this.mSoundManager)
             this.mSoundManager.destroy();
 
-        if (this.mSceneManager)
-            this.mSceneManager.destroy();
-
         if (this.mInputManager)
             this.mInputManager.destroy();
 
         if (this.mDisplayManager)
             this.mDisplayManager.destroy();
-
+        if (this.mSceneManager)
+            this.mSceneManager.destroy();
         // if (this.mEditorCanvasManager)
         //     this.mEditorCanvasManager.destroy();
     }

@@ -40,8 +40,8 @@ export class LayerManager {
     }
 
     public destroy() {
-        this.layers.forEach((val) => {
-            val.destroy();
+        this.layers.forEach((layer) => {
+            layer.destroy();
         });
 
         this.layers = null;
