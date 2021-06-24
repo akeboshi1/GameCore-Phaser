@@ -359,6 +359,100 @@ export class SceneEditorCanvas extends EditorCanvas implements IRender {
         return this.mElementManager.checkCollision(pos, sprite);
     }
 
+    // 将地块数据转化为单帧url，只取idle动画第一层第一帧
+    transformTerrains(sns: string[]): Promise<Array<{sn: string, url: string}>> {
+        const tasks: Array<Promise<{sn: string, url: string}>> = [];
+        for (const sn1 of sns) {
+            // get terrains
+            const framesModel = this.elementStorage.getTerrainPaletteBySN(sn1);
+            if (!framesModel.display) {
+                Logger.getInstance().warn("game-core warning: display info not exist. data: ", framesModel);
+                continue;
+            }
+            if (framesModel.display.texturePath === "" || framesModel.display.dataPath === "") {
+                Logger.getInstance().warn("game-core warning: display info error. data: ", framesModel);
+                continue;
+            }
+            if (!framesModel.getAnimations("idle")) {
+                Logger.getInstance().warn("game-core warning: animation [idle] not exist. data: ", framesModel);
+                continue;
+            }
+            if (!framesModel.getAnimations("idle").layer ||
+                framesModel.getAnimations("idle").layer.length === 0) {
+                Logger.getInstance().warn("game-core warning: animation [idle] has no layer. data: ", framesModel);
+                continue;
+            }
+            if (!framesModel.getAnimations("idle").layer[0].frameName ||
+                framesModel.getAnimations("idle").layer[0].frameName.length === 0) {
+                Logger.getInstance().warn("game-core warning: animation [idle] has no frame. data: ", framesModel);
+                continue;
+            }
+            if (framesModel.getAnimations("idle").layer[0].frameName[0].length === 0) {
+                Logger.getInstance().warn("game-core warning: animation [idle] 's first frame name is error. data: ", framesModel);
+                continue;
+            }
+            const frameName = framesModel.getAnimations("idle").layer[0].frameName[0];
+            const displayData = framesModel.display;
+
+            const task = new Promise<{sn: string, url: string}>((_resolve, _reject) => {
+                // check load
+                const loadPromise = new Promise<any>((loadResolve, loadReject) => {
+                    if (this.scene.textures.exists(framesModel.gene)) {
+                        loadResolve(null);
+                    } else {
+                        this.scene.load.atlas(framesModel.gene, Url.getOsdRes(displayData.texturePath), Url.getOsdRes(displayData.dataPath));
+                        const onAdd = (key: string) => {
+                            if (key !== framesModel.gene) return;
+                            loadResolve(null);
+                            if (this.scene) {
+                                this.scene.textures.off(Phaser.Textures.Events.ADD, onAdd, this);
+                                this.scene.load.off(Phaser.Loader.Events.FILE_LOAD_ERROR, onLoadError, this);
+                            }
+                        };
+                        const onLoadError = (imageFile: Phaser.Loader.File) => {
+                            if (imageFile.key !== framesModel.gene) return;
+                            const errMsg = `game-core: frame loadError ${imageFile.url}`;
+                            Logger.getInstance().warn(errMsg);
+                            if (this.scene) {
+                                this.scene.textures.off(Phaser.Textures.Events.ADD, onAdd, this);
+                                this.scene.load.off(Phaser.Loader.Events.FILE_LOAD_ERROR, onLoadError, this);
+                            }
+                            loadReject(errMsg);
+                        };
+                        this.scene.load.on(Phaser.Loader.Events.FILE_LOAD_ERROR, onLoadError, this);
+                        this.scene.textures.on(Phaser.Textures.Events.ADD, onAdd, this);
+                        this.scene.load.start();
+                    }
+                });
+
+                loadPromise
+                    .then(() => {
+                        // get frame
+                        const frame = this.scene.textures.getFrame(framesModel.gene, frameName);
+
+                        // create canvas
+                        const canvas = this.mScene.textures.createCanvas("GenerateFrame_" + sn1, frame.width, frame.height);
+
+                        // draw frame
+                        canvas.drawFrame(framesModel.gene, frameName);
+
+                        // to url
+                        const url = canvas.canvas.toDataURL("image/png", 1);
+                        canvas.destroy();
+
+                        _resolve({sn: sn1, url});
+                    })
+                    .catch((errMsg) => {
+                        _reject(errMsg);
+                    });
+            });
+
+            tasks.push(task);
+        }
+
+        return Promise.all(tasks);
+    }
+
     destroy() {
         this.mTerrainManager.destroy();
         this.displayObjectPool.destroy();
