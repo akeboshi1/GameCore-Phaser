@@ -333,6 +333,7 @@ export class DisplayManager {
             return;
         }
         const camerasManager = this.render.camerasManager;
+        if (!camerasManager) return;
         const followed = camerasManager.targetFollow === target;
         if (followed) {
             camerasManager.stopFollow();
