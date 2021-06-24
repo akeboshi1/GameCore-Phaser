@@ -162,7 +162,7 @@ export class ElementManager extends PacketHandler implements IElementManager {
         if (!this.hasAddComplete) return;
         if (this.mCacheAddList && this.mCacheAddList.length < 1 && this.mCacheSyncList && this.mCacheSyncList.length < 1
             && this.mDealAddList && this.mDealAddList.length < 1) {
-            this.roomService.game.emitter.emit(ElementManager.ELEMENT_READY);
+            if (this.roomService.game.emitter) this.roomService.game.emitter.emit(ElementManager.ELEMENT_READY);
         }
         this.mElements.forEach((ele) => ele.update(time, delta));
         if (this.mCacheRemoveList.length > 0) this.dealRemoveList(this.mCacheRemoveList);

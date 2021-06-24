@@ -154,14 +154,14 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
     }
 
     public addListen() {
-        this.mGame.emitter.on(EventType.UPDATE_EXTRA_ROOM_INFO, this.onExtraRoomInfoHandler, this);
+        if (this.game.emitter) this.mGame.emitter.on(EventType.UPDATE_EXTRA_ROOM_INFO, this.onExtraRoomInfoHandler, this);
         if (this.connection) {
             this.connection.addPacketListener(this);
         }
     }
 
     public removeListen() {
-        this.mGame.emitter.off(EventType.UPDATE_EXTRA_ROOM_INFO, this.onExtraRoomInfoHandler, this);
+        if (this.game.emitter) this.mGame.emitter.off(EventType.UPDATE_EXTRA_ROOM_INFO, this.onExtraRoomInfoHandler, this);
         if (this.connection) {
             this.connection.removePacketListener(this);
         }
