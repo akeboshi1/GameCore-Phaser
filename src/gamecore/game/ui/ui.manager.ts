@@ -222,6 +222,7 @@ export class UIManager extends PacketHandler {
      */
     public refrehActiveUIState(panel: string) {
         const states = this.getUIStateData(panel);
+        if (!states) return;
         for (const state of states) {
             this.updateUI(state);
         }
