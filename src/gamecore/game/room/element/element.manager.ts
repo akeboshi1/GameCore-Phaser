@@ -284,7 +284,7 @@ export class ElementManager extends PacketHandler implements IElementManager {
         if (!element) return;
         element.state = true;
         // 编辑小屋
-        if (this.mRoom.isDecorating) {
+        if (this.mRoom.isDecorating && this.mRoom.game.emitter) {
             this.mRoom.game.emitter.emit(MessageType.DECORATE_ELEMENT_CREATED, id);
         }
         // 回馈给load缓存队列逻辑
