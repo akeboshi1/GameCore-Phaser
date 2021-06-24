@@ -162,9 +162,11 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
     }
 
     public onDisConnected(isAuto?: boolean) {
-        if (!this.debugReconnect) return;
         // 由于socket逻辑于跨场景和踢下线逻辑冲突，所以游戏状态在此两个逻辑时，不做断线弹窗
         if (!this.peer.state || (this.peer.state.key !== GameState.GameRunning && this.peer.state.key !== GameState.OffLine)) return;
+        this.mGameStateManager.state = GameState.OffLine;
+        this.mGameStateManager.startRun();
+        if (!this.debugReconnect) return;
         Logger.getInstance().debug("app connectFail=====");
         this.isAuto = isAuto;
         if (!this.isAuto) return;
