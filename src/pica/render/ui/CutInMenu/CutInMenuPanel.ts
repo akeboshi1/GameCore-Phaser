@@ -83,15 +83,17 @@ export class CutInMenuPanel extends BasePanel {
     private onRightClickHandler() {
         const type = this.buttonType;
         if (type === "work") {
-            this.render.renderEmitter(ModuleName.CUTINMENU_NAME + "_openmed", ModuleName.PICAWORK_NAME);
+            this.render.renderEmitter(this.key + "_openmed", ModuleName.PICAWORK_NAME);
         } else if (type === "minecar") {
-            this.render.renderEmitter(ModuleName.CUTINMENU_NAME + "_openmed", ModuleName.PICANEWMINE_NAME);
+            this.render.renderEmitter(this.key + "_openmed", ModuleName.PICANEWMINE_NAME);
         } else if (type === "editor") {
-            this.render.renderEmitter(ModuleName.CUTINMENU_NAME + "_editor");
+            this.render.renderEmitter(this.key + "_editor");
         } else if (type === "survey") {
-            this.render.renderEmitter(ModuleName.CUTINMENU_NAME + "_openmedsurvey");
+            this.render.renderEmitter(this.key + "_openmedsurvey");
         } else if (type === "dropElement") {
-            this.render.renderEmitter(ModuleName.CUTINMENU_NAME + "_dropElement");
+            this.render.renderEmitter(this.key + "_dropElement");
+        } else {
+            this.render.renderEmitter(this.key + "_rightButton");
         }
     }
 

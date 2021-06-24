@@ -1,15 +1,15 @@
-import { PicaBattlePass } from "./PicaBattlePass";
+import { PicaPrestige } from "./PicaPrestige";
 import { BasicMediator, Game } from "gamecore";
 import { ModuleName } from "structure";
 import { BaseDataConfigManager } from "../../config";
 import { IBattlePassState } from "picaStructure";
 
-export class PicaBattlePassMediator extends BasicMediator {
+export class PicaPrestigeMediator extends BasicMediator {
   private mInitData: boolean = false;
   constructor(game: Game) {
-    super(ModuleName.PICABATTLEPASS_NAME, game);
+    super(ModuleName.PICAPRESTIGE_NAME, game);
     if (!this.mModel) {
-      this.mModel = new PicaBattlePass(game);
+      this.mModel = new PicaPrestige(game);
     }
   }
 
@@ -72,7 +72,6 @@ export class PicaBattlePassMediator extends BasicMediator {
   }
   private onBATTLE_PASS_SITUATION(packet: any) {
     const content: IBattlePassState = packet.content;
-    content.localTime = Math.floor(this.game.clock.unixTime / 1000);
     this.mView.setBattleState(content);
     if (!this.mInitData) {
       this.setBattlDatas(content.battlePassId);
@@ -82,7 +81,6 @@ export class PicaBattlePassMediator extends BasicMediator {
   private setBattlDatas(id: string) {
     const battleData = this.config.getBattlePass(id);
     const battleLevels = this.config.getBattleLevels();
-    battleData.localTime = this.game.clock.unixTime;
     this.mView.setBattleData(battleData, battleLevels);
   }
   private onCloseHandler() {

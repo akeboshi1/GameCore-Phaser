@@ -72,7 +72,6 @@ export class ModuleName {
     public static PICAPARTYNAVIGATION_NAME: string = "PicaPartyNavigation";
     public static PICAREPAIRCHOOSE_NAME: string = "PicaRepairChoose";
     public static MASK_LOADING_NAME = "MaskLoading";
-    public static PICAILLUSTRATED_NAME = "PicaIllustrated";
     public static PICAILLUSTRATED_NEW_NAME = "PicaNewIllustrated";
     public static PICA_DROP_ELEMENT_NAME = "DropElement";
     // =================todo guide name
@@ -99,4 +98,5 @@ export class ModuleName {
     public static PICALEADERBOARD_NAME: string = "PicaLeaderBoard";
     public static PICAPRESTIGECONVERT_NAME: string = "PicaPrestigeConvert";
     public static PICABATTLEPASS_NAME: string = "PicaBattlePass";
+    public static PICAPRESTIGE_NAME = "PicaPrestige";
 }

@@ -108,7 +108,9 @@ export class PicaBattlePassPanel extends PicaBasePanel {
     }
     onShow() {
     }
-
+    onHide() {
+        if (this.battleCountDown) this.battleCountDown.clear();
+    }
     public setBattleData(battleData: IBattlePass, battleLevels: IBattlePassLevel[]) {
         this.battleData = battleData;
         this.battleLevels = battleLevels;
@@ -193,6 +195,17 @@ export class PicaBattlePassPanel extends PicaBasePanel {
         } else {
             this.buyTicketBtn.setInteractive();
             this.buyTicketBtn.setFrameNormal("red_btn_normal", "red_btn_normal");
+        }
+        const battleData = this.battleData;
+        if (battleData.endTime > battleState.localTime) {
+            const time = battleData.endTime - battleState.localTime;
+            if (!this.battleCountDown) {
+                this.battleCountDown = new TimerCountDown(new Handler(this, (value: number, text: string) => {
+                    this.battlePassEndTime.text = i18n.t("battlepass.remainingtime", { name: text });
+                    battleData.localTime++;
+                }));
+            }
+            this.battleCountDown.executeText(time);
         }
     }
 

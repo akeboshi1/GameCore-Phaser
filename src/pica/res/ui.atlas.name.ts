@@ -42,6 +42,7 @@ export class UIAtlasName {
     public static recharge = "recharge";
     public static market = "market";
     public static battlepass = "battlepass";
+    public static prestige = "prestige";
     public static jsonUrl(name: string) {
         return name + ".json";
     }

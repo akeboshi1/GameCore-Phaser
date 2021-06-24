@@ -574,6 +574,16 @@
     "unlocknext": "解锁下阶段",
     "ultimatetitle": "终极奖励",
     "ultimatetips": "等级达到{{name}}级时可以获得以下奖励",
-    "unlocknexttips": "是否使用{{count}}个{{name}}立即解锁等级"
+    "unlocknexttips": "是否使用{{count}}个{{name}}立即解锁等级",
+    "remainingtime": "本次挑战赛剩余时间:{{name}}"
+  },
+  "prestige": {
+    "privileges": "声望特权",
+    "growup": "声望成长",
+    "level": "声望等级",
+    "detail": "查看详情",
+    "value": "累计获得声望值:",
+    "gointips": "{{name}}进入{{room}}房间并点赞",
+    "rewards": "声望奖励"
   }
 }

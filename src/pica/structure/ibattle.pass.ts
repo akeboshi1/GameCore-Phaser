@@ -33,6 +33,10 @@ export interface IBattlePassState {
      * 最终奖励是否可以领取
      */
     deluxeCanReceive: boolean;
+    /**
+     * 本地服务器时间
+     */
+    localTime: number;
 }
 
 export interface IBattlePass {
@@ -40,6 +44,9 @@ export interface IBattlePass {
     levelUpCost: ICountablePackageItem[];
     maxLevelReward: ICountablePackageItem[];
     price: number;
+    startTime: number;
+    localTime: number;
+    endTime: number;
 }
 export interface IBattlePassLevel {
     deluxeReward: ICountablePackageItem[];
