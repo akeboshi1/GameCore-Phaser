@@ -172,12 +172,12 @@ export class MainPeer extends RPCPeer {
 
     @Export()
     public updateMoss(moss) {
-        this.game.elementStorage.updateMoss(moss);
+        if (this.game.elementStorage) this.game.elementStorage.updateMoss(moss);
     }
 
     @Export()
     public updatePalette(palette) {
-        this.game.elementStorage.updatePalette(palette);
+        if (this.game.elementStorage)this.game.elementStorage.updatePalette(palette);
     }
 
     @Export([webworker_rpc.ParamType.num])

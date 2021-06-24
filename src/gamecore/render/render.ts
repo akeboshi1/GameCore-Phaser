@@ -819,6 +819,10 @@ export class Render extends RPCPeer implements GameMain, IRender {
     @Export([webworker_rpc.ParamType.str])
     public showPanel(panelName: string, params?: any): Promise<boolean> {
         return new Promise<boolean>((resolve, reject) => {
+            if (!this.mUiManager) {
+                reject(false);
+                return;
+            }
             this.mUiManager.showPanel(panelName, params).then((panel) => {
                 if (!panel) {
                     reject(false);
@@ -874,7 +878,7 @@ export class Render extends RPCPeer implements GameMain, IRender {
 
     @Export()
     public updateCharacterPackage() {
-        this.emitter.emit(MessageType.UPDATED_CHARACTER_PACKAGE);
+        if (this.emitter) this.emitter.emit(MessageType.UPDATED_CHARACTER_PACKAGE);
     }
 
     @Export([webworker_rpc.ParamType.num])
@@ -949,7 +953,7 @@ export class Render extends RPCPeer implements GameMain, IRender {
 
     @Export([webworker_rpc.ParamType.str])
     public updateUIState(panelName: string, ui: any) {
-        this.uiManager.updateUIState(panelName, ui);
+        if (this.uiManager) this.uiManager.updateUIState(panelName, ui);
     }
 
     @Export([webworker_rpc.ParamType.num])
@@ -1166,6 +1170,7 @@ export class Render extends RPCPeer implements GameMain, IRender {
 
     @Export([webworker_rpc.ParamType.num, webworker_rpc.ParamType.num])
     public disableInteractive(id: number, type: number) {
+        if (!this.mDisplayManager) return;
         const display = this.mDisplayManager.getDisplay(id);
         if (display) display.disableInteractive();
     }
@@ -1209,7 +1214,7 @@ export class Render extends RPCPeer implements GameMain, IRender {
 
     @Export([webworker_rpc.ParamType.num, webworker_rpc.ParamType.num])
     public addFillEffect(posX: number, posY: number, status: any) {
-        this.displayManager.addFillEffect(posX, posY, status);
+        if (this.displayManager) this.displayManager.addFillEffect(posX, posY, status);
     }
 
     @Export()
@@ -1424,13 +1429,14 @@ export class Render extends RPCPeer implements GameMain, IRender {
 
     @Export([webworker_rpc.ParamType.num])
     public clearBubble(id: number) {
+        if (!this.mDisplayManager) return;
         const display = this.mDisplayManager.getDisplay(id);
         if (display) display.clearBubble();
     }
 
     @Export([webworker_rpc.ParamType.num])
     public startFollow(id: number) {
-        // Logger.getInstance().debug("target ===== startFollow");
+        if (!this.mDisplayManager) return;
         const display = this.mDisplayManager.getDisplay(id);
         if (display) this.mCameraManager.startFollow(display);
     }
@@ -1442,6 +1448,7 @@ export class Render extends RPCPeer implements GameMain, IRender {
 
     @Export([webworker_rpc.ParamType.num])
     public async cameraFollow(id: number, effect: string) {
+        if (!this.mDisplayManager || !this.mCameraManager) return;
         const target = this.mDisplayManager.getDisplay(id);
         if (target) {
             if (effect === "liner") {
@@ -1461,6 +1468,7 @@ export class Render extends RPCPeer implements GameMain, IRender {
 
     @Export([webworker_rpc.ParamType.num])
     public cameraPan(id: number) {
+        if (!this.mDisplayManager) return;
         const display = this.mDisplayManager.getDisplay(id);
         if (display) {
             this.mCameraManager.pan(display.x, display.y, 300);
@@ -1474,6 +1482,7 @@ export class Render extends RPCPeer implements GameMain, IRender {
 
     @Export([webworker_rpc.ParamType.boolean])
     public setLayerDepth(val: boolean) {
+        if (!this.mSceneManager) return;
         const scene: BasicScene = this.mSceneManager.getMainScene() as BasicScene;
         if (!scene) {
             Logger.getInstance().fatal(`scene does not exist`);
@@ -1507,6 +1516,7 @@ export class Render extends RPCPeer implements GameMain, IRender {
 
     @Export()
     public showRefernceArea(id: number, area: number[][], origin: IPos, conflictMap?: number[][]) {
+        if (!this.mDisplayManager) return;
         const ele = this.mDisplayManager.getDisplay(id);
         if (!ele) return;
         ele.showRefernceArea(area, origin, conflictMap);
@@ -1514,6 +1524,7 @@ export class Render extends RPCPeer implements GameMain, IRender {
 
     @Export()
     public hideRefernceArea(id: number) {
+        if (!this.mDisplayManager) return;
         const ele = this.mDisplayManager.getDisplay(id);
         if (!ele) return;
         ele.hideRefernceArea();
@@ -1521,6 +1532,7 @@ export class Render extends RPCPeer implements GameMain, IRender {
 
     @Export()
     public displayAnimationChange(data: any) {
+        if (!this.mDisplayManager) return;
         const id = data.id;
         const direction = data.direction;
         const display = this.mDisplayManager.getDisplay(id);
@@ -1532,6 +1544,7 @@ export class Render extends RPCPeer implements GameMain, IRender {
 
     @Export([webworker_rpc.ParamType.str])
     public workerEmitter(eventType: string, data?: any) {
+        if (!this.emitter) return;
         this.emitter.emit(eventType, data);
     }
 
@@ -1574,17 +1587,20 @@ export class Render extends RPCPeer implements GameMain, IRender {
 
     @Export()
     public liftItem(id: number, display, animation) {
-        this.displayManager.liftItem(id, display, animation);
+        if (!this.mDisplayManager) return;
+        this.mDisplayManager.liftItem(id, display, animation);
     }
 
     @Export()
     public clearMount(id: number) {
+        if (!this.mDisplayManager) return;
         this.mDisplayManager.clearMount(id);
     }
 
     @Export()
     public throwElement(userid: number, target: number, display, animation) {
-        this.displayManager.throwElement(userid, target, display, animation);
+        if (!this.mDisplayManager) return;
+        this.mDisplayManager.throwElement(userid, target, display, animation);
     }
 
     @Export()
