@@ -114,7 +114,7 @@ export declare class Game extends PacketHandler implements IConnectListener, Clo
     getSize(): ISize;
     setGameConfig(config: any): void;
     getGameConfig(): ILauncherConfig;
-    getDataMgr<T>(type: DataMgrType): T;
+    getDataMgr<T>(type: DataMgrType): false | T;
     clearClock(): void;
     roomResume(roomID: number): void;
     roomPause(roomID: number): void;

@@ -553,8 +553,10 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
         if (this.mCollsionManager) this.mCollsionManager.destroy();
         if (this.mActorData) this.mActorData = null;
         Logger.getInstance().debug("room clear");
-        this.game.renderPeer.clearRoom();
-        this.game.uiManager.recover();
+        if (this.game) {
+            if (this.game.renderPeer) this.game.renderPeer.clearRoom();
+            if (this.game.uiManager) this.game.uiManager.recover();
+        }
         this.mTerrainMap = [];
         this.mWalkableMap = [];
         this.mInteractiveList = [];
