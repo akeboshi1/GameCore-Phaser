@@ -246,7 +246,7 @@ export class UIManager extends PacketHandler {
 
     protected async onForceOfflineHandler(packet: PBpacket) {
         const txt = await this.game.renderPeer.i18nString("common.offline");
-        this.game.peer.render.showAlert(txt, true).then(() => {
+        this.game.peer.render.showAlert(txt, true, true).then(() => {
             this.game.peer.render.hidden();
         });
     }
