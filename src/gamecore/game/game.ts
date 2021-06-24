@@ -318,7 +318,7 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
         return this.mConfig;
     }
     public getDataMgr<T>(type: DataMgrType) {
-        return !this.dataControlManager ? false : this.dataControlManager.getDataMgr<T>(type);
+        return !this.dataControlManager ? null : this.dataControlManager.getDataMgr<T>(type);
     }
     public clearClock() {
         if (this.mClock) {
