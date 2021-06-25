@@ -3,10 +3,13 @@ import { UIAtlasName } from "../../../res";
 import { ModuleName } from "structure";
 import { Handler, i18n, UIHelper } from "utils";
 import { PicaBasePanel } from "../pica.base.panel";
-import { op_client } from "pixelpai_proto";
 import { Button, ClickEvent, NineSlicePatch } from "apowophaserui";
-import { IExtendCountablePackageItem, IGalleryCombination, MainUIRedType } from "../../../structure";
+import { IExtendCountablePackageItem, MainUIRedType } from "../../../structure";
 import { CommonBackground, ImageValue, UITools } from "..";
+import { PicaPrestigeLevelPanel } from "./PicaPrestigeLevelPanel";
+import { PicaPrestigeMarketPanel } from "./PicaPrestigeMarketPanel";
+import { PicaPrivilegeDescriblePanel } from "./PicaPrivilegeDescriblePanel";
+import { PicaPrestigeDetailPanel } from "./PicaPrestigeDetailPanel";
 export class PicaIllustratedPanel extends PicaBasePanel {
     private mBackground: CommonBackground;
     private content: Phaser.GameObjects.Container;
@@ -21,6 +24,10 @@ export class PicaIllustratedPanel extends PicaBasePanel {
     private levelButton: Button;
     private prestigeCompent: PrestigeCompent;
     private titleTex: Phaser.GameObjects.Text;
+    private prestigeDetail: PicaPrestigeDetailPanel;
+    private prestigeLev: PicaPrestigeLevelPanel;
+    private prestigeMarket: PicaPrestigeMarketPanel;
+    private privileDescrible: PicaPrivilegeDescriblePanel;
     private optionType: number;
     private redObj: any;
     constructor(uiManager: UiManager) {

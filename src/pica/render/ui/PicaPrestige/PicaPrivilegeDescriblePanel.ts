@@ -13,8 +13,9 @@ export class PicaPrivilegeDescriblePanel extends ButtonEventDispatcher {
     private titlebg: Phaser.GameObjects.Image;
     private closeBtn: Button;
     private labelTips: Phaser.GameObjects.Text;
+    private prestigeLev: Phaser.GameObjects.Text;
     private icon: DynamicImage;
-    private privilege: Phaser.GameObjects.Text;
+    private privilegeTex: Phaser.GameObjects.Text;
     constructor(scene: Phaser.Scene, width: number, height: number, dpr: number, zoom: number) {
         super(scene, dpr, zoom, false);
         this.setSize(width, height);
@@ -38,7 +39,7 @@ export class PicaPrivilegeDescriblePanel extends ButtonEventDispatcher {
     hide() {
         this.visible = false;
     }
-    public setUltimateRewards(datas: ICountablePackageItem[], maxLevel: number) {
+    public setPrestigeData(datas: ICountablePackageItem[], maxLevel: number) {
 
     }
 
@@ -67,10 +68,16 @@ export class PicaPrivilegeDescriblePanel extends ButtonEventDispatcher {
         this.closeBtn = new Button(this.scene, UIAtlasName.uicommon, "close");
         this.closeBtn.setPosition(conWidth * 0.5 - 7 * this.dpr, posY + this.dpr * 7);
         this.closeBtn.on(String(ClickEvent.Tap), this.onCloseHandler, this);
-        this.labelTips = this.scene.make.text({ text: i18n.t("market.converttips"), style: UIHelper.blackStyle(this.dpr, 16) }).setOrigin(0.5);
-        this.labelTips.y = -conHeight * 0.5 + 55 * this.dpr;
+        this.prestigeLev = this.scene.make.text({ text: i18n.t("market.converttips"), style: UIHelper.blackStyle(this.dpr, 16) }).setOrigin(0.5);
+        this.prestigeLev.y = -conHeight * 0.5 + 55 * this.dpr;
         this.icon = new DynamicImage(this.scene, 0, 0, UIAtlasName.prestige, "prestige_privilege_icon");
-        this.content.add([this.bg, this.titlebg, this.titleText, this.closeBtn, this.labelTips]);
+        this.icon.y = this.prestigeLev.y + this.icon.height * 0.5 + 20 * this.dpr;
+        this.labelTips = this.scene.make.text({ text: i18n.t("market.converttips"), style: UIHelper.blackStyle(this.dpr, 16) }).setOrigin(0.5);
+        this.labelTips.y = this.icon.y + 35 * this.dpr;
+        this.privilegeTex = this.scene.make.text({ text: i18n.t("market.converttips"), style: UIHelper.blackStyle(this.dpr, 16) }).setOrigin(0);
+        this.privilegeTex.setWordWrapWidth(264 * this.dpr, true);
+        this.privilegeTex.y = this.labelTips.y + 35 * this.dpr;
+        this.content.add([this.bg, this.titlebg, this.titleText, this.closeBtn, this.labelTips, this.icon, this.privilegeTex]);
         this.resize(width, height);
     }
 
