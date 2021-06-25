@@ -7,7 +7,7 @@ import { BaseDataConfigManager } from "../../config/base.data.config.manager";
 
 export class PicaDecorateMediator extends BasicMediator {
 
-    private readonly QUICK_SELECT_COUNT: number = 6;
+    private readonly QUICK_SELECT_COUNT: number = 5;
 
     private mDecorateManager: DecorateManager;
     private mCacheData_UpdateCount: Array<{ baseID: string, count: number }> = [];
