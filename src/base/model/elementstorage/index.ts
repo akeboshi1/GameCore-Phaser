@@ -1,1 +1,1 @@
-export { IElementStorage, ElementStorage, IAsset } from "./element.storage";
+export { IElementStorage, ElementStorage, IDisplayRef, IAsset } from "./element.storage";

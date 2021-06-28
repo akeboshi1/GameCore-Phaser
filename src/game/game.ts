@@ -2,7 +2,7 @@ import { UIManager } from "./ui/ui.manager";
 import { PBpacket, PacketHandler } from "net-socket-packet";
 import { MainPeer } from "./main.peer";
 import { op_def, op_client, op_virtual_world, op_gateway } from "pixelpai_proto";
-import { Lite } from "game-capsule";
+import { Capsule, Lite } from "game-capsule";
 import { ConnectionService } from "../../lib/net/connection.service";
 import { IConnectListener } from "../../lib/net/socket";
 import { Logger, ResUtils, Tool, load, EventDispatcher, HttpLoadManager, Url, ChatCommandInterface } from "utils";
@@ -386,7 +386,7 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
 
     set moveStyle(moveStyle: number) {
         this.mMoveStyle = moveStyle;
-        this.mainPeer.render.setMoveStyle(moveStyle);
+        // this.mainPeer.render.setMoveStyle(moveStyle);
     }
 
     get moveStyle(): number {
@@ -953,12 +953,12 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
         //  this.user.userData.querySYNC_ALL_PACKAGE();
     }
 
-    private decodeConfigs(req): Promise<Lite> {
+    private decodeConfigs(req): Promise<Capsule> {
         return new Promise((resolve, reject) => {
             const arraybuffer = req.response;
             if (arraybuffer) {
                 try {
-                    const gameConfig = new Lite();
+                    const gameConfig = new Capsule();
                     gameConfig.deserialize(new Uint8Array(arraybuffer));
                     Logger.getInstance().debug("TCL: World -> gameConfig", gameConfig);
                     // const list = (<any>gameConfig)._root._moss._peersDict;

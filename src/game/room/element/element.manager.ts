@@ -9,7 +9,7 @@ import { ElementStateManager } from "./element.state.manager";
 import { ElementDataManager } from "../../data.manager/element.dataManager";
 import { DataMgrType } from "../../data.manager";
 import { ElementActionManager } from "../elementaction/element.action.manager";
-import { IElementStorage, Sprite } from "baseModel";
+import { IElementStorage, IDisplayRef, Sprite } from "baseModel";
 import NodeType = op_def.NodeType;
 import { PicaElementActionManager } from "gamecore";
 
@@ -39,11 +39,16 @@ export class ElementManager extends PacketHandler implements IElementManager {
     /**
      * 添加element缓存list
      */
-    protected mCacheAddList: any[] = [];
+    protected mCacheAddList: IDisplayRef[] = [];
     /**
      * 更新element缓存list
      */
     protected mCacheSyncList: any[] = [];
+
+    /**
+     * 配置文件等待渲染的物件。
+     */
+    protected mCacheDisplayRef: Map<number, IDisplayRef> = new Map();
 
     /**
      * Add添加 End清空
@@ -85,6 +90,9 @@ export class ElementManager extends PacketHandler implements IElementManager {
             this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_MOVE_SPRITE, this.onMove);
             this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_ADJUST_POSITION, this.onAdjust);
             this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_SYNC_SPRITE, this.onSync);
+            this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_HOT_BLOCK_SYNC_SPRITE, this.onBlockSyncSprite);
+            this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_HOT_BLOCK_DELETE_SPRITE, this.onBlockDeleteSprite);
+            this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_HOT_BLOCK_SYNC_SPRITE_END, this.onBlockSpriteEnd);
             this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_ONLY_BUBBLE, this.onShowBubble);
             this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_ONLY_BUBBLE_CLEAN, this.onClearBubbleHandler);
             this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_CHANGE_SPRITE_ANIMATION, this.onChangeAnimation);
@@ -140,6 +148,13 @@ export class ElementManager extends PacketHandler implements IElementManager {
         for (const sprite of sprites) {
             this._add(sprite, addMap);
         }
+    }
+
+    public addDisplayRef(displays: IDisplayRef[]) {
+        for (const display of displays) {
+            if (!this.get(display.id)) this.mCacheDisplayRef.set(display.id, display);
+        }
+        this.dealSyncList();
     }
 
     public checkElementAction(id: number, userid?: number): boolean {
@@ -250,8 +265,10 @@ export class ElementManager extends PacketHandler implements IElementManager {
             if (!obj) continue;
             point = obj.point3f;
             if (point) {
+                if (this.mCacheDisplayRef.has(obj.id)) {
+                    this.mCacheDisplayRef.delete(obj.id);
+                }
                 sprite = new Sprite(obj, 3);
-                (<Sprite>sprite).init(obj);
                 if (!this.checkDisplay(sprite)) {
                     ids.push(sprite.id);
                 } else {
@@ -303,7 +320,6 @@ export class ElementManager extends PacketHandler implements IElementManager {
                 }
                 // 更新elementstorage中显示对象的数据信息
                 const data = new Sprite(sprite, 3);
-                (<Sprite>data).init(sprite);
                 if (data.displayInfo) this.mRoom.game.elementStorage.add(data.displayInfo);
                 element = this.get(sprite.id);
                 if (element) {
@@ -325,6 +341,15 @@ export class ElementManager extends PacketHandler implements IElementManager {
             this.mStateMgr.syncElement(ele);
             this.checkElementDataAction(ele);
         }
+    }
+
+    public dealDisplyRef() {
+        this.mCacheDisplayRef.forEach((ref) => {
+            const sprite = new Sprite({ id: ref.id }, op_def.NodeType.ElementNodeType);
+            sprite.importDisplayRef(ref);
+            this._add(sprite, true);
+        });
+        this.mCacheDisplayRef.clear();
     }
 
     public onDisplayReady(id: number) {
@@ -654,5 +679,49 @@ export class ElementManager extends PacketHandler implements IElementManager {
     private onActiveSpriteHandler(packet: PBpacket) {
         const content: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_ACTIVE_SPRITE = packet.content;
         this.checkElementAction(content.targetId, content.spriteId);
+    }
+
+    private onBlockSyncSprite(packet: PBpacket) {
+        const content: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_HOT_BLOCK_SYNC_SPRITE = packet.content;
+        if (content.nodeType !== op_def.NodeType.ElementNodeType) {
+            return;
+        }
+        const sprites = content.sprites;
+        const ids = [];
+        for (const sprite of sprites) {
+            if (this.get(sprite.id)) {
+                continue;
+            }
+            const sp = new Sprite(sprite);
+            const displayRef = this.mCacheDisplayRef.get(sprite.id);
+            if (displayRef) {
+                this.mCacheDisplayRef.delete(sprite.id);
+                sp.setDisplayInfo(displayRef.displayModel);
+            }
+            if (!sp.displayInfo) ids.push(sprite.id);
+            else this._add(sp, true);
+        }
+        this.fetchDisplay(ids);
+        if (content.packet.currentFrame === content.packet.totalFrame) {
+            this.dealDisplyRef();
+        }
+    }
+
+    private onBlockDeleteSprite(packet: PBpacket) {
+        const content: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_HOT_BLOCK_DELETE_SPRITE = packet.content;
+        if (content.nodeType !== op_def.NodeType.ElementNodeType) {
+            return;
+        }
+        const ids = content.spriteIds;
+        for (const id of ids) {
+            if (this.mCacheDisplayRef.has(id)) this.mCacheDisplayRef.delete(id);
+            if (this.get(id)) this.remove(id);
+        }
+        this.mRoom.onManagerReady(this.constructor.name);
+    }
+
+    private onBlockSpriteEnd(packet: PBpacket) {
+        this.dealDisplyRef();
+        this.mRoom.onManagerReady(this.constructor.name);
     }
 }

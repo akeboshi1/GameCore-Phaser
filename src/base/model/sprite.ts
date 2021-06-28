@@ -4,6 +4,7 @@ import { op_def, op_gameconfig, op_client, op_gameconfig_01 } from "pixelpai_pro
 import { Helpers } from "game-capsule";
 import { DragonbonesModel } from "./dragonbones.model";
 import { FramesModel } from "./frames.model";
+import { IDisplayRef } from "./elementstorage";
 enum TitleMask {
     TQ_NickName = 0x00010000,
     TQ_Badge = 0x00020000,
@@ -420,6 +421,19 @@ export class Sprite extends EventDispatcher implements ISprite {
     unregisterAnimationMap(key: string) {
         if (!this.registerAnimation) return;
         this.registerAnimation.delete(key);
+    }
+
+    importDisplayRef(displayRef: IDisplayRef) {
+        const { pos, direction, displayModel } = displayRef;
+        this.pos = new LogicPos(pos.x, pos.y, pos.z);
+        this.direction = direction;
+        this.displayInfo = displayModel;
+        if (!this.displayInfo) {
+            Logger.getInstance().error(`${displayRef.name}-${displayRef.id} displayInfo does not exise!`);
+            return this;
+        }
+        this.setAnimationName(this.displayInfo.animationName);
+        return this;
     }
 
     private setAnimationData(animationName: string, direction: number, times?: number) {

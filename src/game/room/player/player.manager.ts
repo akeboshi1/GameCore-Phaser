@@ -35,6 +35,8 @@ export class PlayerManager extends PacketHandler implements IElementManager {
             this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_CHAT, this.onShowBubble);
             this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_ONLY_BUBBLE_CLEAN, this.onClearBubbleHandler);
             this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_SYNC_SPRITE, this.onSync);
+            this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_HOT_BLOCK_SYNC_SPRITE, this.onSync);
+            this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_HOT_BLOCK_DELETE_SPRITE, this.onBlockDeleteSprite);
             this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_CHANGE_SPRITE_ANIMATION, this.onChangeAnimation);
             this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_SET_SPRITE_POSITION, this.onSetPosition);
             this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_SET_POSITION, this.onSetPosition);
@@ -257,6 +259,13 @@ export class PlayerManager extends PacketHandler implements IElementManager {
                 } else if (command === op_def.OpCommand.OP_COMMAND_PATCH) {
                     player.updateModel(sprite, this.mRoom.game.avatarType);
                 }
+            } else {
+                // create sprite.attrs数据
+                this._loadSprite(sprite);
+                // create sprite.avatar数据
+                this.checkSuitAvatarSprite(sprite);
+                const _sprite = new Sprite(sprite, content.nodeType);
+                this._add(_sprite);
             }
         }
     }
@@ -324,7 +333,6 @@ export class PlayerManager extends PacketHandler implements IElementManager {
             // create sprite.avatar数据
             this.checkSuitAvatarSprite(sprite);
             const _sprite = new Sprite(sprite, content.nodeType);
-            _sprite.init(sprite);
             this._add(_sprite);
         }
     }
@@ -442,6 +450,34 @@ export class PlayerManager extends PacketHandler implements IElementManager {
             player = this.get(id);
             if (player) {
                 player.setQueue(content.changeAnimation);
+            }
+        }
+    }
+
+    private onBlockSyncSprite(packet: PBpacket) {
+        const content: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_HOT_BLOCK_SYNC_SPRITE = packet.content;
+        const { nodeType, sprites } = content;
+        if (nodeType !== op_def.NodeType.CharacterNodeType) {
+            return;
+        }
+        for (const sprite of sprites) {
+            if (!this.get(sprite.id)) {
+                // create sprite.attrs数据
+                this._loadSprite(sprite);
+                // create sprite.avatar数据
+                this.checkSuitAvatarSprite(sprite);
+                const _sprite = new Sprite(sprite, content.nodeType);
+                this._add(_sprite);
+            }
+        }
+    }
+
+    private onBlockDeleteSprite(packet: PBpacket) {
+        const content: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_HOT_BLOCK_DELETE_SPRITE = packet.content;
+        const { nodeType, spriteIds } = content;
+        for (const id of spriteIds) {
+            if (this.get(id)) {
+                this.remove(id);
             }
         }
     }
