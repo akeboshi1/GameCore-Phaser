@@ -50,6 +50,7 @@ export interface IDisplayRef {
     pos?: IPos;
     direction?: number;
     blockIndex?: number;
+    layer?: number;
     displayModel?: FramesModel | DragonbonesModel;
 }
 
@@ -249,6 +250,7 @@ export class ElementStorage implements IElementStorage {
                     direction: ele.animations.dir,
                     name: obj.name,
                     displayModel,
+                    layer: ele.layer,
                 };
                 this.addDisplayRef(eleRef, op_def.NodeType.ElementNodeType);
             }
@@ -265,34 +267,8 @@ export class ElementStorage implements IElementStorage {
         // for (const scenery of scenerys) {
         //     this._scenerys.push(scenery);
         // }
-        const terrains = this._terrainCollection.data;
-        const rows = terrains.length;
-        const cols = terrains[0].length;
-        for (let i = 0; i < rows; i++) {
-            for (let j = 0; j < cols; j++) {
-                if (terrains[i][j] === 0) continue;
-                const id = i << 16 | j;
-                const pos = Position45.transformTo90(new LogicPos(i, j), sceneNode.size);
-                this.addDisplayRef({
-                    id,
-                    displayModel: this.getTerrainPalette(terrains[i][j]),
-                    pos,
-                    blockIndex: new BlockIndex().getBlockIndex(pos.x, pos.y, sceneNode.size)
-                }, op_def.NodeType.TerrainNodeType);
-            }
-        }
-
-        const mossCollection = this._mossCollection.data;
-        for (const moss of mossCollection) {
-            const mossPalette = this.getMossPalette(moss.key);
-            this.addDisplayRef({
-                id: moss.id,
-                direction: moss.dir || 3,
-                pos: new LogicPos(moss.x, moss.y, moss.z),
-                displayModel: mossPalette.frameModel,
-                blockIndex: new BlockIndex().getBlockIndex(moss.x, moss.y, sceneNode.size)
-            }, op_def.NodeType.ElementNodeType);
-        }
+        this.addTerrainToDisplayRef(sceneNode);
+        this.addMossToDisplayRef(sceneNode);
     }
 
     public add(obj: FramesModel | DragonbonesModel) {
@@ -377,6 +353,41 @@ export class ElementStorage implements IElementStorage {
         const map = this.mDisplayRefMap.get(nodeType);
         if (!map) return;
         map.set(displayRef.id, displayRef);
+    }
+
+    private addTerrainToDisplayRef(sceneNode: SceneNode) {
+        const terrains = this._terrainCollection.data;
+        const rows = terrains.length;
+        const cols = terrains[0].length;
+        for (let i = 0; i < rows; i++) {
+            for (let j = 0; j < cols; j++) {
+                if (terrains[i][j] === 0) continue;
+                const id = i << 16 | j;
+                const pos = Position45.transformTo90(new LogicPos(i, j), sceneNode.size);
+                this.addDisplayRef({
+                    id,
+                    displayModel: this.getTerrainPalette(terrains[i][j]),
+                    pos,
+                    blockIndex: new BlockIndex().getBlockIndex(pos.x, pos.y, sceneNode.size)
+                }, op_def.NodeType.TerrainNodeType);
+            }
+        }
+    }
+
+    private addMossToDisplayRef(sceneNode: SceneNode) {
+        const mossCollection = this._mossCollection.data;
+        for (const moss of mossCollection) {
+            const mossPalette = this.getMossPalette(moss.key);
+            const { layer, frameModel } = mossPalette;
+            this.addDisplayRef({
+                id: moss.id,
+                direction: moss.dir || 3,
+                pos: new LogicPos(moss.x, moss.y, moss.z),
+                displayModel: frameModel,
+                layer,
+                blockIndex: new BlockIndex().getBlockIndex(moss.x, moss.y, sceneNode.size)
+            }, op_def.NodeType.ElementNodeType);
+        }
     }
 
     private clearDisplayRef() {

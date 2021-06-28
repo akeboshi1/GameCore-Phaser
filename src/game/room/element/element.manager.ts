@@ -343,11 +343,15 @@ export class ElementManager extends PacketHandler implements IElementManager {
         }
     }
 
-    public dealDisplyRef() {
+    public dealDisplayRef() {
         this.mCacheDisplayRef.forEach((ref) => {
-            const sprite = new Sprite({ id: ref.id }, op_def.NodeType.ElementNodeType);
-            sprite.importDisplayRef(ref);
-            this._add(sprite, true);
+            const { id, pos, name, direction } = ref;
+            this.addSpritesToCache([{
+                id,
+                point3f: pos,
+                nickname: name,
+                direction,
+             }]);
         });
         this.mCacheDisplayRef.clear();
     }
@@ -687,24 +691,17 @@ export class ElementManager extends PacketHandler implements IElementManager {
             return;
         }
         const sprites = content.sprites;
-        const ids = [];
+        const cache = [];
         for (const sprite of sprites) {
             if (this.get(sprite.id)) {
                 continue;
             }
-            const sp = new Sprite(sprite);
-            const displayRef = this.mCacheDisplayRef.get(sprite.id);
-            if (displayRef) {
+            if (this.mCacheDisplayRef.has(sprite.id)) {
                 this.mCacheDisplayRef.delete(sprite.id);
-                sp.setDisplayInfo(displayRef.displayModel);
             }
-            if (!sp.displayInfo) ids.push(sprite.id);
-            else this._add(sp, true);
+            cache.push(sprite);
         }
-        this.fetchDisplay(ids);
-        if (content.packet.currentFrame === content.packet.totalFrame) {
-            this.dealDisplyRef();
-        }
+        if (cache.length > 0) this.addSpritesToCache(cache);
     }
 
     private onBlockDeleteSprite(packet: PBpacket) {
@@ -717,11 +714,11 @@ export class ElementManager extends PacketHandler implements IElementManager {
             if (this.mCacheDisplayRef.has(id)) this.mCacheDisplayRef.delete(id);
             if (this.get(id)) this.remove(id);
         }
-        this.mRoom.onManagerReady(this.constructor.name);
     }
 
     private onBlockSpriteEnd(packet: PBpacket) {
-        this.dealDisplyRef();
+        this.dealDisplayRef();
+        this.addComplete(packet);
         this.mRoom.onManagerReady(this.constructor.name);
     }
 }
