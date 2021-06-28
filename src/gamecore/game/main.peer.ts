@@ -177,7 +177,7 @@ export class MainPeer extends RPCPeer {
 
     @Export()
     public updatePalette(palette) {
-        if (this.game.elementStorage)this.game.elementStorage.updatePalette(palette);
+        if (this.game.elementStorage) this.game.elementStorage.updatePalette(palette);
     }
 
     @Export([webworker_rpc.ParamType.num])
@@ -279,7 +279,7 @@ export class MainPeer extends RPCPeer {
     @Export()
     public startRoomPlay() {
         Logger.getInstance().debug("peer startroom");
-        this.game.roomManager.currentRoom.startPlay();
+        if (this.game.roomManager && this.game.roomManager.currentRoom) this.game.roomManager.currentRoom.startPlay();
     }
 
     @Export([webworker_rpc.ParamType.str, webworker_rpc.ParamType.str])
