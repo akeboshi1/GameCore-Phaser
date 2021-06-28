@@ -287,9 +287,10 @@ export class ElementStorage implements IElementStorage {
             const mossPalette = this.getMossPalette(moss.key);
             this.addDisplayRef({
                 id: moss.id,
-                direction: moss.dir,
+                direction: moss.dir || 3,
                 pos: new LogicPos(moss.x, moss.y, moss.z),
                 displayModel: mossPalette.frameModel,
+                blockIndex: new BlockIndex().getBlockIndex(moss.x, moss.y, sceneNode.size)
             }, op_def.NodeType.ElementNodeType);
         }
     }
