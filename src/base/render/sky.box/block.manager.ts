@@ -303,7 +303,7 @@ export class BlockManager implements IBlockManager {
       if (this.mScenery.fit === Fit.Center) {
         const size = await this.render.getCurrentRoomSize();
         const { width, height } = this.mScenery;
-        x = size.sceneWidth - width >> 1;
+        x = -width >> 1;
         y = size.sceneHeight - height >> 1;
       }
     }
