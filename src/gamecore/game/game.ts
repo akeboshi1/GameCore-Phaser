@@ -717,7 +717,7 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
             }
             if (this.connect) {
                 this.removePacketListener();
-                // this.connect.closeConnect();
+                this.connect.closeConnect();
             }
             if (this.mClock) {
                 this.mClock.destroy();
@@ -739,7 +739,8 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
         this.clearGame(true).then(() => {
             this.isPause = false;
             if (this.connect) {
-                // this.connect.closeConnect();
+                this.removePacketListener();
+                this.connect.closeConnect();
             }
             if (this.mClock) {
                 this.mClock.destroy();
@@ -747,7 +748,6 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
             }
             this.mainPeer.render.createAccount(gameId, virtualworldId, sceneId, loc, spawnPointId);
             this.createManager();
-            this.removePacketListener();
             this.addPacketListener();
             this.startConnect();
             this.mClock = new Clock(this.connect, this.peer);
