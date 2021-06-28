@@ -129,7 +129,7 @@ export class BlockManager implements IBlockManager {
     const { offset } = this.mScenery;
     const loc = await this.fixPosition({ x: offset.x, y: offset.y });
     Logger.getInstance().log("camera pos ====>", loc, "camera offset ====>", offset);
-    camera.setPosition(0, 0);
+    camera.setPosition(loc.x, loc.y);
 
     for (const block of this.mGrids) {
       block.updatePosition();
@@ -303,7 +303,7 @@ export class BlockManager implements IBlockManager {
       if (this.mScenery.fit === Fit.Center) {
         const size = await this.render.getCurrentRoomSize();
         const { width, height } = this.mScenery;
-        x = -width >> 1;
+        x = size.sceneWidth - width >> 1;
         y = size.sceneHeight - height >> 1;
       }
     }
