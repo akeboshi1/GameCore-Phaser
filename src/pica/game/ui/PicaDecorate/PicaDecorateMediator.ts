@@ -122,7 +122,7 @@ export class PicaDecorateMediator extends BasicMediator {
         });
 
         if (furnitures.length > this.QUICK_SELECT_COUNT) {
-            furnitures = furnitures.slice(0, this.QUICK_SELECT_COUNT - 1);
+            furnitures = furnitures.slice(0, this.QUICK_SELECT_COUNT);
         }
         this.mView.setQuickSelectFurnitures(furnitures);
 
