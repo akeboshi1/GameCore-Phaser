@@ -284,10 +284,6 @@ export class Render extends RPCPeer implements GameMain, IRender {
         //     this.mLocalStorageManager.destroy();
         //     this.mLocalStorageManager = undefined;
         // }
-        if (this.mSceneManager) {
-            this.mSceneManager.destroy();
-            this.mSceneManager = undefined;
-        }
         if (this.mSoundManager) {
             this.mSoundManager.destroy();
             this.mSoundManager = undefined;
@@ -307,6 +303,10 @@ export class Render extends RPCPeer implements GameMain, IRender {
         if (this.mEditorCanvasManager) {
             this.mEditorCanvasManager.destroy();
             this.mEditorCanvasManager = undefined;
+        }
+        if (this.mSceneManager) {
+            this.mSceneManager.destroy();
+            this.mSceneManager = undefined;
         }
     }
 
