@@ -129,7 +129,7 @@ export class BlockManager implements IBlockManager {
     const { offset } = this.mScenery;
     const loc = await this.fixPosition({ x: offset.x, y: offset.y });
     Logger.getInstance().log("camera pos ====>", loc, "camera offset ====>", offset);
-    // camera.setPosition(loc.x, loc.y);
+    camera.setPosition(0, 0);
 
     for (const block of this.mGrids) {
       block.updatePosition();
