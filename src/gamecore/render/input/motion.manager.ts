@@ -118,7 +118,7 @@ export class MotionManager {
 
     protected async onPointerDownHandler(pointer: Phaser.Input.Pointer) {
         if (!this.isRunning) return;
-        if (this.render.guideManager.canInteractive()) return;
+        if (!this.render.guideManager || this.render.guideManager.canInteractive()) return;
         this.scene.input.on("pointermove", this.onPointerMoveHandler, this);
         this.holdTime = setTimeout(() => {
             this.isHolding = true;
@@ -130,14 +130,14 @@ export class MotionManager {
         this.isHolding = false;
         this.scene.input.off("pointermove", this.onPointerMoveHandler, this);
 
-        if (this.render.guideManager.canInteractive()) return;
+        if (!this.render.guideManager || this.render.guideManager.canInteractive()) return;
         if (Math.abs(pointer.downX - pointer.upX) >= 5 * this.render.scaleRatio && Math.abs(pointer.downY - pointer.upY) >= 5 * this.render.scaleRatio || pointer.upTime - pointer.downTime > this.holdDelay) {
             this.stop();
         } else {
             if (this.gameObject) {
                 const id = this.gameObject.getData("id");
                 if (id) {
-                    if (this.render.guideManager.canInteractive(id)) return;
+                    if (!this.render.guideManager || this.render.guideManager.canInteractive(id)) return;
                     await this.getEleMovePath(id, pointer);
                 }
             } else {
@@ -181,7 +181,7 @@ export class MotionManager {
 
     protected onUiGameObjectDownHandler(pointer) {
         if (!this.isRunning) return;
-        if (this.render.guideManager.canInteractive()) return;
+        if (!this.render.guideManager || this.render.guideManager.canInteractive()) return;
         this.isHolding = false;
         this.scene.input.off("pointermove", this.onPointerMoveHandler, this);
         // const position = this.getPreUserPos(pointer);
@@ -193,13 +193,13 @@ export class MotionManager {
     protected onGameObjectDownHandler(pointer, gameObject) {
         if (!this.isRunning) return;
         const id = gameObject ? gameObject.getData("id") : undefined;
-        if (this.render.guideManager.canInteractive(id)) return;
+        if (!this.render.guideManager || this.render.guideManager.canInteractive(id)) return;
         this.gameObject = gameObject;
     }
 
     protected onGameObjectUpHandler(pointer, gameObject) {
         if (!this.isRunning) return;
-        if (this.render.guideManager.canInteractive()) return;
+        if (!this.render.guideManager || this.render.guideManager.canInteractive()) return;
     }
 
     protected getMountId(id: number) {
