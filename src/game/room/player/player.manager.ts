@@ -249,8 +249,8 @@ export class PlayerManager extends PacketHandler implements IElementManager {
         const command = content.command;
         for (const sprite of sprites) {
             player = this.get(sprite.id);
+            this._loadSprite(sprite);
             if (player) {
-                this._loadSprite(sprite);
                 if (command === op_def.OpCommand.OP_COMMAND_UPDATE) {
                     this.checkSuitAvatarSprite(sprite);
                     const _sprite = new Sprite(sprite, content.nodeType);
@@ -260,8 +260,6 @@ export class PlayerManager extends PacketHandler implements IElementManager {
                     player.updateModel(sprite, this.mRoom.game.avatarType);
                 }
             } else {
-                // create sprite.attrs数据
-                this._loadSprite(sprite);
                 // create sprite.avatar数据
                 this.checkSuitAvatarSprite(sprite);
                 const _sprite = new Sprite(sprite, content.nodeType);
