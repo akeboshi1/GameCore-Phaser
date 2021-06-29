@@ -157,24 +157,24 @@
 					}
 				},
 				{
-					"filename": "prestige_grow_icon",
+					"filename": "illustrate_nav_select",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
-						"w": 17,
-						"h": 17
+						"w": 84,
+						"h": 3
 					},
 					"spriteSourceSize": {
 						"x": 0,
 						"y": 0,
-						"w": 17,
-						"h": 17
+						"w": 84,
+						"h": 3
 					},
 					"frame": {
 						"x": 586,
 						"y": 1647,
-						"w": 17,
-						"h": 17
+						"w": 84,
+						"h": 3
 					}
 				},
 				{
@@ -192,10 +192,31 @@
 						"h": 3
 					},
 					"frame": {
-						"x": 587,
-						"y": 1624,
+						"x": 586,
+						"y": 1652,
 						"w": 3,
 						"h": 3
+					}
+				},
+				{
+					"filename": "prestige_grow_icon",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 17,
+						"h": 17
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 17,
+						"h": 17
+					},
+					"frame": {
+						"x": 587,
+						"y": 1624,
+						"w": 17,
+						"h": 17
 					}
 				},
 				{
@@ -213,7 +234,7 @@
 						"h": 39
 					},
 					"frame": {
-						"x": 605,
+						"x": 672,
 						"y": 1624,
 						"w": 30,
 						"h": 39
@@ -234,52 +255,10 @@
 						"h": 32
 					},
 					"frame": {
-						"x": 637,
+						"x": 704,
 						"y": 1624,
 						"w": 31,
 						"h": 32
-					}
-				},
-				{
-					"filename": "prestige_assets_currency_icon",
-					"rotated": false,
-					"trimmed": false,
-					"sourceSize": {
-						"w": 32,
-						"h": 31
-					},
-					"spriteSourceSize": {
-						"x": 0,
-						"y": 0,
-						"w": 32,
-						"h": 31
-					},
-					"frame": {
-						"x": 670,
-						"y": 1624,
-						"w": 32,
-						"h": 31
-					}
-				},
-				{
-					"filename": "prestige_like_icon",
-					"rotated": false,
-					"trimmed": false,
-					"sourceSize": {
-						"w": 30,
-						"h": 30
-					},
-					"spriteSourceSize": {
-						"x": 0,
-						"y": 0,
-						"w": 30,
-						"h": 30
-					},
-					"frame": {
-						"x": 704,
-						"y": 1624,
-						"w": 30,
-						"h": 30
 					}
 				},
 				{
@@ -297,7 +276,7 @@
 						"h": 373
 					},
 					"frame": {
-						"x": 736,
+						"x": 737,
 						"y": 1,
 						"w": 211,
 						"h": 373
@@ -318,7 +297,7 @@
 						"h": 62
 					},
 					"frame": {
-						"x": 949,
+						"x": 950,
 						"y": 1,
 						"w": 62,
 						"h": 62
@@ -339,7 +318,7 @@
 						"h": 49
 					},
 					"frame": {
-						"x": 949,
+						"x": 950,
 						"y": 65,
 						"w": 49,
 						"h": 49
@@ -360,7 +339,7 @@
 						"h": 45
 					},
 					"frame": {
-						"x": 949,
+						"x": 950,
 						"y": 116,
 						"w": 45,
 						"h": 45
@@ -381,10 +360,52 @@
 						"h": 45
 					},
 					"frame": {
-						"x": 949,
+						"x": 950,
 						"y": 163,
 						"w": 45,
 						"h": 45
+					}
+				},
+				{
+					"filename": "prestige_assets_currency_icon",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 32,
+						"h": 31
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 32,
+						"h": 31
+					},
+					"frame": {
+						"x": 950,
+						"y": 210,
+						"w": 32,
+						"h": 31
+					}
+				},
+				{
+					"filename": "prestige_like_icon",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 30,
+						"h": 30
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 30,
+						"h": 30
+					},
+					"frame": {
+						"x": 984,
+						"y": 210,
+						"w": 30,
+						"h": 30
 					}
 				},
 				{
@@ -402,8 +423,8 @@
 						"h": 30
 					},
 					"frame": {
-						"x": 949,
-						"y": 210,
+						"x": 984,
+						"y": 242,
 						"w": 30,
 						"h": 30
 					}
@@ -423,8 +444,8 @@
 						"h": 26
 					},
 					"frame": {
-						"x": 981,
-						"y": 210,
+						"x": 950,
+						"y": 243,
 						"w": 26,
 						"h": 26
 					}
@@ -444,7 +465,7 @@
 						"h": 373
 					},
 					"frame": {
-						"x": 736,
+						"x": 737,
 						"y": 376,
 						"w": 211,
 						"h": 373
@@ -472,7 +493,7 @@
 					}
 				},
 				{
-					"filename": "prestige_privilege_icon",
+					"filename": "prestige_privilege_clothe_icon",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
@@ -493,7 +514,7 @@
 					}
 				},
 				{
-					"filename": "prestige_privilege_icon1",
+					"filename": "prestige_privilege_furniture_icon",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
@@ -514,6 +535,48 @@
 					}
 				},
 				{
+					"filename": "prestige_privilege_prestige_icon",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 140,
+						"h": 140
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 140,
+						"h": 140
+					},
+					"frame": {
+						"x": 723,
+						"y": 1127,
+						"w": 140,
+						"h": 140
+					}
+				},
+				{
+					"filename": "prestige_privilege_wall_icon",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 140,
+						"h": 140
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 140,
+						"h": 140
+					},
+					"frame": {
+						"x": 865,
+						"y": 1127,
+						"w": 140,
+						"h": 140
+					}
+				},
+				{
 					"filename": "prestige_title_bg",
 					"rotated": false,
 					"trimmed": false,
@@ -529,7 +592,7 @@
 					},
 					"frame": {
 						"x": 723,
-						"y": 1127,
+						"y": 1269,
 						"w": 293,
 						"h": 56
 					}
@@ -540,6 +603,6 @@
 	"meta": {
 		"app": "https://www.codeandweb.com/texturepacker",
 		"version": "3.0",
-		"smartupdate": "$TexturePacker:SmartUpdate:7f2461f69d2936623cd26e4289c1b2a8:ea74b2eb9e92abafc8b98c4a77f4a181:a1ae6824c4a3c3c8981c4788c4507371$"
+		"smartupdate": "$TexturePacker:SmartUpdate:c4452be25ca49dddd9d31c9a235fdf33:7937d74316e62848ba8f297f873f406f:a1ae6824c4a3c3c8981c4788c4507371$"
 	}
 }

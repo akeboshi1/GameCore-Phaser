@@ -4,15 +4,14 @@ import { ModuleName } from "structure";
 import { Handler, i18n, UIHelper } from "utils";
 import { PicaBasePanel } from "../pica.base.panel";
 import { Button, ClickEvent, NineSlicePatch } from "apowophaserui";
-import { IExtendCountablePackageItem, MainUIRedType } from "../../../structure";
+import { ICurrencyLevel, IExtendCountablePackageItem, IFameLevel, IPermission, MainUIRedType } from "../../../structure";
 import { CommonBackground, ImageValue, UITools } from "..";
 import { PicaPrestigeLevelPanel } from "./PicaPrestigeLevelPanel";
 import { PicaPrestigeMarketPanel } from "./PicaPrestigeMarketPanel";
 import { PicaPrivilegeDescriblePanel } from "./PicaPrivilegeDescriblePanel";
 import { PicaPrestigeDetailPanel } from "./PicaPrestigeDetailPanel";
-export class PicaIllustratedPanel extends PicaBasePanel {
+export class PicaPrestigePanel extends PicaBasePanel {
     private mBackground: CommonBackground;
-    private content: Phaser.GameObjects.Container;
     private curToggle: ToggleColorButton;
     private topCon: Phaser.GameObjects.Container;
     private toggleCon: Phaser.GameObjects.Container;
@@ -33,7 +32,7 @@ export class PicaIllustratedPanel extends PicaBasePanel {
     constructor(uiManager: UiManager) {
         super(uiManager);
         this.key = ModuleName.PICAPRESTIGE_NAME;
-        this.loadAtlas = [UIAtlasName.uicommon, UIAtlasName.uicommon1, UIAtlasName.prestige];
+        this.loadAtlas = [UIAtlasName.uicommon, UIAtlasName.uicommon1, UIAtlasName.prestige, UIAtlasName.market];
         this.tempDatas = {};
     }
     resize(width?: number, height?: number) {
@@ -41,9 +40,14 @@ export class PicaIllustratedPanel extends PicaBasePanel {
         const h: number = this.scaleHeight;
         this.mBackground.x = w * 0.5;
         this.mBackground.y = h * 0.5;
-        this.content.x = w * 0.5;
-        this.content.y = h * 0.5;
+        this.topCon.x = w * 0.5;
+        this.topCon.y = this.topCon.height * 0.5;
         this.mBackground.setInteractive(new Phaser.Geom.Rectangle(0, 0, w, h), Phaser.Geom.Rectangle.Contains);
+        this.tempDatas = {};
+        if (this.prestigeDetail) {
+            const tempheight = this.scaleHeight - this.topCon.height;
+            this.prestigeDetail.resize(this.scaleWidth, tempheight);
+        }
         super.resize(w, h);
         this.setSize(w, h);
     }
@@ -57,49 +61,48 @@ export class PicaIllustratedPanel extends PicaBasePanel {
     init() {
         const width = this.scaleWidth, height = this.scaleHeight;
         this.mBackground = new CommonBackground(this.scene, 0, 0, width, height);
-        this.add(this.mBackground);
         this.topCon = this.scene.make.container(undefined, false);
-        this.topCon.setSize(this.width, 100 * this.dpr);
+        this.topCon.setSize(this.width, 110 * this.dpr);
+        this.add([this.mBackground, this.topCon]);
         this.toggleCon = this.scene.make.container(undefined, false);
-        this.selectLine = this.scene.make.image({ key: UIAtlasName.illustrate, frame: "illustrate_nav_select" });
+        this.selectLine = this.scene.make.image({ key: UIAtlasName.prestige, frame: "illustrate_nav_select" });
         this.toggleCon.add(this.selectLine);
-        this.toggleCon.y = 0;
+        this.toggleCon.y = -this.topCon.height * 0.5 + 35 * this.dpr;
         this.mBackButton = UITools.createBackButton(this.scene, this.dpr, this.onCloseHandler, this);
+        this.mBackButton.on(ClickEvent.Tap, this.onCloseHandler, this);
         this.mBackButton.x = -width * 0.5 + this.mBackButton.width * 0.5;
-        this.mBackButton.y = this.topCon.height * 0.5 - this.mBackButton.height * 0.5 - 10 * this.dpr;
+        this.mBackButton.y = this.toggleCon.y;
         this.mHelpBtn = new Button(this.scene, UIAtlasName.prestige, "prestige_help_icon");
         this.mHelpBtn.setInteractiveSize(25 * this.dpr, 25 * this.dpr);
         this.mHelpBtn.x = width * 0.5 - this.mHelpBtn.width * 0.5 - 14 * this.dpr;
         this.mHelpBtn.y = this.mBackButton.y;
-        this.horProgress = new ProgressMaskBar(this.scene, UIAtlasName.battlepass, "battlepass_lv_schedule_bottom", "battlepass_lv_schedule_top", UIHelper.whiteStyle(this.dpr, 6));
-        this.horProgress.y = this.mBackButton.y + this.mBackButton.height * 0.5 + 28 * this.dpr;
-        this.horProgress.x = -10 * this.dpr;
+        this.horProgress = new ProgressMaskBar(this.scene, UIAtlasName.prestige, "prestige_lv_bottom", "prestige_lv_top", UIHelper.whiteStyle(this.dpr, 6));
+        this.horProgress.y = this.mBackButton.y + this.mBackButton.height * 0.5 + 35 * this.dpr;
+        this.horProgress.x = 20 * this.dpr;
         this.progressTex = this.scene.make.text({ style: UIHelper.whiteStyle(this.dpr) }).setOrigin(0.5);
         this.progressTex.setFontStyle("bold");
         this.progressTex.x = this.horProgress.x;
         this.progressTex.y = this.horProgress.y + 6 * this.dpr;
-        this.levelButton = new Button(this.scene, UIAtlasName.battlepass, "battlepass_lv_icon", "battlepass_lv_icon", "1", undefined, this.dpr, this.scale);
+        this.levelButton = new Button(this.scene, UIAtlasName.prestige, "prestige_lv_icon", "prestige_lv_icon", "1", undefined, this.dpr, this.scale);
         this.levelButton.setFontStyle("bold");
         this.levelButton.setTextStyle(UIHelper.whiteStyle(this.dpr, 15));
+        this.levelButton.on(ClickEvent.Tap, this.onLevelButtonHandler, this);
         this.levelButton.x = this.horProgress.x - this.horProgress.width * 0.5 - this.levelButton.width * 0.5 - 8 * this.dpr;
         this.levelButton.y = this.horProgress.y;
         this.prestigeCompent = new PrestigeCompent(this.scene, 110 * this.dpr, 27 * this.dpr, this.dpr, this.scale);
-        this.prestigeCompent.x = this.horProgress.x + this.horProgress.width * 0.5 + this.prestigeCompent.width * 0.5 + 5 * this.dpr;
+        this.prestigeCompent.x = width * 0.5 - 10 * this.dpr;
         this.prestigeCompent.y = this.horProgress.y;
         this.topCon.add([this.toggleCon, this.mBackButton, this.mHelpBtn, this.horProgress, this.progressTex, this.levelButton, this.prestigeCompent]);
         this.createOptionButtons();
-        const conWdith = 295 * this.dpr;
-        const conHeight = 405 * this.dpr;
-        this.content = this.scene.make.container(undefined, false);
-        this.content.setSize(conWdith, conHeight);
-        this.add(this.content);
         this.resize();
         super.init();
     }
 
     onShow() {
-        this.openListPanel();
         if (this.redObj) this.setRedsState(this.redObj);
+        if (this.tempDatas["fame"]) {
+            this.setFameDatas(this.tempDatas["fame"]);
+        }
     }
     setAutoOption(option: number) {
         for (const obj of this.toggleCon.list) {
@@ -107,6 +110,26 @@ export class PicaIllustratedPanel extends PicaBasePanel {
                 this.onToggleButtonHandler(undefined, <any>obj);
             }
         }
+    }
+    setFameDatas(datas: IFameLevel[]) {
+        datas = datas || [];
+        this.tempDatas["fame"] = datas;
+        if (!this.mInitialized) return;
+        if (this.prestigeDetail) this.prestigeDetail.setPrestigeData(datas);
+    }
+
+    public setCategories(content: any) {
+        this.prestigeMarket.setCategories(content);
+    }
+
+    public setMoneyData(data: ICurrencyLevel) {
+        this.prestigeMarket.setMoneyData(data);
+    }
+    public updateBuyedProps(buyedDatas: any[]) {
+        this.prestigeMarket.updateBuyedProps(buyedDatas);
+    }
+    public setProp(content: any) {
+        this.prestigeMarket.setProp(content);
     }
     setRedsState(obj: any) {
         this.redObj = obj;
@@ -136,6 +159,10 @@ export class PicaIllustratedPanel extends PicaBasePanel {
                 this.onToggleButtonHandler(undefined, item);
             }
         }
+        const line = this.scene.make.graphics(undefined, false);
+        line.fillStyle(0xEEEEEE, 1);
+        line.fillRect(-this.dpr, -9 * this.dpr, 2 * this.dpr, 18 * this.dpr);
+        this.toggleCon.add(line);
         this.selectLine.y = 20 * this.dpr;
     }
 
@@ -151,113 +178,134 @@ export class PicaIllustratedPanel extends PicaBasePanel {
         this.layoutOption(this.optionType);
     }
     private layoutOption(type: number) {
-        // let tableHeight = this.height * 0.5 - this.topCon.y - this.topCon.height * 0.5;
-        // let offsetY = 30 * this.dpr;
         if (type === 1) {
             this.horProgress.visible = true;
             this.prestigeCompent.visible = false;
+            this.openDetailPanel();
+            this.hideMarketPanel();
         } else if (type === 2) {
             this.horProgress.visible = false;
             this.prestigeCompent.visible = true;
+            this.openMarketPanel();
+            this.hideDetailPanel();
         }
     }
-    private openListPanel() {
-        // this.showListPanel();
-        // this.listPanel.setListData();
-        // if (this.redObj) this.listPanel.setRedsState(this.redObj["redlist"]);
-    }
 
-    private showListPanel() {
-        // if (!this.listPanel) {
-        //     this.listPanel = new PicaIllustratedListPanel(this.scene, this.scaleWidth, this.scaleHeight, this.dpr, this.scale);
-        //     this.listPanel.setHandler(new Handler(this, this.onListHandler));
-        //     this.content.add(this.listPanel);
-        // }
-        // this.listPanel.visible = true;
-        // this.titleTex.visible = true;
+    private onLevelButtonHandler() {
+        this.openLevelPanel();
+        const fame = this.tempDatas["fame"];
+        this.prestigeLev.setRewardsData(fame);
     }
-    private hideListPanel() {
-        // this.listPanel.visible = false;
-    }
-
     private openDetailPanel() {
-        // this.showDetailPanel();
-        // if (this.tempDatas) {
-        //     this.detailPanel.setGallaryData(this.tempDatas.gallery, this.tempDatas.combinations);
-        //     if (this.tempDatas.donemission) this.detailPanel.setDoneMissionList(this.tempDatas.donemission);
-        // }
-        // if (this.redObj) this.detailPanel.setRedsState(this.redObj[MainUIRedType.GALLERY]);
+        this.showDetailPanel();
     }
 
     private showDetailPanel() {
-        // if (!this.detailPanel) {
-        //     this.detailPanel = new PicaIllustratedDetailPanel(this.scene, this.scaleWidth, this.scaleHeight, this.dpr, this.scale);
-        //     this.detailPanel.setHandler(new Handler(this, this.onDetailHandler));
-        //     this.content.add(this.detailPanel);
-        // }
-        // this.detailPanel.resize(this.scaleWidth, this.scaleHeight);
-        // this.detailPanel.visible = true;
-        // this.titleTex.visible = false;
+        const height = this.scaleHeight - this.topCon.height;
+        if (!this.prestigeDetail) {
+            this.prestigeDetail = new PicaPrestigeDetailPanel(this.scene, this.scaleWidth, height, this.dpr, this.scale);
+            this.prestigeDetail.setHandler(new Handler(this, this.onDetailHandler));
+            this.add(this.prestigeDetail);
+            this.prestigeDetail.x = this.scaleWidth * 0.5;
+            this.prestigeDetail.y = this.scaleHeight * 0.5 + this.topCon.height * 0.5;
+        }
+        this.prestigeDetail.show();
+        this.horProgress.visible = true;
+        this.prestigeCompent.visible = false;
     }
-
     private hideDetailPanel() {
-        // this.detailPanel.visible = false;
+        if (this.prestigeDetail) this.prestigeDetail.hide();
     }
 
-    private openFuriDetail(prop: IExtendCountablePackageItem) {
-        // this.showFuriDetailPanel();
-        // this.furiDetail.setProp(prop);
-    }
-    private showFuriDetailPanel() {
-        // if (!this.furiDetail) {
-        //     this.furiDetail = new PicaFuriniDetailPanel(this.scene, this.render, 334 * this.dpr, 353 * this.dpr, this.dpr, this.scale);
-        //     this.furiDetail.setHandler(new Handler(this, this.onFuriDetailHandler));
-        // }
-        // this.content.add(this.furiDetail);
-        // this.furiDetail.visible = true;
-        // this.furiDetail.refreshMask();
+    private openMarketPanel() {
+        this.showMarketPanel();
+        this.render.renderEmitter(this.key + "_getCategories");
     }
 
-    private hideFuriDetailPanel() {
-        // this.content.remove(this.furiDetail);
-        // this.furiDetail.visible = false;
+    private showMarketPanel() {
+        if (!this.prestigeMarket) {
+            this.prestigeMarket = new PicaPrestigeMarketPanel(this.uiManager);
+            this.addAt(this.prestigeMarket, 1);
+        }
+        this.prestigeMarket.show();
+        this.horProgress.visible = false;
+        this.prestigeCompent.visible = true;
     }
 
-    private onListHandler(tag: string, data?: any) {
-        if (tag === "make") {
-            this.render.renderEmitter(this.key + "_openpanel", tag);
-        } else if (tag === "gallary") {
-            this.hideListPanel();
-            this.openDetailPanel();
-        } else if (tag === "cooking") {
-            this.render.renderEmitter(this.key + "_openpanel", tag);
+    private hideMarketPanel() {
+        if (this.prestigeMarket) this.prestigeMarket.hide();
+    }
+
+    private openLevelPanel() {
+        this.showLevelPanel();
+    }
+    private showLevelPanel() {
+        if (!this.prestigeLev) {
+            this.prestigeLev = new PicaPrestigeLevelPanel(this.scene, this.width, this.height, this.dpr, this.scale);
+            this.prestigeLev.setHandler(new Handler(this, this.onLevelHandler));
+            this.add(this.prestigeLev);
+            this.prestigeLev.x = this.scaleWidth * 0.5;
+            this.prestigeLev.y = this.scaleHeight * 0.5;
+        }
+        this.prestigeLev.visible = true;
+        this.hideContentPanel();
+    }
+
+    private hideLevelPanel() {
+        if (this.prestigeLev) this.prestigeLev.visible = false;
+        this.showContentPanel();
+
+    }
+
+    private openDescriblePanel() {
+        this.showDescriblePanel();
+    }
+    private showDescriblePanel() {
+        if (!this.privileDescrible) {
+            this.privileDescrible = new PicaPrivilegeDescriblePanel(this.scene, 334 * this.dpr, 353 * this.dpr, this.dpr, this.scale);
+            this.add(this.privileDescrible);
+        }
+        this.privileDescrible.visible = true;
+    }
+
+    private hideDescriblePanel() {
+        if (this.privileDescrible) this.privileDescrible.visible = false;
+    }
+
+    private showContentPanel() {
+        if (this.topCon) this.topCon.visible = true;
+        if (this.optionType === 1) {
+            if (this.prestigeDetail) this.prestigeDetail.visible = true;
+        } else {
+            if (this.prestigeMarket) this.prestigeMarket.visible = true;
+        }
+    }
+
+    private hideContentPanel() {
+        if (this.topCon) this.topCon.visible = false;
+        if (this.optionType === 1) {
+            this.prestigeDetail.visible = false;
+        } else {
+            this.prestigeMarket.visible = false;
         }
     }
 
     private onDetailHandler(tag: string, data: any) {
-        if (tag === "close") {
-            this.hideDetailPanel();
-            this.showListPanel();
-        } else if (tag === "rewards") {
-            this.render.renderEmitter(this.key + "_queryrewards", data);
-        } else if (tag === "combinations") {
-            this.render.renderEmitter(this.key + "_querycombinations", data);
-        } else if (tag === "furidetail") {
-            this.openFuriDetail(data);
+        if (tag === "detail") {
+            this.openDescriblePanel();
         }
     }
 
-    private onFuriDetailHandler() {
-        this.hideFuriDetailPanel();
+    private onLevelHandler(tag: string, data: any) {
+        if (tag === "back") {
+            this.hideLevelPanel();
+        } else if (tag === "") {
+
+        }
     }
+
     private onCloseHandler() {
-        // if (this.detailPanel && this.detailPanel.visible) {
-        //     this.hideDetailPanel();
-        //     // this.openListPanel();
-        //     this.showListPanel();
-        //     return;
-        // }
-        // this.render.renderEmitter(this.key + "_close");
+        this.render.renderEmitter(this.key + "_close");
     }
 }
 

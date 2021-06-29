@@ -4,7 +4,7 @@ import { UIAtlasName } from "../../../res";
 import { Handler, i18n, UIHelper, Url } from "utils";
 import { CommonBackground } from "..";
 import { UITools } from "../uitool";
-import { ICountablePackageItem, IGalleryLevel, IGalleryLevelGroup } from "picaStructure";
+import { ICountablePackageItem, IFameLevel, IGalleryLevel, IGalleryLevelGroup } from "picaStructure";
 import { PicaItemTipsPanel } from "../SinglePanel/PicaItemTipsPanel";
 import { BackgroundText, ItemButton } from "../Components";
 export class PicaPrestigeLevelPanel extends Phaser.GameObjects.Container {
@@ -18,7 +18,7 @@ export class PicaPrestigeLevelPanel extends Phaser.GameObjects.Container {
     private dpr: number;
     private zoom: number;
     private send: Handler;
-    private galleryData: IGalleryLevelGroup[];
+    private fameDatas: IFameLevel[];
     private redMap: Map<number, Phaser.GameObjects.Image> = new Map();
     constructor(scene: Phaser.Scene, width: number, height: number, dpr: number, zoom: number) {
         super(scene);
@@ -32,8 +32,8 @@ export class PicaPrestigeLevelPanel extends Phaser.GameObjects.Container {
         const w = width || this.width;
         const h = height || this.height;
         this.setSize(w, h);
-        this.backButton.x = -this.width * 0.5 + this.backButton.width * 0.5 - 5 * this.dpr;
-        this.backButton.y = -this.height * 0.5 + 45 * this.dpr;
+        this.backButton.x = -this.width * 0.5 + this.backButton.width * 0.5;
+        this.backButton.y = -this.height * 0.5 + 35 * this.dpr;
         this.oneKeyBtn.x = this.width * 0.5 - this.oneKeyBtn.width * 0.5 - 10 * this.dpr;
         this.oneKeyBtn.y = this.backButton.y;
         this.titleTex.x = this.width * 0.5 - 152 * this.dpr;
@@ -50,19 +50,19 @@ export class PicaPrestigeLevelPanel extends Phaser.GameObjects.Container {
         this.send = send;
     }
 
-    setRewardsData(gallerys: IGalleryLevelGroup[]) {
-        this.galleryData = gallerys;
-        this.mLevelGrid.setItems(gallerys);
-        for (let i = 0; i < gallerys.length; i++) {
-            const data = gallerys[i];
-            if ((data.rewards || !data.allReceived)) {
-                this.mLevelGrid.setT(i / gallerys.length);
+    setRewardsData(fames: IFameLevel[]) {
+        this.fameDatas = fames;
+        this.mLevelGrid.setItems(fames);
+        for (let i = 0; i < fames.length; i++) {
+            const data = fames[i];
+            if ((data.rewardItems || !data.allReceived)) {
+                this.mLevelGrid.setT(i / fames.length);
                 break;
             }
         }
         if (!this.curLevelItem) {
             this.mLevelGrid.setT(1);
-            const cell = this.mLevelGrid.getCell(gallerys.length - 1);
+            const cell = this.mLevelGrid.getCell(fames.length - 1);
             const container = cell ? cell.container : undefined;
             if (container) this.onSelectItemHandler(container);
         }
@@ -177,8 +177,8 @@ class RightRewardsPanel extends Phaser.GameObjects.Container {
         this.receiveButton.on(ClickEvent.Tap, this.onReceiveHandler, this);
     }
 
-    public setRewardsData(group: IGalleryLevelGroup) {
-        this.setGridItems(group.gallery);
+    public setRewardsData(group: IFameLevel) {
+        this.setGridItems(group.rewardItems);
     }
     public setHandler(send: Handler) {
         this.send = send;
@@ -228,6 +228,7 @@ class RewardItem extends ButtonEventDispatcher {
     }
     public setItemData(data: ICountablePackageItem) {
         this.itemData = data;
+        this.itemButton.setItemData(data);
     }
 
     public setHandler(send: Handler) {
@@ -240,7 +241,7 @@ class RewardItem extends ButtonEventDispatcher {
 }
 
 class LevelItem extends ButtonEventDispatcher {
-    public groupData: IGalleryLevelGroup;
+    public groupData: IFameLevel;
     private bg: Phaser.GameObjects.Image;
     private linebg: Phaser.GameObjects.Image;
     private iconImg: Phaser.GameObjects.Image;
@@ -260,10 +261,10 @@ class LevelItem extends ButtonEventDispatcher {
         this.redImg.y = -this.iconImg.height * 0.5;
         this.add([this.linebg, this.bg, this.iconImg, this.levelTex, this.redImg]);
     }
-    public setLevelData(data: IGalleryLevelGroup) {
+    public setLevelData(data: IFameLevel) {
         this.groupData = data;
         this.levelTex.text = data.level < 10 ? `0${data.level}` : `${data.level}`;
-        this.redImg.visible = data.rewards;
+        this.redImg.visible = data.haveReward;
     }
 
     public set select(value: boolean) {
@@ -274,7 +275,7 @@ class LevelItem extends ButtonEventDispatcher {
         } else {
             this.bg.setFrame("illustrate_survey_lv_bg");
             this.iconImg.setFrame("illustrate_survey_lv_icon_s");
-            this.redImg.visible = this.groupData.rewards;
+            this.redImg.visible = this.groupData.haveReward;
         }
     }
 }

@@ -35,16 +35,6 @@ export class PicaPrestige extends BasicModel {
     this.market_name = market_name;
   }
 
-  // /**
-  //  * 获取商品分类
-  //  */
-  // getMarkCategories() {
-  //   const packet = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_MARKET_GET_CATEGORIES);
-  //   const content: op_virtual_world.OP_CLIENT_REQ_VIRTUAL_WORLD_MARKET_GET_CATEGORIES = packet.content;
-  //   content.marketName = this.market_name;
-  //   this.connection.send(packet);
-  // }
-
   queryMarket(page: number, category: string, subCategory: string) {
     const packet = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_MARKET_QUERY);
     const content: op_virtual_world.IOP_CLIENT_REQ_VIRTUAL_WORLD_MARKET_QUERY = packet.content;
@@ -64,15 +54,6 @@ export class PicaPrestige extends BasicModel {
     this.connection.send(packet);
   }
 
-  queryCommodityResource(id: string, category: string) {
-    const packet = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_MARKET_QUERY_COMMODITY_RESOURCE);
-    const content: op_virtual_world.IOP_CLIENT_REQ_VIRTUAL_WORLD_MARKET_QUERY_COMMODITY_RESOURCE = packet.content;
-    content.id = id;
-    content.category = category;
-    content.marketName = this.market_name;
-    this.connection.send(packet);
-  }
-
   queryShopData() {
     const packet = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_PKT_SHOP_DATA);
     const content: op_virtual_world.OP_CLIENT_REQ_VIRTUAL_WORLD_PKT_SHOP_DATA = packet.content;
@@ -82,11 +63,6 @@ export class PicaPrestige extends BasicModel {
 
   destroy() {
     this.unregister();
-  }
-
-  private onGetMarketCategoriesHandler(packet: PBpacket) {
-    // const content: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_GET_MARKET_CATEGORIES = ;
-    this.game.emitter.emit(ModuleName.PICAMARKET_NAME + "_getMarketCategories", packet.content);
   }
 
   private onQueryMarketHandler(packet: PBpacket) {

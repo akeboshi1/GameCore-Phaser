@@ -104,3 +104,5 @@ export * from "./ui/PicaNewMine/PicaNewMineMediator";
 export * from "./ui/PicaNewOrder/PicaNewOrderMediator";
 export * from "./ui/PicaPrestigeConvert/PicaPrestigeConvert";
 export * from "./ui/PicaPrestigeConvert/PicaPrestigeConvertMediator";
+export * from "./ui/PicaPrestige/PicaPrestige";
+export * from "./ui/PicaPrestige/PicaPrestigeMediator";
