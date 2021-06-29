@@ -9,3 +9,4 @@ export * from "./image.value";
 export * from "./input.view";
 export * from "./items.consume.funpanel";
 export * from "./MoreButtonPanel";
+export * from "./background.text";

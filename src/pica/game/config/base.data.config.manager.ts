@@ -40,6 +40,8 @@ import { FurnitureGradeConfig } from "./furniture.grade.config";
 import { RechargeConfig } from "./recharge.config";
 import { Setting2Config } from "./settings2.config";
 import { FrameLevelConfig as FameLevelConfig } from "./fame.level.config";
+import { BattlePassConfig } from "./battle.pass.config";
+import { BattleLevelConfig } from "./battle.level.config";
 
 export enum BaseDataType {
     i18n_zh = "i18n_zh",
@@ -66,7 +68,9 @@ export enum BaseDataType {
     furnitureGrade = "furnitureGrade",
     charge = "charge",
     settings2 = "settings2",
-    famelevel = "famelevel"
+    famelevel = "famelevel",
+    battlePass = "battlePass",
+    battlePassLevel = "battlePassLevel"
     // itemcategory = "itemcategory"
 }
 
@@ -868,6 +872,29 @@ export class BaseDataConfigManager extends BaseConfigManager {
         const data: FameLevelConfig = this.getConfig(BaseDataType.famelevel);
         return data.get(level);
     }
+    public getBattlePass(id: string) {
+        const data: BattlePassConfig = this.getConfig(BaseDataType.battlePass);
+        const temp = data.get(id);
+        if (!temp["find"]) {
+            this.getBatchItemDatas(temp.maxLevelReward);
+            this.getBatchItemDatas(temp.levelUpCost);
+            temp["find"] = true;
+        }
+        return data.get(id);
+    }
+
+    public getBattleLevels() {
+        const data: BattleLevelConfig = this.getConfig(BaseDataType.battlePassLevel);
+        const temps = data.getLevels();
+        for (const temp of temps) {
+            if (!temp["find"]) {
+                this.getBatchItemDatas(temp.deluxeReward);
+                this.getBatchItemDatas(temp.elementaryReward);
+                temp["find"] = true;
+            }
+        }
+        return data.getLevels();
+    }
     public destory() {
         super.destory();
         this.mGame.emitter.off(EventType.QUEST_ELEMENT_PI_DATA, this.checkDynamicElementPI, this);
@@ -898,6 +925,8 @@ export class BaseDataConfigManager extends BaseConfigManager {
         this.dataMap.set(BaseDataType.charge, new RechargeConfig());
         this.dataMap.set(BaseDataType.settings2, new Setting2Config());
         this.dataMap.set(BaseDataType.famelevel, new FameLevelConfig());
+        this.dataMap.set(BaseDataType.battlePass, new BattlePassConfig());
+        this.dataMap.set(BaseDataType.battlePassLevel, new BattleLevelConfig());
     }
 
     protected configUrl(reName: string, tempurl?: string) {

@@ -11,6 +11,7 @@ import { MoneyCompent } from "picaRender";
 import { PicaBasePanel } from "../pica.base.panel";
 import { ImageValueButton } from "../Components/image.value.button";
 export class PicaMarketPanel extends PicaBasePanel {
+  protected moneycomp: MoneyCompent;
   private mSelectItem: ElementDetail;
   private mCloseBtn: ImageValueButton;
   private mTabs: NinePatchTabButton[];
@@ -35,7 +36,6 @@ export class PicaMarketPanel extends PicaBasePanel {
   private randomRefreshBtn: NineSliceButton;
   private refreshIcon: Phaser.GameObjects.Image;
   private refreshNeedCount: Phaser.GameObjects.Text;
-  private moneycomp: MoneyCompent;
   private mCurItem: MarketItem;
   private mCurItemData: IMarketCommodity;
   private moneyValue: number;

@@ -1,6 +1,6 @@
 {
   "name": "@PixelPai/game-core",
-  "version": "1.0.735",
+  "version": "1.0.738",
   "main": "release/js/editor.js",
   "scripts": {
     "dev": "webpack-dev-server --mode development",
@@ -54,7 +54,7 @@
     "simple-sha1": "^3.0.1",
     "sort-display-object": "git+ssh://git@code.apowo.com:PixelPai/sort-display-object.git",
     "tooqinggamephaser": "^0.3.2",
-    "webworker-rpc": "git+ssh://git@code.apowo.com/opensource/webworker-rpc",
+    "webworker-rpc": "git+ssh://git@code.apowo.com/opensource/webworker-rpc#v74",
     "worker-loader": "^3.0.2"
   }
 }

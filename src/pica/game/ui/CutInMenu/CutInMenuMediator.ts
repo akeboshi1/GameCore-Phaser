@@ -101,8 +101,10 @@ export class CutInMenuMediator extends BasicMediator {
             }
         }
     }
-    private onRightButtonHandler(uiid: number, btnid: number) {
-        this.mModel.reqRightButton(uiid, btnid);
+    private onRightButtonHandler() {
+        const data: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_SHOW_UI = this.mShowData;
+        const button = data.button[0];
+        this.mModel.reqRightButton(data.id, button.node.id);
     }
 
     private openPanelMediator(panel: string, data: any) {

@@ -147,6 +147,7 @@ export class PicaNewActivityPanel extends Phaser.GameObjects.Container {
     private onShopHandler() {
         if (this.sendHandler) this.sendHandler.runWith(["shop"]);
     }
+
     private onArrowHandler() {
         this.isFold = !this.isFold;
         if (this.isFold) {

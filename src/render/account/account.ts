@@ -1,4 +1,5 @@
 import { IPos, Logger } from "utils";
+import { Export } from "webworker-rpc";
 
 interface IAccountData {
     accessToken: string;
@@ -22,6 +23,7 @@ export class Account {
         // 2. 缓存用户登陆后的帐号咨讯
     }
 
+    @Export()
     public getAccountData() {
         return this.accountData;
     }
@@ -31,7 +33,7 @@ export class Account {
     //         resolve(this.accountData);
     //     });
     // }
-
+    @Export()
     public setAccount(val: any) {
         // this.clear();
         // Object.assign(this.mCurAccountData, val);
@@ -45,7 +47,7 @@ export class Account {
         };
         this.saveLocalStorage();
     }
-
+    @Export()
     public refreshToken(data: any) {
         if (!this.accountData) {
             try {
@@ -60,7 +62,7 @@ export class Account {
         this.accountData.accessToken = newToken;
         this.saveLocalStorage();
     }
-
+    @Export()
     public saveLocalStorage() {
         if (!this.accountData) {
             return;
@@ -72,17 +74,17 @@ export class Account {
             Logger.getInstance().warn("write localStorage fail");
         }
     }
-
+    @Export()
     public clear() {
         this.accountData = null;
     }
-
+    @Export()
     public destroy() {
         this.clear();
         localStorage.removeItem("token");
         this.enterGame(undefined, undefined, undefined, undefined, undefined);
     }
-
+    @Export()
     public enterGame(gameId: string, virtualWorldId: string, sceneId: number, loc: any, spawnPointId, worldId?: string) {
         this.gameId = gameId;
         this.virtualWorldId = virtualWorldId;

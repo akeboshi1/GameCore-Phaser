@@ -553,6 +553,18 @@
     "commontips": "Average reward",
     "tickettips": "Admission ticket reward",
     "nowunlock": "Unlock",
-    "buyticket": "Tickets"
+    "buyticket": "Tickets",
+    "unlocknext": "Unlock Next",
+    "ultimatetitle": "Ultimate Reward",
+    "remainingtime": "Remaining time:{{name}}"
+  },
+  "prestige": {
+    "privileges": "Privileges",
+    "growup": "Grew Up",
+    "level": "Rating",
+    "detail": "Detail",
+    "value": "Reputation values are accumulated:",
+    "gointips": "{{name}} enters the {{room}} room and thumb up",
+    "rewards": "Rewards"
   }
 }
