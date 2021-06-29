@@ -100,14 +100,17 @@ export class PicaDecoratePanel extends PicaBasePanel {
     public setQuickSelectFurnitures(datas: ICountablePackageItem[]) {
         if (this.mBtns_QuickSelectFurniture.length > 0) return;
 
-        const h = this.scene.cameras.main.height;
+        const areaW = this.scene.cameras.main.width / this.scaleX - 70 * this.dpr;
+        const space = areaW / datas.length;
+        const firstX = 85 * this.dpr;
+        const deltaX = space;
         let i = 0;
         for (const item of datas) {
             const quickBtn = new ItemButton(this.scene, UIAtlasName.uicommon, "bag_icon_common_bg", this.dpr, this.scale, false);
             quickBtn.countTextColor = "#ffffff";
             quickBtn.countTextOffset = new LogicPos(quickBtn.width * 0.5 - 12 * this.dpr, quickBtn.height * 0.5 - 10 * this.dpr);
             quickBtn.BGVisible = false;
-            quickBtn.x = 90 * this.dpr + 55 * this.dpr * i;
+            quickBtn.x = firstX + deltaX * i;
             quickBtn.y = this.mDynamicBtnsY;
             item.grade = 0;
             quickBtn.setItemData(item, true);

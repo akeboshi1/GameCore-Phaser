@@ -128,11 +128,11 @@ export class RoomManager extends PacketHandler implements IRoomManager {
         });
         if (boo) return;
         const room = new Room(this);
+        this.mCurRoom = room;
         this.mRooms.push(room);
         room.addActor(scene.actor);
         room.enter(scene.scene);
         this.game.peer.state = GameState.RoomCreate;
-        this.mCurRoom = room;
     }
 
     private onEnterEditor(packet: PBpacket) {

@@ -1,6 +1,6 @@
 import { Export, RPCPeer, webworker_rpc } from "webworker-rpc";
 import * as protos from "pixelpai_proto";
-import { op_client, op_gateway, op_virtual_world } from "pixelpai_proto";
+import { op_client, op_virtual_world } from "pixelpai_proto";
 import { Buffer, PBpacket } from "net-socket-packet";
 import { ServerAddress } from "../../lib/net/address";
 import { Game } from "./game";
@@ -280,7 +280,7 @@ export class MainPeer extends RPCPeer {
     @Export()
     public startRoomPlay() {
         Logger.getInstance().debug("peer startroom");
-        this.game.roomManager.currentRoom.startPlay();
+        if (this.game.roomManager.currentRoom) this.game.roomManager.currentRoom.startPlay();
     }
 
     @Export([webworker_rpc.ParamType.str, webworker_rpc.ParamType.str])
