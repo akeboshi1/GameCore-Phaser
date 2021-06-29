@@ -245,6 +245,10 @@ export class ElementStorage implements IElementStorage {
                     this.mModels.set(obj.id, displayModel);
                 }
                 const pos = ele.location;
+                if (!pos) {
+                    Logger.getInstance().error(`${ele.name}-${ele.id} location does not exist`);
+                    continue;
+                }
                 const eleRef: IDisplayRef = {
                     id: obj.id,
                     pos,
