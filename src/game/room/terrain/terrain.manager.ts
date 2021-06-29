@@ -414,11 +414,6 @@ export class TerrainManager extends PacketHandler implements IElementManager {
         }
         const add = [];
         this.mCacheDisplayRef.forEach((display) => {
-            // const sprite = new Sprite({ id: display.id });
-            // const pos = display.pos;
-            // this.removeEmpty(new LogicPos(pos.x, pos.y));
-            // sprite.importDisplayRef(display);
-            // this.mTerrainCache.push(sprite);
             const { id, pos, direction } = display;
             add.push({ id, point3f: this.roomService.transformTo90(pos), direction });
         });
