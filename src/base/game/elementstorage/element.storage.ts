@@ -376,6 +376,10 @@ export class ElementStorage implements IElementStorage {
             for (let j = 0; j < rows; j++) {
                 if (terrains[i][j] === 0) continue;
                 const id = i << 16 | j;
+                if (!sceneNode || !sceneNode.size) {
+                    Logger.getInstance().error(`${sceneNode.name}-${sceneNode.id} sceneNode.size does not exist`);
+                    continue;
+                }
                 const pos = Position45.transformTo90(new LogicPos(i, j), sceneNode.size);
                 this.addDisplayRef({
                     id,
