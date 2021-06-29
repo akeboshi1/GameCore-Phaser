@@ -345,12 +345,13 @@ export class ElementManager extends PacketHandler implements IElementManager {
 
     public dealDisplayRef() {
         this.mCacheDisplayRef.forEach((ref) => {
-            const { id, pos, name, direction } = ref;
+            const { id, pos, name, layer, direction } = ref;
             this.addSpritesToCache([{
                 id,
                 point3f: pos,
                 nickname: name,
                 direction,
+                layer,
              }]);
         });
         this.mCacheDisplayRef.clear();
@@ -474,6 +475,7 @@ export class ElementManager extends PacketHandler implements IElementManager {
             ele.model = sprite;
         } else {
             ele = new Element(this.mRoom.game, sprite, this);
+            Logger.getInstance().log("=============>>>>>", sprite.id, sprite.nickname, sprite.pos);
             // 有小屋装扮权限时，设置全部家具可互动
             // if (this.roomService.enableDecorate) {
             //     ele.setInputEnable(InputEnable.Enable);
