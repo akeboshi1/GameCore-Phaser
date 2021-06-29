@@ -4,6 +4,8 @@ import { ConnectionService } from "../../../../lib/net/connection.service";
 import { Logger, LogicPos, LogicRectangle, LogicRectangle45, Tool } from "utils";
 import { Game } from "../../game";
 import { IRoomService } from "../room/room";
+import { BlockIndex } from "../block/block.index";
+import { BlockIndexManager } from "../block/block.index.manager";
 
 export interface ICameraService {
     syncDirty: boolean;
@@ -30,14 +32,18 @@ export class CamerasManager extends PacketHandler implements ICameraService {
     readonly VIEW_PORT_SIZE = 50;
     protected viewPort = new LogicRectangle();
     protected miniViewPort = new LogicRectangle();
+    protected mGame: Game;
     private zoom: number = 1;
     private syncTime: number = 0;
     private target: any;
     private preCamerasList: any[];
     private mInitialize: boolean = false;
-    constructor(protected mGame: Game, private mRoomService: IRoomService) {
+    private mBlockManager: BlockIndexManager;
+    constructor(private mRoomService: IRoomService) {
         super();
+        this.mGame = this.mRoomService.game;
         this.zoom = this.mGame.scaleRatio;
+        this.mBlockManager = new BlockIndexManager(this.mRoomService);
     }
 
     public set initialize(val: boolean) {
@@ -112,74 +118,9 @@ export class CamerasManager extends PacketHandler implements ICameraService {
         // ==== 判断4个顶点在那几个block中
         const width = cameraView.width / this.zoom;
         const height = cameraView.height / this.zoom;
-        const baseX = cameraView.x / this.zoom;
-        const baseY = cameraView.y / this.zoom;
-        const aPoint = { x: baseX, y: baseY };
-        const bPoint = { x: baseX + width, y: baseY + height };
-        const cPoint = { x: baseX, y: baseY + height };
-        const dPoint = { x: baseX + width, y: baseY };
-        const list = [aPoint, bPoint, cPoint, dPoint];
-        const size = this.mGame.roomManager.currentRoom.roomSize;
-        const cols = size.cols;
-        const rows = size.rows;
-        const tileWidth = size.tileWidth;
-        const tileHeight = size.tileHeight;
-        const blockWidth = this.m_blockWidth;
-        const blockHeight = this.m_blockHeight;
-        const max_h = Math.ceil((cols + rows) * (tileHeight / 2) / blockHeight);
-
-        const pointerList = [];
-        let minX = 0;
-        let minY = 0;
-        let maxX = 0;
-        let maxY = 0;
-        list.forEach((pos) => {
-            if (pos.x < minX) {
-                minX = pos.x;
-            }
-            if (pos.x > maxX) {
-                maxX = pos.x;
-            }
-            if (pos.y < minY) {
-                minY = pos.y;
-            }
-            if (pos.y > maxY) {
-                maxY = pos.y;
-            }
-        });
-        const widLen = Math.ceil((maxX - minX) / blockWidth);
-        const heiLen = Math.ceil((maxY - minY) / blockHeight);
-        for (let i = 0; i < widLen + 1; i++) {
-            for (let j = 0; j < heiLen + 1; j++) {
-                pointerList.push({ x: minX + i * blockWidth, y: minY + j * blockHeight });
-            }
-        }
-        // 检查4个定点
-        const len = pointerList.length;
-        const blockIndex = [];
-        for (let i: number = 0; i < len; i++) {
-            const pos = pointerList[i];
-            const h = Math.floor(pos.y / blockHeight);
-            const w = Math.floor((pos.x + rows * tileWidth / 2) / blockWidth);
-            const index = h + w * max_h;
-            blockIndex.push(index);
-        }
-        if (!this.preCamerasList) {
-            this.preCamerasList = [];
-        }
-        // 数组去重
-        Array.from(new Set(blockIndex));
-        // Logger.getInstance().log("cameraview ----->", cameraView);
-        // Logger.getInstance().log("List ----->", list);
-        // Logger.getInstance().log("pointer ----->", pointerList);
-        // Logger.getInstance().log("blockIndex ----->", blockIndex);
-        if (!Tool.equalArr(this.preCamerasList, blockIndex)) {
-            const pkt = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_UPDATE_HOT_BLOCK);
-            const content: op_virtual_world.IOP_CLIENT_REQ_VIRTUAL_WORLD_UPDATE_HOT_BLOCK = pkt.content;
-            content.blockIndex = blockIndex;
-            this.connection.send(pkt);
-            this.preCamerasList = blockIndex;
-        }
+        const x = cameraView.x / this.zoom;
+        const y = cameraView.y / this.zoom;
+        this.mBlockManager.checkBlockIndex({ x, y, width, height });
     }
 
     public feachAllElement() {
@@ -192,26 +133,17 @@ export class CamerasManager extends PacketHandler implements ICameraService {
         const rows = size.rows;
         const widLen = Math.ceil(size.sceneWidth / blockWidth);
         const heiLen = Math.ceil(size.sceneHeight / blockHeight);
-        const max_h = Math.ceil((cols + rows) * (tileHeight / 2) / blockHeight);
 
         const pointerList = [];
         const offset = rows * (tileWidth / 2);
         for (let i = 0; i < widLen + 1; i++) {
             for (let j = 0; j < heiLen + 1; j++) {
-                pointerList.push({ x: i * blockWidth - offset, y: j * blockHeight });
+                pointerList.push({ x: i * blockWidth - offset, y: j * blockHeight, width: blockWidth, height: blockHeight });
             }
         }
 
         // 检查4个定点
-        const len = pointerList.length;
-        const blockIndex = [];
-        for (let i: number = 0; i < len; i++) {
-            const pos = pointerList[i];
-            const h = Math.floor(pos.y / blockHeight);
-            const w = Math.floor((pos.x + rows * tileWidth / 2) / blockWidth);
-            const index = h + w * max_h;
-            blockIndex.push(index);
-        }
+        const blockIndex = new BlockIndex().getBlockIndexs(pointerList, size);
 
         const pkt = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_UPDATE_HOT_BLOCK);
         const content: op_virtual_world.IOP_CLIENT_REQ_VIRTUAL_WORLD_UPDATE_HOT_BLOCK = pkt.content;

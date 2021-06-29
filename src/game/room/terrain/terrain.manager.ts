@@ -11,14 +11,17 @@ import { IFramesModel } from "structure";
 import { IDragonbonesModel } from "structure";
 import { EmptyTerrain } from "./empty.terrain";
 import { IPos, Logger, LogicPos } from "utils";
-import { FramesModel, IElementStorage, Sprite } from "baseModel";
+import { FramesModel, IDisplayRef, IElementStorage, Sprite } from "baseModel";
 import { BaseDataConfigManager } from "picaWorker";
-import * as sha1 from "simple-sha1";
 import { IElementPi } from "picaStructure";
 
 export class TerrainManager extends PacketHandler implements IElementManager {
     public hasAddComplete: boolean = false;
     protected mTerrains: Map<number, Terrain> = new Map<number, Terrain>();
+    /**
+     * 配置文件等待渲染的物件。
+     */
+    protected mCacheDisplayRef: Map<number, IDisplayRef> = new Map();
     protected mGameConfig: IElementStorage;
     // add by 7 ----
     protected mPacketFrameCount: number = 0;
@@ -39,10 +42,10 @@ export class TerrainManager extends PacketHandler implements IElementManager {
             this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_ADD_SPRITE_END, this.addComplete);
             this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_DELETE_SPRITE, this.onRemove);
             this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_SYNC_SPRITE, this.onSyncSprite);
-            this.addHandlerFun(
-                op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_CHANGE_SPRITE_ANIMATION,
-                this.onChangeAnimation
-            );
+            this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_CHANGE_SPRITE_ANIMATION, this.onChangeAnimation);
+            this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_HOT_BLOCK_SYNC_SPRITE, this.onBlockSyncSprite);
+            this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_HOT_BLOCK_DELETE_SPRITE, this.onBlockDeleteSprite);
+            this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_HOT_BLOCK_SYNC_SPRITE_END, this.onBlockSpriteEnd);
         }
         if (this.mRoom) {
             this.mGameConfig = this.mRoom.game.elementStorage;
@@ -61,7 +64,7 @@ export class TerrainManager extends PacketHandler implements IElementManager {
         for (let i = 0; i < roomSize.cols; i++) {
             this.mEmptyMap[i] = new Array(roomSize.rows);
             for (let j = 0; j < roomSize.rows; j++) {
-                this.addEmpty(this.roomService.transformTo90(new LogicPos(i, j)));
+                // this.addEmpty(this.roomService.transformTo90(new LogicPos(i, j)));
             }
         }
     }
@@ -168,6 +171,12 @@ export class TerrainManager extends PacketHandler implements IElementManager {
     public onDisplayCreated(id: number) {
     }
     public onDisplayRemoved(id: number) {
+    }
+
+    public addDisplayRef(displays: IDisplayRef[]) {
+        for (const ref of displays) {
+            if (!this.mCacheDisplayRef.get(ref.id)) this.mCacheDisplayRef.set(ref.id, ref);
+        }
     }
 
     // todo: move to pica
@@ -377,6 +386,41 @@ export class TerrainManager extends PacketHandler implements IElementManager {
             this.mTerrainCache = null;
             this.hasAddComplete = true;
         }
+    }
+
+    private onBlockSyncSprite(packet: PBpacket) {
+        const content: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_HOT_BLOCK_SYNC_SPRITE = packet.content;
+        const { nodeType, sprites } = content;
+        if (nodeType !== op_def.NodeType.TerrainNodeType) return;
+        for (const sprite of sprites) {
+            if (this.mCacheDisplayRef.has(sprite.id)) this.mCacheDisplayRef.delete(sprite.id);
+        }
+        this.addSpritesToCache(sprites);
+    }
+
+    private onBlockDeleteSprite(packet: PBpacket) {
+        const content: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_HOT_BLOCK_DELETE_SPRITE = packet.content;
+        const { nodeType, spriteIds } = content;
+        if (nodeType !== op_def.NodeType.TerrainNodeType) return;
+        for (const id of spriteIds) {
+            if (this.mCacheDisplayRef.has(id)) this.mCacheDisplayRef.delete(id);
+            if (this.get(id)) this.remove(id);
+        }
+    }
+
+    private onBlockSpriteEnd(packet: PBpacket) {
+        if (!this.mTerrainCache) {
+            this.mTerrainCache = [];
+        }
+        this.mCacheDisplayRef.forEach((display) => {
+            const sprite = new Sprite({ id: display.id });
+            const pos = display.pos;
+            this.removeEmpty(new LogicPos(pos.x, pos.y));
+            sprite.importDisplayRef(display);
+            this.mTerrainCache.push(sprite);
+        });
+        this.mCacheDisplayRef.clear();
+        this.dealTerrainCache();
     }
 
     get connection(): ConnectionService | undefined {

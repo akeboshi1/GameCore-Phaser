@@ -85,7 +85,6 @@ export class Render extends RPCPeer implements GameMain, IRender {
     protected mLocalStorageManager: LocalStorageManager;
     protected mEditorCanvasManager: EditorCanvasManager;
     private mCallBack: Function;
-    private _moveStyle: number = 0;
     private _curTime: number;
     private mGame: Phaser.Game;
     private gameConfig: Phaser.Types.Core.GameConfig;
@@ -578,10 +577,6 @@ export class Render extends RPCPeer implements GameMain, IRender {
         return this._curTime;
     }
 
-    get moveStyle(): number {
-        return this._moveStyle;
-    }
-
     public initGameConfig(config: any) {
         this.remote[MAIN_WORKER].MainPeer.initGameConfig(JSON.stringify(config));
     }
@@ -1003,11 +998,6 @@ export class Render extends RPCPeer implements GameMain, IRender {
         this.uiManager.updateUIState(panelName, ui);
     }
 
-    @Export([webworker_rpc.ParamType.num])
-    public setMoveStyle(moveStyle: number) {
-        this._moveStyle = moveStyle;
-    }
-
     @Export([webworker_rpc.ParamType.unit8array])
     public onEnterRoom(scene) {
 
@@ -1075,8 +1065,8 @@ export class Render extends RPCPeer implements GameMain, IRender {
                 const blockHeight = 150;
                 const { x, y } = rect;
                 const obj = {
-                    x: x - blockWidth * 1.3,
-                    y: y - blockHeight * 1.3,
+                    x: x - blockWidth * 1.5,
+                    y: y - blockHeight * 1.5,
                     width: camera.width + blockWidth * 3,
                     height: camera.height + blockHeight * 3,
                     zoom: camera.zoom,
