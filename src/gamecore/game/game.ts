@@ -573,7 +573,7 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
     }
 
     protected async initWorld() {
-        this.mUser = new User();
+        this.createUser();
         this.addHandlerFun(op_client.OPCODE._OP_GATEWAY_RES_CLIENT_ERROR, this.onClientErrorHandler);
         this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_SELECT_CHARACTER, this.onSelectCharacter);
         this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_GOTO_ANOTHER_GAME, this.onGotoAnotherGame);
@@ -590,6 +590,10 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
             Logger.getInstance().error("worldId is not string");
         }
         await this.mainPeer.render.createAccount(this.mConfig.game_id + "", this.mConfig.virtual_world_id + "");
+    }
+
+    protected createUser() {
+        this.mUser = new User();
     }
 
     protected createManager() {
