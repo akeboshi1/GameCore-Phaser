@@ -134,9 +134,11 @@ export class BaseBatchPanel extends Panel {
     }
     @Export()
     protected addResources(key: string, resource: any) {
-        if (resource.type) {
-            if (this.scene.load[resource.type]) {
-                this.scene.load[resource.type](key, Url.getUIRes(resource.dpr, resource.texture), resource.data ? Url.getUIRes(resource.dpr, resource.data) : undefined);
+        const resType = resource.type;
+        if (resType) {
+            if (this.scene.load[resType]) {
+                this.scene.load[resource.type](key, resType !== "video" ? Url.getUIRes(resource.dpr, resource.texture) : Url.getRes(resource.texture),
+                    resource.data ? (resType !== "video" ? Url.getUIRes(resource.dpr, resource.data) : Url.getRes(resource.data)) : undefined);
             }
         }
         super.addResources(key, resource);
