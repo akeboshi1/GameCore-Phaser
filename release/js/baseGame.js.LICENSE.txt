@@ -10,6 +10,8 @@
 
 /*! exports provided: AvatarSuitType, SuitAlternativeType, BaseAvatar */
 
+/*! exports provided: BlockIndex */
+
 /*! exports provided: ChineseUnit */
 
 /*! exports provided: CoinType, Coin */
@@ -462,6 +464,10 @@
 
 /*!********************************************!*\
   !*** ./node_modules/protobufjs/src/rpc.js ***!
+  \********************************************/
+
+/*!********************************************!*\
+  !*** ./src/base/game/block/block.index.ts ***!
   \********************************************/
 
 /*!********************************************!*\

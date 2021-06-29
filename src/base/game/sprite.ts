@@ -2,6 +2,7 @@ import { Direction, EventDispatcher, IPos, Logger, LogicPoint, LogicPos, Animati
 import { op_def, op_gameconfig, op_client, op_gameconfig_01 } from "pixelpai_proto";
 import { Helpers } from "game-capsule";
 import * as sha1 from "simple-sha1";
+import { IDisplayRef } from "./elementstorage";
 enum TitleMask {
     TQ_NickName = 0x00010000,
     TQ_Badge = 0x00020000,
@@ -85,15 +86,12 @@ export class Sprite extends EventDispatcher implements ISprite {
             this.updateDisplay(obj.display, obj.animations, obj.currentAnimationName);
         }
         // ==========> update pos
-        let point;
         if (obj.point3f) {
-            point = obj.point3f;
-            // this.pos = new LogicPos(point.x, point.y, point.z);
+            const point = obj.point3f;
+            this.pos = new LogicPos(point.x, point.y, point.z);
         } else {
-            // this.pos = new LogicPos(0, 0);
-            point = { x: 0, y: 0 };
+            this.pos = new LogicPos(0, 0);
         }
-        this.setPosition(point.x, point.y);
 
         if (obj.sn) {
             this.sn = obj.sn;
@@ -141,136 +139,6 @@ export class Sprite extends EventDispatcher implements ISprite {
         this.speed = obj.speed;
     }
 
-    // =================================== sprite 状态逻辑=========================================
-
-    public updateState(state: Flag) {
-        const _state = Number(state);
-        this.curState = this.curState | (1 << _state);
-        // this.dealSprite();
-    }
-
-    public showNickName(): boolean {
-        const boo = (this.titleMask & TitleMask.TQ_NickName) > 0;
-        if (boo) this.updateState(Flag.NickName);
-        return boo;
-    }
-
-    public setPosition(x: number, y: number) {
-        if (!this.pos) {
-            this.pos = new LogicPos();
-        }
-        this.pos.x = x;
-        this.pos.y = y;
-        this.updateState(Flag.Pos);
-    }
-
-    /**
-     * 更新显示对象数据，需要做load处理
-     * @param avatar
-     */
-    public updateAvatar(avatar: op_gameconfig.IAvatar | IAvatar) {
-        if (this.displayInfo) {
-            (<any>this.displayInfo).destroy();
-        }
-        this.avatar = { id: avatar.id };
-        this.avatar = Object.assign(this.avatar, avatar);
-        this.displayInfo = new DragonbonesModel(this);
-        this.updateState(Flag.Avatar);
-    }
-
-    public setTempAvatar(avatar: IAvatar) {
-        if (this.displayInfo) {
-            this.displayInfo.destroy();
-        }
-        let tempAvatar = { id: avatar.id };
-        tempAvatar = Object.assign(tempAvatar, this.avatar);
-        tempAvatar = Object.assign(tempAvatar, avatar);
-        this.displayInfo = new DragonbonesModel({ id: this.id, avatar: tempAvatar });
-        this.updateState(Flag.Avatar);
-    }
-
-    public updateDisplay(display: op_gameconfig.IDisplay, animations: op_gameconfig_01.IAnimationData[], defAnimation?: string) {
-        if (!display || !animations) {
-            return;
-        }
-        if (!display.dataPath || !display.texturePath) {
-            return;
-        }
-        if (this.displayInfo) {
-            this.displayInfo = null;
-        }
-        const anis = [];
-        const objAnis = animations;
-        for (const ani of objAnis) {
-            anis.push(new AnimationModel(ani));
-        }
-        defAnimation = defAnimation || this.currentAnimationName || "";
-        this.displayInfo = new FramesModel({
-            animations: {
-                defaultAnimationName: defAnimation,
-                display,
-                animationData: anis,
-            },
-            id: this.id,
-            sound: this.sound
-        });
-        this.updateState(Flag.Display);
-        if (defAnimation) {
-            this.setAnimationData(defAnimation, this.direction);
-        }
-    }
-
-    setDirection(val: number) {
-        if (!val) return;
-
-        this.direction = val;
-        this.updateState(Flag.Direction);
-        if (!this.displayInfo) {
-            return;
-        }
-
-        if (this.currentAnimationName) this.direction = this.displayInfo.checkDirectionByExistAnimations(
-            this.getBaseAniName(this.currentAnimationName), this.direction);
-
-        // Logger.getInstance().debug("#dir sprite setDirection:=====", this.id, val);
-        this.setAnimationData(this.currentAnimationName, this.direction);
-    }
-
-    // =================================== 处理sprite数据 ================================
-    public dealSprite() {
-        const state = Number(this.curState);
-        for (const key in Flag) {
-            if (isNaN(Number(key))) {
-                const val = Number(Flag[key]);
-                if (((state >> val) & 1) === 1) {
-                    switch (key) {
-                        case Flag.Pos.toString():
-                            break;
-                        case Flag.AnimationName.toString():
-                            break;
-                        case Flag.Direction.toString():
-                            break;
-                        case Flag.Mount.toString():
-                            break;
-                        case Flag.NickName.toString():
-                            break;
-                        case Flag.Alpha.toString():
-                            break;
-                        case Flag.Speed.toString():
-                            break;
-                        case Flag.Avatar.toString():
-                            break;
-                        case Flag.Display.toString():
-                            break;
-                    }
-                }
-            }
-        }
-        this.curState = 0;
-    }
-
-    // ===================================分割线=========================================
-
     public toSprite(): op_client.ISprite {
         const sprite = op_client.Sprite.create();
         sprite.id = this.id;
@@ -304,12 +172,24 @@ export class Sprite extends EventDispatcher implements ISprite {
         return sprite;
     }
 
+    public showNickName(): boolean {
+        return (this.titleMask & TitleMask.TQ_NickName) > 0;
+    }
+
     public showBadge(): boolean {
         return (this.titleMask & TitleMask.TQ_Badge) > 0;
     }
 
     public newID() {
         this.id = Helpers.genId();
+    }
+
+    public setPosition(x: number, y: number) {
+        if (!this.pos) {
+            this.pos = new LogicPos();
+        }
+        this.pos.x = x;
+        this.pos.y = y;
     }
 
     public turn(): any {
@@ -345,6 +225,24 @@ export class Sprite extends EventDispatcher implements ISprite {
         return false;
     }
 
+    public updateAvatar(avatar: op_gameconfig.IAvatar | IAvatar) {
+        if (this.displayInfo) {
+            this.displayInfo.destroy();
+        }
+        this.avatar = { id: avatar.id };
+        this.avatar = Object.assign(this.avatar, avatar);
+        this.displayInfo = new DragonbonesModel(this);
+    }
+
+    public setTempAvatar(avatar: IAvatar) {
+        if (this.displayInfo) {
+            this.displayInfo.destroy();
+        }
+        let tempAvatar = { id: avatar.id };
+        tempAvatar = Object.assign(tempAvatar, this.avatar);
+        tempAvatar = Object.assign(tempAvatar, avatar);
+        this.displayInfo = new DragonbonesModel({ id: this.id, avatar: tempAvatar });
+    }
     public getAvatarSuits(attrs: op_def.IStrPair[]) {
         let suits: AvatarSuit[];
         if (attrs) {
@@ -377,8 +275,42 @@ export class Sprite extends EventDispatcher implements ISprite {
         }
     }
 
+    public updateDisplay(display: op_gameconfig.IDisplay, animations: op_gameconfig_01.IAnimationData[], defAnimation?: string) {
+        if (!display || !animations) {
+            return;
+        }
+        if (!display.dataPath || !display.texturePath) {
+            return;
+        }
+        if (this.displayInfo) {
+            this.displayInfo = null;
+        }
+        const anis = [];
+        const objAnis = animations;
+        for (const ani of objAnis) {
+            anis.push(new AnimationModel(ani));
+        }
+        defAnimation = defAnimation || this.currentAnimationName || "";
+        this.displayInfo = new FramesModel({
+            animations: {
+                defaultAnimationName: defAnimation,
+                display,
+                animationData: anis,
+            },
+            id: this.id,
+            sound: this.sound
+        });
+        if (defAnimation) {
+            this.setAnimationData(defAnimation, this.direction);
+        }
+    }
+
     public setAnimationQueue(queue: AnimationQueue[]) {
         this.animationQueue = queue;
+    }
+
+    public setMountSprites(ids: number[]) {
+        this.mountSprites = ids;
     }
 
     public setAnimationName(name: string, times?: number) {
@@ -398,6 +330,21 @@ export class Sprite extends EventDispatcher implements ISprite {
         return null;
     }
 
+    setDirection(val: number) {
+        if (!val) return;
+
+        this.direction = val;
+        if (!this.displayInfo) {
+            return;
+        }
+
+        if (this.currentAnimationName) this.direction = this.displayInfo.checkDirectionByExistAnimations(
+            this.getBaseAniName(this.currentAnimationName), this.direction);
+
+        // Logger.getInstance().debug("#dir sprite setDirection:=====", this.id, val);
+        this.setAnimationData(this.currentAnimationName, this.direction);
+    }
+
     setDisplayInfo(displayInfo: FramesModel | DragonbonesModel) {
         this.displayInfo = displayInfo;
         this.displayInfo.id = this.id;
@@ -413,6 +360,7 @@ export class Sprite extends EventDispatcher implements ISprite {
             if (displayInfo.animationName) {
                 this.setAnimationName(displayInfo.animationName);
             }
+            // if (displayInfo.animationName) this.currentAnimationName = displayInfo.animationName;
         }
     }
 
@@ -490,26 +438,36 @@ export class Sprite extends EventDispatcher implements ISprite {
         this.registerAnimation.delete(key);
     }
 
+    importDisplayRef(displayRef: IDisplayRef) {
+        const { pos, direction, displayModel } = displayRef;
+        this.pos = new LogicPos(pos.x, pos.y, pos.z);
+        this.direction = direction;
+        this.displayInfo = displayModel;
+        if (!this.displayInfo) {
+            Logger.getInstance().error(`${displayRef.name}-${displayRef.id} displayInfo does not exise!`);
+            return this;
+        }
+        this.setAnimationName(this.displayInfo.animationName);
+        return this;
+    }
+
     private setAnimationData(animationName: string, direction: number, times?: number) {
         if (!this.displayInfo || !animationName) {
             return;
         }
         const baseAniName = this.getBaseAniName(animationName);
-        if (!baseAniName) return;
-        const currentAnimation = this.displayInfo.findAnimation(baseAniName, direction);
-        if (!currentAnimation) {
-            Logger.getInstance().error(`${this.nickname} can't find animation ${animationName}`);
-            // 否则return void导致引用处报错
-            return null;
+        if (!this.displayInfo.findAnimation) {
+            Logger.getInstance().error("displayInfo no findanimation ====>", this.displayInfo);
+        } else {
+            this.currentAnimation = this.displayInfo.findAnimation(baseAniName, direction);
+            this.currentAnimation.times = times;
+            if (this.animationQueue && this.animationQueue.length > 0) this.currentAnimation.playingQueue = this.animationQueue[0];
+            if (this.currentCollisionArea) {
+                this.setArea();
+            }
+            // Logger.getInstance().debug("#dir ", direction, this.direction);
+            this.emit("Animation_Change", { id: this.id, direction: this.direction, animation: this.currentAnimation, playTimes: times });
         }
-        this.currentAnimation = currentAnimation;
-        this.currentAnimation.times = times;
-        if (this.animationQueue && this.animationQueue.length > 0) this.currentAnimation.playingQueue = this.animationQueue[0];
-        if (this.currentCollisionArea) {
-            this.setArea();
-        }
-        this.updateState(Flag.AnimationName);
-        this.emit("Animation_Change", { id: this.id, direction: this.direction, animation: this.currentAnimation, playTimes: times });
         return this.currentAnimation;
     }
 
@@ -547,7 +505,7 @@ export class Sprite extends EventDispatcher implements ISprite {
         }
     }
 
-    private getBaseAniName(animationName: string): string | undefined {
+    private getBaseAniName(animationName: string): string {
         if (!animationName) return undefined;
         let baseAniName = animationName.split(`_`)[0];
         if (this.registerAnimation) {

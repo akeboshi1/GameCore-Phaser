@@ -44,6 +44,8 @@
 
 /*! exports provided: Bin, MaxRectsBin, MaxRectsPacker, OversizedElementBin, PACKING_LOGIC, Rectangle */
 
+/*! exports provided: BlockIndex */
+
 /*! exports provided: BlockManager */
 
 /*! exports provided: ChineseUnit */
@@ -652,6 +654,10 @@
 
 /*!********************************************!*\
   !*** ./node_modules/protobufjs/src/rpc.js ***!
+  \********************************************/
+
+/*!********************************************!*\
+  !*** ./src/base/game/block/block.index.ts ***!
   \********************************************/
 
 /*!********************************************!*\

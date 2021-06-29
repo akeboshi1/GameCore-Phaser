@@ -5,6 +5,7 @@ import { IDragonbonesModel, IFramesModel, ISprite } from "structure";
 import { Element, IElement } from "./element";
 import { IElementStorage } from "baseGame";
 import { IRoomService } from "../room";
+import { IDisplayRef } from "baseGame";
 export interface IElementManager {
     hasAddComplete: boolean;
     readonly connection: ConnectionService | undefined;
@@ -22,11 +23,15 @@ export declare class ElementManager extends PacketHandler implements IElementMan
     /**
      * 添加element缓存list
      */
-    protected mCacheAddList: any[];
+    protected mCacheAddList: IDisplayRef[];
     /**
      * 更新element缓存list
      */
     protected mCacheSyncList: any[];
+    /**
+     * 配置文件等待渲染的物件。
+     */
+    protected mCacheDisplayRef: Map<number, IDisplayRef>;
     /**
      * Add添加 End清空
      */
@@ -50,6 +55,7 @@ export declare class ElementManager extends PacketHandler implements IElementMan
     remove(id: number): IElement;
     getElements(): IElement[];
     add(sprites: ISprite[], addMap?: boolean): void;
+    addDisplayRef(displays: IDisplayRef[]): void;
     setState(state: op_client.IStateGroup): void;
     destroy(): void;
     update(time: number, delta: number): void;
@@ -65,6 +71,7 @@ export declare class ElementManager extends PacketHandler implements IElementMan
      */
     elementDisplaySyncReady(id: number): void;
     dealSyncList(): void;
+    dealDisplayRef(): void;
     onDisplayReady(id: number): void;
     showReferenceArea(): void;
     hideReferenceArea(): void;
@@ -86,4 +93,7 @@ export declare class ElementManager extends PacketHandler implements IElementMan
     private onShowBubble;
     private onClearBubbleHandler;
     private onChangeAnimation;
+    private onBlockSyncSprite;
+    private onBlockDeleteSprite;
+    private onBlockSpriteEnd;
 }

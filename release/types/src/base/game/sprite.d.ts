@@ -1,5 +1,6 @@
 import { Direction, EventDispatcher, IPos, LogicPoint, AnimationModel, AnimationQueue, Animator, AvatarSuit, IAvatar, ISprite, RunningAnimation, IFramesModel, IDragonbonesModel, IAnimationData, IDisplay } from "structure";
 import { op_def, op_gameconfig, op_client, op_gameconfig_01 } from "pixelpai_proto";
+import { IDisplayRef } from "./elementstorage";
 export declare enum Flag {
     Pos = 0,
     AnimationName = 1,
@@ -50,21 +51,11 @@ export declare class Sprite extends EventDispatcher implements ISprite {
     sound: string;
     curState: number;
     constructor(obj: op_client.ISprite, nodeType?: op_def.NodeType);
-    updateState(state: Flag): void;
-    showNickName(): boolean;
-    setPosition(x: number, y: number): void;
-    /**
-     * 更新显示对象数据，需要做load处理
-     * @param avatar
-     */
-    updateAvatar(avatar: op_gameconfig.IAvatar | IAvatar): void;
-    setTempAvatar(avatar: IAvatar): void;
-    updateDisplay(display: op_gameconfig.IDisplay, animations: op_gameconfig_01.IAnimationData[], defAnimation?: string): void;
-    setDirection(val: number): void;
-    dealSprite(): void;
     toSprite(): op_client.ISprite;
+    showNickName(): boolean;
     showBadge(): boolean;
     newID(): void;
+    setPosition(x: number, y: number): void;
     turn(): any;
     /**
      * 处理 pkt 龙骨套装数据，转换成可接受的op_gameconfig.IAvatar数据
@@ -72,10 +63,15 @@ export declare class Sprite extends EventDispatcher implements ISprite {
      * @returns
      */
     updateAvatarSuits(suits: AvatarSuit[]): boolean;
+    updateAvatar(avatar: op_gameconfig.IAvatar | IAvatar): void;
+    setTempAvatar(avatar: IAvatar): void;
     getAvatarSuits(attrs: op_def.IStrPair[]): AvatarSuit[];
     updateAttr(attrs: op_def.IStrPair[]): void;
+    updateDisplay(display: op_gameconfig.IDisplay, animations: op_gameconfig_01.IAnimationData[], defAnimation?: string): void;
     setAnimationQueue(queue: AnimationQueue[]): void;
+    setMountSprites(ids: number[]): void;
     setAnimationName(name: string, times?: number): RunningAnimation;
+    setDirection(val: number): void;
     setDisplayInfo(displayInfo: FramesModel | DragonbonesModel): void;
     get hasInteractive(): boolean;
     getInteractive(): op_def.IPBPoint2i[];
@@ -86,6 +82,7 @@ export declare class Sprite extends EventDispatcher implements ISprite {
     getOriginPoint(): LogicPoint;
     registerAnimationMap(key: string, value: string): void;
     unregisterAnimationMap(key: string): void;
+    importDisplayRef(displayRef: IDisplayRef): this;
     private setAnimationData;
     private checkDirectionAnimation;
     private setArea;

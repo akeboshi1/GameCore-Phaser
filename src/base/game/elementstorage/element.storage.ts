@@ -9,12 +9,15 @@ import {
     MossNode,
     AssetsNode,
     WallCollectionNode,
-    MossCollectionNode
+    MossCollectionNode,
+    Capsule,
+    EventNode
 } from "game-capsule";
 import { op_def } from "pixelpai_proto";
 import { Url } from "utils";
-import { AnimationModel, IDragonbonesModel, IFramesModel, IScenery, Logger } from "structure";
+import { AnimationModel, IDragonbonesModel, IFramesModel, IPos, IScenery, Logger, LogicPos, Position45 } from "structure";
 import { DragonbonesModel, FramesModel } from "../sprite";
+import { BlockIndex } from "../block/block.index";
 export interface IAsset {
     type: string;
     key: string;
@@ -31,6 +34,7 @@ export interface IElementStorage {
     getTerrainCollection();
     getTerrainPalette(key: number): IFramesModel;
     getTerrainPaletteByBindId(id: number): IFramesModel;
+    getTerrainPaletteBySN(sn: string): IFramesModel;
     getMossPalette(key: number): { layer: number, frameModel: FramesModel };
     getAssets(): IAsset[];
     getScenerys(): IScenery[];
@@ -39,18 +43,25 @@ export interface IElementStorage {
     destroy();
 }
 
-interface IDisplayRef {
+export interface IDisplayRef {
     // element id
     id: number;
     name?: string;
+    pos?: IPos;
+    direction?: number;
+    blockIndex?: number;
+    layer?: number;
     displayModel?: FramesModel | DragonbonesModel;
 }
 
 export class ElementStorage implements IElementStorage {
     protected mModels = new Map<number, FramesModel | DragonbonesModel>();
     protected mElementRef = new Map<number, IDisplayRef>();
+    protected mTerrainRef = new Map<number, IDisplayRef>();
+    protected mDisplayRefMap: Map<op_def.NodeType, Map<number, IDisplayRef>>;
     protected terrainPalette = new Map<number, FramesModel>();
     protected terrainPaletteWithBindId = new Map<number, FramesModel>();
+    protected terrainPaletteWithSN = new Map<string, FramesModel>();
     protected mossPalette = new Map<number, { layer: number, frameModel: FramesModel }>();
     protected _terrainCollection: TerrainCollectionNode;
     protected _mossCollection: MossCollectionNode;
@@ -62,6 +73,9 @@ export class ElementStorage implements IElementStorage {
 
     constructor() {
         // this.event = new Phaser.Events.EventEmitter();
+        this.mDisplayRefMap = new Map();
+        this.mDisplayRefMap.set(op_def.NodeType.ElementNodeType, new Map());
+        this.mDisplayRefMap.set(op_def.NodeType.TerrainNodeType, new Map());
     }
 
     // public on(event: string | symbol, fn: Function, context?: any) {
@@ -100,13 +114,13 @@ export class ElementStorage implements IElementStorage {
                             animationData: anis,
                         },
                     });
-                    this.mModels.set(obj.id, displayModel);
+                    // this.mModels.set(obj.id, displayModel);
                 }
-                const ele: IDisplayRef = {
-                    id: obj.id,
-                    displayModel,
-                };
-                this.mElementRef.set(obj.id, ele);
+                // const ele: IDisplayRef = {
+                //     id: obj.id,
+                //     displayModel,
+                // };
+                // this.mElementRef.set(obj.id, ele);
             }
         }
 
@@ -134,6 +148,7 @@ export class ElementStorage implements IElementStorage {
                 });
                 this.terrainPalette.set(key, frameModel);
                 this.terrainPaletteWithBindId.set(terrainPalette.id, frameModel);
+                this.terrainPaletteWithSN.set(terrainPalette.sn, frameModel);
             }
         }
     }
@@ -178,8 +193,15 @@ export class ElementStorage implements IElementStorage {
         }
     }
 
-    public setSceneConfig(config) {
+    public setSceneConfig(config: Capsule) {
+        this.clearDisplayRef();
         const objs = config.objectsList;
+        const sceneNode = config.root.children.find((node) => node.type === op_def.NodeType.SceneNodeType) as SceneNode;
+        Logger.getInstance().log("sceneNode: ", sceneNode.size);
+        if (!sceneNode) {
+            return Logger.getInstance().error("Failed to parse scene, SceneNode does not exist");
+        }
+        // Logger.getInstance().log("children: ", children);
         let displayModel = null;
         // TODO Lite deserialize可能会有个别Display link失败
         for (const obj of objs) {
@@ -187,18 +209,25 @@ export class ElementStorage implements IElementStorage {
                 displayModel = this.mModels.get(obj.id);
                 const eventName = [];
                 obj.children.forEach((item) => {
-                    if (item.className === "EventNode" && item.eventName === op_def.GameEvent.onElementHit) {
+                    // if (item.className === "EventNode" && item.eventName === op_def.GameEvent.onElementHit) {
+                    //     eventName.push(item.eventName);
+                    // }
+                    if (item instanceof EventNode && item.eventName === op_def.GameEvent.onElementHit) {
                         eventName.push(item.eventName);
                     }
                 });
+                const ele = <ElementNode>obj;
                 if (!displayModel) {
                     const anis = [];
-                    const ele = <ElementNode>obj;
                     const eleAnis = (<ElementNode>obj).animations;
                     if (ele.avatar) {
                         displayModel = new DragonbonesModel({ id: ele.id, avatar: ele.avatar.createProtocolObject() });
                     } else {
                         const objAnis = eleAnis.animationData;
+                        if (objAnis.length < 1) {
+                            Logger.getInstance().error(`${obj.name}:${obj.id} animation error`);
+                            continue;
+                        }
                         for (const ani of objAnis) {
                             anis.push(new AnimationModel(ani.createProtocolObject()));
                         }
@@ -215,16 +244,21 @@ export class ElementStorage implements IElementStorage {
                     }
                     this.mModels.set(obj.id, displayModel);
                 }
+                const pos = ele.location;
                 const eleRef: IDisplayRef = {
                     id: obj.id,
+                    pos,
+                    blockIndex: new BlockIndex().getBlockIndex(pos.x, pos.y, sceneNode.size),
+                    direction: ele.animations.dir,
                     name: obj.name,
                     displayModel,
+                    layer: ele.layer,
                 };
-                this.mElementRef.set(obj.id, eleRef);
+                this.addDisplayRef(eleRef, op_def.NodeType.ElementNodeType);
             }
         }
 
-        const sceneNode = config.root.children.find((node) => node.type === op_def.NodeType.SceneNodeType) as SceneNode;
+        // const sceneNode = config.root.children.find((node) => node.type === op_def.NodeType.SceneNodeType) as SceneNode;
 
         this._terrainCollection = sceneNode.terrainCollection;
         this._mossCollection = sceneNode.mossCollection;
@@ -235,6 +269,8 @@ export class ElementStorage implements IElementStorage {
         // for (const scenery of scenerys) {
         //     this._scenerys.push(scenery);
         // }
+        this.addTerrainToDisplayRef(sceneNode);
+        this.addMossToDisplayRef(sceneNode);
     }
 
     public add(obj: FramesModel | DragonbonesModel) {
@@ -242,16 +278,13 @@ export class ElementStorage implements IElementStorage {
     }
 
     public getElementRef(id) {
-        return this.mElementRef.get(id);
+        const map = this.mDisplayRefMap.get(op_def.NodeType.ElementNodeType);
+        if (!map) return;
+        return map.get(id);
     }
 
     public getDisplayModel(id: number): FramesModel | DragonbonesModel {
-        const ele = this.mElementRef.get(id);
-        if (ele) {
-            return ele.displayModel;
-        }
-        Logger.getInstance().debugError(`can't find element ${id}`);
-        return;
+        return this.mModels.get(id);
     }
 
     public getTerrainCollection() {
@@ -267,6 +300,12 @@ export class ElementStorage implements IElementStorage {
     public getTerrainPaletteByBindId(id: number) {
         if (this.terrainPaletteWithBindId.get(id)) {
             return this.terrainPaletteWithBindId.get(id);
+        }
+    }
+
+    public getTerrainPaletteBySN(sn: string) {
+        if (this.terrainPaletteWithSN.get(sn)) {
+            return this.terrainPaletteWithSN.get(sn);
         }
     }
 
@@ -292,11 +331,22 @@ export class ElementStorage implements IElementStorage {
         return this._wallCollection;
     }
 
+    public getElementFromBlockIndex(indexs: number[], nodeType: op_def.NodeType) {
+        const result = [];
+        const map = this.mDisplayRefMap.get(nodeType);
+        if (!map) return;
+        map.forEach((ele) => {
+            if (indexs.includes(ele.blockIndex)) result.push(ele);
+        });
+        return result;
+    }
+
     public destroy() {
-        this.mElementRef.clear();
+        this.clearDisplayRef();
 
         this.terrainPalette.clear();
         this.terrainPaletteWithBindId.clear();
+        this.terrainPaletteWithSN.clear();
         this.mossPalette.clear();
 
         this.mModels.forEach((model, index) => {
@@ -306,5 +356,50 @@ export class ElementStorage implements IElementStorage {
         this.mModels.clear();
 
         this._assets = undefined;
+    }
+
+    private addDisplayRef(displayRef: IDisplayRef, nodeType: op_def.NodeType) {
+        const map = this.mDisplayRefMap.get(nodeType);
+        if (!map) return;
+        map.set(displayRef.id, displayRef);
+    }
+
+    private addTerrainToDisplayRef(sceneNode: SceneNode) {
+        const terrains = this._terrainCollection.data;
+        const cols = terrains.length;
+        const rows = terrains[0].length;
+        for (let i = 0; i < cols; i++) {
+            for (let j = 0; j < rows; j++) {
+                if (terrains[i][j] === 0) continue;
+                const id = i << 16 | j;
+                const pos = Position45.transformTo90(new LogicPos(i, j), sceneNode.size);
+                this.addDisplayRef({
+                    id,
+                    displayModel: this.getTerrainPalette(terrains[i][j]),
+                    pos,
+                    blockIndex: new BlockIndex().getBlockIndex(pos.x, pos.y, sceneNode.size)
+                }, op_def.NodeType.TerrainNodeType);
+            }
+        }
+    }
+
+    private addMossToDisplayRef(sceneNode: SceneNode) {
+        const mossCollection = this._mossCollection.data;
+        for (const moss of mossCollection) {
+            const mossPalette = this.getMossPalette(moss.key);
+            const { layer, frameModel } = mossPalette;
+            this.addDisplayRef({
+                id: moss.id,
+                direction: moss.dir || 3,
+                pos: new LogicPos(moss.x, moss.y, moss.z),
+                displayModel: frameModel,
+                layer,
+                blockIndex: new BlockIndex().getBlockIndex(moss.x, moss.y, sceneNode.size)
+            }, op_def.NodeType.ElementNodeType);
+        }
+    }
+
+    private clearDisplayRef() {
+        this.mDisplayRefMap.forEach((map) => map.clear());
     }
 }

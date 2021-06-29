@@ -30,7 +30,9 @@ export class PlayerManager extends PacketHandler implements IElementManager {
             this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_ONLY_BUBBLE, this.onOnlyBubbleHandler);
             this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_CHAT, this.onShowBubble);
             this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_ONLY_BUBBLE_CLEAN, this.onClearBubbleHandler);
-            this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_SYNC_SPRITE, this.onSync);
+            // this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_SYNC_SPRITE, this.onSync);
+            this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_HOT_BLOCK_SYNC_SPRITE, this.onSync);
+            this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_HOT_BLOCK_DELETE_SPRITE, this.onBlockDeleteSprite);
             this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_CHANGE_SPRITE_ANIMATION, this.onChangeAnimation);
             this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_SET_SPRITE_POSITION, this.onSetPosition);
             this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_SET_POSITION, this.onSetPosition);
@@ -38,6 +40,7 @@ export class PlayerManager extends PacketHandler implements IElementManager {
             this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_ACTIVE_SPRITE_END, this.onActiveSpriteEndHandler);
             this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_SYNC_ACTOR, this.onSyncActorHandler);
         }
+
         this.addLisenter();
     }
 
@@ -153,8 +156,19 @@ export class PlayerManager extends PacketHandler implements IElementManager {
                     element.calcDirection(element.getPosition(), target.getPosition());
                 }
                 if (data.animation) {
-                    element.play(data.animation, data.times);
+                    const times = data.times;
+                    const queue = [{ animationName: data.animation, times }];
+                    if (times && times > 0) {
+                        if (element.moving) {
+                            queue.push({ animationName: PlayerState.IDLE, times: undefined });
+                        } else {
+                            queue.push({ animationName: element.model.currentAnimation.name, times: element.model.currentAnimation.times });
+                        }
+                    }
+                    element.setQueue(queue);
+                    // element.play(data.animation, data.times);
                 }
+                // this.mActionMgr.executeElementActions(data.action, { targetId, id: data.id }, id);
             }
         }
     }
@@ -222,7 +236,47 @@ export class PlayerManager extends PacketHandler implements IElementManager {
         if (ele) ele.setState(state);
     }
 
-    protected onAdjust(packet: PBpacket) {
+    protected checkPlayerAction(id: number) {
+        if (this.has(id) && id !== this.mRoom.game.user.id) {
+            const ele = this.get(id);
+            // const action = new PlayerElementAction(this.mRoom.game, ele.model);
+            // action.executeAction();
+        }
+    }
+
+    protected _loadSprite(sprite: op_client.ISprite) {
+    }
+
+    private onSync(packet: PBpacket) {
+        const content: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_HOT_BLOCK_SYNC_SPRITE = packet.content;
+        if (content.nodeType !== op_def.NodeType.CharacterNodeType) {
+            return;
+        }
+
+        let player: Player = null;
+        const sprites = content.sprites;
+        const command = content.command;
+        for (const sprite of sprites) {
+            player = this.get(sprite.id);
+            this._loadSprite(sprite);
+            if (player) {
+                if (command === op_def.OpCommand.OP_COMMAND_UPDATE) {
+                    this.checkSuitAvatarSprite(sprite);
+                    const _sprite = new Sprite(sprite, content.nodeType);
+                    player.model = _sprite;
+                } else if (command === op_def.OpCommand.OP_COMMAND_PATCH) {
+                    player.updateModel(sprite, this.mRoom.game.avatarType);
+                }
+            } else {
+                // create sprite.avatar数据
+                this.checkSuitAvatarSprite(sprite);
+                const _sprite = new Sprite(sprite, content.nodeType);
+                this._add(_sprite);
+            }
+        }
+    }
+
+    private onAdjust(packet: PBpacket) {
         const content: op_client.IOP_VIRTUAL_WORLD_REQ_CLIENT_ADJUST_POSITION = packet.content;
         const positions = content.spritePositions;
         const type = content.nodeType;
@@ -242,32 +296,6 @@ export class PlayerManager extends PacketHandler implements IElementManager {
         }
     }
 
-    protected _loadSprite(sprite: op_client.ISprite) {
-    }
-
-    private onSync(packet: PBpacket) {
-        const content: op_client.IOP_VIRTUAL_WORLD_REQ_CLIENT_SYNC_SPRITE = packet.content;
-        if (content.nodeType !== op_def.NodeType.CharacterNodeType) {
-            return;
-        }
-
-        let player: Player = null;
-        const sprites = content.sprites;
-        const command = content.command;
-        for (const sprite of sprites) {
-            player = this.get(sprite.id);
-            if (player) {
-                this._loadSprite(sprite);
-                if (command === op_def.OpCommand.OP_COMMAND_UPDATE) {
-                    this.checkSuitAvatarSprite(sprite);
-                    player.model = new Sprite(sprite, content.nodeType);
-                } else if (command === op_def.OpCommand.OP_COMMAND_PATCH) {
-                    player.updateModel(sprite, this.mRoom.game.avatarType);
-                }
-            }
-        }
-    }
-
     private onAdd(packet: PBpacket) {
         if (!this.mPlayerMap) {
             this.mPlayerMap = new Map();
@@ -279,17 +307,23 @@ export class PlayerManager extends PacketHandler implements IElementManager {
             return;
         }
         for (const sprite of sprites) {
+            // create sprite.attrs数据
             this._loadSprite(sprite);
+            // create sprite.avatar数据
             this.checkSuitAvatarSprite(sprite);
-            this._add(new Sprite(sprite, content.nodeType));
+            const _sprite = new Sprite(sprite, content.nodeType);
+            this._add(_sprite);
         }
     }
 
     private _add(sprite: ISprite) {
         if (!this.mPlayerMap) this.mPlayerMap = new Map();
+        let player = this.mPlayerMap.get(sprite.id);
         if (!this.mPlayerMap.has(sprite.id)) {
-            const player = new Player(sprite as Sprite, this);
+            player = new Player(sprite as Sprite, this);
             this.mPlayerMap.set(player.id || 0, player);
+        } else {
+            player.setModel(sprite);
         }
     }
 
@@ -346,7 +380,7 @@ export class PlayerManager extends PacketHandler implements IElementManager {
         const role: Player = this.get(id);
         if (role) {
             role.stopMove();
-            role.setPosition(new LogicPos(content.position.x, content.position.y, content.position.z));
+            role.setPosition(new LogicPos(content.position.x, content.position.y, content.position.z), id === this.mActor.id);
             this.mRoom.game.renderPeer.setPosition(id, content.position.x, content.position.y, content.position.z);
         }
     }
@@ -402,17 +436,19 @@ export class PlayerManager extends PacketHandler implements IElementManager {
         }
     }
 
+    private onBlockDeleteSprite(packet: PBpacket) {
+        const content: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_HOT_BLOCK_DELETE_SPRITE = packet.content;
+        const { nodeType, spriteIds } = content;
+        for (const id of spriteIds) {
+            if (this.get(id)) {
+                this.remove(id);
+            }
+        }
+    }
+
     private onQueryElementHandler(id: number) {
         const ele = this.get(id);
         this.mRoom.game.emitter.emit(EventType.SCENE_RETURN_FIND_ELEMENT, ele);
-    }
-
-    private checkPlayerAction(id: number) {
-        if (this.has(id) && id !== this.mRoom.game.user.id) {
-            const ele = this.get(id);
-            // const action = new PlayerElementAction(this.mRoom.game, ele.model);
-            // action.executeAction();
-        }
     }
 
     private onActiveSpriteHandler(packet: PBpacket) {

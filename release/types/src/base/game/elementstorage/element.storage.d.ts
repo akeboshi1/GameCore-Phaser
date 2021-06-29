@@ -1,5 +1,6 @@
-import { Lite, PaletteNode, TerrainCollectionNode, MossNode, AssetsNode, WallCollectionNode, MossCollectionNode } from "game-capsule";
-import { IDragonbonesModel, IFramesModel, IScenery } from "structure";
+import { Lite, PaletteNode, TerrainCollectionNode, MossNode, AssetsNode, WallCollectionNode, MossCollectionNode, Capsule } from "game-capsule";
+import { op_def } from "pixelpai_proto";
+import { IDragonbonesModel, IFramesModel, IPos, IScenery } from "structure";
 import { DragonbonesModel, FramesModel } from "../sprite";
 export interface IAsset {
     type: string;
@@ -16,6 +17,7 @@ export interface IElementStorage {
     getTerrainCollection(): any;
     getTerrainPalette(key: number): IFramesModel;
     getTerrainPaletteByBindId(id: number): IFramesModel;
+    getTerrainPaletteBySN(sn: string): IFramesModel;
     getMossPalette(key: number): {
         layer: number;
         frameModel: FramesModel;
@@ -24,16 +26,23 @@ export interface IElementStorage {
     getScenerys(): IScenery[];
     destroy(): any;
 }
-interface IDisplayRef {
+export interface IDisplayRef {
     id: number;
     name?: string;
+    pos?: IPos;
+    direction?: number;
+    blockIndex?: number;
+    layer?: number;
     displayModel?: FramesModel | DragonbonesModel;
 }
 export declare class ElementStorage implements IElementStorage {
     protected mModels: Map<number, FramesModel | DragonbonesModel>;
     protected mElementRef: Map<number, IDisplayRef>;
+    protected mTerrainRef: Map<number, IDisplayRef>;
+    protected mDisplayRefMap: Map<op_def.NodeType, Map<number, IDisplayRef>>;
     protected terrainPalette: Map<number, FramesModel>;
     protected terrainPaletteWithBindId: Map<number, FramesModel>;
+    protected terrainPaletteWithSN: Map<string, FramesModel>;
     protected mossPalette: Map<number, {
         layer: number;
         frameModel: FramesModel;
@@ -48,13 +57,14 @@ export declare class ElementStorage implements IElementStorage {
     updatePalette(palette: PaletteNode): void;
     updateMoss(moss: MossNode): void;
     updateAssets(assetsNode: AssetsNode): void;
-    setSceneConfig(config: any): void;
+    setSceneConfig(config: Capsule): void;
     add(obj: FramesModel | DragonbonesModel): void;
     getElementRef(id: any): IDisplayRef;
     getDisplayModel(id: number): FramesModel | DragonbonesModel;
     getTerrainCollection(): TerrainCollectionNode;
     getTerrainPalette(key: number): FramesModel;
     getTerrainPaletteByBindId(id: number): FramesModel;
+    getTerrainPaletteBySN(sn: string): FramesModel;
     getMossCollection(): MossCollectionNode;
     getMossPalette(id: number): {
         layer: number;
@@ -63,6 +73,10 @@ export declare class ElementStorage implements IElementStorage {
     getScenerys(): IScenery[];
     getAssets(): IAsset[];
     getWallCollection(): WallCollectionNode;
+    getElementFromBlockIndex(indexs: number[], nodeType: op_def.NodeType): any[];
     destroy(): void;
+    private addDisplayRef;
+    private addTerrainToDisplayRef;
+    private addMossToDisplayRef;
+    private clearDisplayRef;
 }
-export {};

@@ -6,12 +6,16 @@ import { IElement } from "../element/element";
 import { ConnectionService, ISprite } from "structure";
 import { IFramesModel } from "structure";
 import { IDragonbonesModel, IPos } from "structure";
-import { IElementStorage } from "baseGame";
+import { IDisplayRef, IElementStorage } from "baseGame";
 import { IRoomService, SpriteAddCompletedListener } from "../../room/room";
 export declare class TerrainManager extends PacketHandler implements IElementManager {
     protected mRoom: IRoomService;
     hasAddComplete: boolean;
     protected mTerrains: Map<number, Terrain>;
+    /**
+     * 配置文件等待渲染的物件。
+     */
+    protected mCacheDisplayRef: Map<number, IDisplayRef>;
     protected mGameConfig: IElementStorage;
     protected mPacketFrameCount: number;
     protected mListener: SpriteAddCompletedListener;
@@ -32,6 +36,7 @@ export declare class TerrainManager extends PacketHandler implements IElementMan
     getElements(): IElement[];
     onDisplayCreated(id: number): void;
     onDisplayRemoved(id: number): void;
+    addDisplayRef(displays: IDisplayRef[]): void;
     changeAllDisplayData(id: string): void;
     protected onAdd(packet: PBpacket): void;
     protected _add(sprite: ISprite): Terrain;
@@ -48,6 +53,9 @@ export declare class TerrainManager extends PacketHandler implements IElementMan
     protected addEmpty(pos: IPos): void;
     protected removeEmpty(pos: IPos): void;
     private dealTerrainCache;
+    private onBlockSyncSprite;
+    private onBlockDeleteSprite;
+    private onBlockSpriteEnd;
     get connection(): ConnectionService | undefined;
     get roomService(): IRoomService;
 }

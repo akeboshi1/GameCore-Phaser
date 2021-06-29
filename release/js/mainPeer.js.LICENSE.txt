@@ -24,6 +24,8 @@
 
 /*! exports provided: BasicModel */
 
+/*! exports provided: BlockIndex */
+
 /*! exports provided: BlockObject */
 
 /*! exports provided: CamerasManager */
@@ -656,6 +658,10 @@
 
 /*!********************************************!*\
   !*** ./node_modules/protobufjs/src/rpc.js ***!
+  \********************************************/
+
+/*!********************************************!*\
+  !*** ./src/base/game/block/block.index.ts ***!
   \********************************************/
 
 /*!********************************************!*\

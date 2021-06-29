@@ -86,6 +86,8 @@
 
 /*! exports provided: BlackScene */
 
+/*! exports provided: BlockIndex */
+
 /*! exports provided: BlockManager */
 
 /*! exports provided: BlockObject */
@@ -1054,6 +1056,10 @@
 
 /*!********************************************!*\
   !*** ./node_modules/protobufjs/src/rpc.js ***!
+  \********************************************/
+
+/*!********************************************!*\
+  !*** ./src/base/game/block/block.index.ts ***!
   \********************************************/
 
 /*!********************************************!*\

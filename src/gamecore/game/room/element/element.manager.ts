@@ -7,8 +7,7 @@ import { IElementStorage, Sprite } from "baseGame";
 import NodeType = op_def.NodeType;
 import { IRoomService } from "../room";
 import { InputEnable } from "./input.enable";
-import { BaseStateManager } from "../state";
-
+import { IDisplayRef } from "baseGame";
 export interface IElementManager {
     hasAddComplete: boolean;
     readonly connection: ConnectionService | undefined;
@@ -29,11 +28,16 @@ export class ElementManager extends PacketHandler implements IElementManager {
     /**
      * 添加element缓存list
      */
-    protected mCacheAddList: any[] = [];
+    protected mCacheAddList: IDisplayRef[] = [];
     /**
      * 更新element缓存list
      */
     protected mCacheSyncList: any[] = [];
+
+    /**
+     * 配置文件等待渲染的物件。
+     */
+    protected mCacheDisplayRef: Map<number, IDisplayRef> = new Map();
 
     /**
      * Add添加 End清空
@@ -47,7 +51,7 @@ export class ElementManager extends PacketHandler implements IElementManager {
     protected mRequestSyncIdList: number[] = [];
     protected mDealSyncMap: Map<number, boolean> = new Map();
     protected mGameConfig: IElementStorage;
-    // protected mStateMgr: PacketHandler;
+    // private mStateMgr: ElementStateManager;
     // private mActionMgr: ElementActionManager;
     protected mLoadLen: number = 0;
     protected mCurIndex: number = 0;
@@ -56,10 +60,12 @@ export class ElementManager extends PacketHandler implements IElementManager {
         if (this.mRoom && this.mRoom.game) {
             this.mGameConfig = this.mRoom.game.elementStorage;
         }
+
         // 进入房间创建地图后将其拷贝给物理进程
-        // this.mStateMgr = new BaseStateManager(mRoom);
+        // this.mStateMgr = new ElementStateManager(mRoom);
         // this.mActionMgr = new PicaElementActionManager(mRoom.game);
         this.addListen();
+
         this.mRoom.onManagerCreated(this.constructor.name);
     }
 
@@ -72,6 +78,9 @@ export class ElementManager extends PacketHandler implements IElementManager {
             this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_MOVE_SPRITE, this.onMove);
             this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_ADJUST_POSITION, this.onAdjust);
             this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_SYNC_SPRITE, this.onSync);
+            this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_HOT_BLOCK_SYNC_SPRITE, this.onBlockSyncSprite);
+            this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_HOT_BLOCK_DELETE_SPRITE, this.onBlockDeleteSprite);
+            this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_HOT_BLOCK_SYNC_SPRITE_END, this.onBlockSpriteEnd);
             this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_ONLY_BUBBLE, this.onShowBubble);
             this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_ONLY_BUBBLE_CLEAN, this.onClearBubbleHandler);
             this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_CHANGE_SPRITE_ANIMATION, this.onChangeAnimation);
@@ -126,6 +135,13 @@ export class ElementManager extends PacketHandler implements IElementManager {
         for (const sprite of sprites) {
             this._add(sprite, addMap);
         }
+    }
+
+    public addDisplayRef(displays: IDisplayRef[]) {
+        for (const display of displays) {
+            if (!this.get(display.id)) this.mCacheDisplayRef.set(display.id, display);
+        }
+        this.dealSyncList();
     }
 
     public setState(state: op_client.IStateGroup) {
@@ -208,6 +224,9 @@ export class ElementManager extends PacketHandler implements IElementManager {
             if (!obj) continue;
             point = obj.point3f;
             if (point) {
+                if (this.mCacheDisplayRef.has(obj.id)) {
+                    this.mCacheDisplayRef.delete(obj.id);
+                }
                 sprite = new Sprite(obj, 3);
                 if (!this.checkDisplay(sprite)) {
                     ids.push(sprite.id);
@@ -222,6 +241,8 @@ export class ElementManager extends PacketHandler implements IElementManager {
             }
         }
         this.fetchDisplay(ids);
+        // this.mStateMgr.add(eles);
+        // this.checkElementDataAction(eles);
     }
 
     /**
@@ -276,7 +297,23 @@ export class ElementManager extends PacketHandler implements IElementManager {
                 }
             }
             this.dealAddList(true);
+            // this.mStateMgr.syncElement(ele);
+            // this.checkElementDataAction(ele);
         }
+    }
+
+    public dealDisplayRef() {
+        this.mCacheDisplayRef.forEach((ref) => {
+            const { id, pos, name, layer, direction } = ref;
+            this.addSpritesToCache([{
+                id,
+                point3f: pos,
+                nickname: name,
+                direction,
+                layer
+            }]);
+        });
+        this.mCacheDisplayRef.clear();
     }
 
     public onDisplayReady(id: number) {
@@ -553,6 +590,8 @@ export class ElementManager extends PacketHandler implements IElementManager {
             const pos = ele.moveBasePos();
             if (pos) ele.moveMotion(veloctiy.x * 400 + pos.x, veloctiy.y * 400 + pos.y);
         }
+        // throw new Error("todo");
+        // this.mRoom.game.physicalPeer.setBaseVelocity(id, veloctiy.x, veloctiy.y);
     }
 
     private onShowBubble(packet: PBpacket) {
@@ -584,5 +623,45 @@ export class ElementManager extends PacketHandler implements IElementManager {
                 ele.setQueue(content.changeAnimation);
             }
         }
+    }
+
+    private onBlockSyncSprite(packet: PBpacket) {
+        const content: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_HOT_BLOCK_SYNC_SPRITE = packet.content;
+        if (content.nodeType !== op_def.NodeType.ElementNodeType) {
+            return;
+        }
+        const sprites = content.sprites;
+        const add = [];
+        for (const sprite of sprites) {
+            if (this.get(sprite.id)) {
+                (<any>sprite).command = content.command;
+                this.mCacheSyncList.push(sprite);
+                continue;
+            }
+            if (this.mCacheDisplayRef.has(sprite.id)) {
+                this.mCacheDisplayRef.delete(sprite.id);
+            }
+            add.push(sprite);
+        }
+        if (add.length > 0) this.addSpritesToCache(add);
+        if (this.mCacheSyncList.length > 0) this.dealSyncList();
+    }
+
+    private onBlockDeleteSprite(packet: PBpacket) {
+        const content: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_HOT_BLOCK_DELETE_SPRITE = packet.content;
+        if (content.nodeType !== op_def.NodeType.ElementNodeType) {
+            return;
+        }
+        const ids = content.spriteIds;
+        for (const id of ids) {
+            if (this.mCacheDisplayRef.has(id)) this.mCacheDisplayRef.delete(id);
+            if (this.get(id)) this.remove(id);
+        }
+    }
+
+    private onBlockSpriteEnd(packet: PBpacket) {
+        this.dealDisplayRef();
+        this.addComplete(packet);
+        this.mRoom.onManagerReady(this.constructor.name);
     }
 }
