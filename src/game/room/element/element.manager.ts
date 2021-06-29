@@ -692,11 +692,9 @@ export class ElementManager extends PacketHandler implements IElementManager {
         }
         const sprites = content.sprites;
         const add = [];
-        const sync = [];
-        const command = content.command;
         for (const sprite of sprites) {
             if (this.get(sprite.id)) {
-                (<any>sprite).command = command;
+                (<any>sprite).command = content.command;
                 this.mCacheSyncList.push(sprite);
                 continue;
             }
@@ -706,7 +704,7 @@ export class ElementManager extends PacketHandler implements IElementManager {
             add.push(sprite);
         }
         if (add.length > 0) this.addSpritesToCache(add);
-        if (sync.length > 0) this.dealSyncList();
+        if (this.mCacheSyncList.length > 0) this.dealSyncList();
     }
 
     private onBlockDeleteSprite(packet: PBpacket) {
