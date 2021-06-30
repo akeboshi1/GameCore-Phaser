@@ -5,7 +5,7 @@ import { EventType, GameState, Logger, LoadState } from "structure";
 import { PBpacket } from "net-socket-packet";
 import { op_gateway, op_client, op_virtual_world, op_def } from "pixelpai_proto";
 import IOP_CLIENT_REQ_VIRTUAL_WORLD_PLAYER_INIT = op_gateway.IOP_CLIENT_REQ_VIRTUAL_WORLD_PLAYER_INIT;
-import { Lite } from "game-capsule";
+import { Capsule } from "game-capsule";
 export class EnterWorldState extends BaseState {
     private mIsSyncPackage: boolean = false;
     private remoteIndex = 0;
@@ -110,7 +110,7 @@ export class EnterWorldState extends BaseState {
         // 每次加载，重新请求数据
         this.mIsSyncPackage = false;
         this.loadGameConfig(mainGameConfigUrl)
-            .then((gameConfig: Lite) => {
+            .then((gameConfig: Capsule) => {
                 this.mGame.elementStorage.setGameConfig(gameConfig);
                 this.mGame.peer.render.createGameCallBack(content.keyEvents);
                 this.gameCreated();
@@ -132,7 +132,7 @@ export class EnterWorldState extends BaseState {
         }
     }
 
-    private loadGameConfig(remotePath): Promise<Lite> {
+    private loadGameConfig(remotePath): Promise<Capsule> {
         const game = this.mMain.game;
         const config = game.getGameConfig();
         const configPath = ResUtils.getGameConfig(remotePath);
@@ -157,12 +157,12 @@ export class EnterWorldState extends BaseState {
         });
     }
 
-    private decodeConfigs(req): Promise<Lite> {
+    private decodeConfigs(req): Promise<Capsule> {
         return new Promise((resolve, reject) => {
             const arraybuffer = req.response;
             if (arraybuffer) {
                 try {
-                    const gameConfig = new Lite();
+                    const gameConfig = new Capsule();
                     gameConfig.deserialize(new Uint8Array(arraybuffer));
                     Logger.getInstance().debug("TCL: World -> gameConfig", gameConfig);
                     resolve(gameConfig);
@@ -215,7 +215,7 @@ export class EnterWorldState extends BaseState {
         if (roomManager.hasRoom(vw.scene.id)) {
             roomManager.onEnterRoom(scene);
         } else {
-            this.loadSceneConfig(vw.scene.id.toString()).then(async (config: Lite) => {
+            this.loadSceneConfig(vw.scene.id.toString()).then(async (config: Capsule) => {
                 this.mGame.elementStorage.setSceneConfig(config);
                 roomManager.onEnterRoom(scene);
                 // ====> 游戏开始运行

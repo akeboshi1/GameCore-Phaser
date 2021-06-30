@@ -2,7 +2,7 @@ import { UIManager } from "./ui/ui.manager";
 import { PBpacket, PacketHandler } from "net-socket-packet";
 import { MainPeer } from "./main.peer";
 import { op_def, op_client, op_virtual_world, op_gateway } from "pixelpai_proto";
-import { Lite } from "game-capsule";
+import { Capsule } from "game-capsule";
 import { load, HttpLoadManager } from "utils";
 import IOP_CLIENT_REQ_VIRTUAL_WORLD_PLAYER_INIT = op_gateway.IOP_CLIENT_REQ_VIRTUAL_WORLD_PLAYER_INIT;
 import { Connection, GameSocket } from "./net/connection";
@@ -760,12 +760,12 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
         });
     }
 
-    private decodeConfigs(req): Promise<Lite> {
+    private decodeConfigs(req): Promise<Capsule> {
         return new Promise((resolve, reject) => {
             const arraybuffer = req.response;
             if (arraybuffer) {
                 try {
-                    const gameConfig = new Lite();
+                    const gameConfig = new Capsule();
                     gameConfig.deserialize(new Uint8Array(arraybuffer));
                     Logger.getInstance().debug("TCL: World -> gameConfig", gameConfig);
                     // const list = (<any>gameConfig)._root._moss._peersDict;
