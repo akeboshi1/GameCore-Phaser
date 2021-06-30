@@ -46,7 +46,7 @@ export class ElementTopDisplay extends TopDisplay {
     }
     public showBubble(text: string, setting: any) {// op_client.IChat_Setting
         const scene = this.scene;
-        if (!scene) {
+        if (!scene || !setting) {
             return;
         }
         if (!this.mBubble) {
