@@ -74,7 +74,7 @@ export class EnterWorldState extends BaseState {
      * @param packet
      * @returns
      */
-    private async onInitVirtualWorldPlayerInit(packet: PBpacket) {
+    protected async onInitVirtualWorldPlayerInit(packet: PBpacket) {
         const clock = this.mGame.clock;
         Logger.getInstance().debug("onInitVirtualWorldPlayerInit");
         // if (this.mClock) this.mClock.sync(); // Manual sync remote time.
@@ -121,7 +121,7 @@ export class EnterWorldState extends BaseState {
             });
     }
 
-    private initgameConfigUrls(urls: string[]) {
+    protected initgameConfigUrls(urls: string[]) {
         for (const url of urls) {
             const sceneId = Tool.baseName(url);
             this.mGame.gameConfigUrls.set(sceneId, url);
@@ -132,7 +132,7 @@ export class EnterWorldState extends BaseState {
         }
     }
 
-    private loadGameConfig(remotePath): Promise<Capsule> {
+    protected loadGameConfig(remotePath): Promise<Capsule> {
         const game = this.mMain.game;
         const config = game.getGameConfig();
         const configPath = ResUtils.getGameConfig(remotePath);
@@ -157,7 +157,7 @@ export class EnterWorldState extends BaseState {
         });
     }
 
-    private decodeConfigs(req): Promise<Capsule> {
+    protected decodeConfigs(req): Promise<Capsule> {
         return new Promise((resolve, reject) => {
             const arraybuffer = req.response;
             if (arraybuffer) {
@@ -177,7 +177,7 @@ export class EnterWorldState extends BaseState {
         });
     }
 
-    private gameCreated() {
+    protected gameCreated() {
         if (this.mConnect) {
             Logger.getInstance().debug("connection gameCreat");
             this.mGame.loadingManager.start(LoadState.WAITENTERROOM);
@@ -189,7 +189,7 @@ export class EnterWorldState extends BaseState {
     }
 
     // ========> 进入房间流程
-    private onEnterSceneHandler(packet: PBpacket) {
+    protected onEnterSceneHandler(packet: PBpacket) {
         const content: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_ENTER_SCENE = packet.content;
         const scene = content.scene;
         switch (scene.sceneType) {
@@ -203,7 +203,7 @@ export class EnterWorldState extends BaseState {
         this.mGame.emitter.emit(EventType.SCENE_CHANGE);
     }
 
-    private async onEnterScene(scene: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_ENTER_SCENE) {
+    protected async onEnterScene(scene: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_ENTER_SCENE) {
         const vw = scene;
         const roomManager = this.mGame.roomManager;
         const curRoom = roomManager.currentRoom;
@@ -224,7 +224,7 @@ export class EnterWorldState extends BaseState {
         }
     }
 
-    private loadSceneConfig(sceneID: string): Promise<any> {
+    protected loadSceneConfig(sceneID: string): Promise<any> {
         const remotePath = this.getConfigUrl(sceneID);
         this.mGame.loadingManager.start(LoadState.DOWNLOADSCENECONFIG);
         const render = this.mGame.renderPeer;
@@ -247,7 +247,7 @@ export class EnterWorldState extends BaseState {
         }
     }
 
-    private getConfigUrl(sceneId: string) {
+    protected getConfigUrl(sceneId: string) {
         return this.mGame.gameConfigUrls.get(sceneId);
     }
 }
