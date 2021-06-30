@@ -42,6 +42,7 @@ export class PicaPrestigeDetailPanel extends Phaser.GameObjects.Container {
                 item = items[i];
             } else {
                 item = new PrestigePrivilegeItem(this.scene, this.dpr, this.zoom);
+                item.setHandler(this.send);
                 this.topScroll.addItem(item);
             }
             item.setItemData(datas[i]);
@@ -188,6 +189,7 @@ class PrestigePrivilegeItem extends Phaser.GameObjects.Container {
     private button: ThreeSliceButton;
     private tipsText: Phaser.GameObjects.Text;
     private mselect: boolean = false;
+    private send: Handler;
     constructor(scene: Phaser.Scene, dpr: number, zoom: number) {
         super(scene);
         this.dpr = dpr;
@@ -216,9 +218,11 @@ class PrestigePrivilegeItem extends Phaser.GameObjects.Container {
         this.tipsText.text = permission.name;
         const url = Url.getOsdRes(permission.texturePath);
         this.icon.load(url);
-        this.icon.scale = this.dpr / this.zoom;
     }
 
+    public setHandler(send: Handler) {
+        this.send = send;
+    }
     public set select(value) {
         this.mselect = value;
         this.bg.setFrame(value ? "prestige_privilege_bg" : "prestige_privilege_bg1");
@@ -229,7 +233,7 @@ class PrestigePrivilegeItem extends Phaser.GameObjects.Container {
     }
 
     private onButtonHandler() {
-        this.emit("buyitem", this.itemData);
+        if (this.send) this.send.runWith(["describle", this.itemData]);
     }
 }
 

@@ -90,6 +90,7 @@ export class PicaPrestigePanel extends PicaBasePanel {
         this.levelButton.x = this.horProgress.x - this.horProgress.width * 0.5 - this.levelButton.width * 0.5 - 8 * this.dpr;
         this.levelButton.y = this.horProgress.y;
         this.prestigeCompent = new PrestigeCompent(this.scene, 110 * this.dpr, 27 * this.dpr, this.dpr, this.scale);
+        this.prestigeCompent.setHandler(new Handler(this, this.onRechargeHandler));
         this.prestigeCompent.x = width * 0.5 - 10 * this.dpr;
         this.prestigeCompent.y = this.horProgress.y;
         this.topCon.add([this.toggleCon, this.mBackButton, this.mHelpBtn, this.horProgress, this.progressTex, this.levelButton, this.prestigeCompent]);
@@ -117,13 +118,16 @@ export class PicaPrestigePanel extends PicaBasePanel {
         if (!this.mInitialized) return;
         if (this.prestigeDetail) this.prestigeDetail.setPrestigeData(datas);
     }
-
+    public onPropConfirmHandler(prop: any, count: number) {
+        this.render.renderEmitter(this.key + "_buyItem", prop);
+    }
     public setCategories(content: any) {
         this.prestigeMarket.setCategories(content);
     }
 
     public setMoneyData(data: ICurrencyLevel) {
         this.prestigeMarket.setMoneyData(data);
+        this.prestigeCompent.setPrestigeData(data.reputationCoin);
     }
     public updateBuyedProps(buyedDatas: any[]) {
         this.prestigeMarket.updateBuyedProps(buyedDatas);
@@ -219,7 +223,6 @@ export class PicaPrestigePanel extends PicaBasePanel {
 
     private openMarketPanel() {
         this.showMarketPanel();
-        this.render.renderEmitter(this.key + "_getCategories");
     }
 
     private showMarketPanel() {
@@ -248,6 +251,7 @@ export class PicaPrestigePanel extends PicaBasePanel {
             this.prestigeLev.y = this.scaleHeight * 0.5;
         }
         this.prestigeLev.visible = true;
+        this.prestigeLev.refreshMask();
         this.hideContentPanel();
     }
 
@@ -257,13 +261,16 @@ export class PicaPrestigePanel extends PicaBasePanel {
 
     }
 
-    private openDescriblePanel() {
+    private openDescriblePanel(data: IFameLevel) {
         this.showDescriblePanel();
+        this.privileDescrible.setPrestigeData(data);
     }
     private showDescriblePanel() {
         if (!this.privileDescrible) {
-            this.privileDescrible = new PicaPrivilegeDescriblePanel(this.scene, 334 * this.dpr, 353 * this.dpr, this.dpr, this.scale);
+            this.privileDescrible = new PicaPrivilegeDescriblePanel(this.scene, this.scaleWidth, this.scaleHeight, this.dpr, this.scale);
             this.add(this.privileDescrible);
+            this.privileDescrible.x = this.scaleWidth * 0.5;
+            this.privileDescrible.y = this.scaleHeight * 0.5;
         }
         this.privileDescrible.visible = true;
     }
@@ -291,8 +298,8 @@ export class PicaPrestigePanel extends PicaBasePanel {
     }
 
     private onDetailHandler(tag: string, data: any) {
-        if (tag === "detail") {
-            this.openDescriblePanel();
+        if (tag === "describle") {
+            this.openDescriblePanel(data);
         }
     }
 
@@ -306,6 +313,10 @@ export class PicaPrestigePanel extends PicaBasePanel {
 
     private onCloseHandler() {
         this.render.renderEmitter(this.key + "_close");
+    }
+
+    private onRechargeHandler() {
+        this.render.mainPeer.showMediator(ModuleName.PICAPRESTIGECONVERT_NAME, true);
     }
 }
 

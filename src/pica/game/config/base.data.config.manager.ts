@@ -889,6 +889,7 @@ export class BaseDataConfigManager extends BaseConfigManager {
             for (const pool of pools) {
                 this.getBatchItemDatas(pool.rewardItems);
                 pool.permission = this.getPermission(pool.permission);
+                pool["find"] = true;
             }
             data["find"] = true;
         }

@@ -178,6 +178,27 @@
 					}
 				},
 				{
+					"filename": "illustrate_survey_lv_prompt_s",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 14,
+						"h": 14
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 14,
+						"h": 14
+					},
+					"frame": {
+						"x": 586,
+						"y": 1652,
+						"w": 14,
+						"h": 14
+					}
+				},
+				{
 					"filename": "prestige_nav_icon",
 					"rotated": false,
 					"trimmed": true,
@@ -192,7 +213,7 @@
 						"h": 3
 					},
 					"frame": {
-						"x": 586,
+						"x": 602,
 						"y": 1652,
 						"w": 3,
 						"h": 3
@@ -283,6 +304,48 @@
 					}
 				},
 				{
+					"filename": "illustrate_survey_lv_bg_line",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 12,
+						"h": 169
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 12,
+						"h": 169
+					},
+					"frame": {
+						"x": 723,
+						"y": 1,
+						"w": 12,
+						"h": 169
+					}
+				},
+				{
+					"filename": "illustrate_survey_lv_icon",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 62,
+						"h": 62
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 62,
+						"h": 62
+					},
+					"frame": {
+						"x": 950,
+						"y": 1,
+						"w": 62,
+						"h": 62
+					}
+				},
+				{
 					"filename": "prestige_lv_icon",
 					"rotated": false,
 					"trimmed": false,
@@ -304,6 +367,27 @@
 					}
 				},
 				{
+					"filename": "illustrate_survey_lv_icon_s",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 50,
+						"h": 50
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 50,
+						"h": 50
+					},
+					"frame": {
+						"x": 950,
+						"y": 65,
+						"w": 50,
+						"h": 50
+					}
+				},
+				{
 					"filename": "prestige_schedule",
 					"rotated": false,
 					"trimmed": false,
@@ -319,7 +403,7 @@
 					},
 					"frame": {
 						"x": 950,
-						"y": 65,
+						"y": 117,
 						"w": 49,
 						"h": 49
 					}
@@ -340,7 +424,7 @@
 					},
 					"frame": {
 						"x": 950,
-						"y": 116,
+						"y": 168,
 						"w": 45,
 						"h": 45
 					}
@@ -361,7 +445,7 @@
 					},
 					"frame": {
 						"x": 950,
-						"y": 163,
+						"y": 215,
 						"w": 45,
 						"h": 45
 					}
@@ -382,7 +466,7 @@
 					},
 					"frame": {
 						"x": 950,
-						"y": 210,
+						"y": 262,
 						"w": 32,
 						"h": 31
 					}
@@ -403,7 +487,7 @@
 					},
 					"frame": {
 						"x": 984,
-						"y": 210,
+						"y": 262,
 						"w": 30,
 						"h": 30
 					}
@@ -424,7 +508,7 @@
 					},
 					"frame": {
 						"x": 984,
-						"y": 242,
+						"y": 294,
 						"w": 30,
 						"h": 30
 					}
@@ -445,7 +529,7 @@
 					},
 					"frame": {
 						"x": 950,
-						"y": 243,
+						"y": 295,
 						"w": 26,
 						"h": 26
 					}
@@ -596,6 +680,48 @@
 						"w": 293,
 						"h": 56
 					}
+				},
+				{
+					"filename": "illustrate_survey_lv_bg1",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 96,
+						"h": 95
+					},
+					"spriteSourceSize": {
+						"x": 1,
+						"y": 1,
+						"w": 95,
+						"h": 93
+					},
+					"frame": {
+						"x": 723,
+						"y": 1327,
+						"w": 95,
+						"h": 93
+					}
+				},
+				{
+					"filename": "illustrate_survey_lv_bg",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 88,
+						"h": 87
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 88,
+						"h": 87
+					},
+					"frame": {
+						"x": 723,
+						"y": 1422,
+						"w": 88,
+						"h": 87
+					}
 				}
 			]
 		}
@@ -603,6 +729,6 @@
 	"meta": {
 		"app": "https://www.codeandweb.com/texturepacker",
 		"version": "3.0",
-		"smartupdate": "$TexturePacker:SmartUpdate:c4452be25ca49dddd9d31c9a235fdf33:7937d74316e62848ba8f297f873f406f:a1ae6824c4a3c3c8981c4788c4507371$"
+		"smartupdate": "$TexturePacker:SmartUpdate:c8f8e48bb721fd1f02901a0a493bd09e:f6873b1274cd13954422b0b6a6eb5714:a1ae6824c4a3c3c8981c4788c4507371$"
 	}
 }

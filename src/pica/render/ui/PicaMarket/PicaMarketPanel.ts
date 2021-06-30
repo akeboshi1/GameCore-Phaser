@@ -16,6 +16,7 @@ export class PicaMarketPanel extends PicaBasePanel {
   protected mCloseBtn: ImageValueButton;
   protected zoom: number;
   protected mSuperInit: boolean = true;
+  protected tileBg: Phaser.GameObjects.TileSprite;
   private mSelectItem: ElementDetail;
   private mTabs: NinePatchTabButton[];
   private mSubTabs: TextButton[];
@@ -26,7 +27,6 @@ export class PicaMarketPanel extends PicaBasePanel {
   private mSubCategeoriesContainer: Phaser.GameObjects.Container;
   private mShelfContainer: Phaser.GameObjects.Container;
   private mBackgroundColor: Phaser.GameObjects.Graphics;
-  private tileBg: Phaser.GameObjects.TileSprite;
   private mShelfBackground: Phaser.GameObjects.Graphics;
   private mSubCategorisScroll: GameGridTable;
   private mItems: MarketItem[];

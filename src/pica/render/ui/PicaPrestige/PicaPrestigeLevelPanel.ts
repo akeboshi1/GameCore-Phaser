@@ -37,7 +37,7 @@ export class PicaPrestigeLevelPanel extends Phaser.GameObjects.Container {
         this.oneKeyBtn.x = this.width * 0.5 - this.oneKeyBtn.width * 0.5 - 10 * this.dpr;
         this.oneKeyBtn.y = this.backButton.y;
         this.titleTex.x = this.width * 0.5 - 152 * this.dpr;
-        this.titleTex.y = - 260 * this.dpr;
+        this.titleTex.y = this.backButton.y + 60 * this.dpr;
         this.rewardsPanel.x = this.titleTex.x;
         this.rewardsPanel.y = this.titleTex.y + this.rewardsPanel.height * 0.5 + 35 * this.dpr;
         this.mLevelGrid.y = 25 * this.dpr;
@@ -82,8 +82,10 @@ export class PicaPrestigeLevelPanel extends Phaser.GameObjects.Container {
 
         this.oneKeyBtn.on(ClickEvent.Tap, this.onAllReceiveHandler, this);
         this.titleTex = new BackgroundText(this.scene, UIAtlasName.prestige, "prestige_title_bg", i18n.t("prestige.level"), this.dpr);
+        this.titleTex.setColor("#6255DE");
+        this.titleTex.setFontStyle("bold");
         this.createGridTable();
-        this.rewardsPanel = new RightRewardsPanel(this.scene, 266 * this.dpr, 443 * this.dpr, this.dpr, this.zoom);
+        this.rewardsPanel = new RightRewardsPanel(this.scene, 266 * this.dpr, 460 * this.dpr, this.dpr, this.zoom);
         this.rewardsPanel.setHandler(new Handler(this, this.onReceivedHandler));
         this.add([this.mBackground, this.backButton, this.oneKeyBtn, this.titleTex, this.rewardsPanel, this.mLevelGrid]);
         this.resize();
@@ -129,7 +131,7 @@ export class PicaPrestigeLevelPanel extends Phaser.GameObjects.Container {
         cell.select = true;
         this.curLevelItem = cell;
         const groupData = cell.groupData;
-        this.titleTex.setText(i18n.t("prestige.level"));
+        this.titleTex.setText(i18n.t("prestige.level") + cell.groupData.level);
         this.rewardsPanel.setRewardsData(groupData);
     }
 
@@ -163,7 +165,7 @@ class RightRewardsPanel extends Phaser.GameObjects.Container {
         this.zoom = zoom;
         this.setSize(width, height);
         const cellHeight = 124 * this.dpr;
-        const conWidth = 108 * dpr, conHeight = height;
+        const conWidth = 130 * dpr, conHeight = height;
         this.gridLayout = new GridLayoutGroup(this.scene, conWidth, conHeight, {
             cellSize: new Phaser.Math.Vector2(conWidth, cellHeight),
             space: new Phaser.Math.Vector2(0, 17 * this.dpr),
@@ -172,13 +174,16 @@ class RightRewardsPanel extends Phaser.GameObjects.Container {
             constraintCount: 2,
             alignmentType: AlignmentType.UpperCenter
         });
-        this.add(this.gridLayout);
         this.receiveButton = new NineSliceButton(scene, 0, 0, 143 * dpr, 40 * dpr, UIAtlasName.uicommon, "red_btn_normal", i18n.t("common.receivereward"), dpr, zoom, UIHelper.button(dpr));
+        this.receiveButton.setTextStyle(UIHelper.whiteStyle(dpr, 16));
+        this.receiveButton.setFontStyle("bold");
         this.receiveButton.on(ClickEvent.Tap, this.onReceiveHandler, this);
+        this.receiveButton.y = height * 0.5 - this.receiveButton.height * 0.5 + 30 * dpr;
+        this.add([this.gridLayout, this.receiveButton]);
     }
 
     public setRewardsData(group: IFameLevel) {
-        this.setGridItems(group.rewardItems);
+        this.setGridItems(group.rewardItems.concat(group.rewardItems));
     }
     public setHandler(send: Handler) {
         this.send = send;
@@ -202,6 +207,7 @@ class RightRewardsPanel extends Phaser.GameObjects.Container {
             item.visible = true;
         }
         this.gridLayout.Layout();
+        this.gridLayout.y = -this.height * 0.5 + this.gridLayout.height * 0.5;
     }
 
     private onReceiveHandler() {
@@ -221,7 +227,7 @@ class RewardItem extends ButtonEventDispatcher {
         this.bg = this.scene.make.image({ key: UIAtlasName.prestige, frame: "prestige_reward_bg" });
         this.setSize(this.bg.width, this.bg.height);
         this.itemButton = new ItemButton(scene, undefined, undefined, dpr, zoom, false);
-        this.itemButton.y = -20 * dpr;
+        this.itemButton.y = -15 * dpr;
         this.add([this.bg, this.itemButton]);
         this.enable = true;
         this.on(ClickEvent.Tap, this.onRewardHandler, this);
@@ -252,11 +258,11 @@ class LevelItem extends ButtonEventDispatcher {
         this.dpr = dpr;
         this.zoom = zoom;
         this.setSize(width, height);
-        this.linebg = this.scene.make.image({ key: UIAtlasName.illustrate_new, frame: "illustrate_survey_lv_bg_line" });
-        this.bg = this.scene.make.image({ key: UIAtlasName.illustrate_new, frame: "illustrate_survey_lv_bg" });
+        this.linebg = this.scene.make.image({ key: UIAtlasName.prestige, frame: "illustrate_survey_lv_bg_line" });
+        this.bg = this.scene.make.image({ key: UIAtlasName.prestige, frame: "illustrate_survey_lv_bg" });
         this.levelTex = this.scene.make.text({ style: UIHelper.whiteStyle(dpr) }).setOrigin(0.5);
-        this.iconImg = this.scene.make.image({ key: UIAtlasName.illustrate_new, frame: "illustrate_survey_lv_icon_s" });
-        this.redImg = this.scene.make.image({ key: UIAtlasName.illustrate_new, frame: "illustrate_survey_lv_prompt_s" });
+        this.iconImg = this.scene.make.image({ key: UIAtlasName.prestige, frame: "illustrate_survey_lv_icon_s" });
+        this.redImg = this.scene.make.image({ key: UIAtlasName.prestige, frame: "illustrate_survey_lv_prompt_s" });
         this.redImg.x = -this.iconImg.width * 0.5;
         this.redImg.y = -this.iconImg.height * 0.5;
         this.add([this.linebg, this.bg, this.iconImg, this.levelTex, this.redImg]);
