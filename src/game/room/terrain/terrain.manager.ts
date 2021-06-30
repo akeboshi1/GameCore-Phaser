@@ -64,7 +64,7 @@ export class TerrainManager extends PacketHandler implements IElementManager {
         for (let i = 0; i < roomSize.cols; i++) {
             this.mEmptyMap[i] = new Array(roomSize.rows);
             for (let j = 0; j < roomSize.rows; j++) {
-                // this.addEmpty(this.roomService.transformTo90(new LogicPos(i, j)));
+                this.addEmpty(this.roomService.transformTo90(new LogicPos(i, j)));
             }
         }
     }
@@ -412,14 +412,16 @@ export class TerrainManager extends PacketHandler implements IElementManager {
         if (!this.mTerrainCache) {
             this.mTerrainCache = [];
         }
+        const add = [];
         this.mCacheDisplayRef.forEach((display) => {
-            const sprite = new Sprite({ id: display.id });
-            const pos = display.pos;
-            this.removeEmpty(new LogicPos(pos.x, pos.y));
-            sprite.importDisplayRef(display);
-            this.mTerrainCache.push(sprite);
+            const { id, pos, direction } = display;
+            add.push({ id, point3f: this.roomService.transformTo90(pos), direction });
         });
         this.mCacheDisplayRef.clear();
+        if (add.length > 0) {
+            this.addSpritesToCache(add);
+        }
+        this.hasAddComplete = true;
         this.dealTerrainCache();
     }
 

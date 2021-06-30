@@ -367,10 +367,10 @@ export class ElementStorage implements IElementStorage {
 
     private addTerrainToDisplayRef(sceneNode: SceneNode) {
         const terrains = this._terrainCollection.data;
-        const rows = terrains.length;
-        const cols = terrains[0].length;
-        for (let i = 0; i < rows; i++) {
-            for (let j = 0; j < cols; j++) {
+        const cols = terrains.length;
+        const rows = terrains[0].length;
+        for (let i = 0; i < cols; i++) {
+            for (let j = 0; j < rows; j++) {
                 if (terrains[i][j] === 0) continue;
                 const id = i << 16 | j;
                 const pos = Position45.transformTo90(new LogicPos(i, j), sceneNode.size);
