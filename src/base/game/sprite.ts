@@ -350,7 +350,7 @@ export class Sprite extends EventDispatcher implements ISprite {
         this.displayInfo.id = this.id;
         if (this.currentAnimationName) {
             // DragonbonesModel 设置的动画在avatar上
-            if (displayInfo instanceof FramesModel) {
+            if (displayInfo.discriminator === "FramesModel") {
                 // this.displayInfo.animationName = this.currentAnimationName;
                 this.setAnimationData(this.currentAnimationName, this.direction);
             } else {
