@@ -14,7 +14,7 @@ import NodeType = op_def.NodeType;
 export class PlayerManager extends PacketHandler implements IElementManager {
     public hasAddComplete: boolean = false;
     protected mActor: User;
-    protected mPlayerMap: Map<number, Player> = new Map();
+    protected mPlayerMap: Map<number, IElement> = new Map();
 
     constructor(protected mRoom: Room) {
         super();
@@ -98,7 +98,7 @@ export class PlayerManager extends PacketHandler implements IElementManager {
                 player = actor;
             }
         }
-        return player;
+        return <Player>player;
     }
 
     has(id: number) {
@@ -188,7 +188,7 @@ export class PlayerManager extends PacketHandler implements IElementManager {
     }
 
     public addPackItems(elementId: number, items: op_gameconfig.IItem[]): void {
-        const character: Player = this.mPlayerMap.get(elementId);
+        const character: Player = <Player>this.mPlayerMap.get(elementId);
         if (character && character.id === this.mActor.id) {
             if (!(character as User).package) {
                 (character as User).package = op_gameconfig.Package.create();
@@ -199,7 +199,7 @@ export class PlayerManager extends PacketHandler implements IElementManager {
     }
 
     public removePackItems(elementId: number, itemId: number): boolean {
-        const character: Player = this.mPlayerMap.get(elementId);
+        const character: Player = <Player>this.mPlayerMap.get(elementId);
         if (character && this.mActor.id) {
             const itemList: any[] = (character as User).package.items;
             const len = itemList.length;
@@ -241,6 +241,17 @@ export class PlayerManager extends PacketHandler implements IElementManager {
             const ele = this.get(id);
             // const action = new PlayerElementAction(this.mRoom.game, ele.model);
             // action.executeAction();
+        }
+    }
+
+    protected _add(sprite: ISprite) {
+        if (!this.mPlayerMap) this.mPlayerMap = new Map();
+        let player = this.mPlayerMap.get(sprite.id);
+        if (!this.mPlayerMap.has(sprite.id)) {
+            player = new Player(sprite as Sprite, this);
+            this.mPlayerMap.set(player.id || 0, player);
+        } else {
+            player.setModel(sprite);
         }
     }
 
@@ -287,7 +298,7 @@ export class PlayerManager extends PacketHandler implements IElementManager {
             let player: Player;
             let point: op_def.IPBPoint3f;
             for (const position of positions) {
-                player = this.mPlayerMap.get(position.id);
+                player = <Player>this.mPlayerMap.get(position.id);
                 if (player) {
                     point = position.point3f;
                     player.setPosition(new LogicPos(point.x || 0, point.y || 0, point.z || 0));
@@ -313,17 +324,6 @@ export class PlayerManager extends PacketHandler implements IElementManager {
             this.checkSuitAvatarSprite(sprite);
             const _sprite = new Sprite(sprite, content.nodeType);
             this._add(_sprite);
-        }
-    }
-
-    private _add(sprite: ISprite) {
-        if (!this.mPlayerMap) this.mPlayerMap = new Map();
-        let player = this.mPlayerMap.get(sprite.id);
-        if (!this.mPlayerMap.has(sprite.id)) {
-            player = new Player(sprite as Sprite, this);
-            this.mPlayerMap.set(player.id || 0, player);
-        } else {
-            player.setModel(sprite);
         }
     }
 

@@ -5,9 +5,10 @@ import { Element, IElement } from "../element/element";
 import { LayerEnum } from "game-capsule";
 import { InputEnable } from "../element/input.enable";
 export class Player extends Element implements IElement {
-    protected nodeType: number = op_def.NodeType.CharacterNodeType;
+    get nodeType(): number {
+        return op_def.NodeType.CharacterNodeType;
+    }
     protected mOffsetY: number = undefined;
-
     constructor(sprite: ISprite, mElementManager: IElementManager) {
         super(sprite, mElementManager);
         this.setInputEnable(InputEnable.Enable);

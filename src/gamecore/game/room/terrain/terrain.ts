@@ -1,12 +1,15 @@
 import { BlockObject } from "../block/block.object";
 import { IElement, MoveData } from "../element/element";
 import { IElementManager } from "../element/element.manager";
-import { op_client } from "pixelpai_proto";
+import { op_def, op_client } from "pixelpai_proto";
 import { ISprite, IPos, Logger, IFramesModel } from "structure";
 import { LayerEnum } from "game-capsule";
 import { IRoomService } from "../../room/room";
 
 export class Terrain extends BlockObject implements IElement {
+    get nodeType(): number {
+        return op_def.NodeType.TerrainNodeType;
+    }
     protected mId: number;
     protected mDisplayInfo: IFramesModel;
     protected mModel: ISprite;

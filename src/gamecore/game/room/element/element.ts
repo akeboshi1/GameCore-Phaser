@@ -27,6 +27,8 @@ export interface IElement {
 
     readonly moveData: MoveData;
 
+    nodeType: number;
+
     state: boolean;
 
     model: ISprite;
@@ -96,6 +98,8 @@ export interface IElement {
     addToInteractiveMap();
 
     removeFromInteractiveMap();
+
+    destroy();
 }
 
 export interface MoveData {
@@ -151,6 +155,10 @@ export class Element extends BlockObject implements IElement {
         return this.mMoving;
     }
 
+    get nodeType(): number {
+        return op_def.NodeType.ElementNodeType;
+    }
+
     protected mId: number;
     protected mDisplayInfo: IFramesModel | IDragonbonesModel;
     protected mAnimationName: string = "";
@@ -173,10 +181,8 @@ export class Element extends BlockObject implements IElement {
     protected mMoveSyncTime: number = 0;
     protected mMovePoints: any[];
     protected mTarget;
-
     private delayTime = 1000 / 45;
     private mState: boolean = false;
-
     constructor(sprite: ISprite, protected mElementManager: IElementManager) {
         super(sprite ? sprite.id : -1, mElementManager ? mElementManager.roomService : undefined);
         if (!sprite) {

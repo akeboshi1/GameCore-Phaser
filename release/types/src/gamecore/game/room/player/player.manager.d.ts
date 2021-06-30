@@ -11,7 +11,7 @@ export declare class PlayerManager extends PacketHandler implements IElementMana
     protected mRoom: Room;
     hasAddComplete: boolean;
     protected mActor: User;
-    protected mPlayerMap: Map<number, Player>;
+    protected mPlayerMap: Map<number, IElement>;
     constructor(mRoom: Room);
     addLisenter(): void;
     removeLisenter(): void;
@@ -40,11 +40,11 @@ export declare class PlayerManager extends PacketHandler implements IElementMana
     showAll(): void;
     setState(state: op_client.IStateGroup): void;
     protected checkPlayerAction(id: number): void;
+    protected _add(sprite: ISprite): void;
     protected _loadSprite(sprite: op_client.ISprite): void;
     private onSync;
     private onAdjust;
     private onAdd;
-    private _add;
     private checkSuitAvatarSprite;
     private addComplete;
     private onRemove;
