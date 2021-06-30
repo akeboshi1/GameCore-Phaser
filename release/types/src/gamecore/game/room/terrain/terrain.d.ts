@@ -6,6 +6,7 @@ import { ISprite, IPos, IFramesModel } from "structure";
 import { IRoomService } from "../../room/room";
 export declare class Terrain extends BlockObject implements IElement {
     protected mElementManager: IElementManager;
+    get nodeType(): number;
     protected mId: number;
     protected mDisplayInfo: IFramesModel;
     protected mModel: ISprite;

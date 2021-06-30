@@ -2,7 +2,7 @@ import { IElementManager } from "../element/element.manager";
 import { IDragonbonesModel, IPos, ISprite } from "structure";
 import { Element, IElement } from "../element/element";
 export declare class Player extends Element implements IElement {
-    protected nodeType: number;
+    get nodeType(): number;
     protected mOffsetY: number;
     constructor(sprite: ISprite, mElementManager: IElementManager);
     setModel(model: ISprite): Promise<any>;

@@ -11,6 +11,7 @@ export interface IElement {
     readonly created: boolean;
     readonly moving: boolean;
     readonly moveData: MoveData;
+    nodeType: number;
     state: boolean;
     model: ISprite;
     update(time?: number, delta?: number): any;
@@ -46,6 +47,7 @@ export interface IElement {
     removeFromWalkableMap(): any;
     addToInteractiveMap(): any;
     removeFromInteractiveMap(): any;
+    destroy(): any;
 }
 export interface MoveData {
     step?: number;
@@ -66,6 +68,7 @@ export declare class Element extends BlockObject implements IElement {
     get created(): boolean;
     get eleMgr(): IElementManager;
     get moving(): boolean;
+    get nodeType(): number;
     protected mId: number;
     protected mDisplayInfo: IFramesModel | IDragonbonesModel;
     protected mAnimationName: string;

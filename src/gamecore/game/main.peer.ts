@@ -5,6 +5,7 @@ import * as protos from "pixelpai_proto";
 import { Game } from "./game";
 import { IPos, Logger, ILauncherConfig, EventType, IWorkerParam, LogicPos } from "structure";
 import { BaseState } from "./state";
+import { Player } from "./room/player/player";
 
 for (const key in protos) {
     PBpacket.addProtocol(protos[key]);
@@ -194,8 +195,8 @@ export class MainPeer extends RPCPeer {
 
     @Export([webworker_rpc.ParamType.num, webworker_rpc.ParamType.str])
     public changePlayerState(id: number, state: string, times?: number) {
-        const dragonbones = this.game.roomManager.currentRoom.playerManager.get(id);
-        if (dragonbones) dragonbones.changeState(state, times);
+        const playser = <Player>this.game.roomManager.currentRoom.playerManager.get(id);
+        if (playser) playser.changeState(state, times);
     }
 
     @Export([webworker_rpc.ParamType.num])
@@ -304,7 +305,8 @@ export class MainPeer extends RPCPeer {
 
     @Export([webworker_rpc.ParamType.num])
     public getPlayerName(id: number): string {
-        return this.game.roomManager.currentRoom.playerManager.get(id).nickname;
+        const player = <Player>this.game.roomManager.currentRoom.playerManager.get(id);
+        return player.nickname;
     }
 
     @Export()
@@ -348,7 +350,7 @@ export class MainPeer extends RPCPeer {
     @Export([webworker_rpc.ParamType.num])
     public displayCompleteMove(id: number) {
         if (!this.game.roomManager.currentRoom) return;
-        const element = this.game.roomManager.currentRoom.playerManager.get(id);
+        const element = <Player>this.game.roomManager.currentRoom.playerManager.get(id);
         if (element) element.completeMove();
     }
 
