@@ -87,7 +87,7 @@ export class PlayerManager extends PacketHandler implements IElementManager {
         this.mPlayerMap.forEach((player) => player.update(time, delta));
     }
 
-    public get(id: number): Player {
+    public get(id: number): IElement {
         if (!this.mPlayerMap) {
             return;
         }
@@ -147,7 +147,7 @@ export class PlayerManager extends PacketHandler implements IElementManager {
         if (this.has(id)) {
             if (data) {
                 if (typeof data === "string") data = JSON.parse(data);
-                const element = this.get(id);
+                const element = <Player>this.get(id);
                 if (data.weaponID) {
                     element.setWeapon(data.weaponID);
                 }
@@ -175,14 +175,14 @@ export class PlayerManager extends PacketHandler implements IElementManager {
 
     public addWeapon(id: number, weaponID: string) {
         if (this.has(id)) {
-            const element = this.get(id);
+            const element = <Player>this.get(id);
             element.setWeapon(weaponID);
         }
     }
 
     public playAnimator(id: number, aniName: string, times?: number) {
         if (this.has(id)) {
-            const element = this.get(id);
+            const element = <Player>this.get(id);
             element.play(aniName, times);
         }
     }
@@ -232,7 +232,7 @@ export class PlayerManager extends PacketHandler implements IElementManager {
     }
 
     public setState(state: op_client.IStateGroup) {
-        const ele = this.get(state.owner.id);
+        const ele = <Player>this.get(state.owner.id);
         if (ele) ele.setState(state);
     }
 
@@ -268,7 +268,7 @@ export class PlayerManager extends PacketHandler implements IElementManager {
         const sprites = content.sprites;
         const command = content.command;
         for (const sprite of sprites) {
-            player = this.get(sprite.id);
+            player = <Player>this.get(sprite.id);
             this._loadSprite(sprite);
             if (player) {
                 if (command === op_def.OpCommand.OP_COMMAND_UPDATE) {
@@ -362,7 +362,7 @@ export class PlayerManager extends PacketHandler implements IElementManager {
             for (let i: number = 0; i < len; i++) {
                 movePath = movePaths[i];
                 playID = movePath.id;
-                player = this.get(playID);
+                player = <Player>this.get(playID);
                 if (player && movePath.movePos && movePath.movePos.length > 0) {
                     player.move(movePath.movePos);
                 }
@@ -377,7 +377,7 @@ export class PlayerManager extends PacketHandler implements IElementManager {
         if (type !== NodeType.CharacterNodeType) {
             return;
         }
-        const role: Player = this.get(id);
+        const role: Player = <Player>this.get(id);
         if (role) {
             role.stopMove();
             role.setPosition(new LogicPos(content.position.x, content.position.y, content.position.z), id === this.mActor.id);
@@ -387,7 +387,7 @@ export class PlayerManager extends PacketHandler implements IElementManager {
 
     private onShowBubble(packet: PBpacket) {
         const content: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_CHAT = packet.content;
-        const player = this.get(content.chatSenderid);
+        const player = <Player>this.get(content.chatSenderid);
         if (player) {
             player.showBubble(content.chatContext, content.chatSetting);
         }
@@ -395,7 +395,7 @@ export class PlayerManager extends PacketHandler implements IElementManager {
 
     private onOnlyBubbleHandler(packet: PBpacket) {
         const content: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_ONLY_BUBBLE = packet.content;
-        const player = this.get(content.receiverid);
+        const player = <Player>this.get(content.receiverid);
         if (player) {
             player.showBubble(content.context, content.chatsetting);
         }
@@ -403,7 +403,7 @@ export class PlayerManager extends PacketHandler implements IElementManager {
 
     private onClearBubbleHandler(packet: PBpacket) {
         const content: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_ONLY_BUBBLE_CLEAN = packet.content;
-        const player = this.get(content.receiverid);
+        const player = <Player>this.get(content.receiverid);
         if (player) {
             player.clearBubble();
         }
@@ -414,7 +414,7 @@ export class PlayerManager extends PacketHandler implements IElementManager {
         const ids = content.id;
         let player: Player;
         for (const id of ids) {
-            player = this.get(id);
+            player = <Player>this.get(id);
             if (player) {
                 player.showEffected(null);
             }
@@ -429,7 +429,7 @@ export class PlayerManager extends PacketHandler implements IElementManager {
         let player: Player = null;
         const ids = content.ids;
         for (const id of ids) {
-            player = this.get(id);
+            player = <Player>this.get(id);
             if (player) {
                 player.setQueue(content.changeAnimation);
             }
@@ -462,7 +462,7 @@ export class PlayerManager extends PacketHandler implements IElementManager {
         const content: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_ACTIVE_SPRITE_END = packet.content;
         const playerid = content.spriteId;
         if (this.has(playerid)) {
-            const element = this.get(playerid);
+            const element = <Player>this.get(playerid);
             element.removeWeapon();
             element.play(PlayerState.IDLE);
         }

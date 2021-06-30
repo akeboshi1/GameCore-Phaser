@@ -19,7 +19,7 @@ export declare class PlayerManager extends PacketHandler implements IElementMana
     get actor(): User;
     destroy(): void;
     update(time: number, delta: number): void;
-    get(id: number): Player;
+    get(id: number): IElement;
     has(id: number): boolean;
     add(sprite: ISprite[]): void;
     remove(id: number): IElement;
