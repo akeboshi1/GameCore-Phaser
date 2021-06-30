@@ -1,6 +1,6 @@
-import {Bubble} from "./bubble";
-import {Url} from "utils";
-import {IDisplayObject} from "../display.object";
+import { Bubble } from "./bubble";
+import { Url } from "utils";
+import { IDisplayObject } from "../display.object";
 import { DynamicImage } from "baseRender";
 
 export class BubbleContainer extends Phaser.GameObjects.Container {
@@ -19,6 +19,7 @@ export class BubbleContainer extends Phaser.GameObjects.Container {
 
     public addBubble(text: string, bubbleSetting: any) {// op_client.IChat_Setting
         const bubble = this.createBubble(bubbleSetting);
+        if (!bubble) return;
         const len = this.mBubbles.length;
         let bul: Bubble = null;
         let h = 0;
