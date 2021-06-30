@@ -125,11 +125,9 @@ export class BlockManager implements IBlockManager {
   }
 
   async updatePosition() {
-    const camera = this.scene.cameras.main;
     const { offset } = this.mScenery;
     const loc = await this.fixPosition({ x: offset.x, y: offset.y });
-    Logger.getInstance().log("camera pos ====>", loc, "camera offset ====>", offset);
-    camera.setPosition(loc.x, loc.y);
+    this.mContainer.setPosition(loc.x, loc.y);
 
     for (const block of this.mGrids) {
       block.updatePosition();
@@ -342,15 +340,15 @@ class Block extends DynamicImage {
     this.x = x;
     this.y = y;
     this.setSize(width, height);
-    const camera = this.scene.cameras.main;
-    this.mRectangle = new Phaser.Geom.Rectangle(x * this.mScale + camera.x, y * this.mScale + camera.y, width * this.mScale, height * this.mScale);
+    const parentX = (this.parentContainer ? this.parentContainer.x : 0);
+    const parentY = (this.parentContainer ? this.parentContainer.y : 0);
+    this.mRectangle = new Phaser.Geom.Rectangle(x * this.mScale + parentX, y * this.mScale + parentY, width * this.mScale, height * this.mScale);
   }
 
   updatePosition() {
     if (this.mRectangle) {
-      const camera = this.scene.cameras.main;
-      this.mRectangle.x = this.x * this.mScale + camera.x;
-      this.mRectangle.y = this.y * this.mScale + camera.y;
+      this.mRectangle.x = this.x * this.mScale + (this.parentContainer ? this.parentContainer.x : 0);
+      this.mRectangle.y = this.y * this.mScale + (this.parentContainer ? this.parentContainer.y : 0);
     }
   }
 
