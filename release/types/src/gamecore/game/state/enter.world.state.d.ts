@@ -4,7 +4,7 @@ import { PBpacket } from "net-socket-packet";
 import { op_client } from "pixelpai_proto";
 import { Capsule } from "game-capsule";
 export declare class EnterWorldState extends BaseState {
-    private mIsSyncPackage;
+    protected isSyncPackage: boolean;
     private remoteIndex;
     constructor(main: MainPeer, key: string);
     run(): void;

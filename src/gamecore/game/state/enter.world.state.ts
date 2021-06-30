@@ -7,7 +7,7 @@ import { op_gateway, op_client, op_virtual_world, op_def } from "pixelpai_proto"
 import IOP_CLIENT_REQ_VIRTUAL_WORLD_PLAYER_INIT = op_gateway.IOP_CLIENT_REQ_VIRTUAL_WORLD_PLAYER_INIT;
 import { Capsule } from "game-capsule";
 export class EnterWorldState extends BaseState {
-    private mIsSyncPackage: boolean = false;
+    protected isSyncPackage: boolean = false;
     private remoteIndex = 0;
     constructor(main: MainPeer, key: string) {
         super(main, key);
@@ -108,7 +108,7 @@ export class EnterWorldState extends BaseState {
         this.mGame.loadingManager.start(LoadState.DOWNLOADGAMECONFIG);
         Logger.getInstance().debug("onInitVirtualWorldPlayerInit====loadGameConfig");
         // 每次加载，重新请求数据
-        this.mIsSyncPackage = false;
+        this.isSyncPackage = false;
         this.loadGameConfig(mainGameConfigUrl)
             .then((gameConfig: Capsule) => {
                 this.mGame.elementStorage.setGameConfig(gameConfig);
