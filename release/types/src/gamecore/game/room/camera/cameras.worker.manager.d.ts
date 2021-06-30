@@ -33,6 +33,7 @@ export declare class CamerasManager extends PacketHandler implements ICameraServ
     private target;
     private preCamerasList;
     private mInitialize;
+    private mBlockManager;
     constructor(mGame: Game, mRoomService: IRoomService);
     set initialize(val: boolean);
     get initialize(): boolean;
@@ -42,6 +43,7 @@ export declare class CamerasManager extends PacketHandler implements ICameraServ
     centerCameas(): void;
     syncCamera(): Promise<void>;
     syncCameraScroll(): Promise<void>;
+    feachAllElement(): void;
     resetCameraSize(width: number, height: number): void;
     update(time?: number, delta?: number): void;
     destroy(): void;

@@ -14,10 +14,9 @@ import {
     EventNode
 } from "game-capsule";
 import { op_def } from "pixelpai_proto";
-import { Url } from "utils";
+import { Url, BlockIndex } from "utils";
 import { AnimationModel, IDragonbonesModel, IFramesModel, IPos, IScenery, Logger, LogicPos, Position45 } from "structure";
 import { DragonbonesModel, FramesModel } from "../sprite";
-import { BlockIndex } from "../block/block.index";
 export interface IAsset {
     type: string;
     key: string;

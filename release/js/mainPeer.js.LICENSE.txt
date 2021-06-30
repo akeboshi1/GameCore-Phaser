@@ -26,6 +26,8 @@
 
 /*! exports provided: BlockIndex */
 
+/*! exports provided: BlockIndexManager */
+
 /*! exports provided: BlockObject */
 
 /*! exports provided: CamerasManager */
@@ -96,7 +98,7 @@
 
 /*! exports provided: HTTP_REGEX, Url, ResUtils, BlackButton, BlueButton, WhiteButton, CloseButton, Background, Border, TransparentButton */
 
-/*! exports provided: HTTP_REGEX, Url, ResUtils, BlackButton, BlueButton, WhiteButton, CloseButton, Background, Border, TransparentButton, Tool, load, loadArr, Algorithm, CopyProtoType, StringUtils, ObjectAssign, UiUtils, isMobile, HttpLoadManager, Helpers, NumberUtils */
+/*! exports provided: HTTP_REGEX, Url, ResUtils, BlackButton, BlueButton, WhiteButton, CloseButton, Background, Border, TransparentButton, Tool, load, loadArr, Algorithm, CopyProtoType, StringUtils, ObjectAssign, UiUtils, isMobile, HttpLoadManager, Helpers, NumberUtils, BlockIndex */
 
 /*! exports provided: Handler */
 
@@ -374,6 +376,10 @@
 
 /*!**********************************!*\
   !*** ./src/structure/scenery.ts ***!
+  \**********************************/
+
+/*!**********************************!*\
+  !*** ./src/utils/block.index.ts ***!
   \**********************************/
 
 /*!**********************************!*\
@@ -658,10 +664,6 @@
 
 /*!********************************************!*\
   !*** ./node_modules/protobufjs/src/rpc.js ***!
-  \********************************************/
-
-/*!********************************************!*\
-  !*** ./src/base/game/block/block.index.ts ***!
   \********************************************/
 
 /*!********************************************!*\
@@ -1042,6 +1044,10 @@
 
 /*!*************************************************************!*\
   !*** ./node_modules/pathfinding/src/finders/AStarFinder.js ***!
+  \*************************************************************/
+
+/*!*************************************************************!*\
+  !*** ./src/gamecore/game/room/block/block.index.manager.ts ***!
   \*************************************************************/
 
 /*!***************************************************************!*\

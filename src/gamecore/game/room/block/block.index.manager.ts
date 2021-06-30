@@ -1,8 +1,7 @@
 import { op_virtual_world, op_def } from "pixelpai_proto";
-import { BlockIndex } from "../../../../base/game/block/block.index";
 import { PBpacket } from "net-socket-packet";
 import { IRectangle } from "structure";
-import { Tool } from "utils";
+import { Tool, BlockIndex } from "utils";
 import { IRoomService } from "../room";
 
 export class BlockIndexManager {
