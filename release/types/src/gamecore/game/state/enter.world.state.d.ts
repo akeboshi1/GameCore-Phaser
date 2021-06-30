@@ -5,7 +5,7 @@ import { op_client } from "pixelpai_proto";
 import { Capsule } from "game-capsule";
 export declare class EnterWorldState extends BaseState {
     protected isSyncPackage: boolean;
-    private remoteIndex;
+    protected remoteIndex: number;
     constructor(main: MainPeer, key: string);
     run(): void;
     update(data?: any): void;

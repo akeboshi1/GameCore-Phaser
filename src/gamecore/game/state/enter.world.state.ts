@@ -8,7 +8,7 @@ import IOP_CLIENT_REQ_VIRTUAL_WORLD_PLAYER_INIT = op_gateway.IOP_CLIENT_REQ_VIRT
 import { Capsule } from "game-capsule";
 export class EnterWorldState extends BaseState {
     protected isSyncPackage: boolean = false;
-    private remoteIndex = 0;
+    protected remoteIndex = 0;
     constructor(main: MainPeer, key: string) {
         super(main, key);
     }
