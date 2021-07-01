@@ -170,10 +170,9 @@ export class BlockManager implements IBlockManager {
       return;
     }
 
-    const camera = this.scene.cameras.main;
     const targetPos = await this.fixPosition(targets);
     const resetPos = await this.fixPosition(reset);
-    this.move(camera, targetPos, duration, resetPos, resetDuration);
+    this.move(this.mContainer, targetPos, duration, resetPos, resetDuration);
   }
 
   protected handlerState(state) {
