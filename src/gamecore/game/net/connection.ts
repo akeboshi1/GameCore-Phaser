@@ -92,7 +92,10 @@ export class Connection implements ConnectionService {
     }
 
     get connect(): boolean {
-        return this.isConnect;
+        if (!this.mSocket) {
+            return false;
+        }
+        return this.mSocket.isConnect;
     }
 
     set connect(val) {
@@ -106,18 +109,15 @@ export class Connection implements ConnectionService {
     startConnect(addr: ServerAddress, keepalive?: boolean): void {
         if (this.isCloseing) {
             this.gateway = { addr, keepalive };
-            // 可能此时socket已经断开了，但回调没有监听到
-            if (!this.mSocket.connectState) {
-                this.isCloseing = false;
-                this.startConnect(this.gateway.addr, this.gateway.keepalive);
-            }
             return;
         }
         if (this.isConnect) this.closeConnect();
         this.mCachedServerAddress = addr;
-        if (!this.mSocket) {
-            this.mSocket = new GameSocket(this.mPeer, new ConnListener(this.mPeer));
+        // 存在socket，等待销毁并重新创建
+        if (this.mSocket) {
+            return;
         }
+        this.mSocket = new GameSocket(this.mPeer, new ConnListener(this.mPeer));
         this.mSocket.startConnect(this.mCachedServerAddress);
     }
 
@@ -127,14 +127,17 @@ export class Connection implements ConnectionService {
         this.mCachedServerAddress = undefined;
         if (this.mSocket) {
             this.mSocket.state = false;
-            this.mSocket.stopConnect().then(() => {
-                this.isCloseing = false;
-                this.mSocket.destroy();
-                this.mSocket = null;
-                if (this.gateway) this.startConnect(this.gateway.addr, this.gateway.keepalive);
-            });
+            // socket.isConnect判断socket是否关闭===》客户端先关闭socket,则走socket关闭逻辑；服务端关闭socket，则直接closeBack逻辑
+            this.mSocket.isConnect ? this.mSocket.stopConnect(this.closeBack()) : this.closeBack();
         }
         this.clearPacketListeners();
+    }
+
+    closeBack() {
+        this.isCloseing = false;
+        this.mSocket.destroy();
+        this.mSocket = null;
+        if (this.gateway) this.startConnect(this.gateway.addr, this.gateway.keepalive);
     }
 
     setClock(clock: Clock) {
