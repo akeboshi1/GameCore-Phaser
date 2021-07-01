@@ -390,7 +390,17 @@ export class AvatarEditorDragonbone extends Phaser.GameObjects.Container {
         for (const set of sets) {
             const idx = this.mSets.findIndex((x) => x.id === set.id);
             if (idx >= 0) {
-                this.mSets.splice(idx, 1);
+                // remove all parts
+                // this.mSets.splice(idx, 1);
+
+                // remove part of set.parts
+                const findSet = this.mSets[idx];
+                for (const part of set.parts) {
+                    const partID = findSet.parts.indexOf(part);
+                    if (partID >= 0) {
+                        findSet.parts.splice(partID, 1);
+                    }
+                }
             }
 
             const dirs = ["1", "3"];
