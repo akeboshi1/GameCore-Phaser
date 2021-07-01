@@ -104,7 +104,7 @@ export class PicaMarketMediator extends BasicMediator {
     const config = <BaseDataConfigManager>this.game.configManager;
     const shopName = this.model.market_name;
     if (shopName === "shop") {
-      const names = ["shop", "crownshop", "gradeshop"];
+      const names = ["shop", "crownshop"];
       config.checkDynamicShop(names).then(() => {
         const map = new Map();
         for (const name of names) {
