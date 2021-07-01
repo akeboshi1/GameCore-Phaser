@@ -6,6 +6,7 @@ import { IPos } from "structure";
 export declare class Wall extends BlockObject {
     protected mModel: ISprite;
     protected mDisplayInfo: IFramesModel;
+    protected mId: number;
     constructor(sprite: ISprite, roomService: IRoomService);
     startMove(): void;
     stopMove(): void;
