@@ -449,37 +449,51 @@ export class Render extends RPCPeer implements GameMain, IRender {
 
     @Export([webworker_rpc.ParamType.num, webworker_rpc.ParamType.str])
     public getUIPath(dpr: number, res: string) {
-        return this.resUrl.getUIRes(dpr, res);
+        return new Promise((resolve, reject) => {
+            resolve(this.resUrl.getUIRes(dpr, res));
+        });
     }
 
     @Export()
     public getResPath() {
-        return this.resUrl.RES_PATH;
+        return new Promise((resolve, reject) => {
+            resolve(this.resUrl.RES_PATH);
+        });
     }
 
     @Export()
     public getOsdPath() {
-        return this.resUrl.OSD_PATH;
+        return new Promise((resolve, reject) => {
+            resolve(this.resUrl.OSD_PATH);
+        });
     }
 
     @Export()
     public getResourceRoot() {
-        return this.resUrl.RESOURCE_ROOT;
+        return new Promise((resolve, reject) => {
+            resolve(this.resUrl.RESOURCE_ROOT);
+        });
     }
 
     @Export()
     public getResUIPath() {
-        return this.resUrl.RESUI_PATH;
+        return new Promise((resolve, reject) => {
+            resolve(this.resUrl.RESUI_PATH);
+        });
     }
 
     @Export([webworker_rpc.ParamType.str])
     public getNormalUIPath(res: string) {
-        return this.resUrl.getNormalUIRes(res);
+        return new Promise((resolve, reject) => {
+            resolve(this.resUrl.getNormalUIRes(res));
+        });
     }
 
     @Export([webworker_rpc.ParamType.str])
     public getGameConfig(path: string) {
-        return this.resUrl.getGameConfig(path);
+        return new Promise((resolve, reject) => {
+            resolve(this.resUrl.getGameConfig(path));
+        });
     }
 
     startFullscreen(): void {
