@@ -401,6 +401,9 @@ export class AvatarEditorDragonbone extends Phaser.GameObjects.Container {
                         findSet.parts.splice(partID, 1);
                     }
                 }
+                if (findSet.parts.length === 0) {
+                    this.mSets.splice(idx, 1);
+                }
             }
 
             const dirs = ["1", "3"];
