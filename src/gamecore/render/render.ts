@@ -452,6 +452,16 @@ export class Render extends RPCPeer implements GameMain, IRender {
         return this.resUrl.getUIRes(dpr, res);
     }
 
+    @Export()
+    public getResPath() {
+        return this.resUrl.RES_PATH;
+    }
+
+    @Export()
+    public getOsdPath() {
+        return this.resUrl.OSD_PATH;
+    }
+
     @Export([webworker_rpc.ParamType.str])
     public getNormalUIPath(res: string) {
         return this.resUrl.getNormalUIRes(res);
