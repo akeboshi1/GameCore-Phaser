@@ -2,8 +2,9 @@ import { PicaPrestige } from "./PicaPrestige";
 import { BasicMediator, Game } from "gamecore";
 import { EventType, MessageType, ModuleName } from "structure";
 import { BaseDataConfigManager } from "../../config";
-import { ICurrencyLevel } from "picaStructure";
+import { ICurrencyLevel, IFameLevel } from "picaStructure";
 import { Logger } from "utils";
+import { FAME_STATUS } from "custom_proto";
 
 export class PicaPrestigeMediator extends BasicMediator {
   protected mModel: PicaPrestige;
@@ -23,6 +24,9 @@ export class PicaPrestigeMediator extends BasicMediator {
     this.game.emitter.on(this.key + "_close", this.onCloseHandler, this);
     this.game.emitter.on(this.key + "_popItemCard", this.onPopItemCardHandler, this);
     this.game.emitter.on(this.key + "_setmarketdata", this.setMarketData, this);
+    this.game.emitter.on(this.key + "_setmarketdata", this.setMarketData, this);
+    this.game.emitter.on(this.key + "_getlevelrewards", this.sendGetFameLevelReward, this);
+    this.game.emitter.on(this.key + "_getallrewards", this.sendGetAllFameLevelReward, this);
     this.game.emitter.on(EventType.UPDATE_PLAYER_INFO, this.onUpdatePlayerInfoHandler, this);
   }
 
@@ -35,13 +39,17 @@ export class PicaPrestigeMediator extends BasicMediator {
     this.game.emitter.off(this.key + "_close", this.onCloseHandler, this);
     this.game.emitter.off(this.key + "_popItemCard", this.onPopItemCardHandler, this);
     this.game.emitter.off(this.key + "_setmarketdata", this.setMarketData, this);
+    this.game.emitter.off(this.key + "_getlevelrewards", this.sendGetFameLevelReward, this);
+    this.game.emitter.off(this.key + "_getallrewards", this.sendGetAllFameLevelReward, this);
     this.game.emitter.off(EventType.UPDATE_PLAYER_INFO, this.onUpdatePlayerInfoHandler, this);
+
     super.hide();
   }
 
   panelInit() {
     super.panelInit();
-    this.setPrestigesDatas();
+    this.sendPostFameStatus();
+    this.onUpdatePlayerInfoHandler();
   }
 
   destroy() {
@@ -52,18 +60,24 @@ export class PicaPrestigeMediator extends BasicMediator {
 
   onDisable() {
     this.proto.off("BOUGHT_REPUTATIONITEMS", this.onBOUGHT_REPUTATIONITEMS, this);
+    this.proto.off("FAME_STATUS", this.FAME_STATUS, this);
   }
 
   onEnable() {
     this.proto.on("BOUGHT_REPUTATIONITEMS", this.onBOUGHT_REPUTATIONITEMS, this);
+    this.proto.on("FAME_STATUS", this.FAME_STATUS, this);
   }
   private sendGetGiftPackBoughtStatus() {
     this.game.sendCustomProto("STRING_INT", "reputationFacade:postAllBoughtPopularityItems", {});
   }
-
-  private setPrestigesDatas() {
-    const pools = this.config.getFames();
-    if (this.mView) this.mView.setFameDatas(pools);
+  private sendGetFameLevelReward(count: number) {
+    this.game.sendCustomProto("INT", "reputationFacade:getFameLevelReward", { count });
+  }
+  private sendGetAllFameLevelReward() {
+    this.game.sendCustomProto("STRING_INT", "reputationFacade:getAllFameLevelReward", {});
+  }
+  private sendPostFameStatus() {
+    this.game.sendCustomProto("STRING_INT", "reputationFacade:postFameStatus", {});
   }
 
   private getMarketCategories() {
@@ -132,6 +146,32 @@ export class PicaPrestigeMediator extends BasicMediator {
   private onBOUGHT_REPUTATIONITEMS(packet: any) {
     const status = packet.content.status;
     this.mView.updateBuyedProps(status);
+  }
+  private FAME_STATUS(packet: any) {
+    const content: FAME_STATUS = packet.content;
+    const userData = this.game.user.userData;
+    const pools = this.config.getFames();
+    pools.forEach((value: IFameLevel) => {
+      let allReceived = true;
+      if (content.levelRewardTakenList.indexOf(value.level) === -1) {
+        allReceived = false;
+      }
+      value.allReceived = allReceived;
+      if (!allReceived) {
+        if (value.level < userData.reputationLevel) {
+          value.haveReward = true;
+        } else if (value.level === userData.reputationLevel && value.exp === userData.reputation) {
+          value.haveReward = true;
+        }
+      } else {
+        value.haveReward = false;
+      }
+
+    });
+    if (this.mView) {
+      this.mView.setFameDatas(pools);
+      this.mView.setFameStatus(content);
+    }
   }
   private onShowOpenPanel(content: any) {
     this.setParam([content]);

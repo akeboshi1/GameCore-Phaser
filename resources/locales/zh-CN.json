@@ -583,7 +583,7 @@
     "level": "声望等级",
     "detail": "查看详情",
     "value": "累计获得声望值:",
-    "gointips": "{{name}}进入{{room}}房间并点赞",
+    "gointips": "{name}进入{room}房间并点赞",
     "rewards": "声望奖励",
     "permissiontitle": "特权详情"
   }

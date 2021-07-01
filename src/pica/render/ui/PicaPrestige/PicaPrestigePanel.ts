@@ -10,6 +10,7 @@ import { PicaPrestigeLevelPanel } from "./PicaPrestigeLevelPanel";
 import { PicaPrestigeMarketPanel } from "./PicaPrestigeMarketPanel";
 import { PicaPrivilegeDescriblePanel } from "./PicaPrivilegeDescriblePanel";
 import { PicaPrestigeDetailPanel } from "./PicaPrestigeDetailPanel";
+import { FAME_STATUS } from "custom_proto";
 export class PicaPrestigePanel extends PicaBasePanel {
     private mBackground: CommonBackground;
     private curToggle: ToggleColorButton;
@@ -101,9 +102,10 @@ export class PicaPrestigePanel extends PicaBasePanel {
 
     onShow() {
         if (this.redObj) this.setRedsState(this.redObj);
-        if (this.tempDatas["fame"]) {
-            this.setFameDatas(this.tempDatas["fame"]);
-        }
+        const fame = this.tempDatas["fame"], status = this.tempDatas["status"], money = this.tempDatas["money"];
+        if (fame) this.setFameDatas(fame);
+        if (status) this.setFameStatus(status);
+        if (money) this.setMoneyData(money);
     }
     setAutoOption(option: number) {
         for (const obj of this.toggleCon.list) {
@@ -117,6 +119,21 @@ export class PicaPrestigePanel extends PicaBasePanel {
         this.tempDatas["fame"] = datas;
         if (!this.mInitialized) return;
         if (this.prestigeDetail) this.prestigeDetail.setPrestigeData(datas);
+        this.updatePrestigeProgress();
+    }
+
+    setFameStatus(status: FAME_STATUS) {
+        const mstatus = this.tempDatas["status"];
+        if (mstatus) {
+            status.reputaionRecords = mstatus.reputaionRecords.concat(status.reputaionRecords);
+        }
+        this.tempDatas["status"] = status;
+        if (!this.mInitialized) return;
+        if (this.prestigeDetail) this.prestigeDetail.setPrestigeStatus(status);
+        if (this.prestigeLev && this.prestigeLev.visible) {
+            const fame = this.tempDatas["fame"];
+            this.prestigeLev.setRewardsData(fame);
+        }
     }
     public onPropConfirmHandler(prop: any, count: number) {
         this.render.renderEmitter(this.key + "_buyItem", prop);
@@ -126,14 +143,33 @@ export class PicaPrestigePanel extends PicaBasePanel {
     }
 
     public setMoneyData(data: ICurrencyLevel) {
-        this.prestigeMarket.setMoneyData(data);
+        this.tempDatas["money"] = data;
+        if (!this.mInitialized) return;
+        if (this.prestigeMarket) this.prestigeMarket.setMoneyData(data);
         this.prestigeCompent.setPrestigeData(data.reputationCoin);
+        this.updatePrestigeProgress();
+
     }
     public updateBuyedProps(buyedDatas: any[]) {
         this.prestigeMarket.updateBuyedProps(buyedDatas);
     }
     public setProp(content: any) {
         this.prestigeMarket.setProp(content);
+    }
+    public updatePrestigeProgress() {
+        const money: ICurrencyLevel = this.tempDatas["money"];
+        const fames: IFameLevel[] = this.tempDatas["fame"];
+        if (money && fames) {
+            this.levelButton.setText(money.reputationLv + "");
+            for (const temp of fames) {
+                if (temp.level === money.reputationLv) {
+                    temp.exp = temp.exp || 0;
+                    this.horProgress.setProgress(money.reputation, temp.exp);
+                    this.progressTex.text = `${money.reputation}/${temp.exp}`;
+                    break;
+                }
+            }
+        }
     }
     setRedsState(obj: any) {
         this.redObj = obj;
@@ -184,11 +220,13 @@ export class PicaPrestigePanel extends PicaBasePanel {
     private layoutOption(type: number) {
         if (type === 1) {
             this.horProgress.visible = true;
+            this.progressTex.visible = true;
             this.prestigeCompent.visible = false;
             this.openDetailPanel();
             this.hideMarketPanel();
         } else if (type === 2) {
             this.horProgress.visible = false;
+            this.progressTex.visible = false;
             this.prestigeCompent.visible = true;
             this.openMarketPanel();
             this.hideDetailPanel();
@@ -306,8 +344,10 @@ export class PicaPrestigePanel extends PicaBasePanel {
     private onLevelHandler(tag: string, data: any) {
         if (tag === "back") {
             this.hideLevelPanel();
-        } else if (tag === "") {
-
+        } else if (tag === "rewards") {
+            this.render.renderEmitter(this.key + "_getlevelrewards", data);
+        } else if (tag === "allrewards") {
+            this.render.renderEmitter(this.key + "_getallrewards");
         }
     }
 

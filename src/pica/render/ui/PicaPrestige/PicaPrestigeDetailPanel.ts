@@ -4,6 +4,7 @@ import { Font, Handler, i18n, UIHelper, Url } from "utils";
 import { BackgroundText, ImageBBCodeValue, ImageValue } from "../Components";
 import { DynamicImage, ThreeSliceButton } from "gamecoreRender";
 import { IFameLevel, IPermission } from "picaStructure";
+import { FAME_STATUS, Reputaion_Record } from "custom_proto";
 export class PicaPrestigeDetailPanel extends Phaser.GameObjects.Container {
     private content: Phaser.GameObjects.Container;
     private bottom: Phaser.GameObjects.Container;
@@ -48,14 +49,19 @@ export class PicaPrestigeDetailPanel extends Phaser.GameObjects.Container {
             item.setItemData(datas[i]);
         }
         this.topScroll.Sort();
-        this.setPrestigaValues(888888);
+    }
+
+    public setPrestigeStatus(status: FAME_STATUS) {
+        this.setPrestigaValues(status.allReputationExp);
+        this.setPrestigaTips(status.reputaionRecords);
     }
 
     public setPrestigaValues(value: number) {
-        this.prestigeText.text = i18n.t("prestige.value") + `[color=#6255DE][size=${16 * this.dpr}][b]${value}[/b][/size][/color]`;
+        this.prestigeText.text = i18n.t("prestige.value") + ` [color=#6255DE][size=${16 * this.dpr}][b]${value}[/b][/size][/color]`;
     }
 
     public setPrestigaTips(datas: any[]) {
+        datas = datas || new Array(60);
         this.bottomGrid.setItems(datas);
         this.bottomGrid.setT(0);
     }
@@ -107,7 +113,7 @@ export class PicaPrestigeDetailPanel extends Phaser.GameObjects.Container {
             }
         }).setOrigin(0.5);
         this.prestigeText.y = -this.bottomLabel.y + this.bottomLabel.height * 0.5 + 13 * this.dpr;
-        this.bottomGrid = this.createGrideTable(0, 32 * this.dpr, this.width, 220 * this.dpr, 310 * this.dpr, 36 * this.dpr);
+        this.bottomGrid = this.createGrideTable(0, 32 * this.dpr, this.width, 220 * this.dpr, 320 * this.dpr, 36 * this.dpr);
         this.bottomGraphic = this.scene.make.graphics(undefined, false);
         this.bottom.add([this.bottomGraphic, this.bottomLabel, this.prestigeText, this.bottomGrid]);
         this.add([this.content, this.bottom]);
@@ -123,7 +129,7 @@ export class PicaPrestigeDetailPanel extends Phaser.GameObjects.Container {
         this.bottomLabel.y = -bottomHeight * 0.5 + this.bottomLabel.height * 0.5 + 15 * this.dpr;
         this.prestigeText.y = this.bottomLabel.y + this.bottomLabel.height * 0.5 + 20 * this.dpr;
         const gridWidth = 334 * this.dpr, gridHeight = bottomHeight - 80 * this.dpr;
-        this.bottomGrid.setSize(gridWidth, gridHeight);
+        this.bottomGrid.setSize(gridWidth + 10 * this.dpr, gridHeight);
         this.bottomGrid.y = bottomHeight * 0.5 - gridHeight * 0.5;
         this.bottomGrid.resetMask();
         this.bottomGraphic.fillStyle(0xffffff, 0.3);
@@ -157,7 +163,7 @@ export class PicaPrestigeDetailPanel extends Phaser.GameObjects.Container {
                 if (cellContainer === null) {
                     cellContainer = new PrestigeValueTipsItem(this.scene, capW, capH, this.dpr);
                 }
-                cellContainer.setData({ item });
+                cellContainer.setTipsData(item);
                 return cellContainer;
             },
         };
@@ -204,7 +210,8 @@ class PrestigePrivilegeItem extends Phaser.GameObjects.Container {
         this.tipsText = this.scene.make.text({ style: UIHelper.blackStyle(dpr, 11) }).setOrigin(0.5);
         this.tipsText.y = this.icon.y + this.icon.height * 0.5 + 17 * dpr;
         this.button = new ThreeSliceButton(scene, 73 * dpr, 26 * dpr, UIAtlasName.uicommon, UIHelper.threeYellowSmall, UIHelper.threeYellowSmall, i18n.t("prestige.detail"));
-        this.button.setTextStyle(UIHelper.brownishStyle(dpr));
+        this.button.setTextStyle(UIHelper.brownishStyle(dpr, 11));
+        this.button.setFontStyle("bold");
         this.button.y = this.height * 0.5 - this.button.height * 0.5 - 13 * dpr;
         this.button.on(ClickEvent.Tap, this.onButtonHandler, this);
         this.add([this.bg, this.icon, this.nameText, this.tipsText, this.button]);
@@ -247,11 +254,23 @@ class PrestigeValueTipsItem extends Phaser.GameObjects.Container {
         this.leftLabel = this.scene.make.image({ key: UIAtlasName.prestige, frame: "prestige_grow_icon" });
         this.leftLabel.x = -width * 0.5 + 17 * dpr;
         this.contentText = new BBCodeText(scene, 0, 0, "", UIHelper.blackStyle(dpr, 12)).setOrigin(0, 0.5);
-        this.contentText.x = this.leftLabel.x + 5 * dpr;
-        this.valueImg = new ImageBBCodeValue(scene, 40 * dpr, 30 * dpr, UIAtlasName.prestige, "prestige_list_currency_icon", dpr);
-        this.valueImg.setTextStyle(UIHelper.colorStyle("#1B59B7", dpr * 12));
+        this.contentText.x = this.leftLabel.x + 10 * dpr;
+        this.valueImg = new ImageBBCodeValue(scene, 10 * dpr, 30 * dpr, UIAtlasName.prestige, "prestige_list_currency_icon", dpr, UIHelper.colorStyle("#1B59B7", 12 * dpr));
         this.valueImg.setLayout(3);
         this.valueImg.x = width * 0.5 - this.valueImg.width;
         this.add([this.leftLabel, this.contentText, this.valueImg]);
+    }
+    public setTipsData(data: Reputaion_Record) {
+        const xmlEle = (new DOMParser).parseFromString(data.content, "text/xml");
+        const node: Element = xmlEle.getElementsByTagName("player")[0];
+        const tempName = node.getAttribute("name");
+        const tempRoom = node.nextSibling.nodeValue;
+        const name = `[color=#1B59B7]${tempName}[/color]`;
+        const room = `[color=#1B59B7]${tempRoom}[/color]`;
+        let content = i18n.t("prestige.gointips");
+        content = content.replace("{name}", name);
+        content = content.replace("{room}", room);
+        this.contentText.text = content;
+        this.valueImg.setText(`[b]+${10}[/b]`);
     }
 }

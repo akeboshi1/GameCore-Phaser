@@ -141,8 +141,8 @@ export class PicaPrestigeLevelPanel extends Phaser.GameObjects.Container {
             this.onSelectItemHandler(cell);
         }
     }
-    private onReceivedHandler(data: IGalleryLevel) {
-        if (this.send) this.send.runWith(["rewards", data.id]);
+    private onReceivedHandler(tag: string, data: IFameLevel) {
+        if (this.send) this.send.runWith(["rewards", data.level]);
     }
     private onAllReceiveHandler() {
         if (this.send) this.send.runWith("allrewards");
@@ -159,6 +159,7 @@ class RightRewardsPanel extends Phaser.GameObjects.Container {
     private gridItems: RewardItem[] = [];
     private receiveButton: NineSliceButton;
     private send: Handler;
+    private fameData: IFameLevel;
     constructor(scene: Phaser.Scene, width: number, height: number, dpr: number, zoom: number) {
         super(scene);
         this.dpr = dpr;
@@ -183,7 +184,15 @@ class RightRewardsPanel extends Phaser.GameObjects.Container {
     }
 
     public setRewardsData(group: IFameLevel) {
-        this.setGridItems(group.rewardItems.concat(group.rewardItems));
+        this.fameData = group;
+        this.setGridItems(group.rewardItems);
+        if (group.allReceived || !group.haveReward) {
+            this.receiveButton.disInteractive();
+            this.receiveButton.setFrameNormal("butt_gray");
+        } else {
+            this.receiveButton.setInteractive();
+            this.receiveButton.setFrameNormal("red_btn_normal");
+        }
     }
     public setHandler(send: Handler) {
         this.send = send;
@@ -211,7 +220,7 @@ class RightRewardsPanel extends Phaser.GameObjects.Container {
     }
 
     private onReceiveHandler() {
-
+        if (this.send) this.send.runWith(["rewards", this.fameData]);
     }
 
 }
