@@ -150,7 +150,7 @@ export class BlockManager implements IBlockManager {
     if (id === undefined || targets === undefined || duration === undefined) {
       return;
     }
-    if (!this.scene || this.mContainer) {
+    if (!this.scene || !this.mContainer) {
       return;
     }
     if (id !== this.mScenery.id) {
