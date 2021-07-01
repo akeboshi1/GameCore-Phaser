@@ -352,7 +352,6 @@ class Block extends DynamicImage {
     this.x = x;
     this.y = y;
     this.setSize(width, height);
-    const camera = this.scene.cameras.main;
     const parentX = (this.parentContainer ? this.parentContainer.x : 0);
     const parentY = (this.parentContainer ? this.parentContainer.y : 0);
     this.mRectangle = new Phaser.Geom.Rectangle(x * this.mScale + parentX, y * this.mScale + parentY, width * this.mScale, height * this.mScale);
@@ -360,15 +359,15 @@ class Block extends DynamicImage {
 
   updatePosition() {
     if (this.mRectangle) {
-      const camera = this.scene.cameras.main;
       this.mRectangle.x = this.x * this.mScale + (this.parentContainer ? this.parentContainer.x : 0);
       this.mRectangle.y = this.y * this.mScale + (this.parentContainer ? this.parentContainer.y : 0);
     }
   }
 
   resize(width: number, height: number) {
-    const camera = this.scene.cameras.main;
-    this.mRectangle = new Phaser.Geom.Rectangle(this.x * this.mScale + camera.x, this.y * this.mScale + camera.y, this.width * this.mScale, this.height * this.mScale);
+    const parentX = (this.parentContainer ? this.parentContainer.x : 0);
+    const parentY = (this.parentContainer ? this.parentContainer.y : 0);
+    this.mRectangle = new Phaser.Geom.Rectangle(this.x * this.mScale + parentX, this.y * this.mScale + parentY, this.width * this.mScale, this.height * this.mScale);
   }
 
   setScaleRatio(val: number) {
