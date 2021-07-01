@@ -132,7 +132,7 @@ export class PicaNewHeadPanel extends Phaser.GameObjects.Container {
         this.roomSetBtn.x = -peoplebg.width - 29 * this.dpr;
         this.roomSetBtn.y = 0;
         this.roomPraiseBtn.on(ClickEvent.Tap, this.onPraiseHandler, this);
-        this.roomPraiseBtn.x = -peoplebg.width - 38 * this.dpr;
+        this.roomPraiseBtn.x = -peoplebg.width - 29 * this.dpr;
         this.roomPraiseBtn.y = 0;
         this.sceneclickCon = new ButtonEventDispatcher(this.scene, 0, 0);
         this.sceneclickCon.setSize(100 * this.dpr, 30 * this.dpr);
@@ -183,9 +183,9 @@ export class PicaNewHeadPanel extends Phaser.GameObjects.Container {
             this.roomSetBtn.visible = isself;
             this.roomPraiseBtn.visible = !isself;
             this.roomPraiseBtn.setCount(Praise);
-            this.roomPraiseBtn.setPraise(isPraise);
+            this.roomPraiseBtn.setPraise(false);
             if (!isself) {
-                this.sceneTex.x = this.sceneNamebg.x - 20 * this.dpr;
+                this.sceneTex.x = this.sceneNamebg.x - 15 * this.dpr;
             }
         } else {
             this.roomPraiseBtn.visible = false;
@@ -194,7 +194,11 @@ export class PicaNewHeadPanel extends Phaser.GameObjects.Container {
         }
         this.sceneclickCon.enable = true;
     }
-
+    setCanLikeRoom(canlike: boolean) {
+        if (!this.praise && canlike) {
+            this.roomPraiseBtn.setPraise(canlike);
+        }
+    }
     public setHandler(send: Handler) {
         this.sendHandler = send;
     }
@@ -303,19 +307,21 @@ class RoomPraiseButton extends ButtonEventDispatcher {
     private uintImg: Phaser.GameObjects.Image;
     private textPosx: number;
     private praiseImg: Phaser.GameObjects.Image;
+    private bg: Phaser.GameObjects.Image;
     constructor(scene: Phaser.Scene, dpr: number, zoom: number) {
         super(scene, 0, 0);
         this.dpr = dpr;
         this.zoom = zoom;
-        const bg = this.scene.make.image({ key: UIAtlasName.uicommon, frame: "home_likes_bg" });
-        this.setSize(bg.width, bg.height);
+        this.bg = this.scene.make.image({ key: UIAtlasName.uicommon, frame: "home_praise_bg" });
+        this.setSize(this.bg.width, this.bg.height);
         this.praiseImg = this.scene.make.image({ key: UIAtlasName.uicommon, frame: "home_praise" });
-        this.praiseImg.x = -this.width * 0.5 + this.praiseImg.width * 0.5 + 5 * dpr;
+        this.praiseImg.x = 0;// -this.width * 0.5 + this.praiseImg.width * 0.5 + 5 * dpr;
         this.countTex = this.scene.make.text({ style: UIHelper.whiteStyle(dpr, 11) }).setOrigin(0.5);
         this.textPosx = this.width * 0.5 - 10 * dpr;
         this.countTex.x = this.textPosx;
+        this.countTex.visible = false;
         this.uintImg = this.scene.make.image({ key: UIAtlasName.uicommon, frame: "home_silver_myriad" }).setOrigin(0, 0.5);
-        this.add([bg, this.praiseImg, this.countTex, this.uintImg]);
+        this.add([this.bg, this.praiseImg, this.countTex, this.uintImg]);
         this.uintImg.visible = false;
         this.enable = true;
     }
@@ -335,7 +341,14 @@ class RoomPraiseButton extends ButtonEventDispatcher {
     }
 
     setPraise(praise: boolean) {
-        this.enable = !praise;
+        this.enable = praise;
+        if (praise) {
+            this.bg.setFrame("home_praise_bg");
+            this.praiseImg.setFrame("home_praise");
+        } else {
+            this.bg.setFrame("prestige_like_bg");
+            this.praiseImg.setFrame("prestige_like_icon");
+        }
         // this.praiseImg.setFrame(praise ? "home_praise" : "home_praise_1");
     }
 }

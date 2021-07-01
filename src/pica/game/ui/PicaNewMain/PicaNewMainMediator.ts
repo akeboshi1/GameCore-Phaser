@@ -1,3 +1,4 @@
+import { CAN_LIKE_ROOM } from "custom_proto";
 import { BasicMediator, DataMgrType, Game, PlayerProperty, SceneDataManager } from "gamecore";
 import { MainUIRedType, RedEventType } from "picaStructure";
 import { op_client } from "pixelpai_proto";
@@ -22,6 +23,7 @@ export class PicaNewMainMediator extends BasicMediator {
         this.game.emitter.on(this.key + "_querydecorate", this.queryDecorate, this);
         this.game.emitter.on(EventType.FECTH_FOLD_MAIN_UI, this.onFoldButtonHandler, this);
         this.game.emitter.on(RedEventType.MAIN_PANEL_RED, this.onRedSystemHandler, this);
+        this.game.emitter.on(EventType.CAN_LIKE_ROOM, this.onUpdateCanLikeRoomHandler, this);
     }
 
     hide() {
@@ -34,6 +36,7 @@ export class PicaNewMainMediator extends BasicMediator {
         this.game.emitter.off(this.key + "_querydecorate", this.queryDecorate, this);
         this.game.emitter.off(EventType.FECTH_FOLD_MAIN_UI, this.onFoldButtonHandler, this);
         this.game.emitter.off(RedEventType.MAIN_PANEL_RED, this.onRedSystemHandler, this);
+        this.game.emitter.off(EventType.CAN_LIKE_ROOM, this.onUpdateCanLikeRoomHandler, this);
     }
 
     destroy() {
@@ -73,6 +76,9 @@ export class PicaNewMainMediator extends BasicMediator {
         }
     }
 
+    private onUpdateCanLikeRoomHandler(content: CAN_LIKE_ROOM) {
+        if (this.mView) this.mView.setCanLikeRoom(content.canLikeRoom);
+    }
     private onOpenHouseHandler() {
         if (!this.roomInfo || this.roomInfo.roomType !== "room" && this.roomInfo.roomType !== "store") return;
         const uimanager = this.game.uiManager;

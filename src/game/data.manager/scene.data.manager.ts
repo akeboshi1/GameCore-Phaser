@@ -1,7 +1,7 @@
 import { PBpacket } from "net-socket-packet";
 import { BaseDataConfigManager } from "picaWorker";
 import { op_client, op_virtual_world } from "pixelpai_proto";
-import { ExtraRoomInfo } from "custom_proto";
+import { CAN_LIKE_ROOM, ExtraRoomInfo } from "custom_proto";
 import { EventType, ModuleName, RoomType } from "structure";
 import { EventDispatcher, Logger } from "utils";
 import { CacheDataManager } from ".";
@@ -33,16 +33,11 @@ export class SceneDataManager extends BasePacketHandler {
         this.proto.on("UPDATE_ROOM_INFO", this.onUpdateModeRoomInfo, this);
         this.proto.on("ExtraRoomInfo", this.onExtraRoomInfoHandler, this);
         this.proto.on("PKT_LEVEL_UP", this.onShowLevelUpPanel, this);
+        this.proto.on("CAN_LIKE_ROOM", this.onCAN_LIKE_ROOM, this);
         this.mEvent.on(EventType.REQUEST_GO_MINE_READY, this.onRequestGoMineReadyHandler, this);
         this.addPackListener();
     }
 
-    public removePackListener() {
-        super.removePackListener();
-        this.proto.off("UPDATE_ROOM_INFO", this.onUpdateModeRoomInfo, this);
-        this.proto.off("ExtraRoomInfo", this.onExtraRoomInfoHandler, this);
-        this.proto.off("PKT_LEVEL_UP", this.onShowLevelUpPanel, this);
-    }
     clear() {
         super.clear();
         this.mCurRoom = undefined;
@@ -180,6 +175,11 @@ export class SceneDataManager extends BasePacketHandler {
         content.roomId = "S1200010";
         content.password = undefined;
         this.connection.send(packet);
+    }
+
+    private onCAN_LIKE_ROOM(packge: PBpacket) {
+        const content: CAN_LIKE_ROOM = packge.content;
+        this.game.emitter.emit(EventType.CAN_LIKE_ROOM, content);
     }
     get curRoomID() {
         if (this.mCurRoom) return this.mCurRoom.roomId;

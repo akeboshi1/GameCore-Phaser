@@ -261,7 +261,7 @@ class PrestigeValueTipsItem extends Phaser.GameObjects.Container {
         this.add([this.leftLabel, this.contentText, this.valueImg]);
     }
     public setTipsData(data: Reputaion_Record) {
-        const xmlEle = (new DOMParser).parseFromString(data.content, "text/xml");
+        const xmlEle = (new DOMParser()).parseFromString(data.content, "text/xml");
         const node: Element = xmlEle.getElementsByTagName("player")[0];
         const tempName = node.getAttribute("name");
         const tempRoom = node.nextSibling.nodeValue;
