@@ -549,6 +549,7 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
     }
 
     public showMediator(name: string, isShow: boolean, param?: any) {
+        if (!this.mUIManager) return;
         if (isShow) {
             this.mUIManager.showMed(name, param);
         } else {
@@ -557,6 +558,7 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
     }
 
     public hideMediator(name) {
+        if (!this.mUIManager) return;
         this.mUIManager.hideMed(name);
     }
 
