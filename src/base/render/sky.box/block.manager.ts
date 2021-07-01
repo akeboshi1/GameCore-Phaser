@@ -150,17 +150,16 @@ export class BlockManager implements IBlockManager {
     if (id === undefined || targets === undefined || duration === undefined) {
       return;
     }
-    if (!this.scene) {
+    if (!this.scene || this.mContainer) {
       return;
     }
     if (id !== this.mScenery.id) {
       return;
     }
 
-    const camera = this.scene.cameras.main;
     const targetPos = await this.fixPosition(targets);
     const resetPos = await this.fixPosition(reset);
-    this.move(camera, targetPos, duration, resetPos, resetDuration);
+    this.move(this.mContainer, targetPos, duration, resetPos, resetDuration);
   }
 
   protected handlerState(state) {
@@ -353,8 +352,9 @@ class Block extends DynamicImage {
   }
 
   resize(width: number, height: number) {
-    const camera = this.scene.cameras.main;
-    this.mRectangle = new Phaser.Geom.Rectangle(this.x * this.mScale + camera.x, this.y * this.mScale + camera.y, this.width * this.mScale, this.height * this.mScale);
+    // const camera = this.scene.cameras.main;
+    // this.mRectangle = new Phaser.Geom.Rectangle(this.x * this.mScale + camera.x, this.y * this.mScale + camera.y, this.width * this.mScale, this.height * this.mScale);
+    this.setRectangle(this.x, this.y, this.width, this.height);
   }
 
   setScaleRatio(val: number) {
