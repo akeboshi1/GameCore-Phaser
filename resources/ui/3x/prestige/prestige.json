@@ -199,6 +199,69 @@
 					}
 				},
 				{
+					"filename": "illustrate_survey_lv_prompt_s",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 20,
+						"h": 20
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 20,
+						"h": 20
+					},
+					"frame": {
+						"x": 2120,
+						"y": 1361,
+						"w": 20,
+						"h": 20
+					}
+				},
+				{
+					"filename": "illustrate_survey_lv_bg_line",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 18,
+						"h": 253
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 18,
+						"h": 253
+					},
+					"frame": {
+						"x": 2142,
+						"y": 1361,
+						"w": 18,
+						"h": 253
+					}
+				},
+				{
+					"filename": "illustrate_survey_lv_icon",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 92,
+						"h": 92
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 92,
+						"h": 92
+					},
+					"frame": {
+						"x": 1718,
+						"y": 1644,
+						"w": 92,
+						"h": 92
+					}
+				},
+				{
 					"filename": "prestige_lv_icon",
 					"rotated": false,
 					"trimmed": false,
@@ -220,24 +283,45 @@
 					}
 				},
 				{
-					"filename": "prestige_schedule",
+					"filename": "illustrate_nav_select",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
-						"w": 73,
-						"h": 73
+						"w": 126,
+						"h": 4
 					},
 					"spriteSourceSize": {
 						"x": 0,
 						"y": 0,
-						"w": 73,
-						"h": 73
+						"w": 126,
+						"h": 4
+					},
+					"frame": {
+						"x": 1718,
+						"y": 1738,
+						"w": 126,
+						"h": 4
+					}
+				},
+				{
+					"filename": "illustrate_survey_lv_icon_s",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 74,
+						"h": 74
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 74,
+						"h": 74
 					},
 					"frame": {
 						"x": 1812,
 						"y": 1644,
-						"w": 73,
-						"h": 73
+						"w": 74,
+						"h": 74
 					}
 				},
 				{
@@ -255,10 +339,31 @@
 						"h": 48
 					},
 					"frame": {
-						"x": 1812,
-						"y": 1719,
+						"x": 1846,
+						"y": 1720,
 						"w": 46,
 						"h": 48
+					}
+				},
+				{
+					"filename": "prestige_schedule",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 73,
+						"h": 73
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 73,
+						"h": 73
+					},
+					"frame": {
+						"x": 1888,
+						"y": 1644,
+						"w": 73,
+						"h": 73
 					}
 				},
 				{
@@ -276,31 +381,10 @@
 						"h": 46
 					},
 					"frame": {
-						"x": 1860,
+						"x": 1894,
 						"y": 1719,
 						"w": 48,
 						"h": 46
-					}
-				},
-				{
-					"filename": "prestige_like_bg",
-					"rotated": false,
-					"trimmed": false,
-					"sourceSize": {
-						"w": 67,
-						"h": 67
-					},
-					"spriteSourceSize": {
-						"x": 0,
-						"y": 0,
-						"w": 67,
-						"h": 67
-					},
-					"frame": {
-						"x": 1887,
-						"y": 1644,
-						"w": 67,
-						"h": 67
 					}
 				},
 				{
@@ -318,14 +402,14 @@
 						"h": 44
 					},
 					"frame": {
-						"x": 1910,
-						"y": 1713,
+						"x": 1944,
+						"y": 1719,
 						"w": 44,
 						"h": 44
 					}
 				},
 				{
-					"filename": "prestige_like_bg1",
+					"filename": "prestige_like_bg",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
@@ -339,7 +423,7 @@
 						"h": 67
 					},
 					"frame": {
-						"x": 1956,
+						"x": 1963,
 						"y": 1644,
 						"w": 67,
 						"h": 67
@@ -360,10 +444,31 @@
 						"h": 44
 					},
 					"frame": {
-						"x": 1956,
+						"x": 1990,
 						"y": 1713,
 						"w": 44,
 						"h": 44
+					}
+				},
+				{
+					"filename": "prestige_like_bg1",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 67,
+						"h": 67
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 67,
+						"h": 67
+					},
+					"frame": {
+						"x": 2032,
+						"y": 1644,
+						"w": 67,
+						"h": 67
 					}
 				},
 				{
@@ -381,7 +486,7 @@
 						"h": 58
 					},
 					"frame": {
-						"x": 2025,
+						"x": 2101,
 						"y": 1644,
 						"w": 44,
 						"h": 58
@@ -406,6 +511,27 @@
 						"y": 1225,
 						"w": 928,
 						"h": 1
+					}
+				},
+				{
+					"filename": "illustrate_survey_lv_bg1",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 143,
+						"h": 142
+					},
+					"spriteSourceSize": {
+						"x": 2,
+						"y": 1,
+						"w": 140,
+						"h": 140
+					},
+					"frame": {
+						"x": 931,
+						"y": 1225,
+						"w": 140,
+						"h": 140
 					}
 				},
 				{
@@ -451,48 +577,6 @@
 					}
 				},
 				{
-					"filename": "prestige_privilege_icon",
-					"rotated": false,
-					"trimmed": true,
-					"sourceSize": {
-						"w": 210,
-						"h": 210
-					},
-					"spriteSourceSize": {
-						"x": 1,
-						"y": 1,
-						"w": 208,
-						"h": 208
-					},
-					"frame": {
-						"x": 1,
-						"y": 1292,
-						"w": 208,
-						"h": 208
-					}
-				},
-				{
-					"filename": "prestige_privilege_icon1",
-					"rotated": false,
-					"trimmed": true,
-					"sourceSize": {
-						"w": 210,
-						"h": 210
-					},
-					"spriteSourceSize": {
-						"x": 1,
-						"y": 1,
-						"w": 208,
-						"h": 208
-					},
-					"frame": {
-						"x": 1,
-						"y": 1502,
-						"w": 208,
-						"h": 208
-					}
-				},
-				{
 					"filename": "prestige_schedule_bottom",
 					"rotated": false,
 					"trimmed": false,
@@ -508,9 +592,30 @@
 					},
 					"frame": {
 						"x": 1,
-						"y": 1712,
+						"y": 1292,
 						"w": 751,
 						"h": 10
+					}
+				},
+				{
+					"filename": "illustrate_survey_lv_bg",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 131,
+						"h": 130
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 131,
+						"h": 130
+					},
+					"frame": {
+						"x": 754,
+						"y": 1292,
+						"w": 131,
+						"h": 130
 					}
 				},
 				{
@@ -529,9 +634,93 @@
 					},
 					"frame": {
 						"x": 1,
-						"y": 1724,
+						"y": 1304,
 						"w": 751,
 						"h": 10
+					}
+				},
+				{
+					"filename": "prestige_privilege_clothe_icon",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 210,
+						"h": 210
+					},
+					"spriteSourceSize": {
+						"x": 1,
+						"y": 1,
+						"w": 208,
+						"h": 208
+					},
+					"frame": {
+						"x": 1,
+						"y": 1424,
+						"w": 208,
+						"h": 208
+					}
+				},
+				{
+					"filename": "prestige_privilege_furniture_icon",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 210,
+						"h": 210
+					},
+					"spriteSourceSize": {
+						"x": 1,
+						"y": 1,
+						"w": 208,
+						"h": 208
+					},
+					"frame": {
+						"x": 211,
+						"y": 1424,
+						"w": 208,
+						"h": 208
+					}
+				},
+				{
+					"filename": "prestige_privilege_prestige_icon",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 210,
+						"h": 210
+					},
+					"spriteSourceSize": {
+						"x": 1,
+						"y": 1,
+						"w": 208,
+						"h": 208
+					},
+					"frame": {
+						"x": 421,
+						"y": 1316,
+						"w": 208,
+						"h": 208
+					}
+				},
+				{
+					"filename": "prestige_privilege_wall_icon",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 210,
+						"h": 210
+					},
+					"spriteSourceSize": {
+						"x": 1,
+						"y": 1,
+						"w": 208,
+						"h": 208
+					},
+					"frame": {
+						"x": 421,
+						"y": 1526,
+						"w": 208,
+						"h": 208
 					}
 				}
 			]
@@ -540,6 +729,6 @@
 	"meta": {
 		"app": "https://www.codeandweb.com/texturepacker",
 		"version": "3.0",
-		"smartupdate": "$TexturePacker:SmartUpdate:ec9734309a7a89303b31edcb13ff97a5:6b67306e4ed78f10dfc3c3ac2a82091c:a1ae6824c4a3c3c8981c4788c4507371$"
+		"smartupdate": "$TexturePacker:SmartUpdate:6062d807f59128ae0c7e2bba5d3ac691:b8c85cdc913ec62eaaad89658572f507:a1ae6824c4a3c3c8981c4788c4507371$"
 	}
 }

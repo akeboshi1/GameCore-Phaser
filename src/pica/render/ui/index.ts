@@ -134,3 +134,4 @@ export * from "./HotelFarmGuide/HotelFarmGuidePanel";
 export * from "./HotelMineGuide/BaseHotelMineGuidePanel";
 export * from "./HotelMineGuide/HotelMineGuidePanel";
 export * from "./PicaPrestigeConvert/PicaPrestigeConvertPanel";
+export * from "./PicaPrestige/PicaPrestigePanel";

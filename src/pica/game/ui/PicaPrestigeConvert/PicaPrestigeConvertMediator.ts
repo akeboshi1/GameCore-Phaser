@@ -40,7 +40,7 @@ export class PicaPrestigeConvertMediator extends BasicMediator {
     private onUpdatePlayerInfoHandler() {
         const userData = this.game.user.userData;
         const radio = this.config.getReputationCoin();
-        const limit = this.config.getFrameLevel(userData.reputationLevel || 1);
+        const limit = this.config.getFameLevel(userData.reputationLevel || 1);
         if (this.mView) this.mView.setExchangedEnergy(userData.energy, radio.count, limit.exchangeLimit);
     }
     private exchangeEnergyToReputationCoins(count: number) {

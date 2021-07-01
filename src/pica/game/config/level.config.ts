@@ -1,9 +1,9 @@
 import { BaseConfigData } from "gamecore";
-import { ILevel } from "../../structure";
+import { IFameLevel } from "../../structure";
 import { Logger } from "utils";
 export class LevelConfig extends BaseConfigData {
-    poolsMap: Map<string, Map<number, ILevel>> = new Map();
-    public get(type: string, level: number): ILevel {
+    poolsMap: Map<string, Map<number, IFameLevel>> = new Map();
+    public get(type: string, level: number): IFameLevel {
         const map = this.poolsMap.get(type);
         if (map.has(level)) {
 
@@ -26,7 +26,7 @@ export class LevelConfig extends BaseConfigData {
         for (const key in json) {
             if (Object.prototype.hasOwnProperty.call(json, key)) {
                 const arr = json[key];
-                let map: Map<number, ILevel>;
+                let map: Map<number, IFameLevel>;
                 if (this.poolsMap.has(key)) {
                     map = this.poolsMap.get(key);
                 } else {

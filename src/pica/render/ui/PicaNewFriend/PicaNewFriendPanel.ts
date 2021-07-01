@@ -31,6 +31,7 @@ export class PicaNewFriendPanel extends PicaBasePanel {
     private bottomPanel: PicaFriendBottomPanel;
     private people: number;
     private optionType: number;
+    private isPlayMoving: boolean = false;
     constructor(uiManager: UiManager) {
         super(uiManager);
         this.key = ModuleName.PICANEWFRIEND_NAME;
@@ -42,7 +43,9 @@ export class PicaNewFriendPanel extends PicaBasePanel {
         const scale = this.scale;
         const width = this.scaleWidth;
         const height = this.scaleHeight;
-        this.content.x = width + this.content.width * 0.5 + 10 * this.dpr;
+        if (!this.isPlayMoving)
+            this.content.x = width + this.content.width * 0.5 + 10 * this.dpr;
+        else this.content.x = width - this.content.width * 0.5;
         this.content.y = height * 0.5;
         this.setSize(width, height);
     }
@@ -129,6 +132,7 @@ export class PicaNewFriendPanel extends PicaBasePanel {
             this.basePanelMap.forEach((value) => {
                 value.refreshMask();
             });
+            this.isPlayMoving = true;
         }));
     }
     protected createOptionButtons() {

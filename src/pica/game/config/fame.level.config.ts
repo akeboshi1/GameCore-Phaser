@@ -1,9 +1,10 @@
 import { BaseConfigData } from "gamecore";
-import { ILevel } from "../../structure";
+import { IFameLevel } from "../../structure";
 import { Logger } from "utils";
-export class FrameLevelConfig extends BaseConfigData {
-    poolsMap: Map<number, ILevel> = new Map();
-    public get(level: number): ILevel {
+export class FameLevelConfig extends BaseConfigData {
+    poolsMap: Map<number, IFameLevel> = new Map();
+    pools: IFameLevel[];
+    public get(level: number): IFameLevel {
         const map = this.poolsMap;
         if (map.has(level)) {
 
@@ -13,9 +14,13 @@ export class FrameLevelConfig extends BaseConfigData {
             return undefined;
         }
     }
+
+    public getPools() {
+        return this.pools;
+    }
     parseJson(json) {
-        const sheet1 = json["Sheet1"];
-        for (const temp of sheet1) {
+        this.pools = json["Sheet1"];
+        for (const temp of this.pools) {
             this.poolsMap.set(temp.level, temp);
         }
     }

@@ -12,8 +12,12 @@ import { PicaBasePanel } from "../pica.base.panel";
 import { ImageValueButton } from "../Components/image.value.button";
 export class PicaMarketPanel extends PicaBasePanel {
   protected moneycomp: MoneyCompent;
+  protected imgBg: Phaser.GameObjects.Image;
+  protected mCloseBtn: ImageValueButton;
+  protected zoom: number;
+  protected mSuperInit: boolean = true;
+  protected tileBg: Phaser.GameObjects.TileSprite;
   private mSelectItem: ElementDetail;
-  private mCloseBtn: ImageValueButton;
   private mTabs: NinePatchTabButton[];
   private mSubTabs: TextButton[];
   private mSelectedCategories: Phaser.GameObjects.GameObject;
@@ -23,8 +27,6 @@ export class PicaMarketPanel extends PicaBasePanel {
   private mSubCategeoriesContainer: Phaser.GameObjects.Container;
   private mShelfContainer: Phaser.GameObjects.Container;
   private mBackgroundColor: Phaser.GameObjects.Graphics;
-  private tileBg: Phaser.GameObjects.TileSprite;
-  private imgBg: Phaser.GameObjects.Image;
   private mShelfBackground: Phaser.GameObjects.Graphics;
   private mSubCategorisScroll: GameGridTable;
   private mItems: MarketItem[];
@@ -55,6 +57,7 @@ export class PicaMarketPanel extends PicaBasePanel {
     this.textures = [{ atlasName: "prestige_bg_texture", folder: UIAtlasName.market }];
     this.mSubTabs = [];
     this.mTabs = [];
+    this.zoom = this.scale;
   }
 
   public addListen() {
@@ -131,10 +134,10 @@ export class PicaMarketPanel extends PicaBasePanel {
       btn.y = capH / 2;
       let img: Phaser.GameObjects.Image;
       if (category.category.shopName === "crownshop") {
-        img = this.scene.make.image({ key: UIAtlasName.market, frame: "prestige_nav_icon" });
+        img = this.scene.make.image({ key: this.atlas, frame: "prestige_nav_icon" });
         btn.setTextColor("#FFF36E");
       } else if (category.category.shopName === "gradeshop") {
-        img = this.scene.make.image({ key: UIAtlasName.market, frame: "prestige_nav_icon" });
+        img = this.scene.make.image({ key: this.atlas, frame: "prestige_nav_icon" });
       }
       if (img) {
         img.x = -capW * 0.5 + img.width * 0.5 + 8 * this.dpr;
@@ -245,7 +248,7 @@ export class PicaMarketPanel extends PicaBasePanel {
     this.mCloseBtn.enable = true;
     this.mCloseBtn.setPosition(this.mCloseBtn.width * 0.5 + 5 * this.dpr, 45 * this.dpr);
     this.mCloseBtn.on(ClickEvent.Tap, this.onCloseHandler, this);
-    this.moneycomp = new MoneyCompent(this.scene, 190 * this.dpr, 28 * this.dpr, this.dpr, this.scale);
+    this.moneycomp = new MoneyCompent(this.scene, 190 * this.dpr, 28 * this.dpr, this.dpr, this.zoom);
     this.moneycomp.setHandler(new Handler(this, this.onConvertHandler));
     this.moneycomp.x = w - 20 * this.dpr;
     this.moneycomp.y = this.mCloseBtn.y;
@@ -257,11 +260,9 @@ export class PicaMarketPanel extends PicaBasePanel {
     this.mShelfContainer.add([this.mShelfBackground, this.mCategoriesContainer, this.mPropContainer]);
     this.add([this.mShelfContainer, this.mSubCategeoriesContainer]);
 
-    this.mSelectItem = new ElementDetail(this.scene, this.render, this.atlas, this.dpr, this.scale);
+    this.mSelectItem = new ElementDetail(this.scene, this.render, this.atlas, this.dpr, this.zoom);
     this.mSelectItem.setSize(w, h - this.mShelfContainer.height);
     this.add([this.imgBg, this.tileBg, this.mSelectItem, this.mCloseBtn, this.moneycomp]);
-    super.init();
-
     this.mCategoriesBar = this.scene.make.graphics(undefined, false);
 
     const capW = 56 * this.dpr;
@@ -275,7 +276,7 @@ export class PicaMarketPanel extends PicaBasePanel {
         cellWidth: capW,
         cellHeight: capH,
         reuseCellContainer: true,
-        zoom: this.scale,
+        zoom: this.zoom,
         mask: false
       },
       scrollMode: 1,
@@ -317,7 +318,7 @@ export class PicaMarketPanel extends PicaBasePanel {
       }
     }).setOrigin(0, 0.5);
     const btnWidth = 80 * this.dpr, btnHeight = 30 * this.dpr;
-    this.randomRefreshBtn = new NineSliceButton(this.scene, w * 0.5, this.randomRefeshTime.y, btnWidth, btnHeight, UIAtlasName.uicommon, "button_g", i18n.t("market.refresh"), this.dpr, this.scale, {
+    this.randomRefreshBtn = new NineSliceButton(this.scene, w * 0.5, this.randomRefeshTime.y, btnWidth, btnHeight, UIAtlasName.uicommon, "button_g", i18n.t("market.refresh"), this.dpr, this.zoom, {
       left: 15 * this.dpr,
       top: 15 * this.dpr,
       right: 15 * this.dpr,
@@ -357,7 +358,7 @@ export class PicaMarketPanel extends PicaBasePanel {
         cellWidth,
         cellHeight,
         reuseCellContainer: true,
-        zoom: this.scale,
+        zoom: this.zoom,
         mask: false
       },
       scrollMode: 1,
@@ -366,7 +367,7 @@ export class PicaMarketPanel extends PicaBasePanel {
         const scene = cell.scene,
           item = cell.item;
         if (cellContainer === null) {
-          cellContainer = new MarketItem(scene, 0, 0, this.dpr, this.scale);
+          cellContainer = new MarketItem(scene, 0, 0, this.dpr, this.zoom);
         }
         cellContainer.setData({ item });
         cellContainer.setProp(item, this.currencyData);
@@ -386,7 +387,7 @@ export class PicaMarketPanel extends PicaBasePanel {
     });
     this.add(this.mPropGrid);
     this.resize(0, 0);
-
+    if (this.mSuperInit) super.init();
     this.render.renderEmitter(this.key + "_getCategories");
   }
 

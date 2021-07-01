@@ -179,14 +179,14 @@ export class PicaFriendBasePanel extends Phaser.GameObjects.Container {
                 if (target.createAt) {
                     createAt = Date.parse(target.createAt);
                 }
-                let online = false;
-                const game = friend.game;
-                if (game && game.length > 0) {
-                    if (friend.nowtime - game[0].lastTime <= 60) {
-                        online = true;
-                    }
-                }
-                result.push({ type, id: target._id, lv: target.level, nickname: target.nickname, avatar: target.avatar, relation, createAt, online });
+                // let online = false;
+                // const game = friend.game;
+                // if (game && game.length > 0) {
+                //     if (friend.nowtime - game[0].lastTime <= 60) {
+                //         online = true;
+                //     }
+                // }
+                result.push({ type, id: target._id, lv: target.level, nickname: target.nickname, avatar: target.avatar, relation, createAt });
                 ids.push(target._id);
             }
         }

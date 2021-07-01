@@ -39,9 +39,11 @@ import { Element2Config } from "./element2.config";
 import { FurnitureGradeConfig } from "./furniture.grade.config";
 import { RechargeConfig } from "./recharge.config";
 import { Setting2Config } from "./settings2.config";
-import { FrameLevelConfig as FameLevelConfig } from "./fame.level.config";
+import { FameLevelConfig as FameLevelConfig } from "./fame.level.config";
 import { BattlePassConfig } from "./battle.pass.config";
 import { BattleLevelConfig } from "./battle.level.config";
+import { PermissionConfig } from "./permission.config";
+import { IPermission } from "src/pica/structure/ipermission";
 
 export enum BaseDataType {
     i18n_zh = "i18n_zh",
@@ -70,7 +72,8 @@ export enum BaseDataType {
     settings2 = "settings2",
     famelevel = "famelevel",
     battlePass = "battlePass",
-    battlePassLevel = "battlePassLevel"
+    battlePassLevel = "battlePassLevel",
+    permission = "permission"
     // itemcategory = "itemcategory"
 }
 
@@ -868,9 +871,29 @@ export class BaseDataConfigManager extends BaseConfigManager {
         const data: Setting2Config = this.getConfig(BaseDataType.settings2);
         return data.getReputationCoin();
     }
-    public getFrameLevel(level: number) {
+    public getFameLevel(level: number) {
         const data: FameLevelConfig = this.getConfig(BaseDataType.famelevel);
-        return data.get(level);
+        const temp = data.get(level);
+        if (!temp["find"]) {
+            this.getBatchItemDatas(temp.rewardItems);
+            temp.permission = this.getPermission(temp.permission);
+            temp["find"] = true;
+        }
+        return temp;
+    }
+
+    public getFames() {
+        const data: FameLevelConfig = this.getConfig(BaseDataType.famelevel);
+        const pools = data.getPools();
+        if (!data["find"]) {
+            for (const pool of pools) {
+                this.getBatchItemDatas(pool.rewardItems);
+                pool.permission = this.getPermission(pool.permission);
+                pool["find"] = true;
+            }
+            data["find"] = true;
+        }
+        return pools;
     }
     public getBattlePass(id: string) {
         const data: BattlePassConfig = this.getConfig(BaseDataType.battlePass);
@@ -894,6 +917,17 @@ export class BaseDataConfigManager extends BaseConfigManager {
             }
         }
         return data.getLevels();
+    }
+
+    public getPermission(id: string) {
+        const data: PermissionConfig = this.getConfig(BaseDataType.permission);
+        const temp = data.get(id);
+        if (!temp["find"]) {
+            temp.name = this.getI18n(temp.name);
+            temp.des = this.getI18n(temp.des);
+            temp["find"] = true;
+        }
+        return temp;
     }
     public destory() {
         super.destory();
@@ -927,6 +961,7 @@ export class BaseDataConfigManager extends BaseConfigManager {
         this.dataMap.set(BaseDataType.famelevel, new FameLevelConfig());
         this.dataMap.set(BaseDataType.battlePass, new BattlePassConfig());
         this.dataMap.set(BaseDataType.battlePassLevel, new BattleLevelConfig());
+        this.dataMap.set(BaseDataType.permission, new PermissionConfig());
     }
 
     protected configUrl(reName: string, tempurl?: string) {
