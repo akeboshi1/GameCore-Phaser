@@ -468,10 +468,10 @@ export class Render extends RPCPeer implements GameMain, IRender {
         });
     }
 
-    @Export()
-    public getResourceRoot() {
+    @Export([webworker_rpc.ParamType.str])
+    public getResourceRoot(url: string) {
         return new Promise((resolve, reject) => {
-            resolve(this.resUrl.RESOURCE_ROOT);
+            resolve(this.resUrl.getResRoot(url));
         });
     }
 
