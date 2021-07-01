@@ -15,7 +15,7 @@ import {
 } from "game-capsule";
 import { op_def } from "pixelpai_proto";
 import { Url, BlockIndex } from "utils";
-import { AnimationModel, IDragonbonesModel, IFramesModel, IPos, IScenery, Logger, LogicPos, Position45 } from "structure";
+import { AnimationModel, IDragonbonesModel, IFramesModel, IPos, IResPath, IScenery, Logger, LogicPos, Position45 } from "structure";
 import { DragonbonesModel, FramesModel } from "../sprite";
 export interface IAsset {
     type: string;
@@ -70,7 +70,7 @@ export class ElementStorage implements IElementStorage {
 
     // private event: Phaser.Events.EventEmitter;
 
-    constructor() {
+    constructor(private config: IResPath) {
         // this.event = new Phaser.Events.EventEmitter();
         this.mDisplayRefMap = new Map();
         this.mDisplayRefMap.set(op_def.NodeType.ElementNodeType, new Map());
@@ -185,7 +185,7 @@ export class ElementStorage implements IElementStorage {
                     this._assets.push({
                         type: fileType[1],
                         key: asset.key,
-                        source: Url.getOsdRes(media),
+                        source: this.config.osdPath + media,
                     });
                 }
             }

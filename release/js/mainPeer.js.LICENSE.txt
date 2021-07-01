@@ -96,9 +96,9 @@
 
 /*! exports provided: GuideWorkerManager */
 
-/*! exports provided: HTTP_REGEX, Url, ResUtils, BlackButton, BlueButton, WhiteButton, CloseButton, Background, Border, TransparentButton */
+/*! exports provided: HTTP_REGEX, Url */
 
-/*! exports provided: HTTP_REGEX, Url, ResUtils, BlackButton, BlueButton, WhiteButton, CloseButton, Background, Border, TransparentButton, Tool, load, loadArr, Algorithm, CopyProtoType, StringUtils, ObjectAssign, UiUtils, isMobile, HttpLoadManager, Helpers, NumberUtils, BlockIndex */
+/*! exports provided: HTTP_REGEX, Url, Tool, load, loadArr, Algorithm, CopyProtoType, StringUtils, ObjectAssign, UiUtils, isMobile, HttpLoadManager, Helpers, NumberUtils, BlockIndex */
 
 /*! exports provided: Handler */
 
@@ -396,6 +396,10 @@
 
 /*!***********************************!*\
   !*** ./src/gamecore/game/game.ts ***!
+  \***********************************/
+
+/*!***********************************!*\
+  !*** ./src/structure/IResPath.ts ***!
   \***********************************/
 
 /*!***********************************!*\

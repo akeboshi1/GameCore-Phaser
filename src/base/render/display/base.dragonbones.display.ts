@@ -1,4 +1,4 @@
-import { ResUtils, Tool, Url } from "utils";
+import { Tool } from "utils";
 import {
     IAvatar,
     IDragonbonesModel,
@@ -7,6 +7,7 @@ import {
     Atlas,
     DisplayField,
     Logger,
+    IResPath,
 } from "structure";
 import { BaseDisplay } from "./base.display";
 
@@ -126,7 +127,6 @@ const SERIALIZE_QUEUE = [
 const ReplacedTextures: Map<string, number> = new Map<string, number>();
 // 解决低版本和高版本共用同一张合图的问题，低版本未做"不重复上传"的处理
 const ReplacedTextureVersion: string = "v1";
-
 /**
  * 龙骨显示对象
  */
@@ -155,7 +155,7 @@ export class BaseDragonbonesDisplay extends BaseDisplay {
     private readonly UNPACK_SLOTS = [AvatarSlotNameTemp.FarmWeap, AvatarSlotNameTemp.BarmWeap];
     private readonly UNCHECK_AVATAR_PROPERTY = ["id", "dirable", "farmWeapId", "farmShldId", "barmWeapId", "barmShldId"];
 
-    public constructor(scene: Phaser.Scene, id?: number) {
+    public constructor(scene: Phaser.Scene, private pathObj: IResPath, id?: number) {
         super(scene, id);
     }
 
@@ -365,9 +365,10 @@ export class BaseDragonbonesDisplay extends BaseDisplay {
                 resolve(this.mArmatureDisplay);
             } else {
                 const res = `dragonbones`;
-                const pngUrl = Url.getRes(`${res}/${this.resourceName}_tex.png`);
-                const jsonUrl = Url.getRes(`${res}/${this.resourceName}_tex.json`);
-                const dbbinUrl = Url.getRes(`${res}/${this.resourceName}_ske.dbbin`);
+                const resPath = this.localResourceRoot;
+                const pngUrl = resPath + `${res}/${this.resourceName}_tex.png`;
+                const jsonUrl = resPath + `${res}/${this.resourceName}_tex.json`;
+                const dbbinUrl = resPath + `${res}/${this.resourceName}_ske.dbbin`;
                 this.loadDragonBones(pngUrl, jsonUrl, dbbinUrl)
                     .then(() => {
                         this.createArmatureDisplay();
@@ -378,16 +379,20 @@ export class BaseDragonbonesDisplay extends BaseDisplay {
     }
 
     protected get localResourceRoot(): string {
-        return Url.RES_PATH;
+        return this.pathObj.resPath;
+    }
+
+    protected get osdResourceRoot(): string {
+        return this.pathObj.osdPath;
     }
 
     // TODO: 游戏中截图会出现404，待解决
     protected partNameToLoadUrl(partName: string): string {
-        return ResUtils.getPartUrl(partName);
+        return this.osdResourceRoot + "avatar/part/" + partName + ".png";
     }
 
     protected partNameToLoadKey(partName: string): string {
-        return ResUtils.getPartName(partName);
+        return partName + "_png";
     }
 
     protected partNameToDBFrameName(partName: string): string {
@@ -619,7 +624,10 @@ export class BaseDragonbonesDisplay extends BaseDisplay {
                     if (this.scene.textures.exists(this.mReplaceTextureKey)) {
                         resolve(null);
                     } else {
-                        const loadData = ResUtils.getUsrAvatarTextureUrls(this.mReplaceTextureKey);
+                        const loadData = {
+                            img: this.pathObj.osdPath + "user_avatar/texture/" + this.mReplaceTextureKey + ".png",
+                            json: this.pathObj.osdPath + "user_avatar/texture/" + this.mReplaceTextureKey + ".json"
+                        };
                         this.scene.load.atlas(this.mReplaceTextureKey, loadData.img, loadData.json);
                         const onLoadComplete = (key: string) => {
                             if (this.mReplaceTextureKey !== key) return;

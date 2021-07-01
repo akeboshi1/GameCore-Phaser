@@ -2,7 +2,6 @@ import { op_def, op_client, op_gameconfig, op_virtual_world } from "pixelpai_pro
 import { PBpacket } from "net-socket-packet";
 import { Player } from "../room/player/player";
 import { PlayerModel } from "../room/player/player.model";
-import { Url } from "utils";
 import { AvatarSuitType, EventType, IDragonbonesModel, IFramesModel, PlayerState, ISprite, DirectionChecker, IPos, Logger, LogicPos } from "structure";
 import { LayerEnum } from "game-capsule";
 import { Tool } from "utils";
@@ -359,7 +358,7 @@ export class User extends Player {
         const ele = this.mRoomService.getElement(targetId);
         if (ele) {
             if (ele.model && ele.model.sound) {
-                const key = Url.getSound(ele.model.sound);
+                const key = await this.mRoomService.game.renderPeer.url.getSound(ele.model.sound);
                 this.mRoomService.game.renderPeer.playSoundByKey(key);
             }
             // this.mTarget = ele;

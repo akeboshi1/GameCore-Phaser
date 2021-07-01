@@ -1,5 +1,7 @@
 /// <reference types="tooqingphaser" />
+import { Url } from "utils";
 export declare class Bubble extends Phaser.GameObjects.Container {
+    private url;
     private mChatContent;
     private mBubbleBg;
     private mMinWidth;
@@ -9,7 +11,7 @@ export declare class Bubble extends Phaser.GameObjects.Container {
     private mTweenCallContext;
     private mRemoveDelay;
     private mScale;
-    constructor(scene: Phaser.Scene, scale: number);
+    constructor(scene: Phaser.Scene, scale: number, url: Url);
     show(text: string, bubble: any): void;
     tweenTo(toY: number): void;
     durationRemove(duration: number, callback?: Function, callbackContext?: any): void;

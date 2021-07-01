@@ -11,6 +11,7 @@ import { EditorCamerasManager } from "./manager/cameras.manager";
 import { IRender, LayerManager } from "baseRender";
 import { ElementStorage } from "baseGame";
 import { EditorSceneManger } from "./manager/scene.manager";
+import { Url } from "utils";
 export declare class SceneEditorCanvas extends EditorCanvas implements IRender {
     displayObjectPool: DisplayObjectPool;
     private mSelecedElement;
@@ -34,6 +35,8 @@ export declare class SceneEditorCanvas extends EditorCanvas implements IRender {
     private mElementStorage;
     private mScene;
     constructor(config: IEditorCanvasConfig);
+    get url(): Url;
+    get config(): IEditorCanvasConfig;
     update(time?: number, delta?: number): void;
     create(scene: Phaser.Scene): void;
     enableClick(): void;

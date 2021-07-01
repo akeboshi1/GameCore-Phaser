@@ -1,7 +1,6 @@
 import { EditorCanvas, IEditorCanvasConfig } from "../editor.canvas";
 import { AvatarEditorDragonbone } from "./avatar.editor.dragonbone";
 import { Scene } from "tooqingphaser";
-import { Url } from "utils";
 import { Logger } from "structure";
 
 /**
@@ -25,7 +24,7 @@ export class AvatarEditorCanvas extends EditorCanvas {
 
         // start
         this.mData = config.node;
-        this.mGame.scene.start(this.SCENEKEY, { onCreated: this.onSceneCreated.bind(this), onUpdate: this.update.bind(this), onDestroy: this.onSceneDestroy.bind(this) });
+        this.mGame.scene.start(this.SCENEKEY, { onCreated: this.onSceneCreated.bind(this), onUpdate: this.update.bind(this), onDestroy: this.onSceneDestroy.bind(this), resPath: this.mConfig.LOCAL_HOME_PATH });
     }
 
     public destroy() {
@@ -49,7 +48,7 @@ export class AvatarEditorCanvas extends EditorCanvas {
     }
 
     public onSceneCreated(scene: Phaser.Scene) {
-        this.mDragonbone = new AvatarEditorDragonbone(scene, this.mConfig.osd, this.mEmitter, true);
+        this.mDragonbone = new AvatarEditorDragonbone(scene, this.mConfig.LOCAL_HOME_PATH, this.mConfig.osd, this.mEmitter, true);
     }
     public update() {
 
@@ -105,7 +104,7 @@ export class AvatarEditorCanvas extends EditorCanvas {
             this.mGame.scene.add(this.SCENEKEY_SNAPSHOT, AvatarEditorScene, false);
             curScene.scene.launch(this.SCENEKEY_SNAPSHOT, {
                 onCreated: (s: Scene) => {
-                    const a = new AvatarEditorDragonbone(s, this.mConfig.osd, this.mEmitter, true, curSets,
+                    const a = new AvatarEditorDragonbone(s, this.mConfig.LOCAL_HOME_PATH, this.mConfig.osd, this.mEmitter, true, curSets,
                         (dragonbone) => {
                             dragonbone.generateShopIcon(width, height).then((src) => {
                                 resolve(src);
@@ -137,7 +136,7 @@ export class AvatarEditorCanvas extends EditorCanvas {
             curScene.scene.launch(this.SCENEKEY_SNAPSHOT, {
                 onCreated: (s: Scene) => {
                     this.mGame.scene.sendToBack(this.SCENEKEY_SNAPSHOT);
-                    const a = new AvatarEditorDragonbone(s, this.mConfig.osd, this.mEmitter, false, curSets,
+                    const a = new AvatarEditorDragonbone(s, this.mConfig.LOCAL_HOME_PATH, this.mConfig.osd, this.mEmitter, false, curSets,
                         (dragonbone) => {
                             dragonbone.generateHeadIcon().then((src) => {
                                 resolve(src);
@@ -165,19 +164,20 @@ export class AvatarEditorScene extends Phaser.Scene {
     private onSceneCreated: (scene: Phaser.Scene) => any;
     private onSceneUpdate: () => any;
     private onSceneDestroy: () => any;
-
+    private resPath: string;
     public preload() {
         Logger.getInstance().debug("AvatarEditorScene preload");
 
         this.game.plugins.installScenePlugin("DragonBones", dragonBones.phaser.plugin.DragonBonesScenePlugin, "dragonbone", this, true);
 
-        this.load.image("avatar_placeholder", Url.getRes("dragonbones/avatar.png"));
+        this.load.image("avatar_placeholder", this.resPath+"dragonbones/avatar.png");
     }
 
-    public init(data: { onCreated?: (scene: Phaser.Scene) => any, onUpdate?: () => any, onDestroy?: () => any }): void {
+    public init(data: { onCreated?: (scene: Phaser.Scene) => any, onUpdate?: () => any, onDestroy?: () => any, resPath?: string }): void {
         this.onSceneCreated = data.onCreated;
         this.onSceneUpdate = data.onUpdate;
         this.onSceneDestroy = data.onDestroy;
+        this.resPath = data.resPath;
     }
 
     public create(): void {

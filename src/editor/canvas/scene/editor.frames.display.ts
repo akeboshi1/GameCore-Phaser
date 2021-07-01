@@ -5,6 +5,7 @@ import { SceneEditorCanvas } from "./scene.editor.canvas";
 import { EditorTopDisplay } from "./top.display";
 import { op_def } from "pixelpai_proto";
 import { LayerEnum, Helpers } from "game-capsule";
+import { IEditorCanvasConfig } from "../editor.canvas";
 
 export class EditorFramesDisplay extends BaseFramesDisplay {
 
@@ -15,8 +16,8 @@ export class EditorFramesDisplay extends BaseFramesDisplay {
     protected mOverlapped: boolean = false;
     protected mLayer: number;
 
-    constructor(protected sceneEditor: SceneEditorCanvas, sprite: Sprite) {
-        super(sceneEditor.scene, sprite.id, sprite.nodeType);
+    constructor(protected sceneEditor: SceneEditorCanvas, config: IEditorCanvasConfig, sprite: Sprite) {
+        super(sceneEditor.scene, { resPath: config.LOCAL_HOME_PATH, osdPath: config.osd }, sprite.id, sprite.nodeType);
         this.sprite = sprite;
         this.mLayer = sprite.layer;
     }

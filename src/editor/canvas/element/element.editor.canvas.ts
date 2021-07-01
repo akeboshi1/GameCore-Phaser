@@ -2,7 +2,6 @@ import { EditorCanvas, IEditorCanvasConfig } from "../editor.canvas";
 import ElementEditorGrids from "./element.editor.grids";
 import ElementEditorAnimations from "./element.editor.animations";
 import ElementEditorResourceManager from "./element.editor.resource.manager";
-import { Url } from "utils";
 import { ElementFramesDisplay } from "./element.frames.display";
 import version from "../../../../version";
 import { Logger } from "structure";
@@ -26,8 +25,6 @@ export class ElementEditorCanvas extends EditorCanvas {
     constructor(config: IEditorCanvasConfig) {
         super(config);
         Logger.getInstance().debug("ElementEditorCanvas.constructor()");
-        Url.RES_PATH = `./resources_v${version}/`;
-
         this.mGame.scene.add(this.SCENEKEY, ElementEditorScene);
 
         // start
@@ -70,7 +67,7 @@ export class ElementEditorCanvas extends EditorCanvas {
 
         const scene = this.getScene();
         this.mGrids = new ElementEditorGrids(scene, this.mData.animations.getDefaultAnimationData());
-        this.mAnimations = new ElementFramesDisplay(scene, this.mData.animations.getDefaultAnimationData(), this.mGrids, this.mEmitter, this.mConfig.osd);
+        this.mAnimations = new ElementFramesDisplay(scene, this.mData.animations.getDefaultAnimationData(), this.mGrids, this.mEmitter, this.mConfig);
         // this.mAnimations = new ElementEditorAnimations(scene, this.mData.animations.getDefaultAnimationData(), this.mGrids, this.mEmitter);
         this.mResManager.init(scene);
 

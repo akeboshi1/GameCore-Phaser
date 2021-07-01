@@ -1,4 +1,4 @@
-import { load, ResUtils, Tool, Url } from "utils";
+import { load, Tool } from "utils";
 import { MainPeer } from "../main.peer";
 import { BaseState } from "./base.state";
 import { EventType, GameState, Logger, LoadState } from "structure";
@@ -81,7 +81,7 @@ export class EnterWorldState extends BaseState {
         // TODO 进游戏前预加载资源
         const content: op_client.IOP_GATEWAY_RES_CLIENT_VIRTUAL_WORLD_INIT = packet.content;
         const configUrls = content.configUrls;
-        if (content.resourceRoot) Url.RESOURCE_ROOT = content.resourceRoot[0];
+        if (content.resourceRoot) this.mMain.render.setResourecRoot(content.resourceRoot[0]);
         clock.sync(-1);
 
         this.initgameConfigUrls(configUrls);
@@ -132,10 +132,10 @@ export class EnterWorldState extends BaseState {
         }
     }
 
-    protected loadGameConfig(remotePath): Promise<Capsule> {
+    protected async loadGameConfig(remotePath): Promise<Capsule> {
         const game = this.mMain.game;
         const config = game.getGameConfig();
-        const configPath = ResUtils.getGameConfig(remotePath);
+        const configPath = await this.mMain.render.getGameConfig(remotePath);
         return load(configPath, "arraybuffer").then((req: any) => {
             this.mGame.gameConfigState.set(remotePath, true);
             game.loadingManager.start(LoadState.PARSECONFIG);

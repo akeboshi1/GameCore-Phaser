@@ -68,6 +68,7 @@ export class Render extends RPCPeer implements GameMain, IRender {
 
     protected readonly DEFAULT_WIDTH = 360;
     protected readonly DEFAULT_HEIGHT = 640;
+    protected resUrl: Url;
     protected mGuideManager: GuideManager;
     protected mSceneManager: BaseSceneManager;
     protected mCameraManager: CamerasRenderManager;
@@ -240,6 +241,10 @@ export class Render extends RPCPeer implements GameMain, IRender {
 
     get game(): Phaser.Game {
         return this.mGame;
+    }
+
+    get url(): Url {
+        return this.resUrl;
     }
 
     getSize(): Size | undefined {
@@ -435,6 +440,26 @@ export class Render extends RPCPeer implements GameMain, IRender {
         this.destroy(false).then(() => {
             this.initWorker();
         });
+    }
+
+    @Export([webworker_rpc.ParamType.str])
+    public setResourecRoot(root: string) {
+        this.resUrl.RESOURCE_ROOT = root;
+    }
+
+    @Export([webworker_rpc.ParamType.num, webworker_rpc.ParamType.str])
+    public getUIPath(dpr: number, res: string) {
+        return this.resUrl.getUIRes(dpr, res);
+    }
+
+    @Export([webworker_rpc.ParamType.str])
+    public getNormalUIPath(res: string) {
+        return this.resUrl.getNormalUIRes(res);
+    }
+
+    @Export([webworker_rpc.ParamType.str])
+    public getGameConfig(path: string) {
+        return this.resUrl.getGameConfig(path);
     }
 
     startFullscreen(): void {
@@ -1636,9 +1661,8 @@ export class Render extends RPCPeer implements GameMain, IRender {
         if (this.mConfig.height === undefined) {
             this.mConfig.height = window.innerHeight;
         }
-        Url.OSD_PATH = this.mConfig.osd;
-        Url.RES_PATH = `resources/`;
-        Url.RESUI_PATH = `${Url.RES_PATH}ui/`;
+        this.resUrl = new Url();
+        this.resUrl.init({ osd: this.mConfig.osd, res: `resources/`, resUI: `resources/ui/` });
         this.initRatio();
     }
 

@@ -30,11 +30,13 @@ export declare class AvatarEditorScene extends Phaser.Scene {
     private onSceneCreated;
     private onSceneUpdate;
     private onSceneDestroy;
+    private resPath;
     preload(): void;
     init(data: {
         onCreated?: (scene: Phaser.Scene) => any;
         onUpdate?: () => any;
         onDestroy?: () => any;
+        resPath?: string;
     }): void;
     create(): void;
     update(): void;

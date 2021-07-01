@@ -1,8 +1,8 @@
 import { BBCodeText } from "apowophaserui";
 import { SoundButton } from "./soundButton";
-import { Url } from "utils";
 import { Font, Handler } from "structure";
 import { DynamicImage } from "baseRender";
+import { Render } from "../../render";
 export class PropItem extends SoundButton {
     public itemData: any;
     protected dpr: number;
@@ -12,7 +12,7 @@ export class PropItem extends SoundButton {
     protected bg: Phaser.GameObjects.Image;
     protected send: Handler;
     protected bgframe: string;
-    constructor(scene: Phaser.Scene, key: string, bgframe: string, dpr: number, style?: any) {
+    constructor(scene: Phaser.Scene, protected render: Render, key: string, bgframe: string, dpr: number, style?: any) {
         super(scene, 0, 0);
         this.dpr = dpr;
         this.key = key;
@@ -33,7 +33,7 @@ export class PropItem extends SoundButton {
     public setItemData(data: any) {
         this.itemData = data;
         this.itemCount.text = data.count + "";
-        const url = Url.getOsdRes(data.texturePath);
+        const url = this.render.url.getOsdRes(data.texturePath);
         const zoom = this.getWorldTransformMatrix().scaleX;
         this.itemIcon.scale = this.dpr / zoom;
         this.itemIcon.load(url);

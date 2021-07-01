@@ -18,8 +18,7 @@ export class DragonbonesDisplay extends BaseDragonbonesDisplay implements IDispl
     protected mName: string = undefined;
     protected mStartFireTween: Phaser.Tweens.Tween;
     constructor(scene: Phaser.Scene, protected render: Render, id?: number, protected uuid?: number, type?: number) {
-        super(scene, id);
-
+        super(scene, { resPath: render.url.RES_PATH, osdPath: render.url.OSD_PATH }, id);
         this.mNodeType = type;
 
         this.mLoadQueue = new LoadQueue(scene);

@@ -6,6 +6,7 @@ import { Render } from "../render";
  * 人物头顶显示对象
  */
 export declare class ElementTopDisplay extends TopDisplay {
+    private render;
     private mBubble;
     private isDispose;
     private uiScale;

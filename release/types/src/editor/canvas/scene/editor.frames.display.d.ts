@@ -3,6 +3,7 @@ import { BaseDragonbonesDisplay, BaseFramesDisplay, ReferenceArea } from "baseRe
 import { RunningAnimation } from "structure";
 import { SceneEditorCanvas } from "./scene.editor.canvas";
 import { EditorTopDisplay } from "./top.display";
+import { IEditorCanvasConfig } from "../editor.canvas";
 export declare class EditorFramesDisplay extends BaseFramesDisplay {
     protected sceneEditor: SceneEditorCanvas;
     sprite: Sprite;
@@ -11,7 +12,7 @@ export declare class EditorFramesDisplay extends BaseFramesDisplay {
     protected mIsMoss: boolean;
     protected mOverlapped: boolean;
     protected mLayer: number;
-    constructor(sceneEditor: SceneEditorCanvas, sprite: Sprite);
+    constructor(sceneEditor: SceneEditorCanvas, config: IEditorCanvasConfig, sprite: Sprite);
     mount(display: BaseFramesDisplay | BaseDragonbonesDisplay, targetIndex?: number): void;
     unmount(display: BaseFramesDisplay | BaseDragonbonesDisplay): void;
     asociate(): void;

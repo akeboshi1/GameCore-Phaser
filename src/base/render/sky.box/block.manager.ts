@@ -1,5 +1,5 @@
-import { Url } from "utils";
 import { Logger, Fit, IScenery } from "structure";
+import { Url } from "utils";
 import { IBaseCameraService } from "../cameras/base.cameras.manager";
 import { IRender } from "../render";
 import { DynamicImage } from "../ui/components/dynamic.image";
@@ -216,7 +216,7 @@ export class BlockManager implements IBlockManager {
       for (let i = 0; i < len; i++) {
         const l = this.mUris[i].length;
         for (let j = 0; j < l; j++) {
-          const block = new Block(this.scene, this.mUris[i][j], this.mScaleRatio);
+          const block = new Block(this.scene, this.mUris[i][j], this.mScaleRatio, this.render.url);
           block.setRectangle(j * this.mGridWidth, i * this.mGridHeight, this.mGridWidth, this.mGridHeight);
           this.mGrids.push(block);
         }
@@ -317,7 +317,7 @@ class Block extends DynamicImage {
   private mKey: string;
   private mRectangle: Phaser.Geom.Rectangle;
   private mScale: number;
-  constructor(scene: Phaser.Scene, key: string, scale: number) {
+  constructor(scene: Phaser.Scene, key: string, scale: number, private url: Url) {
     super(scene, 0, 0);
     this.mKey = key;
     this.mScale = scale;
@@ -333,7 +333,7 @@ class Block extends DynamicImage {
         // TODO
         // this.setActive(val);
       } else {
-        this.load(Url.getOsdRes(this.mKey));
+        this.load(this.url.getOsdRes(this.mKey));
       }
     }
   }

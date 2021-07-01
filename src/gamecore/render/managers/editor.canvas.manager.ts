@@ -57,11 +57,10 @@ export class EditorCanvasManager {
             this.render.sceneManager.currentScene.scene.launch(this.SCENEKEY_SNAPSHOT, {
                 onCreated: (s: Scene) => {
                     this.render.game.scene.sendToBack(this.SCENEKEY_SNAPSHOT);
-                    const a = new AvatarEditorDragonbone(s, this.AVATAR_CANVAS_RESOURCE_PATH, this.render.emitter, false, sets,
+                    const a = new AvatarEditorDragonbone(s, this.render.url.RES_PATH, this.render.url.OSD_PATH, this.render.emitter, false, sets,
                         (dragonbone) => {
                             dragonbone.generateHeadIcon().then((src) => {
                                 resolve(src);
-
                                 dragonbone.destroy();
                                 this.render.game.scene.stop(this.SCENEKEY_SNAPSHOT);
                                 this.render.game.scene.remove(this.SCENEKEY_SNAPSHOT);

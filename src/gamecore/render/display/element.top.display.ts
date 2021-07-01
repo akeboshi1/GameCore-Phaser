@@ -1,4 +1,3 @@
-import { Url } from "utils";
 import { PlayScene } from "../scenes/play.scene";
 import { BubbleContainer } from "./bubble/bubble.container";
 import { ElementStateType, StateConfig, Font } from "structure";
@@ -12,7 +11,7 @@ export class ElementTopDisplay extends TopDisplay {
     private mBubble: BubbleContainer;
     private isDispose: boolean = false;
     private uiScale: number;
-    constructor(scene: Phaser.Scene, owner: any, render: Render) {
+    constructor(scene: Phaser.Scene, owner: any, private render: Render) {
         super(scene, owner, render.scaleRatio, render.uiRatio);
         this.uiScale = render.uiScale || 1;
     }
@@ -50,7 +49,7 @@ export class ElementTopDisplay extends TopDisplay {
             return;
         }
         if (!this.mBubble) {
-            this.mBubble = new BubbleContainer(scene, this.mSceneScale);
+            this.mBubble = new BubbleContainer(scene, this.mSceneScale, this.render.url);
         }
         this.mBubble.addBubble(text, setting);
         this.mBubble.follow(this.mOwner);
@@ -74,7 +73,8 @@ export class ElementTopDisplay extends TopDisplay {
                 }
             };
             this.scene.load.once(`filecomplete-json-${key}`, fn, this);
-            this.scene.load.json(key, Url.getRes(`config/base/state/${state}.json`));
+            const path = this.render.url.getNormalUIRes(`config/base/state/${state}.json`);
+            this.scene.load.json(key, path);
             this.scene.load.start();
         }
     }
@@ -202,7 +202,9 @@ export class ElementTopDisplay extends TopDisplay {
         if (this.scene.textures.exists(pngurl)) {
             if (!this.isDispose && callback) callback.call(context);
         } else {
-            this.scene.load.atlas(pngurl, Url.getUIRes(this.mUIRatio, pngurl), Url.getUIRes(this.mUIRatio, jsonurl));
+            const pngPath = this.render.url.getUIRes(this.mUIRatio, pngurl);
+            const jsonPath = this.render.url.getUIRes(this.mUIRatio, jsonurl);
+            this.scene.load.atlas(pngurl, pngPath, jsonPath);
             this.scene.load.once(Phaser.Loader.Events.COMPLETE, () => {
                 if (!this.isDispose && callback) callback.call(context);
             }, this);

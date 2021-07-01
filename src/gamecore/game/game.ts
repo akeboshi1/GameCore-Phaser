@@ -596,11 +596,12 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
         this.mUser = new User();
     }
 
-    protected createManager() {
+    protected async createManager() {
         if (!this.mRoomManager) this.mRoomManager = new RoomManager(this);
         if (!this.mGuideWorkerManager) this.mGuideWorkerManager = new GuideWorkerManager(this);
         // this.mUiManager = new UiManager(this);
-        if (!this.mElementStorage) this.mElementStorage = new ElementStorage();
+        const resUrl = await this.renderPeer.url;
+        if (!this.mElementStorage) this.mElementStorage = new ElementStorage({ resPath: resUrl.RES_PATH, osdPath: resUrl.OSD_PATH });
         if (!this.mUIManager) this.mUIManager = new UIManager(this);
         if (!this.mHttpService) this.mHttpService = new HttpService(this);
         if (!this.mSoundManager) this.mSoundManager = new SoundWorkerManager(this);

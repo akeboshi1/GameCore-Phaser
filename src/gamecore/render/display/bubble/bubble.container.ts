@@ -8,12 +8,12 @@ export class BubbleContainer extends Phaser.GameObjects.Container {
     private mArrow: DynamicImage;
     private mScale: number;
 
-    constructor(scene: Phaser.Scene, scale: number) {
+    constructor(scene: Phaser.Scene, scale: number, private url: Url) {
         super(scene);
         this.mScale = scale;
         this.mArrow = new DynamicImage(this.scene, 0, 0);
         this.mArrow.scale = scale;
-        this.mArrow.load(Url.getRes("ui/chat/bubble_arrow.png"));
+        this.mArrow.load(url.getRes("ui/chat/bubble_arrow.png"));
         this.add(this.mArrow);
     }
 
@@ -71,7 +71,7 @@ export class BubbleContainer extends Phaser.GameObjects.Container {
 
     private createBubble(bubbleSetting: any): Bubble {// op_client.IChat_Setting
         if (!bubbleSetting) return;
-        const bubble = new Bubble(this.scene, this.mScale);
+        const bubble = new Bubble(this.scene, this.mScale, this.url);
         this.mBubbles.push(bubble);
         const duration = bubbleSetting.duration ? bubbleSetting.duration : 5000;
         bubble.durationRemove(duration, this.onRemoveBubble, this);

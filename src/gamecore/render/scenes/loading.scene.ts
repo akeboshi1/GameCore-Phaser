@@ -1,4 +1,4 @@
-import { UiUtils, Url } from "utils";
+import { UiUtils } from "utils";
 import { BaseLayer, BasicScene } from "baseRender";
 import { UiManager } from "../ui";
 import { MainUIScene } from "./main.ui.scene";
@@ -249,9 +249,9 @@ export class LoadingScene extends BasicScene {
     const sheet: CSSStyleSheet = <CSSStyleSheet>element.sheet;
     const font = ["en/tt0173m_.ttf", "en/tt0503m_.ttf", "04B.ttf"];
     // const styles = "@font-face { font-family: 'Source Han Sans'; src: url('./resources/fonts/otf/SourceHanSansTC-Regular.otf') format('opentype');font-display:swap; }\n";
-    const styles2 = `@font-face { font-family: 'tt0173m_'; src: url('${Url.getRes("fonts/en/tt0173m_.ttf")}') format('truetype');font-display:swap }\n`;
-    const styles3 = `@font-face { font-family: 'tt0503m_'; src: url('${Url.getRes("fonts/en/tt0503m_.ttf")}') format('truetype'); font-display:swap}\n`;
-    const styles4 = `@font-face { font-family: 't04B25'; src: url('${Url.getRes("fonts/04B.ttf")}') format('truetype'); font-display:swap}`;
+    const styles2 = `@font-face { font-family: 'tt0173m_'; src: url('${this.render.url.getRes("fonts/en/tt0173m_.ttf")}') format('truetype');font-display:swap }\n`;
+    const styles3 = `@font-face { font-family: 'tt0503m_'; src: url('${this.render.url.getRes("fonts/en/tt0503m_.ttf")}') format('truetype'); font-display:swap}\n`;
+    const styles4 = `@font-face { font-family: 't04B25'; src: url('${this.render.url.getRes("fonts/04B.ttf")}') format('truetype'); font-display:swap}`;
     // sheet.insertRule(styles, 0);
     sheet.insertRule(styles2, 0);
     sheet.insertRule(styles3, 0);
