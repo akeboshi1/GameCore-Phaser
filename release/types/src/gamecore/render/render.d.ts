@@ -121,6 +121,8 @@ export declare class Render extends RPCPeer implements GameMain, IRender {
     getUIPath(dpr: number, res: string): string;
     getResPath(): string;
     getOsdPath(): string;
+    getResourceRoot(): string;
+    getResUIPath(): string;
     getNormalUIPath(res: string): string;
     getGameConfig(path: string): string;
     startFullscreen(): void;
