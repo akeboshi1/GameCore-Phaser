@@ -12,8 +12,11 @@ export enum GameState {
     EnterWorld = "EnterWorld",
     // ===== 游戏运行
     GameRunning = "GameRunning",
-    // ===== 下线
-    OffLine = "OffLine",
+
+    // 跨游戏状态
+    ChangeGame = "ChangeGame",
+    // 退游戏状态
+    OffLine = "OffLine"
 }
 
 export enum ConnectState {

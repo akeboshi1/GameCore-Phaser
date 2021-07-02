@@ -41,6 +41,10 @@ export class GameStateManager {
         // // =====>设置完当前状态后直接启动
         // this.mCurState.run();
     }
+    startState(state: string, data?: any) {
+        this.state = state;
+        this.startRun(data);
+    }
     refreshStateTime() {
         const now: number = new Date().getTime();
         this.stateTime = now;
@@ -63,5 +67,6 @@ export class GameStateManager {
         this.mStateMap.set(GameState.Login, new LoginState(this.mMain, GameState.Login));
         this.mStateMap.set(GameState.GameRunning, new GameRunningState(this.mMain, GameState.GameRunning));
         this.mStateMap.set(GameState.OffLine, new BaseState(this.mMain, GameState.OffLine));
+        this.mStateMap.set(GameState.ChangeGame, new BaseState(this.mMain, GameState.ChangeGame));
     }
 }

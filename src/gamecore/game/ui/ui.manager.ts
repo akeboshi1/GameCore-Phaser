@@ -245,9 +245,10 @@ export class UIManager extends PacketHandler {
     }
 
     protected async onForceOfflineHandler(packet: PBpacket) {
-        if (this.game.peer.state.key !== GameState.GameRunning && this.game.peer.state.key !== GameState.OffLine) return;
-        const txt = await this.game.renderPeer.i18nString("common.offline");
-        this.game.peer.render.showAlert(txt, true, false).then(() => {
+
+        if (this.game.peer.state.key === GameState.ChangeGame) return;
+        this.game.gameStateManager.startState(GameState.OffLine);
+        this.game.peer.render.showAlert("common.offline", true).then(() => {
             this.game.peer.render.hidden();
         });
     }
