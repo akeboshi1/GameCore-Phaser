@@ -46,7 +46,10 @@ export class Render extends BaseRender {
     public setAccount(val: any) {
         super.setAccount(val);
         if (val && this.isCordove()) {
-            (<any>window).IAP.initialize(this.account.accountData.accessToken)
+            if ((<any>window).IAP) {
+                (<any>window).IAP.initialize(this.account.accountData.accessToken);
+            }
+
         }
     }
 
