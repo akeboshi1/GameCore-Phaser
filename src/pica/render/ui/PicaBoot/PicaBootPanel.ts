@@ -84,8 +84,8 @@ export class PicaBootPanel extends PicaBasePanel {
                 fontFamily: Font.DEFULT_FONT
             }
         }, false).setOrigin(0.5).setStroke("0x0", 2 * this.dpr * this.scale);
-       // label1.setResolution(this.dpr);
-        label1.y = (scaleH - label1.height) * 0.5 - 50 * this.dpr ;
+        // label1.setResolution(this.dpr);
+        label1.y = (scaleH - label1.height) * 0.5 - 50 * this.dpr;
 
         const label2 = this.scene.make.text({
             text: `本网络游戏适合年满16周岁以上的用户，请您确认已如实进行\n实名注册，为了您的健康，请合理控制游戏时间。`,
@@ -97,7 +97,7 @@ export class PicaBootPanel extends PicaBasePanel {
             }
         }).setOrigin(0.5).setStroke("0x0", 2 * this.dpr * this.scale);
         // label2.setResolution(this.dpr);
-        label2.y = (scaleH - label2.height) * 0.5 - 16 * this.dpr ;
+        label2.y = (scaleH - label2.height) * 0.5 - 16 * this.dpr;
 
         this.playBtn = new PlayBtn(this.scene, 0, -scaleH * 0.5 + scaleH * 0.75, 191 * this.dpr, 60 * this.dpr, UIAtlasName.uicommon, "yellow_btn", i18n.t("boot.play"), this.dpr, 1, {
             left: 12 * this.dpr,
@@ -191,6 +191,10 @@ export class PicaBootPanel extends PicaBasePanel {
             this.mMediator.enterGame();
             this.playBtn.enabled = false;
         }
+        if ((<any>window).IAP) {
+            (<any>window).IAP.initialize(this.render.account.accountData.accessToken);
+        }
+
     }
 
     private logged() {
