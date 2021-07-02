@@ -65,7 +65,7 @@ export class SoundManager {
         // TODO
         this.play({
             key: content.soundKey,
-            urls: Url.getOsdRes(content.soundKey),
+            urls: this.render.url.getOsdRes(content.soundKey),
             field: content.scope,
             soundConfig: { loop: content.loop }
         });
@@ -78,7 +78,7 @@ export class SoundManager {
         // TODO
         this.play({
             key: content.soundKey,
-            urls: Url.getRes(content.soundKey),
+            urls: this.render.url.getRes(content.soundKey),
             field: content.scope,
             soundConfig: { loop: content.loop }
         });

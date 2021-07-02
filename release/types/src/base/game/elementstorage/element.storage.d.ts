@@ -1,6 +1,6 @@
 import { Lite, PaletteNode, TerrainCollectionNode, MossNode, AssetsNode, WallCollectionNode, MossCollectionNode, Capsule } from "game-capsule";
 import { op_def } from "pixelpai_proto";
-import { IDragonbonesModel, IFramesModel, IPos, IScenery } from "structure";
+import { IDragonbonesModel, IFramesModel, IPos, IResPath, IScenery } from "structure";
 import { DragonbonesModel, FramesModel } from "../sprite";
 export interface IAsset {
     type: string;
@@ -36,6 +36,7 @@ export interface IDisplayRef {
     displayModel?: FramesModel | DragonbonesModel;
 }
 export declare class ElementStorage implements IElementStorage {
+    private config;
     protected mModels: Map<number, FramesModel | DragonbonesModel>;
     protected mElementRef: Map<number, IDisplayRef>;
     protected mTerrainRef: Map<number, IDisplayRef>;
@@ -52,7 +53,7 @@ export declare class ElementStorage implements IElementStorage {
     protected _wallCollection: WallCollectionNode;
     protected _scenerys: IScenery[];
     protected _assets: IAsset[];
-    constructor();
+    constructor(config: IResPath);
     setGameConfig(config: Lite): void;
     updatePalette(palette: PaletteNode): void;
     updateMoss(moss: MossNode): void;

@@ -67,3 +67,4 @@ export * from "./net";
 export * from "./task";
 export * from "./state";
 export * from "./core.rpc";
+export * from "./IResPath";

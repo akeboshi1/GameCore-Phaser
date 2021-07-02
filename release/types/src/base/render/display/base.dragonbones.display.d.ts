@@ -1,5 +1,5 @@
 /// <reference types="tooqingphaser" />
-import { IAvatar, IDragonbonesModel, RunningAnimation, DisplayField } from "structure";
+import { IAvatar, IDragonbonesModel, RunningAnimation, DisplayField, IResPath } from "structure";
 import { BaseDisplay } from "./base.display";
 export declare enum AvatarSlotNameTemp {
     BodyCostDres = "body_cost_dres_$",
@@ -77,6 +77,7 @@ export declare enum AvatarPartNameTemp {
  * 龙骨显示对象
  */
 export declare class BaseDragonbonesDisplay extends BaseDisplay {
+    private pathObj;
     protected mArmatureName: string;
     protected mResourceName: string;
     protected mArmatureDisplay: dragonBones.phaser.display.ArmatureDisplay | undefined;
@@ -95,7 +96,7 @@ export declare class BaseDragonbonesDisplay extends BaseDisplay {
     protected loadError: boolean;
     private readonly UNPACK_SLOTS;
     private readonly UNCHECK_AVATAR_PROPERTY;
-    constructor(scene: Phaser.Scene, id?: number);
+    constructor(scene: Phaser.Scene, pathObj: IResPath, id?: number);
     set displayInfo(val: IDragonbonesModel | undefined);
     get displayInfo(): IDragonbonesModel | undefined;
     get spriteWidth(): number;
@@ -117,6 +118,7 @@ export declare class BaseDragonbonesDisplay extends BaseDisplay {
     get resourceName(): string;
     protected buildDragbones(): Promise<any>;
     protected get localResourceRoot(): string;
+    protected get osdResourceRoot(): string;
     protected partNameToLoadUrl(partName: string): string;
     protected partNameToLoadKey(partName: string): string;
     protected partNameToDBFrameName(partName: string): string;

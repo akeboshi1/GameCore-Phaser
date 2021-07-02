@@ -19,7 +19,7 @@ export class GuideEffect extends Phaser.GameObjects.Container {
     private mCachePos: IPos;
     private mHandDisplay: HandDisplay;
     private mCacheText: string;
-    constructor(scene: Phaser.Scene, private tmpScale = 1) {
+    constructor(scene: Phaser.Scene, private tmpScale = 1, private url: Url) {
         super(scene);
         this.mScale *= this.tmpScale;
         this.preload();
@@ -36,7 +36,7 @@ export class GuideEffect extends Phaser.GameObjects.Container {
                     index++;
                     if (resource.type) {
                         if (this.scene.load[resource.type]) {
-                            this.scene.load[resource.type](resource.key, Url.getRes(resource.url), Url.getRes(resource.data));
+                            this.scene.load[resource.type](resource.key, this.url.getRes(resource.url), this.url.getRes(resource.data));
                         }
                     }
                 }

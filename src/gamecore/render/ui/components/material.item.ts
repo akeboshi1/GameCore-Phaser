@@ -1,9 +1,10 @@
+import { Render } from "../../render";
 import { PropItem } from "./prop.item";
 export class MaterialItem extends PropItem {
     private mselect: boolean = false;
     private selectframe: string;
-    constructor(scene: Phaser.Scene, key: string, bgframe: string, selectframe: string, dpr: number, style?: any) {
-        super(scene, key, bgframe, dpr, style);
+    constructor(scene: Phaser.Scene, render: Render, key: string, bgframe: string, selectframe: string, dpr: number, style?: any) {
+        super(scene,render, key, bgframe, dpr, style);
         this.selectframe = selectframe;
     }
     public setItemData(data: any, needvalue: boolean = true) {

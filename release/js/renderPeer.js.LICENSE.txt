@@ -172,6 +172,8 @@
 
 /*! exports provided: ElementEditorCanvas */
 
+/*! exports provided: ElementFramesDisplay */
+
 /*! exports provided: ElementStateType, ElementState */
 
 /*! exports provided: ElementStorage */
@@ -210,9 +212,9 @@
 
 /*! exports provided: GuideManager */
 
-/*! exports provided: HTTP_REGEX, Url, ResUtils, BlackButton, BlueButton, WhiteButton, CloseButton, Background, Border, TransparentButton */
+/*! exports provided: HTTP_REGEX, Url */
 
-/*! exports provided: HTTP_REGEX, Url, ResUtils, BlackButton, BlueButton, WhiteButton, CloseButton, Background, Border, TransparentButton, Tool, load, loadArr, Algorithm, CopyProtoType, StringUtils, ObjectAssign, UiUtils, isMobile, HttpLoadManager, Helpers, NumberUtils, BlockIndex */
+/*! exports provided: HTTP_REGEX, Url, Tool, load, loadArr, Algorithm, CopyProtoType, StringUtils, ObjectAssign, UiUtils, isMobile, HttpLoadManager, Helpers, NumberUtils, BlockIndex */
 
 /*! exports provided: Handler */
 
@@ -241,8 +243,6 @@
 /*! exports provided: ItemSlot */
 
 /*! exports provided: JoystickManager */
-
-/*! exports provided: LOCAL_HOME_PATH, ElementFramesDisplay */
 
 /*! exports provided: LOCAL_HOME_PATH, default */
 
@@ -574,6 +574,10 @@
 
 /*!***********************************!*\
   !*** ./src/editor/utils/index.ts ***!
+  \***********************************/
+
+/*!***********************************!*\
+  !*** ./src/structure/IResPath.ts ***!
   \***********************************/
 
 /*!***********************************!*\

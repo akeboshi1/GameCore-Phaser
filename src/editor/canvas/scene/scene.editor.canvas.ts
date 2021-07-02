@@ -51,8 +51,9 @@ export class SceneEditorCanvas extends EditorCanvas implements IRender {
     private mScene: Phaser.Scene;
     constructor(config: IEditorCanvasConfig) {
         super(config);
-        Url.OSD_PATH = config.osd || "https://osd-alpha.tooqing.com/";
         this.mElements = new Map();
+        this.mConfig = config;
+        this.mConfig.osd = config.osd || "https://osd-alpha.tooqing.com/";
         this.mFactory = new EditorFactory(this);
         this.mSelecedElement = new SelectedElementManager(this);
         this.mStamp = new MouseFollow(this);
@@ -66,8 +67,16 @@ export class SceneEditorCanvas extends EditorCanvas implements IRender {
         this.mWallManager = new EditorWallManager(this);
         this.mSkyboxManager = new EditorSkyboxManager(this);
         this.mSceneManager = new EditorSceneManger(this);
-        this.mElementStorage = new ElementStorage();
+        this.mElementStorage = new ElementStorage({ resPath: config.LOCAL_HOME_PATH, osdPath: config.osd });
         this.mGame.scene.add(SceneEditor.name, SceneEditor, true, this);
+    }
+
+    get url(): Url {
+        return null;
+    }
+
+    get config(): IEditorCanvasConfig {
+        return this.mConfig;
     }
 
     public update(time?: number, delta?: number) {
@@ -1042,9 +1051,9 @@ class MouseDisplayContainer extends Phaser.GameObjects.Container {
         for (let i = 0; i < size; i++) {
             for (let j = 0; j < size; j++) {
                 if (sprite.avatar) {
-                    frameDisplay = new EditorDragonbonesDisplay(this.sceneEditor.scene, sprite);
+                    frameDisplay = new EditorDragonbonesDisplay(this.sceneEditor.scene, this.sceneEditor.config, sprite);
                 } else {
-                    frameDisplay = new EditorFramesDisplay(this.sceneEditor, sprite);
+                    frameDisplay = new EditorFramesDisplay(this.sceneEditor, this.sceneEditor.config, sprite);
                 }
                 frameDisplay.setAlpha(0.8);
                 // frameDisplay.once("initialized", this.onInitializedHandler, this);

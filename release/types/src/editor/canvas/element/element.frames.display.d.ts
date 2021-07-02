@@ -3,9 +3,9 @@ import { ResourcesChangeListener } from "./element.editor.resource.manager";
 import ElementEditorGrids from "./element.editor.grids";
 import { BaseFramesDisplay } from "baseRender";
 import { AnimationDataNode } from "game-capsule";
-export declare const LOCAL_HOME_PATH: string;
+import { IEditorCanvasConfig } from "../editor.canvas";
 export declare class ElementFramesDisplay extends BaseFramesDisplay implements ResourcesChangeListener {
-    private mWebHomePath;
+    private mConfig;
     private readonly MOUNT_ANIMATION_TIME_SCALE;
     private mGrids;
     private mEmitter;
@@ -14,7 +14,7 @@ export declare class ElementFramesDisplay extends BaseFramesDisplay implements R
     private mCurFrameIdx;
     private mPlaying;
     private mCurMountAnimation;
-    constructor(scene: Phaser.Scene, node: any, grids: ElementEditorGrids, emitter: Phaser.Events.EventEmitter, mWebHomePath: string);
+    constructor(scene: Phaser.Scene, node: any, grids: ElementEditorGrids, emitter: Phaser.Events.EventEmitter, mConfig: IEditorCanvasConfig);
     setAnimationData(data: AnimationDataNode): void;
     onResourcesLoaded(): void;
     onResourcesCleared(): void;

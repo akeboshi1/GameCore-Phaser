@@ -4,9 +4,9 @@
 
 /*! exports provided: CopyProtoType */
 
-/*! exports provided: HTTP_REGEX, Url, ResUtils, BlackButton, BlueButton, WhiteButton, CloseButton, Background, Border, TransparentButton */
+/*! exports provided: HTTP_REGEX, Url */
 
-/*! exports provided: HTTP_REGEX, Url, ResUtils, BlackButton, BlueButton, WhiteButton, CloseButton, Background, Border, TransparentButton, Tool, load, loadArr, Algorithm, CopyProtoType, StringUtils, ObjectAssign, UiUtils, isMobile, HttpLoadManager, Helpers, NumberUtils, BlockIndex */
+/*! exports provided: HTTP_REGEX, Url, Tool, load, loadArr, Algorithm, CopyProtoType, StringUtils, ObjectAssign, UiUtils, isMobile, HttpLoadManager, Helpers, NumberUtils, BlockIndex */
 
 /*! exports provided: Helpers */
 

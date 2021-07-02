@@ -13,7 +13,7 @@ export class Bubble extends Phaser.GameObjects.Container {
     private mRemoveDelay: any;
     private mScale: number;
 
-    constructor(scene: Phaser.Scene, scale: number) {
+    constructor(scene: Phaser.Scene, scale: number, private url: Url) {
         super(scene);
         this.mScale = scale;
         // this.x = 40 * scale;
@@ -39,7 +39,8 @@ export class Bubble extends Phaser.GameObjects.Container {
         this.y = this.mMinHeight;
 
         this.mBubbleBg = new DynamicNinepatch(this.scene, this);
-        const res = Url.getOsdRes(bubble.bubbleResource || "platformitem/thumbnail/bubble_01.png");
+        const path_back = bubble.bubbleResource || "platformitem/thumbnail/bubble_01.png";
+        const res = this.url.getOsdRes(path_back);
         this.mBubbleBg.load(res, {
             width: this.mMinWidth / this.mScale,
             height: this.mMinHeight / this.mScale,

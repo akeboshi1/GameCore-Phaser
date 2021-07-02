@@ -549,6 +549,7 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
     }
 
     public showMediator(name: string, isShow: boolean, param?: any) {
+        if (!this.mUIManager) return;
         if (isShow) {
             this.mUIManager.showMed(name, param);
         } else {
@@ -557,6 +558,7 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
     }
 
     public hideMediator(name) {
+        if (!this.mUIManager) return;
         this.mUIManager.hideMed(name);
     }
 
@@ -596,11 +598,9 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
         this.mUser = new User();
     }
 
-    protected createManager() {
+    protected async createManager() {
         if (!this.mRoomManager) this.mRoomManager = new RoomManager(this);
         if (!this.mGuideWorkerManager) this.mGuideWorkerManager = new GuideWorkerManager(this);
-        // this.mUiManager = new UiManager(this);
-        if (!this.mElementStorage) this.mElementStorage = new ElementStorage();
         if (!this.mUIManager) this.mUIManager = new UIManager(this);
         if (!this.mHttpService) this.mHttpService = new HttpService(this);
         if (!this.mSoundManager) this.mSoundManager = new SoundWorkerManager(this);
@@ -617,6 +617,10 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
         this.user.addPackListener();
         this.mSoundManager.addPackListener();
         // this.mPlayerDataManager.addPackListener();
+        // this.mUiManager = new UiManager(this);
+        const resPath = await this.renderPeer.getResPath();
+        const osdPath = await this.renderPeer.getOsdPath();
+        this.mElementStorage = new ElementStorage({ resPath, osdPath });
     }
     protected onClearGame() {
 

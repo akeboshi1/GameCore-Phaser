@@ -1,5 +1,6 @@
 /// <reference types="tooqingphaser" />
 import { IPos } from "structure";
+import { Url } from "utils";
 export interface IGuideRes {
     key: string;
     url: string;
@@ -8,6 +9,7 @@ export interface IGuideRes {
 }
 export declare class GuideEffect extends Phaser.GameObjects.Container {
     private tmpScale;
+    private url;
     protected mInitialized: boolean;
     private mGuideEffect;
     private mMask;
@@ -18,7 +20,7 @@ export declare class GuideEffect extends Phaser.GameObjects.Container {
     private mCachePos;
     private mHandDisplay;
     private mCacheText;
-    constructor(scene: Phaser.Scene, tmpScale?: number);
+    constructor(scene: Phaser.Scene, tmpScale: number, url: Url);
     preload(): void;
     createGuideEffect(pos: IPos, text?: string): void;
     setGuideText(text: string): void;

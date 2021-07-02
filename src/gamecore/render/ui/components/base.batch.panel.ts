@@ -1,6 +1,6 @@
 import { Panel } from "apowophaserui";
 import { MainUIScene } from "../../scenes/main.ui.scene";
-import { UiUtils, Url } from "utils";
+import { UiUtils } from "utils";
 import { Logger } from "structure";
 import { Render } from "../../render";
 import { Export } from "webworker-rpc";
@@ -137,8 +137,9 @@ export class BaseBatchPanel extends Panel {
         const resType = resource.type;
         if (resType) {
             if (this.scene.load[resType]) {
-                this.scene.load[resource.type](key, resType !== "video" ? Url.getUIRes(resource.dpr, resource.texture) : Url.getNormalUIRes(resource.texture),
-                    resource.data ? (resType !== "video" ? Url.getUIRes(resource.dpr, resource.data) : Url.getNormalUIRes(resource.data)) : undefined);
+                this.scene.load[resource.type](key,
+                    resType !== "video" ? this.render.url.getUIRes(resource.dpr, resource.texture) : this.render.url.getNormalUIRes(resource.texture),
+                    resource.data ? (resType !== "video" ? this.render.url.getUIRes(resource.dpr, resource.data) : this.render.url.getNormalUIRes(resource.data)) : undefined);
             }
         }
         super.addResources(key, resource);

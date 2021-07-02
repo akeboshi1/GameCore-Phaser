@@ -1,11 +1,12 @@
 /// <reference types="tooqingphaser" />
 import { BaseDisplay } from "./base.display";
-import { DisplayField, IFramesModel, RunningAnimation } from "structure";
+import { DisplayField, IFramesModel, RunningAnimation, IResPath } from "structure";
 import { BaseDragonbonesDisplay } from "./base.dragonbones.display";
 /**
  * 序列帧显示对象
  */
 export declare class BaseFramesDisplay extends BaseDisplay {
+    private pathObj;
     protected mFadeTween: Phaser.Tweens.Tween;
     protected mDisplayDatas: Map<DisplayField, IFramesModel>;
     protected mScaleTween: Phaser.Tweens.Tween;
@@ -18,7 +19,7 @@ export declare class BaseFramesDisplay extends BaseDisplay {
     protected mPreAnimation: RunningAnimation;
     protected mNodeType: number;
     private mField;
-    constructor(scene: Phaser.Scene, id?: number, nodeType?: number);
+    constructor(scene: Phaser.Scene, pathObj: IResPath, id?: number, nodeType?: number);
     load(displayInfo: IFramesModel, field?: DisplayField): Promise<any>;
     play(animation: RunningAnimation, field?: DisplayField): void;
     playEffect(): void;

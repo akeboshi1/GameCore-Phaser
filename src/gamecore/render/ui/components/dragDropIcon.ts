@@ -1,7 +1,7 @@
 import { IDragable } from "./idragable";
-import { Url } from "utils";
 import { IDropable } from "./idropable";
 import { DynamicImage } from "baseRender";
+import { Render } from "../../render";
 
 export class DragDropIcon extends Phaser.GameObjects.Container implements IDragable, IDropable {
     protected mDropType: number;
@@ -9,7 +9,7 @@ export class DragDropIcon extends Phaser.GameObjects.Container implements IDraga
     private mIcon: DynamicImage;
     private mUrl: string;
     private mCallBack: Function;
-    constructor(private mScene: Phaser.Scene, x: number, y: number, texture?: string) {
+    constructor(private mScene: Phaser.Scene, private render: Render, x: number, y: number, texture?: string) {
         super(mScene, x, y);
         this.mIcon = new DynamicImage(this.mScene, 0, 0); // this.mScene.make.image(undefined, false);
         this.add(this.mIcon);
@@ -18,7 +18,7 @@ export class DragDropIcon extends Phaser.GameObjects.Container implements IDraga
     public load(value: string, thisArg?: any, onLoadComplete?: Function) {
         this.mUrl = value;
         const key: string = this.resKey;
-        this.mIcon.load(Url.getOsdRes(this.mUrl), () => {
+        this.mIcon.load(this.render.url.getOsdRes(this.mUrl), () => {
             if (this.mCallBack) this.mCallBack();
         });
         // if (!this.mScene.cache.obj.has(key)) {
@@ -64,7 +64,7 @@ export class DragDropIcon extends Phaser.GameObjects.Container implements IDraga
 
     public get resKey(): string {
         if (this.mUrl === undefined) return "";
-        const key: string = Url.getOsdRes((this.mUrl)); // Load.Image.getKey(this.mUrl);
+        const key: string = this.render.url.getOsdRes((this.mUrl)); // Load.Image.getKey(this.mUrl);
         return key;
     }
 

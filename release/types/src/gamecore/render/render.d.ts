@@ -1,5 +1,6 @@
 /// <reference types="tooqingphaser" />
 import { RPCPeer } from "webworker-rpc";
+import { Url } from "utils";
 import { PBpacket } from "net-socket-packet";
 import { op_client } from "pixelpai_proto";
 import { Account } from "./account";
@@ -34,6 +35,7 @@ export declare class Render extends RPCPeer implements GameMain, IRender {
     protected mMainPeer: any;
     protected readonly DEFAULT_WIDTH = 360;
     protected readonly DEFAULT_HEIGHT = 640;
+    protected resUrl: Url;
     protected mGuideManager: GuideManager;
     protected mSceneManager: BaseSceneManager;
     protected mCameraManager: CamerasRenderManager;
@@ -98,6 +100,7 @@ export declare class Render extends RPCPeer implements GameMain, IRender {
     get localStorageManager(): LocalStorageManager;
     get editorCanvasManager(): EditorCanvasManager;
     get game(): Phaser.Game;
+    get url(): Url;
     getSize(): Size | undefined;
     createGame(): void;
     createManager(): void;
@@ -114,6 +117,14 @@ export declare class Render extends RPCPeer implements GameMain, IRender {
     visibilitychange(state: string): void;
     showErrorMsg(msg: string): void;
     hidden(): void;
+    setResourecRoot(root: string): void;
+    getUIPath(dpr: number, res: string): Promise<unknown>;
+    getResPath(): Promise<unknown>;
+    getOsdPath(): Promise<unknown>;
+    getResourceRoot(url: string): Promise<unknown>;
+    getResUIPath(): Promise<unknown>;
+    getNormalUIPath(res: string): Promise<unknown>;
+    getGameConfig(path: string): Promise<unknown>;
     startFullscreen(): void;
     stopFullscreen(): void;
     setGameConfig(config: any): void;

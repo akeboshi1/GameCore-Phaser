@@ -1,7 +1,5 @@
 import { BasicScene } from "baseRender";
 import { Size, Logger, SceneName } from "structure";
-import { Url } from "utils";
-
 export class LoginAccountScene extends BasicScene {
     private mWorld: any;
     private bg: Phaser.GameObjects.Sprite;
@@ -17,9 +15,9 @@ export class LoginAccountScene extends BasicScene {
         if (this.mWorld) {
             dpr = this.mWorld.uiRatio || 2;
         }
-        this.load.image("avatar_placeholder", Url.getRes("dragonbones/avatar.png"));
-        this.load.atlas("curtain", Url.getUIRes(dpr, "loading/curtain.png"), Url.getUIRes(dpr, "loading/curtain.json"));
-        this.load.atlas("loading", Url.getRes("ui/loading/loading.png"), Url.getRes("ui/loading/loading.json"));
+        this.load.image("avatar_placeholder", this.render.url.getRes("dragonbones/avatar.png"));
+        this.load.atlas("curtain", this.render.url.getUIRes(dpr, "loading/curtain.png"), this.render.url.getUIRes(dpr, "loading/curtain.json"));
+        this.load.atlas("loading", this.render.url.getRes("ui/loading/loading.png"), this.render.url.getRes("ui/loading/loading.json"));
         // this.load.atlas("grass", Url.getUIRes(dpr, "loading/grass.png"), Url.getUIRes(dpr, "loading/grass.json"));
         this.load.script("webfont", "./resources/scripts/webfont/1.6.26/webfont.js");
         // this.load.spritesheet("rabbit00.png", "./resources/rabbit00.png", { frameWidth: 150, frameHeight: 150 });
