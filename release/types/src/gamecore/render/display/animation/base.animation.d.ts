@@ -11,6 +11,7 @@ export declare class BaseAnimation extends Phaser.GameObjects.Container implemen
     constructor(scene: Phaser.Scene);
     load(resName: string, textureUrl: string, jsonUrl?: string): void;
     play(aniName?: string): void;
+    clear(): void;
     destroy(): void;
     onLoadComplete(loader?: any, totalComplete?: number, totalFailed?: number): void;
 }

@@ -12,7 +12,7 @@ export class BaseAnimation extends Phaser.GameObjects.Container implements IAnim
         super(scene);
     }
     public load(resName: string, textureUrl: string, jsonUrl?: string) {
-        this.destroy();
+        this.clear();
         this.resName = resName ? resName : textureUrl;
         this.curAniName = resName;
         this.textureUrl = textureUrl;
@@ -22,13 +22,18 @@ export class BaseAnimation extends Phaser.GameObjects.Container implements IAnim
         if (aniName) this.curAniName = aniName;
         this.isPlaying = true;
     }
-    public destroy() {
+
+    public clear() {
         if (this.animUrlData) this.animUrlData.dispose();
         this.animUrlData = undefined;
         this.curAniName = undefined;
         this.isPlaying = false;
         this.loaded = false;
         this.loop = false;
+    }
+
+    public destroy() {
+        this.clear();
         super.destroy();
     }
     public onLoadComplete(loader?: any, totalComplete?: number, totalFailed?: number) {
