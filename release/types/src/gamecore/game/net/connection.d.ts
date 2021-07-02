@@ -40,6 +40,7 @@ export declare class Connection implements ConnectionService {
     get socket(): SocketConnection;
     startConnect(addr: ServerAddress, keepalive?: boolean): void;
     closeConnect(): void;
+    closeBack(): void;
     setClock(clock: Clock): void;
     addPacketListener(listener: PacketHandler): void;
     send(packet: PBpacket): void;

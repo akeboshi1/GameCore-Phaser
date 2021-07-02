@@ -1,7 +1,6 @@
 import { Render } from "../../render";
 import { ChatCommandInterface, IPosition45Obj, LogicPos, Position45 } from "structure";
-import { RoomScene } from "../../scenes/room.scene";
-
+import { BasicScene } from "baseRender";
 export class GridsDebugger implements ChatCommandInterface {
     public isDebug: boolean = false;
 
@@ -30,7 +29,7 @@ export class GridsDebugger implements ChatCommandInterface {
     public show() {
         if (!this.mRoomSize) return;
         const scene = this.render.sceneManager.getMainScene();
-        if (!scene || !(scene instanceof RoomScene)) {
+        if (!scene || !(scene instanceof BasicScene)) {
             return;
         }
         if (this.mGraphic) this.mGraphic.destroy();
