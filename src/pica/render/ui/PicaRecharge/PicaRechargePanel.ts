@@ -196,12 +196,12 @@ export class PicaRechargePanel extends PicaBasePanel {
         return gamescroll;
     }
 
-    private buy(productId, productName, price: number) {
+    private buy(productId, price: number) {
         if (this.render.isCordove()) {
             if ((window as any).IAP) {
                 (window as any).IAP.buy(productId, () => {
                     const noticedata = {
-                        text: [{ text: `购买${productName}成功，等待发货！`, node: undefined }]
+                        text: [{ text: `购买成功，等待发货！`, node: undefined }]
                     };
                     this.render.mainPeer.showMediator(ModuleName.PICANOTICE_NAME, true, noticedata);
                 });
@@ -233,7 +233,7 @@ export class PicaRechargePanel extends PicaBasePanel {
         if (tag === "pointer") {
             PicaItemTipsPanel.Inst.showTips(obj, data);
         } else if (tag === "buy") {
-            this.buy(data.id, data.nameId, data.price);
+            this.buy(data.id, data.price);
         }
     }
 }
