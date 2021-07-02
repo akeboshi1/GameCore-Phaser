@@ -117,6 +117,7 @@ export declare class Render extends RPCPeer implements GameMain, IRender {
     visibilitychange(state: string): void;
     showErrorMsg(msg: string): void;
     hidden(): void;
+    getSound(key: string): Promise<unknown>;
     setResourecRoot(root: string): void;
     getUIPath(dpr: number, res: string): Promise<unknown>;
     getResPath(): Promise<unknown>;
