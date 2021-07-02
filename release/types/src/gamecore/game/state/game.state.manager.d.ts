@@ -9,6 +9,7 @@ export declare class GameStateManager {
     get curState(): BaseState;
     get state(): string;
     set state(key: string);
+    startState(state: string, data?: any): void;
     refreshStateTime(): void;
     startRun(data?: any): void;
     update(data?: any): void;

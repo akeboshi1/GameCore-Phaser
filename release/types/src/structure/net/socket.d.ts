@@ -15,13 +15,13 @@ export declare class SocketConnection {
     protected mServerAddr: ServerAddress;
     protected mConnectListener?: IConnectListener;
     protected isAuto: boolean;
-    private isConnect;
-    private closeConnectResolver;
+    private mIsConnect;
+    private mCloseBack;
     constructor($listener: IConnectListener);
-    get connectState(): boolean;
     set state(val: boolean);
+    get isConnect(): boolean;
     startConnect(addr: ServerAddress): void;
-    stopConnect(): Promise<any>;
+    stopConnect(closeBack?: any): void;
     send(data: any): void;
     destroy(): void;
     protected onConnected(): void;
