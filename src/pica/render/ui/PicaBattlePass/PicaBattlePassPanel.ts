@@ -324,7 +324,7 @@ export class PicaBattlePassPanel extends PicaBasePanel {
         const pointer = this.scene.input.activePointer;
         gameobject.checkExtendRect(pointer);
         this.tempBattleItem = gameobject;
-        this.gamescroll.Sort();
+        this.gamescroll.Sort(true);
     }
     private onReceiveRewardHandler(tag: string, data: IBattlePassLevel) {
         if (tag === "nowunlock") {
@@ -495,6 +495,7 @@ class BattlePassItem extends Phaser.GameObjects.Container {
             if (passData.level === state.battlePassLevel + 1) {
                 canNowUnlock = true;
             }
+            canReceive = false;
         }
 
         return { elementary, deluxe, canReceive, isCurrentLevel, canNowUnlock };
