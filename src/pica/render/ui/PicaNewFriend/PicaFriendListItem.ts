@@ -4,7 +4,7 @@ import { UIAtlasName } from "picaRes";
 import { FriendChannel, FriendRelationEnum } from "structure";
 import { Font, Handler, i18n, NumberUtils, UIHelper, Url } from "utils";
 import { ImageBBCodeValue } from "..";
-import { ImageValue } from "../Components";
+import { ImageValue, PicaCommonSearchInput } from "../Components";
 import { UITools } from "../uitool";
 export class PicaFriendBaseListItem extends Phaser.GameObjects.Container {
     /**
@@ -176,7 +176,7 @@ export class PicaFriendSearchItem extends PicaFriendBaseListItem {
     protected bg: Phaser.GameObjects.Image;
     protected checkBox: CheckBox;
     protected contentTex: Phaser.GameObjects.Text;
-    protected inputLabel: PicaFriendSearchInput;
+    protected inputLabel: PicaCommonSearchInput;
     protected searchBtn: Button;
     protected addBtn: Button;
     protected inputVisible: boolean;
@@ -217,7 +217,7 @@ export class PicaFriendSearchItem extends PicaFriendBaseListItem {
         this.checkBox.setInteractiveSize(20 * this.dpr, 20 * this.dpr);
         this.checkBox.on(ClickEvent.Tap, this.onCheckBoxHandler, this);
         this.contentTex = this.scene.make.text({ text: i18n.t("friendlist.olinetitle"), style: UIHelper.whiteStyle(this.dpr) }).setOrigin(0, 0.5);
-        this.inputLabel = new PicaFriendSearchInput(this.scene, 146 * this.dpr, 26 * this.dpr, UIAtlasName.friend_new, "friend_add_search_bg", this.dpr, {
+        this.inputLabel = new PicaCommonSearchInput(this.scene, 146 * this.dpr, 26 * this.dpr, UIAtlasName.friend_new, "friend_add_search_bg", this.dpr, {
             type: "text",
             placeholder: i18n.t("friendlist.friendplaceholder"),
             color: "#ffffff",
@@ -270,51 +270,6 @@ export class PicaFriendSearchItem extends PicaFriendBaseListItem {
     }
 }
 
-export class PicaFriendSearchInput extends Phaser.GameObjects.Container {
-    protected background: Phaser.GameObjects.Image;
-    protected inputText: InputLabel;
-    protected dpr: number;
-    protected blur: boolean = false;
-    constructor(scene: Phaser.Scene, width: number, height: number, key: string, bg: string, dpr: number, config: any) {
-        super(scene);
-        this.dpr = dpr;
-        this.setSize(width, height);
-        this.background = this.scene.make.image({ key, frame: bg });
-        this.inputText = new InputLabel(this.scene, config).setOrigin(0, 0.5);
-        this.inputText.x = -width * 0.5 + 5 * dpr;
-        this.inputText.on("textchange", this.onTextChangeHandler, this);
-        this.inputText.on("blur", this.onTextBlurHandler, this);
-        this.inputText.on("focus", this.onTextFocusHandler, this);
-        this.add([this.background, this.inputText]);
-    }
-    public hide() {
-        this.visible = false;
-    }
-
-    public show() {
-        this.visible = true;
-    }
-
-    public setText(text) {
-        this.inputText.setText(text);
-    }
-
-    private onTextChangeHandler(input, event) {
-        this.emit("textchange");
-    }
-
-    private onTextBlurHandler() {
-        this.emit("blur");
-    }
-
-    private onTextFocusHandler(e) {
-        this.emit("focus");
-    }
-
-    get text() {
-        return this.inputText.text;
-    }
-}
 export class PicaFriendCommonItem extends Phaser.GameObjects.Container {
     public itemData: any;
     public itemType: number;
@@ -389,7 +344,7 @@ export class PicaFriendFunctionSearchItem extends PicaFriendSearchItem {
 
     protected init() {
         this.bg = this.scene.make.image({ key: UIAtlasName.friend_new, frame: "friend_list_online_bg" });
-        this.inputLabel = new PicaFriendSearchInput(this.scene, 146 * this.dpr, 26 * this.dpr, UIAtlasName.friend_new, "friend_add_search_bg", this.dpr, {
+        this.inputLabel = new PicaCommonSearchInput(this.scene, 146 * this.dpr, 26 * this.dpr, UIAtlasName.friend_new, "friend_add_search_bg", this.dpr, {
             type: "text",
             placeholder: i18n.t("friendlist.friendplaceholder"),
             color: "#ffffff",

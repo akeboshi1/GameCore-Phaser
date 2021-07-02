@@ -99,4 +99,6 @@ export class ModuleName {
     public static PICAPRESTIGECONVERT_NAME: string = "PicaPrestigeConvert";
     public static PICABATTLEPASS_NAME: string = "PicaBattlePass";
     public static PICAPRESTIGE_NAME = "PicaPrestige";
+    public static PICANEWMANOR_NAME: string = "PicaNewManor";
+
 }

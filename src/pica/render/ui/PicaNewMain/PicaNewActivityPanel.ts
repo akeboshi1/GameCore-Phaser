@@ -3,6 +3,7 @@ import { Render } from "gamecoreRender";
 import { UIAtlasName } from "../../../res";
 import { Handler } from "utils";
 import { MainUIRedType } from "picaStructure";
+import { ModuleName } from "structure";
 export class PicaNewActivityPanel extends Phaser.GameObjects.Container {
     public arrowButton: Button;
     private dpr: number;
@@ -42,6 +43,14 @@ export class PicaNewActivityPanel extends Phaser.GameObjects.Container {
         this.interactiveButton = new Button(this.scene, UIAtlasName.iconcommon, "home_recharge", "home_recharge");
         this.interactiveButton.on(ClickEvent.Tap, this.onInteractiveHandler, this);
 
+        const tsetButton1 = new Button(this.scene, UIAtlasName.iconcommon, "home_recharge", "home_recharge");
+        tsetButton1.on(ClickEvent.Tap, this.onTestHandler, this);
+        tsetButton1.setData("tag", ModuleName.PICABATTLEPASS_NAME);
+
+        const tsetButton2 = new Button(this.scene, UIAtlasName.iconcommon, "home_recharge", "home_recharge");
+        tsetButton2.on(ClickEvent.Tap, this.onTestHandler, this);
+        tsetButton2.setData("tag", ModuleName.PICAPRESTIGE_NAME);
+
         this.emailButton = new Button(this.scene, UIAtlasName.iconcommon, "home_email", "home_email");
         this.emailButton.on(ClickEvent.Tap, this.onEmailHandler, this);
         this.redButtonMap.set(MainUIRedType.MAIL, this.emailButton);
@@ -55,7 +64,7 @@ export class PicaNewActivityPanel extends Phaser.GameObjects.Container {
         this.arrowButton = new Button(this.scene, UIAtlasName.uicommon, "home_more_2", "home_more_2");
         this.arrowButton.on(ClickEvent.Tap, this.onArrowHandler, this);
         this.listBtns = [this.activityButton, this.indentButton, this.rechargeButton, this.emailButton];
-        this.listBtns2 = [this.roamButton, this.shopButton, this.interactiveButton];
+        this.listBtns2 = [this.roamButton, this.shopButton, this.interactiveButton, tsetButton1, tsetButton2];
         this.listPosY = [this.activityButton.y, this.indentButton.y, this.rechargeButton.y, this.emailButton.y];
         this.add(this.listBtns);
         this.add(this.listBtns2);
@@ -146,6 +155,13 @@ export class PicaNewActivityPanel extends Phaser.GameObjects.Container {
     }
     private onShopHandler() {
         if (this.sendHandler) this.sendHandler.runWith(["shop"]);
+    }
+    private onButtonHandler(pointer, button: Button) {
+
+    }
+    private onTestHandler(pointer, button: Button) {
+        const tag = button.getData("tag");
+        if (this.sendHandler) this.sendHandler.runWith(["test", tag]);
     }
 
     private onArrowHandler() {

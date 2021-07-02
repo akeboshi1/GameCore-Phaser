@@ -3,6 +3,7 @@ import { ButtonEventDispatcher, Render } from "gamecoreRender";
 import { UIAtlasName } from "picaRes";
 import { AvatarSuitType, EventType } from "structure";
 import { i18n, UIHelper, Url } from "utils";
+import { BackTextButton } from "../Components";
 
 export class UITools {
     /**
@@ -61,18 +62,10 @@ export class UITools {
     }
 
     public static createBackButton(scene: Phaser.Scene, dpr: number, fun: Function, caller: any, title: string = "") {
-        const backButton = new ButtonEventDispatcher(scene, 0, 0);
+        const backButton = new BackTextButton(scene, 80 * dpr, 22 * dpr, dpr);
+        backButton.setText(title);
         backButton.on(ClickEvent.Tap, fun, caller);
-        const closeImg = scene.make.image({ key: UIAtlasName.uicommon, frame: "back_arrow" });
-        const titleTex = scene.make.text({ text: title, style: UIHelper.whiteStyle(dpr, 16) }).setOrigin(0, 0.5);
-        titleTex.setFontStyle("bold");
-        backButton.add([closeImg, titleTex]);
-        let width = closeImg.width + titleTex.width + 30 * dpr;
-        width = width < 80 * dpr ? 80 * dpr : width;
-        backButton.setSize(width, 22 * dpr);
         backButton.enable = true;
-        closeImg.x = -backButton.width * 0.5 + closeImg.width * 0.5 + 15 * dpr;
-        titleTex.x = closeImg.x + closeImg.width * 0.5 + 15 * dpr;
         return backButton;
     }
 

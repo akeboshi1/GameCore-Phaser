@@ -3,7 +3,7 @@ import { UiManager } from "gamecoreRender";
 import { ClickEvent } from "apowophaserui";
 import { ModuleName } from "structure";
 import { UIAtlasName } from "../../../res";
-import { Handler, i18n } from "utils";
+import { Handler, i18n, UIHelper } from "utils";
 import { PicaBasePanel } from "../pica.base.panel";
 import { PicaExploreListDetailPanel } from "./PicaExploreListDetailPanel";
 import { BackTextButton, EnergyProgressBar } from "../Components";
@@ -76,7 +76,7 @@ export class PicaExploreListPanel extends PicaBasePanel {
         this.bg = new CommonBackground(this.scene, 0, 0, w, h, UIAtlasName.explorelog, "explore_bg", 0xf6f0dc);
         this.topbg = this.scene.make.image({ key: "explore_bg_stripe_top" });
         this.midbg = this.scene.make.image({ key: "explore_bg_stripe_middle" });
-        this.mBackBtn = new BackTextButton(this.scene, this.dpr);
+        this.mBackBtn = this.mBackBtn = new BackTextButton(this.scene, 100 * this.dpr, 40 * this.dpr, this.dpr, UIHelper.whiteStyle(this.dpr, 20));
         this.mBackBtn.setText(i18n.t("explore.title"));
         this.energyProgress = new EnergyProgressBar(this.scene, this.dpr);
         const conHeight = h - topHeight - bottomHeight;

@@ -217,6 +217,8 @@ export class PicaNewMainPanel extends PicaBasePanel {
             this.render.renderEmitter(ModuleName.PICANEWMAIN_NAME + "_showpanel", ModuleName.PICAROAM_NAME);
         } else if (tag === "shop") {
             this.render.renderEmitter(ModuleName.PICANEWMAIN_NAME + "_showpanel", ModuleName.PICAMARKET_NAME);
+        } else if (tag === "test") {
+            this.render.renderEmitter(ModuleName.PICANEWMAIN_NAME + "_showpanel", data);
         }
     }
 

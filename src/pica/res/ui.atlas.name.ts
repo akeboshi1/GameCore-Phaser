@@ -43,6 +43,7 @@ export class UIAtlasName {
     public static market = "market";
     public static battlepass = "battlepass";
     public static prestige = "prestige";
+    public static manor_new = "manor_new";
     public static jsonUrl(name: string) {
         return name + ".json";
     }

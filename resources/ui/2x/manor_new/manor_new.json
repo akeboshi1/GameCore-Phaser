@@ -1,0 +1,377 @@
+{
+	"textures": [
+		{
+			"image": "manor_new",
+			"format": "RGBA8888",
+			"size": {
+				"w": 1962,
+				"h": 383
+			},
+			"scale": 1,
+			"frames": [
+				{
+					"filename": "manor_create_bg",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 720,
+						"h": 142
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 720,
+						"h": 142
+					},
+					"frame": {
+						"x": 1,
+						"y": 1,
+						"w": 720,
+						"h": 142
+					}
+				},
+				{
+					"filename": "manor_host_bg",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 666,
+						"h": 124
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 666,
+						"h": 124
+					},
+					"frame": {
+						"x": 1,
+						"y": 145,
+						"w": 666,
+						"h": 124
+					}
+				},
+				{
+					"filename": "manor_host_bg_1",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 666,
+						"h": 124
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 666,
+						"h": 124
+					},
+					"frame": {
+						"x": 723,
+						"y": 1,
+						"w": 666,
+						"h": 124
+					}
+				},
+				{
+					"filename": "manor_create_declaration_input",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 570,
+						"h": 192
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 570,
+						"h": 192
+					},
+					"frame": {
+						"x": 1391,
+						"y": 1,
+						"w": 570,
+						"h": 192
+					}
+				},
+				{
+					"filename": "manor_resident_bg",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 666,
+						"h": 124
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 666,
+						"h": 124
+					},
+					"frame": {
+						"x": 723,
+						"y": 127,
+						"w": 666,
+						"h": 124
+					}
+				},
+				{
+					"filename": "manor_create_name_input",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 570,
+						"h": 74
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 570,
+						"h": 74
+					},
+					"frame": {
+						"x": 1,
+						"y": 271,
+						"w": 570,
+						"h": 74
+					}
+				},
+				{
+					"filename": "manor_resident_bg_1",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 666,
+						"h": 124
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 666,
+						"h": 124
+					},
+					"frame": {
+						"x": 669,
+						"y": 253,
+						"w": 666,
+						"h": 124
+					}
+				},
+				{
+					"filename": "map_party_list_bg",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 545,
+						"h": 134
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 545,
+						"h": 134
+					},
+					"frame": {
+						"x": 1391,
+						"y": 195,
+						"w": 545,
+						"h": 134
+					}
+				},
+				{
+					"filename": "friend_add_search_bg",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 291,
+						"h": 51
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 291,
+						"h": 51
+					},
+					"frame": {
+						"x": 1337,
+						"y": 331,
+						"w": 291,
+						"h": 51
+					}
+				},
+				{
+					"filename": "manor_list_icon",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 62,
+						"h": 56
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 62,
+						"h": 56
+					},
+					"frame": {
+						"x": 573,
+						"y": 271,
+						"w": 62,
+						"h": 56
+					}
+				},
+				{
+					"filename": "manor_host_mail",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 60,
+						"h": 40
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 60,
+						"h": 40
+					},
+					"frame": {
+						"x": 1630,
+						"y": 331,
+						"w": 60,
+						"h": 40
+					}
+				},
+				{
+					"filename": "manor_resident_head_unknown",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 42,
+						"h": 58
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 42,
+						"h": 58
+					},
+					"frame": {
+						"x": 669,
+						"y": 145,
+						"w": 42,
+						"h": 58
+					}
+				},
+				{
+					"filename": "map_party_people",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 26,
+						"h": 41
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 26,
+						"h": 41
+					},
+					"frame": {
+						"x": 1337,
+						"y": 253,
+						"w": 26,
+						"h": 41
+					}
+				},
+				{
+					"filename": "manor_search_icon",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 25,
+						"h": 25
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 25,
+						"h": 25
+					},
+					"frame": {
+						"x": 1,
+						"y": 347,
+						"w": 25,
+						"h": 25
+					}
+				},
+				{
+					"filename": "manor_host_forward",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 22,
+						"h": 24
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 22,
+						"h": 24
+					},
+					"frame": {
+						"x": 1938,
+						"y": 195,
+						"w": 22,
+						"h": 24
+					}
+				},
+				{
+					"filename": "manor_host_kick",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 23,
+						"h": 23
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 23,
+						"h": 23
+					},
+					"frame": {
+						"x": 637,
+						"y": 271,
+						"w": 23,
+						"h": 23
+					}
+				},
+				{
+					"filename": "map_party_homeowners",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 20,
+						"h": 24
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 20,
+						"h": 24
+					},
+					"frame": {
+						"x": 1692,
+						"y": 331,
+						"w": 20,
+						"h": 24
+					}
+				}
+			]
+		}
+	],
+	"meta": {
+		"app": "https://www.codeandweb.com/texturepacker",
+		"version": "3.0",
+		"smartupdate": "$TexturePacker:SmartUpdate:97717bc96b8cbf3e047d9c973a95f29f:0fdd9966654a8aa309f6de2f0212ab63:83d9e0f9c0a48b087bebe14224820b89$"
+	}
+}
