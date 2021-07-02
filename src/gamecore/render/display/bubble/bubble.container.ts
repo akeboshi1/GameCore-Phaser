@@ -18,6 +18,7 @@ export class BubbleContainer extends Phaser.GameObjects.Container {
     }
 
     public addBubble(text: string, bubbleSetting: any) {// op_client.IChat_Setting
+        if (!bubbleSetting) bubbleSetting = { };
         const bubble = this.createBubble(bubbleSetting);
         if (!bubble) return;
         const len = this.mBubbles.length;
@@ -70,7 +71,7 @@ export class BubbleContainer extends Phaser.GameObjects.Container {
     }
 
     private createBubble(bubbleSetting: any): Bubble {// op_client.IChat_Setting
-        if (!bubbleSetting) return;
+        if (!bubbleSetting) bubbleSetting = { };
         const bubble = new Bubble(this.scene, this.mScale, this.url);
         this.mBubbles.push(bubble);
         const duration = bubbleSetting.duration ? bubbleSetting.duration : 5000;
