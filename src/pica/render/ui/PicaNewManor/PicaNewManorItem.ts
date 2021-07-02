@@ -5,13 +5,13 @@ import { Handler, i18n, NumberUtils, UIHelper } from "utils";
 import { ImageBBCodeValue } from "..";
 
 export class PicaNewManorListItem extends Phaser.GameObjects.Container {
-    private imagIcon: DynamicImage;
-    private ownerName: ImageBBCodeValue;
     public roomData: any;
     protected dpr: number;
     protected bg: Phaser.GameObjects.Image;
     protected roomName: BBCodeText;
     protected playerCount: ImageBBCodeValue;
+    private imagIcon: DynamicImage;
+    private ownerName: ImageBBCodeValue;
     protected send: Handler;
     constructor(scene: Phaser.Scene, dpr: number) {
         super(scene);

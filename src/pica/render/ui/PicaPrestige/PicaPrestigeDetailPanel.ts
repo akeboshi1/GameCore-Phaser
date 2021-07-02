@@ -255,6 +255,13 @@ class PrestigeValueTipsItem extends Phaser.GameObjects.Container {
         this.leftLabel.x = -width * 0.5 + 17 * dpr;
         this.contentText = new BBCodeText(scene, 0, 0, "", UIHelper.blackStyle(dpr, 12)).setOrigin(0, 0.5);
         this.contentText.x = this.leftLabel.x + 10 * dpr;
+        this.contentText.setInteractive()
+            .on("areadown", (key) => {
+                // Logger.getInstance().debug(key);
+            })
+            .on("areaup", (key) => {
+
+            });
         this.valueImg = new ImageBBCodeValue(scene, 10 * dpr, 30 * dpr, UIAtlasName.prestige, "prestige_list_currency_icon", dpr, UIHelper.colorStyle("#1B59B7", 12 * dpr));
         this.valueImg.setLayout(3);
         this.valueImg.x = width * 0.5 - this.valueImg.width;
@@ -265,12 +272,16 @@ class PrestigeValueTipsItem extends Phaser.GameObjects.Container {
         const node: Element = xmlEle.getElementsByTagName("player")[0];
         const tempName = node.getAttribute("name");
         const tempRoom = node.nextSibling.nodeValue;
-        const name = `[color=#1B59B7]${tempName}[/color]`;
+        const name = `[area=name][color=#1B59B7]${tempName}[/color][/area]`;
         const room = `[color=#1B59B7]${tempRoom}[/color]`;
         let content = i18n.t("prestige.gointips");
         content = content.replace("{name}", name);
         content = content.replace("{room}", room);
         this.contentText.text = content;
         this.valueImg.setText(`[b]+${10}[/b]`);
+    }
+
+    private onSendHandler() {
+
     }
 }

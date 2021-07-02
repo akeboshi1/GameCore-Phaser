@@ -569,7 +569,8 @@
     "ultimatetitle": "终极奖励",
     "ultimatetips": "等级达到{{name}}级时可以获得以下奖励",
     "unlocknexttips": "是否使用{{count}}个{{name}}立即解锁等级",
-    "remainingtime": "本次挑战赛剩余时间:{{name}}"
+    "remainingtime": "本次挑战赛剩余时间:{{name}}",
+    "energytips": "只要消耗体力就可以获得经验哦~"
   },
   "prestige": {
     "privileges": "声望特权",

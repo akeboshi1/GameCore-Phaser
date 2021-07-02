@@ -550,7 +550,8 @@
     "buyticket": "Tickets",
     "unlocknext": "Unlock Next",
     "ultimatetitle": "Ultimate Reward",
-    "remainingtime": "Remaining time:{{name}}"
+    "remainingtime": "Remaining time:{{name}}",
+    "energytips": "As long as the energy can gain experience oh ~"
   },
   "prestige": {
     "privileges": "Privileges",
