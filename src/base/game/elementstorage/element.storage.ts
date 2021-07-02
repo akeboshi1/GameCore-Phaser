@@ -51,6 +51,7 @@ export interface IDisplayRef {
     blockIndex?: number;
     layer?: number;
     displayModel?: FramesModel | DragonbonesModel;
+    mountSprites?: number[];
 }
 
 export class ElementStorage implements IElementStorage {
@@ -248,6 +249,10 @@ export class ElementStorage implements IElementStorage {
                     Logger.getInstance().error(`${ele.name}-${ele.id} location does not exist`);
                     continue;
                 }
+                let mountSprites = null;
+                if (ele.mountSprites && ele.mountSprites.ids.length > 0) {
+                    mountSprites = ele.mountSprites.ids;
+                }
                 const eleRef: IDisplayRef = {
                     id: obj.id,
                     pos,
@@ -256,6 +261,7 @@ export class ElementStorage implements IElementStorage {
                     name: obj.name,
                     displayModel,
                     layer: ele.layer,
+                    mountSprites
                 };
                 this.addDisplayRef(eleRef, op_def.NodeType.ElementNodeType);
             }
