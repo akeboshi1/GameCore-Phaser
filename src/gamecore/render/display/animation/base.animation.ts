@@ -29,6 +29,7 @@ export class BaseAnimation extends Phaser.GameObjects.Container implements IAnim
         this.isPlaying = false;
         this.loaded = false;
         this.loop = false;
+        super.destroy();
     }
     public onLoadComplete(loader?: any, totalComplete?: number, totalFailed?: number) {
 
