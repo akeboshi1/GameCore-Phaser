@@ -183,7 +183,7 @@ export class PicaNewHeadPanel extends Phaser.GameObjects.Container {
             this.roomSetBtn.visible = isself;
             this.roomPraiseBtn.visible = !isself;
             this.roomPraiseBtn.setCount(Praise);
-            this.roomPraiseBtn.setPraise(false);
+            this.roomPraiseBtn.setPraise(isPraise ? PraiseStatus.HAVED : PraiseStatus.NO);
             if (!isself) {
                 this.sceneTex.x = this.sceneNamebg.x - 15 * this.dpr;
             }
@@ -196,7 +196,7 @@ export class PicaNewHeadPanel extends Phaser.GameObjects.Container {
     }
     setCanLikeRoom(canlike: boolean) {
         if (!this.praise && canlike) {
-            this.roomPraiseBtn.setPraise(canlike);
+            this.roomPraiseBtn.setPraise(PraiseStatus.YES);
         }
     }
     public setHandler(send: Handler) {
@@ -340,15 +340,23 @@ class RoomPraiseButton extends ButtonEventDispatcher {
         }
     }
 
-    setPraise(praise: boolean) {
-        this.enable = praise;
-        if (praise) {
+    setPraise(status: PraiseStatus) {
+        this.enable = status === PraiseStatus.YES;
+        if (status === PraiseStatus.NO) {
+            this.bg.setFrame("prestige_like_bg");
+            this.praiseImg.setFrame("prestige_like_icon");
+        } if (status === PraiseStatus.YES) {
             this.bg.setFrame("home_praise_bg");
             this.praiseImg.setFrame("home_praise");
         } else {
-            this.bg.setFrame("prestige_like_bg");
-            this.praiseImg.setFrame("prestige_like_icon");
+            this.bg.setFrame("home_praise_bg");
+            this.praiseImg.setFrame("prestige_like_icon2");
         }
         // this.praiseImg.setFrame(praise ? "home_praise" : "home_praise_1");
     }
+}
+enum PraiseStatus {
+    NO,
+    YES,
+    HAVED
 }

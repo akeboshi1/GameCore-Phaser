@@ -6,7 +6,7 @@ import { UITools } from "../uitool";
 import { PicaItemTipsPanel } from "../SinglePanel/PicaItemTipsPanel";
 import { PicaRenderUiManager } from "../pica.Renderuimanager";
 import { ModuleName, TimerCountDown } from "structure";
-import { ButtonEventDispatcher, DynamicImage, ProgressMaskBar, ThreeSliceButton } from "gamecoreRender";
+import { ButtonEventDispatcher, DynamicImage, ItemInfoTips, ProgressMaskBar, ThreeSliceButton } from "gamecoreRender";
 import { Font, Handler, i18n, Tool, UIHelper, Url } from "utils";
 import { IBattlePass, IBattlePassLevel, IBattlePassState, ICountablePackageItem } from "picaStructure";
 import { PicaBattleUnlockPanel } from "./PicaBattleUnlockPanel";
@@ -39,6 +39,9 @@ export class PicaBattlePassPanel extends PicaBasePanel {
     private unlockPanel: PicaBattleUnlockPanel;
     private ultimatePanel: PicaUltimateRewardPanel;
     private lastLevel: IBattlePassLevel;
+    private tipsPanel: ItemInfoTips;
+    private tipsBtn: Button;
+    private tipsVisible: boolean = false;
     constructor(uiManager: PicaRenderUiManager) {
         super(uiManager);
         this.key = ModuleName.PICABATTLEPASS_NAME;
@@ -56,6 +59,8 @@ export class PicaBattlePassPanel extends PicaBasePanel {
         this.content.x = w * 0.5;
         this.content.y = h * 0.5;
         this.top.y = -h * 0.5 + this.top.height * 0.5;
+        this.tipsPanel.y = this.top.y + this.tipsPanel.height + 32 * this.dpr;
+        this.tipsPanel.setInvalidArea(Tool.getRectangle(this.tipsBtn, this.scene));
         this.bottom.y = h * 0.5 - this.bottom.height * 0.5 - 5 * this.dpr;
         this.setMiddleConSize(w, h);
         if (this.gamescroll) {
@@ -81,6 +86,22 @@ export class PicaBattlePassPanel extends PicaBasePanel {
         const titleTex = this.scene.make.text({ text: i18n.t("battlepass.title"), style: UIHelper.colorStyle("#ffffff", 20 * this.dpr) }).setOrigin(0.5);
         titleTex.setFontStyle("bold");
         titleTex.y = this.mBackButton.y;
+        this.tipsBtn = new Button(this.scene, UIAtlasName.uicommon, "prestige_help_icon");
+        this.tipsBtn.x = titleTex.x + titleTex.width * 0.5 + 13 * this.dpr;
+        this.tipsBtn.y = titleTex.y;
+        this.tipsBtn.on(ClickEvent.Tap, this.onTipsHandler, this);
+        this.tipsPanel = new ItemInfoTips(this.scene, 190 * this.dpr, 38 * this.dpr, UIAtlasName.uicommon, "tips_bg1", this.dpr, undefined, {
+            color: "#333333",
+            fontSize: 11 * this.dpr,
+            fontFamily: Font.DEFULT_FONT
+        });
+        this.tipsPanel.x = this.tipsBtn.x;
+        this.tipsPanel.setText(i18n.t("battlepass.energytips"));
+        this.tipsPanel.setVisible(false);
+        const tipsArr = this.scene.make.image({ key: UIAtlasName.uicommon, frame: "tips_arrow" });
+        tipsArr.rotation = Math.PI;
+        tipsArr.y = -this.tipsPanel.height - 5 * this.dpr;
+        this.tipsPanel.add(tipsArr);
         this.horProgress = new ProgressMaskBar(this.scene, UIAtlasName.battlepass, "battlepass_lv_schedule_bottom", "battlepass_lv_schedule_top", UIHelper.whiteStyle(this.dpr, 6));
         this.horProgress.y = titleTex.y + titleTex.height * 0.5 + 28 * this.dpr;
         this.horProgress.x = -10 * this.dpr;
@@ -99,8 +120,8 @@ export class PicaBattlePassPanel extends PicaBasePanel {
         this.finalItem.x = this.horProgress.x + this.horProgress.width * 0.5 + this.finalItem.width * 0.5 + 12 * this.dpr;
         this.finalItem.y = this.horProgress.y;
         this.finalItem.on(ClickEvent.Tap, this.onFinalBtnHandler, this);
-        this.top.add([this.mBackButton, titleTex, this.horProgress, this.levelButton, this.progressTex, this.battlePassEndTime, this.finalItem]);
-        this.content.add(this.top);
+        this.top.add([this.mBackButton, titleTex, this.tipsBtn, this.horProgress, this.levelButton, this.progressTex, this.battlePassEndTime, this.finalItem]);
+        this.content.add([this.top, this.tipsPanel]);
         this.createBottom(width, 50 * this.dpr);
         this.createMiddle(width, height);
         this.resize();
@@ -303,7 +324,7 @@ export class PicaBattlePassPanel extends PicaBasePanel {
         const pointer = this.scene.input.activePointer;
         gameobject.checkExtendRect(pointer);
         this.tempBattleItem = gameobject;
-        this.gamescroll.Sort();
+        this.gamescroll.Sort(true);
     }
     private onReceiveRewardHandler(tag: string, data: IBattlePassLevel) {
         if (tag === "nowunlock") {
@@ -328,6 +349,15 @@ export class PicaBattlePassPanel extends PicaBasePanel {
 
     private onUnlockBattleHandler(level) {
         this.render.renderEmitter(this.key + "_buylevel", level);
+    }
+    private onTipsHandler() {
+        if (this.tipsPanel) {
+            if (this.tipsVisible !== this.tipsPanel.visible) {
+                this.tipsVisible = this.tipsPanel.visible;
+            }
+            this.tipsVisible = !this.tipsVisible;
+            this.tipsPanel.setVisible(this.tipsVisible);
+        }
     }
 }
 
@@ -465,6 +495,7 @@ class BattlePassItem extends Phaser.GameObjects.Container {
             if (passData.level === state.battlePassLevel + 1) {
                 canNowUnlock = true;
             }
+            canReceive = false;
         }
 
         return { elementary, deluxe, canReceive, isCurrentLevel, canNowUnlock };

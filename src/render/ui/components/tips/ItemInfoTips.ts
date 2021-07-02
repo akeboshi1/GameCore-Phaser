@@ -7,11 +7,12 @@ export class ItemInfoTips extends Phaser.GameObjects.Container {
     private dpr: number;
     private key: string;
     private config: IPatchesConfig;
+    private style: any;
     private fullHide: boolean = true;
     private invalidArea: Phaser.Geom.Rectangle;
     private callback: Handler;
     private listenType: string;
-    constructor(scene: Phaser.Scene, width: number, height: number, key: string, bg: string, dpr: number, config?: IPatchesConfig) {
+    constructor(scene: Phaser.Scene, width: number, height: number, key: string, bg: string, dpr: number, config?: IPatchesConfig, style?: any) {
         super(scene);
         this.setSize(width, height);
         this.key = key;
@@ -22,6 +23,15 @@ export class ItemInfoTips extends Phaser.GameObjects.Container {
             right: 15 * this.dpr,
             bottom: 15 * this.dpr
         };
+        this.style = style || {
+            color: "#333333",
+            fontSize: 13 * this.dpr,
+            fontFamily: Font.DEFULT_FONT,
+        };
+        this.style["wrap"] = {
+            width: this.width - 15 * this.dpr,
+            mode: "string"
+        }
         this.listenType = "pointerdown";
         this.create(bg);
     }
@@ -108,15 +118,7 @@ export class ItemInfoTips extends Phaser.GameObjects.Container {
         const tipsbg = new NineSlicePatch(this.scene, 0, 0, tipsWidth, tipsHeight, this.key, bg, this.config);
         tipsbg.setPosition(0, -tipsHeight * 0.5);
         this.tipsbg = tipsbg;
-        const tipsText = new BBCodeText(this.scene, -this.width * 0.5 + 10 * this.dpr, -tipsHeight + 60 * this.dpr, "", {
-            color: "#333333",
-            fontSize: 13 * this.dpr,
-            fontFamily: Font.DEFULT_FONT,
-            wrap: {
-                width: this.width - 15 * this.dpr,
-                mode: "string"
-            }
-        }).setOrigin(0);
+        const tipsText = new BBCodeText(this.scene, -this.width * 0.5 + 10 * this.dpr, -tipsHeight + 60 * this.dpr, "", this.style).setOrigin(0);
         tipsText.setLineSpacing(2 * this.dpr);
         this.tipsText = tipsText;
         this.add([tipsbg, tipsText]);

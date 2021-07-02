@@ -43,16 +43,6 @@ export class Render extends BaseRender {
         }
     }
 
-    public setAccount(val: any) {
-        super.setAccount(val);
-        if (val && this.isCordove()) {
-            if ((<any>window).IAP) {
-                (<any>window).IAP.initialize(this.account.accountData.accessToken);
-            }
-
-        }
-    }
-
     /**
      * 是否是审核版本
      */

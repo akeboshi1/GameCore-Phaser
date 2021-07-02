@@ -10,4 +10,4 @@ export * from "./input.view";
 export * from "./items.consume.funpanel";
 export * from "./MoreButtonPanel";
 export * from "./background.text";
-export * from "./pica.common.search.input"
+export * from "./pica.common.search.input";
