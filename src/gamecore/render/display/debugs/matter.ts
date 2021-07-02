@@ -1,10 +1,10 @@
 import { Render } from "../../render";
-import { Logger } from "structure";
+import { Logger, SceneName } from "structure";
 import { BasicScene } from "baseRender";
 export class MatterBodies {
     private mGraphics: Phaser.GameObjects.Graphics;
     constructor(private render: Render) {
-        const scene = this.render.sceneManager.getSceneByName(BasicScene.name);
+        const scene = this.render.sceneManager.getSceneByName(SceneName.PLAY_SCENE);
         if (!scene) {
             Logger.getInstance().error("no matter scene");
             return;

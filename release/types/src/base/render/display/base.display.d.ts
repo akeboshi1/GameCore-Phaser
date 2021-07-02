@@ -62,7 +62,7 @@ export declare abstract class BaseDisplay extends Phaser.GameObjects.Container i
     destroyMount(): void;
     fadeIn(callback?: () => void): void;
     fadeOut(callback?: () => void): void;
-    getSprite(key: DisplayField): Phaser.GameObjects.Container | Phaser.GameObjects.Image | Phaser.GameObjects.Sprite;
+    getSprite(key: DisplayField): Phaser.GameObjects.Container | Phaser.GameObjects.Sprite | Phaser.GameObjects.Image;
     getScene(): Phaser.Scene;
     protected updateSort(): void;
     get runningAnimation(): RunningAnimation;
