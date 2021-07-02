@@ -39,10 +39,8 @@ export class FrameAnimation extends BaseAnimation {
         this.frameAnim.play(this.curAniName);
     }
     public destroy() {
-        super.destroy();
-        if (this.frameAnim) this.frameAnim.destroy();
-        this.frameAnim = null;
         this.complHandler = undefined;
+        super.destroy();
     }
 
     public onLoadComplete(loader?: any, totalComplete?: number, totalFailed?: number) {
