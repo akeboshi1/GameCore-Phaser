@@ -33,7 +33,6 @@ export class ToolTip extends Phaser.GameObjects.Container implements IToolTip {
         if (this.mText) this.mText.destroy(true);
         this.mWidth = 0;
         this.mHeight = 0;
-        this.removeAllListeners();
         this.removeAll();
         super.destroy();
     }
