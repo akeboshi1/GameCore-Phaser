@@ -12,6 +12,7 @@ export class PicaRoomNavigationPanel extends Phaser.GameObjects.Container {
     private inputLabel: PicaCommonSearchInput;
     private searchBtn: Button;
     private refreshBtn: ThreeSliceButton;
+    private topCon: Phaser.GameObjects.Container;
     private dpr: number;
     private zoom: number;
     private sendHandler: Handler;
@@ -28,9 +29,9 @@ export class PicaRoomNavigationPanel extends Phaser.GameObjects.Container {
         this.mBackButton.setText(i18n.t("manor.title"));
         this.mBackButton.x = -this.width * 0.5 + this.mBackButton.width * 0.5;
         this.mBackButton.y = -this.height * 0.5 + 40 * this.dpr;
-        this.inputLabel = new PicaCommonSearchInput(this.scene, 146 * this.dpr, 26 * this.dpr, UIAtlasName.friend_new, "friend_add_search_bg", this.dpr, {
+        this.inputLabel = new PicaCommonSearchInput(this.scene, 152 * this.dpr, 26 * this.dpr, UIAtlasName.friend_new, "friend_add_search_bg", this.dpr, {
             type: "text",
-            placeholder: i18n.t("friendlist.friendplaceholder"),
+            placeholder: i18n.t("manor.inputlabel"),
             color: "#ffffff",
             text: "",
             fontSize: 13 * this.dpr + "px",

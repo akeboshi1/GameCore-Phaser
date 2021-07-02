@@ -42,7 +42,7 @@ export class PicaBattlePassPanel extends PicaBasePanel {
     constructor(uiManager: PicaRenderUiManager) {
         super(uiManager);
         this.key = ModuleName.PICABATTLEPASS_NAME;
-        this.loadAtlas = [UIAtlasName.uicommon, UIAtlasName.battlepass];
+        this.loadAtlas = [UIAtlasName.uicommon, UIAtlasName.uicommon1, UIAtlasName.battlepass];
     }
     resize(width?: number, height?: number) {
         const w: number = this.scaleWidth;
