@@ -41,6 +41,7 @@ const commonConfig = {
         minimizer: [
             new TerserPlugin({
                 sourceMap: false,
+                // 设置为true速度最快，自动设置数据处理长度的通道处理
                 parallel: true,
                 terserOptions: {
                     ecma: undefined,
