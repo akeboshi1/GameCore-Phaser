@@ -34,6 +34,7 @@ export interface IDisplayRef {
     blockIndex?: number;
     layer?: number;
     displayModel?: FramesModel | DragonbonesModel;
+    mountSprites?: number[];
 }
 export declare class ElementStorage implements IElementStorage {
     private config;

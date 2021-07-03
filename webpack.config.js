@@ -8,7 +8,11 @@ const TSLintPlugin = require("tslint-webpack-plugin");
 const TerserPlugin = require("terser-webpack-plugin");
 const CircularDependencyPlugin = require("circular-dependency-plugin");
 const appVer = require("./version");
+// 导入速度分析插件
+const SpeedMeasurePlugin = require("speed-measure-webpack-plugin");
 
+// 实例化插件
+const smp = new SpeedMeasurePlugin();
 // const resourcesOut = { name: "[name]_[hash].[ext]", outputPath: "resources" };
 const commonConfig = {
     resolve: {
@@ -139,6 +143,6 @@ const gameConfig = Object.assign({}, commonConfig, {
     },
 });
 
-module.exports = [
+module.exports = smp.wrap(
     gameConfig
-];
+);
