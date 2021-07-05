@@ -5556,8 +5556,8 @@ toidentifier@1.0.0:
   integrity sha512-yaOH/Pk/VEhBWWTlhI+qXxDFXlejDGcQipMlyxda9nthulaxLZUNcUqFxokp0vcYnvteJln5FNQDRrxj3YcbVw==
 
 "tooqingphaser@git+ssh://git@code.apowo.com:opensource/phaser.git":
-  version "0.3.8"
-  resolved "git+ssh://git@code.apowo.com:opensource/phaser.git#55d2b2c10c18666e5555e62cc07d727de8e8a357"
+  version "0.3.9"
+  resolved "git+ssh://git@code.apowo.com:opensource/phaser.git#64062f4f4fff66576875f92f26403b098140d460"
   dependencies:
     eventemitter3 "^4.0.7"
     exports-loader "^1.1.1"
