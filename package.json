@@ -1,6 +1,6 @@
 {
   "name": "game-core",
-  "version": "1.0.632",
+  "version": "1.0.633",
   "exports": {
     ".": "./release/js/index.js",
     "./renderPeer": "./release/js/renderPeer.js",
