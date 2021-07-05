@@ -73,7 +73,7 @@ export class ElementTopDisplay extends TopDisplay {
                 }
             };
             this.scene.load.once(`filecomplete-json-${key}`, fn, this);
-            const path = this.render.url.getNormalUIRes(`config/base/state/${state}.json`);
+            const path = this.render.url.getRes(`config/base/state/${state}.json`);
             this.scene.load.json(key, path);
             this.scene.load.start();
         }

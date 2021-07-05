@@ -2,7 +2,6 @@ import { Game } from "tooqingphaser";
 import { Export, RPCPeer, webworker_rpc } from "webworker-rpc";
 import { UiUtils, Url } from "utils";
 import { PBpacket } from "net-socket-packet";
-import * as protos from "pixelpai_proto";
 import { op_client } from "pixelpai_proto";
 import { Account } from "./account";
 import { SceneManager } from "./scenes/scene.manager";
@@ -34,10 +33,6 @@ import { UiManager } from "./ui";
 import { GuideManager } from "./guide";
 import { MouseManager } from "./input/mouse.manager";
 import { SoundManager } from "./managers";
-
-for (const key in protos) {
-    PBpacket.addProtocol(protos[key]);
-}
 
 enum MoveStyle {
     DIRECTION_MOVE_STYLE = 1,
