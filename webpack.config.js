@@ -35,6 +35,8 @@ const commonConfig = {
         "game-capsule": "game-capsule",
         "custom_proto": "custom_proto",
         "net-socket-packet": "net-socket-packet",
+        "apowophaserui": "apowophaserui",
+        "tooqingphaser": "tooqingphaser"
     },
     optimization: {
         minimize: true,
