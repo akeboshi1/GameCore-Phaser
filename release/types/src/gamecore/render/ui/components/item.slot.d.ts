@@ -1,4 +1,3 @@
-/// <reference types="tooqingphaser" />
 import { op_gameconfig } from "pixelpai_proto";
 import { DragDropIcon } from "./dragDropIcon";
 import { IToolTip } from "./tips/itoolTip";
