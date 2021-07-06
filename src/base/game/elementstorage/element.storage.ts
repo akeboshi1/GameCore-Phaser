@@ -283,6 +283,7 @@ export class ElementStorage implements IElementStorage {
     }
 
     public add(obj: FramesModel | DragonbonesModel) {
+        if (!obj) return;
         this.mModels.set(obj.id, obj);
     }
 
