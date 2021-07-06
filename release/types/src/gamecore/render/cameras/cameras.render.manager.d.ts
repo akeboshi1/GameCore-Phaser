@@ -1,3 +1,4 @@
+/// <reference types="tooqingphaser" />
 import { BaseCamerasManager } from "baseRender";
 import { Render } from "../render";
 export declare class CamerasRenderManager extends BaseCamerasManager {

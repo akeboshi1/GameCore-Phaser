@@ -1,3 +1,4 @@
+/// <reference types="tooqingphaser" />
 import { ClickEvent } from "apowophaserui";
 import { ButtonEventDispatcher } from "./button.event.dispatch";
 export declare class ToggleColorButton extends ButtonEventDispatcher {
