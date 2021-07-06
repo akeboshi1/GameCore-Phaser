@@ -8,7 +8,7 @@ import { Tool } from "utils";
 import { IElement, IRoomService } from "../room";
 import { MoveControll } from "../collsion";
 // import * as _ from "lodash";
-const wokerfps: number = 45;
+const wokerfps: number = 30;
 const interval = wokerfps > 0 ? 1000 / wokerfps : 1000 / 30;
 export class User extends Player {
     public stopBoxMove: boolean = false;

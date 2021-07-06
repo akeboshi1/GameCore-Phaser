@@ -74,10 +74,7 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
     constructor(peer: MainPeer) {
         super();
         this.mainPeer = peer;
-        this.connect = new Connection(peer);
-        this.addPacketListener();
-        if (!this.mGameStateManager) this.mGameStateManager = new GameStateManager(this.peer);
-        this.update(new Date().getTime());
+        this.boot();
     }
 
     public setConfigPath(path: any) {
@@ -625,6 +622,14 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
     protected onClearGame() {
 
     }
+
+    protected boot() {
+        this.connect = new Connection(this.peer);
+        this.addPacketListener();
+        if (!this.mGameStateManager) this.mGameStateManager = new GameStateManager(this.peer);
+        this.update(new Date().getTime());
+    }
+
     protected onSelectCharacter() {
         const pkt = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_GATEWAY_CHARACTER_CREATED);
         this.mainPeer.send(pkt.Serialization());
