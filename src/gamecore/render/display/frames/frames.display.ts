@@ -20,6 +20,7 @@ export class FramesDisplay extends BaseFramesDisplay implements IDisplayObject {
 
     constructor(scene: Phaser.Scene, private render: Render, id?: number, type?: number) {
         super(scene, { resPath: render.url.RES_PATH, osdPath: render.url.OSD_PATH }, type);
+        this.mNodeType = type;
         this.mID = id;
     }
 
