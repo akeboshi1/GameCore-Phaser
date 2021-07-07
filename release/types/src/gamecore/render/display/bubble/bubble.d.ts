@@ -1,3 +1,4 @@
+/// <reference types="tooqingphaser" />
 import { Url } from "utils";
 export declare class Bubble extends Phaser.GameObjects.Container {
     private url;

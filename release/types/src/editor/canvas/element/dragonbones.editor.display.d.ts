@@ -1,3 +1,4 @@
+/// <reference types="tooqingphaser" />
 import { BaseDragonbonesDisplay } from "baseRender";
 export declare class DragonbonesEditorDisplay extends BaseDragonbonesDisplay {
     constructor(scene: Phaser.Scene, mWebHomePath: string);

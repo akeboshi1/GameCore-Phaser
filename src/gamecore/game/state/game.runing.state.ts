@@ -4,4 +4,6 @@ export class GameRunningState extends BaseEnterSceneState {
     constructor(main: MainPeer, key: string) {
         super(main, key);
     }
+    next(data?: any) {
+    }
 }

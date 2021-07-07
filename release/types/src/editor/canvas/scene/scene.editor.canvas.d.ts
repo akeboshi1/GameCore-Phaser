@@ -1,3 +1,4 @@
+/// <reference types="tooqingphaser" />
 import { Capsule, ElementNode, LayerEnum, MossNode, PaletteNode, SceneNode, TerrainNode } from "game-capsule";
 import { op_def, op_client } from "pixelpai_proto";
 import { Direction, IPos, IPosition45Obj } from "structure";
