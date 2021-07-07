@@ -146,6 +146,26 @@ export class RoomManager extends PacketHandler implements IRoomManager {
         });
     }
 
+    public decodeConfigs(req): Promise<Capsule> {
+        return new Promise((resolve, reject) => {
+            const arraybuffer = req.response;
+            if (arraybuffer) {
+                try {
+                    const gameConfig = new Capsule();
+                    gameConfig.deserialize(new Uint8Array(arraybuffer));
+                    Logger.getInstance().debug("TCL: World -> gameConfig", gameConfig);
+                    resolve(gameConfig);
+                } catch (error) {
+                    Logger.getInstance().error("catch error", error);
+                    reject(error);
+                }
+            } else {
+                Logger.getInstance().error("reject error");
+                reject("error");
+            }
+        });
+    }
+
     // ========> 进入房间流程
     protected onEnterSceneHandler(packet: PBpacket) {
         const content: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_ENTER_SCENE = packet.content;
@@ -203,26 +223,6 @@ export class RoomManager extends PacketHandler implements IRoomManager {
                 });
             });
         }
-    }
-
-    protected decodeConfigs(req): Promise<Capsule> {
-        return new Promise((resolve, reject) => {
-            const arraybuffer = req.response;
-            if (arraybuffer) {
-                try {
-                    const gameConfig = new Capsule();
-                    gameConfig.deserialize(new Uint8Array(arraybuffer));
-                    Logger.getInstance().debug("TCL: World -> gameConfig", gameConfig);
-                    resolve(gameConfig);
-                } catch (error) {
-                    Logger.getInstance().error("catch error", error);
-                    reject(error);
-                }
-            } else {
-                Logger.getInstance().error("reject error");
-                reject("error");
-            }
-        });
     }
 
     protected getConfigUrl(sceneId: string) {
