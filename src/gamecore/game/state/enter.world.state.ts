@@ -6,6 +6,7 @@ import { PBpacket } from "net-socket-packet";
 import { op_gateway, op_client, op_virtual_world, op_def } from "pixelpai_proto";
 import IOP_CLIENT_REQ_VIRTUAL_WORLD_PLAYER_INIT = op_gateway.IOP_CLIENT_REQ_VIRTUAL_WORLD_PLAYER_INIT;
 import { Capsule } from "game-capsule";
+import { ConfigPath } from "../config";
 export class EnterWorldState extends BaseState {
     protected isSyncPackage: boolean = false;
     protected remoteIndex = 0;
@@ -135,7 +136,7 @@ export class EnterWorldState extends BaseState {
     protected async loadGameConfig(remotePath): Promise<Capsule> {
         const game = this.mMain.game;
         const config = game.getGameConfig();
-        const configPath = await this.mMain.render.getGameConfig(remotePath);
+        const configPath = ConfigPath.getSceneConfigUrl(remotePath);
         return load(configPath, "arraybuffer").then((req: any) => {
             this.mGame.gameConfigState.set(remotePath, true);
             game.loadingManager.start(LoadState.PARSECONFIG);

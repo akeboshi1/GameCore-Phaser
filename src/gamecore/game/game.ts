@@ -288,7 +288,8 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
         if (!this.gameConfigUrls) return;
         this.gameConfigUrls.forEach((remotePath) => {
             if (!this.mGameConfigState.get(remotePath)) {
-                return load(remotePath, "arraybuffer").then((req: any) => {
+                const url = ConfigPath.getSceneConfigUrl(remotePath);
+                return load(url, "arraybuffer").then((req: any) => {
                     Logger.getInstance().debug("start decodeConfig");
                 }, (reason) => {
                     Logger.getInstance().error("reload res ====>", reason, "reload count ====>", this.remoteIndex);

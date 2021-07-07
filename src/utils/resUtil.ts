@@ -1,4 +1,3 @@
-export const HTTP_REGEX = /^(http|https):/i;
 export class Url {
     // cdn资源路径
     OSD_PATH = "";
@@ -52,12 +51,6 @@ export class Url {
             img: this.OSD_PATH + "user_avatar/texture/" + value + ".png",
             json: this.OSD_PATH + "user_avatar/texture/" + value + ".json"
         };
-    }
-    getGameConfig(value: string): string {
-        if (HTTP_REGEX.test(value)) {
-            return value;
-        }
-        return this.OSD_PATH + value;
     }
 
     getResRoot(value: string): string {

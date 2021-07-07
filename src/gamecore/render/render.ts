@@ -495,13 +495,6 @@ export class Render extends RPCPeer implements GameMain, IRender {
         });
     }
 
-    @Export([webworker_rpc.ParamType.str])
-    public getGameConfig(path: string) {
-        return new Promise((resolve, reject) => {
-            resolve(this.resUrl.getGameConfig(path));
-        });
-    }
-
     startFullscreen(): void {
 
     }
