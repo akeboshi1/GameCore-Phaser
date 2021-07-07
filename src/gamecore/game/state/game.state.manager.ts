@@ -27,6 +27,7 @@ export class GameStateManager {
     }
     set state(key: string) {
         if (!this.mStateMap) return;
+        // 如果开启状态时，存在长期运行的state，比如gameRunning，则需要手动将该state停掉，并且关闭监听
         if (this.mCurState) {
             this.mCurState.removePacketListener();
         }

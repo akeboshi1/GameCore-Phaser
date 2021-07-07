@@ -2288,8 +2288,8 @@ function-bind@^1.1.1:
   integrity sha512-yIovAzMX49sF8Yl58fSCWJ5svSLuaibPxXQJFLmBObTuCr0Mf1KiPopGM9NiFjiYBCbfaa2Fh6breQ6ANVTI0A==
 
 "game-capsule@git+ssh://git@code.apowo.com:PixelPai/game-capsule.git#dev":
-  version "1.2.213"
-  resolved "git+ssh://git@code.apowo.com:PixelPai/game-capsule.git#2a8c73aeaa7076ee237f9ffee76bdb7743b9a188"
+  version "1.2.215"
+  resolved "git+ssh://git@code.apowo.com:PixelPai/game-capsule.git#b94b32d9e4fa5d71576781ea6eade54735510c79"
   dependencies:
     chance "^1.0.18"
     crypto-js "^3.1.9-1"
@@ -4320,8 +4320,8 @@ pinkie@^2.0.0:
   integrity sha1-clVrgM+g1IqXToDnckjoDtT3+HA=
 
 "pixelpai_proto@git+ssh://git@code.apowo.com:PixelPai/pixelpai_proto.git#typescriptdev":
-  version "1.0.554"
-  resolved "git+ssh://git@code.apowo.com:PixelPai/pixelpai_proto.git#a8e102a69f7268a59fff392a05a5d8bc781c2da7"
+  version "1.0.556"
+  resolved "git+ssh://git@code.apowo.com:PixelPai/pixelpai_proto.git#300bcf99a97a0597d0b5bf2009b2ed5eecc7d1c6"
   dependencies:
     protobufjs "^6.8.8"
 
