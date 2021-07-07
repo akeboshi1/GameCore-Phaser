@@ -5,4 +5,5 @@ export declare class ConfigPath {
     static getConfigPath(): string;
     static getBasePath(): string;
     static getBaseVersionPath(): string;
+    static getSceneConfigUrl(url: string): string;
 }

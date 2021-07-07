@@ -125,7 +125,6 @@ export declare class Render extends RPCPeer implements GameMain, IRender {
     getResourceRoot(url: string): Promise<unknown>;
     getResUIPath(): Promise<unknown>;
     getNormalUIPath(res: string): Promise<unknown>;
-    getGameConfig(path: string): Promise<unknown>;
     startFullscreen(): void;
     stopFullscreen(): void;
     setGameConfig(config: any): void;

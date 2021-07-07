@@ -53,6 +53,9 @@ export class GameStateManager {
     startRun(data?: any) {
         if (this.mCurState) this.mCurState.run(data);
     }
+    next(data?: any) {
+        if (this.mCurState) this.mCurState.next(data);
+    }
     update(data?: any) {
         if (this.mCurState) this.mCurState.update(data);
     }

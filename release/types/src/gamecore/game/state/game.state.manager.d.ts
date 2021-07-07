@@ -12,6 +12,7 @@ export declare class GameStateManager {
     startState(state: string, data?: any): void;
     refreshStateTime(): void;
     startRun(data?: any): void;
+    next(data?: any): void;
     update(data?: any): void;
     destroy(): void;
     protected init(): void;

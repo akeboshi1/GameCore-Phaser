@@ -4,10 +4,6 @@
 
 /*! exports provided: CopyProtoType */
 
-/*! exports provided: HTTP_REGEX, Url */
-
-/*! exports provided: HTTP_REGEX, Url, Tool, load, loadArr, Algorithm, CopyProtoType, StringUtils, ObjectAssign, UiUtils, isMobile, HttpLoadManager, Helpers, NumberUtils, BlockIndex */
-
 /*! exports provided: Helpers */
 
 /*! exports provided: HttpLoadManager */
@@ -21,6 +17,10 @@
 /*! exports provided: Tool */
 
 /*! exports provided: UiUtils */
+
+/*! exports provided: Url */
+
+/*! exports provided: Url, Tool, load, loadArr, Algorithm, CopyProtoType, StringUtils, ObjectAssign, UiUtils, isMobile, HttpLoadManager, Helpers, NumberUtils, BlockIndex */
 
 /*! exports provided: isMobile */
 

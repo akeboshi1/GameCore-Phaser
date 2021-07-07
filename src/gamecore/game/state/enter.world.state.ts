@@ -5,8 +5,8 @@ import { PBpacket } from "net-socket-packet";
 import { op_gateway, op_client, op_virtual_world } from "pixelpai_proto";
 import IOP_CLIENT_REQ_VIRTUAL_WORLD_PLAYER_INIT = op_gateway.IOP_CLIENT_REQ_VIRTUAL_WORLD_PLAYER_INIT;
 import { Capsule } from "game-capsule";
-import { BaseEnterSceneState } from "./base.enterScene.state";
-export class EnterWorldState extends BaseEnterSceneState {
+import { BaseState } from "./base.state";
+export class EnterWorldState extends BaseState {
     protected isSyncPackage: boolean = false;
     protected remoteIndex = 0;
     constructor(main: MainPeer, key: string) {
@@ -15,6 +15,7 @@ export class EnterWorldState extends BaseEnterSceneState {
 
     run() {
         super.run();
+        this.addPacketListener();
         this.addHandlerFun(op_client.OPCODE._OP_GATEWAY_RES_CLIENT_VIRTUAL_WORLD_INIT, this.onInitVirtualWorldPlayerInit);
         Logger.getInstance().debug("loginEnterWorld");
         const version = this.mMain.config.version;
@@ -107,7 +108,7 @@ export class EnterWorldState extends BaseEnterSceneState {
         Logger.getInstance().debug("onInitVirtualWorldPlayerInit====loadGameConfig");
         // 每次加载，重新请求数据
         this.isSyncPackage = false;
-        this.loadGameConfig(mainGameConfigUrl)
+        this.mGame.roomManager.loadGameConfig(mainGameConfigUrl)
             .then((gameConfig: Capsule) => {
                 this.mGame.elementStorage.setGameConfig(gameConfig);
                 this.mGame.peer.render.createGameCallBack(content.keyEvents);

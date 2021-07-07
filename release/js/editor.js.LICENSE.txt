@@ -134,10 +134,6 @@
 
 /*! exports provided: GroundLayer */
 
-/*! exports provided: HTTP_REGEX, Url */
-
-/*! exports provided: HTTP_REGEX, Url, Tool, load, loadArr, Algorithm, CopyProtoType, StringUtils, ObjectAssign, UiUtils, isMobile, HttpLoadManager, Helpers, NumberUtils, BlockIndex */
-
 /*! exports provided: Handler */
 
 /*! exports provided: Helpers */
@@ -213,6 +209,10 @@
 /*! exports provided: TopDisplay, FollowObject, FollowEnum */
 
 /*! exports provided: UiUtils */
+
+/*! exports provided: Url */
+
+/*! exports provided: Url, Tool, load, loadArr, Algorithm, CopyProtoType, StringUtils, ObjectAssign, UiUtils, isMobile, HttpLoadManager, Helpers, NumberUtils, BlockIndex */
 
 /*! exports provided: ValueResolver */
 

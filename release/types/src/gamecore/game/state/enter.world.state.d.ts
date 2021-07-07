@@ -1,7 +1,7 @@
 import { MainPeer } from "../main.peer";
 import { PBpacket } from "net-socket-packet";
-import { BaseEnterSceneState } from "./base.enterScene.state";
-export declare class EnterWorldState extends BaseEnterSceneState {
+import { BaseState } from "./base.state";
+export declare class EnterWorldState extends BaseState {
     protected isSyncPackage: boolean;
     protected remoteIndex: number;
     constructor(main: MainPeer, key: string);
