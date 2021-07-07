@@ -1,4 +1,3 @@
-/// <reference types="tooqingphaser" />
 import { IPos } from "structure";
 import { UiManager } from "../ui";
 import { BaseGuide } from "./base.guide";

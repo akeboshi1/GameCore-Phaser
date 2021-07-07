@@ -1,4 +1,3 @@
-/// <reference types="tooqingphaser" />
 import { Handler } from "structure";
 export declare class TextToolTips extends Phaser.GameObjects.Container {
     private bg;

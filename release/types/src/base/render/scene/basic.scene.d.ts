@@ -1,4 +1,3 @@
-/// <reference types="tooqingphaser" />
 import { LayerManager } from "../layer";
 export declare class BasicScene extends Phaser.Scene {
     layerManager: LayerManager;

@@ -1,4 +1,3 @@
-/// <reference types="tooqingphaser" />
 import { Render } from "../../render";
 import { PropItem } from "./prop.item";
 export declare class MaterialItem extends PropItem {

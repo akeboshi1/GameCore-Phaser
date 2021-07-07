@@ -1,4 +1,3 @@
-/// <reference types="tooqingphaser" />
 import { IPos } from "structure";
 import { Url } from "utils";
 export interface IGuideRes {

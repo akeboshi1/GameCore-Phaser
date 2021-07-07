@@ -1,4 +1,3 @@
-/// <reference types="tooqingphaser" />
 import { BaseLayer } from "./base.layer";
 export declare class LayerManager {
     private mDepthSurface;
