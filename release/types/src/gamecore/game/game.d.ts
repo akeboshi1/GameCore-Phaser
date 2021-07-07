@@ -169,6 +169,7 @@ export declare class Game extends PacketHandler implements IConnectListener, Clo
     protected createUser(): void;
     protected createManager(): Promise<void>;
     protected onClearGame(): void;
+    protected boot(): void;
     protected onSelectCharacter(): void;
     protected onGotoAnotherGame(packet: PBpacket): void;
     protected onAvatarGameModeHandler(packet: PBpacket): void;
