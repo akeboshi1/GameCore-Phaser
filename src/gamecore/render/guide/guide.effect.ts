@@ -10,15 +10,15 @@ export interface IGuideRes {
 }
 export class GuideEffect extends Phaser.GameObjects.Container {
     protected mInitialized: boolean = false;
-    private mGuideEffect: Phaser.GameObjects.Image;
-    private mMask: Phaser.GameObjects.Graphics;
-    private guideText: Phaser.GameObjects.Text;
-    private mScaleTween;
-    private mScale: number = 1;
-    private mResources: Map<string, IGuideRes> = new Map();
-    private mCachePos: IPos;
-    private mHandDisplay: HandDisplay;
-    private mCacheText: string;
+    protected mGuideEffect: Phaser.GameObjects.Image;
+    protected mMask: Phaser.GameObjects.Graphics;
+    protected guideText: Phaser.GameObjects.Text;
+    protected mScaleTween;
+    protected mScale: number = 1;
+    protected mResources: Map<string, IGuideRes> = new Map();
+    protected mCachePos: IPos;
+    protected mHandDisplay: HandDisplay;
+    protected mCacheText: string;
     constructor(scene: Phaser.Scene, private tmpScale = 1, private url: Url) {
         super(scene);
         this.mScale *= this.tmpScale;

@@ -11,15 +11,15 @@ export declare class GuideEffect extends Phaser.GameObjects.Container {
     private tmpScale;
     private url;
     protected mInitialized: boolean;
-    private mGuideEffect;
-    private mMask;
-    private guideText;
-    private mScaleTween;
-    private mScale;
-    private mResources;
-    private mCachePos;
-    private mHandDisplay;
-    private mCacheText;
+    protected mGuideEffect: Phaser.GameObjects.Image;
+    protected mMask: Phaser.GameObjects.Graphics;
+    protected guideText: Phaser.GameObjects.Text;
+    protected mScaleTween: any;
+    protected mScale: number;
+    protected mResources: Map<string, IGuideRes>;
+    protected mCachePos: IPos;
+    protected mHandDisplay: HandDisplay;
+    protected mCacheText: string;
     constructor(scene: Phaser.Scene, tmpScale: number, url: Url);
     preload(): void;
     createGuideEffect(pos: IPos, text?: string): void;
@@ -35,3 +35,8 @@ export declare class GuideEffect extends Phaser.GameObjects.Container {
     private loadImageHandler;
     private loadError;
 }
+declare class HandDisplay extends Phaser.GameObjects.Container {
+    private mImage;
+    constructor(scene: Phaser.Scene, key: string);
+}
+export {};
