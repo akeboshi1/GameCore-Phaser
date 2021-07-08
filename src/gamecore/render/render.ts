@@ -127,6 +127,7 @@ export class Render extends RPCPeer implements GameMain, IRender {
         this.mConfig.hasGameCreated = this.mConfig.game_created ? true : false;
         this.mConfig.hasReload = this.mConfig.reload ? true : false;
         this.mConfig.hasGameLoaded = this.mConfig.gameLoaded ? true : false;
+        Logger.getInstance().isDebug = this.mConfig.debugLog || false;
 
         if (this.mConfig.devicePixelRatio) this.mConfig.devicePixelRatio = Math.floor(this.mConfig.devicePixelRatio);
         if (this.mConfig.width) this.mConfig.width = Math.floor(this.mConfig.width);

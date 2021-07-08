@@ -21,6 +21,7 @@ export interface ILauncherConfig {
     width: number;
     height: number;
     debugReconnect: boolean;
+    debugLog: boolean;
     baseWidth: number;
     baseHeight: number;
     renderPeerKey: string;

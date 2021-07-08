@@ -1,4 +1,4 @@
-import { i18n } from "structure";
+import { i18n, Logger } from "structure";
 import { Game } from "../../game";
 import { HttpService } from "./http.service";
 
@@ -40,6 +40,8 @@ export class HttpClock {
                     }
                     resolve(true);
                 }
+            }).catch((error) => {
+                Logger.getInstance().error(error);
             });
         });
     }
@@ -59,6 +61,8 @@ export class HttpClock {
                     this.game.peer.closeConnect(true);
                 }
             }
+        }).catch((errorTxt) => {
+            Logger.getInstance().error(errorTxt);
         });
     }
 
