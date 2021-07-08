@@ -164,6 +164,8 @@ export class MainPeer extends RPCPeer {
     public createGame(config: ILauncherConfig) {
         this.mConfig = config;
         this.game.init(config);
+        // log 在不同进程中都需要设置debug参数
+        Logger.getInstance().isDebug = config.debugLog || false;
     }
 
     @Export()
