@@ -431,10 +431,12 @@ export class SceneEditorCanvas extends EditorCanvas implements IRender {
                         const frame = this.scene.textures.getFrame(framesModel.gene, frameName);
 
                         // create canvas
-                        const canvas = this.mScene.textures.createCanvas("GenerateFrame_" + sn1, frame.width, frame.height);
+                        const tileWidth = 64;
+                        const canvas = this.mScene.textures.createCanvas("GenerateFrame_" + sn1, tileWidth, frame.height);
 
                         // draw frame
-                        canvas.drawFrame(framesModel.gene, frameName);
+                        const x = (tileWidth - frame.width) * 0.5;
+                        canvas.drawFrame(framesModel.gene, frameName, x, 0);
 
                         // to url
                         const url = canvas.canvas.toDataURL("image/png", 1);
