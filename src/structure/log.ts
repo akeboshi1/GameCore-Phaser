@@ -26,7 +26,7 @@ export class Logger implements ChatCommandInterface {
    * @param optionalParams 
    */
   log(message?: any, ...optionalParams: any[]) {
-    if (this.isDebug)
+    if (Logger._instance.isDebug)
       console.log(message, ...optionalParams);
   }
 
@@ -36,30 +36,30 @@ export class Logger implements ChatCommandInterface {
    * @param optionalParams 
    */
   debug(message?: any, ...optionalParams: any[]) {
-    if (this.isDebug)
+    if (Logger._instance.isDebug)
       console.log(message, ...optionalParams);
   }
 
   error(message?: any, ...optionalParams: any[]) {
-    // if (this.isDebug)
+    // if (Logger._instance.isDebug)
     console.error(message, ...optionalParams);
     // this.mErrorList.push(message);
   }
 
   debugError(message?: any, ...optionalParams: any[]) {
-    if (this.isDebug)
+    if (Logger._instance.isDebug)
       console.error(message, ...optionalParams);
     // this.mErrorList.push(message);
   }
 
   warn(message?: any, ...optionalParams: any[]) {
-    if (this.isDebug)
+    if (Logger._instance.isDebug)
       console.warn(message, ...optionalParams);
     // this.mWarnList.push(message);
   }
 
   info(message?: any, ...optionalParams: any[]) {
-    if (this.isDebug)
+    if (Logger._instance.isDebug)
       console.info(message, ...optionalParams);
   }
 
@@ -72,10 +72,10 @@ export class Logger implements ChatCommandInterface {
   // }
 
   v() {
-    this.isDebug = true;
+    Logger._instance.isDebug = true;
   }
   q() {
-    this.isDebug = false;
+    Logger._instance.isDebug = false;
   }
 }
 

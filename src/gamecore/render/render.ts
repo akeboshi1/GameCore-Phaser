@@ -111,7 +111,6 @@ export class Render extends RPCPeer implements GameMain, IRender {
     private mHiddenTime: any;
     constructor(config: ILauncherConfig, callBack?: Function) {
         super(config.renderPeerKey);
-        Logger.getInstance().log("config ====>", config);
         this.emitter = new Phaser.Events.EventEmitter();
         this.mConfig = config;
         this.mCallBack = callBack;
@@ -137,6 +136,7 @@ export class Render extends RPCPeer implements GameMain, IRender {
         delete this.mConfig.game_created;
         delete this.mConfig.closeGame;
         delete this.mConfig.gameLoaded;
+        Logger.getInstance().log("config ====>", config);
         // Logger.getInstance().debug("connectfail===>", this.mConnectFailFunc, this.mConfig);
         this.initConfig();
         Logger.getInstance().log("Render version ====>:", `v${this.mConfig.version}`);

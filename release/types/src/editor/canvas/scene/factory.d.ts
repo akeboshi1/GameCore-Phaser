@@ -6,7 +6,7 @@ import { EditorDragonbonesDisplay } from "./editor.dragonbones.display";
 export declare class EditorFactory {
     private sceneEditor;
     constructor(sceneEditor: SceneEditorCanvas);
-    createDisplay(sprite: Sprite): EditorDragonbonesDisplay | EditorFramesDisplay;
+    createDisplay(sprite: Sprite): EditorFramesDisplay | EditorDragonbonesDisplay;
     createDragonbonesDisplay(sprite: Sprite): EditorDragonbonesDisplay;
     createFramesDisplayBYSprite(sprite: Sprite): EditorFramesDisplay;
     createFramesDisplay(element: ElementNode | TerrainNode): EditorFramesDisplay;
