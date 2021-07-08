@@ -121,7 +121,7 @@ export class RoomManager extends PacketHandler implements IRoomManager {
         this.removeAllRoom();
     }
 
-    public async loadGameConfig(remotePath): Promise<Capsule> {
+    public loadGameConfig(remotePath): Promise<Capsule> {
         const game = this.game;
         const config = game.getGameConfig();
         const configPath = ConfigPath.getSceneConfigUrl(remotePath);

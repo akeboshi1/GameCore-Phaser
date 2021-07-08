@@ -38,3 +38,4 @@ export * from "./progress.nine.mask.bar";
 export * from "./toggle.button";
 export * from "./toggle.color.button";
 export * from "./checkbox.toggle";
+export * from "./base.batch.panel";
