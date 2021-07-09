@@ -1613,8 +1613,8 @@ export class Render extends RPCPeer implements GameMain, IRender {
     }
 
     @Export([webworker_rpc.ParamType.num, webworker_rpc.ParamType.num])
-    public unmount(id: number, targetID: number) {
-        if (this.mDisplayManager) this.mDisplayManager.unmount(id, targetID);
+    public unmount(id: number, targetID: number, pos: IPos) {
+        if (this.mDisplayManager) this.mDisplayManager.unmount(id, targetID, pos);
     }
 
     @Export([webworker_rpc.ParamType.num])
