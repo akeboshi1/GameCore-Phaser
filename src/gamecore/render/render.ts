@@ -1678,6 +1678,11 @@ export class Render extends RPCPeer implements GameMain, IRender {
         return (pktGlobal && pktGlobal.envPlatform === "Cordova");
     }
 
+    @Export()
+    public getI18nLanguage() {
+        return i18n.languages[0];
+    }
+
     protected onWorkerUnlinked(worker: string) {
         if (!this.mWorkerDestroyMap.has(worker)) return;
 

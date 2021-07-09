@@ -281,7 +281,7 @@ export declare class Render extends RPCPeer implements GameMain, IRender {
     displayAnimationChange(data: any): void;
     workerEmitter(eventType: string, data?: any): void;
     mount(id: number, targetID: number, targetIndex: number): void;
-    unmount(id: number, targetID: number): void;
+    unmount(id: number, targetID: number, pos: IPos): void;
     updateInput(val: number): void;
     addEffect(target: number, effectID: number, display: IFramesModel): void;
     removeEffect(target: number, effectID: number): void;
@@ -292,6 +292,7 @@ export declare class Render extends RPCPeer implements GameMain, IRender {
     switchDecorateMouseManager(): void;
     setRoomSize(size: IPosition45Obj, miniSize: IPosition45Obj): void;
     isCordove(): boolean;
+    getI18nLanguage(): string;
     protected onWorkerUnlinked(worker: string): void;
     protected initConfig(): void;
     protected initRatio(): void;

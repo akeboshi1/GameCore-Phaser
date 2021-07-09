@@ -634,10 +634,12 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
     protected onSelectCharacter() {
         const pkt = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_GATEWAY_CHARACTER_CREATED);
         this.mainPeer.send(pkt.Serialization());
-        const i18Packet = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_SET_LOCALE);
-        const content: op_virtual_world.IOP_CLIENT_REQ_VIRTUAL_WORLD_SET_LOCALE = i18Packet.content;
-        content.localeCode = "zh-CN";
-        this.mainPeer.send(i18Packet.Serialization());
+        this.renderPeer.getI18nLanguage().then((language) => {
+            const i18Packet = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_SET_LOCALE);
+            const content: op_virtual_world.IOP_CLIENT_REQ_VIRTUAL_WORLD_SET_LOCALE = i18Packet.content;
+            content.localeCode = language;
+            this.mainPeer.send(i18Packet.Serialization());
+        });
     }
     protected onGotoAnotherGame(packet: PBpacket) {
         const content: op_client.IOP_VIRTUAL_WORLD_REQ_CLIENT_GOTO_ANOTHER_GAME = packet.content;
