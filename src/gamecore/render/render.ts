@@ -18,7 +18,7 @@ import {
     IScenery,
     MessageType,
     SceneName,
-    PlatFormType, i18n, IPos, IPosition45Obj, Logger, LogicPos, Pos, Size, ValueResolver, IWorkerParam
+    PlatFormType, i18n, IPos, IPosition45Obj, Logger, LogicPos, Pos, Size, ValueResolver, IWorkerParam, initLocales
 } from "structure";
 import { DisplayManager } from "./managers/display.manager";
 import { InputManager } from "./input/input.manager";
@@ -33,6 +33,7 @@ import { UiManager } from "./ui";
 import { GuideManager } from "./guide";
 import { MouseManager } from "./input/mouse.manager";
 import { SoundManager } from "./managers";
+
 
 enum MoveStyle {
     DIRECTION_MOVE_STYLE = 1,
@@ -1703,6 +1704,7 @@ export class Render extends RPCPeer implements GameMain, IRender {
         this.resUrl = new Url();
         this.resUrl.init({ osd: this.mConfig.osd, res: `resources/`, resUI: `resources/ui/` });
         this.initRatio();
+        this.initLocales();
     }
 
     protected initRatio() {
@@ -1762,6 +1764,10 @@ export class Render extends RPCPeer implements GameMain, IRender {
             }
             if (loginScene && loginScene.scene.isActive()) loginScene.scene.setVisible(true);
         }
+    }
+
+    protected initLocales() {
+        initLocales(`${this.resUrl.RES_PATH}/locales/{{lng}}.json`);
     }
 
     private onFullScreenChange() {

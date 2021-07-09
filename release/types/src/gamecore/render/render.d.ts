@@ -298,6 +298,7 @@ export declare class Render extends RPCPeer implements GameMain, IRender {
     protected initRatio(): void;
     protected initWorker(): void;
     protected dealTipsScene(sceneName: string, show: boolean): void;
+    protected initLocales(): void;
     private onFullScreenChange;
     private gameCreated;
     private resumeScene;
