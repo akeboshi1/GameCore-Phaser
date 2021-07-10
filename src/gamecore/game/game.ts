@@ -751,6 +751,7 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
         this.mainPeer.render.createAccount(gameId, virtualworldId, sceneId, loc, spawnPointId);
         this.createManager();
         this.addPacketListener();
+        this.startConnect();
         this.mClock = new Clock(this.connect, this.peer);
         this.mainPeer.render.createAnotherGame(gameId, virtualworldId, sceneId, loc ? loc.x : 0, loc ? loc.y : 0, loc ? loc.z : 0, spawnPointId, worldId);
     }
@@ -770,32 +771,6 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
                 });
             } else {
                 this.initClonnect(gameId, virtualworldId, sceneId, loc, spawnPointId, worldId);
-            }
-        });
-    }
-
-    private decodeConfigs(req): Promise<Capsule> {
-        return new Promise((resolve, reject) => {
-            const arraybuffer = req.response;
-            if (arraybuffer) {
-                try {
-                    const gameConfig = new Capsule();
-                    gameConfig.deserialize(new Uint8Array(arraybuffer));
-                    Logger.getInstance().debug("TCL: World -> gameConfig", gameConfig);
-                    // const list = (<any>gameConfig)._root._moss._peersDict;
-                    // list.forEach((dat) => {
-                    //     if (dat.id === 1229472650) {
-                    //         Logger.getInstance().debug("地毯=======", dat);
-                    //     }
-                    // });
-                    resolve(gameConfig);
-                } catch (error) {
-                    Logger.getInstance().error("catch error", error);
-                    reject(error);
-                }
-            } else {
-                Logger.getInstance().error("reject error");
-                reject("error");
             }
         });
     }

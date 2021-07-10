@@ -137,8 +137,8 @@ export class Connection implements ConnectionService {
         this.isCloseing = false;
         this.mSocket.destroy();
         this.mSocket = null;
+        if (callBack) callBack();
         if (this.gateway) {
-            if (callBack) callBack();
             this.startConnect(this.gateway.addr, this.gateway.keepalive);
         }
     }

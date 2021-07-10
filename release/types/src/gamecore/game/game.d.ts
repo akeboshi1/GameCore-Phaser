@@ -178,7 +178,6 @@ export declare class Game extends PacketHandler implements IConnectListener, Clo
     private _createAnotherGame;
     private initClonnect;
     private _onGotoAnotherGame;
-    private decodeConfigs;
     private onClientPingHandler;
     private _run;
 }
