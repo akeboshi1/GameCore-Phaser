@@ -34,7 +34,6 @@ import { GuideManager } from "./guide";
 import { MouseManager } from "./input/mouse.manager";
 import { SoundManager } from "./managers";
 
-
 enum MoveStyle {
     DIRECTION_MOVE_STYLE = 1,
     FOLLOW_MOUSE_MOVE_STYLE = 2,
