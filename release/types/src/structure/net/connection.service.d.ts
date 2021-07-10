@@ -6,7 +6,7 @@ export interface ConnectionService {
     pause: boolean;
     socket: SocketConnection;
     startConnect(addr: ServerAddress, keepalive?: boolean): any;
-    closeConnect(): void;
+    closeConnect(callBack?: Function): void;
     setClock(clock: any): void;
     update(): any;
     addPacketListener(listener: PacketHandler): void;

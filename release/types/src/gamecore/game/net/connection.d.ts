@@ -39,8 +39,8 @@ export declare class Connection implements ConnectionService {
     set connect(val: boolean);
     get socket(): SocketConnection;
     startConnect(addr: ServerAddress, keepalive?: boolean): void;
-    closeConnect(): void;
-    closeBack(): void;
+    closeConnect(callBack?: Function): void;
+    closeBack(callBack?: Function): void;
     setClock(clock: Clock): void;
     addPacketListener(listener: PacketHandler): void;
     send(packet: PBpacket): void;
