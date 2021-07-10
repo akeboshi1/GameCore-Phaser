@@ -1,0 +1,27 @@
+{
+  "compilerOptions": {
+    "experimentalDecorators": true,
+    "module": "esnext",
+    "moduleResolution": "node",
+    "target": "esnext",
+    "lib": [
+      "es2015",
+      "webworker",
+      "dom",
+      "es5",
+      "es6",
+      "es7",
+      "esnext"
+    ],
+    "declaration": true,
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+    "sourceMap": false,
+    "outDir": "./release/js",
+    "declarationDir": "./release/types",
+    "skipLibCheck": true, // 使用这个参数才能是exculde生效
+  },
+  "exclude": [
+    "node_modules",
+  ]
+}

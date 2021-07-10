@@ -88,7 +88,7 @@
 
 /*! exports provided: defaults, hasXMLHttpRequest */
 
-/*! exports provided: initLocales, addResources, addNamesp, i18n */
+/*! exports provided: initLocales, addResources, addResourceBundle, i18n */
 
 /*! exports provided: projectionAngle */
 
