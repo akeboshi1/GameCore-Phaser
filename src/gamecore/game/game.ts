@@ -739,11 +739,10 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
             }
             if (this.connect) {
                 this.connect.closeConnect(() => {
-                    this.initClonnect(gameId, virtualworldId, sceneId, loc, spawnPointId, worldId);
+                    // this.initClonnect(gameId, virtualworldId, sceneId, loc, spawnPointId, worldId);
                 });
-            } else {
-                this.initClonnect(gameId, virtualworldId, sceneId, loc, spawnPointId, worldId);
             }
+            this.initClonnect(gameId, virtualworldId, sceneId, loc, spawnPointId, worldId);
         });
     }
 
@@ -767,11 +766,10 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
             }
             if (this.connect) {
                 this.connect.closeConnect(() => {
-                    this.initClonnect(gameId, virtualworldId, sceneId, loc, spawnPointId, worldId);
+                    // this.initClonnect(gameId, virtualworldId, sceneId, loc, spawnPointId, worldId);
                 });
-            } else {
-                this.initClonnect(gameId, virtualworldId, sceneId, loc, spawnPointId, worldId);
             }
+            this.initClonnect(gameId, virtualworldId, sceneId, loc, spawnPointId, worldId);
         });
     }
 
