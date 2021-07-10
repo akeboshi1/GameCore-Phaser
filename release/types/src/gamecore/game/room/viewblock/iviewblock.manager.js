@@ -1,1 +1,0 @@
-//# sourceMappingURL=iviewblock.manager.js.map

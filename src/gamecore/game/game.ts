@@ -729,7 +729,6 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
         this.mGameStateManager.startState(GameState.ChangeGame);
         this.clearGame(true).then(() => {
             this.isPause = false;
-            this.removePacketListener();
             if (this.mUser) {
                 this.mUser.clear();
             }
@@ -738,11 +737,13 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
                 this.mClock = null;
             }
             if (this.connect) {
+                this.removePacketListener();
                 this.connect.closeConnect(() => {
-                    // this.initClonnect(gameId, virtualworldId, sceneId, loc, spawnPointId, worldId);
+                    this.initClonnect(gameId, virtualworldId, sceneId, loc, spawnPointId, worldId);
                 });
+            } else {
+                this.initClonnect(gameId, virtualworldId, sceneId, loc, spawnPointId, worldId);
             }
-            this.initClonnect(gameId, virtualworldId, sceneId, loc, spawnPointId, worldId);
         });
     }
 
@@ -759,17 +760,18 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
         this.mGameStateManager.startState(GameState.ChangeGame);
         this.clearGame(true).then(() => {
             this.isPause = false;
-            this.removePacketListener();
             if (this.mClock) {
                 this.mClock.destroy();
                 this.mClock = null;
             }
             if (this.connect) {
+                this.removePacketListener();
                 this.connect.closeConnect(() => {
-                    // this.initClonnect(gameId, virtualworldId, sceneId, loc, spawnPointId, worldId);
+                    this.initClonnect(gameId, virtualworldId, sceneId, loc, spawnPointId, worldId);
                 });
+            } else {
+                this.initClonnect(gameId, virtualworldId, sceneId, loc, spawnPointId, worldId);
             }
-            this.initClonnect(gameId, virtualworldId, sceneId, loc, spawnPointId, worldId);
         });
     }
 

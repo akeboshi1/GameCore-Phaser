@@ -1,0 +1,30 @@
+import { Render } from "../../render";
+import { ChatCommandInterface, IPos, IPosition45Obj } from "structure";
+export declare class AstarDebugger implements ChatCommandInterface {
+    private render;
+    isDebug: boolean;
+    private readonly CIRCLE_RADIUS_POINTS;
+    private readonly CIRCLE_RADIUS_START_POSITION;
+    private readonly CIRCLE_RADIUS_TARGET_POSITION;
+    private readonly CIRCLE_COLOR_POINTS_PASS;
+    private readonly CIRCLE_COLOR_POINTS_NOTPASS;
+    private readonly CIRCLE_COLOR_START_POSITION;
+    private readonly CIRCLE_COLOR_TARGET_POSITION;
+    private readonly LINE_COLOR_PATH;
+    private mPointsShowType;
+    private mPoints_Walkable;
+    private mPoints_NotWalkable;
+    private mPath;
+    private mAstarSize;
+    constructor(render: Render);
+    q(): void;
+    v(): void;
+    destroy(): void;
+    init(map: number[][], size: IPosition45Obj): void;
+    update(x: number, y: number, val: boolean): void;
+    showPath(start: IPos, tar: IPos, path: IPos[]): void;
+    drawPoints(): Promise<void>;
+    clearAll(): void;
+    private clearPath;
+    private drawPath;
+}
