@@ -17,7 +17,7 @@ export class ElementTopDisplay extends TopDisplay {
     }
 
     public showNickname(name: string) {
-        if (!this.mOwner) {
+        if (!this.mOwner || !this.mFollows) {
             return;
         }
         let follow = this.mFollows.get(FollowEnum.Nickname);
@@ -79,6 +79,7 @@ export class ElementTopDisplay extends TopDisplay {
         }
     }
     public showUIState(state: StateConfig) {
+        if (!this.mFollows) return;
         if (state.type !== "text") {
             const pngurl = state.image.display.texturepath;
             const jsonurl = state.image.display.datapath;
@@ -120,6 +121,7 @@ export class ElementTopDisplay extends TopDisplay {
     }
 
     updateOffset() {
+        if (!this.mFollows) return;
         const offset = this.getYOffset();
         this.mFollows.forEach((follow) => follow.setOffset(0, offset.y));
     }
