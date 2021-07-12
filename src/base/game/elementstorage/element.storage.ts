@@ -14,7 +14,7 @@ import {
     EventNode
 } from "game-capsule";
 import { op_def } from "pixelpai_proto";
-import { Url, BlockIndex } from "utils";
+import { BlockIndex } from "utils";
 import { AnimationModel, IDragonbonesModel, IFramesModel, IPos, IResPath, IScenery, Logger, LogicPos, Position45 } from "structure";
 import { DragonbonesModel, FramesModel } from "../sprite";
 export interface IAsset {
@@ -401,6 +401,10 @@ export class ElementStorage implements IElementStorage {
         const mossCollection = this._mossCollection.data;
         for (const moss of mossCollection) {
             const mossPalette = this.getMossPalette(moss.key);
+            if (!mossPalette) {
+                Logger.getInstance().error("moss.key:" + moss.key + ",not exist");
+                return;
+            }
             const { layer, frameModel } = mossPalette;
             this.addDisplayRef({
                 id: moss.id,
