@@ -1,4 +1,3 @@
-/// <reference types="tooqingphaser" />
 import { BasicScene } from "baseRender";
 export declare class GamePauseScene extends BasicScene {
     protected bg: Phaser.GameObjects.Graphics;
