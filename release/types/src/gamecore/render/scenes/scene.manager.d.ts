@@ -1,3 +1,4 @@
+/// <reference types="tooqingphaser" />
 import { Render } from "../render";
 import { BasicScene, BaseSceneManager } from "baseRender";
 import { SceneInputEnum } from "baseRender";
