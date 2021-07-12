@@ -402,7 +402,7 @@ export class ElementStorage implements IElementStorage {
         for (const moss of mossCollection) {
             const mossPalette = this.getMossPalette(moss.key);
             if (!mossPalette) {
-                Logger.getInstance().error("moss.key:" + moss.key + ",not exist");
+                Logger.getInstance().error("moss.id:" + moss.id + ";moss.key:" + moss.key + ",not exist");
                 continue;
             }
             const { layer, frameModel } = mossPalette;
