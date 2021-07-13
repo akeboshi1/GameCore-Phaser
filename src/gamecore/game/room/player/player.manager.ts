@@ -389,7 +389,7 @@ export class PlayerManager extends PacketHandler implements IElementManager {
         const content: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_CHAT = packet.content;
         const player = <Player>this.get(content.chatSenderid);
         if (player) {
-            player.showBubble(content.chatContext, content.chatSetting);
+            player.showBubble(content.chatContext.msg, content.chatSetting);
         }
     }
 
@@ -397,7 +397,7 @@ export class PlayerManager extends PacketHandler implements IElementManager {
         const content: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_ONLY_BUBBLE = packet.content;
         const player = <Player>this.get(content.receiverid);
         if (player) {
-            player.showBubble(content.context, content.chatsetting);
+            player.showBubble(content.context.msg, content.chatsetting);
         }
     }
 
