@@ -1,3 +1,4 @@
+/// <reference types="tooqingphaser" />
 import { Url } from "utils";
 import { IBaseCameraService } from "./cameras";
 import { BaseSceneManager } from "./scene/base.scene.manager";

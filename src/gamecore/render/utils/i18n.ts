@@ -3,6 +3,11 @@ import { op_def } from "pixelpai_proto";
 import HttpApi from "i18next-http-backend";
 import LanguageDetector from "i18next-browser-languagedetector";
 
+// 获取花括号内字段
+const GET_WORD_REXGE = /[^{][a-zA-Z0-9]+(?=\})/g;
+// 占位符字段
+const GET_DATA_REXGE = /%{([0-9A-Za-z]*)}/g;
+
 export function initLocales(path: string): Promise<any> {
   return i18next
     .use(HttpApi)
@@ -17,11 +22,29 @@ export function initLocales(path: string): Promise<any> {
     });
 }
 
-export function translateConfig(msg: op_def.StrMsg, options?: any) {
+export function ttranslate(string: string, options?: any, namespaces?: string) {
+  if (namespaces) string += `${namespaces}:`;
+  return i18n.t(string, options);
+}
+
+export function translateProto(strMsg: op_def.StrMsg, namespaces?: string) {
+  const { msg, i18nMsg, i18nData } = strMsg;
+  if (msg) return msg;
   // {{take}},{{reward}}%{number}{{secceed}}
-  // const keys = msg.match(/[^{{][a-zA-Z0-9]+(?=\}})/g);
-  const text = msg.msg || msg.i18nMsg;
-  return i18n.t(text, options);
+  const allWords = i18nMsg.match(GET_WORD_REXGE);
+  let dataWords = [];
+  const tmps = i18nMsg.match(GET_DATA_REXGE);
+  if (tmps) {
+    dataWords = tmps.map((key) => key.match(GET_WORD_REXGE));
+  }
+  let text = "";
+  let word = null;
+  for (let i = 0; i < allWords.length; i++) {
+    word = allWords[i];
+    text += dataWords.includes(word) ? `{{${word}}} ` : i === 0 ? `${word} ` : `$t(${word}) `;
+  }
+
+  return i18n.t(text, i18nData, namespaces);
 }
 
 export function addResources(ns: string, resources: any) {
@@ -29,8 +52,8 @@ export function addResources(ns: string, resources: any) {
   return i18n.addResources(i18n.languages[0], ns, resources);
 }
 
-export function addResourceBundle(lng: string, ns: string, resources: any) {
-  return i18n.addResourceBundle(lng, ns, resources);
+export function addResourceBundle(lng: string, ns: string, resources: any, deep?: boolean, overwrite?: boolean) {
+  return i18n.addResourceBundle(lng, ns, resources, deep, overwrite);
 }
 
 export const i18n = i18next;
