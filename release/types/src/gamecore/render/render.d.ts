@@ -2,7 +2,7 @@
 import { RPCPeer } from "webworker-rpc";
 import { Url } from "utils";
 import { PBpacket } from "net-socket-packet";
-import { op_client } from "pixelpai_proto";
+import { op_client, op_def } from "pixelpai_proto";
 import { Account } from "./account";
 import { LocalStorageManager } from "./managers/local.storage.manager";
 import { CamerasRenderManager } from "./cameras/cameras.render.manager";
@@ -264,7 +264,7 @@ export declare class Render extends RPCPeer implements GameMain, IRender {
     changeAlpha(id: number, alpha: number): void;
     removeBlockObject(id: number): void;
     setPosition(id: number, x: number, y: number, z?: number): void;
-    showBubble(id: number, text: string, setting: op_client.IChat_Setting): void;
+    showBubble(id: number, text: op_def.StrMsg, setting: op_client.IChat_Setting): void;
     clearBubble(id: number): void;
     startFollow(id: number): void;
     stopFollow(): void;

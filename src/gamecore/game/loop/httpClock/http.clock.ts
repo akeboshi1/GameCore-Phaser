@@ -1,4 +1,4 @@
-import { i18n, Logger } from "structure";
+import { Logger } from "structure";
 import { Game } from "../../game";
 import { HttpService } from "./http.service";
 
@@ -83,7 +83,7 @@ export class HttpClock {
     }
 
     private showAlert(text: string, callback?: () => void) {
-        this.game.peer.render.showAlert(text, i18n.t("common.tips"));
+        this.game.peer.render.showAlert(text, "common.tips", true);
     }
 
     set enable(val: boolean) {

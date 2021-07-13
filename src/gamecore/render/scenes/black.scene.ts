@@ -1,5 +1,6 @@
 import { BasicScene } from "baseRender";
-import { Font, i18n, Logger, SceneName } from "structure";
+import { Font, Logger, SceneName } from "structure";
+import { i18n } from "../utils";
 export class BlackScene extends BasicScene {
     constructor() {
         super({ key: SceneName.BLACK_SCENE });

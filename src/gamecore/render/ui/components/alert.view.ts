@@ -1,10 +1,11 @@
 import { Button, BBCodeText, ClickEvent } from "apowophaserui";
-import { Font, i18n } from "structure";
+import { Font } from "structure";
 import { UiUtils } from "utils";
 import { MainUIScene } from "../../scenes/main.ui.scene";
 import { BaseBatchPanel } from "./base.batch.panel";
 import { UiManager } from "../ui.manager";
 import { BasicScene } from "baseRender";
+import { i18n } from "../../utils";
 
 export class AlertView extends BaseBatchPanel {
     protected skinName: string = "AlertView";

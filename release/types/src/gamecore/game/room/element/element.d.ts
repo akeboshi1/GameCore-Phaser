@@ -121,7 +121,7 @@ export declare class Element extends BlockObject implements IElement {
     getPosition(): IPos;
     setPosition(p: IPos, syncPos?: boolean): void;
     getRootPosition(): IPos;
-    showBubble(text: string, setting: op_client.IChat_Setting): void;
+    showBubble(text: op_def.IStrMsg, setting: op_client.IChat_Setting): void;
     clearBubble(): void;
     showNickname(): void;
     hideNickname(): void;

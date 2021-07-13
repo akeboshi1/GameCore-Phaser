@@ -554,7 +554,7 @@ export class Element extends BlockObject implements IElement {
         return this.mModel.pos;
     }
 
-    public showBubble(text: string, setting: op_client.IChat_Setting) {
+    public showBubble(text: op_def.IStrMsg, setting: op_client.IChat_Setting) {
         this.mRoomService.game.renderPeer.showBubble(this.id, text, setting);
     }
 

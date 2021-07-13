@@ -2,7 +2,7 @@ import { Game } from "tooqingphaser";
 import { Export, RPCPeer, webworker_rpc } from "webworker-rpc";
 import { UiUtils, Url } from "utils";
 import { PBpacket } from "net-socket-packet";
-import { op_client } from "pixelpai_proto";
+import { op_client, op_def } from "pixelpai_proto";
 import { Account } from "./account";
 import { SceneManager } from "./scenes/scene.manager";
 import { LocalStorageManager } from "./managers/local.storage.manager";
@@ -18,7 +18,7 @@ import {
     IScenery,
     MessageType,
     SceneName,
-    PlatFormType, i18n, IPos, IPosition45Obj, Logger, LogicPos, Pos, Size, ValueResolver, IWorkerParam, initLocales
+    PlatFormType, IPos, IPosition45Obj, Logger, LogicPos, Pos, Size, ValueResolver, IWorkerParam
 } from "structure";
 import { DisplayManager } from "./managers/display.manager";
 import { InputManager } from "./input/input.manager";
@@ -33,6 +33,7 @@ import { UiManager } from "./ui";
 import { GuideManager } from "./guide";
 import { MouseManager } from "./input/mouse.manager";
 import { SoundManager } from "./managers";
+import { i18n, initLocales } from "./utils";
 
 enum MoveStyle {
     DIRECTION_MOVE_STYLE = 1,
@@ -1479,11 +1480,11 @@ export class Render extends RPCPeer implements GameMain, IRender {
         if (display) display.setPosition(x, y, z);
     }
 
-    @Export([webworker_rpc.ParamType.num, webworker_rpc.ParamType.str])
-    public showBubble(id: number, text: string, setting: op_client.IChat_Setting) {
+    @Export()
+    public showBubble(id: number, text: op_def.StrMsg, setting: op_client.IChat_Setting) {
         if (!this.mDisplayManager) return;
         const display = this.mDisplayManager.getDisplay(id);
-        if (display) display.showBubble(text, setting);
+        if (display) display.showBubble(text.msg, setting);
     }
 
     @Export([webworker_rpc.ParamType.num])
