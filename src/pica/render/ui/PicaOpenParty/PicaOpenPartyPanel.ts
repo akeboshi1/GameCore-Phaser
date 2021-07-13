@@ -159,7 +159,7 @@ export class PicaOpenPartyPanel extends BasePanel {
             return;
         }
         const data = new op_client.OP_VIRTUAL_WORLD_RES_CLIENT_SHOW_UI();
-        data.text = [{ text, node: undefined }];
+        data.text = [{ text: { msg: text }, node: undefined }];
         this.render.mainPeer.showMediator(panelName, true, data);
     }
     private onQueryThemeHandler() {

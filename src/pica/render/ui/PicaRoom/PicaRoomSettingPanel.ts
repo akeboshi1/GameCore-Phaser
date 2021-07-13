@@ -23,7 +23,7 @@ export class PicaRoomSettingPanel extends Phaser.GameObjects.Container {
 
     }
     public setAttributeData(data: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_EDIT_MODE_ROOM_INFO) {
-        this.roomPassword.setAttributeData(data.name);
+        this.roomPassword.setAttributeData(data.name.msg);
     }
 
     public setHandler(send: Handler) {

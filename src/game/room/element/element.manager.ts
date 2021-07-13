@@ -640,7 +640,7 @@ export class ElementManager extends PacketHandler implements IElementManager {
         const content: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_ONLY_BUBBLE = packet.content;
         const element = this.get(content.receiverid);
         if (element) {
-            element.showBubble(content.context, content.chatsetting);
+            element.showBubble(content.context.msg, content.chatsetting);
         }
     }
 

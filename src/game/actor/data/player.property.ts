@@ -78,7 +78,7 @@ export class PlayerProperty {
                             isexit = true;
                         }
                     }
-                    if (!isexit) this.properties.push(temp);
+                    if (!isexit) this.rooms.push(temp);
                 }
             }
         }

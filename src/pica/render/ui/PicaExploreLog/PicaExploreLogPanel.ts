@@ -464,7 +464,8 @@ class PicaExploreLogGuideText extends Phaser.GameObjects.Container {
             const finish = temp.progress === temp.totalSteps;
             const frame = finish ? "checkpoint_end_aims_done" : "checkpoint_end_aims_undone";
             const color = finish ? "#FFFFFF" : "#FFEE5D";
-            const text = !temp.totalSteps ? `${temp.text} (${temp.progress})` : `${temp.text} (${temp.progress}/${temp.totalSteps})`;
+            const tempText = temp.i18nText;
+            const text = !temp.totalSteps ? `${tempText.msg} (${temp.progress})` : `${tempText.msg} (${temp.progress}/${temp.totalSteps})`;
             item.setFrameValue(text, UIAtlasName.explorelog, frame);
             item.setTextStyle({ color });
             item.visible = true;
