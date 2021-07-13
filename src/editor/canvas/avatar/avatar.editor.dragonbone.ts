@@ -84,9 +84,10 @@ export class AvatarEditorDragonbone extends Phaser.GameObjects.Container {
     };
     private static readonly MODEL_SETS = [
         {
-            id: "5fbf562e72c7db2dbdcdb4ea",
+            id: "60c868397a93345f1bb33d1f",
             parts: AvatarEditorDragonbone.BASE_PARTS
-        }
+        },
+        {id: null, parts: ["head_hair", "head_eyes", "head_mous", "body_cost"]},
     ];
 
     private static readonly DEFAULT_SCALE_GAME_HEIGHT = 72;// 默认展示龙骨时，游戏尺寸
@@ -364,13 +365,13 @@ export class AvatarEditorDragonbone extends Phaser.GameObjects.Container {
 
             for (const set of this.mBaseSets) {
                 for (const part of set.parts) {
-                    this.mParts[part] = set;
+                    this.mParts[part] = set.id ? set : null;
                 }
             }
         }
         for (const set of this.mSets) {
             for (const part of set.parts) {
-                this.mParts[part] = set;
+                this.mParts[part] = set.id ? set : null;
             }
         }
         // 特型装扮隐藏对应部位
@@ -481,7 +482,7 @@ export class AvatarEditorDragonbone extends Phaser.GameObjects.Container {
                     return {
                         armature: this.mDisplay_default,
                         x: this.mDisplay_default.x,
-                        y: this.mArmatureBottomArea,
+                        y: this.mArmatureBottomArea + 2,
                         baseSets: AvatarEditorDragonbone.MODEL_SETS
                     };
                 }
