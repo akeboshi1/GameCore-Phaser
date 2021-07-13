@@ -1,4 +1,3 @@
-/// <reference types="tooqingphaser" />
 import { SoundField } from "apowophaserui";
 import { Render } from "../render";
 export declare class SoundManager {

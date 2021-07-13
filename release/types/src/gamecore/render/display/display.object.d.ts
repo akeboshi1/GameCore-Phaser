@@ -1,4 +1,3 @@
-/// <reference types="tooqingphaser" />
 import { ElementStateType, IPos, IProjection } from "structure";
 import { IBaseDisplay } from "display";
 export interface IDisplayObject extends IBaseDisplay {
