@@ -22,6 +22,10 @@ export class AvatarEditorCanvas extends EditorCanvas {
 
         this.mGame.scene.add(this.SCENEKEY, AvatarEditorScene);
 
+        if (config.osd === undefined) {
+            Logger.getInstance().error("AvatarEditorCanvas config error: no osd");
+        }
+
         // start
         this.mData = config.node;
         this.mGame.scene.start(this.SCENEKEY, { onCreated: this.onSceneCreated.bind(this), onUpdate: this.update.bind(this), onDestroy: this.onSceneDestroy.bind(this) });
