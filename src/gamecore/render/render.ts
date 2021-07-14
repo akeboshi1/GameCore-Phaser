@@ -33,7 +33,7 @@ import { UiManager } from "./ui";
 import { GuideManager } from "./guide";
 import { MouseManager } from "./input/mouse.manager";
 import { SoundManager } from "./managers";
-import { i18n, initLocales } from "./utils";
+import { i18n, initLocales, translateProto } from "./utils";
 
 enum MoveStyle {
     DIRECTION_MOVE_STYLE = 1,
@@ -1484,7 +1484,8 @@ export class Render extends RPCPeer implements GameMain, IRender {
     public showBubble(id: number, text: op_def.StrMsg, setting: op_client.IChat_Setting) {
         if (!this.mDisplayManager) return;
         const display = this.mDisplayManager.getDisplay(id);
-        if (display) display.showBubble(text.msg, setting);
+        const label = translateProto(text);
+        if (display) display.showBubble(label, setting);
     }
 
     @Export([webworker_rpc.ParamType.num])
