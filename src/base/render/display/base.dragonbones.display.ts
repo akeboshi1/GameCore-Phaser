@@ -502,6 +502,7 @@ export class BaseDragonbonesDisplay extends BaseDisplay {
         slotList.forEach((slot: dragonBones.Slot) => {
             if (slot) {
                 slot.display.visible = false;
+                slot.replaceDisplay(slot.display);
             }
         });
         // const defaultDBTexture: Phaser.Textures.Texture = this.scene.game.textures.get(this.resourceName);
