@@ -268,7 +268,7 @@ export class AvatarEditorDragonbone extends Phaser.GameObjects.Container {
             };
             this.snapshot({
                 x: 0,
-                y: AvatarEditorDragonbone.HEAD_ICON_DEFAULT_SNAPSHOT_TOTAL_HEIGHT - AvatarEditorDragonbone.HEAD_ICON_HEIGHT,
+                y: 0, //AvatarEditorDragonbone.HEAD_ICON_DEFAULT_SNAPSHOT_TOTAL_HEIGHT - AvatarEditorDragonbone.HEAD_ICON_HEIGHT,
                 width: AvatarEditorDragonbone.HEAD_ICON_WIDTH,
                 height: AvatarEditorDragonbone.HEAD_ICON_HEIGHT
             }, modelData)
