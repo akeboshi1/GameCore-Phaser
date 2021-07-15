@@ -176,7 +176,7 @@ export declare class Game extends PacketHandler implements IConnectListener, Clo
     protected update(current?: number, delta?: number): void;
     protected clearGame(bool?: boolean): Promise<void>;
     private _createAnotherGame;
-    private initClonnect;
+    private initConnect;
     private _onGotoAnotherGame;
     private onClientPingHandler;
     private _run;

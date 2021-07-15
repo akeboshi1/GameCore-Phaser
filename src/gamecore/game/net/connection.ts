@@ -125,12 +125,12 @@ export class Connection implements ConnectionService {
         this.isConnect = false;
         this.isCloseing = true;
         this.mCachedServerAddress = undefined;
+        this.clearPacketListeners();
         if (this.mSocket) {
             this.mSocket.state = false;
             // socket.isConnect判断socket是否关闭===》客户端先关闭socket,则走socket关闭逻辑；服务端关闭socket，则直接closeBack逻辑
             this.mSocket.isConnect ? this.mSocket.stopConnect(this.closeBack(callBack)) : this.closeBack(callBack);
         }
-        this.clearPacketListeners();
     }
 
     closeBack(callBack?: Function) {

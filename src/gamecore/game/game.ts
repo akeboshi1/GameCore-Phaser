@@ -738,20 +738,20 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
             if (this.connect) {
                 this.removePacketListener();
                 this.connect.closeConnect(() => {
-                    // this.initClonnect(gameId, virtualworldId, sceneId, loc, spawnPointId, worldId);
+                    this.initConnect(gameId, virtualworldId, sceneId, loc, spawnPointId, worldId);
                 });
+            } else {
+                this.initConnect(gameId, virtualworldId, sceneId, loc, spawnPointId, worldId);
             }
-            // else {
-            this.initClonnect(gameId, virtualworldId, sceneId, loc, spawnPointId, worldId);
-            // }
         });
     }
 
-    private initClonnect(gameId, virtualworldId, sceneId, loc, spawnPointId?, worldId?) {
-        this.mainPeer.render.createAccount(gameId, virtualworldId, sceneId, loc, spawnPointId);
+    private initConnect(gameId, virtualworldId, sceneId, loc, spawnPointId?, worldId?) {
+        this.createUser();
         this.createManager();
         this.addPacketListener();
         this.startConnect();
+        this.mainPeer.render.createAccount(gameId, virtualworldId, sceneId, loc, spawnPointId);
         this.mClock = new Clock(this.connect, this.peer);
         this.mainPeer.render.createAnotherGame(gameId, virtualworldId, sceneId, loc ? loc.x : 0, loc ? loc.y : 0, loc ? loc.z : 0, spawnPointId, worldId);
     }
@@ -767,12 +767,11 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
             if (this.connect) {
                 this.removePacketListener();
                 this.connect.closeConnect(() => {
-                    // this.initClonnect(gameId, virtualworldId, sceneId, loc, spawnPointId, worldId);
+                    this.initConnect(gameId, virtualworldId, sceneId, loc, spawnPointId, worldId);
                 });
+            } else {
+                this.initConnect(gameId, virtualworldId, sceneId, loc, spawnPointId, worldId);
             }
-            // else {
-            this.initClonnect(gameId, virtualworldId, sceneId, loc, spawnPointId, worldId);
-            // }
         });
     }
 
