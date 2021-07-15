@@ -1,11 +1,12 @@
 {
-  "name": "@PixelPai/game-core",
+  "name": "game-core",
   "version": "1.0.757",
   "exports": {
     ".": "./release/js/index.js",
     "./renderPeer": "./release/js/renderPeer.js",
     "./mainPeer": "./release/js/mainPeer.js",
     "./utils": "./release/js/utils.js",
+    "./editor": "./release/js/editor.js",
     "./structure": "./release/js/structure.js",
     "./baseRender": "./release/js/baseRender.js",
     "./baseGame": "./release/js/baseGame.js"
@@ -18,6 +19,9 @@
       ],
       "renderPeer": [
         "release/types/src/gamecore/render"
+      ],
+      "editor": [
+        "release/types/src/gamecore/editor"
       ],
       "baseRender": [
         "release/types/src/base/render"
@@ -38,7 +42,6 @@
     "up": "yarn upgrade game-capsule webworker-rpc tooqingphaser sort-display-object net-socket-packet custom_proto",
     "build": "yarn up && yarn ver && node --max-old-space-size=4096 node_modules/webpack/bin/webpack.js --mode=production --output-path=./release --progress",
     "build:dev": "webpack --mode=development --output-path=./release --progress",
-    "build:editor:dev": "webpack --config webpack.editor.config.js --mode=development --output-path=./release --progress",
     "ver": "genversion version.js",
     "patch": "yarn version --patch && yarn ver",
     "dts": "dts-bundle --configJson dts-bundle.json && rm -rf types",
