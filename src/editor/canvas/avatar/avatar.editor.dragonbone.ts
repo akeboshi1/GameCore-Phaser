@@ -263,7 +263,7 @@ export class AvatarEditorDragonbone extends Phaser.GameObjects.Container {
             const modelData = {
                 armature: this.mDisplay_default,
                 x: AvatarEditorDragonbone.HEAD_ICON_WIDTH / 2,
-                y: AvatarEditorDragonbone.HEAD_ICON_DEFAULT_BOTTOM_PIX,
+                y: - AvatarEditorDragonbone.HEAD_ICON_HIDE_PIX,
                 baseSets: AvatarEditorDragonbone.DEFAULT_SETS
             };
             this.snapshot({
@@ -492,13 +492,13 @@ export class AvatarEditorDragonbone extends Phaser.GameObjects.Container {
                     const gameHeight = this.scene.scale.height;
                     Logger.getInstance().debug(`ZW-- start snapshot, gameSize: ${gameWidth}*${gameHeight}, setSize: ${area.width}*${area.height}`);
                     const rt = this.scene.make.renderTexture({ x: 0, y: 0, width: gameWidth, height: gameHeight }, false);
-                    modelData.armature.scaleY *= -1;
+                    // modelData.armature.scaleY *= -1;
                     const display = modelData.armature.getDisplay();
                     if (!display) reject("display does not exist");
                     display.armature.advanceTime(1000);
                     rt.draw(modelData.armature, modelData.x, modelData.y);
                     rt.snapshotArea(area.x, area.y, area.width, area.height, (img: HTMLImageElement) => {
-                        modelData.armature.scaleY *= -1;
+                        // modelData.armature.scaleY *= -1;
                         // reverse parts
                         this.setBaseSets(AvatarEditorDragonbone.DEFAULT_SETS);
                         this.reloadDisplay()
