@@ -41,7 +41,7 @@ export declare class Sprite extends EventDispatcher implements ISprite {
     originCollisionPoint: LogicPoint;
     attrs: op_def.IStrPair[];
     suits: AvatarSuit[];
-    animationQueue: AnimationQueue[];
+    animationQueue: AnimationQueue;
     mountSprites: number[];
     speed: number;
     interactive: op_def.IPBPoint2f[];
@@ -68,7 +68,7 @@ export declare class Sprite extends EventDispatcher implements ISprite {
     getAvatarSuits(attrs: op_def.IStrPair[]): AvatarSuit[];
     updateAttr(attrs: op_def.IStrPair[]): void;
     updateDisplay(display: op_gameconfig.IDisplay, animations: op_gameconfig_01.IAnimationData[], defAnimation?: string): void;
-    setAnimationQueue(queue: AnimationQueue[]): void;
+    setAnimationQueue(queue: AnimationQueue): void;
     setMountSprites(ids: number[]): void;
     setAnimationName(name: string, times?: number): RunningAnimation;
     setDirection(val: number): void;

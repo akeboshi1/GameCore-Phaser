@@ -54,7 +54,7 @@ export class Sprite extends EventDispatcher implements ISprite {
 
     public attrs: op_def.IStrPair[];
     public suits: AvatarSuit[];
-    public animationQueue: AnimationQueue[];
+    public animationQueue: AnimationQueue;
 
     public mountSprites: number[];
 
@@ -305,7 +305,7 @@ export class Sprite extends EventDispatcher implements ISprite {
         }
     }
 
-    public setAnimationQueue(queue: AnimationQueue[]) {
+    public setAnimationQueue(queue: AnimationQueue) {
         this.animationQueue = queue;
     }
 
@@ -461,7 +461,10 @@ export class Sprite extends EventDispatcher implements ISprite {
         } else {
             this.currentAnimation = this.displayInfo.findAnimation(baseAniName, direction);
             this.currentAnimation.times = times;
-            if (this.animationQueue && this.animationQueue.length > 0) this.currentAnimation.playingQueue = this.animationQueue[0];
+            if (this.animationQueue) {
+                const anis = this.animationQueue.changeAnimation;
+                if (anis && anis.length > 0) this.currentAnimation.playingQueue = anis[0];
+            }
             if (this.currentCollisionArea) {
                 this.setArea();
             }

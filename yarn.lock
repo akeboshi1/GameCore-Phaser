@@ -1428,8 +1428,8 @@ currently-unhandled@^0.4.1:
     array-find-index "^1.0.1"
 
 "custom_proto@git+ssh://git@code.apowo.com:PixelPai/custom_proto.git#typescriptdev":
-  version "1.0.46"
-  resolved "git+ssh://git@code.apowo.com:PixelPai/custom_proto.git#1af57accebaf041fdfddf317e1ef8461435b0edf"
+  version "1.0.48"
+  resolved "git+ssh://git@code.apowo.com:PixelPai/custom_proto.git#f196e5d68ccb091f4768b0f671871631a65f8899"
   dependencies:
     protobufjs "^6.8.8"
 
@@ -2303,7 +2303,7 @@ function-bind@^1.1.1:
 
 "game-capsule@git+ssh://git@code.apowo.com:PixelPai/game-capsule.git#dev":
   version "1.2.224"
-  resolved "git+ssh://git@code.apowo.com:PixelPai/game-capsule.git#f974fbb63680b84367f3d8f23dd4fbb8df66f13f"
+  resolved "git+ssh://git@code.apowo.com:PixelPai/game-capsule.git#54a8022e3ee0edfe8afb27162ab79b18cac783eb"
   dependencies:
     chance "^1.0.18"
     crypto-js "^3.1.9-1"

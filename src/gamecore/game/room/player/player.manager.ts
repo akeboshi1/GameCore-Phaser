@@ -431,7 +431,7 @@ export class PlayerManager extends PacketHandler implements IElementManager {
         for (const id of ids) {
             player = <Player>this.get(id);
             if (player) {
-                player.setQueue(content.changeAnimation);
+                player.setQueue(content.changeAnimation, content.finishAnimationBehavior);
             }
         }
     }

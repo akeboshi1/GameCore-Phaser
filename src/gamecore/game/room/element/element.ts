@@ -17,6 +17,7 @@ import { IElementManager } from "./element.manager";
 import { BaseStateManager } from "../state";
 import { IRoomService } from "../../room/room";
 import { InputEnable } from "./input.enable";
+import { IChangeAnimation } from "src/structure/animation";
 
 export interface IElement {
     readonly id: number;
@@ -71,7 +72,7 @@ export interface IElement {
 
     setAlpha(val: number);
 
-    setQueue(queue: op_client.IChangeAnimation[]);
+    setQueue(queue: op_client.IChangeAnimation[], finishAnimationBehavior?: number);
 
     completeAnimationQueue();
 
@@ -331,28 +332,34 @@ export class Element extends BlockObject implements IElement {
         }
     }
 
-    public setQueue(animations: op_client.IChangeAnimation[]) {
+    public setQueue(animations: op_client.IChangeAnimation[], finishAnimationBehavior?: number) {
         if (!this.mModel) {
             return;
         }
-        const queue = [];
+        const changeAnimation: IChangeAnimation[] = [];
         for (const animation of animations) {
-            const aq: AnimationQueue = {
+            const aq: IChangeAnimation = {
                 name: animation.animationName,
                 playTimes: animation.times,
             };
-            queue.push(aq);
+            changeAnimation.push(aq);
         }
-        this.mModel.setAnimationQueue(queue);
-        if (queue.length > 0) {
+        this.mModel.setAnimationQueue({ changeAnimation, finishAnimationBehavior });
+        if (changeAnimation.length > 0) {
             this.play(animations[0].animationName, animations[0].times);
         }
     }
 
     public completeAnimationQueue() {
-        const anis = this.model.animationQueue;
-        if (!anis || anis.length < 1) return;
+        const animationQueue = this.model.animationQueue;
+        const anis = animationQueue.changeAnimation;
+        if (!anis) return;
         anis.shift();
+        // finishAnimationBehavior -1 回到之前的动画， 0 停在当前
+        if (anis.length < 1 || animationQueue.finishAnimationBehavior === 0) {
+            delete animationQueue.finishAnimationBehavior;
+            return;
+        }
         let aniName: string = PlayerState.IDLE;
         let playTiems;
         if (anis.length > 0) {
