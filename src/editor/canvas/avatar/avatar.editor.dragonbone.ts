@@ -263,7 +263,7 @@ export class AvatarEditorDragonbone extends Phaser.GameObjects.Container {
             const modelData = {
                 armature: this.mDisplay_default,
                 x: AvatarEditorDragonbone.HEAD_ICON_WIDTH / 2,
-                y: - AvatarEditorDragonbone.HEAD_ICON_HIDE_PIX,
+                y: AvatarEditorDragonbone.HEAD_ICON_HEIGHT,
                 baseSets: AvatarEditorDragonbone.DEFAULT_SETS
             };
             this.snapshot({
