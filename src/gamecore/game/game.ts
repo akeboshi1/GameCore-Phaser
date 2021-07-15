@@ -2,7 +2,6 @@ import { UIManager } from "./ui/ui.manager";
 import { PBpacket, PacketHandler } from "net-socket-packet";
 import { MainPeer } from "./main.peer";
 import { op_def, op_client, op_virtual_world, op_gateway } from "pixelpai_proto";
-import { Capsule } from "game-capsule";
 import { load, HttpLoadManager } from "utils";
 import IOP_CLIENT_REQ_VIRTUAL_WORLD_PLAYER_INIT = op_gateway.IOP_CLIENT_REQ_VIRTUAL_WORLD_PLAYER_INIT;
 import { Connection, GameSocket } from "./net/connection";
@@ -634,10 +633,10 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
     protected onSelectCharacter() {
         const pkt = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_GATEWAY_CHARACTER_CREATED);
         this.mainPeer.send(pkt.Serialization());
-        this.renderPeer.getI18nLanguage().then((language) => {
+        this.renderPeer.getI18nLanguages().then((language) => {
             const i18Packet = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_SET_LOCALE);
             const content: op_virtual_world.IOP_CLIENT_REQ_VIRTUAL_WORLD_SET_LOCALE = i18Packet.content;
-            content.localeCode = language;
+            content.localeCode = language[0];
             this.mainPeer.send(i18Packet.Serialization());
         });
     }

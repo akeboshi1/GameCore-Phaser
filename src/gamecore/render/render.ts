@@ -1681,8 +1681,8 @@ export class Render extends RPCPeer implements GameMain, IRender {
     }
 
     @Export()
-    public getI18nLanguage() {
-        return i18n.languages[0];
+    public getI18nLanguages() {
+        return i18n.languages;
     }
 
     protected onWorkerUnlinked(worker: string) {

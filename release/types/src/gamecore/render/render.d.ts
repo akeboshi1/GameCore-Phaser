@@ -292,7 +292,7 @@ export declare class Render extends RPCPeer implements GameMain, IRender {
     switchDecorateMouseManager(): void;
     setRoomSize(size: IPosition45Obj, miniSize: IPosition45Obj): void;
     isCordove(): boolean;
-    getI18nLanguage(): string;
+    getI18nLanguages(): string[];
     protected onWorkerUnlinked(worker: string): void;
     protected initConfig(): void;
     protected initRatio(): void;
