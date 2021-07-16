@@ -128,11 +128,11 @@ export class Connection implements ConnectionService {
 
     closeConnect(callBack?: Function) {
         this.mCachedServerAddress = undefined;
+        this.clearPacketListeners();
         // 正在关闭什么都不做，等待callback
         if (this.mSocket) {
             this.mSocket.state = false;
             if (this.mSocket.socketState === SocketState.link) {
-                this.clearPacketListeners();
                 this.mSocket.stopConnect(this.closeBack(callBack));
                 this.isConnectState = SocketState.closeing;
             } else {
