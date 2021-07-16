@@ -1,4 +1,4 @@
-import { LoadingTips as LoadingTips, Logger, SceneName } from "structure";
+import { LoadingTips, LoadState, Logger, SceneName } from "structure";
 import { Render } from "../render";
 import { BasicScene, SkyBoxScene, BaseSceneManager } from "baseRender";
 import { CreateRoleScene } from "./create.role.scene";
@@ -58,7 +58,7 @@ export class SceneManager extends BaseSceneManager {
         if (scene && scene.scene.isActive) {
             progress *= 100;
             // const text = StringUtils.format("正在加载资源 {0}", [progress.toFixed(0) + "%"]);
-            (<LoadingScene>scene).updateProgress(i18n.t(LoadingTips.LOADINg_RESOURCES, { progress }));
+            (<LoadingScene>scene).updateProgress(i18n.t(LoadingTips.LOADING_RESOURCES, { progress: progress.toFixed(0) }));
         }
         const pauseScene = sceneManager.getScene(SceneName.GAMEPAUSE_SCENE) as GamePauseScene;
         if (pauseScene && pauseScene.scene.isActive()) return;
@@ -86,13 +86,55 @@ export class SceneManager extends BaseSceneManager {
             return;// Promise.reject("className error: " + name);
         }
         data.render = this.render;
+        if (data.state !== undefined) {
+            const state = data.state;
+            switch (state) {
+                case LoadState.ENTERWORLD:
+                    data.text = LoadingTips.ENTER_WORLD;
+                    break;
+                case LoadState.DOWNLOADGAMECONFIG:
+                    // data.loadProgress = "异世界发现中..."; // "正在加载游戏pi";
+                    data.text = LoadingTips.DOWNLOAD_CONFIG;
+                    break;
+                case LoadState.DOWNLOADSCENECONFIG:
+                    // data.loadProgress = "构建次元空间...";// "正在加载场景pi";
+                    data.text = LoadingTips.DOWNLOAD_SCENE_CONFIG;
+                    break;
+                case LoadState.LOADINGRESOURCES:
+                    data.text = LoadingTips.LOADING_RESOURCES;
+                    break;
+                case LoadState.LOGINGAME:
+                    // data.loadProgress = "勇者，正在穿越异世界...";// "正在请求登陆游戏";
+                    data.text = LoadingTips.LOGIN_GAME;
+                    break;
+                case LoadState.PARSECONFIG:
+                    // data.loadProgress = "大贤者迪塔装载中...";// "正在解析一大波游戏数据";
+                    data.text = LoadingTips.PARSE_CONFIG;
+                    break;
+                case LoadState.LOADJSON:
+                    // data.loadProgress = "大贤者杰森装载中...";// "正在加载前端json配置"; // StringUtils.format("正在加载资源 {0}", [data.data.resName]);
+                    data.text = LoadingTips.DOWNLOAD_SCENE_CONFIG;
+                    break;
+                case LoadState.WAITENTERROOM:
+                    // data.loadProgress = "大魔术咏唱:真理之门...";// "正在等待进入房间";
+                    data.text = LoadingTips.WAIT_ENTER_ROOM;
+                    break;
+                case LoadState.CREATESCENE:
+                    // data.text = LoadingTips.crea();
+                    break;
+            }
+        }
+        // 切换场景时，将之前场景状态变为正在切换（并没有被销毁，销毁是一个异步过程）
+        if (this.mCurSceneName && this.mCurSceneName !== name && this.currentScene) {
+            this.currentScene.sceneChange = true;
+        }
         const scene = sceneManager.getScene(name) as BasicScene;
         if (scene) {
             const isActive = scene.scene.isActive(name);
             if (!isActive) {
                 scene.wake(data);
             } else {
-                if (data.text && data.text.length > 0) scene.updateProgress(data.text);
+                if (data.text && data.text.length > 0) scene.updateProgress(i18n.t(data.text));
                 if (data.loadProgress) scene.loadProgress(data.loadProgress);
             }
             if (data.callBack) data.callBack();

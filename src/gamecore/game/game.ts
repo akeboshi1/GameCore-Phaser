@@ -3,7 +3,6 @@ import { PBpacket, PacketHandler } from "net-socket-packet";
 import { MainPeer } from "./main.peer";
 import { op_def, op_client, op_virtual_world, op_gateway } from "pixelpai_proto";
 import { load, HttpLoadManager } from "utils";
-import IOP_CLIENT_REQ_VIRTUAL_WORLD_PLAYER_INIT = op_gateway.IOP_CLIENT_REQ_VIRTUAL_WORLD_PLAYER_INIT;
 import { Connection, GameSocket } from "./net/connection";
 import { Clock, ClockReadyListener } from "./loop/clock/clock";
 import { HttpClock } from "./loop/httpClock/http.clock";
