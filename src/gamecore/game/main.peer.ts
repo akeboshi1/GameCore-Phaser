@@ -501,8 +501,8 @@ export class MainPeer extends RPCPeer {
         this.game.httpClock.enable = enable;
     }
 
-    @Export([webworker_rpc.ParamType.str])
-    public showNoticeHandler(text: string) {
+    @Export()
+    public showNoticeHandler(text: { msg?: string, i18nMsg?: string, i18nData?: any } ) {
         // const data = new op_client.OP_VIRTUAL_WORLD_RES_CLIENT_SHOW_UI();
         // data.text = [{ text, node: undefined }];
         // this.game.showByName(ModuleName.PICANOTICE_NAME, data);

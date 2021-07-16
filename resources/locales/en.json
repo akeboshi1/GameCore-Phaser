@@ -2,5 +2,8 @@
   "common": {
     "cancel": "Cancel",
     "confirm": "OK"
+  },
+  "loading": {
+    "loadresource": "Loading resources {{progress}}"
   }
 }

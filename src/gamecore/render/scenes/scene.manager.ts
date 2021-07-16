@@ -1,5 +1,4 @@
-import { Logger, SceneName } from "structure";
-import { StringUtils } from "utils";
+import { LoadingTips as LoadingTips, Logger, SceneName } from "structure";
 import { Render } from "../render";
 import { BasicScene, SkyBoxScene, BaseSceneManager } from "baseRender";
 import { CreateRoleScene } from "./create.role.scene";
@@ -13,6 +12,7 @@ import { RoomScene } from "./room.scene";
 import { SelectRoleScene } from "./select.role.scene";
 import { BlackScene } from "./black.scene";
 import { SceneInputEnum } from "baseRender";
+import { i18n } from "../utils";
 export class SceneManager extends BaseSceneManager {
     protected sceneManagerName: string;
     protected mCurSceneName: string;
@@ -57,8 +57,8 @@ export class SceneManager extends BaseSceneManager {
         const scene = sceneManager.getScene(SceneName.LOADING_SCENE) as LoadingScene;
         if (scene && scene.scene.isActive) {
             progress *= 100;
-            const text = StringUtils.format("正在加载资源 {0}", [progress.toFixed(0) + "%"]);
-            (<LoadingScene>scene).updateProgress(text);
+            // const text = StringUtils.format("正在加载资源 {0}", [progress.toFixed(0) + "%"]);
+            (<LoadingScene>scene).updateProgress(i18n.t(LoadingTips.LOADINg_RESOURCES, { progress }));
         }
         const pauseScene = sceneManager.getScene(SceneName.GAMEPAUSE_SCENE) as GamePauseScene;
         if (pauseScene && pauseScene.scene.isActive()) return;

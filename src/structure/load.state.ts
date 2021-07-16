@@ -15,3 +15,7 @@ export enum PlaySceneLoadState {
     CREATING_ROOM,
     LOAD_COMPOLETE,
 }
+
+export class LoadingTips {
+    static readonly LOADINg_RESOURCES = "loading.loadresource";
+}
