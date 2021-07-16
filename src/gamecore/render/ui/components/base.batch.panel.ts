@@ -84,7 +84,7 @@ export class BaseBatchPanel extends Panel {
         }
         this.exportListeners.push(f);
     }
-    @Export()
+
     protected preload() {
         this.mPreLoad = true;
         if (!this.scene) {
@@ -112,7 +112,7 @@ export class BaseBatchPanel extends Panel {
             this.mSynchronize = true;
         }
     }
-    @Export()
+
     protected init() {
         // 异步过程中存在某些ui在销毁之前初始化完成
         if (this.mScene && this.mScene.sys && this.mScene.sys.displayList) {
@@ -124,7 +124,7 @@ export class BaseBatchPanel extends Panel {
             this.onInitialized();
         }
     }
-    @Export()
+
     protected setLinear(key: string) {
         if (!key) {
             return;
@@ -132,7 +132,7 @@ export class BaseBatchPanel extends Panel {
         const frame = this.scene.textures.getFrame(key, "__BASE");
         if (frame) frame.texture.setFilter(Phaser.Textures.FilterMode.LINEAR);
     }
-    @Export()
+
     protected addResources(key: string, resource: any) {
         const resType = resource.type;
         if (resType) {
@@ -144,7 +144,7 @@ export class BaseBatchPanel extends Panel {
         }
         super.addResources(key, resource);
     }
-    @Export()
+
     protected cacheExists(type: string, key: string) {
         if (type === "image" || type === "atlas" || type === "texture") {
             return this.scene.textures.exists(key);
@@ -153,34 +153,34 @@ export class BaseBatchPanel extends Panel {
         }
         return false;
     }
-    @Export()
+
     protected get scaleWidth() {
         const width = this.scene.cameras.main.width / this.scale;
         return width;
     }
-    @Export()
+
     protected get scaleHeight() {
         const height = this.scene.cameras.main.height / this.scale;
         return height;
     }
-    @Export()
+
     protected get cameraWidth() {
         const width = this.scene.cameras.main.width;
         return width;
     }
-    @Export()
+
     protected get cameraHeight() {
         const height = this.scene.cameras.main.height;
         return height;
     }
-    @Export()
+
     protected __exportProperty() {
         if (!this.render) {
             return;
         }
         return this.render.exportProperty(this, this.render, this.key).onceReady(this.exportComplete.bind(this));
     }
-    @Export()
+
     protected exportComplete() {
         this.exported = true;
         for (const listener of this.exportListeners) {
@@ -188,15 +188,15 @@ export class BaseBatchPanel extends Panel {
         }
         this.exportListeners.length = 0;
     }
-    @Export()
+
     protected onShow() {
 
     }
-    @Export()
+
     protected onHide() {
         this.render.uiManager.hideBatchPanel(this);
     }
-    @Export()
+
     protected onInitialized() {
 
     }
