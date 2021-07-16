@@ -1,5 +1,5 @@
-import { StringUtils } from "utils";
 import { LayerManager } from "../layer";
+import { LoadingTips } from "structure";
 export class BasicScene extends Phaser.Scene {
     public layerManager: LayerManager;
     protected initialize: boolean = false;
@@ -18,8 +18,8 @@ export class BasicScene extends Phaser.Scene {
     }
 
     public preload() {
-        const str = StringUtils.format("正在加载资源 {0}", ["0%"]);
-        if (this.render) this.render.showLoading({ "text": str });
+        // const str = i18n.t(LoadingTips.LOADINg_RESOURCES, { progress: 0 });
+        // if (this.render) this.render.showLoading({ "text": str });
     }
 
     setScale(zoom: number) {

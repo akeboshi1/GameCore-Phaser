@@ -1,4 +1,3 @@
-/// <reference types="tooqingphaser" />
 export declare enum LoadType {
     IMAGE = 0,
     JSON = 1,

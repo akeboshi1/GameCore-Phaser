@@ -1,4 +1,3 @@
-/// <reference types="tooqingphaser" />
 import { Url } from "utils";
 import { IDisplayObject } from "../display.object";
 export declare class BubbleContainer extends Phaser.GameObjects.Container {

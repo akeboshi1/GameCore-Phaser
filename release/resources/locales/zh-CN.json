@@ -2,5 +2,8 @@
   "common": {
     "cancel": "取消",
     "confirm": "确定"
+  },
+  "loading": {
+    "loadresource": "正在加载资源 {{progress}}"
   }
 }

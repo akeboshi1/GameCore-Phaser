@@ -1,4 +1,3 @@
-/// <reference types="tooqingphaser" />
 import { BaseUI } from "apowophaserui";
 export declare class ProgressMaskBar extends BaseUI {
     value: number;

@@ -97,7 +97,11 @@ export declare class MainPeer extends RPCPeer {
     clearClock(): void;
     requestCurTime(): Promise<number>;
     httpClockEnable(enable: boolean): void;
-    showNoticeHandler(text: string): void;
+    showNoticeHandler(text: {
+        msg?: string;
+        i18nMsg?: string;
+        i18nData?: any;
+    }): void;
     showPanelHandler(name: string, data?: any): void;
     closePanelHandler(id: number): void;
     showMediator(name: string, isShow: boolean, param?: any): void;

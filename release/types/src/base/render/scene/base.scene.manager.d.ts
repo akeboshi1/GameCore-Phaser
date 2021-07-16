@@ -1,4 +1,3 @@
-/// <reference types="tooqingphaser" />
 import { BasicScene } from "./basic.scene";
 import { IRender } from "../render";
 export declare class BaseSceneManager {
