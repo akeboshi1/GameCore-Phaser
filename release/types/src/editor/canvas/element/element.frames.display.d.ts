@@ -1,3 +1,4 @@
+/// <reference types="tooqingphaser" />
 import { ResourcesChangeListener } from "./element.editor.resource.manager";
 import ElementEditorGrids from "./element.editor.grids";
 import { BaseFramesDisplay } from "baseRender";

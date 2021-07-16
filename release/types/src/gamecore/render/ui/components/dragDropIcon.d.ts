@@ -1,3 +1,4 @@
+/// <reference types="tooqingphaser" />
 import { IDragable } from "./idragable";
 import { IDropable } from "./idropable";
 import { Render } from "../../render";

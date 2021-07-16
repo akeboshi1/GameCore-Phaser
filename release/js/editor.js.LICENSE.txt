@@ -190,7 +190,7 @@
 
 /*! exports provided: SkyBoxScene */
 
-/*! exports provided: SocketConnectionError, SocketConnection */
+/*! exports provided: SocketConnectionError, SocketState, SocketConnection */
 
 /*! exports provided: SortRectangle */
 

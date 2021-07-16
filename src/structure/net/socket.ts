@@ -20,6 +20,12 @@ export class SocketConnectionError extends Error {
     }
 }
 
+export enum SocketState {
+    closed,
+    closeing,
+    link
+}
+
 // 实际工作在Web-Worker内的WebSocket客户端
 export class SocketConnection {
     protected mTransport: WSWrapper;
@@ -27,7 +33,7 @@ export class SocketConnection {
     protected mConnectListener?: IConnectListener;
     // true是外部断网，false是手动断网
     protected isAuto: boolean = true;
-    private mIsConnect: boolean = false;
+    private mConnectState: number = SocketState.closed;
     private mCloseBack: any;
     constructor($listener: IConnectListener) {
         this.mTransport = new WSWrapper();
@@ -40,12 +46,12 @@ export class SocketConnection {
                 Logger.getInstance().info(`SocketConnection ready.[${this.mServerAddr.host}:${this.mServerAddr.port}]`);
                 listener.onConnected(this.isAuto);
                 this.onConnected();
-                this.mIsConnect = true;
+                this.mConnectState = SocketState.link;
                 this.isAuto = true;
             });
             this.mTransport.on("close", () => {
                 Logger.getInstance().info(`SocketConnection close.`);
-                this.mIsConnect = false;
+                this.mConnectState = SocketState.closed;
                 listener.onDisConnected(this.isAuto);
                 if (this.mCloseBack) {
                     this.mCloseBack();
@@ -53,7 +59,7 @@ export class SocketConnection {
             });
             this.mTransport.on("error", (reason: SocketConnectionError) => {
                 Logger.getInstance().info(`SocketConnection error.`);
-                if (this.mIsConnect) listener.onError(reason);
+                if (this.mConnectState > SocketState.closeing) listener.onError(reason);
             });
         }
     }
@@ -62,8 +68,13 @@ export class SocketConnection {
         this.isAuto = val;
     }
 
-    get isConnect() {
-        return this.mIsConnect;
+    /**
+     * 0: 已经关闭
+     * 1: 正在关闭
+     * 2: 链接
+     */
+    get socketState() {
+        return this.mConnectState;
     }
 
     startConnect(addr: ServerAddress): void {
