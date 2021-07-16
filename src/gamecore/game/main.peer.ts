@@ -502,7 +502,7 @@ export class MainPeer extends RPCPeer {
     }
 
     @Export()
-    public showNoticeHandler(text: { msg?: string, i18nMsg?: string, i18nData?: any } ) {
+    public showNoticeHandler(text: { msg?: string, i18nMsg?: string, i18nData?: any }) {
         // const data = new op_client.OP_VIRTUAL_WORLD_RES_CLIENT_SHOW_UI();
         // data.text = [{ text, node: undefined }];
         // this.game.showByName(ModuleName.PICANOTICE_NAME, data);
@@ -632,7 +632,7 @@ export class MainPeer extends RPCPeer {
     @Export([webworker_rpc.ParamType.str])
     public uploadHeadImage(url: string) {
         this.game.httpService.uploadHeadImage(url).then(() => {
-            this.game.emitter.emit("updateDetail");
+            if (this.game && this.game.emitter) this.game.emitter.emit("updateDetail");
         });
     }
 

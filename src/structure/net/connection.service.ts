@@ -3,7 +3,7 @@ import { ServerAddress } from "./address";
 import { SocketConnection } from "./socket";
 
 export interface ConnectionService {
-    connect: boolean;
+    connect: number;
     pause: boolean;
     socket: SocketConnection;
     startConnect(addr: ServerAddress, keepalive?: boolean);

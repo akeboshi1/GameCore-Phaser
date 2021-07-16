@@ -40,7 +40,7 @@
 
 /*! exports provided: LayerName */
 
-/*! exports provided: LoadState, PlaySceneLoadState */
+/*! exports provided: LoadState, PlaySceneLoadState, LoadingTips */
 
 /*! exports provided: Logger, log, error */
 
@@ -72,7 +72,7 @@
 
 /*! exports provided: Size */
 
-/*! exports provided: SocketConnectionError, SocketConnection */
+/*! exports provided: SocketConnectionError, SocketState, SocketConnection */
 
 /*! exports provided: SortRectangle */
 

@@ -2,7 +2,7 @@
 import { PacketHandler, PBpacket } from "net-socket-packet";
 import * as protos from "pixelpai_proto";
 import { MainPeer } from "../main.peer";
-import { Logger } from "structure";
+import { ConnectState, Logger, SocketState } from "structure";
 import { SocketConnection, IConnectListener, SocketConnectionError, ConnectionService, ServerAddress } from "structure";
 import { Clock } from "../loop/clock/clock";
 
@@ -74,12 +74,12 @@ export class Connection implements ConnectionService {
     protected mPacketHandlers: PacketHandler[] = [];
     private mCachedServerAddress: ServerAddress | undefined;
     private mSocket: GameSocket;
-    private isConnect: boolean = false;
+    private isConnectState: number = SocketState.closed;
     private isPause: boolean = false;
     private mClock: Clock;
     private mPeer: MainPeer;
     private gateway: any;
-    private isCloseing: boolean = false;
+    // private isCloseing: boolean = false;
     constructor(peer: MainPeer) {
         this.mPeer = peer;
     }
@@ -91,15 +91,15 @@ export class Connection implements ConnectionService {
         return this.isPause;
     }
 
-    get connect(): boolean {
+    get connect(): number {
         if (!this.mSocket) {
-            return false;
+            return SocketState.closed;
         }
-        return this.mSocket.isConnect;
+        return this.mSocket.socketState;
     }
 
     set connect(val) {
-        this.isConnect = val;
+        this.isConnectState = val;
     }
 
     get socket(): SocketConnection {
@@ -107,11 +107,16 @@ export class Connection implements ConnectionService {
     }
 
     startConnect(addr: ServerAddress, keepalive?: boolean): void {
-        if (this.isCloseing) {
+        if (this.isConnectState === SocketState.closeing) {
             this.gateway = { addr, keepalive };
             return;
         }
-        if (this.isConnect) this.closeConnect();
+        if (this.isConnectState > SocketState.closeing) {
+            this.closeConnect(() => {
+                this.startConnect(addr, keepalive);
+            });
+            return;
+        }
         this.mCachedServerAddress = addr;
         // 存在socket，等待销毁并重新创建
         if (this.mSocket) {
@@ -122,19 +127,23 @@ export class Connection implements ConnectionService {
     }
 
     closeConnect(callBack?: Function) {
-        this.isConnect = false;
-        this.isCloseing = true;
         this.mCachedServerAddress = undefined;
         this.clearPacketListeners();
+        // 正在关闭什么都不做，等待callback
         if (this.mSocket) {
             this.mSocket.state = false;
-            // socket.isConnect判断socket是否关闭===》客户端先关闭socket,则走socket关闭逻辑；服务端关闭socket，则直接closeBack逻辑
-            this.mSocket.isConnect ? this.mSocket.stopConnect(this.closeBack(callBack)) : this.closeBack(callBack);
+            if (this.mSocket.socketState === SocketState.link) {
+                this.mSocket.stopConnect(this.closeBack(callBack));
+                this.isConnectState = SocketState.closeing;
+            } else if (this.mSocket.socketState === SocketState.closed) {
+                this.closeBack(callBack);
+            }
         }
+
     }
 
     closeBack(callBack?: Function) {
-        this.isCloseing = false;
+        this.isConnectState = SocketState.closed;
         this.mSocket.destroy();
         this.mSocket = null;
         if (callBack) callBack();
@@ -182,7 +191,7 @@ export class Connection implements ConnectionService {
     }
 
     onData(data: ArrayBuffer) {
-        if (!this.isConnect) return;
+        if (!this.isConnectState) return;
         const protobuf_packet = PBpacket.Create(data);
         this.mUuid = protobuf_packet.header.uuid;
         Logger.getInstance().log(`MainWorker[接收] <<< ${protobuf_packet.toString()} `);
