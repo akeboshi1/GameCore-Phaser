@@ -132,12 +132,13 @@ export class Connection implements ConnectionService {
         // 正在关闭什么都不做，等待callback
         if (this.mSocket) {
             this.mSocket.state = false;
-            if (this.mSocket.socketState > SocketState.closeing) {
+            if (this.mSocket.socketState === SocketState.link) {
                 this.mSocket.stopConnect(this.closeBack(callBack));
                 this.isConnectState = SocketState.closeing;
-            } else {
-                this.closeBack(callBack);
             }
+            // else if (this.mSocket.socketState === SocketState.closed) {
+            //     this.closeBack(callBack);
+            // }
         }
 
     }
