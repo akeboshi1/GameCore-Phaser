@@ -11,11 +11,12 @@ import {
     WallCollectionNode,
     MossCollectionNode,
     Capsule,
-    EventNode
+    EventNode,
+    GroundWalkableCollectionNode,
 } from "game-capsule";
 import { op_def } from "pixelpai_proto";
 import { BlockIndex } from "utils";
-import { AnimationModel, IDragonbonesModel, IFramesModel, IPos, IResPath, IScenery, Logger, LogicPos, Position45 } from "structure";
+import { AnimationModel, IDragonbonesModel, IFramesModel, IPos, IResPath, IScenery, Logger, LogicPos, Position45, ITilesetProperty } from "structure";
 import { DragonbonesModel, FramesModel } from "../sprite";
 export interface IAsset {
     type: string;
@@ -25,14 +26,11 @@ export interface IAsset {
 
 export interface IElementStorage {
     setGameConfig(gameConfig: Lite);
-    updatePalette(palette: PaletteNode);
     updateMoss(moss: MossNode);
     setSceneConfig(config: Lite);
     add(obj: IFramesModel | IDragonbonesModel): void;
     getDisplayModel(id: number): IFramesModel | IDragonbonesModel;
     getTerrainCollection();
-    getTerrainPalette(key: number): IFramesModel;
-    getTerrainPaletteByBindId(id: number): IFramesModel;
     getTerrainPaletteBySN(sn: string): IFramesModel;
     getMossPalette(key: number): { layer: number, frameModel: FramesModel };
     getAssets(): IAsset[];
@@ -55,19 +53,18 @@ export interface IDisplayRef {
 }
 
 export class ElementStorage implements IElementStorage {
-    protected mModels = new Map<number, FramesModel | DragonbonesModel>();
-    protected mElementRef = new Map<number, IDisplayRef>();
-    protected mTerrainRef = new Map<number, IDisplayRef>();
-    protected mDisplayRefMap: Map<op_def.NodeType, Map<number, IDisplayRef>>;
-    protected terrainPalette = new Map<number, FramesModel>();
-    protected terrainPaletteWithBindId = new Map<number, FramesModel>();
-    protected terrainPaletteWithSN = new Map<string, FramesModel>();
-    protected mossPalette = new Map<number, { layer: number, frameModel: FramesModel }>();
-    protected _terrainCollection: TerrainCollectionNode;
-    protected _mossCollection: MossCollectionNode;
-    protected _wallCollection: WallCollectionNode;
-    protected _scenerys: IScenery[];
-    protected _assets: IAsset[];
+    private mModels = new Map<number, FramesModel | DragonbonesModel>();
+    private mElementRef = new Map<number, IDisplayRef>();
+    private mDisplayRefMap: Map<op_def.NodeType, Map<number, IDisplayRef>>;
+    private terrainPaletteWithSN = new Map<string, FramesModel>();
+    private tilesetsSN2Idx: Map<string, number> = new Map<string, number>();
+    private mossPalette = new Map<number, { layer: number, frameModel: FramesModel }>();
+    private _terrainCollection: TerrainCollectionNode;
+    private _mossCollection: MossCollectionNode;
+    private _wallCollection: WallCollectionNode;
+    private _groundWalkableCollection: GroundWalkableCollectionNode;
+    private _scenerys: IScenery[];
+    private _assets: IAsset[];
 
     // private event: Phaser.Events.EventEmitter;
 
@@ -124,33 +121,8 @@ export class ElementStorage implements IElementStorage {
             }
         }
 
-        this.updatePalette(config.root.palette);
         this.updateMoss(config.root.moss);
         this.updateAssets(config.root.assets);
-    }
-
-    public updatePalette(palette: PaletteNode) {
-        for (const key of Array.from(palette.peersDict.keys())) {
-            const terrainPalette = palette.peersDict.get(key) as TerrainNode;
-            const terrainModel = this.terrainPalette.get(terrainPalette.id);
-            if (!terrainPalette.animations) continue;
-            if (!terrainModel) {
-                const frameModel = new FramesModel({
-                    id: terrainPalette.id,
-                    sn: terrainPalette.sn,
-                    animations: {
-                        defaultAnimationName: terrainPalette.animations.defaultAnimationName,
-                        display: terrainPalette.animations.display,
-                        animationData: terrainPalette.animations.animationData.map(
-                            (ani: AnimationDataNode) => new AnimationModel(ani.createProtocolObject())
-                        ),
-                    },
-                });
-                this.terrainPalette.set(key, frameModel);
-                this.terrainPaletteWithBindId.set(terrainPalette.id, frameModel);
-                this.terrainPaletteWithSN.set(terrainPalette.sn, frameModel);
-            }
-        }
     }
 
     public updateMoss(moss: MossNode) {
@@ -272,13 +244,8 @@ export class ElementStorage implements IElementStorage {
         this._terrainCollection = sceneNode.terrainCollection;
         this._mossCollection = sceneNode.mossCollection;
         this._wallCollection = sceneNode.wallCollection;
+        this._groundWalkableCollection = sceneNode.groundWalkableCollection;
         this._scenerys = sceneNode.getScenerys();
-        // const scenerys = sceneNode.getScenerys();
-        // this._scenerys = [];
-        // for (const scenery of scenerys) {
-        //     this._scenerys.push(scenery);
-        // }
-        this.addTerrainToDisplayRef(sceneNode);
         this.addMossToDisplayRef(sceneNode);
     }
 
@@ -299,18 +266,6 @@ export class ElementStorage implements IElementStorage {
 
     public getTerrainCollection() {
         return this._terrainCollection;
-    }
-
-    public getTerrainPalette(key: number) {
-        if (this.terrainPalette.get(key)) {
-            return this.terrainPalette.get(key);
-        }
-    }
-
-    public getTerrainPaletteByBindId(id: number) {
-        if (this.terrainPaletteWithBindId.get(id)) {
-            return this.terrainPaletteWithBindId.get(id);
-        }
     }
 
     public getTerrainPaletteBySN(sn: string) {
@@ -341,6 +296,17 @@ export class ElementStorage implements IElementStorage {
         return this._wallCollection;
     }
 
+    public getGroundWalkableCollection() {
+        return this._groundWalkableCollection;
+    }
+
+    public getTilesetIndexBySN(sn: string): number {
+        if (sn === undefined || sn.length === 0 || !this.tilesetsSN2Idx.has(sn)) {
+            return -1;
+        }
+        return this.tilesetsSN2Idx.get(sn);
+    }
+
     public getElementFromBlockIndex(indexs: number[], nodeType: op_def.NodeType) {
         const result = [];
         const map = this.mDisplayRefMap.get(nodeType);
@@ -351,13 +317,24 @@ export class ElementStorage implements IElementStorage {
         return result;
     }
 
+    public updateTilesets(props: ITilesetProperty[]) {
+        this.tilesetsSN2Idx.clear();
+        for (const prop of props) {
+            if (prop.sn === undefined || prop.sn.length === 0) {
+                Logger.getInstance().warn("tileset data error: ", prop);
+                continue;
+            }
+
+            this.tilesetsSN2Idx.set(prop.sn, prop.index);
+        }
+    }
+
     public destroy() {
         this.clearDisplayRef();
 
-        this.terrainPalette.clear();
-        this.terrainPaletteWithBindId.clear();
         this.terrainPaletteWithSN.clear();
         this.mossPalette.clear();
+        this.tilesetsSN2Idx.clear();
 
         this.mModels.forEach((model, index) => {
             model.destroy();
@@ -372,29 +349,6 @@ export class ElementStorage implements IElementStorage {
         const map = this.mDisplayRefMap.get(nodeType);
         if (!map) return;
         map.set(displayRef.id, displayRef);
-    }
-
-    private addTerrainToDisplayRef(sceneNode: SceneNode) {
-        const terrains = this._terrainCollection.data;
-        const cols = terrains.length;
-        const rows = terrains[0].length;
-        for (let i = 0; i < cols; i++) {
-            for (let j = 0; j < rows; j++) {
-                if (terrains[i][j] === 0) continue;
-                const id = i << 16 | j;
-                if (!sceneNode || !sceneNode.size) {
-                    Logger.getInstance().error(`${sceneNode.name}-${sceneNode.id} sceneNode.size does not exist`);
-                    continue;
-                }
-                const pos = Position45.transformTo90(new LogicPos(i, j), sceneNode.size);
-                this.addDisplayRef({
-                    id,
-                    displayModel: this.getTerrainPalette(terrains[i][j]),
-                    pos,
-                    blockIndex: new BlockIndex().getBlockIndex(pos.x, pos.y, sceneNode.size)
-                }, op_def.NodeType.TerrainNodeType);
-            }
-        }
     }
 
     private addMossToDisplayRef(sceneNode: SceneNode) {

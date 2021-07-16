@@ -1,3 +1,4 @@
+/// <reference types="tooqingphaser" />
 import { Render } from "../../render";
 import { Pos } from "structure";
 export interface IBtnData {

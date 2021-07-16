@@ -147,15 +147,47 @@ export class HttpService {
         return this.post("update_blob", { file: url });
     }
 
-    uploadDBTexture(key: string, url: string, json: string) {
-        const path = "user_avatar/texture/";
-        const imgFullName = path + key + ".png";
-        const jsonFullName = path + key + ".json";
+    uploadDBTexture(key: string, url: string, json: string): Promise<any> {
+        return new Promise<any>((resolve, reject) => {
+            const path = "user_avatar/texture/";
+            const imgFullName = path + key + ".png";
+            const jsonFullName = path + key + ".json";
 
-        return this.post("file_upload", { filename: jsonFullName, blob: json, type: "json" })
-            .then(() => {
-                return this.post("file_upload", { filename: imgFullName, blob: url, type: "png" });
-            });
+            // head first
+            this.game.renderPeer.getUsrAvatarTextureUrls(key)
+                .then((usrAvatarTextureUrls) => {
+                    return Promise.all([this.head(usrAvatarTextureUrls.img), this.head(usrAvatarTextureUrls.json)]);
+                })
+                .then((statusArr) => {
+                    let exit404 = false;
+                    for (const status of statusArr) {
+                        if (status === 404) {
+                            exit404 = true;
+                            break;
+                        }
+                    }
+                    if (exit404) {
+                        Promise.all([this.post("file_upload_mq", {filename: jsonFullName, blob: json, type: "json"}),
+                            this.post("file_upload_mq", {filename: imgFullName, blob: url, type: "png"})])
+                            .then((responses) => {
+                                resolve(null);
+                                for (const respons of responses) {
+                                    if (respons.status === 404) {
+                                        Logger.getInstance().error("file_upload_mq error: ", respons);
+                                    }
+                                }
+                            })
+                            .catch((reason) => {
+                                reject(reason);
+                            });
+                    } else {
+                        resolve(null);
+                    }
+                })
+                .catch((reason) => {
+                    reject(reason);
+                });
+        });
     }
 
     userHeadsImage(uids: string[]) {
@@ -181,6 +213,13 @@ export class HttpService {
         };
         // Logger.getInstance().debug("#post ", `${this.api_root}${uri}`, data);
         return fetch(`${this.api_root}${uri}`, data).then((response) => response.json());
+    }
+
+    public async head(url: string): Promise<number> {
+        const data = {
+            method: "HEAD"
+        };
+        return fetch(url, data).then((response) => response.status);
     }
 
     public get(uri: string) {

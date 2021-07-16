@@ -16,4 +16,8 @@ export declare class Url {
         json: string;
     };
     getResRoot(value: string): string;
+    getTilemapUrls(root: string, sceneID: string): {
+        mapJson: string;
+        tilesetImg: string;
+    };
 }

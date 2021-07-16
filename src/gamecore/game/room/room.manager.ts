@@ -125,6 +125,7 @@ export class RoomManager extends PacketHandler implements IRoomManager {
         const game = this.game;
         const config = game.getGameConfig();
         const configPath = ConfigPath.getSceneConfigUrl(remotePath);
+        this.game.setCurSceneConfigUrl(configPath);
         return load(configPath, "arraybuffer").then((req: any) => {
             this.mGame.gameConfigState.set(remotePath, true);
             game.loadingManager.start(LoadState.PARSECONFIG);

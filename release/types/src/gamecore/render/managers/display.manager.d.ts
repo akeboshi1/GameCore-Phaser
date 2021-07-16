@@ -1,4 +1,4 @@
-import { DisplayField, ElementStateType, IScenery, IPos, IPosition45Obj, IFramesModel, IDragonbonesModel, RunningAnimation } from "structure";
+import { DisplayField, ElementStateType, IScenery, IPos, IPosition45Obj, IFramesModel, IDragonbonesModel, RunningAnimation, ITilesetProperty, IGround } from "structure";
 import { FramesDisplay } from "../display/frames/frames.display";
 import { DragonbonesDisplay } from "../display/dragonbones/dragonbones.display";
 import { Render } from "../render";
@@ -56,6 +56,7 @@ export declare class DisplayManager {
     private loading;
     private mModelCache;
     private mGridLayer;
+    private mGround;
     private uuid;
     constructor(render: Render);
     get user(): IDisplayObject;
@@ -84,6 +85,9 @@ export declare class DisplayManager {
     addSkybox(scenery: IScenery): void;
     updateSkyboxState(state: any): void;
     removeSkybox(id: number): void;
+    addGround(ground: IGround): Promise<ITilesetProperty[]>;
+    changeGround(pos45: IPos, key: number): ITilesetProperty;
+    removeGround(): void;
     getDisplay(id: number): DragonbonesDisplay | FramesDisplay | undefined;
     displayDoMove(id: number, moveData: any): void;
     showNickname(id: number, name: string): void;

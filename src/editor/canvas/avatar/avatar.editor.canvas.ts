@@ -23,6 +23,7 @@ export class AvatarEditorCanvas extends EditorCanvas {
         this.mGame.scene.add(this.SCENEKEY, AvatarEditorScene);
 
         // start
+        this.mConfig.osd = config.osd || "https://osd-alpha.tooqing.com/";
         this.mData = config.node;
         this.mGame.scene.start(this.SCENEKEY, { onCreated: this.onSceneCreated.bind(this), onUpdate: this.update.bind(this), onDestroy: this.onSceneDestroy.bind(this), resPath: this.mConfig.LOCAL_HOME_PATH });
     }

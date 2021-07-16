@@ -12,7 +12,6 @@ export * from "./player/player.model";
 export * from "./sky.box/scenery";
 export * from "./sky.box/sky.box.manager";
 export * from "./state";
-export * from "./terrain/terrain";
 export * from "./terrain/terrain.manager";
 export * from "./terrain/empty.terrain";
 export * from "./viewblock/iviewblock.manager";

@@ -1,4 +1,5 @@
-import { Capsule, ElementNode, LayerEnum, MossNode, PaletteNode, SceneNode, TerrainNode } from "game-capsule";
+/// <reference types="tooqingphaser" />
+import { Capsule, ElementNode, LayerEnum, MossNode, SceneNode, TerrainNode } from "game-capsule";
 import { op_def, op_client } from "pixelpai_proto";
 import { Direction, IPos, IPosition45Obj } from "structure";
 import { EditorCanvas, IEditorCanvasConfig } from "../editor.canvas";
@@ -72,12 +73,15 @@ export declare class SceneEditorCanvas extends EditorCanvas implements IRender {
     fetchSprite(ids: number[], nodeType: op_def.NodeType): void;
     fetchScenery(id: number): void;
     setGameConfig(config: Capsule): void;
-    updatePalette(palette: PaletteNode): void;
     updateMoss(moss: MossNode): void;
     getCurrentRoomSize(): IPosition45Obj;
     getCurrentRoomMiniSize(): IPosition45Obj;
     getMainScene(): Phaser.Scene;
     checkCollision(pos: IPos, sprite: any): boolean;
+    transformTerrains(sns: string[]): Promise<Array<{
+        sn: string;
+        url: string;
+    }>>;
     destroy(): void;
     private init;
     private addListener;
