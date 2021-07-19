@@ -6,7 +6,7 @@
   "loading": {
     "login_error": "Login failed, please login again or try again later",
     "loadresource": "Loading resources {{progress}}",
-    "logging": "Searching for available space rift...",
+    "enter_world": "Searching for available space rift...",
     "wait_enter_room": "Constructing warp portal...",
     "downloading_game_config": "Checking vessel's stability...",
     "parse_config": "Analyzing spectrum...",

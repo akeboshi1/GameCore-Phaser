@@ -20,7 +20,7 @@ export class EnterWorldState extends BaseState {
         Logger.getInstance().debug("loginEnterWorld");
         const version = this.mMain.config.version;
         this.mGame.loadingManager
-            .start(LoadState.ENTERWORLD, { render: `v${version}` })
+            .start(LoadState.ENTERWORLD)
             .then(this.mGame.renderPeer.hideLogin());
         // =============> 向服务器发送_OP_CLIENT_REQ_VIRTUAL_WORLD_PLAYER_INIT
         const pkt: PBpacket = new PBpacket(op_gateway.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_PLAYER_INIT);

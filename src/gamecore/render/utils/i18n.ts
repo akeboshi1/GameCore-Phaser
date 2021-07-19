@@ -40,7 +40,17 @@ export function translateProto(strMsg: op_def.IStrMsg, namespaces?: string) {
   //   word = allWords[i];
   //   text += dataWords.includes(word) ? `{{${word}}} ` : i === 0 ? `${word}` : ` $t(${word})`;
   // }
-  return translate(i18nMsg, i18nData ? JSON.parse(i18nData) : undefined, namespaces);
+  let datas = null;
+  if (i18nData) {
+    datas = JSON.parse(i18nData);
+    for (const key in datas) {
+      const subData = datas[key];
+      if (subData.i18nMsg) {
+        datas[key] = translate(subData.i18nMsg, subData.i18nData, namespaces);
+      }
+    }
+  }
+  return translate(i18nMsg, datas, namespaces);
 }
 
 export function addResources(ns: string, resources: any) {
@@ -50,6 +60,11 @@ export function addResources(ns: string, resources: any) {
 
 export function addResourceBundle(lng: string, ns: string, resources: any, deep?: boolean, overwrite?: boolean) {
   return i18n.addResourceBundle(lng, ns, resources, deep, overwrite);
+}
+
+export function isZh() {
+  const lng = i18n.languages[0];
+  return lng.includes("zh");
 }
 
 export const i18n = i18next;

@@ -105,7 +105,7 @@ export class SceneManager extends BaseSceneManager {
                     break;
                 case LoadState.LOGINGAME:
                     // data.loadProgress = "勇者，正在穿越异世界...";// "正在请求登陆游戏";
-                    data.text = LoadingTips.LOGIN_GAME;
+                    // data.text = LoadingTips.LOGIN_GAME;
                     break;
                 case LoadState.PARSECONFIG:
                     // data.loadProgress = "大贤者迪塔装载中...";// "正在解析一大波游戏数据";
@@ -123,6 +123,9 @@ export class SceneManager extends BaseSceneManager {
                     // data.text = LoadingTips.crea();
                     break;
             }
+            if (data.text) {
+                data.text = i18n.t(data.text);
+            }
         }
         // 切换场景时，将之前场景状态变为正在切换（并没有被销毁，销毁是一个异步过程）
         if (this.mCurSceneName && this.mCurSceneName !== name && this.currentScene) {
@@ -134,7 +137,7 @@ export class SceneManager extends BaseSceneManager {
             if (!isActive) {
                 scene.wake(data);
             } else {
-                if (data.text && data.text.length > 0) scene.updateProgress(i18n.t(data.text));
+                if (data.text && data.text.length > 0) scene.updateProgress(data.text);
                 if (data.loadProgress) scene.loadProgress(data.loadProgress);
             }
             if (data.callBack) data.callBack();
