@@ -91,6 +91,9 @@ export class SocketConnection {
         if (!this.mTransport) {
             return Logger.getInstance().error(`Empty transport.`);
         }
+        if (this.mConnectState < SocketState.link) {
+            return Logger.getInstance().error(`Socket closing`);
+        }
         this.mTransport.Send(data);
     }
 

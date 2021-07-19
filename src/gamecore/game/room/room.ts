@@ -91,6 +91,8 @@ export interface IRoomService {
 
     removeFromWalkableMap(sprite: ISprite, isTerrain?: boolean);
 
+    setGroundWalkable(pos: IPos, walkable: boolean);
+
     getInteractiveEles(x: number, y: number): number[][];
 
     isWalkable(x: number, y: number): boolean;
@@ -298,9 +300,6 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
         if (!ele && this.mElementManager) {
             ele = this.mElementManager.get(id);
         }
-        if (!ele && this.mTerrainManager) {
-            ele = this.mTerrainManager.get(id);
-        }
         return ele;
     }
 
@@ -361,16 +360,7 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
         this.mBlocks.int(this.mSize);
         this.mGame.user.enterScene(this, this.mActorData);
 
-        if (this.connection) {
-            await this.cameraService.syncCamera();
-            if (this.cameraService.initialize) await this.cameraService.syncCameraScroll();
-            this.connection.send(new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_SCENE_CREATED));
-        }
-
         this.initSkyBox();
-        this.mTerrainManager.init();
-        this.mWallMamager.init();
-
         this.mAstar = new AStar(this);
         const map = [];
         for (let i = 0; i < this.miniSize.rows; i++) {
@@ -380,6 +370,16 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
             }
         }
         this.mAstar.init(map);
+
+        // terrain manager 中会调用astar  所以astar初始化需要在terrain manager 之前
+        await this.mTerrainManager.init();
+        this.mWallMamager.init();
+
+        if (this.connection) {
+            await this.cameraService.syncCamera();
+            if (this.cameraService.initialize) await this.cameraService.syncCameraScroll();
+            this.connection.send(new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_SCENE_CREATED));
+        }
     }
 
     public initUI() {
@@ -491,6 +491,17 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
                 this.removeWalkableMark(tempX, tempY, sprite.id);
             }
         }
+    }
+
+    public setGroundWalkable(pos: IPos, walkable: boolean) {
+        this.addWalkableMark(pos.x * 2, pos.y * 2, 0, 0, walkable);
+        this.addWalkableMark(pos.x * 2 + 1, pos.y * 2, 0, 0, walkable);
+        this.addWalkableMark(pos.x * 2, pos.y * 2 + 1, 0, 0, walkable);
+        this.addWalkableMark(pos.x * 2 + 1, pos.y * 2 + 1, 0, 0, walkable);
+        this.setTerrainMap(pos.x * 2, pos.y * 2, walkable);
+        this.setTerrainMap(pos.x * 2 + 1, pos.y * 2, walkable);
+        this.setTerrainMap(pos.x * 2, pos.y * 2 + 1, walkable);
+        this.setTerrainMap(pos.x * 2 + 1, pos.y * 2 + 1, walkable);
     }
 
     public getInteractiveEles(x: number, y: number): number[][] {
@@ -836,11 +847,11 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
             }
             this.mElementManager.addSpritesToCache(addList);
         } else if (nodeType === op_def.NodeType.TerrainNodeType) {
-            for (const sp of content.sprites) {
-                if (this.mTerrainManager.get(sp.id)) continue;
-                addList.push(sp);
-            }
-            this.mTerrainManager.addSpritesToCache(addList);
+            // for (const sp of content.sprites) {
+            //     if (this.mTerrainManager.get(sp.id)) continue;
+            //     addList.push(sp);
+            // }
+            // this.mTerrainManager.addSpritesToCache(addList);
         }
     }
 
@@ -868,14 +879,14 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
             }
             this.mElementManager.addSpritesToCache(content.sprites);
         } else if (nodeType === op_def.NodeType.TerrainNodeType) {
-            if (content.packet.currentFrame !== undefined && content.packet.currentFrame === 1) {
-                // remove all elements
-                const terrains = this.terrainManager.getElements();
-                for (const terrain of terrains) {
-                    this.terrainManager.remove(terrain.id);
-                }
-            }
-            this.mTerrainManager.add(addList);
+            // if (content.packet.currentFrame !== undefined && content.packet.currentFrame === 1) {
+            //     // remove all elements
+            //     const terrains = this.terrainManager.getElements();
+            //     for (const terrain of terrains) {
+            //         this.terrainManager.remove(terrain.id);
+            //     }
+            // }
+            // this.mTerrainManager.add(addList);
         }
     }
 

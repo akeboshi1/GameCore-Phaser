@@ -57,4 +57,10 @@ export class Url {
         if (this.OSD_PATH) return this.OSD_PATH + "/" + value;
         return value;
     }
+    getTilemapUrls(root: string, sceneID: string): { mapJson: string, tilesetImg: string } {
+        return {
+            mapJson: root + "mapdata/" + sceneID + "-map.json",
+            tilesetImg: root + "mapdata/" + "ground.png"
+        };
+    }
 }

@@ -63,6 +63,7 @@ export interface IRoomService {
     removeFromInteractiveMap(sprite: ISprite): any;
     addToWalkableMap(sprite: ISprite, isTerrain?: boolean): any;
     removeFromWalkableMap(sprite: ISprite, isTerrain?: boolean): any;
+    setGroundWalkable(pos: IPos, walkable: boolean): any;
     getInteractiveEles(x: number, y: number): number[][];
     isWalkable(x: number, y: number): boolean;
     checkSpriteConflictToWalkableMap(sprite: ISprite, isTerrain?: boolean, pos?: IPos): number[][];
@@ -132,6 +133,7 @@ export declare class Room extends PacketHandler implements IRoomService, SpriteA
     removeFromInteractiveMap(sprite: ISprite): void;
     addToWalkableMap(sprite: ISprite, isTerrain?: boolean): void;
     removeFromWalkableMap(sprite: ISprite, isTerrain?: boolean): void;
+    setGroundWalkable(pos: IPos, walkable: boolean): void;
     getInteractiveEles(x: number, y: number): number[][];
     isWalkable(x: number, y: number): boolean;
     findPath(startPos: IPos, targetPosList: IPos[], toReverse: boolean): LogicPos[];

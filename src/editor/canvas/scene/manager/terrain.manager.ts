@@ -163,32 +163,32 @@ export class EditorTerrainManager extends PacketHandler {
             this.taskQueue.delete(key);
 
             if (action === "ADD") {
-                const palette = this.sceneEditor.elementStorage.getTerrainPalette(loc.key);
-                if (!palette) continue;
-
-                const sprite = palette.createSprite({
-                    nodeType: op_def.NodeType.TerrainNodeType,
-                    x: loc.x,
-                    y: loc.y,
-                    z: 0
-                });
-                this.mEditorTerrains.set(locId, loc.key);
-                this.sceneEditor.displayObjectPool.push("terrains", locId, sprite);
+                // const palette = this.sceneEditor.elementStorage.getTerrainPalette(loc.key);
+                // if (!palette) continue;
+                //
+                // const sprite = palette.createSprite({
+                //     nodeType: op_def.NodeType.TerrainNodeType,
+                //     x: loc.x,
+                //     y: loc.y,
+                //     z: 0
+                // });
+                // this.mEditorTerrains.set(locId, loc.key);
+                // this.sceneEditor.displayObjectPool.push("terrains", locId, sprite);
             } else if (action === "DELETE") {
                 this.mEditorTerrains.delete(locId);
                 this.sceneEditor.displayObjectPool.remove("terrains", locId);
             } else if (action === "UPDATE") {
-                const palette = this.sceneEditor.elementStorage.getTerrainPalette(loc.key);
-                if (!palette) continue;
-
-                const sprite = palette.createSprite({
-                    nodeType: op_def.NodeType.TerrainNodeType,
-                    x: loc.x,
-                    y: loc.y,
-                    z: 0
-                });
-                this.mEditorTerrains.set(locId, loc.key);
-                this.sceneEditor.displayObjectPool.update("terrains", locId, sprite);
+                // const palette = this.sceneEditor.elementStorage.getTerrainPalette(loc.key);
+                // if (!palette) continue;
+                //
+                // const sprite = palette.createSprite({
+                //     nodeType: op_def.NodeType.TerrainNodeType,
+                //     x: loc.x,
+                //     y: loc.y,
+                //     z: 0
+                // });
+                // this.mEditorTerrains.set(locId, loc.key);
+                // this.sceneEditor.displayObjectPool.update("terrains", locId, sprite);
             }
         }
     }

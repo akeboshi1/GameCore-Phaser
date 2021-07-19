@@ -51,6 +51,7 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
     protected mGameStateManager: GameStateManager;
 
     protected mGameConfigUrls: Map<string, string> = new Map();
+    protected curSceneConfigUrl: string;
     protected mGameConfigUrl: string;
     protected mGameConfigState: Map<string, boolean> = new Map();
     protected isPause: boolean = false;
@@ -340,6 +341,14 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
 
     public getConfigUrl(sceneId: string) {
         return this.gameConfigUrls.get(sceneId);
+    }
+
+    public setCurSceneConfigUrl(val) {
+        this.curSceneConfigUrl = val;
+    }
+
+    public getCurSceneConfigUrl() {
+        return this.curSceneConfigUrl;
     }
 
     onClockReady(): void {

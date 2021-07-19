@@ -1,5 +1,7 @@
-import { ValueResolver, DisplayField, IDragonbonesModel, IFramesModel, RunningAnimation, Handler, IProjection, LogicPos } from "structure";
+import {DisplayField, IDragonbonesModel, IFramesModel, LogicPos, RunningAnimation, Handler, ValueResolver, IProjection} from "structure";
 import { ISortObject } from "./sort.object";
+import {ListenerManager} from "../listener.manager/listener.manager";
+
 export interface IBaseDisplay {
     displayInfo: IDragonbonesModel | IFramesModel | undefined;
     direction: number;
@@ -58,10 +60,12 @@ export abstract class BaseDisplay extends Phaser.GameObjects.Container implement
     protected mSortY: number = 0;
     protected mID: number = 0;
     protected mHasInteractive: boolean = false;
+    protected mListenerMng: ListenerManager;
 
     constructor(scene: Phaser.Scene, id?: number) {
         super(scene);
         this.mID = id;
+        this.mListenerMng = new ListenerManager(scene);
     }
 
     public destroy(fromScene?: boolean) {
@@ -72,7 +76,10 @@ export abstract class BaseDisplay extends Phaser.GameObjects.Container implement
             this.parentContainer.remove(this);
         }
         this.mHasInteractive = false;
-        super.destroy(fromScene);
+
+        this.mListenerMng.destroy();
+
+        super.destroy();
     }
 
     public load(data: IDragonbonesModel | IFramesModel): Promise<any> {
@@ -107,7 +114,7 @@ export abstract class BaseDisplay extends Phaser.GameObjects.Container implement
         return this.mDirection;
     }
 
-    public get displayInfo(): IDragonbonesModel | IFramesModel | undefined {
+    public get displayInfo() {
         return this.mDisplayInfo;
     }
 
@@ -233,4 +240,5 @@ export abstract class BaseDisplay extends Phaser.GameObjects.Container implement
     set hasInteractive(val) {
         this.mHasInteractive = val;
     }
+
 }

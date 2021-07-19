@@ -1,6 +1,7 @@
 /// <reference types="tooqingphaser" />
-import { ValueResolver, DisplayField, IDragonbonesModel, IFramesModel, RunningAnimation, Handler, IProjection, LogicPos } from "structure";
+import { DisplayField, IDragonbonesModel, IFramesModel, LogicPos, RunningAnimation, Handler, ValueResolver, IProjection } from "structure";
 import { ISortObject } from "./sort.object";
+import { ListenerManager } from "../listener.manager/listener.manager";
 export interface IBaseDisplay {
     displayInfo: IDragonbonesModel | IFramesModel | undefined;
     direction: number;
@@ -41,6 +42,7 @@ export declare abstract class BaseDisplay extends Phaser.GameObjects.Container i
     protected mSortY: number;
     protected mID: number;
     protected mHasInteractive: boolean;
+    protected mListenerMng: ListenerManager;
     constructor(scene: Phaser.Scene, id?: number);
     destroy(fromScene?: boolean): void;
     load(data: IDragonbonesModel | IFramesModel): Promise<any>;
@@ -48,7 +50,7 @@ export declare abstract class BaseDisplay extends Phaser.GameObjects.Container i
     get created(): boolean;
     set direction(dir: number);
     get direction(): number;
-    get displayInfo(): IDragonbonesModel | IFramesModel | undefined;
+    get displayInfo(): IDragonbonesModel | IFramesModel;
     set displayInfo(data: IDragonbonesModel | IFramesModel);
     play(animation: RunningAnimation): void;
     changeAlpha(val: number): void;

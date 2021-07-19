@@ -44,7 +44,6 @@ export declare class MainPeer extends RPCPeer {
     createGame(config: ILauncherConfig): void;
     getScaleRatio(): number;
     updateMoss(moss: any): void;
-    updatePalette(palette: any): void;
     removeElement(id: number): void;
     refreshToken(): void;
     changePlayerState(id: number, state: string, times?: number): void;
