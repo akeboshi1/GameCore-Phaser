@@ -1,6 +1,6 @@
 import { Capsule, ElementNode, LayerEnum, MossNode, PaletteNode, SceneNode, TerrainNode } from "game-capsule";
 import { op_def, op_client } from "pixelpai_proto";
-import { IFramesModel, ISprite } from "structure";
+import {Atlas, IFramesModel, ISprite} from "structure";
 import { Direction, IPos, IPosition45Obj, Logger, LogicPos, Position45 } from "structure";
 import { EditorCanvas, IEditorCanvasConfig } from "../editor.canvas";
 import { EditorFramesDisplay } from "./editor.frames.display";
@@ -21,6 +21,7 @@ import { EditorSceneManger } from "./manager/scene.manager";
 import { EditorWallManager } from "./manager/wall.manager";
 import { EditorDragonbonesDisplay } from "./editor.dragonbones.display";
 import { load, Url } from "utils";
+import {MaxRectsPacker} from "maxrects-packer";
 for (const key in protos) {
     PBpacket.addProtocol(protos[key]);
 }
@@ -369,9 +370,9 @@ export class SceneEditorCanvas extends EditorCanvas implements IRender {
         return this.mElementManager.checkCollision(pos, sprite);
     }
 
-    // 将地块数据转化为单帧url，只取idle动画第一层第一帧
-    transformTerrains(sns: string[]): Promise<Array<{sn: string, url: string}>> {
-        const tasks: Array<Promise<{sn: string, url: string}>> = [];
+    // 将地块数据转化为单帧url并合图，只取idle动画第一层第一帧，返回合图url
+    transformTerrains(sns: string[]): Promise<{json: string, url: string}> {
+        const tasks: Array<Promise<{sn: string, gene: string, frame: string}>> = [];
         for (const sn1 of sns) {
             // get terrains
             const framesModel = this.elementStorage.getTerrainPaletteBySN(sn1);
@@ -404,7 +405,7 @@ export class SceneEditorCanvas extends EditorCanvas implements IRender {
             const frameName = framesModel.getAnimations("idle").layer[0].frameName[0];
             const displayData = framesModel.display;
 
-            const task = new Promise<{sn: string, url: string}>((_resolve, _reject) => {
+            const task = new Promise<{sn: string, gene: string, frame: string}>((_resolve, _reject) => {
                 // check load
                 const loadPromise = new Promise<any>((loadResolve, loadReject) => {
                     if (this.scene.textures.exists(framesModel.gene)) {
@@ -438,21 +439,21 @@ export class SceneEditorCanvas extends EditorCanvas implements IRender {
                 loadPromise
                     .then(() => {
                         // get frame
-                        const frame = this.scene.textures.getFrame(framesModel.gene, frameName);
+                        // const frame = this.scene.textures.getFrame(framesModel.gene, frameName);
+                        //
+                        // // create canvas
+                        // const tileWidth = 64;
+                        // const canvas = this.mScene.textures.createCanvas("GenerateFrame_" + sn1, tileWidth, frame.height);
+                        //
+                        // // draw frame
+                        // const x = (tileWidth - frame.width) * 0.5;
+                        // canvas.drawFrame(framesModel.gene, frameName, x, 0);
+                        //
+                        // // to url
+                        // const url = canvas.canvas.toDataURL("image/png", 1);
+                        // canvas.destroy();
 
-                        // create canvas
-                        const tileWidth = 64;
-                        const canvas = this.mScene.textures.createCanvas("GenerateFrame_" + sn1, tileWidth, frame.height);
-
-                        // draw frame
-                        const x = (tileWidth - frame.width) * 0.5;
-                        canvas.drawFrame(framesModel.gene, frameName, x, 0);
-
-                        // to url
-                        const url = canvas.canvas.toDataURL("image/png", 1);
-                        canvas.destroy();
-
-                        _resolve({sn: sn1, url});
+                        _resolve({sn: sn1, gene: framesModel.gene, frame: frameName});
                     })
                     .catch((errMsg) => {
                         _reject(errMsg);
@@ -462,7 +463,36 @@ export class SceneEditorCanvas extends EditorCanvas implements IRender {
             tasks.push(task);
         }
 
-        return Promise.all(tasks);
+        return new Promise<{json: string, url: string}>((resolve, reject) => {
+            Promise.all(tasks)
+                .then((frames) => {
+                    const atlas = new Atlas();
+                    const packer = new MaxRectsPacker();
+                    packer.padding = 2;
+                    for (const f of frames) {
+                        const frame = this.mScene.textures.getFrame(f.gene, f.frame);
+                        const tileWidth = 64;
+                        packer.add(tileWidth, frame.height, f);
+                    }
+
+                    const { width, height } = packer.bins[0];
+                    const canvas = this.mScene.textures.createCanvas("GenerateTilesetImg", width, height);
+                    packer.bins.forEach((bin) => {
+                        bin.rects.forEach((rect) => {
+                            canvas.drawFrame(rect.data.gene, rect.data.frame, rect.x, rect.y);
+                            atlas.addFrame(rect.data.sn, rect);
+                        });
+                    });
+
+                    const url = canvas.canvas.toDataURL("image/png", 1);
+                    canvas.destroy();
+
+                    resolve({ url, json: atlas.toString() });
+                })
+                .catch((reason) => {
+                    reject(reason);
+                });
+        });
     }
 
     destroy() {
