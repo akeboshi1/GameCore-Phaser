@@ -27,6 +27,7 @@ export declare class Tool {
     static angleToDirections(angle: any, dirMode: any, out: any): any;
     static checkPointerContains(gameObject: any, pointer: any): boolean;
     static baseName(str: any): string;
+    static rootName(str: string): string;
     static isNumeric(str: any): boolean;
     private static chunk;
 }

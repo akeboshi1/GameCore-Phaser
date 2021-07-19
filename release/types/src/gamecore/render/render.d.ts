@@ -6,7 +6,7 @@ import { op_client, op_def } from "pixelpai_proto";
 import { Account } from "./account";
 import { LocalStorageManager } from "./managers/local.storage.manager";
 import { CamerasRenderManager } from "./cameras/cameras.render.manager";
-import { ElementStateType, GameMain, IDragonbonesModel, IFramesModel, ILauncherConfig, IScenery, IPos, IPosition45Obj, LogicPos, Size, IWorkerParam } from "structure";
+import { ElementStateType, GameMain, IDragonbonesModel, IFramesModel, ILauncherConfig, IScenery, IPos, IPosition45Obj, LogicPos, Size, IWorkerParam, IGround, ITilesetProperty } from "structure";
 import { DisplayManager } from "./managers/display.manager";
 import { InputManager } from "./input/input.manager";
 import { EditorCanvasManager } from "./managers/editor.canvas.manager";
@@ -125,6 +125,10 @@ export declare class Render extends RPCPeer implements GameMain, IRender {
     getResourceRoot(url: string): Promise<unknown>;
     getResUIPath(): Promise<unknown>;
     getNormalUIPath(res: string): Promise<unknown>;
+    getUsrAvatarTextureUrls(value: string): {
+        img: string;
+        json: string;
+    };
     startFullscreen(): void;
     stopFullscreen(): void;
     setGameConfig(config: any): void;
@@ -257,6 +261,9 @@ export declare class Render extends RPCPeer implements GameMain, IRender {
     setPlayerModel(sprite: any): void;
     addSkybox(scenery: IScenery): void;
     removeSkybox(id: number): void;
+    addGround(ground: IGround): Promise<ITilesetProperty[]>;
+    changeGround(pos45: IPos, key: number): ITilesetProperty;
+    removeGround(): void;
     showMatterDebug(vertices: any): void;
     hideMatterDebug(): void;
     drawServerPosition(x: number, y: number): void;

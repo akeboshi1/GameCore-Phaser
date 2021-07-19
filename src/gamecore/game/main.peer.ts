@@ -178,11 +178,6 @@ export class MainPeer extends RPCPeer {
         if (this.game.elementStorage) this.game.elementStorage.updateMoss(moss);
     }
 
-    @Export()
-    public updatePalette(palette) {
-        if (this.game.elementStorage) this.game.elementStorage.updatePalette(palette);
-    }
-
     @Export([webworker_rpc.ParamType.num])
     public removeElement(id: number) {
         if (this.game.roomManager && this.game.roomManager.currentRoom && this.game.roomManager.currentRoom.elementManager) {

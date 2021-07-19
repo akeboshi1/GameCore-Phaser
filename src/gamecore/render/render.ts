@@ -18,7 +18,7 @@ import {
     IScenery,
     MessageType,
     SceneName,
-    PlatFormType, IPos, IPosition45Obj, Logger, LogicPos, Pos, Size, ValueResolver, IWorkerParam
+    PlatFormType, IPos, IPosition45Obj, Logger, LogicPos, Pos, Size, ValueResolver, IWorkerParam, IGround, ITilesetProperty
 } from "structure";
 import { DisplayManager } from "./managers/display.manager";
 import { InputManager } from "./input/input.manager";
@@ -495,6 +495,11 @@ export class Render extends RPCPeer implements GameMain, IRender {
         return new Promise((resolve, reject) => {
             resolve(this.resUrl.getNormalUIRes(res));
         });
+    }
+
+    @Export()
+    public getUsrAvatarTextureUrls(value: string): { img: string, json: string } {
+        return this.resUrl.getUsrAvatarTextureUrls(value);
     }
 
     startFullscreen(): void {
@@ -1441,6 +1446,23 @@ export class Render extends RPCPeer implements GameMain, IRender {
     @Export([webworker_rpc.ParamType.num])
     public removeSkybox(id: number) {
         if (this.mDisplayManager) this.mDisplayManager.removeSkybox(id);
+    }
+
+    @Export()
+    public addGround(ground: IGround): Promise<ITilesetProperty[]> {
+        if (this.mDisplayManager) return this.mDisplayManager.addGround(ground);
+        return Promise.reject("no display manager");
+    }
+
+    @Export()
+    public changeGround(pos45: IPos, key: number): ITilesetProperty {
+        if (this.mDisplayManager) return this.mDisplayManager.changeGround(pos45, key);
+        return null;
+    }
+
+    @Export()
+    public removeGround() {
+        if (this.mDisplayManager) this.mDisplayManager.removeGround();
     }
 
     @Export()

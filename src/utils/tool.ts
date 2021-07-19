@@ -201,6 +201,11 @@ export class Tool {
         return base;
     }
 
+    public static rootName(str: string) {
+        const root = new String(str).substring(0, str.lastIndexOf("/")) + "/";
+        return root;
+    }
+
     // public static getRectangle(gameObject, scene) {
     //     // 移动超过30个单位，直接表示在移动，不必做点击处理
     //     const rectangle = new Phaser.Geom.Rectangle(0, 0, 0, 0);

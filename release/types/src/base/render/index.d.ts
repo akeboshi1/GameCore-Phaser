@@ -5,3 +5,5 @@ export * from "./scene";
 export * from "./layer";
 export * from "./display";
 export * from "./cameras";
+export * from "./ground";
+export * from "./listener.manager";

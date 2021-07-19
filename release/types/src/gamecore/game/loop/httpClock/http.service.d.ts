@@ -71,5 +71,6 @@ export declare class HttpService {
     uploadDBTexture(key: string, url: string, json: string): Promise<any>;
     userHeadsImage(uids: string[]): Promise<unknown>;
     post(uri: string, body: any, headers?: any): Promise<any>;
+    head(url: string): Promise<number>;
     get(uri: string): Promise<unknown>;
 }

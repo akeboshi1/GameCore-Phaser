@@ -85,17 +85,14 @@ export declare class BaseDragonbonesDisplay extends BaseDisplay {
     protected mInteractive: boolean;
     protected mLoadingShadow: Phaser.GameObjects.Image;
     protected mMountContainer: Phaser.GameObjects.Container;
-    protected replaceArr: any[];
-    protected mLoadMap: Map<string, string>;
-    protected mErrorLoadMap: Map<string, any>;
-    protected mNeedReplaceTexture: boolean;
-    protected mBoardPoint: Phaser.Geom.Point;
-    protected mReplaceTextureKey: string;
-    protected mLoadListeners: Map<string, Function[]>;
-    protected mTexturesListeners: Map<string, Function[]>;
-    protected loadError: boolean;
+    private replaceArr;
+    private mLoadMap;
+    private mErrorLoadMap;
+    private mNeedReplaceTexture;
+    private mBoardPoint;
     private readonly UNPACK_SLOTS;
     private readonly UNCHECK_AVATAR_PROPERTY;
+    private mReplaceTextureKey;
     constructor(scene: Phaser.Scene, pathObj: IResPath, id?: number);
     set displayInfo(val: IDragonbonesModel | undefined);
     get displayInfo(): IDragonbonesModel | undefined;
@@ -140,8 +137,6 @@ export declare class BaseDragonbonesDisplay extends BaseDisplay {
     private partLoadKeyToSlotName;
     private slotNameToPropertyName;
     private setReplaceArrAndLoadMap;
-    private addPhaserListener;
-    private removePhaserListener;
     private recordReplacedTexture;
     private destroyReplacedTextureManually;
 }

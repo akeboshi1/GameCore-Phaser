@@ -64,3 +64,5 @@ export * from "./task";
 export * from "./state";
 export * from "./core.rpc";
 export * from "./IResPath";
+export * from "./ground";
+export * from "./tilemap";
