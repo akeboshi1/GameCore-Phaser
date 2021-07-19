@@ -191,10 +191,10 @@ export class Connection implements ConnectionService {
     }
 
     onData(data: ArrayBuffer) {
-        if (!this.isConnectState) return;
         const protobuf_packet = PBpacket.Create(data);
         this.mUuid = protobuf_packet.header.uuid;
-        Logger.getInstance().log(`MainWorker[接收] <<< ${protobuf_packet.toString()} `);
+        Logger.getInstance().log(`MainWorker[接收] <<< ${protobuf_packet.toString()} `, ` <<< connectState: ${this.isConnectState}`);
+        if (!this.isConnectState) return;
         const handlers = this.mPacketHandlers;
         this.mPeer.clearBeat();
         handlers.forEach((handler: PacketHandler) => {
