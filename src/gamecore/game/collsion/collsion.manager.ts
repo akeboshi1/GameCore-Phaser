@@ -3,7 +3,7 @@ import * as SAT from "sat";
 import { LogicPos } from "structure";
 
 export class CollsionManager {
-    private debug: boolean = true;
+    private debug: boolean = false;
     private borders: Map<number, SAT.Polygon> = new Map();
 
     constructor(private roomService: IRoomService) {
