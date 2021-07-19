@@ -2,6 +2,7 @@ import { DynamicNinepatch } from "../../ui/components/dynamic.ninepatch";
 import { BBCodeText, NineSlicePatch } from "apowophaserui";
 import { Url } from "utils";
 import { Font } from "structure";
+import { getWarpMode } from "../../utils/ui";
 export class Bubble extends Phaser.GameObjects.Container {
     private mChatContent: BBCodeText;
     private mBubbleBg: DynamicNinepatch;
@@ -20,24 +21,22 @@ export class Bubble extends Phaser.GameObjects.Container {
     }
 
     public show(text: string, bubble: any) {// op_client.IChat_Setting
-        this.mChatContent = new BBCodeText(this.scene, 0, 0, text, {
+        this.mChatContent = new BBCodeText(this.scene, 1 * this.mScale, 0, text, {
             fontFamily: Font.DEFULT_FONT,
-            fontSize: 14 * this.mScale,
+            fontSize: 11.33 * this.mScale,
             color: "#000000",
-            origin: { x: 0, y: 0 },
-            wrap: { width: 200 * this.mScale, mode: "character" }
+            wrap: { width: 124.33 * this.mScale, mode: getWarpMode() }
         }).setOrigin(0.5, 0.5);
         this.add(this.mChatContent);
 
-        const _minH = 50 * this.mScale;
-        const _minW = 100 * this.mScale;
-        this.mMinHeight = this.mChatContent.height + 30 * this.mScale;
+        const _minH = 56 * this.mScale;
+        const _minW = 56 * this.mScale;
+        this.mMinHeight = this.mChatContent.height + 40 * this.mScale;
         this.mMinHeight = this.mMinHeight < _minH ? _minH : this.mMinHeight;
-        this.mMinWidth = this.mChatContent.width + 30 * this.mScale;
+        this.mMinWidth = this.mChatContent.width + 40 * this.mScale;
         this.mMinWidth = this.mMinWidth < _minW ? _minW : this.mMinWidth;
 
         this.y = this.mMinHeight;
-
         this.mBubbleBg = new DynamicNinepatch(this.scene, this);
         const path_back = bubble.bubbleResource || "platformitem/thumbnail/bubble_01.png";
         const res = this.url.getOsdRes(path_back);
@@ -108,10 +107,9 @@ export class Bubble extends Phaser.GameObjects.Container {
     private onComplete(img: NineSlicePatch) {
         if (img && this.scene) {
             img.scale = this.mScale;
-            this.addAt(img, 0);
             img.y = -img.displayHeight >> 1;
-            this.mChatContent.y = -(img.displayHeight >> 1) + 8 * this.mScale;
-            // img.texture.setFilter(Phaser.Textures.FilterMode.LINEAR);
+            this.addAt(img, 0);
+            this.mChatContent.y = 15 * 0.5 * this.mScale + img.y;
         }
     }
 

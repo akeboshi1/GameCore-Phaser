@@ -52,13 +52,6 @@ export class BubbleContainer extends Phaser.GameObjects.Container {
 
     public destroy(fromScene?: boolean): void {
         if (!this.mBubbles) return;
-        // const len = this.mBubbles.length;
-        // let bul: Bubble = null;
-        // for (let i = len - 1; i >= 0; i--) {
-        //     bul = this.mBubbles[i];
-        //     if (!bul) continue;
-        //     bul.destroy();
-        // }
         this.mBubbles = null;
         this.removeFormParent();
         super.destroy(fromScene);
