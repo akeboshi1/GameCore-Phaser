@@ -45,8 +45,8 @@ export function translateProto(strMsg: op_def.IStrMsg, namespaces?: string) {
     datas = JSON.parse(i18nData);
     for (const key in datas) {
       const subData = datas[key];
-      if (subData.i18nMsg) {
-        datas[key] = translate(subData.i18nMsg, subData.i18nData, namespaces);
+      if (subData.i18n_msg) {
+        datas[key] = translate(subData.i18n_msg, subData.i18n_data, namespaces);
       }
     }
   }
