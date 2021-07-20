@@ -23,7 +23,7 @@ const commonConfig = {
             gamecoreRender: path.join(__dirname, "./src/gamecore/render"),
             structure: path.join(__dirname, "./src/structure"),
             utils: path.join(__dirname, "./src/utils"),
-            editorCanvas: path.join(__dirname, "./src/editor"),
+            editor: path.join(__dirname, "./src/editor"),
             display: path.join(__dirname, "./src/base/render/display"),
             baseRender: path.join(__dirname, "./src/base/render"),
             baseGame: path.join(__dirname, "./src/base/game"),
