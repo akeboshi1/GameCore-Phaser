@@ -348,9 +348,9 @@ export class SceneEditorCanvas extends EditorCanvas implements IRender {
         this.mElementStorage.setGameConfig(config);
     }
 
-    // updatePalette(palette: PaletteNode) {
-    //     this.mElementStorage.updatePalette(palette);
-    // }
+    updatePalette(palette: PaletteNode) {
+        // this.mElementStorage.updatePalette(palette);
+    }
 
     updateMoss(moss: MossNode) {
         this.mElementStorage.updateMoss(moss);
