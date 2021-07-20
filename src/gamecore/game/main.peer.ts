@@ -277,12 +277,7 @@ export class MainPeer extends RPCPeer {
     @Export()
     public startRoomPlay() {
         Logger.getInstance().debug("peer startroom");
-        if (!this.game.roomManager || !this.game.roomManager.currentRoom) {
-            this.game.emitter.off("EnterRoom", this.enterRoomHander, this);
-            this.game.emitter.on("EnterRoom", this.enterRoomHander, this);
-            return;
-        }
-        this.game.roomManager.currentRoom.startPlay();
+        if (this.game.roomManager && this.game.roomManager.currentRoom) this.game.roomManager.currentRoom.startPlay();
     }
 
     @Export([webworker_rpc.ParamType.str, webworker_rpc.ParamType.str])
@@ -683,10 +678,5 @@ export class MainPeer extends RPCPeer {
     // ==== config
     public isPlatform_PC() {
         return this.mConfig && this.mConfig.platform && this.mConfig.platform === "pc";
-    }
-
-    protected enterRoomHander() {
-        this.game.emitter.off("EnterRoom", this.enterRoomHander, this);
-        this.game.roomManager.currentRoom.startPlay();
     }
 }
