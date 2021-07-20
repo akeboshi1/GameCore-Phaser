@@ -15,6 +15,7 @@ export class MainPeer extends RPCPeer {
     protected mGame: Game;
     protected mRenderParam: IWorkerParam;
     protected mMainPeerParam: IWorkerParam;
+    protected mStartRoomPlay: boolean = false;
     private gameState;
     private stateTime: number = 0;
     private mConfig: ILauncherConfig;
@@ -276,8 +277,25 @@ export class MainPeer extends RPCPeer {
 
     @Export()
     public startRoomPlay() {
+        this.mStartRoomPlay = true;
         Logger.getInstance().debug("peer startroom");
-        if (this.game.roomManager && this.game.roomManager.currentRoom) this.game.roomManager.currentRoom.startPlay();
+        if (!this.game.roomManager || !this.game.roomManager.currentRoom) {
+            Logger.getInstance().log("scene no peer startroom");
+            return;
+        }
+        Logger.getInstance().log("scene has peer startroom");
+        this.game.roomManager.currentRoom.startPlay();
+    }
+
+    public addListen() {
+        this.removeListen();
+        Logger.getInstance().log("scene addListen");
+        this.game.emitter.on("EnterRoom", this.enterRoomHander, this);
+    }
+
+    public removeListen() {
+        Logger.getInstance().log("scene removeListen");
+        this.game.emitter.off("EnterRoom", this.enterRoomHander, this);
     }
 
     @Export([webworker_rpc.ParamType.str, webworker_rpc.ParamType.str])
@@ -678,5 +696,13 @@ export class MainPeer extends RPCPeer {
     // ==== config
     public isPlatform_PC() {
         return this.mConfig && this.mConfig.platform && this.mConfig.platform === "pc";
+    }
+
+    protected enterRoomHander() {
+        if (!this.mStartRoomPlay) return;
+        this.removeListen();
+        Logger.getInstance().log("scene getlisten");
+        this.game.roomManager.currentRoom.startPlay();
+        this.mStartRoomPlay = false;
     }
 }

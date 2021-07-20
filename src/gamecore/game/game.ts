@@ -626,6 +626,7 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
         const resPath = await this.renderPeer.getResPath();
         const osdPath = await this.renderPeer.getOsdPath();
         this.mElementStorage = new ElementStorage({ resPath, osdPath });
+        this.peer.addListen();
     }
     protected onClearGame() {
 
