@@ -50,7 +50,6 @@ Generated\ Files/
 *.VisualState.xml
 TestResult.xml
 [Dd]ebugPS/
-[Rr]elease/
 dlldata.c
 BenchmarkDotNet.Artifacts/
 project.lock.json

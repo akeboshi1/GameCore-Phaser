@@ -1,0 +1,356 @@
+{
+	"textures": [
+		{
+			"image": "mail",
+			"format": "RGBA8888",
+			"size": {
+				"w": 686,
+				"h": 491
+			},
+			"scale": 1,
+			"frames": [
+				{
+					"filename": "mail_Unfold_bg",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 550,
+						"h": 202
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 550,
+						"h": 202
+					},
+					"frame": {
+						"x": 1,
+						"y": 1,
+						"w": 550,
+						"h": 202
+					}
+				},
+				{
+					"filename": "mail_reward_bg",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 112,
+						"h": 112
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 112,
+						"h": 112
+					},
+					"frame": {
+						"x": 553,
+						"y": 1,
+						"w": 112,
+						"h": 112
+					}
+				},
+				{
+					"filename": "mail_read_mark_bg",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 78,
+						"h": 78
+					},
+					"spriteSourceSize": {
+						"x": 1,
+						"y": 1,
+						"w": 76,
+						"h": 76
+					},
+					"frame": {
+						"x": 553,
+						"y": 115,
+						"w": 76,
+						"h": 76
+					}
+				},
+				{
+					"filename": "mail_read_arrow",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 26,
+						"h": 18
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 26,
+						"h": 18
+					},
+					"frame": {
+						"x": 631,
+						"y": 115,
+						"w": 26,
+						"h": 18
+					}
+				},
+				{
+					"filename": "mail_unread_arrow",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 26,
+						"h": 18
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 26,
+						"h": 18
+					},
+					"frame": {
+						"x": 659,
+						"y": 115,
+						"w": 26,
+						"h": 18
+					}
+				},
+				{
+					"filename": "mail_annex_icon",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 24,
+						"h": 27
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 24,
+						"h": 27
+					},
+					"frame": {
+						"x": 631,
+						"y": 135,
+						"w": 24,
+						"h": 27
+					}
+				},
+				{
+					"filename": "mail_read_time",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 22,
+						"h": 22
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 22,
+						"h": 22
+					},
+					"frame": {
+						"x": 657,
+						"y": 135,
+						"w": 22,
+						"h": 22
+					}
+				},
+				{
+					"filename": "mail_unread_time",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 22,
+						"h": 22
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 22,
+						"h": 22
+					},
+					"frame": {
+						"x": 657,
+						"y": 159,
+						"w": 22,
+						"h": 22
+					}
+				},
+				{
+					"filename": "mail_unread_mark_bg",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 78,
+						"h": 78
+					},
+					"spriteSourceSize": {
+						"x": 1,
+						"y": 1,
+						"w": 76,
+						"h": 76
+					},
+					"frame": {
+						"x": 553,
+						"y": 193,
+						"w": 76,
+						"h": 76
+					}
+				},
+				{
+					"filename": "mail_read_bg",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 544,
+						"h": 140
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 544,
+						"h": 140
+					},
+					"frame": {
+						"x": 1,
+						"y": 205,
+						"w": 544,
+						"h": 140
+					}
+				},
+				{
+					"filename": "mail_read_countdown_bg",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 138,
+						"h": 29
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 138,
+						"h": 29
+					},
+					"frame": {
+						"x": 547,
+						"y": 271,
+						"w": 138,
+						"h": 29
+					}
+				},
+				{
+					"filename": "mail_unread_countdown_bg",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 138,
+						"h": 29
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 138,
+						"h": 29
+					},
+					"frame": {
+						"x": 547,
+						"y": 302,
+						"w": 138,
+						"h": 29
+					}
+				},
+				{
+					"filename": "mail_unread_bg",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 544,
+						"h": 140
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 544,
+						"h": 140
+					},
+					"frame": {
+						"x": 1,
+						"y": 347,
+						"w": 544,
+						"h": 140
+					}
+				},
+				{
+					"filename": "mail_reward_line",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 504,
+						"h": 1
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 504,
+						"h": 1
+					},
+					"frame": {
+						"x": 1,
+						"y": 489,
+						"w": 504,
+						"h": 1
+					}
+				},
+				{
+					"filename": "mail_read_mark",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 63,
+						"h": 61
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 63,
+						"h": 61
+					},
+					"frame": {
+						"x": 547,
+						"y": 333,
+						"w": 63,
+						"h": 61
+					}
+				},
+				{
+					"filename": "mail_unread_mark",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 62,
+						"h": 52
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 62,
+						"h": 52
+					},
+					"frame": {
+						"x": 612,
+						"y": 333,
+						"w": 62,
+						"h": 52
+					}
+				}
+			]
+		}
+	],
+	"meta": {
+		"app": "https://www.codeandweb.com/texturepacker",
+		"version": "3.0",
+		"smartupdate": "$TexturePacker:SmartUpdate:e805f0f844c197a0d9c08af7099028ae:9121e724e27aef09d591892e016b1bd2:dcdf04b4780ab3bebcf789460296c677$"
+	}
+}

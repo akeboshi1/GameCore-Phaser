@@ -1,0 +1,209 @@
+{
+	"textures": [
+		{
+			"image": "task_daily",
+			"format": "RGBA8888",
+			"size": {
+				"w": 920,
+				"h": 233
+			},
+			"scale": 1,
+			"frames": [
+				{
+					"filename": "daily_task_refresh_bg",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 544,
+						"h": 140
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 544,
+						"h": 140
+					},
+					"frame": {
+						"x": 1,
+						"y": 1,
+						"w": 544,
+						"h": 140
+					}
+				},
+				{
+					"filename": "daily_card_done_set1_1",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 86,
+						"h": 90
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 86,
+						"h": 90
+					},
+					"frame": {
+						"x": 547,
+						"y": 1,
+						"w": 86,
+						"h": 90
+					}
+				},
+				{
+					"filename": "daily_card_undone_set1",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 86,
+						"h": 90
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 86,
+						"h": 90
+					},
+					"frame": {
+						"x": 635,
+						"y": 1,
+						"w": 86,
+						"h": 90
+					}
+				},
+				{
+					"filename": "daily_card_done_set_1",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 63,
+						"h": 66
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 63,
+						"h": 66
+					},
+					"frame": {
+						"x": 723,
+						"y": 1,
+						"w": 63,
+						"h": 66
+					}
+				},
+				{
+					"filename": "daily_card_undone_set",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 63,
+						"h": 66
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 63,
+						"h": 66
+					},
+					"frame": {
+						"x": 788,
+						"y": 1,
+						"w": 63,
+						"h": 66
+					}
+				},
+				{
+					"filename": "daily_task_refresh_diamond_b",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 52,
+						"h": 46
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 52,
+						"h": 46
+					},
+					"frame": {
+						"x": 723,
+						"y": 69,
+						"w": 52,
+						"h": 46
+					}
+				},
+				{
+					"filename": "daily_task_refresh_diamond_s",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 26,
+						"h": 22
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 26,
+						"h": 22
+					},
+					"frame": {
+						"x": 547,
+						"y": 93,
+						"w": 26,
+						"h": 22
+					}
+				},
+				{
+					"filename": "daily_card_done_line",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 498,
+						"h": 128
+					},
+					"spriteSourceSize": {
+						"x": 28,
+						"y": 16,
+						"w": 458,
+						"h": 89
+					},
+					"frame": {
+						"x": 1,
+						"y": 143,
+						"w": 458,
+						"h": 89
+					}
+				},
+				{
+					"filename": "daily_card_undone_line",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 498,
+						"h": 128
+					},
+					"spriteSourceSize": {
+						"x": 28,
+						"y": 16,
+						"w": 458,
+						"h": 89
+					},
+					"frame": {
+						"x": 461,
+						"y": 143,
+						"w": 458,
+						"h": 89
+					}
+				}
+			]
+		}
+	],
+	"meta": {
+		"app": "https://www.codeandweb.com/texturepacker",
+		"version": "3.0",
+		"smartupdate": "$TexturePacker:SmartUpdate:d81fcec8e895f74f607d54a1ae2eb9df:c351462ffb47780a0c9b7000d8b3fff5:2e2f4df3cc41959930a1c9f12b1c7fe5$"
+	}
+}
