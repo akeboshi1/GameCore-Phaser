@@ -26,11 +26,6 @@ for (const key in protos) {
     PBpacket.addProtocol(protos[key]);
 }
 
-export interface ISceneEditorCanvasConfig extends IEditorCanvasConfig {
-    connection: any;
-    game_created: () => void;
-}
-
 // api: https://dej4esdop1.feishu.cn/docs/doccnFfHMv18NF2JPy7Rqh5dtod#
 export class SceneEditorCanvas extends EditorCanvas implements IRender {
     public displayObjectPool: DisplayObjectPool;
@@ -57,7 +52,7 @@ export class SceneEditorCanvas extends EditorCanvas implements IRender {
     private mElementStorage: ElementStorage;
 
     private mScene: Phaser.Scene;
-    constructor(config: ISceneEditorCanvasConfig) {
+    constructor(config: IEditorCanvasConfig) {
         super(config);
         this.mElements = new Map();
         this.mConfig = config;
@@ -83,8 +78,8 @@ export class SceneEditorCanvas extends EditorCanvas implements IRender {
         return null;
     }
 
-    get config(): ISceneEditorCanvasConfig {
-        return <ISceneEditorCanvasConfig> this.mConfig;
+    get config(): IEditorCanvasConfig {
+        return this.mConfig;
     }
 
     public update(time?: number, delta?: number) {

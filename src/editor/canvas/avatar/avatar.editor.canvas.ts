@@ -3,10 +3,6 @@ import { AvatarEditorDragonbone } from "./avatar.editor.dragonbone";
 import { Scene } from "tooqingphaser";
 import { Logger } from "structure";
 
-export interface IAvatarEditorCanvasConfig extends IEditorCanvasConfig {
-    node: any;
-}
-
 /**
  * api:https://dej4esdop1.feishu.cn/docs/doccn2zhhTyXaB3HYm69a0sIYhh
  * 尺寸规范链接：https://dej4esdop1.feishu.cn/docs/doccn5QVnqQ9XQz5baCBayOy49f?from=from_copylink
@@ -20,7 +16,7 @@ export class AvatarEditorCanvas extends EditorCanvas {
 
     private mDragonbone: AvatarEditorDragonbone;
 
-    constructor(config: IAvatarEditorCanvasConfig) {
+    constructor(config: IEditorCanvasConfig) {
         super(config);
         Logger.getInstance().debug("AvatarEditorCanvas.constructor()");
 
