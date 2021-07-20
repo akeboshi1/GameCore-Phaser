@@ -1,12 +1,15 @@
 export interface IEditorCanvasConfig {
     width: number;
     height: number;
-    node: {};
-    connection: any;
-    game_created: () => void;
+    node?: {};
+    connection?: any;
+    game_id?: string;
+    game_created?: () => void;
     LOCAL_HOME_PATH?: string;
     parent?: string;
     osd?: string;
+    api_root?: string;
+    server_addr?: { host: string, port: number, secure: boolean };
 }
 
 export class EditorCanvas {

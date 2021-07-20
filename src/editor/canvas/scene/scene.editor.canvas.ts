@@ -56,7 +56,7 @@ export class SceneEditorCanvas extends EditorCanvas implements IRender {
         super(config);
         this.mElements = new Map();
         this.mConfig = config;
-        this.mConfig.osd = config.osd || "https://osd-alpha.tooqing.com/";
+        this.config.osd = config.osd || "https://osd-alpha.tooqing.com/";
         this.mFactory = new EditorFactory(this);
         this.mSelecedElement = new SelectedElementManager(this);
         this.mStamp = new MouseFollow(this);
@@ -91,8 +91,8 @@ export class SceneEditorCanvas extends EditorCanvas implements IRender {
 
     public create(scene: Phaser.Scene) {
         this.mScene = scene;
-        if (this.mConfig.game_created) {
-            this.mConfig.game_created.call(this);
+        if (this.config.game_created) {
+            this.config.game_created.call(this);
         }
         // if (!this.mSceneNode) {
         //     return;
@@ -113,7 +113,7 @@ export class SceneEditorCanvas extends EditorCanvas implements IRender {
     }
 
     public load(url: string) {
-        load(this.mConfig.LOCAL_HOME_PATH + url, "arraybuffer").then((req: any) => {
+        load(this.config.LOCAL_HOME_PATH + url, "arraybuffer").then((req: any) => {
             try {
                 const capsule = new Capsule().deserialize(req.response);
             } catch {
@@ -348,9 +348,9 @@ export class SceneEditorCanvas extends EditorCanvas implements IRender {
         this.mElementStorage.setGameConfig(config);
     }
 
-    // updatePalette(palette: PaletteNode) {
-    //     this.mElementStorage.updatePalette(palette);
-    // }
+    updatePalette(palette: PaletteNode) {
+        // this.mElementStorage.updatePalette(palette);
+    }
 
     updateMoss(moss: MossNode) {
         this.mElementStorage.updateMoss(moss);
@@ -413,7 +413,7 @@ export class SceneEditorCanvas extends EditorCanvas implements IRender {
                     if (this.scene.textures.exists(framesModel.gene)) {
                         loadResolve(null);
                     } else {
-                        this.scene.load.atlas(framesModel.gene, this.mConfig.osd + displayData.texturePath, this.mConfig.osd + displayData.dataPath);
+                        this.scene.load.atlas(framesModel.gene, this.config.osd + displayData.texturePath, this.config.osd + displayData.dataPath);
                         const onAdd = (key: string) => {
                             if (key !== framesModel.gene) return;
                             loadResolve(null);
