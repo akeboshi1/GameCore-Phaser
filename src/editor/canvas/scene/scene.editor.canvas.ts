@@ -25,6 +25,8 @@ import {MaxRectsPacker} from "maxrects-packer";
 for (const key in protos) {
     PBpacket.addProtocol(protos[key]);
 }
+
+// api: https://dej4esdop1.feishu.cn/docs/doccnFfHMv18NF2JPy7Rqh5dtod#
 export class SceneEditorCanvas extends EditorCanvas implements IRender {
     public displayObjectPool: DisplayObjectPool;
     private mSelecedElement: SelectedElementManager;
