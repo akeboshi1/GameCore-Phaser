@@ -2,7 +2,7 @@ import { Scene } from "tooqingphaser";
 import { Render } from "../render";
 import { AvatarSuitType, Logger } from "structure";
 import { DragonbonesDisplay } from "../display/dragonbones/dragonbones.display";
-import { AvatarEditorDragonbone, AvatarEditorScene } from "editorCanvas";
+import { AvatarEditorDragonbone, AvatarEditorScene } from "editor";
 
 // 在runtime和editor中共用的avatar功能
 export class AvatarHelper {
