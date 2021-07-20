@@ -4,7 +4,7 @@ import { AStar, ConnectionService, Handler, IPos, IPosition45Obj, Logger, LogicP
 import { Game } from "../../game";
 import { EventType, IScenery, ISprite, LoadState, SceneName } from "structure";
 import IActor = op_client.IActor;
-import { ExtraRoomInfo } from "custom_proto";
+// import { ExtraRoomInfo } from "custom_proto";
 import { TerrainManager } from "./terrain/terrain.manager";
 import { ElementManager } from "./element/element.manager";
 import { PlayerManager } from "./player/player.manager";
@@ -156,14 +156,14 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
     }
 
     public addListen() {
-        if (this.game.emitter) this.mGame.emitter.on(EventType.UPDATE_EXTRA_ROOM_INFO, this.onExtraRoomInfoHandler, this);
+        // if (this.game.emitter) this.mGame.emitter.on(EventType.UPDATE_EXTRA_ROOM_INFO, this.onExtraRoomInfoHandler, this);
         if (this.connection) {
             this.connection.addPacketListener(this);
         }
     }
 
     public removeListen() {
-        if (this.game.emitter) this.mGame.emitter.off(EventType.UPDATE_EXTRA_ROOM_INFO, this.onExtraRoomInfoHandler, this);
+        // if (this.game.emitter) this.mGame.emitter.off(EventType.UPDATE_EXTRA_ROOM_INFO, this.onExtraRoomInfoHandler, this);
         if (this.connection) {
             this.connection.removePacketListener(this);
         }
@@ -908,14 +908,14 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
         }
     }
 
-    protected onExtraRoomInfoHandler(content: ExtraRoomInfo) {
-        if (this.wallManager) {
-            this.wallManager.changeAllDisplayData(content.wallId);
-        }
-        if (this.terrainManager) {
-            this.terrainManager.changeAllDisplayData(content.floorId);
-        }
-    }
+    // protected onExtraRoomInfoHandler(content: ExtraRoomInfo) {
+    //     if (this.wallManager) {
+    //         this.wallManager.changeAllDisplayData(content.wallId);
+    //     }
+    //     if (this.terrainManager) {
+    //         this.terrainManager.changeAllDisplayData(content.floorId);
+    //     }
+    // }
 
     protected getSpriteWalkableData(sprite: ISprite, isTerrain: boolean, pos?: IPos): { origin: IPos, collisionArea: number[][], walkableArea: number[][], pos45: IPos, rows: number, cols: number } {
         let collisionArea = sprite.getCollisionArea();
