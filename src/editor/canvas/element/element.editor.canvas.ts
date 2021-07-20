@@ -7,6 +7,10 @@ import version from "../../../../version";
 import { Logger } from "structure";
 import { ElementEditorBrushType, ElementEditorEmitType } from "./element.editor.type";
 
+export interface IElementEditorCanvasConfig extends IEditorCanvasConfig {
+    node: any;
+}
+
 /**
  * api:https://dej4esdop1.feishu.cn/docs/doccn1Ez79LjYywnNiAGbaP35Tc
  */
@@ -22,7 +26,7 @@ export class ElementEditorCanvas extends EditorCanvas {
     private mGrids: ElementEditorGrids;
     private mAnimations: ElementFramesDisplay | ElementEditorAnimations;
 
-    constructor(config: IEditorCanvasConfig) {
+    constructor(config: IElementEditorCanvasConfig) {
         super(config);
         Logger.getInstance().debug("ElementEditorCanvas.constructor()");
         this.mGame.scene.add(this.SCENEKEY, ElementEditorScene);

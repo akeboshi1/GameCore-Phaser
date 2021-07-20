@@ -114,6 +114,7 @@ export class RoomManager extends PacketHandler implements IRoomManager {
         room.addActor(scene.actor);
         room.enter(scene.scene);
         this.mCurRoom = room;
+        this.game.emitter.emit("EnterRoom");
     }
 
     public destroy() {

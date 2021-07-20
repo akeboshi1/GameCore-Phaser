@@ -46,12 +46,12 @@ export class WallManager {
     // 在墙面上
     public isInWallRect(pos: IPos): boolean {
         const pos45 = Position45.transformTo45(pos, this.roomService.roomSize);
-        // 4的由来：
-        // 墙高：6倍地块高度，其中有1倍被藏在地块下，所以可放置区域只有5倍地块高的区域，所以xy范围为[-4, 0]
+        // 10的由来：
+        // 墙高：12倍地块高度，其中有1倍被藏在地块下，所以可放置区域只有11倍地块高的区域，所以xy范围为[-10, 0]
         for (const wall of this.walls) {
-            const minX = wall.model.pos.x - 4;
+            const minX = wall.model.pos.x - 10;
             const maxX = wall.model.pos.x;
-            const minY = wall.model.pos.y - 4;
+            const minY = wall.model.pos.y - 10;
             const maxY = wall.model.pos.y;
             if (pos45.x >= minX && pos45.x <= maxX && pos45.y >= minY && pos45.y <= maxY) {
                 return true;
@@ -94,11 +94,5 @@ export class WallManager {
         }
 
         return false;
-    }
-
-    // todo: move to pica
-    // 替换全部资源
-    public changeAllDisplayData(id: string) {
-        // todo: change display data
     }
 }
