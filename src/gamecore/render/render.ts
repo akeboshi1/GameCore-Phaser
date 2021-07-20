@@ -23,7 +23,7 @@ import {
 import { DisplayManager } from "./managers/display.manager";
 import { InputManager } from "./input/input.manager";
 import { MainUIScene } from "./scenes/main.ui.scene";
-import { EditorCanvasManager } from "./managers/editor.canvas.manager";
+import { AvatarHelper } from "./managers/avatarHelper";
 import { BaseSceneManager, BasicScene, IRender, PlayCamera } from "baseRender";
 import { AstarDebugger } from "./display/debugs/astar";
 import { EditorModeDebugger } from "./display/debugs/editor.mode.debugger";
@@ -75,7 +75,7 @@ export class Render extends RPCPeer implements GameMain, IRender {
     protected mUiManager: UiManager;
     protected mDisplayManager: DisplayManager;
     protected mLocalStorageManager: LocalStorageManager;
-    protected mEditorCanvasManager: EditorCanvasManager;
+    protected mAvatarHelper: AvatarHelper;
     protected mRenderParam: IWorkerParam;
     protected mMainPeerParam: IWorkerParam;
     protected mAccount: Account;
@@ -236,8 +236,8 @@ export class Render extends RPCPeer implements GameMain, IRender {
         return this.mLocalStorageManager;
     }
 
-    get editorCanvasManager(): EditorCanvasManager {
-        return this.mEditorCanvasManager;
+    get editorCanvasManager(): AvatarHelper {
+        return this.mAvatarHelper;
     }
 
     get game(): Phaser.Game {
@@ -269,7 +269,7 @@ export class Render extends RPCPeer implements GameMain, IRender {
         if (!this.mInputManager) this.mInputManager = new InputManager(this);
         if (!this.mSoundManager) this.mSoundManager = new SoundManager(this);
         if (!this.mDisplayManager) this.mDisplayManager = new DisplayManager(this);
-        if (!this.mEditorCanvasManager) this.mEditorCanvasManager = new EditorCanvasManager(this);
+        if (!this.mAvatarHelper) this.mAvatarHelper = new AvatarHelper(this);
     }
 
     // 切游戏的时候销毁各个manmager
@@ -302,9 +302,9 @@ export class Render extends RPCPeer implements GameMain, IRender {
             this.mDisplayManager.destroy();
             this.mDisplayManager = undefined;
         }
-        if (this.mEditorCanvasManager) {
-            this.mEditorCanvasManager.destroy();
-            this.mEditorCanvasManager = undefined;
+        if (this.mAvatarHelper) {
+            this.mAvatarHelper.destroy();
+            this.mAvatarHelper = undefined;
         }
         if (this.mSceneManager) {
             this.mSceneManager.destroy();
