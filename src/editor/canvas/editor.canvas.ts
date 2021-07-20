@@ -1,12 +1,9 @@
 export interface IEditorCanvasConfig {
     width: number;
     height: number;
-    node: {};
-    connection: any;
-    game_created: () => void;
-    LOCAL_HOME_PATH?: string;
-    parent?: string;
-    osd?: string;
+    parent: string;
+    osd?: string;// 远程地址
+    LOCAL_HOME_PATH?: string;// 本地路径
 }
 
 export class EditorCanvas {
