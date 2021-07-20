@@ -1,3 +1,3 @@
-export * from "./editor.launcher";
+export * from "./editor.canvas.manager";
 export * from "./canvas";
 export * from "./utils";

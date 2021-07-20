@@ -17,7 +17,7 @@ export enum EditorCanvasType {
     Scene
 }
 
-export class EditorLauncher {
+export class EditorCanvasManager {
     // public static CreateCanvas<T extends EditorCanvas>(type: string, config: IEditorCanvasConfig): T {
     //     var canvas = Object.create(window[type].prototype);
     //     canvas.constructor.apply(canvas, config);

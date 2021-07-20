@@ -23,7 +23,7 @@ import {
 import { DisplayManager } from "./managers/display.manager";
 import { InputManager } from "./input/input.manager";
 import { MainUIScene } from "./scenes/main.ui.scene";
-import { AvatarHelper } from "./managers/avatarHelper";
+import { AvatarHelper } from "./managers/avatar.helper";
 import { BaseSceneManager, BasicScene, IRender, PlayCamera } from "baseRender";
 import { AstarDebugger } from "./display/debugs/astar";
 import { EditorModeDebugger } from "./display/debugs/editor.mode.debugger";

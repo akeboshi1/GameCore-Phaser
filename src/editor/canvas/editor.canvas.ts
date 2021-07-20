@@ -54,6 +54,12 @@ export class EditorCanvas {
         }
     }
 
+    public enableClick() {
+    }
+
+    public disableClick() {
+    }
+
     public destroy() {
         if (this.mGame) {
             this.mGame.plugins.removeScenePlugin("DragonBones");
