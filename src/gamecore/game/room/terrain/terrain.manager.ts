@@ -113,12 +113,6 @@ export class TerrainManager extends PacketHandler {
         }
     }
 
-    // todo: move to pica
-    // 替换全部资源
-    public changeAllDisplayData(id: string) {
-
-    }
-
     protected onSyncSprite(packet: PBpacket) {
         const content: op_client.IOP_EDITOR_REQ_CLIENT_SYNC_SPRITE = packet.content;
         if (content.nodeType !== op_def.NodeType.TerrainNodeType) {
@@ -178,16 +172,16 @@ export class TerrainManager extends PacketHandler {
         return this.mRoom;
     }
 
-    private terrainPos2Idx(x: number, y: number): number {
+    protected terrainPos2Idx(x: number, y: number): number {
         return x + y * this.mRoom.roomSize.cols;
     }
 
-    private changeGroundBySN(pos45: IPos, sn: string): Promise<ITilesetProperty> {
+    protected changeGroundBySN(pos45: IPos, sn: string): Promise<ITilesetProperty> {
         const index = this.mRoom.game.elementStorage.getTilesetIndexBySN(sn);
         return this.changeGroundByTilesetIndex(pos45, index);
     }
 
-    private changeGroundByTilesetIndex(pos45: IPos, key: number): Promise<ITilesetProperty> {
+    protected changeGroundByTilesetIndex(pos45: IPos, key: number): Promise<ITilesetProperty> {
         return new Promise<ITilesetProperty>((resolve, reject) => {
             this.mRoom.game.renderPeer.changeGround(pos45, key)
                 .then((prop: ITilesetProperty) => {
@@ -199,7 +193,7 @@ export class TerrainManager extends PacketHandler {
         });
     }
 
-    private changeWalkable(pos45: IPos, walkable: boolean) {
+    protected changeWalkable(pos45: IPos, walkable: boolean) {
         const terrainIdx = this.terrainPos2Idx(pos45.x, pos45.y);
         // set empty
         if (walkable && this.mEmptyMap.has(terrainIdx)) {

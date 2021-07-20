@@ -95,10 +95,4 @@ export class WallManager {
 
         return false;
     }
-
-    // todo: move to pica
-    // 替换全部资源
-    public changeAllDisplayData(id: string) {
-        // todo: change display data
-    }
 }
