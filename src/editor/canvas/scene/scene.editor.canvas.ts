@@ -78,7 +78,7 @@ export class SceneEditorCanvas extends EditorCanvas implements IRender {
     }
 
     get url(): Url {
-        return null;
+        return this.mUrl;
     }
 
     get config(): IEditorCanvasConfig {

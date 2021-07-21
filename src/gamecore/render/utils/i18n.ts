@@ -8,7 +8,11 @@ export function initLocales(path: string): Promise<any> {
     .use(HttpApi)
     .use(LanguageDetector)
     .init({
-      fallbackLng: "zh-CN",
+      fallbackLng: {
+        "en": ["en-US", "en-AU"],
+        "zh-CN": ["zh"],
+        "default": ["en"]
+      },
       load: "currentOnly",
       backend: {
         loadPath: path,

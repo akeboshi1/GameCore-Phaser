@@ -92,6 +92,7 @@ export class HttpClock {
 
     set gameId(val: string) {
         let gameId = val;
+        if (!val) return;
         const index = val.lastIndexOf(".");
         if (index > -1) {
             gameId = gameId.slice(index + 1, gameId.length);
