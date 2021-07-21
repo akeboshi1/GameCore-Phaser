@@ -58,6 +58,7 @@ export class SceneEditorCanvas extends EditorCanvas implements IRender {
         this.mElements = new Map();
         this.mConfig = config;
         this.config.osd = config.osd || "https://osd-alpha.tooqing.com/";
+        this.setSceneConfig(<SceneNode>config.node);
         this.mFactory = new EditorFactory(this);
         this.mSelecedElement = new SelectedElementManager(this);
         this.mStamp = new MouseFollow(this);
@@ -88,15 +89,17 @@ export class SceneEditorCanvas extends EditorCanvas implements IRender {
     public update(time?: number, delta?: number) {
         this.mElementManager.update();
         this.mMossManager.update();
-        this.mTerrainManager.update();
         this.mWallManager.update();
     }
 
     public create(scene: Phaser.Scene) {
         this.mScene = scene;
-        if (this.config.game_created) {
-            this.config.game_created.call(this);
-        }
+        this.mTerrainManager.create()
+            .then(() => {
+                if (this.config.game_created) {
+                    this.config.game_created.call(this);
+                }
+            });
         // if (!this.mSceneNode) {
         //     return;
         // }
@@ -194,6 +197,10 @@ export class SceneEditorCanvas extends EditorCanvas implements IRender {
             return;
         }
         this.mSelecedElement.unselectedElements();
+    }
+
+    public reloadTilemap() {
+        this.mTerrainManager.create();
     }
 
     public updateElements() {
@@ -485,6 +492,7 @@ export class SceneEditorCanvas extends EditorCanvas implements IRender {
                     }
 
                     const { width, height } = packer.bins[0];
+                    atlas.setSize(width, height);
                     const canvas = this.mScene.textures.createCanvas("GenerateTilesetImg", width, height);
                     packer.bins.forEach((bin) => {
                         bin.rects.forEach((rect) => {
@@ -711,14 +719,6 @@ export class SceneEditorCanvas extends EditorCanvas implements IRender {
         (<SceneEditor>this.mScene).layerManager.addToLayer(element.layer.toString(), display);
     }
 
-    private addTerrain(terrain: TerrainNode) {
-        const display = this.factory.createFramesDisplay(terrain);
-        const loc = terrain.location;
-        const pos = Position45.transformTo90(loc, this.mRoomSize);
-        display.setPosition(pos.x, pos.y);
-        (<SceneEditor>this.mScene).layerManager.addToLayer(terrain.layer.toString(), display);
-    }
-
     private eraser(type: op_def.NodeType) {
         const positions = this.mStamp.getEaserPosition();
         if (type === op_def.NodeType.TerrainNodeType) {
@@ -779,6 +779,10 @@ export class SceneEditorCanvas extends EditorCanvas implements IRender {
 
     get mossManager() {
         return this.mMossManager;
+    }
+
+    get sceneNode() {
+        return this.mSceneNode;
     }
 
     get emitter() {
@@ -969,7 +973,7 @@ class MouseFollow {
 
     createTerrainsOrMossesData() {
         const locs = this.mDisplay.displays.map((display) => this.getPosition(display.x, display.y));
-        return { locs, key: this.key };
+        return { locs, key: this.key, sn: this.sn };
     }
 
     createWallData() {
@@ -1103,6 +1107,10 @@ class MouseFollow {
 
     get key() {
         return this.mKey;
+    }
+
+    get sn() {
+        return this.mSprite.sn;
     }
 }
 
