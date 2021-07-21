@@ -1,5 +1,5 @@
 import {version} from "../../version";
 
-export function getCoreVersion() {
+export function getCoreVersion(): string {
     return version;
 }

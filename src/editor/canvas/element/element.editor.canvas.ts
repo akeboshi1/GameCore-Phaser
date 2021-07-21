@@ -3,7 +3,6 @@ import ElementEditorGrids from "./element.editor.grids";
 import ElementEditorAnimations from "./element.editor.animations";
 import ElementEditorResourceManager from "./element.editor.resource.manager";
 import { ElementFramesDisplay } from "./element.frames.display";
-import version from "../../../../version";
 import { Logger } from "structure";
 import { ElementEditorBrushType, ElementEditorEmitType } from "./element.editor.type";
 

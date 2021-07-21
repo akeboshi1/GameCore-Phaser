@@ -125,6 +125,25 @@ export class ElementStorage implements IElementStorage {
         this.updateAssets(config.root.assets);
     }
 
+    public updatePalette(palette: PaletteNode) {
+        for (const key of Array.from(palette.peersDict.keys())) {
+            const terrainPalette = palette.peersDict.get(key) as TerrainNode;
+            if (!terrainPalette.animations) continue;
+            const frameModel = new FramesModel({
+                id: terrainPalette.id,
+                sn: terrainPalette.sn,
+                animations: {
+                    defaultAnimationName: terrainPalette.animations.defaultAnimationName,
+                    display: terrainPalette.animations.display,
+                    animationData: terrainPalette.animations.animationData.map(
+                        (ani: AnimationDataNode) => new AnimationModel(ani.createProtocolObject())
+                    ),
+                },
+            });
+            this.terrainPaletteWithSN.set(terrainPalette.sn, frameModel);
+        }
+    }
+
     public updateMoss(moss: MossNode) {
         for (const peerKey of Array.from(moss.peersDict.keys())) {
             const elementMoss = moss.peersDict.get(peerKey) as ElementNode;
