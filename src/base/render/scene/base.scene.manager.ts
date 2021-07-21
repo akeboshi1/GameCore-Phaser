@@ -60,7 +60,10 @@ export class BaseSceneManager {
     public bringToTop(sceneName: string) {
     }
 
-    public startScene(name: string, data?: any) {
+    public startScene(name: string, data?: any): Promise<void> {
+        return new Promise<void>((resolve, reject) => {
+            resolve();
+        });
     }
 
     public stopScene(name: string) {

@@ -349,37 +349,44 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
 
     public async startPlay() {
         Logger.getInstance().debug("room startplay =====");
-        this.game.renderPeer.showPlay();
-        this.createManager();
-        const padding = 199 * this.mScaleRatio;
-        const offsetX = this.mSize.rows * (this.mSize.tileWidth / 2);
-        this.mGame.peer.render.roomstartPlay();
-        this.mGame.peer.render.gridsDebugger.setData(this.mSize);
-        this.mGame.peer.render.setCamerasBounds(-padding - offsetX * this.mScaleRatio, -padding, this.mSize.sceneWidth * this.mScaleRatio + padding * 2, this.mSize.sceneHeight * this.mScaleRatio + padding * 2);
-        //     // init block
-        this.mBlocks.int(this.mSize);
-        this.mGame.user.enterScene(this, this.mActorData);
+        this.game.renderPeer.showPlay().then(() => {
+            this.createManager();
+            // ======> 等待playscene创建完成
+            const padding = 199 * this.mScaleRatio;
+            const offsetX = this.mSize.rows * (this.mSize.tileWidth / 2);
+            this.mGame.peer.render.roomstartPlay();
+            this.mGame.peer.render.gridsDebugger.setData(this.mSize);
+            this.mGame.peer.render.setCamerasBounds(-padding - offsetX * this.mScaleRatio, -padding, this.mSize.sceneWidth * this.mScaleRatio + padding * 2, this.mSize.sceneHeight * this.mScaleRatio + padding * 2);
+            //     // init block
+            this.mBlocks.int(this.mSize);
+            this.mGame.user.enterScene(this, this.mActorData);
 
-        this.initSkyBox();
-        this.mAstar = new AStar(this);
-        const map = [];
-        for (let i = 0; i < this.miniSize.rows; i++) {
-            map[i] = [];
-            for (let j = 0; j < this.miniSize.cols; j++) {
-                map[i][j] = 1;
+            this.initSkyBox();
+            this.mAstar = new AStar(this);
+            const map = [];
+            for (let i = 0; i < this.miniSize.rows; i++) {
+                map[i] = [];
+                for (let j = 0; j < this.miniSize.cols; j++) {
+                    map[i][j] = 1;
+                }
             }
-        }
-        this.mAstar.init(map);
+            this.mAstar.init(map);
 
-        // terrain manager 中会调用astar  所以astar初始化需要在terrain manager 之前
-        await this.mTerrainManager.init();
-        this.mWallMamager.init();
+            this.mTerrainManager.init().then(() => {
+                this.mWallMamager.init();
 
-        if (this.connection) {
-            await this.cameraService.syncCamera();
-            if (this.cameraService.initialize) await this.cameraService.syncCameraScroll();
-            this.connection.send(new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_SCENE_CREATED));
-        }
+                if (this.connection) {
+                    this.cameraService.syncCamera().then(() => {
+                        Logger.getInstance().log("scene send scene_created");
+                        if (this.cameraService.initialize) {
+                            this.cameraService.syncCameraScroll().then(() => {
+                                this.connection.send(new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_SCENE_CREATED));
+                            });
+                        }
+                    });
+                }
+            });
+        });
     }
 
     public initUI() {

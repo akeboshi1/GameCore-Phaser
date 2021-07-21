@@ -861,7 +861,17 @@ export class Render extends RPCPeer implements GameMain, IRender {
 
     @Export()
     public showPlay(params?: any) {
-        if (this.mSceneManager) this.mSceneManager.startScene(SceneName.PLAY_SCENE, { render: this, params });
+        return new Promise<void>((resolve, reject) => {
+            if (!this.mSceneManager) {
+                reject();
+                return;
+            }
+            this.mSceneManager.startScene(SceneName.PLAY_SCENE, { render: this, params }).then(() => {
+                resolve();
+            }).catch(() => {
+                reject();
+            });
+        });
     }
 
     @Export()
