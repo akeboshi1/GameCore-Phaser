@@ -1,9 +1,9 @@
 import {ListenerManager, PhaserListenerType} from "../listener.manager/listener.manager";
-import {IRender} from "../render";
 import Tile = Phaser.Tilemaps.Tile;
 import Tileset = Phaser.Tilemaps.Tileset;
 import {ITilesetProperty} from "../../../structure/tilemap";
 import { IGround, IPos, Logger } from "structure";
+import {Url} from "utils";
 
 export class Ground extends Phaser.GameObjects.Container {
     public id: string;
@@ -14,14 +14,14 @@ export class Ground extends Phaser.GameObjects.Container {
     private readonly MAP_JSON_TILESET_NAME: string = "ground";
     private readonly MAP_JSON_LAYER_NAME: string = "ground-layer";
 
-    constructor(private render: IRender, scene: Phaser.Scene) {
+    constructor(scene: Phaser.Scene, private url: Url, private scaleRatio: number) {
         super(scene);
         this.listenerMng = new ListenerManager(scene);
     }
 
     public load(data: IGround): Promise<any> {
         this.id = data.id;
-        const urls = this.render.url.getTilemapUrls(data.resRoot, data.id);
+        const urls = this.url.getTilemapUrls(data.resRoot, data.id);
         return new Promise<any>((resolve, reject) => {
             this.loadTilemap(urls.mapJson, urls.tilesetImg)
                 .then(() => {
@@ -78,6 +78,12 @@ export class Ground extends Phaser.GameObjects.Container {
         return result;
     }
 
+    public existTerrain(x: number, y: number) {
+        const tile = this.tilemapLayer.getTileAt(x, y);
+        if (!tile) return false;
+        return tile.index >= 0;
+    }
+
     protected get mapJsonKey() {
         return "tilemapJson_" + this.id;
     }
@@ -103,7 +109,7 @@ export class Ground extends Phaser.GameObjects.Container {
         const tileSet = map.addTilesetImage(this.MAP_JSON_TILESET_NAME, this.tilesetImgKey);
         this.tilemapLayer = map.createLayer(this.MAP_JSON_LAYER_NAME, [tileSet]);
         // todo: ???
-        this.tilemapLayer.setScale(this.render.scaleRatio / 1.07);
+        this.tilemapLayer.setScale(this.scaleRatio / 1.07);
         this.addAt(this.tilemapLayer, 0);
     }
 
