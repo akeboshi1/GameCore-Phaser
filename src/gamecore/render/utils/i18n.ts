@@ -9,8 +9,8 @@ export function initLocales(path: string): Promise<any> {
     .use(LanguageDetector)
     .init({
       fallbackLng: {
-        "en": ["en-US", "en-AU"],
-        "zh-CN": ["zh"],
+        "en-US": ["en"],
+        "zh": ["zh-CN"],
         "default": ["en"]
       },
       load: "currentOnly",
