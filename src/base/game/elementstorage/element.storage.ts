@@ -26,6 +26,7 @@ export interface IAsset {
 
 export interface IElementStorage {
     setGameConfig(gameConfig: Lite);
+    updatePalette(palette: PaletteNode);
     updateMoss(moss: MossNode);
     setSceneConfig(config: Lite);
     add(obj: IFramesModel | IDragonbonesModel): void;
@@ -121,6 +122,7 @@ export class ElementStorage implements IElementStorage {
             }
         }
 
+        this.updatePalette(config.root.palette);
         this.updateMoss(config.root.moss);
         this.updateAssets(config.root.assets);
     }

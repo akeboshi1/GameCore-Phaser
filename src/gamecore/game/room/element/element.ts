@@ -336,6 +336,7 @@ export class Element extends BlockObject implements IElement {
         if (!this.mModel) {
             return;
         }
+        if (animations.length < 1) return;
         const changeAnimation: IChangeAnimation[] = [];
         for (const animation of animations) {
             const aq: IChangeAnimation = {
@@ -344,10 +345,20 @@ export class Element extends BlockObject implements IElement {
             };
             changeAnimation.push(aq);
         }
-        this.mModel.setAnimationQueue({ changeAnimation, finishAnimationBehavior });
-        if (changeAnimation.length > 0) {
-            this.play(animations[0].animationName, animations[0].times);
+        const lastAni = changeAnimation[changeAnimation.length - 1];
+        if (lastAni.playTimes && lastAni.playTimes > 0) {
+            // finishAnimationBehavior -1 回到之前的动画， 0 停在当前
+            if (finishAnimationBehavior === -1) {
+                const currentAnimation = this.mModel.currentAnimation;
+                if (this.mMoving) {
+                    changeAnimation.push();
+                } else {
+                    changeAnimation.push({ name: currentAnimation.name, playTimes: currentAnimation.times });
+                }
+            }
         }
+        this.mModel.setAnimationQueue({ changeAnimation });
+        this.play(animations[0].animationName, animations[0].times);
     }
 
     public completeAnimationQueue() {
@@ -355,18 +366,9 @@ export class Element extends BlockObject implements IElement {
         const anis = animationQueue.changeAnimation;
         if (!anis) return;
         anis.shift();
-        // finishAnimationBehavior -1 回到之前的动画， 0 停在当前
-        if (anis.length < 1 || animationQueue.finishAnimationBehavior === 0) {
-            delete animationQueue.finishAnimationBehavior;
-            return;
-        }
-        let aniName: string = PlayerState.IDLE;
-        let playTiems;
-        if (anis.length > 0) {
-            aniName = anis[0].name;
-            playTiems = anis[0].playTimes;
-        }
-        this.play(aniName, playTiems);
+        const tmpAni = anis[0];
+        if (!tmpAni) return;
+        this.play(tmpAni.name, tmpAni.playTimes);
     }
 
     public setDirection(val: number) {

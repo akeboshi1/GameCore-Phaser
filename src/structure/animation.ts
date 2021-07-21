@@ -7,8 +7,6 @@ export interface RunningAnimation {
 
 export interface AnimationQueue {
     changeAnimation: IChangeAnimation[];
-    // finishAnimationBehavior -1 回到之前的动画， 0 停在当前 默认0
-    finishAnimationBehavior?: number;
 }
 
 export interface IChangeAnimation {

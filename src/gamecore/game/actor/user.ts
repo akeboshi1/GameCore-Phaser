@@ -223,11 +223,11 @@ export class User extends Player {
         this.mRoomService.game.renderPeer.drawServerPosition(moveData[0].x, moveData[0].y);
     }
 
-    public setQueue(animations: op_client.IChangeAnimation[]) {
+    public setQueue(animations: op_client.IChangeAnimation[], finishAnimationBehavior?: number) {
         if (this.mMoving) {
             return;
         }
-        super.setQueue(animations);
+        super.setQueue(animations, finishAnimationBehavior);
     }
 
     public requestPushBox(targetId: number) {
