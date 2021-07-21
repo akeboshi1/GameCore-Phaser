@@ -349,8 +349,9 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
 
     public async startPlay() {
         Logger.getInstance().debug("room startplay =====");
+        // 优先创建manager，用于后续操作
+        this.createManager();
         this.game.renderPeer.showPlay().then(() => {
-            this.createManager();
             // ======> 等待playscene创建完成
             const padding = 199 * this.mScaleRatio;
             const offsetX = this.mSize.rows * (this.mSize.tileWidth / 2);
@@ -374,19 +375,25 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
 
             this.mTerrainManager.init().then(() => {
                 this.mWallMamager.init();
-
                 if (this.connection) {
+                    this.game.emitter.on("CameraSync", this.syncCameraScroll, this);
                     this.cameraService.syncCamera().then(() => {
                         Logger.getInstance().log("scene send scene_created");
-                        if (this.cameraService.initialize) {
-                            this.cameraService.syncCameraScroll().then(() => {
-                                this.connection.send(new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_SCENE_CREATED));
-                            });
-                        }
+                    }).catch((error) => {
+                        Logger.getInstance().log(error);
                     });
                 }
             });
         });
+    }
+
+    public syncCameraScroll() {
+        this.game.emitter.off("CameraSync", this.syncCameraScroll, this);
+        if (this.cameraService.initialize) {
+            this.cameraService.syncCameraScroll().then(() => {
+                this.connection.send(new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_SCENE_CREATED));
+            });
+        }
     }
 
     public initUI() {
@@ -436,6 +443,7 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
         if (!this.mInteractiveList) return;
         const len = this.mInteractiveList.length;
         for (let i: number = 0; i < len; i++) {
+            if (!this.mInteractiveList[i]) continue;
             const tmpLen = this.mInteractiveList[i].length;
             for (let j: number = 0; j < tmpLen; j++) {
                 const ids = this.mInteractiveList[i][j];
@@ -819,6 +827,7 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
 
     protected onCameraResetSizeHandler() {
         this.cameraService.initialize = true;
+        this.game.emitter.emit("CameraSync");
         // this.cameraService.syncCameraScroll();
     }
 

@@ -1,8 +1,8 @@
-import {PacketHandler, PBpacket} from "net-socket-packet";
-import {op_client, op_def} from "pixelpai_proto";
-import {IDragonbonesModel, IFramesModel, ISprite, ITilesetProperty, Logger, LogicPos, IPos, Position45, ConnectionService} from "structure";
-import {EmptyTerrain} from "./empty.terrain";
-import {Tool} from "utils";
+import { PacketHandler, PBpacket } from "net-socket-packet";
+import { op_client, op_def } from "pixelpai_proto";
+import { IDragonbonesModel, IFramesModel, ISprite, ITilesetProperty, Logger, LogicPos, IPos, Position45, ConnectionService } from "structure";
+import { EmptyTerrain } from "./empty.terrain";
+import { Tool } from "utils";
 import NodeType = op_def.NodeType;
 import { IDisplayRef, IElementStorage } from "baseGame";
 import { IRoomService, SpriteAddCompletedListener } from "../room";
@@ -46,10 +46,14 @@ export class TerrainManager extends PacketHandler {
             const scenePIUrl = this.mRoom.game.getCurSceneConfigUrl();
             const sceneID = Tool.baseName(scenePIUrl);
             const urlRoot = Tool.rootName(scenePIUrl);
-            this.mRoom.game.renderPeer.addGround({id: sceneID, resRoot: urlRoot})
+            this.mRoom.game.renderPeer.addGround({ id: sceneID, resRoot: urlRoot })
                 .then((properties: ITilesetProperty[]) => {
                     this.mRoom.game.elementStorage.updateTilesets(properties);
                     resolve(null);
+                }).catch((error) => {
+                    // tslint:disable-next-line:no-console
+                    console.log(error);
+                    reject(error);
                 });
 
             // set walkable

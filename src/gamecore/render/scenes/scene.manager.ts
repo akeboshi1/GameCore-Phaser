@@ -138,6 +138,7 @@ export class SceneManager extends BaseSceneManager {
                     if (data.loadProgress) scene.loadProgress(data.loadProgress);
                 }
                 if (data.callBack) data.callBack();
+                resolve();
             } else {
                 this.render.emitter.once("sceneCreated", () => {
                     Logger.getInstance().debug("sceneCreated===scenemanager");
