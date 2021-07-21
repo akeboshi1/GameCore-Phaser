@@ -1,8 +1,8 @@
-import {ListenerManager, PhaserListenerType} from "../listener.manager/listener.manager";
-import {IRender} from "../render";
+import { ListenerManager, PhaserListenerType } from "../listener.manager/listener.manager";
+import { IRender } from "../render";
 import Tile = Phaser.Tilemaps.Tile;
 import Tileset = Phaser.Tilemaps.Tileset;
-import {ITilesetProperty} from "../../../structure/tilemap";
+import { ITilesetProperty } from "../../../structure/tilemap";
 import { IGround, IPos, Logger } from "structure";
 
 export class Ground extends Phaser.GameObjects.Container {
@@ -51,10 +51,10 @@ export class Ground extends Phaser.GameObjects.Container {
 
     public destroy(fromScene?: boolean) {
         if (this.tilemapLayer) {
-            this.tilemapLayer.tilemap.destroy();
             this.tilemapLayer.destroy();
+            if (this.tilemapLayer.tilemap) this.tilemapLayer.tilemap.destroy();
         }
-        this.listenerMng.destroy();
+        if (this.listenerMng) this.listenerMng.destroy();
         super.destroy(fromScene);
     }
 
@@ -171,6 +171,6 @@ export class Ground extends Phaser.GameObjects.Container {
 
     private getTilesetProperties(tileset: Tileset, index: number): ITilesetProperty {
         const prop = tileset.getTileProperties(index);
-        return {index, sn: prop["sn"]};
+        return { index, sn: prop["sn"] };
     }
 }

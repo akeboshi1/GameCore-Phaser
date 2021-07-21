@@ -99,8 +99,12 @@ export class CamerasManager extends PacketHandler implements ICameraService {
     }
 
     public syncCamera(): Promise<void> {
-        return new Promise<void>((resolve) => {
+        return new Promise<void>((resolve, reject) => {
             this.mGame.peer.render.getWorldView().then((cameraView) => {
+                if (!cameraView) {
+                    reject();
+                    return;
+                }
                 const packet = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_RESET_CAMERA_SIZE);
                 const size: op_virtual_world.IOP_CLIENT_REQ_VIRTUAL_WORLD_RESET_CAMERA_SIZE = packet.content;
                 // TODO zoom统一使用一个
@@ -122,6 +126,7 @@ export class CamerasManager extends PacketHandler implements ICameraService {
             this.mGame.peer.render.getWorldView().then((cameraView) => {
                 if (!cameraView) {
                     Logger.getInstance().error("no cameraView");
+                    reject();
                     return;
                 }
                 // ==== 判断4个顶点在那几个block中
