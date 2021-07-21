@@ -111,9 +111,11 @@ export class RoomManager extends PacketHandler implements IRoomManager {
         if (boo) return;
         const room = new Room(this);
         this.mRooms.push(room);
-        room.addActor(scene.actor);
-        room.enter(scene.scene);
+        // create curRoom
         this.mCurRoom = room;
+        room.addActor(scene.actor);
+        // create playScene
+        room.enter(scene.scene);
         this.game.emitter.emit("EnterRoom");
     }
 

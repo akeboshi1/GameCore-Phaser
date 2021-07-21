@@ -684,6 +684,7 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
         return new Promise((resolve, reject) => {
             this.renderPeer.clearGame(bool).then(() => {
                 this.isAuto = true;
+                if (this.peer) this.peer.clearGame();
                 if (this.mClock) {
                     this.mClock.destroy();
                     this.mClock = null;

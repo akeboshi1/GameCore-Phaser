@@ -284,6 +284,7 @@ export class MainPeer extends RPCPeer {
             return;
         }
         Logger.getInstance().log("scene has peer startroom");
+        this.removeListen();
         this.game.roomManager.currentRoom.startPlay();
     }
 
@@ -696,6 +697,11 @@ export class MainPeer extends RPCPeer {
     // ==== config
     public isPlatform_PC() {
         return this.mConfig && this.mConfig.platform && this.mConfig.platform === "pc";
+    }
+
+    public clearGame() {
+        this.mStartRoomPlay = false;
+        this.removeListen();
     }
 
     protected enterRoomHander() {
