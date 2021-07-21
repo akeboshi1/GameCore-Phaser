@@ -52,6 +52,7 @@ export class SceneEditorCanvas extends EditorCanvas implements IRender {
     private mElementStorage: ElementStorage;
 
     private mScene: Phaser.Scene;
+    private mUrl: Url;
     constructor(config: IEditorCanvasConfig) {
         super(config);
         this.mElements = new Map();
@@ -72,6 +73,8 @@ export class SceneEditorCanvas extends EditorCanvas implements IRender {
         this.mSceneManager = new EditorSceneManger(this);
         this.mElementStorage = new ElementStorage({ resPath: config.LOCAL_HOME_PATH, osdPath: config.osd });
         this.mGame.scene.add(SceneEditor.name, SceneEditor, true, this);
+        this.mUrl = new Url();
+        this.mUrl.init(config);
     }
 
     get url(): Url {
