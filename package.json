@@ -9,7 +9,8 @@
     "./editor": "./release/js/editor.js",
     "./structure": "./release/js/structure.js",
     "./baseRender": "./release/js/baseRender.js",
-    "./baseGame": "./release/js/baseGame.js"
+    "./baseGame": "./release/js/baseGame.js",
+    "./coreVersion": "./version.js"
   },
   "types": "release/types/index.d.ts",
   "typesVersions": {
