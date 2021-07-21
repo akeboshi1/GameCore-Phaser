@@ -1,6 +1,6 @@
 {
   "name": "@PixelPai/game-core",
-  "version": "1.0.772",
+  "version": "1.0.777",
   "exports": {
     ".": "./release/js/index.js",
     "./renderPeer": "./release/js/renderPeer.js",
@@ -9,8 +9,7 @@
     "./editor": "./release/js/editor.js",
     "./structure": "./release/js/structure.js",
     "./baseRender": "./release/js/baseRender.js",
-    "./baseGame": "./release/js/baseGame.js",
-    "./coreVersion": "./version.js"
+    "./baseGame": "./release/js/baseGame.js"
   },
   "types": "release/types/index.d.ts",
   "typesVersions": {

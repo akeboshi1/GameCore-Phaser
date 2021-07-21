@@ -352,7 +352,7 @@ export class SceneEditorCanvas extends EditorCanvas implements IRender {
     }
 
     updatePalette(palette: PaletteNode) {
-        // this.mElementStorage.updatePalette(palette);
+        this.mElementStorage.updatePalette(palette);
     }
 
     updateMoss(moss: MossNode) {
@@ -381,6 +381,10 @@ export class SceneEditorCanvas extends EditorCanvas implements IRender {
         for (const sn1 of sns) {
             // get terrains
             const framesModel = this.elementStorage.getTerrainPaletteBySN(sn1);
+            if (!framesModel) {
+                Logger.getInstance().warn("game-core warning: terrain palette not exist. data: ", sn1);
+                continue;
+            }
             if (!framesModel.display) {
                 Logger.getInstance().warn("game-core warning: display info not exist. data: ", framesModel);
                 continue;
