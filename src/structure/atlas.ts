@@ -47,6 +47,7 @@ export class Atlas {
     setSize(w: number, h: number) {
         this.width = w;
         this.height = h;
+        this.atlas = {frames: this.frames, size: {w: this.width, h: this.height}};
     }
 
     toString() {

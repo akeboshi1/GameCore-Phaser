@@ -493,7 +493,14 @@ export class SceneEditorCanvas extends EditorCanvas implements IRender {
                     for (const f of frames) {
                         const frame = this.mScene.textures.getFrame(f.gene, f.frame);
                         const tileWidth = 64;
-                        packer.add(tileWidth, frame.height, f);
+                        const tileHeight = 60;
+                        if (frame.width > tileWidth || frame.height > tileHeight) {
+                            Logger.getInstance().warn("tile size is larger then settings(64 * 60): ", frame.width, frame.height);
+                        }
+
+                        // 每张tile按照设计尺寸64*60居中对齐
+                        packer.add(tileWidth, tileHeight, {gene: f.gene, frame: f.frame, sn: f.sn,
+                            deltaX: (tileWidth - frame.width) * 0.5, deltaY: (tileHeight - frame.height) * 0.5});
                     }
 
                     const { width, height } = packer.bins[0];
@@ -501,7 +508,7 @@ export class SceneEditorCanvas extends EditorCanvas implements IRender {
                     const canvas = this.mScene.textures.createCanvas("GenerateTilesetImg", width, height);
                     packer.bins.forEach((bin) => {
                         bin.rects.forEach((rect) => {
-                            canvas.drawFrame(rect.data.gene, rect.data.frame, rect.x, rect.y);
+                            canvas.drawFrame(rect.data.gene, rect.data.frame, rect.x + rect.data.deltaX, rect.y + rect.data.deltaY);
                             atlas.addFrame(rect.data.sn, rect);
                         });
                     });
