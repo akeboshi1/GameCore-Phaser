@@ -1,6 +1,6 @@
 import { Capsule, ElementNode, LayerEnum, MossNode, PaletteNode, SceneNode, TerrainNode } from "game-capsule";
 import { op_def, op_client } from "pixelpai_proto";
-import { IFramesModel, ISprite } from "structure";
+import {Atlas, IFramesModel, ISprite} from "structure";
 import { Direction, IPos, IPosition45Obj, Logger, LogicPos, Position45 } from "structure";
 import { EditorCanvas, IEditorCanvasConfig } from "../editor.canvas";
 import { EditorFramesDisplay } from "./editor.frames.display";
@@ -21,9 +21,12 @@ import { EditorSceneManger } from "./manager/scene.manager";
 import { EditorWallManager } from "./manager/wall.manager";
 import { EditorDragonbonesDisplay } from "./editor.dragonbones.display";
 import { load, Url } from "utils";
+import {MaxRectsPacker} from "maxrects-packer";
 for (const key in protos) {
     PBpacket.addProtocol(protos[key]);
 }
+
+// api: https://dej4esdop1.feishu.cn/docs/doccnFfHMv18NF2JPy7Rqh5dtod#
 export class SceneEditorCanvas extends EditorCanvas implements IRender {
     public displayObjectPool: DisplayObjectPool;
     private mSelecedElement: SelectedElementManager;
@@ -49,10 +52,13 @@ export class SceneEditorCanvas extends EditorCanvas implements IRender {
     private mElementStorage: ElementStorage;
 
     private mScene: Phaser.Scene;
+    private mUrl: Url;
     constructor(config: IEditorCanvasConfig) {
         super(config);
-        Url.OSD_PATH = config.osd || "https://osd-alpha.tooqing.com/";
         this.mElements = new Map();
+        this.mConfig = config;
+        this.config.osd = config.osd || "https://osd-alpha.tooqing.com/";
+        this.setSceneConfig(<SceneNode>config.node);
         this.mFactory = new EditorFactory(this);
         this.mSelecedElement = new SelectedElementManager(this);
         this.mStamp = new MouseFollow(this);
@@ -66,22 +72,34 @@ export class SceneEditorCanvas extends EditorCanvas implements IRender {
         this.mWallManager = new EditorWallManager(this);
         this.mSkyboxManager = new EditorSkyboxManager(this);
         this.mSceneManager = new EditorSceneManger(this);
-        this.mElementStorage = new ElementStorage();
+        this.mElementStorage = new ElementStorage({ resPath: config.LOCAL_HOME_PATH, osdPath: config.osd });
         this.mGame.scene.add(SceneEditor.name, SceneEditor, true, this);
+        this.mUrl = new Url();
+        this.mUrl.init(config);
+    }
+
+    get url(): Url {
+        return this.mUrl;
+    }
+
+    get config(): IEditorCanvasConfig {
+        return this.mConfig;
     }
 
     public update(time?: number, delta?: number) {
         this.mElementManager.update();
         this.mMossManager.update();
-        this.mTerrainManager.update();
         this.mWallManager.update();
     }
 
     public create(scene: Phaser.Scene) {
         this.mScene = scene;
-        if (this.mConfig.game_created) {
-            this.mConfig.game_created.call(this);
-        }
+        this.mTerrainManager.create()
+            .then(() => {
+                if (this.config.game_created) {
+                    this.config.game_created.call(this);
+                }
+            });
         // if (!this.mSceneNode) {
         //     return;
         // }
@@ -101,7 +119,7 @@ export class SceneEditorCanvas extends EditorCanvas implements IRender {
     }
 
     public load(url: string) {
-        load(this.mConfig.LOCAL_HOME_PATH + url, "arraybuffer").then((req: any) => {
+        load(this.config.LOCAL_HOME_PATH + url, "arraybuffer").then((req: any) => {
             try {
                 const capsule = new Capsule().deserialize(req.response);
             } catch {
@@ -179,6 +197,10 @@ export class SceneEditorCanvas extends EditorCanvas implements IRender {
             return;
         }
         this.mSelecedElement.unselectedElements();
+    }
+
+    public reloadTilemap() {
+        this.mTerrainManager.create();
     }
 
     public updateElements() {
@@ -360,6 +382,136 @@ export class SceneEditorCanvas extends EditorCanvas implements IRender {
         return this.mElementManager.checkCollision(pos, sprite);
     }
 
+    // 将地块数据转化为单帧url并合图，只取idle动画第一层第一帧，返回合图url
+    transformTerrains(sns: string[]): Promise<{json: string, url: string}> {
+        const tasks: Array<Promise<{sn: string, gene: string, frame: string}>> = [];
+        for (const sn1 of sns) {
+            // get terrains
+            const framesModel = this.elementStorage.getTerrainPaletteBySN(sn1);
+            if (!framesModel) {
+                Logger.getInstance().warn("game-core warning: terrain palette not exist. data: ", sn1);
+                continue;
+            }
+            if (!framesModel.display) {
+                Logger.getInstance().warn("game-core warning: display info not exist. data: ", framesModel);
+                continue;
+            }
+            if (framesModel.display.texturePath === "" || framesModel.display.dataPath === "") {
+                Logger.getInstance().warn("game-core warning: display info error. data: ", framesModel);
+                continue;
+            }
+            if (!framesModel.getAnimations("idle")) {
+                Logger.getInstance().warn("game-core warning: animation [idle] not exist. data: ", framesModel);
+                continue;
+            }
+            if (!framesModel.getAnimations("idle").layer ||
+                framesModel.getAnimations("idle").layer.length === 0) {
+                Logger.getInstance().warn("game-core warning: animation [idle] has no layer. data: ", framesModel);
+                continue;
+            }
+            if (!framesModel.getAnimations("idle").layer[0].frameName ||
+                framesModel.getAnimations("idle").layer[0].frameName.length === 0) {
+                Logger.getInstance().warn("game-core warning: animation [idle] has no frame. data: ", framesModel);
+                continue;
+            }
+            if (framesModel.getAnimations("idle").layer[0].frameName[0].length === 0) {
+                Logger.getInstance().warn("game-core warning: animation [idle] 's first frame name is error. data: ", framesModel);
+                continue;
+            }
+            const frameName = framesModel.getAnimations("idle").layer[0].frameName[0];
+            const displayData = framesModel.display;
+
+            const task = new Promise<{sn: string, gene: string, frame: string}>((_resolve, _reject) => {
+                // check load
+                const loadPromise = new Promise<any>((loadResolve, loadReject) => {
+                    if (this.scene.textures.exists(framesModel.gene)) {
+                        loadResolve(null);
+                    } else {
+                        this.scene.load.atlas(framesModel.gene, this.config.osd + displayData.texturePath, this.config.osd + displayData.dataPath);
+                        const onAdd = (key: string) => {
+                            if (key !== framesModel.gene) return;
+                            loadResolve(null);
+                            if (this.scene) {
+                                this.scene.textures.off(Phaser.Textures.Events.ADD, onAdd, this);
+                                this.scene.load.off(Phaser.Loader.Events.FILE_LOAD_ERROR, onLoadError, this);
+                            }
+                        };
+                        const onLoadError = (imageFile: Phaser.Loader.File) => {
+                            if (imageFile.key !== framesModel.gene) return;
+                            const errMsg = `game-core: frame loadError ${imageFile.url}`;
+                            Logger.getInstance().warn(errMsg);
+                            if (this.scene) {
+                                this.scene.textures.off(Phaser.Textures.Events.ADD, onAdd, this);
+                                this.scene.load.off(Phaser.Loader.Events.FILE_LOAD_ERROR, onLoadError, this);
+                            }
+                            loadReject(errMsg);
+                        };
+                        this.scene.load.on(Phaser.Loader.Events.FILE_LOAD_ERROR, onLoadError, this);
+                        this.scene.textures.on(Phaser.Textures.Events.ADD, onAdd, this);
+                        this.scene.load.start();
+                    }
+                });
+
+                loadPromise
+                    .then(() => {
+                        // get frame
+                        // const frame = this.scene.textures.getFrame(framesModel.gene, frameName);
+                        //
+                        // // create canvas
+                        // const tileWidth = 64;
+                        // const canvas = this.mScene.textures.createCanvas("GenerateFrame_" + sn1, tileWidth, frame.height);
+                        //
+                        // // draw frame
+                        // const x = (tileWidth - frame.width) * 0.5;
+                        // canvas.drawFrame(framesModel.gene, frameName, x, 0);
+                        //
+                        // // to url
+                        // const url = canvas.canvas.toDataURL("image/png", 1);
+                        // canvas.destroy();
+
+                        _resolve({sn: sn1, gene: framesModel.gene, frame: frameName});
+                    })
+                    .catch((errMsg) => {
+                        _reject(errMsg);
+                    });
+            });
+
+            tasks.push(task);
+        }
+
+        return new Promise<{json: string, url: string}>((resolve, reject) => {
+            Promise.all(tasks)
+                .then((frames) => {
+                    const atlas = new Atlas();
+                    const packer = new MaxRectsPacker();
+                    packer.padding = 2;
+                    for (const f of frames) {
+                        const frame = this.mScene.textures.getFrame(f.gene, f.frame);
+                        const tileWidth = 64;
+                        packer.add(tileWidth, frame.height, f);
+                    }
+
+                    const { width, height } = packer.bins[0];
+                    atlas.setSize(width, height);
+                    const canvas = this.mScene.textures.createCanvas("GenerateTilesetImg", width, height);
+                    packer.bins.forEach((bin) => {
+                        bin.rects.forEach((rect) => {
+                            canvas.drawFrame(rect.data.gene, rect.data.frame, rect.x, rect.y);
+                            atlas.addFrame(rect.data.sn, rect);
+                        });
+                    });
+
+                    const url = canvas.canvas.toDataURL("image/png", 1);
+                    canvas.destroy();
+
+                    resolve({ url, json: atlas.toString() });
+                })
+                .catch((reason) => {
+                    reject(reason);
+                });
+        });
+    }
+
     destroy() {
         this.mTerrainManager.destroy();
         this.displayObjectPool.destroy();
@@ -475,9 +627,9 @@ export class SceneEditorCanvas extends EditorCanvas implements IRender {
             // }
             switch (nodeType) {
                 case op_def.NodeType.TerrainNodeType:
-                    if (!this.mElementStorage.getTerrainPalette(key)) {
-                        this.mEditorPacket.reqEditorSyncPaletteOrMoss(key, nodeType);
-                    }
+                    // if (!this.mElementStorage.getTerrainPalette(key)) {
+                    //     this.mEditorPacket.reqEditorSyncPaletteOrMoss(key, nodeType);
+                    // }
                     break;
                 case op_def.NodeType.WallNodeType:
                 case op_def.NodeType.ElementNodeType:
@@ -567,14 +719,6 @@ export class SceneEditorCanvas extends EditorCanvas implements IRender {
         (<SceneEditor>this.mScene).layerManager.addToLayer(element.layer.toString(), display);
     }
 
-    private addTerrain(terrain: TerrainNode) {
-        const display = this.factory.createFramesDisplay(terrain);
-        const loc = terrain.location;
-        const pos = Position45.transformTo90(loc, this.mRoomSize);
-        display.setPosition(pos.x, pos.y);
-        (<SceneEditor>this.mScene).layerManager.addToLayer(terrain.layer.toString(), display);
-    }
-
     private eraser(type: op_def.NodeType) {
         const positions = this.mStamp.getEaserPosition();
         if (type === op_def.NodeType.TerrainNodeType) {
@@ -635,6 +779,10 @@ export class SceneEditorCanvas extends EditorCanvas implements IRender {
 
     get mossManager() {
         return this.mMossManager;
+    }
+
+    get sceneNode() {
+        return this.mSceneNode;
     }
 
     get emitter() {
@@ -825,7 +973,7 @@ class MouseFollow {
 
     createTerrainsOrMossesData() {
         const locs = this.mDisplay.displays.map((display) => this.getPosition(display.x, display.y));
-        return { locs, key: this.key };
+        return { locs, key: this.key, sn: this.sn };
     }
 
     createWallData() {
@@ -960,6 +1108,10 @@ class MouseFollow {
     get key() {
         return this.mKey;
     }
+
+    get sn() {
+        return this.mSprite.sn;
+    }
 }
 
 class MouseDisplayContainer extends Phaser.GameObjects.Container {
@@ -1042,9 +1194,9 @@ class MouseDisplayContainer extends Phaser.GameObjects.Container {
         for (let i = 0; i < size; i++) {
             for (let j = 0; j < size; j++) {
                 if (sprite.avatar) {
-                    frameDisplay = new EditorDragonbonesDisplay(this.sceneEditor.scene, sprite);
+                    frameDisplay = new EditorDragonbonesDisplay(this.sceneEditor.scene, this.sceneEditor.config, sprite);
                 } else {
-                    frameDisplay = new EditorFramesDisplay(this.sceneEditor, sprite);
+                    frameDisplay = new EditorFramesDisplay(this.sceneEditor, this.sceneEditor.config, sprite);
                 }
                 frameDisplay.setAlpha(0.8);
                 // frameDisplay.once("initialized", this.onInitializedHandler, this);

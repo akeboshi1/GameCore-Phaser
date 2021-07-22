@@ -1,342 +1,66 @@
-export const HTTP_REGEX = /^(http|https):/i;
 export class Url {
     // cdn资源路径
-    static OSD_PATH = "";
+    OSD_PATH = "";
     // 本地资源路径
-    static RES_PATH: string = "";
-    static RESUI_PATH: string = "";
-    static RESOURCE_ROOT: string = "";
-    // static REQUIRE_CONTEXT;
-    static getRes(value: string): string {
-        return Url.RES_PATH + value;
+    RES_PATH: string = "";
+    RESUI_PATH: string = "";
+    RESOURCE_ROOT: string = "";
+    init(config) {
+        // { osd: this.mConfig.osd, res: `resources/`, resUI: `resources/ui/` }
+        this.OSD_PATH = config.osd;
+        this.RES_PATH = config.res;
+        this.RESUI_PATH = config.resUI;
+    }
+    //  REQUIRE_CONTEXT;
+    getRes(value: string): string {
+        return this.RES_PATH + value;
     }
 
-    static getUIRes(dpr: number, value: string): string {
-        return Url.RESUI_PATH + `${dpr}x/${value}`;
+    getUIRes(dpr: number, value: string): string {
+        return this.RESUI_PATH + `${dpr}x/${value}`;
     }
 
-    static getSound(key: string): string {
+    getSound(key: string): string {
         return "sound/" + key + ".mp3";
     }
 
-    static getNormalUIRes(value: string) {
-        return Url.RESUI_PATH + value;
+    getNormalUIRes(value: string) {
+        return this.RESUI_PATH + value;
     }
 
-    static getOsdRes(value: string): string {
+    getOsdRes(value: string): string {
         if (!value) {
             // tslint:disable-next-line:no-console
             console.warn("splicing url failed");
             return;
         }
-        if (Url.OSD_PATH) {
-            if (HTTP_REGEX.test(Url.OSD_PATH)) {
-                return Url.OSD_PATH + value;
-            }
-            return Url.OSD_PATH + value;
+        if (this.OSD_PATH) {
+            return this.OSD_PATH + value;
         }
         return value;
     }
-}
-export class ResUtils {
-    static getPartName(value: string): string {
+
+    getPartName(value: string): string {
         return value + "_png";
     }
-    static getPartUrl(value: string): string {
-        // TOOD 编辑器或调式会传入本地资源。Avatar资源只存在cdn
-        if (HTTP_REGEX.test(Url.OSD_PATH)) {
-            return Url.OSD_PATH + "avatar/part/" + value + ".png";
-        }
-        return Url.OSD_PATH + "avatar/part/" + value + ".png";
+    getPartUrl(value: string): string {
+        return this.OSD_PATH + "avatar/part/" + value + ".png";
     }
-    static getUsrAvatarTextureUrls(value: string): { img: string, json: string } {
+    getUsrAvatarTextureUrls(value: string): { img: string, json: string } {
         return {
-            img: Url.OSD_PATH + "user_avatar/texture/" + value + ".png",
-            json: Url.OSD_PATH + "user_avatar/texture/" + value + ".json"
+            img: this.OSD_PATH + "user_avatar/texture/" + value + ".png",
+            json: this.OSD_PATH + "user_avatar/texture/" + value + ".json"
         };
     }
-    static getGameConfig(value: string): string {
-        if (HTTP_REGEX.test(value)) {
-            return value;
-        }
-        return Url.OSD_PATH + value;
-    }
 
-    static getResRoot(value: string): string {
-        if (Url.OSD_PATH) return Url.OSD_PATH + "/" + value;
+    getResRoot(value: string): string {
+        if (this.OSD_PATH) return this.OSD_PATH + "/" + value;
         return value;
     }
-}
-
-export class BlackButton {
-    static getName(): string {
-        return "black_button";
-    }
-
-    static getPNG(): string {
-        return Url.getRes("ui/common/button.png");
-    }
-
-    static getColumns(): number[] {
-        return [4, 2, 4];
-    }
-
-    static getRows(): number[] {
-        return [4, 2, 4];
-    }
-
-    static left(): number {
-        return 4;
-    }
-
-    static top(): number {
-        return 4;
-    }
-    static right(): number {
-        return 4;
-    }
-
-    static bottom(): number {
-        return 4;
-    }
-
-    static getConfig() {
+    getTilemapUrls(root: string, sceneID: string): { mapJson: string, tilesetImg: string } {
         return {
-            top: 4,
-            left: 4,
-            right: 4,
-            bottom: 4
-        };
-    }
-}
-
-export class BlueButton {
-    static getName(): string {
-        return "button_blue";
-    }
-
-    static getPNG(): string {
-        return Url.getRes("ui/common/button_blue.png");
-    }
-
-    static getJSON(): string {
-        return Url.getRes("ui/common/button_blue.json");
-    }
-
-    static getColumns(): number[] {
-        return [7, 1, 7];
-    }
-
-    static getRows(): number[] {
-        return [7, 1, 7];
-    }
-
-    static left(): number {
-        return 7;
-    }
-
-    static top(): number {
-        return 7;
-    }
-    static right(): number {
-        return 7;
-    }
-
-    static bottom(): number {
-        return 7;
-    }
-
-    static getConfig() {
-        return {
-            left: 7,
-            top: 7,
-            right: 7,
-            bottom: 7
-        };
-    }
-}
-
-export class WhiteButton {
-    static getName(): string {
-        return "button_white";
-    }
-
-    static getPNG(): string {
-        return Url.getRes("ui/common/button_white.png");
-    }
-
-    static getJSON(): string {
-        return Url.getRes("ui/common/button_white.json");
-    }
-
-    static getColumns(): number[] {
-        return [7, 1, 7];
-    }
-
-    static getRows(): number[] {
-        return [7, 1, 7];
-    }
-
-    static left(): number {
-        return 7;
-    }
-
-    static top(): number {
-        return 7;
-    }
-    static right(): number {
-        return 7;
-    }
-
-    static bottom(): number {
-        return 7;
-    }
-
-    static getConfig() {
-        return {
-            left: 7,
-            top: 7,
-            right: 7,
-            bottom: 7
-        };
-    }
-}
-
-export class CloseButton {
-    static getName(): string {
-        return "common_clsBtn";
-    }
-
-    static getPNG(): string {
-        return Url.getRes("ui/common/common_clsBtn.png");
-    }
-
-    static getJSON(): string {
-        return Url.getRes("ui/common/common_clsBtn.json");
-    }
-
-    static getFrameConfig(): Phaser.Types.Loader.FileTypes.ImageFrameConfig {
-        return { frameWidth: 16, frameHeight: 16, startFrame: 1, endFrame: 3 };
-    }
-}
-
-export class Background {
-    static getName(): string {
-        return "common_background";
-    }
-
-    static getPNG(): string {
-        return Url.getRes("ui/common/common_panelBg.png");
-    }
-
-    static getColumns(): number[] {
-        return [11, 9, 11];
-    }
-
-    static getRows(): number[] {
-        return [14, 13, 14];
-    }
-
-    static left(): number {
-        return 10;
-    }
-
-    static top(): number {
-        return 15;
-    }
-    static right(): number {
-        return 10;
-    }
-
-    static bottom(): number {
-        return 15;
-    }
-
-    static getConfig() {
-        return {
-            left: 10,
-            top: 15,
-            right: 10,
-            bottom: 15,
-        };
-    }
-}
-
-export class Border {
-    static getName(): string {
-        return "common_border";
-    }
-
-    static getPNG(): string {
-        return Url.getRes("ui/common/common_border.png");
-    }
-
-    static getColumns(): number[] {
-        return [4, 2, 4];
-    }
-
-    static getRows(): number[] {
-        return [4, 2, 4];
-    }
-
-    static left(): number {
-        return 4;
-    }
-
-    static top(): number {
-        return 4;
-    }
-    static right(): number {
-        return 4;
-    }
-
-    static bottom(): number {
-        return 4;
-    }
-
-    static getConfig() {
-        return {
-            left: 4,
-            top: 4,
-            right: 4,
-            bottom: 4
-        };
-    }
-}
-export class TransparentButton {
-    static getName() {
-        return "button_transparent";
-    }
-
-    static getPNG(): string {
-        return Url.getRes("ui/common/button_transparent.png");
-    }
-
-    static getJSON(): string {
-        return Url.getRes("ui/common/button_transparent.json");
-    }
-
-    static left(): number {
-        return 4;
-    }
-
-    static top(): number {
-        return 4;
-    }
-    static right(): number {
-        return 4;
-    }
-
-    static bottom(): number {
-        return 4;
-    }
-
-    static getConfig() {
-        return {
-            left: 4,
-            top: 4,
-            right: 4,
-            bottom: 4
+            mapJson: root + "mapdata/" + sceneID + "-map.json",
+            tilesetImg: root + "mapdata/" + "ground.png"
         };
     }
 }

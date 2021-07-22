@@ -2,14 +2,13 @@ import { op_def, op_client, op_gameconfig, op_virtual_world } from "pixelpai_pro
 import { PBpacket } from "net-socket-packet";
 import { Player } from "../room/player/player";
 import { PlayerModel } from "../room/player/player.model";
-import { Url } from "utils";
 import { AvatarSuitType, EventType, IDragonbonesModel, IFramesModel, PlayerState, ISprite, DirectionChecker, IPos, Logger, LogicPos } from "structure";
 import { LayerEnum } from "game-capsule";
 import { Tool } from "utils";
 import { IElement, IRoomService } from "../room";
 import { MoveControll } from "../collsion";
 // import * as _ from "lodash";
-const wokerfps: number = 45;
+const wokerfps: number = 30;
 const interval = wokerfps > 0 ? 1000 / wokerfps : 1000 / 30;
 export class User extends Player {
     public stopBoxMove: boolean = false;
@@ -224,11 +223,11 @@ export class User extends Player {
         this.mRoomService.game.renderPeer.drawServerPosition(moveData[0].x, moveData[0].y);
     }
 
-    public setQueue(animations: op_client.IChangeAnimation[]) {
+    public setQueue(animations: op_client.IChangeAnimation[], finishAnimationBehavior?: number) {
         if (this.mMoving) {
             return;
         }
-        super.setQueue(animations);
+        super.setQueue(animations, finishAnimationBehavior);
     }
 
     public requestPushBox(targetId: number) {
@@ -359,7 +358,7 @@ export class User extends Player {
         const ele = this.mRoomService.getElement(targetId);
         if (ele) {
             if (ele.model && ele.model.sound) {
-                const key = Url.getSound(ele.model.sound);
+                const key = await this.mRoomService.game.renderPeer.url.getSound(ele.model.sound);
                 this.mRoomService.game.renderPeer.playSoundByKey(key);
             }
             // this.mTarget = ele;

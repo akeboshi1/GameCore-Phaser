@@ -2,8 +2,7 @@ import { Game } from "tooqingphaser";
 import { Export, RPCPeer, webworker_rpc } from "webworker-rpc";
 import { UiUtils, Url } from "utils";
 import { PBpacket } from "net-socket-packet";
-import * as protos from "pixelpai_proto";
-import { op_client } from "pixelpai_proto";
+import { op_client, op_def } from "pixelpai_proto";
 import { Account } from "./account";
 import { SceneManager } from "./scenes/scene.manager";
 import { LocalStorageManager } from "./managers/local.storage.manager";
@@ -19,12 +18,12 @@ import {
     IScenery,
     MessageType,
     SceneName,
-    PlatFormType, i18n, IPos, IPosition45Obj, Logger, LogicPos, Pos, Size, ValueResolver, IWorkerParam
+    PlatFormType, IPos, IPosition45Obj, Logger, LogicPos, Pos, Size, ValueResolver, IWorkerParam, IGround, ITilesetProperty
 } from "structure";
 import { DisplayManager } from "./managers/display.manager";
 import { InputManager } from "./input/input.manager";
 import { MainUIScene } from "./scenes/main.ui.scene";
-import { EditorCanvasManager } from "./managers/editor.canvas.manager";
+import { AvatarHelper } from "./managers/avatar.helper";
 import { BaseSceneManager, BasicScene, IRender, PlayCamera } from "baseRender";
 import { AstarDebugger } from "./display/debugs/astar";
 import { EditorModeDebugger } from "./display/debugs/editor.mode.debugger";
@@ -34,10 +33,7 @@ import { UiManager } from "./ui";
 import { GuideManager } from "./guide";
 import { MouseManager } from "./input/mouse.manager";
 import { SoundManager } from "./managers";
-
-for (const key in protos) {
-    PBpacket.addProtocol(protos[key]);
-}
+import { i18n, initLocales, translateProto } from "./utils";
 
 enum MoveStyle {
     DIRECTION_MOVE_STYLE = 1,
@@ -68,6 +64,7 @@ export class Render extends RPCPeer implements GameMain, IRender {
 
     protected readonly DEFAULT_WIDTH = 360;
     protected readonly DEFAULT_HEIGHT = 640;
+    protected resUrl: Url;
     protected mGuideManager: GuideManager;
     protected mSceneManager: BaseSceneManager;
     protected mCameraManager: CamerasRenderManager;
@@ -78,7 +75,7 @@ export class Render extends RPCPeer implements GameMain, IRender {
     protected mUiManager: UiManager;
     protected mDisplayManager: DisplayManager;
     protected mLocalStorageManager: LocalStorageManager;
-    protected mEditorCanvasManager: EditorCanvasManager;
+    protected mAvatarHelper: AvatarHelper;
     protected mRenderParam: IWorkerParam;
     protected mMainPeerParam: IWorkerParam;
     protected mAccount: Account;
@@ -115,7 +112,6 @@ export class Render extends RPCPeer implements GameMain, IRender {
     private mHiddenTime: any;
     constructor(config: ILauncherConfig, callBack?: Function) {
         super(config.renderPeerKey);
-        Logger.getInstance().log("config ====>", config);
         this.emitter = new Phaser.Events.EventEmitter();
         this.mConfig = config;
         this.mCallBack = callBack;
@@ -131,11 +127,17 @@ export class Render extends RPCPeer implements GameMain, IRender {
         this.mConfig.hasGameCreated = this.mConfig.game_created ? true : false;
         this.mConfig.hasReload = this.mConfig.reload ? true : false;
         this.mConfig.hasGameLoaded = this.mConfig.gameLoaded ? true : false;
+        Logger.getInstance().isDebug = this.mConfig.debugLog || false;
+
+        if (this.mConfig.devicePixelRatio) this.mConfig.devicePixelRatio = Math.floor(this.mConfig.devicePixelRatio);
+        if (this.mConfig.width) this.mConfig.width = Math.floor(this.mConfig.width);
+        if (this.mConfig.height) this.mConfig.height = Math.floor(this.mConfig.height);
         // rpc不传送方法
         delete this.mConfig.connectFail;
         delete this.mConfig.game_created;
         delete this.mConfig.closeGame;
         delete this.mConfig.gameLoaded;
+        Logger.getInstance().log("config ====>", config);
         // Logger.getInstance().debug("connectfail===>", this.mConnectFailFunc, this.mConfig);
         this.initConfig();
         Logger.getInstance().log("Render version ====>:", `v${this.mConfig.version}`);
@@ -234,12 +236,16 @@ export class Render extends RPCPeer implements GameMain, IRender {
         return this.mLocalStorageManager;
     }
 
-    get editorCanvasManager(): EditorCanvasManager {
-        return this.mEditorCanvasManager;
+    get editorCanvasManager(): AvatarHelper {
+        return this.mAvatarHelper;
     }
 
     get game(): Phaser.Game {
         return this.mGame;
+    }
+
+    get url(): Url {
+        return this.resUrl;
     }
 
     getSize(): Size | undefined {
@@ -263,7 +269,7 @@ export class Render extends RPCPeer implements GameMain, IRender {
         if (!this.mInputManager) this.mInputManager = new InputManager(this);
         if (!this.mSoundManager) this.mSoundManager = new SoundManager(this);
         if (!this.mDisplayManager) this.mDisplayManager = new DisplayManager(this);
-        if (!this.mEditorCanvasManager) this.mEditorCanvasManager = new EditorCanvasManager(this);
+        if (!this.mAvatarHelper) this.mAvatarHelper = new AvatarHelper(this);
     }
 
     // 切游戏的时候销毁各个manmager
@@ -296,9 +302,9 @@ export class Render extends RPCPeer implements GameMain, IRender {
             this.mDisplayManager.destroy();
             this.mDisplayManager = undefined;
         }
-        if (this.mEditorCanvasManager) {
-            this.mEditorCanvasManager.destroy();
-            this.mEditorCanvasManager = undefined;
+        if (this.mAvatarHelper) {
+            this.mAvatarHelper.destroy();
+            this.mAvatarHelper = undefined;
         }
         if (this.mSceneManager) {
             this.mSceneManager.destroy();
@@ -437,6 +443,65 @@ export class Render extends RPCPeer implements GameMain, IRender {
         });
     }
 
+    @Export([webworker_rpc.ParamType.str])
+    public getSound(key: string) {
+        return new Promise((resolve, reject) => {
+            resolve(this.resUrl.getSound(key));
+        });
+    }
+
+    @Export([webworker_rpc.ParamType.str])
+    public setResourecRoot(root: string) {
+        this.resUrl.RESOURCE_ROOT = root;
+    }
+
+    @Export([webworker_rpc.ParamType.num, webworker_rpc.ParamType.str])
+    public getUIPath(dpr: number, res: string) {
+        return new Promise((resolve, reject) => {
+            resolve(this.resUrl.getUIRes(dpr, res));
+        });
+    }
+
+    @Export()
+    public getResPath() {
+        return new Promise((resolve, reject) => {
+            resolve(this.resUrl.RES_PATH);
+        });
+    }
+
+    @Export()
+    public getOsdPath() {
+        return new Promise((resolve, reject) => {
+            resolve(this.resUrl.OSD_PATH);
+        });
+    }
+
+    @Export([webworker_rpc.ParamType.str])
+    public getResourceRoot(url: string) {
+        return new Promise((resolve, reject) => {
+            resolve(this.resUrl.getResRoot(url));
+        });
+    }
+
+    @Export()
+    public getResUIPath() {
+        return new Promise((resolve, reject) => {
+            resolve(this.resUrl.RESUI_PATH);
+        });
+    }
+
+    @Export([webworker_rpc.ParamType.str])
+    public getNormalUIPath(res: string) {
+        return new Promise((resolve, reject) => {
+            resolve(this.resUrl.getNormalUIRes(res));
+        });
+    }
+
+    @Export()
+    public getUsrAvatarTextureUrls(value: string): { img: string, json: string } {
+        return this.resUrl.getUsrAvatarTextureUrls(value);
+    }
+
     startFullscreen(): void {
 
     }
@@ -559,7 +624,7 @@ export class Render extends RPCPeer implements GameMain, IRender {
                 transparent: false,
                 backgroundColor: 0x0,
                 fps: {
-                    target: 45,
+                    target: 30,
                     forceSetTimeOut: true
                 },
                 dom: {
@@ -796,7 +861,17 @@ export class Render extends RPCPeer implements GameMain, IRender {
 
     @Export()
     public showPlay(params?: any) {
-        if (this.mSceneManager) this.mSceneManager.startScene(SceneName.PLAY_SCENE, { render: this, params });
+        return new Promise<void>((resolve, reject) => {
+            if (!this.mSceneManager) {
+                reject();
+                return;
+            }
+            this.mSceneManager.startScene(SceneName.PLAY_SCENE, { render: this, params }).then(() => {
+                resolve();
+            }).catch(() => {
+                reject();
+            });
+        });
     }
 
     @Export()
@@ -1076,10 +1151,13 @@ export class Render extends RPCPeer implements GameMain, IRender {
             data = {};
         }
         data.callBack = () => {
-            if (data.sceneName) this.mSceneManager.startScene(data.sceneName);
-            return new Promise<any>((resolve, reject) => {
-                resolve(null);
-            });
+            if (data.sceneName) {
+                this.mSceneManager.startScene(data.sceneName).then(() => {
+                    return new Promise<any>((resolve, reject) => {
+                        resolve(null);
+                    });
+                });
+            }
         };
         data.dpr = this.uiRatio;
         data.version = this.mConfig.version;
@@ -1384,6 +1462,23 @@ export class Render extends RPCPeer implements GameMain, IRender {
     }
 
     @Export()
+    public addGround(ground: IGround): Promise<ITilesetProperty[]> {
+        if (this.mDisplayManager) return this.mDisplayManager.addGround(ground);
+        return Promise.reject("no display manager");
+    }
+
+    @Export()
+    public changeGround(pos45: IPos, key: number): ITilesetProperty {
+        if (this.mDisplayManager) return this.mDisplayManager.changeGround(pos45, key);
+        return null;
+    }
+
+    @Export()
+    public removeGround() {
+        if (this.mDisplayManager) this.mDisplayManager.removeGround();
+    }
+
+    @Export()
     public showMatterDebug(vertices) {
         if (this.mDisplayManager) this.mDisplayManager.showMatterDebug(vertices);
     }
@@ -1420,11 +1515,12 @@ export class Render extends RPCPeer implements GameMain, IRender {
         if (display) display.setPosition(x, y, z);
     }
 
-    @Export([webworker_rpc.ParamType.num, webworker_rpc.ParamType.str])
-    public showBubble(id: number, text: string, setting: op_client.IChat_Setting) {
+    @Export()
+    public showBubble(id: number, text: op_def.StrMsg, setting: op_client.IChat_Setting) {
         if (!this.mDisplayManager) return;
         const display = this.mDisplayManager.getDisplay(id);
-        if (display) display.showBubble(text, setting);
+        const label = translateProto(text);
+        if (display) display.showBubble(label, setting);
     }
 
     @Export([webworker_rpc.ParamType.num])
@@ -1554,8 +1650,8 @@ export class Render extends RPCPeer implements GameMain, IRender {
     }
 
     @Export([webworker_rpc.ParamType.num, webworker_rpc.ParamType.num])
-    public unmount(id: number, targetID: number) {
-        if (this.mDisplayManager) this.mDisplayManager.unmount(id, targetID);
+    public unmount(id: number, targetID: number, pos: IPos) {
+        if (this.mDisplayManager) this.mDisplayManager.unmount(id, targetID, pos);
     }
 
     @Export([webworker_rpc.ParamType.num])
@@ -1619,6 +1715,11 @@ export class Render extends RPCPeer implements GameMain, IRender {
         return (pktGlobal && pktGlobal.envPlatform === "Cordova");
     }
 
+    @Export()
+    public getI18nLanguages() {
+        return i18n.languages;
+    }
+
     protected onWorkerUnlinked(worker: string) {
         if (!this.mWorkerDestroyMap.has(worker)) return;
 
@@ -1636,10 +1737,10 @@ export class Render extends RPCPeer implements GameMain, IRender {
         if (this.mConfig.height === undefined) {
             this.mConfig.height = window.innerHeight;
         }
-        Url.OSD_PATH = this.mConfig.osd;
-        Url.RES_PATH = `resources/`;
-        Url.RESUI_PATH = `${Url.RES_PATH}ui/`;
+        this.resUrl = new Url();
+        this.resUrl.init({ osd: this.mConfig.osd, res: `resources/`, resUI: `resources/ui/` });
         this.initRatio();
+        this.initLocales();
     }
 
     protected initRatio() {
@@ -1699,6 +1800,10 @@ export class Render extends RPCPeer implements GameMain, IRender {
             }
             if (loginScene && loginScene.scene.isActive()) loginScene.scene.setVisible(true);
         }
+    }
+
+    protected initLocales() {
+        initLocales(`${this.resUrl.RES_PATH}/locales/{{lng}}.json`);
     }
 
     private onFullScreenChange() {

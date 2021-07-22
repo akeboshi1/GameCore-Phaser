@@ -1,5 +1,4 @@
 import { Render } from "../../render";
-import { Url } from "utils";
 import { Pos } from "structure";
 
 export interface IBtnData {
@@ -39,7 +38,7 @@ export class IconBtn extends Phaser.GameObjects.Container {
         this.mBgTexture = data.bgTextures;
         this.mData = data;
         if (!this.mScene.textures.exists(this.mBgResKey) && data.pngUrl && data.jsonUrl) {
-            this.mScene.load.atlas(data.key, Url.getRes(data.pngUrl), Url.getRes(data.jsonUrl));
+            this.mScene.load.atlas(data.key, render.url.getRes(data.pngUrl), render.url.getRes(data.jsonUrl));
             this.mScene.load.once(Phaser.Loader.Events.COMPLETE, this.loadComplete, this);
             this.mScene.load.start();
             return;

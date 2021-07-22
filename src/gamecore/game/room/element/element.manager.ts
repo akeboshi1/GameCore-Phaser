@@ -304,13 +304,14 @@ export class ElementManager extends PacketHandler implements IElementManager {
 
     public dealDisplayRef() {
         this.mCacheDisplayRef.forEach((ref) => {
-            const { id, pos, name, layer, direction } = ref;
+            const { id, pos, name, layer, direction, mountSprites } = ref;
             this.addSpritesToCache([{
                 id,
                 point3f: pos,
                 nickname: name,
                 direction,
-                layer
+                layer,
+                mountSprites
             }]);
         });
         this.mCacheDisplayRef.clear();
@@ -620,7 +621,7 @@ export class ElementManager extends PacketHandler implements IElementManager {
         for (const id of ids) {
             ele = this.get(id);
             if (ele) {
-                ele.setQueue(content.changeAnimation);
+                ele.setQueue(content.changeAnimation, content.finishAnimationBehavior);
             }
         }
     }

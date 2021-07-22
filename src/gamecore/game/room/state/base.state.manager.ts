@@ -26,6 +26,7 @@ export class BaseStateManager {
     handleStates(states: Map<string, State>) {
         if (!states) return;
         states.forEach((state) => this.handleState(state));
+        states.clear();
     }
 
     destroy() {

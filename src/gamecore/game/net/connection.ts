@@ -2,7 +2,7 @@
 import { PacketHandler, PBpacket } from "net-socket-packet";
 import * as protos from "pixelpai_proto";
 import { MainPeer } from "../main.peer";
-import { Logger } from "structure";
+import { ConnectState, Logger, SocketState } from "structure";
 import { SocketConnection, IConnectListener, SocketConnectionError, ConnectionService, ServerAddress } from "structure";
 import { Clock } from "../loop/clock/clock";
 
@@ -74,12 +74,12 @@ export class Connection implements ConnectionService {
     protected mPacketHandlers: PacketHandler[] = [];
     private mCachedServerAddress: ServerAddress | undefined;
     private mSocket: GameSocket;
-    private isConnect: boolean = false;
+    private isConnectState: number = SocketState.closed;
     private isPause: boolean = false;
     private mClock: Clock;
     private mPeer: MainPeer;
     private gateway: any;
-    private isCloseing: boolean = false;
+    // private isCloseing: boolean = false;
     constructor(peer: MainPeer) {
         this.mPeer = peer;
     }
@@ -91,12 +91,15 @@ export class Connection implements ConnectionService {
         return this.isPause;
     }
 
-    get connect(): boolean {
-        return this.isConnect;
+    get connect(): number {
+        if (!this.mSocket) {
+            return SocketState.closed;
+        }
+        return this.mSocket.socketState;
     }
 
     set connect(val) {
-        this.isConnect = val;
+        this.isConnectState = val;
     }
 
     get socket(): SocketConnection {
@@ -104,37 +107,49 @@ export class Connection implements ConnectionService {
     }
 
     startConnect(addr: ServerAddress, keepalive?: boolean): void {
-        if (this.isCloseing) {
+        if (this.isConnectState === SocketState.closeing) {
             this.gateway = { addr, keepalive };
-            // 可能此时socket已经断开了，但回调没有监听到
-            if (!this.mSocket.connectState) {
-                this.isCloseing = false;
-                this.startConnect(this.gateway.addr, this.gateway.keepalive);
-            }
             return;
         }
-        if (this.isConnect) this.closeConnect();
-        this.mCachedServerAddress = addr;
-        if (!this.mSocket) {
-            this.mSocket = new GameSocket(this.mPeer, new ConnListener(this.mPeer));
+        if (this.isConnectState > SocketState.closeing) {
+            this.closeConnect(() => {
+                this.startConnect(addr, keepalive);
+            });
+            return;
         }
+        this.mCachedServerAddress = addr;
+        // 存在socket，等待销毁并重新创建
+        if (this.mSocket) {
+            return;
+        }
+        this.mSocket = new GameSocket(this.mPeer, new ConnListener(this.mPeer));
         this.mSocket.startConnect(this.mCachedServerAddress);
     }
 
-    closeConnect(): void {
-        this.isConnect = false;
-        this.isCloseing = true;
+    closeConnect(callBack?: Function) {
         this.mCachedServerAddress = undefined;
+        this.clearPacketListeners();
+        // 正在关闭什么都不做，等待callback
         if (this.mSocket) {
             this.mSocket.state = false;
-            this.mSocket.stopConnect().then(() => {
-                this.isCloseing = false;
-                this.mSocket.destroy();
-                this.mSocket = null;
-                if (this.gateway) this.startConnect(this.gateway.addr, this.gateway.keepalive);
-            });
+            if (this.mSocket.socketState === SocketState.link) {
+                this.mSocket.stopConnect(this.closeBack(callBack));
+                this.isConnectState = SocketState.closeing;
+            } else {
+                this.closeBack(callBack);
+            }
         }
-        this.clearPacketListeners();
+
+    }
+
+    closeBack(callBack?: Function) {
+        this.isConnectState = SocketState.closed;
+        this.mSocket.destroy();
+        this.mSocket = null;
+        if (callBack) callBack();
+        if (this.gateway) {
+            this.startConnect(this.gateway.addr, this.gateway.keepalive);
+        }
     }
 
     setClock(clock: Clock) {
@@ -176,10 +191,10 @@ export class Connection implements ConnectionService {
     }
 
     onData(data: ArrayBuffer) {
-        if (!this.isConnect) return;
         const protobuf_packet = PBpacket.Create(data);
         this.mUuid = protobuf_packet.header.uuid;
-        Logger.getInstance().log(`MainWorker[接收] <<< ${protobuf_packet.toString()} `);
+        Logger.getInstance().log(`MainWorker[接收] <<< ${protobuf_packet.toString()} `, ` <<< connectState: ${this.isConnectState}`);
+        if (!this.isConnectState) return;
         const handlers = this.mPacketHandlers;
         this.mPeer.clearBeat();
         handlers.forEach((handler: PacketHandler) => {

@@ -1,11 +1,11 @@
-import { load, ResUtils, Tool, Url } from "utils";
+import { Tool } from "utils";
 import { MainPeer } from "../main.peer";
-import { BaseState } from "./base.state";
-import { EventType, GameState, Logger, LoadState } from "structure";
+import { GameState, Logger, LoadState } from "structure";
 import { PBpacket } from "net-socket-packet";
-import { op_gateway, op_client, op_virtual_world, op_def } from "pixelpai_proto";
+import { op_gateway, op_client, op_virtual_world } from "pixelpai_proto";
 import IOP_CLIENT_REQ_VIRTUAL_WORLD_PLAYER_INIT = op_gateway.IOP_CLIENT_REQ_VIRTUAL_WORLD_PLAYER_INIT;
 import { Capsule } from "game-capsule";
+import { BaseState } from "./base.state";
 export class EnterWorldState extends BaseState {
     protected isSyncPackage: boolean = false;
     protected remoteIndex = 0;
@@ -17,11 +17,10 @@ export class EnterWorldState extends BaseState {
         super.run();
         this.addPacketListener();
         this.addHandlerFun(op_client.OPCODE._OP_GATEWAY_RES_CLIENT_VIRTUAL_WORLD_INIT, this.onInitVirtualWorldPlayerInit);
-        this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_ENTER_SCENE, this.onEnterSceneHandler);
         Logger.getInstance().debug("loginEnterWorld");
         const version = this.mMain.config.version;
         this.mGame.loadingManager
-            .start(LoadState.ENTERWORLD, { render: "构建现实世界" + `_v${version}`, main: "构建魔法世界" + `_v${version}`, physical: "构建物理世界" + `_v${version}` })
+            .start(LoadState.ENTERWORLD)
             .then(this.mGame.renderPeer.hideLogin());
         // =============> 向服务器发送_OP_CLIENT_REQ_VIRTUAL_WORLD_PLAYER_INIT
         const pkt: PBpacket = new PBpacket(op_gateway.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_PLAYER_INIT);
@@ -81,7 +80,7 @@ export class EnterWorldState extends BaseState {
         // TODO 进游戏前预加载资源
         const content: op_client.IOP_GATEWAY_RES_CLIENT_VIRTUAL_WORLD_INIT = packet.content;
         const configUrls = content.configUrls;
-        if (content.resourceRoot) Url.RESOURCE_ROOT = content.resourceRoot[0];
+        if (content.resourceRoot) this.mMain.render.setResourecRoot(content.resourceRoot[0]);
         clock.sync(-1);
 
         this.initgameConfigUrls(configUrls);
@@ -109,7 +108,7 @@ export class EnterWorldState extends BaseState {
         Logger.getInstance().debug("onInitVirtualWorldPlayerInit====loadGameConfig");
         // 每次加载，重新请求数据
         this.isSyncPackage = false;
-        this.loadGameConfig(mainGameConfigUrl)
+        this.mGame.roomManager.loadGameConfig(mainGameConfigUrl)
             .then((gameConfig: Capsule) => {
                 this.mGame.elementStorage.setGameConfig(gameConfig);
                 this.mGame.peer.render.createGameCallBack(content.keyEvents);
@@ -132,51 +131,6 @@ export class EnterWorldState extends BaseState {
         }
     }
 
-    protected loadGameConfig(remotePath): Promise<Capsule> {
-        const game = this.mMain.game;
-        const config = game.getGameConfig();
-        const configPath = ResUtils.getGameConfig(remotePath);
-        return load(configPath, "arraybuffer").then((req: any) => {
-            this.mGame.gameConfigState.set(remotePath, true);
-            game.loadingManager.start(LoadState.PARSECONFIG);
-            Logger.getInstance().debug("start decodeConfig");
-            return this.decodeConfigs(req);
-        }, (reason) => {
-            if (this.remoteIndex > 3) {
-                if (config.hasReload) {
-                    // app reload
-                } else {
-                    Logger.getInstance().log(reason);
-                    game.renderPeer.reload();
-                }
-                return;
-            }
-            this.remoteIndex++;
-            Logger.getInstance().error("reload res ====>", reason, "reload count ====>", this.remoteIndex);
-            return this.loadGameConfig(remotePath);
-        });
-    }
-
-    protected decodeConfigs(req): Promise<Capsule> {
-        return new Promise((resolve, reject) => {
-            const arraybuffer = req.response;
-            if (arraybuffer) {
-                try {
-                    const gameConfig = new Capsule();
-                    gameConfig.deserialize(new Uint8Array(arraybuffer));
-                    Logger.getInstance().debug("TCL: World -> gameConfig", gameConfig);
-                    resolve(gameConfig);
-                } catch (error) {
-                    Logger.getInstance().error("catch error", error);
-                    reject(error);
-                }
-            } else {
-                Logger.getInstance().error("reject error");
-                reject("error");
-            }
-        });
-    }
-
     protected gameCreated() {
         if (this.mConnect) {
             Logger.getInstance().debug("connection gameCreat");
@@ -186,68 +140,5 @@ export class EnterWorldState extends BaseState {
         } else {
             Logger.getInstance().debug("no connection gameCreat");
         }
-    }
-
-    // ========> 进入房间流程
-    protected onEnterSceneHandler(packet: PBpacket) {
-        const content: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_ENTER_SCENE = packet.content;
-        const scene = content.scene;
-        switch (scene.sceneType) {
-            case op_def.SceneTypeEnum.NORMAL_SCENE_TYPE:
-                this.onEnterScene(content);
-                break;
-            case op_def.SceneTypeEnum.EDIT_SCENE_TYPE:
-                Logger.getInstance().error("error message: scene.sceneType === EDIT_SCENE_TYPE");
-                break;
-        }
-        this.mGame.emitter.emit(EventType.SCENE_CHANGE);
-    }
-
-    protected async onEnterScene(scene: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_ENTER_SCENE) {
-        const vw = scene;
-        const roomManager = this.mGame.roomManager;
-        const curRoom = roomManager.currentRoom;
-        if (curRoom) {
-            // 客户端会接受到多次进入场景消息，这边客户端自己处理下，防止一个房间多次创建
-            if (curRoom.id === vw.scene.id) return;
-            await roomManager.leaveRoom(curRoom);
-        }
-        if (roomManager.hasRoom(vw.scene.id)) {
-            roomManager.onEnterRoom(scene);
-        } else {
-            this.loadSceneConfig(vw.scene.id.toString()).then(async (config: Capsule) => {
-                this.mGame.elementStorage.setSceneConfig(config);
-                roomManager.onEnterRoom(scene);
-                // ====> 游戏开始运行
-                this.next();
-            });
-        }
-    }
-
-    protected loadSceneConfig(sceneID: string): Promise<any> {
-        const remotePath = this.getConfigUrl(sceneID);
-        this.mGame.loadingManager.start(LoadState.DOWNLOADSCENECONFIG);
-        const render = this.mGame.renderPeer;
-        const result = this.mGame.preloadGameConfig();
-        if (result === undefined) {
-            return this.loadGameConfig(remotePath);
-        } else {
-            return result.then((req: any) => {
-                return this.loadGameConfig(remotePath);
-            }, (reason) => {
-                return new Promise((resolve, reject) => {
-                    render.showAlert("配置加载错误，请重新登陆" + reason, true, false)
-                        .then(() => {
-                            if (!this.mGame.debugReconnect) return;
-                            render.hidden();
-                        });
-                    reject();
-                });
-            });
-        }
-    }
-
-    protected getConfigUrl(sceneId: string) {
-        return this.mGame.gameConfigUrls.get(sceneId);
     }
 }

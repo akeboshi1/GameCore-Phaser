@@ -1,4 +1,4 @@
-import { Handler } from "./Handler";
+import { Handler } from "structure";
 import { i18n } from "./i18n";
 
 export class TimerCountDown {

@@ -1,4 +1,4 @@
-import { Logger, ServerAddress } from "structure";
+import { Logger, ServerAddress, SocketState } from "structure";
 import { Clock, HttpClock } from "../loop";
 import { MainPeer } from "../main.peer";
 import { BaseState } from "./base.state";
@@ -12,7 +12,7 @@ export class ConnectingState extends BaseState {
         const config = this.mMain.config;
         const gateway: ServerAddress = config.server_addr;
         if (!gateway || !gateway.host || !gateway.port) {
-            this.mMain.render.showAlert("登录失败，请重新登录或稍后再试", true, false)
+            this.mMain.render.showAlert("loading.login_error", true, true)
                 .then(async () => {
                     await this.mMain.render.clearAccount();
                     this.mGame.login();
@@ -33,7 +33,7 @@ export class ConnectingState extends BaseState {
         if (!this.mGame.clock) this.mGame.clock = new Clock(this.mGame.connection, this.mGame.peer, this.mGame);
         if (!this.mGame.httpClock) this.mGame.httpClock = new HttpClock(this.mGame);
         Logger.getInstance().info(`enterVirtualWorld`);
-        this.mGame.connection.connect = true;
+        this.mGame.connection.connect = SocketState.link;
         this.next();
     }
     next() {

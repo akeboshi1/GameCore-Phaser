@@ -15,6 +15,7 @@ export class MainPeer extends RPCPeer {
     protected mGame: Game;
     protected mRenderParam: IWorkerParam;
     protected mMainPeerParam: IWorkerParam;
+    protected mStartRoomPlay: boolean = false;
     private gameState;
     private stateTime: number = 0;
     private mConfig: ILauncherConfig;
@@ -164,6 +165,8 @@ export class MainPeer extends RPCPeer {
     public createGame(config: ILauncherConfig) {
         this.mConfig = config;
         this.game.init(config);
+        // log 在不同进程中都需要设置debug参数
+        Logger.getInstance().isDebug = config.debugLog || false;
     }
 
     @Export()
@@ -174,11 +177,6 @@ export class MainPeer extends RPCPeer {
     @Export()
     public updateMoss(moss) {
         if (this.game.elementStorage) this.game.elementStorage.updateMoss(moss);
-    }
-
-    @Export()
-    public updatePalette(palette) {
-        if (this.game.elementStorage) this.game.elementStorage.updatePalette(palette);
     }
 
     @Export([webworker_rpc.ParamType.num])
@@ -279,8 +277,26 @@ export class MainPeer extends RPCPeer {
 
     @Export()
     public startRoomPlay() {
+        this.mStartRoomPlay = true;
         Logger.getInstance().debug("peer startroom");
-        if (this.game.roomManager && this.game.roomManager.currentRoom) this.game.roomManager.currentRoom.startPlay();
+        if (!this.game.roomManager || !this.game.roomManager.currentRoom) {
+            Logger.getInstance().log("scene no peer startroom");
+            return;
+        }
+        Logger.getInstance().log("scene has peer startroom");
+        this.removeListen();
+        this.game.roomManager.currentRoom.startPlay();
+    }
+
+    public addListen() {
+        this.removeListen();
+        Logger.getInstance().log("scene addListen");
+        this.game.emitter.on("EnterRoom", this.enterRoomHander, this);
+    }
+
+    public removeListen() {
+        Logger.getInstance().log("scene removeListen");
+        this.game.emitter.off("EnterRoom", this.enterRoomHander, this);
     }
 
     @Export([webworker_rpc.ParamType.str, webworker_rpc.ParamType.str])
@@ -499,8 +515,8 @@ export class MainPeer extends RPCPeer {
         this.game.httpClock.enable = enable;
     }
 
-    @Export([webworker_rpc.ParamType.str])
-    public showNoticeHandler(text: string) {
+    @Export()
+    public showNoticeHandler(text: { msg?: string, i18nMsg?: string, i18nData?: any }) {
         // const data = new op_client.OP_VIRTUAL_WORLD_RES_CLIENT_SHOW_UI();
         // data.text = [{ text, node: undefined }];
         // this.game.showByName(ModuleName.PICANOTICE_NAME, data);
@@ -630,7 +646,7 @@ export class MainPeer extends RPCPeer {
     @Export([webworker_rpc.ParamType.str])
     public uploadHeadImage(url: string) {
         this.game.httpService.uploadHeadImage(url).then(() => {
-            this.game.emitter.emit("updateDetail");
+            if (this.game && this.game.emitter) this.game.emitter.emit("updateDetail");
         });
     }
 
@@ -681,5 +697,18 @@ export class MainPeer extends RPCPeer {
     // ==== config
     public isPlatform_PC() {
         return this.mConfig && this.mConfig.platform && this.mConfig.platform === "pc";
+    }
+
+    public clearGame() {
+        this.mStartRoomPlay = false;
+        this.removeListen();
+    }
+
+    protected enterRoomHander() {
+        if (!this.mStartRoomPlay) return;
+        this.removeListen();
+        Logger.getInstance().log("scene getlisten");
+        this.game.roomManager.currentRoom.startPlay();
+        this.mStartRoomPlay = false;
     }
 }

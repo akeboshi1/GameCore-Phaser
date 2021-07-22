@@ -1,82 +1,88 @@
 import { PacketHandler, PBpacket } from "net-socket-packet";
-import { op_client, op_def, op_virtual_world } from "pixelpai_proto";
-import { Terrain } from "./terrain";
-import { IElementManager } from "../element/element.manager";
-import { IElement } from "../element/element";
-import NodeType = op_def.NodeType;
-import { ConnectionService, ISprite } from "structure";
-import { IFramesModel } from "structure";
-import { IDragonbonesModel, IPos, Logger, LogicPos } from "structure";
+import { op_client, op_def } from "pixelpai_proto";
+import { IDragonbonesModel, IFramesModel, ISprite, ITilesetProperty, Logger, LogicPos, IPos, Position45, ConnectionService } from "structure";
 import { EmptyTerrain } from "./empty.terrain";
-import { IDisplayRef, IElementStorage, Sprite } from "baseGame";
-import { IRoomService, SpriteAddCompletedListener } from "../../room/room";
-export class TerrainManager extends PacketHandler implements IElementManager {
+import { Tool } from "utils";
+import NodeType = op_def.NodeType;
+import { IDisplayRef, IElementStorage } from "baseGame";
+import { IRoomService, SpriteAddCompletedListener } from "../room";
+
+// todo: rename to GroundManager
+export class TerrainManager extends PacketHandler {
     public hasAddComplete: boolean = false;
-    protected mTerrains: Map<number, Terrain> = new Map<number, Terrain>();
     /**
      * 配置文件等待渲染的物件。
      */
     protected mCacheDisplayRef: Map<number, IDisplayRef> = new Map();
     protected mGameConfig: IElementStorage;
-    // add by 7 ----
-    protected mPacketFrameCount: number = 0;
-    protected mListener: SpriteAddCompletedListener;
-    // ---- by 7
-    private mEmptyMap: EmptyTerrain[][];
+    // idx = x + y * cols
+    private mEmptyMap: Map<number, EmptyTerrain> = new Map<number, EmptyTerrain>();
     private mDirty: boolean = false;
-    private mTerrainCache: any[];
     private mIsDealEmptyTerrain: boolean = false;
-    // private mExtraRoomInfo: IElementPi = null;
+
     constructor(protected mRoom: IRoomService, listener?: SpriteAddCompletedListener) {
         super();
-        this.mListener = listener;
         if (this.connection) {
             this.connection.addPacketListener(this);
 
-            this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_ADD_SPRITE, this.onAdd);
-            this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_ADD_SPRITE_END, this.addComplete);
-            this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_DELETE_SPRITE, this.onRemove);
             this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_SYNC_SPRITE, this.onSyncSprite);
             this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_CHANGE_SPRITE_ANIMATION, this.onChangeAnimation);
-            this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_HOT_BLOCK_SYNC_SPRITE, this.onBlockSyncSprite);
-            this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_HOT_BLOCK_DELETE_SPRITE, this.onBlockDeleteSprite);
-            this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_HOT_BLOCK_SYNC_SPRITE_END, this.onBlockSpriteEnd);
+            this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_SYNC_TILE_MAP, this.onSyncTilemap);
         }
         if (this.mRoom) {
             this.mGameConfig = this.mRoom.game.elementStorage;
         }
-        // this.roomService.game.emitter.on(ElementManager.ELEMENT_READY, this.dealTerrainCache, this);
     }
 
     public get isDealEmptyTerrain(): boolean {
         return this.mIsDealEmptyTerrain;
     }
 
-    public init() {
-        this.mIsDealEmptyTerrain = false;
-        const roomSize = this.roomService.roomSize;
-        this.mEmptyMap = new Array(roomSize.cols);
-        for (let i = 0; i < roomSize.cols; i++) {
-            this.mEmptyMap[i] = new Array(roomSize.rows);
-            for (let j = 0; j < roomSize.rows; j++) {
-                this.addEmpty(this.roomService.transformTo90(new LogicPos(i, j)));
+    public init(): Promise<any> {
+        return new Promise<any>((resolve, reject) => {
+            this.mIsDealEmptyTerrain = false;
+            const roomSize = this.roomService.roomSize;
+
+            const scenePIUrl = this.mRoom.game.getCurSceneConfigUrl();
+            const sceneID = Tool.baseName(scenePIUrl);
+            const urlRoot = Tool.rootName(scenePIUrl);
+            this.mRoom.game.renderPeer.addGround({ id: sceneID, resRoot: urlRoot })
+                .then((properties: ITilesetProperty[]) => {
+                    this.mRoom.game.elementStorage.updateTilesets(properties);
+                    resolve(null);
+                }).catch((error) => {
+                    // tslint:disable-next-line:no-console
+                    console.log(error);
+                    reject(error);
+                });
+
+            // set walkable
+            const walkableArray = this.mRoom.game.elementStorage.getGroundWalkableCollection().data;
+            let tempX = 0;
+            let tempY = 0;
+            for (let i = 0; i < walkableArray.length; i++) {
+                const walkable = walkableArray[i];
+                tempX = i % roomSize.cols;
+                tempY = Math.floor(i / roomSize.cols);
+                this.mRoom.setGroundWalkable(new LogicPos(tempX, tempY), walkable);
+                if (!walkable) {
+                    this.addEmpty(new LogicPos(tempX, tempY));
+                }
             }
-        }
+        });
     }
 
     public update(time: number, delta: number) {
         if (this.mDirty) {
-            const len = this.mEmptyMap.length;
-            for (let i: number = 0; i < len; i++) {
-                const tmpList = this.mEmptyMap[i];
-                const tmpLen: number = tmpList.length;
-                for (let j: number = 0; j < tmpLen; j++) {
-                    const terrain = tmpList[j];
-                    if (terrain && terrain.dirty) {
-                        this.mEmptyMap[i][j] = undefined;
-                        terrain.destroy();
-                    }
+            const removeIds = [];
+            this.mEmptyMap.forEach((terrain, idx) => {
+                if (terrain && terrain.dirty) {
+                    removeIds.push(idx);
+                    terrain.destroy();
                 }
+            });
+            for (const removeId of removeIds) {
+                this.mEmptyMap.delete(removeId);
             }
             this.mDirty = false;
         }
@@ -84,38 +90,12 @@ export class TerrainManager extends PacketHandler implements IElementManager {
 
     public dealEmptyTerrain() {
         this.mIsDealEmptyTerrain = true;
-        this.mEmptyMap.forEach((emptyTerrainList) => {
-            if (emptyTerrainList) emptyTerrainList.forEach((emptyTerrain) => {
-                if (emptyTerrain) emptyTerrain.addDisplay();
-            });
+        this.mEmptyMap.forEach((emptyTerrain) => {
+            if (emptyTerrain) emptyTerrain.addDisplay();
         });
 
         // todo 处理完地块后开始加载其他scene的pi
         this.mRoom.game.loadTotalSceneConfig();
-    }
-
-    public addSpritesToCache(sprites: op_client.ISprite[]) {
-        const ids = [];
-        // sprites 服务端
-        let point: op_def.IPBPoint3f;
-        if (!this.mTerrainCache) this.mTerrainCache = [];
-        this.hasAddComplete = false;
-        for (const sprite of sprites) {
-            if (this.mTerrains.get(sprite.id)) continue;
-            point = sprite.point3f;
-
-            this.removeEmpty(new LogicPos(point.x, point.y));
-            if (point) {
-                const s = new Sprite(sprite, op_def.NodeType.TerrainNodeType);
-                this.checkTerrainDisplay(s);
-                if (!s.displayInfo) {
-                    ids.push(s.id);
-                }
-                this.mTerrainCache.push(s);
-                // this._add(s);
-            }
-        }
-        this.fetchDisplay(ids);
     }
 
     public destroy() {
@@ -124,47 +104,11 @@ export class TerrainManager extends PacketHandler implements IElementManager {
         if (this.connection) {
             this.connection.removePacketListener(this);
         }
-        if (this.mTerrains) {
-            this.mTerrains.forEach((terrain) => this.remove(terrain.id));
-            this.mTerrains.clear();
-        }
-        if (this.mTerrainCache) {
-            this.mTerrainCache.length = 0;
-            this.mTerrainCache = null;
-        }
-    }
-
-    public get(id: number): Terrain {
-        const terrain: Terrain = this.mTerrains.get(id);
-        if (!terrain) {
-            return;
-        }
-        return terrain;
-    }
-
-    public add(sprites: ISprite[]) {
-        for (const sprite of sprites) {
-            this._add(sprite);
-        }
-    }
-
-    public remove(id: number): IElement {
-        if (!this.mTerrains) return;
-        const terrain = this.mTerrains.get(id);
-        if (terrain) {
-            this.mTerrains.delete(id);
+        this.mEmptyMap.forEach((terrain) => {
             terrain.destroy();
-        }
-        return terrain;
-    }
-
-    public getElements(): IElement[] {
-        return Array.from(this.mTerrains.values());
-    }
-
-    public onDisplayCreated(id: number) {
-    }
-    public onDisplayRemoved(id: number) {
+        });
+        this.mEmptyMap.clear();
+        this.mRoom.game.renderPeer.removeGround();
     }
 
     public addDisplayRef(displays: IDisplayRef[]) {
@@ -173,91 +117,25 @@ export class TerrainManager extends PacketHandler implements IElementManager {
         }
     }
 
-    // todo: move to pica
-    // 替换全部资源
-    public changeAllDisplayData(id: string) {
-        // const configMgr = <BaseDataConfigManager>this.roomService.game.configManager;
-        // const configData = configMgr.getElement2Data(id);
-        // if (!configData) {
-        //     Logger.getInstance().error("no config data, id: ", id);
-        //     return;
-        // }
-        // configMgr.checkDynamicElementPI({ sn: configData.sn, itemid: id, serialize: configData.serializeString }).then((wallConfig) => {
-        //     if (!wallConfig) return;
-        //     this.mExtraRoomInfo = wallConfig;
-        //     this.mTerrains.forEach((terrain) => {
-        //         const sprite = terrain.model;
-        //         // @ts-ignore
-        //         sprite.updateDisplay(wallConfig.animationDisplay, wallConfig.animations);
-        //         terrain.load(<FramesModel>sprite.displayInfo);
-        //     });
-        // });
-    }
-
-    protected onAdd(packet: PBpacket) {
-        this.mPacketFrameCount++;
-        if (!this.mGameConfig) {
-            return;
-        }
-        const content: op_client.IOP_VIRTUAL_WORLD_REQ_CLIENT_ADD_SPRITE = packet.content;
-        const sprites = content.sprites;
-        const type = content.nodeType;
-        if (type !== op_def.NodeType.TerrainNodeType) {
-            return;
-        }
-        this.addSpritesToCache(sprites);
-    }
-
-    protected _add(sprite: ISprite): Terrain {
-        // if (this.mExtraRoomInfo) {
-        //     sprite.updateDisplay(this.mExtraRoomInfo.animationDisplay, <any>this.mExtraRoomInfo.animations);
-        // }
-        let terrain = this.mTerrains.get(sprite.id);
-        if (!terrain) {
-            terrain = new Terrain(sprite, this);
-        } else {
-            terrain.model = sprite;
-        }
-        // this.addMap(sprite);
-        this.mTerrains.set(terrain.id || 0, terrain);
-        return terrain;
-    }
-
-    protected addComplete(packet: PBpacket) {
-        this.hasAddComplete = true;
-        this.dealTerrainCache();
-        // this.dealEmptyTerrain();
-    }
-
-    protected onRemove(packet: PBpacket) {
-        const content: op_client.IOP_VIRTUAL_WORLD_REQ_CLIENT_DELETE_SPRITE = packet.content;
-        const type: number = content.nodeType;
-        const ids: number[] = content.ids;
-        if (type !== op_def.NodeType.TerrainNodeType) {
-            return;
-        }
-        for (const id of ids) {
-            const terrain = this.remove(id);
-            if (terrain) {
-                this.addEmpty(terrain.model.pos);
-            }
-        }
-        // Logger.getInstance().debug("remove terrain length: ", ids.length);
-    }
-
     protected onSyncSprite(packet: PBpacket) {
         const content: op_client.IOP_EDITOR_REQ_CLIENT_SYNC_SPRITE = packet.content;
         if (content.nodeType !== op_def.NodeType.TerrainNodeType) {
             return;
         }
-        let terrain: Terrain = null;
         const sprites = content.sprites;
-        for (const sprite of sprites) {
-            terrain = this.get(sprite.id);
-            if (terrain) {
-                const sp = new Sprite(sprite, content.nodeType);
-                terrain.model = sp;
+    }
+
+    protected onSyncTilemap(packet: PBpacket) {
+        const content: op_client.IOP_VIRTUAL_WORLD_REQ_CLIENT_SYNC_TILE_MAP = packet.content;
+        for (const oneGroup of content.terrainGroup) {
+            for (const onePos of oneGroup.positionList) {
+                this.changeGroundBySN(onePos, oneGroup.sn);
             }
+        }
+        for (let i = 0; i < content.walkableCollection.value.length; i++) {
+            const x = i % this.roomService.roomSize.cols;
+            const y = Math.floor(i / this.roomService.roomSize.cols);
+            this.changeWalkable(new LogicPos(x, y), content.walkableCollection.value[i]);
         }
     }
 
@@ -271,62 +149,6 @@ export class TerrainManager extends PacketHandler implements IElementManager {
         }
     }
 
-    protected checkTerrainDisplay(sprite: ISprite) {
-        if (!sprite.displayInfo) {
-            const palette = this.roomService.game.elementStorage.getTerrainPaletteByBindId(sprite.bindID);
-            if (palette) {
-                sprite.setDisplayInfo(palette);
-            }
-        }
-    }
-
-    protected fetchDisplay(ids: number[]) {
-        if (ids.length === 0) {
-            return;
-        }
-        const packet = new PBpacket(op_virtual_world.OPCODE._OP_REQ_VIRTUAL_WORLD_QUERY_SPRITE_RESOURCE);
-        const content: op_virtual_world.IOP_REQ_VIRTUAL_WORLD_QUERY_SPRITE_RESOURCE = packet.content;
-        content.ids = ids;
-        this.connection.send(packet);
-    }
-
-    protected removeMap(sprite: ISprite) {
-        this.setMap(sprite, 1);
-    }
-
-    protected addMap(sprite: ISprite) {
-        this.setMap(sprite, 0);
-    }
-
-    protected setMap(sprite: ISprite, type: number) {
-        const displayInfo = sprite.displayInfo;
-        if (!displayInfo) {
-            return;
-        }
-        const curAni = sprite.currentAnimation;
-        // const aniName = curAni.name;
-        // const flip = false;
-        // const collisionArea = displayInfo.getCollisionArea(aniName, flip);
-        // const walkArea = displayInfo.getWalkableArea(aniName, flip);
-        // const origin = displayInfo.getOriginPoint(aniName, flip);
-        // let rows = collisionArea.length;
-        // let cols = collisionArea[0].length;
-        // let hasCollisionArea = true;
-        // if (rows === 1 && cols === 1) {
-        //     rows = 2;
-        //     cols = 2;
-        //     hasCollisionArea = false;
-        // }
-        // const pos = sprite.pos;
-        // for (let i = 0; i < rows; i++) {
-        //     for (let j = 0; j < cols; j++) {
-        //         // if ((!hasCollisionArea) || collisionArea[i][j] === 1 && walkArea[i][j] === 1) {
-        //         // this.mMap[pos.x + i - origin.x][pos.y + j - origin.y] = type;
-        //         // }
-        //     }
-        // }
-    }
-
     protected onChangeAnimation(packet: PBpacket) {
         const content: op_client.IOP_VIRTUAL_WORLD_REQ_CLIENT_CHANGE_SPRITE_ANIMATION = packet.content;
         if (content.nodeType !== NodeType.TerrainNodeType) {
@@ -334,93 +156,13 @@ export class TerrainManager extends PacketHandler implements IElementManager {
         }
         const anis = content.changeAnimation;
         const ids = content.ids;
-        if (anis.length < 1) {
-            return;
-        }
-        let terrain: Terrain = null;
-        for (const id of ids) {
-            terrain = this.get(id);
-            if (terrain) {
-                terrain.play(anis[0].animationName);
-                // terrain.setQueue(content.changeAnimation);
-            }
-        }
     }
 
-    protected addEmpty(pos: IPos) {
-        const tmpPos = this.roomService.transformTo45(pos);
-        const block = new EmptyTerrain(this.roomService, pos, tmpPos.x, tmpPos.y);
-        const pos45 = this.roomService.transformTo45(pos);
-        this.mEmptyMap[pos45.x][pos45.y] = block;
-    }
-
-    protected removeEmpty(pos: IPos) {
-        const pos45 = this.roomService.transformTo45(pos);
-        if (pos45.x >= this.mEmptyMap.length || pos45.y >= this.mEmptyMap[0].length) {
-            Logger.getInstance().debug(`position ${pos.x} ${pos.y} exceed the map boundary`);
-            return;
-        }
-        if (!this.mEmptyMap[pos45.x] || !this.mEmptyMap[pos45.x][pos45.y]) return;
-        const block = this.mEmptyMap[pos45.x][pos45.y];
-        if (block) {
-            block.dirty = true;
-            this.mDirty = true;
-        }
-    }
-
-    private dealTerrainCache() {
-        if (this.mTerrainCache) {
-            this.mTerrainCache.forEach((sprite) => {
-                this._add(sprite);
-            });
-            this.mTerrainCache.length = 0;
-            this.mTerrainCache = null;
-            this.hasAddComplete = true;
-        }
-    }
-
-    private onBlockSyncSprite(packet: PBpacket) {
-        const content: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_HOT_BLOCK_SYNC_SPRITE = packet.content;
-        const { nodeType, sprites } = content;
-        if (nodeType !== op_def.NodeType.TerrainNodeType) return;
-        for (const sprite of sprites) {
-            if (this.mCacheDisplayRef.has(sprite.id)) this.mCacheDisplayRef.delete(sprite.id);
-        }
-        this.addSpritesToCache(sprites);
-    }
-
-    private onBlockDeleteSprite(packet: PBpacket) {
-        const content: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_HOT_BLOCK_DELETE_SPRITE = packet.content;
-        const { nodeType, spriteIds } = content;
-        if (nodeType !== op_def.NodeType.TerrainNodeType) return;
-        for (const id of spriteIds) {
-            if (this.mCacheDisplayRef.has(id)) this.mCacheDisplayRef.delete(id);
-            if (this.get(id)) this.remove(id);
-        }
-    }
-
-    private onBlockSpriteEnd(packet: PBpacket) {
-        if (!this.mTerrainCache) {
-            this.mTerrainCache = [];
-        }
-        const add = [];
-        this.mCacheDisplayRef.forEach((display) => {
-            // const sprite = new Sprite({ id: display.id });
-            // const pos = display.pos;
-            // this.removeEmpty(new LogicPos(pos.x, pos.y));
-            // sprite.importDisplayRef(display);
-            // this.mTerrainCache.push(sprite);
-            const { id, pos, direction } = display;
-            add.push({ id, point3f: this.roomService.transformTo90(pos), direction });
-
-        });
-        this.mCacheDisplayRef.clear();
-        if (add.length > 0) {
-            this.addSpritesToCache(add);
-        }
-        this.hasAddComplete = true;
-        this.dealTerrainCache();
-
+    protected addEmpty(pos45: IPos): EmptyTerrain {
+        const pos90 = Position45.transformTo90(pos45, this.roomService.roomSize);
+        const block = new EmptyTerrain(this.roomService, pos90, pos45.x, pos45.y);
+        this.mEmptyMap.set(this.terrainPos2Idx(pos45.x, pos45.y), block);
+        return block;
     }
 
     get connection(): ConnectionService | undefined {
@@ -432,5 +174,40 @@ export class TerrainManager extends PacketHandler implements IElementManager {
 
     get roomService(): IRoomService {
         return this.mRoom;
+    }
+
+    protected terrainPos2Idx(x: number, y: number): number {
+        return x + y * this.mRoom.roomSize.cols;
+    }
+
+    protected changeGroundBySN(pos45: IPos, sn: string): Promise<ITilesetProperty> {
+        const index = this.mRoom.game.elementStorage.getTilesetIndexBySN(sn);
+        return this.changeGroundByTilesetIndex(pos45, index);
+    }
+
+    protected changeGroundByTilesetIndex(pos45: IPos, key: number): Promise<ITilesetProperty> {
+        return new Promise<ITilesetProperty>((resolve, reject) => {
+            this.mRoom.game.renderPeer.changeGround(pos45, key)
+                .then((prop: ITilesetProperty) => {
+                    resolve(prop);
+                })
+                .catch((reason) => {
+                    reject(reason);
+                });
+        });
+    }
+
+    protected changeWalkable(pos45: IPos, walkable: boolean) {
+        const terrainIdx = this.terrainPos2Idx(pos45.x, pos45.y);
+        // set empty
+        if (walkable && this.mEmptyMap.has(terrainIdx)) {
+            this.mEmptyMap.get(terrainIdx).dirty = true;
+            this.mDirty = true;
+        } else if (!walkable && !this.mEmptyMap.has(terrainIdx)) {
+            const empty = this.addEmpty(pos45);
+            if (this.mIsDealEmptyTerrain) empty.addDisplay();
+        }
+        // set astar
+        this.mRoom.setGroundWalkable(pos45, walkable);
     }
 }

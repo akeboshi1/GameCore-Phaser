@@ -1,5 +1,7 @@
+import { FramesModel } from "baseGame";
 import { PacketHandler, PBpacket } from "net-socket-packet";
 import { op_virtual_world, op_client, op_def } from "pixelpai_proto";
+import { AnimationModel } from "structure";
 import { IRoomService } from "../room";
 import { Effect } from "./effect";
 
@@ -9,7 +11,7 @@ export class EffectManager extends PacketHandler {
         super();
         this.mEffects = new Map();
         this.connection.addPacketListener(this);
-        this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_SYNC_SPRITE, this.onSyncSprite);
+        this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_RES_CLIENT_HOT_BLOCK_SYNC_SPRITE, this.onSyncSprite);
     }
 
     public add(ownerID: number, id?: number) {
@@ -70,7 +72,7 @@ export class EffectManager extends PacketHandler {
     }
 
     private onSyncSprite(packet: PBpacket) {
-        const content: op_client.IOP_VIRTUAL_WORLD_REQ_CLIENT_SYNC_SPRITE = packet.content;
+        const content: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_HOT_BLOCK_SYNC_SPRITE = packet.content;
         if (content.nodeType !== op_def.NodeType.ElementNodeType) {
             return;
         }
@@ -78,9 +80,33 @@ export class EffectManager extends PacketHandler {
         for (const sprite of sprites) {
             this.mEffects.forEach((effect) => {
                 if (effect.bindId === sprite.id) {
-                    effect.syncSprite(sprite);
+                    // effect.syncSprite(sprite);
+                    const framesModel = this.createFramesModel(sprite);
+                    if (framesModel) {
+                        effect.updateDisplayInfo(framesModel);
+                        this.room.game.elementStorage.add(framesModel);
+                    }
                 }
             });
+        }
+    }
+
+    private createFramesModel(sprite: op_client.ISprite) {
+        const { display, animations } = sprite;
+        if (display && animations) {
+            const anis = [];
+            for (const ani of animations) {
+                anis.push(new AnimationModel(ani));
+            }
+            const framesModel = new FramesModel({
+                id: sprite.bindId || sprite.id,
+                animations: {
+                    defaultAnimationName: sprite.currentAnimationName,
+                    display,
+                    animationData: anis,
+                },
+            });
+            return framesModel;
         }
     }
 

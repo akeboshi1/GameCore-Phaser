@@ -157,15 +157,7 @@ export class PlayerManager extends PacketHandler implements IElementManager {
                 }
                 if (data.animation) {
                     const times = data.times;
-                    const queue = [{ animationName: data.animation, times }];
-                    if (times && times > 0) {
-                        if (element.moving) {
-                            queue.push({ animationName: PlayerState.IDLE, times: undefined });
-                        } else {
-                            queue.push({ animationName: element.model.currentAnimation.name, times: element.model.currentAnimation.times });
-                        }
-                    }
-                    element.setQueue(queue);
+                    element.setQueue([{ animationName: data.animation, times }], -1);
                     // element.play(data.animation, data.times);
                 }
                 // this.mActionMgr.executeElementActions(data.action, { targetId, id: data.id }, id);
@@ -431,7 +423,7 @@ export class PlayerManager extends PacketHandler implements IElementManager {
         for (const id of ids) {
             player = <Player>this.get(id);
             if (player) {
-                player.setQueue(content.changeAnimation);
+                player.setQueue(content.changeAnimation, content.finishAnimationBehavior);
             }
         }
     }

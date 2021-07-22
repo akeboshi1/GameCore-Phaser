@@ -1,6 +1,6 @@
 import { BaseFramesDisplay, ReferenceArea } from "baseRender";
 import { Render } from "../../render";
-import { IPos, Logger,DisplayField, ElementStateType, LayerName, RunningAnimation, TitleMask } from "structure";
+import { IPos, Logger, DisplayField, ElementStateType, LayerName, RunningAnimation, TitleMask } from "structure";
 import { IDisplayObject } from "../display.object";
 import { ElementTopDisplay } from "../element.top.display";
 import { DragonbonesDisplay } from "../dragonbones/dragonbones.display";
@@ -19,7 +19,8 @@ export class FramesDisplay extends BaseFramesDisplay implements IDisplayObject {
     private mGrids: Phaser.GameObjects.Graphics;
 
     constructor(scene: Phaser.Scene, private render: Render, id?: number, type?: number) {
-        super(scene, id, type);
+        super(scene, { resPath: render.url.RES_PATH, osdPath: render.url.OSD_PATH }, type);
+        this.mNodeType = type;
         this.mID = id;
     }
 

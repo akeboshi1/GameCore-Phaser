@@ -1,14 +1,13 @@
 import { BasicScene } from "baseRender";
-import { Font, i18n, Logger, SceneName } from "structure";
-import { Url } from "utils";
-
+import { Font, Logger, SceneName } from "structure";
+import { i18n } from "../utils";
 export class BlackScene extends BasicScene {
     constructor() {
         super({ key: SceneName.BLACK_SCENE });
     }
 
     public preload() {
-        this.load.script("webfont", Url.getRes("scripts/webfont/1.6.26/webfont.js"));
+        this.load.script("webfont", this.render.url.getRes("scripts/webfont/1.6.26/webfont.js"));
     }
 
     public create() {

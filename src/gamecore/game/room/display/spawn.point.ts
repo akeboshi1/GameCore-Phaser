@@ -22,7 +22,7 @@ export class SpawnPoint implements ISprite {
     bindID: number;
     sn: string;
     attrs: op_def.IStrPair[];
-    animationQueue: AnimationQueue[];
+    animationQueue: AnimationQueue;
     suits: AvatarSuit[];
     titleMask: number;
     sound: string;

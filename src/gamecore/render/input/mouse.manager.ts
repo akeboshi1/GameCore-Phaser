@@ -85,10 +85,11 @@ export class MouseManager {
         }
         let id = 0;
         let com = null;
-        if (gameobject && gameobject.parentContainer) {
-            id = gameobject.parentContainer.getData("id");
-            // TODO 提供个接口
-            com = gameobject.parentContainer.parentContainer || gameobject.parentContainer;
+        if (gameobject) {
+            id = gameobject.getData("id");
+            if (id) {
+                com = this.render.displayManager.getDisplay(id);
+            }
         }
 
         if (!pointer.isDown) {

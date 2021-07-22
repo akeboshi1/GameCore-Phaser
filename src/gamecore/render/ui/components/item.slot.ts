@@ -1,7 +1,6 @@
 import { op_gameconfig } from "pixelpai_proto";
 import { DragDropIcon } from "./dragDropIcon";
 import { IToolTip } from "./tips/itoolTip";
-import { Url } from "utils";
 import { ToolTip } from "./tips/toolTip";
 import { EventType } from "structure";
 import { Render } from "../../render";
@@ -82,9 +81,9 @@ export class ItemSlot {
                 this.mIcon.icon.visible = false;
             }
             if (!url) return;
-            if (this.mScene.textures.exists(Url.getOsdRes(url))) {
+            if (this.mScene.textures.exists(this.mRender.url.getOsdRes(url))) {
                 if (this.mData) {
-                    this.mIcon.icon.setTexture(Url.getOsdRes(url));
+                    this.mIcon.icon.setTexture(this.mRender.url.getOsdRes(url));
                     this.mIcon.icon.visible = true;
                 }
             } else {
@@ -156,7 +155,7 @@ export class ItemSlot {
         this.itemBG.setTexture(this.mResStr, this.mResSlot);
         this.toolTipCon.addAt(this.itemBG, 0);
         this.toolTipCon.setSize(this.itemBG.width, this.itemBG.height);
-        this.mIcon = new DragDropIcon(this.mScene, 0, 0);
+        this.mIcon = new DragDropIcon(this.mScene, this.mRender, 0, 0);
         this.toolTipCon.addAt(this.mIcon, 1);
         if (this.mSubScriptRes) {
             this.mSubScriptSprite = this.mScene.make.sprite(undefined, false);
@@ -166,7 +165,7 @@ export class ItemSlot {
             // this.con.addAt(this.mSubScriptSprite, 2);
         }
         if (this.isTipBoo) {
-            this.toolTip = new ToolTip(this.mScene, "itemSlotTip", Url.getRes("ui/toolTip/toolTip.json"), Url.getRes("ui/toolTip/toolTip.png"), this.mRender.uiScale);
+            this.toolTip = new ToolTip(this.mScene, "itemSlotTip", this.mRender.url.getRes("ui/toolTip/toolTip.json"), this.mRender.url.getRes("ui/toolTip/toolTip.png"), this.mRender.uiScale);
         }
 
         this.toolTipCon.setInteractive(new Phaser.Geom.Rectangle(0, 0, this.itemBG.width, 56), Phaser.Geom.Rectangle.Contains);

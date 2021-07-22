@@ -1,11 +1,11 @@
 import { DragonbonesModel } from "baseGame";
 import { BaseDragonbonesDisplay } from "baseRender";
 import { Logger } from "structure";
-
+import version from "../../../../version";
 export class DragonbonesEditorDisplay extends BaseDragonbonesDisplay {
 
-    constructor(scene: Phaser.Scene, private mWebHomePath: string) {
-        super(scene);
+    constructor(scene: Phaser.Scene, mWebHomePath: string) {
+        super(scene, { resPath: `./resources_v${version}/`, osdPath: mWebHomePath });
     }
 
     public load(): Promise<any> {
@@ -43,10 +43,6 @@ export class DragonbonesEditorDisplay extends BaseDragonbonesDisplay {
     public stop() {
         if (!this.mArmatureDisplay) return;
         this.mArmatureDisplay.animation.stop();
-    }
-
-    protected partNameToLoadUrl(val: string): string {
-        return `${this.mWebHomePath}/avatar/part/${val}.png`;
     }
 
     private clearArmatureUnusedSlots() {

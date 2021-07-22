@@ -1,4 +1,19 @@
-import { DisplayField, ElementStateType, IScenery, LayerName, Handler, IPos, IPosition45Obj, Logger, LogicPos, IFramesModel, IDragonbonesModel, RunningAnimation } from "structure";
+import {
+    DisplayField,
+    ElementStateType,
+    IScenery,
+    LayerName,
+    Handler,
+    IPos,
+    IPosition45Obj,
+    Logger,
+    LogicPos,
+    IFramesModel,
+    IDragonbonesModel,
+    RunningAnimation,
+    ITilesetProperty,
+    IGround
+} from "structure";
 import { FramesDisplay } from "../display/frames/frames.display";
 import { PlayScene } from "../scenes/play.scene";
 import { DragonbonesDisplay } from "../display/dragonbones/dragonbones.display";
@@ -9,7 +24,7 @@ import { ServerPosition } from "../display/debugs/server.pointer";
 import { IDisplayObject } from "../display";
 import { LayerEnum } from "game-capsule";
 import { TerrainGrid } from "../display/terrain.grid";
-import { BaseSceneManager, BlockManager } from "baseRender";
+import { BaseSceneManager, BlockManager, Ground } from "baseRender";
 import { FramesModel } from "baseGame";
 import { Tool } from "utils";
 
@@ -65,6 +80,7 @@ export class DisplayManager {
     private loading: boolean = false;
     private mModelCache: Map<number, any>;
     private mGridLayer: TerrainGrid;
+    private mGround: Ground;
 
     // ====实例id
     private uuid: number = 0;
@@ -432,6 +448,37 @@ export class DisplayManager {
         this.scenerys.delete(id);
     }
 
+    public addGround(ground: IGround): Promise<ITilesetProperty[]> {
+        return new Promise<ITilesetProperty[]>((resolve, reject) => {
+            const scene = this.sceneManager.getMainScene();
+            this.mGround = new Ground(scene, this.render.url, this.render.scaleRatio);
+            (<PlayScene> scene).layerManager.addToLayer(LayerName.GROUND, this.mGround);
+            this.mGround.load(ground)
+                .then(() => {
+                    const allProperties = this.mGround.getAllTilesetProperties();
+                    resolve(allProperties);
+                })
+                .catch((err) => {
+                    reject(err);
+                });
+        });
+    }
+
+    // 修改地块 返回自定义数据
+    public changeGround(pos45: IPos, key: number): ITilesetProperty {
+        if (this.mGround) {
+            this.mGround.changeAt(pos45, key);
+            return this.mGround.getTilePropertiesByPos(pos45.x, pos45.y);
+        }
+        return null;
+    }
+
+    public removeGround() {
+        if (this.mGround) {
+            this.mGround.destroy();
+        }
+    }
+
     public getDisplay(id: number): DragonbonesDisplay | FramesDisplay | undefined {
         return this.displays.get(id);
     }
@@ -607,6 +654,10 @@ export class DisplayManager {
         if (this.serverPosition) {
             this.serverPosition.destroy();
             this.serverPosition = null;
+        }
+
+        if (this.mGround) {
+            this.mGround.destroy();
         }
     }
 

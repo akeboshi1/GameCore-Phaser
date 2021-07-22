@@ -11,10 +11,10 @@ export interface ICameraService {
     initialize: boolean;
     getViewPort(): Promise<LogicRectangle | undefined>;
     getMiniViewPort(): Promise<LogicRectangle45 | undefined>;
-    syncToEditor(): void;
+    syncToEditor(): Promise<void>;
     centerCameas(): void;
-    syncCamera(): void;
-    syncCameraScroll(): void;
+    syncCamera(): Promise<void>;
+    syncCameraScroll(): Promise<void>;
     resetCameraSize(width: number, height: number);
     startFollow(target: any, effect?: string);
     stopFollow();
@@ -80,44 +80,64 @@ export class CamerasManager extends PacketHandler implements ICameraService {
         });
     }
 
-    public syncToEditor() {
-        const cameraView = this.mGame.peer.render.getWorldView();
-        const pkt = new PBpacket(op_editor.OPCODE._OP_CLIENT_REQ_EDITOR_RESET_CAMERA);
-        const content: op_editor.IOP_CLIENT_REQ_EDITOR_RESET_CAMERA = pkt.content;
-        content.x = cameraView.x;
-        content.y = cameraView.y;
-        content.width = cameraView.width;
-        content.height = cameraView.height;
-        this.connection.send(pkt);
+    public syncToEditor(): Promise<void> {
+        return new Promise<void>((resolve) => {
+            this.mGame.peer.render.getWorldView().then((cameraView) => {
+                const pkt = new PBpacket(op_editor.OPCODE._OP_CLIENT_REQ_EDITOR_RESET_CAMERA);
+                const content: op_editor.IOP_CLIENT_REQ_EDITOR_RESET_CAMERA = pkt.content;
+                content.x = cameraView.x;
+                content.y = cameraView.y;
+                content.width = cameraView.width;
+                content.height = cameraView.height;
+                this.connection.send(pkt);
+                resolve();
+            });
+        });
     }
 
     public centerCameas() {
     }
 
-    public async syncCamera() {
-        const cameraView = await this.mGame.peer.render.getWorldView();
-        const packet = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_RESET_CAMERA_SIZE);
-        const size: op_virtual_world.IOP_CLIENT_REQ_VIRTUAL_WORLD_RESET_CAMERA_SIZE = packet.content;
-        // TODO zoom统一使用一个
-        size.width = cameraView.width / this.zoom;
-        size.height = cameraView.height / this.zoom;
-        this.connection.send(packet);
+    public syncCamera(): Promise<void> {
+        return new Promise<void>((resolve, reject) => {
+            this.mGame.peer.render.getWorldView().then((cameraView) => {
+                if (!cameraView) {
+                    reject();
+                    return;
+                }
+                const packet = new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_RESET_CAMERA_SIZE);
+                const size: op_virtual_world.IOP_CLIENT_REQ_VIRTUAL_WORLD_RESET_CAMERA_SIZE = packet.content;
+                // TODO zoom统一使用一个
+                size.width = cameraView.width / this.zoom;
+                size.height = cameraView.height / this.zoom;
+                this.connection.send(packet);
+                resolve();
+            });
+        });
     }
 
-    public async syncCameraScroll() {
-        if (!this.mInitialize) return;
-        // todo 前端先判断进入不同区块，然后告知服务端进入不同区块
-        const cameraView = await this.mGame.peer.render.getWorldView();
-        if (!cameraView) {
-            Logger.getInstance().error("no cameraView");
-            return;
-        }
-        // ==== 判断4个顶点在那几个block中
-        const width = cameraView.width / this.zoom;
-        const height = cameraView.height / this.zoom;
-        const x = cameraView.x / this.zoom;
-        const y = cameraView.y / this.zoom;
-        this.mBlockManager.checkBlockIndex({ x, y, width, height });
+    public async syncCameraScroll(): Promise<void> {
+        return new Promise<void>((resolve, reject) => {
+            if (!this.mInitialize) {
+                reject();
+                return;
+            }
+            // todo 前端先判断进入不同区块，然后告知服务端进入不同区块
+            this.mGame.peer.render.getWorldView().then((cameraView) => {
+                if (!cameraView) {
+                    Logger.getInstance().error("no cameraView");
+                    reject();
+                    return;
+                }
+                // ==== 判断4个顶点在那几个block中
+                const width = cameraView.width / this.zoom;
+                const height = cameraView.height / this.zoom;
+                const x = cameraView.x / this.zoom;
+                const y = cameraView.y / this.zoom;
+                this.mBlockManager.checkBlockIndex({ x, y, width, height });
+                resolve();
+            });
+        });
     }
 
     public feachAllElement() {

@@ -8,9 +8,7 @@ import { AnimationDataNode } from "game-capsule";
 import { AnimationModel, RunningAnimation } from "structure";
 import { DragonbonesEditorDisplay } from "./dragonbones.editor.display";
 import { ElementEditorEmitType } from "./element.editor.type";
-
-export const LOCAL_HOME_PATH: string = path.resolve(os.homedir(), ".pixelpai");
-
+import { IEditorCanvasConfig } from "../editor.canvas";
 export class ElementFramesDisplay extends BaseFramesDisplay implements ResourcesChangeListener {
 
     private readonly MOUNT_ANIMATION_TIME_SCALE: number = 1000 / 12;
@@ -24,8 +22,8 @@ export class ElementFramesDisplay extends BaseFramesDisplay implements Resources
     private mPlaying: boolean = false;
     private mCurMountAnimation: RunningAnimation = { name: "idle", flip: false };
 
-    constructor(scene: Phaser.Scene, node: any, grids: ElementEditorGrids, emitter: Phaser.Events.EventEmitter, private mWebHomePath: string) {// AnimationDataNode
-        super(scene);
+    constructor(scene: Phaser.Scene, node: any, grids: ElementEditorGrids, emitter: Phaser.Events.EventEmitter, private mConfig: IEditorCanvasConfig) {// AnimationDataNode
+        super(scene, { resPath: mConfig.LOCAL_HOME_PATH, osdPath: mConfig.osd });
         this.mGrids = grids;
         this.mEmitter = emitter;
         this.mMountList = new Map<number, Phaser.GameObjects.Container>();
@@ -509,7 +507,7 @@ export class ElementFramesDisplay extends BaseFramesDisplay implements Resources
         if (!mountlayer || !mountlayer.mountPoint) return;
         for (let i = 0; i < mountlayer.mountPoint.length; i++) {
             if (this.mMountList.get(i)) continue;
-            const arm = new DragonbonesEditorDisplay(this.scene, this.mWebHomePath);
+            const arm = new DragonbonesEditorDisplay(this.scene, this.mConfig.osd);
             this.mount(arm, i);
             arm.load();
             const pos = { x: mountlayer.mountPoint[i].x, y: mountlayer.mountPoint[i].y };

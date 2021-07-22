@@ -1,19 +1,22 @@
-import { ResUtils, Tool, Url } from "utils";
 import {
     IAvatar,
     IDragonbonesModel,
     RunningAnimation,
     SlotSkin,
     Atlas,
+    IFramesModel,
     DisplayField,
-    Logger,
+    AvatarSuitType,
+    IResPath, Logger
 } from "structure";
-import { BaseDisplay } from "./base.display";
+import {BaseDisplay} from "./base.display";
 
 import * as sha1 from "simple-sha1";
 // import * as hash from "object-hash";
 import ImageFile = Phaser.Loader.FileTypes.ImageFile;
-import { MaxRectsPacker } from "maxrects-packer";
+import {MaxRectsPacker} from "maxrects-packer";
+import {PhaserListenerType} from "../listener.manager/listener.manager";
+import {Tool} from "utils";
 
 export enum AvatarSlotNameTemp {
     BodyCostDres = "body_cost_dres_$",
@@ -138,24 +141,21 @@ export class BaseDragonbonesDisplay extends BaseDisplay {
     protected mInteractive: boolean = true;
     protected mLoadingShadow: Phaser.GameObjects.Image;
     protected mMountContainer: Phaser.GameObjects.Container;
-    protected replaceArr = [];
+    private replaceArr = [];
     // key: slotName; val: partName
-    protected mLoadMap: Map<string, string> = new Map();
+    private mLoadMap: Map<string, string> = new Map();
     // key: loadKey; val: err
-    protected mErrorLoadMap: Map<string, any> = new Map();
-    protected mNeedReplaceTexture: boolean = false;
-    protected mBoardPoint: Phaser.Geom.Point;
-    // 不需要手动释放旧的资源，龙骨中已经做了相关处理
-    // private mPreReplaceTextureKey: string = "";
-    protected mReplaceTextureKey: string = "";
-    // phaer 监听回收
-    protected mLoadListeners: Map<string, Function[]> = new Map();
-    protected mTexturesListeners: Map<string, Function[]> = new Map();
-    protected loadError: boolean = false;
+    private mErrorLoadMap: Map<string, any> = new Map();
+    private mNeedReplaceTexture: boolean = false;
+    private mBoardPoint: Phaser.Geom.Point;
     private readonly UNPACK_SLOTS = [AvatarSlotNameTemp.FarmWeap, AvatarSlotNameTemp.BarmWeap];
     private readonly UNCHECK_AVATAR_PROPERTY = ["id", "dirable", "farmWeapId", "farmShldId", "barmWeapId", "barmShldId"];
 
-    public constructor(scene: Phaser.Scene, id?: number) {
+    // 不需要手动释放旧的资源，龙骨中已经做了相关处理
+    // private mPreReplaceTextureKey: string = "";
+    private mReplaceTextureKey: string = "";
+
+    public constructor(scene: Phaser.Scene, private pathObj: IResPath, id?: number) {
         super(scene, id);
     }
 
@@ -193,7 +193,7 @@ export class BaseDragonbonesDisplay extends BaseDisplay {
         // test
         // useRenderTex = false;
 
-        this.displayInfo = <IDragonbonesModel>display;
+        this.displayInfo = <IDragonbonesModel> display;
         if (!this.displayInfo) return Promise.reject("displayInfo error");
         this.setData("id", this.displayInfo.id);
         return new Promise<any>((resolve, reject) => {
@@ -245,7 +245,7 @@ export class BaseDragonbonesDisplay extends BaseDisplay {
                 .then(() => {
                     const textureKey = this.generateReplaceTextureKey();
                     const replaceData = this.generateReplaceTexture(textureKey);
-                    resolve({ key: textureKey, url: replaceData.url, json: replaceData.json });
+                    resolve({key: textureKey, url: replaceData.url, json: replaceData.json});
                 });
         });
     }
@@ -318,19 +318,6 @@ export class BaseDragonbonesDisplay extends BaseDisplay {
             this.mFadeTween = null;
         }
 
-        this.mLoadListeners.forEach((val, key) => {
-            for (const func of val) {
-                this.scene.load.off(key, func, this);
-            }
-        });
-        this.mLoadListeners.clear();
-        this.mTexturesListeners.forEach((val, key) => {
-            for (const func of val) {
-                this.scene.textures.off(key, func, this);
-            }
-        });
-        this.mTexturesListeners.clear();
-
         super.destroy();
     }
 
@@ -365,9 +352,10 @@ export class BaseDragonbonesDisplay extends BaseDisplay {
                 resolve(this.mArmatureDisplay);
             } else {
                 const res = `dragonbones`;
-                const pngUrl = Url.getRes(`${res}/${this.resourceName}_tex.png`);
-                const jsonUrl = Url.getRes(`${res}/${this.resourceName}_tex.json`);
-                const dbbinUrl = Url.getRes(`${res}/${this.resourceName}_ske.dbbin`);
+                const resPath = this.localResourceRoot;
+                const pngUrl = resPath + `${res}/${this.resourceName}_tex.png`;
+                const jsonUrl = resPath + `${res}/${this.resourceName}_tex.json`;
+                const dbbinUrl = resPath + `${res}/${this.resourceName}_ske.dbbin`;
                 this.loadDragonBones(pngUrl, jsonUrl, dbbinUrl)
                     .then(() => {
                         this.createArmatureDisplay();
@@ -378,16 +366,20 @@ export class BaseDragonbonesDisplay extends BaseDisplay {
     }
 
     protected get localResourceRoot(): string {
-        return Url.RES_PATH;
+        return this.pathObj.resPath;
+    }
+
+    protected get osdResourceRoot(): string {
+        return this.pathObj.osdPath;
     }
 
     // TODO: 游戏中截图会出现404，待解决
     protected partNameToLoadUrl(partName: string): string {
-        return ResUtils.getPartUrl(partName);
+        return this.osdResourceRoot + "avatar/part/" + partName + ".png";
     }
 
     protected partNameToLoadKey(partName: string): string {
-        return ResUtils.getPartName(partName);
+        return partName + "_png";
     }
 
     protected partNameToDBFrameName(partName: string): string {
@@ -426,7 +418,6 @@ export class BaseDragonbonesDisplay extends BaseDisplay {
             return;
         }
         const queue = this.mAnimation.playingQueue;
-        if (!queue) return;
         if (queue.playedTimes === undefined) {
             queue.playedTimes = 1;
         } else {
@@ -442,7 +433,7 @@ export class BaseDragonbonesDisplay extends BaseDisplay {
         if (this.mLoadingShadow) {
             this.mLoadingShadow.destroy();
         }
-        this.mLoadingShadow = this.scene.make.image({ key: "avatar_placeholder", x: -22, y: -68 }).setOrigin(0);
+        this.mLoadingShadow = this.scene.make.image({key: "avatar_placeholder", x: -22, y: -68}).setOrigin(0);
         this.add(this.mLoadingShadow);
 
         if (this.mArmatureDisplay) {
@@ -470,23 +461,15 @@ export class BaseDragonbonesDisplay extends BaseDisplay {
                 dbbinUrl,
                 null,
                 null,
-                { responseType: "arraybuffer" }
+                {responseType: "arraybuffer"}
             );
             const onLoad = () => {
                 if (!this.scene.cache.custom.dragonbone.get(this.resourceName)) return;
-                this.removePhaserListener(PhaserListenerType.Load, Phaser.Loader.Events.COMPLETE, onLoad);
+                this.mListenerMng.removePhaserListener(PhaserListenerType.Load, Phaser.Loader.Events.COMPLETE, onLoad);
                 resolve(null);
             };
 
-            const onFileLoadError = () => {
-                this.removePhaserListener(PhaserListenerType.Load, Phaser.Loader.Events.FILE_LOAD_ERROR, onFileLoadError);
-                // tslint:disable-next-line:no-console
-                // console.log("fileloaderror ===>", pngUrl);
-                reject(null);
-            };
-
-            this.addPhaserListener(PhaserListenerType.Load, Phaser.Loader.Events.COMPLETE, onLoad);
-            this.addPhaserListener(PhaserListenerType.Load, Phaser.Loader.Events.FILE_LOAD_ERROR, onFileLoadError);
+            this.mListenerMng.addPhaserListener(PhaserListenerType.Load, Phaser.Loader.Events.COMPLETE, onLoad);
             this.scene.load.start();
         });
     }
@@ -510,6 +493,7 @@ export class BaseDragonbonesDisplay extends BaseDisplay {
         slotList.forEach((slot: dragonBones.Slot) => {
             if (slot) {
                 slot.display.visible = false;
+                slot.replaceDisplay(slot.display);
             }
         });
         // const defaultDBTexture: Phaser.Textures.Texture = this.scene.game.textures.get(this.resourceName);
@@ -585,11 +569,11 @@ export class BaseDragonbonesDisplay extends BaseDisplay {
                 Logger.getInstance().error("draw texture error, texture not exists, key: ", loadKey);
             } else {
                 const frame = this.scene.game.textures.getFrame(loadKey, "__BASE");
-                packer.add(frame.width, frame.height, { key: loadKey, name: dbFrameName });
+                packer.add(frame.width, frame.height, {key: loadKey, name: dbFrameName});
             }
         }
 
-        const { width, height } = packer.bins[0];
+        const {width, height} = packer.bins[0];
         const canvas = this.scene.textures.createCanvas("canvas_" + this.id + "_" + textureKey, width, height);
 
         packer.bins.forEach((bin) => {
@@ -602,7 +586,7 @@ export class BaseDragonbonesDisplay extends BaseDisplay {
         const url = canvas.canvas.toDataURL("image/png", 1);
         canvas.destroy();
 
-        return { url, json: atlas.toString() };
+        return {url, json: atlas.toString()};
     }
 
     private prepareReplaceRenderTexture(): Promise<any> {
@@ -619,26 +603,28 @@ export class BaseDragonbonesDisplay extends BaseDisplay {
                     if (this.scene.textures.exists(this.mReplaceTextureKey)) {
                         resolve(null);
                     } else {
-                        const loadData = ResUtils.getUsrAvatarTextureUrls(this.mReplaceTextureKey);
+                        const loadData = {
+                            img: this.pathObj.osdPath + "user_avatar/texture/" + this.mReplaceTextureKey + ".png",
+                            json: this.pathObj.osdPath + "user_avatar/texture/" + this.mReplaceTextureKey + ".json"
+                        };
                         this.scene.load.atlas(this.mReplaceTextureKey, loadData.img, loadData.json);
                         const onLoadComplete = (key: string) => {
                             if (this.mReplaceTextureKey !== key) return;
-                            this.removePhaserListener(PhaserListenerType.Load, Phaser.Loader.Events.FILE_COMPLETE, onLoadComplete);
-                            this.removePhaserListener(PhaserListenerType.Load, Phaser.Loader.Events.FILE_LOAD_ERROR, onLoadError);
-                            // tslint:disable-next-line:no-console
-                            console.warn("load dragonbones texture complete: ", loadData);
+                            this.mListenerMng.removePhaserListener(PhaserListenerType.Load, Phaser.Loader.Events.FILE_COMPLETE, onLoadComplete);
+                            this.mListenerMng.removePhaserListener(PhaserListenerType.Load, Phaser.Loader.Events.FILE_LOAD_ERROR, onLoadError);
+
                             resolve(null);
                         };
                         const onLoadError = (imageFile: ImageFile) => {
                             if (this.mReplaceTextureKey !== imageFile.key) return;
-                            this.removePhaserListener(PhaserListenerType.Load, Phaser.Loader.Events.FILE_COMPLETE, onLoadComplete);
-                            this.removePhaserListener(PhaserListenerType.Load, Phaser.Loader.Events.FILE_LOAD_ERROR, onLoadError);
-                            // tslint:disable-next-line:no-console
-                            console.warn("load dragonbones texture error: ", loadData);
+                            this.mListenerMng.removePhaserListener(PhaserListenerType.Load, Phaser.Loader.Events.FILE_COMPLETE, onLoadComplete);
+                            this.mListenerMng.removePhaserListener(PhaserListenerType.Load, Phaser.Loader.Events.FILE_LOAD_ERROR, onLoadError);
+
+                            Logger.getInstance().warn("load dragonbones texture error: ", loadData);
                             reject("load dragonbones texture error: " + loadData);
                         };
-                        this.addPhaserListener(PhaserListenerType.Load, Phaser.Loader.Events.FILE_COMPLETE, onLoadComplete);
-                        this.addPhaserListener(PhaserListenerType.Load, Phaser.Loader.Events.FILE_LOAD_ERROR, onLoadError);
+                        this.mListenerMng.addPhaserListener(PhaserListenerType.Load, Phaser.Loader.Events.FILE_COMPLETE, onLoadComplete);
+                        this.mListenerMng.addPhaserListener(PhaserListenerType.Load, Phaser.Loader.Events.FILE_LOAD_ERROR, onLoadError);
                         this.scene.load.start();
                     }
                 })
@@ -671,7 +657,7 @@ export class BaseDragonbonesDisplay extends BaseDisplay {
                 const loadUrl: string = this.partNameToLoadUrl(pName);
                 const loadKey: string = this.partNameToLoadKey(pName);
                 if (!this.scene.textures.exists(loadKey))
-                    loadList.push({ key: loadKey, url: loadUrl });
+                    loadList.push({key: loadKey, url: loadUrl});
             });
 
             if (loadList.length === 0) {
@@ -681,10 +667,10 @@ export class BaseDragonbonesDisplay extends BaseDisplay {
 
             const onLoadComplete = (data, totalComplete: integer, totalFailed: integer) => {
                 if (!this.scene) return;
-                this.removePhaserListener(PhaserListenerType.Load, Phaser.Loader.Events.COMPLETE, onLoadComplete);
+                this.mListenerMng.removePhaserListener(PhaserListenerType.Load, Phaser.Loader.Events.COMPLETE, onLoadComplete);
                 resolve(null);
             };
-            this.addPhaserListener(PhaserListenerType.Load, Phaser.Loader.Events.COMPLETE, onLoadComplete);
+            this.mListenerMng.addPhaserListener(PhaserListenerType.Load, Phaser.Loader.Events.COMPLETE, onLoadComplete);
 
             const onLoadError = (e: any) => {
                 // ==============为了防止404资源重复请求加载，在加载失败后直接将其索引放置加载失败列表中，并从加载map中删除
@@ -695,7 +681,7 @@ export class BaseDragonbonesDisplay extends BaseDisplay {
                 // this.mLoadMap.delete(sName);
                 this.mErrorLoadMap.set(lKey, e);
             };
-            this.addPhaserListener(PhaserListenerType.Load, Phaser.Loader.Events.FILE_LOAD_ERROR, onLoadError);
+            this.mListenerMng.addPhaserListener(PhaserListenerType.Load, Phaser.Loader.Events.FILE_LOAD_ERROR, onLoadError);
 
             this.scene.load.image(loadList);
             this.scene.load.start();
@@ -710,7 +696,7 @@ export class BaseDragonbonesDisplay extends BaseDisplay {
             version = (skin.version === undefined || skin.version === "" ? "" : `_${skin.version}`);
             sn = skin.sn;
         }
-        return { sn, version };
+        return {sn, version};
     }
 
     private clearFadeTween() {
@@ -1287,55 +1273,6 @@ export class BaseDragonbonesDisplay extends BaseDisplay {
         }
     }
 
-    // issues: https://code.apowo.com/PixelPai/game-core/-/issues/243
-    private addPhaserListener(type: PhaserListenerType, key: string, func: Function) {
-        let loadPlugin;
-        let listenersMap;
-        switch (type) {
-            case PhaserListenerType.Load: {
-                loadPlugin = this.scene.load;
-                listenersMap = this.mLoadListeners;
-                break;
-            }
-            case PhaserListenerType.Textures: {
-                loadPlugin = this.scene.textures;
-                listenersMap = this.mTexturesListeners;
-                break;
-            }
-        }
-        loadPlugin.off(key, func, this);
-        loadPlugin.on(key, func, this);
-        if (!listenersMap.has(key)) {
-            listenersMap.set(key, []);
-        }
-        const listeners = listenersMap.get(key);
-        const idx = listeners.indexOf(func);
-        if (idx >= 0) listeners.splice(idx, 1);
-        listeners.push(func);
-    }
-
-    private removePhaserListener(type: PhaserListenerType, key: string, func: Function) {
-        let loadPlugin;
-        let listenersMap;
-        switch (type) {
-            case PhaserListenerType.Load: {
-                loadPlugin = this.scene.load;
-                listenersMap = this.mLoadListeners;
-                break;
-            }
-            case PhaserListenerType.Textures: {
-                loadPlugin = this.scene.textures;
-                listenersMap = this.mTexturesListeners;
-                break;
-            }
-        }
-        loadPlugin.off(key, func, this);
-        if (!listenersMap.has(key)) return;
-        const listeners = listenersMap.get(key);
-        const idx = listeners.indexOf(func);
-        if (idx >= 0) listeners.splice(idx, 1);
-    }
-
     private recordReplacedTexture(key: string) {
         if (ReplacedTextures.has(key)) {
             const count = ReplacedTextures.get(key);
@@ -1361,9 +1298,4 @@ export class BaseDragonbonesDisplay extends BaseDisplay {
         }
         textureAtlasData.releaseRenderTexture();
     }
-}
-
-enum PhaserListenerType {
-    Load = 0,
-    Textures = 1
 }

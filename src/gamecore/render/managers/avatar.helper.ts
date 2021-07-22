@@ -2,9 +2,10 @@ import { Scene } from "tooqingphaser";
 import { Render } from "../render";
 import { AvatarSuitType, Logger } from "structure";
 import { DragonbonesDisplay } from "../display/dragonbones/dragonbones.display";
-import { AvatarEditorDragonbone, AvatarEditorScene } from "editorCanvas";
+import { AvatarEditorDragonbone, AvatarEditorScene } from "editor";
 
-export class EditorCanvasManager {
+// 在runtime和editor中共用的avatar功能
+export class AvatarHelper {
     public readonly AVATAR_CANVAS_TEST_DATA = [{ id: "5facff1a67d3b140e835e1d0", parts: ["head_hair"] }];
 
     private readonly AVATAR_CANVAS_RESOURCE_PATH = "https://osd-alpha.tooqing.com";
@@ -57,11 +58,10 @@ export class EditorCanvasManager {
             this.render.sceneManager.currentScene.scene.launch(this.SCENEKEY_SNAPSHOT, {
                 onCreated: (s: Scene) => {
                     this.render.game.scene.sendToBack(this.SCENEKEY_SNAPSHOT);
-                    const a = new AvatarEditorDragonbone(s, this.AVATAR_CANVAS_RESOURCE_PATH, this.render.emitter, false, sets,
+                    const a = new AvatarEditorDragonbone(s, this.render.url.RES_PATH, this.render.url.OSD_PATH, this.render.emitter, false, sets,
                         (dragonbone) => {
                             dragonbone.generateHeadIcon().then((src) => {
                                 resolve(src);
-
                                 dragonbone.destroy();
                                 this.render.game.scene.stop(this.SCENEKEY_SNAPSHOT);
                                 this.render.game.scene.remove(this.SCENEKEY_SNAPSHOT);

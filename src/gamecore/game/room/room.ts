@@ -2,9 +2,8 @@ import { op_client, op_def, op_virtual_world } from "pixelpai_proto";
 import { PacketHandler, PBpacket } from "net-socket-packet";
 import { AStar, ConnectionService, Handler, IPos, IPosition45Obj, Logger, LogicPos, Position45 } from "structure";
 import { Game } from "../../game";
-import { EventType, IScenery, ISprite, LoadState, SceneName } from "structure";
+import { IScenery, ISprite, LoadState, SceneName } from "structure";
 import IActor = op_client.IActor;
-import { ExtraRoomInfo } from "custom_proto";
 import { TerrainManager } from "./terrain/terrain.manager";
 import { ElementManager } from "./element/element.manager";
 import { PlayerManager } from "./player/player.manager";
@@ -91,6 +90,8 @@ export interface IRoomService {
 
     removeFromWalkableMap(sprite: ISprite, isTerrain?: boolean);
 
+    setGroundWalkable(pos: IPos, walkable: boolean);
+
     getInteractiveEles(x: number, y: number): number[][];
 
     isWalkable(x: number, y: number): boolean;
@@ -154,14 +155,14 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
     }
 
     public addListen() {
-        if (this.game.emitter) this.mGame.emitter.on(EventType.UPDATE_EXTRA_ROOM_INFO, this.onExtraRoomInfoHandler, this);
+        // if (this.game.emitter) this.mGame.emitter.on(EventType.UPDATE_EXTRA_ROOM_INFO, this.onExtraRoomInfoHandler, this);
         if (this.connection) {
             this.connection.addPacketListener(this);
         }
     }
 
     public removeListen() {
-        if (this.game.emitter) this.mGame.emitter.off(EventType.UPDATE_EXTRA_ROOM_INFO, this.onExtraRoomInfoHandler, this);
+        // if (this.game.emitter) this.mGame.emitter.off(EventType.UPDATE_EXTRA_ROOM_INFO, this.onExtraRoomInfoHandler, this);
         if (this.connection) {
             this.connection.removePacketListener(this);
         }
@@ -298,9 +299,6 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
         if (!ele && this.mElementManager) {
             ele = this.mElementManager.get(id);
         }
-        if (!ele && this.mTerrainManager) {
-            ele = this.mTerrainManager.get(id);
-        }
         return ele;
     }
 
@@ -350,36 +348,51 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
 
     public async startPlay() {
         Logger.getInstance().debug("room startplay =====");
-        this.game.renderPeer.showPlay();
+        // 优先创建manager，用于后续操作
         this.createManager();
-        const padding = 199 * this.mScaleRatio;
-        const offsetX = this.mSize.rows * (this.mSize.tileWidth / 2);
-        this.mGame.peer.render.roomstartPlay();
-        this.mGame.peer.render.gridsDebugger.setData(this.mSize);
-        this.mGame.peer.render.setCamerasBounds(-padding - offsetX * this.mScaleRatio, -padding, this.mSize.sceneWidth * this.mScaleRatio + padding * 2, this.mSize.sceneHeight * this.mScaleRatio + padding * 2);
-        //     // init block
-        this.mBlocks.int(this.mSize);
-        this.mGame.user.enterScene(this, this.mActorData);
+        this.game.renderPeer.showPlay().then(() => {
+            // ======> 等待playscene创建完成
+            const padding = 199 * this.mScaleRatio;
+            const offsetX = this.mSize.rows * (this.mSize.tileWidth / 2);
+            this.mGame.peer.render.roomstartPlay();
+            this.mGame.peer.render.gridsDebugger.setData(this.mSize);
+            this.mGame.peer.render.setCamerasBounds(-padding - offsetX * this.mScaleRatio, -padding, this.mSize.sceneWidth * this.mScaleRatio + padding * 2, this.mSize.sceneHeight * this.mScaleRatio + padding * 2);
+            //     // init block
+            this.mBlocks.int(this.mSize);
+            this.mGame.user.enterScene(this, this.mActorData);
 
-        if (this.connection) {
-            await this.cameraService.syncCamera();
-            if (this.cameraService.initialize) await this.cameraService.syncCameraScroll();
-            this.connection.send(new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_SCENE_CREATED));
-        }
-
-        this.initSkyBox();
-        this.mTerrainManager.init();
-        this.mWallMamager.init();
-
-        this.mAstar = new AStar(this);
-        const map = [];
-        for (let i = 0; i < this.miniSize.rows; i++) {
-            map[i] = [];
-            for (let j = 0; j < this.miniSize.cols; j++) {
-                map[i][j] = 1;
+            this.initSkyBox();
+            this.mAstar = new AStar(this);
+            const map = [];
+            for (let i = 0; i < this.miniSize.rows; i++) {
+                map[i] = [];
+                for (let j = 0; j < this.miniSize.cols; j++) {
+                    map[i][j] = 1;
+                }
             }
+            this.mAstar.init(map);
+
+            this.mTerrainManager.init().then(() => {
+                this.mWallMamager.init();
+                if (this.connection) {
+                    this.game.emitter.on("CameraSync", this.syncCameraScroll, this);
+                    this.cameraService.syncCamera().then(() => {
+                        Logger.getInstance().log("scene send scene_created");
+                    }).catch((error) => {
+                        Logger.getInstance().log(error);
+                    });
+                }
+            });
+        });
+    }
+
+    public syncCameraScroll() {
+        this.game.emitter.off("CameraSync", this.syncCameraScroll, this);
+        if (this.cameraService.initialize) {
+            this.cameraService.syncCameraScroll().then(() => {
+                this.connection.send(new PBpacket(op_virtual_world.OPCODE._OP_CLIENT_REQ_VIRTUAL_WORLD_SCENE_CREATED));
+            });
         }
-        this.mAstar.init(map);
     }
 
     public initUI() {
@@ -429,6 +442,7 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
         if (!this.mInteractiveList) return;
         const len = this.mInteractiveList.length;
         for (let i: number = 0; i < len; i++) {
+            if (!this.mInteractiveList[i]) continue;
             const tmpLen = this.mInteractiveList[i].length;
             for (let j: number = 0; j < tmpLen; j++) {
                 const ids = this.mInteractiveList[i][j];
@@ -491,6 +505,17 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
                 this.removeWalkableMark(tempX, tempY, sprite.id);
             }
         }
+    }
+
+    public setGroundWalkable(pos: IPos, walkable: boolean) {
+        this.addWalkableMark(pos.x * 2, pos.y * 2, 0, 0, walkable);
+        this.addWalkableMark(pos.x * 2 + 1, pos.y * 2, 0, 0, walkable);
+        this.addWalkableMark(pos.x * 2, pos.y * 2 + 1, 0, 0, walkable);
+        this.addWalkableMark(pos.x * 2 + 1, pos.y * 2 + 1, 0, 0, walkable);
+        this.setTerrainMap(pos.x * 2, pos.y * 2, walkable);
+        this.setTerrainMap(pos.x * 2 + 1, pos.y * 2, walkable);
+        this.setTerrainMap(pos.x * 2, pos.y * 2 + 1, walkable);
+        this.setTerrainMap(pos.x * 2 + 1, pos.y * 2 + 1, walkable);
     }
 
     public getInteractiveEles(x: number, y: number): number[][] {
@@ -801,6 +826,7 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
 
     protected onCameraResetSizeHandler() {
         this.cameraService.initialize = true;
+        this.game.emitter.emit("CameraSync");
         // this.cameraService.syncCameraScroll();
     }
 
@@ -836,11 +862,11 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
             }
             this.mElementManager.addSpritesToCache(addList);
         } else if (nodeType === op_def.NodeType.TerrainNodeType) {
-            for (const sp of content.sprites) {
-                if (this.mTerrainManager.get(sp.id)) continue;
-                addList.push(sp);
-            }
-            this.mTerrainManager.addSpritesToCache(addList);
+            // for (const sp of content.sprites) {
+            //     if (this.mTerrainManager.get(sp.id)) continue;
+            //     addList.push(sp);
+            // }
+            // this.mTerrainManager.addSpritesToCache(addList);
         }
     }
 
@@ -868,14 +894,14 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
             }
             this.mElementManager.addSpritesToCache(content.sprites);
         } else if (nodeType === op_def.NodeType.TerrainNodeType) {
-            if (content.packet.currentFrame !== undefined && content.packet.currentFrame === 1) {
-                // remove all elements
-                const terrains = this.terrainManager.getElements();
-                for (const terrain of terrains) {
-                    this.terrainManager.remove(terrain.id);
-                }
-            }
-            this.mTerrainManager.add(addList);
+            // if (content.packet.currentFrame !== undefined && content.packet.currentFrame === 1) {
+            //     // remove all elements
+            //     const terrains = this.terrainManager.getElements();
+            //     for (const terrain of terrains) {
+            //         this.terrainManager.remove(terrain.id);
+            //     }
+            // }
+            // this.mTerrainManager.add(addList);
         }
     }
 
@@ -897,14 +923,14 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
         }
     }
 
-    protected onExtraRoomInfoHandler(content: ExtraRoomInfo) {
-        if (this.wallManager) {
-            this.wallManager.changeAllDisplayData(content.wallId);
-        }
-        if (this.terrainManager) {
-            this.terrainManager.changeAllDisplayData(content.floorId);
-        }
-    }
+    // protected onExtraRoomInfoHandler(content: ExtraRoomInfo) {
+    //     if (this.wallManager) {
+    //         this.wallManager.changeAllDisplayData(content.wallId);
+    //     }
+    //     if (this.terrainManager) {
+    //         this.terrainManager.changeAllDisplayData(content.floorId);
+    //     }
+    // }
 
     protected getSpriteWalkableData(sprite: ISprite, isTerrain: boolean, pos?: IPos): { origin: IPos, collisionArea: number[][], walkableArea: number[][], pos45: IPos, rows: number, cols: number } {
         let collisionArea = sprite.getCollisionArea();

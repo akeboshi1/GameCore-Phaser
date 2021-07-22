@@ -1,4 +1,4 @@
-import { i18n } from "structure";
+import { Logger } from "structure";
 import { Game } from "../../game";
 import { HttpService } from "./http.service";
 
@@ -40,6 +40,8 @@ export class HttpClock {
                     }
                     resolve(true);
                 }
+            }).catch((error) => {
+                Logger.getInstance().error(error);
             });
         });
     }
@@ -59,6 +61,8 @@ export class HttpClock {
                     this.game.peer.closeConnect(true);
                 }
             }
+        }).catch((errorTxt) => {
+            Logger.getInstance().error(errorTxt);
         });
     }
 
@@ -79,7 +83,7 @@ export class HttpClock {
     }
 
     private showAlert(text: string, callback?: () => void) {
-        this.game.peer.render.showAlert(text, i18n.t("common.tips"));
+        this.game.peer.render.showAlert(text, "common.tips", true);
     }
 
     set enable(val: boolean) {
@@ -88,6 +92,7 @@ export class HttpClock {
 
     set gameId(val: string) {
         let gameId = val;
+        if (!val) return;
         const index = val.lastIndexOf(".");
         if (index > -1) {
             gameId = gameId.slice(index + 1, gameId.length);

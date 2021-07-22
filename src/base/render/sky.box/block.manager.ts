@@ -1,5 +1,5 @@
-import { Url } from "utils";
 import { Logger, Fit, IScenery } from "structure";
+import { Url } from "utils";
 import { IBaseCameraService } from "../cameras/base.cameras.manager";
 import { IRender } from "../render";
 import { DynamicImage } from "../ui/components/dynamic.image";
@@ -150,17 +150,16 @@ export class BlockManager implements IBlockManager {
     if (id === undefined || targets === undefined || duration === undefined) {
       return;
     }
-    if (!this.scene) {
+    if (!this.scene || !this.mContainer) {
       return;
     }
     if (id !== this.mScenery.id) {
       return;
     }
 
-    const camera = this.scene.cameras.main;
     const targetPos = await this.fixPosition(targets);
     const resetPos = await this.fixPosition(reset);
-    this.move(camera, targetPos, duration, resetPos, resetDuration);
+    this.move(this.mContainer, targetPos, duration, resetPos, resetDuration);
   }
 
   protected handlerState(state) {
@@ -214,7 +213,7 @@ export class BlockManager implements IBlockManager {
       for (let i = 0; i < len; i++) {
         const l = this.mUris[i].length;
         for (let j = 0; j < l; j++) {
-          const block = new Block(this.scene, this.mUris[i][j], this.mScaleRatio);
+          const block = new Block(this.scene, this.mUris[i][j], this.mScaleRatio, this.render.url);
           block.setRectangle(j * this.mGridWidth, i * this.mGridHeight, this.mGridWidth, this.mGridHeight);
           this.mGrids.push(block);
         }
@@ -315,7 +314,7 @@ class Block extends DynamicImage {
   private mKey: string;
   private mRectangle: Phaser.Geom.Rectangle;
   private mScale: number;
-  constructor(scene: Phaser.Scene, key: string, scale: number) {
+  constructor(scene: Phaser.Scene, key: string, scale: number, private url: Url) {
     super(scene, 0, 0);
     this.mKey = key;
     this.mScale = scale;
@@ -331,7 +330,7 @@ class Block extends DynamicImage {
         // TODO
         // this.setActive(val);
       } else {
-        this.load(Url.getOsdRes(this.mKey));
+        this.load(this.url.getOsdRes(this.mKey));
       }
     }
   }
@@ -353,8 +352,9 @@ class Block extends DynamicImage {
   }
 
   resize(width: number, height: number) {
-    const camera = this.scene.cameras.main;
-    this.mRectangle = new Phaser.Geom.Rectangle(this.x * this.mScale + camera.x, this.y * this.mScale + camera.y, this.width * this.mScale, this.height * this.mScale);
+    // const camera = this.scene.cameras.main;
+    // this.mRectangle = new Phaser.Geom.Rectangle(this.x * this.mScale + camera.x, this.y * this.mScale + camera.y, this.width * this.mScale, this.height * this.mScale);
+    this.setRectangle(this.x, this.y, this.width, this.height);
   }
 
   setScaleRatio(val: number) {

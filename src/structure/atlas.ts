@@ -10,11 +10,13 @@ export interface IFrame {
 
 export class Atlas {
     atlas: {};
+    width: number = 0;
+    height: number = 0;
     private frames: IFrame[];
 
     constructor() {
         this.frames = [];
-        this.atlas = {frames: this.frames};
+        this.atlas = {frames: this.frames, size: {w: this.width, h: this.height}};
     }
 
     addFrame(name: string, rect: {x: number, y: number, width: number, height: number}) {
@@ -30,7 +32,7 @@ export class Atlas {
 
     setFrame(frame) {
         this.frames = frame;
-        this.atlas = {frames: this.frames};
+        this.atlas = {frames: this.frames, size: {w: this.width, h: this.height}};
     }
 
     removeFrame(name: string) {
@@ -40,6 +42,11 @@ export class Atlas {
 
     clearFrames() {
         this.frames.length = 0;
+    }
+
+    setSize(w: number, h: number) {
+        this.width = w;
+        this.height = h;
     }
 
     toString() {

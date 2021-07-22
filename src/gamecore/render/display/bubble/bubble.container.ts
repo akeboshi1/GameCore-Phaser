@@ -8,16 +8,17 @@ export class BubbleContainer extends Phaser.GameObjects.Container {
     private mArrow: DynamicImage;
     private mScale: number;
 
-    constructor(scene: Phaser.Scene, scale: number) {
+    constructor(scene: Phaser.Scene, scale: number, private url: Url) {
         super(scene);
         this.mScale = scale;
         this.mArrow = new DynamicImage(this.scene, 0, 0);
         this.mArrow.scale = scale;
-        this.mArrow.load(Url.getRes("ui/chat/bubble_arrow.png"));
+        this.mArrow.load(url.getRes("ui/chat/bubble_arrow.png"));
         this.add(this.mArrow);
     }
 
     public addBubble(text: string, bubbleSetting: any) {// op_client.IChat_Setting
+        if (!bubbleSetting) bubbleSetting = { };
         const bubble = this.createBubble(bubbleSetting);
         if (!bubble) return;
         const len = this.mBubbles.length;
@@ -51,13 +52,6 @@ export class BubbleContainer extends Phaser.GameObjects.Container {
 
     public destroy(fromScene?: boolean): void {
         if (!this.mBubbles) return;
-        // const len = this.mBubbles.length;
-        // let bul: Bubble = null;
-        // for (let i = len - 1; i >= 0; i--) {
-        //     bul = this.mBubbles[i];
-        //     if (!bul) continue;
-        //     bul.destroy();
-        // }
         this.mBubbles = null;
         this.removeFormParent();
         super.destroy(fromScene);
@@ -70,8 +64,8 @@ export class BubbleContainer extends Phaser.GameObjects.Container {
     }
 
     private createBubble(bubbleSetting: any): Bubble {// op_client.IChat_Setting
-        if (!bubbleSetting) return;
-        const bubble = new Bubble(this.scene, this.mScale);
+        if (!bubbleSetting) bubbleSetting = { };
+        const bubble = new Bubble(this.scene, this.mScale, this.url);
         this.mBubbles.push(bubble);
         const duration = bubbleSetting.duration ? bubbleSetting.duration : 5000;
         bubble.durationRemove(duration, this.onRemoveBubble, this);

@@ -17,6 +17,7 @@ import { IElementManager } from "./element.manager";
 import { BaseStateManager } from "../state";
 import { IRoomService } from "../../room/room";
 import { InputEnable } from "./input.enable";
+import { IChangeAnimation } from "src/structure/animation";
 
 export interface IElement {
     readonly id: number;
@@ -71,7 +72,7 @@ export interface IElement {
 
     setAlpha(val: number);
 
-    setQueue(queue: op_client.IChangeAnimation[]);
+    setQueue(queue: op_client.IChangeAnimation[], finishAnimationBehavior?: number);
 
     completeAnimationQueue();
 
@@ -231,7 +232,7 @@ export class Element extends BlockObject implements IElement {
         this.removeFromMap();
         // 必须执行一遍下面的方法，否则无法获取碰撞区域
         const area = model.getCollisionArea();
-        const obj = { id: model.id, pos: model.pos, nickname: model.nickname, sound: model.sound, alpha: model.alpha, titleMask: model.titleMask | 0x00020000, hasInteractive: model.hasInteractive };
+        const obj = { id: model.id, pos: model.pos, nickname: model.nickname, nodeType: model.nodeType, sound: model.sound, alpha: model.alpha, titleMask: model.titleMask | 0x00020000, hasInteractive: model.hasInteractive };
         this.addToMap();
         // render action
         this.load(this.mModel.displayInfo)
@@ -331,35 +332,43 @@ export class Element extends BlockObject implements IElement {
         }
     }
 
-    public setQueue(animations: op_client.IChangeAnimation[]) {
+    public setQueue(animations: op_client.IChangeAnimation[], finishAnimationBehavior?: number) {
         if (!this.mModel) {
             return;
         }
-        const queue = [];
+        if (animations.length < 1) return;
+        const changeAnimation: IChangeAnimation[] = [];
         for (const animation of animations) {
-            const aq: AnimationQueue = {
+            const aq: IChangeAnimation = {
                 name: animation.animationName,
                 playTimes: animation.times,
             };
-            queue.push(aq);
+            changeAnimation.push(aq);
         }
-        this.mModel.setAnimationQueue(queue);
-        if (queue.length > 0) {
-            this.play(animations[0].animationName, animations[0].times);
+        const lastAni = changeAnimation[changeAnimation.length - 1];
+        if (lastAni.playTimes && lastAni.playTimes > 0) {
+            // finishAnimationBehavior -1 回到之前的动画， 0 停在当前
+            if (finishAnimationBehavior === -1) {
+                const currentAnimation = this.mModel.currentAnimation;
+                if (this.mMoving) {
+                    changeAnimation.push();
+                } else {
+                    changeAnimation.push({ name: currentAnimation.name, playTimes: currentAnimation.times });
+                }
+            }
         }
+        this.mModel.setAnimationQueue({ changeAnimation });
+        this.play(animations[0].animationName, animations[0].times);
     }
 
     public completeAnimationQueue() {
-        const anis = this.model.animationQueue;
-        if (!anis || anis.length < 1) return;
+        const animationQueue = this.model.animationQueue;
+        const anis = animationQueue.changeAnimation;
+        if (!anis) return;
         anis.shift();
-        let aniName: string = PlayerState.IDLE;
-        let playTiems;
-        if (anis.length > 0) {
-            aniName = anis[0].name;
-            playTiems = anis[0].playTimes;
-        }
-        this.play(aniName, playTiems);
+        const tmpAni = anis[0];
+        if (!tmpAni) return;
+        this.play(tmpAni.name, tmpAni.playTimes);
     }
 
     public setDirection(val: number) {
@@ -554,7 +563,7 @@ export class Element extends BlockObject implements IElement {
         return this.mModel.pos;
     }
 
-    public showBubble(text: string, setting: op_client.IChat_Setting) {
+    public showBubble(text: op_def.IStrMsg, setting: op_client.IChat_Setting) {
         this.mRoomService.game.renderPeer.showBubble(this.id, text, setting);
     }
 
@@ -845,6 +854,7 @@ export class Element extends BlockObject implements IElement {
     }
 
     protected async addDisplay(): Promise<any> {
+        if (this.mCreatedDisplay) return;
         super.addDisplay();
         let depth = 0;
         if (this.model && this.model.pos) {

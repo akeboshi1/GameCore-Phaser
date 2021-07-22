@@ -1,7 +1,6 @@
 import { Render } from "../../render";
 import { Logger, SceneName } from "structure";
 import { BasicScene } from "baseRender";
-
 export class MatterBodies {
     private mGraphics: Phaser.GameObjects.Graphics;
     constructor(private render: Render) {
@@ -27,11 +26,12 @@ export class MatterBodies {
         graphics.beginPath();
         const dpr = this.render.scaleRatio;
         for (const bodie of bodies) {
-            graphics.moveTo(bodie[0].x / dpr, bodie[0].y / dpr);
-            for (let j = 1; j < bodie.length; j++) {
-                graphics.lineTo(bodie[j].x / dpr, bodie[j].y / dpr);
+            const { points, pos, offset } = bodie;
+            graphics.moveTo(points[0].x + pos.x + offset.x, points[0].y + pos.y + offset.y);
+            for (let j = 1; j < points.length; j++) {
+                graphics.lineTo(points[j].x + pos.x + offset.x, points[j].y + pos.y + offset.y);
             }
-            graphics.lineTo(bodie[0].x / dpr, bodie[0].y / dpr);
+            graphics.lineTo(points[0].x + pos.x + offset.x, points[0].y + pos.y + offset.y);
 
         }
         graphics.strokePath();

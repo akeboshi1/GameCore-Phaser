@@ -3,15 +3,16 @@ import { BaseDragonbonesDisplay, ReferenceArea } from "baseRender";
 import { LayerEnum } from "game-capsule";
 import { IDragonbonesModel } from "structure";
 import { EditorTopDisplay } from "./top.display";
-import { op_def  } from "pixelpai_proto";
+import { op_def } from "pixelpai_proto";
+import { IEditorCanvasConfig } from "../editor.canvas";
 
 export class EditorDragonbonesDisplay extends BaseDragonbonesDisplay {
     public sprite: Sprite;
     protected mReferenceArea: ReferenceArea;
     protected mTopDisplay: EditorTopDisplay;
     protected mNodeType: op_def.NodeType;
-    constructor(scene: Phaser.Scene, sprite: Sprite) {
-        super(scene, sprite.id);
+    constructor(scene: Phaser.Scene, config: IEditorCanvasConfig, sprite: Sprite) {
+        super(scene, { resPath: config.LOCAL_HOME_PATH, osdPath: config.osd }, sprite.id);
         this.setSprite(sprite);
         this.mNodeType = sprite.nodeType;
     }
@@ -57,7 +58,7 @@ export class EditorDragonbonesDisplay extends BaseDragonbonesDisplay {
         this.setSprite(sprite);
         const displayInfo = sprite.displayInfo;
         if (displayInfo) {
-            this.load(<IDragonbonesModel> displayInfo, undefined, false);
+            this.load(<IDragonbonesModel>displayInfo, undefined, false);
         }
         const pos = sprite.pos;
         if (pos) {
