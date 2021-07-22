@@ -28,7 +28,6 @@ export class Wall extends BlockObject {
         // this.mDisplayInfo = <IFramesModel> this.mModel.displayInfo;
         // this.createDisplay();
         this.setPosition(this.mModel.pos);
-        this.setRenderable(true);
         // this.addDisplay();
     }
 
@@ -41,13 +40,14 @@ export class Wall extends BlockObject {
         if (!this.mDisplayInfo) {
             return;
         }
-        this.addDisplay();
+        this.setRenderable(true);
         // if (!this.mDisplay) {
         //     this.createDisplay();
         // }
         // this.mDisplayInfo = displayInfo;
         // this.mDisplay.once("initialized", this.onInitializedHandler, this);
         // this.mDisplay.load(this.mDisplayInfo);
+        this.removeDisplay();
     }
 
     public play(animationName: string): void {
@@ -127,6 +127,12 @@ export class Wall extends BlockObject {
 
     public async getInteractivePositionList() {
         return [];
+    }
+
+    public setRenderable(isRenderable: boolean) {
+        this.mRenderable = isRenderable;
+        isRenderable ? this.addDisplay() : this.removeDisplay();
+        return Promise.resolve();
     }
 
     public destroy() {
