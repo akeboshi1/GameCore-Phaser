@@ -46,7 +46,11 @@ export class Ground extends Phaser.GameObjects.Container {
         const curIdx = tile.index;
         const tileX = tile.x;
         const tileY = tile.y;
-        this.tilemapLayer.replaceByIndex(curIdx, newIndex, tileX, tileY, 1, 1);
+        if (curIdx === -1) {
+            this.tilemapLayer.putTileAt(newIndex, tileX, tileY);
+        } else {
+            this.tilemapLayer.replaceByIndex(curIdx, newIndex, tileX, tileY, 1, 1);
+        }
     }
 
     public destroy(fromScene?: boolean) {
@@ -177,6 +181,6 @@ export class Ground extends Phaser.GameObjects.Container {
 
     private getTilesetProperties(tileset: Tileset, index: number): ITilesetProperty {
         const prop = tileset.getTileProperties(index);
-        return { index, sn: prop["sn"] };
+        return {index, sn: prop["sn"]};
     }
 }
