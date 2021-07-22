@@ -286,12 +286,25 @@ export class UIManager extends PacketHandler {
 
     protected handleShowUI(packet: PBpacket): void {
         const ui: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_SHOW_UI = packet.content;
+        // Logger.getInstance().log("show ui =========>", "handleShowUI");
         // TODO 根据远程scene状态缓存命令
-        if (this.game.roomManager.currentRoom && !this.game.roomManager.currentRoom.isLoading) {
+        if (this.game.roomManager.currentRoom) {
+            // Logger.getInstance().log("show ui =========>", "has currentRoom");
             this.showMed(ui.name, ui);
         } else {
             this.mLoadingCache.push(ui);
+            this.game.emitter.off("EnterRoom", this.roomCreated, this);
+            this.game.emitter.on("EnterRoom", this.roomCreated, this);
         }
+    }
+
+    protected roomCreated() {
+        // Logger.getInstance().log("show ui =========>", "roomCreated");
+        this.game.emitter.off("EnterRoom", this.roomCreated, this);
+        for (const oneCache of this.mLoadingCache) {
+            this.showMed(oneCache.name, oneCache);
+        }
+        this.mLoadingCache.length = 0;
     }
 
     protected handleUpdateUI(packet: PBpacket) {
