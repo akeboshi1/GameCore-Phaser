@@ -1,13 +1,15 @@
+/// <reference types="tooqingphaser" />
 import { Sprite } from "baseGame";
 import { BaseDragonbonesDisplay, ReferenceArea } from "baseRender";
 import { EditorTopDisplay } from "./top.display";
 import { op_def } from "pixelpai_proto";
+import { IEditorCanvasConfig } from "../editor.canvas";
 export declare class EditorDragonbonesDisplay extends BaseDragonbonesDisplay {
     sprite: Sprite;
     protected mReferenceArea: ReferenceArea;
     protected mTopDisplay: EditorTopDisplay;
     protected mNodeType: op_def.NodeType;
-    constructor(scene: Phaser.Scene, sprite: Sprite);
+    constructor(scene: Phaser.Scene, config: IEditorCanvasConfig, sprite: Sprite);
     asociate(): void;
     selected(): void;
     unselected(): void;

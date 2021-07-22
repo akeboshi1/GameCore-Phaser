@@ -1,0 +1,377 @@
+{
+	"textures": [
+		{
+			"image": "createrole",
+			"format": "RGBA8888",
+			"size": {
+				"w": 653,
+				"h": 254
+			},
+			"scale": 1,
+			"frames": [
+				{
+					"filename": "Create_role_id_bg",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 518,
+						"h": 103
+					},
+					"spriteSourceSize": {
+						"x": 3,
+						"y": 2,
+						"w": 513,
+						"h": 99
+					},
+					"frame": {
+						"x": 1,
+						"y": 1,
+						"w": 513,
+						"h": 99
+					}
+				},
+				{
+					"filename": "Create_gender_select",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 136,
+						"h": 136
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 136,
+						"h": 136
+					},
+					"frame": {
+						"x": 516,
+						"y": 1,
+						"w": 136,
+						"h": 136
+					}
+				},
+				{
+					"filename": "Create_name_bg",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 260,
+						"h": 62
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 260,
+						"h": 62
+					},
+					"frame": {
+						"x": 1,
+						"y": 102,
+						"w": 260,
+						"h": 62
+					}
+				},
+				{
+					"filename": "Create_gender_uncheck",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 128,
+						"h": 128
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 128,
+						"h": 128
+					},
+					"frame": {
+						"x": 263,
+						"y": 102,
+						"w": 128,
+						"h": 128
+					}
+				},
+				{
+					"filename": "Create_gender_boy",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 72,
+						"h": 76
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 72,
+						"h": 76
+					},
+					"frame": {
+						"x": 1,
+						"y": 166,
+						"w": 72,
+						"h": 76
+					}
+				},
+				{
+					"filename": "Create_role_id_random",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 70,
+						"h": 72
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 70,
+						"h": 72
+					},
+					"frame": {
+						"x": 393,
+						"y": 102,
+						"w": 70,
+						"h": 72
+					}
+				},
+				{
+					"filename": "Create_gender_girl",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 72,
+						"h": 76
+					},
+					"spriteSourceSize": {
+						"x": 4,
+						"y": 0,
+						"w": 60,
+						"h": 71
+					},
+					"frame": {
+						"x": 75,
+						"y": 166,
+						"w": 60,
+						"h": 71
+					}
+				},
+				{
+					"filename": "Create_complexion_select",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 60,
+						"h": 60
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 60,
+						"h": 60
+					},
+					"frame": {
+						"x": 137,
+						"y": 166,
+						"w": 60,
+						"h": 60
+					}
+				},
+				{
+					"filename": "Create_arrow_left",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 51,
+						"h": 64
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 51,
+						"h": 64
+					},
+					"frame": {
+						"x": 199,
+						"y": 166,
+						"w": 51,
+						"h": 64
+					}
+				},
+				{
+					"filename": "Create_arrow_right",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 51,
+						"h": 64
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 51,
+						"h": 64
+					},
+					"frame": {
+						"x": 393,
+						"y": 176,
+						"w": 51,
+						"h": 64
+					}
+				},
+				{
+					"filename": "Create_complexion_1",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 50,
+						"h": 50
+					},
+					"spriteSourceSize": {
+						"x": 1,
+						"y": 1,
+						"w": 48,
+						"h": 48
+					},
+					"frame": {
+						"x": 465,
+						"y": 102,
+						"w": 48,
+						"h": 48
+					}
+				},
+				{
+					"filename": "Create_clothe_arrow_left",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 51,
+						"h": 64
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 51,
+						"h": 64
+					},
+					"frame": {
+						"x": 446,
+						"y": 176,
+						"w": 51,
+						"h": 64
+					}
+				},
+				{
+					"filename": "Create_clothe_arrow_right",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 51,
+						"h": 64
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 51,
+						"h": 64
+					},
+					"frame": {
+						"x": 515,
+						"y": 139,
+						"w": 51,
+						"h": 64
+					}
+				},
+				{
+					"filename": "Create_complexion_3",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 50,
+						"h": 50
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 50,
+						"h": 50
+					},
+					"frame": {
+						"x": 568,
+						"y": 139,
+						"w": 50,
+						"h": 50
+					}
+				},
+				{
+					"filename": "Create_complexion_2",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 50,
+						"h": 50
+					},
+					"spriteSourceSize": {
+						"x": 1,
+						"y": 1,
+						"w": 48,
+						"h": 48
+					},
+					"frame": {
+						"x": 499,
+						"y": 205,
+						"w": 48,
+						"h": 48
+					}
+				},
+				{
+					"filename": "Create_complexion_4",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 50,
+						"h": 50
+					},
+					"spriteSourceSize": {
+						"x": 1,
+						"y": 1,
+						"w": 48,
+						"h": 48
+					},
+					"frame": {
+						"x": 549,
+						"y": 205,
+						"w": 48,
+						"h": 48
+					}
+				},
+				{
+					"filename": "Create_complexion_5",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 50,
+						"h": 50
+					},
+					"spriteSourceSize": {
+						"x": 1,
+						"y": 1,
+						"w": 48,
+						"h": 48
+					},
+					"frame": {
+						"x": 599,
+						"y": 191,
+						"w": 48,
+						"h": 48
+					}
+				}
+			]
+		}
+	],
+	"meta": {
+		"app": "https://www.codeandweb.com/texturepacker",
+		"version": "3.0",
+		"smartupdate": "$TexturePacker:SmartUpdate:e8eaa7856ed3691dd9856901ec80e531:4e3fd842824e69a2253889b143d59776:139833bd70a86e215babf71354196c22$"
+	}
+}

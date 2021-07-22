@@ -8,6 +8,7 @@ export declare class MainPeer extends RPCPeer {
     protected mGame: Game;
     protected mRenderParam: IWorkerParam;
     protected mMainPeerParam: IWorkerParam;
+    protected mStartRoomPlay: boolean;
     private gameState;
     private stateTime;
     private mConfig;
@@ -44,7 +45,6 @@ export declare class MainPeer extends RPCPeer {
     createGame(config: ILauncherConfig): void;
     getScaleRatio(): number;
     updateMoss(moss: any): void;
-    updatePalette(palette: any): void;
     removeElement(id: number): void;
     refreshToken(): void;
     changePlayerState(id: number, state: string, times?: number): void;
@@ -63,6 +63,8 @@ export declare class MainPeer extends RPCPeer {
     initUI(): void;
     getActiveUIData(str: string): any;
     startRoomPlay(): void;
+    addListen(): void;
+    removeListen(): void;
     onVerifiedHandler(name: string, idcard: string): void;
     getRoomTransformTo90(p: any): IPos;
     getCurrentRoomSize(): any;
@@ -97,7 +99,11 @@ export declare class MainPeer extends RPCPeer {
     clearClock(): void;
     requestCurTime(): Promise<number>;
     httpClockEnable(enable: boolean): void;
-    showNoticeHandler(text: string): void;
+    showNoticeHandler(text: {
+        msg?: string;
+        i18nMsg?: string;
+        i18nData?: any;
+    }): void;
     showPanelHandler(name: string, data?: any): void;
     closePanelHandler(id: number): void;
     showMediator(name: string, isShow: boolean, param?: any): void;
@@ -125,4 +131,6 @@ export declare class MainPeer extends RPCPeer {
      */
     destroy(): void;
     isPlatform_PC(): boolean;
+    clearGame(): void;
+    protected enterRoomHander(): void;
 }

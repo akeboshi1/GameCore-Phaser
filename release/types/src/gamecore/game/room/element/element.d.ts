@@ -33,7 +33,7 @@ export interface IElement {
     hideRefernceArea(): any;
     turn(): any;
     setAlpha(val: number): any;
-    setQueue(queue: op_client.IChangeAnimation[]): any;
+    setQueue(queue: op_client.IChangeAnimation[], finishAnimationBehavior?: number): any;
     completeAnimationQueue(): any;
     mount(ele: IElement): this;
     unmount(targetPos?: IPos): Promise<this>;
@@ -99,7 +99,7 @@ export declare class Element extends BlockObject implements IElement {
     setModel(model: ISprite): Promise<void>;
     updateModel(model: op_client.ISprite, avatarType?: op_def.AvatarStyle): void;
     play(animationName: string, times?: number): void;
-    setQueue(animations: op_client.IChangeAnimation[]): void;
+    setQueue(animations: op_client.IChangeAnimation[], finishAnimationBehavior?: number): void;
     completeAnimationQueue(): void;
     setDirection(val: number): void;
     getDirection(): number;
@@ -121,7 +121,7 @@ export declare class Element extends BlockObject implements IElement {
     getPosition(): IPos;
     setPosition(p: IPos, syncPos?: boolean): void;
     getRootPosition(): IPos;
-    showBubble(text: string, setting: op_client.IChat_Setting): void;
+    showBubble(text: op_def.IStrMsg, setting: op_client.IChat_Setting): void;
     clearBubble(): void;
     showNickname(): void;
     hideNickname(): void;

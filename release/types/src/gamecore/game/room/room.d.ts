@@ -4,7 +4,6 @@ import { AStar, ConnectionService, Handler, IPos, IPosition45Obj, LogicPos } fro
 import { Game } from "../../game";
 import { IScenery, ISprite } from "structure";
 import IActor = op_client.IActor;
-import { ExtraRoomInfo } from "custom_proto";
 import { TerrainManager } from "./terrain/terrain.manager";
 import { ElementManager } from "./element/element.manager";
 import { PlayerManager } from "./player/player.manager";
@@ -63,6 +62,7 @@ export interface IRoomService {
     removeFromInteractiveMap(sprite: ISprite): any;
     addToWalkableMap(sprite: ISprite, isTerrain?: boolean): any;
     removeFromWalkableMap(sprite: ISprite, isTerrain?: boolean): any;
+    setGroundWalkable(pos: IPos, walkable: boolean): any;
     getInteractiveEles(x: number, y: number): number[][];
     isWalkable(x: number, y: number): boolean;
     checkSpriteConflictToWalkableMap(sprite: ISprite, isTerrain?: boolean, pos?: IPos): number[][];
@@ -127,11 +127,13 @@ export declare class Room extends PacketHandler implements IRoomService, SpriteA
     };
     createManager(): void;
     startPlay(): Promise<void>;
+    syncCameraScroll(): void;
     initUI(): void;
     addToInteractiveMap(sprite: ISprite): void;
     removeFromInteractiveMap(sprite: ISprite): void;
     addToWalkableMap(sprite: ISprite, isTerrain?: boolean): void;
     removeFromWalkableMap(sprite: ISprite, isTerrain?: boolean): void;
+    setGroundWalkable(pos: IPos, walkable: boolean): void;
     getInteractiveEles(x: number, y: number): number[][];
     isWalkable(x: number, y: number): boolean;
     findPath(startPos: IPos, targetPosList: IPos[], toReverse: boolean): LogicPos[];
@@ -173,7 +175,6 @@ export declare class Room extends PacketHandler implements IRoomService, SpriteA
     protected onAllSpriteReceived(packet: PBpacket): void;
     protected onReloadScene(packet: PBpacket): void;
     protected onSyncStateHandler(packet: PBpacket): void;
-    protected onExtraRoomInfoHandler(content: ExtraRoomInfo): void;
     protected getSpriteWalkableData(sprite: ISprite, isTerrain: boolean, pos?: IPos): {
         origin: IPos;
         collisionArea: number[][];

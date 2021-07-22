@@ -2,11 +2,11 @@ import { PacketHandler, PBpacket } from "net-socket-packet";
 import { ServerAddress } from "./address";
 import { SocketConnection } from "./socket";
 export interface ConnectionService {
-    connect: boolean;
+    connect: number;
     pause: boolean;
     socket: SocketConnection;
     startConnect(addr: ServerAddress, keepalive?: boolean): any;
-    closeConnect(): void;
+    closeConnect(callBack?: Function): void;
     setClock(clock: any): void;
     update(): any;
     addPacketListener(listener: PacketHandler): void;

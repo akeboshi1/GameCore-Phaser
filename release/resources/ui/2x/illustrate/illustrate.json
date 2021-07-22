@@ -1,0 +1,461 @@
+{
+	"textures": [
+		{
+			"image": "illustrate",
+			"format": "RGBA8888",
+			"size": {
+				"w": 1876,
+				"h": 1000
+			},
+			"scale": 1,
+			"frames": [
+				{
+					"filename": "illustrate_collect_bg_1",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 654,
+						"h": 672
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 654,
+						"h": 672
+					},
+					"frame": {
+						"x": 1,
+						"y": 1,
+						"w": 654,
+						"h": 672
+					}
+				},
+				{
+					"filename": "illustrate_collect_bg_2",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 654,
+						"h": 319
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 654,
+						"h": 319
+					},
+					"frame": {
+						"x": 1,
+						"y": 675,
+						"w": 654,
+						"h": 319
+					}
+				},
+				{
+					"filename": "illustrate_collect_bg_3",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 654,
+						"h": 319
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 654,
+						"h": 319
+					},
+					"frame": {
+						"x": 657,
+						"y": 1,
+						"w": 654,
+						"h": 319
+					}
+				},
+				{
+					"filename": "detail_props_message_bg",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 600,
+						"h": 282
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 600,
+						"h": 282
+					},
+					"frame": {
+						"x": 657,
+						"y": 322,
+						"w": 600,
+						"h": 282
+					}
+				},
+				{
+					"filename": "illustrate_cooking_bg",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 608,
+						"h": 192
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 608,
+						"h": 192
+					},
+					"frame": {
+						"x": 657,
+						"y": 606,
+						"w": 608,
+						"h": 192
+					}
+				},
+				{
+					"filename": "illustrate_dress_bg",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 608,
+						"h": 192
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 608,
+						"h": 192
+					},
+					"frame": {
+						"x": 657,
+						"y": 800,
+						"w": 608,
+						"h": 192
+					}
+				},
+				{
+					"filename": "illustrate_survey_lv_top",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 506,
+						"h": 20
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 506,
+						"h": 20
+					},
+					"frame": {
+						"x": 1313,
+						"y": 1,
+						"w": 506,
+						"h": 20
+					}
+				},
+				{
+					"filename": "illustrate_dress_picture",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 286,
+						"h": 204
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 286,
+						"h": 204
+					},
+					"frame": {
+						"x": 1313,
+						"y": 23,
+						"w": 286,
+						"h": 204
+					}
+				},
+				{
+					"filename": "illustrate_cooking_picture",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 286,
+						"h": 204
+					},
+					"spriteSourceSize": {
+						"x": 9,
+						"y": 0,
+						"w": 260,
+						"h": 204
+					},
+					"frame": {
+						"x": 1601,
+						"y": 23,
+						"w": 260,
+						"h": 204
+					}
+				},
+				{
+					"filename": "illustrate_furniture_picture",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 286,
+						"h": 204
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 25,
+						"w": 286,
+						"h": 176
+					},
+					"frame": {
+						"x": 1313,
+						"y": 229,
+						"w": 286,
+						"h": 176
+					}
+				},
+				{
+					"filename": "illustrate_furniture_bg",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 608,
+						"h": 192
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 608,
+						"h": 192
+					},
+					"frame": {
+						"x": 1259,
+						"y": 407,
+						"w": 608,
+						"h": 192
+					}
+				},
+				{
+					"filename": "illustrate_make_bg",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 608,
+						"h": 192
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 608,
+						"h": 192
+					},
+					"frame": {
+						"x": 1267,
+						"y": 601,
+						"w": 608,
+						"h": 192
+					}
+				},
+				{
+					"filename": "illustrate_make_picture",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 286,
+						"h": 204
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 281,
+						"h": 204
+					},
+					"frame": {
+						"x": 1267,
+						"y": 795,
+						"w": 281,
+						"h": 204
+					}
+				},
+				{
+					"filename": "illustrate_furniture_title",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 235,
+						"h": 63
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 235,
+						"h": 63
+					},
+					"frame": {
+						"x": 1601,
+						"y": 229,
+						"w": 235,
+						"h": 63
+					}
+				},
+				{
+					"filename": "illustrate_dress_title",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 235,
+						"h": 63
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 1,
+						"w": 235,
+						"h": 61
+					},
+					"frame": {
+						"x": 1550,
+						"y": 795,
+						"w": 235,
+						"h": 61
+					}
+				},
+				{
+					"filename": "illustrate_survey_nohave",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 134,
+						"h": 134
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 134,
+						"h": 134
+					},
+					"frame": {
+						"x": 1550,
+						"y": 858,
+						"w": 134,
+						"h": 134
+					}
+				},
+				{
+					"filename": "illustrate_cooking_title",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 124,
+						"h": 64
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 124,
+						"h": 64
+					},
+					"frame": {
+						"x": 1601,
+						"y": 294,
+						"w": 124,
+						"h": 64
+					}
+				},
+				{
+					"filename": "illustrate_make_title",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 122,
+						"h": 60
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 122,
+						"h": 60
+					},
+					"frame": {
+						"x": 1727,
+						"y": 294,
+						"w": 122,
+						"h": 60
+					}
+				},
+				{
+					"filename": "illustrate_nav_interval",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 3,
+						"h": 32
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 3,
+						"h": 32
+					},
+					"frame": {
+						"x": 1259,
+						"y": 322,
+						"w": 3,
+						"h": 32
+					}
+				},
+				{
+					"filename": "illustrate_survey_star_empty",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 17,
+						"h": 16
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 17,
+						"h": 16
+					},
+					"frame": {
+						"x": 1821,
+						"y": 1,
+						"w": 17,
+						"h": 16
+					}
+				},
+				{
+					"filename": "illustrate_survey_star_full",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 17,
+						"h": 16
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 17,
+						"h": 16
+					},
+					"frame": {
+						"x": 1787,
+						"y": 795,
+						"w": 17,
+						"h": 16
+					}
+				}
+			]
+		}
+	],
+	"meta": {
+		"app": "https://www.codeandweb.com/texturepacker",
+		"version": "3.0",
+		"smartupdate": "$TexturePacker:SmartUpdate:ebfd6f50c605e01e3b96e3b63769078e:3bcaeb0957bbaa01d24bdb85be755db1:122453b6f89bfdf17dd5f5f907a1c15c$"
+	}
+}

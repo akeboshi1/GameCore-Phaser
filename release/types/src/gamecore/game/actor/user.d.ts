@@ -30,7 +30,7 @@ export declare class User extends Player {
     startMove(): void;
     stopMove(stopPos?: IPos): void;
     move(moveData: any): void;
-    setQueue(animations: op_client.IChangeAnimation[]): void;
+    setQueue(animations: op_client.IChangeAnimation[], finishAnimationBehavior?: number): void;
     requestPushBox(targetId: number): void;
     setRenderable(isRenderable: boolean): Promise<any>;
     clear(): void;

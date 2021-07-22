@@ -9,5 +9,4 @@ export declare class WallManager {
     destroy(): void;
     isInWallRect(pos: IPos): boolean;
     isAgainstWall(pos: IPos, originPoint: IPos): boolean;
-    changeAllDisplayData(id: string): void;
 }

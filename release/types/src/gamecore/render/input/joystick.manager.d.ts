@@ -1,3 +1,4 @@
+/// <reference types="tooqingphaser" />
 import { PacketHandler } from "net-socket-packet";
 import { Render } from "../render";
 export declare class JoystickManager extends PacketHandler {

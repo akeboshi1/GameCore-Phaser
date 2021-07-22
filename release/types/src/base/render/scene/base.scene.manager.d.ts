@@ -1,3 +1,4 @@
+/// <reference types="tooqingphaser" />
 import { BasicScene } from "./basic.scene";
 import { IRender } from "../render";
 export declare class BaseSceneManager {
@@ -14,7 +15,7 @@ export declare class BaseSceneManager {
     getSceneByName(sceneName: string): Phaser.Scene;
     showProgress(progress: number): void;
     bringToTop(sceneName: string): void;
-    startScene(name: string, data?: any): void;
+    startScene(name: string, data?: any): Promise<void>;
     stopScene(name: string): void;
     wakeScene(name: string, data?: any): void;
     sleepScene(name: string): void;

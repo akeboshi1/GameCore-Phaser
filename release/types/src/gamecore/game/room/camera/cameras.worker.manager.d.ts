@@ -7,10 +7,10 @@ export interface ICameraService {
     initialize: boolean;
     getViewPort(): Promise<LogicRectangle | undefined>;
     getMiniViewPort(): Promise<LogicRectangle45 | undefined>;
-    syncToEditor(): void;
+    syncToEditor(): Promise<void>;
     centerCameas(): void;
-    syncCamera(): void;
-    syncCameraScroll(): void;
+    syncCamera(): Promise<void>;
+    syncCameraScroll(): Promise<void>;
     resetCameraSize(width: number, height: number): any;
     startFollow(target: any, effect?: string): any;
     stopFollow(): any;
@@ -39,7 +39,7 @@ export declare class CamerasManager extends PacketHandler implements ICameraServ
     get initialize(): boolean;
     getViewPort(): Promise<LogicRectangle | undefined>;
     getMiniViewPort(): Promise<LogicRectangle45 | undefined>;
-    syncToEditor(): void;
+    syncToEditor(): Promise<void>;
     centerCameas(): void;
     syncCamera(): Promise<void>;
     syncCameraScroll(): Promise<void>;

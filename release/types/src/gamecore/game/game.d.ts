@@ -46,6 +46,7 @@ export declare class Game extends PacketHandler implements IConnectListener, Clo
     protected mHttpLoadManager: HttpLoadManager;
     protected mGameStateManager: GameStateManager;
     protected mGameConfigUrls: Map<string, string>;
+    protected curSceneConfigUrl: string;
     protected mGameConfigUrl: string;
     protected mGameConfigState: Map<string, boolean>;
     protected isPause: boolean;
@@ -120,6 +121,8 @@ export declare class Game extends PacketHandler implements IConnectListener, Clo
     roomPause(roomID: number): void;
     setCamerasBounds(x: number, y: number, width: number, height: number): void;
     getConfigUrl(sceneId: string): string;
+    setCurSceneConfigUrl(val: any): void;
+    getCurSceneConfigUrl(): string;
     onClockReady(): void;
     syncClock(times?: number): void;
     set moveStyle(moveStyle: number);
@@ -167,16 +170,17 @@ export declare class Game extends PacketHandler implements IConnectListener, Clo
     preloadGameConfig(): Promise<any>;
     protected initWorld(): Promise<void>;
     protected createUser(): void;
-    protected createManager(): void;
+    protected createManager(): Promise<void>;
     protected onClearGame(): void;
+    protected boot(): void;
     protected onSelectCharacter(): void;
     protected onGotoAnotherGame(packet: PBpacket): void;
     protected onAvatarGameModeHandler(packet: PBpacket): void;
     protected update(current?: number, delta?: number): void;
     protected clearGame(bool?: boolean): Promise<void>;
     private _createAnotherGame;
+    private initConnect;
     private _onGotoAnotherGame;
-    private decodeConfigs;
     private onClientPingHandler;
     private _run;
 }

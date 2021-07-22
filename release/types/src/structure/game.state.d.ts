@@ -5,6 +5,7 @@ export declare enum GameState {
     Connecting = "Connecting",
     EnterWorld = "EnterWorld",
     GameRunning = "GameRunning",
+    ChangeGame = "ChangeGame",
     OffLine = "OffLine"
 }
 export declare enum ConnectState {

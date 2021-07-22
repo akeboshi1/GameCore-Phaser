@@ -25,7 +25,7 @@ export interface ISprite {
     interactive: op_def.IPBPoint2f[];
     attrs: op_def.IStrPair[];
     suits: AvatarSuit[];
-    animationQueue: AnimationQueue[];
+    animationQueue: AnimationQueue;
     currentAnimationName: string;
     displayInfo: IFramesModel | IDragonbonesModel;
     direction: number;
@@ -44,7 +44,7 @@ export interface ISprite {
     updateDisplay(display: op_gameconfig.IDisplay, animations: op_gameconfig_01.IAnimationData[], defAnimation?: string): any;
     setPosition(x: number, y: number): any;
     setAnimationName(name: string, playTimes?: number): RunningAnimation;
-    setAnimationQueue(queue: AnimationQueue[]): any;
+    setAnimationQueue(queue: AnimationQueue): any;
     setDirection(val: any): any;
     setDisplayInfo(val: any): any;
     updateAttr(attrs: op_def.IStrPair[]): any;

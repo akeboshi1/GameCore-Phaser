@@ -1,4 +1,3 @@
-import { op_client } from "pixelpai_proto";
 import { Game } from "../../game";
 import { DragonbonesModel, FramesModel } from "baseGame";
 export declare class Effect {
@@ -14,7 +13,7 @@ export declare class Effect {
     private mId;
     private mDisplayInfo;
     constructor(game: Game, mOwnerID: number, bindId: number);
-    syncSprite(sprite: op_client.ISprite): void;
+    updateDisplayInfo(frameModel: FramesModel): void;
     destroy(): void;
     get bindId(): number;
     set displayInfo(display: FramesModel | DragonbonesModel);

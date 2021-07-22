@@ -9,6 +9,8 @@ export interface IFrame {
 }
 export declare class Atlas {
     atlas: {};
+    width: number;
+    height: number;
     private frames;
     constructor();
     addFrame(name: string, rect: {
@@ -20,5 +22,6 @@ export declare class Atlas {
     setFrame(frame: any): void;
     removeFrame(name: string): void;
     clearFrames(): void;
+    setSize(w: number, h: number): void;
     toString(): string;
 }

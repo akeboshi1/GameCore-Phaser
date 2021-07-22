@@ -1,14 +1,15 @@
 /// <reference types="tooqingphaser" />
 import { RPCPeer } from "webworker-rpc";
+import { Url } from "utils";
 import { PBpacket } from "net-socket-packet";
-import { op_client } from "pixelpai_proto";
+import { op_client, op_def } from "pixelpai_proto";
 import { Account } from "./account";
 import { LocalStorageManager } from "./managers/local.storage.manager";
 import { CamerasRenderManager } from "./cameras/cameras.render.manager";
-import { ElementStateType, GameMain, IDragonbonesModel, IFramesModel, ILauncherConfig, IScenery, IPos, IPosition45Obj, LogicPos, Size, IWorkerParam } from "structure";
+import { ElementStateType, GameMain, IDragonbonesModel, IFramesModel, ILauncherConfig, IScenery, IPos, IPosition45Obj, LogicPos, Size, IWorkerParam, IGround, ITilesetProperty } from "structure";
 import { DisplayManager } from "./managers/display.manager";
 import { InputManager } from "./input/input.manager";
-import { EditorCanvasManager } from "./managers/editor.canvas.manager";
+import { AvatarHelper } from "./managers/avatar.helper";
 import { BaseSceneManager, IRender } from "baseRender";
 import { AstarDebugger } from "./display/debugs/astar";
 import { EditorModeDebugger } from "./display/debugs/editor.mode.debugger";
@@ -34,6 +35,7 @@ export declare class Render extends RPCPeer implements GameMain, IRender {
     protected mMainPeer: any;
     protected readonly DEFAULT_WIDTH = 360;
     protected readonly DEFAULT_HEIGHT = 640;
+    protected resUrl: Url;
     protected mGuideManager: GuideManager;
     protected mSceneManager: BaseSceneManager;
     protected mCameraManager: CamerasRenderManager;
@@ -43,7 +45,7 @@ export declare class Render extends RPCPeer implements GameMain, IRender {
     protected mUiManager: UiManager;
     protected mDisplayManager: DisplayManager;
     protected mLocalStorageManager: LocalStorageManager;
-    protected mEditorCanvasManager: EditorCanvasManager;
+    protected mAvatarHelper: AvatarHelper;
     protected mRenderParam: IWorkerParam;
     protected mMainPeerParam: IWorkerParam;
     protected mAccount: Account;
@@ -96,8 +98,9 @@ export declare class Render extends RPCPeer implements GameMain, IRender {
     get displayManager(): DisplayManager;
     get soundManager(): SoundManager;
     get localStorageManager(): LocalStorageManager;
-    get editorCanvasManager(): EditorCanvasManager;
+    get editorCanvasManager(): AvatarHelper;
     get game(): Phaser.Game;
+    get url(): Url;
     getSize(): Size | undefined;
     createGame(): void;
     createManager(): void;
@@ -114,6 +117,18 @@ export declare class Render extends RPCPeer implements GameMain, IRender {
     visibilitychange(state: string): void;
     showErrorMsg(msg: string): void;
     hidden(): void;
+    getSound(key: string): Promise<unknown>;
+    setResourecRoot(root: string): void;
+    getUIPath(dpr: number, res: string): Promise<unknown>;
+    getResPath(): Promise<unknown>;
+    getOsdPath(): Promise<unknown>;
+    getResourceRoot(url: string): Promise<unknown>;
+    getResUIPath(): Promise<unknown>;
+    getNormalUIPath(res: string): Promise<unknown>;
+    getUsrAvatarTextureUrls(value: string): {
+        img: string;
+        json: string;
+    };
     startFullscreen(): void;
     stopFullscreen(): void;
     setGameConfig(config: any): void;
@@ -162,7 +177,7 @@ export declare class Render extends RPCPeer implements GameMain, IRender {
     changeLayer(id: number, layerName: string): void;
     showCreateRole(params?: any): void;
     hideCreateRole(): void;
-    showPlay(params?: any): void;
+    showPlay(params?: any): Promise<void>;
     updateFPS(): void;
     endFPS(): void;
     hidePlay(): void;
@@ -246,6 +261,9 @@ export declare class Render extends RPCPeer implements GameMain, IRender {
     setPlayerModel(sprite: any): void;
     addSkybox(scenery: IScenery): void;
     removeSkybox(id: number): void;
+    addGround(ground: IGround): Promise<ITilesetProperty[]>;
+    changeGround(pos45: IPos, key: number): ITilesetProperty;
+    removeGround(): void;
     showMatterDebug(vertices: any): void;
     hideMatterDebug(): void;
     drawServerPosition(x: number, y: number): void;
@@ -253,7 +271,7 @@ export declare class Render extends RPCPeer implements GameMain, IRender {
     changeAlpha(id: number, alpha: number): void;
     removeBlockObject(id: number): void;
     setPosition(id: number, x: number, y: number, z?: number): void;
-    showBubble(id: number, text: string, setting: op_client.IChat_Setting): void;
+    showBubble(id: number, text: op_def.StrMsg, setting: op_client.IChat_Setting): void;
     clearBubble(id: number): void;
     startFollow(id: number): void;
     stopFollow(): void;
@@ -270,7 +288,7 @@ export declare class Render extends RPCPeer implements GameMain, IRender {
     displayAnimationChange(data: any): void;
     workerEmitter(eventType: string, data?: any): void;
     mount(id: number, targetID: number, targetIndex: number): void;
-    unmount(id: number, targetID: number): void;
+    unmount(id: number, targetID: number, pos: IPos): void;
     updateInput(val: number): void;
     addEffect(target: number, effectID: number, display: IFramesModel): void;
     removeEffect(target: number, effectID: number): void;
@@ -281,11 +299,13 @@ export declare class Render extends RPCPeer implements GameMain, IRender {
     switchDecorateMouseManager(): void;
     setRoomSize(size: IPosition45Obj, miniSize: IPosition45Obj): void;
     isCordove(): boolean;
+    getI18nLanguages(): string[];
     protected onWorkerUnlinked(worker: string): void;
     protected initConfig(): void;
     protected initRatio(): void;
     protected initWorker(): void;
     protected dealTipsScene(sceneName: string, show: boolean): void;
+    protected initLocales(): void;
     private onFullScreenChange;
     private gameCreated;
     private resumeScene;

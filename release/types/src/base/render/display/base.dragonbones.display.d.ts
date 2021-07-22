@@ -1,4 +1,5 @@
-import { IAvatar, IDragonbonesModel, RunningAnimation, DisplayField } from "structure";
+/// <reference types="tooqingphaser" />
+import { IAvatar, IDragonbonesModel, RunningAnimation, DisplayField, IResPath } from "structure";
 import { BaseDisplay } from "./base.display";
 export declare enum AvatarSlotNameTemp {
     BodyCostDres = "body_cost_dres_$",
@@ -76,6 +77,7 @@ export declare enum AvatarPartNameTemp {
  * 龙骨显示对象
  */
 export declare class BaseDragonbonesDisplay extends BaseDisplay {
+    private pathObj;
     protected mArmatureName: string;
     protected mResourceName: string;
     protected mArmatureDisplay: dragonBones.phaser.display.ArmatureDisplay | undefined;
@@ -83,18 +85,15 @@ export declare class BaseDragonbonesDisplay extends BaseDisplay {
     protected mInteractive: boolean;
     protected mLoadingShadow: Phaser.GameObjects.Image;
     protected mMountContainer: Phaser.GameObjects.Container;
-    protected replaceArr: any[];
-    protected mLoadMap: Map<string, string>;
-    protected mErrorLoadMap: Map<string, any>;
-    protected mNeedReplaceTexture: boolean;
-    protected mBoardPoint: Phaser.Geom.Point;
-    protected mReplaceTextureKey: string;
-    protected mLoadListeners: Map<string, Function[]>;
-    protected mTexturesListeners: Map<string, Function[]>;
-    protected loadError: boolean;
+    private replaceArr;
+    private mLoadMap;
+    private mErrorLoadMap;
+    private mNeedReplaceTexture;
+    private mBoardPoint;
     private readonly UNPACK_SLOTS;
     private readonly UNCHECK_AVATAR_PROPERTY;
-    constructor(scene: Phaser.Scene, id?: number);
+    private mReplaceTextureKey;
+    constructor(scene: Phaser.Scene, pathObj: IResPath, id?: number);
     set displayInfo(val: IDragonbonesModel | undefined);
     get displayInfo(): IDragonbonesModel | undefined;
     get spriteWidth(): number;
@@ -116,6 +115,7 @@ export declare class BaseDragonbonesDisplay extends BaseDisplay {
     get resourceName(): string;
     protected buildDragbones(): Promise<any>;
     protected get localResourceRoot(): string;
+    protected get osdResourceRoot(): string;
     protected partNameToLoadUrl(partName: string): string;
     protected partNameToLoadKey(partName: string): string;
     protected partNameToDBFrameName(partName: string): string;
@@ -137,8 +137,6 @@ export declare class BaseDragonbonesDisplay extends BaseDisplay {
     private partLoadKeyToSlotName;
     private slotNameToPropertyName;
     private setReplaceArrAndLoadMap;
-    private addPhaserListener;
-    private removePhaserListener;
     private recordReplacedTexture;
     private destroyReplacedTextureManually;
 }

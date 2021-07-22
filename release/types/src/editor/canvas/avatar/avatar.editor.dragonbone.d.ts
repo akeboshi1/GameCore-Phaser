@@ -1,3 +1,4 @@
+/// <reference types="tooqingphaser" />
 export declare class AvatarEditorDragonbone extends Phaser.GameObjects.Container {
     private static readonly DRAGONBONE_NAME_DEFAULT;
     private static readonly DRAGONBONE_NAME_HEAD;
@@ -23,6 +24,7 @@ export declare class AvatarEditorDragonbone extends Phaser.GameObjects.Container
     private mEmitter;
     private mAutoScale;
     private mWebHomePath;
+    private mLocalHomePath;
     private mCurAnimationName;
     private mCurDir;
     private mBaseSets;
@@ -31,7 +33,7 @@ export declare class AvatarEditorDragonbone extends Phaser.GameObjects.Container
     private mArmatureBottomArea;
     private mArmatureBottomArea_head;
     private mOnReadyForSnapshot;
-    constructor(scene: Phaser.Scene, webHomePath: string, emitter: Phaser.Events.EventEmitter, autoScale: boolean, startSets?: any[], onReadyForSnapshot?: (a: AvatarEditorDragonbone) => any);
+    constructor(scene: Phaser.Scene, homePath: string, osdPath: string, emitter: Phaser.Events.EventEmitter, autoScale: boolean, startSets?: any[], onReadyForSnapshot?: (a: AvatarEditorDragonbone) => any);
     destroy(): void;
     loadLocalResources(img: any, part: string, dir: string): Promise<string>;
     setDir(dir: number): void;

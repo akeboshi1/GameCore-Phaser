@@ -1,0 +1,175 @@
+{
+	"frames": {
+		"shopView_bagSlot": {
+			"frame": {
+				"x": 0,
+				"y": 0,
+				"w": 52,
+				"h": 52
+			},
+			"rotated": false,
+			"trimmed": false,
+			"spriteSourceSize": {
+				"x": 0,
+				"y": 0,
+				"w": 52,
+				"h": 52
+			},
+			"sourceSize": {
+				"w": 52,
+				"h": 52
+			}
+		},
+		"shopView_bg": {
+			"frame": {
+				"x": 0,
+				"y": 52,
+				"w": 551,
+				"h": 382
+			},
+			"rotated": false,
+			"trimmed": false,
+			"spriteSourceSize": {
+				"x": 0,
+				"y": 0,
+				"w": 551,
+				"h": 382
+			},
+			"sourceSize": {
+				"w": 551,
+				"h": 382
+			}
+		},
+		"shopView_thumbtack": {
+			"frame": {
+				"x": 52,
+				"y": 0,
+				"w": 22,
+				"h": 24
+			},
+			"rotated": false,
+			"trimmed": false,
+			"spriteSourceSize": {
+				"x": 0,
+				"y": 0,
+				"w": 22,
+				"h": 24
+			},
+			"sourceSize": {
+				"w": 22,
+				"h": 24
+			}
+		},
+		"shopView_thumbtacksmall": {
+			"frame": {
+				"x": 74,
+				"y": 0,
+				"w": 18,
+				"h": 19
+			},
+			"rotated": false,
+			"trimmed": false,
+			"spriteSourceSize": {
+				"x": 0,
+				"y": 0,
+				"w": 18,
+				"h": 19
+			},
+			"sourceSize": {
+				"w": 18,
+				"h": 19
+			}
+		},
+		"shopView_tipbot": {
+			"frame": {
+				"x": 92,
+				"y": 0,
+				"w": 170,
+				"h": 8
+			},
+			"rotated": false,
+			"trimmed": false,
+			"spriteSourceSize": {
+				"x": 0,
+				"y": 0,
+				"w": 170,
+				"h": 8
+			},
+			"sourceSize": {
+				"w": 170,
+				"h": 8
+			}
+		},
+		"shopView_tipmid": {
+			"frame": {
+				"x": 262,
+				"y": 0,
+				"w": 170,
+				"h": 15
+			},
+			"rotated": false,
+			"trimmed": false,
+			"spriteSourceSize": {
+				"x": 0,
+				"y": 0,
+				"w": 170,
+				"h": 15
+			},
+			"sourceSize": {
+				"w": 170,
+				"h": 15
+			}
+		},
+		"shopView_tiptop": {
+			"frame": {
+				"x": 92,
+				"y": 15,
+				"w": 170,
+				"h": 8
+			},
+			"rotated": false,
+			"trimmed": false,
+			"spriteSourceSize": {
+				"x": 0,
+				"y": 0,
+				"w": 170,
+				"h": 8
+			},
+			"sourceSize": {
+				"w": 170,
+				"h": 8
+			}
+		},
+		"shopView_titleIcon": {
+			"frame": {
+				"x": 432,
+				"y": 0,
+				"w": 32,
+				"h": 32
+			},
+			"rotated": false,
+			"trimmed": false,
+			"spriteSourceSize": {
+				"x": 0,
+				"y": 0,
+				"w": 32,
+				"h": 32
+			},
+			"sourceSize": {
+				"w": 32,
+				"h": 32
+			}
+		}
+	},
+	"meta": {
+		"app": "http://www.codeandweb.com/texturepacker",
+		"version": "1.0",
+		"image": "spritesheet.png",
+		"format": "RGBA8888",
+		"size": {
+			"w": 551,
+			"h": 434
+		},
+		"scale": "1"
+	}
+}

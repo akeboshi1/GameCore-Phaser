@@ -1,0 +1,314 @@
+{
+	"textures": [
+		{
+			"image": "battlepass",
+			"format": "RGBA8888",
+			"size": {
+				"w": 1011,
+				"h": 1501
+			},
+			"scale": 1,
+			"frames": [
+				{
+					"filename": "battlepass_reward_completed_1",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 999,
+						"h": 362
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 999,
+						"h": 362
+					},
+					"frame": {
+						"x": 1,
+						"y": 1,
+						"w": 999,
+						"h": 362
+					}
+				},
+				{
+					"filename": "battlepass_reward_locked",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 1011,
+						"h": 248
+					},
+					"spriteSourceSize": {
+						"x": 1,
+						"y": 1,
+						"w": 1009,
+						"h": 246
+					},
+					"frame": {
+						"x": 1,
+						"y": 365,
+						"w": 1009,
+						"h": 246
+					}
+				},
+				{
+					"filename": "battlepass_reward_received",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 1000,
+						"h": 236
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 1000,
+						"h": 236
+					},
+					"frame": {
+						"x": 1,
+						"y": 613,
+						"w": 1000,
+						"h": 236
+					}
+				},
+				{
+					"filename": "battlepass_reward_completed",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 999,
+						"h": 236
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 999,
+						"h": 236
+					},
+					"frame": {
+						"x": 1,
+						"y": 851,
+						"w": 999,
+						"h": 236
+					}
+				},
+				{
+					"filename": "battlepass_reward_locked_mask",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 999,
+						"h": 236
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 999,
+						"h": 236
+					},
+					"frame": {
+						"x": 1,
+						"y": 1089,
+						"w": 999,
+						"h": 236
+					}
+				},
+				{
+					"filename": "battlepass_reward_nav_2",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 669,
+						"h": 79
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 669,
+						"h": 79
+					},
+					"frame": {
+						"x": 1,
+						"y": 1327,
+						"w": 669,
+						"h": 79
+					}
+				},
+				{
+					"filename": "battlepass_reward_nav_1",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 297,
+						"h": 80
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 297,
+						"h": 80
+					},
+					"frame": {
+						"x": 672,
+						"y": 1327,
+						"w": 297,
+						"h": 80
+					}
+				},
+				{
+					"filename": "battlepass_lock",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 39,
+						"h": 48
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 39,
+						"h": 48
+					},
+					"frame": {
+						"x": 971,
+						"y": 1327,
+						"w": 39,
+						"h": 48
+					}
+				},
+				{
+					"filename": "battlepass_reward_prompt",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 23,
+						"h": 23
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 23,
+						"h": 23
+					},
+					"frame": {
+						"x": 971,
+						"y": 1377,
+						"w": 23,
+						"h": 23
+					}
+				},
+				{
+					"filename": "battlepass_lv_icon",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 92,
+						"h": 92
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 92,
+						"h": 92
+					},
+					"frame": {
+						"x": 1,
+						"y": 1408,
+						"w": 92,
+						"h": 92
+					}
+				},
+				{
+					"filename": "battlepass_lv_reward_bg",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 93,
+						"h": 47
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 93,
+						"h": 47
+					},
+					"frame": {
+						"x": 95,
+						"y": 1408,
+						"w": 93,
+						"h": 47
+					}
+				},
+				{
+					"filename": "battlepass_lv_schedule_bottom",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 693,
+						"h": 30
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 693,
+						"h": 30
+					},
+					"frame": {
+						"x": 95,
+						"y": 1457,
+						"w": 693,
+						"h": 30
+					}
+				},
+				{
+					"filename": "battlepass_lv_schedule_top",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 693,
+						"h": 30
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 693,
+						"h": 30
+					},
+					"frame": {
+						"x": 190,
+						"y": 1409,
+						"w": 693,
+						"h": 30
+					}
+				},
+				{
+					"filename": "battlepass_received",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 41,
+						"h": 41
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 41,
+						"h": 41
+					},
+					"frame": {
+						"x": 885,
+						"y": 1409,
+						"w": 41,
+						"h": 41
+					}
+				}
+			]
+		}
+	],
+	"meta": {
+		"app": "https://www.codeandweb.com/texturepacker",
+		"version": "3.0",
+		"smartupdate": "$TexturePacker:SmartUpdate:8f0ef81287aa988fa14524879c52b7f8:04a6d994a1a248e7f1172f478e10647b:415604ad487afc760758d46269e49d98$"
+	}
+}

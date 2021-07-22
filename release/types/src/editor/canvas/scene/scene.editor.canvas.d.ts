@@ -1,3 +1,4 @@
+/// <reference types="tooqingphaser" />
 import { Capsule, ElementNode, LayerEnum, MossNode, PaletteNode, SceneNode, TerrainNode } from "game-capsule";
 import { op_def, op_client } from "pixelpai_proto";
 import { Direction, IPos, IPosition45Obj } from "structure";
@@ -10,6 +11,7 @@ import { EditorCamerasManager } from "./manager/cameras.manager";
 import { IRender, LayerManager } from "baseRender";
 import { ElementStorage } from "baseGame";
 import { EditorSceneManger } from "./manager/scene.manager";
+import { Url } from "utils";
 export declare class SceneEditorCanvas extends EditorCanvas implements IRender {
     displayObjectPool: DisplayObjectPool;
     private mSelecedElement;
@@ -32,7 +34,10 @@ export declare class SceneEditorCanvas extends EditorCanvas implements IRender {
     private mSceneManager;
     private mElementStorage;
     private mScene;
+    private mUrl;
     constructor(config: IEditorCanvasConfig);
+    get url(): Url;
+    get config(): IEditorCanvasConfig;
     update(time?: number, delta?: number): void;
     create(scene: Phaser.Scene): void;
     enableClick(): void;
@@ -48,6 +53,7 @@ export declare class SceneEditorCanvas extends EditorCanvas implements IRender {
     setSprite(content: any): void;
     selectElement(id: number, selecting?: boolean): void;
     unselectElement(): void;
+    reloadTilemap(): void;
     updateElements(): void;
     deleteElement(): void;
     duplicateElements(): void;
@@ -75,6 +81,10 @@ export declare class SceneEditorCanvas extends EditorCanvas implements IRender {
     getCurrentRoomMiniSize(): IPosition45Obj;
     getMainScene(): Phaser.Scene;
     checkCollision(pos: IPos, sprite: any): boolean;
+    transformTerrains(sns: string[]): Promise<{
+        json: string;
+        url: string;
+    }>;
     destroy(): void;
     private init;
     private addListener;
@@ -87,7 +97,6 @@ export declare class SceneEditorCanvas extends EditorCanvas implements IRender {
     private onGameobjectDownHandler;
     private onWheelHandler;
     private addElement;
-    private addTerrain;
     private eraser;
     private initSkybox;
     get alignGrid(): boolean;
@@ -102,6 +111,7 @@ export declare class SceneEditorCanvas extends EditorCanvas implements IRender {
     get scaleRatio(): number;
     get elementManager(): EditorElementManager;
     get mossManager(): EditorMossManager;
+    get sceneNode(): SceneNode;
     get emitter(): Phaser.Events.EventEmitter;
     get sceneManager(): EditorSceneManger;
 }
