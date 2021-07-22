@@ -65,7 +65,7 @@ export class EditorTerrainManager extends PacketHandler {
             drawLocs.push({x: pos.x, y: pos.y, z: pos.z});
             this.changeGroundBySN(pos, terrainCoorData.sn);
         }
-        this.reqEditorAddTerrainsData(drawLocs, index + 1);
+        this.reqEditorAddTerrainsData(drawLocs, index);
     }
 
     removeTerrains(locations: IPos[]) {
