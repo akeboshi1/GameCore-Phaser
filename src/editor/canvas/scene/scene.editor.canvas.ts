@@ -482,9 +482,14 @@ export class SceneEditorCanvas extends EditorCanvas implements IRender {
         return new Promise<{json: string, url: string}>((resolve, reject) => {
             Promise.all(tasks)
                 .then((frames) => {
+                    if (frames.length === 0) {
+                        reject("no data");
+                        return;
+                    }
+
                     const atlas = new Atlas();
                     const packer = new MaxRectsPacker();
-                    packer.padding = 2;
+                    packer.padding = 0;
                     for (const f of frames) {
                         const frame = this.mScene.textures.getFrame(f.gene, f.frame);
                         const tileWidth = 64;
