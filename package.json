@@ -39,7 +39,7 @@
   },
   "scripts": {
     "dev": "webpack-dev-server --mode development",
-    "up": "yarn upgrade game-capsule webworker-rpc tooqingphaser sort-display-object net-socket-packet custom_proto",
+    "up": "yarn upgrade game-capsule webworker-rpc tooqingphaser sort-display-object net-socket-packet",
     "build": "yarn up && yarn ver && node --max-old-space-size=4096 node_modules/webpack/bin/webpack.js --mode=production --output-path=./release --progress",
     "build:dev": "webpack --mode=development --output-path=./release --progress",
     "ver": "genversion version.js",
