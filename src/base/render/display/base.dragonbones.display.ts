@@ -504,7 +504,7 @@ export class BaseDragonbonesDisplay extends BaseDisplay {
             if (!slot) continue;
             const skin = this.formattingSkin(rep.skin);
             if (skin.sn.length === 0) continue;
-            const partName = rep.part.replace("#", skin.sn.toString()).replace("$", rep.dir.toString()) + skin.version;
+            const partName = this.formatPartName(rep.part, skin, rep.dir.toString());
             const loadKey: string = this.partNameToLoadKey(partName);
             const dbFrameName: string = this.partNameToDBFrameName(partName);
             // if (this.UNPACK_SLOTS.indexOf(rep.slot) < 0) {
@@ -549,6 +549,24 @@ export class BaseDragonbonesDisplay extends BaseDisplay {
         return result;
     }
 
+    protected formatPartName(sourcePart: string, skin: any, dir: string) {
+        if (!sourcePart) {
+            Logger.getInstance().error("part name is undefined");
+            return "";
+        }
+        if (!skin) {
+            Logger.getInstance().error("skin not does exist");
+            return "";
+        }
+        const { sn, version, tag } = skin;
+        // 帽发截断
+        let cutOff = "";
+        if (tag && tag.includes("cutOff")) {
+            cutOff = "_cutOff";
+        }
+        return sourcePart.replace("#", sn).replace("$", dir) + cutOff + version;
+    }
+
     private generateReplaceTexture(textureKey: string): { url: string, json: string } {
         const atlas = new Atlas();
         const packer = new MaxRectsPacker();
@@ -562,7 +580,7 @@ export class BaseDragonbonesDisplay extends BaseDisplay {
             if (!slot) continue;
             const skin = this.formattingSkin(rep.skin);
             if (skin.sn.length === 0) continue;
-            const partName = rep.part.replace("#", skin.sn.toString()).replace("$", rep.dir.toString()) + skin.version;
+            const partName = this.formatPartName(rep.part, skin, rep.dir.toString());
             const loadKey: string = this.partNameToLoadKey(partName);
             const dbFrameName: string = this.partNameToDBFrameName(partName);
             if (!this.scene.game.textures.exists(loadKey)) {
@@ -696,7 +714,7 @@ export class BaseDragonbonesDisplay extends BaseDisplay {
             version = (skin.version === undefined || skin.version === "" ? "" : `_${skin.version}`);
             sn = skin.sn;
         }
-        return {sn, version};
+        return { sn, version, tag: skin.tag };
     }
 
     private clearFadeTween() {
@@ -1256,10 +1274,8 @@ export class BaseDragonbonesDisplay extends BaseDisplay {
             if (!slot) return;
             const tempskin = this.formattingSkin(skin);
             if (!tempskin.sn) return;
-            const partName = partNameTemp.replace("#", tempskin.sn).replace("$", dir.toString()) + tempskin.version;
-            const dragonBonesTexture = this.scene.game.textures.get(this.resourceName);
+            const partName = this.formatPartName(partNameTemp, tempskin, dir.toString());
             const loadKey: string = this.partNameToLoadKey(partName);
-            const dbFrameName: string = this.partNameToDBFrameName(partName);
             if (this.mErrorLoadMap.get(loadKey)) return;
             if (!this.scene.textures.exists(loadKey)) {//  && !dragonBonesTexture.frames[dbFrameName]
                 // ==============所有资源都需要从外部加载

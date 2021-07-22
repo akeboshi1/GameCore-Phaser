@@ -32,8 +32,6 @@ const commonConfig = {
     },
     externals: {
         "webworker-rpc": 'webworker-rpc',
-        "game-capsule": "game-capsule",
-        "net-socket-packet": "net-socket-packet",
     },
     optimization: {
         minimize: true,

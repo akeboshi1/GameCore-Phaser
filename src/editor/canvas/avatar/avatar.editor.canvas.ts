@@ -15,6 +15,7 @@ export class AvatarEditorCanvas extends EditorCanvas {
     private readonly SCENEKEY_SNAPSHOT: string = "AvatarEditorSnapshotScene";
 
     private mDragonbone: AvatarEditorDragonbone;
+    private mResoutceRoot = "resources/";
 
     constructor(config: IEditorCanvasConfig) {
         super(config);
@@ -49,7 +50,7 @@ export class AvatarEditorCanvas extends EditorCanvas {
     }
 
     public onSceneCreated(scene: Phaser.Scene) {
-        this.mDragonbone = new AvatarEditorDragonbone(scene, this.mConfig.LOCAL_HOME_PATH, this.mConfig.osd, this.mEmitter, true);
+        this.mDragonbone = new AvatarEditorDragonbone(scene, this.mResoutceRoot, this.mConfig.osd, this.mEmitter, true);
     }
     public update() {
 
@@ -105,7 +106,7 @@ export class AvatarEditorCanvas extends EditorCanvas {
             this.mGame.scene.add(this.SCENEKEY_SNAPSHOT, AvatarEditorScene, false);
             curScene.scene.launch(this.SCENEKEY_SNAPSHOT, {
                 onCreated: (s: Scene) => {
-                    const a = new AvatarEditorDragonbone(s, this.mConfig.LOCAL_HOME_PATH, this.mConfig.osd, this.mEmitter, true, curSets,
+                    const a = new AvatarEditorDragonbone(s, this.mResoutceRoot, this.mConfig.osd, this.mEmitter, true, curSets,
                         (dragonbone) => {
                             dragonbone.generateShopIcon(width, height).then((src) => {
                                 resolve(src);

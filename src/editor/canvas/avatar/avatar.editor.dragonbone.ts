@@ -118,7 +118,7 @@ export class AvatarEditorDragonbone extends Phaser.GameObjects.Container {
         super(scene);
 
         this.mWebHomePath = osdPath;
-        this.mLocalHomePath = homePath;
+        this.mLocalHomePath = "resources/";
         this.mEmitter = emitter;
         this.mAutoScale = autoScale;
 
@@ -537,7 +537,8 @@ export class AvatarEditorDragonbone extends Phaser.GameObjects.Container {
             const set = parts[partName];
             if (!set) continue;
             const avatarKey = this.convertPartNameToIAvatarKey(partName);
-            avatarModel[avatarKey] = { sn: set.id, version: set.version };
+            const { version, tag } = set;
+            avatarModel[avatarKey] = { sn: set.id, version, tag };
         }
 
         const dragonbonesModel: IDragonbonesModel = { id: 0, avatar: avatarModel };
