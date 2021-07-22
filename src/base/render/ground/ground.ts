@@ -35,12 +35,12 @@ export class Ground extends Phaser.GameObjects.Container {
     }
 
     public changeAt(pos45: IPos, newIndex: number) {
-        if (!this.tilemapLayer) return false;
+        if (!this.tilemapLayer) return;
 
-        const tile = this.tilemapLayer.getTileAt(pos45.x, pos45.y);
+        const tile = this.tilemapLayer.getTileAt(pos45.x, pos45.y, true);
         if (!tile) {
             Logger.getInstance().warn("cannot find tile at pos: ", pos45);
-            return false;
+            return;
         }
 
         const curIdx = tile.index;
