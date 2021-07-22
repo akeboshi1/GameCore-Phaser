@@ -1,0 +1,335 @@
+{
+	"textures": [
+		{
+			"image": "room_decorate",
+			"format": "RGBA8888",
+			"size": {
+				"w": 1080,
+				"h": 243
+			},
+			"scale": 1,
+			"frames": [
+				{
+					"filename": "room_decorate_line",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 1078,
+						"h": 4
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 1078,
+						"h": 4
+					},
+					"frame": {
+						"x": 1,
+						"y": 1,
+						"w": 1078,
+						"h": 4
+					}
+				},
+				{
+					"filename": "room_decorate_Spin",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 186,
+						"h": 131
+					},
+					"spriteSourceSize": {
+						"x": 2,
+						"y": 1,
+						"w": 183,
+						"h": 129
+					},
+					"frame": {
+						"x": 1,
+						"y": 7,
+						"w": 183,
+						"h": 129
+					}
+				},
+				{
+					"filename": "room_decorate_operating",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 225,
+						"h": 106
+					},
+					"spriteSourceSize": {
+						"x": 1,
+						"y": 1,
+						"w": 223,
+						"h": 104
+					},
+					"frame": {
+						"x": 1,
+						"y": 138,
+						"w": 223,
+						"h": 104
+					}
+				},
+				{
+					"filename": "room_decorate_confirm",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 185,
+						"h": 131
+					},
+					"spriteSourceSize": {
+						"x": 1,
+						"y": 1,
+						"w": 183,
+						"h": 129
+					},
+					"frame": {
+						"x": 186,
+						"y": 7,
+						"w": 183,
+						"h": 129
+					}
+				},
+				{
+					"filename": "room_decorate_Furniture",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 192,
+						"h": 106
+					},
+					"spriteSourceSize": {
+						"x": 1,
+						"y": 1,
+						"w": 190,
+						"h": 104
+					},
+					"frame": {
+						"x": 226,
+						"y": 138,
+						"w": 190,
+						"h": 104
+					}
+				},
+				{
+					"filename": "room_decorate_put",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 186,
+						"h": 131
+					},
+					"spriteSourceSize": {
+						"x": 2,
+						"y": 1,
+						"w": 183,
+						"h": 129
+					},
+					"frame": {
+						"x": 371,
+						"y": 7,
+						"w": 183,
+						"h": 129
+					}
+				},
+				{
+					"filename": "room_decorate_decoration",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 192,
+						"h": 106
+					},
+					"spriteSourceSize": {
+						"x": 1,
+						"y": 1,
+						"w": 190,
+						"h": 104
+					},
+					"frame": {
+						"x": 418,
+						"y": 138,
+						"w": 190,
+						"h": 104
+					}
+				},
+				{
+					"filename": "room_decorate_closed",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 131,
+						"h": 131
+					},
+					"spriteSourceSize": {
+						"x": 2,
+						"y": 1,
+						"w": 128,
+						"h": 129
+					},
+					"frame": {
+						"x": 556,
+						"y": 7,
+						"w": 128,
+						"h": 129
+					}
+				},
+				{
+					"filename": "room_decorate_delete",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 106,
+						"h": 106
+					},
+					"spriteSourceSize": {
+						"x": 1,
+						"y": 1,
+						"w": 104,
+						"h": 104
+					},
+					"frame": {
+						"x": 610,
+						"y": 138,
+						"w": 104,
+						"h": 104
+					}
+				},
+				{
+					"filename": "room_decorate_tiled",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 131,
+						"h": 130
+					},
+					"spriteSourceSize": {
+						"x": 1,
+						"y": 1,
+						"w": 129,
+						"h": 128
+					},
+					"frame": {
+						"x": 686,
+						"y": 7,
+						"w": 129,
+						"h": 128
+					}
+				},
+				{
+					"filename": "room_decorate_withdraw",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 106,
+						"h": 106
+					},
+					"spriteSourceSize": {
+						"x": 1,
+						"y": 1,
+						"w": 104,
+						"h": 104
+					},
+					"frame": {
+						"x": 716,
+						"y": 137,
+						"w": 104,
+						"h": 104
+					}
+				},
+				{
+					"filename": "room_decorate_save",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 129,
+						"h": 129
+					},
+					"spriteSourceSize": {
+						"x": 1,
+						"y": 1,
+						"w": 127,
+						"h": 127
+					},
+					"frame": {
+						"x": 817,
+						"y": 7,
+						"w": 127,
+						"h": 127
+					}
+				},
+				{
+					"filename": "room_decorate_icon_default",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 116,
+						"h": 116
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 116,
+						"h": 116
+					},
+					"frame": {
+						"x": 946,
+						"y": 7,
+						"w": 116,
+						"h": 116
+					}
+				},
+				{
+					"filename": "room_decorate_icon_select",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 116,
+						"h": 116
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 116,
+						"h": 116
+					},
+					"frame": {
+						"x": 946,
+						"y": 125,
+						"w": 116,
+						"h": 116
+					}
+				},
+				{
+					"filename": "room_decorate_previous",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 44,
+						"h": 76
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 44,
+						"h": 76
+					},
+					"frame": {
+						"x": 822,
+						"y": 136,
+						"w": 44,
+						"h": 76
+					}
+				}
+			]
+		}
+	],
+	"meta": {
+		"app": "https://www.codeandweb.com/texturepacker",
+		"version": "3.0",
+		"smartupdate": "$TexturePacker:SmartUpdate:48c2ca4db765f2c9560bbe78417544fc:d5c8480ad067e998e0084f3b21465f19:1ee529922e0f957da3a2b12250477bcc$"
+	}
+}

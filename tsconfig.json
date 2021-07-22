@@ -1,0 +1,52 @@
+{
+  "compilerOptions": {
+    "experimentalDecorators": true,
+    "module": "esnext",
+    "moduleResolution": "node",
+    "target": "es5",
+    "lib": [
+      "es2015",
+      "webworker",
+      "dom"
+    ],
+    "declaration": true,
+    "sourceMap": true,
+    "outDir": "release/types",
+    "typeRoots": [
+      "node_modules/@types",
+      "node_modules/apowophaserui/types"
+    ],
+    "baseUrl": ".",
+    "noImplicitUseStrict": true,
+    "alwaysStrict": false,
+    "paths": {
+      "gamecoreRender": [
+        "src/gamecore/render/index"
+      ],
+      "gamecore": [
+        "src/gamecore/game/index"
+      ],
+      "utils": [
+        "src/utils/index"
+      ],
+      "structure": [
+        "src/structure/index"
+      ],
+      "editorCanvas": [
+        "src/editor/index"
+      ],
+      "display": [
+        "src/base/render/display/index"
+      ],
+      "baseGame": [
+        "src/base/game/index"
+      ],
+      "baseRender": [
+        "src/base/render/index"
+      ]
+    }
+  },
+  "exclude": [
+    "node_modules",
+  ]
+}
