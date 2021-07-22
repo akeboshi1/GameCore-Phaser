@@ -50,7 +50,7 @@ Generated\ Files/
 *.VisualState.xml
 TestResult.xml
 [Dd]ebugPS/
-[Rr]eleasePS/
+[Rr]elease/
 dlldata.c
 BenchmarkDotNet.Artifacts/
 project.lock.json
@@ -232,5 +232,14 @@ jspm_packages/
 XUP-PC.json
 !.idea/
 config/DESKTOP-68V7D0N.json
+.gitignore
+webpack.config.js
+.gitignore
+yarn.lock
 .idea/inspectionProfiles/Project_Default.xml
+.gitignore
+webpack.config.js
+yargs.d.ts
+.gitignore
+webpack.config.js
 *.DS_Store

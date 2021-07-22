@@ -32,7 +32,7 @@
       "structure": [
         "src/structure/index"
       ],
-      "editorCanvas": [
+      "editor": [
         "src/editor/index"
       ],
       "display": [
