@@ -28,7 +28,8 @@ export class EditorTerrainManager {
                     resolve();
                 })
                 .catch(() => {
-                    reject();
+                    // 允许加载失败
+                    resolve();
                 });
         });
     }
