@@ -549,7 +549,7 @@ export class BaseDragonbonesDisplay extends BaseDisplay {
         return result;
     }
 
-    protected formatPartName(sourcePart: string, skin: any, dir: string) {
+    protected formatPartName(sourcePart: string, skin: SlotSkin, dir: string) {
         if (!sourcePart) {
             Logger.getInstance().error("part name is undefined");
             return "";
@@ -558,12 +558,9 @@ export class BaseDragonbonesDisplay extends BaseDisplay {
             Logger.getInstance().error("skin not does exist");
             return "";
         }
-        const { sn, version, tag } = skin;
+        const { sn, version, useCutOff } = skin;
         // 帽发截断
-        let cutOff = "";
-        if (tag && tag.includes("cutOff")) {
-            cutOff = "_cutOff";
-        }
+        let cutOff = useCutOff ? "_cutoff" : "";
         return sourcePart.replace("#", sn).replace("$", dir) + cutOff + version;
     }
 
@@ -706,15 +703,16 @@ export class BaseDragonbonesDisplay extends BaseDisplay {
         });
     }
 
-    private formattingSkin(skin: any) {
-        let version = "", sn = "";
+    private formattingSkin(skin: SlotSkin | string | number) {
+        let version = "", sn = "", tag = undefined;
         if (typeof skin === "string" || typeof skin === "number") {
             sn = skin.toString();
         } else {
             version = (skin.version === undefined || skin.version === "" ? "" : `_${skin.version}`);
             sn = skin.sn;
+            tag = skin.tag;
         }
-        return { sn, version, tag: skin.tag };
+        return { sn, version, tag };
     }
 
     private clearFadeTween() {
@@ -1268,6 +1266,8 @@ export class BaseDragonbonesDisplay extends BaseDisplay {
             });
         }
 
+        this.replaceAvatar(avater);
+
         const setLoadMap = (soltNameTemp: string, partNameTemp: string, dir: number, skin: SlotSkin | string | number) => {
             const slotName: string = soltNameTemp.replace("$", dir.toString());
             const slot: dragonBones.Slot = this.mArmatureDisplay.armature.getSlot(slotName);
@@ -1313,5 +1313,40 @@ export class BaseDragonbonesDisplay extends BaseDisplay {
             textureAtlasData.renderTexture.destroy();
         }
         textureAtlasData.releaseRenderTexture();
+    }
+
+    /**
+     * avatar预处理
+     * 部分帽子需要替换头发资源
+     * 部分头饰需要去掉头发
+     */
+    private replaceAvatar(avatar: IAvatar) {
+        const headHat = avatar.headHatsId;
+        if (headHat && typeof headHat !== "string") {
+            const hatTag = headHat.tag;
+            // 帽子标记使用截断资源
+            if (hatTag && hatTag.includes("fit_cutoff")) {
+                
+            }
+            if (hatTag) {
+                if (hatTag.includes("fit_cutoff")) {
+                    const headHair = avatar.headHairId;
+                    const headHairBack = avatar.headHairBackId;
+                    if (headHair && headHairBack && typeof headHair !== "string" && typeof headHairBack !== "string") {
+                        const hairTag = headHair.tag;
+                        const hairBackTag = headHairBack.tag;
+                        if (hairTag && hairTag.includes("cutoff")) headHair.useCutOff = true;
+                        if (hairBackTag && hairBackTag.includes("cutoff")) headHairBack.useCutOff = true;
+                    }
+                }
+                if (hatTag.includes("remove_hair")) {
+                    this.replaceArr = this.replaceArr.filter((avatar) => avatar.slot !== AvatarSlotNameTemp.HeadHair 
+                        && avatar.slot !== AvatarSlotNameTemp.HeadHairBack);
+                    // TODO 暂不修改原始数据。 修改后生成纹理hash有差异.
+                    // avatar.headHairId = null;
+                    // avatar.headHairBackId = null;
+                }
+            }
+        }
     }
 }

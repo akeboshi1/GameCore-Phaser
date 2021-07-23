@@ -52,4 +52,6 @@ export interface SlotSkin {
     sn?: string;
     suitType?: string;
     version?: string;
+    tag?: string[];
+    useCutOff?: boolean;
 }
