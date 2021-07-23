@@ -1,7 +1,7 @@
 import { PacketHandler, PBpacket } from "net-socket-packet";
 import { op_client, op_def, op_virtual_world } from "pixelpai_proto";
 import { ConnectionService, Logger, LogicPos, MessageType } from "structure";
-import { IDragonbonesModel, IFramesModel, ISprite } from "structure";
+import { IDragonbonesModel, IFramesModel, ISprite, ISyncSprite } from "structure";
 import { Element, IElement } from "./element";
 import { IElementStorage, Sprite } from "baseGame";
 import NodeType = op_def.NodeType;
@@ -28,11 +28,11 @@ export class ElementManager extends PacketHandler implements IElementManager {
     /**
      * 添加element缓存list
      */
-    protected mCacheAddList: IDisplayRef[] = [];
+    protected mCacheAddList: op_client.ISprite[] = [];
     /**
      * 更新element缓存list
      */
-    protected mCacheSyncList: any[] = [];
+    protected mCacheSyncList: ISyncSprite[] = [];
 
     /**
      * 配置文件等待渲染的物件。
@@ -211,14 +211,14 @@ export class ElementManager extends PacketHandler implements IElementManager {
         }
     }
 
-    public dealAddList(spliceBoo: boolean = false) {
+    public dealAddList() {
         const len = 30;
         let point: op_def.IPBPoint3f;
         let sprite: ISprite = null;
         const ids = [];
         const eles = [];
-        const tmpLen = !spliceBoo ? (this.mCacheAddList.length > len ? len : this.mCacheAddList.length) : this.mDealAddList.length;
-        const tmpList = !spliceBoo ? this.mCacheAddList.splice(0, tmpLen) : (this.mDealAddList.length > 0 ? this.mDealAddList : this.mRequestSyncIdList.splice(0, tmpLen));
+        const tmpLen = this.mCacheAddList.length > len ? len : this.mCacheAddList.length;
+        const tmpList = this.mCacheAddList.splice(0, tmpLen);
         for (let i: number = 0; i < tmpLen; i++) {
             const obj = tmpList[i];
             if (!obj) continue;
@@ -231,10 +231,10 @@ export class ElementManager extends PacketHandler implements IElementManager {
                 if (!this.checkDisplay(sprite)) {
                     ids.push(sprite.id);
                 } else {
-                    obj.state = true;
-                    if (this.mDealAddList.indexOf(obj) === -1) {
-                        this.mDealAddList.push(obj);
-                    }
+                    // obj.state = true;
+                    // if (this.mDealAddList.indexOf(obj) === -1) {
+                    //     this.mDealAddList.push(obj);
+                    // }
                 }
                 const ele = this._add(sprite);
                 eles.push(ele);
@@ -269,34 +269,41 @@ export class ElementManager extends PacketHandler implements IElementManager {
         if (this.mCacheSyncList && this.mCacheSyncList.length > 0) {
             let element: Element = null;
             const tmpLen = this.mCacheSyncList.length > len ? len : this.mCacheSyncList.length;
-            const tmpList = this.mCacheSyncList.splice(0, tmpLen);
-            const ele = [];
+            const tmpList: ISyncSprite[] = this.mCacheSyncList.splice(0, tmpLen);
+            const ids = [];
+            const addCaches = [];
             for (let i: number = 0; i < tmpLen; i++) {
-                const sprite = tmpList[i];
+                const { sprite, command } = tmpList[i];
                 if (!sprite) continue;
-                if (this.mRequestSyncIdList.length > 0 && this.mRequestSyncIdList.indexOf(sprite.id) === -1) {
-                    continue;
-                }
-                // 更新elementstorage中显示对象的数据信息
-                const data = new Sprite(sprite, 3);
-                if (data.displayInfo) this.mRoom.game.elementStorage.add(data.displayInfo);
                 element = this.get(sprite.id);
                 if (element) {
                     this.mDealSyncMap.set(sprite.id, false);
-                    const command = (<any>sprite).command;
                     if (command === op_def.OpCommand.OP_COMMAND_UPDATE) { //  全部
-                        // 初始化数据
+                        const data = new Sprite(sprite, 3);
+                        const index = this.mRequestSyncIdList.indexOf(sprite.id);
+                        if (data.displayInfo) {
+                            if (index > -1) {
+                                 this.mRoom.game.elementStorage.add(data.displayInfo);
+                                 this.mRequestSyncIdList.splice(index, 1);
+                             }
+                        } else {
+                            if (index === -1) {
+                                ids.push(sprite.id);
+                            }
+                        }
                         element.model = data;
                     } else if (command === op_def.OpCommand.OP_COMMAND_PATCH) { //  增量
                         // 更新数据
                         element.updateModel(sprite);
                     }
-                    ele.push(element);
                 } else {
-                    this.mDealAddList.push(sprite);
+                    addCaches.push(sprite);
+                    // this.mDealAddList.push(sprite);
                 }
             }
-            this.dealAddList(true);
+            this.addSpritesToCache(addCaches);
+            this.fetchDisplay(ids);
+            this.dealAddList();
             // this.mStateMgr.syncElement(ele);
             // this.checkElementDataAction(ele);
         }
@@ -344,11 +351,6 @@ export class ElementManager extends PacketHandler implements IElementManager {
         if (notReadyElements.length < 1) {
             Logger.getInstance().debug("#loading onManagerReady ", this.constructor.name);
             this.mRoom.onManagerReady(this.constructor.name);
-            if (this.mRequestSyncIdList && this.mRequestSyncIdList.length > 0) {
-                this.fetchDisplay(this.mRequestSyncIdList);
-                this.mRequestSyncIdList.length = 0;
-                this.mRequestSyncIdList = [];
-            }
             for (const cacheId of this.mAddCache) {
                 const ele = this.mElements.get(cacheId);
                 if (ele) {
@@ -372,6 +374,7 @@ export class ElementManager extends PacketHandler implements IElementManager {
     }
 
     public addSpritesToCache(objs: op_client.ISprite[]) {
+        const ids = [];
         for (const obj of objs) {
             if (this.get(obj.id)) {
                 continue;
@@ -381,9 +384,10 @@ export class ElementManager extends PacketHandler implements IElementManager {
             if (this.checkDisplay(sprite)) {
                 this.mCacheAddList.push(obj);
             } else {
-                this.mRequestSyncIdList.push(obj.id);
+                ids.push(obj.id);
             }
         }
+        this.fetchDisplay(ids);
     }
 
     get connection(): ConnectionService {
@@ -461,11 +465,6 @@ export class ElementManager extends PacketHandler implements IElementManager {
         }
         if (!this.mCacheAddList || this.mCacheAddList.length === 0) {
             this.mRoom.onManagerReady(this.constructor.name);
-            if (this.mRequestSyncIdList && this.mRequestSyncIdList.length > 0) {
-                this.fetchDisplay(this.mRequestSyncIdList);
-                this.mRequestSyncIdList.length = 0;
-                this.mRequestSyncIdList = [];
-            }
         }
     }
 
@@ -489,23 +488,21 @@ export class ElementManager extends PacketHandler implements IElementManager {
 
     protected fetchDisplay(ids: number[]) {
         if (ids.length < 1) return;
+        const result = [];
+        for (const id of ids) {
+            if (!this.mRequestSyncIdList.includes(id)) {
+                result.push(id);
+            }
+        }
         const packet = new PBpacket(op_virtual_world.OPCODE._OP_REQ_VIRTUAL_WORLD_QUERY_SPRITE_RESOURCE);
         const content: op_virtual_world.IOP_REQ_VIRTUAL_WORLD_QUERY_SPRITE_RESOURCE = packet.content;
-        content.ids = ids;
+        content.ids = result;
         this.connection.send(packet);
     }
 
     get roomService(): IRoomService {
         return this.mRoom;
     }
-
-    // get eleDataMgr() {
-    //     if (this.mRoom) {
-    //         const game = this.mRoom.game;
-    //         return game.getDataMgr<ElementDataManager>(DataMgrType.EleMgr);
-    //     }
-    //     return undefined;
-    // }
 
     protected onSetPosition(packet: PBpacket) {
         const content: op_client.IOP_VIRTUAL_WORLD_REQ_CLIENT_SET_SPRITE_POSITION = packet.content;
@@ -555,7 +552,7 @@ export class ElementManager extends PacketHandler implements IElementManager {
         const sprites = content.sprites;
         for (const sprite of sprites) {
             (<any>sprite).command = command;
-            this.mCacheSyncList.push(sprite);
+            this.mCacheSyncList.push({ sprite, command, patchKeys: content.patchKeys });
         }
         this.dealSyncList();
     }
@@ -635,8 +632,7 @@ export class ElementManager extends PacketHandler implements IElementManager {
         const add = [];
         for (const sprite of sprites) {
             if (this.get(sprite.id)) {
-                (<any>sprite).command = content.command;
-                this.mCacheSyncList.push(sprite);
+                this.mCacheSyncList.push({ sprite, command: content.command, patchKeys: content.patchKeys });
                 continue;
             }
             if (this.mCacheDisplayRef.has(sprite.id)) {
