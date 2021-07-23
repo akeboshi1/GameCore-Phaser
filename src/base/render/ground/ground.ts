@@ -46,6 +46,8 @@ export class Ground extends Phaser.GameObjects.Container {
         const curIdx = tile.index;
         const tileX = tile.x;
         const tileY = tile.y;
+        if (curIdx === -1 && newIndex === -1) return;
+
         if (curIdx === -1) {
             this.tilemapLayer.putTileAt(newIndex, tileX, tileY);
         } else {
