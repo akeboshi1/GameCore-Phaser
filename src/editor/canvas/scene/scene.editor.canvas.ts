@@ -21,7 +21,6 @@ import { EditorSceneManger } from "./manager/scene.manager";
 import { EditorWallManager } from "./manager/wall.manager";
 import { EditorDragonbonesDisplay } from "./editor.dragonbones.display";
 import { load, Url } from "utils";
-import {MaxRectsPacker} from "maxrects-packer";
 for (const key in protos) {
     PBpacket.addProtocol(protos[key]);
 }
@@ -488,23 +487,42 @@ export class SceneEditorCanvas extends EditorCanvas implements IRender {
                     }
 
                     const atlas = new Atlas();
-                    const packer = new MaxRectsPacker();
-                    packer.padding = 0;
+                    const rects: Array<{drawX: number, drawY: number, gene: string, frame: string, sn: string,
+                        rect: {x: number, y: number, width: number, height: number} }> = [];
+                    let x = 0;
+                    let y = 0;
+                    const tileWidth = 64;
+                    const tileHeight = 60;
+                    const maxX = Math.floor(1024 / tileWidth);
+                    let imgWidth = 0;
+                    let imgHeight = 0;
                     for (const f of frames) {
                         const frame = this.mScene.textures.getFrame(f.gene, f.frame);
-                        const tileWidth = 64;
-                        packer.add(tileWidth, frame.height, f);
+                        if (frame.width > tileWidth || frame.height > tileHeight) {
+                            Logger.getInstance().warn("tile size is larger then settings(64 * 60): ", frame.width, frame.height);
+                        }
+
+                        // 每张tile按照设计尺寸64*60居中对齐
+                        const deltaX = (tileWidth - frame.width) * 0.5;
+                        const deltaY = (tileHeight - frame.height) * 0.5;
+                        const rect = {x: x * tileWidth, y: y * tileHeight, width: tileWidth, height: tileHeight};
+                        rects.push({rect, drawX: rect.x + deltaX, drawY: rect.y + deltaY, gene: f.gene, frame: f.frame, sn: f.sn});
+                        imgWidth = (x + 1) * tileWidth;
+                        imgHeight = (y + 1) * tileHeight;
+
+                        x++;
+                        if (x >= maxX) {
+                            x = 0;
+                            y++;
+                        }
                     }
 
-                    const { width, height } = packer.bins[0];
-                    atlas.setSize(width, height);
-                    const canvas = this.mScene.textures.createCanvas("GenerateTilesetImg", width, height);
-                    packer.bins.forEach((bin) => {
-                        bin.rects.forEach((rect) => {
-                            canvas.drawFrame(rect.data.gene, rect.data.frame, rect.x, rect.y);
-                            atlas.addFrame(rect.data.sn, rect);
-                        });
-                    });
+                    atlas.setSize(imgWidth, imgHeight);
+                    const canvas = this.mScene.textures.createCanvas("GenerateTilesetImg", imgWidth, imgHeight);
+                    for (const rect of rects) {
+                        canvas.drawFrame(rect.gene, rect.frame, rect.drawX, rect.drawY);
+                        atlas.addFrame(rect.sn, rect.rect);
+                    }
 
                     const url = canvas.canvas.toDataURL("image/png", 1);
                     canvas.destroy();
