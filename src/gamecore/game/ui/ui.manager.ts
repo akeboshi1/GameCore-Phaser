@@ -21,6 +21,8 @@ export class UIManager extends PacketHandler {
     // 用于记录功能ui打开的顺序,最多2个
     protected mShowuiList: any[] = [];
     protected mLoadingCache: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_SHOW_UI[] = [];
+    protected mCloseCache: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_CLOSE_UI[] = [];
+    protected mUpdateCache: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_UPDATE_UI[] = [];
 
     constructor(protected game: Game) {
         super();
@@ -59,6 +61,7 @@ export class UIManager extends PacketHandler {
         this.addHandlerFun(op_client.OPCODE._OP_VIRTUAL_WORLD_REQ_CLIENT_FORCE_OFFLINE, this.onForceOfflineHandler);
         this.game.emitter.on(EventType.SCENE_SHOW_UI, this.onOpenUIMediator, this);
         this.game.emitter.on(EventType.SCENE_SHOW_MAIN_UI, this.showMainUI, this);
+        this.game.emitter.on("EnterRoom", this.roomCreated, this);
     }
 
     public removePackListener() {
@@ -69,6 +72,7 @@ export class UIManager extends PacketHandler {
         connection.removePacketListener(this);
         this.game.emitter.off(EventType.SCENE_SHOW_UI, this.onOpenUIMediator, this);
         this.game.emitter.off(EventType.SCENE_SHOW_MAIN_UI, this.showMainUI, this);
+        this.game.emitter.on("EnterRoom", this.roomCreated, this);
     }
 
     public showMainUI(hideNames?: string[]) {
@@ -292,9 +296,43 @@ export class UIManager extends PacketHandler {
             // Logger.getInstance().log("show ui =========>", "has currentRoom");
             this.showMed(ui.name, ui);
         } else {
-            this.mLoadingCache.push(ui);
-            this.game.emitter.off("EnterRoom", this.roomCreated, this);
-            this.game.emitter.on("EnterRoom", this.roomCreated, this);
+            if (this.mLoadingCache.indexOf(ui) < 0) {
+                this.mLoadingCache.push(ui);
+            }
+            // this.game.emitter.off("EnterRoom", this.roomCreated, this);
+            // this.game.emitter.on("EnterRoom", this.roomCreated, this);
+        }
+    }
+
+    protected handleCloseUI(packet: PBpacket): void {
+        const ui: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_CLOSE_UI = packet.content;
+        // TODO 根据远程scene状态缓存命令
+        if (this.game.roomManager.currentRoom) {
+            this.hideMed(ui.name);
+        } else {
+            const idx = this.mLoadingCache.findIndex((x) => x.name === ui.name);
+            if (idx >= 0) {
+                this.mLoadingCache.splice(idx, 1);
+            }
+            const idx1 = this.mUpdateCache.findIndex((x) => x.name === ui.name);
+            if (idx1 >= 0) {
+                this.mUpdateCache.splice(idx1, 1);
+            }
+            if (this.mCloseCache.indexOf(ui) < 0) {
+                this.mCloseCache.push(ui);
+            }
+        }
+    }
+
+    protected handleUpdateUI(packet: PBpacket) {
+        const ui: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_UPDATE_UI = packet.content;
+        // TODO 根据远程scene状态缓存命令
+        if (this.game.roomManager.currentRoom) {
+            this.updateMed(ui.name, ui);
+        } else {
+            if (this.mUpdateCache.indexOf(ui) < 0) {
+                this.mUpdateCache.push(ui);
+            }
         }
     }
 
@@ -305,27 +343,14 @@ export class UIManager extends PacketHandler {
             this.showMed(oneCache.name, oneCache);
         }
         this.mLoadingCache.length = 0;
-    }
-
-    protected handleUpdateUI(packet: PBpacket) {
-        const ui: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_UPDATE_UI = packet.content;
-        // TODO 根据远程scene状态缓存命令
-        if (this.game.roomManager.currentRoom && !this.game.roomManager.currentRoom.isLoading) {
-            this.updateMed(ui.name, ui);
+        for (const updateCache of this.mUpdateCache) {
+            this.updateMed(updateCache.name, updateCache);
         }
-    }
-
-    protected handleCloseUI(packet: PBpacket): void {
-        const ui: op_client.OP_VIRTUAL_WORLD_RES_CLIENT_CLOSE_UI = packet.content;
-        // TODO 根据远程scene状态缓存命令
-        if (this.game.roomManager.currentRoom && !this.game.roomManager.currentRoom.isLoading) {
-            this.hideMed(ui.name);
-        } else {
-            const idx = this.mLoadingCache.findIndex((x) => x.name === ui.name);
-            if (idx >= 0) {
-                this.mLoadingCache.splice(idx, 1);
-            }
+        this.mUpdateCache.length = 0;
+        for (const hideCache of this.mCloseCache) {
+            this.hideMed(hideCache.name);
         }
+        this.mCloseCache.length = 0;
     }
 
     protected getPanelNameByAlias(alias: string) {
