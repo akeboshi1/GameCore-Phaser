@@ -66,3 +66,4 @@ export * from "./core.rpc";
 export * from "./IResPath";
 export * from "./ground";
 export * from "./tilemap";
+export * from "./sync.sprite";
