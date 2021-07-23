@@ -704,15 +704,14 @@ export class BaseDragonbonesDisplay extends BaseDisplay {
     }
 
     private formattingSkin(skin: SlotSkin | string | number) {
-        let version = "", sn = "", tag = undefined;
+        let version = "", sn = "";
         if (typeof skin === "string" || typeof skin === "number") {
             sn = skin.toString();
         } else {
             version = (skin.version === undefined || skin.version === "" ? "" : `_${skin.version}`);
             sn = skin.sn;
-            tag = skin.tag;
         }
-        return { sn, version, tag };
+        return { sn, version };
     }
 
     private clearFadeTween() {
@@ -774,6 +773,7 @@ export class BaseDragonbonesDisplay extends BaseDisplay {
     private setReplaceArrAndLoadMap() {
         this.replaceArr.length = 0;
         const avater: IAvatar = this.displayInfo.avatar;
+        this.replaceAvatar(avater);
         if (avater.bodyBaseId) {
             this.replaceArr.push({
                 slot: AvatarSlotNameTemp.BodyBase,
@@ -1265,9 +1265,7 @@ export class BaseDragonbonesDisplay extends BaseDisplay {
                 skin: avater.bodyCloaId,
             });
         }
-
-        this.replaceAvatar(avater);
-
+    
         const setLoadMap = (soltNameTemp: string, partNameTemp: string, dir: number, skin: SlotSkin | string | number) => {
             const slotName: string = soltNameTemp.replace("$", dir.toString());
             const slot: dragonBones.Slot = this.mArmatureDisplay.armature.getSlot(slotName);
@@ -1323,7 +1321,7 @@ export class BaseDragonbonesDisplay extends BaseDisplay {
     private replaceAvatar(avatar: IAvatar) {
         const headHat = avatar.headHatsId;
         if (headHat && typeof headHat !== "string") {
-            const hatTag = headHat.tag;
+            const hatTag = headHat.tags;
             // 帽子标记使用截断资源
             if (hatTag && hatTag.includes("fit_cutoff")) {
                 
@@ -1333,18 +1331,17 @@ export class BaseDragonbonesDisplay extends BaseDisplay {
                     const headHair = avatar.headHairId;
                     const headHairBack = avatar.headHairBackId;
                     if (headHair && headHairBack && typeof headHair !== "string" && typeof headHairBack !== "string") {
-                        const hairTag = headHair.tag;
-                        const hairBackTag = headHairBack.tag;
+                        const hairTag = headHair.tags;
+                        const hairBackTag = headHairBack.tags;
                         if (hairTag && hairTag.includes("cutoff")) headHair.useCutOff = true;
                         if (hairBackTag && hairBackTag.includes("cutoff")) headHairBack.useCutOff = true;
                     }
                 }
                 if (hatTag.includes("remove_hair")) {
-                    this.replaceArr = this.replaceArr.filter((avatar) => avatar.slot !== AvatarSlotNameTemp.HeadHair 
-                        && avatar.slot !== AvatarSlotNameTemp.HeadHairBack);
-                    // TODO 暂不修改原始数据。 修改后生成纹理hash有差异.
-                    // avatar.headHairId = null;
-                    // avatar.headHairBackId = null;
+                    // this.replaceArr = this.replaceArr.filter((avatar) => avatar.slot !== AvatarSlotNameTemp.HeadHair 
+                    //     && avatar.slot !== AvatarSlotNameTemp.HeadHairBack);
+                    avatar.headHairId = null;
+                    avatar.headHairBackId = null;
                 }
             }
         }
