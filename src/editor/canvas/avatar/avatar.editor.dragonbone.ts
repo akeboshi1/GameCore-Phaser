@@ -32,6 +32,7 @@ export class AvatarEditorDragonbone extends Phaser.GameObjects.Container {
         "head_mous",
         "head_hair_back",
         "head_hats",
+        "head_hats_back",
         "head_mask",
         "head_spec",
         "head_face",
@@ -71,8 +72,9 @@ export class AvatarEditorDragonbone extends Phaser.GameObjects.Container {
         { id: "60c8626bdd14da5f64b49341", parts: AvatarEditorDragonbone.BASE_PARTS },
         { id: "5cd28238fb073710972a73c2", parts: ["head_hair", "head_eyes", "head_mous", "body_cost"] },
     ];
+    // 特型 某一特型有资源的话  对应普通槽位需要隐藏
     private static readonly SPECIAL_SETS = {
-        ["head_spec"]: ["head_eyes", "head_hair", "head_mous", "head_hair_back", "head_hats", "head_mask", "head_face", "head_base"],
+        ["head_spec"]: ["head_eyes", "head_hair", "head_mous", "head_hair_back", "head_hats", "head_hats_back", "head_mask", "head_face", "head_base"],
         ["body_spec"]: ["body_cost", "body_cost_dres", "body_tail", "body_wing", "body_base"],
         ["farm_spec"]: ["farm_cost", "farm_shld", "farm_weap", "farm_base"],
         ["barm_spec"]: ["barm_cost", "barm_shld", "barm_weap", "barm_base"],
