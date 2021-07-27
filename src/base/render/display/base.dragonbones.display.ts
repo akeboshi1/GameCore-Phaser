@@ -4,9 +4,7 @@ import {
     RunningAnimation,
     SlotSkin,
     Atlas,
-    IFramesModel,
     DisplayField,
-    AvatarSuitType,
     IResPath, Logger
 } from "structure";
 import {BaseDisplay} from "./base.display";
@@ -51,6 +49,7 @@ export enum AvatarSlotNameTemp {
     HeadMous = "head_mous_$",
     HeadHair = "head_hair_$",
     HeadHats = "head_hats_$",
+    HeadHatBack = "head_hats_back_$",
     HeadFace = "head_face_$",
     HeadChin = "head_chin_$"
 }
@@ -81,6 +80,7 @@ export enum AvatarPartNameTemp {
     HeadHair = "head_hair_#_$",
     HeadHairBack = "head_hair_back_#_$",
     HeadHats = "head_hats_#_$",
+    HeadHatsBack = "head_hats_back_#_$",
     HeadFace = "head_face_#_$",
     HeadMask = "head_mask_#_$",
     HeadMous = "head_mous_#_$",
@@ -99,6 +99,7 @@ const SERIALIZE_QUEUE = [
     "headHairBackId",
     "headMousId",
     "headHatsId",
+    "headHatsBackId",
     "headMaskId",
     "headSpecId",
     "headFaceId",
@@ -1263,6 +1264,21 @@ export class BaseDragonbonesDisplay extends BaseDisplay {
                 part: AvatarPartNameTemp.BodyCloa,
                 dir: 1,
                 skin: avater.bodyCloaId,
+            });
+        }
+
+        if (avater.headHatsBackId) {
+            this.replaceArr.push({
+                slot: AvatarSlotNameTemp.HeadHatBack,
+                part: AvatarPartNameTemp.HeadHatsBack,
+                dir: 3,
+                skin: avater.headHatsBackId
+            });
+            this.replaceArr.push({
+                slot: AvatarSlotNameTemp.HeadHatBack,
+                part: AvatarPartNameTemp.HeadHatsBack,
+                dir: 1,
+                skin: avater.headHatsBackId
             });
         }
     
