@@ -60,8 +60,8 @@ export class Ground extends Phaser.GameObjects.Container {
             this.scene.textures.remove(this.tilesetImgKey);
             this.scene.textures.removeKey(this.tilesetImgKey);
         }
-        if (this.scene.cache.json.exists(this.mapJsonKey)) {
-            this.scene.cache.json.remove(this.mapJsonKey);
+        if (this.scene.cache.tilemap.exists(this.mapJsonKey)) {
+            this.scene.cache.tilemap.remove(this.mapJsonKey);
         }
         if (this.tilemapLayer) {
             this.tilemapLayer.destroy();
