@@ -1,15 +1,51 @@
 {
   "name": "@PixelPai/game-core",
-  "version": "1.0.746",
-  "main": "release/js/editor.js",
+  "version": "1.0.792",
+  "exports": {
+    ".": "./release/js/index.js",
+    "./renderPeer": "./release/js/renderPeer.js",
+    "./mainPeer": "./release/js/mainPeer.js",
+    "./utils": "./release/js/utils.js",
+    "./editor": "./release/js/editor.js",
+    "./structure": "./release/js/structure.js",
+    "./baseRender": "./release/js/baseRender.js",
+    "./baseGame": "./release/js/baseGame.js"
+  },
+  "types": "release/types/index.d.ts",
+  "typesVersions": {
+    "*": {
+      "mainPeer": [
+        "release/types/src/gamecore/game"
+      ],
+      "renderPeer": [
+        "release/types/src/gamecore/render"
+      ],
+      "editor": [
+        "release/types/src/gamecore/editor"
+      ],
+      "baseRender": [
+        "release/types/src/base/render"
+      ],
+      "baseGame": [
+        "release/types/src/base/game"
+      ],
+      "utils": [
+        "release/types/src/utils"
+      ],
+      "structure": [
+        "release/types/src/structure"
+      ]
+    }
+  },
   "scripts": {
     "dev": "webpack-dev-server --mode development",
-    "up": "yarn upgrade game-capsule webworker-rpc tooqinggamephaser sort-display-object net-socket-packet custom_proto",
+    "up": "yarn upgrade game-capsule webworker-rpc tooqingphaser sort-display-object net-socket-packet",
     "build": "yarn up && yarn ver && node --max-old-space-size=4096 node_modules/webpack/bin/webpack.js --mode=production --output-path=./release --progress",
     "build:dev": "webpack --mode=development --output-path=./release --progress",
-    "build:editor:dev": "webpack --config webpack.editor.config.js --mode=development --output-path=./release --progress",
     "ver": "genversion version.js",
-    "patch": "yarn version --patch && yarn ver"
+    "patch": "yarn version --patch && yarn ver",
+    "dts": "dts-bundle --configJson dts-bundle.json && rm -rf types",
+    "rm:dts": "rimraf types"
   },
   "publishConfig": {
     "@PixelPai:registry": "https://code.apowo.com/api/v4/projects/4/packages/npm/"
@@ -20,12 +56,15 @@
   "devDependencies": {
     "@types/chance": "^1.0.7",
     "@types/sat": "^0.0.31",
+    "circular-dependency-plugin": "^5.2.2",
     "clean-webpack-plugin": "^3.0.0",
     "copy-webpack-plugin": "^5.1.2",
+    "dts-bundle": "^0.7.3",
     "expose-loader": "^0.7.5",
     "file-loader": "^6.2.0",
     "genversion": "^2.2.0",
     "move-cli": "^1.2.1",
+    "speed-measure-webpack-plugin": "^1.5.0",
     "tern": "^0.24.1",
     "terser-webpack-plugin": "^2.1.3",
     "ts-loader": "^6.0.4",
@@ -37,15 +76,14 @@
     "webpack-dev-server": "^3.7.2"
   },
   "dependencies": {
-    "apowophaserui": "^1.0.7",
+    "apowophaserui": "^1.1.1",
     "chance": "^1.1.3",
     "copy-text-to-clipboard": "^2.1.1",
-    "custom_proto": "git+ssh://git@code.apowo.com:PixelPai/custom_proto.git#typescriptdev",
     "game-capsule": "git+ssh://git@code.apowo.com:PixelPai/game-capsule.git#dev",
     "html-webpack-plugin": "^4.3.0",
     "i18next": "^19.0.3",
     "i18next-browser-languagedetector": "^4.0.1",
-    "i18next-xhr-backend": "^3.2.2",
+    "i18next-http-backend": "^1.2.6",
     "maxrects-packer": "^2.6.0",
     "monotone-convex-hull-2d": "^1.0.1",
     "net-socket-packet": "git+ssh://git@code.apowo.com:PixelPai/net-socket-packet.git",
@@ -53,8 +91,8 @@
     "sat": "^0.9.0",
     "simple-sha1": "^3.0.1",
     "sort-display-object": "git+ssh://git@code.apowo.com:PixelPai/sort-display-object.git",
-    "tooqinggamephaser": "^0.3.2",
-    "webworker-rpc": "git+ssh://git@code.apowo.com/opensource/webworker-rpc#v74",
+    "tooqingphaser": "git+ssh://git@code.apowo.com:opensource/phaser.git",
+    "webworker-rpc": "git+ssh://git@code.apowo.com/opensource/webworker-rpc",
     "worker-loader": "^3.0.2"
   }
 }

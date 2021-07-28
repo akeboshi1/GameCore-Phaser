@@ -1,7 +1,6 @@
 import { PacketHandler, PBpacket } from "net-socket-packet";
 import { op_client, op_virtual_world, op_editor, op_def } from "pixelpai_proto";
-import { ISprite } from "structure";
-import { IPos, Logger } from "utils";
+import { ISprite, IPos } from "structure";
 import { SceneEditorCanvas } from "../scene.editor.canvas";
 
 export class EditorPacket extends PacketHandler {

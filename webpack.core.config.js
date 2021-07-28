@@ -1,7 +1,7 @@
 const path = require("path");
 const webpack = require("webpack");
-const pathToPhaser = path.join(__dirname, "/node_modules/phaser");
-const phaser = path.join(pathToPhaser, "dist/phaser.js");
+const pathToPhaser = path.join(__dirname, "/node_modules/@PixelPai/tooqingphaser");
+const phaser = path.join(pathToPhaser, "dist/phaser.min.js");
 const ConfigWebpackPlugin = require("config-webpack");
 const CopyWebpackPlugin = require("copy-webpack-plugin");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
@@ -22,7 +22,6 @@ const config = {
         rules: [
             { test: /\.ts$/, loader: "ts-loader", exclude: "/node_modules/" },
             { test: /phaser\.js$/, loader: "expose-loader?Phaser" },
-            { test: /dragonBones\.js$/, loader: "expose-loader?dragonBones" },
             { test: /phaserui\.js$/, loader: "expose-loader?phaserui" },
         ],
     },
@@ -30,7 +29,6 @@ const config = {
         extensions: [".ts", ".js"],
         alias: {
             phaser: phaser,
-            dragonBones: path.join(__dirname, "./lib/dragonBones/dragonBones.js"),
             phaserui: path.join(__dirname,"/node_modules/apowophaserui/dist/phaserui.js")
         }
     },

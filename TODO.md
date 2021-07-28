@@ -7,6 +7,7 @@ TODO List
 - [x] 角色avator资源单图，合图优化 其他角色avator资源单图 合图 cdn优化 优先寻找cdn上图集，若没有则下载单图进行拼接
 - [ ] 游戏镜头优化，减少渲染区域
 - [ ] 修复游戏bug todo
+- [ ] 游戏渲染帧数
 - [ ] pkt更新为node_module,新增pkt ci
 
 

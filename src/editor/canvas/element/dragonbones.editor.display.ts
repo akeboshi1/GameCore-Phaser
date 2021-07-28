@@ -1,28 +1,27 @@
-import {DragonbonesModel} from "baseModel";
-import {BaseDragonbonesDisplay} from "baseRender";
-import {Logger} from "utils";
-import {SlotSkin} from "structure";
-
+import { DragonbonesModel } from "baseGame";
+import { BaseDragonbonesDisplay } from "baseRender";
+import { Logger } from "structure";
+import version from "../../../../version";
 export class DragonbonesEditorDisplay extends BaseDragonbonesDisplay {
 
-    constructor(scene: Phaser.Scene, private mWebHomePath: string) {
-        super(scene);
+    constructor(scene: Phaser.Scene, mWebHomePath: string) {
+        super(scene, { resPath: `./resources/`, osdPath: mWebHomePath });
     }
 
     public load(): Promise<any> {
         const display = new DragonbonesModel({
             id: 0, avatar: {
                 id: "0",
-                headBaseId: "0001",
+                headBaseId: "60c8626bdd14da5f64b49341",
                 headHairId: "5cd28238fb073710972a73c2",
                 headEyesId: "5cd28238fb073710972a73c2",
                 headMousId: "5cd28238fb073710972a73c2",
-                bodyBaseId: "0001",
+                bodyBaseId: "60c8626bdd14da5f64b49341",
                 bodyCostId: "5cd28238fb073710972a73c2",
-                farmBaseId: "0001",
-                barmBaseId: "0001",
-                flegBaseId: "0001",
-                blegBaseId: "0001"
+                farmBaseId: "60c8626bdd14da5f64b49341",
+                barmBaseId: "60c8626bdd14da5f64b49341",
+                flegBaseId: "60c8626bdd14da5f64b49341",
+                blegBaseId: "60c8626bdd14da5f64b49341"
             }
         });
         return super.load(display, undefined, false);
@@ -44,10 +43,6 @@ export class DragonbonesEditorDisplay extends BaseDragonbonesDisplay {
     public stop() {
         if (!this.mArmatureDisplay) return;
         this.mArmatureDisplay.animation.stop();
-    }
-
-    protected partNameToLoadUrl(val: string): string {
-        return `${this.mWebHomePath}/avatar/part/${val}.png`;
     }
 
     private clearArmatureUnusedSlots() {

@@ -2,23 +2,9 @@ import { EditorCanvas, IEditorCanvasConfig } from "../editor.canvas";
 import ElementEditorGrids from "./element.editor.grids";
 import ElementEditorAnimations from "./element.editor.animations";
 import ElementEditorResourceManager from "./element.editor.resource.manager";
-import { Logger, Url } from "utils";
-import ElementFramesDisplay from "./element.frames.display";
-import version from "../../../../version";
-
-export enum ElementEditorBrushType {
-    Drag,
-    Walkable,
-    Collision,
-    Interactive
-}
-
-export enum ElementEditorEmitType {
-    Resource_Loaded = "resourceLoaded",
-    Active_Animation_Layer = "activeAnimationLayer",
-    Active_Mount_Layer = "activeMountLayer",
-    Update_Frame_Sumb = "updateFrameSumb"
-}
+import { ElementFramesDisplay } from "./element.frames.display";
+import { Logger } from "structure";
+import { ElementEditorBrushType, ElementEditorEmitType } from "./element.editor.type";
 
 /**
  * api:https://dej4esdop1.feishu.cn/docs/doccn1Ez79LjYywnNiAGbaP35Tc
@@ -38,8 +24,6 @@ export class ElementEditorCanvas extends EditorCanvas {
     constructor(config: IEditorCanvasConfig) {
         super(config);
         Logger.getInstance().debug("ElementEditorCanvas.constructor()");
-        Url.RES_PATH = `./resources_v${version}/`;
-
         this.mGame.scene.add(this.SCENEKEY, ElementEditorScene);
 
         // start
@@ -82,7 +66,7 @@ export class ElementEditorCanvas extends EditorCanvas {
 
         const scene = this.getScene();
         this.mGrids = new ElementEditorGrids(scene, this.mData.animations.getDefaultAnimationData());
-        this.mAnimations = new ElementFramesDisplay(scene, this.mData.animations.getDefaultAnimationData(), this.mGrids, this.mEmitter, this.mConfig.osd);
+        this.mAnimations = new ElementFramesDisplay(scene, this.mData.animations.getDefaultAnimationData(), this.mGrids, this.mEmitter, this.mConfig);
         // this.mAnimations = new ElementEditorAnimations(scene, this.mData.animations.getDefaultAnimationData(), this.mGrids, this.mEmitter);
         this.mResManager.init(scene);
 

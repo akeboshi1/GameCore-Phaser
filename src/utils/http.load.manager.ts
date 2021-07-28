@@ -1,6 +1,4 @@
-import { IHttpLoaderConfig, load } from "./http";
-import { Logger } from "./log";
-
+import { IHttpLoaderConfig } from "./http";
 export class HttpLoadManager {
     private static maxLen: number = 30; // 默认最大长度30个，浏览器最大并发数为32个，空余2个为了能处理优先加载逻辑
     private mCacheList: any[] = [];
@@ -35,7 +33,8 @@ export class HttpLoadManager {
             return new Promise((resolve, reject) => {
                 const http = new XMLHttpRequest();
                 http.addEventListener("error", () => {
-                    Logger.getInstance().log("http error =============>>>>");
+                    // tslint:disable-next-line:no-console
+                    console.log("http error =============>>>>");
                 });
                 http.timeout = 20000; // 超时时间，单位是毫秒
                 http.onload = (response: ProgressEvent) => {
@@ -47,13 +46,15 @@ export class HttpLoadManager {
                 };
                 http.onerror = () => {
                     this.mCurLen--;
-                    Logger.getInstance().log("http error ====>");
+                    // tslint:disable-next-line:no-console
+                    console.log("http error ====>");
                     reject(`${path} load error!!!!!`);
                 };
                 http.ontimeout = (e) => {
                     this.mCurLen--;
                     // XMLHttpRequest 超时。在此做某事。
-                    Logger.getInstance().log("http timeout ====>");
+                    // tslint:disable-next-line:no-console
+                    console.log("http timeout ====>");
                     reject(`${path} load ontimeout!!!!!`);
                 };
                 http.open("GET", path, true);
@@ -72,7 +73,8 @@ export class HttpLoadManager {
         return new Promise((resolve, reject) => {
             const http = new XMLHttpRequest();
             http.addEventListener("error", () => {
-                Logger.getInstance().log("http error =============>>>>");
+                // tslint:disable-next-line:no-console
+                console.log("http error =============>>>>");
             });
             http.timeout = 20000; // 超时时间，单位是毫秒
             http.onload = (response: ProgressEvent) => {
@@ -84,13 +86,15 @@ export class HttpLoadManager {
             };
             http.onerror = () => {
                 this.mCurLen--;
-                Logger.getInstance().log("http error ====>");
+                // tslint:disable-next-line:no-console
+                console.log("http error ====>");
                 reject(`${path} load error!!!!!`);
             };
             http.ontimeout = (e) => {
                 this.mCurLen--;
                 // XMLHttpRequest 超时。在此做某事。
-                Logger.getInstance().log("http timeout ====>");
+                // tslint:disable-next-line:no-console
+                console.log("http timeout ====>");
                 reject(`${path} load ontimeout!!!!!`);
             };
             http.open("GET", path, true);

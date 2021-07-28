@@ -1,13 +1,11 @@
-import { Logger, Url } from "utils";
-import { Fit, IScenery } from "structure";
-import { DynamicImage } from "../../../render/ui/components/dynamic.image";
-import { ICameraService } from "../cameras/cameras.manager";
+import { Logger, Fit, IScenery } from "structure";
+import { IBaseCameraService } from "../cameras/base.cameras.manager";
 import { IRender } from "../render";
-import * as copy from "copy-text-to-clipboard";
+import { DynamicImage } from "../ui/components/dynamic.image";
+import { Url } from "../utils";
 export interface IBlockManager {
   startPlay(scene: Phaser.Scene);
   check(time?: number, delta?: number);
-  snapshot();
 }
 
 export class BlockManager implements IBlockManager {
@@ -23,7 +21,7 @@ export class BlockManager implements IBlockManager {
   private mSceneName: string = "";
   private scene: Phaser.Scene;
   private mScenery: IScenery;
-  private mCameras: ICameraService;
+  private mCameras: IBaseCameraService;
   private mStateMap: Map<string, any>;
   private _bound: Phaser.Geom.Rectangle;
   private tween: Phaser.Tweens.Tween;
@@ -64,7 +62,6 @@ export class BlockManager implements IBlockManager {
 
   check(time?: number, delta?: number) {
     const worldView = this.mMainCamera.worldView;
-    // Logger.getInstance().log("worldView: ", worldView);
     const viewPort = new Phaser.Geom.Rectangle(worldView.x - worldView.width / 2, worldView.y - worldView.height / 2, worldView.width * 2, worldView.height * 2);
     for (const block of this.mGrids) {
       block.checkCamera(Phaser.Geom.Intersects.RectangleToRectangle(viewPort, block.rectangle));
@@ -127,16 +124,6 @@ export class BlockManager implements IBlockManager {
     return this.mContainer;
   }
 
-  snapshot() {
-    const rt = this.scene.make.renderTexture({ x: 0, y: 0, width: this.scenery.width, height: this.scenery.height });
-    this.updateScale(1);
-    rt.draw(this.getLayer());
-    this.updateScale(this.render.scaleRatio);
-    rt.snapshot((img: any) => {
-      copy(img.src);
-    });
-  }
-
   async updatePosition() {
     const { offset } = this.mScenery;
     const loc = await this.fixPosition({ x: offset.x, y: offset.y });
@@ -163,7 +150,7 @@ export class BlockManager implements IBlockManager {
     if (id === undefined || targets === undefined || duration === undefined) {
       return;
     }
-    if (!this.scene) {
+    if (!this.scene || !this.mContainer) {
       return;
     }
     if (id !== this.mScenery.id) {
@@ -226,7 +213,7 @@ export class BlockManager implements IBlockManager {
       for (let i = 0; i < len; i++) {
         const l = this.mUris[i].length;
         for (let j = 0; j < l; j++) {
-          const block = new Block(this.scene, this.mUris[i][j], this.mScaleRatio);
+          const block = new Block(this.scene, this.mUris[i][j], this.mScaleRatio, this.render.url);
           block.setRectangle(j * this.mGridWidth, i * this.mGridHeight, this.mGridWidth, this.mGridHeight);
           this.mGrids.push(block);
         }
@@ -327,7 +314,7 @@ class Block extends DynamicImage {
   private mKey: string;
   private mRectangle: Phaser.Geom.Rectangle;
   private mScale: number;
-  constructor(scene: Phaser.Scene, key: string, scale: number) {
+  constructor(scene: Phaser.Scene, key: string, scale: number, private url: Url) {
     super(scene, 0, 0);
     this.mKey = key;
     this.mScale = scale;
@@ -343,7 +330,7 @@ class Block extends DynamicImage {
         // TODO
         // this.setActive(val);
       } else {
-        this.load(Url.getOsdRes(this.mKey));
+        this.load(this.url.getOsdRes(this.mKey));
       }
     }
   }
@@ -365,9 +352,9 @@ class Block extends DynamicImage {
   }
 
   resize(width: number, height: number) {
-    const parentX = (this.parentContainer ? this.parentContainer.x : 0);
-    const parentY = (this.parentContainer ? this.parentContainer.y : 0);
-    this.mRectangle = new Phaser.Geom.Rectangle(this.x * this.mScale + parentX, this.y * this.mScale + parentY, this.width * this.mScale, this.height * this.mScale);
+    // const camera = this.scene.cameras.main;
+    // this.mRectangle = new Phaser.Geom.Rectangle(this.x * this.mScale + camera.x, this.y * this.mScale + camera.y, this.width * this.mScale, this.height * this.mScale);
+    this.setRectangle(this.x, this.y, this.width, this.height);
   }
 
   setScaleRatio(val: number) {

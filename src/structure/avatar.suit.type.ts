@@ -1,5 +1,5 @@
-import {op_def, op_client} from "pixelpai_proto";
-import {IAvatar} from "./dragonbones";
+import { op_def } from "pixelpai_proto";
+import { IAvatar } from "./dragonbones";
 
 export class AvatarSuitType {
     static avatarSuit: AvatarSuitType;
@@ -8,7 +8,7 @@ export class AvatarSuitType {
         "hair": ["head_hair", "head_hair_back"],
         "eye": ["head_eyes"],
         "mouse": ["head_mous"],
-        "hat": ["head_hats"],
+        "hat": ["head_hats", "head_hats_back"],
         "mask": ["head_mask"],
         "face": ["head_face"],
         "weapon": ["weap_farm", "weap_barm"],
@@ -23,7 +23,7 @@ export class AvatarSuitType {
         "chin": ["head_chin"]
     };
     static specHideParts = {
-        headSpecId: ["headEyesId", "headHairId", "headMousId", "headHairBackId", "headHatsId", "headMaskId", "headFaceId", "headBaseId"],
+        headSpecId: ["headEyesId", "headHairId", "headMousId", "headHairBackId", "headHatsId", "headHatsBackId", "headMaskId", "headFaceId", "headBaseId"],
         bodySpecId: ["bodyCostId", "bodyCostDresId", "bodyTailId", "bodyWingId", "bodyBaseId"],
         farmSpecId: ["farmCostId", "farmShldId", "farmWeapId", "farmBaseId"],
         barmSpecId: ["barmCostId", "barmShldId", "barmWeapId", "barmBaseId"],
@@ -275,7 +275,7 @@ export class AvatarSuitType {
     public hair = ["headHairId", "headHairBackId"];
     public eye = ["headEyesId"];
     public mouse = ["headMousId"];
-    public hat = ["headHatsId"];
+    public hat = ["headHatsId", "headHatsBackId"];
     public mask = ["headMaskId"];
     public face = ["headFaceId"];
     public weapon = ["barmWeapId"];
@@ -320,12 +320,12 @@ export class SuitAlternativeType {
 
 export class BaseAvatar {
     id = "10000";
-    barmBaseId = {sn: "0001"};
-    blegBaseId = {sn: "0001"};
-    bodyBaseId = {sn: "0001"};
-    farmBaseId = {sn: "0001"};
-    flegBaseId = {sn: "0001"};
-    headBaseId = {sn: "0001"};
+    barmBaseId = {sn: "60c8626bdd14da5f64b49341"};
+    blegBaseId = {sn: "60c8626bdd14da5f64b49341"};
+    bodyBaseId = {sn: "60c8626bdd14da5f64b49341"};
+    farmBaseId = {sn: "60c8626bdd14da5f64b49341"};
+    flegBaseId = {sn: "60c8626bdd14da5f64b49341"};
+    headBaseId = {sn: "60c8626bdd14da5f64b49341"};
     headHairId = {sn: "5cd28238fb073710972a73c2"};
     headEyesId = {sn: "5cd28238fb073710972a73c2"};
     headMousId = {sn: "5cd28238fb073710972a73c2"};

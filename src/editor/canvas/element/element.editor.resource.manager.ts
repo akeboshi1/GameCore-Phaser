@@ -1,8 +1,7 @@
 import * as path from "path";
-import {MaxRectsPacker} from "maxrects-packer";
-import {ElementEditorEmitType} from "./element.editor.canvas";
-import {Logger} from "utils";
-import {Atlas} from "structure";
+import { MaxRectsPacker } from "maxrects-packer";
+import { ElementEditorEmitType } from "./element.editor.type";
+import { Logger, Atlas } from "structure";
 
 export const WEB_HOME_PATH: string = "https://osd.tooqing.com/";
 export const SPRITE_SHEET_KEY: string = "ELEMENT_EDITOR_SPRITE_SHEET_KEY";

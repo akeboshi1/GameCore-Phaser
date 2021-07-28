@@ -1,4 +1,4 @@
-import { ILogicPoint } from "utils";
+import { ILogicPoint } from "./logic.point";
 
 export interface IScenery {
     readonly id: number;

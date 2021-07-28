@@ -1,5 +1,5 @@
 import { BaseLayer } from "./base.layer";
-import {Logger} from "utils";
+import { Logger } from "structure";
 
 export class LayerManager {
     private mDepthSurface: boolean;
@@ -28,7 +28,7 @@ export class LayerManager {
         return layer;
     }
 
-    public addToLayer(layerName: string, obj: Phaser.GameObjects.GameObject, index: number = -1) {
+    public addToLayer(layerName: string, obj: any, index: number = -1) {
         const layer = this.layers.get(layerName);
         if (!layer) return;
 
@@ -40,8 +40,8 @@ export class LayerManager {
     }
 
     public destroy() {
-        this.layers.forEach((val) => {
-            val.destroy();
+        this.layers.forEach((layer) => {
+            layer.destroy();
         });
 
         this.layers = null;

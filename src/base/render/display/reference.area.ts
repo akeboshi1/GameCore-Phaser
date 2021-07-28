@@ -1,4 +1,4 @@
-import { Pos, IPosition45Obj, Position45, IPos } from "utils";
+import { Pos, IPosition45Obj, Position45, IPos } from "structure";
 
 export class ReferenceArea extends Phaser.GameObjects.Graphics {
     private mSize: IPosition45Obj;

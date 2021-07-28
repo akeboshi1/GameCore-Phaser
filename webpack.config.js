@@ -1,44 +1,44 @@
 const path = require("path");
 const webpack = require("webpack");
-const pathToPhaser = path.join(__dirname, "/node_modules/tooqinggamephaser");
-const phaser = path.join(pathToPhaser, "dist/phaser.js");
-const pathToRPC = path.join(__dirname, "/node_modules/webworker-rpc");
-const webworkerrpc = path.join(pathToRPC, "release/rpcpeer.js")
+const dragonBonesPath = path.join(__dirname, "/src/base/render/dragonBones/dragonBones.js");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const CopyWebpackPlugin = require("copy-webpack-plugin");
 const { CleanWebpackPlugin } = require("clean-webpack-plugin");
 const TSLintPlugin = require("tslint-webpack-plugin");
 const TerserPlugin = require("terser-webpack-plugin");
+const CircularDependencyPlugin = require("circular-dependency-plugin");
 const appVer = require("./version");
+// 导入速度分析插件
+const SpeedMeasurePlugin = require("speed-measure-webpack-plugin");
 
-const resourcesOut = { name: "[name]_[hash].[ext]", outputPath: "resources" };
+// 实例化插件
+const smp = new SpeedMeasurePlugin();
+// const resourcesOut = { name: "[name]_[hash].[ext]", outputPath: "resources" };
 const commonConfig = {
     resolve: {
         extensions: [".ts", ".js"],
         alias: {
-            phaser: phaser,
-            webworkerrpc: webworkerrpc,
-            dragonBones: path.join(__dirname, "./lib/dragonBones/dragonBones.js"),
-            gamecore: path.join(__dirname, "./src/game"),
-            gamecoreRender: path.join(__dirname, "./src/render"),
+            dragonBones: dragonBonesPath,
+            gamecore: path.join(__dirname, "./src/gamecore/game"),
+            gamecoreRender: path.join(__dirname, "./src/gamecore/render"),
             structure: path.join(__dirname, "./src/structure"),
             utils: path.join(__dirname, "./src/utils"),
-            picaWorker: path.join(__dirname, "./src/pica/game"),
-            picaRender: path.join(__dirname, "./src/pica/render"),
-            picaRes: path.join(__dirname, "./src/pica/res"),
-            picaStructure: path.join(__dirname, "./src/pica/structure"),
-            editorCanvas: path.join(__dirname, "./src/editor"),
-            display: path.join(__dirname, "./src/base/display"),
+            editor: path.join(__dirname, "./src/editor"),
+            display: path.join(__dirname, "./src/base/render/display"),
             baseRender: path.join(__dirname, "./src/base/render"),
-            baseModel: path.join(__dirname, "./src/base/model"),
+            baseGame: path.join(__dirname, "./src/base/game"),
             resources: path.join(__dirname, "./resources")
         },
+    },
+    externals: {
+        "webworker-rpc": 'webworker-rpc',
     },
     optimization: {
         minimize: true,
         minimizer: [
             new TerserPlugin({
                 sourceMap: false,
+                // 设置为true速度最快，自动设置数据处理长度的通道处理
                 parallel: true,
                 terserOptions: {
                     ecma: undefined,
@@ -68,7 +68,7 @@ const commonConfig = {
         new TSLintPlugin({
             config: path.resolve(__dirname, "./tslint.json"),
             files: ["./src/**/*.ts"],
-        }),
+        })
     ]
 };
 
@@ -77,34 +77,32 @@ const gameConfig = Object.assign({}, commonConfig, {
     module: {
         rules: [
             { test: /\.ts$/, loader: "ts-loader", options: { allowTsInNodeModules: false }, exclude: "/node_modules/" },
-            { test: /phaser\.js$/, loader: "expose-loader?Phaser" },
             { test: /dragonBones\.js$/, loader: "expose-loader?dragonBones" },
-            { test: /webworkerrpc\.js$/, loader: "expose-loader?webworker-rpc" },
-            { test: /\.(gif|png|dbbin|ttf|jpe?g|svg|mp3|mp4|xml)$/i, loader: "file-loader", options: resourcesOut },
-            { test: /\.json/, type: "javascript/auto", loader: "file-loader", exclude: "/resources/locales/", options: resourcesOut },
         ],
     },
     entry: {
-        tooqing: path.join(__dirname, "./launcher.ts"),
-        editor: path.join(__dirname, "./src/editor/index.ts"),
+        index: "./src/index.ts",
+        baseGame: "./src/base/game/index.ts",
+        baseRender: "./src/base/render/index.ts",
+        editor: "./src/editor/index.ts",
+        utils: "./src/utils/index.ts",
+        structure: "./src/structure/index.ts",
+        renderPeer: "./src/gamecore/render/index.ts",
+        mainPeer: "./src/gamecore/game/index.ts",
     },
     output: {
         // This is required so workers are known where to be loaded from
         path: path.resolve(__dirname, "dist"),
         filename: "js/[name].js",
-        chunkFilename: `js/[name]_v${appVer}.js`,
+        chunkFilename: `js/[name].js`,
         libraryTarget: "umd",
         globalObject: "this",
         library: "[name]",
     },
     plugins: [
         new CopyWebpackPlugin([{
-            from: "./resources/locales", to: `resources/locales`, toType: "dir"
-            , force: true
-        },
-        {
-            from: "./resources/scripts", to: `resources/scripts`, toType: "dir"
-            , force: true
+            from: "**/*", to: `resources`, toType: "dir"
+            , force: true, context: "resources"
         }]),
         new HtmlWebpackPlugin({
             inject: "head",
@@ -116,12 +114,25 @@ const gameConfig = Object.assign({}, commonConfig, {
             WEBGL_RENDERER: true, // I did this to make webpack work, but I"m not really sure it should always be true
             CANVAS_RENDERER: true, // I did this to make webpack work, but I"m not really sure it should always be true
         }),
+        new CircularDependencyPlugin({
+            // exclude detection of files based on a RegExp
+            exclude: /a\.js|node_modules/,
+            // include specific files based on a RegExp
+            include: /src/,
+            // add errors to webpack instead of warnings
+            failOnError: true,
+            // allow import cycles that include an asyncronous import,
+            // e.g. via import(/* webpackMode: "weak" */ './file.js')
+            allowAsyncCycles: false,
+            // set the current working directory for displaying module paths
+            cwd: process.cwd(),
+        })
     ],
     devServer: {
         writeToDisk: true,
-        watchOptions: {
-            poll: 1000,
-        },
+        // watchOptions: {
+        //     poll: 1000,
+        // },
         contentBase: path.resolve(__dirname, "./dist"),
         publicPath: "/dist",
         host: "0.0.0.0",
@@ -130,29 +141,6 @@ const gameConfig = Object.assign({}, commonConfig, {
     },
 });
 
-
-
-const workerConfig = Object.assign({}, commonConfig, {
-    module: {
-        rules: [
-            { test: /\.ts$/, loader: "ts-loader", options: { allowTsInNodeModules: false }, exclude: "/node_modules/" },
-            { test: /webworkerrpc\.js$/, loader: "expose-loader?webworker-rpc" },
-            { test: /\.(gif|png|dbbin|ttf|jpe?g|svg|mp3|mp4|xml)$/i, loader: "file-loader", options: resourcesOut },
-            { test: /\.json/, type: "javascript/auto", loader: "file-loader", exclude: "/resources/locales/", options: resourcesOut },
-        ],
-    },
-    entry: {
-        mainWorker: path.join(__dirname, "./src/game/main.peer.ts"),
-    },
-    output: {
-        // This is required so workers are known where to be loaded from
-        path: path.resolve(__dirname, "dist"),
-        filename: `js/[name]_v${appVer}.js`,
-        libraryTarget: "umd",
-        globalObject: "this",
-        library: "[name]",
-    },
-});
-module.exports = [
-    gameConfig, workerConfig
-];
+module.exports = smp.wrap(
+    gameConfig
+);

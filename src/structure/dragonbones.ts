@@ -17,6 +17,7 @@ export interface IAvatar {
     headHairBackId?: (SlotSkin | string | null);
     headMousId?: (SlotSkin | string | null);
     headHatsId?: (SlotSkin | string | null);
+    headHatsBackId?: (SlotSkin | string | null);
     headMaskId?: (SlotSkin | string | null);
     headChinId?: (SlotSkin | string | null);
     headSpecId?: (SlotSkin | string | null);
@@ -52,4 +53,6 @@ export interface SlotSkin {
     sn?: string;
     suitType?: string;
     version?: string;
+    tags?: string[];
+    useCutOff?: boolean;
 }

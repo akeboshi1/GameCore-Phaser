@@ -1,5 +1,5 @@
 import sort from "sort-display-object";
-import { Logger } from "utils";
+import { Logger } from "structure";
 import { BaseDragonbonesDisplay } from "../display/base.dragonbones.display";
 import { BaseFramesDisplay } from "../display/base.frames.display";
 import { BaseLayer } from "./base.layer";

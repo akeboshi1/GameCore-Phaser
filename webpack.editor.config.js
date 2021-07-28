@@ -1,7 +1,7 @@
 const path = require("path");
 const webpack = require("webpack");
-const pathToPhaser = path.join(__dirname, "/node_modules/tooqinggamephaser");
-const phaser = path.join(pathToPhaser, "dist/phaser.js");
+const pathToPhaser = path.join(__dirname, "/node_modules/@PixelPai/tooqingphaser");
+const phaser = path.join(pathToPhaser, "dist/phaser.min.js");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const CopyWebpackPlugin = require("copy-webpack-plugin");
 const { CleanWebpackPlugin } = require("clean-webpack-plugin");
@@ -42,7 +42,7 @@ const config = {
             picaStructure: path.join(__dirname, "./src/pica/structure"),
             editorCanvas: path.join(__dirname, "./src/editor"),
             baseRender: path.join(__dirname, "./src/base/render"),
-            baseModel: path.join(__dirname, "./src/base/model")
+            baseGame: path.join(__dirname, "./src/base/model")
         },
     },
     optimization: {

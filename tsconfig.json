@@ -9,9 +9,9 @@
       "webworker",
       "dom"
     ],
-    "declaration": false,
+    "declaration": true,
     "sourceMap": true,
-    // "outDir": "types",
+    "outDir": "release/types",
     "typeRoots": [
       "node_modules/@types",
       "node_modules/apowophaserui/types"
@@ -21,40 +21,28 @@
     "alwaysStrict": false,
     "paths": {
       "gamecoreRender": [
-        "./src/render/index"
+        "src/gamecore/render/index"
       ],
       "gamecore": [
-        "./src/game/index"
+        "src/gamecore/game/index"
       ],
       "utils": [
-        "./src/utils/index"
+        "src/utils/index"
       ],
       "structure": [
-        "./src/structure/index"
+        "src/structure/index"
       ],
-      "picaWorker": [
-        "./src/pica/game/index"
-      ],
-      "picaRender": [
-        "./src/pica/render/index"
-      ],
-      "picaRes": [
-        "./src/pica/res/index"
-      ],
-      "picaStructure": [
-        "./src/pica/structure/index"
-      ],
-      "editorCanvas": [
-        "./src/editor/index"
+      "editor": [
+        "src/editor/index"
       ],
       "display": [
         "src/base/render/display/index"
       ],
-      "baseModel": [
-        "./src/base/model/index"
+      "baseGame": [
+        "src/base/game/index"
       ],
       "baseRender": [
-        "./src/base/render/index"
+        "src/base/render/index"
       ]
     }
   },

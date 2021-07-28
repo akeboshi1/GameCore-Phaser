@@ -1,9 +1,6 @@
-import {Logger, ResUtils} from "utils";
-import version from "../../../../version";
-import {BaseDragonbonesDisplay} from "baseRender";
-import {IAvatar, IDragonbonesModel} from "structure";
-import * as stream from "stream";
-
+import { BaseDragonbonesDisplay } from "baseRender";
+import { Logger, IAvatar, IDragonbonesModel } from "structure";
+import { IEditorCanvasConfig } from "../editor.canvas";
 export class AvatarEditorDragonbone extends Phaser.GameObjects.Container {
 
     private static readonly DRAGONBONE_NAME_DEFAULT = "bones_human01";
@@ -35,6 +32,7 @@ export class AvatarEditorDragonbone extends Phaser.GameObjects.Container {
         "head_mous",
         "head_hair_back",
         "head_hats",
+        "head_hats_back",
         "head_mask",
         "head_spec",
         "head_face",
@@ -71,11 +69,12 @@ export class AvatarEditorDragonbone extends Phaser.GameObjects.Container {
         ["body_cost"]: ["body_cost", "body_cost_dres"]
     };
     private static readonly DEFAULT_SETS = [
-        {id: "60c8626bdd14da5f64b49341", parts: AvatarEditorDragonbone.BASE_PARTS},
-        {id: "5cd28238fb073710972a73c2", parts: ["head_hair", "head_eyes", "head_mous", "body_cost"]},
+        { id: "60c8626bdd14da5f64b49341", parts: AvatarEditorDragonbone.BASE_PARTS },
+        { id: "5cd28238fb073710972a73c2", parts: ["head_hair", "head_eyes", "head_mous", "body_cost"] },
     ];
+    // 特型 某一特型有资源的话  对应普通槽位需要隐藏
     private static readonly SPECIAL_SETS = {
-        ["head_spec"]: ["head_eyes", "head_hair", "head_mous", "head_hair_back", "head_hats", "head_mask", "head_face", "head_base"],
+        ["head_spec"]: ["head_eyes", "head_hair", "head_mous", "head_hair_back", "head_hats", "head_hats_back", "head_mask", "head_face", "head_base"],
         ["body_spec"]: ["body_cost", "body_cost_dres", "body_tail", "body_wing", "body_base"],
         ["farm_spec"]: ["farm_cost", "farm_shld", "farm_weap", "farm_base"],
         ["barm_spec"]: ["barm_cost", "barm_shld", "barm_weap", "barm_base"],
@@ -84,9 +83,10 @@ export class AvatarEditorDragonbone extends Phaser.GameObjects.Container {
     };
     private static readonly MODEL_SETS = [
         {
-            id: "5fbf562e72c7db2dbdcdb4ea",
+            id: "60c868397a93345f1bb33d1f",
             parts: AvatarEditorDragonbone.BASE_PARTS
-        }
+        },
+        {id: null, parts: ["head_hair", "head_eyes", "head_mous", "body_cost"]},
     ];
 
     private static readonly DEFAULT_SCALE_GAME_HEIGHT = 72;// 默认展示龙骨时，游戏尺寸
@@ -106,6 +106,7 @@ export class AvatarEditorDragonbone extends Phaser.GameObjects.Container {
     private mEmitter: Phaser.Events.EventEmitter;
     private mAutoScale: boolean = true;// 截图时不能临时改变龙骨scale（除y*-1以外），只能在创建时就设置好scale
     private mWebHomePath: string;
+    private mLocalHomePath: string;
     private mCurAnimationName: string = "idle";
     private mCurDir = 3;
     private mBaseSets: any[] = [];
@@ -115,10 +116,11 @@ export class AvatarEditorDragonbone extends Phaser.GameObjects.Container {
     private mArmatureBottomArea_head: number = 0;
     private mOnReadyForSnapshot: (a: AvatarEditorDragonbone) => any;
 
-    constructor(scene: Phaser.Scene, webHomePath: string, emitter: Phaser.Events.EventEmitter, autoScale: boolean, startSets?: any[], onReadyForSnapshot?: (a: AvatarEditorDragonbone) => any) {
+    constructor(scene: Phaser.Scene, homePath: string, osdPath: string, emitter: Phaser.Events.EventEmitter, autoScale: boolean, startSets?: any[], onReadyForSnapshot?: (a: AvatarEditorDragonbone) => any) {
         super(scene);
 
-        this.mWebHomePath = webHomePath;
+        this.mWebHomePath = osdPath;
+        this.mLocalHomePath = "resources/";
         this.mEmitter = emitter;
         this.mAutoScale = autoScale;
 
@@ -203,7 +205,7 @@ export class AvatarEditorDragonbone extends Phaser.GameObjects.Container {
         this.mCurAnimationName = animationName;
 
         if (this.mDisplay_default) {
-            this.mDisplay_default.play({name: this.mCurAnimationName, flip: false});
+            this.mDisplay_default.play({ name: this.mCurAnimationName, flip: false });
         }
         // if (this.mArmatureDisplay_head) {
         //     this.mArmatureDisplay_head.play({ name: this.mCurAnimationName, flip: false });
@@ -239,7 +241,7 @@ export class AvatarEditorDragonbone extends Phaser.GameObjects.Container {
                 return;
             }
 
-            this.snapshot({x: 0, y: 0, width, height}, modelData)
+            this.snapshot({ x: 0, y: 0, width, height }, modelData)
                 .then((result) => {
                     Logger.getInstance().log("shop icon: ", result);
                     resolve(result);
@@ -264,12 +266,12 @@ export class AvatarEditorDragonbone extends Phaser.GameObjects.Container {
             const modelData = {
                 armature: this.mDisplay_default,
                 x: AvatarEditorDragonbone.HEAD_ICON_WIDTH / 2,
-                y: AvatarEditorDragonbone.HEAD_ICON_DEFAULT_BOTTOM_PIX,
+                y: AvatarEditorDragonbone.HEAD_ICON_DEFAULT_SNAPSHOT_TOTAL_HEIGHT,
                 baseSets: AvatarEditorDragonbone.DEFAULT_SETS
             };
             this.snapshot({
                 x: 0,
-                y: AvatarEditorDragonbone.HEAD_ICON_DEFAULT_SNAPSHOT_TOTAL_HEIGHT - AvatarEditorDragonbone.HEAD_ICON_HEIGHT,
+                y: 0, //AvatarEditorDragonbone.HEAD_ICON_DEFAULT_SNAPSHOT_TOTAL_HEIGHT - AvatarEditorDragonbone.HEAD_ICON_HEIGHT,
                 width: AvatarEditorDragonbone.HEAD_ICON_WIDTH,
                 height: AvatarEditorDragonbone.HEAD_ICON_HEIGHT
             }, modelData)
@@ -295,15 +297,15 @@ export class AvatarEditorDragonbone extends Phaser.GameObjects.Container {
         }
         const sceneHeight = this.scene.scale.height;
         this.mArmatureBottomArea = AvatarEditorDragonbone.DEFAULT_SCALE_BOTTOM_PIX * sceneHeight / AvatarEditorDragonbone.DEFAULT_SCALE_GAME_HEIGHT;
-        this.mDisplay_default = new EditorDragonbonesDisplay(this.scene, AvatarEditorDragonbone.DRAGONBONE_NAME_DEFAULT, this.mWebHomePath);
-        this.mDisplay_default.play({name: this.mCurAnimationName, flip: false});
+        this.mDisplay_default = new EditorDragonbonesDisplay(this.scene, AvatarEditorDragonbone.DRAGONBONE_NAME_DEFAULT, this.mLocalHomePath, this.mWebHomePath);
+        this.mDisplay_default.play({ name: this.mCurAnimationName, flip: false });
         if (this.mAutoScale) this.mDisplay_default.scale = sceneHeight / AvatarEditorDragonbone.DEFAULT_SCALE_GAME_HEIGHT;
         this.mDisplay_default.x = this.scene.scale.width >> 1;
         this.mDisplay_default.y = this.scene.scale.height - this.mArmatureBottomArea;
         this.add(this.mDisplay_default);
         this.mArmatureBottomArea_head = this.mArmatureBottomArea -
             AvatarEditorDragonbone.ARMATURE_LEG_PERCENT * AvatarEditorDragonbone.ARMATURE_HEIGHT * sceneHeight / AvatarEditorDragonbone.DEFAULT_SCALE_GAME_HEIGHT;
-        this.mDisplay_head = new EditorDragonbonesDisplay(this.scene, AvatarEditorDragonbone.DRAGONBONE_NAME_HEAD, this.mWebHomePath);
+        this.mDisplay_head = new EditorDragonbonesDisplay(this.scene, AvatarEditorDragonbone.DRAGONBONE_NAME_HEAD, this.mLocalHomePath, this.mWebHomePath);
         if (this.mAutoScale) this.mDisplay_head.scale = sceneHeight / AvatarEditorDragonbone.DEFAULT_SCALE_GAME_HEIGHT;
         this.mDisplay_head.x = this.scene.scale.width >> 1;
         this.mDisplay_head.y = this.scene.scale.height - this.mArmatureBottomArea_head + 1000;
@@ -364,13 +366,13 @@ export class AvatarEditorDragonbone extends Phaser.GameObjects.Container {
 
             for (const set of this.mBaseSets) {
                 for (const part of set.parts) {
-                    this.mParts[part] = set;
+                    this.mParts[part] = set.id ? set : null;
                 }
             }
         }
         for (const set of this.mSets) {
             for (const part of set.parts) {
-                this.mParts[part] = set;
+                this.mParts[part] = set.id ? set : null;
             }
         }
         // 特型装扮隐藏对应部位
@@ -426,7 +428,7 @@ export class AvatarEditorDragonbone extends Phaser.GameObjects.Container {
             const loadData = this.convertPartsToIDragonbonesModel(this.mParts);
 
             Promise.all([this.mDisplay_default.load(loadData, undefined, false),
-                this.mDisplay_head.load(loadData, undefined, false)])
+            this.mDisplay_head.load(loadData, undefined, false)])
                 .then(() => {
                     resolve(null);
                     if (this.mOnReadyForSnapshot) {
@@ -438,7 +440,7 @@ export class AvatarEditorDragonbone extends Phaser.GameObjects.Container {
                     if (err) Logger.getInstance().error("reload display error: ", err);
                 });
 
-            this.mDisplay_default.play({name: this.mCurAnimationName, flip: false});
+            this.mDisplay_default.play({ name: this.mCurAnimationName, flip: false });
         });
     }
 
@@ -450,7 +452,7 @@ export class AvatarEditorDragonbone extends Phaser.GameObjects.Container {
             result = `${result}_${ver}`;
         }
 
-        result = ResUtils.getPartName(result);
+        result = result + "_png";
         return result;
     }
 
@@ -481,7 +483,7 @@ export class AvatarEditorDragonbone extends Phaser.GameObjects.Container {
                     return {
                         armature: this.mDisplay_default,
                         x: this.mDisplay_default.x,
-                        y: this.mArmatureBottomArea,
+                        y: this.mDisplay_default.y,
                         baseSets: AvatarEditorDragonbone.MODEL_SETS
                     };
                 }
@@ -492,13 +494,12 @@ export class AvatarEditorDragonbone extends Phaser.GameObjects.Container {
         return {
             armature: this.mDisplay_head,
             x: this.mDisplay_default.x,
-            y: this.mArmatureBottomArea_head,
+            y: this.scene.scale.height - this.mArmatureBottomArea_head,
             baseSets: AvatarEditorDragonbone.MODEL_SETS
         };
     }
 
-    private snapshot(area: { x: number, y: number, width: number, height: number },
-                     modelData: { armature: EditorDragonbonesDisplay, x: number, y: number, baseSets: any[] }): Promise<string> {
+    private snapshot(area: { x: number, y: number, width: number, height: number }, modelData: { armature: EditorDragonbonesDisplay, x: number, y: number, baseSets: any[] }): Promise<string> {
         return new Promise<string>((resolve, reject) => {
             this.setBaseSets(modelData.baseSets);
             this.reloadDisplay()
@@ -506,14 +507,12 @@ export class AvatarEditorDragonbone extends Phaser.GameObjects.Container {
                     const gameWidth = this.scene.scale.width;
                     const gameHeight = this.scene.scale.height;
                     Logger.getInstance().debug(`ZW-- start snapshot, gameSize: ${gameWidth}*${gameHeight}, setSize: ${area.width}*${area.height}`);
-                    const rt = this.scene.make.renderTexture({x: 0, y: 0, width: gameWidth, height: gameHeight}, false);
-                    modelData.armature.scaleY *= -1;
+                    const rt = this.scene.make.renderTexture({ x: 0, y: 0, width: gameWidth, height: gameHeight }, false);
                     const display = modelData.armature.getDisplay();
                     if (!display) reject("display does not exist");
                     display.armature.advanceTime(1000);
                     rt.draw(modelData.armature, modelData.x, modelData.y);
                     rt.snapshotArea(area.x, area.y, area.width, area.height, (img: HTMLImageElement) => {
-                        modelData.armature.scaleY *= -1;
                         // reverse parts
                         this.setBaseSets(AvatarEditorDragonbone.DEFAULT_SETS);
                         this.reloadDisplay()
@@ -530,7 +529,7 @@ export class AvatarEditorDragonbone extends Phaser.GameObjects.Container {
     }
 
     private convertPartsToIDragonbonesModel(parts: { [key: string]: any }): IDragonbonesModel {
-        const avatarModel: IAvatar = {id: "0"};
+        const avatarModel: IAvatar = { id: "0" };
 
         const allPartsName = [].concat(AvatarEditorDragonbone.BASE_PARTS, AvatarEditorDragonbone.ADD_PARTS);
         for (const partName of allPartsName) {
@@ -538,10 +537,11 @@ export class AvatarEditorDragonbone extends Phaser.GameObjects.Container {
             const set = parts[partName];
             if (!set) continue;
             const avatarKey = this.convertPartNameToIAvatarKey(partName);
-            avatarModel[avatarKey] = {sn: set.id, version: set.version};
+            const { version, tags } = set;
+            avatarModel[avatarKey] = { sn: set.id, version, tags };
         }
 
-        const dragonbonesModel: IDragonbonesModel = {id: 0, avatar: avatarModel};
+        const dragonbonesModel: IDragonbonesModel = { id: 0, avatar: avatarModel };
         return dragonbonesModel;
     }
 
@@ -564,8 +564,8 @@ class EditorDragonbonesDisplay extends BaseDragonbonesDisplay {
     //
     // private uuid = 0;
 
-    constructor(scene: Phaser.Scene, resName: string, private mWebHomePath: string) {
-        super(scene);
+    constructor(scene: Phaser.Scene, resName: string, mLocalHomePath: string, mWebHomePath: string) {
+        super(scene, { resPath: mLocalHomePath, osdPath: mWebHomePath });
 
         this.resourceName = resName;
         // this.uuid = EditorDragonbonesDisplay.GenerateCount ++;
@@ -574,12 +574,4 @@ class EditorDragonbonesDisplay extends BaseDragonbonesDisplay {
     // protected generateReplaceTextureKey(): string {
     //     return super.generateReplaceTextureKey() + "_editor_" + this.resourceName + "_" + this.uuid;
     // }
-
-    protected get localResourceRoot(): string {
-        return `./resources_v${version}/`;
-    }
-
-    protected partNameToLoadUrl(val: string): string {
-        return `${this.mWebHomePath}/avatar/part/${val}.png`;
-    }
 }

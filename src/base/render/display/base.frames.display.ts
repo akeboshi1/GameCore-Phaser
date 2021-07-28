@@ -1,6 +1,5 @@
-import { Direction, Logger, Url } from "utils";
 import { BaseDisplay } from "./base.display";
-import { DisplayField, IFramesModel, RunningAnimation } from "structure";
+import { Direction, Logger, DisplayField, IFramesModel, RunningAnimation, IResPath } from "structure";
 import ImageFile = Phaser.Loader.FileTypes.ImageFile;
 import { BaseDragonbonesDisplay } from "./base.dragonbones.display";
 
@@ -22,7 +21,7 @@ export class BaseFramesDisplay extends BaseDisplay {
     protected mNodeType: number;
     private mField;
 
-    constructor(scene: Phaser.Scene, id?: number, nodeType?: number) {
+    constructor(scene: Phaser.Scene, private pathObj: IResPath, id?: number, nodeType?: number) {
         super(scene, id);
         this.mNodeType = nodeType;
         this.mID = id;
@@ -53,7 +52,7 @@ export class BaseFramesDisplay extends BaseDisplay {
                 Logger.getInstance().debug("update frame loadError", "动画资源报错：", this.displayInfo);
                 this.displayCreated();
             } else {
-                this.scene.load.atlas(this.framesInfo.gene, Url.getOsdRes(display.texturePath), Url.getOsdRes(display.dataPath));
+                this.scene.load.atlas(this.framesInfo.gene, this.pathObj.osdPath + display.texturePath, this.pathObj.osdPath + display.dataPath);
                 const onAdd = (key: string) => {
                     if (key !== this.framesInfo.gene) return;
                     this.onAddTextureHandler(key, field, onAdd);
@@ -500,6 +499,7 @@ export class BaseFramesDisplay extends BaseDisplay {
 
     protected onAnimationRepeatHander() {
         const queue = this.mAnimation.playingQueue;
+        if (!queue) return;
         if (queue.playedTimes === undefined) {
             queue.playedTimes = 1;
         } else {

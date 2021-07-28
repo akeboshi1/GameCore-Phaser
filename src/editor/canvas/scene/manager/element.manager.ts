@@ -1,9 +1,8 @@
-import { Sprite } from "baseModel";
+import { Sprite } from "baseGame";
 import { LayerEnum } from "game-capsule";
 import { PacketHandler, PBpacket } from "net-socket-packet";
 import { op_client, op_editor, op_def } from "pixelpai_proto";
-import { ISprite } from "structure";
-import { IPos, Position45 } from "utils";
+import { ISprite, IPos, Position45 } from "structure";
 import { SceneEditorCanvas } from "../scene.editor.canvas";
 
 export class EditorElementManager extends PacketHandler {
@@ -69,16 +68,6 @@ export class EditorElementManager extends PacketHandler {
         this.sceneEditor.connection.send(pkt);
     }
 
-    // removeEditor(id: number) {
-    //     const ele = this.tryRemove(id);
-    //     if (ele) {
-    //         const pkt = new PBpacket(op_editor.OPCODE._OP_CLIENT_REQ_EDITOR_DELETE_SPRITE);
-    //         const content: op_editor.IOP_CLIENT_REQ_EDITOR_DELETE_SPRITE = pkt.content;
-    //         content.ids = [id];
-    //         this.connection.send(pkt);
-    //     }
-    //     return ele;
-    // }
     deleteElements(ids: number[]) {
         for (const id of ids) {
             this.taskQueue.set(id, {
@@ -145,28 +134,11 @@ export class EditorElementManager extends PacketHandler {
         for (const sprite of sprites) {
             this.sceneEditor.displayObjectPool.addCache(sprite.id);
             const _sprite = new Sprite(sprite, content.nodeType);
-            _sprite.init(sprite);
             this.taskQueue.set(sprite.id, {
                 action: "ADD",
                 sprite: _sprite,
             });
         }
-
-        // if (!sprites) return;
-        // if (nodeType !== NodeType.ElementNodeType && nodeType !== NodeType.SpawnPointType) {
-        //     return;
-        // }
-        // let point: op_def.IPBPoint3f;
-        // const displays = [];
-        // let ele: Element = null;
-        // for (const sprite of sprites) {
-        //     point = sprite.point3f;
-        //     if (point) {
-        //         ele = this._add(new Sprite(sprite, nodeType));
-        //         if (ele.getDisplay()) displays.push(ele.getDisplay());
-        //     }
-        // }
-        // this.mRoom.addToSurface(displays);
     }
 
     protected handleDeleteElements(packet: PBpacket) {
@@ -176,10 +148,6 @@ export class EditorElementManager extends PacketHandler {
             return;
         }
         this.sceneEditor.unselectElement();
-        // for (const id of ids) {
-        //     this.tryRemove(id);
-        // }
-        // this.roomService.removeSelected();
         for (const id of ids) {
             this.taskQueue.set(id, {
                 action: "DELETE",
@@ -196,9 +164,7 @@ export class EditorElementManager extends PacketHandler {
             return;
         }
         for (const sprite of sprites) {
-            // this.trySync(sprite);
             const _sprite = new Sprite(sprite);
-            _sprite.init(sprite);
             this.taskQueue.set(sprite.id, {
                 action: "UPDATE",
                 sprite: _sprite,
@@ -238,43 +204,6 @@ export class EditorElementManager extends PacketHandler {
         return overlap;
     }
 
-    // protected _add(sprite: ISprite): Element {
-    //     let ele = this.mElements.get(sprite.id);
-    //     if (!ele) ele = new Element(sprite, this);
-    //     ele.setBlockable(false);
-    //     ele.setRenderable(true);
-    //     ele.setInputEnable(InputEnable.Enable);
-    //     this.mElements.set(ele.id, ele);
-    //     return ele;
-    // }
-
-    // protected tryRemove(id) {
-    //     const element = this.mElements.get(id);
-    //     if (element) {
-    //         this.mElements.delete(id);
-    //         element.destroy();
-    //         if (this.roomService) {
-    //             this.roomService.blocks.remove(element);
-    //         }
-    //         return element;
-    //     }
-    // }
-
-    // protected trySync(sprite: op_client.ISprite) {
-    //     const element = this.mElements.get(sprite.id);
-    //     if (!element) {
-    //         Logger.getInstance().log("can't find element", sprite);
-    //         return;
-    //     }
-    //     const point = sprite.point3f;
-    //     if (point) {
-    //         element.setPosition(new Pos(point.x, point.y, point.z));
-    //     }
-    //     if (sprite.direction) {
-    //         element.setDirection(sprite.direction);
-    //     }
-    // }
-
     private batchActionSprites() {
         if (!Array.from(this.taskQueue.keys()).length) {
             return;
@@ -285,7 +214,6 @@ export class EditorElementManager extends PacketHandler {
         for (const key of batchTasksKeys) {
             const { action, sprite } = this.taskQueue.get(key);
             this.taskQueue.delete(key);
-
             if (action === "ADD") {
                 this.sceneEditor.displayObjectPool.push("elements", sprite.id.toString(), sprite);
             } else if (action === "DELETE") {
@@ -294,8 +222,5 @@ export class EditorElementManager extends PacketHandler {
                 this.sceneEditor.displayObjectPool.update("elements", sprite.id.toString(), sprite);
             }
         }
-        // if (this.taskQueue.size === 0) {
-        // this.sceneEditor.displayObjectPool.asociate("elements", batchTasksKeys);
-        // }
     }
 }

@@ -1,11 +1,12 @@
 import { EditorFramesDisplay } from "./editor.frames.display";
 import { SceneEditorCanvas } from "./scene.editor.canvas";
 import { ReferenceArea } from "baseRender";
-import { Sprite } from "baseModel";
+import { Sprite } from "baseGame";
+import { IEditorCanvasConfig } from "../editor.canvas";
 
 export class EditorElementDisplay extends EditorFramesDisplay {
-    constructor(sceneEditor: SceneEditorCanvas, sprite: Sprite) {
-        super(sceneEditor, sprite);
+    constructor(sceneEditor: SceneEditorCanvas, config: IEditorCanvasConfig, sprite: Sprite) {
+        super(sceneEditor, config, sprite);
     }
 
     selected() {

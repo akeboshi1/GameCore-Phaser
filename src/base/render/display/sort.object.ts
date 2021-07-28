@@ -1,4 +1,4 @@
-import { IProjection } from "utils";
+import { IProjection } from "structure";
 
 export interface ISortObject {
     readonly sortX: number;

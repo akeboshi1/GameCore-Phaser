@@ -1,4 +1,4 @@
-import {LayerEnum} from "game-capsule";
+import { LayerEnum } from "game-capsule";
 
 export class LayerName {
     public static GROUNDCLICK = "groundClickLayer";

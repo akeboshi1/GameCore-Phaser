@@ -1,6 +1,7 @@
 import { op_def } from "pixelpai_proto";
-import { IPos, LogicPoint } from "utils";
 import { RunningAnimation } from "./animation";
+import { LogicPoint } from "./logic.point";
+import { IPos } from "./logic.pos";
 
 export interface IPhysicalSprite {
     id: number;

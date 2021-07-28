@@ -1,5 +1,3 @@
-import { Logger } from "./log";
-
 export class ObjectAssign {
 
     /**

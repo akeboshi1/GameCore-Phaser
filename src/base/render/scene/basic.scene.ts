@@ -1,13 +1,11 @@
-import { LayerManager } from "baseRender";
-import { StringUtils } from "utils";
-import { Render } from "../../../render/render";
-
+import { LayerManager } from "../layer";
+import { LoadingTips } from "structure";
 export class BasicScene extends Phaser.Scene {
     public layerManager: LayerManager;
     protected initialize: boolean = false;
     protected hasChangeScene: boolean = false;
     protected hasDestroy: boolean = false;
-    protected render: Render;
+    protected render: any;
     constructor(config: string | Phaser.Types.Scenes.SettingsConfig) {
         super(config);
         this.layerManager = new LayerManager();
@@ -20,8 +18,8 @@ export class BasicScene extends Phaser.Scene {
     }
 
     public preload() {
-        const str = StringUtils.format("正在加载资源 {0}", ["0%"]);
-        if (this.render) this.render.showLoading({ "text": str });
+        // const str = i18n.t(LoadingTips.LOADINg_RESOURCES, { progress: 0 });
+        // if (this.render) this.render.showLoading({ "text": str });
     }
 
     setScale(zoom: number) {

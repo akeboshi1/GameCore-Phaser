@@ -1,10 +1,8 @@
 import { PacketHandler, PBpacket } from "net-socket-packet";
 import { SceneEditorCanvas } from "../scene.editor.canvas";
 import { op_client, op_editor, op_def } from "pixelpai_proto";
-import { IScenery } from "structure";
-import { BlockManager, Scenery } from "baseRender";
-import { Logger } from "utils";
-
+import { IScenery, Logger } from "structure";
+import { BlockManager, BaseScenery } from "baseRender";
 export class EditorSkyboxManager extends PacketHandler {
     private blocks: Map<number, BlockManager>;
     private mSelected: BlockManager;
@@ -30,7 +28,7 @@ export class EditorSkyboxManager extends PacketHandler {
     }
 
     add(scenery: IScenery) {
-        const block = new BlockManager(scenery, this.sceneEditor);
+        const block = new BlockManager(scenery, this.sceneEditor as any);
         this.blocks.set(scenery.id, block);
     }
 
@@ -74,12 +72,12 @@ export class EditorSkyboxManager extends PacketHandler {
 
     private onAddSceneryHandler(packet: PBpacket) {
         const content: op_client.IOP_EDITOR_REQ_CLIENT_ADD_SCENERY = packet.content;
-        this.add(new Scenery(content));
+        this.add(new BaseScenery(content));
     }
 
     private onUpdateSceneryHandler(packet: PBpacket) {
         const content: op_client.IOP_EDITOR_REQ_CLIENT_UPDATE_SCENERY = packet.content;
-        this.update(new Scenery(content));
+        this.update(new BaseScenery(content));
     }
 
     private onDeleteSceneryHandler(packet: PBpacket) {

@@ -1,5 +1,3 @@
-import { IPos } from "./logic.pos";
-
 export class Tool {
 
     /**
@@ -26,7 +24,7 @@ export class Tool {
      * @param fromScene 当前所在scene
      * @param pos 需要转换去scene上的position
      */
-    public static getPosByScenes(fromScene: Phaser.Scene, pos: IPos): IPos {
+    public static getPosByScenes(fromScene, pos): any {
         const camera = fromScene.cameras.main;
         const px = pos.x - camera.scrollX;
         const py = pos.y - camera.scrollY;
@@ -177,14 +175,14 @@ export class Tool {
         return out;
     }
 
-    public static checkPointerContains(gameObject: any, pointer: Phaser.Input.Pointer): boolean {
+    public static checkPointerContains(gameObject: any, pointer): boolean {
         if (!gameObject) return false;
         const left = -gameObject.width / 2;
         const right = gameObject.width / 2;
         const top = -gameObject.height / 2;
         const bottom = gameObject.height / 2;
         if (pointer) {
-            const worldMatrix: Phaser.GameObjects.Components.TransformMatrix = gameObject.getWorldTransformMatrix();
+            const worldMatrix = gameObject.getWorldTransformMatrix();
             const zoom = worldMatrix.scaleX;
             const x: number = (pointer.x - worldMatrix.tx) / zoom;
             const y: number = (pointer.y - worldMatrix.ty) / zoom;
@@ -203,24 +201,29 @@ export class Tool {
         return base;
     }
 
-    public static getRectangle(gameObject, scene: Phaser.Scene) {
-        // 移动超过30个单位，直接表示在移动，不必做点击处理
-        const rectangle = new Phaser.Geom.Rectangle(0, 0, 0, 0);
-        let parent = gameObject.parentContainer;
-        let zoom = gameObject.scale;
-        while (parent && parent !== scene) {
-            zoom *= parent.scale;
-            parent = parent.parentContainer;
-        }
-        const worldWidth = gameObject.width * zoom;
-        const worldHeight = gameObject.height * zoom;
-        const worldMatrix = gameObject.getWorldTransformMatrix();
-        rectangle.left = worldMatrix.tx - worldWidth * gameObject.originX;
-        rectangle.right = worldMatrix.tx + worldWidth * (1 - gameObject.originX);
-        rectangle.top = worldMatrix.ty - worldHeight * gameObject.originY;
-        rectangle.bottom = worldMatrix.ty + worldHeight * (1 - gameObject.originY);
-        return rectangle;
+    public static rootName(str: string) {
+        const root = new String(str).substring(0, str.lastIndexOf("/")) + "/";
+        return root;
     }
+
+    // public static getRectangle(gameObject, scene) {
+    //     // 移动超过30个单位，直接表示在移动，不必做点击处理
+    //     const rectangle = new Phaser.Geom.Rectangle(0, 0, 0, 0);
+    //     let parent = gameObject.parentContainer;
+    //     let zoom = gameObject.scale;
+    //     while (parent && parent !== scene) {
+    //         zoom *= parent.scale;
+    //         parent = parent.parentContainer;
+    //     }
+    //     const worldWidth = gameObject.width * zoom;
+    //     const worldHeight = gameObject.height * zoom;
+    //     const worldMatrix = gameObject.getWorldTransformMatrix();
+    //     rectangle.left = worldMatrix.tx - worldWidth * gameObject.originX;
+    //     rectangle.right = worldMatrix.tx + worldWidth * (1 - gameObject.originX);
+    //     rectangle.top = worldMatrix.ty - worldHeight * gameObject.originY;
+    //     rectangle.bottom = worldMatrix.ty + worldHeight * (1 - gameObject.originY);
+    //     return rectangle;
+    // }
 
     // check is string a number. 0001;2.22 return true
     public static isNumeric(str): boolean {

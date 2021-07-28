@@ -1,4 +1,4 @@
-import { FramesModel, Sprite } from "baseModel";
+import { Sprite } from "baseGame";
 import { AnimationsNode, ElementNode, TerrainNode } from "game-capsule";
 import { AnimationModel, IFramesModel } from "structure";
 import { EditorFramesDisplay } from "./editor.frames.display";
@@ -19,7 +19,7 @@ export class EditorFactory {
     }
 
     public createDragonbonesDisplay(sprite: Sprite) {
-        const display = new EditorDragonbonesDisplay(this.sceneEditor.scene, sprite);
+        const display = new EditorDragonbonesDisplay(this.sceneEditor.scene, this.sceneEditor.config, sprite);
         display.updateSprite(sprite);
         return display;
     }
@@ -28,9 +28,9 @@ export class EditorFactory {
         // const display = new EditorFramesDisplay(this.sceneEditor.scene, sprite.id, sprite.nodeType, this.sceneEditor);
         let display: EditorFramesDisplay = null;
         if (sprite.nodeType === op_def.NodeType.ElementNodeType) {
-            display = new EditorElementDisplay(this.sceneEditor, sprite);
+            display = new EditorElementDisplay(this.sceneEditor, this.sceneEditor.config, sprite);
         } else {
-            display = new EditorFramesDisplay(this.sceneEditor, sprite);
+            display = new EditorFramesDisplay(this.sceneEditor, this.sceneEditor.config, sprite);
         }
         display.isMoss = sprite.isMoss;
         // display.sprite = sprite;
@@ -42,7 +42,7 @@ export class EditorFactory {
         const animations = element.animations;
         const frameModel: IFramesModel = this.createFramesModel(animations);
 
-        const display = new EditorFramesDisplay(this.sceneEditor, undefined);
+        const display = new EditorFramesDisplay(this.sceneEditor, this.sceneEditor.config, undefined);
         display.load(frameModel);
         display.play({ name: animations.defaultAnimationName, flip: false });
         return display;

@@ -1,17 +1,15 @@
-import {ElementEditorEmitType} from "./element.editor.canvas";
 import * as path from "path";
 import * as os from "os";
-import {SPRITE_SHEET_KEY, ResourcesChangeListener, IMAGE_BLANK_KEY} from "./element.editor.resource.manager";
+import { SPRITE_SHEET_KEY, ResourcesChangeListener, IMAGE_BLANK_KEY } from "./element.editor.resource.manager";
 import ElementEditorGrids from "./element.editor.grids";
-import {Handler, Logger} from "utils";
-import {BaseDragonbonesDisplay, BaseFramesDisplay} from "baseRender";
-import {AnimationDataNode} from "game-capsule";
-import {AnimationModel, RunningAnimation} from "structure";
-import {DragonbonesEditorDisplay} from "./dragonbones.editor.display";
-
-export const LOCAL_HOME_PATH: string = path.resolve(os.homedir(), ".pixelpai");
-
-export default class ElementFramesDisplay extends BaseFramesDisplay implements ResourcesChangeListener {
+import { Logger } from "structure";
+import { BaseDragonbonesDisplay, BaseFramesDisplay } from "baseRender";
+import { AnimationDataNode } from "game-capsule";
+import { AnimationModel, RunningAnimation } from "structure";
+import { DragonbonesEditorDisplay } from "./dragonbones.editor.display";
+import { ElementEditorEmitType } from "./element.editor.type";
+import { IEditorCanvasConfig } from "../editor.canvas";
+export class ElementFramesDisplay extends BaseFramesDisplay implements ResourcesChangeListener {
 
     private readonly MOUNT_ANIMATION_TIME_SCALE: number = 1000 / 12;
 
@@ -22,10 +20,10 @@ export default class ElementFramesDisplay extends BaseFramesDisplay implements R
     // private mMountArmatureParent: Phaser.GameObjects.Container;
     private mCurFrameIdx: number = 0;
     private mPlaying: boolean = false;
-    private mCurMountAnimation: RunningAnimation = {name: "idle", flip: false};
+    private mCurMountAnimation: RunningAnimation = { name: "idle", flip: false };
 
-    constructor(scene: Phaser.Scene, node: any, grids: ElementEditorGrids, emitter: Phaser.Events.EventEmitter, private mWebHomePath: string) {// AnimationDataNode
-        super(scene);
+    constructor(scene: Phaser.Scene, node: any, grids: ElementEditorGrids, emitter: Phaser.Events.EventEmitter, private mConfig: IEditorCanvasConfig) {// AnimationDataNode
+        super(scene, { resPath: mConfig.LOCAL_HOME_PATH, osdPath: mConfig.osd });
         this.mGrids = grids;
         this.mEmitter = emitter;
         this.mMountList = new Map<number, Phaser.GameObjects.Container>();
@@ -206,7 +204,7 @@ export default class ElementFramesDisplay extends BaseFramesDisplay implements R
         if (!data) {
             return;
         }
-        const baseLoc = data.offsetLoc || {x: 0, y: 0};
+        const baseLoc = data.offsetLoc || { x: 0, y: 0 };
         display.x = baseLoc.x;
         display.y = baseLoc.y;
     }
@@ -239,7 +237,7 @@ export default class ElementFramesDisplay extends BaseFramesDisplay implements R
                 reject(null);
                 return;
             }
-            const image = this.scene.make.image({key: SPRITE_SHEET_KEY, frame: frameName}).setOrigin(0, 0);
+            const image = this.scene.make.image({ key: SPRITE_SHEET_KEY, frame: frameName }).setOrigin(0, 0);
             let scaleRatio = 1;
             if (image.width > 48 || image.height > 48) {
                 if (image.width > image.height) {
@@ -382,7 +380,7 @@ export default class ElementFramesDisplay extends BaseFramesDisplay implements R
     }
 
     private onDragHandler(pointer, gameObject, dragX, dragY) {
-        const delta = {x: 0, y: 0};
+        const delta = { x: 0, y: 0 };
         this.mSelectedGameObjects.forEach((element) => {
             if (element === gameObject) {
                 delta.x = dragX - element.x;
@@ -408,7 +406,7 @@ export default class ElementFramesDisplay extends BaseFramesDisplay implements R
         this.mDisplays.forEach((val, key) => {
             const data = this.mAnimationData.layerDict.get(key);
             // const point = { x: val.x, y: val.y };
-            let {x, y} = val;
+            let { x, y } = val;
             x -= val.width * 0.5;
             y -= val.height * 0.5;
             if (!data.offsetLoc || data.offsetLoc.x !== x || data.offsetLoc.y !== y) {
@@ -421,7 +419,7 @@ export default class ElementFramesDisplay extends BaseFramesDisplay implements R
             for (let i = 0; i < mountPoints.length; i++) {
                 const data = mountPoints[i];
                 const mountObject = this.mMountList.get(i);
-                const {x, y} = mountObject;
+                const { x, y } = mountObject;
                 if (x !== data.x || y !== data.y) {
                     data.x = x;
                     data.y = y;
@@ -449,7 +447,7 @@ export default class ElementFramesDisplay extends BaseFramesDisplay implements R
         // this.mCurAnimation = this.mAnimationData.createProtocolObject();
         if (this.scene.textures.exists(SPRITE_SHEET_KEY)) {
             let index = 0;
-            this.play({name: this.mAnimationData.name, flip: false});
+            this.play({ name: this.mAnimationData.name, flip: false });
             this.mAnimationData.layerDict.forEach((val, key) => {
                 const display = this.mDisplays.get(key);
                 if (!display) return;
@@ -464,7 +462,7 @@ export default class ElementFramesDisplay extends BaseFramesDisplay implements R
                     display.visible = true;
                     // if (isSprite) (<Phaser.GameObjects.Sprite>display).play(animationName);
                 } else {
-                    if (isSprite) (<Phaser.GameObjects.Sprite> display).anims.stop();
+                    if (isSprite) (<Phaser.GameObjects.Sprite>display).anims.stop();
                     if (this.mCurFrameIdx >= val.frameName.length) {
                         Logger.getInstance().warn("wrong frame idx: " + this.mCurFrameIdx + "; frameName.length: " + val.frameName.length);
                         display.visible = false;
@@ -509,10 +507,10 @@ export default class ElementFramesDisplay extends BaseFramesDisplay implements R
         if (!mountlayer || !mountlayer.mountPoint) return;
         for (let i = 0; i < mountlayer.mountPoint.length; i++) {
             if (this.mMountList.get(i)) continue;
-            const arm = new DragonbonesEditorDisplay(this.scene, this.mWebHomePath);
+            const arm = new DragonbonesEditorDisplay(this.scene, this.mConfig.osd);
             this.mount(arm, i);
             arm.load();
-            const pos = {x: mountlayer.mountPoint[i].x, y: mountlayer.mountPoint[i].y};
+            const pos = { x: mountlayer.mountPoint[i].x, y: mountlayer.mountPoint[i].y };
             arm.setPosition(pos.x, pos.y);
             arm.play(this.mCurMountAnimation);
 

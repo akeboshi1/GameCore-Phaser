@@ -1,7 +1,7 @@
 import { Capsule, ElementNode, LayerEnum, MossNode, PaletteNode, SceneNode, TerrainNode } from "game-capsule";
-import { op_def, op_client } from "pixelpai_proto";
-import { IFramesModel, ISprite } from "structure";
-import { Direction, IPos, IPosition45Obj, load, Logger, LogicPos, Position45, Url } from "utils";
+import {op_def, op_client, op_editor} from "pixelpai_proto";
+import {Atlas, IFramesModel, ISprite, Pos} from "structure";
+import { Direction, IPos, IPosition45Obj, Logger, LogicPos, Position45 } from "structure";
 import { EditorCanvas, IEditorCanvasConfig } from "../editor.canvas";
 import { EditorFramesDisplay } from "./editor.frames.display";
 import { EditorFactory } from "./factory";
@@ -13,16 +13,19 @@ import { EditorMossManager } from "./manager/moss.manager";
 import { EditorElementManager } from "./manager/element.manager";
 import { EditorCamerasManager } from "./manager/cameras.manager";
 import { EditorSkyboxManager } from "./manager/skybox.manager";
-import { BaseLayer, GroundLayer, IRender, LayerManager, SurfaceLayer } from "baseRender";
-import { ElementStorage, Sprite } from "baseModel";
+import { BaseLayer, GroundLayer, IRender, LayerManager, SurfaceLayer, Url } from "baseRender";
+import { ElementStorage, Sprite } from "baseGame";
 import * as protos from "pixelpai_proto";
 import { PBpacket } from "net-socket-packet";
 import { EditorSceneManger } from "./manager/scene.manager";
 import { EditorWallManager } from "./manager/wall.manager";
 import { EditorDragonbonesDisplay } from "./editor.dragonbones.display";
+import { load } from "utils";
 for (const key in protos) {
     PBpacket.addProtocol(protos[key]);
 }
+
+// api: https://dej4esdop1.feishu.cn/docs/doccnFfHMv18NF2JPy7Rqh5dtod#
 export class SceneEditorCanvas extends EditorCanvas implements IRender {
     public displayObjectPool: DisplayObjectPool;
     private mSelecedElement: SelectedElementManager;
@@ -48,10 +51,15 @@ export class SceneEditorCanvas extends EditorCanvas implements IRender {
     private mElementStorage: ElementStorage;
 
     private mScene: Phaser.Scene;
+    private mUrl: Url;
+    private mGroundWalkableChangeIdxes: number[] = [];
+
     constructor(config: IEditorCanvasConfig) {
         super(config);
-        Url.OSD_PATH = config.osd || "https://osd-alpha.tooqing.com/";
         this.mElements = new Map();
+        this.mConfig = config;
+        this.config.osd = config.osd || "https://osd-alpha.tooqing.com/";
+        this.setSceneConfig(<SceneNode>config.node);
         this.mFactory = new EditorFactory(this);
         this.mSelecedElement = new SelectedElementManager(this);
         this.mStamp = new MouseFollow(this);
@@ -65,22 +73,34 @@ export class SceneEditorCanvas extends EditorCanvas implements IRender {
         this.mWallManager = new EditorWallManager(this);
         this.mSkyboxManager = new EditorSkyboxManager(this);
         this.mSceneManager = new EditorSceneManger(this);
-        this.mElementStorage = new ElementStorage();
+        this.mElementStorage = new ElementStorage({ resPath: config.LOCAL_HOME_PATH, osdPath: config.osd });
         this.mGame.scene.add(SceneEditor.name, SceneEditor, true, this);
+        this.mUrl = new Url();
+        this.mUrl.init(config);
+    }
+
+    get url(): Url {
+        return this.mUrl;
+    }
+
+    get config(): IEditorCanvasConfig {
+        return this.mConfig;
     }
 
     public update(time?: number, delta?: number) {
         this.mElementManager.update();
         this.mMossManager.update();
-        this.mTerrainManager.update();
         this.mWallManager.update();
     }
 
     public create(scene: Phaser.Scene) {
         this.mScene = scene;
-        if (this.mConfig.game_created) {
-            this.mConfig.game_created.call(this);
-        }
+        this.mTerrainManager.create()
+            .then(() => {
+                if (this.config.game_created) {
+                    this.config.game_created.call(this);
+                }
+            });
         // if (!this.mSceneNode) {
         //     return;
         // }
@@ -100,7 +120,7 @@ export class SceneEditorCanvas extends EditorCanvas implements IRender {
     }
 
     public load(url: string) {
-        load(this.mConfig.LOCAL_HOME_PATH + url, "arraybuffer").then((req: any) => {
+        load(this.config.LOCAL_HOME_PATH + url, "arraybuffer").then((req: any) => {
             try {
                 const capsule = new Capsule().deserialize(req.response);
             } catch {
@@ -136,8 +156,9 @@ export class SceneEditorCanvas extends EditorCanvas implements IRender {
         if (this.mBrush !== BrushEnum.Select) {
             this.mSelecedElement.unselectedElements();
         }
-        if (this.mBrush === BrushEnum.Eraser || this.mBrush === BrushEnum.EraserWall) {
-            this.mStamp.showEraserArea();
+        if (this.mBrush === BrushEnum.Eraser || this.mBrush === BrushEnum.EraserWall ||
+            this.mBrush === BrushEnum.BrushWalkable || this.mBrush === BrushEnum.EraserWalkable) {
+            this.mStamp.showBlackBrushArea();
         }
     }
 
@@ -178,6 +199,10 @@ export class SceneEditorCanvas extends EditorCanvas implements IRender {
             return;
         }
         this.mSelecedElement.unselectedElements();
+    }
+
+    public reloadTilemap() {
+        this.mTerrainManager.create();
     }
 
     public updateElements() {
@@ -359,12 +384,16 @@ export class SceneEditorCanvas extends EditorCanvas implements IRender {
         return this.mElementManager.checkCollision(pos, sprite);
     }
 
-    // 将地块数据转化为单帧url，只取idle动画第一层第一帧
-    transformTerrains(sns: string[]): Promise<Array<{sn: string, url: string}>> {
-        const tasks: Array<Promise<{sn: string, url: string}>> = [];
+    // 将地块数据转化为单帧url并合图，只取idle动画第一层第一帧，返回合图url
+    transformTerrains(sns: string[]): Promise<{json: string, url: string}> {
+        const tasks: Array<Promise<{sn: string, gene: string, frame: string}>> = [];
         for (const sn1 of sns) {
             // get terrains
             const framesModel = this.elementStorage.getTerrainPaletteBySN(sn1);
+            if (!framesModel) {
+                Logger.getInstance().warn("game-core warning: terrain palette not exist. data: ", sn1);
+                continue;
+            }
             if (!framesModel.display) {
                 Logger.getInstance().warn("game-core warning: display info not exist. data: ", framesModel);
                 continue;
@@ -394,13 +423,13 @@ export class SceneEditorCanvas extends EditorCanvas implements IRender {
             const frameName = framesModel.getAnimations("idle").layer[0].frameName[0];
             const displayData = framesModel.display;
 
-            const task = new Promise<{sn: string, url: string}>((_resolve, _reject) => {
+            const task = new Promise<{sn: string, gene: string, frame: string}>((_resolve, _reject) => {
                 // check load
                 const loadPromise = new Promise<any>((loadResolve, loadReject) => {
                     if (this.scene.textures.exists(framesModel.gene)) {
                         loadResolve(null);
                     } else {
-                        this.scene.load.atlas(framesModel.gene, Url.getOsdRes(displayData.texturePath), Url.getOsdRes(displayData.dataPath));
+                        this.scene.load.atlas(framesModel.gene, this.config.osd + displayData.texturePath, this.config.osd + displayData.dataPath);
                         const onAdd = (key: string) => {
                             if (key !== framesModel.gene) return;
                             loadResolve(null);
@@ -428,19 +457,21 @@ export class SceneEditorCanvas extends EditorCanvas implements IRender {
                 loadPromise
                     .then(() => {
                         // get frame
-                        const frame = this.scene.textures.getFrame(framesModel.gene, frameName);
+                        // const frame = this.scene.textures.getFrame(framesModel.gene, frameName);
+                        //
+                        // // create canvas
+                        // const tileWidth = 64;
+                        // const canvas = this.mScene.textures.createCanvas("GenerateFrame_" + sn1, tileWidth, frame.height);
+                        //
+                        // // draw frame
+                        // const x = (tileWidth - frame.width) * 0.5;
+                        // canvas.drawFrame(framesModel.gene, frameName, x, 0);
+                        //
+                        // // to url
+                        // const url = canvas.canvas.toDataURL("image/png", 1);
+                        // canvas.destroy();
 
-                        // create canvas
-                        const canvas = this.mScene.textures.createCanvas("GenerateFrame_" + sn1, frame.width, frame.height);
-
-                        // draw frame
-                        canvas.drawFrame(framesModel.gene, frameName);
-
-                        // to url
-                        const url = canvas.canvas.toDataURL("image/png", 1);
-                        canvas.destroy();
-
-                        _resolve({sn: sn1, url});
+                        _resolve({sn: sn1, gene: framesModel.gene, frame: frameName});
                     })
                     .catch((errMsg) => {
                         _reject(errMsg);
@@ -450,7 +481,67 @@ export class SceneEditorCanvas extends EditorCanvas implements IRender {
             tasks.push(task);
         }
 
-        return Promise.all(tasks);
+        return new Promise<{json: string, url: string}>((resolve, reject) => {
+            Promise.all(tasks)
+                .then((frames) => {
+                    if (frames.length === 0) {
+                        reject("no data");
+                        return;
+                    }
+
+                    const atlas = new Atlas();
+                    const rects: Array<{drawX: number, drawY: number, gene: string, frame: string, sn: string,
+                        rect: {x: number, y: number, width: number, height: number} }> = [];
+                    let x = 0;
+                    let y = 0;
+                    const tileWidth = 64;
+                    const tileHeight = 60;
+                    const maxX = Math.floor(1024 / tileWidth);
+                    let imgWidth = 0;
+                    let imgHeight = 0;
+                    for (const f of frames) {
+                        const frame = this.mScene.textures.getFrame(f.gene, f.frame);
+                        if (frame.width > tileWidth || frame.height > tileHeight) {
+                            Logger.getInstance().warn("tile size is larger then settings(64 * 60): ", frame.width, frame.height);
+                        }
+
+                        // 每张tile按照设计尺寸64*60居中对齐
+                        const deltaX = (tileWidth - frame.width) * 0.5;
+                        const deltaY = (tileHeight - frame.height) * 0.5;
+                        const rect = {x: x * tileWidth, y: y * tileHeight, width: tileWidth, height: tileHeight};
+                        rects.push({rect, drawX: rect.x + deltaX, drawY: rect.y + deltaY, gene: f.gene, frame: f.frame, sn: f.sn});
+                        imgWidth = y === 0 ? (x + 1) * tileWidth : maxX * tileWidth;
+                        imgHeight = (y + 1) * tileHeight;
+
+                        x++;
+                        if (x >= maxX) {
+                            x = 0;
+                            y++;
+                        }
+                    }
+
+                    atlas.setSize(imgWidth, imgHeight);
+                    const canvas = this.mScene.textures.createCanvas("GenerateTilesetImg", imgWidth, imgHeight);
+                    for (const rect of rects) {
+                        canvas.drawFrame(rect.gene, rect.frame, rect.drawX, rect.drawY);
+                        atlas.addFrame(rect.sn, rect.rect);
+                    }
+
+                    const url = canvas.canvas.toDataURL("image/png", 1);
+                    canvas.destroy();
+
+                    resolve({ url, json: atlas.toString() });
+                })
+                .catch((reason) => {
+                    reject(reason);
+                });
+        });
+    }
+
+    setGroundWalkableLayerVisible(val: boolean) {
+        if (!this.mScene) return;
+
+        (<SceneEditor>this.mScene).setGroundWalkableLayerVisible(val);
     }
 
     destroy() {
@@ -542,13 +633,25 @@ export class SceneEditorCanvas extends EditorCanvas implements IRender {
                 }
                 break;
             case BrushEnum.Eraser:
-                this.eraser(op_def.NodeType.TerrainNodeType);
+                this.eraserNode(op_def.NodeType.TerrainNodeType);
                 break;
             case BrushEnum.EraserWall:
-                this.eraser(op_def.NodeType.WallNodeType);
+                this.eraserNode(op_def.NodeType.WallNodeType);
                 break;
             case BrushEnum.Move:
                 this.mCameraManager.syncCameraScroll();
+                break;
+            case BrushEnum.BrushWalkable: {
+                this.changeGroundWalkable(true);
+                this.requestSyncGroundWalkableData(true, this.mGroundWalkableChangeIdxes);
+                this.mGroundWalkableChangeIdxes.length = 0;
+            }
+                break;
+            case BrushEnum.EraserWalkable: {
+                this.changeGroundWalkable(false);
+                this.requestSyncGroundWalkableData(false, this.mGroundWalkableChangeIdxes);
+                this.mGroundWalkableChangeIdxes.length = 0;
+            }
                 break;
         }
     }
@@ -568,9 +671,9 @@ export class SceneEditorCanvas extends EditorCanvas implements IRender {
             // }
             switch (nodeType) {
                 case op_def.NodeType.TerrainNodeType:
-                    if (!this.mElementStorage.getTerrainPalette(key)) {
-                        this.mEditorPacket.reqEditorSyncPaletteOrMoss(key, nodeType);
-                    }
+                    // if (!this.mElementStorage.getTerrainPalette(key)) {
+                    //     this.mEditorPacket.reqEditorSyncPaletteOrMoss(key, nodeType);
+                    // }
                     break;
                 case op_def.NodeType.WallNodeType:
                 case op_def.NodeType.ElementNodeType:
@@ -580,6 +683,8 @@ export class SceneEditorCanvas extends EditorCanvas implements IRender {
                     break;
             }
         }
+
+        this.mGroundWalkableChangeIdxes.length = 0;
     }
 
     private onPointerMoveHandler(pointer: Phaser.Input.Pointer) {
@@ -610,13 +715,25 @@ export class SceneEditorCanvas extends EditorCanvas implements IRender {
             case BrushEnum.Eraser:
                 this.mStamp.pointerMove(pointer.worldX, pointer.worldY);
                 if (pointer.isDown) {
-                    this.eraser(op_def.NodeType.TerrainNodeType);
+                    this.eraserNode(op_def.NodeType.TerrainNodeType);
                 }
                 break;
             case BrushEnum.EraserWall:
                 this.mStamp.pointerMove(pointer.worldX, pointer.worldY);
                 if (pointer.isDown) {
-                    this.eraser(op_def.NodeType.WallNodeType);
+                    this.eraserNode(op_def.NodeType.WallNodeType);
+                }
+                break;
+            case BrushEnum.BrushWalkable:
+                this.mStamp.pointerMove(pointer.worldX, pointer.worldY);
+                if (pointer.isDown) {
+                    this.changeGroundWalkable(true);
+                }
+                break;
+            case BrushEnum.EraserWalkable:
+                this.mStamp.pointerMove(pointer.worldX, pointer.worldY);
+                if (pointer.isDown) {
+                    this.changeGroundWalkable(false);
                 }
                 break;
         }
@@ -645,6 +762,8 @@ export class SceneEditorCanvas extends EditorCanvas implements IRender {
             case BrushEnum.BRUSH:
             case BrushEnum.Fill:
             case BrushEnum.EraserWall:
+            case BrushEnum.BrushWalkable:
+            case BrushEnum.EraserWalkable:
                 this.mStamp.wheel(pointer);
                 break;
         }
@@ -660,21 +779,41 @@ export class SceneEditorCanvas extends EditorCanvas implements IRender {
         (<SceneEditor>this.mScene).layerManager.addToLayer(element.layer.toString(), display);
     }
 
-    private addTerrain(terrain: TerrainNode) {
-        const display = this.factory.createFramesDisplay(terrain);
-        const loc = terrain.location;
-        const pos = Position45.transformTo90(loc, this.mRoomSize);
-        display.setPosition(pos.x, pos.y);
-        (<SceneEditor>this.mScene).layerManager.addToLayer(terrain.layer.toString(), display);
-    }
-
-    private eraser(type: op_def.NodeType) {
-        const positions = this.mStamp.getEaserPosition();
+    private eraserNode(type: op_def.NodeType) {
+        const positions = this.mStamp.getBlackBrushPositions();
         if (type === op_def.NodeType.TerrainNodeType) {
             this.mTerrainManager.removeTerrains(positions);
         } else {
             this.mWallManager.removeWalls(positions);
         }
+    }
+
+    private changeGroundWalkable(add: boolean) {
+        const positions = this.mStamp.getBlackBrushPositions();
+        let data = [].concat(this.sceneNode.groundWalkableCollection.data);
+        if (data.length === 0) {
+            data = new Array(this.getCurrentRoomSize().cols * this.getCurrentRoomSize().rows).fill(false);
+        }
+        for (let i = 0; i < positions.length; i++) {
+            const pos = positions[i];
+            const posIdx = this.getCurrentRoomSize().cols * pos.y + pos.x;
+            if (this.mGroundWalkableChangeIdxes.indexOf(posIdx) < 0) this.mGroundWalkableChangeIdxes.push(posIdx);
+        }
+
+        for (let i = 0; i < this.mGroundWalkableChangeIdxes.length; i++) {
+            const posIdx = this.mGroundWalkableChangeIdxes[i];
+            data[posIdx] = add;
+        }
+
+        (<SceneEditor>this.mScene).updateGroundWalkableShow(data);
+    }
+
+    private requestSyncGroundWalkableData(walkable: boolean, idxes: number[]) {
+        const pkt = new PBpacket(op_editor.OPCODE._OP_CLIENT_REQ_EDITOR_SYNC_WALKABLE);
+        const content: op_editor.OP_CLIENT_REQ_EDITOR_SYNC_WALKABLE = pkt.content;
+        content.walkable = walkable;
+        content.indexes = idxes;
+        this.connection.send(pkt);
     }
 
     private initSkybox() {
@@ -730,6 +869,10 @@ export class SceneEditorCanvas extends EditorCanvas implements IRender {
         return this.mMossManager;
     }
 
+    get sceneNode() {
+        return this.mSceneNode;
+    }
+
     get emitter() {
         return this.mEmitter;
     }
@@ -747,11 +890,13 @@ export class SceneEditor extends Phaser.Scene {
     public static LAYER_WALL = LayerEnum.Wall;
     public static LAYER_HANGING = LayerEnum.Hanging;
     public static LAYER_ATMOSPHERE = "atmosphere";
+    public static LAYER_GROUND_WALKABLE = "groundWalkable";
     public static SCENE_UI = "sceneUILayer";
     public layerManager: LayerManager;
 
     private gridLayer: GridLayer;
     private sceneEditor: SceneEditorCanvas;
+    private groundWalkableLayer: GroundWalkableLayer;
     constructor() {
         super({ key: "SceneEditor" });
     }
@@ -775,7 +920,11 @@ export class SceneEditor extends Phaser.Scene {
         this.layerManager.addLayer(this, BaseLayer, SceneEditor.LAYER_MIDDLE, 4);
         this.layerManager.addLayer(this, GroundLayer, SceneEditor.LAYER_FLOOR.toString(), 5);
         this.layerManager.addLayer(this, SurfaceLayer, SceneEditor.LAYER_SURFACE.toString(), 6);
-        this.layerManager.addLayer(this, BaseLayer, SceneEditor.SCENE_UI, 7);
+        this.layerManager.addLayer(this, BaseLayer, SceneEditor.LAYER_GROUND_WALKABLE, 7);
+        this.layerManager.addLayer(this, BaseLayer, SceneEditor.SCENE_UI, 8);
+        this.groundWalkableLayer = new GroundWalkableLayer(this, this.sceneEditor.sceneNode.groundWalkableCollection.data, this.sceneEditor.getCurrentRoomSize());
+        this.layerManager.addToLayer(SceneEditor.LAYER_GROUND_WALKABLE, this.groundWalkableLayer);
+        this.groundWalkableLayer.setVisible(false);
 
         this.sceneEditor.create(this);
     }
@@ -791,6 +940,18 @@ export class SceneEditor extends Phaser.Scene {
 
     hideGrid() {
         this.gridLayer.clear();
+    }
+
+    setGroundWalkableLayerVisible(val: boolean) {
+        if (!this.groundWalkableLayer) return;
+
+        this.groundWalkableLayer.setVisible(val);
+    }
+
+    updateGroundWalkableShow(data: boolean[]) {
+        if (!this.groundWalkableLayer) return;
+
+        this.groundWalkableLayer.updateShow(data);
     }
 }
 
@@ -818,13 +979,53 @@ class GridLayer extends Phaser.GameObjects.Graphics {
     }
 }
 
+class GroundWalkableLayer extends Phaser.GameObjects.Graphics {
+
+    private readonly STYLE_COLOR_WALKABLE = 0x00ff00;
+    private readonly STYLE_COLOR_NOT_WALKABLE = 0xff8000;
+    private readonly STYLE_ALPHA = 0.5;
+
+    constructor(scene: Phaser.Scene, data: boolean[], private roomSize: IPosition45Obj) {
+        super(scene);
+
+        this.updateShow(data);
+    }
+
+    public updateShow(data: boolean[]) {
+        this.clear();
+        this.beginPath();
+        let x = 0;
+        let y = 0;
+        let p1: Pos;
+        let p2: Pos;
+        let p3: Pos;
+        let p4: Pos;
+        for (let i = 0; i < data.length; i++) {
+            const walkable = data[i];
+            x = i % this.roomSize.cols;
+            y = Math.floor(i / this.roomSize.cols);
+            p1 = Position45.transformTo90(new Pos(x, y), this.roomSize);
+            p2 = Position45.transformTo90(new Pos(x + 1, y), this.roomSize);
+            p3 = Position45.transformTo90(new Pos(x + 1, y + 1), this.roomSize);
+            p4 = Position45.transformTo90(new Pos(x, y + 1), this.roomSize);
+            this.lineStyle(2, this.STYLE_COLOR_WALKABLE);
+            this.beginPath();
+            this.fillStyle(walkable ? this.STYLE_COLOR_WALKABLE : this.STYLE_COLOR_NOT_WALKABLE, this.STYLE_ALPHA);
+            this.strokePoints([p1.toPoint(), p2.toPoint(), p3.toPoint(), p4.toPoint()], true, true);
+            this.fillPath();
+        }
+    }
+}
+
 enum BrushEnum {
     Move = "move",
     Select = "select",
     Fill = "FILL",
     Eraser = "eraser",
     BRUSH = "brush",
-    EraserWall = "eraserWall"
+    EraserWall = "eraserWall",
+    BrushWalkable = "brushWalkable",
+    EraserWalkable = "eraserWalkable"
 }
 
 class MouseFollow {
@@ -869,7 +1070,6 @@ class MouseFollow {
         this.mKey = content.key;
         this.isTerrain = this.mNodeType === op_def.NodeType.TerrainNodeType || this.mNodeType === op_def.NodeType.WallNodeType;
         this.mSprite = new Sprite(content.sprite, content.nodeType);
-        this.mSprite.init(content.sprite);
         this.mDisplay = new MouseDisplayContainer(this.sceneEditor);
         const size = this.mNodeType === op_def.NodeType.TerrainNodeType ? this.mSize : 1;
         this.mDisplay.setDisplay(this.mSprite, size);
@@ -895,12 +1095,13 @@ class MouseFollow {
     //     (<SceneEditor>scene).layerManager.addToLayer("sceneUILayer", this.mDisplay);
     // }
 
-    showEraserArea() {
+    // 擦除、地板可行走笔刷 样式
+    showBlackBrushArea() {
         if (this.mDisplay) {
             this.mDisplay.destroy();
         }
         const scene = this.sceneEditor.scene;
-        this.mDisplay = new EraserArea(this.sceneEditor);
+        this.mDisplay = new BlackBrushArea(this.sceneEditor);
         this.mNodeType = op_def.NodeType.TerrainNodeType;
         this.mDisplay.setDisplay(null, this.mSize);
         this.isTerrain = true;
@@ -919,7 +1120,7 @@ class MouseFollow {
 
     createTerrainsOrMossesData() {
         const locs = this.mDisplay.displays.map((display) => this.getPosition(display.x, display.y));
-        return { locs, key: this.key };
+        return { locs, key: this.key, sn: this.sn };
     }
 
     createWallData() {
@@ -960,7 +1161,7 @@ class MouseFollow {
         return result;
     }
 
-    getEaserPosition(): IPos[] {
+    getBlackBrushPositions(): IPos[] {
         const result: LogicPos[] = [];
         if (!this.mDisplay) {
             return;
@@ -1054,6 +1255,10 @@ class MouseFollow {
     get key() {
         return this.mKey;
     }
+
+    get sn() {
+        return this.mSprite.sn;
+    }
 }
 
 class MouseDisplayContainer extends Phaser.GameObjects.Container {
@@ -1136,9 +1341,9 @@ class MouseDisplayContainer extends Phaser.GameObjects.Container {
         for (let i = 0; i < size; i++) {
             for (let j = 0; j < size; j++) {
                 if (sprite.avatar) {
-                    frameDisplay = new EditorDragonbonesDisplay(this.sceneEditor.scene, sprite);
+                    frameDisplay = new EditorDragonbonesDisplay(this.sceneEditor.scene, this.sceneEditor.config, sprite);
                 } else {
-                    frameDisplay = new EditorFramesDisplay(this.sceneEditor, sprite);
+                    frameDisplay = new EditorFramesDisplay(this.sceneEditor, this.sceneEditor.config, sprite);
                 }
                 frameDisplay.setAlpha(0.8);
                 // frameDisplay.once("initialized", this.onInitializedHandler, this);
@@ -1184,7 +1389,7 @@ class MouseDisplayContainer extends Phaser.GameObjects.Container {
     }
 }
 
-class EraserArea extends MouseDisplayContainer {
+class BlackBrushArea extends MouseDisplayContainer {
     private area: Phaser.GameObjects.Graphics;
     constructor(sceneEditor: SceneEditorCanvas) {
         super(sceneEditor);

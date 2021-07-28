@@ -1,4 +1,3 @@
-import { Logger } from "./log";
 export interface IHttpLoaderConfig {
   path: string;
   responseType: XMLHttpRequestResponseType;
@@ -8,7 +7,8 @@ export function load(path: string, responseType: XMLHttpRequestResponseType): Pr
   return new Promise((resolve, reject) => {
     const http = new XMLHttpRequest();
     http.addEventListener("error", () => {
-      Logger.getInstance().log("http error =============>>>>");
+      // tslint:disable-next-line:no-console
+      console.log("http error =============>>>>");
     });
     http.timeout = 20000; // 超时时间，单位是毫秒
     http.onload = (response: ProgressEvent) => {
