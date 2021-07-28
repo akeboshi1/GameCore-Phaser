@@ -1,3 +1,3 @@
-import {version} from "../../version";
+import version from "../../version";
 
-export var coreVersion = version;
+export const coreVersion = version;
