@@ -1,22 +1,25 @@
 import { DynamicNinepatch } from "../../ui/components/dynamic.ninepatch";
 import { BBCodeText, NineSlicePatch } from "apowophaserui";
-import { Url } from "utils";
 import { Font } from "structure";
 import { getWarpMode } from "../../utils/ui";
+import { Render } from "../../render";
+import { Url } from "baseRender";
 export class Bubble extends Phaser.GameObjects.Container {
-    private mChatContent: BBCodeText;
-    private mBubbleBg: DynamicNinepatch;
-    private mMinWidth: number = 0;
-    private mMinHeight: number = 0;
-    private mToY: number;
-    private mTweenCompleteCallback: Function;
-    private mTweenCallContext: any;
-    private mRemoveDelay: any;
-    private mScale: number;
+    protected mChatContent: BBCodeText;
+    protected mBubbleBg: DynamicNinepatch;
+    protected mMinWidth: number = 0;
+    protected mMinHeight: number = 0;
+    protected mToY: number;
+    protected mTweenCompleteCallback: Function;
+    protected mTweenCallContext: any;
+    protected mRemoveDelay: any;
+    protected mScale: number;
+    protected url: Url;
 
-    constructor(scene: Phaser.Scene, scale: number, private url: Url) {
+    constructor(scene: Phaser.Scene, scale: number, protected render: Render) {
         super(scene);
         this.mScale = scale;
+        this.url = this.render.url;
         // this.x = 40 * scale;
     }
 

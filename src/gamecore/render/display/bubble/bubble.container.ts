@@ -1,19 +1,21 @@
 import { Bubble } from "./bubble";
-import { Url } from "utils";
 import { IDisplayObject } from "../display.object";
-import { DynamicImage } from "baseRender";
+import { DynamicImage, Url } from "baseRender";
+import { Render } from "../../render";
 
 export class BubbleContainer extends Phaser.GameObjects.Container {
     private mBubbles: Bubble[] = [];
     private mArrow: DynamicImage;
     private mScale: number;
+    private url: Url;
 
-    constructor(scene: Phaser.Scene, scale: number, private url: Url) {
+    constructor(scene: Phaser.Scene, scale: number, private render: Render) {
         super(scene);
         this.mScale = scale;
         this.mArrow = new DynamicImage(this.scene, 0, 0);
+        this.url = this.render.url;
         this.mArrow.scale = scale;
-        this.mArrow.load(url.getRes("ui/chat/bubble_arrow.png"));
+        this.mArrow.load(this.url.getRes("ui/chat/bubble_arrow.png"));
         this.add(this.mArrow);
     }
 
@@ -65,7 +67,8 @@ export class BubbleContainer extends Phaser.GameObjects.Container {
 
     private createBubble(bubbleSetting: any): Bubble {// op_client.IChat_Setting
         if (!bubbleSetting) bubbleSetting = { };
-        const bubble = new Bubble(this.scene, this.mScale, this.url);
+        // const bubble = new Bubble(this.scene, this.mScale, this.url);
+        const bubble = this.render.add.bubble(this.scene, this.mScale)
         this.mBubbles.push(bubble);
         const duration = bubbleSetting.duration ? bubbleSetting.duration : 5000;
         bubble.durationRemove(duration, this.onRemoveBubble, this);

@@ -49,7 +49,7 @@ export class ElementTopDisplay extends TopDisplay {
             return;
         }
         if (!this.mBubble) {
-            this.mBubble = new BubbleContainer(scene, this.mSceneScale, this.render.url);
+            this.mBubble = new BubbleContainer(scene, this.mSceneScale, this.render);
         }
         this.mBubble.addBubble(text, setting);
         this.mBubble.follow(this.mOwner);

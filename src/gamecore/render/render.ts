@@ -1,6 +1,6 @@
 import { Game } from "tooqingphaser";
 import { Export, RPCPeer, webworker_rpc } from "webworker-rpc";
-import { UiUtils, Url } from "utils";
+import { UiUtils } from "utils";
 import { PBpacket } from "net-socket-packet";
 import { op_client, op_def } from "pixelpai_proto";
 import { Account } from "./account";
@@ -24,7 +24,7 @@ import { DisplayManager } from "./managers/display.manager";
 import { InputManager } from "./input/input.manager";
 import { MainUIScene } from "./scenes/main.ui.scene";
 import { AvatarHelper } from "./managers/avatar.helper";
-import { BaseSceneManager, BasicScene, IRender, PlayCamera } from "baseRender";
+import { BaseSceneManager, BasicScene, IRender, PlayCamera, Url } from "baseRender";
 import { AstarDebugger } from "./display/debugs/astar";
 import { EditorModeDebugger } from "./display/debugs/editor.mode.debugger";
 import { GridsDebugger } from "./display/debugs/grids";
@@ -34,6 +34,7 @@ import { GuideManager } from "./guide";
 import { MouseManager } from "./input/mouse.manager";
 import { SoundManager } from "./managers";
 import { i18n, initLocales, translateProto } from "./utils";
+import { RenderFactor } from "./factor";
 
 enum MoveStyle {
     DIRECTION_MOVE_STYLE = 1,
@@ -84,23 +85,24 @@ export class Render extends RPCPeer implements GameMain, IRender {
      * 场景缩放系数（layermanager，缩放场景中容器大小）
      */
     protected mScaleRatio: number;
-    private mCallBack: Function;
-    private _moveStyle: number = 0;
-    private _curTime: number;
-    private gameConfig: Phaser.Types.Core.GameConfig;
+    protected mAdd: RenderFactor;
+    protected mCallBack: Function;
+    protected _moveStyle: number = 0;
+    protected _curTime: number;  
+    protected gameConfig: Phaser.Types.Core.GameConfig;
     /**
      * 判断加载几x资源
      */
-    private mUIRatio: number;
+    protected mUIRatio: number;
     /**
      * 面板缩放系数
      */
-    private mUIScale: number;
+    protected mUIScale: number;
     /**
      * 房间尺寸
      */
-    private mRoomSize: IPosition45Obj;
-    private mRoomMiniSize: IPosition45Obj;
+    protected mRoomSize: IPosition45Obj;
+    protected mRoomMiniSize: IPosition45Obj;
 
     private isPause: boolean = false;
     private mConnectFailFunc: Function;
@@ -248,6 +250,10 @@ export class Render extends RPCPeer implements GameMain, IRender {
         return this.resUrl;
     }
 
+    get add() {
+        return this.mAdd;
+    }
+
     getSize(): Size | undefined {
         if (!this.mGame) return;
         return this.mGame.scale.gameSize;
@@ -270,6 +276,7 @@ export class Render extends RPCPeer implements GameMain, IRender {
         if (!this.mSoundManager) this.mSoundManager = new SoundManager(this);
         if (!this.mDisplayManager) this.mDisplayManager = new DisplayManager(this);
         if (!this.mAvatarHelper) this.mAvatarHelper = new AvatarHelper(this);
+        if (!this.mAdd) this.mAdd = new RenderFactor(this);
     }
 
     // 切游戏的时候销毁各个manmager
