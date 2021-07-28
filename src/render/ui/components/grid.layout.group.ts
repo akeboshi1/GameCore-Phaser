@@ -10,8 +10,12 @@ export class GridLayoutGroup extends Phaser.GameObjects.Container {
     private _constraint: ConstraintType;
     private _constraintCount: number;
     private layoutElements: any[] = [];
+    private fixedWidth: number;
+    private fixedHeight: number;
     constructor(scene: Phaser.Scene, width: number, height: number, config: GridLayoutGroupConfig) {
         super(scene);
+        this.fixedWidth = width;
+        this.fixedHeight = height;
         this.setSize(width, height);
         this._padding = config.padding || new Phaser.Math.Vector4(0, 0, 0, 0);
         this._cellSize = config.cellSize || new Phaser.Math.Vector2(100, 100);
@@ -169,8 +173,7 @@ export class GridLayoutGroup extends Phaser.GameObjects.Container {
         } else {
             this.width = maxWidth;
         }
-        this.setAllChildPositionOffset(0);
-        this.setAllChildPositionOffset(1);
+
     }
 
     private setChildAlongAxis(child: any, axis: number, pos: number, size: number) {
@@ -187,25 +190,12 @@ export class GridLayoutGroup extends Phaser.GameObjects.Container {
         }
     }
 
-    private setAllChildPositionOffset(axis: number) {
-
-        for (const child of this.layoutElements) {
-            if (axis === 0) {
-                const offset = this.width * 0.5;
-                child.x -= offset;
-            } else {
-                const offset = this.height * 0.5;
-                child.y -= offset;
-            }
-        }
-    }
-
     private getStartOffset(axis: number, requiredSpaceWithoutPadding: number) {
         const requiredSpace = requiredSpaceWithoutPadding + (axis === 0 ? this.paddingHorizontal() : this.paddingVertical());
-        const availableSpace = (axis === 0 ? this.width : this.height);
+        const availableSpace = (axis === 0 ? this.fixedWidth : this.fixedHeight);
         const surplusSpace = availableSpace - requiredSpace;
         const alignmentOnAxis = this.getAlignmentOnAxis(axis);
-        return (axis === 0 ? this._padding.x : this._padding.z) + surplusSpace * alignmentOnAxis;
+        return (axis === 0 ? this._padding.x : this._padding.z) + surplusSpace * alignmentOnAxis - availableSpace * (axis === 0 ? this.originX : this.originY);
     }
 
     private getAlignmentOnAxis(axis: number): number {
