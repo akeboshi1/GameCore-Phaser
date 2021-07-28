@@ -15,3 +15,4 @@ export * from "./scenes";
 export * from "./ui";
 export * from "./render";
 export * from "./utils";
+export * from "./factor";

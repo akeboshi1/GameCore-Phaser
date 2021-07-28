@@ -1,4 +1,3 @@
-export * from "./resUtil";
 export { Tool } from "./tool";
 export { load, loadArr } from "./http";
 export { Algorithm } from "./algorithm";
