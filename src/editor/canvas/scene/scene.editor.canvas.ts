@@ -790,7 +790,7 @@ export class SceneEditorCanvas extends EditorCanvas implements IRender {
 
     private changeGroundWalkable(add: boolean) {
         const positions = this.mStamp.getBlackBrushPositions();
-        let data = [].concat(this.elementStorage.getGroundWalkableCollection().data);
+        let data = [].concat(this.sceneNode.groundWalkableCollection.data);
         if (data.length === 0) {
             data = new Array(this.getCurrentRoomSize().cols * this.getCurrentRoomSize().rows).fill(false);
         }
@@ -922,7 +922,7 @@ export class SceneEditor extends Phaser.Scene {
         this.layerManager.addLayer(this, SurfaceLayer, SceneEditor.LAYER_SURFACE.toString(), 6);
         this.layerManager.addLayer(this, BaseLayer, SceneEditor.LAYER_GROUND_WALKABLE, 7);
         this.layerManager.addLayer(this, BaseLayer, SceneEditor.SCENE_UI, 8);
-        this.groundWalkableLayer = new GroundWalkableLayer(this, this.sceneEditor.getCurrentRoomSize());
+        this.groundWalkableLayer = new GroundWalkableLayer(this, this.sceneEditor.sceneNode.groundWalkableCollection.data, this.sceneEditor.getCurrentRoomSize());
         this.layerManager.addToLayer(SceneEditor.LAYER_GROUND_WALKABLE, this.groundWalkableLayer);
 
         this.sceneEditor.create(this);
@@ -984,8 +984,10 @@ class GroundWalkableLayer extends Phaser.GameObjects.Graphics {
     private readonly STYLE_COLOR_NOT_WALKABLE = 0xff8000;
     private readonly STYLE_ALPHA = 0.5;
 
-    constructor(scene: Phaser.Scene, private roomSize: IPosition45Obj) {
+    constructor(scene: Phaser.Scene, data: boolean[], private roomSize: IPosition45Obj) {
         super(scene);
+
+        this.updateShow(data);
     }
 
     public updateShow(data: boolean[]) {
