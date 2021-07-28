@@ -1,5 +1,5 @@
+import { Url } from "baseRender";
 import { Font, IPos } from "structure";
-import { Url } from "utils";
 import { MainUIScene } from "../scenes";
 
 export interface IGuideRes {

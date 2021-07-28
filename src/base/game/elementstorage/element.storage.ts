@@ -13,6 +13,7 @@ import {
     Capsule,
     EventNode,
     GroundWalkableCollectionNode,
+    AttributeNode,
 } from "game-capsule";
 import { op_def } from "pixelpai_proto";
 import { BlockIndex } from "utils";
@@ -51,6 +52,7 @@ export interface IDisplayRef {
     layer?: number;
     displayModel?: FramesModel | DragonbonesModel;
     mountSprites?: number[];
+    titleMask?: number;
 }
 
 export class ElementStorage implements IElementStorage {
@@ -246,7 +248,8 @@ export class ElementStorage implements IElementStorage {
                 if (ele.mountSprites && ele.mountSprites.ids.length > 0) {
                     mountSprites = ele.mountSprites.ids;
                 }
-                const eleRef: IDisplayRef = {
+                const attrs = <AttributeNode[]>ele.children.filter((child) => child.type === op_def.NodeType.AttributeType);
+                const eleRef: IDisplayRef = Object.assign({
                     id: obj.id,
                     pos,
                     blockIndex: new BlockIndex().getBlockIndex(pos.x, pos.y, sceneNode.size),
@@ -255,7 +258,7 @@ export class ElementStorage implements IElementStorage {
                     displayModel,
                     layer: ele.layer,
                     mountSprites
-                };
+                }, this.getAttr(attrs));
                 this.addDisplayRef(eleRef, op_def.NodeType.ElementNodeType);
             }
         }
@@ -394,5 +397,16 @@ export class ElementStorage implements IElementStorage {
 
     private clearDisplayRef() {
         this.mDisplayRefMap.forEach((map) => map.clear());
+    }
+
+    private getAttr(attrs: AttributeNode[]) {
+        const result = { };
+        // TODO attrs在Sprite中解析
+        for (const attr of attrs) {
+            if (attr.key === "TitleMask") {
+                result["titleMask"] = attr.intVal;
+            }
+        }
+        return result;
     }
 }

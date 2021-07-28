@@ -138,10 +138,10 @@ export class FramesDisplay extends BaseFramesDisplay implements IDisplayObject {
             name = this.mName;
         }
         this.mName = name;
+        if (!this.checkShowNickname()) return;
         if (!this.mTopDisplay) {
             this.mTopDisplay = new ElementTopDisplay(this.scene, this, this.render);
         }
-        if (!this.checkShowNickname()) return;
         this.mTopDisplay.showNickname(name);
 
         // debug

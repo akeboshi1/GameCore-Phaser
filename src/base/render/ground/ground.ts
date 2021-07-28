@@ -1,9 +1,9 @@
 import {ListenerManager, PhaserListenerType} from "../listener.manager/listener.manager";
 import {ITilesetProperty} from "../../../structure/tilemap";
 import {IGround, IPos, Logger} from "structure";
-import {Url} from "utils";
 import Tile = Phaser.Tilemaps.Tile;
 import Tileset = Phaser.Tilemaps.Tileset;
+import { Url } from "../utils";
 
 export class Ground extends Phaser.GameObjects.Container {
     public id: string;

@@ -311,14 +311,15 @@ export class ElementManager extends PacketHandler implements IElementManager {
 
     public dealDisplayRef() {
         this.mCacheDisplayRef.forEach((ref) => {
-            const { id, pos, name, layer, direction, mountSprites } = ref;
+            const { id, pos, name, layer, direction, mountSprites, titleMask } = ref;
             this.addSpritesToCache([{
                 id,
                 point3f: pos,
                 nickname: name,
                 direction,
                 layer,
-                mountSprites
+                mountSprites,
+                titleMask
             }]);
         });
         this.mCacheDisplayRef.clear();
