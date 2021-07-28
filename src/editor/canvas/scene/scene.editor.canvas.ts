@@ -1,6 +1,6 @@
 import { Capsule, ElementNode, LayerEnum, MossNode, PaletteNode, SceneNode, TerrainNode } from "game-capsule";
-import { op_def, op_client } from "pixelpai_proto";
-import {Atlas, IFramesModel, ISprite} from "structure";
+import {op_def, op_client, op_editor} from "pixelpai_proto";
+import {Atlas, IFramesModel, ISprite, Pos} from "structure";
 import { Direction, IPos, IPosition45Obj, Logger, LogicPos, Position45 } from "structure";
 import { EditorCanvas, IEditorCanvasConfig } from "../editor.canvas";
 import { EditorFramesDisplay } from "./editor.frames.display";
@@ -52,6 +52,8 @@ export class SceneEditorCanvas extends EditorCanvas implements IRender {
 
     private mScene: Phaser.Scene;
     private mUrl: Url;
+    private mGroundWalkableChangeIdxes: number[] = [];
+
     constructor(config: IEditorCanvasConfig) {
         super(config);
         this.mElements = new Map();
@@ -154,8 +156,9 @@ export class SceneEditorCanvas extends EditorCanvas implements IRender {
         if (this.mBrush !== BrushEnum.Select) {
             this.mSelecedElement.unselectedElements();
         }
-        if (this.mBrush === BrushEnum.Eraser || this.mBrush === BrushEnum.EraserWall) {
-            this.mStamp.showEraserArea();
+        if (this.mBrush === BrushEnum.Eraser || this.mBrush === BrushEnum.EraserWall ||
+            this.mBrush === BrushEnum.BrushWalkable || this.mBrush === BrushEnum.EraserWalkable) {
+            this.mStamp.showBlackBrushArea();
         }
     }
 
@@ -507,7 +510,7 @@ export class SceneEditorCanvas extends EditorCanvas implements IRender {
                         const deltaY = (tileHeight - frame.height) * 0.5;
                         const rect = {x: x * tileWidth, y: y * tileHeight, width: tileWidth, height: tileHeight};
                         rects.push({rect, drawX: rect.x + deltaX, drawY: rect.y + deltaY, gene: f.gene, frame: f.frame, sn: f.sn});
-                        imgWidth = (x + 1) * tileWidth;
+                        imgWidth = y === 0 ? (x + 1) * tileWidth : maxX * tileWidth;
                         imgHeight = (y + 1) * tileHeight;
 
                         x++;
@@ -533,6 +536,12 @@ export class SceneEditorCanvas extends EditorCanvas implements IRender {
                     reject(reason);
                 });
         });
+    }
+
+    setGroundWalkableLayerVisible(val: boolean) {
+        if (!this.mScene) return;
+
+        (<SceneEditor>this.mScene).setGroundWalkableLayerVisible(val);
     }
 
     destroy() {
@@ -624,13 +633,25 @@ export class SceneEditorCanvas extends EditorCanvas implements IRender {
                 }
                 break;
             case BrushEnum.Eraser:
-                this.eraser(op_def.NodeType.TerrainNodeType);
+                this.eraserNode(op_def.NodeType.TerrainNodeType);
                 break;
             case BrushEnum.EraserWall:
-                this.eraser(op_def.NodeType.WallNodeType);
+                this.eraserNode(op_def.NodeType.WallNodeType);
                 break;
             case BrushEnum.Move:
                 this.mCameraManager.syncCameraScroll();
+                break;
+            case BrushEnum.BrushWalkable: {
+                this.changeGroundWalkable(true);
+                this.requestSyncGroundWalkableData(true, this.mGroundWalkableChangeIdxes);
+                this.mGroundWalkableChangeIdxes.length = 0;
+            }
+                break;
+            case BrushEnum.EraserWalkable: {
+                this.changeGroundWalkable(false);
+                this.requestSyncGroundWalkableData(false, this.mGroundWalkableChangeIdxes);
+                this.mGroundWalkableChangeIdxes.length = 0;
+            }
                 break;
         }
     }
@@ -662,6 +683,8 @@ export class SceneEditorCanvas extends EditorCanvas implements IRender {
                     break;
             }
         }
+
+        this.mGroundWalkableChangeIdxes.length = 0;
     }
 
     private onPointerMoveHandler(pointer: Phaser.Input.Pointer) {
@@ -692,13 +715,25 @@ export class SceneEditorCanvas extends EditorCanvas implements IRender {
             case BrushEnum.Eraser:
                 this.mStamp.pointerMove(pointer.worldX, pointer.worldY);
                 if (pointer.isDown) {
-                    this.eraser(op_def.NodeType.TerrainNodeType);
+                    this.eraserNode(op_def.NodeType.TerrainNodeType);
                 }
                 break;
             case BrushEnum.EraserWall:
                 this.mStamp.pointerMove(pointer.worldX, pointer.worldY);
                 if (pointer.isDown) {
-                    this.eraser(op_def.NodeType.WallNodeType);
+                    this.eraserNode(op_def.NodeType.WallNodeType);
+                }
+                break;
+            case BrushEnum.BrushWalkable:
+                this.mStamp.pointerMove(pointer.worldX, pointer.worldY);
+                if (pointer.isDown) {
+                    this.changeGroundWalkable(true);
+                }
+                break;
+            case BrushEnum.EraserWalkable:
+                this.mStamp.pointerMove(pointer.worldX, pointer.worldY);
+                if (pointer.isDown) {
+                    this.changeGroundWalkable(false);
                 }
                 break;
         }
@@ -727,6 +762,8 @@ export class SceneEditorCanvas extends EditorCanvas implements IRender {
             case BrushEnum.BRUSH:
             case BrushEnum.Fill:
             case BrushEnum.EraserWall:
+            case BrushEnum.BrushWalkable:
+            case BrushEnum.EraserWalkable:
                 this.mStamp.wheel(pointer);
                 break;
         }
@@ -742,13 +779,41 @@ export class SceneEditorCanvas extends EditorCanvas implements IRender {
         (<SceneEditor>this.mScene).layerManager.addToLayer(element.layer.toString(), display);
     }
 
-    private eraser(type: op_def.NodeType) {
-        const positions = this.mStamp.getEaserPosition();
+    private eraserNode(type: op_def.NodeType) {
+        const positions = this.mStamp.getBlackBrushPositions();
         if (type === op_def.NodeType.TerrainNodeType) {
             this.mTerrainManager.removeTerrains(positions);
         } else {
             this.mWallManager.removeWalls(positions);
         }
+    }
+
+    private changeGroundWalkable(add: boolean) {
+        const positions = this.mStamp.getBlackBrushPositions();
+        let data = [].concat(this.elementStorage.getGroundWalkableCollection().data);
+        if (data.length === 0) {
+            data = new Array(this.getCurrentRoomSize().cols * this.getCurrentRoomSize().rows).fill(false);
+        }
+        for (let i = 0; i < positions.length; i++) {
+            const pos = positions[i];
+            const posIdx = this.getCurrentRoomSize().cols * pos.y + pos.x;
+            if (this.mGroundWalkableChangeIdxes.indexOf(posIdx) < 0) this.mGroundWalkableChangeIdxes.push(posIdx);
+        }
+
+        for (let i = 0; i < this.mGroundWalkableChangeIdxes.length; i++) {
+            const posIdx = this.mGroundWalkableChangeIdxes[i];
+            data[posIdx] = add;
+        }
+
+        (<SceneEditor>this.mScene).updateGroundWalkableShow(data);
+    }
+
+    private requestSyncGroundWalkableData(walkable: boolean, idxes: number[]) {
+        const pkt = new PBpacket(op_editor.OPCODE._OP_CLIENT_REQ_EDITOR_SYNC_WALKABLE);
+        const content: op_editor.OP_CLIENT_REQ_EDITOR_SYNC_WALKABLE = pkt.content;
+        content.walkable = walkable;
+        content.indexes = idxes;
+        this.connection.send(pkt);
     }
 
     private initSkybox() {
@@ -825,11 +890,13 @@ export class SceneEditor extends Phaser.Scene {
     public static LAYER_WALL = LayerEnum.Wall;
     public static LAYER_HANGING = LayerEnum.Hanging;
     public static LAYER_ATMOSPHERE = "atmosphere";
+    public static LAYER_GROUND_WALKABLE = "groundWalkable";
     public static SCENE_UI = "sceneUILayer";
     public layerManager: LayerManager;
 
     private gridLayer: GridLayer;
     private sceneEditor: SceneEditorCanvas;
+    private groundWalkableLayer: GroundWalkableLayer;
     constructor() {
         super({ key: "SceneEditor" });
     }
@@ -853,7 +920,10 @@ export class SceneEditor extends Phaser.Scene {
         this.layerManager.addLayer(this, BaseLayer, SceneEditor.LAYER_MIDDLE, 4);
         this.layerManager.addLayer(this, GroundLayer, SceneEditor.LAYER_FLOOR.toString(), 5);
         this.layerManager.addLayer(this, SurfaceLayer, SceneEditor.LAYER_SURFACE.toString(), 6);
-        this.layerManager.addLayer(this, BaseLayer, SceneEditor.SCENE_UI, 7);
+        this.layerManager.addLayer(this, BaseLayer, SceneEditor.LAYER_GROUND_WALKABLE, 7);
+        this.layerManager.addLayer(this, BaseLayer, SceneEditor.SCENE_UI, 8);
+        this.groundWalkableLayer = new GroundWalkableLayer(this, this.sceneEditor.getCurrentRoomSize());
+        this.layerManager.addToLayer(SceneEditor.LAYER_GROUND_WALKABLE, this.groundWalkableLayer);
 
         this.sceneEditor.create(this);
     }
@@ -869,6 +939,18 @@ export class SceneEditor extends Phaser.Scene {
 
     hideGrid() {
         this.gridLayer.clear();
+    }
+
+    setGroundWalkableLayerVisible(val: boolean) {
+        if (!this.groundWalkableLayer) return;
+
+        this.groundWalkableLayer.setVisible(val);
+    }
+
+    updateGroundWalkableShow(data: boolean[]) {
+        if (!this.groundWalkableLayer) return;
+
+        this.groundWalkableLayer.updateShow(data);
     }
 }
 
@@ -896,13 +978,51 @@ class GridLayer extends Phaser.GameObjects.Graphics {
     }
 }
 
+class GroundWalkableLayer extends Phaser.GameObjects.Graphics {
+
+    private readonly STYLE_COLOR_WALKABLE = 0x00ff00;
+    private readonly STYLE_COLOR_NOT_WALKABLE = 0xff8000;
+    private readonly STYLE_ALPHA = 0.5;
+
+    constructor(scene: Phaser.Scene, private roomSize: IPosition45Obj) {
+        super(scene);
+    }
+
+    public updateShow(data: boolean[]) {
+        this.clear();
+        this.beginPath();
+        let x = 0;
+        let y = 0;
+        let p1: Pos;
+        let p2: Pos;
+        let p3: Pos;
+        let p4: Pos;
+        for (let i = 0; i < data.length; i++) {
+            const walkable = data[i];
+            x = i % this.roomSize.cols;
+            y = Math.floor(i / this.roomSize.cols);
+            p1 = Position45.transformTo90(new Pos(x, y), this.roomSize);
+            p2 = Position45.transformTo90(new Pos(x + 1, y), this.roomSize);
+            p3 = Position45.transformTo90(new Pos(x + 1, y + 1), this.roomSize);
+            p4 = Position45.transformTo90(new Pos(x, y + 1), this.roomSize);
+            this.lineStyle(2, this.STYLE_COLOR_WALKABLE);
+            this.beginPath();
+            this.fillStyle(walkable ? this.STYLE_COLOR_WALKABLE : this.STYLE_COLOR_NOT_WALKABLE, this.STYLE_ALPHA);
+            this.strokePoints([p1.toPoint(), p2.toPoint(), p3.toPoint(), p4.toPoint()], true, true);
+            this.fillPath();
+        }
+    }
+}
+
 enum BrushEnum {
     Move = "move",
     Select = "select",
     Fill = "FILL",
     Eraser = "eraser",
     BRUSH = "brush",
-    EraserWall = "eraserWall"
+    EraserWall = "eraserWall",
+    BrushWalkable = "brushWalkable",
+    EraserWalkable = "eraserWalkable"
 }
 
 class MouseFollow {
@@ -972,12 +1092,13 @@ class MouseFollow {
     //     (<SceneEditor>scene).layerManager.addToLayer("sceneUILayer", this.mDisplay);
     // }
 
-    showEraserArea() {
+    // 擦除、地板可行走笔刷 样式
+    showBlackBrushArea() {
         if (this.mDisplay) {
             this.mDisplay.destroy();
         }
         const scene = this.sceneEditor.scene;
-        this.mDisplay = new EraserArea(this.sceneEditor);
+        this.mDisplay = new BlackBrushArea(this.sceneEditor);
         this.mNodeType = op_def.NodeType.TerrainNodeType;
         this.mDisplay.setDisplay(null, this.mSize);
         this.isTerrain = true;
@@ -1037,7 +1158,7 @@ class MouseFollow {
         return result;
     }
 
-    getEaserPosition(): IPos[] {
+    getBlackBrushPositions(): IPos[] {
         const result: LogicPos[] = [];
         if (!this.mDisplay) {
             return;
@@ -1265,7 +1386,7 @@ class MouseDisplayContainer extends Phaser.GameObjects.Container {
     }
 }
 
-class EraserArea extends MouseDisplayContainer {
+class BlackBrushArea extends MouseDisplayContainer {
     private area: Phaser.GameObjects.Graphics;
     constructor(sceneEditor: SceneEditorCanvas) {
         super(sceneEditor);
