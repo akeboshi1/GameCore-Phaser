@@ -88,7 +88,7 @@ export class Render extends RPCPeer implements GameMain, IRender {
     protected mAdd: RenderFactor;
     protected mCallBack: Function;
     protected _moveStyle: number = 0;
-    protected _curTime: number;  
+    protected _curTime: number;
     protected gameConfig: Phaser.Types.Core.GameConfig;
     /**
      * 判断加载几x资源
