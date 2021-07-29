@@ -517,7 +517,7 @@ export class SceneEditorCanvas extends EditorCanvas implements IRender {
                     for (const f of frames) {
                         const frame = this.scene.textures.getFrame(f.key, "__BASE");
                         if (frame.width > tileWidth || frame.height > tileHeight) {
-                            Logger.getInstance().warn("tile size is larger then settings(64 * 60): ", frame.width, frame.height);
+                            Logger.getInstance().warn("tile size is larger then settings(60 * 60): ", frame.width, frame.height);
                         }
 
                         const deltaX = 0;
