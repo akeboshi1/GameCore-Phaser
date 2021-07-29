@@ -494,7 +494,7 @@ export class SceneEditorCanvas extends EditorCanvas implements IRender {
                         rect: {x: number, y: number, width: number, height: number} }> = [];
                     let x = 0;
                     let y = 0;
-                    const tileWidth = 64;
+                    const tileWidth = this.sceneNode.size.tileWidth;
                     const tileHeight = 60;
                     const maxX = Math.floor(1024 / tileWidth);
                     let imgWidth = 0;
@@ -505,9 +505,9 @@ export class SceneEditorCanvas extends EditorCanvas implements IRender {
                             Logger.getInstance().warn("tile size is larger then settings(64 * 60): ", frame.width, frame.height);
                         }
 
-                        // 每张tile按照设计尺寸64*60居中对齐
+                        // 每张tile按照设计尺寸60*60 横向居中对齐 竖直上对齐
                         const deltaX = (tileWidth - frame.width) * 0.5;
-                        const deltaY = (tileHeight - frame.height) * 0.5;
+                        const deltaY = 0;
                         const rect = {x: x * tileWidth, y: y * tileHeight, width: tileWidth, height: tileHeight};
                         rects.push({rect, drawX: rect.x + deltaX, drawY: rect.y + deltaY, gene: f.gene, frame: f.frame, sn: f.sn});
                         imgWidth = y === 0 ? (x + 1) * tileWidth : maxX * tileWidth;
@@ -796,8 +796,8 @@ export class SceneEditorCanvas extends EditorCanvas implements IRender {
         }
         for (let i = 0; i < positions.length; i++) {
             const pos = positions[i];
+            if (pos.x >= this.getCurrentRoomSize().cols || pos.y >= this.getCurrentRoomSize().rows) continue;
             const posIdx = this.getCurrentRoomSize().cols * pos.y + pos.x;
-            if (posIdx >= data.length) continue;
             if (this.mGroundWalkableChangeIdxes.indexOf(posIdx) < 0) this.mGroundWalkableChangeIdxes.push(posIdx);
         }
 
@@ -994,7 +994,7 @@ class GroundWalkableLayer extends Phaser.GameObjects.Graphics {
 
     public updateShow(data: boolean[]) {
         if (data.length !== this.roomSize.cols * this.roomSize.rows) {
-            Logger.getInstance().error("data.length error: ", data.length, this.roomSize.cols * this.roomSize.rows);
+            Logger.getInstance().error("walkableCollection.length error: ", data.length, this.roomSize.cols * this.roomSize.rows);
             return;
         }
         this.clear();
