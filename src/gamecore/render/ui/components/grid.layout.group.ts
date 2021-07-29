@@ -166,14 +166,10 @@ export class GridLayoutGroup extends Phaser.GameObjects.Container {
             this.setChildAlongAxis(this.layoutElements[i], 0, startOffset.x + (this._cellSize.x + this._spacing.x) * positionX, this._cellSize.x);
             this.setChildAlongAxis(this.layoutElements[i], 1, startOffset.y + (this._cellSize.y + this._spacing.y) * positionY, this._cellSize.y);
         }
-        const maxWidth = startOffset.x + (this._cellSize.x + this._spacing.x) * (positionX + 1);
-        const maxHeight = startOffset.y + (this._cellSize.y + this._spacing.y) * (positionY + 1);
-        if (this.startAxis === AxisType.Horizontal) {
-            this.height = maxHeight;
-        } else {
-            this.width = maxWidth;
-        }
-
+        const maxWidth = this.paddingHorizontal() + (this._cellSize.x + this._spacing.x) * (positionX + 1);
+        const maxHeight = this.paddingVertical() + (this._cellSize.y + this._spacing.y) * (positionY + 1);
+        this.width = maxWidth;
+        this.height = maxHeight;
     }
 
     private setChildAlongAxis(child: any, axis: number, pos: number, size: number) {
@@ -199,10 +195,11 @@ export class GridLayoutGroup extends Phaser.GameObjects.Container {
     }
 
     private getAlignmentOnAxis(axis: number): number {
-        if (axis === 0)
-            return (this._alignmentType % 3) * 0.5;
-        else
-            return Math.floor(this._alignmentType / 3) * 0.5;
+        return (this._alignmentType % 3) * 0.5;;
+        // if (axis === 0)
+        //     return (this._alignmentType % 3) * 0.5;
+        // else
+        //     return Math.floor(this._alignmentType / 3) * 0.5;
     }
 
     private getCellCount(): Phaser.Math.Vector2 {
