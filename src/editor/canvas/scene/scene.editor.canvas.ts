@@ -457,35 +457,35 @@ export class SceneEditorCanvas extends EditorCanvas implements IRender {
                     }
                 });
 
-                const cutPromise = new Promise<any>((cutResolve, cutReject) => {
-                    // get frame
-                    const frame = this.scene.textures.getFrame(framesModel.gene, frameName);
-
-                    // create canvas
-                    const canvas = this.mScene.textures.createCanvas("GenerateFrame_" + sn1, tileWidth, tileHeight);
-
-                    // 每张tile按照设计尺寸60*60 横向居中对齐 竖直上对齐
-                    const x = (tileWidth - frame.width) * 0.5;
-                    canvas.drawFrame(framesModel.gene, frameName, x, 0);
-
-                    // to url
-                    const url = canvas.canvas.toDataURL("image/png", 1);
-                    canvas.destroy();
-
-                    // reload
-                    const onLoadFunc = (key: string) => {
-                        if (key !== tileKey) return;
-                        this.mScene.textures.off(Phaser.Textures.Events.LOAD, onLoadFunc, this);
-
-                        cutResolve(null);
-                    }
-                    this.mScene.textures.on(Phaser.Textures.Events.LOAD, onLoadFunc, this);
-                    this.mScene.textures.addBase64(tileKey, url);
-                });
-
                 loadPromise
                     .then(() => {
-                        return cutPromise;
+                        return new Promise<any>((cutResolve, cutReject) => {
+                            // get frame
+                            const frame = this.scene.textures.getFrame(framesModel.gene, frameName);
+
+                            // create canvas
+                            const canvas = this.scene.textures.createCanvas("GenerateTile_" + tileKey, tileWidth, tileHeight);
+
+                            // 每张tile按照设计尺寸60*60 横向居中对齐 竖直上对齐
+                            const x = (tileWidth - frame.width) * 0.5;
+                            canvas.drawFrame(framesModel.gene, frameName, x, 0);
+
+                            // to url
+                            const url = canvas.canvas.toDataURL("image/png", 1);
+                            canvas.destroy();
+
+                            // reload
+                            const onLoadFunc = (key: string) => {
+                                if (key !== tileKey) return;
+                                if (this.scene) {
+                                    this.scene.textures.off(Phaser.Textures.Events.LOAD, onLoadFunc, this);
+                                }
+
+                                cutResolve(null);
+                            }
+                            this.scene.textures.on(Phaser.Textures.Events.LOAD, onLoadFunc, this);
+                            this.scene.textures.addBase64(tileKey, url);
+                        });
                     })
                     .then(() => {
                         _resolve({sn: sn1, key: tileKey});
@@ -515,9 +515,9 @@ export class SceneEditorCanvas extends EditorCanvas implements IRender {
                     let imgWidth = 0;
                     let imgHeight = 0;
                     for (const f of frames) {
-                        const frame = this.mScene.textures.getFrame(f.key, "__BASE");
+                        const frame = this.scene.textures.getFrame(f.key, "__BASE");
                         if (frame.width > tileWidth || frame.height > tileHeight) {
-                            Logger.getInstance().warn("tile size is larger then settings(64 * 60): ", frame.width, frame.height);
+                            Logger.getInstance().warn("tile size is larger then settings(60 * 60): ", frame.width, frame.height);
                         }
 
                         const deltaX = 0;
@@ -535,7 +535,7 @@ export class SceneEditorCanvas extends EditorCanvas implements IRender {
                     }
 
                     atlas.setSize(imgWidth, imgHeight);
-                    const canvas = this.mScene.textures.createCanvas("GenerateTilesetImg", imgWidth, imgHeight);
+                    const canvas = this.scene.textures.createCanvas("GenerateTilesetImg", imgWidth, imgHeight);
                     for (const rect of rects) {
                         canvas.drawFrame(rect.key, "__BASE", rect.drawX, rect.drawY);
                         atlas.addFrame(rect.sn, rect.rect);
@@ -547,9 +547,11 @@ export class SceneEditorCanvas extends EditorCanvas implements IRender {
                     resolve({ url, json: atlas.toString() });
 
                     // destroy frames
-                    for (const rect of rects) {
-                        this.mScene.textures.remove(rect.key);
-                        this.mScene.textures.removeKey(rect.key);
+                    if (this.scene) {
+                        for (const rect of rects) {
+                            this.scene.textures.remove(rect.key);
+                            this.scene.textures.removeKey(rect.key);
+                        }
                     }
                 })
                 .catch((reason) => {
