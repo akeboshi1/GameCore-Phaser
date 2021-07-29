@@ -121,8 +121,7 @@ export class Ground extends Phaser.GameObjects.Container {
         const map = this.scene.add.tilemap(this.mapJsonKey);
         const tileSet = map.addTilesetImage(this.MAP_JSON_TILESET_NAME, this.tilesetImgKey);
         this.tilemapLayer = map.createLayer(this.MAP_JSON_LAYER_NAME, [tileSet]);
-        // todo: ???
-        this.tilemapLayer.setScale(this.scaleRatio / 1.07);
+        this.tilemapLayer.setScale(this.scaleRatio);
         this.addAt(this.tilemapLayer, 0);
     }
 
