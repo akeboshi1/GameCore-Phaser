@@ -797,6 +797,7 @@ export class SceneEditorCanvas extends EditorCanvas implements IRender {
         for (let i = 0; i < positions.length; i++) {
             const pos = positions[i];
             const posIdx = this.getCurrentRoomSize().cols * pos.y + pos.x;
+            if (posIdx >= data.length) continue;
             if (this.mGroundWalkableChangeIdxes.indexOf(posIdx) < 0) this.mGroundWalkableChangeIdxes.push(posIdx);
         }
 
@@ -992,6 +993,10 @@ class GroundWalkableLayer extends Phaser.GameObjects.Graphics {
     }
 
     public updateShow(data: boolean[]) {
+        if (data.length !== this.roomSize.cols * this.roomSize.rows) {
+            Logger.getInstance().error("data.length error: ", data.length, this.roomSize.cols * this.roomSize.rows);
+            return;
+        }
         this.clear();
         this.beginPath();
         let x = 0;
