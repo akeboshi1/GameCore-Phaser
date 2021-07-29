@@ -1337,7 +1337,7 @@ export class BaseDragonbonesDisplay extends BaseDisplay {
     private replaceAvatar(avatar: IAvatar) {
         const headHat = avatar.headHatsId;
         if (headHat && typeof headHat !== "string") {
-            const hatTag = headHat.tags;
+            const hatTag = headHat.tag;
             // 帽子标记使用截断资源
             if (hatTag && hatTag.includes("fit_cutoff")) {
                 
@@ -1347,8 +1347,8 @@ export class BaseDragonbonesDisplay extends BaseDisplay {
                     const headHair = avatar.headHairId;
                     const headHairBack = avatar.headHairBackId;
                     if (headHair && headHairBack && typeof headHair !== "string" && typeof headHairBack !== "string") {
-                        const hairTag = headHair.tags;
-                        const hairBackTag = headHairBack.tags;
+                        const hairTag = headHair.tag;
+                        const hairBackTag = headHairBack.tag;
                         if (hairTag && hairTag.includes("cutoff")) headHair.useCutOff = true;
                         if (hairBackTag && hairBackTag.includes("cutoff")) headHairBack.useCutOff = true;
                     }

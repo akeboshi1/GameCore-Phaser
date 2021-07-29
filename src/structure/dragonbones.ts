@@ -53,6 +53,6 @@ export interface SlotSkin {
     sn?: string;
     suitType?: string;
     version?: string;
-    tags?: string[];
+    tag?: string[];
     useCutOff?: boolean;
 }

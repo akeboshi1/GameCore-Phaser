@@ -538,7 +538,7 @@ export class AvatarEditorDragonbone extends Phaser.GameObjects.Container {
             if (!set) continue;
             const avatarKey = this.convertPartNameToIAvatarKey(partName);
             const { version, tags } = set;
-            avatarModel[avatarKey] = { sn: set.id, version, tags };
+            avatarModel[avatarKey] = { sn: set.id, version, tag: tags };
         }
 
         const dragonbonesModel: IDragonbonesModel = { id: 0, avatar: avatarModel };
