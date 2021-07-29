@@ -27,6 +27,7 @@ import { TerrainGrid } from "../display/terrain.grid";
 import { BaseSceneManager, BlockManager, Ground } from "baseRender";
 import { FramesModel } from "baseGame";
 import { Tool } from "utils";
+import { translate } from "../utils";
 
 export enum NodeType {
     UnknownNodeType = 0,
@@ -420,7 +421,11 @@ export class DisplayManager {
         display.checkCollision(sprite);
         display.changeAlpha(sprite.alpha);
         display.hasInteractive = sprite.hasInteractive;
-        if (sprite.nickname) display.showNickname(sprite.nickname);
+        let nickname = sprite.nickname;
+        if (sprite.i18nName) {
+            nickname = translate(sprite.i18nName);
+        }
+        if (nickname) display.showNickname(nickname);
     }
 
     public startFireMove(id: number, pos: any) {

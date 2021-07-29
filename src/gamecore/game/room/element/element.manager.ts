@@ -311,7 +311,7 @@ export class ElementManager extends PacketHandler implements IElementManager {
 
     public dealDisplayRef() {
         this.mCacheDisplayRef.forEach((ref) => {
-            const { id, pos, name, layer, direction, mountSprites, titleMask } = ref;
+            const { id, pos, name, layer, direction, mountSprites, attrs } = ref;
             this.addSpritesToCache([{
                 id,
                 point3f: pos,
@@ -319,7 +319,7 @@ export class ElementManager extends PacketHandler implements IElementManager {
                 direction,
                 layer,
                 mountSprites,
-                titleMask
+                attrs
             }]);
         });
         this.mCacheDisplayRef.clear();
