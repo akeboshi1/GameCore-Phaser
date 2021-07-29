@@ -386,7 +386,9 @@ export class SceneEditorCanvas extends EditorCanvas implements IRender {
 
     // 将地块数据转化为单帧url并合图，只取idle动画第一层第一帧，返回合图url
     transformTerrains(sns: string[]): Promise<{json: string, url: string}> {
-        const tasks: Array<Promise<{sn: string, gene: string, frame: string}>> = [];
+        const tasks: Array<Promise<{sn: string, key: string}>> = [];
+        const tileWidth = this.sceneNode.size.tileWidth;
+        const tileHeight = 60;
         for (const sn1 of sns) {
             // get terrains
             const framesModel = this.elementStorage.getTerrainPaletteBySN(sn1);
@@ -422,8 +424,9 @@ export class SceneEditorCanvas extends EditorCanvas implements IRender {
             }
             const frameName = framesModel.getAnimations("idle").layer[0].frameName[0];
             const displayData = framesModel.display;
+            const tileKey = framesModel.gene + "_" + frameName;
 
-            const task = new Promise<{sn: string, gene: string, frame: string}>((_resolve, _reject) => {
+            const task = new Promise<{sn: string, key: string}>((_resolve, _reject) => {
                 // check load
                 const loadPromise = new Promise<any>((loadResolve, loadReject) => {
                     if (this.scene.textures.exists(framesModel.gene)) {
@@ -454,24 +457,38 @@ export class SceneEditorCanvas extends EditorCanvas implements IRender {
                     }
                 });
 
+                const cutPromise = new Promise<any>((cutResolve, cutReject) => {
+                    // get frame
+                    const frame = this.scene.textures.getFrame(framesModel.gene, frameName);
+
+                    // create canvas
+                    const canvas = this.mScene.textures.createCanvas("GenerateFrame_" + sn1, tileWidth, tileHeight);
+
+                    // 每张tile按照设计尺寸60*60 横向居中对齐 竖直上对齐
+                    const x = (tileWidth - frame.width) * 0.5;
+                    canvas.drawFrame(framesModel.gene, frameName, x, 0);
+
+                    // to url
+                    const url = canvas.canvas.toDataURL("image/png", 1);
+                    canvas.destroy();
+
+                    // reload
+                    const onLoadFunc = (key: string) => {
+                        if (key !== tileKey) return;
+                        this.mScene.textures.off(Phaser.Textures.Events.LOAD, onLoadFunc, this);
+
+                        cutResolve(null);
+                    }
+                    this.mScene.textures.on(Phaser.Textures.Events.LOAD, onLoadFunc, this);
+                    this.mScene.textures.addBase64(tileKey, url);
+                });
+
                 loadPromise
                     .then(() => {
-                        // get frame
-                        // const frame = this.scene.textures.getFrame(framesModel.gene, frameName);
-                        //
-                        // // create canvas
-                        // const tileWidth = 64;
-                        // const canvas = this.mScene.textures.createCanvas("GenerateFrame_" + sn1, tileWidth, frame.height);
-                        //
-                        // // draw frame
-                        // const x = (tileWidth - frame.width) * 0.5;
-                        // canvas.drawFrame(framesModel.gene, frameName, x, 0);
-                        //
-                        // // to url
-                        // const url = canvas.canvas.toDataURL("image/png", 1);
-                        // canvas.destroy();
-
-                        _resolve({sn: sn1, gene: framesModel.gene, frame: frameName});
+                        return cutPromise;
+                    })
+                    .then(() => {
+                        _resolve({sn: sn1, key: tileKey});
                     })
                     .catch((errMsg) => {
                         _reject(errMsg);
@@ -490,26 +507,23 @@ export class SceneEditorCanvas extends EditorCanvas implements IRender {
                     }
 
                     const atlas = new Atlas();
-                    const rects: Array<{drawX: number, drawY: number, gene: string, frame: string, sn: string,
+                    const rects: Array<{drawX: number, drawY: number, key: string, sn: string,
                         rect: {x: number, y: number, width: number, height: number} }> = [];
                     let x = 0;
                     let y = 0;
-                    const tileWidth = this.sceneNode.size.tileWidth;
-                    const tileHeight = 60;
                     const maxX = Math.floor(1024 / tileWidth);
                     let imgWidth = 0;
                     let imgHeight = 0;
                     for (const f of frames) {
-                        const frame = this.mScene.textures.getFrame(f.gene, f.frame);
+                        const frame = this.mScene.textures.getFrame(f.key, "__BASE");
                         if (frame.width > tileWidth || frame.height > tileHeight) {
                             Logger.getInstance().warn("tile size is larger then settings(64 * 60): ", frame.width, frame.height);
                         }
 
-                        // 每张tile按照设计尺寸60*60 横向居中对齐 竖直上对齐
-                        const deltaX = (tileWidth - frame.width) * 0.5;
+                        const deltaX = 0;
                         const deltaY = 0;
                         const rect = {x: x * tileWidth, y: y * tileHeight, width: tileWidth, height: tileHeight};
-                        rects.push({rect, drawX: rect.x + deltaX, drawY: rect.y + deltaY, gene: f.gene, frame: f.frame, sn: f.sn});
+                        rects.push({rect, drawX: rect.x + deltaX, drawY: rect.y + deltaY, key: f.key, sn: f.sn});
                         imgWidth = y === 0 ? (x + 1) * tileWidth : maxX * tileWidth;
                         imgHeight = (y + 1) * tileHeight;
 
@@ -523,7 +537,7 @@ export class SceneEditorCanvas extends EditorCanvas implements IRender {
                     atlas.setSize(imgWidth, imgHeight);
                     const canvas = this.mScene.textures.createCanvas("GenerateTilesetImg", imgWidth, imgHeight);
                     for (const rect of rects) {
-                        canvas.drawFrame(rect.gene, rect.frame, rect.drawX, rect.drawY);
+                        canvas.drawFrame(rect.key, "__BASE", rect.drawX, rect.drawY);
                         atlas.addFrame(rect.sn, rect.rect);
                     }
 
@@ -531,6 +545,12 @@ export class SceneEditorCanvas extends EditorCanvas implements IRender {
                     canvas.destroy();
 
                     resolve({ url, json: atlas.toString() });
+
+                    // destroy frames
+                    for (const rect of rects) {
+                        this.mScene.textures.remove(rect.key);
+                        this.mScene.textures.removeKey(rect.key);
+                    }
                 })
                 .catch((reason) => {
                     reject(reason);
