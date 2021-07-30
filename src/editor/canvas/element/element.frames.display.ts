@@ -407,8 +407,8 @@ export class ElementFramesDisplay extends BaseFramesDisplay implements Resources
             const data = this.mAnimationData.layerDict.get(key);
             // const point = { x: val.x, y: val.y };
             let { x, y } = val;
-            x -= val.width * 0.5;
-            y -= val.height * 0.5;
+            // x -= val.width * 0.5;
+            // y -= val.height * 0.5;
             if (!data.offsetLoc || data.offsetLoc.x !== x || data.offsetLoc.y !== y) {
                 data.setOffsetLoc(x, y);
             }
