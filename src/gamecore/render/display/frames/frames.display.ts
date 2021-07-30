@@ -1,6 +1,6 @@
 import { BaseFramesDisplay, ReferenceArea } from "baseRender";
 import { Render } from "../../render";
-import { IPos, Logger, DisplayField, ElementStateType, LayerName, RunningAnimation, TitleMask } from "structure";
+import { IPos, Logger, DisplayField, ElementStateType, LayerName, RunningAnimation, TitleMask, Position45, LogicPos } from "structure";
 import { IDisplayObject } from "../display.object";
 import { ElementTopDisplay } from "../element.top.display";
 import { DragonbonesDisplay } from "../dragonbones/dragonbones.display";
@@ -247,6 +247,21 @@ export class FramesDisplay extends BaseFramesDisplay implements IDisplayObject {
         if (frontend) {
             this.remove(frontend, true);
         }
+    }
+
+    public resetDisplayOffset() {
+        if (!this.mCurAnimation) return;
+        const layer = this.mCurAnimation.layer;
+        if (!layer || layer.length < 1) {
+            return;
+        }
+        // 最底层为底图
+        const mainLayer = layer[0];
+        const offsetLoc = mainLayer.offsetLoc;
+        this.mDisplays.forEach((display) => {
+            display.x -= offsetLoc.x;
+            display.y -= offsetLoc.y;
+        })
     }
 
     // public mount(display: FramesDisplay | DragonbonesDisplay, targetIndex?: number) {
