@@ -104,7 +104,7 @@ export class EnterWorldState extends BaseState {
             game_id = game_id.split(".")[1];
         }
         const mainGameConfigUrl = this.mGame.gameConfigUrl;
-        this.mGame.loadingManager.start(LoadState.DOWNLOADGAMECONFIG);
+        if (this.mGame.loadingManager) this.mGame.loadingManager.start(LoadState.DOWNLOADGAMECONFIG);
         Logger.getInstance().debug("onInitVirtualWorldPlayerInit====loadGameConfig");
         // 每次加载，重新请求数据
         this.isSyncPackage = false;
