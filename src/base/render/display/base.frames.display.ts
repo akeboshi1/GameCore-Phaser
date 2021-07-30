@@ -414,8 +414,6 @@ export class BaseFramesDisplay extends BaseDisplay {
         if (data && data.gene === key) {
             this.scene.textures.off(Phaser.Textures.Events.ADD, cb, this);
             this.onLoadCompleted(field);
-        } else {
-            Logger.getInstance().debug("no addtexture", this, data, field);
         }
     }
 
