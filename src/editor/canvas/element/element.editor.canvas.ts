@@ -1,6 +1,5 @@
 import { EditorCanvas, IEditorCanvasConfig } from "../editor.canvas";
 import ElementEditorGrids from "./element.editor.grids";
-import ElementEditorAnimations from "./element.editor.animations";
 import ElementEditorResourceManager from "./element.editor.resource.manager";
 import { ElementFramesDisplay } from "./element.frames.display";
 import { Logger } from "structure";
@@ -19,7 +18,7 @@ export class ElementEditorCanvas extends EditorCanvas {
 
     private mResManager: ElementEditorResourceManager;
     private mGrids: ElementEditorGrids;
-    private mAnimations: ElementFramesDisplay | ElementEditorAnimations;
+    private mAnimations: ElementFramesDisplay;
 
     constructor(config: IEditorCanvasConfig) {
         super(config);
