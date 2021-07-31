@@ -205,6 +205,15 @@ export class SceneEditorCanvas extends EditorCanvas implements IRender {
         this.mTerrainManager.create();
     }
 
+    public reloadWalkableCollection() {
+        let data = [].concat(this.sceneNode.groundWalkableCollection.data);
+        if (data.length === 0) {
+            data = new Array(this.getCurrentRoomSize().cols * this.getCurrentRoomSize().rows).fill(false);
+        }
+
+        (<SceneEditor>this.mScene).updateGroundWalkableShow(data);
+    }
+
     public updateElements() {
     }
 
