@@ -107,7 +107,7 @@ export class Bubble extends Phaser.GameObjects.Container {
         super.destroy(true);
     }
 
-    private onComplete(img: NineSlicePatch) {
+    protected onComplete(img: NineSlicePatch) {
         if (img && this.scene) {
             img.scale = this.mScale;
             img.y = -img.displayHeight >> 1;
