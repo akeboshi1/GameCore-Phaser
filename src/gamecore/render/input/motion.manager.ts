@@ -6,13 +6,13 @@ export class MotionManager {
     public enable: boolean;
     protected scene: Phaser.Scene;
     protected uiScene: Phaser.Scene;
-    private gameObject: Phaser.GameObjects.GameObject;
-    private scaleRatio: number;
-    private isHolding: boolean = false;
-    private holdTime: any;
-    private holdDelay: number = 200;
-    private curtime: number;
-    private isRunning = true;
+    protected gameObject: Phaser.GameObjects.GameObject;
+    protected scaleRatio: number;
+    protected isHolding: boolean = false;
+    protected holdTime: any;
+    protected holdDelay: number = 200;
+    protected curtime: number;
+    protected isRunning = true;
     // private curDirection: number = 0;
     constructor(protected render: Render) {
         this.scaleRatio = render.scaleRatio;
