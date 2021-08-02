@@ -214,6 +214,11 @@ export class MotionManager {
         // this.render.physicalPeer.findPath(targets, id);
     }
 
+    protected clearGameObject() {
+        this.gameObject = null;
+        clearTimeout(this.holdTime);
+    }
+
     private start(worldX: number, worldY: number, id?: number) {
         this.render.mainPeer.moveMotion(worldX, worldY, id);
     }
@@ -228,10 +233,5 @@ export class MotionManager {
         const tmpX = pointer.worldX / this.scaleRatio - x;
         const tmpY = pointer.worldY / this.scaleRatio - y;
         return this.scene.cameras.main.getWorldPoint(pointer.x - tmpX, pointer.y - tmpY);
-    }
-
-    private clearGameObject() {
-        this.gameObject = null;
-        clearTimeout(this.holdTime);
     }
 }
