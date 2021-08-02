@@ -462,6 +462,11 @@ export class MainPeer extends RPCPeer {
     }
 
     @Export([webworker_rpc.ParamType.num])
+    public activeSprite(id: number) {
+        if (this.game.user) this.game.user.activeSprite(id);
+    }
+
+    @Export([webworker_rpc.ParamType.num])
     public getInteractivePosition(id: number) {
         const room = this.game.roomManager.currentRoom;
         if (!room) return;

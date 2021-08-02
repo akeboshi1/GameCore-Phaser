@@ -126,10 +126,13 @@ export class MotionManager {
     }
 
     protected async onPointerUpHandler(pointer: Phaser.Input.Pointer) {
+        this.moveToTargetAndActive(pointer);
+    }
+
+    protected async moveToTargetAndActive(pointer: Phaser.Input.Pointer) {
         if (!this.isRunning) return;
         this.isHolding = false;
         this.scene.input.off("pointermove", this.onPointerMoveHandler, this);
-
         if (!this.render.guideManager || this.render.guideManager.canInteractive()) return;
         if (Math.abs(pointer.downX - pointer.upX) >= 5 * this.render.scaleRatio && Math.abs(pointer.downY - pointer.upY) >= 5 * this.render.scaleRatio || pointer.upTime - pointer.downTime > this.holdDelay) {
             this.stop();
@@ -141,13 +144,6 @@ export class MotionManager {
                     await this.getEleMovePath(id, pointer);
                 }
             } else {
-                // if (this.render.guideManager.canInteractive()) {
-                //     const curGuide = this.render.guideManager.curGuide;
-                //     Logger.getInstance().log("pointerup ====>", curGuide);
-                //     const id = (<BasePlaySceneGuide>curGuide).data;
-                //     await this.getEleMovePath(id, pointer);
-                // } else {
-                // }
                 this.movePath(pointer.worldX / this.render.scaleRatio, pointer.worldY / this.render.scaleRatio, 0, [new LogicPos(pointer.worldX / this.scaleRatio, pointer.worldY / this.scaleRatio)]);
             }
         }
@@ -211,13 +207,15 @@ export class MotionManager {
         return ele.id;
     }
 
-    private start(worldX: number, worldY: number, id?: number) {
-        this.render.mainPeer.moveMotion(worldX, worldY, id);
-    }
+    protected movePath(x: number, y: number, z: number, targets: {}, id?: number) {
+        // todo check
 
-    private movePath(x: number, y: number, z: number, targets: {}, id?: number) {
         this.render.mainPeer.findPath(targets, id);
         // this.render.physicalPeer.findPath(targets, id);
+    }
+
+    private start(worldX: number, worldY: number, id?: number) {
+        this.render.mainPeer.moveMotion(worldX, worldY, id);
     }
 
     private stop() {
