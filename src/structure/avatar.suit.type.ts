@@ -3,25 +3,6 @@ import { IAvatar } from "./dragonbones";
 
 export class AvatarSuitType {
     static avatarSuit: AvatarSuitType;
-    static suitPart = {
-        "costume": ["body_cost", "body_cost_dres", "farm_cost", "barm_cost", "fleg_cost", "bleg_cost"],
-        "hair": ["head_hair", "head_hair_back"],
-        "eye": ["head_eyes"],
-        "mouse": ["head_mous"],
-        "hat": ["head_hats", "head_hats_back"],
-        "mask": ["head_mask"],
-        "face": ["head_face"],
-        "weapon": ["weap_farm", "weap_barm"],
-        "shield": ["shld_farm", "shld_barm"],
-        "tail": ["body_tail"],
-        "wing": ["body_wing"],
-        "helmet": ["head_spec"],
-        "shell": ["body_spec", "farm_spec", "barm_spec", "fleg_spec", "bleg_spec"],
-        "base": ["head_base", "body_base", "farm_base", "barm_base", "fleg_base", "bleg_base"],
-        "scar": ["body_scar"],
-        "cloa": ["body_cloa"],
-        "chin": ["head_chin"]
-    };
     static specHideParts = {
         headSpecId: ["headEyesId", "headHairId", "headMousId", "headHairBackId", "headHatsId", "headHatsBackId", "headMaskId", "headFaceId", "headBaseId"],
         bodySpecId: ["bodyCostId", "bodyCostDresId", "bodyTailId", "bodyWingId", "bodyBaseId"],
@@ -284,12 +265,13 @@ export class AvatarSuitType {
     public wing = ["bodyWingId"];
     public helmet = ["headSpecId"];
     // 已和金老板确认，头部特型也加入shell，即装备shell后，会覆盖helmet
-    public shell = ["headSpecId", "bodySpecId", "farmSpecId", "barmSpecId", "flegSpecId", "blegSpecId"];
+    public shell = ["bodySpecId", "farmSpecId", "barmSpecId", "flegSpecId", "blegSpecId"];
     public baseSuitType = `[{"count":1,"id":"10001","sn":"5cd28238fb073710972a73c2","suit_type":"costume"},{"count":1,"id":"10002","sn":"5cd28238fb073710972a73c2","suit_type":"eye"},{"count":1,"id":"1003","sn":"5cd28238fb073710972a73c2","suit_type":"hair"},{"count":1,"id":"10004","sn":"5cd28238fb073710972a73c2","suit_type":"mouse"}]`;
     public base = ["headBaseId", "bodyBaseId", "farmBaseId", "barmBaseId", "flegBaseId", "blegBaseId"];
     public scar = ["bodyScarId"];
     public cloa = ["bodyCloaId"];
     public chin = ["headChinId"];
+    public cyborg = ["headSpecId", "bodySpecId", "farmSpecId", "barmSpecId", "flegSpecId", "blegSpecId"];
 }
 
 export class SuitAlternativeType {
@@ -299,9 +281,11 @@ export class SuitAlternativeType {
         this.suitAlternative = this.suitAlternative || new SuitAlternativeType();
         const maskType: number = this.suitAlternative[target];
         const sourceType: number = this.suitAlternative[source];
+        if (!maskType || !sourceType) return false;
         const value = maskType & sourceType;
         return value === maskType || value === sourceType;
     }
+    
 
     public costume = 0x000001;
     public hair = 0x000002;
@@ -315,7 +299,9 @@ export class SuitAlternativeType {
     public tail = 0x000200;
     public wing = 0x000400;
     public helmet = 0x0007e;
-    public shell = 0x000601;
+    // public shell = 0x000001 | 0x000200 | 0x000400;
+    // public cyborg = 0x000001 | 0x000002 | 0x000004 | 0x000008 | 0x000010 | 0x000020 | 0x000040 | 0x000100 | 0x000200 | 0x000400 | 0x0007e;
+    
 }
 
 export class BaseAvatar {
