@@ -205,6 +205,15 @@ export class SceneEditorCanvas extends EditorCanvas implements IRender {
         this.mTerrainManager.create();
     }
 
+    public reloadWalkableCollection() {
+        let data = [].concat(this.sceneNode.groundWalkableCollection.data);
+        if (data.length === 0) {
+            data = new Array(this.getCurrentRoomSize().cols * this.getCurrentRoomSize().rows).fill(false);
+        }
+
+        (<SceneEditor>this.mScene).updateGroundWalkableShow(data);
+    }
+
     public updateElements() {
     }
 
@@ -269,6 +278,8 @@ export class SceneEditorCanvas extends EditorCanvas implements IRender {
             if (this.mStamp.isMoss) {
                 const mossesCoorData = this.mStamp.createTerrainsOrMossesData();
                 this.mMossManager.addMosses(mossesCoorData);
+            } else if (this.mStamp.isHanging && !this.mWallManager.isInWallRect(sprites[0].pos)) {
+                return;
             } else {
                 this.mElementManager.addElements(sprites);
             }
@@ -380,7 +391,10 @@ export class SceneEditorCanvas extends EditorCanvas implements IRender {
         return this.mScene;
     }
 
-    checkCollision(pos: IPos, sprite) {
+    checkCanPlace(pos: IPos, sprite) {
+        if (sprite.layer === LayerEnum.Hanging) {
+            return this.mWallManager.isInWallRect(pos);
+        }
         return this.mElementManager.checkCollision(pos, sprite);
     }
 
@@ -1226,7 +1240,7 @@ class MouseFollow {
             return;
         }
         if (this.mNodeType === op_def.NodeType.ElementNodeType) {
-            const result = this.sceneEditor.checkCollision(pos, this.mSprite);
+            const result = this.sceneEditor.checkCanPlace(pos, this.mSprite);
             if (!result) {
                 return;
             }
@@ -1273,6 +1287,10 @@ class MouseFollow {
 
     get isMoss() {
         return this.mIsMoss;
+    }
+
+    get isHanging() {
+        return this.mSprite.layer === LayerEnum.Hanging;
     }
 
     get nodeType() {
@@ -1514,13 +1532,17 @@ class SelectedElementManager {
                     rootMount.updateMountPoint(ele, _x, _y);
                     continue;
                 }
-                const result = this.sceneEditor.checkCollision(worldPos, ele.sprite);
+                const result = this.sceneEditor.checkCanPlace(worldPos, ele.sprite);
                 if (!result) {
                     return;
                 }
             }
-            const pos = transitionGrid(worldPos.x, worldPos.y, this.sceneEditor.alignGrid, roomSize);
-            ele.setPosition(pos.x, pos.y);
+            if (ele.sprite.layer === LayerEnum.Hanging) {
+                ele.setPosition(worldPos.x, worldPos.y);
+            } else {
+                const pos = transitionGrid(worldPos.x, worldPos.y, this.sceneEditor.alignGrid, roomSize);
+                ele.setPosition(pos.x, pos.y);
+            }
         }
     }
 

@@ -205,8 +205,8 @@ export class ElementFramesDisplay extends BaseFramesDisplay implements Resources
             return;
         }
         const baseLoc = data.offsetLoc || { x: 0, y: 0 };
-        display.x = baseLoc.x;
-        display.y = baseLoc.y;
+        display.x = baseLoc.x + display.width * 0.5;
+        display.y = baseLoc.y + display.height * 0.5;
     }
 
     public generateThumbnail(): Promise<string> {

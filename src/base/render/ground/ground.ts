@@ -83,7 +83,7 @@ export class Ground extends Phaser.GameObjects.Container {
 
         const result = [];
         for (const tileset of this.tilemapLayer.tileset) {
-            for (let i = tileset.firstgid; i < tileset.firstgid + tileset.total; i++) {
+            for (let i = tileset.firstgid; i < tileset.firstgid + this.getTilesetPropertiesCount(tileset.tileProperties, tileset.total); i++) {
                 const prop = this.getTilesetProperties(tileset, i);
                 result.push(prop);
             }
@@ -92,6 +92,7 @@ export class Ground extends Phaser.GameObjects.Container {
     }
 
     public existTerrain(x: number, y: number) {
+        if (!this.tilemapLayer) return false;
         const tile = this.tilemapLayer.getTileAt(x, y);
         if (!tile) return false;
         return tile.index >= 0;
@@ -190,5 +191,13 @@ export class Ground extends Phaser.GameObjects.Container {
     private getTilesetProperties(tileset: Tileset, index: number): ITilesetProperty {
         const prop = tileset.getTileProperties(index);
         return {index, sn: prop["sn"]};
+    }
+
+    private getTilesetPropertiesCount(properties: any, total: number): number {
+        let i = 0;
+        while (properties.hasOwnProperty(i + "")) {
+            i++;
+        }
+        return Math.min(i, total);
     }
 }

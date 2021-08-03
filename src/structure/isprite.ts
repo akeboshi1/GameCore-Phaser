@@ -40,6 +40,7 @@ export interface ISprite {
     animator?: Animator;
     updateSuits?: boolean;
     layer?: number;
+    i18nName?: string;
     newID();
     updateAvatar(avatar: IAvatar);
     setTempAvatar(avatar: IAvatar);

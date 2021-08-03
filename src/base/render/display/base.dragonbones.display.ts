@@ -705,14 +705,15 @@ export class BaseDragonbonesDisplay extends BaseDisplay {
     }
 
     private formattingSkin(skin: SlotSkin | string | number) {
-        let version = "", sn = "";
+        let version = "", sn = "", useCutOff = false;
         if (typeof skin === "string" || typeof skin === "number") {
             sn = skin.toString();
         } else {
             version = (skin.version === undefined || skin.version === "" ? "" : `_${skin.version}`);
             sn = skin.sn;
+            useCutOff = skin.useCutOff;
         }
-        return { sn, version };
+        return { sn, version, useCutOff };
     }
 
     private clearFadeTween() {
@@ -1356,8 +1357,8 @@ export class BaseDragonbonesDisplay extends BaseDisplay {
                 if (hatTag.includes("remove_hair")) {
                     // this.replaceArr = this.replaceArr.filter((avatar) => avatar.slot !== AvatarSlotNameTemp.HeadHair 
                     //     && avatar.slot !== AvatarSlotNameTemp.HeadHairBack);
-                    avatar.headHairId = null;
-                    avatar.headHairBackId = null;
+                    delete avatar.headHairId;
+                    delete avatar.headHairBackId;
                 }
             }
         }

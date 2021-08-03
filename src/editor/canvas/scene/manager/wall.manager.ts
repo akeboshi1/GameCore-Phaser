@@ -1,7 +1,7 @@
 import { LayerEnum } from "game-capsule";
 import { PacketHandler, PBpacket } from "net-socket-packet";
 import { op_editor, op_def, op_client } from "pixelpai_proto";
-import { Direction, IPos } from "structure";
+import {Direction, IPos, LogicPos, Position45} from "structure";
 import { SceneEditorCanvas } from "../scene.editor.canvas";
 
 export class EditorWallManager extends PacketHandler {
@@ -75,6 +75,60 @@ export class EditorWallManager extends PacketHandler {
 
         if (removeWalls.length > 0) this.reqEditorDeleteTerrainsData(removeWalls);
     }
+
+    // 在墙面上
+    public isInWallRect(pos: IPos): boolean {
+        const pos45 = Position45.transformTo45(pos, this.sceneEditor.roomSize);
+        // 10的由来：
+        // 墙高：12倍地块高度，其中有1倍被藏在地块下，所以可放置区域只有11倍地块高的区域，所以xy范围为[-10, 0]
+        let result = false;
+        this.walls.forEach((col) => {
+            const minX = col.x - 10;
+            const maxX = col.x;
+            const minY = col.y - 10;
+            const maxY = col.y;
+            if (pos45.x >= minX && pos45.x <= maxX && pos45.y >= minY && pos45.y <= maxY) {
+                result = true;
+                return;
+            }
+        });
+        return result;
+    }
+
+    // 靠墙，按照miniSize坐标系
+    // public isAgainstWall(pos: IPos, originPoint: IPos): boolean {
+    //     const pos45 = Position45.transformTo45(pos, this.roomService.miniSize);
+    //     const checkPos45 = new LogicPos(pos45.x - originPoint.x, pos45.y - originPoint.y);
+    //     for (const wall of this.walls) {
+    //         const roomSizePos = wall.model.pos;
+    //         const miniSizePoses = [
+    //             new LogicPos(roomSizePos.x * 2, roomSizePos.y * 2),
+    //             new LogicPos(roomSizePos.x * 2, roomSizePos.y * 2 + 1),
+    //             new LogicPos(roomSizePos.x * 2 + 1, roomSizePos.y * 2),
+    //             new LogicPos(roomSizePos.x * 2 + 1, roomSizePos.y * 2 + 1)];
+    //         if (wall.model.direction === Direction.concave) {
+    //             // 凹角的墙会删除相邻阴面阳面的墙，所以这里需要额外判断两块墙体的位置
+    //             const yinPos = new LogicPos(roomSizePos.x, roomSizePos.y + 1);
+    //             miniSizePoses.push(new LogicPos(yinPos.x * 2, yinPos.y * 2));
+    //             miniSizePoses.push(new LogicPos(yinPos.x * 2, yinPos.y * 2 + 1));
+    //             miniSizePoses.push(new LogicPos(yinPos.x * 2 + 1, yinPos.y * 2));
+    //             miniSizePoses.push(new LogicPos(yinPos.x * 2 + 1, yinPos.y * 2 + 1));
+    //             const yangPos = new LogicPos(roomSizePos.x + 1, roomSizePos.y);
+    //             miniSizePoses.push(new LogicPos(yangPos.x * 2, yangPos.y * 2));
+    //             miniSizePoses.push(new LogicPos(yangPos.x * 2, yangPos.y * 2 + 1));
+    //             miniSizePoses.push(new LogicPos(yangPos.x * 2 + 1, yangPos.y * 2));
+    //             miniSizePoses.push(new LogicPos(yangPos.x * 2 + 1, yangPos.y * 2 + 1));
+    //         }
+    //         for (const miniSizePose of miniSizePoses) {
+    //             if ((miniSizePose.y === checkPos45.y && (miniSizePose.x === checkPos45.x + 1 || miniSizePose.x === checkPos45.x - 1)) ||
+    //                 (miniSizePose.x === checkPos45.x && (miniSizePose.y === checkPos45.y + 1 || miniSizePose.y === checkPos45.y - 1))) {
+    //                 return true;
+    //             }
+    //         }
+    //     }
+    //
+    //     return false;
+    // }
 
     private handleCreateWalls(packet: PBpacket) {
         const content: op_client.IOP_EDITOR_REQ_CLIENT_ADD_SPRITES_WITH_LOCS = packet.content;

@@ -42,7 +42,6 @@ export class WallManager {
         this.walls.length = 0;
     }
 
-    // todo: move to pica
     // 在墙面上
     public isInWallRect(pos: IPos): boolean {
         const pos45 = Position45.transformTo45(pos, this.roomService.roomSize);
@@ -60,7 +59,6 @@ export class WallManager {
         return false;
     }
 
-    // todo: move to pica
     // 靠墙，按照miniSize坐标系
     public isAgainstWall(pos: IPos, originPoint: IPos): boolean {
         const pos45 = Position45.transformTo45(pos, this.roomService.miniSize);

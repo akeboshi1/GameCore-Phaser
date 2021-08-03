@@ -232,7 +232,7 @@ export class Element extends BlockObject implements IElement {
         this.removeFromMap();
         // 必须执行一遍下面的方法，否则无法获取碰撞区域
         const area = model.getCollisionArea();
-        const obj = { id: model.id, pos: model.pos, nickname: model.nickname, nodeType: model.nodeType, sound: model.sound, alpha: model.alpha, titleMask: model.titleMask | 0x00020000, hasInteractive: model.hasInteractive };
+        const obj = { id: model.id, pos: model.pos, nickname: model.nickname, nodeType: model.nodeType, sound: model.sound, alpha: model.alpha, titleMask: model.titleMask | 0x00020000, i18nName: model.i18nName, hasInteractive: model.hasInteractive };
         this.addToMap();
         // render action
         this.load(this.mModel.displayInfo)

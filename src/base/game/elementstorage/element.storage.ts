@@ -53,6 +53,7 @@ export interface IDisplayRef {
     displayModel?: FramesModel | DragonbonesModel;
     mountSprites?: number[];
     titleMask?: number;
+    attrs?: op_def.IStrPair[];
 }
 
 export class ElementStorage implements IElementStorage {
@@ -248,8 +249,9 @@ export class ElementStorage implements IElementStorage {
                 if (ele.mountSprites && ele.mountSprites.ids.length > 0) {
                     mountSprites = ele.mountSprites.ids;
                 }
-                const attrs = <AttributeNode[]>ele.children.filter((child) => child.type === op_def.NodeType.AttributeType);
-                const eleRef: IDisplayRef = Object.assign({
+                const attrNodes = <AttributeNode[]>ele.children.filter((child) => child.type === op_def.NodeType.AttributeType);
+                const attrs = this.getAttr(attrNodes);
+                const eleRef: IDisplayRef = {
                     id: obj.id,
                     pos,
                     blockIndex: new BlockIndex().getBlockIndex(pos.x, pos.y, sceneNode.size),
@@ -257,8 +259,9 @@ export class ElementStorage implements IElementStorage {
                     name: obj.name,
                     displayModel,
                     layer: ele.layer,
-                    mountSprites
-                }, this.getAttr(attrs));
+                    mountSprites,
+                    attrs
+                };
                 this.addDisplayRef(eleRef, op_def.NodeType.ElementNodeType);
             }
         }
@@ -399,13 +402,10 @@ export class ElementStorage implements IElementStorage {
         this.mDisplayRefMap.forEach((map) => map.clear());
     }
 
-    private getAttr(attrs: AttributeNode[]) {
-        const result = { };
-        // TODO attrs在Sprite中解析
+    private getAttr(attrs: AttributeNode[]): op_def.IStrPair[] {
+        const result = [];
         for (const attr of attrs) {
-            if (attr.key === "TitleMask") {
-                result["titleMask"] = attr.intVal;
-            }
+            result.push({ key: attr.key, value: attr.basicTypeVal })
         }
         return result;
     }

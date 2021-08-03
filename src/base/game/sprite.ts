@@ -32,6 +32,7 @@ export class Sprite extends EventDispatcher implements ISprite {
     public sn: string;
     public alpha: number;
     public nickname: string;
+    public i18nName: string;
     public displayBadgeCards: op_def.IBadgeCard[];
 
     public package: op_gameconfig.IPackage;
@@ -96,7 +97,7 @@ export class Sprite extends EventDispatcher implements ISprite {
         if (obj.sn) {
             this.sn = obj.sn;
         }
-        this.titleMask = obj.titleMask;
+        if (obj.titleMask) this.titleMask = obj.titleMask;
 
         this.alpha = obj.opacity === undefined ? 1 : obj.opacity / 100;
         this.displayBadgeCards = obj.displayBadgeCards;
@@ -257,6 +258,7 @@ export class Sprite extends EventDispatcher implements ISprite {
     }
 
     public updateAttr(attrs: op_def.IStrPair[]) {
+        // TODO this.attrs改成map. 目前皮卡堂里有用到
         this.attrs = attrs;
         if (!attrs) return;
         let suits: AvatarSuit[];
@@ -271,6 +273,10 @@ export class Sprite extends EventDispatcher implements ISprite {
                 }
             } else if (attr.key === "touchSound") {
                 this.sound = attr.value;
+            } else if (attr.key === "TitleMask") {
+                this.titleMask = parseInt(attr.value);
+            } else if (attr .key === "i18nName") {
+                this.i18nName = attr.value;
             }
         }
     }
@@ -300,6 +306,7 @@ export class Sprite extends EventDispatcher implements ISprite {
             id: this.id,
             sound: this.sound
         });
+        this.sn = this.displayInfo.type;
         if (defAnimation) {
             this.setAnimationData(defAnimation, this.direction);
         }
@@ -347,6 +354,10 @@ export class Sprite extends EventDispatcher implements ISprite {
 
     setDisplayInfo(displayInfo: FramesModel | DragonbonesModel) {
         this.displayInfo = displayInfo;
+        // 修复新号部分家具没有sn数据
+        if (displayInfo.hasOwnProperty("type")) {
+            this.sn = this.displayInfo["type"];
+        }
         this.displayInfo.id = this.id;
         if (this.currentAnimationName) {
             // DragonbonesModel 设置的动画在avatar上

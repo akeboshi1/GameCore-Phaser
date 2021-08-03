@@ -10,6 +10,8 @@ export class BaseDataControlManager {
     constructor(game: Game) {
         this.mGame = game;
         this.mEvent = new EventDispatcher();
+        this.mPackMap = new Map();
+        this.mDataMap = new Map();
         this.initPackMap();
         this.initDataMap();
     }

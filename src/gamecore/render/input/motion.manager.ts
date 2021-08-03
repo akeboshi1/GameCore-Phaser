@@ -6,13 +6,13 @@ export class MotionManager {
     public enable: boolean;
     protected scene: Phaser.Scene;
     protected uiScene: Phaser.Scene;
-    private gameObject: Phaser.GameObjects.GameObject;
-    private scaleRatio: number;
-    private isHolding: boolean = false;
-    private holdTime: any;
-    private holdDelay: number = 200;
-    private curtime: number;
-    private isRunning = true;
+    protected gameObject: Phaser.GameObjects.GameObject;
+    protected scaleRatio: number;
+    protected isHolding: boolean = false;
+    protected holdTime: any;
+    protected holdDelay: number = 200;
+    protected curtime: number;
+    protected isRunning = true;
     // private curDirection: number = 0;
     constructor(protected render: Render) {
         this.scaleRatio = render.scaleRatio;
@@ -126,10 +126,13 @@ export class MotionManager {
     }
 
     protected async onPointerUpHandler(pointer: Phaser.Input.Pointer) {
+        this.moveToTargetAndActive(pointer);
+    }
+
+    protected async moveToTargetAndActive(pointer: Phaser.Input.Pointer) {
         if (!this.isRunning) return;
         this.isHolding = false;
         this.scene.input.off("pointermove", this.onPointerMoveHandler, this);
-
         if (!this.render.guideManager || this.render.guideManager.canInteractive()) return;
         if (Math.abs(pointer.downX - pointer.upX) >= 5 * this.render.scaleRatio && Math.abs(pointer.downY - pointer.upY) >= 5 * this.render.scaleRatio || pointer.upTime - pointer.downTime > this.holdDelay) {
             this.stop();
@@ -141,13 +144,6 @@ export class MotionManager {
                     await this.getEleMovePath(id, pointer);
                 }
             } else {
-                // if (this.render.guideManager.canInteractive()) {
-                //     const curGuide = this.render.guideManager.curGuide;
-                //     Logger.getInstance().log("pointerup ====>", curGuide);
-                //     const id = (<BasePlaySceneGuide>curGuide).data;
-                //     await this.getEleMovePath(id, pointer);
-                // } else {
-                // }
                 this.movePath(pointer.worldX / this.render.scaleRatio, pointer.worldY / this.render.scaleRatio, 0, [new LogicPos(pointer.worldX / this.scaleRatio, pointer.worldY / this.scaleRatio)]);
             }
         }
@@ -211,13 +207,20 @@ export class MotionManager {
         return ele.id;
     }
 
-    private start(worldX: number, worldY: number, id?: number) {
-        this.render.mainPeer.moveMotion(worldX, worldY, id);
-    }
+    protected movePath(x: number, y: number, z: number, targets: {}, id?: number) {
+        // todo check
 
-    private movePath(x: number, y: number, z: number, targets: {}, id?: number) {
         this.render.mainPeer.findPath(targets, id);
         // this.render.physicalPeer.findPath(targets, id);
+    }
+
+    protected clearGameObject() {
+        this.gameObject = null;
+        clearTimeout(this.holdTime);
+    }
+
+    private start(worldX: number, worldY: number, id?: number) {
+        this.render.mainPeer.moveMotion(worldX, worldY, id);
     }
 
     private stop() {
@@ -230,10 +233,5 @@ export class MotionManager {
         const tmpX = pointer.worldX / this.scaleRatio - x;
         const tmpY = pointer.worldY / this.scaleRatio - y;
         return this.scene.cameras.main.getWorldPoint(pointer.x - tmpX, pointer.y - tmpY);
-    }
-
-    private clearGameObject() {
-        this.gameObject = null;
-        clearTimeout(this.holdTime);
     }
 }
