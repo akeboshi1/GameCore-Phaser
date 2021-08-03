@@ -2297,7 +2297,7 @@ function-bind@^1.1.1:
 
 "game-capsule@git+ssh://git@code.apowo.com:PixelPai/game-capsule.git#dev":
   version "1.2.227"
-  resolved "git+ssh://git@code.apowo.com:PixelPai/game-capsule.git#1c9d038058d425d509743b2178874d886c1d1e0b"
+  resolved "git+ssh://git@code.apowo.com:PixelPai/game-capsule.git#ddff68c736c488b097e95465c54f670e55f83295"
   dependencies:
     chance "^1.0.18"
     crypto-js "^3.1.9-1"
