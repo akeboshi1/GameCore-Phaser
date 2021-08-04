@@ -957,7 +957,11 @@ export class SceneEditor extends Phaser.Scene {
         this.layerManager.addLayer(this, SurfaceLayer, SceneEditor.LAYER_SURFACE.toString(), 6);
         this.layerManager.addLayer(this, BaseLayer, SceneEditor.LAYER_GROUND_WALKABLE, 7);
         this.layerManager.addLayer(this, BaseLayer, SceneEditor.SCENE_UI, 8);
-        this.groundWalkableLayer = new GroundWalkableLayer(this, this.sceneEditor.sceneNode.groundWalkableCollection.data, this.sceneEditor.getCurrentRoomSize());
+        let initWalkableData = [];
+        if (this.sceneEditor.sceneNode.groundWalkableCollection) {
+            initWalkableData = this.sceneEditor.sceneNode.groundWalkableCollection.data;
+        }
+        this.groundWalkableLayer = new GroundWalkableLayer(this, initWalkableData, this.sceneEditor.getCurrentRoomSize());
         this.layerManager.addToLayer(SceneEditor.LAYER_GROUND_WALKABLE, this.groundWalkableLayer);
         this.groundWalkableLayer.setVisible(false);
 
