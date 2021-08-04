@@ -92,6 +92,7 @@ export class Ground extends Phaser.GameObjects.Container {
     }
 
     public existTerrain(x: number, y: number) {
+        if (!this.tilemapLayer) return false;
         const tile = this.tilemapLayer.getTileAt(x, y);
         if (!tile) return false;
         return tile.index >= 0;

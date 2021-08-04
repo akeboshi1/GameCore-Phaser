@@ -148,6 +148,8 @@ export class GridLayoutGroup extends Phaser.GameObjects.Container {
         );
         let positionX = 0;
         let positionY = 0;
+        let horMaxcount = 0;
+        let verMaxcount = 0;
         for (let i = 0; i < this.layoutElements.length; i++) {
 
             if (this._startAxis === AxisType.Horizontal) {
@@ -157,7 +159,8 @@ export class GridLayoutGroup extends Phaser.GameObjects.Container {
                 positionX = Math.floor(i / cellsPerMainAxis);
                 positionY = i % cellsPerMainAxis;
             }
-
+            if (horMaxcount < positionX) horMaxcount = positionX;
+            if (verMaxcount < positionY) verMaxcount = positionY;
             if (cornerX === 1)
                 positionX = actualCellCountX - 1 - positionX;
             if (cornerY === 1)
@@ -166,8 +169,8 @@ export class GridLayoutGroup extends Phaser.GameObjects.Container {
             this.setChildAlongAxis(this.layoutElements[i], 0, startOffset.x + (this._cellSize.x + this._spacing.x) * positionX, this._cellSize.x);
             this.setChildAlongAxis(this.layoutElements[i], 1, startOffset.y + (this._cellSize.y + this._spacing.y) * positionY, this._cellSize.y);
         }
-        const maxWidth = this.paddingHorizontal() + (this._cellSize.x + this._spacing.x) * (positionX + 1);
-        const maxHeight = this.paddingVertical() + (this._cellSize.y + this._spacing.y) * (positionY + 1);
+        const maxWidth = this.paddingHorizontal() + (this._cellSize.x + this._spacing.x) * (horMaxcount + 1);
+        const maxHeight = this.paddingVertical() + (this._cellSize.y + this._spacing.y) * (verMaxcount + 1);
         this.width = maxWidth;
         this.height = maxHeight;
     }

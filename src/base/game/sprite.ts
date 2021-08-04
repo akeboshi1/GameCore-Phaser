@@ -318,6 +318,7 @@ export class Sprite extends EventDispatcher implements ISprite {
             id: this.id,
             sound: this.sound
         });
+        this.sn = this.displayInfo.type;
         if (defAnimation) {
             this.setAnimationData(defAnimation, this.direction);
         }
@@ -365,6 +366,10 @@ export class Sprite extends EventDispatcher implements ISprite {
 
     setDisplayInfo(displayInfo: FramesModel | DragonbonesModel) {
         this.displayInfo = displayInfo;
+        // 修复新号部分家具没有sn数据
+        if (displayInfo.hasOwnProperty("type")) {
+            this.sn = this.displayInfo["type"];
+        }
         this.displayInfo.id = this.id;
         if (this.currentAnimationName) {
             // DragonbonesModel 设置的动画在avatar上
