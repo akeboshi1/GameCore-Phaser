@@ -618,6 +618,10 @@ export class Element extends BlockObject implements IElement {
         return result;
     }
 
+    public getAttr(key: string) {
+        return this.mModel.getAttr(key);
+    }
+
     get nickname(): string {
         return this.mModel.nickname;
     }
