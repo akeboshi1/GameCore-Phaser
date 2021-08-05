@@ -187,6 +187,7 @@ export class EditorWallManager extends PacketHandler {
                     x: loc.x,
                     y: loc.y,
                     z: 0,
+                    sn:palette.frameModel.type,
                     dir: loc.dir,
                     layer: LayerEnum.Wall
                 });
@@ -204,6 +205,7 @@ export class EditorWallManager extends PacketHandler {
                     x: loc.x,
                     y: loc.y,
                     z: 0,
+                    sn:palette.frameModel.type,
                     dir: loc.dir,
                     layer: palette.layer
                 });

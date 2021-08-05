@@ -258,6 +258,11 @@ export class Element extends BlockObject implements IElement {
             return;
         }
         this.removeFromMap();
+        if (!this.mModel.sn) {
+            // tslint:disable-next-line:no-console
+            // console.log("update model sn", model);
+            this.mModel.sn = model.sn;
+        }
         if (model.hasOwnProperty("attrs")) {
             this.mModel.updateAttr(model.attrs);
         }

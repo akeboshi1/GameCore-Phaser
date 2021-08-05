@@ -100,6 +100,7 @@ export class Sprite extends EventDispatcher implements ISprite {
 
         if (obj.sn) {
             this.sn = obj.sn;
+            if (this.displayInfo) this.displayInfo.type = this.sn;
         }
         if (obj.titleMask) this.titleMask = obj.titleMask;
 
@@ -172,7 +173,7 @@ export class Sprite extends EventDispatcher implements ISprite {
         }
         sprite.direction = this.direction;
         sprite.bindId = this.bindID;
-        sprite.sn = this.sn;
+        sprite.sn = this.sn || this.displayInfo.type;
         sprite.version = this.version;
         return sprite;
     }
@@ -279,6 +280,7 @@ export class Sprite extends EventDispatcher implements ISprite {
             } else if (key === "touchSound") {
                 this.sound = value;
             } else if (key === "TitleMask") {
+                // tslint:disable-next-line:radix
                 this.titleMask = parseInt(value);
             } else if (key === "i18nName") {
                 this.i18nName = value;
@@ -318,7 +320,7 @@ export class Sprite extends EventDispatcher implements ISprite {
             id: this.id,
             sound: this.sound
         });
-        this.sn = this.displayInfo.type;
+        // this.sn = this.displayInfo.type;
         if (defAnimation) {
             this.setAnimationData(defAnimation, this.direction);
         }
@@ -581,6 +583,8 @@ export class FramesModel implements IFramesModel {
     constructor(data: any) {
         // TODO 定义IElement接口
         this.id = data.id || 0;
+        // tslint:disable-next-line:no-console
+        if (!data.sn) console.log("framesmodel no sn", data);
         this.type = data.sn || "";
         this.eventName = data.eventName;
         this.sound = data.sound;
@@ -681,6 +685,7 @@ export class FramesModel implements IFramesModel {
         x: number;
         y: number;
         z?: number;
+        sn?: string;
         id?: number;
         dir?: number;
         isMoss?: boolean;
@@ -829,6 +834,7 @@ export class DragonbonesModel implements IDragonbonesModel {
     id: number;
     public eventName: number[];
     public sound: string;
+    public type: string;
     avatarDir?: number;
     avatar?: IAvatar;
     animationName?: string;

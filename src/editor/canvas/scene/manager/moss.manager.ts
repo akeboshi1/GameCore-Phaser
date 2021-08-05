@@ -174,6 +174,7 @@ export class EditorMossManager extends PacketHandler {
                 // @ts-ignore
                 const sprite = moss.frameModel.createSprite({
                     ...loc,
+                    sn:moss.frameModel.type,
                     nodeType: op_def.NodeType.ElementNodeType,
                     isMoss: true,
                     layer: moss.layer
@@ -190,6 +191,7 @@ export class EditorMossManager extends PacketHandler {
                 if (!moss) continue;
                 const sprite = moss.frameModel.createSprite({
                     ...loc,
+                    sn:moss.frameModel.type,
                     nodeType: op_def.NodeType.ElementNodeType,
                     isMoss: true,
                     layer: moss.layer
