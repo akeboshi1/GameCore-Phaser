@@ -586,7 +586,7 @@ export class Element extends BlockObject implements IElement {
     }
 
     public removeTopDisplay() {
-
+        if (this.mCreatedDisplay) this.mRoomService.game.renderPeer.removeTopDisplay(this.id);
     }
 
     public showRefernceArea(conflictMap?: number[][]) {

@@ -153,6 +153,11 @@ export class DragonbonesDisplay extends BaseDragonbonesDisplay implements IDispl
         this.mTopDisplay.loadState(data);
     }
 
+    public removeTopDisplay() {
+        if (!this.mTopDisplay) return;
+        this.mTopDisplay.removeDisplay();
+    }
+
     public showBubble(text: string, setting: any) {// op_client.IChat_Setting
         if (!this.mTopDisplay) {
             this.mTopDisplay = new ElementTopDisplay(this.scene, this, this.render);

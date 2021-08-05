@@ -43,6 +43,7 @@ export class ElementTopDisplay extends TopDisplay {
     public hideNickname() {
         this.removeFollowObject(FollowEnum.Nickname);
     }
+
     public showBubble(text: string, setting: any) {// op_client.IChat_Setting
         const scene = this.scene;
         if (!scene || !setting) {
