@@ -53,6 +53,9 @@ export class Sprite extends EventDispatcher implements ISprite {
 
     public originCollisionPoint: LogicPoint;
 
+    /**
+     * @deprecated
+     */
     public attrs: op_def.IStrPair[];
     public suits: AvatarSuit[];
     public animationQueue: AnimationQueue;
@@ -66,6 +69,7 @@ export class Sprite extends EventDispatcher implements ISprite {
     public layer: number;
     public sound: string;
     public curState: number = 0;
+    protected attrMap: Map<string, string | boolean | number>;
     constructor(obj: op_client.ISprite, nodeType?: op_def.NodeType) {
         super();
         // 必要数据
@@ -263,22 +267,30 @@ export class Sprite extends EventDispatcher implements ISprite {
         if (!attrs) return;
         let suits: AvatarSuit[];
         for (const attr of attrs) {
-            if (attr.key === "PKT_AVATAR_SUITS") {
-                suits = JSON.parse(attr.value);
+            const { key, value } = attr;
+            if (key === "PKT_AVATAR_SUITS") {
+                suits = JSON.parse(value);
                 if (suits && suits.length > 0) {
                     this.suits = suits;
                     this.updateSuits = true;
                     if (!this.animator) this.animator = new Animator(this.suits);
                     else this.animator.setSuits(this.suits);
                 }
-            } else if (attr.key === "touchSound") {
-                this.sound = attr.value;
-            } else if (attr.key === "TitleMask") {
-                this.titleMask = parseInt(attr.value);
-            } else if (attr .key === "i18nName") {
-                this.i18nName = attr.value;
+            } else if (key === "touchSound") {
+                this.sound = value;
+            } else if (key === "TitleMask") {
+                this.titleMask = parseInt(value);
+            } else if (key === "i18nName") {
+                this.i18nName = value;
             }
+            if (!this.attrMap) this.attrMap = new Map();
+            this.attrMap.set(key, value);
         }
+    }
+
+    public getAttr(key) {
+        if (!this.attrMap) return;
+        return this.attrMap.get(key);
     }
 
     public updateDisplay(display: op_gameconfig.IDisplay, animations: op_gameconfig_01.IAnimationData[], defAnimation?: string) {

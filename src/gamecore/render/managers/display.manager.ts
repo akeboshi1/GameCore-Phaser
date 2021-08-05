@@ -510,6 +510,12 @@ export class DisplayManager {
         display.showTopDisplay(state);
     }
 
+    public removeTopDisplay(id: number) {
+        const display = this.getDisplay(id);
+        if (!display) return;
+        display.removeTopDisplay();
+    }
+
     public showMatterDebug(bodies) {
         if (!this.matterBodies) {
             this.matterBodies = new MatterBodies(this.render);

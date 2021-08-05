@@ -586,7 +586,7 @@ export class Element extends BlockObject implements IElement {
     }
 
     public removeTopDisplay() {
-
+        if (this.mCreatedDisplay) this.mRoomService.game.renderPeer.removeTopDisplay(this.id);
     }
 
     public showRefernceArea(conflictMap?: number[][]) {
@@ -616,6 +616,10 @@ export class Element extends BlockObject implements IElement {
             }
         }
         return result;
+    }
+
+    public getAttr(key: string) {
+        return this.mModel.getAttr(key);
     }
 
     get nickname(): string {

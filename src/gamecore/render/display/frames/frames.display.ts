@@ -169,6 +169,11 @@ export class FramesDisplay extends BaseFramesDisplay implements IDisplayObject {
         this.mTopDisplay.loadState(data);
     }
 
+    public removeTopDisplay() {
+        if (!this.mTopDisplay) return;
+        this.mTopDisplay.removeDisplay();
+    }
+
     public showBubble(text: string, setting: any) {// op_client.IChat_Setting
         if (!this.mTopDisplay) {
             this.mTopDisplay = new ElementTopDisplay(this.scene, this, this.render);

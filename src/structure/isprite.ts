@@ -25,6 +25,9 @@ export interface ISprite {
     currentCollisionPoint: LogicPoint;
     hasInteractive: boolean;
     interactive: op_def.IPBPoint2f[];
+    /**
+     * @deprecated
+     */
     attrs: op_def.IStrPair[];
     suits: AvatarSuit[];
     animationQueue: AnimationQueue;
@@ -60,4 +63,5 @@ export interface ISprite {
     toSprite(): op_client.ISprite;
     registerAnimationMap(key: string, value: string);
     unregisterAnimationMap(key: string);
+    getAttr(key: string): number | boolean | string;
 }

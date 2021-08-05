@@ -1609,6 +1609,10 @@ export class Render extends RPCPeer implements GameMain, IRender {
         if (this.mDisplayManager) this.mDisplayManager.showTopDisplay(id, state);
     }
 
+    public removeTopDisplay(id: number) {
+        if (this.mDisplayManager) this.mDisplayManager.removeTopDisplay(id);
+    }
+
     @Export()
     public SetDisplayVisible(id: number, visible: boolean) {
         if (!this.mDisplayManager) return;

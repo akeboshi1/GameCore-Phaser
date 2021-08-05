@@ -399,10 +399,8 @@ export class SceneEditorCanvas extends EditorCanvas implements IRender {
     }
 
     // 将地块数据转化为单帧url并合图，只取idle动画第一层第一帧，返回合图url
-    transformTerrains(sns: string[]): Promise<{json: string, url: string}> {
+    transformTerrains(tileWidth: number, tileHeight: number, sns: string[]): Promise<{json: string, url: string}> {
         const tasks: Array<Promise<{sn: string, key: string}>> = [];
-        const tileWidth = this.sceneNode.size.tileWidth;
-        const tileHeight = 60;
         for (const sn1 of sns) {
             // get terrains
             const framesModel = this.elementStorage.getTerrainPaletteBySN(sn1);
@@ -959,7 +957,11 @@ export class SceneEditor extends Phaser.Scene {
         this.layerManager.addLayer(this, SurfaceLayer, SceneEditor.LAYER_SURFACE.toString(), 6);
         this.layerManager.addLayer(this, BaseLayer, SceneEditor.LAYER_GROUND_WALKABLE, 7);
         this.layerManager.addLayer(this, BaseLayer, SceneEditor.SCENE_UI, 8);
-        this.groundWalkableLayer = new GroundWalkableLayer(this, this.sceneEditor.sceneNode.groundWalkableCollection.data, this.sceneEditor.getCurrentRoomSize());
+        let initWalkableData = [];
+        if (this.sceneEditor.sceneNode.groundWalkableCollection) {
+            initWalkableData = this.sceneEditor.sceneNode.groundWalkableCollection.data;
+        }
+        this.groundWalkableLayer = new GroundWalkableLayer(this, initWalkableData, this.sceneEditor.getCurrentRoomSize());
         this.layerManager.addToLayer(SceneEditor.LAYER_GROUND_WALKABLE, this.groundWalkableLayer);
         this.groundWalkableLayer.setVisible(false);
 

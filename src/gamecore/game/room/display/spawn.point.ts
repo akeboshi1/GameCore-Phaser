@@ -136,6 +136,10 @@ export class SpawnPoint implements ISprite {
         return [];
     }
 
+    public getAttr(key: string) {
+        return undefined;
+    }
+
     registerAnimationMap(key: string, value: string) { }
     unregisterAnimationMap(key: string) { }
 
