@@ -205,7 +205,7 @@ export class ElementTopDisplay extends TopDisplay {
         const jsonurl = state.display.datapath;
         const frame = state.image.img;
         if (this.scene.textures.exists(pngurl)) {
-            if (!this.isDispose && callback) callback.call(context);
+            if (!this.isDispose && callback) callback.call(context, pngurl, frame);
         } else {
             let pngPath, jsonPath;
             state.foldType = state.foldType || "dpr";
