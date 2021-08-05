@@ -1609,6 +1609,7 @@ export class Render extends RPCPeer implements GameMain, IRender {
         if (this.mDisplayManager) this.mDisplayManager.showTopDisplay(id, state);
     }
 
+    @Export([webworker_rpc.ParamType.num])
     public removeTopDisplay(id: number) {
         if (this.mDisplayManager) this.mDisplayManager.removeTopDisplay(id);
     }
