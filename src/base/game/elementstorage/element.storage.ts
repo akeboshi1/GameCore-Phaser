@@ -45,6 +45,7 @@ export interface IElementStorage {
 export interface IDisplayRef {
     // element id
     id: number;
+    sn?: string;
     name?: string;
     pos?: IPos;
     direction?: number;
@@ -253,6 +254,7 @@ export class ElementStorage implements IElementStorage {
                 const attrs = this.getAttr(attrNodes);
                 const eleRef: IDisplayRef = {
                     id: obj.id,
+                    sn: obj.sn,
                     pos,
                     blockIndex: new BlockIndex().getBlockIndex(pos.x, pos.y, sceneNode.size),
                     direction: ele.animations.dir,
