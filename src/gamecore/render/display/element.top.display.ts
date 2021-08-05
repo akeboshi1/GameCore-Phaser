@@ -101,14 +101,14 @@ export class ElementTopDisplay extends TopDisplay {
                     }
                     sprite.play(animation.anikey);
                 } else {
-                    if (this.mFollows.has(FollowEnum.Sprite)) {
-                        follow = this.mFollows.get(FollowEnum.Sprite);
+                    if (this.mFollows.has(FollowEnum.Image)) {
+                        follow = this.mFollows.get(FollowEnum.Image);
                         sprite = follow.object;
                         sprite.setTexture(pngurl, frame);
                     } else {
                         sprite = this.scene.make.image({ key: pngurl, frame });
                         follow = new FollowObject(sprite, this.mOwner, this.mSceneScale);
-                        this.mFollows.set(FollowEnum.Sprite, follow);
+                        this.mFollows.set(FollowEnum.Image, follow);
                     }
                 }
                 sprite.setScale(this.uiScale);
