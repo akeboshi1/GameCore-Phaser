@@ -209,15 +209,15 @@ export class ElementTopDisplay extends TopDisplay {
             state.foldType = state.foldType || "dpr";
             if (state.foldType === "dpr") {
                 pngPath = this.render.url.getUIRes(this.mUIRatio, pngurl);
-                jsonPath = this.render.url.getUIRes(this.mUIRatio, jsonurl);
+                if (jsonurl) jsonPath = this.render.url.getUIRes(this.mUIRatio, jsonurl);
             } else {
                 pngPath = this.render.url.getNormalUIRes(pngurl);
-                jsonPath = this.render.url.getNormalUIRes(jsonurl);
+                if (jsonurl) jsonPath = this.render.url.getNormalUIRes(jsonurl);
             }
             if (pngurl && jsonurl) {
                 this.scene.load.atlas(pngurl, pngPath, jsonPath);
             } else {
-                this.scene.load.image(pngurl, pngurl);
+                this.scene.load.image(pngurl, pngPath);
             }
 
             this.scene.load.once(Phaser.Loader.Events.COMPLETE, () => {
