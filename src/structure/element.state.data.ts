@@ -12,11 +12,11 @@ export interface StateConfig {
         };
 
     };
-    foldType: string,
+    foldType: string;
     display?: {
         texturepath?: string;
         datapath?: string;
-    }
+    };
 }
 
 export enum ElementStateType {

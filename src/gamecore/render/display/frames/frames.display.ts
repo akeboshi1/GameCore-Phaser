@@ -266,7 +266,7 @@ export class FramesDisplay extends BaseFramesDisplay implements IDisplayObject {
         this.mDisplays.forEach((display) => {
             display.x -= offsetLoc.x;
             display.y -= offsetLoc.y;
-        })
+        });
     }
 
     // public mount(display: FramesDisplay | DragonbonesDisplay, targetIndex?: number) {

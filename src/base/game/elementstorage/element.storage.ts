@@ -254,7 +254,7 @@ export class ElementStorage implements IElementStorage {
                 const attrs = this.getAttr(attrNodes);
                 const eleRef: IDisplayRef = {
                     id: obj.id,
-                    sn: obj.sn,
+                    sn: obj.sn || displayModel.type,
                     pos,
                     blockIndex: new BlockIndex().getBlockIndex(pos.x, pos.y, sceneNode.size),
                     direction: ele.animations.dir,
@@ -391,6 +391,7 @@ export class ElementStorage implements IElementStorage {
             const { layer, frameModel } = mossPalette;
             this.addDisplayRef({
                 id: moss.id,
+                sn: frameModel.type,
                 direction: moss.dir || 3,
                 pos: new LogicPos(moss.x, moss.y, moss.z),
                 displayModel: frameModel,
@@ -407,7 +408,7 @@ export class ElementStorage implements IElementStorage {
     private getAttr(attrs: AttributeNode[]): op_def.IStrPair[] {
         const result = [];
         for (const attr of attrs) {
-            result.push({ key: attr.key, value: attr.basicTypeVal })
+            result.push({ key: attr.key, value: attr.basicTypeVal });
         }
         return result;
     }
