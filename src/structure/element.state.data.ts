@@ -10,11 +10,13 @@ export interface StateConfig {
             duration?: number,
             repeat?: number
         };
-        display?: {
-            texturepath?: string;
-            datapath?: string;
-        }
+
     };
+    foldType: string,
+    display?: {
+        texturepath?: string;
+        datapath?: string;
+    }
 }
 
 export enum ElementStateType {

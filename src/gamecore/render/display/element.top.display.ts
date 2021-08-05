@@ -82,21 +82,18 @@ export class ElementTopDisplay extends TopDisplay {
     public showUIState(state: StateConfig) {
         if (!this.mFollows) return;
         if (state.type !== "text") {
-            const pngurl = state.image.display.texturepath;
-            const jsonurl = state.image.display.datapath;
-            this.loadAtals(pngurl, jsonurl, this, () => {
+            this.loadAtals(state, this, (key: string, frame?: string) => {
                 let follow;
                 let sprite;
-                const frame = state.image.img;
                 if (state.type === "sprite") {
                     const animation = state.image.animation;
                     const frames = animation.frame;
-                    this.scene.anims.create({ key: animation.anikey, frames: this.scene.anims.generateFrameNames(pngurl, { prefix: frame + "_", frames }), duration: animation.duration, repeat: animation.repeat });
+                    this.scene.anims.create({ key: animation.anikey, frames: this.scene.anims.generateFrameNames(key, { prefix: frame + "_", frames }), duration: animation.duration, repeat: animation.repeat });
                     if (this.mFollows.has(FollowEnum.Sprite)) {
                         follow = this.mFollows.get(FollowEnum.Sprite);
                         sprite = follow.object;
                     } else {
-                        sprite = this.scene.make.sprite({ key: pngurl, frame: frame + "_1" });
+                        sprite = this.scene.make.sprite({ key, frame: frame + "_1" });
                         follow = new FollowObject(sprite, this.mOwner, this.mSceneScale);
                         this.mFollows.set(FollowEnum.Sprite, follow);
                     }
@@ -105,9 +102,9 @@ export class ElementTopDisplay extends TopDisplay {
                     if (this.mFollows.has(FollowEnum.Image)) {
                         follow = this.mFollows.get(FollowEnum.Image);
                         sprite = follow.object;
-                        sprite.setTexture(pngurl, frame);
+                        sprite.setTexture(key, frame);
                     } else {
-                        sprite = this.scene.make.image({ key: pngurl, frame });
+                        sprite = this.scene.make.image({ key, frame });
                         follow = new FollowObject(sprite, this.mOwner, this.mSceneScale);
                         this.mFollows.set(FollowEnum.Image, follow);
                     }
@@ -201,15 +198,30 @@ export class ElementTopDisplay extends TopDisplay {
     //     }
 
     // }
-    private loadAtals(pngurl: string, jsonurl: string, context: any, callback: any) {
+    private loadAtals(state: StateConfig, context: any, callback: Function) {
+        const pngurl = state.display.texturepath;
+        const jsonurl = state.display.datapath;
+        const frame = state.image.img;
         if (this.scene.textures.exists(pngurl)) {
             if (!this.isDispose && callback) callback.call(context);
         } else {
-            const pngPath = this.render.url.getUIRes(this.mUIRatio, pngurl);
-            const jsonPath = this.render.url.getUIRes(this.mUIRatio, jsonurl);
-            this.scene.load.atlas(pngurl, pngPath, jsonPath);
+            let pngPath, jsonPath;
+            state.foldType = state.foldType || "dpr";
+            if (state.foldType === "dpr") {
+                pngPath = this.render.url.getUIRes(this.mUIRatio, pngurl);
+                jsonPath = this.render.url.getUIRes(this.mUIRatio, jsonurl);
+            } else {
+                pngPath = this.render.url.getNormalUIRes(pngurl);
+                jsonPath = this.render.url.getNormalUIRes(jsonurl);
+            }
+            if (pngurl && jsonurl) {
+                this.scene.load.atlas(pngurl, pngPath, jsonPath);
+            } else {
+                this.scene.load.image(pngurl, pngurl);
+            }
+
             this.scene.load.once(Phaser.Loader.Events.COMPLETE, () => {
-                if (!this.isDispose && callback) callback.call(context);
+                if (!this.isDispose && callback) callback.call(context, pngurl, frame);
             }, this);
             this.scene.load.start();
         }
