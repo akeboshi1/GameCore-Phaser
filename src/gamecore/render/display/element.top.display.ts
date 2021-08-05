@@ -109,7 +109,9 @@ export class ElementTopDisplay extends TopDisplay {
                         this.mFollows.set(FollowEnum.Image, follow);
                     }
                 }
-                sprite.setScale(this.uiScale);
+                if (state.foldType === "normal") {
+                    sprite.setScale(this.uiScale * this.mSceneScale);
+                } else sprite.setScale(this.uiScale);
                 const point = this.getYOffset();
                 follow.setOffset(0, point.y);
                 this.addToSceneUI(sprite);
