@@ -1815,7 +1815,7 @@ export class Render extends RPCPeer implements GameMain, IRender {
     }
 
     protected initLocales() {
-        initLocales(`${this.resUrl.RES_PATH}/locales/{{lng}}.json`);
+        initLocales(`${this.resUrl.RES_PATH}locales/{{lng}}.json`);
     }
 
     private onFullScreenChange() {
