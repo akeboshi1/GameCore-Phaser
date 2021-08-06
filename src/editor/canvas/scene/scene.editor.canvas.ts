@@ -400,6 +400,9 @@ export class SceneEditorCanvas extends EditorCanvas implements IRender {
 
     // 将地块数据转化为单帧url并合图，只取idle动画第一层第一帧，返回合图url
     transformTerrains(tileWidth: number, tileHeight: number, sns: string[]): Promise<{json: string, url: string}> {
+        if (sns.length === 0) {
+            return Promise.reject("game-core error: sns.length === 0");
+        }
         const tasks: Array<Promise<{sn: string, key: string}>> = [];
         for (const sn1 of sns) {
             // get terrains
@@ -514,7 +517,7 @@ export class SceneEditorCanvas extends EditorCanvas implements IRender {
             Promise.all(tasks)
                 .then((frames) => {
                     if (frames.length === 0) {
-                        reject("no data");
+                        reject("game-core error: no correct data");
                         return;
                     }
 
