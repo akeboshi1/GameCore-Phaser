@@ -118,6 +118,8 @@ export class Ground extends Phaser.GameObjects.Container {
         if (!this.scene) return;
 
         if (this.tilemapLayer) return;
+        if (!this.scene.cache.tilemap.exists(this.mapJsonKey)) return;
+        if (!this.scene.textures.exists(this.tilesetImgKey)) return;
 
         const map = this.scene.add.tilemap(this.mapJsonKey);
         const tileSet = map.addTilesetImage(this.MAP_JSON_TILESET_NAME, this.tilesetImgKey);
@@ -170,8 +172,8 @@ export class Ground extends Phaser.GameObjects.Container {
                 this.listenerMng.removePhaserListener(PhaserListenerType.Load, Phaser.Loader.Events.FILE_COMPLETE, onLoadComplete);
                 this.listenerMng.removePhaserListener(PhaserListenerType.Load, Phaser.Loader.Events.FILE_LOAD_ERROR, onLoadError);
 
-                Logger.getInstance().warn("load ground tileset img error: " + this.tilesetImgKey);
-                reject("load ground tileset img error: " + this.tilesetImgKey);
+                // Logger.getInstance().warn("load ground tileset img error: " + this.tilesetImgKey);
+                resolve(null);
             };
             this.listenerMng.addPhaserListener(PhaserListenerType.Load, Phaser.Loader.Events.FILE_COMPLETE, onLoadComplete);
             this.listenerMng.addPhaserListener(PhaserListenerType.Load, Phaser.Loader.Events.FILE_LOAD_ERROR, onLoadError);
