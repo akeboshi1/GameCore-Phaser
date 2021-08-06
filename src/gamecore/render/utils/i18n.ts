@@ -1,11 +1,11 @@
 import i18next from "i18next";
 import { op_def } from "pixelpai_proto";
-import HttpApi from "i18next-http-backend";
+import i18nextXHRBackend from "i18next-xhr-backend";
 import LanguageDetector from "i18next-browser-languagedetector";
 
 export function initLocales(path: string): Promise<any> {
   return i18next
-    .use(HttpApi)
+    .use(i18nextXHRBackend)
     .use(LanguageDetector)
     .init({
       fallbackLng: {
