@@ -252,12 +252,15 @@ export class ElementStorage implements IElementStorage {
                 }
                 const attrNodes = <AttributeNode[]>ele.children.filter((child) => child.type === op_def.NodeType.AttributeType);
                 const attrs = this.getAttr(attrNodes);
+                let direction = 3;
+                if (ele.animations) direction = ele.animations.dir;
+                if (ele.avatar) direction = ele.avatar.dir;
                 const eleRef: IDisplayRef = {
                     id: obj.id,
                     sn: obj.sn || displayModel.type,
                     pos,
                     blockIndex: new BlockIndex().getBlockIndex(pos.x, pos.y, sceneNode.size),
-                    direction: ele.animations.dir,
+                    direction,
                     name: obj.name,
                     displayModel,
                     layer: ele.layer,

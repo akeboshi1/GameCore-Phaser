@@ -583,8 +583,6 @@ export class FramesModel implements IFramesModel {
     constructor(data: any) {
         // TODO 定义IElement接口
         this.id = data.id || 0;
-        // tslint:disable-next-line:no-console
-        if (!data.sn) console.log("framesmodel no sn", data);
         this.type = data.sn || "";
         this.eventName = data.eventName;
         this.sound = data.sound;

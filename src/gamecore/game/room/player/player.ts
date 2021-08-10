@@ -4,6 +4,7 @@ import { IDragonbonesModel, IPos, ISprite, PlayerState, DirectionChecker } from 
 import { Element, IElement } from "../element/element";
 import { LayerEnum } from "game-capsule";
 import { InputEnable } from "../element/input.enable";
+import { DragonbonesModel } from "baseGame";
 export class Player extends Element implements IElement {
     get nodeType(): number {
         return op_def.NodeType.CharacterNodeType;
@@ -87,6 +88,18 @@ export class Player extends Element implements IElement {
     public setWeapon(weaponid: string) {
         if (!this.mModel || !this.mModel.avatar) return;
         const avatar: any = { barmWeapId: { sn: weaponid, slot: "NDE5NDMwNA==", suit_type: "weapon" } };
+        const displayInfo = this.mModel.displayInfo;
+        if (displayInfo) {
+            if (displayInfo instanceof DragonbonesModel && displayInfo.avatar) {
+                const weap = displayInfo.avatar.barmWeapId;
+                if (typeof weap === "string") {
+                    if (weap === weaponid) return;
+                } else {
+                    if (weap?.sn === weaponid) return;
+                }
+            }
+
+        }
         this.model.setTempAvatar(avatar);
         this.load(this.mModel.displayInfo);
     }

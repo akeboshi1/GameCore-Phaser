@@ -12,7 +12,7 @@ export class EditorDragonbonesDisplay extends BaseDragonbonesDisplay {
     protected mTopDisplay: EditorTopDisplay;
     protected mNodeType: op_def.NodeType;
     constructor(scene: Phaser.Scene, config: IEditorCanvasConfig, sprite: Sprite) {
-        super(scene, { resPath: config.LOCAL_HOME_PATH, osdPath: config.osd }, sprite.id);
+        super(scene, { resPath: "./resources/", osdPath: config.osd }, sprite.id);
         this.setSprite(sprite);
         this.mNodeType = sprite.nodeType;
     }
