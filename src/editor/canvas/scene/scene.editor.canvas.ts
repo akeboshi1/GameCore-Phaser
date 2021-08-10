@@ -833,7 +833,8 @@ export class SceneEditorCanvas extends EditorCanvas implements IRender {
         }
         for (let i = 0; i < positions.length; i++) {
             const pos = positions[i];
-            if (pos.x >= this.getCurrentRoomSize().cols || pos.y >= this.getCurrentRoomSize().rows) continue;
+            if (pos.x >= this.getCurrentRoomSize().cols || pos.x < 0 ||
+                pos.y >= this.getCurrentRoomSize().rows || pos.y < 0) continue;
             const posIdx = this.getCurrentRoomSize().cols * pos.y + pos.x;
             if (this.mGroundWalkableChangeIdxes.indexOf(posIdx) < 0) this.mGroundWalkableChangeIdxes.push(posIdx);
         }
