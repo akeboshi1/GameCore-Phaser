@@ -1,6 +1,6 @@
 <mxfile host="65bd71144e">
     <diagram id="BO4f_YWSRwQBq1X9HVu2" name="Page-1">
-        <mxGraphModel dx="5109" dy="3037" grid="1" gridSize="10" guides="1" tooltips="1" connect="0" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+        <mxGraphModel dx="5225" dy="2882" grid="1" gridSize="10" guides="1" tooltips="1" connect="0" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
             <root>
                 <mxCell id="0"/>
                 <mxCell id="1" parent="0"/>
@@ -156,7 +156,7 @@
                     <mxGeometry y="208" width="610" height="112" as="geometry"/>
                 </mxCell>
                 <mxCell id="123" value="&lt;br style=&quot;color: rgb(78 , 201 , 176) ; font-family: &amp;#34;menlo&amp;#34; , &amp;#34;monaco&amp;#34; , &amp;#34;courier new&amp;#34; , monospace , &amp;#34;menlo&amp;#34; , &amp;#34;monaco&amp;#34; , &amp;#34;courier new&amp;#34; , monospace ; font-size: 16px&quot;&gt;&lt;span style=&quot;color: rgb(78 , 201 , 176) ; font-family: &amp;#34;menlo&amp;#34; , &amp;#34;monaco&amp;#34; , &amp;#34;courier new&amp;#34; , monospace , &amp;#34;menlo&amp;#34; , &amp;#34;monaco&amp;#34; , &amp;#34;courier new&amp;#34; , monospace ; font-size: 16px ; background-color: rgb(30 , 30 , 30)&quot;&gt;GComboBox extends GComponent&lt;/span&gt;" style="swimlane;fontStyle=0;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=55;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=0;marginBottom=0;html=1;rounded=0;sketch=0;" parent="1" vertex="1">
-                    <mxGeometry x="-1010" y="650" width="770" height="470" as="geometry"/>
+                    <mxGeometry x="-480" y="650" width="770" height="470" as="geometry"/>
                 </mxCell>
                 <mxCell id="130" value="&lt;font style=&quot;font-size: 15px&quot;&gt;constructor(scene:Phaser.Scene,{bgRes,textRes,btnRes,iconResitemRes},dir:number,visibleCount:number)&lt;br&gt;setItems(data:any[ ])&lt;br&gt;set text(value:string)&lt;br&gt;setSelectIndex(index:number);&lt;br&gt;dropBtn.on(&quot;pointer.down&quot;);&lt;br&gt;dispose()&lt;br&gt;&lt;/font&gt;" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" parent="123" vertex="1">
                     <mxGeometry y="55" width="770" height="122" as="geometry"/>
@@ -376,7 +376,7 @@
                 <mxCell id="228" value="" style="swimlane;fontStyle=1;align=center;verticalAlign=top;horizontal=1;startSize=0;collapsible=0;marginBottom=0;html=1;strokeColor=none;fillColor=none;" parent="227" vertex="1">
                     <mxGeometry y="30" width="260" height="90" as="geometry"/>
                 </mxCell>
-                <mxCell id="229" value="url，httpRequest" style="html=1;align=center;verticalAlign=middle;rotatable=0;" parent="228" vertex="1">
+                <mxCell id="229" value="url，httpRequest，container" style="html=1;align=center;verticalAlign=middle;rotatable=0;" parent="228" vertex="1">
                     <mxGeometry width="250" height="30" relative="1" as="geometry">
                         <mxPoint x="5" y="20" as="offset"/>
                     </mxGeometry>
@@ -610,16 +610,19 @@
                         <mxPoint x="5" y="20" as="offset"/>
                     </mxGeometry>
                 </mxCell>
-                <mxCell id="299" value="&lt;font color=&quot;#4ec9b0&quot; face=&quot;menlo, monaco, courier new, monospace, menlo, monaco, courier new, monospace&quot;&gt;&lt;span style=&quot;font-size: 16px ; font-weight: 400 ; background-color: rgb(30 , 30 , 30)&quot;&gt;GRoot(显示对象根节点，phaser.scene)&lt;br&gt;&lt;/span&gt;&lt;/font&gt;" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=30;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=0;marginBottom=0;html=1;rounded=0;sketch=0;" parent="1" vertex="1">
-                    <mxGeometry x="-588" y="-551.5" width="390" height="100" as="geometry"/>
+                <mxCell id="299" value="&lt;font color=&quot;#4ec9b0&quot; face=&quot;menlo, monaco, courier new, monospace, menlo, monaco, courier new, monospace&quot;&gt;&lt;span style=&quot;font-size: 16px ; font-weight: 400 ; background-color: rgb(30 , 30 , 30)&quot;&gt;GRoot(显示对象根节点,换场景即会重新创建)&lt;br&gt;&lt;/span&gt;&lt;/font&gt;" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=30;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=0;marginBottom=0;html=1;rounded=0;sketch=0;" parent="1" vertex="1">
+                    <mxGeometry x="-590" y="-590" width="390" height="130" as="geometry"/>
                 </mxCell>
                 <mxCell id="300" value="" style="swimlane;fontStyle=1;align=center;verticalAlign=top;horizontal=1;startSize=0;collapsible=0;marginBottom=0;html=1;strokeColor=none;fillColor=none;" parent="299" vertex="1">
-                    <mxGeometry y="30" width="390" height="70" as="geometry"/>
+                    <mxGeometry y="30" width="390" height="100" as="geometry"/>
                 </mxCell>
-                <mxCell id="301" value="add(child),remove(child),showWindow(win)...groot比window更底层" style="html=1;align=center;verticalAlign=middle;rotatable=0;" parent="300" vertex="1">
+                <mxCell id="301" value="scen,uiStage(添加显示对象全部用uistage处理)" style="html=1;align=center;verticalAlign=middle;rotatable=0;" parent="300" vertex="1">
                     <mxGeometry width="380" height="30" relative="1" as="geometry">
                         <mxPoint x="5" y="20" as="offset"/>
                     </mxGeometry>
+                </mxCell>
+                <mxCell id="445" value="showWindow(win)...groot比window更底层" style="html=1;align=center;verticalAlign=middle;rotatable=0;" vertex="1" parent="300">
+                    <mxGeometry x="5" y="60" width="380" height="30" as="geometry"/>
                 </mxCell>
                 <mxCell id="302" value="&lt;font color=&quot;#4ec9b0&quot; face=&quot;menlo, monaco, courier new, monospace, menlo, monaco, courier new, monospace&quot;&gt;&lt;span style=&quot;font-size: 16px ; font-weight: 400 ; background-color: rgb(30 , 30 , 30)&quot;&gt;NineSlice extends Phaser.RenderTexture&lt;/span&gt;&lt;/font&gt;" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=30;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=0;marginBottom=0;html=1;rounded=0;sketch=0;" parent="1" vertex="1">
                     <mxGeometry x="-1358" y="-1561.5" width="420" height="130" as="geometry"/>
@@ -726,7 +729,7 @@
                     <mxGeometry y="118" width="530" height="42" as="geometry"/>
                 </mxCell>
                 <mxCell id="342" value="&lt;font color=&quot;#4ec9b0&quot; face=&quot;menlo, monaco, courier new, monospace, menlo, monaco, courier new, monospace&quot;&gt;&lt;span style=&quot;font-size: 16px ; background-color: rgb(30 , 30 , 30)&quot;&gt;RichTextfield extends Phaser.GameObjects.Container&lt;/span&gt;&lt;/font&gt;" style="swimlane;fontStyle=0;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=40;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=0;marginBottom=0;html=1;rounded=0;sketch=0;" parent="1" vertex="1">
-                    <mxGeometry x="-1010" y="580" width="530" height="160" as="geometry"/>
+                    <mxGeometry x="-1010" y="490" width="530" height="160" as="geometry"/>
                 </mxCell>
                 <mxCell id="343" value="attributes" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" parent="342" vertex="1">
                     <mxGeometry y="40" width="530" height="20" as="geometry"/>
@@ -744,7 +747,7 @@
                     <mxGeometry y="118" width="530" height="42" as="geometry"/>
                 </mxCell>
                 <mxCell id="348" value="&lt;font color=&quot;#4ec9b0&quot; face=&quot;menlo, monaco, courier new, monospace, menlo, monaco, courier new, monospace&quot;&gt;&lt;span style=&quot;font-size: 16px ; background-color: rgb(30 , 30 , 30)&quot;&gt;InputTextfield extends Phaser.GameObjects.DomElement&lt;/span&gt;&lt;/font&gt;" style="swimlane;fontStyle=0;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=40;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=0;marginBottom=0;html=1;rounded=0;sketch=0;" parent="1" vertex="1">
-                    <mxGeometry x="-1010" y="780" width="530" height="230" as="geometry"/>
+                    <mxGeometry x="-1010" y="650" width="530" height="230" as="geometry"/>
                 </mxCell>
                 <mxCell id="349" value="attributes" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" parent="348" vertex="1">
                     <mxGeometry y="40" width="530" height="20" as="geometry"/>
@@ -762,7 +765,7 @@
                     <mxGeometry y="118" width="530" height="112" as="geometry"/>
                 </mxCell>
                 <mxCell id="354" value="&lt;font color=&quot;#4ec9b0&quot; face=&quot;menlo, monaco, courier new, monospace, menlo, monaco, courier new, monospace&quot;&gt;&lt;span style=&quot;font-size: 16px ; background-color: rgb(30 , 30 , 30)&quot;&gt;GGroup extends GObject&lt;/span&gt;&lt;/font&gt;" style="swimlane;fontStyle=0;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=40;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=0;marginBottom=0;html=1;rounded=0;sketch=0;" parent="1" vertex="1">
-                    <mxGeometry x="-240" y="882" width="530" height="238" as="geometry"/>
+                    <mxGeometry x="-1010" y="882" width="530" height="238" as="geometry"/>
                 </mxCell>
                 <mxCell id="359" value="&lt;span style=&quot;font-size: 15px&quot;&gt;constructor(scene:Phaser.Scene)&lt;br&gt;createDisplay()&lt;br&gt;updatePos(x,y);&lt;br&gt;updateAlpha(alpha);&lt;br&gt;addChild(child);&lt;br&gt;removeChild(child);&lt;br&gt;&lt;/span&gt;" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" parent="354" vertex="1">
                     <mxGeometry y="40" width="530" height="120" as="geometry"/>
@@ -964,6 +967,34 @@
                 </mxCell>
                 <mxCell id="435" value="ui元件具体参数结构" style="shape=process2;fixedSize=1;size=5;fontStyle=1;fontSize=15;" vertex="1" parent="1">
                     <mxGeometry x="-1470" y="-370" width="170" height="40" as="geometry"/>
+                </mxCell>
+                <mxCell id="436" value="&lt;font color=&quot;#4ec9b0&quot; face=&quot;menlo, monaco, courier new, monospace, menlo, monaco, courier new, monospace&quot; style=&quot;font-size: 16px&quot;&gt;&lt;span style=&quot;font-weight: 400 ; background-color: rgb(30 , 30 , 30) ; line-height: 150%&quot;&gt;AssetLoader extends Phaser.Event.Emitter&lt;br&gt;&lt;/span&gt;&lt;/font&gt;" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=30;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=0;marginBottom=0;html=1;rounded=0;sketch=0;" vertex="1" parent="1">
+                    <mxGeometry x="-3009" y="-1621.5" width="539" height="210" as="geometry"/>
+                </mxCell>
+                <mxCell id="437" value="" style="swimlane;fontStyle=1;align=center;verticalAlign=top;horizontal=1;startSize=0;collapsible=0;marginBottom=0;html=1;strokeColor=none;fillColor=none;" vertex="1" parent="436">
+                    <mxGeometry y="30" width="539" height="180" as="geometry"/>
+                </mxCell>
+                <mxCell id="438" value="&lt;span style=&quot;font-size: 15px&quot;&gt;resources:Map[key,url]&lt;br&gt;&lt;/span&gt;" style="html=1;align=left;verticalAlign=middle;rotatable=0;" vertex="1" parent="437">
+                    <mxGeometry width="530" height="40" relative="1" as="geometry">
+                        <mxPoint x="5" y="9" as="offset"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="439" value="&lt;span style=&quot;font-size: 15px&quot;&gt;static addResources(res);&lt;br&gt;static get resourcesPool():Map;&lt;br&gt;&lt;/span&gt;&lt;span style=&quot;font-size: 15px&quot;&gt;static destroyResourcePool();&lt;br&gt;&lt;/span&gt;&lt;span style=&quot;font-size: 15px&quot;&gt;_onComplete()==&amp;gt;this.emit(&quot;fui_complete&quot;)&lt;br&gt;&lt;/span&gt;" style="html=1;align=left;verticalAlign=middle;rotatable=0;" vertex="1" parent="437">
+                    <mxGeometry x="4.5" y="61.5" width="530" height="108.5" as="geometry"/>
+                </mxCell>
+                <mxCell id="440" value="&lt;font color=&quot;#4ec9b0&quot; face=&quot;menlo, monaco, courier new, monospace, menlo, monaco, courier new, monospace&quot;&gt;&lt;span style=&quot;font-size: 16px ; font-weight: 400 ; background-color: rgb(30 , 30 , 30)&quot;&gt;UIStage(场景对象)&lt;br&gt;&lt;/span&gt;&lt;/font&gt;" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=30;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=0;marginBottom=0;html=1;rounded=0;sketch=0;" vertex="1" parent="1">
+                    <mxGeometry x="-588" y="-441.5" width="390" height="120" as="geometry"/>
+                </mxCell>
+                <mxCell id="441" value="" style="swimlane;fontStyle=1;align=center;verticalAlign=top;horizontal=1;startSize=0;collapsible=0;marginBottom=0;html=1;strokeColor=none;fillColor=none;" vertex="1" parent="440">
+                    <mxGeometry y="30" width="390" height="90" as="geometry"/>
+                </mxCell>
+                <mxCell id="442" value="x,y,width,height,displayobject," style="html=1;align=center;verticalAlign=middle;rotatable=0;" vertex="1" parent="441">
+                    <mxGeometry width="380" height="30" relative="1" as="geometry">
+                        <mxPoint x="5" y="12" as="offset"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="446" value="addChild(child),removeChild().." style="html=1;align=center;verticalAlign=middle;rotatable=0;" vertex="1" parent="441">
+                    <mxGeometry x="5" y="51.5" width="380" height="30" as="geometry"/>
                 </mxCell>
             </root>
         </mxGraphModel>
