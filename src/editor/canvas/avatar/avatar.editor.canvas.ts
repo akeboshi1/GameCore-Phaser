@@ -10,6 +10,7 @@ import { Logger } from "structure";
 export class AvatarEditorCanvas extends EditorCanvas {
 
     public mData: any;
+    private mCreated: boolean = false;
 
     private readonly SCENEKEY: string = "AvatarEditorScene";
     private readonly SCENEKEY_SNAPSHOT: string = "AvatarEditorSnapshotScene";
@@ -51,6 +52,12 @@ export class AvatarEditorCanvas extends EditorCanvas {
 
     public onSceneCreated(scene: Phaser.Scene) {
         this.mDragonbone = new AvatarEditorDragonbone(scene, this.mResoutceRoot, this.mConfig.osd, this.mEmitter, true);
+        const createCallback = this.mConfig.game_created;
+        if (createCallback) {
+            createCallback.call(this);
+            delete this.mConfig.game_created;
+        }
+        this.mCreated = true;
     }
     public update() {
 
@@ -156,8 +163,13 @@ export class AvatarEditorCanvas extends EditorCanvas {
     public on(event: AvatarEditorEmitType, fn: Function, context?: any) {
         this.mEmitter.on(event, fn, context);
     }
+
     public off(event: AvatarEditorEmitType, fn?: Function, context?: any, once?: boolean) {
         this.mEmitter.off(event, fn, context, once);
+    }
+
+    public get created() {
+        return this.mCreated;
     }
 }
 
@@ -193,6 +205,7 @@ export class AvatarEditorScene extends Phaser.Scene {
     public destroy() {
         if (this.onSceneDestroy) this.onSceneDestroy();
     }
+
 }
 
 export enum AvatarEditorEmitType {
