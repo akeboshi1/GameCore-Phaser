@@ -138,7 +138,7 @@ export class DragonbonesDisplay extends BaseDragonbonesDisplay implements IDispl
         this.mName = name;
         if (!this.checkShowNickname()) return;
         if (!this.mTopDisplay) {
-            this.mTopDisplay = new ElementTopDisplay(this.scene, this, this.render);
+            this.mTopDisplay = this.render.add.elementTopDisplay(this.scene, this);
         }
         this.mTopDisplay.showNickname(name);
     }
@@ -150,7 +150,7 @@ export class DragonbonesDisplay extends BaseDragonbonesDisplay implements IDispl
             this.mTopDisplay = undefined;
             return;
         }
-        if (!this.mTopDisplay) this.mTopDisplay = new ElementTopDisplay(this.scene, this, this.render);
+        if (!this.mTopDisplay) this.mTopDisplay = this.render.add.elementTopDisplay(this.scene, this);
         this.mTopDisplay.loadState(data);
     }
 
@@ -161,7 +161,7 @@ export class DragonbonesDisplay extends BaseDragonbonesDisplay implements IDispl
 
     public showBubble(text: string, setting: any) {// op_client.IChat_Setting
         if (!this.mTopDisplay) {
-            this.mTopDisplay = new ElementTopDisplay(this.scene, this, this.render);
+            this.mTopDisplay = this.render.add.elementTopDisplay(this.scene, this);
         }
         this.mTopDisplay.showBubble(text, setting);
     }

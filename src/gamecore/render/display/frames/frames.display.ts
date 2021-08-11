@@ -2,8 +2,8 @@ import { BaseFramesDisplay, ReferenceArea } from "baseRender";
 import { Render } from "../../render";
 import { IPos, Logger, DisplayField, ElementStateType, LayerName, RunningAnimation, TitleMask, Position45, LogicPos } from "structure";
 import { IDisplayObject } from "../display.object";
-import { ElementTopDisplay } from "../element.top.display";
 import { DragonbonesDisplay } from "../dragonbones/dragonbones.display";
+import { ElementTopDisplay } from "../element.top.display";
 
 /**
  * 序列帧显示对象
@@ -140,7 +140,7 @@ export class FramesDisplay extends BaseFramesDisplay implements IDisplayObject {
         this.mName = name;
         if (!this.checkShowNickname()) return;
         if (!this.mTopDisplay) {
-            this.mTopDisplay = new ElementTopDisplay(this.scene, this, this.render);
+            this.mTopDisplay = this.render.add.elementTopDisplay(this.scene, this);
         }
         this.mTopDisplay.showNickname(name);
 
@@ -165,7 +165,7 @@ export class FramesDisplay extends BaseFramesDisplay implements IDisplayObject {
             this.mTopDisplay = undefined;
             return;
         }
-        if (!this.mTopDisplay) this.mTopDisplay = new ElementTopDisplay(this.scene, this, this.render);
+        if (!this.mTopDisplay) this.mTopDisplay = this.render.add.elementTopDisplay(this.scene, this);
         this.mTopDisplay.loadState(data);
     }
 
@@ -176,7 +176,7 @@ export class FramesDisplay extends BaseFramesDisplay implements IDisplayObject {
 
     public showBubble(text: string, setting: any) {// op_client.IChat_Setting
         if (!this.mTopDisplay) {
-            this.mTopDisplay = new ElementTopDisplay(this.scene, this, this.render);
+            this.mTopDisplay = this.render.add.elementTopDisplay(this.scene, this);
         }
         this.mTopDisplay.showBubble(text, setting);
     }
