@@ -8,10 +8,10 @@ import { Render } from "../render";
  * 人物头顶显示对象
  */
 export class ElementTopDisplay extends TopDisplay {
-    private mBubble: BubbleContainer;
-    private isDispose: boolean = false;
-    private uiScale: number;
-    constructor(scene: Phaser.Scene, owner: any, private render: Render) {
+    protected mBubble: BubbleContainer;
+    protected isDispose: boolean = false;
+    protected uiScale: number;
+    constructor(scene: Phaser.Scene, owner: any, protected render: Render) {
         super(scene, owner, render.scaleRatio, render.uiRatio);
         this.uiScale = render.uiScale || 1;
     }
@@ -189,6 +189,10 @@ export class ElementTopDisplay extends TopDisplay {
         }
         (<PlayScene>this.scene).layerManager.addToLayer("sceneUILayer", obj);
     }
+
+    protected createNickname() {
+        return
+    }
     // private removeFollowObject(key: FollowEnum) {
     //     if (!this.mFollows) return;
     //     if (this.mFollows.has(key)) {
@@ -200,7 +204,7 @@ export class ElementTopDisplay extends TopDisplay {
     //     }
 
     // }
-    private loadAtals(state: StateConfig, context: any, callback: Function) {
+    protected loadAtals(state: StateConfig, context: any, callback: Function) {
         const pngurl = state.display.texturepath;
         const jsonurl = state.display.datapath;
         const frame = state.image.img;
@@ -228,7 +232,7 @@ export class ElementTopDisplay extends TopDisplay {
             this.scene.load.start();
         }
     }
-    private showStateHandler(json) {
+    protected showStateHandler(json) {
         this.showUIState(json);
     }
 }
