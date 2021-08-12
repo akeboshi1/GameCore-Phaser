@@ -25,12 +25,7 @@ export class ElementTopDisplay extends TopDisplay {
         if (follow) {
             nickname = follow.object;
         } else {
-            nickname = this.scene.make.text({
-                style: {
-                    fontSize: 12 * this.mSceneScale + "px",
-                    fontFamily: Font.DEFULT_FONT
-                }
-            }).setOrigin(0.5).setStroke("#000000", 2 * this.mSceneScale);
+            nickname = this.createNickname();
             follow = new FollowObject(nickname, this.mOwner, this.mSceneScale);
             this.mFollows.set(FollowEnum.Nickname, follow);
         }
@@ -191,7 +186,13 @@ export class ElementTopDisplay extends TopDisplay {
     }
 
     protected createNickname() {
-        return
+        const nickname = this.scene.make.text({
+            style: {
+                fontSize: 12 * this.mSceneScale + "px",
+                fontFamily: Font.DEFULT_FONT
+            }
+        }).setOrigin(0.5).setStroke("#000000", 2 * this.mSceneScale);
+        return nickname;
     }
     // private removeFollowObject(key: FollowEnum) {
     //     if (!this.mFollows) return;

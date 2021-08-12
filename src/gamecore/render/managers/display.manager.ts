@@ -146,7 +146,7 @@ export class DisplayManager {
         const sprite = this.mModelCache.get(id);
         if (sprite) {
             display.titleMask = sprite.titleMask;
-            if (sprite.nickname) display.showNickname(sprite.nickname);
+            if (sprite.nickname) this.showNickname(id, sprite.nickname);
             this.mModelCache.delete(id);
         }
         (<PlayScene>scene).layerManager.addToLayer(layer.toString(), display);
@@ -176,7 +176,7 @@ export class DisplayManager {
         const sprite = this.mModelCache.get(id);
         if (sprite) {
             display.titleMask = sprite.titleMask;
-            if (sprite.nickname) display.showNickname(sprite.nickname);
+            if (sprite.nickname) this.showNickname(data.id, sprite.nickname);
             this.mModelCache.delete(id);
         }
         (<PlayScene>scene).layerManager.addToLayer(layer.toString(), display);
@@ -203,7 +203,7 @@ export class DisplayManager {
         const sprite = this.mModelCache.get(id);
         if (sprite) {
             display.titleMask = sprite.titleMask;
-            if (sprite.nickname) display.showNickname(sprite.nickname);
+            if (sprite.nickname) this.showNickname(id, sprite.nickname);
             this.mModelCache.delete(id);
         }
         (<PlayScene>scene).layerManager.addToLayer(layer.toString(), display);
@@ -231,7 +231,7 @@ export class DisplayManager {
         const sprite = this.mModelCache.get(id);
         if (sprite) {
             display.titleMask = sprite.titleMask;
-            if (sprite.nickname) display.showNickname(sprite.nickname);
+            if (sprite.nickname) this.showNickname(id, sprite.nickname);
             this.mModelCache.delete(id);
         }
         (<PlayScene>scene).layerManager.addToLayer(layer.toString(), display);
@@ -425,7 +425,7 @@ export class DisplayManager {
         if (sprite.i18nName) {
             nickname = translate(sprite.i18nName);
         }
-        if (nickname) display.showNickname(nickname);
+        if (nickname) this.showNickname(sprite.id, nickname);
     }
 
     public startFireMove(id: number, pos: any) {
@@ -457,7 +457,7 @@ export class DisplayManager {
         return new Promise<ITilesetProperty[]>((resolve, reject) => {
             const scene = this.sceneManager.getMainScene();
             this.mGround = new Ground(scene, this.render.url, this.render.scaleRatio);
-            (<PlayScene> scene).layerManager.addToLayer(LayerName.GROUND, this.mGround);
+            (<PlayScene>scene).layerManager.addToLayer(LayerName.GROUND, this.mGround);
             this.mGround.load(ground)
                 .then(() => {
                     const allProperties = this.mGround.getAllTilesetProperties();
