@@ -270,12 +270,12 @@ export class User extends Player {
         this.mRoomService.game.emitter.emit(EventType.SCENE_PLAYER_ACTION, this.mRoomService.game.user.id, targetId, param);
     }
 
-    public updateModel(model: op_client.IActor) {
+    public updateModel(model: op_client.IActor, patchKeys: string[]) {
         if (model.hasOwnProperty("inputMask")) {
             this.mInputMask = model.inputMask;
             this.mRoomService.game.renderPeer.updateInput(this.mInputMask);
         }
-        super.updateModel(model, this.mRoomService.game.avatarType);
+        super.updateModel(model, patchKeys, this.mRoomService.game.avatarType);
     }
 
     public destroy() {

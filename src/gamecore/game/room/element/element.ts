@@ -44,7 +44,7 @@ export interface IElement {
 
     setModel(model: ISprite);
 
-    updateModel(model: op_client.ISprite);
+    updateModel(model: op_client.ISprite, patchKey: string[]);
 
     play(animationName: string): void;
 
@@ -253,9 +253,44 @@ export class Element extends BlockObject implements IElement {
             });
     }
 
-    public updateModel(model: op_client.ISprite, avatarType?: op_def.AvatarStyle) {
+    public updateModel(model: op_client.ISprite, patchKeys: string[], avatarType?: op_def.AvatarStyle) {
         if (this.mModel.id !== model.id) {
             return;
+        }
+        // direction  nickname  display_badge_cards  point3f  attrs  current_animation_name  opacity  animations  speed  mount_sprites
+        for (const key of patchKeys) {
+            // TODO 考虑使用反射
+            switch (key) {
+                case "direction":
+                    this.setDirection(model.direction);
+                    break;
+                case "nickname":
+                    this.mModel.nickname = model.nickname;
+                    this.showNickname();
+                    break;
+                case "point3f":
+                    const point3f = model.point3f;
+                    this.setPosition(new LogicPos(point3f.x, point3f.y, point3f.z));
+                    break;
+                case "attrs":
+                    this.mModel.updateAttr(model.attrs);
+                    break;
+                case "speed":
+                    this.mModel.speed = model.speed;
+                    // 速度改变，重新计算
+                    if (this.mMoving) this.startMove();
+                    break;
+                case "current_animation_name":
+                    this.play(model.currentAnimationName);
+                    this.setInputEnable(this.mInputEnable);
+                    this.mModel.setAnimationQueue(undefined);
+                    break;
+                case "mount_sprites":
+                    const mounts = model.mountSprites;
+                    this.mergeMounth(mounts);
+                    this.updateMounth(mounts);
+                    break;
+            }
         }
         this.removeFromMap();
         if (!this.mModel.sn) {
@@ -263,9 +298,9 @@ export class Element extends BlockObject implements IElement {
             // console.log("update model sn", model);
             this.mModel.sn = model.sn;
         }
-        if (model.hasOwnProperty("attrs")) {
-            this.mModel.updateAttr(model.attrs);
-        }
+        // if (model.hasOwnProperty("attrs")) {
+        //     this.mModel.updateAttr(model.attrs);
+        // }
         let reload = false;
         if (avatarType === op_def.AvatarStyle.SuitType) {
             if (this.mModel.updateSuits) {
@@ -285,28 +320,7 @@ export class Element extends BlockObject implements IElement {
             this.mModel.updateDisplay(model.display, model.animations);
             reload = true;
         }
-        if (model.hasOwnProperty("currentAnimationName")) {
-            this.play(model.currentAnimationName);
-            this.setInputEnable(this.mInputEnable);
-            this.mModel.setAnimationQueue(undefined);
-        }
-        if (model.hasOwnProperty("direction")) {
-            this.setDirection(model.direction);
-        }
-        if (model.hasOwnProperty("mountSprites")) {
-            const mounts = model.mountSprites;
-            this.mergeMounth(mounts);
-            this.updateMounth(mounts);
-        }
-        if (model.hasOwnProperty("speed")) {
-            this.mModel.speed = model.speed;
-            // 速度改变，重新计算
-            if (this.mMoving) this.startMove();
-        }
-        if (model.hasOwnProperty("nickname")) {
-            this.mModel.nickname = model.nickname;
-            this.showNickname();
-        }
+        
         if (reload) this.load(this.mModel.displayInfo);
         this.addToMap();
     }
