@@ -1,6 +1,6 @@
 {
   "name": "@PixelPai/game-core",
-  "version": "1.0.825",
+  "version": "1.0.826",
   "exports": {
     ".": "./release/js/index.js",
     "./renderPeer": "./release/js/renderPeer.js",
