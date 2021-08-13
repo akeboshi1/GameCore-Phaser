@@ -16,7 +16,6 @@ export class User extends Player {
     protected mMoveStyle: MoveStyleEnum = MoveStyleEnum.Null;
     protected mSyncTime: number = 0;
     protected mSyncDirty: boolean = false;
-    protected mInputMask: number;
     protected mSetPostionTime: number = 0;
     protected mPreTargetID: number = 0;
     protected holdTime: number = 0;
@@ -41,6 +40,13 @@ export class User extends Player {
 
     public load(displayInfo: IFramesModel | IDragonbonesModel, isUser: boolean = false): Promise<any> {
         return super.load(displayInfo, true);
+    }
+
+    async setModel(model: PlayerModel) {
+        if (model.inputMask) {
+            this.mRoomService.game.renderPeer.updateInput(model.inputMask);
+        }
+        super.setModel(model);
     }
 
     addPackListener() {
@@ -71,7 +77,8 @@ export class User extends Player {
         this.mRoomService.playerManager.setMe(this);
         // todo render setScroll
         Logger.getInstance().debug("setCameraScroller");
-        this.mRoomService.game.renderPeer.setCameraScroller(actor.x, actor.y);
+        const pos = actor.point3f;
+        if (pos) this.mRoomService.game.renderPeer.setCameraScroller(pos.x, pos.y);
     }
 
     update(time?: number, delta?: number) {
@@ -272,8 +279,8 @@ export class User extends Player {
 
     public updateModel(model: op_client.IActor, patchKeys: string[]) {
         if (model.hasOwnProperty("inputMask")) {
-            this.mInputMask = model.inputMask;
-            this.mRoomService.game.renderPeer.updateInput(this.mInputMask);
+            (<PlayerModel>this.mModel).inputMask = model.inputMask;
+            this.mRoomService.game.renderPeer.updateInput(model.inputMask);
         }
         super.updateModel(model, patchKeys, this.mRoomService.game.avatarType);
     }

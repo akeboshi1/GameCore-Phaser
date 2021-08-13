@@ -382,6 +382,10 @@ export class Element extends BlockObject implements IElement {
 
     public completeAnimationQueue() {
         const animationQueue = this.model.animationQueue;
+        if (!animationQueue) {
+            this.play(this.mCurState);
+            Logger.getInstance().error("Animation queue does not exist")；
+        }
         const anis = animationQueue.changeAnimation;
         if (!anis) return;
         anis.shift();
@@ -548,7 +552,6 @@ export class Element extends BlockObject implements IElement {
         this.changeState(PlayerState.IDLE);
         // 如果主角没有在推箱子，直接跳过
         if (!this.mRoomService.playerManager.actor.stopBoxMove) return;
-        Logger.getInstance().log("============>>>>> element stop: ", this.mModel.nickname, this.mModel.pos.x, this.mModel.pos.y);
         this.mMovePoints = [];
         this.mRoomService.playerManager.actor.stopBoxMove = false;
     }

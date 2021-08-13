@@ -462,6 +462,7 @@ export class PlayerManager extends PacketHandler implements IElementManager {
 
     private onSyncActorHandler(packet: PBpacket) {
         const content: op_client.IOP_VIRTUAL_WORLD_REQ_CLIENT_SYNC_ACTOR = packet.content;
+        this._loadSprite(content.actor)
         this.actor.setModel(new PlayerModel(content.actor));
     }
 
