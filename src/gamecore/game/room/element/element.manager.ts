@@ -273,7 +273,7 @@ export class ElementManager extends PacketHandler implements IElementManager {
             const ids = [];
             const addCaches = [];
             for (let i: number = 0; i < tmpLen; i++) {
-                const { sprite, command } = tmpList[i];
+                const { sprite, command, patchKeys } = tmpList[i];
                 if (!sprite) continue;
                 element = this.get(sprite.id);
                 if (element) {
@@ -294,7 +294,7 @@ export class ElementManager extends PacketHandler implements IElementManager {
                         element.model = data;
                     } else if (command === op_def.OpCommand.OP_COMMAND_PATCH) { //  增量
                         // 更新数据
-                        element.updateModel(sprite);
+                        element.updateModel(sprite, patchKeys);
                     }
                 } else {
                     addCaches.push(sprite);

@@ -49,6 +49,7 @@ export class TerrainManager extends PacketHandler {
             this.mRoom.game.renderPeer.addGround({ id: sceneID, resRoot: urlRoot })
                 .then((properties: ITilesetProperty[]) => {
                     this.mRoom.game.elementStorage.updateTilesets(properties);
+                    this.hasAddComplete = true;
                     resolve(null);
                 }).catch((error) => {
                     // tslint:disable-next-line:no-console
@@ -99,6 +100,7 @@ export class TerrainManager extends PacketHandler {
     }
 
     public destroy() {
+        this.hasAddComplete = false;
         this.mIsDealEmptyTerrain = false;
         //  this.roomService.game.emitter.off(ElementManager.ELEMENT_READY, this.dealTerrainCache, this);
         if (this.connection) {

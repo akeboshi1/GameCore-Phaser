@@ -483,7 +483,6 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
                 if (isTerrain) this.setTerrainMap(tempX, tempY, canWalk);
             }
         }
-        if (isTerrain) this.showDecorateGrid();
     }
 
     public removeFromWalkableMap(sprite: ISprite, isTerrain: boolean = false) {
@@ -1094,11 +1093,5 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
     protected setState(state: op_client.IStateGroup) {
         if (!this.mStateManager) this.mStateManager = new RoomStateManager(this);
         this.mStateManager.setState(state);
-    }
-
-    protected showDecorateGrid() {
-        if (!this.isDecorating) return;
-        if (!this.mTerrainManager.hasAddComplete) return;
-        this.game.renderPeer.showEditGrids(this.mMiniSize, this.mTerrainMap);
     }
 }

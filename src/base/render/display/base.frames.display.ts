@@ -400,7 +400,6 @@ export class BaseFramesDisplay extends BaseDisplay {
         //     display.destroy();
         // }
         this.mDisplays.forEach((display) => display.destroy());
-        this.mMountList.clear();
         this.mDisplays.clear();
         this.mMainSprite = null;
         this.mPreAnimation = null;

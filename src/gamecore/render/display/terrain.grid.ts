@@ -14,6 +14,7 @@ export class TerrainGrid {
     constructor(private render: Render, private miniSize: IPosition45Obj) {
     }
 
+    // 设置网格map，1绘制，非1不绘制
     setMap(map: number[][]) {
         this.map = map;
         this.dirty = true;
@@ -56,7 +57,7 @@ export class TerrainGrid {
         const rows = this.map.length;
         for (let i = 0; i < rows; i++) {
             for (let j = 0; j < cols; j++) {
-                if (this.map[i][j] !== -1) {
+                if (this.map[i][j] === 1) {
                     this.draw(j, i);
                 }
             }
