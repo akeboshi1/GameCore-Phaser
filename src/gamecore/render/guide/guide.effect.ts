@@ -68,13 +68,7 @@ export class GuideEffect extends Phaser.GameObjects.Container {
             this.mGuideEffect.setPosition(0, 0);
             this.mHandDisplay = new HandDisplay(this.scene, "handEffect");
             this.mHandDisplay.scale = this.tmpScale;
-            this.guideText = this.scene.make.text({
-                style: {
-                    fontSize: 18 * this.tmpScale + "px",
-                    fontFamily: Font.DEFULT_FONT,
-                    color: "#ffffff"
-                }
-            }).setOrigin(0.5);
+            this.guideText = this.createGuidText();
             (<any>this.scene).layerManager.addToLayer(MainUIScene.LAYER_MASK, this.mGuideEffect);
             (<any>this.scene).layerManager.addToLayer(MainUIScene.LAYER_MASK, this.mHandDisplay);
             (<any>this.scene).layerManager.addToLayer(MainUIScene.LAYER_MASK, this.guideText);
@@ -83,6 +77,16 @@ export class GuideEffect extends Phaser.GameObjects.Container {
         this.updatePos(pos);
         // this.setInteractive(new Phaser.Geom.Rectangle(width >> 1, height >> 1, width, height), Phaser.Geom.Rectangle.Contains);
         this.start();
+    }
+    public createGuidText() {
+        const guideText = this.scene.make.text({
+            style: {
+                fontSize: 18 * this.tmpScale + "px",
+                fontFamily: Font.DEFULT_FONT,
+                color: "#ffffff"
+            }
+        }).setOrigin(0.5);
+        return guideText;
     }
     public setGuideText(text: string) {
         this.guideText.text = text;
