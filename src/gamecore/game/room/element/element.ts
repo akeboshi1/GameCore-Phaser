@@ -384,7 +384,8 @@ export class Element extends BlockObject implements IElement {
         const animationQueue = this.model.animationQueue;
         if (!animationQueue) {
             this.play(this.mCurState);
-            Logger.getInstance().error("Animation queue does not exist")；
+            Logger.getInstance().error("Animation queue does not exist");
+            return;
         }
         const anis = animationQueue.changeAnimation;
         if (!anis) return;
