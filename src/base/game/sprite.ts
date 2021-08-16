@@ -53,10 +53,6 @@ export class Sprite extends EventDispatcher implements ISprite {
 
     public originCollisionPoint: LogicPoint;
 
-    /**
-     * @deprecated
-     */
-    public attrs: op_def.IStrPair[];
     public suits: AvatarSuit[];
     public animationQueue: AnimationQueue;
 
@@ -69,7 +65,7 @@ export class Sprite extends EventDispatcher implements ISprite {
     public layer: number;
     public sound: string;
     public curState: number = 0;
-    protected attrMap: Map<string, string | boolean | number>;
+    protected mAttrs: Map<string, string | boolean | number>;
     constructor(obj: op_client.ISprite, nodeType?: op_def.NodeType) {
         super();
         // 必要数据
@@ -263,8 +259,6 @@ export class Sprite extends EventDispatcher implements ISprite {
     }
 
     public updateAttr(attrs: op_def.IStrPair[]) {
-        // TODO this.attrs改成map. 目前皮卡堂里有用到
-        this.attrs = attrs;
         if (!attrs) return;
         let suits: AvatarSuit[];
         for (const attr of attrs) {
@@ -280,19 +274,18 @@ export class Sprite extends EventDispatcher implements ISprite {
             } else if (key === "touchSound") {
                 this.sound = value;
             } else if (key === "TitleMask") {
-                // tslint:disable-next-line:radix
-                this.titleMask = parseInt(value);
+                this.titleMask = parseInt(value, 10);
             } else if (key === "i18nName") {
                 this.i18nName = value;
             }
-            if (!this.attrMap) this.attrMap = new Map();
-            this.attrMap.set(key, value);
+            if (!this.mAttrs) this.mAttrs = new Map();
+            this.mAttrs.set(key, value);
         }
     }
 
     public getAttr(key) {
-        if (!this.attrMap) return;
-        return this.attrMap.get(key);
+        if (!this.mAttrs) return;
+        return this.mAttrs.get(key);
     }
 
     public updateDisplay(display: op_gameconfig.IDisplay, animations: op_gameconfig_01.IAnimationData[], defAnimation?: string) {
@@ -399,6 +392,10 @@ export class Sprite extends EventDispatcher implements ISprite {
             return true;
         }
         return false;
+    }
+
+    get attrs() {
+        return this.mAttrs;
     }
 
     public getInteractive() {

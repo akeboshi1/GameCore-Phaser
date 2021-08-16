@@ -21,7 +21,6 @@ export class SpawnPoint implements ISprite {
     pos: LogicPos;
     bindID: number;
     sn: string;
-    attrs: op_def.IStrPair[];
     animationQueue: AnimationQueue;
     suits: AvatarSuit[];
     titleMask: number;
@@ -165,5 +164,9 @@ export class SpawnPoint implements ISprite {
 
     get speed() {
         return 0;
+    }
+
+    get attrs() {
+        return undefined;
     }
 }

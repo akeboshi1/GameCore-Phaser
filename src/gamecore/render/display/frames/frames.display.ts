@@ -13,6 +13,7 @@ export class FramesDisplay extends BaseFramesDisplay implements IDisplayObject {
     protected mTitleMask: number;
     protected mReferenceArea: ReferenceArea;
     protected mTopDisplay: ElementTopDisplay;
+    protected attrs: Map<string, string | number | boolean>;
     private mName: string = undefined;
     private mStartFireTween: Phaser.Tweens.Tween;
     private mDebugPoint: Phaser.GameObjects.Graphics;
@@ -49,6 +50,10 @@ export class FramesDisplay extends BaseFramesDisplay implements IDisplayObject {
         if (this.mGrids) {
             this.mGrids.destroy();
             this.mGrids = undefined;
+        }
+        if (this.attrs) {
+            this.attrs.clear();
+            this.attrs = undefined;
         }
         super.destroy();
     }
@@ -351,6 +356,15 @@ export class FramesDisplay extends BaseFramesDisplay implements IDisplayObject {
                 }
             },
         });
+    }
+
+    public updateAttrs(attrs: Map<string, string | number | boolean>) {
+        this.attrs = attrs;
+    }
+
+    public getAttr(key: string) {
+        if (!this.attrs) return;
+        return this.attrs.get(key); 
     }
 
     protected async fetchProjection() {

@@ -420,11 +420,9 @@ export class DisplayManager {
         display.setPosition(sprite.pos.x, sprite.pos.y, sprite.pos.z);
         display.checkCollision(sprite);
         display.changeAlpha(sprite.alpha);
-        display.hasInteractive = sprite.hasInteractive;
+        this.setHasInteractive(display, sprite.hasInteractive);
+        this.updateAttrs(display, sprite.attrs);
         let nickname = sprite.nickname;
-        if (sprite.i18nName) {
-            nickname = translate(sprite.i18nName);
-        }
         if (nickname) this.showNickname(sprite.id, nickname);
     }
 
@@ -500,6 +498,11 @@ export class DisplayManager {
         }
         display.showNickname(name);
         // if (display) display.showNickname(name);
+    }
+
+    public setHasInteractive(display: FramesDisplay | DragonbonesDisplay, val: boolean) {
+        if (!display) return;
+        display.hasInteractive = val;
     }
 
     public showTopDisplay(id: number, state?: ElementStateType) {
@@ -633,6 +636,13 @@ export class DisplayManager {
             }
             this.scenerys.forEach((scenery) => scenery.updateScale(this.render.scaleRatio));
         });
+    }
+
+    public updateAttrs(display: FramesDisplay | DragonbonesDisplay, attrs: any) {
+        if (!display) {
+            return;
+        }
+        display.updateAttrs(attrs);
     }
 
     public destroy() {

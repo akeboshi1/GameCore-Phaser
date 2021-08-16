@@ -25,10 +25,6 @@ export interface ISprite {
     currentCollisionPoint: LogicPoint;
     hasInteractive: boolean;
     interactive: op_def.IPBPoint2f[];
-    /**
-     * @deprecated
-     */
-    attrs: op_def.IStrPair[];
     suits: AvatarSuit[];
     animationQueue: AnimationQueue;
     currentAnimationName: string;
@@ -43,7 +39,7 @@ export interface ISprite {
     animator?: Animator;
     updateSuits?: boolean;
     layer?: number;
-    i18nName?: string;
+    readonly attrs?: Map<string, string | boolean | number>;
     newID();
     updateAvatar(avatar: IAvatar);
     setTempAvatar(avatar: IAvatar);

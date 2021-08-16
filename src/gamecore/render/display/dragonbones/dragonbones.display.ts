@@ -18,6 +18,7 @@ export class DragonbonesDisplay extends BaseDragonbonesDisplay implements IDispl
     protected mName: string = undefined;
     protected mStartFireTween: Phaser.Tweens.Tween;
     protected mEffectSprite: Phaser.GameObjects.Sprite;
+    protected attrs: Map<string, string | number | boolean>;
     constructor(scene: Phaser.Scene, protected render: Render, id?: number, protected uuid?: number, type?: number) {
         super(scene, { resPath: render.url.RES_PATH, osdPath: render.url.OSD_PATH }, id);
         this.mNodeType = type;
@@ -74,6 +75,10 @@ export class DragonbonesDisplay extends BaseDragonbonesDisplay implements IDispl
         }
         if (this.mTopDisplay) {
             this.mTopDisplay.destroy();
+        }
+        if (this.attrs) {
+            this.attrs.clear();
+            this.attrs = undefined;
         }
         super.destroy();
     }
@@ -222,6 +227,15 @@ export class DragonbonesDisplay extends BaseDragonbonesDisplay implements IDispl
             },
             onCompleteParams: [this]
         });
+    }
+
+    public updateAttrs(attrs: Map<string, string | number | boolean>) {
+        this.attrs = attrs;
+    }
+
+    public getAttr(key: string) {
+        if (!this.attrs) return;
+        return this.attrs.get(key); 
     }
 
     public doMove(moveData: any) {
