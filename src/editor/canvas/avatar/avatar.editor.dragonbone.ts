@@ -89,8 +89,10 @@ export class AvatarEditorDragonbone extends Phaser.GameObjects.Container {
         {id: null, parts: ["head_hair", "head_eyes", "head_mous", "body_cost"]},
     ];
 
-    private static readonly DEFAULT_SCALE_GAME_HEIGHT = 72;// 默认展示龙骨时，游戏尺寸
-    private static readonly DEFAULT_SCALE_BOTTOM_PIX = 4;// 默认展示龙骨时，龙骨所处位置下方的区域（/像素）
+    private static readonly SHOW_SCALE_GAME_HEIGHT = 90;// 默认展示龙骨时，游戏尺寸
+    private static readonly SHOW_SCALE_BOTTOM_PIX = 6;// 默认展示龙骨时，龙骨所处位置下方的区域（/像素）
+    private static readonly SHOP_ICON_SCALE_GAME_HEIGHT = 72;// 商店icon设计尺寸
+    private static readonly SHOP_ICON_SCALE_BOTTOM_PIX = 4;// 商店icon中，龙骨所处位置下方的区域（/像素）
     private static readonly ARMATURE_HEIGHT = 61;// 龙骨设计高度
     private static readonly ARMATURE_LEG_PERCENT = 0.15;// 龙骨中，腿部占整个身高比重
     private static readonly HEAD_ICON_HIDE_PIX = 22;// 头像截图中，下方隐藏的龙骨高度
@@ -112,8 +114,6 @@ export class AvatarEditorDragonbone extends Phaser.GameObjects.Container {
     private mBaseSets: any[] = [];
     private mSets: any[] = [];
     private mParts: { [key: string]: any } = {};
-    private mArmatureBottomArea: number = 0;
-    private mArmatureBottomArea_head: number = 0;
     private mOnReadyForSnapshot: (a: AvatarEditorDragonbone) => any;
 
     constructor(scene: Phaser.Scene, homePath: string, osdPath: string, emitter: Phaser.Events.EventEmitter, autoScale: boolean, startSets?: any[], onReadyForSnapshot?: (a: AvatarEditorDragonbone) => any) {
@@ -296,19 +296,19 @@ export class AvatarEditorDragonbone extends Phaser.GameObjects.Container {
             this.mDisplay_head.destroy();
         }
         const sceneHeight = this.scene.scale.height;
-        this.mArmatureBottomArea = AvatarEditorDragonbone.DEFAULT_SCALE_BOTTOM_PIX * sceneHeight / AvatarEditorDragonbone.DEFAULT_SCALE_GAME_HEIGHT;
+        const bottomArea_default = AvatarEditorDragonbone.SHOW_SCALE_BOTTOM_PIX * sceneHeight / AvatarEditorDragonbone.SHOW_SCALE_GAME_HEIGHT;
         this.mDisplay_default = new EditorDragonbonesDisplay(this.scene, AvatarEditorDragonbone.DRAGONBONE_NAME_DEFAULT, this.mLocalHomePath, this.mWebHomePath);
         this.mDisplay_default.play({ name: this.mCurAnimationName, flip: false });
-        if (this.mAutoScale) this.mDisplay_default.scale = sceneHeight / AvatarEditorDragonbone.DEFAULT_SCALE_GAME_HEIGHT;
+        if (this.mAutoScale) this.mDisplay_default.scale = sceneHeight / AvatarEditorDragonbone.SHOW_SCALE_GAME_HEIGHT;
         this.mDisplay_default.x = this.scene.scale.width >> 1;
-        this.mDisplay_default.y = this.scene.scale.height - this.mArmatureBottomArea;
+        this.mDisplay_default.y = this.scene.scale.height - bottomArea_default;
         this.add(this.mDisplay_default);
-        this.mArmatureBottomArea_head = this.mArmatureBottomArea -
-            AvatarEditorDragonbone.ARMATURE_LEG_PERCENT * AvatarEditorDragonbone.ARMATURE_HEIGHT * sceneHeight / AvatarEditorDragonbone.DEFAULT_SCALE_GAME_HEIGHT;
+        const bottomArea_head = bottomArea_default -
+            AvatarEditorDragonbone.ARMATURE_LEG_PERCENT * AvatarEditorDragonbone.ARMATURE_HEIGHT * sceneHeight / AvatarEditorDragonbone.SHOW_SCALE_GAME_HEIGHT;
         this.mDisplay_head = new EditorDragonbonesDisplay(this.scene, AvatarEditorDragonbone.DRAGONBONE_NAME_HEAD, this.mLocalHomePath, this.mWebHomePath);
-        if (this.mAutoScale) this.mDisplay_head.scale = sceneHeight / AvatarEditorDragonbone.DEFAULT_SCALE_GAME_HEIGHT;
+        if (this.mAutoScale) this.mDisplay_head.scale = sceneHeight / AvatarEditorDragonbone.SHOW_SCALE_GAME_HEIGHT;
         this.mDisplay_head.x = this.scene.scale.width >> 1;
-        this.mDisplay_head.y = this.scene.scale.height - this.mArmatureBottomArea_head + 1000;
+        this.mDisplay_head.y = this.scene.scale.height - bottomArea_head + 1000;
         this.add(this.mDisplay_head);
 
         this.reloadDisplay();
@@ -476,14 +476,20 @@ export class AvatarEditorDragonbone extends Phaser.GameObjects.Container {
     }
 
     private getSnapshotModelData(): { armature: EditorDragonbonesDisplay, x: number, y: number, baseSets: any[] } {
+        const sceneHeight = this.scene.scale.height;
+        const bottomArea_default = AvatarEditorDragonbone.SHOP_ICON_SCALE_BOTTOM_PIX * sceneHeight / AvatarEditorDragonbone.SHOP_ICON_SCALE_GAME_HEIGHT;
+        const bottomArea_head = bottomArea_default -
+            AvatarEditorDragonbone.ARMATURE_LEG_PERCENT * AvatarEditorDragonbone.ARMATURE_HEIGHT * sceneHeight / AvatarEditorDragonbone.SHOP_ICON_SCALE_GAME_HEIGHT;
+
+
         for (const set of this.mSets) {
             for (const part of set.parts) {
                 if (AvatarEditorDragonbone.BOTTOM_BODY_PARTS.indexOf(part) >= 0) {
                     // Logger.getInstance().debug("ZW-- snapshotArmature: body");
                     return {
                         armature: this.mDisplay_default,
-                        x: this.mDisplay_default.x,
-                        y: this.mDisplay_default.y,
+                        x: this.scene.scale.width >> 1,
+                        y: this.scene.scale.height - bottomArea_default,
                         baseSets: AvatarEditorDragonbone.MODEL_SETS
                     };
                 }
@@ -493,8 +499,8 @@ export class AvatarEditorDragonbone extends Phaser.GameObjects.Container {
         // Logger.getInstance().debug("ZW-- snapshotArmature: head");
         return {
             armature: this.mDisplay_head,
-            x: this.mDisplay_default.x,
-            y: this.scene.scale.height - this.mArmatureBottomArea_head,
+            x: this.scene.scale.width >> 1,
+            y: this.scene.scale.height - bottomArea_head,
             baseSets: AvatarEditorDragonbone.MODEL_SETS
         };
     }
@@ -511,10 +517,13 @@ export class AvatarEditorDragonbone extends Phaser.GameObjects.Container {
                     const display = modelData.armature.getDisplay();
                     if (!display) reject("display does not exist");
                     display.armature.advanceTime(1000);
+                    const preScale = modelData.armature.scale;
+                    modelData.armature.setScale(1);
                     rt.draw(modelData.armature, modelData.x, modelData.y);
                     rt.snapshotArea(area.x, area.y, area.width, area.height, (img: HTMLImageElement) => {
                         // reverse parts
                         this.setBaseSets(AvatarEditorDragonbone.DEFAULT_SETS);
+                        modelData.armature.setScale(preScale);
                         this.reloadDisplay()
                             .then(() => {
                                 resolve(img.src);
