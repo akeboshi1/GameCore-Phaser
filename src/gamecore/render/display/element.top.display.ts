@@ -31,8 +31,7 @@ export class ElementTopDisplay extends TopDisplay {
         }
         nickname.text = name;
         this.addToSceneUI(nickname);
-        if (!this.mOwner.topPoint) return;
-        follow.setOffset(0, this.mOwner.topPoint.y);
+        this.updateOffset();
         follow.update();
     }
     public hideNickname() {
@@ -107,30 +106,33 @@ export class ElementTopDisplay extends TopDisplay {
                 if (state.foldType === "normal") {
                     sprite.setScale(this.uiScale * this.mSceneScale);
                 } else sprite.setScale(this.uiScale);
-                const point = this.getYOffset();
-                follow.setOffset(0, point.y);
                 this.addToSceneUI(sprite);
+                this.updateOffset();
                 follow.update();
             });
         }
     }
 
     updateOffset() {
-        if (!this.mFollows) return;
-        const offset = this.getYOffset();
-        this.mFollows.forEach((follow) => follow.setOffset(0, offset.y));
-    }
-
-    public getYOffset() {
-        const pos = new Phaser.Geom.Point();
-        pos.x = 0, pos.y = this.mOwner.topPoint.y;
+        if (!this.mFollows || !this.hasTopPoint()) return;
+        let offset = new Phaser.Geom.Point();
+        offset.y = this.mOwner.topPoint.y;
         if (this.mFollows.has(FollowEnum.Nickname)) {
             const follow = this.mFollows.get(FollowEnum.Nickname);
             if (follow && follow.object) {
-                pos.y += (<any>(follow.object)).height * 0.5;
+                const height = follow.object.height;
+                follow.setOffset(0, offset.y);
+                offset.y -= height * 0.5 + 2;
             }
         }
-        return pos;
+        this.mFollows.forEach((follow, key) => {
+            if (key !== FollowEnum.Nickname && follow && follow.object) {
+                const displayHeight = follow.object.height / this.mSceneScale;
+                offset.y -= displayHeight * 0.5;
+                follow.setOffset(0, offset.y);
+                offset.y -= displayHeight * 0.5 + 2;
+            }
+        });
     }
 
     public addDisplay() {
