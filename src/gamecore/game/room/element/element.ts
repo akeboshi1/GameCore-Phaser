@@ -303,7 +303,8 @@ export class Element extends BlockObject implements IElement {
                         break;
                     }
                     this.mModel.updateDisplay(model.display, model.animations);
-                    this.load(this.mModel.displayInfo)
+                    this.load(this.mModel.displayInfo);
+                    this.mElementManager.roomService.game.renderPeer.setHasInteractive(this.id, this.mModel.hasInteractive);
                     break;
             }
         }
