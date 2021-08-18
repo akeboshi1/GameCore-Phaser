@@ -278,9 +278,13 @@ export class User extends Player {
     }
 
     public updateModel(model: op_client.IActor, patchKeys: string[]) {
-        if (model.hasOwnProperty("inputMask")) {
-            (<PlayerModel>this.mModel).inputMask = model.inputMask;
-            this.mRoomService.game.renderPeer.updateInput(model.inputMask);
+        for (const patchKey of patchKeys) {
+            switch(patchKey) {
+                case "input_mask":
+                    (<PlayerModel>this.mModel).inputMask = model.inputMask;
+                    this.mRoomService.game.renderPeer.updateInput(model.inputMask);
+                    break;
+            }
         }
         super.updateModel(model, patchKeys, this.mRoomService.game.avatarType);
     }

@@ -1,7 +1,8 @@
 {
   "common": {
     "cancel": "取消",
-    "confirm": "确定"
+    "confirm": "确定",
+    "wait_userinfo_timeout": "获取用户信息超时"
   },
   "loading": {
     "login_error": "登录失败，请重新登录或稍后再试",

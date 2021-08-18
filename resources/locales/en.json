@@ -1,7 +1,8 @@
 {
   "common": {
     "cancel": "Cancel",
-    "confirm": "OK"
+    "confirm": "OK",
+    "wait_userinfo_timeout": "Get user information timed out."
   },
   "loading": {
     "login_error": "Login failed, please login again or try again later",
