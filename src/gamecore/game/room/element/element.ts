@@ -210,7 +210,6 @@ export class Element extends BlockObject implements IElement {
         this.mDisplayInfo = displayInfo;
         this.isUser = isUser;
         if (!displayInfo) return Promise.reject(`element ${this.mModel.nickname} ${this.id} display does not exist`);
-        await this.loadDisplayInfo();
         return this.addToBlock();
     }
 
@@ -229,14 +228,17 @@ export class Element extends BlockObject implements IElement {
         if (this.mModel.pos) {
             this.setPosition(this.mModel.pos);
         }
+        const obj = { id: model.id, pos: model.pos, nickname: model.nickname, nodeType: model.nodeType, sound: model.sound, alpha: model.alpha, titleMask: model.titleMask | 0x00020000, attrs: model.attrs, hasInteractive: model.hasInteractive };
+        this.mElementManager.roomService.game.peer.render.setModel(obj);
+        if (!model.displayInfo) {
+            return;
+        }
         this.removeFromMap();
         // 必须执行一遍下面的方法，否则无法获取碰撞区域
         const area = model.getCollisionArea();
-        const obj = { id: model.id, pos: model.pos, nickname: model.nickname, nodeType: model.nodeType, sound: model.sound, alpha: model.alpha, titleMask: model.titleMask | 0x00020000, attrs: model.attrs, hasInteractive: model.hasInteractive };
         this.addToMap();
         // render action
         this.load(this.mModel.displayInfo)
-            .then(() => this.mElementManager.roomService.game.peer.render.setModel(obj))
             .then(() => {
                 this.setDirection(this.mModel.direction);
                 if (this.mInputEnable === InputEnable.Interactive) {
@@ -257,6 +259,7 @@ export class Element extends BlockObject implements IElement {
         if (this.mModel.id !== model.id) {
             return;
         }
+        this.removeFromMap();
         // direction  nickname  display_badge_cards  point3f  attrs  current_animation_name  opacity  animations  speed  mount_sprites
         for (const key of patchKeys) {
             // TODO 考虑使用反射
@@ -290,9 +293,20 @@ export class Element extends BlockObject implements IElement {
                     this.mergeMounth(mounts);
                     this.updateMounth(mounts);
                     break;
+                case "animations":
+                    if (!model.animations) {
+                        Logger.getInstance().error(`${model.nickname}-${model.id} animation does not exist`);
+                        break;
+                    }
+                    if (!model.display) {
+                        Logger.getInstance().error(`${model.nickname}-${model.id} display does not exist`);
+                        break;
+                    }
+                    this.mModel.updateDisplay(model.display, model.animations);
+                    this.load(this.mModel.displayInfo)
+                    break;
             }
         }
-        this.removeFromMap();
         if (!this.mModel.sn) {
             // tslint:disable-next-line:no-console
             // console.log("update model sn", model);
@@ -808,14 +822,16 @@ export class Element extends BlockObject implements IElement {
             return;
         }
         let createPromise: Promise<any> = null;
+        // const { id, pos, nickname, nodeType, sound, titleMask, attrs, hasInteractive } = this.mModel;
+        // const data = { id, pos, nickname, nodeType, sound, titleMask, attrs, hasInteractive};
         if (this.mDisplayInfo.discriminator === "DragonbonesModel") {
             if (this.isUser) {
-                createPromise = this.mElementManager.roomService.game.peer.render.createUserDragonBones(this.mDisplayInfo as IDragonbonesModel, this.mModel.layer);
+                createPromise = this.mElementManager.roomService.game.peer.render.createUserDragonBones(this.mDisplayInfo as IDragonbonesModel, this.mModel.layer, this.mModel.nodeType);
             } else {
                 createPromise = this.mElementManager.roomService.game.peer.render.createDragonBones(this.id, this.mDisplayInfo as IDragonbonesModel, this.mModel.layer, this.mModel.nodeType);
             }
         } else {
-            createPromise = this.mElementManager.roomService.game.peer.render.createFramesDisplay(this.id, this.mDisplayInfo as IFramesModel, this.mModel.layer);
+            createPromise = this.mElementManager.roomService.game.peer.render.createFramesDisplay(this.id, this.mDisplayInfo as IFramesModel, this.mModel.layer, this.mModel.nodeType);
         }
 
         this.mElementManager.roomService.game.renderPeer.editorModeDebugger.getIsDebug()
@@ -824,8 +840,8 @@ export class Element extends BlockObject implements IElement {
             });
 
         createPromise.then(() => {
-            const pos = this.mModel.pos;
-            this.mElementManager.roomService.game.peer.render.setPosition(this.id, pos.x, pos.y);
+            // const pos = this.mModel.pos;
+            // this.mElementManager.roomService.game.peer.render.setPosition(this.id, pos.x, pos.y);
             if (currentAnimation) this.mElementManager.roomService.game.renderPeer.playAnimation(this.id, this.mModel.currentAnimation);
         }).catch((error) => {
             Logger.getInstance().error("promise error ====>", error);
@@ -834,7 +850,6 @@ export class Element extends BlockObject implements IElement {
         if (this.mInputEnable) this.setInputEnable(this.mInputEnable);
         if (this.mTopDisplay) this.showTopDisplay(this.mTopDisplay);
         this.addBody();
-        this.roomService.game.emitter.emit("ElementCreated", this.id);
         return Promise.resolve();
     }
 

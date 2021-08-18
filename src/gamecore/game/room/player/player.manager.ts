@@ -371,6 +371,10 @@ export class PlayerManager extends PacketHandler implements IElementManager {
         }
         const role: Player = <Player>this.get(id);
         if (role) {
+            // 自己不受后端移动影响
+            if (role === this.actor) {
+                return;
+            }
             role.stopMove();
             role.setPosition(new LogicPos(content.position.x, content.position.y, content.position.z), id === this.mActor.id);
             this.mRoom.game.renderPeer.setPosition(id, content.position.x, content.position.y, content.position.z);
@@ -463,7 +467,11 @@ export class PlayerManager extends PacketHandler implements IElementManager {
     private onSyncActorHandler(packet: PBpacket) {
         const content: op_client.IOP_VIRTUAL_WORLD_REQ_CLIENT_SYNC_ACTOR = packet.content;
         this._loadSprite(content.actor)
-        this.actor.setModel(new PlayerModel(content.actor));
+        if (content.command === op_def.OpCommand.OP_COMMAND_PATCH) {
+            this.actor.updateModel(content.actor, content.patchKeys);
+        } else {
+            this.actor.setModel(new PlayerModel(content.actor));
+        }
     }
 
     get roomService(): IRoomService {

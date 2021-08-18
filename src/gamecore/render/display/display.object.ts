@@ -9,8 +9,6 @@ export interface IDisplayObject extends IBaseDisplay {
 
     startLoad(): Promise<any>;
 
-    checkCollision(sprite: any): boolean;
-
     showRefernceArea(area: number[][], origin: IPos);
 
     hideRefernceArea();

@@ -1,8 +1,8 @@
 import { Render } from "../render";
 import { FramesDisplay } from "../display/frames/frames.display";
 import { MessageType } from "structure";
-import { NodeType } from "../managers/display.manager";
 import { UiUtils } from "utils";
+import { op_def } from "pixelpai_proto";
 
 export enum MouseEvent {
     RightMouseDown = 1,
@@ -98,7 +98,7 @@ export class MouseManager {
             if (diffX > 10 || diffY > 10) return;
             if (!gameobject || !gameobject.parentContainer) return;
             if (!com || !(com instanceof FramesDisplay)) return;
-            if (com.nodeType !== NodeType.ElementNodeType) return;
+            if (com.nodeType !== op_def.NodeType.ElementNodeType) return;
             if (!com.hasInteractive) return;
 
             com.scaleTween();
@@ -151,7 +151,7 @@ export class MouseManager {
         }
         if (this.render.guideManager.canInteractive(id)) return;
         this.mGameObject = gameObject;
-        if (display.nodeType === NodeType.ElementNodeType) this.render.renderEmitter("FurnitureEvent", id);
+        if (display.nodeType === op_def.NodeType.ElementNodeType) this.render.renderEmitter("FurnitureEvent", id);
         // 重置hold时间
         clearTimeout(this.mDownTime);
         this.mDownTime = setTimeout(this.holdHandler.bind(this), this.mDownDelay, pointer, gameObject);

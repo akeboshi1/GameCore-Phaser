@@ -67,3 +67,4 @@ export * from "./IResPath";
 export * from "./ground";
 export * from "./tilemap";
 export * from "./sync.sprite";
+export * from "./render.sprite";

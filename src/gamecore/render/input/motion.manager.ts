@@ -1,6 +1,6 @@
 import { Render } from "../render";
-import { NodeType } from "../managers";
 import { MainUIScene } from "../scenes/main.ui.scene";
+import { op_def } from "pixelpai_proto";
 import { SceneName, LogicPos } from "structure";
 export class MotionManager {
     public enable: boolean;
@@ -97,7 +97,7 @@ export class MotionManager {
         if (id) {
             if (id) {
                 const ele = this.render.displayManager.getDisplay(id);
-                if (ele.nodeType === NodeType.CharacterNodeType) {
+                if (ele.nodeType === op_def.NodeType.CharacterNodeType) {
                     // TODO
                     this.render.mainPeer.activePlayer(id);
                     this.clearGameObject();
@@ -156,7 +156,7 @@ export class MotionManager {
             this.movePath(pointer.worldX / this.render.scaleRatio, pointer.worldY / this.render.scaleRatio, 0, [new LogicPos(pointer.worldX / this.scaleRatio, pointer.worldY / this.scaleRatio)]);
             return;
         }
-        if (ele.nodeType === NodeType.CharacterNodeType) {
+        if (ele.nodeType === op_def.NodeType.CharacterNodeType) {
             // TODO
             this.render.mainPeer.activePlayer(id);
             this.clearGameObject();

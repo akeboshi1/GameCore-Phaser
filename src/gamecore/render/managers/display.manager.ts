@@ -12,7 +12,8 @@ import {
     IDragonbonesModel,
     RunningAnimation,
     ITilesetProperty,
-    IGround
+    IGround,
+    IRenderSprite
 } from "structure";
 import { FramesDisplay } from "../display/frames/frames.display";
 import { PlayScene } from "../scenes/play.scene";
@@ -28,47 +29,6 @@ import { BaseSceneManager, BlockManager, Ground } from "baseRender";
 import { FramesModel } from "baseGame";
 import { Tool } from "utils";
 import { translate } from "../utils";
-
-export enum NodeType {
-    UnknownNodeType = 0,
-    GameNodeType = 1,
-    SceneNodeType = 2,
-    ElementNodeType = 3,
-    TerrainNodeType = 4,
-    CharacterNodeType = 5,
-    LocationType = 6,
-    MovableType = 7,
-    DisplayType = 8,
-    AttributeType = 9,
-    FunctionType = 10,
-    AnimationsType = 11,
-    EventType = 12,
-    MapSizeType = 13,
-    UIType = 14,
-    TimerType = 15,
-    PackageType = 16,
-    PackageItemType = 17,
-    AvatarType = 18,
-    SettingsType = 19,
-    CampType = 20,
-    MutexType = 21,
-    AnimationDataType = 22,
-    ForkType = 23,
-    ButtonType = 24,
-    TextType = 25,
-    AccessType = 26,
-    SpawnPointType = 27,
-    CommodityType = 28,
-    ShopType = 29,
-    PaletteType = 30,
-    TerrainCollectionType = 31,
-    AssetsType = 32,
-    MossType = 33,
-    MossCollectionType = 34,
-    SceneryType = 35,
-    ModsType = 36,
-    InputTextType = 37
-}
 
 export class DisplayManager {
     private sceneManager: BaseSceneManager;
@@ -125,7 +85,7 @@ export class DisplayManager {
         }
     }
 
-    public addDragonbonesDisplay(id: number, data: IDragonbonesModel, layer: number, nodeType: NodeType) {
+    public addDragonbonesDisplay(id: number, data: IDragonbonesModel, layer: number, nodeType: op_def.NodeType) {
         if (!data) {
             return;
         }
@@ -163,7 +123,7 @@ export class DisplayManager {
         }
         let display: DragonbonesDisplay;
         if (!this.displays.has(data.id)) {
-            display = new DragonbonesDisplay(scene, this.render, data.id, this.uuid++, NodeType.CharacterNodeType);
+            display = new DragonbonesDisplay(scene, this.render, data.id, this.uuid++, op_def.NodeType.CharacterNodeType);
             this.displays.set(data.id, display);
         } else {
             display = this.displays.get(data.id) as DragonbonesDisplay;
@@ -175,15 +135,14 @@ export class DisplayManager {
         const id = data.id;
         const sprite = this.mModelCache.get(id);
         if (sprite) {
-            display.titleMask = sprite.titleMask;
-            if (sprite.nickname) this.showNickname(data.id, sprite.nickname);
+            this.setModel(sprite);
             this.mModelCache.delete(id);
         }
         (<PlayScene>scene).layerManager.addToLayer(layer.toString(), display);
         return display;
     }
 
-    public addTerrainDisplay(id: number, data: IFramesModel, layer: number) {
+    public addTerrainDisplay(id: number, data: IFramesModel, layer: number, nodeType: op_def.NodeType) {
         if (!data) {
             return;
         }
@@ -194,7 +153,7 @@ export class DisplayManager {
         }
         let display: FramesDisplay;
         if (!this.displays.has(id)) {
-            display = new FramesDisplay(scene, this.render, id, NodeType.TerrainNodeType);
+            display = new FramesDisplay(scene, this.render, id, nodeType);
             this.displays.set(id, display);
         } else {
             display = this.displays.get(id) as FramesDisplay;
@@ -202,15 +161,16 @@ export class DisplayManager {
         display.load(data);
         const sprite = this.mModelCache.get(id);
         if (sprite) {
-            display.titleMask = sprite.titleMask;
-            if (sprite.nickname) this.showNickname(id, sprite.nickname);
+            this.setModel(sprite);
+            // display.titleMask = sprite.titleMask;
+            // if (sprite.nickname) this.showNickname(id, sprite.nickname);
             this.mModelCache.delete(id);
         }
         (<PlayScene>scene).layerManager.addToLayer(layer.toString(), display);
         return display;
     }
 
-    public addFramesDisplay(id: number, data: IFramesModel, layer: number, field?: DisplayField) {
+    public addFramesDisplay(id: number, data: IFramesModel, layer: number, nodeType: op_def.NodeType, field?: DisplayField) {
         if (!data) {
             Logger.getInstance().debug("no data addFramesDisplay ====>", id);
             return;
@@ -222,7 +182,7 @@ export class DisplayManager {
         }
         let display: FramesDisplay;
         if (!this.displays.has(id)) {
-            display = new FramesDisplay(scene, this.render, id, NodeType.ElementNodeType);
+            display = new FramesDisplay(scene, this.render, id, nodeType);
             this.displays.set(id, display);
         } else {
             display = this.displays.get(id) as FramesDisplay;
@@ -230,8 +190,9 @@ export class DisplayManager {
         display.load(data, field);
         const sprite = this.mModelCache.get(id);
         if (sprite) {
-            display.titleMask = sprite.titleMask;
-            if (sprite.nickname) this.showNickname(id, sprite.nickname);
+            this.setModel(sprite);
+            // display.titleMask = sprite.titleMask;
+            // if (sprite.nickname) this.showNickname(id, sprite.nickname);
             this.mModelCache.delete(id);
         }
         (<PlayScene>scene).layerManager.addToLayer(layer.toString(), display);
@@ -374,7 +335,7 @@ export class DisplayManager {
     public addEffect(targetID: number, effectID: number, display: IFramesModel) {
         const target = this.getDisplay(targetID);
         let effect = this.getDisplay(effectID);
-        if (!effect) effect = this.addFramesDisplay(effectID, display, parseInt(LayerName.SURFACE, 10), DisplayField.Effect);
+        if (!effect) effect = this.addFramesDisplay(effectID, display, parseInt(LayerName.SURFACE, 10), op_def.NodeType.ElementNodeType, DisplayField.Effect);
         if (!target || !effect) {
             return;
         }
@@ -409,17 +370,16 @@ export class DisplayManager {
         // display.showEffect();
     }
 
-    public setModel(sprite: any) {
+    public setModel(sprite: IRenderSprite) {
         const display = this.displays.get(sprite.id);
         if (!display) {
             this.mModelCache.set(sprite.id, sprite);
             return;
         }
         if (!sprite.pos) sprite.pos = new LogicPos(0, 0, 0);
-        display.titleMask = sprite.titleMask;
+        display.titleMask = sprite.titleMask | 0x00020000;
         display.setPosition(sprite.pos.x, sprite.pos.y, sprite.pos.z);
-        display.checkCollision(sprite);
-        display.changeAlpha(sprite.alpha);
+        // display.changeAlpha(sprite.alpha);
         this.setHasInteractive(display, sprite.hasInteractive);
         this.updateAttrs(display, sprite.attrs);
         let nickname = sprite.nickname;

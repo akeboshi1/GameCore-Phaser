@@ -1428,24 +1428,24 @@ export class Render extends RPCPeer implements GameMain, IRender {
     }
 
     @Export([webworker_rpc.ParamType.num])
-    public createDragonBones(id: number, displayInfo: IFramesModel | IDragonbonesModel, layer: number, nodeType) {
+    public createDragonBones(id: number, displayInfo: IFramesModel | IDragonbonesModel, layer: number, nodeType: op_def.NodeType) {
         if (this.mDisplayManager) this.mDisplayManager.addDragonbonesDisplay(id, displayInfo, layer, nodeType);
     }
 
     @Export()
-    public createUserDragonBones(displayInfo: IFramesModel | IDragonbonesModel, layer: number) {
+    public createUserDragonBones(displayInfo: IFramesModel | IDragonbonesModel, layer: number, nodeType: op_def.NodeType) {
         if (this.mDisplayManager) this.mDisplayManager.addUserDragonbonesDisplay(displayInfo, true, layer);
     }
 
     @Export([webworker_rpc.ParamType.num])
-    public createFramesDisplay(id: number, displayInfo: IFramesModel, layer: number) {
-        if (this.mDisplayManager) this.mDisplayManager.addFramesDisplay(id, displayInfo, layer);
+    public createFramesDisplay(id: number, displayInfo: IFramesModel, layer: number, nodeType: op_def.NodeType) {
+        if (this.mDisplayManager) this.mDisplayManager.addFramesDisplay(id, displayInfo, layer, nodeType);
         else Logger.getInstance().debug("no displayManager ====>");
     }
 
     @Export([webworker_rpc.ParamType.num])
-    public createTerrainDisplay(id: number, displayInfo: IFramesModel, layer: number) {
-        if (this.mDisplayManager) this.mDisplayManager.addTerrainDisplay(id, displayInfo, layer);
+    public createTerrainDisplay(id: number, displayInfo: IFramesModel, layer: number, nodeType: op_def.NodeType) {
+        if (this.mDisplayManager) this.mDisplayManager.addTerrainDisplay(id, displayInfo, layer, nodeType);
     }
 
     @Export()

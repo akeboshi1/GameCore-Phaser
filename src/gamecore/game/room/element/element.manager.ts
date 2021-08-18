@@ -3,7 +3,7 @@ import { op_client, op_def, op_virtual_world } from "pixelpai_proto";
 import { ConnectionService, Logger, LogicPos, MessageType } from "structure";
 import { IDragonbonesModel, IFramesModel, ISprite, ISyncSprite } from "structure";
 import { Element, IElement } from "./element";
-import { IElementStorage, Sprite } from "baseGame";
+import { FramesModel, IElementStorage, Sprite } from "baseGame";
 import NodeType = op_def.NodeType;
 import { IRoomService } from "../room";
 import { InputEnable } from "./input.enable";
@@ -281,15 +281,8 @@ export class ElementManager extends PacketHandler implements IElementManager {
                     if (command === op_def.OpCommand.OP_COMMAND_UPDATE) { //  全部
                         const data = new Sprite(sprite, 3);
                         const index = this.mRequestSyncIdList.indexOf(sprite.id);
-                        if (data.displayInfo) {
-                            if (index > -1) {
-                                 this.mRoom.game.elementStorage.add(data.displayInfo);
-                                 this.mRequestSyncIdList.splice(index, 1);
-                             }
-                        } else {
-                            if (index === -1) {
-                                ids.push(sprite.id);
-                            }
+                        if (!data.displayInfo && index === -1) {
+                            ids.push(sprite.id);
                         }
                         element.model = data;
                     } else if (command === op_def.OpCommand.OP_COMMAND_PATCH) { //  增量
@@ -333,6 +326,11 @@ export class ElementManager extends PacketHandler implements IElementManager {
         // 编辑小屋
         if (this.mRoom.isDecorating && this.mRoom.game.emitter) {
             this.mRoom.game.emitter.emit(MessageType.DECORATE_ELEMENT_CREATED, id);
+        }
+        const index = this.mRequestSyncIdList.indexOf(id);
+        if (index > -1) {
+            if (element.model) this.mRoom.game.elementStorage.add(<FramesModel>element.model.displayInfo);
+            this.mRequestSyncIdList.splice(index, 1);
         }
         // 回馈给load缓存队列逻辑
         this.elementLoadCallBack(id);
@@ -383,11 +381,10 @@ export class ElementManager extends PacketHandler implements IElementManager {
             }
             this.mAddCache.push(obj.id);
             const sprite = new Sprite(obj, 3);
-            if (this.checkDisplay(sprite)) {
-                this.mCacheAddList.push(obj);
-            } else {
+            if (!this.checkDisplay(sprite)) {
                 ids.push(obj.id);
             }
+            this.mCacheAddList.push(obj);
         }
         this.fetchDisplay(ids);
     }
@@ -494,6 +491,7 @@ export class ElementManager extends PacketHandler implements IElementManager {
         for (const id of ids) {
             if (!this.mRequestSyncIdList.includes(id)) {
                 result.push(id);
+                this.mRequestSyncIdList.push(id);
             }
         }
         const packet = new PBpacket(op_virtual_world.OPCODE._OP_REQ_VIRTUAL_WORLD_QUERY_SPRITE_RESOURCE);

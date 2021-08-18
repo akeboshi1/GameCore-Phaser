@@ -79,12 +79,6 @@ export class FramesDisplay extends BaseFramesDisplay implements IDisplayObject {
         this.updateTopDisplay();
     }
 
-    public checkCollision(sprite: any): boolean {
-        const currentCollisionArea = sprite.currentCollisionArea;
-        if (currentCollisionArea && currentCollisionArea.length > 0) return true;
-        return false;
-    }
-
     public async showRefernceArea(area: number[][], origin: IPos, conflictMap?: number[][]) {
         if (!area || area.length <= 0 || !origin) return;
         const roomSize = this.render.roomSize;

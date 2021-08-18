@@ -149,7 +149,7 @@ export class Wall extends BlockObject {
             // Logger.getInstance().error("displayinfo does not exist, Create display failed");
             return;
         }
-        await this.mRoomService.game.peer.render.createTerrainDisplay(this.id, this.mDisplayInfo, this.mModel.layer);
+        await this.mRoomService.game.peer.render.createTerrainDisplay(this.id, this.mDisplayInfo, this.mModel.layer, op_def.NodeType.WallNodeType);
         const currentAnimation = this.mModel.currentAnimation;
         if (currentAnimation) {
             await this.mRoomService.game.renderPeer.playAnimation(this.id, this.mModel.currentAnimation);
