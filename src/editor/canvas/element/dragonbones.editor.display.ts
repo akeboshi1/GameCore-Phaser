@@ -4,6 +4,8 @@ import { Logger } from "structure";
 import version from "../../../../version";
 export class DragonbonesEditorDisplay extends BaseDragonbonesDisplay {
 
+    public dirty = false;
+
     constructor(scene: Phaser.Scene, mWebHomePath: string) {
         super(scene, { resPath: `./resources/`, osdPath: mWebHomePath });
     }
@@ -24,7 +26,18 @@ export class DragonbonesEditorDisplay extends BaseDragonbonesDisplay {
                 blegBaseId: "60c8626bdd14da5f64b49341"
             }
         });
-        return super.load(display, undefined, false);
+        return new Promise<any>((resolve, reject) => {
+            super.load(display, undefined, false)
+                .then(() => {
+                    resolve(null);
+                    if (this.dirty) {
+                        this.destroy();
+                    }
+                })
+                .catch((err) => {
+                    reject(err);
+                });
+        });
     }
 
     public displayCreated() {

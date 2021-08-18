@@ -500,7 +500,7 @@ export class ElementFramesDisplay extends BaseFramesDisplay implements Resources
 
         this.mMountList.forEach((val) => {
             this.unmount(val as BaseDragonbonesDisplay);
-            val.destroy(true);
+            (<DragonbonesEditorDisplay>val).dirty = true;
         });
         this.mMountList.clear();
 
