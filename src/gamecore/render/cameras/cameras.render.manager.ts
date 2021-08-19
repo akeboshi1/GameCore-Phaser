@@ -56,12 +56,24 @@ export class CamerasRenderManager extends BaseCamerasManager {
         }
         this.stopFollow();
         if (effect) {
-            this.pan(x, y, 1000).then(() => {
+            this.pan(x, y, 800).then(() => {
                 this.render.syncCameraScroll();
             });
         } else {
             this.setScroll(x, y);
             this.render.syncCameraScroll();
+        }
+    }
+
+    public startFollow(target?: any, effect?: string) {
+        if (effect === "liner") {
+            const position = target.getPosition();
+            this.stopFollow();
+            this.pan(position.x, position.y, 800).then(() => {
+                super.startFollow(target);
+            });
+        } else {
+            super.startFollow(target);
         }
     }
 
