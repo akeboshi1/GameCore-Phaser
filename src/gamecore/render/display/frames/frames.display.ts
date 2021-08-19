@@ -170,7 +170,7 @@ export class FramesDisplay extends BaseFramesDisplay implements IDisplayObject {
 
     public removeTopDisplay() {
         if (!this.mTopDisplay) return;
-        this.mTopDisplay.removeDisplay();
+        this.mTopDisplay.removeUIState();
     }
 
     public showBubble(text: string, setting: any) {// op_client.IChat_Setting

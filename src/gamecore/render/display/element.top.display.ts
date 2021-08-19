@@ -143,9 +143,15 @@ export class ElementTopDisplay extends TopDisplay {
         }
     }
 
-    public removeDisplay() {
+    public removeUIState() {
         if (this.mFollows) {
-            this.mFollows.forEach((follow) => follow.remove());
+            // this.mFollows.forEach((follow) => follow.remove());
+            this.mFollows.forEach((follow, key) => {
+                if (key !== FollowEnum.Nickname) {
+                    follow.destroy();
+                    this.mFollows.delete(key);
+                }
+            })
         }
     }
 
