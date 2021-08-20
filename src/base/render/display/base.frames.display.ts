@@ -309,7 +309,7 @@ export class BaseFramesDisplay extends BaseDisplay {
         }
 
         this.mDisplayDatas.clear();
-        super.destroy();
+        super.destroy(true);
     }
 
     protected createDisplays(key: string, ani: any) {

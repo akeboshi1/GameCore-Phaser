@@ -319,7 +319,7 @@ export class BaseDragonbonesDisplay extends BaseDisplay {
             this.mFadeTween = null;
         }
 
-        super.destroy();
+        super.destroy(true);
     }
 
     public setClickInteractive(active: boolean) {

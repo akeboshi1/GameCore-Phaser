@@ -79,7 +79,7 @@ export abstract class BaseDisplay extends Phaser.GameObjects.Container implement
 
         this.mListenerMng.destroy();
 
-        super.destroy();
+        super.destroy(fromScene);
     }
 
     public load(data: IDragonbonesModel | IFramesModel): Promise<any> {
