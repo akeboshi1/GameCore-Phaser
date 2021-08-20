@@ -52,6 +52,8 @@ export class SceneEditorCanvas extends EditorCanvas implements IRender {
 
     private mScene: Phaser.Scene;
     private mUrl: Url;
+    // 临时数据 鼠标按下时赋值 抬起时清空
+    private mGroundWalkableData: boolean[] = [];
     private mGroundWalkableChangeIdxes: number[] = [];
 
     constructor(config: IEditorCanvasConfig) {
@@ -681,12 +683,14 @@ export class SceneEditorCanvas extends EditorCanvas implements IRender {
             case BrushEnum.BrushWalkable: {
                 this.changeGroundWalkable(true);
                 this.requestSyncGroundWalkableData(true, this.mGroundWalkableChangeIdxes);
+                this.mGroundWalkableData.length = 0;
                 this.mGroundWalkableChangeIdxes.length = 0;
             }
                 break;
             case BrushEnum.EraserWalkable: {
                 this.changeGroundWalkable(false);
                 this.requestSyncGroundWalkableData(false, this.mGroundWalkableChangeIdxes);
+                this.mGroundWalkableData.length = 0;
                 this.mGroundWalkableChangeIdxes.length = 0;
             }
                 break;
@@ -827,9 +831,11 @@ export class SceneEditorCanvas extends EditorCanvas implements IRender {
 
     private changeGroundWalkable(add: boolean) {
         const positions = this.mStamp.getBlackBrushPositions();
-        let data = [].concat(this.sceneNode.groundWalkableCollection.data);
-        if (data.length === 0) {
-            data = new Array(this.getCurrentRoomSize().cols * this.getCurrentRoomSize().rows).fill(false);
+        if (this.mGroundWalkableData.length === 0) {
+            this.mGroundWalkableData = [].concat(this.sceneNode.groundWalkableCollection.data);
+        }
+        if (this.mGroundWalkableData.length === 0) {
+            this.mGroundWalkableData = new Array(this.getCurrentRoomSize().cols * this.getCurrentRoomSize().rows).fill(false);
         }
         for (let i = 0; i < positions.length; i++) {
             const pos = positions[i];
@@ -841,10 +847,10 @@ export class SceneEditorCanvas extends EditorCanvas implements IRender {
 
         for (let i = 0; i < this.mGroundWalkableChangeIdxes.length; i++) {
             const posIdx = this.mGroundWalkableChangeIdxes[i];
-            data[posIdx] = add;
+            this.mGroundWalkableData[posIdx] = add;
         }
 
-        (<SceneEditor>this.mScene).updateGroundWalkableShow(data);
+        (<SceneEditor>this.mScene).updateGroundWalkableShow(this.mGroundWalkableData);
     }
 
     private requestSyncGroundWalkableData(walkable: boolean, idxes: number[]) {
