@@ -51,10 +51,12 @@ export class UIDragonbonesDisplay extends DragonbonesDisplay {
 
     displayCreated() {
         super.displayCreated();
-
-        this.play({ name: "idle", flip: false });
+        this.onDisplayCreated();
     }
 
+    protected onDisplayCreated() {
+        this.play({ name: "idle", flip: false });
+    }
     protected onArmatureLoopComplete(event: dragonBones.EventObject) {
         if (!this.mArmatureDisplay || !this.mAnimation) {
             return;
