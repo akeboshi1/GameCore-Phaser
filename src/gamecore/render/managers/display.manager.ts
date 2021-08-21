@@ -105,8 +105,7 @@ export class DisplayManager {
         display.load(data);
         const sprite = this.mModelCache.get(id);
         if (sprite) {
-            display.titleMask = sprite.titleMask;
-            if (sprite.nickname) this.showNickname(id, sprite.nickname);
+            this.setModel(sprite);
             this.mModelCache.delete(id);
         }
         (<PlayScene>scene).layerManager.addToLayer(layer.toString(), display);
