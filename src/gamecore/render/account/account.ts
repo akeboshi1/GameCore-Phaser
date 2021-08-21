@@ -1,13 +1,21 @@
 import { IPos, Logger } from "structure";
 import { Export } from "webworker-rpc";
 
-interface IAccountData {
+export interface IAccountData {
     accessToken: string;
-    refreshToken: string;
     expire: number;
     fingerprint: string;
     id: string;
+    role?: Role;
+    token?: string;
+    refreshToken?: string;
     gateway?: { host: string, port: number };
+}
+
+export enum Role {
+    Admin,
+    Member,
+    Tourist
 }
 export class Account {
     public gameId: string;
@@ -33,7 +41,7 @@ export class Account {
     //     });
     // }
     @Export()
-    public setAccount(val: any) {
+    public setAccount(val: IAccountData) {
         // this.clear();
         // Object.assign(this.mCurAccountData, val);
         this.accountData = {
@@ -42,7 +50,8 @@ export class Account {
             refreshToken: val.refreshToken,
             expire: val.expire,
             accessToken: val.token || val.accessToken,
-            gateway: val.gateway
+            gateway: val.gateway,
+            role: val.role
         };
         this.saveLocalStorage();
     }

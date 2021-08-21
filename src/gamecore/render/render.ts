@@ -3,7 +3,7 @@ import { Export, RPCPeer, webworker_rpc } from "webworker-rpc";
 import { UiUtils } from "utils";
 import { PBpacket } from "net-socket-packet";
 import { op_client, op_def } from "pixelpai_proto";
-import { Account } from "./account";
+import { Account, IAccountData } from "./account";
 import { SceneManager } from "./scenes/scene.manager";
 import { LocalStorageManager } from "./managers/local.storage.manager";
 import { PlayScene } from "./scenes/play.scene";
@@ -1081,7 +1081,7 @@ export class Render extends RPCPeer implements GameMain, IRender {
     }
 
     @Export()
-    public setAccount(val: any): void {
+    public setAccount(val: IAccountData): void {
         this.mAccount.setAccount(val);
         this.updateGateway();
     }
