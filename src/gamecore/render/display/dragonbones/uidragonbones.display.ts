@@ -3,9 +3,9 @@ import { DragonbonesDisplay } from "./dragonbones.display";
 
 export class UIDragonbonesDisplay extends DragonbonesDisplay {
     protected mInteractive: boolean = false;
-    private mComplHandler: Handler;
-    private AniAction: any[];
-    private isBack: boolean = false;
+    protected mComplHandler: Handler;
+    protected AniAction: any[];
+    protected isBack: boolean = false;
     public play(val: RunningAnimation) {
         val.name = this.getAnimationName(val.name) + (this.isBack ? "_back" : "");
         super.play(val);
@@ -61,6 +61,11 @@ export class UIDragonbonesDisplay extends DragonbonesDisplay {
         if (!this.mArmatureDisplay || !this.mAnimation) {
             return;
         }
+        this.mAnimation.times -= 1;
+        if (this.mAnimation.times > 0) {
+            this.play(this.mAnimation);
+            return;
+        }
         this.mArmatureDisplay.removeDBEventListener(dragonBones.EventObject.LOOP_COMPLETE, this.onArmatureLoopComplete, this);
         const queue = this.mAnimation.playingQueue;
         if (!queue || queue.name === undefined) {
@@ -73,5 +78,9 @@ export class UIDragonbonesDisplay extends DragonbonesDisplay {
             };
             this.play(runAni);
         }
+    }
+
+    public get armatureDisplay() {
+        return this.mArmatureDisplay;
     }
 }
