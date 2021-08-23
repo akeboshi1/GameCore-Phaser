@@ -375,12 +375,12 @@ export class DisplayManager {
             this.mModelCache.set(sprite.id, sprite);
             return;
         }
+        this.updateAttrs(display, sprite.attrs);
         if (!sprite.pos) sprite.pos = new LogicPos(0, 0, 0);
         display.titleMask = sprite.titleMask | 0x00020000;
         display.setPosition(sprite.pos.x, sprite.pos.y, sprite.pos.z);
         // display.changeAlpha(sprite.alpha);
         this.setHasInteractive(display, sprite.hasInteractive);
-        this.updateAttrs(display, sprite.attrs);
         let nickname = sprite.nickname;
         if (nickname) this.showNickname(sprite.id, nickname);
     }
