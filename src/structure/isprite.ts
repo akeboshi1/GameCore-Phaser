@@ -49,7 +49,7 @@ export interface ISprite {
     setAnimationQueue(queue: AnimationQueue);
     setDirection(val);
     setDisplayInfo(val);
-    updateAttr(attrs: op_def.IStrPair[]);
+    updateAttr(attrs: op_gameconfig_01.IAttribute[]);
     updateAvatarSuits(suits: AvatarSuit[]): boolean;
     getCollisionArea(): number[][];
     getWalkableArea(): number[][];

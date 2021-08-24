@@ -15,7 +15,7 @@ import {
     GroundWalkableCollectionNode,
     AttributeNode,
 } from "game-capsule";
-import { op_def } from "pixelpai_proto";
+import { op_def, op_gameconfig_01 } from "pixelpai_proto";
 import { BlockIndex } from "utils";
 import { AnimationModel, IDragonbonesModel, IFramesModel, IPos, IResPath, IScenery, Logger, LogicPos, Position45, ITilesetProperty } from "structure";
 import { DragonbonesModel, FramesModel } from "../sprite";
@@ -54,7 +54,7 @@ export interface IDisplayRef {
     displayModel?: FramesModel | DragonbonesModel;
     mountSprites?: number[];
     titleMask?: number;
-    attrs?: op_def.IStrPair[];
+    attrs?: op_gameconfig_01.IAttribute[];
 }
 
 export class ElementStorage implements IElementStorage {
@@ -408,10 +408,22 @@ export class ElementStorage implements IElementStorage {
         this.mDisplayRefMap.forEach((map) => map.clear());
     }
 
-    private getAttr(attrs: AttributeNode[]): op_def.IStrPair[] {
+    private getAttr(attrs: AttributeNode[]): op_gameconfig_01.IAttribute[] {
         const result = [];
         for (const attr of attrs) {
-            result.push({ key: attr.key, value: attr.basicTypeVal });
+            const attribute: op_gameconfig_01.IAttribute = { key: attr.key, node: undefined }
+            if (attr.boolVal !== undefined && attr.boolVal !== null) {
+                attribute.boolVal = attr.boolVal;
+                attribute.valueType = op_gameconfig_01.AttributeValueEnum.boolVal;
+            } else if (attr.intVal !== undefined && attr.intVal !== null) {
+                attribute.intVal = attr.intVal;
+                attribute.valueType = op_gameconfig_01.AttributeValueEnum.intVal;
+            } else if (attribute.strVal !== undefined && attribute.strVal !== null) {
+                attribute.strVal = attr.strVal;
+                attribute.valueType = op_gameconfig_01.AttributeValueEnum.strVal;
+            }
+            result.push(attribute);
+            // result.push({ key: attr.key, value: attr.basicTypeVal });
         }
         return result;
     }

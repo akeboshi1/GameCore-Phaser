@@ -1409,8 +1409,7 @@ export class Render extends RPCPeer implements GameMain, IRender {
     @Export([webworker_rpc.ParamType.num, webworker_rpc.ParamType.boolean])
     public setHasInteractive(id: number, hasInteractive: boolean) {
         if (!this.mDisplayManager) return;
-        const display = this.mDisplayManager.getDisplay(id);
-        if (display) display.hasInteractive = hasInteractive;
+        this.mDisplayManager.setHasInteractive(this.mDisplayManager.getDisplay(id), hasInteractive);
     }
 
     @Export([webworker_rpc.ParamType.num, webworker_rpc.ParamType.num])

@@ -258,13 +258,13 @@ export class Sprite extends EventDispatcher implements ISprite {
         return suits;
     }
 
-    public updateAttr(attrs: op_def.IStrPair[]) {
+    public updateAttr(attrs: op_gameconfig_01.IAttribute[]) {
         if (!attrs) return;
         let suits: AvatarSuit[];
         for (const attr of attrs) {
-            const { key, value } = attr;
+            const { key } = attr;
             if (key === "PKT_AVATAR_SUITS") {
-                suits = JSON.parse(value);
+                suits = JSON.parse(attr.strVal);
                 if (suits && suits.length > 0) {
                     this.suits = suits;
                     this.updateSuits = true;
@@ -272,14 +272,14 @@ export class Sprite extends EventDispatcher implements ISprite {
                     else this.animator.setSuits(this.suits);
                 }
             } else if (key === "touchSound") {
-                this.sound = value;
+                this.sound = attr.strVal;
             } else if (key === "TitleMask") {
-                this.titleMask = parseInt(value, 10);
+                this.titleMask = attr.intVal;
             } else if (key === "i18nName") {
-                this.i18nName = value;
+                this.i18nName = attr.strVal;
             }
             if (!this.mAttrs) this.mAttrs = new Map();
-            this.mAttrs.set(key, value);
+            this.mAttrs.set(key, this.getAttrValue(attr));
         }
     }
 
@@ -471,6 +471,25 @@ export class Sprite extends EventDispatcher implements ISprite {
         }
         this.setAnimationName(this.displayInfo.animationName);
         return this;
+    }
+
+    protected getAttrValue(value: op_gameconfig_01.IAttribute) {
+        if (!value) {
+            // Logger.getInstance().error("");
+            return;
+        }
+        switch (value.valueType) {
+            case op_gameconfig_01.AttributeValueEnum.strVal:
+                return value.strVal;
+            case op_gameconfig_01.AttributeValueEnum.media:
+                return value.media;
+            case op_gameconfig_01.AttributeValueEnum.boolVal:
+                return value.boolVal;
+            case op_gameconfig_01.AttributeValueEnum.intVal:
+                return value.intVal;
+            default:
+                return value.strVal;
+        }
     }
 
     private setAnimationData(animationName: string, direction: number, times?: number) {
