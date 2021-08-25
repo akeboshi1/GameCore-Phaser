@@ -411,18 +411,7 @@ export class ElementStorage implements IElementStorage {
     private getAttr(attrs: AttributeNode[]): op_gameconfig_01.IAttribute[] {
         const result = [];
         for (const attr of attrs) {
-            const attribute: op_gameconfig_01.IAttribute = { key: attr.key, node: undefined }
-            if (attr.boolVal !== undefined && attr.boolVal !== null) {
-                attribute.boolVal = attr.boolVal;
-                attribute.valueType = op_gameconfig_01.AttributeValueEnum.boolVal;
-            } else if (attr.intVal !== undefined && attr.intVal !== null) {
-                attribute.intVal = attr.intVal;
-                attribute.valueType = op_gameconfig_01.AttributeValueEnum.intVal;
-            } else if (attr.strVal !== undefined && attr.strVal !== null) {
-                attribute.strVal = attr.strVal;
-                attribute.valueType = op_gameconfig_01.AttributeValueEnum.strVal;
-            }
-            result.push(attribute);
+            result.push(attr.createProtocolObject());
             // result.push({ key: attr.key, value: attr.basicTypeVal });
         }
         return result;
