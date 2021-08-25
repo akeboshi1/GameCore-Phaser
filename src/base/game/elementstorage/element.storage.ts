@@ -418,7 +418,7 @@ export class ElementStorage implements IElementStorage {
             } else if (attr.intVal !== undefined && attr.intVal !== null) {
                 attribute.intVal = attr.intVal;
                 attribute.valueType = op_gameconfig_01.AttributeValueEnum.intVal;
-            } else if (attribute.strVal !== undefined && attribute.strVal !== null) {
+            } else if (attr.strVal !== undefined && attr.strVal !== null) {
                 attribute.strVal = attr.strVal;
                 attribute.valueType = op_gameconfig_01.AttributeValueEnum.strVal;
             }
