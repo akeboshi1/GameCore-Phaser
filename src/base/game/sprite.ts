@@ -83,6 +83,10 @@ export class Sprite extends EventDispatcher implements ISprite {
         if (this.avatar) {
             this.updateAvatar(this.avatar);
         }
+        if (obj.humanoid === 1) {
+            this.displayInfo = new DragonbonesModel(undefined);
+            this.displayInfo.parseHumanoid(obj.humanoidDescription);
+        }
         if (obj.display) {
             this.updateDisplay(obj.display, obj.animations, obj.currentAnimationName);
         }
@@ -849,6 +853,7 @@ export class DragonbonesModel implements IDragonbonesModel {
     public eventName: number[];
     public sound: string;
     public type: string;
+    public dragonboneName: string = "bones_human01";
     avatarDir?: number;
     avatar?: IAvatar;
     animationName?: string;
@@ -858,6 +863,17 @@ export class DragonbonesModel implements IDragonbonesModel {
         if (data) {
             this.id = data.id;
             this.avatar = data.avatar;
+            for (const key in this.avatar) {
+                if (key === "id" || key === "dirable") continue;
+                if (Object.prototype.hasOwnProperty.call(this.avatar, key)) {
+                    const element = this.avatar[key];
+                    delete this.avatar[key];
+                    let newKey = key.replace("Id", "");
+                    newKey = newKey.replace(/(?<keyword>[A-Z]+)/g, "_$<keyword>");
+                    newKey = newKey.toLocaleLowerCase();
+                    this.avatar[newKey] = element;
+                }
+            }
             this.eventName = data.eventName;
             this.sound = data.sound;
             const aniName = data.avatar.defaultAnimation;
@@ -871,6 +887,18 @@ export class DragonbonesModel implements IDragonbonesModel {
                 this[key] = val[key];
             }
         }
+    }
+
+    public parseHumanoid(humanoid: op_gameconfig_01.IHumanoidDescription) {
+        const { modelId, slots } = humanoid;
+        this.avatar = { id: modelId };
+        for (const slot of slots) {
+            this.avatar[slot.slot] = {
+                sn: slot.sn,
+                version: slot.version
+            }
+        }
+        this.dragonboneName = humanoid.modelId;
     }
 
     public destroy() {

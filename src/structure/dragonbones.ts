@@ -6,6 +6,7 @@ export interface IDragonbonesModel {
     avatarDir?: number;
     avatar?: IAvatar;
     animationName?: string;
+    dragonboneName?: string;
 }
 
 export interface IAvatar {

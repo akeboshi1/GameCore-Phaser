@@ -827,7 +827,7 @@ export class Element extends BlockObject implements IElement {
         // const data = { id, pos, nickname, nodeType, sound, titleMask, attrs, hasInteractive};
         if (this.mDisplayInfo.discriminator === "DragonbonesModel") {
             if (this.isUser) {
-                createPromise = this.mElementManager.roomService.game.peer.render.createUserDragonBones(this.mDisplayInfo as IDragonbonesModel, this.mModel.layer, this.mModel.nodeType);
+                createPromise = this.mElementManager.roomService.game.peer.render.createUserDragonBones(this.id, this.mDisplayInfo as IDragonbonesModel, this.mModel.layer, this.mModel.nodeType);
             } else {
                 createPromise = this.mElementManager.roomService.game.peer.render.createDragonBones(this.id, this.mDisplayInfo as IDragonbonesModel, this.mModel.layer, this.mModel.nodeType);
             }

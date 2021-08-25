@@ -111,7 +111,7 @@ export class DisplayManager {
         (<PlayScene>scene).layerManager.addToLayer(layer.toString(), display);
     }
 
-    public addUserDragonbonesDisplay(data: IDragonbonesModel, isUser: boolean = false, layer: number) {
+    public addUserDragonbonesDisplay(id: number, data: IDragonbonesModel, isUser: boolean = false, layer: number) {
         if (!data) {
             return;
         }
@@ -121,9 +121,9 @@ export class DisplayManager {
             return;
         }
         let display: DragonbonesDisplay;
-        if (!this.displays.has(data.id)) {
-            display = new DragonbonesDisplay(scene, this.render, data.id, this.uuid++, op_def.NodeType.CharacterNodeType);
-            this.displays.set(data.id, display);
+        if (!this.displays.has(id)) {
+            display = new DragonbonesDisplay(scene, this.render, id, this.uuid++, op_def.NodeType.CharacterNodeType);
+            this.displays.set(id, display);
         } else {
             display = this.displays.get(data.id) as DragonbonesDisplay;
         }
@@ -131,7 +131,6 @@ export class DisplayManager {
         display.load(data, undefined, false);
         // display.startLoad();
         if (isUser) this.mUser = display;
-        const id = data.id;
         const sprite = this.mModelCache.get(id);
         if (sprite) {
             this.setModel(sprite);
