@@ -93,38 +93,38 @@ export enum AvatarPartNameTemp {
 }
 
 const SERIALIZE_QUEUE = [
-    "headBaseId",
-    "headHairId",
-    "headEyesId",
-    "headHairBackId",
-    "headMousId",
-    "headHatsId",
-    "headHatsBackId",
-    "headMaskId",
-    "headSpecId",
-    "headFaceId",
-    "headChinId",
-    "bodyBaseId",
-    "bodyCostId",
-    "bodyCostDresId",
-    "bodyTailId",
-    "bodyWingId",
-    "bodyScarId",
-    "bodyCloaId",
-    "bodySpecId",
-    "farmBaseId",
-    "farmCostId",
-    "farmSpecId",
-    "barmBaseId",
-    "barmCostId",
-    "barmSpecId",
-    "flegBaseId",
-    "flegCostId",
-    "flegSpecId",
-    "blegBaseId",
-    "blegCostId",
-    "blegSpecId",
-    "stalkerId",
+    "head_base",
+    "head_hair",
+    "head_eyes",
+    "head_hair_back",
+    "head_mous",
+    "head_hats",
+    "head_hats_back",
+    "head_mask",
+    "head_spec",
+    "head_face",
+    "head_chin",
+    "body_base",
+    "body_cost",
+    "body_cost_dres",
+    "body_tail",
+    "body_wing",
+    "body_Scar",
+    "body_cloa",
+    "body_spec",
+    "farm_base",
+    "farm_cost",
+    "farm_spec",
+    "barm_base",
+    "barm_cost",
+    "barm_spec",
+    "fleg_base",
+    "fleg_cost",
+    "fleg_spec",
+    "bleg_base",
+    "bleg_cost",
+    "bleg_spec",
+    "stalker",
 ];
 
 const ReplacedTextures: Map<string, number> = new Map<string, number>();
@@ -150,7 +150,7 @@ export class BaseDragonbonesDisplay extends BaseDisplay {
     private mNeedReplaceTexture: boolean = false;
     private mBoardPoint: Phaser.Geom.Point;
     private readonly UNPACK_SLOTS = [AvatarSlotNameTemp.FarmWeap, AvatarSlotNameTemp.BarmWeap];
-    private readonly UNCHECK_AVATAR_PROPERTY = ["id", "dirable", "farmWeapId", "farmShldId", "barmWeapId", "barmShldId"];
+    private readonly UNCHECK_AVATAR_PROPERTY = ["id", "dirable", "farm_weap", "farm_shld", "barm_weap", "barm_shld"];
 
     // 不需要手动释放旧的资源，龙骨中已经做了相关处理
     // private mPreReplaceTextureKey: string = "";
@@ -575,8 +575,8 @@ export class BaseDragonbonesDisplay extends BaseDisplay {
         packer.options.pot = false;
         for (const rep of this.replaceArr) {
             const slotName: string = rep.slot.replace("$", rep.dir.toString());
-            const propertyName = this.slotNameToPropertyName(slotName);
-            if (this.UNCHECK_AVATAR_PROPERTY.indexOf(propertyName) >= 0) continue;
+            // const propertyName = this.slotNameToPropertyName(slotName);
+            if (this.UNCHECK_AVATAR_PROPERTY.indexOf(slotName) >= 0) continue;
             const slot: dragonBones.Slot = this.mArmatureDisplay.armature.getSlot(slotName);
             if (!slot) continue;
             const skin = this.formattingSkin(rep.skin);
@@ -612,8 +612,8 @@ export class BaseDragonbonesDisplay extends BaseDisplay {
         return new Promise<any>((resolve, reject) => {
             // load unpack parts
             this.loadPartsRes((slotName) => {
-                const propertyName = this.slotNameToPropertyName(slotName);
-                return this.UNCHECK_AVATAR_PROPERTY.indexOf(propertyName) >= 0;
+                // const propertyName = this.slotNameToPropertyName(slotName);
+                return this.UNCHECK_AVATAR_PROPERTY.indexOf(slotName) >= 0;
             })
                 .then(() => {
                     // load replaced texture
@@ -783,7 +783,7 @@ export class BaseDragonbonesDisplay extends BaseDisplay {
             if (key === "id" || key === "dirable") continue;
             if (Object.prototype.hasOwnProperty.call(avater, key)) {
                 const element = avater[key];
-                if (!element) {
+                if (!element || !element.sn) {
                     continue;
                 }
                 this.replaceArr.push({

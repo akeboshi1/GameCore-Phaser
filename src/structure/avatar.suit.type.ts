@@ -133,8 +133,8 @@ export class AvatarSuitType {
             const avatarSlot: any = op_def.AvatarSlot;
             for (const key in avatarSlot) {
                 if (typeof key === "string") {
-                    const humpName = this.toHumpName(key) + "Id";
-                    this.slotBitMap.set(humpName, avatarSlot[key]);
+                    // const humpName = this.toHumpName(key) + "Id";
+                    this.slotBitMap.set(key, avatarSlot[key]);
                 }
             }
         }
@@ -159,11 +159,7 @@ export class AvatarSuitType {
                 slotArr.push(slot);
             }
         }
-        if (resultType) {
-            return slotArr;
-        } else {
-            return this.toSlotNames(slotArr);
-        }
+        return slotArr;
     }
 
     static toHumpName(str: string) {
@@ -240,11 +236,11 @@ export class AvatarSuitType {
                 id = val.sn;
             }
             if (id.length === 0) continue;
-            const slotName = this.toSlotName(avatarKey);
+            // const slotName = this.toSlotName(avatarKey);
             if (!setsMap.has(id)) {
                 setsMap.set(id, {id, parts: []});
             }
-            setsMap.get(id).parts.push(slotName);
+            setsMap.get(id).parts.push(avatarKey);
             if (typeof val !== "string" && val.version !== undefined && val.version !== null) {
                 setsMap.get(id).version = val.version;
             }
