@@ -4,12 +4,12 @@ import { IAvatar } from "./dragonbones";
 export class AvatarSuitType {
     static avatarSuit: AvatarSuitType;
     static specHideParts = {
-        headSpecId: ["headEyesId", "headHairId", "headMousId", "headHairBackId", "headHatsId", "headHatsBackId", "headMaskId", "headFaceId", "headBaseId"],
-        bodySpecId: ["bodyCostId", "bodyCostDresId", "bodyTailId", "bodyWingId", "bodyBaseId"],
-        farmSpecId: ["farmCostId", "farmShldId", "farmWeapId", "farmBaseId"],
-        barmSpecId: ["barmCostId", "barmShldId", "barmWeapId", "barmBaseId"],
-        flegSpecId: ["flegCostId", "flegBaseId"],
-        blegSpecId: ["blegCostId", "blegBaseId"]
+        headSpecId: ["head_eyes", "head_hair", "head_mous", "head_hair_back", "head_hats", "head_hats_back", "head_mask", "head_face", "head_base"],
+        bodySpecId: ["body_cost", "body_cost_dres", "body_tail", "body_wing", "body_base"],
+        farmSpecId: ["farm_cost", "farm_shld", "farm_weap", "farm_base"],
+        barmSpecId: ["barm_cost", "barm_shld", "barm_weap", "barm_base"],
+        flegSpecId: ["fleg_cost", "fleg_base"],
+        blegSpecId: ["bleg_cost", "bleg_base"]
     };
     static slotBitMap: Map<string, number>;
 
@@ -252,26 +252,26 @@ export class AvatarSuitType {
         return Array.from(setsMap.values());
     }
 
-    public costume = ["bodyCostId", "bodyCostDresId", "farmCostId", "barmCostId", "flegCostId", "blegCostId"];
-    public hair = ["headHairId", "headHairBackId"];
-    public eye = ["headEyesId"];
-    public mouse = ["headMousId"];
-    public hat = ["headHatsId", "headHatsBackId"];
-    public mask = ["headMaskId"];
-    public face = ["headFaceId"];
-    public weapon = ["barmWeapId"];
-    public shield = ["farmShldId"];
-    public tail = ["bodyTailId"];
-    public wing = ["bodyWingId"];
-    public helmet = ["headSpecId"];
+    public costume = ["body_cost", "body_cost_dres", "farm_cost", "barm_cost", "fleg_cost", "bleg_cost"];
+    public hair = ["head_hair", "head_hair_back"];
+    public eye = ["head_eyes"];
+    public mouse = ["head_mous"];
+    public hat = ["head_hats", "head_hats_back"];
+    public mask = ["head_mask"];
+    public face = ["head_face"];
+    public weapon = ["barm_weap"];
+    public shield = ["farm_shld"];
+    public tail = ["body_tail"];
+    public wing = ["body_wing"];
+    public helmet = ["head_spec"];
     // 已和金老板确认，头部特型也加入shell，即装备shell后，会覆盖helmet
-    public shell = ["bodySpecId", "farmSpecId", "barmSpecId", "flegSpecId", "blegSpecId"];
+    public shell = ["body_spec", "farm_spec", "barm_spec", "fleg_spec", "bleg_spec"];
     public baseSuitType = `[{"count":1,"id":"10001","sn":"5cd28238fb073710972a73c2","suit_type":"costume"},{"count":1,"id":"10002","sn":"5cd28238fb073710972a73c2","suit_type":"eye"},{"count":1,"id":"1003","sn":"5cd28238fb073710972a73c2","suit_type":"hair"},{"count":1,"id":"10004","sn":"5cd28238fb073710972a73c2","suit_type":"mouse"}]`;
-    public base = ["headBaseId", "bodyBaseId", "farmBaseId", "barmBaseId", "flegBaseId", "blegBaseId"];
-    public scar = ["bodyScarId"];
-    public cloa = ["bodyCloaId"];
-    public chin = ["headChinId"];
-    public cyborg = ["headSpecId", "bodySpecId", "farmSpecId", "barmSpecId", "flegSpecId", "blegSpecId"];
+    public base = ["head_base", "body_base", "farm_base", "barm_base", "fleg_base", "bleg_base"];
+    public scar = ["body_scar"];
+    public cloa = ["body_cloa"];
+    public chin = ["head_chin"];
+    public cyborg = ["head_spec", "body_spec", "farm_spec", "barm_spec", "fleg_spec", "bleg_spec"];
 }
 
 export class SuitAlternativeType {
@@ -306,16 +306,16 @@ export class SuitAlternativeType {
 
 export class BaseAvatar {
     id = "10000";
-    barmBaseId = {sn: "60c8626bdd14da5f64b49341"};
-    blegBaseId = {sn: "60c8626bdd14da5f64b49341"};
-    bodyBaseId = {sn: "60c8626bdd14da5f64b49341"};
-    farmBaseId = {sn: "60c8626bdd14da5f64b49341"};
-    flegBaseId = {sn: "60c8626bdd14da5f64b49341"};
-    headBaseId = {sn: "60c8626bdd14da5f64b49341"};
-    headHairId = {sn: "5cd28238fb073710972a73c2"};
-    headEyesId = {sn: "5cd28238fb073710972a73c2"};
-    headMousId = {sn: "5cd28238fb073710972a73c2"};
-    bodyCostId = {sn: "5cd28238fb073710972a73c2"};
+    barm_base = {sn: "60c8626bdd14da5f64b49341"};
+    bleg_base = {sn: "60c8626bdd14da5f64b49341"};
+    body_base = {sn: "60c8626bdd14da5f64b49341"};
+    farm_base = {sn: "60c8626bdd14da5f64b49341"};
+    fleg_base = {sn: "60c8626bdd14da5f64b49341"};
+    head_base = {sn: "60c8626bdd14da5f64b49341"};
+    head_hair = {sn: "5cd28238fb073710972a73c2"};
+    head_eyes = {sn: "5cd28238fb073710972a73c2"};
+    head_mous = {sn: "5cd28238fb073710972a73c2"};
+    body_cost = {sn: "5cd28238fb073710972a73c2"};
 }
 
 export interface AvatarSuit {
