@@ -857,6 +857,7 @@ export class DragonbonesModel implements IDragonbonesModel {
     avatarDir?: number;
     avatar?: IAvatar;
     animationName?: string;
+    static readonly IGNORE_KEY = ["id", "dirable", "node", "defaultDir", "backboneId", "defaultAnimation"]
     constructor(data: any) {
         // this.id = id;
         // this.avatar = avatar;
@@ -864,7 +865,7 @@ export class DragonbonesModel implements IDragonbonesModel {
             this.id = data.id;
             this.avatar = data.avatar;
             for (const key in this.avatar) {
-                if (key === "id" || key === "dirable") continue;
+                if (DragonbonesModel.IGNORE_KEY.includes(key)) continue;
                 if (Object.prototype.hasOwnProperty.call(this.avatar, key)) {
                     const element = this.avatar[key];
                     delete this.avatar[key];

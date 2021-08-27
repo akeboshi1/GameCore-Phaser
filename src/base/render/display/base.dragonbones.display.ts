@@ -783,7 +783,7 @@ export class BaseDragonbonesDisplay extends BaseDisplay {
             if (key === "id" || key === "dirable") continue;
             if (Object.prototype.hasOwnProperty.call(avater, key)) {
                 const element = avater[key];
-                if (!element || !element.sn) {
+                if (!element || (typeof element !== "string" && !element.sn)) {
                     continue;
                 }
                 this.replaceArr.push({
