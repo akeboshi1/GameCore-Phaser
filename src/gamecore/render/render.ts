@@ -1762,7 +1762,7 @@ export class Render extends RPCPeer implements GameMain, IRender {
         Logger.getInstance().log("startLink mainpeer", this.mMainPeerParam.key, this.mMainPeerParam.url);
         const key = this.mMainPeerParam.key;
         const peerName = this.mMainPeerParam.name;
-        this.attach(this.mMainPeerParam.key, this.mMainPeerParam.url).onceReady(() => {
+        this.attach(this.mMainPeerParam.key, this.mMainPeerParam.url, true).onceReady(() => {
             this.mMainPeer = this.remote[key][peerName];
             this.mMainPeer.updateFps();
             this.createGame();
