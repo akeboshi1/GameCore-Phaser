@@ -564,7 +564,7 @@ export class BaseDragonbonesDisplay extends BaseDisplay {
         }
         const { sn, version, useCutOff } = skin;
         // 帽发截断
-        let cutOff = useCutOff ? "_cutoff" : "";
+        const cutOff = useCutOff ? "_cutoff" : "";
         return sourcePart.replace("#", sn).replace("$", dir) + cutOff + version;
     }
 
@@ -797,10 +797,10 @@ export class BaseDragonbonesDisplay extends BaseDisplay {
                     part: `${key}_#_$`,
                     dir: 1,
                     skin: element
-                })
+                });
             }
         }
-    
+
         const setLoadMap = (soltNameTemp: string, partNameTemp: string, dir: number, skin: SlotSkin | string | number) => {
             const slotName: string = soltNameTemp.replace("$", dir.toString());
             const slot: dragonBones.Slot = this.mArmatureDisplay.armature.getSlot(slotName);
@@ -859,7 +859,6 @@ export class BaseDragonbonesDisplay extends BaseDisplay {
             const hatTag = headHat.tag;
             // 帽子标记使用截断资源
             if (hatTag && hatTag.includes("fit_cutoff")) {
-                
             }
             if (hatTag) {
                 if (hatTag.includes("fit_cutoff")) {
@@ -873,7 +872,7 @@ export class BaseDragonbonesDisplay extends BaseDisplay {
                     }
                 }
                 if (hatTag.includes("remove_hair")) {
-                    // this.replaceArr = this.replaceArr.filter((avatar) => avatar.slot !== AvatarSlotNameTemp.HeadHair 
+                    // this.replaceArr = this.replaceArr.filter((avatar) => avatar.slot !== AvatarSlotNameTemp.HeadHair
                     //     && avatar.slot !== AvatarSlotNameTemp.HeadHairBack);
                     delete avatar.headHairId;
                     delete avatar.headHairBackId;

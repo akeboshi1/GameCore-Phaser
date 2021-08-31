@@ -229,7 +229,7 @@ export class DragonbonesDisplay extends BaseDragonbonesDisplay implements IDispl
 
     public getAttr(key: string) {
         if (!this.attrs) return;
-        return this.attrs.get(key); 
+        return this.attrs.get(key);
     }
 
     public doMove(moveData: any) {

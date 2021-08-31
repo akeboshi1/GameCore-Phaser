@@ -380,7 +380,7 @@ export class DisplayManager {
         display.setPosition(sprite.pos.x, sprite.pos.y, sprite.pos.z);
         // display.changeAlpha(sprite.alpha);
         this.setHasInteractive(display, sprite.hasInteractive);
-        let nickname = sprite.nickname;
+        const nickname = sprite.nickname;
         if (nickname) this.showNickname(sprite.id, nickname);
     }
 
@@ -610,9 +610,9 @@ export class DisplayManager {
             this.preLoadList = [];
         }
         if (this.displays) {
-            this.displays.forEach((display) => {
-                if (display) display.destroy();
-            });
+            // this.displays.forEach((display) => {
+            //     if (display) display.destroy();
+            // });
             this.displays.clear();
         }
 
@@ -621,9 +621,9 @@ export class DisplayManager {
         }
 
         if (this.scenerys) {
-            this.scenerys.forEach((block) => {
-                if (block) block.destroy();
-            });
+            // this.scenerys.forEach((block) => {
+            //     if (block) block.destroy();
+            // });
             this.scenerys.clear();
         }
         if (this.matterBodies) {
