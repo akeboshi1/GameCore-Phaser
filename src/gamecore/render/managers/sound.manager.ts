@@ -4,6 +4,7 @@ import { Logger } from "structure";
 
 export class SoundManager {
 
+    protected 
     private mScene: Phaser.Scene;
     private mSoundMap: Map<SoundField, Sound>;
     constructor(protected render: Render) {
@@ -145,6 +146,7 @@ export class SoundManager {
 class Sound {
     private mKey: string;
     private mSound: Phaser.Sound.BaseSound;
+    private soundConfig: Phaser.Types.Sound.SoundConfig;
     constructor(private scene: Phaser.Scene) {
     }
     sound(): Phaser.Sound.BaseSound {
@@ -155,9 +157,10 @@ class Sound {
         if (!this.scene) {
             return;
         }
+        this.soundConfig = this.soundConfig || soundConfig;
         if (this.mSound && this.mSound.key === key) {
             if (this.mSound.isPlaying) return;
-            this.mSound.play();
+            this.mSound.play(this.soundConfig);
             return;
         }
         this.mKey = key;
@@ -224,6 +227,6 @@ class Sound {
             this.mSound.destroy();
         }
         this.mSound = this.scene.sound.add(this.mKey);
-        this.mSound.play();
+        this.mSound.play(this.soundConfig);
     }
 }
