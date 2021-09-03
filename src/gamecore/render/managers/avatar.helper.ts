@@ -31,13 +31,30 @@ export class AvatarHelper {
 
         return new Promise<any>((resolve, reject) => {
             const avatarSets = AvatarSuitType.toIAvatarSets(dbDisplay.displayInfo.avatar);
-            // this.render.uiManager.showPanel(ModuleName.MASK_LOADING_NAME);
-            dbDisplay.save()
-                .then((saveData) => {
-                    this.render.mainPeer.uploadDBTexture(saveData.key, saveData.url, saveData.json)
-                        .catch((reason) => {
-                            Logger.getInstance().error("uploadDBTexture error: " + reason);
+            const replaceTexKey = dbDisplay.generateReplaceTextureKey();
+            const dbUrls = this.render.url.getUsrAvatarTextureUrls(replaceTexKey);
+            this.render.mainPeer.headDBTexture(dbUrls.img, dbUrls.json)
+                .then((exists) => {
+                    if (exists) {
+                        return Promise.resolve(null);
+                    } else {
+                        return new Promise<any>((_res, _rej) => {
+                            dbDisplay.save()
+                                .then((saveData) => {
+                                    this.render.mainPeer.uploadDBTexture(saveData.key, saveData.url, saveData.json)
+                                        .catch((reason) => {
+                                            Logger.getInstance().error("uploadDBTexture error: " + reason);
+                                        });
+                                    _res(null);
+                                })
+                                .catch((res) => {
+                                    _rej(res);
+                                });
                         });
+
+                    }
+                })
+                .then(() => {
                     return this.createHeadIcon(avatarSets);
                 })
                 .then((str) => {
