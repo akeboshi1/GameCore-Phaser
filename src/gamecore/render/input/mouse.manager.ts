@@ -3,6 +3,7 @@ import { FramesDisplay } from "../display/frames/frames.display";
 import { MessageType } from "structure";
 import { UiUtils } from "utils";
 import { op_def } from "pixelpai_proto";
+import { SoundField } from "apowophaserui";
 
 export enum MouseEvent {
     RightMouseDown = 1,
@@ -146,7 +147,8 @@ export class MouseManager {
             // soundKey = "sound/mine.mp3";
         } else {
             this.render.soundManager.playSound({
-                soundKey
+                soundKey,
+                scope:SoundField.Effect
             });
         }
         if (this.render.guideManager.canInteractive(id)) return;
