@@ -358,7 +358,7 @@ export class FramesDisplay extends BaseFramesDisplay implements IDisplayObject {
 
     public getAttr(key: string) {
         if (!this.attrs) return;
-        return this.attrs.get(key); 
+        return this.attrs.get(key);
     }
 
     protected async fetchProjection() {

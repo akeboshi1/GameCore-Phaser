@@ -5,7 +5,7 @@ export class RenderFactor {
     constructor(protected render: Render) { }
 
     bubble(scene: Phaser.Scene, scale: number) {
-        return new Bubble(scene, scale, this.render)
+        return new Bubble(scene, scale, this.render);
     }
 
     elementTopDisplay(scene: Phaser.Scene, owner: any) {
