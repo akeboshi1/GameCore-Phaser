@@ -848,6 +848,7 @@ export class FramesModel implements IFramesModel {
     }
 }
 export class DragonbonesModel implements IDragonbonesModel {
+    static readonly IGNORE_KEY = ["id", "dirable", "node", "defaultDir", "backboneId", "defaultAnimation"];
     discriminator: string = "DragonbonesModel";
     id: number;
     public eventName: number[];
@@ -857,7 +858,6 @@ export class DragonbonesModel implements IDragonbonesModel {
     avatarDir?: number;
     avatar?: IAvatar;
     animationName?: string;
-    static readonly IGNORE_KEY = ["id", "dirable", "node", "defaultDir", "backboneId", "defaultAnimation"]
     constructor(data: any) {
         // this.id = id;
         // this.avatar = avatar;
@@ -897,7 +897,7 @@ export class DragonbonesModel implements IDragonbonesModel {
             this.avatar[slot.slot] = {
                 sn: slot.sn,
                 version: slot.version
-            }
+            };
         }
         this.dragonboneName = humanoid.modelId;
     }

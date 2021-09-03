@@ -17,7 +17,7 @@ export class ElementTopDisplay extends TopDisplay {
     }
 
     public showNickname(name: string) {
-        if (!this.mOwner || !this.mFollows) {
+        if (!this.mOwner || !this.mFollows || !name) {
             return;
         }
         let follow = this.mFollows.get(FollowEnum.Nickname);
@@ -115,7 +115,7 @@ export class ElementTopDisplay extends TopDisplay {
 
     updateOffset() {
         if (!this.mFollows || !this.hasTopPoint()) return;
-        let offset = new Phaser.Geom.Point();
+        const offset = new Phaser.Geom.Point();
         offset.y = this.mOwner.topPoint.y;
         if (this.mFollows.has(FollowEnum.Nickname)) {
             const follow = this.mFollows.get(FollowEnum.Nickname);
@@ -151,7 +151,7 @@ export class ElementTopDisplay extends TopDisplay {
                     follow.destroy();
                     this.mFollows.delete(key);
                 }
-            })
+            });
         }
     }
 

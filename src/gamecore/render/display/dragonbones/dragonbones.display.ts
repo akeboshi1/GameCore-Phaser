@@ -178,17 +178,17 @@ export class DragonbonesDisplay extends BaseDragonbonesDisplay implements IDispl
         // const pipeline = (<Phaser.Renderer.WebGL.WebGLRenderer>this.scene.renderer).pipelines.get("circle");
         // if (!pipeline) (<Phaser.Renderer.WebGL.WebGLRenderer>this.scene.renderer).pipelines.add("circle", new CirclePieple(this.scene.game));
         // if (!this.mEffectSprite) {
-            // this.mEffectSprite = this.scene.make.sprite(undefined, false);
-            // this.mEffectSprite.x = 0;
-            // this.mEffectSprite.y = 0;
-            // const gfx = this.scene.make.graphics(undefined, false);
-            // gfx.fillStyle(0x00ff00);
-            // gfx.fillRect(0, 0, 300, 300);
-            // gfx.visible = false;
-            // const texture = gfx.generateTexture("gfx", 300, 300);
-            // this.mEffectSprite.setTexture("gfx");
-            // this.mEffectSprite.setPipeline("circle");
-            // this.addAt(this.mEffectSprite, 0);
+        // this.mEffectSprite = this.scene.make.sprite(undefined, false);
+        // this.mEffectSprite.x = 0;
+        // this.mEffectSprite.y = 0;
+        // const gfx = this.scene.make.graphics(undefined, false);
+        // gfx.fillStyle(0x00ff00);
+        // gfx.fillRect(0, 0, 300, 300);
+        // gfx.visible = false;
+        // const texture = gfx.generateTexture("gfx", 300, 300);
+        // this.mEffectSprite.setTexture("gfx");
+        // this.mEffectSprite.setPipeline("circle");
+        // this.addAt(this.mEffectSprite, 0);
         // }
         this.render.mainPeer.elementDisplayReady(this.id);
         this.render.renderEmitter("dragonBones_initialized");
