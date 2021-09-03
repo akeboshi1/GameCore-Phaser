@@ -281,7 +281,6 @@ export class SuitAlternativeType {
         const value = maskType & sourceType;
         return value === maskType || value === sourceType;
     }
-    
 
     public costume = 0x000001;
     public hair = 0x000002;
@@ -297,7 +296,6 @@ export class SuitAlternativeType {
     public helmet = 0x0007e;
     // public shell = 0x000001 | 0x000200 | 0x000400;
     // public cyborg = 0x000001 | 0x000002 | 0x000004 | 0x000008 | 0x000010 | 0x000020 | 0x000040 | 0x000100 | 0x000200 | 0x000400 | 0x0007e;
-    
 }
 
 export class BaseAvatar {
