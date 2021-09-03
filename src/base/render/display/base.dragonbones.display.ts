@@ -345,6 +345,10 @@ export class BaseDragonbonesDisplay extends BaseDisplay {
         return this.mResourceName;
     }
 
+    public generateReplaceTextureKey() {
+        return this.serializeAvatarData(this.displayInfo.avatar) + ReplacedTextureVersion;
+    }
+
     protected buildDragbones(): Promise<any> {
         return new Promise<any>((resolve, reject) => {
             if (!this.scene.cache.custom.dragonbone) {
@@ -388,10 +392,6 @@ export class BaseDragonbonesDisplay extends BaseDisplay {
 
     protected partNameToDBFrameName(partName: string): string {
         return "test resources/" + partName;
-    }
-
-    protected generateReplaceTextureKey() {
-        return this.serializeAvatarData(this.displayInfo.avatar) + ReplacedTextureVersion;
     }
 
     protected createArmatureDisplay() {
