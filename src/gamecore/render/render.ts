@@ -634,9 +634,6 @@ export class Render extends RPCPeer implements GameMain, IRender {
                     target: 60,
                     forceSetTimeOut: true
                 },
-                audio: {
-                    noAudio: true
-                },
                 dom: {
                     createContainer: true,
                 },
