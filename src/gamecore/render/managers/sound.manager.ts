@@ -140,7 +140,7 @@ export class Sound {
     public soundConfig: Phaser.Types.Sound.SoundConfig;
     protected mKey: string;
     protected mSound: Phaser.Sound.BaseSound;
-    constructor(private scene: Phaser.Scene) {
+    constructor(protected scene: Phaser.Scene) {
     }
     sound(): Phaser.Sound.BaseSound {
         return this.mSound;
