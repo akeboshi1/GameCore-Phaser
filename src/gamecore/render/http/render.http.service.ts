@@ -3,8 +3,8 @@ import { Logger } from "structure";
 
 export class RenderHttpService {
     private api_root: string;
-    constructor(private render: Render, api_root: string) {
-        this.api_root = api_root;
+    constructor(private render: Render) {
+        this.api_root = render.config.api_root;
     }
     /**
      * 上传人物头像

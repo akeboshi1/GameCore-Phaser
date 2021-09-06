@@ -33,7 +33,7 @@ export class AvatarHelper {
             const avatarSets = AvatarSuitType.toIAvatarSets(dbDisplay.displayInfo.avatar);
             const replaceTexKey = dbDisplay.generateReplaceTextureKey();
             const dbUrls = this.render.url.getUsrAvatarTextureUrls(replaceTexKey);
-            this.render.mainPeer.headDBTexture(dbUrls.img, dbUrls.json)
+            this.render.httpService.headDBTexture(dbUrls.img, dbUrls.json)
                 .then((exists) => {
                     if (exists) {
                         return Promise.resolve(null);
@@ -41,7 +41,7 @@ export class AvatarHelper {
                         return new Promise<any>((_res, _rej) => {
                             dbDisplay.save()
                                 .then((saveData) => {
-                                    this.render.mainPeer.uploadDBTexture(saveData.key, saveData.url, saveData.json)
+                                    this.render.httpService.uploadDBTexture(saveData.key, saveData.url, saveData.json)
                                         .catch((reason) => {
                                             Logger.getInstance().error("uploadDBTexture error: " + reason);
                                         });
@@ -58,7 +58,7 @@ export class AvatarHelper {
                     return this.createHeadIcon(avatarSets);
                 })
                 .then((str) => {
-                    this.render.mainPeer.uploadHeadImage(str);
+                    this.render.httpService.uploadHeadImage(str);
                     // this.render.uiManager.hidePanel(ModuleName.MASK_LOADING_NAME);
                     resolve(null);
                 })

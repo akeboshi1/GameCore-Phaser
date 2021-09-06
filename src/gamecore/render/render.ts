@@ -35,6 +35,7 @@ import { MouseManager } from "./input/mouse.manager";
 import { SoundManager } from "./managers";
 import { i18n, initLocales, translateProto } from "./utils";
 import { RenderFactor } from "./factor";
+import {RenderHttpService} from "./http/render.http.service";
 
 enum MoveStyle {
     DIRECTION_MOVE_STYLE = 1,
@@ -77,6 +78,7 @@ export class Render extends RPCPeer implements GameMain, IRender {
     protected mDisplayManager: DisplayManager;
     protected mLocalStorageManager: LocalStorageManager;
     protected mAvatarHelper: AvatarHelper;
+    protected mHttpService: RenderHttpService;
     protected mRenderParam: IWorkerParam;
     protected mMainPeerParam: IWorkerParam;
     protected mAccount: Account;
@@ -242,6 +244,10 @@ export class Render extends RPCPeer implements GameMain, IRender {
         return this.mAvatarHelper;
     }
 
+    get httpService(): RenderHttpService {
+        return this.mHttpService;
+    }
+
     get game(): Phaser.Game {
         return this.mGame;
     }
@@ -277,6 +283,7 @@ export class Render extends RPCPeer implements GameMain, IRender {
         if (!this.mDisplayManager) this.mDisplayManager = new DisplayManager(this);
         if (!this.mAvatarHelper) this.mAvatarHelper = new AvatarHelper(this);
         if (!this.mAdd) this.mAdd = new RenderFactor(this);
+        if (!this.mHttpService) this.mHttpService = new RenderHttpService(this);
     }
 
     // 切游戏的时候销毁各个manmager

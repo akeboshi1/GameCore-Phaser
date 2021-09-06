@@ -648,23 +648,6 @@ export class MainPeer extends RPCPeer {
         this.game.user.stopMove(new LogicPos(x, y));
     }
 
-    @Export([webworker_rpc.ParamType.str])
-    public uploadHeadImage(url: string) {
-        this.game.httpService.uploadHeadImage(url).then(() => {
-            if (this.game && this.game.emitter) this.game.emitter.emit("updateDetail");
-        });
-    }
-
-    @Export([webworker_rpc.ParamType.str, webworker_rpc.ParamType.str])
-    public headDBTexture(img: string, json: string): Promise<boolean> {
-        return this.game.httpService.headDBTexture(img, json);
-    }
-
-    @Export([webworker_rpc.ParamType.str, webworker_rpc.ParamType.str, webworker_rpc.ParamType.str])
-    public uploadDBTexture(key: string, url: string, json: string): Promise<any> {
-        return this.game.httpService.uploadDBTexture(key, url, json);
-    }
-
     @Export([webworker_rpc.ParamType.num])
     public completeDragonBonesAnimationQueue(id: number) {
         const dragonbones = this.game.roomManager.currentRoom.playerManager.get(id);
