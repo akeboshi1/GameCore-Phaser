@@ -44,12 +44,12 @@ export class RenderHttpService {
             Promise.all([this.post("file_upload_mq", { filename: jsonFullName, blob: json, type: "json" }),
             this.post("file_upload_mq", { filename: imgFullName, blob: url, type: "png" })])
                 .then((responses) => {
-                    resolve(null);
                     for (const respons of responses) {
                         if (respons.status === 404) {
                             Logger.getInstance().error("file_upload_mq error: ", respons);
                         }
                     }
+                    resolve(null);
                 })
                 .catch((reason) => {
                     reject(reason);
@@ -93,7 +93,7 @@ export class RenderHttpService {
         return new Promise((resolve, reject) => {
             this.render.getAccount().then((account) => {
                 if (!account) {
-                    reject("account does not exist");
+                    return reject("account does not exist");
                 }
                 const accountData = account.accountData;
                 if (!accountData) {
