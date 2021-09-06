@@ -78,10 +78,10 @@ export class AvatarHelper {
                     const a = new AvatarEditorDragonbone(s, this.render.url.RES_PATH, this.render.url.OSD_PATH, this.render.emitter, false, sets,
                         (dragonbone) => {
                             dragonbone.generateHeadIcon().then((src) => {
-                                resolve(src);
                                 dragonbone.destroy();
                                 this.render.game.scene.stop(this.SCENEKEY_SNAPSHOT);
                                 this.render.game.scene.remove(this.SCENEKEY_SNAPSHOT);
+                                resolve(src);
                             });
                         });
                 }
