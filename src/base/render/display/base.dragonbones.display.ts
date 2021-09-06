@@ -349,6 +349,10 @@ export class BaseDragonbonesDisplay extends BaseDisplay {
         return this.serializeAvatarData(this.displayInfo.avatar) + ReplacedTextureVersion;
     }
 
+    public forceUpdateShow() {
+        this.mArmatureDisplay.armature.advanceTime(1000);
+    }
+
     protected buildDragbones(): Promise<any> {
         return new Promise<any>((resolve, reject) => {
             if (!this.scene.cache.custom.dragonbone) {
