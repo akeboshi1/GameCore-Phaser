@@ -274,6 +274,13 @@ export class BaseDragonbonesDisplay extends BaseDisplay {
         super.play(val);
     }
 
+    public stop(animationName?: string) {
+        this.mAnimation = null;
+        if (this.mArmatureDisplay) {
+            this.mArmatureDisplay.animation.stop(animationName);
+        }
+    }
+
     public fadeIn(callback?: () => void) {
         this.clearFadeTween();
         this.alpha = 0;

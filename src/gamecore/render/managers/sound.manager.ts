@@ -57,29 +57,23 @@ export class SoundManager {
     }
 
     public playOsdSound(content: any) {
-        // const content: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_SOUND_CTL = packet.content;
-        if (content.loop === undefined) {
-            content.loop = false;
-        }
+        const soundConfig = content.soundConfig || { loop: false }
         // TODO
         this.play({
             key: content.soundKey,
             urls: this.render.url.getOsdRes(content.soundKey),
             field: content.scope,
-            soundConfig: { loop: content.loop }
+            soundConfig
         });
     }
     public playSound(content: any) {
-        // const content: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_SOUND_CTL = packet.content;
-        if (content.loop === undefined) {
-            content.loop = false;
-        }
+        const soundConfig = content.soundConfig || { loop: false }
         // TODO
         this.play({
             key: content.soundKey,
             urls: this.render.url.getRes(content.soundKey),
             field: content.scope,
-            soundConfig: { loop: content.loop }
+            soundConfig
         });
     }
     protected play(config: any) {
@@ -143,9 +137,9 @@ export class SoundManager {
 }
 
 export class Sound {
+    public soundConfig: Phaser.Types.Sound.SoundConfig;
     private mKey: string;
     private mSound: Phaser.Sound.BaseSound;
-    private soundConfig: Phaser.Types.Sound.SoundConfig;
     constructor(private scene: Phaser.Scene) {
     }
     sound(): Phaser.Sound.BaseSound {
@@ -156,7 +150,7 @@ export class Sound {
         if (!this.scene) {
             return;
         }
-        this.soundConfig = this.soundConfig || soundConfig;
+        this.soundConfig = soundConfig;
         if (this.mSound && this.mSound.key === key) {
             if (this.mSound.isPlaying) return;
             this.mSound.play(this.soundConfig);
