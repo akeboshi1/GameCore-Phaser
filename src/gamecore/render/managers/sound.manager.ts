@@ -4,9 +4,8 @@ import { Logger } from "structure";
 
 export class SoundManager {
 
-    protected 
-    private mScene: Phaser.Scene;
-    private mSoundMap: Map<SoundField, Sound>;
+    protected mScene: Phaser.Scene;
+    protected mSoundMap: Map<SoundField, Sound>;
     constructor(protected render: Render) {
     }
 
@@ -143,7 +142,7 @@ export class SoundManager {
     }
 }
 
-class Sound {
+export class Sound {
     private mKey: string;
     private mSound: Phaser.Sound.BaseSound;
     private soundConfig: Phaser.Types.Sound.SoundConfig;
@@ -217,11 +216,11 @@ class Sound {
         }
     }
 
-    private onSoundCompleteHandler() {
+    protected onSoundCompleteHandler() {
         this.startPlay();
     }
 
-    private startPlay() {
+    protected startPlay() {
         if (this.mSound) {
             this.mSound.stop();
             this.mSound.destroy();
