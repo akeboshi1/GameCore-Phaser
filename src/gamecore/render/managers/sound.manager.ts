@@ -138,9 +138,9 @@ export class SoundManager {
 
 export class Sound {
     public soundConfig: Phaser.Types.Sound.SoundConfig;
-    private mKey: string;
-    private mSound: Phaser.Sound.BaseSound;
-    constructor(private scene: Phaser.Scene) {
+    protected mKey: string;
+    protected mSound: Phaser.Sound.BaseSound;
+    constructor(protected scene: Phaser.Scene) {
     }
     sound(): Phaser.Sound.BaseSound {
         return this.mSound;
