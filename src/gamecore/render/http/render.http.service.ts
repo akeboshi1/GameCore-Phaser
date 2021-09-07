@@ -60,8 +60,8 @@ export class RenderHttpService {
     userHeadsImage(uids: string[]) {
         return this.get(`account/get_head_img?uids=${JSON.stringify(uids)}`);
     }
-    public async post(uri: string, body: any, headers?: any): Promise<any> {
-        const account = await this.render.getAccount();
+    public post(uri: string, body: any, headers?: any): Promise<any> {
+        const account = this.render.getAccount();
         if (!account) {
             return Promise.reject("account does not exist");
         }
@@ -91,22 +91,21 @@ export class RenderHttpService {
 
     public get(uri: string) {
         return new Promise((resolve, reject) => {
-            this.render.getAccount().then((account) => {
-                if (!account) {
-                    return reject("account does not exist");
+            const account = this.render.getAccount()
+            if (!account) {
+                return reject("account does not exist");
+            }
+            const accountData = account.accountData;
+            if (!accountData) {
+                return reject("token does not exist");
+            }
+            const data = {
+                method: "GET",
+                headers: {
+                    "X-Pixelpai-TK": accountData.accessToken
                 }
-                const accountData = account.accountData;
-                if (!accountData) {
-                    return reject("token does not exist");
-                }
-                const data = {
-                    method: "GET",
-                    headers: {
-                        "X-Pixelpai-TK": accountData.accessToken
-                    }
-                };
-                resolve(fetch(`${this.api_root}${uri}`, data).then((response) => response.json()));
-            });
+            };
+            resolve(fetch(`${this.api_root}${uri}`, data).then((response) => response.json()));
         });
     }
 }
