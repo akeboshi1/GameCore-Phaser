@@ -219,15 +219,15 @@ export class MotionManager {
         clearTimeout(this.holdTime);
     }
 
-    private start(worldX: number, worldY: number, id?: number) {
+    protected start(worldX: number, worldY: number, id?: number) {
         this.render.mainPeer.moveMotion(worldX, worldY, id);
     }
 
-    private stop() {
-        this.render.mainPeer.stopSelfMove();
+    protected stop() {
+        this.render.mainPeer.stopSelfMove(true);
     }
 
-    private getPreUserPos(pointer): Phaser.Math.Vector2 {
+    protected getPreUserPos(pointer): Phaser.Math.Vector2 {
         if (!this.scene || !this.scene.cameras || !this.scene.cameras.main) return null;
         const { x, y } = this.render.displayManager.user;
         const tmpX = pointer.worldX / this.scaleRatio - x;

@@ -200,7 +200,7 @@ export class User extends Player {
         this.moveControll.setVelocity(Math.cos(angle) * speed, Math.sin(angle) * speed);
     }
 
-    public stopMove(stopPos?: IPos) {
+    public stopMove(stopPos?: IPos, stopActive = false) {
         if (!this.mMovePoints) this.mMovePoints = [];
         this.changeState(PlayerState.IDLE);
         this.moveControll.setVelocity(0, 0);
@@ -218,6 +218,10 @@ export class User extends Player {
         }
         this.mMovePoints = [];
         this.mMoving = false;
+
+        if (stopActive && this.mMoveData) {
+            delete this.mMoveData.targetId;
+        }
 
         this.stopActiveSprite();
     }

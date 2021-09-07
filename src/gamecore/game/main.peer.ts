@@ -475,9 +475,9 @@ export class MainPeer extends RPCPeer {
         return ele.getInteractivePositionList();
     }
 
-    @Export()
-    public stopSelfMove() {
-        this.game.user.stopMove();
+    @Export([webworker_rpc.ParamType.boolean])
+    public stopSelfMove(stopActive = false) {
+        this.game.user.stopMove(undefined, stopActive);
     }
 
     @Export([webworker_rpc.ParamType.str])
