@@ -167,9 +167,9 @@
   integrity sha512-j2tekvJCO7j22cs+LO6i0kRPhmQ9MXaPZ55TzOc1lzkN5b6BWqq4AFjl04s1oRRQ1v5rSe+KEvnLUSTonuls/A==
 
 "@types/node@>=13.7.0":
-  version "16.7.10"
-  resolved "https://registry.yarnpkg.com/@types/node/-/node-16.7.10.tgz#7aa732cc47341c12a16b7d562f519c2383b6d4fc"
-  integrity sha512-S63Dlv4zIPb8x6MMTgDq5WWRJQe56iBEY0O3SOFA9JrRienkOVDXSXBjjJw6HTNQYSE2JI6GMCR6LVbIMHJVvA==
+  version "16.7.12"
+  resolved "https://registry.yarnpkg.com/@types/node/-/node-16.7.12.tgz#4e30f80bfa9983fbc3b55875c0522da0303f4e95"
+  integrity sha512-IrhrusVM9QJAn1xLFFqbZH+XCI8L6eZoVHjR4sZeGTBBvjQSuchXGgKpown1jP75TCMSndcbudYBDTekOhcIZA==
 
 "@types/node@^13.7.0":
   version "13.13.52"
@@ -2294,8 +2294,8 @@ function-bind@^1.1.1:
   integrity sha512-yIovAzMX49sF8Yl58fSCWJ5svSLuaibPxXQJFLmBObTuCr0Mf1KiPopGM9NiFjiYBCbfaa2Fh6breQ6ANVTI0A==
 
 "game-capsule@git+ssh://git@code.apowo.com:PixelPai/game-capsule.git#dev":
-  version "1.2.231"
-  resolved "git+ssh://git@code.apowo.com:PixelPai/game-capsule.git#22a8c6f603170c934d85f89a1d9f6861a6cf4181"
+  version "1.2.234"
+  resolved "git+ssh://git@code.apowo.com:PixelPai/game-capsule.git#37f7aefafcba4bb9605d0d6f3ac2a1598991cbd7"
   dependencies:
     chance "^1.0.18"
     crypto-js "^3.1.9-1"
