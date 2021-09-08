@@ -220,9 +220,13 @@ export class ElementStorage implements IElementStorage {
                     if (ele.avatar) {
                         displayModel = new DragonbonesModel({ id: ele.id, avatar: ele.avatar.createProtocolObject() });
                     } else {
+                        if (!eleAnis) {
+                            Logger.getInstance().error(`${ele.sn}-${ele.name} missing animations`);
+                            continue;
+                        }
                         const objAnis = eleAnis.animationData;
                         if (objAnis.length < 1) {
-                            Logger.getInstance().error(`${obj.name}:${obj.id} animation error`);
+                            Logger.getInstance().error(`${ele.sn}-${ele.name} missing animationData`);
                             continue;
                         }
                         for (const ani of objAnis) {
