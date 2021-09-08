@@ -199,7 +199,7 @@ export class ElementTopDisplay extends TopDisplay {
                 fontSize: 12 * this.mSceneScale + "px",
                 fontFamily: Font.DEFULT_FONT
             }
-        }).setOrigin(0.5).setStroke("#000000", 2 * this.mSceneScale);
+        }).setOrigin(0.5, 1).setStroke("#000000", 2 * this.mSceneScale);
         return nickname;
     }
     // private removeFollowObject(key: FollowEnum) {
