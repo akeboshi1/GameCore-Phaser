@@ -57,7 +57,7 @@ export class SoundManager {
     }
 
     public playOsdSound(content: any) {
-        const soundConfig = content.soundConfig || { loop: false }
+        const soundConfig = content.soundConfig || { loop: content.loop || false }
         // TODO
         this.play({
             key: content.soundKey,
@@ -67,7 +67,7 @@ export class SoundManager {
         });
     }
     public playSound(content: any) {
-        const soundConfig = content.soundConfig || { loop: false }
+        const soundConfig = content.soundConfig || { loop: content.loop || false }
         // TODO
         this.play({
             key: content.soundKey,
