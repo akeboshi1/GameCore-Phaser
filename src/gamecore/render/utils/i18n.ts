@@ -1,13 +1,13 @@
-import i18next from "i18next";
+import i18next, { InitOptions } from "i18next";
 import { op_def } from "pixelpai_proto";
 import i18nextXHRBackend from "i18next-xhr-backend";
 import LanguageDetector from "i18next-browser-languagedetector";
 
-export function initLocales(path: string): Promise<any> {
+export function initLocales(path: string, options?: InitOptions): Promise<any> {
   return i18next
     .use(i18nextXHRBackend)
     .use(LanguageDetector)
-    .init({
+    .init(Object.assign({
       fallbackLng: {
         "en-US": ["en"],
         "zh": ["zh-CN"],
@@ -17,8 +17,8 @@ export function initLocales(path: string): Promise<any> {
       backend: {
         loadPath: path,
         crossDomain: true
-      }
-    });
+      },
+    }, options));
 }
 
 export function translate(string: string, options?: any, namespaces?: string) {
