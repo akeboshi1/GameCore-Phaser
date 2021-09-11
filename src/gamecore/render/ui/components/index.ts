@@ -5,6 +5,7 @@ export { CheckboxGroup } from "./checkbox.group";
 export { TextButton } from "./TextButton";
 export { LabelInput } from "./label.input";
 export { Tap } from "./tap";
+export { Label } from "./label";
 export * from "./base.panel";
 export * from "./ninepatch.button";
 export * from "./alert.view";
