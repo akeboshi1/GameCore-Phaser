@@ -41,11 +41,25 @@ export class BasicMediator implements IMediator {
     protected mModel: any;
     protected mShowData: any;
     protected mView: any;
+    /**
+     * -1 不动
+     * 0 hide
+     * 1 show
+     */
+    protected mUIState: number = -1;
     constructor(public key: string, protected game: Game) {
         if (!key || key.length === 0) {
             Logger.getInstance().error("invalid key");
             return;
         }
+    }
+
+    get uiState(): number {
+        return this.mUIState;
+    }
+
+    set uiState(val) {
+        this.mUIState = val;
     }
     @Export()
     public get UIType(): number {
@@ -118,14 +132,32 @@ export class BasicMediator implements IMediator {
         this.mShowData = null;
         this.mParam = null;
         if (this.mModel) this.mModel.destroy();
-        if (this.key.length > 0 && this.game && this.game.peer && this.game.peer.hasOwnProperty(this.key)) delete this.game.peer[this.key];
+        if (this.key && this.game && this.game.peer && this.game.peer.hasOwnProperty(this.key)) {
+            delete this.game.peer[this.key];
+        }
     }
 
     protected _show() {
+        this.checkState();
     }
 
     protected panelInit() {
         this.mPanelInit = true;
+        this.checkState();
+    }
+
+    protected checkState() {
+        switch (this.mUIState) {
+            case -1:
+                break;
+            case 0:
+                if (this.mShow) this.hide();
+                break;
+            case 1:
+                if (!this.mShow) this.show(this.mShowData);
+                break;
+        }
+        this.mUIState = -1;
     }
 
     protected mediatorExport() {
