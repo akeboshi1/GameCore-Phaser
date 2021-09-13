@@ -123,6 +123,7 @@ export class UIManager extends PacketHandler {
         // if (mediator.showing) return;
         if (param) mediator.setParam(param);
         if (mediator.isShow()) return;
+        mediator.uiState = 1;
         mediator.show(param);
     }
 
@@ -151,7 +152,10 @@ export class UIManager extends PacketHandler {
             // Logger.getInstance().error(`error ${type} no panel can show!!!`);
             return;
         }
-        if (!mediator.isShow()) return;
+        if (!mediator.isShow()) {
+            mediator.uiState = 0;
+            return;
+        };
         mediator.hide();
     }
 
