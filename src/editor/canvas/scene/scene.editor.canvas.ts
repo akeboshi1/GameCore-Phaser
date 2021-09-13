@@ -442,6 +442,7 @@ export class SceneEditorCanvas extends EditorCanvas implements IRender {
             const frameName = framesModel.getAnimations("idle").layer[0].frameName[0];
             const displayData = framesModel.display;
             const tileKey = framesModel.gene + "_" + frameName;
+            const drawOffset = framesModel.getAnimations("idle").layer[0].offsetLoc;
 
             const task = new Promise<{sn: string, key: string}>((_resolve, _reject) => {
                 // check load
@@ -483,9 +484,10 @@ export class SceneEditorCanvas extends EditorCanvas implements IRender {
                             // create canvas
                             const canvas = this.scene.textures.createCanvas("GenerateTile_" + tileKey, tileWidth, tileHeight);
 
-                            // 每张tile按照设计尺寸60*60 横向居中对齐 竖直上对齐
+                            // 每张tile按照设计尺寸60*60 横向居中对齐 竖直取动画中第一帧y值
                             const x = (tileWidth - frame.width) * 0.5;
-                            canvas.drawFrame(framesModel.gene, frameName, x, 0);
+                            const y = drawOffset.y;
+                            canvas.drawFrame(framesModel.gene, frameName, x, y);
 
                             // to url
                             const url = canvas.canvas.toDataURL("image/png", 1);
