@@ -4,6 +4,7 @@ export interface IBaseCameraService {
     camera: Phaser.Cameras.Scene2D.Camera | undefined;
     moving: boolean;
     readonly targetFollow: any;
+    readonly cameras: Phaser.Cameras.Scene2D.Camera[];
     startRoomPlay(scene: Phaser.Scene);
     startFollow(target: any): void;
     stopFollow(): void;
@@ -181,5 +182,9 @@ export class BaseCamerasManager implements IBaseCameraService {
 
     get camera(): Phaser.Cameras.Scene2D.Camera | undefined {
         return this.mMain;
+    }
+
+    get cameras() {
+        return this.mCameras;
     }
 }
