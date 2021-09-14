@@ -44,20 +44,24 @@ export class SoundManager {
 
     destroy() {
         // phaser 内部会做统一处理，不需要手动清除sound
-        // if (this.mSoundMap) {
-        //     this.mSoundMap.forEach((sound) => {
-        //         if (sound) {
-        //             sound.stop();
-        //             sound.destroy();
-        //         }
-        //     });
-        //     this.mSoundMap.clear();
-        //     this.mSoundMap = undefined;
-        // }
+        // this.clear();
+    }
+
+    clear() {
+        if (this.mSoundMap) {
+            this.mSoundMap.forEach((sound) => {
+                if (sound) {
+                    sound.stop();
+                    sound.destroy();
+                }
+            });
+            this.mSoundMap.clear();
+            this.mSoundMap = undefined;
+        }
     }
 
     public playOsdSound(content: any) {
-        const soundConfig = content.soundConfig || { loop: content.loop || false }
+        const soundConfig = content.soundConfig || { loop: content.loop || false };
         // TODO
         this.play({
             key: content.soundKey,
@@ -67,7 +71,7 @@ export class SoundManager {
         });
     }
     public playSound(content: any) {
-        const soundConfig = content.soundConfig || { loop: content.loop || false }
+        const soundConfig = content.soundConfig || { loop: content.loop || false };
         // TODO
         this.play({
             key: content.soundKey,
