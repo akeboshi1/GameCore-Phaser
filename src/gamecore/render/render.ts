@@ -340,7 +340,7 @@ export class Render extends RPCPeer implements GameMain, IRender {
         //     this.mLocalStorageManager.destroy();
 
         if (this.mSoundManager)
-            this.mSoundManager.destroy();
+            this.mSoundManager.clear();
 
         if (this.mInputManager)
             this.mInputManager.destroy();
