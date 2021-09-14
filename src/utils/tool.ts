@@ -175,14 +175,16 @@ export class Tool {
         return out;
     }
 
-    public static checkPointerContains(gameObject: any, pointer): boolean {
-        if (!gameObject) return false;
-        const left = -gameObject.width / 2;
-        const right = gameObject.width / 2;
-        const top = -gameObject.height / 2;
-        const bottom = gameObject.height / 2;
+    public static checkPointerContains(obj: any, pointer): boolean {
+        if (!obj) return false;
+        const originX = obj.originX === undefined ? 0.5 : obj.originX;
+        const originY = obj.originY === undefined ? 0.5 : obj.originY;
+        const left = -obj.width * originX;
+        const right = obj.width * (1 - originX);
+        const top = -obj.height * (originY);
+        const bottom = obj.height * (1 - originY);
         if (pointer) {
-            const worldMatrix = gameObject.getWorldTransformMatrix();
+            const worldMatrix = obj.getWorldTransformMatrix();
             const zoom = worldMatrix.scaleX;
             const x: number = (pointer.x - worldMatrix.tx) / zoom;
             const y: number = (pointer.y - worldMatrix.ty) / zoom;
