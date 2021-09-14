@@ -40,3 +40,7 @@ export * from "./toggle.button";
 export * from "./toggle.color.button";
 export * from "./checkbox.toggle";
 export * from "./base.batch.panel";
+export * from "./tq.button";
+export * from "./tq.nine.slice.button";
+export * from "./tq.combobox";
+export * from "./tq.progress.bar";
