@@ -22,6 +22,7 @@ export class ToggleButton extends ButtonEventDispatcher {
                 color: "#ffffff"
             }
         }, false).setOrigin(0.5, 0.5);
+        this.mText.texture.setFilter(Phaser.Textures.FilterMode.LINEAR);
         this.add([this.mBackground, this.mText]);
         this.mNormal = frame;
         this.mDown = down;

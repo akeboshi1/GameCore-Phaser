@@ -18,6 +18,7 @@ export class ToggleColorButton extends ButtonEventDispatcher {
             text,
             style
         }, false).setOrigin(0.5, 0.5);
+        this.mText.texture.setFilter(Phaser.Textures.FilterMode.LINEAR);
         this.add(this.mText);
         this.enable = true;
     }

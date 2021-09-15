@@ -27,6 +27,7 @@ export class InputLabel extends Phaser.GameObjects.Container {
             text: this.mPlaceholder,
             style: labelConfig
         }, false).setInteractive(new Phaser.Geom.Rectangle(-clickW * 0.5, -clickH * 0.5, clickW, clickH), Phaser.Geom.Rectangle.Contains);
+        this.mLabel.texture.setFilter(Phaser.Textures.FilterMode.LINEAR);
         this.mOriginX = this.mLabel.originX;
         this.mOriginY = this.mLabel.originY;
         const tap = new Tap(this.mLabel);
