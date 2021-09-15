@@ -34,7 +34,7 @@ export class EditorTerrainManager extends PacketHandler {
             if (this.mGround) {
                 this.mGround.destroy();
             }
-            this.mGround = new Ground(this.sceneEditor.scene, this.sceneEditor.url, this.sceneEditor.scaleRatio);
+            this.mGround = new Ground(this.sceneEditor.scene, this.sceneEditor.url, 1);
             (<SceneEditor> this.sceneEditor.scene).layerManager.addToLayer(LayerName.GROUND, this.mGround);
             this.mGround.load({id: this.sceneEditor.sceneNode.id + "", resRoot: this.sceneEditor.config.LOCAL_HOME_PATH})
                 .then(() => {
