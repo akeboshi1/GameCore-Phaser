@@ -496,7 +496,12 @@ export class ElementFramesDisplay extends BaseFramesDisplay implements Resources
 
     private updateMountLayerPlay() {
         if (!this.mAnimationData) return;
+        const firstLayer = this.mAnimationData.layerDict.values().next().value;
         const mountlayer = this.mAnimationData.mountLayer;
+        if (mountlayer.frameVisible && mountlayer.frameVisible.length !== firstLayer.frameName.length) {
+            Logger.getInstance().error("wrong data: frameName.length: " + firstLayer.frameName.length + "; mountlayer.frameVisible.length: " + mountlayer.frameVisible.length);
+            return;
+        }
 
         this.mMountList.forEach((val) => {
             this.unmount(val as BaseDragonbonesDisplay);
@@ -519,11 +524,6 @@ export class ElementFramesDisplay extends BaseFramesDisplay implements Resources
 
         // this.mMountArmatureParent.setDepth(data.index);
         this.updateChildrenIdxByDepth();
-        const firstLayer = this.mAnimationData.layerDict.values().next().value;
-        if (mountlayer.frameVisible && mountlayer.frameVisible.length !== firstLayer.frameName.length) {
-            Logger.getInstance().error("wrong data: frameName.length: " + firstLayer.frameName.length + "; mountlayer.frameVisible.length: " + mountlayer.frameVisible.length);
-            return;
-        }
         for (let i = 0; i < mountlayer.mountPoint.length; i++) {
             if (!this.mMountList.get(i)) continue;
             const armature = this.mMountList.get(i);

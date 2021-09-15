@@ -125,7 +125,8 @@ export class BaseFramesDisplay extends BaseDisplay {
             this.mMainSprite.on(Phaser.Animations.Events.ANIMATION_REPEAT, this.onAnimationRepeatHander, this);
         }
 
-        if (this.mMountContainer && this.mMountContainer.parentContainer && this.mCurAnimation.mountLayer) {
+        if (this.mMountContainer && this.mMountContainer.parentContainer &&
+            this.mCurAnimation.mountLayer && this.mCurAnimation.mountLayer.frameVisible && this.mCurAnimation.mountLayer.frameVisible.length > 0) {
             const stageContainer = <Phaser.GameObjects.Container>this.mSprites.get(DisplayField.STAGE);
             stageContainer.moveTo(this.mMountContainer, this.mCurAnimation.mountLayer.index);
         }
