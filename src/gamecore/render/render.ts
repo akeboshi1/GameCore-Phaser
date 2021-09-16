@@ -1815,11 +1815,7 @@ export class Render extends RPCPeer implements GameMain, IRender {
         initLocales(`${this.resUrl.RES_PATH}locales/{{lng}}.json`);
     }
 
-    private onFullScreenChange() {
-        this.resize(this.mGame.scale.gameSize.width, this.mGame.scale.gameSize.height);
-    }
-
-    private gameCreated(keyEvents: any) {
+    protected gameCreated(keyEvents: any) {
         if (this.mCallBack) {
             this.mCallBack();
         }
@@ -1828,6 +1824,10 @@ export class Render extends RPCPeer implements GameMain, IRender {
         }
         this.mGame.scale.on("enterfullscreen", this.onFullScreenChange, this);
         this.mGame.scale.on("leavefullscreen", this.onFullScreenChange, this);
+    }
+
+    private onFullScreenChange() {
+        this.resize(this.mGame.scale.gameSize.width, this.mGame.scale.gameSize.height);
     }
 
     private resumeScene() {

@@ -155,7 +155,7 @@ export class UIManager extends PacketHandler {
         if (!mediator.isShow()) {
             mediator.uiState = 0;
             return;
-        };
+        }
         mediator.hide();
     }
 
