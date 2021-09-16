@@ -72,7 +72,7 @@ export class UIManager extends PacketHandler {
         connection.removePacketListener(this);
         this.game.emitter.off(EventType.SCENE_SHOW_UI, this.onOpenUIMediator, this);
         this.game.emitter.off(EventType.SCENE_SHOW_MAIN_UI, this.showMainUI, this);
-        this.game.emitter.on("EnterRoom", this.roomCreated, this);
+        this.game.emitter.off("EnterRoom", this.roomCreated, this);
     }
 
     public showMainUI(hideNames?: string[]) {
