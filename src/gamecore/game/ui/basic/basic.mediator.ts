@@ -131,10 +131,14 @@ export class BasicMediator implements IMediator {
         this.mPanelInit = false;
         this.mShowData = null;
         this.mParam = null;
-        if (this.mModel) this.mModel.destroy();
-        if (this.key && this.game && this.game.peer && this.game.peer.hasOwnProperty(this.key)) {
-            delete this.game.peer[this.key];
+        if (this.mModel) {
+            this.mModel.destroy();
+            this.mModel = null;
         }
+        if (this.key && this.game && this.game.peer) {
+            this.game.peer.cancelExportProperty(this, this.game.peer, this.key);
+        }
+        this.game = null;
     }
 
     protected _show() {
