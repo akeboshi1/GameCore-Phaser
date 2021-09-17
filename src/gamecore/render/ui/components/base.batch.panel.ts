@@ -72,7 +72,9 @@ export class BaseBatchPanel extends Panel {
     }
     @Export()
     public destroy() {
-        if (this.render && this.render.hasOwnProperty(this.key)) delete this.render[this.key];
+        if (this.render) {
+            this.render.cancelExportProperty(this, this.render, this.key);
+        }
         this.exportListeners.length = 0;
         super.destroy();
     }
