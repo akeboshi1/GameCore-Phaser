@@ -35,7 +35,7 @@ import { MouseManager } from "./input/mouse.manager";
 import { SoundManager } from "./managers";
 import { i18n, initLocales, translateProto } from "./utils";
 import { RenderFactor } from "./factor";
-import {RenderHttpService} from "./http/render.http.service";
+import { RenderHttpService } from "./http/render.http.service";
 
 enum MoveStyle {
     DIRECTION_MOVE_STYLE = 1,
@@ -61,7 +61,7 @@ export class Render extends RPCPeer implements GameMain, IRender {
     @Export()
     public editorModeDebugger: EditorModeDebugger;
 
-    protected mMainPeer: any;
+    // protected mainPeer: any;
     // protected mPhysicalPeer: any;
 
     protected readonly DEFAULT_WIDTH = 360;
@@ -268,7 +268,7 @@ export class Render extends RPCPeer implements GameMain, IRender {
     createGame() {
         this.newGame().then(() => {
             this.createManager();
-            this.mMainPeer.createGame(this.mConfig);
+            this.mainPeer.createGame(this.mConfig);
         });
     }
 
@@ -354,7 +354,7 @@ export class Render extends RPCPeer implements GameMain, IRender {
     }
 
     enterGame() {
-        this.mMainPeer.loginEnterWorld();
+        this.mainPeer.loginEnterWorld();
         this.mGame.scene.remove(SceneName.LOGIN_SCENE);
     }
 
@@ -740,15 +740,15 @@ export class Render extends RPCPeer implements GameMain, IRender {
     }
 
     public syncCameraScroll() {
-        if (this.mMainPeer) this.mMainPeer.syncCameraScroll();
+        if (this.mainPeer) this.mainPeer.syncCameraScroll();
     }
 
     public renderEmitter(eventType: string, data?: any) {
-        if (this.mMainPeer) this.mMainPeer.renderEmitter(eventType, data);
+        if (this.mainPeer) this.mainPeer.renderEmitter(eventType, data);
     }
 
     public showMediator(name: string, isShow: boolean) {
-        if (this.mMainPeer) this.mMainPeer.showMediator(name, isShow);
+        if (this.mainPeer) this.mainPeer.showMediator(name, isShow);
     }
 
     public getMainScene() {
@@ -1770,8 +1770,12 @@ export class Render extends RPCPeer implements GameMain, IRender {
         const key = this.mMainPeerParam.key;
         const peerName = this.mMainPeerParam.name;
         this.attach(this.mMainPeerParam.key, this.mMainPeerParam.url, true).onceReady(() => {
-            this.mMainPeer = this.remote[key][peerName];
-            this.mMainPeer.updateFps();
+            // this.mainPeer = this.remote[key][peerName];
+            if (!this.mainPeer) {
+                Logger.getInstance().error("no mainpeer", key, peerName);
+                return;
+            }
+            this.mainPeer.updateFps();
             this.createGame();
             Logger.getInstance().debug("worker onReady");
         });
@@ -1870,9 +1874,10 @@ export class Render extends RPCPeer implements GameMain, IRender {
     }
 
     get mainPeer() {
-        if (!this.mMainPeer) {
+        const peer = this.remote[this.mMainPeerParam.key][this.mMainPeerParam.name];
+        if (!peer) {
             throw new Error("can't find main worker");
         }
-        return this.mMainPeer;
+        return peer;
     }
 }
