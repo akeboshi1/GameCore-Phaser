@@ -1,4 +1,4 @@
-import { ComboBox } from "apowophaserui"
+import { ComboBox } from "apowophaserui";
 
 export class TQComboBox extends ComboBox {
     constructor(scene: Phaser.Scene, config: any) {
