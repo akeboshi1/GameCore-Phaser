@@ -498,6 +498,7 @@ export class ElementFramesDisplay extends BaseFramesDisplay implements Resources
         if (!this.mAnimationData) return;
         const firstLayer = this.mAnimationData.layerDict.values().next().value;
         const mountlayer = this.mAnimationData.mountLayer;
+        if (!mountlayer || !mountlayer.mountPoint) return;
         if (mountlayer.frameVisible && mountlayer.frameVisible.length !== firstLayer.frameName.length) {
             Logger.getInstance().error("wrong data: frameName.length: " + firstLayer.frameName.length + "; mountlayer.frameVisible.length: " + mountlayer.frameVisible.length);
             return;
@@ -509,7 +510,6 @@ export class ElementFramesDisplay extends BaseFramesDisplay implements Resources
         });
         this.mMountList.clear();
 
-        if (!mountlayer || !mountlayer.mountPoint) return;
         for (let i = 0; i < mountlayer.mountPoint.length; i++) {
             if (this.mMountList.get(i)) continue;
             const arm = new DragonbonesEditorDisplay(this.scene, this.mConfig.osd);
