@@ -12,7 +12,8 @@ import {
     RunningAnimation,
     ITilesetProperty,
     IGround,
-    IRenderSprite
+    IRenderSprite,
+    Handler
 } from "structure";
 import { FramesDisplay } from "../display/frames/frames.display";
 import { PlayScene } from "../scenes/play.scene";

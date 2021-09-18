@@ -60,7 +60,7 @@ export class ValueResolver<T> {
     if (this.rejecter) {
       this.rejecter(reason);
     } else {
-      throw reason;
+      // throw reason;
     }
     this.resolver = null;
     this.rejecter = null;
