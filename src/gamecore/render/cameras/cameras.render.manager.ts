@@ -77,13 +77,6 @@ export class CamerasRenderManager extends BaseCamerasManager {
         }
     }
 
-    public destroy() {
-        Logger.getInstance().debug("camerasmanager destroy");
-        this.mMain = undefined;
-        this.mTarget = undefined;
-        this.mCameras = [];
-    }
-
     private resetCameraSize(width: number, height: number) {
         Logger.getInstance().debug("resetCamerSize");
         this.render.mainPeer.resetGameraSize(width, height);

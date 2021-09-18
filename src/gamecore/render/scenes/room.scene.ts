@@ -35,4 +35,9 @@ export class RoomScene extends BasicScene {
     protected onPointerUpHandler(pointer: Phaser.Input.Pointer, currentlyOver: Phaser.GameObjects.GameObject[]) {
     }
 
+    protected onDestroy() {
+        this.onGameOutHandler();
+        super.onDestroy();
+    }
+
 }

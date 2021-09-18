@@ -320,7 +320,7 @@ export class BaseDragonbonesDisplay extends BaseDisplay {
             // });
             this.destroyReplacedTextureManually();
 
-            this.mArmatureDisplay.dispose(false);
+            this.mArmatureDisplay.destroy();
             this.mArmatureDisplay = null;
         }
 

@@ -1,4 +1,4 @@
-import { BaseLayer, GroundLayer, PlayCamera, SurfaceLayer } from "baseRender";
+import { BaseLayer, GroundLayer, PlayCamera, SurfaceLayer, Url } from "baseRender";
 import { MainUIScene } from "./main.ui.scene";
 import { RoomScene } from "./room.scene";
 import { Logger, LayerName, PlaySceneLoadState, SceneName } from "structure";
@@ -16,8 +16,8 @@ export class PlayScene extends RoomScene {
     }
 
     public preload() {
-        // this.load.audio("click", Url.getRes("sound/click.mp3"));
-        // this.load.audio("mine", Url.getRes("sound/mine.mp3"));
+        this.load.audio("click", Url.getRes("sound/click.mp3"));
+        this.load.audio("mine", Url.getRes("sound/mine.mp3"));
         super.preload();
     }
 

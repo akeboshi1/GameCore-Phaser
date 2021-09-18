@@ -32,6 +32,9 @@ const commonConfig = {
     },
     externals: {
         "webworker-rpc": 'webworker-rpc',
+        "pixelpai_proto": "pixelpai_proto",
+        "tooqingphaser": "tooqingphaser",
+        "game-capsule": "game-capsule"
     },
     optimization: {
         minimize: true,
@@ -40,6 +43,7 @@ const commonConfig = {
                 sourceMap: false,
                 // 设置为true速度最快，自动设置数据处理长度的通道处理
                 parallel: true,
+                extractComments: false,
                 terserOptions: {
                     ecma: undefined,
                     warnings: false,

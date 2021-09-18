@@ -3,7 +3,6 @@ import {
     ElementStateType,
     IScenery,
     LayerName,
-    Handler,
     IPos,
     IPosition45Obj,
     Logger,
@@ -411,17 +410,18 @@ export class DisplayManager {
 
     public addGround(ground: IGround): Promise<ITilesetProperty[]> {
         return new Promise<ITilesetProperty[]>((resolve, reject) => {
-            const scene = this.sceneManager.getMainScene();
-            this.mGround = new Ground(scene, this.render.url, this.render.scaleRatio);
-            (<PlayScene>scene).layerManager.addToLayer(LayerName.GROUND, this.mGround);
-            this.mGround.load(ground)
-                .then(() => {
-                    const allProperties = this.mGround.getAllTilesetProperties();
-                    resolve(allProperties);
-                })
-                .catch((err) => {
-                    reject(err);
-                });
+            // const scene = this.sceneManager.getMainScene();
+            // this.mGround = new Ground(scene, this.render.url, this.render.scaleRatio);
+            // (<PlayScene>scene).layerManager.addToLayer(LayerName.GROUND, this.mGround);
+            // this.mGround.load(ground)
+            //     .then(() => {
+            //         const allProperties = this.mGround.getAllTilesetProperties();
+            //         resolve(allProperties);
+            //     })
+            //     .catch((err) => {
+            //         reject(err);
+            //     });
+            resolve(null);
         });
     }
 
@@ -637,6 +637,7 @@ export class DisplayManager {
 
         if (this.mGround) {
             this.mGround.destroy();
+            this.mGround = null;
         }
     }
 

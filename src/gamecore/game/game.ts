@@ -761,6 +761,7 @@ export class Game extends PacketHandler implements IConnectListener, ClockReadyL
         this.createManager();
         this.addPacketListener();
         this.startConnect();
+        // TODO createAccount createAnotherGame统一成一个接口
         this.mainPeer.render.createAccount(gameId, virtualworldId, sceneId, loc, spawnPointId);
         this.mClock = new Clock(this.connect, this.peer);
         this.mainPeer.render.createAnotherGame(gameId, virtualworldId, sceneId, loc ? loc.x : 0, loc ? loc.y : 0, loc ? loc.z : 0, spawnPointId, worldId);

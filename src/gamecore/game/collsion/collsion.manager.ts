@@ -72,5 +72,6 @@ export class CollsionManager {
 
     destroy() {
         this.borders.clear();
+        this.roomService = null;
     }
 }

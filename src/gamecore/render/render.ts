@@ -145,6 +145,7 @@ export class Render extends RPCPeer implements GameMain, IRender {
         // Logger.getInstance().debug("connectfail===>", this.mConnectFailFunc, this.mConfig);
         this.initConfig();
         Logger.getInstance().log("Render version ====>:", `v${this.mConfig.version}`);
+        this.createAccount(config.game_id, config.virtual_world_id);
         // const len = 3;
         // const statList = [];
         // for (let i = 0; i < len; i++) {
@@ -324,6 +325,10 @@ export class Render extends RPCPeer implements GameMain, IRender {
             this.mSceneManager.destroy();
             this.mSceneManager = undefined;
         }
+        if (this.gridsDebugger) {
+            this.gridsDebugger.destroy();
+            this.gridsDebugger = undefined;
+        }
     }
 
     // 切换scene时，清除各个manager缓存
@@ -331,10 +336,10 @@ export class Render extends RPCPeer implements GameMain, IRender {
         this.sceneCreated = false;
         this.emitter.emit(Render.SCENE_DESTROY);
         if (this.mUiManager)
-            this.mUiManager.destroy();
+            this.mUiManager.clear();
 
         if (this.mCameraManager)
-            this.mCameraManager.destroy();
+            this.mCameraManager.clear();
 
         // if (this.mLocalStorageManager)
         //     this.mLocalStorageManager.destroy();
@@ -343,12 +348,19 @@ export class Render extends RPCPeer implements GameMain, IRender {
             this.mSoundManager.clear();
 
         if (this.mInputManager)
-            this.mInputManager.destroy();
+            this.mInputManager.clear();
 
         if (this.mDisplayManager)
             this.mDisplayManager.destroy();
         if (this.mSceneManager)
             this.mSceneManager.destroy();
+    
+        if (this.mAvatarHelper) {
+            this.mAvatarHelper.destroy();
+        }
+        if (this.gridsDebugger) {
+            this.gridsDebugger.destroy();
+        }
         // if (this.mEditorCanvasManager)
         //     this.mEditorCanvasManager.destroy();
     }
@@ -581,16 +593,12 @@ export class Render extends RPCPeer implements GameMain, IRender {
             this.destroyWorker([this.mMainPeerParam.key]).then(() => {
                 if (this.mGame) {
                     this.destroyManager();
+                    this.mRoomSize = null;
+                    this.mRoomMiniSize = null;
                     this.mGame.events.off(Phaser.Core.Events.FOCUS, this.onFocus, this);
                     this.mGame.events.off(Phaser.Core.Events.BLUR, this.onBlur, this);
-                    this.mGame.scale.off("enterfullscreen", this.onFullScreenChange, this);
-                    this.mGame.scale.off("leavefullscreen", this.onFullScreenChange, this);
-                    this.mGame.scale.off("orientationchange", this.onOrientationChange, this);
-                    this.mGame.plugins.removeGlobalPlugin("rexButton");
-                    this.mGame.plugins.removeGlobalPlugin("rexNinePatchPlugin");
-                    this.mGame.plugins.removeGlobalPlugin("rexInputText");
-                    this.mGame.plugins.removeGlobalPlugin("rexBBCodeTextPlugin");
-                    this.mGame.plugins.removeGlobalPlugin("rexMoveTo");
+                    this.mGame.events.removeAllListeners();
+                    this.mGame.scale.removeAllListeners();
                     this.mGame.plugins.removeScenePlugin("DragonBones");
                     this.mGame.events.once(Phaser.Core.Events.DESTROY, () => {
                         this.mGame = undefined;
@@ -770,7 +778,7 @@ export class Render extends RPCPeer implements GameMain, IRender {
                 }
             }
             if (this.mConfig.server_addr.secure === undefined) this.mConfig.server_addr.secure = true;
-            this.mainPeer.setConfig(this.mConfig);
+            if (this.mMainPeer) this.mMainPeer.setConfig(this.mConfig);
         }
     }
 
@@ -1071,6 +1079,7 @@ export class Render extends RPCPeer implements GameMain, IRender {
         return new Promise<any>((resolve, reject) => {
             if (!this.mAccount) {
                 this.mAccount = new Account();
+                this.mAccount.enterGame(gameID, worldID, sceneID, loc, spawnPointId);
             }
             resolve(true);
         });
@@ -1225,10 +1234,6 @@ export class Render extends RPCPeer implements GameMain, IRender {
 
     @Export([webworker_rpc.ParamType.str, webworker_rpc.ParamType.str])
     public createAnotherGame(gameId: string, virtualWorldId: string, sceneId?: number, px?: number, py?: number, pz?: number, spawnPointId?, worldId?: string) {
-        // this.newGame().then(() => {
-        //     // todo sceneManager loginScene.name
-        // });
-        Logger.getInstance().debug("gotoanothergame ====>");
         this.account.enterGame(gameId, virtualWorldId, sceneId, { x: px, y: py, z: pz }, spawnPointId, worldId);
     }
 
@@ -1319,27 +1324,21 @@ export class Render extends RPCPeer implements GameMain, IRender {
         return new Promise((resolve, reject) => {
             if (this.mGame) {
                 Logger.getInstance().log("====================>>>>>>>> clear game");
-                this.mGame.events.off(Phaser.Core.Events.FOCUS, this.onFocus, this);
-                this.mGame.events.off(Phaser.Core.Events.BLUR, this.onBlur, this);
-                this.mGame.scale.off("enterfullscreen", this.onFullScreenChange, this);
-                this.mGame.scale.off("leavefullscreen", this.onFullScreenChange, this);
-                this.mGame.scale.off("orientationchange", this.onOrientationChange, this);
-                this.mGame.plugins.removeGlobalPlugin("rexButton");
-                this.mGame.plugins.removeGlobalPlugin("rexNinePatchPlugin");
-                this.mGame.plugins.removeGlobalPlugin("rexInputText");
-                this.mGame.plugins.removeGlobalPlugin("rexBBCodeTextPlugin");
-                this.mGame.plugins.removeGlobalPlugin("rexMoveTo");
-                this.mGame.plugins.removeScenePlugin("DragonBones");
                 this.destroyManager();
+                this.mGame.events.removeAllListeners();
+                this.mGame.scale.removeAllListeners();
+                this.mGame.plugins.removeScenePlugin("DragonBones");
                 this.mGame.events.once(Phaser.Core.Events.DESTROY, () => {
                     this.mGame = undefined;
-                    if (boo) {
-                        this.newGame().then(() => {
-                            this.createManager();
-                            resolve();
-                        });
-                        return;
-                    }
+                    setTimeout(() => {
+                        if (boo) {
+                            this.newGame().then(() => {
+                                this.createManager();
+                                resolve();
+                            });
+                            return;
+                        }
+                    }, 100);
                     resolve();
                 });
                 this.mGame.destroy(true);
@@ -1771,7 +1770,7 @@ export class Render extends RPCPeer implements GameMain, IRender {
         const peerName = this.mMainPeerParam.name;
         this.attach(this.mMainPeerParam.key, this.mMainPeerParam.url, true).onceReady(() => {
             this.mMainPeer = this.remote[key][peerName];
-            this.mMainPeer.updateFps();
+            // this.mMainPeer.updateFps();
             this.createGame();
             Logger.getInstance().debug("worker onReady");
         });

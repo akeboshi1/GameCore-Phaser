@@ -357,7 +357,7 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
             this.mGame.peer.render.roomstartPlay();
             this.mGame.peer.render.gridsDebugger.setData(this.mSize);
             this.mGame.peer.render.setCamerasBounds(-padding - offsetX * this.mScaleRatio, -padding, this.mSize.sceneWidth * this.mScaleRatio + padding * 2, this.mSize.sceneHeight * this.mScaleRatio + padding * 2);
-            //     // init block
+            // init block
             this.mBlocks.int(this.mSize);
             this.mGame.user.enterScene(this, this.mActorData);
 
@@ -575,22 +575,27 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
         if (this.mSkyboxManager) this.mSkyboxManager.destroy();
         if (this.mWallMamager) this.mWallMamager.destroy();
         if (this.mCollsionManager) this.mCollsionManager.destroy();
+        if (this.mCameraService) this.mCameraService.destroy();
         if (this.mActorData) this.mActorData = null;
         Logger.getInstance().debug("room clear");
         if (this.game) {
             if (this.game.renderPeer) this.game.renderPeer.clearRoom();
             if (this.game.uiManager) this.game.uiManager.recover();
         }
-        this.mTerrainMap = [];
-        this.mWalkableMap = [];
-        this.mInteractiveList = [];
+        this.mTerrainMap = null;
+        this.mWalkableMap = null;
+        this.mInteractiveList = null;
+        this.mSize = null;
+        this.mMiniSize = null;
         this.mWalkableMarkMap.clear();
+        this.mManagersReadyStates.clear();
     }
 
     public destroy() {
         this.removeListen();
         this.clear();
         this.game.renderPeer.removeScene(SceneName.PLAY_SCENE);
+        this.mGame = null;
     }
 
     // update handlers. TODO: remove method
@@ -637,21 +642,21 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
         if (!this.mManagersReadyStates.has(key)) return;
 
         this.mManagersReadyStates.set(key, true);
-        let allReady = true;
-        this.mManagersReadyStates.forEach((val) => {
-            if (val === false) {
-                allReady = false;
-            }
-        });
-        if (allReady) {
+        // let allReady = true;
+        // this.mManagersReadyStates.forEach((val) => {
+        //     if (val === false) {
+        //         allReady = false;
+        //     }
+        // });
+        // if (allReady) {
             this.game.renderPeer.roomReady();
             this.onRoomReady();
-        }
+        // }
     }
 
     public onRoomReady() {
         if (!this.terrainManager.isDealEmptyTerrain) {
-            this.terrainManager.dealEmptyTerrain();
+            // this.terrainManager.dealEmptyTerrain();
         }
     }
 

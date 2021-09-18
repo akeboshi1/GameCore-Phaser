@@ -782,7 +782,16 @@ export class Element extends BlockObject implements IElement {
             this.mStateManager.destroy();
             this.mStateManager = null;
         }
+        this.removeFromWalkableMap();
         this.removeDisplay();
+        if (this.mModel) {
+            this.mModel.destroy();
+            this.mModel = null;
+        }
+        this.mDisplayInfo = null;
+        this.mElementManager = null;
+        this.mMovePoints = null;
+        this.mRoomService = null;
         super.destroy();
     }
 

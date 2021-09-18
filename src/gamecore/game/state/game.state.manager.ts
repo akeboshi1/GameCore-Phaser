@@ -63,6 +63,7 @@ export class GameStateManager {
         if (this.mStateMap) {
             this.mStateMap.clear();
         }
+        this.mCurState = null;
     }
     protected init() {
         this.mStateMap.set(GameState.Init, new InitState(this.mMain, GameState.Init));

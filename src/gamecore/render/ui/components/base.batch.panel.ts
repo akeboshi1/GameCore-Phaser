@@ -45,12 +45,7 @@ export class BaseBatchPanel extends Panel {
     }
     @Export()
     startLoad() {
-        if (!this.scene) {
-            return;
-        }
-        this.scene.load.on(Phaser.Loader.Events.FILE_COMPLETE, this.onFileKeyComplete, this);
-        this.scene.load.once(Phaser.Loader.Events.COMPLETE, this.loadComplete, this);
-        this.scene.load.start();
+        super.startLoad();
     }
     @Export()
     show(param?: any) {
@@ -76,6 +71,8 @@ export class BaseBatchPanel extends Panel {
             this.render.cancelExportProperty(this, this.render, this.key);
         }
         this.exportListeners.length = 0;
+        if (this.mReLoadResources) this.mReLoadResources.clear();
+        if (this.mResources) this.mResources.clear();
         super.destroy();
     }
     @Export()

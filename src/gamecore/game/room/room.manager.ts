@@ -91,9 +91,12 @@ export class RoomManager extends PacketHandler implements IRoomManager {
         return idx >= 0;
     }
 
-    public async leaveRoom(room: IRoomService) {
+    public leaveRoom(room: IRoomService) {
         if (!room) return;
         this.mRooms = this.mRooms.filter((r: IRoomService) => r.id !== room.id);
+        if (this.mCurRoom === room) {
+            this.mCurRoom = null;
+        }
         room.destroy();
     }
 
@@ -182,7 +185,7 @@ export class RoomManager extends PacketHandler implements IRoomManager {
                 Logger.getInstance().error("error message: scene.sceneType === EDIT_SCENE_TYPE");
                 break;
         }
-        this.mGame.emitter.emit(EventType.SCENE_CHANGE);
+        // this.mGame.emitter.emit(EventType.SCENE_CHANGE);
     }
 
     protected async onEnterScene(scene: op_client.IOP_VIRTUAL_WORLD_RES_CLIENT_ENTER_SCENE) {

@@ -191,8 +191,10 @@ export class CamerasManager extends PacketHandler implements ICameraService {
 
     public destroy() {
         this.mInitialize = false;
-        this.preCamerasList.length = 0;
         this.preCamerasList = null;
+        this.viewPort = null;
+        this.miniViewPort = null;
+        this.mBlockManager = null;
     }
 
     public startFollow(target: any, effect?: string) {

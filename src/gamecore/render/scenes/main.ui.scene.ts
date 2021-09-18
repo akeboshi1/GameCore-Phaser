@@ -7,10 +7,6 @@ export class MainUIScene extends RoomScene {
   public static readonly LAYER_DIALOG = "dialogLayer";
   public static readonly LAYER_TOOLTIPS = "toolTipsLayer";
   public static readonly LAYER_MASK = "maskLayer";
-  private timeOutID = 0;
-  private timeOutCancelMap = {};
-  private timeOutCallerList = [];
-  private timeOutTimeMap = {};
   private fps: Phaser.GameObjects.Text;
   // private sizeTF: Phaser.GameObjects.Text;
   constructor() {
@@ -56,17 +52,6 @@ export class MainUIScene extends RoomScene {
     // this.render.guideManager.init();
   }
 
-  public setTimeout(caller, time): number {
-    const begin = Date.now();
-    this.timeOutCallerList[++this.timeOutID] = caller;
-    this.timeOutTimeMap[this.timeOutID] = { now: begin, delay: time };
-    return this.timeOutID;
-  }
-
-  public clearTimeout(id) {
-    this.timeOutCancelMap[id] = true;
-  }
-
   public updateFPS() {
     if (this.fps) this.fps.setText(this.game.loop.actualFps.toFixed());
   }
@@ -96,6 +81,11 @@ export class MainUIScene extends RoomScene {
     //   const url = Url.getNormalUIRes(`${folder}/${res}.mp4`);
     //   this.load.video(res, url, undefined, true, true);
     // }
+  }
+
+  protected onDestroy() {
+    if (this.fps) this.fps.destroy();
+    super.onDestroy();
   }
 
   // private checkOriention(orientation) {
