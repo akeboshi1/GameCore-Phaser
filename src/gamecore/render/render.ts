@@ -601,6 +601,11 @@ export class Render extends RPCPeer implements GameMain, IRender {
                     this.mGame.scale.removeAllListeners();
                     this.mGame.plugins.removeScenePlugin("DragonBones");
                     this.mGame.events.once(Phaser.Core.Events.DESTROY, () => {
+                        this.mGame.textures.destroy();
+                        this.mGame.cache.destroy();
+                        this.mGame.anims.destroy();
+                        this.mGame.input.destroy();
+                        this.mGame.sound.destroy();
                         this.mGame = undefined;
                         if (destroyPeer) super.destroy();
                         resolve();
@@ -778,8 +783,8 @@ export class Render extends RPCPeer implements GameMain, IRender {
                 }
             }
             if (this.mConfig.server_addr.secure === undefined) this.mConfig.server_addr.secure = true;
-            const mainPeer = this.mainPeer;
-            if (mainPeer) mainPeer.setConfig(this.mConfig);
+            // const mainPeer = this.mainPeer;
+            // if (mainPeer) mainPeer.setConfig(this.mConfig);
         }
     }
 
@@ -1330,6 +1335,11 @@ export class Render extends RPCPeer implements GameMain, IRender {
                 this.mGame.scale.removeAllListeners();
                 this.mGame.plugins.removeScenePlugin("DragonBones");
                 this.mGame.events.once(Phaser.Core.Events.DESTROY, () => {
+                    this.mGame.textures.destroy();
+                    this.mGame.cache.destroy();
+                    this.mGame.anims.destroy();
+                    this.mGame.input.destroy();
+                    this.mGame.sound.destroy();
                     this.mGame = undefined;
                     setTimeout(() => {
                         if (boo) {
