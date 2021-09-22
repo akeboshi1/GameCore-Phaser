@@ -1,6 +1,6 @@
 {
   "name": "@PixelPai/game-core",
-  "version": "1.0.877",
+  "version": "1.0.878",
   "exports": {
     ".": "./release/js/index.js",
     "./renderPeer": "./release/js/renderPeer.js",
@@ -41,7 +41,7 @@
     "dev": "webpack-dev-server --mode development",
     "up": "yarn upgrade game-capsule webworker-rpc tooqingphaser sort-display-object net-socket-packet",
     "build": "yarn up && yarn ver && node --max-old-space-size=4096 node_modules/webpack/bin/webpack.js --mode=production --output-path=./release --progress",
-    "build:dev": "rimraf release && webpack --mode=production --output-path=./release --progress",
+    "build:dev": "rimraf release && webpack --mode=development --output-path=./release --progress",
     "ver": "genversion version.js",
     "patch": "yarn version --patch && yarn ver",
     "dts": "dts-bundle --configJson dts-bundle.json && rm -rf types",
