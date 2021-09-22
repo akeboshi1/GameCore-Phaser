@@ -52,8 +52,6 @@ export class TerrainManager extends PacketHandler {
                     this.hasAddComplete = true;
                     resolve(null);
                 }).catch((error) => {
-                    // tslint:disable-next-line:no-console
-                    console.log(error);
                     reject(error);
                 });
 
