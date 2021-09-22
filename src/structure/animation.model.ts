@@ -29,7 +29,9 @@ export class AnimationModel implements IAnimationData {
     layer: IAnimationLayer[];
     interactiveArea: ILogicPoint[];
     mountLayer: IAnimationMountLayer;
+    private mNode: op_gameconfig_01.INode;
     constructor(ani: op_gameconfig_01.IAnimationData) {
+        this.mNode = ani.node;
         const tmpBaseLoc = ani.baseLoc.split(",");
         this.id = ani.node.id;
         this.name = ani.node.name;
@@ -73,7 +75,7 @@ export class AnimationModel implements IAnimationData {
 
     changeLayer(layer: any[]) {
         this.layer = layer;
-        if (this.layer.length < 1) {
+        if (this.layer.length < 1 && this.frameName) {
             this.layer = [{
                 frameName: this.frameName,
                 offsetLoc: this.baseLoc,
@@ -89,7 +91,7 @@ export class AnimationModel implements IAnimationData {
      */
     createProtocolObject(): op_gameconfig_01.IAnimationData {
         const ani = op_gameconfig_01.AnimationData.create();
-        // ani.node = this.mNode;
+        ani.node = this.mNode;
         ani.baseLoc = `${this.baseLoc.x},${this.baseLoc.y}`;
         ani.node.name = this.name;
         ani.loop = this.loop;
