@@ -1,7 +1,6 @@
 import { Logger } from "structure";
 import { Export } from "webworker-rpc";
 import { Game } from "../../game";
-import { BasicModel } from "./basic.model";
 
 export interface IMediator {
     UIType: number;

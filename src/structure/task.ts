@@ -1,6 +1,7 @@
-
-import { op_def } from "pixelpai_proto";
+/**
+ * @deprecated
+ */
 export interface Task {
     action: string;
-    loc: Partial<op_def.IMossMetaData>;
+    loc: any;
 }

@@ -69,15 +69,18 @@ export abstract class BaseDisplay extends Phaser.GameObjects.Container implement
     }
 
     public destroy(fromScene?: boolean) {
+        this.mMountList.clear();
         this.mSprites.forEach((sprite) => sprite.destroy());
         this.mSprites.clear();
-
-        if (this.parentContainer) {
-            this.parentContainer.remove(this);
-        }
         this.mHasInteractive = false;
 
         this.mListenerMng.destroy();
+        if (this.mLoadDisplayPromise) {
+            this.mLoadDisplayPromise = null;
+        }
+        this.mProjectionSize = null;
+        this.createdHandler = null;
+        this.mDisplayInfo = null;
 
         super.destroy(fromScene);
     }

@@ -34,7 +34,7 @@ export class DynamicImage extends Phaser.GameObjects.Image {
         this.mLoadCompleteCallbak = null;
         this.mLoadContext = null;
         this.mLoadErrorCallback = null;
-        this.mUrl = "";
+        this.mUrl = null;
         if (this.scene) {
             this.scene.load.off(Phaser.Loader.Events.FILE_COMPLETE, this.onLoadComplete, this);
             this.scene.load.off(Phaser.Loader.Events.FILE_LOAD_ERROR, this.onLoadError, this);

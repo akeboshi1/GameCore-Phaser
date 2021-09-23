@@ -1,7 +1,10 @@
-import { op_client, op_def } from "pixelpai_proto";
 
+
+/**
+ * @deprecated
+ */
 export interface ISyncSprite {
-    sprite: op_client.ISprite;
-    command: op_def.OpCommand;
+    sprite: any; // op_client.ISprite;
+    command: any; // op_def.OpCommand;
     patchKeys: string[];
 }

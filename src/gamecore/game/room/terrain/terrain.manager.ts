@@ -52,8 +52,6 @@ export class TerrainManager extends PacketHandler {
                     this.hasAddComplete = true;
                     resolve(null);
                 }).catch((error) => {
-                    // tslint:disable-next-line:no-console
-                    console.log(error);
                     reject(error);
                 });
 
@@ -109,8 +107,12 @@ export class TerrainManager extends PacketHandler {
         this.mEmptyMap.forEach((terrain) => {
             terrain.destroy();
         });
+        if (this.mCacheDisplayRef) {
+            this.mCacheDisplayRef.clear();
+        }
         this.mEmptyMap.clear();
         this.mRoom.game.renderPeer.removeGround();
+        this.mGameConfig = null;
     }
 
     public addDisplayRef(displays: IDisplayRef[]) {

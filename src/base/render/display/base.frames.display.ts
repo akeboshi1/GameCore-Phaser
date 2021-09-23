@@ -49,25 +49,12 @@ export class BaseFramesDisplay extends BaseDisplay {
                 return;
             }
             if (display.texturePath === "" || display.dataPath === "") {
-                Logger.getInstance().debug("update frame loadError", "动画资源报错：", this.displayInfo);
+                Logger.getInstance().debug("update frame loadError", "动画资源报错：", this.id);
                 this.displayCreated();
             } else {
                 this.scene.load.atlas(this.framesInfo.gene, this.pathObj.osdPath + display.texturePath, this.pathObj.osdPath + display.dataPath);
-                const onAdd = (key: string) => {
-                    if (key !== this.framesInfo.gene) return;
-                    this.onAddTextureHandler(key, field, onAdd);
-                    if (this.scene) {
-                        this.scene.load.off(Phaser.Loader.Events.FILE_LOAD_ERROR, onLoadError, this);
-                    }
-                };
-                const onLoadError = (imageFile: ImageFile) => {
-                    const key = imageFile.multiFile ? imageFile.multiFile.key : imageFile.key;
-                    if (key !== this.framesInfo.gene) return;
-                    Logger.getInstance().debug(`update frame loadError ${imageFile.url}`);
-                    this.displayCreated();
-                };
-                this.scene.load.on(Phaser.Loader.Events.FILE_LOAD_ERROR, onLoadError, this);
-                this.scene.textures.on(Phaser.Textures.Events.ADD, onAdd, this);
+                this.scene.load.on(Phaser.Loader.Events.FILE_LOAD_ERROR, this.onLoadErrorHandler, this);
+                this.scene.textures.on(Phaser.Textures.Events.ADD, this.onAddTextureHandler, this);
                 this.scene.load.start();
             }
 
@@ -297,9 +284,8 @@ export class BaseFramesDisplay extends BaseDisplay {
     }
 
     public destroy() {
-
-        this.clearDisplay();
-
+        this.scene.load.off(Phaser.Loader.Events.FILE_LOAD_ERROR, this.onLoadErrorHandler, this);
+        this.scene.textures.off(Phaser.Textures.Events.ADD, this.onAddTextureHandler, this);
         if (this.mFadeTween) {
             this.clearFadeTween();
             this.mFadeTween = undefined;
@@ -308,6 +294,8 @@ export class BaseFramesDisplay extends BaseDisplay {
             this.mScaleTween.stop();
             this.mScaleTween = undefined;
         }
+        this.mMainSprite = null;
+        this.mPreAnimation = null;
 
         this.mDisplayDatas.clear();
         super.destroy(true);
@@ -406,15 +394,25 @@ export class BaseFramesDisplay extends BaseDisplay {
         this.mPreAnimation = null;
     }
 
-    protected onAddTextureHandler(key: string, field?: DisplayField, cb?: (key: string) => void) {
-        if (field === undefined) {
-            field = DisplayField.STAGE;
+    protected onAddTextureHandler(key: string) {
+        if (this.mField === undefined) {
+            this.mField = DisplayField.STAGE;
         }
-        const data = this.mDisplayDatas.get(field);
+        const data = this.mDisplayDatas.get(this.mField);
         if (data && data.gene === key) {
-            this.scene.textures.off(Phaser.Textures.Events.ADD, cb, this);
-            this.onLoadCompleted(field);
+            this.scene.load.off(Phaser.Loader.Events.FILE_LOAD_ERROR, this.onLoadErrorHandler, this);
+            this.scene.textures.off(Phaser.Textures.Events.ADD, this.onAddTextureHandler, this);
+            this.onLoadCompleted(this.mField);
         }
+    }
+
+    protected onLoadErrorHandler(imageFile: ImageFile) {
+        const key = imageFile.multiFile ? imageFile.multiFile.key : imageFile.key;
+        if (key !== this.framesInfo.gene) return;
+        this.scene.load.off(Phaser.Loader.Events.FILE_LOAD_ERROR, this.onLoadErrorHandler, this);
+        this.scene.textures.off(Phaser.Textures.Events.ADD, this.onAddTextureHandler, this);
+        Logger.getInstance().debug(`update frame loadError ${imageFile.url}`);
+        this.displayCreated();
     }
 
     protected mAllLoadCompleted() {

@@ -17,7 +17,7 @@ import {
 } from "game-capsule";
 import { op_def, op_gameconfig_01 } from "pixelpai_proto";
 import { BlockIndex } from "utils";
-import { AnimationModel, IDragonbonesModel, IFramesModel, IPos, IResPath, IScenery, Logger, LogicPos, Position45, ITilesetProperty } from "structure";
+import { AnimationModel, IDragonbonesModel, IFramesModel, IPos, IResPath, IScenery, Logger, LogicPos, ITilesetProperty } from "structure";
 import { DragonbonesModel, FramesModel } from "../sprite";
 export interface IAsset {
     type: string;
@@ -94,38 +94,6 @@ export class ElementStorage implements IElementStorage {
             return;
         }
 
-        const objs = config.objectsList;
-        let displayModel = null;
-        for (const obj of objs) {
-            if (obj.type === op_def.NodeType.ElementNodeType) {
-                displayModel = this.mModels.get(obj.id);
-                if (!displayModel) {
-                    const anis = [];
-                    const eleAnis = (<ElementNode>obj).animations;
-                    if (!eleAnis) continue;
-                    const objAnis = eleAnis.animationData;
-                    for (const ani of objAnis) {
-                        anis.push(new AnimationModel(ani.createProtocolObject()));
-                    }
-                    displayModel = new FramesModel({
-                        id: obj.id,
-                        sn: obj.sn,
-                        animations: {
-                            defaultAnimationName: eleAnis.defaultAnimationName,
-                            display: eleAnis.display,
-                            animationData: anis,
-                        },
-                    });
-                    // this.mModels.set(obj.id, displayModel);
-                }
-                // const ele: IDisplayRef = {
-                //     id: obj.id,
-                //     displayModel,
-                // };
-                // this.mElementRef.set(obj.id, ele);
-            }
-        }
-
         this.updatePalette(config.root.palette);
         this.updateMoss(config.root.moss);
         this.updateAssets(config.root.assets);
@@ -194,21 +162,15 @@ export class ElementStorage implements IElementStorage {
         this.clearDisplayRef();
         const objs = config.objectsList;
         const sceneNode = config.root.children.find((node) => node.type === op_def.NodeType.SceneNodeType) as SceneNode;
-        Logger.getInstance().log("sceneNode: ", sceneNode.size);
         if (!sceneNode) {
             return Logger.getInstance().error("Failed to parse scene, SceneNode does not exist");
         }
-        // Logger.getInstance().log("children: ", children);
         let displayModel = null;
-        // TODO Lite deserialize可能会有个别Display link失败
         for (const obj of objs) {
             if (obj.type === op_def.NodeType.ElementNodeType) {
                 displayModel = this.mModels.get(obj.id);
                 const eventName = [];
                 obj.children.forEach((item) => {
-                    // if (item.className === "EventNode" && item.eventName === op_def.GameEvent.onElementHit) {
-                    //     eventName.push(item.eventName);
-                    // }
                     if (item instanceof EventNode && item.eventName === op_def.GameEvent.onElementHit) {
                         eventName.push(item.eventName);
                     }
@@ -378,6 +340,23 @@ export class ElementStorage implements IElementStorage {
 
         this.mModels.clear();
 
+        if (this._terrainCollection) {
+            this._terrainCollection.destroy();
+            this._terrainCollection = null;
+        }
+        if (this._mossCollection) {
+            this._mossCollection.destroy();
+            this._mossCollection = null;
+        }
+        if (this._wallCollection) {
+            this._wallCollection.destroy();
+            this._wallCollection = null;
+        }
+        if (this._groundWalkableCollection) {
+            this._groundWalkableCollection.destroy();
+            this._groundWalkableCollection = null;
+        }
+        this._scenerys = null;
         this._assets = undefined;
     }
 

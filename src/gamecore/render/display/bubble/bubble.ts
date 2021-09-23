@@ -104,6 +104,8 @@ export class Bubble extends Phaser.GameObjects.Container {
         if (this.mRemoveDelay) {
             clearTimeout(this.mRemoveDelay);
         }
+        this.render = null;
+        this.url = null;
         super.destroy(true);
     }
 

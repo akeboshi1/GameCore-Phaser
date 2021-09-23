@@ -1,4 +1,4 @@
-import { op_def } from "pixelpai_proto";
+import { AvatarSlot } from "./avatar";
 import { IAvatar } from "./dragonbones";
 
 export class AvatarSuitType {
@@ -130,7 +130,7 @@ export class AvatarSuitType {
     static checkSlotValue(suitType: string, slotbit: string, resultType: boolean = true) {
         if (!this.slotBitMap) {
             this.slotBitMap = new Map();
-            const avatarSlot: any = op_def.AvatarSlot;
+            const avatarSlot: any = AvatarSlot;
             for (const key in avatarSlot) {
                 if (typeof key === "string") {
                     // const humpName = this.toHumpName(key) + "Id";

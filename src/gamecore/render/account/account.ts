@@ -1,5 +1,4 @@
 import { IPos, Logger } from "structure";
-import { Export } from "webworker-rpc";
 
 export interface IAccountData {
     accessToken: string;

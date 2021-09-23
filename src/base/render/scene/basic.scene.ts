@@ -1,5 +1,4 @@
 import { LayerManager } from "../layer";
-import { LoadingTips } from "structure";
 export class BasicScene extends Phaser.Scene {
     public layerManager: LayerManager;
     protected initialize: boolean = false;
@@ -18,8 +17,6 @@ export class BasicScene extends Phaser.Scene {
     }
 
     public preload() {
-        // const str = i18n.t(LoadingTips.LOADINg_RESOURCES, { progress: 0 });
-        // if (this.render) this.render.showLoading({ "text": str });
     }
 
     setScale(zoom: number) {
@@ -35,14 +32,20 @@ export class BasicScene extends Phaser.Scene {
     public create() {
         this.initialize = true;
         this.render.emitter.emit("sceneCreated");
-        this.events.on("shutdown", this.destroy, this);
+        this.events.once(Phaser.Scenes.Events.DESTROY, this.onDestroy, this);
     }
 
-    public destroy() {
-        this.events.off("shutdown", this.destroy, this);
+    protected onDestroy() {
         this.hasDestroy = true;
         this.initialize = false;
         this.hasChangeScene = false;
+        if (this.layerManager) {
+            // TODO Element会自己管理生命周期
+            // this.layerManager.destroy();
+            this.layerManager = null;
+        }
+        this.render = null;
+        
     }
 
     public sceneInitialize(): boolean {

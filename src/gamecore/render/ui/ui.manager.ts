@@ -126,9 +126,14 @@ export class UiManager {
         return panel;
     }
 
-    public destroy() {
+    public clear() {
         this.clearPanel();
         this.clearCache();
+    }
+
+    public destroy() {
+        this.clear();
+        this.mRender = null;
         this.mScene = undefined;
     }
 

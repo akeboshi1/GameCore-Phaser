@@ -1,6 +1,6 @@
 import { Game } from "../../game";
-import { Helpers } from "game-capsule";
 import { DragonbonesModel, FramesModel } from "baseGame";
+import { Helpers } from "utils";
 export class Effect {
     /**
      * 同类型显示对象共用一个。用于同步数据
@@ -23,6 +23,7 @@ export class Effect {
 
     destroy() {
         this.game.renderPeer.removeEffect(this.mOwnerID, this.mId);
+        this.mDisplayInfo = null;
     }
 
     get bindId(): number {

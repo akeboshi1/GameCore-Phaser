@@ -30,4 +30,9 @@ export class SkyBoxScene extends BasicScene {
   update(time: number, delta: number) {
     this.skyBoxManager.check(time, delta);
   }
+
+  onDestroy() {
+    super.onDestroy();
+    this.skyBoxManager = null;
+  }
 }

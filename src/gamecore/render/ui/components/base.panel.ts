@@ -1,4 +1,3 @@
-import { Export } from "webworker-rpc";
 import { Render } from "../../render";
 import { BaseBatchPanel } from "./base.batch.panel";
 export class BasePanel extends BaseBatchPanel {
