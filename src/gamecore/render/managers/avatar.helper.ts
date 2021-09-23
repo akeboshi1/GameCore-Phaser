@@ -1,8 +1,6 @@
-import { Scene } from "tooqingphaser";
 import { Render } from "../render";
-import {AvatarSuitType, IDragonbonesModel, Logger} from "structure";
+import { IDragonbonesModel, Logger} from "structure";
 import { DragonbonesDisplay } from "../display/dragonbones/dragonbones.display";
-import { AvatarEditorDragonbone, AvatarEditorScene } from "editor";
 
 // 在runtime和editor中共用的avatar功能
 export class AvatarHelper {
@@ -78,6 +76,7 @@ export class AvatarHelper {
             const dragonbones = new DragonbonesDisplay(curScene, this.render);
             dragonbones.load(data)
                 .then(() => {
+                    dragonbones.play({name: "idle", flip: false});
                     dragonbones.forceUpdateShow();
                     const rt = curScene.make.renderTexture({ x: 0, y: 0, width: this.HEAD_ICON_WIDTH, height: this.HEAD_ICON_HEIGHT }, false);
                     rt.draw(dragonbones, this.HEAD_ICON_WIDTH * 0.5, this.HEAD_ICON_DEFAULT_SNAPSHOT_TOTAL_HEIGHT);
