@@ -642,21 +642,21 @@ export class Room extends PacketHandler implements IRoomService, SpriteAddComple
         if (!this.mManagersReadyStates.has(key)) return;
 
         this.mManagersReadyStates.set(key, true);
-        // let allReady = true;
-        // this.mManagersReadyStates.forEach((val) => {
-        //     if (val === false) {
-        //         allReady = false;
-        //     }
-        // });
-        // if (allReady) {
+        let allReady = true;
+        this.mManagersReadyStates.forEach((val) => {
+            if (val === false) {
+                allReady = false;
+            }
+        });
+        if (allReady) {
             this.game.renderPeer.roomReady();
             this.onRoomReady();
-        // }
+        }
     }
 
     public onRoomReady() {
         if (!this.terrainManager.isDealEmptyTerrain) {
-            // this.terrainManager.dealEmptyTerrain();
+            this.terrainManager.dealEmptyTerrain();
         }
     }
 
