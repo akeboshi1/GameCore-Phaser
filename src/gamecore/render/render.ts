@@ -1619,6 +1619,13 @@ export class Render extends RPCPeer implements GameMain, IRender {
         display.setVisible(visible);
     }
 
+    public setTopDisplayVisible(id: number, visible: boolean) {
+        if (!this.mDisplayManager) return;
+        const display = this.displayManager.getDisplay(id);
+        if (!display) return;
+        display.setTopDisplayVisible(visible);
+    }
+
     @Export()
     public showRefernceArea(id: number, area: number[][], origin: IPos, conflictMap?: number[][]) {
         if (!this.mDisplayManager) return;
