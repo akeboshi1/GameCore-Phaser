@@ -232,18 +232,12 @@ export class Sprite extends EventDispatcher implements ISprite {
     }
 
     public updateAvatar(avatar: op_gameconfig.IAvatar | IAvatar) {
-        if (this.displayInfo) {
-            this.displayInfo.destroy();
-        }
         this.avatar = { id: avatar.id };
         this.avatar = Object.assign(this.avatar, avatar);
         this.displayInfo = new DragonbonesModel(this);
     }
 
     public setTempAvatar(avatar: IAvatar) {
-        if (this.displayInfo) {
-            this.displayInfo.destroy();
-        }
         let tempAvatar = { id: avatar.id };
         tempAvatar = Object.assign(tempAvatar, this.avatar);
         tempAvatar = Object.assign(tempAvatar, avatar);
@@ -388,7 +382,6 @@ export class Sprite extends EventDispatcher implements ISprite {
 
     destroy() {
         if (this.displayInfo) {
-            this.displayInfo.destroy();
             this.displayInfo = null;
         }
         if (this.mAttrs) {

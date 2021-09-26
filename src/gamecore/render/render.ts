@@ -783,8 +783,8 @@ export class Render extends RPCPeer implements GameMain, IRender {
                 }
             }
             if (this.mConfig.server_addr.secure === undefined) this.mConfig.server_addr.secure = true;
-            // const mainPeer = this.mainPeer;
-            // if (mainPeer) mainPeer.setConfig(this.mConfig);
+            const mainPeer = this.mainPeer;
+            if (mainPeer) mainPeer.setConfig(this.mConfig);
         }
     }
 
