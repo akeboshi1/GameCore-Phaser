@@ -271,15 +271,20 @@ export class ElementManager extends PacketHandler implements IElementManager {
                     this.mDealSyncMap.set(sprite.id, false);
                     if (command === op_def.OpCommand.OP_COMMAND_UPDATE) { //  全部
                         const data = new Sprite(sprite, 3);
-                        const index = this.mRequestSyncIdList.indexOf(sprite.id);
-                        if (!data.displayInfo && index === -1) {
-                            ids.push(sprite.id);
+                        if (!data.displayInfo) {
+                            if (!this.checkDisplay(data)) {
+                                const index = this.mRequestSyncIdList.indexOf(sprite.id);
+                                if (index === -1) {
+                                    ids.push(sprite.id);
+                                }
+                            }
                         }
                         element.model = data;
                     } else if (command === op_def.OpCommand.OP_COMMAND_PATCH) { //  增量
                         // 更新数据
                         element.updateModel(sprite, patchKeys);
                     }
+                    if (sprite.animations && sprite.display) this.removeRequestSyncId(element);
                 } else {
                     addCaches.push(sprite);
                 }
@@ -314,11 +319,6 @@ export class ElementManager extends PacketHandler implements IElementManager {
         // 编辑小屋
         if (this.mRoom.isDecorating && this.mRoom.game.emitter) {
             this.mRoom.game.emitter.emit(MessageType.DECORATE_ELEMENT_CREATED, id);
-        }
-        const index = this.mRequestSyncIdList.indexOf(id);
-        if (index > -1) {
-            if (element.model) this.mRoom.game.elementStorage.add(<FramesModel>element.model.displayInfo);
-            this.mRequestSyncIdList.splice(index, 1);
         }
         // 回馈给load缓存队列逻辑
         this.elementLoadCallBack(id);
@@ -485,6 +485,15 @@ export class ElementManager extends PacketHandler implements IElementManager {
         const content: op_virtual_world.IOP_REQ_VIRTUAL_WORLD_QUERY_SPRITE_RESOURCE = packet.content;
         content.ids = result;
         this.connection.send(packet);
+    }
+
+    protected removeRequestSyncId(element: IElement) {
+        const id = element.id;
+        const index = this.mRequestSyncIdList.indexOf(id);
+        if (index > -1) {
+            if (element.model) this.mRoom.game.elementStorage.add(<FramesModel>element.model.displayInfo);
+            this.mRequestSyncIdList.splice(index, 1);
+        }
     }
 
     get roomService(): IRoomService {
