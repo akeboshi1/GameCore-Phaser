@@ -164,7 +164,11 @@ export class ElementTopDisplay extends TopDisplay {
         if (this.mFollows.has(FollowEnum.Nickname)) return true;
         return false;
     }
-
+    public setTopDisplay(visible: boolean) {
+        this.mFollows.forEach((follow) => {
+            if (follow.object) follow.object.visible = visible;
+        });
+    }
     public destroy() {
         if (this.mFollows) {
             this.mFollows.forEach((follow) => follow.destroy());

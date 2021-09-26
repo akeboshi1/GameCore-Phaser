@@ -129,7 +129,11 @@ export class DragonbonesDisplay extends BaseDragonbonesDisplay implements IDispl
         }
         return super.setVisible(value);
     }
-
+    public setTopDisplayVisible(value: boolean) {
+        if (this.mTopDisplay) {
+           this.mTopDisplay.setTopDisplay(value);
+        }
+    }
     public showNickname(name?: string) {
         if (name === undefined) {
             name = this.mName;

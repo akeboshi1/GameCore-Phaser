@@ -167,7 +167,11 @@ export class FramesDisplay extends BaseFramesDisplay implements IDisplayObject {
         if (!this.mTopDisplay) this.mTopDisplay = this.render.add.elementTopDisplay(this.scene, this);
         this.mTopDisplay.loadState(data);
     }
-
+    public setTopDisplayVisible(value: boolean) {
+        if (this.mTopDisplay) {
+           this.mTopDisplay.setTopDisplay(value);
+        }
+    }
     public removeTopDisplay() {
         if (!this.mTopDisplay) return;
         this.mTopDisplay.removeUIState();
