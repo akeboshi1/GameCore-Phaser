@@ -35,6 +35,9 @@ export class EmptyTerrain extends BlockObject {
 
     public destroy() {
         this.removeBody();
+        this.mRoomService = null;
+        this.pos = null;
+        super.destroy();
     }
 
     protected drawBody() {

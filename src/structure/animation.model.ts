@@ -1,18 +1,19 @@
-import { op_gameconfig_01, op_def } from "pixelpai_proto";
-import { IPoint } from "game-capsule";
-import { LogicPoint } from "./logic.point";
+import { IAnimationLayer } from "./animation.layer";
+import { IAnimationMountLayer, AnimationMountLayer } from "./animation.mount";
+import { LogicPoint, ILogicPoint } from "./logic.point";
+import { op_gameconfig_01 } from "pixelpai_proto";
 export interface IAnimationData {
     name: string;
     frameName: string[];
     frameRate: number;
     loop: boolean;
-    baseLoc: LogicPoint;
+    baseLoc: ILogicPoint;
     collisionArea?: number[][];
     walkableArea?: number[][];
     originPoint: LogicPoint;
-    layer: op_gameconfig_01.IAnimationLayer[];
-    interactiveArea?: op_def.IPBPoint2i[];
-    mountLayer: op_gameconfig_01.IAnimationMountLayer;
+    layer: IAnimationLayer[];
+    interactiveArea?: ILogicPoint[];
+    mountLayer: IAnimationMountLayer;
 }
 
 export class AnimationModel implements IAnimationData {
@@ -21,17 +22,17 @@ export class AnimationModel implements IAnimationData {
     frameName: string[];
     frameRate: number;
     loop: boolean;
-    baseLoc: LogicPoint;
+    baseLoc: ILogicPoint;
     collisionArea?: number[][];
     walkableArea?: number[][];
     originPoint: LogicPoint;
-    layer: op_gameconfig_01.IAnimationLayer[];
-    interactiveArea: IPoint[];
-    mountLayer: op_gameconfig_01.IAnimationMountLayer;
-    protected mNode: op_gameconfig_01.INode;
+    layer: IAnimationLayer[];
+    interactiveArea: ILogicPoint[];
+    mountLayer: IAnimationMountLayer;
+    private mNode: op_gameconfig_01.INode;
     constructor(ani: op_gameconfig_01.IAnimationData) {
-        const tmpBaseLoc = ani.baseLoc.split(",");
         this.mNode = ani.node;
+        const tmpBaseLoc = ani.baseLoc.split(",");
         this.id = ani.node.id;
         this.name = ani.node.name;
         this.frameName = ani.frameName;
@@ -74,14 +75,20 @@ export class AnimationModel implements IAnimationData {
 
     changeLayer(layer: any[]) {
         this.layer = layer;
-        if (this.layer.length < 1) {
+        if (this.layer.length < 1 && this.frameName) {
             this.layer = [{
                 frameName: this.frameName,
-                offsetLoc: this.baseLoc
+                offsetLoc: this.baseLoc,
+                frameVisible: new Array(this.frameName.length).fill(true),
+                name: "",
+                id: 1,
             }];
         }
     }
 
+    /**
+     * @deprecated
+     */
     createProtocolObject(): op_gameconfig_01.IAnimationData {
         const ani = op_gameconfig_01.AnimationData.create();
         ani.node = this.mNode;
@@ -107,13 +114,13 @@ export class AnimationModel implements IAnimationData {
 
     createMountPoint(index: number) {
         if (!this.mountLayer) {
-            this.mountLayer = op_gameconfig_01.AnimationMountLayer.create();
-            this.mountLayer.mountPoint = [op_def.PBPoint3f.create({ x: 0, y: 0 })];
+            this.mountLayer = AnimationMountLayer.create();
+            this.mountLayer.mountPoint = [new LogicPoint(0, 0)];
             this.mountLayer.index = this.layer.length;
         } else {
             const mountPoint = this.mountLayer.mountPoint;
             if (index >= mountPoint.length) {
-                mountPoint.push(op_def.PBPoint3f.create({ x: 0, y: 0 }));
+                mountPoint.push(new LogicPoint(0, 0));
             }
         }
     }

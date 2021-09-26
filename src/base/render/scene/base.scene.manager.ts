@@ -89,6 +89,7 @@ export class BaseSceneManager {
     }
 
     public destroy() {
+        this.mMainScene = null;
     }
 
     public updateInput(val: SceneInputEnum) {

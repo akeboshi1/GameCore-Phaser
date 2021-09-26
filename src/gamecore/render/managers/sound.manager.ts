@@ -18,6 +18,9 @@ export class SoundManager {
     }
 
     stopAll() {
+        if (!this.mSoundMap) {
+            return;
+        }
         if (!this.mScene) {
             Logger.getInstance().fatal(`${SoundManager.name} scene does not exist,can't stopAll`);
             return;
@@ -26,6 +29,9 @@ export class SoundManager {
     }
 
     pauseAll() {
+        if (!this.mSoundMap) {
+            return;
+        }
         if (!this.mScene) {
             Logger.getInstance().fatal(`${SoundManager.name} scene does not exist,can't pauseAll`);
             return;
@@ -34,8 +40,10 @@ export class SoundManager {
     }
 
     resume() {
+        if (!this.mSoundMap) {
+            return;
+        }
         if (!this.mScene) {
-
             Logger.getInstance().fatal(`${SoundManager.name} scene does not exist,can't resumeAll`);
             return;
         }
@@ -45,6 +53,11 @@ export class SoundManager {
     destroy() {
         // phaser 内部会做统一处理，不需要手动清除sound
         // this.clear();
+        if (this.mSoundMap) {
+            this.mSoundMap.clear();
+            this.mSoundMap = null;
+        }
+        this.mScene = null;
     }
 
     clear() {

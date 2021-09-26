@@ -29,7 +29,11 @@ export class WallManager {
                 direction: palette.dir,
             };
             const sprite = new Sprite(obj);
-            sprite.setDisplayInfo(elementStorage.getMossPalette(palette.key).frameModel);
+            const mossPalette = elementStorage.getMossPalette(palette.key);
+            if (!mossPalette) {
+                continue;
+            }
+            sprite.setDisplayInfo(mossPalette.frameModel);
             const w = new Wall(sprite, this.roomService);
             this.walls.push(w);
         }
@@ -40,6 +44,7 @@ export class WallManager {
             wall.destroy();
         }
         this.walls.length = 0;
+        this.roomService = null;
     }
 
     // 在墙面上

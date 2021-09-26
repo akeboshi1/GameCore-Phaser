@@ -107,7 +107,7 @@ export class ViewblockManager implements IViewBlockManager {
         this.mDelay = 0;
         if (this.mBlocks) {
             this.mBlocks.length = 0;
-            this.mBlocks = [];
         }
+        this.mCameras = null;
     }
 }

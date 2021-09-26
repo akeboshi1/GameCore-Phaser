@@ -59,7 +59,6 @@ export class PlayerManager extends PacketHandler implements IElementManager {
     }
 
     public createActor(actor: op_client.IActor) {
-        const playModel = new PlayerModel(actor);
         this.mActor = new User();
     }
 
@@ -73,14 +72,11 @@ export class PlayerManager extends PacketHandler implements IElementManager {
             Logger.getInstance().debug("playermanager ---- removepacklistener");
             this.connection.removePacketListener(this);
         }
-        if (this.mActor) {
-            this.mActor.destroy();
-            this.mActor = null;
-        }
         if (this.mPlayerMap) {
             this.mPlayerMap.forEach((player) => this.remove(player.id));
             this.mPlayerMap.clear();
         }
+        this.mActor = null;
     }
 
     update(time: number, delta: number) {
@@ -119,7 +115,7 @@ export class PlayerManager extends PacketHandler implements IElementManager {
 
     public setMe(user: User) {
         this.mActor = user;
-        this.mPlayerMap.set(user.id, user);
+        this.mPlayerMap.set(this.mActor.id, this.mActor);
     }
 
     public addToWalkableMap(sprite: ISprite) {

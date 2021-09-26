@@ -156,11 +156,14 @@ export class BaseCamerasManager implements IBaseCameraService {
         }
     }
 
-    public destroy() {
-        Logger.getInstance().log("camerasmanager destroy");
+    public clear() {
+        this.mCameras.length = 0;
         this.mMain = undefined;
         this.mTarget = undefined;
-        this.mCameras = [];
+    }
+
+    public destroy() {
+        this.clear();
     }
 
     set moving(val: boolean) {

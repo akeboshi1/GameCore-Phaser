@@ -119,6 +119,10 @@ export class SpawnPoint implements ISprite {
     setDisplayInfo() {
     }
 
+    destroy() {
+        this.displayInfo = null;
+    }
+
     public getCollisionArea() {
         return this.currentCollisionArea;
     }

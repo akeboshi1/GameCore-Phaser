@@ -28,9 +28,14 @@ export class InputManager {
     update(time: number, delta: number) {
     }
 
-    public destroy() {
+    public clear() {
         if (this.mMouseManager) this.mMouseManager.destroy();
         if (this.mJoystickManager) this.mJoystickManager.destroy();
+    }
+
+    public destroy() {
+        this.clear();
+        this.mScene = null;
     }
 
     public changeMouseManager(mng: MouseManager) {

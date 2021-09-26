@@ -48,6 +48,10 @@ export class TopDisplay {
         }
     }
 
+    public destroy() {
+        this.scene = null;
+    }
+
     protected addToSceneUI(obj: any) {
         throw new Error("");
     }

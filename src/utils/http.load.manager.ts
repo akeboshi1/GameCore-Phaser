@@ -32,10 +32,6 @@ export class HttpLoadManager {
             const responseType = loaderConfig.responseType;
             return new Promise((resolve, reject) => {
                 const http = new XMLHttpRequest();
-                http.addEventListener("error", () => {
-                    // tslint:disable-next-line:no-console
-                    console.log("http error =============>>>>");
-                });
                 http.timeout = 20000; // 超时时间，单位是毫秒
                 http.onload = (response: ProgressEvent) => {
                     this.mCurLen--;
@@ -47,14 +43,12 @@ export class HttpLoadManager {
                 http.onerror = () => {
                     this.mCurLen--;
                     // tslint:disable-next-line:no-console
-                    console.log("http error ====>");
                     reject(`${path} load error!!!!!`);
                 };
                 http.ontimeout = (e) => {
                     this.mCurLen--;
                     // XMLHttpRequest 超时。在此做某事。
                     // tslint:disable-next-line:no-console
-                    console.log("http timeout ====>");
                     reject(`${path} load ontimeout!!!!!`);
                 };
                 http.open("GET", path, true);

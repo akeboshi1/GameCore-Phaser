@@ -1,8 +1,8 @@
 import { Direction, EventDispatcher, IPos, Logger, LogicPoint, LogicPos, AnimationModel, AnimationQueue, Animator, AvatarSuit, AvatarSuitType, IAvatar, ISprite, RunningAnimation, IFramesModel, IDragonbonesModel, IAnimationData, IDisplay } from "structure";
 import { op_def, op_gameconfig, op_client, op_gameconfig_01 } from "pixelpai_proto";
-import { Helpers } from "game-capsule";
 import * as sha1 from "simple-sha1";
 import { IDisplayRef } from "./elementstorage";
+import { Helpers } from "utils";
 enum TitleMask {
     TQ_NickName = 0x00010000,
     TQ_Badge = 0x00020000,
@@ -232,18 +232,12 @@ export class Sprite extends EventDispatcher implements ISprite {
     }
 
     public updateAvatar(avatar: op_gameconfig.IAvatar | IAvatar) {
-        if (this.displayInfo) {
-            this.displayInfo.destroy();
-        }
         this.avatar = { id: avatar.id };
         this.avatar = Object.assign(this.avatar, avatar);
         this.displayInfo = new DragonbonesModel(this);
     }
 
     public setTempAvatar(avatar: IAvatar) {
-        if (this.displayInfo) {
-            this.displayInfo.destroy();
-        }
         let tempAvatar = { id: avatar.id };
         tempAvatar = Object.assign(tempAvatar, this.avatar);
         tempAvatar = Object.assign(tempAvatar, avatar);
@@ -384,6 +378,19 @@ export class Sprite extends EventDispatcher implements ISprite {
             }
             // if (displayInfo.animationName) this.currentAnimationName = displayInfo.animationName;
         }
+    }
+
+    destroy() {
+        if (this.displayInfo) {
+            this.displayInfo = null;
+        }
+        if (this.mAttrs) {
+            this.mAttrs.clear();
+            this.mAttrs = null;
+        }
+        this.package = null;
+        this.currentCollisionArea = null;
+        this.currentWalkableArea = null;
     }
 
     get hasInteractive(): boolean {
@@ -637,7 +644,6 @@ export class FramesModel implements IFramesModel {
     }
 
     public destroy() {
-        if (this.animations) this.animations.clear();
     }
 
     public createProtocolObject(): op_gameconfig_01.IAnimationData[] {
@@ -903,6 +909,7 @@ export class DragonbonesModel implements IDragonbonesModel {
     }
 
     public destroy() {
+        this.avatar = null;
     }
 
     public getCollisionArea(aniName: string): number[][] {

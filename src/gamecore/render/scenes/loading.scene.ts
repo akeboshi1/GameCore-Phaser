@@ -210,6 +210,12 @@ export class LoadingScene extends BasicScene {
     return (this.sys.config as Phaser.Types.Scenes.SettingsConfig).key;
   }
 
+  protected onDestroy() {
+    this.textures.removeKey("curtain");
+    this.textures.removeKey("loading");
+    super.onDestroy();
+  }
+
   private getDebug() {
     let renderType = "WebGL";
     const config = this.game.config;

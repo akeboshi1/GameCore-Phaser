@@ -3,7 +3,6 @@ import {
     ElementStateType,
     IScenery,
     LayerName,
-    Handler,
     IPos,
     IPosition45Obj,
     Logger,
@@ -13,7 +12,8 @@ import {
     RunningAnimation,
     ITilesetProperty,
     IGround,
-    IRenderSprite
+    IRenderSprite,
+    Handler
 } from "structure";
 import { FramesDisplay } from "../display/frames/frames.display";
 import { PlayScene } from "../scenes/play.scene";
@@ -637,6 +637,7 @@ export class DisplayManager {
 
         if (this.mGround) {
             this.mGround.destroy();
+            this.mGround = null;
         }
     }
 

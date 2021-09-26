@@ -138,7 +138,16 @@ export class BlockManager implements IBlockManager {
     if (this.render && this.render.game) {
       this.render.game.scene.remove(this.mSceneName);
     }
+    this.mContainer.destroy(true);
     this.mGrids.length = 0;
+    this.mUris.length = 0;
+    this.mMainCamera = null;
+    this.mScenery = null;
+    this.mCameras = null;
+    this._bound = null;
+    if (this.mStateMap) this.mStateMap.clear();
+    if (this.tween) this.tween.destroy();
+    this.scene = null;
   }
 
   setState(state) {
@@ -359,6 +368,12 @@ class Block extends DynamicImage {
 
   setScaleRatio(val: number) {
     this.mScale = val;
+  }
+
+  destroy() {
+    this.mRectangle = null;
+    this.texture.remove(this.mKey);
+    super.destroy();
   }
 
   get rectangle(): Phaser.Geom.Rectangle {

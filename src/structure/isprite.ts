@@ -60,4 +60,5 @@ export interface ISprite {
     registerAnimationMap(key: string, value: string);
     unregisterAnimationMap(key: string);
     getAttr(key: string): number | boolean | string;
+    destroy();
 }

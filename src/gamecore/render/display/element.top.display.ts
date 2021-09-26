@@ -179,6 +179,7 @@ export class ElementTopDisplay extends TopDisplay {
             this.mBubble.destroy();
             this.mBubble = undefined;
         }
+        super.destroy();
     }
 
     public update() {

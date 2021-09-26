@@ -20,11 +20,12 @@ export class SceneManager extends BaseSceneManager {
         super(render);
         this.sceneManagerName = "SceneManager";
         (<Render>this.render).exportProperty(this, this.render, this.sceneManagerName)
-            .onceReady(() => {
-            });
+            // .onceReady(() => {
+            // });
     }
 
     get currentScene(): BasicScene {
+        if (!this.render) return;
         const sceneManager = this.render.game.scene;
         if (!sceneManager) {
             return null;
@@ -33,6 +34,9 @@ export class SceneManager extends BaseSceneManager {
     }
 
     public resize(width, height) {
+        if (!this.render) {
+            return;
+        }
         const sceneManager = this.render.game.scene;
         if (!sceneManager) {
             return null;
@@ -78,6 +82,9 @@ export class SceneManager extends BaseSceneManager {
 
     public startScene(name: string, data?: any): Promise<void> {
         return new Promise<void>((resolve, reject) => {
+            if (!this.render) {
+                reject("start scene faild. render does not exist");
+            }
             const sceneManager = this.render.game.scene;
             if (!data) data = { render: this.render };
             if (!sceneManager) {
@@ -153,6 +160,10 @@ export class SceneManager extends BaseSceneManager {
     }
 
     public launchScene(startScene: BasicScene, LaunchName: string, sceneName: string, data?: any) {
+        if (!this.render) {
+            Logger.getInstance().error("launchScene faild. render does not exist")
+            return;
+        }
         const sceneManager = this.render.game.scene;
         if (!data) data = { render: this.render };
         if (!sceneManager) {
@@ -174,6 +185,10 @@ export class SceneManager extends BaseSceneManager {
     }
 
     public stopScene(name: string) {
+        if (!this.render) {
+            Logger.getInstance().error("stop scene faild. render does not exist")
+            return;
+        }
         const sceneManager = this.render.game.scene;
         if (!sceneManager) {
             return Promise.reject("start faild. SceneManager does not exist");
@@ -204,6 +219,10 @@ export class SceneManager extends BaseSceneManager {
     }
 
     public sleepScene(name: string) {
+        if (!this.render) {
+            Logger.getInstance().error("sleep scene faild. render does not exist")
+            return;
+        }
         if (!this.render.game.scene.getScene(name)) {
             Logger.getInstance().debug(name + "sleep faild");
             return;
@@ -214,6 +233,10 @@ export class SceneManager extends BaseSceneManager {
     }
 
     public pauseScene(name: string) {
+        if (!this.render) {
+            Logger.getInstance().error("pause scene faild. render does not exist")
+            return;
+        }
         const scene = this.render.game.scene.getScene(name);
         if (!scene) {
             Logger.getInstance().error("scene not found : ", name);
@@ -246,7 +269,7 @@ export class SceneManager extends BaseSceneManager {
     public destroy() {
         if (this.mCurSceneName) this.mCurSceneName = undefined;
         if (this.render && this.render.hasOwnProperty(this.sceneManagerName)) delete this.render[this.sceneManagerName];
-        this.mMainScene = undefined;
+        super.destroy();
     }
 
     public updateInput(val: SceneInputEnum) {

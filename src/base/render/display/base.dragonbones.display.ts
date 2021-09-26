@@ -320,7 +320,7 @@ export class BaseDragonbonesDisplay extends BaseDisplay {
             // });
             this.destroyReplacedTextureManually();
 
-            this.mArmatureDisplay.dispose(false);
+            this.mArmatureDisplay.destroy();
             this.mArmatureDisplay = null;
         }
 
@@ -560,7 +560,6 @@ export class BaseDragonbonesDisplay extends BaseDisplay {
         }
 
         const result = sha1.sync(serializeStr);
-        Logger.getInstance().debug("serialize avatar data: ", result, data);
         return result;
     }
 
@@ -865,7 +864,10 @@ export class BaseDragonbonesDisplay extends BaseDisplay {
      * 部分头饰需要去掉头发
      */
     private replaceAvatar(avatar: IAvatar) {
-        const headHat = avatar.headHatsId;
+        if (!avatar) {
+            return;
+        }
+        const headHat = avatar["head_hats"];
         if (headHat && typeof headHat !== "string") {
             const hatTag = headHat.tag;
             // 帽子标记使用截断资源

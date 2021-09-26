@@ -1,12 +1,11 @@
-import * as Chance from "chance";
-
 export class Helpers {
     static readonly MAX_ID: number = Math.pow(2, 31);
     static genId(): number {
-        return new Chance().natural({
-            min: 10000,
-            max: Helpers.MAX_ID
-        });
+        // return new Chance().natural({
+        //     min: 10000,
+        //     max: Helpers.MAX_ID
+        // });
+        return Math.floor(Math.random() * Helpers.MAX_ID)
     }
 
     static flipArray<T>(source: T[][]): any[][] {
