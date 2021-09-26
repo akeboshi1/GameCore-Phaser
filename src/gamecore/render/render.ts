@@ -1884,9 +1884,11 @@ export class Render extends RPCPeer implements GameMain, IRender {
     }
 
     get mainPeer() {
+        if (!this.remote[this.mMainPeerParam.key]) return null;
         const peer = this.remote[this.mMainPeerParam.key][this.mMainPeerParam.name];
         if (!peer) {
-            throw new Error("can't find main worker");
+            // throw new Error("can't find main worker");
+            return null;
         }
         return peer;
     }
