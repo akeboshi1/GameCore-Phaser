@@ -223,6 +223,7 @@ export class Element extends BlockObject implements IElement {
             model.layer = LayerEnum.Surface;
             Logger.getInstance().warn(`${Element.name}: sprite layer is empty`);
         }
+        this.removeFromMap();
         this.mModel = model;
         this.mQueueAnimations = undefined;
         if (this.mModel.pos) {
@@ -233,7 +234,6 @@ export class Element extends BlockObject implements IElement {
         if (!model.displayInfo) {
             return;
         }
-        this.removeFromMap();
         // 必须执行一遍下面的方法，否则无法获取碰撞区域
         const area = model.getCollisionArea();
         this.addToMap();
