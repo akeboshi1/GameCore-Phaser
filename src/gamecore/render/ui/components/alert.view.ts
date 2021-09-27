@@ -7,13 +7,15 @@ import { UiManager } from "../ui.manager";
 import { BasicScene } from "baseRender";
 import { i18n } from "../../utils";
 import { TQBBCodeText } from "./tq.bbcode.text";
+import { TQButton } from "./tq.button";
+import { Label } from "./label";
 
 export class AlertView extends BaseBatchPanel {
     protected skinName: string = "AlertView";
-    private mOkBtn: Button;
-    private mCancelBtn: Button;
+    private mOkBtn: TQButton;
+    private mCancelBtn: TQButton;
     private mContent: TQBBCodeText;
-    private mTitleLabel: Phaser.GameObjects.Text;
+    private mTitleLabel: Label;
     private mOkText: string;
     private mBackGround: Phaser.GameObjects.Graphics;
     constructor(scene: Phaser.Scene, private uiManager: UiManager) {
@@ -81,14 +83,19 @@ export class AlertView extends BaseBatchPanel {
         title.texture.setFilter(Phaser.Textures.FilterMode.LINEAR);
         title.y = -bg.height / 2;
 
-        this.mTitleLabel = this.scene.make.text({
-            text: i18n.t("common.tips"),
-            style: {
-                fontFamily: Font.DEFULT_FONT,
-                fontSize: 12 * this.dpr * zoom + "px",
-                color: "#905B06"
-            }
-        }, false).setOrigin(0.5);
+        // this.mTitleLabel = this.scene.make.text({
+        //     text: i18n.t("common.tips"),
+        //     style: {
+        //         fontFamily: Font.DEFULT_FONT,
+        //         fontSize: 12 * this.dpr * zoom + "px",
+        //         color: "#905B06"
+        //     }
+        // }, false).setOrigin(0.5);
+        this.mTitleLabel = new Label(this.scene, 0, 0, i18n.t("common.tips"), {
+            fontFamily: Font.DEFULT_FONT,
+            fontSize: 12 * this.dpr * zoom + "px",
+            color: "#905B06"
+        }).setOrigin(0.5);
         this.mTitleLabel.y = title.y;
 
         this.mContent = new TQBBCodeText(this.scene, 0, -11 * this.dpr, "", {
@@ -102,7 +109,7 @@ export class AlertView extends BaseBatchPanel {
         });
         this.mContent.setOrigin(0.5, 0.5);
 
-        this.mOkBtn = new Button(this.scene, this.key, "yellow_btn.png", undefined, this.mOkText || i18n.t("common.confirm"));
+        this.mOkBtn = new TQButton(this.scene, this.key, "yellow_btn.png", undefined, this.mOkText || i18n.t("common.confirm"));
         this.mOkBtn.setTextStyle({
             color: "#905B06",
             fontFamily: Font.DEFULT_FONT,
@@ -112,7 +119,7 @@ export class AlertView extends BaseBatchPanel {
         this.mOkBtn.y = (bg.height - this.mOkBtn.displayHeight) / 2 - 16 * this.dpr;
         this.mOkBtn.on(ClickEvent.Tap, this.onOkHandler, this);
 
-        this.mCancelBtn = new Button(this.scene, this.key, "red_btn.png", undefined, i18n.t("common.cancel"));
+        this.mCancelBtn = new TQButton(this.scene, this.key, "red_btn.png", undefined, i18n.t("common.cancel"));
         this.mCancelBtn.setTextStyle({
             fontFamily: Font.DEFULT_FONT,
             fontSize: 13 * this.dpr * zoom
