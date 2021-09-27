@@ -79,7 +79,7 @@ export class FramesDisplay extends BaseFramesDisplay implements IDisplayObject {
         this.updateTopDisplay();
     }
 
-    public async showRefernceArea(area: number[][], origin: IPos, conflictMap?: number[][]) {
+    public async showRefernceArea(area: number[][], origin: IPos, conflictMap?: number[][], freeColor?: number, conflictColor?: number) {
         if (!area || area.length <= 0 || !origin) return;
         const roomSize = this.render.roomSize;
         if (!this.mReferenceArea) {
@@ -89,7 +89,8 @@ export class FramesDisplay extends BaseFramesDisplay implements IDisplayObject {
         if (conflictMap !== undefined && conflictMap.length > 0) {
             drawArea = conflictMap;
         }
-        this.mReferenceArea.draw(drawArea, origin, roomSize.tileWidth / this.render.scaleRatio, roomSize.tileHeight / this.render.scaleRatio);
+        this.mReferenceArea.draw(drawArea, origin, roomSize.tileWidth / this.render.scaleRatio, roomSize.tileHeight / this.render.scaleRatio,
+            freeColor, conflictColor);
         this.addAt(this.mReferenceArea, 0);
     }
 

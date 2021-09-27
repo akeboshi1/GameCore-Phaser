@@ -7,7 +7,13 @@ export class ReferenceArea extends Phaser.GameObjects.Graphics {
         super(scene);
     }
 
-    draw(area: number[][], origin: IPos, tileWidth: number, tileHeight: number) {
+    draw(area: number[][], origin: IPos, tileWidth: number, tileHeight: number, freeColor?: number, conflictColor?: number) {
+        if (freeColor === undefined) {
+            freeColor = 0x00FF00;
+        }
+        if (conflictColor === undefined) {
+            conflictColor = 0xFF0000;
+        }
         this.clear();
         if (area.length === 0 || area[0].length === 0) {
             return;
@@ -37,7 +43,7 @@ export class ReferenceArea extends Phaser.GameObjects.Graphics {
                 p3 = Position45.transformTo90(new Pos(x + 1, y + 1), this.mSize);
                 p4 = Position45.transformTo90(new Pos(x, y + 1), this.mSize);
                 this.beginPath();
-                this.fillStyle(area[y][x] === 1 ? 0x00FF00 : 0xFF0000);
+                this.fillStyle(area[y][x] === 1 ? freeColor : conflictColor);
                 this.strokePoints([p1.toPoint(), p2.toPoint(), p3.toPoint(), p4.toPoint()], true, true);
                 this.fillPath();
             }
