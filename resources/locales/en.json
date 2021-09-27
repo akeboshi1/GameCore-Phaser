@@ -5,6 +5,7 @@
     "wait_userinfo_timeout": "Get user information timed out."
   },
   "loading": {
+    "connecting": "connecting",
     "login_error": "Login failed, please login again or try again later",
     "loadresource": "Loading resources {{progress}}",
     "enter_world": "Searching for available space rift...",

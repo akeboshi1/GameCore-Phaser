@@ -5,6 +5,7 @@
     "wait_userinfo_timeout": "获取用户信息超时"
   },
   "loading": {
+    "connecting": "正在建立连接...",
     "login_error": "登录失败，请重新登录或稍后再试",
     "loadresource": "正在加载资源 {{progress}}",
     "enter_world": "可用空间裂缝搜寻中...",

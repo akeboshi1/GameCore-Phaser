@@ -1,4 +1,5 @@
 export enum LoadState {
+    CONNECTING,
     ENTERWORLD,
     DOWNLOADGAMECONFIG,
     DOWNLOADSCENECONFIG,
@@ -17,6 +18,7 @@ export enum PlaySceneLoadState {
 }
 
 export class LoadingTips {
+    static readonly CONNECTING = "loading.connecting"
     static readonly LOADING_RESOURCES = "loading.loadresource";
     static readonly ENTER_WORLD = "loading.enter_world";
     static readonly LOGIN_GAME = "loading.logging";

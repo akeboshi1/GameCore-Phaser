@@ -99,6 +99,9 @@ export class SceneManager extends BaseSceneManager {
             if (data.state !== undefined) {
                 const state = data.state;
                 switch (state) {
+                    case LoadState.CONNECTING:
+                        data.text = LoadingTips.CONNECTING;
+                        break;
                     case LoadState.ENTERWORLD:
                         data.text = LoadingTips.ENTER_WORLD;
                         break;

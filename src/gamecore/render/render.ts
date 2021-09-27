@@ -1341,16 +1341,15 @@ export class Render extends RPCPeer implements GameMain, IRender {
                     this.mGame.input.destroy();
                     this.mGame.sound.destroy();
                     this.mGame = undefined;
-                    setTimeout(() => {
-                        if (boo) {
-                            this.newGame().then(() => {
-                                this.createManager();
-                                resolve();
-                            });
-                            return;
-                        }
-                    }, 100);
-                    resolve();
+                    if (boo) {
+                        this.newGame().then(() => {
+                            this.createManager();
+                            resolve();
+                        });
+                        return;
+                    } else {
+                        resolve();
+                    }
                 });
                 this.mGame.destroy(true);
             } else {

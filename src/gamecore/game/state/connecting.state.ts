@@ -1,4 +1,4 @@
-import { Logger, ServerAddress, SocketState } from "structure";
+import { Logger, ServerAddress, SocketState, LoadState } from "structure";
 import { Clock, HttpClock } from "../loop";
 import { MainPeer } from "../main.peer";
 import { BaseState } from "./base.state";
@@ -23,6 +23,7 @@ export class ConnectingState extends BaseState {
             // connect to this.mGame server.
             const addr: ServerAddress = { host: gateway.host, port: gateway.port, secure: gateway.secure };
             this.mGame.connection.startConnect(addr);
+            this.mGame.loadingManager.start(LoadState.CONNECTING);
         }
     }
 
