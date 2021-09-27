@@ -1,4 +1,4 @@
-import { Button, BBCodeText, ClickEvent } from "apowophaserui";
+import { Button, ClickEvent } from "apowophaserui";
 import { Font } from "structure";
 import { UiUtils } from "utils";
 import { MainUIScene } from "../../scenes/main.ui.scene";
@@ -6,12 +6,13 @@ import { BaseBatchPanel } from "./base.batch.panel";
 import { UiManager } from "../ui.manager";
 import { BasicScene } from "baseRender";
 import { i18n } from "../../utils";
+import { TQBBCodeText } from "./tq.bbcode.text";
 
 export class AlertView extends BaseBatchPanel {
     protected skinName: string = "AlertView";
     private mOkBtn: Button;
     private mCancelBtn: Button;
-    private mContent: BBCodeText;
+    private mContent: TQBBCodeText;
     private mTitleLabel: Phaser.GameObjects.Text;
     private mOkText: string;
     private mBackGround: Phaser.GameObjects.Graphics;
@@ -90,7 +91,7 @@ export class AlertView extends BaseBatchPanel {
         }, false).setOrigin(0.5);
         this.mTitleLabel.y = title.y;
 
-        this.mContent = new BBCodeText(this.scene, 0, -11 * this.dpr, "", {
+        this.mContent = new TQBBCodeText(this.scene, 0, -11 * this.dpr, "", {
             fontSize: 12 * this.dpr * zoom + "px",
             fontFamily: Font.DEFULT_FONT,
             color: "#0",

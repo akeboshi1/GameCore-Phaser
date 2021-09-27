@@ -44,3 +44,4 @@ export * from "./tq.button";
 export * from "./tq.nine.slice.button";
 export * from "./tq.combobox";
 export * from "./tq.progress.bar";
+export * from "./tq.bbcode.text";
