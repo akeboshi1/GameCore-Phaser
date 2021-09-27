@@ -16,7 +16,6 @@ export class MainPeer extends RPCPeer {
     protected mRenderParam: IWorkerParam;
     protected mMainPeerParam: IWorkerParam;
     protected mStartRoomPlay: boolean = false;
-    private gameState;
     private stateTime: number = 0;
     private mConfig: ILauncherConfig;
     /**
@@ -26,14 +25,12 @@ export class MainPeer extends RPCPeer {
     private delayTime: number = 15000;
     private reConnectCount: number = 0;
     private startDelay: any;
-    private isStartUpdateFps: boolean = false;
-    private startUpdateFps: any;
 
     // private isReconnect: boolean = false;
     constructor(workerName: string) {
         super(workerName);
         this.game = new Game(this);
-        this.stateTime = new Date().getTime();
+        this.stateTime = Date.now();
     }
 
     get renderParam() {
@@ -67,7 +64,6 @@ export class MainPeer extends RPCPeer {
     set state(val) {
         const now: number = new Date().getTime();
         Logger.getInstance().log("gameState: ====>", val, "delayTime:=====>", now - this.stateTime);
-        this.gameState = val;
         this.stateTime = now;
     }
     // ============= connection调用主进程
@@ -98,26 +94,6 @@ export class MainPeer extends RPCPeer {
 
     public workerEmitter(eventType: string, data: any) {
         this.render.workerEmitter(eventType, data);
-    }
-
-    // ============= 主进程调用心跳
-    @Export()
-    public updateFps() {
-        if (this.isStartUpdateFps) return;
-        this.isStartUpdateFps = true;
-        this.startUpdateFps = setInterval(() => {
-            this.render.updateFPS();
-        }, 100);
-    }
-
-    @Export()
-    public endFps() {
-        if (this.startUpdateFps) {
-            clearInterval(this.startUpdateFps);
-            this.startUpdateFps = null;
-        }
-        // Logger.getInstance().debug("heartBeatWorker endBeat");
-        this.render.endFPS();
     }
 
     public startBeat() {

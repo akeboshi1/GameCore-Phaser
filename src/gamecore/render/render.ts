@@ -903,18 +903,6 @@ export class Render extends RPCPeer implements GameMain, IRender {
     }
 
     @Export()
-    public updateFPS() {
-        if (!this.game) return;
-        const scene: MainUIScene = this.game.scene.getScene(SceneName.MAINUI_SCENE) as MainUIScene;
-        if (!scene || !scene.scene.isVisible || !scene.scene.isActive || !scene.scene.isPaused) return;
-        scene.updateFPS();
-    }
-
-    @Export()
-    public endFPS() {
-    }
-
-    @Export()
     public hidePlay() {
         if (this.mSceneManager) this.mSceneManager.stopScene(SceneName.PLAY_SCENE);
     }
@@ -1791,7 +1779,6 @@ export class Render extends RPCPeer implements GameMain, IRender {
                 Logger.getInstance().error("no mainpeer", key, peerName);
                 return;
             }
-            this.mainPeer.updateFps();
             this.createGame();
             Logger.getInstance().debug("worker onReady");
         });
