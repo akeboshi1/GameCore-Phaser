@@ -95,13 +95,18 @@ export class DragonbonesDisplay extends BaseDragonbonesDisplay implements IDispl
         return this.mTitleMask;
     }
 
-    public async showRefernceArea(area: number[][], origin: IPos) {
+    public async showRefernceArea(area: number[][], origin: IPos, conflictMap?: number[][], freeColor?: number, conflictColor?: number) {
         if (!area || area.length <= 0 || !origin) return;
         if (!this.mReferenceArea) {
             this.mReferenceArea = new ReferenceArea(this.scene);
         }
+        let drawArea = area;
+        if (conflictMap !== undefined && conflictMap.length > 0) {
+            drawArea = conflictMap;
+        }
         const roomSize = await this.render.mainPeer.getCurrentRoomSize();
-        this.mReferenceArea.draw(area, origin, roomSize.tileWidth / this.render.scaleRatio, roomSize.tileHeight / this.render.scaleRatio);
+        this.mReferenceArea.draw(drawArea, origin, roomSize.tileWidth / this.render.scaleRatio, roomSize.tileHeight / this.render.scaleRatio,
+            freeColor, conflictColor);
         this.addAt(this.mReferenceArea, 0);
     }
 

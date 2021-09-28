@@ -1632,11 +1632,11 @@ export class Render extends RPCPeer implements GameMain, IRender {
     }
 
     @Export()
-    public showRefernceArea(id: number, area: number[][], origin: IPos, conflictMap?: number[][]) {
+    public showRefernceArea(id: number, area: number[][], origin: IPos, conflictMap?: number[][], freeColor?: number, conflictColor?: number) {
         if (!this.mDisplayManager) return;
         const ele = this.mDisplayManager.getDisplay(id);
         if (!ele) return;
-        ele.showRefernceArea(area, origin, conflictMap);
+        ele.showRefernceArea(area, origin, conflictMap, freeColor, conflictColor);
     }
 
     @Export()

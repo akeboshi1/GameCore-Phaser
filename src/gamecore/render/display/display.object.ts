@@ -9,7 +9,7 @@ export interface IDisplayObject extends IBaseDisplay {
 
     startLoad(): Promise<any>;
 
-    showRefernceArea(area: number[][], origin: IPos);
+    showRefernceArea(area: number[][], origin: IPos, conflictMap?: number[][], freeColor?: number, conflictColor?: number);
 
     hideRefernceArea();
 

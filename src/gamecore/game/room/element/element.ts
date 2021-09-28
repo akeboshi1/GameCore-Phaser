@@ -64,7 +64,7 @@ export interface IElement {
 
     hideNickname();
 
-    showRefernceArea();
+    showRefernceArea(conflictMap?: number[][], freeColor?: number, conflictColor?: number);
 
     hideRefernceArea();
 
@@ -627,11 +627,11 @@ export class Element extends BlockObject implements IElement {
         if (this.mCreatedDisplay) this.mRoomService.game.renderPeer.removeTopDisplay(this.id);
     }
 
-    public showRefernceArea(conflictMap?: number[][]) {
+    public showRefernceArea(conflictMap?: number[][], freeColor?: number, conflictColor?: number) {
         const area = this.mModel.getCollisionArea();
         const origin = this.mModel.getOriginPoint();
         if (!area || !origin) return;
-        this.mRoomService.game.renderPeer.showRefernceArea(this.id, area, origin, conflictMap);
+        this.mRoomService.game.renderPeer.showRefernceArea(this.id, area, origin, conflictMap, freeColor, conflictColor);
     }
 
     public hideRefernceArea() {
