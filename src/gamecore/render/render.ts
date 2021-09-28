@@ -943,8 +943,13 @@ export class Render extends RPCPeer implements GameMain, IRender {
 
     @Export()
     public reload() {
-        Logger.getInstance().log("game relaod =====>");
-        // window.location.reload();
+        Logger.getInstance().log("game relaod");
+        const reload = this.mConfig.reload;
+        if (reload) {
+            reload();
+        } else {
+            if (window) window.location.reload();
+        }
     }
 
     @Export()
@@ -1288,7 +1293,10 @@ export class Render extends RPCPeer implements GameMain, IRender {
 
     @Export()
     public gameLoadedCallBack() {
-        if (this.mGameLoadedFunc) this.mGameLoadedFunc.call(this);
+        if (this.mGameLoadedFunc){
+            this.mGameLoadedFunc.call(this);
+            this.mGameLoadedFunc = null;
+        }
     }
 
     @Export()
