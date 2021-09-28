@@ -1074,14 +1074,13 @@ export class Render extends RPCPeer implements GameMain, IRender {
     }
 
     @Export([webworker_rpc.ParamType.str, webworker_rpc.ParamType.str])
-    public createAccount(gameID: string, worldID: string, sceneID?: number, loc?: IPos, spawnPointId?: number): Promise<any> {
-        return new Promise<any>((resolve, reject) => {
-            if (!this.mAccount) {
-                this.mAccount = new Account();
-                this.mAccount.enterGame(gameID, worldID, sceneID, loc, spawnPointId);
-            }
-            resolve(true);
-        });
+    public createAccount(gameID: string, worldID: string, sceneID?: number, loc?: IPos, spawnPointId?: number): Account {
+        if (!this.mAccount) {
+            const { game_id, virtual_world_id, world_id } = this.config;
+            this.mAccount = new Account({ gameId: game_id, virtualWorldId: virtual_world_id, worldId: world_id});
+            this.mAccount.enterGame(gameID, worldID, sceneID, loc, spawnPointId);
+        }
+        return this.mAccount;
     }
 
     @Export()

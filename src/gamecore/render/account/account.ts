@@ -16,6 +16,14 @@ export enum Role {
     Member,
     Tourist
 }
+
+interface Config {
+    // 外部传入游戏配置。gameId和virtualWorldId在切换游戏是会改变
+    gameId: string,
+    virtualWorldId: string,
+    worldId?: string
+}
+
 export class Account {
     public gameId: string;
     public virtualWorldId: string;
@@ -24,7 +32,7 @@ export class Account {
     public spawnPointId: number;
     public accountData: IAccountData;
     public worldId: string;
-    constructor() {
+    constructor(protected config: Config) {
         // TODO
         // 1. 登陆注册的逻辑在这里做
         // 2. 缓存用户登陆后的帐号咨讯
@@ -51,7 +59,9 @@ export class Account {
             role: val.role
         };
         this.saveLocalStorage();
+        this.resetGame();
     }
+
     public refreshToken(data: any) {
         if (!this.accountData) {
             try {
@@ -83,8 +93,18 @@ export class Account {
     public destroy() {
         this.clear();
         localStorage.removeItem("token");
-        this.enterGame(undefined, undefined, undefined, undefined, undefined);
+        this.clearGame();
     }
+
+    public resetGame() {
+        this.gameId = this.config.gameId;
+        this.virtualWorldId = this.config.virtualWorldId;
+        this.worldId = this.config.worldId;
+        this.sceneID = undefined;
+        this.loc = undefined;
+        this.spawnPointId = undefined;
+    }
+
     public enterGame(gameId: string, virtualWorldId: string, sceneId: number, loc: any, spawnPointId, worldId?: string) {
         this.gameId = gameId;
         this.virtualWorldId = virtualWorldId;
@@ -92,6 +112,10 @@ export class Account {
         this.loc = loc;
         this.spawnPointId = spawnPointId;
         this.worldId = worldId;
+    }
+
+    protected clearGame() {
+        this.enterGame(undefined, undefined, undefined, undefined, undefined);
     }
 
     get gameID(): string {
