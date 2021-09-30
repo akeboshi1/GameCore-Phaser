@@ -57,15 +57,15 @@ export class AnimationModel implements IAnimationData {
         const origin = ani.originPoint;
         this.originPoint = new LogicPoint(origin[0], origin[1]);
         if (typeof ani.collisionArea === "string") {
-            this.collisionArea = this.stringToArray(ani.collisionArea, ",", "&") || [[0]];
+            this.collisionArea = this.stringToArray(ani.collisionArea, ",", "&");
         } else {
-            this.collisionArea = ani.collisionArea || [[0]];
+            this.collisionArea = ani.collisionArea;
         }
 
         if (typeof ani.walkableArea === "string") {
-            this.walkableArea = this.stringToArray(ani.walkableArea, ",", "&") || [[0]];
+            this.walkableArea = this.stringToArray(ani.walkableArea, ",", "&");
         } else {
-            this.walkableArea = ani.walkableArea || [[0]];
+            this.walkableArea = ani.walkableArea;
         }
         // this.mInteractiveArea = [{x: 0, y: 0}];
         this.interactiveArea = ani.interactiveArea;
