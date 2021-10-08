@@ -481,6 +481,9 @@ export class ElementManager extends PacketHandler implements IElementManager {
                 this.mRequestSyncIdList.push(id);
             }
         }
+        if (result.length < 1) {
+            return;
+        }
         const packet = new PBpacket(op_virtual_world.OPCODE._OP_REQ_VIRTUAL_WORLD_QUERY_SPRITE_RESOURCE);
         const content: op_virtual_world.IOP_REQ_VIRTUAL_WORLD_QUERY_SPRITE_RESOURCE = packet.content;
         content.ids = result;
@@ -631,6 +634,10 @@ export class ElementManager extends PacketHandler implements IElementManager {
                 this.mCacheDisplayRef.delete(sprite.id);
             }
             add.push(sprite);
+            const syncIndex = this.mRequestSyncIdList.indexOf(sprite.id)
+            if (syncIndex > -1) {
+                this.mRequestSyncIdList.splice(syncIndex, 1);
+            }
         }
         if (add.length > 0) this.addSpritesToCache(add);
         if (this.mCacheSyncList.length > 0) this.dealSyncList();
