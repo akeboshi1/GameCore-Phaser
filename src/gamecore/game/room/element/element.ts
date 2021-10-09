@@ -232,6 +232,7 @@ export class Element extends BlockObject implements IElement {
         const obj = { id: model.id, pos: model.pos, nickname: model.nickname, nodeType: model.nodeType, sound: model.sound, alpha: model.alpha, titleMask: model.titleMask | 0x00020000, attrs: model.attrs, hasInteractive: model.hasInteractive };
         this.mElementManager.roomService.game.peer.render.setModel(obj);
         if (!model.displayInfo) {
+            Logger.getInstance().warn(`${Element.name}: sprite displayInfo is empty`);
             return;
         }
         // 必须执行一遍下面的方法，否则无法获取碰撞区域
