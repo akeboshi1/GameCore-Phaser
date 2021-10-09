@@ -133,8 +133,14 @@ export class MouseManager {
             this.scene.input.off("pointerup", this.onPointerUp, this);
         }
         this.scene = null;
-        this.debounce = null;
         this.mGameObject = null;
+        if (this.debounce) {
+            clearTimeout(this.debounce);
+        }
+        if (this.mDownTime) {
+            clearTimeout(this.mDownTime);
+        }
+        this.mClickID = 0;
         this.pause();
     }
 

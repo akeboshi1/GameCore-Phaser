@@ -249,7 +249,23 @@ export class UIManager extends PacketHandler {
             this.mMedMap = null;
         }
         if (this.mUIStateData) this.mUIStateData = undefined;
+
+
+        this.mNoneUIMap.clear();
+        this.mSceneUIMap.clear();
+        this.mNormalUIMap.clear();
+        this.mPopUIMap.clear();
+        this.mTipUIMap.clear();
+        this.mMonopolyUIMap.clear();
+        this.mActivityUIMap.clear();
+        this.mUILayoutMap.clear();
+    // 用于记录功能ui打开的顺序,最多2个
+        this.mShowuiList.length = 0;
+        this.mLoadingCache.length = 0;
+        this.mCloseCache.length = 0;
+        this.mUpdateCache.length = 0;
         this.isshowMainui = false;
+        this.game = null;
     }
 
     protected async onForceOfflineHandler(packet: PBpacket) {

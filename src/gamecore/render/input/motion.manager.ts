@@ -90,6 +90,9 @@ export class MotionManager {
 
     destroy() {
         this.removeListener();
+        this.clearGameObject();
+        this.scene = null;
+        this.uiScene = null;
     }
 
     public async onGuideOnPointUpHandler(pointer: Phaser.Input.Pointer, id: number) {
@@ -216,7 +219,7 @@ export class MotionManager {
 
     protected clearGameObject() {
         this.gameObject = null;
-        clearTimeout(this.holdTime);
+        if (this.holdTime) clearTimeout(this.holdTime);
     }
 
     protected start(worldX: number, worldY: number, id?: number) {

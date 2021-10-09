@@ -22,13 +22,9 @@ import {
 } from "structure";
 import { DisplayManager } from "./managers/display.manager";
 import { InputManager } from "./input/input.manager";
-import { MainUIScene } from "./scenes/main.ui.scene";
 import { AvatarHelper } from "./managers/avatar.helper";
 import { BaseSceneManager, BasicScene, IRender, PlayCamera, Url } from "baseRender";
-import { AstarDebugger } from "./display/debugs/astar";
 import { EditorModeDebugger } from "./display/debugs/editor.mode.debugger";
-import { GridsDebugger } from "./display/debugs/grids";
-import { SortDebugger } from "./display/debugs/sort.debugger";
 import { UiManager } from "./ui";
 import { GuideManager } from "./guide";
 import { MouseManager } from "./input/mouse.manager";
@@ -52,12 +48,7 @@ export class Render extends RPCPeer implements GameMain, IRender {
     public isConnect: boolean = false;
     public sceneCreated: boolean = false;
     public emitter: Phaser.Events.EventEmitter;
-    @Export()
-    public gridsDebugger: GridsDebugger;
-    @Export()
-    public astarDebugger: AstarDebugger;
-    @Export()
-    public sortDebugger: SortDebugger;
+
     @Export()
     public editorModeDebugger: EditorModeDebugger;
 
@@ -119,9 +110,6 @@ export class Render extends RPCPeer implements GameMain, IRender {
         this.emitter = new Phaser.Events.EventEmitter();
         this.mConfig = config;
         this.mCallBack = callBack;
-        this.gridsDebugger = new GridsDebugger(this);
-        this.astarDebugger = new AstarDebugger(this);
-        this.sortDebugger = new SortDebugger(this);
         this.editorModeDebugger = new EditorModeDebugger(this);
         this.mConnectFailFunc = this.mConfig.connectFail;
         this.mGameCreatedFunc = this.mConfig.game_created;
@@ -325,9 +313,8 @@ export class Render extends RPCPeer implements GameMain, IRender {
             this.mSceneManager.destroy();
             this.mSceneManager = undefined;
         }
-        if (this.gridsDebugger) {
-            this.gridsDebugger.destroy();
-            this.gridsDebugger = undefined;
+        if (this.emitter) {
+            this.emitter.removeAllListeners();
         }
     }
 
@@ -357,9 +344,6 @@ export class Render extends RPCPeer implements GameMain, IRender {
     
         if (this.mAvatarHelper) {
             this.mAvatarHelper.destroy();
-        }
-        if (this.gridsDebugger) {
-            this.gridsDebugger.destroy();
         }
         // if (this.mEditorCanvasManager)
         //     this.mEditorCanvasManager.destroy();
@@ -606,6 +590,7 @@ export class Render extends RPCPeer implements GameMain, IRender {
                         this.mGame.anims.destroy();
                         this.mGame.input.destroy();
                         this.mGame.sound.destroy();
+                        this.mGame.scale.destroy();
                         this.mGame = undefined;
                         if (destroyPeer) super.destroy();
                         resolve();
@@ -1335,6 +1320,7 @@ export class Render extends RPCPeer implements GameMain, IRender {
                     this.mGame.anims.destroy();
                     this.mGame.input.destroy();
                     this.mGame.sound.destroy();
+                    this.mGame.scale.destroy();
                     this.mGame = undefined;
                     if (boo) {
                         this.newGame().then(() => {
