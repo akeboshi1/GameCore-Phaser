@@ -1,4 +1,3 @@
-import { Logger } from "structure";
 import { Game } from "../../game";
 import { HttpService } from "./http.service";
 
@@ -7,12 +6,11 @@ import { HttpService } from "./http.service";
  */
 export class HttpClock {
     // private readonly interval = 300000;
-    private readonly interval = 60000;
-    private mTimestamp: number = 0;
-    private httpService: HttpService;
-    private mEnable: boolean = false;
-    private mGameId: string;
-    constructor(private game: Game) {
+    protected readonly interval = 60000;
+    protected mTimestamp: number = 0;
+    protected httpService: HttpService;
+    protected mGameId: string;
+    constructor(protected game: Game) {
         this.httpService = game.httpService;
         this.gameId = game.getGameConfig().game_id;
     }
@@ -25,69 +23,12 @@ export class HttpClock {
         this.mTimestamp += delta;
     }
 
-    allowLogin(callback: () => void) {
-        return new Promise((resolve, reject) => {
-            this.fetch().then((response: any) => {
-                const { code, data } = response;
-                if (code === 0) {
-                    if (!this.allowedPeriod(data, callback)) {
-                        resolve(false);
-                        return;
-                    }
-                    if (!this.checkTimeAllowed(data, callback)) {
-                        resolve(false);
-                        return;
-                    }
-                    resolve(true);
-                }
-            }).catch((error) => {
-                Logger.getInstance().error(error);
-            });
-        });
-    }
-
     fetch() {
         return this.httpService.playedDuration("831dab", this.mGameId);
     }
 
     sync() {
-        this.fetch().then((response: any) => {
-            if (this.mEnable === false) {
-                return;
-            }
-            const { code, data } = response;
-            if (code === 0) {
-                if (!this.checkTimeAllowed(data) || !this.allowedPeriod(data)) {
-                    this.game.peer.closeConnect(true);
-                }
-            }
-        }).catch((errorTxt) => {
-            Logger.getInstance().error(errorTxt);
-        });
-    }
-
-    private allowedPeriod(data: any, callback?: () => void) {
-        if (data.in_allowed_period) {
-            return true;
-        }
-        this.showAlert(`[color=#ff0000][size=${14 * this.game.getGameConfig().ui_scale}]您的账号属于未成年人[/size][/color]\n每日22:00~次日8:00是休息时间，根据相关规定，该时间不可登录游戏，请注意休息哦！`, callback);
-        return false;
-    }
-
-    private checkTimeAllowed(data: any, callback?: () => void) {
-        if (data.time_played >= data.max_time_allowed) {
-            this.showAlert(`[color=#ff0000][size=${14 * this.game.getGameConfig().ui_scale}]您的账号属于未成年人[/size][/color]\n今日累计时长已超过${(data.max_time_allowed / 3600).toFixed(1)}小时！\n不可登录`, callback);
-            return false;
-        }
-        return true;
-    }
-
-    private showAlert(text: string, callback?: () => void) {
-        this.game.peer.render.showAlert(text, "common.tips", true);
-    }
-
-    set enable(val: boolean) {
-        this.mEnable = val;
+        this.fetch();
     }
 
     set gameId(val: string) {

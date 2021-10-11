@@ -491,11 +491,6 @@ export class MainPeer extends RPCPeer {
         });
     }
 
-    @Export([webworker_rpc.ParamType.boolean])
-    public httpClockEnable(enable: boolean) {
-        this.game.httpClock.enable = enable;
-    }
-
     @Export()
     public showNoticeHandler(text: { msg?: string, i18nMsg?: string, i18nData?: any }) {
         // const data = new op_client.OP_VIRTUAL_WORLD_RES_CLIENT_SHOW_UI();
