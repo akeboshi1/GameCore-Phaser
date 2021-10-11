@@ -897,15 +897,15 @@ export class DragonbonesModel implements IDragonbonesModel {
     }
 
     public parseHumanoid(humanoid: op_gameconfig_01.IHumanoidDescription) {
-        const { modelId, slots } = humanoid;
-        this.avatar = { id: modelId };
+        const { modeId, slots } = humanoid;
+        this.avatar = { id: modeId };
         for (const slot of slots) {
             this.avatar[slot.slot] = {
                 sn: slot.sn,
                 version: slot.version
             };
         }
-        this.dragonboneName = humanoid.modelId;
+        this.dragonboneName = modeId;
     }
 
     public destroy() {
