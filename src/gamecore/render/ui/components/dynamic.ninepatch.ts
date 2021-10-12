@@ -26,6 +26,14 @@ export class DynamicNinepatch {
         }
     }
 
+    public destroy() {
+        if (this.mScene) {
+            this.mScene.load.off(Phaser.Loader.Events.COMPLETE, this.onLoadCompleteHandler, this);
+            this.mScene = null;
+        }
+        this.mConfig = null;
+    }
+
     private onLoadCompleteHandler() {
         // x: number, y: number, width: number, height: number, key: string, frame: string
         this.mImage = new NineSlicePatch(this.mScene, 0, 0, this.mConfig.width, this.mConfig.height, this.mConfig.key, undefined, this.mConfig.config, this.mConfig.scale);

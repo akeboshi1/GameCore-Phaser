@@ -610,9 +610,9 @@ export class DisplayManager {
             this.preLoadList = [];
         }
         if (this.displays) {
-            // this.displays.forEach((display) => {
-            //     if (display) display.destroy();
-            // });
+            this.displays.forEach((display) => {
+                if (display) display.destroy();
+            });
             this.displays.clear();
         }
 
@@ -621,9 +621,9 @@ export class DisplayManager {
         }
 
         if (this.scenerys) {
-            // this.scenerys.forEach((block) => {
-            //     if (block) block.destroy();
-            // });
+            this.scenerys.forEach((block) => {
+                if (block) block.destroy();
+            });
             this.scenerys.clear();
         }
         if (this.matterBodies) {

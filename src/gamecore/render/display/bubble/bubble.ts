@@ -106,7 +106,12 @@ export class Bubble extends Phaser.GameObjects.Container {
         }
         this.render = null;
         this.url = null;
-        super.destroy(true);
+        super.destroy();
+        this.mChatContent = null;
+        if (this.mBubbleBg) {
+            this.mBubbleBg.destroy();
+            this.mBubbleBg = null;
+        }
     }
 
     protected onComplete(img: NineSlicePatch) {

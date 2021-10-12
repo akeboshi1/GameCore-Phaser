@@ -36,7 +36,7 @@ export class RoomScene extends BasicScene {
     }
 
     protected onDestroy() {
-        this.onGameOutHandler();
+        this.mRoomID = null;
         super.onDestroy();
     }
 

@@ -286,6 +286,7 @@ export class BaseFramesDisplay extends BaseDisplay {
     public destroy() {
         this.scene.load.off(Phaser.Loader.Events.FILE_LOAD_ERROR, this.onLoadErrorHandler, this);
         this.scene.textures.off(Phaser.Textures.Events.ADD, this.onAddTextureHandler, this);
+        
         if (this.mFadeTween) {
             this.clearFadeTween();
             this.mFadeTween = undefined;
@@ -294,11 +295,14 @@ export class BaseFramesDisplay extends BaseDisplay {
             this.mScaleTween.stop();
             this.mScaleTween = undefined;
         }
-        this.mMainSprite = null;
+        if (this.mMainSprite) {
+            this.mMainSprite.off(Phaser.Animations.Events.ANIMATION_REPEAT, this.onAnimationRepeatHander, this);
+            this.mMainSprite = null;
+        }
         this.mPreAnimation = null;
 
         this.mDisplayDatas.clear();
-        super.destroy(true);
+        super.destroy();
     }
 
     protected createDisplays(key: string, ani: any) {

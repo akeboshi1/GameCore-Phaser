@@ -579,12 +579,10 @@ export class Render extends RPCPeer implements GameMain, IRender {
                     this.destroyManager();
                     this.mRoomSize = null;
                     this.mRoomMiniSize = null;
-                    this.mGame.events.off(Phaser.Core.Events.FOCUS, this.onFocus, this);
-                    this.mGame.events.off(Phaser.Core.Events.BLUR, this.onBlur, this);
                     this.mGame.events.removeAllListeners();
                     this.mGame.scale.removeAllListeners();
                     this.mGame.plugins.removeScenePlugin("DragonBones");
-                    this.mGame.events.once(Phaser.Core.Events.DESTROY, () => {
+                    this.mGame.events.once(Phaser.Core.Events.DESTROY, () => {   
                         this.mGame.textures.destroy();
                         this.mGame.cache.destroy();
                         this.mGame.anims.destroy();
@@ -1285,6 +1283,9 @@ export class Render extends RPCPeer implements GameMain, IRender {
 
     @Export()
     public createGameCallBack(keyEvents: any) {
+        if (!this.mGame) {
+            return;
+        }
         this.mGame.events.on(Phaser.Core.Events.FOCUS, this.onFocus, this);
         this.mGame.events.on(Phaser.Core.Events.BLUR, this.onBlur, this);
         this.resize(this.mConfig.width, this.mConfig.height);

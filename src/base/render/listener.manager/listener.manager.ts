@@ -19,6 +19,7 @@ export class ListenerManager {
             }
         });
         this.mTexturesListeners.clear();
+        this.scene = null;
     }
 
     // issues: https://code.apowo.com/PixelPai/game-core/-/issues/243

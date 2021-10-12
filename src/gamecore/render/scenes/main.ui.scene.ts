@@ -78,7 +78,7 @@ export class MainUIScene extends RoomScene {
   }
 
   protected onDestroy() {
-    if (this.fps) this.fps.destroy();
+    this.fps = undefined;
     super.onDestroy();
   }
 }
