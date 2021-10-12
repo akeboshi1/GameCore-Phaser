@@ -30,6 +30,7 @@ export class EditorElementDisplay extends EditorFramesDisplay {
         }
         const area = this.getCollisionArea();
         const origin = this.getOriginPoint();
+        if (!area || !origin) return;
         const { tileWidth, tileHeight } = this.sceneEditor.miniRoomSize;
         this.mReferenceArea.draw(area, origin, tileWidth, tileHeight);
         this.addAt(this.mReferenceArea, 0);
