@@ -4,8 +4,9 @@ import { IFramesModel, RunningAnimation, Logger, LogicPoint, Position45 } from "
 import { SceneEditorCanvas } from "./scene.editor.canvas";
 import { EditorTopDisplay } from "./top.display";
 import { op_def } from "pixelpai_proto";
-import { LayerEnum, Helpers } from "game-capsule";
+import { LayerEnum } from "game-capsule";
 import { IEditorCanvasConfig } from "../editor.canvas";
+import {Helpers} from "utils";
 
 export class EditorFramesDisplay extends BaseFramesDisplay {
 
