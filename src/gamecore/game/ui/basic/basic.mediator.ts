@@ -124,6 +124,11 @@ export class BasicMediator implements IMediator {
         return this.mParam;
     }
     @Export()
+    destroyPanel() {
+        this.mPanelInit = false;
+        this.mView = undefined;
+    }
+    @Export()
     destroy() {
         this.hide();
         this.mShow = false;
@@ -135,6 +140,7 @@ export class BasicMediator implements IMediator {
             this.mModel = null;
         }
         if (this.key && this.game && this.game.peer) {
+            // 如果panel 中有类似this.view的引用，需要在此时执行置空操作
             this.game.peer.cancelExportProperty(this, this.game.peer, this.key);
         }
         this.game = null;
