@@ -6,7 +6,7 @@ import { HttpService } from "./http.service";
  */
 export class HttpClock {
     // private readonly interval = 300000;
-    protected readonly interval = 60000;
+    protected interval = 60000;
     protected mTimestamp: number = 0;
     protected httpService: HttpService;
     protected mGameId: string;
@@ -38,7 +38,9 @@ export class HttpClock {
         if (index > -1) {
             gameId = gameId.slice(index + 1, gameId.length);
         }
+        if (this.mGameId && this.mGameId !== gameId) {
+            this.sync();
+        }
         this.mGameId = gameId;
-        this.sync();
     }
 }
