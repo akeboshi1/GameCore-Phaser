@@ -105,7 +105,7 @@ export class EditorElementManager extends PacketHandler {
         const collision = sprite.getCollisionArea();
         const origin = sprite.getOriginPoint();
         if (!collision) {
-            return false;
+            return true;
         }
         const miniSize = this.sceneEditor.miniRoomSize;
         const pos45 = Position45.transformTo45(pos, miniSize);
