@@ -146,7 +146,7 @@ export class BlockManager implements IBlockManager {
     this.mCameras = null;
     this._bound = null;
     if (this.mStateMap) this.mStateMap.clear();
-    if (this.tween) this.tween.destroy();
+    if (this.tween) this.tween.stop();
     this.scene = null;
   }
 
