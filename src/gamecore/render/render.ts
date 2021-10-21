@@ -1,4 +1,4 @@
-import { Game } from "tooqingphaser";
+import { Game } from "phaser3";
 import { Export, RPCPeer, webworker_rpc } from "webworker-rpc";
 import { UiUtils } from "utils";
 import { PBpacket } from "net-socket-packet";

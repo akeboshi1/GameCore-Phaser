@@ -1,4 +1,4 @@
-import "tooqingphaser";
+import "phaser3";
 import "dragonBones";
 import { IEditorCanvasConfig, ElementEditorCanvas, AvatarEditorCanvas, SceneEditorCanvas } from "../editor/canvas";
 

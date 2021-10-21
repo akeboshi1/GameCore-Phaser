@@ -162,9 +162,9 @@
   integrity sha512-j2tekvJCO7j22cs+LO6i0kRPhmQ9MXaPZ55TzOc1lzkN5b6BWqq4AFjl04s1oRRQ1v5rSe+KEvnLUSTonuls/A==
 
 "@types/node@>=13.7.0":
-  version "16.10.3"
-  resolved "https://registry.yarnpkg.com/@types/node/-/node-16.10.3.tgz#7a8f2838603ea314d1d22bb3171d899e15c57bd5"
-  integrity sha512-ho3Ruq+fFnBrZhUYI46n/bV2GjwzSkwuT4dTf0GkuNFmnb8nq4ny2z9JEVemFi6bdEJanHLlYfy9c6FN9B9McQ==
+  version "16.11.1"
+  resolved "https://registry.yarnpkg.com/@types/node/-/node-16.11.1.tgz#2e50a649a50fc403433a14f829eface1a3443e97"
+  integrity sha512-PYGcJHL9mwl1Ek3PLiYgyEKtwTMmkMw4vbiyz/ps3pfdRYLVv+SN7qHVAImrjdAXxgluDEw6Ph4lyv+m9UpRmA==
 
 "@types/node@^13.7.0":
   version "13.13.52"
@@ -2339,8 +2339,8 @@ function-bind@^1.1.1:
   integrity sha512-yIovAzMX49sF8Yl58fSCWJ5svSLuaibPxXQJFLmBObTuCr0Mf1KiPopGM9NiFjiYBCbfaa2Fh6breQ6ANVTI0A==
 
 "game-capsule@git+ssh://git@code.apowo.com:PixelPai/game-capsule.git#dev":
-  version "1.2.235"
-  resolved "git+ssh://git@code.apowo.com:PixelPai/game-capsule.git#0ff69ed069813af1877d2b7b322224daef8c01e4"
+  version "1.2.237"
+  resolved "git+ssh://git@code.apowo.com:PixelPai/game-capsule.git#7010265e3c1b92a824a07191343b0879530ae1d5"
   dependencies:
     chance "^1.0.18"
     crypto-js "^3.1.9-1"
@@ -4463,6 +4463,15 @@ performance-now@^2.1.0:
   resolved "https://registry.yarnpkg.com/performance-now/-/performance-now-2.1.0.tgz#6309f4e0e5fa913ec1c69307ae364b4b377c9e7b"
   integrity sha1-Ywn04OX6kT7BxpMHrjZLSzd8nns=
 
+"phaser3@git+ssh://git@code.apowo.com:opensource/phaser.git":
+  version "0.4.9"
+  resolved "git+ssh://git@code.apowo.com:opensource/phaser.git#cb6c9a3b754758a47c108d87dfc0e5d2990d679e"
+  dependencies:
+    eventemitter3 "^4.0.7"
+    exports-loader "^1.1.1"
+    imports-loader "^1.2.0"
+    path "^0.12.7"
+
 picomatch@^2.0.4:
   version "2.2.2"
   resolved "https://registry.npmjs.org/picomatch/-/picomatch-2.2.2.tgz#21f333e9b6b8eaff02468f5146ea406d345f4dad"
@@ -4506,8 +4515,8 @@ pinkie@^2.0.0:
   integrity sha1-clVrgM+g1IqXToDnckjoDtT3+HA=
 
 "pixelpai_proto@git+ssh://git@code.apowo.com:PixelPai/pixelpai_proto.git#typescriptdev":
-  version "1.0.585"
-  resolved "git+ssh://git@code.apowo.com:PixelPai/pixelpai_proto.git#384f25e44e4fdf36b02b39767a6251c84268c5d8"
+  version "1.0.589"
+  resolved "git+ssh://git@code.apowo.com:PixelPai/pixelpai_proto.git#b6b32bb01f38f642a10825b7428bbe97cae1470d"
   dependencies:
     protobufjs "^6.8.8"
 
@@ -5770,15 +5779,6 @@ toidentifier@1.0.0:
   version "1.0.0"
   resolved "https://registry.npmjs.org/toidentifier/-/toidentifier-1.0.0.tgz#7e1be3470f1e77948bc43d94a3c8f4d7752ba553"
   integrity sha512-yaOH/Pk/VEhBWWTlhI+qXxDFXlejDGcQipMlyxda9nthulaxLZUNcUqFxokp0vcYnvteJln5FNQDRrxj3YcbVw==
-
-"tooqingphaser@git+ssh://git@code.apowo.com:opensource/phaser.git":
-  version "0.4.7"
-  resolved "git+ssh://git@code.apowo.com:opensource/phaser.git#557c36c3342cebec0f23fbb2fa31c871f604017f"
-  dependencies:
-    eventemitter3 "^4.0.7"
-    exports-loader "^1.1.1"
-    imports-loader "^1.2.0"
-    path "^0.12.7"
 
 toposort@^2.0.2:
   version "2.0.2"

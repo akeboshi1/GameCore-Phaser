@@ -1,6 +1,6 @@
 import { EditorCanvas, IEditorCanvasConfig } from "../editor.canvas";
 import { AvatarEditorDragonbone } from "./avatar.editor.dragonbone";
-import { Scene } from "tooqingphaser";
+import { Scene } from "phaser3";
 import { Logger } from "structure";
 
 /**

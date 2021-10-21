@@ -33,7 +33,7 @@ const commonConfig = {
     externals: {
         "webworker-rpc": 'webworker-rpc',
         "pixelpai_proto": "pixelpai_proto",
-        "tooqingphaser": "tooqingphaser",
+        "phaser3": "phaser3",
         "game-capsule": "game-capsule"
     },
     optimization: {
