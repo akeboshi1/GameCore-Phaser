@@ -4,12 +4,12 @@ import { IAvatar } from "./dragonbones";
 export class AvatarSuitType {
     static avatarSuit: AvatarSuitType;
     static specHideParts = {
-        headSpecId: ["head_eyes", "head_hair", "head_mous", "head_hair_back", "head_hats", "head_hats_back", "head_mask", "head_face", "head_base"],
-        bodySpecId: ["body_cost", "body_cost_dres", "body_tail", "body_wing", "body_base"],
-        farmSpecId: ["farm_cost", "farm_shld", "farm_weap", "farm_base"],
-        barmSpecId: ["barm_cost", "barm_shld", "barm_weap", "barm_base"],
-        flegSpecId: ["fleg_cost", "fleg_base"],
-        blegSpecId: ["bleg_cost", "bleg_base"]
+        head_spec: ["head_eyes", "head_hair", "head_mous", "head_hair_back", "head_hats", "head_hats_back", "head_mask", "head_face", "head_base"],
+        body_spec: ["body_cost", "body_cost_dres", "body_tail", "body_wing", "body_base"],
+        farm_spec: ["farm_cost", "farm_shld", "farm_weap", "farm_base"],
+        barm_spec: ["barm_cost", "barm_shld", "barm_weap", "barm_base"],
+        fleg_spec: ["fleg_cost", "fleg_base"],
+        bleg_spec: ["bleg_cost", "bleg_base"]
     };
     static slotBitMap: Map<string, number>;
 
@@ -117,7 +117,8 @@ export class AvatarSuitType {
         if (attrs) {
             for (const attr of attrs) {
                 if (attr.key === "PKT_AVATAR_SUITS") {
-                    if (attr.value && attr.value.length > 0 && JSON.parse(attr.value).length > 0) {
+                    const value = attr.value;
+                    if (value && value.length > 0 && JSON.parse(value).length > 0) {
                         return true;
                     }
                 }
@@ -294,8 +295,8 @@ export class SuitAlternativeType {
     public tail = 0x000200;
     public wing = 0x000400;
     public helmet = 0x0007e;
-    // public shell = 0x000001 | 0x000200 | 0x000400;
-    // public cyborg = 0x000001 | 0x000002 | 0x000004 | 0x000008 | 0x000010 | 0x000020 | 0x000040 | 0x000100 | 0x000200 | 0x000400 | 0x0007e;
+    public shell = 0x000001 | 0x000200 | 0x000400;
+    public cyborg = 0x000001 | 0x000002 | 0x000004 | 0x000008 | 0x000010 | 0x000020 | 0x000040 | 0x000100 | 0x000200 | 0x000400 | 0x0007e | 0x00800;
 }
 
 export class BaseAvatar {
