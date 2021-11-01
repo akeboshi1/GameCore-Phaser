@@ -3,7 +3,7 @@ import * as os from "os";
 import { SPRITE_SHEET_KEY, ResourcesChangeListener, IMAGE_BLANK_KEY } from "./element.editor.resource.manager";
 import ElementEditorGrids from "./element.editor.grids";
 import { Logger } from "structure";
-import { BaseDragonbonesDisplay, BaseFramesDisplay } from "baseRender";
+import { BaseDragonbonesDisplay, BaseDisplay, BaseFramesDisplay } from "baseRender";
 import { AnimationDataNode } from "game-capsule";
 import { AnimationModel, RunningAnimation } from "structure";
 import { DragonbonesEditorDisplay } from "./dragonbones.editor.display";
@@ -26,7 +26,7 @@ export class ElementFramesDisplay extends BaseFramesDisplay implements Resources
         super(scene, { resPath: mConfig.LOCAL_HOME_PATH, osdPath: mConfig.osd });
         this.mGrids = grids;
         this.mEmitter = emitter;
-        this.mMountList = new Map<number, Phaser.GameObjects.Container>();
+        this.mMountList = new Map<number, BaseDisplay>();
         const parentContainer = scene.add.container(0, 0);
         parentContainer.add(this);
         // this.mMountArmatureParent = scene.add.container(0, 0);

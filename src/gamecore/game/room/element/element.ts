@@ -9,7 +9,7 @@ import {
     IFramesModel,
     IProjection,
     ISprite,
-    PlayerState, DirectionChecker, IPos, Logger, LogicPos
+    PlayerState, DirectionChecker, IPos, Logger, LogicPos, Pos
 } from "structure";
 import { Tool } from "utils";
 import { BlockObject } from "../block/block.object";
@@ -719,7 +719,7 @@ export class Element extends BlockObject implements IElement {
         this.mMounts.splice(index, 1);
         await ele.unmount(targetPos);
         if (!this.mMounts) return Promise.resolve();
-        this.mRoomService.game.renderPeer.unmount(this.id, ele.id, ele.getPosition());
+        if (this.mRoomService) this.mRoomService.game.renderPeer.unmount(this.id, ele.id, ele.getPosition());
         return Promise.resolve();
     }
 
@@ -778,6 +778,11 @@ export class Element extends BlockObject implements IElement {
             this.mMoveData.path.length = 0;
             this.mMoveData.path = [];
             this.mMoveData = null;
+        }
+        if (this.mMounts) {
+            for (const mount of this.mMounts) {
+                this.removeMount(mount, mount.getPosition());
+            }
         }
         if (this.mStateManager) {
             this.mStateManager.destroy();

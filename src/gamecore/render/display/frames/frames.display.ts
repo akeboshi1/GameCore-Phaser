@@ -320,6 +320,8 @@ export class FramesDisplay extends BaseFramesDisplay implements IDisplayObject {
             return;
         }
         super.unmount(display);
+        display.x = this.x + display.x;
+        display.y = this.y + display.y;
         this.render.displayManager.addToLayer(LayerName.SURFACE, display);
         //     display.setRootMount(undefined);
         //     const index = this.mMountList.indexOf(display);

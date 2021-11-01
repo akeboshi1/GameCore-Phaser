@@ -299,7 +299,11 @@ export class BaseFramesDisplay extends BaseDisplay {
             this.mMainSprite.off(Phaser.Animations.Events.ANIMATION_REPEAT, this.onAnimationRepeatHander, this);
             this.mMainSprite = null;
         }
+        if (this.mMountList) {
+            this.mMountList.forEach((mount) => this.unmount(<any>mount));
+        }
         this.mPreAnimation = null;
+        this.mCurAnimation = null;
 
         this.mDisplayDatas.clear();
         super.destroy();
